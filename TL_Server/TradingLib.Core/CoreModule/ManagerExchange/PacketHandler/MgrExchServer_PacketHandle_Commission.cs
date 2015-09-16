@@ -56,6 +56,46 @@ namespace TradingLib.Core
         }
 
 
+        [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "DeleteCommissionTemplate", "DeleteCommissionTemplate - delete commission template", "删除手续费模板")]
+        public void CTE_DeleteCommissionTemplate(ISession session, int template_id)
+        {
+            Manager manager = session.GetManager();
+            logger.Info(string.Format("管理员:{0} 删除手续费模板 request:{1}", manager.Login, template_id));
+            if (manager.IsRoot())
+            {
+                CommissionTemplate template = BasicTracker.CommissionTemplateTracker[template_id];
+                if (template == null)
+                {
+                    throw new FutsRspError("指定手续费模板不存在");
+
+                }
+                if (template.Domain_ID != manager.domain_id)
+                {
+                    throw new FutsRspError("手续费模板与管理员不属于同一域");
+                }
+                
+                //调用维护器 删除该模板
+                BasicTracker.CommissionTemplateTracker.DeleteCommissionTemplate(template_id);
+                IAccount[] accounts = manager.Domain.GetAccounts().ToArray();
+
+                for (int i = 0; i < accounts.Length; i++)
+                {
+                    IAccount acc = accounts[i];
+                    if (acc.Commission_ID == template_id)
+                    {
+                        TLCtxHelper.ModuleAccountManager.UpdateAccountCommissionTemplate(acc.ID, 0);
+                    }
+                }
+                session.NotifyMgr("NotifyDeleteCommissionTemplate", template);
+                session.OperationSuccess("删除续费模板成功");
+            }
+            else
+            {
+                throw new FutsRspError("无权删除手续费模板");
+            }
+        }
+
+
 
         [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "QryCommissionTemplateItem", "QryCommissionTemplateItem - qry commission template item", "查询手续费模板项目")]
         public void CTE_QryCommissionTemplateItem(ISession session, int templateid)

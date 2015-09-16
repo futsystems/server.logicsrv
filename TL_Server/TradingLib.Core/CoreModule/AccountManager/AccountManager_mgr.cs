@@ -385,7 +385,11 @@ namespace TradingLib.Core
         }
 
 
-
+        /// <summary>
+        /// 交易账户 出入金
+        /// </summary>
+        /// <param name="session"></param>
+        /// <param name="json"></param>
         [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "AccountCashOperation", "AccountCashOperation - account cash operation", "给交易帐户出入去金", QSEnumArgParseType.Json)]
         public void CTE_CashOperation(ISession session, string json)
         {

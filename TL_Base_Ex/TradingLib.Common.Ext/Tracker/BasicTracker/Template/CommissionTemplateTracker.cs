@@ -76,6 +76,37 @@ namespace TradingLib.Common
             }
         }
 
+        /// <summary>
+        /// 删除手续费模板
+        /// </summary>
+        /// <param name="template_id"></param>
+        public void DeleteCommissionTemplate(int template_id)
+        {
+
+            CommissionTemplate target = null;
+            //存在对应的手续费模板
+            if (commissionTemplateMap.TryGetValue(template_id, out target))
+            {
+                ORM.MCommission.DeleteCommissionTemplate(template_id);
+
+                //删除模板对象
+                CommissionTemplate remove_template = null;
+                commissionTemplateMap.TryRemove(template_id, out remove_template);//删除模板对象
+
+                if (remove_template != null)
+                {
+                    CommissionTemplateItem remove_item = null;
+                    //删除所有模板项
+                    foreach (var item in remove_template.CommissionItems)
+                    {
+                        commissionTemplateItemMap.TryRemove(item.ID, out remove_item);
+                    }
+                }
+                
+            }
+        }
+
+
         public void UpdateCommissionTemplate(CommissionTemplateSetting t)
         {
             CommissionTemplate target = null;

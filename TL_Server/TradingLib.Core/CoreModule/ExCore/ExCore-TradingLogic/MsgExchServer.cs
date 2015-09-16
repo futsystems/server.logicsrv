@@ -176,14 +176,25 @@ namespace TradingLib.Core
             }
         }
 
+        /// <summary>
+        /// 向交易端发送通知
+        /// </summary>
+        /// <param name="arg1"></param>
+        /// <param name="arg2"></param>
         void EventAccount_AccountTradingNoticeEvent(string arg1, string arg2)
         {
-            throw new NotImplementedException();
+            
         }
 
+        /// <summary>
+        /// 出入金操作用于msgexch通知交易端
+        /// </summary>
+        /// <param name="arg1"></param>
+        /// <param name="arg2"></param>
+        /// <param name="arg3"></param>
         void EventAccount_AccountCashOperationEvent(string arg1, QSEnumCashOperation arg2, decimal arg3)
         {
-            throw new NotImplementedException();
+            
         }
 
         void EventSystem_SettleResetEvent(object sender, SystemEventArgs e)

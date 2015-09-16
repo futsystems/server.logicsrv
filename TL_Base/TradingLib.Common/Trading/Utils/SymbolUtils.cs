@@ -60,7 +60,12 @@ namespace TradingLib.Common
             {
                 return GetMonth(sym.ULSymbol);
             }
-            string month = sym.Symbol.Substring(sym.Symbol.Length-2, 2);
+            
+            //if (sym.SecurityFamily.Exchange.Country == Country.CN)
+            //{
+            //    string month = sym.Symbol.Substring(sym.Symbol.Length - 2, 2);
+            //}
+            string month = sym.ExpireDate.ToString().Substring(4, 2);
             return int.Parse(month);
         }
 

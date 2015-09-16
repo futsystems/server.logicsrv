@@ -38,7 +38,9 @@ namespace TradingLib.Core
         [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "UpdateMarginTemplate", "UpdateMarginTemplate - update margin template", "更新保证金模板", QSEnumArgParseType.Json)]
         public void CTE_UpdateMarginTemplate(ISession session, string json)
         {
+            
             Manager manager = session.GetManager();
+            
             if (manager.IsRoot())
             {
                 MarginTemplateSetting t = Mixins.Json.JsonMapper.ToObject<MarginTemplateSetting>(json);
@@ -59,6 +61,49 @@ namespace TradingLib.Core
                 throw new FutsRspError("无权修改保证金模板");
             }
         }
+
+        [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "DeleteMarginTemplate", "DeleteMarginTemplate - delete margin template", "删除保证金模板")]
+        public void CTE_DeleteMarginTemplate(ISession session, int template_id)
+        {
+            Manager manager = session.GetManager();
+
+            logger.Info(string.Format("管理员:{0} 删除保证金模板 request:{1}", manager.Login, template_id));
+            if (manager.IsRoot())
+            {
+                MarginTemplate template = BasicTracker.MarginTemplateTracker[template_id];
+                if (template == null)
+                {
+                    throw new FutsRspError("指定保证金模板不存在");
+
+                }
+                if (template.Domain_ID != manager.domain_id)
+                {
+                    throw new FutsRspError("保证金模板与管理员不属于同一域");
+                }
+
+                //调用维护器 删除该模板
+                BasicTracker.MarginTemplateTracker.DeleteMarginTemplate(template_id);
+
+                IAccount[] accounts = manager.Domain.GetAccounts().ToArray();
+
+                for (int i = 0; i < accounts.Length; i++)
+                {
+                    IAccount acc = accounts[i];
+                    if (acc.Commission_ID == template_id)
+                    {
+                        TLCtxHelper.ModuleAccountManager.UpdateAccountMarginTemplate(acc.ID, 0);
+                    }
+                }
+
+                session.NotifyMgr("NotifyDeleteMarginTemplate", template);
+                session.OperationSuccess("删除保证金模板成功");
+            }
+            else
+            {
+                throw new FutsRspError("无权删除保证金模板");
+            }
+        }
+
 
         /// <summary>
         /// 查询保证金项目

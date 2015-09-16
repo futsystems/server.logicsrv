@@ -38,6 +38,23 @@ namespace TradingLib.ORM
         }
 
         /// <summary>
+        /// 删除某个保证金模板
+        /// </summary>
+        /// <param name="template_id"></param>
+        public static void DeleteMarginTemplate(int template_id)
+        {
+            using (DBMySql db = new DBMySql())
+            {
+                string query = string.Format("DELETE FROM cfg_margin_template WHERE id={0}", template_id);
+                db.Connection.Execute(query);
+
+                query = string.Format("DELETE FROM cfg_margin WHERE template_id={0}", template_id);
+                db.Connection.Execute(query);
+            }
+        }
+
+
+        /// <summary>
         /// 获得所有手续费模板
         /// </summary>
         /// <returns></returns>

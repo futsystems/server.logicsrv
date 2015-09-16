@@ -58,5 +58,18 @@ namespace TradingLib.API
         /// <param name="comment"></param>
         void CashOperation(string account, decimal ammount,QSEnumEquityType equitytype, string transref, string comment);
 
+        /// <summary>
+        /// 更新手续费模板
+        /// </summary>
+        /// <param name="account"></param>
+        /// <param name="template_id"></param>
+        void UpdateAccountCommissionTemplate(string account, int template_id);
+
+        /// <summary>
+        /// 更新保证金模板
+        /// </summary>
+        /// <param name="account"></param>
+        /// <param name="template_id"></param>
+        void UpdateAccountMarginTemplate(string account, int template_id);
     }
 }

@@ -65,6 +65,35 @@ namespace TradingLib.Common
         }
 
         /// <summary>
+        /// 删除某个保证金模板
+        /// </summary>
+        /// <param name="template_id"></param>
+        public void DeleteMarginTemplate(int template_id)
+        {
+            MarginTemplate target = null;
+            //存在对应的手续费模板
+            if (marginTemplateMap.TryGetValue(template_id, out target))
+            {
+                ORM.MMargin.DeleteMarginTemplate(template_id);
+
+                //删除模板对象
+                MarginTemplate remove_template = null;
+                marginTemplateMap.TryRemove(template_id, out remove_template);//删除模板对象
+
+                
+                if (remove_template != null)
+                {
+                    MarginTemplateItem remove_item = null;
+                    //删除所有模板项
+                    foreach (var item in remove_template.MarginTemplateItems)
+                    {
+                        marginTemplateItemMap.TryRemove(item.ID, out remove_item);
+                    }
+                }
+
+            }
+        }
+        /// <summary>
         /// 更新手续费模板
         /// </summary>
         /// <param name="t"></param>

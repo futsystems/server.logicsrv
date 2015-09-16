@@ -188,6 +188,7 @@ namespace TradingLib.Core
 
         /// <summary>
         /// 交易账户的资金操作
+        /// amount带有符号，正数表示入金 负数表示出金
         /// </summary>
         /// <param name="acc"></param>
         /// <param name="amount"></param>
@@ -255,10 +256,10 @@ namespace TradingLib.Core
                 {
                     acc.CreditWithdraw(Math.Abs(amount));
                 }
-                ORM.MAccount.CashOperation(account, amount, QSEnumEquityType.CreditEquity, transref, comment);
-            
-                TLCtxHelper.EventAccount.FireAccountCashOperationEvent(acc.ID,amount>0?QSEnumCashOperation.Deposit:QSEnumCashOperation.WithDraw,Math.Abs(amount));
+                ORM.MAccount.CashOperation(account, amount, QSEnumEquityType.CreditEquity, transref, comment);                
             }
+
+            TLCtxHelper.EventAccount.FireAccountCashOperationEvent(acc.ID, amount > 0 ? QSEnumCashOperation.Deposit : QSEnumCashOperation.WithDraw, Math.Abs(amount));
         }
 
         /// <summary>
