@@ -324,7 +324,17 @@ namespace TradingLib.Common
             sonorder.FilledSize = o.FilledSize;//成交数量
             sonorder.Size = o.Size;//更新委托当前数量
 
-            fatherOrder.OrderSysID = fatherOrder.OrderSeq.ToString();//父委托OrderSysID编号 取系统的OrderSeq
+            //fatherOrder.OrderSysID = fatherOrder.OrderSeq.ToString();//父委托OrderSysID编号 取系统的OrderSeq
+            //父委托编号赋值
+            //1对1
+            if (sonOrders.Count == 1)
+            {
+                fatherOrder.OrderSysID = o.OrderSysID;
+            }
+            else //1对多
+            {
+                fatherOrder.OrderSysID = fatherOrder.OrderSeq.ToString();//父委托OrderSysID编号 取系统的OrderSeq
+            }
 
             //更新父委托状态 成交数量 状态 以及 状态信息
             int lastfilledsize = fatherOrder.FilledSize;

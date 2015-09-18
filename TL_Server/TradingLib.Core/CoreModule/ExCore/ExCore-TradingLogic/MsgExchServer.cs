@@ -47,6 +47,10 @@ namespace TradingLib.Core
 
         bool needConfirmSettlement = true;
         int loginTerminalNum = 6;
+
+        bool simpromptenable = false;
+        string simprompt = string.Empty;
+
         public MsgExchServer()
             : base(MsgExchServer.CoreName)
         {
@@ -81,6 +85,21 @@ namespace TradingLib.Core
                 }
 
                 loginTerminalNum = _cfgdb["LoginTerminalNum"].AsInt();
+
+
+                if (!_cfgdb.HaveConfig("SIMPromtEnable"))
+                {
+                    _cfgdb.UpdateConfig("SIMPromtEnable", QSEnumCfgType.Bool, false, "模拟委托注明模拟二字");
+                }
+                simpromptenable = _cfgdb["SIMPromtEnable"].AsBool();
+
+
+                if (!_cfgdb.HaveConfig("SIMPromt"))
+                {
+                    _cfgdb.UpdateConfig("SIMPromt", QSEnumCfgType.String, "模拟", "模拟委托标注内容");
+                }
+                simprompt = _cfgdb["SIMPromt"].AsString();
+
 
 
                 tl = new TLServer_Exch(CoreName,_cfgdb["TLServerIP"].AsString(), _cfgdb["TLPort"].AsInt(), true);
@@ -204,8 +223,17 @@ namespace TradingLib.Core
             
         }
 
-        
 
+
+        protected override void AmendOrderComment(ref Order o)
+        {
+            base.AmendOrderComment(ref o);
+
+            if (simpromptenable && o.Broker == "SIMBROKER")
+            {
+                o.Comment = simprompt + ":" + o.Comment;
+            }
+        }
 
         public override void Dispose()
         {

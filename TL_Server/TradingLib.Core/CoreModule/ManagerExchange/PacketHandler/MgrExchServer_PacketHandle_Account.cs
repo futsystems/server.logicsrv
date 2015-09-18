@@ -65,5 +65,28 @@ namespace TradingLib.Core
             _resumecache.Write(request);
         }
 
+        [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "FlatAllPosition", "FlatAllPosition - falt all position", "平调所有子账户持仓")]
+        public void CTE_UpdateAccountExStrategyTemplate(ISession session)
+        {
+            Manager manager = session.GetManager();
+            if (manager.IsRoot())
+            {
+                foreach (var account in manager.Domain.GetAccounts())
+                {
+                    account.InactiveAccount();
+                    account.FlatPosition(QSEnumOrderSource.QSMONITER, "一键强平");
+
+                    Util.sleep(500);
+                }
+                session.OperationSuccess("强平成功");
+            }
+            else
+            {
+                throw new FutsRspError("无权执行强平操作");
+            }
+
+
+        }
+
     }
 }

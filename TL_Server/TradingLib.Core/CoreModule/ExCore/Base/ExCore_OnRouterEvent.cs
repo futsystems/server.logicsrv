@@ -56,11 +56,8 @@ namespace TradingLib.Core
             this.NotifyOrderError(order, info);
         }
 
-
-        public void OnOrderEvent(Order o)
+        protected virtual void AmendOrderComment(ref Order o)
         {
-            IAccount account = TLCtxHelper.ModuleAccountManager[o.Account];
-
             //更新委托状态
             switch (o.Status)
             {
@@ -85,7 +82,13 @@ namespace TradingLib.Core
                 default:
                     break;
             }
+        }
+        public void OnOrderEvent(Order o)
+        {
+            IAccount account = TLCtxHelper.ModuleAccountManager[o.Account];
 
+            AmendOrderComment(ref o);
+            
             //清算中心响应委托回报
             TLCtxHelper.ModuleClearCentre.GotOrder(o);
 
