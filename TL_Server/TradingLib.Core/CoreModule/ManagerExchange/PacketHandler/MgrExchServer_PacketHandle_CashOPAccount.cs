@@ -74,7 +74,11 @@ namespace TradingLib.Core
                         throw new FutsRspError("无权访问帐户:" + account.ID);
                     }
 
-                    
+                    request = ORM.MCashOpAccount.GetAccountCashOperation(request.Ref);
+                    if (request.Status != QSEnumCashInOutStatus.PENDING)
+                    {
+                        throw new FutsRspError("出入金请求已经关闭");
+                    }
 
                     //调用清算中心出入金确认操作
                     //TLCtxHelper.CmdAuthCashOperation.ConfirmCashOperation(request.Ref);
@@ -107,6 +111,12 @@ namespace TradingLib.Core
                 JsonWrapperCashOperation request = Mixins.Json.JsonMapper.ToObject<JsonWrapperCashOperation>(playload);
                 if (request != null)
                 {
+                    request = ORM.MCashOpAccount.GetAccountCashOperation(request.Ref);
+                    if (request.Status != QSEnumCashInOutStatus.PENDING)
+                    {
+                        throw new FutsRspError("出入金请求已经关闭");
+                    }
+
                     ORM.MCashOpAccount.CancelAccountCashOperation(request);
                     session.ReplyMgr(request);
                     //通过事件中继触发事件
@@ -131,6 +141,12 @@ namespace TradingLib.Core
                 JsonWrapperCashOperation request = Mixins.Json.JsonMapper.ToObject<JsonWrapperCashOperation>(playload);
                 if (request != null)
                 {
+                    request = ORM.MCashOpAccount.GetAccountCashOperation(request.Ref);
+                    if (request.Status != QSEnumCashInOutStatus.PENDING)
+                    {
+                        throw new FutsRspError("出入金请求已经关闭");
+                    }
+
                     ORM.MCashOpAccount.RejectAccountCashOperation(request);
                     session.ReplyMgr(request);
                     //通过事件中继触发事件
