@@ -669,7 +669,12 @@ namespace Broker.Live
 
         public override void SendOrder(Order o)
         {
-            _splittracker.SendFatherOrder(o);
+            //发送委托时 底层CTP接口有一个递增操作 该操作不是线程安全的，如果多个线程同时调用该函数则会出现orderref相同的情况从而出现下单错乱的问题。
+            lock (this)
+            {
+                _splittracker.SendFatherOrder(o);
+                Util.sleep(10);
+            }
         }
 
         public override void CancelOrder(long oid)
