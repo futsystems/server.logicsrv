@@ -96,5 +96,15 @@ namespace TradingLib.Common
         /// </summary>
         public bool PositionLock { get; set; }
 
+
+        /// <summary>
+        /// 开仓滑点
+        /// </summary>
+        public int EntrySlip { get; set; }
+
+        /// <summary>
+        /// 平仓滑点
+        /// </summary>
+        public int ExitSlip { get; set; }
     }
 }

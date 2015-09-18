@@ -153,6 +153,11 @@ namespace TradingLib.Common
         public bool Module_Follow { get; set; }
 
         /// <summary>
+        /// 滑点模块
+        /// </summary>
+        public bool Module_Slip { get; set; }
+
+        /// <summary>
         /// 实盘路由
         /// </summary>
         public bool Router_Live { get; set; }

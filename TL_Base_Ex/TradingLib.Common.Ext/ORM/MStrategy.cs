@@ -59,7 +59,7 @@ namespace TradingLib.ORM
         {
             using (DBMySql db = new DBMySql())
             {
-                string query = string.Format("INSERT INTO cfg_strategy (`marginprice`,`includecloseprofit`,`includepositionprofit`,`algorithm`,`sidemargin`,`creditseparate`,`positionlock`,`template_id`) VALUES ( '{0}','{1}','{2}','{3}','{4}','{5}','{6}','{7}')", item.MarginPrice, item.IncludeCloseProfit ? 1 : 0, item.IncludePositionProfit ? 1 : 0, item.Algorithm, item.SideMargin ? 1 : 0, item.CreditSeparate ? 1 : 0, item.PositionLock ? 1 : 0, item.Template_ID);
+                string query = string.Format("INSERT INTO cfg_strategy (`marginprice`,`includecloseprofit`,`includepositionprofit`,`algorithm`,`sidemargin`,`creditseparate`,`positionlock`,`entryslip`,`exitslip`,`template_id`) VALUES ( '{0}','{1}','{2}','{3}','{4}','{5}','{6}','{7}','{8}','{9}')", item.MarginPrice, item.IncludeCloseProfit ? 1 : 0, item.IncludePositionProfit ? 1 : 0, item.Algorithm, item.SideMargin ? 1 : 0, item.CreditSeparate ? 1 : 0, item.PositionLock ? 1 : 0,item.EntrySlip,item.ExitSlip, item.Template_ID);
                 int row = db.Connection.Execute(query);
                 SetIdentity(db.Connection, id => item.ID = id, "id", "cfg_strategy");
             }
@@ -86,7 +86,7 @@ namespace TradingLib.ORM
         {
             using (DBMySql db = new DBMySql())
             {
-                string query = string.Format("UPDATE cfg_strategy SET marginprice='{0}',includecloseprofit='{1}' ,includepositionprofit='{2}' ,algorithm='{3}' ,sidemargin='{4}' ,creditseparate='{5}' ,positionlock='{6}' WHERE id='{7}'", item.MarginPrice, item.IncludeCloseProfit ? 1 : 0, item.IncludePositionProfit ? 1 : 0, item.Algorithm, item.SideMargin ? 1 : 0, item.CreditSeparate ? 1 : 0, item.PositionLock ? 1 : 0, item.ID);
+                string query = string.Format("UPDATE cfg_strategy SET marginprice='{0}',includecloseprofit='{1}' ,includepositionprofit='{2}' ,algorithm='{3}' ,sidemargin='{4}' ,creditseparate='{5}' ,positionlock='{6}',entryslip='{7}' ,exitslip='{8}' WHERE id='{9}'", item.MarginPrice, item.IncludeCloseProfit ? 1 : 0, item.IncludePositionProfit ? 1 : 0, item.Algorithm, item.SideMargin ? 1 : 0, item.CreditSeparate ? 1 : 0, item.PositionLock ? 1 : 0,item.EntrySlip,item.ExitSlip, item.ID);
                 db.Connection.Execute(query);
             }
         }

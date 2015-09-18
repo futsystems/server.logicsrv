@@ -130,6 +130,10 @@ namespace TradingLib.API
         bool Module_Follow { get; set; }
 
         /// <summary>
+        /// 滑点模块
+        /// </summary>
+        bool Module_Slip { get; set; }
+        /// <summary>
         /// 实盘路由
         /// </summary>
         bool Router_Live { get; set; }

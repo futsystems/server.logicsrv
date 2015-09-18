@@ -169,7 +169,6 @@ namespace TradingLib.Common
             info.Broker = acc.Broker;
             info.BankID = acc.BankID;
             info.BankAC = acc.BankAC;
-            //info.PosLock = acc.PosLock;
             info.MGRID = acc.Mgr_fk;
             info.Deleted = acc.Deleted;
             info.RG_ID = acc.RG_FK;
@@ -204,13 +203,9 @@ namespace TradingLib.Common
             {
 
                 info.IsLogin = acc.IsLogin;
-                //info.SessionInfo = acc.SessionInfo;
-
             }
 
             info.IsWarn = acc.IsWarn;
-
-            //info.ConnectorToken = TLCtxHelper.Version.ProductType== QSEnumProductType.VendorMoniter ?BasicTracke
             return info;
         }
 
