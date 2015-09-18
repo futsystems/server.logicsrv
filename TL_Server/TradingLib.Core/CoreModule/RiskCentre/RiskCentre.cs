@@ -128,13 +128,14 @@ namespace TradingLib.Core
             //清空帐户风控检查帐户列表
             ClearActiveAccount();
 
-            foreach (IAccount account in TLCtxHelper.ModuleAccountManager.Accounts)
-            {
-                if (!account.RuleItemLoaded)
-                {
-                    this.LoadRuleItem(account);
-                }
-            }
+            //foreach (IAccount account in TLCtxHelper.ModuleAccountManager.Accounts)
+            //{
+            //    if (!account.RuleItemLoaded)
+            //    {
+            //        this.LoadRuleItem(account);
+            //    }
+            //}
+            LoadRuleItemAll();
         }
 
         #endregion
@@ -143,13 +144,14 @@ namespace TradingLib.Core
         {
             Util.StartStatus(this.PROGRAME);
 
-            foreach (IAccount account in TLCtxHelper.ModuleAccountManager.Accounts)
-            {
-                if (!account.RuleItemLoaded)
-                {
-                    this.LoadRuleItem(account);
-                }
-            }
+            //foreach (IAccount account in TLCtxHelper.ModuleAccountManager.Accounts)
+            //{
+            //    if (!account.RuleItemLoaded)
+            //    {
+            //        this.LoadRuleItem(account);
+            //    }
+            //}
+            LoadRuleItemAll();
         }
 
         public void Stop()

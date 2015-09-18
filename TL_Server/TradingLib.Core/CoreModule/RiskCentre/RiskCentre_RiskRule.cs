@@ -273,5 +273,32 @@ namespace TradingLib.Core
         {
             return dicRule.Values;
         }
+
+
+        /// <summary>
+        /// 加载所有交易账户的风控规则
+        /// 只做一次数据库查询 放入内存后进行操作 避免遍历所有交易账户进行数据库查询
+        /// </summary>
+        void LoadRuleItemAll()
+        {
+            logger.Info("加载所有交易账户 风控规则");
+            IEnumerable<RuleItem> ruleitems = ORM.MRuleItem.SelectAllRuleItems();
+            foreach (IAccount account in TLCtxHelper.ModuleAccountManager.Accounts)
+            {
+                if (!account.RuleItemLoaded)
+                {
+                    foreach (RuleItem item in ruleitems.Where(r => account.ID == r.Account))
+                    {
+                        AddRule(account, item);
+                    }
+                    //加载完毕后 设定帐户的风控规则加载标识
+                    account.RuleItemLoaded = true;
+                    //将帐户插入激活的检查列表
+                    //InsertActiveAccount(account);
+                    AttachAccountCheck(account.ID);
+                }
+            }
+        }
+
     }
 }
