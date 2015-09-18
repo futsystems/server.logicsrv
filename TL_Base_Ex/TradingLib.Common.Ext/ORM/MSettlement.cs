@@ -60,7 +60,7 @@ namespace TradingLib.ORM
         {
             using (DBMySql db = new DBMySql())
             {
-                string query = String.Format("select account from log_position_detail_hist  where `account` = '{0}' AND `settleday` = '{1}' AND  `symbol`='{2}' AND `tradeid`='{3}'", p.Account, p.Settleday, p.Symbol, p.TradeID);
+                string query = String.Format("select account from log_position_detail_hist  where `account` = '{0}' AND `settleday` = '{1}' AND  `symbol`='{2}' AND `tradeid`='{3}' AND `side`='{4}' AND `opendate`='{5}'", p.Account, p.Settleday, p.Symbol, p.TradeID, p.Side ? 1 : 0, p.OpenDate);
                 return db.Connection.Query(query).Count() > 0;
             }
         }
