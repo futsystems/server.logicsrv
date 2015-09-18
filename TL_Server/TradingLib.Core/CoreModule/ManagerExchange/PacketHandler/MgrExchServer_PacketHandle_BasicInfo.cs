@@ -180,13 +180,10 @@ namespace TradingLib.Core
                 }
 
                 SecurityFamilyImpl sec = request.SecurityFaimly;
+                //通过对应的域更新品种对象
+                manager.Domain.UpdateSecurity(sec);
+                int secidupdate = sec.ID;
 
-                SecurityFamilyImpl rawsec = manager.Domain.GetSecurityFamily(sec.ID);
-                if (rawsec == null)
-                {
-                    Util.Debug("品种数据异常，直接返回");
-                    return;
-                }
                 //如果是超级域 则同步更新所有分区
                 if (manager.Domain.Super)
                 {
@@ -196,22 +193,22 @@ namespace TradingLib.Core
                         if (d.ID == manager.Domain.ID) //超级域 跳过 已经更新过品种数据
                             continue;
                         //通过初始品种数据的Code找到对应的对象，然后将ID传入 调用更新，否则更新时 ID不对应导致重复增加
-                        SecurityFamilyImpl t = d.GetSecurityFamily(rawsec.Code);
-                        if (t == null)
+                        SecurityFamilyImpl t = d.GetSecurityFamily(sec.Code);//通过品种找到某个域的品种 
+                        if (t == null) //品种不存在则为添加
                         {
-                            continue;
+                            sec.ID = 0;
                         }
-                        sec.ID = t.ID;
+                        else //品种存在则更新
+                        {
+                            sec.ID = t.ID;
+                        }
                         d.UpdateSecurity(sec, false);
                     }
                 }
 
-                sec.ID = rawsec.ID;
-                //分区数据更新完毕后 再更新超级分区
-                manager.Domain.UpdateSecurity(sec);
-
-                RspMGRQrySecurityResponse response = ResponseTemplate<RspMGRQrySecurityResponse>.SrvSendRspResponse(request);
-                response.SecurityFaimly = manager.Domain.GetSecurityFamily(sec.ID);
+                //需要通过第一次更新获得sec_id来获得对象进行回报 否则在更新其他域的品种对象时id会发生同步变化
+                RspMGRUpdateSecurityResponse response = ResponseTemplate<RspMGRUpdateSecurityResponse>.SrvSendRspResponse(request);
+                response.SecurityFaimly = manager.Domain.GetSecurityFamily(secidupdate);
 
                 CacheRspResponse(response);
 
@@ -247,9 +244,11 @@ namespace TradingLib.Core
                 SecurityFamilyImpl rawsec = BasicTracker.SecurityTracker[symbol.Domain_ID, symbol.security_fk];
                 if (rawsec == null)
                 {
-                    Util.Debug("品种数据异常，直接返回");
-                    return;
+                    throw new FutsRspError("品种数据异常");
                 }
+
+                //调用该域更新该合约
+                manager.Domain.UpdateSymbol(symbol);
 
                 //如果是超级域 则同步更新所有分区
                 if (manager.Domain.Super)
@@ -264,9 +263,7 @@ namespace TradingLib.Core
                 }
 
 
-                manager.Domain.UpdateSymbol(symbol);
-
-                RspMGRQrySymbolResponse response = ResponseTemplate<RspMGRQrySymbolResponse>.SrvSendRspResponse(request);
+                RspMGRUpdateSymbolResponse response = ResponseTemplate<RspMGRUpdateSymbolResponse>.SrvSendRspResponse(request);
                 response.Symbol = manager.Domain.GetSymbol(symbol.ID);
                 CacheRspResponse(response);
 
@@ -283,117 +280,117 @@ namespace TradingLib.Core
         }
 
 
-        void SrvOnMGRReqAddSecurity(MGRReqAddSecurityRequest request, ISession session, Manager manager)
-        {
-            try
-            {
-                logger.Info(string.Format("管理员:{0} 请求添加品种:{1}", session.AuthorizedID, request.ToString()));
+        //void SrvOnMGRReqAddSecurity(MGRReqAddSecurityRequest request, ISession session, Manager manager)
+        //{
+        //    try
+        //    {
+        //        logger.Info(string.Format("管理员:{0} 请求添加品种:{1}", session.AuthorizedID, request.ToString()));
 
-                if (!manager.IsInRoot())
-                {
-                    throw new FutsRspError("无权添加品种数据");
-                }
+        //        if (!manager.IsInRoot())
+        //        {
+        //            throw new FutsRspError("无权添加品种数据");
+        //        }
 
-                SecurityFamilyImpl sec = request.SecurityFaimly;
-                if (manager.Domain.GetSecurityFamily(sec.Code) == null)
-                {
-                    manager.Domain.UpdateSecurity(sec);
+        //        SecurityFamilyImpl sec = request.SecurityFaimly;
+        //        if (manager.Domain.GetSecurityFamily(sec.Code) == null)
+        //        {
+        //            manager.Domain.UpdateSecurity(sec);
 
-                    //如果是超级域 则同步更新所有分区
-                    if (manager.Domain.Super)
-                    {
-                        //更新所有域的品种
-                        foreach (var d in BasicTracker.DomainTracker.Domains)
-                        {
-                            if (d.ID == manager.Domain.ID) //超级域 跳过 已经更新过品种数据
-                                continue;
-                            d.UpdateSecurity(sec);
-                        }
-                    }
-
-
-
-                    RspMGRQrySecurityResponse response = ResponseTemplate<RspMGRQrySecurityResponse>.SrvSendRspResponse(request);
-                    response.SecurityFaimly = manager.Domain.GetSecurityFamily(sec.Code);
-                    CacheRspResponse(response);
-                }
-                else
-                {
-
-                    RspMGRQrySecurityResponse response = ResponseTemplate<RspMGRQrySecurityResponse>.SrvSendRspResponse(request);
-                    response.RspInfo.Fill("SECURITY_EXIST");
-                    CacheRspResponse(response);
-                }
-                if (sec.Tradeable)
-                {
-                    //exchsrv.RegisterSymbol(BasicTracker.SecurityTracker[sec.Code]);
-                }
-            }
-            catch (FutsRspError ex)
-            {
-                session.OperationError(ex);
-            }
-        }
-
-        void SrvOnMGRReqAddSymbol(MGRReqAddSymbolRequest request, ISession session, Manager manager)
-        {
-            try
-            {
-                logger.Info(string.Format("管理员:{0} 请求添加合约:{1}", session.AuthorizedID, request.ToString()));
-
-                if (!manager.IsInRoot())
-                {
-                    throw new FutsRspError("无权添加合约数据");
-                }
-
-                SymbolImpl symbol = request.Symbol;
-                //设定合约symbol为当前管理员域ID 避免管理端没有正常传输分区ID
-                symbol.Domain_ID = manager.Domain.ID;
-
-                SecurityFamilyImpl rawsec = BasicTracker.SecurityTracker[symbol.Domain_ID, symbol.security_fk];
-                if (rawsec == null)
-                {
-                    Util.Debug("品种数据异常，直接返回");
-                    return;
-                }
-
-                if (manager.Domain.GetSymbol(symbol.Symbol) == null)
-                {
-                    manager.Domain.UpdateSymbol(symbol);
-
-                    //如果是超级域 则同步更新所有分区
-                    if (manager.Domain.Super)
-                    {
-                        //更新所有域的合约
-                        foreach (var d in BasicTracker.DomainTracker.Domains)
-                        {
-                            if (d.ID == manager.Domain.ID) //超级域 跳过 已经更新过品种数据
-                                continue;
-                            d.UpdateSymbolViaSuper(symbol);
-                        }
-                    }
+        //            //如果是超级域 则同步更新所有分区
+        //            if (manager.Domain.Super)
+        //            {
+        //                //更新所有域的品种
+        //                foreach (var d in BasicTracker.DomainTracker.Domains)
+        //                {
+        //                    if (d.ID == manager.Domain.ID) //超级域 跳过 已经更新过品种数据
+        //                        continue;
+        //                    d.UpdateSecurity(sec);
+        //                }
+        //            }
 
 
-                    RspMGRReqAddSymbolResponse response = ResponseTemplate<RspMGRReqAddSymbolResponse>.SrvSendRspResponse(request);
-                    response.Symbol = manager.Domain.GetSymbol(symbol.Symbol);
-                    CacheRspResponse(response);
-                }
-                else
-                {
-                    RspMGRReqAddSymbolResponse response = ResponseTemplate<RspMGRReqAddSymbolResponse>.SrvSendRspResponse(request);
-                    response.RspInfo.Fill("SYMBOL_EXIST");
-                    CacheRspResponse(response);
-                }
-                if (symbol.Tradeable)
-                {
-                    TLCtxHelper.ModuleExCore.RegisterSymbol(manager.Domain.GetSymbol(symbol.Symbol));
-                }
-            }
-            catch (FutsRspError ex)
-            {
-                session.OperationError(ex);
-            }
-        }
+
+        //            RspMGRQrySecurityResponse response = ResponseTemplate<RspMGRQrySecurityResponse>.SrvSendRspResponse(request);
+        //            response.SecurityFaimly = manager.Domain.GetSecurityFamily(sec.Code);
+        //            CacheRspResponse(response);
+        //        }
+        //        else
+        //        {
+
+        //            RspMGRQrySecurityResponse response = ResponseTemplate<RspMGRQrySecurityResponse>.SrvSendRspResponse(request);
+        //            response.RspInfo.Fill("SECURITY_EXIST");
+        //            CacheRspResponse(response);
+        //        }
+        //        if (sec.Tradeable)
+        //        {
+        //            //exchsrv.RegisterSymbol(BasicTracker.SecurityTracker[sec.Code]);
+        //        }
+        //    }
+        //    catch (FutsRspError ex)
+        //    {
+        //        session.OperationError(ex);
+        //    }
+        //}
+
+        //void SrvOnMGRReqAddSymbol(MGRReqAddSymbolRequest request, ISession session, Manager manager)
+        //{
+        //    try
+        //    {
+        //        logger.Info(string.Format("管理员:{0} 请求添加合约:{1}", session.AuthorizedID, request.ToString()));
+
+        //        if (!manager.IsInRoot())
+        //        {
+        //            throw new FutsRspError("无权添加合约数据");
+        //        }
+
+        //        SymbolImpl symbol = request.Symbol;
+        //        //设定合约symbol为当前管理员域ID 避免管理端没有正常传输分区ID
+        //        symbol.Domain_ID = manager.Domain.ID;
+
+        //        SecurityFamilyImpl rawsec = BasicTracker.SecurityTracker[symbol.Domain_ID, symbol.security_fk];
+        //        if (rawsec == null)
+        //        {
+        //            Util.Debug("品种数据异常，直接返回");
+        //            return;
+        //        }
+
+        //        if (manager.Domain.GetSymbol(symbol.Symbol) == null)
+        //        {
+        //            manager.Domain.UpdateSymbol(symbol);
+
+        //            //如果是超级域 则同步更新所有分区
+        //            if (manager.Domain.Super)
+        //            {
+        //                //更新所有域的合约
+        //                foreach (var d in BasicTracker.DomainTracker.Domains)
+        //                {
+        //                    if (d.ID == manager.Domain.ID) //超级域 跳过 已经更新过品种数据
+        //                        continue;
+        //                    d.UpdateSymbolViaSuper(symbol);
+        //                }
+        //            }
+
+
+        //            RspMGRReqAddSymbolResponse response = ResponseTemplate<RspMGRReqAddSymbolResponse>.SrvSendRspResponse(request);
+        //            response.Symbol = manager.Domain.GetSymbol(symbol.Symbol);
+        //            CacheRspResponse(response);
+        //        }
+        //        else
+        //        {
+        //            RspMGRReqAddSymbolResponse response = ResponseTemplate<RspMGRReqAddSymbolResponse>.SrvSendRspResponse(request);
+        //            response.RspInfo.Fill("SYMBOL_EXIST");
+        //            CacheRspResponse(response);
+        //        }
+        //        if (symbol.Tradeable)
+        //        {
+        //            TLCtxHelper.ModuleExCore.RegisterSymbol(manager.Domain.GetSymbol(symbol.Symbol));
+        //        }
+        //    }
+        //    catch (FutsRspError ex)
+        //    {
+        //        session.OperationError(ex);
+        //    }
+        //}
 
         #endregion
 

@@ -17,6 +17,7 @@ namespace TradingLib.Common
         static BasicTracker defaultinstance;
 
         //交易所 品种 合约
+        CalendarTracker calendartracker;
         DBExchangeTracker extracker;
         DBMarketTimeTracker mktimetracker;
         SecurityTracker setracker;
@@ -90,6 +91,21 @@ namespace TradingLib.Common
                 if (defaultinstance.mgrtracker == null)
                     defaultinstance.mgrtracker = new DBManagerTracker();
                 return defaultinstance.mgrtracker;
+            }
+        }
+
+        /// <summary>
+        /// 日历对象维护器
+        /// </summary>
+        public static CalendarTracker CalendarTracker
+        {
+            get
+            {
+                if (defaultinstance.calendartracker == null)
+                {
+                    defaultinstance.calendartracker = new CalendarTracker();
+                }
+                return defaultinstance.calendartracker;
             }
         }
         /// <summary>

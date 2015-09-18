@@ -46,6 +46,19 @@ namespace TraddingSrvCLI
             try
             {
                 debug("********* start core daemon *********");
+                //DateTime now = DateTime.Now;
+
+                //DateTime start = new DateTime(now.Year, 1, 1);
+                //HolidayCalculator hc = new HolidayCalculator(start, Util.GetConfigFile("holiday/usa.xml"));
+
+                ////Console.WriteLine("\nHere are holidays for the 12 months following " + date.ToString("D") + ":");
+                //foreach (HolidayCalculator.Holiday h in hc.OrderedHolidays)
+                //{
+                //    Console.WriteLine(h.Name + " - " + h.Date.ToString("D"));
+                //}
+
+                CalendarTracker v = BasicTracker.CalendarTracker;
+
                 CoreDaemon cd = new CoreDaemon();
                 //cd.SendDebugEvent +=new DebugDelegate(debug);
                 //启动核心守护

@@ -428,6 +428,11 @@ namespace TradingLib.Common
             return filepath;
         }
 
+        public static string GetHolidayPath()
+        {
+            return Path.Combine(new string[] { BaseDir, "config", "holiday" });
+        }
+
         /// <summary>
         /// 获得某个资源目录
         /// </summary>

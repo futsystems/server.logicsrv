@@ -284,12 +284,12 @@ namespace TradingLib.Common
         {
             DateTime target = time;//目标时间
             //如果存在时区信息 则将该事件转换成 对应的时区时间
-            //if (TargetTimeZone != null)
-            //{
-            //    TimeZoneInfo localTimeZone = TimeZoneInfo.FindSystemTimeZoneById("China Standard Time");
+            if (TargetTimeZone != null)
+            {
+                TimeZoneInfo localTimeZone = TimeZoneInfo.FindSystemTimeZoneById("China Standard Time");
 
-            //    target = TimeZoneInfo.ConvertTime(time,localTimeZone, TargetTimeZone);
-            //}
+                target = TimeZoneInfo.ConvertTime(time,TargetTimeZone);
+            }
             int tltime = Util.ToTLTime(target);
 
             foreach (MktTimeEntry s in sessionlist)

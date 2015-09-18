@@ -268,10 +268,11 @@ namespace TradingLib.Common
                         return RequestTemplate<MGRQrySettleRequest>.SrvRecvRequest(frontid, clientid, content);
                     case MessageTypes.MGRCHANGEACCOUNTPASS://请求修改帐户密码
                         return RequestTemplate<MGRChangeAccountPassRequest>.SrvRecvRequest(frontid, clientid, content);
-                    case MessageTypes.MGRADDSECURITY://请求添加品种
-                        return RequestTemplate<MGRReqAddSecurityRequest>.SrvRecvRequest(frontid, clientid, content);
-                    case MessageTypes.MGRADDSYMBOL://请求添加合约
-                        return RequestTemplate<MGRReqAddSymbolRequest>.SrvRecvRequest(frontid, clientid, content);
+                    //case MessageTypes.MGRADDSECURITY://请求添加品种
+                    //    return RequestTemplate<MGRReqAddSecurityRequest>.SrvRecvRequest(frontid, clientid, content);
+
+                    //case MessageTypes.MGRADDSYMBOL://请求添加合约
+                    //    return RequestTemplate<MGRReqAddSymbolRequest>.SrvRecvRequest(frontid, clientid, content);
                     case MessageTypes.MGRCHANGEINVESTOR://请求修改投资者信息
                         return RequestTemplate<MGRReqChangeInvestorRequest>.SrvRecvRequest(frontid, clientid, content);
                     case MessageTypes.MGRUPDATEPOSLOCK://请求修改帐户锁仓权限
@@ -456,10 +457,15 @@ namespace TradingLib.Common
                     return ResponseTemplate<RspMGRQrySettleResponse>.CliRecvResponse(content);
                 //case MessageTypes.MGRCHANGEACCOUNTPASSRESPONSE://请求修改帐户密码回报
                 //    return ResponseTemplate<RspMGRChangeAccountPassResponse>.CliRecvResponse(content);
-                case MessageTypes.MGRADDSECURITYRESPONSE://请求添加品种回报
-                    return ResponseTemplate<RspMGRReqAddSecurityResponse>.CliRecvResponse(content);
-                case MessageTypes.MGRADDSYMBOLRESPONSE://请求添加合约回报
-                    return ResponseTemplate<RspMGRReqAddSymbolResponse>.CliRecvResponse(content);
+                //case MessageTypes.MGRADDSECURITYRESPONSE://请求添加品种回报
+                //    return ResponseTemplate<RspMGRReqAddSecurityResponse>.CliRecvResponse(content);
+                case MessageTypes.MGRUPDATESECURITYRESPONSE://请求更新品种
+                    return ResponseTemplate<RspMGRUpdateSecurityResponse>.CliRecvResponse(content);
+
+                //case MessageTypes.MGRADDSYMBOLRESPONSE://请求添加合约回报
+                //    return ResponseTemplate<RspMGRReqAddSymbolResponse>.CliRecvResponse(content);
+                case MessageTypes.MGRUPDATESYMBOLRESPONSE://请求更新合约回报
+                    return ResponseTemplate<RspMGRUpdateSymbolResponse>.CliRecvResponse(content);
                 case MessageTypes.MGRCHANGEINVESTOR://请求修改投资者信息
                     return ResponseTemplate<RspMGRReqChangeInvestorResponse>.CliRecvResponse(content);
                 case MessageTypes.MGRUPDATEPOSLOCKRESPONSE://请求修改帐户锁仓权限回报

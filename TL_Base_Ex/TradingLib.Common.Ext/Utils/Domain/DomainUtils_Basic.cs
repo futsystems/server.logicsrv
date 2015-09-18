@@ -71,6 +71,7 @@ namespace TradingLib.Common
         /// <summary>
         /// 超级域更新合约时 同步更新分区合约
         /// 这里需要生成对应的symbol然后调用updatesymbol进行更新，否则合约的品种外键会错误
+        /// symbol对应的外键数据全部是主域 对应的对象数据 因此这里需要进行重新创建对象并连接对象
         /// </summary>
         /// <param name="domain"></param>
         /// <param name="sym"></param>
@@ -105,7 +106,6 @@ namespace TradingLib.Common
             //目标分区的品种数据不存在
             if (sec == null)
             {
-
                 return;
             }
 

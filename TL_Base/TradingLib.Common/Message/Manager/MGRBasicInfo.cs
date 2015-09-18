@@ -158,70 +158,70 @@ namespace TradingLib.Common
         }
     }
 
-    /// <summary>
-    /// 添加品种请求
-    /// </summary>
-    public class MGRReqAddSecurityRequest : RequestPacket
-    {
-        public MGRReqAddSecurityRequest()
-        {
-            _type = MessageTypes.MGRADDSECURITY;
-            SecurityFaimly = null;
-        }
+    ///// <summary>
+    ///// 添加品种请求
+    ///// </summary>
+    //public class MGRReqAddSecurityRequest : RequestPacket
+    //{
+    //    public MGRReqAddSecurityRequest()
+    //    {
+    //        _type = MessageTypes.MGRADDSECURITY;
+    //        SecurityFaimly = null;
+    //    }
 
-        public SecurityFamilyImpl SecurityFaimly { get; set; }
+    //    public SecurityFamilyImpl SecurityFaimly { get; set; }
 
-        public override string ContentSerialize()
-        {
-            if (this.SecurityFaimly == null)
-                return string.Empty;
-            return this.SecurityFaimly.Serialize();
-        }
+    //    public override string ContentSerialize()
+    //    {
+    //        if (this.SecurityFaimly == null)
+    //            return string.Empty;
+    //        return this.SecurityFaimly.Serialize();
+    //    }
 
-        public override void ContentDeserialize(string contentstr)
-        {
-            if (string.IsNullOrEmpty(contentstr))
-            {
-                this.SecurityFaimly = null;
-                return;
-            }
-            this.SecurityFaimly = new SecurityFamilyImpl();
-            this.SecurityFaimly.Deserialize(contentstr);
-        }
+    //    public override void ContentDeserialize(string contentstr)
+    //    {
+    //        if (string.IsNullOrEmpty(contentstr))
+    //        {
+    //            this.SecurityFaimly = null;
+    //            return;
+    //        }
+    //        this.SecurityFaimly = new SecurityFamilyImpl();
+    //        this.SecurityFaimly.Deserialize(contentstr);
+    //    }
     
-    }
+    //}
 
-    /// <summary>
-    /// 添加品种回报
-    /// </summary>
-    public class RspMGRReqAddSecurityResponse : RspResponsePacket
-    {
-        public RspMGRReqAddSecurityResponse()
-        {
-            _type = MessageTypes.MGRADDSECURITYRESPONSE;
-            SecurityFaimly = null;
-        }
-        public SecurityFamilyImpl SecurityFaimly { get; set; }
+    ///// <summary>
+    ///// 添加品种回报
+    ///// </summary>
+    //public class RspMGRReqAddSecurityResponse : RspResponsePacket
+    //{
+    //    public RspMGRReqAddSecurityResponse()
+    //    {
+    //        _type = MessageTypes.MGRADDSECURITYRESPONSE;
+    //        SecurityFaimly = null;
+    //    }
+    //    public SecurityFamilyImpl SecurityFaimly { get; set; }
 
-        public override string ResponseSerialize()
-        {
-            if (SecurityFaimly == null)
-                return string.Empty;
+    //    public override string ResponseSerialize()
+    //    {
+    //        if (SecurityFaimly == null)
+    //            return string.Empty;
 
-            return this.SecurityFaimly.Serialize();
-        }
+    //        return this.SecurityFaimly.Serialize();
+    //    }
 
-        public override void ResponseDeserialize(string content)
-        {
-            if (string.IsNullOrEmpty(content))
-            {
-                this.SecurityFaimly = null;
-                return;
-            }
-            this.SecurityFaimly = new SecurityFamilyImpl();
-            this.SecurityFaimly.Deserialize(content);
-        }
-    }
+    //    public override void ResponseDeserialize(string content)
+    //    {
+    //        if (string.IsNullOrEmpty(content))
+    //        {
+    //            this.SecurityFaimly = null;
+    //            return;
+    //        }
+    //        this.SecurityFaimly = new SecurityFamilyImpl();
+    //        this.SecurityFaimly.Deserialize(content);
+    //    }
+    //}
     /// <summary>
     /// 更新品种信息
     /// </summary>
@@ -254,6 +254,37 @@ namespace TradingLib.Common
         }
     }
 
+    /// <summary>
+    /// 更新品种回报
+    /// </summary>
+    public class RspMGRUpdateSecurityResponse : RspResponsePacket
+    {
+        public RspMGRUpdateSecurityResponse()
+        {
+            _type = MessageTypes.MGRUPDATESECURITYRESPONSE;
+            SecurityFaimly = null;
+        }
+        public SecurityFamilyImpl SecurityFaimly { get; set; }
+
+        public override string ResponseSerialize()
+        {
+            if (SecurityFaimly == null)
+                return string.Empty;
+
+            return this.SecurityFaimly.Serialize();
+        }
+
+        public override void ResponseDeserialize(string content)
+        {
+            if (string.IsNullOrEmpty(content))
+            {
+                this.SecurityFaimly = null;
+                return;
+            }
+            this.SecurityFaimly = new SecurityFamilyImpl();
+            this.SecurityFaimly.Deserialize(content);
+        }
+    }
 
     /// <summary>
     /// 查询合约信息
@@ -308,66 +339,67 @@ namespace TradingLib.Common
         }
     }
 
-    /// <summary>
-    /// 请求添加合约
-    /// </summary>
-    public class MGRReqAddSymbolRequest : RequestPacket
-    {
-        public MGRReqAddSymbolRequest()
-        {
-            _type = MessageTypes.MGRADDSYMBOL;
-            this.Symbol = null;
-        }
-        public SymbolImpl Symbol { get; set; }
+    ///// <summary>
+    ///// 请求添加合约
+    ///// </summary>
+    //public class MGRReqAddSymbolRequest : RequestPacket
+    //{
+    //    public MGRReqAddSymbolRequest()
+    //    {
+    //        _type = MessageTypes.MGRADDSYMBOL;
+    //        this.Symbol = null;
+    //    }
+    //    public SymbolImpl Symbol { get; set; }
 
-        public override string ContentSerialize()
-        {
-            if (this.Symbol == null)
-                return string.Empty;
-            return this.Symbol.Serialize();
-        }
+    //    public override string ContentSerialize()
+    //    {
+    //        if (this.Symbol == null)
+    //            return string.Empty;
+    //        return this.Symbol.Serialize();
+    //    }
 
-        public override void ContentDeserialize(string contentstr)
-        {
-            if (string.IsNullOrEmpty(contentstr))
-            {
-                this.Symbol = null;
-                return;
-            }
-            this.Symbol = new SymbolImpl();
-            this.Symbol.Deserialize(contentstr);
-        }
-    }
+    //    public override void ContentDeserialize(string contentstr)
+    //    {
+    //        if (string.IsNullOrEmpty(contentstr))
+    //        {
+    //            this.Symbol = null;
+    //            return;
+    //        }
+    //        this.Symbol = new SymbolImpl();
+    //        this.Symbol.Deserialize(contentstr);
+    //    }
+    //}
 
-    /// <summary>
-    /// 添加合约回报
-    /// </summary>
-    public class RspMGRReqAddSymbolResponse : RspResponsePacket
-    {
-        public RspMGRReqAddSymbolResponse()
-        {
-            _type = MessageTypes.MGRADDSYMBOLRESPONSE;
-            this.Symbol = null;
-        }
-        public SymbolImpl Symbol { get; set; }
-        public override string ResponseSerialize()
-        {
-            if (this.Symbol == null)
-                return string.Empty;
-            return this.Symbol.Serialize();
-        }
+    ///// <summary>
+    ///// 添加合约回报
+    ///// </summary>
+    //public class RspMGRReqAddSymbolResponse : RspResponsePacket
+    //{
+    //    public RspMGRReqAddSymbolResponse()
+    //    {
+    //        _type = MessageTypes.MGRADDSYMBOLRESPONSE;
+    //        this.Symbol = null;
+    //    }
+    //    public SymbolImpl Symbol { get; set; }
+    //    public override string ResponseSerialize()
+    //    {
+    //        if (this.Symbol == null)
+    //            return string.Empty;
+    //        return this.Symbol.Serialize();
+    //    }
 
-        public override void ResponseDeserialize(string content)
-        {
-            if (string.IsNullOrEmpty(content))
-            {
-                this.Symbol = null;
-                return;
-            }
-            this.Symbol = new SymbolImpl();
-            this.Symbol.Deserialize(content);
-        }
-    }
+    //    public override void ResponseDeserialize(string content)
+    //    {
+    //        if (string.IsNullOrEmpty(content))
+    //        {
+    //            this.Symbol = null;
+    //            return;
+    //        }
+    //        this.Symbol = new SymbolImpl();
+    //        this.Symbol.Deserialize(content);
+    //    }
+    //}
+
     /// <summary>
     /// 更新合约信息
     /// </summary>
@@ -397,6 +429,34 @@ namespace TradingLib.Common
             }
             this.Symbol = new SymbolImpl();
             this.Symbol.Deserialize(contentstr);
+        }
+    }
+
+
+    public class RspMGRUpdateSymbolResponse : RspResponsePacket
+    {
+        public RspMGRUpdateSymbolResponse()
+        {
+            _type = MessageTypes.MGRUPDATESYMBOLRESPONSE;
+            this.Symbol = null;
+        }
+        public SymbolImpl Symbol { get; set; }
+        public override string ResponseSerialize()
+        {
+            if (this.Symbol == null)
+                return string.Empty;
+            return this.Symbol.Serialize();
+        }
+
+        public override void ResponseDeserialize(string content)
+        {
+            if (string.IsNullOrEmpty(content))
+            {
+                this.Symbol = null;
+                return;
+            }
+            this.Symbol = new SymbolImpl();
+            this.Symbol.Deserialize(content);
         }
     }
 }

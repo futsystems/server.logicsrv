@@ -233,6 +233,7 @@ namespace TradingLib.Core
                             SrvOnMGRUpdateSymbol(packet as MGRUpdateSymbolRequest, session, manager);
                             break;
                         }
+                    
                     //case MessageTypes.MGRQRYRULECLASS://请求查询风控规则列表
                     //    {
                     //        SrvOnMGRQryRuleSet(packet as MGRQryRuleSetRequest, session, manager);
@@ -283,16 +284,17 @@ namespace TradingLib.Core
                     //        SrvOnMGRChangeAccountPassword(packet as MGRChangeAccountPassRequest, session, manager);
                     //        break;
                     //    }
-                    case MessageTypes.MGRADDSECURITY://请求添加品种
-                        {
-                            SrvOnMGRReqAddSecurity(packet as MGRReqAddSecurityRequest, session, manager);
-                            break;
-                        }
-                    case MessageTypes.MGRADDSYMBOL://请求添加合约
-                        {
-                            SrvOnMGRReqAddSymbol(packet as MGRReqAddSymbolRequest, session, manager);
-                            break;
-                        }
+                    //case MessageTypes.MGRADDSECURITY://请求添加品种
+                    //    {
+                    //        SrvOnMGRReqAddSecurity(packet as MGRReqAddSecurityRequest, session, manager);
+                    //        break;
+                    //    }
+                    
+                    //case MessageTypes.MGRADDSYMBOL://请求添加合约
+                    //    {
+                    //        SrvOnMGRReqAddSymbol(packet as MGRReqAddSymbolRequest, session, manager);
+                    //        break;
+                    //    }
                     //case MessageTypes.MGRCHANGEINVESTOR://请求修改投资者信息
                     //    {
                     //        SrvOnMGRReqChangeInvestor(packet as MGRReqChangeInvestorRequest, session, manager);

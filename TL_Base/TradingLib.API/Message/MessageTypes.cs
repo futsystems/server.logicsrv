@@ -194,10 +194,10 @@ namespace TradingLib.API
         MGRQRYEXCHANGE,//查询交易所信息
         MGRQRYMARKETTIME,//查询市场时间段
         MGRQRYSECURITY,//查询品种
-        MGRADDSECURITY,//添加品种
+        //MGRADDSECURITY,//添加品种
         MGRUPDATESECURITY,//更新品种信息
         MGRQRYSYMBOL,//查询合约信息
-        MGRADDSYMBOL,//请求添加合约信息
+        //MGRADDSYMBOL,//请求添加合约信息
         MGRUPDATESYMBOL,//更新合约信息
 
         MGRQRYRULECLASS,//查询风控规则列表
@@ -241,9 +241,11 @@ namespace TradingLib.API
         MGREXCHANGERESPONSE,//查询交易所回报
         MGRMARKETTIMERESPONSE,//查询市场时间段回报
         MGRSECURITYRESPONSE,//查询品种回报
-        MGRADDSECURITYRESPONSE,//添加品种回报
+        //MGRADDSECURITYRESPONSE,//添加品种回报
+        MGRUPDATESECURITYRESPONSE,//更新品种回报
         MGRSYMBOLRESPONSE,//合约信息回报
-        MGRADDSYMBOLRESPONSE,//添加合约回报
+        //MGRADDSYMBOLRESPONSE,//添加合约回报
+        MGRUPDATESYMBOLRESPONSE,//更新合约回报
 
         MGRRULECLASSRESPONSE,//风控规则回报
         MGRRULEITEMRESPONSE,//帐户风控规则回报
