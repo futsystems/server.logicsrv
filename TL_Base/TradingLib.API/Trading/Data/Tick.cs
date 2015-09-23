@@ -148,6 +148,10 @@ namespace TradingLib.API
         decimal LowerLimit { get; set; }
         //QSEnumTickType Type { get; set; }
 
+        /// <summary>
+        /// ◊Ú»’Ω·À„
+        /// </summary>
+        decimal PreClose { get; set; }
     }
 
     /// <summary>

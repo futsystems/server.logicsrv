@@ -115,6 +115,7 @@ namespace TradingLib.Common
             _settlement = 0;
             _upperlimit = 0;
             _lowerlimit = 0;
+            _preclose = 0;
         }
         public static TickImpl Copy(Tick c)
         {
@@ -150,6 +151,7 @@ namespace TradingLib.Common
 
             k.UpperLimit = c.UpperLimit;
             k.LowerLimit = c.LowerLimit;
+            k.PreClose = c.PreClose;
             return k;
         }
         /// <summary>
@@ -263,6 +265,14 @@ namespace TradingLib.Common
         /// 跌停价
         /// </summary>
         public decimal LowerLimit { get { return _lowerlimit; } set { _lowerlimit = value; } }
+
+        decimal _preclose;
+        /// <summary>
+        /// 昨日收盘价
+        /// </summary>
+        public decimal PreClose { get { return _preclose; } set { _preclose = value; } }
+
+
         public static string Serialize(Tick t)
         {
             const char d = ',';
@@ -315,7 +325,8 @@ namespace TradingLib.Common
             sb.Append(t.UpperLimit);
             sb.Append(d);
             sb.Append(t.LowerLimit);
-
+            sb.Append(d);
+            sb.Append(t.PreClose);
 
             return sb.ToString();
         }
@@ -375,6 +386,8 @@ namespace TradingLib.Common
                 t.UpperLimit = d;
             if (decimal.TryParse(r[(int)TickField.lower], System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out d))
                 t.LowerLimit = d;
+            if (decimal.TryParse(r[(int)TickField.preclose], System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out d))
+                t.PreClose = d;
             return t;
         }
 
@@ -504,5 +517,6 @@ namespace TradingLib.Common
         settlement,
         upper,
         lower,
+        preclose,
     }
 }
