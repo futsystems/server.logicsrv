@@ -71,6 +71,7 @@ namespace TradingLib.Common
             upperlimit.Clear();
             lowerlimit.Clear();
             settlement.Clear();
+            preclose.Clear();
         }
 
 
@@ -115,6 +116,7 @@ namespace TradingLib.Common
             lowerlimit = new GenericTracker<decimal>(_estlabels);
 
             settlement = new GenericTracker<decimal>(_estlabels);
+            preclose = new GenericTracker<decimal>(_estlabels);
 
             // setup generic trackers to track tick information
             last.NewTxt += new TextIdxDelegate(last_NewTxt);
@@ -154,6 +156,7 @@ namespace TradingLib.Common
             lowerlimit.addindex(txt, 0);
 
             settlement.addindex(txt, 0);
+            preclose.addindex(txt, 0);
 
             if (NewTxt!=null)
                 NewTxt(txt,idx);
@@ -183,6 +186,7 @@ namespace TradingLib.Common
         GenericTracker<decimal> upperlimit;
         GenericTracker<decimal> lowerlimit;
         GenericTracker<decimal> settlement;
+        GenericTracker<decimal> preclose;
 
         public string Display(int idx) { return this[idx].ToString(); }
         public string Display(string txt) { return this[txt].ToString(); }
@@ -365,7 +369,7 @@ namespace TradingLib.Common
                 k.UpperLimit = upperlimit[idx];
                 k.LowerLimit = lowerlimit[idx];
                 k.Settlement = settlement[idx];
-
+                k.PreClose = preclose[idx];
                 return k;
             }
         }
@@ -481,6 +485,11 @@ namespace TradingLib.Common
             if (k.Settlement != 0)
             {
                 settlement[idx] = k.Settlement;
+            }
+
+            if (k.PreClose != 0)
+            {
+                preclose[idx] = k.PreClose;
             }
 
             return true;

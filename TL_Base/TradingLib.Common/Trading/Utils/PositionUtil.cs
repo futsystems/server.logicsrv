@@ -253,7 +253,7 @@ namespace TradingLib.Common
             p.CloseProfitByTrade = pos.CalCloseProfitByTrade();
 
             p.LastSettlementPrice = (pos.LastSettlementPrice != null ? (decimal)pos.LastSettlementPrice : 0);//获得的是持仓对象Position的昨日结算价格 这个价格是从行情产生的
-            p.SettlementPrice = (pos.SettlementPrice != null ? (decimal)pos.SettlementPrice : 0);
+            p.SettlementPrice = pos.LastPrice;// (pos.SettlementPrice != null ? (decimal)pos.SettlementPrice : 0);
 
 
 

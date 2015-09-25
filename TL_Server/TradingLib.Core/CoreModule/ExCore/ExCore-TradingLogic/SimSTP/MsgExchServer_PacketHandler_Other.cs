@@ -87,12 +87,9 @@ namespace TradingLib.Core
         {
             logger.Info("QryPosition :" + request.ToString());
             Position[] positions = new Position[] { };
-            //Position[] netpos = new Position[] { };
-
             if (string.IsNullOrEmpty(request.Symbol))
             {
                 positions = account.Positions.ToArray();
-                //netpos = account.PositionsNet.ToArray();
             }
             if (!string.IsNullOrEmpty(request.Symbol))
             {
@@ -574,6 +571,7 @@ namespace TradingLib.Core
 
         /// <summary>
         /// 查询市场行情处理
+        /// 市场行情回报处理错误 会导致FX无法正常登入 在查询市场行情 这步操作会失败
         /// </summary>
         /// <param name="request"></param>
         /// <param name="account"></param>
@@ -583,32 +581,60 @@ namespace TradingLib.Core
 
             if (string.IsNullOrEmpty(request.Symbol))
             {
-                Tick[] ticks = mdtickmap.Values.ToArray();
-                if (ticks.Length >= 1)
+                //Symbol sym = account.Domain.GetSymbols().Where(s => s.IsTradeable).FirstOrDefault();
+                //if (sym != null)
+                //{
+                //    Tick k = new TickImpl(sym.Symbol);
+                //    RspQryMarketDataResponse response = ResponseTemplate<RspQryMarketDataResponse>.SrvSendRspResponse(request);
+                //    response.TickToSend = k;
+                //    CacheRspResponse(response);
+                //}
+
+
+                Symbol[] symlist = account.Domain.GetSymbols().Where(s => s.IsTradeable).ToArray();
+                for (int i = 0; i < symlist.Length; i++)
                 {
-                    for (int i = 0; i < ticks.Length; i++)
-                    {
-                        RspQryMarketDataResponse response = ResponseTemplate<RspQryMarketDataResponse>.SrvSendRspResponse(request);
-                        response.TickToSend = ticks[i];
-                        CacheRspResponse(response, i != ticks.Length - 1);
-                    }
+                    //Tick k = TLCtxHelper.ModuleDataRouter.GetTickSnapshot(symlist[i].Symbol);// CmdUtils.GetTickSnapshot(symlist[i].Symbol);
+                    //if (k == null) continue;
+                    //k.Exchange = symlist[i].SecurityFamily.Exchange.EXCode;
+                    //RspQryMarketDataResponse response = ResponseTemplate<RspQryMarketDataResponse>.SrvSendRspResponse(request);
+                    //response.TickToSend = k;
+
+                    Tick k = new TickImpl(symlist[i].Symbol);
+                    RspQryMarketDataResponse response = ResponseTemplate<RspQryMarketDataResponse>.SrvSendRspResponse(request);
+                    response.TickToSend = k;
+                    CacheRspResponse(response);
+
+                    CacheRspResponse(response, i == symlist.Length - 1);
                 }
-                else
-                {
-                    //如果数据库没有报错上个交易日的市场数据 则生成空数据回报 否则飞迅客户端会无法登入
-                    Symbol sym = account.Domain.GetSymbols().Where(s => s.IsTradeable).FirstOrDefault();
-                    if (sym != null)
-                    {
-                        Tick k = new TickImpl(sym.Symbol);
-                        RspQryMarketDataResponse response = ResponseTemplate<RspQryMarketDataResponse>.SrvSendRspResponse(request);
-                        response.TickToSend = k;
-                        CacheRspResponse(response);
-                    }
-                    else
-                    {
-                        Util.Debug("帐户:" + account.ID + "所在域没有可交易合约,无法生成默认市场数据");
-                    }
-                }
+
+
+                //Tick[] ticks = mdtickmap.Values.ToArray();
+                //if (ticks.Length >= 1)
+                //{
+                //    for (int i = 0; i < ticks.Length; i++)
+                //    {
+                //        RspQryMarketDataResponse response = ResponseTemplate<RspQryMarketDataResponse>.SrvSendRspResponse(request);
+                //        response.TickToSend = ticks[i];
+                //        CacheRspResponse(response, i != ticks.Length - 1);
+                //    }
+                //}
+                //else
+                //{
+                //    //如果数据库没有报错上个交易日的市场数据 则生成空数据回报 否则飞迅客户端会无法登入
+                //    Symbol sym = account.Domain.GetSymbols().Where(s => s.IsTradeable).FirstOrDefault();
+                //    if (sym != null)
+                //    {
+                //        Tick k = new TickImpl(sym.Symbol);
+                //        RspQryMarketDataResponse response = ResponseTemplate<RspQryMarketDataResponse>.SrvSendRspResponse(request);
+                //        response.TickToSend = k;
+                //        CacheRspResponse(response);
+                //    }
+                //    else
+                //    {
+                //        Util.Debug("帐户:" + account.ID + "所在域没有可交易合约,无法生成默认市场数据");
+                //    }
+                //}
             }
 
             
