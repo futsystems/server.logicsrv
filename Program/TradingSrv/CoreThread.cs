@@ -190,6 +190,8 @@ namespace TraddingSrvCLI
                             //启动完毕
                             _status = QSEnumCoreThreadStatus.Started;
                             TLCtxHelper.PrintVersion();
+                            string memo = string.Format("系统启动时间:{0} 当前交易日:{1} 清算中心状态:{2}", TLCtxHelper.StartUpTime, TLCtxHelper.ModuleSettleCentre.CurrentTradingday, TLCtxHelper.ModuleClearCentre.Status);
+                            Util.Info(memo);
 
                             while (go)
                             {

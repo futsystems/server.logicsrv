@@ -91,14 +91,14 @@ namespace TradingLib.Core
         /// <summary>
         /// 开启清算中心
         /// </summary>
-        internal void OpenClearCentre()
+        public void OpenClearCentre()
         {
             Status = QSEnumClearCentreStatus.CCOPEN;
         }
         /// <summary>
         /// 关闭清算中心
         /// </summary>
-        internal void CloseClearCentre()
+        public void CloseClearCentre()
         {
             Status = QSEnumClearCentreStatus.CCCLOSE;
         }
@@ -120,5 +120,6 @@ namespace TradingLib.Core
         { 
             
         }
+
     }
 }

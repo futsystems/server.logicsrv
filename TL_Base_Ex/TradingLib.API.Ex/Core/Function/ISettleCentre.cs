@@ -71,6 +71,10 @@ namespace TradingLib.API
         bool IsInSettle { get; }
 
 
+        /// <summary>
+        /// 获取结算中心重置时间
+        /// </summary>
+        int ResetTime { get; }
 
     }
 }

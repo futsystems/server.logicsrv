@@ -72,15 +72,22 @@ namespace TradingLib.Core
 
         /// <summary>
         /// 返回下一个交易日【除去 周六、日,国家今年法定假日】
+        /// checkfestival 是否检查日历文件，如果检查 则按照日历文件排除假期
         /// </summary>
         /// <param name="day"></param>
         /// <returns></returns>
-        public static int NextTradingDay(int day)
+        public static int NextTradingDay(int day, bool checkCalendar= true)
         {
             DateTime workday = Util.ToDateTime(day, 0);
             //在当前日期上加一日
             workday = workday.Date.AddDays(1);
 
+            //如果不检查交易日历 则直接返回下一个天为交易日
+            if (!checkCalendar)
+            {
+                return Util.ToTLDate(workday);
+            }
+            
             //循环判断workday是否是节假日 如果不是则加一日
             while (true)
             {
@@ -224,6 +231,25 @@ namespace TradingLib.Core
             return sb.ToString();
         }
 
+        /// <summary>
+        /// 每天都交易的情况下 通过当前信息来获得当前交易日
+        /// 按时间判断 结算之前为上个交易日，结算之后为下个交易日
+        /// </summary>
+        /// <param name="nowdate"></param>
+        /// <param name="nowtime"></param>
+        /// <param name="nexttradingday"></param>
+        /// <returns></returns>
+        public static int GetCurrentTradingdayEveryDay(int nowdate, int nowtime, int nexttradingday)
+        {
+            if (nowtime > settletime)
+            {
+                return nexttradingday;
+            }
+            else
+            {
+                return nowdate;
+            }
+        }
         /// <summary>
         /// 获得当前交易日
         /// 由于有夜盘交易,并且夜盘算入下一个交易日 因此在交易日判定上不是按照自然日进行的

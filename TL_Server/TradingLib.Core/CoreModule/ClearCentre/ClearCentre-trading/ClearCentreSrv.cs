@@ -139,14 +139,23 @@ namespace TradingLib.Core
         #endregion
 
 
-
+        /* 清算中心开启与关闭逻辑
+         * 1.系统设置时 设置了结算时间 结算前2分钟进行数据转储，结算前5分钟关闭清算中心
+         * 2.系统重置5分钟后开启结算中心
+         * 
+         * 清算前5分钟 和 重置后5分钟之内 系统清算中心处于关闭状态
+         * 
+         * 
+         * 
+         * 
+         * **/
         #region 清算中心 开启 关闭 以及状态更新
-        const string OpenTime = "8:55";
-        const string CloseTime = "15:15";
-        const string NightOpenTime = "20:55";
-        const string NightClosedTime = "23:59";
-        const string NightOpenTime2 = "00:01";
-        const string NightClosedTime2 = "02:30";
+        //const string OpenTime = "8:55";
+        //const string CloseTime = "15:15";
+        //const string NightOpenTime = "20:55";
+        //const string NightClosedTime = "23:59";
+        //const string NightOpenTime2 = "00:01";
+        //const string NightClosedTime2 = "02:30";
 
         QSEnumClearCentreStatus oldstatus = QSEnumClearCentreStatus.UNKNOWN;
         QSEnumClearCentreStatus _status = QSEnumClearCentreStatus.UNKNOWN;
@@ -183,11 +192,17 @@ namespace TradingLib.Core
             //交易日内 盘中 启动软件
             if (oldstatus == QSEnumClearCentreStatus.CCRESTORE && Status == QSEnumClearCentreStatus.CCRESTOREFINISH)
             {
-                bool day = Util.IsInPeriod(Convert.ToDateTime(OpenTime), Convert.ToDateTime(CloseTime));
-                bool nigth1 = Util.IsInPeriod(Convert.ToDateTime(NightOpenTime), Convert.ToDateTime(NightClosedTime));
-                bool night2 = Util.IsInPeriod(Convert.ToDateTime(NightOpenTime2), Convert.ToDateTime(NightClosedTime2));
+                DateTime close = Util.ToDateTime(Util.ToTLDate(DateTime.Now),TLCtxHelper.ModuleSettleCentre.SettleTime).AddMinutes(-5);
+                DateTime open = Util.ToDateTime(Util.ToTLDate(DateTime.Now), TLCtxHelper.ModuleSettleCentre.ResetTime).AddMinutes(5);
 
-                if (day || nigth1 || night2)
+                //判断是否在关闭时间区间内 如果再该区间则系统关闭 否则系统开启
+                bool islcose = Util.IsInPeriod(close, open);
+
+                //bool day = Util.IsInPeriod(Convert.ToDateTime(OpenTime), Convert.ToDateTime(CloseTime));
+                //bool nigth1 = Util.IsInPeriod(Convert.ToDateTime(NightOpenTime), Convert.ToDateTime(NightClosedTime));
+                //bool night2 = Util.IsInPeriod(Convert.ToDateTime(NightOpenTime2), Convert.ToDateTime(NightClosedTime2));
+
+                if (!islcose)
                     Status = QSEnumClearCentreStatus.CCOPEN;
                 else
                     Status = QSEnumClearCentreStatus.CCCLOSE;
@@ -197,14 +212,14 @@ namespace TradingLib.Core
         /// <summary>
         /// 开启清算中心
         /// </summary>
-        internal void OpenClearCentre()
+        public void OpenClearCentre()
         {
             Status = QSEnumClearCentreStatus.CCOPEN;
         }
         /// <summary>
         /// 关闭清算中心
         /// </summary>
-        internal void CloseClearCentre()
+        public void CloseClearCentre()
         {
             Status = QSEnumClearCentreStatus.CCCLOSE;
         }

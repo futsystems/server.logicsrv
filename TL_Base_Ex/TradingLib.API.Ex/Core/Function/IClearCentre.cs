@@ -106,6 +106,15 @@ namespace TradingLib.API
         void Reset();
 
         /// <summary>
+        /// 开启清算中心
+        /// </summary>
+        void OpenClearCentre();
+
+        /// <summary>
+        /// 关闭清算中心
+        /// </summary>
+        void CloseClearCentre();
+        /// <summary>
         /// 载入交易帐户
         /// 为该用户生成基本交易数据结构，并维护该帐户的实时交易信息，以形成交易状态
         /// </summary>

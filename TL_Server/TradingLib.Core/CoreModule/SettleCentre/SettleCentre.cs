@@ -71,7 +71,7 @@ namespace TradingLib.Core
             {
                 if (!IsNormal)
                 {
-                    return TradingCalendar.SettleTime;
+                    return _settleTime;
                 }
                 else
                 {
@@ -80,12 +80,25 @@ namespace TradingLib.Core
             }
         }
 
+        /// <summary>
+        /// 获得重置时间
+        /// </summary>
+        public int ResetTime
+        {
+            get
+            {
+                return _resetTime;
+            }
+        }
+
         SettlementPriceTracker _settlementPriceTracker = new SettlementPriceTracker();
 
         ConfigDB _cfgdb;
+        int _settleTime = 160000;
         int _resetTime = 170000;
         bool _cleanTmp = false;
         bool _settleWithLatestPrice = false;
+        bool _tradingEveryDay = false;
 
         public SettleCentre()
             :base(SettleCentre.CoreName)
@@ -96,20 +109,20 @@ namespace TradingLib.Core
             SettleCentreStatus = QSEnumSettleCentreStatus.UNKNOWN;
             IsInSettle = false;
 
-            //初始化交易日信息
-            InitTradingDay();
+            
 
             //结算时间
             if (!_cfgdb.HaveConfig("SettleTime"))
             {
                 _cfgdb.UpdateConfig("SettleTime", QSEnumCfgType.Int, 160000, "执行结算,将当日交易与出入金记录进行结转");
             }
+            _settleTime = _cfgdb["SettleTime"].AsInt();
             TradingCalendar.SettleTime = _cfgdb["SettleTime"].AsInt();
 
             //重置时间
             if (!_cfgdb.HaveConfig("ResetTime"))
             {
-                _cfgdb.UpdateConfig("ResetTime", QSEnumCfgType.Int, 170000, "执行重置任务清空日内数据 系统帐户归位");
+                _cfgdb.UpdateConfig("ResetTime", QSEnumCfgType.Int, 151000, "执行重置任务清空日内数据 系统帐户归位");
             }
             _resetTime = _cfgdb["ResetTime"].AsInt();
 
@@ -127,8 +140,20 @@ namespace TradingLib.Core
             }
             _cleanTmp = _cfgdb["CleanTmpTable"].AsBool();
 
-            //注入交易记录转储任务 结算前5分钟 保存交易记录
-            DateTime storetime = Util.ToDateTime(Util.ToTLDate(DateTime.Now), TradingCalendar.SettleTime)-new TimeSpan(0,5,0);
+            //是否每日进行交易(全球市场需要每日进行交易 系统每天进行结算,具体是否可以交易按品种对应的交易日历进行判定)
+            if (!_cfgdb.HaveConfig("TradingEveryDay"))
+            {
+                _cfgdb.UpdateConfig("TradingEveryDay", QSEnumCfgType.Bool, true, "系统是否每日进行交易(全球多品种交易)");
+            }
+            _tradingEveryDay = _cfgdb["TradingEveryDay"].AsBool();
+
+
+            //初始化交易日信息
+            InitTradingDay();
+
+
+            //注入交易记录转储任务 结算前2分钟 保存交易记录
+            DateTime storetime = Util.ToDateTime(Util.ToTLDate(DateTime.Now), TradingCalendar.SettleTime)-new TimeSpan(0,2,0);
             TaskProc taskstore = new TaskProc(this.UUID, "系统转储-" + Util.ToTLTime(storetime).ToString(), storetime.Hour, storetime.Minute, storetime.Second, delegate() { Task_DataStore(); });
             TLCtxHelper.ModuleTaskCentre.RegisterTask(taskstore);
 
@@ -141,6 +166,15 @@ namespace TradingLib.Core
             DateTime resettime = Util.ToDateTime(Util.ToTLDate(DateTime.Now), _resetTime);
             TaskProc taskreset = new TaskProc(this.UUID, "系统重置-" + Util.ToTLTime(resettime).ToString(), resettime.Hour, resettime.Minute, resettime.Second, delegate() { Task_ResetTradingday(); });
             TLCtxHelper.ModuleTaskCentre.RegisterTask(taskreset);
+
+            //注入关闭清算中心任务
+            DateTime closecctime = Util.ToDateTime(Util.ToTLDate(DateTime.Now), _settleTime).AddMinutes(-5);
+            TaskProc taskclosecc = new TaskProc(this.UUID, "关闭清算中心" + Util.ToTLTime(closecctime).ToString(), closecctime.Hour, closecctime.Minute, closecctime.Second, delegate() { Task_CloseClearCentre(); });
+
+            //注入开启清算中心任务
+            DateTime opencctime = Util.ToDateTime(Util.ToTLDate(DateTime.Now), _resetTime).AddMinutes(5);
+            TaskProc taskopencc = new TaskProc(this.UUID, "开启清算中心" + Util.ToTLTime(opencctime).ToString(), opencctime.Hour, opencctime.Minute, opencctime.Second, delegate() { Task_OpenClearCentre(); });
+
 
         }
 
@@ -185,15 +219,15 @@ namespace TradingLib.Core
         void InitTradingDay()
         {
             //开发模式每天都有结算,运行模式按照交易日里进行结算
-            logger.Info("System running under " + (GlobalConfig.IsDevelop ? "develop" : "production"));
-
+            ///logger.Info("System running under " + (GlobalConfig.IsDevelop ? "develop" : "production") +" 是否每日交易:"+_tradingEveryDay.ToString());
+            logger.Info(string.Format("System running mode:{0} trading everyday:{1}", GlobalConfig.IsDevelop ? "develop" : "production", _tradingEveryDay));
             //从数据库获得上次结算日
             _lastsettleday = ORM.MSettlement.GetLastSettleday();
 
             //通过交易日历获得针对结算日的下一个交易日 该交易日会越过休息日与法定假期
             if (!GlobalConfig.IsDevelop)
             {
-                _nexttradingday = TradingCalendar.NextTradingDay(_lastsettleday);
+                _nexttradingday = TradingCalendar.NextTradingDay(_lastsettleday, !_tradingEveryDay);//如果是每天交易 则不检查交易日历信息
             }
             else
             {
@@ -205,6 +239,10 @@ namespace TradingLib.Core
             int nowdate = Util.ToTLDate();
             int nowtime = Util.ToTLTime();
 
+            //需要增加交易日逻辑判断
+            //1.当前日期已经越过了下一个交易日 则表明需要手工结算
+            //2.当前交易日 已经结算过
+            
             //如果当前日期越过了下一个交易日,则表明按结算推算出来的下一个交易日已经被跳过,需要手工进行结算
             if (nowdate > _nexttradingday)
             {
@@ -214,13 +252,21 @@ namespace TradingLib.Core
                 logger.Info(string.Format("设定当前交易日为下一个交易日:{0}", _nexttradingday));
                 _tradingday = _nexttradingday;
             }
+
             //如果当前日期<=netxtradingday则正常,比如下午结算后 当前交易日就是夜盘隶属的下一个交易日,当前时间则小于该交易日,遇到周五则会小2天
             else
             {
                 if (!GlobalConfig.IsDevelop)
                 {
-                    //运行模式的交易日是通过交易日历来获得当前交易日 当前交易日有可能为0,为0标识当前不是交易日
-                    _tradingday = TradingCalendar.GetCurrentTradingday(nowdate,nowtime,_nexttradingday);
+                    if (!_tradingEveryDay)
+                    {
+                        //运行模式的交易日是通过交易日历来获得当前交易日 当前交易日有可能为0,为0标识当前不是交易日
+                        _tradingday = TradingCalendar.GetCurrentTradingday(nowdate, nowtime, _nexttradingday);
+                    }
+                    else
+                    {
+                        _tradingday = TradingCalendar.GetCurrentTradingdayEveryDay(nowdate, nowtime, _nexttradingday);
+                    }
                 }
                 else
                 {
@@ -230,6 +276,8 @@ namespace TradingLib.Core
                 logger.Info(string.Format("结算中心初始化交易日信息,当前日期:{0} 当前时间:{1}", nowdate, nowtime));
                 logger.Info(string.Format("上次结算日:{0} 下一交易日:{1} 当前交易日:{2}", _lastsettleday, _nexttradingday, _tradingday));
 
+
+                
                 if (CurrentTradingday == 0)
                 {
                     SettleCentreStatus = QSEnumSettleCentreStatus.NOTRADINGDAY;//如果没有当前交易日信息则为非交易日状态

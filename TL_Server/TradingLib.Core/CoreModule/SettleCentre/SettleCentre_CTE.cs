@@ -142,6 +142,28 @@ namespace TradingLib.Core
             
         }
 
+        void Task_OpenClearCentre()
+        {
+            if (!TLCtxHelper.ModuleSettleCentre.IsTradingday) return;
+            {
+                TLCtxHelper.ModuleClearCentre.OpenClearCentre();
+            }
+            //    logger.Info("开启清算中心,准备接受客户委托")
+        }
+
+        void Task_CloseClearCentre()
+        {
+            if (!TLCtxHelper.ModuleSettleCentre.IsTradingday) return;
+            {
+                TLCtxHelper.ModuleClearCentre.CloseClearCentre();
+            }
+            //    logger.Info("开启清算中心,准备接受客户委托")
+        }
+
+
+       
+
+
         void ResetSystem()
         {
             TLCtxHelper.EventSystem.FireBeforeSettleResetEvent(this, new SystemEventArgs());
