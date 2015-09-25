@@ -596,6 +596,7 @@ namespace TradingLib.Core
         /// <param name="him"></param>
         protected void SrvClearClient(UnregisterClientRequest req,T1 client)
         {
+            logger.Debug("SrvClearClient called");
             if (client == null) return;
             _clients.UnRegistClient(client.Location.ClientID);//clientlist负责触发 updatelogininfo事件
             logger.Info("Client :" + req.ClientID + " Unregisted from server ");
@@ -607,6 +608,7 @@ namespace TradingLib.Core
         /// <param name="msg"></param>
         void SrvLoginReq(LoginRequest request,T1 client)
         {
+           
             if (client == null) return;
             logger.Info("Client:" + request.ClientID + " Try to login:" + request.Content);
             //主体认证部分,不同的TLServer有不同的验证需求，这里将逻辑放置到子类当中去实现

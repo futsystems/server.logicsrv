@@ -69,14 +69,16 @@ namespace TradingLib.Core
 
             get
             {
-                if (!IsNormal)
-                {
-                    return _settleTime;
-                }
-                else
-                {
-                    return Util.ToTLTime(DateTime.Now);
-                }
+                return _settleTime;
+
+                //if (!IsNormal)
+                //{
+                //    return _settleTime;
+                //}
+                //else
+                //{
+                //    return Util.ToTLTime(DateTime.Now);
+                //}
             }
         }
 
