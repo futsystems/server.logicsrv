@@ -444,7 +444,7 @@ namespace TradingLib.ORM
             switch (category)
             {
                 case QSEnumAccountCategory.SUBACCOUNT:
-                    return GlobalConfig.PrefixReal;
+                    return GlobalConfig.SubPrefix;
                 case QSEnumAccountCategory.SIGACCOUNT:
                     return "S";
                 case QSEnumAccountCategory.MONITERACCOUNT:
@@ -452,7 +452,7 @@ namespace TradingLib.ORM
                 case QSEnumAccountCategory.STRATEGYACCOUNT:
                     return "ST";
                 default:
-                    return GlobalConfig.PrefixSim;
+                    return GlobalConfig.SubPrefix;
             }
         }
 
@@ -544,9 +544,9 @@ namespace TradingLib.ORM
                         throw new FutsRspError("已经存在帐户:" + create.Account);  
                     }
                     //
-                    if (create.Account.StartsWith(GlobalConfig.PrefixReal) || create.Account.StartsWith(GlobalConfig.PrefixSim))
+                    if (create.Account.StartsWith(GlobalConfig.SubPrefix))
                     {
-                        throw new FutsRspError("指定交易帐号不能使用默认前缀:" + GlobalConfig.PrefixReal + "," + GlobalConfig.PrefixSim);
+                        throw new FutsRspError("指定交易帐号不能使用默认前缀:" + GlobalConfig.SubPrefix);
                     }
                 }
                 if (string.IsNullOrEmpty(create.Password))

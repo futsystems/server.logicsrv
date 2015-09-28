@@ -68,10 +68,10 @@ namespace TradingLib.Core
                 {
                     _cfgdb.UpdateConfig("TLPort", QSEnumCfgType.Int, 5570, "TL_MQ监听Base端口");
                 }
-                if (!_cfgdb.HaveConfig("VerbDebug"))
-                {
-                    _cfgdb.UpdateConfig("VerbDebug", QSEnumCfgType.Bool,false.ToString(), "是否输出verb日志");
-                }
+                //if (!_cfgdb.HaveConfig("VerbDebug"))
+                //{
+                //    _cfgdb.UpdateConfig("VerbDebug", QSEnumCfgType.Bool,false.ToString(), "是否输出verb日志");
+                //}
 
                 if (!_cfgdb.HaveConfig("NeedConfirmSettlement"))
                 {

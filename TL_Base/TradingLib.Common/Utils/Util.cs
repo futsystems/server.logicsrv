@@ -887,7 +887,15 @@ namespace TradingLib.Common
         //}
 
 
-
+        /// <summary>
+        /// 通过过期日 获得合约的月份后缀
+        /// </summary>
+        /// <param name="expiredate"></param>
+        /// <returns></returns>
+        //public static string GetSymbolMonth(DateTime expiredate)
+        //{ 
+            
+        //}
 
         /// <summary>
         /// Obtains a version out of a string that contains version + other information.

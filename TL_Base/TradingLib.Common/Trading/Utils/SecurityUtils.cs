@@ -71,6 +71,7 @@ namespace TradingLib.Common
 
         /// <summary>
         /// 判断该品种是否处于连续竞价时间段
+        /// 连续竞价阶段 就是对应该品种是否处于交易时间
         /// </summary>
         /// <param name="sec"></param>
         /// <returns></returns>

@@ -209,8 +209,8 @@ namespace TradingLib.Core
                 //需要通过第一次更新获得sec_id来获得对象进行回报 否则在更新其他域的品种对象时id会发生同步变化
                 RspMGRUpdateSecurityResponse response = ResponseTemplate<RspMGRUpdateSecurityResponse>.SrvSendRspResponse(request);
                 response.SecurityFaimly = manager.Domain.GetSecurityFamily(secidupdate);
-
                 CacheRspResponse(response);
+
 
                 if (sec.Tradeable)
                 {
@@ -264,12 +264,13 @@ namespace TradingLib.Core
 
 
                 RspMGRUpdateSymbolResponse response = ResponseTemplate<RspMGRUpdateSymbolResponse>.SrvSendRspResponse(request);
-                response.Symbol = manager.Domain.GetSymbol(symbol.ID);
+                SymbolImpl localsymbol = manager.Domain.GetSymbol(symbol.ID);
+                response.Symbol = localsymbol;
                 CacheRspResponse(response);
 
-                if (symbol.Tradeable)
+                if (localsymbol.Tradeable)
                 {
-                    TLCtxHelper.ModuleExCore.RegisterSymbol(symbol);
+                    TLCtxHelper.ModuleExCore.RegisterSymbol(localsymbol);
                 }
                 session.OperationSuccess("合约数据更新成功");
             }

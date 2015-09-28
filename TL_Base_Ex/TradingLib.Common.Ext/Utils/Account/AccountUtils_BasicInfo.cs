@@ -75,9 +75,10 @@ namespace TradingLib.Common
         /// <returns></returns>
         public static Instrument Symbol2Instrument(this IAccount account, Symbol symbol)
         {
+            
             Instrument instrument = new Instrument();
             instrument.Symbol = symbol.Symbol;
-            instrument.Name = symbol.SecurityFamily.Name;
+            instrument.Name = string.Format("{0}{1}", symbol.SecurityFamily.Name, symbol.ExpireDate.ToString().Substring(4,2));//.ToString("yyMM"));
             instrument.Security = symbol.SecurityFamily.Code;
             instrument.ExchangeID = symbol.SecurityFamily.Exchange.EXCode;
             instrument.EntryCommission = symbol.EntryCommission;

@@ -349,7 +349,7 @@ namespace TradingLib.Core
             {
                 if (account.Category == QSEnumAccountCategory.SUBACCOUNT)
                 {
-                    response.NoticeContent = string.IsNullOrEmpty(GlobalConfig.SimPrompt) ? ("欢迎使用" + GlobalConfig.VendorName + "交易系统") : GlobalConfig.SimPrompt;
+                    response.NoticeContent = ("欢迎使用" + GlobalConfig.VendorName + "交易系统");
                 }
                 //else if (account.Category == QSEnumAccountCategory.REAL)
                 //{
@@ -359,7 +359,7 @@ namespace TradingLib.Core
             //如果通知内容为空 则提供默认提示
             if(string.IsNullOrEmpty(response.NoticeContent))
             {
-                response.NoticeContent = string.IsNullOrEmpty(GlobalConfig.DealerPrompt)?("欢迎使用" + GlobalConfig.VendorName + "交易系统"):GlobalConfig.DealerPrompt;
+                response.NoticeContent =("欢迎使用" + GlobalConfig.VendorName + "交易系统");
             }
 
             //输出交易帐户 交易通知

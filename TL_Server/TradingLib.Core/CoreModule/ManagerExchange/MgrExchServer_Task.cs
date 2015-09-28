@@ -11,85 +11,85 @@ namespace TradingLib.Core
 {
     public partial class MgrExchServer
     {
-        string _interfacelist = null;
+        //string _interfacelist = null;
 
-        string GetInterfaceList()
-        {
-            if (string.IsNullOrEmpty(_interfacelist))
-            {
-                List<string> iplist = new List<string>();
-                NetworkInterface[] nics = NetworkInterface.GetAllNetworkInterfaces();
-                foreach (NetworkInterface adapter in nics)
-                {
-                    //判断是否为以太网卡
-                    //Wireless80211         无线网卡    Ppp     宽带连接
-                    //Ethernet              以太网卡   
-                    //这里篇幅有限贴几个常用的，其他的返回值大家就自己百度吧！
-                    if (adapter.NetworkInterfaceType == NetworkInterfaceType.Ethernet)
-                    {
-                        //获取以太网卡网络接口信息
-                        IPInterfaceProperties ip = adapter.GetIPProperties();
-                        //获取单播地址集
-                        UnicastIPAddressInformationCollection ipCollection = ip.UnicastAddresses;
-                        foreach (UnicastIPAddressInformation ipadd in ipCollection)
-                        {
-                            //InterNetwork    IPV4地址      InterNetworkV6        IPV6地址
-                            //Max            MAX 位址
-                            if (ipadd.Address.AddressFamily == AddressFamily.InterNetwork)
-                                //判断是否为ipv4
-                                iplist.Add(ipadd.Address.ToString());
-                        }
-                    }
-                }
-                _interfacelist = string.Join(",", iplist.ToArray());
-            }
-            return _interfacelist;
-        }
+        //string GetInterfaceList()
+        //{
+        //    if (string.IsNullOrEmpty(_interfacelist))
+        //    {
+        //        List<string> iplist = new List<string>();
+        //        NetworkInterface[] nics = NetworkInterface.GetAllNetworkInterfaces();
+        //        foreach (NetworkInterface adapter in nics)
+        //        {
+        //            //判断是否为以太网卡
+        //            //Wireless80211         无线网卡    Ppp     宽带连接
+        //            //Ethernet              以太网卡   
+        //            //这里篇幅有限贴几个常用的，其他的返回值大家就自己百度吧！
+        //            if (adapter.NetworkInterfaceType == NetworkInterfaceType.Ethernet)
+        //            {
+        //                //获取以太网卡网络接口信息
+        //                IPInterfaceProperties ip = adapter.GetIPProperties();
+        //                //获取单播地址集
+        //                UnicastIPAddressInformationCollection ipCollection = ip.UnicastAddresses;
+        //                foreach (UnicastIPAddressInformation ipadd in ipCollection)
+        //                {
+        //                    //InterNetwork    IPV4地址      InterNetworkV6        IPV6地址
+        //                    //Max            MAX 位址
+        //                    if (ipadd.Address.AddressFamily == AddressFamily.InterNetwork)
+        //                        //判断是否为ipv4
+        //                        iplist.Add(ipadd.Address.ToString());
+        //                }
+        //            }
+        //        }
+        //        _interfacelist = string.Join(",", iplist.ToArray());
+        //    }
+        //    return _interfacelist;
+        //}
 
-        string _deployname = null;
-        string GetDeployName()
-        {
-            if (string.IsNullOrEmpty(_deployname))
-            {
-                string tmp = GlobalConfig.DeployName;
-                if (tmp.Equals("Deploy"))
-                {
-                    _deployname = string.Format("Deploy-{0}", GetInterfaceList());
-                }
-            }
-            return _deployname;
-        }
+        //string _deployname = null;
+        //string GetDeployName()
+        //{
+        //    if (string.IsNullOrEmpty(_deployname))
+        //    {
+        //        string tmp = GlobalConfig.DeployName;
+        //        if (tmp.Equals("Deploy"))
+        //        {
+        //            _deployname = string.Format("Deploy-{0}", GetInterfaceList());
+        //        }
+        //    }
+        //    return _deployname;
+        //}
 
-        string _organization = null;
-        string GetOrganization()
-        {
-            if (string.IsNullOrEmpty(_organization))
-            {
-                _organization = GlobalConfig.Organization;
-            }
+        //string _organization = null;
+        //string GetOrganization()
+        //{
+        //    if (string.IsNullOrEmpty(_organization))
+        //    {
+        //        _organization = GlobalConfig.Organization;
+        //    }
 
-            return _organization;
-        }
-        [TaskAttr("采集系统状态信息", 10, 0, "定时采集系统状态信息向日志服务器推送")]
-        public void Task_StatusCollect()
-        {
-            object status = new
-            {
-                Deploy = GetDeployName(),
-                Organization = GetOrganization(),//组织机构
-                UpdateTime = Util.ToTLDateTime(),//最近更新时间
-                DomainNum = BasicTracker.DomainTracker.Domains.Count(),//分区数量
-                ManagerNum = BasicTracker.ManagerTracker.Managers.Count(),//管理员数量
-                ManagerRegistedNum = customerExInfoMap.Values.Count,
-                AccountNum = TLCtxHelper.ModuleAccountManager.Accounts.Count(),//交易帐户数量
-                IsTradingday = TLCtxHelper.ModuleSettleCentre.IsTradingday,//当前是否是交易日
-                SettleNormal = TLCtxHelper.ModuleSettleCentre.IsNormal,//结算中心是否正常
-                StartUpTime = TLCtxHelper.StartUpTime,//启动时间
-                InterfaceList = GetInterfaceList(),//ip地址列表
-            };
+        //    return _organization;
+        //}
+        //[TaskAttr("采集系统状态信息", 10, 0, "定时采集系统状态信息向日志服务器推送")]
+        //public void Task_StatusCollect()
+        //{
+        //    object status = new
+        //    {
+        //        Deploy = GetDeployName(),
+        //        Organization = GetOrganization(),//组织机构
+        //        UpdateTime = Util.ToTLDateTime(),//最近更新时间
+        //        DomainNum = BasicTracker.DomainTracker.Domains.Count(),//分区数量
+        //        ManagerNum = BasicTracker.ManagerTracker.Managers.Count(),//管理员数量
+        //        ManagerRegistedNum = customerExInfoMap.Values.Count,
+        //        AccountNum = TLCtxHelper.ModuleAccountManager.Accounts.Count(),//交易帐户数量
+        //        IsTradingday = TLCtxHelper.ModuleSettleCentre.IsTradingday,//当前是否是交易日
+        //        SettleNormal = TLCtxHelper.ModuleSettleCentre.IsNormal,//结算中心是否正常
+        //        StartUpTime = TLCtxHelper.StartUpTime,//启动时间
+        //        InterfaceList = GetInterfaceList(),//ip地址列表
+        //    };
 
-            _pusherSrv.Push(status);
-        }
+        //    _pusherSrv.Push(status);
+        //}
 
 
         DateTime _lastPushAllTime = DateTime.Now;

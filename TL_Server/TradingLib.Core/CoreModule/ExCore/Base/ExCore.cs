@@ -36,7 +36,7 @@ namespace TradingLib.Core
             #region 委托流水号
             if (!_cfgdb.HaveConfig("StartOrderSeq"))
             {
-                _cfgdb.UpdateConfig("StartOrderSeq", QSEnumCfgType.Int, 1000, "默认起始委托流水号");
+                _cfgdb.UpdateConfig("StartOrderSeq", QSEnumCfgType.Int, 20000, "默认起始委托流水号");
             }
             _startOrderSeq = _cfgdb["StartOrderSeq"].AsInt();
 
@@ -62,7 +62,7 @@ namespace TradingLib.Core
             #region 成交流水号
             if (!_cfgdb.HaveConfig("StartTradeID"))
             {
-                _cfgdb.UpdateConfig("StartTradeID", QSEnumCfgType.Int, 2000, "默认起始成交编号");
+                _cfgdb.UpdateConfig("StartTradeID", QSEnumCfgType.Int, 20000, "默认起始成交编号");
             }
             _startTradeID = _cfgdb["StartTradeID"].AsInt();
 

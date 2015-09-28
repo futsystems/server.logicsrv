@@ -249,6 +249,7 @@ namespace TradingLib.Core
         #region 获得某个合约的行情通道
         /// <summary>
         /// 获得某个合约的行情数据
+        /// 默认通过FastDatafeed进行注册并管理所有市场行情数据 具体的注册流程通过TickPubSrv去管理
         /// </summary>
         /// <param name="symbol"></param>
         /// <returns></returns>
