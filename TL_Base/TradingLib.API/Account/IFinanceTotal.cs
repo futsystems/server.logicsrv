@@ -99,5 +99,10 @@ namespace TradingLib.API
         /// 信用金额
         /// </summary>
         decimal Credit { get; }
+
+        /// <summary>
+        /// 交易帐户货币类别
+        /// </summary>
+        //CurrencyType Currency { get; }
     }
 }

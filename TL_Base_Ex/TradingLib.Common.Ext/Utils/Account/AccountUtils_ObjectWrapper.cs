@@ -158,7 +158,7 @@ namespace TradingLib.Common
             info.Profit = acc.Profit;
             info.RealizedPL = acc.RealizedPL;
             info.UnRealizedPL = acc.UnRealizedPL;
-            
+            info.Currency = acc.Currency;
             info.Name = acc.Name;
             AccountProfile profile = BasicTracker.AccountProfileTracker[acc.ID];
             if (profile != null)

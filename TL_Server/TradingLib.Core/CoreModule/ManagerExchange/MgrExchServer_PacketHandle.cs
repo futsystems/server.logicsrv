@@ -62,7 +62,7 @@ namespace TradingLib.Core
             IAccount account = TLCtxHelper.ModuleAccountManager[fill.Account];
             if (account == null) return;
 
-            fill.oSymbol = account.GetSymbol(fill.Symbol);
+            fill.oSymbol = account.Domain.GetSymbol(fill.Symbol);
 
             if (fill.oSymbol == null)
             {

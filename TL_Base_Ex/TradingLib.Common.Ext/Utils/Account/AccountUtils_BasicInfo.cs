@@ -15,11 +15,11 @@ namespace TradingLib.Common
         /// <param name="account"></param>
         /// <param name="symbol"></param>
         /// <returns></returns>
-        public static Symbol GetSymbol(this IAccount account, string symbol)
-        {
-            Symbol sym = account.Domain.GetSymbol(symbol);
-            return sym;
-        }
+        //public static Symbol GetSymbol(this IAccount account, string symbol)
+        //{
+        //    Symbol sym = account.Domain.GetSymbol(symbol);
+        //    return sym;
+        //}
 
         /// <summary>
         /// 获得帐户下品种
@@ -35,14 +35,20 @@ namespace TradingLib.Common
 
         /// <summary>
         /// 获得某个帐户所有可交易合约
+        /// 这里约定了品种的货币必须匹配
         /// </summary>
         /// <param name="account"></param>
         /// <returns></returns>
         public static IEnumerable<Symbol> GetSymbols(this IAccount account)
         {
-            return account.Domain.GetSymbols().Where(sym=>sym.IsTradeable);
+            return account.Domain.GetSymbols().Where(sym=>sym.IsTradeable).Where(s=>s.Currency == account.Currency);
         }
 
+        /// <summary>
+        /// 获得可以交易的Instrument对象数据
+        /// </summary>
+        /// <param name="account"></param>
+        /// <returns></returns>
         public static IEnumerable<Instrument> GetInstruments(this IAccount account)
         {
             return account.GetSymbols().Select(sym => { return account.Symbol2Instrument(sym); });
@@ -55,7 +61,7 @@ namespace TradingLib.Common
 
         public static bool TrckerOrderSymbol(this IAccount account, ref Order o)
         {
-            Symbol symbol = account.GetSymbol(o.Symbol);
+            Symbol symbol = account.Domain.GetSymbol(o.Symbol);
             if (symbol == null)
             {
                 return false;

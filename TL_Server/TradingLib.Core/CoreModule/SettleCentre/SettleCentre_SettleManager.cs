@@ -111,7 +111,7 @@ namespace TradingLib.Core
             f.Account = acct;
             IAccount account = TLCtxHelper.ModuleAccountManager[acct];
 
-            f.oSymbol = account.GetSymbol(f.Symbol);
+            f.oSymbol = account.Domain.GetSymbol(f.Symbol);
 
             if (f.oSymbol == null)
             {

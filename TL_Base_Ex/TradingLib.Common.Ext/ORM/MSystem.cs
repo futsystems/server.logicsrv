@@ -24,6 +24,8 @@ namespace TradingLib.ORM
                 v.Minor = info.Min;
                 v.Fix = info.Fix;
                 v.Date = info.Date;
+                v.ProductType = info.ProductType;
+                v.DeployID = info.DeployID;
                 return v;
             }
         }

@@ -7,6 +7,9 @@ using TradingLib.API;
 
 namespace TradingLib.Common
 {
+    /// <summary>
+    /// 用于管理段与服务端之间的交易帐户实时财务数据更新
+    /// </summary>
     public class AccountInfoLite
     {
         public string Account { get; set; }

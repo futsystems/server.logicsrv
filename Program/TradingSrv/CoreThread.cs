@@ -48,12 +48,12 @@ namespace TraddingSrvCLI
         /// 全局容器 静态，生命周期为整个程序的生命周期
         /// </summary>
         private static IContainer Container { get; set; }
-        public CoreThread(string autofac_setion)
+        public CoreThread()
         {
             //生成容器，并注册组件 这里后期修改成配置文件形式，则可以按照配置文件加载不同的组件实现不同的服务端服务
-            var builder = new ContainerBuilder();
+            //var builder = new ContainerBuilder();
             //从配置文件加载对应的配置项运行
-            builder.RegisterModule(new ConfigurationSettingsReader(autofac_setion, Util.GetConfigFile("autofac.xml")));
+            //builder.RegisterModule(new ConfigurationSettingsReader(autofac_setion, Util.GetConfigFile("autofac.xml")));
 
             /*
             builder.RegisterType<CoreManager>().As<ICoreManager>().InstancePerLifetimeScope();
@@ -78,7 +78,7 @@ namespace TraddingSrvCLI
             builder.RegisterType<DataRepository>().As<IModuleDataRepository>().As<IDataRepository>().InstancePerLifetimeScope();
             **/
 
-            Container = builder.Build();
+            //Container = builder.Build();
             
         }
 
@@ -145,70 +145,77 @@ namespace TraddingSrvCLI
              * 
              * 
              * */
-            using (var scope = Container.BeginLifetimeScope())
-            {
-                TLCtxHelper.RegisterScope(scope);
-                ////////////////////////////////// Init & Load Section
-                Util.StatusSection("Database", "INIT", QSEnumInfoColor.INFOGREEN, true);
-                //读取配置文件 初始化数据库参数 系统其余设置均从数据库中加载
-                ConfigFile _configFile = ConfigFile.GetConfigFile();
-                DBHelper.InitDBConfig(_configFile["DBAddress"].AsString(), _configFile["DBPort"].AsInt(), _configFile["DBName"].AsString(), _configFile["DBUser"].AsString(), _configFile["DBPass"].AsString());
+            Util.StatusSection("Database", "INIT", QSEnumInfoColor.INFOGREEN, true);
+            //读取配置文件 初始化数据库参数 系统其余设置均从数据库中加载
+            ConfigFile _configFile = ConfigFile.GetConfigFile();
+            DBHelper.InitDBConfig(_configFile["DBAddress"].AsString(), _configFile["DBPort"].AsInt(), _configFile["DBName"].AsString(), _configFile["DBUser"].AsString(), _configFile["DBPass"].AsString());
 
-                string product = _configFile["Product"].AsString();
-                TLCtxHelper.Version.ProductType = product.Equals("counter") ? QSEnumProductType.CounterSystem : QSEnumProductType.VendorMoniter;
+            var builder = new ContainerBuilder();
+            
+                builder.RegisterModule(new ConfigurationSettingsReader(TLCtxHelper.Version.ProductType.ToString(), Util.GetConfigFile("autofac.xml")));
+                Container = builder.Build();
 
-
-
-                using (var coreMgr =scope.Resolve<ICoreManager>())//1.核心模块管理器,加载核心服务组件
+                using (var scope = Container.BeginLifetimeScope())
                 {
-                    coreMgr.Init();
-                    using (var connectorMgr = scope.Resolve<IConnectorManager>())//2.路由管理器,绑定核心部分的数据与成交路由,并加载Connector
+                    TLCtxHelper.RegisterScope(scope);
+                    ////////////////////////////////// Init & Load Section
+
+                    //string product = _configFile["Product"].AsString();
+                    //TLCtxHelper.Version.ProductType = product.Equals("counter") ? QSEnumProductType.CounterSystem : QSEnumProductType.VendorMoniter;
+
+
+
+                    using (var coreMgr = scope.Resolve<ICoreManager>())//1.核心模块管理器,加载核心服务组件
                     {
-                        connectorMgr.Init();
-                        using (var contribMgr = scope.Resolve<IContribManager>())//3.扩展模块管理器 加载扩展模块,启动扩展模块
+                        coreMgr.Init();
+                        using (var connectorMgr = scope.Resolve<IConnectorManager>())//2.路由管理器,绑定核心部分的数据与成交路由,并加载Connector
                         {
-                            contribMgr.Init();
-                            contribMgr.Load();
-
-                            ////////////////////////////////// Stat Section
-                            //0.启动扩展服务
-                            contribMgr.Start();
-
-                            //1.待所有服务器启动完毕后 启动核心服务
-                            coreMgr.Start();
-
-                            //3.绑定扩展模块调用事件
-                            TLCtxHelper.BindContribEvent();
-
-                            //启动连接管理器 启动通道
-                            connectorMgr.Start();
-
-                            //最后确认主备机服务状态，并启用全局状态标识，所有的消息接收需要该标识打开,否则不接受任何操作类的消息
-                            TLCtxHelper.IsReady = true;
-
-                            TLCtxHelper.StartUpTime = Util.ToTLDateTime();
-                            //启动完毕
-                            _status = QSEnumCoreThreadStatus.Started;
-                            TLCtxHelper.PrintVersion();
-                            string memo = string.Format("系统启动时间:{0} 当前交易日:{1} 清算中心状态:{2}", TLCtxHelper.StartUpTime, TLCtxHelper.ModuleSettleCentre.CurrentTradingday, TLCtxHelper.ModuleClearCentre.Status);
-                            Util.Info(memo);
-
-                            while (go)
+                            connectorMgr.Init();
+                            using (var contribMgr = scope.Resolve<IContribManager>())//3.扩展模块管理器 加载扩展模块,启动扩展模块
                             {
-                                Thread.Sleep(1000);
+                                contribMgr.Init();
+                                contribMgr.Load();
+
+                                ////////////////////////////////// Stat Section
+                                //0.启动扩展服务
+                                contribMgr.Start();
+
+                                //1.待所有服务器启动完毕后 启动核心服务
+                                coreMgr.Start();
+
+                                //3.绑定扩展模块调用事件
+                                TLCtxHelper.BindContribEvent();
+
+                                //启动连接管理器 启动通道
+                                connectorMgr.Start();
+
+                                //最后确认主备机服务状态，并启用全局状态标识，所有的消息接收需要该标识打开,否则不接受任何操作类的消息
+                                TLCtxHelper.IsReady = true;
+
+                                TLCtxHelper.StartUpTime = Util.ToTLDateTime();
+                                //启动完毕
+                                _status = QSEnumCoreThreadStatus.Started;
+                                TLCtxHelper.PrintVersion();
+                                string memo = string.Format("系统启动时间:{0} 当前交易日:{1} 清算中心状态:{2}", TLCtxHelper.StartUpTime, TLCtxHelper.ModuleSettleCentre.CurrentTradingday, TLCtxHelper.ModuleClearCentre.Status);
+                                Util.Info(memo);
+
+                                while (go)
+                                {
+                                    Thread.Sleep(1000);
+                                }
+                                TLCtxHelper.IsReady = false;
+                                connectorMgr.Stop();//通道管理器停止
+                                coreMgr.Stop();//内核停止
+                                contribMgr.Stop();//扩展停止
+                                //GC.Collect();
                             }
-                            TLCtxHelper.IsReady = false;
-                            connectorMgr.Stop();//通道管理器停止
-                            coreMgr.Stop();//内核停止
-                            contribMgr.Stop();//扩展停止
-                            //GC.Collect();
                         }
                     }
-                }
-                debug("******************************corethread stopped **********************************");
+                    debug("******************************corethread stopped **********************************");
 
-                _status = QSEnumCoreThreadStatus.Stopped;
-            }
+                    _status = QSEnumCoreThreadStatus.Stopped;
+                }
+            
         }
     }
 }

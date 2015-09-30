@@ -49,6 +49,10 @@ namespace TradingLib.Common
         public QSEnumOrderTransferType RouterType { get; set; }
 
         /// <summary>
+        /// 货币类别
+        /// </summary>
+        public CurrencyType Currency { get; set; }
+        /// <summary>
         /// 用户ID预留与web站点帐户系统
         /// </summary>
         public int UserID { get; set; }

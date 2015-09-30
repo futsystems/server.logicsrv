@@ -45,6 +45,7 @@ namespace TradingLib.ORM
         public string Account { get; set; }
         public QSEnumAccountCategory Account_Category { get; set; }
         public QSEnumOrderTransferType Order_Route_Type { get; set; }
+        public CurrencyType Currency { get; set; }
         public bool IntraDay { get; set; }
         
         public DateTime CreatedTime { get; set; }
@@ -298,6 +299,20 @@ namespace TradingLib.ORM
                 return db.Connection.Execute(query) >= 0;
             }
         }
+
+        /// <summary>
+        /// 更新交易账户货币
+        /// </summary>
+        /// <param name="account"></param>
+        /// <param name="currency"></param>
+        public static void UpdateAccountCurrency(string account, CurrencyType currency)
+        {
+            using (DBMySql db = new DBMySql())
+            {
+                string query = String.Format("UPDATE accounts SET currency = '{0}' WHERE account = '{1}'", currency, account);
+                db.Connection.Execute(query);
+            }
+        }
         #endregion
 
         #region 出入金操作与统计
@@ -439,6 +454,11 @@ namespace TradingLib.ORM
             }
         }
 
+        /// <summary>
+        /// 获得交易帐户前缀
+        /// </summary>
+        /// <param name="category"></param>
+        /// <returns></returns>
         static string GetPrefix(QSEnumAccountCategory category)
         {
             switch (category)
@@ -564,7 +584,7 @@ namespace TradingLib.ORM
                 }
                 Manager mgr = BasicTracker.ManagerTracker[create.BaseManagerID];
 
-                string query = String.Format("Insert into accounts (`account`,`pass`,`account_category`,`order_route_type`,`createdtime`,`settledatetime`,`user_id`,`mgr_fk`,`rg_fk`,`domain_id` ) values('{0}','{1}','{2}','{3}','{4}','{5}','{6}','{7}','{8}','{9}')", create.Account, create.Password, create.Category, create.RouterType, Util.ToTLDateTime(), Util.ToTLDateTime(DateTime.Now - new TimeSpan(1, 0, 0, 0, 0)), create.UserID, create.BaseManagerID, create.RouterID, mgr.Domain.ID);
+                string query = String.Format("Insert into accounts (`account`,`pass`,`account_category`,`order_route_type`,`createdtime`,`settledatetime`,`user_id`,`mgr_fk`,`rg_fk`,`domain_id`,`currency` ) values('{0}','{1}','{2}','{3}','{4}','{5}','{6}','{7}','{8}','{9}','{10}')", create.Account, create.Password, create.Category, create.RouterType, Util.ToTLDateTime(), Util.ToTLDateTime(DateTime.Now - new TimeSpan(1, 0, 0, 0, 0)), create.UserID, create.BaseManagerID, create.RouterID, mgr.Domain.ID,create.Currency);
                 return db.Connection.Execute(query) > 0;
             }
         }
@@ -658,6 +678,7 @@ namespace TradingLib.ORM
             account.Margin_ID = fields.Margin_ID;
             //account.CreditSeparate = fields.CreditSeparate;
             account.ExStrategy_ID = fields.exstrategy_id;
+            account.Currency = fields.Currency;
             //绑定对应的域
             (account as AccountBase).Domain = BasicTracker.DomainTracker[fields.domain_id];
             //Util.Debug("fileds route:" + fields.Order_Router_Type.ToString() +" category:"+fields.Account_Category.ToString()) ;

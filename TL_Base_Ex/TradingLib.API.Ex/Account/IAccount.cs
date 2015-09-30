@@ -83,6 +83,11 @@ namespace TradingLib.API
         QSEnumAccountCategory Category { get; set; }
 
 
+        /// <summary>
+        /// 货币类别
+        /// </summary>
+        CurrencyType Currency { get; set; }
+
         #region 投资者信息
         /// <summary>
         /// MAC地址 用于标注客户端硬件

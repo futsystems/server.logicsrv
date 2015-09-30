@@ -158,7 +158,7 @@ namespace TradingLib.Core
         void SrvOnQryMaxOrderVol(QryMaxOrderVolRequest request, IAccount account)
         {
             logger.Info("QryMaxOrderVol :" + request.ToString());
-            Symbol symbol = account.GetSymbol(request.Symbol);
+            Symbol symbol = account.Domain.GetSymbol(request.Symbol);
             RspQryMaxOrderVolResponse response = ResponseTemplate<RspQryMaxOrderVolResponse>.SrvSendRspResponse(request);
             if(symbol == null)
             {
@@ -386,6 +386,7 @@ namespace TradingLib.Core
             {
                 logger.Info("qry instruments via security type");
                 instruments =account.GetInstruments(request.SecurityType).ToArray();  
+                
             }
             //如果所有字段为空 则为查询所有合约列表
             if (request.SecurityType == SecurityType.NIL && string.IsNullOrEmpty(request.ExchID) && string.IsNullOrEmpty(request.Symbol) && string.IsNullOrEmpty(request.Security))
@@ -527,7 +528,7 @@ namespace TradingLib.Core
             else
             {
                 RspQryInstrumentCommissionRateResponse response = ResponseTemplate<RspQryInstrumentCommissionRateResponse>.SrvSendRspResponse(request);
-                Symbol sym = account.GetSymbol(request.Symbol);
+                Symbol sym = account.Domain.GetSymbol(request.Symbol);
                 if (sym == null)
                 {
                     response.RspInfo.Fill("SYMBOL_NOT_EXISTED");
@@ -552,7 +553,7 @@ namespace TradingLib.Core
             else 
             {
                 RspQryInstrumentMarginRateResponse response = ResponseTemplate<RspQryInstrumentMarginRateResponse>.SrvSendRspResponse(request);
-                Symbol sym = account.GetSymbol(request.Symbol);
+                Symbol sym = account.Domain.GetSymbol(request.Symbol);
                 if (sym == null)
                 {
                     response.RspInfo.Fill("SYMBOL_NOT_EXISTED");
@@ -591,7 +592,7 @@ namespace TradingLib.Core
                 //}
 
 
-                Symbol[] symlist = account.Domain.GetSymbols().Where(s => s.IsTradeable).ToArray();
+                Symbol[] symlist = account.GetSymbols().ToArray();//获得交易帐户可交易列表
                 for (int i = 0; i < symlist.Length; i++)
                 {
                     //Tick k = TLCtxHelper.ModuleDataRouter.GetTickSnapshot(symlist[i].Symbol);// CmdUtils.GetTickSnapshot(symlist[i].Symbol);

@@ -85,8 +85,8 @@ namespace TraddingSrvCLI
             ConfigFile _configFile = ConfigFile.GetConfigFile();
             _oppositeAddress = _configFile["OppositAddress"].AsString();
             _corePort = _configFile["CorePort"].AsInt();
-            autofac_section = _configFile["Product"].AsString();
-            autofac_section = string.IsNullOrEmpty(autofac_section) ? "Product" : autofac_section;
+            //autofac_section = _configFile["Product"].AsString();
+            //autofac_section = string.IsNullOrEmpty(autofac_section) ? "Product" : autofac_section;
 
             
             if (!string.IsNullOrEmpty(_oppositeAddress))
@@ -100,7 +100,7 @@ namespace TraddingSrvCLI
                 StartWatchDog();
             }
 
-            corethread = new CoreThread(autofac_section);
+            corethread = new CoreThread();
             if (!_opposited)
             {    
                 //如果没有设置opposited  启动核心线程

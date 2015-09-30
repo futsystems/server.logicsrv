@@ -68,6 +68,19 @@ namespace TradingLib.Core
         }
 
         /// <summary>
+        /// 更新交易帐户货币
+        /// </summary>
+        /// <param name="account"></param>
+        /// <param name="currency"></param>
+        public void UpdateAccountCurrency(string account, CurrencyType currency)
+        {
+            if (!HaveAccount(account)) return;
+            IAccount acc = this[account];
+            acc.Currency = currency;
+            ORM.MAccount.UpdateAccountCurrency(account, currency);
+            AccountChanged(account);
+        }
+        /// <summary>
         /// 更新交易帐户的ManagerID
         /// </summary>
         /// <param name="account"></param>

@@ -69,6 +69,12 @@ namespace TradingLib.Common
         /// </summary>
         public QSEnumAccountCategory Category { get; set; }
 
+
+        /// <summary>
+        /// 交易账户货币
+        /// </summary>
+        public CurrencyType Currency { get; set; }
+
         /// <summary>
         /// 硬件地址
         /// </summary>

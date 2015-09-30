@@ -159,7 +159,7 @@ namespace TradingLib.Core
         {
             IAccount acc = TLCtxHelper.ModuleAccountManager[account];
             if (acc == null) return null;
-            return acc.GetSymbol(symbol);
+            return acc.Domain.GetSymbol(symbol);
         }
 
 

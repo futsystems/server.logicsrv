@@ -165,6 +165,11 @@ namespace TradingLib.Core
         }
 
 
+        /// <summary>
+        /// 统一使用AccountCreation对象创建交易帐户
+        /// </summary>
+        /// <param name="session"></param>
+        /// <param name="json"></param>
         [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "AddAccountFacde", "AddAccountFacde - add  account", "添加交易帐号", QSEnumArgParseType.Json)]
         public void CTE_AddAccountFacde(ISession session, string json)
         {
@@ -225,7 +230,11 @@ namespace TradingLib.Core
         }
 
 
-
+        /// <summary>
+        /// 查询交易帐户的Profile
+        /// </summary>
+        /// <param name="session"></param>
+        /// <param name="account"></param>
         [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "QryAccountProfile", "QryAccountProfile - qry profile account", "查询交易帐户个人信息")]
         public void CTE_QryAccountProfile(ISession session, string account)
         {
@@ -383,6 +392,33 @@ namespace TradingLib.Core
                 this.UpdateInvestorInfo(account, name, broker, bank_id, bank_ac);
             }
         }
+
+        [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "UpdateAccountCurrency", "UpdateAccountCurrency - update account currency", "更新交易帐户货币类别", QSEnumArgParseType.Json)]
+        public void CTE_UpdateAccountCurrency(ISession session, string json)
+        {
+            logger.Info(string.Format("管理员:{0} 请求修改投资者信息:{1}", session.AuthorizedID, json));
+            var req = Mixins.Json.JsonMapper.ToObject(json);
+            var account = req["account"].ToString();
+            var currency = (CurrencyType)Enum.Parse(typeof(CurrencyType),req["currency"].ToString());
+
+            Manager mgr = session.GetManager();
+            
+            IAccount acct = TLCtxHelper.ModuleAccountManager[account];
+            if (acct == null)
+            {
+                throw new FutsRspError("交易帐户不存在");
+            }
+
+            if (mgr == null || (!mgr.RightAccessAccount(acct)))
+            {
+                throw new FutsRspError("无权操作交易帐户");
+            }
+
+            this.UpdateAccountCurrency(account, currency);
+
+            session.OperationSuccess("交易帐户更新货币类型成功");
+        }
+
 
 
         /// <summary>

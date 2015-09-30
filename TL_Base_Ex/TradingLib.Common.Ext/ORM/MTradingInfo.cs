@@ -21,7 +21,7 @@ namespace TradingLib.ORM
             this.Date = 0;
             this.UpdateDate = 0;
             this.ProductType = QSEnumProductType.CounterSystem;
-            
+            this.DeployID = "";
         }
 
         /// <summary>
@@ -64,6 +64,11 @@ namespace TradingLib.ORM
         /// 产品类别
         /// </summary>
         public QSEnumProductType ProductType { get; set; }
+
+        /// <summary>
+        /// 部署编号
+        /// </summary>
+        public string DeployID { get; set; }
     }
 
     internal class positionroundinfo
@@ -403,7 +408,7 @@ namespace TradingLib.ORM
             IAccount account = TLCtxHelper.ModuleAccountManager[info.Account];
             if (account == null)
                 return null;
-            PositionRoundImpl pr = new PositionRoundImpl(info.Account, account.GetSymbol(info.Symbol), info.Side);
+            PositionRoundImpl pr = new PositionRoundImpl(info.Account, account.Domain.GetSymbol(info.Symbol), info.Side);
 
             pr.EntryTime = info.EntryTime;
             pr.EntrySize = info.EntrySize;

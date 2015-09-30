@@ -8,7 +8,7 @@ namespace TradingLib.Common
 {
     /// <summary>
     /// 基础交易帐户信息
-    /// 用于传递交易帐户
+    /// 用于服务器与管理段进行通讯
     /// </summary>
     public class AccountLite
     {
@@ -36,6 +36,11 @@ namespace TradingLib.Common
         /// 日内交易
         /// </summary>
         public bool IntraDay { get; set; }
+
+        /// <summary>
+        /// 货币
+        /// </summary>
+        public CurrencyType Currency { get; set; }
 
         /// <summary>
         /// 上期权益
@@ -252,9 +257,12 @@ namespace TradingLib.Common
             sb.Append(d);
             sb.Append(account.MAcctRiskRule);
             sb.Append(d);
+            sb.Append(account.Currency);
+            sb.Append(d);
             sb.Append(account.IsWarn);
             sb.Append(d);
             sb.Append(account.WarnMessage);
+
 
             return sb.ToString();
         }
@@ -296,8 +304,9 @@ namespace TradingLib.Common
             account.ConnectorToken = rec[30];
             account.MAcctConnected = bool.Parse(rec[31]);
             account.MAcctRiskRule = rec[32];
-            account.IsWarn = bool.Parse(rec[33]);
-            account.WarnMessage = rec[34];
+            account.Currency = (CurrencyType)Enum.Parse(typeof(CurrencyType), rec[33]);
+            account.IsWarn = bool.Parse(rec[34]);
+            account.WarnMessage = rec[35];
 
             return account;
         }

@@ -179,7 +179,7 @@ namespace TradingLib.Contrib.ResponseHost
         /// <returns></returns>
         protected Symbol GetSymbol(string symbol)
         {
-            return this.Account.GetSymbol(symbol);
+            return this.Account.Domain.GetSymbol(symbol);
         }
 
         /// <summary>

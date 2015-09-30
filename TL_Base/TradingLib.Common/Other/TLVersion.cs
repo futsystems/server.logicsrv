@@ -25,6 +25,7 @@ namespace TradingLib.Common
         [Description("主帐户监控系统")]
         VendorMoniter,
     }
+
     /// <summary>
     /// 系统版本信息
     /// </summary>
@@ -52,6 +53,11 @@ namespace TradingLib.Common
         /// </summary>
         public QSEnumProductType ProductType { get; set; }
 
+        /// <summary>
+        /// 部署编号 用于区分不同柜台的部署编号
+        /// </summary>
+        public string DeployID { get; set; }
+
         string _version = null;
         public string Version
         {
@@ -78,7 +84,7 @@ namespace TradingLib.Common
 
         public static string Serialize(TLVersion version)
         {
-            return string.Format("{0},{1},{2},{3},{4}",version.Major,version.Minor,version.Fix,version.Date,version.ProductType);
+            return string.Format("{0},{1},{2},{3},{4},{5}", version.Major, version.Minor, version.Fix, version.Date, version.ProductType,version.DeployID);
         }
 
         public static TLVersion Deserialize(string content)
@@ -90,6 +96,7 @@ namespace TradingLib.Common
             v.Fix = int.Parse(rec[2]);
             v.Date = int.Parse(rec[3]);
             v.ProductType = (QSEnumProductType)Enum.Parse(typeof(QSEnumProductType), rec[4]);
+            v.DeployID = rec[5];
             return v;
         }
     }

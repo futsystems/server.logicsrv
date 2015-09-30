@@ -178,7 +178,7 @@ namespace TradingLib.Core
             }
             pos.Account = account.ID;
             //设定合约
-            pos.oSymbol = account.GetSymbol(pos.Symbol);
+            pos.oSymbol = account.Domain.GetSymbol(pos.Symbol);
 
             TLCtxHelper.ModuleClearCentre.GotPosition(pos);
 
@@ -364,7 +364,7 @@ namespace TradingLib.Core
                     }
 
                     localorder.Account = account.ID;
-                    localorder.oSymbol = account.GetSymbol(localorder.Symbol);
+                    localorder.oSymbol = account.Domain.GetSymbol(localorder.Symbol);
                     //设定委托编号
                     TLCtxHelper.ModuleExCore.AssignOrderID(ref localorder);
                     //将路由中心处理获得的id传递给接口侧id
