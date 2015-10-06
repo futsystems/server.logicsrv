@@ -72,7 +72,7 @@ namespace TradingLib.Common
             DBSecurityTracker tracker = null;
             if (!domainsecboltracker.TryGetValue(sec.Domain_ID, out tracker))
             {
-                domainsecboltracker.Add(sec.ID, new DBSecurityTracker(BasicTracker.DomainTracker[sec.Domain_ID]));
+                domainsecboltracker.Add(sec.Domain_ID, new DBSecurityTracker(BasicTracker.DomainTracker[sec.Domain_ID]));
             }
             domainsecboltracker[sec.Domain_ID].UpdateSecurity(sec,updateall);
 
@@ -83,7 +83,7 @@ namespace TradingLib.Common
             DBSecurityTracker tracker = null;
             if (!domainsecboltracker.TryGetValue(domain.ID, out tracker))
             {
-                domainsecboltracker.Add(sec.ID, new DBSecurityTracker(BasicTracker.DomainTracker[domain.ID]));
+                domainsecboltracker.Add(domain.ID, new DBSecurityTracker(BasicTracker.DomainTracker[domain.ID]));
             }
             domainsecboltracker[domain.ID].SyncSecurity(sec);
 

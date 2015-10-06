@@ -105,7 +105,21 @@ namespace TradingLib.Core
 
                 //如果是新增分区 则需要自动同步品种和合约数据
                 if (isadd)
-                { 
+                {
+                    Domain superdomain = BasicTracker.DomainTracker.SuperDomain;
+                    Domain addeddomain = BasicTracker.DomainTracker[domain.ID];//通过刚才添加的id获得对应的分区对象
+                    if (superdomain != null && addeddomain != null)
+                    {
+                        foreach (SecurityFamilyImpl sec in superdomain.GetSecurityFamilies())
+                        {
+                            addeddomain.SyncSecurity(sec);
+                        }
+
+                        foreach (SymbolImpl sym in superdomain.GetSymbols())
+                        {
+                            addeddomain.SyncSymbol(sym);
+                        }
+                    }
                     
                 }
 
