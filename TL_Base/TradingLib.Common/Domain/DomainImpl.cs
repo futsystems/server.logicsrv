@@ -81,6 +81,12 @@ namespace TradingLib.Common
 
 
         /// <summary>
+        /// 代理数量限制
+        /// </summary>
+        public int AgentLimit { get; set; }
+
+
+        /// <summary>
         /// 过期日
         /// </summary>
         public int DateExpired { get; set; }
@@ -181,5 +187,16 @@ namespace TradingLib.Common
         /// 
         /// </summary>
         public int CFG_SyncVendor_ID { get; set; }
+
+        /// <summary>
+        /// 是否处于运营状态
+        /// </summary>
+        public bool IsProduction { get; set; }
+
+        /// <summary>
+        /// 分帐户个数
+        /// </summary>
+        public int DiscountNum { get; set; }
+
     }
 }

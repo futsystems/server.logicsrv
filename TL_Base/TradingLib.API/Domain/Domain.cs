@@ -80,6 +80,11 @@ namespace TradingLib.API
         int AccLimit { get; set; }
 
         /// <summary>
+        /// 代理数量限制
+        /// </summary>
+        int AgentLimit { get; set; }
+
+        /// <summary>
         /// 路由组数量限制
         /// </summary>
         int RouterGroupLimit { get; set; }
@@ -161,6 +166,18 @@ namespace TradingLib.API
         /// 同步实盘帐户ID
         /// </summary>
         int CFG_SyncVendor_ID { get; set; }
+
+        /// <summary>
+        /// 是否处于运营状态
+        /// </summary>
+        bool IsProduction { get; set; }
+
+        /// <summary>
+        /// 分帐户个数
+        /// </summary>
+        int DiscountNum { get; set; }
+
+
         #endregion
     }
 }
