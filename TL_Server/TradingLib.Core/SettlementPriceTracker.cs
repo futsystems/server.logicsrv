@@ -41,6 +41,14 @@ namespace TradingLib.Core
                 return settlementPriceMap.Values;
             }
         }
+
+        public int Count
+        {
+            get
+            {
+                return settlementPriceMap.Count;
+            }
+        }
         /// <summary>
         /// 获得某个合约的结算价信息
         /// </summary>
@@ -66,7 +74,7 @@ namespace TradingLib.Core
         public void UpdateSettlementPrice(MarketData price)
         {
             MarketData target = null;
-            //结算价信息已经存在
+            //结算价信息已经存在 更新结算价
             if (settlementPriceMap.TryGetValue(price.Symbol, out target))
             {
                 target.Settlement = price.Settlement;
@@ -75,10 +83,7 @@ namespace TradingLib.Core
             }
             else
             {
-                target = new MarketData();
-                target.Settlement = price.Settlement;
-                target.SettleDay = price.SettleDay;
-                target.Symbol = price.Symbol;
+                target = price;
                 //插入数据库记录
                 ORM.MSettlement.InsertMarketData(target);
                 //放到缓存

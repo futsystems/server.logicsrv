@@ -123,6 +123,7 @@ namespace TradingLib.Core
             Util.sleep(1000);//防止交易日计算时与结算时间过度接近 造成当前交易日计算错误
             this.Reset();
             settled = true;//当日结算过 当日结算过则需要重置交易系统
+
             this.IsInSettle = false;//标识系统结算完毕
         }
 

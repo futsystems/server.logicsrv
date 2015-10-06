@@ -137,18 +137,34 @@ namespace TradingLib.Core
 
 
         /// <summary>
+        /// 获得某个行情的结算价信息
+        /// </summary>
+        /// <param name="k"></param>
+        /// <returns></returns>
+        decimal GetAvabileSettlementPrice(Tick k)
+        {
+            if (k.Settlement != 0) return k.Settlement;
+            return k.Trade;
+        }
+        /// <summary>
         /// 保存结算价格
         /// 通过行情路由获得当前市场快照然后保存快照中所有合约的结算价格
+        /// 结算价获取需要一定的逻辑生成 多市场交易过程中 交易所有不同的结算时间,但是系统结算时按一定时间进行结算的
+        /// 结算价主要用于交易终端登入时获得隔夜持仓的成本
         /// </summary>
         void SaveSettlementPrice()
         {
+            logger.Info(datastoreheader + "SaveSettlementPrice");
             //清空结算价信息
             _settlementPriceTracker.Clear();
-            foreach (var k in TLCtxHelper.ModuleDataRouter.GetTickSnapshot())
+            //遍历超级域所有合约
+            foreach (var sym in BasicTracker.DomainTracker.SuperDomain.GetSymbols())
             {
-                if (k != null && k.Settlement != 0 && (double)k.Settlement < double.MaxValue)
+                MarketData data = new MarketData();
+
+                Tick k = TLCtxHelper.ModuleDataRouter.GetTickSnapshot(sym.Symbol);
+                if (k != null)
                 {
-                    MarketData data = new MarketData();
                     data.AskPrice = k.AskPrice;
                     data.AskSize = k.AskSize;
                     data.BidPrice = k.BidPrice;
@@ -161,15 +177,16 @@ namespace TradingLib.Core
                     data.Open = k.Open;
                     data.PreOI = k.PreOpenInterest;
                     data.PreSettlement = k.PreSettlement;
-                    data.SettleDay = TLCtxHelper.ModuleSettleCentre.NextTradingday;
-                    data.Settlement = k.Settlement;
+                    data.Settlement = GetAvabileSettlementPrice(k);
                     data.Symbol = k.Symbol;
                     data.UpperLimit = k.UpperLimit;
                     data.Vol = k.Vol;
-
-                    _settlementPriceTracker.UpdateSettlementPrice(data);
                 }
+                data.SettleDay = TLCtxHelper.ModuleSettleCentre.NextTradingday;//设定结算日
+                _settlementPriceTracker.UpdateSettlementPrice(data);
             }
+            //Tick[] ticks = TLCtxHelper.ModuleDataRouter.GetTickSnapshot();
+            logger.Info(string.Format("SaveSettlementPrice Saved:{0}",_settlementPriceTracker.Count));
         }
 
         /// <summary>
@@ -196,6 +213,7 @@ namespace TradingLib.Core
                     }
                 }
 
+                //如果没有正常会的结算价则 持仓结算价按对应的最新价进行结算
                 if (pos.SettlementPrice == null)
                 {
                     pos.SettlementPrice = pos.LastPrice;
