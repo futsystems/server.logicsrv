@@ -161,6 +161,7 @@ namespace TradingLib.Core
             foreach (var sym in BasicTracker.DomainTracker.SuperDomain.GetSymbols())
             {
                 MarketData data = new MarketData();
+                data.Symbol = sym.Symbol;
 
                 Tick k = TLCtxHelper.ModuleDataRouter.GetTickSnapshot(sym.Symbol);
                 if (k != null)
@@ -178,7 +179,6 @@ namespace TradingLib.Core
                     data.PreOI = k.PreOpenInterest;
                     data.PreSettlement = k.PreSettlement;
                     data.Settlement = GetAvabileSettlementPrice(k);
-                    data.Symbol = k.Symbol;
                     data.UpperLimit = k.UpperLimit;
                     data.Vol = k.Vol;
                 }

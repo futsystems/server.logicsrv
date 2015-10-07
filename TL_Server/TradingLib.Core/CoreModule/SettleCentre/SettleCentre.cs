@@ -172,11 +172,12 @@ namespace TradingLib.Core
             //注入关闭清算中心任务
             DateTime closecctime = Util.ToDateTime(Util.ToTLDate(DateTime.Now), _settleTime).AddMinutes(-5);
             TaskProc taskclosecc = new TaskProc(this.UUID, "关闭清算中心" + Util.ToTLTime(closecctime).ToString(), closecctime.Hour, closecctime.Minute, closecctime.Second, delegate() { Task_CloseClearCentre(); });
+            TLCtxHelper.ModuleTaskCentre.RegisterTask(taskclosecc);
 
             //注入开启清算中心任务
             DateTime opencctime = Util.ToDateTime(Util.ToTLDate(DateTime.Now), _resetTime).AddMinutes(5);
             TaskProc taskopencc = new TaskProc(this.UUID, "开启清算中心" + Util.ToTLTime(opencctime).ToString(), opencctime.Hour, opencctime.Minute, opencctime.Second, delegate() { Task_OpenClearCentre(); });
-
+            TLCtxHelper.ModuleTaskCentre.RegisterTask(taskopencc);
 
         }
 

@@ -603,6 +603,23 @@ namespace TradingLib.Core
 
                     Tick k = new TickImpl(symlist[i].Symbol);
                     RspQryMarketDataResponse response = ResponseTemplate<RspQryMarketDataResponse>.SrvSendRspResponse(request);
+                    
+
+                    Position longpos = account.GetPosition(symlist[i].Symbol, true);
+                    Position shortpos = account.GetPosition(symlist[i].Symbol, true);
+
+                    //按帐户对应隔夜持仓的结算价来设定查询行情昨日结算价，快期交易客户端通过查询行情来获得隔夜持仓的持仓成本（持仓结算价依赖于结算模式，国内期货是按结算价进行结算，国外持仓按初始开仓价进行结算-不用盯市结算）
+                    decimal presettlement = 0;
+                    if (longpos!= null && longpos.PositionDetailYdRef.Count() > 0)
+                    {
+                        presettlement = longpos.PositionDetailYdRef.FirstOrDefault().SettlementPrice;
+                    }
+                    if (shortpos != null && shortpos.PositionDetailYdRef.Count() > 0)
+                    {
+                        presettlement = shortpos.PositionDetailYdRef.FirstOrDefault().SettlementPrice;
+                    }
+                    k.PreSettlement = presettlement;
+
                     response.TickToSend = k;
                     CacheRspResponse(response);
 
