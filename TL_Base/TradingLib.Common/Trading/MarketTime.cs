@@ -6,6 +6,12 @@ using TradingLib.API;
 
 namespace TradingLib.Common
 {
+
+    
+    
+
+
+
     public class MktTime
     {
         public MktTime(int starttime, int stoptime)
