@@ -99,6 +99,8 @@
     <Compile Include="Trading\MarginConfig.cs" />
     <Compile Include="Trading\MarketData.cs" />
     <Compile Include="Trading\MarketTime.cs" />
+    <Compile Include="Trading\MarketTime\MarketTime.cs" />
+    <Compile Include="Trading\MarketTime\TradingRange.cs" />
     <Compile Include="Utils\ChinSpellcs.cs" />
     <Compile Include="Utils\Util_Decimal.cs" />
     <Compile Include="Utils\Version.cs" />
