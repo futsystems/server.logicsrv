@@ -43,14 +43,17 @@ namespace TradingLib.Common
             this.StartTime = 0;
             this.EndDay = DayOfWeek.Tuesday;
             this.EndDay = 0;
+            this.MarketClose = false;
         }
-        public TradingRange(DayOfWeek startday, int starttime, DayOfWeek endday, int endtime, QSEnumRangeSettleFlag flag = QSEnumRangeSettleFlag.T)
+
+        public TradingRange(DayOfWeek startday, int starttime, DayOfWeek endday, int endtime, QSEnumRangeSettleFlag flag = QSEnumRangeSettleFlag.T,bool marketclose=false)
         {
             this.StartDay = startday;
             this.StartTime = starttime;
             this.EndDay = endday;
             this.EndTime = endtime;
             this.SettleFlag = flag;
+            this.MarketClose = marketclose;
         }
         /// <summary>
         /// 结算标识
@@ -74,6 +77,12 @@ namespace TradingLib.Common
         public int EndTime { get; set; }
 
         /// <summary>
+        /// 收盘时间段标识
+        /// 用于标注在该交易小节 收盘
+        /// </summary>
+        public bool MarketClose { get; set; }
+
+        /// <summary>
         /// 序列化
         /// </summary>
         /// <param name="range"></param>
@@ -93,6 +102,7 @@ namespace TradingLib.Common
             sb.Append(d);
             sb.Append(range.SettleFlag);
             sb.Append(d);
+            sb.Append(range.MarketClose);
             return sb.ToString();
         }
 
@@ -114,6 +124,7 @@ namespace TradingLib.Common
             range.EndDay = (DayOfWeek)Enum.Parse(typeof(DayOfWeek), rec[2]);
             range.EndTime = int.Parse(rec[3]);
             range.SettleFlag = (QSEnumRangeSettleFlag)Enum.Parse(typeof(QSEnumRangeSettleFlag), rec[4]);
+            range.MarketClose = bool.Parse(rec[5]);
             return range;
         }
 
@@ -128,7 +139,7 @@ namespace TradingLib.Common
         }
 
 
-        //string _key = null;
+        string _key = null;
         /// <summary>
         /// 交易小节 键值
         /// </summary>
@@ -136,15 +147,15 @@ namespace TradingLib.Common
         {
             get
             {
-                //if (_key == null)
-                //{
-                //    _key = string.Format("{0}-{1}-{2}-{3}-{4}", this.StartDay, this.StartTime, this.EndDay, this.EndTime, this.SettleFlag);
-                //}
-                //return _key;
-                return string.Format("{0}-{1}-{2}-{3}-{4}", this.StartDay, this.StartTime, this.EndDay, this.EndTime, this.SettleFlag);
-               
+
+                if (_key == null)
+                {
+                    _key = string.Format("{0}-{1:d6}-{2}-{3:d6}-{4}", (int)this.StartDay, this.StartTime, (int)this.EndDay, this.EndTime, this.SettleFlag);
+                }
+                return _key;
             }
         }
+
         public override int GetHashCode()
         {
             return RangeKey.GetHashCode();

@@ -118,7 +118,7 @@ namespace TradingLib.Common
             {
                 if (MarketTime != null)
                 {
-                    return MarketTime.IsInMarketTime(DateTime.Now);
+                    return MarketTime.IsInContinuous(DateTime.Now);
                 }
                 else
                 {

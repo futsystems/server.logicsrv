@@ -34,6 +34,11 @@ namespace TradingLib.API
         /// <returns></returns>
         //bool IsInMarketTime(int time);
 
-        bool IsInMarketTime(DateTime time);
+        /// <summary>
+        /// 是否处于集合竞价时间段
+        /// </summary>
+        /// <param name="time"></param>
+        /// <returns></returns>
+        bool IsInContinuous(DateTime time);
     }
 }

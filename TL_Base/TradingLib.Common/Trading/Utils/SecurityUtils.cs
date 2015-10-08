@@ -26,7 +26,7 @@ namespace TradingLib.Common
             return 1;
         }
 
-        #region 判定品种当前是否处于集合竞价时间段
+        #region 品种交易时间段判定
         static int _actimestart_com = 85500;
         static int _actimeend_com = 85900;
         static int _normaltimestart_com = 90000;
@@ -80,7 +80,7 @@ namespace TradingLib.Common
 
             if (sec.MarketTime != null)
             {
-                return sec.MarketTime.IsInMarketTime(DateTime.Now);
+                return sec.MarketTime.IsInContinuous(DateTime.Now);
             }
             else
             {
