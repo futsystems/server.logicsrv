@@ -36,7 +36,7 @@ namespace TradingLib.ORM
         {
             using (DBMySql db = new DBMySql())
             {
-                const string query = "SELECT * FROM info_exchange";
+                const string query = "SELECT * FROM info_exchange WHERE avabile=1";//选择可用的交易所列表
                 IEnumerable<Exchange> result = db.Connection.Query<Exchange>(query, null);
                 return result;
             }
@@ -50,7 +50,7 @@ namespace TradingLib.ORM
         {
             using (DBMySql db = new DBMySql())
             {
-                string query = string.Format("UPDATE info_exchange SET country='{0}',excode='{1}',name='{2}',title='{3}',calendar='{4}',timezone='{5}' WHERE id='{6}'", ex.Country, ex.EXCode, ex.Name, ex.Title, ex.Calendar,ex.TimeZone, ex.ID);
+                string query = string.Format("UPDATE info_exchange SET country='{0}',excode='{1}',name='{2}',title='{3}',calendar='{4}',timezone='{5}',closetime='{6}' WHERE id='{7}'", ex.Country, ex.EXCode, ex.Name, ex.Title, ex.Calendar, ex.TimeZone,ex.CloseTime, ex.ID);
                 db.Connection.Execute(query);
             }
         }
@@ -63,7 +63,7 @@ namespace TradingLib.ORM
         {
             using (DBMySql db = new DBMySql())
             {
-                string query = string.Format("INSERT INTO info_exchange (`country`,`excode`,`name`,`title`,`calendar`,`timezone`) VALUES ( '{0}','{1}','{2}','{3}','{4}','{5}')", ex.Country, ex.EXCode, ex.Name, ex.Title, ex.Calendar,ex.TimeZone);
+                string query = string.Format("INSERT INTO info_exchange (`country`,`excode`,`name`,`title`,`calendar`,`timezone`,`closetime`) VALUES ( '{0}','{1}','{2}','{3}','{4}','{5}','{6}')", ex.Country, ex.EXCode, ex.Name, ex.Title, ex.Calendar, ex.TimeZone, ex.CloseTime);
                 db.Connection.Execute(query);
                 SetIdentity(db.Connection, id => ex.ID = id, "id", "info_exchange");
             }
@@ -77,7 +77,7 @@ namespace TradingLib.ORM
         {
             using (DBMySql db = new DBMySql())
             {
-                const string query = "SELECT a.id,a.name,a.description,a.timezone,a.ranges FROM info_markettime a";
+                const string query = "SELECT a.id,a.name,a.description,a.ranges FROM info_markettime a";
                 IEnumerable<MarketTime> result = db.Connection.Query<MarketTime, MarketTimeDBRanges, MarketTime>(query, (mkttime, dbranges) => { mkttime.DeserializeTradingRange(dbranges.Ranges); return mkttime; }, null, null, false, "ranges", null, null).ToList<MarketTime>();
                 return result;
             }

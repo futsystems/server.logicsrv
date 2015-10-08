@@ -147,8 +147,14 @@ namespace TradingLib.Common
             //加载所有合约 这里需要判断合约是否过期
             foreach (SymbolImpl sym in ORM.MBasicInfo.SelectSymbol(domain.ID))
             {
+                //过期品种不加载
+                //TODO:完善品种过期检查
                 if (sym.IsExpired(TLCtxHelper.ModuleSettleCentre.NextTradingday))
                     continue;
+                if (BasicTracker.SecurityTracker[sym.Domain_ID, sym.security_fk] == null)
+                {
+                    continue;
+                }
                 symcodemap[sym.Symbol] = sym;
                 idxcodemap[sym.ID] = sym;
             }

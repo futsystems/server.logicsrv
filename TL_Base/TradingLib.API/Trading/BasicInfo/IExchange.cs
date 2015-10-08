@@ -31,6 +31,11 @@ namespace TradingLib.API
         /// 品种对象绑定交易所对象，判断品种是否可以交易 需要获得交易所时间，交易所时间需要用交易所时区对象将时间进行转换
         /// </summary>
         TimeZoneInfo TimeZoneInfo { get; }
+
+        /// <summary>
+        /// 收盘时间
+        /// </summary>
+        int CloseTime { get; set; }
         /// <summary>
         /// 交易日历
         /// </summary>

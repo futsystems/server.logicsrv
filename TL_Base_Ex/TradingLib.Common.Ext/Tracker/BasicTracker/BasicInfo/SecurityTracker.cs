@@ -107,8 +107,14 @@ namespace TradingLib.Common
             //从数据库加载品种数据
             foreach (SecurityFamilyImpl sec in ORM.MBasicInfo.SelectSecurity(_doamin.ID))
             {
+                //如果交易所不存在 则品种不加载
+                if (BasicTracker.ExchagneTracker[sec.exchange_fk] == null)
+                {
+                    continue;
+                }
                 seccodemap[sec.Code] = sec;
                 idxcodemap[sec.ID] = sec;
+
             }
 
             

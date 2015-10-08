@@ -18,6 +18,7 @@ namespace TradingLib.Common
         private string _title;//简称
         private string _calendar;//假日
         private string _timezone;//时区信息
+        private int _closetime;//收盘时间
 
         /// <summary>
         /// 交易所数据库编号
@@ -53,7 +54,13 @@ namespace TradingLib.Common
         /// 时区
         /// </summary>
         public string TimeZone { get { return _timezone; } set { _genTimeZone = false; _timezone = value; } }
-        
+
+        /// <summary>
+        /// 收盘时间
+        /// </summary>
+        public int CloseTime { get { return _closetime; } set { _closetime = value; } }
+
+
         public Exchange()
         {
             this.ID = 0;
@@ -113,6 +120,8 @@ namespace TradingLib.Common
             sb.Append(ex.Calendar);
             sb.Append(d);
             sb.Append(ex.TimeZone);
+            sb.Append(d);
+            sb.Append(ex.CloseTime);
             return sb.ToString();
         }
 
@@ -128,6 +137,7 @@ namespace TradingLib.Common
             ex.Title = rec[4];
             ex.Calendar = rec[5];
             ex.TimeZone = rec[6];
+            ex.CloseTime = int.Parse(rec[7]);
             return ex;
 
         }

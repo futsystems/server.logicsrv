@@ -16,21 +16,24 @@ namespace TradingLib.Common
                 return QSEnumActionCheckResult.RangeNotExist;
             }
 
-            if (exchange.IsInHoliday(extime))
+            //获得当前交易小节所属交易日 如果该交易日放假
+            DateTime tradingday = range.TradingDay(extime);
+            if (exchange.IsInHoliday(tradingday))
             {
                 return QSEnumActionCheckResult.InHoliday;
             }
 
-            //如果是属于T交易日 则只要在交易小节内且交易所不放假 则都是可以交易的,T+1则需要判断下一个交易日是否交易
-            if (range.SettleFlag == QSEnumRangeSettleFlag.T1)
-            {
-                DateTime t1_tradingday = range.TradingDay(extime);//获得当前交易小节所属交易日 如果该交易日不交易则返回
-                if (exchange.IsInHoliday(t1_tradingday))
-                {
-                    return QSEnumActionCheckResult.InHoliday;
-                }
 
-            }
+
+            //如果是属于T交易日 则只要在交易小节内且交易所不放假 则都是可以交易的,T+1则需要判断下一个交易日是否交易
+            //if (range.SettleFlag == QSEnumRangeSettleFlag.T1)
+            //{
+            //    if (exchange.IsInHoliday(t1_tradingday))
+            //    {
+            //        return QSEnumActionCheckResult.InHoliday;
+            //    }
+
+            //}
             return QSEnumActionCheckResult.Allowed;
         }
         /// <summary>

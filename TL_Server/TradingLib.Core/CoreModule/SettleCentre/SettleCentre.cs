@@ -116,7 +116,7 @@ namespace TradingLib.Core
             //结算时间
             if (!_cfgdb.HaveConfig("SettleTime"))
             {
-                _cfgdb.UpdateConfig("SettleTime", QSEnumCfgType.Int, 160000, "执行结算,将当日交易与出入金记录进行结转");
+                _cfgdb.UpdateConfig("SettleTime", QSEnumCfgType.Int, 162000, "执行结算,将当日交易与出入金记录进行结转");
             }
             _settleTime = _cfgdb["SettleTime"].AsInt();
             TradingCalendar.SettleTime = _cfgdb["SettleTime"].AsInt();
@@ -124,7 +124,7 @@ namespace TradingLib.Core
             //重置时间
             if (!_cfgdb.HaveConfig("ResetTime"))
             {
-                _cfgdb.UpdateConfig("ResetTime", QSEnumCfgType.Int, 151000, "执行重置任务清空日内数据 系统帐户归位");
+                _cfgdb.UpdateConfig("ResetTime", QSEnumCfgType.Int, 163000, "执行重置任务清空日内数据 系统帐户归位");
             }
             _resetTime = _cfgdb["ResetTime"].AsInt();
 
