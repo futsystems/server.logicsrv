@@ -909,7 +909,7 @@ namespace TradingLib.Core
                                         foreach (Position pos in ps.PendingPositionFlat)
                                         {
                                             //判定当前交易时间
-                                            if (pos.oSymbol.IsMarketTime)
+                                            if (pos.oSymbol.SecurityFamily.CheckPlaceOrder()== QSEnumActionCheckResult.Allowed)
                                             {
                                                 RiskTaskSet ps2 = GenFlatPostionSet(pos, ps.Source, ps.ForceCloseReason);
                                                 addlist.Add(ps2);

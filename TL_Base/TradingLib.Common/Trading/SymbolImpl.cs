@@ -286,59 +286,59 @@ namespace TradingLib.Common
         int _domainid = 0;
         public int Domain_ID { get { return _domainid; } set { _domainid = value; } }
 
-        /// <summary>
-        /// 检查合约是否是开市时间
-        /// </summary>
-        public bool IsMarketTime
-        {
-            get
-            {
-                if (SecurityFamily != null)
-                {
-                    //异化合约返回底层时间
-                    if (SecurityFamily.Type == API.SecurityType.INNOV)
-                    {
-                        if (ULSymbol == null)
-                        {
-                            return false;
-                        }
-                        return ULSymbol.IsMarketTime;
-                    }
-                    return SecurityFamily.IsMarketTime;
-                }
-                else
-                {
-                    return false;
-                }
-            }
-        }
+        ///// <summary>
+        ///// 检查合约是否是开市时间
+        ///// </summary>
+        //public bool IsMarketTime
+        //{
+        //    get
+        //    {
+        //        if (SecurityFamily != null)
+        //        {
+        //            //异化合约返回底层时间
+        //            if (SecurityFamily.Type == API.SecurityType.INNOV)
+        //            {
+        //                if (ULSymbol == null)
+        //                {
+        //                    return false;
+        //                }
+        //                return ULSymbol.IsMarketTime;
+        //            }
+        //            return SecurityFamily.IsMarketTime;
+        //        }
+        //        else
+        //        {
+        //            return false;
+        //        }
+        //    }
+        //}
 
-        /// <summary>
-        /// 是否处于强平时间
-        /// </summary>
-        public bool IsFlatTime
-        {
-            get
-            {
-                if (SecurityFamily != null)
-                {
-                    //异化合约返回底层时间
-                    if (SecurityFamily.Type == API.SecurityType.INNOV)
-                    {
-                        if (ULSymbol == null)
-                        {
-                            return false;
-                        }
-                        return ULSymbol.IsFlatTime;
-                    }
-                    return SecurityFamily.IsFlatTime;
-                }
-                else
-                {
-                    return false;
-                }
-            }
-        }
+        ///// <summary>
+        ///// 是否处于强平时间
+        ///// </summary>
+        //public bool IsFlatTime
+        //{
+        //    get
+        //    {
+        //        if (SecurityFamily != null)
+        //        {
+        //            //异化合约返回底层时间
+        //            if (SecurityFamily.Type == API.SecurityType.INNOV)
+        //            {
+        //                if (ULSymbol == null)
+        //                {
+        //                    return false;
+        //                }
+        //                return ULSymbol.IsFlatTime;
+        //            }
+        //            return SecurityFamily.IsFlatTime;
+        //        }
+        //        else
+        //        {
+        //            return false;
+        //        }
+        //    }
+        //}
 
         /// <summary>
         /// 该合约是否有效 如果没有底层证券品种信息则该合约无效

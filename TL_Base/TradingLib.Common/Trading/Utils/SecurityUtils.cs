@@ -26,68 +26,23 @@ namespace TradingLib.Common
             return 1;
         }
 
-        #region 品种交易时间段判定
-        static int _actimestart_com = 85500;
-        static int _actimeend_com = 85900;
-        static int _normaltimestart_com = 90000;
-
-        static int _actimestart_cf = 91000;
-        static int _acttimeend_cf = 91400;
-        static int _normaltimestart_cf = 91500;
-
         /// <summary>
-        /// 是否处于集合竞价成交时间段
+        /// 获得品种交易小节
         /// </summary>
         /// <param name="sec"></param>
+        /// <param name="extime"></param>
         /// <returns></returns>
-        public static bool IsInActionExutionTime(this SecurityFamily sec)
-        {
-            int now = Util.ToTLTime();
-            if (sec.Exchange.EXCode.Equals("CFFEX"))
-            {
-                return now > _acttimeend_cf && now < _normaltimestart_cf;
-            }
-            else
-            {
-                return now > _actimeend_com && now < _normaltimestart_com;
-            }
-        }
-        /// <summary>
-        /// 是否处于集合竞价报单时间段
-        /// </summary>
-        /// <returns></returns>
-        public static bool IsInAuctionTime(this SecurityFamily sec)
-        {
-            int now = Util.ToTLTime();
-            if (sec.Exchange.EXCode.Equals("CFFEX"))
-            {
-                return now > _actimestart_cf && now < _acttimeend_cf;
-            }
-            else
-            {
-                return now > _actimestart_com && now < _actimeend_com;
-            }
-        }
-
-        /// <summary>
-        /// 判断该品种是否处于连续竞价时间段
-        /// 连续竞价阶段 就是对应该品种是否处于交易时间
-        /// </summary>
-        /// <param name="sec"></param>
-        /// <returns></returns>
-        public static bool IsInContinuous(this SecurityFamily sec)
-        {
-
-            if (sec.MarketTime != null)
-            {
-                return sec.MarketTime.IsInContinuous(DateTime.Now);
-            }
-            else
-            {
-                return false;
-            }
-        }
-        #endregion
+        //public static TradingRange JudgeRange(this SecurityFamily sec,DateTime extime)
+        //{
+        //    if (sec.MarketTime != null)
+        //    {
+        //        return sec.MarketTime.JudgeRange(extime);
+        //    }
+        //    else
+        //    {
+        //        return null;
+        //    }
+        //}
 
 
     }

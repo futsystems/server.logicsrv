@@ -59,18 +59,23 @@ namespace TradingLib.Common
         {
             _hc = null;
         }
+
+
         /// <summary>
         /// 判断某个时间是否在假期内
         /// 假日列表内 只要有一个日期和提供的时间是同一天,则表明该日期是假日
+        /// 注该日期需要考虑时区
         /// </summary>
         /// <param name="datetime"></param>
         /// <returns></returns>
         public bool IsHoliday(DateTime datetime)
         {
+            //默认日历对象 任何一天都不是假期
             if (_hc == null) return false;
-
-            return _hc.OrderedHolidays.Any(hd => hd.Date.Year == datetime.Year && hd.Date.Month == datetime.Month && hd.Date.Day == datetime.Day);
+            bool holiday = _hc.OrderedHolidays.Any(hd => hd.Date.Year == datetime.Year && hd.Date.Month == datetime.Month && hd.Date.Day == datetime.Day);
+            return holiday;
         }
+
 
 
     }

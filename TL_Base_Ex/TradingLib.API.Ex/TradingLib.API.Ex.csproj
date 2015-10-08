@@ -58,6 +58,7 @@
     <Compile Include="Core\Function\IExCore.cs" />
     <Compile Include="Core\Function\IFollowCentre.cs" />
     <Compile Include="Core\Function\ITaskCentre.cs" />
+    <Compile Include="EnumActionCheckResult.cs" />
     <Compile Include="Enums.cs" />
     <Compile Include="Module\IModuleAccountManager.cs" />
     <Compile Include="Module\IModuleAPIExchange.cs" />

@@ -10,6 +10,7 @@
 <error id="SYMBOL_NOT_EXISTED" value="8" prompt="指定合约不存在"/>
 <error id="SYMBOL_NOT_TRADEABLE" value="81" prompt="指定合约不可交易"/>
 <error id="SYMBOL_NOT_MARKETTIME" value="82" prompt="非交易时间"/>
+<error id="MARKET_CLOSE" value="83" prompt="交易所休市"/>
 <error id="SYMBOL_TICK_ERROR" value="9" prompt="该合约无有效市场行情,无法处理委托"/>
 <error id="SETTLECENTRE_NOT_RESET" value="10" prompt="交易柜台未重置,等待结算"/>
 <error id="INSUFFICIENT_MONEY" value="11" prompt="可用资金不足"/>

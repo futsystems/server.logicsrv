@@ -101,7 +101,7 @@
     <Compile Include="Trading\MarketTime\MarketTime_old.cs" />
     <Compile Include="Trading\MarketTime\MarketTime.cs" />
     <Compile Include="Trading\MarketTime\TradingRange.cs" />
-    <Compile Include="Trading\Utils\ExchangeUtils.cs" />
+    <Compile Include="Trading\Utils\DateTimeUtils.cs" />
     <Compile Include="Utils\ChinSpellcs.cs" />
     <Compile Include="Utils\Util_Decimal.cs" />
     <Compile Include="Utils\Version.cs" />

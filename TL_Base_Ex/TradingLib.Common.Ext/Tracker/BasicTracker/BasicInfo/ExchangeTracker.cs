@@ -100,6 +100,7 @@ namespace TradingLib.Common
                 target.Title = ex.Title;
                 target.Country = ex.Country;
                 target.Calendar = ex.Calendar;
+                target.TimeZone = ex.TimeZone;
 
                 ORM.MBasicInfo.UpdateExchange(target);
             }
@@ -111,6 +112,7 @@ namespace TradingLib.Common
                 target.Title = ex.Title;
                 target.Country = ex.Country;
                 target.Calendar = ex.Calendar;
+                target.TimeZone = ex.TimeZone;
 
                 ORM.MBasicInfo.InsertExchange(target);
                 ex.ID = target.ID;

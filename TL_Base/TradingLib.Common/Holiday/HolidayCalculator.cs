@@ -77,10 +77,11 @@ namespace TradingLib.Common
                 }
             }
             orderedHolidays.Sort();
-            foreach (var v in orderedHolidayList)
+            foreach (var v in orderedHolidays)
             {
-                orderedHolidayList.Add(v);
+                orderedHolidayList.Add(v as Holiday);
             }
+
         }
 
 

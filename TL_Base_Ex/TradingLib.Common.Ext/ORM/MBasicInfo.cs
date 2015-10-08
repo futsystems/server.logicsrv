@@ -50,7 +50,7 @@ namespace TradingLib.ORM
         {
             using (DBMySql db = new DBMySql())
             {
-                string query = string.Format("UPDATE info_exchange SET country='{0}',excode='{1}',name='{2}',title='{3}',calendar='{4}' WHERE id='{5}'", ex.Country, ex.EXCode, ex.Name, ex.Title, ex.Calendar, ex.ID);
+                string query = string.Format("UPDATE info_exchange SET country='{0}',excode='{1}',name='{2}',title='{3}',calendar='{4}',timezone='{5}' WHERE id='{6}'", ex.Country, ex.EXCode, ex.Name, ex.Title, ex.Calendar,ex.TimeZone, ex.ID);
                 db.Connection.Execute(query);
             }
         }
@@ -63,7 +63,7 @@ namespace TradingLib.ORM
         {
             using (DBMySql db = new DBMySql())
             {
-                string query = string.Format("INSERT INTO info_exchange (`country`,`excode`,`name`,`title`,`calendar`) VALUES ( '{0}','{1}','{2}','{3}','{4}')", ex.Country, ex.EXCode, ex.Name, ex.Title, ex.Calendar);
+                string query = string.Format("INSERT INTO info_exchange (`country`,`excode`,`name`,`title`,`calendar`,`timezone`) VALUES ( '{0}','{1}','{2}','{3}','{4}','{5}')", ex.Country, ex.EXCode, ex.Name, ex.Title, ex.Calendar,ex.TimeZone);
                 db.Connection.Execute(query);
                 SetIdentity(db.Connection, id => ex.ID = id, "id", "info_exchange");
             }
@@ -92,7 +92,7 @@ namespace TradingLib.ORM
         {
             using (DBMySql db = new DBMySql())
             {
-                string query = string.Format("UPDATE info_markettime SET name='{0}',description='{1}',timezone='{2}',ranges='{3}' WHERE id='{4}'",mt.Name,mt.Description,mt.TimeZone,mt.SerializeTradingRange(),mt.ID);
+                string query = string.Format("UPDATE info_markettime SET name='{0}',description='{1}',ranges='{2}' WHERE id='{3}'",mt.Name,mt.Description,mt.SerializeTradingRange(),mt.ID);
                 db.Connection.Execute(query);
             }
         }
@@ -105,7 +105,7 @@ namespace TradingLib.ORM
         {
             using (DBMySql db = new DBMySql())
             {
-                string query = string.Format("INSERT INTO info_markettime (`name`,`description`,`timezone`,`ranges`) VALUES ( '{0}','{1}','{2}','{3}')", mt.Name, mt.Description, mt.TimeZone, mt.SerializeTradingRange());
+                string query = string.Format("INSERT INTO info_markettime (`name`,`description`,`ranges`) VALUES ( '{0}','{1}','{2}')", mt.Name, mt.Description, mt.SerializeTradingRange());
                 db.Connection.Execute(query);
                 SetIdentity(db.Connection, id => mt.ID = id, "id", "info_markettime");
             }

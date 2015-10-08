@@ -53,9 +53,9 @@ namespace TradingLib.Core
             errortitle = string.Empty;
             needlog = true;
 
-            bool periodAuctionPlace = false;
-            bool periodAuctionExecution = false;
-            bool periodContinuous = false;
+            //bool periodAuctionPlace = false;
+           // bool periodAuctionExecution = false;
+            //bool periodContinuous = false;
 
             //1 结算中心检查
             //1.1检查结算中心是否正常状态 如果历史结算状态则需要将结算记录补充完毕后才可以接受新的委托
@@ -107,6 +107,15 @@ namespace TradingLib.Core
                 return false;
             }
 
+            //交易时间检查
+            QSEnumActionCheckResult result = o.oSymbol.SecurityFamily.CheckPlaceOrder();
+            if (result != QSEnumActionCheckResult.Allowed)
+            {
+                errortitle = "SYMBOL_NOT_MARKETTIME";
+                return false;
+            }
+
+            /*
             periodAuctionPlace = o.oSymbol.SecurityFamily.IsInAuctionTime();//是否处于集合竞价报单时段
             periodAuctionExecution = o.oSymbol.SecurityFamily.IsInActionExutionTime();//是否处于集合竞价撮合时段
             periodContinuous = o.oSymbol.SecurityFamily.IsInContinuous();//是否处于连续竞价阶段
@@ -147,6 +156,7 @@ namespace TradingLib.Core
                 //    return false;
                 //}
             }
+            **/
 
             //4.开仓标识与锁仓权限检查
             //4.1自动开平标识识别
@@ -235,7 +245,7 @@ namespace TradingLib.Core
 
             //6.委托价格检查
             //6.1连续竞价阶段需要检查合约有效性是否有正常的价格 集合竞价阶段 该合约可能还没有行情
-            if (periodContinuous)
+            //if (periodContinuous)
             {
                 Tick tk = TLCtxHelper.ModuleDataRouter.GetTickSnapshot(o.Symbol);
                 if (tk == null || (!tk.isValid))
@@ -324,12 +334,12 @@ namespace TradingLib.Core
                     if ((!inter) && account.IntraDay)//非内部委托并且帐户是日内交易帐户则要检查日内交易时间
                     {
                         //如果是强平时间段则不可交易 
-                        if (o.oSymbol.IsFlatTime)
-                        {
-                            msg = "日内交易帐户，系统正在强平，无法处理委托！";
-                            logger.Info("Order rejected by [FlatTime Check] not in [intraday] trading time" + o.GetOrderInfo());
-                            return false;
-                        }
+                        //if (o.oSymbol.SecurityFamily.cl)
+                        //{
+                        //    msg = "日内交易帐户，系统正在强平，无法处理委托！";
+                        //    logger.Info("Order rejected by [FlatTime Check] not in [intraday] trading time" + o.GetOrderInfo());
+                        //    return false;
+                        //}
                     }
                 }
 

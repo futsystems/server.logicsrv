@@ -39,6 +39,13 @@ namespace TradingLib.API
         /// </summary>
         /// <param name="time"></param>
         /// <returns></returns>
-        bool IsInContinuous(DateTime time);
+        //bool IsInContinuous(DateTime time);
+
+        /// <summary>
+        /// 获得当前交易小节
+        /// </summary>
+        /// <param name="time"></param>
+        /// <returns></returns>
+        TradingRange JudgeRange(DateTime systime);
     }
 }

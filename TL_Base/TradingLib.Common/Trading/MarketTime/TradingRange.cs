@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using TradingLib.API;
 
 namespace TradingLib.Common
 {
@@ -15,28 +16,14 @@ namespace TradingLib.Common
      * 
      * **/
 
-    /// <summary>
-    /// 交易小节 结算标识
-    /// 用于标注交易小节属于当前交易日还是下一个交易日
-    /// </summary>
-    public enum QSEnumRangeSettleFlag
-    {
-        /// <summary>
-        /// 属于当前交易日
-        /// </summary>
-        T,
-        /// <summary>
-        /// 属于下一交易日
-        /// </summary>
-        T1
-    }
+   
 
     /// <summary>
     /// 交易时间小节
     /// </summary>
-    public class TradingRange
+    public class TradingRangeImpl:TradingRange
     {
-        public TradingRange()
+        public TradingRangeImpl()
         {
             this.SettleFlag = QSEnumRangeSettleFlag.T;
             this.StartDay = DayOfWeek.Monday;
@@ -46,7 +33,7 @@ namespace TradingLib.Common
             this.MarketClose = false;
         }
 
-        public TradingRange(DayOfWeek startday, int starttime, DayOfWeek endday, int endtime, QSEnumRangeSettleFlag flag = QSEnumRangeSettleFlag.T,bool marketclose=false)
+        public TradingRangeImpl(DayOfWeek startday, int starttime, DayOfWeek endday, int endtime, QSEnumRangeSettleFlag flag = QSEnumRangeSettleFlag.T, bool marketclose = false)
         {
             this.StartDay = startday;
             this.StartTime = starttime;
@@ -111,14 +98,14 @@ namespace TradingLib.Common
         /// </summary>
         /// <param name="message"></param>
         /// <returns></returns>
-        public static TradingRange Deserialize(string message)
+        public static TradingRangeImpl Deserialize(string message)
         {
             if (string.IsNullOrEmpty(message))
                 return null;
             string[] rec = message.Split(',');
             if (rec.Length < 5) return null;
 
-            TradingRange range = new TradingRange();
+            TradingRangeImpl range = new TradingRangeImpl();
             range.StartDay = (DayOfWeek)Enum.Parse(typeof(DayOfWeek), rec[0]);
             range.StartTime = int.Parse(rec[1]);
             range.EndDay = (DayOfWeek)Enum.Parse(typeof(DayOfWeek), rec[2]);
@@ -195,6 +182,86 @@ namespace TradingLib.Common
                 if (w == range.EndDay && t > range.EndTime) return false;
                 return true;
             }
+        }
+
+        /// <summary>
+        /// 判断交易小节上某个时间点 所属交易日
+        /// 注该日期需要和对应的交易所时间一致
+        /// 交易小节是一个规律性的时间段规则，需要提供具体的交易时间才可以判定交易日
+        /// </summary>
+        /// <param name="time"></param>
+        /// <returns></returns>
+        public static DateTime TradingDay(this TradingRange range,DateTime extime)
+        {
+            if (!range.IsInRange(extime))
+            {
+                throw new ArgumentException("提供的时间必须在交易小节内");
+            }
+
+            //交易小节开始于结束在同一天
+            if (range.StartDay == range.EndDay)
+            {
+                if (range.SettleFlag == QSEnumRangeSettleFlag.T)
+                {
+                    return extime.Date;
+                }
+                else if (range.SettleFlag == QSEnumRangeSettleFlag.T1)
+                {
+                    return extime.Date.NextWorkDay();
+                }
+                return extime;
+            }
+            else if (range.StartDay < range.EndDay)
+            {
+                //如果是星期日 则属于星期一对应的结算日
+                if (range.StartDay == DayOfWeek.Sunday) //不存在T 和 T+1的判断
+                {
+                    if (extime.DayOfWeek == range.StartDay)
+                    {
+                        return extime.Date.NextWorkDay();
+                    }
+                    else if (extime.DayOfWeek == range.EndDay)
+                    {
+                        return extime.Date;
+                    }
+                }
+
+                //当前时间在交易小节前半段 星期4晚上 9:00到星期5凌晨2点(T+1)，在星期四时间段内 则对应的交易日为星期四对应的交易日+1
+                if (extime.DayOfWeek == range.StartDay)
+                {
+                    if (range.SettleFlag == QSEnumRangeSettleFlag.T)
+                    {
+                        return extime.Date;
+                    }
+                    else if (range.SettleFlag == QSEnumRangeSettleFlag.T1)
+                    {
+                        return extime.Date.NextWorkDay();
+                    }
+                    return extime.Date;
+                }
+                //当前时间在交易小节后半段 星期4晚上 9:00到星期5凌晨2点(T+1)，在星期五时间段内 则对应的交易日为星期五对应的日期
+                //我们假定每个交易小节只属于一个交易日不跨越多个交易日
+                else if (extime.DayOfWeek == range.EndDay)
+                {
+                    if (range.SettleFlag == QSEnumRangeSettleFlag.T)
+                    {
+
+                        return extime.Date.AddDays(-1);
+                    }
+                    else if (range.SettleFlag == QSEnumRangeSettleFlag.T1)
+                    {
+                        return extime.Date.AddDays(-1).NextWorkDay();
+                    }
+                }
+
+            }
+            else //range.StartDay>range.EndDay
+            {
+
+            }
+
+            return extime.Date;
+        
         }
     }
 }

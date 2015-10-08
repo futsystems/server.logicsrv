@@ -96,13 +96,13 @@ namespace TradingLib.API
         /// <summary>
         /// 检查是否是市场开市时间
         /// </summary>
-        bool IsMarketTime { get; }
+        //bool IsMarketTime { get; }
 
 
         /// <summary>
         /// 是否在强平时间段内
         /// </summary>
-        bool IsFlatTime { get; }
+        //bool IsFlatTime { get; }
 
         /// <summary>
         /// 合约到期月

@@ -104,7 +104,8 @@
     <Compile Include="Utils\Account\AccountUtils_ExStrategy.cs" />
     <Compile Include="Utils\Account\AccountUtils_Args.cs" />
     <Compile Include="Utils\Account\AccountUtils_SessionInfo.cs" />
-    <Compile Include="Utils\BasicInfo\ExchangeUtils.cs" />
+    <Compile Include="Utils\BasicInfo\ExchangeUtils_Ex.cs" />
+    <Compile Include="Utils\BasicInfo\SecurityUtils_Ex.cs" />
     <Compile Include="Utils\Deferred.cs" />
     <Compile Include="Utils\Domain\DomainUtils_CommissionMargin.cs" />
     <Compile Include="Utils\Domain\DomainUtils_ExStrategy.cs" />

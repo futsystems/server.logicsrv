@@ -112,37 +112,37 @@ namespace TradingLib.Common
         public IMarketTime MarketTime { get; set; }
 
 
-        public bool IsMarketTime
-        {
-            get
-            {
-                if (MarketTime != null)
-                {
-                    return MarketTime.IsInContinuous(DateTime.Now);
-                }
-                else
-                {
-                    return false;
-                }
-            }
-        }
+        //public bool IsMarketTime
+        //{
+        //    get
+        //    {
+        //        if (MarketTime != null)
+        //        {
+        //            return MarketTime.IsInContinuous(DateTime.Now);
+        //        }
+        //        else
+        //        {
+        //            return false;
+        //        }
+        //    }
+        //}
 
 
 
-        public bool IsFlatTime
-        {
-            get
-            {
-                if (MarketTime != null)
-                {
-                    return false;
-                }
-                else
-                {
-                    return false;
-                }
-            }
-        }
+        //public bool IsFlatTime
+        //{
+        //    get
+        //    {
+        //        if (MarketTime != null)
+        //        {
+        //            return false;
+        //        }
+        //        else
+        //        {
+        //            return false;
+        //        }
+        //    }
+        //}
         public string Serialize()
         {
             StringBuilder sb = new StringBuilder();

@@ -40,7 +40,8 @@ namespace TradingLib.Core
                 if (action.ActionFlag == QSEnumOrderActionFlag.Delete)
                 {
                     //如果不处于连续竞价阶段 并且 也不处于 集合竞价报单阶段 则不允许撤单
-                    if ((!o.oSymbol.SecurityFamily.IsInContinuous()) && (!o.oSymbol.SecurityFamily.IsInAuctionTime()))
+                    string error_title=string.Empty;
+                    if(o.oSymbol.SecurityFamily.CheckCancelOrder()!= QSEnumActionCheckResult.Allowed)
                     {
                         NotifyOrderActionError(action, RspInfoEx.Fill("SYMBOL_NOT_MARKETTIME"));
                     }

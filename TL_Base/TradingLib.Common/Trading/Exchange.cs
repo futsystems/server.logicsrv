@@ -17,6 +17,7 @@ namespace TradingLib.Common
         private Country _country;//交易所所处国家
         private string _title;//简称
         private string _calendar;//假日
+        private string _timezone;//时区信息
 
         /// <summary>
         /// 交易所数据库编号
@@ -48,15 +49,45 @@ namespace TradingLib.Common
         /// </summary>
         public string Calendar { get { return _calendar; } set { _calendar=value; } }
 
+        /// <summary>
+        /// 时区
+        /// </summary>
+        public string TimeZone { get { return _timezone; } set { _genTimeZone = false; _timezone = value; } }
+        
         public Exchange()
         {
             this.ID = 0;
             this.EXCode = "";
             this.Name = "";
             this.Country = Country.CN;
+            this.TimeZone = "";
             this.Title = "";
         }
-        
+
+
+        TimeZoneInfo _targetTimeZone = null;
+        bool _genTimeZone = false;
+
+        public TimeZoneInfo TimeZoneInfo
+        {
+            get
+            {
+                if (!_genTimeZone)//延迟生成时区对象
+                {
+                    _genTimeZone = true;
+                    if (string.IsNullOrEmpty(this.TimeZone))
+                    {
+                        _targetTimeZone = null;//没有提供具体市区信息则与本地系统时间一致
+                    }
+                    else
+                    {
+                        _targetTimeZone = TimeZoneInfo.FindSystemTimeZoneById(this.TimeZone);
+                    }
+                }
+                return _targetTimeZone;
+            }
+        }
+
 
         public override string ToString()
         {
@@ -80,6 +111,8 @@ namespace TradingLib.Common
             sb.Append(ex.Title);
             sb.Append(d);
             sb.Append(ex.Calendar);
+            sb.Append(d);
+            sb.Append(ex.TimeZone);
             return sb.ToString();
         }
 
@@ -94,6 +127,7 @@ namespace TradingLib.Common
             ex.Country = (Country)Enum.Parse(typeof(Country), rec[3]);
             ex.Title = rec[4];
             ex.Calendar = rec[5];
+            ex.TimeZone = rec[6];
             return ex;
 
         }

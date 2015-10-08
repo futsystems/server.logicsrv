@@ -72,7 +72,6 @@ namespace TradingLib.Common
             if (idxsessionmap.TryGetValue(mt.ID, out target))
             {
                 target.Name = mt.Name;
-                target.TimeZone = mt.TimeZone;
                 target.Description = mt.Description;
 
                 //将交易小节加载到内存对象中
@@ -85,7 +84,6 @@ namespace TradingLib.Common
                 target = new MarketTime();
                 target.Name = mt.Name;
                 target.Description = mt.Description;
-                target.TimeZone = mt.TimeZone;
                 target.DeserializeTradingRange(mt.SerializeTradingRange());
 
                 ORM.MBasicInfo.InsertMarketTime(target);
