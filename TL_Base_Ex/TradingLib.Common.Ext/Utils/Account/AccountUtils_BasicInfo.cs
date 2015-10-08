@@ -10,18 +10,6 @@ namespace TradingLib.Common
     public static class AccountUtils_BasicInfo
     {
         /// <summary>
-        /// 获得帐户下的合约
-        /// </summary>
-        /// <param name="account"></param>
-        /// <param name="symbol"></param>
-        /// <returns></returns>
-        //public static Symbol GetSymbol(this IAccount account, string symbol)
-        //{
-        //    Symbol sym = account.Domain.GetSymbol(symbol);
-        //    return sym;
-        //}
-
-        /// <summary>
         /// 获得帐户下品种
         /// </summary>
         /// <param name="account"></param>
@@ -62,6 +50,7 @@ namespace TradingLib.Common
         public static bool TrckerOrderSymbol(this IAccount account, ref Order o)
         {
             Symbol symbol = account.Domain.GetSymbol(o.Symbol);
+            //TODO:增加合约可交易判定
             if (symbol == null)
             {
                 return false;
@@ -84,7 +73,7 @@ namespace TradingLib.Common
             
             Instrument instrument = new Instrument();
             instrument.Symbol = symbol.Symbol;
-            instrument.Name = string.Format("{0}{1}", symbol.SecurityFamily.Name, symbol.ExpireDate.ToString().Substring(4,2));//.ToString("yyMM"));
+            instrument.Name = string.Format("{0}{1}", symbol.SecurityFamily.Name, symbol.ExpireDate.ToString().Substring(2,4));//.ToString("yyMM"));
             instrument.Security = symbol.SecurityFamily.Code;
             instrument.ExchangeID = symbol.SecurityFamily.Exchange.EXCode;
             instrument.EntryCommission = symbol.EntryCommission;

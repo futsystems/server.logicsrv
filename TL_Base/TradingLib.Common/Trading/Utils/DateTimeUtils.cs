@@ -60,5 +60,20 @@ namespace TradingLib.Common
                 workday = workday.Date.AddDays(-1);
             }
         }
+
+        public static int ToTLDate(this DateTime dt)
+        {
+            return Util.ToTLDate(dt);
+        }
+
+        public static int ToTLTime(this DateTime dt)
+        {
+            return Util.ToTLTime(dt);
+        }
+
+        public static long ToTLDateTime(this DateTime dt)
+        {
+            return Util.ToTLDateTime(dt);
+        }
     }
 }

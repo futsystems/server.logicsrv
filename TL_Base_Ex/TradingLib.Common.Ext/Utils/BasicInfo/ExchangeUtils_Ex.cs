@@ -33,19 +33,39 @@ namespace TradingLib.Common
             return BasicTracker.CalendarTracker[exchagne.Calendar];
         }
 
+        public static DateTime GetExchangeTime(this IExchange exchange)
+        {
+            return exchange.GetExchangeTime(DateTime.Now);
+        }
         /// <summary>
         /// 将系统时间转换成交易所时间
         /// </summary>
         /// <param name="exchange"></param>
         /// <param name="systime"></param>
         /// <returns></returns>
-        public static DateTime GetTargetTime(this IExchange exchange, DateTime systime)
+        public static DateTime GetExchangeTime(this IExchange exchange, DateTime systime)
         {
             DateTime target = systime;
             //如果交易所设定时区 则按该时区获得当前时间
             if (exchange.TimeZoneInfo != null)
             {
                 target = TimeZoneInfo.ConvertTime(systime, exchange.TimeZoneInfo);
+            }
+            return target;
+        }
+
+        /// <summary>
+        /// 将交易所时间转换成本地系统时间
+        /// </summary>
+        /// <param name="exchange"></param>
+        /// <param name="extime"></param>
+        /// <returns></returns>
+        public static DateTime GetSystemTime(this IExchange exchange, DateTime extime)
+        {
+            DateTime target = extime;
+            if (exchange.TimeZoneInfo != null)
+            {
+                target = TimeZoneInfo.ConvertTimeBySystemTimeZoneId(extime, exchange.TimeZone, "China Standard Time");
             }
             return target;
         }

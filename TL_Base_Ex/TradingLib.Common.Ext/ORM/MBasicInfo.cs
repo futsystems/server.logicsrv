@@ -77,7 +77,7 @@ namespace TradingLib.ORM
         {
             using (DBMySql db = new DBMySql())
             {
-                const string query = "SELECT a.id,a.name,a.description,a.ranges FROM info_markettime a";
+                const string query = "SELECT a.id,a.name,a.description,a.closetime,a.ranges FROM info_markettime a";
                 IEnumerable<MarketTime> result = db.Connection.Query<MarketTime, MarketTimeDBRanges, MarketTime>(query, (mkttime, dbranges) => { mkttime.DeserializeTradingRange(dbranges.Ranges); return mkttime; }, null, null, false, "ranges", null, null).ToList<MarketTime>();
                 return result;
             }
@@ -92,7 +92,7 @@ namespace TradingLib.ORM
         {
             using (DBMySql db = new DBMySql())
             {
-                string query = string.Format("UPDATE info_markettime SET name='{0}',description='{1}',ranges='{2}' WHERE id='{3}'",mt.Name,mt.Description,mt.SerializeTradingRange(),mt.ID);
+                string query = string.Format("UPDATE info_markettime SET name='{0}',description='{1}',ranges='{2}',closetime='{3}' WHERE id='{4}'", mt.Name, mt.Description, mt.SerializeTradingRange(),mt.CloseTime, mt.ID);
                 db.Connection.Execute(query);
             }
         }
@@ -105,7 +105,7 @@ namespace TradingLib.ORM
         {
             using (DBMySql db = new DBMySql())
             {
-                string query = string.Format("INSERT INTO info_markettime (`name`,`description`,`ranges`) VALUES ( '{0}','{1}','{2}')", mt.Name, mt.Description, mt.SerializeTradingRange());
+                string query = string.Format("INSERT INTO info_markettime (`name`,`description`,`ranges`,`closetime`) VALUES ( '{0}','{1}','{2}','{3}')", mt.Name, mt.Description, mt.SerializeTradingRange(),mt.CloseTime);
                 db.Connection.Execute(query);
                 SetIdentity(db.Connection, id => mt.ID = id, "id", "info_markettime");
             }

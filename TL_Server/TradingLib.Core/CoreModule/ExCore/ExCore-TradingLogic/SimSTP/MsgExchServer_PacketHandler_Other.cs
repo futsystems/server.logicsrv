@@ -384,14 +384,12 @@ namespace TradingLib.Core
             Instrument[] instruments = new Instrument[]{};
             if (request.SecurityType != SecurityType.NIL && string.IsNullOrEmpty(request.ExchID) && string.IsNullOrEmpty(request.Symbol) && string.IsNullOrEmpty(request.Security))
             {
-                logger.Info("qry instruments via security type");
                 instruments =account.GetInstruments(request.SecurityType).ToArray();  
                 
             }
             //如果所有字段为空 则为查询所有合约列表
             if (request.SecurityType == SecurityType.NIL && string.IsNullOrEmpty(request.ExchID) && string.IsNullOrEmpty(request.Symbol) && string.IsNullOrEmpty(request.Security))
             {
-                //debug("it is here b", QSEnumDebugLevel.INFO);
                 instruments = account.GetInstruments().ToArray();
             }
 

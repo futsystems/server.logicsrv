@@ -73,7 +73,7 @@ namespace TradingLib.Common
             {
                 target.Name = mt.Name;
                 target.Description = mt.Description;
-
+                target.CloseTime = mt.CloseTime;
                 //将交易小节加载到内存对象中
                 target.DeserializeTradingRange(mt.SerializeTradingRange());
 
@@ -84,6 +84,7 @@ namespace TradingLib.Common
                 target = new MarketTime();
                 target.Name = mt.Name;
                 target.Description = mt.Description;
+                target.CloseTime = mt.CloseTime;
                 target.DeserializeTradingRange(mt.SerializeTradingRange());
 
                 ORM.MBasicInfo.InsertMarketTime(target);

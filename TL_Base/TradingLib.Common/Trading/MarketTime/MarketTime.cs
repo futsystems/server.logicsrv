@@ -36,72 +36,10 @@ namespace TradingLib.Common
         /// </summary>
         public string Description { get; set; }
 
-
-        //string _timeZone = string.Empty;
-        ///// <summary>
-        ///// 时区ID
-        ///// </summary>
-        //public string TimeZone { 
-        //    get { return _timeZone; }
-        //    set
-        //    {
-        //        _genTimeZone = false;
-        //        _timeZone = value;
-        //    }
-        //}
-
-
-        //TimeZoneInfo _targetTimeZone = null;
-        //bool _genTimeZone = false;
-
-        //TimeZoneInfo TargetTimeZone
-        //{
-        //    get
-        //    {
-        //        if (!_genTimeZone)//延迟生成时区对象
-        //        {
-        //            _genTimeZone = true;
-        //            if (string.IsNullOrEmpty(this.TimeZone))
-        //            {
-        //                _targetTimeZone = null;//没有提供具体市区信息则与本地系统时间一致
-        //            }
-        //            else
-        //            {
-        //                _targetTimeZone = TimeZoneInfo.FindSystemTimeZoneById(this.TimeZone);
-        //            }
-        //        }
-        //        return _targetTimeZone;
-        //    }
-        //}
-
-        //DateTime GetTargetTime(DateTime time)
-        //{
-        //    DateTime target = time;//目标时间
-        //    //如果存在时区信息 则将该事件转换成 对应的时区时间
-        //    if (TargetTimeZone != null)
-        //    {
-        //        //TimeZoneInfo localTimeZone = TimeZoneInfo.FindSystemTimeZoneById("China Standard Time");
-        //        target = TimeZoneInfo.ConvertTime(time, TargetTimeZone);
-        //    }
-        //    return target;
-        //}
-
-        ///// <summary>
-        ///// 是否在连续竞价交易时间段
-        ///// </summary>
-        ///// <param name="time"></param>
-        ///// <returns></returns>
-        //public bool IsInContinuous(DateTime time)
-        //{
-        //    DateTime target = GetTargetTime(time);
-        //    Util.Debug(string.Format("Local: {0} - Target: {1}",time,target));
-        //    foreach (var range in this._sortRangeList.Values)
-        //    {
-        //        if (range.IsInRange(target))
-        //            return true;
-        //    }
-        //    return false;
-        //}
+        /// <summary>
+        /// 收盘时间
+        /// </summary>
+        public int CloseTime { get; set; }
 
         /// <summary>
         /// 获得某时间 所属交易时间小节
@@ -135,6 +73,8 @@ namespace TradingLib.Common
             sb.Append(d);
             sb.Append(mt.Description);
             sb.Append(d);
+            sb.Append(mt.CloseTime);
+            sb.Append(d);
             sb.Append(mt.SerializeTradingRange());
             return sb.ToString();
         }
@@ -145,12 +85,13 @@ namespace TradingLib.Common
         /// <param name="content"></param>
         public static MarketTime Deserialize(string content)
         {
-            string[] rec = content.Split(new char[] { ',' }, 4);
+            string[] rec = content.Split(new char[] { ',' }, 5);
             MarketTime mt = new MarketTime();
             mt.ID = int.Parse(rec[0]);
             mt.Name = rec[1];
             mt.Description = rec[2];
-            mt.DeserializeTradingRange(rec[3]);
+            mt.CloseTime = int.Parse(rec[3]);
+            mt.DeserializeTradingRange(rec[4]);
             return mt;
         }
 

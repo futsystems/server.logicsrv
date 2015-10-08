@@ -11,136 +11,64 @@ namespace TradingLib.Core
 {
     public partial class RiskCentre
     {
-
-        /// <summary>
-        /// 判断合约是否绑定在某个市场交易时间对象上
-        /// </summary>
-        /// <param name="sym"></param>
-        /// <param name="mt"></param>
-        /// <returns></returns>
-        bool IsSymbolWithMarketTime(Symbol sym, MarketTime mt)
-        {
-            if (sym == null)
-                return false;
-
-            if (sym.SecurityFamily != null && sym.SecurityFamily.MarketTime != null)
-            {
-                if (sym.SecurityFamily.MarketTime.Equals(mt))
-                    return true;
-            }
-            return false;
-        }
-
-        /// <summary>
-        /// 判断某个合约的交易时间对象是否在一个交易时间对象组中
-        /// </summary>
-        /// <param name="sym"></param>
-        /// <param name="mts"></param>
-        /// <returns></returns>
-        bool IsSymbolWithMarketTime(Symbol sym, MarketTime[] mts)
-        {
-            foreach (MarketTime mt in mts)
-            {
-                if (IsSymbolWithMarketTime(sym, mt))
-                    return true;
-            }
-            return false;
-        }
-
-
         /// <summary>
         /// 初始化强平任务 生成强平任务 注入到调度系统
         /// </summary>
         void InitFlatTask()
         {
             logger.Info("初始化日内强平任务");
-            Dictionary<int, List<MarketTime>> flatlist = new Dictionary<int, List<MarketTime>>();
-            //foreach (FlatTimeMarketTimePair p in BasicTracker.MarketTimeTracker.GetFlatTimeMarketTimePairs())
-            //{
-            //    //debug("xxxxxxxxxxxxx flattime:" + p.FlatTime.ToString() + " marketime id:" + p.MarketTime.ID, QSEnumDebugLevel.INFO);
-            //    if (!flatlist.Keys.Contains(p.FlatTime))
-            //    {
-            //        flatlist[p.FlatTime] = new List<MarketTime>();
-            //    }
-            //    flatlist[p.FlatTime].Add(p.MarketTime);
-            //}
+            Dictionary<DateTime, List<SecurityFamily>> closetimemap = new Dictionary<DateTime, List<SecurityFamily>>();
 
-            //foreach (int flattime in flatlist.Keys)
-            //{
-            //    InjectTask(flattime, flatlist[flattime].ToArray());
-            //}
-
-            
-
-        }
-
-        //2:30 到期合约执行强平
-        [TaskAttr("强平-合约交割",14,50,0, "合约交割日执行强平")]
-        public void Task_FlatPositionViaExpiredDate()
-        {
-
-            foreach (Position pos in TLCtxHelper.ModuleClearCentre.TotalPositions.Where(p => !p.isFlat && p.oSymbol.IsExpiredToday()))
+            //遍历所有品种
+            foreach (var sec in BasicTracker.DomainTracker.SuperDomain.GetSecurityFamilies())
             {
-                this.FlatPosition(pos, QSEnumOrderSource.RISKCENTRE, "合约交割强平");
-                Thread.Sleep(50);
+                if (sec.MarketTime == null)
+                    continue;
+                DateTime extime = Util.ToDateTime(sec.Exchange.GetExchangeTime().ToTLDate(), sec.MarketTime.CloseTime);
+
+                DateTime systime = sec.Exchange.GetSystemTime(extime);
+
+                if (!closetimemap.Keys.Contains(systime))
+                {
+                    closetimemap.Add(systime, new List<SecurityFamily>());
+                }
+                closetimemap[systime].Add(sec);
             }
+
+            foreach (var key in closetimemap.Keys)
+            {
+                RegisterMarketCloseFlatTask(key, closetimemap[key]);
+            }
+
         }
 
-        
-        /// <summary>
-        /// 注入强平任务
-        /// </summary>
-        /// <param name="flattime"></param>
-        /// <param name="mts"></param>
-        void InjectTask(int flattime, MarketTime[] mts)
+        void RegisterMarketCloseFlatTask(DateTime closetime, List<SecurityFamily> list)
         {
-            //注入强平任务
-            logger.Info("注入强平任务,强平时间点:" + flattime);
-            DateTime t = Util.ToDateTime(Util.ToTLDate(), flattime);
-            TaskProc task = new TaskProc(this.UUID, "强平-日内" + flattime.ToString(), t.Hour, t.Minute, t.Second, delegate() { FlatPositionViaMarketTime(flattime,mts); });
+            logger.Info("注册收盘强平任务,收盘时间:" + closetime.ToString("HH:mm:ss"));
+            DateTime flattime = closetime.AddMinutes(-5);//提前5分钟强平
+            TaskProc task = new TaskProc(this.UUID, "收盘前强平-" + flattime.ToString("HH:mm:ss"), flattime.Hour, flattime.Minute, flattime.Second, delegate() { FlatPositoinBeforeClose(closetime, list); });
             TLCtxHelper.ModuleTaskCentre.RegisterTask(task);
+
         }
 
-        string MarketTimeIDstr(MarketTime[] mts)
+        void FlatPositoinBeforeClose(DateTime close, List<SecurityFamily> list)
         {
-            string str = string.Empty;
-            foreach (MarketTime mt in mts)
+            //将品种列表中的pending委托 撤单
+            foreach (var o in TLCtxHelper.ModuleClearCentre.TotalOrders.Where(o => o.IsPending() && list.Any(sec => sec.Code == o.oSymbol.SecurityFamily.Code)))
             {
-                str = str + mt.ID + ",";
-            }
-            return str;
-        }
-
-
-        /// <summary>
-        /// 强平绑定某个市场交易时间的所有持仓
-        /// </summary>
-        /// <param name="mt"></param>
-        void FlatPositionViaMarketTime(int flattime,MarketTime[] mts)
-        {
-            logger.Info("执行强平任务 对日内帐户执行撤单并强平持仓,强平时间点:" + flattime.ToString());
-            //1.遍历所有pending orders 如果委托对应的帐户是日内交易并且该委托需要在该强平时间点撤单 则执行撤单
-            //查询所有待成交委托 且该委托合约在对应的强平时间点 撤掉将当前强平时间点的所有委托
-            foreach (Order od in TLCtxHelper.ModuleClearCentre.TotalOrders.Where(o => o.IsPending() && IsSymbolWithMarketTime(o.oSymbol, mts)))
-            {
-                logger.Info("symbol:" + od.Symbol + "order status:" + od.IsPending().ToString() + " withmarkettime:" + IsSymbolWithMarketTime(od.oSymbol, mts));
-                //if (od.IsPending() && IsSymbolWithMarketTime(od.oSymbol, mts))
-                //{
-                IAccount acc = TLCtxHelper.ModuleAccountManager[od.Account];
+                IAccount acc = TLCtxHelper.ModuleAccountManager[o.Account];
                 if (acc != null)
                 {
                     if (!acc.IntraDay) continue;
-                    {
-                        //取消委托
-                        CancelOrder(od, QSEnumOrderSource.RISKCENTRE, "尾盘强平");
-                    }
+                    CancelOrder(o, QSEnumOrderSource.RISKCENTRE, "尾盘强平");
+                    Thread.Sleep(50);
                 }
             }
 
             //等待1秒后再进行强平持仓
             Util.sleep(3000);
             //2.遍历所有持仓 进行强平
-            foreach (Position pos in TLCtxHelper.ModuleClearCentre.TotalPositions.Where(p => !p.isFlat && IsSymbolWithMarketTime(p.oSymbol, mts)))
+            foreach (Position pos in TLCtxHelper.ModuleClearCentre.TotalPositions.Where(p => !p.isFlat && list.Any(sec => sec.Code == p.oSymbol.SecurityFamily.Code)))
             {
                 IAccount acc = TLCtxHelper.ModuleAccountManager[pos.Account];
                 if (acc != null)
@@ -150,6 +78,9 @@ namespace TradingLib.Core
                     Thread.Sleep(50);
                 }
             }
+
+            
         }
+
     }
 }
