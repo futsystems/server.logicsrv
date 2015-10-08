@@ -90,7 +90,7 @@ namespace TradingLib.Common
         {
             if (this.MarketTime == null)
                 return string.Empty;
-            return this.MarketTime.Serialize();
+            return TradingLib.Common.MarketTime.Serialize(this.MarketTime);
         }
 
         public override void ResponseDeserialize(string content)
@@ -100,8 +100,7 @@ namespace TradingLib.Common
                 this.MarketTime = null;
                 return;
             }
-            this.MarketTime = new MarketTime();
-            this.MarketTime.Deserialize(content);
+            this.MarketTime = TradingLib.Common.MarketTime.Deserialize(content);
         }
     }
 

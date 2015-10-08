@@ -11,9 +11,9 @@ using TradingLib.Mixins.JsonObject;
 
 namespace TradingLib.ORM
 {
-    internal class MarketTimeString
+    internal class MarketTimeDBRanges
     {
-        public string MarketTime { get; set; }
+        public string Ranges { get; set; }
     }
 
     internal class SecForigenKey
@@ -52,11 +52,38 @@ namespace TradingLib.ORM
         {
             using (DBMySql db = new DBMySql())
             {
-                const string query = "SELECT a.id,a.name,a.description,a.timezone,a.markettime FROM info_markettime a";
-                IEnumerable<MarketTime> result = db.Connection.Query<MarketTime, MarketTimeString, MarketTime>(query, (mkttime, mkttimestr) => { mkttime.DeserializeMktTimeString(mkttimestr.MarketTime); return mkttime; }, null, null, false, "markettime", null, null).ToList<MarketTime>();
+                const string query = "SELECT a.id,a.name,a.description,a.timezone,a.ranges FROM info_markettime a";
+                IEnumerable<MarketTime> result = db.Connection.Query<MarketTime, MarketTimeDBRanges, MarketTime>(query, (mkttime, dbranges) => { mkttime.DeserializeTradingRange(dbranges.Ranges); return mkttime; }, null, null, false, "ranges", null, null).ToList<MarketTime>();
                 return result;
             }
 
+        }
+
+        /// <summary>
+        /// 更新交易时间段
+        /// </summary>
+        /// <param name="mt"></param>
+        public static void UpdateMarketTime(MarketTime mt)
+        {
+            using (DBMySql db = new DBMySql())
+            {
+                string query = string.Format("UPDATE info_markettime SET name='{0}',description='{1}',timezone='{2}',ranges='{3}' WHERE id='{4}'",mt.Name,mt.Description,mt.TimeZone,mt.SerializeTradingRange(),mt.ID);
+                db.Connection.Execute(query);
+            }
+        }
+
+        /// <summary>
+        /// 插入交易时间段
+        /// </summary>
+        /// <param name="mt"></param>
+        public static void InsertMarketTime(MarketTime mt)
+        {
+            using (DBMySql db = new DBMySql())
+            {
+                string query = string.Format("INSERT INTO info_markettime (`name`,`description`,`timezone`,`ranges`) VALUES ( '{0}','{1}','{2}','{3}')", mt.Name, mt.Description, mt.TimeZone, mt.SerializeTradingRange());
+                db.Connection.Execute(query);
+                SetIdentity(db.Connection, id => mt.ID = id, "id", "info_markettime");
+            }
         }
 
         /// <summary>

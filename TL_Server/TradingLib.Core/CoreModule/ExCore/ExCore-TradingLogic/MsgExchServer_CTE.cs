@@ -133,12 +133,13 @@ namespace TradingLib.Core
                             "打印当前市场交易小节")]
         public string PrintTimeSpans()
         {
-            StringBuilder sb = new StringBuilder();
-            foreach (MktTime ent in BasicTracker.MarketTimeTracker.GetMarketTimes())
-            {
-                sb.Append("Start:" + ent.StartTime.ToString() + " - End:" + ent.EndTime.ToString() + Environment.NewLine);
-            }
-            return sb.ToString();
+            //StringBuilder sb = new StringBuilder();
+            //foreach (MktTime ent in BasicTracker.MarketTimeTracker.GetMarketTimes())
+            //{
+            //    sb.Append("Start:" + ent.StartTime.ToString() + " - End:" + ent.EndTime.ToString() + Environment.NewLine);
+            //}
+            //return sb.ToString();
+            return "";
         }
 
          [CoreCommandAttr(QSEnumCommandSource.CLI,

@@ -88,14 +88,15 @@ namespace TradingLib.Core
                 return;
             }
 
+            //TODO:xxxxxx
             //时间检查
-            IMarketTime mt = fill.oSymbol.SecurityFamily.MarketTime;
-            if (!mt.IsInMarketTime(fill.xTime))
-            {
-                response.RspInfo.Fill("SYMBOL_NOT_MARKETTIME");
-                CacheRspResponse(response);
-                return;
-            }
+            //IMarketTime mt = fill.oSymbol.SecurityFamily.MarketTime;
+            //if (!mt.IsInMarketTime(fill.xTime))
+            //{
+            //    response.RspInfo.Fill("SYMBOL_NOT_MARKETTIME");
+            //    CacheRspResponse(response);
+            //    return;
+            //}
 
 
             fill.Broker = "SIMBROKER";
@@ -211,6 +212,11 @@ namespace TradingLib.Core
                     case MessageTypes.MGRQRYMARKETTIME://请求查询市场时间段
                         {
                             SrvOnMGRQryMarketTime(packet as MGRQryMarketTimeRequest, session, manager);
+                            break;
+                        }
+                    case MessageTypes.MGRUPDATEMARKETTIME://请求更新交易时间段
+                        {
+                            SrvOnMGRUpdateMarketTime(packet as MGRUpdateMarketTimeRequest, session, manager);
                             break;
                         }
                     case MessageTypes.MGRQRYSECURITY://请求查询品种

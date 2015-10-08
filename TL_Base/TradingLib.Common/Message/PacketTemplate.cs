@@ -238,6 +238,8 @@ namespace TradingLib.Common
                         return RequestTemplate<MGRQryExchangeRequuest>.SrvRecvRequest(frontid, clientid, content);
                     case MessageTypes.MGRQRYMARKETTIME://请求查询交易时间段
                         return RequestTemplate<MGRQryMarketTimeRequest>.SrvRecvRequest(frontid, clientid, content);
+                    case MessageTypes.MGRUPDATEMARKETTIME://请求更新交易时间段
+                        return RequestTemplate<MGRUpdateMarketTimeRequest>.SrvRecvRequest(frontid, clientid, content);
                     case MessageTypes.MGRQRYSECURITY://请求查询品种列表
                         return RequestTemplate<MGRQrySecurityRequest>.SrvRecvRequest(frontid, clientid, content);
                     case MessageTypes.MGRUPDATESECURITY://更新品种信息
@@ -431,6 +433,8 @@ namespace TradingLib.Common
                     return ResponseTemplate<RspMGRQryExchangeResponse>.CliRecvResponse(content);
                 case MessageTypes.MGRMARKETTIMERESPONSE://查询交易时间段回报
                     return ResponseTemplate<RspMGRQryMarketTimeResponse>.CliRecvResponse(content);
+                case MessageTypes.MGRUPDATEMARKETTIMERESPONSE://更新交易时间段回报
+                    return ResponseTemplate<RspMGRUpdateMarketTimeResponse>.CliRecvResponse(content);
                 case MessageTypes.MGRSECURITYRESPONSE://查询品种回报
                     return ResponseTemplate<RspMGRQrySecurityResponse>.CliRecvResponse(content);
                 case MessageTypes.MGRSYMBOLRESPONSE://查询合约回报

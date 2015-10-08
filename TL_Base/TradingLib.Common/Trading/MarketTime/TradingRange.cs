@@ -72,6 +72,85 @@ namespace TradingLib.Common
         /// 结束时间
         /// </summary>
         public int EndTime { get; set; }
+
+        /// <summary>
+        /// 序列化
+        /// </summary>
+        /// <param name="range"></param>
+        /// <returns></returns>
+        public static string Serialize(TradingRange range)
+        {
+            StringBuilder sb = new StringBuilder();
+            char d = ',';
+            //sb.Append("#");
+            sb.Append(range.StartDay);
+            sb.Append(d);
+            sb.Append(range.StartTime);
+            sb.Append(d);
+            sb.Append(range.EndDay);
+            sb.Append(d);
+            sb.Append(range.EndTime);
+            sb.Append(d);
+            sb.Append(range.SettleFlag);
+            sb.Append(d);
+            return sb.ToString();
+        }
+
+        /// <summary>
+        /// 反序列化
+        /// </summary>
+        /// <param name="message"></param>
+        /// <returns></returns>
+        public static TradingRange Deserialize(string message)
+        {
+            if (string.IsNullOrEmpty(message))
+                return null;
+            string[] rec = message.Split(',');
+            if (rec.Length < 5) return null;
+
+            TradingRange range = new TradingRange();
+            range.StartDay = (DayOfWeek)Enum.Parse(typeof(DayOfWeek), rec[0]);
+            range.StartTime = int.Parse(rec[1]);
+            range.EndDay = (DayOfWeek)Enum.Parse(typeof(DayOfWeek), rec[2]);
+            range.EndTime = int.Parse(rec[3]);
+            range.SettleFlag = (QSEnumRangeSettleFlag)Enum.Parse(typeof(QSEnumRangeSettleFlag), rec[4]);
+            return range;
+        }
+
+        public override bool Equals(object obj)
+        {
+            if(obj is TradingRange)
+            {
+                TradingRange t = obj as TradingRange;
+                return (this.StartDay == t.StartDay && this.StartTime == t.StartTime && this.EndDay == t.EndDay && this.EndTime == t.EndTime && this.SettleFlag == t.SettleFlag);
+            }
+            return false;
+        }
+
+
+        //string _key = null;
+        /// <summary>
+        /// 交易小节 键值
+        /// </summary>
+        public string RangeKey
+        {
+            get
+            {
+                //if (_key == null)
+                //{
+                //    _key = string.Format("{0}-{1}-{2}-{3}-{4}", this.StartDay, this.StartTime, this.EndDay, this.EndTime, this.SettleFlag);
+                //}
+                //return _key;
+                return string.Format("{0}-{1}-{2}-{3}-{4}", this.StartDay, this.StartTime, this.EndDay, this.EndTime, this.SettleFlag);
+               
+            }
+        }
+        public override int GetHashCode()
+        {
+            return RangeKey.GetHashCode();
+        }
+
+
     }
 
     public static class TradingRangeUtils

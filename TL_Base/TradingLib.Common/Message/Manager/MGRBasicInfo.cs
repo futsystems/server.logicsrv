@@ -91,7 +91,7 @@ namespace TradingLib.Common
         {
             if (this.MarketTime == null)
                 return string.Empty;
-            return this.MarketTime.Serialize();
+            return TradingLib.Common.MarketTime.Serialize(this.MarketTime);
         }
 
         public override void ResponseDeserialize(string content)
@@ -101,11 +101,69 @@ namespace TradingLib.Common
                 this.MarketTime = null;
                 return;
             }
-            this.MarketTime = new MarketTime();
-            this.MarketTime.Deserialize(content);
+            this.MarketTime = TradingLib.Common.MarketTime.Deserialize(content);
         }
     }
 
+
+    public class MGRUpdateMarketTimeRequest : RequestPacket
+    {
+        public MGRUpdateMarketTimeRequest()
+        {
+            _type = MessageTypes.MGRUPDATEMARKETTIME;
+            this.MarketTime = null;
+        }
+
+        public MarketTime MarketTime { get; set; }
+
+        public override string ContentSerialize()
+        {
+            if (this.MarketTime == null)
+                return string.Empty;
+            return TradingLib.Common.MarketTime.Serialize(this.MarketTime);
+        }
+
+
+        public override void ContentDeserialize(string contentstr)
+        {
+            if (string.IsNullOrEmpty(contentstr))
+            {
+                this.MarketTime = null;
+                return;
+            }
+            this.MarketTime = TradingLib.Common.MarketTime.Deserialize(contentstr);
+        }
+
+    }
+
+    public class RspMGRUpdateMarketTimeResponse : RspResponsePacket
+    {
+        public RspMGRUpdateMarketTimeResponse()
+        {
+            _type = MessageTypes.MGRUPDATEMARKETTIMERESPONSE;
+            this.MarketTime = null;
+        }
+
+        public MarketTime MarketTime { get; set; }
+
+        public override string ResponseSerialize()
+        {
+            if (this.MarketTime == null)
+                return string.Empty;
+            return TradingLib.Common.MarketTime.Serialize(this.MarketTime);
+        }
+
+
+        public override void ResponseDeserialize(string contentstr)
+        {
+            if (string.IsNullOrEmpty(contentstr))
+            {
+                this.MarketTime = null;
+                return;
+            }
+            this.MarketTime = TradingLib.Common.MarketTime.Deserialize(contentstr);
+        }
+    }
     /// <summary>
     /// 查询品种
     /// </summary>
@@ -158,70 +216,6 @@ namespace TradingLib.Common
         }
     }
 
-    ///// <summary>
-    ///// 添加品种请求
-    ///// </summary>
-    //public class MGRReqAddSecurityRequest : RequestPacket
-    //{
-    //    public MGRReqAddSecurityRequest()
-    //    {
-    //        _type = MessageTypes.MGRADDSECURITY;
-    //        SecurityFaimly = null;
-    //    }
-
-    //    public SecurityFamilyImpl SecurityFaimly { get; set; }
-
-    //    public override string ContentSerialize()
-    //    {
-    //        if (this.SecurityFaimly == null)
-    //            return string.Empty;
-    //        return this.SecurityFaimly.Serialize();
-    //    }
-
-    //    public override void ContentDeserialize(string contentstr)
-    //    {
-    //        if (string.IsNullOrEmpty(contentstr))
-    //        {
-    //            this.SecurityFaimly = null;
-    //            return;
-    //        }
-    //        this.SecurityFaimly = new SecurityFamilyImpl();
-    //        this.SecurityFaimly.Deserialize(contentstr);
-    //    }
-    
-    //}
-
-    ///// <summary>
-    ///// 添加品种回报
-    ///// </summary>
-    //public class RspMGRReqAddSecurityResponse : RspResponsePacket
-    //{
-    //    public RspMGRReqAddSecurityResponse()
-    //    {
-    //        _type = MessageTypes.MGRADDSECURITYRESPONSE;
-    //        SecurityFaimly = null;
-    //    }
-    //    public SecurityFamilyImpl SecurityFaimly { get; set; }
-
-    //    public override string ResponseSerialize()
-    //    {
-    //        if (SecurityFaimly == null)
-    //            return string.Empty;
-
-    //        return this.SecurityFaimly.Serialize();
-    //    }
-
-    //    public override void ResponseDeserialize(string content)
-    //    {
-    //        if (string.IsNullOrEmpty(content))
-    //        {
-    //            this.SecurityFaimly = null;
-    //            return;
-    //        }
-    //        this.SecurityFaimly = new SecurityFamilyImpl();
-    //        this.SecurityFaimly.Deserialize(content);
-    //    }
-    //}
     /// <summary>
     /// 更新品种信息
     /// </summary>

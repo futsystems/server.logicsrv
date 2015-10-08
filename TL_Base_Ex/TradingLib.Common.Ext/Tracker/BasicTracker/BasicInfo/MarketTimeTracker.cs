@@ -66,27 +66,55 @@ namespace TradingLib.Common
             }
         }
 
+        public void UpdateMarketTime(MarketTime mt)
+        {
+            MarketTime target = null;
+            if (idxsessionmap.TryGetValue(mt.ID, out target))
+            {
+                target.Name = mt.Name;
+                target.TimeZone = mt.TimeZone;
+                target.Description = mt.Description;
+
+                //将交易小节加载到内存对象中
+                target.DeserializeTradingRange(mt.SerializeTradingRange());
+
+                ORM.MBasicInfo.UpdateMarketTime(target);
+            }
+            else
+            {
+                target = new MarketTime();
+                target.Name = mt.Name;
+                target.Description = mt.Description;
+                target.TimeZone = mt.TimeZone;
+                target.DeserializeTradingRange(mt.SerializeTradingRange());
+
+                ORM.MBasicInfo.InsertMarketTime(target);
+                mt.ID = target.ID;
+
+                idxsessionmap[target.ID] = target;
+            }
+        }
         /// <summary>
         /// 获得强平时间点与MarketTime 值对
         /// </summary>
         /// <returns></returns>
-        public FlatTimeMarketTimePair[] GetFlatTimeMarketTimePairs()
-        {
-            List<FlatTimeMarketTimePair> list = new List<FlatTimeMarketTimePair>();
-            //遍历所有市场交易时间对象
-            foreach (MarketTime mt in idxsessionmap.Values)
-            {
-                //每个市场交易时间对象下的时间片段进行遍历 找出有强平标识的片段
-                foreach (MktTimeEntry me in mt.MktTimeEntries)
-                { 
-                    if(me.NeedFlat)//如果需要强平 则记录对应的交易时间对象
-                    {
-                        list.Add(new FlatTimeMarketTimePair(me.FlatStartTime,mt));                
-                    }
-                }
-            }
-            return list.ToArray();
-        }
+        //public FlatTimeMarketTimePair[] GetFlatTimeMarketTimePairs()
+        //{
+        //    List<FlatTimeMarketTimePair> list = new List<FlatTimeMarketTimePair>();
+        //    //遍历所有市场交易时间对象
+        //    foreach (MarketTime mt in idxsessionmap.Values)
+        //    {
+        //        //每个市场交易时间对象下的时间片段进行遍历 找出有强平标识的片段
+        //        foreach (MktTimeEntry me in mt.MktTimeEntries)
+        //        { 
+        //            if(me.NeedFlat)//如果需要强平 则记录对应的交易时间对象
+        //            {
+        //                list.Add(new FlatTimeMarketTimePair(me.FlatStartTime,mt));                
+        //            }
+        //        }
+        //    }
+        //    return list.ToArray();
+        //}
 
         /// <summary>
         /// 获得所有开市 时间段
@@ -94,50 +122,50 @@ namespace TradingLib.Common
         /// 
         /// </summary>
         /// <returns></returns>
-        public List<MktTime> GetMarketTimes()
-        {
-            List<MktTimeEntry> entrylist = new List<MktTimeEntry>();
-            foreach (MarketTime mt in idxsessionmap.Values)
-            {
-                foreach (MktTimeEntry ent in mt.MktTimeEntries)
-                {
-                    if (entrylist.Any(s => s.SameTimeSpan(ent)))
-                        continue;
-                    entrylist.Add(ent as MktTimeEntry);
-                }
-            }
-            //时间段如果有价差 则取并集，没有交叉则单独计算
+        //public List<MktTime> GetMarketTimes()
+        //{
+        //    List<MktTimeEntry> entrylist = new List<MktTimeEntry>();
+        //    foreach (MarketTime mt in idxsessionmap.Values)
+        //    {
+        //        foreach (MktTimeEntry ent in mt.MktTimeEntries)
+        //        {
+        //            if (entrylist.Any(s => s.SameTimeSpan(ent)))
+        //                continue;
+        //            entrylist.Add(ent as MktTimeEntry);
+        //        }
+        //    }
+        //    //时间段如果有价差 则取并集，没有交叉则单独计算
 
-            List<MktTime> list = entrylist.Select(ent=>new MktTime(ent.StartTime,ent.EndTime)).ToList();
-            List<MktTime> listtodelete = new List<MktTime>();
-            for (int i = 0; i < list.Count; i++)
-            {
-                for (int j = 0; i < list.Count; i++)
-                {
-                    if (j == i)
-                        continue;
-                    if (list[i].IsInSpan(list[j]))
-                        listtodelete.Add(list[j]);
-                }
-            }
+        //    List<MktTime> list = entrylist.Select(ent=>new MktTime(ent.StartTime,ent.EndTime)).ToList();
+        //    List<MktTime> listtodelete = new List<MktTime>();
+        //    for (int i = 0; i < list.Count; i++)
+        //    {
+        //        for (int j = 0; i < list.Count; i++)
+        //        {
+        //            if (j == i)
+        //                continue;
+        //            if (list[i].IsInSpan(list[j]))
+        //                listtodelete.Add(list[j]);
+        //        }
+        //    }
 
            
-            //MktTime t1 = list[0];
+        //    //MktTime t1 = list[0];
 
-            //for (int i = 1; i < list.Count; i++)
-            //{
-            //    if (t1.CrossSpan(list[i]))
-            //    {
-            //        list[0] = MktTime.UnionSpan(t1, list[i]);
-            //        listtodelete.Add(list[i]);
-            //    }
-            //}
-            foreach (MktTime t in listtodelete)
-            {
-                list.Remove(t);
-            }
-            return list;
-        }
+        //    //for (int i = 1; i < list.Count; i++)
+        //    //{
+        //    //    if (t1.CrossSpan(list[i]))
+        //    //    {
+        //    //        list[0] = MktTime.UnionSpan(t1, list[i]);
+        //    //        listtodelete.Add(list[i]);
+        //    //    }
+        //    //}
+        //    foreach (MktTime t in listtodelete)
+        //    {
+        //        list.Remove(t);
+        //    }
+        //    return list;
+        //}
     }
 
 }

@@ -129,12 +129,13 @@ namespace TradingLib.Core
                 throw new FutsRspError(string.Format("平仓数量大于持仓数量"));
             }
 
+            //TODO:改进时间检查
             //时间检查
-            IMarketTime mt = f.oSymbol.SecurityFamily.MarketTime;
-            if (!mt.IsInMarketTime(f.xTime))
-            {
-                throw new FutsRspError("平仓时间不在交易时间段内");
-            }
+            //IMarketTime mt = f.oSymbol.SecurityFamily.MarketTime;
+            //if (!mt.IsInMarketTime(f.xTime))
+            //{
+            //    throw new FutsRspError("平仓时间不在交易时间段内");
+            //}
 
             f.Broker = "SIMBROKER";
 

@@ -20,18 +20,20 @@ namespace TradingLib.API
         /// <summary>
         /// 是否是开市时间
         /// </summary>
-        bool IsOpenTime { get; }
+        //bool IsMarketTime { get; }
 
         /// <summary>
         /// 是否是在强平时间段
         /// </summary>
-        bool IsFlatTime { get; }
+        //bool IsFlatTime { get; }
 
         /// <summary>
         /// 判断某个时间是否在交易时间段内
         /// </summary>
         /// <param name="time"></param>
         /// <returns></returns>
-        bool IsInMarketTime(int time);
+        //bool IsInMarketTime(int time);
+
+        bool IsInMarketTime(DateTime time);
     }
 }

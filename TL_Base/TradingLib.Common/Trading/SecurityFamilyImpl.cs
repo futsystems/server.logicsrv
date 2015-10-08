@@ -118,7 +118,7 @@ namespace TradingLib.Common
             {
                 if (MarketTime != null)
                 {
-                    return MarketTime.IsOpenTime;
+                    return MarketTime.IsInMarketTime(DateTime.Now);
                 }
                 else
                 {
@@ -135,7 +135,7 @@ namespace TradingLib.Common
             {
                 if (MarketTime != null)
                 {
-                    return MarketTime.IsFlatTime;
+                    return false;
                 }
                 else
                 {

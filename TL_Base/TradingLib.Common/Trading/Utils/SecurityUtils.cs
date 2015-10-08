@@ -80,7 +80,7 @@ namespace TradingLib.Common
 
             if (sec.MarketTime != null)
             {
-                return sec.MarketTime.IsOpenTime;
+                return sec.MarketTime.IsInMarketTime(DateTime.Now);
             }
             else
             {

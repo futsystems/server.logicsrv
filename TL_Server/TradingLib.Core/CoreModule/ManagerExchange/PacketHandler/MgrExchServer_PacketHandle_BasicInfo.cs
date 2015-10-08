@@ -124,6 +124,25 @@ namespace TradingLib.Core
             }
         }
 
+        void SrvOnMGRUpdateMarketTime(MGRUpdateMarketTimeRequest request, ISession session, Manager manager)
+        {
+            logger.Info(string.Format("管理员:{0} 请求更新交易时间段:{1}", session.AuthorizedID, request.ToString()));
+            Manager manger = session.GetManager();
+            if (manager.IsRoot())
+            { 
+                if(request.MarketTime != null)
+                {
+                    BasicTracker.MarketTimeTracker.UpdateMarketTime(request.MarketTime);
+                    RspMGRUpdateMarketTimeResponse response = ResponseTemplate<RspMGRUpdateMarketTimeResponse>.SrvSendRspResponse(request);
+                    response.MarketTime = BasicTracker.MarketTimeTracker[request.MarketTime.ID];
+
+                    CacheRspResponse(response);
+                }
+
+                
+            }
+        
+        }
         void SrvOnMGRQrySecurity(MGRQrySecurityRequest request, ISession session, Manager manager)
         {
             logger.Info(string.Format("管理员:{0} 请求查询品种:{1}", session.AuthorizedID, request.ToString()));

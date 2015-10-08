@@ -55,20 +55,20 @@ namespace TradingLib.Core
         {
             logger.Info("初始化日内强平任务");
             Dictionary<int, List<MarketTime>> flatlist = new Dictionary<int, List<MarketTime>>();
-            foreach (FlatTimeMarketTimePair p in BasicTracker.MarketTimeTracker.GetFlatTimeMarketTimePairs())
-            {
-                //debug("xxxxxxxxxxxxx flattime:" + p.FlatTime.ToString() + " marketime id:" + p.MarketTime.ID, QSEnumDebugLevel.INFO);
-                if (!flatlist.Keys.Contains(p.FlatTime))
-                {
-                    flatlist[p.FlatTime] = new List<MarketTime>();
-                }
-                flatlist[p.FlatTime].Add(p.MarketTime);
-            }
+            //foreach (FlatTimeMarketTimePair p in BasicTracker.MarketTimeTracker.GetFlatTimeMarketTimePairs())
+            //{
+            //    //debug("xxxxxxxxxxxxx flattime:" + p.FlatTime.ToString() + " marketime id:" + p.MarketTime.ID, QSEnumDebugLevel.INFO);
+            //    if (!flatlist.Keys.Contains(p.FlatTime))
+            //    {
+            //        flatlist[p.FlatTime] = new List<MarketTime>();
+            //    }
+            //    flatlist[p.FlatTime].Add(p.MarketTime);
+            //}
 
-            foreach (int flattime in flatlist.Keys)
-            {
-                InjectTask(flattime, flatlist[flattime].ToArray());
-            }
+            //foreach (int flattime in flatlist.Keys)
+            //{
+            //    InjectTask(flattime, flatlist[flattime].ToArray());
+            //}
 
             
 
