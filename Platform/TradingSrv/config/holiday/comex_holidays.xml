@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Holidays>
+<Holidays code="COMEX" name="CME-COMEX分部">
 	<Holiday name="New Year's Day">
 		<Month>1</Month>
 		<Day>1</Day>

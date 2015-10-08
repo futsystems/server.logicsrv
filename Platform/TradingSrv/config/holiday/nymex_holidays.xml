@@ -1,14 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Holidays code="SGX" name="新交所">
+<Holidays code="NYMEX" name="CME-NYMEX分部">
 	<Holiday name="New Year's Day">
 		<Month>1</Month>
 		<Day>1</Day>
-	</Holiday>
-	
-	<Holiday name="Chinese Spring Festival">
-		<Month>1</Month>
-		<DayOfWeek>1</DayOfWeek>
-		<WeekOfMonth>3</WeekOfMonth>
 	</Holiday>
 	
 	<Holiday name="Martin Luther King's Birthday">
@@ -67,6 +61,9 @@
 		<Month>12</Month>
 		<Day>25</Day>
 	</Holiday>
+
+
+
 </Holidays>
 
 
