@@ -36,6 +36,22 @@ namespace TradingLib.Common
     /// </summary>
     public class TradingRange
     {
+        public TradingRange()
+        {
+            this.SettleFlag = QSEnumRangeSettleFlag.T;
+            this.StartDay = DayOfWeek.Monday;
+            this.StartTime = 0;
+            this.EndDay = DayOfWeek.Tuesday;
+            this.EndDay = 0;
+        }
+        public TradingRange(DayOfWeek startday, int starttime, DayOfWeek endday, int endtime, QSEnumRangeSettleFlag flag = QSEnumRangeSettleFlag.T)
+        {
+            this.StartDay = startday;
+            this.StartTime = starttime;
+            this.EndDay = endday;
+            this.EndTime = endtime;
+            this.SettleFlag = flag;
+        }
         /// <summary>
         /// 结算标识
         /// </summary>
@@ -66,17 +82,29 @@ namespace TradingLib.Common
         /// </summary>
         /// <param name="now"></param>
         /// <returns></returns>
-        internal static bool IsInRange(this TradingRange range, DateTime time)
+        public static bool IsInRange(this TradingRange range, DateTime time)
         {
             DayOfWeek w = time.DayOfWeek;
             int t = Util.ToTLTime(time);//获得时间
-            //如果当前所处日期在开始和结束日期之外
-            if (w < range.StartDay) return false;
-            if (w > range.EndDay) return false;
+            //星期日:0 星期一:1 .... 星期六:6
+            //起止日期 星期一到星期二， 星期天到星期一
+            if (range.StartDay <= range.EndDay)
+            {
+                //如果当前所处日期在开始和结束日期之外
+                if (w < range.StartDay) return false;
+                if (w > range.EndDay) return false;
 
-            if (w == range.StartDay && t < range.StartTime) return false;
-            if (w == range.EndDay && t > range.EndTime) return false;
-            return true;
+                if (w == range.StartDay && t < range.StartTime) return false;
+                if (w == range.EndDay && t > range.EndTime) return false;
+                return true;
+            }
+            else //星期6到星期一
+            {
+                if (w < range.StartDay && w>range.EndDay) return false;
+                if (w == range.StartDay && t < range.StartTime) return false;
+                if (w == range.EndDay && t > range.EndTime) return false;
+                return true;
+            }
         }
     }
 }
