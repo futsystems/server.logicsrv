@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.IO;
 using TradingLib.API;
+using Common.Logging;
 
 
 namespace TradingLib.Common
@@ -17,6 +18,8 @@ namespace TradingLib.Common
         Dictionary<string, Calendar> calendarMap = new Dictionary<string, Calendar>();
 
         Calendar _default = null;
+        ILog logger = LogManager.GetLogger("CalendarTracker");
+
         public CalendarTracker()
         {
             foreach (var fn in Directory.GetFiles(Util.GetHolidayPath(), "*.xml"))
@@ -25,8 +28,13 @@ namespace TradingLib.Common
                 {
                     string fname = Path.GetFileNameWithoutExtension(fn);  
                     Calendar c = new Calendar(fn);
+                    if (calendarMap.Keys.Contains(c.Code))
+                    {
+                        logger.Warn(string.Format("Calendar File:{0} Code:{1} Exist,Please Edit Calendar File", fn, c.Code));
+                        continue;
+                    }
                     //将日历添加到Map中
-                    calendarMap.Add(fname.ToUpper(), c);
+                    calendarMap.Add(c.Code, c);
                 }
                 catch (Exception ex)
                 {
@@ -37,20 +45,39 @@ namespace TradingLib.Common
         }
 
         /// <summary>
-        /// 获得某个交易所的假日对象
+        /// 所有日历对象
         /// </summary>
-        /// <param name="exchange"></param>
-        /// <returns></returns>
-        public Calendar GetCalendar(IExchange exchange)
-        {
-            string key = exchange.EXCode.ToUpper();
-            Calendar target = null;
+        public IEnumerable<Calendar> Calendars { get { return calendarMap.Values; } }
 
-            if (calendarMap.TryGetValue(key, out target))
+
+        /// <summary>
+        /// 获得所有日历对象条目
+        /// </summary>
+        //public IEnumerable<CalendarItem> CalendarItems
+        //{
+        //    get
+        //    {
+        //        return this.Calendars.Select(c => new CalendarItem() { Code = c.Code, Name = c.Name });
+        //    }
+        //}
+        /// <summary>
+        /// 获得交易日历对象
+        /// </summary>
+        /// <param name="calendarfn"></param>
+        /// <returns></returns>
+        public Calendar this[string calendarfn]
+        {
+            get
             {
-                return target;
+                if (string.IsNullOrEmpty(calendarfn)) return _default;
+                Calendar target = null;
+                if (calendarMap.TryGetValue(calendarfn, out target))
+                {
+                    return target;
+                }
+                return _default;
             }
-            return _default;
         }
+        
     }
 }

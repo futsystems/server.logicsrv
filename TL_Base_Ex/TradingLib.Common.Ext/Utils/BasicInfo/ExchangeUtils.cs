@@ -16,8 +16,10 @@ namespace TradingLib.Common
         /// <returns></returns>
         public static Calendar GetCalendar(this IExchange exchagne)
         {
-            return BasicTracker.CalendarTracker.GetCalendar(exchagne);
+            return BasicTracker.CalendarTracker[exchagne.Calendar];
         }
+
+
 
 
     }

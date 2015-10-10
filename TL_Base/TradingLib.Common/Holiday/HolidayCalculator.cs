@@ -22,6 +22,8 @@ namespace TradingLib.Common
             orderedHolidays = new ArrayList();
             xHolidays = new XmlDocument();
             xHolidays.Load(xmlPath);
+            _name = string.Empty;
+            _code = string.Empty;
             this.processXML();
         }
         #endregion
@@ -30,6 +32,8 @@ namespace TradingLib.Common
         private ArrayList orderedHolidays;
         private XmlDocument xHolidays;
         private DateTime startingDate;
+        private string _code;
+        private string _name;
         #endregion
 
         #region Public Properties
@@ -43,7 +47,14 @@ namespace TradingLib.Common
         {
             get { return this.orderedHolidayList; }
         }
+
+        public string Code { get { return _code; } }
+
+        public string Name { get { return _name; } }
+
+
         #endregion
+
 
         #region Private Methods
 
@@ -53,6 +64,10 @@ namespace TradingLib.Common
         /// </summary>
         private void processXML()
         {
+            
+            XmlNode root = xHolidays.SelectSingleNode("/Holidays");
+            _code = root.Attributes["code"].Value.ToString();
+            _name = root.Attributes["name"].Value.ToString();
             foreach (XmlNode n in xHolidays.SelectNodes("/Holidays/Holiday"))
             {
                 Holiday h = this.processNode(n);

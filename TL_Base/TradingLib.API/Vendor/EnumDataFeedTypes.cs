@@ -19,6 +19,7 @@ namespace TradingLib.API
         CTPOPT,//国内CTP期权 DataFeed
         IB,//外盘IBDataFeed
         IQFEED,//外盘IQFeed行情源
+        SHZD,//上海直达接口 获取恒生行情
     };
 
 

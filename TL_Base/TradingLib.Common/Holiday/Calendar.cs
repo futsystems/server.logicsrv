@@ -9,13 +9,30 @@ using TradingLib.Common;
 namespace TradingLib.Common
 {
     /// <summary>
+    /// 日历对象条目 用于管理段查询获得日历对象列表
+    /// </summary>
+    public class CalendarItem
+    {
+        /// <summary>
+        /// 日历对象编号
+        /// </summary>
+        public string Code { get; set; }
+
+        /// <summary>
+        /// 日历对象名称
+        /// </summary>
+        public string Name { get; set; }
+    }
+
+    /// <summary>
     /// 日历对象
     /// 
     /// </summary>
     public class Calendar
     {
-        string _name=string.Empty;
-        public string Name { get { return _name; } }
+        public string Name { get { return _hc==null?"DEFAULT":_hc.Name; } }
+
+        public string Code { get { return _hc==null?"DEFAULT":_hc.Code; } }
 
         HolidayCalculator _hc = null;
 
@@ -31,16 +48,15 @@ namespace TradingLib.Common
             {
                 throw new ArgumentException("holiday file do not exist");
             }
-            _name = Path.GetFileNameWithoutExtension(fn).ToUpper();
             _hc = new HolidayCalculator(start, fn);
         }
 
         /// <summary>
         /// 默认构造函数 不包含任何假日信息
+        /// 默认假日对象
         /// </summary>
         public Calendar()
         {
-            _name = "DEFAULT";
             _hc = null;
         }
         /// <summary>

@@ -84,8 +84,6 @@ namespace TradingLib.Core
             {
                 throw new FutsRspError("无权执行强平操作");
             }
-
-
         }
 
     }

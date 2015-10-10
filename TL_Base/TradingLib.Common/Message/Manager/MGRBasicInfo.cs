@@ -29,6 +29,68 @@ namespace TradingLib.Common
     }
 
     /// <summary>
+    /// 更新交易所信息
+    /// </summary>
+    public class MGRUpdateExchangeRequest : RequestPacket
+    {
+        public MGRUpdateExchangeRequest()
+        {
+            _type = MessageTypes.MGRUPDATEEXCHANGE;
+            this.Exchange = null;
+        }
+
+        public Exchange Exchange { get; set; }
+
+        public override string ContentSerialize()
+        {
+            if (this.Exchange == null)
+                return string.Empty;
+            return TradingLib.Common.Exchange.Serialize(this.Exchange);
+        }
+
+        public override void ContentDeserialize(string content)
+        {
+            if (string.IsNullOrEmpty(content))
+            {
+                this.Exchange = null;
+                return;
+            }
+            this.Exchange = TradingLib.Common.Exchange.Deserialize(content);
+        }
+    }
+
+    public class RspMGRUpdateExchangeResponse : RspResponsePacket
+    {
+
+        public RspMGRUpdateExchangeResponse()
+        {
+            _type = MessageTypes.MGRUPDATEEXCHANGERESPONSE;
+            this.Exchange = null;
+        }
+
+        public Exchange Exchange { get; set; }
+
+        public override string ResponseSerialize()
+        {
+            if (this.Exchange == null)
+                return string.Empty;
+            return TradingLib.Common.Exchange.Serialize(this.Exchange);
+        }
+
+        public override void ResponseDeserialize(string content)
+        {
+            if (string.IsNullOrEmpty(content))
+            {
+                this.Exchange = null;
+                return;
+            }
+            this.Exchange = TradingLib.Common.Exchange.Deserialize(content);
+        }
+    }
+
+
+
+    /// <summary>
     /// 查询交易所回报
     /// </summary>
     public class RspMGRQryExchangeResponse : RspResponsePacket
@@ -43,7 +105,7 @@ namespace TradingLib.Common
         public override string ResponseSerialize()
         {
             if (this.Exchange == null) return string.Empty;
-            return this.Exchange.Serialize();
+            return TradingLib.Common.Exchange.Serialize(this.Exchange);
         }
 
         public override void ResponseDeserialize(string content)
@@ -53,8 +115,7 @@ namespace TradingLib.Common
                 this.Exchange = null;
                 return;
             }
-            this.Exchange = new Exchange();
-            this.Exchange.Deserialize(content);
+            this.Exchange = TradingLib.Common.Exchange.Deserialize(content);
         }
     }
 

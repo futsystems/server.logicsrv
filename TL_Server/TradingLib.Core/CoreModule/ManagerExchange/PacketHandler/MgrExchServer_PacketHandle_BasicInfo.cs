@@ -94,6 +94,31 @@ namespace TradingLib.Core
         #endregion
 
         #region Security Symbol Exchange MarketTime
+
+        //查询日历列表
+        [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "QryCalendarList", "QryCalendarList - qry calendar list", "查询日历对象列表")]
+        public void CTE_QryCalendarList(ISession session)
+        {
+            Manager manager = session.GetManager();
+            if (manager.IsRoot())
+            {
+                CalendarItem[] items = BasicTracker.CalendarTracker.Calendars.Select(c => new CalendarItem() { Code = c.Code, Name = c.Name }).ToArray();
+                int totalnum = items.Length;
+
+                if (totalnum > 0)
+                {
+                    for (int i = 0; i < totalnum; i++)
+                    {
+                        session.ReplyMgr(items[i], i == totalnum - 1);
+                    }
+                }
+                else
+                {
+                    session.ReplyMgr(null);
+                }
+            }
+        }
+
         void SrvOnMGRQryExchange(MGRQryExchangeRequuest request, ISession session, Manager manager)
         {
             logger.Info(string.Format("管理员:{0} 请求查询交易所列表:{1}", session.AuthorizedID, request.ToString()));
@@ -107,6 +132,22 @@ namespace TradingLib.Core
                 response.Exchange = exchs[i] as Exchange;
 
                 CacheRspResponse(response, i == totalnum - 1);
+            }
+        }
+
+        void SrvOnMGRUpdateExchange(MGRUpdateExchangeRequest request, ISession session, Manager manager)
+        {
+            logger.Info(string.Format("管理员:{0} 请求更新交易所信息:{1}", session.AuthorizedID, request.ToString()));
+            if (manager.IsRoot())
+            {
+                if (request.Exchange != null)
+                {
+                    BasicTracker.ExchagneTracker.UpdateExchange(request.Exchange);
+
+                    RspMGRUpdateExchangeResponse response = ResponseTemplate<RspMGRUpdateExchangeResponse>.SrvSendRspResponse(request);
+                    response.Exchange = BasicTracker.ExchagneTracker[request.Exchange.ID];
+                    CacheRspResponse(response);
+                }
             }
         }
 

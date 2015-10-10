@@ -42,7 +42,7 @@ namespace TradingLib.Common
         public override string ResponseSerialize()
         {
             if (this.Exchange == null) return string.Empty;
-            return this.Exchange.Serialize();
+            return TradingLib.Common.Exchange.Serialize(this.Exchange);
         }
 
         public override void ResponseDeserialize(string content)
@@ -52,8 +52,7 @@ namespace TradingLib.Common
                 this.Exchange = null;
                 return;
             }
-            this.Exchange = new Exchange();
-            this.Exchange.Deserialize(content);
+            this.Exchange = TradingLib.Common.Exchange.Deserialize(content);
         }
     }
 

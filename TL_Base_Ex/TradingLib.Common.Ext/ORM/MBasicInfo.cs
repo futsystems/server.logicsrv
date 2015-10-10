@@ -40,9 +40,34 @@ namespace TradingLib.ORM
                 IEnumerable<Exchange> result = db.Connection.Query<Exchange>(query, null);
                 return result;
             }
-
         }
 
+        /// <summary>
+        /// 更新交易所
+        /// </summary>
+        /// <param name="ex"></param>
+        public static void UpdateExchange(Exchange ex)
+        {
+            using (DBMySql db = new DBMySql())
+            {
+                string query = string.Format("UPDATE info_exchange SET country='{0}',excode='{1}',name='{2}',title='{3}',calendar='{4}' WHERE id='{5}'", ex.Country, ex.EXCode, ex.Name, ex.Title, ex.Calendar, ex.ID);
+                db.Connection.Execute(query);
+            }
+        }
+
+        /// <summary>
+        /// 插入交易所
+        /// </summary>
+        /// <param name="ex"></param>
+        public static void InsertExchange(Exchange ex)
+        {
+            using (DBMySql db = new DBMySql())
+            {
+                string query = string.Format("INSERT INTO info_exchange (`country`,`excode`,`name`,`title`,`calendar`) VALUES ( '{0}','{1}','{2}','{3}','{4}')", ex.Country, ex.EXCode, ex.Name, ex.Title, ex.Calendar);
+                db.Connection.Execute(query);
+                SetIdentity(db.Connection, id => ex.ID = id, "id", "info_exchange");
+            }
+        }
 
         /// <summary>
         /// 返回帐户类别列表

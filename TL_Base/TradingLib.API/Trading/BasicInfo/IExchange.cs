@@ -24,8 +24,12 @@ namespace TradingLib.API
         /// 交易所编号 
         /// 国家+交易所代码
         /// </summary>
-        string Index { get; }
+        //string Index { get; }
 
+        /// <summary>
+        /// 交易日历
+        /// </summary>
+        string Calendar { get; set; }
         /// <summary>
         /// 简称
         /// </summary>

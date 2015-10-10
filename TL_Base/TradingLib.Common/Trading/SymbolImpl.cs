@@ -270,7 +270,7 @@ namespace TradingLib.Common
 
         public CurrencyType Currency { get { return SecurityFamily != null ? SecurityFamily.Currency : CurrencyType.RMB; } }
 
-        public string Exchange { get { return SecurityFamily != null ? SecurityFamily.Exchange.Index : ""; } }
+        public string Exchange { get { return SecurityFamily != null ? SecurityFamily.Exchange.EXCode : ""; } }
 
 
         bool _tradeable = false;
