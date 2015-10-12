@@ -12,41 +12,84 @@ namespace TradingLib.Core
     {
 
         /// <summary>
-        /// 结算某个交易账户 指定交易所和结算日
-        /// 交易所结算相当于是将帐户中的记录进行结算汇总，
+        /// 初始化结算任务
         /// </summary>
-        /// <param name="account"></param>
-        /// <returns></returns>
-        ExchangeSettlement SettleAccount(IAccount account,IExchange exchange,int settleday)
+        void InitSettleTask()
         {
-            ExchangeSettlement settlement = new ExchangeSettlementImpl();
-            settlement.Account = account.ID;
-            settlement.Exchange = exchange.EXCode;
-            settlement.Settleday = settleday;
-            
-            //手续费 手续费为所有成交手续费累加
-            settlement.Commission = account.GetTrades(exchange).Sum(f => f.Commission);
-            //平仓盈亏 为所有持仓对象下面的平仓明细的平仓盈亏累加
-            settlement.CloseProfitByDate = account.GetPositions(exchange).Sum(pos => pos.PositionCloseDetail.Sum(pcd => pcd.CloseProfitByDate));
-            //浮动盈亏
-            settlement.PositionProfitByDate = account.GetPositions(exchange).Sum(pos => pos.PositionDetailTotal.Sum(pd => pd.PositionProfitByDate));
+            logger.Info("初始化结算任务");
+            Dictionary<DateTime, List<IExchange>> exchangesettlemap = new Dictionary<DateTime, List<IExchange>>();
 
-            return settlement;
-        }
-        /// <summary>
-        /// 保存结算价格
-        /// </summary>
-        void SaveSettlePrice()
-        { 
+            foreach (var ex in BasicTracker.ExchagneTracker.Exchanges)
+            {
+                DateTime settleextime = Util.ToDateTime(ex.GetExchangeTime().ToTLDate(), ex.CloseTime);//获得交易所结算时间对应交易所时间
+
+                DateTime settlesystime = ex.GetSystemTime(settleextime);//转换成系统时间
+
+                if (!exchangesettlemap.Keys.Contains(settlesystime))
+                {
+                    exchangesettlemap.Add(settlesystime, new List<IExchange>());
+                }
+
+                exchangesettlemap[settlesystime].Add(ex);
+            }
+
+            foreach (var ky in exchangesettlemap.Keys)
+            {
+                RegisterExchangeSettleTask(ky, exchangesettlemap[ky]);
+            }
         
         }
-        
+
+        void RegisterExchangeSettleTask(DateTime settletime, List<IExchange> list)
+        {
+            logger.Info("注册交易所结算任务,结算时间:" + settletime.ToString("HH:mm:ss"));
+            //DateTime flattime = settletime.AddMinutes(-5);//提前5分钟强平
+            TaskProc task = new TaskProc(this.UUID, "交易所结算-" + settletime.ToString("HH:mm:ss"), settletime.Hour, settletime.Minute, settletime.Second, delegate() { SettleExchange(list); });
+            TLCtxHelper.ModuleTaskCentre.RegisterTask(task);
+        }
+
         /// <summary>
-        /// 设定持仓结算价格
+        /// 交易所结算
+        /// 交易所结算规则
+        /// 1.周六周日 对应的时间节点上不执行结算
+        /// 2.节假日不执行结算
+        /// 3.结算时 当前日期就是结算日 只是上个交易日的T+1时段的交易 并入当前交易日进行结算
+        /// 
+        /// 1.分账户结算
+        /// 2.Broker结算
         /// </summary>
-        void BindSetlePrice()
-        { 
-        
+        /// <param name="list"></param>
+        void SettleExchange(List<IExchange> list)
+        {
+            try
+            {
+                foreach (var exchange in list)
+                {
+                    DateTime extime = exchange.GetExchangeTime();//获得交易所当前时间
+
+                    //非工作日不结算
+                    if (!extime.IsWorkDay())
+                    {
+                        continue;
+                    }
+                    //节假日不结算
+                    if (exchange.IsInHoliday(extime))
+                    {
+                        continue;
+                    }
+                    int settleday = extime.ToTLDate();
+
+                    logger.Info(string.Format("交易所:{0} 执行结算 结算日:{1}", exchange.EXCode, settleday));
+                    foreach (var account in TLCtxHelper.ModuleAccountManager.Accounts)
+                    {
+                        account.SettleExchange(exchange, settleday);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                logger.Error("交易所结算失败:" + ex.ToString());
+            }
         }
 
         /// <summary>

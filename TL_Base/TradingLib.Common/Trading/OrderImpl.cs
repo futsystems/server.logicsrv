@@ -227,6 +227,8 @@ namespace TradingLib.Common
             this.FatherBreed = copythis.FatherBreed;
             this.FatherID = copythis.FatherID;
             this.Breed = copythis.Breed;
+            this.Settled = copythis.Settled;
+            this.SettleDay = copythis.SettleDay;
 
             this.CopyID = copythis.CopyID + 1;
         }

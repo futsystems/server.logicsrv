@@ -90,6 +90,20 @@ namespace TradingLib.Core
             _asynLoger.updateOrder(o);
         }
 
+        public override void MarkOrderSettled(Order o)
+        {
+            _asynLoger.MarkOrderSettled(o);
+        }
+
+        public override void MarkTradeSettled(Trade f)
+        {
+            _asynLoger.MarkTradeSettled(f);
+        }
+
+        public override void MarkPositionDetailSettled(PositionDetail pd)
+        {
+            _asynLoger.MarkPositionDetailSettled(pd);
+        }
         public override void NewOrderAction(OrderAction actoin)
         {
             _asynLoger.newOrderAction(actoin);
@@ -170,7 +184,7 @@ namespace TradingLib.Core
         public override IEnumerable<Trade> SelectAcctTrades()
         {
             //填充对象oSymbol
-            IEnumerable<Trade> trades = ORM.MTradingInfo.SelectTrades().Select(f => { f.oSymbol = GetAccountSymbol(f.Account, f.Symbol); return f; });
+            IEnumerable<Trade> trades = ORM.MTradingInfo.SelectTradesUnSettled().Select(f => { f.oSymbol = GetAccountSymbol(f.Account, f.Symbol); return f; });
             logger.Info("数据库恢复前次结算以来成交数据:" + trades.Count().ToString() + "条");
             return trades;
         }
@@ -181,18 +195,22 @@ namespace TradingLib.Core
         /// <returns></returns>
         public override IEnumerable<Order> SelectAcctOrders()
         {
-            IEnumerable<Order> orders = ORM.MTradingInfo.SelectOrders().Select(o => { o.oSymbol = GetAccountSymbol(o.Account, o.Symbol); return o; });
+            IEnumerable<Order> orders = ORM.MTradingInfo.SelectOrdersUnSettled().Select(o => { o.oSymbol = GetAccountSymbol(o.Account, o.Symbol); return o; });
             logger.Info("数据库恢复前次结算以来委托数据:" + orders.Count().ToString() + "条");
             return orders;
         }
 
         /// <summary>
         /// 获得所有交易帐户日内 持仓明细数据
+        /// 隔夜持仓数据 按交易所结算日期来加载
+        /// 交易所结算有一个结算日，结算生成的隔夜持仓时的settleday为该结算日
+        /// 如果跨越了某个交易所多日结算,则上一个隔夜持仓就没有,因此获取所有交易所结算结算日最大的那个结算的隔夜持仓数据
+        /// 手续费 平仓盈亏 等数据是结算累加统计的，而隔夜持仓则是按最近的一个隔夜持仓来计算
         /// </summary>
         /// <returns></returns>
         public override IEnumerable<PositionDetail> SelectAcctPositionDetails()
         {
-            IEnumerable<PositionDetail> positions = ORM.MSettlement.SelectAccountPositionDetails(TLCtxHelper.ModuleSettleCentre.LastSettleday).Select(pos => { pos.oSymbol = GetAccountSymbol(pos.Account, pos.Symbol); return pos; });
+            IEnumerable<PositionDetail> positions = ORM.MSettlement.SelecteAccountPositionDetailsUnSettled().Select(pos => { pos.oSymbol = GetAccountSymbol(pos.Account, pos.Symbol); return pos; });
             logger.Info("数据库恢复前次结算持仓明细数据:" + positions.Count().ToString() + "条");
             return positions;
         }

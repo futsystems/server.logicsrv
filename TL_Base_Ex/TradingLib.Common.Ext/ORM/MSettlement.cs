@@ -66,6 +66,32 @@ namespace TradingLib.ORM
         }
 
         /// <summary>
+        /// 标注某个持仓明细已结算
+        /// </summary>
+        /// <param name="p"></param>
+        public static void MarkPositionDetailSettled(PositionDetail p)
+        {
+            using (DBMySql db = new DBMySql())
+            {
+                string query = string.Format("UPDATE log_position_detail_hist SET settled='1' WHERE `account` = '{0}' AND `settleday` = '{1}' AND  `symbol`='{2}' AND `tradeid`='{3}' AND `side`='{4}' AND `opendate`='{5}'", p.Account, p.Settleday, p.Symbol, p.TradeID, p.Side ? 1 : 0, p.OpenDate);
+                db.Connection.Execute(query);
+            }
+        }
+
+        /// <summary>
+        /// 查询未结算隔夜持仓明细
+        /// </summary>
+        /// <returns></returns>
+        public static IEnumerable<PositionDetail> SelecteAccountPositionDetailsUnSettled()
+        {
+            using (DBMySql db = new DBMySql())
+            {
+                string query = string.Format("SELECT * FROM  log_position_detail_hist WHERE settled = {0} AND  breed='{1}'",0, QSEnumOrderBreedType.ACCT);
+                return db.Connection.Query<PositionDetailImpl>(query);
+            }
+        }
+
+        /// <summary>
         /// 获得分帐户侧所有持仓明细
         /// </summary>
         /// <param name="tradingday"></param>
@@ -194,7 +220,7 @@ namespace TradingLib.ORM
         {
             using (DBMySql db = new DBMySql())
             {
-                if (!IsPositoinRoundExist(pr, settleday))
+                if (!IsPositoinRoundExist(pr, settleday))//如果已经存在在不重复插入
                 {
                     string query = String.Format("Insert into hold_postransactions (`account`,`symbol`,`security`,`multiple`,`entrytime`,`entrysize`,`entryprice`,`entrycommission`,`exitsize`,`exitprice`,`exitcommission`,`highest`,`lowest`,`size`,`holdsize`,`side`,`wl`,`totalpoints`,`profit`,`commission`,`netprofit`,`type`,`settleday`) values('{0}','{1}','{2}','{3}',{4},'{5}','{6}','{7}','{9}','{10}','{11}','{12}','{13}','{14}','{15}','{16}','{17}','{18}','{19}','{20}','{21}','{22}',{23})", pr.Account, pr.Symbol, pr.Security, pr.Multiple, pr.EntryTime, pr.EntrySize, pr.EntryPrice, pr.EntryCommission, pr.ExitTime, pr.ExitSize, pr.ExitPrice, pr.ExitCommission, pr.Highest, pr.Lowest, pr.Size, pr.HoldSize, pr.Side ? 1 : 0, pr.WL?1:0, pr.TotalPoints, pr.Profit, pr.Commissoin, pr.NetProfit, pr.Type, settleday);
                     db.Connection.Execute(query);
@@ -468,12 +494,12 @@ namespace TradingLib.ORM
         /// 获得没有结算的交易所结算记录
         /// </summary>
         /// <returns></returns>
-        public static IEnumerable<ExchangeSettlement> SelectPendingExchangeSettlement()
+        public static IEnumerable<ExchangeSettlementImpl> SelectPendingExchangeSettlement()
         {
             using (DBMySql db = new DBMySql())
             {
-                const string query = "SELECT * FROM log_settlement_exchange";
-                IEnumerable<ExchangeSettlement> result = db.Connection.Query<ExchangeSettlement>(query);
+                const string query = "SELECT * FROM log_settlement_exchange WHERE settled ='0'";
+                IEnumerable<ExchangeSettlementImpl> result = db.Connection.Query<ExchangeSettlementImpl>(query);
                 return result;
             }
         }

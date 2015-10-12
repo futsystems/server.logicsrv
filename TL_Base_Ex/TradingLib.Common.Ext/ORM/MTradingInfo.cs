@@ -197,15 +197,28 @@ namespace TradingLib.ORM
                 return db.Connection.Execute(query) >= 0;
             }
         }
-        
+
+        public static void MarkOrderSettled(Order o)
+        {
+            using (DBMySql db = new DBMySql())
+            {
+                string query = string.Format("UPDATE tmp_orders SET settled='{0}' where id = '{1}'", o.Settled ? 1 : 0, o.id);
+                db.Connection.Execute(query);
+            }
+        }
+
+
         /// <summary>
         /// 获得最近结算日的下一个结算日的委托数据
         /// </summary>
         /// <returns></returns>
-        public static IList<Order> SelectOrders()
+        public static IEnumerable<Order> SelectOrdersUnSettled()
         {
-            int settleday = TLCtxHelper.ModuleSettleCentre.NextTradingday;
-            return SelectOrders(settleday, settleday);
+            using (DBMySql db = new DBMySql())
+            {
+                string query = string.Format("SELECT * FROM  tmp_orders  WHERE  settled='{0}' AND breed='{1}'", 0, QSEnumOrderBreedType.ACCT);
+                return db.Connection.Query<OrderImpl>(query);
+            }
         }
 
         /// <summary>
@@ -290,14 +303,32 @@ namespace TradingLib.ORM
         }
 
         /// <summary>
+        /// 标记成交已结算
+        /// </summary>
+        /// <param name="f"></param>
+        public static void MarkeTradeSettled(Trade f)
+        {
+            using (DBMySql db = new DBMySql())
+            {
+                string query = string.Format("UPDATE tmp_trades SET settled='{0}' WHERE settleday = '{1}' AND tradeid='{2}'", f.Settled ? 1 : 0, f.SettleDay, f.TradeID);
+                db.Connection.Execute(query);
+            }
+        }
+
+
+        /// <summary>
         /// 获得最近结算日的下一个结算日的成交数据
         /// </summary>
         /// <returns></returns>
-        public static IList<Trade> SelectTrades()
+        public static IEnumerable<Trade> SelectTradesUnSettled()
         {
-            int settleday = TLCtxHelper.ModuleSettleCentre.NextTradingday;
-            return SelectTrades(settleday, settleday);
+            using (DBMySql db = new DBMySql())
+            {
+                string query = string.Format("SELECT * FROM  tmp_trades  WHERE  settled='{0}' AND breed='{1}'", 0, QSEnumOrderBreedType.ACCT);
+                return db.Connection.Query<TradeImpl>(query);
+            }
         }
+
 
         /// <summary>
         /// 获得最近结算日的所有成交侧 成交数据

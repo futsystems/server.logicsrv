@@ -8,6 +8,25 @@ namespace TradingLib.Common
 {
     public partial class ClearCentreBase
     {
+        public void GotExchangeSettlement(ExchangeSettlement settle)
+        {
+            try
+            {
+                IAccount account = TLCtxHelper.ModuleAccountManager[settle.Account];
+                if (account == null) return;
+                acctk.GotExchangeSettlement(settle);
+                onGotExchangeSettlement(settle);
+            }
+            catch (Exception ex)
+            {
+                logger.Error("处理交易所结算数据异常:" + ex.ToString());
+            }
+        }
+
+        internal virtual void onGotExchangeSettlement(ExchangeSettlement settle)
+        { 
+            
+        }
         public void GotPosition(PositionDetail p)
         {
             try

@@ -25,13 +25,14 @@ namespace TradingLib.Common
 
         /// <summary>
         /// 平仓盈亏
+        /// 交易所结算盯市盈亏 计入 平仓盈亏中
         /// </summary>
-        public decimal RealizedPL { get { return this.PendingSettleCloseProfitByDate + this.CalFutRealizedPL() + this.CalOptRealizedPL() + this.CalInnovRealizedPL(); } }
+        public decimal RealizedPL { get { return this.PendingSettleCloseProfitByDate + this.PendingSettlePositionProfitByDate + this.CalFutRealizedPL() + this.CalOptRealizedPL() + this.CalInnovRealizedPL(); } }
 
         /// <summary>
         /// 浮动盈亏 
         /// </summary>
-        public decimal UnRealizedPL { get { return this.PendingSettlePositionProfitByDate + this.CalFutUnRealizedPL() + this.CalOptPositionValue() - this.CalOptPositionCost() + this.CalInnovPositionValue() - this.CalInnovPositionCost(); } }
+        public decimal UnRealizedPL { get { return  + this.CalFutUnRealizedPL() + this.CalOptPositionValue() - this.CalOptPositionCost() + this.CalInnovPositionValue() - this.CalInnovPositionCost(); } }
 
         /// <summary>
         /// 盯市盈亏

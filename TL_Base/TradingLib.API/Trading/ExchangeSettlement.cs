@@ -37,5 +37,10 @@ namespace TradingLib.API
         /// 交易所
         /// </summary>
         string Exchange { get; set; }
+
+        /// <summary>
+        /// 是否已结算
+        /// </summary>
+        bool Settled { get; set; }
     }
 }

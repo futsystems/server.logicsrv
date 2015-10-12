@@ -344,6 +344,8 @@ namespace TradingLib.Common
             this.FatherBreed = copytrade.FatherBreed;
             this.FatherID = copytrade.FatherID;
             this.Breed = copytrade.Breed;
+            this.Settled = copytrade.Settled;
+            this.SettleDay = copytrade.SettleDay;
 
             //this.Domain_ID = copytrade.Domain_ID;
 

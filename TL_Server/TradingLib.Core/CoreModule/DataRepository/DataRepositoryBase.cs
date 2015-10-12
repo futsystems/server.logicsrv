@@ -64,6 +64,21 @@ namespace TradingLib.Core
             throw new NotImplementedException();
         }
 
+
+        public virtual void MarkOrderSettled(Order o)
+        {
+            throw new NotImplementedException();
+        }
+
+        public virtual void MarkTradeSettled(Trade f)
+        {
+            throw new NotImplementedException();
+        }
+
+        public virtual void MarkPositionDetailSettled(PositionDetail pd)
+        {
+            throw new NotImplementedException();
+        }
         /// <summary>
         /// 插入委托操作
         /// </summary>

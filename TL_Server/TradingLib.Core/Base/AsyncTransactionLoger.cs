@@ -32,11 +32,15 @@ namespace TradingLib.Core
         //FastDBTransaction fastdb;
         RingBuffer<Order> _ocache;
         RingBuffer<Order> _oupdatecache;
+        RingBuffer<Order> _osettlecache;
+        
         RingBuffer<Trade> _tcache;
+        RingBuffer<Trade> _tsettlecache;
         RingBuffer<long> _ccache;
         RingBuffer<PositionRound> _postranscache;
         RingBuffer<OrderAction> _oactioncache;
         RingBuffer<PositionCloseDetail> _posclosecache;
+        RingBuffer<PositionDetail> _pdsettledcache;
         //RingBuffer<PositionRound> _postransopencache;
 
         public int OrderInCache { get { return _ocache.Count; } }
@@ -159,6 +163,17 @@ namespace TradingLib.Core
                                 }
                                 Thread.Sleep(_delay);
                             }
+                            while (!_ocache.hasItems && !_oupdatecache.hasItems && _osettlecache.hasItems)
+                            {
+                                Order o = _osettlecache.Read();
+                                ORM.MTradingInfo.MarkOrderSettled(o);
+                            }
+                            while (_pdsettledcache.hasItems) 
+                            {
+                                PositionDetail pd = _pdsettledcache.Read();
+                                ORM.MSettlement.MarkPositionDetailSettled(pd);
+                            
+                            }
                             //插入成交
                             while (!_ocache.hasItems && _tcache.hasItems)
                             {
@@ -187,6 +202,11 @@ namespace TradingLib.Core
                                 }
                                 Thread.Sleep(_delay);
 
+                            }
+                            while (!_ocache.hasItems && !_tcache.hasItems && _tsettlecache.hasItems)
+                            {
+                                Trade f = _tsettlecache.Read();
+                                ORM.MTradingInfo.MarkeTradeSettled(f);
                             }
                             //插入取消
                             while (!_ocache.hasItems && _ccache.hasItems)
@@ -369,12 +389,31 @@ namespace TradingLib.Core
             _oupdatecache.Write(oc);
             newlog();
         }
+        public void MarkOrderSettled(Order o)
+        {
+            Order oc = new OrderImpl(o);
+            _osettlecache.Write(oc);
+            newlog();
+        }
         public void newTrade(Trade f)
         {
             Trade nf = new TradeImpl(f);
             _tcache.Write(nf);
             newlog();
         }
+        public void MarkTradeSettled(Trade f)
+        {
+            Trade nf = new TradeImpl(f);
+            _tsettlecache.Write(nf);
+            newlog();
+        }
+
+        public void MarkPositionDetailSettled(PositionDetail pd)
+        {
+            _pdsettledcache.Write(pd);
+            newlog();
+        }
+
         public void newCancle(long id)
         {
             _ccache.Write(id);
@@ -452,11 +491,14 @@ namespace TradingLib.Core
         {
             _ocache = new RingBuffer<Order>(maxbr);
             _oupdatecache = new RingBuffer<Order>(maxbr);
+            _osettlecache = new RingBuffer<Order>(maxbr);
             _tcache = new RingBuffer<Trade>(maxbr);
+            _tsettlecache = new RingBuffer<Trade>(maxbr);
             _ccache = new RingBuffer<long>(maxbr);
             _postranscache = new RingBuffer<PositionRound>(maxbr);
             _oactioncache = new RingBuffer<OrderAction>(maxbr);
             _posclosecache = new RingBuffer<PositionCloseDetail>(maxbr);
+            _pdsettledcache = new RingBuffer<PositionDetail>(maxbr);
         }
 
         void _brcache_BufferOverrunEvent()

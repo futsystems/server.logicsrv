@@ -15,7 +15,6 @@ namespace TradingLib.Core
     /// </summary>
     public partial class ClearCentre
     {
-        #region *【RestoreFromMysql】从数据库恢复交易数据到内存
         /// <summary>
         /// 从数据库恢复委托 成交 取消数据
         /// 账户的交易数据恢复
@@ -34,15 +33,22 @@ namespace TradingLib.Core
 
 
                 logger.Info("从数据库加载交易日:" + TLCtxHelper.ModuleSettleCentre.NextTradingday.ToString() + " 交易数据");
+
+                //从数据库加载未结算记录
                 IEnumerable<Order> olist = TLCtxHelper.ModuleDataRepository.SelectAcctOrders();
                 IEnumerable<Trade> flist = TLCtxHelper.ModuleDataRepository.SelectAcctTrades();
                 IEnumerable<OrderAction> clist = TLCtxHelper.ModuleDataRepository.SelectAcctOrderActions();
+
                 IEnumerable<ExchangeSettlement> exsettlelist = TLCtxHelper.ModuleDataRepository.SelectAcctExchangeSettlemts();
 
                 logger.Info("从数据库加载上次结算日:" + TLCtxHelper.ModuleSettleCentre.LastSettleday.ToString() + " 持仓明细数据");
                 IEnumerable<PositionDetail> plist = TLCtxHelper.ModuleDataRepository.SelectAcctPositionDetails();//从数据得到昨持仓数据
                 //IEnumerable<PositionRoundImpl> prlist = LoadPositionRoundFromMysql();//恢复开启的positionround数据
 
+                foreach (ExchangeSettlement settle in exsettlelist)
+                {
+                    this.GotExchangeSettlement(settle);
+                }
                 //从数据库加载上日结算持仓信息 用于恢复当前持仓状态
                 foreach (PositionDetail p in plist)
                 {
@@ -78,9 +84,8 @@ namespace TradingLib.Core
                 throw (new QSClearCentreResotreError(ex, "清算中心从数据库恢复数据异常"));
             }
 
+            IAccount[] s = TLCtxHelper.ModuleAccountManager.Accounts.ToArray();
             Status = QSEnumClearCentreStatus.CCRESTOREFINISH;
         }
-
-        #endregion
     }
 }

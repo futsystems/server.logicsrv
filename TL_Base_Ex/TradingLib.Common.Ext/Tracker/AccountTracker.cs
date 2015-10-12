@@ -170,6 +170,11 @@ namespace TradingLib.Common
 
 
         #region 响应交易对象
+
+        internal void GotExchangeSettlement(ExchangeSettlement settle)
+        {
+            AcctList[settle.Account].LoadExchangeSettlement(settle);
+        }
         /// <summary>
         /// 从数据库加载昨日持仓明细数据 
         /// </summary>

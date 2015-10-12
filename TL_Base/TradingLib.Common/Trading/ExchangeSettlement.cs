@@ -22,6 +22,7 @@ namespace TradingLib.Common
             this.Exchange = string.Empty;
             this.Settled = false;
         }
+
         /// <summary>
         /// 结算日
         /// </summary>

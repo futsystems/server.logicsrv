@@ -166,6 +166,19 @@ namespace TradingLib.API
         #endregion
 
 
+        /// <summary>
+        /// 帐户加载交易所结算记录
+        /// </summary>
+        /// <param name="settle"></param>
+        void LoadExchangeSettlement(ExchangeSettlement settle);
+
+
+        /// <summary>
+        /// 执行某个交易所 某个交易日的结算
+        /// </summary>
+        /// <param name="exchange"></param>
+        /// <param name="settleday"></param>
+        void SettleExchange(IExchange exchange, int settleday);
 
         #region 出入金操作
         /// <summary>
