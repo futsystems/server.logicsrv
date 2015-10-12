@@ -121,6 +121,11 @@ namespace TradingLib.Core
             throw new NotImplementedException();
         }
 
+        public virtual IEnumerable<ExchangeSettlement> SelectAcctExchangeSettlemts()
+        {
+            throw new NotImplementedException();
+        }
+
         /// <summary>
         /// 获得所有交易账户日内 委托操作数据
         /// </summary>

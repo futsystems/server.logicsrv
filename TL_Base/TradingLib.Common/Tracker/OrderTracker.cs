@@ -1,7 +1,8 @@
 using System;
+using System.Linq;
 using System.Collections.Generic;
-using TradingLib.API;
 using System.Collections;
+using TradingLib.API;
 
 namespace TradingLib.Common
 {
@@ -373,11 +374,12 @@ namespace TradingLib.Common
 
         /// <summary>
         /// get orders from tracker
+        /// 这里默认对已结算的委托进行过滤
         /// </summary>
         /// <returns></returns>
         public IEnumerator<Order> GetEnumerator() 
         { 
-            return orders.GetEnumerator(); 
+            return orders.Where(o=>!o.Settled).GetEnumerator(); 
         
         }
 

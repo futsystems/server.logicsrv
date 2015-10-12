@@ -89,6 +89,7 @@
     <Compile Include="Other\TLVersion.cs" />
     <Compile Include="Protocol\CommissionTemplateItem.cs" />
     <Compile Include="Protocol\LoginInfo.cs" />
+    <Compile Include="Tracker\TradeTracker.cs" />
     <Compile Include="Trading\Comparers.cs" />
     <Compile Include="Trading\Config\CommissionTemplate.cs" />
     <Compile Include="Trading\Config\CommissionTemplateItem.cs" />
@@ -101,6 +102,7 @@
     <Compile Include="Trading\MarketTime\MarketTime_old.cs" />
     <Compile Include="Trading\MarketTime\MarketTime.cs" />
     <Compile Include="Trading\MarketTime\TradingRange.cs" />
+    <Compile Include="Trading\ExchangeSettlement.cs" />
     <Compile Include="Trading\Utils\DateTimeUtils.cs" />
     <Compile Include="Utils\ChinSpellcs.cs" />
     <Compile Include="Utils\Util_Decimal.cs" />

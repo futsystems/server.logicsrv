@@ -83,7 +83,14 @@ namespace NLog.Targets
                 {
                     string address = string.Format("tcp://{0}:{1}", _hostName, _port);
                     debug(string.Format("LogCollectServer:{0}", address));
-                    socket.Connect(address);
+                    try
+                    {
+                        socket.Connect(address);
+                    }
+                    catch (ZmqSocketException ex)
+                    {
+                        debug("address error:" + ex.ToString());
+                    }
 
                     debug(string.Format("NLog-ZMQTarget will push log to remote:{0} with identity:{1}",address,_identity));
                     

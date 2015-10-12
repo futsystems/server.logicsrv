@@ -197,6 +197,7 @@ namespace TradingLib.Core
             return positions;
         }
 
+        
         /// <summary>
         /// 获得所有交易账户日内 委托操作数据
         /// </summary>
@@ -207,6 +208,17 @@ namespace TradingLib.Core
             logger.Info("数据库恢复前次结算以来取消数据:" + actions.Count().ToString() + "条");
             return actions;
 
+        }
+
+        /// <summary>
+        /// 获得所有交易账户 交易所未结算结算数据
+        /// </summary>
+        /// <returns></returns>
+        public override IEnumerable<ExchangeSettlement> SelectAcctExchangeSettlemts()
+        {
+            IEnumerable<ExchangeSettlement> settlements = ORM.MSettlement.SelectPendingExchangeSettlement();
+            logger.Info("数据库恢复未结算 交易所结算数据:" + settlements.Count().ToString() + "条");
+            return settlements;
         }
         /// <summary>
         /// 获得某个成交接口的日内 成交数据

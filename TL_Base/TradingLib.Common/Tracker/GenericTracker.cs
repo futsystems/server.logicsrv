@@ -313,6 +313,19 @@ namespace TradingLib.Common
             return idx;//返回对应的idx
         }
 
+
+        public virtual void removeindex(string txtidx, T val)
+        {
+            int idx=UNKNOWN;
+            lock (_addlock)
+            {
+                if (_txtidx.TryRemove(txtidx, out idx))//存在txtidx
+                { 
+                    
+                }
+                
+            }
+        }
         /// <summary>
         /// clears all tracked values and labels
         /// 清空所有记录内容

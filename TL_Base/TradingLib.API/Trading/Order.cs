@@ -115,6 +115,17 @@ namespace TradingLib.API
         string Exchange { get; set; }
 
         /// <summary>
+        /// 结算日 标注属于哪个结算日
+        /// </summary>
+        int SettleDay { get; set; }
+
+        /// <summary>
+        /// 结算标认识
+        /// </summary>
+        bool Settled { get; set; }
+
+
+        /// <summary>
         /// 品种类别
         /// </summary>
         SecurityType SecurityType { get; set; }
@@ -321,6 +332,8 @@ namespace TradingLib.API
         /// 代表是多头操作还是空头操作
         /// </summary>
         bool PositionSide { get; }
+
+        
         
     }
 

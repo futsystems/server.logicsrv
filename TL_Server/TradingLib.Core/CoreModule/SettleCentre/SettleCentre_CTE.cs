@@ -54,6 +54,19 @@ namespace TradingLib.Core
             return string.Format("last settleday:{0} next tradingday:{1} current tradingday:{2} istradingday:{3}", _lastsettleday, _nexttradingday, _tradingday,IsTradingday);
         }
 
+        [ContribCommandAttr(QSEnumCommandSource.CLI, "settleexchange", "settleexchange - settle exchange", "执行交易所结算")]
+        public void CTE_SettleAccount(string account, string exchange)
+        {
+            IAccount acc = TLCtxHelper.ModuleAccountManager[account];
+            AccountBase ab = acc as AccountBase;
+            IExchange ex = BasicTracker.ExchagneTracker[exchange];
+
+            if (ab != null && ex != null)
+            {
+                ab.SettleExchange(ex, 20151012);
+            }
+
+        }
         bool settled = false;
 
         #region 大结算过程

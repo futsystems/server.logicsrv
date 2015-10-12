@@ -214,6 +214,12 @@ namespace TradingLib.API
         ///// </summary>
         //QSEnumOrderBreedType Breed { get; set; }
 
+        /// <summary>
+        /// 标注该持仓是否已经被结算
+        /// </summary>
+        bool Settled { get; set; }
+
+
     }
 
     public class InvalidPosition : Exception {}

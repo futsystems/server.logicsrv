@@ -1,71 +1,142 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Holidays code="SGX" name="新交所">
-	<Holiday name="New Year's Day">
+	<Holiday name="New Year's Day(元旦)">
 		<Month>1</Month>
 		<Day>1</Day>
 	</Holiday>
-	
-	<Holiday name="Chinese Spring Festival">
+	<Holiday name="New Year's Day(元旦)">
 		<Month>1</Month>
-		<DayOfWeek>1</DayOfWeek>
-		<WeekOfMonth>3</WeekOfMonth>
+		<Day>2</Day>
+	</Holiday>
+	<Holiday name="New Year's Day(元旦)">
+		<Month>1</Month>
+		<Day>3</Day>
 	</Holiday>
 	
-	<Holiday name="Martin Luther King's Birthday">
-		<Month>1</Month>
-		<DayOfWeek>1</DayOfWeek>
-		<WeekOfMonth>3</WeekOfMonth>
-	</Holiday>
-
-	<Holiday name="President's Day">
+	<Holiday name="Chinese Spring Festival(新年)">
 		<Month>2</Month>
-		<DayOfWeek>1</DayOfWeek>
-		<WeekOfMonth>3</WeekOfMonth>
+		<Day>18</Day>
+	</Holiday>
+	<Holiday name="Chinese Spring Festival(新年)">
+		<Month>2</Month>
+		<Day>19</Day>
+	</Holiday>
+	<Holiday name="Chinese Spring Festival(新年)">
+		<Month>2</Month>
+		<Day>20</Day>
+	</Holiday>
+	<Holiday name="Chinese Spring Festival(新年)">
+		<Month>2</Month>
+		<Day>21</Day>
+	</Holiday>
+	<Holiday name="Chinese Spring Festival(新年)">
+		<Month>2</Month>
+		<Day>22</Day>
+	</Holiday>
+	<Holiday name="Chinese Spring Festival(新年)">
+		<Month>2</Month>
+		<Day>23</Day>
+	</Holiday>
+	<Holiday name="Chinese Spring Festival(新年)">
+		<Month>2</Month>
+		<Day>24</Day>
 	</Holiday>
 	
-	<Holiday name="Easter">
-		<Easter />
-	</Holiday>
 	
-	<Holiday name="Good Friday">
-		<DaysAfterHoliday Holiday="Easter">
-			<Days>-2</Days>
-		</DaysAfterHoliday>
-	</Holiday>
+	
 
-	
-	<Holiday name="Memorial Day">
-		<Month>5</Month>
-		<DayOfWeek>1</DayOfWeek>
-		<WeekOfMonth>5</WeekOfMonth>
-	</Holiday>
-
-	
-	<Holiday name="Independence Day">
-		<Month>7</Month>
+	<Holiday name="Tomb-sweeping Day(清明)">
+		<Month>4</Month>
 		<Day>4</Day>
 	</Holiday>
+	<Holiday name="Tomb-sweeping Day(清明)">
+		<Month>4</Month>
+		<Day>5</Day>
+	</Holiday>
+	<Holiday name="Tomb-sweeping Day(清明)">
+		<Month>4</Month>
+		<Day>6</Day>
+	</Holiday>
 	
-	<Holiday name="Labor Day">
+	<Holiday name="Labor Day(劳动节)">
+		<Month>5</Month>
+		<Day>1</Day>
+	</Holiday>
+	<Holiday name="Labor Day(劳动节)">
+		<Month>5</Month>
+		<Day>2</Day>
+	</Holiday>
+	<Holiday name="Labor Day(劳动节)">
+		<Month>5</Month>
+		<Day>3</Day>
+	</Holiday>
+	
+	<Holiday name="Dragon Boat Festival(端午节)">
+		<Month>6</Month>
+		<Day>20</Day>
+	</Holiday>
+	<Holiday name="Dragon Boat Festival(端午节)">
+		<Month>6</Month>
+		<Day>21</Day>
+	</Holiday>
+	<Holiday name="Dragon Boat Festival(端午节)">
+		<Month>6</Month>
+		<Day>22</Day>
+	</Holiday>
+	
+	
+	<Holiday name="抗日胜利">
 		<Month>9</Month>
-		<DayOfWeek>1</DayOfWeek>
-		<WeekOfMonth>1</WeekOfMonth>
+		<Day>3</Day>
 	</Holiday>
-
-	<Holiday name="Columbus Day">
-		<Month>10</Month>
-		<DayOfWeek>1</DayOfWeek>
-		<WeekOfMonth>2</WeekOfMonth>
+	<Holiday name="抗日胜利">
+		<Month>9</Month>
+		<Day>4</Day>
 	</Holiday>
-
-	<Holiday name="Veterans Day">
-		<Month>11</Month>
-		<Day>11</Day>
+	<Holiday name="抗日胜利">
+		<Month>9</Month>
+		<Day>5</Day>
 	</Holiday>
 	
-	<Holiday name="Christmas Day">
-		<Month>12</Month>
-		<Day>25</Day>
+	
+	<Holiday name="Mid-autumn Festival(中秋节)">
+		<Month>9</Month>
+		<Day>26</Day>
+	</Holiday>
+	<Holiday name="Mid-autumn Festival(中秋节)">
+		<Month>9</Month>
+		<Day>27</Day>
+	</Holiday>
+	
+	
+
+	<Holiday name="National Day(国庆节)">
+		<Month>10</Month>
+		<Day>1</Day>
+	</Holiday>
+	<Holiday name="National Day(国庆节)">
+		<Month>10</Month>
+		<Day>2</Day>
+	</Holiday>
+	<Holiday name="National Day(国庆节)">
+		<Month>10</Month>
+		<Day>3</Day>
+	</Holiday>
+	<Holiday name="National Day(国庆节)">
+		<Month>10</Month>
+		<Day>4</Day>
+	</Holiday>
+	<Holiday name="National Day(国庆节)">
+		<Month>10</Month>
+		<Day>5</Day>
+	</Holiday>
+	<Holiday name="National Day(国庆节)">
+		<Month>10</Month>
+		<Day>6</Day>
+	</Holiday>
+	<Holiday name="National Day(国庆节)">
+		<Month>10</Month>
+		<Day>7</Day>
 	</Holiday>
 </Holidays>
 

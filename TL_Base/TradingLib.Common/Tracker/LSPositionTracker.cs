@@ -44,6 +44,7 @@ namespace TradingLib.Common
         {
             poslist.Add(pos);
             NewPosition(pos);
+            //对外暴露持仓明细和平仓明细事件
             pos.NewPositionCloseDetailEvent += new Action<Trade,PositionCloseDetail>(NewPositionCloseDetail);
             pos.NewPositionDetailEvent += new Action<Trade, PositionDetail>(NewPositionDetail);
         }
@@ -117,6 +118,15 @@ namespace TradingLib.Common
             poslist.Clear();
         }
 
+        /// <summary>
+        /// 将结算过的持仓丢弃
+        /// </summary>
+        public void DropSettled()
+        {
+            _ltk.DropSettled();
+            _stk.DropSettled();
+        }
+
 
         #region 获得对应的持仓数据
         public Position this[string symbol, bool side]
@@ -151,7 +161,7 @@ namespace TradingLib.Common
         #endregion
 
 
-        #region Enumerator
+        #region Enumerator 用于遍历position
         IEnumerator IEnumerable.GetEnumerator()
         {
             return GetEnumerator();
@@ -164,12 +174,12 @@ namespace TradingLib.Common
 
         public IEnumerator<Position> GetEnumerator()
         {
-            return poslist.GetEnumerator();
+            return poslist.Where(pos=>!pos.Settled).GetEnumerator();
         }
         #endregion
 
 
-
+        #region 对外触发持仓类事件
         /// <summary>
         /// 新的持仓明细生成事件
         /// </summary>
@@ -204,6 +214,8 @@ namespace TradingLib.Common
                 NewPositionEvent(pos);
         }
         public event Action<Position> NewPositionEvent;
+        #endregion
+
 
     }
 }

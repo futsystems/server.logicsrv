@@ -218,6 +218,7 @@
     <Compile Include="CoreModule\FollowCentre\Signal.cs" />
     <Compile Include="CoreModule\FollowCentre\SignalTracker2.cs" />
     <Compile Include="CoreModule\FollowCentre\Tracker\TradeFollowItemTracker.cs" />
+    <Compile Include="CoreModule\SettleCentre\SettleCentre_Settle.cs" />
     <Compile Include="CoreModule\TaskCentre\Listener.cs" />
     <Compile Include="CoreModule\TaskCentre\TaskCentre.cs" />
     <Compile Include="CoreModule\ExCore\ExCore-TradingLogic\MsgExchServer.cs" />

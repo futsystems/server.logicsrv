@@ -22,7 +22,8 @@ namespace TradingLib.Common
         //为每个账户映射一个PositionTracker用户维护该Account的Position
         protected ConcurrentDictionary<string, LSPositionTracker> PosBook = new ConcurrentDictionary<string, LSPositionTracker>();
         //为每个账户映射一个TradeList用于记录实时的成交记录
-        protected ConcurrentDictionary<string, ThreadSafeList<Trade>> TradeBook = new ConcurrentDictionary<string, ThreadSafeList<Trade>>();
+        //protected ConcurrentDictionary<string, ThreadSafeList<Trade>> TradeBook = new ConcurrentDictionary<string, ThreadSafeList<Trade>>();
+        protected ConcurrentDictionary<string, TradeTracker> TradeBook = new ConcurrentDictionary<string, TradeTracker>();
 
         #region 持仓创建事件和平仓明细事件
         void NewPositionCloseDetail(Trade close,PositionCloseDetail detail)
@@ -81,7 +82,7 @@ namespace TradingLib.Common
             if (ptremove != null)
                 ptremove.Clear();
 
-            ThreadSafeList<Trade> ttremove = null;
+            TradeTracker ttremove = null;
             TradeBook.TryRemove(account.ID, out ttremove);//删除成交列表
             if (ttremove != null)
                 ttremove.Clear();
@@ -123,7 +124,7 @@ namespace TradingLib.Common
             baseacc.TKPosition = pt;
 
             //4.添加账户对应的成交管理器
-            ThreadSafeList<Trade> tt = new ThreadSafeList<Trade>();
+            TradeTracker tt = new TradeTracker();
             if (!TradeBook.ContainsKey(account.ID))
                 TradeBook.TryAdd(account.ID, tt);
             baseacc.TKTrade = tt;
@@ -158,6 +159,15 @@ namespace TradingLib.Common
 
         }
 
+        //public void ResetAccount(IAccount account, IExchange exchange)
+        //{
+        //    Order[] orderlist = account.GetOrders(exchange).ToArray();
+        //    //foreach (var o in orderlist)
+        //    //{ 
+        //    //    //OrdBook[account.ID].
+        //    //}
+        //}
+
 
         #region 响应交易对象
         /// <summary>
@@ -187,7 +197,7 @@ namespace TradingLib.Common
         {
             OrdBook[fill.Account].GotFill(fill);
             PosBook[fill.Account].GotFill(fill);
-            TradeBook[fill.Account].Add(fill);
+            TradeBook[fill.Account].GotFill(fill);
         }
 
         /// <summary>
@@ -216,4 +226,6 @@ namespace TradingLib.Common
 
 
     }
+
+
 }

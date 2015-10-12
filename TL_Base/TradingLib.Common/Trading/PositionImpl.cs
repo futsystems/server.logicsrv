@@ -263,9 +263,14 @@ namespace TradingLib.Common
             get { return (_sym!="") && (((AvgPrice == 0) && (Size == 0)) || ((AvgPrice != 0) && (Size != 0))); }
         }
 
-       
-        
 
+
+        bool _settled = false;
+
+        /// <summary>
+        /// 是否已经结算
+        /// </summary>
+        public bool Settled { get { return _settled; } set { _settled = value; } }
         /// <summary>
         /// 浮动盈亏
         /// 当第一次有持仓时,会造成_last为0 从而导致有一个时间片段计算的unrealziedpl为不准确的 
@@ -287,24 +292,6 @@ namespace TradingLib.Common
         /// </summary>
         public decimal ClosedPL { get { return _closedpl; } }
 
-        // <summary>
-        /// 结算时盯市浮动盈亏
-        /// </summary>
-        //public decimal UnrealizedPLByDate
-        //{
-        //    get
-        //    {
-        //        if (_settlementprice == null)
-        //        {
-        //            Util.Debug("position:" + this.GetPositionKey() + " have not got settlement price,will use lastprice", QSEnumDebugLevel.WARNING);
-        //            _settlementprice = LastPrice;
-        //        }
-
-        //        decimal settleprice = (decimal)_settlementprice;
-        //        return _size * (settleprice - AvgPrice);
-        //    }
-
-        //}
 
         #region 价格信息
         /// <summary>
@@ -601,7 +588,7 @@ namespace TradingLib.Common
             _tradelist.Add(t);
 
             decimal cpl = 0;
-            //2.处理持仓明细
+            //2.处理成交
             if (t.IsEntryPosition)//开仓 由开仓成交生成新的持仓明细 并设定昨日结算价格
             {
                 _openamount += t.GetAmount();

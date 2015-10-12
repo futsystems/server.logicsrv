@@ -37,6 +37,7 @@ namespace TradingLib.Core
                 IEnumerable<Order> olist = TLCtxHelper.ModuleDataRepository.SelectAcctOrders();
                 IEnumerable<Trade> flist = TLCtxHelper.ModuleDataRepository.SelectAcctTrades();
                 IEnumerable<OrderAction> clist = TLCtxHelper.ModuleDataRepository.SelectAcctOrderActions();
+                IEnumerable<ExchangeSettlement> exsettlelist = TLCtxHelper.ModuleDataRepository.SelectAcctExchangeSettlemts();
 
                 logger.Info("从数据库加载上次结算日:" + TLCtxHelper.ModuleSettleCentre.LastSettleday.ToString() + " 持仓明细数据");
                 IEnumerable<PositionDetail> plist = TLCtxHelper.ModuleDataRepository.SelectAcctPositionDetails();//从数据得到昨持仓数据

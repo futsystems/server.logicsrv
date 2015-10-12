@@ -112,6 +112,29 @@ namespace TradingLib.Common
 
             //将交易帐户 交易记录维护器中该帐户的交易记录清空
             acctk.ResetAccount(a);
+        }
+
+        /// <summary>
+        /// 清空交易帐户某个交易所的交易记录
+        /// </summary>
+        /// <param name="account"></param>
+        /// <param name="exchange"></param>
+        public void ResetAccount(IAccount account, IExchange exchange)
+        {
+            foreach (Order o in account.GetOrders(exchange))
+            {
+                totaltk.DropOrder(o);
+            }
+
+            foreach (Trade f in account.GetTrades(exchange))
+            {
+                totaltk.DropFill(f);
+            }
+
+            foreach (Position p in account.GetPositions(exchange))
+            {
+                totaltk.DropPosition(p);
+            }
 
         }
         #endregion

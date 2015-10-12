@@ -453,6 +453,32 @@ namespace TradingLib.ORM
         #endregion
 
 
+        #region 交易所结算
+
+        public static void InsertExchangeSettlement(ExchangeSettlement settlement)
+        {
+            using (DBMySql db = new DBMySql())
+            {
+                string query = String.Format("INSERT into log_settlement_exchange (`settleday`,`account`,`closeprofitbydate`,`positionprofitbydate`,`commission`,`exchange`) values('{0}','{1}','{2}','{3}','{4}','{5}')", settlement.Settleday, settlement.Account, settlement.CloseProfitByDate, settlement.PositionProfitByDate,settlement.Commission, settlement.Exchange);
+                db.Connection.Execute(query);
+            }
+        }
+
+        /// <summary>
+        /// 获得没有结算的交易所结算记录
+        /// </summary>
+        /// <returns></returns>
+        public static IEnumerable<ExchangeSettlement> SelectPendingExchangeSettlement()
+        {
+            using (DBMySql db = new DBMySql())
+            {
+                const string query = "SELECT * FROM log_settlement_exchange";
+                IEnumerable<ExchangeSettlement> result = db.Connection.Query<ExchangeSettlement>(query);
+                return result;
+            }
+        }
+
+        #endregion
 
     }
 

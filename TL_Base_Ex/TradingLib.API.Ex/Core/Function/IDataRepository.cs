@@ -72,6 +72,12 @@ namespace TradingLib.API
         /// <returns></returns>
         IEnumerable<OrderAction> SelectAcctOrderActions();
 
+
+        /// <summary>
+        /// 获得所有交易账户 未结算结算记录
+        /// </summary>
+        /// <returns></returns>
+        IEnumerable<ExchangeSettlement> SelectAcctExchangeSettlemts();
         /// <summary>
         /// 获得某个成交接口的日内 成交数据
         /// </summary>

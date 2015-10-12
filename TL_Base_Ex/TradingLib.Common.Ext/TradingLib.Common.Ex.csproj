@@ -82,6 +82,7 @@
     <Compile Include="Accounts\Account.cs" />
     <Compile Include="Accounts\Account_IAccountIndicator.cs" />
     <Compile Include="Accounts\Account_Session.cs" />
+    <Compile Include="Accounts\Account_Settlement.cs" />
     <Compile Include="Contex\Event\EventArgs\BrokerAccountInfoEventArgs.cs" />
     <Compile Include="Contex\Event\EventArgs\BrokerTransferEventArgs.cs" />
     <Compile Include="Contex\Event\EventArgs\ManagerNotifyEventArgs.cs" />

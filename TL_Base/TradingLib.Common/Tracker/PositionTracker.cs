@@ -248,6 +248,25 @@ namespace TradingLib.Common
             return cpl;
         }
 
+        /// <summary>
+        /// 注销某个持仓
+        /// 通过getindex将无法获得该持仓对应的idx
+        /// </summary>
+        /// <param name="pos"></param>
+        public void DropPosition(Position pos)
+        {
+            removeindex(pos.Symbol + pos.Account, pos);
+        }
+
+        //TODO:完善实时结算过程中持仓对象的屏蔽
+        public void DropSettled()
+        {
+            Position[] poslist = this.Where(pos => pos.Settled).ToArray();
+            foreach (var pos in poslist)
+            {
+                removeindex(pos.Symbol + pos.Account, pos);
+            }
+        }
 
         /// <summary>
         /// called when a new position is added to tracker.

@@ -115,7 +115,10 @@ namespace TradingLib.Common
         /// </summary>
         public long SettlementConfirmTimeStamp { get; set; }
 
-
+        /// <summary>
+        /// 上一个结算日
+        /// </summary>
+        public int LastSettleday { get; set; }
 
         /// <summary>
         /// 代理商ID

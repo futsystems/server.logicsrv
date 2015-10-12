@@ -127,6 +127,17 @@ namespace TradingLib.Common
         /// </summary>
         public CurrencyType Currency { get { return oSymbol != null ? oSymbol.SecurityFamily.Currency : cur; } set { cur = value; } }
 
+        int _settleday = 0;
+        /// <summary>
+        /// 结算日
+        /// </summary>
+        public int SettleDay { get { return _settleday; } set { _settleday = value; } }
+
+        bool _settled = false;
+        /// <summary>
+        /// 结算标识
+        /// </summary>
+        public bool Settled { get { return _settled; } set { _settled = value; } }
         #endregion
 
         #region 判定属性
