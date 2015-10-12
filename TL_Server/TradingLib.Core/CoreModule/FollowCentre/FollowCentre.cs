@@ -23,9 +23,9 @@ namespace TradingLib.Core
         {
             FollowTracker.NotifyTradeFollowItemEvent += new Action<TradeFollowItem>(NotifyFollowItem);
 
-            TLCtxHelper.EventSystem.SettleDataStoreEvent += new EventHandler<SystemEventArgs>(EventSystem_SettleDataStoreEvent);
-            TLCtxHelper.EventSystem.SettleEvent += new EventHandler<SystemEventArgs>(EventSystem_SettleEvent);
-            TLCtxHelper.EventSystem.SettleResetEvent += new EventHandler<SystemEventArgs>(EventSystem_SettleResetEvent);
+            //TLCtxHelper.EventSystem.SettleDataStoreEvent += new EventHandler<SystemEventArgs>(EventSystem_SettleDataStoreEvent);
+            //TLCtxHelper.EventSystem.SettleEvent += new EventHandler<SystemEventArgs>(EventSystem_SettleEvent);
+            //TLCtxHelper.EventSystem.SettleResetEvent += new EventHandler<SystemEventArgs>(EventSystem_SettleResetEvent);
         }
 
         /// <summary>

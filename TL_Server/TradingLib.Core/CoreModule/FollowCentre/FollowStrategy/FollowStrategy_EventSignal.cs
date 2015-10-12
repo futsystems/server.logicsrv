@@ -75,7 +75,7 @@ namespace TradingLib.Core
 
                     //数据库记录新生成的跟单项目
                     FollowItemData data = followitem.ToFollowItemData();
-                    data.Settleday = TLCtxHelper.ModuleSettleCentre.NextTradingday;
+                    data.Settleday = TLCtxHelper.ModuleSettleCentre.Tradingday;
                     FollowTracker.FollowItemLogger.NewFollowItem(data);
 
                     //对外通知跟单项

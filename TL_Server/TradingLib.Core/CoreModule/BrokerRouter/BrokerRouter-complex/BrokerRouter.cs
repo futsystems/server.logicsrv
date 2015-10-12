@@ -101,7 +101,9 @@ namespace TradingLib.Core
             
         }
 
-
+        /// <summary>
+        /// Broker路由重置
+        /// </summary>
         public void Reset()
         {
             //_ordHelper.Clear();

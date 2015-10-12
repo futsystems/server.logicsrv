@@ -49,7 +49,7 @@ namespace TradingLib.Core
         [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "QrySettleStatus", "QrySettleStatus - 查询结算状态", "查询结算状态")]
         public void CTE_QrySettleStatus(ISession session)
         {
-            var status = new { last_settleday = _lastsettleday, next_settleday = _nexttradingday, current_settleday = _tradingday };
+            var status = new { last_settleday = _lastsettleday, next_settleday = 0, current_settleday = _tradingday };
             session.ReplyMgr(status);
         }
 
@@ -215,7 +215,7 @@ namespace TradingLib.Core
             if (settlementPrice != null)
             {
                 _settlementPriceTracker.UpdateSettlementPrice(settlementPrice);
-                session.ReplyMgr(_settlementPriceTracker[this.CurrentTradingday,settlementPrice.Symbol]);
+                session.ReplyMgr(_settlementPriceTracker[this.Tradingday, settlementPrice.Symbol]);
             }
 
             session.OperationSuccess("结算价更新成功");
@@ -241,7 +241,7 @@ namespace TradingLib.Core
             int currentday = int.Parse(data["currentday"].ToString());
 
             //设定当前日期
-            this.SetCurrentDay(currentday);
+            //this.SetCurrentDay(currentday);
 
             //重新加载合约数据
             BasicTracker.SymbolTracker.Reload();
@@ -250,7 +250,7 @@ namespace TradingLib.Core
             _settlementPriceTracker.Clear();
 
             //加载当前交易日的结算价信息
-            _settlementPriceTracker.LoadSettlementPrice(this.NextTradingday);
+            _settlementPriceTracker.LoadSettlementPrice(this.Tradingday);
 
             //重置清算中心 用于加载对应的交易数据
             TLCtxHelper.ModuleClearCentre.Reset();
@@ -259,10 +259,10 @@ namespace TradingLib.Core
             foreach (Position pos in TLCtxHelper.ModuleClearCentre.TotalPositions.Where(pos => !pos.isFlat))
             {
                 //如果该未平持仓没有对应的结算价信息 则我们在list中加入该合约 用于推送到手工结算窗口让管理员进行填写
-                if (_settlementPriceTracker[this.CurrentTradingday,pos.Symbol] == null)
+                if (_settlementPriceTracker[this.Tradingday, pos.Symbol] == null)
                 {
                     //插入该结算价信息记录 价格为-1
-                    _settlementPriceTracker.UpdateSettlementPrice(new MarketData() { Settlement = -1, SettleDay = this.NextTradingday, Symbol = pos.Symbol });
+                    _settlementPriceTracker.UpdateSettlementPrice(new MarketData() { Settlement = -1, SettleDay = this.Tradingday, Symbol = pos.Symbol });
                 }
             }
 
@@ -298,7 +298,7 @@ namespace TradingLib.Core
                 throw new FutsRspError(string.Format("{0}不是交易日", settleday));
             }
 
-            int cursettleday = this.CurrentTradingday;//
+            int cursettleday = this.Tradingday;//
             logger.Info(string.Format("重新执行交易日:{0}的结算操作，当前交易日为:{1}", settleday, cursettleday));
 
             if (settleday != cursettleday)
@@ -311,15 +311,15 @@ namespace TradingLib.Core
             //this.IsInSettle = true;//标识结算中心处于结算状态
 
             //绑定结算价格
-            this.BindSettlementPrice();
+            //this.BindSettlementPrice();
 
-            //A:储存 结算数据(各业持仓,持仓回合,当日交易记录)
-            //保存结算持仓数据和对应的PR数据
-            this.SaveHoldInfo();
-            //保存持仓明细
-            this.SavePositionDetails();
-            //转储到历史记录表
-            this.Dump2Log();
+            ////A:储存 结算数据(各业持仓,持仓回合,当日交易记录)
+            ////保存结算持仓数据和对应的PR数据
+            //this.SaveHoldInfo();
+            ////保存持仓明细
+            //this.SavePositionDetails();
+            ////转储到历史记录表
+            //this.Dump2Log();
 
             //B:结算交易帐户形成结算记录
             this.SettleAccount();

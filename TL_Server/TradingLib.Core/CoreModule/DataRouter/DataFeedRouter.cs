@@ -684,10 +684,6 @@ namespace TradingLib.Core
 
         public void Reset()
         {
-            //行情快照需要加载，同时结算时需要切换结算价格 用于维持最新市场状态
-
-            //清空行情快照，?为什么不清空呢？
-            //_ticktracker.Clear();
             //清除当前订阅列表 
             mb.Clear();
         }

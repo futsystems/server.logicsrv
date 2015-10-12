@@ -32,7 +32,7 @@ namespace TradingLib.Core
                 
 
 
-                logger.Info("从数据库加载交易日:" + TLCtxHelper.ModuleSettleCentre.NextTradingday.ToString() + " 交易数据");
+                logger.Info("从数据库加载未结算交易数据");
 
                 //从数据库加载未结算记录
                 IEnumerable<Order> olist = TLCtxHelper.ModuleDataRepository.SelectAcctOrders();

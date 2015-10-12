@@ -26,7 +26,7 @@ namespace TradingLib.Contrib.MainAcctFinService
             f.Collected = false;
             f.DateTime = Util.ToTLDateTime();
             f.FeeType = QSEnumFeeType.CommissionFee;
-            f.Settleday = TLCtxHelper.ModuleSettleCentre.NextTradingday;
+            f.Settleday = TLCtxHelper.ModuleSettleCentre.Tradingday;
             f.FeeStatus = QSEnumFeeStatus.Charged;
             f.Error = string.Empty;
             return f;
@@ -46,7 +46,7 @@ namespace TradingLib.Contrib.MainAcctFinService
             f.Collected = false;
             f.DateTime = Util.ToTLDateTime();
             f.FeeType = QSEnumFeeType.FinServiceFee;
-            f.Settleday = TLCtxHelper.ModuleSettleCentre.NextTradingday;
+            f.Settleday = TLCtxHelper.ModuleSettleCentre.Tradingday;
             f.FeeStatus = QSEnumFeeStatus.Charged;
             f.Error = string.Empty;
             return f;

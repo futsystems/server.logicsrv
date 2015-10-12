@@ -24,11 +24,11 @@ namespace TradingLib.Common
 
         ConcurrentDictionary<string, Position> positionmap = new ConcurrentDictionary<string, Position>();
 
-        public IEnumerable<Order> TotalOrders { get { return ordermap.Values; } }
+        public IEnumerable<Order> TotalOrders { get { return ordermap.Values.Where(o=>!o.Settled); } }
 
-        public IEnumerable<Trade> TotalTrades { get { return trademap.Values; } }
+        public IEnumerable<Trade> TotalTrades { get { return trademap.Values.Where(f=>!f.Settled); } }
 
-        public IEnumerable<Position> TotalPositions { get { return positionmap.Values; } }
+        public IEnumerable<Position> TotalPositions { get { return positionmap.Values.Where(p=>!p.Settled); } }
 
         /// <summary>
         /// 通过OrderId获得该Order

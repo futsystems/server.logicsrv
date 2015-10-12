@@ -41,7 +41,7 @@ namespace TradingLib.API
         /// <summary>
         /// 当前交易日
         /// </summary>
-        int CurrentTradingday { get; }
+        int Tradingday { get; }
 
         /// <summary>
         /// 获得当前结算时间
@@ -51,7 +51,7 @@ namespace TradingLib.API
         /// <summary>
         /// 下个交易日
         /// </summary>
-        int NextTradingday { get; }
+        //int NextTradingday { get; }
 
         /// <summary>
         /// 当前是否是交易日

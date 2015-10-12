@@ -149,7 +149,7 @@ namespace TradingLib.Common
             {
                 //过期品种不加载
                 //TODO:完善品种过期检查
-                if (sym.IsExpired(TLCtxHelper.ModuleSettleCentre.NextTradingday))
+                if (sym.IsExpired(TLCtxHelper.ModuleSettleCentre.Tradingday))
                     continue;
                 if (BasicTracker.SecurityTracker[sym.Domain_ID, sym.security_fk] == null)
                 {
@@ -269,7 +269,7 @@ namespace TradingLib.Common
             //加载所有合约 这里需要判断合约是否过期
             foreach (SymbolImpl sym in ORM.MBasicInfo.SelectSymbol(_domain.ID))
             {
-                if (sym.IsExpired(TLCtxHelper.ModuleSettleCentre.NextTradingday))//下个交易日是否过期
+                if (sym.IsExpired(TLCtxHelper.ModuleSettleCentre.Tradingday))//下个交易日是否过期
                     continue;
                 symcodemap[sym.Symbol] = sym;
                 idxcodemap[sym.ID] = sym;

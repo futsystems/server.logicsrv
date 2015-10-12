@@ -271,8 +271,8 @@ namespace TradingLib.Core
             logger.Info("ConfirmSettlement :" + request.ToString());
             
             //获得结算时间
-            long timestamp = Util.ToTLDateTime(TLCtxHelper.ModuleSettleCentre.CurrentTradingday, Util.ToTLTime());
-            ORM.MSettlement.ConfirmeSettle(request.Account, TLCtxHelper.ModuleSettleCentre.CurrentTradingday, timestamp);
+            long timestamp = Util.ToTLDateTime(TLCtxHelper.ModuleSettleCentre.Tradingday, Util.ToTLTime());
+            ORM.MSettlement.ConfirmeSettle(request.Account, TLCtxHelper.ModuleSettleCentre.Tradingday, timestamp);
             IAccount account = TLCtxHelper.ModuleAccountManager[request.Account];
             account.SettlementConfirmTimeStamp = timestamp;
 

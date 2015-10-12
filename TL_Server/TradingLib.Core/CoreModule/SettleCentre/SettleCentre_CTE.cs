@@ -51,7 +51,7 @@ namespace TradingLib.Core
         [ContribCommandAttr(QSEnumCommandSource.CLI, "settlestatus", "settlestatus - settlestatus", "settlestatus")]
         public string CTE_SettleStatus()
         {
-            return string.Format("last settleday:{0} next tradingday:{1} current tradingday:{2} istradingday:{3}", _lastsettleday, _nexttradingday, _tradingday,IsTradingday);
+            return string.Format("last settleday:{0} next tradingday:{1} current tradingday:{2} istradingday:{3}", _lastsettleday, 0, _tradingday,IsTradingday);
         }
 
         [ContribCommandAttr(QSEnumCommandSource.CLI, "settleexchange", "settleexchange - settle exchange", "执行交易所结算")]
@@ -63,8 +63,8 @@ namespace TradingLib.Core
 
             if (ab != null && ex != null)
             {
-                SaveSettlementPrice(ex, 20151013);
-                ab.SettleExchange(ex, 20151013);
+                SaveSettlementPrice(ex, Tradingday);
+                ab.SettleExchange(ex, Tradingday);
             }
 
         }
@@ -77,7 +77,7 @@ namespace TradingLib.Core
 
             if (ab != null)
             {
-                ab.SettleAccount(this.CurrentTradingday);
+                ab.SettleAccount(this.Tradingday);
             }
 
         }
@@ -106,22 +106,22 @@ namespace TradingLib.Core
                 logger.Error("BeforeSettleEvent Fired error:" + ex.ToString());
             }
 
-            //保存结算价信息
-            this.SaveSettlementPrice();
+            ////保存结算价信息
+            //this.SaveSettlementPrice();
 
-            //绑定结算价信息
-            this.BindSettlementPrice();
+            ////绑定结算价信息
+            //this.BindSettlementPrice();
 
-            //A:储存 结算数据(各业持仓,持仓回合,当日交易记录)
-            //保存结算持仓数据和对应的PR数据
-            this.SaveHoldInfo();
-            //保存持仓明细
-            this.SavePositionDetails();
-            //转储到历史记录表
-            this.Dump2Log();
+            ////A:储存 结算数据(各业持仓,持仓回合,当日交易记录)
+            ////保存结算持仓数据和对应的PR数据
+            //this.SaveHoldInfo();
+            ////保存持仓明细
+            //this.SavePositionDetails();
+            ////转储到历史记录表
+            //this.Dump2Log();
 
             //通过事件中继出发数据保存事件
-            TLCtxHelper.EventSystem.FireSettleDataStoreEvent(this, new SystemEventArgs());
+            //TLCtxHelper.EventSystem.FireSettleDataStoreEvent(this, new SystemEventArgs());
            
         }
 
@@ -133,44 +133,44 @@ namespace TradingLib.Core
         /// 结算时间15:50 在15:50-16:00之间开机会导致无法找到对应的交易日
         /// 4点结算 否则在结算中心初始化交易日过程中会导致交易日判定不准确，交易日判定是以结算时间为界限，结算前是当前交易日，结算后就是下一交易日
         /// </summary>
-        [ContribCommandAttr(QSEnumCommandSource.CLI, "settle", "settle - clean the interday tmp table after reset", "清算中心结算交易帐户")]
-        public void Task_SettleAccount()
-        {
-            if (IsNormal && !IsTradingday) return;
-            this.IsInSettle = true;//标识结算中心处于结算状态
+        //[ContribCommandAttr(QSEnumCommandSource.CLI, "settle", "settle - clean the interday tmp table after reset", "清算中心结算交易帐户")]
+        //public void Task_SettleAccount()
+        //{
+        //    if (IsNormal && !IsTradingday) return;
+        //    this.IsInSettle = true;//标识结算中心处于结算状态
 
-            this.SettleAccount();
+        //    //this.SettleAccount();
 
-            //触发 结算操作事件 用于调用监听该事件对象进行结算操作 比如 代理模块对代理帐户的结算
-            TLCtxHelper.EventSystem.FireSettleEvent(this, new SystemEventArgs());
+        //    //触发 结算操作事件 用于调用监听该事件对象进行结算操作 比如 代理模块对代理帐户的结算
+        //    //TLCtxHelper.EventSystem.FireSettleEvent(this, new SystemEventArgs());
 
-            //触发 结算完成事件
-            TLCtxHelper.EventSystem.FireAfterSettleEvent(this, new SystemEventArgs());
+        //    //触发 结算完成事件
+        //    TLCtxHelper.EventSystem.FireAfterSettleEvent(this, new SystemEventArgs());
 
-            //结算后 重置结算中心 如果交易日没有发生变化，则出入金还会停留在上个结算日，而上个结算日已经结算，因此该出入金记录会被丢失 
-            //出入金拒绝窗口就是结算时间段
-            Util.sleep(1000);//防止交易日计算时与结算时间过度接近 造成当前交易日计算错误
-            this.Reset();
-            settled = true;//当日结算过 当日结算过则需要重置交易系统
+        //    //结算后 重置结算中心 如果交易日没有发生变化，则出入金还会停留在上个结算日，而上个结算日已经结算，因此该出入金记录会被丢失 
+        //    //出入金拒绝窗口就是结算时间段
+        //    Util.sleep(1000);//防止交易日计算时与结算时间过度接近 造成当前交易日计算错误
+        //    this.Reset();
+        //    settled = true;//当日结算过 当日结算过则需要重置交易系统
 
-            this.IsInSettle = false;//标识系统结算完毕
-        }
+        //    this.IsInSettle = false;//标识系统结算完毕
+        //}
 
         
         //3.重置结算中心交易日信息 重置清算中心交易帐户 将昨日扎帐
         //清算中心，风控中心，以及数据路由 成交路由都需要进行重置
         //开盘前需要重置
         //通过参数 设定时间注入到任务系统
-        [ContribCommandAttr(QSEnumCommandSource.CLI, "resetsc", "resetsc - reset settlecentre trading day", "重置结算中心")]
-        public void Task_ResetTradingday()
-        {
-            //debug("重置交易系统 isnaormal:"+IsNormal.ToString() +" istradingday:"+IsTradingday.ToString(),QSEnumDebugLevel.INFO);
-            if (!settled) return;//没有结算就不重置交易系统
-            logger.Info("系统重置，清算中心重置帐户，风控中心重置规则 清空日内记录表");
+        //[ContribCommandAttr(QSEnumCommandSource.CLI, "resetsc", "resetsc - reset settlecentre trading day", "重置结算中心")]
+        //public void Task_ResetTradingday()
+        //{
+        //    //debug("重置交易系统 isnaormal:"+IsNormal.ToString() +" istradingday:"+IsTradingday.ToString(),QSEnumDebugLevel.INFO);
+        //    if (!settled) return;//没有结算就不重置交易系统
+        //    logger.Info("系统重置，清算中心重置帐户，风控中心重置规则 清空日内记录表");
 
-            this.ResetSystem();
+        //    this.ResetSystem();
             
-        }
+        //}
 
         void Task_OpenClearCentre()
         {
@@ -196,13 +196,13 @@ namespace TradingLib.Core
 
         void ResetSystem()
         {
-            TLCtxHelper.EventSystem.FireBeforeSettleResetEvent(this, new SystemEventArgs());
+            //TLCtxHelper.EventSystem.FireBeforeSettleResetEvent(this, new SystemEventArgs());
 
             //清空日内交易记录
-            if (_cleanTmp)
-            {
-                this.CleanTempTable();
-            }
+            //if (_cleanTmp)
+            //{
+            //    this.CleanTempTable();
+            //}
 
             //重置结算价格维护器
             _settlementPriceTracker.Clear();
@@ -211,7 +211,7 @@ namespace TradingLib.Core
             TLCtxHelper.EventSystem.FireSettleResetEvet(this, new SystemEventArgs());
 
             //触发 系统重置完成事件
-            TLCtxHelper.EventSystem.FireAfterSettleResetEvent(this, new SystemEventArgs());
+            //TLCtxHelper.EventSystem.FireAfterSettleResetEvent(this, new SystemEventArgs());
         }
 
         /// <summary>
@@ -225,21 +225,21 @@ namespace TradingLib.Core
             TLCtxHelper.EventSystem.FireBeforeSettleEvent(this, new SystemEventArgs());
 
             //保存结算价信息
-            this.SaveSettlementPrice();
+            //this.SaveSettlementPrice();
 
-            //加载当前交易日的结算价信息
-            _settlementPriceTracker.LoadSettlementPrice(this.NextTradingday);
+            ////加载当前交易日的结算价信息
+            //_settlementPriceTracker.LoadSettlementPrice(this.NextTradingday);
 
-            TLCtxHelper.EventSystem.FireSettleDataStoreEvent(this, new SystemEventArgs());
+            ////TLCtxHelper.EventSystem.FireSettleDataStoreEvent(this, new SystemEventArgs());
 
-            this.BindSettlementPrice();
+            //this.BindSettlementPrice();
 
-            this.SaveHoldInfo();
+            //this.SaveHoldInfo();
 
-            //A:储存当前数据
-            this.SaveHoldInfo();//保存结算持仓数据和对应的PR数据
-            this.SavePositionDetails();//保存持仓明细
-            this.Dump2Log();//转储到历史记录表
+            ////A:储存当前数据
+            //this.SaveHoldInfo();//保存结算持仓数据和对应的PR数据
+            //this.SavePositionDetails();//保存持仓明细
+            //this.Dump2Log();//转储到历史记录表
 
 
             //B:结算交易帐户形成结算记录
@@ -248,7 +248,7 @@ namespace TradingLib.Core
             
             TLCtxHelper.EventSystem.FireAfterSettleEvent(this, new SystemEventArgs());
 
-            TLCtxHelper.EventSystem.FireBeforeSettleResetEvent(this, new SystemEventArgs());
+            //TLCtxHelper.EventSystem.FireBeforeSettleResetEvent(this, new SystemEventArgs());
             ////C:清空当日交易记录
             //if (_cleanTmp)
             //{
@@ -262,26 +262,26 @@ namespace TradingLib.Core
             TLCtxHelper.EventSystem.FireSettleResetEvet(this, new SystemEventArgs());
 
             //重置任务中心
-            TLCtxHelper.EventSystem.FireAfterSettleResetEvent(this, new SystemEventArgs());
+            //TLCtxHelper.EventSystem.FireAfterSettleResetEvent(this, new SystemEventArgs());
         }
         #endregion
 
 
 
 
-        #region 定时开启 关闭清算中心 并在夜盘收盘后更新交易日信息 
-        [TaskAttr("重置结算中心-夜盘收盘后", 3,0,0, "夜盘收盘后重置结算中心")]
-        [TaskAttr("重置结算中心-夜盘收盘后", 8,0,0, "每天8点重置结算中心")]//判定当前交易日状态，系统很多其他事务是按结算状态来进行的
-        public void Task_ResetTradingdayNieght()
-        {
-            logger.Info("结算中心重置交易日信息");
-            this.Reset();
-        }
+        //#region 定时开启 关闭清算中心 并在夜盘收盘后更新交易日信息 
+        //[TaskAttr("重置结算中心-夜盘收盘后", 3,0,0, "夜盘收盘后重置结算中心")]
+        //[TaskAttr("重置结算中心-夜盘收盘后", 8,0,0, "每天8点重置结算中心")]//判定当前交易日状态，系统很多其他事务是按结算状态来进行的
+        //public void Task_ResetTradingdayNieght()
+        //{
+        //    logger.Info("结算中心重置交易日信息");
+        //    this.Reset();
+        //}
 
 
 
 
-        #endregion
+        //#endregion
 
 
 

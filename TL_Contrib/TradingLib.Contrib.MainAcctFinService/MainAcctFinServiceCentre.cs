@@ -143,7 +143,7 @@ namespace TradingLib.Contrib.MainAcctFinService
         /// <param name="account"></param>
         void ChargeCommissionFee(IAccount account)
         {
-            if (HaveAccountCharged(account.ID, QSEnumFeeType.CommissionFee, TLCtxHelper.ModuleSettleCentre.NextTradingday))
+            if (HaveAccountCharged(account.ID, QSEnumFeeType.CommissionFee, TLCtxHelper.ModuleSettleCentre.Tradingday))
             {
                 return;
             }
@@ -175,7 +175,7 @@ namespace TradingLib.Contrib.MainAcctFinService
 
         void ChargeServiceFee(IAccount account,QSEnumChargeTime time)
         {
-            if (HaveAccountCharged(account.ID, QSEnumFeeType.FinServiceFee, TLCtxHelper.ModuleSettleCentre.NextTradingday))
+            if (HaveAccountCharged(account.ID, QSEnumFeeType.FinServiceFee, TLCtxHelper.ModuleSettleCentre.Tradingday))
             {
                 return;
             }
@@ -226,7 +226,7 @@ namespace TradingLib.Contrib.MainAcctFinService
 
         void CollectFee()
         {
-            foreach (var f in FinGlobal.FinServiceTracker.GetFees(TLCtxHelper.ModuleSettleCentre.NextTradingday))
+            foreach (var f in FinGlobal.FinServiceTracker.GetFees(TLCtxHelper.ModuleSettleCentre.Tradingday))
             {
                 CollectFee(f);
             }

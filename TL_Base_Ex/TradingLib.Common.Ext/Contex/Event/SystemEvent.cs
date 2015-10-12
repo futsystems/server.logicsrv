@@ -38,12 +38,12 @@ namespace TradingLib.Common
         /// <summary>
         /// 结算 数据转储事件
         /// </summary>
-        public event EventHandler<SystemEventArgs> SettleDataStoreEvent;
+        //public event EventHandler<SystemEventArgs> SettleDataStoreEvent;
 
         /// <summary>
         /// 结算事件
         /// </summary>
-        public event EventHandler<SystemEventArgs> SettleEvent;
+        //public event EventHandler<SystemEventArgs> SettleEvent;
 
         /// <summary>
         /// 结算后事件 在系统结算完毕后触发
@@ -53,13 +53,13 @@ namespace TradingLib.Common
         /// <summary>
         /// 结算重置前事件 在结算重置前触发
         /// </summary>
-        public event EventHandler<SystemEventArgs> BeforeSettleResetEvent;
+        //public event EventHandler<SystemEventArgs> BeforeSettleResetEvent;
 
 
         /// <summary>
         /// 结算重置后事件 在结算重置后触发
         /// </summary>
-        public event EventHandler<SystemEventArgs> AfterSettleResetEvent;
+        //public event EventHandler<SystemEventArgs> AfterSettleResetEvent;
 
 
         /// <summary>
@@ -73,17 +73,17 @@ namespace TradingLib.Common
                 BeforeSettleEvent(sender, args);
         }
 
-        internal void FireSettleDataStoreEvent(object sender, SystemEventArgs args)
-        {
-            if (SettleDataStoreEvent != null)
-                SettleDataStoreEvent(sender, args);
-        }
+        //internal void FireSettleDataStoreEvent(object sender, SystemEventArgs args)
+        //{
+        //    //if (SettleDataStoreEvent != null)
+        //    //    SettleDataStoreEvent(sender, args);
+        //}
 
-        internal void FireSettleEvent(object sender, SystemEventArgs args)
-        {
-            if (SettleEvent != null)
-                SettleEvent(sender, args);
-        }
+        //internal void FireSettleEvent(object sender, SystemEventArgs args)
+        //{
+        //    //if (SettleEvent != null)
+        //    //    SettleEvent(sender, args);
+        //}
 
         internal void FireAfterSettleEvent(object sender, SystemEventArgs args)
         {
@@ -91,17 +91,17 @@ namespace TradingLib.Common
                 AfterSettleEvent(sender, args);
         }
 
-        internal void FireBeforeSettleResetEvent(object sender, SystemEventArgs args)
-        {
-            if (BeforeSettleResetEvent != null)
-                BeforeSettleResetEvent(sender, args);
-        }
+        //internal void FireBeforeSettleResetEvent(object sender, SystemEventArgs args)
+        //{
+        //    //if (BeforeSettleResetEvent != null)
+        //    //    BeforeSettleResetEvent(sender, args);
+        //}
 
-        internal void FireAfterSettleResetEvent(object sender, SystemEventArgs args)
-        {
-            if (AfterSettleResetEvent != null)
-                AfterSettleResetEvent(sender, args);
-        }
+        //internal void FireAfterSettleResetEvent(object sender, SystemEventArgs args)
+        //{
+        //    //if (AfterSettleResetEvent != null)
+        //    //    AfterSettleResetEvent(sender, args);
+        //}
 
         internal void FireSettleResetEvet(object sender, SystemEventArgs args)
         {

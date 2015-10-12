@@ -458,7 +458,7 @@ namespace TradingLib.Core
             txn.EquityType = equity_type;
             txn.Operator = manager.Login;
             txn.Settled = false;
-            txn.Settleday = TLCtxHelper.ModuleSettleCentre.CurrentTradingday;
+            txn.Settleday = TLCtxHelper.ModuleSettleCentre.Tradingday;
             txn.TxnRef = txnref;
             txn.TxnType = amount > 0 ? QSEnumCashOperation.Deposit : QSEnumCashOperation.WithDraw;
 

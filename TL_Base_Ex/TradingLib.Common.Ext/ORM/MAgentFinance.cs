@@ -202,7 +202,7 @@ namespace TradingLib.ORM
 
                     JsonWrapperCasnTrans trans = new JsonWrapperCasnTrans();
                     trans.mgr_fk = op.mgr_fk;
-                    trans.Settleday = TLCtxHelper.ModuleSettleCentre.NextTradingday;
+                    trans.Settleday = TLCtxHelper.ModuleSettleCentre.Tradingday;
                     trans.TransRef = op.Ref;
                     trans.DateTime = Util.ToTLDateTime();
                     trans.Comment = "";

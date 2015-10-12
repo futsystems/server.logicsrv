@@ -333,7 +333,7 @@ namespace TradingLib.Contrib.FinService
             item.serviceplan_fk = this.serviceplan_fk;
             item.Agent_fk = this.AgentID;
             item.Comment = comment;
-            item.Settleday = TLCtxHelper.ModuleSettleCentre.NextTradingday;
+            item.Settleday = TLCtxHelper.ModuleSettleCentre.Tradingday;
             
 
             //定义了代理之间的分润计算

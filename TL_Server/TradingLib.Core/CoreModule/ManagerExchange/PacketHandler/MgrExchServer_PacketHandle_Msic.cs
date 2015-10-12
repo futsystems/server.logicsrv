@@ -17,12 +17,12 @@ namespace TradingLib.Core
             {
                 Manager manger = session.GetManager();
                 SystemStatus status = new SystemStatus();
-                status.CurrentTradingday = TLCtxHelper.ModuleSettleCentre.CurrentTradingday;
+                status.CurrentTradingday = TLCtxHelper.ModuleSettleCentre.Tradingday;
                 status.ClearCentreStatus = TLCtxHelper.ModuleClearCentre.Status; //clearcentre.Status == QSEnumClearCentreStatus.CCOPEN;
                 status.IsSettleNormal = TLCtxHelper.ModuleSettleCentre.IsNormal;
                 status.IsTradingday = TLCtxHelper.ModuleSettleCentre.IsTradingday;
                 status.LastSettleday = TLCtxHelper.ModuleSettleCentre.LastSettleday;
-                status.NextTradingday = TLCtxHelper.ModuleSettleCentre.NextTradingday;
+                status.NextTradingday = TLCtxHelper.ModuleSettleCentre.Tradingday;
                 status.TotalAccountNum = manger.Domain.Super ? TLCtxHelper.ModuleAccountManager.Accounts.Count() : manger.GetAccounts().Count();
                 status.MarketOpenCheck = TLCtxHelper.ModuleRiskCentre.MarketOpenTimeCheck;
                 status.IsDevMode = GlobalConfig.IsDevelop;

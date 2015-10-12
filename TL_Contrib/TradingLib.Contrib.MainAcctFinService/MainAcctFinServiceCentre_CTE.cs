@@ -119,7 +119,7 @@ namespace TradingLib.Contrib.MainAcctFinService
             Manager manager = session.GetManager();
 
 
-            Fee[] feelist = ORM.MFee.SelectFees(TLCtxHelper.ModuleSettleCentre.NextTradingday).ToArray();
+            Fee[] feelist = ORM.MFee.SelectFees(TLCtxHelper.ModuleSettleCentre.Tradingday).ToArray();
 
             for (int i = 0; i < feelist.Length; i++)
             {

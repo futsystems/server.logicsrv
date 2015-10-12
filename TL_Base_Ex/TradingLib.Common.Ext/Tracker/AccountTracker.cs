@@ -145,7 +145,8 @@ namespace TradingLib.Common
 
 
         /// <summary>
-        /// 重置
+        /// 重置某个交易帐户
+        /// 清空委托维护器 持仓维护器 成交维护器
         /// </summary>
         public void ResetAccount(IAccount account)
         {
@@ -156,17 +157,7 @@ namespace TradingLib.Common
             OrdBook[account.ID].Clear();
             PosBook[account.ID].Clear();
             TradeBook[account.ID].Clear();
-
         }
-
-        //public void ResetAccount(IAccount account, IExchange exchange)
-        //{
-        //    Order[] orderlist = account.GetOrders(exchange).ToArray();
-        //    //foreach (var o in orderlist)
-        //    //{ 
-        //    //    //OrdBook[account.ID].
-        //    //}
-        //}
 
 
         #region 响应交易对象

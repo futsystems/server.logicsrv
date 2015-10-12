@@ -57,13 +57,13 @@ namespace TradingLib.Core
                 throw (new QSClearCentreInitError(ex, "ClearCentre初始化错误"));
             }
 
-            TLCtxHelper.EventSystem.SettleResetEvent +=new EventHandler<SystemEventArgs>(EventSystem_SettleResetEvent);
+            //TLCtxHelper.EventSystem.SettleResetEvent +=new EventHandler<SystemEventArgs>(EventSystem_SettleResetEvent);
         }
 
-        void  EventSystem_SettleResetEvent(object sender, SystemEventArgs e)
-        {
-            this.Reset();
-        }
+        //void  EventSystem_SettleResetEvent(object sender, SystemEventArgs e)
+        //{
+        //    this.Reset();
+        //}
 
 
         /// <summary>

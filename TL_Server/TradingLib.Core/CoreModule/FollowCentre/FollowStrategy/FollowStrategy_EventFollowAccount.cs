@@ -44,7 +44,7 @@ namespace TradingLib.Core
                     item.GotTrade(t);
 
                     //记录跟单项和成交的映射关系
-                    FollowItemTrade ft = new FollowItemTrade { FollowKey = item.FollowKey, TradeID = t.TradeID, Settleday = TLCtxHelper.ModuleSettleCentre.NextTradingday };
+                    FollowItemTrade ft = new FollowItemTrade { FollowKey = item.FollowKey, TradeID = t.TradeID, Settleday = TLCtxHelper.ModuleSettleCentre.Tradingday };
                     FollowTracker.FollowItemLogger.NewFollowItemTrade(ft);
                 }
             }

@@ -305,7 +305,7 @@ namespace TradingLib.Contirb.LogServer
             log.Date = Util.ToTLDate();
             log.Exception = !args.IsSuccess ? args.InnerException.ToString() : "";
             log.Result = args.IsSuccess;
-            log.Settleday = TLCtxHelper.ModuleSettleCentre.NextTradingday;
+            log.Settleday = TLCtxHelper.ModuleSettleCentre.Tradingday;
             log.TaskMemo = args.Task.GetTaskMemo(false);
             log.TaskName = args.Task.TaskName;
             log.TaskType = args.Task.TaskType;
@@ -320,7 +320,7 @@ namespace TradingLib.Contirb.LogServer
 
 
 
-            log.Settleday = TLCtxHelper.ModuleSettleCentre.NextTradingday;
+            log.Settleday = TLCtxHelper.ModuleSettleCentre.Tradingday;
             log.Date = Util.ToTLDate();
             log.Time = Util.ToTLTime();
             log.AuthorizedID = args.Session!=null?args.Session.AuthorizedID:"";

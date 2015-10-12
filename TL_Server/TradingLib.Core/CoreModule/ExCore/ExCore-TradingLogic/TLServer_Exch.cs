@@ -100,7 +100,7 @@ namespace TradingLib.Core
             response.ClientUUID = client.Location.ClientID;
             response.FrontIDi = client.FrontIDi;
             response.SessionIDi = client.SessionIDi;
-            response.Date = TLCtxHelper.ModuleSettleCentre.CurrentTradingday;
+            response.Date = TLCtxHelper.ModuleSettleCentre.Tradingday;
             newLoginRequest(client, request, ref response);
 
             //2.检查验证结果 并将对应的数据储存到对应的client informaiton中去
