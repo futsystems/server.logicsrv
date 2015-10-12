@@ -48,6 +48,13 @@ namespace TradingLib.API
         /// <param name="pd"></param>
         void MarkPositionDetailSettled(PositionDetail pd);
 
+
+        /// <summary>
+        /// 标注交易所结算已结算
+        /// </summary>
+        /// <param name="settle"></param>
+        void MarkExchangeSettlementSettled(ExchangeSettlement settle);
+
         /// <summary>
         /// 插入成交
         /// </summary>

@@ -49,32 +49,28 @@ namespace TradingLib.Common
         /// </summary>
         public decimal Profit { get { return RealizedPL + UnRealizedPL - Commission; } }
 
-        decimal _cashin = 0;
+        ThreadSafeList<CashTransaction> cashtranslsit = new ThreadSafeList<CashTransaction>();
         /// <summary>
-        /// 本次结算周期(本日入金)
+        /// 未结算入金
         /// </summary>
-        public decimal CashIn { get { return _cashin; } set { _cashin = value; } }
+        public decimal CashIn { get { return cashtranslsit.Where(tx => !tx.Settled && tx.TxnType == QSEnumCashOperation.Deposit && tx.EquityType == QSEnumEquityType.OwnEquity).Sum(tx => tx.Amount); } }
 
-        decimal _cashout = 0;
         /// <summary>
-        /// 本次结算周期(本日出金)
+        /// 未结算出金
         /// </summary>
-        public decimal CashOut { get { return _cashout; } set { _cashout = value; } }
+        public decimal CashOut { get { return cashtranslsit.Where(tx => !tx.Settled && tx.TxnType == QSEnumCashOperation.WithDraw && tx.EquityType == QSEnumEquityType.OwnEquity).Sum(tx => tx.Amount); } }
 
 
-        decimal _creditcashin = 0;
+        
         /// <summary>
         /// 优先资金 入金
         /// </summary>
-        public decimal CreditCashIn { get { return _creditcashin; } set { _creditcashin = value; } }
+        public decimal CreditCashIn { get { return cashtranslsit.Where(tx => !tx.Settled && tx.TxnType == QSEnumCashOperation.Deposit && tx.EquityType == QSEnumEquityType.CreditEquity).Sum(tx => tx.Amount); } }
 
-
-
-        decimal _creditcashout = 0;
         /// <summary>
         /// 优先资金出金
         /// </summary>
-        public decimal CreditCashOut { get { return _creditcashout; } set { _creditcashout = value; } }
+        public decimal CreditCashOut { get { return cashtranslsit.Where(tx => !tx.Settled && tx.TxnType == QSEnumCashOperation.WithDraw && tx.EquityType == QSEnumEquityType.CreditEquity).Sum(tx => tx.Amount); } }
 
 
         /// <summary>
@@ -138,44 +134,53 @@ namespace TradingLib.Common
         public decimal Credit { get { return LastCredit + CreditCashIn - CreditCashOut + TLCtxHelper.ExContribEvent.GetFinAmmountAvabile(this.ID); } }
 
         /// <summary>
-        /// 入金
+        /// 帐户资金操作
         /// </summary>
-        /// <param name="amount"></param>
-        public void Deposit(decimal amount)
+        /// <param name="txn"></param>
+        public void CashTrans(CashTransaction txn)
         {
-            amount = Math.Abs(amount);
-            _cashin += amount;
+            cashtranslsit.Add(txn);
         }
 
-        /// <summary>
-        /// 出金
-        /// 入金,出金均是绝对值,用于记录金额
-        /// </summary>
-        /// <param name="amount"></param>
-        public void Withdraw(decimal amount)
-        {
-            amount = Math.Abs(amount);
-            _cashout += amount;
-        }
+        ///// <summary>
+        ///// 入金
+        ///// </summary>
+        ///// <param name="amount"></param>
+        //public void Deposit(decimal amount)
+        //{
+        //    amount = Math.Abs(amount);
+        //    _cashin += amount;
+        //}
 
-        /// <summary>
-        /// 优先资入金
-        /// </summary>
-        /// <param name="amount"></param>
-        public void CreditDeposit(decimal amount)
-        {
-            amount = Math.Abs(amount);
-            _creditcashin += amount;
-        }
+        ///// <summary>
+        ///// 出金
+        ///// 入金,出金均是绝对值,用于记录金额
+        ///// </summary>
+        ///// <param name="amount"></param>
+        //public void Withdraw(decimal amount)
+        //{
+        //    amount = Math.Abs(amount);
+        //    _cashout += amount;
+        //}
 
-        /// <summary>
-        /// 优先资金出金
-        /// </summary>
-        /// <param name="amount"></param>
-        public void CreditWithdraw(decimal amount)
-        {
-            amount = Math.Abs(amount);
-            _creditcashout += amount;
-        }
+        ///// <summary>
+        ///// 优先资入金
+        ///// </summary>
+        ///// <param name="amount"></param>
+        //public void CreditDeposit(decimal amount)
+        //{
+        //    amount = Math.Abs(amount);
+        //    _creditcashin += amount;
+        //}
+
+        ///// <summary>
+        ///// 优先资金出金
+        ///// </summary>
+        ///// <param name="amount"></param>
+        //public void CreditWithdraw(decimal amount)
+        //{
+        //    amount = Math.Abs(amount);
+        //    _creditcashout += amount;
+        //}
     }
 }

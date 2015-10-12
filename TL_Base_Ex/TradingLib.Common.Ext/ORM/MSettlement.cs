@@ -79,6 +79,18 @@ namespace TradingLib.ORM
         }
 
         /// <summary>
+        /// 更新交易所结算为已结算
+        /// </summary>
+        /// <param name="settle"></param>
+        public static void MarkExchangeSettlementSettled(ExchangeSettlement settle)
+        {
+            using (DBMySql db = new DBMySql())
+            {
+                string query = string.Format("UPDATE log_settlement_exchange SET settled='1' WHERE `account` = '{0}' AND `settleday` = '{1}' AND  `account`='{2}' AND `exchange`='{3}' ", settle.Account, settle.Settleday, settle.Exchange);
+                db.Connection.Execute(query);
+            }
+        }
+        /// <summary>
         /// 查询未结算隔夜持仓明细
         /// </summary>
         /// <returns></returns>
@@ -90,6 +102,8 @@ namespace TradingLib.ORM
                 return db.Connection.Query<PositionDetailImpl>(query);
             }
         }
+
+        
 
         /// <summary>
         /// 获得分帐户侧所有持仓明细
@@ -285,6 +299,35 @@ namespace TradingLib.ORM
             }
         }
 
+        /// <summary>
+        /// 插入交易帐户结算记录
+        /// </summary>
+        /// <param name="settle"></param>
+        public static void InsertAccountSettlement(AccountSettlement settle)
+        {
+            using (DBMySql db = new DBMySql())
+            {
+                using (var transaction = db.Connection.BeginTransaction())
+                {
+                    bool istransok = true;
+                    string query = string.Format("INSERT INTO log_settlement (`account`,`settleday`,`closeprofitbydate`,`positionprofitbydate`,`commission`,`cashin`,`cashout`,`lastequity`,`equitysettled`,`lastcredit`,`creditsettled`,`creditcashin`,`creditcashout`) values('{0}','{1}','{2}','{3}','{4}','{5}','{6}','{7}','{8}','{9}','{10}','{11}','{12}')", settle.Account, settle.Settleday, settle.CloseProfitByDate, settle.PositionProfitByDate, settle.Commission, settle.CashIn, settle.CashOut, settle.LastEquity, settle.EquitySettled, settle.LastCredit, settle.CreditSettled, settle.CreditCashIn, settle.CreditCashOut);
+                    istransok = istransok && (db.Connection.Execute(query) > 0);
+
+                    query = string.Format("UPDATE accounts SET lastequity = '{0}' WHERE account = '{1}'", settle.EquitySettled, settle.Account);
+                    istransok = istransok && (db.Connection.Execute(query) >= 0);
+
+                    query = string.Format("UPDATE accounts SET settledatetime= '{0}' WHERE account = '{1}'",DateTime.Now, settle.Account);
+                    istransok = istransok && (db.Connection.Execute(query) >= 0);
+
+                    //如果所有操作均正确,则提交数据库transactoin
+                    if (istransok)
+                        transaction.Commit();
+
+                }
+            }
+
+            
+        }
         /// <summary>
         /// 结算某个交易账户
         /// </summary>

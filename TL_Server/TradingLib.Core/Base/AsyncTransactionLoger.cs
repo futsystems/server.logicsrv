@@ -41,6 +41,8 @@ namespace TradingLib.Core
         RingBuffer<OrderAction> _oactioncache;
         RingBuffer<PositionCloseDetail> _posclosecache;
         RingBuffer<PositionDetail> _pdsettledcache;
+        RingBuffer<ExchangeSettlement> _exsettlecache;
+
         //RingBuffer<PositionRound> _postransopencache;
 
         public int OrderInCache { get { return _ocache.Count; } }
@@ -173,6 +175,13 @@ namespace TradingLib.Core
                                 PositionDetail pd = _pdsettledcache.Read();
                                 ORM.MSettlement.MarkPositionDetailSettled(pd);
                             
+                            }
+
+                            while (_exsettlecache.hasItems)
+                            {
+                                ExchangeSettlement settle = _exsettlecache.Read();
+                                ORM.MSettlement.MarkExchangeSettlementSettled(settle);
+
                             }
                             //插入成交
                             while (!_ocache.hasItems && _tcache.hasItems)
@@ -414,6 +423,11 @@ namespace TradingLib.Core
             newlog();
         }
 
+        public void MarkExchangeSettlementSettled(ExchangeSettlement settle)
+        {
+            _exsettlecache.Write(settle);
+            newlog();
+        }
         public void newCancle(long id)
         {
             _ccache.Write(id);
@@ -499,6 +513,7 @@ namespace TradingLib.Core
             _oactioncache = new RingBuffer<OrderAction>(maxbr);
             _posclosecache = new RingBuffer<PositionCloseDetail>(maxbr);
             _pdsettledcache = new RingBuffer<PositionDetail>(maxbr);
+            _exsettlecache = new RingBuffer<ExchangeSettlement>(maxbr);
         }
 
         void _brcache_BufferOverrunEvent()

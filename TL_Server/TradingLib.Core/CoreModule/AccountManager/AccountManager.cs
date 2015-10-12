@@ -196,22 +196,23 @@ namespace TradingLib.Core
                     CashReport credit = creditreport.Where(r => r.Account == acc.ID).FirstOrDefault();
                     EquityReport equity = equityreport.Where(r => r.Account == acc.ID).FirstOrDefault();
 
-                    if (own != null)
-                    {
-                        acc.Deposit(own.CashIn);
-                        acc.Withdraw(own.CashOut);
-                    }
+                    //TODO:帐户加载 
+                    //if (own != null)
+                    //{
+                    //    acc.Deposit(own.CashIn);
+                    //    acc.Withdraw(own.CashOut);
+                    //}
 
-                    if (credit != null)
-                    {
-                        acc.CreditDeposit(credit.CashIn);
-                        acc.CreditWithdraw(credit.CashOut);
-                    }
-                    if (equity != null)
-                    {
-                        acc.LastEquity = equity.Equity;
-                        acc.LastCredit = equity.Credit;
-                    }
+                    //if (credit != null)
+                    //{
+                    //    acc.CreditDeposit(credit.CashIn);
+                    //    acc.CreditWithdraw(credit.CashOut);
+                    //}
+                    //if (equity != null)
+                    //{
+                    //    acc.LastEquity = equity.Equity;
+                    //    acc.LastCredit = equity.Credit;
+                    //}
                     //这里累计NextTradingday的出入金数据 恢复到当前状态,结算之后的所有交易数据都归入以结算日为基础计算的下一个交易日
                     //acc.Deposit(ORM.MAccount.CashInOfTradingDay(acc.ID, QSEnumEquityType.OwnEquity,TLCtxHelper.Ctx.SettleCentre.NextTradingday));
                     //acc.Withdraw(ORM.MAccount.CashOutOfTradingDay(acc.ID,QSEnumEquityType.OwnEquity, TLCtxHelper.Ctx.SettleCentre.NextTradingday));

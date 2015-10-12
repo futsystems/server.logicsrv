@@ -104,6 +104,11 @@ namespace TradingLib.Core
         {
             _asynLoger.MarkPositionDetailSettled(pd);
         }
+
+        public override void MarkExchangeSettlementSettled(ExchangeSettlement settle)
+        {
+            _asynLoger.MarkExchangeSettlementSettled(settle);
+        }
         public override void NewOrderAction(OrderAction actoin)
         {
             _asynLoger.newOrderAction(actoin);

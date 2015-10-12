@@ -25,7 +25,48 @@ namespace TradingLib.Common
         {
             settlementlist.Add(settle);
         }
+
+
+        public void SettleAccount(int settleday)
+        { 
+            //所有交易所对应的settleday交易日结算完毕后，我们执行汇总结算
+            AccountSettlement settlement = new AccountSettlement();
+            settlement.Account = this.ID;
+            settlement.Settleday = settleday;
+
+            settlement.LastEquity = this.LastEquity;
+            settlement.LastCredit = this.LastCredit;
+            settlement.CashIn = 0;
+            settlement.CashOut = 0;
+            settlement.CreditCashIn = 0;
+            settlement.CreditCashOut = 0;
+            settlement.CloseProfitByDate = PendingSettleCloseProfitByDate;
+            settlement.PositionProfitByDate = PendingSettlePositionProfitByDate;
+            settlement.Commission = PendingSettleCommission;
+            settlement.EquitySettled = settlement.LastEquity + settlement.CashIn - settlement.CashOut + settlement.CloseProfitByDate + settlement.PositionProfitByDate - settlement.Commission;
+            settlement.CreditSettled = settlement.LastCredit + settlement.CreditCashIn - settlement.CreditCashOut;
+
+            //保存结算记录
+            ORM.MSettlement.InsertAccountSettlement(settlement);
+
+            foreach (var settle in settlementlist)
+            {
+                settle.Settled = true;
+                TLCtxHelper.ModuleDataRepository.MarkExchangeSettlementSettled(settle);
+            }
+            foreach (var txn in cashtranslsit)
+            {
+                txn.Settled = true;//标注已结算
+            }
+            //TODO:出入金也记录入列表 然后通过Settled来标注
+            //设置昨日权益等信息
+            this.LastEquity = settlement.EquitySettled;
+            this.LastCredit = settlement.CreditSettled;
+            this.LastSettleday = settlement.Settleday;
+
+
         
+        }
         /// <summary>
         /// 交易所 某个交易日 执行结算
         /// 交易所结算目的是按照交易所的结算时间进行 结算

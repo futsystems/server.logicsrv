@@ -19,11 +19,31 @@ namespace TradingLib.Core
             logger.Info("初始化结算任务");
             Dictionary<DateTime, List<IExchange>> exchangesettlemap = new Dictionary<DateTime, List<IExchange>>();
 
+            //int utcoffset = 12;//按utc + 从最高降低
+            //获得当前系统时间与UTC时间的Offset
+            //TimeSpan offset = TimeZoneInfo.FindSystemTimeZoneById(TimeZone.CurrentTimeZone.s).BaseUtcOffset;
+            //DateTime lastsettletime = DateTime.Now;
+            IExchange latestexchange = null;
+            DateTime latestsettlesystime = DateTime.Now;
+
             foreach (var ex in BasicTracker.ExchagneTracker.Exchanges)
             {
+
                 DateTime settleextime = Util.ToDateTime(ex.GetExchangeTime().ToTLDate(), ex.CloseTime);//获得交易所结算时间对应交易所时间
 
                 DateTime settlesystime = ex.GetSystemTime(settleextime);//转换成系统时间
+                //logger.Info("exch:" + ex.EXCode + " extime:" + settleextime.ToString() + " systime:" + settlesystime.ToString());
+                if (latestexchange == null)
+                {
+                    latestexchange = ex;
+                    latestsettlesystime = settlesystime;
+                }
+
+                if (settlesystime > latestsettlesystime)
+                {
+                    latestsettlesystime = settlesystime;
+                    latestexchange = ex;
+                }
 
                 if (!exchangesettlemap.Keys.Contains(settlesystime))
                 {
@@ -32,12 +52,16 @@ namespace TradingLib.Core
 
                 exchangesettlemap[settlesystime].Add(ex);
             }
+                       
 
             foreach (var ky in exchangesettlemap.Keys)
             {
                 RegisterExchangeSettleTask(ky, exchangesettlemap[ky]);
             }
-        
+
+            //最后一个结算的交易所 结算完成5分钟后执行交易帐户结算
+            logger.Info(string.Format("最后结算交易所:{0} 时间:{1}",latestexchange.EXCode,latestsettlesystime.ToString("HH:mm:ss")));
+            RegisterAccountSettleTask(latestsettlesystime.AddMinutes(5));
         }
 
         void RegisterExchangeSettleTask(DateTime settletime, List<IExchange> list)
@@ -47,6 +71,24 @@ namespace TradingLib.Core
             TaskProc task = new TaskProc(this.UUID, "交易所结算-" + settletime.ToString("HH:mm:ss"), settletime.Hour, settletime.Minute, settletime.Second, delegate() { SettleExchange(list); });
             TLCtxHelper.ModuleTaskCentre.RegisterTask(task);
         }
+
+        void RegisterAccountSettleTask(DateTime settletime)
+        {
+            logger.Info("注册交易帐户结算任务,结算时间:" + settletime.ToString("HH:mm:ss"));
+            TaskProc task = new TaskProc(this.UUID, "交易帐户结算-" + settletime.ToString("HH:mm:ss"), settletime.Hour, settletime.Minute, settletime.Second, delegate() { SettleAccount(); });
+            TLCtxHelper.ModuleTaskCentre.RegisterTask(task);
+        }
+
+        /// <summary>
+        /// 交易帐户执行每天结算
+        /// </summary>
+        void SettleAccounts()
+        {
+
+            //logger.Info(string.Format("Update lastsettleday as:{0}", CurrentTradingday));
+            //ORM.MSettlement.UpdateSettleday(CurrentTradingday);
+        }
+
 
         /// <summary>
         /// 交易所结算

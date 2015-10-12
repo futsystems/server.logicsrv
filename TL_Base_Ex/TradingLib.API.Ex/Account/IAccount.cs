@@ -180,30 +180,36 @@ namespace TradingLib.API
         /// <param name="settleday"></param>
         void SettleExchange(IExchange exchange, int settleday);
 
+
+        /// <summary>
+        /// 出入金操作
+        /// </summary>
+        /// <param name="txn"></param>
+        void CashTrans(CashTransaction txn);
         #region 出入金操作
-        /// <summary>
-        /// 入金接口
-        /// </summary>
-        /// <param name="amount"></param>
-        void Deposit(decimal amount);
+        ///// <summary>
+        ///// 入金接口
+        ///// </summary>
+        ///// <param name="amount"></param>
+        //void Deposit(decimal amount);
 
-        /// <summary>
-        /// 出金接口
-        /// </summary>
-        /// <param name="amount"></param>
-        void Withdraw(decimal amount);
+        ///// <summary>
+        ///// 出金接口
+        ///// </summary>
+        ///// <param name="amount"></param>
+        //void Withdraw(decimal amount);
 
-        /// <summary>
-        /// 信用入金
-        /// </summary>
-        /// <param name="amount"></param>
-        void CreditDeposit(decimal amount);
+        ///// <summary>
+        ///// 信用入金
+        ///// </summary>
+        ///// <param name="amount"></param>
+        //void CreditDeposit(decimal amount);
 
-        /// <summary>
-        /// 信用出金
-        /// </summary>
-        /// <param name="amount"></param>
-        void CreditWithdraw(decimal amount);
+        ///// <summary>
+        ///// 信用出金
+        ///// </summary>
+        ///// <param name="amount"></param>
+        //void CreditWithdraw(decimal amount);
         #endregion
 
         /// <summary>

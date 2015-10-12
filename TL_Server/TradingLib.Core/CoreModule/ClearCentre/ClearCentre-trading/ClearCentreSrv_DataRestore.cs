@@ -84,7 +84,7 @@ namespace TradingLib.Core
                 throw (new QSClearCentreResotreError(ex, "清算中心从数据库恢复数据异常"));
             }
 
-            IAccount[] s = TLCtxHelper.ModuleAccountManager.Accounts.ToArray();
+            //IAccount[] s = TLCtxHelper.ModuleAccountManager.Accounts.ToArray();
             Status = QSEnumClearCentreStatus.CCRESTOREFINISH;
         }
     }

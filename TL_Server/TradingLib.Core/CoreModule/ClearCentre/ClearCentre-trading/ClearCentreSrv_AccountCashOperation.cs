@@ -88,21 +88,24 @@ namespace TradingLib.Core
                 throw new FutsRspError("系统正在结算,禁止出入金操作");
             }
 
+            //TODO:出入金确认操作
+
             //执行数据库操作
-            bool ret = ORM.MCashOpAccount.ConfirmAccountCashOperation(op);
+            //bool ret = ORM.MCashOpAccount.ConfirmAccountCashOperation(op);
             
+
             //如果数据库操作正常 则同步内存数据
-            if (ret)
-            {
-                if (op.Operation == QSEnumCashOperation.Deposit)
-                {
-                    account.Deposit(op.Amount);
-                }
-                else
-                {
-                    account.Withdraw(op.Amount);
-                }
-            }
+            //if (ret)
+            //{
+            //    if (op.Operation == QSEnumCashOperation.Deposit)
+            //    {
+            //        account.Deposit(op.Amount);
+            //    }
+            //    else
+            //    {
+            //        account.Withdraw(op.Amount);
+            //    }
+            //}
             logger.Info("Account:" + op.Account + " 确认入金:" + op.Amount.ToString() + " 成功!");
             return true;
         }

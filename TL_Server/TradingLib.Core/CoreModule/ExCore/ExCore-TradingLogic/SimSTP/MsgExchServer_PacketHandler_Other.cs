@@ -479,6 +479,7 @@ namespace TradingLib.Core
         /// <param name="request"></param>
         void SrvOnQryTransferSerial(QryTransferSerialRequest request)
         {
+            //TODO:交易CTP接口查询出入金记录
             logger.Info("QryTransferSerialRequest:" + request.ToString());
             IList<CashTransaction> cts = ORM.MAccount.SelectHistCashTransaction(request.TradingAccount, 0, 0);
             IAccount account = TLCtxHelper.ModuleAccountManager[request.TradingAccount];
@@ -491,11 +492,11 @@ namespace TradingLib.Core
                     RspQryTransferSerialResponse response = ResponseTemplate<RspQryTransferSerialResponse>.SrvSendRspResponse(request);
                     CashTransaction t = cts[i];
                     response.Date = Util.ToTLDate(t.DateTime);
-                    response.Time = Util.ToTLTime(t.DateTime);
+                    response.Time = 0;// Util.ToTLTime(t.DateTime);
                     response.TradingAccount = request.TradingAccount;
                     response.BankAccount = account.BankAC;
                     response.Amount = t.Amount;
-                    response.TransRef = t.TransRef;
+                    response.TransRef = "";//t.TransRef;
                     CacheRspResponse(response, i == totalnum - 1);
                 }
             }

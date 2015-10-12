@@ -63,6 +63,7 @@
     <Compile Include="Msic\EnumTransType.cs" />
     <Compile Include="Msic\IMGRClient.cs" />
     <Compile Include="Trading\BasicInfo\ITradingRange.cs" />
+    <Compile Include="Trading\CashTransaction.cs" />
     <Compile Include="Trading\EnumStrategy.cs" />
     <Compile Include="Trading\ExchangeSettlement.cs" />
     <Compile Include="Vendor\PositionMetric.cs" />

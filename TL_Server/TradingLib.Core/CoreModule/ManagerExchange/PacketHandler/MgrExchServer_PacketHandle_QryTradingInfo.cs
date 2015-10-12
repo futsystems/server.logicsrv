@@ -122,7 +122,6 @@ namespace TradingLib.Core
                 {
                     //返回空项目
                     RspMGRQryCashResponse response = ResponseTemplate<RspMGRQryCashResponse>.SrvSendRspResponse(request);
-                    response.CashTransToSend = new CashTransaction();
                     CacheRspResponse(response);
                 }
             }

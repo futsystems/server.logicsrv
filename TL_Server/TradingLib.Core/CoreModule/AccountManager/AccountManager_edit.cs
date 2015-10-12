@@ -215,7 +215,7 @@ namespace TradingLib.Core
             {
                 throw new FutsRspError("交易帐户不存在");
             }
-
+            //TODO:交易账户出入金操作
             //帐户自有资金的出入金操作
             if (equitytype == QSEnumEquityType.OwnEquity)
             {
@@ -234,15 +234,15 @@ namespace TradingLib.Core
                     throw new FutsRspError("系统正在结算,禁止出入金操作");
                 }
 
-                if (amount > 0)
-                {
-                    acc.Deposit(amount);
-                }
-                else
-                {
-                    acc.Withdraw(Math.Abs(amount));
-                }
-                ORM.MAccount.CashOperation(account, amount,QSEnumEquityType.OwnEquity, transref, comment);
+                //if (amount > 0)
+                //{
+                //    acc.Deposit(amount);
+                //}
+                //else
+                //{
+                //    acc.Withdraw(Math.Abs(amount));
+                //}
+                //ORM.MAccount.CashOperation(account, amount,QSEnumEquityType.OwnEquity, transref, comment);
             }
             
             if (equitytype == QSEnumEquityType.CreditEquity)
@@ -261,15 +261,15 @@ namespace TradingLib.Core
                     throw new FutsRspError("系统正在结算,禁止出入金操作");
                 }
 
-                if (amount > 0)
-                {
-                    acc.CreditDeposit(Math.Abs(amount));
-                }
-                else
-                {
-                    acc.CreditWithdraw(Math.Abs(amount));
-                }
-                ORM.MAccount.CashOperation(account, amount, QSEnumEquityType.CreditEquity, transref, comment);                
+                //if (amount > 0)
+                //{
+                //    acc.CreditDeposit(Math.Abs(amount));
+                //}
+                //else
+                //{
+                //    acc.CreditWithdraw(Math.Abs(amount));
+                //}
+                //ORM.MAccount.CashOperation(account, amount, QSEnumEquityType.CreditEquity, transref, comment);                
             }
 
             TLCtxHelper.EventAccount.FireAccountCashOperationEvent(acc.ID, amount > 0 ? QSEnumCashOperation.Deposit : QSEnumCashOperation.WithDraw, Math.Abs(amount));

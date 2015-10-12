@@ -79,6 +79,11 @@ namespace TradingLib.Core
         {
             throw new NotImplementedException();
         }
+
+        public virtual void MarkExchangeSettlementSettled(ExchangeSettlement settle)
+        {
+            throw new NotImplementedException();
+        }
         /// <summary>
         /// 插入委托操作
         /// </summary>
