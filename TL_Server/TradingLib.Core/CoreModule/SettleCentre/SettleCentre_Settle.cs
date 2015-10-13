@@ -24,8 +24,14 @@ namespace TradingLib.Core
             //获得当前系统时间与UTC时间的Offset
             //TimeSpan offset = TimeZoneInfo.FindSystemTimeZoneById(TimeZone.CurrentTimeZone.s).BaseUtcOffset;
             //DateTime lastsettletime = DateTime.Now;
-            IExchange latestexchange = null;
-            DateTime latestsettlesystime = DateTime.Now;
+            IExchange lastexchange = null;
+            IExchange firstexchange = null;
+            DateTime firstSettleTime = DateTime.Now;
+            DateTime lastSettleTime = DateTime.Now;
+            int firstSettleday = 0;
+            int lastSettleday = 0;
+
+            //DateTime latestsettlesystime = DateTime.Now;
 
             foreach (var ex in BasicTracker.ExchagneTracker.Exchanges)
             {
@@ -34,16 +40,32 @@ namespace TradingLib.Core
 
                 DateTime settlesystime = ex.GetSystemTime(settleextime);//转换成系统时间
                 //logger.Info("exch:" + ex.EXCode + " extime:" + settleextime.ToString() + " systime:" + settlesystime.ToString());
-                if (latestexchange == null)
+                if (lastexchange == null)
                 {
-                    latestexchange = ex;
-                    latestsettlesystime = settlesystime;
+                    lastexchange = ex;
+                    lastSettleTime = settlesystime;
+                    lastSettleday = settleextime.ToTLDate();
+
+                }
+                if (firstexchange == null)
+                {
+                    firstexchange = ex;
+                    firstSettleTime = settlesystime;
+                    firstSettleday = settleextime.ToTLDate();
                 }
 
-                if (settlesystime > latestsettlesystime)
+                if (settlesystime > lastSettleTime)
                 {
-                    latestsettlesystime = settlesystime;
-                    latestexchange = ex;
+                    lastSettleTime = settlesystime;
+                    lastexchange = ex;
+                    lastSettleday = settleextime.ToTLDate();
+
+                }
+                if (settlesystime < firstSettleTime)
+                {
+                    firstSettleTime = settlesystime;
+                    firstexchange = ex;
+                    firstSettleday = settleextime.ToTLDate();
                 }
 
                 if (!exchangesettlemap.Keys.Contains(settlesystime))
@@ -53,7 +75,7 @@ namespace TradingLib.Core
 
                 exchangesettlemap[settlesystime].Add(ex);
             }
-                       
+
 
             foreach (var ky in exchangesettlemap.Keys)
             {
@@ -61,11 +83,14 @@ namespace TradingLib.Core
             }
 
             //最后一个结算的交易所 结算完成5分钟后执行交易帐户结算
-            logger.Info(string.Format("最后结算交易所:{0} 时间:{1}",latestexchange.EXCode,latestsettlesystime.ToString("HH:mm:ss")));
-            _netxSettleTime = latestsettlesystime.AddMinutes(5);
+            logger.Info(string.Format("最早结算交易所:{0} 时间:{1} 结算日:{2}", firstexchange.EXCode, firstSettleTime.ToString("yyyyMMdd HH:mm:ss"), firstSettleday));
+            logger.Info(string.Format("最后结算交易所:{0} 时间:{1} 结算日:{2}", lastexchange.EXCode, lastSettleTime.ToString("yyyyMMdd HH:mm:ss"), lastSettleday));
+            _netxSettleTime = lastSettleTime.AddMinutes(5);
             RegisterAccountSettleTask(_netxSettleTime);
             //周期定时结算时间
             _settleTime = _netxSettleTime.ToTLTime();
+
+            _tradingday = firstSettleday;
 
         }
 
