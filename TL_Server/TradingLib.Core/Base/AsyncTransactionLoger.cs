@@ -42,8 +42,9 @@ namespace TradingLib.Core
         RingBuffer<PositionCloseDetail> _posclosecache;
         RingBuffer<PositionDetail> _pdsettledcache;
         RingBuffer<ExchangeSettlement> _exsettlecache;
+        RingBuffer<CashTransaction> _cashtxnsettlecash;
 
-        //RingBuffer<PositionRound> _postransopencache;
+
 
         public int OrderInCache { get { return _ocache.Count; } }
         public int TradeInCache { get { return _tcache.Count; } }
@@ -181,6 +182,12 @@ namespace TradingLib.Core
                             {
                                 ExchangeSettlement settle = _exsettlecache.Read();
                                 ORM.MSettlement.MarkExchangeSettlementSettled(settle);
+
+                            }
+                            while (_cashtxnsettlecash.hasItems)
+                            {
+                                CashTransaction txn = _cashtxnsettlecash.Read();
+                                ORM.MCashTransaction.MarkeCashTransactionSettled(txn);
 
                             }
                             //插入成交
@@ -379,6 +386,58 @@ namespace TradingLib.Core
         /// </summary>
         public int SLEEP { get { return _sleep; } set { _sleep = value; } }
 
+
+        #region 结算标识
+        /// <summary>
+        /// 结算委托
+        /// </summary>
+        /// <param name="o"></param>
+        public void MarkOrderSettled(Order o)
+        {
+            Order oc = new OrderImpl(o);
+            _osettlecache.Write(oc);
+            newlog();
+        }
+        /// <summary>
+        /// 结算成交
+        /// </summary>
+        /// <param name="f"></param>
+        public void MarkTradeSettled(Trade f)
+        {
+            Trade nf = new TradeImpl(f);
+            _tsettlecache.Write(nf);
+            newlog();
+        }
+        /// <summary>
+        /// 结算持仓明细
+        /// </summary>
+        /// <param name="pd"></param>
+        public void MarkPositionDetailSettled(PositionDetail pd)
+        {
+            _pdsettledcache.Write(pd);
+            newlog();
+        }
+        /// <summary>
+        /// 结算交易所结算
+        /// </summary>
+        /// <param name="settle"></param>
+        public void MarkExchangeSettlementSettled(ExchangeSettlement settle)
+        {
+            _exsettlecache.Write(settle);
+            newlog();
+        }
+
+        /// <summary>
+        /// 结算出入金记录
+        /// </summary>
+        /// <param name="txn"></param>
+        public void MarkCashTransactionSettled(CashTransaction txn)
+        {
+            _cashtxnsettlecash.Write(txn);
+            newlog();
+        }
+        #endregion
+
         /// <summary>
         /// 将新的需要记录的数据记录下来 从而实现异步处理防止阻塞通讯主线程
         /// 数据记录需要copy模式,否则引用对象得其他线程访问时候会出现数据错误 比如成交数目与实际成交数目无法对应等问题。
@@ -398,36 +457,16 @@ namespace TradingLib.Core
             _oupdatecache.Write(oc);
             newlog();
         }
-        public void MarkOrderSettled(Order o)
-        {
-            Order oc = new OrderImpl(o);
-            _osettlecache.Write(oc);
-            newlog();
-        }
+        
         public void newTrade(Trade f)
         {
             Trade nf = new TradeImpl(f);
             _tcache.Write(nf);
             newlog();
         }
-        public void MarkTradeSettled(Trade f)
-        {
-            Trade nf = new TradeImpl(f);
-            _tsettlecache.Write(nf);
-            newlog();
-        }
+        
 
-        public void MarkPositionDetailSettled(PositionDetail pd)
-        {
-            _pdsettledcache.Write(pd);
-            newlog();
-        }
 
-        public void MarkExchangeSettlementSettled(ExchangeSettlement settle)
-        {
-            _exsettlecache.Write(settle);
-            newlog();
-        }
         public void newCancle(long id)
         {
             _ccache.Write(id);
@@ -514,6 +553,7 @@ namespace TradingLib.Core
             _posclosecache = new RingBuffer<PositionCloseDetail>(maxbr);
             _pdsettledcache = new RingBuffer<PositionDetail>(maxbr);
             _exsettlecache = new RingBuffer<ExchangeSettlement>(maxbr);
+            _cashtxnsettlecash = new RingBuffer<CashTransaction>(maxbr);
         }
 
         void _brcache_BufferOverrunEvent()

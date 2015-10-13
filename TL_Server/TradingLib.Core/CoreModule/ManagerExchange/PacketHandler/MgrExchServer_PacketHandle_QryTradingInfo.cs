@@ -107,8 +107,8 @@ namespace TradingLib.Core
                 //权限验证
                 manager.ValidRightReadAccount(request.TradingAccount);
 
-                IList<CashTransaction> cts = ORM.MAccount.SelectHistCashTransaction(request.TradingAccount, request.Settleday, request.Settleday);
-                int totalnum = cts.Count;
+                CashTransaction[] cts = ORM.MCashTransaction.SelectHistCashTransactions(request.TradingAccount, request.Settleday, request.Settleday).ToArray();
+                int totalnum = cts.Length;
                 if (totalnum > 0)
                 {
                     for (int i = 0; i < totalnum; i++)

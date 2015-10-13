@@ -76,5 +76,14 @@ namespace TradingLib.API
         /// </summary>
         int ResetTime { get; }
 
+
+        /// <summary>
+        /// 获得某个交易日 某个合约的计算价格
+        /// </summary>
+        /// <param name="settleday"></param>
+        /// <param name="symbol"></param>
+        /// <returns></returns>
+        SettlementPrice GetSettlementPrice(int settleday, string symbol);
+
     }
 }

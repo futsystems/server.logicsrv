@@ -90,6 +90,7 @@
     <Compile Include="Contrib\Task.cs" />
     <Compile Include="ORM\MAccountConnectorMap.cs" />
     <Compile Include="ORM\MAccountProfile.cs" />
+    <Compile Include="ORM\MCashTransaction.cs" />
     <Compile Include="ORM\MCommission.cs" />
     <Compile Include="ORM\MMargin.cs" />
     <Compile Include="ORM\MStrategy.cs" />

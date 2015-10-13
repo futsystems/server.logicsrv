@@ -88,33 +88,11 @@ namespace TradingLib.API
         /// </summary>
         CurrencyType Currency { get; set; }
 
-        #region 投资者信息
+
         /// <summary>
         /// MAC地址 用于标注客户端硬件
         /// </summary>
         string MAC { get; set; }
-
-        /// <summary>
-        /// 帐户Name 用于储存帐户名称
-        /// </summary>
-        string Name { get; set; }
-
-        /// <summary>
-        /// 帐户
-        /// </summary>
-        string Broker { get; set; }
-
-        /// <summary>
-        /// 银行
-        /// </summary>
-        int BankID { get; set; }
-
-        /// <summary>
-        /// 银行帐号
-        /// </summary>
-        string BankAC { get; set; }
-        #endregion
-
 
         /// <summary>
         /// 账户建立时间
@@ -180,37 +158,16 @@ namespace TradingLib.API
         /// <param name="settleday"></param>
         void SettleExchange(IExchange exchange, int settleday);
 
+        /// <summary>
+        /// 交易账户执行账户结算
+        /// </summary>
+        void SettleAccount(int settleday);
 
         /// <summary>
         /// 出入金操作
         /// </summary>
         /// <param name="txn"></param>
         void CashTrans(CashTransaction txn);
-        #region 出入金操作
-        ///// <summary>
-        ///// 入金接口
-        ///// </summary>
-        ///// <param name="amount"></param>
-        //void Deposit(decimal amount);
-
-        ///// <summary>
-        ///// 出金接口
-        ///// </summary>
-        ///// <param name="amount"></param>
-        //void Withdraw(decimal amount);
-
-        ///// <summary>
-        ///// 信用入金
-        ///// </summary>
-        ///// <param name="amount"></param>
-        //void CreditDeposit(decimal amount);
-
-        ///// <summary>
-        ///// 信用出金
-        ///// </summary>
-        ///// <param name="amount"></param>
-        //void CreditWithdraw(decimal amount);
-        #endregion
 
         /// <summary>
         /// 域ID

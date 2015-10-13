@@ -375,23 +375,23 @@ namespace TradingLib.Core
             }
         }
 
-        [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "UpdateAccountInvestor", "UpdateAccountInvestor - update account investor info", "修改交易帐号投资者信息", QSEnumArgParseType.Json)]
-        public void CTE_UpdateAccountInvestor(ISession session, string json)
-        {
-            logger.Info(string.Format("管理员:{0} 请求修改投资者信息:{1}", session.AuthorizedID, json));
-            var req = Mixins.Json.JsonMapper.ToObject(json);
-            var account = req["account"].ToString();
-            var name = req["name"].ToString();
-            var broker = req["broker"].ToString();
-            var bank_id = int.Parse(req["bank_id"].ToString());
-            var bank_ac = req["bank_ac"].ToString();
+        //[ContribCommandAttr(QSEnumCommandSource.MessageMgr, "UpdateAccountInvestor", "UpdateAccountInvestor - update account investor info", "修改交易帐号投资者信息", QSEnumArgParseType.Json)]
+        //public void CTE_UpdateAccountInvestor(ISession session, string json)
+        //{
+        //    logger.Info(string.Format("管理员:{0} 请求修改投资者信息:{1}", session.AuthorizedID, json));
+        //    var req = Mixins.Json.JsonMapper.ToObject(json);
+        //    var account = req["account"].ToString();
+        //    var name = req["name"].ToString();
+        //    var broker = req["broker"].ToString();
+        //    var bank_id = int.Parse(req["bank_id"].ToString());
+        //    var bank_ac = req["bank_ac"].ToString();
 
-            IAccount acct = TLCtxHelper.ModuleAccountManager[account];
-            if (acct != null)
-            {
-                this.UpdateInvestorInfo(account, name, broker, bank_id, bank_ac);
-            }
-        }
+        //    IAccount acct = TLCtxHelper.ModuleAccountManager[account];
+        //    if (acct != null)
+        //    {
+        //        this.UpdateInvestorInfo(account, name, broker, bank_id, bank_ac);
+        //    }
+        //}
 
         [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "UpdateAccountCurrency", "UpdateAccountCurrency - update account currency", "更新交易帐户货币类别", QSEnumArgParseType.Json)]
         public void CTE_UpdateAccountCurrency(ISession session, string json)
@@ -450,8 +450,21 @@ namespace TradingLib.Core
                 throw new FutsRspError("无权操作该帐户");
             }
 
+            CashTransaction txn = new CashTransactionImpl();
+            txn.Account = account;
+            txn.Amount = Math.Abs(amount);
+            txn.Comment = comment;
+            txn.DateTime = Util.ToTLDateTime();
+            txn.EquityType = equity_type;
+            txn.Operator = manager.Login;
+            txn.Settled = false;
+            txn.Settleday = TLCtxHelper.ModuleSettleCentre.CurrentTradingday;
+            txn.TxnRef = txnref;
+            txn.TxnType = amount > 0 ? QSEnumCashOperation.Deposit : QSEnumCashOperation.WithDraw;
+
+
             //执行出入金操作
-            this.CashOperation(account, amount,equity_type, txnref, comment);
+            this.CashOperation(txn);
 
             //主帐户监控
             if (TLCtxHelper.Version.ProductType == QSEnumProductType.VendorMoniter)

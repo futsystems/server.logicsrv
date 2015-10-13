@@ -52,6 +52,7 @@ namespace TradingLib.Common
         /// 货币类别
         /// </summary>
         public CurrencyType Currency { get; set; }
+
         /// <summary>
         /// 用户ID预留与web站点帐户系统
         /// </summary>
@@ -68,22 +69,5 @@ namespace TradingLib.Common
         /// 交易路由ID
         /// </summary>
         public int RouterID { get; set; }
-
-
-        ///// <summary>
-        ///// 所属柜员
-        ///// </summary>
-        //public Manager BaseManager { get; set; }
-
-        ///// <summary>
-        ///// 路由组
-        ///// </summary>
-        //public RouterGroup RouteGroup { get; set; }
-
-        ///// <summary>
-        ///// 帐号所属域
-        ///// </summary>
-        //public Domain Domain { get; set; }
-
     }
 }

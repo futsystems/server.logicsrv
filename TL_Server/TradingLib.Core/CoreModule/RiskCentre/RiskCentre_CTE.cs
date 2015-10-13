@@ -44,7 +44,8 @@ namespace TradingLib.Core
             if (!TLCtxHelper.ModuleSettleCentre.IsTradingday) return;//非交易日不执行
             foreach (IAccount account in activeaccount.Values.Where(a=>!a.Execute).Where(a => a.AnyPosition))
             {
-                if (account.GetPositionsHold().Any(pos => pos.oSymbol.SecurityFamily.CheckPlaceOrder()== QSEnumActionCheckResult.Allowed))//如果有持仓 并且有任一个持仓对因合约处于交易时间段
+                int settleday = 0;
+                if (account.GetPositionsHold().Any(pos => pos.oSymbol.SecurityFamily.CheckPlaceOrder(out settleday)== QSEnumActionCheckResult.Allowed))//如果有持仓 并且有任一个持仓对因合约处于交易时间段
                 {
                     //检查是否是交易时间段
                     account.FlatPosition(QSEnumOrderSource.RISKCENTREACCOUNTRULE, "强平冻结帐户持仓");

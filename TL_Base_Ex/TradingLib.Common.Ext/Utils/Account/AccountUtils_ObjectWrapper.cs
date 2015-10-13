@@ -27,18 +27,18 @@ namespace TradingLib.Common
             }
             return "未设置";
         }
-        public static JsonWrapperAccountBankAC GetBankAC(this IAccount acc)
-        {
-            JsonWrapperAccountBankAC bkacc = new JsonWrapperAccountBankAC();
-            bkacc.Name = string.IsNullOrEmpty(acc.Name) ? null : acc.Name;
-            bkacc.BankAC = acc.BankAC;
-            bkacc.Branch = "";
-            ContractBank bk = BasicTracker.ContractBankTracker[acc.BankID];
-            bkacc.Bank = bk != null ? bk.Name : null;
-            bkacc.Account = acc.ID;
-            bkacc.AgentInfo = GetAgentInfo(acc);
-            return bkacc;
-        }
+        //public static JsonWrapperAccountBankAC GetBankAC(this IAccount acc)
+        //{
+        //    JsonWrapperAccountBankAC bkacc = new JsonWrapperAccountBankAC();
+        //    bkacc.Name = string.IsNullOrEmpty(acc.Name) ? null : acc.Name;
+        //    bkacc.BankAC = acc.BankAC;
+        //    bkacc.Branch = "";
+        //    ContractBank bk = BasicTracker.ContractBankTracker[acc.BankID];
+        //    bkacc.Bank = bk != null ? bk.Name : null;
+        //    bkacc.Account = acc.ID;
+        //    bkacc.AgentInfo = GetAgentInfo(acc);
+        //    return bkacc;
+        //}
 
 
 
@@ -159,16 +159,16 @@ namespace TradingLib.Common
             info.RealizedPL = acc.RealizedPL;
             info.UnRealizedPL = acc.UnRealizedPL;
             info.Currency = acc.Currency;
-            info.Name = acc.Name;
+
             AccountProfile profile = BasicTracker.AccountProfileTracker[acc.ID];
             if (profile != null)
             {
                 info.Name = profile.Name;
             }
 
-            info.Broker = acc.Broker;
-            info.BankID = acc.BankID;
-            info.BankAC = acc.BankAC;
+            //info.Broker = acc.Broker;
+            //info.BankID = acc.BankID;
+            //info.BankAC = acc.BankAC;
             info.MGRID = acc.Mgr_fk;
             info.Deleted = acc.Deleted;
             info.RG_ID = acc.RG_FK;

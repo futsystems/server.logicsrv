@@ -538,22 +538,22 @@ namespace TradingLib.Common
         }
         #endregion
 
-        public static string GetCustName(this IAccount account)
-        {
-            if (string.IsNullOrEmpty(account.Name))
-            {
-                return  "帐号[" + account.ID + "]";
-            }
-            return account.Name;
-        }
+        //public static string GetCustName(this IAccount account)
+        //{
+        //    if (string.IsNullOrEmpty(account.Name))
+        //    {
+        //        return  "帐号[" + account.ID + "]";
+        //    }
+        //    return account.Name;
+        //}
 
-        public static string GetCustBroker(this IAccount account)
-        {
-            if (string.IsNullOrEmpty(account.Broker))
-            {
-                return GlobalConfig.DefaultBroker;
-            }
-            return account.Broker;
-        }
+        //public static string GetCustBroker(this IAccount account)
+        //{
+        //    if (string.IsNullOrEmpty(account.Broker))
+        //    {
+        //        return GlobalConfig.DefaultBroker;
+        //    }
+        //    return account.Broker;
+        //}
     }
 }

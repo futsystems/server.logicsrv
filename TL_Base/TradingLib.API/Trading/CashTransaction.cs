@@ -8,6 +8,11 @@ namespace TradingLib.API
     public interface CashTransaction
     {
         /// <summary>
+        /// 出入金编号
+        /// </summary>
+        string TxnID { get; set; }
+
+        /// <summary>
         /// 交易帐户
         /// </summary>
         string Account { get; set; }

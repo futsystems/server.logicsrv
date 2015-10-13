@@ -134,14 +134,16 @@ namespace TradingLib.Core
             //平仓明细
             IEnumerable<PositionCloseDetail> positionclose = ORM.MSettlement.SelectPositionCloseDetail(s.Account,s.SettleDay);
 
-
+            AccountProfile profile = BasicTracker.AccountProfileTracker[account.ID];
+            string brokername =string.IsNullOrEmpty(profile.Broker)?"":profile.Broker;
+            string custname = string.IsNullOrEmpty(profile.Name) ? account.ID : profile.Name;
             decimal margin = positiondetails.Sum(pos => pos.Margin);
 
             settlelist.Add(NewLine);
-            settlelist.Add(SectionName(account.GetCustBroker()));
+            settlelist.Add(SectionName(brokername));
             settlelist.Add(line);
             settlelist.Add(SectionName(header1));
-            settlelist.Add(string.Format("{0}{1,10}      {2}{3,10}      {4}{5,10}", padRightEx("客户号:", 10),s.Account, padRightEx("客户名称:", 10),account.GetCustName(), padRightEx("日期:", 10),s.SettleDay));
+            settlelist.Add(string.Format("{0}{1,10}      {2}{3,10}      {4}{5,10}", padRightEx("客户号:", 10), s.Account, padRightEx("客户名称:", 10), custname, padRightEx("日期:", 10), s.SettleDay));
             settlelist.Add(NewLine);
             settlelist.Add(NewLine);
             settlelist.Add(SectionName("资金状况"));

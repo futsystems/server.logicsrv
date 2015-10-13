@@ -136,16 +136,7 @@ namespace TradingLib.Core
         }
 
 
-        /// <summary>
-        /// 获得某个行情的结算价信息
-        /// </summary>
-        /// <param name="k"></param>
-        /// <returns></returns>
-        decimal GetAvabileSettlementPrice(Tick k)
-        {
-            if (k.Settlement != 0) return k.Settlement;
-            return k.Trade;
-        }
+        
         /// <summary>
         /// 保存结算价格
         /// 通过行情路由获得当前市场快照然后保存快照中所有合约的结算价格
@@ -186,7 +177,7 @@ namespace TradingLib.Core
                 _settlementPriceTracker.UpdateSettlementPrice(data);
             }
             //Tick[] ticks = TLCtxHelper.ModuleDataRouter.GetTickSnapshot();
-            logger.Info(string.Format("SaveSettlementPrice Saved:{0}",_settlementPriceTracker.Count));
+            logger.Info(string.Format("SaveSettlementPrice Saved:{0}",_settlementPriceTracker[this.CurrentTradingday].Count()));
         }
 
         /// <summary>
@@ -206,7 +197,7 @@ namespace TradingLib.Core
                 else
                 {
                     //如果持仓合约有对应的结算价信息 设定结算价
-                    target = _settlementPriceTracker[pos.Symbol];
+                    target = _settlementPriceTracker[this.CurrentTradingday,pos.Symbol];
                     if (target != null && target.Settlement>0)
                     {
                         pos.SettlementPrice = target.Settlement;
@@ -228,7 +219,7 @@ namespace TradingLib.Core
                 foreach(Position pos in broker.Positions.Where(p=>!p.isFlat))
                 {
                     //遍历成交接口持仓 设定结算价
-                    target = _settlementPriceTracker[pos.Symbol];
+                    target = _settlementPriceTracker[this.CurrentTradingday,pos.Symbol];
                     if (target != null && target.Settlement > 0)
                     {
                         pos.SettlementPrice = target.Settlement;

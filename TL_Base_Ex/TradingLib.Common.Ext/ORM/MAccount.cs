@@ -45,30 +45,28 @@ namespace TradingLib.ORM
         public string Account { get; set; }
         public QSEnumAccountCategory Account_Category { get; set; }
         public QSEnumOrderTransferType Order_Route_Type { get; set; }
-        public CurrencyType Currency { get; set; }
-        public bool IntraDay { get; set; }
-        
+
         public DateTime CreatedTime { get; set; }
         public DateTime SettleDateTime { get; set; }
+
         public decimal LastEquity { get; set; }
+        public decimal LastCredit { get; set; }
+
+        
+        public bool IntraDay { get; set; }
+        public CurrencyType Currency { get; set; }
+        
+        
         public int User_ID { get; set; }
-        public long Confrim_TimeStamp { get; set; }
-        public string MAC { get; set; }
-
-        public string Name { get; set; }
-        public string Broker { get; set; }
-        public int? BankID { get; set; }
-        public string BankAC { get; set; }
-
-        //public bool PosLock { get; set; }
-        //public bool SideMargin { get; set; }
-       // public bool CreditSeparate { get; set; }
         public int Mgr_fk { get; set; }
         public int rg_fk { get; set; }
-        public int Commission_ID { get; set; }
         public int Margin_ID { get; set; }
-        public int domain_id { get; set; }
+        public int Commission_ID { get; set; }
         public int exstrategy_id { get; set; }
+        public int domain_id { get; set; }
+        
+        public long Confrim_TimeStamp { get; set; }
+        public string MAC { get; set; }
 
     }
 
@@ -323,14 +321,14 @@ namespace TradingLib.ORM
         /// <param name="amount"></param>
         /// <param name="comment"></param>
         /// <returns></returns>
-        public static bool CashOperation(string account, decimal amount,QSEnumEquityType equity_type, string transref,string comment)
-        {
-            using (DBMySql db = new DBMySql())
-            {
-                string query = String.Format("Insert into log_cashtrans (`datetime`,`amount`,`comment`,`account`,`transref`,`settleday`,`equity_type`) values('{0}','{1}','{2}','{3}','{4}','{5}','{6}')", Util.ToTLDateTime(), amount.ToString(), comment, account.ToString(), transref, TLCtxHelper.ModuleSettleCentre.NextTradingday, equity_type);
-                return db.Connection.Execute(query) > 0;
-            }
-        }
+        //public static bool CashOperation(string account, decimal amount,QSEnumEquityType equity_type, string transref,string comment)
+        //{
+        //    using (DBMySql db = new DBMySql())
+        //    {
+        //        string query = String.Format("Insert into log_cashtrans (`datetime`,`amount`,`comment`,`account`,`transref`,`settleday`,`equity_type`) values('{0}','{1}','{2}','{3}','{4}','{5}','{6}')", Util.ToTLDateTime(), amount.ToString(), comment, account.ToString(), transref, TLCtxHelper.ModuleSettleCentre.NextTradingday, equity_type);
+        //        return db.Connection.Execute(query) > 0;
+        //    }
+        //}
 
         /// <summary>
         /// 帐户下某个transref是否存在
@@ -338,14 +336,7 @@ namespace TradingLib.ORM
         /// <param name="account"></param>
         /// <param name="transref"></param>
         /// <returns></returns>
-        public static bool IsTransRefExist(string account, string transref)
-        {
-            using (DBMySql db = new DBMySql())
-            {
-                string query = String.Format("SELECT * FROM log_cashtrans WHERE account={0} AND transref ={1}", account, transref);
-                return db.Connection.Query<TransRefFields>(query, null).ToArray().Length > 0;
-            }
-        }
+
 
         /// <summary>
         /// 获得某个交易日的所有入金
@@ -353,15 +344,15 @@ namespace TradingLib.ORM
         /// <param name="accId"></param>
         /// <param name="start"></param>
         /// <returns></returns>
-        public static decimal CashInOfTradingDay(string accId, QSEnumEquityType eq_type,  int tradingday)
-        {
-            using (DBMySql db = new DBMySql())
-            {
-                string query = String.Format("SELECT Sum(amount) as total FROM log_cashtrans where settleday ='{0}' and account='{1}' and equity_type='{2}' and amount>0", tradingday, accId,eq_type);
-                TotalCashAmount total = db.Connection.Query<TotalCashAmount>(query, null).Single<TotalCashAmount>();
-                return total.Total;
-            }
-        }
+        //public static decimal CashInOfTradingDay(string accId, QSEnumEquityType eq_type,  int tradingday)
+        //{
+        //    using (DBMySql db = new DBMySql())
+        //    {
+        //        string query = String.Format("SELECT Sum(amount) as total FROM log_cashtrans where settleday ='{0}' and account='{1}' and equity_type='{2}' and amount>0", tradingday, accId,eq_type);
+        //        TotalCashAmount total = db.Connection.Query<TotalCashAmount>(query, null).Single<TotalCashAmount>();
+        //        return total.Total;
+        //    }
+        //}
 
         /// <summary>
         /// 某个时间端内所有入金之和
@@ -370,67 +361,97 @@ namespace TradingLib.ORM
         /// <param name="start"></param>
         /// <param name="end"></param>
         /// <returns></returns>
-        public static decimal CashIn(string accId, DateTime start, DateTime end)
-        {
-            using (DBMySql db = new DBMySql())
-            {
-                string query = String.Format("SELECT Sum(amount) as total FROM log_cashtrans where datetime >='{0}'and datetime <= '{1}' and account='{2}' and amount>0", start.ToString(), end.ToString(), accId);
-                TotalCashAmount total = db.Connection.Query<TotalCashAmount>(query, null).Single<TotalCashAmount>();
-                return total.Total;
-            }
-        }
+        //public static decimal CashIn(string accId, DateTime start, DateTime end)
+        //{
+        //    using (DBMySql db = new DBMySql())
+        //    {
+        //        string query = String.Format("SELECT Sum(amount) as total FROM log_cashtrans where datetime >='{0}'and datetime <= '{1}' and account='{2}' and amount>0", start.ToString(), end.ToString(), accId);
+        //        TotalCashAmount total = db.Connection.Query<TotalCashAmount>(query, null).Single<TotalCashAmount>();
+        //        return total.Total;
+        //    }
+        //}
 
-        /// <summary>
-        /// 获得结算以来的出金
-        /// </summary>
-        /// <param name="accID"></param>
-        /// <param name="start"></param>
-        /// <returns></returns>
-        public static decimal CashOutOfTradingDay(string accId,QSEnumEquityType eq_type,int tradingday)
-        {
-            using (DBMySql db = new DBMySql())
-            {
-                string query = String.Format("SELECT Sum(amount) as total FROM log_cashtrans where settleday ='{0}' and account='{1}' and equity_type='{2}' and amount<0", tradingday, accId, eq_type);
-                TotalCashAmount total = db.Connection.Query<TotalCashAmount>(query, null).Single<TotalCashAmount>();
-                return total.Total;
-            }
-        }
-        /// <summary>
-        /// 统计某个时间段内所有出金总合
-        /// </summary>
-        /// <param name="accId"></param>
-        /// <param name="start"></param>
-        /// <param name="end"></param>
-        /// <returns></returns>
-        public static decimal CashOut(string accId, DateTime start, DateTime end)
-        {
-            using (DBMySql db = new DBMySql())
-            {
-                string query = String.Format("SELECT Sum(amount) as total FROM log_cashtrans where datetime >='{0}'and datetime <= '{1}' and account='{2}' and amount<0", start.ToString(), end.ToString(), accId);
-                TotalCashAmount total = db.Connection.Query<TotalCashAmount>(query, null).Single<TotalCashAmount>();
-                return total.Total;
-            }
+        ///// <summary>
+        ///// 获得结算以来的出金
+        ///// </summary>
+        ///// <param name="accID"></param>
+        ///// <param name="start"></param>
+        ///// <returns></returns>
+        //public static decimal CashOutOfTradingDay(string accId,QSEnumEquityType eq_type,int tradingday)
+        //{
+        //    using (DBMySql db = new DBMySql())
+        //    {
+        //        string query = String.Format("SELECT Sum(amount) as total FROM log_cashtrans where settleday ='{0}' and account='{1}' and equity_type='{2}' and amount<0", tradingday, accId, eq_type);
+        //        TotalCashAmount total = db.Connection.Query<TotalCashAmount>(query, null).Single<TotalCashAmount>();
+        //        return total.Total;
+        //    }
+        //}
+        ///// <summary>
+        ///// 统计某个时间段内所有出金总合
+        ///// </summary>
+        ///// <param name="accId"></param>
+        ///// <param name="start"></param>
+        ///// <param name="end"></param>
+        ///// <returns></returns>
+        //public static decimal CashOut(string accId, DateTime start, DateTime end)
+        //{
+        //    using (DBMySql db = new DBMySql())
+        //    {
+        //        string query = String.Format("SELECT Sum(amount) as total FROM log_cashtrans where datetime >='{0}'and datetime <= '{1}' and account='{2}' and amount<0", start.ToString(), end.ToString(), accId);
+        //        TotalCashAmount total = db.Connection.Query<TotalCashAmount>(query, null).Single<TotalCashAmount>();
+        //        return total.Total;
+        //    }
 
-        }
+        //}
 
-        public static IList<CashTransaction> SelectHistCashTransaction(string account, int begin, int end)
-        {
-            using (DBMySql db = new DBMySql())
-            {
-                string query = string.Empty;
-                if (begin == 0 && end == 0)
-                {
-                    query = string.Format("SELECT * FROM  {0}  WHERE account='{1}'", "log_cashtrans",account);
-                }
-                else
-                {
-                    query = string.Format("SELECT * FROM  {0}  WHERE settleday >='{1}' AND settleday <='{2}' AND account='{3}'", "log_cashtrans", begin, end, account);
-                }
-                IList<CashTransaction> cts = db.Connection.Query<CashTransaction>(query).ToArray();
+        ///// <summary>
+        ///// 获得所有未结算出入金记录
+        ///// </summary>
+        ///// <returns></returns>
+        //public static IEnumerable<CashTransactionImpl> SelectCashTransactionsUnSettled()
+        //{
 
-                return cts;
-            }
-        }
+        //    using (DBMySql db = new DBMySql())
+        //    {
+        //        string query = string.Format("SELECT * FROM log_cashtrans WHERE settled=0");
+        //        return db.Connection.Query<CashTransactionImpl>(query);
+        //    }
+        //}
+
+        ///// <summary>
+        ///// 查询某个交易帐户某个时间段内的出入金记录
+        ///// </summary>
+        ///// <param name="account"></param>
+        ///// <param name="begin"></param>
+        ///// <param name="end"></param>
+        ///// <returns></returns>
+        //public static IEnumerable<CashTransactionImpl> SelectHistCashTransactions(string account, int begin, int end)
+        //{
+        //    using (DBMySql db = new DBMySql())
+        //    {
+        //        string query = string.Format("SELECT * FROM log_cashtrans WHERE account='{0}' AND settleday>='{2}' AND settleday<='{3}'", account, begin, end);
+        //        return db.Connection.Query<CashTransactionImpl>(query);
+        //    }
+        //}
+
+        //public static IList<CashTransaction> SelectHistCashTransaction(string account, int begin, int end)
+        //{
+        //    using (DBMySql db = new DBMySql())
+        //    {
+        //        string query = string.Empty;
+        //        if (begin == 0 && end == 0)
+        //        {
+        //            query = string.Format("SELECT * FROM  {0}  WHERE account='{1}'", "log_cashtrans",account);
+        //        }
+        //        else
+        //        {
+        //            query = string.Format("SELECT * FROM  {0}  WHERE settleday >='{1}' AND settleday <='{2}' AND account='{3}'", "log_cashtrans", begin, end, account);
+        //        }
+        //        IList<CashTransaction> cts = db.Connection.Query<CashTransaction>(query).ToArray();
+
+        //        return cts;
+        //    }
+        //}
         #endregion
 
 
@@ -658,6 +679,7 @@ namespace TradingLib.ORM
         {
             IAccount account = AccountBase.CreateAccount(fields.Account);
             account.LastEquity = fields.LastEquity;
+            account.LastCredit = fields.LastCredit;
             account.UserID = fields.User_ID;
             account.CreatedTime = fields.CreatedTime;
             account.SettleDateTime = fields.SettleDateTime;//Util.ToDateTime(fields.SettleDateTime);
@@ -666,10 +688,10 @@ namespace TradingLib.ORM
             account.Category = fields.Account_Category;
             account.SettlementConfirmTimeStamp = fields.Confrim_TimeStamp;
             account.MAC = fields.MAC;
-            account.Name = fields.Name;
-            account.Broker = fields.Broker;
-            account.BankID = fields.BankID==null?0:(int)fields.BankID;
-            account.BankAC = fields.BankAC;
+            //account.Name = fields.Name;
+            //account.Broker = fields.Broker;
+            //account.BankID = fields.BankID==null?0:(int)fields.BankID;
+            //account.BankAC = fields.BankAC;
             //account.PosLock = fields.PosLock;
             //account.SideMargin = fields.SideMargin;
             account.Mgr_fk = fields.Mgr_fk;
@@ -766,35 +788,35 @@ namespace TradingLib.ORM
         /// <param name="type"></param>
         /// <param name="tradingday"></param>
         /// <returns></returns>
-        public static IEnumerable<CashReport> SelectCashReport(QSEnumEquityType type, int tradingday)
-        {
-            using (DBMySql db = new DBMySql())
-            {
-                string query = string.Empty;
-                if (type == QSEnumEquityType.OwnEquity)
-                {
-                    query = String.Format(@"select IFNULL(account1,account2) as account,IFNULL(own_in,0) as cashin,IFNULL(own_out,0) as cashout  FROM
-(
-select * from (SELECT account as account1,Sum(amount) as own_in FROM log_cashtrans where settleday ={0}  and equity_type='OwnEquity' and amount>0 GROUP BY account )tb1   left  join  (SELECT account as account2,Sum(amount) as own_out FROM log_cashtrans where settleday ={0}  and equity_type='OwnEquity' and amount<0 GROUP BY account) tb2 on tb1.account1=tb2.account2
-union
-select * from (SELECT account as account1,Sum(amount) as own_in FROM log_cashtrans where settleday ={0}  and equity_type='OwnEquity' and amount>0 GROUP BY account )tb1   right  join  (SELECT account as account2,Sum(amount) as own_out FROM log_cashtrans where settleday ={0}  and equity_type='OwnEquity' and amount<0 GROUP BY account) tb2 on tb1.account1=tb2.account2
-) as cash_report", tradingday);
-                }
-                else
-                {
-                    query = String.Format(@"select IFNULL(account1,account2) as account,IFNULL(own_in,0) as cashin,IFNULL(own_out,0) as cashout  FROM
-(
-select * from (SELECT account as account1,Sum(amount) as own_in FROM log_cashtrans where settleday ={0}  and equity_type='CreditEquity' and amount>0 GROUP BY account )tb1   left  join  (SELECT account as account2,Sum(amount) as own_out FROM log_cashtrans where settleday ={0}  and equity_type='CreditEquity' and amount<0 GROUP BY account) tb2 on tb1.account1=tb2.account2
-union
-select * from (SELECT account as account1,Sum(amount) as own_in FROM log_cashtrans where settleday ={0}  and equity_type='CreditEquity' and amount>0 GROUP BY account )tb1   right  join  (SELECT account as account2,Sum(amount) as own_out FROM log_cashtrans where settleday ={0}  and equity_type='CreditEquity' and amount<0 GROUP BY account) tb2 on tb1.account1=tb2.account2
-) as cash_report", tradingday);
-                }
+//        public static IEnumerable<CashReport> SelectCashReport(QSEnumEquityType type, int tradingday)
+//        {
+//            using (DBMySql db = new DBMySql())
+//            {
+//                string query = string.Empty;
+//                if (type == QSEnumEquityType.OwnEquity)
+//                {
+//                    query = String.Format(@"select IFNULL(account1,account2) as account,IFNULL(own_in,0) as cashin,IFNULL(own_out,0) as cashout  FROM
+//(
+//select * from (SELECT account as account1,Sum(amount) as own_in FROM log_cashtrans where settleday ={0}  and equity_type='OwnEquity' and amount>0 GROUP BY account )tb1   left  join  (SELECT account as account2,Sum(amount) as own_out FROM log_cashtrans where settleday ={0}  and equity_type='OwnEquity' and amount<0 GROUP BY account) tb2 on tb1.account1=tb2.account2
+//union
+//select * from (SELECT account as account1,Sum(amount) as own_in FROM log_cashtrans where settleday ={0}  and equity_type='OwnEquity' and amount>0 GROUP BY account )tb1   right  join  (SELECT account as account2,Sum(amount) as own_out FROM log_cashtrans where settleday ={0}  and equity_type='OwnEquity' and amount<0 GROUP BY account) tb2 on tb1.account1=tb2.account2
+//) as cash_report", tradingday);
+//                }
+//                else
+//                {
+//                    query = String.Format(@"select IFNULL(account1,account2) as account,IFNULL(own_in,0) as cashin,IFNULL(own_out,0) as cashout  FROM
+//(
+//select * from (SELECT account as account1,Sum(amount) as own_in FROM log_cashtrans where settleday ={0}  and equity_type='CreditEquity' and amount>0 GROUP BY account )tb1   left  join  (SELECT account as account2,Sum(amount) as own_out FROM log_cashtrans where settleday ={0}  and equity_type='CreditEquity' and amount<0 GROUP BY account) tb2 on tb1.account1=tb2.account2
+//union
+//select * from (SELECT account as account1,Sum(amount) as own_in FROM log_cashtrans where settleday ={0}  and equity_type='CreditEquity' and amount>0 GROUP BY account )tb1   right  join  (SELECT account as account2,Sum(amount) as own_out FROM log_cashtrans where settleday ={0}  and equity_type='CreditEquity' and amount<0 GROUP BY account) tb2 on tb1.account1=tb2.account2
+//) as cash_report", tradingday);
+//                }
 
 
-                return db.Connection.Query<CashReport>(query, null);
+//                return db.Connection.Query<CashReport>(query, null);
 
-            }
-        }
+//            }
+//        }
 
 
         /// <summary>

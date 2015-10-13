@@ -299,10 +299,11 @@ namespace TradingLib.Core
 
             TrdClientInfo info = tl.GetClient(request.ClientID);
 
+            AccountProfile profile = BasicTracker.AccountProfileTracker[account.ID];
             response.TradingAccount = account.ID;
-            response.Email = "xxxx@xxx.com";
+            response.Email = profile.Email;
             //查询交易帐户时,如果token为空则生成帐户名否则传递Token
-            response.NickName = account.GetCustName();
+            response.NickName = string.IsNullOrEmpty(profile.Name) ? account.ID : profile.Name;
                 
             CacheRspResponse(response);
         }
@@ -455,11 +456,12 @@ namespace TradingLib.Core
             {
                 RspQryRegisterBankAccountResponse response = ResponseTemplate<RspQryRegisterBankAccountResponse>.SrvSendRspResponse(request);
                 response.TradingAccount = account.ID;
+                AccountProfile profile = BasicTracker.AccountProfileTracker[account.ID];
                 //如果对应的BankFK不为0 则传递设置的银行帐户信息
-                if (account.BankID != 0)
+                if (profile.Bank_ID!=0)
                 {
-                    response.BankAC = account.BankAC;//获得银行卡号 如果没有设置银行卡号码 会导致博易客户端频繁请求交易帐号信息
-                    ContractBank bank = BasicTracker.ContractBankTracker[account.BankID];
+                    response.BankAC = profile.BankAC;//获得银行卡号 如果没有设置银行卡号码 会导致博易客户端频繁请求交易帐号信息
+                    ContractBank bank = BasicTracker.ContractBankTracker[profile.Bank_ID];
                     response.BankName =  bank.Name;
                     response.BankID = bank.BrankID;
                 }
@@ -481,9 +483,9 @@ namespace TradingLib.Core
         {
             //TODO:交易CTP接口查询出入金记录
             logger.Info("QryTransferSerialRequest:" + request.ToString());
-            IList<CashTransaction> cts = ORM.MAccount.SelectHistCashTransaction(request.TradingAccount, 0, 0);
+            CashTransaction[] cts = ORM.MCashTransaction.SelectHistCashTransactions(request.TradingAccount, 0, 0).ToArray();
             IAccount account = TLCtxHelper.ModuleAccountManager[request.TradingAccount];
-            int totalnum = cts.Count;
+            int totalnum = cts.Length;
             logger.Info("total transfer num:" + totalnum.ToString());
             if (totalnum > 0)
             {
@@ -491,10 +493,12 @@ namespace TradingLib.Core
                 {
                     RspQryTransferSerialResponse response = ResponseTemplate<RspQryTransferSerialResponse>.SrvSendRspResponse(request);
                     CashTransaction t = cts[i];
+                    AccountProfile profile = BasicTracker.AccountProfileTracker[account.ID];
+
                     response.Date = Util.ToTLDate(t.DateTime);
                     response.Time = 0;// Util.ToTLTime(t.DateTime);
                     response.TradingAccount = request.TradingAccount;
-                    response.BankAccount = account.BankAC;
+                    response.BankAccount = profile.BankAC;
                     response.Amount = t.Amount;
                     response.TransRef = "";//t.TransRef;
                     CacheRspResponse(response, i == totalnum - 1);

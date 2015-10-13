@@ -289,11 +289,14 @@ namespace TradingLib.Core
 
             if (diff_credit != 0)
             {
-                TLCtxHelper.ModuleAccountManager.CashOperation(account, diff_equity, QSEnumEquityType.OwnEquity, "", string.Format("Sync-Target:{0}", targetStaticEquity));
+                CashTransaction txn = new CashTransactionImpl() { Account = account, Amount = Math.Abs(diff_equity), EquityType = QSEnumEquityType.OwnEquity, Comment = string.Format("Sync-Target:{0}", targetStaticEquity), TxnType = diff_equity > 0 ? QSEnumCashOperation.Deposit : QSEnumCashOperation.WithDraw };
+                //TLCtxHelper.ModuleAccountManager.CashOperation(account, diff_equity, QSEnumEquityType.OwnEquity, "", string.Format("Sync-Target:{0}", targetStaticEquity));
             }
             if (diff_equity != 0)
             {
-                TLCtxHelper.ModuleAccountManager.CashOperation(account, diff_credit, QSEnumEquityType.CreditEquity, "", string.Format("Sync-Target:{0}", targetStaticCredit));
+                CashTransaction txn = new CashTransactionImpl() { Account = account, Amount = Math.Abs(diff_equity), EquityType = QSEnumEquityType.OwnEquity, Comment = string.Format("Sync-Target:{0}", targetStaticEquity), TxnType = diff_equity > 0 ? QSEnumCashOperation.Deposit : QSEnumCashOperation.WithDraw };
+              
+                //TLCtxHelper.ModuleAccountManager.CashOperation(account, diff_credit, QSEnumEquityType.CreditEquity, "", string.Format("Sync-Target:{0}", targetStaticCredit));
             }
             
             session.OperationSuccess("同步资金完成");
@@ -475,7 +478,8 @@ namespace TradingLib.Core
 
                                 double creditvalue = (double)account.Credit;
                                 //调用帐户管理模块执行出金操作
-                                TLCtxHelper.ModuleAccountManager.CashOperation(account.ID, account.Credit * -1, QSEnumEquityType.CreditEquity, "", "");
+                                CashTransaction txn = new CashTransactionImpl() { Account = account.ID, Amount = account.Credit, EquityType = QSEnumEquityType.CreditEquity, TxnType = QSEnumCashOperation.WithDraw };
+                                TLCtxHelper.ModuleAccountManager.CashOperation(txn);
 
                                 //调用broker接口执行出金操作
                                 TLBroker b = broker as TLBroker;

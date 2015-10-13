@@ -251,21 +251,21 @@ namespace TradingLib.Contrib.MainAcctFinService
 
             try
             {
-
+                //TODO:主帐户监控模块的出入金操作
                 FinGlobal.FinServiceTracker.UpdateFeeStatus(f, QSEnumFeeStatus.Rollback);
                 if (f.FeeType == QSEnumFeeType.FinServiceFee)
                 {
                     //帐户客户权益出金
-                    TLCtxHelper.ModuleAccountManager.CashOperation(account, amount, QSEnumEquityType.OwnEquity, "", comment);
+                    //TLCtxHelper.ModuleAccountManager.CashOperation(account, amount, QSEnumEquityType.OwnEquity, "", comment);
                     //帐户优先权益入金
-                    TLCtxHelper.ModuleAccountManager.CashOperation(account, amount * -1, QSEnumEquityType.CreditEquity, "", comment);
+                    //TLCtxHelper.ModuleAccountManager.CashOperation(account, amount * -1, QSEnumEquityType.CreditEquity, "", comment);
                 }
                 //系统的手续按照本地费率计算，多收的手续费可以通过从主帐户出金的方式或者优先资金入金的方式收取
                 if (f.FeeType == QSEnumFeeType.CommissionFee)
                 {
                     //这里客户权益不需要出金，因为手续费盘中已经通过计算多收取了 体现在了客户权益中
                     //帐户优先权益入金
-                    TLCtxHelper.ModuleAccountManager.CashOperation(account, amount * -1, QSEnumEquityType.CreditEquity, "", comment);
+                    //TLCtxHelper.ModuleAccountManager.CashOperation(account, amount * -1, QSEnumEquityType.CreditEquity, "", comment);
                 }
                 FinGlobal.FinServiceTracker.FeeUnCollected(f);
                 FinGlobal.FinServiceTracker.UpdateFeeStatus(f, QSEnumFeeStatus.RollbackSuccess);
@@ -305,16 +305,17 @@ namespace TradingLib.Contrib.MainAcctFinService
                             if (f.FeeType == QSEnumFeeType.FinServiceFee)
                             {
                                 //帐户客户权益出金
-                                TLCtxHelper.ModuleAccountManager.CashOperation(account, amount * -1, QSEnumEquityType.OwnEquity, "", comment);
+
+                                TLCtxHelper.ModuleAccountManager.CashOperation(new CashTransactionImpl() { Account = account, Amount = amount, EquityType = QSEnumEquityType.OwnEquity, TxnType = QSEnumCashOperation.WithDraw, Comment = comment });
                                 //帐户优先权益入金
-                                TLCtxHelper.ModuleAccountManager.CashOperation(account, amount, QSEnumEquityType.CreditEquity, "",comment);
+                                TLCtxHelper.ModuleAccountManager.CashOperation(new CashTransactionImpl() { Account = account, Amount = amount, EquityType = QSEnumEquityType.CreditEquity, TxnType = QSEnumCashOperation.Deposit, Comment = comment });
                             }
                             //系统的手续按照本地费率计算，多收的手续费可以通过从主帐户出金的方式或者优先资金入金的方式收取
                             if (f.FeeType == QSEnumFeeType.CommissionFee)
                             {
                                 //这里客户权益不需要出金，因为手续费盘中已经通过计算多收取了 体现在了客户权益中
                                 //帐户优先权益入金
-                                TLCtxHelper.ModuleAccountManager.CashOperation(account, amount, QSEnumEquityType.CreditEquity, "", comment);
+                                TLCtxHelper.ModuleAccountManager.CashOperation(new CashTransactionImpl() { Account = account, Amount = amount, EquityType = QSEnumEquityType.CreditEquity, TxnType = QSEnumCashOperation.Deposit, Comment = comment });
                             }
 
                             FinGlobal.FinServiceTracker.FeeCollected(f);
@@ -337,7 +338,7 @@ namespace TradingLib.Contrib.MainAcctFinService
                         if (f.FeeType == QSEnumFeeType.FinServiceFee)
                         {
                             //帐户客户权益出金
-                            TLCtxHelper.ModuleAccountManager.CashOperation(account, amount * -1, QSEnumEquityType.OwnEquity, "", comment);
+                            TLCtxHelper.ModuleAccountManager.CashOperation(new CashTransactionImpl() { Account = account, Amount = amount, EquityType = QSEnumEquityType.OwnEquity, TxnType = QSEnumCashOperation.WithDraw, Comment = comment });
 
                             TLBroker broker = GetBroker(account);
                             if (broker == null)

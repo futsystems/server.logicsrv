@@ -199,7 +199,7 @@ namespace TradingLib.Core
             int currentday = int.Parse(data["settleday"].ToString());
 
             //发送结算价信息
-            session.ReplyMgr(_settlementPriceTracker.SettlementPrices.ToArray());
+            session.ReplyMgr(_settlementPriceTracker[currentday].ToArray());
         }
 
         [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "UpdateSettlementPrice", "UpdateSettlementPrice - 更新结算价格信息", "更新结算价格信息", QSEnumArgParseType.Json)]
@@ -215,7 +215,7 @@ namespace TradingLib.Core
             if (settlementPrice != null)
             {
                 _settlementPriceTracker.UpdateSettlementPrice(settlementPrice);
-                session.ReplyMgr(_settlementPriceTracker[settlementPrice.Symbol]);
+                session.ReplyMgr(_settlementPriceTracker[this.CurrentTradingday,settlementPrice.Symbol]);
             }
 
             session.OperationSuccess("结算价更新成功");
@@ -259,7 +259,7 @@ namespace TradingLib.Core
             foreach (Position pos in TLCtxHelper.ModuleClearCentre.TotalPositions.Where(pos => !pos.isFlat))
             {
                 //如果该未平持仓没有对应的结算价信息 则我们在list中加入该合约 用于推送到手工结算窗口让管理员进行填写
-                if (_settlementPriceTracker[pos.Symbol] == null)
+                if (_settlementPriceTracker[this.CurrentTradingday,pos.Symbol] == null)
                 {
                     //插入该结算价信息记录 价格为-1
                     _settlementPriceTracker.UpdateSettlementPrice(new MarketData() { Settlement = -1, SettleDay = this.NextTradingday, Symbol = pos.Symbol });

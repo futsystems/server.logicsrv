@@ -84,6 +84,15 @@ namespace TradingLib.Core
         {
             throw new NotImplementedException();
         }
+
+        /// <summary>
+        /// 标注出入金已经结算
+        /// </summary>
+        /// <param name="txn"></param>
+        public virtual void MarkCashTransactionSettled(CashTransaction txn)
+        {
+            throw new NotImplementedException();        
+        }
         /// <summary>
         /// 插入委托操作
         /// </summary>
@@ -154,6 +163,15 @@ namespace TradingLib.Core
         {
             throw new NotImplementedException();
         }
+
+
+        public virtual IEnumerable<CashTransaction> SelectAcctCashTransactionUnSettled()
+        {
+            throw new NotImplementedException();
+        }
+
+
+
         /// <summary>
         /// 获得某个成交接口的日内 成交数据
         /// </summary>

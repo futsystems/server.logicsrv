@@ -56,6 +56,13 @@ namespace TradingLib.API
         void MarkExchangeSettlementSettled(ExchangeSettlement settle);
 
         /// <summary>
+        /// 标注出入金已经结算
+        /// </summary>
+        /// <param name="txn"></param>
+        void MarkCashTransactionSettled(CashTransaction txn);
+
+
+        /// <summary>
         /// 插入成交
         /// </summary>
         /// <param name="f"></param>
@@ -103,6 +110,17 @@ namespace TradingLib.API
         /// </summary>
         /// <returns></returns>
         IEnumerable<ExchangeSettlement> SelectAcctExchangeSettlemts();
+
+
+        /// <summary>
+        /// 获得所有交易账户 未结算记录
+        /// </summary>
+        /// <returns></returns>
+        IEnumerable<CashTransaction> SelectAcctCashTransactionUnSettled();
+
+
+
+
         /// <summary>
         /// 获得某个成交接口的日内 成交数据
         /// </summary>

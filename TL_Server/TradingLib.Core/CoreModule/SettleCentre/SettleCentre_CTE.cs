@@ -63,10 +63,26 @@ namespace TradingLib.Core
 
             if (ab != null && ex != null)
             {
-                ab.SettleExchange(ex, 20151012);
+                SaveSettlementPrice(ex, 20151013);
+                ab.SettleExchange(ex, 20151013);
             }
 
         }
+
+        [ContribCommandAttr(QSEnumCommandSource.CLI, "settleaccount", "settleaccount - settle account", "执行帐户结算")]
+        public void CTE_SettleAccount(string account)
+        {
+            IAccount acc = TLCtxHelper.ModuleAccountManager[account];
+            AccountBase ab = acc as AccountBase;
+
+            if (ab != null)
+            {
+                ab.SettleAccount(this.CurrentTradingday);
+            }
+
+        }
+
+        
         bool settled = false;
 
         #region 大结算过程
@@ -106,7 +122,7 @@ namespace TradingLib.Core
 
             //通过事件中继出发数据保存事件
             TLCtxHelper.EventSystem.FireSettleDataStoreEvent(this, new SystemEventArgs());
-            
+           
         }
 
 

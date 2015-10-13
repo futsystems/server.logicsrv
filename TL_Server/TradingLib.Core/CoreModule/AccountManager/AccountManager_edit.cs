@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Security.Cryptography;
 using TradingLib.API;
 using TradingLib.Common;
 
@@ -47,25 +48,25 @@ namespace TradingLib.Core
             AccountChanged(account);
         }
 
-        /// <summary>
-        /// 修改投资者信息
-        /// </summary>
-        /// <param name="account"></param>
-        /// <param name="name"></param>
-        /// <param name="broker"></param>
-        /// <param name="bankfk"></param>
-        /// <param name="bankac"></param>
-        public void UpdateInvestorInfo(string account, string name, string broker, int bankfk, string bankac)
-        {
-            if (!HaveAccount(account)) return;
-            IAccount acc = this[account];
-            acc.Name = name;
-            acc.Broker = broker;
-            acc.BankAC = bankac;
-            acc.BankID = bankfk;
-            ORM.MAccount.UpdateInvestorInfo(account, name, broker, bankfk, bankac);
-            AccountChanged(account);
-        }
+        ///// <summary>
+        ///// 修改投资者信息
+        ///// </summary>
+        ///// <param name="account"></param>
+        ///// <param name="name"></param>
+        ///// <param name="broker"></param>
+        ///// <param name="bankfk"></param>
+        ///// <param name="bankac"></param>
+        //public void UpdateInvestorInfo(string account, string name, string broker, int bankfk, string bankac)
+        //{
+        //    if (!HaveAccount(account)) return;
+        //    IAccount acc = this[account];
+        //    acc.Name = name;
+        //    acc.Broker = broker;
+        //    acc.BankAC = bankac;
+        //    acc.BankID = bankfk;
+        //    ORM.MAccount.UpdateInvestorInfo(account, name, broker, bankfk, bankac);
+        //    AccountChanged(account);
+        //}
 
         /// <summary>
         /// 更新交易帐户货币
@@ -199,6 +200,24 @@ namespace TradingLib.Core
             AccountChanged(id);
         }
 
+
+        object _txnidgen = new object();
+        string GenTxnID()
+        {
+            lock (_txnidgen)
+            {
+                System.Threading.Thread.Sleep(10);
+                string strDateTimeNumber = DateTime.Now.ToString("yyyyMMddHHmmssms");
+                byte[] randomBytes = new byte[4];
+                RNGCryptoServiceProvider rngCrypto =
+                new RNGCryptoServiceProvider();
+
+                rngCrypto.GetBytes(randomBytes);
+                Int32 rngNum = BitConverter.ToInt32(randomBytes, 0);
+                return strDateTimeNumber + "-"+rngNum.ToString();
+                
+            }
+        }
         /// <summary>
         /// 交易账户的资金操作
         /// amount带有符号，正数表示入金 负数表示出金
@@ -206,73 +225,88 @@ namespace TradingLib.Core
         /// <param name="acc"></param>
         /// <param name="amount"></param>
         /// <param name="comment"></param>
-        public void CashOperation(string account, decimal amount,QSEnumEquityType equitytype, string transref, string comment)
+        public void CashOperation(CashTransaction txn)
         {
 
-            logger.Info("CashOperation ID:" + account + " Amount:" + amount.ToString() + " Comment:" + comment);
-            IAccount acc = this[account];
+            logger.Info("CashOperation ID:" + txn.Account + " Amount:" + txn.Amount.ToString() + " Txntype:" + txn.TxnType.ToString() + " EquityType:" + txn.EquityType.ToString());
+            IAccount acc = this[txn.Account];
             if (acc == null)
             {
                 throw new FutsRspError("交易帐户不存在");
             }
+
+            //执行时间检查 
+            if (TLCtxHelper.ModuleSettleCentre.IsInSettle)
+            {
+                throw new FutsRspError("系统正在结算,禁止出入金操作");
+            }
+            if (txn.TxnType == QSEnumCashOperation.WithDraw && txn.Amount > acc.NowEquity)
+            {
+                throw new FutsRspError("出金额度大于帐户权益");
+            }
+            //生成唯一序列号
+            txn.TxnID = GenTxnID();
+            acc.CashTrans(txn);
+            ORM.MCashTransaction.InsertCashTransaction(txn);
+
             //TODO:交易账户出入金操作
             //帐户自有资金的出入金操作
-            if (equitytype == QSEnumEquityType.OwnEquity)
-            {
-                //金额检查
-                if (amount < 0)
-                {
-                    if (acc.NowEquity < Math.Abs(amount))
-                    {
-                        throw new FutsRspError("出金额度大于帐户权益");
-                    }
-                }
+            //if (equitytype == QSEnumEquityType.OwnEquity)
+            //{
+            //    //金额检查
+            //    if (amount < 0)
+            //    {
+            //        if (acc.NowEquity < Math.Abs(amount))
+            //        {
+            //            throw new FutsRspError("出金额度大于帐户权益");
+            //        }
+            //    }
 
-                //执行时间检查 
-                if (TLCtxHelper.ModuleSettleCentre.IsInSettle)
-                {
-                    throw new FutsRspError("系统正在结算,禁止出入金操作");
-                }
+            //    //执行时间检查 
+            //    if (TLCtxHelper.ModuleSettleCentre.IsInSettle)
+            //    {
+            //        throw new FutsRspError("系统正在结算,禁止出入金操作");
+            //    }
 
-                //if (amount > 0)
-                //{
-                //    acc.Deposit(amount);
-                //}
-                //else
-                //{
-                //    acc.Withdraw(Math.Abs(amount));
-                //}
-                //ORM.MAccount.CashOperation(account, amount,QSEnumEquityType.OwnEquity, transref, comment);
-            }
+            //    //if (amount > 0)
+            //    //{
+            //    //    acc.Deposit(amount);
+            //    //}
+            //    //else
+            //    //{
+            //    //    acc.Withdraw(Math.Abs(amount));
+            //    //}
+            //    //ORM.MAccount.CashOperation(account, amount,QSEnumEquityType.OwnEquity, transref, comment);
+            //}
             
-            if (equitytype == QSEnumEquityType.CreditEquity)
-            {
-                if (amount < 0)
-                {
-                    if (acc.Credit< Math.Abs(amount))
-                    {
-                        throw new FutsRspError("出金额度大于优先资金权益");
-                    }
-                }
+            //if (equitytype == QSEnumEquityType.CreditEquity)
+            //{
+            //    if (amount < 0)
+            //    {
+            //        if (acc.Credit< Math.Abs(amount))
+            //        {
+            //            throw new FutsRspError("出金额度大于优先资金权益");
+            //        }
+            //    }
 
-                //执行时间检查 
-                if (TLCtxHelper.ModuleSettleCentre.IsInSettle)
-                {
-                    throw new FutsRspError("系统正在结算,禁止出入金操作");
-                }
+            //    //执行时间检查 
+            //    if (TLCtxHelper.ModuleSettleCentre.IsInSettle)
+            //    {
+            //        throw new FutsRspError("系统正在结算,禁止出入金操作");
+            //    }
 
-                //if (amount > 0)
-                //{
-                //    acc.CreditDeposit(Math.Abs(amount));
-                //}
-                //else
-                //{
-                //    acc.CreditWithdraw(Math.Abs(amount));
-                //}
-                //ORM.MAccount.CashOperation(account, amount, QSEnumEquityType.CreditEquity, transref, comment);                
-            }
+            //    //if (amount > 0)
+            //    //{
+            //    //    acc.CreditDeposit(Math.Abs(amount));
+            //    //}
+            //    //else
+            //    //{
+            //    //    acc.CreditWithdraw(Math.Abs(amount));
+            //    //}
+            //    //ORM.MAccount.CashOperation(account, amount, QSEnumEquityType.CreditEquity, transref, comment);                
+            //}
 
-            TLCtxHelper.EventAccount.FireAccountCashOperationEvent(acc.ID, amount > 0 ? QSEnumCashOperation.Deposit : QSEnumCashOperation.WithDraw, Math.Abs(amount));
+            //TLCtxHelper.EventAccount.FireAccountCashOperationEvent(txn.Account,txn., Math.Abs(amount));
         }
 
         /// <summary>

@@ -64,6 +64,11 @@ namespace TradingLib.Core
             RegisterAccountSettleTask(latestsettlesystime.AddMinutes(5));
         }
 
+        /// <summary>
+        /// 注册交易所结算任务
+        /// </summary>
+        /// <param name="settletime"></param>
+        /// <param name="list"></param>
         void RegisterExchangeSettleTask(DateTime settletime, List<IExchange> list)
         {
             logger.Info("注册交易所结算任务,结算时间:" + settletime.ToString("HH:mm:ss"));
@@ -72,6 +77,10 @@ namespace TradingLib.Core
             TLCtxHelper.ModuleTaskCentre.RegisterTask(task);
         }
 
+        /// <summary>
+        /// 注册交易账户结算任务
+        /// </summary>
+        /// <param name="settletime"></param>
         void RegisterAccountSettleTask(DateTime settletime)
         {
             logger.Info("注册交易帐户结算任务,结算时间:" + settletime.ToString("HH:mm:ss"));
@@ -80,16 +89,70 @@ namespace TradingLib.Core
         }
 
         /// <summary>
-        /// 交易帐户执行每天结算
+        /// 交易帐户结算
+        /// 系统执行每天定时结算包含周末与节假日,多交易所情况下 交易所按交易所的结算规则进行结算，系统进行每日结算
         /// </summary>
         void SettleAccounts()
         {
+            this.IsInSettle = true;//标识结算中心处于结算状态
+            logger.Info("系统执行帐户结算,结算日:" + this.CurrentTradingday);
+            foreach (IAccount acc in TLCtxHelper.ModuleAccountManager.Accounts)
+            {
+                acc.SettleAccount(this.CurrentTradingday);
+            }
+            this.IsInSettle = false;//标识系统结算完毕
 
-            //logger.Info(string.Format("Update lastsettleday as:{0}", CurrentTradingday));
-            //ORM.MSettlement.UpdateSettleday(CurrentTradingday);
         }
 
+        /// <summary>
+        /// 获得某个行情的结算价信息
+        /// </summary>
+        /// <param name="k"></param>
+        /// <returns></returns>
+        decimal GetAvabileSettlementPrice(Tick k)
+        {
+            if (k.Settlement != 0) return k.Settlement;
+            return k.Trade;
+        }
 
+        /// <summary>
+        /// 保存交易所的结算价格
+        /// </summary>
+        /// <param name="exchange"></param>
+        void SaveSettlementPrice(IExchange exchange,int settleday)
+        {
+            //获得交易所所有合约结算价格
+            foreach (var sym in BasicTracker.DomainTracker.SuperDomain.GetSymbols().Where(s=>s.SecurityFamily.Exchange.EXCode == exchange.EXCode))
+            {
+                MarketData data = new MarketData();
+                data.Symbol = sym.Symbol;
+                data.Exchange = exchange.EXCode;
+                data.SettleDay = settleday;
+
+                Tick k = TLCtxHelper.ModuleDataRouter.GetTickSnapshot(sym.Symbol);
+                if (k != null)
+                {
+                    data.AskPrice = k.AskPrice;
+                    data.AskSize = k.AskSize;
+                    data.BidPrice = k.BidPrice;
+                    data.BidSize = k.BidSize;
+                    data.Close = k.Trade;
+                    data.High = k.High;
+                    data.Low = k.Low;
+                    data.LowerLimit = k.LowerLimit;
+                    data.OI = k.OpenInterest;
+                    data.Open = k.Open;
+                    data.PreOI = k.PreOpenInterest;
+                    data.PreSettlement = k.PreSettlement;
+                    data.Settlement = GetAvabileSettlementPrice(k);
+                    data.UpperLimit = k.UpperLimit;
+                    data.Vol = k.Vol;
+                }
+                _settlementPriceTracker.UpdateSettlementPrice(data);
+            
+            }
+        
+        }
         /// <summary>
         /// 交易所结算
         /// 交易所结算规则
@@ -119,9 +182,13 @@ namespace TradingLib.Core
                     {
                         continue;
                     }
+                    //结算日为交易所当前日期
                     int settleday = extime.ToTLDate();
 
                     logger.Info(string.Format("交易所:{0} 执行结算 结算日:{1}", exchange.EXCode, settleday));
+                    //保存交易所对应的结算价格
+                    SaveSettlementPrice(exchange, settleday);
+                    //执行交易帐户的交易所结算
                     foreach (var account in TLCtxHelper.ModuleAccountManager.Accounts)
                     {
                         account.SettleExchange(exchange, settleday);
@@ -134,6 +201,27 @@ namespace TradingLib.Core
             }
         }
 
+
+
+        /// <summary>
+        /// 获得某个交易日某个合约的结算价格
+        /// </summary>
+        /// <param name="settleday"></param>
+        /// <param name="symbol"></param>
+        /// <returns></returns>
+        public SettlementPrice GetSettlementPrice(int settleday, string symbol)
+        {
+            return _settlementPriceTracker[settleday, symbol];
+        }
+
+
+
+
+
+
+
+
+        ///////////////////////////
         /// <summary>
         /// 保存历史持仓记录
         /// </summary>

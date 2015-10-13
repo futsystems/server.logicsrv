@@ -108,12 +108,15 @@ namespace TradingLib.Core
             }
 
             //交易时间检查
-            QSEnumActionCheckResult result = o.oSymbol.SecurityFamily.CheckPlaceOrder();
+            int settleday = 0;
+            QSEnumActionCheckResult result = o.oSymbol.SecurityFamily.CheckPlaceOrder(out settleday);
             if (result != QSEnumActionCheckResult.Allowed)
             {
                 errortitle = "SYMBOL_NOT_MARKETTIME";
                 return false;
             }
+            //设定交易日
+            o.SettleDay = settleday;
 
             /*
             periodAuctionPlace = o.oSymbol.SecurityFamily.IsInAuctionTime();//是否处于集合竞价报单时段

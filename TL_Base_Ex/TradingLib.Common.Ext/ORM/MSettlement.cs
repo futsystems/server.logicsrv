@@ -86,7 +86,7 @@ namespace TradingLib.ORM
         {
             using (DBMySql db = new DBMySql())
             {
-                string query = string.Format("UPDATE log_settlement_exchange SET settled='1' WHERE `account` = '{0}' AND `settleday` = '{1}' AND  `account`='{2}' AND `exchange`='{3}' ", settle.Account, settle.Settleday, settle.Exchange);
+                string query = string.Format("UPDATE log_settlement_exchange SET settled='1' WHERE `account` = '{0}' AND `settleday` = '{1}'  AND `exchange`='{2}' ", settle.Account, settle.Settleday, settle.Exchange);
                 db.Connection.Execute(query);
             }
         }
@@ -501,7 +501,7 @@ namespace TradingLib.ORM
         {
             using (DBMySql db = new DBMySql())
             {
-                string query = String.Format("INSERT INTO log_settlement_price (`settleday`,`symbol`,`askprice`,`asksize`,`bidprice`,`bidsize`,`upperlimit`,`lowerlimit`,`presettlement`,`settlement`,`preoi`,`oi`,`open`,`high`,`low`,`close`,`vol`) values('{0}','{1}','{2}','{3}','{4}','{5}','{6}','{7}','{8}','{9}','{10}','{11}','{12}','{13}','{14}','{15}','{16}')",data.SettleDay,data.Symbol,data.AskPrice,data.AskSize,data.BidPrice,data.BidSize,data.UpperLimit,data.LowerLimit,data.PreSettlement,data.Settlement,data.PreOI,data.OI,data.Open,data.High,data.Low,data.Close,data.Vol );
+                string query = String.Format("INSERT INTO log_settlement_price (`settleday`,`symbol`,`askprice`,`asksize`,`bidprice`,`bidsize`,`upperlimit`,`lowerlimit`,`presettlement`,`settlement`,`preoi`,`oi`,`open`,`high`,`low`,`close`,`vol`,`exchange`) values('{0}','{1}','{2}','{3}','{4}','{5}','{6}','{7}','{8}','{9}','{10}','{11}','{12}','{13}','{14}','{15}','{16}','{17}')", data.SettleDay, data.Symbol, data.AskPrice, data.AskSize, data.BidPrice, data.BidSize, data.UpperLimit, data.LowerLimit, data.PreSettlement, data.Settlement, data.PreOI, data.OI, data.Open, data.High, data.Low, data.Close, data.Vol, data.Exchange);
                  db.Connection.Execute(query);
             }
         }

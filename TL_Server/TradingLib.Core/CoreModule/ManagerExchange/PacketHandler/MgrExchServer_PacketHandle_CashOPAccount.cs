@@ -10,15 +10,15 @@ namespace TradingLib.Core
 {
     public partial class MgrExchServer
     {
-        [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "QryAccountPaymentInfo", "QryAccountPaymentInfo - query payment Info", "查询交易帐户支付信息")]
-        public void CTE_QryAccountPaymentInfo(ISession session, string account)
-        {
-            IAccount acc = TLCtxHelper.ModuleAccountManager[account];
-            if (acc == null)
-            { 
-            }
-            session.ReplyMgr(acc.GetBankAC());
-        }
+        //[ContribCommandAttr(QSEnumCommandSource.MessageMgr, "QryAccountPaymentInfo", "QryAccountPaymentInfo - query payment Info", "查询交易帐户支付信息")]
+        //public void CTE_QryAccountPaymentInfo(ISession session, string account)
+        //{
+        //    IAccount acc = TLCtxHelper.ModuleAccountManager[account];
+        //    if (acc == null)
+        //    { 
+        //    }
+        //    session.ReplyMgr(acc.GetBankAC());
+        //}
 
 
         [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "QryAccountCashOperationTotal", "QryAccountCashOperationTotal - query account pending cash operation", "查询所有交易帐户待处理委托")]

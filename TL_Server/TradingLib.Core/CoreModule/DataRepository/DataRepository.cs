@@ -72,24 +72,7 @@ namespace TradingLib.Core
         //    this.Dump2Log();//将委托 成交 撤单 PR数据保存到对应的log_表 所有的转储操作均是replace into不会存在重复操作
         //}
 
-        /// <summary>
-        /// 插入委托
-        /// </summary>
-        /// <param name="o"></param>
-        public override void NewOrder(Order o)
-        {
-            _asynLoger.newOrder(o);
-        }
-
-        /// <summary>
-        /// 更新委托
-        /// </summary>
-        /// <param name="o"></param>
-        public override void UpdateOrder(Order o)
-        {
-            _asynLoger.updateOrder(o);
-        }
-
+        #region 更新记录的结算标识
         public override void MarkOrderSettled(Order o)
         {
             _asynLoger.MarkOrderSettled(o);
@@ -109,6 +92,31 @@ namespace TradingLib.Core
         {
             _asynLoger.MarkExchangeSettlementSettled(settle);
         }
+
+        public override void MarkCashTransactionSettled(CashTransaction txn)
+        {
+            _asynLoger.MarkCashTransactionSettled(txn);
+        }
+        #endregion
+        /// <summary>
+        /// 插入委托
+        /// </summary>
+        /// <param name="o"></param>
+        public override void NewOrder(Order o)
+        {
+            _asynLoger.newOrder(o);
+        }
+
+        /// <summary>
+        /// 更新委托
+        /// </summary>
+        /// <param name="o"></param>
+        public override void UpdateOrder(Order o)
+        {
+            _asynLoger.updateOrder(o);
+        }
+
+
         public override void NewOrderAction(OrderAction actoin)
         {
             _asynLoger.newOrderAction(actoin);
@@ -243,6 +251,19 @@ namespace TradingLib.Core
             logger.Info("数据库恢复未结算 交易所结算数据:" + settlements.Count().ToString() + "条");
             return settlements;
         }
+
+        /// <summary>
+        /// 获得所有未结算出入金记录
+        /// </summary>
+        /// <returns></returns>
+        public override IEnumerable<CashTransaction> SelectAcctCashTransactionUnSettled()
+        {
+            IEnumerable<CashTransaction> cashntxns = ORM.MCashTransaction.SelectCashTransactionsUnSettled();
+            logger.Info("数据库恢复未结算 出入金记录数据:" + cashntxns.Count().ToString() + "条");
+            return cashntxns;
+        }
+
+
         /// <summary>
         /// 获得某个成交接口的日内 成交数据
         /// </summary>

@@ -7,12 +7,19 @@ using TradingLib.Common;
 using TradingLib.ORM;
 
 
-
 namespace TradingLib.Core
 {
+    /// <summary>
+    /// 以结算日为一组
+    /// </summary>
     public class SettlementPriceTracker
     {
-        Dictionary<string, MarketData> settlementPriceMap = new Dictionary<string, MarketData>();
+        /// <summary>
+        /// 按交易日 建立结算价map
+        /// </summary>
+        Dictionary<int, Dictionary<string, MarketData>> settlementPriceMap = new Dictionary<int, Dictionary<string, MarketData>>();
+
+        //Dictionary<string, MarketData> settlementPriceMap = new Dictionary<string, MarketData>();
 
         /// <summary>
         /// 从数据库加载某个结算日的计算机信息
@@ -20,9 +27,13 @@ namespace TradingLib.Core
         /// <param name="settleday"></param>
         public void LoadSettlementPrice(int settleday)
         {
+            if (!settlementPriceMap.Keys.Contains(settleday))
+            {
+                settlementPriceMap.Add(settleday, new Dictionary<string, MarketData>());
+            }
             foreach (var price in ORM.MSettlement.SelectMarketData(settleday))
             {
-                settlementPriceMap.Add(price.Symbol, price);
+                settlementPriceMap[settleday].Add(price.Symbol, price);
             }
         }
 
@@ -34,32 +45,40 @@ namespace TradingLib.Core
             settlementPriceMap.Clear();
         }
 
-        public IEnumerable<MarketData> SettlementPrices
+        public IEnumerable<MarketData> this[int settleday]
         {
             get
             {
-                return settlementPriceMap.Values;
+                if (!settlementPriceMap.Keys.Contains(settleday))
+                {
+                    settlementPriceMap.Add(settleday, new Dictionary<string, MarketData>());
+                }
+                return settlementPriceMap[settleday].Values;
             }
         }
 
-        public int Count
-        {
-            get
-            {
-                return settlementPriceMap.Count;
-            }
-        }
+        //public int Count
+        //{
+        //    get
+        //    {
+        //        return settlementPriceMap.Count;
+        //    }
+        //}
         /// <summary>
         /// 获得某个合约的结算价信息
         /// </summary>
         /// <param name="symbol"></param>
         /// <returns></returns>
-        public MarketData this[string symbol]
+        public MarketData this[int settleday,string symbol]
         {
             get
             {
                 MarketData target = null;
-                if (settlementPriceMap.TryGetValue(symbol, out target))
+                if (!settlementPriceMap.Keys.Contains(settleday))
+                {
+                    settlementPriceMap.Add(settleday, new Dictionary<string, MarketData>());
+                }
+                if (settlementPriceMap[settleday].TryGetValue(symbol, out target))
                 {
                     return target;
                 }
@@ -75,7 +94,11 @@ namespace TradingLib.Core
         {
             MarketData target = null;
             //结算价信息已经存在 更新结算价
-            if (settlementPriceMap.TryGetValue(price.Symbol, out target))
+            if (!settlementPriceMap.Keys.Contains(price.SettleDay))
+            {
+                settlementPriceMap.Add(price.SettleDay, new Dictionary<string, MarketData>());
+            }
+            if (settlementPriceMap[price.SettleDay].TryGetValue(price.Symbol, out target))
             {
                 target.Settlement = price.Settlement;
                 ORM.MSettlement.UpdateMarketData(target);//更新到数据库
@@ -87,7 +110,7 @@ namespace TradingLib.Core
                 //插入数据库记录
                 ORM.MSettlement.InsertMarketData(target);
                 //放到缓存
-                settlementPriceMap.Add(target.Symbol, target);
+                settlementPriceMap[price.SettleDay].Add(target.Symbol, target);
             }
         }
     }

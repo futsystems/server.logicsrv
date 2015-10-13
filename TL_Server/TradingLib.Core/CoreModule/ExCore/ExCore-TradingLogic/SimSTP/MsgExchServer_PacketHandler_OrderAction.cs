@@ -41,7 +41,8 @@ namespace TradingLib.Core
                 {
                     //如果不处于连续竞价阶段 并且 也不处于 集合竞价报单阶段 则不允许撤单
                     string error_title=string.Empty;
-                    if(o.oSymbol.SecurityFamily.CheckCancelOrder()!= QSEnumActionCheckResult.Allowed)
+                    int settleday = 0;
+                    if(o.oSymbol.SecurityFamily.CheckCancelOrder(out settleday)!= QSEnumActionCheckResult.Allowed)
                     {
                         NotifyOrderActionError(action, RspInfoEx.Fill("SYMBOL_NOT_MARKETTIME"));
                     }

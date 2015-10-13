@@ -8,6 +8,7 @@ namespace TradingLib.Common
 {
     public class CashTransactionImpl:CashTransaction
     {
+        public string TxnID { get; set; }
         /// <summary>
         /// 交易帐户
         /// </summary>

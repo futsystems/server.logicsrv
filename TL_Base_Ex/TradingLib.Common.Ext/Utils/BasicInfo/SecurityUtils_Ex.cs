@@ -9,10 +9,12 @@ namespace TradingLib.Common
     public static class SecurityUtils_Ex
     {
 
-        static QSEnumActionCheckResult MarketTimeCheck(IExchange exchange,DateTime extime,TradingRange range)
+        static QSEnumActionCheckResult MarketTimeCheck(IExchange exchange,DateTime extime,TradingRange range,out int settleday)
         {
+            settleday = 0;
             if (range == null)
             {
+                settleday = 0;
                 return QSEnumActionCheckResult.RangeNotExist;
             }
 
@@ -20,6 +22,7 @@ namespace TradingLib.Common
             DateTime tradingday = range.TradingDay(extime);
             if (exchange.IsInHoliday(tradingday))
             {
+                settleday = 0;
                 return QSEnumActionCheckResult.InHoliday;
             }
 
@@ -34,6 +37,7 @@ namespace TradingLib.Common
             //    }
 
             //}
+            settleday = tradingday.ToTLDate();
             return QSEnumActionCheckResult.Allowed;
         }
         /// <summary>
@@ -42,24 +46,24 @@ namespace TradingLib.Common
         /// </summary>
         /// <param name="sec"></param>
         /// <returns></returns>
-        public static QSEnumActionCheckResult CheckPlaceOrder(this SecurityFamily sec)
+        public static QSEnumActionCheckResult CheckPlaceOrder(this SecurityFamily sec,out int settleday)
         {
             IExchange exchange = sec.Exchange;
             DateTime extime = exchange.GetExchangeTime(DateTime.Now);//获得交易所时间
             TradingRange range = sec.MarketTime.JudgeRange(extime);//根据交易所时间判定当前品种所属交易小节
 
-            return MarketTimeCheck(exchange, extime, range);
+            return MarketTimeCheck(exchange, extime, range,out settleday);
             
         
         }
 
-        public static QSEnumActionCheckResult CheckCancelOrder(this SecurityFamily sec)
+        public static QSEnumActionCheckResult CheckCancelOrder(this SecurityFamily sec,out int settleday)
         {
             IExchange exchange = sec.Exchange;
             DateTime extime = exchange.GetExchangeTime(DateTime.Now);//获得交易所时间
             TradingRange range = sec.MarketTime.JudgeRange(extime);//根据交易所时间判定当前品种所属交易小节
 
-            return MarketTimeCheck(exchange, extime, range);
+            return MarketTimeCheck(exchange, extime, range ,out settleday);
             
         }
 

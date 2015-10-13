@@ -36,29 +36,34 @@ namespace TradingLib.Common
 
             settlement.LastEquity = this.LastEquity;
             settlement.LastCredit = this.LastCredit;
-            settlement.CashIn = 0;
-            settlement.CashOut = 0;
-            settlement.CreditCashIn = 0;
-            settlement.CreditCashOut = 0;
+            settlement.CashIn = this.CashIn;
+            settlement.CashOut = this.CashOut;
+            settlement.CreditCashIn = this.CreditCashIn;
+            settlement.CreditCashOut = this.CreditCashOut;
+
             settlement.CloseProfitByDate = PendingSettleCloseProfitByDate;
             settlement.PositionProfitByDate = PendingSettlePositionProfitByDate;
             settlement.Commission = PendingSettleCommission;
+
             settlement.EquitySettled = settlement.LastEquity + settlement.CashIn - settlement.CashOut + settlement.CloseProfitByDate + settlement.PositionProfitByDate - settlement.Commission;
             settlement.CreditSettled = settlement.LastCredit + settlement.CreditCashIn - settlement.CreditCashOut;
 
             //保存结算记录
             ORM.MSettlement.InsertAccountSettlement(settlement);
 
+            //标注交易所结算记录
             foreach (var settle in settlementlist)
             {
                 settle.Settled = true;
                 TLCtxHelper.ModuleDataRepository.MarkExchangeSettlementSettled(settle);
             }
+
+            //标注出入金记录 已结算
             foreach (var txn in cashtranslsit)
             {
                 txn.Settled = true;//标注已结算
+                TLCtxHelper.ModuleDataRepository.MarkCashTransactionSettled(txn);
             }
-            //TODO:出入金也记录入列表 然后通过Settled来标注
             //设置昨日权益等信息
             this.LastEquity = settlement.EquitySettled;
             this.LastCredit = settlement.CreditSettled;
@@ -101,6 +106,19 @@ namespace TradingLib.Common
             List<PositionDetail> positiondetail_settle = new List<PositionDetail>();
             foreach (Position pos in this.GetPositions(exchange).Where(p => !p.isFlat))
             {
+                //设定持仓结算价格
+                SettlementPrice target = TLCtxHelper.ModuleSettleCentre.GetSettlementPrice(settleday,pos.Symbol);
+                if (target != null && target.Settlement > 0)
+                {
+                    pos.SettlementPrice = target.Settlement;
+                }
+
+                //如果没有正常获得结算价格 持仓结算价按对应的最新价进行结算
+                if (pos.SettlementPrice == null)
+                {
+                    pos.SettlementPrice = pos.LastPrice;
+                }
+
                 //遍历该未平仓持仓对象下的所有持仓明细
                 foreach (PositionDetail pd in pos.PositionDetailTotal.Where(pd => !pd.IsClosed()))
                 {
@@ -143,7 +161,7 @@ namespace TradingLib.Common
                     TLCtxHelper.ModuleDataRepository.MarkPositionDetailSettled(pd);
                 }
             }
-            //将已经结算的持仓从内存数据对象中屏蔽
+            //将已经结算的持仓从内存数据对象中屏蔽 持仓数据是一个状态数据,因此我们这里将上个周期的持仓对象进行屏蔽
             this.TKPosition.DropSettled();
 
 
