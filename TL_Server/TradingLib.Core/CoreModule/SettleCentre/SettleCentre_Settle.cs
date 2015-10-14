@@ -32,7 +32,7 @@ namespace TradingLib.Core
             int lastSettleday = 0;
 
             //DateTime latestsettlesystime = DateTime.Now;
-
+            DateTime now = DateTime.Now;
             foreach (var ex in BasicTracker.ExchagneTracker.Exchanges)
             {
 
@@ -40,7 +40,7 @@ namespace TradingLib.Core
 
                 DateTime settlesystime = ex.GetSystemTime(settleextime);//转换成系统时间
                 //logger.Info("exch:" + ex.EXCode + " extime:" + settleextime.ToString() + " systime:" + settlesystime.ToString());
-                if (lastexchange == null)
+                if (lastexchange == null && settlesystime>now)//这里需要找到最早的未结算的交易所
                 {
                     lastexchange = ex;
                     lastSettleTime = settlesystime;
