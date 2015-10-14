@@ -7,18 +7,6 @@ using TradingLib.API;
 
 namespace TradingLib.Common
 {
-    /// <summary>
-    /// 交易所状态
-    /// </summary>
-    public class ExchangeStatus
-    {
-        /// <summary>
-        /// 当前交易日
-        /// </summary>
-        public int TradingDay { get; set; }
-
-
-    }
 
 
     public static class ExchangeUtils_Ex
@@ -67,7 +55,8 @@ namespace TradingLib.Common
             DateTime target = extime;
             if (exchange.TimeZoneInfo != null)
             {
-                target = TimeZoneInfo.ConvertTimeBySystemTimeZoneId(extime, exchange.TimeZone, "China Standard Time");
+                //target = TimeZoneInfo.ConvertTime(extime, exchange.TimeZoneInfo, TimeZone.CurrentTimeZone.);
+                target = TimeZoneInfo.ConvertTimeBySystemTimeZoneId(extime, exchange.TimeZone, TimeZone.CurrentTimeZone.StandardName);
             }
             return target;
         }
