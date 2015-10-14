@@ -186,10 +186,8 @@ namespace TradingLib.Core
         /// </summary>
         void InitTradingDay()
         {
-            logger.Info(string.Format("System running mode:{0} trading everyday:{1}", GlobalConfig.IsDevelop ? "develop" : "production", _tradingEveryDay));
             //从数据库获得上次结算日
             _lastsettleday = ORM.MSettlement.GetLastSettleday();
-            //取最早结算交易所对应的当前日期为 系统当前结算日
 
             //如果上个结算日大于等于当前交易日 则交易日设置异常
             if (_lastsettleday >= _tradingday)

@@ -8,8 +8,95 @@ using TradingLib.Common;
 
 namespace TradingLib.Core
 {
+    internal class ExchangeSettleInfo:IComparable
+    {
+        /// <summary>
+        /// 默认 按时间升序排列，第一个元素是最近的一个时间
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <returns></returns>
+        public int CompareTo(object obj)
+        {
+            ExchangeSettleInfo info = obj as ExchangeSettleInfo;
+            if (info.LocalSysSettleTime > this.LocalSysSettleTime)
+            {
+                return -1;
+            }
+            else if (info.LocalSysSettleTime == this.LocalSysSettleTime)
+            {
+                return 0;
+            }
+            else
+            {
+                return 1;
+            }
+        }
+        /// <summary>
+        /// 交易所
+        /// </summary>
+        public IExchange Exchange {get;set;}
+
+        /// <summary>
+        /// 该交易所下一个结算时间
+        /// </summary>
+        public DateTime NextExchangeSettleTime {get;set;}
+
+        /// <summary>
+        /// 结算时间对应的本地时间
+        /// </summary>
+        public DateTime LocalSysSettleTime {get;set;}
+
+        /// <summary>
+        /// 对应的交易所结算日
+        /// </summary>
+        public int Settleday {get;set;}
+
+
+        public override string ToString()
+        {
+            return string.Format("{0} Now:{1} NextSettleTime:{2} SysTime:{3} Settleday:{4} ", Exchange.EXCode,Exchange.GetExchangeTime().ToString("yyyyMMdd HH:mm:ss") ,NextExchangeSettleTime.ToString("yyyyMMdd HH:mm:ss"), LocalSysSettleTime.ToString("yyyyMMdd HH:mm:ss"), Settleday);
+        }
+
+    }
+
+    
     public partial class SettleCentre
     {
+
+        /// <summary>
+        /// 获得交易所下一个结算时间
+        /// 这个结算时间 不排除周末和节假日，具体交易所是否结算 需要排除周末和节假日，
+        /// 这里结算时间的获取 只是用于获得当前系统的结算日 以及对应的结算时间
+        /// </summary>
+        /// <param name="exchange"></param>
+        /// <param name="systime"></param>
+        /// <returns></returns>
+        DateTime GetNextSettleTime(IExchange exchange)
+        {
+            //获得交易所当前时间
+            DateTime exchangetime = exchange.GetExchangeTime();
+            //如果交易所当前时间小于结算时间，则下一个结算时间就是当前日期对应的结算时间 
+            if (exchangetime.ToTLTime() < exchange.CloseTime)
+            {
+                return Util.ToDateTime(exchangetime.ToTLDate(), exchange.CloseTime);
+            }
+            else //当前时间大于结算时间 则取下一日的结算时间
+            {
+                return Util.ToDateTime(exchangetime.AddDays(1).ToTLDate(), exchange.CloseTime);
+            }
+        }
+
+        ExchangeSettleInfo GetExchangeSettleInfo(IExchange exchange)
+        {
+            ExchangeSettleInfo info = new ExchangeSettleInfo();
+            info.Exchange = exchange;
+            info.NextExchangeSettleTime = GetNextSettleTime(exchange);
+            info.LocalSysSettleTime = exchange.GetSystemTime(info.NextExchangeSettleTime);
+            info.Settleday = info.NextExchangeSettleTime.ToTLDate();
+            return info;
+
+        }
+
 
         /// <summary>
         /// 初始化结算任务
@@ -20,78 +107,51 @@ namespace TradingLib.Core
             logger.Info("初始化结算任务");
             Dictionary<DateTime, List<IExchange>> exchangesettlemap = new Dictionary<DateTime, List<IExchange>>();
 
-            //int utcoffset = 12;//按utc + 从最高降低
-            //获得当前系统时间与UTC时间的Offset
-            //TimeSpan offset = TimeZoneInfo.FindSystemTimeZoneById(TimeZone.CurrentTimeZone.s).BaseUtcOffset;
-            //DateTime lastsettletime = DateTime.Now;
-            IExchange lastexchange = null;
-            IExchange firstexchange = null;
-            DateTime firstSettleTime = DateTime.Now;
-            DateTime lastSettleTime = DateTime.Now;
-            int firstSettleday = 0;
-            int lastSettleday = 0;
+            List<ExchangeSettleInfo> infolsit = new List<ExchangeSettleInfo>();
 
-            //DateTime latestsettlesystime = DateTime.Now;
-            DateTime now = DateTime.Now;
             foreach (var ex in BasicTracker.ExchagneTracker.Exchanges)
             {
+                ExchangeSettleInfo exinfo = GetExchangeSettleInfo(ex);
+                infolsit.Add(exinfo);
 
-                DateTime settleextime = Util.ToDateTime(ex.GetExchangeTime().ToTLDate(), ex.CloseTime);//获得交易所结算时间对应交易所时间
-
-                DateTime settlesystime = ex.GetSystemTime(settleextime);//转换成系统时间
-                //logger.Info("exch:" + ex.EXCode + " extime:" + settleextime.ToString() + " systime:" + settlesystime.ToString());
-                if (lastexchange == null && settlesystime>now)//这里需要找到最早的未结算的交易所
+                if (!exchangesettlemap.Keys.Contains(exinfo.LocalSysSettleTime))
                 {
-                    lastexchange = ex;
-                    lastSettleTime = settlesystime;
-                    lastSettleday = settleextime.ToTLDate();
-
-                }
-                if (firstexchange == null)
-                {
-                    firstexchange = ex;
-                    firstSettleTime = settlesystime;
-                    firstSettleday = settleextime.ToTLDate();
+                    exchangesettlemap.Add(exinfo.LocalSysSettleTime, new List<IExchange>());
                 }
 
-                if (settlesystime > lastSettleTime)
-                {
-                    lastSettleTime = settlesystime;
-                    lastexchange = ex;
-                    lastSettleday = settleextime.ToTLDate();
-
-                }
-                if (settlesystime < firstSettleTime)
-                {
-                    firstSettleTime = settlesystime;
-                    firstexchange = ex;
-                    firstSettleday = settleextime.ToTLDate();
-                }
-
-                if (!exchangesettlemap.Keys.Contains(settlesystime))
-                {
-                    exchangesettlemap.Add(settlesystime, new List<IExchange>());
-                }
-
-                exchangesettlemap[settlesystime].Add(ex);
+                exchangesettlemap[exinfo.LocalSysSettleTime].Add(ex);
             }
 
-
+            //注册交易所结算定时任务
             foreach (var ky in exchangesettlemap.Keys)
             {
                 RegisterExchangeSettleTask(ky, exchangesettlemap[ky]);
             }
 
-            //最后一个结算的交易所 结算完成5分钟后执行交易帐户结算
-            logger.Info(string.Format("最早结算交易所:{0} 时间:{1} 结算日:{2}", firstexchange.EXCode, firstSettleTime.ToString("yyyyMMdd HH:mm:ss"), firstSettleday));
-            logger.Info(string.Format("最后结算交易所:{0} 时间:{1} 结算日:{2}", lastexchange.EXCode, lastSettleTime.ToString("yyyyMMdd HH:mm:ss"), lastSettleday));
-            _netxSettleTime = lastSettleTime.AddMinutes(5);
+            infolsit.Sort();
+            foreach (var info in infolsit)
+            {
+                logger.Info(info);
+            }
+            ExchangeSettleInfo firstex = infolsit.First();
+            _tradingday = firstex.Settleday;//最早结算交易所对应的日期就是 结算日
+
+            List<ExchangeSettleInfo> tmp = infolsit.Where(e => e.Settleday == _tradingday).ToList();
+            tmp.Sort();
+            ExchangeSettleInfo lastex = tmp.Last();
+            _netxSettleTime = lastex.LocalSysSettleTime.AddMinutes(5);//应该结算日最晚的一个交易所结算时间 为系统柜台结算时间
             RegisterAccountSettleTask(_netxSettleTime);
             //周期定时结算时间
             _settleTime = _netxSettleTime.ToTLTime();
 
-            _tradingday = firstSettleday;
+            //当前时间是否大于最后交易所结算时间 且在柜台结算时间之前，如果在这个时间段内，则当前tradingday为 判定出来的交易日的上一个交易日
+            int now = Util.ToTLTime();
+            if (now > lastex.LocalSysSettleTime.ToTLTime() && now < _netxSettleTime.ToTLTime())
+            {
+                _tradingday = Util.ToDateTime(_tradingday, 0).AddDays(-1).ToTLDate();
+            }
 
+            logger.Info(string.Format("判定当前交易日:{0} 柜台结算时间:{1}", _tradingday, _netxSettleTime.ToString("yyyyMMdd HH:mm:ss")));
         }
 
         /// <summary>
