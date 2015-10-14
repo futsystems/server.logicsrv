@@ -26,6 +26,9 @@ namespace TradingLib.ORM
                 v.Date = info.Date;
                 v.ProductType = info.ProductType;
                 v.DeployID = info.DeployID;
+                System.OperatingSystem osInfo = System.Environment.OSVersion;
+                v.Platfrom = System.Environment.OSVersion.Platform;
+                
                 return v;
             }
         }
