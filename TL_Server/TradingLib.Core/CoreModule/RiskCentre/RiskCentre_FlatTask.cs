@@ -53,6 +53,7 @@ namespace TradingLib.Core
 
         void FlatPositoinBeforeClose(DateTime close, List<SecurityFamily> list)
         {
+            logger.Info("执行收盘前强平操作,对应收盘时间:" + close.ToString("HH:mm:ss"));
             //将品种列表中的pending委托 撤单
             foreach (var o in TLCtxHelper.ModuleClearCentre.TotalOrders.Where(o => o.IsPending() && list.Any(sec => sec.Code == o.oSymbol.SecurityFamily.Code)))
             {

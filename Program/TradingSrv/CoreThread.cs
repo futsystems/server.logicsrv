@@ -54,7 +54,10 @@ namespace TraddingSrvCLI
             //var builder = new ContainerBuilder();
             //从配置文件加载对应的配置项运行
             //builder.RegisterModule(new ConfigurationSettingsReader(autofac_setion, Util.GetConfigFile("autofac.xml")));
-
+            System.OperatingSystem osInfo = System.Environment.OSVersion;
+            
+            System.PlatformID platformID = osInfo.Platform;
+            Console.WriteLine(platformID.ToString());
             /*
             builder.RegisterType<CoreManager>().As<ICoreManager>().InstancePerLifetimeScope();
             builder.RegisterType<ConnectorManager>().As<IConnectorManager>().As<IRouterManager>().InstancePerLifetimeScope();
@@ -196,7 +199,7 @@ namespace TraddingSrvCLI
                                 //启动完毕
                                 _status = QSEnumCoreThreadStatus.Started;
                                 TLCtxHelper.PrintVersion();
-                                string memo = string.Format("StartUpTime:{0} Tradingday:{1} Settletime:{2} CCStatus:{2}", TLCtxHelper.StartUpTime, TLCtxHelper.ModuleSettleCentre.Tradingday,TLCtxHelper.ModuleSettleCentre.SettleTime, TLCtxHelper.ModuleClearCentre.Status);
+                                string memo = string.Format("StartUpTime:{0} Tradingday:{1} Settletime:{2} CCStatus:{3}", TLCtxHelper.StartUpTime, TLCtxHelper.ModuleSettleCentre.Tradingday,TLCtxHelper.ModuleSettleCentre.SettleTime, TLCtxHelper.ModuleClearCentre.Status);
                                 Util.Info(memo);
 
                                 while (go)

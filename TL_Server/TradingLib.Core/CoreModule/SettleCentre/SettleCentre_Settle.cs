@@ -143,6 +143,7 @@ namespace TradingLib.Core
             RegisterAccountSettleTask(_netxSettleTime);
             //周期定时结算时间
             _settleTime = _netxSettleTime.ToTLTime();
+            _resetTime = _settleTime;// _netxSettleTime.AddMinutes(5).ToTLTime();//结算后5分钟为重置时间
 
             //当前时间是否大于最后交易所结算时间 且在柜台结算时间之前，如果在这个时间段内，则当前tradingday为 判定出来的交易日的上一个交易日
             int now = Util.ToTLTime();

@@ -53,6 +53,8 @@ namespace TradingLib.Common
         /// </summary>
         public QSEnumProductType ProductType { get; set; }
 
+
+        public QSEnumPlatformType PlatfromType { get; set; }
         /// <summary>
         /// 部署编号 用于区分不同柜台的部署编号
         /// </summary>
@@ -84,7 +86,7 @@ namespace TradingLib.Common
 
         public static string Serialize(TLVersion version)
         {
-            return string.Format("{0},{1},{2},{3},{4},{5}", version.Major, version.Minor, version.Fix, version.Date, version.ProductType,version.DeployID);
+            return string.Format("{0},{1},{2},{3},{4},{5},{6}", version.Major, version.Minor, version.Fix, version.Date, version.ProductType,version.PlatfromType,version.DeployID);
         }
 
         public static TLVersion Deserialize(string content)
@@ -96,7 +98,8 @@ namespace TradingLib.Common
             v.Fix = int.Parse(rec[2]);
             v.Date = int.Parse(rec[3]);
             v.ProductType = (QSEnumProductType)Enum.Parse(typeof(QSEnumProductType), rec[4]);
-            v.DeployID = rec[5];
+            v.PlatfromType = (QSEnumPlatformType)Enum.Parse(typeof(QSEnumPlatformType), rec[5]);
+            v.DeployID = rec[6];
             return v;
         }
     }

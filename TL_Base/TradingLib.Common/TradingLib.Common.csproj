@@ -86,6 +86,7 @@
     <Compile Include="Domain\DomainImpl.cs" />
     <Compile Include="Other\CashReport.cs" />
     <Compile Include="Other\ManagerNotify.cs" />
+    <Compile Include="Other\TimeZoneConvert.cs" />
     <Compile Include="Other\TLVersion.cs" />
     <Compile Include="Protocol\CommissionTemplateItem.cs" />
     <Compile Include="Protocol\LoginInfo.cs" />
@@ -107,6 +108,7 @@
     <Compile Include="Trading\Settlement\ExchangeSettlement.cs" />
     <Compile Include="Trading\Utils\DateTimeUtils.cs" />
     <Compile Include="Utils\ChinSpellcs.cs" />
+    <Compile Include="Utils\TimeZoneIDTracker.cs" />
     <Compile Include="Utils\Util_Decimal.cs" />
     <Compile Include="Utils\Version.cs" />
     <Compile Include="Tracker\HighLowTracker.cs" />
