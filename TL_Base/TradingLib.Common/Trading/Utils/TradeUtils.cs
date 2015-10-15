@@ -48,15 +48,19 @@ namespace TradingLib.Common
 
         public static string GetTradeDetail(this Trade f)
         {
+            Util.Debug("~~~~~~~~~~~~ 00");
             StringBuilder sb = new StringBuilder();
             sb.Append(f.Account + " " + f.Symbol + " ");
             sb.Append(" T:" + f.GetDateTime().ToString());
             sb.Append(" " + f.OffsetFlag.ToString());
             sb.Append(f.Side ? " BOT" : " SOD");
-
+            Util.Debug("~~~~~~~~~~~~ 01");
             sb.Append(" " + Math.Abs(f.xSize).ToString());
+            Util.Debug("~~~~~~~~~~~~ 02");
             sb.Append("@" + f.oSymbol.FormatPrice(f.xPrice));
+            Util.Debug("~~~~~~~~~~~~ 03");
             sb.Append(" C:" + f.Commission.ToString());
+            Util.Debug("~~~~~~~~~~~~ 04");
             sb.Append(string.Format("Broker:{0} BLocalID:{1} BRemoteID:{2} TradeID:{3} OrderSysID:{4} Breed:{5}", f.Broker, f.BrokerLocalOrderID, f.BrokerRemoteOrderID, f.TradeID, f.OrderSysID, f.Breed));
             //sb.Append(" R:" + f.Broker + "/" + f.TradeID);
 
