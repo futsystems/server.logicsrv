@@ -17,16 +17,16 @@ namespace TradingLib.Core
             {
                 Manager manger = session.GetManager();
                 SystemStatus status = new SystemStatus();
-                status.CurrentTradingday = TLCtxHelper.ModuleSettleCentre.Tradingday;
-                status.ClearCentreStatus = TLCtxHelper.ModuleClearCentre.Status; //clearcentre.Status == QSEnumClearCentreStatus.CCOPEN;
-                status.IsSettleNormal = TLCtxHelper.ModuleSettleCentre.IsNormal;
-                status.IsTradingday = TLCtxHelper.ModuleSettleCentre.IsTradingday;
-                status.LastSettleday = TLCtxHelper.ModuleSettleCentre.LastSettleday;
-                status.NextTradingday = TLCtxHelper.ModuleSettleCentre.Tradingday;
-                status.TotalAccountNum = manger.Domain.Super ? TLCtxHelper.ModuleAccountManager.Accounts.Count() : manger.GetAccounts().Count();
-                status.MarketOpenCheck = TLCtxHelper.ModuleRiskCentre.MarketOpenTimeCheck;
-                status.IsDevMode = GlobalConfig.IsDevelop;
 
+                status.StartUpTime = TLCtxHelper.StartUpTime;
+                status.LastSettleday = TLCtxHelper.ModuleSettleCentre.LastSettleday;
+                status.Tradingday = TLCtxHelper.ModuleSettleCentre.Tradingday;
+                status.NextSettleTime = TLCtxHelper.ModuleSettleCentre.NextSettleTime;
+                status.IsSettleNormal = TLCtxHelper.ModuleSettleCentre.IsNormal;
+                status.ClearCentreStatus = TLCtxHelper.ModuleClearCentre.Status; //clearcentre.Status == QSEnumClearCentreStatus.CCOPEN;
+                
+
+                status.TotalAccountNum = manger.Domain.Super ? TLCtxHelper.ModuleAccountManager.Accounts.Count() : manger.GetAccounts().Count();
                 session.ReplyMgr(status);
             }
             catch (FutsRspError ex)

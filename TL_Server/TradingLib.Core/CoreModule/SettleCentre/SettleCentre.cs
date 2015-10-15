@@ -36,12 +36,11 @@ namespace TradingLib.Core
         /// </summary>
         public int Tradingday { get { return _tradingday; } }
 
-        //int _nexttradingday =0;
-        ///// <summary>
-        ///// 下一个交易日
-        ///// 在上个结算日基础上获得下一个交易日
-        ///// </summary>
-        //public int NextTradingday { get { return _nexttradingday; } }
+        /// <summary>
+        /// 下一个结算时间
+        /// </summary>
+        public long NextSettleTime { get { return _netxSettleTime.ToTLDateTime(); } }
+
 
 
         /// <summary>

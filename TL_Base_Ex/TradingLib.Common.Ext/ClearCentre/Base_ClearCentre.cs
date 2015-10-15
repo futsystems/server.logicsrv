@@ -86,6 +86,22 @@ namespace TradingLib.Common
         /// <param name="a"></param>
         public void DropAccount(IAccount a)
         {
+            //将该交易帐户的委托 成交 持仓 从统计维护器中删除
+            foreach (Order o in a.Orders)
+            {
+                totaltk.DropOrder(o);
+            }
+
+            foreach (Trade f in a.Trades)
+            {
+                totaltk.DropFill(f);
+            }
+
+            foreach (Position p in a.Positions)
+            {
+                totaltk.DropPosition(p);
+            }
+            //将帐户从帐户维护器中删除
             acctk.DropAccount(a);
         }
 
@@ -119,24 +135,24 @@ namespace TradingLib.Common
         /// </summary>
         /// <param name="account"></param>
         /// <param name="exchange"></param>
-        public void ResetAccount(IAccount account, IExchange exchange)
-        {
-            foreach (Order o in account.GetOrders(exchange))
-            {
-                totaltk.DropOrder(o);
-            }
+        //public void ResetAccount(IAccount account, IExchange exchange)
+        //{
+        //    foreach (Order o in account.GetOrders(exchange))
+        //    {
+        //        totaltk.DropOrder(o);
+        //    }
 
-            foreach (Trade f in account.GetTrades(exchange))
-            {
-                totaltk.DropFill(f);
-            }
+        //    foreach (Trade f in account.GetTrades(exchange))
+        //    {
+        //        totaltk.DropFill(f);
+        //    }
 
-            foreach (Position p in account.GetPositions(exchange))
-            {
-                totaltk.DropPosition(p);
-            }
+        //    foreach (Position p in account.GetPositions(exchange))
+        //    {
+        //        totaltk.DropPosition(p);
+        //    }
 
-        }
+        //}
         #endregion
 
 

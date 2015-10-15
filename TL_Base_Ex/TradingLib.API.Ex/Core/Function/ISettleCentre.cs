@@ -49,9 +49,9 @@ namespace TradingLib.API
         int SettleTime { get; }
 
         /// <summary>
-        /// 下个交易日
+        /// 下一个结算时间
         /// </summary>
-        //int NextTradingday { get; }
+        long NextSettleTime { get; }
 
         /// <summary>
         /// 当前是否是交易日

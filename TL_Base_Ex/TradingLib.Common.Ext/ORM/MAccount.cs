@@ -622,6 +622,12 @@ namespace TradingLib.ORM
                 string delquery = string.Empty;
                 delquery = string.Format("DELETE FROM accounts WHERE account = '{0}'", account);//删除帐户列表
                 db.Connection.Execute(delquery);
+                delquery = string.Format("DELETE FROM accounts_profile WHERE account='{0}'", account);//删除帐户Profile数据
+                db.Connection.Execute(delquery);
+
+                delquery = string.Format("DELETE FROM cfg_rule WHERE account='{0}'", account);//删除帐户风控规则设置
+                db.Connection.Execute(delquery);
+
                 //delquery = string.Format("DELETE FROM hold_positions WHERE account='{0}'", account);//删除隔夜持仓
                 //db.Connection.Execute(delquery);
                 delquery = string.Format("DELETE FROM hold_postransactions WHERE account='{0}'", account);//删除隔夜持仓
@@ -635,15 +641,22 @@ namespace TradingLib.ORM
                 db.Connection.Execute(delquery);
                 delquery = string.Format("DELETE FROM log_orders WHERE account='{0}'", account);//删除委托
                 db.Connection.Execute(delquery);
-                delquery = string.Format("DELETE FROM log_trades WHERE account='{0}'", account);//删除交易回合
-                db.Connection.Execute(delquery);
-                delquery = string.Format("DELETE FROM log_postransactions WHERE account='{0}'", account);//删除交易回合
-                db.Connection.Execute(delquery);
-
                 delquery = string.Format("DELETE FROM log_position_close_detail WHERE account='{0}'", account);//删除平仓明细
                 db.Connection.Execute(delquery);
                 delquery = string.Format("DELETE FROM log_position_detail_hist WHERE account='{0}'", account);//删除持仓明细
                 db.Connection.Execute(delquery);
+                delquery = string.Format("DELETE FROM log_postransactions WHERE account='{0}'", account);//删除交易回合
+                db.Connection.Execute(delquery);
+
+                delquery = string.Format("DELETE FROM log_settlement WHERE account='{0}'", account);//删除帐户结算记录
+                delquery = string.Format("DELETE FROM log_settlement_exchange WHERE account='{0}'", account);//删除帐户交易所结算记录
+
+                delquery = string.Format("DELETE FROM log_trades WHERE account='{0}'", account);//删除交易回合
+                db.Connection.Execute(delquery);
+
+
+
+
 
                 delquery = string.Format("DELETE FROM tmp_orderactions WHERE account='{0}'", account);//删除日内交易记录
                 db.Connection.Execute(delquery);

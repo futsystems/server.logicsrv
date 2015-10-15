@@ -142,6 +142,8 @@ namespace TradingLib.Core
 
             try
             {
+
+                AcctList.TryRemove(account, out acc);
                 //删除数据库
                 ORM.MAccount.DelAccount(account);//删除数据库记录
                 //删除内存记录
@@ -149,7 +151,7 @@ namespace TradingLib.Core
                 //对外触发交易帐户删除事件
                 TLCtxHelper.EventAccount.FireAccountDelEvent(account);
                 acc.Deleted = true;
-                AccountChanged(account);
+                //AccountChanged(account);
             }
             catch (Exception ex)
             {
