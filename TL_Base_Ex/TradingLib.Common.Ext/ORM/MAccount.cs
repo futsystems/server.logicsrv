@@ -46,8 +46,8 @@ namespace TradingLib.ORM
         public QSEnumAccountCategory Account_Category { get; set; }
         public QSEnumOrderTransferType Order_Route_Type { get; set; }
 
-        public DateTime CreatedTime { get; set; }
-        public DateTime SettleDateTime { get; set; }
+        public long CreatedTime { get; set; }
+        public long SettleDateTime { get; set; }
 
         public decimal LastEquity { get; set; }
         public decimal LastCredit { get; set; }
@@ -605,7 +605,7 @@ namespace TradingLib.ORM
                 }
                 Manager mgr = BasicTracker.ManagerTracker[create.BaseManagerID];
 
-                string query = String.Format("Insert into accounts (`account`,`pass`,`account_category`,`order_route_type`,`createdtime`,`settledatetime`,`user_id`,`mgr_fk`,`rg_fk`,`domain_id`,`currency` ) values('{0}','{1}','{2}','{3}','{4}','{5}','{6}','{7}','{8}','{9}','{10}')", create.Account, create.Password, create.Category, create.RouterType, Util.ToTLDateTime(), Util.ToTLDateTime(DateTime.Now - new TimeSpan(1, 0, 0, 0, 0)), create.UserID, create.BaseManagerID, create.RouterID, mgr.Domain.ID,create.Currency);
+                string query = String.Format("Insert into accounts (`account`,`pass`,`account_category`,`order_route_type`,`createdtime`,`settledtime`,`user_id`,`mgr_fk`,`rg_fk`,`domain_id`,`currency` ) values('{0}','{1}','{2}','{3}','{4}','{5}','{6}','{7}','{8}','{9}','{10}')", create.Account, create.Password, create.Category, create.RouterType, Util.ToTLDateTime(), Util.ToTLDateTime(DateTime.Now - new TimeSpan(1, 0, 0, 0, 0)), create.UserID, create.BaseManagerID, create.RouterID, mgr.Domain.ID,create.Currency);
                 return db.Connection.Execute(query) > 0;
             }
         }
@@ -681,8 +681,8 @@ namespace TradingLib.ORM
             account.LastEquity = fields.LastEquity;
             account.LastCredit = fields.LastCredit;
             account.UserID = fields.User_ID;
-            account.CreatedTime = fields.CreatedTime;
-            account.SettleDateTime = fields.SettleDateTime;//Util.ToDateTime(fields.SettleDateTime);
+            account.CreatedTime = Util.ToDateTime(fields.CreatedTime);
+            account.SettleDateTime = Util.ToDateTime(fields.SettleDateTime);//Util.ToDateTime(fields.SettleDateTime);
             account.OrderRouteType = fields.Order_Route_Type;
             account.IntraDay = fields.IntraDay;
             account.Category = fields.Account_Category;

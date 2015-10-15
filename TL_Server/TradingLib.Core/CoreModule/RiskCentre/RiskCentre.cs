@@ -50,7 +50,7 @@ namespace TradingLib.Core
 
             if (!_cfgdb.HaveConfig("OrderLimitSize"))
             {
-                _cfgdb.UpdateConfig("OrderLimitSize", QSEnumCfgType.Int, 50, "单笔委托最大上限");
+                _cfgdb.UpdateConfig("OrderLimitSize", QSEnumCfgType.Int, 100, "单笔委托最大上限");
             }
             //最大委托数量
             _orderlimitsize = _cfgdb["OrderLimitSize"].AsInt();

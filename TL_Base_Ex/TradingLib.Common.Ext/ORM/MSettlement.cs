@@ -316,7 +316,7 @@ namespace TradingLib.ORM
                     query = string.Format("UPDATE accounts SET lastequity = '{0}' WHERE account = '{1}'", settle.EquitySettled, settle.Account);
                     istransok = istransok && (db.Connection.Execute(query) >= 0);
 
-                    query = string.Format("UPDATE accounts SET settledatetime= '{0}' WHERE account = '{1}'",DateTime.Now, settle.Account);
+                    query = string.Format("UPDATE accounts SET settledatetime= '{0}' WHERE account = '{1}'",Util.ToTLDateTime(), settle.Account);
                     istransok = istransok && (db.Connection.Execute(query) >= 0);
 
                     //如果所有操作均正确,则提交数据库transactoin

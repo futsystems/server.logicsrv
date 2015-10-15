@@ -234,6 +234,7 @@ namespace TradingLib.Core
         /// <returns></returns>
         decimal GetAvabileSettlementPrice(Tick k)
         {
+            //如果结算价不为0则返回结算价否则返回最后一个成交价 即收盘价
             if (k.Settlement != 0) return k.Settlement;
             return k.Trade;
         }

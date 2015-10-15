@@ -89,6 +89,7 @@ namespace TradingLib.Common
                     else
                     {
                         _targetTimeZone = TimeZoneInfo.FindSystemTimeZoneById(this.TimeZone);
+                        //DateTime t = new DateTime(2015,1,1,1,1,1,DateTimeKind.
                     }
                 }
                 return _targetTimeZone;
