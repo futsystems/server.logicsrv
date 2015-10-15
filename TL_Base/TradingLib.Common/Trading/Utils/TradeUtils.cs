@@ -51,11 +51,11 @@ namespace TradingLib.Common
             Util.Debug("TradeDetail~~~~~~~~~~~~ 00");
             StringBuilder sb = new StringBuilder();
             sb.Append(f.Account + " " + f.Symbol + " ");
-            Util.Debug("~~~~~~~~~~~~ 00-1")
+            Util.Debug("~~~~~~~~~~~~ 00-1");
             sb.Append(" T:" + f.GetDateTime().ToString());
-            Util.Debug("~~~~~~~~~~~~ 00-2")
+            Util.Debug("~~~~~~~~~~~~ 00-2");
             sb.Append(" " + f.OffsetFlag.ToString());
-            Util.Debug("~~~~~~~~~~~~ 00-3")
+            Util.Debug("~~~~~~~~~~~~ 00-3");
             sb.Append(f.Side ? " BOT" : " SOD");
             Util.Debug("~~~~~~~~~~~~ 01");
             sb.Append(" " + Math.Abs(f.xSize).ToString());
