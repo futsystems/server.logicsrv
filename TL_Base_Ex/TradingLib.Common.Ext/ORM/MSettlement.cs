@@ -313,10 +313,10 @@ namespace TradingLib.ORM
                     string query = string.Format("INSERT INTO log_settlement (`account`,`settleday`,`closeprofitbydate`,`positionprofitbydate`,`commission`,`cashin`,`cashout`,`lastequity`,`equitysettled`,`lastcredit`,`creditsettled`,`creditcashin`,`creditcashout`) values('{0}','{1}','{2}','{3}','{4}','{5}','{6}','{7}','{8}','{9}','{10}','{11}','{12}')", settle.Account, settle.Settleday, settle.CloseProfitByDate, settle.PositionProfitByDate, settle.Commission, settle.CashIn, settle.CashOut, settle.LastEquity, settle.EquitySettled, settle.LastCredit, settle.CreditSettled, settle.CreditCashIn, settle.CreditCashOut);
                     istransok = istransok && (db.Connection.Execute(query) > 0);
 
-                    query = string.Format("UPDATE accounts SET lastequity = '{0}' WHERE account = '{1}'", settle.EquitySettled, settle.Account);
+                    query = string.Format("UPDATE accounts SET lastequity = '{0}',lastcredit='{1}' WHERE account = '{2}'", settle.EquitySettled,settle.CreditSettled, settle.Account);
                     istransok = istransok && (db.Connection.Execute(query) >= 0);
 
-                    query = string.Format("UPDATE accounts SET settledatetime= '{0}' WHERE account = '{1}'",Util.ToTLDateTime(), settle.Account);
+                    query = string.Format("UPDATE accounts SET settledtime= '{0}' WHERE account = '{1}'", Util.ToTLDateTime(), settle.Account);
                     istransok = istransok && (db.Connection.Execute(query) >= 0);
 
                     //如果所有操作均正确,则提交数据库transactoin
