@@ -39,6 +39,7 @@ namespace TradingLib.Common
         public void Write(T val)
         {
             System.Threading.Interlocked.Increment(ref _wc);
+            Util.Debug("buffer writer,_wc:"+_wc.ToString());
             if (_wc >= _buffer.Length)
             {
                 System.Threading.Interlocked.Exchange(ref _wc, 0);
@@ -51,6 +52,7 @@ namespace TradingLib.Common
                 }
             }
             _buffer[_wc] = val;
+            Util.Debug("val null:" + (val == null).ToString());
         }
         /// <summary>
         /// returns true if all written elements have been read from buffer
@@ -74,6 +76,7 @@ namespace TradingLib.Common
             }
             T val = _buffer[_rc];
             _buffer[_rc] = default(T);//used to delete reference to obje buffered,then gc can collected ti asap
+            Util.Debug("buffer read,_rc:" + _rc.ToString() + " val==null:" + (val == null).ToString());
             return val;
         }
         
