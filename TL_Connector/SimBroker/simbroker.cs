@@ -460,6 +460,7 @@ namespace Broker.SIM
                         debug("~~~~~~~~~~ cache fill,fill==null" + (nf == null).ToString());
                         //debug("cache fill:" + nf.GetTradeDetail(), QSEnumDebugLevel.WARNING);
                         _fcache.Write(nf);
+                        debug("_fcache count:" + _fcache.Count.ToString());
                     }
                 }
                 // add orders back
@@ -724,7 +725,9 @@ namespace Broker.SIM
                     while (!_ocache.hasItems && _fcache.hasItems)
                     {
                         //debug("PPT fire Trade Event.............", QSEnumDebugLevel.INFO);
+                        debug("Procout fill out,cnt:" + _fcache.Count.ToString());
                         Trade f = _fcache.Read();
+                        debug("read fill, fill==null " + (f == null).ToString());
                         NotifyTrade(f);
 
                     }
