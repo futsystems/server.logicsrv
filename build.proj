@@ -48,6 +48,7 @@
 		<LibFiles Include="lib\Common.Logging.dll" />
 		<LibFiles Include="lib\Common.Logging.NLog31.dll" />
 		<LibFiles Include="lib\NLog.dll" />
+		<LibFiles Include="lib\NodaTime.dll" />
 								
 		<LibFiles Condition=" '$(OperatingPlatform)' == 'Windows' " Include="lib\libzmq\clrzmq\clrzmq.dll" />
 		<LibFiles Condition=" '$(OperatingPlatform)' == 'Unix' " Include="lib\libzmq\clrzmq-unix\clrzmq.dll" />
