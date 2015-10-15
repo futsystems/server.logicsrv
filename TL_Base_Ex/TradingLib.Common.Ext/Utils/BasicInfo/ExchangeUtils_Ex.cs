@@ -21,26 +21,27 @@ namespace TradingLib.Common
             return BasicTracker.CalendarTracker[exchagne.Calendar];
         }
 
-        public static DateTime GetExchangeTime(this IExchange exchange)
-        {
-            return exchange.GetExchangeTime(DateTime.Now);
-        }
+        //public static DateTime GetExchangeTime(this IExchange exchange)
+        //{
+        //    return NodaTime.SystemClock.Instance.Now.InZone(_exTz);
+        //    //return exchange.GetExchangeTime(DateTime.Now);
+        //}
         /// <summary>
         /// 将系统时间转换成交易所时间
         /// </summary>
         /// <param name="exchange"></param>
         /// <param name="systime"></param>
         /// <returns></returns>
-        public static DateTime GetExchangeTime(this IExchange exchange, DateTime systime)
-        {
-            DateTime target = systime;
-            //如果交易所设定时区 则按该时区获得当前时间
-            if (exchange.TimeZoneInfo != null)
-            {
-                target = TimeZoneInfo.ConvertTime(systime, exchange.TimeZoneInfo);
-            }
-            return target;
-        }
+        //public static DateTime GetExchangeTime(this IExchange exchange, DateTime systime)
+        //{
+        //    DateTime target = systime;
+        //    //如果交易所设定时区 则按该时区获得当前时间
+        //    if (exchange.TimeZoneInfo != null)
+        //    {
+        //        target = TimeZoneInfo.ConvertTime(systime, exchange.TimeZoneInfo);
+        //    }
+        //    return target;
+        //}
 
         
 
@@ -50,16 +51,16 @@ namespace TradingLib.Common
         /// <param name="exchange"></param>
         /// <param name="extime"></param>
         /// <returns></returns>
-        public static DateTime GetSystemTime(this IExchange exchange, DateTime extime)
-        {
-            DateTime target = extime;
-            if (exchange.TimeZoneInfo != null)
-            {
-                //target = TimeZoneInfo.ConvertTime(extime, exchange.TimeZoneInfo, TimeZone.CurrentTimeZone.);
-                target = TimeZoneInfo.ConvertTimeBySystemTimeZoneId(extime, exchange.TimeZone, TimeZone.CurrentTimeZone.StandardName);
-            }
-            return target;
-        }
+        //public static DateTime GetSystemTime(this IExchange exchange, DateTime extime)
+        //{
+        //    DateTime target = extime;
+        //    if (exchange.TimeZoneInfo != null)
+        //    {
+        //        //target = TimeZoneInfo.ConvertTime(extime, exchange.TimeZoneInfo, TimeZone.CurrentTimeZone.);
+        //        target = TimeZoneInfo.ConvertTimeBySystemTimeZoneId(extime, exchange.TimeZone, TimeZone.CurrentTimeZone.StandardName);
+        //    }
+        //    return target;
+        //}
 
         /// <summary>
         /// 判定某个时间 交易所是否在节假日

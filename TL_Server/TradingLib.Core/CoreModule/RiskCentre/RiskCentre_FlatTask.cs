@@ -26,7 +26,7 @@ namespace TradingLib.Core
                     continue;
                 DateTime extime = Util.ToDateTime(sec.Exchange.GetExchangeTime().ToTLDate(), sec.MarketTime.CloseTime);
 
-                DateTime systime = sec.Exchange.GetSystemTime(extime);
+                DateTime systime = sec.Exchange.ConvertToSystemTime(extime);
 
                 if (!closetimemap.Keys.Contains(systime))
                 {

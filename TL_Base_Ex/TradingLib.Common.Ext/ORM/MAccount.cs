@@ -688,12 +688,6 @@ namespace TradingLib.ORM
             account.Category = fields.Account_Category;
             account.SettlementConfirmTimeStamp = fields.Confrim_TimeStamp;
             account.MAC = fields.MAC;
-            //account.Name = fields.Name;
-            //account.Broker = fields.Broker;
-            //account.BankID = fields.BankID==null?0:(int)fields.BankID;
-            //account.BankAC = fields.BankAC;
-            //account.PosLock = fields.PosLock;
-            //account.SideMargin = fields.SideMargin;
             account.Mgr_fk = fields.Mgr_fk;
             account.RG_FK = fields.rg_fk;
             account.Commission_ID = fields.Commission_ID;

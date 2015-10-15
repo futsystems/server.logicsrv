@@ -47,8 +47,6 @@ namespace TradingLib.Common
         //交易帐户个人信息维护器
         AccountProfileTracker accprofiletracker;
 
-        //时区ID维护器
-        TimeZoneIDTracker timezoneidtracker;
         static BasicTracker()
         {
             defaultinstance = new BasicTracker();
@@ -186,19 +184,6 @@ namespace TradingLib.Common
                 if (defaultinstance.rgtracker == null)
                     defaultinstance.rgtracker = new RouterGrouperTracker();
                 return defaultinstance.rgtracker;
-            }
-        }
-
-        /// <summary>
-        /// 时区维护器
-        /// </summary>
-        public static TimeZoneIDTracker TimeZoneIDTracker
-        {
-            get
-            {
-                if (defaultinstance.timezoneidtracker == null)
-                    defaultinstance.timezoneidtracker = new TimeZoneIDTracker();
-                return defaultinstance.timezoneidtracker;
             }
         }
 

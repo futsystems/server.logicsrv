@@ -91,7 +91,7 @@ namespace TradingLib.Core
             ExchangeSettleInfo info = new ExchangeSettleInfo();
             info.Exchange = exchange;
             info.NextExchangeSettleTime = GetNextSettleTime(exchange);
-            info.LocalSysSettleTime = exchange.GetSystemTime(info.NextExchangeSettleTime);
+            info.LocalSysSettleTime = exchange.ConvertToSystemTime(info.NextExchangeSettleTime);
             info.Settleday = info.NextExchangeSettleTime.ToTLDate();
             return info;
 

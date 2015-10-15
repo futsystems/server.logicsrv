@@ -24,14 +24,34 @@ namespace TradingLib.API
         /// <summary>
         /// 交易所对应的时区信息
         /// </summary>
-        string TimeZone { get; set; }
+        string TimeZoneID { get; set; }
 
 
         /// <summary>
         /// 品种对象绑定交易所对象，判断品种是否可以交易 需要获得交易所时间，交易所时间需要用交易所时区对象将时间进行转换
         /// </summary>
-        TimeZoneInfo TimeZoneInfo { get; }
+        //TimeZoneInfo TimeZoneInfo { get; }
 
+        /// <summary>
+        /// 获取交易所当前时间
+        /// </summary>
+        /// <returns></returns>
+        DateTime GetExchangeTime();
+
+        /// <summary>
+        /// 将系统时间转换成交易所时间
+        /// </summary>
+        /// <param name="systime"></param>
+        /// <returns></returns>
+        DateTime ConvertToExchangeTime(DateTime systime);
+
+        /// <summary>
+        /// 将交易所时间转换成系统时间
+        /// </summary>
+        /// <param name="extime"></param>
+        /// <returns></returns>
+        DateTime ConvertToSystemTime(DateTime extime);
+        
         /// <summary>
         /// 收盘时间
         /// </summary>

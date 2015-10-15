@@ -49,7 +49,7 @@ namespace TradingLib.Common
         public static QSEnumActionCheckResult CheckPlaceOrder(this SecurityFamily sec,out int settleday)
         {
             IExchange exchange = sec.Exchange;
-            DateTime extime = exchange.GetExchangeTime(DateTime.Now);//获得交易所时间
+            DateTime extime = exchange.GetExchangeTime();//获得交易所时间
             TradingRange range = sec.MarketTime.JudgeRange(extime);//根据交易所时间判定当前品种所属交易小节
 
             return MarketTimeCheck(exchange, extime, range,out settleday);
@@ -60,7 +60,7 @@ namespace TradingLib.Common
         public static QSEnumActionCheckResult CheckCancelOrder(this SecurityFamily sec,out int settleday)
         {
             IExchange exchange = sec.Exchange;
-            DateTime extime = exchange.GetExchangeTime(DateTime.Now);//获得交易所时间
+            DateTime extime = exchange.GetExchangeTime();//获得交易所时间
             TradingRange range = sec.MarketTime.JudgeRange(extime);//根据交易所时间判定当前品种所属交易小节
 
             return MarketTimeCheck(exchange, extime, range ,out settleday);
@@ -76,7 +76,7 @@ namespace TradingLib.Common
         public static bool CloseAfterTimeSpan(this SecurityFamily sec,int minute)
         {
             IExchange exchange = sec.Exchange;
-            DateTime extime = exchange.GetExchangeTime(DateTime.Now);//获得交易所时间
+            DateTime extime = exchange.GetExchangeTime();//获得交易所时间
             TradingRange range = sec.MarketTime.JudgeRange(extime);//根据交易所时间判定当前品种所属交易小节
 
             if (range.MarketClose)

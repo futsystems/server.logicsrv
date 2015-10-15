@@ -46,6 +46,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\Common.Logging.Core.dll</HintPath>
     </Reference>
+    <Reference Include="NodaTime">
+      <HintPath>..\..\lib\NodaTime.dll</HintPath>
+    </Reference>
     <Reference Include="Quartz">
       <HintPath>..\..\lib\Quartz.dll</HintPath>
     </Reference>

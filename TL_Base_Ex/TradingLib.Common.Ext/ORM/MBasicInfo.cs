@@ -50,7 +50,7 @@ namespace TradingLib.ORM
         {
             using (DBMySql db = new DBMySql())
             {
-                string query = string.Format("UPDATE info_exchange SET country='{0}',excode='{1}',name='{2}',title='{3}',calendar='{4}',timezone='{5}',closetime='{6}' WHERE id='{7}'", ex.Country, ex.EXCode, ex.Name, ex.Title, ex.Calendar, ex.TimeZone,ex.CloseTime, ex.ID);
+                string query = string.Format("UPDATE info_exchange SET country='{0}',excode='{1}',name='{2}',title='{3}',calendar='{4}',timezoneid='{5}',closetime='{6}' WHERE id='{7}'", ex.Country, ex.EXCode, ex.Name, ex.Title, ex.Calendar, ex.TimeZoneID,ex.CloseTime, ex.ID);
                 db.Connection.Execute(query);
             }
         }
@@ -63,7 +63,7 @@ namespace TradingLib.ORM
         {
             using (DBMySql db = new DBMySql())
             {
-                string query = string.Format("INSERT INTO info_exchange (`country`,`excode`,`name`,`title`,`calendar`,`timezone`,`closetime`) VALUES ( '{0}','{1}','{2}','{3}','{4}','{5}','{6}')", ex.Country, ex.EXCode, ex.Name, ex.Title, ex.Calendar, ex.TimeZone, ex.CloseTime);
+                string query = string.Format("INSERT INTO info_exchange (`country`,`excode`,`name`,`title`,`calendar`,`timezoneid`,`closetime`) VALUES ( '{0}','{1}','{2}','{3}','{4}','{5}','{6}')", ex.Country, ex.EXCode, ex.Name, ex.Title, ex.Calendar, ex.TimeZoneID, ex.CloseTime);
                 db.Connection.Execute(query);
                 SetIdentity(db.Connection, id => ex.ID = id, "id", "info_exchange");
             }
