@@ -106,7 +106,7 @@ namespace TradingLib.Common
 
                 target.IsProduction = domain.IsProduction;
                 target.DiscountNum = domain.DiscountNum;
-
+                target.Dedicated = domain.Dedicated;
                 ORM.MDomain.UpdateDomain(target);
                 
             }
@@ -139,6 +139,7 @@ namespace TradingLib.Common
                 target.AgentLimit = domain.AgentLimit;
                 target.IsProduction = domain.IsProduction;
                 target.DiscountNum = domain.DiscountNum;
+                target.Dedicated = domain.Dedicated;
 
                 ORM.MDomain.InsertDomain(target);
                 domain.ID = target.ID;

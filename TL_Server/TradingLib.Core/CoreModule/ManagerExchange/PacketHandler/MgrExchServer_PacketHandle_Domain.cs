@@ -98,6 +98,10 @@ namespace TradingLib.Core
             //只有超级域的管理员
             if (manager.Domain.Super && manager.IsRoot())
             {
+                if (BasicTracker.DomainTracker.Domains.Any(d => d.Dedicated))
+                {
+                    throw new FutsRspError("独立部署不允许添加多个分区");
+                }
                 DomainImpl domain = TradingLib.Mixins.Json.JsonMapper.ToObject<DomainImpl>(json);
                 bool isadd = domain.ID == 0;
                 BasicTracker.DomainTracker.UpdateDomain(domain);
@@ -127,7 +131,14 @@ namespace TradingLib.Core
                 if (isadd)
                 {
                     Manager toadd = new Manager();
-                    toadd.Login = string.Format("root-{0}", domain.ID);
+                    if (!domain.Dedicated)
+                    {
+                        toadd.Login = string.Format("admin-{0}", domain.ID);
+                    }
+                    else
+                    {
+                        toadd.Login = string.Format("{0}", TLCtxHelper.Version.DeployID);
+                    }
                     toadd.Mobile = domain.Mobile;
                     toadd.Name = domain.LinkMan;
                     toadd.QQ = domain.QQ;
