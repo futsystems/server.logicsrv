@@ -137,7 +137,7 @@ namespace TradingLib.Core
                     }
                     else
                     {
-                        toadd.Login = string.Format("{0}", TLCtxHelper.Version.DeployID);
+                        toadd.Login = string.Format("admin");
                     }
                     toadd.Mobile = domain.Mobile;
                     toadd.Name = domain.LinkMan;
