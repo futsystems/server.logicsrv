@@ -112,6 +112,7 @@ namespace TradingLib.Core
                 {
                     Domain superdomain = BasicTracker.DomainTracker.SuperDomain;
                     Domain addeddomain = BasicTracker.DomainTracker[domain.ID];//通过刚才添加的id获得对应的分区对象
+                    logger.Debug("superdomain:" + superdomain.ID.ToString() + " adddomain:" + addeddomain.ID.ToString());
                     if (superdomain != null && addeddomain != null)
                     {
                         foreach (SecurityFamilyImpl sec in superdomain.GetSecurityFamilies())
@@ -161,7 +162,7 @@ namespace TradingLib.Core
                         Util.Warn("Domain:" + domain.Name + " 没有对应的Root Manager");
                         
                         Manager toadd = new Manager();
-                        toadd.Login = string.Format("root-{0}", domain.ID);
+                        toadd.Login = string.Format("admin-{0}", domain.ID);
                         toadd.Mobile = domain.Mobile;
                         toadd.Name = domain.LinkMan;
                         toadd.QQ = domain.QQ;
