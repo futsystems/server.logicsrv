@@ -215,6 +215,12 @@ namespace TradingLib.Core
                 //委托多头开仓操作,同时又空头头寸 或者 委托空头开仓操作，同时又有多头头寸 则表明在持有头寸的时候进行了反向头寸的操作
                 if (othersideentry || (orderside && haveshort) || ((!orderside) && havelong))//多头持仓操作
                 {
+                    //如果为国外交易所 或者是中国香港交易所 则不允许锁仓
+                    if (o.oSymbol.SecurityFamily.Exchange.Country != Country.CN || o.oSymbol.SecurityFamily.Exchange.EXCode=="HKEX")
+                    {
+                        errortitle = "TWO_SIDE_POSITION_HOLD_FORBIDDEN";
+                        return false;
+                    }
                     //非期货品种无法进行锁仓操作 同时帐户设置是否允许锁仓操作
                     if ((o.oSymbol.SecurityType != SecurityType.FUT) || (!account.GetParamPositionLock()))
                     {
