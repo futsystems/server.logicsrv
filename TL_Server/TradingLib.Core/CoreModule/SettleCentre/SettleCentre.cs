@@ -180,6 +180,7 @@ namespace TradingLib.Core
 
         //}
 
+        
         /// <summary>
         /// 初始化交易日信息
         /// </summary>

@@ -139,7 +139,7 @@ namespace TradingLib.Core
         public override void NewPositionCloseDetail(PositionCloseDetail d)
         {
             //设定该平仓明细所在结算日
-            d.Settleday = TLCtxHelper.ModuleSettleCentre.Tradingday;
+            //d.Settleday = TLCtxHelper.ModuleSettleCentre.Tradingday;
             //异步保存平仓明细
             _asynLoger.newPositionCloseDetail(d);
         }

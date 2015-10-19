@@ -132,7 +132,7 @@ namespace TradingLib.Common
 
             ///2.统计手续费 平仓盈亏 盯市持仓盈亏
             //手续费 手续费为所有成交手续费累加
-            settlement.Commission = this.GetTrades(exchange).Sum(f => f.Commission);
+            settlement.Commission = this.GetTrades(exchange,settleday).Sum(f => f.Commission);
             //平仓盈亏 为所有持仓对象下面的平仓明细的平仓盈亏累加
             settlement.CloseProfitByDate = this.GetPositions(exchange).Sum(pos => pos.PositionCloseDetail.Sum(pcd => pcd.CloseProfitByDate));
             //浮动盈亏
@@ -142,12 +142,12 @@ namespace TradingLib.Common
             ORM.MSettlement.InsertExchangeSettlement(settlement);
 
             ///4.标注已结算数据 委托 成交 持仓
-            foreach (var o in this.GetOrders(exchange))
+            foreach (var o in this.GetOrders(exchange, settleday))
             {
                 o.Settled = true;
                 TLCtxHelper.ModuleDataRepository.MarkOrderSettled(o);
             }
-            foreach (var f in this.GetTrades(exchange))
+            foreach (var f in this.GetTrades(exchange,settleday))
             {
                 f.Settled = true;
                 TLCtxHelper.ModuleDataRepository.MarkTradeSettled(f);

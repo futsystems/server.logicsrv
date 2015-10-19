@@ -579,7 +579,7 @@ namespace TradingLib.Common
                 if (!t.Symbol.Equals(this.Symbol)) throw new Exception("Failed because osymbol and symbol do not match");
                 _osymbol = t.oSymbol;
             }
-
+            
             //帐户比较
             if (_acct == "") _acct = t.Account;
             if (_acct != t.Account) throw new Exception("Failed because adjustment account did not match position account.");
@@ -702,7 +702,7 @@ namespace TradingLib.Common
 
 
         /// <summary>
-        /// 产生新的平仓明细
+        /// 平仓 产生新的平仓明细
         /// </summary>
         /// <param name="closedetail"></param>
         void NewPositionCloseDetail(Trade close,PositionCloseDetail closedetail)
@@ -713,6 +713,11 @@ namespace TradingLib.Common
         }
         public event Action<Trade,PositionCloseDetail> NewPositionCloseDetailEvent;
 
+        /// <summary>
+        /// 开仓 产生新的持仓明细
+        /// </summary>
+        /// <param name="open"></param>
+        /// <param name="detail"></param>
         void NewPositionDetail(Trade open, PositionDetail detail)
         {
             if (NewPositionDetailEvent != null)
@@ -839,7 +844,7 @@ namespace TradingLib.Common
         /// </summary>
         /// <param name="f"></param>
         /// <returns></returns>
-        public  PositionDetail OpenPosition(Trade f)
+        PositionDetail OpenPosition(Trade f)
         {
             PositionDetail pos = new PositionDetailImpl(this);
             pos.Account = f.Account;
@@ -849,7 +854,7 @@ namespace TradingLib.Common
             pos.OpenDate = f.xDate;
             pos.OpenTime = f.xTime;
             pos.LastSettlementPrice = this.LastSettlementPrice != null ? (decimal)this.LastSettlementPrice : f.xPrice;//新开仓设定昨日结算价
-            pos.Settleday = 0;//
+            pos.Settleday = f.SettleDay;//由成交开仓的 则该持仓明细对应的结算日与成交记录的结算日一致
             pos.Side = f.PositionSide;
             pos.Volume = Math.Abs(f.xSize);
             pos.OpenPrice = f.xPrice;
@@ -868,7 +873,7 @@ namespace TradingLib.Common
         /// </summary>
         /// <param name="close"></param>
         /// <returns></returns>
-        public PositionCloseDetail ClosePosition(PositionDetail pos, Trade f, int remainsize)
+        PositionCloseDetail ClosePosition(PositionDetail pos, Trade f, int remainsize)
         {
             if (pos.IsClosed()) throw new Exception("can not close the closed position");
             if (f.IsEntryPosition) throw new Exception("entry trade can not close postion");
@@ -881,6 +886,8 @@ namespace TradingLib.Common
 
             //生成平仓对象
             PositionCloseDetail closedetail = new PositionCloseDetailImpl(pos, f, closesize);
+            closedetail.Settleday = f.SettleDay;//由成交平仓的 平仓明细 与成交的结算日一致
+
 
             //更新持仓明细的平仓汇总信息
             pos.Volume -= closedetail.CloseVolume;
@@ -888,6 +895,7 @@ namespace TradingLib.Common
             pos.CloseAmount += closedetail.CloseAmount;
             pos.CloseProfitByDate += closedetail.CloseProfitByDate;
             pos.CloseProfitByTrade += closedetail.CloseProfitByTrade;
+            
 
             //pos.Domain_ID = pos.Domain_ID;
             return closedetail;

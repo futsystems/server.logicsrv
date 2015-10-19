@@ -691,8 +691,8 @@ namespace TradingLib.ORM
         static IAccount AccountFields2IAccount(AccountFields fields)
         {
             IAccount account = AccountBase.CreateAccount(fields.Account);
-            account.LastEquity = fields.LastEquity;
-            account.LastCredit = fields.LastCredit;
+            //account.LastEquity = fields.LastEquity;
+            //account.LastCredit = fields.LastCredit;
             account.UserID = fields.User_ID;
             account.CreatedTime = Util.ToDateTime(fields.CreatedTime);
             account.SettleDateTime = Util.ToDateTime(fields.SettleDateTime);//Util.ToDateTime(fields.SettleDateTime);
@@ -736,32 +736,32 @@ namespace TradingLib.ORM
         /// </summary>
         /// <param name="account"></param>
         /// <returns></returns>
-        public static decimal GetSettleEquity(string account,int settleday)
-        {
-            using (DBMySql db = new DBMySql())
-            {
-                string query = string.Format("SELECT account,nowequity FROM log_settlement WHERE account = '{0}' AND settleday = '{1}'", account,settleday);
-                AccountLastEquity settleEquity = db.Connection.Query<AccountLastEquity>(query).SingleOrDefault();//包含多个元素则异常
-                //Util.Debug("settleEquity == null :" + (settleEquity == null).ToString());
-                return settleEquity==null?0:settleEquity.NowEquity;
-            }
-        }
+        //public static decimal GetSettleEquity(string account,int settleday)
+        //{
+        //    using (DBMySql db = new DBMySql())
+        //    {
+        //        string query = string.Format("SELECT account,nowequity FROM log_settlement WHERE account = '{0}' AND settleday = '{1}'", account,settleday);
+        //        AccountLastEquity settleEquity = db.Connection.Query<AccountLastEquity>(query).SingleOrDefault();//包含多个元素则异常
+        //        //Util.Debug("settleEquity == null :" + (settleEquity == null).ToString());
+        //        return settleEquity==null?0:settleEquity.NowEquity;
+        //    }
+        //}
 
-        /// <summary>
-        /// 查询某个交易帐户某个交易日的结算优先资金(信用额度)
-        /// </summary>
-        /// <param name="account"></param>
-        /// <param name="settleday"></param>
-        /// <returns></returns>
-        public static decimal GetSettleCredit(string account, int settleday)
-        {
-            using (DBMySql db = new DBMySql())
-            {
-                string query = string.Format("SELECT account,nowcredit FROM log_settlement WHERE account = '{0}' AND settleday = '{1}'", account, settleday);
-                AccountLastCredit settleCredit = db.Connection.Query<AccountLastCredit>(query).SingleOrDefault();//包含多个元素则异常
-                return settleCredit == null ? 0 : settleCredit.NowCredit;
-            }
-        }
+        ///// <summary>
+        ///// 查询某个交易帐户某个交易日的结算优先资金(信用额度)
+        ///// </summary>
+        ///// <param name="account"></param>
+        ///// <param name="settleday"></param>
+        ///// <returns></returns>
+        //public static decimal GetSettleCredit(string account, int settleday)
+        //{
+        //    using (DBMySql db = new DBMySql())
+        //    {
+        //        string query = string.Format("SELECT account,nowcredit FROM log_settlement WHERE account = '{0}' AND settleday = '{1}'", account, settleday);
+        //        AccountLastCredit settleCredit = db.Connection.Query<AccountLastCredit>(query).SingleOrDefault();//包含多个元素则异常
+        //        return settleCredit == null ? 0 : settleCredit.NowCredit;
+        //    }
+        //}
 
         /// <summary>
         /// 获得某个交易帐户
@@ -831,13 +831,12 @@ namespace TradingLib.ORM
         /// </summary>
         /// <param name="tradingday"></param>
         /// <returns></returns>
-        public static IEnumerable<EquityReport> SelectEquityReport(int tradingday)
+        public static IEnumerable<EquityReport> SelectEquityReport(int settleday)
         {
             using (DBMySql db = new DBMySql())
             {
-                string query = string.Format("SELECT account,nowequity as equity,nowcredit as credit FROM log_settlement WHERE settleday = '{0}'", tradingday);
+                string query = string.Format("SELECT account,equitysettled as equity,creditsettled as credit FROM log_settlement WHERE settleday = '{0}'", settleday);
                 return db.Connection.Query<EquityReport>(query);//包含多个元素则异常
-
             }
         }
         #endregion

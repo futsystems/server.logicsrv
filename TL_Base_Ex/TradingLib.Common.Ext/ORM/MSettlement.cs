@@ -549,6 +549,48 @@ namespace TradingLib.ORM
 
         #endregion
 
+
+        #region 回滚到某个交易日
+
+        /// <summary>
+        /// 将交易记录回滚到某个结算日
+        /// </summary>
+        /// <param name="settleday"></param>
+        public static void RollBackToSettleday(int settleday)
+        {
+            using (DBMySql db = new DBMySql())
+            {
+                //将该交易日及以后的交易记录标注成未结算
+                string query = string.Format("UPDATE tmp_orders SET settled=0 WHERE settleday >= '{0}' ", settleday);
+                db.Connection.Execute(query);
+
+                query = string.Format("UPDATE tmp_trades SET settled=0 WHERE settleday >= '{0}' ", settleday);
+                db.Connection.Execute(query);
+
+                //将该结算日及以后的出入金记录标注为未结算
+                query = string.Format("UPDATE log_cashtrans SET settled=0 WHERE settleday >='{0}'", settleday);
+                db.Connection.Execute(query);
+
+                //将该交易日及以后的结算持仓删除
+                query = string.Format("DELETE from log_position_detail_hist WHERE settleday >= '{0}'", settleday);
+                db.Connection.Execute(query);
+
+                //将在该交易日结算的结算持仓 标注成未结算
+                query = string.Format("UPDATE log_position_detail_hist SET settled=0 WHERE settledinday ='{0}'", settleday);
+                db.Connection.Execute(query);
+
+                //删除该结算日及以后的交易所结算记录
+                query = string.Format("DELETE from log_settlement_exchange WHERE settleday >= '{0}'", settleday);
+                db.Connection.Execute(query);
+
+                //删除结算日及以后的计算记录
+                query = string.Format("DELETE from log_settlement WHERE settleday >= '{0}'", settleday);
+                db.Connection.Execute(query);
+            }
+        }
+
+        #endregion
+
     }
 
     

@@ -92,7 +92,6 @@ namespace TradingLib.Core
             var side = bool.Parse(data["side"].ToString());
             //以上参数用于确定某个持仓对象
 
-
             //平仓时间
             int time = int.Parse(data["time"].ToString());
             //平仓数量
@@ -238,41 +237,46 @@ namespace TradingLib.Core
             var data = JsonMapper.ToObject(json);
 
             //获得对应的交易日
-            int currentday = int.Parse(data["currentday"].ToString());
+            int histday = int.Parse(data["currentday"].ToString());
+
+            _tradingday = histday;
+
+            //将数据库中相关记录恢复到结算日状态
+            ORM.MSettlement.RollBackToSettleday(_tradingday);
 
             //设定当前日期
             //this.SetCurrentDay(currentday);
 
-            //重新加载合约数据
-            BasicTracker.SymbolTracker.Reload();
+            ////重新加载合约数据
+            //BasicTracker.SymbolTracker.Reload();
 
-            //重置结算价格维护器
-            _settlementPriceTracker.Clear();
+            ////重置结算价格维护器
+            //_settlementPriceTracker.Clear();
 
-            //加载当前交易日的结算价信息
-            _settlementPriceTracker.LoadSettlementPrice(this.Tradingday);
+            ////加载当前交易日的结算价信息
+            //_settlementPriceTracker.LoadSettlementPrice(this.Tradingday);
 
-            //重置清算中心 用于加载对应的交易数据
-            TLCtxHelper.ModuleClearCentre.Reset();
+            ////重置清算中心 用于加载对应的交易数据
+            //TLCtxHelper.ModuleClearCentre.Reset();
             
-            //获得所有未平持仓 并查询是否有结算价记录 没有记录则插入到数据库
-            foreach (Position pos in TLCtxHelper.ModuleClearCentre.TotalPositions.Where(pos => !pos.isFlat))
-            {
-                //如果该未平持仓没有对应的结算价信息 则我们在list中加入该合约 用于推送到手工结算窗口让管理员进行填写
-                if (_settlementPriceTracker[this.Tradingday, pos.Symbol] == null)
-                {
-                    //插入该结算价信息记录 价格为-1
-                    _settlementPriceTracker.UpdateSettlementPrice(new MarketData() { Settlement = -1, SettleDay = this.Tradingday, Symbol = pos.Symbol });
-                }
-            }
+            ////获得所有未平持仓 并查询是否有结算价记录 没有记录则插入到数据库
+            //foreach (Position pos in TLCtxHelper.ModuleClearCentre.TotalPositions.Where(pos => !pos.isFlat))
+            //{
+            //    //如果该未平持仓没有对应的结算价信息 则我们在list中加入该合约 用于推送到手工结算窗口让管理员进行填写
+            //    if (_settlementPriceTracker[this.Tradingday, pos.Symbol] == null)
+            //    {
+            //        //插入该结算价信息记录 价格为-1
+            //        _settlementPriceTracker.UpdateSettlementPrice(new MarketData() { Settlement = -1, SettleDay = this.Tradingday, Symbol = pos.Symbol });
+            //    }
+            //}
 
-            foreach (IAccount acc in TLCtxHelper.ModuleAccountManager.Accounts)
-            {
-                //触发帐户变化事件
-            }
+            //foreach (IAccount acc in TLCtxHelper.ModuleAccountManager.Accounts)
+            //{
+            //    //触发帐户变化事件
+            //}
 
             session.ReplyMgr("xxxxxx");
-            session.OperationSuccess(string.Format("系统回滚到交易日:{0}成功", currentday));
+            session.OperationSuccess(string.Format("系统回滚到交易日:{0}成功", histday));
         }
 
         /// <summary>
