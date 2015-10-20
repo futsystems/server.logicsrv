@@ -13,7 +13,7 @@ using System.Threading;
 using System.Net;
 using System.Net.Sockets;
 using Common.Logging;
-using System.Management;
+
 
 namespace TradingLib.Common
 {
