@@ -66,13 +66,21 @@ namespace TradingLib.Core
                 return false;
             }
 
-            //1.2检查当前是否是交易日
-            if (!TLCtxHelper.ModuleSettleCentre.IsTradingday)//非周六0->2:30 周六0:00->2:30有交易(金银夜盘交易)
+            //结算中心处于实时模式 才可以接受委托操作
+            if (TLCtxHelper.ModuleSettleCentre.SettleMode != QSEnumSettleMode.LiveMode)
             {
-                errortitle = "NOT_TRADINGDAY";//非交易日
+                errortitle = "SETTLECENTRE_NOT_RESET";//结算中心异常
                 needlog = false;
                 return false;
             }
+
+            //1.2检查当前是否是交易日
+            //if (!TLCtxHelper.ModuleSettleCentre.IsTradingday)//非周六0->2:30 周六0:00->2:30有交易(金银夜盘交易)
+            //{
+            //    errortitle = "NOT_TRADINGDAY";//非交易日
+            //    needlog = false;
+            //    return false;
+            //}
 
             //1.3检查结算中心是否处于结算状态 结算状态不接受任何委托
             if (TLCtxHelper.ModuleSettleCentre.IsInSettle)

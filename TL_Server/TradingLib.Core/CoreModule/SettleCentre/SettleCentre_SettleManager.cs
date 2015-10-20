@@ -23,7 +23,7 @@ namespace TradingLib.Core
             {
                 throw new FutsRspError("无权进行该操作");
             }
-            var status = new { last_settleday = _lastsettleday, next_settleday = 0, current_settleday = _tradingday };
+            var status = new { last_settleday = _lastsettleday, current_settleday = _tradingday,settle_mode=_settlemode };
             session.ReplyMgr(status);
         }
 
@@ -267,6 +267,31 @@ namespace TradingLib.Core
             session.OperationSuccess(string.Format("系统回滚到交易日:{0}成功", histday));
         }
 
+
+        [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "ReSettleExchange", "ReSettleExchange - 重新执行交易所结算", "重新执行交易所结算", QSEnumArgParseType.Json)]
+        public void CTE_SettleExchange(ISession session, string json)
+        {
+            Manager manager = session.GetManager();
+            if (manager == null || (!manager.IsRoot()))
+            {
+                throw new FutsRspError("无权进行该操作");
+            }
+
+            var data = JsonMapper.ToObject(json);
+            //获得对应的交易日
+            string excode  = data["exchange"].ToString();
+            IExchange exchagne = BasicTracker.ExchagneTracker[excode];
+            if (exchagne == null)
+            {
+                throw new FutsRspError("交易所:" + excode + "不存在");
+            }
+            List<IExchange> exlist = new List<IExchange>();
+            exlist.Add(exchagne);
+            //结算交易所
+            SettleExchange(exlist,this.Tradingday);
+
+            session.OperationSuccess("交易所结算完毕");
+        }
         /// <summary>
         /// 对某个交易日执行结算操作
         /// </summary>

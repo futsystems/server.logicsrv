@@ -31,7 +31,10 @@ namespace TradingLib.Core
             }
             foreach (var price in ORM.MSettlement.SelectMarketData(settleday))
             {
-                settlementPriceMap[settleday].Add(price.Symbol, price);
+                if (!settlementPriceMap[settleday].Keys.Contains(price.Symbol))
+                {
+                    settlementPriceMap[settleday].Add(price.Symbol, price);
+                }
             }
         }
 

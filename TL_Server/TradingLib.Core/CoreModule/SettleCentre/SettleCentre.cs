@@ -146,6 +146,8 @@ namespace TradingLib.Core
             TaskProc taskopencc = new TaskProc(this.UUID, "开启清算中心" + Util.ToTLTime(opencctime).ToString(), opencctime.Hour, opencctime.Minute, opencctime.Second, delegate() { Task_OpenClearCentre(); });
             TLCtxHelper.ModuleTaskCentre.RegisterTask(taskopencc);
 
+
+            _settlementPriceTracker.LoadSettlementPrice(this.Tradingday);
             
         }
 

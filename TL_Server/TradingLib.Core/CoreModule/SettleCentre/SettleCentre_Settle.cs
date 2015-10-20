@@ -208,7 +208,7 @@ namespace TradingLib.Core
             DateTime now = DateTime.Now;
             foreach (IAccount acc in TLCtxHelper.ModuleAccountManager.Accounts)
             {
-                if (acc.CreatedTime > now)//历史结算中 帐户创建时间之前的交易日不执行结算
+                if (acc.CreatedTime < now)//历史结算中 帐户创建时间之前的交易日不执行结算
                 {
                     acc.SettleAccount(this.Tradingday);
                 }
@@ -337,7 +337,7 @@ namespace TradingLib.Core
                     //执行交易帐户的交易所结算
                     foreach (var account in TLCtxHelper.ModuleAccountManager.Accounts)
                     {
-                        if (account.CreatedTime > now)//历史结算中 帐户创建时间之前的交易日不执行结算
+                        if (account.CreatedTime < now)//历史结算中 帐户创建时间之前的交易日不执行结算
                         {
                             account.SettleExchange(exchange, settleday);
                         }
