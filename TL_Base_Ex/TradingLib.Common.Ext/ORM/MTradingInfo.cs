@@ -504,6 +504,72 @@ namespace TradingLib.ORM
        
 
         #region 日内数据转储与清空
+
+        /// <summary>
+        /// 转储orders
+        /// </summary>
+        /// <returns></returns>
+        public static void DumpSettledOrders(out int rows, int tradingday)
+        {
+            using (DBMySql db = new DBMySql())
+            {
+                rows = 0;
+                tradingday = tradingday == 0 ? int.MaxValue : tradingday;//如果指定0，则表示转储所有交易记录，否则转储该交易日之前的所有已结算记录
+                string query = String.Format("replace into log_orders select * from tmp_orders WHERE settleday<={0} and settled=1", tradingday);
+                rows = db.Connection.Execute(query);
+            }
+        }
+
+        /// <summary>
+        /// 转储成交数据
+        /// </summary>
+        /// <returns></returns>
+        public static void DumpSettledTrades(out int rows, int tradingday)
+        {
+            using (DBMySql db = new DBMySql())
+            {
+                rows = 0;
+                tradingday = tradingday == 0 ? int.MaxValue : tradingday;
+                string query = String.Format("replace into log_trades select * from tmp_trades WHERE settleday<={0} and settled=1", tradingday);
+                rows = db.Connection.Execute(query);
+            }
+        }
+
+        /// <summary>
+        /// 转储日内取消数据到历史取消表
+        /// </summary>
+        /// <param name="rows"></param>
+        /// <returns></returns>
+        public static void DumpSettledOrderActions(out int rows, int tradingday)
+        {
+            using (DBMySql db = new DBMySql())
+            {
+                rows = 0;
+                tradingday = tradingday == 0 ? int.MaxValue : tradingday;
+                string query = String.Format("replace into log_orderactions select * from tmp_orderactions where settleday<={0}", tradingday);
+                rows = db.Connection.Execute(query);
+            }
+        }
+
+        /// <summary>
+        /// 转储日内交易回合记录
+        /// </summary>
+        /// <param name="rows"></param>
+        /// <returns></returns>
+        //public static bool DumpIntradayPosTransactions(out int rows, int tradingday = 0)
+        //{
+        //    using (DBMySql db = new DBMySql())
+        //    {
+        //        rows = 0;
+        //        tradingday = (tradingday != 0 ? tradingday : TLCtxHelper.ModuleSettleCentre.LastSettleday);
+        //        string query = String.Format("replace into log_postransactions select * from tmp_postransactions where settleday={0}", tradingday);
+        //        rows = db.Connection.Execute(query);
+        //        return rows >= 0;
+        //    }
+        //}
+
+
+
         /// <summary>
         /// 删除日内委托数据
         /// </summary>
@@ -518,21 +584,7 @@ namespace TradingLib.ORM
             }
         }
 
-        /// <summary>
-        /// 转储orders
-        /// </summary>
-        /// <returns></returns>
-        public static bool DumpIntradayOrders(out int rows,int tradingday=0)
-        {
-            using (DBMySql db = new DBMySql())
-            {
-                rows = 0;
-                tradingday = (tradingday != 0 ? tradingday : TLCtxHelper.ModuleSettleCentre.Tradingday);
-                string query = String.Format("replace into log_orders select * from tmp_orders WHERE settleday={0}",tradingday);
-                rows = db.Connection.Execute(query);
-                return rows>= 0;
-            }
-        }
+        
 
         /// <summary>
         /// 清空日内成交数据
@@ -548,21 +600,7 @@ namespace TradingLib.ORM
             }
         }
 
-        /// <summary>
-        /// 转储成交数据
-        /// </summary>
-        /// <returns></returns>
-        public static bool DumpIntradayTrades(out int rows, int tradingday = 0)
-        {
-            using (DBMySql db = new DBMySql())
-            {
-                rows = 0;
-                tradingday = (tradingday != 0 ? tradingday : TLCtxHelper.ModuleSettleCentre.Tradingday);
-                string query = String.Format("replace into log_trades select * from tmp_trades WHERE settleday={0}", tradingday);
-                rows = db.Connection.Execute(query);
-                return rows >= 0;
-            }
-        }
+        
 
         /// <summary>
         /// 清空日内取消数据
@@ -577,39 +615,9 @@ namespace TradingLib.ORM
                 return db.Connection.Execute(query)>=0;
             }
         }
-        /// <summary>
-        /// 转储日内取消数据到历史取消表
-        /// </summary>
-        /// <param name="rows"></param>
-        /// <returns></returns>
-        public static bool DumpIntradayOrderActions(out int rows,int tradingday=0)
-        {
-            using (DBMySql db = new DBMySql())
-            {
-                rows = 0;
-                tradingday = (tradingday != 0 ? tradingday : TLCtxHelper.ModuleSettleCentre.Tradingday);
-                string query = String.Format("replace into log_orderactions select * from tmp_orderactions where settleday={0}", tradingday);
-                rows = db.Connection.Execute(query);
-                return rows >= 0;
-            }
-        }
+        
 
-        /// <summary>
-        /// 转储日内交易回合记录
-        /// </summary>
-        /// <param name="rows"></param>
-        /// <returns></returns>
-        public static bool DumpIntradayPosTransactions(out int rows, int tradingday = 0)
-        {
-            using (DBMySql db = new DBMySql())
-            {
-                rows = 0;
-                tradingday = (tradingday != 0 ? tradingday : TLCtxHelper.ModuleSettleCentre.Tradingday);
-                string query = String.Format("replace into log_postransactions select * from tmp_postransactions where settleday={0}", tradingday);
-                rows = db.Connection.Execute(query);
-                return rows >= 0;
-            }
-        }
+        
 
         /// <summary>
         /// 清空日内交易回合记录

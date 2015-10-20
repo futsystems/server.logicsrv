@@ -122,7 +122,7 @@ namespace TradingLib.Core
                 exchangesettlemap[exinfo.LocalSysSettleTime].Add(ex);
             }
 
-            //注册交易所结算定时任务
+            //1.注册交易所结算定时任务
             foreach (var ky in exchangesettlemap.Keys)
             {
                 RegisterExchangeSettleTask(ky, exchangesettlemap[ky]);
@@ -140,7 +140,9 @@ namespace TradingLib.Core
             tmp.Sort();
             ExchangeSettleInfo lastex = tmp.Last();
             _netxSettleTime = lastex.LocalSysSettleTime.AddMinutes(5);//应该结算日最晚的一个交易所结算时间 为系统柜台结算时间
+            //2.注册交易帐户结算定时任务
             RegisterAccountSettleTask(_netxSettleTime);
+            
             //周期定时结算时间
             _settleTime = _netxSettleTime.ToTLTime();
             _resetTime = _settleTime;// _netxSettleTime.AddMinutes(5).ToTLTime();//结算后5分钟为重置时间
@@ -152,6 +154,9 @@ namespace TradingLib.Core
                 _tradingday = Util.ToDateTime(_tradingday, 0).AddDays(-1).ToTLDate();
             }
 
+            //3.注册定时转储任务 交易帐户结算后随机的5-10分钟之内执行数据转储
+            DateTime storetime = _netxSettleTime.AddMinutes(new Random().Next(5,10));
+            RegisterDataStoreTask(storetime);
             logger.Info(string.Format("判定当前交易日:{0} 柜台结算时间:{1}", _tradingday, _netxSettleTime.ToString("yyyyMMdd HH:mm:ss")));
         }
 
@@ -179,6 +184,13 @@ namespace TradingLib.Core
             TLCtxHelper.ModuleTaskCentre.RegisterTask(task);
         }
 
+
+        void RegisterDataStoreTask(DateTime storetime)
+        {
+            logger.Info("注册交易记录转储任务,转储时间:" + storetime.ToString("HH:mm:ss"));
+            TaskProc task = new TaskProc(this.UUID, "交易帐户结算-" + storetime.ToString("HH:mm:ss"), storetime.Hour, storetime.Minute, storetime.Second, delegate() { Dump2Log(_lastsettleday); });
+            TLCtxHelper.ModuleTaskCentre.RegisterTask(task);
+        }
         /// <summary>
         /// 交易帐户结算
         /// 系统执行每天定时结算包含周末与节假日,多交易所情况下 交易所按交易所的结算规则进行结算，系统进行每日结算
@@ -273,9 +285,7 @@ namespace TradingLib.Core
                     data.Vol = k.Vol;
                 }
                 _settlementPriceTracker.UpdateSettlementPrice(data);
-            
             }
-        
         }
         /// <summary>
         /// 交易所结算
@@ -342,6 +352,25 @@ namespace TradingLib.Core
 
 
 
+
+        /// <summary>
+        /// 将已结算的交易记录转储到历史交易记录表
+        /// </summary>
+        public void Dump2Log(int tradingday)
+        {
+            logger.Info("Dump TradingInfo(Order,Trade,OrderAction)");
+            int onum, tnum, cnum;//, prnum;
+
+            ORM.MTradingInfo.DumpSettledOrders(out onum, tradingday);
+            ORM.MTradingInfo.DumpSettledTrades(out tnum, tradingday);
+            ORM.MTradingInfo.DumpSettledOrderActions(out cnum, tradingday);
+           // ORM.MTradingInfo.DumpIntradayPosTransactions(out prnum);
+
+            logger.Info("Order       Saved:" + onum.ToString());
+            logger.Info("Trade       Saved:" + tnum.ToString());
+            logger.Info("OrderAction Saved:" + cnum.ToString());
+            //logger.Info("PosTrans    Saved:" + prnum.ToString());
+        }
 
 
 

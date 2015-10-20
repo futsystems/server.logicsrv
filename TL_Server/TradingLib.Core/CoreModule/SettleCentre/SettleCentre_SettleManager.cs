@@ -343,5 +343,14 @@ namespace TradingLib.Core
 
             this.ResetSystem();
         }
+
+        [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "ReqDumpSettledData", "ReqDumpSettledData - 转储已结算交易记录", "将tmp表中的交易记录转储到交易记录历史表")]
+        public void CTE_ReqDumpSettledData(ISession session)
+        {
+            //转储所有记录
+            Dump2Log(0);
+            session.OperationSuccess("转储交易记录成功");
+        }
+
     }
 }
