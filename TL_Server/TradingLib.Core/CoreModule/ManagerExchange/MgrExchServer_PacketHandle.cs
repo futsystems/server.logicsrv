@@ -244,7 +244,7 @@ namespace TradingLib.Core
                             SrvOnMGRUpdateSymbol(packet as MGRUpdateSymbolRequest, session, manager);
                             break;
                         }
-                    
+
                     //case MessageTypes.MGRQRYRULECLASS://请求查询风控规则列表
                     //    {
                     //        SrvOnMGRQryRuleSet(packet as MGRQryRuleSetRequest, session, manager);

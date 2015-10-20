@@ -13,7 +13,7 @@ using System.Threading;
 using System.Net;
 using System.Net.Sockets;
 using Common.Logging;
-
+using System.Management;
 
 namespace TradingLib.Common
 {
@@ -341,6 +341,34 @@ namespace TradingLib.Common
                 System.Threading.Thread.Sleep(ms);
         }
 
+
+        /// <summary>
+        /// 获得当前地址信息
+        /// </summary>
+        /// <returns></returns>
+        public static LocationInfo GetLocationInfo()
+        {
+            try
+            {
+                String direction = "";
+                WebRequest request = WebRequest.Create("http://ip.360.cn/IPShare/info");
+                using (WebResponse response = request.GetResponse())
+                using (StreamReader stream = new StreamReader(response.GetResponseStream(), Encoding.UTF8))
+                {
+                    direction = stream.ReadToEnd();
+
+                    TradingLib.Mixins.Json.JsonData data = TradingLib.Mixins.Json.JsonMapper.ToObject(direction);
+                    string ip = data["ip"].ToString().Trim();
+                    string location = data["location"].ToString().Trim();
+                    return new LocationInfo() { IP = ip, Location = location, MAC = "" };
+
+                }
+            }
+            catch (Exception ex)
+            {
+                return new LocationInfo() { MAC = "" };
+            }
+        }
 
 
         public static bool IsToday(DateTime dt)

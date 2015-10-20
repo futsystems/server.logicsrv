@@ -18,6 +18,11 @@ namespace TradingLib.Core
         [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "QrySettleStatus", "QrySettleStatus - 查询结算状态", "查询结算状态")]
         public void CTE_QrySettleStatus(ISession session)
         {
+            Manager manager = session.GetManager();
+            if (manager == null || (!manager.IsRoot()))
+            {
+                throw new FutsRspError("无权进行该操作");
+            }
             var status = new { last_settleday = _lastsettleday, next_settleday = 0, current_settleday = _tradingday };
             session.ReplyMgr(status);
         }
@@ -52,6 +57,7 @@ namespace TradingLib.Core
             {
                 throw new FutsRspError("无权进行该操作");
             }
+
 
             var data = JsonMapper.ToObject(json);
 
@@ -164,6 +170,7 @@ namespace TradingLib.Core
                 throw new FutsRspError("无权进行该操作");
             }
 
+
             var data = JsonMapper.ToObject(json);
             //获得对应的交易日
             int currentday = int.Parse(data["settleday"].ToString());
@@ -220,13 +227,13 @@ namespace TradingLib.Core
             _lastsettleday = Util.ToDateTime(_tradingday, 0).AddDays(-1).ToTLDate();//默认上一个结算日为当前交易日的上一个日期
 
             //将数据库中相关记录恢复到结算日状态
-            ORM.MSettlement.RollBackToSettleday(_tradingday);
+            ORM.MSettlement.RollBackToSettleday(this.Tradingday);
 
             ////重新加载合约数据
-            BasicTracker.SymbolTracker.Reload();
+            BasicTracker.SymbolTracker.Reload(this.Tradingday);
 
             ////重置结算价格维护器
-            _settlementPriceTracker.Clear();
+            _settlementPriceTracker.Clear(this.Tradingday);
 
             ////加载当前交易日的结算价信息
             _settlementPriceTracker.LoadSettlementPrice(this.Tradingday);
@@ -293,26 +300,8 @@ namespace TradingLib.Core
             //2.帐户结算
             SettleAccount();
 
-            //3.
-
-
-            //通过系统事件中继触发结算前事件
-            //TLCtxHelper.EventSystem.FireBeforeSettleEvent(this, new SystemEventArgs());
-            //this.IsInSettle = true;//标识结算中心处于结算状态
-
-            //绑定结算价格
-            //this.BindSettlementPrice();
-
-            ////A:储存 结算数据(各业持仓,持仓回合,当日交易记录)
-            ////保存结算持仓数据和对应的PR数据
-            //this.SaveHoldInfo();
-            ////保存持仓明细
-            //this.SavePositionDetails();
-            ////转储到历史记录表
-            //this.Dump2Log();
-
-            //B:结算交易帐户形成结算记录
-            //this.SettleAccount();
+            //保存已结算交易记录
+            Dump2Log();
 
             session.OperationSuccess(string.Format("交易日:{0}结算完成", settleday));
         }
@@ -322,13 +311,13 @@ namespace TradingLib.Core
         /// </summary>
         /// <param name="session"></param>
         /// <param name="json"></param>
-        [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "ResetSystem", "ResetSystem - 重置当前系统 进入工作状态", "重置当前系统 进入工作状态", QSEnumArgParseType.Json)]
-        public void CTE_QrySettlementPrice(ISession session)
-        {
-            this.Reset();
+        //[ContribCommandAttr(QSEnumCommandSource.MessageMgr, "ResetSystem", "ResetSystem - 重置当前系统 进入工作状态", "重置当前系统 进入工作状态", QSEnumArgParseType.Json)]
+        //public void CTE_QrySettlementPrice(ISession session)
+        //{
+        //    this.Reset();
 
-            this.ResetSystem();
-        }
+        //    this.ResetSystem();
+        //}
 
         /// <summary>
         /// 转储已结算交易记录
@@ -337,8 +326,13 @@ namespace TradingLib.Core
         [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "ReqDumpSettledData", "ReqDumpSettledData - 转储已结算交易记录", "将tmp表中的交易记录转储到交易记录历史表")]
         public void CTE_ReqDumpSettledData(ISession session)
         {
+            Manager manager = session.GetManager();
+            if (manager == null || (!manager.IsRoot()))
+            {
+                throw new FutsRspError("无权进行该操作");
+            }
             //转储所有记录
-            Dump2Log(0);
+            Dump2Log(true);
             session.OperationSuccess("转储交易记录成功");
         }
 

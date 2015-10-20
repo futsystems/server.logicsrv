@@ -594,7 +594,7 @@ namespace TradingLib.Core
                 //    CacheRspResponse(response);
                 //}
 
-
+                //这里通过查询持仓来获得对应的结算价 保持快期交易端与服务端数据一致
                 Symbol[] symlist = account.GetSymbols().ToArray();//获得交易帐户可交易列表
                 for (int i = 0; i < symlist.Length; i++)
                 {

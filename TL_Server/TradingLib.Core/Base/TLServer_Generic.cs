@@ -543,6 +543,17 @@ namespace TradingLib.Core
             }
 
         }
+
+        void SrvOnUpdateLocationInfo(UpdateLocationInfoRequest request, T1 client)
+        { 
+            if(request.LocationInfo!=null)
+            {
+                logger.Info(string.Format("clientID:{0} IP:{1} Location:{2} MAC:{3}", client.Location.ClientID,request.LocationInfo.IP,request.LocationInfo.Location, request.LocationInfo.MAC));
+                client.IPAddress = request.LocationInfo.IP;
+                client.HardWareCode = request.LocationInfo.MAC;
+            }
+        }
+
         /// <summary>
         /// 客户端请求注册到服务器
         /// 该消息是客户端发送上来的第一条消息
@@ -834,6 +845,10 @@ namespace TradingLib.Core
                         break;
                     case MessageTypes.VERSIONREQUEST://版本查询
                         SrvVersonReq(packet as VersionRequest, client);
+                        PacketEvent(session, packet, front, address);
+                        break;
+                    case MessageTypes.UPDATELOCATION://地址信息更新
+                        SrvOnUpdateLocationInfo(packet as UpdateLocationInfoRequest, client);
                         PacketEvent(session, packet, front, address);
                         break;
                     case MessageTypes.LOGINREQUEST://登入

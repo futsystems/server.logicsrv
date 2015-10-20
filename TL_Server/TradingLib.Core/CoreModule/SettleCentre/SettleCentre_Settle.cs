@@ -188,7 +188,7 @@ namespace TradingLib.Core
         void RegisterDataStoreTask(DateTime storetime)
         {
             logger.Info("注册交易记录转储任务,转储时间:" + storetime.ToString("HH:mm:ss"));
-            TaskProc task = new TaskProc(this.UUID, "交易数据转储-" + storetime.ToString("HH:mm:ss"), storetime.Hour, storetime.Minute, storetime.Second, delegate() { Dump2Log(_lastsettleday); });
+            TaskProc task = new TaskProc(this.UUID, "交易数据转储-" + storetime.ToString("HH:mm:ss"), storetime.Hour, storetime.Minute, storetime.Second, delegate() { Dump2Log(); });
             TLCtxHelper.ModuleTaskCentre.RegisterTask(task);
         }
         /// <summary>
@@ -214,13 +214,9 @@ namespace TradingLib.Core
                 }
             }
 
-            //更新结算日
-            logger.Info(string.Format("Update lastsettleday as:{0}", Tradingday));
-            ORM.MSettlement.UpdateSettleday(Tradingday);
+            //滚动交易日
+            RollTradingDay();
 
-            //更新交易日
-            _lastsettleday = this.Tradingday;
-            _tradingday = Util.ToDateTime(Tradingday, DateTime.Now.ToTLTime()).AddDays(1).ToTLDate();
             logger.Info(string.Format("Settle finished,entry tradingday:{0}", this.Tradingday));
 
             //触发结算后事件
@@ -374,15 +370,16 @@ namespace TradingLib.Core
 
         /// <summary>
         /// 将已结算的交易记录转储到历史交易记录表
+        /// 保存交易记录发生在交易帐户结算之后
         /// </summary>
-        public void Dump2Log(int tradingday)
+        public void Dump2Log(bool dumpall =false)
         {
             logger.Info("Dump TradingInfo(Order,Trade,OrderAction)");
             int onum, tnum, cnum;//, prnum;
-
-            ORM.MTradingInfo.DumpSettledOrders(out onum, tradingday);
-            ORM.MTradingInfo.DumpSettledTrades(out tnum, tradingday);
-            ORM.MTradingInfo.DumpSettledOrderActions(out cnum, tradingday);
+            int tradingday = this.LastSettleday;//保存上一个交易日的结算数据
+            ORM.MTradingInfo.DumpSettledOrders(out onum, tradingday,dumpall);
+            ORM.MTradingInfo.DumpSettledTrades(out tnum, tradingday, dumpall);
+            ORM.MTradingInfo.DumpSettledOrderActions(out cnum, tradingday, dumpall);
            // ORM.MTradingInfo.DumpIntradayPosTransactions(out prnum);
 
             logger.Info("Order       Saved:" + onum.ToString());

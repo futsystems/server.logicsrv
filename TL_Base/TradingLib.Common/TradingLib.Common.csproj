@@ -74,6 +74,7 @@
     <Compile Include="Holiday\Calendar.cs" />
     <Compile Include="Holiday\HolidayCalculator.cs" />
     <Compile Include="Manager\UIAccess.cs" />
+    <Compile Include="Message\UpdateLocation.cs" />
     <Compile Include="Message\XAPI\BasicInfo.cs" />
     <Compile Include="Message\CashOperationNotify.cs" />
     <Compile Include="Message\LogicFront.cs" />
@@ -110,6 +111,7 @@
     <Compile Include="Trading\Settlement\ExchangeSettlement.cs" />
     <Compile Include="Trading\Utils\DateTimeUtils.cs" />
     <Compile Include="Utils\ChinSpellcs.cs" />
+    <Compile Include="Utils\LocationInfo.cs" />
     <Compile Include="Utils\Util_Decimal.cs" />
     <Compile Include="Utils\Version.cs" />
     <Compile Include="Tracker\HighLowTracker.cs" />

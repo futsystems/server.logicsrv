@@ -97,7 +97,7 @@ namespace TradingLib.API
         XQRYYDPOSITION,//查询隔夜持仓 (通过隔夜持仓数据与当日成交数据可以完全恢复一个交易帐户的交易状态)
         XQRYORDER,//查询委托
         XQRYTRADE,//查询成交
-
+        UPDATELOCATION,//更新地址信息
 
         DOMREQUEST,//请求DOM市场Level2数据
         IMBALANCEREQUEST,//imbalance..查询这个是什么意思
@@ -156,7 +156,7 @@ namespace TradingLib.API
         XYDPOSITIONRESPONSE,//隔夜持仓回报
         XORDERRESPONSE,//委托回报
         XTRADERESPONSE,//成交回报
-
+        //UPDATELOCATIONRESPONSE,//更新地址回报
         // END STANDARD MESSAGES
 
 

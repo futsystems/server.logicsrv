@@ -196,6 +196,9 @@ namespace TradingLib.Common
                     //查询成交
                     case MessageTypes.XQRYTRADE:
                         return RequestTemplate<XQryTradeRequest>.SrvRecvRequest(frontid, clientid, content);
+                    //更新地址信息
+                    case MessageTypes.UPDATELOCATION:
+                        return RequestTemplate<UpdateLocationInfoRequest>.SrvRecvRequest(frontid, clientid, content);
 
                     #region manager
                     case MessageTypes.MGRLOGINREQUEST://请求登入

@@ -26,11 +26,11 @@ namespace TradingLib.Common
         /// 重新加载合约数据
         /// 合约数据与交易日相关，在结算中心回滚的过程中需要重新加载已过期的历史合约
         /// </summary>
-        internal void Reload()
+        internal void Reload(int tradingday)
         {
             foreach (var t in domainsymboltracker.Values)
             {
-                t.Reload();
+                t.Reload(tradingday);
             }
         }
 
@@ -262,14 +262,15 @@ namespace TradingLib.Common
         /// <summary>
         /// 结算中心修改结算日后 需要重新加载合约数据
         /// </summary>
-        public void Reload()
+        public void Reload(int tradingday)
         {
             symcodemap.Clear();
             idxcodemap.Clear();
             //加载所有合约 这里需要判断合约是否过期
             foreach (SymbolImpl sym in ORM.MBasicInfo.SelectSymbol(_domain.ID))
             {
-                if (sym.IsExpired(TLCtxHelper.ModuleSettleCentre.Tradingday))//下个交易日是否过期
+                int currentday = tradingday != 0 ? tradingday : sym.SecurityFamily.Exchange.GetExchangeTime().ToTLDate();
+                if (sym.IsExpired(currentday))//下个交易日是否过期
                     continue;
                 symcodemap[sym.Symbol] = sym;
                 idxcodemap[sym.ID] = sym;

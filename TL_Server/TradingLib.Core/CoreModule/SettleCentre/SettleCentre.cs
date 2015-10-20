@@ -206,6 +206,19 @@ namespace TradingLib.Core
         }
 
         /// <summary>
+        /// 滚动交易日
+        /// </summary>
+        void RollTradingDay()
+        {
+            //更新结算日
+            logger.Info(string.Format("Update lastsettleday as:{0}", Tradingday));
+            ORM.MSettlement.UpdateSettleday(this.Tradingday);
+            //更新交易日
+            _lastsettleday = this.Tradingday;
+            _tradingday = Util.ToDateTime(this.Tradingday, DateTime.Now.ToTLTime()).AddDays(1).ToTLDate();
+        }
+
+        /// <summary>
         /// 重置结算信息
         /// 按照系统记录的上个结算日 当前日期 时间来获得对应的当前交易日和结算状态信息
         /// </summary>

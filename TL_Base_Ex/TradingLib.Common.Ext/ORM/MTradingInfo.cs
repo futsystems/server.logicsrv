@@ -525,12 +525,12 @@ namespace TradingLib.ORM
         /// 转储orders
         /// </summary>
         /// <returns></returns>
-        public static void DumpSettledOrders(out int rows, int tradingday)
+        public static void DumpSettledOrders(out int rows, int tradingday,bool dumpall)
         {
             using (DBMySql db = new DBMySql())
             {
                 rows = 0;
-                tradingday = tradingday == 0 ? int.MaxValue : tradingday;//如果指定0，则表示转储所有交易记录，否则转储该交易日之前的所有已结算记录
+                tradingday = dumpall ? int.MaxValue : tradingday;//如果指定0，则表示转储所有交易记录，否则转储该交易日之前的所有已结算记录
                 string query = String.Format("replace into log_orders select * from tmp_orders WHERE settleday<={0} and settled=1", tradingday);
                 rows = db.Connection.Execute(query);
             }
@@ -540,12 +540,12 @@ namespace TradingLib.ORM
         /// 转储成交数据
         /// </summary>
         /// <returns></returns>
-        public static void DumpSettledTrades(out int rows, int tradingday)
+        public static void DumpSettledTrades(out int rows, int tradingday,bool dumpall)
         {
             using (DBMySql db = new DBMySql())
             {
                 rows = 0;
-                tradingday = tradingday == 0 ? int.MaxValue : tradingday;
+                tradingday = dumpall ? int.MaxValue : tradingday;
                 string query = String.Format("replace into log_trades select * from tmp_trades WHERE settleday<={0} and settled=1", tradingday);
                 rows = db.Connection.Execute(query);
             }
@@ -556,12 +556,12 @@ namespace TradingLib.ORM
         /// </summary>
         /// <param name="rows"></param>
         /// <returns></returns>
-        public static void DumpSettledOrderActions(out int rows, int tradingday)
+        public static void DumpSettledOrderActions(out int rows, int tradingday,bool dumpall)
         {
             using (DBMySql db = new DBMySql())
             {
                 rows = 0;
-                tradingday = tradingday == 0 ? int.MaxValue : tradingday;
+                tradingday = dumpall? int.MaxValue : tradingday;
                 string query = String.Format("replace into log_orderactions select * from tmp_orderactions where settleday<={0}", tradingday);
                 rows = db.Connection.Execute(query);
             }
