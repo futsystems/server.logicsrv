@@ -98,12 +98,15 @@ namespace TradingLib.Core
             //只有超级域的管理员
             if (manager.Domain.Super && manager.IsRoot())
             {
-                if (BasicTracker.DomainTracker.Domains.Any(d => d.Dedicated))
+               
+                DomainImpl domain = TradingLib.Mixins.Json.JsonMapper.ToObject<DomainImpl>(json);
+                bool isadd = domain.ID == 0;
+
+                if (BasicTracker.DomainTracker.Domains.Any(d => d.Dedicated)&&isadd)
                 {
                     throw new FutsRspError("独立部署不允许添加多个分区");
                 }
-                DomainImpl domain = TradingLib.Mixins.Json.JsonMapper.ToObject<DomainImpl>(json);
-                bool isadd = domain.ID == 0;
+
                 BasicTracker.DomainTracker.UpdateDomain(domain);
 
 
