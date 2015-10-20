@@ -853,7 +853,7 @@ namespace TradingLib.Common
 
             pos.OpenDate = f.xDate;
             pos.OpenTime = f.xTime;
-            pos.LastSettlementPrice = this.LastSettlementPrice != null ? (decimal)this.LastSettlementPrice : f.xPrice;//新开仓设定昨日结算价
+            //pos.LastSettlementPrice = this.LastSettlementPrice != null ? (decimal)this.LastSettlementPrice : f.xPrice;//新开仓设定昨日结算价
             pos.Settleday = f.SettleDay;//由成交开仓的 则该持仓明细对应的结算日与成交记录的结算日一致
             pos.Side = f.PositionSide;
             pos.Volume = Math.Abs(f.xSize);

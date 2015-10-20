@@ -212,12 +212,20 @@ namespace TradingLib.ORM
         /// 获得最近结算日的下一个结算日的委托数据
         /// </summary>
         /// <returns></returns>
-        public static IEnumerable<Order> SelectOrdersUnSettled()
+        public static IEnumerable<Order> SelectOrdersUnSettled(int tradingday)
         {
             using (DBMySql db = new DBMySql())
             {
-                string query = string.Format("SELECT * FROM  tmp_orders  WHERE  settled='{0}' AND breed='{1}'", 0, QSEnumOrderBreedType.ACCT);
-                return db.Connection.Query<OrderImpl>(query);
+                if (tradingday == 0)
+                {
+                    string query = string.Format("SELECT * FROM  tmp_orders  WHERE  settled='{0}' AND breed='{1}'", 0, QSEnumOrderBreedType.ACCT);
+                    return db.Connection.Query<OrderImpl>(query);
+                }
+                else
+                {
+                    string query = string.Format("SELECT * FROM  tmp_orders  WHERE  settled='{0}' AND breed='{1}' AND settleday='{2}'", 0, QSEnumOrderBreedType.ACCT,tradingday);
+                    return db.Connection.Query<OrderImpl>(query);
+                }
             }
         }
 
@@ -320,12 +328,20 @@ namespace TradingLib.ORM
         /// 获得最近结算日的下一个结算日的成交数据
         /// </summary>
         /// <returns></returns>
-        public static IEnumerable<Trade> SelectTradesUnSettled()
+        public static IEnumerable<Trade> SelectTradesUnSettled(int tradingday)
         {
             using (DBMySql db = new DBMySql())
             {
-                string query = string.Format("SELECT * FROM  tmp_trades  WHERE  settled='{0}' AND breed='{1}'", 0, QSEnumOrderBreedType.ACCT);
-                return db.Connection.Query<TradeImpl>(query);
+                if (tradingday == 0)
+                {
+                    string query = string.Format("SELECT * FROM  tmp_trades  WHERE  settled='{0}' AND breed='{1}'", 0, QSEnumOrderBreedType.ACCT);
+                    return db.Connection.Query<TradeImpl>(query);
+                }
+                else
+                {
+                    string query = string.Format("SELECT * FROM  tmp_trades  WHERE  settled='{0}' AND breed='{1}' AND settleday='{2}'", 0, QSEnumOrderBreedType.ACCT,tradingday);
+                    return db.Connection.Query<TradeImpl>(query);
+                }
             }
         }
 

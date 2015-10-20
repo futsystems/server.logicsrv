@@ -22,6 +22,10 @@ namespace TradingLib.Core
         /// </summary>
         public QSEnumSettleCentreStatus SettleCentreStatus { get { return _settleStatus; } set { _settleStatus = value; } }
 
+
+        QSEnumSettleMode _settlemode = QSEnumSettleMode.LiveMode;
+
+        public QSEnumSettleMode SettleMode { get { return _settlemode; } set { _settlemode = value; } }
         int _lastsettleday = 0;
         /// <summary>
         /// 上一个结算日

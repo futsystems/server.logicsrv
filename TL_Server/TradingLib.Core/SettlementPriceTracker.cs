@@ -19,8 +19,6 @@ namespace TradingLib.Core
         /// </summary>
         Dictionary<int, Dictionary<string, MarketData>> settlementPriceMap = new Dictionary<int, Dictionary<string, MarketData>>();
 
-        //Dictionary<string, MarketData> settlementPriceMap = new Dictionary<string, MarketData>();
-
         /// <summary>
         /// 从数据库加载某个结算日的计算机信息
         /// </summary>
@@ -43,6 +41,18 @@ namespace TradingLib.Core
         public void Clear()
         {
             settlementPriceMap.Clear();
+        }
+
+        /// <summary>
+        /// 清空某个交易日的结算数据
+        /// </summary>
+        /// <param name="tradingday"></param>
+        public void Clear(int tradingday)
+        {
+            if (settlementPriceMap.Keys.Contains(tradingday))
+            {
+                settlementPriceMap[tradingday].Clear();
+            }
         }
 
         public IEnumerable<MarketData> this[int settleday]

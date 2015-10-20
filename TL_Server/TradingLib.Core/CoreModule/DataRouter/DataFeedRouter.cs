@@ -623,10 +623,14 @@ namespace TradingLib.Core
         /// <param name="k"></param>
         void GotTick(Tick k)
         {
-            //利用异步处理tick组件来接受并处理tick数据,这样当有多个数据源时,就不会存在线程问题。
-            //在asynctick中统一缓存然后由唯一的线程对外发送tick数据
-            //debug("datafeed got tick ??????????????", QSEnumDebugLevel.INFO);
-            asynctick.newTick(k);
+            //历史结算不响应外部行情数据
+            if (TLCtxHelper.ModuleSettleCentre.SettleMode == QSEnumSettleMode.LiveMode)
+            {
+                //利用异步处理tick组件来接受并处理tick数据,这样当有多个数据源时,就不会存在线程问题。
+                //在asynctick中统一缓存然后由唯一的线程对外发送tick数据
+                //debug("datafeed got tick ??????????????", QSEnumDebugLevel.INFO);
+                asynctick.newTick(k);
+            }
         }
 
         public void ExcludeSymbol(string symbol)

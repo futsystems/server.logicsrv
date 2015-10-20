@@ -34,6 +34,10 @@ namespace TradingLib.API
         QSEnumSettleCentreStatus SettleCentreStatus { get; }
 
         /// <summary>
+        /// 结算模式，结算模式决定了清算中心数据加载方式
+        /// </summary>
+        QSEnumSettleMode SettleMode { get; }
+        /// <summary>
         /// 上次结算日
         /// </summary>
         int LastSettleday { get; }

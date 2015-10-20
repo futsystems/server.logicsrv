@@ -40,13 +40,21 @@ namespace TradingLib.ORM
         /// 获得所有未结算出入金记录
         /// </summary>
         /// <returns></returns>
-        public static IEnumerable<CashTransactionImpl> SelectCashTransactionsUnSettled()
+        public static IEnumerable<CashTransactionImpl> SelectCashTransactionsUnSettled(int tradingday)
         {
 
             using (DBMySql db = new DBMySql())
             {
-                string query = string.Format("SELECT * FROM log_cashtrans WHERE settled=0");
-                return db.Connection.Query<CashTransactionImpl>(query);
+                if (tradingday == 0)
+                {
+                    string query = string.Format("SELECT * FROM log_cashtrans WHERE settled=0");
+                    return db.Connection.Query<CashTransactionImpl>(query);
+                }
+                else
+                {
+                    string query = string.Format("SELECT * FROM log_cashtrans WHERE settled=0 AND settleday='{0}'",tradingday);
+                    return db.Connection.Query<CashTransactionImpl>(query);
+                }
             }
         }
 

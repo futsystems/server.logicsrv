@@ -127,7 +127,7 @@ namespace TradingLib.Core
         /// 获得所有交易帐户日内 成交数据
         /// </summary>
         /// <returns></returns>
-        public virtual IEnumerable<Trade> SelectAcctTrades()
+        public virtual IEnumerable<Trade> SelectAcctTrades(int tradingday)
         {
             throw new NotImplementedException();
         }
@@ -136,7 +136,7 @@ namespace TradingLib.Core
         /// 获得所有交易帐户日内 委托数据
         /// </summary>
         /// <returns></returns>
-        public virtual IEnumerable<Order> SelectAcctOrders()
+        public virtual IEnumerable<Order> SelectAcctOrders(int tradingday)
         {
             throw new NotImplementedException();
         }
@@ -159,13 +159,13 @@ namespace TradingLib.Core
         /// 获得所有交易账户日内 委托操作数据
         /// </summary>
         /// <returns></returns>
-        public virtual IEnumerable<OrderAction> SelectAcctOrderActions()
+        public virtual IEnumerable<OrderAction> SelectAcctOrderActions(int tradingday)
         {
             throw new NotImplementedException();
         }
 
 
-        public virtual IEnumerable<CashTransaction> SelectAcctCashTransactionUnSettled()
+        public virtual IEnumerable<CashTransaction> SelectAcctCashTransactionUnSettled(int tradingday)
         {
             throw new NotImplementedException();
         }

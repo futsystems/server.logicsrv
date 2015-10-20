@@ -73,7 +73,7 @@ namespace TradingLib.ORM
         {
             using (DBMySql db = new DBMySql())
             {
-                string query = string.Format("UPDATE log_position_detail_hist SET settled='1' WHERE `account` = '{0}' AND `settleday` = '{1}' AND  `symbol`='{2}' AND `tradeid`='{3}' AND `side`='{4}' AND `opendate`='{5}'", p.Account, p.Settleday, p.Symbol, p.TradeID, p.Side ? 1 : 0, p.OpenDate);
+                string query = string.Format("UPDATE log_position_detail_hist SET settled='1',settledinday='{0}' WHERE `account` = '{1}' AND `settleday` = '{2}' AND  `symbol`='{3}' AND `tradeid`='{4}' AND `side`='{5}' AND `opendate`='{6}'",TLCtxHelper.ModuleSettleCentre.Tradingday, p.Account, p.Settleday, p.Symbol, p.TradeID, p.Side ? 1 : 0, p.OpenDate);
                 db.Connection.Execute(query);
             }
         }

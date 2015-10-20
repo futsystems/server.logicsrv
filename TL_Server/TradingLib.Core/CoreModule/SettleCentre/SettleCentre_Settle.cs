@@ -188,7 +188,7 @@ namespace TradingLib.Core
         void RegisterDataStoreTask(DateTime storetime)
         {
             logger.Info("注册交易记录转储任务,转储时间:" + storetime.ToString("HH:mm:ss"));
-            TaskProc task = new TaskProc(this.UUID, "交易帐户结算-" + storetime.ToString("HH:mm:ss"), storetime.Hour, storetime.Minute, storetime.Second, delegate() { Dump2Log(_lastsettleday); });
+            TaskProc task = new TaskProc(this.UUID, "交易数据转储-" + storetime.ToString("HH:mm:ss"), storetime.Hour, storetime.Minute, storetime.Second, delegate() { Dump2Log(_lastsettleday); });
             TLCtxHelper.ModuleTaskCentre.RegisterTask(task);
         }
         /// <summary>
@@ -205,9 +205,13 @@ namespace TradingLib.Core
             TLCtxHelper.EventSystem.FireBeforeSettleEvent(this, new SystemEventArgs());
 
             logger.Info("系统执行帐户结算,结算日:" + this.Tradingday);
+            DateTime now = DateTime.Now;
             foreach (IAccount acc in TLCtxHelper.ModuleAccountManager.Accounts)
             {
-                acc.SettleAccount(this.Tradingday);
+                if (acc.CreatedTime > now)//历史结算中 帐户创建时间之前的交易日不执行结算
+                {
+                    acc.SettleAccount(this.Tradingday);
+                }
             }
 
             //更新结算日
@@ -298,13 +302,21 @@ namespace TradingLib.Core
         /// 2.Broker结算
         /// </summary>
         /// <param name="list"></param>
-        void SettleExchange(List<IExchange> list)
+        void SettleExchange(List<IExchange> list,int tradingday=0)
         {
             try
             {
+                bool histmode = _settlemode == QSEnumSettleMode.HistMode;
+                //历史结算需要制定交易日
+                if (histmode && tradingday == 0)
+                {
+                    throw new ArgumentException("hist settle need tradingday");
+                }
+
                 foreach (var exchange in list)
                 {
-                    DateTime extime = exchange.GetExchangeTime();//获得交易所当前时间
+                    //历史结算使用制定交易日否则使用当前交易所时间
+                    DateTime extime = histmode ? Util.ToDateTime(tradingday, 0) : exchange.GetExchangeTime(); //获得交易所当前时间
 
                     //非工作日不结算
                     if (!extime.IsWorkDay())
@@ -320,12 +332,19 @@ namespace TradingLib.Core
                     int settleday = extime.ToTLDate();
 
                     logger.Info(string.Format("交易所:{0} 执行结算 结算日:{1}", exchange.EXCode, settleday));
-                    //保存交易所对应的结算价格
-                    SaveSettlementPrice(exchange, settleday);
+                    if (!histmode) //正常结算模式 需要保存结算价
+                    {
+                        //保存交易所对应的结算价格
+                        SaveSettlementPrice(exchange, settleday);
+                    }
+                    DateTime now = DateTime.Now;
                     //执行交易帐户的交易所结算
                     foreach (var account in TLCtxHelper.ModuleAccountManager.Accounts)
                     {
-                        account.SettleExchange(exchange, settleday);
+                        if (account.CreatedTime > now)//历史结算中 帐户创建时间之前的交易日不执行结算
+                        {
+                            account.SettleExchange(exchange, settleday);
+                        }
                     }
                 }
             }

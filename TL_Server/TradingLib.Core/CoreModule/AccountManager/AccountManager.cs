@@ -185,26 +185,10 @@ namespace TradingLib.Core
                 }
 
 
-                //未结算出入金记录
-                IEnumerable<CashTransaction> cashtxns = TLCtxHelper.ModuleDataRepository.SelectAcctCashTransactionUnSettled();
-                
-                //
-                IEnumerable<EquityReport> equityreport = ORM.MAccount.SelectEquityReport(TLCtxHelper.ModuleSettleCentre.LastSettleday);
                 foreach (IAccount acc in accountlist)
                 {
                     AcctList.TryAdd(acc.ID, acc);
-                    EquityReport equity = equityreport.Where(r => r.Account == acc.ID).FirstOrDefault();
-                    if (equity != null)
-                    {
-                        acc.LastEquity = equity.Equity;
-                        acc.LastCredit = equity.Credit;
-                    }
-
-                    //恢复交易帐户的出入金记录
-                    foreach (var txn in cashtxns.Where(x => x.Account == acc.ID))
-                    {
-                        acc.CashTrans(txn);
-                    }
+                    
                     TLCtxHelper.ModuleClearCentre.CacheAccount(acc);
                 }
             }

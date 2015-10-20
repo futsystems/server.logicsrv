@@ -81,14 +81,24 @@ namespace TradingLib.API
         /// 获得所有交易帐户日内 成交数据
         /// </summary>
         /// <returns></returns>
-        IEnumerable<Trade> SelectAcctTrades();
+        IEnumerable<Trade> SelectAcctTrades(int tradingday);
 
 
         /// <summary>
         /// 获得所有交易帐户日内 委托数据
         /// </summary>
         /// <returns></returns>
-        IEnumerable<Order> SelectAcctOrders();
+        IEnumerable<Order> SelectAcctOrders(int tradingday);
+
+
+        
+
+
+        /// <summary>
+        /// 获得所有交易帐户日内 委托操作数据
+        /// </summary>
+        /// <returns></returns>
+        IEnumerable<OrderAction> SelectAcctOrderActions(int tradingday);
 
 
         /// <summary>
@@ -96,14 +106,6 @@ namespace TradingLib.API
         /// </summary>
         /// <returns></returns>
         IEnumerable<PositionDetail> SelectAcctPositionDetails();
-
-
-        /// <summary>
-        /// 获得所有交易帐户日内 委托操作数据
-        /// </summary>
-        /// <returns></returns>
-        IEnumerable<OrderAction> SelectAcctOrderActions();
-
 
         /// <summary>
         /// 获得所有交易账户 未结算结算记录
@@ -116,7 +118,7 @@ namespace TradingLib.API
         /// 获得所有交易账户 未结算记录
         /// </summary>
         /// <returns></returns>
-        IEnumerable<CashTransaction> SelectAcctCashTransactionUnSettled();
+        IEnumerable<CashTransaction> SelectAcctCashTransactionUnSettled(int tradingday);
 
 
 

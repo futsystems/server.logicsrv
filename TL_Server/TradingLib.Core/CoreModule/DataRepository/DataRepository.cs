@@ -194,10 +194,10 @@ namespace TradingLib.Core
         /// 获得所有交易帐户日内 成交数据
         /// </summary>
         /// <returns></returns>
-        public override IEnumerable<Trade> SelectAcctTrades()
+        public override IEnumerable<Trade> SelectAcctTrades(int tradingday)
         {
             //填充对象oSymbol
-            IEnumerable<Trade> trades = ORM.MTradingInfo.SelectTradesUnSettled().Select(f => { f.oSymbol = GetAccountSymbol(f.Account, f.Symbol); return f; });
+            IEnumerable<Trade> trades = ORM.MTradingInfo.SelectTradesUnSettled(tradingday).Select(f => { f.oSymbol = GetAccountSymbol(f.Account, f.Symbol); return f; });
             logger.Info("数据库恢复前次结算以来成交数据:" + trades.Count().ToString() + "条");
             return trades;
         }
@@ -206,9 +206,9 @@ namespace TradingLib.Core
         /// 获得所有交易帐户日内 委托数据
         /// </summary>
         /// <returns></returns>
-        public override IEnumerable<Order> SelectAcctOrders()
+        public override IEnumerable<Order> SelectAcctOrders(int tradingday)
         {
-            IEnumerable<Order> orders = ORM.MTradingInfo.SelectOrdersUnSettled().Select(o => { o.oSymbol = GetAccountSymbol(o.Account, o.Symbol); return o; });
+            IEnumerable<Order> orders = ORM.MTradingInfo.SelectOrdersUnSettled(tradingday).Select(o => { o.oSymbol = GetAccountSymbol(o.Account, o.Symbol); return o; });
             logger.Info("数据库恢复前次结算以来委托数据:" + orders.Count().ToString() + "条");
             return orders;
         }
@@ -233,7 +233,7 @@ namespace TradingLib.Core
         /// 获得所有交易账户日内 委托操作数据
         /// </summary>
         /// <returns></returns>
-        public override IEnumerable<OrderAction> SelectAcctOrderActions()
+        public override IEnumerable<OrderAction> SelectAcctOrderActions(int tradingday)
         {
             IEnumerable<OrderAction> actions = ORM.MTradingInfo.SelectOrderActions().Where(o=>o.OrderID != 0);
             logger.Info("数据库恢复前次结算以来取消数据:" + actions.Count().ToString() + "条");
@@ -256,9 +256,9 @@ namespace TradingLib.Core
         /// 获得所有未结算出入金记录
         /// </summary>
         /// <returns></returns>
-        public override IEnumerable<CashTransaction> SelectAcctCashTransactionUnSettled()
+        public override IEnumerable<CashTransaction> SelectAcctCashTransactionUnSettled(int tradingday)
         {
-            IEnumerable<CashTransaction> cashntxns = ORM.MCashTransaction.SelectCashTransactionsUnSettled();
+            IEnumerable<CashTransaction> cashntxns = ORM.MCashTransaction.SelectCashTransactionsUnSettled(tradingday);
             logger.Info("数据库恢复未结算 出入金记录数据:" + cashntxns.Count().ToString() + "条");
             return cashntxns;
         }

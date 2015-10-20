@@ -12,37 +12,6 @@ namespace TradingLib.Core
     public partial class SettleCentre
     {
         /// <summary>
-        /// 删除某个交易日的结算数据
-        /// </summary>
-        /// <param name="session"></param>
-        /// <param name="json"></param>
-        [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "DeleteSettleInfo", "DeleteSettleInfo - 删除某个交易日的结算数据", "删除某个交易日的结算数据", QSEnumArgParseType.Json)]
-        public void CTE_DeleteSettleInfo(ISession session, string json)
-        {
-            Manager manager = session.GetManager();
-            if (manager == null || (!manager.IsRoot()))
-            {
-                throw new FutsRspError("无权进行该操作");
-            }
-
-            var data = JsonMapper.ToObject(json);
-            //获得对应的交易日
-            int settleday = int.Parse(data["settleday"].ToString());
-
-            if (!TradingCalendar.IsTradingday(settleday))
-            {
-                throw new FutsRspError(string.Format("{0}不是交易日", settleday));
-            }
-
-
-            ORM.MSettlement.DeletePositionDetails(settleday);
-            ORM.MSettlement.DeleteSettlement(settleday);
-            ORM.MSettlement.DeleteHoldPositionRound(settleday);
-
-            session.OperationSuccess(string.Format("删除交易日:{0}结算信息成功", settleday));
-        }
-
-        /// <summary>
         /// 查询结算状态
         /// </summary>
         /// <param name="session"></param>
@@ -61,6 +30,8 @@ namespace TradingLib.Core
         [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "QryPositionHold", "QryPositionHold - 查询当前持仓", "查询当前持仓")]
         public void CTE_QryPositionHold(ISession session)
         {
+            logger.Info("查询当前持仓");
+
             Manager manager = session.GetManager();
             if (manager == null || (!manager.IsRoot()))
             {
@@ -201,6 +172,11 @@ namespace TradingLib.Core
             session.ReplyMgr(_settlementPriceTracker[currentday].ToArray());
         }
 
+        /// <summary>
+        /// 更新结算价
+        /// </summary>
+        /// <param name="session"></param>
+        /// <param name="json"></param>
         [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "UpdateSettlementPrice", "UpdateSettlementPrice - 更新结算价格信息", "更新结算价格信息", QSEnumArgParseType.Json)]
         public void CTE_UpdateSettlementPrice(ISession session, string json)
         {
@@ -234,48 +210,53 @@ namespace TradingLib.Core
                 throw new FutsRspError("无权进行该操作");
             }
 
+            this.SettleMode = QSEnumSettleMode.HistMode;
             var data = JsonMapper.ToObject(json);
 
             //获得对应的交易日
             int histday = int.Parse(data["currentday"].ToString());
 
             _tradingday = histday;
+            _lastsettleday = Util.ToDateTime(_tradingday, 0).AddDays(-1).ToTLDate();//默认上一个结算日为当前交易日的上一个日期
 
             //将数据库中相关记录恢复到结算日状态
             ORM.MSettlement.RollBackToSettleday(_tradingday);
 
-            //设定当前日期
-            //this.SetCurrentDay(currentday);
-
             ////重新加载合约数据
-            //BasicTracker.SymbolTracker.Reload();
+            BasicTracker.SymbolTracker.Reload();
 
             ////重置结算价格维护器
-            //_settlementPriceTracker.Clear();
+            _settlementPriceTracker.Clear();
 
             ////加载当前交易日的结算价信息
-            //_settlementPriceTracker.LoadSettlementPrice(this.Tradingday);
+            _settlementPriceTracker.LoadSettlementPrice(this.Tradingday);
 
             ////重置清算中心 用于加载对应的交易数据
-            //TLCtxHelper.ModuleClearCentre.Reset();
-            
-            ////获得所有未平持仓 并查询是否有结算价记录 没有记录则插入到数据库
-            //foreach (Position pos in TLCtxHelper.ModuleClearCentre.TotalPositions.Where(pos => !pos.isFlat))
-            //{
-            //    //如果该未平持仓没有对应的结算价信息 则我们在list中加入该合约 用于推送到手工结算窗口让管理员进行填写
-            //    if (_settlementPriceTracker[this.Tradingday, pos.Symbol] == null)
-            //    {
-            //        //插入该结算价信息记录 价格为-1
-            //        _settlementPriceTracker.UpdateSettlementPrice(new MarketData() { Settlement = -1, SettleDay = this.Tradingday, Symbol = pos.Symbol });
-            //    }
-            //}
+            TLCtxHelper.ModuleClearCentre.Reset();
 
-            //foreach (IAccount acc in TLCtxHelper.ModuleAccountManager.Accounts)
-            //{
-            //    //触发帐户变化事件
-            //}
+            //获得所有未平持仓 并查询是否有结算价记录 没有记录则插入到数据库
+            foreach (Position pos in TLCtxHelper.ModuleClearCentre.TotalPositions.Where(pos => !pos.isFlat))
+            {
+                //如果该未平持仓没有对应的结算价信息 则我们在list中加入该合约 用于推送到手工结算窗口让管理员进行填写
+                if (_settlementPriceTracker[this.Tradingday, pos.Symbol] == null)
+                {
+                    //插入该结算价信息记录 价格为-1
+                    _settlementPriceTracker.UpdateSettlementPrice(new MarketData() { Settlement = -1, SettleDay = this.Tradingday, Symbol = pos.Symbol });
+                }
+                else
+                {
+                    MarketData d = _settlementPriceTracker[this.Tradingday, pos.Symbol];
+                    pos.SettlementPrice = d.Settlement;
+                    pos.LastSettlementPrice = d.PreSettlement;
+                }
+            }
 
-            session.ReplyMgr("xxxxxx");
+            foreach (IAccount acc in TLCtxHelper.ModuleAccountManager.Accounts)
+            {
+                //触发帐户变化事件 用于更新昨日权益
+                TLCtxHelper.EventAccount.FireAccountChangeEent(acc.ID);
+            }
+            session.ReplyMgr("rollback");//管理段通过Rollback回报来触发 查询持仓，查询结算价等相关操作
             session.OperationSuccess(string.Format("系统回滚到交易日:{0}成功", histday));
         }
 
@@ -297,11 +278,6 @@ namespace TradingLib.Core
             //获得对应的交易日
             int settleday = int.Parse(data["settleday"].ToString());
 
-            if (!TradingCalendar.IsTradingday(settleday))
-            {
-                throw new FutsRspError(string.Format("{0}不是交易日", settleday));
-            }
-
             int cursettleday = this.Tradingday;//
             logger.Info(string.Format("重新执行交易日:{0}的结算操作，当前交易日为:{1}", settleday, cursettleday));
 
@@ -309,6 +285,16 @@ namespace TradingLib.Core
             {
                 throw new FutsRspError(string.Format("当前交易数据交易日不符,请先加载交易日:{0}的交易数据", settleday));
             }
+
+            //执行结算过程
+            //1.交易所结算
+            SettleExchange(BasicTracker.ExchagneTracker.Exchanges.ToList<IExchange>(), _tradingday);
+
+            //2.帐户结算
+            SettleAccount();
+
+            //3.
+
 
             //通过系统事件中继触发结算前事件
             //TLCtxHelper.EventSystem.FireBeforeSettleEvent(this, new SystemEventArgs());
@@ -326,7 +312,7 @@ namespace TradingLib.Core
             //this.Dump2Log();
 
             //B:结算交易帐户形成结算记录
-            this.SettleAccount();
+            //this.SettleAccount();
 
             session.OperationSuccess(string.Format("交易日:{0}结算完成", settleday));
         }
@@ -344,6 +330,10 @@ namespace TradingLib.Core
             this.ResetSystem();
         }
 
+        /// <summary>
+        /// 转储已结算交易记录
+        /// </summary>
+        /// <param name="session"></param>
         [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "ReqDumpSettledData", "ReqDumpSettledData - 转储已结算交易记录", "将tmp表中的交易记录转储到交易记录历史表")]
         public void CTE_ReqDumpSettledData(ISession session)
         {

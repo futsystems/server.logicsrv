@@ -199,6 +199,11 @@ namespace TradingLib.Common
         /// </summary>
         public void Reset()
         {
+            this.LastEquity = 0;
+            this.LastCredit = 0;
+            //清空出入金与交易所结算数据
+            settlementlist.Clear();
+            cashtranslsit.Clear();
             //重置风控规则
             ClearAccountCheck();
             ClearOrderCheck();
