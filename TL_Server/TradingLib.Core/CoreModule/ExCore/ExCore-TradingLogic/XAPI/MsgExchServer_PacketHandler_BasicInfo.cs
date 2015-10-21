@@ -112,5 +112,38 @@ namespace TradingLib.Core
             }
         }
 
+        /// <summary>
+        /// 从行情数据中心获得行情快照,
+        /// 如果没有对应的快照需要获得最近的结算价数据信息
+        /// </summary>
+        /// <param name="request"></param>
+        /// <param name="account"></param>
+        void SrvOnXQryTickSnapShot(XQryTickSnapShotRequest request, IAccount account)
+        {
+            logger.Info("XQryTickSnapShot:" + request.ToString());
+            Symbol[] symlist = account.GetSymbols().Where(sym => sym.IsTradeable).ToArray();
+            int totalnum = symlist.Length;
+            if (totalnum > 0)
+            {
+                for (int i = 0; i < totalnum; i++)
+                {
+                    Tick k = TLCtxHelper.ModuleDataRouter.GetTickSnapshot(symlist[i].Symbol);// CmdUtils.GetTickSnapshot(symlist[i].Symbol);
+                    if (k != null && !k.isValid)
+                    {
+                        k = TLCtxHelper.ModuleSettleCentre.GetLastTickSnapshot(symlist[i].Symbol);
+                        //MarketData md = TLCtxHelper.ModuleSettleCentre.GetSettlementPrice(TLCtxHelper.ModuleSettleCentre.Tradingday, symlist[i].Symbol);
+                    }
+                    RspXQryTickSnapShotResponse response = ResponseTemplate<RspXQryTickSnapShotResponse>.SrvSendRspResponse(request);
+                    response.Tick = k;
+                    CacheRspResponse(response, i == totalnum - 1);
+                }
+            }
+            else
+            {
+                RspXQryTickSnapShotResponse response = ResponseTemplate<RspXQryTickSnapShotResponse>.SrvSendRspResponse(request);
+                CacheRspResponse(response);
+            }
+        }
+
     }
 }

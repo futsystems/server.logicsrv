@@ -89,5 +89,11 @@ namespace TradingLib.API
         /// <returns></returns>
         SettlementPrice GetSettlementPrice(int settleday, string symbol);
 
+        /// <summary>
+        /// 获得某个合约的最后一个行情快照
+        /// </summary>
+        /// <param name="symbol"></param>
+        /// <returns></returns>
+        Tick GetLastTickSnapshot(string symbol);
     }
 }

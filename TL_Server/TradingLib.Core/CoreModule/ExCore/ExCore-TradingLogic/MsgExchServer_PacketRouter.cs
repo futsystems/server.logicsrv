@@ -192,6 +192,12 @@ namespace TradingLib.Core
                         SrvOnXQryTrade(request, account);
                     }
                     break;
+                case MessageTypes.XQRYTICKSNAPSHOT://查询行情快照
+                    {
+                        XQryTickSnapShotRequest request = packet as XQryTickSnapShotRequest;
+                        SrvOnXQryTickSnapShot(request, account);
+                    }
+                    break;
 
                 case MessageTypes.CONTRIBREQUEST://扩展请求
                     {

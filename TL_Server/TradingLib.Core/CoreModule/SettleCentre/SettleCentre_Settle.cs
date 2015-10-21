@@ -364,7 +364,10 @@ namespace TradingLib.Core
         }
 
 
-
+        public Tick GetLastTickSnapshot(string symbol)
+        {
+            return _settlementPriceTracker.GetLastTickSnapshot(symbol);
+        }
 
 
 

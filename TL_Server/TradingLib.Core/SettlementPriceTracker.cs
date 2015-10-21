@@ -19,6 +19,7 @@ namespace TradingLib.Core
         /// </summary>
         Dictionary<int, Dictionary<string, MarketData>> settlementPriceMap = new Dictionary<int, Dictionary<string, MarketData>>();
 
+        Dictionary<string, Tick> lastticksnapshot = new Dictionary<string, Tick>();
         /// <summary>
         /// 从数据库加载某个结算日的计算机信息
         /// </summary>
@@ -31,10 +32,13 @@ namespace TradingLib.Core
             }
             foreach (var price in ORM.MSettlement.SelectMarketData(settleday))
             {
+
                 if (!settlementPriceMap[settleday].Keys.Contains(price.Symbol))
                 {
                     settlementPriceMap[settleday].Add(price.Symbol, price);
                 }
+
+                UpdateLastTickSnapshot(price);
             }
         }
 
@@ -70,6 +74,16 @@ namespace TradingLib.Core
             }
         }
 
+        public Tick GetLastTickSnapshot(string symbol)
+        {
+            Tick target = null;
+            if (lastticksnapshot.TryGetValue(symbol, out target))
+            {
+                return target;
+            }
+            return null;
+        }
+
         //public int Count
         //{
         //    get
@@ -99,6 +113,21 @@ namespace TradingLib.Core
             }
         }
 
+        void UpdateLastTickSnapshot(MarketData price)
+        {
+            //更新最新行情快照
+            if (lastticksnapshot.Keys.Contains(price.Symbol))
+            {
+                if (lastticksnapshot[price.Symbol].Date <= price.SettleDay)
+                {
+                    lastticksnapshot[price.Symbol] = price.ToTick();
+                }
+            }
+            else
+            {
+                lastticksnapshot.Add(price.Symbol, price.ToTick());
+            }
+        }
         /// <summary>
         /// 更新结算价信息
         /// </summary>
@@ -106,6 +135,8 @@ namespace TradingLib.Core
         public void UpdateSettlementPrice(MarketData price)
         {
             MarketData target = null;
+
+            
             //结算价信息已经存在 更新结算价
             if (!settlementPriceMap.Keys.Contains(price.SettleDay))
             {

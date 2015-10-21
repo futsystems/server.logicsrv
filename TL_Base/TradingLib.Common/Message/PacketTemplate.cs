@@ -199,6 +199,9 @@ namespace TradingLib.Common
                     //更新地址信息
                     case MessageTypes.UPDATELOCATION:
                         return RequestTemplate<UpdateLocationInfoRequest>.SrvRecvRequest(frontid, clientid, content);
+                    //查询行情快照
+                    case MessageTypes.XQRYTICKSNAPSHOT:
+                        return RequestTemplate<XQryTickSnapShotRequest>.SrvRecvRequest(frontid, clientid, content);
 
                     #region manager
                     case MessageTypes.MGRLOGINREQUEST://请求登入
@@ -406,6 +409,8 @@ namespace TradingLib.Common
                     return ResponseTemplate<RspXQryOrderResponse>.CliRecvResponse(content);
                 case MessageTypes.XTRADERESPONSE://成交回报
                     return ResponseTemplate<RspXQryTradeResponse>.CliRecvResponse(content);
+                case MessageTypes.XTICKSNAPSHOTRESPONSE://行情快照回报
+                    return ResponseTemplate<RspXQryTickSnapShotResponse>.CliRecvResponse(content);
 
                 case MessageTypes.TICKNOTIFY:
                     TickNotify ticknotify = new TickNotify();

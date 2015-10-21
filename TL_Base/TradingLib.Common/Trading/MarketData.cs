@@ -101,5 +101,29 @@ namespace TradingLib.Common
         /// 成交量
         /// </summary>
         public int Vol { get; set; }
+
+        public Tick ToTick()
+        {
+            TickImpl tick = new TickImpl(this.Symbol);
+            tick.AskSize = this.AskSize;
+            tick.AskPrice = this.AskPrice;
+            tick.BidSize = this.BidSize;
+            tick.BidPrice = this.BidPrice;
+            tick.UpperLimit = this.UpperLimit;
+            tick.LowerLimit = this.LowerLimit;
+            tick.PreOpenInterest = this.PreOI;
+            tick.OpenInterest = this.OI;
+            tick.PreSettlement = this.PreSettlement;
+            this.Settlement = this.Settlement;
+
+            tick.Open = this.Open;
+            tick.High = this.High;
+            tick.Low = this.Low;
+            tick.PreClose = this.PreSettlement;
+            tick.Date = this.SettleDay;
+
+            return tick;
+        }
     }
+
 }

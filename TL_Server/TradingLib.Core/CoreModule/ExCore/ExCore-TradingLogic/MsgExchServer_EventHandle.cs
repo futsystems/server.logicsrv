@@ -67,8 +67,7 @@ namespace TradingLib.Core
             try
             {
                 bool login = false;
-                logger.Info("Got login request:" + request.LoginID + "|" + request.Passwd + " Type:" + request.LoginType.ToString());
-                
+                logger.Info(string.Format("Got LoginRequest ID:{0} Password:{1} Type:{2} IP:{3} MAC:{4}",request.LoginID,request.Passwd,request.LoginType,request.IPAddress,request.MAC));
                 IAccount account=null;
                 if (request.LoginType == 0)
                 {
@@ -126,17 +125,15 @@ namespace TradingLib.Core
                 }
                 else if (request.LoginType == 1)
                 {
-                    logger.Info("系统通过清算中心认证,LoginID:" + request.LoginID + " Password:" + request.Passwd);
-                    //1.检查帐户是否存在
-
+                    logger.Info(string.Format("LoginType:{0} 通过本地数据库认证,LoginID:{1} Password:{2}", request.LoginType, request.LoginID, request.Passwd));
                     //1.检查帐户是否存在
                     //获得当前登入终端数量
                     int loginnums = tl.ClientsForAccount(request.LoginID).Count();
                     //如果当前登入个数大于等于系统允许的登入数量则拒绝登入
-                    logger.Info("account:" + request.LoginID + " current login num:" + loginnums.ToString());
-
+                     //logger.Info("account:" + request.LoginID + " current login num:" + loginnums.ToString());
                     if (loginnums >= loginTerminalNum)
                     {
+                        logger.Warn(string.Format("MaxLoginNum:{0} account:{1} current logined num:{2}", loginTerminalNum, request.LoginID, loginnums));
                         response.Authorized = false;
                         response.RspInfo.Fill("TERMINAL_NUM_LIMIT");
                     }

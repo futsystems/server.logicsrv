@@ -208,4 +208,58 @@ namespace TradingLib.Common
         }
     }
 
+    /// <summary>
+    /// 查询行情快照请求
+    /// </summary>
+    public class XQryTickSnapShotRequest : RequestPacket
+    {
+        public XQryTickSnapShotRequest()
+        {
+            _type = MessageTypes.XQRYTICKSNAPSHOT;
+            this.Symbol = string.Empty;
+        }
+
+        public string Symbol { get; set; }
+        public override string ContentSerialize()
+        {
+            return this.Symbol;
+        }
+
+        public override void ContentDeserialize(string contentstr)
+        {
+            this.Symbol = contentstr;
+        }
+
+    }
+
+    /// <summary>
+    /// 行情快照回报
+    /// </summary>
+    public class RspXQryTickSnapShotResponse : RspResponsePacket
+    {
+        public RspXQryTickSnapShotResponse()
+        {
+            _type = MessageTypes.XTICKSNAPSHOTRESPONSE;
+            this.Tick = null;
+        }
+
+        public Tick Tick { get; set; }
+
+        public override string ResponseSerialize()
+        {
+            if (this.Tick == null)
+                return string.Empty;
+            return TickImpl.Serialize(this.Tick);
+        }
+
+        public override void ResponseDeserialize(string content)
+        {
+            if (string.IsNullOrEmpty(content))
+            {
+                this.Tick = null;
+                return;
+            }
+            this.Tick = TickImpl.Deserialize(content);
+        }
+    }
 }

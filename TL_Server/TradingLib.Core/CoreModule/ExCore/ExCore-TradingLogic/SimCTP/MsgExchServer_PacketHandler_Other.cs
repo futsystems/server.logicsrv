@@ -177,7 +177,7 @@ namespace TradingLib.Core
 
                 logger.Info("got max opensize:" + size.ToString());
                 response.Symbol = request.Symbol;
-                response.MaxVol = size;
+                response.MaxVol = size >= 0 ? size : 0;
                 response.OffsetFlag = request.OffsetFlag;
                 response.Side = request.Side;
 
