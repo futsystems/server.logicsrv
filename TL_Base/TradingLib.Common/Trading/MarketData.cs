@@ -105,6 +105,8 @@ namespace TradingLib.Common
         public Tick ToTick()
         {
             TickImpl tick = new TickImpl(this.Symbol);
+            tick.Trade = this.Close;
+            tick.Size = 1;
             tick.AskSize = this.AskSize;
             tick.AskPrice = this.AskPrice;
             tick.BidSize = this.BidSize;
