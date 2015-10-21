@@ -4,19 +4,6 @@
 		<Month>1</Month>
 		<Day>1</Day>
 	</Holiday>
-	<Holiday name="New Year's Day(元旦)">
-		<Month>1</Month>
-		<Day>2</Day>
-	</Holiday>
-	<Holiday name="New Year's Day(元旦)">
-		<Month>1</Month>
-		<Day>3</Day>
-	</Holiday>
-	
-	<Holiday name="Chinese Spring Festival(新年)">
-		<Month>2</Month>
-		<Day>18</Day>
-	</Holiday>
 	<Holiday name="Chinese Spring Festival(新年)">
 		<Month>2</Month>
 		<Day>19</Day>
@@ -25,118 +12,105 @@
 		<Month>2</Month>
 		<Day>20</Day>
 	</Holiday>
-	<Holiday name="Chinese Spring Festival(新年)">
-		<Month>2</Month>
-		<Day>21</Day>
-	</Holiday>
-	<Holiday name="Chinese Spring Festival(新年)">
-		<Month>2</Month>
-		<Day>22</Day>
-	</Holiday>
-	<Holiday name="Chinese Spring Festival(新年)">
-		<Month>2</Month>
-		<Day>23</Day>
-	</Holiday>
-	<Holiday name="Chinese Spring Festival(新年)">
-		<Month>2</Month>
-		<Day>24</Day>
-	</Holiday>
-	
-	
-	
-
-	<Holiday name="Tomb-sweeping Day(清明)">
+	<Holiday name="(耶穌受難節)">
 		<Month>4</Month>
-		<Day>4</Day>
-	</Holiday>
-	<Holiday name="Tomb-sweeping Day(清明)">
-		<Month>4</Month>
-		<Day>5</Day>
+		<Day>3</Day>
 	</Holiday>
 	<Holiday name="Tomb-sweeping Day(清明)">
 		<Month>4</Month>
 		<Day>6</Day>
 	</Holiday>
-	
+	<Holiday name="(復活節星期一翌日)">
+		<Month>4</Month>
+		<Day>7</Day>
+	</Holiday>
 	<Holiday name="Labor Day(劳动节)">
 		<Month>5</Month>
 		<Day>1</Day>
+	</Holiday>
+	<Holiday name="(佛誕)">
+		<Month>5</Month>
+		<Day>25</Day>
+	</Holiday>
+	<Holiday name="(香港特別行政區成立紀念日)">
+		<Month>7</Month>
+		<Day>1</Day>
+	</Holiday>
+	<Holiday name="抗日胜利">
+		<Month>9</Month>
+		<Day>3</Day>
+	</Holiday>
+	<Holiday name="Mid-autumn Festival(中秋节)">
+		<Month>9</Month>
+		<Day>28</Day>
+	</Holiday>
+	<Holiday name="National Day(国庆节)">
+		<Month>10</Month>
+		<Day>1</Day>
+	</Holiday>
+	<Holiday name="(重陽節)">
+		<Month>10</Month>
+		<Day>21</Day>
+	</Holiday>
+	<Holiday name="(聖誕節)">
+		<Month>12</Month>
+		<Day>25</Day>
+	</Holiday>
+	<Holiday name="New Year's Day(元旦)">
+		<Month>1</Month>
+		<Day>1</Day>
+	</Holiday>
+	<Holiday name="(農曆年初一)">
+		<Month>2</Month>
+		<Day>8</Day>
+	</Holiday>
+	<Holiday name="(農曆年初二)">
+		<Month>2</Month>
+		<Day>9</Day>
+	</Holiday>
+	<Holiday name="(農曆年初三)">
+		<Month>2</Month>
+		<Day>10</Day>
+	</Holiday>
+	<Holiday name="(耶穌受難節)">
+		<Month>3</Month>
+		<Day>25</Day>
+	</Holiday>
+	<Holiday name="(復活節星期一)">
+		<Month>3</Month>
+		<Day>28</Day>
+	</Holiday>
+	<Holiday name="Tomb-sweeping Day(清明)">
+		<Month>4</Month>
+		<Day>4</Day>
 	</Holiday>
 	<Holiday name="Labor Day(劳动节)">
 		<Month>5</Month>
 		<Day>2</Day>
 	</Holiday>
-	<Holiday name="Labor Day(劳动节)">
-		<Month>5</Month>
-		<Day>3</Day>
-	</Holiday>
-	
-	<Holiday name="Dragon Boat Festival(端午节)">
+	<Holiday name="(端午節)">
 		<Month>6</Month>
-		<Day>20</Day>
+		<Day>9</Day>
 	</Holiday>
-	<Holiday name="Dragon Boat Festival(端午节)">
-		<Month>6</Month>
-		<Day>21</Day>
+	<Holiday name="(香港特別行政區成立紀念日)">
+		<Month>7</Month>
+		<Day>1</Day>
 	</Holiday>
-	<Holiday name="Dragon Boat Festival(端午节)">
-		<Month>6</Month>
-		<Day>22</Day>
-	</Holiday>
-	
-	
-	<Holiday name="抗日胜利">
-		<Month>9</Month>
-		<Day>3</Day>
-	</Holiday>
-	<Holiday name="抗日胜利">
-		<Month>9</Month>
-		<Day>4</Day>
-	</Holiday>
-	<Holiday name="抗日胜利">
-		<Month>9</Month>
-		<Day>5</Day>
-	</Holiday>
-	
-	
 	<Holiday name="Mid-autumn Festival(中秋节)">
 		<Month>9</Month>
+		<Day>16</Day>
+	</Holiday>
+	<Holiday name="(重陽節)">
+		<Month>10</Month>
+		<Day>10</Day>
+	</Holiday>
+	<Holiday name="(聖誕節後第一個周日)">
+		<Month>12</Month>
 		<Day>26</Day>
 	</Holiday>
-	<Holiday name="Mid-autumn Festival(中秋节)">
-		<Month>9</Month>
+	<Holiday name="(聖誕節後第二個周日)">
+		<Month>12</Month>
 		<Day>27</Day>
-	</Holiday>
-	
-	
-
-	<Holiday name="National Day(国庆节)">
-		<Month>10</Month>
-		<Day>1</Day>
-	</Holiday>
-	<Holiday name="National Day(国庆节)">
-		<Month>10</Month>
-		<Day>2</Day>
-	</Holiday>
-	<Holiday name="National Day(国庆节)">
-		<Month>10</Month>
-		<Day>3</Day>
-	</Holiday>
-	<Holiday name="National Day(国庆节)">
-		<Month>10</Month>
-		<Day>4</Day>
-	</Holiday>
-	<Holiday name="National Day(国庆节)">
-		<Month>10</Month>
-		<Day>5</Day>
-	</Holiday>
-	<Holiday name="National Day(国庆节)">
-		<Month>10</Month>
-		<Day>6</Day>
-	</Holiday>
-	<Holiday name="National Day(国庆节)">
-		<Month>10</Month>
-		<Day>7</Day>
 	</Holiday>
 </Holidays>
 
