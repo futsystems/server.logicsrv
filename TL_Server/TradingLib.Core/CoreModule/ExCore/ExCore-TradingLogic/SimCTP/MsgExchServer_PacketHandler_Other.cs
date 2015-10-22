@@ -585,33 +585,28 @@ namespace TradingLib.Core
 
             if (string.IsNullOrEmpty(request.Symbol))
             {
-                //Symbol sym = account.Domain.GetSymbols().Where(s => s.IsTradeable).FirstOrDefault();
-                //if (sym != null)
-                //{
-                //    Tick k = new TickImpl(sym.Symbol);
-                //    RspQryMarketDataResponse response = ResponseTemplate<RspQryMarketDataResponse>.SrvSendRspResponse(request);
-                //    response.TickToSend = k;
-                //    CacheRspResponse(response);
-                //}
-
                 //这里通过查询持仓来获得对应的结算价 保持快期交易端与服务端数据一致
                 Symbol[] symlist = account.GetSymbols().ToArray();//获得交易帐户可交易列表
                 for (int i = 0; i < symlist.Length; i++)
                 {
-                    //Tick k = TLCtxHelper.ModuleDataRouter.GetTickSnapshot(symlist[i].Symbol);// CmdUtils.GetTickSnapshot(symlist[i].Symbol);
-                    //if (k == null) continue;
+                    Tick k = TLCtxHelper.ModuleDataRouter.GetTickSnapshot(symlist[i].Symbol);// CmdUtils.GetTickSnapshot(symlist[i].Symbol);
+                    if (k == null || !k.isValid)
+                    {
+                        k = TLCtxHelper.ModuleSettleCentre.GetLastTickSnapshot(symlist[i].Symbol);
+                    }
                     //k.Exchange = symlist[i].SecurityFamily.Exchange.EXCode;
                     //RspQryMarketDataResponse response = ResponseTemplate<RspQryMarketDataResponse>.SrvSendRspResponse(request);
                     //response.TickToSend = k;
 
-                    Tick k = new TickImpl(symlist[i].Symbol);
-                    RspQryMarketDataResponse response = ResponseTemplate<RspQryMarketDataResponse>.SrvSendRspResponse(request);
-                    
+                    //Tick k = new TickImpl(symlist[i].Symbol);
 
+                    //TODO:行情和结算优化后 这里只需要查询当前DataRouter的行情快照即可
+                    RspQryMarketDataResponse response = ResponseTemplate<RspQryMarketDataResponse>.SrvSendRspResponse(request);
+
+                    //按帐户对应隔夜持仓的结算价来设定查询行情昨日结算价，快期交易客户端通过查询行情来获得隔夜持仓的持仓成本（持仓结算价依赖于结算模式，国内期货是按结算价进行结算，国外持仓按初始开仓价进行结算-不用盯市结算）
                     Position longpos = account.GetPosition(symlist[i].Symbol, true);
                     Position shortpos = account.GetPosition(symlist[i].Symbol, true);
 
-                    //按帐户对应隔夜持仓的结算价来设定查询行情昨日结算价，快期交易客户端通过查询行情来获得隔夜持仓的持仓成本（持仓结算价依赖于结算模式，国内期货是按结算价进行结算，国外持仓按初始开仓价进行结算-不用盯市结算）
                     decimal presettlement = 0;
                     if (longpos!= null && longpos.PositionDetailYdRef.Count() > 0)
                     {
@@ -621,44 +616,16 @@ namespace TradingLib.Core
                     {
                         presettlement = shortpos.PositionDetailYdRef.FirstOrDefault().SettlementPrice;
                     }
-                    k.PreSettlement = presettlement;
+                    if (presettlement != 0)
+                    {
+                        k.PreSettlement = presettlement;
+                    }
 
                     response.TickToSend = k;
-                    CacheRspResponse(response);
 
                     CacheRspResponse(response, i == symlist.Length - 1);
                 }
-
-
-                //Tick[] ticks = mdtickmap.Values.ToArray();
-                //if (ticks.Length >= 1)
-                //{
-                //    for (int i = 0; i < ticks.Length; i++)
-                //    {
-                //        RspQryMarketDataResponse response = ResponseTemplate<RspQryMarketDataResponse>.SrvSendRspResponse(request);
-                //        response.TickToSend = ticks[i];
-                //        CacheRspResponse(response, i != ticks.Length - 1);
-                //    }
-                //}
-                //else
-                //{
-                //    //如果数据库没有报错上个交易日的市场数据 则生成空数据回报 否则飞迅客户端会无法登入
-                //    Symbol sym = account.Domain.GetSymbols().Where(s => s.IsTradeable).FirstOrDefault();
-                //    if (sym != null)
-                //    {
-                //        Tick k = new TickImpl(sym.Symbol);
-                //        RspQryMarketDataResponse response = ResponseTemplate<RspQryMarketDataResponse>.SrvSendRspResponse(request);
-                //        response.TickToSend = k;
-                //        CacheRspResponse(response);
-                //    }
-                //    else
-                //    {
-                //        Util.Debug("帐户:" + account.ID + "所在域没有可交易合约,无法生成默认市场数据");
-                //    }
-                //}
             }
-
-            
         }
 
         /// <summary>

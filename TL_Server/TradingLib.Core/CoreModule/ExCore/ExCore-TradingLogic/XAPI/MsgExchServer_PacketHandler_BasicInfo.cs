@@ -128,7 +128,7 @@ namespace TradingLib.Core
                 for (int i = 0; i < totalnum; i++)
                 {
                     Tick k = TLCtxHelper.ModuleDataRouter.GetTickSnapshot(symlist[i].Symbol);// CmdUtils.GetTickSnapshot(symlist[i].Symbol);
-                    if (k != null && !k.isValid)
+                    if (k == null || !k.isValid)
                     {
                         k = TLCtxHelper.ModuleSettleCentre.GetLastTickSnapshot(symlist[i].Symbol);
                         //MarketData md = TLCtxHelper.ModuleSettleCentre.GetSettlementPrice(TLCtxHelper.ModuleSettleCentre.Tradingday, symlist[i].Symbol);
