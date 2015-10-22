@@ -93,6 +93,13 @@ namespace TradingLib.API
         /// </summary>
         bool IsTradeable{get;}
 
+
+        /// <summary>
+        /// 给出交易所日期，判定合约是否过期 通过比较过期日与交易所当前日期
+        /// </summary>
+        /// <param name="exday"></param>
+        /// <returns></returns>
+        bool IsExpired(int exday);
         /// <summary>
         /// 检查是否是市场开市时间
         /// </summary>

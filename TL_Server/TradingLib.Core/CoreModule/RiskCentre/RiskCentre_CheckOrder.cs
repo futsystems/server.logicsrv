@@ -115,6 +115,13 @@ namespace TradingLib.Core
                 return false;
             }
 
+            int exday = o.oSymbol.SecurityFamily.Exchange.GetExchangeTime().ToTLDate();
+            if (o.oSymbol.IsExpired(exday))
+            {
+                errortitle = "SYMBOL_NOT_TRADEABLE";//合约不可交易
+                return false;
+            }
+
             //交易时间检查
             int settleday = 0;
             QSEnumActionCheckResult result = o.oSymbol.SecurityFamily.CheckPlaceOrder(out settleday);

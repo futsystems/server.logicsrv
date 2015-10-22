@@ -147,14 +147,18 @@ namespace TradingLib.Common
             //加载所有合约 这里需要判断合约是否过期
             foreach (SymbolImpl sym in ORM.MBasicInfo.SelectSymbol(domain.ID))
             {
+
+                //不存在对应的品种 不加载
+                SecurityFamily sec = BasicTracker.SecurityTracker[sym.Domain_ID, sym.security_fk];
+                if (sec== null)
+                    continue;
+
                 //过期品种不加载
-                //TODO:完善品种过期检查
-                if (sym.IsExpired(TLCtxHelper.ModuleSettleCentre.Tradingday))
+                //获得交易所当前日期 并判断是否过期
+                int exday = sec.Exchange.GetExchangeTime().ToTLDate();
+                if (sym.IsExpired(exday))
                     continue;
-                if (BasicTracker.SecurityTracker[sym.Domain_ID, sym.security_fk] == null)
-                {
-                    continue;
-                }
+
                 symcodemap[sym.Symbol] = sym;
                 idxcodemap[sym.ID] = sym;
             }
@@ -269,9 +273,18 @@ namespace TradingLib.Common
             //加载所有合约 这里需要判断合约是否过期
             foreach (SymbolImpl sym in ORM.MBasicInfo.SelectSymbol(_domain.ID))
             {
+                
+
+                //不存在对应的品种 不加载
+                SecurityFamily sec = BasicTracker.SecurityTracker[sym.Domain_ID, sym.security_fk];
+                if (sec == null)
+                    continue;
+
+                //根据给定的交易日 判定合约是否过期 过期不加载
                 int currentday = tradingday != 0 ? tradingday : sym.SecurityFamily.Exchange.GetExchangeTime().ToTLDate();
                 if (sym.IsExpired(currentday))//下个交易日是否过期
                     continue;
+
                 symcodemap[sym.Symbol] = sym;
                 idxcodemap[sym.ID] = sym;
             }
