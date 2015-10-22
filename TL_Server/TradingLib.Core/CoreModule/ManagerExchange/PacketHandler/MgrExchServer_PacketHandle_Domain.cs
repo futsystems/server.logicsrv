@@ -102,7 +102,7 @@ namespace TradingLib.Core
                 DomainImpl domain = TradingLib.Mixins.Json.JsonMapper.ToObject<DomainImpl>(json);
                 bool isadd = domain.ID == 0;
 
-                if (BasicTracker.DomainTracker.Domains.Any(d => d.Dedicated)&&isadd)
+                if (isadd && BasicTracker.DomainTracker.Domains.Any(d => d.Dedicated))
                 {
                     throw new FutsRspError("独立部署不允许添加多个分区");
                 }
