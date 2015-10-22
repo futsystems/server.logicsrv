@@ -41,7 +41,14 @@ namespace TradingLib.Common
                 {
                     return target;
                 }
-                return null;
+                else
+                {
+                    //如果不存在对应交易账户的profile信息 这里生成对应的默认profile加入 这样通过交易账号获得profile对象 均不可能为空，生成结算单时 避免了profile为空时的异常
+                    AccountProfile profile = new AccountProfile();
+                    profile.Account = account;
+                    UpdateAccountProfile(profile);
+                    return profilemap[account];
+                }
             }
         }
 

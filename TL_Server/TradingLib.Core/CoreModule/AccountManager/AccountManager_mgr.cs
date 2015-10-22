@@ -672,22 +672,5 @@ namespace TradingLib.Core
             }
         }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        //#endregion
-
     }
 }

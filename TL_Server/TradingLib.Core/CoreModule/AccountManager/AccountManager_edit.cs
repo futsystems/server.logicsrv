@@ -258,63 +258,6 @@ namespace TradingLib.Core
             acc.CashTrans(txn);
             ORM.MCashTransaction.InsertCashTransaction(txn);
 
-            //TODO:交易账户出入金操作
-            //帐户自有资金的出入金操作
-            //if (equitytype == QSEnumEquityType.OwnEquity)
-            //{
-            //    //金额检查
-            //    if (amount < 0)
-            //    {
-            //        if (acc.NowEquity < Math.Abs(amount))
-            //        {
-            //            throw new FutsRspError("出金额度大于帐户权益");
-            //        }
-            //    }
-
-            //    //执行时间检查 
-            //    if (TLCtxHelper.ModuleSettleCentre.IsInSettle)
-            //    {
-            //        throw new FutsRspError("系统正在结算,禁止出入金操作");
-            //    }
-
-            //    //if (amount > 0)
-            //    //{
-            //    //    acc.Deposit(amount);
-            //    //}
-            //    //else
-            //    //{
-            //    //    acc.Withdraw(Math.Abs(amount));
-            //    //}
-            //    //ORM.MAccount.CashOperation(account, amount,QSEnumEquityType.OwnEquity, transref, comment);
-            //}
-            
-            //if (equitytype == QSEnumEquityType.CreditEquity)
-            //{
-            //    if (amount < 0)
-            //    {
-            //        if (acc.Credit< Math.Abs(amount))
-            //        {
-            //            throw new FutsRspError("出金额度大于优先资金权益");
-            //        }
-            //    }
-
-            //    //执行时间检查 
-            //    if (TLCtxHelper.ModuleSettleCentre.IsInSettle)
-            //    {
-            //        throw new FutsRspError("系统正在结算,禁止出入金操作");
-            //    }
-
-            //    //if (amount > 0)
-            //    //{
-            //    //    acc.CreditDeposit(Math.Abs(amount));
-            //    //}
-            //    //else
-            //    //{
-            //    //    acc.CreditWithdraw(Math.Abs(amount));
-            //    //}
-            //    //ORM.MAccount.CashOperation(account, amount, QSEnumEquityType.CreditEquity, transref, comment);                
-            //}
-
             //TLCtxHelper.EventAccount.FireAccountCashOperationEvent(txn.Account,txn., Math.Abs(amount));
         }
 
