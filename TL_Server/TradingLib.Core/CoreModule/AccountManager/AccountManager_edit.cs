@@ -240,10 +240,19 @@ namespace TradingLib.Core
             {
                 throw new FutsRspError("系统正在结算,禁止出入金操作");
             }
-            if (txn.TxnType == QSEnumCashOperation.WithDraw && txn.Amount > acc.NowEquity)
+
+            if (txn.TxnType == QSEnumCashOperation.WithDraw)
             {
-                throw new FutsRspError("出金额度大于帐户权益");
+                if (txn.EquityType == QSEnumEquityType.OwnEquity && txn.Amount > acc.NowEquity)
+                {
+                    throw new FutsRspError("出金额度大于帐户权益");
+                }
+                if (txn.EquityType == QSEnumEquityType.CreditEquity && txn.Amount > acc.Credit)
+                {
+                    throw new FutsRspError("出金额度大于帐户信用额度");
+                }
             }
+
             //生成唯一序列号
             txn.TxnID = GenTxnID();
             acc.CashTrans(txn);
