@@ -359,6 +359,11 @@ namespace TradingLib.Core
         [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "ResetSystem", "ResetSystem - 重置当前系统 进入工作状态", "重置当前系统 进入工作状态", QSEnumArgParseType.Json)]
         public void CTE_QrySettlementPrice(ISession session)
         {
+            Manager manager = session.GetManager();
+            if (manager == null || (!manager.IsRoot()))
+            {
+                throw new FutsRspError("无权进行该操作");
+            }
             this.Reset();
 
             this.ResetSystem();

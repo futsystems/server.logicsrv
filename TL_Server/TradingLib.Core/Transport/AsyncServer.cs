@@ -96,8 +96,13 @@ namespace TradingLib.Core
             //VerboseDebugging = verb;//是否输出详细日志
 
             zmqTP = new ZeromqThroughPut();
-            //zmqTP.SendDebugEvent += new DebugDelegate(msgdebug);
+            zmqTP.SendDebugEvent += new DebugDelegate(zmqTP_SendDebugEvent);
 
+        }
+
+        void zmqTP_SendDebugEvent(string msg)
+        {
+            Util.Debug(msg,QSEnumDebugLevel.INFO,"ZMQTP");
         }
 
         /// <summary>
@@ -278,6 +283,7 @@ namespace TradingLib.Core
             {   //当server端返回信息时,我们同样需要借助一定的设备完成
                 using (ZmqSocket frontend = context.CreateSocket(SocketType.ROUTER), backend = context.CreateSocket(SocketType.DEALER), outchannel = context.CreateSocket(SocketType.DEALER), outClient = context.CreateSocket(SocketType.DEALER), publisher = context.CreateSocket(SocketType.PUB), serviceRep = context.CreateSocket(SocketType.REP))
                 {
+                    //frontend.MaxMessageSize = 1024;//设置消息大小
                     #region tcp keep alive
                     //frontend.AddTcpAcceptFilter("192.168.1.1");//由防火墙来控制访问列表
                     //a.消息大小设置 管理端不设置消息大小，需要上传 配置文件
@@ -470,10 +476,12 @@ namespace TradingLib.Core
         //Worker消息处理函数
         void MessageProcess(ZmqSocket worker, int id)
         {
+
             try
             {
                 //服务端从这里得到客户端过来的消息
                 ZMessage zmsg = new ZMessage(worker);
+                Util.Debug("message frame size:"+zmsg.FrameCount.ToString()+" bodysize:"+zmsg.Body.Length.ToString() , QSEnumDebugLevel.INFO, "MESSAGE");
                 //1.进行消息地址解析 zmessage 中含有多个frame frame[0]是消息主体,其余frame是附加的地址信息
                 //通过zmessage frame数量判断,获得对应的地址信息
                 string front = string.Empty;
@@ -551,6 +559,10 @@ namespace TradingLib.Core
                 //if (this._tlmode == QSEnumTLMode.TradingSrv && !zmqTP.NewZmessage(address,zmsg)) 
                 //{
                 //    return true;
+                //}
+                //if (!zmqTP.NewZmessage(address, zmsg))
+                //{
+                //    return;
                 //}
 
                 //3.消息处理如果解析出来的消息是有效的则丢入处理流程进行处理，如果无效则不处理

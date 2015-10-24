@@ -104,6 +104,10 @@ namespace TradingLib.Core
             {
                 throw new FutsRspError("交易帐户资金大于1元，请处理后删除");
             }
+            if (!manager.RightAccessAccount(account))
+            {
+                throw new FutsRspError("无权删除交易账户");
+            }
             clearcentre.DelAccount(request.AccountToDelete);
 
             session.OperationSuccess("交易帐户:" + request.AccountToDelete + " 删除成功");
