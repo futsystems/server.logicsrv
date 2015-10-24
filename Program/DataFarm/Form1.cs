@@ -21,7 +21,7 @@ namespace DataFarm
             InitializeComponent();
         }
 
-        ServerBase appserver = null;
+        TLServerBase appserver = null;
 
         void debug(string msg)
         {
@@ -30,13 +30,13 @@ namespace DataFarm
 
         void InitServer()
         {
-            appserver = new ServerBase();
+            appserver = new TLServerBase();
             if(!appserver.Setup("127.0.0.1",5060))
             {
                 debug("server setup error");
             }
-            appserver.NewSessionConnected += new SuperSocket.SocketBase.SessionHandler<SessionBase>(appserver_NewSessionConnected);
-            appserver.NewRequestReceived += new SuperSocket.SocketBase.RequestHandler<SessionBase, BinaryRequestInfo>(appserver_NewRequestReceived);
+            appserver.NewSessionConnected += new SuperSocket.SocketBase.SessionHandler<TLSessionBase>(appserver_NewSessionConnected);
+            appserver.NewRequestReceived += new SuperSocket.SocketBase.RequestHandler<TLSessionBase, TLRequestInfo>(appserver_NewRequestReceived);
             
             if (!appserver.Start())
             {
@@ -45,20 +45,14 @@ namespace DataFarm
             debug("server inited");
         }
 
-        void appserver_NewRequestReceived(SessionBase session, BinaryRequestInfo requestInfo)
+        void appserver_NewRequestReceived(TLSessionBase session, TLRequestInfo requestInfo)
         {
-            debug("request received:");
+            debug("request received type:" + requestInfo.Message.Type.ToString() + " body:" + requestInfo.Message.Content + " key:" + requestInfo.Key + " body:" + requestInfo.Body);
         }
 
-        void appserver_NewSessionConnected(SessionBase session)
+        void appserver_NewSessionConnected(TLSessionBase session)
         {
             debug("session connected:" + session.SessionID);
-        }
-
-        void appserver_NewRequestReceived(SessionBase session, StringRequestInfo requestInfo)
-        {
-            debug("request received,session:" + session.SessionID + " requestInfo key:" + requestInfo.Key + requestInfo.Body);
-   
         }
 
 

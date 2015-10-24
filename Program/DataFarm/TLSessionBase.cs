@@ -8,7 +8,7 @@ using SuperSocket.Facility.Protocol;
 
 namespace DataFarm
 {
-    public class SessionBase : AppSession<SessionBase, BinaryRequestInfo>
+    public class TLSessionBase : AppSession<TLSessionBase, TLRequestInfo>
     {
         protected override void OnSessionStarted()
         {
