@@ -357,6 +357,7 @@ namespace TradingLib.Core
                     //日内交易检查
                     if ((!inter) && account.IntraDay)//非内部委托并且帐户是日内交易帐户则要检查日内交易时间
                     {
+
                         //如果是强平时间段则不可交易 
                         //if (o.oSymbol.SecurityFamily.cl)
                         //{

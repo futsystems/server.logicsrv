@@ -45,7 +45,7 @@ namespace TradingLib.Core
         void RegisterMarketCloseFlatTask(DateTime closetime, List<SecurityFamily> list)
         {
             logger.Info("注册收盘强平任务,收盘时间:" + closetime.ToString("HH:mm:ss"));
-            DateTime flattime = closetime.AddMinutes(-5);//提前5分钟强平
+            DateTime flattime = closetime.AddMinutes(-1*GlobalConfig.FlatTimeAheadOfMarketClose);//提前5分钟强平
             TaskProc task = new TaskProc(this.UUID, "收盘前强平-" + flattime.ToString("HH:mm:ss"), flattime.Hour, flattime.Minute, flattime.Second, delegate() { FlatPositoinBeforeClose(closetime, list); });
             TLCtxHelper.ModuleTaskCentre.RegisterTask(task);
 
