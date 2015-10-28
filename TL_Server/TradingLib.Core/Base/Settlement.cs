@@ -121,18 +121,18 @@ namespace TradingLib.Core
         const int len_TURNOVER = 13;
         const int len_COMMISSION = 10;
         const int len_SEQID = 8;
-        public static List<string> GenSettlementFile(Settlement s, IAccount account)
+        public static List<string> GenSettlementFile(AccountSettlement s, IAccount account)
         {
             List<string> settlelist = new List<string>();
 
             //查询历史持仓 计算保证金占用
-            //IList<SettlePosition> positions = ORM.MTradingInfo.SelectHistPositions(s.Account, s.SettleDay, s.SettleDay);
+            //IList<SettlePosition> positions = ORM.MTradingInfo.SelectHistPositions(s.Account, s.Settleday, s.Settleday);
             //成交明细
-            IList<Trade> trades = ORM.MTradingInfo.SelectHistTrades(s.Account, s.SettleDay, s.SettleDay);
+            IList<Trade> trades = ORM.MTradingInfo.SelectHistTrades(s.Account, s.Settleday, s.Settleday);
             //持仓明细
-            IEnumerable<PositionDetail> positiondetails = ORM.MSettlement.SelectPositionDetails(s.Account,s.SettleDay);
+            IEnumerable<PositionDetail> positiondetails = ORM.MSettlement.SelectPositionDetails(s.Account,s.Settleday);
             //平仓明细
-            IEnumerable<PositionCloseDetail> positionclose = ORM.MSettlement.SelectPositionCloseDetail(s.Account,s.SettleDay);
+            IEnumerable<PositionCloseDetail> positionclose = ORM.MSettlement.SelectPositionCloseDetail(s.Account,s.Settleday);
 
             AccountProfile profile = BasicTracker.AccountProfileTracker[account.ID];
             string brokername =string.IsNullOrEmpty(profile.Broker)?"":profile.Broker;
@@ -143,17 +143,17 @@ namespace TradingLib.Core
             settlelist.Add(SectionName(brokername));
             settlelist.Add(line);
             settlelist.Add(SectionName(header1));
-            settlelist.Add(string.Format("{0}{1,10}      {2}{3,10}      {4}{5,10}", padRightEx("客户号:", 10), s.Account, padRightEx("客户名称:", 10), custname, padRightEx("日期:", 10), s.SettleDay));
+            settlelist.Add(string.Format("{0}{1,10}      {2}{3,10}      {4}{5,10}", padRightEx("客户号:", 10), s.Account, padRightEx("客户名称:", 10), custname, padRightEx("日期:", 10), s.Settleday));
             settlelist.Add(NewLine);
             settlelist.Add(NewLine);
             settlelist.Add(SectionName("资金状况"));
             settlelist.Add(line);
-            settlelist.Add(string.Format(tp_total, FieldName("上日结存:", fieldwidth_total), s.LastEquity, FieldName("当日结存:", fieldwidth_total), s.NowEquity, FieldName("可用资金:", fieldwidth_total), s.NowEquity - margin));
-            settlelist.Add(string.Format(tp_total, FieldName("出入金:", fieldwidth_total), s.CashIn-s.CashOut, FieldName("客户权益:", fieldwidth_total), s.NowEquity, FieldName("风险度:", fieldwidth_total),s.NowEquity!=0 ?margin/s.NowEquity:0));
+            settlelist.Add(string.Format(tp_total, FieldName("上日结存:", fieldwidth_total), s.LastEquity, FieldName("当日结存:", fieldwidth_total), s.EquitySettled, FieldName("可用资金:", fieldwidth_total), s.EquitySettled - margin));
+            settlelist.Add(string.Format(tp_total, FieldName("出入金:", fieldwidth_total), s.CashIn - s.CashOut, FieldName("客户权益:", fieldwidth_total), s.EquitySettled, FieldName("风险度:", fieldwidth_total), s.EquitySettled != 0 ? margin / s.EquitySettled : 0));
             settlelist.Add(string.Format(tp_total, FieldName("手续费:", fieldwidth_total), s.Commission, FieldName("总保证金占用:", fieldwidth_total), margin, FieldName("追加保证金:", fieldwidth_total), 0));
-            settlelist.Add(string.Format(tp_total, FieldName("平仓盈亏:", fieldwidth_total), s.RealizedPL, FieldName("持仓盯市盈亏:", fieldwidth_total), s.UnRealizedPL, FieldName("交割保证金:", fieldwidth_total), 0));
-            settlelist.Add(string.Format(tp_onefield, FieldName("可提资金", fieldwidth_total), s.NowEquity-margin));
-            settlelist.Add(string.Format(tp_onefield, FieldName("总盈亏", fieldwidth_total), s.RealizedPL+s.UnRealizedPL-s.Commission));
+            settlelist.Add(string.Format(tp_total, FieldName("平仓盈亏:", fieldwidth_total), s.CloseProfitByDate, FieldName("持仓盯市盈亏:", fieldwidth_total), s.PositionProfitByDate, FieldName("交割保证金:", fieldwidth_total), 0));
+            settlelist.Add(string.Format(tp_onefield, FieldName("可提资金", fieldwidth_total), s.EquitySettled-margin));
+            settlelist.Add(string.Format(tp_onefield, FieldName("总盈亏", fieldwidth_total), s.CloseProfitByDate + s.PositionProfitByDate - s.Commission));
             settlelist.Add(NewLine);
             settlelist.Add(NewLine);
 

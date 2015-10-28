@@ -208,34 +208,5 @@ namespace TradingLib.Common
             info.IsWarn = acc.IsWarn;
             return info;
         }
-
-        /// <summary>
-        /// 生成结算单
-        /// </summary>
-        /// <param name="account"></param>
-        /// <returns></returns>
-        public static Settlement ToSettlement(this IAccount account)
-        {
-            Settlement settle = new SettlementImpl();
-            settle.Account = account.ID;
-            settle.CashIn = account.CashIn;
-            settle.CashOut = account.CashOut;
-            settle.Commission = account.Commission;
-            settle.Confirmed = false;
-            settle.LastEquity = account.LastEquity;
-            settle.RealizedPL = account.RealizedPL;
-            settle.UnRealizedPL = account.SettleUnRealizedPL;
-            settle.NowEquity = settle.LastEquity + settle.RealizedPL + settle.UnRealizedPL - settle.Commission + settle.CashIn - settle.CashOut;
-
-            settle.CreditCashIn = account.CreditCashIn;
-            settle.CreditCashOut = account.CreditCashOut;
-            settle.LastCredit = account.LastCredit;
-            settle.NowCredit = account.LastCredit + account.CreditCashIn - account.CreditCashOut;
-
-            //指定交易日期
-            settle.SettleDay = Util.ToTLDate();
-            settle.SettleTime = Util.ToTLTime();
-            return settle;
-        }
     }
 }

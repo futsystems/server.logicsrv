@@ -141,14 +141,14 @@ namespace TradingLib.Core
                 manager.ValidRightReadAccount(request.TradingAccount);
 
                 IAccount account = TLCtxHelper.ModuleAccountManager[request.TradingAccount];
-                Settlement settlement = ORM.MSettlement.SelectSettlement(request.TradingAccount, request.Settleday);
+                AccountSettlement settlement = ORM.MSettlement.SelectSettlement(request.TradingAccount, request.Settleday);
                 if (settlement != null)
                 {
                     List<string> settlelist = SettlementFactory.GenSettlementFile(settlement, account);
                     for (int i = 0; i < settlelist.Count; i++)
                     {
                         RspMGRQrySettleResponse response = ResponseTemplate<RspMGRQrySettleResponse>.SrvSendRspResponse(request);
-                        response.Tradingday = settlement.SettleDay;
+                        response.Tradingday = settlement.Settleday;
                         response.TradingAccount = settlement.Account;
                         response.SettlementContent = settlelist[i] + "\n";
                         CacheRspResponse(response, i == settlelist.Count - 1);

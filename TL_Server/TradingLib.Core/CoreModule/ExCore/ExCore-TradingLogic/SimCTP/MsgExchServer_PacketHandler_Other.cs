@@ -204,7 +204,7 @@ namespace TradingLib.Core
         void SrvOnQrySettleInfo(QrySettleInfoRequest request)
         {
             logger.Info("QrySettleInfo :" + request.ToString());
-            Settlement settlement = null;
+            AccountSettlement settlement = null;
             //如果查询日期为0 则查询上个结算日
             IAccount account = TLCtxHelper.ModuleAccountManager[request.Account];
             //判断account是否为空
@@ -222,7 +222,7 @@ namespace TradingLib.Core
                 for (int i = 0; i < settlelist.Count; i++)
                 {
                     RspQrySettleInfoResponse response = ResponseTemplate<RspQrySettleInfoResponse>.SrvSendRspResponse(request);
-                    response.Tradingday = settlement.SettleDay;
+                    response.Tradingday = settlement.Settleday;
                     response.TradingAccount = settlement.Account;
                     response.SettlementContent = settlelist[i] + "\n";
                     CacheRspResponse(response, i == settlelist.Count - 1);

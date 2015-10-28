@@ -301,6 +301,7 @@ namespace TradingLib.ORM
 
         /// <summary>
         /// 插入交易帐户结算记录
+        /// 同时更新交易账户对应的结算字段
         /// </summary>
         /// <param name="settle"></param>
         public static void InsertAccountSettlement(AccountSettlement settle)
@@ -436,12 +437,12 @@ namespace TradingLib.ORM
         /// <param name="account"></param>
         /// <param name="settleday"></param>
         /// <returns></returns>
-        public static Settlement SelectSettlement(string account,int settleday)
+        public static AccountSettlement SelectSettlement(string account,int settleday)
         {
             using (DBMySql db = new DBMySql())
             {
                 string query = String.Format("SELECT * FROM log_settlement WHERE account = '{0}' AND settleday = '{1}'", account,settleday);
-                Settlement settlement = db.Connection.Query<SettlementImpl>(query, null).SingleOrDefault();
+                AccountSettlement settlement = db.Connection.Query<AccountSettlement>(query, null).SingleOrDefault();
                 return settlement;
             }
         }
