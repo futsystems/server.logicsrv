@@ -249,7 +249,6 @@
     <Compile Include="Trading\Utils\PositionUtil.cs" />
     <Compile Include="Trading\Product.cs" />
     <Compile Include="Trading\SecurityFamilyImpl.cs" />
-    <Compile Include="Trading\Settlement.cs" />
     <Compile Include="Trading\SymbolImpl.cs" />
     <Compile Include="Trading\ThreadTracker.cs" />
     <Compile Include="Tracker\MessageTracker.cs" />

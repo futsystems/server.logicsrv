@@ -140,7 +140,6 @@
     <Compile Include="Trading\EnumPosOperation.cs" />
     <Compile Include="Trading\PositionCloseDetail.cs" />
     <Compile Include="Trading\PositionDetail.cs" />
-    <Compile Include="Trading\Settlement.cs" />
     <Compile Include="Trading\Data\Tick.cs" />
     <Compile Include="Trading\Trade.cs" />
     <Compile Include="Rule\IRule.cs" />
