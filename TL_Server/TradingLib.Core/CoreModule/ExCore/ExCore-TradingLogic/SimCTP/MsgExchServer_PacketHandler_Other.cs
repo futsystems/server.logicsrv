@@ -594,12 +594,13 @@ namespace TradingLib.Core
                     {
                         k = TLCtxHelper.ModuleSettleCentre.GetLastTickSnapshot(symlist[i].Symbol);
                     }
-                    //k.Exchange = symlist[i].SecurityFamily.Exchange.EXCode;
-                    //RspQryMarketDataResponse response = ResponseTemplate<RspQryMarketDataResponse>.SrvSendRspResponse(request);
-                    //response.TickToSend = k;
 
-                    //Tick k = new TickImpl(symlist[i].Symbol);
-
+                    //如果没有找到对应的合约则进入下一个合约进行行情数据处理
+                    if (k == null)
+                    {
+                        k = new TickImpl(symlist[i].Symbol);
+                        k.Exchange = symlist[i].SecurityFamily.Exchange.EXCode;
+                    }
                     //TODO:行情和结算优化后 这里只需要查询当前DataRouter的行情快照即可
                     RspQryMarketDataResponse response = ResponseTemplate<RspQryMarketDataResponse>.SrvSendRspResponse(request);
 
