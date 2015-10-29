@@ -198,6 +198,20 @@ namespace TradingLib.ORM
             }
         }
 
+        /// <summary>
+        /// 更新翻转后的委托对象
+        /// </summary>
+        /// <param name="o"></param>
+        /// <returns></returns>
+        public static void UpdateOrderReversed(Order o)
+        {
+            using (DBMySql db = new DBMySql())
+            {
+                string query = String.Format("UPDATE tmp_orders SET size = '{0}',filledsize = '{1}',totalsize = '{2}',side = '{3}' WHERE id = '{4}'", o.Size, o.FilledSize, o.TotalSize, o.Side ? 1 : 0, o.id);
+                db.Connection.Execute(query);
+            }
+        }
+
         public static void MarkOrderSettled(Order o)
         {
             using (DBMySql db = new DBMySql())
@@ -308,6 +322,20 @@ namespace TradingLib.ORM
 
             }
 
+        }
+
+
+        /// <summary>
+        /// 更新反转成交
+        /// </summary>
+        /// <param name="f"></param>
+        public static void UpdateTradeReversed(Trade f)
+        {
+            using (DBMySql db = new DBMySql())
+            {
+                string query = String.Format("UPDATE tmp_trades SET side='{0}' ,xsize='{1}',profit='{2}' WHERE settleday = '{3}' AND tradeid='{4}'", f.Side ? 1 : 0, f.xSize,f.Profit,f.SettleDay, f.TradeID);
+                db.Connection.Execute(query);
+            }
         }
 
         /// <summary>

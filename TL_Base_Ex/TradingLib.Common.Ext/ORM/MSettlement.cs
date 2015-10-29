@@ -179,6 +179,19 @@ namespace TradingLib.ORM
         }
 
         /// <summary>
+        /// 更新反转平仓明细
+        /// </summary>
+        /// <param name="p"></param>
+        public static void UpdatePositionCloseDetailReversed(PositionCloseDetail p)
+        {
+            using (DBMySql db = new DBMySql())
+            {
+                string query = String.Format("UPDATE log_position_close_detail SET closeprofitbydate = '{0}',closepointbydate = '{1}',closeprofitbytrade = '{2}' ,side='{3}' WHERE settleday = '{4}' AND opentradeid='{5}' AND closetradeid='{6}'", p.CloseProfitByDate, p.ClosePointByDate, p.CloseProfitByTrade,p.Side?1:0, p.Settleday, p.OpenTradeID, p.CloseTradeID);
+                db.Connection.Execute(query);
+            }
+        }
+
+        /// <summary>
         /// 查询某个交易日的所有平仓明细
         /// </summary>
         /// <param name="tradingday"></param>

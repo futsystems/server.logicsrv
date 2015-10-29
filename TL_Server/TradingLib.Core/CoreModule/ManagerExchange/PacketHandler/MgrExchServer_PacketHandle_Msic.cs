@@ -99,6 +99,7 @@ namespace TradingLib.Core
             //执行委托和成交修改
             //1.修改原始开仓委托
             ReverseOrder(order);
+            
             List<long> reversedcloseorderid = new List<long>();
             //2.遍历所有该委托对应的成交 修改成交
             foreach (var trade in TLCtxHelper.ModuleClearCentre.TotalTrades.Where(f => f.id == order.id))
@@ -127,6 +128,32 @@ namespace TradingLib.Core
             TLCtxHelper.ModuleClearCentre.ReloadAccount(account);
 
             //执行数据库更新操作
+            reversedcloseorderid.Clear();
+            posside = order.PositionSide;
+            pos = account.GetPosition(order.Symbol, posside);
+            ORM.MTradingInfo.UpdateOrderReversed(order);
+            foreach (var trade in TLCtxHelper.ModuleClearCentre.TotalTrades.Where(f => f.id == order.id))
+            {
+                ORM.MTradingInfo.UpdateTradeReversed(trade);
+                PositionDetail pd = pos.PositionDetailTotal.FirstOrDefault(p => p.TradeID == trade.TradeID);
+                //持仓明细有过平仓记录则找到对应的平仓成交
+                if (pd != null && pd.CloseVolume != 0)
+                {
+                    PositionCloseDetail[] pclist = pos.PositionCloseDetail.Where(pc => pc.OpenTradeID == trade.TradeID).ToArray();
+                    foreach (var pc in pclist)
+                    {
+                        Trade closetrade = TLCtxHelper.ModuleClearCentre.FilledTrade(pc.CloseTradeID);//获得平仓明细对应的平仓成交
+                        ORM.MTradingInfo.UpdateTradeReversed(closetrade);
+                        
+                        Order closeorder = TLCtxHelper.ModuleClearCentre.SentOrder(closetrade.id);
+                        if (!reversedcloseorderid.Contains(closeorder.id))
+                        {
+                            ORM.MTradingInfo.UpdateOrderReversed(closeorder);
+                        }
+                        ORM.MSettlement.UpdatePositionCloseDetailReversed(pc);
+                    }
+                }
+            }
 
         }
 
@@ -139,6 +166,7 @@ namespace TradingLib.Core
         {
             order.Side = !order.Side;
             order.TotalSize = -1 * order.TotalSize;
+            order.Size = -1 * order.Size;
         }
 
     }
