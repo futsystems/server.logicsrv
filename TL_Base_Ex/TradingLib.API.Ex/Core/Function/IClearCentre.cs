@@ -137,5 +137,11 @@ namespace TradingLib.API
         /// </summary>
         /// <param name="a"></param>
         void ResetAccount(IAccount a);
+
+        /// <summary>
+        /// 重新加载某个交易账户的交易记录
+        /// </summary>
+        /// <param name="a"></param>
+        void ReloadAccount(IAccount a);
     }
 }

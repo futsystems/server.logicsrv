@@ -55,5 +55,28 @@ namespace TradingLib.Common
         public IEnumerable<Trade> TotalTrades { get { return totaltk.TotalTrades; } }
         #endregion
 
+
+        #region 重新加载某个交易账户的持仓
+
+        //TODO:实时重新加载交易账户成交数据
+        public void ReloadAccount(IAccount account)
+        {
+            foreach (Position pos in account.Positions)
+            {
+                //将交易帐户下原来的持仓从数据结构中删除
+                totaltk.DropPosition(pos);
+            }
+            //重新加载交易帐户持仓数据
+            acctk.ReloadPosition(account);
+
+            //重新将帐户持仓对象放入数据结构
+            foreach(var pos in account.Positions)
+            {
+                totaltk.NewPosition(pos);
+            }
+        }
+
+        #endregion
+
     }
 }

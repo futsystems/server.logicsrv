@@ -158,6 +158,36 @@ namespace TradingLib.Common
             PosBook[account.ID].Clear();
             TradeBook[account.ID].Clear();
         }
+        
+        /// <summary>
+        /// 重新生成某个交易账户的持仓数据
+        /// </summary>
+        /// <param name="account"></param>
+        public void ReloadPosition(IAccount account)
+        { 
+            LSPositionTracker tk = PosBook[account.ID];
+            PositionDetail[] pdlist = tk.YDPositionDetails.ToArray();
+
+            //重置持仓维护器
+            tk.Clear();
+            tk.InReCalculate = true;
+
+            foreach(var pd in pdlist)
+            {
+                tk.GotPosition(pd);    
+            }
+            foreach(var fill in TradeBook[account.ID])
+            {
+                tk.GotFill(fill);
+            }
+
+            foreach (var pos in tk.Positions)
+            { 
+                
+            }
+
+            tk.InReCalculate = false;
+        }
 
 
         #region 响应交易对象
