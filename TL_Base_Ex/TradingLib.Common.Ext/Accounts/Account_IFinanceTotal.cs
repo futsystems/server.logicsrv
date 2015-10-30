@@ -92,8 +92,9 @@ namespace TradingLib.Common
 
         /// <summary>
         /// 总净值
+        /// 昨日权益 + 当前期货/期权/等品种的净值 + 入金 - 出金 + 待结算平仓盈亏 + 待结算盯市盈亏
         /// </summary>
-        public decimal TotalLiquidation { get { return LastEquity + this.CalFutLiquidation() + this.CalOptLiquidation() + this.CalInnovLiquidation() + CashIn - CashOut; } }//帐户总净值
+        public decimal TotalLiquidation { get { return LastEquity + this.CalFutLiquidation() + this.CalOptLiquidation() + this.CalInnovLiquidation() + CashIn - CashOut + PendingSettleCloseProfitByDate + PendingSettlePositionProfitByDate; } }//帐户总净值
         
         /// <summary>
         /// 总可用资金
