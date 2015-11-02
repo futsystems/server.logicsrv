@@ -74,8 +74,6 @@ namespace TradingLib.Common
         decimal CaculateProfitTakePrice(Position pos)
         {
             if (pos == null) return -1;
-            if (this.Enable) return -1;
-
             decimal hitprice = -1;
             switch (this.OffsetType)
             {
