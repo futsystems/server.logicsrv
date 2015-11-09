@@ -183,7 +183,7 @@ namespace TradingLib.Common
             // get number of this bar in the day for this interval(获得该bar所在当天时间中的排序)
             long bcount = (int)((double)elap / intervallength);
             // add the date to the front of number to make it unique //某天的序号加上日期就为该Bar的唯一序号
-            bcount += (long)date * 10000;
+            bcount += (long)date * 10000;//20150101
             return bcount;
         }
 

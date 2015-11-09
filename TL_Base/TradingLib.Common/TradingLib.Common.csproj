@@ -101,6 +101,11 @@
     <Compile Include="Trading\Config\ExStrategyTemplate.cs" />
     <Compile Include="Trading\Config\MarginTemplate.cs" />
     <Compile Include="Trading\Config\MarginTemplateItem.cs" />
+    <Compile Include="Trading\Data\Bar2\BarDataV.cs" />
+    <Compile Include="Trading\Data\Bar2\BarFrequency.cs" />
+    <Compile Include="Trading\Data\Bar2\BarGenerator.cs" />
+    <Compile Include="Trading\Data\Bar2\Enums.cs" />
+    <Compile Include="Trading\Data\Bar\BarRequest.cs" />
     <Compile Include="Trading\MarginConfig.cs" />
     <Compile Include="Trading\MarketData.cs" />
     <Compile Include="Trading\MarketTime\MarketTime_old.cs" />
@@ -112,6 +117,7 @@
     <Compile Include="Trading\Utils\DateTimeUtils.cs" />
     <Compile Include="Utils\ChinSpellcs.cs" />
     <Compile Include="Utils\LocationInfo.cs" />
+    <Compile Include="Utils\QList.cs" />
     <Compile Include="Utils\Util_Decimal.cs" />
     <Compile Include="Utils\Version.cs" />
     <Compile Include="Tracker\HighLowTracker.cs" />

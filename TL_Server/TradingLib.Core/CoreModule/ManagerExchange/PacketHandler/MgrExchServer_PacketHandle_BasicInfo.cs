@@ -241,7 +241,7 @@ namespace TradingLib.Core
 
                 SecurityFamilyImpl sec = request.SecurityFaimly;
                 //如果已经存在该品种则不执行添加操作
-                if (manager.Domain.GetSecurityFamily(sec.Code) != null)
+                if (sec.ID==0 && manager.Domain.GetSecurityFamily(sec.Code) != null)
                 {
                     throw new FutsRspError("已经存在品种:" + sec.Code);
                 }
@@ -312,7 +312,7 @@ namespace TradingLib.Core
                     throw new FutsRspError("品种数据异常");
                 }
 
-                if (manager.Domain.GetSymbol(symbol.Symbol) != null)
+                if (symbol.ID==0 && manager.Domain.GetSymbol(symbol.Symbol) != null)
                 {
                     throw new FutsRspError("已经存在合约:" + symbol.Symbol);
                 }

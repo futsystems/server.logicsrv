@@ -382,6 +382,121 @@ namespace TradingLib.Common
 
         //public int ExpireMonth { get; set; }
 
+        public static string MonthLetter2Num(string month)
+        {
+            if (month == "F")
+            {
+                return "01";
+            }
+            else if (month == "G")
+            {
+                return "02";
+            }
+            else if (month == "H")
+            {
+                return "03";
+            }
+            else if (month == "J")
+            {
+                return "04";
+            }
+            else if (month == "K")
+            {
+                return "05";
+            }
+            else if (month == "M")
+            {
+                return "06";
+            }
+            else if (month == "N")
+            {
+                return "07";
+            }
+            else if (month == "Q")
+            {
+                return "08";
+            }
+            else if (month == "U")
+            {
+                return "09";
+            }
+            else if (month == "V")
+            {
+                return "10";
+            }
+            else if (month == "X")
+            {
+                return "11";
+            }
+            else if (month == "Z")
+            {
+                return "12";
+            }
+            else
+            {
+                throw new ArgumentException("Month must in (FGHJKMNQUVXZ)");
+            }
+        }
+
+        /// <summary>
+        /// 月份数字转换成字符
+        /// </summary>
+        /// <returns></returns>
+        public static string MonthNum2Letter(string month)
+        {
+            if (month == "01")
+            {
+                return "F";
+            }
+            else if (month == "02")
+            {
+                return "G";
+            }
+            else if (month == "03")
+            {
+                return "H";
+            }
+            else if (month == "04")
+            {
+                return "J";
+            }
+            else if (month == "05")
+            {
+                return "K";
+            }
+            else if (month == "06")
+            {
+                return "M";
+            }
+            else if (month == "07")
+            {
+                return "N";
+            }
+            else if (month == "08")
+            {
+                return "Q";
+            }
+            else if (month == "09")
+            {
+                return "U";
+            }
+            else if (month == "10")
+            {
+                return "V";
+            }
+            else if (month == "11")
+            {
+                return "X";
+            }
+            else if (month == "12")
+            {
+                return "Z";
+            }
+            else
+            {
+                throw new ArgumentException("Month must in (01,02....12)");
+            }
+        }
 
         public string Serialize()
         {

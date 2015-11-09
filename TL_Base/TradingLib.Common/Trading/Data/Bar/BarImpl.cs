@@ -14,12 +14,12 @@ namespace TradingLib.Common
         public void GotTick(Tick k) { newTick(k); }
         string _sym = "";
         public string Symbol { get { return _sym; } set { _sym = value; } }
-        private double h = double.MinValue;//最高价
-        private double l = double.MaxValue;//最低价
-        private double o = 0;//开盘价
-        private double c = 0;//收盘价
-        private double ask = 0;
-        private double bid = 0;
+        private decimal h = decimal.MinValue;//最高价
+        private decimal l = decimal.MaxValue;//最低价
+        private decimal o = 0;//开盘价
+        private decimal c = 0;//收盘价
+        private decimal ask = 0;
+        private decimal bid = 0;
 
         private long v = 0;//成交量
         private long oi = 0;//持仓
@@ -41,15 +41,15 @@ namespace TradingLib.Common
         //ulong lBid { get { return bid; } }
 
 
-        public double High { get { return h; } set { h =value; } }
-        public double Low { get { return l; } set { l = value; } }
-        public double Open { get { return o; } set { o = value; } }
-        public double Close { get { return c; } set { c = value; } }
+        public decimal High { get { return h; } set { h = value; } }
+        public decimal Low { get { return l; } set { l = value; } }
+        public decimal Open { get { return o; } set { o = value; } }
+        public decimal Close { get { return c; } set { c = value; } }
         public long Volume { get { return v; } set { v = value; } }
         public long OpenInterest { get { return oi; } set { oi = value; } }
 
-        public double Ask { get { return ask; } set { ask = value; } }
-        public double Bid { get { return bid; } set { bid = value; } }
+        public decimal Ask { get { return ask; } set { ask = value; } }
+        public decimal Bid { get { return bid; } set { bid = value; } }
 
 
         public bool isNew { get { return _new; } set { _new = value; } }
@@ -88,12 +88,12 @@ namespace TradingLib.Common
             else
             {
                 units = interval;
-                h = (double)high;
-                o = (double)open;
-                l = (double)low;
-                c = (double)close;
-                this.ask = (double)ask;
-                this.bid = (double)bid;
+                h = high;
+                o = open;
+                l = low;
+                c = close;
+                this.ask = ask;
+                this.bid = bid;
                 v = vol;
                 bardate = date;
                 _time = time;
@@ -225,6 +225,7 @@ namespace TradingLib.Common
             c = t._trade;
             return true;
         }
+
         public override string ToString() { return "OHLC (" + bardate +" "+_time + "  " +Bartime.ToString()+") " + Open.ToString("F2") + "," + High.ToString("F2") + "," + Low.ToString("F2") + "," + Close.ToString("F2") + ","+Volume.ToString(); }
         /// <summary>
         /// Create bar object from a CSV file providing OHLC+Volume data.
@@ -233,7 +234,7 @@ namespace TradingLib.Common
         /// <param name="record">The record in comma-delimited format.</param>
         /// <returns>The equivalent Bar</returns>
         public static Bar FromCSV(string record) { return FromCSV(record, string.Empty, (int)BarInterval.Day); }
-        public static Bar FromCSV(string record,string symbol,int interval)
+        public static Bar FromCSV(string record, string symbol, int interval)
         {
             // google used as example
             string[] r = record.Split(',');
@@ -244,13 +245,13 @@ namespace TradingLib.Common
                 d = DateTime.Parse(r[0], System.Globalization.CultureInfo.InvariantCulture);
             }
             catch (System.FormatException) { return null; }
-            int date = (d.Year*10000)+(d.Month*100)+d.Day;
-            decimal open = Convert.ToDecimal(r[1],System.Globalization.CultureInfo.InvariantCulture);
+            int date = (d.Year * 10000) + (d.Month * 100) + d.Day;
+            decimal open = Convert.ToDecimal(r[1], System.Globalization.CultureInfo.InvariantCulture);
             decimal high = Convert.ToDecimal(r[2], System.Globalization.CultureInfo.InvariantCulture);
             decimal low = Convert.ToDecimal(r[3], System.Globalization.CultureInfo.InvariantCulture);
             decimal close = Convert.ToDecimal(r[4], System.Globalization.CultureInfo.InvariantCulture);
             long vol = Convert.ToInt64(r[5], System.Globalization.CultureInfo.InvariantCulture);
-            return new BarImpl(open,high,low,close,vol,date,0,symbol,interval);
+            return new BarImpl(open, high, low, close, vol, date, 0, symbol, interval);
         }
 
         /// <summary>
@@ -330,69 +331,69 @@ namespace TradingLib.Common
         /// </summary>
         /// <param name="msg"></param>
         /// <returns></returns>
-        public static BarRequest ParseBarRequest(string msg)
-        {
-            string[] r = msg.Split(',');
-            BarRequest br  = new BarRequest();
-            br.Symbol = r[(int)BarRequestField.Symbol];
-            br.Interval = Convert.ToInt32(r[(int)BarRequestField.BarInt]);
-            br.StartDate = int.Parse(r[(int)BarRequestField.StartDate]);
-            br.StartTime = int.Parse(r[(int)BarRequestField.StartTime]);
-            br.EndDate= int.Parse(r[(int)BarRequestField.EndDate]);
-            br.EndTime = int.Parse(r[(int)BarRequestField.EndTime]);
-            br.CustomInterval = int.Parse(r[(int)BarRequestField.CustomInterval]);
-            br.ID = long.Parse(r[(int)BarRequestField.ID]);
-            br.Client = r[(int)BarRequestField.Client];
-            return br;
-        }
+        //public static BarRequest ParseBarRequest(string msg)
+        //{
+        //    string[] r = msg.Split(',');
+        //    BarRequest br  = new BarRequest();
+        //    br.Symbol = r[(int)BarRequestField.Symbol];
+        //    br.Interval = Convert.ToInt32(r[(int)BarRequestField.BarInt]);
+        //    br.StartDate = int.Parse(r[(int)BarRequestField.StartDate]);
+        //    br.StartTime = int.Parse(r[(int)BarRequestField.StartTime]);
+        //    br.EndDate= int.Parse(r[(int)BarRequestField.EndDate]);
+        //    br.EndTime = int.Parse(r[(int)BarRequestField.EndTime]);
+        //    br.CustomInterval = int.Parse(r[(int)BarRequestField.CustomInterval]);
+        //    br.ID = long.Parse(r[(int)BarRequestField.ID]);
+        //    br.Client = r[(int)BarRequestField.Client];
+        //    return br;
+        //}
 
-        /// <summary>
-        /// request historical data for today
-        /// </summary>
-        /// <param name="symbol"></param>
-        /// <param name="interval"></param>
-        /// <returns></returns>
-        public static string BuildBarRequest(string symbol, BarInterval interval)
-        {
-            return BuildBarRequest(new BarRequest(symbol, (int)interval, Util.ToTLDate(), 0, Util.ToTLDate(), Util.ToTLTime(),string.Empty));
-        }
-        /// <summary>
-        /// bar request for symbol and interval from previous date through present time
-        /// </summary>
-        /// <param name="symbol"></param>
-        /// <param name="interval"></param>
-        /// <param name="startdate"></param>
-        /// <returns></returns>
-        public static string BuildBarRequest(string symbol, BarInterval interval, int startdate)
-        {
-            return BuildBarRequest(new BarRequest(symbol, (int)interval, startdate, 0, Util.ToTLDate(), Util.ToTLTime(),string.Empty));
-        }
-        public static string BuildBarRequest(string symbol, int interval, int startdate)
-        {
-            return BuildBarRequest(new BarRequest(symbol, interval, startdate, 0, Util.ToTLDate(), Util.ToTLTime(), string.Empty));
-        }
-        /// <summary>
-        /// builds bar request
-        /// </summary>
-        /// <param name="br"></param>
-        /// <returns></returns>
-        public static string BuildBarRequest(BarRequest br)
-        {
-            string[] r = new string[] 
-            {
-                br.Symbol,
-                br.Interval.ToString(),
-                br.StartDate.ToString(),
-                br.StartTime.ToString(),
-                br.EndDate.ToString(),
-                br.EndTime.ToString(),
-                br.ID.ToString(),
-                br.CustomInterval.ToString(),
-                br.Client,
-            };
-            return string.Join(",", r);
+        ///// <summary>
+        ///// request historical data for today
+        ///// </summary>
+        ///// <param name="symbol"></param>
+        ///// <param name="interval"></param>
+        ///// <returns></returns>
+        //public static string BuildBarRequest(string symbol, BarInterval interval)
+        //{
+        //    return BuildBarRequest(new BarRequest(symbol, (int)interval, Util.ToTLDate(), 0, Util.ToTLDate(), Util.ToTLTime(),string.Empty));
+        //}
+        ///// <summary>
+        ///// bar request for symbol and interval from previous date through present time
+        ///// </summary>
+        ///// <param name="symbol"></param>
+        ///// <param name="interval"></param>
+        ///// <param name="startdate"></param>
+        ///// <returns></returns>
+        //public static string BuildBarRequest(string symbol, BarInterval interval, int startdate)
+        //{
+        //    return BuildBarRequest(new BarRequest(symbol, (int)interval, startdate, 0, Util.ToTLDate(), Util.ToTLTime(),string.Empty));
+        //}
+        //public static string BuildBarRequest(string symbol, int interval, int startdate)
+        //{
+        //    return BuildBarRequest(new BarRequest(symbol, interval, startdate, 0, Util.ToTLDate(), Util.ToTLTime(), string.Empty));
+        //}
+        ///// <summary>
+        ///// builds bar request
+        ///// </summary>
+        ///// <param name="br"></param>
+        ///// <returns></returns>
+        //public static string BuildBarRequest(BarRequest br)
+        //{
+        //    string[] r = new string[] 
+        //    {
+        //        br.Symbol,
+        //        br.Interval.ToString(),
+        //        br.StartDate.ToString(),
+        //        br.StartTime.ToString(),
+        //        br.EndDate.ToString(),
+        //        br.EndTime.ToString(),
+        //        br.ID.ToString(),
+        //        br.CustomInterval.ToString(),
+        //        br.Client,
+        //    };
+        //    return string.Join(",", r);
             
-        }
+        //}
 
         //计算多少个bar对应的时间点
         public static DateTime DateFromBarsBack(int barsback, BarInterval intv) { return DateFromBarsBack(barsback, intv, DateTime.Now); }
@@ -411,6 +412,7 @@ namespace TradingLib.Common
             int bars = (int)((double)start2endseconds / (int)interval);
             return bars;
         }
+
         /// <summary>
         /// build bar request for certain # of bars back from present 获得自当前时间开始多少个bar
         /// </summary>
@@ -418,51 +420,15 @@ namespace TradingLib.Common
         /// <param name="barsback"></param>
         /// <param name="interval"></param>
         /// <returns></returns>
-        public static string BuildBarRequestBarsBack(string sym, int barsback, int interval)
-        {
-            DateTime n = DateTime.Now;
-            return BarImpl.BuildBarRequest(new BarRequest(sym, interval, Util.ToTLDate(BarImpl.DateFromBarsBack(barsback, interval, n)), Util.ToTLTime(BarImpl.DateFromBarsBack(barsback, interval, n)), Util.ToTLDate(n), Util.ToTLTime(n), string.Empty));
-        }
+        //public static string BuildBarRequestBarsBack(string sym, int barsback, int interval)
+        //{
+        //    DateTime n = DateTime.Now;
+        //    return BarImpl.BuildBarRequest(new BarRequest(sym, interval, Util.ToTLDate(BarImpl.DateFromBarsBack(barsback, interval, n)), Util.ToTLTime(BarImpl.DateFromBarsBack(barsback, interval, n)), Util.ToTLDate(n), Util.ToTLTime(n), string.Empty));
+        //}
 
         
     }
 
-    public struct BarRequest
-    {
-        /// <summary>
-        /// client making request
-        /// </summary>
-        public string Client;
-        public int StartDate;
-        public int EndDate;
-        public int StartTime;
-        public int EndTime;
-        public int CustomInterval;
-        public string Symbol;
-        public int Interval;
-        public long ID;
-        public DateTime StartDateTime { get { return Util.ToDateTime(StartDate,StartTime); } }
-        public DateTime EndDateTime { get { return Util.ToDateTime(EndDate, EndTime); } }
-        public BarRequest(string symbol, int interval, int startdate, int starttime, int enddate, int endtime, string client)
-        {
-            Client = client;
-            Symbol = symbol;
-            Interval = interval;
-            StartDate = startdate;
-            StartTime = starttime;
-            EndDate = enddate;
-            EndTime = endtime;
-            ID = 0;
-            CustomInterval = 0;
-
-        }
-
-        public override string ToString()
-        {
-            return Symbol + " " + Interval + " " + StartDateTime + "->" + EndDateTime;
-        }
-        
-    }
 
 
 }

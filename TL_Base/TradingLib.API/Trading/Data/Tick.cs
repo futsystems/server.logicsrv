@@ -146,12 +146,16 @@ namespace TradingLib.API
         /// 跌停价
         /// </summary>
         decimal LowerLimit { get; set; }
-        //QSEnumTickType Type { get; set; }
 
         /// <summary>
         /// 昨日结算
         /// </summary>
         decimal PreClose { get; set; }
+
+        /// <summary>
+        /// 行情源
+        /// </summary>
+        QSEnumDataFeedTypes DataFeed { get; set; }
     }
 
     /// <summary>

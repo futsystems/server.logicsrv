@@ -467,7 +467,7 @@ namespace TradingLib.Quant.Engine
                 }
                 **/
                 //Profiler.Instance.EnterSection("sendpeding");
-                this.SendPendingBars();//为什么我们需要下一个Tick来驱动这个sendpendingbars,而不是在每个tick结束后来检查pendingbars?
+                this.SendPendingBars();//为什么我们需要下一个Tick来驱动这个sendpendingbars,而不是在每个tick结束后来检查pendingbars? 在同一秒内可能会有多个Tick产生
                 //Profiler.Instance.LeaveSection();
             }
             else

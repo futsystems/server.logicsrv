@@ -7,26 +7,62 @@ namespace TradingLib.API
 {
     public interface Bar
     {
+        /// <summary>
+        /// 合约
+        /// </summary>
         string Symbol { get; set;}
 
-        double High { get; set;}
-        double Low { get; set ;}
-        double Open { get; set ;}
-        double Close { get; set; }
+        /// <summary>
+        /// 最高价
+        /// </summary>
+        decimal High { get; set;}
+
+        /// <summary>
+        /// 最低价
+        /// </summary>
+        decimal Low { get; set; }
+
+        /// <summary>
+        /// 开盘价
+        /// </summary>
+        decimal Open { get; set; }
+
+        /// <summary>
+        /// 收盘价
+        /// </summary>
+        decimal Close { get; set; }
+
+        /// <summary>
+        /// 成交量
+        /// </summary>
         long Volume { get; set; }
-        bool isNew { get; set;}
+
+        /// <summary>
+        /// 持仓量
+        /// </summary>
+        long OpenInterest { get; set; }
+
+        /// <summary>
+        /// Bar日期
+        /// </summary>
+        int Bardate { get; set; }
+
+        /// <summary>
+        /// Bar时间
+        /// </summary>
         int Bartime { get;  }
-        int Bardate { get; set;}
+        
+        bool isNew { get; set; }
         bool isValid { get;}
         int Interval { get; set; }
         int time { get; set; }
 
-        double Ask { get; set; }
-        double Bid { get; set; }
+        decimal Ask { get; set; }
+        decimal Bid { get; set; }
 
         Bar Clone();
 
-        long OpenInterest { get; set; }
+        
         /// <summary>
         /// 开始时间
         /// </summary>
@@ -65,6 +101,10 @@ namespace TradingLib.API
         /// One-minute intervals
         /// </summary>
         Minute = 60,
+        /// <summary>
+        /// Thress-minute intervals
+        /// </summary>
+        ThreeMin = 180,
         /// <summary>
         /// Five-minute interval
         /// </summary>

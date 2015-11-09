@@ -116,6 +116,7 @@ namespace TradingLib.Common
             _upperlimit = 0;
             _lowerlimit = 0;
             _preclose = 0;
+            _datafeed = QSEnumDataFeedTypes.DEFAULT;
         }
         public static TickImpl Copy(Tick c)
         {
@@ -152,6 +153,8 @@ namespace TradingLib.Common
             k.UpperLimit = c.UpperLimit;
             k.LowerLimit = c.LowerLimit;
             k.PreClose = c.PreClose;
+            k.DataFeed = c.DataFeed;
+
             return k;
         }
         /// <summary>
@@ -272,6 +275,11 @@ namespace TradingLib.Common
         /// </summary>
         public decimal PreClose { get { return _preclose; } set { _preclose = value; } }
 
+        QSEnumDataFeedTypes _datafeed;
+        /// <summary>
+        /// 行情源
+        /// </summary>
+        public QSEnumDataFeedTypes DataFeed { get { return _datafeed; } set { _datafeed = value; } }
 
         public static string Serialize(Tick t)
         {
@@ -327,7 +335,8 @@ namespace TradingLib.Common
             sb.Append(t.LowerLimit);
             sb.Append(d);
             sb.Append(t.PreClose);
-
+            sb.Append(d);
+            sb.Append(t.DataFeed);
             return sb.ToString();
         }
 
@@ -388,6 +397,11 @@ namespace TradingLib.Common
                 t.LowerLimit = d;
             if (decimal.TryParse(r[(int)TickField.preclose], System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out d))
                 t.PreClose = d;
+            //
+            if (r.Length >= (int)TickField.datafeed+1)
+            {
+                t.DataFeed = (QSEnumDataFeedTypes)Enum.Parse(typeof(QSEnumDataFeedTypes), r[(int)TickField.datafeed]);
+            }
             return t;
         }
 
@@ -493,30 +507,31 @@ namespace TradingLib.Common
 
     enum TickField
     { // tick message fields from TL server
-        symbol = 0,
-        date,
-        time,
-        KUNUSED,
-        trade,
-        tsize,
-        tex,
-        bid,
-        ask,
-        bidsize,
+        symbol = 0,//0
+        date,//1
+        time,//2
+        KUNUSED,//3
+        trade,//4
+        tsize,//5
+        tex,//6
+        bid,//7
+        ask,//8
+        bidsize,//9
         asksize,//10
-        bidex,
-        askex,
-        tdepth,
+        bidex,//11
+        askex,//12
+        tdepth,//13
         vol,//14
-        open,
-        high,
-        low,
-        preoi,
-        oi,
-        presettlement,
-        settlement,
-        upper,
-        lower,
-        preclose,
+        open,//15
+        high,//16
+        low,//17
+        preoi,//18
+        oi,//19
+        presettlement,//20
+        settlement,//21
+        upper,//22
+        lower,//23
+        preclose,//24
+        datafeed,//25
     }
 }
