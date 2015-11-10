@@ -56,23 +56,26 @@ namespace RuleSet2.Account
             msg = string.Empty;
             decimal equity = this.Account.NowEquity;//获得该账户的当前权益
 
-            iswarnning = this.Account.IsWarn;
-            if (equity < equity_warn)
+            if (equity_warn > 0)
             {
-                if (!iswarnning)
+                iswarnning = this.Account.IsWarn;
+                if (equity < equity_warn)
                 {
-                    iswarnning = true;
-                    this.Account.Warn(true, "达到警告线");
-                    Util.Debug("帐户警告开启~~~~~~~~~~~~~~~~~~~");
+                    if (!iswarnning)
+                    {
+                        iswarnning = true;
+                        this.Account.Warn(true, "达到警告线");
+                        Util.Debug("帐户警告开启~~~~~~~~~~~~~~~~~~~");
+                    }
                 }
-            }
-            else
-            {
-                if (iswarnning)
+                else
                 {
-                    iswarnning = false;
-                    this.Account.Warn(false, "");
-                    Util.Debug("帐户警告关闭~~~~~~~~~~~~~~~~~~~");
+                    if (iswarnning)
+                    {
+                        iswarnning = false;
+                        this.Account.Warn(false, "");
+                        Util.Debug("帐户警告关闭~~~~~~~~~~~~~~~~~~~");
+                    }
                 }
             }
 

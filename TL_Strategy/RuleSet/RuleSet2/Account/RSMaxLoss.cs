@@ -55,24 +55,26 @@ namespace RuleSet2.Account
             decimal loss = this.Account.Profit;//获得该帐户净亏损
             if (loss >= 0) return true;//如果帐户盈利则直接返回
             loss = Math.Abs(loss);
-
-            iswarnning = this.Account.IsWarn;
-            if (loss >= loss_warn)
+            if (loss_warn > 0)
             {
-                if (!iswarnning)
+                iswarnning = this.Account.IsWarn;
+                if (loss >= loss_warn)
                 {
-                    iswarnning = true;
-                    this.Account.Warn(true, "达到警告线");
-                    Util.Debug("帐户警告开启~~~~~~~~~~~~~~~~~~~");
+                    if (!iswarnning)
+                    {
+                        iswarnning = true;
+                        this.Account.Warn(true, "达到警告线");
+                        Util.Debug("帐户警告开启~~~~~~~~~~~~~~~~~~~");
+                    }
                 }
-            }
-            else
-            {
-                if (iswarnning)
+                else
                 {
-                    iswarnning = false;
-                    this.Account.Warn(false, "");
-                    Util.Debug("帐户警告关闭~~~~~~~~~~~~~~~~~~~");
+                    if (iswarnning)
+                    {
+                        iswarnning = false;
+                        this.Account.Warn(false, "");
+                        Util.Debug("帐户警告关闭~~~~~~~~~~~~~~~~~~~");
+                    }
                 }
             }
 
