@@ -11,6 +11,10 @@ using SuperSocket.SocketBase.Command;
 using SuperSocket.SocketBase.Config;
 using SuperSocket.SocketBase.Protocol;
 
+using TradingLib.DataFarm.API;
+using TradingLib.DataFarm.Common;
+using TradingLib.API;
+using TradingLib.Common;
 
 namespace DataFarm
 {
@@ -28,37 +32,23 @@ namespace DataFarm
             debugControl1.GotDebug(msg);
         }
 
-        void InitServer()
-        {
-            appserver = new TLServerBase();
-            if(!appserver.Setup("127.0.0.1",5060))
-            {
-                debug("server setup error");
-            }
-            appserver.NewSessionConnected += new SuperSocket.SocketBase.SessionHandler<TLSessionBase>(appserver_NewSessionConnected);
-            appserver.NewRequestReceived += new SuperSocket.SocketBase.RequestHandler<TLSessionBase, TLRequestInfo>(appserver_NewRequestReceived);
-            
-            if (!appserver.Start())
-            {
-                debug("server start error");
-            }
-            debug("server inited");
-        }
 
-        void appserver_NewRequestReceived(TLSessionBase session, TLRequestInfo requestInfo)
-        {
-            debug("request received type:" + requestInfo.Message.Type.ToString() + " body:" + requestInfo.Message.Content + " key:" + requestInfo.Key + " body:" + requestInfo.Body);
-        }
-
-        void appserver_NewSessionConnected(TLSessionBase session)
-        {
-            debug("session connected:" + session.SessionID);
-        }
-
-
+        TCPServiceHost _tcphost = null;
+        TradingLib.DataFarm.Common.DataServer datasrv;
         private void btnInitServer_Click(object sender, EventArgs e)
         {
-            InitServer();
+            //_tcphost = new TCPServiceHost();
+            //_tcphost.Start();
+
+            datasrv = new DataServer();
+            datasrv.Start();
+        }
+
+        //IDataStore datastore = new BinaryDataStore();
+        private void TickProcess_Click(object sender, EventArgs e)
+        {
+            //IDataAccessor<Tick> tickstore = datastore.GetTickStorage("IF1511");
+            
         }
         
     }

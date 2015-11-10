@@ -104,7 +104,18 @@
     <Compile Include="Trading\Data\Bar2\BarDataV.cs" />
     <Compile Include="Trading\Data\Bar2\BarFrequency.cs" />
     <Compile Include="Trading\Data\Bar2\BarGenerator.cs" />
+    <Compile Include="Trading\Data\Bar2\BarUtils.cs" />
     <Compile Include="Trading\Data\Bar2\Enums.cs" />
+    <Compile Include="Trading\Data\Bar2\EventArgs.cs" />
+    <Compile Include="Trading\Data\Bar2\FreqKey.cs" />
+    <Compile Include="Trading\Data\Bar2\Frequency.cs" />
+    <Compile Include="Trading\Data\Bar2\FrequencyBarElementSeries.cs" />
+    <Compile Include="Trading\Data\Bar2\FrequencyBase.cs" />
+    <Compile Include="Trading\Data\Bar2\FrequencyManager.cs" />
+    <Compile Include="Trading\Data\Bar2\IFrequencyGenerator.cs" />
+    <Compile Include="Trading\Data\Bar2\PriorityItemPair.cs" />
+    <Compile Include="Trading\Data\Bar2\SymbolFreq.cs" />
+    <Compile Include="Trading\Data\Bar2\TimeFreqGenerator.cs" />
     <Compile Include="Trading\Data\Bar\BarRequest.cs" />
     <Compile Include="Trading\MarginConfig.cs" />
     <Compile Include="Trading\MarketData.cs" />
@@ -116,6 +127,7 @@
     <Compile Include="Trading\Settlement\ExchangeSettlement.cs" />
     <Compile Include="Trading\Utils\DateTimeUtils.cs" />
     <Compile Include="Utils\ChinSpellcs.cs" />
+    <Compile Include="Utils\Dequeue.cs" />
     <Compile Include="Utils\LocationInfo.cs" />
     <Compile Include="Utils\QList.cs" />
     <Compile Include="Utils\Util_Decimal.cs" />

@@ -145,6 +145,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SuperSocket.Facility.Net40"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SuperSocket.Common.Net40", "TL_DataFarm\Common\SuperSocket.Common.Net40.csproj", "{A24F4D38-BA9C-4FD6-95B7-4980DE36131A}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TradingLib.DataFarm.Server", "TL_DataFarm\TradingLib.DataFarm.Server\TradingLib.DataFarm.Server.csproj", "{70FF638B-E319-4437-A2E2-A5FDA17BD8D7}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -1346,6 +1348,27 @@ Global
 		{A24F4D38-BA9C-4FD6-95B7-4980DE36131A}.ReleaseMono|Win32.ActiveCfg = Release|Any CPU
 		{A24F4D38-BA9C-4FD6-95B7-4980DE36131A}.ReleaseMono|x64.ActiveCfg = Release|Any CPU
 		{A24F4D38-BA9C-4FD6-95B7-4980DE36131A}.ReleaseMono|x86.ActiveCfg = Release|Any CPU
+		{70FF638B-E319-4437-A2E2-A5FDA17BD8D7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{70FF638B-E319-4437-A2E2-A5FDA17BD8D7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{70FF638B-E319-4437-A2E2-A5FDA17BD8D7}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{70FF638B-E319-4437-A2E2-A5FDA17BD8D7}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{70FF638B-E319-4437-A2E2-A5FDA17BD8D7}.Debug|Win32.ActiveCfg = Debug|Any CPU
+		{70FF638B-E319-4437-A2E2-A5FDA17BD8D7}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{70FF638B-E319-4437-A2E2-A5FDA17BD8D7}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{70FF638B-E319-4437-A2E2-A5FDA17BD8D7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{70FF638B-E319-4437-A2E2-A5FDA17BD8D7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{70FF638B-E319-4437-A2E2-A5FDA17BD8D7}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{70FF638B-E319-4437-A2E2-A5FDA17BD8D7}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{70FF638B-E319-4437-A2E2-A5FDA17BD8D7}.Release|Win32.ActiveCfg = Release|Any CPU
+		{70FF638B-E319-4437-A2E2-A5FDA17BD8D7}.Release|x64.ActiveCfg = Release|Any CPU
+		{70FF638B-E319-4437-A2E2-A5FDA17BD8D7}.Release|x86.ActiveCfg = Release|Any CPU
+		{70FF638B-E319-4437-A2E2-A5FDA17BD8D7}.ReleaseMono|Any CPU.ActiveCfg = Release|Any CPU
+		{70FF638B-E319-4437-A2E2-A5FDA17BD8D7}.ReleaseMono|Any CPU.Build.0 = Release|Any CPU
+		{70FF638B-E319-4437-A2E2-A5FDA17BD8D7}.ReleaseMono|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{70FF638B-E319-4437-A2E2-A5FDA17BD8D7}.ReleaseMono|Mixed Platforms.Build.0 = Release|Any CPU
+		{70FF638B-E319-4437-A2E2-A5FDA17BD8D7}.ReleaseMono|Win32.ActiveCfg = Release|Any CPU
+		{70FF638B-E319-4437-A2E2-A5FDA17BD8D7}.ReleaseMono|x64.ActiveCfg = Release|Any CPU
+		{70FF638B-E319-4437-A2E2-A5FDA17BD8D7}.ReleaseMono|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -1414,6 +1437,7 @@ Global
 		{153FEF72-191C-43D9-BE71-2B351C7AC760} = {05AC1A2D-C1A1-44FD-9AEE-6C29C9A957C6}
 		{01987BAC-C498-44DD-B274-62EA2506B51D} = {05AC1A2D-C1A1-44FD-9AEE-6C29C9A957C6}
 		{A24F4D38-BA9C-4FD6-95B7-4980DE36131A} = {05AC1A2D-C1A1-44FD-9AEE-6C29C9A957C6}
+		{70FF638B-E319-4437-A2E2-A5FDA17BD8D7} = {05AC1A2D-C1A1-44FD-9AEE-6C29C9A957C6}
 	EndGlobalSection
 	GlobalSection(MonoDevelopProperties) = preSolution
 		StartupItem = TL_Base\TradingLib.API\TradingLib.API.csproj

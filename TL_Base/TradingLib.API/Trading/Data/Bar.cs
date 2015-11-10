@@ -15,22 +15,22 @@ namespace TradingLib.API
         /// <summary>
         /// 最高价
         /// </summary>
-        decimal High { get; set;}
+        double High { get; set;}
 
         /// <summary>
         /// 最低价
         /// </summary>
-        decimal Low { get; set; }
+        double Low { get; set; }
 
         /// <summary>
         /// 开盘价
         /// </summary>
-        decimal Open { get; set; }
+        double Open { get; set; }
 
         /// <summary>
         /// 收盘价
         /// </summary>
-        decimal Close { get; set; }
+        double Close { get; set; }
 
         /// <summary>
         /// 成交量
@@ -57,8 +57,8 @@ namespace TradingLib.API
         int Interval { get; set; }
         int time { get; set; }
 
-        decimal Ask { get; set; }
-        decimal Bid { get; set; }
+        double Ask { get; set; }
+        double Bid { get; set; }
 
         Bar Clone();
 

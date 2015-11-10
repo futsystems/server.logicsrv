@@ -27,7 +27,7 @@ namespace TradingLib.API
         /// 200907042005.
         /// this is not guaranteed to be set.
         /// </summary>
-        long Datetime { get; set; } // datetime as long
+        DateTime Datetime { get; set; } // datetime as long
         
         /// <summary>
         /// depth of last bid/ask quote

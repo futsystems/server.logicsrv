@@ -90,5 +90,28 @@ namespace TradingLib.Common
             return;
         }
 
+        public override bool Equals(object obj)
+        {
+            if (obj is BarFrequency)
+            {
+                BarFrequency freq = obj as BarFrequency;
+                return freq.Interval == this.Interval && freq.Type == this.Type;
+            }
+            return false;
+        }
+
+        public override string ToString()
+        {
+            return "Freq Type:" + this.Type.ToString() + " Interval:" + this.Interval.ToString();
+        }
+        public string ToUniqueId()
+        {
+            return string.Format("{0}-{1}", this.Interval, this.Type);
+        }
+
+        public override int GetHashCode()
+        {
+            return this.ToUniqueId().GetHashCode();
+        }
     }
 }

@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using TradingLib.API;
 
-namespace TradingLib.DataFarm.Common
+
+namespace TradingLib.Common
 {
-    public class Class1
-    {
-    }
+    
 }

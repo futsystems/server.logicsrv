@@ -14,12 +14,12 @@ namespace TradingLib.Common
         public void GotTick(Tick k) { newTick(k); }
         string _sym = "";
         public string Symbol { get { return _sym; } set { _sym = value; } }
-        private decimal h = decimal.MinValue;//最高价
-        private decimal l = decimal.MaxValue;//最低价
-        private decimal o = 0;//开盘价
-        private decimal c = 0;//收盘价
-        private decimal ask = 0;
-        private decimal bid = 0;
+        private double h = double.MinValue;//最高价
+        private double l = double.MaxValue;//最低价
+        private double o = 0;//开盘价
+        private double c = 0;//收盘价
+        private double ask = 0;
+        private double bid = 0;
 
         private long v = 0;//成交量
         private long oi = 0;//持仓
@@ -32,24 +32,17 @@ namespace TradingLib.Common
         private bool DAYEND = false;
         public int time { get { return _time; } set { _time = value; } }
         public bool DayEnd { get { return DAYEND; } }
-        //ulong lHigh { get { return h; } }
-        //ulong lLow { get { return l; } }
-        //ulong lOpen { get { return o; } }
-        //ulong lClose { get { return c; } }
 
-        //ulong lAsk { get { return ask; } }
-        //ulong lBid { get { return bid; } }
+        public double High { get { return h; } set { h = value; } }
+        public double Low { get { return l; } set { l = value; } }
+        public double Open { get { return o; } set { o = value; } }
+        public double Close { get { return c; } set { c = value; } }
 
-
-        public decimal High { get { return h; } set { h = value; } }
-        public decimal Low { get { return l; } set { l = value; } }
-        public decimal Open { get { return o; } set { o = value; } }
-        public decimal Close { get { return c; } set { c = value; } }
         public long Volume { get { return v; } set { v = value; } }
         public long OpenInterest { get { return oi; } set { oi = value; } }
 
-        public decimal Ask { get { return ask; } set { ask = value; } }
-        public decimal Bid { get { return bid; } set { bid = value; } }
+        public double Ask { get { return ask; } set { ask = value; } }
+        public double Bid { get { return bid; } set { bid = value; } }
 
 
         public bool isNew { get { return _new; } set { _new = value; } }
@@ -68,9 +61,17 @@ namespace TradingLib.Common
         public DateTime BarStartTime { get { return _starttime; } set { _starttime = value;bardate = Util.ToTLDate(value); _time = Util.ToTLTime(value); } }
         public DateTime BarEndTime { get { return _endtime; } set { _endtime = value; } }
 
+        public int Bardate { get { return bardate; } set { bardate = value; } }
+
         public bool EmptyBar { get { return _empty; } set { _empty = value; } }
 
 
+        public BarImpl(bool emptybar, DateTime startTime)
+        {
+            this._empty = emptybar;
+            this._starttime = startTime;
+        
+        }
         //public BarImpl(decimal open, decimal high, decimal low, decimal close, long vol, int date, int time, string symbol) : this(open, high, low, close, vol, date, time, symbol) { }
         public BarImpl(decimal open, decimal high, decimal low, decimal close, long vol, int date, int time, string symbol, int interval)
             : this(open, high, low, close, vol, 0, date, time, symbol, interval)
@@ -88,12 +89,12 @@ namespace TradingLib.Common
             else
             {
                 units = interval;
-                h = high;
-                o = open;
-                l = low;
-                c = close;
-                this.ask = ask;
-                this.bid = bid;
+                h = (double)high;
+                o = (double)open;
+                l = (double)low;
+                c = (double)close;
+                this.ask = (double)ask;
+                this.bid = (double)bid;
                 v = vol;
                 bardate = date;
                 _time = time;
@@ -158,13 +159,14 @@ namespace TradingLib.Common
         {
             
         }
+
         /// <summary>
         /// 对应的当日Bar的开始时间,通过_time进行计算
         /// </summary>
-        public int Bartime 
-        { 
-            get 
-            { 
+        public int Bartime
+        {
+            get
+            {
                 // get num of seconds elaps
                 int elap = Util.FT2FTS(_time); //计算该时刻的时间间隔
                 // get remainder of dividing by interval
@@ -172,14 +174,14 @@ namespace TradingLib.Common
                 // get datetime
                 DateTime dt = Util.TLD2DT(bardate);
                 // add rounded down result
-                dt = dt.AddSeconds(elap-rem);//所有时间间隔-余数 就为Bar的开始时间
+                dt = dt.AddSeconds(elap - rem);//所有时间间隔-余数 就为Bar的开始时间
                 // conver back to normal time
                 int bt = Util.ToTLTime(dt);
                 return bt;
             }
             //set { _time = value; }
         }
-        public int Bardate { get { return bardate; } set { bardate = value; } }
+        
         /// <summary>
         /// bt是用来计算一天中的第几根Bar是用序号来计算的
         /// </summary>

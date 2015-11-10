@@ -87,7 +87,7 @@ namespace DataClient
                     //StreamWriter writer = new StreamWriter(socketStream, Encoding.Default, 1024 * 8);
                     //writer.WriteLine(command + parameter);
                     //writer.Flush();
-                    byte[] nrequest = Message.sendmessage(MessageTypes.BROKERNAMEREQUEST, string.Empty);
+                    byte[] nrequest = Message.sendmessage((MessageTypes)10000, string.Empty);
                     s.Send(nrequest);
 
                     //byte[] data = new byte[command.Length];

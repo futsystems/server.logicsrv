@@ -10,7 +10,7 @@ namespace TradingLib.Common
     public struct TickImpl : Tick
     {
         int _symidx;
-        internal long _datetime;
+        DateTime  _datetime;
         Symbol _Sec;
         string _sym;//symbol
         string _be;//bidexchange
@@ -33,7 +33,7 @@ namespace TradingLib.Common
 
         public int Date { get { return _date; } set { _date = value; } }
         public int Time { get { return _time; } set { _time = value; } }
-        public long Datetime { get { return _datetime; } set { _datetime = value; } }
+        public DateTime Datetime { get { return _datetime; } set { _datetime = value; } }
 
         public int Depth { get { return _depth; } set { _depth = value; } }
         public int Size { get { return _size; } set { _size = value; } }
@@ -65,7 +65,7 @@ namespace TradingLib.Common
 
         public bool isTrade { get { return (_trade != 0) && (_size > 0); } }
 
-        public bool hasTick { get { return (this.isTrade || hasBid || hasAsk); } }
+        public bool hasTick { get { return (isTrade || hasBid || hasAsk); } }
 
         public bool isValid { get { return (_sym != "") && (isIndex || hasTick); } }
 
@@ -102,7 +102,7 @@ namespace TradingLib.Common
             _trade = 0;
             _bid = 0;
             _ask = 0;
-            _datetime = 0;
+            _datetime = DateTime.MinValue;
             _symidx = 0;
 
             _vol = 0;
@@ -389,7 +389,7 @@ namespace TradingLib.Common
             t.Exchange = r[(int)TickField.tex];
             t.BidExchange = r[(int)TickField.bidex];
             t.AskExchange = r[(int)TickField.askex];
-            t.Datetime = t.Date * 1000000 + t.Time;
+            t.Datetime = Util.ToDateTime(t.Date, t.Time);// t.Date * 1000000 + t.Time;
 
             if (decimal.TryParse(r[(int)TickField.upper], System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out d))
                 t.UpperLimit = d;
