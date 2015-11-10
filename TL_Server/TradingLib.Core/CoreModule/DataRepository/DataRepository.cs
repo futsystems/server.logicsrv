@@ -189,15 +189,16 @@ namespace TradingLib.Core
             return acc.Domain.GetSymbol(symbol);
         }
 
-
+        //TODO:数据过滤 没有合约对象的委托,成交,持仓
         /// <summary>
         /// 获得所有交易帐户日内 成交数据
+        /// 注意需要过滤掉oSymbol为空的委托对象
         /// </summary>
         /// <returns></returns>
         public override IEnumerable<Trade> SelectAcctTrades(int tradingday)
         {
             //填充对象oSymbol
-            IEnumerable<Trade> trades = ORM.MTradingInfo.SelectTradesUnSettled(tradingday).Select(f => { f.oSymbol = GetAccountSymbol(f.Account, f.Symbol); return f; });
+            IEnumerable<Trade> trades = ORM.MTradingInfo.SelectTradesUnSettled(tradingday).Select(f => { f.oSymbol = GetAccountSymbol(f.Account, f.Symbol); return f; }).Where(f=>f.oSymbol!= null);
             logger.Info("数据库恢复前次结算以来成交数据:" + trades.Count().ToString() + "条");
             return trades;
         }
@@ -208,7 +209,7 @@ namespace TradingLib.Core
         /// <returns></returns>
         public override IEnumerable<Order> SelectAcctOrders(int tradingday)
         {
-            IEnumerable<Order> orders = ORM.MTradingInfo.SelectOrdersUnSettled(tradingday).Select(o => { o.oSymbol = GetAccountSymbol(o.Account, o.Symbol); return o; });
+            IEnumerable<Order> orders = ORM.MTradingInfo.SelectOrdersUnSettled(tradingday).Select(o => { o.oSymbol = GetAccountSymbol(o.Account, o.Symbol); return o; }).Where(o=>o.oSymbol!=null);
             logger.Info("数据库恢复前次结算以来委托数据:" + orders.Count().ToString() + "条");
             return orders;
         }
@@ -223,7 +224,7 @@ namespace TradingLib.Core
         /// <returns></returns>
         public override IEnumerable<PositionDetail> SelectAcctPositionDetails()
         {
-            IEnumerable<PositionDetail> positions = ORM.MSettlement.SelecteAccountPositionDetailsUnSettled().Select(pos => { pos.oSymbol = GetAccountSymbol(pos.Account, pos.Symbol); return pos; });
+            IEnumerable<PositionDetail> positions = ORM.MSettlement.SelecteAccountPositionDetailsUnSettled().Select(pos => { pos.oSymbol = GetAccountSymbol(pos.Account, pos.Symbol); return pos; }).Where(pos=>pos.oSymbol!=null);
             logger.Info("数据库恢复前次结算持仓明细数据:" + positions.Count().ToString() + "条");
             return positions;
         }
@@ -238,7 +239,6 @@ namespace TradingLib.Core
             IEnumerable<OrderAction> actions = ORM.MTradingInfo.SelectOrderActions().Where(o=>o.OrderID != 0);
             logger.Info("数据库恢复前次结算以来取消数据:" + actions.Count().ToString() + "条");
             return actions;
-
         }
 
         /// <summary>
