@@ -6,6 +6,9 @@ using TradingLib.API;
 
 namespace TradingLib.Common
 {
+    /// <summary>
+    /// 将Frequency适配成ISeries接口用于绘图
+    /// </summary>
     internal sealed class FrequencyBarElementSeries : ISeries
     {
         private readonly Frequency _frequency;

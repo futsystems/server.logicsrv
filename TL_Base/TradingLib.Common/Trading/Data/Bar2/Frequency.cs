@@ -12,7 +12,6 @@ namespace TradingLib.Common
     /// </summary>
     public class Frequency
     {
-
         /// <summary>
         /// 只读Bar数据
         /// </summary>
@@ -29,11 +28,18 @@ namespace TradingLib.Common
         public Symbol Symbol { get; set; }
 
         public Dictionary<Frequency, QList<DateTime>> DestFrequencyConversion { get; set; }
+
         internal bool SynchronizeBars { get; set; }
 
-        public Frequency(Symbol symbol, bool synchronizeBars)
+        FrequencyManager.FreqKey _key = null;
+
+        public FrequencyPlugin FrequencySettings { get; set; }
+
+        public Frequency(FrequencyManager.FreqKey key, bool synchronizeBars)
         {
-            this.Symbol = symbol;
+            this._key = key;
+            this.Symbol = key.Symbol;
+            this.FrequencySettings = key.Settings;
             this.SynchronizeBars = synchronizeBars;
             this.WriteableBars = new QList<Bar>();
             this.Bars = this.WriteableBars.AsReadOnly();
@@ -98,7 +104,7 @@ namespace TradingLib.Common
             return xe151e765248d06d8;
         }
 
-        private int x954e89ce87b3f10e(System.DateTime xb21f13a9707ad954)
+        private int x954e89ce87b3f10e(DateTime xb21f13a9707ad954)
         {
             if (this.Bars.Count == 0)
             {

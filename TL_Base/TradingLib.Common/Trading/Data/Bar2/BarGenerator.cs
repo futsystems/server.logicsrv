@@ -6,38 +6,43 @@ using TradingLib.API;
 
 namespace TradingLib.Common
 {
+    /// <summary>
+    /// Bar生成器 用于处理行情数据更新Bar数据
+    /// 具体Bar开始和结束由IFrequencyGeneratro进行管理
+    /// </summary>
     public class BarGenerator
     {
         private BarConstructionType _barConstructionType;
         public BarConstructionType BarConstructionType { get { return _barConstructionType; } }
 
-        private bool _updated;
+        private bool _updated;//是否更新过OHLC
         /// <summary>
         /// Tick数据不进行更新 在处理Bar数据时进行更新
         /// </summary>
         private Bar _partialBar;
-        
-        private Symbol _symbol;
-        public Symbol Symbol { get { return _symbol; } }
+        public Bar BarPartialBar { get { return _partialBar; } }
 
         private Bar _currentPartialBar;
         public Bar PartialBar { get { return _partialBar; } }
 
-        private int _interval = 0;
-        public int Interval { get { return _interval; } set { _interval = value; } }
+
+        private Symbol _symbol;
+        public Symbol Symbol { get { return _symbol; } }
+
         private bool _isTickSent;
-        private BarDataV _barStore = null;
 
         public DateTime BarStartTime { get {return _currentPartialBar.BarStartTime; } }
 
 
-        public BarGenerator(Symbol symbol, int interval, BarConstructionType type)
+        public BarGenerator(Symbol symbol,BarConstructionType type)
         {
             this._symbol = symbol;
-            this._interval = interval;
             this._barConstructionType = type;
+            this.CloseBar(DateTime.MinValue);
 
         }
+
+
         public void ProcessBar(Bar bar)
         { 
         
@@ -49,9 +54,6 @@ namespace TradingLib.Common
 
         public void ProcessTick(Tick tick)
         {
-            if (!tick.isValid) return;
-            if (tick.Symbol != _symbol.Symbol) return;
-
             if (tick.hasAsk)
             {
                 this._currentPartialBar.Ask = (double)tick.AskPrice;
@@ -178,10 +180,12 @@ namespace TradingLib.Common
                 }
             }
 
-            //
-            if (NewBar != null && !e.Bar.EmptyBar)
+            if (e.Bar.BarStartTime != System.DateTime.MinValue && !e.Bar.EmptyBar)
             {
-                NewBar(e);
+                if (NewBar != null && !e.Bar.EmptyBar)
+                {
+                    NewBar(e);
+                }
             }
         }
 
@@ -204,14 +208,7 @@ namespace TradingLib.Common
             Bar data = this._currentPartialBar;
             this._isTickSent = false;
 
-            if (_barStore == null)
-            {
-                this._currentPartialBar = new BarImpl();
-            }
-            else
-            { 
-                
-            }
+            this._currentPartialBar = new BarImpl();
 
             this._currentPartialBar.BarStartTime = barEndTime;
             this._currentPartialBar.EmptyBar = false;
@@ -223,6 +220,8 @@ namespace TradingLib.Common
                 this._currentPartialBar.Bid = data.Bid;
                 this._currentPartialBar.Ask = data.Ask;
             }
+
+            this._partialBar = this._currentPartialBar.Clone();
         }
     
     }

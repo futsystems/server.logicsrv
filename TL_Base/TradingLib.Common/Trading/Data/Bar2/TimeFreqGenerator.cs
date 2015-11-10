@@ -6,7 +6,10 @@ using TradingLib.API;
 
 namespace TradingLib.Common
 {
-    public class TimeFrequency : FrequencyBase
+    /// <summary>
+    /// 以时间为间隔的Bar数据生成器 通过CreateFrequencyGenerator获得具体的Bar生成器
+    /// </summary>
+    public class TimeFrequency : FrequencyPlugin
     {
 
         TimeSpan _barLength;
@@ -14,6 +17,38 @@ namespace TradingLib.Common
 
         BarFrequency _freq;
         public override BarFrequency BarFrequency { get { return _freq; } }
+
+
+        /// <summary>
+        /// Determines whether two FrequencyPlugin instances are equal
+        /// </summary>
+        /// <param name="obj">FrequencyPlugin used for comparison</param>
+        /// <returns>true if they are equal, otherwise false.</returns>
+        public override bool Equals(object obj)
+        {
+            TimeFrequency timeFrequency = obj as TimeFrequency;
+            return timeFrequency != null && this.BarLength == timeFrequency.BarLength;
+        }
+
+        /// <summary>
+        /// Serves as a hash function for a particular type, suitable for use in hashing algorithms and data structures like a hash table.
+        /// </summary>
+        /// <returns>The hash code for this object.</returns>
+        public override int GetHashCode()
+        {
+            return this.BarLength.GetHashCode();
+        }
+
+
+        /// <summary>
+        /// 全复制
+        /// </summary>
+        /// <returns></returns>
+        public override FrequencyPlugin Clone()
+        {
+            return (TimeFrequency)base.MemberwiseClone();
+        }
+
 
         int _comparecode;
         public int CompareCode { get { return _comparecode; } }
@@ -126,7 +161,7 @@ namespace TradingLib.Common
             /// <param name="type"></param>
             public void Initialize(Symbol symbol, BarConstructionType type)
             {
-                this._generator = new BarGenerator(symbol, this._units, type);
+                this._generator = new BarGenerator(symbol,type);
                 this._generator.NewBar += new Action<SingleBarEventArgs>(_generator_NewBar);
                 this._generator.NewTick += new Action<NewTickEventArgs>(_generator_NewTick);
             }

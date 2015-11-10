@@ -107,10 +107,9 @@
     <Compile Include="Trading\Data\Bar2\BarUtils.cs" />
     <Compile Include="Trading\Data\Bar2\Enums.cs" />
     <Compile Include="Trading\Data\Bar2\EventArgs.cs" />
-    <Compile Include="Trading\Data\Bar2\FreqKey.cs" />
     <Compile Include="Trading\Data\Bar2\Frequency.cs" />
     <Compile Include="Trading\Data\Bar2\FrequencyBarElementSeries.cs" />
-    <Compile Include="Trading\Data\Bar2\FrequencyBase.cs" />
+    <Compile Include="Trading\Data\Bar2\FrequencyPlugin.cs" />
     <Compile Include="Trading\Data\Bar2\FrequencyManager.cs" />
     <Compile Include="Trading\Data\Bar2\IFrequencyGenerator.cs" />
     <Compile Include="Trading\Data\Bar2\PriorityItemPair.cs" />
