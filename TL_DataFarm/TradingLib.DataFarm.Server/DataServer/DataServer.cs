@@ -5,6 +5,7 @@ using System.Text;
 using Common.Logging;
 using TradingLib.API;
 using TradingLib.Common;
+using TradingLib.ORM;
 using TradingLib.DataFarm;
 
 namespace TradingLib.DataFarm.Common
@@ -21,8 +22,21 @@ namespace TradingLib.DataFarm.Common
     {
         ILog logger = LogManager.GetLogger("DataServer");
 
+        FrequencyService freqService;
         public void Start()
         {
+            logger.Info("Load MySQL Connection Info from confg file");
+            ConfigFile _configFile = ConfigFile.GetConfigFile();
+            DBHelper.InitDBConfig(_configFile["DBAddress"].AsString(), _configFile["DBPort"].AsInt(), _configFile["DBName"].AsString(), _configFile["DBUser"].AsString(), _configFile["DBPass"].AsString());
+
+            foreach (var exchange in MDBasicTracker.ExchagneTracker.Exchanges)
+            {
+                logger.Info("Exchange:" + exchange.EXCode);
+            }
+
+            freqService = new FrequencyService();
+
+
             //初始化数据库服务
             InitDataBaseService();
 

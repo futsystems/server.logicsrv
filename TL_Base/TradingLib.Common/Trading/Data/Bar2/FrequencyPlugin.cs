@@ -40,5 +40,6 @@ namespace TradingLib.Common
         /// <returns>The hash code for this object.</returns>
         public abstract override int GetHashCode();
 
+
     }
 }

@@ -220,7 +220,10 @@ namespace TradingLib.DataFarm
                    
                     //订阅行情心跳数据
                     subscriber.Subscribe(Encoding.UTF8.GetBytes("TICKHEARTBEAT"));
-                    subscriber.SubscribeAll();
+                    string prefix ="CNX5^";
+                    subscriber.Subscribe(Encoding.UTF8.GetBytes(prefix));
+
+                    //subscriber.SubscribeAll();
                     _symbolreq = symbolreq;
                     _subscriber = subscriber;
 
@@ -232,6 +235,7 @@ namespace TradingLib.DataFarm
                             string[] p = tickstr.Split('^');
                             if (p.Length > 1)
                             {
+                                //logger.Info("tick str:" + tickstr);
                                 string symbol = p[0];
                                 string tickcontent = p[1];
                                 Tick k = TickImpl.Deserialize(tickcontent);
@@ -241,7 +245,7 @@ namespace TradingLib.DataFarm
                             }
                             else
                             {
-                                //debug("tick str:" + tickstr, QSEnumDebugLevel.INFO);
+                                
                             }
                         }
                         catch (Exception ex)

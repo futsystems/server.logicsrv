@@ -23,6 +23,12 @@ namespace DataFarm
         public Form1()
         {
             InitializeComponent();
+            this.FormClosing += new FormClosingEventHandler(Form1_FormClosing);
+        }
+
+        void Form1_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            System.Environment.Exit(0);
         }
 
         TLServerBase appserver = null;
@@ -33,7 +39,7 @@ namespace DataFarm
         }
 
 
-        TCPServiceHost _tcphost = null;
+        //TCPServiceHost _tcphost = null;
         TradingLib.DataFarm.Common.DataServer datasrv;
         private void btnInitServer_Click(object sender, EventArgs e)
         {

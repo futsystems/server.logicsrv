@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using TradingLib.API;
+using Common.Logging;
 
 namespace TradingLib.Common
 {
@@ -11,7 +12,7 @@ namespace TradingLib.Common
     /// </summary>
     public class TimeFrequency : FrequencyPlugin
     {
-
+        ILog logger = LogManager.GetLogger("TimeFrequency");
         TimeSpan _barLength;
         public TimeSpan BarLength { get { return _barLength; } }
 
@@ -39,7 +40,10 @@ namespace TradingLib.Common
             return this.BarLength.GetHashCode();
         }
 
-
+        public override string ToString()
+        {
+            return string.Format("Time:{0}s", this._freq.Interval);
+        }
         /// <summary>
         /// 全复制
         /// </summary>
@@ -50,8 +54,8 @@ namespace TradingLib.Common
         }
 
 
-        int _comparecode;
-        public int CompareCode { get { return _comparecode; } }
+        //int _comparecode;
+        //public int CompareCode { get { return _comparecode; } }
 
         /// <summary>
         /// 初始化一个TimeFrequency对象
@@ -65,8 +69,8 @@ namespace TradingLib.Common
             }
             _barLength = new TimeSpan(0, 0, freq.Interval);
 
-            BarFrequency _freq = freq;
-            _comparecode = freq.Interval * 10000 + (int)BarFrequency.Type;//通过这种方式获得为唯一的comparecode
+            _freq = freq;
+            //_comparecode = freq.Interval * 10000 + (int)BarFrequency.Type;//通过这种方式获得为唯一的comparecode
         }
 
         /// <summary>
@@ -142,6 +146,8 @@ namespace TradingLib.Common
         /// </summary>
         internal class TimeFreqGenerator:IFrequencyGenerator
         {
+            ILog logger = LogManager.GetLogger("TimeFreqGenerator");
+
             bool _updated = false;
             TimeSpan _interval;
             BarGenerator _generator;
@@ -199,21 +205,22 @@ namespace TradingLib.Common
                 //没有处理过tick数据 则更新当前的round时间为当前Bar的开始时间
                 if (!this._updated)
                 {
+                    logger.Debug(string.Format("DateTime:{0} SetBarStartTime:{1}", datetime, round));
                     this._generator.SetBarStartTime(round);
                     this._updated = true;
                 }
-                //如果roundtime大于PartialBar的起始时间 越过了一个Bar数据
+                //如果roundtime大于PartialBar的起始时间 越过了一个Bar数据 调用generator发送Bar同时设定BarStartTime
                 if (round > this._generator.PartialBar.BarStartTime)
                 {
-                    //取下一个Bar时间
-                    DateTime nextround = TimeFrequency.NextRoundedTime(datetime, this._interval);
+                    //取下一个Bar时间 根据当前BarStartTime计算下一个BarStarTime
+                    DateTime nextround = TimeFrequency.NextRoundedTime(this._generator.BarStartTime, this._interval);
                     if (round < nextround)
                     {
                         throw new Exception("Error in time rounding logic");
                     }
                     //发送当前Generator中的Bar数据 同时设定下一个Bar的开始时间
-                    this._generator.SendNewBar(nextround);
-                    this._generator.SetBarStartTime(nextround);
+                    this._generator.SendNewBar(nextround);//结束时间按Bar的开始时间以及间隔计算获得
+                    this._generator.SetBarStartTime(round);//Bar的开始时间按当前实际时间Round获得
                 }
             }
 

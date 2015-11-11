@@ -47,25 +47,36 @@
     <Reference Include="TradingLib.API">
       <HintPath>..\..\lib\TradingLib\TradingLib.API.dll</HintPath>
     </Reference>
+    <Reference Include="TradingLib.API.Ex">
+      <HintPath>..\..\lib\TradingLib\TradingLib.API.Ex.dll</HintPath>
+    </Reference>
     <Reference Include="TradingLib.Common">
       <HintPath>..\..\lib\TradingLib\TradingLib.Common.dll</HintPath>
+    </Reference>
+    <Reference Include="TradingLib.Common.Ex">
+      <HintPath>..\..\lib\TradingLib\TradingLib.Common.Ex.dll</HintPath>
     </Reference>
     <Reference Include="TradingLib.Mixins">
       <HintPath>..\..\lib\TradingLib\TradingLib.Mixins.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DataServer.cs" />
+    <Compile Include="BasicInfoTracker.cs" />
+    <Compile Include="DataServer\DataServer.cs" />
+    <Compile Include="FrequencyService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="DataServer_.cs" />
-    <Compile Include="DataServer_ServiceHost.cs" />
-    <Compile Include="DataServer_Connection.cs" />
-    <Compile Include="DataServer_Message.cs" />
-    <Compile Include="DataServer_MD_Tick.cs" />
-    <Compile Include="DataServer_OnRequest.cs" />
-    <Compile Include="DataServer_MD_HistBar.cs" />
+    <Compile Include="DataServer\DataServer_.cs" />
+    <Compile Include="DataServer\DataServer_ServiceHost.cs" />
+    <Compile Include="DataServer\DataServer_Connection.cs" />
+    <Compile Include="DataServer\DataServer_Message.cs" />
+    <Compile Include="DataServer\DataServer_MD_Tick.cs" />
+    <Compile Include="DataServer\DataServer_OnRequest.cs" />
+    <Compile Include="DataServer\DataServer_MD_HistBar.cs" />
     <Compile Include="TickFeed.cs" />
-    <Compile Include="DataServer_DataBase.cs" />
+    <Compile Include="DataServer\DataServer_DataBase.cs" />
+    <Compile Include="DataServer\DataServer_MySql.cs" />
+    <Compile Include="Tracker\SercurityTracker.cs" />
+    <Compile Include="Tracker\SymbolTracker.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\TradingLib.DataFarm.API\TradingLib.DataFarm.API.csproj">

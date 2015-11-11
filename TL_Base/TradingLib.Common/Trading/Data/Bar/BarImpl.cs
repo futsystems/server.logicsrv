@@ -124,6 +124,7 @@ namespace TradingLib.Common
             Interval = b.Interval;
             BarStartTime = b.BarStartTime; ;
             BarEndTime = b.BarEndTime;//BarStartTime
+            _sym = b.Symbol;
         }
 
         public BarImpl(Bar b)
@@ -228,7 +229,12 @@ namespace TradingLib.Common
             return true;
         }
 
-        public override string ToString() { return "OHLC (" + bardate +" "+_time + "  " +Bartime.ToString()+") " + Open.ToString("F2") + "," + High.ToString("F2") + "," + Low.ToString("F2") + "," + Close.ToString("F2") + ","+Volume.ToString(); }
+        public override string ToString()
+        {
+            return string.Format("{6}-{7} {0}-OHLC({1},{2},{3},{4},{5})", this.Symbol, this.Open, this.High, this.Low, this.Close, this.Volume, this.BarStartTime, this.BarEndTime);
+            //return "OHLC (" + bardate +" "+_time + "  " +Bartime.ToString()+") " + Open.ToString("F2") + "," + High.ToString("F2") + "," + Low.ToString("F2") + "," + Close.ToString("F2") + ","+Volume.ToString(); }
+        }
+
         /// <summary>
         /// Create bar object from a CSV file providing OHLC+Volume data.
         /// 从csv获得bar数据
@@ -256,6 +262,7 @@ namespace TradingLib.Common
             return new BarImpl(open, high, low, close, vol, date, 0, symbol, interval);
         }
 
+       
         /// <summary>
         /// 序列化bar
         /// </summary>

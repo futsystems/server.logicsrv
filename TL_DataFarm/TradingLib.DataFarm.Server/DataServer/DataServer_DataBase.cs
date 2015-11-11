@@ -34,7 +34,7 @@ namespace TradingLib.DataFarm.Common
             List<Tick> ticklist = store.Load(DateTime.MinValue, DateTime.MaxValue, -1, true);
             foreach (var k in ticklist)
             {
-                logger.Info("Tick:" + k.ToString());
+                //logger.Info("Tick:" + k.ToString());
             }
         }
         #region 保存行情与Bar数据

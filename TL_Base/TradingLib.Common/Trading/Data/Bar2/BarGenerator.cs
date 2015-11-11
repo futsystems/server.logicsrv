@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using TradingLib.API;
+using Common.Logging;
 
 namespace TradingLib.Common
 {
@@ -12,6 +13,8 @@ namespace TradingLib.Common
     /// </summary>
     public class BarGenerator
     {
+        ILog logger = LogManager.GetLogger("BarGenerator");
+
         private BarConstructionType _barConstructionType;
         public BarConstructionType BarConstructionType { get { return _barConstructionType; } }
 
@@ -38,6 +41,7 @@ namespace TradingLib.Common
         {
             this._symbol = symbol;
             this._barConstructionType = type;
+            //初始化PartialBar
             this.CloseBar(DateTime.MinValue);
 
         }
@@ -67,17 +71,12 @@ namespace TradingLib.Common
             if (tick.isTrade)
             {
                 this._currentPartialBar.Volume += tick.Size;
+                this._currentPartialBar.OpenInterest = tick.OpenInterest;
                 this._currentPartialBar.EmptyBar = false;
             }
-            this._currentPartialBar.OpenInterest = tick.OpenInterest;
-
+            //记录时间
             this._currentPartialBar.time = tick.Time;
 
-            if (tick.isTrade)
-            {
-                this._currentPartialBar.Volume += tick.Size;
-                this._currentPartialBar.OpenInterest = tick.OpenInterest;
-            }
 
             decimal value = 0;
             bool needUpdate = false;
@@ -117,7 +116,7 @@ namespace TradingLib.Common
 
             if (needUpdate)
             {
-                if (!this._updated)
+                if (!this._updated)//没有更新过Bar则获得的第一个Trade设定为OHLC后面的Trade再更新HLC
                 {
                     this._currentPartialBar.Open = (double)value;
                     this._currentPartialBar.High = (double)value;
@@ -154,12 +153,10 @@ namespace TradingLib.Common
         /// <param name="barEndTime"></param>
         public void SendNewBar(DateTime barEndTime)
         {
-            bool flag = !this._updated && this._currentPartialBar.Close == 0;
+            bool flag = !this._updated && this._currentPartialBar.Close == 0;//update表示是否更新过OHLC
             //当前Tick我们无法确认该Bar数据已经结束,需要下一个Tick的时间来判定该Bar是否结束，比如10:30:59秒，在该秒内可能有多个Tick数据，只有当10:31:00这个Tick过来或定时器触发时候才表面10:30分这个Bar结束了
-
-            SingleBarEventArgs e = new SingleBarEventArgs(this._symbol,new BarImpl(this._currentPartialBar),barEndTime,this._isTickSent);
-
-            this.CloseBar(barEndTime);
+            Bar barClosed = this.CloseBar(barEndTime);
+            SingleBarEventArgs e = new SingleBarEventArgs(this._symbol, new BarImpl(barClosed), barEndTime, this._isTickSent);
 
             //如果没有更新过数据 则手工更新
             if (flag)
@@ -180,9 +177,9 @@ namespace TradingLib.Common
                 }
             }
 
-            if (e.Bar.BarStartTime != System.DateTime.MinValue && !e.Bar.EmptyBar)
+            if (e.Bar.BarStartTime != System.DateTime.MinValue && !e.Bar.EmptyBar)//EmptyBar是只没有获得任何一个行情的Bar为空Bar
             {
-                if (NewBar != null && !e.Bar.EmptyBar)
+                if (NewBar != null)
                 {
                     NewBar(e);
                 }
@@ -201,27 +198,37 @@ namespace TradingLib.Common
 
         /// <summary>
         /// 结束一个Bar数据
+        /// 结束一个Bar的时候会同时生成下一个Bar数据
         /// </summary>
         /// <param name="barEndTime"></param>
-        private void CloseBar(DateTime barEndTime)
+        private Bar CloseBar(DateTime barEndTime)
         {
+             //设定Bar结束时间
+            if (this._currentPartialBar != null)
+            {
+                this._currentPartialBar.BarEndTime = barEndTime;
+            }
+            logger.Debug(string.Format("Close Bar:{0}", this._currentPartialBar != null ? this._currentPartialBar.ToString() : "Null"));
+            
             Bar data = this._currentPartialBar;
             this._isTickSent = false;
 
             this._currentPartialBar = new BarImpl();
-
+            this._currentPartialBar.Symbol = this._symbol.Symbol;
             this._currentPartialBar.BarStartTime = barEndTime;
-            this._currentPartialBar.EmptyBar = false;
+            this._currentPartialBar.EmptyBar = true;
             this._updated = false;
 
             if (data != null)
             {
+                //下一个Bar的高开低收等于上一个Bar的收盘价
                 this._currentPartialBar.Open = this._currentPartialBar.Close = this._currentPartialBar.High = this._currentPartialBar.Low = data.Close;
                 this._currentPartialBar.Bid = data.Bid;
                 this._currentPartialBar.Ask = data.Ask;
             }
 
             this._partialBar = this._currentPartialBar.Clone();
+            return data;
         }
     
     }

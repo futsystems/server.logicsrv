@@ -57,8 +57,14 @@
     <Reference Include="TradingLib.API">
       <HintPath>..\..\lib\TradingLib\TradingLib.API.dll</HintPath>
     </Reference>
+    <Reference Include="TradingLib.API.Ex">
+      <HintPath>..\..\lib\TradingLib\TradingLib.API.Ex.dll</HintPath>
+    </Reference>
     <Reference Include="TradingLib.Common">
       <HintPath>..\..\lib\TradingLib\TradingLib.Common.dll</HintPath>
+    </Reference>
+    <Reference Include="TradingLib.Common.Ex">
+      <HintPath>..\..\lib\TradingLib\TradingLib.Common.Ex.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
