@@ -50,7 +50,7 @@ namespace TradingLib.Common
         }
     }
 
-    internal class SortedQueue<T>
+    public class SortedQueue<T>
     {
         private int _count;
 
@@ -75,6 +75,14 @@ namespace TradingLib.Common
             this._comparer = comparer;
             this._capacity = 15;
             this._items = new T[this._capacity];
+        }
+
+        public T[] Items
+        {
+            get
+            {
+                return this._items;
+            }
         }
 
         public T Peek()

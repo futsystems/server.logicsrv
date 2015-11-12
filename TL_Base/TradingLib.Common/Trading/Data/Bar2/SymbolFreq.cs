@@ -14,14 +14,15 @@ namespace TradingLib.Common
         /// <summary>
         /// 合约
         /// </summary>
-        public Symbol Symbol { get; set; }
+        public string Symbol { get; set; }
 
         /// <summary>
         /// 频率参数
         /// </summary>
         public BarFrequency BarFrequency { get; set; }
 
-        public SymbolFreq(Symbol symbol, BarFrequency freq)
+        
+        public SymbolFreq(string symbol, BarFrequency freq)
         {
             this.Symbol = symbol;
             this.BarFrequency = freq;
@@ -49,7 +50,7 @@ namespace TradingLib.Common
         /// <returns></returns>
         public string ToUniqueId()
         {
-            return this.Symbol.Symbol + "-" + this.BarFrequency.ToUniqueId();
+            return this.Symbol + "-" + this.BarFrequency.ToUniqueId();
         }
 
 

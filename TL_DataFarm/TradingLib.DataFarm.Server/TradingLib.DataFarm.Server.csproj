@@ -62,8 +62,15 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BasicInfoTracker.cs" />
+    <Compile Include="DataBase\Compare.cs" />
+    <Compile Include="DataBase\STSDBBase.cs" />
+    <Compile Include="DataBase\Persist.cs" />
+    <Compile Include="DataBase\STSLocalDB.cs" />
+    <Compile Include="DataBase\STSMemoryDB.cs" />
     <Compile Include="DataServer\DataServer.cs" />
-    <Compile Include="FrequencyService.cs" />
+    <Compile Include="FrequencyService\FrequencyService.cs" />
+    <Compile Include="FrequencyService\FrequencyService_.cs" />
+    <Compile Include="FrequencyService\FrequencyService_QryBar.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="DataServer\DataServer_.cs" />
     <Compile Include="DataServer\DataServer_ServiceHost.cs" />
@@ -79,6 +86,10 @@
     <Compile Include="Tracker\SymbolTracker.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\STSdb4\STSdb4.csproj">
+      <Project>{BE6C9FF2-7817-4EF4-BD8F-6F78126878D3}</Project>
+      <Name>STSdb4</Name>
+    </ProjectReference>
     <ProjectReference Include="..\TradingLib.DataFarm.API\TradingLib.DataFarm.API.csproj">
       <Project>{FE184B78-DFA2-4E10-98CD-C6EAC59D84D9}</Project>
       <Name>TradingLib.DataFarm.API</Name>

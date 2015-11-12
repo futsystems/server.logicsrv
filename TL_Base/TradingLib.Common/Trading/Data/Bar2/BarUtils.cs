@@ -12,6 +12,15 @@ namespace TradingLib.Common
     /// </summary>
     public static class BarUtils
     {
+        public static BarFrequency GetBarFrequency(this Bar bar)
+        {
+            return new BarFrequency(bar.IntervalType, bar.Interval);
+        }
+
+        public static SymbolFreq GetSymbolFreq(this Bar bar)
+        {
+            return new SymbolFreq(bar.Symbol, new BarFrequency(bar.IntervalType, bar.Interval));
+        }
 
         private static Func<QSEnumBarElement, string> x31af784cbc72c68d;
 

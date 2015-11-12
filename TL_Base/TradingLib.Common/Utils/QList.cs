@@ -5,7 +5,7 @@ using System.Text;
 
 namespace TradingLib.Common
 {
-    public sealed class QList<T>
+    public  class QList<T>
     {
         /// <summary>
         /// 内部List类
@@ -477,6 +477,8 @@ namespace TradingLib.Common
             return this._queue[nBars];
         }
 
+        
+
         /// <summary>
         /// Sets a value that has been previously set.
         /// 设定某个数据项
@@ -514,7 +516,7 @@ namespace TradingLib.Common
         /// <param name="item">The item to add to the series.</param>
         /// <remarks>
         /// If there is a current partial item (<see cref="P:RightEdge.Common.RList`1.HasPartialItem" /> is true), it will be removed.
-        /// 添加某个数据项 添加数据项时会清空PartialItem
+        /// 添加某个数据项 添加数据项时会清空PartialItem 添加时默认添加的数据项时最新数据
         /// </remarks>
         public void Add(T item)
         {

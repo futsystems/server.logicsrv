@@ -167,7 +167,7 @@ namespace TradingLib.Common
             /// <param name="type"></param>
             public void Initialize(Symbol symbol, BarConstructionType type)
             {
-                this._generator = new BarGenerator(symbol,type);
+                this._generator = new BarGenerator(symbol, new BarFrequency(BarInterval.CustomTime, this._units), type);
                 this._generator.NewBar += new Action<SingleBarEventArgs>(_generator_NewBar);
                 this._generator.NewTick += new Action<NewTickEventArgs>(_generator_NewTick);
             }

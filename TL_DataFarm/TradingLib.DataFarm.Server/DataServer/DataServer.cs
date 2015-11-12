@@ -34,16 +34,27 @@ namespace TradingLib.DataFarm.Common
                 logger.Info("Exchange:" + exchange.EXCode);
             }
 
-            freqService = new FrequencyService();
 
+
+            freqService = new FrequencyService();
+            freqService.NewBarEvent += new Action<Bar>(freqService_NewBarEvent);
 
             //初始化数据库服务
-            InitDataBaseService();
+            //InitDataBaseService();
 
             //初始化行情服务
-            InitTickService();
+            //InitTickService();
 
+            //加载ServiceHost
+            LoadServiceHosts();
+            //启动ServiceHost
+            StartServiceHosts();
             
+        }
+
+        void freqService_NewBarEvent(Bar obj)
+        {
+            SaveBar(obj);
         }
     }
 }

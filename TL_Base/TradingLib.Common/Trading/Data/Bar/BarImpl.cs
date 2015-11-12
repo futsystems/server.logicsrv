@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 using System.Collections.Generic;
 using TradingLib.API;
 
@@ -9,260 +10,242 @@ namespace TradingLib.Common
     /// A single bar of price data, which represents OHLC and volume for an interval of time.
     /// </summary>
     [Serializable]
-    public class BarImpl : GotTickIndicator, TradingLib.API.Bar
+    public class BarImpl : Bar
     {
-        public void GotTick(Tick k) { newTick(k); }
         string _sym = "";
         public string Symbol { get { return _sym; } set { _sym = value; } }
+
         private double h = double.MinValue;//最高价
-        private double l = double.MaxValue;//最低价
-        private double o = 0;//开盘价
-        private double c = 0;//收盘价
-        private double ask = 0;
-        private double bid = 0;
-
-        private long v = 0;//成交量
-        private long oi = 0;//持仓
-
-        private int tradesinbar = 0;
-        private bool _new = false;
-        private int units = 300;
-        private int _time = 0;//当前更新的真实时间
-        private int bardate = 0;
-        private bool DAYEND = false;
-        public int time { get { return _time; } set { _time = value; } }
-        public bool DayEnd { get { return DAYEND; } }
-
         public double High { get { return h; } set { h = value; } }
+
+        private double l = double.MaxValue;//最低价
         public double Low { get { return l; } set { l = value; } }
+
+        private double o = 0;//开盘价
         public double Open { get { return o; } set { o = value; } }
+
+        private double c = 0;//收盘价
         public double Close { get { return c; } set { c = value; } }
 
-        public long Volume { get { return v; } set { v = value; } }
-        public long OpenInterest { get { return oi; } set { oi = value; } }
-
+        private double ask = 0;
         public double Ask { get { return ask; } set { ask = value; } }
+
+        private double bid = 0;
         public double Bid { get { return bid; } set { bid = value; } }
 
+        private int v = 0;//成交量
+        public int Volume { get { return v; } set { v = value; } }
 
-        public bool isNew { get { return _new; } set { _new = value; } }
-        public bool isValid { get { return (h >= l) && (o != 0) && (c != 0); } }
-        public int TradeCount { get { return tradesinbar; } }
+        private int oi = 0;//持仓
+        public int OpenInterest { get { return oi; } set { oi = value; } }
 
-        public BarImpl() : this(BarInterval.FiveMin) { }
+        private int _tradesCount = 0;
+        public int TradeCount { get { return _tradesCount; } set { _tradesCount = value; } }
 
+        private int _tradingday = 0;
+        /// <summary>
+        /// 交易日
+        /// </summary>
+        public int TradingDay { get { return _tradesCount; } set { _tradingday = value; } }
+
+
+
+        bool _empty = true;
+        /// <summary>
+        /// 是否有成交更新过该Bar
+        /// </summary>
+        public bool EmptyBar { get { return _empty; } set { _empty = value; } }
+
+
+        BarInterval _intervalType = BarInterval.CustomTime;
+        /// <summary>
+        /// 频率类别
+        /// </summary>
+        public BarInterval IntervalType { get { return _intervalType; } set { _intervalType=value; } }
+
+        private int units = 60;
+        /// <summary>
+        /// 间隔数
+        /// </summary>
         public int Interval { get { return units; } set { units = value; } }
 
 
         DateTime _starttime = DateTime.MinValue;
-        DateTime _endtime = DateTime.MaxValue;
-        bool _empty=false;
-
-        public DateTime BarStartTime { get { return _starttime; } set { _starttime = value;bardate = Util.ToTLDate(value); _time = Util.ToTLTime(value); } }
-        public DateTime BarEndTime { get { return _endtime; } set { _endtime = value; } }
-
-        public int Bardate { get { return bardate; } set { bardate = value; } }
-
-        public bool EmptyBar { get { return _empty; } set { _empty = value; } }
-
-
-        public BarImpl(bool emptybar, DateTime startTime)
+        /// <summary>
+        /// Bar开始时间
+        /// </summary>
+        public DateTime BarStartTime
         {
-            this._empty = emptybar;
+            get { return _starttime; }
+            set { _starttime = value; }
+        }
+
+
+        //public BarImpl() : this(BarInterval.FiveMin) { }
+
+        public BarImpl(string symbol, BarFrequency bf, DateTime startTime)
+        {
+            this._sym = symbol;
             this._starttime = startTime;
-        
-        }
-        //public BarImpl(decimal open, decimal high, decimal low, decimal close, long vol, int date, int time, string symbol) : this(open, high, low, close, vol, date, time, symbol) { }
-        public BarImpl(decimal open, decimal high, decimal low, decimal close, long vol, int date, int time, string symbol, int interval)
-            : this(open, high, low, close, vol, 0, date, time, symbol, interval)
-        { }
-        public BarImpl(decimal open, decimal high, decimal low, decimal close, long vol, long oi,int date, int time, string symbol, int interval)
-             :this(open, high, low, close, vol, 0,0,0,date, time, symbol, interval)
-        {
-        }
-        public BarImpl(decimal open, decimal high, decimal low, decimal close, long vol, long oi,decimal ask,decimal bid,int date, int time, string symbol, int interval)
-        {
-            if (open < 0 || high < 0 || low < 0 || close < 0)
-            {
-                return;
-            }
-            else
-            {
-                units = interval;
-                h = (double)high;
-                o = (double)open;
-                l = (double)low;
-                c = (double)close;
-                this.ask = (double)ask;
-                this.bid = (double)bid;
-                v = vol;
-                bardate = date;
-                _time = time;
-                _starttime = Util.ToDateTime(date, time);
-                _endtime = _starttime.AddSeconds(interval);
-                _sym = symbol;
-            }
+            this._intervalType = bf.Type;
+            this.units = bf.Interval;
+
         }
         public Bar Clone()
         {
             return new BarImpl(this);
         }
-        public BarImpl(BarImpl b)
-        {
-            v = b.Volume;
-            oi = b.OpenInterest;
-
-            h = b.Open;
-            l = b.Low;
-            o = b.Open;
-            c = b.Close;
-
-            DAYEND = b.DAYEND;
-            _time = b._time;
-            bardate = b.bardate;
-
-            Interval = b.Interval;
-            BarStartTime = b.BarStartTime; ;
-            BarEndTime = b.BarEndTime;//BarStartTime
-            _sym = b.Symbol;
-        }
-
         public BarImpl(Bar b)
         {
-            v = b.Volume;
-            oi = b.OpenInterest;
-
+            _sym = b.Symbol;
             h = b.Open;
             l = b.Low;
             o = b.Open;
             c = b.Close;
 
-            //DAYEND = b.;
-            _time = b.time;//Bar的当前实际日期  BarTime是通过b.time计算而来
-            bardate = b.Bardate;//Bar的日期
+            v = b.Volume;
+            oi = b.OpenInterest;
 
-            Interval = b.Interval;//间隔units
+            ask = b.Ask;
+            bid = b.Bid;
+
+            //_bardate = b.BarDate;
+            //_updatetime = b.BarUpdateTime;
+
+            _empty = b.EmptyBar;
+            _tradesCount = b.TradeCount;
+            _tradingday = b.TradingDay;
+
+            _intervalType = b.IntervalType;
+            units = b.Interval;
+
             BarStartTime = b.BarStartTime;//结束时间
-            BarEndTime = b.BarEndTime;//BarStartTime
+            //BarEndTime = b.BarEndTime;//BarStartTime
         }
 
-
-        /// <summary>
-        /// 生成一个Interval(units)为多少个间隔的Bar
-        /// </summary>
-        /// <param name="interval"></param>
         public BarImpl(int interval)
         {
             units = interval;
-        }
-        public BarImpl(BarInterval tu) 
-            :this((int)tu)
-        {
-            
+            _intervalType = BarInterval.CustomTime;
+
         }
 
-        /// <summary>
-        /// 对应的当日Bar的开始时间,通过_time进行计算
-        /// </summary>
-        public int Bartime
-        {
-            get
-            {
-                // get num of seconds elaps
-                int elap = Util.FT2FTS(_time); //计算该时刻的时间间隔
-                // get remainder of dividing by interval
-                int rem = elap % Interval;//获得对应余数
-                // get datetime
-                DateTime dt = Util.TLD2DT(bardate);
-                // add rounded down result
-                dt = dt.AddSeconds(elap - rem);//所有时间间隔-余数 就为Bar的开始时间
-                // conver back to normal time
-                int bt = Util.ToTLTime(dt);
-                return bt;
-            }
-            //set { _time = value; }
+        public BarImpl()
+            : this(60)
+        { 
+        
         }
+
         
         /// <summary>
         /// bt是用来计算一天中的第几根Bar是用序号来计算的
         /// </summary>
         /// <param name="time"></param>
         /// <returns></returns>
-        private int bt(int time) 
-        {
-            // get time elapsed to this point
-            int elap = Util.FT2FTS(time);
-            // get seconds per bar
-            int secperbar = Interval;
-            // get number of this bar in the day for this interval
-            int bcount = (int)((double)elap / secperbar);
-            return bcount;
-        }
+        //private int bt(int time) 
+        //{
+        //    // get time elapsed to this point
+        //    int elap = Util.FT2FTS(time);
+        //    // get seconds per bar
+        //    int secperbar = Interval;
+        //    // get number of this bar in the day for this interval
+        //    int bcount = (int)((double)elap / secperbar);
+        //    return bcount;
+        //}
 
         /// <summary>
         /// Accepts the specified tick.
         /// </summary>
         /// <param name="t">The tick you want to add to the bar.</param>
         /// <returns>true if the tick is accepted, false if it belongs to another bar.</returns>
-        public bool newTick(Tick k)
-        {
-            TickImpl t = (TickImpl)k;
-            if (_sym == "") _sym = t.Symbol;
-            if (_sym != t.Symbol) throw new InvalidTick();
-            //if (_time == 0) { _time = t.time; bardate = t.date; }
-            if (_time == 0) { _time = bt(t.Time); bardate = t.Date; }
-            if (bardate != t.Date) DAYEND = true;
-            else DAYEND = false;
-            // check if this bar's tick//如果该bar不在改时间段中则return false
-            if ((bt(t.Time) != _time) || (bardate != t.Date)) return false; 
-            // if tick doesn't have trade or index, ignore
-            if (!t.isTrade && !t.isIndex) return true; //我们只能通过trade来进行bar的形成，没有成交的ask bid不能作为bar数据
-            tradesinbar++; // count it 累计该bar内的trade trade/ask/bid
-            _new = tradesinbar == 1;//是否是新bar的标准  tradesinbar==1
-            // only count volume on trades, not indicies
-            if (!t.isIndex) v += t.Size; // add trade size to bar volume 如果不是质数 则bar的volume通过trades来进行累加
-            //更新bar的o h l c 数据
-            if (o == 0) o = t._trade;//如果open为0 赋初值
-            if (t._trade > h) h = t._trade;
-            if (t._trade < l) l = t._trade;
-            c = t._trade;
-            return true;
-        }
+        //public bool newTick(Tick k)
+        //{
+        //    TickImpl t = (TickImpl)k;
+        //    if (_sym == "") _sym = t.Symbol;
+        //    if (_sym != t.Symbol) throw new InvalidTick();
+        //    //if (_time == 0) { _time = t.time; bardate = t.date; }
+        //    if (_updatetime == 0) { _starttime = Util.ToDateTime(_bardate, bt(t.Time)); }
+        //    if (_bardate != t.Date) DAYEND = true;
+        //    else DAYEND = false;
+        //    // check if this bar's tick//如果该bar不在改时间段中则return false
+        //    if ((bt(t.Time) != _starttime.ToTLTime()) || (_bardate != t.Date)) return false; 
+        //    // if tick doesn't have trade or index, ignore
+        //    if (!t.isTrade && !t.isIndex) return true; //我们只能通过trade来进行bar的形成，没有成交的ask bid不能作为bar数据
+        //    _tradesCount++; // count it 累计该bar内的trade trade/ask/bid
+        //    _new = _tradesCount == 1;//是否是新bar的标准  tradesinbar==1
+        //    // only count volume on trades, not indicies
+        //    if (!t.isIndex) v += t.Size; // add trade size to bar volume 如果不是质数 则bar的volume通过trades来进行累加
+        //    //更新bar的o h l c 数据
+        //    if (o == 0) o = t._trade;//如果open为0 赋初值
+        //    if (t._trade > h) h = t._trade;
+        //    if (t._trade < l) l = t._trade;
+        //    c = t._trade;
+        //    return true;
+        //}
 
         public override string ToString()
         {
-            return string.Format("{6}-{7} {0}-OHLC({1},{2},{3},{4},{5})", this.Symbol, this.Open, this.High, this.Low, this.Close, this.Volume, this.BarStartTime, this.BarEndTime);
-            //return "OHLC (" + bardate +" "+_time + "  " +Bartime.ToString()+") " + Open.ToString("F2") + "," + High.ToString("F2") + "," + Low.ToString("F2") + "," + Close.ToString("F2") + ","+Volume.ToString(); }
+            return string.Format("{6} {0}-OHLC({1},{2},{3},{4},{5})", this.Symbol, this.Open, this.High, this.Low, this.Close, this.Volume, this.BarStartTime);
+        }
+
+        #region 读写Bar不能修改 否则会造成数据格式不兼容
+        /// <summary>
+        /// 将Bar数据写入
+        /// </summary>
+        /// <param name="writer"></param>
+        /// <param name="bar"></param>
+        public static void Write(BinaryWriter writer,BarImpl bar)
+        {
+            writer.Write(Util.ToTLDateTime(bar.BarStartTime));
+            writer.Write(bar.Symbol);
+            writer.Write((int)bar.IntervalType);
+            writer.Write(bar.Interval);
+
+            writer.Write(bar.Ask);
+            writer.Write(bar.Bid);
+            writer.Write(bar.Open);
+            writer.Write(bar.High);
+            writer.Write(bar.Low);
+            writer.Write(bar.Close);
+
+            writer.Write(bar.Volume);
+            writer.Write(bar.OpenInterest);
+            writer.Write(bar.TradeCount);
+            writer.Write(bar.TradingDay);
+            writer.Write(bar.EmptyBar);
         }
 
         /// <summary>
-        /// Create bar object from a CSV file providing OHLC+Volume data.
-        /// 从csv获得bar数据
+        /// 读取Bar数据
         /// </summary>
-        /// <param name="record">The record in comma-delimited format.</param>
-        /// <returns>The equivalent Bar</returns>
-        public static Bar FromCSV(string record) { return FromCSV(record, string.Empty, (int)BarInterval.Day); }
-        public static Bar FromCSV(string record, string symbol, int interval)
+        /// <param name="reader"></param>
+        /// <returns></returns>
+        public static BarImpl Read(BinaryReader reader)
         {
-            // google used as example
-            string[] r = record.Split(',');
-            if (r.Length < 6) return null;
-            DateTime d = new DateTime();
-            try
-            {
-                d = DateTime.Parse(r[0], System.Globalization.CultureInfo.InvariantCulture);
-            }
-            catch (System.FormatException) { return null; }
-            int date = (d.Year * 10000) + (d.Month * 100) + d.Day;
-            decimal open = Convert.ToDecimal(r[1], System.Globalization.CultureInfo.InvariantCulture);
-            decimal high = Convert.ToDecimal(r[2], System.Globalization.CultureInfo.InvariantCulture);
-            decimal low = Convert.ToDecimal(r[3], System.Globalization.CultureInfo.InvariantCulture);
-            decimal close = Convert.ToDecimal(r[4], System.Globalization.CultureInfo.InvariantCulture);
-            long vol = Convert.ToInt64(r[5], System.Globalization.CultureInfo.InvariantCulture);
-            return new BarImpl(open, high, low, close, vol, date, 0, symbol, interval);
-        }
+            BarImpl bar = new BarImpl();
+            long date = reader.ReadInt64();
+            bar.BarStartTime = Util.ToDateTime(date);
+            bar.Symbol = reader.ReadString();
+            bar.IntervalType = (BarInterval)reader.ReadInt32();
+            bar.Interval = reader.ReadInt32();
 
-       
+            bar.Ask = reader.ReadDouble();
+            bar.Bid = reader.ReadDouble();
+            bar.Open = reader.ReadDouble();
+            bar.High = reader.ReadDouble();
+            bar.Low = reader.ReadDouble();
+            bar.Close = reader.ReadDouble();
+
+            bar.Volume = reader.ReadInt32();
+            bar.OpenInterest = reader.ReadInt32();
+            bar.TradeCount = reader.ReadInt32();
+            bar.TradingDay = reader.ReadInt32();
+            bar.EmptyBar = reader.ReadBoolean();
+            return bar;
+        }
+        #endregion
+
+
         /// <summary>
         /// 序列化bar
         /// </summary>
@@ -282,9 +265,9 @@ namespace TradingLib.Common
             sb.Append(d);
             sb.Append(b.Volume);
             sb.Append(d);
-            sb.Append(b.Bardate);
+            //sb.Append(b.BarDate);
             sb.Append(d);
-            sb.Append(b.time);
+            sb.Append(b.BarStartTime);
             sb.Append(d);
             sb.Append(b.Symbol);
             sb.Append(d);
@@ -310,7 +293,7 @@ namespace TradingLib.Common
             int time = Convert.ToInt32(r[6]);
             string symbol = r[7];
             int interval = Convert.ToInt32(r[8]);
-            return new BarImpl(open, high, low, close, vol, date, time, symbol,interval);
+            return null;// new BarImpl(open, high, low, close, vol, date, time, symbol, interval);
         }
 
         /// <summary>
@@ -320,20 +303,20 @@ namespace TradingLib.Common
         /// <param name="bar"></param>
         /// <returns></returns>
         
-        public static Tick[] ToTick(Bar bar)
-        {
-            if (!bar.isValid) return new Tick[0];
-            List<Tick> list = new List<Tick>();
-            list.Add(TickImpl.NewTrade(bar.Symbol, bar.Bardate, bar.Bartime, (decimal)bar.Open,
-(int)((double)bar.Volume / 4), string.Empty));
-            list.Add(TickImpl.NewTrade(bar.Symbol, bar.Bardate, bar.Bartime,
-(decimal)bar.High, (int)((double)bar.Volume / 4), string.Empty));
-            list.Add(TickImpl.NewTrade(bar.Symbol, bar.Bardate, bar.Bartime, (decimal)bar.Low,
-(int)((double)bar.Volume / 4), string.Empty));
-            list.Add(TickImpl.NewTrade(bar.Symbol, bar.Bardate, bar.Bartime,
-(decimal)bar.Close, (int)((double)bar.Volume / 4), string.Empty));
-            return list.ToArray();
-        }
+//        public static Tick[] ToTick(Bar bar)
+//        {
+//            if (!bar.isValid) return new Tick[0];
+//            List<Tick> list = new List<Tick>();
+//            list.Add(TickImpl.NewTrade(bar.Symbol, bar.BarDate, bar.BarStartTime.ToTLTime(), (decimal)bar.Open,
+//(int)((double)bar.Volume / 4), string.Empty));
+//            list.Add(TickImpl.NewTrade(bar.Symbol, bar.BarDate, bar.BarStartTime.ToTLTime(),
+//(decimal)bar.High, (int)((double)bar.Volume / 4), string.Empty));
+//            list.Add(TickImpl.NewTrade(bar.Symbol, bar.BarDate, bar.BarStartTime.ToTLTime(), (decimal)bar.Low,
+//(int)((double)bar.Volume / 4), string.Empty));
+//            list.Add(TickImpl.NewTrade(bar.Symbol, bar.BarDate, bar.BarStartTime.ToTLTime(),
+//(decimal)bar.Close, (int)((double)bar.Volume / 4), string.Empty));
+//            return list.ToArray();
+//        }
         
         /// <summary>
         /// parses message into a structured bar request

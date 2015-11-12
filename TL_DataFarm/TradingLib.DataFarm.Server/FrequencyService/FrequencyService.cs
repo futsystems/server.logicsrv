@@ -12,21 +12,28 @@ namespace TradingLib.DataFarm.Common
     /// <summary>
     /// 维护Bar数据
     /// </summary>
-    public class FrequencyService
+    public partial class FrequencyService
     {
 
         ILog logger = LogManager.GetLogger("FrequencyService");
 
+        public event Action<Bar> NewBarEvent;
+
+
         FrequencyManager frequencyManager;
         ConcurrentDictionary<string, Symbol> subscribeSymbolMap = new ConcurrentDictionary<string, Symbol>();
+        ConcurrentDictionary<BarFrequency, FrequencyPlugin> frequencyPluginMap = new ConcurrentDictionary<BarFrequency, FrequencyPlugin>();
+
 
         public FrequencyService()
         {
+
             //初始化FrequencyPlugin
             TimeFrequency tm = new TimeFrequency(new BarFrequency(BarInterval.CustomTime,30));
             
             //加载合约
-            Symbol symbol = MDBasicTracker.SymbolTracker["CNX5"];
+            Symbol symbol = MDBasicTracker.SymbolTracker["HGZ5"];
+            //Symbol symbol2 = MDBasicTracker.SymbolTracker["HSIX5"];
             if (symbol != null)
             {
                 logger.Info("~~~~~got symbol:" + symbol.Symbol);
@@ -34,6 +41,7 @@ namespace TradingLib.DataFarm.Common
 
                 Dictionary<Symbol, BarConstructionType> map = new Dictionary<Symbol, BarConstructionType>();
                 map.Add(symbol, BarConstructionType.Trade);
+                //map.Add(symbol2, BarConstructionType.Trade);
 
                 subscribeSymbolMap.TryAdd(symbol.Symbol, symbol);
 
@@ -65,6 +73,12 @@ namespace TradingLib.DataFarm.Common
             {
                 logger.Info("Bar:" + b.ToString());
             }
+
+            if (NewBarEvent != null)
+            {
+                NewBarEvent(obj.Bar);
+            }
+
         }
 
 

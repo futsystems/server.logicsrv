@@ -112,10 +112,13 @@
     <Compile Include="Trading\Data\Bar2\FrequencyPlugin.cs" />
     <Compile Include="Trading\Data\Bar2\FrequencyManager.cs" />
     <Compile Include="Trading\Data\Bar2\IFrequencyGenerator.cs" />
+    <Compile Include="Trading\Data\Bar2\ITimeSeries.cs" />
     <Compile Include="Trading\Data\Bar2\PriorityItemPair.cs" />
+    <Compile Include="Trading\Data\Bar2\QTimeList.cs" />
     <Compile Include="Trading\Data\Bar2\SymbolFreq.cs" />
     <Compile Include="Trading\Data\Bar2\TimeFreqGenerator.cs" />
     <Compile Include="Trading\Data\Bar\BarRequest.cs" />
+    <Compile Include="Trading\Data\Bar\BarUtils.cs" />
     <Compile Include="Trading\MarginConfig.cs" />
     <Compile Include="Trading\MarketData.cs" />
     <Compile Include="Trading\MarketTime\MarketTime_old.cs" />

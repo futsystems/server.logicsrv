@@ -38,6 +38,17 @@ namespace DataClient
             client.TLFound();
         }
 
+        TLZMQDataClient mqclient;
+        private void btnMQClient_Click(object sender, EventArgs e)
+        {
+            logger.Info("start client");
+            mqclient = new TLZMQDataClient("127.0.0.1", 9590);
+            mqclient.Connect();
+
+            TradingLib.Common.Message msg = new TradingLib.Common.Message(TradingLib.API.MessageTypes.BROKERNAMEREQUEST,"it is pok ");
+            mqclient.Send(TradingLib.Common.Message.sendmessage(msg));
+        }
+
 
     }
 }

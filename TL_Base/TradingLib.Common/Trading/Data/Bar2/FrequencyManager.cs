@@ -585,7 +585,7 @@ namespace TradingLib.Common
                             }
                             if (barData != null)
                             {
-                                Bar barData2 = new BarImpl(true, current3.Value.Bar.BarStartTime);
+                                Bar barData2 = new BarImpl(current3.Value.Bar.Symbol,freqKey.Settings.BarFrequency, current3.Value.Bar.BarStartTime);
                                 barData2.Open = (barData2.Close = (barData2.High = (barData2.Low = barData.Close)));
                                 barData2.Bid = barData.Bid;
                                 barData2.Ask = barData.Ask;

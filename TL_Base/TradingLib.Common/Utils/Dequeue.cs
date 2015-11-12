@@ -11,7 +11,7 @@ namespace TradingLib.Common
     /// 前后都可以操作的队列
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    public class Dequeue<T> : System.Collections.IEnumerable, System.Collections.Generic.IEnumerable<T>
+    public class Dequeue<T> : IEnumerable,IEnumerable<T>
     {
         internal class DequeueEnumerator : IEnumerator, System.IDisposable,IEnumerator<T>
         {
@@ -232,6 +232,7 @@ namespace TradingLib.Common
 
         /// <summary>
         /// Add the given object to the collections head
+        /// 从头部添加一条数据
         /// </summary>
         /// <param name="value">The object to enqueue</param>
         public void EnqueueHead(T value)
@@ -252,6 +253,7 @@ namespace TradingLib.Common
 
         /// <summary>
         /// Add the given object to the collections tail
+        /// 从尾部添加一条数据
         /// </summary>
         /// <param name="value">The object to enqueue</param>
         public void EnqueueTail(T value)
@@ -269,6 +271,7 @@ namespace TradingLib.Common
 
         /// <summary>
         /// Retrieve and remove the current head
+        /// 从头部删除一条数据
         /// </summary>
         /// <returns>The removed object</returns>
         public T DequeueHead()
@@ -287,6 +290,7 @@ namespace TradingLib.Common
 
         /// <summary>
         /// Retrieve and remove the current tail
+        /// 从尾部删除一条数据
         /// </summary>
         /// <returns>The removed object</returns>
         public T DequeueTail()
@@ -308,6 +312,7 @@ namespace TradingLib.Common
 
         /// <summary>
         /// Add the given collection to the dequeues tail
+        /// 将数据集添加到尾部
         /// </summary>
         /// <param name="C">The source collection</param>
         public void EnqueueTailRange(System.Collections.Generic.ICollection<T> C)
@@ -330,6 +335,7 @@ namespace TradingLib.Common
         /// Add the given collection to the dequeues head.
         /// To preserve the order in the collection, the entries are
         /// added in revers order.
+        /// 将数据集添加到头部
         /// </summary>
         /// <param name="C">The source collection</param>
         public void EnqueueHeadRange(System.Collections.Generic.ICollection<T> C)

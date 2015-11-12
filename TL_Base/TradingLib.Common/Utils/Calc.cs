@@ -1781,7 +1781,7 @@ namespace TradingLib.Common
             int year = (bardate - (month * 100) - day) / 10000;
             return new int[] { year, month, day };
         }
-        public static int[] Date(Bar bar) { return Date(bar.Bardate); }
+        public static int[] Date(Bar bar) { return Date(Util.ToTLDate(bar.BarStartTime)); }
 
         public static double HH(double[] array) { return Max(array); }
 
@@ -2104,17 +2104,17 @@ namespace TradingLib.Common
         /// </summary>
         /// <param name="symbols"></param>
         /// <returns></returns>
-        public static BarList[] FetchCharts(string[] symbols)
-        {
-            List<BarList> l = new List<BarList>();
-            foreach (string sym in symbols)
-            {
-                BarList bl = BarListImpl.DayFromGoogle(sym);
-                if (bl.isValid)
-                    l.Add(bl);
-            }
-            return l.ToArray();
-        }
+        //public static BarList[] FetchCharts(string[] symbols)
+        //{
+        //    List<BarList> l = new List<BarList>();
+        //    foreach (string sym in symbols)
+        //    {
+        //        BarList bl = BarListImpl.DayFromGoogle(sym);
+        //        if (bl.isValid)
+        //            l.Add(bl);
+        //    }
+        //    return l.ToArray();
+        //}
 
         /// <summary>
         /// calculates upper bollinger using default # stdev of 2.5 and opening prices.

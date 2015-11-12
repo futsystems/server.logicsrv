@@ -30,6 +30,7 @@
         {
             this.debugControl1 = new TLDataClient.DebugControl();
             this.btnInit = new System.Windows.Forms.Button();
+            this.btnMQClient = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // debugControl1
@@ -55,11 +56,22 @@
             this.btnInit.UseVisualStyleBackColor = true;
             this.btnInit.Click += new System.EventHandler(this.btnInit_Click);
             // 
+            // btnMQClient
+            // 
+            this.btnMQClient.Location = new System.Drawing.Point(583, 71);
+            this.btnMQClient.Name = "btnMQClient";
+            this.btnMQClient.Size = new System.Drawing.Size(75, 23);
+            this.btnMQClient.TabIndex = 2;
+            this.btnMQClient.Text = "MQClient";
+            this.btnMQClient.UseVisualStyleBackColor = true;
+            this.btnMQClient.Click += new System.EventHandler(this.btnMQClient_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(812, 405);
+            this.Controls.Add(this.btnMQClient);
             this.Controls.Add(this.btnInit);
             this.Controls.Add(this.debugControl1);
             this.Name = "Form1";
@@ -72,6 +84,7 @@
 
         private TLDataClient.DebugControl debugControl1;
         private System.Windows.Forms.Button btnInit;
+        private System.Windows.Forms.Button btnMQClient;
     }
 }
 

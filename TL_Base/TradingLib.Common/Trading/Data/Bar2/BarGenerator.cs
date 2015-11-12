@@ -36,9 +36,10 @@ namespace TradingLib.Common
 
         public DateTime BarStartTime { get {return _currentPartialBar.BarStartTime; } }
 
-
-        public BarGenerator(Symbol symbol,BarConstructionType type)
+        BarFrequency _freq;
+        public BarGenerator(Symbol symbol,BarFrequency freq,BarConstructionType type)
         {
+            this._freq = freq;
             this._symbol = symbol;
             this._barConstructionType = type;
             //初始化PartialBar
@@ -73,9 +74,11 @@ namespace TradingLib.Common
                 this._currentPartialBar.Volume += tick.Size;
                 this._currentPartialBar.OpenInterest = tick.OpenInterest;
                 this._currentPartialBar.EmptyBar = false;
+                this._currentPartialBar.TradeCount++;
+
             }
             //记录时间
-            this._currentPartialBar.time = tick.Time;
+            //this._currentPartialBar.BarUpdateTime = tick.Time;
 
 
             decimal value = 0;
@@ -204,19 +207,16 @@ namespace TradingLib.Common
         private Bar CloseBar(DateTime barEndTime)
         {
              //设定Bar结束时间
-            if (this._currentPartialBar != null)
-            {
-                this._currentPartialBar.BarEndTime = barEndTime;
-            }
+            //if (this._currentPartialBar != null)
+            //{
+            //    this._currentPartialBar.BarEndTime = barEndTime;
+            //}
             logger.Debug(string.Format("Close Bar:{0}", this._currentPartialBar != null ? this._currentPartialBar.ToString() : "Null"));
             
             Bar data = this._currentPartialBar;
             this._isTickSent = false;
 
-            this._currentPartialBar = new BarImpl();
-            this._currentPartialBar.Symbol = this._symbol.Symbol;
-            this._currentPartialBar.BarStartTime = barEndTime;
-            this._currentPartialBar.EmptyBar = true;
+            this._currentPartialBar = new BarImpl(this._symbol.Symbol, this._freq, barEndTime);
             this._updated = false;
 
             if (data != null)

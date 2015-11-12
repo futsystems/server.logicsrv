@@ -28,10 +28,10 @@ namespace TradingLib.DataFarm.Common
                 barData.High = br.ReadDouble();
                 barData.Low = br.ReadDouble();
                 barData.Open = br.ReadDouble();
-                barData.OpenInterest = br.ReadInt64();
+                barData.OpenInterest = (int)br.ReadInt64();
                 double d = br.ReadDouble();
                 barData.BarStartTime = DateTime.FromOADate(d);
-                barData.Volume = br.ReadInt64();
+                barData.Volume = (int)br.ReadInt64();
                 return barData.BarStartTime;
             }
             return DateTime.MinValue;
@@ -49,18 +49,19 @@ namespace TradingLib.DataFarm.Common
             num += 8;
             barData.EmptyBar = BitConverter.ToBoolean(buffer, num);
             num++;
+
             barData.High = BitConverter.ToDouble(buffer, num);
             num += 8;
             barData.Low = BitConverter.ToDouble(buffer, num);
             num += 8;
             barData.Open = BitConverter.ToDouble(buffer, num);
             num += 8;
-            barData.OpenInterest = BitConverter.ToInt64(buffer, num);
-            num += 4;
+            barData.OpenInterest = (int)BitConverter.ToInt64(buffer, num);
+            num += 8;
             double d = BitConverter.ToDouble(buffer, num);
             barData.BarStartTime = DateTime.FromOADate(d);
             num += 8;
-            barData.Volume = BitConverter.ToInt64(buffer, num);
+            barData.Volume = (int)BitConverter.ToInt64(buffer, num);
             num += 8;
             return barData;
         }
@@ -72,6 +73,7 @@ namespace TradingLib.DataFarm.Common
             bw.Write(bar.Bid);
             bw.Write(bar.Close);
             bw.Write(bar.EmptyBar);
+
             bw.Write(bar.High);
             bw.Write(bar.Low);
             bw.Write(bar.Open);
