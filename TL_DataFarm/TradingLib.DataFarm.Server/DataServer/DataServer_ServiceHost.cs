@@ -6,7 +6,7 @@ using System.IO;
 using System.Reflection;
 using TradingLib.API;
 using TradingLib.Common;
-using TradingLib.DataFarm;
+using TradingLib.DataFarm.API;
 
 namespace TradingLib.DataFarm.Common
 {
@@ -80,20 +80,16 @@ namespace TradingLib.DataFarm.Common
 
         void StartServiceHost(DataFarm.API.IServiceHost host)
         {
-            host.RequestEvent += new Action<DataFarm.API.IServiceHost,IPacket>(OnRequestEvent);
+            host.SessionCreatedEvent += new Action<IServiceHost, IConnection>(OnSessionCreatedEvent);
+            host.SessionClosedEvent += new Action<IServiceHost, IConnection>(OnSessionClosedEvent);
+            host.RequestEvent += new Action<IServiceHost, IConnection, IPacket>(OnRequestEvent);    //(OnRequestEvent);
+            host.ServiceEvent += new Func<IServiceHost, IPacket, IPacket>(OnServiceEvent);
             host.Start();
         }
 
+        
 
-        /// <summary>
-        /// 获得ServiceHost发送过来的请求数据
-        /// 按消息类别执行请求
-        /// </summary>
-        /// <param name="host"></param>
-        /// <param name="packet"></param>
-        void OnRequestEvent(DataFarm.API.IServiceHost host,IPacket packet)
-        {
-            
-        }
+
+        
     }
 }

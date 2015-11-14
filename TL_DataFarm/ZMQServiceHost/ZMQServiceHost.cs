@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Concurrent;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -67,7 +68,7 @@ namespace ZMQServiceHost
         {
             if (_started)
                 return;
-            logger.Info("Start Message Transport Service @" + _name);
+            logger.Info("Start Transport Service @" + _name);
             //启动主服务线程
             _workergo = true;
             _srvgo = true;
@@ -274,98 +275,111 @@ namespace ZMQServiceHost
             }
         }
 
+        public void Send(IPacket packet, bool isReq = false)
+        {
+            this.Send(packet.Data, packet.ClientID, isReq);  
+        }
+
+        public void Send(byte[] data, string address, bool isReq = false)
+        {
+            if (_outputChanel == null)
+                throw new InvalidOperationException("out channel is null");
+            lock (_outputChanel)
+            {
+                ZMessage zmsg = new ZMessage(data);
+                if (isReq)
+                {
+                    zmsg.Wrap(Encoding.UTF8.GetBytes(address), Encoding.UTF8.GetBytes(""));
+                }
+                else
+                {
+                    zmsg.Wrap(Encoding.UTF8.GetBytes(address), null);
+                }
+                zmsg.Send(_outputChanel);
+            }
+        }
+
+        /// <summary>
+        /// 记录客户端注册的连接
+        /// </summary>
+        ConcurrentDictionary<string, IConnection> _sessionMap = new ConcurrentDictionary<string, IConnection>();
+
+        /// <summary>
+        /// MD_ZMQ服务端处理直接连接的客户端请求 每个请求均有一个对应的地址
+        /// 
+        /// </summary>
+        /// <param name="worker"></param>
+        /// <param name="id"></param>
         void MessageProcess(ZmqSocket worker, int id)
         {
             try
             {
+                ZMessage zrequest = new ZMessage(worker);
+                string address = zrequest.AddressToString();
+                Message message = Message.gotmessage(zrequest.Body);
 
-                //服务端从这里得到客户端过来的消息
-                ZMessage zmsg = new ZMessage(worker);
-                //1.进行消息地址解析 zmessage 中含有多个frame frame[0]是消息主体,其余frame是附加的地址信息
-                //通过zmessage frame数量判断,获得对应的地址信息
-                string front = string.Empty;
-                string address = string.Empty;
-                Message msg = Message.gotmessage(zmsg.Body);
-
-                logger.Info("Frames Count:" + zmsg.FrameCount.ToString() + " body:" + UTF8Encoding.Default.GetString(zmsg.Body) + " add:" + UTF8Encoding.Default.GetString(zmsg.Address));
-                //注意:进行地址有效性检查,如果有空地址 则直接返回。空地址会造成下道逻辑的错误
-                //带有2层地址,客户端从接入服务器登入
-                //if (TradingLib.Core.CoreGlobal.EnableAccess)//如果允许前置接入 则消息可以带有2层或者1层地址
-                //如果消息类型是前置发送到交易逻辑服务的心跳
-                if (msg.Type == MessageTypes.LOGICLIVEREQUEST)
+                logger.Info(string.Format("ServiceHost got message type:{0} content:{1}", message.Type, message.Content));
+                //响应客户端服务查询
+                switch(message.Type)
                 {
-                    if (zmsg.FrameCount == 3)
-                    {
-                        front = zmsg.AddressToString();//获得第一层地址
-                        zmsg.Unwrap();//分离第一层地址
-                        address = zmsg.AddressToString();
-
-                        LogicLiveRequest request = (LogicLiveRequest)PacketHelper.SrvRecvRequest(msg.Type, msg.Content, front, address);
-
-                        //Util.Debug(string.Format("LogicHeartBeat from:{0} address:{1}",front,address),QSEnumDebugLevel.DEBUG);
-                        LogicLiveResponse response = ResponseTemplate<LogicLiveResponse>.SrvSendRspResponse(request);
-
-                        ZMessage reply = new ZMessage(response.Data);
-                        //将消息地址与消息绑定，通过outputChanel发送出去,这样frontend就会根据消息地址自动的将消息发送给对应的客户端
-                        reply.Wrap(Encoding.UTF8.GetBytes(address), null);
-                        //如果front不为空或者null,则我们再继续添加路由地址
-                        if (!string.IsNullOrEmpty(front))
+                    //响应客户端服务查询
+                    case MessageTypes.SERVICEREQUEST:
                         {
-                            reply.Wrap(Encoding.UTF8.GetBytes(front), null);
+                            QryServiceRequest request = RequestTemplate<QryServiceRequest>.SrvRecvRequest("", address, message.Content);
+                            RspQryServiceResponse response = QryService(request);
+                            this.Send(response,true);
+                            logger.Info(string.Format("Got QryServiceRequest from:{0} request:{1} reponse:{2}", address, request, response));
+                            return;
                         }
-                        reply.Send(worker);
-                    }
-                    return;
 
-                }
-                if (true)
-                {
-                    if (zmsg.FrameCount == 3)
-                    {
-                        front = zmsg.AddressToString();//获得第一层地址
-                        zmsg.Unwrap();//分离第一层地址
-                        address = zmsg.AddressToString();
-                        //debug("Got 3 frame " + "front:" + front + " address:" + address, QSEnumDebugLevel.MUST);
-                        if (string.IsNullOrEmpty(front) || string.IsNullOrEmpty(address) || address.Length != 36) return;
-                    }
-                    //带有1层地址,客户直接连接到本地的router
-                    else if (zmsg.FrameCount == 2)
-                    {
-                        address = zmsg.AddressToString();
-                        //debug("Got 2 frame " + "front:" + front + " address:" + address, QSEnumDebugLevel.MUST);
-                        if (string.IsNullOrEmpty(address) || address.Length != 36) return;
-                    }
-                    else
-                    {
+
+                    //响应客户端连接注册 该注册是底层连接部分的注册 需要ServiceHost维护该连接在客户端登入成功后还建立漏记连接Connection
+                    case MessageTypes.REGISTERCLIENT:
+                        {
+                            RegisterClientRequest request = RequestTemplate<RegisterClientRequest>.SrvRecvRequest("", address, message.Content);
+                            if (request != null)
+                            {
+                                IConnection conn = null;
+                                //连接已经建立直接返回
+                                if (_sessionMap.TryGetValue(address,out conn))
+                                {
+                                    logger.Warn(string.Format("Client:{0} already exist", address));
+                                    return;
+                                }
+                                
+                                //创建连接
+                                conn = new ZMQConnection(this, address);
+                                _sessionMap.TryAdd(address, conn);
+
+                                //发送回报
+                                RspRegisterClientResponse response = ResponseTemplate<RspRegisterClientResponse>.SrvSendRspResponse(request);
+                                response.SessionID = address;
+                                conn.Send(response);
+
+                                logger.Info(string.Format("Client:{0} registed to server", address));
+                                //向逻辑成抛出连接建立事件
+                                OnSessionCreated(conn);
+                                
+                            }
+                            return;
+                        }
+                    default:
+                        {
+                            IConnection conn = null;
+                            if (!_sessionMap.TryGetValue(address, out conn))
+                            {
+                                logger.Warn(string.Format("Client:{0} is not registed to server, ignore request", address));
+                                return;
+                            }
+
+                            IPacket packet = PacketHelper.SrvRecvRequest(message.Type, message.Content, "", address);
+                            if (packet != null && RequestEvent != null)
+                            {
+                                RequestEvent(this,conn,packet);
+                            }
+                        }
                         return;
-                    }
                 }
-                else//如果不允许前置接入,则只有1层地址的消息可以被处理
-                {
-                    if (zmsg.FrameCount == 2)
-                    {
-                        address = zmsg.AddressToString();
-                        //debug("no access Got 2 frame " + "front:" + front + " address:" + address, QSEnumDebugLevel.MUST);
-                        if (string.IsNullOrEmpty(address) || address.Length != 36) return;
-                    }
-                    else
-                    {
-                        return;
-                    }
-                }
-
-                //2.流控 超过消息频率则直接返回不进行该消息的处理(拒绝该消息) 交易服务器才执行流控,管理服务器不执行
-                //if (this._tlmode == QSEnumTLMode.TradingSrv && !zmqTP.NewZmessage(address,zmsg)) 
-                //{
-                //    return true;
-                //}
-
-                //3.消息处理如果解析出来的消息是有效的则丢入处理流程进行处理，如果无效则不处理
-
-                //debug(string.Format("[AsyncServerMQ] Worker_{0} Got Message,FrameCount:{1} Front:{2} Address:{3} Type:{4} Content:{5}", id, zmsg.FrameCount,front, address, msg.Type, msg.Content),QSEnumDebugLevel.INFO);
-                if (msg.isValid)
-                    HandleMessage(msg.Type, msg.Content, front, address);//处理消息按照消息类型进行消息路由,如果没有该消息则则会被系统过滤掉
-                return;
             }
             catch (ZmqException e)
             {
@@ -398,11 +412,65 @@ namespace ZMQServiceHost
             return null;
         }
 
+        void OnSessionCreated(IConnection conn)
+        {
+            if (SessionCreatedEvent != null)
+            {
+                SessionCreatedEvent(this, conn);
+            }
+        }
 
-        private void HandleMessage(MessageTypes type, string body, string front, string address)
+        void OnSessionClosed(IConnection conn)
+        {
+            if (SessionClosedEvent != null)
+            {
+                SessionClosedEvent(this, conn);
+            }
+        }
+        private void HandleMessage(MessageTypes type, string body,string address)
         { 
             
         }
-        public event Action<IServiceHost, IPacket> RequestEvent;
+
+        /// <summary>
+        /// 查询服务是否可用
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        private RspQryServiceResponse QryService(QryServiceRequest request)
+        {
+            RspQryServiceResponse response = null;
+            if (ServiceEvent != null)
+            {
+                IPacket packet = ServiceEvent(this, request);
+                
+                if (packet!=null && packet.Type == MessageTypes.SERVICERESPONSE)
+                {
+                    response = packet as RspQryServiceResponse;
+                    response.APIType = QSEnumAPIType.MD_ZMQ;
+                    response.APIVersion = "1.0.0";
+                }
+            }
+            if (response == null)
+            {
+                response = ResponseTemplate<RspQryServiceResponse>.SrvSendRspResponse(request);
+                response.APIType = QSEnumAPIType.ERROR;
+                response.APIVersion = "";
+            }
+            return response;
+        }
+        public event Action<IServiceHost,IConnection,IPacket> RequestEvent;
+
+        public event Func<IServiceHost, IPacket, IPacket> ServiceEvent;
+
+        /// <summary>
+        /// 客户端连接建立
+        /// </summary>
+        public event Action<IServiceHost, IConnection> SessionCreatedEvent;
+
+        /// <summary>
+        /// 客户端连接关闭
+        /// </summary>
+        public event Action<IServiceHost, IConnection> SessionClosedEvent;
     }
 }

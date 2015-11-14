@@ -35,8 +35,8 @@ namespace TradingLib.API
         UPDATECLIENTFRONTID=4,//重启前置后，由于前置编号发生变化，需要更新原来交易客户端回话的前置地址，否则后期的通讯将会被丢弃
         FRONTSTATUSREQUEST=5,//前置机工作状态请求
         FRONTSTATUSRESPONSE=6,//前置机工作状态回报
-        CUSTOM7,
-        CUSTOM8,
+        SERVICEREQUEST=7,//服务查询请求
+        SERVICERESPONSE=8,//服务查询回报
         CUSTOM9,
         CUSTOM10,
        
@@ -109,7 +109,9 @@ namespace TradingLib.API
         BROKERNAMERESPONSE,//服务名查询回报
         FEATURERESPONSE,//功能特征回报
         HEARTBEATRESPONSE,//服务端应答客户端,如果客户端在一定时间内没有收到数据 就会触发发送heartbeatrequest,然后服务端就会发送一个response以证明客户端与服务端之间连接有效
-        
+        REGISTERCLIENTRESPONSE,//客户端注册连接回报
+
+
         TICKNOTIFY=6100,//Tick数据
         TICKHEARTBEAT,//行情心跳
         INDICATORNOTIFY,//指标通知

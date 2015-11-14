@@ -5,7 +5,7 @@ using System.Text;
 using SuperSocket.SocketBase;
 using SuperSocket.SocketBase.Protocol;
 
-namespace DataFarm
+namespace TCPServiceHost
 {
     public class TLServerBase : AppServer<TLSessionBase,TLRequestInfo>
     {

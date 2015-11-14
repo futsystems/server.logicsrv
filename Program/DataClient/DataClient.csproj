@@ -84,7 +84,9 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="TLClient_Socket.cs" />
+    <Compile Include="TLClient.cs" />
+    <Compile Include="TLSocketBase.cs" />
+    <Compile Include="TLSocket_TCP.cs" />
     <Compile Include="TLZMQDataClient.cs" />
     <Compile Include="zmessages.cs" />
     <EmbeddedResource Include="DebugControl.resx">

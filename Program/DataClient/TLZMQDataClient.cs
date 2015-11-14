@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading;
+using System.Net;
 using TradingLib.API;
 using TradingLib.Common;
 using Common.Logging;
@@ -14,10 +15,10 @@ namespace DataClient
     /// 负责连接MDCore服务器
     /// 用于查询基础数据以及历史数据
     /// </summary>
-    public class TLZMQDataClient
+    public class TLZMQDataClient:TLSocketBase
     {
 
-        ILog logger = LogManager.GetLogger("Client");
+        ILog logger = LogManager.GetLogger("ZMQSocket");
 
         const int TimoutSecend = 1;
 
@@ -26,25 +27,35 @@ namespace DataClient
         /// </summary>
         TimeSpan pollerTimeOut = new TimeSpan(0, 0, TimoutSecend);
 
+        string _sessionId = string.Empty;
+        public string SessionID { get { return _sessionId; } }
 
         ZmqSocket _dealer = null;
         string _id = string.Empty;
         Thread _thread = null;
 
-        string _server = "127.0.0.1";
-        int _port = 9590;
+        //string _server = "127.0.0.1";
+        //int _port = 9590;
         bool _running = false;
 
-        public TLZMQDataClient(string server, int port)
-        {
-            _server = server;
-            _port = port;
+
+        public event Action<MessageTypes,string> MessageEvent;
+
+
+        public TLZMQDataClient(IPEndPoint server)
+            : base(server)
+        { 
+            
         }
 
+        public override bool IsConnected
+        {
+            get { return _running; }
+        }
         /// <summary>
         /// 连接到服务端
         /// </summary>
-        public void Connect()
+        public override void Connect()
         {
             //启动数据接收线程
             if (_processgo)
@@ -66,7 +77,7 @@ namespace DataClient
         /// <summary>
         /// 断开服务端连接
         /// </summary>
-        public void Disconnect()
+        public override void Disconnect()
         {
             if (!_processgo)
                 return;
@@ -95,7 +106,7 @@ namespace DataClient
         /// 发送消息
         /// </summary>
         /// <param name="msg"></param>
-        public void Send(byte[] msg)
+        public override void Send(byte[] msg)
         {
             if (_dealer == null)
                 throw new InvalidOperationException("dealer socket is null");
@@ -104,7 +115,44 @@ namespace DataClient
                 _dealer.Send(msg);
             }
         }
+        
+        static TimeSpan socketTimeOut = new TimeSpan(0, 0, 2);
 
+        /// <summary>
+        /// 查询服务端服务是否可用
+        /// 客户端提供apiType类别,version版本号等信息
+        /// </summary>
+        /// <returns></returns>
+        public override  RspQryServiceResponse QryService(QSEnumAPIType apiType,string version)
+        {
+            using (ZmqContext ctx = ZmqContext.Create())
+            {
+                using (ZmqSocket socket= ctx.CreateSocket(SocketType.REQ))
+                {
+                    socket.Identity = Encoding.UTF8.GetBytes(System.Guid.NewGuid().ToString());
+                    socket.Linger = new TimeSpan(0, 0, 0);
+                    socket.Connect(string.Format("tcp://{0}:{1}",_server.Address,_server.Port));
+                    QryServiceRequest request = RequestTemplate<QryServiceRequest>.CliSendRequest(0);
+                    request.APIType = apiType;
+                    request.APIVersion = version;
+                    socket.Send(request.Data, socketTimeOut);
+                    
+                    byte[] data=new byte[1024];
+                    socket.Receive(data,socketTimeOut);//3秒内没有获得服务端回报则超时退出
+                    Message message = Message.gotmessage(data);
+
+                    RspQryServiceResponse response = null;
+                    if (message.isValid && message.Type == MessageTypes.SERVICERESPONSE)
+                    {
+                        response = ResponseTemplate<RspQryServiceResponse>.CliRecvResponse(message.Content);
+
+                    }
+                    return response;
+                    
+                }
+
+            }
+        }
 
         
         bool _processgo = false;
@@ -116,16 +164,27 @@ namespace DataClient
                 {
                     _id = System.Guid.NewGuid().ToString();
                     _dealer.Identity = Encoding.UTF8.GetBytes(_id);
-
-                    string cstr = string.Format("tcp://{0}:{1}", _server, _port);
+                    _dealer.Linger = new TimeSpan(0, 0, 0);
+                    string cstr = string.Format("tcp://{0}:{1}", _server.Address,_server.Port);
                     _dealer.Connect(cstr);
                     logger.Info("connect to MDCore:" + cstr);
 
                     
                     _dealer.ReceiveReady += (s, e) =>
                     {
-                        var zmsg = new ZMessage(e.Socket);
-
+                        try
+                        {
+                            var zmsg = new ZMessage(e.Socket);
+                            Message msg = Message.gotmessage(zmsg.Body);
+                            if (msg.isValid && MessageEvent != null)
+                            {
+                                MessageEvent(msg.Type, msg.Content);
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            logger.Error("Handle Data Error:" + ex.ToString());
+                        }
                     };
                     var poller = new Poller(new List<ZmqSocket> { _dealer });
                     _running = true;

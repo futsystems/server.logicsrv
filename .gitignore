@@ -26,6 +26,7 @@
 /Platform/TradingSrv/TLDataBase/LogServer/*
 /Platform/**/logs
 /Platform/Logs
+/Platform/DataSrv/database/*
 
 /publish
 /package

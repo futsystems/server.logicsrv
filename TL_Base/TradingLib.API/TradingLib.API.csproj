@@ -62,6 +62,7 @@
     <Compile Include="Msic\EnumMarginPrice.cs" />
     <Compile Include="Msic\EnumTransType.cs" />
     <Compile Include="Msic\IMGRClient.cs" />
+    <Compile Include="Msic\ITLSocket.cs" />
     <Compile Include="Trading\BasicInfo\ITradingRange.cs" />
     <Compile Include="Trading\BasicInfo\SettlementPrice.cs" />
     <Compile Include="Trading\CashTransaction.cs" />

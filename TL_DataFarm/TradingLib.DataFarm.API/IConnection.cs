@@ -33,6 +33,11 @@ namespace TradingLib.DataFarm.API
         string IPAddress { get; set; }
 
         /// <summary>
+        /// 最近的客户端心跳
+        /// </summary>
+        DateTime LastHeartBeat { get; set; }
+
+        /// <summary>
         /// 向Connection发送消息
         /// </summary>
         /// <param name="packet"></param>

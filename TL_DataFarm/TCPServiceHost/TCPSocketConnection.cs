@@ -5,7 +5,7 @@ using System.Text;
 using TradingLib.API;
 using TradingLib.DataFarm.API;
 
-namespace DataFarm
+namespace TCPServiceHost
 {
     /// <summary>
     /// 封装了一个TCPSocketServiceHost 中的Connection对象
@@ -54,15 +54,19 @@ namespace DataFarm
         {
             _session = session;
             _serviceHost = host;
+            this.LastHeartBeat = DateTime.Now;
         }
 
+
+        public DateTime LastHeartBeat { get; set; }
         /// <summary>
         /// 发送数据包
         /// </summary>
         /// <param name="packet"></param>
         public void Send(IPacket packet)
-        { 
-            
+        {
+            byte[] data = packet.Data;
+            _session.Send(data, 0, data.Length);
         }
 
         

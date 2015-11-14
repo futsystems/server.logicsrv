@@ -58,7 +58,7 @@ namespace SuperSocket.Facility.Protocol
         public virtual TRequestInfo Filter(byte[] readBuffer, int offset, int length, bool toBeCopied, out int rest)
         {
             rest = m_ParsedLength + length - m_Size;
-
+            //已解析长度+当前数据长度-定长长度 >=0 表明有一个数据包完整到达,进行解析
             if (rest >= 0)
             {
                 var requestInfo = ProcessMatchedRequest(readBuffer, offset - m_ParsedLength, m_Size, toBeCopied);

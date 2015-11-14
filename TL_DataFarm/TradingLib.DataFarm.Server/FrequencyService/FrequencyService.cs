@@ -50,10 +50,10 @@ namespace TradingLib.DataFarm.Common
 
 
             //绑定事件
-            frequencyManager.FreqKeyRegistedEvent += new Action<FrequencyManager.FreqKey>(OnFreqKeyRegistedEvent);
+            //frequencyManager.FreqKeyRegistedEvent += new Action<FrequencyManager.FreqKey>(OnFreqKeyRegistedEvent);
 
             //注册频率发生器
-            frequencyManager.RegisterFrequencies(tm);
+            //frequencyManager.RegisterFrequencies(tm);
         }
 
         void OnFreqKeyRegistedEvent(FrequencyManager.FreqKey obj)

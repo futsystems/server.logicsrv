@@ -6,10 +6,7 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
-using SuperSocket.Common;
-using SuperSocket.SocketBase.Command;
-using SuperSocket.SocketBase.Config;
-using SuperSocket.SocketBase.Protocol;
+
 
 using TradingLib.DataFarm.API;
 using TradingLib.DataFarm.Common;
@@ -31,7 +28,7 @@ namespace DataFarm
             System.Environment.Exit(0);
         }
 
-        TLServerBase appserver = null;
+        //TLServerBase appserver = null;
 
         void debug(string msg)
         {

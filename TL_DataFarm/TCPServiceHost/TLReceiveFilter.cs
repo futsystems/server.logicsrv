@@ -9,8 +9,12 @@ using TradingLib.API;
 using TradingLib.Common;
 
 
-namespace DataFarm
+namespace TCPServiceHost
 {
+    /// <summary>
+    /// 头部定长协议
+    /// 用于头部长度固定，头部中包含消息体长度的协议类型
+    /// </summary>
     public class TLReceiveFilter : FixedHeaderReceiveFilter<TLRequestInfo>
     {
         public TLReceiveFilter()
@@ -48,12 +52,12 @@ namespace DataFarm
         /// <returns></returns>
         protected override TLRequestInfo ResolveRequestInfo(ArraySegment<byte> header, byte[] bodyBuffer, int offset, int length)
         {
-            int totallen = BitConverter.ToInt32(header.Array, offset + LENGTHOFFSET);
-            MessageTypes type = (MessageTypes)BitConverter.ToInt32(header.Array, offset + TYPEOFFSET);
+            int totallen = BitConverter.ToInt32(header.Array,LENGTHOFFSET);
+            MessageTypes type = (MessageTypes)BitConverter.ToInt32(header.Array,TYPEOFFSET);
             string content = string.Empty;
             if(length>0)
             {
-                content = System.Text.Encoding.UTF8.GetString(bodyBuffer,0,length);
+                content = System.Text.Encoding.UTF8.GetString(bodyBuffer,offset,length);
             }
             Message message = new Message(type, content,totallen);
 

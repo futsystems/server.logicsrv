@@ -40,6 +40,9 @@
     <Reference Include="Common.Logging.Core">
       <HintPath>..\..\lib\Common.Logging.Core.dll</HintPath>
     </Reference>
+    <Reference Include="STSdb4">
+      <HintPath>..\..\lib\STSdb4.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data" />
@@ -68,6 +71,7 @@
     <Compile Include="DataBase\STSLocalDB.cs" />
     <Compile Include="DataBase\STSMemoryDB.cs" />
     <Compile Include="DataServer\DataServer.cs" />
+    <Compile Include="DataServer\DataServer_IPacketRouter.cs" />
     <Compile Include="FrequencyService\FrequencyService.cs" />
     <Compile Include="FrequencyService\FrequencyService_.cs" />
     <Compile Include="FrequencyService\FrequencyService_QryBar.cs" />
@@ -86,10 +90,6 @@
     <Compile Include="Tracker\SymbolTracker.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\STSdb4\STSdb4.csproj">
-      <Project>{BE6C9FF2-7817-4EF4-BD8F-6F78126878D3}</Project>
-      <Name>STSdb4</Name>
-    </ProjectReference>
     <ProjectReference Include="..\TradingLib.DataFarm.API\TradingLib.DataFarm.API.csproj">
       <Project>{FE184B78-DFA2-4E10-98CD-C6EAC59D84D9}</Project>
       <Name>TradingLib.DataFarm.API</Name>

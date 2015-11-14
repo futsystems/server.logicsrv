@@ -49,6 +49,8 @@ namespace TradingLib.DataFarm.Common
             LoadServiceHosts();
             //启动ServiceHost
             StartServiceHosts();
+
+            
             
         }
 

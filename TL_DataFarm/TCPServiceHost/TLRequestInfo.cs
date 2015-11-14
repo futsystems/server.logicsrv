@@ -7,7 +7,7 @@ using SuperSocket.SocketBase.Protocol;
 using TradingLib.API;
 using TradingLib.Common;
 
-namespace DataFarm
+namespace TCPServiceHost
 {
     public class TLRequestInfo : RequestInfo<string>
     {

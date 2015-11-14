@@ -7,7 +7,8 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using Common.Logging;
-
+using TradingLib.API;
+using TradingLib.Common;
 
 namespace DataClient
 {
@@ -31,22 +32,33 @@ namespace DataClient
             InitClient();
         }
 
-        TLClient_Socket client = null;
+        //TLSocket_TCP client = null;
         void InitClient()
         {
-            client = new TLClient_Socket("127.0.0.1", 5060, "demo_client");
-            client.TLFound();
+            
         }
 
         TLZMQDataClient mqclient;
+        TLClient cli;
         private void btnMQClient_Click(object sender, EventArgs e)
         {
             logger.Info("start client");
-            mqclient = new TLZMQDataClient("127.0.0.1", 9590);
-            mqclient.Connect();
+            cli = new TLClient("127.0.0.1", 5060, "ZMQClient");
+            cli.Start();
+            
+        }
 
-            TradingLib.Common.Message msg = new TradingLib.Common.Message(TradingLib.API.MessageTypes.BROKERNAMEREQUEST,"it is pok ");
-            mqclient.Send(TradingLib.Common.Message.sendmessage(msg));
+        private void btnQryService_Click(object sender, EventArgs e)
+        {
+            
+        }
+
+        private void btnStopMQClient_Click(object sender, EventArgs e)
+        {
+            if (cli != null)
+            {
+                cli.Stop();
+            }
         }
 
 

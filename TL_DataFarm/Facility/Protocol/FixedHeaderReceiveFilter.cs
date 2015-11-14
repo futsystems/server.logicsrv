@@ -44,6 +44,7 @@ namespace SuperSocket.Facility.Protocol
         /// <returns></returns>
         public override TRequestInfo Filter(byte[] readBuffer, int offset, int length, bool toBeCopied, out int rest)
         {
+            //没有获得头部数据 则调用基类FixedSizeReceiveFilterl来获得数据
             if (!m_FoundHeader)
                 return base.Filter(readBuffer, offset, length, toBeCopied, out rest);
 

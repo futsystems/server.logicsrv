@@ -6,7 +6,7 @@ using TradingLib.API;
 using TradingLib.DataFarm.API;
 using Common.Logging;
 
-namespace DataFarm
+namespace TCPServiceHost
 {
     public partial class TCPServiceHost:IServiceHost
     {

@@ -32,6 +32,31 @@ namespace TradingLib.Common
         }
     }
 
+    public class RspRegisterClientResponse : RspResponsePacket
+    {
+        public RspRegisterClientResponse()
+        {
+            _type = MessageTypes.REGISTERCLIENTRESPONSE;
+            this.SessionID = string.Empty;
+        }
+        /// <summary>
+        /// 回话编号
+        /// 每个客户端连接到服务端均有一个SessionID对应
+        /// </summary>
+        public string SessionID { get; set; }
+
+        public override string ResponseSerialize()
+        {
+            return string.Format("{0}", this.SessionID);
+        }
+
+        public override void ResponseDeserialize(string content)
+        {
+            string[] rec = content.Split(',');
+            this.SessionID = rec[0];
+        }
+    }
+
     public class UnregisterClientRequest : RequestPacket
     {
         public UnregisterClientRequest()
