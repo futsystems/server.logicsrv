@@ -616,6 +616,7 @@ namespace DataClient
         /// <returns></returns>
         public void SendHeartBeat()
         {
+            _lastHeartbeatSent = DateTime.Now;
             HeartBeat hb = RequestTemplate<HeartBeat>.CliSendRequest(requestid++);
             TLSend(hb);
         }

@@ -26,14 +26,6 @@ namespace TradingLib.DataFarm.API
 
 
         /// <summary>
-        /// 创建Connection对象
-        /// DataServer不负责传输层面逻辑，只负责业务层面的逻辑,当DataServer认证通过后需要调用ServiceHost来创建Connection
-        /// </summary>
-        /// <param name="sessionID"></param>
-        /// <returns></returns>
-        IConnection CreateConnection(string sessionID);
-
-        /// <summary>
         /// 客户端连接建立
         /// </summary>
         event Action<IServiceHost, IConnection> SessionCreatedEvent;

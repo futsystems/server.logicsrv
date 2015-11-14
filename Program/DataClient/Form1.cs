@@ -61,6 +61,19 @@ namespace DataClient
             }
         }
 
+        private void btnQryBar_Click(object sender, EventArgs e)
+        {
+            QryBarRequest request = RequestTemplate<QryBarRequest>.CliSendRequest(0);
+            request.FromEnd = fromend.Checked;
+            request.Symbol = Symbol.Text;
+            request.MaxCount = (int)maxcount.Value;
+            request.Interval = (int)interval.Value;
+            request.Start = start.Value;
+            request.End = end.Value;
+
+            cli.TLSend(request);
+        }
+
 
     }
 }

@@ -18,7 +18,7 @@ namespace TradingLib.DataFarm.Common
     {
 
         private readonly string _ServiceHostFolder = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "ServiceHost");
-        private readonly List<DataFarm.API.IServiceHost> _serviceHosts = new List<DataFarm.API.IServiceHost>();
+        private readonly List<IServiceHost> _serviceHosts = new List<IServiceHost>();
         
         /// <summary>
         /// 加载ServiceHost
@@ -78,7 +78,12 @@ namespace TradingLib.DataFarm.Common
             }
         }
 
-        void StartServiceHost(DataFarm.API.IServiceHost host)
+        /// <summary>
+        /// 启动某个ServiceHost
+        /// 绑定ServiceHost
+        /// </summary>
+        /// <param name="host"></param>
+        void StartServiceHost(IServiceHost host)
         {
             host.SessionCreatedEvent += new Action<IServiceHost, IConnection>(OnSessionCreatedEvent);
             host.SessionClosedEvent += new Action<IServiceHost, IConnection>(OnSessionClosedEvent);

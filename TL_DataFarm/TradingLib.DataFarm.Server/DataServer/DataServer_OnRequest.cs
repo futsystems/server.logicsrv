@@ -29,7 +29,16 @@ namespace TradingLib.DataFarm.Common
 
         void OnSessionCreatedEvent(IServiceHost arg1, IConnection arg2)
         {
-            logger.Info(string.Format("Connection:{0} created", arg2.SessionID));
+            
+            if (!connectionMap.Keys.Contains(arg2.SessionID))
+            {
+                connectionMap.TryAdd(arg2.SessionID, arg2);
+                logger.Info(string.Format("Connection:{0} created", arg2.SessionID));
+            }
+            else
+            {
+                logger.Warn(string.Format("Connection:{0} already exit", arg2.SessionID));
+            }
         }
 
 
@@ -54,7 +63,6 @@ namespace TradingLib.DataFarm.Common
             logger.Info(string.Format("ServiceHost:{0} Connection:{1} Request:{2}", host.Name, conn.SessionID, packet.ToString()));
             
             //更新客户端连接心跳
-            
 
             switch (packet.Type)
             { 
@@ -72,10 +80,14 @@ namespace TradingLib.DataFarm.Common
                     break;
                     //响应客户端心跳查询
                 case MessageTypes.HEARTBEATREQUEST:
-                    //SrvOnHeartbeatRequest(host, conn, packet as HeartBeatRequest);
+                    SrvOnHeartbeatRequest(host, conn, packet as HeartBeatRequest);
                     break;
 
+                case MessageTypes.BARREQUEST:
+                    SrvOnBarRequest(host, conn, packet as QryBarRequest);
+                    break;
                 default:
+                    logger.Warn(string.Format("Message Type:{0} not handled",packet.Type));
                     break;
             }
         }
@@ -117,5 +129,16 @@ namespace TradingLib.DataFarm.Common
             conn.Send(response);
         }
 
+
+        void SrvOnBarRequest(IServiceHost host, IConnection conn, QryBarRequest request)
+        {
+            logger.Info("Got Qry Bar Request:" + request.ToString());
+            //查询Bar数据
+            IEnumerable<Bar> bars = localdb.QryBar(request.Symbol, request.IntervalType, request.Interval, request.Start, request.End, (int)request.MaxCount, request.FromEnd);
+
+            logger.Info("got cnt:" + bars.Count());
+        }
+
+        
     }
 }

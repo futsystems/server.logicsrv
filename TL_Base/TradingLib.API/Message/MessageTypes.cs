@@ -76,7 +76,7 @@ namespace TradingLib.API
 
         QRYACCOUNTINFO,//查询交易账户信息
         QRYMAXORDERVOL,//查询最大开仓量
-        QRYBAR,//请求Bar数据
+        BARREQUEST,//请求Bar数据
         CONTRIBREQUEST,//扩展请求
         REQCHANGEPASS,//请求修改密码
         QRYNOTICE,//查询交易服务器通知
@@ -102,6 +102,7 @@ namespace TradingLib.API
 
         DOMREQUEST,//请求DOM市场Level2数据
         IMBALANCEREQUEST,//imbalance..查询这个是什么意思
+
 
         // responses or acks
         RESPONSE = 6000,
@@ -162,7 +163,6 @@ namespace TradingLib.API
         //UPDATELOCATIONRESPONSE,//更新地址回报
         XTICKSNAPSHOTRESPONSE,//行情快照回报
         // END STANDARD MESSAGES
-
 
 
 

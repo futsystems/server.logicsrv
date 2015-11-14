@@ -25,6 +25,7 @@ namespace TradingLib.DataFarm.Common
     public partial class DataServer
     {
 
+        STSLocalDB localdb;
         void InitDataBaseService()
         {
             _saverunning = true;
@@ -34,6 +35,10 @@ namespace TradingLib.DataFarm.Common
 
             LoadTick();
             LoadBar();
+
+            localdb =  new STSLocalDB("test.stsdb4");
+            localdb.Init();
+            localdb.RegisterSymbolFreq("HGZ5",BarInterval.CustomTime,30);
         }
         BinaryDataStore database = new BinaryDataStore();
 

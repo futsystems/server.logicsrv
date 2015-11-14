@@ -145,8 +145,8 @@ namespace TradingLib.Common
                     case MessageTypes.CONFIRMSETTLEMENT:
                         return RequestTemplate<ConfirmSettlementRequest>.SrvRecvRequest(frontid, clientid, content);
                     //查询历史行情
-                    case MessageTypes.QRYBAR:
-                        return null;
+                    case MessageTypes.BARREQUEST:
+                        return RequestTemplate<QryBarRequest>.SrvRecvRequest(frontid, clientid, content);
                     //扩展命令请求
                     case MessageTypes.CONTRIBREQUEST:
                         return RequestTemplate<ContribRequest>.SrvRecvRequest(frontid, clientid, content);

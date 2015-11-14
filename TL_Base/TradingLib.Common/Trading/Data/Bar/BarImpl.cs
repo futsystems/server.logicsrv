@@ -255,24 +255,35 @@ namespace TradingLib.Common
         {
             const char d = ',';
             System.Text.StringBuilder sb = new System.Text.StringBuilder();
-            sb.Append(b.Open.ToString(System.Globalization.CultureInfo.InvariantCulture));
-            sb.Append(d);
-            sb.Append(b.High.ToString(System.Globalization.CultureInfo.InvariantCulture));
-            sb.Append(d);
-            sb.Append(b.Low.ToString(System.Globalization.CultureInfo.InvariantCulture));
-            sb.Append(d);
-            sb.Append(b.Close.ToString(System.Globalization.CultureInfo.InvariantCulture));
-            sb.Append(d);
-            sb.Append(b.Volume);
-            sb.Append(d);
-            //sb.Append(b.BarDate);
-            sb.Append(d);
             sb.Append(b.BarStartTime);
             sb.Append(d);
             sb.Append(b.Symbol);
             sb.Append(d);
-            sb.Append(b.Interval.ToString(System.Globalization.CultureInfo.InvariantCulture));
-            
+            sb.Append((int)b.IntervalType);
+            sb.Append(d);
+            sb.Append(b.Interval);
+            sb.Append(d);
+            sb.Append(b.Ask);
+            sb.Append(d);
+            sb.Append(b.Bid);
+            sb.Append(d);
+            sb.Append(b.Open);
+            sb.Append(d);
+            sb.Append(b.High);
+            sb.Append(d);
+            sb.Append(b.Low);
+            sb.Append(d);
+            sb.Append(b.Close);
+            sb.Append(d);
+            sb.Append(b.Volume);
+            sb.Append(d);
+            sb.Append(b.OpenInterest);
+            sb.Append(d);
+            sb.Append(b.TradeCount);
+            sb.Append(d);
+            sb.Append(b.TradingDay);
+            sb.Append(d);
+            sb.Append(b.EmptyBar);
             return sb.ToString();
         }
 
@@ -284,16 +295,28 @@ namespace TradingLib.Common
         public static Bar Deserialize(string msg)
         {
             string[] r = msg.Split(',');
-            decimal open = Convert.ToDecimal(r[0], System.Globalization.CultureInfo.InvariantCulture);
-            decimal high = Convert.ToDecimal(r[1], System.Globalization.CultureInfo.InvariantCulture);
-            decimal low = Convert.ToDecimal(r[2], System.Globalization.CultureInfo.InvariantCulture);
-            decimal close = Convert.ToDecimal(r[3], System.Globalization.CultureInfo.InvariantCulture);
-            long vol = Convert.ToInt64(r[4]);
-            int date = Convert.ToInt32(r[5]);
-            int time = Convert.ToInt32(r[6]);
-            string symbol = r[7];
-            int interval = Convert.ToInt32(r[8]);
-            return null;// new BarImpl(open, high, low, close, vol, date, time, symbol, interval);
+            Bar b = new BarImpl();
+            b.BarStartTime = DateTime.Parse(r[0]);
+            b.Symbol = r[1];
+            b.IntervalType = (BarInterval)int.Parse(r[2]);
+            b.Interval = int.Parse(r[3]);
+            b.Ask = double.Parse(r[4]);
+            b.Bid = double.Parse(r[5]);
+
+            b.Open = double.Parse(r[6]);
+            b.High = double.Parse(r[7]);
+            b.Low = double.Parse(r[8]);
+            b.Close = double.Parse(r[9]);
+
+            b.Volume = int.Parse(r[10]);
+            b.OpenInterest = int.Parse(r[11]);
+            b.TradeCount = int.Parse(r[12]);
+            b.TradingDay = int.Parse(r[13]);
+            b.EmptyBar = bool.Parse(r[14]);
+
+            return b;
+
+
         }
 
         /// <summary>
