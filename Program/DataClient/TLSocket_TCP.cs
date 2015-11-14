@@ -24,12 +24,8 @@ namespace DataClient
         bool _recvgo = false;
         Thread _recvThread = null;
 
-        public TLSocket_TCP(IPEndPoint server)
-            : base(server)
-        { 
-           
-            
-        }
+
+        
 
         bool _connected = false;
         public override bool IsConnected { get { return _connected; } }
@@ -40,7 +36,7 @@ namespace DataClient
         public override RspQryServiceResponse QryService(QSEnumAPIType apiType, string version)
         {
             Socket s = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-            s.Connect(_server);
+            s.Connect(this.Server);
             QryServiceRequest request = RequestTemplate<QryServiceRequest>.CliSendRequest(0);
             request.APIType = apiType;
             request.APIVersion = version;
@@ -78,7 +74,7 @@ namespace DataClient
         public override  void Connect()
         {
             _socket=new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-            _socket.Connect(_server);
+            _socket.Connect(this.Server);
 
             if (_socket.Connected)
             {

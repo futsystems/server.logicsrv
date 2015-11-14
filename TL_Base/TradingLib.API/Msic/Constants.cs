@@ -68,9 +68,9 @@ namespace TradingLib.API
         /// </summary>
         public const int HEARTBEATDEADMS = SENDHEARTBEATMS * 3;//(在4个心跳请求间隔内服务器没有回应,表明连接丢失,尝试重新建立连接)
         /// <summary>
-        /// 默认检查服务器心跳回报间隔 20MS(心跳维护线程的刷新频率,每5MS检查上次服务器心跳时间)
+        /// 默认检查服务器心跳回报间隔 50MS(心跳维护线程的刷新频率,每5MS检查上次服务器心跳时间)
         /// </summary>
-        public const int DEFAULTWAIT = 1000;
+        public const int DEFAULTWAIT = 500;
 
         //注:客户端按一定频率向服务端发送心跳信息,会再用一定量的服务器消息处理量
         //客户端10秒/次 那么10个客户端就是每秒1次,1000个客户端就是每秒100条心跳信息,这里需要延长发送间隔

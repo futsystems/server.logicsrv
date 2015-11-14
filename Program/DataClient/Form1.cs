@@ -38,12 +38,12 @@ namespace DataClient
             
         }
 
-        TLZMQDataClient mqclient;
-        TLClient cli;
+        TLSocket_ZMQ mqclient;
+        TLClient<TLSocket_TCP> cli;
         private void btnMQClient_Click(object sender, EventArgs e)
         {
             logger.Info("start client");
-            cli = new TLClient("127.0.0.1", 5060, "ZMQClient");
+            cli = new TLClient<TLSocket_TCP>("127.0.0.1", 5060, "ZMQClient");
             cli.Start();
             
         }

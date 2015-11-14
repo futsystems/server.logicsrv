@@ -4,17 +4,24 @@ using System.Linq;
 using System.Text;
 using System.Net;
 using TradingLib.API;
-using TradingLib.Common;
 
-namespace DataClient
+namespace TradingLib.Common
 {
+    /// <summary>
+    /// TLScoketBase
+    /// 用于封装底层Socket通讯
+    /// </summary>
     public abstract class TLSocketBase
     {
         /// <summary>
-        /// Socket收到消息后事件
+        /// Socket消息事件
         /// </summary>
         public event Action<MessageTypes, string> MessageEvent;
 
+        /// <summary>
+        /// 处于Socket收到的消息
+        /// </summary>
+        /// <param name="message"></param>
         protected void HandleMessage(Message message)
         {
             if (MessageEvent != null)
@@ -23,15 +30,9 @@ namespace DataClient
             }
         }
 
-        protected IPEndPoint _server;
-        /// <summary>
-        /// 构造函数
-        /// </summary>
-        /// <param name="server"></param>
-        public TLSocketBase(IPEndPoint server)
-        {
-            _server = server;
-        }
+        IPEndPoint _server;
+        public IPEndPoint Server { get { return _server; } set { _server=value; } }
+
 
         /// <summary>
         /// Socket是否处于连接状态

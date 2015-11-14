@@ -91,6 +91,7 @@
     <Compile Include="Domain\DomainImpl.cs" />
     <Compile Include="Other\CashReport.cs" />
     <Compile Include="Other\ManagerNotify.cs" />
+    <Compile Include="Other\TLSocketBase.cs" />
     <Compile Include="Other\TLVersion.cs" />
     <Compile Include="Protocol\CommissionTemplateItem.cs" />
     <Compile Include="Protocol\LoginInfo.cs" />

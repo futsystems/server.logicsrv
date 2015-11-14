@@ -19,72 +19,94 @@ namespace DataClient
     /// 注定请求一个心跳，服务端获得该请求后会主动向客户端发送一个心跳，客户端通过服务端消息更新时间来判断和服务端的连接
     /// 是否处于有效状态
     /// </summary>
-    public class TLClient
+    public class TLClient<T>
+        where T:TLSocketBase,new()
     {
         ILog logger;
-
-        //string PROGRAME = "TLClient_MQ";
         const string _skip = "        ";
 
-        string _sessionid = string.Empty;
-        public string SessionID { get { return _sessionid; } }
-        /// <summary>
-        /// 服务类型，数据/成交/两者同时支持
-        /// </summary>
-        public QSEnumProviderType ProviderType { get; set; }
-
-        TLSocketBase _mqcli = null;//通讯client组件
-
-        int port = Const.TLDEFAULTBASEPORT;//默认服务端口
-        int _wait = 1000;//后台检测连接状态频率
-        public const int DEFAULTWAIT = Const.DEFAULTWAIT;//心跳检测线程检测频率
-
-        int heartbeatperiod = Const.HEARTBEATPERIOD;//向服务端发送心跳信息间隔
+        TLSocketBase _tlsocket = null;
+        int requestid = 0;
+        int _watchWait =  Const.DEFAULTWAIT;//心跳检测线程检测频率
+        int _hbPeriod = Const.HEARTBEATPERIOD;//向服务端发送心跳信息间隔
+        int _sendheartbeat = Const.SENDHEARTBEATMS;//发送心跳请求间隔
+        int _hbDeadTimeSpan = Const.HEARTBEATDEADMS;//心跳死亡间隔
+        long _lastheartbeat = 0;//最后心跳时间
 
         bool _started = false;//后台检测连接状态线程是否启动
         bool _connect = false;//客户端是否连接到服务端
-
-        int _sendheartbeat = Const.SENDHEARTBEATMS;//发送心跳请求间隔
-        int _heartbeatdeadat = Const.HEARTBEATDEADMS;//心跳死亡间隔
-        long _lastheartbeat = 0;//最后心跳时间
-
         bool _requestheartbeat = false;//请求心跳回复
         bool _recvheartbeat = false;//收到心跳回复
         bool _reconnectreq = false;//请求重新连接
 
+
+        string _sessionid = string.Empty;
+        /// <summary>
+        /// 回话编号
+        /// </summary>
+        public string SessionID
+        {
+            get { return _sessionid; }
+        }
+
+
+        MessageTypes[] _initfl = new MessageTypes[] { MessageTypes.REGISTERCLIENT, MessageTypes.CLEARCLIENT, MessageTypes.FEATUREREQUEST, MessageTypes.VERSIONREQUEST, MessageTypes.HEARTBEAT, MessageTypes.HEARTBEATREQUEST, MessageTypes.LOGINREQUEST };
         List<MessageTypes> _rfl = new List<MessageTypes>();
-        public List<MessageTypes> RequestFeatureList { get { return _rfl; } }//功能列表
+        /// <summary>
+        /// 功能列表
+        /// </summary>
+        public List<MessageTypes> FeatureList
+        {
+            get { return _rfl; }
+        }
 
 
         List<IPEndPoint> _serverlist = new List<IPEndPoint>();//服务端IP列表 参数给定的IP地址列表
         List<IPEndPoint> _serverAvabile = new List<IPEndPoint>();//当前可用的IP列表
 
-        MessageTypes[] _initfl = new MessageTypes[] { MessageTypes.REGISTERCLIENT, MessageTypes.CLEARCLIENT, MessageTypes.FEATUREREQUEST, MessageTypes.VERSIONREQUEST, MessageTypes.HEARTBEAT, MessageTypes.HEARTBEATREQUEST, MessageTypes.LOGINREQUEST };
 
 
         //客户端标识
         string _name = string.Empty;
-        public string Name { get { return _name; } set { _name = value; } }
-        //尝试连接次数
-        int _disconnectretry = 3;
-        public const int DEFAULTRETRIES = 3;//默认尝试连接次数
-        public int DisconnectRetries { get { return _disconnectretry; } set { _disconnectretry = value; } }
+        public string Name 
+        { 
+            get { return _name; } 
+            set { _name = value; }
+        }
 
         int _remodedelay = Const.RECONNECTDELAY;//在心跳机制中重新建立连接中 Mode失败后再次Mode的时间间隔 单位秒
         int _modeRetries = Const.RECONNECTTIMES;//在心跳机制中通过Mode重新搜索服务列表 并建立连接，重试次数
-        public int ModeRetries { get { return _modeRetries; } set { _modeRetries = value; } }
+        /// <summary>
+        /// 连接尝试次数
+        /// </summary>
+        public int ModeRetries 
+        { 
+            get { return _modeRetries; } 
+            set { _modeRetries = value; } 
+        }
         
         //当前连接服务端序号
         int _curprovider = -1;
-        public int ProviderSelected { get { return _curprovider; } }
-        //BrokerName
-        //Providers _bn = Providers.Unknown;
-        //public Providers BrokerName { get { return _bn; } }
-        //服务端版本
+        /// <summary>
+        /// 返回当前服务端
+        /// </summary>
+        public IPEndPoint CurrentServer
+        {
+            get
+            {
+                if (_connect)
+                    return _serverAvabile[_curprovider];
+                return null;
+            }
+        }
+       
         private TLVersion _serverversion;
+        /// <summary>
+        /// 当前连接服务端版本信息
+        /// </summary>
         public TLVersion ServerVersion { get { return _serverversion; } }
 
-        int requestid = 0;
+        
         /// <summary>
         /// 是否处于连接状态
         /// </summary>
@@ -176,7 +198,7 @@ namespace DataClient
                             //当得到响应请求后,_recvheartbeat = !_recvheartbeat; 因此在发送了一个hearbeatrequest后 在没有得到服务器反馈前不会再次重新发送
                             RequestHeartBeat();
                         }
-                        else if (diff > _heartbeatdeadat)//心跳间隔超时后,我们请求服务端的心跳回报,如果服务端的心跳响应超过心跳死亡时间,则我们尝试 重新建立连接
+                        else if (diff > _hbDeadTimeSpan)//心跳间隔超时后,我们请求服务端的心跳回报,如果服务端的心跳响应超过心跳死亡时间,则我们尝试 重新建立连接
                         {
                             //logger.Info("xxxxxxxxxxxxxxx diff:" + diff.ToString() + " dead:" + _heartbeatdeadat.ToString());
                             StartReconnect();
@@ -190,12 +212,12 @@ namespace DataClient
                 }
 
                 DateTime tnow = DateTime.Now;
-                if (DateTime.Now.Subtract(_lastHeartbeatSent).TotalSeconds > heartbeatperiod)
+                if (DateTime.Now.Subtract(_lastHeartbeatSent).TotalSeconds > _hbPeriod)
                 {
                     SendHeartBeat();
                 }
                 //注等待要放在最后,否则有些情况下停止了服务_started = false,但是刚才检查过了在等待，从而进入上面的检查过程，stop连接后 自动重连。
-                Thread.Sleep(_wait);//每隔多少秒检查心跳时间MS
+                Thread.Sleep(_watchWait);//每隔多少秒检查心跳时间MS
                
             }
         }
@@ -279,7 +301,7 @@ namespace DataClient
             finally
             {
                 logger.Info("Realse socket and thread resource");
-                _mqcli = null;
+                _tlsocket = null;
                 _bwthread = null;
                 
             }
@@ -313,12 +335,13 @@ namespace DataClient
                 logger.Info(_skip + "Attempting connection to server: " + _serverAvabile[serverIdx]);
                 Disconnect();
                 //初始化底层Socket连接
-                _mqcli = new TLSocket_TCP(_serverAvabile[serverIdx]);
-                _mqcli.MessageEvent += new Action<MessageTypes,string>(handle);
+                _tlsocket = new T();
+                _tlsocket.Server = _serverAvabile[serverIdx];
+                _tlsocket.MessageEvent += new Action<MessageTypes, string>(handle);
                 //开始启动连接
-                _mqcli.Connect();
+                _tlsocket.Connect();
 
-                if (_mqcli.IsConnected)//如果客户端连接成功 则返回True
+                if (_tlsocket.IsConnected)//如果客户端连接成功 则返回True
                 {
                     //更新服务端消息回报时间戳避免watchdog提前请求服务端心跳
                     UpdateServerHeartbeat();
@@ -345,16 +368,16 @@ namespace DataClient
         /// </summary>
         void Disconnect()
         {
-            if (_mqcli != null && _mqcli.IsConnected)
+            if (_tlsocket != null && _tlsocket.IsConnected)
             {
                 logger.Info("[Disconnect] diconnect from server");
                 //注销客户端
                 UnRegister();
                 //断开底层Sockt连接
-                _mqcli.Disconnect();
+                _tlsocket.Disconnect();
                 //解除事件绑定
-                _mqcli.MessageEvent -= new Action<MessageTypes, string>(handle);
-                _mqcli = null;
+                _tlsocket.MessageEvent -= new Action<MessageTypes, string>(handle);
+                _tlsocket = null;
 
                 _connect = false;
                 if (OnDisconnectEvent != null)
@@ -478,7 +501,8 @@ namespace DataClient
                 try
                 {
                     //通过底层Sock对象查询服务,服务端会返回查询服务回报,如果查询服务回报ErrorID==0则表明服务可用
-                    TLSocketBase socket = new TLSocket_TCP(endpoint);
+                    TLSocketBase socket = new T();
+                    socket.Server = endpoint;
 
                     RspQryServiceResponse response = socket.QryService(QSEnumAPIType.MD_ZMQ, "1.0.0");
                     if (response != null && response.RspInfo.ErrorID == 0)
@@ -508,14 +532,14 @@ namespace DataClient
         {
             try
             {
-                if (_mqcli == null)
+                if (_tlsocket == null)
                 {
                     throw new InvalidOperationException("Socket not created");
                 }
 
-                if (_mqcli != null && _mqcli.IsConnected)
+                if (_tlsocket != null && _tlsocket.IsConnected)
                 {
-                    _mqcli.Send(package.Data);
+                    _tlsocket.Send(package.Data);
                     return 0;
                 }
                 else

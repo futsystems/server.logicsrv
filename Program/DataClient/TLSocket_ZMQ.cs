@@ -15,7 +15,7 @@ namespace DataClient
     /// 负责连接MDCore服务器
     /// 用于查询基础数据以及历史数据
     /// </summary>
-    public class TLZMQDataClient:TLSocketBase
+    public class TLSocket_ZMQ:TLSocketBase
     {
 
         ILog logger = LogManager.GetLogger("ZMQSocket");
@@ -38,15 +38,6 @@ namespace DataClient
         //int _port = 9590;
         bool _running = false;
 
-
-        public event Action<MessageTypes,string> MessageEvent;
-
-
-        public TLZMQDataClient(IPEndPoint server)
-            : base(server)
-        { 
-            
-        }
 
         public override bool IsConnected
         {
@@ -131,7 +122,7 @@ namespace DataClient
                 {
                     socket.Identity = Encoding.UTF8.GetBytes(System.Guid.NewGuid().ToString());
                     socket.Linger = new TimeSpan(0, 0, 0);
-                    socket.Connect(string.Format("tcp://{0}:{1}",_server.Address,_server.Port));
+                    socket.Connect(string.Format("tcp://{0}:{1}",this.Server.Address,this.Server.Port));
                     QryServiceRequest request = RequestTemplate<QryServiceRequest>.CliSendRequest(0);
                     request.APIType = apiType;
                     request.APIVersion = version;
@@ -165,7 +156,7 @@ namespace DataClient
                     _id = System.Guid.NewGuid().ToString();
                     _dealer.Identity = Encoding.UTF8.GetBytes(_id);
                     _dealer.Linger = new TimeSpan(0, 0, 0);
-                    string cstr = string.Format("tcp://{0}:{1}", _server.Address,_server.Port);
+                    string cstr = string.Format("tcp://{0}:{1}", this.Server.Address,this.Server.Port);
                     _dealer.Connect(cstr);
                     logger.Info("connect to MDCore:" + cstr);
 
@@ -176,9 +167,9 @@ namespace DataClient
                         {
                             var zmsg = new ZMessage(e.Socket);
                             Message msg = Message.gotmessage(zmsg.Body);
-                            if (msg.isValid && MessageEvent != null)
+                            if (msg.isValid)
                             {
-                                MessageEvent(msg.Type, msg.Content);
+                                HandleMessage(msg);
                             }
                         }
                         catch (Exception ex)
