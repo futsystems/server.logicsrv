@@ -56,8 +56,9 @@ namespace TradingLib.API
         REGISTERCLIENT,//注册客户端
         CLEARCLIENT,//注销客户端
 
-        REGISTERSTOCK,//注册市场数据
-        CLEARSTOCKS,//取消市场数据注册
+        REGISTERSYMTICK,//注册市场数据
+        UNREGISTERSYMTICK,//注销市场数据
+
         
         //
         SENDORDER=5100,//发送委托

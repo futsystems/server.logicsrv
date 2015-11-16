@@ -62,28 +62,42 @@ namespace DataClient
 
         public override void Send(byte[] msg)
         {
-            if (_socket == null)
-                throw new InvalidOperationException("Socket is null");
-            if (_socket.Connected)
+            try
             {
-                _socket.Send(msg);
+                if (_socket == null)
+                    throw new InvalidOperationException("Socket is null");
+                if (_socket.Connected)
+                {
+                    _socket.Send(msg);
+                }
+            }
+            catch (Exception ex)
+            {
+                logger.Error("socket send data error:" + ex.ToString());
             }
         }
 
 
         public override  void Connect()
         {
-            _socket=new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-            _socket.Connect(this.Server);
-
-            if (_socket.Connected)
+            try
             {
-                buffer = new byte[_socket.ReceiveBufferSize];
-                bufferoffset = 0;
+                _socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+                _socket.Connect(this.Server);
 
-                StartRecv();
+                if (_socket.Connected)
+                {
+                    buffer = new byte[_socket.ReceiveBufferSize];
+                    bufferoffset = 0;
 
-                _connected = true;
+                    StartRecv();
+
+                    _connected = true;
+                }
+            }
+            catch (Exception ex)
+            {
+                logger.Error(string.Format("socket connect to server:{0} error:{1}", this.Server, ex));
             }
 
             
@@ -130,24 +144,37 @@ namespace DataClient
         {
             while (_recvgo)
             {
-                int ret = _socket.Receive(buffer, bufferoffset, buffer.Length - bufferoffset, SocketFlags.None);
-                if (ret > 0)
+                try
                 {
-                    //logger.Debug("socket recv bytes:" + ret + "raw data:" + HexToString(buffer, ret));
-                    Message[] messagelist = Message.gotmessages(ref buffer, ref ret);
-                    foreach (var msg in messagelist)
+                    int ret = _socket.Receive(buffer, bufferoffset, buffer.Length - bufferoffset, SocketFlags.None);
+                    if (ret > 0)
                     {
-                        HandleMessage(msg);
+                        //logger.Debug("socket recv bytes:" + ret + "raw data:" + HexToString(buffer, ret));
+                        Message[] messagelist = Message.gotmessages(ref buffer, ref ret);
+                        foreach (var msg in messagelist)
+                        {
+                            HandleMessage(msg);
+                        }
+                    }
+                    else if (ret == 0) // socket was shutdown
+                    {
+                        _connected = IsSocketConnected(_socket);
+                        if (!_connected)
+                        {
+                            StopRecv();
+                        }
                     }
                 }
-                else if (ret == 0) // socket was shutdown
+                catch (SocketException ex)
                 {
-                    _connected = IsSocketConnected(_socket);
-                    if (!_connected)
-                    {
-                        StopRecv();
-                    }
-                }               
+                    logger.Error("socket exception: " + ex.SocketErrorCode + ex.Message + ex.StackTrace);
+
+                }
+                catch (Exception ex)
+                {
+                    logger.Error(ex.Message + ex.StackTrace);
+                }
+                
             }
         }
 

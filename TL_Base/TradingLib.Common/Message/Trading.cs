@@ -77,14 +77,18 @@ namespace TradingLib.Common
 
         public override string ContentSerialize()
         {
+            if (this.Tick == null)
+                return string.Empty;
             return TickImpl.Serialize(Tick);
-            //throw new NotImplementedException();
         }
 
         public override void ContentDeserialize(string contentstr)
         {
-            //Tick = TickImpl.Deserialize(contentstr);
-            //throw new NotImplementedException();
+            if (!string.IsNullOrEmpty(contentstr))
+            {
+                this.Tick = TickImpl.Deserialize(contentstr);
+            }
+
         }
     }
 

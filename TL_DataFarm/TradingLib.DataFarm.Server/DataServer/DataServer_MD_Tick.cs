@@ -30,23 +30,23 @@ namespace TradingLib.DataFarm.Common
         //异步处理行情组件,行情源组件获得行情更新后放入环形队列中进行处理
         AsyncResponse asyncTick = new AsyncResponse("Tick");
 
-        FastTickDataFeed datafeed = null;
+        //FastTickDataFeed datafeed = null;
         /// <summary>
         /// 初始化行情服务
         /// </summary>
         void InitTickService()
         {
 
-            datafeed = new FastTickDataFeed("139.196.49.175", "127.0.0.1", 9000, 9001);
+            //datafeed = new FastTickDataFeed("139.196.49.175", "127.0.0.1", 9000, 9001);
 
-            datafeed.OnConnectEvent += new Action(datafeed_OnConnectEvent);
-            datafeed.OnDisconnectEvent += new Action(datafeed_OnDisconnectEvent);
-            datafeed.OnTickEvent += new Action<Tick>(OnTickEvent);
+            //datafeed.OnConnectEvent += new Action(datafeed_OnConnectEvent);
+            //datafeed.OnDisconnectEvent += new Action(datafeed_OnDisconnectEvent);
+            //datafeed.OnTickEvent += new Action<Tick>(OnTickEvent);
 
-            asyncTick.GotTick += new TickDelegate(asyncTick_GotTick);
-            asyncTick.Start();
+            //asyncTick.GotTick += new TickDelegate(asyncTick_GotTick);
+            //asyncTick.Start();
 
-            datafeed.Start();
+            //datafeed.Start();
         }
 
 

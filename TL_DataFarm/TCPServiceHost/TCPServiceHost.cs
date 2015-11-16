@@ -73,7 +73,7 @@ namespace TCPServiceHost
         /// <param name="requestInfo"></param>
         void tcpSocketServer_NewRequestReceived(TLSessionBase session, TLRequestInfo requestInfo)
         {
-            logger.Info(string.Format("Message type:{0} content:{1} sessoin:{2}", requestInfo.Message.Type, requestInfo.Message.Content, session.SessionID));
+            //logger.Info(string.Format("Message type:{0} content:{1} sessoin:{2}", requestInfo.Message.Type, requestInfo.Message.Content, session.SessionID));
 
             string sessionId = session.SessionID;
             switch (requestInfo.Message.Type)

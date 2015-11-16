@@ -74,6 +74,21 @@ namespace DataClient
             cli.TLSend(request);
         }
 
+        private void btnRegisterSymbol_Click(object sender, EventArgs e)
+        {
+            RegisterSymbolTickRequest request = RequestTemplate<RegisterSymbolTickRequest>.CliSendRequest(0);
+            request.Register(reg_symbol.Text);
+
+            cli.TLSend(request);
+        }
+
+        private void btnUnRegSymbol_Click(object sender, EventArgs e)
+        {
+            UnregisterSymbolTickRequest request = RequestTemplate<UnregisterSymbolTickRequest>.CliSendRequest(0);
+            request.Unregister(reg_symbol.Text);
+            cli.TLSend(request);
+        }
+
 
     }
 }

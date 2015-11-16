@@ -7,6 +7,7 @@ using TradingLib.API;
 using TradingLib.Common;
 using ZeroMQ;
 using Common.Logging;
+using TradingLib.DataFarm.API;
 
 namespace TradingLib.DataFarm
 {
@@ -14,9 +15,9 @@ namespace TradingLib.DataFarm
     /// 行情源
     /// 用于连接到TickSrv接受实时行情
     /// </summary>
-    public class FastTickDataFeed
+    public class FastTickDataFeed : ITickFeed
     {
-        ILog logger = LogManager.GetLogger("FastTickFeed");
+        ILog logger;
 
         TimeSpan timeout = new TimeSpan(0, 0, 1);
 
@@ -28,6 +29,9 @@ namespace TradingLib.DataFarm
         public bool IsLive { get { return _tickreceiveruning; } }
 
         bool _usemaster = true;
+
+        const string NAME = "FastTickFeed";
+        public string Name { get { return NAME; } }
         string CurrentServer
         {
             get
@@ -36,34 +40,44 @@ namespace TradingLib.DataFarm
                 return _usemaster ? _master : _slave;
             }
         }
+        public FastTickDataFeed()
+        {
+            logger = LogManager.GetLogger(this.Name);
+            ConfigFile _cfg = ConfigFile.GetConfigFile("FastTickFeed.cfg");
+            _master = _cfg["TickSrvMaster"].AsString();
+            _slave = _cfg["TickSrvSlave"].AsString();
+            _port = _cfg["TickPort"].AsInt();
+            _reqport = _cfg["ReqPort"].AsInt();
+        }
 
         public FastTickDataFeed(string masterAddress, string slaveAddress, int dataport, int reqport)
         {
+            logger = LogManager.GetLogger(this.Name);
             _master = masterAddress;
             _slave = slaveAddress;
             _port = dataport;
             _reqport = reqport;
         }
 
-        public event Action<Tick> OnTickEvent;
+        public event Action<ITickFeed,Tick> TickEvent;
         void OnTick(Tick k)
         {
-            if (OnTickEvent != null)
-                OnTickEvent(k);
+            if (TickEvent != null)
+                TickEvent(this, k);
         }
 
-        public event Action OnConnectEvent;
+        public event Action<ITickFeed> ConnectEvent;
         void OnConnected()
         {
-            if (OnConnectEvent != null)
-                OnConnectEvent();
+            if (ConnectEvent != null)
+                ConnectEvent(this);
         }
 
-        public event Action OnDisconnectEvent;
+        public event Action<ITickFeed> DisconnectEvent;
         void OnDisconnected()
         {
-            if (OnDisconnectEvent != null)
-                OnDisconnectEvent();
+            if (DisconnectEvent != null)
+                DisconnectEvent(this);
         }
 
 

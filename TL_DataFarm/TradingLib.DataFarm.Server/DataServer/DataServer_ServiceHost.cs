@@ -85,11 +85,11 @@ namespace TradingLib.DataFarm.Common
         /// <param name="host"></param>
         void StartServiceHost(IServiceHost host)
         {
-            host.SessionCreatedEvent += new Action<IServiceHost, IConnection>(OnSessionCreatedEvent);
-            host.SessionClosedEvent += new Action<IServiceHost, IConnection>(OnSessionClosedEvent);
-            host.RequestEvent += new Action<IServiceHost, IConnection, IPacket>(OnRequestEvent);    //(OnRequestEvent);
-            host.ServiceEvent += new Func<IServiceHost, IPacket, IPacket>(OnServiceEvent);
-            host.Start();
+            //host.SessionCreatedEvent += new Action<IServiceHost, IConnection>(OnSessionCreatedEvent);
+            //host.SessionClosedEvent += new Action<IServiceHost, IConnection>(OnSessionClosedEvent);
+            //host.RequestEvent += new Action<IServiceHost, IConnection, IPacket>(OnRequestEvent);    //(OnRequestEvent);
+            //host.ServiceEvent += new Func<IServiceHost, IPacket, IPacket>(OnServiceEvent);
+            //host.Start();
         }
 
         

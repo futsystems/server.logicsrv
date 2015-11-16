@@ -46,7 +46,9 @@
     <Compile Include="IConnection.cs" />
     <Compile Include="IDataAccess.cs" />
     <Compile Include="IDataStore.cs" />
+    <Compile Include="IHistDataStore.cs" />
     <Compile Include="IServiceHost.cs" />
+    <Compile Include="ITickFeed.cs" />
     <Compile Include="MDMessageType.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

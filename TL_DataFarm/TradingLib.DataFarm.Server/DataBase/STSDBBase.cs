@@ -123,11 +123,41 @@ namespace TradingLib.DataFarm.Common
         {
             string tableName = GetTableName(bar.Symbol, bar.IntervalType, bar.Interval);
             var table = GetTable(tableName);
-            
-            if (table == null) return;
+
+            if (table == null)
+            {
+                logger.Info(string.Format("Table:{0} do not exist", tableName));
+                return;
+            }
 
             long key = bar.BarStartTime.ToTLDateTime();
             table[key] = bar;
+        }
+
+        /// <summary>
+        /// 插入一条Bar数据
+        /// 如果对应的键值已经存在则不执行插入
+        /// </summary>
+        /// <param name="bar"></param>
+        public virtual void InsertBar(BarImpl bar)
+        {
+            string tableName = GetTableName(bar.Symbol, bar.IntervalType, bar.Interval);
+            var table = GetTable(tableName);
+
+            if (table == null)
+            {
+                logger.Info(string.Format("Table:{0} do not exist", tableName));
+                return;
+            }
+            long key = bar.BarStartTime.ToTLDateTime();
+            if (!table.Exists(key))
+            {
+                table[key] = bar;
+            }
+            else
+            {
+                logger.Info(string.Format("Table:{0} already contains key:{1}", tableName, key));
+            }
         }
 
         /// <summary>

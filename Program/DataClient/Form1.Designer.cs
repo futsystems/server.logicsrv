@@ -28,7 +28,6 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.debugControl1 = new TLDataClient.DebugControl();
             this.btnInit = new System.Windows.Forms.Button();
             this.btnMQClient = new System.Windows.Forms.Button();
             this.btnQryService = new System.Windows.Forms.Button();
@@ -45,20 +44,12 @@
             this.btnQryBar = new System.Windows.Forms.Button();
             this.interval = new ComponentFactory.Krypton.Toolkit.KryptonNumericUpDown();
             this.kryptonLabel5 = new ComponentFactory.Krypton.Toolkit.KryptonLabel();
+            this.debugControl1 = new TLDataClient.DebugControl();
+            this.btnRegisterSymbol = new System.Windows.Forms.Button();
+            this.reg_symbol = new ComponentFactory.Krypton.Toolkit.KryptonTextBox();
+            this.kryptonLabel6 = new ComponentFactory.Krypton.Toolkit.KryptonLabel();
+            this.btnUnRegSymbol = new System.Windows.Forms.Button();
             this.SuspendLayout();
-            // 
-            // debugControl1
-            // 
-            this.debugControl1.Dock = System.Windows.Forms.DockStyle.Left;
-            this.debugControl1.EnableSearching = true;
-            this.debugControl1.ExternalTimeStamp = 0;
-            this.debugControl1.Location = new System.Drawing.Point(0, 0);
-            this.debugControl1.Margin = new System.Windows.Forms.Padding(2);
-            this.debugControl1.Name = "debugControl1";
-            this.debugControl1.Size = new System.Drawing.Size(450, 405);
-            this.debugControl1.TabIndex = 0;
-            this.debugControl1.TimeStamps = true;
-            this.debugControl1.UseExternalTimeStamp = false;
             // 
             // btnInit
             // 
@@ -214,11 +205,64 @@
             this.kryptonLabel5.TabIndex = 15;
             this.kryptonLabel5.Values.Text = "Interval";
             // 
+            // debugControl1
+            // 
+            this.debugControl1.Dock = System.Windows.Forms.DockStyle.Left;
+            this.debugControl1.EnableSearching = true;
+            this.debugControl1.ExternalTimeStamp = 0;
+            this.debugControl1.Location = new System.Drawing.Point(0, 0);
+            this.debugControl1.Margin = new System.Windows.Forms.Padding(2);
+            this.debugControl1.Name = "debugControl1";
+            this.debugControl1.Size = new System.Drawing.Size(450, 405);
+            this.debugControl1.TabIndex = 0;
+            this.debugControl1.TimeStamps = true;
+            this.debugControl1.UseExternalTimeStamp = false;
+            // 
+            // btnRegisterSymbol
+            // 
+            this.btnRegisterSymbol.Location = new System.Drawing.Point(618, 165);
+            this.btnRegisterSymbol.Name = "btnRegisterSymbol";
+            this.btnRegisterSymbol.Size = new System.Drawing.Size(75, 22);
+            this.btnRegisterSymbol.TabIndex = 17;
+            this.btnRegisterSymbol.Text = "RegSym";
+            this.btnRegisterSymbol.UseVisualStyleBackColor = true;
+            this.btnRegisterSymbol.Click += new System.EventHandler(this.btnRegisterSymbol_Click);
+            // 
+            // reg_symbol
+            // 
+            this.reg_symbol.Location = new System.Drawing.Point(522, 165);
+            this.reg_symbol.Name = "reg_symbol";
+            this.reg_symbol.Size = new System.Drawing.Size(63, 20);
+            this.reg_symbol.TabIndex = 19;
+            this.reg_symbol.Text = "HGZ5";
+            // 
+            // kryptonLabel6
+            // 
+            this.kryptonLabel6.Location = new System.Drawing.Point(465, 164);
+            this.kryptonLabel6.Name = "kryptonLabel6";
+            this.kryptonLabel6.Size = new System.Drawing.Size(51, 20);
+            this.kryptonLabel6.TabIndex = 18;
+            this.kryptonLabel6.Values.Text = "Symbol";
+            // 
+            // btnUnRegSymbol
+            // 
+            this.btnUnRegSymbol.Location = new System.Drawing.Point(722, 165);
+            this.btnUnRegSymbol.Name = "btnUnRegSymbol";
+            this.btnUnRegSymbol.Size = new System.Drawing.Size(75, 22);
+            this.btnUnRegSymbol.TabIndex = 20;
+            this.btnUnRegSymbol.Text = "UnregSym";
+            this.btnUnRegSymbol.UseVisualStyleBackColor = true;
+            this.btnUnRegSymbol.Click += new System.EventHandler(this.btnUnRegSymbol_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(812, 405);
+            this.Controls.Add(this.btnUnRegSymbol);
+            this.Controls.Add(this.reg_symbol);
+            this.Controls.Add(this.kryptonLabel6);
+            this.Controls.Add(this.btnRegisterSymbol);
             this.Controls.Add(this.interval);
             this.Controls.Add(this.kryptonLabel5);
             this.Controls.Add(this.btnQryBar);
@@ -262,6 +306,10 @@
         private System.Windows.Forms.Button btnQryBar;
         private ComponentFactory.Krypton.Toolkit.KryptonNumericUpDown interval;
         private ComponentFactory.Krypton.Toolkit.KryptonLabel kryptonLabel5;
+        private System.Windows.Forms.Button btnRegisterSymbol;
+        private ComponentFactory.Krypton.Toolkit.KryptonTextBox reg_symbol;
+        private ComponentFactory.Krypton.Toolkit.KryptonLabel kryptonLabel6;
+        private System.Windows.Forms.Button btnUnRegSymbol;
     }
 }
 

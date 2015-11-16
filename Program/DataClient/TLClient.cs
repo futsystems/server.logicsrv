@@ -737,46 +737,53 @@ namespace DataClient
         //消息处理逻辑
         void handle(MessageTypes type,string content)
         {
-            v(string.Format("Got Message type:{0} content:{1}", type,content));
-            IPacket packet = PacketHelper.CliRecvResponse(type, content);
-            //更新服务端消息回报时间戳
-            UpdateServerHeartbeat();
-            switch (packet.Type)
+            try
             {
-                //注册回报
-                case MessageTypes.REGISTERCLIENTRESPONSE:
-                    {
-                        CliOnRegisterResponse(packet as RspRegisterClientResponse);
-                        break;
-                    }
-                //版本回报
-                case MessageTypes.VERSIONRESPONSE:
-                    {
-                        CliOnVersionResponse(packet as VersionResponse);
-                    }
-                    break;
-                //功能回报
-                case MessageTypes.FEATURERESPONSE:
-                    {
-                        CliOnFeatureResponse(packet as FeatureResponse);                        
-                    }
-                    break;
-               
-                //心跳请求回报
-                case MessageTypes.HEARTBEATRESPONSE:
-                    {
-                        CliOnHeartbeatResponse(packet as HeartBeatResponse);
-                    }
-                    break;
-                //其余逻辑数据包
-                default:
-                    {
-                        if (OnPacketEvent != null)
+                v(string.Format("Got Message type:{0} content:{1}", type, content));
+                IPacket packet = PacketHelper.CliRecvResponse(type, content);
+                //更新服务端消息回报时间戳
+                UpdateServerHeartbeat();
+                switch (packet.Type)
+                {
+                    //注册回报
+                    case MessageTypes.REGISTERCLIENTRESPONSE:
                         {
-                            OnPacketEvent(packet);
+                            CliOnRegisterResponse(packet as RspRegisterClientResponse);
+                            break;
                         }
-                    }
-                    break;
+                    //版本回报
+                    case MessageTypes.VERSIONRESPONSE:
+                        {
+                            CliOnVersionResponse(packet as VersionResponse);
+                        }
+                        break;
+                    //功能回报
+                    case MessageTypes.FEATURERESPONSE:
+                        {
+                            CliOnFeatureResponse(packet as FeatureResponse);
+                        }
+                        break;
+
+                    //心跳请求回报
+                    case MessageTypes.HEARTBEATRESPONSE:
+                        {
+                            CliOnHeartbeatResponse(packet as HeartBeatResponse);
+                        }
+                        break;
+                    //其余逻辑数据包
+                    default:
+                        {
+                            if (OnPacketEvent != null)
+                            {
+                                OnPacketEvent(packet);
+                            }
+                        }
+                        break;
+                }
+            }
+            catch (Exception ex)
+            {
+                logger.Error(string.Format("Handle message error:{0}", ex));
             }
 
         }

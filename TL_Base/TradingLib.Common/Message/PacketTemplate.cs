@@ -100,11 +100,11 @@ namespace TradingLib.Common
                     case MessageTypes.BROKERNAMEREQUEST:
                         return RequestTemplate<BrokerNameRequest>.SrvRecvRequest(frontid, clientid, content);
                     //注册合约
-                    case MessageTypes.REGISTERSTOCK:
-                        return RequestTemplate<RegisterSymbolsRequest>.SrvRecvRequest(frontid, clientid, content);
+                    case MessageTypes.REGISTERSYMTICK:
+                        return RequestTemplate<RegisterSymbolTickRequest>.SrvRecvRequest(frontid, clientid, content);
                     //注销合约
-                    case MessageTypes.CLEARSTOCKS:
-                        return RequestTemplate<UnregisterSymbolsRequest>.SrvRecvRequest(frontid, clientid, content);
+                    case MessageTypes.UNREGISTERSYMTICK:
+                        return RequestTemplate<UnregisterSymbolTickRequest>.SrvRecvRequest(frontid, clientid, content);
                     //发送委托
                     case MessageTypes.SENDORDER:
                         return RequestTemplate<OrderInsertRequest>.SrvRecvRequest(frontid, clientid, content);
@@ -369,6 +369,8 @@ namespace TradingLib.Common
                     return ResponseTemplate<RspQrySymbolResponse>.CliRecvResponse(content);
                 case MessageTypes.SETTLEINFORESPONSE://结算信息回报
                     return ResponseTemplate<RspQrySettleInfoResponse>.CliRecvResponse(content);
+                case MessageTypes.BARRESPONSE://历史数据回报
+                    return ResponseTemplate<RspQryBarResponse>.CliRecvResponse(content);
                 case MessageTypes.SETTLEINFOCONFIRMRESPONSE://结算确认回报
                     return ResponseTemplate<RspQrySettleInfoConfirmResponse>.CliRecvResponse(content);
                 case MessageTypes.CONFIRMSETTLEMENTRESPONSE://确认结算回报
@@ -419,9 +421,8 @@ namespace TradingLib.Common
                     return ResponseTemplate<RspXQryTickSnapShotResponse>.CliRecvResponse(content);
 
                 case MessageTypes.TICKNOTIFY:
-                    TickNotify ticknotify = new TickNotify();
-                    ticknotify.Tick = TickImpl.Deserialize(content);
-                    return ticknotify;
+                    return ResponseTemplate<TickNotify>.CliRecvResponse(content);
+
                 case MessageTypes.TICKHEARTBEAT:
                     TickHeartBeatResponse tickhb = new TickHeartBeatResponse();
                     return tickhb;

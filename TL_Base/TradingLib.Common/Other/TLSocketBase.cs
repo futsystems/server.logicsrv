@@ -24,6 +24,7 @@ namespace TradingLib.Common
         /// <param name="message"></param>
         protected void HandleMessage(Message message)
         {
+            
             if (MessageEvent != null)
             {
                 MessageEvent(message.Type, message.Content);

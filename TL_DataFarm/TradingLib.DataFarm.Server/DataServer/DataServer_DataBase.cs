@@ -168,6 +168,7 @@ namespace TradingLib.DataFarm.Common
                 //logger.Info("Tick:" + k.ToString());
             }
         }
+
         #region 保存行情与Bar数据
         RingBuffer<Tick> tickbuffer = new RingBuffer<Tick>(10000);
         RingBuffer<Bar> barbuffer = new RingBuffer<Bar>(10000);

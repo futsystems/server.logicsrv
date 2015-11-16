@@ -27,7 +27,8 @@
 /Platform/**/logs
 /Platform/Logs
 /Platform/DataSrv/database/*
-
+/Platform/DataCore/database/*
+/Platform/DataFront/database/*
 /publish
 /package
 /packages

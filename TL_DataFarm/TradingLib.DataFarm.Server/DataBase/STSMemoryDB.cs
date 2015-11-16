@@ -9,6 +9,7 @@ using STSdb4.General.Collections;
 using STSdb4.General.Comparers;
 using TradingLib.API;
 using TradingLib.Common;
+using TradingLib.DataFarm.API;
 using Common.Logging;
 
 using STSdb4.Data;
@@ -23,7 +24,7 @@ namespace TradingLib.DataFarm.Common
     ///  内存STSDB服务
     ///  用于组织Bar数据提供查询服务或本地K线生成服务
     /// </summary>
-    public class STSMemoryDB:STSDBBase
+    public class STSMemoryDB : STSDBBase, IHistDataStore
     {
         public STSMemoryDB()
             : base("STSMemoryB")

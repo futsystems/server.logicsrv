@@ -8,6 +8,8 @@ using STSdb4.General.Collections;
 using STSdb4.General.Comparers;
 using TradingLib.API;
 using TradingLib.Common;
+using TradingLib.DataFarm.API;
+
 using Common.Logging;
 
 using STSdb4.Data;
@@ -22,7 +24,7 @@ namespace TradingLib.DataFarm.Common
     ///  写库数据服务器负责产生Bar数据并保存到数据库中
     ///  数据库采用本地文件数据库
     /// </summary>
-    public class STSLocalDB:STSDBBase
+    public class STSLocalDB:STSDBBase,IHistDataStore
     {
 
         string _dbfile = "demo.data";

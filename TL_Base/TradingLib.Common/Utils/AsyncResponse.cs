@@ -43,7 +43,10 @@ namespace TradingLib.Common
         /// 是否处于有效工作状态
         /// </summary>
         public bool isValid { get { return _readtick; } }
-
+        /// <summary>
+        /// 是否处于工作状态
+        /// </summary>
+        public bool IsRunning { get { return _readtick; } }
         void ReadTick()
         {
             while (_readtick)
