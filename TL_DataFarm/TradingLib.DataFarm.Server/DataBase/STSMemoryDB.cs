@@ -66,6 +66,18 @@ namespace TradingLib.DataFarm.Common
         }
 
         /// <summary>
+        /// 设置某个合约的Bar数据的缓存标识
+        /// </summary>
+        /// <param name="symbol"></param>
+        /// <param name="type"></param>
+        /// <param name="interval"></param>
+        /// <param name="cached"></param>
+        public override void SetCached(string symbol, BarInterval type, int interval, bool cached)
+        {
+            string tbname = GetTableName(symbol, type, interval);
+            tableCachedMap[tbname] = cached;
+        }
+        /// <summary>
         /// 查看某表是否被缓存
         /// </summary>
         /// <param name="tbname"></param>

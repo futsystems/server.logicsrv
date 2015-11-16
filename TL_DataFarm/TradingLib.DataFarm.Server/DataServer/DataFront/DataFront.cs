@@ -30,7 +30,10 @@ namespace TradingLib.DataFarm.Common
 
             _backend = new DataCoreBackend("127.0.0.1", 9590);
             _backend.InitedEvent += new Action(Backend_InitedEvent);
+            _backend.BarResponseEvent += new Action<RspQryBarResponse>(Backend_BarResponseEvent);
         }
+
+        
 
         void Backend_InitedEvent()
         {

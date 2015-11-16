@@ -125,6 +125,16 @@ namespace TradingLib.DataFarm.Common
         }
 
 
+        /// <summary>
+        /// 处理请求
+        /// </summary>
+        /// <param name="host"></param>
+        /// <param name="conn"></param>
+        /// <param name="packet"></param>
+        protected void ProcessRequest(IServiceHost host, IConnection conn, IPacket packet)
+        {
+            OnRequestEvent(host, conn, packet);
+        }
 
         void OnRequestEvent(IServiceHost host, IConnection conn, IPacket packet)
         {

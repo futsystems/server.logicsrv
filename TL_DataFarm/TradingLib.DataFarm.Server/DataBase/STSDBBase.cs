@@ -111,7 +111,11 @@ namespace TradingLib.DataFarm.Common
         {
             return this.IsRegisted(symbol, type, interval);
         }
-        
+
+        public virtual void SetCached(string symbol, BarInterval type, int interval, bool cached)
+        { 
+            
+        }
         
         /// <summary>
         /// 获得数据表
@@ -161,8 +165,11 @@ namespace TradingLib.DataFarm.Common
                 return;
             }
 
-            long key = bar.BarStartTime.ToTLDateTime();
-            table[key] = bar;
+            if (bar != null)
+            {
+                long key = bar.BarStartTime.ToTLDateTime();
+                table[key] = bar;
+            }
         }
 
         /// <summary>

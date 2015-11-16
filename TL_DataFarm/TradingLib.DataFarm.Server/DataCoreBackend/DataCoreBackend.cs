@@ -52,15 +52,22 @@ namespace TradingLib.DataFarm.Common
             zmqclient.Stop();
         }
 
+        /// <summary>
+        /// 初始化完成事件
+        /// </summary>
+        public event Action InitedEvent;
+
+        /// <summary>
+        /// DataCore回报Bar数据事件
+        /// </summary>
+        public event Action<RspQryBarResponse> BarResponseEvent;
+
         bool _inited = false;
         /// <summary>
         /// 是否初始化基础数据完成
         /// </summary>
         public bool IsInited { get { return _inited; } }
-        /// <summary>
-        /// 初始化完成事件
-        /// </summary>
-        public event Action InitedEvent;
+        
 
         int _requestId = 0;
         private int NextRequestID
@@ -74,20 +81,21 @@ namespace TradingLib.DataFarm.Common
 
         /// <summary>
         /// 处理客户查询Bar数据
+        /// 返回Backend查询RequestId
         /// </summary>
         /// <param name="request"></param>
-        public void QryBar(QryBarRequest request)
+        public int QryBar(QryBarRequest request)
         {
             QryBarRequest brequest = RequestTemplate<QryBarRequest>.CliSendRequest(NextRequestID);
             brequest.FromEnd = request.FromEnd;
             brequest.Symbol = request.Symbol;
-            brequest.MaxCount = request.MaxCount;
+            brequest.MaxCount = -1;
             brequest.Interval = request.Interval;
-            brequest.Start = request.Start;
-            brequest.End = request.End;
+            brequest.Start = DateTime.MinValue;
+            brequest.End = DateTime.MaxValue;
 
             zmqclient.TLSend(brequest);
-            
+            return brequest.RequestID;
         }
 
         void zmqclient_OnPacketEvent(IPacket obj)
@@ -205,7 +213,12 @@ namespace TradingLib.DataFarm.Common
 
 
         void SrvOnBarResponseResponse(RspQryBarResponse response)
-        { 
+        {
+            if (BarResponseEvent != null)
+            {
+                BarResponseEvent(response);
+            }
+
             
         }
 
