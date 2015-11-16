@@ -140,7 +140,6 @@ namespace TradingLib.DataFarm.Common
         /// <param name="k"></param>
         void NotifyTick2Connections(Tick k)
         {
-            //logger.Debug("notify tick");
             ConcurrentDictionary<string, IConnection> target = null;
             if (symRegMap.TryGetValue(k.Symbol, out target))
             {

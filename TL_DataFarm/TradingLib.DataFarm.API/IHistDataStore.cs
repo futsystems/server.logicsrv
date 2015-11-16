@@ -22,6 +22,26 @@ namespace TradingLib.DataFarm.API
         void RegisterSymbolFreq(string symbol,BarInterval type,int interval);
 
         /// <summary>
+        /// 判断某个合约的频率数据是否注册
+        /// </summary>
+        /// <param name="symbol"></param>
+        /// <param name="type"></param>
+        /// <param name="interval"></param>
+        /// <returns></returns>
+        bool IsRegisted(string symbol, BarInterval type, int interval);
+
+        /// <summary>
+        /// 判断某个合约的频率数据是否缓存
+        /// 本地数据库直接返回true,从本地文件加载
+        /// 内存数据库没有缓存则从DataCore后端加载历史数据 数据加载完毕后再处理对应的客户端查询请求
+        /// </summary>
+        /// <param name="symbol"></param>
+        /// <param name="type"></param>
+        /// <param name="interval"></param>
+        /// <returns></returns>
+        bool IsCached(string symbol, BarInterval type, int interval);
+
+        /// <summary>
         /// 查询历史数据
         /// </summary>
         /// <param name="symbol">合约</param>

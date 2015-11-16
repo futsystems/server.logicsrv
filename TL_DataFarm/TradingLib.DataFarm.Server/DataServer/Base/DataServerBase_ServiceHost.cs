@@ -150,6 +150,22 @@ namespace TradingLib.DataFarm.Common
                 case MessageTypes.HEARTBEATREQUEST:
                     SrvOnHeartbeatRequest(host, conn, packet as HeartBeatRequest);
                     break;
+                //查询交易时间段
+                case MessageTypes.XQRYMARKETTIME:
+                    SrvOnQryMarketTimeRequest(host, conn, packet as XQryMarketTimeRequest);
+                    break;
+                //查询交易所
+                case MessageTypes.XQRYEXCHANGE:
+                    SrvOnQryExchangeRequest(host, conn, packet as XQryExchangeRequuest);
+                    break;
+                //查询品种数据
+                case MessageTypes.XQRYSECURITY:
+                    SrvOnQrySecurityRequest(host, conn, packet as XQrySecurityRequest);
+                    break;
+                //查询合约数据
+                case MessageTypes.XQRYSYMBOL:
+                    SrvOnQrySymbolRequest(host, conn, packet as XQrySymbolRequest);
+                    break;
                 //注册合约行情数据
                 case MessageTypes.REGISTERSYMTICK:
                     SrvOnRegisterSymbolTick(host, conn, packet as RegisterSymbolTickRequest);

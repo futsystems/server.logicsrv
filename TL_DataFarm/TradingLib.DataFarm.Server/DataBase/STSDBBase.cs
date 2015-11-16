@@ -80,6 +80,37 @@ namespace TradingLib.DataFarm.Common
             tableMap.TryAdd(tbname, table);  
         }
 
+        /// <summary>
+        /// 判断合约频率是否注册
+        /// 没有注册的请求直接返回
+        /// </summary>
+        /// <param name="symbol"></param>
+        /// <param name="type"></param>
+        /// <param name="interval"></param>
+        /// <returns></returns>
+        public bool IsRegisted(string symbol, BarInterval type, int interval)
+        {
+            string tbname = GetTableName(symbol, type, interval);
+
+            if (tableMap.Keys.Contains(tbname))
+            {
+                return true;
+            }
+            return false;
+        }
+
+        /// <summary>
+        /// 判断某个合约的频率数据是否缓存
+        /// 本地数据库 有注册就表示数据缓存 从本地文件加载
+        /// </summary>
+        /// <param name="symbol"></param>
+        /// <param name="type"></param>
+        /// <param name="interval"></param>
+        /// <returns></returns>
+        public virtual bool IsCached(string symbol, BarInterval type, int interval)
+        {
+            return this.IsRegisted(symbol, type, interval);
+        }
         
         
         /// <summary>

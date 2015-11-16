@@ -48,12 +48,15 @@ namespace TradingLib.DataFarm.Common
         }
 
         /// <summary>
-        /// 查看某表是否被缓存
+        /// 内存数据库有表-缓存标识 map用于记录某个表示否从DataCoreBackend缓存到本地内存
         /// </summary>
-        /// <param name="tbname"></param>
+        /// <param name="symbol"></param>
+        /// <param name="type"></param>
+        /// <param name="interval"></param>
         /// <returns></returns>
-        private bool IsTableCached(string tbname)
+        public override bool IsCached(string symbol, BarInterval type, int interval)
         {
+            string tbname = GetTableName(symbol, type, interval);
             bool cached = false;
             if (!tableCachedMap.TryGetValue(tbname, out cached))
             {
@@ -62,26 +65,41 @@ namespace TradingLib.DataFarm.Common
             return tableCachedMap[tbname];
         }
 
-        public override IEnumerable<BarImpl> QryBar(string symbol, BarInterval type, int interval, DateTime start, DateTime end, int maxcount, bool fromEnd)
-        {
-            string tbname = GetTableName(symbol, type, interval);
-            var table = GetTable(tbname);
-            if (table == null)
-            {
-                logger.Warn(string.Format("Table:{0} do not exist", tbname));
-                return new List<BarImpl>();
-            }
+        /// <summary>
+        /// 查看某表是否被缓存
+        /// </summary>
+        /// <param name="tbname"></param>
+        /// <returns></returns>
+        //private bool IsTableCached(string tbname)
+        //{
+        //    bool cached = false;
+        //    if (!tableCachedMap.TryGetValue(tbname, out cached))
+        //    {
+        //        tableCachedMap.TryAdd(tbname, false);
+        //    }
+        //    return tableCachedMap[tbname];
+        //}
 
-            bool cached = IsTableCached(tbname);
-            //如果表没有缓存则查询写库服务器获得数据
-            if (!cached)
-            {
+        //public override IEnumerable<BarImpl> QryBar(string symbol, BarInterval type, int interval, DateTime start, DateTime end, int maxcount, bool fromEnd)
+        //{
+        //    string tbname = GetTableName(symbol, type, interval);
+        //    var table = GetTable(tbname);
+        //    if (table == null)
+        //    {
+        //        logger.Warn(string.Format("Table:{0} do not exist", tbname));
+        //        return new List<BarImpl>();
+        //    }
 
-            }
+        //    bool cached = IsTableCached(tbname);
+        //    //如果表没有缓存则查询写库服务器获得数据
+        //    if (!cached)
+        //    {
 
-            return base.QryBar(symbol, type, interval, start, end, maxcount, fromEnd);
+        //    }
+
+        //    return base.QryBar(symbol, type, interval, start, end, maxcount, fromEnd);
             
-        }
+        //}
 
 
 

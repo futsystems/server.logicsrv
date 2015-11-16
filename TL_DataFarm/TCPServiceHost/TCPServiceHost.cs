@@ -32,7 +32,9 @@ namespace TCPServiceHost
         void InitServer()
         {
             tcpSocketServer = new TLServerBase();
-            if (!tcpSocketServer.Setup("127.0.0.1", _port))
+           
+
+            if (!tcpSocketServer.Setup("0.0.0.0", _port))
             {
                 logger.Error("Setup TcpSocket Error");
             }
@@ -148,6 +150,9 @@ namespace TCPServiceHost
 
         public void Start()
         {
+            ConfigFile _cfg = ConfigFile.GetConfigFile("TCPServiceHost.cfg");
+            _port = _cfg["HistPort"].AsInt();
+
             logger.Info(string.Format("Start Transport Service:{0} at:{1}", _name, _port));
             if (_started)
             {

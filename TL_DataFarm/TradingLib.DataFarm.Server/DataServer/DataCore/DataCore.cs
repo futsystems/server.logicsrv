@@ -18,7 +18,7 @@ namespace TradingLib.DataFarm.Common
         {
             //初始化MySQL数据库连接池
             logger.Info("Init MySQL connection pool");
-            ConfigFile _configFile = ConfigFile.GetConfigFile();
+            ConfigFile _configFile = ConfigFile.GetConfigFile("DataCore.cfg");
             DBHelper.InitDBConfig(_configFile["DBAddress"].AsString(), _configFile["DBPort"].AsInt(), _configFile["DBName"].AsString(), _configFile["DBUser"].AsString(), _configFile["DBPass"].AsString());
 
 
@@ -34,7 +34,7 @@ namespace TradingLib.DataFarm.Common
 
         }
 
-        public void Start()
+        public override void Start()
         {
             logger.Info("Start....");
 
@@ -45,7 +45,7 @@ namespace TradingLib.DataFarm.Common
             this.StartServiceHosts();
         }
 
-        public void Stop()
+        public override void Stop()
         {
 
         }
@@ -57,6 +57,11 @@ namespace TradingLib.DataFarm.Common
         public override IHistDataStore GetHistDataSotre()
         {
             return _datastore;
+        }
+
+        public override void BackendQryBar(IServiceHost host, IConnection conn, QryBarRequest request)
+        {
+            logger.Error("DataCore not suprot BackendQryBar");
         }
     }
 }

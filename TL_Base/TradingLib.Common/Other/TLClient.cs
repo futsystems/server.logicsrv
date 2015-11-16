@@ -9,7 +9,7 @@ using TradingLib.Common;
 using Common.Logging;
 
 
-namespace DataClient
+namespace TradingLib.Common
 {
     /// <summary>
     /// 客户端与服务端心跳

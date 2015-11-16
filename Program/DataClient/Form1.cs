@@ -38,12 +38,11 @@ namespace DataClient
             
         }
 
-        TLSocket_ZMQ mqclient;
         TLClient<TLSocket_TCP> cli;
         private void btnMQClient_Click(object sender, EventArgs e)
         {
             logger.Info("start client");
-            cli = new TLClient<TLSocket_TCP>("127.0.0.1", 5060, "ZMQClient");
+            cli = new TLClient<TLSocket_TCP>("127.0.0.1", int.Parse(port.Text), "ZMQClient");
             cli.Start();
             
         }
@@ -88,6 +87,36 @@ namespace DataClient
             request.Unregister(reg_symbol.Text);
             cli.TLSend(request);
         }
+
+        private void btnQryMT_Click(object sender, EventArgs e)
+        {
+            XQryMarketTimeRequest request = RequestTemplate<XQryMarketTimeRequest>.CliSendRequest(0);
+            cli.TLSend(request);
+        }
+
+        private void btnQryExchange_Click(object sender, EventArgs e)
+        {
+            XQryExchangeRequuest request = RequestTemplate<XQryExchangeRequuest>.CliSendRequest(0);
+            cli.TLSend(request);
+        }
+
+        private void btnQrySec_Click(object sender, EventArgs e)
+        {
+            XQrySecurityRequest request = RequestTemplate<XQrySecurityRequest>.CliSendRequest(0);
+            cli.TLSend(request);
+        }
+
+        private void btnQrySymbol_Click(object sender, EventArgs e)
+        {
+            XQrySymbolRequest request = RequestTemplate<XQrySymbolRequest>.CliSendRequest(0);
+            cli.TLSend(request);
+        }
+
+
+
+
+
+
 
 
     }

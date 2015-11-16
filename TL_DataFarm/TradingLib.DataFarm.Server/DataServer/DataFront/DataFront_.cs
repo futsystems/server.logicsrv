@@ -4,13 +4,16 @@ using System.Linq;
 using System.Text;
 using TradingLib.API;
 using TradingLib.Common;
-using TradingLib.DataFarm;
+using TradingLib.DataFarm.API;
 
 namespace TradingLib.DataFarm.Common
 {
 
-    public partial class DataServer
+    public partial class DataFront
     {
 
+
+        
+        
     }
 }

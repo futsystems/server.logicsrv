@@ -33,6 +33,22 @@ namespace TradingLib.DataFarm.Common
         public abstract IHistDataStore GetHistDataSotre();
 
 
+        /// <summary>
+        /// 调用后端执行Bar数据查询
+        /// </summary>
+        /// <param name="host"></param>
+        /// <param name="conn"></param>
+        /// <param name="request"></param>
+        public abstract void BackendQryBar(IServiceHost host, IConnection conn, QryBarRequest request);
+        /// <summary>
+        /// 启动服务
+        /// </summary>
+        public abstract void Start();
+
+        /// <summary>
+        /// 停止服务
+        /// </summary>
+        public abstract void Stop();
         
     }
 }

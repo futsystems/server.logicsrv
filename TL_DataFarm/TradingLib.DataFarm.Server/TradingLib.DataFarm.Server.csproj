@@ -71,6 +71,9 @@
     <Compile Include="DataBase\STSDBFactory.cs" />
     <Compile Include="DataBase\STSLocalDB.cs" />
     <Compile Include="DataBase\STSMemoryDB.cs" />
+    <Compile Include="DataCoreBackend\DataCoreBackend.cs" />
+    <Compile Include="DataCoreBackend\TLSocket_ZMQ.cs" />
+    <Compile Include="DataCoreBackend\zmessages.cs" />
     <Compile Include="DataServer\Base\DataServerBase.cs" />
     <Compile Include="DataServer\Base\DataServerBase_.cs" />
     <Compile Include="DataServer\Base\DataServerBase_ServiceHost.cs" />
@@ -81,8 +84,9 @@
     <Compile Include="DataServer\Base\DataServerBase_Common.cs" />
     <Compile Include="DataServer\DataCore\DataCore.cs" />
     <Compile Include="DataServer\DataFront\DataFront.cs" />
+    <Compile Include="DataServer\DataFront\DataFront_.cs" />
+    <Compile Include="DataServer\DataFront\DataFront_BackendQry.cs" />
     <Compile Include="DataServer\DataServer.cs" />
-    <Compile Include="DataServer\DataServer_IPacketRouter.cs" />
     <Compile Include="FrequencyService\FrequencyService.cs" />
     <Compile Include="FrequencyService\FrequencyService_.cs" />
     <Compile Include="FrequencyService\FrequencyService_QryBar.cs" />
@@ -92,9 +96,7 @@
     <Compile Include="DataServer\DataServer_Message.cs" />
     <Compile Include="DataServer\DataServer_MD_Tick.cs" />
     <Compile Include="DataServer\DataServer_OnRequest.cs" />
-    <Compile Include="DataServer\DataServer_MD_HistBar.cs" />
     <Compile Include="DataServer\DataServer_DataBase.cs" />
-    <Compile Include="DataServer\DataServer_MySql.cs" />
     <Compile Include="Tracker\SercurityTracker.cs" />
     <Compile Include="Tracker\SymbolTracker.cs" />
   </ItemGroup>

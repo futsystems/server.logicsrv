@@ -74,5 +74,6 @@
       <OutFiles Include="$(OutputPath)\$(AssemblyName).dll" />
     </ItemGroup>
 	<Copy SourceFiles="@(OutFiles)" DestinationFolder="..\..\Platform\DataCore\TickFeed" SkipUnchangedFiles="true"/>
+	<Copy SourceFiles="@(OutFiles)" DestinationFolder="..\..\Platform\DataFront\TickFeed" SkipUnchangedFiles="true"/>
   </Target>
 </Project>

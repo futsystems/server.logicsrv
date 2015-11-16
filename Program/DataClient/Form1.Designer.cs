@@ -28,7 +28,6 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.btnInit = new System.Windows.Forms.Button();
             this.btnMQClient = new System.Windows.Forms.Button();
             this.btnQryService = new System.Windows.Forms.Button();
             this.btnStopMQClient = new System.Windows.Forms.Button();
@@ -44,22 +43,17 @@
             this.btnQryBar = new System.Windows.Forms.Button();
             this.interval = new ComponentFactory.Krypton.Toolkit.KryptonNumericUpDown();
             this.kryptonLabel5 = new ComponentFactory.Krypton.Toolkit.KryptonLabel();
-            this.debugControl1 = new TLDataClient.DebugControl();
             this.btnRegisterSymbol = new System.Windows.Forms.Button();
             this.reg_symbol = new ComponentFactory.Krypton.Toolkit.KryptonTextBox();
             this.kryptonLabel6 = new ComponentFactory.Krypton.Toolkit.KryptonLabel();
             this.btnUnRegSymbol = new System.Windows.Forms.Button();
+            this.btnQryMT = new System.Windows.Forms.Button();
+            this.btnQryExchange = new System.Windows.Forms.Button();
+            this.btnQrySec = new System.Windows.Forms.Button();
+            this.btnQrySymbol = new System.Windows.Forms.Button();
+            this.port = new ComponentFactory.Krypton.Toolkit.KryptonTextBox();
+            this.debugControl1 = new TLDataClient.DebugControl();
             this.SuspendLayout();
-            // 
-            // btnInit
-            // 
-            this.btnInit.Location = new System.Drawing.Point(725, 21);
-            this.btnInit.Name = "btnInit";
-            this.btnInit.Size = new System.Drawing.Size(75, 23);
-            this.btnInit.TabIndex = 1;
-            this.btnInit.Text = "初始化";
-            this.btnInit.UseVisualStyleBackColor = true;
-            this.btnInit.Click += new System.EventHandler(this.btnInit_Click);
             // 
             // btnMQClient
             // 
@@ -205,19 +199,6 @@
             this.kryptonLabel5.TabIndex = 15;
             this.kryptonLabel5.Values.Text = "Interval";
             // 
-            // debugControl1
-            // 
-            this.debugControl1.Dock = System.Windows.Forms.DockStyle.Left;
-            this.debugControl1.EnableSearching = true;
-            this.debugControl1.ExternalTimeStamp = 0;
-            this.debugControl1.Location = new System.Drawing.Point(0, 0);
-            this.debugControl1.Margin = new System.Windows.Forms.Padding(2);
-            this.debugControl1.Name = "debugControl1";
-            this.debugControl1.Size = new System.Drawing.Size(450, 405);
-            this.debugControl1.TabIndex = 0;
-            this.debugControl1.TimeStamps = true;
-            this.debugControl1.UseExternalTimeStamp = false;
-            // 
             // btnRegisterSymbol
             // 
             this.btnRegisterSymbol.Location = new System.Drawing.Point(618, 165);
@@ -254,11 +235,77 @@
             this.btnUnRegSymbol.UseVisualStyleBackColor = true;
             this.btnUnRegSymbol.Click += new System.EventHandler(this.btnUnRegSymbol_Click);
             // 
+            // btnQryMT
+            // 
+            this.btnQryMT.Location = new System.Drawing.Point(476, 202);
+            this.btnQryMT.Name = "btnQryMT";
+            this.btnQryMT.Size = new System.Drawing.Size(75, 22);
+            this.btnQryMT.TabIndex = 21;
+            this.btnQryMT.Text = "QryMT";
+            this.btnQryMT.UseVisualStyleBackColor = true;
+            this.btnQryMT.Click += new System.EventHandler(this.btnQryMT_Click);
+            // 
+            // btnQryExchange
+            // 
+            this.btnQryExchange.Location = new System.Drawing.Point(557, 202);
+            this.btnQryExchange.Name = "btnQryExchange";
+            this.btnQryExchange.Size = new System.Drawing.Size(75, 22);
+            this.btnQryExchange.TabIndex = 22;
+            this.btnQryExchange.Text = "QryExchange";
+            this.btnQryExchange.UseVisualStyleBackColor = true;
+            this.btnQryExchange.Click += new System.EventHandler(this.btnQryExchange_Click);
+            // 
+            // btnQrySec
+            // 
+            this.btnQrySec.Location = new System.Drawing.Point(641, 202);
+            this.btnQrySec.Name = "btnQrySec";
+            this.btnQrySec.Size = new System.Drawing.Size(75, 22);
+            this.btnQrySec.TabIndex = 23;
+            this.btnQrySec.Text = "QrySec";
+            this.btnQrySec.UseVisualStyleBackColor = true;
+            this.btnQrySec.Click += new System.EventHandler(this.btnQrySec_Click);
+            // 
+            // btnQrySymbol
+            // 
+            this.btnQrySymbol.Location = new System.Drawing.Point(725, 202);
+            this.btnQrySymbol.Name = "btnQrySymbol";
+            this.btnQrySymbol.Size = new System.Drawing.Size(75, 22);
+            this.btnQrySymbol.TabIndex = 24;
+            this.btnQrySymbol.Text = "QrySymbol";
+            this.btnQrySymbol.UseVisualStyleBackColor = true;
+            this.btnQrySymbol.Click += new System.EventHandler(this.btnQrySymbol_Click);
+            // 
+            // port
+            // 
+            this.port.Location = new System.Drawing.Point(708, 12);
+            this.port.Name = "port";
+            this.port.Size = new System.Drawing.Size(81, 20);
+            this.port.TabIndex = 25;
+            this.port.Text = "8022";
+            // 
+            // debugControl1
+            // 
+            this.debugControl1.Dock = System.Windows.Forms.DockStyle.Left;
+            this.debugControl1.EnableSearching = true;
+            this.debugControl1.ExternalTimeStamp = 0;
+            this.debugControl1.Location = new System.Drawing.Point(0, 0);
+            this.debugControl1.Margin = new System.Windows.Forms.Padding(2);
+            this.debugControl1.Name = "debugControl1";
+            this.debugControl1.Size = new System.Drawing.Size(450, 405);
+            this.debugControl1.TabIndex = 0;
+            this.debugControl1.TimeStamps = true;
+            this.debugControl1.UseExternalTimeStamp = false;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(812, 405);
+            this.Controls.Add(this.port);
+            this.Controls.Add(this.btnQrySymbol);
+            this.Controls.Add(this.btnQrySec);
+            this.Controls.Add(this.btnQryExchange);
+            this.Controls.Add(this.btnQryMT);
             this.Controls.Add(this.btnUnRegSymbol);
             this.Controls.Add(this.reg_symbol);
             this.Controls.Add(this.kryptonLabel6);
@@ -278,7 +325,6 @@
             this.Controls.Add(this.btnStopMQClient);
             this.Controls.Add(this.btnQryService);
             this.Controls.Add(this.btnMQClient);
-            this.Controls.Add(this.btnInit);
             this.Controls.Add(this.debugControl1);
             this.Name = "Form1";
             this.Text = "行情客户端";
@@ -290,7 +336,6 @@
         #endregion
 
         private TLDataClient.DebugControl debugControl1;
-        private System.Windows.Forms.Button btnInit;
         private System.Windows.Forms.Button btnMQClient;
         private System.Windows.Forms.Button btnQryService;
         private System.Windows.Forms.Button btnStopMQClient;
@@ -310,6 +355,11 @@
         private ComponentFactory.Krypton.Toolkit.KryptonTextBox reg_symbol;
         private ComponentFactory.Krypton.Toolkit.KryptonLabel kryptonLabel6;
         private System.Windows.Forms.Button btnUnRegSymbol;
+        private System.Windows.Forms.Button btnQryMT;
+        private System.Windows.Forms.Button btnQryExchange;
+        private System.Windows.Forms.Button btnQrySec;
+        private System.Windows.Forms.Button btnQrySymbol;
+        private ComponentFactory.Krypton.Toolkit.KryptonTextBox port;
     }
 }
 
