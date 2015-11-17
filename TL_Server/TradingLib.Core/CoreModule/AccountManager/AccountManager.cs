@@ -148,6 +148,8 @@ namespace TradingLib.Core
                 ORM.MAccount.DelAccount(account);//删除数据库记录
                 //删除内存记录
                 TLCtxHelper.ModuleClearCentre.DropAccount(acc);
+
+                BasicTracker.AccountProfileTracker.DropAccount(account);
                 //对外触发交易帐户删除事件
                 TLCtxHelper.EventAccount.FireAccountDelEvent(account);
                 acc.Deleted = true;

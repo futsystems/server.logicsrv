@@ -53,6 +53,19 @@ namespace TradingLib.Common
         }
 
         /// <summary>
+        /// 删除交易账户对应的Profile信息
+        /// </summary>
+        /// <param name="account"></param>
+        public void DropAccount(string account)
+        {
+            AccountProfile target = null;
+            if (this.profilemap.Keys.Contains(account))
+            {
+                this.profilemap.Remove(account);
+            }
+        }
+
+        /// <summary>
         /// 更新某个交易帐户的个人信息
         /// </summary>
         /// <param name="profile"></param>
