@@ -100,27 +100,12 @@ namespace TradingLib.API
         /// <param name="exday"></param>
         /// <returns></returns>
         bool IsExpired(int exday);
-        /// <summary>
-        /// 检查是否是市场开市时间
-        /// </summary>
-        //bool IsMarketTime { get; }
 
-
-        /// <summary>
-        /// 是否在强平时间段内
-        /// </summary>
-        //bool IsFlatTime { get; }
-
-        /// <summary>
-        /// 合约到期月
-        /// </summary>
-        //int ExpireMonth { get; set; }
 
         /// <summary>
         /// 合约到期日
         /// </summary>
         int ExpireDate { get; set; }
-
 
         /// <summary>
         /// 期权 方向
@@ -137,8 +122,16 @@ namespace TradingLib.API
         /// </summary>
         Symbol UnderlayingSymbol { get; set; }
 
-        
+        /// <summary>
+        /// 合约月份
+        /// </summary>
+        string Month { get; set; }
 
+        /// <summary>
+        /// 合约类别
+        /// 标准合约，月连续合约，主力连续合约,连1,连2等
+        /// </summary>
+        QSEnumSymbolType SymbolType { get; set; }
 
     }
 }

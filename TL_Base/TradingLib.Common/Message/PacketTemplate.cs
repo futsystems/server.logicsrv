@@ -421,7 +421,13 @@ namespace TradingLib.Common
                     return ResponseTemplate<RspXQryTickSnapShotResponse>.CliRecvResponse(content);
 
                 case MessageTypes.TICKNOTIFY:
-                    return ResponseTemplate<TickNotify>.CliRecvResponse(content);
+                    {
+                        TickNotify notify = new TickNotify();
+                        if (string.IsNullOrEmpty(content)) return notify;
+                        notify.Tick = TickImpl.Deserialize(content);
+                        return notify;
+                    }
+                    //return ResponseTemplate<TickNotify>.CliRecvResponse(content);
 
                 case MessageTypes.TICKHEARTBEAT:
                     TickHeartBeatResponse tickhb = new TickHeartBeatResponse();

@@ -140,6 +140,10 @@ namespace TradingLib.Common
         Dictionary<string, SymbolImpl> symcodemap = new Dictionary<string, SymbolImpl>();
         Dictionary<int, SymbolImpl> idxcodemap = new Dictionary<int, SymbolImpl>();
 
+
+        //月连续合约映射
+        Dictionary<string, SymbolImpl> monthContinuousMap = new Dictionary<string, SymbolImpl>();
+
         Domain _domain = null;
         public DBSymbolTracker(Domain domain)
         {
@@ -161,6 +165,7 @@ namespace TradingLib.Common
 
                 symcodemap[sym.Symbol] = sym;
                 idxcodemap[sym.ID] = sym;
+
             }
 
             //易话合约底层绑定
@@ -170,9 +175,61 @@ namespace TradingLib.Common
                 sym.UnderlayingSymbol = this[sym.underlayingsymbol_fk];
                 sym.SecurityFamily = BasicTracker.SecurityTracker[sym.Domain_ID,sym.security_fk];
             }
+
+            //获得月连续合约
+            foreach (var symbol in this.MonthCountinuousSymbols)
+            { 
+                //查找标准合约 品种一致 月份一致
+                SymbolImpl std = FindStdSymbolForMonthContinuous(symbol);
+                if (std != null)
+                {
+                    monthContinuousMap.Add(std.Symbol,symbol);
+                }
+            }
         }
 
+        /// <summary>
+        /// 查找某个月连续合约对应的标准合约 不存在则返回null
+        /// </summary>
+        /// <param name="month"></param>
+        /// <returns></returns>
+        SymbolImpl FindStdSymbolForMonthContinuous(SymbolImpl month)
+        {
+            return idxcodemap.Values.Where(sym => sym.SymbolType == QSEnumSymbolType.Standard && sym.SecurityFamily.Code == month.SecurityFamily.Code && sym.Month == month.Month).FirstOrDefault();
+                
+        }
 
+        /// <summary>
+        /// 查找某个标准合约对应的连续合约 不存在则返回null
+        /// </summary>
+        /// <param name="std"></param>
+        /// <returns></returns>
+        SymbolImpl FindMonthContinuousSymbolForStd(SymbolImpl std)
+        {
+            return idxcodemap.Values.Where(sym => sym.SymbolType == QSEnumSymbolType.MonthContinuous && sym.SecurityFamily.Code == std.SecurityFamily.Code && sym.Month == std.Month).FirstOrDefault();
+            
+        }
+        /// <summary>
+        /// 所有月连续合约
+        /// </summary>
+        public IEnumerable<SymbolImpl> MonthCountinuousSymbols
+        {
+            get
+            {
+                return idxcodemap.Values.Where(sym => sym.SymbolType == QSEnumSymbolType.MonthContinuous);
+            }
+        }
+        /// <summary>
+        /// 获得有效的月连续合约映射
+        /// 标准合约映射到月连续合约对象
+        /// </summary>
+        public  Dictionary<string, SymbolImpl> MonthContinuousAvabile
+        {
+            get
+            {
+                return monthContinuousMap;
+            }
+        }
         /// <summary>
         /// 通过合约代码获得合约对象
         /// </summary>
@@ -270,6 +327,8 @@ namespace TradingLib.Common
         {
             symcodemap.Clear();
             idxcodemap.Clear();
+            monthContinuousMap.Clear();
+
             //加载所有合约 这里需要判断合约是否过期
             foreach (SymbolImpl sym in ORM.MBasicInfo.SelectSymbol(_domain.ID))
             {
@@ -287,6 +346,7 @@ namespace TradingLib.Common
 
                 symcodemap[sym.Symbol] = sym;
                 idxcodemap[sym.ID] = sym;
+
             }
 
             //易话合约底层绑定
@@ -295,6 +355,19 @@ namespace TradingLib.Common
                 sym.ULSymbol = this[sym.underlaying_fk];
                 sym.UnderlayingSymbol = this[sym.underlayingsymbol_fk];
                 sym.SecurityFamily = BasicTracker.SecurityTracker[sym.Domain_ID, sym.security_fk];
+            }
+
+           
+
+            //获得月连续合约
+            foreach (var symbol in this.MonthCountinuousSymbols)
+            {
+                //查找标准合约 品种一致 月份一致
+                SymbolImpl std = FindStdSymbolForMonthContinuous(symbol);
+                if (std != null)
+                {
+                    monthContinuousMap.Add(std.Symbol, symbol);
+                }
             }
         }
 
@@ -347,7 +420,7 @@ namespace TradingLib.Common
                 //target.MaintanceMargin = sym._maintancemargin;
                 target.Strike = sym.Strike;
                 target.OptionSide = sym.OptionSide;
-                //target.ExpireMonth = sym.ExpireMonth;
+                target.Month = sym.Month;
                 target.ExpireDate = sym.ExpireDate;
 
                 SecurityFamilyImpl sec = BasicTracker.SecurityTracker[target.Domain_ID, sym.SecurityFamily.Code];
@@ -403,6 +476,23 @@ namespace TradingLib.Common
                 symcodemap[target.Symbol] = target;
                 idxcodemap[target.ID] = target;
 
+                //建立月连续与标准合约关系
+                if (target.SymbolType == QSEnumSymbolType.MonthContinuous)
+                {
+                    SymbolImpl std = FindStdSymbolForMonthContinuous(target);
+                    if (std != null)
+                    {
+                        monthContinuousMap.Add(std.Symbol, target);
+                    }
+                }
+                if (target.SymbolType == QSEnumSymbolType.Standard)
+                {
+                    SymbolImpl month = FindMonthContinuousSymbolForStd(target);
+                    if (month != null)
+                    {
+                        monthContinuousMap.Add(target.Symbol, month);
+                    }
+                }
             }
         }
 
@@ -420,11 +510,11 @@ namespace TradingLib.Common
                     target.Margin = sym._margin;
                     target.ExtraMargin = sym._extramargin;
                     target.MaintanceMargin = sym._maintancemargin;
-
                     target.Tradeable = sym.Tradeable;//更新交易标识
-                    //target.ExpireMonth = sym.ExpireMonth;
+                    
                 }
                 target.ExpireDate = sym.ExpireDate;
+                target.SymbolType = sym.SymbolType;
 
                 ORM.MBasicInfo.UpdateSymbol(target);
 
@@ -441,7 +531,7 @@ namespace TradingLib.Common
                 target.MaintanceMargin = sym._maintancemargin;
                 target.Strike = sym.Strike;
                 target.OptionSide = sym.OptionSide;
-                //target.ExpireMonth = sym.ExpireMonth;
+                target.Month = sym.Month;
                 target.ExpireDate = sym.ExpireDate;
 
                 target.security_fk = sym.security_fk;
@@ -450,7 +540,8 @@ namespace TradingLib.Common
                 target.ULSymbol = BasicTracker.SymbolTracker[target.Domain_ID,target.underlaying_fk] as SymbolImpl;
                 target.underlayingsymbol_fk = sym.underlayingsymbol_fk;
                 target.UnderlayingSymbol = BasicTracker.SymbolTracker[target.Domain_ID, target.underlayingsymbol_fk] as SymbolImpl;
-                target.Tradeable = sym.Tradeable;//更新交易标识
+                target.Tradeable = sym.Tradeable;
+                target.SymbolType = sym.SymbolType;
 
                 if (target.security_fk == 0 || target.SecurityFamily == null)
                 {
@@ -460,6 +551,25 @@ namespace TradingLib.Common
                 
                 symcodemap[target.Symbol] = target;
                 idxcodemap[target.ID] = target;
+
+                //建立月连续与标准合约关系
+                if (target.SymbolType == QSEnumSymbolType.MonthContinuous)
+                {
+                    SymbolImpl std = FindStdSymbolForMonthContinuous(target);
+                    if (std != null)
+                    {
+                        monthContinuousMap.Add(std.Symbol, target);
+                    }
+                }
+                if (target.SymbolType == QSEnumSymbolType.Standard)
+                {
+                    SymbolImpl month = FindMonthContinuousSymbolForStd(target);
+                    if (month != null)
+                    {
+                        monthContinuousMap.Add(target.Symbol, month);
+                    }
+                }
+
 
                 sym.ID = target.ID;
                 

@@ -151,8 +151,8 @@ namespace TradingLib.Core
             f.Add(MessageTypes.FEATUREREQUEST);//请求功能特征
             f.Add(MessageTypes.FEATURERESPONSE);//回报功能请求
 
-            f.Add(MessageTypes.REGISTERSTOCK);//请求行情数据
-            f.Add(MessageTypes.CLEARSTOCKS);//取消行情数据
+            f.Add(MessageTypes.REGISTERSYMTICK);//请求行情数据
+            f.Add(MessageTypes.UNREGISTERSYMTICK);//取消行情数据
 
             
             if (newFeatureRequest != null)
@@ -241,7 +241,7 @@ namespace TradingLib.Core
         /// </summary>
         /// <param name="cname"></param>
         /// <param name="stklist"></param>
-        void SrvRegStocks(ISession session, RegisterSymbolsRequest request)
+        void SrvRegStocks(ISession session, RegisterSymbolTickRequest request)
         {
             logger.Info("Client:" + request.ClientID + " Request Mktdata: " + request.Content);
             if (newRegisterSymbols != null)
@@ -254,7 +254,7 @@ namespace TradingLib.Core
         /// 客户端请求清除已注册的symbol
         /// </summary>
         /// <param name="cname"></param>
-        void SrvClearStocks(ISession session, UnregisterSymbolsRequest request)
+        void SrvClearStocks(ISession session, UnregisterSymbolTickRequest request)
         {
             //SrvBeatHeart(client);
         }
@@ -288,11 +288,11 @@ namespace TradingLib.Core
                 case MessageTypes.SENDORDERACTION:
                     SrvOnOrderAction(session,packet as OrderActionRequest);
                     break;
-                case MessageTypes.REGISTERSTOCK:
-                    SrvRegStocks(session,packet as RegisterSymbolsRequest);
+                case MessageTypes.REGISTERSYMTICK:
+                    SrvRegStocks(session,packet as RegisterSymbolTickRequest);
                     break;
-                case MessageTypes.CLEARSTOCKS:
-                    SrvClearStocks(session,packet as UnregisterSymbolsRequest);
+                case MessageTypes.UNREGISTERSYMTICK:
+                    SrvClearStocks(session,packet as UnregisterSymbolTickRequest);
                     break;
                 default:
                     if (newPacketRequest != null)

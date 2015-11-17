@@ -286,7 +286,18 @@ namespace TradingLib.Common
         int _domainid = 0;
         public int Domain_ID { get { return _domainid; } set { _domainid = value; } }
 
-        
+
+        string _month = "01";
+        /// <summary>
+        /// 月份
+        /// </summary>
+        public string Month { get { return _month; } set { _month = value; } }
+
+        QSEnumSymbolType _symboltype = QSEnumSymbolType.Standard;
+        /// <summary>
+        /// 合约类别
+        /// </summary>
+        public QSEnumSymbolType SymbolType { get { return _symboltype; } set { _symboltype = value; } }
 
         /// <summary>
         /// 该合约是否有效 如果没有底层证券品种信息则该合约无效
@@ -306,7 +317,7 @@ namespace TradingLib.Common
         /// </summary>
         public bool IsExpired(int date)
         {
-
+            //过期日未0 则该合约永不过期
             if (this.ExpireDate == 0)
             {
                 return false;
@@ -528,10 +539,11 @@ namespace TradingLib.Common
             sb.Append(d);
             sb.Append(this.underlayingsymbol_fk.ToString());//底层合约外键
             sb.Append(d);
-            sb.Append("0");//过期月份
+            sb.Append(this.Month);//过期月份
             sb.Append(d);
             sb.Append(this.Tradeable.ToString());//该合约是否允许交易
-            
+            sb.Append(d);
+            sb.Append(this.SymbolType);
 
             return sb.ToString();
         }
@@ -552,8 +564,9 @@ namespace TradingLib.Common
             this.security_fk = int.Parse(rec[10]);
             this.underlaying_fk = int.Parse(rec[11]);
             this.underlayingsymbol_fk = int.Parse(rec[12]);
-            //this.ExpireMonth = int.Parse(rec[13]);
+            this.Month = rec[13];
             this.Tradeable = bool.Parse(rec[14]);
+            this.SymbolType = (QSEnumSymbolType)Enum.Parse(typeof(QSEnumSymbolType), rec[15]);
         }
     }
 }

@@ -73,7 +73,7 @@ namespace TradingLib.Common
             
             Instrument instrument = new Instrument();
             instrument.Symbol = symbol.Symbol;
-            instrument.Name = string.Format("{0}{1}", symbol.SecurityFamily.Name, symbol.ExpireDate.ToString().Substring(2,4));//.ToString("yyMM"));
+            instrument.Name = string.Format("{0}{1}", symbol.SecurityFamily.Name,symbol.Month);
             instrument.Security = symbol.SecurityFamily.Code;
             instrument.ExchangeID = symbol.SecurityFamily.Exchange.EXCode;
             instrument.EntryCommission = symbol.EntryCommission;

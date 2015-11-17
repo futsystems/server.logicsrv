@@ -109,11 +109,11 @@ namespace TradingLib.Common
         /// 当日到期
         /// </summary>
         /// <returns></returns>
-        public static bool IsExpiredToday(this Symbol sym)
-        {
-            if (sym.ExpireDate == Util.ToTLDate())
-                return true;
-            return false;
-        }
+        //public static bool IsExpiredToday(this Symbol sym)
+        //{
+        //    if (sym.ExpireDate == Util.ToTLDate())
+        //        return true;
+        //    return false;
+        //}
     }
 }

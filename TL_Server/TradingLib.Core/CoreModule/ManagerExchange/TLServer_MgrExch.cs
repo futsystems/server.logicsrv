@@ -168,8 +168,8 @@ namespace TradingLib.Core
             f.Add(MessageTypes.FEATUREREQUEST);//请求功能特征
             f.Add(MessageTypes.FEATURERESPONSE);//回报功能请求
 
-            f.Add(MessageTypes.REGISTERSTOCK);//请求行情数据
-            f.Add(MessageTypes.CLEARSTOCKS);//取消行情数据
+            f.Add(MessageTypes.REGISTERSYMTICK);//请求行情数据
+            f.Add(MessageTypes.UNREGISTERSYMTICK);//取消行情数据
 
             if (newFeatureRequest != null)
             {

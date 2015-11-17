@@ -20,6 +20,7 @@ namespace TradingLib.Common
             }
         }
 
+        DomainImpl _superdomian = null;
         /// <summary>
         /// 返回超级域 
         /// </summary>
@@ -27,7 +28,9 @@ namespace TradingLib.Common
         {
             get
             {
-                return domainmap.Values.Where(d => (d.Super)).FirstOrDefault();
+                if(_superdomian == null)
+                    _superdomian = domainmap.Values.Where(d => (d.Super)).FirstOrDefault();
+                return _superdomian;
             }
             
         }

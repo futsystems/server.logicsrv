@@ -340,6 +340,7 @@ namespace TradingLib.Core
                 foreach (Symbol sym in b.ToArray())
                 {
                     if (mb.HaveSymbol(sym.Symbol)) continue;//注册过的行情字头不再进行注册
+                    if (sym.SymbolType != QSEnumSymbolType.Standard) continue;//非标准合约不注册行情，非标准合约行情本地逻辑生成
                     IDataFeed d = GetDataFeed(sym);//通过合约查找对应的数据接口
                     if (d != null)
                     {
@@ -645,6 +646,9 @@ namespace TradingLib.Core
                 excludesymbol.Remove(symbol);
         }
         List<string> excludesymbol = new List<string>();
+
+        Dictionary<string, SymbolImpl> _monthSymbolPair = null;
+        bool _cacheMonthSymbol = false;
         //通过建立asynctick 使得tick在微观级别上是单线程处理,在同一时刻排除了多个tick进入系统的可能
         //维持了其他基于tick数据操作的线程安全 因为有多个datafeed时完全有可能在同一时刻有2个线程在调用ontick函数
         void asynctick_GotTick(Tick k)
@@ -653,8 +657,28 @@ namespace TradingLib.Core
                 return;
             //debug("it is tick here..............", QSEnumDebugLevel.INFO);
             newtick(k, false);
-
+            if(_monthSymbolPair == null && !_cacheMonthSymbol)
+            {
+                _cacheMonthSymbol = true;
+                DomainImpl super = BasicTracker.DomainTracker.SuperDomain;
+                if (super != null)
+                {
+                    _monthSymbolPair = BasicTracker.SymbolTracker[super.ID].MonthContinuousAvabile;
+                }
+                
+            }
+            if (_monthSymbolPair != null)
+            {
+                SymbolImpl month = null;
+                if (_monthSymbolPair.TryGetValue(k.Symbol, out month))
+                {
+                    Tick k2 = TickImpl.Copy(k);
+                    k2.Symbol = month.Symbol;
+                    newtick(k2, false);
+                }
+            }
         }
+
         void newtick(Tick k,bool ishist=false)
         {
             //debug("got tick:" + TickImpl.Serialize(k), QSEnumDebugLevel.INFO);

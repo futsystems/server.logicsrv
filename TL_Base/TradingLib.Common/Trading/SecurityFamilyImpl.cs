@@ -112,37 +112,11 @@ namespace TradingLib.Common
         public IMarketTime MarketTime { get; set; }
 
 
-        //public bool IsMarketTime
-        //{
-        //    get
-        //    {
-        //        if (MarketTime != null)
-        //        {
-        //            return MarketTime.IsInContinuous(DateTime.Now);
-        //        }
-        //        else
-        //        {
-        //            return false;
-        //        }
-        //    }
-        //}
+        /// <summary>
+        /// 该品种对应的行情源
+        /// </summary>
+        public QSEnumDataFeedTypes DataFeed { get; set; }
 
-
-
-        //public bool IsFlatTime
-        //{
-        //    get
-        //    {
-        //        if (MarketTime != null)
-        //        {
-        //            return false;
-        //        }
-        //        else
-        //        {
-        //            return false;
-        //        }
-        //    }
-        //}
         public string Serialize()
         {
             StringBuilder sb = new StringBuilder();
@@ -179,6 +153,8 @@ namespace TradingLib.Common
             sb.Append(this.underlaying_fk.ToString());//securityfamily
             sb.Append(d);
             sb.Append(this.mkttime_fk.ToString());//markettime
+            sb.Append(d);
+            sb.Append(this.DataFeed);
             return sb.ToString();
         }
 
@@ -209,7 +185,7 @@ namespace TradingLib.Common
             this.exchange_fk = int.Parse(rec[13]);
             this.underlaying_fk = int.Parse(rec[14]);
             this.mkttime_fk = int.Parse(rec[15]);
-
+            this.DataFeed = (QSEnumDataFeedTypes)Enum.Parse(typeof(QSEnumDataFeedTypes), rec[16]);
         }
     }
 }

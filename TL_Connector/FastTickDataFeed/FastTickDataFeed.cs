@@ -318,7 +318,7 @@ namespace DataFeed.FastTick
 
                 foreach (KeyValuePair<QSEnumDataFeedTypes, List<Symbol>> kv in map)
                 {
-                    string symlist = string.Join(",", kv.Value.Select(sym=>sym.Symbol));
+                    //string symlist = string.Join(",", kv.Value.Select(sym=>sym.Symbol));
                     //将合约字头逐个向publisher进行订阅
                     foreach (Symbol s in kv.Value)
                     {
@@ -327,7 +327,6 @@ namespace DataFeed.FastTick
                     }
 
                     //通过FastTickServer的管理端口 请求FastTickServer向行情源订阅行情数据,Publisher的订阅是内部的一个分发订阅 不会产生向行情源订阅实际数据
-
                     //注册合约协议格式 DATAFEED:SYMBOL|EXCHANGE
                     foreach (var sym in kv.Value)
                     {
@@ -335,18 +334,7 @@ namespace DataFeed.FastTick
                         debug(Token + " RegisterSymbol " + tmpreq, QSEnumDebugLevel.INFO);
                         Send(TradingLib.API.MessageTypes.MGRREGISTERSYMBOLS, tmpreq);
                     }
-                    
 
-                    ////如果国外交易所 需要按交易所进行发送
-                    //if (kv.Key == QSEnumDataFeedTypes.IQFEED)
-                    //{
-                        
-                    //}
-
-                    ////默认按 DataFeed:sym0,sym1,sym2的方式发送请求
-                    //string requeststr = (kv.Key.ToString() + ":" + symlist);
-                    //debug(Token + " RegisterSymbol " + requeststr, QSEnumDebugLevel.INFO);
-                    //Send(TradingLib.API.MessageTypes.MGRREGISTERSYMBOLS, requeststr);
                 }
 
                 
@@ -368,7 +356,7 @@ namespace DataFeed.FastTick
             Dictionary<QSEnumDataFeedTypes, List<Symbol>> map = new Dictionary<QSEnumDataFeedTypes, List<Symbol>>();
             foreach (Symbol sym in basket)
             {
-                QSEnumDataFeedTypes type = Symbol2DataFeedType(sym);
+                QSEnumDataFeedTypes type = sym.SecurityFamily.DataFeed;////Symbol2DataFeedType(sym);
                 if (map.Keys.Contains(type))
                 {
                     map[type].Add(sym);

@@ -235,6 +235,7 @@ namespace TradingLib.Common
                 target.Multiple = sec.Multiple;
                 target.PriceTick = sec.PriceTick;
                 target.Domain_ID = _doamin.ID;
+                target.DataFeed = sec.DataFeed;
 
                 //同步已经存在的品种 不更新费率信息
                 //target.EntryCommission = sec.EntryCommission;
@@ -274,6 +275,7 @@ namespace TradingLib.Common
                 target.ExtraMargin = sec.ExtraMargin;
                 target.MaintanceMargin = sec.MaintanceMargin;
                 target.Tradeable = sec.Tradeable;
+                target.DataFeed = sec.DataFeed;
 
                 ORM.MBasicInfo.InsertSecurity(target);
 
@@ -283,6 +285,12 @@ namespace TradingLib.Common
             }
         
         }
+
+        /// <summary>
+        /// 更新品种信息
+        /// </summary>
+        /// <param name="sec"></param>
+        /// <param name="updateall"></param>
         public void UpdateSecurity(SecurityFamilyImpl sec,bool updateall)
         {
             SecurityFamilyImpl target = null;
@@ -306,6 +314,7 @@ namespace TradingLib.Common
 
                 target.Multiple = sec.Multiple;
                 target.PriceTick = sec.PriceTick;
+                target.DataFeed = sec.DataFeed;
 
                 if (updateall)
                 {
@@ -347,6 +356,7 @@ namespace TradingLib.Common
                 target.ExtraMargin = sec.ExtraMargin;
                 target.MaintanceMargin = sec.MaintanceMargin;
                 target.Tradeable = sec.Tradeable;
+                target.DataFeed = sec.DataFeed;
 
                 //数据库插入 并绑定数据库ID
                 ORM.MBasicInfo.InsertSecurity(target);

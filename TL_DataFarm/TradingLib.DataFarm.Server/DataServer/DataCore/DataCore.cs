@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.IO;
 using TradingLib.API;
 using TradingLib.Common;
 using TradingLib.ORM;
@@ -30,8 +31,11 @@ namespace TradingLib.DataFarm.Common
             _datastore = STSDBFactory.CreateLocalDB();
             //从数据库加载有效合约进行注册
             _datastore.RegisterSymbolFreq("HGZ5", BarInterval.CustomTime, 30);
-            
 
+            foreach (var file in Directory.GetFiles("Import", "*.csv"))
+            {
+                logger.Info("File:" + file);
+            }
         }
 
         public override void Start()
