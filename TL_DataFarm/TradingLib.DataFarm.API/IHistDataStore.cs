@@ -41,7 +41,10 @@ namespace TradingLib.DataFarm.API
         /// <returns></returns>
         bool IsCached(string symbol, BarInterval type, int interval);
 
-
+        /// <summary>
+        /// 保存
+        /// </summary>
+        void Commit();
         /// <summary>
         /// 设置某个合约频率数据为已缓存
         /// </summary>

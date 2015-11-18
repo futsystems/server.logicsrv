@@ -108,18 +108,24 @@ namespace TradingLib.DataFarm.Common
             }
 
         }
-
+        int i = 0;
+        int size = 0;
         void Backend_BarResponseEvent(RspQryBarResponse obj)
         {
             IHistDataStore store = this.GetHistDataSotre();
-            obj.Bar.Symbol = "HGZ5"; ;
-            obj.Bar.Interval = 30;
-            obj.Bar.IntervalType = BarInterval.CustomTime;
+            //obj.Bar.Symbol = "HGZ5"; ;
+            //obj.Bar.Interval = 30;
+            //obj.Bar.IntervalType = BarInterval.CustomTime;
+            if (size == 0)
+            {
+                size = obj.Data.Length;
+            }
             if (store != null)
             {
                 //更新内存Bar数据缓存
+                //i++;
                 store.UpdateBar(obj.Bar as BarImpl);
-
+                //logger.Info("cnt:" + i.ToString() + " size:" + size.ToString());
                 //如果是最后一个Bar回报
                 if (obj.IsLast)
                 {

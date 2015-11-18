@@ -31,10 +31,42 @@ namespace TradingLib.DataFarm.Common
             _datastore = STSDBFactory.CreateLocalDB();
             //从数据库加载有效合约进行注册
             _datastore.RegisterSymbolFreq("HGZ5", BarInterval.CustomTime, 30);
+            _datastore.RegisterSymbolFreq("IF1511", BarInterval.CustomTime, 60);
 
             foreach (var file in Directory.GetFiles("Import", "*.csv"))
             {
                 logger.Info("File:" + file);
+                string line = string.Empty;
+                using (StreamReader  fs = new StreamReader (file,Encoding.UTF8))
+                {
+                    
+                    while (line != null)
+                    {
+                        line = fs.ReadLine();
+                        if (line != null && line.Length > 0)
+                        {
+                            BarImpl b = new BarImpl();
+                            string[] rec = line.Split(',');
+
+                            b.Symbol = "IF1511";
+                            b.IntervalType = BarInterval.CustomTime;
+                            b.Interval = 60;
+                            b.Open = double.Parse(rec[2]);
+                            b.High = double.Parse(rec[3]);
+                            b.Low = double.Parse(rec[4]);
+                            b.Close = double.Parse(rec[5]);
+                            b.Volume = int.Parse(rec[6]);
+                            b.OpenInterest = int.Parse(rec[7]);
+                            //logger.Info("datatime:" + rec[0] + " " + rec[1]);
+                            b.BarStartTime = DateTime.ParseExact(rec[0] + " " + rec[1], "yyyy-MM-dd HH:mm", System.Globalization.CultureInfo.CurrentCulture);
+                            //logger.Info("bar:" + b.ToString());
+                            _datastore.UpdateBar(b);
+                            //_datastore.Commit();
+                        }
+                    }
+                    
+                }
+                _datastore.Commit();
             }
         }
 

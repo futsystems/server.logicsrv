@@ -89,7 +89,7 @@ namespace TradingLib.DataFarm.Common
             QryBarRequest brequest = RequestTemplate<QryBarRequest>.CliSendRequest(NextRequestID);
             brequest.FromEnd = request.FromEnd;
             brequest.Symbol = request.Symbol;
-            brequest.MaxCount = -1;
+            brequest.MaxCount = -1;// request.MaxCount;
             brequest.Interval = request.Interval;
             brequest.Start = DateTime.MinValue;
             brequest.End = DateTime.MaxValue;
@@ -100,7 +100,7 @@ namespace TradingLib.DataFarm.Common
 
         void zmqclient_OnPacketEvent(IPacket obj)
         {
-            logger.Info("zmqclient got message type:" + obj.Type.ToString() + " content:" + obj.Content);
+            logger.Debug("zmqclient got message type:" + obj.Type.ToString() + " content:" + obj.Content);
             switch (obj.Type)
             { 
                 case MessageTypes.XMARKETTIMERESPONSE:

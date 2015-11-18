@@ -27,7 +27,7 @@ namespace TradingLib.DataFarm.Common
             _datastore = STSDBFactory.CreateMemoryDB();
             //从数据库加载有效合约进行注册
             _datastore.RegisterSymbolFreq("HGZ5", BarInterval.CustomTime, 30);
-
+            _datastore.RegisterSymbolFreq("IF1511", BarInterval.CustomTime, 60);
             _backend = new DataCoreBackend("127.0.0.1", 9590);
             _backend.InitedEvent += new Action(Backend_InitedEvent);
             _backend.BarResponseEvent += new Action<RspQryBarResponse>(Backend_BarResponseEvent);

@@ -150,11 +150,15 @@ namespace DataClient
                     if (ret > 0)
                     {
                         //logger.Debug("socket recv bytes:" + ret + "raw data:" + HexToString(buffer, ret));
-                        Message[] messagelist = Message.gotmessages(ref buffer, ref ret);
+                        Message[] messagelist = Message.gotmessages(ref buffer, ref bufferoffset);//消息不完整则会将数据copy到头部并且设定bufferoffset用于下一次读取数据时进行自动拼接
+                        //int gotlen = 0;
                         foreach (var msg in messagelist)
                         {
+                            //gotlen += msg.ByteLength;
                             HandleMessage(msg);
                         }
+                        //logger.Info(string.Format("buffer len:{0} buffer offset:{1} ret len:{2} parse len:{3}", buffer.Length, bufferoffset, ret, gotlen));
+                        
                     }
                     else if (ret == 0) // socket was shutdown
                     {

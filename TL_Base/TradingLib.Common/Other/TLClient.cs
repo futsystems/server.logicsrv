@@ -734,13 +734,19 @@ namespace TradingLib.Common
         #endregion
 
 
+        int i = 0;
         //消息处理逻辑
         void handle(MessageTypes type,string content)
         {
             try
             {
-                v(string.Format("Got Message type:{0} content:{1}", type, content));
+                logger.Debug(string.Format("Got Message type:{0} content:{1}", type, content));
                 IPacket packet = PacketHelper.CliRecvResponse(type, content);
+                if (type == MessageTypes.BARRESPONSE)
+                {
+                    i++;
+                    logger.Info("bar cnt:" + i.ToString());
+                }
                 //更新服务端消息回报时间戳
                 UpdateServerHeartbeat();
                 switch (packet.Type)

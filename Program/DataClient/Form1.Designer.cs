@@ -99,7 +99,7 @@
             this.Symbol.Name = "Symbol";
             this.Symbol.Size = new System.Drawing.Size(63, 20);
             this.Symbol.TabIndex = 6;
-            this.Symbol.Text = "HGZ5";
+            this.Symbol.Text = "IF1511";
             // 
             // kryptonLabel2
             // 
@@ -186,7 +186,7 @@
             this.interval.Size = new System.Drawing.Size(52, 22);
             this.interval.TabIndex = 16;
             this.interval.Value = new decimal(new int[] {
-            30,
+            60,
             0,
             0,
             0});
@@ -281,7 +281,7 @@
             this.port.Name = "port";
             this.port.Size = new System.Drawing.Size(81, 20);
             this.port.TabIndex = 25;
-            this.port.Text = "8022";
+            this.port.Text = "5060";
             // 
             // debugControl1
             // 

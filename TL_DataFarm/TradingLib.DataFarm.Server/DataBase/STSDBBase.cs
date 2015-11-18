@@ -49,6 +49,14 @@ namespace TradingLib.DataFarm.Common
 
         }
 
+
+        public void Commit()
+        {
+            if (engine != null)
+            {
+                engine.Commit();
+            }
+        }
         /// <summary>
         /// 注册合约Bar类型
         /// </summary>

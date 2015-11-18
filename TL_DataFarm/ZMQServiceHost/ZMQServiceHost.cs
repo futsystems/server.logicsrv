@@ -158,13 +158,22 @@ namespace ZMQServiceHost
                 {
                     //前端Router用于注册Client
                     frontend.Bind("tcp://*:" + _port.ToString());
+                    frontend.SendHighWatermark = 5000000;
+                    frontend.ReceiveHighWatermark = 5000000;
                     //后端用于向worker线程发送消息,worker再去执行
                     backend.Bind("inproc://backend");
+                    backend.SendHighWatermark = 5000000;
+                    backend.ReceiveHighWatermark = 5000000;
                     //用于系统对外发送消息
                     outchannel.Bind("inproc://output");
+                    outchannel.SendHighWatermark = 5000000;
+                    outchannel.ReceiveHighWatermark = 5000000;
                     //对外发送消息的对端socket
                     _outputChanel = outClient;
+                    
                     outClient.Connect("inproc://output");
+                    outClient.SendHighWatermark = 5000000;
+                    outClient.ReceiveHighWatermark = 5000000;
                     logger.Info("MD ServiceHost Listen at:" + _port.ToString());
                     for (int workerid = 0; workerid < _worknum; workerid++)
                     {

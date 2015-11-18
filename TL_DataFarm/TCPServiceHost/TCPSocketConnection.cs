@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using TradingLib.API;
 using TradingLib.DataFarm.API;
+using Common.Logging;
 
 namespace TCPServiceHost
 {
@@ -12,6 +13,7 @@ namespace TCPServiceHost
     /// </summary>
     public class TCPSocketConnection:IConnection
     {
+        ILog logger = LogManager.GetLogger("conn");
 
         public string IPAddress 
         { 
@@ -67,6 +69,8 @@ namespace TCPServiceHost
         {
             byte[] data = packet.Data;
             _session.Send(data, 0, data.Length);
+            //bool re = _session.TrySend(data, 0, data.Length);
+            //logger.Info(string.Format("send data lenght:{0} ret:{1}", data.Length, re));
         }
 
         

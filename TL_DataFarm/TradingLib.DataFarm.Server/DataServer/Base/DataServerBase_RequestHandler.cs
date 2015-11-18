@@ -102,13 +102,18 @@ namespace TradingLib.DataFarm.Common
                     Bar[] bars = store.QryBar(request.Symbol, request.IntervalType, request.Interval, request.Start, request.End, (int)request.MaxCount, request.FromEnd).ToArray();
 
                     logger.Info("got bar cnt:" + bars.Count());
-
+                    Profiler pf = new Profiler();
+                    pf.EnterSection("send packet");
                     for (int i = 0; i < bars.Length; i++)
                     {
                         RspQryBarResponse response = ResponseTemplate<RspQryBarResponse>.SrvSendRspResponse(request);
                         response.Bar = bars[i];
                         conn.SendResponse(response, i == bars.Length - 1);
+                        
                     }
+                    pf.LeaveSection();
+                    logger.Info(pf.GetStatsString());
+                    logger.Info("send bar finished");
                 }
                 else
                 {
@@ -160,8 +165,9 @@ namespace TradingLib.DataFarm.Common
                 response.MarketTime = mts[i];
                 conn.SendResponse(response, i == totalnum - 1);
             }
+            
         }
-
+        const int MAXSENTSIZE = 1000;
 
 
         /// <summary>

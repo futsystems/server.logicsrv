@@ -156,6 +156,7 @@ namespace TradingLib.DataFarm.Common
                     _id = System.Guid.NewGuid().ToString();
                     _dealer.Identity = Encoding.UTF8.GetBytes(_id);
                     _dealer.Linger = new TimeSpan(0, 0, 0);
+                    _dealer.ReceiveHighWatermark = 5000000;
                     string cstr = string.Format("tcp://{0}:{1}", this.Server.Address,this.Server.Port);
                     _dealer.Connect(cstr);
                     logger.Info("connect to MDCore:" + cstr);

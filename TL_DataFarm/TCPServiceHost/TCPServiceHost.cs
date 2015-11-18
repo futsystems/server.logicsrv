@@ -32,12 +32,30 @@ namespace TCPServiceHost
         void InitServer()
         {
             tcpSocketServer = new TLServerBase();
-           
 
-            if (!tcpSocketServer.Setup("0.0.0.0", _port))
+            SuperSocket.SocketBase.Config.ServerConfig cfg = new SuperSocket.SocketBase.Config.ServerConfig();
+            cfg.Port = _port;
+            cfg.SendBufferSize = 4096;
+            cfg.ReceiveBufferSize = 4096;
+            cfg.Ip = "0.0.0.0";
+            cfg.ClearIdleSession = true;
+            cfg.IdleSessionTimeOut = 60;
+            cfg.ClearIdleSessionInterval = 120;
+            cfg.MaxConnectionNumber = 1024;
+            cfg.Mode = SuperSocket.SocketBase.SocketMode.Tcp;
+            //cfg.SyncSend = false;
+
+            if (!tcpSocketServer.Setup(cfg))
             {
                 logger.Error("Setup TcpSocket Error");
             }
+
+            //tcpSocketServer.Config.ReceiveBufferSize = 4096;
+            //tcpSocketServer.Config.SendBufferSize = 20480;
+            //tcpSocketServer.Setup(
+            
+
+            logger.Info("recv buffersize:" + tcpSocketServer.Config.SendBufferSize);
 
             tcpSocketServer.NewSessionConnected += new SuperSocket.SocketBase.SessionHandler<TLSessionBase>(tcpSocketServer_NewSessionConnected);
             tcpSocketServer.NewRequestReceived += new SuperSocket.SocketBase.RequestHandler<TLSessionBase, TLRequestInfo>(tcpSocketServer_NewRequestReceived);

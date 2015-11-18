@@ -57,5 +57,6 @@
 *.rar
 *.tar
 *.zip
+*.stsdb4
 
 TradingLibGUI.suo
