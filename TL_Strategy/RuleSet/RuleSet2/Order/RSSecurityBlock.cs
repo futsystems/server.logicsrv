@@ -6,12 +6,12 @@ using TradingLib.API;
 using TradingLib.Common;
 
 
-namespace OrderRuleSet
+namespace RuleSet2.Order
 {
     /// <summary>
-    /// 交易品种，设置在某个时间段内禁止交易某些品种
+    /// 交易品种黑名单/白名单 允许交易某些品种或禁止交易某些品种
     /// </summary>
-    public class RSSecurityBlock : RuleBase, IOrderCheck
+    public class RSSecurityFilter : RuleBase, IOrderCheck
     {
         /// <summary>
         /// 参数【json格式】
@@ -19,27 +19,9 @@ namespace OrderRuleSet
         private string _args = string.Empty;
 
         /// <summary>
-        /// 开始时间
+        /// 是否是白名单
         /// </summary>
-        private int start_time = 0;
-
-
-        /// <summary>
-        /// 结束时间
-        /// </summary>
-        private int end_time = 0;
-
-
-        /// <summary>
-        /// 禁止开仓
-        /// </summary>
-        private bool block_open = false;
-
-        /// <summary>
-        /// 禁止平仓
-        /// </summary>
-        private bool block_close = false;
-
+        private bool is_white = false;
 
         /// <summary>
         /// 品种列表
@@ -60,15 +42,17 @@ namespace OrderRuleSet
                     _args = value;
                     //解析json参数
                     var args = TradingLib.Mixins.Json.JsonMapper.ToObject(_args);
-                    start_time = int.Parse(args["start_time"].ToString());
-                    end_time = int.Parse(args["end_time"].ToString());
 
-                    block_open = bool.Parse(args["block_open"].ToString());
-                    block_close = bool.Parse(args["block_close"].ToString());
+                    is_white = bool.Parse(args["is_white"].ToString());
 
-                    foreach (string code in args["sec_list"].ToString().Split(','))
+                    //解析品种列表
+                    string secs = args["sec_list"].ToString();
+                    if (!string.IsNullOrEmpty(secs))
                     {
-                        sec_list.Add(code);
+                        foreach (var sec in secs.Split(','))
+                        {
+                            sec_list.Add(sec);
+                        }
                     }
 
 
@@ -88,50 +72,31 @@ namespace OrderRuleSet
         /// <param name="o"></param>
         /// <param name="msg"></param>
         /// <returns></returns>
-        public bool checkOrder(Order o, out string msg)
+        public bool checkOrder(TradingLib.API.Order o, out string msg)
         {
 
+            
             msg = string.Empty;
-
-            bool needcheck = false;
-            //起止时间均为0,标识全天检查
-            if (start_time == 0 && end_time == 0)
-            {
-                needcheck = true;
-            }
-            else
-            {
-                int now = Util.ToTLTime();
-                
-                //如果不全为0 则需要在开始和结束之间才进行检查
-                if (now >= start_time && now <= end_time)
-                {
-                    needcheck = true;
-                }
-            }
-
-            if (needcheck)
-            {
-                if ((block_open && o.IsEntryPosition) || (block_close && !o.IsEntryPosition))//禁止开仓并且该委托是开仓委托 或者 禁止平仓且委托为平仓委托
-                {
-                    needcheck = true;
-                }
-                else
-                {
-                    needcheck = false;
-                }
-            }
-
-            if (needcheck)
+            
+            //白名单策略 品种需在设定品种列表之内
+            if (is_white)
             {
                 if (sec_list.Contains(o.oSymbol.SecurityFamily.Code))
                 {
-
+                    return true;
+                }
+                msg = string.Format("品种:{0}不允许交易", o.oSymbol.SecurityFamily.Code);
+                return false;
+            }
+            else//黑名单
+            {
+                if (sec_list.Contains(o.oSymbol.SecurityFamily.Code))
+                {
+                    msg = string.Format("品种:{0}不允许交易", o.oSymbol.SecurityFamily.Code);
                     return false;
                 }
+                return true;
             }
-
-            return true;
         }
 
         /// <summary>
@@ -141,7 +106,7 @@ namespace OrderRuleSet
         {
             get
             {
-                return "禁止交易选中的品种:"+string.Join(",",sec_list.ToArray());
+                return (is_white?"允许":"禁止")+"交易品种:"+string.Join(",",sec_list.ToArray());
             }
         }
 
@@ -152,7 +117,7 @@ namespace OrderRuleSet
         /// </summary>
         public static new string Title
         {
-            get { return "品种黑名单,禁止交易选中的品种"; }
+            get { return "品种黑/白名单,禁止或允许交易选定的品种"; }
         }
 
         /// <summary>
@@ -160,7 +125,7 @@ namespace OrderRuleSet
         /// </summary>
         public static new string Description
         {
-            get { return "禁止交易选中的品种"; }
+            get { return "禁止/允许交易选中的品种"; }
         }
 
         public static new bool CanSetCompare { get { return false; } }

@@ -505,6 +505,7 @@ namespace TradingLib.Core
                     if (!account.CheckOrder(o, out msg))//如果通过风控检查 则置委托状态为Placed
                     {
                         logger.Info("Order rejected by[Order Rule Check]" + o.GetOrderInfo());
+                        
                         return false;
                     }
                 }

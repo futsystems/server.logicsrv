@@ -43,8 +43,34 @@ namespace DataClient
         {
             logger.Info("start client");
             cli = new TLClient<TLSocket_TCP>("127.0.0.1", int.Parse(port.Text), "ZMQClient");
+            cli.OnPacketEvent += new Action<IPacket>(cli_OnPacketEvent);
             cli.Start();
             
+        }
+
+        int bcnt = 0;
+        void cli_OnPacketEvent(IPacket obj)
+        {
+            switch (obj.Type)
+            {
+                case MessageTypes.BARRESPONSE:
+                    {
+                        CliOnBarResponse(obj as RspQryBarResponse);
+                        break;
+                    }
+                default:
+                    break;
+            }
+        }
+
+        void CliOnBarResponse(RspQryBarResponse response)
+        { 
+             bcnt++;
+             if (response.IsLast)
+             {
+                 logger.Info("Total got bar:" + bcnt.ToString());
+                 bcnt = 0;
+             }
         }
 
         private void btnQryService_Click(object sender, EventArgs e)

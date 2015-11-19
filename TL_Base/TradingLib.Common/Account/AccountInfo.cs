@@ -14,6 +14,7 @@ namespace TradingLib.Common
     public class AccountInfo
     {
         public string Account { get; set; }
+        public string Name { get; set; }//交易者姓名
         public decimal LastEquity { get; set; }//昨日权益
         public decimal NowEquity { get; set; }//当前动态权益
 
@@ -206,6 +207,8 @@ namespace TradingLib.Common
             sb.Append(info.CreditCashIn);
             sb.Append(d);
             sb.Append(info.CreditCashOut);
+            sb.Append(d);
+            sb.Append(info.Name);
             return sb.ToString();
         }
 
@@ -276,6 +279,7 @@ namespace TradingLib.Common
                 a.LastCredit = decimal.Parse(r[49]);
                 a.CreditCashIn = decimal.Parse(r[50]);
                 a.CreditCashOut = decimal.Parse(r[51]);
+                a.Name = r[52];
             }
             return a;
         }

@@ -28,7 +28,7 @@ namespace TradingLib.Common
         TLSocketBase _tlsocket = null;
         int requestid = 0;
         int _watchWait =  Const.DEFAULTWAIT;//心跳检测线程检测频率
-        int _hbPeriod = Const.HEARTBEATPERIOD;//向服务端发送心跳信息间隔
+        int _hbPeriod = 5;//Const.HEARTBEATPERIOD;//向服务端发送心跳信息间隔
         int _sendheartbeat = Const.SENDHEARTBEATMS;//发送心跳请求间隔
         int _hbDeadTimeSpan = Const.HEARTBEATDEADMS;//心跳死亡间隔
         long _lastheartbeat = 0;//最后心跳时间
@@ -734,7 +734,7 @@ namespace TradingLib.Common
         #endregion
 
 
-        int i = 0;
+        //int i = 0;
         //消息处理逻辑
         void handle(MessageTypes type,string content)
         {
@@ -742,11 +742,6 @@ namespace TradingLib.Common
             {
                 logger.Debug(string.Format("Got Message type:{0} content:{1}", type, content));
                 IPacket packet = PacketHelper.CliRecvResponse(type, content);
-                if (type == MessageTypes.BARRESPONSE)
-                {
-                    i++;
-                    logger.Info("bar cnt:" + i.ToString());
-                }
                 //更新服务端消息回报时间戳
                 UpdateServerHeartbeat();
                 switch (packet.Type)

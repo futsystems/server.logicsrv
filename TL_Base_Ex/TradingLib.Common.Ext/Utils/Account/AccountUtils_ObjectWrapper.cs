@@ -110,6 +110,8 @@ namespace TradingLib.Common
             a.LastCredit = acc.LastCredit;
             a.CreditCashIn = acc.CreditCashIn;
             a.CreditCashOut = acc.CreditCashOut;
+            AccountProfile profile = BasicTracker.AccountProfileTracker[acc.ID];
+            a.Name = string.IsNullOrEmpty(profile.Name) ? acc.ID : profile.Name;
 
             return a;
         }
