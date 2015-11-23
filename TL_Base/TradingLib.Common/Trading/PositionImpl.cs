@@ -605,13 +605,20 @@ namespace TradingLib.Common
             }
             else//平仓金额 数量累加
             {
-                _closeamount += t.GetAmount();
-                _closevol += t.UnsignedSize;
+                bool closefail = false;
+                
 
                 if (NeedGenPositionDetails)
                 {
-                    cpl = ClosePosition(t);//执行平仓操作
+                    cpl = ClosePosition(t,out closefail);//执行平仓操作
+                    if (closefail)
+                    {
+                        return 0;
+                    }
                 }
+
+                _closeamount += t.GetAmount();
+                _closevol += t.UnsignedSize;
             }
 
             //3.调整持仓汇总的数量和价格
@@ -731,8 +738,10 @@ namespace TradingLib.Common
         /// 平仓操作会返回一个平仓盈亏 用于填充到adjust
         /// </summary>
         /// <param name="close"></param>
-        decimal  ClosePosition(Trade close)
+        decimal  ClosePosition(Trade close,out bool closefail)
         {
+            closefail = false;
+
             int remainsize = close.UnsignedSize;
             decimal closeprofit = 0;//平仓盈亏金额
             decimal closepoint = 0;//平仓盈亏点数
@@ -796,6 +805,7 @@ namespace TradingLib.Common
             }
             else
             {
+                closefail = true;//平仓成交出现异常
                 Util.Fatal("exit trade have not used up,some big error happend");
             }
             return 0;

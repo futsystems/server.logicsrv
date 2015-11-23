@@ -82,6 +82,7 @@ namespace TradingLib.Core
                     this.GotPosition(p);
                 }
 
+               
                 //foreach (PositionRoundImpl pr in prlist)
                 //{
                 //    Util.Debug(pr.ToString(), QSEnumDebugLevel.VERB);
@@ -104,6 +105,7 @@ namespace TradingLib.Core
                     if(action.ActionFlag == QSEnumOrderActionFlag.Delete && action.OrderID != 0)
                         this.GotCancel(action.OrderID) ;
                 }
+
             }
             catch (Exception ex)
             {
