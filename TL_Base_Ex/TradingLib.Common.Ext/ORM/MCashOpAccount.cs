@@ -127,6 +127,7 @@ namespace TradingLib.ORM
         /// <returns></returns>
         public static IEnumerable<JsonWrapperCasnTrans> SelectAccountCashTrans(string account, long start, long end)
         {
+
             using (DBMySql db = new DBMySql())
             {
                 string query = string.Empty;
