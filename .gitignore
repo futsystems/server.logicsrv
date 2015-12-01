@@ -20,6 +20,7 @@
 /Platform/FutsMoniter/Secure0
 /Platform/**/*.dll
 /Platform/**/*.exe
+/Platform/**/*.dat
 /Platform/**/log/
 /Platform/**/cache/
 /Platform/**/Logs/
@@ -53,5 +54,6 @@
 *.rar
 *.tar
 *.zip
+
 
 /.project

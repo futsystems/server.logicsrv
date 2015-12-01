@@ -18,6 +18,7 @@ namespace TradingLib.Contrib.APIService
     public partial class APIServiceBundle : ContribSrvObject, IContrib
     {
         const string ContribName = "APIService";
+        HttpAPIServer _apiServer = null;
 
         public APIServiceBundle()
             : base(APIServiceBundle.ContribName)
@@ -35,10 +36,16 @@ namespace TradingLib.Contrib.APIService
         /// 销毁
         /// </summary>
         public void OnDestory() { }
+        
+        
         /// <summary>
         /// 启动
         /// </summary>
-        public void Start() { }
+        public void Start() 
+        {
+            _apiServer = new HttpAPIServer();
+            _apiServer.Start();
+        }
 
         /// <summary>
         /// 停止
