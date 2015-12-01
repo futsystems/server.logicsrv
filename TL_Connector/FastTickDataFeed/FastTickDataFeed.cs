@@ -305,6 +305,27 @@ namespace DataFeed.FastTick
             }
         }
 
+        void Send(IPacket packet)
+        {
+            if (_symbolreq != null)
+            {
+                lock (_symbolreq)
+                {
+                    try
+                    {
+                        string rep = null;
+                        _symbolreq.Send(packet.Data);//非阻塞
+                        rep = _symbolreq.Receive(Encoding.UTF8, timeout);
+
+                    }
+                    catch (Exception ex)
+                    {
+                        debug("发送消息异常:" + ex.ToString());
+                    }
+                }
+            }
+        }
+
         /// <summary>
         /// 注册市场数据
         /// </summary>
@@ -333,6 +354,13 @@ namespace DataFeed.FastTick
                         string tmpreq = (kv.Key.ToString() + ":" + sym.Symbol + "|" + sym.SecurityFamily.Exchange.EXCode);
                         debug(Token + " RegisterSymbol " + tmpreq, QSEnumDebugLevel.INFO);
                         Send(TradingLib.API.MessageTypes.MGRREGISTERSYMBOLS, tmpreq);
+
+                        //MDRegisterSymbolsRequest request = RequestTemplate<MDRegisterSymbolsRequest>.CliSendRequest(0);
+                        //request.DataFeed = kv.Key;
+                        //request.Exchange = sym.SecurityFamily.Exchange.EXCode;
+                        //request.SymbolList.Add(sym.Symbol);
+
+                        //Send(request);
                     }
 
                 }

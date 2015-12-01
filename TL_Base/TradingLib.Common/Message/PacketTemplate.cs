@@ -307,6 +307,8 @@ namespace TradingLib.Common
                         return RequestTemplate<MGRReqDelAccountRequest>.SrvRecvRequest(frontid, clientid, content);
                     #endregion
 
+
+                    
                     default:
                         throw new PacketTypeNotAvabile(type, content, frontid, clientid);
                 }

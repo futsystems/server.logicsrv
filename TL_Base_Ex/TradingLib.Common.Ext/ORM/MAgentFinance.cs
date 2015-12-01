@@ -203,11 +203,11 @@ namespace TradingLib.ORM
                     JsonWrapperCasnTrans trans = new JsonWrapperCasnTrans();
                     trans.mgr_fk = op.mgr_fk;
                     trans.Settleday = TLCtxHelper.ModuleSettleCentre.Tradingday;
-                    trans.TransRef = op.Ref;
+                    trans.TxnRef = op.Ref;
                     trans.DateTime = Util.ToTLDateTime();
                     trans.Comment = "";
                     trans.Amount = (op.Operation == QSEnumCashOperation.Deposit ? 1 : -1) * op.Amount;
-                    string query2 = string.Format("INSERT INTO manager_cashtrans (`mgr_fk`,`settleday`,`datetime`,`amount`,`transref`,`comment`) VALUES ( '{0}','{1}','{2}','{3}','{4}','{5}')",trans.mgr_fk,trans.Settleday,trans.DateTime,trans.Amount,trans.TransRef,trans.Comment);
+                    string query2 = string.Format("INSERT INTO manager_cashtrans (`mgr_fk`,`settleday`,`datetime`,`amount`,`transref`,`comment`) VALUES ( '{0}','{1}','{2}','{3}','{4}','{5}')",trans.mgr_fk,trans.Settleday,trans.DateTime,trans.Amount,trans.TxnRef,trans.Comment);
 
                     istransok = istransok && db.Connection.Execute(query2) > 0;
                     if (istransok)

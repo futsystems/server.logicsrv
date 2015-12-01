@@ -424,7 +424,7 @@ namespace TradingLib.Mixins.JsonObject
         /// <summary>
         /// 对应流水
         /// </summary>
-        public string TransRef { get; set; }
+        public string TxnRef { get; set; }
 
         /// <summary>
         /// 说明
@@ -433,9 +433,16 @@ namespace TradingLib.Mixins.JsonObject
 
 
         /// <summary>
-        /// 资金类型
+        /// 出入金类型
         /// </summary>
-        public QSEnumEquityType Equity_Type { get; set; }
+        public QSEnumCashOperation TxnType { get; set; }
+
+        /// <summary>
+        /// 资金类别
+        /// </summary>
+        public QSEnumEquityType EquityType { get; set; }
+
+
     }
 
 

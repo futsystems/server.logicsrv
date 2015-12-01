@@ -174,6 +174,9 @@ namespace TradingLib.API
         MGRSTARTDATAFEED,//启动数据通道
         MGRSTOPDATAFEED,//停止数据通道
         MGRREGISTERSYMBOLS,//订阅行情
+        MGRUNREGISTERSYMBOLS,//注销行情订阅
+        MGRQRYSYMBOLSREGISTED,//查询已注册合约
+        MGRQRYSYMBOLSREGISTEDRESPONSE,//查询已注册合约回报
 
         // START MANAGER MESSAGES
         MGRQRYACCOUNTS=8000,//查询帐户列表
