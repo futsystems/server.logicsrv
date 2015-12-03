@@ -145,7 +145,10 @@ namespace TradingLib.Core
             
             //周期定时结算时间
             _settleTime = _netxSettleTime.ToTLTime();
-            _resetTime = _settleTime;// _netxSettleTime.AddMinutes(5).ToTLTime();//结算后5分钟为重置时间
+            _resetTime = _netxSettleTime.AddMinutes(5).ToTLTime();
+
+            DateTime _nextSettResetTime = _netxSettleTime.AddMinutes(5);//结算后5分钟为重置时间
+            RegisterSettleResetTask(_nextSettResetTime);
 
             //当前时间是否大于最后交易所结算时间 且在柜台结算时间之前，如果在这个时间段内，则当前tradingday为 判定出来的交易日的上一个交易日
             int now = Util.ToTLTime();
@@ -184,6 +187,12 @@ namespace TradingLib.Core
             TLCtxHelper.ModuleTaskCentre.RegisterTask(task);
         }
 
+        void RegisterSettleResetTask(DateTime resettime)
+        {
+            logger.Info("注册系统重置任务,重置时间:" + resettime.ToString("HH:mm:ss"));
+            TaskProc task = new TaskProc(this.UUID, "交易系统重置-" + resettime.ToString("HH:mm:ss"), resettime.Hour, resettime.Minute, resettime.Second, delegate() { SetteReset(); });
+            TLCtxHelper.ModuleTaskCentre.RegisterTask(task);
+        }
 
         void RegisterDataStoreTask(DateTime storetime)
         {
@@ -191,6 +200,8 @@ namespace TradingLib.Core
             TaskProc task = new TaskProc(this.UUID, "交易数据转储-" + storetime.ToString("HH:mm:ss"), storetime.Hour, storetime.Minute, storetime.Second, delegate() { Dump2Log(); });
             TLCtxHelper.ModuleTaskCentre.RegisterTask(task);
         }
+
+
         /// <summary>
         /// 交易帐户结算
         /// 系统执行每天定时结算包含周末与节假日,多交易所情况下 交易所按交易所的结算规则进行结算，系统进行每日结算
@@ -221,14 +232,21 @@ namespace TradingLib.Core
 
             //触发结算后事件
             TLCtxHelper.EventSystem.FireAfterSettleEvent(this, new SystemEventArgs());
+            
+        }
 
+        /// <summary>
+        /// 单独触发结算事件
+        /// </summary>
+        void SetteReset()
+        {
+            //TODO:结算后 如果立刻执行重置 加载交易账户交易记录时会导致重复加载
             logger.Info("结算后系统重置");
             //触发 系统重置操作事件
             TLCtxHelper.EventSystem.FireSettleResetEvet(this, new SystemEventArgs());
 
             this.IsInSettle = false;//标识系统结算完毕
         }
-
         /// <summary>
         /// 结算重置
         /// </summary>
