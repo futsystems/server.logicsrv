@@ -190,6 +190,19 @@ namespace TradingLib.ORM
         }
 
         /// <summary>
+        /// 删除某个ID的合约
+        /// </summary>
+        public static void DeleteSymbol(int id)
+        {
+            using (DBMySql db = new DBMySql())
+            {
+                string delquery = string.Empty;
+                delquery = string.Format("DELETE FROM info_symbols WHERE id = '{0}'", id);
+                db.Connection.Execute(delquery);
+            }
+        }
+
+        /// <summary>
         /// 获得所有签约银行列表
         /// </summary>
         /// <returns></returns>

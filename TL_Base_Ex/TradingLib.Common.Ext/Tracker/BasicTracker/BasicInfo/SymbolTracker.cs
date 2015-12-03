@@ -161,8 +161,11 @@ namespace TradingLib.Common
                 //获得交易所当前日期 并判断是否过期
                 int exday = sec.Exchange.GetExchangeTime().ToTLDate();
                 if (sym.IsExpired(exday))
+                {
+                    //TODO:过期合约删除 是否需要全部删除？
+                    ORM.MBasicInfo.DeleteSymbol(sym.ID);
                     continue;
-
+                }
                 symcodemap[sym.Symbol] = sym;
                 idxcodemap[sym.ID] = sym;
 

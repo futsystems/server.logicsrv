@@ -131,7 +131,7 @@
     <Compile Include="Trading\Settlement\AccountSettlement.cs" />
     <Compile Include="Trading\Settlement\CashTransactionImpl.cs" />
     <Compile Include="Trading\Settlement\ExchangeSettlement.cs" />
-    <Compile Include="Trading\Utils\DateTimeUtils.cs" />
+    <Compile Include="Utils\DateTimeUtils.cs" />
     <Compile Include="Utils\ChinSpellcs.cs" />
     <Compile Include="Utils\Dequeue.cs" />
     <Compile Include="Utils\LocationInfo.cs" />

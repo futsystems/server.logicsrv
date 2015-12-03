@@ -75,5 +75,27 @@ namespace TradingLib.Common
         {
             return Util.ToTLDateTime(dt);
         }
+
+
+
+        /// <summary>
+        /// 获得某个时间的第一天
+        /// </summary>
+        /// <param name="dt"></param>
+        /// <returns></returns>
+        public static DateTime FirstDayOfMonth(this DateTime dt)
+        {
+            return dt.AddDays(1 - dt.Day);
+        }
+
+        /// <summary>
+        /// 获得某个时间的最后一天
+        /// </summary>
+        /// <param name="dt"></param>
+        /// <returns></returns>
+        public static DateTime LastDayOfMonth(this DateTime dt)
+        {
+            return dt.AddDays(1 - dt.Day).AddMonths(1).AddDays(-1);
+        }
     }
 }
