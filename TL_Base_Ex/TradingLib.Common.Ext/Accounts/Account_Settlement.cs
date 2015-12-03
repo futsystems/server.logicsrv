@@ -90,87 +90,94 @@ namespace TradingLib.Common
         /// <param name="settleday"></param>
         public void SettleExchange(IExchange exchange,int settleday)
         {
-            ///0.检查对应交易所是否有结算记录
-            if (settlementlist.Any(settle => settle.Settleday == settleday && settle.Exchange==exchange.EXCode))
+            try
             {
-                Util.Warn(string.Format("Account:{0} have setteld in Exchange:{1} for date:{2}", this.ID, exchange.EXCode, settleday));
-                return;
-            }
-            ExchangeSettlement settlement = new ExchangeSettlementImpl();
-            settlement.Account = this.ID;
-            settlement.Exchange = exchange.EXCode;
-            settlement.Settleday = settleday;
-
-
-            ///1.设定持仓结算价格 生成持仓明细(插入持仓明细时会检查是否已经存在相同的持仓明晰)
-            List<PositionDetail> positiondetail_settle = new List<PositionDetail>();
-            foreach (Position pos in this.GetPositions(exchange).Where(p => !p.isFlat))
-            {
-                //设定持仓结算价格
-                SettlementPrice target = TLCtxHelper.ModuleSettleCentre.GetSettlementPrice(settleday,pos.Symbol);
-                if (target != null && target.Settlement > 0)
+                ///0.检查对应交易所是否有结算记录
+                if (settlementlist.Any(settle => settle.Settleday == settleday && settle.Exchange == exchange.EXCode))
                 {
-                    pos.SettlementPrice = target.Settlement;
+                    Util.Warn(string.Format("Account:{0} have setteld in Exchange:{1} for date:{2}", this.ID, exchange.EXCode, settleday));
+                    return;
+                }
+                ExchangeSettlement settlement = new ExchangeSettlementImpl();
+                settlement.Account = this.ID;
+                settlement.Exchange = exchange.EXCode;
+                settlement.Settleday = settleday;
+
+
+                ///1.设定持仓结算价格 生成持仓明细(插入持仓明细时会检查是否已经存在相同的持仓明晰)
+                List<PositionDetail> positiondetail_settle = new List<PositionDetail>();
+                foreach (Position pos in this.GetPositions(exchange).Where(p => !p.isFlat))
+                {
+                    //设定持仓结算价格
+                    SettlementPrice target = TLCtxHelper.ModuleSettleCentre.GetSettlementPrice(settleday, pos.Symbol);
+                    if (target != null && target.Settlement > 0)
+                    {
+                        pos.SettlementPrice = target.Settlement;
+                    }
+
+                    //如果没有正常获得结算价格 持仓结算价按对应的最新价进行结算
+                    if (pos.SettlementPrice == null)
+                    {
+                        pos.SettlementPrice = pos.LastPrice;
+                    }
+
+                    //遍历该未平仓持仓对象下的所有持仓明细
+                    foreach (PositionDetail pd in pos.PositionDetailTotal.Where(pd => !pd.IsClosed()))
+                    {
+                        //保存结算持仓明细时要将结算日更新为当前
+                        pd.Settleday = settleday;
+                        //保存持仓明细到数据库
+                        ORM.MSettlement.InsertPositionDetail(pd);
+                        positiondetail_settle.Add(pd);
+                    }
                 }
 
-                //如果没有正常获得结算价格 持仓结算价按对应的最新价进行结算
-                if (pos.SettlementPrice == null)
+                ///2.统计手续费 平仓盈亏 盯市持仓盈亏
+                //手续费 手续费为所有成交手续费累加
+                settlement.Commission = this.GetTrades(exchange, settleday).Sum(f => f.Commission);
+                //平仓盈亏 为所有持仓对象下面的平仓明细的平仓盈亏累加
+                settlement.CloseProfitByDate = this.GetPositions(exchange).Sum(pos => pos.PositionCloseDetail.Sum(pcd => pcd.CloseProfitByDate));
+                //浮动盈亏
+                settlement.PositionProfitByDate = this.GetPositions(exchange).Sum(pos => pos.PositionDetailTotal.Sum(pd => pd.PositionProfitByDate));
+
+                ///3.保存结算记录到数据库
+                ORM.MSettlement.InsertExchangeSettlement(settlement);
+
+                ///4.标注已结算数据 委托 成交 持仓
+                foreach (var o in  this.GetOrders(exchange, settleday))
                 {
-                    pos.SettlementPrice = pos.LastPrice;
+                    o.Settled = true;
+                    TLCtxHelper.ModuleDataRepository.MarkOrderSettled(o);
                 }
-
-                //遍历该未平仓持仓对象下的所有持仓明细
-                foreach (PositionDetail pd in pos.PositionDetailTotal.Where(pd => !pd.IsClosed()))
+                foreach (var f in this.GetTrades(exchange, settleday))
                 {
-                    //保存结算持仓明细时要将结算日更新为当前
-                    pd.Settleday = settleday;
-                    //保存持仓明细到数据库
-                    ORM.MSettlement.InsertPositionDetail(pd);
-                    positiondetail_settle.Add(pd);
+                    f.Settled = true;
+                    TLCtxHelper.ModuleDataRepository.MarkTradeSettled(f);
                 }
-            }
-
-            ///2.统计手续费 平仓盈亏 盯市持仓盈亏
-            //手续费 手续费为所有成交手续费累加
-            settlement.Commission = this.GetTrades(exchange,settleday).Sum(f => f.Commission);
-            //平仓盈亏 为所有持仓对象下面的平仓明细的平仓盈亏累加
-            settlement.CloseProfitByDate = this.GetPositions(exchange).Sum(pos => pos.PositionCloseDetail.Sum(pcd => pcd.CloseProfitByDate));
-            //浮动盈亏
-            settlement.PositionProfitByDate = this.GetPositions(exchange).Sum(pos => pos.PositionDetailTotal.Sum(pd => pd.PositionProfitByDate));
-
-            ///3.保存结算记录到数据库
-            ORM.MSettlement.InsertExchangeSettlement(settlement);
-
-            ///4.标注已结算数据 委托 成交 持仓
-            foreach (var o in this.GetOrders(exchange, settleday))
-            {
-                o.Settled = true;
-                TLCtxHelper.ModuleDataRepository.MarkOrderSettled(o);
-            }
-            foreach (var f in this.GetTrades(exchange,settleday))
-            {
-                f.Settled = true;
-                TLCtxHelper.ModuleDataRepository.MarkTradeSettled(f);
-            }
-            foreach (var pos in this.GetPositions(exchange))
-            {
-                pos.Settled = true;
-                //如果持仓有隔夜持仓 将对应的隔夜持仓标注成已结算否则会对隔夜持仓重复加载
-                foreach (var pd in pos.PositionDetailYdRef)
+                foreach (var pos in this.GetPositions(exchange))
                 {
-                    TLCtxHelper.ModuleDataRepository.MarkPositionDetailSettled(pd);
+                    pos.Settled = true;
+                    //如果持仓有隔夜持仓 将对应的隔夜持仓标注成已结算否则会对隔夜持仓重复加载
+                    foreach (var pd in pos.PositionDetailYdRef)
+                    {
+                        TLCtxHelper.ModuleDataRepository.MarkPositionDetailSettled(pd);
+                    }
                 }
+                //将已经结算的持仓从内存数据对象中屏蔽 持仓数据是一个状态数据,因此我们这里将上个周期的持仓对象进行屏蔽
+                this.TKPosition.DropSettled();
+
+
+                ///5.加载持仓明晰和交易所结算记录
+                foreach (var pd in positiondetail_settle)
+                {
+                    this.TKPosition.GotPosition(pd);
+                }
+                settlementlist.Add(settlement);//将交易所结算记录加入列表
             }
-            //将已经结算的持仓从内存数据对象中屏蔽 持仓数据是一个状态数据,因此我们这里将上个周期的持仓对象进行屏蔽
-            this.TKPosition.DropSettled();
-
-
-            ///5.加载持仓明晰和交易所结算记录
-            foreach (var pd in positiondetail_settle)
+            catch (Exception ex) //增加单个帐户交易所结算报错
             {
-                this.TKPosition.GotPosition(pd);
+                Util.Error(string.Format("Account:{0} 交易所结算失败:{1}", this.ID, ex.ToString()));
             }
-            settlementlist.Add(settlement);//将交易所结算记录加入列表
 
         }
 
