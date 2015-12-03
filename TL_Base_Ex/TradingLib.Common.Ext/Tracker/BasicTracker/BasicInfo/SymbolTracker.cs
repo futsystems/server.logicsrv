@@ -154,8 +154,11 @@ namespace TradingLib.Common
 
                 //不存在对应的品种 不加载
                 SecurityFamily sec = BasicTracker.SecurityTracker[sym.Domain_ID, sym.security_fk];
-                if (sec== null)
+                if (sec == null)
+                {
+                    ORM.MBasicInfo.DeleteSymbol(sym.ID);
                     continue;
+                }
 
                 //过期品种不加载
                 //获得交易所当前日期 并判断是否过期
