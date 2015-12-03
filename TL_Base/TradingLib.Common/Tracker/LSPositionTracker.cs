@@ -194,7 +194,7 @@ namespace TradingLib.Common
 
         public IEnumerator<Position> GetEnumerator()
         {
-            return poslist.Where(pos=>!pos.Settled).GetEnumerator();
+            return poslist.Where(pos=>!pos.Settled&&pos.oSymbol!=null).GetEnumerator();
         }
         #endregion
 

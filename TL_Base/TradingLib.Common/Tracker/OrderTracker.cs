@@ -383,7 +383,7 @@ namespace TradingLib.Common
         /// <returns></returns>
         public IEnumerator<Order> GetEnumerator() 
         {
-            return orders.Where(o => !o.Settled && o.Account != UNKNOWSENTACCOUNT).GetEnumerator(); 
+            return orders.Where(o => !o.Settled && o.Account != UNKNOWSENTACCOUNT && o.oSymbol!= null).GetEnumerator(); 
         
         }
 

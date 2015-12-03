@@ -54,7 +54,7 @@ namespace TradingLib.Common
         /// <returns></returns>
         public IEnumerator<Trade> GetEnumerator()
         {
-            return trades.Where(f => !f.Settled).GetEnumerator();
+            return trades.Where(f => !f.Settled && f.oSymbol!= null).GetEnumerator();
 
         }
 
