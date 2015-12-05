@@ -112,6 +112,7 @@ namespace TradingLib.Core
             if (!o.oSymbol.IsTradeable)//合约不可交易
             {
                 errortitle = "SYMBOL_NOT_TRADEABLE";//合约不可交易
+                needlog = false;
                 return false;
             }
 
@@ -119,12 +120,14 @@ namespace TradingLib.Core
             if (o.oSymbol.IsExpired(exday))
             {
                 errortitle = "SYMBOL_NOT_TRADEABLE";//合约不可交易
+                needlog = false;
                 return false;
             }
 
             if (o.oSymbol.SecurityFamily.Currency != account.Currency)
             {
                 errortitle = "SYMBOL_NOT_TRADEABLE";//合约不可交易
+                needlog = false;
                 return false;
             }
 
@@ -134,6 +137,7 @@ namespace TradingLib.Core
             if (result != QSEnumActionCheckResult.Allowed)
             {
                 errortitle = "SYMBOL_NOT_MARKETTIME";
+                needlog = false;
                 return false;
             }
             //设定交易日
