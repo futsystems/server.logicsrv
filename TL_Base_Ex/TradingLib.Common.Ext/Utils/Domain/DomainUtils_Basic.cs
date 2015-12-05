@@ -93,7 +93,7 @@ namespace TradingLib.Common
             target.MaintanceMargin = symbol._maintancemargin;
             target.Strike = symbol.Strike;
             target.OptionSide = symbol.OptionSide;
-            //target.ExpireMonth = sym.ExpireMonth;
+            target.Month = symbol.Month;
             target.ExpireDate = symbol.ExpireDate;
 
             //获得初始合约对象的原始品种数据，由于品种通过数据库ID进行关联，因此初始合约是超级域的品种对象这里需要转化
