@@ -86,6 +86,11 @@ namespace TradingLib.Core
             }
         }
 
+        /// <summary>
+        /// 获得某个交易所的结算信息
+        /// </summary>
+        /// <param name="exchange"></param>
+        /// <returns></returns>
         ExchangeSettleInfo GetExchangeSettleInfo(IExchange exchange)
         {
             ExchangeSettleInfo info = new ExchangeSettleInfo();
@@ -94,7 +99,6 @@ namespace TradingLib.Core
             info.LocalSysSettleTime = exchange.ConvertToSystemTime(info.NextExchangeSettleTime);
             info.Settleday = info.NextExchangeSettleTime.ToTLDate();
             return info;
-
         }
 
 
@@ -133,34 +137,37 @@ namespace TradingLib.Core
             {
                 logger.Info(info);
             }
-            ExchangeSettleInfo firstex = infolsit.First();
-            _tradingday = firstex.Settleday;//最早结算交易所对应的日期就是 结算日
 
+            //最早结算交易所对应的日期就是 结算日
+            ExchangeSettleInfo firstex = infolsit.First();
+            _tradingday = firstex.Settleday;
+
+            //该结算日最晚的一个交易所结算时间 为系统柜台结算时间(顺延5分钟)
             List<ExchangeSettleInfo> tmp = infolsit.Where(e => e.Settleday == _tradingday).ToList();
             tmp.Sort();
             ExchangeSettleInfo lastex = tmp.Last();
-            _netxSettleTime = lastex.LocalSysSettleTime.AddMinutes(5);//应该结算日最晚的一个交易所结算时间 为系统柜台结算时间
-            //2.注册交易帐户结算定时任务
-            RegisterAccountSettleTask(_netxSettleTime);
-            
-            //周期定时结算时间
-            _settleTime = _netxSettleTime.ToTLTime();
-            _resetTime = _netxSettleTime.AddMinutes(5).ToTLTime();
 
-            DateTime _nextSettResetTime = _netxSettleTime.AddMinutes(5);//结算后5分钟为重置时间
-            RegisterSettleResetTask(_nextSettResetTime);
+            //2.注册交易帐户结算定时任务
+            _nextSettleTime = lastex.LocalSysSettleTime.AddMinutes(5);
+            _settleTime = _nextSettleTime.ToTLTime();
+            RegisterAccountSettleTask(_nextSettleTime);
+
+            //3.注册结算重置定时任务
+            _nextSettleResetTime = _nextSettleTime.AddMinutes(5);//结算后5分钟为重置时间
+            _resetTime = _nextSettleResetTime.ToTLTime();
+            RegisterSettleResetTask(_nextSettleResetTime);
 
             //当前时间是否大于最后交易所结算时间 且在柜台结算时间之前，如果在这个时间段内，则当前tradingday为 判定出来的交易日的上一个交易日
             int now = Util.ToTLTime();
-            if (now > lastex.LocalSysSettleTime.ToTLTime() && now < _netxSettleTime.ToTLTime())
+            if (now > lastex.LocalSysSettleTime.ToTLTime() && now < _nextSettleTime.ToTLTime())
             {
                 _tradingday = Util.ToDateTime(_tradingday, 0).AddDays(-1).ToTLDate();
             }
 
-            //3.注册定时转储任务 交易帐户结算后随机的5-10分钟之内执行数据转储
-            DateTime storetime = _netxSettleTime.AddMinutes(new Random().Next(5,10));
+            //4.注册定时转储任务 交易帐户结算后随机的5-10分钟之内执行数据转储
+            DateTime storetime = _nextSettleResetTime.AddMinutes(new Random().Next(5, 10));
             RegisterDataStoreTask(storetime);
-            logger.Info(string.Format("判定当前交易日:{0} 柜台结算时间:{1}", _tradingday, _netxSettleTime.ToString("yyyyMMdd HH:mm:ss")));
+            logger.Info(string.Format("判定当前交易日:{0} 柜台结算时间:{1}", _tradingday, _nextSettleTime.ToString("yyyyMMdd HH:mm:ss")));
         }
 
         /// <summary>
@@ -202,6 +209,71 @@ namespace TradingLib.Core
         }
 
 
+        #region 结算过程
+        /// <summary>
+        /// 交易所结算
+        /// 交易所结算规则
+        /// 1.周六周日 对应的时间节点上不执行结算
+        /// 2.节假日不执行结算
+        /// 3.结算时 当前日期就是结算日 只是上个交易日的T+1时段的交易 并入当前交易日进行结算
+        /// 
+        /// 1.分账户结算
+        /// 2.Broker结算
+        /// </summary>
+        /// <param name="list"></param>
+        void SettleExchange(List<IExchange> list, int tradingday = 0)
+        {
+            try
+            {
+                bool histmode = _settlemode == QSEnumSettleMode.HistMode;
+                //历史结算需要制定交易日
+                if (histmode && tradingday == 0)
+                {
+                    throw new ArgumentException("hist settle need tradingday");
+                }
+
+                foreach (var exchange in list)
+                {
+                    //历史结算使用制定交易日否则使用当前交易所时间
+                    DateTime extime = histmode ? Util.ToDateTime(tradingday, 0) : exchange.GetExchangeTime(); //获得交易所当前时间
+
+                    //非工作日不结算
+                    if (!extime.IsWorkDay())
+                    {
+                        continue;
+                    }
+                    //节假日不结算
+                    if (exchange.IsInHoliday(extime))
+                    {
+                        continue;
+                    }
+                    //结算日为交易所当前日期
+                    int settleday = extime.ToTLDate();
+
+                    logger.Info(string.Format("交易所:{0} 执行结算 结算日:{1}", exchange.EXCode, settleday));
+                    if (!histmode) //正常结算模式 需要保存结算价
+                    {
+                        //保存交易所对应的结算价格
+                        SaveSettlementPrice(exchange, settleday);
+                    }
+
+                    DateTime now = DateTime.Now;
+                    //执行交易帐户的交易所结算
+                    foreach (var account in TLCtxHelper.ModuleAccountManager.Accounts)
+                    {
+                        if (account.CreatedTime < now)//历史结算中 帐户创建时间之前的交易日不执行结算
+                        {
+                            account.SettleExchange(exchange, settleday);
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                logger.Error("交易所结算失败:" + ex.ToString());
+            }
+        }
+
         /// <summary>
         /// 交易帐户结算
         /// 系统执行每天定时结算包含周末与节假日,多交易所情况下 交易所按交易所的结算规则进行结算，系统进行每日结算
@@ -225,7 +297,7 @@ namespace TradingLib.Core
                 }
             }
 
-            //滚动交易日
+            //TODO:滚动交易日是在结算时执行还是在重置时执行
             RollTradingDay();
 
             logger.Info(string.Format("Settle finished,entry tradingday:{0}", this.Tradingday));
@@ -247,15 +319,30 @@ namespace TradingLib.Core
 
             this.IsInSettle = false;//标识系统结算完毕
         }
+
+
         /// <summary>
-        /// 结算重置
+        /// 将已结算的交易记录转储到历史交易记录表
+        /// 保存交易记录发生在交易帐户结算之后
         /// </summary>
-        //void SettleReset()
-        //{
-        //    logger.Info("结算后系统重置");
-        //    //触发 系统重置操作事件
-        //    TLCtxHelper.EventSystem.FireSettleResetEvet(this, new SystemEventArgs());
-        //}
+        public void Dump2Log(bool dumpall = false)
+        {
+            logger.Info("Dump TradingInfo(Order,Trade,OrderAction)");
+            int onum, tnum, cnum;//, prnum;
+            int tradingday = this.LastSettleday;//保存上一个交易日的结算数据
+            ORM.MTradingInfo.DumpSettledOrders(out onum, tradingday, dumpall);
+            ORM.MTradingInfo.DumpSettledTrades(out tnum, tradingday, dumpall);
+            ORM.MTradingInfo.DumpSettledOrderActions(out cnum, tradingday, dumpall);
+            // ORM.MTradingInfo.DumpIntradayPosTransactions(out prnum);
+
+            logger.Info("Order       Saved:" + onum.ToString());
+            logger.Info("Trade       Saved:" + tnum.ToString());
+            logger.Info("OrderAction Saved:" + cnum.ToString());
+            //logger.Info("PosTrans    Saved:" + prnum.ToString());
+        }
+
+        #endregion
+
 
         /// <summary>
         /// 获得某个行情的结算价信息
@@ -305,68 +392,7 @@ namespace TradingLib.Core
                 _settlementPriceTracker.UpdateSettlementPrice(data);
             }
         }
-        /// <summary>
-        /// 交易所结算
-        /// 交易所结算规则
-        /// 1.周六周日 对应的时间节点上不执行结算
-        /// 2.节假日不执行结算
-        /// 3.结算时 当前日期就是结算日 只是上个交易日的T+1时段的交易 并入当前交易日进行结算
-        /// 
-        /// 1.分账户结算
-        /// 2.Broker结算
-        /// </summary>
-        /// <param name="list"></param>
-        void SettleExchange(List<IExchange> list,int tradingday=0)
-        {
-            try
-            {
-                bool histmode = _settlemode == QSEnumSettleMode.HistMode;
-                //历史结算需要制定交易日
-                if (histmode && tradingday == 0)
-                {
-                    throw new ArgumentException("hist settle need tradingday");
-                }
 
-                foreach (var exchange in list)
-                {
-                    //历史结算使用制定交易日否则使用当前交易所时间
-                    DateTime extime = histmode ? Util.ToDateTime(tradingday, 0) : exchange.GetExchangeTime(); //获得交易所当前时间
-
-                    //非工作日不结算
-                    if (!extime.IsWorkDay())
-                    {
-                        continue;
-                    }
-                    //节假日不结算
-                    if (exchange.IsInHoliday(extime))
-                    {
-                        continue;
-                    }
-                    //结算日为交易所当前日期
-                    int settleday = extime.ToTLDate();
-
-                    logger.Info(string.Format("交易所:{0} 执行结算 结算日:{1}", exchange.EXCode, settleday));
-                    if (!histmode) //正常结算模式 需要保存结算价
-                    {
-                        //保存交易所对应的结算价格
-                        SaveSettlementPrice(exchange, settleday);
-                    }
-                    DateTime now = DateTime.Now;
-                    //执行交易帐户的交易所结算
-                    foreach (var account in TLCtxHelper.ModuleAccountManager.Accounts)
-                    {
-                        if (account.CreatedTime < now)//历史结算中 帐户创建时间之前的交易日不执行结算
-                        {
-                            account.SettleExchange(exchange, settleday);
-                        }
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                logger.Error("交易所结算失败:" + ex.ToString());
-            }
-        }
 
 
 
@@ -389,25 +415,7 @@ namespace TradingLib.Core
 
 
 
-        /// <summary>
-        /// 将已结算的交易记录转储到历史交易记录表
-        /// 保存交易记录发生在交易帐户结算之后
-        /// </summary>
-        public void Dump2Log(bool dumpall =false)
-        {
-            logger.Info("Dump TradingInfo(Order,Trade,OrderAction)");
-            int onum, tnum, cnum;//, prnum;
-            int tradingday = this.LastSettleday;//保存上一个交易日的结算数据
-            ORM.MTradingInfo.DumpSettledOrders(out onum, tradingday,dumpall);
-            ORM.MTradingInfo.DumpSettledTrades(out tnum, tradingday, dumpall);
-            ORM.MTradingInfo.DumpSettledOrderActions(out cnum, tradingday, dumpall);
-           // ORM.MTradingInfo.DumpIntradayPosTransactions(out prnum);
 
-            logger.Info("Order       Saved:" + onum.ToString());
-            logger.Info("Trade       Saved:" + tnum.ToString());
-            logger.Info("OrderAction Saved:" + cnum.ToString());
-            //logger.Info("PosTrans    Saved:" + prnum.ToString());
-        }
 
 
 

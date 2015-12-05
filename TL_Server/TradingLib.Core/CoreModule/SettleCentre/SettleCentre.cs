@@ -43,7 +43,7 @@ namespace TradingLib.Core
         /// <summary>
         /// 下一个结算时间
         /// </summary>
-        public long NextSettleTime { get { return _netxSettleTime.ToTLDateTime(); } }
+        public long NextSettleTime { get { return _nextSettleTime.ToTLDateTime(); } }
 
 
 
@@ -95,14 +95,15 @@ namespace TradingLib.Core
         /// <summary>
         /// 遍历所有可用交易所 获得所有交易所的结算时间 边转换成本地时间 采用最晚的一个时间为下一个结算时间
         /// </summary>
-        DateTime _netxSettleTime = DateTime.Now;
+        DateTime _nextSettleTime = DateTime.Now;
+        DateTime _nextSettleResetTime = DateTime.Now;
         
 
 
         int _resetTime = 170000;
         bool _cleanTmp = false;
-        bool _settleWithLatestPrice = false;
-        bool _tradingEveryDay = false;
+        //bool _settleWithLatestPrice = false;
+        //bool _tradingEveryDay = false;
 
         public SettleCentre()
             :base(SettleCentre.CoreName)
@@ -136,12 +137,12 @@ namespace TradingLib.Core
             //TaskProc taskreset = new TaskProc(this.UUID, "系统重置-" + Util.ToTLTime(resettime).ToString(), resettime.Hour, resettime.Minute, resettime.Second, delegate() { Task_ResetTradingday(); });
             //TLCtxHelper.ModuleTaskCentre.RegisterTask(taskreset);
 
-            //注入关闭清算中心任务
+            //注入关闭清算中心任务 结算前5分钟关闭清算中心
             DateTime closecctime = Util.ToDateTime(Util.ToTLDate(DateTime.Now), _settleTime).AddMinutes(-5);
             TaskProc taskclosecc = new TaskProc(this.UUID, "关闭清算中心" + Util.ToTLTime(closecctime).ToString(), closecctime.Hour, closecctime.Minute, closecctime.Second, delegate() { Task_CloseClearCentre(); });
             TLCtxHelper.ModuleTaskCentre.RegisterTask(taskclosecc);
 
-            //注入开启清算中心任务
+            //注入开启清算中心任务 重置后5分钟开启清算中心
             DateTime opencctime = Util.ToDateTime(Util.ToTLDate(DateTime.Now), _resetTime).AddMinutes(5);
             TaskProc taskopencc = new TaskProc(this.UUID, "开启清算中心" + Util.ToTLTime(opencctime).ToString(), opencctime.Hour, opencctime.Minute, opencctime.Second, delegate() { Task_OpenClearCentre(); });
             TLCtxHelper.ModuleTaskCentre.RegisterTask(taskopencc);
@@ -202,7 +203,7 @@ namespace TradingLib.Core
                 throw new ArgumentException("invlaid settleday");
             }
 
-            logger.Warn(string.Format("SettleCentre lastsettleday:{0} tradingday:{1} next settletime:{2}", _lastsettleday, _tradingday, _netxSettleTime.ToString("yyyyMMdd HH:mm:ss")));
+            logger.Warn(string.Format("SettleCentre lastsettleday:{0} tradingday:{1} next settletime:{2}", _lastsettleday, _tradingday, _nextSettleTime.ToString("yyyyMMdd HH:mm:ss")));
             SettleCentreStatus = QSEnumSettleCentreStatus.TRADINGDAY;//如果获得了当前交易日则当前为可交易日状态
 
         }
