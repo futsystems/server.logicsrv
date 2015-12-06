@@ -489,8 +489,33 @@ namespace TradingLib.Core
         /// 交易帐号只能是数字或字母
         /// </summary>
         System.Text.RegularExpressions.Regex regaccount = new System.Text.RegularExpressions.Regex(@"^[A-Za-z0-9-]+$");
-        
 
+        /// <summary>
+        /// 判断UserID是否存在帐户
+        /// </summary>
+        /// <param name="user_id"></param>
+        /// <returns></returns>
+        public bool ExistAccount(int user_id)
+        {
+            return ORM.MAccount.HaveRequested(user_id, QSEnumAccountCategory.SIMULATION);
+        }
+        
+        /// <summary>
+        /// 添加交易账户
+        /// </summary>
+        /// <param name="user_id"></param>
+        /// <returns></returns>
+        public string AddAccount(int user_id)
+        {
+            AccountCreation create = new AccountCreation();
+            create.BaseManager = BasicTracker.ManagerTracker["root"];
+            create.Category = QSEnumAccountCategory.SIMULATION;
+            create.Domain = BasicTracker.DomainTracker[1];
+            create.RouterType = QSEnumOrderTransferType.SIM;
+            create.UserID = user_id;
+            this.AddAccount(ref create);
+            return create.Account;
+        }
         /// <summary>
         /// 为某个user_id添加某个类型的帐号 密码为pass
         /// 默认mgr_fk为0 如果为0则通过ManagerTracker获得Root的mgr_fk 将默认帐户统一挂在Root用户下

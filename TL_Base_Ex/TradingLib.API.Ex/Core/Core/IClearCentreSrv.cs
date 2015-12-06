@@ -91,6 +91,8 @@ namespace TradingLib.API
         /// <returns></returns>
         //bool CashOperationSafe(string accid, decimal ammount, string comment, out string msg);
 
+        bool ExistAccount(int user_id);
+        string  AddAccount(int user_id);
         
     }
 }

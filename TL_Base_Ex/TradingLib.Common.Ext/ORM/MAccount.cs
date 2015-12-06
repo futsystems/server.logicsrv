@@ -588,7 +588,7 @@ select * from (SELECT account as account1,Sum(amount) as own_in FROM log_cashtra
         /// <param name="user_id"></param>
         /// <param name="category"></param>
         /// <returns></returns>
-        private static bool HaveRequested(int user_id, QSEnumAccountCategory category = QSEnumAccountCategory.SIMULATION)
+        public static bool HaveRequested(int user_id, QSEnumAccountCategory category = QSEnumAccountCategory.SIMULATION)
         {
             using (DBMySql db = new DBMySql())
             {
