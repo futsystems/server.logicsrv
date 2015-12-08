@@ -277,7 +277,6 @@ namespace TradingLib.Core
                                     logger.Info(s + " 成功");
                                 }
                                 Thread.Sleep(_delay);
-
                             }
 
                             //插入取消

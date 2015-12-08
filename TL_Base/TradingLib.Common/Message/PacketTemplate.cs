@@ -307,8 +307,15 @@ namespace TradingLib.Common
                         return RequestTemplate<MGRReqDelAccountRequest>.SrvRecvRequest(frontid, clientid, content);
                     #endregion
 
+                    #region 行情部分
+                    case MessageTypes.MGRSTARTDATAFEED://启动行情通道
+                        return RequestTemplate<MDReqStartDataFeedRequest>.SrvRecvRequest(frontid, clientid, content);
+                    case MessageTypes.MGRSTOPDATAFEED://停止行情通道
+                        return RequestTemplate<MDReqStopDataFeedRequest>.SrvRecvRequest(frontid, clientid, content);
+                    case MessageTypes.MGRREGISTERSYMBOLS://注册行情
+                        return RequestTemplate<MDRegisterSymbolsRequest>.SrvRecvRequest(frontid, clientid, content);
+                    #endregion
 
-                    
                     default:
                         throw new PacketTypeNotAvabile(type, content, frontid, clientid);
                 }
@@ -509,6 +516,12 @@ namespace TradingLib.Common
                     return ResponseTemplate<RspMGRContribResponse>.CliRecvResponse(content);
                 case MessageTypes.MGRCONTRIBRNOTIFY://扩展回报
                     return ResponseTemplate<NotifyMGRContribNotify>.CliRecvResponse(content);
+                #endregion
+
+
+                #region 行情部分
+                case MessageTypes.MGRQRYSYMBOLSREGISTEDRESPONSE://FeedHandler请求查询已注册合约回报
+                    return ResponseTemplate<RspMDQrySymbolsRegistedResponse>.CliRecvResponse(content);
                 #endregion
                 default:
                     throw new PacketError();
