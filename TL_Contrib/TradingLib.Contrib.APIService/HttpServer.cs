@@ -252,7 +252,7 @@ namespace TradingLib.Contrib.APIService
         {
             using (var server = new NHttp.HttpServer())
             {
-                server.EndPoint = new IPEndPoint(IPAddress.Loopback, 9070);
+                server.EndPoint = new IPEndPoint(IPAddress.Any, 9070);
 
                 server.RequestReceived += (s, e) =>
                 {
