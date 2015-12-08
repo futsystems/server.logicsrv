@@ -239,7 +239,7 @@ namespace TradingLib.Contrib.APIService
         void InitServer()
         {
             _server = new NHttp.HttpServer();
-            _server.EndPoint = new IPEndPoint(IPAddress.Loopback, 9070);
+            _server.EndPoint = new IPEndPoint(IPAddress.Any, 9070);
             _server.RequestReceived += (s, e) =>
             {
                 HandleHttpRequest(e);
@@ -248,28 +248,6 @@ namespace TradingLib.Contrib.APIService
             _server.Start();
 
         }
-        void Process()
-        {
-            using (var server = new NHttp.HttpServer())
-            {
-                server.EndPoint = new IPEndPoint(IPAddress.Any, 9070);
-
-                server.RequestReceived += (s, e) =>
-                {
-                    using (var writer = new StreamWriter(e.Response.OutputStream))
-                    {
-                        writer.Write("Hello world!");
-                    }
-                };
-
-                
-                server.Start();
-
-                //Process.Start(String.Format("http://{0}/", server.EndPoint));
-
-                //Console.WriteLine("Press any key to continue...");
-                //Console.ReadKey();
-            }
-        }
+       
     }
 }
