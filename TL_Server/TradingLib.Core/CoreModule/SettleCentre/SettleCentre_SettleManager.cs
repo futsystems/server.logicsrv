@@ -375,7 +375,7 @@ namespace TradingLib.Core
 
             //删除上个交易日以前的所有已结算数据
             ORM.MTradingInfo.DeleteSettledTradingInfo();
-            
+            session.OperationSuccess("删除已结算临时数据成功");
         }
 
 
