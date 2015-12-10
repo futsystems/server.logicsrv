@@ -102,7 +102,7 @@ namespace TradingLib.ORM
 
     }
 
-    internal class ordersnum
+    internal class EntityCount
     {
         public int Count { get; set; }
     }
@@ -145,7 +145,7 @@ namespace TradingLib.ORM
             using (DBMySql db = new DBMySql())
             {
                 string query_count = string.Format("SELECT count(pk_id) as count FROM tmp_orders");
-                ordersnum num = db.Connection.Query<ordersnum>(query_count).SingleOrDefault();
+                EntityCount num = db.Connection.Query<EntityCount>(query_count).SingleOrDefault();
                 if (num.Count == 0)
                 {
                     return 1000;
@@ -693,6 +693,61 @@ namespace TradingLib.ORM
         #endregion
 
 
-        
+        #region 未结算委托数量查询
+
+        /// <summary>
+        /// 查询帐户未结算委托数量
+        /// </summary>
+        /// <param name="settleday"></param>
+        /// <returns></returns>
+        public static int GetUnsettledAcctOrderNum(int settleday)
+        {
+            using (DBMySql db = new DBMySql())
+            {
+                string query_count = string.Format("SELECT count(pk_id) as count FROM tmp_orders WHERE settleday='{0}' AND breed='ACCT' AND settled=0",settleday);
+                EntityCount num = db.Connection.Query<EntityCount>(query_count).SingleOrDefault();
+                return num.Count;
+            }
+        }
+
+        /// <summary>
+        /// 查询Broker未结算委托数量
+        /// </summary>
+        /// <param name="settleday"></param>
+        /// <returns></returns>
+        public static int GetUnsettledBrokerOrderNum(int settleday)
+        {
+            using (DBMySql db = new DBMySql())
+            {
+                string query_count = string.Format("SELECT count(pk_id) as count FROM tmp_orders WHERE settleday='{0}' AND breed='BROKER' AND settled=0", settleday);
+                EntityCount num = db.Connection.Query<EntityCount>(query_count).SingleOrDefault();
+                return num.Count;
+            }
+        }
+
+        public static int GetTotalOrderNum(int settleday)
+        {
+            using (DBMySql db = new DBMySql())
+            {
+                string query_count = string.Format("SELECT count(pk_id) as count FROM tmp_trades WHERE settleday='{0}'", settleday);
+                EntityCount num = db.Connection.Query<EntityCount>(query_count).SingleOrDefault();
+                return num.Count;
+            }
+        }
+
+
+        public static int GetTotalTradeNum(int settleday)
+        {
+            using (DBMySql db = new DBMySql())
+            {
+                string query_count = string.Format("SELECT count(pk_id) as count FROM tmp_trades WHERE settleday='{0}'", settleday);
+                EntityCount num = db.Connection.Query<EntityCount>(query_count).SingleOrDefault();
+                return num.Count;
+            }
+        }
+
+
+        #endregion
+
     }
 }

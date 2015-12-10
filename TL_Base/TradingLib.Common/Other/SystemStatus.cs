@@ -31,6 +31,18 @@ namespace TradingLib.Common
         public int LastSettleday { get; set; }
 
         /// <summary>
+        /// 上个结算日未结算委托记录
+        /// 如果上个结算日有未结算委托记录则表明结算过程异常
+        /// </summary>
+        public int UnsettledAcctOrderNumOfPreSettleday{ get; set; }
+
+
+        /// <summary>
+        /// 上个结算日未计算委托记录(Broker)
+        /// </summary>
+        public int UnsettledBrokerOrderNumOfPreSettleday { get; set; }
+
+        /// <summary>
         /// 当前交易日
         /// </summary>
         public int Tradingday { get; set; }
@@ -54,10 +66,17 @@ namespace TradingLib.Common
         /// 账户总数
         /// </summary>
         public int TotalAccountNum { get; set; }
-        
 
 
+        /// <summary>
+        /// 所有委托数量
+        /// </summary>
+        public int TotalOrderNum { get; set; }
 
+        /// <summary>
+        /// 所有成交数量
+        /// </summary>
+        public int TotalTradeNum { get; set; }
         public  string Serialize()
         {
             StringBuilder sb = new StringBuilder();
@@ -76,6 +95,15 @@ namespace TradingLib.Common
             sb.Append(this.ClearCentreStatus.ToString());
             sb.Append(d);
             sb.Append(this.TotalAccountNum.ToString());
+            sb.Append(d);
+            sb.Append(this.UnsettledAcctOrderNumOfPreSettleday);
+            sb.Append(d);
+            sb.Append(this.UnsettledBrokerOrderNumOfPreSettleday);
+            sb.Append(d);
+            sb.Append(this.TotalOrderNum);
+            sb.Append(d);
+            sb.Append(this.TotalTradeNum);
+
             return sb.ToString();
         }
 
@@ -89,6 +117,10 @@ namespace TradingLib.Common
             this.IsSettleNormal = bool.Parse(rec[4]);
             this.ClearCentreStatus = (QSEnumClearCentreStatus)Enum.Parse(typeof(QSEnumClearCentreStatus), rec[5]);
             this.TotalAccountNum = int.Parse(rec[6]);
+            this.UnsettledAcctOrderNumOfPreSettleday = int.Parse(rec[7]);
+            this.UnsettledBrokerOrderNumOfPreSettleday = int.Parse(rec[8]);
+            this.TotalOrderNum = int.Parse(rec[9]);
+            this.TotalTradeNum = int.Parse(rec[10]);
         }
     }
 }
