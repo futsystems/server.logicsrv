@@ -553,12 +553,11 @@ namespace TradingLib.ORM
         /// 转储orders
         /// </summary>
         /// <returns></returns>
-        public static void DumpSettledOrders(out int rows, int tradingday,bool dumpall)
+        public static void DumpSettledOrders(out int rows, int tradingday)
         {
             using (DBMySql db = new DBMySql())
             {
                 rows = 0;
-                tradingday = dumpall ? int.MaxValue : tradingday;//如果指定0，则表示转储所有交易记录，否则转储该交易日之前的所有已结算记录
                 string query = String.Format("replace into log_orders select * from tmp_orders WHERE settleday<={0} and settled=1", tradingday);
                 rows = db.Connection.Execute(query);
             }
@@ -568,12 +567,11 @@ namespace TradingLib.ORM
         /// 转储成交数据
         /// </summary>
         /// <returns></returns>
-        public static void DumpSettledTrades(out int rows, int tradingday,bool dumpall)
+        public static void DumpSettledTrades(out int rows, int tradingday)
         {
             using (DBMySql db = new DBMySql())
             {
                 rows = 0;
-                tradingday = dumpall ? int.MaxValue : tradingday;
                 string query = String.Format("replace into log_trades select * from tmp_trades WHERE settleday<={0} and settled=1", tradingday);
                 rows = db.Connection.Execute(query);
             }
@@ -584,35 +582,39 @@ namespace TradingLib.ORM
         /// </summary>
         /// <param name="rows"></param>
         /// <returns></returns>
-        public static void DumpSettledOrderActions(out int rows, int tradingday,bool dumpall)
+        public static void DumpSettledOrderActions(out int rows, int tradingday)
         {
             using (DBMySql db = new DBMySql())
             {
                 rows = 0;
-                tradingday = dumpall? int.MaxValue : tradingday;
                 string query = String.Format("replace into log_orderactions select * from tmp_orderactions where settleday<={0}", tradingday);
                 rows = db.Connection.Execute(query);
             }
         }
 
+
         /// <summary>
-        /// 转储日内交易回合记录
+        /// 删除所有已结算数据
+        /// 需要加入删除前置判断
         /// </summary>
-        /// <param name="rows"></param>
-        /// <returns></returns>
-        //public static bool DumpIntradayPosTransactions(out int rows, int tradingday = 0)
-        //{
-        //    using (DBMySql db = new DBMySql())
-        //    {
-        //        rows = 0;
-        //        tradingday = (tradingday != 0 ? tradingday : TLCtxHelper.ModuleSettleCentre.LastSettleday);
-        //        string query = String.Format("replace into log_postransactions select * from tmp_postransactions where settleday={0}", tradingday);
-        //        rows = db.Connection.Execute(query);
-        //        return rows >= 0;
-        //    }
-        //}
+        /// <param name="tradingday"></param>
+        public static void DeleteSettledTradingInfo()
+        {
+            using (DBMySql db = new DBMySql())
+            {
+                int tradingday = TLCtxHelper.ModuleSettleCentre.LastSettleday;
 
+                string query = String.Format("DELETE FROM tmp_orders WHERE settleday <={0} AND settled=1", tradingday);
+                db.Connection.Execute(query);
 
+                query = String.Format("DELETE FROM tmp_trades WHERE settleday <={0} AND settled=1", tradingday);
+                db.Connection.Execute(query);
+
+                query = String.Format("DELETE FROM tmp_orderactions WHERE settleday <={0}", tradingday);
+                db.Connection.Execute(query);
+
+            }
+        }
 
         /// <summary>
         /// 删除日内委托数据
@@ -704,11 +706,27 @@ namespace TradingLib.ORM
         {
             using (DBMySql db = new DBMySql())
             {
-                string query_count = string.Format("SELECT count(pk_id) as count FROM tmp_orders WHERE settleday='{0}' AND breed='ACCT' AND settled=0",settleday);
+                string query_count = string.Format("SELECT count(pk_id) as count FROM tmp_orders WHERE settleday<='{0}' AND breed='ACCT' AND settled=0",settleday);
                 EntityCount num = db.Connection.Query<EntityCount>(query_count).SingleOrDefault();
                 return num.Count;
             }
         }
+
+        /// <summary>
+        /// 查询帐户未结算成交数量
+        /// </summary>
+        /// <param name="settleday"></param>
+        /// <returns></returns>
+        public static int GetUnsettledAcctTradeNum(int settleday)
+        {
+            using (DBMySql db = new DBMySql())
+            {
+                string query_count = string.Format("SELECT count(pk_id) as count FROM tmp_trades WHERE settleday<='{0}' AND breed='ACCT' AND settled=0", settleday);
+                EntityCount num = db.Connection.Query<EntityCount>(query_count).SingleOrDefault();
+                return num.Count;
+            }
+        }
+
 
         /// <summary>
         /// 查询Broker未结算委托数量
@@ -719,24 +737,33 @@ namespace TradingLib.ORM
         {
             using (DBMySql db = new DBMySql())
             {
-                string query_count = string.Format("SELECT count(pk_id) as count FROM tmp_orders WHERE settleday='{0}' AND breed='BROKER' AND settled=0", settleday);
+                string query_count = string.Format("SELECT count(pk_id) as count FROM tmp_orders WHERE settleday<='{0}' AND breed='BROKER' AND settled=0", settleday);
                 EntityCount num = db.Connection.Query<EntityCount>(query_count).SingleOrDefault();
                 return num.Count;
             }
         }
 
-        public static int GetTotalOrderNum(int settleday)
+        /// <summary>
+        /// 获得某个交易日所有日内委托数量
+        /// </summary>
+        /// <param name="settleday"></param>
+        /// <returns></returns>
+        public static int GetInterdayOrderNum(int settleday)
         {
             using (DBMySql db = new DBMySql())
             {
-                string query_count = string.Format("SELECT count(pk_id) as count FROM tmp_trades WHERE settleday='{0}'", settleday);
+                string query_count = string.Format("SELECT count(pk_id) as count FROM tmp_orders WHERE settleday='{0}'", settleday);
                 EntityCount num = db.Connection.Query<EntityCount>(query_count).SingleOrDefault();
                 return num.Count;
             }
         }
 
-
-        public static int GetTotalTradeNum(int settleday)
+        /// <summary>
+        /// 获得某个交易日所有日内成交数量
+        /// </summary>
+        /// <param name="settleday"></param>
+        /// <returns></returns>
+        public static int GetInterdayTradeNum(int settleday)
         {
             using (DBMySql db = new DBMySql())
             {

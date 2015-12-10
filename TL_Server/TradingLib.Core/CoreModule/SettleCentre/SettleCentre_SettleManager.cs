@@ -331,24 +331,13 @@ namespace TradingLib.Core
             session.OperationSuccess(string.Format("交易日:{0}结算完成", settleday));
         }
 
-        /// <summary>
-        /// 查询结算价信息
-        /// </summary>
-        /// <param name="session"></param>
-        /// <param name="json"></param>
-        //[ContribCommandAttr(QSEnumCommandSource.MessageMgr, "ResetSystem", "ResetSystem - 重置当前系统 进入工作状态", "重置当前系统 进入工作状态", QSEnumArgParseType.Json)]
-        //public void CTE_QrySettlementPrice(ISession session)
-        //{
-        //    this.Reset();
 
-        //    this.ResetSystem();
-        //}
 
         /// <summary>
         /// 转储已结算交易记录
         /// </summary>
         /// <param name="session"></param>
-        [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "ReqDumpSettledData", "ReqDumpSettledData - 转储已结算交易记录", "将tmp表中的交易记录转储到交易记录历史表")]
+        [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "StoreSettledData", "StoreSettledData - 转储已结算交易记录", "将tmp表中的交易记录转储到交易记录历史表")]
         public void CTE_ReqDumpSettledData(ISession session)
         {
             Manager manager = session.GetManager();
@@ -357,9 +346,38 @@ namespace TradingLib.Core
                 throw new FutsRspError("无权进行该操作");
             }
             //转储所有记录
-            Dump2Log(true);
+            StoreAll2Log();
             session.OperationSuccess("转储交易记录成功");
         }
+
+        /// <summary>
+        /// 删除上个结算日及以前所有已结算数据
+        /// 加入结算异常检查
+        /// </summary>
+        /// <param name="session"></param>
+        [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "DeleteSettledData", "DeleteSettledData - 删除已结算交易记录", "将tmp表中的已结算交易记录删除")]
+        public void CTE_DeleteSettledData(ISession session)
+        {
+            Manager manager = session.GetManager();
+            if (manager == null || (!manager.IsRoot()) || (!manager.Domain.Super))
+            {
+                throw new FutsRspError("无权进行该操作");
+            }
+            //转储所有记录
+            StoreAll2Log();
+            //查询上个结算日以前的未结算委托
+            int onum = ORM.MTradingInfo.GetUnsettledAcctOrderNum(TLCtxHelper.ModuleSettleCentre.LastSettleday);
+            int tnum = ORM.MTradingInfo.GetUnsettledAcctTradeNum(TLCtxHelper.ModuleSettleCentre.LastSettleday);
+            if (onum > 0 || tnum > 0)
+            {
+                throw new FutsRspError(string.Format("结算日:{0} 之前有未结算委托与成交数据", TLCtxHelper.ModuleSettleCentre.LastSettleday));
+            }
+
+            //删除上个交易日以前的所有已结算数据
+            ORM.MTradingInfo.DeleteSettledTradingInfo();
+            
+        }
+
 
     }
 }

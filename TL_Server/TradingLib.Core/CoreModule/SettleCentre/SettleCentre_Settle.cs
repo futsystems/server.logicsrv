@@ -320,25 +320,51 @@ namespace TradingLib.Core
             this.IsInSettle = false;//标识系统结算完毕
         }
 
-
+        /// <summary>
+        /// 转储所有已结算交易记录
+        /// </summary>
+        void StoreAll2Log()
+        {
+            int onum, tnum, cnum;//, prnum;
+            //转储结算完毕的委托 成交数据
+            ORM.MTradingInfo.DumpSettledOrders(out onum, int.MaxValue);
+            ORM.MTradingInfo.DumpSettledTrades(out tnum, int.MaxValue);
+            ORM.MTradingInfo.DumpSettledOrderActions(out cnum, int.MaxValue);
+            logger.Info(string.Format("转储所有已结算交易记录结束 Order:{0} Trade:{1} Action:{2}", onum, tnum, cnum));
+        }
         /// <summary>
         /// 将已结算的交易记录转储到历史交易记录表
         /// 保存交易记录发生在交易帐户结算之后
         /// </summary>
-        public void Dump2Log(bool dumpall = false)
+        public void Dump2Log()
         {
             logger.Info("Dump TradingInfo(Order,Trade,OrderAction)");
-            int onum, tnum, cnum;//, prnum;
+            int tmp_onum, tmp_tnum;
             int tradingday = this.LastSettleday;//保存上一个交易日的结算数据
-            ORM.MTradingInfo.DumpSettledOrders(out onum, tradingday, dumpall);
-            ORM.MTradingInfo.DumpSettledTrades(out tnum, tradingday, dumpall);
-            ORM.MTradingInfo.DumpSettledOrderActions(out cnum, tradingday, dumpall);
+
+            //查询某个交易日的日内委托与成交数量
+            tmp_onum = ORM.MTradingInfo.GetInterdayOrderNum(tradingday);
+            tmp_tnum = ORM.MTradingInfo.GetInterdayTradeNum(tradingday);
+
+            int onum, tnum, cnum;//, prnum;
+            //转储结算完毕的委托 成交数据
+            ORM.MTradingInfo.DumpSettledOrders(out onum, tradingday);//注如果有历史数据没有删除则dump后的委托数量是所有数量
+            ORM.MTradingInfo.DumpSettledTrades(out tnum, tradingday);
+            ORM.MTradingInfo.DumpSettledOrderActions(out cnum, tradingday);
             // ORM.MTradingInfo.DumpIntradayPosTransactions(out prnum);
 
-            logger.Info("Order       Saved:" + onum.ToString());
-            logger.Info("Trade       Saved:" + tnum.ToString());
+            logger.Info("Order       Saved:" + onum.ToString() +" NumQry:"+tmp_onum.ToString());
+            logger.Info("Trade       Saved:" + tnum.ToString()+" NumQry:"+tmp_tnum.ToString());
             logger.Info("OrderAction Saved:" + cnum.ToString());
             //logger.Info("PosTrans    Saved:" + prnum.ToString());
+            //如果日内数量与转储的数量一致 表面正常结算且已经正常保存到log表
+            if (tmp_onum==onum && tmp_tnum == tnum)
+            {
+                ORM.MTradingInfo.ClearIntradayOrders(tradingday);
+                ORM.MTradingInfo.ClearIntradayTrades(tradingday);
+                ORM.MTradingInfo.ClearIntradayOrderActions(tradingday);
+            }
+            
         }
 
         #endregion

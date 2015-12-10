@@ -26,8 +26,8 @@ namespace TradingLib.Core
                 status.ClearCentreStatus = TLCtxHelper.ModuleClearCentre.Status;
                 status.UnsettledAcctOrderNumOfPreSettleday = ORM.MTradingInfo.GetUnsettledAcctOrderNum(TLCtxHelper.ModuleSettleCentre.LastSettleday);
                 status.UnsettledBrokerOrderNumOfPreSettleday = ORM.MTradingInfo.GetUnsettledBrokerOrderNum(TLCtxHelper.ModuleSettleCentre.LastSettleday);
-                status.TotalOrderNum = ORM.MTradingInfo.GetTotalOrderNum(TLCtxHelper.ModuleSettleCentre.Tradingday);
-                status.TotalTradeNum = ORM.MTradingInfo.GetTotalTradeNum(TLCtxHelper.ModuleSettleCentre.Tradingday);
+                status.TotalOrderNum = ORM.MTradingInfo.GetInterdayOrderNum(TLCtxHelper.ModuleSettleCentre.Tradingday);
+                status.TotalTradeNum = ORM.MTradingInfo.GetInterdayTradeNum(TLCtxHelper.ModuleSettleCentre.Tradingday);
                 status.TotalAccountNum = manger.Domain.Super ? TLCtxHelper.ModuleAccountManager.Accounts.Count() : manger.GetAccounts().Count();
                 session.ReplyMgr(status);
             }
