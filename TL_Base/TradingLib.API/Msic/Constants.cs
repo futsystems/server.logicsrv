@@ -62,11 +62,11 @@ namespace TradingLib.API
         /// <summary>
         /// 多少秒内没有收到服务端消息,则请求心跳回报,用于检测服务端是否存活 这里增加时间间隔到30秒
         /// </summary>
-        public const int SENDHEARTBEATMS = 1 * 5 * 1000;//发送心跳请求延迟(单位秒,15秒内没有得到服务器的任何消息,则发送心跳请求)
+        public const int SENDHEARTBEATMS = 1 * 15 * 1000;//发送心跳请求延迟(单位秒,15秒内没有得到服务器的任何消息,则发送心跳请求)
         /// <summary>
         /// 在多少个请求间隔内没有得到服务端的心跳请求回报,则认为与服务端的连接丢失,客户端会尝试重新建立连接
         /// </summary>
-        public const int HEARTBEATDEADMS = SENDHEARTBEATMS * 3;//(在4个心跳请求间隔内服务器没有回应,表明连接丢失,尝试重新建立连接)
+        public const int HEARTBEATDEADMS = SENDHEARTBEATMS * 4;//(在4个心跳请求间隔内服务器没有回应,表明连接丢失,尝试重新建立连接)
         /// <summary>
         /// 默认检查服务器心跳回报间隔 50MS(心跳维护线程的刷新频率,每5MS检查上次服务器心跳时间)
         /// </summary>

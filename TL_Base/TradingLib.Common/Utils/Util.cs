@@ -386,15 +386,7 @@ namespace TradingLib.Common
         }
 
 
-        public static string GetPriceTickFormat(decimal pricetick)
-        {
-            string[] p = pricetick.ToString().Split('.');
-            if (p.Length <= 1)
-                return "{0:F0}";
-            else
-                return "{0:F" + p[1].ToCharArray().Length.ToString() + "}";
-
-        }
+        
 
         /// <summary>
         /// 获得某个Enum的描述
@@ -823,6 +815,25 @@ namespace TradingLib.Common
         #endregion
 
 
+
+        #region Security and symbol
+
+        /// <summary>
+        /// 获得某个PriceTick对应的数字格式化输出样式
+        /// </summary>
+        /// <param name="pricetick"></param>
+        /// <returns></returns>
+        public static string GetPriceTickFormat(decimal pricetick)
+        {
+            string[] p = pricetick.ToString().Split('.');
+            if (p.Length <= 1)
+                return "{0:F0}";
+            else
+                return "{0:F" + p[1].ToCharArray().Length.ToString() + "}";
+
+        }
+
+        #endregion
         public const string ZEROBUILD = "0";
         /// <summary>
         /// Gets a number representing the build of an installation.

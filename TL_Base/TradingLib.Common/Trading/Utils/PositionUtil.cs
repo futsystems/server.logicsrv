@@ -27,6 +27,11 @@ namespace TradingLib.Common
             return sb.ToString();
         }
 
+        /// <summary>
+        /// 获得持仓键
+        /// </summary>
+        /// <param name="pos"></param>
+        /// <returns></returns>
         public static string GetPositionKey(this Position pos)
         {
             return pos.Account + "-" + pos.Symbol + "-" + pos.DirectionType.ToString();

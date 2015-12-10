@@ -138,6 +138,23 @@ namespace DataClient
             cli.TLSend(request);
         }
 
+        string GetPriceFormat(decimal pricetick)
+        {
+            string[] p = pricetick.ToString().Split('.');
+            if (p.Length <= 1)
+                return "{0:F0}";
+            else
+                return "{0:F" + p[1].ToCharArray().Length.ToString() + "}";
+        }
+
+
+        private void btnPriceFormat_Click(object sender, EventArgs e)
+        {
+            decimal x = 123.3434343M;
+
+            debug("x:" + string.Format(GetPriceFormat(decimal.Parse(pricetick.Text)), x));
+        }
+
 
 
 

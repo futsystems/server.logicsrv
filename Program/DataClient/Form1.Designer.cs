@@ -53,6 +53,8 @@
             this.btnQrySymbol = new System.Windows.Forms.Button();
             this.port = new ComponentFactory.Krypton.Toolkit.KryptonTextBox();
             this.debugControl1 = new TLDataClient.DebugControl();
+            this.pricetick = new ComponentFactory.Krypton.Toolkit.KryptonTextBox();
+            this.btnPriceFormat = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // btnMQClient
@@ -296,11 +298,31 @@
             this.debugControl1.TimeStamps = true;
             this.debugControl1.UseExternalTimeStamp = false;
             // 
+            // pricetick
+            // 
+            this.pricetick.Location = new System.Drawing.Point(477, 250);
+            this.pricetick.Name = "pricetick";
+            this.pricetick.Size = new System.Drawing.Size(63, 20);
+            this.pricetick.TabIndex = 26;
+            this.pricetick.Text = "0.02";
+            // 
+            // btnPriceFormat
+            // 
+            this.btnPriceFormat.Location = new System.Drawing.Point(557, 248);
+            this.btnPriceFormat.Name = "btnPriceFormat";
+            this.btnPriceFormat.Size = new System.Drawing.Size(91, 22);
+            this.btnPriceFormat.TabIndex = 27;
+            this.btnPriceFormat.Text = "PriceFormat";
+            this.btnPriceFormat.UseVisualStyleBackColor = true;
+            this.btnPriceFormat.Click += new System.EventHandler(this.btnPriceFormat_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(812, 405);
+            this.Controls.Add(this.btnPriceFormat);
+            this.Controls.Add(this.pricetick);
             this.Controls.Add(this.port);
             this.Controls.Add(this.btnQrySymbol);
             this.Controls.Add(this.btnQrySec);
@@ -360,6 +382,8 @@
         private System.Windows.Forms.Button btnQrySec;
         private System.Windows.Forms.Button btnQrySymbol;
         private ComponentFactory.Krypton.Toolkit.KryptonTextBox port;
+        private ComponentFactory.Krypton.Toolkit.KryptonTextBox pricetick;
+        private System.Windows.Forms.Button btnPriceFormat;
     }
 }
 

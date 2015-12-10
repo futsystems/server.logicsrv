@@ -27,6 +27,16 @@ namespace TradingLib.Common
         }
 
         /// <summary>
+        /// 获得价格输出样式
+        /// </summary>
+        /// <param name="sec"></param>
+        /// <returns></returns>
+        public static string GetPriceFormat(this SecurityFamily sec)
+        {
+            return Util.GetPriceTickFormat(sec.PriceTick);
+        }
+
+        /// <summary>
         /// 获得品种交易小节
         /// </summary>
         /// <param name="sec"></param>

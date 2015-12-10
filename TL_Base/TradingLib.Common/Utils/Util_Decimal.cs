@@ -9,6 +9,18 @@ namespace TradingLib.Common
     public static class Util_Decimal
     {
 
+        #region 格式化输出
+        /// <summary>
+        /// decimal 格式化输出
+        /// </summary>
+        /// <param name="val"></param>
+        /// <param name="format"></param>
+        /// <returns></returns>
+        public static string ToFormatStr(this decimal val, string format = "{0:F2}")
+        {
+            return string.Format(format, val);
+        }
+        #endregion
         #region decimal 转换成中文大写
         private static String[] Ls_ShZ = { "零", "壹", "贰", "叁", "肆", "伍", "陆", "柒", "捌", "玖", "拾" };
         private static String[] Ls_DW_Zh = { "元", "拾", "佰", "仟", "万", "拾", "佰", "仟", "亿", "拾", "佰", "仟", "万" };

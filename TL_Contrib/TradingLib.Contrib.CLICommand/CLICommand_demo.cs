@@ -106,6 +106,22 @@ namespace TradingLib.Contrib.CLICommand
 
     public partial class CommandCabinet : ContribSrvObject, IContrib
     {
+        [CoreCommandAttr(QSEnumCommandSource.CLI, "printpos", "printpos - print position of account", "输出某个帐户的持仓")]
+        public string CTE_PrintPosition(string account)
+        {
+            IAccount acc = TLCtxHelper.ModuleAccountManager[account];
+            if (acc == null)
+            {
+                return string.Format("Account:{0} not exit", account);
+            }
+            StringBuilder sb = new StringBuilder();
+            foreach (var pos in acc.Positions)
+            {
+                sb.Append(pos.ToString());
+            }
+            return sb.ToString();
+        
+        }
         [CoreCommandAttr(QSEnumCommandSource.CLI, "demo1", "demo1 - ", "")]
         public string CTE_FlatPosition()
         {
