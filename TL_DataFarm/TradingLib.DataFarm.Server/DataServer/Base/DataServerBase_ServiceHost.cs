@@ -99,18 +99,19 @@ namespace TradingLib.DataFarm.Common
         }
 
 
-        void OnSessionClosedEvent(IServiceHost arg1, IConnection arg2)
+        protected virtual void OnSessionClosedEvent(IServiceHost arg1, IConnection arg2)
         {
-
+            logger.Info(string.Format("ServiceHost:{0} Connection:{1} Closed",arg1.Name,arg2.SessionID));
         }
 
-        void OnSessionCreatedEvent(IServiceHost arg1, IConnection arg2)
+        protected virtual void OnSessionCreatedEvent(IServiceHost arg1, IConnection arg2)
         {
+            logger.Info(string.Format("ServiceHost:{0} Connection:{1} Closed", arg1.Name, arg2.SessionID));
             OnSessionCreated(arg1, arg2);
         }
 
 
-        IPacket OnServiceEvent(IServiceHost arg1, IPacket arg2)
+        protected virtual IPacket OnServiceEvent(IServiceHost arg1, IPacket arg2)
         {
             if (arg2.Type == MessageTypes.SERVICEREQUEST)
             {

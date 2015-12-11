@@ -40,6 +40,7 @@ namespace TradingLib.DataFarm.Common
         /// <param name="conn"></param>
         /// <param name="request"></param>
         public abstract void BackendQryBar(IServiceHost host, IConnection conn, QryBarRequest request);
+
         /// <summary>
         /// 启动服务
         /// </summary>

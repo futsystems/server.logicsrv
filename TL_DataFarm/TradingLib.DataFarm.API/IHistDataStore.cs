@@ -45,6 +45,8 @@ namespace TradingLib.DataFarm.API
         /// 保存
         /// </summary>
         void Commit();
+
+
         /// <summary>
         /// 设置某个合约频率数据为已缓存
         /// </summary>

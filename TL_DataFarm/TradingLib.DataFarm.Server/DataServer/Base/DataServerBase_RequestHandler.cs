@@ -109,7 +109,6 @@ namespace TradingLib.DataFarm.Common
                         RspQryBarResponse response = ResponseTemplate<RspQryBarResponse>.SrvSendRspResponse(request);
                         response.Bar = bars[i];
                         conn.SendResponse(response, i == bars.Length - 1);
-                        
                     }
                     pf.LeaveSection();
                     logger.Info(pf.GetStatsString());
