@@ -45,10 +45,10 @@ namespace TradingLib.Common
         public static decimal CalcPositionMargin(this Position p)
         {
             //异化合约按照固定金额来计算
-            if (p.oSymbol.SecurityType == SecurityType.INNOV)
-            {
-                return p.UnsignedSize * (p.oSymbol.Margin + (p.oSymbol.ExtraMargin > 0 ? p.oSymbol.ExtraMargin : 0));//通过固定保证金来计算持仓保证金占用
-            }
+            //if (p.oSymbol.SecurityType == SecurityType.INNOV)
+            //{
+            //    return p.UnsignedSize * (p.oSymbol.Margin + (p.oSymbol.ExtraMargin > 0 ? p.oSymbol.ExtraMargin : 0));//通过固定保证金来计算持仓保证金占用
+            //}
 
             //其余品种保证金按照最新价格计算
             if (p.oSymbol.Margin <= 1)
@@ -69,10 +69,10 @@ namespace TradingLib.Common
         public static decimal CalcPositionSettleMargin(this Position p)
         {
             //异化合约按照固定金额来计算
-            if (p.oSymbol.SecurityType == SecurityType.INNOV)
-            {
-                return p.UnsignedSize * (p.oSymbol.Margin + (p.oSymbol.ExtraMargin > 0 ? p.oSymbol.ExtraMargin : 0));//通过固定保证金来计算持仓保证金占用
-            }
+            //if (p.oSymbol.SecurityType == SecurityType.INNOV)
+            //{
+            //    return p.UnsignedSize * (p.oSymbol.Margin + (p.oSymbol.ExtraMargin > 0 ? p.oSymbol.ExtraMargin : 0));//通过固定保证金来计算持仓保证金占用
+            //}
 
             //其余品种保证金按照结算价格计算
             if (p.oSymbol.Margin <= 1)
@@ -81,7 +81,7 @@ namespace TradingLib.Common
                 return p.oSymbol.Margin * p.UnsignedSize;
         }
 
-
+        #region 盘中快速计算平仓盈亏与浮动盈亏
         /// <summary>
         /// 计算平仓盈亏
         /// </summary>
@@ -101,6 +101,8 @@ namespace TradingLib.Common
         {
             return p.UnRealizedPL * p.oSymbol.Multiple;
         }
+        #endregion
+
 
         /// 计算结算时 持仓汇总的盯市盈亏 这里累加所有持仓明细的浮动盈亏获得
         /// </summary>
@@ -109,15 +111,16 @@ namespace TradingLib.Common
         public static decimal CalcSettleUnRealizedPL(this Position p)
         {
             return p.PositionDetailTotal.Where(pos => !pos.IsClosed()).Sum(pos => pos.PositionProfitByDate);
-            //return p.UnrealizedPLByDate * p.oSymbol.Multiple;
         }
 
+
+        #region 计算持仓市值
         /// <summary>
         /// 计算持仓成本
         /// </summary>
         /// <param name="p"></param>
         /// <returns></returns>
-        public static decimal CalcPositionCost(this Position p)
+        public static decimal CalcPositionCostValue(this Position p)
         {
             return p.UnsignedSize * p.AvgPrice * p.oSymbol.Multiple;
         }
@@ -127,7 +130,7 @@ namespace TradingLib.Common
         /// </summary>
         /// <param name="p"></param>
         /// <returns></returns>
-        public static decimal CalcPositionValue(this Position p)
+        public static decimal CalcPositionMarketValue(this Position p)
         {
             return p.UnsignedSize * p.LastPrice * p.oSymbol.Multiple;
         }
@@ -141,8 +144,9 @@ namespace TradingLib.Common
         {
             return p.UnsignedSize * (decimal)p.SettlementPrice* p.oSymbol.Multiple;
         }
+        #endregion
 
-        
+
         /// <summary>
         /// 获得持仓内所有成交手续费
         /// </summary>
@@ -153,6 +157,9 @@ namespace TradingLib.Common
             return pos.Trades.Sum(fill => fill.GetCommission());
         }
 
+
+
+        #region 计算盯市/逐笔 平仓盈亏与浮动盈亏
         /// <summary>
         /// 累加所有持仓明细的逐日平仓盈亏
         /// </summary>
@@ -173,6 +180,26 @@ namespace TradingLib.Common
             return pos.PositionDetailTotal.Sum(pd => pd.CloseProfitByTrade);
         }
 
+        /// <summary>
+        /// 计算盯市浮动盈亏
+        /// </summary>
+        /// <param name="pos"></param>
+        /// <returns></returns>
+        public static decimal CalPositionProfitByDate(this Position pos)
+        {
+            return pos.PositionDetailTotal.Sum(pd => pd.PositionProfitByDate);
+        }
+
+        /// <summary>
+        /// 计算逐笔浮动盈亏
+        /// </summary>
+        /// <param name="pos"></param>
+        /// <returns></returns>
+        public static decimal CalPositionProfitByTrade(this Position pos)
+        {
+            return pos.PositionDetailTotal.Sum(pd => pd.PositionProfitByTrade);
+        }
+        #endregion
 
 
         /// <summary>

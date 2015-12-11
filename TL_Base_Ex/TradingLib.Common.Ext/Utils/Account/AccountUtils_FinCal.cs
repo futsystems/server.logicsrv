@@ -376,7 +376,7 @@ namespace TradingLib.Common
         /// <returns></returns>
         public static decimal CalOptPositionCost(this IAccount account)
         {
-            return FilterPositions(account, SecurityType.OPT).Sum(pos => pos.CalcPositionCost());
+            return FilterPositions(account, SecurityType.OPT).Sum(pos => pos.CalcPositionCostValue());
         }
         /// <summary>
         /// 期权持仓市值
@@ -385,7 +385,7 @@ namespace TradingLib.Common
         /// <returns></returns>
         public static decimal CalOptPositionValue(this IAccount account)
         {
-            return FilterPositions(account, SecurityType.OPT).Sum(pos => pos.CalcPositionValue());
+            return FilterPositions(account, SecurityType.OPT).Sum(pos => pos.CalcPositionMarketValue());
         }
         /// <summary>
         /// 期权结算市值
@@ -458,7 +458,7 @@ namespace TradingLib.Common
         /// <returns></returns>
         public static decimal CalInnovPositionCost(this IAccount account)
         {
-            return FilterPositions(account, SecurityType.INNOV).Sum(pos => pos.CalcPositionCost());
+            return FilterPositions(account, SecurityType.INNOV).Sum(pos => pos.CalcPositionCostValue());
         }
 
         /// <summary>
@@ -468,7 +468,7 @@ namespace TradingLib.Common
         /// <returns></returns>
         public static decimal CalInnovPositionValue(this IAccount account)
         {
-            return FilterPositions(account, SecurityType.INNOV).Sum(pos => pos.CalcPositionValue());
+            return FilterPositions(account, SecurityType.INNOV).Sum(pos => pos.CalcPositionMarketValue());
         }
 
         /// <summary>
