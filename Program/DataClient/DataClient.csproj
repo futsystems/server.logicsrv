@@ -114,6 +114,12 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\TL_DataFarm\TradingLib.MDClient\TradingLib.MDClient.csproj">
+      <Project>{F480745A-4808-4282-8339-AF2AA06FBEC9}</Project>
+      <Name>TradingLib.MDClient</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

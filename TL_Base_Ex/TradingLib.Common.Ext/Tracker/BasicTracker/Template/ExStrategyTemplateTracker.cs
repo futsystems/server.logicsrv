@@ -125,6 +125,8 @@ namespace TradingLib.Common
                 target.PositionLock = item.PositionLock;
                 target.EntrySlip = item.EntrySlip;
                 target.ExitSlip = item.ExitSlip;
+                target.LimitCheck = item.LimitCheck;
+                target.Probability = item.Probability;
 
                 ORM.MExStrategy.UpdateExStrategyTemplateItem(target);
             }
@@ -140,6 +142,8 @@ namespace TradingLib.Common
                 target.PositionLock = item.PositionLock;
                 target.EntrySlip = item.EntrySlip;
                 target.ExitSlip = item.ExitSlip;
+                target.LimitCheck = item.LimitCheck;
+                target.Probability = item.Probability;
 
                 target.Template_ID = item.Template_ID;
                 ORM.MExStrategy.InsertExStrategyTemplateItem(target);

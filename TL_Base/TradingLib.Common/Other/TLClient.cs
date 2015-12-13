@@ -741,6 +741,10 @@ namespace TradingLib.Common
             try
             {
                 logger.Debug(string.Format("Got Message type:{0} content:{1}", type, content));
+                if (type == MessageTypes.XEXCHANGERESPNSE)
+                {
+                    int i = 0;
+                }
                 IPacket packet = PacketHelper.CliRecvResponse(type, content);
                 //更新服务端消息回报时间戳
                 UpdateServerHeartbeat();

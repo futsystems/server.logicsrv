@@ -48,6 +48,24 @@ namespace TradingLib.Common
     /// </summary>
     public class ExStrategy
     {
+        public ExStrategy()
+        {
+            this.ID = 0;
+            this.Template_ID = 0;
+            this.MarginPrice = QSEnumMarginPrice.OpenPrice;
+            this.IncludeCloseProfit = true;
+            this.IncludePositionProfit = true;
+            this.Algorithm = QSEnumAlgorithm.AG_All;
+            this.SideMargin = true;
+            this.CreditSeparate = true;
+            this.PositionLock = true;
+            this.EntrySlip = 0;
+            this.ExitSlip = 0;
+            this.LimitCheck = false;
+            this.Probability = 100;
+
+
+        }
         /// <summary>
         /// 数据库ID编号
         /// </summary>
@@ -106,5 +124,15 @@ namespace TradingLib.Common
         /// 平仓滑点
         /// </summary>
         public int ExitSlip { get; set; }
+
+        /// <summary>
+        /// 限价单检查
+        /// </summary>
+        public bool LimitCheck { get; set; }
+
+        /// <summary>
+        /// 执行概率
+        /// </summary>
+        public int Probability { get; set; }
     }
 }

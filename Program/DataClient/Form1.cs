@@ -39,39 +39,43 @@ namespace DataClient
         }
 
         TLClient<TLSocket_TCP> cli;
+        TradingLib.MDClient.MDClient mdclient = null;
         private void btnMQClient_Click(object sender, EventArgs e)
         {
-            logger.Info("start client");
-            cli = new TLClient<TLSocket_TCP>("127.0.0.1", int.Parse(port.Text), "ZMQClient");
-            cli.OnPacketEvent += new Action<IPacket>(cli_OnPacketEvent);
-            cli.Start();
+            //logger.Info("start client");
+            //cli = new TLClient<TLSocket_TCP>("127.0.0.1", int.Parse(port.Text), "ZMQClient");
+            //cli.OnPacketEvent += new Action<IPacket>(cli_OnPacketEvent);
+            //cli.Start();
+
+            mdclient = new TradingLib.MDClient.MDClient("127.0.0.1", 5060, 5060);
+            mdclient.Start();
             
         }
 
         int bcnt = 0;
-        void cli_OnPacketEvent(IPacket obj)
-        {
-            switch (obj.Type)
-            {
-                case MessageTypes.BARRESPONSE:
-                    {
-                        CliOnBarResponse(obj as RspQryBarResponse);
-                        break;
-                    }
-                default:
-                    break;
-            }
-        }
+        //void cli_OnPacketEvent(IPacket obj)
+        //{
+        //    switch (obj.Type)
+        //    {
+        //        case MessageTypes.BARRESPONSE:
+        //            {
+        //                CliOnBarResponse(obj as RspQryBarResponse);
+        //                break;
+        //            }
+        //        default:
+        //            break;
+        //    }
+        //}
 
-        void CliOnBarResponse(RspQryBarResponse response)
-        { 
-             bcnt++;
-             if (response.IsLast)
-             {
-                 logger.Info("Total got bar:" + bcnt.ToString());
-                 bcnt = 0;
-             }
-        }
+        //void CliOnBarResponse(RspQryBarResponse response)
+        //{ 
+        //     bcnt++;
+        //     if (response.IsLast)
+        //     {
+        //         logger.Info("Total got bar:" + bcnt.ToString());
+        //         bcnt = 0;
+        //     }
+        //}
 
         private void btnQryService_Click(object sender, EventArgs e)
         {
@@ -88,22 +92,22 @@ namespace DataClient
 
         private void btnQryBar_Click(object sender, EventArgs e)
         {
-            QryBarRequest request = RequestTemplate<QryBarRequest>.CliSendRequest(0);
-            request.FromEnd = fromend.Checked;
-            request.Symbol = Symbol.Text;
-            request.MaxCount = (int)maxcount.Value;
-            request.Interval = (int)interval.Value;
-            request.Start = start.Value;
-            request.End = end.Value;
+            //QryBarRequest request = RequestTemplate<QryBarRequest>.CliSendRequest(0);
+            //request.FromEnd = fromend.Checked;
+            //request.Symbol = Symbol.Text;
+            //request.MaxCount = (int)maxcount.Value;
+            //request.Interval = (int)interval.Value;
+            //request.Start = start.Value;
+            //request.End = end.Value;
 
-            cli.TLSend(request);
+            mdclient.QryBar(Symbol.Text,(int)interval.Value, start.Value, end.Value);
+            //cli.TLSend(request);
         }
 
         private void btnRegisterSymbol_Click(object sender, EventArgs e)
         {
             RegisterSymbolTickRequest request = RequestTemplate<RegisterSymbolTickRequest>.CliSendRequest(0);
             request.Register(reg_symbol.Text);
-
             cli.TLSend(request);
         }
 

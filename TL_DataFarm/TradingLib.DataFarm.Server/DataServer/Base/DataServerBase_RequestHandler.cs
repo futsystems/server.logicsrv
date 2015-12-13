@@ -134,7 +134,7 @@ namespace TradingLib.DataFarm.Common
         protected virtual void SrvOnQryExchangeRequest(IServiceHost host, IConnection conn, XQryExchangeRequuest request)
         {
             logger.Info(string.Format("Conn:{0} qry exchange:{1}", conn.SessionID, request.ToString()));
-            IExchange[] exchs = BasicTracker.ExchagneTracker.Exchanges;
+            IExchange[] exchs =MDBasicTracker.ExchagneTracker.Exchanges;
 
             int totalnum = exchs.Length;
 
