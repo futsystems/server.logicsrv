@@ -31,9 +31,9 @@ namespace TradingLib.Common
             }
 
             Manager sroot = new Manager();
-            sroot.AccLimit = 0;
+            sroot.AccLimit = 1000;
             sroot.Active = true;
-            sroot.AgentLimit = 0;
+            sroot.AgentLimit = 100;
             sroot.CreditLimit = 0;
             sroot.domain_id = 1;
             sroot.ID = -1;
