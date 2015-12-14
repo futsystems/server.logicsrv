@@ -49,7 +49,7 @@ namespace TradingLib.Core
         public string CoreId { get { return this.PROGRAME; } }
 
 
-
+        Random _slipRandom = new Random(200);
 
         //TIFEngine _tifengine;
         //private ClearCentre _clearCentre;

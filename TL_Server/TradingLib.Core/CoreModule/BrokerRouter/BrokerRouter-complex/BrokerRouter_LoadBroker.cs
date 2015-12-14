@@ -147,19 +147,39 @@ namespace TradingLib.Core
                     //交易参数模板存在 则调整成交价格
                     if (strategy != null)
                     {
-                        if (t.IsEntryPosition)
+                        //如果需要检查限价单 则获得对应的委托
+                        if (strategy.LimitCheck)
                         {
-                            t.xPrice = t.xPrice + (t.Side ? 1 : -1) * strategy.EntrySlip * t.oSymbol.SecurityFamily.PriceTick;
+                            Order o = TLCtxHelper.ModuleClearCentre.SentOrder(t.id);
+                            //委托为空 直接发送成交
+                            if (o == null)
+                            {
+                                goto SENDDIRECT;
+                            }
+                            //限价单 直接发送成交
+                            if (o.isLimit)
+                            {
+                                goto SENDDIRECT;
+                            }
                         }
-                        else
+
+                        int val = _slipRandom.Next(0, 100);
+                        //获得的随机数在设定的范围内 则执行价格修正
+                        if (val <= strategy.Probability)
                         {
-                            t.xPrice = t.xPrice + (t.Side ? 1 : -1) * strategy.ExitSlip * t.oSymbol.SecurityFamily.PriceTick;
+                            if (t.IsEntryPosition)
+                            {
+                                t.xPrice = t.xPrice + (t.Side ? 1 : -1) * strategy.EntrySlip * t.oSymbol.SecurityFamily.PriceTick;
+                            }
+                            else
+                            {
+                                t.xPrice = t.xPrice + (t.Side ? 1 : -1) * strategy.ExitSlip * t.oSymbol.SecurityFamily.PriceTick;
+                            }
                         }
                     }
                 }
+            SENDDIRECT:
                 _fillcache.Write(t);
-
-                //_fillcache.Write(new TradeImpl(fill));
             }
             else
             {
