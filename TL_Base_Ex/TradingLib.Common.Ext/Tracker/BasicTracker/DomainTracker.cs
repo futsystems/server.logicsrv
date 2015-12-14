@@ -100,6 +100,7 @@ namespace TradingLib.Common
 
                 target.Module_FinService = domain.Module_FinService;
                 target.Module_PayOnline = domain.Module_PayOnline;
+                target.Module_Slip = domain.Module_Slip;
                 target.Router_Live = domain.Router_Live;
                 target.Router_Sim = domain.Router_Sim;
                 target.VendorLimit = domain.VendorLimit;
@@ -134,6 +135,8 @@ namespace TradingLib.Common
                 target.Module_SubAgent = domain.Module_SubAgent;
                 target.Module_FinService = domain.Module_FinService;
                 target.Module_PayOnline = domain.Module_PayOnline;
+                target.Module_Slip = domain.Module_Slip;
+
                 target.Router_Live = domain.Router_Live;
                 target.Router_Sim = domain.Router_Sim;
                 target.VendorLimit = domain.VendorLimit;

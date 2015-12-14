@@ -138,6 +138,7 @@ namespace TradingLib.API
         /// 滑点模块
         /// </summary>
         bool Module_Slip { get; set; }
+
         /// <summary>
         /// 实盘路由
         /// </summary>
