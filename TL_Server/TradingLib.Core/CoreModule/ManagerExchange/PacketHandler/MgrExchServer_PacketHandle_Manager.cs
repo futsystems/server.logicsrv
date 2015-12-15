@@ -82,10 +82,15 @@ namespace TradingLib.Core
                 {
                     throw new FutsRspError("柜员登入ID不能重复:" + m.Login);
                 }
-                if (m.Login.StartsWith("root"))
+                if (m.Login.Contains("root"))
                 {
                     throw new FutsRspError("系统保留字段root,不能用柜员登入名");
                 }
+                if (m.Login.Contains("admin"))
+                {
+                    throw new FutsRspError("系统保留字段admin,不能用柜员登入名");
+                }
+
                 BasicTracker.ManagerTracker.UpdateManager(m);
 
                 session.OperationSuccess("添加管理员成功");
@@ -107,6 +112,51 @@ namespace TradingLib.Core
                 //通知管理员信息变更
                 NotifyManagerUpdate(target);
             }
+        }
+
+
+        /// <summary>
+        /// 删除管理员
+        /// 删除管理员 删除管理员下面所有代理 以及代理下面的所有交易帐户
+        /// </summary>
+        /// <param name="session"></param>
+        /// <param name="mgr_id"></param>
+        [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "DeleteManager", "DeleteManager - delete manger", "删除柜员", QSEnumArgParseType.CommaSeparated)]
+        public void CTE_DelManager(ISession session, int mgr_id)
+        {
+            Manager manager = session.GetManager();
+            logger.Info(string.Format("管理员:{0} 删除管理员 id:{1}", manager.Login, mgr_id));
+
+            Manager remove = BasicTracker.ManagerTracker[mgr_id];
+            if (remove == null)
+            {
+                throw new FutsRspError(string.Format("管理员:{0}不存在", mgr_id));
+            }
+
+            if (!manager.RightAccessManager(remove))
+            {
+                throw new FutsRspError(string.Format("无权删除管理员:{0}", mgr_id));
+            }
+
+            //查看该manger下的所有代理
+            List<Manager> mgrlist = remove.GetVisibleManager().ToList();
+
+            foreach (var mgr in mgrlist)
+            {
+                //删除管理员下的帐户
+                List<IAccount> acclist = TLCtxHelper.ModuleAccountManager.Accounts.Where(acc => acc.Mgr_fk == mgr.ID).ToList();
+                foreach (var acc in acclist)
+                {
+                    TLCtxHelper.ModuleAccountManager.DelAccount(acc.ID);
+                }
+
+                //删除管理员
+                BasicTracker.ManagerTracker.DeleteManager(mgr);
+
+            }
+
+            session.OperationSuccess("删除管理员成功");
+
         }
 
         [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "UpdateManagerPass", "UpdateManagerPass - update manager password", "修改柜员密码")]

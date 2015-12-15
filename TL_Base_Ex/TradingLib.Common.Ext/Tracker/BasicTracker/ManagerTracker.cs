@@ -69,6 +69,24 @@ namespace TradingLib.Common
             return 0;
         }
 
+        /// <summary>
+        /// 删除某个管理员
+        /// </summary>
+        /// <param name="mgr"></param>
+        public void DeleteManager(ManagerSetting mgr)
+        { 
+            Manager target = null;
+            //添加
+            if (!mgridmap.TryGetValue(mgr.ID, out target))
+            {
+                ORM.MManager.DeleteManager(mgr.ID);
+                mgridmap.TryRemove(mgr.ID, out target);
+                if (target != null)
+                {
+                    managermap.TryRemove(mgr.Login, out target);
+                }
+            }
+        }
         public void UpdateManager(ManagerSetting mgr)
         {
             Manager target = null;

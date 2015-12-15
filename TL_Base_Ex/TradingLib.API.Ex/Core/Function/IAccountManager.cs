@@ -22,6 +22,13 @@ namespace TradingLib.API
         /// <returns></returns>
         IAccount this[string accid] { get; }
 
+
+        /// <summary>
+        /// 删除交易帐户
+        /// </summary>
+        /// <param name="account"></param>
+        void DelAccount(string account);
+
         /// <summary>
         /// 禁止某个账户进行交易
         /// </summary>

@@ -140,6 +140,40 @@ namespace TradingLib.ORM
                 return true;
             }
         }
+
+        /// <summary>
+        /// 删除管理员
+        /// </summary>
+        /// <param name="mgr_id"></param>
+        public static void DeleteManager(int mgr_id)
+        {
+            using (DBMySql db = new DBMySql())
+            {
+                string delquery = string.Empty;
+                delquery = string.Format("DELETE FROM manager WHERE id = '{0}'", mgr_id);//删除帐户列表
+                db.Connection.Execute(delquery);
+
+                delquery = string.Format("DELETE FROM manager_balance WHERE mgr_fk = '{0}'", mgr_id);//删除帐户列表
+                db.Connection.Execute(delquery);
+
+                delquery = string.Format("DELETE FROM manager_bankac WHERE mgr_fk = '{0}'", mgr_id);//删除帐户列表
+                db.Connection.Execute(delquery);
+
+                delquery = string.Format("DELETE FROM manager_cashopreq WHERE mgr_fk = '{0}'", mgr_id);//删除帐户列表
+                db.Connection.Execute(delquery);
+
+                delquery = string.Format("DELETE FROM manager_cashtrans WHERE mgr_fk = '{0}'", mgr_id);//删除帐户列表
+                db.Connection.Execute(delquery);
+
+                delquery = string.Format("DELETE FROM manager_settlement WHERE mgr_fk = '{0}'", mgr_id);//删除帐户列表
+                db.Connection.Execute(delquery);
+
+                delquery = string.Format("DELETE FROM cfg_manager_permission WHERE manager_id = '{0}'", mgr_id);//删除帐户列表
+                db.Connection.Execute(delquery);
+
+                
+            }
+        }
         /// <summary>
         /// 获得所有Manager
         /// </summary>
