@@ -79,6 +79,10 @@ namespace TradingLib.Common
         /// </summary>
         public bool Active { get; set; }
 
+        /// <summary>
+        /// 权限ID
+        /// </summary>
+        //public int Permission_ID { get; set; }
     }
 
     public class Manager:ManagerSetting
@@ -132,46 +136,46 @@ namespace TradingLib.Common
         {
             return string.Format("Manager[{0}]:{1} Type:{2} BaseFK:{3} ParentFK:{4}", this.ID, this.Login, this.Type, this.mgr_fk, this.parent_fk);
         }
-        public string Serialize()
-        {
-            StringBuilder sb = new StringBuilder();
-            char d = ',';
-            Manager p = this;
-            sb.Append(p.ID.ToString());
-            sb.Append(d);
-            sb.Append(p.Login);
-            sb.Append(d);
-            sb.Append(p.User_Id.ToString());
-            sb.Append(d);
-            sb.Append(p.Type.ToString());
-            sb.Append(d);
-            sb.Append(p.Name);
-            sb.Append(d);
-            sb.Append(p.Mobile);
-            sb.Append(d);
-            sb.Append(p.QQ);
-            sb.Append(d);
-            sb.Append(p.AccLimit.ToString());
-            sb.Append(d);
-            sb.Append(p.mgr_fk.ToString());
-            sb.Append(d);
-            sb.Append(p.Active.ToString());
-            return sb.ToString();
-        }
+        //public string Serialize()
+        //{
+        //    StringBuilder sb = new StringBuilder();
+        //    char d = ',';
+        //    Manager p = this;
+        //    sb.Append(p.ID.ToString());
+        //    sb.Append(d);
+        //    sb.Append(p.Login);
+        //    sb.Append(d);
+        //    sb.Append(p.User_Id.ToString());
+        //    sb.Append(d);
+        //    sb.Append(p.Type.ToString());
+        //    sb.Append(d);
+        //    sb.Append(p.Name);
+        //    sb.Append(d);
+        //    sb.Append(p.Mobile);
+        //    sb.Append(d);
+        //    sb.Append(p.QQ);
+        //    sb.Append(d);
+        //    sb.Append(p.AccLimit.ToString());
+        //    sb.Append(d);
+        //    sb.Append(p.mgr_fk.ToString());
+        //    sb.Append(d);
+        //    sb.Append(p.Active.ToString());
+        //    return sb.ToString();
+        //}
 
-        public void Deserialize(string message)
-        {
-            string[] rec = message.Split(',');
-            this.ID = int.Parse(rec[0]);
-            this.Login = rec[1];
-            this.User_Id = int.Parse(rec[2]);
-            this.Type = (QSEnumManagerType)Enum.Parse(typeof(QSEnumManagerType), rec[3]);
-            this.Name = rec[4];
-            this.Mobile = rec[5];
-            this.QQ=rec[6];
-            this.AccLimit = int.Parse(rec[7]);
-            this.mgr_fk= int.Parse(rec[8]);
-            this.Active = bool.Parse(rec[9]);
-        }
+        //public void Deserialize(string message)
+        //{
+        //    string[] rec = message.Split(',');
+        //    this.ID = int.Parse(rec[0]);
+        //    this.Login = rec[1];
+        //    this.User_Id = int.Parse(rec[2]);
+        //    this.Type = (QSEnumManagerType)Enum.Parse(typeof(QSEnumManagerType), rec[3]);
+        //    this.Name = rec[4];
+        //    this.Mobile = rec[5];
+        //    this.QQ=rec[6];
+        //    this.AccLimit = int.Parse(rec[7]);
+        //    this.mgr_fk= int.Parse(rec[8]);
+        //    this.Active = bool.Parse(rec[9]);
+        //}
     }
 }

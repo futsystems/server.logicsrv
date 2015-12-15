@@ -70,5 +70,35 @@ namespace TradingLib.Common
         [PermissionFieldAttr("风控规则", "是否有权设定帐户风控规则")]
         public bool r_riskrule { get; set; }
 
+
+        /// <summary>
+        /// 设置手续费权限
+        /// </summary>
+        [PermissionFieldAttr("手续费模板", "是否有权设定帐户手续费")]
+        public bool r_commission { get; set; }
+
+        /// <summary>
+        /// 设置保证金权限
+        /// </summary>
+        [PermissionFieldAttr("保证金模板", "是否有权设定帐户保证金")]
+        public bool r_margin { get; set; }
+
+        /// <summary>
+        /// 设置交易参数权限
+        /// </summary>
+        [PermissionFieldAttr("交易参数", "是否有权设定帐户交易参数")]
+        public bool r_exstrategy { get; set; }
+
+        /// <summary>
+        /// 修改帐户基本信息
+        /// </summary>
+        [PermissionFieldAttr("帐户信息", "是否有权修改帐户信息")]
+        public bool r_account_info { get; set; }
+
+        /// <summary>
+        /// 是否有权修改帐户隔夜设置
+        /// </summary>
+        [PermissionFieldAttr("隔夜设置", "是否有权修改帐户隔夜设置")]
+        public bool r_account_interday { get; set; }
     }
 }

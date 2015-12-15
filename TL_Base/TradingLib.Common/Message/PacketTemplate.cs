@@ -289,12 +289,12 @@ namespace TradingLib.Common
                         return RequestTemplate<MGRReqChangeInvestorRequest>.SrvRecvRequest(frontid, clientid, content);
                     case MessageTypes.MGRUPDATEPOSLOCK://请求修改帐户锁仓权限
                         return RequestTemplate<MGRReqUpdatePosLockRequest>.SrvRecvRequest(frontid, clientid, content);
-                    case MessageTypes.MGRQRYMANAGER://查询管理员列表
-                        return RequestTemplate<MGRQryManagerRequest>.SrvRecvRequest(frontid, clientid, content);
-                    case MessageTypes.MGRADDMANAGER://请求添加管理员
-                        return RequestTemplate<MGRReqAddManagerRequest>.SrvRecvRequest(frontid, clientid, content);
-                    case MessageTypes.MGRUPDATEMANAGER://请求更新管理员
-                        return RequestTemplate<MGRReqUpdateManagerRequest>.SrvRecvRequest(frontid, clientid, content);
+                    //case MessageTypes.MGRQRYMANAGER://查询管理员列表
+                    //    return RequestTemplate<MGRQryManagerRequest>.SrvRecvRequest(frontid, clientid, content);
+                    //case MessageTypes.MGRADDMANAGER://请求添加管理员
+                    //    return RequestTemplate<MGRReqAddManagerRequest>.SrvRecvRequest(frontid, clientid, content);
+                    //case MessageTypes.MGRUPDATEMANAGER://请求更新管理员
+                    //    return RequestTemplate<MGRReqUpdateManagerRequest>.SrvRecvRequest(frontid, clientid, content);
                     case MessageTypes.MGRQRYACCTSERVICE://请求查询帐户服务
                         return RequestTemplate<MGRQryAcctServiceRequest>.SrvRecvRequest(frontid, clientid, content);
                     case MessageTypes.MGRCONTRIBREQUEST://扩展请求
@@ -508,8 +508,8 @@ namespace TradingLib.Common
                     return ResponseTemplate<RspMGRReqChangeInvestorResponse>.CliRecvResponse(content);
                 case MessageTypes.MGRUPDATEPOSLOCKRESPONSE://请求修改帐户锁仓权限回报
                     return ResponseTemplate<RspMGRReqUpdatePosLockResponse>.CliRecvResponse(content);
-                case MessageTypes.MGRMANAGERRESPONSE://查询管理员列表回报
-                    return ResponseTemplate<RspMGRQryManagerResponse>.CliRecvResponse(content);
+                //case MessageTypes.MGRMANAGERRESPONSE://查询管理员列表回报
+                //    return ResponseTemplate<RspMGRQryManagerResponse>.CliRecvResponse(content);
                 case MessageTypes.MGRQRYACCTSERVICERESPONSE://查询帐户服务回报
                     return ResponseTemplate<RspMGRQryAcctServiceResponse>.CliRecvResponse(content);
                 case MessageTypes.MGRCONTRIBRESPONSE://扩展回报

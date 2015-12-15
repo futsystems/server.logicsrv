@@ -13,7 +13,7 @@ namespace TradingLib.Core
         /// 查询模板列表
         /// </summary>
         /// <param name="session"></param>
-        [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "QueryPermmissionTemplateList", "QueryPermmissionTemplateList - Query Permmission lsit", "查询权限模板列表")]
+        [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "QueryPermmissionTemplate", "QueryPermmissionTemplate - Query Permmission lsit", "查询权限模板列表")]
         public void CTE_QueryPermissionTemplateList(ISession session)
         {
             try
@@ -49,7 +49,7 @@ namespace TradingLib.Core
                 access.domain_id = manger.domain_id;
 
                 BasicTracker.UIAccessTracker.UpdateUIAccess(access);//更新
-                session.NotifyMgr("NotifyUIAccess", BasicTracker.UIAccessTracker[access.id]);
+                session.NotifyMgr("NotifyPermissionTemplate", BasicTracker.UIAccessTracker[access.id]);
                 session.OperationSuccess("权限模板更新成功");
             }
             else
@@ -57,6 +57,41 @@ namespace TradingLib.Core
                 throw new FutsRspError("无权查询权限模板列表");
             }
         }
+
+        /// <summary>
+        /// 删除权限模板
+        /// </summary>
+        /// <param name="session"></param>
+        /// <param name="template_id"></param>
+        [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "DeletePermissionTemplate", "DeletePermissionTemplate - delete permission template", "删除权限模板")]
+        public void CTE_DelPermissionTemplate(ISession session, int template_id)
+        { 
+             Manager manager = session.GetManager();
+            logger.Info(string.Format("管理员:{0} 删除权限模板 request:{1}", manager.Login, template_id));
+            if (manager.IsRoot())
+            {
+                UIAccess access = BasicTracker.UIAccessTracker[template_id];
+                if (access == null)
+                {
+                    throw new FutsRspError("指定权限模板不存在");
+                }
+                if (manager.domain_id != access.domain_id)
+                {
+                    throw new FutsRspError("权限模板与管理员不属于同一域");
+                }
+
+                //删除权限模板 权限模板中Manager与权限模板的map在tracker中维护
+                BasicTracker.UIAccessTracker.DeletePermissionTemplate(template_id);
+
+                session.NotifyMgr("NotifyDeletePermissionTemplate", access);
+                session.OperationSuccess("删除续费模板成功");
+            }
+            else
+            {
+                throw new FutsRspError("无权删除权限模板");
+            }
+        }
+
 
         [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "QueryAgentPermission", "QueryAgentPermission - query agent permission", "查询某个代理的权限设置")]
         public void CTE_QueryAgentPermission(ISession session, int managerid)

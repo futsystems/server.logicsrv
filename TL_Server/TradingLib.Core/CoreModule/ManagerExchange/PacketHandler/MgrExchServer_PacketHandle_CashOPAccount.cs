@@ -207,11 +207,11 @@ namespace TradingLib.Core
                         //如果是代理则需要检查父代理权限设置中的 子代理提交出入金权限和代理本身的提交出入金权限
                         if (manger.IsAgent())
                         {
-                            fatheraccess = BasicTracker.UIAccessTracker.GetUIAccess(manger.ParentManager);
-                            if (!fatheraccess.r_cashop_subagent)
-                            {
-                                throw new FutsRspError("无权提交出入金");
-                            }
+                            //fatheraccess = BasicTracker.UIAccessTracker.GetUIAccess(manger.ParentManager);
+                            //if (!fatheraccess.r_cashop_subagent)
+                            //{
+                            //    throw new FutsRspError("无权提交出入金");
+                            //}
 
                             access = BasicTracker.UIAccessTracker.GetUIAccess(manger);
 
@@ -233,18 +233,18 @@ namespace TradingLib.Core
                         session.OperationSuccess("提交交易帐户出入金成功");
 
                         //如果自动确认该代理的出入金 则执行确认操作
-                        if (access.r_cashop_auto_confirm)
-                        {
-                            //调用清算中心出入金确认操作
-                            //TLCtxHelper..ConfirmCashOperation(request.Ref);
+                        //if (access.r_cashop_auto_confirm)
+                        //{
+                        //    //调用清算中心出入金确认操作
+                        //    //TLCtxHelper..ConfirmCashOperation(request.Ref);
 
-                            //重新从数据库加载数据 返回当前记录的数据
-                            request = ORM.MCashOpAccount.GetAccountCashOperation(request.Ref);
-                            session.ReplyMgr(request);
-                            //通过事件中继触发事件
-                            TLCtxHelper.EventSystem.FireCashOperation(this, QSEnumCashOpEventType.Confirm, request);
+                        //    //重新从数据库加载数据 返回当前记录的数据
+                        //    request = ORM.MCashOpAccount.GetAccountCashOperation(request.Ref);
+                        //    session.ReplyMgr(request);
+                        //    //通过事件中继触发事件
+                        //    TLCtxHelper.EventSystem.FireCashOperation(this, QSEnumCashOpEventType.Confirm, request);
 
-                        }
+                        //}
                     }
                     //debug("update agent bank account: id:" + bankaccount.Bank.ID + " name:" + bankaccount.Bank.Name, QSEnumDebugLevel.INFO);
                 }

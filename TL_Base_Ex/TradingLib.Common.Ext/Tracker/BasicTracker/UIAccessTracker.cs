@@ -43,9 +43,9 @@ namespace TradingLib.Common
                 uiaccessmap.TryAdd(a.id, a);
             }
 
-            foreach (Manager2UIACcess access in ORM.MUIAccess.SelectManager2UIAccess())
+            foreach (Manager2UIAccess access in ORM.MUIAccess.SelectManager2UIAccess())
             {
-                manageruiidxmap.TryAdd(access.manager_id, access.access_id);
+                manageruiidxmap.TryAdd(access.manager_id, access.template_id);
             }
         }
 
@@ -225,6 +225,29 @@ namespace TradingLib.Common
             }
         }
 
+        /// <summary>
+        /// 删除权限模板
+        /// </summary>
+        /// <param name="access"></param>
+        public void DeletePermissionTemplate(int template_id)
+        {
+            UIAccess target = null;
+            if (uiaccessmap.TryGetValue(template_id, out target))
+            {
+                uiaccessmap.TryRemove(template_id, out target);
+                ORM.MUIAccess.DeletePermissionTemplate(template_id);
+                if (target != null)
+                {
+                    int to_remove = 0;
+                    List<int> remove = manageruiidxmap.Where(pair => pair.Value == target.id).Select(pair => pair.Key).ToList();
+                    foreach(var mgr_id in remove)
+                    {
+                        manageruiidxmap.TryRemove(mgr_id,out to_remove);
+                    }
+                }
+            }
+        
+        }
         /// <summary>
         /// 更新某个权限或者新增某个权限
         /// </summary>
