@@ -124,6 +124,7 @@ namespace TradingLib.Common
                 target.Name = t.Name;
                 target.Description = t.Description;
                 target.Domain_ID = t.Domain_ID;
+                target.Manager_ID = t.Manager_ID;
 
                 ORM.MCommission.InsertCommissionTemplate(target);
                 //放入内存数据结构

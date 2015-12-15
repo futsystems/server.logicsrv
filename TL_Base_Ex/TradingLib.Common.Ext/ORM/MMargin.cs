@@ -18,7 +18,7 @@ namespace TradingLib.ORM
         {
             using (DBMySql db = new DBMySql())
             {
-                string query = string.Format("INSERT INTO cfg_margin_template (`name`,`description`,`domain_id`) VALUES ( '{0}','{1}','{2}')", t.Name, t.Description, t.Domain_ID);
+                string query = string.Format("INSERT INTO cfg_margin_template (`name`,`description`,`domain_id`,`manager_id`) VALUES ( '{0}','{1}','{2}','{3}')", t.Name, t.Description, t.Domain_ID,t.Manager_ID);
                 int row = db.Connection.Execute(query);
                 SetIdentity(db.Connection, id => t.ID = id, "id", "cfg_margin_template");
             }

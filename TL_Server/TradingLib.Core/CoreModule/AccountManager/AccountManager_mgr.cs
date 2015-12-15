@@ -658,18 +658,25 @@ namespace TradingLib.Core
         public void CTE_QryAccountLoginInfo(ISession session, string account)
         {
             Manager manager = session.GetManager();
-            if (manager.IsRoot())
+
+            
+            IAccount acc = TLCtxHelper.ModuleAccountManager[account];
+            if (acc == null)
             {
-                IAccount acc = TLCtxHelper.ModuleAccountManager[account];
-                if (acc == null)
-                {
-                    throw new FutsRspError("交易帐户不存在");
-                }
+                throw new FutsRspError("交易帐户不存在");
+            }
+            if (manager.RightAccessAccount(acc))
+            {
                 Protocol.LoginInfo logininfo = new Protocol.LoginInfo();
                 logininfo.LoginID = account;
                 logininfo.Pass = ORM.MAccount.GetAccountPass(account);
                 session.ReplyMgr(logininfo);
             }
+            else
+            {
+                throw new FutsRspError("无权查看帐户");
+            }
+            
         }
 
     }

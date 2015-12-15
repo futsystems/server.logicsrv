@@ -28,15 +28,14 @@ namespace TradingLib.Common
         public UIAccessTracker()
         {
             _cfgdb = new ConfigDB("UIAccessTracker");
-            if (!_cfgdb.HaveConfig("Comment"))
+            if (!_cfgdb.HaveConfig("ExcludePermissionForAgent"))
             {
-                _cfgdb.UpdateConfig("ExcludePermissionForAgent", QSEnumCfgType.String, "r_execution,r_block,r_simacc,r_cashop,r_cashop_subagent,r_cashop_auto_confirm", "代理默认排除的权限列表");
+                _cfgdb.UpdateConfig("ExcludePermissionForAgent", QSEnumCfgType.String, "r_account_del,r_cashop,r_commission,r_margin,r_exstrategy", "代理默认排除的权限列表");
             }
             foreach (string s in _cfgdb["ExcludePermissionForAgent"].AsString().Split(','))
             {
                 _excludePermissionForAgent.Add(s);
             }
-
             //加载访问权限对象到内存
             foreach (UIAccess a in ORM.MUIAccess.SelectUIAccess())
             {

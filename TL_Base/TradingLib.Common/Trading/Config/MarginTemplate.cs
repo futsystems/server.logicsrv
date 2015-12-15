@@ -27,6 +27,13 @@ namespace TradingLib.Common
         /// </summary>
         public int Domain_ID { get; set; }
 
+
+        /// <summary>
+        /// 管理员主域ID
+        /// </summary>
+        public int Manager_ID { get; set; }
+
+
         public override string ToString()
         {
             return this.Name;

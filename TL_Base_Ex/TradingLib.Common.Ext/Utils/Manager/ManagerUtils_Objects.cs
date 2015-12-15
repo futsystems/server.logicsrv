@@ -66,5 +66,16 @@ namespace TradingLib.Common
             }
         }
 
+
+        /// <summary>
+        /// 获得某个管理员的权限
+        /// </summary>
+        /// <param name="mgr"></param>
+        /// <returns></returns>
+        public static UIAccess GetAccess(this Manager mgr)
+        {
+            return BasicTracker.UIAccessTracker.GetUIAccess(mgr);
+        }
+
     }
 }
