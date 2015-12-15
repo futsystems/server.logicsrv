@@ -53,6 +53,44 @@ namespace TradingLib.Core
             }
         }
 
+        [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "DeleteExStrategyTemplate", "DeleteExStrategyTemplate - delete ex strategy template", "删除交易参数模板")]
+        public void CTE_DelExStrategyTemplate(ISession session, int template_id)
+        { 
+             Manager manager = session.GetManager();
+            logger.Info(string.Format("管理员:{0} 删除交易参数模板 request:{1}", manager.Login, template_id));
+            if (manager.IsRoot())
+            {
+                ExStrategyTemplate template = BasicTracker.ExStrategyTemplateTracker[template_id];
+                if (template == null)
+                {
+                    throw new FutsRspError("指定交易参数模板不存在");
+                }
+                if (template.Domain_ID != manager.domain_id)
+                {
+                    throw new FutsRspError("交易参数模板与管理员不属于同一域");
+                }
+                //调用维护器 删除该模板
+                BasicTracker.ExStrategyTemplateTracker.DeleteExStrategyTemplate(template_id);
+                IAccount[] accounts = manager.Domain.GetAccounts().ToArray();
+
+                //遍历所有交易帐户 如果交易参数模板为删掉的模板则将模板id设置为0
+                for (int i = 0; i < accounts.Length; i++)
+                {
+                    IAccount acc = accounts[i];
+                    if (acc.ExStrategy_ID == template_id)
+                    {
+                        TLCtxHelper.ModuleAccountManager.UpdateAccountExStrategyTemplate(acc.ID, 0);
+                    }
+                }
+                session.NotifyMgr("NotifyDeleteExStrategyTemplate", template);
+                session.OperationSuccess("删除交易参数模板成功");
+            }
+            else
+            {
+                throw new FutsRspError("无权删除交易参数模板");
+            }
+        }
+
         [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "QryExStrategyTemplateItem", "QryExStrategyTemplateItem - qry commission template item", "查询手续费模板项目")]
         public void CTE_QryExStrategyTemplateItem(ISession session, int templateid)
         {

@@ -107,6 +107,29 @@ namespace TradingLib.Common
         }
 
         /// <summary>
+        /// 删除某个交易参数模板
+        /// </summary>
+        /// <param name="template_id"></param>
+        public void DeleteExStrategyTemplate(int template_id)
+        {
+            ExStrategyTemplate target = null;
+            //存在对应的手续费模板
+            if (exStrategyTemplateMap.TryGetValue(template_id, out target))
+            {
+                ORM.MExStrategy.DeleteExStrategyTemplate(template_id);
+
+                //删除模板对象
+                ExStrategyTemplate remove_template = null;
+                exStrategyTemplateMap.TryRemove(template_id, out remove_template);//删除模板对象
+
+                if (remove_template != null)
+                {
+                    ExStrategy remove_item = null;
+                    exStrategyMap.TryRemove(remove_template.ExStrategy.ID, out remove_item);
+                }
+            }
+        }
+        /// <summary>
         /// 更新策略模板项目
         /// </summary>
         /// <param name="item"></param>

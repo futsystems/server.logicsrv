@@ -71,5 +71,13 @@ namespace TradingLib.API
         /// <param name="account"></param>
         /// <param name="template_id"></param>
         void UpdateAccountMarginTemplate(string account, int template_id);
+
+
+        /// <summary>
+        /// 更新交易参数模板
+        /// </summary>
+        /// <param name="account"></param>
+        /// <param name="id"></param>
+        void UpdateAccountExStrategyTemplate(string account, int template_id);
     }
 }
