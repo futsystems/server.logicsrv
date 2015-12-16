@@ -77,7 +77,7 @@ namespace TradingLib.Common
         { 
             Manager target = null;
             //添加
-            if (!mgridmap.TryGetValue(mgr.ID, out target))
+            if (mgridmap.TryGetValue(mgr.ID, out target))
             {
                 ORM.MManager.DeleteManager(mgr.ID);
                 mgridmap.TryRemove(mgr.ID, out target);

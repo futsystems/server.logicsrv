@@ -171,6 +171,19 @@ namespace TradingLib.Core
             CachePacket(response);
         }
 
+        /// <summary>
+        /// 管理员删除通知
+        /// 向所有有权访问mgr信息的管理员发送mgr删除通知
+        /// </summary>
+        /// <param name="mgr"></param>
+        void NotifyManagerDelete(Manager mgr)
+        {
+            NotifyMGRContribNotify response = ResponseTemplate<NotifyMGRContribNotify>.SrvSendNotifyResponse(GetNotifyTargets(mgr.GetNotifyPredicate()));
+            response.ModuleID = CoreName;
+            response.CMDStr = "NotifyManagerDelete";
+            response.Result = Mixins.Json.JsonReply.SuccessReply(mgr).ToJson();
+            CachePacket(response);
+        }
 
         
     }

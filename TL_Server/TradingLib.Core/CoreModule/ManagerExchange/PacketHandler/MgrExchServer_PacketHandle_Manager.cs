@@ -152,9 +152,9 @@ namespace TradingLib.Core
 
                 //删除管理员
                 BasicTracker.ManagerTracker.DeleteManager(mgr);
-
+                NotifyManagerDelete(mgr);
             }
-
+            
             session.OperationSuccess("删除管理员成功");
 
         }
