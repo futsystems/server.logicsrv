@@ -41,6 +41,40 @@ namespace TradingLib.Common
         }
 
         /// <summary>
+        /// 获得帐户下 某个交易所的持仓
+        /// </summary>
+        /// <param name="account"></param>
+        /// <param name="exchange"></param>
+        /// <returns></returns>
+        public static IEnumerable<Position> GetPositions(this IAccount account, IExchange exchange)
+        {
+            return account.Positions.Where(pos => pos.oSymbol.SecurityFamily.Exchange.EXCode == exchange.EXCode);        
+        }
+
+
+        /// <summary>
+        /// 获得交易帐户某个交易所的委托
+        /// </summary>
+        /// <param name="account"></param>
+        /// <param name="exchange"></param>
+        /// <returns></returns>
+        public static IEnumerable<Order> GetOrders(this IAccount account, IExchange exchange,int settleday)
+        {
+            return account.Orders.Where(o => o.oSymbol.SecurityFamily.Exchange.EXCode == exchange.EXCode && o.SettleDay == settleday);
+        }
+
+        /// <summary>
+        /// 获得交易帐户某个交易所的所有成交
+        /// </summary>
+        /// <param name="account"></param>
+        /// <param name="exchange"></param>
+        /// <returns></returns>
+        public static IEnumerable<Trade> GetTrades(this IAccount account, IExchange exchange,int settleday)
+        {
+            return account.Trades.Where(f => f.oSymbol.SecurityFamily.Exchange.EXCode == exchange.EXCode && f.SettleDay == settleday);
+        }
+
+        /// <summary>
         /// 返回所有持仓手数之和
         /// </summary>
         /// <param name="account"></param>

@@ -38,6 +38,8 @@
             this.kryptonPage4 = new ComponentFactory.Krypton.Navigator.KryptonPage();
             this.quote_shfe = new FutSystems.GUI.ViewQuoteList();
             this.ctOrderSenderM1 = new FutsMoniter.ctOrderSenderM();
+            this.kryptonPage2 = new ComponentFactory.Krypton.Navigator.KryptonPage();
+            this.quote_innov = new FutSystems.GUI.ViewQuoteList();
             ((System.ComponentModel.ISupportInitialize)(this.quotenav)).BeginInit();
             this.quotenav.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.kryptonPage1)).BeginInit();
@@ -48,6 +50,8 @@
             this.page3.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.kryptonPage4)).BeginInit();
             this.kryptonPage4.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.kryptonPage2)).BeginInit();
+            this.kryptonPage2.SuspendLayout();
             this.SuspendLayout();
             // 
             // quotenav
@@ -64,8 +68,9 @@
             this.kryptonPage1,
             this.page2,
             this.page3,
-            this.kryptonPage4});
-            this.quotenav.SelectedIndex = 0;
+            this.kryptonPage4,
+            this.kryptonPage2});
+            this.quotenav.SelectedIndex = 4;
             this.quotenav.Size = new System.Drawing.Size(634, 298);
             this.quotenav.TabIndex = 0;
             this.quotenav.Text = "kryptonNavigator1";
@@ -226,6 +231,43 @@
             this.ctOrderSenderM1.Size = new System.Drawing.Size(634, 57);
             this.ctOrderSenderM1.TabIndex = 1;
             // 
+            // kryptonPage2
+            // 
+            this.kryptonPage2.AutoHiddenSlideSize = new System.Drawing.Size(200, 200);
+            this.kryptonPage2.Controls.Add(this.quote_innov);
+            this.kryptonPage2.Flags = 65534;
+            this.kryptonPage2.LastVisibleSet = true;
+            this.kryptonPage2.MinimumSize = new System.Drawing.Size(50, 50);
+            this.kryptonPage2.Name = "kryptonPage2";
+            this.kryptonPage2.Size = new System.Drawing.Size(632, 273);
+            this.kryptonPage2.Text = "kryptonPage2";
+            this.kryptonPage2.ToolTipTitle = "Page ToolTip";
+            this.kryptonPage2.UniqueName = "4253B3F22ED742AA30A423698A58D9A3";
+            // 
+            // quote_innov
+            // 
+            this.quote_innov.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.quote_innov.DNColor = System.Drawing.Color.Green;
+            this.quote_innov.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.quote_innov.HeaderBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.quote_innov.HeaderFont = new System.Drawing.Font("Microsoft Sans Serif", 10F);
+            this.quote_innov.HeaderFontColor = System.Drawing.Color.Turquoise;
+            this.quote_innov.Location = new System.Drawing.Point(0, 0);
+            this.quote_innov.MenuEnable = false;
+            this.quote_innov.Name = "quote_innov";
+            this.quote_innov.QuoteBackColor1 = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.quote_innov.QuoteBackColor2 = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.quote_innov.QuoteFont = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold);
+            this.quote_innov.QuoteViewWidth = 1030;
+            this.quote_innov.SelectedQuoteRow = -1;
+            this.quote_innov.Size = new System.Drawing.Size(632, 273);
+            this.quote_innov.SymbolFont = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold);
+            this.quote_innov.SymbolFontColor = System.Drawing.Color.Green;
+            this.quote_innov.TabIndex = 3;
+            this.quote_innov.TableLineColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.quote_innov.Text = "viewQuoteList1";
+            this.quote_innov.UPColor = System.Drawing.Color.Red;
+            // 
             // ctQuoteMoniter
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -244,6 +286,8 @@
             this.page3.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.kryptonPage4)).EndInit();
             this.kryptonPage4.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.kryptonPage2)).EndInit();
+            this.kryptonPage2.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -260,5 +304,7 @@
         private FutSystems.GUI.ViewQuoteList quote_dce;
         private FutSystems.GUI.ViewQuoteList quote_cffex;
         private ctOrderSenderM ctOrderSenderM1;
+        private ComponentFactory.Krypton.Navigator.KryptonPage kryptonPage2;
+        private FutSystems.GUI.ViewQuoteList quote_innov;
     }
 }

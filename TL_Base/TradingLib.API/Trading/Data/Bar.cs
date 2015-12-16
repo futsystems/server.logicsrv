@@ -7,41 +7,86 @@ namespace TradingLib.API
 {
     public interface Bar
     {
+        /// <summary>
+        /// 合约
+        /// </summary>
         string Symbol { get; set;}
 
+        /// <summary>
+        /// 最高价
+        /// </summary>
         double High { get; set;}
-        double Low { get; set ;}
-        double Open { get; set ;}
-        double Close { get; set; }
-        long Volume { get; set; }
-        bool isNew { get; set;}
-        int Bartime { get;  }
-        int Bardate { get; set;}
-        bool isValid { get;}
-        int Interval { get; set; }
-        int time { get; set; }
 
+        /// <summary>
+        /// 最低价
+        /// </summary>
+        double Low { get; set; }
+
+        /// <summary>
+        /// 开盘价
+        /// </summary>
+        double Open { get; set; }
+
+        /// <summary>
+        /// 收盘价
+        /// </summary>
+        double Close { get; set; }
+
+        /// <summary>
+        /// 成交量
+        /// </summary>
+        int Volume { get; set; }
+
+        /// <summary>
+        /// 持仓量
+        /// </summary>
+        int OpenInterest { get; set; }
+
+        /// <summary>
+        /// Ask价
+        /// </summary>
         double Ask { get; set; }
+
+        /// <summary>
+        /// Bid价
+        /// </summary>
         double Bid { get; set; }
 
-        Bar Clone();
+        /// <summary>
+        /// 成交笔数
+        /// </summary>
+        int TradeCount { get; set; }
 
-        long OpenInterest { get; set; }
+        /// <summary>
+        /// Bar所处交易日
+        /// </summary>
+        int TradingDay { get; set; }
+
         /// <summary>
         /// 开始时间
         /// </summary>
         DateTime BarStartTime { get; set; }
+
         /// <summary>
-        /// 结束时间
+        /// 频率类别
         /// </summary>
-        DateTime BarEndTime { get; set; }
+        BarInterval IntervalType { get; set; }
+
+        /// <summary>
+        /// 间隔数
+        /// </summary>
+        int Interval { get; set; }
+
+        /// <summary>
+        /// 复制一个Bar数据
+        /// </summary>
+        /// <returns></returns>
+        Bar Clone();
+
         /// <summary>
         /// 该Bar是否为空
         /// </summary>
         bool EmptyBar { get; set; }
-
-
-
     }
 
     /// <summary>
@@ -61,10 +106,16 @@ namespace TradingLib.API
         /// custom interval length
         /// </summary>
         CustomTime = -1,
+        //!!do not change the value of CustomTime,CustomTicks,CustomVol
+
         /// <summary>
         /// One-minute intervals
         /// </summary>
         Minute = 60,
+        /// <summary>
+        /// Thress-minute intervals
+        /// </summary>
+        ThreeMin = 180,
         /// <summary>
         /// Five-minute interval
         /// </summary>

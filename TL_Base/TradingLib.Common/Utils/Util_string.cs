@@ -8,7 +8,7 @@ namespace TradingLib.Common
 {
     public partial class Util
     {
-        public static string padLeftEx(string str, int totalByteCount)
+        public static string padLeftEx(string str, int totalByteCount,char p=' ')
         {
             Encoding coding = Encoding.GetEncoding("gb2312");
             int dcount = 0;
@@ -17,12 +17,12 @@ namespace TradingLib.Common
                 if (coding.GetByteCount(ch.ToString()) == 2)
                     dcount++;
             }
-            string w = str.PadRight(totalByteCount - dcount);
+            string w = str.PadRight(totalByteCount - dcount, p);
             return w;
         }
 
 
-        public static string padRightEx(string str, int totalByteCount)
+        public static string padRightEx(string str, int totalByteCount, char p = ' ')
         {
             Encoding coding = Encoding.GetEncoding("gb2312");
             int dcount = 0;
@@ -32,11 +32,11 @@ namespace TradingLib.Common
                     dcount++;
             }
 
-            string w = str.PadLeft(totalByteCount - dcount);
+            string w = str.PadLeft(totalByteCount - dcount,p);
             return w;
         }
 
-        public static string padCenterEx(string str, int totalByteCount)
+        public static string padCenterEx(string str, int totalByteCount, char p = ' ')
         {
             Encoding coding = Encoding.GetEncoding("gb2312");
             int dcount = 0;
@@ -48,7 +48,7 @@ namespace TradingLib.Common
             int strcnt = dcount + str.Length;
             int remaincnt = totalByteCount - strcnt;
             int leftcnt = remaincnt / 2;
-            return str.PadLeft(leftcnt + strcnt - dcount).PadRight(totalByteCount - dcount);
+            return str.PadLeft(leftcnt + strcnt - dcount,p).PadRight(totalByteCount - dcount,p);
         }
     }
 }

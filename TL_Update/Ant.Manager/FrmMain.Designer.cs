@@ -158,7 +158,7 @@
             this.MinimumSize = new System.Drawing.Size(600, 500);
             this.Name = "FrmMain";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "QSTrading更新管理端";
+            this.Text = "自动更新管理端";
             this.Load += new System.EventHandler(this.FrmMain_Load);
             this.toolStrip1.ResumeLayout(false);
             this.toolStrip1.PerformLayout();

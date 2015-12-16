@@ -134,7 +134,7 @@ namespace FutsMoniter
         }
         ExStrategy _current = null;
 
-        void OnQryExStrategyTemplateItem(string json)
+        void OnQryExStrategyTemplateItem(string json, bool islast)
         {
             ExStrategy item = MoniterUtils.ParseJsonResponse<ExStrategy>(json);
             if (item != null)
@@ -143,7 +143,7 @@ namespace FutsMoniter
             }
         }
 
-        void OnNotifyExStrategyTemplateItem(string json)
+        void OnNotifyExStrategyTemplateItem(string json, bool islast)
         {
             ExStrategy obj = MoniterUtils.ParseJsonResponse<ExStrategy>(json);
             if (obj != null)
@@ -164,7 +164,7 @@ namespace FutsMoniter
 
 
         Dictionary<int, ExStrategyTemplateSetting> templatemap = new Dictionary<int, ExStrategyTemplateSetting>();
-        void OnQryExStrategyTemplate(string json)
+        void OnQryExStrategyTemplate(string json, bool islast)
         {
             ExStrategyTemplateSetting[] list = MoniterUtils.ParseJsonResponse<ExStrategyTemplateSetting[]>(json);
             if (list != null)
@@ -177,7 +177,7 @@ namespace FutsMoniter
             }
         }
 
-        void OnNotifyExStrategyTemplate(string json)
+        void OnNotifyExStrategyTemplate(string json, bool islast)
         {
             ExStrategyTemplateSetting obj = MoniterUtils.ParseJsonResponse<ExStrategyTemplateSetting>(json);
             if (obj != null)

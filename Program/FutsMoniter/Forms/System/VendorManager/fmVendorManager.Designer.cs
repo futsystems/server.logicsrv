@@ -114,7 +114,7 @@
             this.kryptonPage3.LastVisibleSet = true;
             this.kryptonPage3.MinimumSize = new System.Drawing.Size(50, 50);
             this.kryptonPage3.Name = "kryptonPage3";
-            this.kryptonPage3.Size = new System.Drawing.Size(755, 252);
+            this.kryptonPage3.Size = new System.Drawing.Size(755, 250);
             this.kryptonPage3.Text = "实盘帐户";
             this.kryptonPage3.ToolTipTitle = "Page ToolTip";
             this.kryptonPage3.UniqueName = "EB9D6C16047B41BD81AA79B6A51AD8D9";
@@ -125,7 +125,7 @@
             this.kryptonPanel4.Dock = System.Windows.Forms.DockStyle.Fill;
             this.kryptonPanel4.Location = new System.Drawing.Point(0, 0);
             this.kryptonPanel4.Name = "kryptonPanel4";
-            this.kryptonPanel4.Size = new System.Drawing.Size(755, 252);
+            this.kryptonPanel4.Size = new System.Drawing.Size(755, 250);
             this.kryptonPanel4.TabIndex = 0;
             // 
             // vendorgrid
@@ -135,7 +135,7 @@
             this.vendorgrid.Location = new System.Drawing.Point(0, 0);
             this.vendorgrid.Name = "vendorgrid";
             this.vendorgrid.RowTemplate.Height = 23;
-            this.vendorgrid.Size = new System.Drawing.Size(755, 252);
+            this.vendorgrid.Size = new System.Drawing.Size(755, 250);
             this.vendorgrid.TabIndex = 0;
             // 
             // kryptonPage1
@@ -146,7 +146,7 @@
             this.kryptonPage1.LastVisibleSet = true;
             this.kryptonPage1.MinimumSize = new System.Drawing.Size(50, 50);
             this.kryptonPage1.Name = "kryptonPage1";
-            this.kryptonPage1.Size = new System.Drawing.Size(755, 252);
+            this.kryptonPage1.Size = new System.Drawing.Size(755, 250);
             this.kryptonPage1.Text = "通道设置";
             this.kryptonPage1.ToolTipTitle = "Page ToolTip";
             this.kryptonPage1.UniqueName = "34020F663F5E46D4FCA15E785DF5FA30";
@@ -157,7 +157,7 @@
             this.kryptonPanel2.Dock = System.Windows.Forms.DockStyle.Fill;
             this.kryptonPanel2.Location = new System.Drawing.Point(0, 0);
             this.kryptonPanel2.Name = "kryptonPanel2";
-            this.kryptonPanel2.Size = new System.Drawing.Size(755, 252);
+            this.kryptonPanel2.Size = new System.Drawing.Size(755, 250);
             this.kryptonPanel2.TabIndex = 0;
             // 
             // configgrid
@@ -167,7 +167,7 @@
             this.configgrid.Location = new System.Drawing.Point(0, 0);
             this.configgrid.Name = "configgrid";
             this.configgrid.RowTemplate.Height = 23;
-            this.configgrid.Size = new System.Drawing.Size(755, 252);
+            this.configgrid.Size = new System.Drawing.Size(755, 250);
             this.configgrid.TabIndex = 0;
             // 
             // pageroutergroup
@@ -246,14 +246,14 @@
             this.rgname.Enabled = false;
             this.rgname.Location = new System.Drawing.Point(105, 61);
             this.rgname.Name = "rgname";
-            this.rgname.Size = new System.Drawing.Size(140, 21);
+            this.rgname.Size = new System.Drawing.Size(140, 20);
             this.rgname.TabIndex = 14;
             // 
             // rgid
             // 
             this.rgid.Location = new System.Drawing.Point(105, 41);
             this.rgid.Name = "rgid";
-            this.rgid.Size = new System.Drawing.Size(19, 18);
+            this.rgid.Size = new System.Drawing.Size(20, 20);
             this.rgid.TabIndex = 13;
             this.rgid.Values.Text = "--";
             // 
@@ -261,7 +261,7 @@
             // 
             this.kryptonLabel4.Location = new System.Drawing.Point(58, 113);
             this.kryptonLabel4.Name = "kryptonLabel4";
-            this.kryptonLabel4.Size = new System.Drawing.Size(41, 18);
+            this.kryptonLabel4.Size = new System.Drawing.Size(38, 20);
             this.kryptonLabel4.TabIndex = 12;
             this.kryptonLabel4.Values.Text = "描述:";
             // 
@@ -269,7 +269,7 @@
             // 
             this.kryptonLabel3.Location = new System.Drawing.Point(58, 89);
             this.kryptonLabel3.Name = "kryptonLabel3";
-            this.kryptonLabel3.Size = new System.Drawing.Size(41, 18);
+            this.kryptonLabel3.Size = new System.Drawing.Size(38, 20);
             this.kryptonLabel3.TabIndex = 11;
             this.kryptonLabel3.Values.Text = "策略:";
             // 
@@ -277,7 +277,7 @@
             // 
             this.kryptonLabel2.Location = new System.Drawing.Point(58, 65);
             this.kryptonLabel2.Name = "kryptonLabel2";
-            this.kryptonLabel2.Size = new System.Drawing.Size(41, 18);
+            this.kryptonLabel2.Size = new System.Drawing.Size(38, 20);
             this.kryptonLabel2.TabIndex = 10;
             this.kryptonLabel2.Values.Text = "名称:";
             // 
@@ -285,7 +285,7 @@
             // 
             this.kryptonLabel1.Location = new System.Drawing.Point(5, 41);
             this.kryptonLabel1.Name = "kryptonLabel1";
-            this.kryptonLabel1.Size = new System.Drawing.Size(94, 18);
+            this.kryptonLabel1.Size = new System.Drawing.Size(87, 20);
             this.kryptonLabel1.TabIndex = 9;
             this.kryptonLabel1.Values.Text = "路由组全局ID:";
             // 
@@ -320,7 +320,7 @@
             this.routeritemgrid.Location = new System.Drawing.Point(0, 0);
             this.routeritemgrid.Name = "routeritemgrid";
             this.routeritemgrid.RowTemplate.Height = 23;
-            this.routeritemgrid.Size = new System.Drawing.Size(468, 231);
+            this.routeritemgrid.Size = new System.Drawing.Size(468, 229);
             this.routeritemgrid.TabIndex = 0;
             // 
             // fmVendorManager

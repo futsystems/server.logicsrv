@@ -89,7 +89,7 @@ namespace TradingLib.Common
         /// <summary>
         /// 成交维护器
         /// </summary>
-        public ThreadSafeList<Trade> TKTrade { get; set; }
+        public TradeTracker TKTrade { get; set; }
 
         /// <summary>
         /// 当日所有成交数据

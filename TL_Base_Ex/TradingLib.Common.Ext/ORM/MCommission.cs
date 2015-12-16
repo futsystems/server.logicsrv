@@ -27,6 +27,22 @@ namespace TradingLib.ORM
         }
 
         /// <summary>
+        /// 删除某个手续费模板
+        /// </summary>
+        /// <param name="template_id"></param>
+        public static void DeleteCommissionTemplate(int template_id)
+        {
+            using (DBMySql db = new DBMySql())
+            {
+                string query = string.Format("DELETE FROM cfg_commission_template WHERE id={0}", template_id);
+                db.Connection.Execute(query);
+
+                query = string.Format("DELETE FROM cfg_commission WHERE template_id={0}", template_id);
+                db.Connection.Execute(query);
+            }
+        }
+
+        /// <summary>
         /// 插入一条手续费模板
         /// </summary>
         /// <param name="t"></param>
@@ -34,7 +50,7 @@ namespace TradingLib.ORM
         {
             using (DBMySql db = new DBMySql())
             {
-                string query = string.Format("INSERT INTO cfg_commission_template (`name`,`description`,`domain_id`) VALUES ( '{0}','{1}','{2}')",t.Name,t.Description,t.Domain_ID);
+                string query = string.Format("INSERT INTO cfg_commission_template (`name`,`description`,`domain_id`,`manager_id`) VALUES ( '{0}','{1}','{2}','{3}')", t.Name, t.Description, t.Domain_ID,t.Manager_ID);
                 int row = db.Connection.Execute(query);
                 SetIdentity(db.Connection, id => t.ID = id, "id", "cfg_commission_template");
             }

@@ -112,6 +112,13 @@ namespace TradingLib.API
         /// 当前服务是否可用
         /// </summary>
         bool IsAvabile { get; }
+
+
+        /// <summary>
+        /// 获得交易帐户服务 通知
+        /// </summary>
+        /// <returns></returns>
+        IEnumerable<string> GetNotice();
     }
 
 

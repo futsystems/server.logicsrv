@@ -25,7 +25,7 @@ namespace TradingLib.ServiceManager
     /// 路由通道管理器
     /// 加载对应的路由通道类型 然后按照设定生成对应的路由并进行管理
     /// </summary>
-    public partial class ConnectorManager : BaseSrvObject, IServiceManager, IRouterManager,IDisposable
+    public partial class ConnectorManager : BaseSrvObject,IConnectorManager
     {
         const string SMGName = "ConnectorManager";
         //Broker或Datafeed连接与断开的事件
@@ -35,8 +35,8 @@ namespace TradingLib.ServiceManager
         //public event IConnecterParamDel DataFeedDisconnectedEvent;
 
 
-        BrokerRouter _brokerrouter;
-        DataFeedRouter _datafeedrouter;
+        //IBrokerRouter _brokerrouter;
+        //IDataRouter _datafeedrouter;
 
         public string ServiceMgrName { get { return SMGName; } }
 
@@ -63,19 +63,19 @@ namespace TradingLib.ServiceManager
         }
 
 
-        bool routerbinded = false;
+        //bool routerbinded = false;
         /// <summary>
         /// 绑定数据与成交路由中心
         /// 用于连接路由和行情中心
         /// </summary>
         /// <param name="_br"></param>
         /// <param name="_dr"></param>
-        public void BindRouter(BrokerRouter _br, DataFeedRouter _dr)
-        {
-            _brokerrouter = _br;
-            _datafeedrouter = _dr;
-            routerbinded = true;
-        }
+        //public void BindRouter(IBrokerRouter _br, IDataRouter _dr)
+        //{
+        //    //_brokerrouter = _br;
+        //    //_datafeedrouter = _dr;
+        //    //routerbinded = true;
+        //}
 
         /// <summary>
         /// 加载行情和成交路由
@@ -83,11 +83,11 @@ namespace TradingLib.ServiceManager
         public void Init()
         {
             Util.InitStatus(this.PROGRAME, true);
-            if (!routerbinded)
-            {
-                debug("未绑定数据与成交路由中心,请先绑定", QSEnumDebugLevel.ERROR);
-                return;
-            }
+            //if (!routerbinded)
+            //{
+            //    debug("未绑定数据与成交路由中心,请先绑定", QSEnumDebugLevel.ERROR);
+            //    return;
+            //}
 
             //加载接口类型
             LoadConnectorType();
@@ -101,6 +101,8 @@ namespace TradingLib.ServiceManager
             //根据设置 设定默认模拟成交接口
             _defaultsimbroker = FindBroker(_defaultSimBrokerToken);//_defaultSimBrokerToken 通过数据库设置
             _defaultdatafeed = FindDataFeed(_defaultDataFeedToken);//_defaultDataFeedToken通过数据库设置
+
+
         }
 
         /// <summary>
@@ -109,14 +111,23 @@ namespace TradingLib.ServiceManager
         public void Start()
         {
             Util.StatusSection(this.PROGRAME, "STARTCONNECTOR", QSEnumInfoColor.INFODARKRED,true);
-            if (TLCtxHelper.Ctx.SettleCentre.IsTradingday)//如果是交易日则需要启动实盘通道
+            if (GlobalConfig.NeedStartDefaultConnector)
             {
-                debug("正常交易日,启动所有通道", QSEnumDebugLevel.INFO);
-                StartConnector();
+                if (TLCtxHelper.ModuleSettleCentre.IsTradingday)//如果是交易日则需要启动实盘通道
+                {
+                    logger.Info("正常交易日,启动所有通道");
+                    StartConnector();
+                }
             }
         }
 
-
+        /// <summary>
+        /// 停止
+        /// </summary>
+        public void Stop()
+        { 
+        
+        }
 
 
         //接口类型应映射表
@@ -128,7 +139,7 @@ namespace TradingLib.ServiceManager
         /// </summary>
         void LoadConnectorType()
         {
-            debug("Load datafeed and broker connectors", QSEnumDebugLevel.INFO);
+            logger.Info("Load datafeed and broker connectors");
             //获得当前插件connecter中所有可用的交易通道插件以及数据通道插件 
             List<Type> brokerlist = PluginHelper.LoadBrokerType();
             List<Type> datafeedlist = PluginHelper.LoadDataFeedType();

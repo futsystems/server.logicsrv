@@ -326,7 +326,7 @@ namespace TradingLib.Contrib.FinService
             }
             catch (Exception ex)
             {
-                Util.Debug("ServicePlan flat postion error:" + ex.ToString(), QSEnumDebugLevel.ERROR);
+                Util.Error("ServicePlan flat postion error:" + ex.ToString());
             }
                 
         }
@@ -355,7 +355,7 @@ namespace TradingLib.Contrib.FinService
         /// </summary>
         public virtual void OnAccountActive(string account)
         {
-            Util.Debug("帐户:" + account + " 激活，重置服务相关状态", QSEnumDebugLevel.INFO);
+            Util.Info("帐户:" + account + " 激活，重置服务相关状态");
             _flatsent = false;//重置强平触发标识
         }
     }

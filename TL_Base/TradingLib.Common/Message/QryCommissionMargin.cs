@@ -110,12 +110,10 @@ namespace TradingLib.Common
             this.Symbol = cfg.Symbol;
             this.OpenRatioByMoney = cfg.OpenRatioByMoney;
             this.OpenRatioByVolume = cfg.OpenRatioByVolume;
-            //this.CloseRatioByMoney = cfg.close;
             this.CloseRatioByMoney = cfg.CloseRatioByMoney;
             this.CloseRatioByVolume = cfg.CloseRatioByVolume;
             this.CloseTodayRatioByMoney = cfg.CloseTodayRatioByMoney;
             this.CloseTodayRatioByVolume = cfg.CloseTodayRatioByVolume;
-           // this.CloseTodayRatioByVolume = cfg.close
 
         }
         public override string ResponseSerialize()
@@ -228,6 +226,16 @@ namespace TradingLib.Common
         /// 空头保证金按量 每手5000
         /// </summary>
         public decimal ShortMarginRatioByVoume { get; set; }
+
+        public void FillMarginCfg(MarginConfig cfg)
+        {
+            this.LongMarginRatioByMoney = cfg.LongMarginRatioByMoney;
+            this.LongMarginRatioByVolume = cfg.LongMarginRatioByVolume;
+            this.ShortMarginRatioByMoney = cfg.ShortMarginRatioByMoney;
+            this.ShortMarginRatioByVoume = cfg.ShortMarginRatioByVoume;
+
+        }
+
 
         public override string ResponseSerialize()
         {

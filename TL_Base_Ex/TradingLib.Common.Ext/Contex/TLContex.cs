@@ -64,14 +64,6 @@ namespace TradingLib.Common
         //ThreadSafeList<string> bypasscmds = new ThreadSafeList<string>();
         #endregion
 
-        #region 定时任务列表
-
-        ThreadSafeList<ITask> taskList = new ThreadSafeList<ITask>();
-        /// <summary>
-        /// 全局任务列表
-        /// </summary>
-        public ThreadSafeList<ITask> TaskList { get { return taskList; } }
-        #endregion
 
         #region 对象引用列表
         //记录了系统内的所有BaseObject
@@ -137,55 +129,6 @@ namespace TradingLib.Common
         #endregion
 
         #region internal 暴露对象
-        IClearCentreSrv _clearCentreSrv = null;
-        /// <summary>
-        /// 清算中心
-        /// </summary>
-        internal IClearCentreSrv ClearCentre
-        {
-            get
-            {
-                if (_clearCentreSrv == null)
-                {
-                    debug("Error-ClearCentre not valid");
-                }
-                return _clearCentreSrv;
-            }
-        }
-
-        IRiskCentre _riskcentre = null;
-        /// <summary>
-        /// 风控中心
-        /// </summary>
-        internal IRiskCentre RiskCentre
-        {
-            get
-            {
-                if (_riskcentre == null)
-                {
-                    debug("Error-RiskCentre not valid");
-                }
-                return _riskcentre;
-            }
-        }
-
-        ISettleCentre _settlecentre = null;
-        /// <summary>
-        /// 清算中心
-        /// </summary>
-        internal ISettleCentre SettleCentre
-        {
-            get
-            {
-                if (_settlecentre == null)
-                {
-                    debug("Error-SettleCentre not valid");
-                }
-                return _settlecentre;
-                
-            }
-        }
-
         IMessageExchange _messageExchange = null;
         internal IMessageExchange MessageExchange
         {
@@ -199,32 +142,18 @@ namespace TradingLib.Common
             }
         }
 
-        IMessageMgr _messagemgr = null;
-        internal IMessageMgr MessageMgr
-        {
-            get
-            {
-                if (_messagemgr == null)
-                {
-                    debug("Error-MessageMgr not valid");
-                }
-                return _messagemgr;
-            }
-        }
-
-
-        IRouterManager _routermanager = null;
-        internal IRouterManager RouterManager
-        {
-            get
-            {
-                if (_routermanager == null)
-                {
-                    debug("Error-RotuerManager not valid");
-                }
-                return _routermanager;
-            }
-        }
+        //IMessageMgr _messagemgr = null;
+        //internal IMessageMgr MessageMgr
+        //{
+        //    get
+        //    {
+        //        if (_messagemgr == null)
+        //        {
+        //            debug("Error-MessageMgr not valid");
+        //        }
+        //        return _messagemgr;
+        //    }
+        //}
         #endregion
 
 
@@ -242,17 +171,6 @@ namespace TradingLib.Common
         {
             Util.Debug(">>>>Context:" + msg);
         }
-
-        void objlog(ILogItem item)
-        {
-            Util.Log(item);
-        }
-        void objemail(IEmail email)
-        {
-            TLCtxHelper.Email(email);
-        }
-
-
 
         #region 命令解析与调用
 
@@ -479,8 +397,6 @@ namespace TradingLib.Common
         #endregion
 
         #region 注册BaseSrvObject
-
-
         public void Unregister(object obj)
         {
             if (obj is BaseSrvObject)
@@ -489,9 +405,9 @@ namespace TradingLib.Common
 
                 //2.将BaseSrvObject的日志输出时间绑定到全局日志输出组件
                 //srvobj -= new DebugDelegate(objdebug);
-                srvobj.SendLogItemEvent -= new ILogItemDel(objlog);
+                //srvobj.SendLogItemEvent -= new ILogItemDel(Util.Log);
                 //3.将BaseSrvObject的邮件发送事件banding到全局邮件发送函数
-                srvobj.SendEmailEvent -= new EmailDel(objemail);
+                //srvobj.SendEmailEvent -= new EmailDel(TLCtxHelper.Email);
 
                 //4.将BaseSrvObject的log事件绑定到全局日志发送函数
                 //srvobj.SendLogEvent -= new LogDelegate(objlog);
@@ -508,40 +424,16 @@ namespace TradingLib.Common
                     baseSrvObjectMap.TryRemove(srvobj.UUID, out objremoved);
                 }
 
-
-
-
-
-
-
-
-
-                if (obj is IClearCentreSrv)
-                {
-                    debug("ClearCentre unregisted from ctx");
-                    _clearCentreSrv = null;
-                }
-                if (obj is IRiskCentre)
-                {
-                    debug("RiskCentre unregisted from ctx");
-                    _riskcentre = null;
-                    //return;
-                }
-                if (obj is ISettleCentre)
-                {
-                    debug("SettleCentre unregsited from ctx");
-                    _settlecentre = null;
-                }
                 if (obj is IMessageExchange)
                 {
                     debug("MessageRouter(TradingServer) unregisted from ctx");
                     _messageExchange = null;
                 }
-                if (obj is IMessageMgr)
-                {
-                    debug("MessageMgr(ManagerSrv) unregisted from ctx");
-                    _messagemgr = null;
-                }
+                //if (obj is IMessageMgr)
+                //{
+                //    debug("MessageMgr(ManagerSrv) unregisted from ctx");
+                //    _messagemgr = null;
+                //}
 
                 if (obj is IServiceManager)
                 { 
@@ -549,10 +441,10 @@ namespace TradingLib.Common
                     serviceMgrIdUUIDMap.TryRemove(mgr.ServiceMgrName.ToUpper(), out uuidremoved);
                     UnParseCommandInfo(obj, mgr.ServiceMgrName);
 
-                    if (obj is IRouterManager)
-                    {
-                        _routermanager = null;
-                    }
+                    //if (obj is IRouterManager)
+                    //{
+                    //    _routermanager = null;
+                    //}
                 }
 
                 //1.检查是否是核心模块
@@ -594,47 +486,25 @@ namespace TradingLib.Common
                 //1.记录系统生成的BaseSrvObject
                 BaseSrvObject srvobj = obj as BaseSrvObject;
                 baseSrvObjectMap.TryAdd(srvobj.UUID, srvobj);
-
                 //2.将BaseSrvObject的日志输出时间绑定到全局日志输出组件
-                //srvobj.SendDebugEvent += new DebugDelegate(objdebug);
-                srvobj.SendLogItemEvent += new ILogItemDel(objlog) ;
+                //srvobj.SendLogItemEvent += new ILogItemDel(Util.Log);
                 //3.将BaseSrvObject的邮件发送事件banding到全局邮件发送函数
-                srvobj.SendEmailEvent += new EmailDel(objemail);
-
-                //4.将BaseSrvObject的log事件绑定到全局日志发送函数
-                //srvobj.SendLogEvent += new LogDelegate(objlog);
-
+                //srvobj.SendEmailEvent += new EmailDel(TLCtxHelper.Email);
                 //4.查找该对象所支持模块任务列表
                 ParseTaskInfo(srvobj);
 
 
-                if (obj is IClearCentreSrv)
-                {
-                    //debug("ClearCentre registed to ctx");
-                    _clearCentreSrv = obj as IClearCentreSrv;
-                    //return;
-                }
-                if (obj is ISettleCentre)
-                {
-                    _settlecentre = obj as ISettleCentre ;
-                }
-
-                if (obj is IRiskCentre)
-                {
-                    //debug("RiskCentre registed to ctx");
-                    _riskcentre = obj as IRiskCentre;
-                    //return;
-                }
                 if (obj is IMessageExchange)
                 {
                     //debug("MessageRouter(TradingServer) registed to ctx");
                     _messageExchange = obj as IMessageExchange;
                 }
-                if (obj is IMessageMgr)
-                {
-                    //debug("MessageMgr(ManagerSrv) regsited to ctx");
-                    _messagemgr = obj as IMessageMgr;
-                }
+                //if (obj is IMessageMgr)
+                //{
+                //    //debug("MessageMgr(ManagerSrv) regsited to ctx");
+                //    _messagemgr = obj as IMessageMgr;
+                //}
+
 
                 //0.检查是否是服务模块管理
                 if (obj is IServiceManager)
@@ -642,18 +512,17 @@ namespace TradingLib.Common
                     IServiceManager mgr = obj as IServiceManager;
                     serviceMgrIdUUIDMap.TryAdd(mgr.ServiceMgrName.ToUpper(), srvobj.UUID);
                     ParseCommandInfo(obj, mgr.ServiceMgrName);
-                    if (obj is IRouterManager)
-                    {
-                        _routermanager = obj as IRouterManager;
-                    }
                 }
 
                 //1.检查是否是核心模块
                 if (obj is ICore)
                 {
+                    if (obj is IModuleBrokerRouter)
+                    {
+                        int x = 0;
+                    }
                     ICore core = obj as ICore;
                     coreIdUUIDMap.TryAdd(core.CoreId.ToUpper(), srvobj.UUID);
-                    
                     ParseCommandInfo(obj, core.CoreId);
                 }
 
@@ -665,10 +534,8 @@ namespace TradingLib.Common
                     contribIDUUIDMap.TryAdd(plugin.ContribID.ToUpper(), srvobj.UUID);
                     //查找该对象所支持模块命令列表
                     ParseCommandInfo(obj, plugin.ContribID);
-
                     //查找对象暴露的事件
                     ParseContribEventInfo(obj, plugin.ContribID);
-
                 }
             }
 
@@ -677,17 +544,7 @@ namespace TradingLib.Common
         #region 注册扩展组件的Task函数
 
 
-        /// <summary>
-        /// 手工注入TaskProc 
-        /// 注意在生成TaskProc时需要制定对象的UUID 从而实现当对象注销时自动通过uuid进行任务释放
-        /// 
-        /// </summary>
-        /// <param name="proc"></param>
-        public void InjectTask(TaskProc proc)
-        {
 
-            taskList.Add(proc);
-        }
         /// <summary>
         /// 解析任务
         /// </summary>
@@ -698,12 +555,10 @@ namespace TradingLib.Common
 
             foreach (TaskInfo info in list)
             {
-                ITask task = TaskInfo2ITask(obj, info);
+                ITask task = TaskProc.CreateTask(obj, info);
                 if (task != null)
                 {
-                    //Util.Debug("注册任务:" + info.Attr.Name);
-                    //将任务标识为某个BaseSrvObject对象,对象销毁时要自动注销任务
-                    taskList.Add(task);
+                    TLCtxHelper.ModuleTaskCentre.RegisterTask(task);
                 }
             }
         }
@@ -712,33 +567,21 @@ namespace TradingLib.Common
 
         void UnParseTaskInfo(BaseSrvObject obj)
         {
-            List<ITask> deletelist = new List<ITask>();
-            foreach(ITask t in taskList)
-            {
-                if (t.UUID == obj.UUID)
-                {
-                    deletelist.Add(t);
-                }
-            }
-            foreach (ITask t in deletelist)
-            {
-                taskList.Remove(t);
-            }
+            //List<ITask> deletelist = new List<ITask>();
+            //foreach(ITask t in taskList)
+            //{
+            //    if (t.UUID == obj.UUID)
+            //    {
+            //        deletelist.Add(t);
+            //    }
+            //}
+            //foreach (ITask t in deletelist)
+            //{
+            //    taskList.Remove(t);
+            //}
 
         }
 
-        ITask TaskInfo2ITask(BaseSrvObject obj, TaskInfo info)
-        {
-            switch (info.Attr.TaskType)
-            {
-                case QSEnumTaskType.CIRCULATE:
-                    return new TaskProc(obj.UUID,info.Attr.Name, new TimeSpan(0, 0,0, info.Attr.IntervalSecends,info.Attr.IntervalMilliSecends), delegate() { info.MethodInfo.Invoke(obj, null); });
-                case QSEnumTaskType.SPECIALTIME:
-                    return new TaskProc(obj.UUID,info.Attr.Name, info.Attr.Hour, info.Attr.Minute, info.Attr.Secend, delegate() { info.MethodInfo.Invoke(obj, null); });
-                default:
-                    return null;
-            }
-        }
         #endregion
 
         #region 解析注册ContribEvent

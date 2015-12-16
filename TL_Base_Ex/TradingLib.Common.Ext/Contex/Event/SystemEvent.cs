@@ -35,6 +35,15 @@ namespace TradingLib.Common
         /// </summary>
         public event EventHandler<SystemEventArgs> BeforeSettleEvent;
 
+        /// <summary>
+        /// 结算 数据转储事件
+        /// </summary>
+        //public event EventHandler<SystemEventArgs> SettleDataStoreEvent;
+
+        /// <summary>
+        /// 结算事件
+        /// </summary>
+        //public event EventHandler<SystemEventArgs> SettleEvent;
 
         /// <summary>
         /// 结算后事件 在系统结算完毕后触发
@@ -44,13 +53,19 @@ namespace TradingLib.Common
         /// <summary>
         /// 结算重置前事件 在结算重置前触发
         /// </summary>
-        public event EventHandler<SystemEventArgs> BeforeSettleResetEvent;
+        //public event EventHandler<SystemEventArgs> BeforeSettleResetEvent;
 
 
         /// <summary>
         /// 结算重置后事件 在结算重置后触发
         /// </summary>
-        public event EventHandler<SystemEventArgs> AfterSettleResetEvent;
+        //public event EventHandler<SystemEventArgs> AfterSettleResetEvent;
+
+
+        /// <summary>
+        /// 结算重置事件 在结算重置时触发
+        /// </summary>
+        public event EventHandler<SystemEventArgs> SettleResetEvent;
 
         internal void FireBeforeSettleEvent(object sender,SystemEventArgs args)
         {
@@ -58,6 +73,17 @@ namespace TradingLib.Common
                 BeforeSettleEvent(sender, args);
         }
 
+        //internal void FireSettleDataStoreEvent(object sender, SystemEventArgs args)
+        //{
+        //    //if (SettleDataStoreEvent != null)
+        //    //    SettleDataStoreEvent(sender, args);
+        //}
+
+        //internal void FireSettleEvent(object sender, SystemEventArgs args)
+        //{
+        //    //if (SettleEvent != null)
+        //    //    SettleEvent(sender, args);
+        //}
 
         internal void FireAfterSettleEvent(object sender, SystemEventArgs args)
         {
@@ -65,18 +91,23 @@ namespace TradingLib.Common
                 AfterSettleEvent(sender, args);
         }
 
-        internal void FireBeforeSettleResetEvent(object sender, SystemEventArgs args)
-        {
-            if (BeforeSettleResetEvent != null)
-                BeforeSettleResetEvent(sender, args);
-        }
+        //internal void FireBeforeSettleResetEvent(object sender, SystemEventArgs args)
+        //{
+        //    //if (BeforeSettleResetEvent != null)
+        //    //    BeforeSettleResetEvent(sender, args);
+        //}
 
-        internal void FireAfterSettleResetEvent(object sender, SystemEventArgs args)
-        {
-            if (AfterSettleResetEvent != null)
-                AfterSettleResetEvent(sender, args);
-        }
+        //internal void FireAfterSettleResetEvent(object sender, SystemEventArgs args)
+        //{
+        //    //if (AfterSettleResetEvent != null)
+        //    //    AfterSettleResetEvent(sender, args);
+        //}
 
+        internal void FireSettleResetEvet(object sender, SystemEventArgs args)
+        {
+            if (SettleResetEvent != null)
+                SettleResetEvent(sender, args);
+        }
         #endregion
 
 
@@ -160,6 +191,44 @@ namespace TradingLib.Common
             CashOperationEventArgs arg = new CashOperationEventArgs(eventType, cashOperation);
             CashOperationRequest(sender, arg);
         }
+        #endregion
+
+
+        #region 其他事件
+
+        public event EventHandler<ManagerNotifyEventArgs> ManagerNotifyEvent = delegate { };
+
+        public void FireManagerNotifyEvent(object sender, ManagerNotifyEventArgs arg)
+        {
+            ManagerNotifyEvent(sender, arg);
+        }
+        #endregion
+
+
+        #region 底层交易接口出入金回报事件
+
+        public event EventHandler<BrokerTransferEventArgs> BrokerTransferEvent = delegate { };
+        /// <summary>
+        /// 主帐户出入金操作回报事件
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="arg"></param>
+        public void FireBrokerTransferEvent(object sender, BrokerTransferEventArgs arg)
+        {
+            BrokerTransferEvent(sender, arg);
+        }
+
+        public event EventHandler<BrokerAccountInfoEventArgs> BrokerAccountInfoEvent = delegate { };
+        /// <summary>
+        /// 主帐户交易帐户回报事件
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="arg"></param>
+        public void FireBrokerAccountInfoEvent(object sender, BrokerAccountInfoEventArgs arg)
+        {
+            BrokerAccountInfoEvent(sender, arg);
+        }
+
         #endregion
 
     }

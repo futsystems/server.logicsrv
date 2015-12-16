@@ -48,12 +48,12 @@ namespace TradingLib.Common
 
         public static string GetTradeDetail(this Trade f)
         {
+            Util.Debug("TradeDetail~~~~~~~~~~~~ 00 f==null" + (f == null).ToString());
             StringBuilder sb = new StringBuilder();
             sb.Append(f.Account + " " + f.Symbol + " ");
             sb.Append(" T:" + f.GetDateTime().ToString());
             sb.Append(" " + f.OffsetFlag.ToString());
             sb.Append(f.Side ? " BOT" : " SOD");
-
             sb.Append(" " + Math.Abs(f.xSize).ToString());
             sb.Append("@" + f.oSymbol.FormatPrice(f.xPrice));
             sb.Append(" C:" + f.Commission.ToString());

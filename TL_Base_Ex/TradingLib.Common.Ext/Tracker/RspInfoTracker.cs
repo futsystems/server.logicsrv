@@ -8,18 +8,30 @@ namespace TradingLib.Common
 {
     public class RspInfoTracker
     {
-        static XMLRspInfoTracker webapitracker = null;
-        static XMLRspInfoTracker exRspInfoTracker = null;
+
+
+        XMLRspInfoTracker webapitracker = null;
+        XMLRspInfoTracker exRspInfoTracker = null;
+
+        static RspInfoTracker _defaultinstance = null;
         static RspInfoTracker()
         {
-            webapitracker = new XMLRspInfoTracker("WEBAPI","webapierror.xml","errors");
-            exRspInfoTracker = new XMLRspInfoTracker("EX", "error.xml", "errors");
+            _defaultinstance = new RspInfoTracker();
+            
         }
 
         private RspInfoTracker()
         { 
             
         }
+
+
+        //public static void Init()
+        //{
+        //    _defaultinstance.webapitracker = new XMLRspInfoTracker("WEBAPI", "webapierror.xml", "errors");
+        //    _defaultinstance.exRspInfoTracker = new XMLRspInfoTracker("EX", "error.xml", "errors");
+        //}
+
 
         /// <summary>
         /// 获得web同步调用的回报信息维护器
@@ -28,9 +40,9 @@ namespace TradingLib.Common
         {
             get
             {
-                if (webapitracker == null)
-                    webapitracker = new XMLRspInfoTracker("WEBAPI","webapierror.xml", "errors");
-                return webapitracker;
+                if (_defaultinstance.webapitracker == null)
+                    _defaultinstance.webapitracker = new XMLRspInfoTracker("WEBAPI", "webapierror.xml", "errors");
+                return _defaultinstance.webapitracker;
             }
         }
 
@@ -40,10 +52,10 @@ namespace TradingLib.Common
         public static XMLRspInfoTracker ExRspInfo
         {
             get
-            { 
-                if(exRspInfoTracker == null)
-                    exRspInfoTracker = new XMLRspInfoTracker("EX", "error.xml", "errors");
-                return exRspInfoTracker;
+            {
+                if (_defaultinstance.exRspInfoTracker == null)
+                    _defaultinstance.exRspInfoTracker = new XMLRspInfoTracker("EX", "error.xml", "errors");
+                return _defaultinstance.exRspInfoTracker;
             }
         }
     }

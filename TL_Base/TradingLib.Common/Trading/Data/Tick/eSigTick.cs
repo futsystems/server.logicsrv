@@ -67,7 +67,7 @@ namespace TradingLib.Common
             }
             if (int.TryParse(r[(int)Q.DATE], out ti))
                 t.Date = ti + 20000000;
-            t.Datetime = ((long)t.Date * 1000000) + (long)t.Time;
+            t.Datetime = Util.ToDateTime(t.Date, t.Time);//((long)t.Date * 1000000) + (long)t.Time;
             return t;
         }
 

@@ -22,7 +22,7 @@ namespace TradingLib.ORM
         public static void InitDBConfig(string address, int port, string name, string user, string pass)
         {
 
-            Util.Debug(string.Format("{0}Address:{1} Port:{2} DBName:{3} UserName:{4} Password:{5}", Util.GlobalPrefix, address, port, name, user, pass));
+            Util.Info(string.Format("{0}Address:{1} Port:{2} DBName:{3} UserName:{4} Password:{5}", Util.GlobalPrefix, address, port, name, user, pass));
             DBAddress = address;
             DBPort= port;
             DBName = name;

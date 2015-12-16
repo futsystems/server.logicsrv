@@ -8,7 +8,7 @@ namespace TradingLib.Common
 {
     /// <summary>
     /// 基础交易帐户信息
-    /// 用于传递交易帐户
+    /// 用于服务器与管理段进行通讯
     /// </summary>
     public class AccountLite
     {
@@ -36,6 +36,11 @@ namespace TradingLib.Common
         /// 日内交易
         /// </summary>
         public bool IntraDay { get; set; }
+
+        /// <summary>
+        /// 货币
+        /// </summary>
+        public CurrencyType Currency { get; set; }
 
         /// <summary>
         /// 上期权益
@@ -113,15 +118,6 @@ namespace TradingLib.Common
         /// </summary>
         public bool PosLock { get; set; }
 
-        /// <summary>
-        /// 单向大边
-        /// </summary>
-        //public bool SideMargin { get; set; }
-
-        /// <summary>
-        /// 信用额度分开显示
-        /// </summary>
-        //public bool CreditSeparate { get; set; }
 
         /// <summary>
         /// 帐户所属管理员全局ID
@@ -161,8 +157,34 @@ namespace TradingLib.Common
         /// <summary>
         /// 登入地址
         /// </summary>
-        public string IPAddress { get; set; }
+        public string SessionInfo { get; set; }
 
+
+        /// <summary>
+        /// 绑定的主帐户信息
+        /// </summary>
+        public string ConnectorToken { get; set; }
+
+        /// <summary>
+        /// 绑定主帐户连接状态
+        /// </summary>
+        public bool MAcctConnected { get; set; }
+
+        /// <summary>
+        /// 主帐户风控规则
+        /// </summary>
+        public string MAcctRiskRule { get; set; }
+
+
+        /// <summary>
+        /// 警告状态
+        /// </summary>
+        public bool IsWarn { get; set; }
+
+        /// <summary>
+        /// 警告内容
+        /// </summary>
+        public string WarnMessage { get; set; }
 
 
         public static string Serialize(AccountLite account)
@@ -215,7 +237,7 @@ namespace TradingLib.Common
             sb.Append(d);
             sb.Append(account.IsLogin);
             sb.Append(d);
-            sb.Append(account.IPAddress);
+            sb.Append(account.SessionInfo);
             sb.Append(d);
             //sb.Append("");
             sb.Append(d);
@@ -228,6 +250,20 @@ namespace TradingLib.Common
             sb.Append(account.Margin_ID);
             sb.Append(d);
             sb.Append(account.ExStrategy_ID);
+            sb.Append(d);
+            sb.Append(account.ConnectorToken);
+            sb.Append(d);
+            sb.Append(account.MAcctConnected);
+            sb.Append(d);
+            sb.Append(account.MAcctRiskRule);
+            sb.Append(d);
+            sb.Append(account.Currency);
+            sb.Append(d);
+            sb.Append(account.IsWarn);
+            sb.Append(d);
+            sb.Append(account.WarnMessage);
+
+
             return sb.ToString();
         }
 
@@ -258,13 +294,20 @@ namespace TradingLib.Common
             account.Deleted = bool.Parse(rec[20]);
             account.RG_ID = int.Parse(rec[21]);
             account.IsLogin = bool.Parse(rec[22]);
-            account.IPAddress = rec[23];
+            account.SessionInfo = rec[23];
             //account.SideMargin = bool.Parse(rec[24]);
             account.Commissin_ID = int.Parse(rec[25]);
             account.Credit = decimal.Parse(rec[26]);
             //account.CreditSeparate = bool.Parse(rec[27]);
             account.Margin_ID = int.Parse(rec[28]);
             account.ExStrategy_ID = int.Parse(rec[29]);
+            account.ConnectorToken = rec[30];
+            account.MAcctConnected = bool.Parse(rec[31]);
+            account.MAcctRiskRule = rec[32];
+            account.Currency = (CurrencyType)Enum.Parse(typeof(CurrencyType), rec[33]);
+            account.IsWarn = bool.Parse(rec[34]);
+            account.WarnMessage = rec[35];
+
             return account;
         }
     }

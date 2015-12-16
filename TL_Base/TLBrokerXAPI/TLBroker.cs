@@ -86,11 +86,23 @@ namespace TradingLib.BrokerXAPI
         int _waitnum = 10;
 
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="libPath">接口c++DLL目录</param>
+        /// <param name="brokerLibPath">成交接口c++DLL目录</param>
+        /// <param name="filename">c++DLL名称</param>
+        public TLBroker()
+        {
+
+        }
+
+
         public virtual void Start()
         {
             string msg = string.Empty;
             bool success = this.Start(out msg);
-            Util.Debug("Start Broker:" + this.Token + " " + (success ? "成功" : "失败") + " msg:" + msg,success==false?QSEnumDebugLevel.ERROR:QSEnumDebugLevel.INFO);
+            Util.Info("Start Broker:" + this.Token + " " + (success ? "成功" : "失败") + " msg:" + msg);
         }
         /// <summary>
         /// 启动接口
@@ -99,7 +111,7 @@ namespace TradingLib.BrokerXAPI
         public virtual bool Start(out string msg)
         {
             msg = string.Empty;
-            debug("Try to start broker:" + this.Token, QSEnumDebugLevel.INFO);
+            Util.Info("Try to start broker:" + this.Token,this.GetType().Name);
             //初始化参数
             ParseConfigInfo();
             //初始化接口
@@ -138,14 +150,10 @@ namespace TradingLib.BrokerXAPI
             if (!_loginsuccess)
             {
                 msg = "登入失败,请检查配置信息";
-                debug(msg, QSEnumDebugLevel.WARNING);
+                debug(msg, QSEnumDebugLevel.WARN);
                 ResetResource();
                 return false;
             }
-            
-
-            //恢复该接口日内交易数据
-            OnResume();
 
             //启动回报消息通知线程 在另外一个线程中将接口返回的回报进行处理
             _working = true;
@@ -155,37 +163,66 @@ namespace TradingLib.BrokerXAPI
 
             msg = "接口:" + this.Token + "登入成功,可以接受交易请求";
             debug(msg, QSEnumDebugLevel.INFO);
+
+            //恢复该接口日内交易数据
+            OnResume();
+            //对外触发连连接成功事件
+            NotifyConnected();
             return true;
             //对外触发连接成功事件
         }
 
+        /// <summary>
+        /// 记录从接口获得的合约数据
+        /// 保证金 手续费等
+        /// 本地处理成交时 需要计算成交数据
+        /// </summary>
+        ConcurrentDictionary<string, XSymbol> symbolmap = new ConcurrentDictionary<string, XSymbol>();
+
+
+        public virtual void Stop()
+        {
+            if (!this.IsLive) return;
+            _working = false;
+
+            //停止消息发送线程
+            Util.WaitThreadStop(_notifythread);
+
+            //重置接口对象
+            ResetResource();
+
+            
+            this.DestoryBroker();
+
+            this.NotifyDisconnected();
+        }
+
+        /// <summary>
+        /// 释放底层接口对象
+        /// </summary>
         void ResetResource()
         {
-            Util.Debug("Release Broker c++ resoure and reset start status",QSEnumDebugLevel.INFO);
+            Util.Info("Release Broker c++ resoure and reset start status");
             //断开底层接口连接
             _wrapper.Disconnect();
-            _wrapper.Dispose();
+            //先释放_broker _broker日志输出依赖于 _wrapper的日志输出/
             _broker.Dispose();
+            //最后释放wrapper
+            _wrapper.Dispose();
+
 
             _wrapper = null;
             _broker = null;
             _connected = false;
             _loginreply = false;
             _loginsuccess = false;
+            Util.Info("Resource Disposed", this.GetType().Name);
         }
-        public virtual void Stop()
-        {
-            if (!this.IsLive) return;
-            _working = false;
-            //停止消息发送线程
-            Util.WaitThreadStop(_notifythread);
 
-            ResetResource();
-
-            this.DestoryBroker();
-        }
 
         public bool IsLive { get { return _working; } }
+
+
 
         #region 交易接口生成与销毁
         public virtual void InitBroker()
@@ -209,14 +246,18 @@ namespace TradingLib.BrokerXAPI
             _wrapper.OnRtnOrderActionErrorEvent += new CBRtnOrderActionError(_wrapper_OnRtnOrderActionErrorEvent);
             _wrapper.OnRtnTradeEvent += new CBRtnTrade(_wrapper_OnRtnTradeEvent);
             _wrapper.OnSymbolEvent += new CBOnSymbol(_wrapper_OnSymbolEvent);
+            _wrapper.OnAccountInfoEvent += new CBOnAccountInfo(_wrapper_OnAccountInfoEvent);
+
+            _wrapper.OnQryOrderEvent += new CBOnQryOrder(_wrapper_OnQryOrderEvent);
+            _wrapper.OnQryTradeEvent += new CBOnQryTrade(_wrapper_OnQryTradeEvent);
+            _wrapper.OnQryPositionDetailEvent += new CBOnQryPositionDetail(_wrapper_OnQryPositionDetailEvent);
+
+            _wrapper.OnLogEvent += new CBOnLog(_wrapper_OnLogEvent);
+            _wrapper.OnMessageEvent += new CBOnMessage(_wrapper_OnMessageEvent);
+            _wrapper.OnTransferEvent += new CBOnTransfer(_wrapper_OnTransferEvent);
         }
 
-        void _wrapper_OnSymbolEvent(ref XSymbol pSymbolField, bool islast)
-        {
-            NotifySymbol(pSymbolField, islast);
-        }
-
-        
+      
 
         /// <summary>
         /// 执行对象销毁
@@ -226,6 +267,17 @@ namespace TradingLib.BrokerXAPI
             
 
         }
+
+        /// <summary>
+        /// 启动时登入成功后 恢复日内交易数据
+        /// </summary>
+        public virtual void OnResume()
+        {
+
+
+        }
+
+
         #endregion
 
         #region 交易接口操作 下单 撤单 与回报处理 子类覆写
@@ -266,6 +318,57 @@ namespace TradingLib.BrokerXAPI
         
         }
 
+
+
+        public bool QryAccountInfo()
+        {
+            return WrapperQryAccountInfo();
+        }
+
+        public bool QryOrder()
+        {
+            return WrapperQryOrder();
+        }
+
+        public bool QryTrade()
+        {
+            return WrapperQryTrade();
+        }
+
+        public bool QryPositionDetail()
+        {
+            return WrapperQryPositionDetail();
+        }
+
+        /// <summary>
+        /// 执行入金操作 如果没有提供密码则使用通道设置中设置的密码
+        /// </summary>
+        /// <param name="amount"></param>
+        /// <param name="pass"></param>
+        /// <returns></returns>
+        public bool Deposit(double amount,string pass)
+        {
+            return WrapperDeposit(amount,pass);
+        }
+
+        public bool Withdraw(double amount,string pass)
+        {
+            return WrapperWithdraw(amount,pass);
+        }
+
+
+
+
+
+
+
+
+
+        #endregion
+
+        #region 接口返回数据的处理
+
+        //交易实时数据 异步处理
         /// <summary>
         /// 处理接口返回的委托
         /// </summary>
@@ -273,7 +376,7 @@ namespace TradingLib.BrokerXAPI
         public virtual void ProcessOrder(ref XOrderField order)
         {
 
-            
+
         }
 
         /// <summary>
@@ -282,16 +385,17 @@ namespace TradingLib.BrokerXAPI
         /// <param name="trade"></param>
         public virtual void ProcessTrade(ref XTradeField trade)
         {
-            
+
         }
 
+        //查询接口 直接同步调用处理
         /// <summary>
         /// 处理接口返回的错误
         /// </summary>
         /// <param name="error"></param>
         public virtual void ProcessOrderError(ref XOrderError error)
-        { 
-            
+        {
+
         }
 
         /// <summary>
@@ -300,54 +404,138 @@ namespace TradingLib.BrokerXAPI
         /// <param name="error"></param>
         public virtual void ProcessOrderActionError(ref XOrderActionError error)
         {
-        
-        }
 
+        }
 
 
         /// <summary>
-        /// 启动时登入成功后 恢复日内交易数据
+        /// 处理委托查询
         /// </summary>
-        public virtual void OnResume()
+        /// <param name="order"></param>
+        /// <param name="islast"></param>
+        public virtual void ProcessQryOrder(ref XOrderField order, bool islast)
         {
-
 
         }
 
+        /// <summary>
+        /// 处理成交查询
+        /// </summary>
+        /// <param name="trade"></param>
+        /// <param name="islast"></param>
+        public virtual void ProcessQryTrade(ref XTradeField trade, bool islast)
+        {
 
+        }
+
+        public virtual void ProcessQryPositionDetail(ref XPositionDetail position, bool islast)
+        { 
+            
+        }
 
         #endregion
 
-        
+
+
+
+
+
+        #region 底层wrapper向接口提交操作
         /// <summary>
-        /// 
+        /// 提交委托
         /// </summary>
-        /// <param name="libPath">接口c++DLL目录</param>
-        /// <param name="brokerLibPath">成交接口c++DLL目录</param>
-        /// <param name="filename">c++DLL名称</param>
-        public TLBroker()
-        {
-
-        }
-
-
-        #region 底层wrapper发送委托或取消委托
+        /// <param name="order"></param>
+        /// <returns></returns>
         protected bool WrapperSendOrder(ref XOrderField order)
         {
-            //Util.Debug("~~~~~OrderSize:" + System.Runtime.InteropServices.Marshal.SizeOf(typeof(XOrderField)));
             return _wrapper.SendOrder(ref order);
         }
 
+        /// <summary>
+        /// 提交委托操作
+        /// </summary>
+        /// <param name="action"></param>
+        /// <returns></returns>
         protected bool WrapperSendOrderAction(ref XOrderActionField action)
         {
-            //Util.Debug("~~~~~OrderSize:" + System.Runtime.InteropServices.Marshal.SizeOf(typeof(XOrderActionField)));
             return _wrapper.SendOrderAction(ref action);
         }
 
+        /// <summary>
+        /// 查询合约
+        /// </summary>
+        /// <returns></returns>
         protected bool WrapperQryInstrument()
         {
             return _wrapper.QryInstrument();
         }
+
+        /// <summary>
+        /// 查询交易帐户信息
+        /// </summary>
+        /// <returns></returns>
+        protected bool WrapperQryAccountInfo()
+        {
+            return _wrapper.QryAccountInfo();
+        }
+
+        /// <summary>
+        /// 查询委托
+        /// </summary>
+        /// <returns></returns>
+        protected bool WrapperQryOrder()
+        {
+            return _wrapper.QryOrder();
+        }
+
+        /// <summary>
+        /// 查询成交
+        /// </summary>
+        /// <returns></returns>
+        protected bool WrapperQryTrade()
+        {
+            return _wrapper.QryTrade();
+        }
+
+        /// <summary>
+        /// 查询持仓明细
+        /// </summary>
+        /// <returns></returns>
+        protected bool WrapperQryPositionDetail()
+        {
+            return _wrapper.QryPositionDetail();
+        }
+
+        /// <summary>
+        /// 出金操作
+        /// </summary>
+        /// <param name="amount"></param>
+        /// <param name="pass"></param>
+        /// <returns></returns>
+        protected bool WrapperWithdraw(double amount,string pass)
+        {
+            XCashOperation op = new XCashOperation();
+            op.Amount = amount;
+            op.Password = pass;
+
+            return _wrapper.Withdraw(ref op);
+        }
+
+        /// <summary>
+        /// 入金操作
+        /// </summary>
+        /// <param name="amount"></param>
+        /// <param name="pass"></param>
+        /// <returns></returns>
+        protected bool WrapperDeposit(double amount,string pass)
+        {
+            XCashOperation op = new XCashOperation();
+            op.Amount = amount;
+            op.Password = pass;
+
+            return _wrapper.Deposit(ref op);
+        }
+
         #endregion
 
         #region 回报缓存
@@ -358,7 +546,10 @@ namespace TradingLib.BrokerXAPI
         RingBuffer<XTradeField> _tradecache = new RingBuffer<XTradeField>(buffersize);
         RingBuffer<XOrderError> _ordererrorcache = new RingBuffer<XOrderError>(buffersize);
         RingBuffer<XOrderActionError> _orderactionerrorcache = new RingBuffer<XOrderActionError>(buffersize);
-        
+        RingBuffer<XErrorField> _messagecache = new RingBuffer<XErrorField>(buffersize);
+
+        //RingBuffer<XHistOrder> _historder = new RingBuffer<XHistOrder>(buffersize);
+        //RingBuffer<XHistTrade> _histtrade = new RingBuffer<XHistTrade>(buffersize);
         Thread _notifythread = null;
         bool _working = false;
 
@@ -409,6 +600,22 @@ namespace TradingLib.BrokerXAPI
 
                     }
 
+                    //while (!_ordererrorcache.hasItems && !_ordererrorcache.hasItems && !_tradecache.hasItems && _historder.hasItems)
+                    //{
+                    //    XHistOrder order = _historder.Read();
+                    //    ProcessQryOrder(ref order.Order, order.IsLast);
+                    //}
+
+                    //while (!_ordererrorcache.hasItems && !_ordererrorcache.hasItems && !_tradecache.hasItems && _histtrade.hasItems)
+                    //{
+                    //    XHistTrade trade = _histtrade.Read();
+                    //    ProcessQryTrade(ref trade.Trade, trade.IsLast);
+                    //}
+                    while (_messagecache.hasItems)
+                    {
+                        XErrorField message = _messagecache.Read();
+                        NotifyMessage(message);
+                    }
                     // clear current flag signal
                     _notifywaiting.Reset();
                     // wait for a new signal to continue reading
@@ -416,18 +623,19 @@ namespace TradingLib.BrokerXAPI
                 }
                 catch (Exception ex)
                 {
-                    Util.Debug("process cache error:" + ex.ToString(), QSEnumDebugLevel.ERROR);
+                    Util.Error("process cache error:" + ex.ToString());
                 }
             }
             Util.Debug("Notify thread stopped...");
         }
+
         #endregion
 
-        #region Proxy底层事件处理
+        #region Proxy底层回报数据处理
         bool _connected = false;
         void _wrapper_OnConnectedEvent()
         {
-            Util.Debug("-----------TLBroker OnConnectedEvent-----------------------", QSEnumDebugLevel.WARNING);
+            Util.Info("-----------TLBroker OnConnectedEvent-----------------------");
             _connected = true;
             //请求登入
             _wrapper.Login(ref _usrinfo);
@@ -438,7 +646,7 @@ namespace TradingLib.BrokerXAPI
 
         void _wrapper_OnLoginEvent(ref XRspUserLoginField pRspUserLogin)
         {
-            Util.Debug("-----------TLBroker OnLoginEvent-----------------------", QSEnumDebugLevel.WARNING);
+            Util.Info("-----------TLBroker OnLoginEvent-----------------------");
             _loginreply = true;
             if (pRspUserLogin.ErrorID == 0)
             {
@@ -454,49 +662,95 @@ namespace TradingLib.BrokerXAPI
 
         void _wrapper_OnDisconnectedEvent()
         {
-            Util.Debug("-----------TLBroker OnDisconnectedEvent-----------------------", QSEnumDebugLevel.WARNING);
+            Util.Info("-----------TLBroker OnDisconnectedEvent-----------------------");
         }
 
 
 
         void _wrapper_OnRtnOrderEvent(ref XOrderField pOrder)
         {
-            Util.Debug("-----------TLBroker OnRtnOrderEvent-----------------------", QSEnumDebugLevel.WARNING);
-            //Util.Debug(" date:" + pOrder.Date + "time:"+pOrder.Time + " exchange:" + pOrder.Exchange + " filledsize:" + pOrder.FilledSize.ToString() + " limitprice:" + pOrder.LimitPrice + " offsetflag:" + pOrder.OffsetFlag.ToString() + " orderid:" + pOrder.ID + " status:" + pOrder.OrderStatus.ToString() + " side:" + pOrder.Side + " stopprice:" + pOrder.StopPrice.ToString() + " symbol:" + pOrder.Symbol + " totalsize:" + pOrder.TotalSize.ToString() + " unfilledsize:" + pOrder.UnfilledSize.ToString() + " statusmsg:" + pOrder.StatusMsg);
-            
+            Util.Info("-----------TLBroker OnRtnOrderEvent-----------------------");
             _ordercache.Write(pOrder);
             NewNotify();
         }
 
         void _wrapper_OnRtnOrderErrorEvent(ref XOrderField pOrder, ref XErrorField pError)
         {
-            Util.Debug("-----------TLBroker OnRtnOrderErrorEvent-----------------------", QSEnumDebugLevel.WARNING);
-            //Util.Debug("~~~~~ErrorSize:" + System.Runtime.InteropServices.Marshal.SizeOf(typeof(XErrorField)), QSEnumDebugLevel.WARNING);
-            //Util.Debug("order localid:" + pOrder.BrokerLocalOrderID + " errorid:" + pError.ErrorID.ToString() + " errmsg:" + pError.ErrorMsg, QSEnumDebugLevel.MUST);
-            //Util.Debug(" data:" + pOrder.Date + " exchange:" + pOrder.Exchange + " filledsize:" + pOrder.FilledSize.ToString() + " limitprice:" + pOrder.LimitPrice + " offsetflag:" + pOrder.OffsetFlag.ToString() + " orderid:" + pOrder.ID + " status:" + pOrder.OrderStatus.ToString() + " side:" + pOrder.Side + " stopprice:" + pOrder.StopPrice.ToString() + " symbol:" + pOrder.Symbol + " totalsize:" + pOrder.TotalSize.ToString() + " unfilledsize:" + pOrder.UnfilledSize.ToString() + " statusmsg:" + pOrder.StatusMsg);
-            
+            Util.Info("-----------TLBroker OnRtnOrderErrorEvent-----------------------");
             _ordererrorcache.Write(new XOrderError(pOrder, pError));
             NewNotify();
         }
         void _wrapper_OnRtnOrderActionErrorEvent(ref XOrderActionField pOrderAction, ref XErrorField pError)
         {
-            Util.Debug("-----------TLBroker OrderActionErrorEvent-----------------------", QSEnumDebugLevel.WARNING);
-            //Util.Debug("~~~~~OrderActionSize:" + System.Runtime.InteropServices.Marshal.SizeOf(typeof(XOrderActionField)), QSEnumDebugLevel.WARNING);
-           
+            Util.Info("-----------TLBroker OrderActionErrorEvent-----------------------");
             _orderactionerrorcache.Write(new XOrderActionError(pOrderAction, pError));
             NewNotify();
         }
 
         void _wrapper_OnRtnTradeEvent(ref XTradeField pTrade)
         {
-            Util.Debug("-----------TLBroker OnRtnTradeEvent-----------------------", QSEnumDebugLevel.WARNING);
-            //Util.Debug("~~~~~TradeSize:" + System.Runtime.InteropServices.Marshal.SizeOf(typeof(XTradeField)), QSEnumDebugLevel.WARNING);
-            //Util.Debug("Trade:" + TradingLib.Mixins.LitJson.JsonMapper.ToJson(pTrade), QSEnumDebugLevel.WARNING);
-            //Console.WriteLine("got new trade..???????????????????????");
-            //Util.Debug("tradefield commission:" + pTrade.Commission + " date:" + pTrade.Date.ToString() + " exchange:" + pTrade.Exchange + " offsetflag:" + pTrade.OffsetFlag.ToString() + " price:" + pTrade.Price.ToString() + " side:" + pTrade.Side.ToString() + " size:" + pTrade.Size.ToString() + " symbol:" + pTrade.Symbol + " time:" + pTrade.Time + " tradeid:" + pTrade.BrokerTradeID +" ordresysid:"+pTrade.BrokerRemoteOrderID +" date:"+pTrade.Date.ToString() +" time:"+pTrade.Time.ToString());
+            Util.Debug("-----------TLBroker OnRtnTradeEvent-----------------------");
             _tradecache.Write(pTrade);
             NewNotify();
         }
+
+        void _wrapper_OnQryTradeEvent(ref XTradeField pTrade, bool islast)
+        {
+            //Util.Debug("-----------TLBroker OnQryTradeEvent-----------------------");
+            ProcessQryTrade(ref pTrade, islast);
+        }
+
+        void _wrapper_OnQryOrderEvent(ref XOrderField pOrder, bool islast)
+        {
+            //Util.Debug("-----------TLBroker OnQryOrderEvent-----------------------");
+            ProcessQryOrder(ref pOrder, islast);
+        }
+
+        void _wrapper_OnQryPositionDetailEvent(ref XPositionDetail pPosition, bool islast)
+        {
+            ProcessQryPositionDetail(ref pPosition, islast);
+        }
+
+        void _wrapper_OnLogEvent(IntPtr pData, int len)
+        {
+            byte[] data = new byte[len];
+            Marshal.Copy(pData, data, 0, len);
+            string message = System.Text.Encoding.UTF8.GetString(data, 0, len);
+            Util.Debug(message, "XAPI");
+        }
+
+        /// <summary>
+        /// 接口侧返回消息处理
+        /// </summary>
+        /// <param name="pMessage"></param>
+        /// <param name="islast"></param>
+        void _wrapper_OnMessageEvent(ref XErrorField pMessage, bool islast)
+        {
+            Util.Debug("-----------TLBroker OnMessageEvent-----------------------");
+            _messagecache.Write(pMessage);
+            NewNotify();
+        }
+
+        void _wrapper_OnTransferEvent(ref XTransferField pTransfer, bool islast)
+        {
+            Util.Debug("-----------TLBroker OnTransferEvent-----------------------");
+            //对外通知出入金回报
+            NotifyTransfer(this, pTransfer, islast);
+        }
+
+
+
+        void _wrapper_OnAccountInfoEvent(ref XAccountInfo pAccountInfo, bool islast)
+        {
+            NotifyAccountInfo(this,pAccountInfo, islast);
+        }
+
+        void _wrapper_OnSymbolEvent(ref XSymbol pSymbolField, bool islast)
+        {
+            NotifySymbol(pSymbolField, islast);
+        }
+
+
         #endregion
 
 

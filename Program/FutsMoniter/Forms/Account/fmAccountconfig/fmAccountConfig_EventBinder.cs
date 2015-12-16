@@ -26,7 +26,10 @@ namespace FutsMoniter
             Globals.LogicEvent.RegisterCallback("MgrExchServer", "QryExStrategyTemplate", this.OnQryExStrategyTemplate);
 
 
-
+            Globals.LogicEvent.RegisterCallback("RiskCentre", "QryRuleItem", this.OnRuleItem);
+            Globals.LogicEvent.RegisterCallback("RiskCentre", "UpdateRuleItem", this.OnRuleItemUpdate);
+            Globals.LogicEvent.RegisterCallback("RiskCentre", "DelRuleItem", this.OnRuleItemDel);
+           
 
             if (!Globals.Domain.Super)
             {
@@ -38,11 +41,17 @@ namespace FutsMoniter
                 pageMarginCommission.Visible = Globals.Manager.IsRoot();
             }
 
+            if (Globals.TLClient.ServerVersion.ProductType == QSEnumProductType.VendorMoniter)
+            {
+                pageOrderCheck.Visible = false;
+                ctRouterType1.Visible = false;
+            }
+
             //执行延迟加载 只有当延迟加载的空间加载完毕后才可以将数据显示到界面否则相关字段显示错误
             UpdateAccountSetting();
         }
 
-        void OnQryCommissionTemplate(string json)
+        void OnQryCommissionTemplate(string json,bool islast)
         {
             CommissionTemplateSetting[] list = MoniterUtils.ParseJsonResponse<CommissionTemplateSetting[]>(json);
             if (list != null)
@@ -52,7 +61,7 @@ namespace FutsMoniter
             }
         }
 
-        void OnQryMarginTemplate(string json)
+        void OnQryMarginTemplate(string json,bool islast)
         {
             MarginTemplateSetting[] list = MoniterUtils.ParseJsonResponse<MarginTemplateSetting[]>(json);
             if (list != null)
@@ -62,7 +71,7 @@ namespace FutsMoniter
             }
         }
 
-        void OnQryExStrategyTemplate(string json)
+        void OnQryExStrategyTemplate(string json, bool islast)
         {
             ExStrategyTemplateSetting[] list = MoniterUtils.ParseJsonResponse<ExStrategyTemplateSetting[]>(json);
             if (list != null)
@@ -150,6 +159,10 @@ namespace FutsMoniter
 
             Globals.LogicEvent.GotAccountChangedEvent -= new Action<AccountLite>(OnAccountChanged);//帐户更新
 
+
+            Globals.LogicEvent.UnRegisterCallback("RiskCentre", "QryRuleItem", this.OnRuleItem);
+            Globals.LogicEvent.UnRegisterCallback("RiskCentre", "UpdateRuleItem", this.OnRuleItemUpdate);
+            Globals.LogicEvent.UnRegisterCallback("RiskCentre", "DelRuleItem", this.OnRuleItemDel);
         }
         
     }

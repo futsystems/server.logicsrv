@@ -13,6 +13,7 @@ namespace TradingLib.Common
         static GlobalConfig()
         {
             defaultinstance = new GlobalConfig();
+            //_producttype = (QSEnumProductType)Enum.Parse(typeof(QSEnumProductType), defaultinstance.config["ProductType"].AsString());
         }
 
         private GlobalConfig()
@@ -23,6 +24,17 @@ namespace TradingLib.Common
                 config.UpdateConfig("DEVELOP", QSEnumCfgType.Bool,true, "是否运行在开发模式");
             }
 
+            //if (!config.HaveConfig("DeployName"))
+            //{
+            //    config.UpdateConfig("DeployName", QSEnumCfgType.String, "Deploy", "部署标识");
+            //}
+
+            //if (!config.HaveConfig("Organization"))
+            //{
+            //    config.UpdateConfig("Organization", QSEnumCfgType.String, "TCB", "公司名称");
+            //}
+
+
             if (!config.HaveConfig("DefaultPassword"))
             {
                 config.UpdateConfig("DefaultPassword",QSEnumCfgType.String,"123456","默认帐户密码");
@@ -30,28 +42,28 @@ namespace TradingLib.Common
 
             if (!config.HaveConfig("VendorName"))
             {
-                config.UpdateConfig("VendorName", QSEnumCfgType.String, "乐透", "系统商标,用于显示软件品牌");
+                config.UpdateConfig("VendorName", QSEnumCfgType.String, "XMT", "系统商标,用于显示软件品牌");
             }
 
-            if (!config.HaveConfig("DealerPrompt"))
-            {
-                config.UpdateConfig("DealerPrompt", QSEnumCfgType.String, "", "交易员帐户登入提示");
-            }
+            //if (!config.HaveConfig("LoanneePrompt"))
+            //{
+            //    config.UpdateConfig("LoanneePrompt", QSEnumCfgType.String, "", "配资帐户登入提示");
+            //}
 
-            if (!config.HaveConfig("SimPrompt"))
-            {
-                config.UpdateConfig("SimPrompt", QSEnumCfgType.String, "", "模拟帐户登入提示");
-            }
+            //if (!config.HaveConfig("SimPrompt"))
+            //{
+            //    config.UpdateConfig("SimPrompt", QSEnumCfgType.String, "", "模拟帐户登入提示");
+            //}
 
-            if (!config.HaveConfig("RealPrompt"))
-            {
-                config.UpdateConfig("RealPrompt", QSEnumCfgType.String, "", "实盘帐户登入提示");
-            }
+            //if (!config.HaveConfig("RealPrompt"))
+            //{
+            //    config.UpdateConfig("RealPrompt", QSEnumCfgType.String, "", "实盘帐户登入提示");
+            //}
 
 
             if (!config.HaveConfig("DefaultBroker"))
             {
-                config.UpdateConfig("DefaultBroker", QSEnumCfgType.String, "申银万国期货有限公司", "默认期货公司名称");
+                config.UpdateConfig("DefaultBroker", QSEnumCfgType.String, "期货公司", "默认期货公司名称");
             }
 
             if (!config.HaveConfig("DefaultBankID"))
@@ -69,15 +81,21 @@ namespace TradingLib.Common
                 config.UpdateConfig("DefaultAccountLen", QSEnumCfgType.Int,7, "默认交易帐户长度");
             }
 
-            if (!config.HaveConfig("SimPrefix"))
+            if (!config.HaveConfig("SubPrefix"))
             {
-                config.UpdateConfig("SimPrefix", QSEnumCfgType.String, "66", "模拟帐户前缀");
+                config.UpdateConfig("SubPrefix", QSEnumCfgType.String, "85", "子账户帐户前缀");
             }
 
-            if (!config.HaveConfig("RealPrefix"))
-            {
-                config.UpdateConfig("RealPrefix", QSEnumCfgType.String, "88", "实盘帐户前缀");
-            }
+            //if (!config.HaveConfig("RealPrefix"))
+            //{
+            //    config.UpdateConfig("RealPrefix", QSEnumCfgType.String, "88", "实盘帐户前缀");
+            //}
+
+            //if (!config.HaveConfig("LoanneePrefix"))
+            //{
+            //    config.UpdateConfig("LoanneePrefix", QSEnumCfgType.String, "99", "配资帐户前缀");
+            //}
+
 
             if (!config.HaveConfig("StartDefaultConnector"))
             {
@@ -93,6 +111,13 @@ namespace TradingLib.Common
             {
                 config.UpdateConfig("FlatTimeAheadOfMarketClose", QSEnumCfgType.Int, 5, "收盘前提前多少时间强平持仓");
             }
+
+            ////服务类型
+            //if (!config.HaveConfig("ProductType"))
+            //{
+            //    config.UpdateConfig("ProductType", QSEnumCfgType.String, QSEnumProductType.CounterSystem.ToString(), "服务类型,系统容器会按不同的服务类型加载不同的功能实现");
+            
+            //}
         }
 
         /// <summary>
@@ -126,25 +151,35 @@ namespace TradingLib.Common
             }
         }
 
-        /// <summary>
-        /// 实盘交易帐户前缀
-        /// </summary>
-        public static string PrefixReal
-        {
-            get
-            {
-                return defaultinstance.config["RealPrefix"].AsString();
-            }
-        }
+        ///// <summary>
+        ///// 配资帐户默认前缀
+        ///// </summary>
+        //public static string PrefixLoannee
+        //{
+        //    get
+        //    {
+        //        return defaultinstance.config["LoanneePrefix"].AsString();
+        //    }
+        //}
+        ///// <summary>
+        ///// 实盘交易帐户前缀
+        ///// </summary>
+        //public static string PrefixReal
+        //{
+        //    get
+        //    {
+        //        return defaultinstance.config["RealPrefix"].AsString();
+        //    }
+        //}
 
         /// <summary>
         /// 模拟交易帐户前缀
         /// </summary>
-        public static string PrefixSim
+        public static string SubPrefix
         {
             get
             {
-                return defaultinstance.config["SimPrefix"].AsString();
+                return defaultinstance.config["SubPrefix"].AsString();
             }
         }
 
@@ -216,38 +251,38 @@ namespace TradingLib.Common
             }
         }
 
-        /// <summary>
-        /// 交易员登入提示
-        /// </summary>
-        public static string DealerPrompt
-        {
-            get
-            {
-                return defaultinstance.config["DealerPrompt"].AsString();
-            }
-        }
+        ///// <summary>
+        ///// 交易员登入提示
+        ///// </summary>
+        //public static string DealerPrompt
+        //{
+        //    get
+        //    {
+        //        return defaultinstance.config["DealerPrompt"].AsString();
+        //    }
+        //}
 
-        /// <summary>
-        /// 模拟交易帐号登入提示
-        /// </summary>
-        public static string SimPrompt
-        {
-            get
-            {
-                return defaultinstance.config["SimPrompt"].AsString();
-            }
-        }
+        ///// <summary>
+        ///// 模拟交易帐号登入提示
+        ///// </summary>
+        //public static string SimPrompt
+        //{
+        //    get
+        //    {
+        //        return defaultinstance.config["SimPrompt"].AsString();
+        //    }
+        //}
 
-        /// <summary>
-        /// 实盘帐户登入提示
-        /// </summary>
-        public static string RealPrompt
-        {
-            get
-            {
-                return defaultinstance.config["RealPrompt"].AsString();
-            }
-        }
+        ///// <summary>
+        ///// 实盘帐户登入提示
+        ///// </summary>
+        //public static string RealPrompt
+        //{
+        //    get
+        //    {
+        //        return defaultinstance.config["RealPrompt"].AsString();
+        //    }
+        //}
 
         /// <summary>
         /// 是否需要同步启动默认通道

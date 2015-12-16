@@ -17,6 +17,7 @@ namespace TradingLib.Common
         static BasicTracker defaultinstance;
 
         //交易所 品种 合约
+        CalendarTracker calendartracker;
         DBExchangeTracker extracker;
         DBMarketTimeTracker mktimetracker;
         SecurityTracker setracker;
@@ -31,7 +32,10 @@ namespace TradingLib.Common
         //
         ConnectorConfigTracker connectorcfgtracker;
         RouterGrouperTracker rgtracker;
-        VendorTracker vendortracker;
+        //VendorTracker vendortracker;
+
+        //帐户绑定主帐户
+        AccountConnectorTracker accconnectortracker;
 
         //手续费模板
         CommissionTemplateTracker commissiontracker;
@@ -39,6 +43,9 @@ namespace TradingLib.Common
         MarginTemplateTracker margintracker;
         //计算策略模板
         ExStrategyTemplateTracker exstrategytracker;
+
+        //交易帐户个人信息维护器
+        AccountProfileTracker accprofiletracker;
 
         static BasicTracker()
         {
@@ -70,6 +77,11 @@ namespace TradingLib.Common
                 defaultinstance = null;
             }
         }
+
+        public static void Init()
+        { 
+            
+        }
         /// <summary>
         /// 管理员对象管理器
         /// </summary>
@@ -80,6 +92,21 @@ namespace TradingLib.Common
                 if (defaultinstance.mgrtracker == null)
                     defaultinstance.mgrtracker = new DBManagerTracker();
                 return defaultinstance.mgrtracker;
+            }
+        }
+
+        /// <summary>
+        /// 日历对象维护器
+        /// </summary>
+        public static CalendarTracker CalendarTracker
+        {
+            get
+            {
+                if (defaultinstance.calendartracker == null)
+                {
+                    defaultinstance.calendartracker = new CalendarTracker();
+                }
+                return defaultinstance.calendartracker;
             }
         }
         /// <summary>
@@ -163,15 +190,15 @@ namespace TradingLib.Common
         /// <summary>
         /// 获得实盘帐户维护器
         /// </summary>
-        public static VendorTracker VendorTracker
-        {
-            get
-            {
-                if (defaultinstance.vendortracker == null)
-                    defaultinstance.vendortracker = new VendorTracker();
-                return defaultinstance.vendortracker;
-            }
-        }
+        //public static VendorTracker VendorTracker
+        //{
+        //    get
+        //    {
+        //        if (defaultinstance.vendortracker == null)
+        //            defaultinstance.vendortracker = new VendorTracker();
+        //        return defaultinstance.vendortracker;
+        //    }
+        //}
 
         /// <summary>
         /// 域维护器
@@ -251,6 +278,32 @@ namespace TradingLib.Common
             }
         }
 
+        /// <summary>
+        /// 交易帐户通道绑定维护器
+        /// </summary>
+        public static AccountConnectorTracker ConnectorMapTracker
+        {
+            get
+            {
+                if (defaultinstance.accconnectortracker == null)
+                    defaultinstance.accconnectortracker = new AccountConnectorTracker();
+                return defaultinstance.accconnectortracker;
+            }
+        
+        }
+
+        /// <summary>
+        /// 交易帐户个人信息维护器
+        /// </summary>
+        public static AccountProfileTracker AccountProfileTracker
+        {
+            get
+            {
+                if (defaultinstance.accprofiletracker == null)
+                    defaultinstance.accprofiletracker = new AccountProfileTracker();
+                return defaultinstance.accprofiletracker;
+            }
+        }
 
         //public static void Release()
         //{

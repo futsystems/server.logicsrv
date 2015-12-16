@@ -6,6 +6,7 @@
 *.cache
 *.tlog
 *.su
+*.stsdb4
 
 #排除.sdf
 *.sdf
@@ -13,6 +14,8 @@
 
 #排除目录
 /output
+/patch
+/packages
 /lib/Win
 /lib/TradingLib
 
@@ -21,9 +24,15 @@
 /Platform/**/log/
 /Platform/**/cache/
 /Platform/TLDataBase
-
+/Platform/TradingSrv/TLDataBase/LogServer/*
+/Platform/**/logs
+/Platform/Logs
+/Platform/DataSrv/database/*
+/Platform/DataCore/database/*
+/Platform/DataFront/database/*
 /publish
 /package
+/packages
 /cache
 
 #排除子目录中的bin obj debug release
@@ -49,3 +58,6 @@
 *.rar
 *.tar
 *.zip
+*.stsdb4
+
+TradingLibGUI.suo

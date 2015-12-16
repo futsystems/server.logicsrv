@@ -8,7 +8,30 @@ using System.Runtime.Serialization;
 
 namespace TradingLib.Common
 {
-
+    /// <summary>
+    /// 消息体编码类型
+    /// </summary>
+    public enum MessageCodec
+    {
+        /// <summary>
+        /// 字符串编码
+        /// </summary>
+        Codec_String = 0,
+        /// <summary>
+        /// 二进制消息编码
+        /// </summary>
+        Codec_Byte = 1,
+    }
+    /// <summary>
+    /// 消息
+    /// 固定头格式的消息
+    /// |--4 Length--|--4 Type--|--content--|
+    /// 头部为8字节长度
+    /// 4字节为消息体长度 消息长度包含头部长度
+    /// 4字节为消息类型
+    /// 所有消息序列化成字符串进行传输 涉及到前置C++消息转换部分
+    /// 如果兼容二进制原生协议?
+    /// </summary>
     public struct Message
     {
         public static Message NewMessage()

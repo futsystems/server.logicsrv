@@ -25,11 +25,13 @@ namespace TradingLib.Common
             RegisterCallback("MgrExchServer", "QryManager", OnQryManager);
             RegisterCallback("MgrExchServer", "NotifyDomain", OnNotifyDomain);
             RegisterCallback("ConnectorManager", "QryRouterGroup", OnQryRouterGroup);
+
+            RegisterCallback("RiskCentre", "QryRuleSet", OnQryRuleSet);
             
         }
 
 
-        void OnNotifyDomain(string json)
+        void OnNotifyDomain(string json, bool islast)
         {
             DomainImpl domain = MoniterUtils.ParseJsonResponse<DomainImpl>(json);
             if (domain != null)

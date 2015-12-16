@@ -17,6 +17,10 @@ namespace TradingLib.API
         event Action<AccountLite> GotAccountSelectedEvent;
 
         /// <summary>
+        /// 交易帐户同步事件
+        /// </summary>
+        event Action<AccountLite> GotAccountSyncEvent;
+        /// <summary>
         /// 交易帐号
         /// </summary>
         event Action<AccountLite> GotAccountEvent;
@@ -108,16 +112,17 @@ namespace TradingLib.API
         /// <param name="module"></param>
         /// <param name="cmd"></param>
         /// <param name="del"></param>
-        void RegisterCallback(string module, string cmd, Action<string> del);
+        void RegisterCallback(string module, string cmd, Action<string,bool> del);
 
-
+        void RegisterNotifyCallback(string module, string cmd, Action<string> del);
         /// <summary>
         /// 注销回调函数
         /// </summary>
         /// <param name="module"></param>
         /// <param name="cmd"></param>
         /// <param name="del"></param>
-        void UnRegisterCallback(string module, string cmd, Action<string> del);
+        void UnRegisterCallback(string module, string cmd, Action<string,bool> del);
+        void UnRegisterNotifyCallback(string module, string cmd, Action<string> del);
         #endregion
 
 

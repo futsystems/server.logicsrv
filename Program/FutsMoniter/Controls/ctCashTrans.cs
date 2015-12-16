@@ -119,7 +119,7 @@ namespace FutsMoniter
         }
 
 
-        void OnQryCashTrans(string jsonstr)
+        void OnQryCashTrans(string jsonstr, bool islast)
         {
             //JsonData jd = TradingLib.Mixins.LitJson.JsonMapper.ToObject(jsonstr);
             //int code = int.Parse(jd["Code"].ToString());

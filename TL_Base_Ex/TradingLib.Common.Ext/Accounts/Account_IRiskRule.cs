@@ -9,8 +9,8 @@ namespace TradingLib.Common
 {
     public partial class AccountBase
     {
-        bool _rulitemloaded = false;
-        public bool RuleItemLoaded { get { return _rulitemloaded; } set { _rulitemloaded = value; } }//账户规则加载
+        bool _ruleitemloaded = false;
+        public bool RuleItemLoaded { get { return _ruleitemloaded; } set { _ruleitemloaded = value; } }//账户规则加载
 
 
         /// <summary>

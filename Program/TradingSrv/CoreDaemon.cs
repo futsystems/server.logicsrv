@@ -72,6 +72,8 @@ namespace TraddingSrvCLI
 
         string _oppositeAddress = string.Empty;
         int _corePort = 0;
+        string autofac_section = "counter";
+
         TimeSpan _reqtimeout = new TimeSpan(0, 0, 2);
         string _oppositrepaddress = string.Empty;
         /// <summary>
@@ -83,6 +85,10 @@ namespace TraddingSrvCLI
             ConfigFile _configFile = ConfigFile.GetConfigFile();
             _oppositeAddress = _configFile["OppositAddress"].AsString();
             _corePort = _configFile["CorePort"].AsInt();
+            //autofac_section = _configFile["Product"].AsString();
+            //autofac_section = string.IsNullOrEmpty(autofac_section) ? "Product" : autofac_section;
+
+            
             if (!string.IsNullOrEmpty(_oppositeAddress))
             { 
                 _opposited=true;

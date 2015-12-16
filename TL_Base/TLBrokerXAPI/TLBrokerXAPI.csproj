@@ -48,6 +48,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\..\Shared\VersionInfo.cs">
+      <Link>VersionInfo.cs</Link>
+    </Compile>
     <Compile Include="Delegates.cs" />
     <Compile Include="Interop\Platform.Unix.cs" />
     <Compile Include="Interop\Platform.Windows.cs" />

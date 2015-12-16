@@ -260,19 +260,22 @@ namespace TradingLib.Common
         public RspMGRQryCashResponse()
         {
             _type = MessageTypes.MGRCASHRESPONSE;
-            this.CashTransToSend = new CashTransaction();
+            this.CashTransToSend = null;
         }
 
         public CashTransaction CashTransToSend { get; set; }
 
         public override string ResponseSerialize()
         {
-            return CashTransaction.Serialize(this.CashTransToSend);
+            if (this.CashTransToSend == null) return string.Empty;
+            return CashTransactionImpl.Serialize(this.CashTransToSend);
         }
 
         public override void ResponseDeserialize(string content)
         {
-            this.CashTransToSend = CashTransaction.Deserialize(content);
+            if (string.IsNullOrEmpty(content))
+                return;
+            this.CashTransToSend = CashTransactionImpl.Deserialize(content);
         }
     }
 

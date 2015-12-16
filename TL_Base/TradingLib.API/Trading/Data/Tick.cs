@@ -27,7 +27,7 @@ namespace TradingLib.API
         /// 200907042005.
         /// this is not guaranteed to be set.
         /// </summary>
-        long Datetime { get; set; } // datetime as long
+        DateTime Datetime { get; set; } // datetime as long
         
         /// <summary>
         /// depth of last bid/ask quote
@@ -146,8 +146,16 @@ namespace TradingLib.API
         /// 跌停价
         /// </summary>
         decimal LowerLimit { get; set; }
-        //QSEnumTickType Type { get; set; }
 
+        /// <summary>
+        /// 昨日结算
+        /// </summary>
+        decimal PreClose { get; set; }
+
+        /// <summary>
+        /// 行情源
+        /// </summary>
+        QSEnumDataFeedTypes DataFeed { get; set; }
     }
 
     /// <summary>

@@ -89,7 +89,7 @@ namespace FutsMoniter
         Dictionary<int, VendorSetting> vendormap = new Dictionary<int, VendorSetting>();
 
         bool _gotvendor = false;
-        void OnQryVendor(string jsonstr)
+        void OnQryVendor(string jsonstr, bool islast)
         {
             VendorSetting[] objs = MoniterUtils.ParseJsonResponse<VendorSetting[]>(jsonstr);
             if (objs != null)

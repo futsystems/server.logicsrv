@@ -34,16 +34,10 @@ namespace FutsMoniter
 
             Factory.IDataSourceFactory(cbrgstrategytype).BindDataSource(UIUtil.genEnumList<QSEnumRouterStrategy>());
             this.Load += new EventHandler(fmConnectorCfg_Load);
-            this.FormClosing += new FormClosingEventHandler(fmVendorManager_FormClosing);
+
         }
 
-        void fmVendorManager_FormClosing(object sender, FormClosingEventArgs e)
-        {
-            //if (positionmetricmontier != null)
-            //{
-            //    positionmetricmontier.Close();
-            //}
-        }
+
 
         void fmConnectorCfg_Load(object sender, EventArgs e)
         {
@@ -94,14 +88,14 @@ namespace FutsMoniter
             Globals.LogicEvent.RegisterCallback("MgrExchServer", "QryVendor", this.OnQryVendor);
             Globals.LogicEvent.RegisterCallback("ConnectorManager", "QryRouterItem", this.OnQryRouterItem);
             Globals.LogicEvent.RegisterCallback("ConnectorManager", "QryInterface", this.OnQryInterface);
-            Globals.LogicEvent.RegisterCallback("ConnectorManager", "NotifyConnectorCfg", this.OnNotifyConnectorConfig);
-            Globals.LogicEvent.RegisterCallback("MgrExchServer", "NotifyVendor", this.OnNotifyVendorBind);
-            Globals.LogicEvent.RegisterCallback("ConnectorManager", "NotifyVendor", this.OnNotifyVendorBind);
-            Globals.LogicEvent.RegisterCallback("ConnectorManager", "NotifyRouterItem", this.OnNotifyRouterItem);
+            Globals.LogicEvent.RegisterNotifyCallback("ConnectorManager", "NotifyConnectorCfg", this.OnNotifyConnectorConfig);
+            Globals.LogicEvent.RegisterNotifyCallback("MgrExchServer", "NotifyVendor", this.OnNotifyVendorBind);
+            Globals.LogicEvent.RegisterNotifyCallback("ConnectorManager", "NotifyVendor", this.OnNotifyVendorBind);
+            Globals.LogicEvent.RegisterNotifyCallback("ConnectorManager", "NotifyRouterItem", this.OnNotifyRouterItem);
             //Globals.LogicEvent.RegisterCallback("ConnectorManager", "NotifyRouterGroup", this.OnNotifyRouterGroup);
 
             Globals.LogicEvent.RegisterCallback("ConnectorManager", "QryConnectorStatus", this.OnQryConnectorStatus);
-            Globals.LogicEvent.RegisterCallback("ConnectorManager", "NotifyConnectorStatus", this.OnNotifyConnectorStatus);
+            Globals.LogicEvent.RegisterNotifyCallback("ConnectorManager", "NotifyConnectorStatus", this.OnNotifyConnectorStatus);
 
         }
 
@@ -111,13 +105,13 @@ namespace FutsMoniter
             Globals.LogicEvent.UnRegisterCallback("MgrExchServer", "QryVendor", this.OnQryVendor);
             Globals.LogicEvent.UnRegisterCallback("ConnectorManager", "QryRouterItem", this.OnQryRouterItem);
             Globals.LogicEvent.UnRegisterCallback("ConnectorManager", "QryInterface", this.OnQryInterface);
-            Globals.LogicEvent.UnRegisterCallback("ConnectorManager", "NotifyConnectorCfg", this.OnNotifyConnectorConfig);
-            Globals.LogicEvent.UnRegisterCallback("MgrExchServer", "NotifyVendor", this.OnNotifyVendorBind);
-            Globals.LogicEvent.UnRegisterCallback("ConnectorManager", "NotifyRouterItem", this.OnNotifyRouterItem);
-            Globals.LogicEvent.UnRegisterCallback("ConnectorManager", "NotifyVendor", this.OnNotifyVendorBind);
+            Globals.LogicEvent.UnRegisterNotifyCallback("ConnectorManager", "NotifyConnectorCfg", this.OnNotifyConnectorConfig);
+            Globals.LogicEvent.UnRegisterNotifyCallback("MgrExchServer", "NotifyVendor", this.OnNotifyVendorBind);
+            Globals.LogicEvent.UnRegisterNotifyCallback("ConnectorManager", "NotifyRouterItem", this.OnNotifyRouterItem);
+            Globals.LogicEvent.UnRegisterNotifyCallback("ConnectorManager", "NotifyVendor", this.OnNotifyVendorBind);
 
             Globals.LogicEvent.UnRegisterCallback("ConnectorManager", "QryConnectorStatus", this.OnQryConnectorStatus);
-            Globals.LogicEvent.UnRegisterCallback("ConnectorManager", "NotifyConnectorStatus", this.OnNotifyConnectorStatus);
+            Globals.LogicEvent.UnRegisterNotifyCallback("ConnectorManager", "NotifyConnectorStatus", this.OnNotifyConnectorStatus);
 
         }
 
@@ -146,7 +140,7 @@ namespace FutsMoniter
         ConcurrentDictionary<int, ConnectorInterface> interfacemap = new ConcurrentDictionary<int, ConnectorInterface>();
         bool _gotinterface = false;
 
-        void OnQryInterface(string jsonstr)
+        void OnQryInterface(string jsonstr, bool islast)
         {
             ConnectorInterface[] objs = MoniterUtils.ParseJsonResponse<ConnectorInterface[]>(jsonstr);
             if (objs != null)

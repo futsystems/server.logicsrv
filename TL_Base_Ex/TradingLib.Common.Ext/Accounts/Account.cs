@@ -18,7 +18,7 @@ namespace TradingLib.Common
             _id = AccountID;
             this.Execute = true;
             this.IntraDay = true;
-            this.Category = QSEnumAccountCategory.SIMULATION;
+            this.Category = QSEnumAccountCategory.SUBACCOUNT;
             this.OrderRouteType = QSEnumOrderTransferType.SIM;
             this.MAC = string.Empty;
             this.Name = string.Empty;
@@ -49,6 +49,12 @@ namespace TradingLib.Common
         public bool Execute { get; set; }
 
         /// <summary>
+        /// 是否处于警告状态
+        /// </summary>
+        public bool IsWarn { get; set; }
+
+
+        /// <summary>
         /// 是否是日内交易
         /// </summary>
         public bool IntraDay { get; set; }
@@ -62,6 +68,12 @@ namespace TradingLib.Common
         /// 交易帐户类比 模拟帐户，实盘帐户，交易员
         /// </summary>
         public QSEnumAccountCategory Category { get; set; }
+
+
+        /// <summary>
+        /// 交易账户货币
+        /// </summary>
+        public CurrencyType Currency { get; set; }
 
         /// <summary>
         /// 硬件地址
@@ -104,19 +116,9 @@ namespace TradingLib.Common
         public long SettlementConfirmTimeStamp { get; set; }
 
         /// <summary>
-        /// 锁仓权限
+        /// 上一个结算日
         /// </summary>
-        //public bool PosLock { get; set; }
-
-        /// <summary>
-        /// 单向大边
-        /// </summary>
-        //public bool SideMargin { get; set; }
-
-        /// <summary>
-        /// 客户端信用额度分开显示
-        /// </summary>
-        //public bool CreditSeparate { get; set; }
+        public int LastSettleday { get; set; }
 
         /// <summary>
         /// 代理商ID
@@ -197,13 +199,15 @@ namespace TradingLib.Common
         /// </summary>
         public void Reset()
         {
-            //出入金归零
-            _cashin = 0;
-            _cashout = 0;
-            //清空账户附加的规则 用于重新加载帐户规则
+            this.LastEquity = 0;
+            this.LastCredit = 0;
+            //清空出入金与交易所结算数据
+            settlementlist.Clear();
+            cashtranslsit.Clear();
+            //重置风控规则
             ClearAccountCheck();
             ClearOrderCheck();
-            _rulitemloaded = false;
+            _ruleitemloaded = false;
         }
 
         public bool Deleted { get; set; }

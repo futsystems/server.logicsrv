@@ -93,14 +93,9 @@ namespace TradingLib.API
         IMarketTime MarketTime { get; set; }
 
         /// <summary>
-        /// 是否是开市时间
+        /// 行情源
+        /// 用于标注给品种对应的行情源
         /// </summary>
-        bool IsMarketTime { get; }
-
-
-        /// <summary>
-        /// 是否在强平时间段内
-        /// </summary>
-        bool IsFlatTime { get; }
+        QSEnumDataFeedTypes DataFeed { get; set; }
     }
 }

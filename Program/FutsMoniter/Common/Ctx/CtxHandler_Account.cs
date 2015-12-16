@@ -30,6 +30,12 @@ namespace TradingLib.Common
             if (GotAccountSelectedEvent != null)
                 GotAccountSelectedEvent(account);
         }
+
+        public void FireAccountSyncEvent(AccountLite account)
+        {
+            if (GotAccountSyncEvent != null)
+                GotAccountSyncEvent(account);
+        }
         /// <summary>
         /// 响应客户端交易帐户回报
         /// </summary>

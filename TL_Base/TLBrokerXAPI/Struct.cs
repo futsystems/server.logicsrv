@@ -31,6 +31,7 @@ using TradingLib.Common;
  * */
 namespace TradingLib.BrokerXAPI
 {
+
     /// <summary>
     /// 错误消息结构体
     /// </summary>
@@ -244,6 +245,11 @@ namespace TradingLib.BrokerXAPI
         /// </summary>
         public bool Side;//1
 
+        /// <summary>
+        /// 序号
+        /// </summary>
+        public int SequenceNo;
+
     }
     
     /// <summary>
@@ -367,7 +373,115 @@ namespace TradingLib.BrokerXAPI
         /// 方向
         /// </summary>
         public bool Side;
+
+        /// <summary>
+        /// 序号
+        /// </summary>
+        public int SequenceNo;
     }
+
+    /// <summary>
+    /// 持仓明细结构体
+    /// </summary>
+    [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi)]
+    public struct XPositionDetail
+    {
+        /// <summary>
+        /// 开仓日期
+        /// </summary>
+        public int OpenDate;
+
+        /// <summary>
+        /// 结算日 该持仓明细属于哪个结算日
+        /// </summary>
+        public int SettleDay;
+
+        /// <summary>
+        /// 持仓数量
+        /// </summary>
+        public int Volume;
+
+        /// <summary>
+        /// 平仓数量
+        /// </summary>
+        public int CloseVolume;
+
+        /// <summary>
+        /// 开仓价格
+        /// </summary>
+        public double OpenPrice;
+
+        /// <summary>
+        /// 昨日结算价格
+        /// 隔夜持仓结算时 记录结算价格，并按结算价格来计算盯市盈亏并纳入到权益数据，次日开盘后持仓价就为该结算价格
+        /// </summary>
+        public double LastSettlementPrice;
+
+        /// <summary>
+        /// 方向
+        /// </summary>
+        public bool Side;
+
+        /// <summary>
+        /// 合约
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 24)]
+        public string Symbol;
+
+        /// <summary>
+        /// 交易所
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 12)]
+        public string Exchange;
+
+        /// <summary>
+        /// 成交编号
+        /// 在CTP接口中 每个开仓成交对应一个持仓明细 这里有具体的成交ID对应
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 64)]
+        public string BrokerTradeID;
+
+
+
+
+    }
+    /// <summary>
+    /// 交易帐户信息
+    /// </summary>
+    [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi)]
+    public struct XAccountInfo
+    {
+        /// <summary>
+        /// 昨日权益
+        /// </summary>
+        public double LastEquity;
+
+        /// <summary>
+        /// 入金
+        /// </summary>
+        public double Deposit;
+
+        /// <summary>
+        /// 出金
+        /// </summary>
+        public double WithDraw;
+
+        /// <summary>
+        /// 平仓盈亏
+        /// </summary>
+        public double ClosePorifit;
+
+        /// <summary>
+        /// 持仓盈亏
+        /// </summary>
+        public double PositoinProfit;
+
+        /// <summary>
+        /// 手续费
+        /// </summary>
+        public double Commission;
+    }
+
 
     /// <summary>
     /// 合约结构体 用于传递合约信息
@@ -435,6 +549,54 @@ namespace TradingLib.BrokerXAPI
         public int ExpireDate;
     }
 
+    /// <summary>
+    /// 出入金操作结构体 用于执行出入金操作
+    /// </summary>
+    [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi)]
+    public struct XCashOperation
+    {
+        /// <summary>
+        /// 出入金金额
+        /// </summary>
+        public double Amount;
+
+        /// <summary>
+        /// 密码
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 40)]
+        public string Password;
+    }
+
+
+    /// <summary>
+    /// 出入金回报结构体
+    /// </summary>
+    [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi)]
+    public struct XTransferField
+    {
+
+        /// <summary>
+        /// 出入金标识
+        /// </summary>
+        public QSEnumCashOperation TransType;
+
+        /// <summary>
+        /// 出入金金额
+        /// </summary>
+        public double Amount;
+
+        /// <summary>
+        /// 错误代码
+        /// </summary>
+        public int ErrorID;
+        /// <summary>
+        /// 错误信息
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 256)]
+        public string ErrorMsg;
+
+    }
+
 
     public class XOrderError
     {
@@ -457,6 +619,30 @@ namespace TradingLib.BrokerXAPI
 
         public XOrderActionField OrderAction;
         public XErrorField Error;
+    }
+
+    public class XHistOrder
+    {
+        public XHistOrder(XOrderField order, bool islast)
+        {
+            this.Order = order;
+            this.IsLast = islast;
+        }
+
+        public XOrderField Order;
+        public bool IsLast;
+    }
+
+    public class XHistTrade
+    {
+        public XHistTrade(XTradeField trade, bool islast)
+        {
+            this.Trade = trade;
+            this.IsLast = islast;
+        }
+
+        public XTradeField Trade;
+        public bool IsLast;
     }
 
 

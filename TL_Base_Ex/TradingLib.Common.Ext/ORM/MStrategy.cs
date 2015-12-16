@@ -1,4 +1,4 @@
-﻿using System;
+﻿﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,7 +8,7 @@ using TradingLib.Mixins.DataBase;
 
 namespace TradingLib.ORM
 {
-    public class MExStrategy:MBase
+    public class MExStrategy : MBase
     {
         /// <summary>
         /// 插入计算策略模板
@@ -18,7 +18,7 @@ namespace TradingLib.ORM
         {
             using (DBMySql db = new DBMySql())
             {
-                string query = string.Format("INSERT INTO cfg_strategy_template (`name`,`description`,`domain_id`) VALUES ( '{0}','{1}','{2}')", t.Name, t.Description, t.Domain_ID);
+                string query = string.Format("INSERT INTO cfg_strategy_template (`name`,`description`,`domain_id`,`manager_id`) VALUES ( '{0}','{1}','{2}','{3}')", t.Name, t.Description, t.Domain_ID,t.Manager_ID);
                 int row = db.Connection.Execute(query);
                 SetIdentity(db.Connection, id => t.ID = id, "id", "cfg_strategy_template");
             }
@@ -36,6 +36,23 @@ namespace TradingLib.ORM
                 db.Connection.Execute(query);
             }
         }
+
+        /// <summary>
+        /// 删除某个手续费模板
+        /// </summary>
+        /// <param name="template_id"></param>
+        public static void DeleteExStrategyTemplate(int template_id)
+        {
+            using (DBMySql db = new DBMySql())
+            {
+                string query = string.Format("DELETE FROM cfg_strategy_template WHERE id={0}", template_id);
+                db.Connection.Execute(query);
+
+                query = string.Format("DELETE FROM cfg_strategy WHERE template_id={0}", template_id);
+                db.Connection.Execute(query);
+            }
+        }
+
 
         /// <summary>
         /// 获得所有计算策略模板
@@ -59,7 +76,7 @@ namespace TradingLib.ORM
         {
             using (DBMySql db = new DBMySql())
             {
-                string query = string.Format("INSERT INTO cfg_strategy (`margin`,`avabilefund`,`sidemargin`,`creditseparate`,`positionlock`,`template_id`) VALUES ( '{0}','{1}','{2}','{3}','{4}','{5}')", item.Margin, item.AvabileFund, item.SideMargin ? 1 : 0, item.CreditSeparate ? 1 : 0, item.PositionLock ? 1 : 0, item.Template_ID);
+                string query = string.Format("INSERT INTO cfg_strategy (`marginprice`,`includecloseprofit`,`includepositionprofit`,`algorithm`,`sidemargin`,`creditseparate`,`positionlock`,`entryslip`,`exitslip` ,`limitcheck` ,`probability`,`template_id`) VALUES ( '{0}','{1}','{2}','{3}','{4}','{5}','{6}','{7}','{8}','{9}','{10}','{11}')", item.MarginPrice, item.IncludeCloseProfit ? 1 : 0, item.IncludePositionProfit ? 1 : 0, item.Algorithm, item.SideMargin ? 1 : 0, item.CreditSeparate ? 1 : 0, item.PositionLock ? 1 : 0, item.EntrySlip, item.ExitSlip, item.LimitCheck ? 1 : 0, item.Probability, item.Template_ID);
                 int row = db.Connection.Execute(query);
                 SetIdentity(db.Connection, id => item.ID = id, "id", "cfg_strategy");
             }
@@ -86,7 +103,7 @@ namespace TradingLib.ORM
         {
             using (DBMySql db = new DBMySql())
             {
-                string query = string.Format("UPDATE cfg_strategy SET margin='{0}',avabilefund='{1}' ,sidemargin='{2}' ,creditseparate='{3}' ,positionlock='{4}' WHERE id='{5}'", item.Margin, item.AvabileFund, item.SideMargin ? 1 : 0, item.CreditSeparate ? 1 : 0, item.PositionLock?1:0,item.ID);
+                string query = string.Format("UPDATE cfg_strategy SET marginprice='{0}',includecloseprofit='{1}' ,includepositionprofit='{2}' ,algorithm='{3}' ,sidemargin='{4}' ,creditseparate='{5}' ,positionlock='{6}',entryslip='{7}' ,exitslip='{8}',limitcheck='{9}' ,probability='{10}' WHERE id='{11}'", item.MarginPrice, item.IncludeCloseProfit ? 1 : 0, item.IncludePositionProfit ? 1 : 0, item.Algorithm, item.SideMargin ? 1 : 0, item.CreditSeparate ? 1 : 0, item.PositionLock ? 1 : 0, item.EntrySlip, item.ExitSlip, item.LimitCheck?1:0,item.Probability,item.ID);
                 db.Connection.Execute(query);
             }
         }

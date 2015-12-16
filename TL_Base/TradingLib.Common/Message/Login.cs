@@ -166,7 +166,7 @@ namespace TradingLib.Common
             Date = 0;
             FrontIDi = 0;
             SessionIDi = 0;
-            AccountType = QSEnumAccountCategory.SIMULATION;
+            AccountType = QSEnumAccountCategory.SUBACCOUNT;
             UserID = 0;
             NickName = string.Empty;
             Email = string.Empty;

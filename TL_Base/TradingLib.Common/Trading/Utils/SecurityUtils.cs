@@ -25,5 +25,35 @@ namespace TradingLib.Common
             }
             return 1;
         }
+
+        /// <summary>
+        /// 获得价格输出样式
+        /// </summary>
+        /// <param name="sec"></param>
+        /// <returns></returns>
+        public static string GetPriceFormat(this SecurityFamily sec)
+        {
+            return Util.GetPriceTickFormat(sec.PriceTick);
+        }
+
+        /// <summary>
+        /// 获得品种交易小节
+        /// </summary>
+        /// <param name="sec"></param>
+        /// <param name="extime"></param>
+        /// <returns></returns>
+        //public static TradingRange JudgeRange(this SecurityFamily sec,DateTime extime)
+        //{
+        //    if (sec.MarketTime != null)
+        //    {
+        //        return sec.MarketTime.JudgeRange(extime);
+        //    }
+        //    else
+        //    {
+        //        return null;
+        //    }
+        //}
+
+
     }
 }

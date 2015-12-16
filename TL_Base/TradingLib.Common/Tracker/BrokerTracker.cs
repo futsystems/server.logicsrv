@@ -35,7 +35,7 @@ namespace TradingLib.Common
         IBroker _broker = null;
 
         #region 持仓创建事件和平仓明细事件
-        void NewPositionCloseDetail(PositionCloseDetail detail)
+        void NewPositionCloseDetail(Trade trade,PositionCloseDetail detail)
         {
             //在接口侧 数据暴露源头 设定平仓明细的Broker值 和 Breed类型
             /* Broker和Breed字段只是用于数据区分,不涉及具体的业务逻辑关系
@@ -65,7 +65,7 @@ namespace TradingLib.Common
             _orderTk = new OrderTracker();
             _positionTk = new LSPositionTracker(broker.Token);
             //对外触发持仓生成和平仓明细事件
-            _positionTk.NewPositionCloseDetailEvent += new Action<PositionCloseDetail>(NewPositionCloseDetail);
+            _positionTk.NewPositionCloseDetailEvent += new Action<Trade,PositionCloseDetail>(NewPositionCloseDetail);
             _positionTk.NewPositionEvent += new Action<Position>(NewPosition);
 
             _tradeTk = new ThreadSafeList<Trade>();

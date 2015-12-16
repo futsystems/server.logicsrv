@@ -29,10 +29,29 @@ namespace TradingLib.BrokerXAPI
     public delegate void CBRtnTrade(ref XTradeField pTrade);
 
     /// <summary>
+    /// 查询成交回调委托
+    /// </summary>
+    /// <param name="pTrade"></param>
+    public delegate void CBOnQryTrade(ref XTradeField pTrade,bool islast);
+
+    /// <summary>
     /// 委托回调委托
     /// </summary>
     /// <param name="pOrder"></param>
     public delegate void CBRtnOrder(ref XOrderField pOrder);
+
+    /// <summary>
+    /// 查询委托回调委托
+    /// </summary>
+    /// <param name="pOrder"></param>
+    public delegate void CBOnQryOrder(ref XOrderField pOrder,bool islast);
+
+    /// <summary>
+    /// 查询持仓明细回调函数
+    /// </summary>
+    /// <param name="pPosition"></param>
+    /// <param name="islast"></param>
+    public delegate void CBOnQryPositionDetail(ref XPositionDetail pPosition,bool islast);
 
     /// <summary>
     /// 委托错误回调委托
@@ -55,4 +74,37 @@ namespace TradingLib.BrokerXAPI
     /// <param name="pSymbolField"></param>
     /// <param name="islast"></param>
     public delegate void CBOnSymbol(ref XSymbol pSymbolField,bool islast);
+
+    /// <summary>
+    /// 交易帐户财务信息查询回调委托
+    /// </summary>
+    /// <param name="?"></param>
+    /// <param name="islast"></param>
+    public delegate void CBOnAccountInfo(ref XAccountInfo pAccountInfo,bool islast);
+
+    /// <summary>
+    /// 接口侧日志输出
+    /// </summary>
+    /// <param name="handler"></param>
+    /// <param name="len"></param>
+    public delegate void CBOnLog(IntPtr handler,int len);
+
+
+    /// <summary>
+    /// 接口侧相关操作回报
+    /// 1.操作错误通知
+    /// 2.操作成功通知
+    /// </summary>
+    /// <param name="pError"></param>
+    /// <param name="islast"></param>
+    public delegate void CBOnMessage(ref XErrorField pMessage,bool islast);
+
+
+    /// <summary>
+    /// 接口侧出入金回报
+    /// </summary>
+    /// <param name="pTransfer"></param>
+    /// <param name="islast"></param>
+    public delegate void CBOnTransfer(ref XTransferField pTransfer,bool islast);
+
 }

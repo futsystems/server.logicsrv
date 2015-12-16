@@ -20,9 +20,16 @@ namespace DataFeed.FastTick
 		int port=6000;
 		int reqport=6001;
 
+        ConfigDB _cfgdb;
+        int _tickversion = 1;
         public FastTick()
         {
-			
+            _cfgdb = new ConfigDB("FastTickDataFeed");
+            if (!_cfgdb.HaveConfig("TickServerVersion"))
+            {
+                _cfgdb.UpdateConfig("TickServerVersion", QSEnumCfgType.Int, 1, "行情服务器版本");
+            }
+            _tickversion = _cfgdb["TickServerVersion"].AsInt();
         }
 
 
@@ -54,6 +61,7 @@ namespace DataFeed.FastTick
         {
             get
             {
+                if (string.IsNullOrEmpty(slave)) return master;
                 return _usemaster ? master : slave;
             }
         }
@@ -66,44 +74,6 @@ namespace DataFeed.FastTick
 
             debug(string.Format("MasterServer:{0} SlaveServer:{1} Port:{2} ReqPort:{3}", master, slave, port, reqport), QSEnumDebugLevel.INFO);
             
-            //if (_switch)//优先使用主行情服务
-            //{
-            //    master = _cfg.srvinfo_ipaddress;
-            //    slave = _cfg.srvinfo_field2;
-            //}
-            //else//反转，当主行情异常时连接备用行情
-            //{
-            //    master = _cfg.srvinfo_field2;
-            //    slave = _cfg.srvinfo_ipaddress;
-            //}
-
-            //port = _cfg.srvinfo_port;
-            //int outreq = 6661;
-            //int.TryParse(_cfg.srvinfo_field1,out outreq);
-            //reqport = outreq;
-
-            //if (Util.IsServerPortOpened(server, port, _timeout))
-            //{
-            //    debug("Server:" + server +" is avabile", QSEnumDebugLevel.INFO);
-            //}
-            //else
-            //{
-            //    //如果第一个服务地址异常 则反转服务器连接顺序
-            //    _switch = !_switch;
-            //    debug("Server:" + server + " is not avabile,try another server.", QSEnumDebugLevel.WARNING);
-            //    Util.sleep(1000);
-            //    if (Util.IsServerPortOpened(server2, port, _timeout))
-            //    {
-            //        debug("Server:" + server2 + " is avabile,use it", QSEnumDebugLevel.INFO);
-            //        server = server2;
-            //    }
-            //    else
-            //    {
-            //        debug("Servers are not avabile both,stop...", QSEnumDebugLevel.ERROR);
-            //        return;
-            //    }
-            //}
-
             StartTickHandler();
             
             StartHB();
@@ -155,7 +125,7 @@ namespace DataFeed.FastTick
         {
             while (_hb)
             {
-                if (DateTime.Now.Subtract(_lastheartbeat).TotalSeconds > 4)
+                if (DateTime.Now.Subtract(_lastheartbeat).TotalSeconds > 5)
                 {
                     debug("TickHeartBeat lost, try to ReConnect to tick server", QSEnumDebugLevel.ERROR);
                     if (_tickgo)
@@ -231,11 +201,12 @@ namespace DataFeed.FastTick
                 using ( ZmqSocket subscriber = context.CreateSocket(SocketType.SUB) ,symbolreq= context.CreateSocket(SocketType.REQ))
                 {
                     string reqadd = "tcp://" + CurrentServer + ":" + reqport;
-                    debug("Connect to FastTick ReqServer:" + reqadd, QSEnumDebugLevel.INFO);
+                    //debug("Connect to FastTick ReqServer:" + reqadd, QSEnumDebugLevel.INFO);
                     symbolreq.Connect(reqadd);
 
                     string subadd = "tcp://" + CurrentServer + ":" + port;
-                    debug("Subscribe to FastTick PubServer:" + subadd, QSEnumDebugLevel.INFO);
+                    //debug("Subscribe to FastTick PubServer:" + subadd, QSEnumDebugLevel.INFO);
+                    debug(string.Format("Connect to FastTick Server:{0} ReqPort:{1} DataPort{2}",CurrentServer,reqport,port),QSEnumDebugLevel.INFO);
                     subscriber.Connect(subadd);
                     //订阅行情心跳数据
                     subscriber.Subscribe(Encoding.UTF8.GetBytes("TICKHEARTBEAT"));
@@ -341,6 +312,27 @@ namespace DataFeed.FastTick
             }
         }
 
+        void Send(IPacket packet)
+        {
+            if (_symbolreq != null)
+            {
+                lock (_symbolreq)
+                {
+                    try
+                    {
+                        string rep = null;
+                        _symbolreq.Send(packet.Data);//非阻塞
+                        rep = _symbolreq.Receive(Encoding.UTF8, timeout);
+
+                    }
+                    catch (Exception ex)
+                    {
+                        debug("发送消息异常:" + ex.ToString());
+                    }
+                }
+            }
+        }
+
         /// <summary>
         /// 注册市场数据
         /// </summary>
@@ -354,7 +346,7 @@ namespace DataFeed.FastTick
 
                 foreach (KeyValuePair<QSEnumDataFeedTypes, List<Symbol>> kv in map)
                 {
-                    string symlist = string.Join(",", kv.Value.Select(sym=>sym.Symbol));
+                    //string symlist = string.Join(",", kv.Value.Select(sym=>sym.Symbol));
                     //将合约字头逐个向publisher进行订阅
                     foreach (Symbol s in kv.Value)
                     {
@@ -363,9 +355,25 @@ namespace DataFeed.FastTick
                     }
 
                     //通过FastTickServer的管理端口 请求FastTickServer向行情源订阅行情数据,Publisher的订阅是内部的一个分发订阅 不会产生向行情源订阅实际数据
-                    string requeststr = (kv.Key.ToString() + ":" + symlist);
-                    debug(Token + " RegisterSymbol " + requeststr, QSEnumDebugLevel.INFO);
-                    Send(TradingLib.API.MessageTypes.MGRREGISTERSYMBOLS, requeststr);
+                    //注册合约协议格式 DATAFEED:SYMBOL|EXCHANGE
+                    foreach (var sym in kv.Value)
+                    {
+                        if (_tickversion == 1)
+                        {
+                            string tmpreq = (kv.Key.ToString() + ":" + sym.Symbol + "|" + sym.SecurityFamily.Exchange.EXCode);
+                            debug(Token + " RegisterSymbol " + tmpreq, QSEnumDebugLevel.INFO);
+                            Send(TradingLib.API.MessageTypes.MGRREGISTERSYMBOLS, tmpreq);
+                        }
+                        else if (_tickversion == 2)
+                        {
+                            MDRegisterSymbolsRequest request = RequestTemplate<MDRegisterSymbolsRequest>.CliSendRequest(0);
+                            request.DataFeed = kv.Key;
+                            request.Exchange = sym.SecurityFamily.Exchange.EXCode;
+                            request.SymbolList.Add(sym.Symbol);
+                            Send(request);
+                        }
+                    }
+
                 }
 
                 
@@ -387,7 +395,7 @@ namespace DataFeed.FastTick
             Dictionary<QSEnumDataFeedTypes, List<Symbol>> map = new Dictionary<QSEnumDataFeedTypes, List<Symbol>>();
             foreach (Symbol sym in basket)
             {
-                QSEnumDataFeedTypes type = Symbol2DataFeedType(sym);
+                QSEnumDataFeedTypes type = sym.SecurityFamily.DataFeed;////Symbol2DataFeedType(sym);
                 if (map.Keys.Contains(type))
                 {
                     map[type].Add(sym);
@@ -410,16 +418,26 @@ namespace DataFeed.FastTick
         /// <returns></returns>
         QSEnumDataFeedTypes Symbol2DataFeedType(Symbol symbol)
         {
-            //国内期货合约通过CTP通道订阅
-            if (symbol.SecurityType == SecurityType.FUT && symbol.SecurityFamily.Exchange.Country == Country.CN)
+            if (symbol.SecurityFamily.Exchange.Country == Country.CN)
             {
-                return QSEnumDataFeedTypes.CTP;
-            }
+                if (symbol.SecurityFamily.Exchange.EXCode == "HKEX")//香港交易所通过香港直达期货公司订阅
+                {
+                    return QSEnumDataFeedTypes.SHZD;
+                }
+                if (symbol.SecurityType == SecurityType.FUT)
+                {
+                    return QSEnumDataFeedTypes.CTP;
+                }
 
-            //国内期权合约通过CTPOPT通道订阅
-            if (symbol.SecurityType == SecurityType.OPT && symbol.SecurityFamily.Exchange.Country == Country.CN)
+                if (symbol.SecurityType == SecurityType.OPT)
+                {
+                    return QSEnumDataFeedTypes.CTPOPT;
+                }
+            }
+            //国外行情通过IQFeed获取
+            if (symbol.SecurityFamily.Exchange.Country != Country.CN)
             {
-                return QSEnumDataFeedTypes.CTPOPT;
+                return QSEnumDataFeedTypes.IQFEED;
             }
             return QSEnumDataFeedTypes.CTP;
         }

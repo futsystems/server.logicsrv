@@ -7,7 +7,6 @@ using System.Runtime.InteropServices;
 // 与程序集关联的信息。
 [assembly: AssemblyTitle("TradingLib.APILib")]
 [assembly: AssemblyDescription("")]
-[assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("china")]
 [assembly: AssemblyProduct("TradingLib.APILib")]
 [assembly: AssemblyCopyright("Copyright © china 2014")]

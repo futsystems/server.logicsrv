@@ -14,10 +14,13 @@ namespace TradingLib.API
     /// </summary>
     public enum QSEnumDataFeedTypes
     {
-        DEFAULT,//默认
-        CTP,//国内CTP期货 DataFeed
-        CTPOPT,//国内CTP期权 DataFeed
-        IB,//外盘IBDataFeed
+        DEFAULT=0,//默认
+        CTP=1,//国内CTP期货 DataFeed
+        CTPOPT=2,//国内CTP期权 DataFeed
+        IB=3,//外盘IBDataFeed
+        IQFEED=4,//外盘IQFeed行情源
+        SHZD=5,//上海直达接口 获取恒生行情
+        ESUNNY=6,//易盛
     };
 
 

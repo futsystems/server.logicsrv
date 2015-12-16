@@ -104,7 +104,7 @@ namespace TradingLib.ORM
         {
             using (DBMySql db = new DBMySql())
             {
-                string query = String.Format("UPDATE manager SET  name = '{0}' , mobile = '{1}' , qq = '{2}' , acclimit = '{3}' WHERE id = '{4}'",manager.Name,manager.Mobile,manager.QQ,manager.AccLimit,manager.ID);
+                string query = String.Format("UPDATE manager SET  name = '{0}' , mobile = '{1}' , qq = '{2}',acclimit = '{3}',agentlimit = '{4}',creditlimit = '{5}' WHERE id = '{6}'", manager.Name, manager.Mobile, manager.QQ, manager.AccLimit, manager.AgentLimit, manager.CreditLimit, manager.ID);
                 return db.Connection.Execute(query) >= 0;
             }
         }
@@ -115,7 +115,7 @@ namespace TradingLib.ORM
         {
             using (DBMySql db = new DBMySql())
             {
-                string query = String.Format("Insert into manager (`login`,`type`,`name`,`mobile`,`qq`,`acclimit`,`domain_id`,`active`) values('{0}','{1}','{2}','{3}','{4}','{5}','{6}','{7}')", manger.Login, manger.Type.ToString(), manger.Name, manger.Mobile, manger.QQ, manger.AccLimit, manger.domain_id,manger.Active?1:0);
+                string query = String.Format("Insert into manager (`login`,`type`,`name`,`mobile`,`qq`,`acclimit`,`domain_id`,`active`,`agentlimit`,`creditlimit`) values('{0}','{1}','{2}','{3}','{4}','{5}','{6}','{7}','{8}','{9}')", manger.Login, manger.Type.ToString(), manger.Name, manger.Mobile, manger.QQ, manger.AccLimit, manger.domain_id, manger.Active ? 1 : 0, manger.AgentLimit, manger.CreditLimit);
                 db.Connection.Execute(query);
                 SetIdentity(db.Connection, id => manger.ID = id, "id", "manager");
 
@@ -138,6 +138,40 @@ namespace TradingLib.ORM
                 
 
                 return true;
+            }
+        }
+
+        /// <summary>
+        /// 删除管理员
+        /// </summary>
+        /// <param name="mgr_id"></param>
+        public static void DeleteManager(int mgr_id)
+        {
+            using (DBMySql db = new DBMySql())
+            {
+                string delquery = string.Empty;
+                delquery = string.Format("DELETE FROM manager WHERE id = '{0}'", mgr_id);//删除帐户列表
+                db.Connection.Execute(delquery);
+
+                delquery = string.Format("DELETE FROM manager_balance WHERE mgr_fk = '{0}'", mgr_id);//删除帐户列表
+                db.Connection.Execute(delquery);
+
+                delquery = string.Format("DELETE FROM manager_bankac WHERE mgr_fk = '{0}'", mgr_id);//删除帐户列表
+                db.Connection.Execute(delquery);
+
+                delquery = string.Format("DELETE FROM manager_cashopreq WHERE mgr_fk = '{0}'", mgr_id);//删除帐户列表
+                db.Connection.Execute(delquery);
+
+                delquery = string.Format("DELETE FROM manager_cashtrans WHERE mgr_fk = '{0}'", mgr_id);//删除帐户列表
+                db.Connection.Execute(delquery);
+
+                delquery = string.Format("DELETE FROM manager_settlement WHERE mgr_fk = '{0}'", mgr_id);//删除帐户列表
+                db.Connection.Execute(delquery);
+
+                delquery = string.Format("DELETE FROM cfg_manager_permission WHERE manager_id = '{0}'", mgr_id);//删除帐户列表
+                db.Connection.Execute(delquery);
+
+                
             }
         }
         /// <summary>

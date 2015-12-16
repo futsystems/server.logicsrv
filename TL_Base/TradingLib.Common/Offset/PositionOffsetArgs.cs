@@ -9,9 +9,9 @@ namespace TradingLib.Common
     /// <summary>
     /// 持仓止盈与止损,用于向服务端提交止损与止盈参数,从而实现服务端的止损与止盈
     /// </summary>
-    public class PositionOffsetArgs
+    public class PositionOffsetArg
     {
-        public PositionOffsetArgs(string account, string symbol,bool side,QSEnumPositionOffsetDirection direction)
+        public PositionOffsetArg(string account, string symbol,bool side,QSEnumPositionOffsetDirection direction)
         {
             _account = account;
             _symbol = symbol;
@@ -31,32 +31,32 @@ namespace TradingLib.Common
         /// <param name="LossArgs"></param>
         /// <param name="pos"></param>
         /// <returns></returns>
-        public static decimal CaculateLossTakePrice(PositionOffsetArgs lossArgs, Position pos)
+        public decimal CaculateLossTakePrice(Position pos)
         {
-            if (lossArgs == null || pos == null) return -1;
+            if (pos == null) return -1;
             decimal hitprice = -1;
-            switch (lossArgs.OffsetType)
+            switch (this.OffsetType)
             {
                 case QSEnumPositionOffsetType.POINTS:
-                    hitprice = pos.isLong ? (pos.AvgPrice - lossArgs.Value) : (pos.AvgPrice + lossArgs.Value);
+                    hitprice = pos.isLong ? (pos.AvgPrice - this.Value) : (pos.AvgPrice + this.Value);
                     break;
                 case QSEnumPositionOffsetType.PRICE:
-                    hitprice = lossArgs.Value;
+                    hitprice = this.Value;
                     break;
                 case QSEnumPositionOffsetType.PERCENT:
-                    hitprice = pos.isLong ? (pos.AvgPrice * (1 - lossArgs.Value / 100)) : (pos.AvgPrice * (1 + lossArgs.Value / 100));
+                    hitprice = pos.isLong ? (pos.AvgPrice * (1 - this.Value / 100)) : (pos.AvgPrice * (1 + this.Value / 100));
                     break;
                 case QSEnumPositionOffsetType.TRAILING:
                     {
                         if (pos.isLong && pos.AvgPrice > 0)
                         {
-                            if (pos.Highest > pos.AvgPrice + lossArgs.Start)
-                                hitprice = pos.Highest - lossArgs.Value;
+                            if (pos.Highest > pos.AvgPrice + this.Start)
+                                hitprice = pos.Highest - this.Value;
                         }
                         if (pos.isShort && pos.AvgPrice > 0)
                         {
-                            if (pos.Lowest < pos.AvgPrice - lossArgs.Start)
-                                hitprice = pos.Lowest + lossArgs.Value;
+                            if (pos.Lowest < pos.AvgPrice - this.Start)
+                                hitprice = pos.Lowest + this.Value;
                         }
                     }
                     break;
@@ -71,32 +71,32 @@ namespace TradingLib.Common
         /// </summary>
         /// <param name="pos"></param>
         /// <returns></returns>
-        public static decimal CaculateProfitTakePrice(PositionOffsetArgs profitArgs, Position pos)
+        decimal CaculateProfitTakePrice(Position pos)
         {
-            if (profitArgs == null || pos == null) return -1;
+            if (pos == null) return -1;
             decimal hitprice = -1;
-            switch (profitArgs.OffsetType)
+            switch (this.OffsetType)
             {
                 case QSEnumPositionOffsetType.POINTS:
-                    hitprice = pos.isLong ? (pos.AvgPrice + profitArgs.Value) : (pos.AvgPrice - profitArgs.Value);
+                    hitprice = pos.isLong ? (pos.AvgPrice + this.Value) : (pos.AvgPrice - this.Value);
                     break;
                 case QSEnumPositionOffsetType.PRICE:
-                    hitprice = profitArgs.Value;
+                    hitprice = this.Value;
                     break;
                 case QSEnumPositionOffsetType.PERCENT:
-                    hitprice = pos.isLong ? (pos.AvgPrice * (1 + profitArgs.Value / 100)) : (pos.AvgPrice * (1 - profitArgs.Value / 100));
+                    hitprice = pos.isLong ? (pos.AvgPrice * (1 + this.Value / 100)) : (pos.AvgPrice * (1 - this.Value / 100));
                     break;
                 case QSEnumPositionOffsetType.TRAILING:
                     {
                         if (pos.isLong && pos.AvgPrice > 0)
                         {
-                            if (pos.Highest > pos.AvgPrice + profitArgs.Start)
-                                hitprice = pos.Highest - profitArgs.Value;
+                            if (pos.Highest > pos.AvgPrice + this.Start)
+                                hitprice = pos.Highest - this.Value;
                         }
                         if (pos.isShort && pos.AvgPrice > 0)
                         {
-                            if (pos.Lowest < pos.AvgPrice - profitArgs.Start)
-                                hitprice = pos.Lowest + profitArgs.Value;
+                            if (pos.Lowest < pos.AvgPrice - this.Start)
+                                hitprice = pos.Lowest + this.Value;
                         }
                     }
                     break;
@@ -156,7 +156,7 @@ namespace TradingLib.Common
         /// 用一个止盈止损参数来更新当前止盈止损参数
         /// </summary>
         /// <param name="args"></param>
-        public void UpdateArgs(PositionOffsetArgs args)
+        public void UpdateArgs(PositionOffsetArg args)
         {
             //account symbol direction相同的情况下才可以传递参数
             if((Account == args.Account) && (Symbol == args.Symbol) &&(Direction == args.Direction))
@@ -178,12 +178,12 @@ namespace TradingLib.Common
                 decimal price = 0;
                 if (Direction == QSEnumPositionOffsetDirection.LOSS)
                 {
-                    price = CaculateLossTakePrice(this, pos);
+                    price = CaculateLossTakePrice(pos);
                     return price;
                 }
                 else
                 {
-                    price = CaculateProfitTakePrice(this, pos);
+                    price = CaculateProfitTakePrice(pos);
                     return price;
                 }
         }
@@ -191,7 +191,7 @@ namespace TradingLib.Common
         {
             return Util.GetEnumDescription(Direction) + " " + (Enable ? "有效" : "无效") + " 类型:" + OffsetType.ToString() +" V:"+Value.ToString() +" S:"+Size.ToString() +" St:"+Start.ToString();
         }
-        public static string Serialize(PositionOffsetArgs po)
+        public static string Serialize(PositionOffsetArg po)
         {
             const char d = ',';
             StringBuilder sb = new StringBuilder();
@@ -216,7 +216,7 @@ namespace TradingLib.Common
             return sb.ToString();
         }
 
-        public static PositionOffsetArgs Deserialize(string message)
+        public static PositionOffsetArg Deserialize(string message)
         {
             string[] rec = message.Split(',');
             if (rec.Length < 8) return null;
@@ -232,7 +232,7 @@ namespace TradingLib.Common
             decimal start = Convert.ToDecimal(rec[7]);
             bool side = Convert.ToBoolean(rec[8]);
 
-            PositionOffsetArgs po = new PositionOffsetArgs(account, symbol,side, direction);
+            PositionOffsetArg po = new PositionOffsetArg(account, symbol,side, direction);
             po.Enable = enable;
             po.OffsetType = type;
 

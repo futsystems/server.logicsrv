@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using TradingLib.API;
-using TradingLib.API;
 
 namespace TradingLib.Common
 {
@@ -86,5 +85,16 @@ namespace TradingLib.Common
 
 
         #endregion
+
+        /// <summary>
+        /// 获得Broker中属于某个交易所的持仓
+        /// </summary>
+        /// <param name="broker"></param>
+        /// <param name="exchange"></param>
+        /// <returns></returns>
+        public static IEnumerable<Position> GetPositions(this IBroker broker, IExchange exchange)
+        {
+            return broker.Positions.Where(pos => pos.oSymbol.SecurityFamily.Exchange.EXCode == exchange.EXCode);
+        }
     }
 }

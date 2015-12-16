@@ -20,14 +20,17 @@ namespace TradingLib.Common
             }
         }
 
+        DomainImpl _superdomian = null;
         /// <summary>
-        /// 返回超级域
+        /// 返回超级域 
         /// </summary>
         public DomainImpl SuperDomain
         {
             get
             {
-                return domainmap.Values.Where(d => (d.Super||d.Dedicated)).FirstOrDefault();
+                if(_superdomian == null)
+                    _superdomian = domainmap.Values.Where(d => (d.Super)).FirstOrDefault();
+                return _superdomian;
             }
             
         }
@@ -97,10 +100,17 @@ namespace TradingLib.Common
 
                 target.Module_FinService = domain.Module_FinService;
                 target.Module_PayOnline = domain.Module_PayOnline;
+                target.Module_Slip = domain.Module_Slip;
                 target.Router_Live = domain.Router_Live;
                 target.Router_Sim = domain.Router_Sim;
                 target.VendorLimit = domain.VendorLimit;
+                target.Switch_Router = domain.Switch_Router;
 
+                target.AgentLimit = domain.AgentLimit;
+
+                target.IsProduction = domain.IsProduction;
+                target.DiscountNum = domain.DiscountNum;
+                target.Dedicated = domain.Dedicated;
                 ORM.MDomain.UpdateDomain(target);
                 
             }
@@ -125,9 +135,17 @@ namespace TradingLib.Common
                 target.Module_SubAgent = domain.Module_SubAgent;
                 target.Module_FinService = domain.Module_FinService;
                 target.Module_PayOnline = domain.Module_PayOnline;
+                target.Module_Slip = domain.Module_Slip;
+
                 target.Router_Live = domain.Router_Live;
                 target.Router_Sim = domain.Router_Sim;
                 target.VendorLimit = domain.VendorLimit;
+                target.Switch_Router = domain.Switch_Router;
+
+                target.AgentLimit = domain.AgentLimit;
+                target.IsProduction = domain.IsProduction;
+                target.DiscountNum = domain.DiscountNum;
+                target.Dedicated = domain.Dedicated;
 
                 ORM.MDomain.InsertDomain(target);
                 domain.ID = target.ID;

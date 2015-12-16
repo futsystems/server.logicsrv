@@ -227,6 +227,7 @@ namespace TradingLib.Common
             foreach (PositionRoundImpl pr in prlist)
             {
                 if (pr == null) continue;
+                if (!pr.IsValid) continue;//如果positionround无效 则不加载到维护器中
                 string key = pr.PRKey;
                 if (!_roundmap.ContainsKey(key))
                 {

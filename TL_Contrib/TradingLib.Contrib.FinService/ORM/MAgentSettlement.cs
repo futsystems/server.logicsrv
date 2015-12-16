@@ -21,7 +21,7 @@ namespace TradingLib.Contrib.FinService.ORM
         /// <returns></returns>
         public static bool IsAgentSettled(int agentfk)
         {
-            return IsAgentSettled(agentfk, TLCtxHelper.CmdSettleCentre.NextTradingday);
+            return IsAgentSettled(agentfk, TLCtxHelper.ModuleSettleCentre.Tradingday);
         }
 
 
@@ -50,11 +50,11 @@ namespace TradingLib.Contrib.FinService.ORM
             if (IsAgentSettled(mgr.mgr_fk)) return true;//如果该账户已经结算过，则直接返回
             JsonWrapperAgentSettle settle = new JsonWrapperAgentSettle();
 
-            JsonWrapperToalReport report = ORM.MServiceChargeReport.GenTotalReport(mgr.mgr_fk,TLCtxHelper.CmdSettleCentre.NextTradingday);
+            JsonWrapperToalReport report = ORM.MServiceChargeReport.GenTotalReport(mgr.mgr_fk, TLCtxHelper.ModuleSettleCentre.Tradingday);
 
             settle.LastEquity = mgr.GetAgentBalance().Balance;
             settle.mgr_fk = mgr.mgr_fk;
-            settle.Settleday = TLCtxHelper.CmdSettleCentre.NextTradingday;
+            settle.Settleday = TLCtxHelper.ModuleSettleCentre.Tradingday;
             settle.Profit_Commission = report.CommissionProfit;
             settle.Profit_Fee = report.AgentProfit;
             settle.CashIn = mgr.GetDepositNotSettled();//待结算入金
@@ -63,6 +63,7 @@ namespace TradingLib.Contrib.FinService.ORM
             
             using (DBMySql db = new DBMySql())
             {
+                
                 using (var transaction = db.Connection.BeginTransaction())
                 {
                     bool istransok = true;

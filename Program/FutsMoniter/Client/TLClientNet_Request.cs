@@ -30,15 +30,13 @@ namespace TradingLib.Common
         public void ReqOpenClearCentre()
         {
             debug("请求开启交易中心", QSEnumDebugLevel.INFO);
-            MGRReqOpenClearCentreRequest request = RequestTemplate<MGRReqOpenClearCentreRequest>.CliSendRequest(requestid++);
-            SendPacket(request);
+            this.ReqContribRequest("ClearCentre", "OpenClearCentre","");
         }
 
         public void ReqCloseCentre()
         {
             debug("请求关闭清算中心", QSEnumDebugLevel.INFO);
-            MGRReqCloseClearCentreRequest request = RequestTemplate<MGRReqCloseClearCentreRequest>.CliSendRequest(requestid++);
-            SendPacket(request);
+            this.ReqContribRequest("ClearCentre", "CloseClearCentre", "");
         }
 
         #region 交易类操作

@@ -17,7 +17,17 @@ namespace TradingLib.ServiceManager
         public IDataFeed DefaultDataFeed { get { return _defaultdatafeed; } }
 
         /// <summary>
+        /// 通过ConnectorID查找获得IBroker对象
+        /// </summary>
+        /// <param name="connector_id"></param>
+        /// <returns></returns>
+        public IBroker FindBroker(int connector_id)
+        {
+            return ID2Broker(connector_id);
+        }
+        /// <summary>
         /// 查找某个交易路由
+        /// 通过交易通道的Token来查找对应的Broker
         /// </summary>
         /// <param name="fullname"></param>
         public IBroker FindBroker(string fullname)
@@ -51,38 +61,5 @@ namespace TradingLib.ServiceManager
         /// 获得所有行情路由
         /// </summary>
         public IEnumerable<IDataFeed> DataFeeds { get { return datafeedInstList.Values; } }
-
-
-        /// <summary>
-        /// 获得某个合约的市场快照
-        /// </summary>
-        /// <param name="symbol"></param>
-        /// <returns></returns>
-        public Tick GetTickSnapshot(string symbol)
-        {
-            return _datafeedrouter.GetTickSnapshot(symbol);
-        }
-
-        /// <summary>
-        /// 判断某个合约当前行情是否处于live状态
-        /// </summary>
-        /// <param name="symbol"></param>
-        /// <returns></returns>
-        public bool IsSymbolTickLive(string symbol)
-        {
-            return _datafeedrouter.IsTickLive(symbol);
-        }
-
-
-        /// <summary>
-        /// 获得某个合约的有效价格
-        /// </summary>
-        /// <param name="symbol"></param>
-        /// <returns></returns>
-        public decimal GetAvabilePrice(string symbol)
-        {
-            return _datafeedrouter.GetAvabilePrice(symbol);
-        }
-
     }
 }

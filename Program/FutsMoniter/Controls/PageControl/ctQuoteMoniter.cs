@@ -23,7 +23,7 @@ namespace FutsMoniter
             viewquotemap.Add("DCE", quote_dce);
             viewquotemap.Add("CZCE", quote_czce);
             viewquotemap.Add("CFFEX", quote_cffex);
-
+            viewquotemap.Add("INNOVEX", quote_innov);
             this.Load += new EventHandler(ctQuoteMoniter_Load);
         }
 
@@ -71,7 +71,7 @@ namespace FutsMoniter
             quote_czce.SymbolSelectedEvent += new SymbolDelegate(SelectSymbol);
             quote_dce.SymbolSelectedEvent += new SymbolDelegate(SelectSymbol);
             quote_shfe.SymbolSelectedEvent += new SymbolDelegate(SelectSymbol);
-
+            quote_innov.SymbolSelectedEvent += new SymbolDelegate(SelectSymbol);
             //初始化合约列表
             foreach (Symbol s in Globals.BasicInfoTracker.GetSymbolTradable())
             {
@@ -154,6 +154,12 @@ namespace FutsMoniter
             if (vq != null)
             {
                 vq.GotTick(k);
+            }
+            if (k.Symbol.StartsWith("IF"))
+            {
+                Tick nk = TickImpl.Copy(k);
+                nk.Symbol = string.Format("{0}-mini", nk.Symbol);
+                quote_innov.GotTick(nk);
             }
         }
 

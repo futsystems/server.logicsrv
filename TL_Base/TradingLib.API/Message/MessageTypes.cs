@@ -35,8 +35,8 @@ namespace TradingLib.API
         UPDATECLIENTFRONTID=4,//重启前置后，由于前置编号发生变化，需要更新原来交易客户端回话的前置地址，否则后期的通讯将会被丢弃
         FRONTSTATUSREQUEST=5,//前置机工作状态请求
         FRONTSTATUSRESPONSE=6,//前置机工作状态回报
-        CUSTOM7,
-        CUSTOM8,
+        SERVICEREQUEST=7,//服务查询请求
+        SERVICERESPONSE=8,//服务查询回报
         CUSTOM9,
         CUSTOM10,
        
@@ -56,8 +56,9 @@ namespace TradingLib.API
         REGISTERCLIENT,//注册客户端
         CLEARCLIENT,//注销客户端
 
-        REGISTERSTOCK,//注册市场数据
-        CLEARSTOCKS,//取消市场数据注册
+        REGISTERSYMTICK,//注册市场数据
+        UNREGISTERSYMTICK,//注销市场数据
+
         
         //
         SENDORDER=5100,//发送委托
@@ -76,7 +77,7 @@ namespace TradingLib.API
 
         QRYACCOUNTINFO,//查询交易账户信息
         QRYMAXORDERVOL,//查询最大开仓量
-        QRYBAR,//请求Bar数据
+        BARREQUEST,//请求Bar数据
         CONTRIBREQUEST,//扩展请求
         REQCHANGEPASS,//请求修改密码
         QRYNOTICE,//查询交易服务器通知
@@ -88,9 +89,21 @@ namespace TradingLib.API
         QRYINSTRUMENTCOMMISSIONRATE,//查询合约手续费率
         QRYINSTRUMENTMARGINRATE,//查询合约保证金率
         QRYMARKETDATA,//查询市场行情
+        QRYTRADINGPARAMS,//查询交易参数
+
+        XQRYMARKETTIME,//查询交易时间段
+        XQRYEXCHANGE,//查询交易所
+        XQRYSECURITY,//查询品种
+        XQRYSYMBOL,//查询合约
+        XQRYYDPOSITION,//查询隔夜持仓 (通过隔夜持仓数据与当日成交数据可以完全恢复一个交易帐户的交易状态)
+        XQRYORDER,//查询委托
+        XQRYTRADE,//查询成交
+        UPDATELOCATION,//更新地址信息
+        XQRYTICKSNAPSHOT,//查询行情快照
 
         DOMREQUEST,//请求DOM市场Level2数据
         IMBALANCEREQUEST,//imbalance..查询这个是什么意思
+
 
         // responses or acks
         RESPONSE = 6000,
@@ -98,7 +111,9 @@ namespace TradingLib.API
         BROKERNAMERESPONSE,//服务名查询回报
         FEATURERESPONSE,//功能特征回报
         HEARTBEATRESPONSE,//服务端应答客户端,如果客户端在一定时间内没有收到数据 就会触发发送heartbeatrequest,然后服务端就会发送一个response以证明客户端与服务端之间连接有效
-        
+        REGISTERCLIENTRESPONSE,//客户端注册连接回报
+
+
         TICKNOTIFY=6100,//Tick数据
         TICKHEARTBEAT,//行情心跳
         INDICATORNOTIFY,//指标通知
@@ -109,7 +124,8 @@ namespace TradingLib.API
         POSITIONUPDATENOTIFY,//服务端向客户端发仓位状态信息,PC交易客户端自己计算持仓数据,网页交易客户端则需要服务端进行响应
         ORDERACTIONNOTIFY,//委托操作回报
         ERRORORDERACTIONNOTIFY,//委托操作回报
-        
+        CASHOPERATIONNOTIFY,//出入金操作回报
+        TRADINGNOTICENOTIFY,//交易通知回报
 
         //request replay
         LOGINRESPONSE=6200,//登入回报
@@ -136,11 +152,18 @@ namespace TradingLib.API
         INSTRUMENTCOMMISSIONRATERESPONSE,//查询合约手续费率回报
         INSTRUMENTMARGINRATERESPONSE,//查询合约保证金率回报
         MARKETDATARESPONSE,//查询市场行情回报
+        TRADINGPARAMSRESPONSE,//查询交易参数回报
 
-
-
+        XMARKETTIMERESPONSE,//查询交易时间段
+        XEXCHANGERESPNSE,//查询交易所
+        XSECURITYRESPONSE,//查询品种
+        XSYMBOLRESPONSE,//查询合约
+        XYDPOSITIONRESPONSE,//隔夜持仓回报
+        XORDERRESPONSE,//委托回报
+        XTRADERESPONSE,//成交回报
+        //UPDATELOCATIONRESPONSE,//更新地址回报
+        XTICKSNAPSHOTRESPONSE,//行情快照回报
         // END STANDARD MESSAGES
-
 
 
 
@@ -151,6 +174,9 @@ namespace TradingLib.API
         MGRSTARTDATAFEED,//启动数据通道
         MGRSTOPDATAFEED,//停止数据通道
         MGRREGISTERSYMBOLS,//订阅行情
+        MGRUNREGISTERSYMBOLS,//注销行情订阅
+        MGRQRYSYMBOLSREGISTED,//查询已注册合约
+        MGRQRYSYMBOLSREGISTEDRESPONSE,//查询已注册合约回报
 
         // START MANAGER MESSAGES
         MGRQRYACCOUNTS=8000,//查询帐户列表
@@ -174,13 +200,15 @@ namespace TradingLib.API
         
         
         MGRQRYEXCHANGE,//查询交易所信息
+        MGRUPDATEEXCHANGE,//更新交易所信息
         MGRQRYMARKETTIME,//查询市场时间段
+        MGRUPDATEMARKETTIME,//更新市场时间段
         MGRQRYSECURITY,//查询品种
-        MGRADDSECURITY,//添加品种
         MGRUPDATESECURITY,//更新品种信息
         MGRQRYSYMBOL,//查询合约信息
-        MGRADDSYMBOL,//请求添加合约信息
         MGRUPDATESYMBOL,//更新合约信息
+
+        
 
         MGRQRYRULECLASS,//查询风控规则列表
         MGRQRYRULEITEM,//查询某个交易帐号的风控规则
@@ -221,11 +249,15 @@ namespace TradingLib.API
         MGRACCOUNTCHANGEUPDATE,//交易帐户变动回报
         MGRCONNECTORRESPONSE,//
         MGREXCHANGERESPONSE,//查询交易所回报
+        MGRUPDATEEXCHANGERESPONSE,//更新交易所回报
         MGRMARKETTIMERESPONSE,//查询市场时间段回报
+        MGRUPDATEMARKETTIMERESPONSE,//更新市场时间段回报
         MGRSECURITYRESPONSE,//查询品种回报
-        MGRADDSECURITYRESPONSE,//添加品种回报
+        //MGRADDSECURITYRESPONSE,//添加品种回报
+        MGRUPDATESECURITYRESPONSE,//更新品种回报
         MGRSYMBOLRESPONSE,//合约信息回报
-        MGRADDSYMBOLRESPONSE,//添加合约回报
+        //MGRADDSYMBOLRESPONSE,//添加合约回报
+        MGRUPDATESYMBOLRESPONSE,//更新合约回报
 
         MGRRULECLASSRESPONSE,//风控规则回报
         MGRRULEITEMRESPONSE,//帐户风控规则回报

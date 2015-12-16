@@ -27,6 +27,7 @@ namespace TradingLib.Common
             {
                 //该custinfoex 绑定了管理端
                 if (mgr == null) return false;
+                if (mgr.domain_id != manager.domain_id) return false;//不属于同一分区 则直接返回
                 //如果有Root域的管理端登入 则需要通知
                 if (mgr.IsInRoot())
                     return true;
@@ -62,6 +63,27 @@ namespace TradingLib.Common
 
 
         /// <summary>
+        /// 获得某个帐户的通知对象
+        /// </summary>
+        /// <param name="account"></param>
+        /// <returns></returns>
+        public static Predicate<Manager> GetNotifyPredicate(this IAccount account)
+        {
+            Predicate<Manager> func = null;
+            func = (mgr) =>
+            {
+                if (mgr == null) return false;
+                //如果有Root域的管理端登入 则需要通知
+                if (mgr.IsInRoot())
+                    return true;
+                //如果该交易帐户的代理客户端登入 则需要通知
+                if (mgr.RightAccessAccount(account))
+                    return true;
+                return false;
+            };
+            return func;
+        }
+        /// <summary>
         /// 获得出入金操作的通知对象判断诸词
         /// </summary>
         /// <param name="op"></param>
@@ -76,7 +98,7 @@ namespace TradingLib.Common
                 func = (mgr) =>
                 {
                     if (mgr == null) return false;
-                    IAccount account = TLCtxHelper.CmdAccount[op.Account];
+                    IAccount account = TLCtxHelper.ModuleAccountManager[op.Account];
 
                     //如果有Root域的管理端登入 则需要通知
                     if (mgr.IsInRoot())

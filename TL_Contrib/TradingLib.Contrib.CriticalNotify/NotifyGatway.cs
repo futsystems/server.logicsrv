@@ -45,7 +45,7 @@ namespace TradingLib.Contrib.NotifyCentre
         /// </summary>
         public void OnLoad()
         {
-            debug("");
+            logger.Info("");
             
             //1.加载配置文件
             _cfgdb = new ConfigDB(NotifyGatway.ContribName);
@@ -78,7 +78,7 @@ namespace TradingLib.Contrib.NotifyCentre
             _pass = "lemtone2005";//_cfgdb["pass"].AsString();
             _port = 25;//_cfgdb["port"].AsInt();
 
-            debug("smtp:" + _smtp + " from:" + _from + " user:" + _user + " pass:" + _pass + " port:" + _port.ToString(), QSEnumDebugLevel.INFO);
+            logger.Info("smtp:" + _smtp + " from:" + _from + " user:" + _user + " pass:" + _pass + " port:" + _port.ToString());
             client = new System.Net.Mail.SmtpClient();
             client.Host = _smtp;
             client.Port = _port;
@@ -126,7 +126,7 @@ namespace TradingLib.Contrib.NotifyCentre
             }
             catch (Exception ex)
             {
-                debug("Send email error:" + ex.ToString(), QSEnumDebugLevel.ERROR);
+                logger.Error("Send email error:" + ex.ToString());
             }
         }
 
@@ -138,7 +138,7 @@ namespace TradingLib.Contrib.NotifyCentre
         {
             if (email.Receivers.Length == 0)
                 email.Receivers = _noticelsit.Split(',');
-            debug("send email to:" + string.Join(",", email.Receivers), QSEnumDebugLevel.INFO);
+            logger.Info("send email to:" + string.Join(",", email.Receivers));
             System.Net.Mail.MailMessage Message = new System.Net.Mail.MailMessage();
             Message.From = new System.Net.Mail.MailAddress(_from);//这里需要注
             foreach (string add in email.Receivers)

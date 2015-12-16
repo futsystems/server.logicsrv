@@ -12,6 +12,8 @@ using System.Runtime.InteropServices;
 using System.Threading;
 using System.Net;
 using System.Net.Sockets;
+using Common.Logging;
+
 
 namespace TradingLib.Common
 {
@@ -24,28 +26,6 @@ namespace TradingLib.Common
 
         public static string GlobalPrefix = ">>> ";
 
-
-        public static event ILogItemDel SendLogEvent;
-
-        /// <summary>
-        /// 控制台输出
-        /// 通过控制台打印日志输出
-        /// </summary>
-        /// <param name="msg"></param>
-        public static void ConsolePrint(ILogItem item)
-        {
-            StringBuilder sb = new StringBuilder();
-            sb.Append("[");
-            sb.Append(item.Level.ToString());
-            sb.Append("] ");
-            sb.Append(item.Programe);
-            sb.Append(":");
-            sb.Append(item.Message);
-
-            Console.ForegroundColor = GetColor(item.Level);
-            Console.WriteLine(sb.ToString());
-            Console.ForegroundColor = ConsoleColor.Gray;
-        }
 
         public static void LoadStatus(string body, bool samecolor = false)
         {
@@ -88,101 +68,86 @@ namespace TradingLib.Common
         }
         public static void StatusSection(string body, string status, QSEnumInfoColor color,bool samecolor = false)
         {
-            Console.WriteLine();
-            Console.WriteLine("".PadLeft(GetAvabileConsoleWidth()/ 2 - 1, '.'));
-            ConsoleColorStatus(body, string.Format("[{0}]", status), samecolor ? color : QSEnumInfoColor.INFOWHITE, color);
-            Console.WriteLine();
+            //WriteSectionLine();
+            //_logger.Info(body.PadLeft(20, ' '));
+            WriteSectionLine(body, status);
+            //Console.WriteLine();
+            //Console.WriteLine("".PadLeft(GetAvabileConsoleWidth()/ 2 - 1, '.'));
+            //ConsoleColorStatus(body, string.Format("[{0}]", status), samecolor ? color : QSEnumInfoColor.INFOWHITE, color);
+            //Console.WriteLine();
         }
 
-
-
-        public static void ConsoleColorStatus(string msg,string rightmsg,QSEnumInfoColor colorl= QSEnumInfoColor.INFOWHITE,QSEnumInfoColor colorr=QSEnumInfoColor.INFOWHITE, int lefpad=0)
+        static int MaxLengh = 100;
+        public static void WriteSectionLine()
         {
-            if (colorl == colorr)
-            {
-                int len = GetAvabileConsoleWidth()/ 2;
-                int len2 = (len - msg.Length - lefpad);
-                string s = msg.PadLeft(msg.Length + lefpad) + rightmsg.PadLeft(len2 - 1);
-
-                Console.ForegroundColor = GetColor(colorl);
-                Console.WriteLine(s);
-                Console.ForegroundColor = ConsoleColor.Gray;
-            }
-            else
-            {
-                int len = GetAvabileConsoleWidth() / 2;
-                int len2 = (len - msg.Length - lefpad);
-                Console.ForegroundColor = GetColor(colorl);
-                Console.Write(msg.PadLeft(msg.Length + lefpad));
-                Console.ForegroundColor = GetColor(colorr);
-                Console.Write(rightmsg.PadLeft(len2 - 1));
-                Console.Write(Environment.NewLine);
-                Console.ForegroundColor = ConsoleColor.Gray;
-            }
+            _logger.Info("".PadLeft(MaxLengh, '.'));
         }
 
-        public static ConsoleColor GetColor(QSEnumInfoColor color)
+        public static void WriteSectionLine(string body, string status)
         {
-            switch(color)
-            {
-                case QSEnumInfoColor.INFOBLUE:
-                    return ConsoleColor.Blue;
-                case QSEnumInfoColor.INFODARKRED:
-                    return ConsoleColor.DarkRed;
-                case QSEnumInfoColor.INFOGREEN:
-                    return ConsoleColor.Green;
-                case QSEnumInfoColor.INFOGRAY:
-                    return ConsoleColor.Gray;
-                case QSEnumInfoColor.INFOREAD:
-                    return ConsoleColor.Red;
-                case QSEnumInfoColor.INFOWHITE:
-                    return ConsoleColor.White;
-                case QSEnumInfoColor.INFOYELLOW:
-                    return ConsoleColor.Yellow;
-                default:
-                    return ConsoleColor.White;
-            }
-        }
-        /// <summary>
-        /// Get color for the specified log level
-        /// </summary>
-        /// <param name="level">Level for the log entry</param>
-        /// <returns>A <see cref="ConsoleColor"/> for the level</returns>
-        public static ConsoleColor GetColor(QSEnumDebugLevel level)
-        {
-            switch (level)
-            {
-                case QSEnumDebugLevel.VERB:
-                    return ConsoleColor.DarkGray;
-                case QSEnumDebugLevel.DEBUG:
-                    return ConsoleColor.Gray;
-                case QSEnumDebugLevel.INFO:
-                    return ConsoleColor.White;
-                case QSEnumDebugLevel.WARNING:
-                    return ConsoleColor.DarkMagenta;
-                case QSEnumDebugLevel.ERROR:
-                    return ConsoleColor.Magenta;
-                case QSEnumDebugLevel.MUST:
-                    return ConsoleColor.Blue;
-
-               
-                //case LogLevel.Fatal:
-                //    return ConsoleColor.Red;
-            }
-            return ConsoleColor.Yellow;
+            string s = Util.padRightEx(string.Format(" {0} [{1}]", body, status), MaxLengh, '.');
+            _logger.Info(s);
         }
 
 
-        /// <summary>
-        /// string日志的输入委托 将系统的日志以文本形式输出到console
-        /// </summary>
-        //public static DebugDelegate SendDebugEvent;
-        public static void Debug(string msg, QSEnumDebugLevel level = QSEnumDebugLevel.INFO,string programe=null)
-        {
-            //如果给util绑定了sendlogevent事件处理器 则通过sendlogevent处理日志
-            ILogItem item = new LogItem(msg, level, programe==null?PROGRAME:programe);
-            Log(item);
-        }
+
+        //public static void ConsoleColorStatus(string msg,string rightmsg,QSEnumInfoColor colorl= QSEnumInfoColor.INFOWHITE,QSEnumInfoColor colorr=QSEnumInfoColor.INFOWHITE, int lefpad=0)
+        //{
+        //    if (colorl == colorr)
+        //    {
+        //        int len = GetAvabileConsoleWidth()/ 2;
+        //        int len2 = (len - msg.Length - lefpad);
+        //        string s = msg.PadLeft(msg.Length + lefpad) + rightmsg.PadLeft(len2 - 1);
+
+        //        Console.ForegroundColor = GetColor(colorl);
+        //        Console.WriteLine(s);
+        //        Console.ForegroundColor = ConsoleColor.Gray;
+        //    }
+        //    else
+        //    {
+        //        int len = GetAvabileConsoleWidth() / 2;
+        //        int len2 = (len - msg.Length - lefpad);
+        //        Console.ForegroundColor = GetColor(colorl);
+        //        Console.Write(msg.PadLeft(msg.Length + lefpad));
+        //        Console.ForegroundColor = GetColor(colorr);
+        //        Console.Write(rightmsg.PadLeft(len2 - 1));
+        //        Console.Write(Environment.NewLine);
+        //        Console.ForegroundColor = ConsoleColor.Gray;
+        //    }
+        //}
+
+        //public static ConsoleColor GetColor(QSEnumInfoColor color)
+        //{
+        //    switch(color)
+        //    {
+        //        case QSEnumInfoColor.INFOBLUE:
+        //            return ConsoleColor.Blue;
+        //        case QSEnumInfoColor.INFODARKRED:
+        //            return ConsoleColor.DarkRed;
+        //        case QSEnumInfoColor.INFOGREEN:
+        //            return ConsoleColor.Green;
+        //        case QSEnumInfoColor.INFOGRAY:
+        //            return ConsoleColor.Gray;
+        //        case QSEnumInfoColor.INFOREAD:
+        //            return ConsoleColor.Red;
+        //        case QSEnumInfoColor.INFOWHITE:
+        //            return ConsoleColor.White;
+        //        case QSEnumInfoColor.INFOYELLOW:
+        //            return ConsoleColor.Yellow;
+        //        default:
+        //            return ConsoleColor.White;
+        //    }
+        //}
+
+
+        #region 全局日志输出函数 避免多个类中去获得单独的日志对象
+        /* 大量创建的对象，或者临时性日志输出，则可以通过调用全局日志输出函数进行
+         * 信息输出，避免创建过多logger对象 
+         * 
+         * 
+         * 
+         * **/
+        static ILog _logger = LogManager.GetLogger("Utils");
 
         /// <summary>
         /// 处理日志
@@ -190,27 +155,70 @@ namespace TradingLib.Common
         /// <param name="item"></param>
         public static void Log(ILogItem item)
         {
-            //如果发送日志事件有绑定则发送日志 同时进行控制台打印
-            if (SendLogEvent != null)
-            {
-                //发送日志
-                SendLogEvent(item);
+            Log(item.Message, item.Level, item.Programe);
+        }
 
-                //显示台打印日志
-                ConsolePrint(item);
 
-            }//如果没有绑定处理器 则通过控制台输出
-            else
-            {
-                ConsolePrint(item);
+        /// <summary>
+        /// 全局日志系统
+        /// 该日志函数用于在相关模块中快速输出日志，而不用进行进行LogManager.GetLogger操作，简化了日志输出和调试
+        /// </summary>
+        public static void Log(string msg, QSEnumDebugLevel level = QSEnumDebugLevel.INFO,string programe=null)
+        {
+            //如果给util绑定了sendlogevent事件处理器 则通过sendlogevent处理日志
+            //ILogItem item = new LogItem(msg, level, programe==null?PROGRAME:programe);
+            //Log(item);
+            msg = string.Format("{0}:{1}", !string.IsNullOrEmpty(programe)? "Utils-"+programe : "Utils", msg);
+            switch (level)
+            { 
+                case QSEnumDebugLevel.DEBUG:
+                    _logger.Debug(msg);
+                    break;
+                case QSEnumDebugLevel.ERROR:
+                    _logger.Error(msg);
+                    break;
+                case QSEnumDebugLevel.INFO:
+                    _logger.Info(msg);
+                    break;
+                case QSEnumDebugLevel.FATAL:
+                    _logger.Fatal(msg);
+                    break;
+                case QSEnumDebugLevel.WARN:
+                    _logger.Warn(msg);
+                    break;
+                default:
+                    _logger.Debug(msg);
+                    break;
             }
         }
-        
 
-        static void debug(string msg)
+
+        public static void Debug(string msg, string programe=null)
         {
-            Debug(msg);
+            Log(msg, QSEnumDebugLevel.DEBUG, programe);
         }
+
+        public static void Info(string msg, string progame = null)
+        {
+            Log(msg, QSEnumDebugLevel.INFO, progame);
+        }
+
+        public static void Error(string msg, string programe = null)
+        {
+            Log(msg, QSEnumDebugLevel.ERROR, programe);
+        }
+
+        public static void Fatal(string msg, string programe = null)
+        {
+            Log(msg, QSEnumDebugLevel.FATAL, programe);
+        }
+
+        public static void Warn(string msg, string programe = null)
+        {
+            Log(msg, QSEnumDebugLevel.WARN, programe);
+        }
+        #endregion
+
 
 
 
@@ -334,6 +342,34 @@ namespace TradingLib.Common
         }
 
 
+        /// <summary>
+        /// 获得当前地址信息
+        /// </summary>
+        /// <returns></returns>
+        public static LocationInfo GetLocationInfo()
+        {
+            try
+            {
+                String direction = "";
+                WebRequest request = WebRequest.Create("http://ip.360.cn/IPShare/info");
+                using (WebResponse response = request.GetResponse())
+                using (StreamReader stream = new StreamReader(response.GetResponseStream(), Encoding.UTF8))
+                {
+                    direction = stream.ReadToEnd();
+
+                    TradingLib.Mixins.Json.JsonData data = TradingLib.Mixins.Json.JsonMapper.ToObject(direction);
+                    string ip = data["ip"].ToString().Trim();
+                    string location = data["location"].ToString().Trim();
+                    return new LocationInfo() { IP = ip, Location = location, MAC = "" };
+
+                }
+            }
+            catch (Exception ex)
+            {
+                return new LocationInfo() { MAC = "" };
+            }
+        }
+
 
         public static bool IsToday(DateTime dt)
         {
@@ -350,15 +386,7 @@ namespace TradingLib.Common
         }
 
 
-        public static string GetPriceTickFormat(decimal pricetick)
-        {
-            string[] p = pricetick.ToString().Split('.');
-            if (p.Length <= 1)
-                return "{0:F0}";
-            else
-                return "{0:F" + p[1].ToCharArray().Length.ToString() + "}";
-
-        }
+        
 
         /// <summary>
         /// 获得某个Enum的描述
@@ -388,6 +416,17 @@ namespace TradingLib.Common
         }
 
 
+        /// <summary>
+        /// 通过枚举字符串返回枚举
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="enumstr"></param>
+        /// <returns></returns>
+        public static T ParseEnum<T>(string enumstr)
+        {
+            return (T)Enum.Parse(typeof(T), enumstr);
+        }
+
 
         /// <summary>
         /// 用于记录当前服务器版本，客户端版本不能小于服务端版本，如果客户端版本小于服务端版本，则表明服务端有更新，需要更新客户端API
@@ -407,6 +446,11 @@ namespace TradingLib.Common
         {
             string filepath = Path.Combine(new string[] { BaseDir, "config", cfgname });
             return filepath;
+        }
+
+        public static string GetHolidayPath()
+        {
+            return Path.Combine(new string[] { BaseDir, "config", "holiday" });
         }
 
         /// <summary>
@@ -771,6 +815,25 @@ namespace TradingLib.Common
         #endregion
 
 
+
+        #region Security and symbol
+
+        /// <summary>
+        /// 获得某个PriceTick对应的数字格式化输出样式
+        /// </summary>
+        /// <param name="pricetick"></param>
+        /// <returns></returns>
+        public static string GetPriceTickFormat(decimal pricetick)
+        {
+            string[] p = pricetick.ToString().Split('.');
+            if (p.Length <= 1)
+                return "{0:F0}";
+            else
+                return "{0:F" + p[1].ToCharArray().Length.ToString() + "}";
+
+        }
+
+        #endregion
         public const string ZEROBUILD = "0";
         /// <summary>
         /// Gets a number representing the build of an installation.
@@ -798,6 +861,46 @@ namespace TradingLib.Common
         }
 
 
+        /// <summary>
+        /// 清空某个事件的所有绑定的委托
+        /// </summary>
+        /// <param name="objectHasEvents"></param>
+        /// <param name="eventName"></param>
+        public static void ClearAllEvents(object objectHasEvents, string eventName)
+        {
+            if (objectHasEvents == null)
+            {
+                return;
+            }
+            try
+            {
+                EventInfo[] events = objectHasEvents.GetType().GetEvents(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
+                if (events == null || events.Length < 1)
+                {
+                    return;
+                }
+
+                for (int i = 0; i < events.Length; i++)
+                {
+                    EventInfo ei = events[i];
+                    if (ei.Name == eventName)
+                    {
+                        FieldInfo fi = ei.DeclaringType.GetField(eventName, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
+                        if (fi != null)
+                        {
+                            fi.SetValue(objectHasEvents, null);
+                        }
+                        break;
+                    }
+                }
+            }
+            catch
+            {
+            }
+        }
+
+
+
 
         /// <summary>
         /// Gets string representing the version of this suite.
@@ -823,7 +926,15 @@ namespace TradingLib.Common
         //}
 
 
-
+        /// <summary>
+        /// 通过过期日 获得合约的月份后缀
+        /// </summary>
+        /// <param name="expiredate"></param>
+        /// <returns></returns>
+        //public static string GetSymbolMonth(DateTime expiredate)
+        //{ 
+            
+        //}
 
         /// <summary>
         /// Obtains a version out of a string that contains version + other information.

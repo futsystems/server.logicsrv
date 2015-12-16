@@ -385,6 +385,11 @@ namespace TradingLib.Mixins.JsonObject
         /// 0表示第三方支付
         /// </summary>
         public string  RecvInfo { get; set; }
+
+        /// <summary>
+        /// 提交者信息
+        /// </summary>
+        public string Submitter { get; set; }
     }
 
     public class JsonWrapperCasnTrans
@@ -419,12 +424,25 @@ namespace TradingLib.Mixins.JsonObject
         /// <summary>
         /// 对应流水
         /// </summary>
-        public string TransRef { get; set; }
+        public string TxnRef { get; set; }
 
         /// <summary>
         /// 说明
         /// </summary>
         public string Comment { get; set; }
+
+
+        /// <summary>
+        /// 出入金类型
+        /// </summary>
+        public QSEnumCashOperation TxnType { get; set; }
+
+        /// <summary>
+        /// 资金类别
+        /// </summary>
+        public QSEnumEquityType EquityType { get; set; }
+
+
     }
 
 

@@ -67,6 +67,8 @@ namespace TradingLib.Common
             {
                 switch (type)
                 {
+                    case MessageTypes.SERVICEREQUEST:
+                        return RequestTemplate<QryServiceRequest>.SrvRecvRequest(frontid, clientid, content);
                     //逻辑活动请求
                     case MessageTypes.LOGICLIVEREQUEST:
                         return RequestTemplate<LogicLiveRequest>.SrvRecvRequest(frontid, clientid, content);
@@ -98,11 +100,11 @@ namespace TradingLib.Common
                     case MessageTypes.BROKERNAMEREQUEST:
                         return RequestTemplate<BrokerNameRequest>.SrvRecvRequest(frontid, clientid, content);
                     //注册合约
-                    case MessageTypes.REGISTERSTOCK:
-                        return RequestTemplate<RegisterSymbolsRequest>.SrvRecvRequest(frontid, clientid, content);
+                    case MessageTypes.REGISTERSYMTICK:
+                        return RequestTemplate<RegisterSymbolTickRequest>.SrvRecvRequest(frontid, clientid, content);
                     //注销合约
-                    case MessageTypes.CLEARSTOCKS:
-                        return RequestTemplate<UnregisterSymbolsRequest>.SrvRecvRequest(frontid, clientid, content);
+                    case MessageTypes.UNREGISTERSYMTICK:
+                        return RequestTemplate<UnregisterSymbolTickRequest>.SrvRecvRequest(frontid, clientid, content);
                     //发送委托
                     case MessageTypes.SENDORDER:
                         return RequestTemplate<OrderInsertRequest>.SrvRecvRequest(frontid, clientid, content);
@@ -143,8 +145,8 @@ namespace TradingLib.Common
                     case MessageTypes.CONFIRMSETTLEMENT:
                         return RequestTemplate<ConfirmSettlementRequest>.SrvRecvRequest(frontid, clientid, content);
                     //查询历史行情
-                    case MessageTypes.QRYBAR:
-                        return null;
+                    case MessageTypes.BARREQUEST:
+                        return RequestTemplate<QryBarRequest>.SrvRecvRequest(frontid, clientid, content);
                     //扩展命令请求
                     case MessageTypes.CONTRIBREQUEST:
                         return RequestTemplate<ContribRequest>.SrvRecvRequest(frontid, clientid, content);
@@ -172,7 +174,36 @@ namespace TradingLib.Common
                     //查询市场行情
                     case MessageTypes.QRYMARKETDATA:
                         return RequestTemplate<QryMarketDataRequest>.SrvRecvRequest(frontid, clientid, content);
-
+                    //查询交易参数
+                    case MessageTypes.QRYTRADINGPARAMS:
+                        return RequestTemplate<QryTradingParamsRequest>.SrvRecvRequest(frontid, clientid, content);
+                    //查询交易时间段
+                    case MessageTypes.XQRYMARKETTIME:
+                        return RequestTemplate<XQryMarketTimeRequest>.SrvRecvRequest(frontid, clientid, content);
+                    //查询交易所
+                    case MessageTypes.XQRYEXCHANGE:
+                        return RequestTemplate<XQryExchangeRequuest>.SrvRecvRequest(frontid, clientid, content);
+                    //查询品种
+                    case MessageTypes.XQRYSECURITY:
+                        return RequestTemplate<XQrySecurityRequest>.SrvRecvRequest(frontid, clientid, content);
+                    //查询合约
+                    case MessageTypes.XQRYSYMBOL:
+                        return RequestTemplate<XQrySymbolRequest>.SrvRecvRequest(frontid, clientid, content);
+                    //查询隔夜持仓
+                    case MessageTypes.XQRYYDPOSITION:
+                        return RequestTemplate<XQryYDPositionRequest>.SrvRecvRequest(frontid, clientid, content);
+                    //查询委托
+                    case MessageTypes.XQRYORDER:
+                        return RequestTemplate<XQryOrderRequest>.SrvRecvRequest(frontid,clientid,content);
+                    //查询成交
+                    case MessageTypes.XQRYTRADE:
+                        return RequestTemplate<XQryTradeRequest>.SrvRecvRequest(frontid, clientid, content);
+                    //更新地址信息
+                    case MessageTypes.UPDATELOCATION:
+                        return RequestTemplate<UpdateLocationInfoRequest>.SrvRecvRequest(frontid, clientid, content);
+                    //查询行情快照
+                    case MessageTypes.XQRYTICKSNAPSHOT:
+                        return RequestTemplate<XQryTickSnapShotRequest>.SrvRecvRequest(frontid, clientid, content);
 
                     #region manager
                     case MessageTypes.MGRLOGINREQUEST://请求登入
@@ -213,8 +244,12 @@ namespace TradingLib.Common
                         return RequestTemplate<MGRAddAccountRequest>.SrvRecvRequest(frontid, clientid, content);
                     case MessageTypes.MGRQRYEXCHANGE://请求查询交易所
                         return RequestTemplate<MGRQryExchangeRequuest>.SrvRecvRequest(frontid, clientid, content);
+                    case MessageTypes.MGRUPDATEEXCHANGE://请求更新交易所
+                        return RequestTemplate<MGRUpdateExchangeRequest>.SrvRecvRequest(frontid, clientid, content);
                     case MessageTypes.MGRQRYMARKETTIME://请求查询交易时间段
                         return RequestTemplate<MGRQryMarketTimeRequest>.SrvRecvRequest(frontid, clientid, content);
+                    case MessageTypes.MGRUPDATEMARKETTIME://请求更新交易时间段
+                        return RequestTemplate<MGRUpdateMarketTimeRequest>.SrvRecvRequest(frontid, clientid, content);
                     case MessageTypes.MGRQRYSECURITY://请求查询品种列表
                         return RequestTemplate<MGRQrySecurityRequest>.SrvRecvRequest(frontid, clientid, content);
                     case MessageTypes.MGRUPDATESECURITY://更新品种信息
@@ -245,20 +280,21 @@ namespace TradingLib.Common
                         return RequestTemplate<MGRQrySettleRequest>.SrvRecvRequest(frontid, clientid, content);
                     case MessageTypes.MGRCHANGEACCOUNTPASS://请求修改帐户密码
                         return RequestTemplate<MGRChangeAccountPassRequest>.SrvRecvRequest(frontid, clientid, content);
-                    case MessageTypes.MGRADDSECURITY://请求添加品种
-                        return RequestTemplate<MGRReqAddSecurityRequest>.SrvRecvRequest(frontid, clientid, content);
-                    case MessageTypes.MGRADDSYMBOL://请求添加合约
-                        return RequestTemplate<MGRReqAddSymbolRequest>.SrvRecvRequest(frontid, clientid, content);
+                    //case MessageTypes.MGRADDSECURITY://请求添加品种
+                    //    return RequestTemplate<MGRReqAddSecurityRequest>.SrvRecvRequest(frontid, clientid, content);
+
+                    //case MessageTypes.MGRADDSYMBOL://请求添加合约
+                    //    return RequestTemplate<MGRReqAddSymbolRequest>.SrvRecvRequest(frontid, clientid, content);
                     case MessageTypes.MGRCHANGEINVESTOR://请求修改投资者信息
                         return RequestTemplate<MGRReqChangeInvestorRequest>.SrvRecvRequest(frontid, clientid, content);
                     case MessageTypes.MGRUPDATEPOSLOCK://请求修改帐户锁仓权限
                         return RequestTemplate<MGRReqUpdatePosLockRequest>.SrvRecvRequest(frontid, clientid, content);
-                    case MessageTypes.MGRQRYMANAGER://查询管理员列表
-                        return RequestTemplate<MGRQryManagerRequest>.SrvRecvRequest(frontid, clientid, content);
-                    case MessageTypes.MGRADDMANAGER://请求添加管理员
-                        return RequestTemplate<MGRReqAddManagerRequest>.SrvRecvRequest(frontid, clientid, content);
-                    case MessageTypes.MGRUPDATEMANAGER://请求更新管理员
-                        return RequestTemplate<MGRReqUpdateManagerRequest>.SrvRecvRequest(frontid, clientid, content);
+                    //case MessageTypes.MGRQRYMANAGER://查询管理员列表
+                    //    return RequestTemplate<MGRQryManagerRequest>.SrvRecvRequest(frontid, clientid, content);
+                    //case MessageTypes.MGRADDMANAGER://请求添加管理员
+                    //    return RequestTemplate<MGRReqAddManagerRequest>.SrvRecvRequest(frontid, clientid, content);
+                    //case MessageTypes.MGRUPDATEMANAGER://请求更新管理员
+                    //    return RequestTemplate<MGRReqUpdateManagerRequest>.SrvRecvRequest(frontid, clientid, content);
                     case MessageTypes.MGRQRYACCTSERVICE://请求查询帐户服务
                         return RequestTemplate<MGRQryAcctServiceRequest>.SrvRecvRequest(frontid, clientid, content);
                     case MessageTypes.MGRCONTRIBREQUEST://扩展请求
@@ -269,6 +305,15 @@ namespace TradingLib.Common
                         return RequestTemplate<MGRReqInsertTradeRequest>.SrvRecvRequest(frontid, clientid, content);
                     case MessageTypes.MGRDELACCOUNT://请求删除帐户
                         return RequestTemplate<MGRReqDelAccountRequest>.SrvRecvRequest(frontid, clientid, content);
+                    #endregion
+
+                    #region 行情部分
+                    case MessageTypes.MGRSTARTDATAFEED://启动行情通道
+                        return RequestTemplate<MDReqStartDataFeedRequest>.SrvRecvRequest(frontid, clientid, content);
+                    case MessageTypes.MGRSTOPDATAFEED://停止行情通道
+                        return RequestTemplate<MDReqStopDataFeedRequest>.SrvRecvRequest(frontid, clientid, content);
+                    case MessageTypes.MGRREGISTERSYMBOLS://注册行情
+                        return RequestTemplate<MDRegisterSymbolsRequest>.SrvRecvRequest(frontid, clientid, content);
                     #endregion
 
                     default:
@@ -285,6 +330,10 @@ namespace TradingLib.Common
         {
             switch (type)
             { 
+                case MessageTypes.SERVICERESPONSE:
+                    return ResponseTemplate<RspQryServiceResponse>.CliRecvResponse(content);
+                case MessageTypes.REGISTERCLIENTRESPONSE:
+                    return ResponseTemplate<RspRegisterClientResponse>.CliRecvResponse(content);
                 case MessageTypes.LOGICLIVERESPONSE:
                     return ResponseTemplate<LogicLiveResponse>.CliRecvResponse(content);
                 case MessageTypes.FEATURERESPONSE:
@@ -312,6 +361,10 @@ namespace TradingLib.Common
                     return ResponseTemplate<OrderActionNotify>.CliRecvResponse(content);
                 case MessageTypes.ERRORORDERACTIONNOTIFY://委托操作错误通知
                     return ResponseTemplate<ErrorOrderActionNotify>.CliRecvResponse(content);
+                case MessageTypes.CASHOPERATIONNOTIFY://出入金操作通知
+                    return ResponseTemplate<CashOperationNotify>.CliRecvResponse(content);
+                case MessageTypes.TRADINGNOTICENOTIFY://交易通知
+                    return ResponseTemplate<TradingNoticeNotify>.CliRecvResponse(content);
 
                 case MessageTypes.ORDERRESPONSE://查询委托回报
                     return ResponseTemplate<RspQryOrderResponse>.CliRecvResponse(content);
@@ -325,6 +378,8 @@ namespace TradingLib.Common
                     return ResponseTemplate<RspQrySymbolResponse>.CliRecvResponse(content);
                 case MessageTypes.SETTLEINFORESPONSE://结算信息回报
                     return ResponseTemplate<RspQrySettleInfoResponse>.CliRecvResponse(content);
+                case MessageTypes.BARRESPONSE://历史数据回报
+                    return ResponseTemplate<RspQryBarResponse>.CliRecvResponse(content);
                 case MessageTypes.SETTLEINFOCONFIRMRESPONSE://结算确认回报
                     return ResponseTemplate<RspQrySettleInfoConfirmResponse>.CliRecvResponse(content);
                 case MessageTypes.CONFIRMSETTLEMENTRESPONSE://确认结算回报
@@ -354,11 +409,35 @@ namespace TradingLib.Common
                     return ResponseTemplate<RspQryInstrumentMarginRateResponse>.CliRecvResponse(content);
                 case MessageTypes.MARKETDATARESPONSE://查询市场行情回报
                     return ResponseTemplate<RspQryMarketDataResponse>.CliRecvResponse(content);
+                case MessageTypes.TRADINGPARAMSRESPONSE://交易参数回报
+                    return ResponseTemplate<RspQryTradingParamsResponse>.CliRecvResponse(content);
+
+                case MessageTypes.XMARKETTIMERESPONSE://交易时间回报
+                    return ResponseTemplate<RspXQryMarketTimeResponse>.CliRecvResponse(content);
+                case MessageTypes.XEXCHANGERESPNSE://交易所回报
+                    return ResponseTemplate<RspXQryExchangeResponse>.CliRecvResponse(content);
+                case MessageTypes.XSECURITYRESPONSE://品种回报
+                    return ResponseTemplate<RspXQrySecurityResponse>.CliRecvResponse(content);
+                case MessageTypes.XSYMBOLRESPONSE://合约回报
+                    return ResponseTemplate<RspXQrySymbolResponse>.CliRecvResponse(content);
+                case MessageTypes.XYDPOSITIONRESPONSE://持仓回报
+                    return ResponseTemplate<RspXQryYDPositionResponse>.CliRecvResponse(content);
+                case MessageTypes.XORDERRESPONSE://委托回报
+                    return ResponseTemplate<RspXQryOrderResponse>.CliRecvResponse(content);
+                case MessageTypes.XTRADERESPONSE://成交回报
+                    return ResponseTemplate<RspXQryTradeResponse>.CliRecvResponse(content);
+                case MessageTypes.XTICKSNAPSHOTRESPONSE://行情快照回报
+                    return ResponseTemplate<RspXQryTickSnapShotResponse>.CliRecvResponse(content);
 
                 case MessageTypes.TICKNOTIFY:
-                    TickNotify ticknotify = new TickNotify();
-                    ticknotify.Tick = TickImpl.Deserialize(content);
-                    return ticknotify;
+                    {
+                        TickNotify notify = new TickNotify();
+                        if (string.IsNullOrEmpty(content)) return notify;
+                        notify.Tick = TickImpl.Deserialize(content);
+                        return notify;
+                    }
+                    //return ResponseTemplate<TickNotify>.CliRecvResponse(content);
+
                 case MessageTypes.TICKHEARTBEAT:
                     TickHeartBeatResponse tickhb = new TickHeartBeatResponse();
                     return tickhb;
@@ -384,8 +463,12 @@ namespace TradingLib.Common
                 //    return ResponseTemplate<RspMGRQryConnectorResponse>.CliRecvResponse(content);
                 case MessageTypes.MGREXCHANGERESPONSE://查询交易所回报
                     return ResponseTemplate<RspMGRQryExchangeResponse>.CliRecvResponse(content);
+                case MessageTypes.MGRUPDATEEXCHANGERESPONSE://更新交易所回报
+                    return ResponseTemplate<RspMGRUpdateExchangeResponse>.CliRecvResponse(content);
                 case MessageTypes.MGRMARKETTIMERESPONSE://查询交易时间段回报
                     return ResponseTemplate<RspMGRQryMarketTimeResponse>.CliRecvResponse(content);
+                case MessageTypes.MGRUPDATEMARKETTIMERESPONSE://更新交易时间段回报
+                    return ResponseTemplate<RspMGRUpdateMarketTimeResponse>.CliRecvResponse(content);
                 case MessageTypes.MGRSECURITYRESPONSE://查询品种回报
                     return ResponseTemplate<RspMGRQrySecurityResponse>.CliRecvResponse(content);
                 case MessageTypes.MGRSYMBOLRESPONSE://查询合约回报
@@ -412,22 +495,33 @@ namespace TradingLib.Common
                     return ResponseTemplate<RspMGRQrySettleResponse>.CliRecvResponse(content);
                 //case MessageTypes.MGRCHANGEACCOUNTPASSRESPONSE://请求修改帐户密码回报
                 //    return ResponseTemplate<RspMGRChangeAccountPassResponse>.CliRecvResponse(content);
-                case MessageTypes.MGRADDSECURITYRESPONSE://请求添加品种回报
-                    return ResponseTemplate<RspMGRReqAddSecurityResponse>.CliRecvResponse(content);
-                case MessageTypes.MGRADDSYMBOLRESPONSE://请求添加合约回报
-                    return ResponseTemplate<RspMGRReqAddSymbolResponse>.CliRecvResponse(content);
+                //case MessageTypes.MGRADDSECURITYRESPONSE://请求添加品种回报
+                //    return ResponseTemplate<RspMGRReqAddSecurityResponse>.CliRecvResponse(content);
+                case MessageTypes.MGRUPDATESECURITYRESPONSE://请求更新品种
+                    return ResponseTemplate<RspMGRUpdateSecurityResponse>.CliRecvResponse(content);
+
+                //case MessageTypes.MGRADDSYMBOLRESPONSE://请求添加合约回报
+                //    return ResponseTemplate<RspMGRReqAddSymbolResponse>.CliRecvResponse(content);
+                case MessageTypes.MGRUPDATESYMBOLRESPONSE://请求更新合约回报
+                    return ResponseTemplate<RspMGRUpdateSymbolResponse>.CliRecvResponse(content);
                 case MessageTypes.MGRCHANGEINVESTOR://请求修改投资者信息
                     return ResponseTemplate<RspMGRReqChangeInvestorResponse>.CliRecvResponse(content);
                 case MessageTypes.MGRUPDATEPOSLOCKRESPONSE://请求修改帐户锁仓权限回报
                     return ResponseTemplate<RspMGRReqUpdatePosLockResponse>.CliRecvResponse(content);
-                case MessageTypes.MGRMANAGERRESPONSE://查询管理员列表回报
-                    return ResponseTemplate<RspMGRQryManagerResponse>.CliRecvResponse(content);
+                //case MessageTypes.MGRMANAGERRESPONSE://查询管理员列表回报
+                //    return ResponseTemplate<RspMGRQryManagerResponse>.CliRecvResponse(content);
                 case MessageTypes.MGRQRYACCTSERVICERESPONSE://查询帐户服务回报
                     return ResponseTemplate<RspMGRQryAcctServiceResponse>.CliRecvResponse(content);
                 case MessageTypes.MGRCONTRIBRESPONSE://扩展回报
                     return ResponseTemplate<RspMGRContribResponse>.CliRecvResponse(content);
                 case MessageTypes.MGRCONTRIBRNOTIFY://扩展回报
                     return ResponseTemplate<NotifyMGRContribNotify>.CliRecvResponse(content);
+                #endregion
+
+
+                #region 行情部分
+                case MessageTypes.MGRQRYSYMBOLSREGISTEDRESPONSE://FeedHandler请求查询已注册合约回报
+                    return ResponseTemplate<RspMDQrySymbolsRegistedResponse>.CliRecvResponse(content);
                 #endregion
                 default:
                     throw new PacketError();

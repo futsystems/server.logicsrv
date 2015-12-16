@@ -48,13 +48,13 @@ namespace FutsMoniter
         public void OnInit()
         {
             Globals.LogicEvent.RegisterCallback("MgrExchServer", "QryReceiveableBank", this.OnQryRecvBank);
-            Globals.LogicEvent.RegisterCallback("MgrExchServer", "NotifyRecvBank", this.OnNotifyRecvBank);
+            Globals.LogicEvent.RegisterNotifyCallback("MgrExchServer", "NotifyRecvBank", this.OnNotifyRecvBank);
         }
 
         public void OnDisposed()
         {
             Globals.LogicEvent.UnRegisterCallback("MgrExchServer", "QryReceiveableBank", this.OnQryRecvBank);
-            Globals.LogicEvent.UnRegisterCallback("MgrExchServer", "NotifyRecvBank", this.OnNotifyRecvBank);
+            Globals.LogicEvent.UnRegisterNotifyCallback("MgrExchServer", "NotifyRecvBank", this.OnNotifyRecvBank);
         }
 
         void OnNotifyRecvBank(string jsonstr)
@@ -70,7 +70,7 @@ namespace FutsMoniter
             }
         }
 
-        void OnQryRecvBank(string jsonstr)
+        void OnQryRecvBank(string jsonstr, bool islast)
         {
 
             //JsonData jd = TradingLib.Mixins.LitJson.JsonMapper.ToObject(jsonstr);

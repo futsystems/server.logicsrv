@@ -1,4 +1,4 @@
-﻿using System;
+﻿﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -18,11 +18,21 @@ namespace TradingLib.Common
         /// </summary>
         /// <param name="account"></param>
         /// <returns></returns>
-        public static bool GetArgsSideMargin(this IAccount account)
+        public static bool GetParamSideMargin(this IAccount account)
         {
             ExStrategy s = account.GetExStrategy();
             if (s != null)
                 return s.SideMargin;
+            //如果提供了合约国内交易所（排除香港交易所）默认使用单向大边
+            //if (symbol!= null && symbol.SecurityFamily.Exchange.Country == Country.CN && symbol.SecurityFamily.Exchange.EXCode != "HKEX")
+            //{
+            //    return true;
+            //}
+            //默认RMB帐户实行单向大边
+            if (account.Currency == CurrencyType.RMB)
+            {
+                return true;
+            }
             return false;
         }
 
@@ -31,7 +41,7 @@ namespace TradingLib.Common
         /// </summary>
         /// <param name="account"></param>
         /// <returns></returns>
-        public static bool GetArgsCreditSeparate(this IAccount account)
+        public static bool GetParamCreditSeparate(this IAccount account)
         {
             ExStrategy s = account.GetExStrategy();
             if (s != null)
@@ -44,12 +54,17 @@ namespace TradingLib.Common
         /// </summary>
         /// <param name="account"></param>
         /// <returns></returns>
-        public static bool GetArgsPositionLock(this IAccount account)
+        public static bool GetParamPositionLock(this IAccount account)
         {
             ExStrategy s = account.GetExStrategy();
             if (s != null)
                 return s.PositionLock;
-            return true;
+            //RMB帐户支持锁仓 其他货币不支持锁仓
+            if (account.Currency == CurrencyType.RMB)
+            {
+                return true;
+            }
+            return false;
 
         }
 
@@ -58,12 +73,12 @@ namespace TradingLib.Common
         /// </summary>
         /// <param name="account"></param>
         /// <returns></returns>
-        public static QSEnumMarginStrategy GetArgsMarginStrategy(this IAccount account)
+        public static QSEnumMarginPrice GetParamMarginPriceType(this IAccount account)
         {
             ExStrategy s = account.GetExStrategy();
             if (s != null)
-                return s.Margin;
-            return QSEnumMarginStrategy.LastPrice;
+                return s.MarginPrice;
+            return QSEnumMarginPrice.OpenPrice;
         }
 
         /// <summary>
@@ -71,13 +86,39 @@ namespace TradingLib.Common
         /// </summary>
         /// <param name="account"></param>
         /// <returns></returns>
-        public static QSEnumAvabileFundStrategy GetArgsAvabileFundStrategy(this IAccount account)
+        public static bool GetParamIncludePositionProfit(this IAccount account)
         {
             ExStrategy s = account.GetExStrategy();
             if (s != null)
-                return s.AvabileFund;
-            return QSEnumAvabileFundStrategy.UnPLInclude;
+                return s.IncludePositionProfit;
+            return true;
         }
- 
+
+        /// <summary>
+        /// 返回交易平仓盈亏是否可开仓
+        /// </summary>
+        /// <param name="account"></param>
+        /// <returns></returns>
+        public static bool GetParamIncludeCloseProfit(this IAccount account)
+        {
+            ExStrategy s = account.GetExStrategy();
+            if (s != null)
+                return s.IncludeCloseProfit;
+            return true;
+        }
+
+        /// <summary>
+        /// 返回交易帐户 浮动盈亏计算 算法
+        /// </summary>
+        /// <param name="account"></param>
+        /// <returns></returns>
+        public static QSEnumAlgorithm GetParamAlgorithm(this IAccount account)
+        {
+            ExStrategy s = account.GetExStrategy();
+            if (s != null)
+                return s.Algorithm;
+            return QSEnumAlgorithm.AG_All;
+        }
+
     }
 }

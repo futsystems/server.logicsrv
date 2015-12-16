@@ -80,6 +80,11 @@ namespace TradingLib.API
         int AccLimit { get; set; }
 
         /// <summary>
+        /// 代理数量限制
+        /// </summary>
+        int AgentLimit { get; set; }
+
+        /// <summary>
         /// 路由组数量限制
         /// </summary>
         int RouterGroupLimit { get; set; }
@@ -125,6 +130,16 @@ namespace TradingLib.API
         bool Module_PayOnline { get; set; }
 
         /// <summary>
+        /// 跟单模块
+        /// </summary>
+        bool Module_Follow { get; set; }
+
+        /// <summary>
+        /// 滑点模块
+        /// </summary>
+        bool Module_Slip { get; set; }
+
+        /// <summary>
         /// 实盘路由
         /// </summary>
         bool Router_Live { get; set; }
@@ -133,6 +148,12 @@ namespace TradingLib.API
         /// 模拟路由
         /// </summary>
         bool Router_Sim { get; set; }
+
+
+        /// <summary>
+        /// 切换路由模式
+        /// </summary>
+        bool Switch_Router { get; set; }
 
         /// <summary>
         /// 调试插入成交
@@ -146,6 +167,18 @@ namespace TradingLib.API
         /// 同步实盘帐户ID
         /// </summary>
         int CFG_SyncVendor_ID { get; set; }
+
+        /// <summary>
+        /// 是否处于运营状态
+        /// </summary>
+        bool IsProduction { get; set; }
+
+        /// <summary>
+        /// 分帐户个数
+        /// </summary>
+        int DiscountNum { get; set; }
+
+
         #endregion
     }
 }

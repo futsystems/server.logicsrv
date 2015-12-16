@@ -229,7 +229,7 @@ namespace TradingLib.Common
                     _identity = System.Guid.NewGuid().ToString();
                     _client.Options.Identity = Encoding.UTF8.GetBytes(_identity);
                     string cstr = "tcp://" + _serverip.ToString() + ":" + Port.ToString();
-                    debug(PROGRAME + ":Connect to Message Server:" + cstr, QSEnumDebugLevel.MUST);
+                    debug(PROGRAME + ":Connect to Message Server:" + cstr, QSEnumDebugLevel.INFO);
                     _client.Connect(cstr);
 
                     //当客户端有消息近来时,我们读取消息并调用handleMessage出来消息 
@@ -329,7 +329,7 @@ namespace TradingLib.Common
                 using (subscriber = context.CreateSubscriberSocket())
                 {
                     string cstr = "tcp://" + _tickip.ToString() + ":" + _tickport.ToString();
-                    debug(PROGRAME + ":Connect to TickServer :" + cstr, QSEnumDebugLevel.MUST);
+                    debug(PROGRAME + ":Connect to TickServer :" + cstr, QSEnumDebugLevel.INFO);
                     subscriber.Connect(cstr);
                     SubscribeTickHeartBeat();
 

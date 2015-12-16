@@ -66,7 +66,7 @@ namespace TradingLib.Contrib.TradeFlow
                     _publisher = pub;
                     pub.Bind("tcp://*:"+_pubport.ToString());
                     //循环等待 pub将消息进行分发
-                    debug("TradeFlow publisher bind at:" + _pubport.ToString(),QSEnumDebugLevel.INFO);
+                    logger.Info("TradeFlow publisher bind at:" + _pubport.ToString());
                     while (messageGo)
                     {
                         Thread.Sleep(1000);
@@ -84,7 +84,7 @@ namespace TradingLib.Contrib.TradeFlow
         /// <param name="t"></param>
         void GotTrade(Trade t)
         {
-            debug("got new trade ,will pubish it...",QSEnumDebugLevel.INFO);
+            logger.Info("got new trade ,will pubish it...");
             lock (sendlock)
             {
                 string message = TradeImpl.Serialize(t);

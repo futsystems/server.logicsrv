@@ -83,7 +83,7 @@ namespace FutsMoniter
         }
 
         bool _godomain = false;
-        void OnQryDomain(string jsonstr)
+        void OnQryDomain(string jsonstr, bool islast)
         {
             DomainImpl[] objs = MoniterUtils.ParseJsonResponse<DomainImpl[]>(jsonstr);
             if (objs != null)
@@ -100,7 +100,7 @@ namespace FutsMoniter
             }
         }
 
-        void OnNotifyDomain(string json)
+        void OnNotifyDomain(string json, bool islast)
         {
             DomainImpl obj = MoniterUtils.ParseJsonResponse<DomainImpl>(json);
             if (obj != null)

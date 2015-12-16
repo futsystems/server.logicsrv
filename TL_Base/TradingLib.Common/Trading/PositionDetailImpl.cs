@@ -77,7 +77,7 @@ namespace TradingLib.Common
             this.OpenPrice = 0;
             this.TradeID = string.Empty;
             this.IsHisPosition = false;
-            this.LastSettlementPrice = 0M;
+            //this.LastSettlementPrice = 0M; 不能赋值LastSettlementPrice否则为永远为0，无法获得正常的昨日结算价，在持仓对象中产生的持仓明细 都包含有Position对象 通过取Position对象的LastSettlementPrice来获得昨日结算价
             
             this.CloseVolume = 0;
             this.CloseAmount = 0;
@@ -142,11 +142,40 @@ namespace TradingLib.Common
 
 
 
+        decimal? _lastSelltementPrice;
 
         /// <summary>
         /// 昨结算价
+        /// 如果对象时设定类型的对象则直接取值
+        /// 持仓对象中产生的持仓明细 则通过Position对象来取值
         /// </summary>
-        public decimal LastSettlementPrice { get; set; }
+        public decimal LastSettlementPrice
+        {
+            get
+            {
+                if (_lastSelltementPrice != null)
+                    return (decimal)_lastSelltementPrice;
+                else
+                {
+                    if (Position == null)
+                    {
+                        return this.OpenPrice;
+                    }
+                    else
+                    {
+                        if (Position.LastSettlementPrice == null)
+                        {
+                            return this.OpenPrice;
+                        }
+                        return (decimal)Position.LastSettlementPrice;
+                    }
+                }
+            }
+            set
+            {
+                _lastSelltementPrice = value;
+            }
+        }
 
         decimal? _settlementPrice;
         /// <summary>

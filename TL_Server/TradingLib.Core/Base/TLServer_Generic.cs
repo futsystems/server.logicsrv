@@ -140,7 +140,7 @@ namespace TradingLib.Core
             }
             catch (Exception ex)
             {
-                debug(" Init Error:" + ex.ToString(), QSEnumDebugLevel.ERROR);
+                logger.Error(" Init Error:" + ex.ToString());
                 throw (new QSTLServerInitError(ex));
             }
         }
@@ -152,7 +152,7 @@ namespace TradingLib.Core
         /// <param name="c"></param>
         void _clients_ClientRegistedEvent(T1 c)
         {
-            debug("客户端:" + c.Location.ClientID + " FrontID:" + c.Location.FrontID + "  FrontType:" + c.FrontType.ToString() + " Register to system..", QSEnumDebugLevel.INFO);
+            logger.Info("客户端:" + c.Location.ClientID + " FrontID:" + c.Location.FrontID + "  FrontType:" + c.FrontType.ToString() + " Register to system..");
             if (ClientRegistedEvent != null)
                 ClientRegistedEvent(c);
         }
@@ -164,7 +164,7 @@ namespace TradingLib.Core
         /// <param name="c"></param>
         void _clients_ClientUnRegistedEvent(T1 c)
         {
-            debug("客户端:" + c.Location.ClientID + " FrontID:" + c.Location.FrontID +"  FrontType:" +c.FrontType.ToString()+" Unregisted from system..", QSEnumDebugLevel.INFO);
+            logger.Info("客户端:" + c.Location.ClientID + " FrontID:" + c.Location.FrontID + "  FrontType:" + c.FrontType.ToString() + " Unregisted from system..");
             if (ClientUnregistedEvent != null)
                 ClientUnregistedEvent(c);
 
@@ -227,7 +227,7 @@ namespace TradingLib.Core
                 }
                 catch (Exception ex)
                 {
-                    debug("Cache clientlist error:" + ex.ToString(), QSEnumDebugLevel.ERROR);
+                    logger.Error("Cache clientlist error:" + ex.ToString());
                 }
             }
         }
@@ -236,7 +236,7 @@ namespace TradingLib.Core
         {
             lock (sessionfileobj)
             {
-                debug("try to load sessions form file:"+clientlistfn, QSEnumDebugLevel.INFO);
+                logger.Info("try to load sessions form file:" + clientlistfn);
                 if (!File.Exists(clientlistfn))
                 {
                     return new List<T1>();
@@ -267,7 +267,7 @@ namespace TradingLib.Core
                 }
                 catch (Exception ex)
                 {
-                    debug("Error In Restoring (Session):" + ex.ToString(), QSEnumDebugLevel.ERROR);
+                    logger.Error("Error In Restoring (Session):" + ex.ToString());
                     return cinfolist;
                 }
             }
@@ -317,12 +317,12 @@ namespace TradingLib.Core
             {
                 if (_started) return;
                 Stop();
-                debug("Starting " + PROGRAME + " server...", QSEnumDebugLevel.INFO);
+                logger.Info("Starting " + PROGRAME + " server...");
 
                 int attempts = 0;
                 while (!_started && (attempts++ < retries))
                 {
-                    debug("Try to start server at: " + _serveraddress + ":" + _port.ToString(), QSEnumDebugLevel.INFO);
+                    logger.Info("Try to start server at: " + _serveraddress + ":" + _port.ToString());
                     try
                     {   //注意从外层传入服务器监听地址
                         _trans = new AsyncServer(PROGRAME, _serveraddress, _port, this.NumWorkers, this.EnableTPTracker, false);
@@ -342,15 +342,15 @@ namespace TradingLib.Core
                     }
                 }
                 //如果启动成功 则同时启动行情发送线程
-                if (_started)
-                {
-                    starttickthread();
-                }
+                //if (_started)
+                //{
+                //    starttickthread();
+                //}
 
             }
             catch (Exception ex)
             {
-                debug(ex.Message + ex.StackTrace);
+                logger.Error(ex.Message + ex.StackTrace);
                 return;
             }
         }
@@ -365,9 +365,9 @@ namespace TradingLib.Core
             if (!_started) return;
             try
             {
-                debug("Soping " + PROGRAME + " server...", QSEnumDebugLevel.INFO);
+                logger.Info("Soping " + PROGRAME + " server...");
                 //停止行情线程
-                stoptickthread();
+                //stoptickthread();
                 //停止底层传输
                 if (_trans != null && _trans.IsLive)
                     _trans.Stop();
@@ -376,18 +376,18 @@ namespace TradingLib.Core
             }
             catch (Exception ex)
             {
-                debug(ex.Message + ex.StackTrace);
+                logger.Error(ex.Message + ex.StackTrace);
             }
-            debug("Stopped: " + ProviderName, QSEnumDebugLevel.INFO);
+            logger.Info("Stopped: " + ProviderName);
         }
         #endregion
 
 
         #region 服务端向客户端回报Tick
 
-        RingBuffer<Tick> tickq = new RingBuffer<Tick>(Util.TICK_BUFFER_SIZE);
-        bool _tickgo = false;
-        Thread tickthread;
+        //RingBuffer<Tick> tickq = new RingBuffer<Tick>(Util.TICK_BUFFER_SIZE);
+        //bool _tickgo = false;
+        //Thread tickthread;
 
         /// <summary>
         /// 服务端向客户端发送Tick,发送Tick有2钟方式1.排入队列发送 2.直接发送
@@ -396,80 +396,86 @@ namespace TradingLib.Core
         /// <param name="tick">The tick to include in the notification.</param>
         public void newTick(Tick tick)
         {
-            tickq.Write(tick);
-        }
-
-        void starttickthread()
-        {
-            if (_tickgo)
+            if (tick == null)
                 return;
-            _tickgo = true;
-            tickthread = new Thread(tickprocess);
-            tickthread.IsBackground = true;
-            tickthread.Name = "TickPubThread@" + PROGRAME;
-            tickthread.Start();
-            ThreadTracker.Register(tickthread);
-        }
-
-
-
-        void stoptickthread()
-        {
-            if (!_tickgo) return;
-            if (tickthread != null && tickthread.IsAlive)
+            if (_started)
             {
-                _tickgo = false;
-                int mainwati = 0;
-                while (tickthread.IsAlive && mainwati < 10)
-                {
-                    debug(string.Format("#{0} wati tickthread stopping....", mainwati), QSEnumDebugLevel.INFO);
-                    Thread.Sleep(1000);
-                    mainwati++;
-                }
-                if (!tickthread.IsAlive)
-                {
-                    debug("Tickthread stopped successfull", QSEnumDebugLevel.INFO);
-                }
-                tickthread.Abort();
-                tickthread = null;
+                _trans.SendTick(tick);
             }
+            //tickq.Write(tick);
         }
 
-        int _wait = 10;
-        void tickprocess()
-        {
-            DateTime last = DateTime.Now;
-            DateTime now = DateTime.Now;
-            while (_tickgo)
-            {
-                try
-                {
-                    now = DateTime.Now;
-                    while (tickq.hasItems)
-                    {
-                        Tick tick = tickq.Read();
-                        _trans.SendTick(tick);
-                    }
+        //void starttickthread()
+        //{
+        //    if (_tickgo)
+        //        return;
+        //    _tickgo = true;
+        //    tickthread = new Thread(tickprocess);
+        //    tickthread.IsBackground = true;
+        //    tickthread.Name = "TickPubThread@" + PROGRAME;
+        //    tickthread.Start();
+        //    ThreadTracker.Register(tickthread);
+        //}
 
-                    //发送心跳
-                    if ((now - last).TotalSeconds >= 5)
-                    {
-                        _trans.SendTickHeartBeat();
-                        last = now;
-                    }
-                    if (tickq.isEmpty)
-                    {
-                        Thread.Sleep(_wait);
-                    }
-                }
-                catch (Exception ex)
-                { 
+
+
+        //void stoptickthread()
+        //{
+        //    if (!_tickgo) return;
+        //    if (tickthread != null && tickthread.IsAlive)
+        //    {
+        //        _tickgo = false;
+        //        int mainwati = 0;
+        //        while (tickthread.IsAlive && mainwati < 10)
+        //        {
+        //            logger.Info(string.Format("#{0} wati tickthread stopping....", mainwati));
+        //            Thread.Sleep(1000);
+        //            mainwati++;
+        //        }
+        //        if (!tickthread.IsAlive)
+        //        {
+        //            logger.Info("Tickthread stopped successfull");
+        //        }
+        //        tickthread.Abort();
+        //        tickthread = null;
+        //    }
+        //}
+
+        //int _wait = 10;
+        //void tickprocess()
+        //{
+        //    DateTime last = DateTime.Now;
+        //    DateTime now = DateTime.Now;
+        //    while (_tickgo)
+        //    {
+        //        try
+        //        {
+        //            now = DateTime.Now;
+        //            while (tickq.hasItems)
+        //            {
+        //                Tick tick = tickq.Read();
+        //                _trans.SendTick(tick);
+        //            }
+
+        //            //发送心跳
+        //            if ((now - last).TotalSeconds >= 5)
+        //            {
+        //                _trans.SendTickHeartBeat();
+        //                last = now;
+        //            }
+        //            if (tickq.isEmpty)
+        //            {
+        //                Thread.Sleep(_wait);
+        //            }
+        //        }
+        //        catch (Exception ex)
+        //        { 
                 
-                }
-            }
+        //        }
+        //    }
             
             
-        }
+        //}
         #endregion
 
 
@@ -537,6 +543,17 @@ namespace TradingLib.Core
             }
 
         }
+
+        void SrvOnUpdateLocationInfo(UpdateLocationInfoRequest request, T1 client)
+        { 
+            if(request.LocationInfo!=null)
+            {
+                logger.Info(string.Format("clientID:{0} IP:{1} Location:{2} MAC:{3}", client.Location.ClientID,request.LocationInfo.IP,request.LocationInfo.Location, request.LocationInfo.MAC));
+                client.IPAddress = request.LocationInfo.IP;
+                client.HardWareCode = request.LocationInfo.MAC;
+            }
+        }
+
         /// <summary>
         /// 客户端请求注册到服务器
         /// 该消息是客户端发送上来的第一条消息
@@ -567,7 +584,7 @@ namespace TradingLib.Core
             }
 
             SrvBeatHeart(client);
-            debug("Client:" + request.ClientID + " Bind With Int32 Token, FrontIDi:"+_newcli.FrontIDi.ToString() +" SessionIDi:"+_newcli.SessionIDi.ToString(), QSEnumDebugLevel.INFO);
+            logger.Info("Client:" + request.ClientID + " Bind With Int32 Token, FrontIDi:" + _newcli.FrontIDi.ToString() + " SessionIDi:" + _newcli.SessionIDi.ToString());
         }
 
         /// <summary>
@@ -577,10 +594,10 @@ namespace TradingLib.Core
         /// <param name="request"></param>
         public void SrvVersonReq(VersionRequest request,T1 client)
         {
-            debug("client:" + client.Location.ClientID + " try to qry version", QSEnumDebugLevel.INFO);
+            logger.Info("client:" + client.Location.ClientID + " try to qry version");
             VersionResponse verresp = ResponseTemplate<VersionResponse>.SrvSendRspResponse(request);
             verresp.Version = TLCtxHelper.Version;
-            debug("response:" + verresp.ToString(),QSEnumDebugLevel.INFO);
+            logger.Info("response:" + verresp.ToString());
             SendOutPacket(verresp);
         }
 
@@ -590,9 +607,10 @@ namespace TradingLib.Core
         /// <param name="him"></param>
         protected void SrvClearClient(UnregisterClientRequest req,T1 client)
         {
+            logger.Debug("SrvClearClient called");
             if (client == null) return;
             _clients.UnRegistClient(client.Location.ClientID);//clientlist负责触发 updatelogininfo事件
-            debug("Client :" + req.ClientID + " Unregisted from server ", QSEnumDebugLevel.INFO);
+            logger.Info("Client :" + req.ClientID + " Unregisted from server ");
         }
 
         /// <summary>
@@ -601,8 +619,9 @@ namespace TradingLib.Core
         /// <param name="msg"></param>
         void SrvLoginReq(LoginRequest request,T1 client)
         {
+           
             if (client == null) return;
-            debug("Client:" + request.ClientID + " Try to login:" + request.Content, QSEnumDebugLevel.INFO);
+            logger.Info("Client:" + request.ClientID + " Try to login:" + request.Content);
             //主体认证部分,不同的TLServer有不同的验证需求，这里将逻辑放置到子类当中去实现
             this.AuthLogin(request,client);
             SrvBeatHeart(client);
@@ -828,6 +847,10 @@ namespace TradingLib.Core
                         SrvVersonReq(packet as VersionRequest, client);
                         PacketEvent(session, packet, front, address);
                         break;
+                    case MessageTypes.UPDATELOCATION://地址信息更新
+                        SrvOnUpdateLocationInfo(packet as UpdateLocationInfoRequest, client);
+                        PacketEvent(session, packet, front, address);
+                        break;
                     case MessageTypes.LOGINREQUEST://登入
                         SrvLoginReq(packet as LoginRequest, client);
                         PacketEvent(session, packet, front, address);
@@ -863,14 +886,14 @@ namespace TradingLib.Core
             }
             catch (PacketParseError ex)
             {
-                debug("****** IPacket Deserialize Error", QSEnumDebugLevel.ERROR);
-                debug(string.Format("Message Type:{0} Content:{1} FrontID:{2} Client:{3}", ex.Type.ToString(), ex.Content, ex.FrontID, ex.ClientID), QSEnumDebugLevel.ERROR);
-                debug("Raw Exception:" + ex.RawException.ToString(), QSEnumDebugLevel.ERROR);
+                logger.Error("****** IPacket Deserialize Error");
+                logger.Error(string.Format("Message Type:{0} Content:{1} FrontID:{2} Client:{3}", ex.Type.ToString(), ex.Content, ex.FrontID, ex.ClientID));
+                logger.Info("Raw Exception:" + ex.RawException.ToString());
             }
             catch (PacketTypeNotAvabile ex)
             {
-                debug("****** Can not find PacketClass for Type:"+ex.Type.ToString(), QSEnumDebugLevel.ERROR);
-                debug(string.Format("Message Type:{0} Content:{1} FrontID:{2} Client:{3}", ex.Type.ToString(), ex.Content, ex.FrontID, ex.ClientID), QSEnumDebugLevel.ERROR);
+                logger.Error("****** Can not find PacketClass for Type:" + ex.Type.ToString());
+                logger.Error(string.Format("Message Type:{0} Content:{1} FrontID:{2} Client:{3}", ex.Type.ToString(), ex.Content, ex.FrontID, ex.ClientID));
             }
             return result;
 

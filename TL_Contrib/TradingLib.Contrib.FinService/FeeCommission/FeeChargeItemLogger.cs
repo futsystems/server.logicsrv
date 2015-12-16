@@ -69,17 +69,17 @@ namespace TradingLib.Contrib.FinService
                         }
                         catch (Exception ex)
                         {
-                            debug(ex.ToString(), QSEnumDebugLevel.ERROR);
+                            logger.Error(ex.ToString());
                         }
                         string s = "服务收费日志:FeeCharge inserted:" + o.ToString();
                         if (!re)
                         {
                             _nrt++;
-                            debug(s + "失败", QSEnumDebugLevel.ERROR);
+                            logger.Error(s + "失败");
                         }
                         else
                         {
-                            debug(s + " 成功", QSEnumDebugLevel.INFO);
+                            logger.Info(s + " 成功");
                         }
                         Thread.Sleep(_delay);
                     }
@@ -93,7 +93,7 @@ namespace TradingLib.Contrib.FinService
                 }
                 catch (Exception ex)
                 {
-                    debug(PROGRAME + ":服务收费日志持久化发生错误:" + ex.ToString(), QSEnumDebugLevel.ERROR);
+                    logger.Error(PROGRAME + ":服务收费日志持久化发生错误:" + ex.ToString());
                 }
             }
         }

@@ -11,9 +11,20 @@ namespace TradingLib.ServiceManager
 {
     internal enum QSEnumConnectorOperation
     {
+        /// <summary>
+        /// 启动交易接口
+        /// </summary>
         Start,//启动
 
+        /// <summary>
+        /// 停止交易接口
+        /// </summary>
         Stop,//停止
+
+        /// <summary>
+        /// 重启交易接口
+        /// </summary>
+        Restart,//重启
     }
     internal delegate void AsyncConnectorOperationDel(ISession session, ConnectorConfig cfg, QSEnumConnectorOperation op);
 
@@ -113,6 +124,29 @@ namespace TradingLib.ServiceManager
             b.Stop();
         }
 
+        /// <summary>
+        /// 重启成交接口
+        /// </summary>
+        /// <param name="token"></param>
+        void RestartBroker(string token)
+        {
+            IBroker b = FindBroker(token);
+            if (b == null)//未找到
+            {
+                throw new FutsRspError("通道不存在");
+            }
+            if (b.IsLive)//已经启动则停止
+            {
+                b.Stop();
+            }
+            string msg = string.Empty;
+            bool s = b.Start(out msg);
+            if (!s)
+            {
+                throw new FutsRspError(msg);
+            }
+        }
+
         void StartDataFeed(string token)
         {
             IDataFeed df = FindDataFeed(token);
@@ -126,6 +160,7 @@ namespace TradingLib.ServiceManager
             }
             df.Start();
         }
+
         void StopDataFeed(string token)
         {
             IDataFeed df = FindDataFeed(token);
@@ -146,7 +181,7 @@ namespace TradingLib.ServiceManager
         {
             try
             {
-                debug("启动通道", QSEnumDebugLevel.INFO);
+                logger.Info("启动通道");
                 Manager manger = session.GetManager();
                 if (manger.IsInRoot())
                 {
@@ -156,7 +191,7 @@ namespace TradingLib.ServiceManager
                         AsyncConnectorOperationDel del = new AsyncConnectorOperationDel(ConnectorOperation);
 
                         //
-                        debug("start connector async.....", QSEnumDebugLevel.WARNING);
+                        logger.Info("start connector async.....");
                         del.BeginInvoke(session, cfg, QSEnumConnectorOperation.Start, null, null);
                     }
                     else
@@ -176,7 +211,7 @@ namespace TradingLib.ServiceManager
         {
             try
             {
-                debug("停止通道", QSEnumDebugLevel.INFO);
+                logger.Info("停止通道");
                 Manager manger = session.GetManager();
                 if (manger.IsInRoot())
                 {
@@ -186,7 +221,7 @@ namespace TradingLib.ServiceManager
                         AsyncConnectorOperationDel del = new AsyncConnectorOperationDel(ConnectorOperation);
 
                         //
-                        debug("stop connector async.....", QSEnumDebugLevel.WARNING);
+                        logger.Info("stop connector async.....");
                         del.BeginInvoke(session, cfg, QSEnumConnectorOperation.Stop, null, null);
                     }
                     else

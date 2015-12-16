@@ -27,18 +27,18 @@ namespace TradingLib.Common
             }
             return "未设置";
         }
-        public static JsonWrapperAccountBankAC GetBankAC(this IAccount acc)
-        {
-            JsonWrapperAccountBankAC bkacc = new JsonWrapperAccountBankAC();
-            bkacc.Name = string.IsNullOrEmpty(acc.Name) ? null : acc.Name;
-            bkacc.BankAC = acc.BankAC;
-            bkacc.Branch = "";
-            ContractBank bk = BasicTracker.ContractBankTracker[acc.BankID];
-            bkacc.Bank = bk != null ? bk.Name : null;
-            bkacc.Account = acc.ID;
-            bkacc.AgentInfo = GetAgentInfo(acc);
-            return bkacc;
-        }
+        //public static JsonWrapperAccountBankAC GetBankAC(this IAccount acc)
+        //{
+        //    JsonWrapperAccountBankAC bkacc = new JsonWrapperAccountBankAC();
+        //    bkacc.Name = string.IsNullOrEmpty(acc.Name) ? null : acc.Name;
+        //    bkacc.BankAC = acc.BankAC;
+        //    bkacc.Branch = "";
+        //    ContractBank bk = BasicTracker.ContractBankTracker[acc.BankID];
+        //    bkacc.Bank = bk != null ? bk.Name : null;
+        //    bkacc.Account = acc.ID;
+        //    bkacc.AgentInfo = GetAgentInfo(acc);
+        //    return bkacc;
+        //}
 
 
 
@@ -107,7 +107,12 @@ namespace TradingLib.Common
             a.Margin = acc.Margin;
             a.MarginFrozen = acc.MarginFrozen;
             a.Credit = acc.Credit;
-            
+            a.LastCredit = acc.LastCredit;
+            a.CreditCashIn = acc.CreditCashIn;
+            a.CreditCashOut = acc.CreditCashOut;
+            AccountProfile profile = BasicTracker.AccountProfileTracker[acc.ID];
+            a.Name = string.IsNullOrEmpty(profile.Name) ? acc.ID : profile.Name;
+
             return a;
         }
 
@@ -155,48 +160,52 @@ namespace TradingLib.Common
             info.Profit = acc.Profit;
             info.RealizedPL = acc.RealizedPL;
             info.UnRealizedPL = acc.UnRealizedPL;
-            info.Name = acc.Name;
-            info.Broker = acc.Broker;
-            info.BankID = acc.BankID;
-            info.BankAC = acc.BankAC;
-            //info.PosLock = acc.PosLock;
+            info.Currency = acc.Currency;
+
+            AccountProfile profile = BasicTracker.AccountProfileTracker[acc.ID];
+            if (profile != null)
+            {
+                info.Name = profile.Name;
+            }
+
             info.MGRID = acc.Mgr_fk;
             info.Deleted = acc.Deleted;
             info.RG_ID = acc.RG_FK;
-            IEnumerable<ClientInfoBase> clients = TLCtxHelper.Ctx.MessageExchange.GetNotifyTargets(info.Account);
-            info.IsLogin = clients.Count() > 0;
-            info.IPAddress = info.IsLogin ? clients.FirstOrDefault().IPAddress : "";
-            //info.SideMargin = acc.SideMargin;
+
+            
+
+            //如果将其他模块的数据返回
             info.Commissin_ID = acc.Commission_ID;
             info.Credit = acc.Credit;
-            //info.CreditSeparate = acc.CreditSeparate;
             info.Margin_ID = acc.Margin_ID;
             info.ExStrategy_ID = acc.ExStrategy_ID;
+
+
+
+            if(TLCtxHelper.Version.ProductType == QSEnumProductType.VendorMoniter)
+            {
+                IBroker broker = BasicTracker.ConnectorMapTracker.GetBrokerForAccount(acc.ID);
+                if(broker != null)
+                {
+                    int id = BasicTracker.ConnectorMapTracker.GetConnectorIDForAccount(acc.ID);
+                    ConnectorConfig cfg = BasicTracker.ConnectorConfigTracker.GetBrokerConfig(id);
+                    info.ConnectorToken = cfg!= null?(string.Format("{0}-{1}",cfg.Name,cfg.usrinfo_userid)):"";
+                    info.MAcctConnected = broker.IsLive;
+                    Util.Debug(string.Format("Broker:{0} Connected:{1}", broker.Token, broker.IsLive));
+                }
+
+                IAccountCheck rs = acc.AccountChecks.Where(check => check.GetType().FullName.Equals("AccountRuleSet.RSVendorFlat")).FirstOrDefault();
+                info.MAcctRiskRule = rs != null ? rs.RuleDescription : "未设置";
+            
+            }
+            if (TLCtxHelper.Version.ProductType == QSEnumProductType.CounterSystem)
+            {
+
+                info.IsLogin = acc.IsLogin;
+            }
+
+            info.IsWarn = acc.IsWarn;
             return info;
-        }
-
-        /// <summary>
-        /// 生成结算单
-        /// </summary>
-        /// <param name="account"></param>
-        /// <returns></returns>
-        public static Settlement ToSettlement(this IAccount account)
-        {
-            Settlement settle = new SettlementImpl();
-            settle.Account = account.ID;
-            settle.CashIn = account.CashIn;
-            settle.CashOut = account.CashOut;
-            settle.Commission = account.Commission;
-            settle.Confirmed = false;
-            settle.LastEquity = account.LastEquity;
-            settle.RealizedPL = account.RealizedPL;
-            settle.UnRealizedPL = account.SettleUnRealizedPL;
-            settle.NowEquity = settle.LastEquity + settle.RealizedPL + settle.UnRealizedPL - settle.Commission + settle.CashIn - settle.CashOut;
-
-            //指定交易日期
-            settle.SettleDay = Util.ToTLDate();
-            settle.SettleTime = Util.ToTLTime();
-            return settle;
         }
     }
 }

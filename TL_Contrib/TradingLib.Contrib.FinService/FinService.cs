@@ -228,7 +228,7 @@ namespace TradingLib.Contrib.FinService
         {
             //LibUtil.Debug("初始化配资服务项,account:" + this.Acct);
             //1.预检查
-            this.Account = TLCtxHelper.CmdAccount[this.Acct];//如果没有对应的交易帐号 则直接返回
+            this.Account = TLCtxHelper.ModuleAccountManager[this.Acct];//如果没有对应的交易帐号 则直接返回
             if (this.Account == null) return;
             Type type = FinTracker.ServicePlaneTracker.GetFinServiceType(this.serviceplan_fk);
             if (type == null) return;//如果没有获得对应的类型 则直接返回
@@ -333,7 +333,7 @@ namespace TradingLib.Contrib.FinService
             item.serviceplan_fk = this.serviceplan_fk;
             item.Agent_fk = this.AgentID;
             item.Comment = comment;
-            item.Settleday = TLCtxHelper.CmdSettleCentre.NextTradingday;
+            item.Settleday = TLCtxHelper.ModuleSettleCentre.Tradingday;
             
 
             //定义了代理之间的分润计算
@@ -457,29 +457,14 @@ namespace TradingLib.Contrib.FinService
         
         }
 
-        #endregion
-
-
-        #region 服务查询和设置
-        /// <summary>
-        /// 查询服务状态和参数
-        /// </summary>
-        /// <returns></returns>
-        public string QryService()
+        public IEnumerable<string> GetNotice()
         {
-            return _finservice.ToString();   
-        }
-
-        /// <summary>
-        /// 设置服务状态和参数
-        /// </summary>
-        /// <param name="cfg"></param>
-        public void SetService(string cfg)
-        {
-
+            return new List<string>();
         }
 
         #endregion
+
+        
 
     }
 }

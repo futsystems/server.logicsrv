@@ -127,6 +127,17 @@ namespace TradingLib.Common
         /// </summary>
         public CurrencyType Currency { get { return oSymbol != null ? oSymbol.SecurityFamily.Currency : cur; } set { cur = value; } }
 
+        int _settleday = 0;
+        /// <summary>
+        /// 结算日
+        /// </summary>
+        public int SettleDay { get { return _settleday; } set { _settleday = value; } }
+
+        bool _settled = false;
+        /// <summary>
+        /// 结算标识
+        /// </summary>
+        public bool Settled { get { return _settled; } set { _settled = value; } }
         #endregion
 
         #region 判定属性
@@ -333,6 +344,8 @@ namespace TradingLib.Common
             this.FatherBreed = copytrade.FatherBreed;
             this.FatherID = copytrade.FatherID;
             this.Breed = copytrade.Breed;
+            this.Settled = copytrade.Settled;
+            this.SettleDay = copytrade.SettleDay;
 
             //this.Domain_ID = copytrade.Domain_ID;
 
@@ -374,7 +387,11 @@ namespace TradingLib.Common
             sb.Append(t.HedgeFlag); sb.Append(d);
             sb.Append(t.OrderSeq.ToString()); sb.Append(d);
             sb.Append(t.OrderSysID); sb.Append(d);
-            sb.Append(t.OffsetFlag.ToString());
+            sb.Append(t.OffsetFlag.ToString()); sb.Append(d);
+            sb.Append(t.BrokerLocalOrderID); sb.Append(d);
+            sb.Append(t.BrokerRemoteOrderID); sb.Append(d);//
+            sb.Append(t.BrokerTradeID);
+
 
             return sb.ToString();
         }
@@ -413,6 +430,9 @@ namespace TradingLib.Common
             t.OrderSeq = int.Parse(rec[(int)TradeField.OrderSeq]);
             t.OrderSysID = rec[(int)TradeField.OrderExchID];
             t.OffsetFlag = (QSEnumOffsetFlag)Enum.Parse(typeof(QSEnumOffsetFlag),rec[(int)TradeField.OffsetFlag]);
+            t.BrokerLocalOrderID = rec[(int)TradeField.BrokerLocalOrderID];
+            t.BrokerRemoteOrderID = rec[(int)TradeField.BrokerRemoteOrderID];
+            t.BrokerTradeID = rec[(int)TradeField.BrokerTradeID];
             return t;
         }
 

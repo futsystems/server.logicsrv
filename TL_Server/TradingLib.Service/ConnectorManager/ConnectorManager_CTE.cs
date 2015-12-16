@@ -66,7 +66,7 @@ namespace TradingLib.ServiceManager
             }
             catch (Exception ex)
             {
-                debug("start broker error:" + ex.ToString(),QSEnumDebugLevel.ERROR);
+                logger.Error("start broker error:" + ex.ToString());
             }
         }
 
@@ -79,7 +79,7 @@ namespace TradingLib.ServiceManager
             }
             catch (Exception ex)
             {
-                debug("start broker error:" + ex.ToString(),QSEnumDebugLevel.ERROR);
+                logger.Error("start broker error:" + ex.ToString());
             }
         }
         
@@ -87,14 +87,14 @@ namespace TradingLib.ServiceManager
         [ContribCommandAttr(QSEnumCommandSource.MessageWeb, "startdatafeed", "startdatafeed - 启动某个数据通道", "用于Web端启动某个数据通道")]
         public void StartDataFeedViaToken(string name)
         {
-            debug("启动数据通道:"+name, QSEnumDebugLevel.INFO);
+            logger.Info("启动数据通道:" + name);
             try
             {
                 StartDataFeed(name);
             }
             catch (Exception ex)
             {
-                debug("start datafeed error:" + ex.ToString());
+                logger.Error("start datafeed error:" + ex.ToString());
             }
         }
 
@@ -102,35 +102,35 @@ namespace TradingLib.ServiceManager
         [ContribCommandAttr(QSEnumCommandSource.MessageWeb, "stopdatafeed", "stopdatafeed - 停止某个数据通道", "用于Web端停止某个数据通道")]
         public void StopDataFeedViaToken(string name)
         {
-            debug("停止数据通道:" + name, QSEnumDebugLevel.INFO);
+            logger.Info("停止数据通道:" + name);
             try
             {
                 StopDataFeed(name);
             }
             catch (Exception ex)
             {
-                debug("stop datafeed error:" + ex.ToString());
+                logger.Error("stop datafeed error:" + ex.ToString());
             }
         }
         
         #region Vendor RouterGroup
-        [ContribCommandAttr(QSEnumCommandSource.CLI, "vendorstatus", "vendorstatus - print status of vendor", "输出某个实盘帐户状态")]
-        public string PrintConnector(int vid)
-        {
-            StringBuilder sb = new StringBuilder();
-            Vendor vendor = BasicTracker.VendorTracker[vid];
-            if (vendor == null)
-            {
-                return "vendor:" + vid.ToString() + " do not exist";
-            }
-            sb.Append(string.Format("ID:{0} Name:{1} FutCompany:{2} LastEquity:{3}", vendor.ID, vendor.Name, vendor.FutCompany, vendor.LastEquity)+Environment.NewLine);
-            if(vendor.Broker != null)
-            {
-                IBroker broker = vendor.Broker;
-                sb.Append(string.Format("Broker:{0} Margin:{1} RealizedPL:{2} UnRealizedPL:{3}", broker.Token, vendor.CalMargin(), vendor.CalRealizedPL(), vendor.CalUnRealizedPL()));
-            }
-            return sb.ToString();
-        }
+        //[ContribCommandAttr(QSEnumCommandSource.CLI, "vendorstatus", "vendorstatus - print status of vendor", "输出某个实盘帐户状态")]
+        //public string PrintConnector(int vid)
+        //{
+        //    StringBuilder sb = new StringBuilder();
+        //    Vendor vendor = BasicTracker.VendorTracker[vid];
+        //    if (vendor == null)
+        //    {
+        //        return "vendor:" + vid.ToString() + " do not exist";
+        //    }
+        //    sb.Append(string.Format("ID:{0} Name:{1} FutCompany:{2} LastEquity:{3}", vendor.ID, vendor.Name, vendor.FutCompany, vendor.LastEquity)+Environment.NewLine);
+        //    if(vendor.Broker != null)
+        //    {
+        //        IBroker broker = vendor.Broker;
+        //        sb.Append(string.Format("Broker:{0} Margin:{1} RealizedPL:{2} UnRealizedPL:{3}", broker.Token, vendor.CalMargin(), vendor.CalRealizedPL(), vendor.CalUnRealizedPL()));
+        //    }
+        //    return sb.ToString();
+        //}
         #endregion
     }
 }

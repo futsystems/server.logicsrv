@@ -263,9 +263,14 @@ namespace TradingLib.Common
             get { return (_sym!="") && (((AvgPrice == 0) && (Size == 0)) || ((AvgPrice != 0) && (Size != 0))); }
         }
 
-       
-        
 
+
+        bool _settled = false;
+
+        /// <summary>
+        /// 是否已经结算
+        /// </summary>
+        public bool Settled { get { return _settled; } set { _settled = value; } }
         /// <summary>
         /// 浮动盈亏
         /// 当第一次有持仓时,会造成_last为0 从而导致有一个时间片段计算的unrealziedpl为不准确的 
@@ -287,24 +292,6 @@ namespace TradingLib.Common
         /// </summary>
         public decimal ClosedPL { get { return _closedpl; } }
 
-        // <summary>
-        /// 结算时盯市浮动盈亏
-        /// </summary>
-        //public decimal UnrealizedPLByDate
-        //{
-        //    get
-        //    {
-        //        if (_settlementprice == null)
-        //        {
-        //            Util.Debug("position:" + this.GetPositionKey() + " have not got settlement price,will use lastprice", QSEnumDebugLevel.WARNING);
-        //            _settlementprice = LastPrice;
-        //        }
-
-        //        decimal settleprice = (decimal)_settlementprice;
-        //        return _size * (settleprice - AvgPrice);
-        //    }
-
-        //}
 
         #region 价格信息
         /// <summary>
@@ -461,7 +448,7 @@ namespace TradingLib.Common
                     {
                         c.LastSettlementPrice = k.PreSettlement;
                     }
-                    Util.Debug("update presettlementprice for position[" + this.Account + "-" + this.Symbol + "] price:" + _lastsettlementprice.ToString() +" tick presettlement:"+k.PreSettlement.ToString(), QSEnumDebugLevel.MUST);
+                    Util.Info("update presettlementprice for position[" + this.Account + "-" + this.Symbol + "] price:" + _lastsettlementprice.ToString() + " tick presettlement:" + k.PreSettlement.ToString());
                 }
                 //检查昨结算价格是否异常 如果获得了昨日结算价格 但是又和行情中的昨结算价格不一致则有异常
                 if (_lastsettlementprice != null && k.PreSettlement > 0 && k.PreSettlement != _lastsettlementprice)
@@ -480,7 +467,7 @@ namespace TradingLib.Common
                     {
                         p.SettlementPrice = k.Settlement;
                     }
-                    Util.Debug("update settlementprice for position[" + this.Account + "-" + this.Symbol + "] price:" + _settlementprice.ToString(), QSEnumDebugLevel.MUST);
+                    Util.Info("update settlementprice for position[" + this.Account + "-" + this.Symbol + "] price:" + _settlementprice.ToString());
                 }
             }
         }
@@ -592,7 +579,7 @@ namespace TradingLib.Common
                 if (!t.Symbol.Equals(this.Symbol)) throw new Exception("Failed because osymbol and symbol do not match");
                 _osymbol = t.oSymbol;
             }
-
+            
             //帐户比较
             if (_acct == "") _acct = t.Account;
             if (_acct != t.Account) throw new Exception("Failed because adjustment account did not match position account.");
@@ -601,7 +588,7 @@ namespace TradingLib.Common
             _tradelist.Add(t);
 
             decimal cpl = 0;
-            //2.处理持仓明细
+            //2.处理成交
             if (t.IsEntryPosition)//开仓 由开仓成交生成新的持仓明细 并设定昨日结算价格
             {
                 _openamount += t.GetAmount();
@@ -613,17 +600,25 @@ namespace TradingLib.Common
                     PositionDetail d = this.OpenPosition(t);
                     _postodaynewlist.Add(d);//插入今日新开仓持仓明细
                     _postotallist.Add(d);//插入到Totallist便于访问
+                    NewPositionDetail(t, d);//对外触发持仓明细事件
                 }
             }
             else//平仓金额 数量累加
             {
-                _closeamount += t.GetAmount();
-                _closevol += t.UnsignedSize;
+                bool closefail = false;
+                
 
                 if (NeedGenPositionDetails)
                 {
-                    cpl = ClosePosition(t);//执行平仓操作
+                    cpl = ClosePosition(t,out closefail);//执行平仓操作
+                    if (closefail)
+                    {
+                        return 0;
+                    }
                 }
+
+                _closeamount += t.GetAmount();
+                _closevol += t.UnsignedSize;
             }
 
             //3.调整持仓汇总的数量和价格
@@ -683,6 +678,9 @@ namespace TradingLib.Common
             }
             else
             {
+                decimal v = d.PositionPrice();
+                int s = d.Volume;
+
                 //通过加权计算获得当前的持仓均价
                 this._price = _postotallist.Where(pos1 => !pos1.IsClosed()).Sum(pos2 => pos2.Volume * pos2.PositionPrice()) / Math.Abs(this._size);
             }   
@@ -711,17 +709,28 @@ namespace TradingLib.Common
 
 
         /// <summary>
-        /// 产生新的平仓明细
+        /// 平仓 产生新的平仓明细
         /// </summary>
         /// <param name="closedetail"></param>
-        void NewPositionCloseDetail(PositionCloseDetail closedetail)
+        void NewPositionCloseDetail(Trade close,PositionCloseDetail closedetail)
         {
             _posclosedetaillist.Add(closedetail);
             if (NewPositionCloseDetailEvent != null)
-                NewPositionCloseDetailEvent(closedetail);
+                NewPositionCloseDetailEvent(close,closedetail);
         }
-        public event Action<PositionCloseDetail> NewPositionCloseDetailEvent;
+        public event Action<Trade,PositionCloseDetail> NewPositionCloseDetailEvent;
 
+        /// <summary>
+        /// 开仓 产生新的持仓明细
+        /// </summary>
+        /// <param name="open"></param>
+        /// <param name="detail"></param>
+        void NewPositionDetail(Trade open, PositionDetail detail)
+        {
+            if (NewPositionDetailEvent != null)
+                NewPositionDetailEvent(open, detail);
+        }
+        public event Action<Trade, PositionDetail> NewPositionDetailEvent;
         
         /// <summary>
         /// 利用平仓成交平掉对应的持仓明细 按照先开先平或者平今平昨的平仓逻辑
@@ -729,8 +738,10 @@ namespace TradingLib.Common
         /// 平仓操作会返回一个平仓盈亏 用于填充到adjust
         /// </summary>
         /// <param name="close"></param>
-        decimal  ClosePosition(Trade close)
+        decimal  ClosePosition(Trade close,out bool closefail)
         {
+            closefail = false;
+
             int remainsize = close.UnsignedSize;
             decimal closeprofit = 0;//平仓盈亏金额
             decimal closepoint = 0;//平仓盈亏点数
@@ -748,14 +759,14 @@ namespace TradingLib.Common
                 }
                 catch (Exception ex)
                 {
-                    Util.Debug("close position error:" + ex.ToString(), QSEnumDebugLevel.FATAL);
+                    Util.Fatal("close position error:" + ex.ToString());
                 }
                 if (closedetail != null)
                 {
                     closeprofit += closedetail.CloseProfitByDate;//平仓盈亏金额
                     closepoint += closedetail.ClosePointByDate;
                     remainsize -= closedetail.CloseVolume;
-                    NewPositionCloseDetail(closedetail);
+                    NewPositionCloseDetail(close,closedetail);
                 }
             }
 
@@ -775,14 +786,14 @@ namespace TradingLib.Common
                 }
                 catch (Exception ex)
                 {
-                    Util.Debug("close position error:" + ex.ToString(), QSEnumDebugLevel.FATAL);
+                    Util.Fatal("close position error:" + ex.ToString());
                 }
                 if (closedetail != null)
                 {
                     closeprofit += closedetail.CloseProfitByDate;
                     closepoint += closedetail.ClosePointByDate;
                     remainsize -= closedetail.CloseVolume;
-                    NewPositionCloseDetail(closedetail);
+                    NewPositionCloseDetail(close,closedetail);
                 }
             }
 
@@ -794,7 +805,8 @@ namespace TradingLib.Common
             }
             else
             {
-                Util.Debug("exit trade have not used up,some big error happend", QSEnumDebugLevel.FATAL);
+                closefail = true;//平仓成交出现异常
+                Util.Fatal("exit trade have not used up,some big error happend");
             }
             return 0;
 
@@ -842,7 +854,7 @@ namespace TradingLib.Common
         /// </summary>
         /// <param name="f"></param>
         /// <returns></returns>
-        public  PositionDetail OpenPosition(Trade f)
+        PositionDetail OpenPosition(Trade f)
         {
             PositionDetail pos = new PositionDetailImpl(this);
             pos.Account = f.Account;
@@ -851,8 +863,8 @@ namespace TradingLib.Common
 
             pos.OpenDate = f.xDate;
             pos.OpenTime = f.xTime;
-            pos.LastSettlementPrice = this.LastSettlementPrice != null ? (decimal)this.LastSettlementPrice : f.xPrice;//新开仓设定昨日结算价
-            pos.Settleday = 0;//
+            //pos.LastSettlementPrice = this.LastSettlementPrice != null ? (decimal)this.LastSettlementPrice : f.xPrice;//新开仓设定昨日结算价
+            pos.Settleday = f.SettleDay;//由成交开仓的 则该持仓明细对应的结算日与成交记录的结算日一致
             pos.Side = f.PositionSide;
             pos.Volume = Math.Abs(f.xSize);
             pos.OpenPrice = f.xPrice;
@@ -871,7 +883,7 @@ namespace TradingLib.Common
         /// </summary>
         /// <param name="close"></param>
         /// <returns></returns>
-        public PositionCloseDetail ClosePosition(PositionDetail pos, Trade f, int remainsize)
+        PositionCloseDetail ClosePosition(PositionDetail pos, Trade f, int remainsize)
         {
             if (pos.IsClosed()) throw new Exception("can not close the closed position");
             if (f.IsEntryPosition) throw new Exception("entry trade can not close postion");
@@ -884,6 +896,8 @@ namespace TradingLib.Common
 
             //生成平仓对象
             PositionCloseDetail closedetail = new PositionCloseDetailImpl(pos, f, closesize);
+            closedetail.Settleday = f.SettleDay;//由成交平仓的 平仓明细 与成交的结算日一致
+
 
             //更新持仓明细的平仓汇总信息
             pos.Volume -= closedetail.CloseVolume;
@@ -891,6 +905,7 @@ namespace TradingLib.Common
             pos.CloseAmount += closedetail.CloseAmount;
             pos.CloseProfitByDate += closedetail.CloseProfitByDate;
             pos.CloseProfitByTrade += closedetail.CloseProfitByTrade;
+            
 
             //pos.Domain_ID = pos.Domain_ID;
             return closedetail;

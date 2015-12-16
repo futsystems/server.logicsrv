@@ -43,7 +43,7 @@ namespace FutsMoniter
             Globals.LogicEvent.RegisterCallback("MgrExchServer", "RejectCashOperation", this.OnCashOperation);
 
 
-            Globals.LogicEvent.RegisterCallback("MgrExchServer", "NotifyCashOperation", this.OnNotifyCashOperation);
+            Globals.LogicEvent.RegisterNotifyCallback("MgrExchServer", "NotifyCashOperation", this.OnNotifyCashOperation);
             //请求代理财务数据
             Globals.TLClient.ReqQryAgentFinanceInfo();
         }
@@ -58,7 +58,7 @@ namespace FutsMoniter
             Globals.LogicEvent.UnRegisterCallback("MgrExchServer", "RejectCashOperation", this.OnCashOperation);
             Globals.LogicEvent.UnRegisterCallback("MgrExchServer", "QryFinanceInfoLite", this.OnQryAgentFinanceInfoLite);
 
-            Globals.LogicEvent.UnRegisterCallback("MgrExchServer", "NotifyCashOperation", this.OnNotifyCashOperation);
+            Globals.LogicEvent.UnRegisterNotifyCallback("MgrExchServer", "NotifyCashOperation", this.OnNotifyCashOperation);
                 
         }
 
@@ -68,7 +68,7 @@ namespace FutsMoniter
         /// 响应代理银行信息
         /// </summary>
         /// <param name="jsonstr"></param>
-        void OnUpdateAgentBankInfo(string jsonstr)
+        void OnUpdateAgentBankInfo(string jsonstr, bool islast)
         {
             JsonWrapperBankAccount obj = MoniterUtils.ParseJsonResponse<JsonWrapperBankAccount>(jsonstr);
             if (obj !=null)
@@ -89,7 +89,7 @@ namespace FutsMoniter
         /// 响应代理财务信息lite
         /// </summary>
         /// <param name="jsonstr"></param>
-        void OnQryAgentFinanceInfoLite(string jsonstr)
+        void OnQryAgentFinanceInfoLite(string jsonstr, bool islast)
         {
             JsonWrapperAgentFinanceInfoLite obj = MoniterUtils.ParseJsonResponse<JsonWrapperAgentFinanceInfoLite>(jsonstr);
             if (obj != null)
@@ -106,7 +106,7 @@ namespace FutsMoniter
         /// 响应代理财务信息
         /// </summary>
         /// <param name="jsonstr"></param>
-        void OnQryAgentFinanceInfo(string jsonstr)
+        void OnQryAgentFinanceInfo(string jsonstr, bool islast)
         {
             JsonWrapperAgentFinanceInfo obj = MoniterUtils.ParseJsonResponse<JsonWrapperAgentFinanceInfo>(jsonstr);
             if (obj !=null)
@@ -123,7 +123,7 @@ namespace FutsMoniter
         /// 响应出入金操作
         /// </summary>
         /// <param name="jsonstr"></param>
-        void OnCashOperation(string jsonstr)
+        void OnCashOperation(string jsonstr, bool islast)
         {
             JsonWrapperCashOperation obj = MoniterUtils.ParseJsonResponse<JsonWrapperCashOperation>(jsonstr);
             if (obj!= null)

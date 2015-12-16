@@ -38,6 +38,10 @@ namespace TradingLib.Common
         public bool Execute { get { return _acc.Execute; } }
 
         /// <summary>
+        /// 交易帐户是否处于警告状态
+        /// </summary>
+        public bool IsWarn { get { return _acc.IsWarn; } }
+        /// <summary>
         /// 是否日内交易
         /// </summary>
         public bool IntraDay { get { return _acc.IntraDay; } }
@@ -111,6 +115,12 @@ namespace TradingLib.Common
         public void CancelOrder(Order order, QSEnumOrderSource source, string cancelreason)
         {
             _acc.CancelOrder(order, source, cancelreason);
+        }
+
+
+        public void Warn(bool iswarnning,string message="")
+        {
+            _acc.Warn(iswarnning,message);
         }
         #endregion
 
@@ -238,6 +248,21 @@ namespace TradingLib.Common
         /// 信用额度
         /// </summary>
         public decimal Credit { get { return _acc.Credit; } }
+
+        /// <summary>
+        /// 昨日优先资金
+        /// </summary>
+        public decimal LastCredit { get { return _acc.LastCredit; } set { throw new NotImplementedException(); } }
+
+        /// <summary>
+        /// 优先资金入金
+        /// </summary>
+        public decimal CreditCashIn { get { return _acc.CreditCashIn; } }
+
+        /// <summary>
+        /// 优先资金出金
+        /// </summary>
+        public decimal CreditCashOut { get { return _acc.CreditCashOut; } }
         #endregion
 
         #region 【IAccCal】

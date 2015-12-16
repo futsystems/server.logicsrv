@@ -25,7 +25,7 @@ namespace TradingLib.Contrib.ResponseHost
         /// </summary>
         public void OnLoad()
         {
-            debug("ResponseServer loaded....", QSEnumDebugLevel.INFO);
+            logger.Info("ResponseServer loaded....");
 
             Tracker.ResponseTemplateTracker.LoadResponseTemplate();
             Tracker.ResponseTracker.LoadResponse();
@@ -54,7 +54,7 @@ namespace TradingLib.Contrib.ResponseHost
                 }
                 catch (Exception ex)
                 {
-                    debug("response onfill error:" + ex.ToString(), QSEnumDebugLevel.ERROR);
+                    logger.Error("response onfill error:" + ex.ToString());
                 }
             }
         }
@@ -71,7 +71,7 @@ namespace TradingLib.Contrib.ResponseHost
                 }
                 catch (Exception ex)
                 {
-                    debug("response onorder error:" + ex.ToString(), QSEnumDebugLevel.ERROR);
+                    logger.Error("response onorder error:" + ex.ToString());
                 }
             }
         }
@@ -88,7 +88,7 @@ namespace TradingLib.Contrib.ResponseHost
                 }
                 catch (Exception ex)
                 {
-                    debug("response ontick error:" + ex.ToString(), QSEnumDebugLevel.ERROR);
+                    logger.Error("response ontick error:" + ex.ToString());
                 }
             }
         }
@@ -124,7 +124,7 @@ namespace TradingLib.Contrib.ResponseHost
                 }
                 catch (Exception ex)
                 {
-                    debug("response ontimer error:" + ex.ToString(), QSEnumDebugLevel.ERROR);
+                    logger.Error("response ontimer error:" + ex.ToString());
                 }
             }
         }

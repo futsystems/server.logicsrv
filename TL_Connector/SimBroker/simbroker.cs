@@ -385,18 +385,14 @@ namespace Broker.SIM
                     int cidx = gotcancel(o.id, cancels);
                     if (cidx >= 0)
                     {
-                        debug("PTT Server Canceled: " + o.id,QSEnumDebugLevel.INFO);
+                        debug("PTT Server canceled: " + o.id, QSEnumDebugLevel.INFO);
                         cancels[cidx] = 0;
                         o.Status = QSEnumOrderStatus.Canceled;
-
-                        //如果模拟实盘则需要删除限盘口跟踪
-                        if (o.isLimit && this._simLimitReal)
-                            onLimitOrderCancelled(o.id);
-
                         _ocache.Write(o);
                         _ccache.Write(o.id);
                         continue;
                     }
+
 
                     //2.成交检查 用Tick数据成交该委托 注意我们是遍历所有的委托 然后取对应的tick数据 去进行成交
                     bool filled = false;
@@ -406,7 +402,7 @@ namespace Broker.SIM
                     //如果是挂单 并且需要模拟实盘进行成交
                     if (tick != null && tick.isValid)
                     {
-                       
+
                         //1.以对方盘口价格进行成交
                         filled = o.Fill(tick, _useBikAsk, false);
 
@@ -418,8 +414,9 @@ namespace Broker.SIM
                         {
                             filled = o.Fill(tick, false, false);
                         }
-                        
+
                     }
+
                     // 如果没有成交,则直接返回
                     if (!filled)
                     {
@@ -460,8 +457,10 @@ namespace Broker.SIM
                         Trade nf = new TradeImpl(fill);
                         //关于这里复制后再发出order，这里的process循环 fill order. fill是对order的一个引用，后面修改的数据会覆盖到前面的数据,而gotfillevent触发的时候可能是在另外一个线程中
                         //运行的比如发送回client,或者记录信息等。这样就行程了多个线程对一个对象的访问可能会存在数据部同步的问题。
+                        debug("~~~~~~~~~~ cache fill,fill==null" + (nf == null).ToString());
                         //debug("cache fill:" + nf.GetTradeDetail(), QSEnumDebugLevel.WARNING);
                         _fcache.Write(nf);
+                        debug("_fcache count:" + _fcache.Count.ToString());
                     }
                 }
                 // add orders back
@@ -726,7 +725,9 @@ namespace Broker.SIM
                     while (!_ocache.hasItems && _fcache.hasItems)
                     {
                         //debug("PPT fire Trade Event.............", QSEnumDebugLevel.INFO);
+                        debug("Procout fill out,cnt:" + _fcache.Count.ToString());
                         Trade f = _fcache.Read();
+                        debug("read fill, fill==null " + (f == null).ToString());
                         NotifyTrade(f);
 
                     }

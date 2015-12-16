@@ -35,6 +35,23 @@
     <DelaySign>true</DelaySign>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Autofac">
+      <HintPath>..\..\lib\Autofac.dll</HintPath>
+    </Reference>
+    <Reference Include="Common.Logging, Version=3.0.0.0, Culture=neutral, PublicKeyToken=af08829b84f0328e, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\lib\Common.Logging.dll</HintPath>
+    </Reference>
+    <Reference Include="Common.Logging.Core, Version=3.0.0.0, Culture=neutral, PublicKeyToken=af08829b84f0328e, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\lib\Common.Logging.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="NodaTime">
+      <HintPath>..\..\lib\NodaTime.dll</HintPath>
+    </Reference>
+    <Reference Include="Quartz">
+      <HintPath>..\..\lib\Quartz.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Runtime.Serialization" />
@@ -62,21 +79,43 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\..\Shared\VersionInfo.cs">
+      <Link>VersionInfo.cs</Link>
+    </Compile>
     <Compile Include="Accounts\Account.cs" />
+    <Compile Include="Accounts\Account_IAccountIndicator.cs" />
+    <Compile Include="Accounts\Account_Session.cs" />
+    <Compile Include="Accounts\Account_Settlement.cs" />
+    <Compile Include="Contex\Event\EventArgs\BrokerAccountInfoEventArgs.cs" />
+    <Compile Include="Contex\Event\EventArgs\BrokerTransferEventArgs.cs" />
+    <Compile Include="Contex\Event\EventArgs\ManagerNotifyEventArgs.cs" />
+    <Compile Include="Contex\Event\RouterEvent.cs" />
+    <Compile Include="Contrib\Task.cs" />
+    <Compile Include="ORM\MAccountConnectorMap.cs" />
+    <Compile Include="ORM\MAccountProfile.cs" />
+    <Compile Include="ORM\MCashTransaction.cs" />
     <Compile Include="ORM\MCommission.cs" />
     <Compile Include="ORM\MMargin.cs" />
     <Compile Include="ORM\MStrategy.cs" />
     <Compile Include="ORM\MSystem.cs" />
-    <Compile Include="Tracker\BasicTracker\CommissionTemplateTracker.cs" />
-    <Compile Include="Tracker\BasicTracker\ExStrategyTemplateTracker.cs" />
-    <Compile Include="Tracker\BasicTracker\MarginTemplateTracker.cs" />
+    <Compile Include="Tracker\BasicTracker\AccountProfileTracker.cs" />
+    <Compile Include="Tracker\BasicTracker\BasicInfo\CalendarTracker.cs" />
+    <Compile Include="Tracker\BasicTracker\ConnectorMap\AccountConnectorPair.cs" />
+    <Compile Include="Tracker\BasicTracker\ConnectorMap\AccountConnectorTracker.cs" />
+    <Compile Include="Tracker\BasicTracker\Template\CommissionTemplateTracker.cs" />
+    <Compile Include="Tracker\BasicTracker\Template\ExStrategyTemplateTracker.cs" />
+    <Compile Include="Tracker\BasicTracker\Template\MarginTemplateTracker.cs" />
     <Compile Include="Utils\Account\AccountUtils_xx.cs" />
     <Compile Include="Utils\Account\AccountUtils_ExStrategy.cs" />
     <Compile Include="Utils\Account\AccountUtils_Args.cs" />
+    <Compile Include="Utils\Account\AccountUtils_SessionInfo.cs" />
+    <Compile Include="Utils\BasicInfo\ExchangeUtils_Ex.cs" />
+    <Compile Include="Utils\BasicInfo\SecurityUtils_Ex.cs" />
+    <Compile Include="Utils\BasicInfo\SymbolUtils_Ex.cs" />
+    <Compile Include="Utils\Deferred.cs" />
     <Compile Include="Utils\Domain\DomainUtils_CommissionMargin.cs" />
     <Compile Include="Utils\Domain\DomainUtils_ExStrategy.cs" />
     <Compile Include="Wrapper\AccountAdapterToExp.cs" />
-    <Compile Include="Accounts\AccountCreation.cs" />
     <Compile Include="Accounts\AccountFilter.cs" />
     <Compile Include="Accounts\Account_IAccCal.cs" />
     <Compile Include="Contex\Event\EventArgs\CashOperationEventArgs.cs" />
@@ -94,7 +133,6 @@
     <Compile Include="Accounts\Account_IAccConfig.cs" />
     <Compile Include="Utils\Account\AccountUtils_BasicInfo.cs" />
     <Compile Include="ClearCentre\Base_ClearCentre_GotXXXX.cs" />
-    <Compile Include="ClearCentre\Base_ClearCentre_.cs" />
     <Compile Include="ClearCentre\Base_ClearCentre_TotalInfo.cs" />
     <Compile Include="Client\MgrClientInfo.cs" />
     <Compile Include="Client\TrdClientInfo.cs" />
@@ -110,9 +148,9 @@
     <Compile Include="ORM\MConnector.cs" />
     <Compile Include="ORM\MDomain.cs" />
     <Compile Include="ORM\MRouterGroup.cs" />
-    <Compile Include="Tracker\BasicTracker\ConntorConfigTracker.cs" />
+    <Compile Include="Tracker\BasicTracker\RouterGroup\ConntorConfigTracker.cs" />
     <Compile Include="Tracker\BasicTracker\DomainTracker.cs" />
-    <Compile Include="Tracker\BasicTracker\RouterGrouperTracker.cs" />
+    <Compile Include="Tracker\BasicTracker\RouterGroup\RouterGrouperTracker.cs" />
     <Compile Include="Tracker\RspInfoTracker.cs" />
     <Compile Include="Tracker\BasicTracker\UIAccessTracker.cs" />
     <Compile Include="Utils\CliUtils.cs" />
@@ -143,7 +181,6 @@
     <Compile Include="Contex\Event\IndicatorEvent.cs" />
     <Compile Include="Contex\Event\SessionEvent.cs" />
     <Compile Include="Contex\TLContexHelper.cs" />
-    <Compile Include="Contex\TLContex_Query.cs" />
     <Compile Include="Contrib\ContribPlugin.cs" />
     <Compile Include="Plugin\Attr\ContribAttr.cs" />
     <Compile Include="Plugin\Attr\MethodArgument.cs" />
@@ -176,15 +213,15 @@
     <Compile Include="Contex\TLContex.cs" />
     <Compile Include="Tracker\BasicTracker.cs" />
     <Compile Include="Tracker\BasicTracker\ContrackBankTracker.cs" />
-    <Compile Include="Tracker\BasicTracker\ExchangeTracker.cs" />
+    <Compile Include="Tracker\BasicTracker\BasicInfo\ExchangeTracker.cs" />
     <Compile Include="Tracker\BasicTracker\ManagerTracker.cs" />
     <Compile Include="Tracker\PositionRoundTracker.cs" />
-    <Compile Include="Tracker\BasicTracker\SecurityTracker.cs" />
-    <Compile Include="Tracker\BasicTracker\MarketTimeTracker.cs" />
+    <Compile Include="Tracker\BasicTracker\BasicInfo\SecurityTracker.cs" />
+    <Compile Include="Tracker\BasicTracker\BasicInfo\MarketTimeTracker.cs" />
     <Compile Include="Tracker\SymbolBasketImpl.cs" />
-    <Compile Include="Tracker\BasicTracker\SymbolTracker.cs" />
+    <Compile Include="Tracker\BasicTracker\BasicInfo\SymbolTracker.cs" />
     <Compile Include="Tracker\TotalTracker.cs" />
-    <Compile Include="Tracker\BasicTracker\VendorTracker.cs" />
+    <Compile Include="Tracker\BasicTracker\RouterGroup\VendorTracker.cs" />
     <Compile Include="Utils\Domain\DomainUtils.cs" />
     <Compile Include="Utils\Manager\ManagerUtils_.cs" />
     <Compile Include="Utils\Manager\ManagerUtils_Right.cs" />

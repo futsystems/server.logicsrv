@@ -8,15 +8,7 @@ namespace TradingLib.API
         RMB,
         [Description("美元")]
         USD,
-        AUD,
-        CAD,
-        CHF,
-        EUR,
-        GBP,
+        [Description("港币")]
         HKD,
-        JPY,
-        MXN,
-        NZD,
-        SEK,
     }
 }

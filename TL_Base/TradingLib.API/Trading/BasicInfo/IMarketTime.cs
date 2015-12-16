@@ -18,20 +18,16 @@ namespace TradingLib.API
         string Description { get; }
 
         /// <summary>
-        /// 是否是开市时间
-        /// </summary>
-        bool IsOpenTime { get; }
-
-        /// <summary>
-        /// 是否是在强平时间段
-        /// </summary>
-        bool IsFlatTime { get; }
-
-        /// <summary>
-        /// 判断某个时间是否在交易时间段内
+        /// 获得当前交易小节
         /// </summary>
         /// <param name="time"></param>
         /// <returns></returns>
-        bool IsInMarketTime(int time);
+        TradingRange JudgeRange(DateTime systime);
+
+
+        /// <summary>
+        /// 收盘时间 交易所不同的品种有不同的交易小节设定，品种的收盘时间可能不同
+        /// </summary>
+        int CloseTime { get; } 
     }
 }

@@ -52,7 +52,7 @@ namespace TradingLib.Common
         public static decimal GetWithdrawNotSettled(this Manager manger)
         {
             int agentfk = manger.mgr_fk;
-            return ORM.MAgentFinance.GetWithdrawOfTradingDay(agentfk, TLCtxHelper.Ctx.SettleCentre.NextTradingday);
+            return ORM.MAgentFinance.GetWithdrawOfTradingDay(agentfk, TLCtxHelper.ModuleSettleCentre.Tradingday);
         }
 
         /// <summary>
@@ -63,7 +63,7 @@ namespace TradingLib.Common
         public static decimal GetDepositNotSettled(this Manager manager)
         {
             int agentfk = manager.mgr_fk;
-            return ORM.MAgentFinance.GetDepositOfTradingDay(agentfk, TLCtxHelper.Ctx.SettleCentre.NextTradingday);
+            return ORM.MAgentFinance.GetDepositOfTradingDay(agentfk, TLCtxHelper.ModuleSettleCentre.Tradingday);
         }
         /// <summary>
         /// 获得某个代理某天的结算信息

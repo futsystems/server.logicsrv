@@ -20,7 +20,7 @@ namespace TradingLib.Contrib.APIService
         [ContribCommandAttr(QSEnumCommandSource.MessageWeb, "CreateCounter", "CreateCounter - 新建柜台实例", "在该部署环境中新建柜台实例",QSEnumArgParseType.Json)]
         public object CreateCounter(string request)
         {
-            debug("got create counter request:" + request,QSEnumDebugLevel.INFO);
+            logger.Info("got create counter request:" + request);
             JsonData args = JsonMapper.ToObject(request);
 
             DomainImpl domain = new DomainImpl();
@@ -44,7 +44,7 @@ namespace TradingLib.Contrib.APIService
             toadd.domain_id = domain.ID;
             //更新管理员信息
             BasicTracker.ManagerTracker.UpdateManager(toadd);
-            debug("domain created id:" + domain.ID);
+            logger.Info("domain created id:" + domain.ID);
 
             return new { DomainID = domain.ID };
         }
@@ -57,7 +57,7 @@ namespace TradingLib.Contrib.APIService
         [ContribCommandAttr(QSEnumCommandSource.MessageWeb, "RenewCounter", "RenewCounter - 续费柜台", "续费柜台", QSEnumArgParseType.Json)]
         public object RenewCounter(string request)
         {
-            debug("got renew counter request:" + request, QSEnumDebugLevel.INFO);
+            logger.Info("got renew counter request:" + request);
             JsonData args = JsonMapper.ToObject(request);
             int domain_id = int.Parse(args["DomainID"].ToString());
             int expiredate = int.Parse(args["ExpireDate"].ToString());
@@ -84,7 +84,7 @@ namespace TradingLib.Contrib.APIService
         [ContribCommandAttr(QSEnumCommandSource.MessageWeb, "UpdateCounter", "UpdateCounter - 更新柜台参数", "更新柜台参数", QSEnumArgParseType.Json)]
         public object UpdateCounter(string request)
         {
-            debug("got update counter request:" + request, QSEnumDebugLevel.INFO);
+            logger.Info("got update counter request:" + request);
             JsonData args = JsonMapper.ToObject(request);
             //如果传入的参数不包含DomainID则无法更新柜台实例的参数
             if (!args.Keys.Contains("DomainID"))

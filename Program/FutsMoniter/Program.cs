@@ -26,6 +26,7 @@ namespace FutsMoniter
 
             try
             {
+                TradingLib.MoniterControl.MoniterHelper.RegisterCTX(new WrapperCTX());
                 Application.Run(new Starter());
             }
             catch (Exception ex)

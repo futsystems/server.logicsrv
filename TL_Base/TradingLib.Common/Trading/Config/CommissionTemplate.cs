@@ -28,6 +28,12 @@ namespace TradingLib.Common
         /// </summary>
         public int Domain_ID { get; set; }
 
+        /// <summary>
+        /// 管理员主域ID
+        /// </summary>
+        public int Manager_ID { get; set; }
+
+
         public override string ToString()
         {
             return this.Name;
@@ -76,6 +82,24 @@ namespace TradingLib.Common
                     return item;
                 }
                 return null;
+            }
+        }
+
+        /// <summary>
+        /// 判断是否存在某个品种的模板项目
+        /// </summary>
+        /// <param name="code"></param>
+        /// <param name="month"></param>
+        /// <returns></returns>
+        public bool HaveTemplateItem(string code, int month = 0)
+        {
+            if (month == 0)
+            {
+                return _itemamp.Keys.Contains(string.Format("{0}-1", code));
+            }
+            else
+            {
+                return _itemamp.Keys.Contains(string.Format("{0}-{1}", code, month));
             }
         }
 

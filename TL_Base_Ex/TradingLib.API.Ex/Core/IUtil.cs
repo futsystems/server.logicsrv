@@ -10,30 +10,10 @@ namespace TradingLib.API
     /// </summary>
     public interface IUtil
     {
-        /// <summary>
-        /// 获得某个合约当前可用价格
-        /// </summary>
-        /// <param name="symbol"></param>
-        /// <returns></returns>
-        decimal GetAvabilePrice(string symbol);
+        void ManualInsertOrder(Order o);
 
-        /// <summary>
-        /// 获得某个合约的市场快照
-        /// </summary>
-        /// <param name="symbol"></param>
-        /// <returns></returns>
-        Tick  GetTickSnapshot(string symbol);
+        void ManualInsertTrade(Trade t);
 
-        /// <summary>
-        /// 发送委托
-        /// </summary>
-        /// <param name="o"></param>
-        void SendOrder(Order o);
-
-        /// <summary>
-        /// 取消委托
-        /// </summary>
-        /// <param name="oid"></param>
-        void CancelOrder(long oid);
+        
     }
 }

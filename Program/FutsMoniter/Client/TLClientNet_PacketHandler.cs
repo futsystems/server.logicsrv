@@ -376,14 +376,16 @@ namespace TradingLib.Common
             string module = response.ModuleID;
             string cmd = response.CMDStr;
             string ret = response.Result;
+            
             debug("ContribResponse ->Module:" + module + " CMD:" + cmd + " Ret:" + ret);
-            this.handler.OnMGRContribResponse(module, cmd, ret);
+            this.handler.OnMGRContribResponse(module, cmd, ret,response.IsLast);
         }
         void CliOnMGRContribNotify(NotifyMGRContribNotify notify)
         {
             string module = notify.ModuleID;
             string cmd = notify.CMDStr;
             string ret = notify.Result;
+            
             debug("ContribNotify ->Module:" + module + " CMD:" + cmd + " Ret:" + ret);
             this.handler.OnMGRContribNotify(module, cmd, ret);
         }

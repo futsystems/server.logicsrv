@@ -16,7 +16,7 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DefineConstants>TRACE;DEBUG;DEMO</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <DebugSymbols>true</DebugSymbols>
@@ -32,8 +32,17 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Common.Logging">
+      <HintPath>..\..\lib\Common.Logging.dll</HintPath>
+    </Reference>
+    <Reference Include="Common.Logging.Core">
+      <HintPath>..\..\lib\Common.Logging.Core.dll</HintPath>
+    </Reference>
     <Reference Include="MySql.Data">
       <HintPath>..\..\lib\MySql.Data.dll</HintPath>
+    </Reference>
+    <Reference Include="NodaTime">
+      <HintPath>..\..\lib\NodaTime.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Runtime.Serialization" />
@@ -49,8 +58,31 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\..\Shared\VersionInfo.cs">
+      <Link>VersionInfo.cs</Link>
+    </Compile>
+    <Compile Include="Account\AccountCreation.cs" />
+    <Compile Include="Account\AccountProfie.cs" />
+    <Compile Include="Account\SessionInfo.cs" />
+    <Compile Include="Follow\EnumsFollow.cs" />
+    <Compile Include="Follow\FollowItemDetail.cs" />
+    <Compile Include="Follow\FollowItemStruce.cs" />
+    <Compile Include="Follow\FollowStrategyConfig.cs" />
+    <Compile Include="Follow\FollowStrategyLite.cs" />
+    <Compile Include="Follow\FollowStrategyStatus.cs" />
+    <Compile Include="Follow\SignalConfig.cs" />
+    <Compile Include="Holiday\Calendar.cs" />
+    <Compile Include="Holiday\HolidayCalculator.cs" />
     <Compile Include="Manager\UIAccess.cs" />
+    <Compile Include="Message\Manager\MGRMarketData.cs" />
+    <Compile Include="Message\Service.cs" />
+    <Compile Include="Message\UpdateLocation.cs" />
+    <Compile Include="Message\XAPI\BasicInfo.cs" />
+    <Compile Include="Message\CashOperationNotify.cs" />
     <Compile Include="Message\LogicFront.cs" />
+    <Compile Include="Message\QryTradingParams.cs" />
+    <Compile Include="Message\TradingNoticeNotify.cs" />
+    <Compile Include="Message\XAPI\TradingInfo.cs" />
     <Compile Include="ORM\Config\ConfigDB.cs" />
     <Compile Include="ORM\Config\ConfigItem.cs" />
     <Compile Include="ORM\Config\GlobalConfig.cs" />
@@ -58,21 +90,59 @@
     <Compile Include="ORM\MConfig.cs" />
     <Compile Include="ORM\MySqlBase.cs" />
     <Compile Include="Domain\DomainImpl.cs" />
+    <Compile Include="Other\CashReport.cs" />
+    <Compile Include="Other\ManagerNotify.cs" />
+    <Compile Include="Other\TLClient.cs" />
+    <Compile Include="Other\TLSocketBase.cs" />
     <Compile Include="Other\TLVersion.cs" />
     <Compile Include="Protocol\CommissionTemplateItem.cs" />
     <Compile Include="Protocol\LoginInfo.cs" />
+    <Compile Include="Tracker\TradeTracker.cs" />
+    <Compile Include="Trading\Comparers.cs" />
     <Compile Include="Trading\Config\CommissionTemplate.cs" />
     <Compile Include="Trading\Config\CommissionTemplateItem.cs" />
     <Compile Include="Trading\Config\EnumChargeType.cs" />
     <Compile Include="Trading\Config\ExStrategyTemplate.cs" />
     <Compile Include="Trading\Config\MarginTemplate.cs" />
     <Compile Include="Trading\Config\MarginTemplateItem.cs" />
+    <Compile Include="Trading\Data\Bar2\BarDataV.cs" />
+    <Compile Include="Trading\Data\Bar2\BarFrequency.cs" />
+    <Compile Include="Trading\Data\Bar2\BarGenerator.cs" />
+    <Compile Include="Trading\Data\Bar2\BarUtils.cs" />
+    <Compile Include="Trading\Data\Bar2\Enums.cs" />
+    <Compile Include="Trading\Data\Bar2\EventArgs.cs" />
+    <Compile Include="Trading\Data\Bar2\Frequency.cs" />
+    <Compile Include="Trading\Data\Bar2\FrequencyBarElementSeries.cs" />
+    <Compile Include="Trading\Data\Bar2\FrequencyPlugin.cs" />
+    <Compile Include="Trading\Data\Bar2\FrequencyManager.cs" />
+    <Compile Include="Trading\Data\Bar2\IFrequencyGenerator.cs" />
+    <Compile Include="Trading\Data\Bar2\ITimeSeries.cs" />
+    <Compile Include="Trading\Data\Bar2\PriorityItemPair.cs" />
+    <Compile Include="Trading\Data\Bar2\QTimeList.cs" />
+    <Compile Include="Trading\Data\Bar2\SymbolFreq.cs" />
+    <Compile Include="Trading\Data\Bar2\TimeFreqGenerator.cs" />
+    <Compile Include="Trading\Data\Bar\BarRequest.cs" />
+    <Compile Include="Trading\Data\Bar\BarUtils.cs" />
+    <Compile Include="Trading\MarginConfig.cs" />
+    <Compile Include="Trading\MarketData.cs" />
+    <Compile Include="Trading\MarketTime\MarketTime.cs" />
+    <Compile Include="Trading\MarketTime\TradingRange.cs" />
+    <Compile Include="Trading\Settlement\AccountSettlement.cs" />
+    <Compile Include="Trading\Settlement\CashTransactionImpl.cs" />
+    <Compile Include="Trading\Settlement\ExchangeSettlement.cs" />
+    <Compile Include="Utils\DateTimeUtils.cs" />
+    <Compile Include="Utils\ChinSpellcs.cs" />
+    <Compile Include="Utils\Dequeue.cs" />
+    <Compile Include="Utils\LocationInfo.cs" />
+    <Compile Include="Utils\QList.cs" />
+    <Compile Include="Utils\Util_Decimal.cs" />
     <Compile Include="Utils\Version.cs" />
     <Compile Include="Tracker\HighLowTracker.cs" />
     <Compile Include="Trading\Utils\SecurityUtils.cs" />
     <Compile Include="Utils\Util_string.cs" />
     <Compile Include="Utils\XMLRspInfo\XMLRspInfoTracker.cs" />
     <Compile Include="Utils\XMLRspInfo\XMLRspInfo.cs" />
+    <Compile Include="Vendor\BrokerAccountInfo.cs" />
     <Compile Include="Vendor\ConnectorStatus.cs" />
     <Compile Include="Vendor\ConnectorConfig.cs" />
     <Compile Include="Vendor\ConnectorInfo.cs" />
@@ -202,13 +272,12 @@
     <Compile Include="Trading\Utils\PositionUtil.cs" />
     <Compile Include="Trading\Product.cs" />
     <Compile Include="Trading\SecurityFamilyImpl.cs" />
-    <Compile Include="Trading\Settlement.cs" />
     <Compile Include="Trading\SymbolImpl.cs" />
     <Compile Include="Trading\ThreadTracker.cs" />
     <Compile Include="Tracker\MessageTracker.cs" />
     <Compile Include="Message\TrdMessage.cs" />
     <Compile Include="Trading\OrderTransactionHelper.cs" />
-    <Compile Include="Trading\PositionRound.cs" />
+    <Compile Include="Trading\PositionRoundImpl.cs" />
     <Compile Include="Trading\PositionTransaction.cs" />
     <Compile Include="Trading\SymbolHelper.cs" />
     <Compile Include="Trading\Data\Tick\TickWatcher.cs" />
@@ -244,6 +313,8 @@
     <Compile Include="Offset\TrailTracker.cs" />
     <Compile Include="Utils\Util.cs" />
     <Compile Include="Trading\Utils\TradeUtils.cs" />
+    <Compile Include="Vendor\RouterItem.cs" />
+    <Compile Include="Vendor\RouterItemUtils.cs" />
     <Compile Include="Vendor\VendorImpl.cs" />
     <Compile Include="Vendor\VendorUtils.cs" />
   </ItemGroup>

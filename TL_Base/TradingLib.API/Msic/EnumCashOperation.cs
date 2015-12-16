@@ -18,7 +18,7 @@ namespace TradingLib.API
         CANCELED,
     }
 
-    public enum QSEnumCashOperation
+    public enum QSEnumCashOperation//:byte
     {
         [Description("充值")]
         Deposit,

@@ -12,7 +12,7 @@ namespace TradingLib.ServiceManager
     /// <summary>
     /// 扩展模块管理器
     /// </summary>
-    public class ContribManager : BaseSrvObject, IServiceManager,IDisposable
+    public class ContribManager : BaseSrvObject,IContribManager
     {
         const string SMGName = "ContribManager";
         ConcurrentDictionary<string, IContrib> contribmap = new ConcurrentDictionary<string, IContrib>();
@@ -39,6 +39,10 @@ namespace TradingLib.ServiceManager
             }
         }
 
+        /// <summary>
+        /// 初始化某个扩展模块
+        /// </summary>
+        /// <param name="className"></param>
         void InitContrib(string className)
         {
             IContribPlugin plugin = PluginHelper.LoadContribPlugin(className);
@@ -70,14 +74,14 @@ namespace TradingLib.ServiceManager
             Util.LoadStatus(this.PROGRAME, true);
             foreach (string key in contribmap.Keys)
             {
-                debug("[LOAD CONTRIB] " + key,QSEnumDebugLevel.INFO);
+                logger.Info("[LOAD CONTRIB] " + key);
                 try
                 {
                     contribmap[key].OnLoad();
                 }
                 catch (Exception ex)
                 {
-                    debug("load:" + key + "error:" + ex.ToString(),QSEnumDebugLevel.ERROR);
+                    logger.Error("load:" + key + "error:" + ex.ToString());
                 }
             }
         }
@@ -89,14 +93,14 @@ namespace TradingLib.ServiceManager
             Util.DestoryStatus(this.PROGRAME, true);
             foreach (string key in contribmap.Keys)
             {
-                debug("[RELEASE CONTRIB] " + key, QSEnumDebugLevel.INFO);
+                logger.Info("[RELEASE CONTRIB] " + key);
                 try
                 {
                     contribmap[key].OnDestory();
                 }
                 catch (Exception ex)
                 {
-                    debug("release:" + key + "error:" + ex.ToString(),QSEnumDebugLevel.ERROR);
+                    logger.Error("release:" + key + "error:" + ex.ToString());
                 }
             }
         }
@@ -109,7 +113,7 @@ namespace TradingLib.ServiceManager
             Util.StartStatus(this.PROGRAME, true);
             foreach (string key in contribmap.Keys)
             {
-                debug(string.Format("[START CONTRIB] {0}", key), QSEnumDebugLevel.INFO);
+                logger.Info(string.Format("[START CONTRIB] {0}", key));
                 try
                 {
                     contribmap[key].Start();
@@ -130,7 +134,7 @@ namespace TradingLib.ServiceManager
             Util.StopStatus(this.PROGRAME, true);
             foreach (string key in contribmap.Keys)
             {
-                debug(string.Format("[STOP CONTRIB] {0}", key), QSEnumDebugLevel.INFO);
+                logger.Info(string.Format("[STOP CONTRIB] {0}", key));
                 try
                 {
                     contribmap[key].Stop();
@@ -142,6 +146,10 @@ namespace TradingLib.ServiceManager
             }
         }
 
+        /// <summary>
+        /// 获得扩展模块列表
+        /// </summary>
+        /// <returns></returns>
         private static List<string> GetContribList()
         {
             List<string> list = new List<string>();

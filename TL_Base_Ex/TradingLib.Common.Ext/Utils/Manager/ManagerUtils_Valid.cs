@@ -15,7 +15,7 @@ namespace TradingLib.Common
         /// <param name="account"></param>
         public static void ValidRightReadAccount(this Manager mgr, string accid)
         {
-            IAccount account = TLCtxHelper.CmdAccount[accid];
+            IAccount account = TLCtxHelper.ModuleAccountManager[accid];
             mgr.ValidRightReadAccount(account);
         }
 

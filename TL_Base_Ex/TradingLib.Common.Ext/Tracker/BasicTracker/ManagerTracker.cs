@@ -29,6 +29,29 @@ namespace TradingLib.Common
                 m.BaseManager = this[m.mgr_fk];
                 m.ParentManager = this[m.parent_fk];
             }
+
+            Manager sroot = new Manager();
+            sroot.AccLimit = 1000;
+            sroot.Active = true;
+            sroot.AgentLimit = 100;
+            sroot.CreditLimit = 0;
+            sroot.domain_id = 1;
+            sroot.ID = -1;
+            sroot.Login = "sroot";
+            sroot.mgr_fk = 1;
+            sroot.parent_fk = 1;
+            sroot.domain_id = 1;
+            sroot.Mobile = "";
+            sroot.QQ = "";
+            sroot.Type = QSEnumManagerType.ROOT;
+
+
+            managermap[sroot.Login] = sroot;
+            mgridmap[sroot.ID] = sroot;
+
+            sroot.Domain = BasicTracker.DomainTracker[sroot.domain_id];
+            sroot.BaseManager = this[sroot.mgr_fk];
+            sroot.ParentManager = this[sroot.parent_fk];
         }
 
 
@@ -46,6 +69,24 @@ namespace TradingLib.Common
             return 0;
         }
 
+        /// <summary>
+        /// 删除某个管理员
+        /// </summary>
+        /// <param name="mgr"></param>
+        public void DeleteManager(ManagerSetting mgr)
+        { 
+            Manager target = null;
+            //添加
+            if (mgridmap.TryGetValue(mgr.ID, out target))
+            {
+                ORM.MManager.DeleteManager(mgr.ID);
+                mgridmap.TryRemove(mgr.ID, out target);
+                if (target != null)
+                {
+                    managermap.TryRemove(mgr.Login, out target);
+                }
+            }
+        }
         public void UpdateManager(ManagerSetting mgr)
         {
             Manager target = null;
@@ -62,6 +103,9 @@ namespace TradingLib.Common
                 target.Type = mgr.Type;
                 target.User_Id = mgr.User_Id;
                 target.Active = mgr.Active;
+                target.AgentLimit = mgr.AgentLimit;
+                target.CreditLimit = mgr.CreditLimit;
+
 
                 target.mgr_fk = mgr.mgr_fk;
                 target.domain_id = mgr.domain_id;
@@ -87,6 +131,9 @@ namespace TradingLib.Common
                 target.Mobile = mgr.Mobile;
                 target.QQ = mgr.QQ;
                 target.AccLimit = mgr.AccLimit;
+                target.AgentLimit = mgr.AgentLimit;
+                target.CreditLimit = mgr.CreditLimit;
+
 
                 ORM.MManager.UpdateManager(target);
             }

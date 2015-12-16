@@ -20,6 +20,8 @@ namespace TradingLib.ORM
             this.Fix = 0;
             this.Date = 0;
             this.UpdateDate = 0;
+            this.ProductType = QSEnumProductType.CounterSystem;
+            this.DeployID = "";
         }
 
         /// <summary>
@@ -57,6 +59,16 @@ namespace TradingLib.ORM
         /// 系统更新日期
         /// </summary>
         public int UpdateDate { get; set; }
+
+        /// <summary>
+        /// 产品类别
+        /// </summary>
+        public QSEnumProductType ProductType { get; set; }
+
+        /// <summary>
+        /// 部署编号
+        /// </summary>
+        public string DeployID { get; set; }
     }
 
     internal class positionroundinfo
@@ -65,11 +77,11 @@ namespace TradingLib.ORM
         public string Symbol { get; set; }
         public bool Side { get; set; }
 
-        public DateTime EntryTime { get; set; }
+        public long EntryTime { get; set; }
         public decimal EntryPrice { get; set; }
         public int EntrySize { get; set; }
 
-        public DateTime ExitTime { get; set; }
+        public long ExitTime { get; set; }
         public decimal ExitPrice { get; set; }
         public int ExitSize { get; set; }
 
@@ -90,7 +102,7 @@ namespace TradingLib.ORM
 
     }
 
-    internal class ordersnum
+    internal class EntityCount
     {
         public int Count { get; set; }
     }
@@ -118,11 +130,11 @@ namespace TradingLib.ORM
                 string query = string.Empty;
                 if (o.FatherBreed != null)
                 {
-                    query = String.Format("Insert into tmp_orders (`settleday`,`id`,`account`,`date`,`time`,`symbol`,`localsymbol`,`timeinforce`,`offsetflag`,`hedgeflag`,`size`,`totalsize`,`filledsize`,`side`,`limitprice`,`stopprice`,`trail`,`exchange`,`securitytype`,`currency`,`ordersource`,`forceclose`,`forceclosereason`,`status`,`comment`,`broker`,`brokerlocalorderid`,`brokerremoteorderid`,`orderseq`,`orderref`,`ordersysid`,`sessionidi`,`frontidi`,`fatherid`,`breed`,`fatherbreed`) values('{0}','{1}','{2}','{3}','{4}','{5}','{6}','{7}','{8}','{9}','{10}','{11}','{12}','{13}','{14}','{15}','{16}','{17}','{18}','{19}','{20}','{21}','{22}','{23}','{24}','{25}','{26}','{27}','{28}','{29}','{30}','{31}','{32}','{33}','{34}','{35}')", TLCtxHelper.Ctx.SettleCentre.NextTradingday, o.id, o.Account, o.Date, o.Time, o.Symbol, o.LocalSymbol, o.TimeInForce, o.OffsetFlag, o.HedgeFlag, o.Size, o.TotalSize, o.FilledSize, o.Side ? 1 : 0, o.LimitPrice, o.StopPrice, o.trail, o.Exchange, o.SecurityType, o.Currency, o.OrderSource, o.ForceClose ? 1 : 0, o.ForceCloseReason, o.Status, o.Comment, o.Broker, o.BrokerLocalOrderID, o.BrokerRemoteOrderID, o.OrderSeq, o.OrderRef, o.OrderSysID, o.SessionIDi, o.FrontIDi, o.FatherID, o.Breed, o.FatherBreed);
+                    query = String.Format("Insert into tmp_orders (`settleday`,`id`,`account`,`date`,`time`,`symbol`,`localsymbol`,`timeinforce`,`offsetflag`,`hedgeflag`,`size`,`totalsize`,`filledsize`,`side`,`limitprice`,`stopprice`,`trail`,`exchange`,`securitytype`,`currency`,`ordersource`,`forceclose`,`forceclosereason`,`status`,`comment`,`broker`,`brokerlocalorderid`,`brokerremoteorderid`,`orderseq`,`orderref`,`ordersysid`,`sessionidi`,`frontidi`,`fatherid`,`breed`,`fatherbreed`) values('{0}','{1}','{2}','{3}','{4}','{5}','{6}','{7}','{8}','{9}','{10}','{11}','{12}','{13}','{14}','{15}','{16}','{17}','{18}','{19}','{20}','{21}','{22}','{23}','{24}','{25}','{26}','{27}','{28}','{29}','{30}','{31}','{32}','{33}','{34}','{35}')",o.SettleDay, o.id, o.Account, o.Date, o.Time, o.Symbol, o.LocalSymbol, o.TimeInForce, o.OffsetFlag, o.HedgeFlag, o.Size, o.TotalSize, o.FilledSize, o.Side ? 1 : 0, o.LimitPrice, o.StopPrice, o.trail, o.Exchange, o.SecurityType, o.Currency, o.OrderSource, o.ForceClose ? 1 : 0, o.ForceCloseReason, o.Status, o.Comment, o.Broker, o.BrokerLocalOrderID, o.BrokerRemoteOrderID, o.OrderSeq, o.OrderRef, o.OrderSysID, o.SessionIDi, o.FrontIDi, o.FatherID, o.Breed, o.FatherBreed);
                 }
                 else
                 {
-                    query = String.Format("Insert into tmp_orders (`settleday`,`id`,`account`,`date`,`time`,`symbol`,`localsymbol`,`timeinforce`,`offsetflag`,`hedgeflag`,`size`,`totalsize`,`filledsize`,`side`,`limitprice`,`stopprice`,`trail`,`exchange`,`securitytype`,`currency`,`ordersource`,`forceclose`,`forceclosereason`,`status`,`comment`,`broker`,`brokerlocalorderid`,`brokerremoteorderid`,`orderseq`,`orderref`,`ordersysid`,`sessionidi`,`frontidi`,`fatherid`,`breed`) values('{0}','{1}','{2}','{3}','{4}','{5}','{6}','{7}','{8}','{9}','{10}','{11}','{12}','{13}','{14}','{15}','{16}','{17}','{18}','{19}','{20}','{21}','{22}','{23}','{24}','{25}','{26}','{27}','{28}','{29}','{30}','{31}','{32}','{33}','{34}')", TLCtxHelper.Ctx.SettleCentre.NextTradingday, o.id, o.Account, o.Date, o.Time, o.Symbol, o.LocalSymbol, o.TimeInForce, o.OffsetFlag, o.HedgeFlag, o.Size, o.TotalSize, o.FilledSize, o.Side ? 1 : 0, o.LimitPrice, o.StopPrice, o.trail, o.Exchange, o.SecurityType, o.Currency, o.OrderSource, o.ForceClose ? 1 : 0, o.ForceCloseReason, o.Status, o.Comment, o.Broker, o.BrokerLocalOrderID, o.BrokerRemoteOrderID, o.OrderSeq, o.OrderRef, o.OrderSysID, o.SessionIDi, o.FrontIDi, o.FatherID, o.Breed);
+                    query = String.Format("Insert into tmp_orders (`settleday`,`id`,`account`,`date`,`time`,`symbol`,`localsymbol`,`timeinforce`,`offsetflag`,`hedgeflag`,`size`,`totalsize`,`filledsize`,`side`,`limitprice`,`stopprice`,`trail`,`exchange`,`securitytype`,`currency`,`ordersource`,`forceclose`,`forceclosereason`,`status`,`comment`,`broker`,`brokerlocalorderid`,`brokerremoteorderid`,`orderseq`,`orderref`,`ordersysid`,`sessionidi`,`frontidi`,`fatherid`,`breed`) values('{0}','{1}','{2}','{3}','{4}','{5}','{6}','{7}','{8}','{9}','{10}','{11}','{12}','{13}','{14}','{15}','{16}','{17}','{18}','{19}','{20}','{21}','{22}','{23}','{24}','{25}','{26}','{27}','{28}','{29}','{30}','{31}','{32}','{33}','{34}')", o.SettleDay, o.id, o.Account, o.Date, o.Time, o.Symbol, o.LocalSymbol, o.TimeInForce, o.OffsetFlag, o.HedgeFlag, o.Size, o.TotalSize, o.FilledSize, o.Side ? 1 : 0, o.LimitPrice, o.StopPrice, o.trail, o.Exchange, o.SecurityType, o.Currency, o.OrderSource, o.ForceClose ? 1 : 0, o.ForceCloseReason, o.Status, o.Comment, o.Broker, o.BrokerLocalOrderID, o.BrokerRemoteOrderID, o.OrderSeq, o.OrderRef, o.OrderSysID, o.SessionIDi, o.FrontIDi, o.FatherID, o.Breed);
                 }
                 return db.Connection.Execute(query) > 0;
             }
@@ -133,14 +145,14 @@ namespace TradingLib.ORM
             using (DBMySql db = new DBMySql())
             {
                 string query_count = string.Format("SELECT count(pk_id) as count FROM tmp_orders");
-                ordersnum num = db.Connection.Query<ordersnum>(query_count).SingleOrDefault();
+                EntityCount num = db.Connection.Query<EntityCount>(query_count).SingleOrDefault();
                 if (num.Count == 0)
                 {
                     return 1000;
                 }
                 else
                 {
-                    string query_seq = string.Format("SELECT MAX(orderseq) as MaxOrderSeq FROM tmp_orders WHERE settleday = {0}", TLCtxHelper.Ctx.SettleCentre.NextTradingday);
+                    string query_seq = string.Format("SELECT MAX(orderseq) as MaxOrderSeq FROM tmp_orders WHERE settleday = {0}", TLCtxHelper.ModuleSettleCentre.Tradingday);
                     orderseq seq = db.Connection.Query<orderseq>(query_seq).SingleOrDefault();
                     return seq.MaxOrderSeq;
                 }
@@ -151,7 +163,7 @@ namespace TradingLib.ORM
         {
             using (DBMySql db = new DBMySql())
             {
-                string query = string.Format("SELECT MAX(tradeid) as MaxTradeID FROM tmp_trades WHERE settleday = {0} AND breed='{1}'", TLCtxHelper.Ctx.SettleCentre.NextTradingday,QSEnumOrderBreedType.ACCT);
+                string query = string.Format("SELECT MAX(tradeid) as MaxTradeID FROM tmp_trades WHERE settleday = {0} AND breed='{1}'", TLCtxHelper.ModuleSettleCentre.Tradingday, QSEnumOrderBreedType.ACCT);
                 tradeid id = db.Connection.Query<tradeid>(query).SingleOrDefault();
                 int maxid = 0;
                 if (int.TryParse(id.MaxTradeID, out maxid))
@@ -185,15 +197,50 @@ namespace TradingLib.ORM
                 return db.Connection.Execute(query) >= 0;
             }
         }
-        
+
+        /// <summary>
+        /// 更新翻转后的委托对象
+        /// </summary>
+        /// <param name="o"></param>
+        /// <returns></returns>
+        public static void UpdateOrderReversed(Order o)
+        {
+            using (DBMySql db = new DBMySql())
+            {
+                string query = String.Format("UPDATE tmp_orders SET size = '{0}',filledsize = '{1}',totalsize = '{2}',side = '{3}' WHERE id = '{4}'", o.Size, o.FilledSize, o.TotalSize, o.Side ? 1 : 0, o.id);
+                db.Connection.Execute(query);
+            }
+        }
+
+        public static void MarkOrderSettled(Order o)
+        {
+            using (DBMySql db = new DBMySql())
+            {
+                string query = string.Format("UPDATE tmp_orders SET settled='{0}' where id = '{1}'", o.Settled ? 1 : 0, o.id);
+                db.Connection.Execute(query);
+            }
+        }
+
+
         /// <summary>
         /// 获得最近结算日的下一个结算日的委托数据
         /// </summary>
         /// <returns></returns>
-        public static IList<Order> SelectOrders()
+        public static IEnumerable<Order> SelectOrdersUnSettled(int tradingday)
         {
-            int settleday = TLCtxHelper.Ctx.SettleCentre.NextTradingday;
-            return SelectOrders(settleday, settleday);
+            using (DBMySql db = new DBMySql())
+            {
+                if (tradingday == 0)
+                {
+                    string query = string.Format("SELECT * FROM  tmp_orders  WHERE  settled='{0}' AND breed='{1}'", 0, QSEnumOrderBreedType.ACCT);
+                    return db.Connection.Query<OrderImpl>(query);
+                }
+                else
+                {
+                    string query = string.Format("SELECT * FROM  tmp_orders  WHERE  settled='{0}' AND breed='{1}' AND settleday='{2}'", 0, QSEnumOrderBreedType.ACCT,tradingday);
+                    return db.Connection.Query<OrderImpl>(query);
+                }
+            }
         }
 
         /// <summary>
@@ -202,7 +249,7 @@ namespace TradingLib.ORM
         /// <returns></returns>
         public static IList<Order> SelectBrokerOrders()
         {
-            int settleday = TLCtxHelper.Ctx.SettleCentre.NextTradingday;
+            int settleday = TLCtxHelper.ModuleSettleCentre.Tradingday;
             return SelectOrders(settleday, settleday,QSEnumOrderBreedType.BROKER);
         }
 
@@ -212,7 +259,7 @@ namespace TradingLib.ORM
         /// <returns></returns>
         public static IList<Order> SelectRouterOrders()
         {
-            int settleday = TLCtxHelper.Ctx.SettleCentre.NextTradingday;
+            int settleday = TLCtxHelper.ModuleSettleCentre.Tradingday;
             return SelectOrders(settleday, settleday, QSEnumOrderBreedType.ROUTER);
         }
         /// <summary>
@@ -234,7 +281,8 @@ namespace TradingLib.ORM
                 List<Order> orders2 = db.Connection.Query<OrderImpl>(query2).ToList<Order>();
                 
                 //合并委托记录
-                orders.AddRange(orders2);
+                //orders.AddRange(orders2);
+                orders.Union(orders2, new OrderCompare());
 
                 return orders;
             }
@@ -269,22 +317,62 @@ namespace TradingLib.ORM
         {
             using (DBMySql db = new DBMySql())
             {
-                string query = String.Format("Insert into tmp_trades (`settleday`,`id`,`account`,`xdate`,`xtime`,`symbol`,`side`,`xsize`,`xprice`,`offsetflag`,`hedgeflag`,`commission`,`profit`,`exchange`,`securitytype`,`securitycode`,`currency`,`broker`,`brokerlocalorderid`,`brokerremoteorderid`,`brokertradeid`,`tradeid`,`orderseq`,`orderref`,`ordersysid`,`positionoperation`,`fatherid`,`breed`) values('{0}','{1}','{2}','{3}','{4}','{5}','{6}','{7}','{8}','{9}','{10}','{11}','{12}','{13}','{14}','{15}','{16}','{17}','{18}','{19}','{20}','{21}','{22}','{23}','{24}','{25}','{26}','{27}')", TLCtxHelper.Ctx.SettleCentre.NextTradingday, f.id, f.Account, f.xDate, f.xTime, f.Symbol, f.Side ? 1 : 0, f.xSize, f.xPrice, f.OffsetFlag, f.HedgeFlag, f.Commission, f.Profit, f.Exchange, f.SecurityType, f.SecurityCode, f.Currency, f.Broker, f.BrokerLocalOrderID, f.BrokerRemoteOrderID, f.BrokerTradeID, f.TradeID, f.OrderSeq, f.OrderRef, f.OrderSysID, f.PositionOperation, f.FatherID, f.Breed);
+                string query = String.Format("Insert into tmp_trades (`settleday`,`id`,`account`,`xdate`,`xtime`,`symbol`,`side`,`xsize`,`xprice`,`offsetflag`,`hedgeflag`,`commission`,`profit`,`exchange`,`securitytype`,`securitycode`,`currency`,`broker`,`brokerlocalorderid`,`brokerremoteorderid`,`brokertradeid`,`tradeid`,`orderseq`,`orderref`,`ordersysid`,`positionoperation`,`fatherid`,`breed`) values('{0}','{1}','{2}','{3}','{4}','{5}','{6}','{7}','{8}','{9}','{10}','{11}','{12}','{13}','{14}','{15}','{16}','{17}','{18}','{19}','{20}','{21}','{22}','{23}','{24}','{25}','{26}','{27}')", f.SettleDay, f.id, f.Account, f.xDate, f.xTime, f.Symbol, f.Side ? 1 : 0, f.xSize, f.xPrice, f.OffsetFlag, f.HedgeFlag, f.Commission, f.Profit, f.Exchange, f.SecurityType, f.SecurityCode, f.Currency, f.Broker, f.BrokerLocalOrderID, f.BrokerRemoteOrderID, f.BrokerTradeID, f.TradeID, f.OrderSeq, f.OrderRef, f.OrderSysID, f.PositionOperation, f.FatherID, f.Breed);
                 return  db.Connection.Execute(query) >0;
 
             }
 
         }
 
+
+        /// <summary>
+        /// 更新反转成交
+        /// </summary>
+        /// <param name="f"></param>
+        public static void UpdateTradeReversed(Trade f)
+        {
+            using (DBMySql db = new DBMySql())
+            {
+                string query = String.Format("UPDATE tmp_trades SET side='{0}' ,xsize='{1}',profit='{2}' WHERE settleday = '{3}' AND tradeid='{4}'", f.Side ? 1 : 0, f.xSize,f.Profit,f.SettleDay, f.TradeID);
+                db.Connection.Execute(query);
+            }
+        }
+
+        /// <summary>
+        /// 标记成交已结算
+        /// </summary>
+        /// <param name="f"></param>
+        public static void MarkeTradeSettled(Trade f)
+        {
+            using (DBMySql db = new DBMySql())
+            {
+                string query = string.Format("UPDATE tmp_trades SET settled='{0}' WHERE settleday = '{1}' AND tradeid='{2}'", f.Settled ? 1 : 0, f.SettleDay, f.TradeID);
+                db.Connection.Execute(query);
+            }
+        }
+
+
         /// <summary>
         /// 获得最近结算日的下一个结算日的成交数据
         /// </summary>
         /// <returns></returns>
-        public static IList<Trade> SelectTrades()
+        public static IEnumerable<Trade> SelectTradesUnSettled(int tradingday)
         {
-            int settleday = TLCtxHelper.Ctx.SettleCentre.NextTradingday;
-            return SelectTrades(settleday, settleday);
+            using (DBMySql db = new DBMySql())
+            {
+                if (tradingday == 0)
+                {
+                    string query = string.Format("SELECT * FROM  tmp_trades  WHERE  settled='{0}' AND breed='{1}'", 0, QSEnumOrderBreedType.ACCT);
+                    return db.Connection.Query<TradeImpl>(query);
+                }
+                else
+                {
+                    string query = string.Format("SELECT * FROM  tmp_trades  WHERE  settled='{0}' AND breed='{1}' AND settleday='{2}'", 0, QSEnumOrderBreedType.ACCT,tradingday);
+                    return db.Connection.Query<TradeImpl>(query);
+                }
+            }
         }
+
 
         /// <summary>
         /// 获得最近结算日的所有成交侧 成交数据
@@ -292,7 +380,7 @@ namespace TradingLib.ORM
         /// <returns></returns>
         public static IList<Trade> SelectBrokerTrades()
         {
-            int settleday = TLCtxHelper.Ctx.SettleCentre.NextTradingday;
+            int settleday = TLCtxHelper.ModuleSettleCentre.Tradingday;
             return SelectTrades(settleday, settleday,QSEnumOrderBreedType.BROKER);
         }
 
@@ -312,7 +400,8 @@ namespace TradingLib.ORM
                 string query2 = string.Format("SELECT * FROM  {0}  WHERE settleday >='{1}' AND settleday <='{2}' AND breed='{3}'", "log_trades", begin, end, breed);
                 List<Trade> trades2 = db.Connection.Query<TradeImpl>(query2).ToList<Trade>();
 
-                trades.AddRange(trades2);
+                //trades.AddRange(trades2);
+                trades.Union(trades2, new TradeCompare());
                 return trades;
             }
         }
@@ -343,7 +432,7 @@ namespace TradingLib.ORM
         {
             using (DBMySql db = new DBMySql())
             {
-                string query = String.Format("Insert into tmp_orderactions (`account`,`actionflag`,`orderid`,`sessionid`,`orderref`,`exchange`,`orderexchid`,`settleday`) values('{0}','{1}','{2}','{3}','{4}','{5}','{6}','{7}')", action.Account,action.ActionFlag,action.OrderID,action.SessionID,action.OrderRef,action.Exchagne,action.OrderExchID,TLCtxHelper.Ctx.SettleCentre.CurrentTradingday);
+                string query = String.Format("Insert into tmp_orderactions (`account`,`actionflag`,`orderid`,`sessionid`,`orderref`,`exchange`,`orderexchid`,`settleday`) values('{0}','{1}','{2}','{3}','{4}','{5}','{6}','{7}')", action.Account, action.ActionFlag, action.OrderID, action.SessionID, action.OrderRef, action.Exchagne, action.OrderExchID, TLCtxHelper.ModuleSettleCentre.Tradingday);
                 return db.Connection.Execute(query) > 0;
             }
         }
@@ -354,7 +443,7 @@ namespace TradingLib.ORM
         /// <returns></returns>
         public static IList<OrderAction> SelectOrderActions()
         {
-            int settleday = TLCtxHelper.Ctx.SettleCentre.NextTradingday;
+            int settleday = TLCtxHelper.ModuleSettleCentre.Tradingday;
             return SelectOrderActions(settleday, settleday);
         }
 
@@ -391,10 +480,10 @@ namespace TradingLib.ORM
 
         static PositionRoundImpl PRInfo2PositionRound(positionroundinfo info)
         {
-            IAccount account=TLCtxHelper.Ctx.ClearCentre[info.Account];
+            IAccount account = TLCtxHelper.ModuleAccountManager[info.Account];
             if (account == null)
                 return null;
-            PositionRoundImpl pr = new PositionRoundImpl(info.Account, account.GetSymbol(info.Symbol), info.Side);
+            PositionRoundImpl pr = new PositionRoundImpl(info.Account, account.Domain.GetSymbol(info.Symbol), info.Side);
 
             pr.EntryTime = info.EntryTime;
             pr.EntrySize = info.EntrySize;
@@ -449,7 +538,7 @@ namespace TradingLib.ORM
         {
             using (DBMySql db = new DBMySql())
             {
-                string query = String.Format("Insert into tmp_postransactions (`account`,`symbol`,`security`,`multiple`,`entrytime`,`entrysize`,`entryprice`,`entrycommission`,`exittime`,`exitsize`,`exitprice`,`exitcommission`,`highest`,`lowest`,`size`,`holdsize`,`side`,`wl`,`totalpoints`,`profit`,`commission`,`netprofit`,`type`,`settleday`) values('{0}','{1}','{2}','{3}','{4}','{5}','{6}','{7}','{8}','{9}','{10}','{11}','{12}','{13}','{14}','{15}','{16}','{17}','{18}','{19}','{20}','{21}','{22}',{23})", pr.Account, pr.Symbol, pr.Security, pr.Multiple.ToString(), pr.EntryTime.ToString(), pr.EntrySize.ToString(), pr.EntryPrice.ToString(), pr.EntryCommission.ToString(), pr.ExitTime.ToString(), pr.ExitSize.ToString(), pr.ExitPrice.ToString(), pr.ExitCommission.ToString(), pr.Highest.ToString(), pr.Lowest.ToString(), pr.Size.ToString(), pr.HoldSize.ToString(), pr.Side?1:0, pr.WL.ToString(), pr.TotalPoints.ToString(), pr.Profit.ToString(), pr.Commissoin.ToString(), pr.NetProfit.ToString(), pr.Type.ToString(),TLCtxHelper.Ctx.SettleCentre.CurrentTradingday);
+                string query = String.Format("Insert into tmp_postransactions (`account`,`symbol`,`security`,`multiple`,`entrytime`,`entrysize`,`entryprice`,`entrycommission`,`exittime`,`exitsize`,`exitprice`,`exitcommission`,`highest`,`lowest`,`size`,`holdsize`,`side`,`wl`,`totalpoints`,`profit`,`commission`,`netprofit`,`type`,`settleday`) values('{0}','{1}','{2}','{3}','{4}','{5}','{6}','{7}','{8}','{9}','{10}','{11}','{12}','{13}','{14}','{15}','{16}','{17}','{18}','{19}','{20}','{21}','{22}',{23})", pr.Account, pr.Symbol, pr.Security, pr.Multiple, pr.EntryTime, pr.EntrySize, pr.EntryPrice, pr.EntryCommission, pr.ExitTime, pr.ExitSize, pr.ExitPrice, pr.ExitCommission, pr.Highest, pr.Lowest, pr.Size, pr.HoldSize, pr.Side ? 1 : 0, pr.WL ? 1 : 0, pr.TotalPoints, pr.Profit, pr.Commissoin, pr.NetProfit, pr.Type, TLCtxHelper.ModuleSettleCentre.Tradingday);
                 return db.Connection.Execute(query) > 0;
             }
         }
@@ -459,6 +548,74 @@ namespace TradingLib.ORM
        
 
         #region 日内数据转储与清空
+
+        /// <summary>
+        /// 转储orders
+        /// </summary>
+        /// <returns></returns>
+        public static void DumpSettledOrders(out int rows, int tradingday)
+        {
+            using (DBMySql db = new DBMySql())
+            {
+                rows = 0;
+                string query = String.Format("replace into log_orders select * from tmp_orders WHERE settleday<={0} and settled=1", tradingday);
+                rows = db.Connection.Execute(query);
+            }
+        }
+
+        /// <summary>
+        /// 转储成交数据
+        /// </summary>
+        /// <returns></returns>
+        public static void DumpSettledTrades(out int rows, int tradingday)
+        {
+            using (DBMySql db = new DBMySql())
+            {
+                rows = 0;
+                string query = String.Format("replace into log_trades select * from tmp_trades WHERE settleday<={0} and settled=1", tradingday);
+                rows = db.Connection.Execute(query);
+            }
+        }
+
+        /// <summary>
+        /// 转储日内取消数据到历史取消表
+        /// </summary>
+        /// <param name="rows"></param>
+        /// <returns></returns>
+        public static void DumpSettledOrderActions(out int rows, int tradingday)
+        {
+            using (DBMySql db = new DBMySql())
+            {
+                rows = 0;
+                string query = String.Format("replace into log_orderactions select * from tmp_orderactions where settleday<={0}", tradingday);
+                rows = db.Connection.Execute(query);
+            }
+        }
+
+
+        /// <summary>
+        /// 删除所有已结算数据
+        /// 需要加入删除前置判断
+        /// </summary>
+        /// <param name="tradingday"></param>
+        public static void DeleteSettledTradingInfo()
+        {
+            using (DBMySql db = new DBMySql())
+            {
+                int tradingday = TLCtxHelper.ModuleSettleCentre.LastSettleday;
+
+                string query = String.Format("DELETE FROM tmp_orders WHERE settleday <={0} AND settled=1", tradingday);
+                db.Connection.Execute(query);
+
+                query = String.Format("DELETE FROM tmp_trades WHERE settleday <={0} AND settled=1", tradingday);
+                db.Connection.Execute(query);
+
+                query = String.Format("DELETE FROM tmp_orderactions WHERE settleday <={0}", tradingday);
+                db.Connection.Execute(query);
+
+            }
+        }
+
         /// <summary>
         /// 删除日内委托数据
         /// </summary>
@@ -467,27 +624,13 @@ namespace TradingLib.ORM
         {
             using (DBMySql db = new DBMySql())
             {
-                tradingday = (tradingday != 0 ? tradingday : TLCtxHelper.Ctx.SettleCentre.NextTradingday);
+                tradingday = (tradingday != 0 ? tradingday : TLCtxHelper.ModuleSettleCentre.Tradingday);
                 string query = String.Format("delete from tmp_orders where settleday ={0}",tradingday);
                 return db.Connection.Execute(query) >= 0;
             }
         }
 
-        /// <summary>
-        /// 转储orders
-        /// </summary>
-        /// <returns></returns>
-        public static bool DumpIntradayOrders(out int rows,int tradingday=0)
-        {
-            using (DBMySql db = new DBMySql())
-            {
-                rows = 0;
-                tradingday = (tradingday != 0 ? tradingday : TLCtxHelper.Ctx.SettleCentre.NextTradingday);
-                string query = String.Format("replace into log_orders select * from tmp_orders WHERE settleday={0}",tradingday);
-                rows = db.Connection.Execute(query);
-                return rows>= 0;
-            }
-        }
+        
 
         /// <summary>
         /// 清空日内成交数据
@@ -497,27 +640,13 @@ namespace TradingLib.ORM
         {
             using (DBMySql db = new DBMySql())
             {
-                tradingday = (tradingday != 0 ? tradingday : TLCtxHelper.Ctx.SettleCentre.CurrentTradingday);
+                tradingday = (tradingday != 0 ? tradingday : TLCtxHelper.ModuleSettleCentre.Tradingday);
                 string query = String.Format("delete from tmp_trades where settleday={0}",tradingday);
                 return db.Connection.Execute(query)>=0;
             }
         }
 
-        /// <summary>
-        /// 转储成交数据
-        /// </summary>
-        /// <returns></returns>
-        public static bool DumpIntradayTrades(out int rows, int tradingday = 0)
-        {
-            using (DBMySql db = new DBMySql())
-            {
-                rows = 0;
-                tradingday = (tradingday != 0 ? tradingday : TLCtxHelper.Ctx.SettleCentre.NextTradingday);
-                string query = String.Format("replace into log_trades select * from tmp_trades WHERE settleday={0}", tradingday);
-                rows = db.Connection.Execute(query);
-                return rows >= 0;
-            }
-        }
+        
 
         /// <summary>
         /// 清空日内取消数据
@@ -527,44 +656,14 @@ namespace TradingLib.ORM
         {
             using (DBMySql db = new DBMySql())
             {
-                tradingday = (tradingday != 0 ? tradingday : TLCtxHelper.Ctx.SettleCentre.CurrentTradingday);
+                tradingday = (tradingday != 0 ? tradingday : TLCtxHelper.ModuleSettleCentre.Tradingday);
                 string query = String.Format("delete from tmp_orderactions where settleday={0}",tradingday);
                 return db.Connection.Execute(query)>=0;
             }
         }
-        /// <summary>
-        /// 转储日内取消数据到历史取消表
-        /// </summary>
-        /// <param name="rows"></param>
-        /// <returns></returns>
-        public static bool DumpIntradayOrderActions(out int rows,int tradingday=0)
-        {
-            using (DBMySql db = new DBMySql())
-            {
-                rows = 0;
-                tradingday = (tradingday != 0 ? tradingday : TLCtxHelper.Ctx.SettleCentre.CurrentTradingday);
-                string query = String.Format("replace into log_orderactions select * from tmp_orderactions where settleday={0}", tradingday);
-                rows = db.Connection.Execute(query);
-                return rows >= 0;
-            }
-        }
+        
 
-        /// <summary>
-        /// 转储日内交易回合记录
-        /// </summary>
-        /// <param name="rows"></param>
-        /// <returns></returns>
-        public static bool DumpIntradayPosTransactions(out int rows, int tradingday = 0)
-        {
-            using (DBMySql db = new DBMySql())
-            {
-                rows = 0;
-                tradingday = (tradingday != 0 ? tradingday : TLCtxHelper.Ctx.SettleCentre.CurrentTradingday);
-                string query = String.Format("replace into log_postransactions select * from tmp_postransactions where settleday={0}", tradingday);
-                rows = db.Connection.Execute(query);
-                return rows >= 0;
-            }
-        }
+        
 
         /// <summary>
         /// 清空日内交易回合记录
@@ -574,7 +673,7 @@ namespace TradingLib.ORM
         {
             using (DBMySql db = new DBMySql())
             {
-                tradingday = (tradingday != 0 ? tradingday : TLCtxHelper.Ctx.SettleCentre.CurrentTradingday);
+                tradingday = (tradingday != 0 ? tradingday : TLCtxHelper.ModuleSettleCentre.Tradingday);
                 string query = String.Format("delete from tmp_postransactions where settleday={0}",tradingday);
                 return db.Connection.Execute(query) >= 0;
             }
@@ -593,6 +692,88 @@ namespace TradingLib.ORM
                 return db.Connection.Execute(query) >= 0;
             }
         }
+        #endregion
+
+
+        #region 未结算委托数量查询
+
+        /// <summary>
+        /// 查询帐户未结算委托数量
+        /// </summary>
+        /// <param name="settleday"></param>
+        /// <returns></returns>
+        public static int GetUnsettledAcctOrderNum(int settleday)
+        {
+            using (DBMySql db = new DBMySql())
+            {
+                string query_count = string.Format("SELECT count(pk_id) as count FROM tmp_orders WHERE settleday<='{0}' AND breed='ACCT' AND settled=0",settleday);
+                EntityCount num = db.Connection.Query<EntityCount>(query_count).SingleOrDefault();
+                return num.Count;
+            }
+        }
+
+        /// <summary>
+        /// 查询帐户未结算成交数量
+        /// </summary>
+        /// <param name="settleday"></param>
+        /// <returns></returns>
+        public static int GetUnsettledAcctTradeNum(int settleday)
+        {
+            using (DBMySql db = new DBMySql())
+            {
+                string query_count = string.Format("SELECT count(pk_id) as count FROM tmp_trades WHERE settleday<='{0}' AND breed='ACCT' AND settled=0", settleday);
+                EntityCount num = db.Connection.Query<EntityCount>(query_count).SingleOrDefault();
+                return num.Count;
+            }
+        }
+
+
+        /// <summary>
+        /// 查询Broker未结算委托数量
+        /// </summary>
+        /// <param name="settleday"></param>
+        /// <returns></returns>
+        public static int GetUnsettledBrokerOrderNum(int settleday)
+        {
+            using (DBMySql db = new DBMySql())
+            {
+                string query_count = string.Format("SELECT count(pk_id) as count FROM tmp_orders WHERE settleday<='{0}' AND breed='BROKER' AND settled=0", settleday);
+                EntityCount num = db.Connection.Query<EntityCount>(query_count).SingleOrDefault();
+                return num.Count;
+            }
+        }
+
+        /// <summary>
+        /// 获得某个交易日所有日内委托数量
+        /// </summary>
+        /// <param name="settleday"></param>
+        /// <returns></returns>
+        public static int GetInterdayOrderNum(int settleday)
+        {
+            using (DBMySql db = new DBMySql())
+            {
+                string query_count = string.Format("SELECT count(pk_id) as count FROM tmp_orders WHERE settleday='{0}'", settleday);
+                EntityCount num = db.Connection.Query<EntityCount>(query_count).SingleOrDefault();
+                return num.Count;
+            }
+        }
+
+        /// <summary>
+        /// 获得某个交易日所有日内成交数量
+        /// </summary>
+        /// <param name="settleday"></param>
+        /// <returns></returns>
+        public static int GetInterdayTradeNum(int settleday)
+        {
+            using (DBMySql db = new DBMySql())
+            {
+                string query_count = string.Format("SELECT count(pk_id) as count FROM tmp_trades WHERE settleday='{0}'", settleday);
+                EntityCount num = db.Connection.Query<EntityCount>(query_count).SingleOrDefault();
+                return num.Count;
+            }
+        }
+
+
         #endregion
 
     }

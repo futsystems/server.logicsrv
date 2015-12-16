@@ -15,10 +15,10 @@ namespace TradingLib.ORM
     /// <summary>
     /// 管理员到UIAccess的map
     /// </summary>
-    internal class Manager2UIACcess
+    internal class Manager2UIAccess
     {
         public int manager_id { get; set; }
-        public int access_id { get; set; }
+        public int template_id { get; set; }
 
     }
 
@@ -32,7 +32,7 @@ namespace TradingLib.ORM
         {
             using (DBMySql db = new DBMySql())
             {
-                string query = "SELECT * FROM manager_ui_access";
+                string query = "SELECT * FROM cfg_permission_template";
                return db.Connection.Query<UIAccess>(query);
             }
         }
@@ -41,20 +41,19 @@ namespace TradingLib.ORM
         /// 加载所有帐户的界面访问权限映射
         /// </summary>
         /// <returns></returns>
-        internal static IEnumerable<Manager2UIACcess> SelectManager2UIAccess()
+        internal static IEnumerable<Manager2UIAccess> SelectManager2UIAccess()
         {
             using (DBMySql db = new DBMySql())
             {
-                string query = "SELECT * FROM manager_ui_manager_to_access";
-                return db.Connection.Query<Manager2UIACcess>(query);
+                string query = "SELECT * FROM cfg_manager_permission";
+                return db.Connection.Query<Manager2UIAccess>(query);
             }
         }
 
-        //UPDATE manager_bankac SET bank_id = '{0}' ,name = '{1}',bank_ac = '{2}',b
 
         static string GetUpdateString(UIAccess access)
         {
-            string query = "UPDATE manager_ui_access SET ";
+            string query = "UPDATE cfg_permission_template SET ";
             PropertyInfo[] propertyInfos = typeof(UIAccess).GetProperties();
             for (int i = 0; i < propertyInfos.Length;i++)
             {
@@ -85,7 +84,7 @@ namespace TradingLib.ORM
 
         static string GetInsertString(UIAccess access)
         {
-            string query = "INSERT INTO manager_ui_access (";
+            string query = "INSERT INTO cfg_permission_template (";
             PropertyInfo[] propertyInfos = typeof(UIAccess).GetProperties();
             for (int i = 0; i < propertyInfos.Length; i++)
             {
@@ -130,7 +129,7 @@ namespace TradingLib.ORM
                 string query = GetInsertString(access);
                 Util.Debug("insert string:" + query);
                 int row = db.Connection.Execute(query);
-                SetIdentity(db.Connection, id => access.id = id, "id", "manager_ui_access");
+                SetIdentity(db.Connection, id => access.id = id, "id", "cfg_permission_template");
                 return row > 0;
             }
         }
@@ -144,7 +143,17 @@ namespace TradingLib.ORM
             }
         }
 
+        public static void DeletePermissionTemplate(int template_id)
+        {
+            using (DBMySql db = new DBMySql())
+            {
+                string query = string.Format("DELETE FROM cfg_permission_template WHERE id={0}", template_id);
+                db.Connection.Execute(query);
 
+                query = string.Format("DELETE FROM cfg_manager_permission WHERE template_id={0}", template_id);
+                db.Connection.Execute(query);
+            }
+        }
 
         /// <summary>
         /// 更新代理的权限模板
@@ -156,7 +165,7 @@ namespace TradingLib.ORM
         {
             using (DBMySql db = new DBMySql())
             {
-                string query = string.Format("UPDATE manager_ui_manager_to_access SET access_id ='{0}' WHERE manager_id='{1}'", accessid, managerid);
+                string query = string.Format("UPDATE cfg_manager_permission SET template_id ='{0}' WHERE manager_id='{1}'", accessid, managerid);
                 int row = db.Connection.Execute(query);
                 return row > 0;
             }
@@ -172,7 +181,7 @@ namespace TradingLib.ORM
         {
             using (DBMySql db = new DBMySql())
             {
-                string query = string.Format("INSERT INTO manager_ui_manager_to_access (manager_id,access_id) VALUES ('{0}','{1}')", managerid, accessid);
+                string query = string.Format("INSERT INTO cfg_manager_permission (manager_id,template_id) VALUES ('{0}','{1}')", managerid, accessid);
                 int row = db.Connection.Execute(query);
                 return row > 0;
             }

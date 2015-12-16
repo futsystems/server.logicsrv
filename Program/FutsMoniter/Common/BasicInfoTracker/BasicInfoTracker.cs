@@ -5,12 +5,13 @@ using System.Linq;
 using System.Text;
 using TradingLib.API;
 using TradingLib.Common;
+using TradingLib.MoniterControl;
 using FutsMoniter;
 
 namespace TradingLib.Common
 {
 
-    public partial class BasicInfoTracker:IBasicInfo
+    public partial class BasicInfoTracker:IBasicInfo,IBasicInfoTracker
     {
         public BasicInfoTracker()
         {
@@ -92,8 +93,8 @@ namespace TradingLib.Common
         /// </summary>
         public void OnFinishLoad()
         {
-            Globals.LogicEvent.RegisterCallback("MgrExchServer", "NotifyManagerUpdate", OnManagerNotify);
-            Globals.LogicEvent.RegisterCallback("ConnectorManager", "NotifyRouterGroup", OnRouterGroupNotify);
+            Globals.LogicEvent.RegisterNotifyCallback("MgrExchServer", "NotifyManagerUpdate", OnManagerNotify);
+            Globals.LogicEvent.RegisterNotifyCallback("ConnectorManager", "NotifyRouterGroup", OnRouterGroupNotify);
 
             foreach (SecurityFamilyImpl target in securitymap.Values)
             {

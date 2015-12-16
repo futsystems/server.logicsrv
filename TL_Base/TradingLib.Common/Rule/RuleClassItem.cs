@@ -4,11 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Reflection;
 using TradingLib.API;
+using TradingLib.Mixins.Json;
 
 
 namespace TradingLib.Common
 {
-
     /// <summary>
     /// 规则集条目 用于从反射加载的type中获得相关信息 比如名称，描述，参数的可设置性等
     /// 通过序列化后可以在管理形成对应的风控规则条目,并启动对应的设置界面进行设置
@@ -25,7 +25,7 @@ namespace TradingLib.Common
         /// 检查变量名称
         /// </summary>
         public string ValueName { get; set; }
-        
+
         /// <summary>
         /// 规则类别 委托风控规则/帐户风控规则
         /// </summary>
@@ -56,20 +56,26 @@ namespace TradingLib.Common
         /// </summary>
         public bool CanSetSymbols { get; set; }
 
-        /// <summary>
-        /// 风控规则type
-        /// </summary>
-        public Type RuleClassType { get; set; }
+       
 
         /// <summary>
         /// 默认关系
         /// </summary>
+        
         public QSEnumCompareType DefaultCompare { get; set; }
 
         /// <summary>
         /// 默认值
         /// </summary>
         public string DefaultValue { get; set; }
+
+
+        /// <summary>
+        /// 风控规则type
+        /// </summary>
+        [NoJsonExportAttr()]
+        public Type RuleClassType { get; set; }
+
 
         public string Serialize()
         {
@@ -93,7 +99,7 @@ namespace TradingLib.Common
             sb.Append(d);
             sb.Append(this.DefaultCompare.ToString());
             sb.Append(d);
-            sb.Append(this.DefaultValue.ToArray());
+            sb.Append(this.DefaultValue);
 
             return sb.ToString();
         }

@@ -114,7 +114,7 @@ namespace FutsMoniter
         ConcurrentDictionary<int, ConnectorInterface> interfacemap = new ConcurrentDictionary<int, ConnectorInterface>();
         bool _gotinterface = false;
 
-        void OnQryInterface(string jsonstr)
+        void OnQryInterface(string jsonstr ,bool islast)
         {
             ConnectorInterface[] objs = MoniterUtils.ParseJsonResponse<ConnectorInterface[]>(jsonstr);
             if (objs !=null)
@@ -184,7 +184,7 @@ namespace FutsMoniter
 
         ConcurrentDictionary<int, JsonWrapperServicePlane> servicePlanMap = new ConcurrentDictionary<int, JsonWrapperServicePlane>();
         bool _gotsplist = false;
-        void OnQryFinServicePlan(string jsonstr)
+        void OnQryFinServicePlan(string jsonstr, bool islast)
         {
             JsonWrapperServicePlane[] objs = MoniterUtils.ParseJsonResponse<JsonWrapperServicePlane[]>(jsonstr);
             if (objs != null)

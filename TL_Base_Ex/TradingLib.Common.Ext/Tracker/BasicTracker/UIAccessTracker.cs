@@ -28,24 +28,23 @@ namespace TradingLib.Common
         public UIAccessTracker()
         {
             _cfgdb = new ConfigDB("UIAccessTracker");
-            if (!_cfgdb.HaveConfig("Comment"))
+            if (!_cfgdb.HaveConfig("ExcludePermissionForAgent"))
             {
-                _cfgdb.UpdateConfig("ExcludePermissionForAgent", QSEnumCfgType.String, "fm_debug,nav_system,nav_basic,nav_manager,nav_manager_permissionagent,nav_finance_cashercentre,moniter_router,moniter_acctype,moniter_tab_finance,moniter_menu_delaccount,fun_info_operation,fun_tab_placeorder,moniter_tab_config_inactive,acctype_sim,acctype_dealer", "代理默认排除的权限列表");
+                _cfgdb.UpdateConfig("ExcludePermissionForAgent", QSEnumCfgType.String, "r_account_del,r_cashop,r_commission,r_margin,r_exstrategy", "代理默认排除的权限列表");
             }
             foreach (string s in _cfgdb["ExcludePermissionForAgent"].AsString().Split(','))
             {
                 _excludePermissionForAgent.Add(s);
             }
-
             //加载访问权限对象到内存
             foreach (UIAccess a in ORM.MUIAccess.SelectUIAccess())
             {
                 uiaccessmap.TryAdd(a.id, a);
             }
 
-            foreach (Manager2UIACcess access in ORM.MUIAccess.SelectManager2UIAccess())
+            foreach (Manager2UIAccess access in ORM.MUIAccess.SelectManager2UIAccess())
             {
-                manageruiidxmap.TryAdd(access.manager_id, access.access_id);
+                manageruiidxmap.TryAdd(access.manager_id, access.template_id);
             }
         }
 
@@ -118,7 +117,7 @@ namespace TradingLib.Common
                 }
                 agent = agent.ParentManager;//递归到父域
             }
-            Util.Debug(manager.ToString() + " have no permission set,use default", QSEnumDebugLevel.WARNING);
+            Util.Warn(manager.ToString() + " have no permission set,use default");
 
             if (manager.IsInRoot())//如果是Root权限 则返回默认管理员权限 所有权限打开
             {
@@ -225,6 +224,29 @@ namespace TradingLib.Common
             }
         }
 
+        /// <summary>
+        /// 删除权限模板
+        /// </summary>
+        /// <param name="access"></param>
+        public void DeletePermissionTemplate(int template_id)
+        {
+            UIAccess target = null;
+            if (uiaccessmap.TryGetValue(template_id, out target))
+            {
+                uiaccessmap.TryRemove(template_id, out target);
+                ORM.MUIAccess.DeletePermissionTemplate(template_id);
+                if (target != null)
+                {
+                    int to_remove = 0;
+                    List<int> remove = manageruiidxmap.Where(pair => pair.Value == target.id).Select(pair => pair.Key).ToList();
+                    foreach(var mgr_id in remove)
+                    {
+                        manageruiidxmap.TryRemove(mgr_id,out to_remove);
+                    }
+                }
+            }
+        
+        }
         /// <summary>
         /// 更新某个权限或者新增某个权限
         /// </summary>

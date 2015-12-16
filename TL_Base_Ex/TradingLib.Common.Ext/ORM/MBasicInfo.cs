@@ -11,9 +11,9 @@ using TradingLib.Mixins.JsonObject;
 
 namespace TradingLib.ORM
 {
-    internal class MarketTimeString
+    internal class MarketTimeDBRanges
     {
-        public string MarketTime { get; set; }
+        public string Ranges { get; set; }
     }
 
     internal class SecForigenKey
@@ -36,13 +36,38 @@ namespace TradingLib.ORM
         {
             using (DBMySql db = new DBMySql())
             {
-                const string query = "SELECT * FROM info_exchange";
+                const string query = "SELECT * FROM info_exchange WHERE avabile=1";//选择可用的交易所列表
                 IEnumerable<Exchange> result = db.Connection.Query<Exchange>(query, null);
                 return result;
             }
-
         }
 
+        /// <summary>
+        /// 更新交易所
+        /// </summary>
+        /// <param name="ex"></param>
+        public static void UpdateExchange(Exchange ex)
+        {
+            using (DBMySql db = new DBMySql())
+            {
+                string query = string.Format("UPDATE info_exchange SET country='{0}',excode='{1}',name='{2}',title='{3}',calendar='{4}',timezoneid='{5}',closetime='{6}' WHERE id='{7}'", ex.Country, ex.EXCode, ex.Name, ex.Title, ex.Calendar, ex.TimeZoneID,ex.CloseTime, ex.ID);
+                db.Connection.Execute(query);
+            }
+        }
+
+        /// <summary>
+        /// 插入交易所
+        /// </summary>
+        /// <param name="ex"></param>
+        public static void InsertExchange(Exchange ex)
+        {
+            using (DBMySql db = new DBMySql())
+            {
+                string query = string.Format("INSERT INTO info_exchange (`country`,`excode`,`name`,`title`,`calendar`,`timezoneid`,`closetime`) VALUES ( '{0}','{1}','{2}','{3}','{4}','{5}','{6}')", ex.Country, ex.EXCode, ex.Name, ex.Title, ex.Calendar, ex.TimeZoneID, ex.CloseTime);
+                db.Connection.Execute(query);
+                SetIdentity(db.Connection, id => ex.ID = id, "id", "info_exchange");
+            }
+        }
 
         /// <summary>
         /// 返回帐户类别列表
@@ -52,11 +77,38 @@ namespace TradingLib.ORM
         {
             using (DBMySql db = new DBMySql())
             {
-                const string query = "SELECT a.id,a.name,a.description,a.markettime FROM info_markettime a";
-                IEnumerable<MarketTime> result = db.Connection.Query<MarketTime, MarketTimeString, MarketTime>(query, (mkttime, mkttimestr) => { mkttime.DeserializeMktTimeString(mkttimestr.MarketTime); return mkttime; }, null, null, false, "markettime", null, null).ToList<MarketTime>();
+                const string query = "SELECT a.id,a.name,a.description,a.closetime,a.ranges FROM info_markettime a";
+                IEnumerable<MarketTime> result = db.Connection.Query<MarketTime, MarketTimeDBRanges, MarketTime>(query, (mkttime, dbranges) => { mkttime.DeserializeTradingRange(dbranges.Ranges); return mkttime; }, null, null, false, "ranges", null, null).ToList<MarketTime>();
                 return result;
             }
 
+        }
+
+        /// <summary>
+        /// 更新交易时间段
+        /// </summary>
+        /// <param name="mt"></param>
+        public static void UpdateMarketTime(MarketTime mt)
+        {
+            using (DBMySql db = new DBMySql())
+            {
+                string query = string.Format("UPDATE info_markettime SET name='{0}',description='{1}',ranges='{2}',closetime='{3}' WHERE id='{4}'", mt.Name, mt.Description, mt.SerializeTradingRange(),mt.CloseTime, mt.ID);
+                db.Connection.Execute(query);
+            }
+        }
+
+        /// <summary>
+        /// 插入交易时间段
+        /// </summary>
+        /// <param name="mt"></param>
+        public static void InsertMarketTime(MarketTime mt)
+        {
+            using (DBMySql db = new DBMySql())
+            {
+                string query = string.Format("INSERT INTO info_markettime (`name`,`description`,`ranges`,`closetime`) VALUES ( '{0}','{1}','{2}','{3}')", mt.Name, mt.Description, mt.SerializeTradingRange(),mt.CloseTime);
+                db.Connection.Execute(query);
+                SetIdentity(db.Connection, id => mt.ID = id, "id", "info_markettime");
+            }
         }
 
         /// <summary>
@@ -77,7 +129,7 @@ namespace TradingLib.ORM
         {
             using (DBMySql db = new DBMySql())
             {
-                string query = string.Format("UPDATE info_security SET code='{0}',name='{1}',currency='{2}',type='{3}',multiple='{4}',pricetick='{5}',underlaying_fk='{6}',entrycommission='{7}',exitcommission='{8}',margin='{9}',extramargin='{10}',maintancemargin='{11}',exchange_fk='{12}',mkttime_fk='{13}' ,tradeable ='{14}' WHERE id='{15}'", sec.Code, sec.Name, sec.Currency, sec.Type, sec.Multiple, sec.PriceTick, sec.UnderLayingFK, sec.EntryCommission, sec.ExitCommission, sec.Margin, sec.ExtraMargin, sec.MaintanceMargin, sec.ExchangeFK, sec.MarketTimeFK,sec.Tradeable?1:0 ,sec.ID);
+                string query = string.Format("UPDATE info_security SET code='{0}',name='{1}',currency='{2}',type='{3}',multiple='{4}',pricetick='{5}',underlaying_fk='{6}',entrycommission='{7}',exitcommission='{8}',margin='{9}',extramargin='{10}',maintancemargin='{11}',exchange_fk='{12}',mkttime_fk='{13}' ,tradeable ='{14}', datafeed='{15}' WHERE id='{16}'", sec.Code, sec.Name, sec.Currency, sec.Type, sec.Multiple, sec.PriceTick, sec.UnderLayingFK, sec.EntryCommission, sec.ExitCommission, sec.Margin, sec.ExtraMargin, sec.MaintanceMargin, sec.ExchangeFK, sec.MarketTimeFK, sec.Tradeable ? 1 : 0,sec.DataFeed, sec.ID);
                 return db.Connection.Execute(query)>=0;
             }
         }
@@ -91,7 +143,7 @@ namespace TradingLib.ORM
         {
             using (DBMySql db = new DBMySql())
             {
-                string query = string.Format("INSERT INTO info_security (`code`,`name`,`currency`,`type`,`multiple`,`pricetick`,`underlaying_fk`,`entrycommission`,`exitcommission`,`margin`,`extramargin`,`maintancemargin`,`exchange_fk`,`mkttime_fk`,`tradeable`,`domain_id`) VALUES ( '{0}','{1}','{2}','{3}','{4}','{5}','{6}','{7}','{8}','{9}','{10}','{11}','{12}','{13}','{14}','{15}')", sec.Code, sec.Name, sec.Currency, sec.Type, sec.Multiple, sec.PriceTick, sec.UnderLayingFK, sec.EntryCommission, sec.ExitCommission, sec.Margin, sec.ExtraMargin, sec.MaintanceMargin, sec.ExchangeFK, sec.MarketTimeFK, sec.Tradeable ? 1 : 0,sec.Domain_ID);
+                string query = string.Format("INSERT INTO info_security (`code`,`name`,`currency`,`type`,`multiple`,`pricetick`,`underlaying_fk`,`entrycommission`,`exitcommission`,`margin`,`extramargin`,`maintancemargin`,`exchange_fk`,`mkttime_fk`,`tradeable`,`datafeed`,`domain_id`) VALUES ( '{0}','{1}','{2}','{3}','{4}','{5}','{6}','{7}','{8}','{9}','{10}','{11}','{12}','{13}','{14}','{15}','{16}')", sec.Code, sec.Name, sec.Currency, sec.Type, sec.Multiple, sec.PriceTick, sec.UnderLayingFK, sec.EntryCommission, sec.ExitCommission, sec.Margin, sec.ExtraMargin, sec.MaintanceMargin, sec.ExchangeFK, sec.MarketTimeFK, sec.Tradeable ? 1 : 0,sec.DataFeed, sec.Domain_ID);
                 int row =  db.Connection.Execute(query);
                 SetIdentity(db.Connection, id => sec.ID = id, "id", "info_security");
 
@@ -120,7 +172,7 @@ namespace TradingLib.ORM
             using (DBMySql db = new DBMySql())
             {
                 //TLCtxHelper.Ctx.debug("orm update mktimefk:" + sec.MarketTimeFK.ToString() + " exchangefk:" + sec.ExchangeFK.ToString() + " underfk:" + sec.UnderLayingFK.ToString());
-                string query = string.Format("UPDATE info_symbols SET entrycommission='{0}',exitcommission='{1}',margin='{2}',extramargin='{3}',maintancemargin='{4}' ,expiremonth='{5}',expiredate='{6}',tradeable='{7}' WHERE id='{8}'", sym._entrycommission, sym._exitcommission, sym._margin, sym._extramargin, sym._maintancemargin,0,sym.ExpireDate, sym.Tradeable ? 1 : 0, sym.ID);
+                string query = string.Format("UPDATE info_symbols SET entrycommission='{0}',exitcommission='{1}',margin='{2}',extramargin='{3}',maintancemargin='{4}' ,month='{5}',expiredate='{6}',tradeable='{7}',symboltype='{8}' WHERE id='{9}'", sym._entrycommission, sym._exitcommission, sym._margin, sym._extramargin, sym._maintancemargin, sym.Month, sym.ExpireDate, sym.Tradeable ? 1 : 0,sym.SymbolType, sym.ID);
                 return db.Connection.Execute(query) >= 0;
             }
         }
@@ -129,15 +181,24 @@ namespace TradingLib.ORM
         {
             using (DBMySql db = new DBMySql())
             {
-                
-                //string query = string.Format("INSERT INTO info_symbols (`symbol`,`entrycommission`,`exitcommission`,`margin`,`extramargin`,`maintancemargin`,`strike`,`optionside`,`expiremonth`,`expiredate`,`security_fk``underlaying_fk`,`underlayingsymbol_fk`,`tradeable`) VALUES ( '{0}','{1}','{2}','{3}','{4}','{5}','{6}','{7}','{8}','{9}','{10}','{11}','{12}','{13}')", sym.Symbol, sym.EntryCommission, sym.ExitCommission, sym.Margin, sym.ExtraMargin, sym.MaintanceMargin, sym.Strike, sym.OptionSide, sym.ExpireMonth, sym.ExpireDate, sym.security_fk, sym.underlaying_fk, sym.underlayingsymbol_fk, sym.Tradeable ? 1 : 0);
-                string query = string.Format("INSERT INTO info_symbols (`symbol`,`entrycommission`,`exitcommission`,`margin`,`extramargin`,`maintancemargin`,`strike`,`optionside`,`expiremonth`,`expiredate`,`security_fk`,`underlaying_fk`,`underlayingsymbol_fk`,`tradeable`,`domain_id`) VALUES ( '{0}','{1}','{2}','{3}','{4}','{5}','{6}','{7}','{8}','{9}','{10}','{11}','{12}','{13}','{14}')", sym.Symbol, sym._entrycommission, sym._exitcommission, sym._margin, sym._extramargin, sym._maintancemargin, sym.Strike, sym.OptionSide,0, sym.ExpireDate, sym.security_fk, sym.underlaying_fk, sym.underlayingsymbol_fk, sym.Tradeable ? 1 : 0, sym.Domain_ID);
-                
-                //TLCtxHelper.Ctx.debug("query:" + query);
+                string query = string.Format("INSERT INTO info_symbols (`symbol`,`entrycommission`,`exitcommission`,`margin`,`extramargin`,`maintancemargin`,`strike`,`optionside`,`month`,`expiredate`,`security_fk`,`underlaying_fk`,`underlayingsymbol_fk`,`tradeable`,`domain_id`,`symboltype`) VALUES ( '{0}','{1}','{2}','{3}','{4}','{5}','{6}','{7}','{8}','{9}','{10}','{11}','{12}','{13}','{14}','{15}')", sym.Symbol, sym._entrycommission, sym._exitcommission, sym._margin, sym._extramargin, sym._maintancemargin, sym.Strike, sym.OptionSide, sym.Month, sym.ExpireDate, sym.security_fk, sym.underlaying_fk, sym.underlayingsymbol_fk, sym.Tradeable ? 1 : 0, sym.Domain_ID,sym.SymbolType);
                 int row = db.Connection.Execute(query);
                 SetIdentity(db.Connection, id => sym.ID = id, "id", "info_symbols");
 
                 return row > 0;
+            }
+        }
+
+        /// <summary>
+        /// 删除某个ID的合约
+        /// </summary>
+        public static void DeleteSymbol(int id)
+        {
+            using (DBMySql db = new DBMySql())
+            {
+                string delquery = string.Empty;
+                delquery = string.Format("DELETE FROM info_symbols WHERE id = '{0}'", id);
+                db.Connection.Execute(delquery);
             }
         }
 

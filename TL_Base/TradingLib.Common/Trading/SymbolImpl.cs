@@ -217,7 +217,11 @@ namespace TradingLib.Common
                 if (SecurityFamily != null)
                 {
                     //如果该合约是异化合约,则其乘数参数为底层合约的参数
-                    if (SecurityFamily.Type == API.SecurityType.INNOV)
+                    /* 异化方法
+                     * 1.lotto 保证金手续费变化 底层乘数不变，相当于将波动率小的合约放大成波动率大的合约
+                     * 2.mini  保证金手续费变化 底层成熟也变化，把成熟大的合约缩小成迷你合约
+                     * */
+                    if (SecurityFamily.Type == API.SecurityType.INNOV && SecurityFamily.Code=="LOTO")
                     {
                         return ULSymbol != null ? ULSymbol.Multiple : 1;
                     }
@@ -266,7 +270,7 @@ namespace TradingLib.Common
 
         public CurrencyType Currency { get { return SecurityFamily != null ? SecurityFamily.Currency : CurrencyType.RMB; } }
 
-        public string Exchange { get { return SecurityFamily != null ? SecurityFamily.Exchange.Index : ""; } }
+        public string Exchange { get { return SecurityFamily != null ? SecurityFamily.Exchange.EXCode : ""; } }
 
 
         bool _tradeable = false;
@@ -282,59 +286,18 @@ namespace TradingLib.Common
         int _domainid = 0;
         public int Domain_ID { get { return _domainid; } set { _domainid = value; } }
 
-        /// <summary>
-        /// 检查合约是否是开市时间
-        /// </summary>
-        public bool IsMarketTime
-        {
-            get
-            {
-                if (SecurityFamily != null)
-                {
-                    //异化合约返回底层时间
-                    if (SecurityFamily.Type == API.SecurityType.INNOV)
-                    {
-                        if (ULSymbol == null)
-                        {
-                            return false;
-                        }
-                        return ULSymbol.IsMarketTime;
-                    }
-                    return SecurityFamily.IsMarketTime;
-                }
-                else
-                {
-                    return false;
-                }
-            }
-        }
 
+        string _month = "01";
         /// <summary>
-        /// 是否处于强平时间
+        /// 月份
         /// </summary>
-        public bool IsFlatTime
-        {
-            get
-            {
-                if (SecurityFamily != null)
-                {
-                    //异化合约返回底层时间
-                    if (SecurityFamily.Type == API.SecurityType.INNOV)
-                    {
-                        if (ULSymbol == null)
-                        {
-                            return false;
-                        }
-                        return ULSymbol.IsFlatTime;
-                    }
-                    return SecurityFamily.IsFlatTime;
-                }
-                else
-                {
-                    return false;
-                }
-            }
-        }
+        public string Month { get { return _month; } set { _month = value; } }
+
+        QSEnumSymbolType _symboltype = QSEnumSymbolType.Standard;
+        /// <summary>
+        /// 合约类别
+        /// </summary>
+        public QSEnumSymbolType SymbolType { get { return _symboltype; } set { _symboltype = value; } }
 
         /// <summary>
         /// 该合约是否有效 如果没有底层证券品种信息则该合约无效
@@ -352,20 +315,16 @@ namespace TradingLib.Common
         /// <summary>
         /// 判断该合约是否过期
         /// </summary>
-        public bool IsExpired
+        public bool IsExpired(int date)
         {
-            get 
+            //过期日未0 则该合约永不过期
+            if (this.ExpireDate == 0)
             {
-                if (this.ExpireDate == 0)
-                {
-                    //如果没有结算日信息则不过气
-                    return false;
-                }
-                else
-                {
-                    return Util.ToTLDate() > this.ExpireDate ? true : false;
-                }
-            
+                return false;
+            }
+            else
+            {
+                return date > this.ExpireDate ? true : false;
             }
         }
 
@@ -376,6 +335,7 @@ namespace TradingLib.Common
                 return Serialize(this);
             }
         }
+
 
 
 
@@ -406,7 +366,8 @@ namespace TradingLib.Common
         }
 
         /// <summary>
-        /// 是否可以进行交易 这里需要加入更多完备性检查
+        /// 是否可以进行交易
+        /// 这里Tradeable是指检查品种与合约的全局设定
         /// </summary>
         public bool IsTradeable
         {
@@ -432,6 +393,121 @@ namespace TradingLib.Common
 
         //public int ExpireMonth { get; set; }
 
+        public static string MonthLetter2Num(string month)
+        {
+            if (month == "F")
+            {
+                return "01";
+            }
+            else if (month == "G")
+            {
+                return "02";
+            }
+            else if (month == "H")
+            {
+                return "03";
+            }
+            else if (month == "J")
+            {
+                return "04";
+            }
+            else if (month == "K")
+            {
+                return "05";
+            }
+            else if (month == "M")
+            {
+                return "06";
+            }
+            else if (month == "N")
+            {
+                return "07";
+            }
+            else if (month == "Q")
+            {
+                return "08";
+            }
+            else if (month == "U")
+            {
+                return "09";
+            }
+            else if (month == "V")
+            {
+                return "10";
+            }
+            else if (month == "X")
+            {
+                return "11";
+            }
+            else if (month == "Z")
+            {
+                return "12";
+            }
+            else
+            {
+                throw new ArgumentException("Month must in (FGHJKMNQUVXZ)");
+            }
+        }
+
+        /// <summary>
+        /// 月份数字转换成字符
+        /// </summary>
+        /// <returns></returns>
+        public static string MonthNum2Letter(string month)
+        {
+            if (month == "01")
+            {
+                return "F";
+            }
+            else if (month == "02")
+            {
+                return "G";
+            }
+            else if (month == "03")
+            {
+                return "H";
+            }
+            else if (month == "04")
+            {
+                return "J";
+            }
+            else if (month == "05")
+            {
+                return "K";
+            }
+            else if (month == "06")
+            {
+                return "M";
+            }
+            else if (month == "07")
+            {
+                return "N";
+            }
+            else if (month == "08")
+            {
+                return "Q";
+            }
+            else if (month == "09")
+            {
+                return "U";
+            }
+            else if (month == "10")
+            {
+                return "V";
+            }
+            else if (month == "11")
+            {
+                return "X";
+            }
+            else if (month == "12")
+            {
+                return "Z";
+            }
+            else
+            {
+                throw new ArgumentException("Month must in (01,02....12)");
+            }
+        }
 
         public string Serialize()
         {
@@ -463,10 +539,11 @@ namespace TradingLib.Common
             sb.Append(d);
             sb.Append(this.underlayingsymbol_fk.ToString());//底层合约外键
             sb.Append(d);
-            sb.Append("0");//过期月份
+            sb.Append(this.Month);//过期月份
             sb.Append(d);
             sb.Append(this.Tradeable.ToString());//该合约是否允许交易
-            
+            sb.Append(d);
+            sb.Append(this.SymbolType);
 
             return sb.ToString();
         }
@@ -487,8 +564,9 @@ namespace TradingLib.Common
             this.security_fk = int.Parse(rec[10]);
             this.underlaying_fk = int.Parse(rec[11]);
             this.underlayingsymbol_fk = int.Parse(rec[12]);
-            //this.ExpireMonth = int.Parse(rec[13]);
+            this.Month = rec[13];
             this.Tradeable = bool.Parse(rec[14]);
+            this.SymbolType = (QSEnumSymbolType)Enum.Parse(typeof(QSEnumSymbolType), rec[15]);
         }
     }
 }

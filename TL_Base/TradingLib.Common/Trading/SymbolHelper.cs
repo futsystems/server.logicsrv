@@ -42,28 +42,29 @@ namespace TradingLib.Common
             }
             return code;
         }
+
         //针对不同的交易所返回月份代码 每个交易所的月份代码有所不同
-        public static string genExpireCode(SecurityFamily sec, int monthcode)
-        {
-            //DateTime dt = Util.FT2DT(fastdate);
+        //public static string genExpireCode(SecurityFamily sec, int monthcode)
+        //{
+        //    //DateTime dt = Util.FT2DT(fastdate);
 
-            switch (sec.Exchange.Index)
-            { 
-                case "CN_CZCE":
-                    return (monthcode-201000).ToString();
-                case "CN_CFFEX":
-                    return (monthcode-200000).ToString();
-                case "CN_SHFE":
-                    return (monthcode-200000).ToString();
-                case "CN_DCE":
-                    return (monthcode - 200000).ToString();
-                case "CN_SHFE_24H":
-                    return (monthcode - 200000).ToString();
-                default:
-                    return monthcode.ToString();
+        //    switch (sec.Exchange.Index)
+        //    { 
+        //        case "CN_CZCE":
+        //            return (monthcode-201000).ToString();
+        //        case "CN_CFFEX":
+        //            return (monthcode-200000).ToString();
+        //        case "CN_SHFE":
+        //            return (monthcode-200000).ToString();
+        //        case "CN_DCE":
+        //            return (monthcode - 200000).ToString();
+        //        case "CN_SHFE_24H":
+        //            return (monthcode - 200000).ToString();
+        //        default:
+        //            return monthcode.ToString();
 
-            }
+        //    }
 
-        }
+        //}
     }
 }

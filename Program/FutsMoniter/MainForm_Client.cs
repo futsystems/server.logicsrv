@@ -154,7 +154,7 @@ namespace FutsMoniter
                 Globals.BaseMGRFK = response.LoginResponse.BaseMGRFK;
 
                 //登入成功后设置 服务端版本
-                lbSrvVersion.Text = Globals.TLClient.ServerVersion.Version;
+                lbSrvVersion.Text = Globals.TLClient.ServerVersion.Version +" "+Globals.TLClient.ServerVersion.ProductType.ToString();
                 
             }
             else

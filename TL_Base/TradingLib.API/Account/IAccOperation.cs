@@ -56,5 +56,11 @@ namespace TradingLib.API
         /// <param name="source"></param>
         /// <param name="cancelreason"></param>
         void CancelOrder(Order order, QSEnumOrderSource source, string cancelreason);
+
+        /// <summary>
+        /// 警告帐户 并设置警告信息message
+        /// </summary>
+        /// <param name="message"></param>
+        void Warn(bool warnning,string message="");
     }
 }

@@ -94,6 +94,20 @@ namespace TradingLib.Common
             }
         }
 
+
+        public void OnQryRuleSet(string json, bool islast)
+        {
+            RuleClassItem item = MoniterUtils.ParseJsonResponse<RuleClassItem>(json);
+
+            basicinfotracker.GotRuleClass(item);
+            if (islast && !BasicInfoDone)
+            {
+                Status("风控规则下载完毕，下载管理员列表");
+                Globals.TLClient.ReqQryManager();
+            }
+        }
+
+
         /// <summary>
         /// 风控规则种类回报
         /// </summary>
@@ -109,7 +123,7 @@ namespace TradingLib.Common
             }
         }
 
-        void OnQryManager(string jsonstr)
+        void OnQryManager(string jsonstr, bool islast)
         {
             ManagerSetting[] mgrlist = MoniterUtils.ParseJsonResponse<ManagerSetting[]>(jsonstr);
             if (mgrlist != null)
@@ -137,7 +151,7 @@ namespace TradingLib.Common
         //    }
         //}
 
-        public void OnQryRouterGroup(string jsonstr)
+        public void OnQryRouterGroup(string jsonstr, bool islast)
         { 
             RouterGroupSetting[] rglist = MoniterUtils.ParseJsonResponse<RouterGroupSetting[]>(jsonstr);
             if (rglist != null)

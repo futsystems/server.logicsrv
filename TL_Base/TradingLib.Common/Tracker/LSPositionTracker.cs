@@ -21,6 +21,19 @@ namespace TradingLib.Common
         public PositionTracker _ltk;
 
         public PositionTracker ShortPositionTracker { get { return _stk; } }
+
+        //昨日持仓对象
+        public List<PositionDetail> _ydpositions = new List<PositionDetail>();
+
+        /// <summary>
+        /// 所有隔夜持仓明细
+        /// </summary>
+        public IEnumerable<PositionDetail> YDPositionDetails { get { return _ydpositions; } }
+
+        /// <summary>
+        /// 所有持仓
+        /// </summary>
+        public IEnumerable<Position> Positions { get { return poslist; } }
         /// <summary>
         /// short position tracker
         /// </summary>
@@ -44,14 +57,17 @@ namespace TradingLib.Common
         {
             poslist.Add(pos);
             NewPosition(pos);
-            pos.NewPositionCloseDetailEvent += new Action<PositionCloseDetail>(NewPositionCloseDetail);
+            //对外暴露持仓明细和平仓明细事件
+            pos.NewPositionCloseDetailEvent += new Action<Trade,PositionCloseDetail>(NewPositionCloseDetail);
+            pos.NewPositionDetailEvent += new Action<Trade, PositionDetail>(NewPositionDetail);
         }
 
         void _stk_NewPositionEvent(Position pos)
         {
             poslist.Add(pos);
             NewPosition(pos);
-            pos.NewPositionCloseDetailEvent += new Action<PositionCloseDetail>(NewPositionCloseDetail);
+            pos.NewPositionCloseDetailEvent += new Action<Trade,PositionCloseDetail>(NewPositionCloseDetail);
+            pos.NewPositionDetailEvent += new Action<Trade, PositionDetail>(NewPositionDetail);
         }
 
         #region 响应交易对象数据
@@ -101,18 +117,34 @@ namespace TradingLib.Common
             {
                 _stk.GotPosition(p);
             }
+            _ydpositions.Add(p);
         }
         #endregion
 
-
+        bool _inReCalculate = false;
+        /// <summary>
+        /// 是否处于重新计算状态
+        /// 重新计算状态用于重新加载持仓明细和成交数据生成当前持仓状态 不对外触发平仓明细与持仓事件
+        /// </summary>
+        public bool InReCalculate { get { return _inReCalculate; } set { _inReCalculate = value; } }
         /// <summary>
         /// 清空记录的数据
         /// </summary>
         public void Clear()
         {
+            _ydpositions.Clear();
             _ltk.Clear();
             _stk.Clear();
             poslist.Clear();
+        }
+
+        /// <summary>
+        /// 将结算过的持仓丢弃
+        /// </summary>
+        public void DropSettled()
+        {
+            _ltk.DropSettled();
+            _stk.DropSettled();
         }
 
 
@@ -149,7 +181,7 @@ namespace TradingLib.Common
         #endregion
 
 
-        #region Enumerator
+        #region Enumerator 用于遍历position
         IEnumerator IEnumerable.GetEnumerator()
         {
             return GetEnumerator();
@@ -162,21 +194,34 @@ namespace TradingLib.Common
 
         public IEnumerator<Position> GetEnumerator()
         {
-            return poslist.GetEnumerator();
+            return poslist.Where(pos=>!pos.Settled&&pos.oSymbol!=null).GetEnumerator();
         }
         #endregion
 
+
+        #region 对外触发持仓类事件
+        /// <summary>
+        /// 新的持仓明细生成事件
+        /// </summary>
+        void NewPositionDetail(Trade open, PositionDetail detail)
+        {
+            if (NewPositionDetailEvent != null && !_inReCalculate)
+            {
+                NewPositionDetailEvent(open, detail);
+            }
+        }
+        public event Action<Trade, PositionDetail> NewPositionDetailEvent;
 
         /// <summary>
         /// 产生新的持仓对象
         /// </summary>
         /// <param name="detail"></param>
-        void NewPositionCloseDetail(PositionCloseDetail detail)
+        void NewPositionCloseDetail(Trade close,PositionCloseDetail detail)
         {
-            if (NewPositionCloseDetailEvent != null)
-                NewPositionCloseDetailEvent(detail);
+            if (NewPositionCloseDetailEvent != null && !_inReCalculate)
+                NewPositionCloseDetailEvent(close,detail);
         }
-        public event Action<PositionCloseDetail> NewPositionCloseDetailEvent;
+        public event Action<Trade,PositionCloseDetail> NewPositionCloseDetailEvent;
 
 
         /// <summary>
@@ -185,10 +230,12 @@ namespace TradingLib.Common
         /// <param name="pos"></param>
         void NewPosition(Position pos)
         {
-            if (NewPositionEvent != null)
+            if (NewPositionEvent != null && !_inReCalculate)
                 NewPositionEvent(pos);
         }
         public event Action<Position> NewPositionEvent;
+        #endregion
+
 
     }
 }

@@ -14,21 +14,20 @@ namespace TradingLib.Common
     /// </summary>
     public class ClearCentreAdapterToBroker : IBrokerClearCentre
     {
-        private IClearCentreSrv _clearcentre;
-        public ClearCentreAdapterToBroker(IClearCentreSrv c)
+        public ClearCentreAdapterToBroker()
         {
-            _clearcentre = c;
+
         }
 
 
         public IEnumerable<Order> GetOrdersViaBroker(string broker)
         {
-            return _clearcentre.TotalOrders.Where(o => o.Broker.Equals(broker));
+            return TLCtxHelper.ModuleClearCentre.TotalOrders.Where(o => o.Broker.Equals(broker));
         }
 
         public IEnumerable<Trade> GetTradesViaBroker(string broker)
         {
-            return _clearcentre.TotalTrades.Where(f => f.Broker.Equals(broker));
+            return TLCtxHelper.ModuleClearCentre.TotalTrades.Where(f => f.Broker.Equals(broker));
         }
 
         /// <summary>
@@ -43,11 +42,11 @@ namespace TradingLib.Common
         {
             if (type == QSEnumOrderBreedType.ACCT)
             {
-                return _clearcentre.SentOrder(id);
+                return TLCtxHelper.ModuleClearCentre.SentOrder(id);
             }
             if (type == QSEnumOrderBreedType.ROUTER)
             {
-                return TLCtxHelper.Ctx.MessageExchange.SentRouterOrder(id);
+                return TLCtxHelper.ModuleBrokerRouter.SentRouterOrder(id);
             }
             return null;
         }
@@ -60,7 +59,7 @@ namespace TradingLib.Common
         /// <returns></returns>
         public IEnumerable<Order> SelectBrokerOrders(string token)
         {
-            return _clearcentre.SelectBrokerOrders(token);
+            return TLCtxHelper.ModuleDataRepository.SelectBrokerOrders(token);
         }
 
 
@@ -71,7 +70,7 @@ namespace TradingLib.Common
         /// <returns></returns>
         public IEnumerable<Trade> SelectBrokerTrades(string token)
         {
-            return _clearcentre.SelectBrokerTrades(token);
+            return TLCtxHelper.ModuleDataRepository.SelectBrokerTrades(token);
         }
 
         /// <summary>
@@ -81,7 +80,7 @@ namespace TradingLib.Common
         /// <returns></returns>
         public IEnumerable<PositionDetail> SelectBrokerPositionDetails(string token)
         {
-            return _clearcentre.SelectBrokerPositionDetails(token);
+            return TLCtxHelper.ModuleDataRepository.SelectBrokerPositionDetails(token);
         }
 
     }

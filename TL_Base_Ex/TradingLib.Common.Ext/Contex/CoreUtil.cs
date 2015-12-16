@@ -16,7 +16,7 @@ namespace TradingLib.Common
         /// <returns></returns>
         public decimal GetAvabilePrice(string symbol)
         {
-            return TLCtxHelper.Ctx.RouterManager.GetAvabilePrice(symbol);
+            return TLCtxHelper.ModuleDataRouter.GetAvabilePrice(symbol);
         }
 
         /// <summary>
@@ -26,9 +26,14 @@ namespace TradingLib.Common
         /// <returns></returns>
         public Tick GetTickSnapshot(string symbol)
         {
-            return TLCtxHelper.Ctx.RouterManager.GetTickSnapshot(symbol);
+            return TLCtxHelper.ModuleDataRouter.GetTickSnapshot(symbol);
         }
 
+
+        public void AssignOrderID(ref Order o)
+        {
+            TLCtxHelper.ModuleExCore.AssignOrderID(ref o);
+        }
         /// <summary>
         /// 发送委托
         /// </summary>
@@ -36,7 +41,7 @@ namespace TradingLib.Common
         public void SendOrder(Order o)
         {
 
-            TLCtxHelper.Ctx.MessageExchange.SendOrder(o);
+            TLCtxHelper.ModuleExCore.SendOrder(o);
         }
 
         /// <summary>
@@ -45,7 +50,32 @@ namespace TradingLib.Common
         /// <param name="oid"></param>
         public void CancelOrder(long oid)
         {
-            TLCtxHelper.Ctx.MessageExchange.CancelOrder(oid);
+            TLCtxHelper.ModuleExCore.CancelOrder(oid);
+        }
+
+        public void SendOrderInternal(Order o)
+        {
+            TLCtxHelper.ModuleExCore.SendOrderInternal(o);
+        }
+
+        public Order SentOrder(long id)
+        {
+            return TLCtxHelper.ModuleClearCentre.SentOrder(id);
+        }
+
+
+        public void ManualInsertOrder(Order o)
+        {
+            TLCtxHelper.Ctx.MessageExchange.ManualInsertOrder(o);
+        }
+
+        public void ManualInsertTrade(Trade t)
+        {
+            TLCtxHelper.Ctx.MessageExchange.ManualInsertTrade(t);
+        }
+        public void RegisterSymbol(Symbol sym)
+        {
+            TLCtxHelper.ModuleExCore.RegisterSymbol(sym);
         }
     }
 }

@@ -37,7 +37,7 @@ namespace TradingLib.Common
                 else
                     return false;
             };
-            return TLCtxHelper.Ctx.MessageMgr.GetNotifyTargets(p);
+            return TLCtxHelper.ModuleMgrExchange.GetNotifyTargets(p);
         }
 
 
@@ -48,7 +48,7 @@ namespace TradingLib.Common
         /// <returns></returns>
         public static IEnumerable<IAccount> GetAccounts(this Domain domain)
         {
-            return TLCtxHelper.CmdAccount.Accounts.Where(acc => acc.Domain.Equals(domain));
+            return TLCtxHelper.ModuleAccountManager.Accounts.Where(acc => acc.Domain.Equals(domain));
         }
 
         /// <summary>
@@ -58,7 +58,7 @@ namespace TradingLib.Common
         /// <returns></returns>
         public static IEnumerable<TradingLib.Mixins.JsonObject.JsonWrapperCashOperation> GetAccountCashOperation(this Domain domain)
         {
-            return ORM.MCashOpAccount.GetAccountLatestCashOperationTotal().Where(op => domain.IsInDomain(TLCtxHelper.CmdAccount[op.Account]));
+            return ORM.MCashOpAccount.GetAccountLatestCashOperationTotal().Where(op => domain.IsInDomain(TLCtxHelper.ModuleAccountManager[op.Account]));
         }
 
         /// <summary>
@@ -96,9 +96,19 @@ namespace TradingLib.Common
         /// </summary>
         /// <param name="domain"></param>
         /// <returns></returns>
-        public static IEnumerable<VendorImpl> GetVendors(this Domain domain)
+        //public static IEnumerable<VendorImpl> GetVendors(this Domain domain)
+        //{
+        //    return BasicTracker.VendorTracker.Vendors.Where(vendor => vendor.domain_id==domain.ID);
+        //}
+
+        /// <summary>
+        /// 获得某个分区下面的所有路由项目
+        /// </summary>
+        /// <param name="domain"></param>
+        /// <returns></returns>
+        public static IEnumerable<RouterItemImpl> GetRouterItems(this Domain domain)
         {
-            return BasicTracker.VendorTracker.Vendors.Where(vendor => vendor.domain_id==domain.ID);
+            return BasicTracker.RouterGroupTracker.RouterItems.Where(item => item.RouteGroup.Domain.ID == domain.ID);
         }
 
         /// <summary>
@@ -108,7 +118,8 @@ namespace TradingLib.Common
         /// <returns></returns>
         public static IEnumerable<IBroker> GetBrokers(this Domain domain)
         {
-            return domain.GetVendors().Where(v => v.Broker != null).Select(v => v.Broker);
+           
+            return domain.GetRouterItems().Where(v => v.Broker != null).Select(v => v.Broker);
         }
 
         /// <summary>

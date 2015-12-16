@@ -51,12 +51,30 @@ namespace TradingLib.Common
         {
             if (mgr.IsInRoot())
             {
-                return mgr.Domain.GetManagers();
+                if (mgr.Login.Equals("sroot"))
+                {
+                    return mgr.Domain.GetManagers();
+                }
+                else
+                {
+                    return mgr.Domain.GetManagers().Where(m => !m.Login.Equals("sroot"));
+                }
             }
             else
             {
                 return mgr.Domain.GetManagers().Where(mgr2 => mgr.RightAccessManager(mgr2));
             }
+        }
+
+
+        /// <summary>
+        /// 获得某个管理员的权限
+        /// </summary>
+        /// <param name="mgr"></param>
+        /// <returns></returns>
+        public static UIAccess GetAccess(this Manager mgr)
+        {
+            return BasicTracker.UIAccessTracker.GetUIAccess(mgr);
         }
 
     }

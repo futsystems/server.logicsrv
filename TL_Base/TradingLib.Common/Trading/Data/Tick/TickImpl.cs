@@ -10,7 +10,7 @@ namespace TradingLib.Common
     public struct TickImpl : Tick
     {
         int _symidx;
-        internal long _datetime;
+        DateTime  _datetime;
         Symbol _Sec;
         string _sym;//symbol
         string _be;//bidexchange
@@ -33,7 +33,7 @@ namespace TradingLib.Common
 
         public int Date { get { return _date; } set { _date = value; } }
         public int Time { get { return _time; } set { _time = value; } }
-        public long Datetime { get { return _datetime; } set { _datetime = value; } }
+        public DateTime Datetime { get { return _datetime; } set { _datetime = value; } }
 
         public int Depth { get { return _depth; } set { _depth = value; } }
         public int Size { get { return _size; } set { _size = value; } }
@@ -65,7 +65,7 @@ namespace TradingLib.Common
 
         public bool isTrade { get { return (_trade != 0) && (_size > 0); } }
 
-        public bool hasTick { get { return (this.isTrade || hasBid || hasAsk); } }
+        public bool hasTick { get { return (isTrade || hasBid || hasAsk); } }
 
         public bool isValid { get { return (_sym != "") && (isIndex || hasTick); } }
 
@@ -102,7 +102,7 @@ namespace TradingLib.Common
             _trade = 0;
             _bid = 0;
             _ask = 0;
-            _datetime = 0;
+            _datetime = DateTime.MinValue;
             _symidx = 0;
 
             _vol = 0;
@@ -115,6 +115,8 @@ namespace TradingLib.Common
             _settlement = 0;
             _upperlimit = 0;
             _lowerlimit = 0;
+            _preclose = 0;
+            _datafeed = QSEnumDataFeedTypes.DEFAULT;
         }
         public static TickImpl Copy(Tick c)
         {
@@ -150,6 +152,9 @@ namespace TradingLib.Common
 
             k.UpperLimit = c.UpperLimit;
             k.LowerLimit = c.LowerLimit;
+            k.PreClose = c.PreClose;
+            k.DataFeed = c.DataFeed;
+
             return k;
         }
         /// <summary>
@@ -263,6 +268,19 @@ namespace TradingLib.Common
         /// 跌停价
         /// </summary>
         public decimal LowerLimit { get { return _lowerlimit; } set { _lowerlimit = value; } }
+
+        decimal _preclose;
+        /// <summary>
+        /// 昨日收盘价
+        /// </summary>
+        public decimal PreClose { get { return _preclose; } set { _preclose = value; } }
+
+        QSEnumDataFeedTypes _datafeed;
+        /// <summary>
+        /// 行情源
+        /// </summary>
+        public QSEnumDataFeedTypes DataFeed { get { return _datafeed; } set { _datafeed = value; } }
+
         public static string Serialize(Tick t)
         {
             const char d = ',';
@@ -315,8 +333,10 @@ namespace TradingLib.Common
             sb.Append(t.UpperLimit);
             sb.Append(d);
             sb.Append(t.LowerLimit);
-
-
+            sb.Append(d);
+            sb.Append(t.PreClose);
+            sb.Append(d);
+            sb.Append(t.DataFeed);
             return sb.ToString();
         }
 
@@ -369,12 +389,19 @@ namespace TradingLib.Common
             t.Exchange = r[(int)TickField.tex];
             t.BidExchange = r[(int)TickField.bidex];
             t.AskExchange = r[(int)TickField.askex];
-            t.Datetime = t.Date * 1000000 + t.Time;
+            t.Datetime = Util.ToDateTime(t.Date, t.Time);// t.Date * 1000000 + t.Time;
 
             if (decimal.TryParse(r[(int)TickField.upper], System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out d))
                 t.UpperLimit = d;
             if (decimal.TryParse(r[(int)TickField.lower], System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out d))
                 t.LowerLimit = d;
+            if (decimal.TryParse(r[(int)TickField.preclose], System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out d))
+                t.PreClose = d;
+            //
+            if (r.Length >= (int)TickField.datafeed+1)
+            {
+                t.DataFeed = (QSEnumDataFeedTypes)Enum.Parse(typeof(QSEnumDataFeedTypes), r[(int)TickField.datafeed]);
+            }
             return t;
         }
 
@@ -480,29 +507,31 @@ namespace TradingLib.Common
 
     enum TickField
     { // tick message fields from TL server
-        symbol = 0,
-        date,
-        time,
-        KUNUSED,
-        trade,
-        tsize,
-        tex,
-        bid,
-        ask,
-        bidsize,
+        symbol = 0,//0
+        date,//1
+        time,//2
+        KUNUSED,//3
+        trade,//4
+        tsize,//5
+        tex,//6
+        bid,//7
+        ask,//8
+        bidsize,//9
         asksize,//10
-        bidex,
-        askex,
-        tdepth,
+        bidex,//11
+        askex,//12
+        tdepth,//13
         vol,//14
-        open,
-        high,
-        low,
-        preoi,
-        oi,
-        presettlement,
-        settlement,
-        upper,
-        lower,
+        open,//15
+        high,//16
+        low,//17
+        preoi,//18
+        oi,//19
+        presettlement,//20
+        settlement,//21
+        upper,//22
+        lower,//23
+        preclose,//24
+        datafeed,//25
     }
 }

@@ -1,0 +1,5334 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>TradingLib.Common.Ex</name>
+    </assembly>
+    <members>
+        <member name="M:TradingLib.Common.SymbolTracker.UpdateSymbol(System.Int32,TradingLib.Common.SymbolImpl)">
+            <summary>
+            更新域的某个合约
+            </summary>
+            <param name="domain_id"></param>
+            <param name="sym"></param>
+        </member>
+        <member name="P:TradingLib.Common.SymbolTracker.Item(System.Int32)">
+            <summary>
+            获得某个域的DBSymbolTracker
+            </summary>
+            <param name="domain_id"></param>
+            <returns></returns>
+        </member>
+        <member name="P:TradingLib.Common.SymbolTracker.Item(System.Int32,System.String)">
+            <summary>
+            获得某个域下某个symbol
+            </summary>
+            <param name="domin_id"></param>
+            <param name="symbol"></param>
+            <returns></returns>
+        </member>
+        <member name="T:TradingLib.Common.DBSymbolTracker">
+            <summary>
+            合约管理器用于获得合约对象
+            合约管理器从数据库加载并维护了所有合约列表,委托,成交,持仓均是通过对合约的引用来实现合约数据的索引
+            </summary>
+        </member>
+        <member name="M:TradingLib.Common.DBSymbolTracker.GetBasketAvabile">
+            <summary>
+            所有可交易的合约
+            这里的可用 应该按照合约到期日进行判断,合约过期后就不需要在订阅
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:TradingLib.Common.DBSymbolTracker.GetBasketAvabileViaSecurity(TradingLib.API.SecurityFamily)">
+            <summary>
+            获得某个品种的所有合约
+            </summary>
+            <param name="sec"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TradingLib.Common.DBSymbolTracker.IsSymbolWithSecurity(TradingLib.API.Symbol,TradingLib.API.SecurityFamily)">
+            <summary>
+            某个合约是否属于某个品种
+            </summary>
+            <param name="symbol"></param>
+            <param name="sec"></param>
+            <returns></returns>
+        </member>
+        <member name="P:TradingLib.Common.DBSymbolTracker.Item(System.String)">
+            <summary>
+            通过合约代码获得合约对象
+            </summary>
+            <param name="symbol"></param>
+            <returns></returns>
+        </member>
+        <member name="P:TradingLib.Common.DBSymbolTracker.Item(System.Int32)">
+            <summary>
+            通过数据库全局ID获得合约对象
+            </summary>
+            <param name="idx"></param>
+            <returns></returns>
+        </member>
+        <member name="P:TradingLib.Common.DBSymbolTracker.Symbols">
+            <summary>
+            返回所有维护的合约
+            </summary>
+        </member>
+        <member name="M:TradingLib.Common.DBManagerTracker.GetRootFK">
+            <summary>
+            获得Root全局ID
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:TradingLib.Common.DBManagerTracker.GetBaseManagers">
+            <summary>
+            获得所有基础主域
+            管理员的基础域ID和他的ID相同 则该Manager为主域Manager
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:TradingLib.Common.DBManagerTracker.UpdatePassword(System.Int32,System.String)">
+            <summary>
+            更新管理员密码
+            </summary>
+            <param name="id"></param>
+            <param name="pass"></param>
+        </member>
+        <member name="M:TradingLib.Common.DBManagerTracker.UpdateManagerType(System.Int32,TradingLib.API.QSEnumManagerType)">
+            <summary>
+            更新管理员类型
+            </summary>
+            <param name="id"></param>
+            <param name="type"></param>
+        </member>
+        <member name="P:TradingLib.Common.DBManagerTracker.Managers">
+            <summary>
+            所有管理员
+            </summary>
+        </member>
+        <member name="P:TradingLib.Common.DBManagerTracker.Item(System.Int32)">
+            <summary>
+            通过数据库ID返回对应的Manager
+            </summary>
+            <param name="mgrid"></param>
+            <returns></returns>
+        </member>
+        <member name="P:TradingLib.Common.DBManagerTracker.Item(System.String)">
+            <summary>
+            通过login返回对应的Manager
+            </summary>
+            <param name="login"></param>
+            <returns></returns>
+        </member>
+        <member name="T:TradingLib.Common.ContribCommandInfo">
+            <summary>
+            封装了扩展模块的命令结构
+            保存了通过反射获得的MethodInfo以及自定义特性
+            </summary>
+        </member>
+        <member name="M:TradingLib.Common.DomainUtils.GetRecvBanks(TradingLib.API.Domain)">
+            <summary>
+            返回该域的所有权限模板
+            </summary>
+            <param name="domain"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TradingLib.Common.DomainUtils.GetRecvBank(TradingLib.API.Domain,System.Int32)">
+            <summary>
+            获得某个域下的收款银行信息
+            </summary>
+            <param name="domain"></param>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TradingLib.Common.DomainUtils.UpdateRecvBanks(TradingLib.API.Domain,TradingLib.Mixins.JsonObject.JsonWrapperReceivableAccount)">
+            <summary>
+            更新银行帐户
+            </summary>
+            <param name="domain"></param>
+            <param name="bank"></param>
+        </member>
+        <member name="M:TradingLib.Common.DomainUtils.GetCommissionTemplate(TradingLib.API.Domain)">
+            <summary>
+            获得域下所有手续费模板
+            </summary>
+            <param name="domain"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TradingLib.Common.DomainUtils.GetMarginTemplate(TradingLib.API.Domain)">
+            <summary>
+            获得域下所有保证金模板
+            </summary>
+            <param name="domain"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TradingLib.Common.DomainUtils.UpdateSecurity(TradingLib.API.Domain,TradingLib.Common.SecurityFamilyImpl)">
+            <summary>
+            更新品种
+            </summary>
+            <param name="domain"></param>
+            <param name="sec"></param>
+        </member>
+        <member name="M:TradingLib.Common.DomainUtils.SyncSecurity(TradingLib.API.Domain,TradingLib.Common.SecurityFamilyImpl)">
+            <summary>
+            同步品种信息
+            </summary>
+            <param name="domain"></param>
+            <param name="sec"></param>
+        </member>
+        <member name="M:TradingLib.Common.DomainUtils.UpdateSymbol(TradingLib.API.Domain,TradingLib.Common.SymbolImpl)">
+            <summary>
+            更新某个域的合约合约
+            </summary>
+            <param name="domain"></param>
+            <param name="sym"></param>
+        </member>
+        <member name="M:TradingLib.Common.DomainUtils.SyncSymbol(TradingLib.API.Domain,TradingLib.Common.SymbolImpl)">
+            <summary>
+            同步合约
+            </summary>
+            <param name="domain"></param>
+            <param name="sym"></param>
+        </member>
+        <member name="M:TradingLib.Common.DomainUtils.GetSecurityFamilies(TradingLib.API.Domain)">
+            <summary>
+            获得域下所有品种
+            </summary>
+            <param name="domain"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TradingLib.Common.DomainUtils.GetSymbols(TradingLib.API.Domain)">
+            <summary>
+            获得某个域下所有合约
+            </summary>
+            <param name="domain"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TradingLib.Common.DomainUtils.GetSymbol(TradingLib.API.Domain,System.String)">
+            <summary>
+            获得某个域下的合约
+            </summary>
+            <param name="domain"></param>
+            <param name="symbol"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TradingLib.Common.DomainUtils.GetRootManager(TradingLib.API.Domain)">
+            <summary>
+            获得某个域的Root Manager
+            </summary>
+            <param name="domain"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TradingLib.Common.DomainUtils.GetExStrategyTemplate(TradingLib.API.Domain)">
+            <summary>
+            获得域下所有计算策略模板
+            </summary>
+            <param name="domain"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TradingLib.Common.DomainUtils.UpdateSyncVendor(TradingLib.API.Domain,System.Int32)">
+            <summary>
+            更新同步实盘帐户
+            </summary>
+            <param name="domain"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TradingLib.Common.DomainUtils.IsInDomain(TradingLib.API.Domain,TradingLib.Common.Manager)">
+            <summary>
+            某个Manger是否在某个域内
+            </summary>
+            <param name="domain"></param>
+            <param name="mgr"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TradingLib.Common.DomainUtils.IsInDomain(TradingLib.API.Domain,TradingLib.API.IAccount)">
+            <summary>
+            某个Account是否属于某域
+            </summary>
+            <param name="domain"></param>
+            <param name="account"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TradingLib.Common.DomainUtils.IsExpired(TradingLib.API.Domain)">
+            <summary>
+            判定该域是否过期
+            </summary>
+            <param name="domain"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TradingLib.Common.DomainUtils.GetRootLocations(TradingLib.API.Domain)">
+            <summary>
+            返回某个域的所有管理员地址
+            </summary>
+            <param name="domain"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TradingLib.Common.DomainUtils.GetAccounts(TradingLib.API.Domain)">
+            <summary>
+            获得域内Account
+            </summary>
+            <param name="mgr"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TradingLib.Common.DomainUtils.GetAccountCashOperation(TradingLib.API.Domain)">
+            <summary>
+            查询域内交易帐户出入金操作请求
+            </summary>
+            <param name="domain"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TradingLib.Common.DomainUtils.GetAgentCashOperation(TradingLib.API.Domain)">
+            <summary>
+            查询域内所有代理出入金操作请求
+            </summary>
+            <param name="domain"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TradingLib.Common.DomainUtils.GetUIAccesses(TradingLib.API.Domain)">
+            <summary>
+            返回该域的所有权限模板
+            </summary>
+            <param name="domain"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TradingLib.Common.DomainUtils.GetVendors(TradingLib.API.Domain)">
+            <summary>
+            获得域内Vendor
+            </summary>
+            <param name="domain"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TradingLib.Common.DomainUtils.GetBrokers(TradingLib.API.Domain)">
+            <summary>
+            获得域内所有交易通道
+            </summary>
+            <param name="domain"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TradingLib.Common.DomainUtils.GetManagers(TradingLib.API.Domain)">
+            <summary>
+            获得域内Manager
+            </summary>
+            <param name="domain"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TradingLib.Common.DomainUtils.GetConnectorConfigs(TradingLib.API.Domain)">
+            <summary>
+            获得域内实盘ConnectorConfig
+            </summary>
+            <param name="domain"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TradingLib.Common.DomainUtils.GetDefaultConnectorConfigs(TradingLib.API.Domain)">
+            <summary>
+            获得域内默认通道设置 行情与模拟成交 通道设置 默认通道设置不用绑定vendor
+            </summary>
+            <param name="domain"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TradingLib.Common.DomainUtils.GetInterface(TradingLib.API.Domain)">
+            <summary>
+            获得域可以设置的Interface
+            超级管理员可以获得所有接口
+            分区管理员只能获得设置范围内的接口
+            </summary>
+            <param name="domain"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TradingLib.Common.DomainUtils.GetRouterGroups(TradingLib.API.Domain)">
+            <summary>
+            获得域内所有路由组
+            </summary>
+            <param name="domain"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TradingLib.Common.DomainUtils.GetRouterGroup(TradingLib.API.Domain,System.Int32)">
+            <summary>
+            查找域下某个路由组
+            </summary>
+            <param name="domain"></param>
+            <param name="rgid"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TradingLib.ORM.MConnector.UpdateConnectorInterface(TradingLib.Common.ConnectorInterface)">
+            <summary>
+            更新接口参数
+            </summary>
+            <param name="itface"></param>
+        </member>
+        <member name="M:TradingLib.ORM.MConnector.UpdateConnectorConfigVendor(TradingLib.Common.ConnectorConfig)">
+            <summary>
+            更新ConnectorConfg的Vendor字段
+            </summary>
+            <param name="cfg"></param>
+            <param name="v"></param>
+        </member>
+        <member name="M:TradingLib.ORM.MAgentFinance.GetAgentBalance(System.Int32)">
+            <summary>
+            获得某个代理的最新Balance信息
+            </summary>
+            <param name="agentfk"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TradingLib.ORM.MAgentFinance.InsertAgentBalance(TradingLib.Mixins.JsonObject.JsonWrapperAgentBalance)">
+            <summary>
+            插入Balance数据
+            </summary>
+            <param name="balance"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TradingLib.ORM.MAgentFinance.GetAgentSettle(System.Int32,System.Int32)">
+            <summary>
+            获得某个代理 某个天的结算信息
+            </summary>
+            <param name="agentfk"></param>
+            <param name="settleday"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TradingLib.ORM.MAgentFinance.GetAgentBankAccount(System.Int32)">
+            <summary>
+            获得某个代理的银行帐户信息
+            </summary>
+            <param name="agentfk"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TradingLib.ORM.MAgentFinance.GetAgentLatestCashOperation(System.Int32)">
+            <summary>
+            查询某个代理一个月以内或者待处理的所有出入金操作
+            </summary>
+            <param name="agentfk"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TradingLib.ORM.MAgentFinance.GetAgentLatestCashOperationTotal">
+            <summary>
+            查询一个月以内所有出入金操作或待处理操作
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:TradingLib.ORM.MAgentFinance.InsertAgentCashOperation(TradingLib.Mixins.JsonObject.JsonWrapperCashOperation)">
+            <summary>
+            插入出入金操作
+            </summary>
+            <param name="op"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TradingLib.ORM.MAgentFinance.ConfirmAgentCashOperation(TradingLib.Mixins.JsonObject.JsonWrapperCashOperation)">
+            <summary>
+            确认出入金操作
+            这里需要在数据库事务中进行
+            在确认的时候 需要成功在manager_cashtrans中进行记录
+            </summary>
+            <param name="op"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TradingLib.ORM.MAgentFinance.CancelAgentCashOperation(TradingLib.Mixins.JsonObject.JsonWrapperCashOperation)">
+            <summary>
+            取消出入金操作
+            </summary>
+            <param name="op"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TradingLib.ORM.MAgentFinance.RejectAgentCashOperation(TradingLib.Mixins.JsonObject.JsonWrapperCashOperation)">
+            <summary>
+            拒绝出入金操作请求
+            </summary>
+            <param name="op"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TradingLib.ORM.MAgentFinance.GetPendingDeposit(System.Int32)">
+            <summary>
+            获得某个代理的待充值额度
+            </summary>
+            <param name="agentfk"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TradingLib.ORM.MAgentFinance.GetPendingWithdraw(System.Int32)">
+            <summary>
+            获得某个代理的待提现额度
+            </summary>
+            <param name="agentfk"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TradingLib.ORM.MAgentFinance.GetDepositOfTradingDay(System.Int32,System.Int32)">
+            <summary>
+            查询某个代理 某个交易日的充值金额
+            </summary>
+            <param name="agentfk"></param>
+            <param name="tradingday"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TradingLib.ORM.MAgentFinance.GetWithdrawOfTradingDay(System.Int32,System.Int32)">
+            <summary>
+            查询某个代理 某个交易日的提现金额
+            </summary>
+            <param name="agentfk"></param>
+            <param name="tradingday"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TradingLib.ORM.MAgentFinance.SelectAgentCashTrans(System.Int32,System.Int64,System.Int64)">
+            <summary>
+            获取在一个时间段内所有出入金记录
+            </summary>
+            <param name="account"></param>
+            <param name="start"></param>
+            <param name="end"></param>
+            <returns></returns>
+        </member>
+        <member name="T:TradingLib.Common.RouterGrouperTracker">
+            <summary>
+            路由组管理器
+            </summary>
+        </member>
+        <member name="M:TradingLib.Common.RouterGrouperTracker.UpdateRouterItem(TradingLib.Common.RouterItemSetting)">
+            <summary>
+            更新路由项目
+            添加路由有 路由组ID和帐户ID均不可变,只能修改激活状态，规则，优先级
+            </summary>
+            <param name="item"></param>
+        </member>
+        <member name="P:TradingLib.Common.RouterGrouperTracker.Item(System.Int32)">
+            <summary>
+            通过ID获得对应的路由组
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="P:TradingLib.Common.RouterGrouperTracker.RouterGroups">
+            <summary>
+            返回所有路由组
+            </summary>
+        </member>
+        <member name="P:TradingLib.Common.RouterGrouperTracker.RouterItems">
+            <summary>
+            返回所有路由项目
+            </summary>
+        </member>
+        <member name="M:TradingLib.ORM.MCashOpAccount.InsertAccountCashOperation(TradingLib.Mixins.JsonObject.JsonWrapperCashOperation)">
+            <summary>
+            插入出入金操作
+            </summary>
+            <param name="op"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TradingLib.ORM.MCashOpAccount.GetAccountCashOperation(System.String)">
+            <summary>
+            通过CashOperation Reference获得某个交易帐户某个CashOperation
+            </summary>
+            <param name="account"></param>
+            <param name="ordref"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TradingLib.ORM.MCashOpAccount.ConfirmAccountCashOperation(TradingLib.Mixins.JsonObject.JsonWrapperCashOperation)">
+            <summary>
+            确认出入金操作
+            这里需要在数据库事务中进行
+            在确认的时候 需要成功在logcashtrans_cashtrans中进行记录
+            </summary>
+            <param name="op"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TradingLib.ORM.MCashOpAccount.GetAccountLatestCashOperationTotal">
+            <summary>
+            查询一个月以内所有出入金操作或待处理操作
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:TradingLib.ORM.MCashOpAccount.CancelAccountCashOperation(TradingLib.Mixins.JsonObject.JsonWrapperCashOperation)">
+            <summary>
+            取消出入金操作
+            </summary>
+            <param name="op"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TradingLib.ORM.MCashOpAccount.RejectAccountCashOperation(TradingLib.Mixins.JsonObject.JsonWrapperCashOperation)">
+            <summary>
+            拒绝出入金操作请求
+            </summary>
+            <param name="op"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TradingLib.ORM.MCashOpAccount.SelectAccountCashTrans(System.String,System.Int64,System.Int64)">
+            <summary>
+            获取在一个时间段内所有出入金记录
+            </summary>
+            <param name="account"></param>
+            <param name="start"></param>
+            <param name="end"></param>
+            <returns></returns>
+        </member>
+        <member name="T:TradingLib.Common.AccountBase">
+            <summary>
+            帐户服务类接口
+            交易帐户服务的相关操作 加载 卸载 查找等
+            </summary>
+            <summary>
+            帐户操作类接口
+            原来的设计是通过将ClearCenter和RiskCentre进行wrapper然后注入到IAccount内部实现对应操作的调用
+            后期实现了CTX访问总线，通过总线自动绑定核心组件，然后外围的组件可以通过CTX对关键操作进行操作
+            </summary>
+            <summary>
+            帐户常规检查
+            </summary>
+            <summary>
+            交易帐户对象
+            </summary>
+        </member>
+        <member name="M:TradingLib.Common.AccountBase.SentSize(System.Int64)">
+            <summary>
+            返回维护器所发送的委托数量
+            </summary>
+            <param name="oid"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TradingLib.Common.AccountBase.FilledSize(System.Int64)">
+            <summary>
+            返回维护其所维护的成交数量
+            </summary>
+            <param name="oid"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TradingLib.Common.AccountBase.IsCanceled(System.Int64)">
+            <summary>
+            是否已经取消
+            </summary>
+            <param name="oid"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TradingLib.Common.AccountBase.IsComplate(System.Int64)">
+            <summary>
+            是否已经完成
+            </summary>
+            <param name="oid"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TradingLib.Common.AccountBase.GetPosition(System.String,System.Boolean)">
+            <summary>
+            获得某个合约的持仓对象
+            </summary>
+            <param name="symbol"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TradingLib.Common.AccountBase.CalOrderFundRequired(TradingLib.API.Order,System.Decimal)">
+            <summary>
+            计算某个委托所要占用的资金
+            这里的计算与单纯计算某个委托需要占用的保证金有所不同，这里需要按照
+            保证金计算算法 试算该委托下达后所增加的保证金占用 包含单向大边的处理
+            
+            </summary>
+            <param name="o"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TradingLib.Common.AccountBase.GetFundAvabile(TradingLib.API.Symbol)">
+            <summary>
+            获得某个合约的可交易资金
+            合约可用涉及到自身帐户的资金数量和对应服务的所提供的相关扩展
+            比如配资服务 客户自身资金 + 配资服务的可用资金 这里可以统一IService接口来对此类资金的调整进行抽象
+            这里注意多种服务的资金约束冲突
+            </summary>
+            <param name="symbol"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TradingLib.Common.AccountBase.BindService(TradingLib.API.IAccountService,System.Boolean)">
+            <summary>
+            帐户加载服务
+            </summary>
+            <param name="service"></param>
+        </member>
+        <member name="M:TradingLib.Common.AccountBase.UnBindService(TradingLib.API.IAccountService)">
+            <summary>
+            卸载服务
+            </summary>
+            <param name="service"></param>
+        </member>
+        <member name="M:TradingLib.Common.AccountBase.GetService(System.String,TradingLib.API.IAccountService@)">
+            <summary>
+            获得某个服务
+            </summary>
+            <param name="sn"></param>
+            <param name="service"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TradingLib.Common.AccountBase.InactiveAccount">
+            <summary>
+            冻结帐户
+            </summary>
+        </member>
+        <member name="M:TradingLib.Common.AccountBase.ActiveAccount">
+            <summary>
+            激活帐户
+            </summary>
+        </member>
+        <member name="M:TradingLib.Common.AccountBase.FlatPosition(TradingLib.API.QSEnumOrderSource,System.String)">
+            <summary>
+            强平帐户所有持仓
+            </summary>
+            <param name="source"></param>
+            <param name="comment"></param>
+        </member>
+        <member name="M:TradingLib.Common.AccountBase.FlatPosition(TradingLib.API.Position,TradingLib.API.QSEnumOrderSource,System.String)">
+            <summary>
+            平掉某个持仓
+            </summary>
+            <param name="pos"></param>
+            <param name="source"></param>
+            <param name="comment"></param>
+        </member>
+        <member name="M:TradingLib.Common.AccountBase.CancelOrder(TradingLib.API.QSEnumOrderSource,System.String)">
+            <summary>
+            撤掉帐户下所有委托
+            </summary>
+        </member>
+        <member name="M:TradingLib.Common.AccountBase.CancelOrder(System.String,TradingLib.API.QSEnumOrderSource,System.String)">
+            <summary>
+            撤掉帐户下某个合约的所有委托
+            </summary>
+            <param name="symbol"></param>
+            <param name="source"></param>
+            <param name="cancelreason"></param>
+        </member>
+        <member name="M:TradingLib.Common.AccountBase.CancelOrder(TradingLib.API.Order,TradingLib.API.QSEnumOrderSource,System.String)">
+            <summary>
+            撤掉帐户下的某个为头
+            </summary>
+            <param name="order"></param>
+            <param name="source"></param>
+            <param name="cancelreason"></param>
+        </member>
+        <member name="M:TradingLib.Common.AccountBase.#cctor">
+            <summary>
+            静态初始化
+            </summary>
+        </member>
+        <member name="M:TradingLib.Common.AccountBase.SetAccountType(System.String)">
+            <summary>
+            设定帐户类型
+            </summary>
+            <param name="typename"></param>
+        </member>
+        <member name="M:TradingLib.Common.AccountBase.CreateAccount(System.String)">
+            <summary>
+            
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TradingLib.Common.AccountBase.CanTakeSymbol(TradingLib.API.Symbol,System.String@)">
+            <summary>
+            检查帐户是否可以交易某个合约,在帐户是否可以交易合约逻辑部分
+            我们可以按照合约的种类去查询对应的服务是否支持该合约。
+            具体的检查逻辑可以在扩展模块的服务对象中去实现
+            </summary>
+            <param name="symbol"></param>
+            <param name="msg"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TradingLib.Common.AccountBase.CanFundTakeOrder(TradingLib.API.Order,System.String@)">
+            <summary>
+            检查某个帐户是否可以执行某个委托Order
+            </summary>
+            <param name="o"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TradingLib.Common.AccountBase.CanOpenSize(TradingLib.API.Symbol,System.Boolean,TradingLib.API.QSEnumOffsetFlag)">
+            <summary>
+            查询帐户当前某合约的可开仓数量
+            有些可开逻辑是按照对应服务的相关逻辑进行计算可开数量
+            </summary>
+            <param name="symbol"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TradingLib.Common.AccountBase.Equals(System.Object)">
+            <summary>
+            判断2个帐户是否相同
+            </summary>
+            <param name="obj"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TradingLib.Common.AccountBase.Reset">
+            <summary>
+            重置账户状态,用于每日造成开盘时,重置数据 
+            </summary>
+        </member>
+        <member name="M:TradingLib.Common.AccountBase.GetCommissionConfig(TradingLib.API.Symbol)">
+            <summary>
+            获得某个交易帐户某个合约的手续费设置
+            </summary>
+            <param name="symbol"></param>
+            <returns></returns>
+        </member>
+        <member name="F:TradingLib.Common.AccountBase._ordchekMap">
+            <summary>
+            委托风控规则map 风控规则用数据库ID作为一索引
+            </summary>
+        </member>
+        <member name="M:TradingLib.Common.AccountBase.CheckOrder(TradingLib.API.Order,System.String@)">
+            <summary>
+            委托风控检查
+            </summary>
+            <param name="o"></param>
+            <param name="msg"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TradingLib.Common.AccountBase.DelOrderCheck(System.Int32)">
+            <summary>
+            通过全局ID删除委托检查
+            </summary>
+            <param name="id"></param>
+        </member>
+        <member name="M:TradingLib.Common.AccountBase.CheckAccount(System.String@)">
+            <summary>
+            帐户规则检查
+            </summary>
+            <param name="msg"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TradingLib.Common.AccountBase.ClearAccountCheck">
+            <summary>
+            清空帐户规则
+            </summary>
+        </member>
+        <member name="M:TradingLib.Common.AccountBase.AddAccountCheck(TradingLib.API.IAccountCheck)">
+            <summary>
+            添加帐户风控规则
+            </summary>
+            <param name="rc"></param>
+        </member>
+        <member name="M:TradingLib.Common.AccountBase.DelAccountCheck(System.Int32)">
+            <summary>
+            删除某条帐户风控规则
+            </summary>
+            <param name="id"></param>
+        </member>
+        <member name="M:TradingLib.Common.AccountBase.GetAvabileAdjustment">
+            <summary>
+            获得可用资金期货部分调整
+            取决于交易参数中浮盈是否可以开仓
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:TradingLib.Common.AccountBase.Deposit(System.Decimal)">
+            <summary>
+            入金
+            </summary>
+            <param name="amount"></param>
+        </member>
+        <member name="M:TradingLib.Common.AccountBase.Withdraw(System.Decimal)">
+            <summary>
+            出金
+            入金,出金均是绝对值,用于记录金额
+            </summary>
+            <param name="amount"></param>
+        </member>
+        <member name="P:TradingLib.Common.AccountBase.AnyPosition">
+            <summary>
+            是否有持仓
+            </summary>
+        </member>
+        <member name="P:TradingLib.Common.AccountBase.TKPosition">
+            <summary>
+            持仓维护器
+            </summary>
+        </member>
+        <member name="P:TradingLib.Common.AccountBase.Positions">
+            <summary>
+            当日所有持仓数据 包含已经平仓的持仓对象和有持仓的持仓对象
+            </summary>
+        </member>
+        <member name="P:TradingLib.Common.AccountBase.PositionsLong">
+            <summary>
+            多头持仓维护器
+            </summary>
+        </member>
+        <member name="P:TradingLib.Common.AccountBase.PositionsShort">
+            <summary>
+            空头持仓维护器
+            </summary>
+        </member>
+        <member name="P:TradingLib.Common.AccountBase.TKOrder">
+            <summary>
+            委托维护器
+            </summary>
+        </member>
+        <member name="P:TradingLib.Common.AccountBase.Orders">
+            <summary>
+            当日所有委托数据 
+            </summary>
+        </member>
+        <member name="P:TradingLib.Common.AccountBase.TKTrade">
+            <summary>
+            成交维护器
+            </summary>
+        </member>
+        <member name="P:TradingLib.Common.AccountBase.Trades">
+            <summary>
+            当日所有成交数据
+            </summary>
+        </member>
+        <member name="P:TradingLib.Common.AccountBase.YdPositions">
+            <summary>
+            昨日持仓数据
+            用于管理端获得昨日持仓 当日成交 然后生成当前的交易持仓状态
+            </summary>
+        </member>
+        <member name="P:TradingLib.Common.AccountBase.ID">
+            <summary>
+            交易帐户ID 9680001
+            </summary>
+            <value>The ID.</value>
+        </member>
+        <member name="P:TradingLib.Common.AccountBase.Execute">
+            <summary>
+            是否允许交易
+            </summary>
+        </member>
+        <member name="P:TradingLib.Common.AccountBase.IntraDay">
+            <summary>
+            是否是日内交易
+            </summary>
+        </member>
+        <member name="P:TradingLib.Common.AccountBase.OrderRouteType">
+            <summary>
+            路由类别
+            </summary>
+        </member>
+        <member name="P:TradingLib.Common.AccountBase.Category">
+            <summary>
+            交易帐户类比 模拟帐户，实盘帐户，交易员
+            </summary>
+        </member>
+        <member name="P:TradingLib.Common.AccountBase.MAC">
+            <summary>
+            硬件地址
+            </summary>
+        </member>
+        <member name="P:TradingLib.Common.AccountBase.Name">
+            <summary>
+            交易帐户名称
+            </summary>
+        </member>
+        <member name="P:TradingLib.Common.AccountBase.Broker">
+            <summary>
+            期货公司名称
+            </summary>
+        </member>
+        <member name="P:TradingLib.Common.AccountBase.BankID">
+            <summary>
+            银行
+            </summary>
+        </member>
+        <member name="P:TradingLib.Common.AccountBase.BankAC">
+            <summary>
+            银行帐号
+            </summary>
+        </member>
+        <member name="P:TradingLib.Common.AccountBase.CreatedTime">
+            <summary>
+            记录账户的建立时间
+            </summary>
+        </member>
+        <member name="P:TradingLib.Common.AccountBase.SettleDateTime">
+            <summary>
+            上次结算日
+            </summary>
+        </member>
+        <member name="P:TradingLib.Common.AccountBase.SettlementConfirmTimeStamp">
+            <summary>
+            最近结算确认日期
+            </summary>
+        </member>
+        <member name="P:TradingLib.Common.AccountBase.Mgr_fk">
+            <summary>
+            代理商ID
+            </summary>
+        </member>
+        <member name="P:TradingLib.Common.AccountBase.RG_FK">
+            <summary>
+            路由组ID 用于将某个帐户绑定到某个路由组上面,然后这组用户下单就会下单路由组内的成交接口上
+            </summary>
+        </member>
+        <member name="P:TradingLib.Common.AccountBase.Commission_ID">
+            <summary>
+            手续费模板ID
+            </summary>
+        </member>
+        <member name="P:TradingLib.Common.AccountBase.Margin_ID">
+            <summary>
+            保证金模板ID
+            </summary>
+        </member>
+        <member name="P:TradingLib.Common.AccountBase.ExStrategy_ID">
+            <summary>
+            交易参数模板ID
+            </summary>
+        </member>
+        <member name="P:TradingLib.Common.AccountBase.Domain">
+            <summary>
+            域ID
+            </summary>
+        </member>
+        <member name="P:TradingLib.Common.AccountBase.UserID">
+            <summary>
+            与交易帐号所绑定的全局UserID
+            </summary>
+        </member>
+        <member name="P:TradingLib.Common.AccountBase.isValid">
+            <summary>
+            Gets a value indicating whether this instance is valid.
+            </summary>
+            <value><c>true</c> if this instance is valid; otherwise, <c>false</c>.</value>
+        </member>
+        <member name="P:TradingLib.Common.AccountBase.LastEquity">
+            <summary>
+            昨日权益
+            </summary>
+        </member>
+        <member name="P:TradingLib.Common.AccountBase.NowEquity">
+            <summary>
+            当前权益 经过排查 commission并非线程安全
+            </summary>
+        </member>
+        <member name="P:TradingLib.Common.AccountBase.RealizedPL">
+            <summary>
+            平仓盈亏
+            </summary>
+        </member>
+        <member name="P:TradingLib.Common.AccountBase.UnRealizedPL">
+            <summary>
+            浮动盈亏 
+            </summary>
+        </member>
+        <member name="P:TradingLib.Common.AccountBase.SettleUnRealizedPL">
+            <summary>
+            盯市盈亏
+            </summary>
+        </member>
+        <member name="P:TradingLib.Common.AccountBase.Commission">
+            <summary>
+            手续费
+            </summary>
+        </member>
+        <member name="P:TradingLib.Common.AccountBase.Profit">
+            <summary>
+            净利润
+            </summary>
+        </member>
+        <member name="P:TradingLib.Common.AccountBase.CashIn">
+            <summary>
+            本次结算周期(本日入金)
+            </summary>
+        </member>
+        <member name="P:TradingLib.Common.AccountBase.CashOut">
+            <summary>
+            本次结算周期(本日出金)
+            </summary>
+        </member>
+        <member name="P:TradingLib.Common.AccountBase.Margin">
+            <summary>
+            保证金占用
+            期货保证金占用 期权持仓成本 异化保证金
+            </summary>
+        </member>
+        <member name="P:TradingLib.Common.AccountBase.MarginFrozen">
+            <summary>
+            保证金冻结
+            期货保证金占用 期权资金占用 异化保证金占用
+            </summary>
+        </member>
+        <member name="P:TradingLib.Common.AccountBase.MoneyUsed">
+            <summary>
+            总占用资金
+            </summary>
+        </member>
+        <member name="P:TradingLib.Common.AccountBase.TotalLiquidation">
+            <summary>
+            总净值
+            </summary>
+        </member>
+        <member name="P:TradingLib.Common.AccountBase.AvabileFunds">
+            <summary>
+            总可用资金
+            常规计算的可用资金 + 扩展模块提供的配资资金
+            </summary>
+        </member>
+        <member name="P:TradingLib.Common.AccountBase.Credit">
+            <summary>
+            帐户信用额度
+            </summary>
+        </member>
+        <member name="T:TradingLib.Common.MarginTemplateTracker">
+            <summary>
+            保证金模板维护器
+            </summary>
+        </member>
+        <member name="M:TradingLib.Common.MarginTemplateTracker.UpdateMarginTemplate(TradingLib.Common.MarginTemplateSetting)">
+            <summary>
+            更新手续费模板
+            </summary>
+            <param name="t"></param>
+        </member>
+        <member name="T:TradingLib.Common.NotifyPredicateUtils">
+            <summary>
+            通知谓词帮助类
+            当某个对象发生添加或更新时,判断需要通知某个管理员
+            在执行通知操作时,需要判断当前连接的管理员列表中哪些需要进行通知
+            </summary>
+        </member>
+        <member name="M:TradingLib.Common.NotifyPredicateUtils.GetNotifyPredicate(TradingLib.Common.Manager)">
+            <summary>
+            获得管理员更新的判断谓词
+            用于判断当manager发生更新时 需要通知哪些管理员
+            </summary>
+            <param name="op"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TradingLib.Common.NotifyPredicateUtils.IsForAgent(TradingLib.Mixins.JsonObject.JsonWrapperCashOperation)">
+            <summary>
+            如果出入金请求的 主域ID 则该出入金请求来自代理帐户
+            </summary>
+            <param name="op"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TradingLib.Common.NotifyPredicateUtils.IsForAccount(TradingLib.Mixins.JsonObject.JsonWrapperCashOperation)">
+            <summary>
+            如果有交易帐号并且交易 则该出入金请求是来自交易帐户
+            </summary>
+            <param name="op"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TradingLib.Common.NotifyPredicateUtils.GetNotifyPredicate(TradingLib.Mixins.JsonObject.JsonWrapperCashOperation)">
+            <summary>
+            获得出入金操作的通知对象判断诸词
+            </summary>
+            <param name="op"></param>
+            <returns></returns>
+        </member>
+        <member name="T:TradingLib.Common.DBSecurityTracker">
+            <summary>
+            品种管理器
+            </summary>
+        </member>
+        <member name="M:TradingLib.Common.DBSecurityTracker.GetUnderlayedOn(TradingLib.API.SecurityFamily)">
+            <summary>
+            查找基于某个sec的所有证券品种
+            比如IO基于IF,则通过IF查找 基于IF的所有品种
+            </summary>
+            <param name="sec"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TradingLib.Common.DBSecurityTracker.SyncSecurity(TradingLib.Common.SecurityFamilyImpl)">
+            <summary>
+            同步品种信息 将品种信息同步到本域
+            </summary>
+            <param name="sec"></param>
+        </member>
+        <member name="P:TradingLib.Common.DBSecurityTracker.Item(System.String)">
+            <summary>
+            通过品种编码获得品种
+            </summary>
+            <param name="code"></param>
+            <returns></returns>
+        </member>
+        <member name="P:TradingLib.Common.DBSecurityTracker.Item(System.Int32)">
+            <summary>
+            通过数据库编号获得品种
+            </summary>
+            <param name="index"></param>
+            <returns></returns>
+        </member>
+        <member name="P:TradingLib.Common.DBSecurityTracker.Securities">
+            <summary>
+            返回所有品种簇
+            </summary>
+        </member>
+        <member name="T:TradingLib.Common.Client2Session">
+            <summary>
+            将Client转换成Session 适配器
+            Client是内部底层使用的数据,可以用于相关字段的设置与修改
+            当暴露到外层逻辑时,我们需要进行转换,转换成ISession来表示一个逻辑上的会话概念,相关属性是只读的
+            </summary>
+        </member>
+        <member name="P:TradingLib.Common.Client2Session.SessionType">
+            <summary>
+            回话类型
+            </summary>
+        </member>
+        <member name="P:TradingLib.Common.Client2Session.AuthorizedID">
+            <summary>
+            交易帐号 用于交易服务
+            </summary>
+        </member>
+        <member name="P:TradingLib.Common.Client2Session.Manager">
+            <summary>
+            Manager对象
+            </summary>
+        </member>
+        <member name="P:TradingLib.Common.Client2Session.Account">
+            <summary>
+            交易帐户对象
+            </summary>
+        </member>
+        <member name="P:TradingLib.Common.Client2Session.Authorized">
+            <summary>
+            回话是否已经登入
+            </summary>
+        </member>
+        <member name="P:TradingLib.Common.Client2Session.Location">
+            <summary>
+            回话对端地址
+            </summary>
+        </member>
+        <member name="P:TradingLib.Common.Client2Session.FrontIDi">
+            <summary>
+            前置编号 整数
+            </summary>
+        </member>
+        <member name="P:TradingLib.Common.Client2Session.SessionIDi">
+            <summary>
+            客户连接编号 整数
+            </summary>
+        </member>
+        <member name="P:TradingLib.Common.Client2Session.ContirbID">
+            <summary>
+            对应的扩展模块编号
+            </summary>
+        </member>
+        <member name="P:TradingLib.Common.Client2Session.CMDStr">
+            <summary>
+            对应的扩展模块命令
+            </summary>
+        </member>
+        <member name="P:TradingLib.Common.Client2Session.RequestID">
+            <summary>
+            请求编号
+            </summary>
+        </member>
+        <member name="P:TradingLib.ORM.settlementconfirm.Account">
+            <summary>
+            交易帐号
+            </summary>
+        </member>
+        <member name="P:TradingLib.ORM.settlementconfirm.Settleday">
+            <summary>
+            确认日期
+            </summary>
+        </member>
+        <member name="M:TradingLib.ORM.MSettlement.InsertPositionDetail(TradingLib.API.PositionDetail)">
+            <summary>
+            插入持仓明细
+            </summary>
+            <param name="?"></param>
+            <param name="settleday"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TradingLib.ORM.MSettlement.SelectAccountPositionDetails(System.Int32)">
+            <summary>
+            获得分帐户侧所有持仓明细
+            </summary>
+            <param name="tradingday"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TradingLib.ORM.MSettlement.SelectAccountPositionDetails(System.String,System.Int32)">
+            <summary>
+            获得某个分帐户的持仓明细
+            </summary>
+            <param name="tradingday"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TradingLib.ORM.MSettlement.SelectBrokerPositionDetails(System.Int32)">
+            <summary>
+            获得接口侧所有持仓明细数据
+            </summary>
+            <param name="tradingday"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TradingLib.ORM.MSettlement.SelectPositionDetails(System.String,System.Int32)">
+            <summary>
+            从数据库加载某个交易帐号或通道的持仓明细某个结算日的所有持仓明细
+            </summary>
+            <param name="tradingday"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TradingLib.ORM.MSettlement.InsertPositionCloseDetail(TradingLib.API.PositionCloseDetail)">
+            <summary>
+            插入平仓明细
+            </summary>
+            <param name="p"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TradingLib.ORM.MSettlement.SelectPositionCloseDetail(System.Int32)">
+            <summary>
+            查询某个交易日的所有平仓明细
+            </summary>
+            <param name="tradingday"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TradingLib.ORM.MSettlement.SelectPositionCloseDetail(System.String,System.Int32)">
+            <summary>
+            查询某个交易日某个交易帐户的平仓明细
+            </summary>
+            <param name="tradingday"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TradingLib.ORM.MSettlement.InsertHoldPositionRound(TradingLib.API.PositionRound,System.Int32)">
+            <summary>
+            插入结算持仓回合数据
+            </summary>
+            <param name="pr"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TradingLib.ORM.MSettlement.IsAccountSettled(System.String)">
+            <summary>
+            检查账户当天是否已经结算过了，当天结算过的账户不能再进行结算
+            检查当前交易日是否已经结算过
+            </summary>
+            <param name="account"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TradingLib.ORM.MSettlement.IsAccountSettled(System.String,System.Int32)">
+            <summary>
+            检查账户是否结算过,搜索结算信息表,如果该日有结算信息,则结算过,没有则没有结算过
+            </summary>
+            <param name="account"></param>
+            <param name="day"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TradingLib.ORM.MSettlement.SettleAccount(TradingLib.API.IAccount)">
+            <summary>
+            结算某个交易账户
+            </summary>
+            <param name="acc"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TradingLib.ORM.MSettlement.SelectAccountLastEquity">
+            <summary>
+            获得交易帐户昨日权益
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:TradingLib.ORM.MSettlement.GetLastSettleday">
+            <summary>
+            获取系统最近一次的结算日期
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:TradingLib.ORM.MSettlement.UpdateSettleday(System.Int32)">
+            <summary>
+            更新最近结算日期
+            </summary>
+            <param name="settleday"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TradingLib.ORM.MSettlement.SelectSettlement(System.String,System.Int32)">
+            <summary>
+            查询某个交易帐号 某个交易日的结算单
+            </summary>
+            <param name="account"></param>
+            <param name="settleday"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TradingLib.ORM.MSettlement.ConfirmeSettle(System.String,System.Int32,System.Int64)">
+            <summary>
+            确认交易帐户某日结算单
+            </summary>
+            <param name="account"></param>
+            <param name="settleday"></param>
+            <returns></returns>
+        </member>
+        <member name="T:TradingLib.Common.PacketEventArgs">
+            <summary>
+            某个回话的某个消息包
+            交易客户端和管理端 通过向服务端发送消息包实现相关操作与请求
+            1.标识回话
+            2.定义内容
+            </summary>
+        </member>
+        <member name="P:TradingLib.Common.PacketEventArgs.Session">
+            <summary>
+            回话Session
+            </summary>
+        </member>
+        <member name="P:TradingLib.Common.PacketEventArgs.Packet">
+            <summary>
+            管理端发出的消息包
+            通过消息包可以获得消息类型和消息内容
+            </summary>
+        </member>
+        <member name="P:TradingLib.Common.PacketEventArgs.FrontID">
+            <summary>
+            前置
+            </summary>
+        </member>
+        <member name="P:TradingLib.Common.PacketEventArgs.ClientID">
+            <summary>
+            客户端地址
+            </summary>
+        </member>
+        <member name="T:TradingLib.Common.TotalTracker">
+            <summary>
+            总帐交易记录维护器
+            该维护器只是在总帐维度上维护了分帐户的交易信息
+            本身并不产生新的交易数据，
+            例子：
+            我们需要找到某个编号的委托，如果没有总帐维度，则我们需要遍历每个分帐户去找到该委托
+            而有了总帐维度则我们可以快速的找到该委托
+            </summary>
+        </member>
+        <member name="M:TradingLib.Common.TotalTracker.SentOrder(System.Int64)">
+            <summary>
+            通过OrderId获得该Order
+            </summary>
+            <param name="oid"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TradingLib.Common.TotalTracker.NewPosition(TradingLib.API.Position)">
+            <summary>
+            新持仓对象生成
+            </summary>
+            <param name="pos"></param>
+        </member>
+        <member name="M:TradingLib.Common.TotalTracker.NewOrder(TradingLib.API.Order)">
+            <summary>
+            当有新的委托进入系统时记录该委托
+            </summary>
+            <param name="o"></param>
+        </member>
+        <member name="M:TradingLib.Common.TotalTracker.NewFill(TradingLib.API.Trade)">
+            <summary>
+            新成交
+            </summary>
+            <param name="fill"></param>
+        </member>
+        <member name="T:TradingLib.Common.FlatTimeMarketTimePair">
+            <summary>
+            强平时间与市场交易时间 值对
+            在某个时间点进行强平 并制定该市场时间对象是哪个，在强平时需要把所有绑定该市场交易时间 品种 进行强平
+            </summary>
+        </member>
+        <member name="P:TradingLib.Common.FlatTimeMarketTimePair.FlatTime">
+            <summary>
+            对应的强平时间
+            </summary>
+        </member>
+        <member name="P:TradingLib.Common.FlatTimeMarketTimePair.MarketTime">
+            <summary>
+            对应的市场交易时间
+            </summary>
+        </member>
+        <member name="T:TradingLib.Common.DBMarketTimeTracker">
+            <summary>
+            交易时间段维护器, 用于从数据库加载交易时间段的定义
+            从而在加载品种列表时为每个品种指定对应的交易时间
+            只有在每次开机时才加载市场交易时间盘中没有修改交易时间对象的必要
+            </summary>
+        </member>
+        <member name="M:TradingLib.Common.DBMarketTimeTracker.GetFlatTimeMarketTimePairs">
+            <summary>
+            获得强平时间点与MarketTime 值对
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:TradingLib.Common.DBMarketTimeTracker.GetMarketTimes">
+            <summary>
+            获得所有开市 时间段
+            9:00-11:30
+            
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:TradingLib.Common.DBContractBankTracker.GetRecvBankAccount(System.Int32)">
+            <summary>
+            从收款银行编号获得对应的收款银行信息
+            </summary>
+            <param name="idx"></param>
+            <returns></returns>
+        </member>
+        <member name="P:TradingLib.Common.DBContractBankTracker.Item(System.String)">
+            <summary>
+            获取银行对象
+            </summary>
+            <param name="bankid"></param>
+            <returns></returns>
+        </member>
+        <member name="P:TradingLib.Common.DBContractBankTracker.ReceivableAccounts">
+            <summary>
+            所有收款银行列表
+            </summary>
+        </member>
+        <member name="P:TradingLib.Common.DBContractBankTracker.Banks">
+            <summary>
+            返回所有银行列表
+            </summary>
+        </member>
+        <member name="T:TradingLib.Common.TLContext">
+            <summary>
+            全局上下文,用于提供核心组件的全局引用
+            </summary>
+        </member>
+        <member name="M:TradingLib.Common.TLContext.ContirbID2UUID(System.String)">
+            <summary>
+            通过ContribId找到其对应的UUID
+            </summary>
+            <param name="contribId"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TradingLib.Common.TLContext.IsContribRegisted(System.String)">
+            <summary>
+            检查某个Contrib是否注册到系统
+            </summary>
+            <param name="contribId"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TradingLib.Common.TLContext.ContribFinderName(System.String)">
+            <summary>
+            通过contribId找到其对应的IContirb插件对象
+            </summary>
+            <param name="contribid"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TradingLib.Common.TLContext.MessageExchangeHandler(TradingLib.API.ISession,System.String)">
+            <summary>
+            核心交易信息交换所使用的命令解析处理函数
+            用于处理从客户端发送过来的消息
+            </summary>
+            <param name="session">代表了某个客户端会话</param>
+            <param name="message">客户端提交上来的消息</param>
+        </member>
+        <member name="M:TradingLib.Common.TLContext.MessageWebHandler(TradingLib.Mixins.Json.JsonRequest,System.Boolean)">
+            <summary>
+            处理web message exchange消息调用
+            
+            </summary>
+            <param name="module"></param>
+            <param name="cmdstr"></param>
+            <param name="parameters"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TradingLib.Common.TLContext.MessageCLIHandler(System.String,System.String)">
+            <summary>
+            命令行处理命令调用
+            </summary>
+            <param name="cmdstr"></param>
+            <param name="parameters"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TradingLib.Common.TLContext.CmdHandler(TradingLib.API.ISession,System.String,System.Collections.Concurrent.ConcurrentDictionary{System.String,TradingLib.Common.ContribCommand})">
+            <summary>
+            message 为 contribid|cmdstr|parameters的格式
+            </summary>
+            <param name="session"></param>
+            <param name="message"></param>
+            <param name="cmdmap"></param>
+        </member>
+        <member name="M:TradingLib.Common.TLContext.CmdHandler(TradingLib.API.ISession,System.String,System.String,System.String,System.Collections.Concurrent.ConcurrentDictionary{System.String,TradingLib.Common.ContribCommand})">
+            <summary>
+            命令调用逻辑
+            </summary>
+            <param name="session">该消息来自于哪个会话(Front id,session id)</param>
+            <param name="contribid">该消息发给哪个扩展模块</param>
+            <param name="cmd">该消息调用扩展模块的哪个命令</param>
+            <param name="parameters">调用该扩展模块所附带的参数(除session参数以为),所有扩展模块的函数调用均要包含session入口</param>
+        </member>
+        <member name="M:TradingLib.Common.TLContext.Register(System.Object)">
+            <summary>
+            注册清算中心到全局上下文
+            通过在BaseSrvObject基类中统一向TLContext进行注册,则ctx可以获得全局所有继承自BaseSrvObject的对象
+            
+            </summary>
+            <param name="c"></param>
+        </member>
+        <member name="M:TradingLib.Common.TLContext.InjectTask(TradingLib.Common.TaskProc)">
+            <summary>
+            手工注入TaskProc 
+            注意在生成TaskProc时需要制定对象的UUID 从而实现当对象注销时自动通过uuid进行任务释放
+            
+            </summary>
+            <param name="proc"></param>
+        </member>
+        <member name="M:TradingLib.Common.TLContext.ParseTaskInfo(TradingLib.Common.BaseSrvObject)">
+            <summary>
+            解析任务
+            </summary>
+            <param name="obj"></param>
+        </member>
+        <member name="M:TradingLib.Common.TLContext.ParseContribEventInfo(System.Object,System.String)">
+            <summary>
+            解析事件
+            </summary>
+            <param name="obj"></param>
+            <param name="componentId"></param>
+        </member>
+        <member name="M:TradingLib.Common.TLContext.ParseCommandInfo(System.Object,System.String)">
+            <summary>
+            解析并处理模块命令列表,通过ContribCommandInfo生成对应的命令并填充到列表中
+            客户端通过命令contrib|cmdstr|message来发送消息
+            命令行则只有单一的命令可以解析,因此命令行命令用单一的cmdstr来进行解析
+            </summary>
+            <param name="obj"></param>
+            <param name="list"></param>
+        </member>
+        <member name="M:TradingLib.Common.TLContext.PluginInfo(TradingLib.API.IPlugin)">
+            <summary>
+            销毁扩展模块命令列表
+            </summary>
+            <param name="contribid"></param>
+        </member>
+        <member name="M:TradingLib.Common.TLContext.PrintBaseObjectList">
+            <summary>
+            输出系统内服务对象列表
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:TradingLib.Common.TLContext.PrintContribList">
+            <summary>
+            输出扩展模块信息
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:TradingLib.Common.TLContext.PrintCoreList">
+            <summary>
+            输出核心底层模块列表
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:TradingLib.Common.TLContext.PrintContrib(System.String)">
+            <summary>
+            输出某个contrib的所有信息
+            </summary>
+            <param name="contrib"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TradingLib.Common.TLContext.PrintCommandAPI(System.String,System.String)">
+            <summary>
+            获得某个模块,某个命令的相信信息
+            </summary>
+            <param name="contrib"></param>
+            <param name="cmd"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TradingLib.Common.TLContext.PrintHttpAPI(System.String)">
+            <summary>
+            输出某个访问键值的访问信息
+            </summary>
+            <param name="cmdkey"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TradingLib.Common.TLContext.PrintCLICommandList">
+            <summary>
+            输出所有命令行列表
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:TradingLib.Common.TLContext.PrintEventList">
+            <summary>
+            输出所有事件列表
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:TradingLib.Common.TLContext.PrintEventHandler">
+            <summary>
+            输出事件处理器列表
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:TradingLib.Common.TLContext.PrintCommandList">
+            <summary>
+            输出命令列表
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="P:TradingLib.Common.TLContext.TaskList">
+            <summary>
+            全局任务列表
+            </summary>
+        </member>
+        <member name="P:TradingLib.Common.TLContext.ClearCentre">
+            <summary>
+            清算中心
+            </summary>
+        </member>
+        <member name="P:TradingLib.Common.TLContext.RiskCentre">
+            <summary>
+            风控中心
+            </summary>
+        </member>
+        <member name="P:TradingLib.Common.TLContext.SettleCentre">
+            <summary>
+            清算中心
+            </summary>
+        </member>
+        <member name="M:TradingLib.Common.TaskProc.DoTask">
+            <summary>
+            执行特定时间的任务
+            </summary>
+        </member>
+        <member name="M:TradingLib.Common.TaskProc.CheckTask(System.DateTime)">
+            <summary>
+            执行定时任务
+            检查上次执行时间与当前时间的间隔,如果大于设定的时间间隔,则执行任务
+            </summary>
+            <param name="signalTime">触发检查的时间</param>
+        </member>
+        <member name="M:TradingLib.Common.TaskProc.#ctor(System.String,System.String,System.Int32,System.Int32,System.Int32,TradingLib.API.VoidDelegate)">
+            <summary>
+            特定时间执行的任务
+            几点,几分,几秒定时运行某个任务
+            </summary>
+            <param name="hour"></param>
+            <param name="minute"></param>
+            <param name="secend"></param>
+            <param name="func"></param>
+        </member>
+        <member name="P:TradingLib.Common.TaskProc.UUID">
+            <summary>
+            对象UUID
+            </summary>
+        </member>
+        <member name="P:TradingLib.Common.TaskProc.TaskName">
+            <summary>
+            任务名称
+            </summary>
+        </member>
+        <member name="P:TradingLib.Common.TaskProc.TaskType">
+            <summary>
+            任务类别
+            </summary>
+        </member>
+        <member name="P:TradingLib.Common.TaskProc.TaskInterval">
+            <summary>
+            任务执行间隔
+            </summary>
+        </member>
+        <member name="P:TradingLib.Common.TaskProc.LastTime">
+            <summary>
+            上次执行任务时间
+            </summary>
+        </member>
+        <member name="T:TradingLib.Common.TaskProcWrapper">
+            <summary>
+            将TaskProc置于try catch结构中运行,并记录错误运行输出
+            </summary>
+        </member>
+        <member name="M:TradingLib.ORM.MRouterGroup.InsertVendor(TradingLib.Common.VendorImpl)">
+            <summary>
+            插入新的帐户
+            </summary>
+            <param name="vendor"></param>
+        </member>
+        <member name="M:TradingLib.ORM.MRouterGroup.SelectRouterGroup">
+            <summary>
+            获得所有RouterGroup
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:TradingLib.ORM.MRouterGroup.SelectRouterItem">
+            <summary>
+            从数据库加载所有路由映射关系
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:TradingLib.ORM.MRouterGroup.UpdateRouterItem(TradingLib.Common.RouterItemImpl)">
+            <summary>
+            更新路由项目
+            </summary>
+            <param name="item"></param>
+        </member>
+        <member name="M:TradingLib.ORM.MRouterGroup.InsertRouterItem(TradingLib.Common.RouterItemImpl)">
+            <summary>
+            插入路由项目
+            </summary>
+            <param name="item"></param>
+        </member>
+        <member name="T:TradingLib.Common.TaskEventArgs">
+            <summary>
+            任务事件参数
+            </summary>
+        </member>
+        <member name="P:TradingLib.Common.TaskEventArgs.Task">
+            <summary>
+            任务对象
+            </summary>
+        </member>
+        <member name="P:TradingLib.Common.TaskEventArgs.IsSuccess">
+            <summary>
+            任务是否正常执行
+            如果没有产生运行异常则 执行成功
+            </summary>
+        </member>
+        <member name="P:TradingLib.Common.TaskEventArgs.InnerException">
+            <summary>
+            执行任务时 内部异常
+            </summary>
+        </member>
+        <member name="M:TradingLib.Common.CoreUtil.GetAvabilePrice(System.String)">
+            <summary>
+            返回某个合约的可用价格
+            </summary>
+            <param name="symbol"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TradingLib.Common.CoreUtil.GetTickSnapshot(System.String)">
+            <summary>
+            获得合约市场快照
+            </summary>
+            <param name="symbol"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TradingLib.Common.CoreUtil.SendOrder(TradingLib.API.Order)">
+            <summary>
+            发送委托
+            </summary>
+            <param name="o"></param>
+        </member>
+        <member name="M:TradingLib.Common.CoreUtil.CancelOrder(System.Int64)">
+            <summary>
+            取消委托
+            </summary>
+            <param name="oid"></param>
+        </member>
+        <member name="M:TradingLib.Common.ManagerUtils.GetAccounts(TradingLib.Common.Manager)">
+            <summary>
+            获得某个管理员下的帐户
+            </summary>
+            <param name="mgr"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TradingLib.Common.ManagerUtils.GetVisibleAccount(TradingLib.Common.Manager)">
+            <summary>
+            查看某个代理的可见帐户
+            ROOT权限的用户可以查看所有帐户
+            如果是代理则只能看到代理商的直接客户
+            </summary>
+            <param name="mgr"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TradingLib.Common.ManagerUtils.GetVisibleManager(TradingLib.Common.Manager)">
+            <summary>
+            查看所有可见柜员帐户
+            </summary>
+            <param name="mgr"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TradingLib.Common.ManagerUtils.ValidRightReadAccount(TradingLib.Common.Manager,System.String)">
+            <summary>
+            验证是否有权限操作某帐户
+            </summary>
+            <param name="mgr"></param>
+            <param name="account"></param>
+        </member>
+        <member name="M:TradingLib.Common.ManagerUtils.ValidRightReadAccount(TradingLib.Common.Manager,TradingLib.API.IAccount)">
+            <summary>
+            验证是否有权限操作某帐户
+            </summary>
+            <param name="mgr"></param>
+            <param name="account"></param>
+        </member>
+        <member name="M:TradingLib.Common.ManagerUtils.ValidRightAddManager(TradingLib.Common.Manager,TradingLib.Common.ManagerSetting)">
+            <summary>
+            验证是否有添加管理员的权限
+            </summary>
+            <param name="mgr"></param>
+            <param name="managertoadd"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TradingLib.Common.ManagerUtils.GetAgentBalance(TradingLib.Common.Manager)">
+            <summary>
+            获得某个Manager对应主域的权益信息
+            </summary>
+            <param name="manager"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TradingLib.Common.ManagerUtils.GetPendingWithdraw(TradingLib.Common.Manager)">
+            <summary>
+            获得某个Manager主域的待处理提现
+            </summary>
+            <param name="manger"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TradingLib.Common.ManagerUtils.GetPendingDeposit(TradingLib.Common.Manager)">
+            <summary>
+            获得某个Manager主域的待处理充值
+            </summary>
+            <param name="manager"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TradingLib.Common.ManagerUtils.GetWithdrawNotSettled(TradingLib.Common.Manager)">
+            <summary>
+            获得未结算的提现金额
+            由于每个交易日必须结算，因此上个交易日内的充值提现已经通过结算计入当前Balance
+            而当前结算周期内的充值提现记录没有反应到Balance需要单独计算并显示
+            </summary>
+            <param name="manger"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TradingLib.Common.ManagerUtils.GetDepositNotSettled(TradingLib.Common.Manager)">
+            <summary>
+            获得未结算的充值金额
+            </summary>
+            <param name="manager"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TradingLib.Common.ManagerUtils.GetAgentSettlement(TradingLib.Common.Manager,System.Int32)">
+            <summary>
+            获得某个代理某天的结算信息
+            </summary>
+            <param name="manager"></param>
+            <param name="settleday"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TradingLib.Common.ManagerUtils.GetAgentBankAccount(TradingLib.Common.Manager)">
+            <summary>
+            获得某个代理主域下的银行卡信息
+            </summary>
+            <param name="manager"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TradingLib.Common.ManagerUtils.ToJsonWrapperBank(TradingLib.Common.ContractBank)">
+            <summary>
+            转换成Json对象
+            </summary>
+            <param name="bank"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TradingLib.Common.ManagerUtils.GetAgentLatestCashOperation(TradingLib.Common.Manager)">
+            <summary>
+            获得主域下最近一个月的所有出入金操作
+            </summary>
+            <param name="manager"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TradingLib.Common.ManagerUtils.GetAgentFinanceInfo(TradingLib.Common.Manager)">
+            <summary>
+            获得某个Manager对应主域的财务信息
+            </summary>
+            <param name="manager"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TradingLib.Common.ManagerUtils.GetAgentFinanceInfoLite(TradingLib.Common.Manager)">
+            <summary>
+            获得代理精简财务信息
+            </summary>
+            <param name="manager"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TradingLib.Common.ManagerUtils.GetPaymentInfo(TradingLib.Common.Manager)">
+            <summary>
+            获得某个manager的支付信息
+            </summary>
+            <param name="manager"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TradingLib.Common.ManagerUtils.IsRoot(TradingLib.Common.Manager)">
+            <summary>
+            是否是管理员
+            </summary>
+            <param name="mgr"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TradingLib.Common.ManagerUtils.IsInRoot(TradingLib.Common.Manager)">
+            <summary>
+            判断Manager是否在Root管理域
+            </summary>
+            <param name="mgr"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TradingLib.Common.ManagerUtils.IsAgent(TradingLib.Common.Manager)">
+            <summary>
+            是否是代理
+            </summary>
+            <param name="mgr"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TradingLib.Common.ManagerUtils.IsInAgent(TradingLib.Common.Manager)">
+            <summary>
+            判断管理员是否在Agent管理域
+            </summary>
+            <param name="mgr"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TradingLib.Common.ManagerUtils.IsParentOf(TradingLib.Common.Manager,System.Int32)">
+            <summary>
+            是否是某个mgrfk管理员的父管理员(包含多级父管理员)
+            </summary>
+            <param name="mgr"></param>
+            <param name="mgrfk"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TradingLib.Common.ManagerUtils.IsParentOf(TradingLib.Common.Manager,TradingLib.Common.Manager)">
+            <summary>
+            判断mgrfk是否是Manager的子代理或者子子xx代理，代理A对发展的代理A1 以及代理A1发展的代理A11都具有控制权限
+            </summary>
+            <param name="mgr"></param>
+            <param name="mgrkf"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TradingLib.Common.ManagerUtils.RightAccessManager(TradingLib.Common.Manager,TradingLib.Common.Manager)">
+            <summary>
+            判断mgr是否有权操作mgr2
+            
+            </summary>
+            <param name="mgr"></param>
+            <param name="mgr2"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TradingLib.Common.ManagerUtils.RightAccessAccount(TradingLib.Common.Manager,TradingLib.API.IAccount)">
+            <summary>
+            是否可以访问某个交易帐户
+            </summary>
+            <param name="mgr"></param>
+            <param name="account"></param>
+            <returns></returns>
+        </member>
+        <member name="T:TradingLib.Common.BaseSrvObject">
+            <summary>
+            服务端服务对象的基类,实现日志输出,邮件通知,以及服务端对象名称标识
+            </summary>
+        </member>
+        <member name="F:TradingLib.Common.BaseSrvObject.PROGRAME">
+            <summary>
+            服务端对象名称
+            </summary>
+        </member>
+        <member name="M:TradingLib.Common.BaseSrvObject.Notify(System.String,System.String,System.String[])">
+            <summary>
+            邮件通知
+            </summary>
+            <param name="subject">邮件标题</param>
+            <param name="body">邮件内容</param>
+            <param name="receivers">收件人列表</param>
+        </member>
+        <member name="F:TradingLib.Common.BaseSrvObject._debugEnable">
+            <summary>
+            日志输出事件
+            </summary>
+        </member>
+        <member name="M:TradingLib.Common.BaseSrvObject.debug(System.String,TradingLib.API.QSEnumDebugLevel)">
+            <summary>
+            判断日志级别 然后再进行输出
+            同时对外输出日志事件,用于被日志模块采集日志或分发
+            </summary>
+            <param name="msg"></param>
+            <param name="level"></param>
+        </member>
+        <member name="E:TradingLib.Common.BaseSrvObject.SendEmailEvent">
+            <summary>
+            发送邮件事件
+            </summary>
+        </member>
+        <member name="E:TradingLib.Common.BaseSrvObject.SendLogItemEvent">
+            <summary>
+            对外发送日志事件
+            </summary>
+        </member>
+        <member name="P:TradingLib.Common.BaseSrvObject.DebugEnable">
+            <summary>
+            是否输出日志
+            如果禁用日志 则所有日志将不对外发送
+            </summary>
+        </member>
+        <member name="P:TradingLib.Common.BaseSrvObject.DebugLevel">
+            <summary>
+            日志输出级别
+            </summary>
+        </member>
+        <member name="M:TradingLib.Common.PluginFinderWrapper.GetArgumentList(System.Reflection.MethodInfo)">
+            <summary>
+            获得某个方法的参数列表
+            </summary>
+            <param name="mi"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TradingLib.Common.PluginFinderWrapper.ParseMethodArgs(System.Collections.Generic.List{TradingLib.Common.MethodArgument})">
+            <summary>
+            将参数转换成 object[] 预备调用方法
+            </summary>
+            <param name="args"></param>
+            <returns></returns>
+        </member>
+        <member name="T:TradingLib.Common.ContribCommand">
+            <summary>
+            扩展命令对象
+            
+            </summary>
+        </member>
+        <member name="M:TradingLib.Common.ContribCommand.ExecuteCmd(TradingLib.API.ISession,System.String,System.Boolean)">
+            <summary>
+            执行命令
+            </summary>
+            <param name="parameters"></param>
+            <returns></returns>
+        </member>
+        <member name="T:TradingLib.Common.TLAttribute">
+            <summary>
+            TLAttribute用于属性基类
+            比如标注函数,函数参数,事件等
+            </summary>
+        </member>
+        <member name="P:TradingLib.Common.ContribAttr.ContribID">
+            <summary>
+            扩展模块ID,在系统内部路由中,通过该ID实现消息的路由
+            </summary>
+        </member>
+        <member name="T:TradingLib.ORM.AccountFields">
+            <summary>
+            数据库交易帐户field,用于生成IAccount对象
+            </summary>
+        </member>
+        <member name="M:TradingLib.ORM.MAccount.ValidAccount(System.String,System.String)">
+            <summary>
+            验证交易帐户和密码
+            </summary>
+            <param name="account"></param>
+            <param name="pass"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TradingLib.ORM.MAccount.GetAccountPass(System.String)">
+            <summary>
+            查询某个Manger的密码
+            </summary>
+            <param name="login"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TradingLib.ORM.MAccount.UpdateAccountPass(System.String,System.String)">
+            <summary>
+            更新交易帐户密码
+            </summary>
+            <param name="account"></param>
+            <param name="pass"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TradingLib.ORM.MAccount.UpdateRouterGroup(System.String,System.Int32)">
+            <summary>
+            更新路由组
+            </summary>
+            <param name="account"></param>
+            <param name="gid"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TradingLib.ORM.MAccount.UpdateAccountRouterTransferType(System.String,TradingLib.API.QSEnumOrderTransferType)">
+            <summary>
+            更新账户类型
+            </summary>
+            <param name="account"></param>
+            <param name="acctype"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TradingLib.ORM.MAccount.UpdateAccountCategory(System.String,TradingLib.API.QSEnumAccountCategory)">
+            <summary>
+            更新账户类别 交易员，配资
+            </summary>
+            <param name="account"></param>
+            <param name="ca"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TradingLib.ORM.MAccount.UpdateAccountInterday(System.String,System.Boolean)">
+            <summary>
+            更新账户类型
+            </summary>
+            <param name="account"></param>
+            <param name="acctype"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TradingLib.ORM.MAccount.UpdateInvestorInfo(System.String,System.String,System.String,System.Int32,System.String)">
+            <summary>
+            更新交易帐户标识
+            </summary>
+            <param name="account"></param>
+            <param name="intraday"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TradingLib.ORM.MAccount.UpdateManagerID(System.String,System.Int32)">
+            <summary>
+            更新交易帐户的代理ID
+            </summary>
+            <param name="account"></param>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TradingLib.ORM.MAccount.UpdateAccountCommissionTemplate(System.String,System.Int32)">
+            <summary>
+            更新帐户手续费模板
+            </summary>
+            <param name="account"></param>
+            <param name="templateid"></param>
+        </member>
+        <member name="M:TradingLib.ORM.MAccount.UpdateAccountMarginTemplate(System.String,System.Int32)">
+            <summary>
+            更新帐户保证金模板
+            </summary>
+            <param name="account"></param>
+            <param name="templateid"></param>
+        </member>
+        <member name="M:TradingLib.ORM.MAccount.UpdateAccountExStrategyTemplate(System.String,System.Int32)">
+            <summary>
+            更新账户交易参数模板
+            </summary>
+            <param name="account"></param>
+            <param name="templateid"></param>
+        </member>
+        <member name="M:TradingLib.ORM.MAccount.UpdateAccountMAC(System.String,System.String)">
+            <summary>
+            更新帐户的MAC地址
+            </summary>
+            <param name="account"></param>
+            <param name="mac"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TradingLib.ORM.MAccount.CashOperation(System.String,System.Decimal,System.String,System.String)">
+            <summary>
+            插入出入金记录
+            </summary>
+            <param name="account"></param>
+            <param name="amount"></param>
+            <param name="comment"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TradingLib.ORM.MAccount.IsTransRefExist(System.String,System.String)">
+            <summary>
+            帐户下某个transref是否存在
+            </summary>
+            <param name="account"></param>
+            <param name="transref"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TradingLib.ORM.MAccount.CashInOfTradingDay(System.String,System.Int32)">
+            <summary>
+            获得某个交易日的所有入金
+            </summary>
+            <param name="accId"></param>
+            <param name="start"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TradingLib.ORM.MAccount.CashIn(System.String,System.DateTime,System.DateTime)">
+            <summary>
+            某个时间端内所有入金之和
+            </summary>
+            <param name="accId"></param>
+            <param name="start"></param>
+            <param name="end"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TradingLib.ORM.MAccount.CashOutOfTradingDay(System.String,System.Int32)">
+            <summary>
+            获得结算以来的出金
+            </summary>
+            <param name="accID"></param>
+            <param name="start"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TradingLib.ORM.MAccount.CashOut(System.String,System.DateTime,System.DateTime)">
+            <summary>
+            统计某个时间段内所有出金总合
+            </summary>
+            <param name="accId"></param>
+            <param name="start"></param>
+            <param name="end"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TradingLib.ORM.MAccount.HaveAnyAccount(TradingLib.API.QSEnumAccountCategory)">
+            <summary>
+            检查某个类型的帐户是否申请了交易帐号
+            </summary>
+            <param name="category"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TradingLib.ORM.MAccount.MaxAccountRef(TradingLib.API.QSEnumAccountCategory)">
+            <summary>
+            获得某个类型的帐户的最大值
+            正则搜索 select * from accounts where account REGEXP '^98'
+             '^92[0-9]{4,10}$'
+             以92开头其余为[0-9],长度在4-10之间{』表示的是除掉prefi的长度
+             '^[A-Z]{2}55[0-9]{5}$'
+             以大写A-Z2位开头 接55 其余是5位0-9数字的 正则匹配
+            </summary>
+            <param name="category"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TradingLib.ORM.MAccount.HaveRequested(System.Int32,TradingLib.API.QSEnumAccountCategory)">
+            <summary>
+            某个UserID只能申请一个某个类型的交易帐号
+            </summary>
+            <param name="user_id"></param>
+            <param name="category"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TradingLib.ORM.MAccount.ExistAccount(System.String)">
+            <summary>
+            检查某个交易帐号是否已经存在
+            </summary>
+            <param name="account"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TradingLib.ORM.MAccount.AddAccount(TradingLib.Common.AccountCreation@)">
+            <summary>
+            某个User_id增加一个什么类型的帐号,并且密码设置为pass
+            </summary>
+            <param name="user_id"></param>
+            <param name="pass"></param>
+            <param name="category"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TradingLib.ORM.MAccount.DelAccount(System.String)">
+            <summary>
+            数据库删除交易帐户 以及信息
+            删除帐户数据要彻底否则如果出现同名帐户，会出现错乱
+            </summary>
+            <param name="account"></param>
+        </member>
+        <member name="M:TradingLib.ORM.MAccount.SelectAccounts">
+            <summary>
+            获得所有交易帐户
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:TradingLib.ORM.MAccount.GetSettleEquity(System.String,System.Int32)">
+            <summary>
+            查询某个交易帐户某个交易日的结算权益
+            
+            </summary>
+            <param name="account"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TradingLib.ORM.MAccount.SelectAccount(System.String)">
+            <summary>
+            获得某个交易帐户
+            </summary>
+            <param name="account"></param>
+            <returns></returns>
+        </member>
+        <member name="T:TradingLib.Common.ISessionUtils">
+            <summary>
+            ISession 扩展方法
+            发送消息,获得相关对象等
+            </summary>
+        </member>
+        <member name="M:TradingLib.Common.ISessionUtils.IsManager(TradingLib.API.ISession)">
+            <summary>
+            是否是管理端
+            </summary>
+            <param name="session"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TradingLib.Common.ISessionUtils.IsClient(TradingLib.API.ISession)">
+            <summary>
+            是否是管理端
+            </summary>
+            <param name="session"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TradingLib.Common.ISessionUtils.GetManager(TradingLib.API.ISession)">
+            <summary>
+            获得Sessoin对应的Manager
+            如果是ClientManager则返回null
+            </summary>
+            <param name="session"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TradingLib.Common.ISessionUtils.SendPacket(TradingLib.API.ISession,TradingLib.API.IPacket)">
+            <summary>
+            发送客户端逻辑数据包
+            </summary>
+            <param name="session"></param>
+            <param name="packet"></param>
+        </member>
+        <member name="M:TradingLib.Common.ISessionUtils.SendPacketMgr(TradingLib.API.ISession,TradingLib.API.IPacket)">
+            <summary>
+            发送管理端逻辑数据包
+            </summary>
+            <param name="session"></param>
+            <param name="packet"></param>
+        </member>
+        <member name="M:TradingLib.Common.ISessionUtils.ReplyMgr(TradingLib.API.ISession,System.Object,System.Boolean)">
+            <summary>
+            将某个对象放入JsonReply返回给管理端
+            </summary>
+            <param name="session"></param>
+            <param name="obj"></param>
+            <param name="islast"></param>
+        </member>
+        <member name="M:TradingLib.Common.ISessionUtils.OperationError(TradingLib.API.ISession,TradingLib.Common.FutsRspError)">
+            <summary>
+            操作错误回报
+            通过FutsRspErro携带具体的错误消息生成RspMGROperationResponse 发送给对应的客户端
+            </summary>
+            <param name="session"></param>
+            <param name="error"></param>
+        </member>
+        <member name="M:TradingLib.Common.ISessionUtils.OperationSuccess(TradingLib.API.ISession,System.String)">
+            <summary>
+            错误成功回报
+            某种操作如果没有特定的回报类型,则通过通用Response进行回报 并携带具体的成功消息
+            </summary>
+            <param name="session"></param>
+            <param name="successmessage"></param>
+        </member>
+        <member name="M:TradingLib.Common.ISessionUtils.NotifyMgr(TradingLib.API.ISession,System.String,System.Object,System.Collections.Generic.IEnumerable{TradingLib.API.ILocation})">
+            <summary>
+            向某地址列表发送通知 如果地址列表为null,则发送到ISession对应的地址
+            </summary>
+            <param name="session"></param>
+            <param name="cmdstr"></param>
+            <param name="obj"></param>
+            <param name="targets"></param>
+        </member>
+        <member name="M:TradingLib.Common.ISessionUtils.NotifyMgr(TradingLib.API.ISession,System.String,System.Object,System.Predicate{TradingLib.Common.Manager})">
+            <summary>
+            想符合某个通知判定谓词的管理端列表发送通知
+            比如Manager发生更新,出入金请求记录等需要向特定的管理员发送通知，从而实现各个管理端界面同步更新
+            </summary>
+            <param name="session"></param>
+            <param name="cmdstr"></param>
+            <param name="obj"></param>
+            <param name="predicate"></param>
+        </member>
+        <member name="T:TradingLib.ORM.MBasicInfo">
+            <summary>
+            Exchange数据库操作
+            </summary>
+        </member>
+        <member name="M:TradingLib.ORM.MBasicInfo.SelectExchange">
+            <summary>
+            返回帐户类别列表
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:TradingLib.ORM.MBasicInfo.SelectSession">
+            <summary>
+            返回帐户类别列表
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:TradingLib.ORM.MBasicInfo.SelectSecurity(System.Int32)">
+            <summary>
+            返回帐户类别列表
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:TradingLib.ORM.MBasicInfo.InsertSecurity(TradingLib.Common.SecurityFamilyImpl)">
+            <summary>
+            插入品种
+            </summary>
+            <param name="sec"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TradingLib.ORM.MBasicInfo.SelectSymbol(System.Int32)">
+            <summary>
+            获得某个domain的所有域ID
+            </summary>
+            <param name="domainid"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TradingLib.ORM.MBasicInfo.SelectContractBanks">
+            <summary>
+            获得所有签约银行列表
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:TradingLib.ORM.MBasicInfo.SelectReceivableBanks">
+            <summary>
+            获得所有收款银行
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:TradingLib.ORM.MBasicInfo.UpdateRecvBank(TradingLib.Mixins.JsonObject.JsonWrapperReceivableAccount)">
+            <summary>
+            更新收款银行信息
+            </summary>
+            <param name="bank"></param>
+        </member>
+        <member name="M:TradingLib.ORM.MBasicInfo.InsertRecvBank(TradingLib.Mixins.JsonObject.JsonWrapperReceivableAccount)">
+            <summary>
+            插入收款银行信息
+            </summary>
+            <param name="bank"></param>
+        </member>
+        <member name="T:TradingLib.Common.QSEnumMethodArgumentType">
+            <summary>
+            方法参数
+            </summary>
+        </member>
+        <member name="T:TradingLib.Common.ContribCommandAttr">
+            <summary>
+            用于标注扩展模块的命令,指明该函数响应什么消息形成Message->Command调用的模式
+            </summary>
+        </member>
+        <member name="F:TradingLib.Common.ContribCommandAttr._parsetype">
+            <summary>
+            调用该函数是否需要授权
+            </summary>
+        </member>
+        <member name="M:TradingLib.Common.ContribCommandAttr.#ctor(TradingLib.API.QSEnumCommandSource,System.String,System.String,System.String,TradingLib.API.QSEnumArgParseType)">
+            <summary>
+            消息处理命令
+            用于绑定到对应消息处理路由表相应对应消息源的消息
+            </summary>
+            <param name="source">处理消息来源</param>
+            <param name="cmd">命令操作码 标识了该命令</param>
+            <param name="help">帮助</param>
+            <param name="description">描述</param>
+        </member>
+        <member name="M:TradingLib.Common.ContribCommandAttr.#ctor(System.String,System.String,System.String,System.String,System.String)">
+            <summary>
+            事件处理命令
+            用于绑定到某个扩展模块的某个事件
+            </summary>
+            <param name="contrib"></param>
+            <param name="eventstr"></param>
+            <param name="cmd"></param>
+            <param name="help"></param>
+            <param name="desctiption"></param>
+        </member>
+        <member name="P:TradingLib.Common.ContribCommandAttr.Source">
+            <summary>
+            与该命令绑定的消息源
+            </summary>
+        </member>
+        <member name="P:TradingLib.Common.ContribCommandAttr.CmdStr">
+            <summary>
+            该命令操作标识
+            </summary>
+        </member>
+        <member name="P:TradingLib.Common.ContribCommandAttr.Help">
+            <summary>
+            命令帮助
+            </summary>
+        </member>
+        <member name="P:TradingLib.Common.ContribCommandAttr.Description">
+            <summary>
+            命令说明
+            </summary>
+        </member>
+        <member name="P:TradingLib.Common.ContribCommandAttr.SourceContrib">
+            <summary>
+            模块源
+            </summary>
+        </member>
+        <member name="P:TradingLib.Common.ContribCommandAttr.EventStr">
+            <summary>
+            事件字符串
+            </summary>
+        </member>
+        <member name="P:TradingLib.Common.ContribPlugin.Name">
+            <summary>
+            插件名称
+            </summary>
+        </member>
+        <member name="P:TradingLib.Common.ContribPlugin.Description">
+            <summary>
+            插件描述
+            </summary>
+        </member>
+        <member name="P:TradingLib.Common.ContribPlugin.Version">
+            <summary>
+            版本
+            </summary>
+        </member>
+        <member name="P:TradingLib.Common.ContribPlugin.Author">
+            <summary>
+            姓名
+            </summary>
+        </member>
+        <member name="P:TradingLib.Common.ContribPlugin.Compnay">
+            <summary>
+            公司
+            </summary>
+        </member>
+        <member name="P:TradingLib.Common.ContribPlugin.Id">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:TradingLib.Common.ContribPlugin.ContribID">
+            <summary>
+            扩展模块ID
+            </summary>
+        </member>
+        <member name="T:TradingLib.Common.TrdClientInfo">
+            <summary>
+            记录交易客户端通信息
+            </summary>
+        </member>
+        <member name="T:TradingLib.Common.ClearCentreBase">
+            <summary>
+            清算中心，为服务器维护了一批交易账户,以及每个交易账户的实时Order,trades,position的相关信息。
+            </summary>
+        </member>
+        <member name="M:TradingLib.Common.ClearCentreBase.GotErrorOrder(TradingLib.API.Order,TradingLib.API.RspInfo)">
+            <summary>
+            响应委托错误
+            这里需要判断如果委托已经被记录过则继续响应委托事件 用于更新委托的状态
+            </summary>
+            <param name="error"></param>
+        </member>
+        <member name="M:TradingLib.Common.ClearCentreBase.GotOrder(TradingLib.API.Order)">
+            <summary>
+            清算中心获得委托数据
+            </summary>
+            <param name="o"></param>
+        </member>
+        <member name="M:TradingLib.Common.ClearCentreBase.GotCancel(System.Int64)">
+            <summary>
+            清算中心获得取消
+            </summary>
+            <param name="oid"></param>
+        </member>
+        <member name="M:TradingLib.Common.ClearCentreBase.GotFill(TradingLib.API.Trade)">
+            <summary>
+            清算中心获得成交
+            </summary>
+            <param name="f"></param>
+        </member>
+        <member name="M:TradingLib.Common.ClearCentreBase.IsOrderTracked(System.Int64)">
+            <summary>
+            某个委托是否被维护
+            </summary>
+            <param name="oid"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TradingLib.Common.ClearCentreBase.GetAvabilePrice(System.String)">
+            <summary>
+            获得某个合约的有效价格
+            如果返回-1则价格无效
+            </summary>
+            <param name="symbol"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TradingLib.Common.ClearCentreBase.somePrice(TradingLib.API.Tick)">
+            <summary>
+            从Tick数据采获当前可用的价格
+            优先序列 最新价/ ask / bid 如果均不可用则返回价格0
+            </summary>
+            <param name="k"></param>
+            <returns></returns>
+        </member>
+        <member name="F:TradingLib.Common.ClearCentreBase.acctk">
+            <summary>
+            分帐户交易信息维护其
+            </summary>
+        </member>
+        <member name="F:TradingLib.Common.ClearCentreBase.totaltk">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:TradingLib.Common.ClearCentreBase.ActiveAccount(System.String)">
+            <summary>
+            激活某个交易账户 允许其进行交易
+            </summary>
+            <param name="id"></param>
+        </member>
+        <member name="M:TradingLib.Common.ClearCentreBase.InactiveAccount(System.String)">
+            <summary>
+            禁止某个账户进行交易
+            </summary>
+            <param name="id"></param>
+        </member>
+        <member name="M:TradingLib.Common.ClearCentreBase.UpdateAccountCategory(System.String,TradingLib.API.QSEnumAccountCategory)">
+            <summary>
+            修改账户类型
+            </summary>
+            <param name="id"></param>
+            <param name="ca"></param>
+        </member>
+        <member name="M:TradingLib.Common.ClearCentreBase.ChangeAccountPass(System.String,System.String)">
+            <summary>
+            更改账户密码
+            </summary>
+            <param name="acc"></param>
+            <param name="pass"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TradingLib.Common.ClearCentreBase.UpdateAccountRouterTransferType(System.String,TradingLib.API.QSEnumOrderTransferType)">
+            <summary>
+            修改账户交易转发类别
+            </summary>
+            <param name="acc"></param>
+            <param name="type"></param>
+        </member>
+        <member name="M:TradingLib.Common.ClearCentreBase.CashOperation(System.String,System.Decimal,System.String,System.String)">
+            <summary>
+            交易账户的资金操作
+            </summary>
+            <param name="acc"></param>
+            <param name="amount"></param>
+            <param name="comment"></param>
+        </member>
+        <member name="M:TradingLib.Common.ClearCentreBase.ResetEquity(System.String,System.Decimal)">
+            <summary>
+            复位某个账户的资金到多少数值
+            </summary>
+            <param name="account"></param>
+            <param name="value"></param>
+        </member>
+        <member name="M:TradingLib.Common.ClearCentreBase.UpdateAccountIntradyType(System.String,System.Boolean)">
+            <summary>
+            更新账户日内交易设置
+            </summary>
+            <param name="acc"></param>
+            <param name="intraday"></param>
+        </member>
+        <member name="M:TradingLib.Common.ClearCentreBase.QryAccount(System.Int32,TradingLib.API.QSEnumAccountCategory)">
+            <summary>
+            查找某个userid的交易帐户
+            </summary>
+            <param name="uid"></param>
+            <param name="category"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TradingLib.Common.ClearCentreBase.HaveAccount(System.String)">
+            <summary>
+            查询是否有某个ID的账户
+            </summary>
+            <param name="a"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TradingLib.Common.ClearCentreBase.HaveAccount(System.String,TradingLib.API.IAccount@)">
+            <summary>
+            查询是否有某个ID的账户并返回该账户
+            </summary>
+            <param name="a"></param>
+            <param name="acc"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TradingLib.Common.ClearCentreBase.CacheAccount(TradingLib.API.IAccount)">
+            <summary>
+            将某个账户缓存到服务器内存，注意检查是否已经存在该账户
+            生成该账户所对应的数据对象用于实时储存交易信息与合约信息
+            </summary>
+            <param name="a"></param>
+        </member>
+        <member name="M:TradingLib.Common.ClearCentreBase.DropAccount(TradingLib.API.IAccount)">
+            <summary>
+            将某个帐户从内存中删除
+            </summary>
+            <param name="a"></param>
+        </member>
+        <member name="P:TradingLib.Common.ClearCentreBase.TotalOrders">
+            <summary>
+            所有委托
+            </summary>
+        </member>
+        <member name="P:TradingLib.Common.ClearCentreBase.TotalPositions">
+            <summary>
+            所有持仓
+            </summary>
+        </member>
+        <member name="P:TradingLib.Common.ClearCentreBase.TotalTrades">
+            <summary>
+            所有成交
+            </summary>
+        </member>
+        <member name="P:TradingLib.Common.ClearCentreBase.Accounts">
+            <summary>
+            获得Account数组
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="P:TradingLib.Common.ClearCentreBase.Item(System.String)">
+            <summary>
+            通过AccountID获得某个账户
+            </summary>
+            <param name="accid"></param>
+            <returns></returns>
+        </member>
+        <member name="T:TradingLib.Common.QSEnumCashOpEventType">
+            <summary>
+            出入金操作事件
+            包含了一个出入金请求的过程
+            </summary>
+        </member>
+        <member name="T:TradingLib.Common.AccountAdapterToExp">
+            <summary>
+            暴露给接口调用的IAccount对象,裁剪掉了部分功能提供一个安全的界面给外部
+            </summary>
+        </member>
+        <member name="M:TradingLib.Common.AccountAdapterToExp.FlatPosition(TradingLib.API.QSEnumOrderSource,System.String)">
+            <summary>
+            强平帐户持仓
+            </summary>
+            <param name="source"></param>
+            <param name="comment"></param>
+        </member>
+        <member name="M:TradingLib.Common.AccountAdapterToExp.InactiveAccount">
+            <summary>
+            冻结帐户
+            </summary>
+        </member>
+        <member name="M:TradingLib.Common.AccountAdapterToExp.ActiveAccount">
+            <summary>
+            激活帐户
+            </summary>
+        </member>
+        <member name="M:TradingLib.Common.AccountAdapterToExp.CancelOrder(TradingLib.API.QSEnumOrderSource,System.String)">
+            <summary>
+            撤掉帐户下所有委托
+            </summary>
+        </member>
+        <member name="M:TradingLib.Common.AccountAdapterToExp.CancelOrder(System.String,TradingLib.API.QSEnumOrderSource,System.String)">
+            <summary>
+            撤掉帐户下某个合约的所有委托
+            </summary>
+            <param name="symbol"></param>
+            <param name="source"></param>
+            <param name="cancelreason"></param>
+        </member>
+        <member name="M:TradingLib.Common.AccountAdapterToExp.CancelOrder(TradingLib.API.Order,TradingLib.API.QSEnumOrderSource,System.String)">
+            <summary>
+            撤掉帐户下的某个为头
+            </summary>
+            <param name="order"></param>
+            <param name="source"></param>
+            <param name="cancelreason"></param>
+        </member>
+        <member name="M:TradingLib.Common.AccountAdapterToExp.GetPosition(System.String,System.Boolean)">
+            <summary>
+            获得某个合约的持仓对象
+            </summary>
+            <param name="symbol"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TradingLib.Common.AccountAdapterToExp.CanOpenSize(TradingLib.API.Symbol,System.Boolean,TradingLib.API.QSEnumOffsetFlag)">
+            <summary>
+            获得某个合约的净持仓对象
+            </summary>
+            <param name="symbol"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TradingLib.Common.AccountAdapterToExp.CanFundTakeOrder(TradingLib.API.Order)">
+            <summary>
+            检查某个帐户是否可以接受某个委托 
+            用于保证金资金检查
+            </summary>
+            <param name="o"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TradingLib.Common.AccountAdapterToExp.GetFundAvabile(TradingLib.API.Symbol)">
+            <summary>
+            获得某个合约的可用资金
+            </summary>
+            <param name="symbol"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TradingLib.Common.AccountAdapterToExp.CalOrderFundRequired(TradingLib.API.Order,System.Decimal)">
+            <summary>
+            计算某个委托所占用资金
+            </summary>
+            <param name="o"></param>
+            <returns></returns>
+        </member>
+        <member name="P:TradingLib.Common.AccountAdapterToExp.ID">
+            <summary>
+            账户ID
+            </summary>
+        </member>
+        <member name="P:TradingLib.Common.AccountAdapterToExp.OrderRouteType">
+            <summary>
+            账户委托转发通道类型 模拟还是实盘
+            </summary>
+        </member>
+        <member name="P:TradingLib.Common.AccountAdapterToExp.Category">
+            <summary>
+            账户类型 配资客户还是交易员
+            </summary>
+        </member>
+        <member name="P:TradingLib.Common.AccountAdapterToExp.Execute">
+            <summary>
+            帐户激活或者冻结
+            </summary>
+        </member>
+        <member name="P:TradingLib.Common.AccountAdapterToExp.IntraDay">
+            <summary>
+            是否日内交易
+            </summary>
+        </member>
+        <member name="P:TradingLib.Common.AccountAdapterToExp.SettleDateTime">
+            <summary>
+            上次结算日
+            </summary>
+        </member>
+        <member name="P:TradingLib.Common.AccountAdapterToExp.Positions">
+            <summary>
+            获得账户当前持仓
+            </summary>
+        </member>
+        <member name="P:TradingLib.Common.AccountAdapterToExp.PositionsLong">
+            <summary>
+            多头持仓维护器
+            </summary>
+        </member>
+        <member name="P:TradingLib.Common.AccountAdapterToExp.PositionsShort">
+            <summary>
+            空头持仓维护器
+            </summary>
+        </member>
+        <!-- 对于成员“P:TradingLib.Common.AccountAdapterToExp.NowEquity”忽略有格式错误的 XML 注释 -->
+        <member name="P:TradingLib.Common.AccountAdapterToExp.LastEquity">
+            <summary>
+            上期权益
+            </summary>
+        </member>
+        <member name="P:TradingLib.Common.AccountAdapterToExp.RealizedPL">
+            <summary>
+            平仓利润
+            </summary>
+        </member>
+        <member name="P:TradingLib.Common.AccountAdapterToExp.UnRealizedPL">
+            <summary>
+            未平仓利润
+            </summary>
+        </member>
+        <member name="P:TradingLib.Common.AccountAdapterToExp.SettleUnRealizedPL">
+            <summary>
+            结算时的盯市盈亏
+            </summary>
+        </member>
+        <member name="P:TradingLib.Common.AccountAdapterToExp.Commission">
+            <summary>
+            手续费
+            </summary>
+        </member>
+        <member name="P:TradingLib.Common.AccountAdapterToExp.Profit">
+            <summary>
+            净利
+            </summary>
+        </member>
+        <member name="P:TradingLib.Common.AccountAdapterToExp.CashIn">
+            <summary>
+            入金
+            </summary>
+        </member>
+        <member name="P:TradingLib.Common.AccountAdapterToExp.CashOut">
+            <summary>
+            出金
+            </summary>
+        </member>
+        <member name="P:TradingLib.Common.AccountAdapterToExp.Margin">
+            <summary>
+            保证金占用
+            </summary>
+        </member>
+        <member name="P:TradingLib.Common.AccountAdapterToExp.MarginFrozen">
+            <summary>
+            保证金冻结
+            </summary>
+        </member>
+        <member name="P:TradingLib.Common.AccountAdapterToExp.MoneyUsed">
+            <summary>
+            总占用资金 = 个品种占用资金之和
+            </summary>
+        </member>
+        <member name="P:TradingLib.Common.AccountAdapterToExp.AvabileFunds">
+            <summary>
+            帐户总可用资金
+            </summary>
+        </member>
+        <member name="P:TradingLib.Common.AccountAdapterToExp.TotalLiquidation">
+            <summary>
+            总净值 帐户当前权益=总净值
+            </summary>
+        </member>
+        <member name="P:TradingLib.Common.AccountAdapterToExp.Credit">
+            <summary>
+            信用额度
+            </summary>
+        </member>
+        <member name="T:TradingLib.Common.ExStrategyTemplateTracker">
+            <summary>
+            算法模板维护器
+            维护了所有分区的计算策略模板
+            </summary>
+        </member>
+        <member name="M:TradingLib.Common.ExStrategyTemplateTracker.#ctor">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:TradingLib.Common.ExStrategyTemplateTracker.UpdateExStrategyTemplate(TradingLib.Common.ExStrategyTemplateSetting)">
+            <summary>
+            更新策略模板信息
+            </summary>
+            <param name="t"></param>
+        </member>
+        <member name="M:TradingLib.Common.ExStrategyTemplateTracker.UpdateExStrategy(TradingLib.Common.ExStrategy)">
+            <summary>
+            更新策略模板项目
+            </summary>
+            <param name="item"></param>
+        </member>
+        <member name="P:TradingLib.Common.ExStrategyTemplateTracker.Item(System.Int32)">
+            <summary>
+            计算策略维护器
+            通过数据库全局ID获得对应的策略模板
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="P:TradingLib.Common.ExStrategyTemplateTracker.ExStrategyTemplates">
+            <summary>
+            返回所有策略模板
+            </summary>
+        </member>
+        <member name="M:TradingLib.Common.AccountUtils_BasicInfo.GetSymbol(TradingLib.API.IAccount,System.String)">
+            <summary>
+            获得帐户下的合约
+            </summary>
+            <param name="account"></param>
+            <param name="symbol"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TradingLib.Common.AccountUtils_BasicInfo.GetSecurity(TradingLib.API.IAccount,System.String)">
+            <summary>
+            获得帐户下品种
+            </summary>
+            <param name="account"></param>
+            <param name="code"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TradingLib.Common.AccountUtils_BasicInfo.GetSymbols(TradingLib.API.IAccount)">
+            <summary>
+            获得某个帐户所有可交易合约
+            </summary>
+            <param name="account"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TradingLib.Common.AccountUtils_BasicInfo.Symbol2Instrument(TradingLib.API.IAccount,TradingLib.API.Symbol)">
+            <summary>
+            获得某个帐户的Instrument数据
+            </summary>
+            <param name="account"></param>
+            <param name="symbol"></param>
+            <returns></returns>
+        </member>
+        <member name="T:TradingLib.Common.AccountUtils_TradingInfoEx">
+            <summary>
+            交易信息类的扩展方法
+            </summary>
+        </member>
+        <member name="M:TradingLib.Common.AccountUtils_TradingInfoEx.GetAnyPosition(TradingLib.API.IAccount)">
+            <summary>
+            是否有任何持仓
+            </summary>
+            <param name="account"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TradingLib.Common.AccountUtils_TradingInfoEx.GetPositionsHold(TradingLib.API.IAccount)">
+            <summary>
+            获得当前所有持仓 持仓数量不为0的持仓对象
+            </summary>
+            <param name="account"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TradingLib.Common.AccountUtils_TradingInfoEx.GetTotalPositionSize(TradingLib.API.IAccount)">
+            <summary>
+            返回所有持仓手数之和
+            </summary>
+            <param name="account"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TradingLib.Common.AccountUtils_TradingInfoEx.GetPendingOrders(TradingLib.API.IAccount,System.String)">
+            <summary>
+            获得某个合约上的所有待成交委托
+            </summary>
+            <param name="account"></param>
+            <param name="symbol"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TradingLib.Common.AccountUtils_TradingInfoEx.GetPendingOrders(TradingLib.API.IAccount)">
+            <summary>
+            获得所有待成交委托
+            </summary>
+            <param name="account"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TradingLib.Common.AccountUtils_TradingInfoEx.GetPendingEntryOrders(TradingLib.API.IAccount,System.String,System.Boolean)">
+            <summary>
+            待处理开仓委托
+            </summary>
+            <param name="account"></param>
+            <param name="symbol"></param>
+            <param name="positionside"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TradingLib.Common.AccountUtils_TradingInfoEx.GetPendingEntrySize(TradingLib.API.IAccount,System.String,System.Boolean)">
+            <summary>
+            待处理开仓委托数量
+            </summary>
+            <param name="account"></param>
+            <param name="symbol"></param>
+            <param name="positionside"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TradingLib.Common.AccountUtils_TradingInfoEx.GetPendingExitOrders(TradingLib.API.IAccount,System.String,System.Boolean)">
+            <summary>
+            待处理平仓委托
+            </summary>
+            <param name="account"></param>
+            <param name="symbol"></param>
+            <param name="positionside"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TradingLib.Common.AccountUtils_TradingInfoEx.GetPendingExitSize(TradingLib.API.IAccount,System.String,System.Boolean)">
+            <summary>
+            待处理平仓委托数量
+            </summary>
+            <param name="account"></param>
+            <param name="symbol"></param>
+            <param name="positionside"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TradingLib.Common.AccountUtils_TradingInfoEx.GetPositionSize(TradingLib.API.IAccount,System.String)">
+            <summary>
+            获得某个合约的所有持仓数量包含多和空
+            </summary>
+            <param name="account"></param>
+            <param name="symbol"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TradingLib.Common.AccountUtils_TradingInfoEx.GetLongPositionSize(TradingLib.API.IAccount,System.String)">
+            <summary>
+            获得某个合约的多头持仓数量
+            </summary>
+            <param name="accoount"></param>
+            <param name="symbol"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TradingLib.Common.AccountUtils_TradingInfoEx.GetShortPositionSize(TradingLib.API.IAccount,System.String)">
+            <summary>
+            获得某个合约的空头持仓数量
+            </summary>
+            <param name="account"></param>
+            <param name="symbol"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TradingLib.Common.AccountUtils_TradingInfoEx.GetHaveLongPosition(TradingLib.API.IAccount)">
+            <summary>
+            判断是否有多方头寸
+            </summary>
+            <param name="account"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TradingLib.Common.AccountUtils_TradingInfoEx.GetHaveShortPosition(TradingLib.API.IAccount)">
+            <summary>
+            判断是否有空方头寸
+            </summary>
+            <param name="account"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TradingLib.Common.AccountUtils_ObjectWrapper.GenAccountInfo(TradingLib.API.IAccount)">
+            <summary>
+            生成财务信息
+            </summary>
+            <param name="acc"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TradingLib.Common.AccountUtils_ObjectWrapper.GenAccountInfoLite(TradingLib.API.IAccount)">
+            <summary>
+            生成当前实时财务统计信息
+            </summary>
+            <param name="acc"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TradingLib.Common.AccountUtils_ObjectWrapper.GenAccountLite(TradingLib.API.IAccount)">
+            <summary>
+            生成客户端使用的交易帐户信息
+            </summary>
+            <param name="acc"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TradingLib.Common.AccountUtils_ObjectWrapper.ToSettlement(TradingLib.API.IAccount)">
+            <summary>
+            生成结算单
+            </summary>
+            <param name="account"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TradingLib.Common.PluginFinder.LoadBrokerType">
+            <summary>
+            返回所有成交接口类型
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:TradingLib.Common.PluginFinder.LoadDataFeedType">
+            <summary>
+            返回所有行情接口类型
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:TradingLib.Common.PluginFinder.LoadAccountType">
+            <summary>
+            加载所有帐户类型
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:TradingLib.Common.PluginFinder.LoadContribList">
+            <summary>
+            获得所有扩展模块插件
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:TradingLib.Common.PluginFinder.ConstructContrib(System.String)">
+            <summary>
+            生成某个扩展模块插件的实例
+            </summary>
+            <param name="className"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TradingLib.Common.PluginFinder.ConstructClass``1(System.String)">
+            <summary>
+            无参数构造函数
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TradingLib.Common.PluginFinder.ConstructClass``1(System.String,System.Object[],System.Boolean)">
+            <summary>
+            创建某个类型的实例
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="id"></param>
+            <param name="constructorArgs"></param>
+            <param name="createWrapper"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TradingLib.Common.PluginFinder.GetTypeById(System.Type,System.String)">
+            <summary>
+            通过ID获得 type
+            类的全名
+            </summary>
+            <param name="interfaceType"></param>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TradingLib.Common.PluginFinder.GetImplementors(System.Type)">
+            <summary>
+            获得实现某个接口的所有实现
+            </summary>
+            <param name="Interface"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TradingLib.Common.PluginFinder.LoadImplementors(System.Type)">
+            <summary>
+            从程序目录加载某个接口的实现
+            </summary>
+            <param name="intface"></param>
+        </member>
+        <member name="M:TradingLib.Common.PluginFinder.GetArgumentList(System.Reflection.MethodInfo)">
+            <summary>
+            获得某个函数的参数列表
+            MethodInfo中Order是从1开始的
+            </summary>
+            <param name="type"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TradingLib.Common.PluginFinder.ParseMethodArgs(System.Collections.Generic.List{TradingLib.Common.MethodArgument})">
+            <summary>
+            将MethodArguments中的值转换成对应的类型 返回object[]
+            用于传递给函数作为参数进行调用
+            </summary>
+            <param name="args"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TradingLib.Common.PluginFinder.FindMethod``1(System.Object)">
+            <summary>
+            找到某个对象中用某个Attribute标注的所有方法
+            </summary>
+            <typeparam name="T">自定义特新</typeparam>
+            <param name="obj">对象</param>
+        </member>
+        <member name="M:TradingLib.Common.PluginFinder.FindProperty``1(System.Object)">
+            <summary>
+            查找对象中用某个attr标注的所有属性
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="obj"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TradingLib.Common.PluginFinder.FindContribCommand(System.Object)">
+            <summary>
+            获得某个对象方法列表
+            </summary>
+            <param name="obj"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TradingLib.Common.PluginFinder.FindContribEvent(System.Object)">
+            <summary>
+            获得某个对象的事件列表
+            </summary>
+            <param name="obj"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TradingLib.Common.PluginFinder.FindContribTask(System.Object)">
+            <summary>
+            获得某个对象的任务列表
+            </summary>
+            <param name="obj"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TradingLib.Common.PluginFinder.GetImplementors(System.String,System.Type)">
+            <summary>
+            从某个文件夹加载实现某个接口的类型
+            </summary>
+            <param name="path"></param>
+            <param name="Interface"></param>
+            <returns></returns>
+        </member>
+        <member name="T:TradingLib.Common.FinderPluginInfo">
+            <summary>
+            用于保存插件的特性与类型
+            当查找实现接口的类型时 需要加载到plugin对应的map
+            </summary>
+        </member>
+        <member name="P:TradingLib.Common.CoreAttr.CoreId">
+            <summary>
+            核心模块的CoreID
+            </summary>
+        </member>
+        <member name="M:TradingLib.ORM.MRuleItem.SelectRuleItem">
+            <summary>
+            返回帐户类别列表
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:TradingLib.ORM.MRuleItem.SelectRuleItem(System.String,TradingLib.API.QSEnumRuleType)">
+            <summary>
+            返回某个帐户的风控规则设置
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:TradingLib.ORM.MRuleItem.UpdateRuleItem(TradingLib.Common.RuleItem)">
+            <summary>
+            更新风控规则项目
+            </summary>
+            <param name="item"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TradingLib.ORM.MRuleItem.InsertRuleItem(TradingLib.Common.RuleItem)">
+            <summary>
+            插入风控规则项目
+            </summary>
+            <param name="item"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TradingLib.ORM.MRuleItem.DelRulteItem(TradingLib.Common.RuleItem)">
+            <summary>
+            删除风控规则
+            </summary>
+            <param name="item"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TradingLib.Common.ConnectorConfigTracker.GetBrokerInterface(System.Int32)">
+            <summary>
+            通过ID查找获得对应的成交接口
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="P:TradingLib.Common.ConnectorConfigTracker.BrokerConfigs">
+            <summary>
+            返回所有交易接口设置
+            </summary>
+        </member>
+        <member name="P:TradingLib.Common.ConnectorConfigTracker.BrokerInterfaces">
+            <summary>
+            返回所有接口
+            </summary>
+        </member>
+        <member name="P:TradingLib.Common.ConnectorConfigTracker.Interfaces">
+            <summary>
+            获得所有接口设置
+            </summary>
+        </member>
+        <member name="M:TradingLib.ORM.MDomain.SelectDomains">
+            <summary>
+            获得所有域信息
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:TradingLib.API.ITaskUtils.GetTaskMemo(TradingLib.API.ITask,System.Boolean)">
+            <summary>
+            获得任务描述
+            </summary>
+            <param name="task"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TradingLib.ORM.MMargin.InsertMarginTemplate(TradingLib.Common.MarginTemplate)">
+            <summary>
+            插入保证金模板
+            </summary>
+            <param name="t"></param>
+        </member>
+        <member name="M:TradingLib.ORM.MMargin.UpdateMarginTemplate(TradingLib.Common.MarginTemplate)">
+            <summary>
+            更新保证金模板
+            </summary>
+            <param name="t"></param>
+        </member>
+        <member name="M:TradingLib.ORM.MMargin.SelectMarginTemplates">
+            <summary>
+            获得所有手续费模板
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:TradingLib.ORM.MMargin.InsertMarginTemplateItem(TradingLib.Common.MarginTemplateItem)">
+            <summary>
+            插入保证金模板项
+            </summary>
+            <param name="item"></param>
+        </member>
+        <member name="M:TradingLib.ORM.MMargin.SelectMarginTemplateItems">
+            <summary>
+            获得所有保证金模板项目
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:TradingLib.ORM.MMargin.UpdateMarginTemplateItem(TradingLib.Common.MarginTemplateItem)">
+            <summary>
+            更新保证金模板项目
+            </summary>
+            <param name="item"></param>
+        </member>
+        <member name="T:TradingLib.Common.ClearCentreAdapterToBroker">
+            <summary>
+            ClearCentreSrv适配器 用于整理ClearCentreSrv接口并规范成IBrokerClearCentre接口
+            暴露需要暴露的功能操作
+            </summary>
+        </member>
+        <member name="M:TradingLib.Common.ClearCentreAdapterToBroker.SentOrder(System.Int64,TradingLib.API.QSEnumOrderBreedType)">
+            <summary>
+            成交接口 加载成交侧委托,需要恢复日内委托关系链
+            需要找到成交侧委托的父委托,父委托有可能是路由委托也有可能是直接帐户委托
+            这里需要判断然后从清算中心或路由中心获得对应的委托对象
+            </summary>
+            <param name="id"></param>
+            <param name="type"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TradingLib.Common.ClearCentreAdapterToBroker.SelectBrokerOrders(System.String)">
+            <summary>
+            获得日内成交接口的所有委托
+            </summary>
+            <param name="token"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TradingLib.Common.ClearCentreAdapterToBroker.SelectBrokerTrades(System.String)">
+            <summary>
+            获得日内成交接口的所有成交
+            </summary>
+            <param name="token"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TradingLib.Common.ClearCentreAdapterToBroker.SelectBrokerPositionDetails(System.String)">
+            <summary>
+            获得成交接口上个结算日所有持仓数据
+            </summary>
+            <param name="token"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TradingLib.Common.ContribSrvObject.SendPacket(TradingLib.API.IPacket)">
+            <summary>
+            通过交易交换发送一个逻辑数据包
+            </summary>
+            <param name="packet"></param>
+        </member>
+        <member name="M:TradingLib.Common.ContribSrvObject.SendPacketMgr(TradingLib.API.IPacket)">
+            <summary>
+            通过管理交换发送一个逻辑数据包
+            </summary>
+            <param name="packet"></param>
+        </member>
+        <member name="M:TradingLib.Common.ContribSrvObject.SendContribResponse(TradingLib.API.ISession,System.String,System.Boolean)">
+            <summary>
+            向Session对应的客户端发送一条文本字符串
+            在发送该字符串消息的时候,系统会以格式 ContribID|CMDStr|Message 发送到对端
+            用于告知对端从哪个扩展模块在哪个函数块发送的消息
+            </summary>
+            <param name="session"></param>
+            <param name="message"></param>
+        </member>
+        <member name="T:TradingLib.Common.MethodArgument">
+            <summary>
+            方法参数特性
+            </summary>
+        </member>
+        <member name="M:TradingLib.Common.MethodArgument.#ctor(System.String,TradingLib.Common.QSEnumMethodArgumentType)">
+            <summary>
+            用于自动生成函数参数列表
+            </summary>
+            <param name="name"></param>
+            <param name="type"></param>
+        </member>
+        <member name="M:TradingLib.Common.MethodArgument.#ctor(System.String,TradingLib.Common.QSEnumMethodArgumentType,System.Int32)">
+            <summary>
+            手工指定函数参数
+            </summary>
+            <param name="name"></param>
+            <param name="type"></param>
+            <param name="order"></param>
+        </member>
+        <member name="M:TradingLib.Common.MethodArgument.#ctor(System.String,TradingLib.Common.QSEnumMethodArgumentType,System.Int32,System.String)">
+            <summary>
+            手工指定函数参数
+            </summary>
+            <param name="name"></param>
+            <param name="type"></param>
+            <param name="order"></param>
+            <param name="description"></param>
+        </member>
+        <member name="T:TradingLib.Common.TLCtxHelper">
+            <summary>
+            单例全局上下文
+            </summary>
+        </member>
+        <member name="F:TradingLib.Common.TLCtxHelper.m_IndicatorEvent">
+            <summary>
+            交易类事件与消息
+            </summary>
+        </member>
+        <member name="F:TradingLib.Common.TLCtxHelper.m_SessionEvent">
+            <summary>
+            回话类 注册 注销 登入
+            </summary>
+        </member>
+        <member name="F:TradingLib.Common.TLCtxHelper.m_AccountEvent">
+            <summary>
+            帐户类事件
+            </summary>
+        </member>
+        <member name="F:TradingLib.Common.TLCtxHelper.m_ExContribEvent">
+            <summary>
+            扩展事件
+            </summary>
+        </member>
+        <member name="F:TradingLib.Common.TLCtxHelper.m_SystemEvent">
+            <summary>
+            系统类事件
+            </summary>
+        </member>
+        <member name="M:TradingLib.Common.TLCtxHelper.BindContribEvent">
+            <summary>
+            系统加载完毕后绑定扩展模块的事件
+            </summary>
+        </member>
+        <member name="M:TradingLib.Common.TLCtxHelper.Email(TradingLib.API.IEmail)">
+            <summary>
+            全局发送邮件入口
+            </summary>
+            <param name="email"></param>
+        </member>
+        <member name="P:TradingLib.Common.TLCtxHelper.Version">
+            <summary>
+            版本信息
+            </summary>
+        </member>
+        <member name="P:TradingLib.Common.TLCtxHelper.EventIndicator">
+            <summary>
+            交易信息类事件集合
+            </summary>
+        </member>
+        <member name="P:TradingLib.Common.TLCtxHelper.EventSession">
+            <summary>
+            会话类事件集合
+            </summary>
+        </member>
+        <member name="P:TradingLib.Common.TLCtxHelper.EventAccount">
+            <summary>
+            交易帐户类事件
+            </summary>
+        </member>
+        <member name="P:TradingLib.Common.TLCtxHelper.EventSystem">
+            <summary>
+            系统类事件
+            </summary>
+        </member>
+        <member name="P:TradingLib.Common.TLCtxHelper.ExContribEvent">
+            <summary>
+            扩展模块强关系事件
+            </summary>
+        </member>
+        <member name="P:TradingLib.Common.TLCtxHelper.CmdAccount">
+            <summary>
+            交易帐号类操作
+            </summary>
+        </member>
+        <member name="P:TradingLib.Common.TLCtxHelper.CmdAuthCashOperation">
+            <summary>
+            认证与出入金请求
+            </summary>
+        </member>
+        <member name="P:TradingLib.Common.TLCtxHelper.CmdSettleCentre">
+            <summary>
+            结算中心
+            </summary>
+        </member>
+        <member name="P:TradingLib.Common.TLCtxHelper.CmdRiskCentre">
+            <summary>
+            风控中心
+            </summary>
+        </member>
+        <member name="P:TradingLib.Common.TLCtxHelper.CmdUtils">
+            <summary>
+            辅助类操作函数
+            </summary>
+        </member>
+        <member name="E:TradingLib.Common.TLCtxHelper.SendEmailEvent">
+            <summary>
+            全局发送邮件事件
+            绑定该事件可以获得系统所有对象的Email发送事件
+            </summary>
+        </member>
+        <member name="T:TradingLib.Common.ExContribEvent">
+            <summary>
+            扩展模块的强关系所对应的事件
+            系统解耦过程中有一些关系是无法彻底解耦的,在这个类里面放置了底层系统对扩展模块的调用
+            这些事件只有在扩展模块存在时才有意义,是针对该扩展模块的一些回调
+            </summary>
+        </member>
+        <member name="E:TradingLib.Common.ExContribEvent.GetFinAmmountAvabileEvent">
+            <summary>
+            获得某个交易帐号的所有可用配资额度
+            </summary>
+        </member>
+        <member name="E:TradingLib.Common.ExContribEvent.GetFinAmmountTotalEvent">
+            <summary>
+            获得某个交易帐号总的配资额度 用于提现在帐户可用资金
+            </summary>
+        </member>
+        <member name="E:TradingLib.Common.ExContribEvent.AdjustCommissionEvent">
+            <summary>
+            针对某笔交易调整交易手续费
+            </summary>
+        </member>
+        <member name="T:TradingLib.Common.SecSide">
+            <summary>
+            品种大边数据
+            </summary>
+        </member>
+        <member name="P:TradingLib.Common.SecSide.SecCode">
+            <summary>
+            品种代码
+            </summary>
+        </member>
+        <member name="P:TradingLib.Common.SecSide.Side">
+            <summary>
+            多空方向
+            </summary>
+        </member>
+        <member name="P:TradingLib.Common.SecSide.Margin">
+            <summary>
+            占用保证金
+            </summary>
+        </member>
+        <member name="P:TradingLib.Common.SecSide.HoldSize">
+            <summary>
+            持仓数量
+            </summary>
+        </member>
+        <member name="P:TradingLib.Common.SecSide.MarginFrozen">
+            <summary>
+            冻结保证金
+            </summary>
+        </member>
+        <member name="P:TradingLib.Common.SecSide.PendingOpenSize">
+            <summary>
+            待开仓数量
+            </summary>
+        </member>
+        <member name="P:TradingLib.Common.SecSide.TotalMargin">
+            <summary>
+            所有保证金
+            </summary>
+        </member>
+        <member name="T:TradingLib.Common.MarginSet">
+            <summary>
+            按单向大边统计出来的保证金数据
+            记录某品种 保证金占用，冻结保证金等数据
+            </summary>
+        </member>
+        <member name="P:TradingLib.Common.MarginSet.Code">
+            <summary>
+            键值 品种-方向
+            </summary>
+        </member>
+        <member name="P:TradingLib.Common.MarginSet.MarginSide">
+            <summary>
+            保证金方向 记录了该保证金是按多方计算 还是空方计算
+            </summary>
+        </member>
+        <member name="P:TradingLib.Common.MarginSet.Margin">
+            <summary>
+            占用保证金
+            </summary>
+        </member>
+        <member name="P:TradingLib.Common.MarginSet.BigHoldSize">
+            <summary>
+            大边持仓数量
+            </summary>
+        </member>
+        <member name="P:TradingLib.Common.MarginSet.SmallHoldSize">
+            <summary>
+            小边持仓数量
+            </summary>
+        </member>
+        <member name="P:TradingLib.Common.MarginSet.MarginFrozen">
+            <summary>
+            冻结保证金
+            </summary>
+        </member>
+        <member name="P:TradingLib.Common.MarginSet.BigPendingOpenSize">
+            <summary>
+            大边待开仓数量
+            </summary>
+        </member>
+        <member name="P:TradingLib.Common.MarginSet.SmallPendingOpenSize">
+            <summary>
+            小边待开仓数量
+            </summary>
+        </member>
+        <member name="P:TradingLib.Common.MarginSet.NetFronzenSize">
+            <summary>
+            冻结保证金对应手数
+            这里不是原始挂单数量 是按单边规则计算出来的净冻结挂单数量
+            </summary>
+        </member>
+        <member name="M:TradingLib.Common.AccountUtils_FinCal.FilterOrders(TradingLib.API.IAccount,TradingLib.API.SecurityType)">
+            <summary>
+            
+            </summary>
+            <param name="account"></param>
+            <param name="type"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TradingLib.Common.AccountUtils_FinCal.CalFutMarginSet(TradingLib.API.IAccount,TradingLib.API.Order)">
+            <summary>
+            按照单向大边规则计算品种的保证金数据集
+            EntryOrder开仓委托,用于按照单向大边
+            </summary>
+            <param name="account"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TradingLib.Common.AccountUtils_FinCal.CalFutMargin(TradingLib.API.IAccount)">
+            <summary>
+            计算期货占用保证金
+            在计算单个持仓的保证金是调用交易账户的CalPositionMargin方法
+            </summary>
+            <param name="account"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TradingLib.Common.AccountUtils_FinCal.CalOptPositionCost(TradingLib.API.IAccount)">
+            <summary>
+            期权持仓成本
+            </summary>
+            <param name="account"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TradingLib.Common.AccountUtils_FinCal.CalOptPositionValue(TradingLib.API.IAccount)">
+            <summary>
+            期权持仓市值
+            </summary>
+            <param name="acc"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TradingLib.Common.AccountUtils_FinCal.CalOptSettlePositionValue(TradingLib.API.IAccount)">
+            <summary>
+            期权结算市值
+            </summary>
+            <param name="account"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TradingLib.Common.AccountUtils_FinCal.CalOptRealizedPL(TradingLib.API.IAccount)">
+            <summary>
+            期权平仓盈亏
+            </summary>
+            <param name="account"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TradingLib.Common.AccountUtils_FinCal.CalOptCommission(TradingLib.API.IAccount)">
+            <summary>
+            期权交易手续费
+            </summary>
+            <param name="acc"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TradingLib.Common.AccountUtils_FinCal.CalOptMoneyFrozen(TradingLib.API.IAccount)">
+            <summary>
+            期权资金占用
+            </summary>
+            <param name="acc"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TradingLib.Common.AccountUtils_FinCal.CalInnovPositionCost(TradingLib.API.IAccount)">
+            <summary>
+            异化合约持仓成本
+            </summary>
+            <param name="acc"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TradingLib.Common.AccountUtils_FinCal.CalInnovPositionValue(TradingLib.API.IAccount)">
+            <summary>
+            异化合约持仓市值
+            </summary>
+            <param name="acc"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TradingLib.Common.AccountUtils_FinCal.CalInnovSettlePositionValue(TradingLib.API.IAccount)">
+            <summary>
+            异化合约结算市值
+            </summary>
+            <param name="acc"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TradingLib.Common.AccountUtils_FinCal.CalInnovCommission(TradingLib.API.IAccount)">
+            <summary>
+            异化合约手续费
+            </summary>
+            <param name="acc"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TradingLib.Common.AccountUtils_FinCal.CalInnovRealizedPL(TradingLib.API.IAccount)">
+            <summary>
+            异化合约平仓盈亏
+            </summary>
+            <param name="acc"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TradingLib.Common.AccountUtils_FinCal.CalInnovMargin(TradingLib.API.IAccount)">
+            <summary>
+            异化合约保证金
+            </summary>
+            <param name="acc"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TradingLib.Common.AccountUtils_FinCal.CalInnovMarginFrozen(TradingLib.API.IAccount)">
+            <summary>
+            异化合约保证金冻结
+            </summary>
+            <param name="acc"></param>
+            <returns></returns>
+        </member>
+        <member name="T:TradingLib.Common.AccountUtils_Args">
+            <summary>
+            将交易账户交易参数全部放入模板中进行设置
+            这里以扩展函数的形式提供参数暴露
+            </summary>
+        </member>
+        <member name="M:TradingLib.Common.AccountUtils_Args.GetArgsSideMargin(TradingLib.API.IAccount)">
+            <summary>
+            获得交易账户单向大边保证金设置
+            </summary>
+            <param name="account"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TradingLib.Common.AccountUtils_Args.GetArgsCreditSeparate(TradingLib.API.IAccount)">
+            <summary>
+            交易账户财务信息中是否将信用额度分开显示
+            </summary>
+            <param name="account"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TradingLib.Common.AccountUtils_Args.GetArgsPositionLock(TradingLib.API.IAccount)">
+            <summary>
+            是否支持锁仓操作
+            </summary>
+            <param name="account"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TradingLib.Common.AccountUtils_Args.GetArgsMarginStrategy(TradingLib.API.IAccount)">
+            <summary>
+            获得交易账户的保证金计算方式
+            </summary>
+            <param name="account"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TradingLib.Common.AccountUtils_Args.GetArgsAvabileFundStrategy(TradingLib.API.IAccount)">
+            <summary>
+            返回交易账户浮盈是否可开仓设置
+            </summary>
+            <param name="account"></param>
+            <returns></returns>
+        </member>
+        <member name="T:TradingLib.Common.BasicTracker">
+            <summary>
+            基础信息维护器
+            
+            </summary>
+        </member>
+        <member name="P:TradingLib.Common.BasicTracker.ManagerTracker">
+            <summary>
+            管理员对象管理器
+            </summary>
+        </member>
+        <member name="P:TradingLib.Common.BasicTracker.ExchagneTracker">
+            <summary>
+            交易所对象管理器
+            </summary>
+        </member>
+        <member name="P:TradingLib.Common.BasicTracker.SecurityTracker">
+            <summary>
+            证券品种管理器
+            </summary>
+        </member>
+        <member name="P:TradingLib.Common.BasicTracker.SymbolTracker">
+            <summary>
+            合约对象管理器
+            </summary>
+        </member>
+        <member name="P:TradingLib.Common.BasicTracker.MarketTimeTracker">
+            <summary>
+            交易时间段管理器
+            </summary>
+        </member>
+        <member name="P:TradingLib.Common.BasicTracker.ContractBankTracker">
+            <summary>
+            签约银行列表
+            </summary>
+        </member>
+        <member name="P:TradingLib.Common.BasicTracker.RouterGroupTracker">
+            <summary>
+            获得路由组维护器
+            </summary>
+        </member>
+        <member name="P:TradingLib.Common.BasicTracker.VendorTracker">
+            <summary>
+            获得实盘帐户维护器
+            </summary>
+        </member>
+        <member name="P:TradingLib.Common.BasicTracker.DomainTracker">
+            <summary>
+            域维护器
+            </summary>
+        </member>
+        <member name="P:TradingLib.Common.BasicTracker.ConnectorConfigTracker">
+            <summary>
+            通道参数维护器
+            </summary>
+        </member>
+        <member name="P:TradingLib.Common.BasicTracker.UIAccessTracker">
+            <summary>
+            获得权限维护器
+            </summary>
+        </member>
+        <member name="P:TradingLib.Common.BasicTracker.CommissionTemplateTracker">
+            <summary>
+            手续费模板维护器
+            </summary>
+        </member>
+        <member name="P:TradingLib.Common.BasicTracker.MarginTemplateTracker">
+            <summary>
+            保证金模板维护器
+            </summary>
+        </member>
+        <member name="P:TradingLib.Common.BasicTracker.ExStrategyTemplateTracker">
+            <summary>
+            计算策略模板维护器
+            </summary>
+        </member>
+        <member name="P:TradingLib.Common.ContribEventAttr.DestContrib">
+            <summary>
+            目标扩展模块
+            </summary>
+        </member>
+        <member name="P:TradingLib.Common.ContribEventAttr.EventStr">
+            <summary>
+            事件名称
+            </summary>
+        </member>
+        <member name="P:TradingLib.Common.ContribEventAttr.Help">
+            <summary>
+            帮助
+            </summary>
+        </member>
+        <member name="P:TradingLib.Common.ContribEventAttr.Description">
+            <summary>
+            事件描述
+            </summary>
+        </member>
+        <member name="F:TradingLib.Common.UIAccessTracker.uiaccessmap">
+            <summary>
+            数据库ID与对应的权限设置影射
+            </summary>
+        </member>
+        <member name="F:TradingLib.Common.UIAccessTracker.manageruiidxmap">
+            <summary>
+            ManagerID与对应的权限ID的影射
+            </summary>
+        </member>
+        <member name="M:TradingLib.Common.UIAccessTracker.GetAgentUIAccess(System.Int32)">
+            <summary>
+            获得某个代理的UIAccess
+            </summary>
+            <param name="managerid"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TradingLib.Common.UIAccessTracker.GetUIAccess(TradingLib.Common.Manager)">
+            <summary>
+            获得某个管理员的UIAccess的优先顺序
+            1.如果有指定的权限则使用该权限
+            2.如果指定则使用主域权限
+            3.主域没有指定则使用上级代理的权限
+            4.直接到ROOT则使用默认权限
+            </summary>
+            <param name="manager"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TradingLib.Common.UIAccessTracker.GetDefaultRootAccess">
+            <summary>
+            获得默认Root权限
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:TradingLib.Common.UIAccessTracker.GetDefaultAgentAccess">
+            <summary>
+            获得默认权限列表
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:TradingLib.Common.UIAccessTracker.UpdateAgentPermission(System.Int32,System.Int32)">
+            <summary>
+            更新某个Manager的权限设置
+            </summary>
+            <param name="managerid"></param>
+            <param name="accessid"></param>
+        </member>
+        <member name="M:TradingLib.Common.UIAccessTracker.UpdateUIAccess(TradingLib.Common.UIAccess)">
+            <summary>
+            更新某个权限或者新增某个权限
+            </summary>
+            <param name="access"></param>
+        </member>
+        <member name="P:TradingLib.Common.UIAccessTracker.UIAccesses">
+            <summary>
+            获得所有界面访问权限
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:TradingLib.ORM.Manager2UIACcess">
+            <summary>
+            管理员到UIAccess的map
+            </summary>
+        </member>
+        <member name="M:TradingLib.ORM.MUIAccess.SelectUIAccess">
+            <summary>
+            从数据库加载所有界面权限
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:TradingLib.ORM.MUIAccess.SelectManager2UIAccess">
+            <summary>
+            加载所有帐户的界面访问权限映射
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:TradingLib.ORM.MUIAccess.UpdateManagerPermissionSet(System.Int32,System.Int32)">
+            <summary>
+            更新代理的权限模板
+            </summary>
+            <param name="managerid"></param>
+            <param name="accessid"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TradingLib.ORM.MUIAccess.InsertManagerPermissionSet(System.Int32,System.Int32)">
+            <summary>
+            插入代理权限设置
+            </summary>
+            <param name="managerid"></param>
+            <param name="accessid"></param>
+            <returns></returns>
+        </member>
+        <member name="T:TradingLib.Common.CommissionTemplateTracker">
+            <summary>
+            手续费模板维护器
+            </summary>
+        </member>
+        <member name="P:TradingLib.Common.CommissionTemplateTracker.Item(System.Int32)">
+            <summary>
+            按照数据库ID获得手续费模板
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="P:TradingLib.Common.CommissionTemplateTracker.CommissionTemplates">
+            <summary>
+            返回所有手续费模板
+            </summary>
+        </member>
+        <member name="P:TradingLib.Common.CommissionTemplateTracker.CommissionTemplateItems">
+            <summary>
+            返回所有手续费模板项目
+            </summary>
+        </member>
+        <member name="M:TradingLib.Common.VendorTracker.UpdateVendor(TradingLib.Common.VendorSetting)">
+            <summary>
+            更新Vendor
+            </summary>
+            <param name="vendor"></param>
+        </member>
+        <member name="P:TradingLib.Common.VendorTracker.Item(System.Int32)">
+            <summary>
+            按全局ID获得Vendoer对象
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="P:TradingLib.Common.VendorTracker.Vendors">
+            <summary>
+            获得所有实盘帐户对象
+            </summary>
+        </member>
+        <member name="T:TradingLib.Common.PositionRoundTracker">
+            <summary>
+            持仓回合维护器
+            用于监控一个持仓对象的开平周期,
+            从开始持有仓位到所有持仓平掉归零的一个持仓操作过程
+            </summary>
+        </member>
+        <member name="F:TradingLib.Common.PositionRoundTracker._roundmap">
+            <summary>
+            处于开启过程中的持仓回合
+            </summary>
+        </member>
+        <member name="F:TradingLib.Common.PositionRoundTracker._roundlog">
+            <summary>
+            已经关闭的持仓回合
+            </summary>
+        </member>
+        <member name="M:TradingLib.Common.PositionRoundTracker.SyncPositionHold(System.Collections.Generic.IEnumerable{TradingLib.API.Position})">
+            <summary>
+            每日收盘后将position hold数据与PR数据进行同步 account/symbol/数量 进行一致性校验
+            </summary>
+            <param name="hold"></param>
+        </member>
+        <member name="M:TradingLib.Common.PositionRoundTracker.SyncPosition(TradingLib.API.Position)">
+            <summary>
+            同步持仓数据和PR数据,PositionRound记录了账户的开平回合记录,是交易来回的记录
+            持仓数据是所有交易累加到当前的持仓状态状态信息,
+            所有数据正确，持仓数据和仓位操作数据应该对应,有持仓表明没有平仓，就应该有对应的PositionRound信息
+            同步某个持仓数据,当结算结束后,将PR数据和当前positionhold进行同步,
+            目的1.每天调整PR错误，尽可能将PR数据和position数据吻合,这样PR数据就精确 计算出来的收益与指标均正确
+            2.保持数据库所有数据统一
+            </summary>
+            <param name="p"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TradingLib.Common.PositionRoundTracker.IncludeKeyList(System.Collections.Generic.List{System.String})">
+            <summary>
+            将key列表外的open PR数据排除  并返回我们排除的列表
+            </summary>
+            <param name="keylist"></param>
+        </member>
+        <member name="M:TradingLib.Common.PositionRoundTracker.Posiotn2PR(TradingLib.API.Position)">
+            <summary>
+            将某个position转换成对应的PR数据,在转换的过程中 加减仓数据会丢失，只是针对当前的持仓状态进行的PR数据复原
+            </summary>
+            <param name="p"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TradingLib.Common.PositionRoundTracker.RestorePositionRounds(System.Collections.Generic.IEnumerable{TradingLib.Common.PositionRoundImpl})">
+            <summary>
+            将positionround list恢复到 roundmap中去
+            </summary>
+            <param name="prlist"></param>
+        </member>
+        <member name="M:TradingLib.Common.PositionRoundTracker.GotPositionTransaction(TradingLib.Common.PositionTransaction)">
+            <summary>
+            记录一条持仓操作记录数据
+            </summary>
+            <param name="p"></param>
+        </member>
+        <member name="P:TradingLib.Common.PositionRoundTracker.RoundClosed">
+            <summary>
+            返回已经关闭的持仓操作回合
+            </summary>
+        </member>
+        <member name="P:TradingLib.Common.PositionRoundTracker.RoundOpened">
+            <summary>
+            返回仍然打开的持仓操作回合
+            </summary>
+        </member>
+        <member name="P:TradingLib.Common.PositionRoundTracker.Item(System.String)">
+            <summary>
+            获得某个key对应的开启的仓位操作记录
+            </summary>
+            <param name="key"></param>
+            <returns></returns>
+        </member>
+        <member name="T:TradingLib.Common.RspInfoEx">
+            <summary>
+            RspInfoEx扩展类,用于用静态方法通过key/code生成对应的RspInfo
+            </summary>
+        </member>
+        <member name="T:TradingLib.Common.RspInfoUtils">
+            <summary>
+            RspInfo扩展方法
+            用于从不同的消息源填充消息体
+            </summary>
+        </member>
+        <member name="M:TradingLib.Common.RspInfoUtils.Fill(TradingLib.API.RspInfo,System.String)">
+            <summary>
+            通过key设定具体的错误信息
+            </summary>
+            <param name="error_key"></param>
+        </member>
+        <member name="M:TradingLib.Common.RspInfoUtils.Fill(TradingLib.API.RspInfo,System.Int32)">
+            <summary>
+            通过code设定具体的错误信息
+            </summary>
+            <param name="error_code"></param>
+        </member>
+        <member name="M:TradingLib.Common.CoreCommandAttr.#ctor(TradingLib.API.QSEnumCommandSource,System.String,System.String,System.String)">
+            <summary>
+            消息处理命令,用于标注核心模块的命令特性
+            然后暴露给命令行或者其他相关消息交换
+            </summary>
+            <param name="source">处理消息来源</param>
+            <param name="cmd">命令操作码 标识了该命令</param>
+            <param name="help">帮助</param>
+            <param name="description">描述</param>
+        </member>
+        <member name="T:TradingLib.Common.AccountTracker">
+            <summary>
+            帐户管理器
+            用于维护帐户以及与帐户相关的交易信息
+            
+            </summary>
+        </member>
+        <member name="M:TradingLib.Common.AccountTracker.QryAccount(System.Int32,TradingLib.API.QSEnumAccountCategory)">
+            <summary>
+            查询某个userid下的某个类型的交易帐户
+            </summary>
+            <param name="uid"></param>
+            <param name="category"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TradingLib.Common.AccountTracker.CacheAccount(TradingLib.API.IAccount)">
+            <summary>
+            为accouont生成交易记录内存数据结构
+            </summary>
+            <param name="account"></param>
+        </member>
+        <member name="M:TradingLib.Common.AccountTracker.Clear">
+            <summary>
+            清空数据
+            </summary>
+        </member>
+        <member name="M:TradingLib.Common.AccountTracker.ResetAccount(TradingLib.API.IAccount)">
+            <summary>
+            重置
+            </summary>
+        </member>
+        <member name="M:TradingLib.Common.AccountTracker.GotPosition(TradingLib.API.PositionDetail)">
+            <summary>
+            从数据库加载昨日持仓明细数据 
+            </summary>
+            <param name="pos"></param>
+        </member>
+        <member name="M:TradingLib.Common.AccountTracker.GotOrder(TradingLib.API.Order)">
+            <summary>
+            记录委托
+            </summary>
+            <param name="order"></param>
+        </member>
+        <member name="M:TradingLib.Common.AccountTracker.GotFill(TradingLib.API.Trade)">
+            <summary>
+            记录成交
+            </summary>
+            <param name="fill"></param>
+        </member>
+        <member name="M:TradingLib.Common.AccountTracker.GotCancel(System.String,System.Int64)">
+            <summary>
+            获得取消 用于取消委托
+            </summary>
+            <param name="account"></param>
+            <param name="id"></param>
+        </member>
+        <member name="M:TradingLib.Common.AccountTracker.GotTick(TradingLib.API.Tick)">
+            <summary>
+            获得实时行情数据,用于更新持仓的价格信息和浮动盈亏
+            </summary>
+            <param name="k"></param>
+        </member>
+        <member name="P:TradingLib.Common.AccountTracker.Accounts">
+            <summary>
+            获得所有帐户对象
+            </summary>
+        </member>
+        <member name="P:TradingLib.Common.AccountTracker.Item(System.String)">
+            <summary>
+            按Account帐号获得帐号对象
+            </summary>
+            <param name="account"></param>
+            <returns></returns>
+        </member>
+        <member name="P:TradingLib.ORM.SystemInformation.LastSettleday">
+            <summary>
+            上次结算日
+            </summary>
+        </member>
+        <member name="P:TradingLib.ORM.SystemInformation.Maj">
+            <summary>
+            主版本号
+            功能模块有大的变动，比如增加多个模块或者整体架构发生变化
+            </summary>
+        </member>
+        <member name="P:TradingLib.ORM.SystemInformation.Min">
+            <summary>
+            次版本号
+            和主版本相对而言，次版本号的升级对应的只是局部的变动。
+            但该局部的变动造成了程序和以前版本不能兼容，或者对该程序以前的协作关系产生了破坏，
+            或者是功能上有大的改进或增强。
+            </summary>
+        </member>
+        <member name="P:TradingLib.ORM.SystemInformation.Fix">
+            <summary>
+            修订版本号
+            局部的变动，主要是局部函数的功能改进，或者bug的修正，或者功能的扩充。
+            </summary>
+        </member>
+        <member name="P:TradingLib.ORM.SystemInformation.Date">
+            <summary>
+            日期
+            版本生成日期
+            </summary>
+        </member>
+        <member name="P:TradingLib.ORM.SystemInformation.UpdateDate">
+            <summary>
+            系统更新日期
+            </summary>
+        </member>
+        <member name="M:TradingLib.ORM.MTradingInfo.InsertOrder(TradingLib.API.Order)">
+            <summary>
+            插入委托
+            </summary>
+            <param name="o"></param>
+        </member>
+        <member name="M:TradingLib.ORM.MTradingInfo.UpdateOrderStatus(TradingLib.API.Order)">
+            <summary>
+            更新委托
+            更新内容
+            size
+            filledsize
+            status
+            comment
+            broker
+            brokerlocalorderid
+            brokerremoteorderid
+            
+            ordersysid
+            orderseq由全局统一分配
+            orderref由客户端提供
+            front,session下单时确定
+            </summary>
+            <param name="o"></param>
+        </member>
+        <member name="M:TradingLib.ORM.MTradingInfo.SelectOrders">
+            <summary>
+            获得最近结算日的下一个结算日的委托数据
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:TradingLib.ORM.MTradingInfo.SelectBrokerOrders">
+            <summary>
+            恢复日内Broker侧委托数据
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:TradingLib.ORM.MTradingInfo.SelectRouterOrders">
+            <summary>
+            获得日内Router侧的委托数据
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:TradingLib.ORM.MTradingInfo.SelectOrders(System.Int32,System.Int32,TradingLib.API.QSEnumOrderBreedType)">
+            <summary>
+            搜索某个结算时间段的委托记录
+            </summary>
+            <param name="begin"></param>
+            <param name="end"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TradingLib.ORM.MTradingInfo.SelectHistOrders(System.String,System.Int32,System.Int32)">
+            <summary>
+            查询历史委托
+            </summary>
+            <param name="begin"></param>
+            <param name="end"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TradingLib.ORM.MTradingInfo.InsertTrade(TradingLib.API.Trade)">
+            <summary>
+            插入成交数据
+            </summary>
+            <param name="f"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TradingLib.ORM.MTradingInfo.SelectTrades">
+            <summary>
+            获得最近结算日的下一个结算日的成交数据
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:TradingLib.ORM.MTradingInfo.SelectBrokerTrades">
+            <summary>
+            获得最近结算日的所有成交侧 成交数据
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:TradingLib.ORM.MTradingInfo.SelectTrades(System.Int32,System.Int32,TradingLib.API.QSEnumOrderBreedType)">
+            <summary>
+            搜索某个时间段的委托记录
+            </summary>
+            <param name="begin"></param>
+            <param name="end"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TradingLib.ORM.MTradingInfo.SelectHistTrades(System.String,System.Int32,System.Int32)">
+            <summary>
+            查询历史委托
+            </summary>
+            <param name="begin"></param>
+            <param name="end"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TradingLib.ORM.MTradingInfo.InsertOrderAction(TradingLib.API.OrderAction)">
+            <summary>
+            插入委托操作
+            </summary>
+            <param name="action"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TradingLib.ORM.MTradingInfo.SelectOrderActions">
+            <summary>
+            获得当前交易日的委托操作
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:TradingLib.ORM.MTradingInfo.SelectOrderActions(System.Int32,System.Int32)">
+            <summary>
+            查询某个时间段的委托操作
+            </summary>
+            <param name="begin"></param>
+            <param name="end"></param>
+            <param name="islog"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TradingLib.ORM.MTradingInfo.InsertCancel(System.Int32,System.Int32,System.Int64)">
+            <summary> 
+            插入取消数据
+            </summary>
+            <param name="date"></param>
+            <param name="time"></param>
+            <param name="oid"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TradingLib.ORM.MTradingInfo.InsertPositionRound(TradingLib.API.PositionRound)">
+            <summary>
+            插入关闭的持仓回合数据
+            </summary>
+            <param name="pr"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TradingLib.ORM.MTradingInfo.ClearIntradayOrders(System.Int32)">
+            <summary>
+            删除日内委托数据
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:TradingLib.ORM.MTradingInfo.DumpIntradayOrders(System.Int32@,System.Int32)">
+            <summary>
+            转储orders
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:TradingLib.ORM.MTradingInfo.ClearIntradayTrades(System.Int32)">
+            <summary>
+            清空日内成交数据
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:TradingLib.ORM.MTradingInfo.DumpIntradayTrades(System.Int32@,System.Int32)">
+            <summary>
+            转储成交数据
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:TradingLib.ORM.MTradingInfo.ClearIntradayOrderActions(System.Int32)">
+            <summary>
+            清空日内取消数据
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:TradingLib.ORM.MTradingInfo.DumpIntradayOrderActions(System.Int32@,System.Int32)">
+            <summary>
+            转储日内取消数据到历史取消表
+            </summary>
+            <param name="rows"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TradingLib.ORM.MTradingInfo.DumpIntradayPosTransactions(System.Int32@,System.Int32)">
+            <summary>
+            转储日内交易回合记录
+            </summary>
+            <param name="rows"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TradingLib.ORM.MTradingInfo.ClearIntradayPosTransactions(System.Int32)">
+            <summary>
+            清空日内交易回合记录
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:TradingLib.ORM.MTradingInfo.ClearPosTransactionsOpened">
+            <summary>
+            清空隔夜交易回合记录
+            交易回合记录处于Open状态
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:TradingLib.Common.SystemEventArgs">
+            <summary>
+            系统事件类参数
+            </summary>
+        </member>
+        <member name="T:TradingLib.Common.SystemEvent">
+            <summary>
+            系统类事件
+            比如开启交易中心,执行数据转储,执行结算,结算完毕等
+            结算：保存当日交易记录到历史记录表，保存当日过夜持仓数据，将当日交易财务结果生成结算记录插入并更新当前最新状态
+            结算重置：重新设定当前交易日，从数据库加载最新的Balance并价值该交易日内的持仓记录，交易记录，出入金记录形成当前最新的交易状态
+            </summary>
+        </member>
+        <member name="M:TradingLib.Common.SystemEvent.FireCashOperation(System.Object,TradingLib.Common.QSEnumCashOpEventType,TradingLib.Mixins.JsonObject.JsonWrapperCashOperation)">
+            <summary>
+            通过事件中继 向系统推送资金处理事件
+            在每个调用到出入金操作状态改变的地方进行触发
+            </summary>
+            <param name="sender"></param>
+            <param name="eventType"></param>
+            <param name="cashOperation"></param>
+        </member>
+        <member name="E:TradingLib.Common.SystemEvent.BeforeSettleEvent">
+            <summary>
+            结算前事件 在结算前触发
+            </summary>
+        </member>
+        <member name="E:TradingLib.Common.SystemEvent.AfterSettleEvent">
+            <summary>
+            结算后事件 在系统结算完毕后触发
+            </summary>
+        </member>
+        <member name="E:TradingLib.Common.SystemEvent.BeforeSettleResetEvent">
+            <summary>
+            结算重置前事件 在结算重置前触发
+            </summary>
+        </member>
+        <member name="E:TradingLib.Common.SystemEvent.AfterSettleResetEvent">
+            <summary>
+            结算重置后事件 在结算重置后触发
+            </summary>
+        </member>
+        <member name="E:TradingLib.Common.SystemEvent.SpecialTimeTaskEvent">
+            <summary>
+            定时任务事件
+            </summary>
+        </member>
+        <member name="E:TradingLib.Common.SystemEvent.TaskErrorEvent">
+            <summary>
+            执行任务异常事件
+            </summary>
+        </member>
+        <member name="E:TradingLib.Common.SystemEvent.PositionFlatEvent">
+            <summary>
+            强平成功事件
+            </summary>
+        </member>
+        <member name="E:TradingLib.Common.SystemEvent.CashOperationRequest">
+            <summary>
+            出入金请求 状态改变22:59
+            </summary>
+        </member>
+        <member name="T:TradingLib.Common.DBExchangeTracker">
+            <summary>
+            交易所信息维护
+            用于维护系统全局交易所信息
+            </summary>
+        </member>
+        <member name="P:TradingLib.Common.DBExchangeTracker.Item(System.Int32)">
+            <summary>
+            通过数据库ID获得交易所对象
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="P:TradingLib.Common.DBExchangeTracker.Item(System.String)">
+            <summary>
+            通过交易所编号获得交易所对象
+            </summary>
+            <param name="index"></param>
+            <returns></returns>
+        </member>
+        <member name="P:TradingLib.Common.DBExchangeTracker.Exchanges">
+            <summary>
+            返回所有交易所列表
+            </summary>
+        </member>
+        <member name="T:TradingLib.Common.AccountFilter">
+            <summary>
+            帐户过滤 用于按照一定的搜索语法匹配出对应的Account
+            </summary>
+        </member>
+        <member name="T:TradingLib.Common.ObjectFilter">
+            <summary>
+            对象过滤器
+            </summary>
+        </member>
+        <member name="F:TradingLib.Common.ObjectFilter.op">
+            filter operation 
+        </member>
+        <member name="F:TradingLib.Common.ObjectFilter.attr">
+            filter attribute or null if operation AND, OR or NOT 
+        </member>
+        <member name="F:TradingLib.Common.ObjectFilter.value">
+            filter operands 
+        </member>
+        <member name="M:TradingLib.Common.ObjectFilter.#ctor">
+            <summary>
+            根据参数初始化ObjectFilter的一个新实例
+            </summary>
+            <param name="operation"></param>
+            <param name="attr"></param>
+            <param name="value"></param>
+        </member>
+        <member name="M:TradingLib.Common.ObjectFilter.Init(System.Int32,System.String,System.Object)">
+            <summary>
+            初始化过滤器,由于使用泛型模板,无法通过无参new()直接初始化对象,new出对象后通过调用init 进行初始化
+            </summary>
+            <param name="operation">操作符</param>
+            <param name="attr">属性/字段</param>
+            <param name="value">值</param>
+        </member>
+        <member name="M:TradingLib.Common.ObjectFilter.Create``1(System.String)">
+            <summary>
+            根据过滤语句创建ObjectFilter的实例
+            这里指定具体的filter对象
+            </summary>
+            <param name="filterString"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TradingLib.Common.ObjectFilter.Match(System.Object)">
+            <summary>
+            返回dictionary是否匹配当前ObjectFilter
+            可以被子类重载
+            </summary>
+            <param name="dictionary"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TradingLib.Common.ObjectFilter.InnerMatch(System.Object)">
+            <summary>
+            返回dictionary是否匹配当前ObjectFilter（具体实现）
+            InnerMatch会产生递归调用,最终属性匹配时通过获得对象属性来获得匹配值
+            因此在子类实现GetAttr函数就可以实现不同对象的属性匹配，具体匹配规则在父类中定义
+            </summary>
+            <param name="dic"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TradingLib.Common.ObjectFilter.ToString">
+            <summary>
+            将当前对象转换为对应的经过标准化处理的字符串
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:TradingLib.Common.ObjectFilter.Normalize">
+            <summary>
+            返回当前对象对应的经过标准化处理的字符串
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:TradingLib.Common.ObjectFilter.Equals(System.Object)">
+            <summary>
+            比较两个ObjectFilter是否相等
+            </summary>
+            <param name="obj"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TradingLib.Common.ObjectFilter.GetHashCode">
+            <summary>
+            返回该字符串的Hash代码
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:TradingLib.Common.ObjectFilter.EncodeValue(System.String)">
+            <summary>
+            Encode the value string such that '(', '*', ')' and '\' are escaped.
+            </summary>
+            <param name="value"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TradingLib.Common.ObjectFilter.Compare(System.Int32,System.Object,System.Object)">
+            <summary>
+            比较对象值
+            </summary>
+            <param name="operation"></param>
+            <param name="value1"></param>
+            <param name="value2"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TradingLib.Common.ObjectFilter.ApproxString(System.String)">
+             Map a string for an APPROX (~=) comparison.
+            
+             This implementation removes white spaces. This is the minimum
+             implementation allowed by the OSGi spec.
+            
+             @param input Input string.
+             @return String ready for APPROX comparison.
+        </member>
+        <member name="T:TradingLib.Common.ObjectFilter.Parser`1">
+            <summary>
+            解析过滤字符串为ObjectFilter对象树
+            </summary>
+        </member>
+        <member name="M:TradingLib.Common.ObjectFilter.Parser`1.#ctor(System.String)">
+            <summary>
+            初始化
+            </summary>
+            <param name="filterstring"></param>
+        </member>
+        <member name="M:TradingLib.Common.ObjectFilter.Parser`1.Parse">
+            <summary>
+            解析
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:TradingLib.Common.ObjectFilter.Parser`1.SkipWhiteSpace">
+            <summary>
+            跳过空白
+            </summary>
+        </member>
+        <member name="M:TradingLib.Common.AccountFilter.Match(System.Object)">
+            <summary>
+            返回dictionary是否匹配当前ObjectFilter
+            </summary>
+            <param name="dictionary"></param>
+            <returns></returns>
+        </member>
+        <member name="T:TradingLib.Common.ThroughputTracker`1">
+            <summary>
+            记录某个信息的通过量,经过修改可以做系统的流控
+            </summary>
+            <typeparam name="T"></typeparam>
+        </member>
+        <member name="M:TradingLib.Common.ThroughputTracker`1.newItem(`0)">
+            <summary>
+            记录通过信息,用于计算流控TP值
+            </summary>
+            <param name="item"></param>
+        </member>
+        <member name="P:TradingLib.Common.ThroughputTracker`1.LastBeatTime">
+            <summary>
+            最近一个消息达到时间,用于检测该客户端地址是否已经死亡
+            </summary>
+        </member>
+        <member name="P:TradingLib.Common.ThroughputTracker`1.Throughput">
+            <summary>
+            计算每秒的通过量
+            </summary>
+        </member>
+        <member name="T:TradingLib.Common.CommissionHelper">
+            <summary>
+            用于实现单边计费或者日内不对称计费
+            </summary>
+        </member>
+        <member name="M:TradingLib.Common.CommissionHelper.AnyCommissionSetting(System.String,System.Decimal@)">
+            <summary>
+            检查某个合约日内交易的手续费设置,单边计费
+            </summary>
+            <param name="symbolcode"></param>
+            <param name="needcal"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TradingLib.Common.TaskAttr.#ctor(System.String,System.Int32,System.Int32,System.Int32,System.String)">
+            <summary>
+            定时执行几点几分几秒执行该任务
+            </summary>
+            <param name="name">任务名称</param>
+            <param name="hour">几点</param>
+            <param name="minute">几分</param>
+            <param name="secend">几秒</param>
+            <param name="description">任务描述</param>
+        </member>
+        <member name="M:TradingLib.Common.TaskAttr.#ctor(System.String,System.Int32,System.Int32,System.String)">
+            <summary>
+            每隔多少时间执行该任务
+            </summary>
+            <param name="name">任务名称</param>
+            <param name="secends">任务间隔秒数</param>
+            <param name="description">任务描述</param>
+        </member>
+        <member name="P:TradingLib.Common.TaskAttr.IntervalSecends">
+            <summary>
+            执行间隔-秒
+            </summary>
+        </member>
+        <member name="P:TradingLib.Common.TaskAttr.IntervalMilliSecends">
+            <summary>
+            执行间隔-毫秒
+            </summary>
+        </member>
+        <member name="T:TradingLib.Common.SessionEvent`1">
+            <summary>
+            客户端会话事件
+            </summary>
+        </member>
+        <member name="E:TradingLib.Common.SessionEvent`1.ClientRegisterEvent">
+            <summary>
+            客户端连接事件
+            </summary>
+        </member>
+        <member name="E:TradingLib.Common.SessionEvent`1.ClientUnregistedEvent">
+            <summary>
+            客户端断开事件
+            </summary>
+        </member>
+        <member name="E:TradingLib.Common.SessionEvent`1.AccountLoginSuccessEvent">
+            <summary>
+            交易帐号登入成功
+            </summary>
+        </member>
+        <member name="E:TradingLib.Common.SessionEvent`1.AccountLoginFailedEvent">
+            <summary>
+            交易帐号登入失败
+            </summary>
+        </member>
+        <member name="E:TradingLib.Common.SessionEvent`1.ClientLoginInfoEvent">
+            <summary>
+            客户端登入 退出事件
+            </summary>
+        </member>
+        <member name="E:TradingLib.Common.SessionEvent`1.AuthUserEvent">
+            <summary>
+            客户端回话统一认证回调
+            如果绑定该事件则进行统一用户中心认证,不绑定则通过本地数据库表进行认证
+            </summary>
+        </member>
+        <member name="P:TradingLib.Common.PositionFlatEventArgs.Position">
+            <summary>
+            持仓对象
+            </summary>
+        </member>
+        <member name="P:TradingLib.Common.PositionFlatEventArgs.RspInfo">
+            <summary>
+            附带信息
+            </summary>
+        </member>
+        <member name="T:TradingLib.Common.SymbolBasketImpl">
+            <summary>
+            Holds collections of securities.
+            </summary>
+        </member>
+        <member name="M:TradingLib.Common.SymbolBasketImpl.#ctor(TradingLib.API.SymbolBasket)">
+            <summary>
+            复制一个合约Basket
+            </summary>
+            <param name="copy"></param>
+        </member>
+        <member name="M:TradingLib.Common.SymbolBasketImpl.#ctor(TradingLib.API.Symbol)">
+            <summary>
+            从某个合约对象创建一个合约列表
+            </summary>
+            <param name="firstsec">security</param>
+        </member>
+        <member name="M:TradingLib.Common.SymbolBasketImpl.#ctor(TradingLib.API.Symbol[])">
+            <summary>
+            从一组合约对象创建一个合约列表
+            </summary>
+            <param name="securities"></param>
+        </member>
+        <member name="M:TradingLib.Common.SymbolBasketImpl.Add(TradingLib.API.Symbol)">
+            <summary>
+            adds a security if not already present
+            如果某个合约对象不存在 则增加该合约
+            </summary>
+            <param name="s"></param>
+        </member>
+        <member name="M:TradingLib.Common.SymbolBasketImpl.HaveSymbol(System.String)">
+            <summary>
+            检查basket中是否含有某个特定的symbol
+            </summary>
+            <param name="s"></param>
+        </member>
+        <member name="M:TradingLib.Common.SymbolBasketImpl.Add(TradingLib.API.SymbolBasket)">
+            <summary>
+            adds contents of another basket to this one.
+            will not result in duplicate symbols
+            </summary>
+            <param name="mb"></param>
+        </member>
+        <member name="M:TradingLib.Common.SymbolBasketImpl.Remove(TradingLib.API.SymbolBasket)">
+            <summary>
+            removes all elements of baskets that match.
+            unmatching elements are ignored
+            </summary>
+            <param name="mb"></param>
+        </member>
+        <member name="M:TradingLib.Common.SymbolBasketImpl.Remove(System.String)">
+            <summary>
+            remove single symbol from basket
+            </summary>
+            <param name="symbol"></param>
+        </member>
+        <member name="M:TradingLib.Common.SymbolBasketImpl.Remove(System.Int32)">
+            <summary>
+            remove index of a particular symbol
+            </summary>
+            <param name="i"></param>
+        </member>
+        <member name="M:TradingLib.Common.SymbolBasketImpl.Remove(TradingLib.API.Symbol)">
+            <summary>
+            remove security from basket
+            </summary>
+            <param name="s"></param>
+        </member>
+        <member name="M:TradingLib.Common.SymbolBasketImpl.Clear">
+            <summary>
+            empty basket
+            </summary>
+        </member>
+        <member name="T:TradingLib.Common.PluginHelper">
+            <summary>
+            单例对写
+            </summary>
+        </member>
+        <member name="M:TradingLib.Common.PluginHelper.LoadContribPlugin(System.String)">
+            <summary>
+            按类名(全称)获得某个扩展模块插件
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TradingLib.Common.PluginHelper.LoadContribList">
+            <summary>
+            获得所有扩展模块插件
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:TradingLib.Common.PluginHelper.ConstructContrib(System.String)">
+            <summary>
+            根据某个类名全称 生成扩展模块对象
+            </summary>
+            <param name="className"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TradingLib.Common.PluginHelper.FindContribCommand(System.Object)">
+            <summary>
+            获得扩展命令列表
+            </summary>
+            <param name="obj"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TradingLib.Common.PluginHelper.FindContribEvent(System.Object)">
+            <summary>
+            获得扩展模块的事件
+            </summary>
+            <param name="obj"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TradingLib.Common.PluginHelper.FindContribTask(System.Object)">
+            <summary>
+            获得扩展任务列表
+            </summary>
+            <param name="obj"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TradingLib.Common.PluginHelper.GetArgumentList(System.Reflection.MethodInfo)">
+            <summary>
+            获得某个方法的参数列表
+            </summary>
+            <param name="mi"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TradingLib.Common.PluginHelper.ParseMethodArgs(System.Collections.Generic.List{TradingLib.Common.MethodArgument})">
+            <summary>
+            将参数列表中的值转换成函数参数object[]供函数调用
+            </summary>
+            <param name="args"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TradingLib.Common.PluginHelper.LoadDataFeedType">
+            <summary>
+            获得所有行情接口类型
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:TradingLib.Common.PluginHelper.LoadBrokerType">
+            <summary>
+            获得所有成交接口类型
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:TradingLib.Common.PluginHelper.LoadAccountType">
+            <summary>
+            获得帐户类型
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:TradingLib.Common.PluginHelper.LoadAccountRule">
+            <summary>
+            获得帐户风控规则类型
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:TradingLib.Common.PluginHelper.LoadOrderRule">
+            <summary>
+            获得委托风控规则类型
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:TradingLib.Common.PluginHelper.GetImplementors(System.String,System.Type)">
+            <summary>
+            从某个文件夹加载实现某个接口的类型
+            比如在配资扩展模块中 有多个配资服务计划,且实现了统一的接口，则需要自定义加载该类型
+            </summary>
+            <param name="path"></param>
+            <param name="needtype"></param>
+            <returns></returns>
+        </member>
+        <member name="T:TradingLib.Common.IndicatorEvent">
+            <summary>
+            交易事件 行情 委托 成交 取消等
+            用于在系统底层逻辑处理完毕后向扩展模块进行事件传递
+            </summary>
+        </member>
+        <member name="E:TradingLib.Common.IndicatorEvent.GotTickEvent">
+            <summary>
+            系统内行情数据
+            </summary>
+        </member>
+        <member name="E:TradingLib.Common.IndicatorEvent.GotOrderEvent">
+            <summary>
+            系统底层获得一个委托()
+            </summary>
+        </member>
+        <member name="E:TradingLib.Common.IndicatorEvent.GotCancelEvent">
+            <summary>
+            系统底层获得一个委托
+            </summary>
+        </member>
+        <member name="E:TradingLib.Common.IndicatorEvent.GotFillEvent">
+            <summary>
+            系统底层获得一个成交
+            </summary>
+        </member>
+        <member name="E:TradingLib.Common.IndicatorEvent.GotPositionClosedEvent">
+            <summary>
+            交易系统某个交易回合结束
+            </summary>
+        </member>
+        <member name="T:TradingLib.ORM.MCommission">
+            <summary>
+            手续费数据库操作
+            </summary>
+        </member>
+        <member name="M:TradingLib.ORM.MCommission.UpdateCommissionTemplate(TradingLib.Common.CommissionTemplate)">
+            <summary>
+            更新手续费模板
+            </summary>
+            <param name="t"></param>
+        </member>
+        <member name="M:TradingLib.ORM.MCommission.InsertCommissionTemplate(TradingLib.Common.CommissionTemplate)">
+            <summary>
+            插入一条手续费模板
+            </summary>
+            <param name="t"></param>
+        </member>
+        <member name="M:TradingLib.ORM.MCommission.SelectCommissionTemplates">
+            <summary>
+            获得所有手续费模板
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:TradingLib.ORM.MCommission.UpdateCommissionTemplateItem(TradingLib.Common.CommissionTemplateItem)">
+            <summary>
+            更新手续费项目
+            </summary>
+            <param name="item"></param>
+        </member>
+        <member name="M:TradingLib.ORM.MCommission.InsertCommissionTemplateItem(TradingLib.Common.CommissionTemplateItem)">
+            <summary>
+            插入手续费模板项目
+            </summary>
+            <param name="item"></param>
+        </member>
+        <member name="M:TradingLib.ORM.MCommission.SelectCommissionTemplateItems">
+            <summary>
+            获得所有手续费模板项目
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:TradingLib.Common.WebAPIHelper.ReplySuccess(System.String)">
+            <summary>
+            返回操作成功回报
+            </summary>
+            <param name="message"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TradingLib.Common.WebAPIHelper.ReplyError(System.String)">
+            <summary>
+            用错误标识生成JsonReply
+            </summary>
+            <param name="key"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TradingLib.Common.WebAPIHelper.ReplyError(System.Int32)">
+            <summary>
+            用错误代码生成JsonReply
+            </summary>
+            <param name="code"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TradingLib.Common.WebAPIHelper.ReplyObject(System.Object)">
+            <summary>
+            将对象填充到playload中 生成JsonReply
+            </summary>
+            <param name="obj"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TradingLib.Common.WebAPIHelper.CreateJsonReply(TradingLib.Common.XMLRspInfo)">
+            <summary>
+            通过XMLRspInfo生成对应的JsonReply
+            </summary>
+            <param name="info"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TradingLib.ORM.MExStrategy.InsertExStrategyTemplate(TradingLib.Common.ExStrategyTemplate)">
+            <summary>
+            插入计算策略模板
+            </summary>
+            <param name="t"></param>
+        </member>
+        <member name="M:TradingLib.ORM.MExStrategy.UpdateExStrategyTemplate(TradingLib.Common.ExStrategyTemplate)">
+            <summary>
+            更新计算策略模板
+            </summary>
+            <param name="t"></param>
+        </member>
+        <member name="M:TradingLib.ORM.MExStrategy.SelectExStrategyTemplates">
+            <summary>
+            获得所有计算策略模板
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:TradingLib.ORM.MExStrategy.InsertExStrategyTemplateItem(TradingLib.Common.ExStrategy)">
+            <summary>
+            插入计算策略模板项
+            </summary>
+            <param name="item"></param>
+        </member>
+        <member name="M:TradingLib.ORM.MExStrategy.SelectExStrategyTemplateItems">
+            <summary>
+            获得所有计算策略模板项
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:TradingLib.ORM.MExStrategy.UpdateExStrategyTemplateItem(TradingLib.Common.ExStrategy)">
+            <summary>
+            更新计算策略模板项目
+            </summary>
+            <param name="item"></param>
+        </member>
+        <member name="T:TradingLib.Common.AccountEvent">
+            <summary>
+            交易帐号类事件,交易帐号增加,交易帐号冻结
+            </summary>
+        </member>
+        <member name="E:TradingLib.Common.AccountEvent.AccountInactiveEvent">
+            <summary>
+            交易帐号冻结事件
+            </summary>
+        </member>
+        <member name="E:TradingLib.Common.AccountEvent.AccountActiveEvent">
+            <summary>
+            交易帐号激活事件
+            </summary>
+        </member>
+        <member name="E:TradingLib.Common.AccountEvent.AccountAddEvent">
+            <summary>
+            添加交易帐号事件
+            </summary>
+        </member>
+        <member name="E:TradingLib.Common.AccountEvent.AccountDelEvent">
+            <summary>
+            交易帐号删除事件
+            </summary>
+        </member>
+        <member name="M:TradingLib.ORM.MManager.ValidManager(System.String,System.String)">
+            <summary>
+            验证管理员帐号
+            </summary>
+            <param name="login"></param>
+            <param name="pass"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TradingLib.ORM.MManager.GetManagerPass(System.String)">
+            <summary>
+            查询某个Manger的密码
+            </summary>
+            <param name="login"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TradingLib.ORM.MManager.UpdateManagerPass(System.Int32,System.String)">
+            <summary>
+            更新管理员密码
+            </summary>
+            <param name="login"></param>
+            <param name="pass"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TradingLib.ORM.MManager.UpdateManagerType(System.Int32,TradingLib.API.QSEnumManagerType)">
+            <summary>
+            更新管理员类别
+            </summary>
+            <param name="id"></param>
+            <param name="type"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TradingLib.ORM.MManager.UpdateManagerActive(System.Int32,System.Boolean)">
+            <summary>
+            更新管理员激活或冻结
+            </summary>
+            <param name="id"></param>
+            <param name="active"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TradingLib.ORM.MManager.SelectManager">
+            <summary>
+            获得所有Manager
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="P:TradingLib.Common.RspInfoTracker.WebAPIRspInfo">
+            <summary>
+            获得web同步调用的回报信息维护器
+            </summary>
+        </member>
+        <member name="P:TradingLib.Common.RspInfoTracker.ExRspInfo">
+            <summary>
+            交易RspInfo维护器
+            </summary>
+        </member>
+        <member name="M:TradingLib.Common.DomainTracker.UpdateSyncVendor(TradingLib.Common.DomainImpl,System.Int32)">
+            <summary>
+            更新合约同步源
+            </summary>
+            <param name="domain"></param>
+            <param name="vendorid"></param>
+        </member>
+        <member name="P:TradingLib.Common.DomainTracker.SuperDomain">
+            <summary>
+            返回超级域
+            </summary>
+        </member>
+        <member name="P:TradingLib.Common.DomainTracker.Item(System.Int32)">
+            <summary>
+            按DomainID返回对应的域
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="P:TradingLib.Common.DomainTracker.Domains">
+            <summary>
+            返回所有域
+            </summary>
+        </member>
+        <member name="T:TradingLib.Common.AccountUtils_CommissionMargin">
+            <summary>
+            手续费与保证金扩展函数类
+            </summary>
+        </member>
+        <member name="M:TradingLib.Common.AccountUtils_CommissionMargin.CalCommission(TradingLib.API.IAccount,TradingLib.API.Trade)">
+            <summary>
+            计算某个成交的手续费
+            </summary>
+            <param name="account"></param>
+            <param name="f"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TradingLib.Common.AccountUtils_CommissionMargin.CalPositionMargin(TradingLib.API.IAccount,TradingLib.API.Position)">
+            <summary>
+            计算持仓保证金
+            这里需要按照账户设置的保证金计算规则进行计算
+            </summary>
+            <param name="account"></param>
+            <param name="f"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TradingLib.Common.AccountUtils_CommissionMargin.CalOrderMarginFrozen(TradingLib.API.IAccount,TradingLib.API.Symbol,System.Int32,TradingLib.API.QSEnumOffsetFlag)">
+            <summary>
+            按合约 手数来计算保证金占用
+            </summary>
+            <param name="account"></param>
+            <param name="symbol"></param>
+            <param name="size"></param>
+            <param name="offset"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TradingLib.Common.AccountUtils_CommissionMargin.CalOrderMarginFrozen(TradingLib.API.IAccount,TradingLib.API.Order)">
+            <summary>
+            计算委托的保证金冻结
+            </summary>
+            <param name="account"></param>
+            <param name="o"></param>
+            <returns></returns>
+        </member>
+        <member name="P:TradingLib.Common.AccountCreation.Account">
+            <summary>
+            指定帐户ID
+            </summary>
+        </member>
+        <member name="P:TradingLib.Common.AccountCreation.Password">
+            <summary>
+            设定的帐户和密码
+            </summary>
+        </member>
+        <member name="P:TradingLib.Common.AccountCreation.Category">
+            <summary>
+            帐户类型
+            </summary>
+        </member>
+        <member name="P:TradingLib.Common.AccountCreation.RouterType">
+            <summary>
+            路由类别
+            </summary>
+        </member>
+        <member name="P:TradingLib.Common.AccountCreation.UserID">
+            <summary>
+            用户ID预留与web站点帐户系统
+            </summary>
+        </member>
+        <member name="P:TradingLib.Common.AccountCreation.BaseManager">
+            <summary>
+            所属柜员
+            </summary>
+        </member>
+        <member name="P:TradingLib.Common.AccountCreation.RouteGroup">
+            <summary>
+            路由组
+            </summary>
+        </member>
+        <member name="P:TradingLib.Common.AccountCreation.Domain">
+            <summary>
+            帐号所属域
+            </summary>
+        </member>
+        <member name="M:TradingLib.Common.AccountUtils_ExStrategy.GetExStrategyTemplate(TradingLib.API.IAccount)">
+            <summary>
+            获得交易账户的交易参数模板
+            </summary>
+            <param name="account"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TradingLib.Common.AccountUtils_ExStrategy.GetExStrategy(TradingLib.API.IAccount)">
+            <summary>
+            获得账户交易参数
+            </summary>
+            <param name="account"></param>
+            <returns></returns>
+        </member>
+    </members>
+</doc>

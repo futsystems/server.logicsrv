@@ -67,7 +67,7 @@ namespace TradingLib.Contirb.LogServer
             _port = _cfgdb["port"].AsInt();
             _savedebug = _cfgdb["logtofile"].AsBool();
 
-            Util.SendLogEvent += new ILogItemDel(NewLog);
+            //Util.SendLogEvent += new ILogItemDel(NewLog);
 
             TLCtxHelper.EventSystem.TaskErrorEvent += new EventHandler<TaskEventArgs>(EventSystem_TaskErrorEvent);
             TLCtxHelper.EventSystem.SpecialTimeTaskEvent += new EventHandler<TaskEventArgs>(EventSystem_SpecialTimeTaskEvent);
@@ -95,7 +95,7 @@ namespace TradingLib.Contirb.LogServer
         /// </summary>
         public void OnDestory()
         {
-            Util.SendLogEvent -= new ILogItemDel(NewLog);
+            //Util.SendLogEvent -= new ILogItemDel(NewLog);
             base.Dispose();
             
 
@@ -105,7 +105,7 @@ namespace TradingLib.Contirb.LogServer
         /// </summary>
         public void Start()
         {
-            debug("启动日志服务,监听端口:" + _port.ToString(), QSEnumDebugLevel.INFO);
+            logger.Info("启动日志服务,监听端口:" + _port.ToString());
             if (_loggo) return;
             _loggo = true;
             _reportThread = new Thread(LogProcess);
@@ -118,7 +118,7 @@ namespace TradingLib.Contirb.LogServer
         /// </summary>
         public void Stop()
         {
-            debug("停止日志服务.....");
+            logger.Info("停止日志服务.....");
             if (!_loggo) return;
             _loggo = false;
             Util.WaitThreadStop(_reportThread);
@@ -166,7 +166,7 @@ namespace TradingLib.Contirb.LogServer
                 case QSEnumDebugLevel.INFO:
                     _loginfo.GotDebug(l.Message);
                     break;
-                case QSEnumDebugLevel.WARNING:
+                case QSEnumDebugLevel.WARN:
                     _logwarning.GotDebug(l.Message);
                     break;
                 case QSEnumDebugLevel.DEBUG:
@@ -192,7 +192,7 @@ namespace TradingLib.Contirb.LogServer
             }
             catch (Exception ex)
             {
-                debug("SaveLogTaskEvent Error:" + ex.ToString(), QSEnumDebugLevel.ERROR);
+                logger.Error("SaveLogTaskEvent Error:" + ex.ToString());
             }
         }
 
@@ -204,7 +204,7 @@ namespace TradingLib.Contirb.LogServer
             }
             catch (Exception ex)
             {
-                debug("SaveLogPacketEvent Error:" + ex.ToString(), QSEnumDebugLevel.ERROR);
+                logger.Error("SaveLogPacketEvent Error:" + ex.ToString());
             }
         }
 
@@ -242,6 +242,8 @@ namespace TradingLib.Contirb.LogServer
                         while (logcache.hasItems)
                         {
                             ILogItem l = logcache.Read();
+                            if (l == null)
+                                continue;
                             SaveLog(l);//保存日志到文本文件
                             SendLog(l);//发送日志到网络
                         }
@@ -249,12 +251,16 @@ namespace TradingLib.Contirb.LogServer
                         while (taskeventlogcache.hasItems)
                         {
                             LogTaskEvent l = taskeventlogcache.Read();
+                            if (l == null)
+                                continue;
                             SaveLogTaskEvent(l);
                         }
 
                         while (packetlogcache.hasItems)
                         {
                             LogPacketEvent l = packetlogcache.Read();
+                            if (l == null)
+                                continue;
                             SaveLogPacketEvent(l);
                         }
                         Thread.Sleep(50);
@@ -289,7 +295,7 @@ namespace TradingLib.Contirb.LogServer
             }
             catch (Exception ex)
             {
-                debug("drop logs error:" + ex.ToString(), QSEnumDebugLevel.ERROR);
+                logger.Error("drop logs error:" + ex.ToString());
             }
         }
 
@@ -299,7 +305,7 @@ namespace TradingLib.Contirb.LogServer
             log.Date = Util.ToTLDate();
             log.Exception = !args.IsSuccess ? args.InnerException.ToString() : "";
             log.Result = args.IsSuccess;
-            log.Settleday = TLCtxHelper.CmdSettleCentre.NextTradingday;
+            log.Settleday = TLCtxHelper.ModuleSettleCentre.Tradingday;
             log.TaskMemo = args.Task.GetTaskMemo(false);
             log.TaskName = args.Task.TaskName;
             log.TaskType = args.Task.TaskType;
@@ -312,9 +318,9 @@ namespace TradingLib.Contirb.LogServer
         {
             LogPacketEvent log = new LogPacketEvent();
 
-            
-            
-            log.Settleday = TLCtxHelper.CmdSettleCentre.NextTradingday;
+
+
+            log.Settleday = TLCtxHelper.ModuleSettleCentre.Tradingday;
             log.Date = Util.ToTLDate();
             log.Time = Util.ToTLTime();
             log.AuthorizedID = args.Session!=null?args.Session.AuthorizedID:"";

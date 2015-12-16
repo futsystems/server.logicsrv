@@ -1,4 +1,4 @@
-﻿using System;
+﻿﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -28,6 +28,13 @@ namespace TradingLib.Common
         /// </summary>
         public int Domain_ID { get; set; }
 
+
+        /// <summary>
+        /// 管理员主域ID
+        /// </summary>
+        public int Manager_ID { get; set; }
+
+
         public override string ToString()
         {
             return this.Name;
@@ -48,6 +55,24 @@ namespace TradingLib.Common
     /// </summary>
     public class ExStrategy
     {
+        public ExStrategy()
+        {
+            this.ID = 0;
+            this.Template_ID = 0;
+            this.MarginPrice = QSEnumMarginPrice.OpenPrice;
+            this.IncludeCloseProfit = true;
+            this.IncludePositionProfit = true;
+            this.Algorithm = QSEnumAlgorithm.AG_All;
+            this.SideMargin = true;
+            this.CreditSeparate = true;
+            this.PositionLock = true;
+            this.EntrySlip = 0;
+            this.ExitSlip = 0;
+            this.LimitCheck = false;
+            this.Probability = 100;
+
+
+        }
         /// <summary>
         /// 数据库ID编号
         /// </summary>
@@ -60,13 +85,25 @@ namespace TradingLib.Common
         /// 保证金计算方法
         /// 按不同的保证金计算方法来计算交易账户的持仓保证金
         /// </summary>
-        public QSEnumMarginStrategy Margin { get; set; }
+        public QSEnumMarginPrice MarginPrice { get; set; }
+
+        /// <summary>
+        /// 可用资金是否包含平仓盈亏
+        /// </summary>
+        public bool IncludeCloseProfit { get; set; }
 
 
         /// <summary>
-        /// 可用资金计算方法
+        /// 可用资金是否包含浮动盈亏
         /// </summary>
-        public QSEnumAvabileFundStrategy AvabileFund { get; set; }
+        public bool IncludePositionProfit { get; set; }
+
+
+        /// <summary>
+        /// 浮动盈亏算法
+        /// </summary>
+        public QSEnumAlgorithm Algorithm { get; set; }
+
 
         /// <summary>
         /// 是否支持单向大边保证金制度
@@ -84,5 +121,25 @@ namespace TradingLib.Common
         /// </summary>
         public bool PositionLock { get; set; }
 
+
+        /// <summary>
+        /// 开仓滑点
+        /// </summary>
+        public int EntrySlip { get; set; }
+
+        /// <summary>
+        /// 平仓滑点
+        /// </summary>
+        public int ExitSlip { get; set; }
+
+        /// <summary>
+        /// 限价单检查
+        /// </summary>
+        public bool LimitCheck { get; set; }
+
+        /// <summary>
+        /// 执行概率
+        /// </summary>
+        public int Probability { get; set; }
     }
 }

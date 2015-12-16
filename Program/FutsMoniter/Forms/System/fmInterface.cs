@@ -75,7 +75,7 @@ namespace FutsMoniter
 
         }
 
-        void OnQryInterface(string jsonstr)
+        void OnQryInterface(string jsonstr, bool islast)
         {
             ConnectorInterface[] objs = MoniterUtils.ParseJsonResponse<ConnectorInterface[]>(jsonstr);
             if (objs != null)

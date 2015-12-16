@@ -42,33 +42,58 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\..\Shared\VersionInfo.cs">
+      <Link>VersionInfo.cs</Link>
+    </Compile>
+    <Compile Include="Account\IAccountIndicator.cs" />
     <Compile Include="Account\IAccountService.cs" />
     <Compile Include="Account\IRiskRule.cs" />
     <Compile Include="Contrib\EnumContribCommandHandleType.cs" />
     <Compile Include="Contrib\IPlugin.cs" />
-    <Compile Include="Core\ClearCentre\IAuthCashOperation.cs" />
-    <Compile Include="Core\IRouterManager.cs" />
+    <Compile Include="Core\Function\IAccountManager.cs" />
+    <Compile Include="Core\Function\IClearCentre.cs" />
+    <Compile Include="Core\Function\IDataRepository.cs" />
+    <Compile Include="Core\Function\IBrokerRouter.cs" />
+    <Compile Include="Core\Function\IDataRouter.cs" />
+    <Compile Include="Core\Function\IExCore.cs" />
+    <Compile Include="Core\Function\IFollowCentre.cs" />
+    <Compile Include="Core\Function\ITaskCentre.cs" />
+    <Compile Include="EnumActionCheckResult.cs" />
+    <Compile Include="Enums.cs" />
+    <Compile Include="Module\IModuleAccountManager.cs" />
+    <Compile Include="Module\IModuleAPIExchange.cs" />
+    <Compile Include="Module\IModuleClearCentre.cs" />
+    <Compile Include="Module\IModuleDataRepository.cs" />
+    <Compile Include="Module\IModuleDataRouter.cs" />
+    <Compile Include="Module\IModuleExCore.cs" />
+    <Compile Include="Module\IModuleFollowCentre.cs" />
+    <Compile Include="Module\IModuleMgrExchange.cs" />
+    <Compile Include="Module\IModuleRiskCentre.cs" />
+    <Compile Include="Module\IModuleSettleCentre.cs" />
+    <Compile Include="Module\IModuleTaskCentre.cs" />
+    <Compile Include="Core\Function\IRouterManager.cs" />
     <Compile Include="Account\IGeneralCheck.cs" />
     <Compile Include="Contrib\EnumCommandSource.cs" />
     <Compile Include="Contrib\IContribPlugin.cs" />
-    <Compile Include="Core\Core\ISettleCentre.cs" />
+    <Compile Include="Core\Function\ISettleCentre.cs" />
     <Compile Include="Core\IUtil.cs" />
-    <Compile Include="Core\ITask.cs" />
+    <Compile Include="ITask.cs" />
     <Compile Include="Account\IAccount.cs" />
-    <Compile Include="Core\ClearCentre\IAccountOperation.cs" />
-    <Compile Include="Core\ClearCentre\IBrokerTradingInfo.cs" />
-    <Compile Include="Core\ClearCentre\ITotalAccountInfo.cs" />
-    <Compile Include="Core\Core\IClearCentreSrv.cs" />
     <Compile Include="Contrib\IContrib.cs" />
     <Compile Include="Delegate.cs" />
-    <Compile Include="Core\Core\ICore.cs" />
-    <Compile Include="Core\IServiceManager.cs" />
-    <Compile Include="Core\ITransport.cs" />
-    <Compile Include="Core\Core\IMessageMgr.cs" />
-    <Compile Include="Core\Core\IMessageExchange.cs" />
-    <Compile Include="Core\Core\IRiskCentre.cs" />
+    <Compile Include="Module\ICore.cs" />
+    <Compile Include="Module\IModuleBrokerRouter.cs" />
+    <Compile Include="ServiceManager\IServiceManager.cs" />
+    <Compile Include="ITransport.cs" />
+    <Compile Include="Core\Function\IMessageMgr.cs" />
+    <Compile Include="Core\Function\IMessageExchange.cs" />
+    <Compile Include="Core\Function\IRiskCentre.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ServiceManager\IConnectorManager.cs" />
+    <Compile Include="ServiceManager\IContribManager.cs" />
+    <Compile Include="ServiceManager\ICoreManager.cs" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

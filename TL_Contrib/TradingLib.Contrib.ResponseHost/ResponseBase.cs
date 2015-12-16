@@ -179,7 +179,7 @@ namespace TradingLib.Contrib.ResponseHost
         /// <returns></returns>
         protected Symbol GetSymbol(string symbol)
         {
-            return this.Account.GetSymbol(symbol);
+            return this.Account.Domain.GetSymbol(symbol);
         }
 
         /// <summary>
@@ -189,13 +189,13 @@ namespace TradingLib.Contrib.ResponseHost
         /// <returns></returns>
         protected Tick GetTickSnapshot(string symbol)
         {
-            return TLCtxHelper.CmdUtils.GetTickSnapshot(symbol);
+            return TLCtxHelper.ModuleDataRouter.GetTickSnapshot(symbol);
         }
 
 
         protected void Log(string msg, QSEnumDebugLevel level)
         {
-            Util.Debug(msg, level, Programe);
+            Util.Log(msg, level, Programe);
         }
 
         /// <summary>
@@ -205,7 +205,7 @@ namespace TradingLib.Contrib.ResponseHost
         protected void SendOrder(Order o)
         {
             o.Account = this.Account.ID;
-            TLCtxHelper.CmdUtils.SendOrder(o);
+            TLCtxHelper.ModuleExCore.SendOrder(o);
         }
 
         /// <summary>
@@ -214,7 +214,7 @@ namespace TradingLib.Contrib.ResponseHost
         /// <param name="oid"></param>
         protected void CancelOrder(long oid)
         {
-            TLCtxHelper.CmdUtils.CancelOrder(oid);
+            TLCtxHelper.ModuleExCore.CancelOrder(oid);
         }
         /// <summary>
         /// 买入某个合约

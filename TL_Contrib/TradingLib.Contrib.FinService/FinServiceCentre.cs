@@ -75,7 +75,7 @@ namespace TradingLib.Contrib.FinService
         /// </summary>
         public void OnLoad()
         {
-            debug("FinServiceCentre loading......", QSEnumDebugLevel.INFO);
+            logger.Info("FinServiceCentre loading......");
 
             //从数据库加载参数
             _cfgdb = new ConfigDB(FinServiceCentre.ContribName);
@@ -95,12 +95,12 @@ namespace TradingLib.Contrib.FinService
             IList<Type> types = PluginHelper.GetImplementors("Contrib", typeof(IFinService));
             foreach (Type t in types)
             {
-                debug("Load ServicePlane Type:" + t.FullName, QSEnumDebugLevel.INFO);
+                logger.Info("Load ServicePlane Type:" + t.FullName);
                 //同步服务计划 ServicePlane
                 FinTracker.ServicePlaneTracker.InitServicePlan(t);
             }
 
-            debug("Load Service Instance......", QSEnumDebugLevel.INFO);
+            logger.Info("Load Service Instance......");
             FinTracker.FinServiceTracker.ToArray();
 
 
@@ -120,10 +120,10 @@ namespace TradingLib.Contrib.FinService
             TLCtxHelper.EventIndicator.GotPositionClosedEvent += new PositionRoundClosedDel(EventIndicator_GotPositionClosedEvent);
 
             //帐户添加事件
-            TLCtxHelper.EventAccount.AccountAddEvent += new AccoundIDDel(EventAccount_AccountAddEvent);
+            TLCtxHelper.EventAccount.AccountAddEvent += new Action<IAccount>(EventAccount_AccountAddEvent);
 
             //帐户激活事件
-            TLCtxHelper.EventAccount.AccountActiveEvent += new AccoundIDDel(EventAccount_AccountActiveEvent);
+            TLCtxHelper.EventAccount.AccountActiveEvent += new Action<IAccount>(EventAccount_AccountActiveEvent);
 
             //出入金事件
             TLCtxHelper.EventSystem.CashOperationRequest += new EventHandler<CashOperationEventArgs>(CashOperationEvent_CashOperationRequest);
@@ -186,7 +186,7 @@ namespace TradingLib.Contrib.FinService
         /// <param name="e"></param>
         void EventSystem_BeforeSettleEvent(object sender, SystemEventArgs e)
         {
-            debug("系统将进行结算,结算前配资中心执行交易帐户收费结算 用于收取盘后结算的费用", QSEnumDebugLevel.INFO);
+            logger.Info("系统将进行结算,结算前配资中心执行交易帐户收费结算 用于收取盘后结算的费用");
 
             //1.运行所有配资服务的结算响应回调 比如按每天收取利息 或者按盈利分红的计费模式
             foreach (FinServiceStub stub in FinTracker.FinServiceTracker)
@@ -208,15 +208,23 @@ namespace TradingLib.Contrib.FinService
                 {
                     try
                     {
-                        TLCtxHelper.CmdAuthCashOperation.CashOperation(item.Account, item.TotalFee * -1, "", item.Comment);
+                        CashTransaction txn = new CashTransactionImpl()
+                        {
+                            Account = item.Account,
+                            Amount = item.TotalFee,
+                            EquityType = QSEnumEquityType.OwnEquity,
+                            TxnType = QSEnumCashOperation.WithDraw,
+                            Comment = item.Comment
+                        };
+                        TLCtxHelper.ModuleAccountManager.CashOperation(txn);
                     }
                     catch (FutsRspError ex)
                     {
-                        debug("FinService CashOperation error:" + ex.ErrorMessage, QSEnumDebugLevel.ERROR);
+                        logger.Error("FinService CashOperation error:" + ex.ErrorMessage);
                     }
                     catch (Exception ex)
                     {
-                        debug("FinService CashOperation general error:"+ex.ToString(), QSEnumDebugLevel.ERROR);
+                        logger.Error("FinService CashOperation general error:" + ex.ToString());
                     }
                 }
             }
@@ -231,7 +239,7 @@ namespace TradingLib.Contrib.FinService
         /// <param name="e"></param>
         void EventSystem_AfterSettleEvent(object sender, SystemEventArgs e)
         {
-            debug("核心系统结算完毕,结算后进行代理上财务结算，生成代理算记录", QSEnumDebugLevel.INFO);
+            logger.Info("核心系统结算完毕,结算后进行代理上财务结算，生成代理算记录");
             //1.结算代理商
             foreach (Manager mgr in BasicTracker.ManagerTracker.GetBaseManagers())
             {
@@ -254,7 +262,7 @@ namespace TradingLib.Contrib.FinService
             if (stub == null) return;//不存在对应的配资服务
 
 
-            debug("配资本中心获得出入金事件,对配资服务进行调整", QSEnumDebugLevel.INFO);
+            logger.Info("配资本中心获得出入金事件,对配资服务进行调整");
 
             stub.FinService.OnCashOperation(e.CashOperation);
         }
@@ -265,17 +273,17 @@ namespace TradingLib.Contrib.FinService
         /// 比如默认添加某种类型的配资服务
         /// </summary>
         /// <param name="account"></param>
-        void EventAccount_AccountAddEvent(string account)
+        void EventAccount_AccountAddEvent(IAccount account)
         {
             if (_addservice)
             {
                 DBServicePlan sp = FinTracker.ServicePlaneTracker[_defaultspclassname];
-                IAccount acc = TLCtxHelper.CmdAccount[account];
+                //IAccount acc = TLCtxHelper.ModuleAccountManager[account];
                 //如果是实盘帐号则默认给他开通配资服务
-                if (acc != null && sp != null && (acc.Category == QSEnumAccountCategory.REAL))
+                if (sp != null && (account.Category == QSEnumAccountCategory.SUBACCOUNT))
                 {
                     //如果帐户存在并且服务计划存在 则为该帐户添加对应的配资服务
-                    FinTracker.FinServiceTracker.AddFinService(account, sp.ID);
+                    FinTracker.FinServiceTracker.AddFinService(account.ID, sp.ID);
                 }
             }
         }
@@ -285,12 +293,12 @@ namespace TradingLib.Contrib.FinService
         /// 用于重置服务相关状态
         /// </summary>
         /// <param name="account"></param>
-        void EventAccount_AccountActiveEvent(string account)
+        void EventAccount_AccountActiveEvent(IAccount account)
         {
-            FinServiceStub stub = FinTracker.FinServiceTracker[account];
+            FinServiceStub stub = FinTracker.FinServiceTracker[account.ID];
             if (stub == null) return;//不存在对应的配资服务
 
-            stub.FinService.OnAccountActive(account);
+            stub.FinService.OnAccountActive(account.ID);
 
         }
     }

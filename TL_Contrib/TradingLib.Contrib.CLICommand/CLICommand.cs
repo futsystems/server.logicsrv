@@ -21,7 +21,7 @@ namespace TradingLib.Contrib.CLICommand
         /// </summary>
         public void OnLoad() 
         {
-            debug("CommandCabinet loaded....", QSEnumDebugLevel.INFO);
+            logger.Info("CommandCabinet loaded....");
         }
 
         /// <summary>

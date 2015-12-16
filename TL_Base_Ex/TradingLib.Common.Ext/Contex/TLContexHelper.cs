@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using TradingLib.API;
 using System.Reflection;
+using Autofac;
 
 namespace TradingLib.Common
 {
@@ -15,33 +16,30 @@ namespace TradingLib.Common
         private static TLCtxHelper defaultInstance;
         private TLContext ctx;
 
-        /// <summary>
-        /// 交易类事件与消息
-        /// </summary>
-        private IndicatorEvent m_IndicatorEvent;
+        static ILifetimeScope _scope = null;
+        public static ILifetimeScope Scope {
 
-        /// <summary>
-        /// 回话类 注册 注销 登入
-        /// </summary>
-        private SessionEvent<TrdClientInfo> m_SessionEvent;
+            get 
+            {
+                if (_scope == null)
+                    throw new NullReferenceException("Globle Scope not setted");
+                return _scope;
+            }
+        }
 
-        /// <summary>
-        /// 帐户类事件
-        /// </summary>
-        private AccountEvent m_AccountEvent;
-
-        /// <summary>
-        /// 扩展事件
-        /// </summary>
-        private ExContribEvent m_ExContribEvent;
-
-        /// <summary>
-        /// 系统类事件
-        /// </summary>
-        private SystemEvent m_SystemEvent;
-
+        public static void RegisterScope(ILifetimeScope scope)
+        {
+            _scope = scope;
+        }
 
         private IUtil m_util;
+
+
+        /// <summary>
+        /// 启动时间
+        /// </summary>
+        public static long StartUpTime { get; set; }
+
 
         public static bool IsReady { get; set; }
 
@@ -64,21 +62,12 @@ namespace TradingLib.Common
 
         public static void PrintVersion()
         {
-            Console.WriteLine();
-            Console.ForegroundColor = ConsoleColor.Green;
-            Console.WriteLine("".PadLeft(Util.GetAvabileConsoleWidth() / 2 - 1, '.'));
-            //Version:0.65
-            Util.ConsoleColorStatus(string.Format(". Version:{0}",Version.Version), ".", QSEnumInfoColor.INFOGREEN, QSEnumInfoColor.INFOGREEN);
-            Util.ConsoleColorStatus(string.Format(". Build:{0}", Version.BuildNum), ".", QSEnumInfoColor.INFOGREEN, QSEnumInfoColor.INFOGREEN);
-            
-            Util.ConsoleColorStatus(string.Format(". LastUpdate:{0}", "20141123"), ".", QSEnumInfoColor.INFOGREEN, QSEnumInfoColor.INFOGREEN);
-            Util.ConsoleColorStatus(string.Format(". Author:{0}", "QianBo"), ".", QSEnumInfoColor.INFOGREEN, QSEnumInfoColor.INFOGREEN);
-            
-            Console.ForegroundColor = ConsoleColor.Green;
-            Console.WriteLine("".PadLeft(Util.GetAvabileConsoleWidth() / 2 - 1, '.'));
-            Console.WriteLine();
-            Console.WriteLine();
-            Console.ForegroundColor = ConsoleColor.Gray;
+            Util.Info("");
+            Util.WriteSectionLine();
+            Util.Info(string.Format(". Version:{0}", Version.Version));
+            Util.Info(string.Format(". Build:{0}", Version.BuildNum));
+            Util.Info(string.Format(". LastUpdate:{0}", "20141123"));
+            Util.Info(string.Format(". Author:{0}", "QianBo"));
         }
 
 
@@ -88,7 +77,7 @@ namespace TradingLib.Common
             IsReady = false;
         }
 
-        public TLCtxHelper()
+        private TLCtxHelper()
         {
             this.ctx = new TLContext();
             this.m_IndicatorEvent = new IndicatorEvent();
@@ -123,6 +112,38 @@ namespace TradingLib.Common
                 return defaultInstance.ctx;
             }
         }
+
+
+        #region 全局事件
+        /// <summary>
+        /// 交易类事件与消息
+        /// </summary>
+        private IndicatorEvent m_IndicatorEvent;
+
+        /// <summary>
+        /// 回话类 注册 注销 登入
+        /// </summary>
+        private SessionEvent<TrdClientInfo> m_SessionEvent;
+
+        /// <summary>
+        /// 帐户类事件
+        /// </summary>
+        private AccountEvent m_AccountEvent;
+
+        /// <summary>
+        /// 扩展事件
+        /// </summary>
+        private ExContribEvent m_ExContribEvent;
+
+        /// <summary>
+        /// 系统类事件
+        /// </summary>
+        private SystemEvent m_SystemEvent;
+
+        /// <summary>
+        /// 路右侧事件
+        /// </summary>
+        private RouterEvent m_RouterEvent;
 
         /// <summary>
         /// 交易信息类事件集合
@@ -190,47 +211,50 @@ namespace TradingLib.Common
         }
 
         /// <summary>
-        /// 交易帐号类操作
+        /// 路右侧事件
         /// </summary>
-        public static IAccountOperation CmdAccount
+        public static RouterEvent EventRouter
         {
             get
             {
-                return defaultInstance.ctx.ClearCentre as IAccountOperation;
+                if (defaultInstance.m_RouterEvent == null)
+                    defaultInstance.m_RouterEvent = new RouterEvent();
+                return defaultInstance.m_RouterEvent;
             }
         }
+        #endregion
 
-        /// <summary>
-        /// 认证与出入金请求
-        /// </summary>
-        public static IAuthCashOperation CmdAuthCashOperation
-        {
-            get
-            {
-                return defaultInstance.ctx.ClearCentre as IAuthCashOperation;
-            }
-        }
 
+
+        #region 全局模块对象 通过scope自动获得
+        static ISettleCentre _settlecentre = null;
         /// <summary>
         /// 结算中心
         /// </summary>
-        public static ISettleCentre CmdSettleCentre
+        public static ISettleCentre ModuleSettleCentre
         {
             get
             {
-                return defaultInstance.ctx.SettleCentre as ISettleCentre;
+                if (_settlecentre == null)
+                    _settlecentre = _scope.Resolve<ISettleCentre>();
+                return _settlecentre;
+                //return defaultInstance.ctx.SettleCentre as ISettleCentre;
             }
         }
 
 
+        static IRiskCentre _riskcentre = null;
         /// <summary>
         /// 风控中心
         /// </summary>
-        public static IRiskCentre CmdRiskCentre
+        public static IRiskCentre ModuleRiskCentre
         {
             get
             {
-                return defaultInstance.ctx.RiskCentre as IRiskCentre;
+                if (_riskcentre == null)
+                    _riskcentre = _scope.Resolve<IRiskCentre>();
+                return _riskcentre;
+                //return defaultInstance.ctx.RiskCentre as IRiskCentre;
             }
         }
 
@@ -246,6 +270,139 @@ namespace TradingLib.Common
                 return defaultInstance.m_util;
             }
         }
+
+        static IBrokerRouter _brokerrouter = null;
+        /// <summary>
+        /// 交易路由服务
+        /// </summary>
+        public static IBrokerRouter ModuleBrokerRouter
+        {
+            get
+            {
+                if (_brokerrouter == null)
+                    _brokerrouter = _scope.Resolve<IBrokerRouter>();
+                return _brokerrouter;// defaultInstance.ctx.BrokerRouter as IBrokerRouter;
+            }
+        }
+
+        static IDataRouter _datarouter = null;
+        /// <summary>
+        /// 行情路由服务
+        /// </summary>
+        public static IDataRouter ModuleDataRouter
+        {
+            get
+            {
+                if (_datarouter == null)
+                    _datarouter = _scope.Resolve<IDataRouter>();
+                return _datarouter;
+            }
+        }
+
+        static IDataRepository _datarepository = null;
+        /// <summary>
+        /// 交易记录读写服务
+        /// </summary>
+        public static IDataRepository ModuleDataRepository
+        {
+            get
+            {
+                if (_datarepository == null)
+                    _datarepository = _scope.Resolve<IDataRepository>();
+                return _datarepository;
+            }
+        }
+
+
+        static IAccountManager _accountmanager = null;
+        /// <summary>
+        /// 交易账户管理服务
+        /// </summary>
+        public static IAccountManager ModuleAccountManager
+        {
+            get
+            {
+                if (_accountmanager == null)
+                    _accountmanager = _scope.Resolve<IAccountManager>();
+                return _accountmanager;
+            }
+        }
+
+        static IClearCentre _clearcenre = null;
+        /// <summary>
+        /// 清算服务
+        /// 如果按原来的方式 通过BaseSrvObj进行注册，则需要按照先后顺序进行调用
+        /// 比如初始化到AccountManager时 需要加载交易帐户，加载交易帐户的过程中又需要将该帐户Cache到清算中心
+        /// 此时如果清算中心没有生成，则会造成nullreference异常，
+        /// 如果统一使用autofac容器来自动加载，则使用到该对象时，会自行加载
+        /// 
+        /// 注意：需要减少对象初始化时相互依赖，如果形成依赖循环则程序就会无法初始化造成崩溃。
+        /// 始终整理清楚初始化顺序是有必要的
+        /// </summary>
+        public static IClearCentre ModuleClearCentre
+        {
+            get
+            {
+                //方式1
+                //return defaultInstance.ctx.ClearCentre2;
+
+                //方式2
+                if (_clearcenre == null)
+                    _clearcenre = _scope.Resolve<IClearCentre>();
+                return _clearcenre;
+            }
+        }
+
+        static IRouterManager _routermanager = null;
+        /// <summary>
+        /// 路由服务管理
+        /// </summary>
+        public static IRouterManager ServiceRouterManager
+        {
+            get
+            {
+                if (_routermanager == null)
+                    _routermanager = _scope.Resolve<IRouterManager>();
+                return _routermanager;
+            }
+        }
+
+        static IExCore _excore = null;
+        /// <summary>
+        /// 系统 交易核心
+        /// </summary>
+        public static IExCore ModuleExCore
+        {
+            get
+            {
+                if (_excore == null)
+                    _excore = _scope.Resolve<IExCore>();
+                return _excore;
+            }
+        }
+
+        static ITaskCentre _taskcentre = null;
+        public static ITaskCentre ModuleTaskCentre
+        {
+            get
+            {
+                if (_taskcentre == null)
+                    _taskcentre = _scope.Resolve<ITaskCentre>();
+                return _taskcentre;
+            }
+        }
+
+        static IMgrExchange _mgrexchange = null;
+        public static IMgrExchange ModuleMgrExchange
+        {
+            get
+            {
+                if (_mgrexchange == null)
+                    _mgrexchange = _scope.Resolve<IMgrExchange>();
+                return _mgrexchange;
+            }
+        }
+        #endregion
 
 
         /// <summary>

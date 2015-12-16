@@ -44,7 +44,7 @@ namespace TradingLib.API
         /// <summary>
         /// 入场时间
         /// </summary>
-        DateTime EntryTime { get; }
+        long EntryTime { get; }
 
         /// <summary>
         /// 开仓手数
@@ -64,7 +64,7 @@ namespace TradingLib.API
         /// <summary>
         /// 平仓时间
         /// </summary>
-        DateTime? ExitTime { get; }
+        long ExitTime { get; }
 
         /// <summary>
         /// 平仓数量

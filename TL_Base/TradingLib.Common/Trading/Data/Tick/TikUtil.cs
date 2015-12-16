@@ -174,12 +174,12 @@ namespace TradingLib.Common
         /// </summary>
         /// <param name="bl"></param>
         /// <returns></returns>
-        public static Tick[] Barlist2Tick(BarList bl)
-        {
-            List<Tick> k = new List<Tick>(bl.Count * 4);
-            foreach (Bar b in bl)
-                k.AddRange(BarImpl.ToTick(b));
-            return k.ToArray();
-        }
+        //public static Tick[] Barlist2Tick(BarList bl)
+        //{
+        //    List<Tick> k = new List<Tick>(bl.Count * 4);
+        //    foreach (Bar b in bl)
+        //        k.AddRange(BarImpl.ToTick(b));
+        //    return k.ToArray();
+        //}
     }
 }

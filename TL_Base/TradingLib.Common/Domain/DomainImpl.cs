@@ -30,8 +30,11 @@ namespace TradingLib.Common
             this.Module_FinService = false;
             this.Module_PayOnline = false;
             this.Module_SubAgent = false;
+            this.Module_Follow = false;
+            
             this.Router_Live = true;
             this.Router_Sim = true;
+            this.Switch_Router = true;
             this.Misc_InsertTrade = false;
 
 
@@ -75,6 +78,12 @@ namespace TradingLib.Common
         /// 帐户数目限制
         /// </summary>
         public int AccLimit { get; set; }
+
+
+        /// <summary>
+        /// 代理数量限制
+        /// </summary>
+        public int AgentLimit { get; set; }
 
 
         /// <summary>
@@ -144,6 +153,15 @@ namespace TradingLib.Common
         /// </summary>
         public bool Module_PayOnline { get; set; }
 
+        /// <summary>
+        /// 跟单模块
+        /// </summary>
+        public bool Module_Follow { get; set; }
+
+        /// <summary>
+        /// 滑点模块
+        /// </summary>
+        public bool Module_Slip { get; set; }
 
         /// <summary>
         /// 实盘路由
@@ -156,6 +174,11 @@ namespace TradingLib.Common
         public bool Router_Sim { get; set; }
 
         /// <summary>
+        /// 切换路由模式
+        /// </summary>
+        public bool Switch_Router { get; set; }
+
+        /// <summary>
         /// 调试插入成交
         /// </summary>
         public bool Misc_InsertTrade { get; set; }
@@ -164,5 +187,16 @@ namespace TradingLib.Common
         /// 
         /// </summary>
         public int CFG_SyncVendor_ID { get; set; }
+
+        /// <summary>
+        /// 是否处于运营状态
+        /// </summary>
+        public bool IsProduction { get; set; }
+
+        /// <summary>
+        /// 分帐户个数
+        /// </summary>
+        public int DiscountNum { get; set; }
+
     }
 }

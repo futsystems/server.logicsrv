@@ -32,7 +32,7 @@ namespace TradingLib.Contrib.FinService.ORM
         {
             using (DBMySql db = new DBMySql())
             {
-                string query = string.Format("SELECT * FROM log_service_feecharge WHERE settleday = '{0}' AND collecttype='{1}'", TLCtxHelper.CmdSettleCentre.NextTradingday, EnumFeeCollectType.CollectAfterSettle);
+                string query = string.Format("SELECT * FROM log_service_feecharge WHERE settleday = '{0}' AND collecttype='{1}'", TLCtxHelper.ModuleSettleCentre.Tradingday, EnumFeeCollectType.CollectAfterSettle);
                 return db.Connection.Query<FeeChargeItem>(query);
             }
         }

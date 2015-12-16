@@ -85,5 +85,21 @@ namespace TradingLib.ORM
                 return db.Connection.Execute(query) >= 0;
             }
         }
+
+
+        /// <summary>
+        /// 加载所有账户的风控规则设置
+        /// </summary>
+        /// <returns></returns>
+        public static IEnumerable<RuleItem> SelectAllRuleItems()
+        {
+            using (DBMySql db = new DBMySql())
+            {
+                string query = "SELECT * FROM cfg_rule";
+                IEnumerable<RuleItem> result = db.Connection.Query<RuleItem>(query);
+                return result;
+            }
+        }
+
     }
 }

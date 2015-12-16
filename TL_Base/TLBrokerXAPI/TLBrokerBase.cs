@@ -18,8 +18,6 @@ namespace TradingLib.BrokerXAPI
 
         public IBrokerClearCentre ClearCentre { get; set; }
 
-
-
         #region 交易回报事件事件
         /// <summary>
         /// 当数据服务器登入成功后调用
@@ -30,6 +28,7 @@ namespace TradingLib.BrokerXAPI
             if (Connected != null)
                 Connected(this.Token);
         }
+
         /// <summary>
         /// 当数据服务器断开后触发事件
         /// </summary>
@@ -38,6 +37,40 @@ namespace TradingLib.BrokerXAPI
         {
             if (Disconnected != null)
                 Disconnected(this.Token);
+        }
+
+        /// <summary>
+        /// 交易记录同步开始事件
+        /// </summary>
+        public event IConnecterParamDel ExDataSyncStart;
+
+        protected void NotifyExDataSyncStart()
+        {
+            if (ExDataSyncStart != null)
+                ExDataSyncStart(this.Token);
+        }
+
+        /// <summary>
+        /// 交易记录同步完成事件
+        /// 用于通知接口交易记录已经恢复和同步
+        /// 依赖于该同步的操作可以得到通知
+        /// </summary>
+        public event IConnecterParamDel ExDataSyncEnd;
+
+        protected void NotifyExDataSyncEnd()
+        {
+            if (ExDataSyncEnd != null)
+                ExDataSyncEnd(this.Token);
+        }
+
+        public event Action<RspInfo> GotRspInfoEvent;
+        protected void NotifyMessage(XErrorField message)
+        {
+            RspInfo info = new RspInfoImpl();
+            info.ErrorID = message.ErrorID;
+            info.ErrorMessage = message.ErrorMsg;
+            if (GotRspInfoEvent != null)
+                GotRspInfoEvent(info);
         }
 
         /// <summary>
@@ -95,6 +128,15 @@ namespace TradingLib.BrokerXAPI
                 GotOrderActionErrorEvent(acton, info);
         }
 
+
+        public event Action<PositionDetail> GotHistPositionDetail;
+        protected void NotifyHistPositoinDetail(PositionDetail pos)
+        {
+            debug("Notify HistPositionDetail", QSEnumDebugLevel.INFO);
+            if (GotHistPositionDetail != null)
+                GotHistPositionDetail(pos);
+        }
+
         /// <summary>
         /// 向外通知合约回报
         /// </summary>
@@ -104,6 +146,71 @@ namespace TradingLib.BrokerXAPI
             //debug("Notify SymbolEvent", QSEnumDebugLevel.INFO);
             if (GotSymbolEvent != null)
                 GotSymbolEvent(symbol, islast);
+        }
+
+        public event Action<TLBroker,XAccountInfo, bool> GotAccountInfoEvent;
+        protected void NotifyAccountInfo(TLBroker broker, XAccountInfo accountInfo,bool islast)
+        {
+            if (GotAccountInfoEvent != null)
+                GotAccountInfoEvent(broker,accountInfo, islast);
+        }
+
+        public event Action<XOrderField, bool> GotQryOrderEvent;
+        protected void NotifyQryOrder(XOrderField order, bool islast)
+        {
+
+            try
+            {
+                //Console.WriteLine("xxxxxxxxxxx");
+                if (GotQryOrderEvent != null)
+                    GotQryOrderEvent(order, islast);
+            }
+            catch (Exception ex)
+            {
+                Util.Error("NotifyQryOrder Error:" + ex.ToString());
+            }
+        }
+
+        public event Action<XTradeField, bool> GotQryTradeEvent;
+        protected void NotifyQryTrade(XTradeField trade, bool islast)
+        {
+            try
+            {
+                if (GotQryTradeEvent != null)
+                    GotQryTradeEvent(trade, islast);
+            }
+            catch (Exception ex)
+            {
+
+            }
+        }
+
+        public event Action<XPositionDetail, bool> GotQryPositionDetailEvent;
+        protected void NotifyQryPositionDetail(XPositionDetail position, bool islast)
+        {
+            try
+            {
+                if (GotQryPositionDetailEvent != null)
+                    GotQryPositionDetailEvent(position, islast);
+            }
+            catch (Exception ex)
+            { 
+                
+            }
+        }
+
+        public event Action<TLBroker, XTransferField, bool> GotTransferEvent;
+        protected void NotifyTransfer(TLBroker broker, XTransferField txn, bool islast)
+        {
+            try
+            {
+                if (GotTransferEvent != null)
+                    GotTransferEvent(broker, txn, islast);
+            }
+            catch (Exception ex)
+            { 
+                
+            }
         }
         /// <summary>
         /// 获得当前Tick的市场快照,模拟成交时需要获得当前市场快照用于进行取价操作
@@ -116,7 +223,6 @@ namespace TradingLib.BrokerXAPI
             return null;
         }
         #endregion
-
 
         #region 配置信息
 
@@ -197,6 +303,7 @@ namespace TradingLib.BrokerXAPI
         }
         
 
+
         #endregion
 
 
@@ -228,11 +335,7 @@ namespace TradingLib.BrokerXAPI
         //[Conditional("DEBUG")]
         protected void debug(string msg, QSEnumDebugLevel level = QSEnumDebugLevel.DEBUG)
         {
-            if (_debugEnable && (int)level <= (int)_debuglevel && SendLogItemEvent != null)
-            {
-                ILogItem item = new LogItem(msg, level, this.Token);
-                SendLogItemEvent(item);
-            }
+            Util.Log(msg, level);
         }
         #endregion
 

@@ -24,12 +24,29 @@ namespace TradingLib.API
     /// IAccRiskCheck:交易帐户风控规则检查,添加删除委托风控规则或帐户风控规则
     /// IAccOperation:交易帐户操作接口
     /// </summary>
-    public interface IAccount : IFinanceTotal,IAccCal, IAccTradingInfo, IAccOperation,IGeneralCheck,IRiskRule,IAccConfig
+    public interface IAccount : IFinanceTotal, IAccCal, IAccTradingInfo, IAccOperation, IGeneralCheck, IRiskRule, IAccConfig, IAccountIndicator
     {
 
         #region 交易帐号服务类相关操作
+        /// <summary>
+        /// 绑定交易帐户服务
+        /// </summary>
+        /// <param name="service"></param>
+        /// <param name="force"></param>
         void BindService(IAccountService service, bool force = true);
+
+        /// <summary>
+        /// 解绑帐户服务
+        /// </summary>
+        /// <param name="service"></param>
         void UnBindService(IAccountService service);
+
+        /// <summary>
+        /// 获得某个交易帐户服务
+        /// </summary>
+        /// <param name="sn"></param>
+        /// <param name="service"></param>
+        /// <returns></returns>
         bool GetService(string sn, out IAccountService service);
         #endregion
 
@@ -42,6 +59,13 @@ namespace TradingLib.API
         /// 是否可以进行交易
         /// </summary>
         bool Execute { get; set; }
+
+        /// <summary>
+        /// 是否处于警告状态
+        /// </summary>
+        bool IsWarn { get; set; }
+
+
 
         /// <summary>
         /// 是否日内交易
@@ -58,31 +82,17 @@ namespace TradingLib.API
         /// </summary>
         QSEnumAccountCategory Category { get; set; }
 
+
+        /// <summary>
+        /// 货币类别
+        /// </summary>
+        CurrencyType Currency { get; set; }
+
+
         /// <summary>
         /// MAC地址 用于标注客户端硬件
         /// </summary>
         string MAC { get; set; }
-
-        /// <summary>
-        /// 帐户Name 用于储存帐户名称
-        /// </summary>
-        string Name { get; set; }
-
-        /// <summary>
-        /// 帐户
-        /// </summary>
-        string Broker { get; set; }
-
-        /// <summary>
-        /// 银行
-        /// </summary>
-        int BankID { get; set; }
-
-        /// <summary>
-        /// 银行帐号
-        /// </summary>
-        string BankAC { get; set; }
-
 
         /// <summary>
         /// 账户建立时间
@@ -99,20 +109,7 @@ namespace TradingLib.API
         /// </summary>
         long SettlementConfirmTimeStamp { get; set; }
 
-        /// <summary>
-        /// 是否允许锁仓
-        /// </summary>
-        //bool PosLock { get; set; }
-
-        /// <summary>
-        /// 单向大边
-        /// </summary>
-        //bool SideMargin { get; set; }
-
-        /// <summary>
-        /// 客户端信用额度分开显示
-        /// </summary>
-        //bool CreditSeparate { get; set; }
+       
 
         /// <summary>
         /// 帐号隶属于哪个管理员
@@ -128,6 +125,7 @@ namespace TradingLib.API
         /// </summary>
         int RG_FK { get; set; }
 
+        #region 模板编号
         /// <summary>
         /// 手续费模板ID
         /// </summary>
@@ -143,6 +141,34 @@ namespace TradingLib.API
         /// </summary>
         int ExStrategy_ID { get; set; }
 
+        #endregion
+
+
+        /// <summary>
+        /// 帐户加载交易所结算记录
+        /// </summary>
+        /// <param name="settle"></param>
+        void LoadExchangeSettlement(ExchangeSettlement settle);
+
+
+        /// <summary>
+        /// 执行某个交易所 某个交易日的结算
+        /// </summary>
+        /// <param name="exchange"></param>
+        /// <param name="settleday"></param>
+        void SettleExchange(IExchange exchange, int settleday);
+
+        /// <summary>
+        /// 交易账户执行账户结算
+        /// </summary>
+        void SettleAccount(int settleday);
+
+        /// <summary>
+        /// 出入金操作
+        /// </summary>
+        /// <param name="txn"></param>
+        void CashTrans(CashTransaction txn);
+
         /// <summary>
         /// 域ID
         /// </summary>
@@ -154,17 +180,20 @@ namespace TradingLib.API
         int UserID { get; set; }
 
 
-        /// <summary>
-        /// 入金接口
-        /// </summary>
-        /// <param name="amount"></param>
-        void Deposit(decimal amount);
+        #region 交易回话类
 
         /// <summary>
-        /// 出金接口
+        /// 是否登入
         /// </summary>
-        /// <param name="amount"></param>
-        void Withdraw(decimal amount);
+        bool IsLogin { get; set; }
+
+        /// <summary>
+        /// 回话信息 
+        /// </summary>
+        string SessionInfo { get; set; }
+
+        #endregion
+
 
         /// <summary>
         /// 重置账户状态,用于每日造成开盘时,重置数据 
@@ -175,6 +204,14 @@ namespace TradingLib.API
         /// 删除标志，如果已经删除 则管理端不显示，下次启动不会加载
         /// </summary>
         bool Deleted { get; set; }
+
+
+        /// <summary>
+        /// 获得帐户交易通知
+        /// </summary>
+        /// <returns></returns>
+        IEnumerable<string> GetNotice();
+        
 
     }
 

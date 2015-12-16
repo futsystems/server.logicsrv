@@ -129,9 +129,12 @@
     <Reference Include="TradingLib.Mixins">
       <HintPath>..\..\lib\TradingLib\TradingLib.Mixins.dll</HintPath>
     </Reference>
+    <Reference Include="TradingLib.MoniterControl, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\lib\TradingLib\TradingLib.MoniterControl.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="API\IEventBinder.cs" />
     <Compile Include="API\ILogicHandler\ILogicHandler_.cs" />
     <Compile Include="API\ILogicHandler\ILogicHandler_Contrib.cs" />
     <Compile Include="API\ILogicHandler\ILogicHandler_Basic.cs" />
@@ -140,6 +143,7 @@
     <Compile Include="API\ILogicHandler\ILogicHandler_Account.cs" />
     <Compile Include="Client\AsyncClient_MQ.cs" />
     <Compile Include="Client\PacketHandler\TLClientNet_Request_.cs" />
+    <Compile Include="Client\Request\TLClientNet_Request_ExCore_Exchange.cs" />
     <Compile Include="Client\Request\TLClientNet_Request_ExStrategy.cs" />
     <Compile Include="Client\Request\TLClientNet_Request_CommissionMargin.cs" />
     <Compile Include="Client\Request\TLClientNet_Request_HistQry.cs" />
@@ -158,6 +162,7 @@
     <Compile Include="Client\Request\TLClientNet_Request_Msic.cs" />
     <Compile Include="Client\Request\TLClientNet_Request_Manager.cs" />
     <Compile Include="Client\Request\TLClientNet_Request_log.cs" />
+    <Compile Include="Client\Request\TLClientNet_Request_AccountConnector.cs" />
     <Compile Include="Common\BasicInfoTracker\BasicInfoTracker_.cs" />
     <Compile Include="Common\BasicInfoTracker\BasicInfoTracker_BasicInfo.cs" />
     <Compile Include="Common\BasicInfoTracker\BasicInfoTracker_Rule.cs" />
@@ -332,6 +337,18 @@
     <Compile Include="Forms\Account\fmChangeRouter.Designer.cs">
       <DependentUpon>fmChangeRouter.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\Account\fmBindConnector.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\Account\fmBindConnector.Designer.cs">
+      <DependentUpon>fmBindConnector.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\Account\fmConnectorAccountInfo.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\Account\fmConnectorAccountInfo.Designer.cs">
+      <DependentUpon>fmConnectorAccountInfo.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\Basic\CommissionMargin\fmCommission.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -452,6 +469,12 @@
     </Compile>
     <Compile Include="Forms\Finance\fmAccountCashReq.Designer.cs">
       <DependentUpon>fmAccountCashReq.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\System\ConnectorManager\fmConnectorManager.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\System\ConnectorManager\fmConnectorManager.Designer.cs">
+      <DependentUpon>fmConnectorManager.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\System\fmLogTaskEvent.cs">
       <SubType>Form</SubType>
@@ -784,7 +807,6 @@
     <Compile Include="LoginForm.Designer.cs">
       <DependentUpon>LoginForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="LogServer.cs" />
     <Compile Include="MainForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -806,12 +828,17 @@
     <Compile Include="MainForm_Ribbon.cs">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="MoniterControlHelper.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Common\SplashScreenApplication.cs" />
     <Compile Include="Utils.cs" />
     <Compile Include="Globals_RegEvent.cs" />
     <Compile Include="MainForm_Page.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="WrapperCTX.cs" />
+    <Compile Include="MainForm_Plugin.cs">
       <SubType>Form</SubType>
     </Compile>
     <EmbeddedResource Include="Controls\Base\ctAccountType.resx">
@@ -880,6 +907,12 @@
     <EmbeddedResource Include="Forms\Account\fmChangeRouter.resx">
       <DependentUpon>fmChangeRouter.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Account\fmBindConnector.resx">
+      <DependentUpon>fmBindConnector.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Account\fmConnectorAccountInfo.resx">
+      <DependentUpon>fmConnectorAccountInfo.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Forms\Basic\CommissionMargin\fmCommission.resx">
       <DependentUpon>fmCommission.cs</DependentUpon>
     </EmbeddedResource>
@@ -933,6 +966,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Finance\fmAccountCashReq.resx">
       <DependentUpon>fmAccountCashReq.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\System\ConnectorManager\fmConnectorManager.resx">
+      <DependentUpon>fmConnectorManager.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\System\fmLogTaskEvent.resx">
       <DependentUpon>fmLogTaskEvent.cs</DependentUpon>
@@ -1111,6 +1147,10 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <None Include="images\update-24.png" />
+    <None Include="images\cashop.png" />
+    <None Include="images\cashop2.png" />
+    <None Include="images\clearterminal.png" />
     <Content Include="moniter_terminal.ico" />
     <None Include="resources\moniter_terminal.ico" />
     <None Include="resources\deleteaccount.png" />

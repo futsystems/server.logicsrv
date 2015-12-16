@@ -19,13 +19,16 @@ namespace TradingLib.Common
     {
         ConcurrentDictionary<long, Order> ordermap = new ConcurrentDictionary<long, Order>();
         ConcurrentDictionary<long, Trade> trademap = new ConcurrentDictionary<long, Trade>();
+
+        ConcurrentDictionary<string, Trade> tradeIdMap = new ConcurrentDictionary<string, Trade>();
+
         ConcurrentDictionary<string, Position> positionmap = new ConcurrentDictionary<string, Position>();
 
-        public IEnumerable<Order> TotalOrders { get { return ordermap.Values; } }
+        public IEnumerable<Order> TotalOrders { get { return ordermap.Values.Where(o=>!o.Settled); } }
 
-        public IEnumerable<Trade> TotalTrades { get { return trademap.Values; } }
+        public IEnumerable<Trade> TotalTrades { get { return trademap.Values.Where(f=>!f.Settled); } }
 
-        public IEnumerable<Position> TotalPositions { get { return positionmap.Values; } }
+        public IEnumerable<Position> TotalPositions { get { return positionmap.Values.Where(p=>!p.Settled); } }
 
         /// <summary>
         /// 通过OrderId获得该Order
@@ -38,6 +41,21 @@ namespace TradingLib.Common
             if (ordermap.TryGetValue(oid, out o))
             {
                 return o;
+            }
+            return null;
+        }
+
+        /// <summary>
+        /// 通过成交编号获得对应的成交
+        /// </summary>
+        /// <param name="tradeid"></param>
+        /// <returns></returns>
+        public Trade FilledTrade(string tradeid)
+        {
+            Trade f = null;
+            if (tradeIdMap.TryGetValue(tradeid, out f))
+            {
+                return f;
             }
             return null;
         }
@@ -56,6 +74,15 @@ namespace TradingLib.Common
             positionmap.TryAdd(pos.GetPositionKey(), pos);
         }
 
+        /// <summary>
+        /// 去除某个持仓数据
+        /// </summary>
+        /// <param name="pos"></param>
+        public void DropPosition(Position pos)
+        {
+            Position tmp = null;
+            positionmap.TryRemove(pos.GetPositionKey(), out tmp);
+        }
 
         /// <summary>
         /// 当有新的委托进入系统时记录该委托
@@ -67,14 +94,34 @@ namespace TradingLib.Common
         }
 
         /// <summary>
+        /// 去除某个委托数据
+        /// </summary>
+        /// <param name="o"></param>
+        public void DropOrder(Order o)
+        { 
+            Order tmp=null;
+            ordermap.TryRemove(o.id, out tmp);
+        }
+        /// <summary>
         /// 新成交
         /// </summary>
         /// <param name="fill"></param>
         public void NewFill(Trade fill)
         {
             trademap.TryAdd(fill.id, fill);
+            //建立成交编号与成交映射关系
+            tradeIdMap.TryAdd(fill.TradeID, fill);
         }
 
+        /// <summary>
+        /// 去除某个成交数据
+        /// </summary>
+        /// <param name="fill"></param>
+        public void DropFill(Trade fill)
+        {
+            Trade tmp = null;
+            trademap.TryRemove(fill.id, out tmp);
+        }
 
 
         public void Clear()

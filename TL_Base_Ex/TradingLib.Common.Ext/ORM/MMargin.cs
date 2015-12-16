@@ -18,7 +18,7 @@ namespace TradingLib.ORM
         {
             using (DBMySql db = new DBMySql())
             {
-                string query = string.Format("INSERT INTO cfg_margin_template (`name`,`description`,`domain_id`) VALUES ( '{0}','{1}','{2}')", t.Name, t.Description, t.Domain_ID);
+                string query = string.Format("INSERT INTO cfg_margin_template (`name`,`description`,`domain_id`,`manager_id`) VALUES ( '{0}','{1}','{2}','{3}')", t.Name, t.Description, t.Domain_ID,t.Manager_ID);
                 int row = db.Connection.Execute(query);
                 SetIdentity(db.Connection, id => t.ID = id, "id", "cfg_margin_template");
             }
@@ -36,6 +36,23 @@ namespace TradingLib.ORM
                 db.Connection.Execute(query);
             }
         }
+
+        /// <summary>
+        /// 删除某个保证金模板
+        /// </summary>
+        /// <param name="template_id"></param>
+        public static void DeleteMarginTemplate(int template_id)
+        {
+            using (DBMySql db = new DBMySql())
+            {
+                string query = string.Format("DELETE FROM cfg_margin_template WHERE id={0}", template_id);
+                db.Connection.Execute(query);
+
+                query = string.Format("DELETE FROM cfg_margin WHERE template_id={0}", template_id);
+                db.Connection.Execute(query);
+            }
+        }
+
 
         /// <summary>
         /// 获得所有手续费模板

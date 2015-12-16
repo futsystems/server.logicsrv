@@ -30,6 +30,15 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Autofac">
+      <HintPath>..\..\lib\Autofac.dll</HintPath>
+    </Reference>
+    <Reference Include="Common.Logging">
+      <HintPath>..\..\lib\Common.Logging.dll</HintPath>
+    </Reference>
+    <Reference Include="Common.Logging.Core">
+      <HintPath>..\..\lib\Common.Logging.Core.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data" />
@@ -62,6 +71,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\..\Shared\VersionInfo.cs">
+      <Link>VersionInfo.cs</Link>
+    </Compile>
     <Compile Include="ConnectorManager\ConnectorManager.cs" />
     <Compile Include="ConnectorManager\ConnectorManager_.cs" />
     <Compile Include="ConnectorManager\ConnectorManager_CTE.cs" />
@@ -73,11 +85,8 @@
     <Compile Include="ConnectorManager\PacketHandler\ConnectorManager_Handler_Vendor.cs" />
     <Compile Include="ConnectorManager\ConnectorManager_Task.cs" />
     <Compile Include="ContribManager\ContribManager.cs" />
-    <Compile Include="CoreManager\CoreManager_CTE.cs" />
-    <Compile Include="DebugConfig.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="CoreManager\CoreManager.cs" />
-    <Compile Include="CoreManager\CoreManager_CoreComponents.cs" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

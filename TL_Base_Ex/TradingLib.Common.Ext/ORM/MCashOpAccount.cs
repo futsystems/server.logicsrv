@@ -22,7 +22,7 @@ namespace TradingLib.ORM
         {
             using (DBMySql db = new DBMySql())
             {
-                string query = string.Format("INSERT INTO log_cashopreq (`account`,`datetime`,`operation`,`amount`,`ref`,`status`,`source`,`recvinfo`) VALUES ( '{0}','{1}','{2}','{3}','{4}','{5}','{6}','{7}')", op.Account, op.DateTime, op.Operation, op.Amount, op.Ref, op.Status, op.Source, op.RecvInfo);
+                string query = string.Format("INSERT INTO log_cashopreq (`account`,`datetime`,`operation`,`amount`,`ref`,`status`,`source`,`recvinfo`,`submitter`) VALUES ( '{0}','{1}','{2}','{3}','{4}','{5}','{6}','{7}','{8}')", op.Account, op.DateTime, op.Operation, op.Amount, op.Ref, op.Status, op.Source, op.RecvInfo,op.Submitter);
                 return db.Connection.Execute(query) > 0;
             }
         }
@@ -62,7 +62,7 @@ namespace TradingLib.ORM
                     istransok = db.Connection.Execute(query) > 0;
 
                     decimal amount = op.Operation == QSEnumCashOperation.Deposit ? op.Amount : op.Amount * -1;
-                    string query2 = String.Format("Insert into log_cashtrans (`datetime`,`amount`,`comment`,`account`,`transref`,`settleday`) values('{0}','{1}','{2}','{3}','{4}','{5}')", Util.ToTLDateTime(), amount.ToString(),op.Source.ToString(),op.Account, op.Ref, TLCtxHelper.Ctx.SettleCentre.NextTradingday);
+                    string query2 = String.Format("Insert into log_cashtrans (`datetime`,`amount`,`comment`,`account`,`transref`,`settleday`) values('{0}','{1}','{2}','{3}','{4}','{5}')", Util.ToTLDateTime(), amount.ToString(), op.Source.ToString(), op.Account, op.Ref, TLCtxHelper.ModuleSettleCentre.Tradingday);
 
                     istransok = istransok && db.Connection.Execute(query2) > 0;
                     if (istransok)
@@ -127,6 +127,7 @@ namespace TradingLib.ORM
         /// <returns></returns>
         public static IEnumerable<JsonWrapperCasnTrans> SelectAccountCashTrans(string account, long start, long end)
         {
+
             using (DBMySql db = new DBMySql())
             {
                 string query = string.Empty;

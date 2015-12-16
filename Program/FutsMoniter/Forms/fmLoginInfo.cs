@@ -41,7 +41,7 @@ namespace FutsMoniter
 
             if (_account != null)
             {
-                Globals.LogicEvent.RegisterCallback("MgrExchServer", "QryAccountLoginInfo", this.OnLoginInfo);
+                Globals.LogicEvent.RegisterCallback("AccountManager", "QryAccountLoginInfo", this.OnLoginInfo);
                 Globals.TLClient.ReqQryAccountLoginInfo(_account.Account);
             }
 
@@ -60,11 +60,11 @@ namespace FutsMoniter
 
             if (_account != null)
             {
-                Globals.LogicEvent.UnRegisterCallback("MgrExchServer", "QryAccountLoginInfo", this.OnLoginInfo);
+                Globals.LogicEvent.UnRegisterCallback("AccountManager", "QryAccountLoginInfo", this.OnLoginInfo);
             }
         }
 
-        void OnLoginInfo(string json)
+        void OnLoginInfo(string json, bool islast)
         {
             LoginInfo info = MoniterUtils.ParseJsonResponse<LoginInfo>(json);
             if (json != null)

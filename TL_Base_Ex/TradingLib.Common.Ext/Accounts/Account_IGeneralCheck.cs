@@ -69,9 +69,9 @@ namespace TradingLib.Common
         public virtual int CanOpenSize(Symbol symbol,bool side,QSEnumOffsetFlag flag)
         {
             //未启用单向大边
-            if (!this.GetArgsSideMargin())
+            if (!this.GetParamSideMargin())
             {
-                decimal price = TLCtxHelper.CmdUtils.GetAvabilePrice(symbol.Symbol);
+                decimal price = TLCtxHelper.ModuleDataRouter.GetAvabilePrice(symbol.Symbol);
 
                 decimal fundperlot = this.CalOrderMarginFrozen(symbol, 1);
 
@@ -96,7 +96,8 @@ namespace TradingLib.Common
                 }
                 else
                 {
-                    Util.Debug(string.Format("QryCanOpenSize[MarginSizde] symbol:{0} side:{1} bigside:{2} bighold:{3} smalhold:{4} netfronzen:{5}  bigpending:{6} smallpending:{7} | fund:{8} prelot:{9}", symbol.Symbol, side, ms.MarginSide, ms.BigHoldSize, ms.SmallHoldSize, ms.NetFronzenSize, ms.BigPendingOpenSize, ms.SmallPendingOpenSize,avabilefund,fundperlot), QSEnumDebugLevel.ERROR);
+                    
+                    Util.Error(string.Format("QryCanOpenSize[MarginSizde] symbol:{0} side:{1} bigside:{2} bighold:{3} smalhold:{4} netfronzen:{5}  bigpending:{6} smallpending:{7} | fund:{8} prelot:{9}", symbol.Symbol, side, ms.MarginSide, ms.BigHoldSize, ms.SmallHoldSize, ms.NetFronzenSize, ms.BigPendingOpenSize, ms.SmallPendingOpenSize,avabilefund,fundperlot));
                     //如果查询大边可开数量
                     if (side == ms.MarginSide)
                     {
@@ -112,6 +113,11 @@ namespace TradingLib.Common
                 }
 
             }
+        }
+
+        public virtual IEnumerable<string> GetNotice()
+        {
+            return new List<string>();
         }
     }
 }

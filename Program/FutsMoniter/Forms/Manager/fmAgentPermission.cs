@@ -75,7 +75,7 @@ namespace FutsMoniter
         }
 
 
-        void OnAgentPermission(string jsonstr)
+        void OnAgentPermission(string jsonstr, bool islast)
         {
             //JsonData jd = TradingLib.Mixins.LitJson.JsonMapper.ToObject(jsonstr);
             //int code = int.Parse(jd["Code"].ToString());
@@ -91,7 +91,7 @@ namespace FutsMoniter
         }
 
         bool _loaded = false;
-        void OnPermissionTemplate(string jsonstr)
+        void OnPermissionTemplate(string jsonstr, bool islast)
         {
             UIAccess[] objs = MoniterUtils.ParseJsonResponse<UIAccess[]>(jsonstr);
             if (objs!= null)

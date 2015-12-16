@@ -3,346 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using TradingLib.API;
-//using System.Windows.Forms;
+using NodaTime;
 
 namespace TradingLib.Common
 {
 
-    public class MktTime
-    {
-        public MktTime(int starttime, int stoptime)
-        {
-            this.StartTime = starttime;
-            this.EndTime = stoptime;
-        }
-        public MktTime()
-        {
-            this.StartTime = 0;
-            this.EndTime = 0;
-        }
-        /// <summary>
-        /// 距离该时间段开始还有多少秒
-        /// </summary>
-        /// <param name="threshold"></param>
-        /// <returns></returns>
-        public int StartDiff
-        {
-            get
-            {
-                int diff = Util.FTDIFF(Util.ToTLTime(), this.StartTime);
-                if (diff < 0)
-                    diff += 86400;
-                return diff;
-            }
-        }
-        public bool CrossSpan(MktTime t)
-        {
-            if (IsInSpan(t.StartTime) || IsInSpan(t.EndTime))
-                return true;
-            if (t.IsInSpan(this.StartTime) || t.IsInSpan(this.EndTime))
-                return true;
-            return false;
-        }
-
-        public bool IsInSpan(MktTime t)
-        {
-            if (this.IsInSpan(t.StartTime) && this.IsInSpan(t.EndTime))
-                return true;
-            return false;
-        }
-
-        public static MktTime UnionSpan(MktTime t1, MktTime t2)
-        {
-            return new MktTime(Math.Min(t1.StartTime, t2.StartTime), Math.Max(t1.EndTime, t2.EndTime));
-        }
-        public bool IsInSpan(int time)
-        {
-            if (time >= this.StartTime && time < this.EndTime)
-                return true;
-            return false;
-        }
-        /// <summary>
-        /// 开始时间
-        /// </summary>
-        public int StartTime { get; set; }
-
-        /// <summary>
-        /// 结束时间
-        /// </summary>
-        public int EndTime { get; set; }
-
-        public override string ToString()
-        {
-            return "TimeSpan Start:" + this.StartTime.ToString() + " - End:" + this.EndTime.ToString();
-        }
-    }
-
-    /// <summary>
-    /// 时段
-    /// </summary>
-    public class MktTimeEntry : MktTime
-    {
-
-        public bool SameTimeSpan(MktTimeEntry obj)
-        {
-            MktTimeEntry other = obj;
-            if (other.StartTime == this.StartTime && other.EndTime == this.EndTime)
-                return true;
-            return false;
-        }
-
-        /// <summary>
-        /// 开始强平时间
-        /// </summary>
-        public int FlatStartTime { get; set; }
-
-        /// <summary>
-        /// 是否是强平时间点
-        /// 关于强平时间点与尾盘时间点的逻辑分析
-        /// 需要强平那么就需要强平时间点禁止开仓,否则强平后还会出现开仓
-        /// </summary>
-        public bool NeedFlat { get; set; }
-
-
-        /// <summary>
-        /// 检查是否处于强平状态
-        /// </summary>
-        public bool IsFlatTime()
-        {
-            int now = Util.ToTLTime();
-            //LibUtil.Debug("NeedFlatCheck, now:" + now.ToString() +" NeedFlat:"+NeedFlat.ToString() +" FlatStart:" + FlatStartTime.ToString() + " End:" + EndTime.ToString());
-            if (!this.NeedFlat)
-                return false;
-            //2.在结束前5分钟
-            return now >= FlatStartTime && now <= EndTime;
-
-            
-        }
-        public MktTimeEntry(int start, int end,bool needflat)
-        {
-            StartTime = start;
-            EndTime = end;
-            NeedFlat = needflat;
-            if (NeedFlat)
-            {
-                //计算开始强平时间
-                DateTime t = Util.ToDateTime(Util.ToTLDate(), end).Subtract(new TimeSpan(0,GlobalConfig.FlatTimeAheadOfMarketClose, 0));
-                FlatStartTime = Util.ToTLTime(t);
-            }
-            else
-            {
-                FlatStartTime = 0;
-            }
-        }
-
-        /// <summary>
-        /// 判断当前时间是否在时间段内
-        /// </summary>
-        /// <returns></returns>
-        public bool IsOpenTime()
-        {
-            
-            int now = Util.ToTLTime();
-            //LibUtil.Debug("OpenTimeCheck, now:" + now.ToString() + " Start:" + StartTime.ToString() + " End:" + EndTime.ToString());
-            return now >= StartTime && now <= EndTime;
-        }
-
-        public bool IsInTimeEntry(int time)
-        {
-            return time >= StartTime && time <= EndTime;
-        }
-
-        public  string Serialize()
-        {
-            return "#" + StartTime.ToString() + "-" + EndTime.ToString() + (NeedFlat ? "*" : "");
-        }
-
-        public static MktTimeEntry Deserialize(string msg)
-        {
-            try
-            {
-                string[] p = msg.Split('-');
-                if (p.Length < 2) return null;
-                bool needflat = false;
-                if (p[1].EndsWith("*"))
-                {
-                    needflat = true;
-                    p[1] = p[1].TrimEnd(new char[] { '*' });
-                }
-                MktTimeEntry se = new MktTimeEntry(int.Parse(p[0]), int.Parse(p[1]),needflat);
-                return se;
-            }
-            catch (Exception ex)
-            {
-                return null;
-            }
-            
-        }
-    }
-
-    /// <summary>
-    /// 交易所交易时段
-    /// </summary>
-    public class MarketTime : IMarketTime
-    {
-        /// <summary>
-        /// 数据库全局编号
-        /// </summary>
-        public int ID { get; set; }
-
-        /// <summary>
-        /// 时间段名称
-        /// </summary>
-        public string Name { get; set; }
-
-        /// <summary>
-        /// 时间段描述
-        /// </summary>
-        public string Description { get; set; }
-
-
-        List<MktTimeEntry> sessionlist = new List<MktTimeEntry>();
-        /// <summary>
-        /// 是否是开市时,检查所有的session配对,当前是否是有效交易时间
-        /// </summary>
-        /// <returns></returns>
-        public bool IsOpenTime
-        {
-            get
-            {
-                //判断每个时间段 如果某个时间段满足则返回true,全部不满足 则返回false
-                foreach (MktTimeEntry s in sessionlist)
-                {
-                    if (s.IsOpenTime()) return true;
-                }
-                return false;
-            }
-        }
-
-        /// <summary>
-        /// 判断某个时间是否在交易时间段内
-        /// </summary>
-        /// <param name="time"></param>
-        /// <returns></returns>
-        public bool IsInMarketTime(int time)
-        {
-            //判断每个时间段 如果某个时间段满足则返回true,全部不满足 则返回false
-            foreach (MktTimeEntry s in sessionlist)
-            {
-                if (s.IsInTimeEntry(time)) return true;
-            }
-            return false;
-        }
-
-
-        /// <summary>
-        /// 是否是强平时间段
-        /// </summary>
-        public bool IsFlatTime
-        {
-            get
-            {
-                //判断每个时间段 如果某个时间段满足则返回true,全部不满足 则返回false
-                foreach (MktTimeEntry s in sessionlist)
-                {
-                    if (s.IsFlatTime()) return true;
-                }
-                return false;
-            }
-        }
-
-        public MktTimeEntry[] MktTimeEntries
-        {
-            get
-            {
-                return sessionlist.ToArray();
-            }
-        }
-
-        public override string ToString()
-        {
-            string r = string.Empty;
-            foreach (MktTimeEntry s in sessionlist)
-            {
-                r += s.ToString();
-            }
-            return "ID:" + ID.ToString() +" Name:" + Name + " Desp:" + Description + " MktTime:" + this.SerializeMktTimeString() +" "+r;
-        }
-
-        internal void AddMktTimeEntry(MktTimeEntry s)
-        {
-            this.sessionlist.Add(s);
-        }
-
-        /// <summary>
-        /// 将时间段设置序列化成字符串
-        /// </summary>
-        /// <returns></returns>
-        public string SerializeMktTimeString()
-        {
-            string str = string.Empty;
-            foreach (MktTimeEntry s in sessionlist)
-            {
-                str += s.Serialize();
-            }
-            return str;
-        }
-
-        /// <summary>
-        /// 反序列化到字市场开市时间对象
-        /// </summary>
-        /// <param name="msg"></param>
-        /// <returns></returns>
-        public void DeserializeMktTimeString(string msg)
-        {
-            string[] p = msg.Split('#');
-            foreach (string s in p)
-            {
-                MktTimeEntry se = MktTimeEntry.Deserialize(s);
-                if(se == null) continue;
-                this.AddMktTimeEntry(se);
-            }
-            
-        }
-       
-
-
-        public string Serialize()
-        {
-            StringBuilder sb = new StringBuilder();
-            char d = ',';
-
-            sb.Append(this.ID.ToString());
-            sb.Append(d);
-            sb.Append(this.Name);
-            sb.Append(d);
-            sb.Append(this.Description);
-            sb.Append(d);
-            sb.Append(this.SerializeMktTimeString());
-            return sb.ToString();
-        }
-
-        public void Deserialize(string content)
-        {
-            string[] rec = content.Split(',');
-            this.ID = int.Parse(rec[0]);
-            this.Name = rec[1];
-            this.Description = rec[2];
-            this.DeserializeMktTimeString(rec[3]);
-
-        }
-
-        public override bool Equals(object obj)
-        {
-            if (obj is MarketTime)
-            { 
-                MarketTime mtobj = obj as MarketTime;
-                if (this.ID.Equals(mtobj.ID))
-                    return true;
-            }
-            return false;
-        }
-    }
 
     public class Exchange : IExchange
     {
@@ -352,79 +17,206 @@ namespace TradingLib.Common
         private string _name;//交易所名称
         private Country _country;//交易所所处国家
         private string _title;//简称
+        private string _calendar;//假日
+        private string _timezoneid;//时区信息
+        private int _closetime;//收盘时间
 
+        /// <summary>
+        /// 交易所数据库编号
+        /// </summary>
         public int ID { get { return _id; } set { _id = value; } }
-        public string EXCode { get { return _ex; } set { _ex = value; } }//从数据库加载
-        public string Name { get { return _name; } set { _name = value; } }//从数据库加载
-        public Country Country { get { return _country; } set { _country = value; } }//从数据库加载
 
+        /// <summary>
+        /// 交易所编码
+        /// </summary>
+        public string EXCode { get { return _ex; } set { _ex = value; } }
+
+        /// <summary>
+        /// 交易所名称
+        /// </summary>
+        public string Name { get { return _name; } set { _name = value; } }
+
+        /// <summary>
+        /// 国家
+        /// </summary>
+        public Country Country { get { return _country; } set { _country = value; } }
+
+        /// <summary>
+        /// 交易所简称
+        /// </summary>
         public string Title { get { return _title; } set { _title = value; } }
 
-        private MarketTime _session;//交易所交易时间
+        /// <summary>
+        /// 假日
+        /// </summary>
+        public string Calendar { get { return _calendar; } set { _calendar=value; } }
+
+        /// <summary>
+        /// 时区
+        /// </summary>
+        public string TimeZoneID { get { return _timezoneid; } set { _genTimeZone = false; _timezoneid = value; } }
+
+        /// <summary>
+        /// 收盘时间
+        /// </summary>
+        public int CloseTime { get { return _closetime; } set { _closetime = value; } }
 
 
-        
-        public string SessionString
+        public Exchange()
+        {
+            this.ID = 0;
+            this.EXCode = "";
+            this.Name = "";
+            this.Country = Country.CN;
+            this.TimeZoneID = "";
+            this.Title = "";
+        }
+
+
+        //TimeZoneInfo _targetTimeZone = null;
+        bool _genTimeZone = false;
+
+        //public TimeZoneInfo TimeZoneInfo
+        //{
+        //    get
+        //    {
+        //        if (!_genTimeZone)//延迟生成时区对象
+        //        {
+        //            _genTimeZone = true;
+        //            if (string.IsNullOrEmpty(this.TimeZone))
+        //            {
+        //                _targetTimeZone = null;//没有提供具体市区信息则与本地系统时间一致
+        //            }
+        //            else
+        //            {
+        //                _targetTimeZone = TimeZoneInfo.FindSystemTimeZoneById(this.TimeZone);
+        //                //DateTime t = new DateTime(2015,1,1,1,1,1,DateTimeKind.
+        //            }
+        //        }
+        //        return _targetTimeZone;
+        //    }
+        //}
+
+
+        DateTimeZone _exTz = null;
+        NodaTime.DateTimeZone DateTimeZone
         {
             get
             {
-                return _session.ToString();
+                if (!_genTimeZone)
+                {
+                    _genTimeZone = true;
+                    //如果没有具体提供时区ID则我们使用系统默认时区ID
+                    if (string.IsNullOrEmpty(this.TimeZoneID))
+                    {
+                        _exTz = NodaTime.DateTimeZoneProviders.Tzdb.GetSystemDefault();
+                    }
+                    else //如果提供了时区ID则通过ID查找对应的时区
+                    {
+                        _exTz = NodaTime.DateTimeZoneProviders.Tzdb.GetZoneOrNull(this.TimeZoneID);
+                    }
+                }
+                if (_exTz == null)
+                {
+                    throw new ArgumentNullException("Exchange TimeZoneID not exist");
+                }
+                return _exTz;
             }
         }
 
-        /// <summary>
-        /// 交易所编号 国家_交易所代号
-        /// </summary>
-        public string Index { get { return _country.ToString() + "_" + _ex.ToString(); } }
 
-        public Exchange()
-        { 
-            
-        }
+
 
         /// <summary>
-        /// 初始化交易所 编码,名称,国家,时段字符(从xml文件获取)
+        /// 获得交易所当前时间
         /// </summary>
-        /// <param name="ex"></param>
-        /// <param name="name"></param>
-        /// <param name="country"></param>
-        /// <param name="sessionstr"></param>
-        public Exchange(string ex, string name, Country country,string sessionstr="")
+        /// <returns></returns>
+        public DateTime GetExchangeTime()
         {
-            _ex = ex;
-            _name = name;
-            _country = country;
-            _session = null;
-
+            return SystemClock.Instance.Now.InZone(this.DateTimeZone).ToDateTimeUnspecified();
         }
+
+        /// <summary>
+        /// 将系统时间转换成交易所时间
+        /// </summary>
+        /// <param name="systime"></param>
+        /// <returns></returns>
+        public DateTime ConvertToExchangeTime(DateTime systime)
+        {
+            if (systime.Kind != DateTimeKind.Local)
+            {
+                throw new ArgumentException("Systime should be local DateTime");
+            }
+            return Instant.FromDateTimeUtc(systime.ToUniversalTime()).InZone(this.DateTimeZone).ToDateTimeUnspecified();
+        }
+
+        /// <summary>
+        /// 将交易所时间转换成系统时间
+        /// </summary>
+        /// <param name="extime"></param>
+        /// <returns></returns>
+        public DateTime ConvertToSystemTime(DateTime extime)
+        {
+            if(extime.Kind != DateTimeKind.Unspecified)
+            {
+                throw new ArgumentException("Exchange DateTime can not timezone aware");
+            }
+            //获得交易所本地时间
+            LocalDateTime ldt = LocalDateTime.FromDateTime(extime);
+
+            //DateTime 转换成UTC时间 然后通过UTC标注时间生成Instance,结合时区对象获得ZonedDateTime 从而可将时间转换到任意时区
+            //new ZonedDateTime(ldt,_exTz,)
+            ZonedDateTime dt = this.DateTimeZone.AtStrictly(ldt);
+
+            NodaTime.DateTimeZone systz = NodaTime.DateTimeZoneProviders.Tzdb.GetSystemDefault();
+            //dt.ToInstant().InZone(systz).ToDateTimeUnspecified();
+            return dt.WithZone(systz).ToDateTimeUnspecified();
+        }
+
 
         public override string ToString()
         {
-            return "ID:" + ID.ToString() + " Code:" + EXCode.ToString() + " Name:" + Name.ToString() + " Country:"+ Country.ToString()+" ExIndex:" + Index.ToString(); 
+            return "ID:" + ID.ToString() + " Code:" + EXCode.ToString() + " Name:" + Name.ToString() + " Country:" + Country.ToString(); 
         }
 
-        public string Serialize()
+
+        public static string Serialize(Exchange ex)
         {
             StringBuilder sb = new StringBuilder();
             char d = ',';
 
-            sb.Append(this.ID.ToString());
+            sb.Append(ex.ID.ToString());
             sb.Append(d);
-            sb.Append(this.EXCode.ToString());
+            sb.Append(ex.EXCode.ToString());
             sb.Append(d);
-            sb.Append(this.Name);
+            sb.Append(ex.Name);
             sb.Append(d);
-            sb.Append(this.Country.ToString());
+            sb.Append(ex.Country.ToString());
+            sb.Append(d);
+            sb.Append(ex.Title);
+            sb.Append(d);
+            sb.Append(ex.Calendar);
+            sb.Append(d);
+            sb.Append(ex.TimeZoneID);
+            sb.Append(d);
+            sb.Append(ex.CloseTime);
             return sb.ToString();
         }
 
-        public void Deserialize(string content)
+        public  static Exchange Deserialize(string content)
         {
+            Exchange ex = new Exchange();
+
             string[] rec = content.Split(',');
-            this.ID = int.Parse(rec[0]);
-            this.EXCode = rec[1];
-            this.Name = rec[2];
-            this.Country = (Country)Enum.Parse(typeof(Country), rec[3]);
+            ex.ID = int.Parse(rec[0]);
+            ex.EXCode = rec[1];
+            ex.Name = rec[2];
+            ex.Country = (Country)Enum.Parse(typeof(Country), rec[3]);
+            ex.Title = rec[4];
+            ex.Calendar = rec[5];
+            ex.TimeZoneID = rec[6];
+            ex.CloseTime = int.Parse(rec[7]);
+            return ex;
 
         }
     }

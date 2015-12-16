@@ -1,7 +1,8 @@
 using System;
+using System.Linq;
 using System.Collections.Generic;
-using TradingLib.API;
 using System.Collections;
+using TradingLib.API;
 
 namespace TradingLib.Common
 {
@@ -326,6 +327,7 @@ namespace TradingLib.Common
         bool _fixsentonunknown = false;
         public bool FixSentSizeOnUnknown { get { return _fixsentonunknown; } set { _fixsentonunknown = value; } }
 
+        const string UNKNOWSENTACCOUNT = "UNKNOWNSENTACCOUNT";
         /// <summary>
         /// 记录一笔成交
         /// </summary>
@@ -342,8 +344,11 @@ namespace TradingLib.Common
             
             if (idx < 0)
             {
+                //TODO:成交对应的委托丢失后 会造成生成一个空的委托 在结算时候 该空委托会导致结算异常
                 debug("no existing order found with fillid: " + f.id);
-                idx = orders.addindex(f.id.ToString(), new OrderImpl());
+                Order unknoworder = new OrderImpl();
+                unknoworder.Account = UNKNOWSENTACCOUNT;
+                idx = orders.addindex(f.id.ToString(), unknoworder);
                 unknownsent[idx] = true;
             }
             //累加某个委托的filled数量
@@ -373,11 +378,12 @@ namespace TradingLib.Common
 
         /// <summary>
         /// get orders from tracker
+        /// 这里默认对已结算的委托进行过滤
         /// </summary>
         /// <returns></returns>
         public IEnumerator<Order> GetEnumerator() 
-        { 
-            return orders.GetEnumerator(); 
+        {
+            return orders.Where(o => !o.Settled && o.Account != UNKNOWSENTACCOUNT && o.oSymbol!= null).GetEnumerator(); 
         
         }
 

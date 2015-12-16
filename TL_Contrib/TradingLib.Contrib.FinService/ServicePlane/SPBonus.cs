@@ -250,7 +250,7 @@ namespace TradingLib.Contrib.FinService
         public override int CanOpenSize(Symbol symbol)
         {
 
-            decimal price = TLCtxHelper.CmdUtils.GetAvabilePrice(symbol.Symbol);
+            decimal price = TLCtxHelper.ModuleDataRouter.GetAvabilePrice(symbol.Symbol);
 
             decimal fundperlot = Calc.CalFundRequired(symbol, price, 1);
 

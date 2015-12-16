@@ -75,9 +75,8 @@ namespace TradingLib.BrokerXAPI.Interop
         public TLBrokerProxy(string path, string dllname)
         {
             //1.加载dll
-			Util.Debug ("strat to load Nativelib ......", QSEnumDebugLevel.WARNING);
+            Util.Info("Load Nativelib Broker dll/so",this.GetType().Name);
             NativeLib = new UnmanagedLibrary(path, dllname);
-			Util.Debug ("loaded Nativelib ......", QSEnumDebugLevel.WARNING);
             //2.绑定导出函数到委托
             AssignCommonDelegates();
 
@@ -107,31 +106,5 @@ namespace TradingLib.BrokerXAPI.Interop
         public delegate IntPtr DestoryBrokerProc(IntPtr pBroker);
         public DestoryBrokerProc DestoryBroker;
 
-
-        ///// <summary>
-        ///// 字符串参数调用
-        ///// </summary>
-        ///// <param name="input"></param>
-        ///// <returns></returns>
-        //[UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        //public delegate string DemoStringCallProc(string input);
-        //public DemoStringCallProc demostringcall;
-
-        ///// <summary>
-        ///// 整形参数调用
-        ///// </summary>
-        ///// <param name="x"></param>
-        ///// <returns></returns>
-        //[UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        //public delegate int DemoIntCallProc(int x);
-        //public DemoIntCallProc demointcall;
-
-        ///// <summary>
-        ///// 结构体参数调用
-        ///// </summary>
-        ///// <param name="error"></param>
-        //[UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        //public delegate void DemoStructCallProc(ref  ErrorField error);
-        //public DemoStructCallProc demostructcall;
     }
 }

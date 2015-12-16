@@ -18,6 +18,11 @@ namespace TradingLib.Common
             /// 系统底层获得一个委托()
             /// </summary>
             public event OrderDelegate GotOrderEvent;
+
+            /// <summary>
+            /// 系统底层获得一个委托错误事件
+            /// </summary>
+            public event OrderErrorDelegate GotOrderErrorEvent;
             /// <summary>
             /// 系统底层获得一个委托
             /// </summary>
@@ -44,6 +49,12 @@ namespace TradingLib.Common
                     GotOrderEvent(o);
             }
 
+            internal void FireOrderErrorEvent(Order o,RspInfo e)
+            {
+                if (GotOrderErrorEvent != null)
+                    GotOrderErrorEvent(o, e);
+            }
+
             internal void FireCancelEvent(long oid)
             {
                 if (GotCancelEvent != null)
@@ -61,5 +72,7 @@ namespace TradingLib.Common
                 if (GotPositionClosedEvent != null)
                     GotPositionClosedEvent(pr,pos);
             }
+
+
         }
 }

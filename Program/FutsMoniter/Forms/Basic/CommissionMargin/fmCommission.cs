@@ -142,20 +142,20 @@ namespace FutsMoniter
         public void OnInit()
         {
             Globals.LogicEvent.RegisterCallback("MgrExchServer", "QryCommissionTemplate", this.OnQryCommissionTemplate);
-            Globals.LogicEvent.RegisterCallback("MgrExchServer", "NotifyCommissionTemplate", this.OnNotifyCommissionTemplate);
+            Globals.LogicEvent.RegisterNotifyCallback("MgrExchServer", "NotifyCommissionTemplate", this.OnNotifyCommissionTemplate);
 
             Globals.LogicEvent.RegisterCallback("MgrExchServer", "QryCommissionTemplateItem", this.OnQryCommissionTemplateItem);
-            Globals.LogicEvent.RegisterCallback("MgrExchServer", "NotifyCommissionTemplateItem", this.OnNotifyCommissionTemplateItem);
+            Globals.LogicEvent.RegisterNotifyCallback("MgrExchServer", "NotifyCommissionTemplateItem", this.OnNotifyCommissionTemplateItem);
             Globals.TLClient.ReqQryCommissionTemplate();
         }
 
         public void OnDisposed()
         {
             Globals.LogicEvent.UnRegisterCallback("MgrExchServer", "QryCommissionTemplate", this.OnQryCommissionTemplate);
-            Globals.LogicEvent.UnRegisterCallback("MgrExchServer", "NotifyCommissionTemplate", this.OnNotifyCommissionTemplate);
+            Globals.LogicEvent.UnRegisterNotifyCallback("MgrExchServer", "NotifyCommissionTemplate", this.OnNotifyCommissionTemplate);
 
             Globals.LogicEvent.UnRegisterCallback("MgrExchServer", "QryCommissionTemplateItem", this.OnQryCommissionTemplateItem);
-            Globals.LogicEvent.UnRegisterCallback("MgrExchServer", "NotifyCommissionTemplateItem", this.OnNotifyCommissionTemplateItem);
+            Globals.LogicEvent.UnRegisterNotifyCallback("MgrExchServer", "NotifyCommissionTemplateItem", this.OnNotifyCommissionTemplateItem);
         }
 
         string GetChargeTypeStr(QSEnumChargeType type)
@@ -200,7 +200,7 @@ namespace FutsMoniter
         /// 
         /// </summary>
         /// <param name="json"></param>
-        void OnQryCommissionTemplateItem(string json)
+        void OnQryCommissionTemplateItem(string json, bool islast)
         {
             CommissionTemplateItemSetting obj = MoniterUtils.ParseJsonResponse<CommissionTemplateItemSetting>(json);
             if (obj != null)
@@ -263,7 +263,7 @@ namespace FutsMoniter
         }
 
         Dictionary<int, CommissionTemplateSetting> templatemap = new Dictionary<int, CommissionTemplateSetting>();
-        void OnQryCommissionTemplate(string json)
+        void OnQryCommissionTemplate(string json, bool islast)
         {
             CommissionTemplateSetting[] list = MoniterUtils.ParseJsonResponse<CommissionTemplateSetting[]>(json);
             if (list != null)

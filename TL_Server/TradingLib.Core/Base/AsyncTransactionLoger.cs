@@ -32,12 +32,19 @@ namespace TradingLib.Core
         //FastDBTransaction fastdb;
         RingBuffer<Order> _ocache;
         RingBuffer<Order> _oupdatecache;
+        RingBuffer<Order> _osettlecache;
+        
         RingBuffer<Trade> _tcache;
+        RingBuffer<Trade> _tsettlecache;
         RingBuffer<long> _ccache;
         RingBuffer<PositionRound> _postranscache;
         RingBuffer<OrderAction> _oactioncache;
         RingBuffer<PositionCloseDetail> _posclosecache;
-        //RingBuffer<PositionRound> _postransopencache;
+        RingBuffer<PositionDetail> _pdsettledcache;
+        RingBuffer<ExchangeSettlement> _exsettlecache;
+        RingBuffer<CashTransaction> _cashtxnsettlecash;
+
+
 
         public int OrderInCache { get { return _ocache.Count; } }
         public int TradeInCache { get { return _tcache.Count; } }
@@ -78,10 +85,10 @@ namespace TradingLib.Core
 
         public void DisplayTimer()
         {
-            debug("插入委托时间消耗:"+ordert.Elapsed.ToString(),QSEnumDebugLevel.MUST);
-            debug("更新委托时间消耗:" + updateordert.Elapsed.ToString(), QSEnumDebugLevel.MUST);
-            debug("插入成交时间消耗:" + tradet.Elapsed.ToString(), QSEnumDebugLevel.MUST);
-            debug("插入取消时间消耗:" + tradet.Elapsed.ToString(), QSEnumDebugLevel.MUST);
+            logger.Info("插入委托时间消耗:" + ordert.Elapsed.ToString());
+            logger.Info("更新委托时间消耗:" + updateordert.Elapsed.ToString());
+            logger.Info("插入成交时间消耗:" + tradet.Elapsed.ToString());
+            logger.Info("插入取消时间消耗:" + tradet.Elapsed.ToString());
             
         }
 
@@ -115,18 +122,18 @@ namespace TradingLib.Core
                                 }
                                 catch (Exception ex)
                                 {
-                                    debug(ex.ToString(),QSEnumDebugLevel.ERROR);
+                                    logger.Error(ex.ToString());
                                     throw (new QSTranLogOrderError(o));
                                 }
                                 string s = "交易日志:Order Inserted:" + o.GetOrderInfo();
                                 if (!re)
                                 {
                                     _nrt++;
-                                    debug(s + "失败", QSEnumDebugLevel.ERROR);
+                                    logger.Error(s + "失败");
                                 }
                                 else
                                 {
-                                    debug(s + " 成功", QSEnumDebugLevel.INFO);
+                                    logger.Info(s + " 成功");
                                 }
                                 Thread.Sleep(_delay);
 
@@ -144,20 +151,44 @@ namespace TradingLib.Core
                                 }
                                 catch (Exception ex)
                                 {
-                                    debug(ex.ToString(), QSEnumDebugLevel.ERROR);
+                                    logger.Error(ex.ToString());
                                     throw (new QSTranLogOrderUpdateError(o));
                                 }
                                 string s = "交易日志:Order Update:" + o.GetOrderStatus();
                                 if (!re)
                                 {
                                     _nrt++;
-                                    debug(s + "失败", QSEnumDebugLevel.ERROR);
+                                    logger.Error(s + "失败");
                                 }
                                 else
                                 {
-                                    debug(s + " 成功", QSEnumDebugLevel.INFO);
+                                    logger.Info(s + " 成功");
                                 }
                                 Thread.Sleep(_delay);
+                            }
+                            while (!_ocache.hasItems && !_oupdatecache.hasItems && _osettlecache.hasItems)
+                            {
+                                Order o = _osettlecache.Read();
+                                ORM.MTradingInfo.MarkOrderSettled(o);
+                            }
+                            while (_pdsettledcache.hasItems) 
+                            {
+                                PositionDetail pd = _pdsettledcache.Read();
+                                ORM.MSettlement.MarkPositionDetailSettled(pd);
+                            
+                            }
+
+                            while (_exsettlecache.hasItems)
+                            {
+                                ExchangeSettlement settle = _exsettlecache.Read();
+                                ORM.MSettlement.MarkExchangeSettlementSettled(settle);
+
+                            }
+                            while (_cashtxnsettlecash.hasItems)
+                            {
+                                CashTransaction txn = _cashtxnsettlecash.Read();
+                                ORM.MCashTransaction.MarkeCashTransactionSettled(txn);
+
                             }
                             //插入成交
                             while (!_ocache.hasItems && _tcache.hasItems)
@@ -172,21 +203,26 @@ namespace TradingLib.Core
                                 }
                                 catch (Exception ex)
                                 {
-                                    debug(ex.ToString(), QSEnumDebugLevel.ERROR);
+                                    logger.Error(ex.ToString());
                                     throw (new QSTranLogFillError(f));
                                 }
                                 string s = "交易日志:Trade Inserted:" + f.GetTradeInfo();
                                 if (!re)
                                 {
                                     _nrt++;
-                                    debug(s + " 失败", QSEnumDebugLevel.ERROR);
+                                    logger.Error(s + " 失败");
                                 }
                                 else
                                 {
-                                    debug(s + " 成功", QSEnumDebugLevel.INFO);
+                                    logger.Info(s + " 成功");
                                 }
                                 Thread.Sleep(_delay);
 
+                            }
+                            while (!_ocache.hasItems && !_tcache.hasItems && _tsettlecache.hasItems)
+                            {
+                                Trade f = _tsettlecache.Read();
+                                ORM.MTradingInfo.MarkeTradeSettled(f);
                             }
                             //插入取消
                             while (!_ocache.hasItems && _ccache.hasItems)
@@ -201,18 +237,18 @@ namespace TradingLib.Core
                                 }
                                 catch (Exception ex)
                                 {
-                                    debug(ex.ToString(), QSEnumDebugLevel.ERROR);
+                                    logger.Error(ex.ToString());
                                     throw (new QSTranLogCancelError(oid));
                                 }
                                 string s = "交易日志:Cancle inserted:" + oid.ToString();
                                 if (!re)
                                 {
                                     _nrt++;
-                                    debug(s + " 失败", QSEnumDebugLevel.ERROR);
+                                    logger.Error(s + " 失败");
                                 }
                                 else
                                 {
-                                    debug(s + " 成功", QSEnumDebugLevel.INFO);
+                                    logger.Info(s + " 成功");
                                 }
                                 Thread.Sleep(_delay);
                             }
@@ -227,21 +263,20 @@ namespace TradingLib.Core
                                 }
                                 catch (Exception ex)
                                 {
-                                    debug(ex.ToString(), QSEnumDebugLevel.ERROR);
+                                    logger.Error(ex.ToString());
                                 }
 
                                 string s = "交易日志:OrderAction Inserted" + OrderActionImpl.Serialize(action);
                                 if (!re)
                                 {
                                     _nrt++;
-                                    debug(s + " 失败", QSEnumDebugLevel.ERROR);
+                                    logger.Error(s + " 失败");
                                 }
                                 else
                                 {
-                                    debug(s + " 成功", QSEnumDebugLevel.INFO);
+                                    logger.Info(s + " 成功");
                                 }
                                 Thread.Sleep(_delay);
-
                             }
 
                             //插入取消
@@ -255,18 +290,18 @@ namespace TradingLib.Core
                                 }
                                 catch (Exception ex)
                                 {
-                                    debug(ex.ToString(), QSEnumDebugLevel.ERROR);
+                                    logger.Error(ex.ToString());
                                     //throw (new QSTranLogCancelError(oid));
                                 }
                                 string s = "交易日志:PosTransaction Inserted:";// +oid.ToString();
                                 if (!re)
                                 {
                                     _nrt++;
-                                    debug(s + " 失败", QSEnumDebugLevel.ERROR);
+                                    logger.Error(s + " 失败");
                                 }
                                 else
                                 {
-                                    debug(s + " 成功", QSEnumDebugLevel.INFO);
+                                    logger.Info(s + " 成功");
                                 }
                                 Thread.Sleep(_delay);
                             }
@@ -281,17 +316,17 @@ namespace TradingLib.Core
                                 }
                                 catch (Exception ex)
                                 {
-                                    debug(ex.ToString(), QSEnumDebugLevel.ERROR);
+                                    logger.Error(ex.ToString());
                                 }
                                 string s = "平仓明细日志:PositionCloseDetail Inserted:";// +oid.ToString();
                                 if (!re)
                                 {
                                     _nrt++;
-                                    debug(s + " 失败", QSEnumDebugLevel.ERROR);
+                                    logger.Error(s + " 失败");
                                 }
                                 else
                                 {
-                                    debug(s + " 成功", QSEnumDebugLevel.INFO);
+                                    logger.Info(s + " 成功");
                                 }
                                 Thread.Sleep(_delay);
                             }
@@ -309,36 +344,36 @@ namespace TradingLib.Core
                         //mysql则通过不断尝试进行数据库连接,当连接成功后重新将日志插入数据库
                         catch (QSTranLogOrderError ex)
                         {
-                            debug(ex.OFail.ToString(), QSEnumDebugLevel.ERROR);
-                            debug(PROGRAME +":交易日志持久化发生错误:" + ex.ToString(), QSEnumDebugLevel.ERROR);
+                            logger.Error(ex.OFail.ToString());
+                            logger.Error(PROGRAME + ":交易日志持久化发生错误:" + ex.ToString());
                              //this.newOrder(ex.OFail);
                         }
                         catch (QSTranLogOrderUpdateError ex)
                         {
-                            debug(ex.OFail.ToString(), QSEnumDebugLevel.ERROR);
-                            debug(PROGRAME + ":交易日志持久化发生错误:" + ex.ToString(), QSEnumDebugLevel.ERROR);
+                            logger.Error(ex.OFail.ToString());
+                            logger.Error(PROGRAME + ":交易日志持久化发生错误:" + ex.ToString());
                             //this.updateOrder(ex.OFail);
                         }
                         catch (QSTranLogFillError ex)
                         {
-                            debug(ex.FFail.ToString(), QSEnumDebugLevel.ERROR);
-                            debug(PROGRAME + ":交易日志持久化发生错误:" + ex.ToString(), QSEnumDebugLevel.ERROR);
+                            logger.Error(ex.FFail.ToString());
+                            logger.Error(PROGRAME + ":交易日志持久化发生错误:" + ex.ToString());
                             //this.newTrade(ex.FFail);
                         }
                         catch (QSTranLogCancelError ex)
                         {
-                            debug(PROGRAME + ":交易日志持久化发生错误:" + ex.ToString(), QSEnumDebugLevel.ERROR);
+                            logger.Error(PROGRAME + ":交易日志持久化发生错误:" + ex.ToString());
                             //this.newCancle(ex.CFail);
                         }
                         catch (Exception ex)
                         {
-                            debug(PROGRAME + ":交易日志持久化发生错误:" + ex.ToString(), QSEnumDebugLevel.ERROR);
+                            logger.Error(PROGRAME + ":交易日志持久化发生错误:" + ex.ToString());
                         }
                     }
                     catch (Exception ex)
                     {
                         //在异常捕捉时，我们会将没有记录的交易信息返回缓存进行处理,如果在返回遗漏交易信息的时候发生错误,则我们这里还会产生异常,导致系统崩溃
-                        debug(PROGRAME + ":异常捕捉产生错误,会发生遗漏委托记录" + ex.ToString());
+                        logger.Error(PROGRAME + ":异常捕捉产生错误,会发生遗漏委托记录" + ex.ToString());
                     }
                 }
         }
@@ -349,6 +384,58 @@ namespace TradingLib.Core
         /// sleep time in milliseconds between checking read buffer
         /// </summary>
         public int SLEEP { get { return _sleep; } set { _sleep = value; } }
+
+
+        #region 结算标识
+        /// <summary>
+        /// 结算委托
+        /// </summary>
+        /// <param name="o"></param>
+        public void MarkOrderSettled(Order o)
+        {
+            Order oc = new OrderImpl(o);
+            _osettlecache.Write(oc);
+            newlog();
+        }
+        /// <summary>
+        /// 结算成交
+        /// </summary>
+        /// <param name="f"></param>
+        public void MarkTradeSettled(Trade f)
+        {
+            Trade nf = new TradeImpl(f);
+            _tsettlecache.Write(nf);
+            newlog();
+        }
+        /// <summary>
+        /// 结算持仓明细
+        /// </summary>
+        /// <param name="pd"></param>
+        public void MarkPositionDetailSettled(PositionDetail pd)
+        {
+            _pdsettledcache.Write(pd);
+            newlog();
+        }
+        /// <summary>
+        /// 结算交易所结算
+        /// </summary>
+        /// <param name="settle"></param>
+        public void MarkExchangeSettlementSettled(ExchangeSettlement settle)
+        {
+            _exsettlecache.Write(settle);
+            newlog();
+        }
+
+        /// <summary>
+        /// 结算出入金记录
+        /// </summary>
+        /// <param name="txn"></param>
+        public void MarkCashTransactionSettled(CashTransaction txn)
+        {
+            _cashtxnsettlecash.Write(txn);
+            newlog();
+        }
+        #endregion
 
         /// <summary>
         /// 将新的需要记录的数据记录下来 从而实现异步处理防止阻塞通讯主线程
@@ -369,12 +456,16 @@ namespace TradingLib.Core
             _oupdatecache.Write(oc);
             newlog();
         }
+        
         public void newTrade(Trade f)
         {
             Trade nf = new TradeImpl(f);
             _tcache.Write(nf);
             newlog();
         }
+        
+
+
         public void newCancle(long id)
         {
             _ccache.Write(id);
@@ -452,11 +543,16 @@ namespace TradingLib.Core
         {
             _ocache = new RingBuffer<Order>(maxbr);
             _oupdatecache = new RingBuffer<Order>(maxbr);
+            _osettlecache = new RingBuffer<Order>(maxbr);
             _tcache = new RingBuffer<Trade>(maxbr);
+            _tsettlecache = new RingBuffer<Trade>(maxbr);
             _ccache = new RingBuffer<long>(maxbr);
             _postranscache = new RingBuffer<PositionRound>(maxbr);
             _oactioncache = new RingBuffer<OrderAction>(maxbr);
             _posclosecache = new RingBuffer<PositionCloseDetail>(maxbr);
+            _pdsettledcache = new RingBuffer<PositionDetail>(maxbr);
+            _exsettlecache = new RingBuffer<ExchangeSettlement>(maxbr);
+            _cashtxnsettlecash = new RingBuffer<CashTransaction>(maxbr);
         }
 
         void _brcache_BufferOverrunEvent()

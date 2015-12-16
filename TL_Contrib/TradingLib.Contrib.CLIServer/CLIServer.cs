@@ -28,7 +28,7 @@ namespace TradingLib.Contrib.CLI
         /// </summary>
         public void OnLoad()
         {
-            Util.Debug("CLIserver loading....");
+            logger.Info("CLIServer Loading....");
             _cfgdb = new ConfigDB(CLIServer.ContribName);
             if (!_cfgdb.HaveConfig("cmdport"))
             {
@@ -53,7 +53,7 @@ namespace TradingLib.Contrib.CLI
         /// </summary>
         public void Start()
         {
-            debug("启动命令行服务");
+            logger.Info("启动命令行服务");
             _telentserver = new TelnetServer(_port, null);
             _telentserver.Start();
 
