@@ -20,9 +20,16 @@ namespace DataFeed.FastTick
 		int port=6000;
 		int reqport=6001;
 
+        ConfigDB _cfgdb;
+        int _tickversion = 1;
         public FastTick()
         {
-			
+            _cfgdb = new ConfigDB("FastTickDataFeed");
+            if (!_cfgdb.HaveConfig("TickServerVersion"))
+            {
+                _cfgdb.UpdateConfig("FastTickDataFeed", QSEnumCfgType.Int, 1, "行情服务器版本");
+            }
+            _tickversion = _cfgdb["FastTickDataFeed"].AsInt();
         }
 
 
@@ -351,16 +358,20 @@ namespace DataFeed.FastTick
                     //注册合约协议格式 DATAFEED:SYMBOL|EXCHANGE
                     foreach (var sym in kv.Value)
                     {
-                        string tmpreq = (kv.Key.ToString() + ":" + sym.Symbol + "|" + sym.SecurityFamily.Exchange.EXCode);
-                        debug(Token + " RegisterSymbol " + tmpreq, QSEnumDebugLevel.INFO);
-                        Send(TradingLib.API.MessageTypes.MGRREGISTERSYMBOLS, tmpreq);
-
-                        //MDRegisterSymbolsRequest request = RequestTemplate<MDRegisterSymbolsRequest>.CliSendRequest(0);
-                        //request.DataFeed = kv.Key;
-                        //request.Exchange = sym.SecurityFamily.Exchange.EXCode;
-                        //request.SymbolList.Add(sym.Symbol);
-
-                        //Send(request);
+                        if (_tickversion == 1)
+                        {
+                            string tmpreq = (kv.Key.ToString() + ":" + sym.Symbol + "|" + sym.SecurityFamily.Exchange.EXCode);
+                            debug(Token + " RegisterSymbol " + tmpreq, QSEnumDebugLevel.INFO);
+                            Send(TradingLib.API.MessageTypes.MGRREGISTERSYMBOLS, tmpreq);
+                        }
+                        else if (_tickversion == 2)
+                        {
+                            MDRegisterSymbolsRequest request = RequestTemplate<MDRegisterSymbolsRequest>.CliSendRequest(0);
+                            request.DataFeed = kv.Key;
+                            request.Exchange = sym.SecurityFamily.Exchange.EXCode;
+                            request.SymbolList.Add(sym.Symbol);
+                            Send(request);
+                        }
                     }
 
                 }

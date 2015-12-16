@@ -120,43 +120,6 @@ namespace TradingLib.Common
             //}
         }
 
-        //static QSEnumProductType _producttype = QSEnumProductType.CounterSystem; 
-        ///// <summary>
-        ///// 产品类别
-        ///// 系统根据产品类别来加载不同的服务端实现
-        ///// </summary>
-        //public static QSEnumProductType ProductType
-        //{
-        //    get
-        //    {
-        //        return _producttype;
-        //    }
-        //}
-
-
-        /// <summary>
-        /// 部署名称
-        /// </summary>
-        //public static string DeployName
-        //{
-        //    get
-        //    {
-        //        return defaultinstance.config["DeployName"].AsString();
-        //    }
-        //}
-
-        ///// <summary>
-        ///// 组织名称
-        ///// </summary>
-        //public static string Organization
-        //{
-        //    get
-        //    {
-        //        return defaultinstance.config["Organization"].AsString();
-        //    }
-        //}
-
-
         /// <summary>
         /// 收盘前提前多少时间强平持仓
         /// </summary>
