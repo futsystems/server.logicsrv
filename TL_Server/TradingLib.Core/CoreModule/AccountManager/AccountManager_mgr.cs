@@ -223,7 +223,7 @@ namespace TradingLib.Core
             BasicTracker.AccountProfileTracker.UpdateAccountProfile(creation.Profile);
 
             //对外触发交易帐号添加事件
-            TLCtxHelper.EventAccount.FireAccountAddEvent(creation.Account);
+            TLCtxHelper.EventAccount.FireAccountAddEvent(this[creation.Account]);
 
             session.OperationSuccess("新增交易帐号:" + creation.Account + "成功");
 
@@ -269,7 +269,7 @@ namespace TradingLib.Core
                 BasicTracker.AccountProfileTracker.UpdateAccountProfile(profile);
             }
             //触发交易帐户变动事件
-            TLCtxHelper.EventAccount.FireAccountChangeEent(account.ID);
+            TLCtxHelper.EventAccount.FireAccountChangeEent(account);
 
             session.OperationSuccess("更新个人信息成功");
 

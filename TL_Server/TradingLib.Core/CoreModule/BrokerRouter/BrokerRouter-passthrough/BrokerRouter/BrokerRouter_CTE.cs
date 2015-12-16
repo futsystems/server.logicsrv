@@ -97,7 +97,7 @@ namespace TradingLib.Core
 
 
                 //触发交易帐户变动事件
-                TLCtxHelper.EventAccount.FireAccountChangeEent(account);
+                TLCtxHelper.EventAccount.FireAccountChangeEent(acct);
 
                 //清空该交易帐户交易数据
                 ClearAccountTradingInfo(acct);
@@ -139,7 +139,7 @@ namespace TradingLib.Core
                 BasicTracker.ConnectorMapTracker.DeleteAccountConnectorPair(account);
 
                 //触发交易帐户变动事件
-                TLCtxHelper.EventAccount.FireAccountChangeEent(account);
+                TLCtxHelper.EventAccount.FireAccountChangeEent(acct);
 
                 //清空该交易帐户交易数据
                 ClearAccountTradingInfo(acct);

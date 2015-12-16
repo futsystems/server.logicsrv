@@ -10,15 +10,6 @@ namespace TradingLib.Core
     public partial class MgrExchServer
     {
 
-        ///<summary>
-        /// 管理端触发的提交委托事件
-        /// </summary>
-        //public event OrderDelegate SendOrderEvent;
-        /// <summary>
-        /// 管理端提交的取消委托事件
-        /// </summary>
-        //public event LongDelegate SendOrderCancelEvent;
-
 
         void tl_ClientUnregistedEvent(MgrClientInfo client)
         {
@@ -60,8 +51,6 @@ namespace TradingLib.Core
         {
             //对外发送委托 注 这里需要按照对应持仓的情况进行有效分拆，看是否括约的今仓或昨仓
             //如果跨越的昨仓与今仓则需要分拆 并且将开平标识进行规范化
-            //if (SendOrderEvent != null)
-            //    SendOrderEvent(o);
             TLCtxHelper.ModuleExCore.SendOrderInternal(o);
         }
 
@@ -72,9 +61,6 @@ namespace TradingLib.Core
                 if (o.OrderID != 0)
                 {
                     TLCtxHelper.ModuleExCore.CancelOrder(o.OrderID);
-
-                    //if (SendOrderCancelEvent != null)
-                    //    SendOrderCancelEvent(o.OrderID);
                 }
             }
         }
@@ -91,21 +77,14 @@ namespace TradingLib.Core
         /// <returns></returns>
         ILocation[] tl_GetLocationsViaAccountEvent(string account)
         {
-
             return customerExInfoMap.Values.Where(ex => ex.RightAccessAccount(account)).Select(ex2=>ex2.Location).ToArray();
-
-            //当以account为对象查找通知对象时,遍历所有链接的管理端,如果对应的管理端有权限查看该帐户,则进行通知
-            //List<ILocation> locations = new List<ILocation>();
-            //foreach (CustInfoEx cst in customerExInfoMap.Values)
-            //{
-            //    locations.Add(cst.Location);
-            //}
-
-            //return locations.ToArray();
         }
 
-
-        IEnumerable<CustInfoEx> NotifyTarges
+        /// <summary>
+        /// 通知对象列表
+        /// 管理端登入后会在内存中创建一个管理端Agent
+        /// </summary>
+        IEnumerable<CustInfoEx> NotifyTargets
         {
             get
             {

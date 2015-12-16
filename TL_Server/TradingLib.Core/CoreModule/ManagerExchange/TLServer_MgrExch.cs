@@ -27,6 +27,28 @@ namespace TradingLib.Core
         }
 
 
+        /// <summary>
+        /// 注销某个管理帐户的所有管理端
+        /// </summary>
+        /// <param name="account"></param>
+        public void ClearTerminalsForManager(string manager)
+        {
+            foreach (MgrClientInfo info in this.ClientsForManager(manager))
+            {
+                _clients.UnRegistClient(info.Location.ClientID);
+            }
+        }
+        /// <summary>
+        /// 查找所有以交易帐号account登入的客户端连接
+        /// </summary>
+        /// <param name="account"></param>
+        /// <returns></returns>
+        public IEnumerable<MgrClientInfo> ClientsForManager(string loginid)
+        {
+            return _clients.Clients.Where(client => (client.Manager != null && client.Manager.Login.Equals(loginid)));
+        }
+
+
         public override void TLSendOther(IPacket packet)
         {
             //base.TLSendOther(packet);

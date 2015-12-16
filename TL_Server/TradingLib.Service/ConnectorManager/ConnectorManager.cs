@@ -111,10 +111,13 @@ namespace TradingLib.ServiceManager
         public void Start()
         {
             Util.StatusSection(this.PROGRAME, "STARTCONNECTOR", QSEnumInfoColor.INFODARKRED,true);
-            if (TLCtxHelper.ModuleSettleCentre.IsTradingday)//如果是交易日则需要启动实盘通道
+            if (GlobalConfig.NeedStartDefaultConnector)
             {
-                logger.Info("正常交易日,启动所有通道");
-                StartConnector();
+                if (TLCtxHelper.ModuleSettleCentre.IsTradingday)//如果是交易日则需要启动实盘通道
+                {
+                    logger.Info("正常交易日,启动所有通道");
+                    StartConnector();
+                }
             }
         }
 

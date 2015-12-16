@@ -168,9 +168,6 @@ namespace TradingLib.Common
                 info.Name = profile.Name;
             }
 
-            //info.Broker = acc.Broker;
-            //info.BankID = acc.BankID;
-            //info.BankAC = acc.BankAC;
             info.MGRID = acc.Mgr_fk;
             info.Deleted = acc.Deleted;
             info.RG_ID = acc.RG_FK;

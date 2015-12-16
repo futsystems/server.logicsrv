@@ -79,7 +79,7 @@ namespace TradingLib.Core
         /// 账户属性变动事件
         /// </summary>
         /// <param name="account"></param>
-        protected void AccountChanged(string account)
+        protected void AccountChanged(IAccount account)
         {
             TLCtxHelper.EventAccount.FireAccountChangeEent(account);
         }
@@ -127,15 +127,15 @@ namespace TradingLib.Core
             LoadAccount(create.Account);
 
             //对外触发交易帐号添加事件
-            TLCtxHelper.EventAccount.FireAccountAddEvent(create.Account);
+            TLCtxHelper.EventAccount.FireAccountAddEvent(this[create.Account]);
         }
 
 
-        public void DelAccount(string account)
+        public void DelAccount(string id)
         {
-            logger.Info("清算中心删除交易帐户:" + account);
-            IAccount acc = this[account];
-            if (acc == null)
+            logger.Info("清算中心删除交易帐户:" + id);
+            IAccount account = this[id];
+            if (account == null)
             {
                 throw new FutsRspError("交易帐号不存在");
             }
@@ -143,17 +143,18 @@ namespace TradingLib.Core
             try
             {
 
-                AcctList.TryRemove(account, out acc);
+                AcctList.TryRemove(id, out account);
                 //删除数据库
-                ORM.MAccount.DelAccount(account);//删除数据库记录
+                ORM.MAccount.DelAccount(id);//删除数据库记录
                 //删除内存记录
-                TLCtxHelper.ModuleClearCentre.DropAccount(acc);
+                TLCtxHelper.ModuleClearCentre.DropAccount(account);
 
-                BasicTracker.AccountProfileTracker.DropAccount(account);
+                BasicTracker.AccountProfileTracker.DropAccount(id);
                 //对外触发交易帐户删除事件
+                account.Deleted = true;
+
                 TLCtxHelper.EventAccount.FireAccountDelEvent(account);
-                acc.Deleted = true;
-                //AccountChanged(account);
+                
             }
             catch (Exception ex)
             {

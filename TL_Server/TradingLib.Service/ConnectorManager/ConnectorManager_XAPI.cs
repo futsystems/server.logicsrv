@@ -178,7 +178,7 @@ namespace TradingLib.ServiceManager
                 if (account != null)
                 {
                     //触发帐户变动事件
-                    TLCtxHelper.EventAccount.FireAccountChangeEent(account.ID);
+                    TLCtxHelper.EventAccount.FireAccountChangeEent(account);
                 }
             }
         }
@@ -192,7 +192,7 @@ namespace TradingLib.ServiceManager
                 if (account != null)
                 {
                     //触发帐户变动事件
-                    TLCtxHelper.EventAccount.FireAccountChangeEent(account.ID);
+                    TLCtxHelper.EventAccount.FireAccountChangeEent(account);
                 }
             }
         }

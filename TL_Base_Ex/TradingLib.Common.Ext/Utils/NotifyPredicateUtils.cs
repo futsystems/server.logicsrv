@@ -64,7 +64,6 @@ namespace TradingLib.Common
 
         /// <summary>
         /// 获得某个帐户的通知对象
-        /// 
         /// </summary>
         /// <param name="account"></param>
         /// <returns></returns>
@@ -74,7 +73,6 @@ namespace TradingLib.Common
             func = (mgr) =>
             {
                 if (mgr == null) return false;
-                
                 //如果有Root域的管理端登入 则需要通知
                 if (mgr.IsInRoot())
                     return true;

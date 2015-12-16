@@ -348,7 +348,7 @@ namespace TradingLib.Core
                     TLCtxHelper.EventAccount.FireAccountWarnOffEvent(account, message);//解除警告
                 }
 
-                TLCtxHelper.EventAccount.FireAccountChangeEent(account);//设置帐户状态变化事件
+                TLCtxHelper.EventAccount.FireAccountChangeEent(acct);//设置帐户状态变化事件
             }
             else
             {

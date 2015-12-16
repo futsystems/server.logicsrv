@@ -17,15 +17,9 @@ namespace TradingLib.Core
 
 
         TLServer_MgrExch tl;
-
-        //MsgExchServer exchsrv;
-        //ClearCentre clearcentre;
-        //RiskCentre riskcentre;
         ConfigDB _cfgdb;
 
         ConcurrentDictionary<string, CustInfoEx> customerExInfoMap = null;
-
-        //PushServer _pusherSrv = new PushServer("121.40.32.76", 8870);
 
         public MgrExchServer()
             : base(MgrExchServer.CoreName)
@@ -43,7 +37,6 @@ namespace TradingLib.Core
 
             tl = new TLServer_MgrExch(_cfgdb["TLServerIP"].AsString(), _cfgdb["TLPort"].AsInt(), false);
             tl.NumWorkers = 2;
-            //tl.EnableTPTracker = false;
 
             tl.CachePacketEvent += new IPacketDelegate(CachePacket);
             tl.newFeatureRequest += new MessageArrayDelegate(tl_newFeatureRequest);
@@ -56,14 +49,7 @@ namespace TradingLib.Core
             tl.ClientRegistedEvent += new ClientInfoDelegate<MgrClientInfo>(tl_ClientRegistedEvent);
             tl.ClientUnregistedEvent += new ClientInfoDelegate<MgrClientInfo>(tl_ClientUnregistedEvent);
 
-            //exchsrv = srv;
-            //clearcentre = c;
-            //riskcentre = r;
-
             customerExInfoMap = new ConcurrentDictionary<string, CustInfoEx>();
-
-
-
 
             //初始化通知
             InitNotifySection();
@@ -75,12 +61,17 @@ namespace TradingLib.Core
             TLCtxHelper.EventIndicator.GotFillEvent += new FillDelegate(this.newTrade);
             TLCtxHelper.EventIndicator.GotOrderEvent += new OrderDelegate(this.newOrder);
             TLCtxHelper.EventIndicator.GotOrderErrorEvent += new OrderErrorDelegate(this.newOrderError);
-            TLCtxHelper.EventAccount.AccountChangeEvent += new AccoundIDDel(this.newAccountChanged);
-            TLCtxHelper.EventAccount.AccountAddEvent += new AccoundIDDel(this.newAccountAdded);
+
+            //订阅帐户变动信息
+            TLCtxHelper.EventAccount.AccountChangeEvent += new Action<IAccount>(this.newAccountChanged);
+            TLCtxHelper.EventAccount.AccountAddEvent += new Action<IAccount>(this.newAccountAdded);
+            TLCtxHelper.EventAccount.AccountDelEvent += new Action<IAccount>(this.newAccountDeleted);
             TLCtxHelper.EventSession.ClientLoginInfoEvent += new ClientLoginInfoDelegate<TrdClientInfo>(this.newSessionUpdate);
 
 
         }
+
+        
 
 
         public override void Dispose()

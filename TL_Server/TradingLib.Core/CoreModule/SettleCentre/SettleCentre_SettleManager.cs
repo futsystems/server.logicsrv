@@ -261,7 +261,7 @@ namespace TradingLib.Core
             foreach (IAccount acc in TLCtxHelper.ModuleAccountManager.Accounts)
             {
                 //触发帐户变化事件 用于更新昨日权益
-                TLCtxHelper.EventAccount.FireAccountChangeEent(acc.ID);
+                TLCtxHelper.EventAccount.FireAccountChangeEent(acc);
             }
             session.ReplyMgr("rollback");//管理段通过Rollback回报来触发 查询持仓，查询结算价等相关操作
             session.OperationSuccess(string.Format("系统回滚到交易日:{0}成功", histday));

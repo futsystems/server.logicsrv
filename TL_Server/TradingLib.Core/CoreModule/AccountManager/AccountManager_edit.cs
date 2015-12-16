@@ -27,11 +27,12 @@ namespace TradingLib.Core
         /// </summary>
         /// <param name="id"></param>
         /// <param name="ca"></param>
-        public void UpdateAccountCategory(string account, QSEnumAccountCategory ca)
+        public void UpdateAccountCategory(string id, QSEnumAccountCategory ca)
         {
-            if (!HaveAccount(account)) return;
-            this[account].Category = ca;
-            ORM.MAccount.UpdateAccountCategory(account, ca);
+            IAccount account = this[id];
+            if (account == null) return;
+            account.Category = ca;
+            ORM.MAccount.UpdateAccountCategory(id, ca);
             AccountChanged(account);
         }
 
@@ -40,45 +41,27 @@ namespace TradingLib.Core
         /// </summary>
         /// <param name="acc"></param>
         /// <param name="type"></param>
-        public void UpdateAccountRouterTransferType(string account, QSEnumOrderTransferType type)
+        public void UpdateAccountRouterTransferType(string id, QSEnumOrderTransferType type)
         {
-            if (!HaveAccount(account)) return;
-            this[account].OrderRouteType = type;
-            ORM.MAccount.UpdateAccountRouterTransferType(account, type);
+            IAccount account = this[id];
+            if (account == null) return;
+            account.OrderRouteType = type;
+            ORM.MAccount.UpdateAccountRouterTransferType(id, type);
             AccountChanged(account);
         }
 
-        ///// <summary>
-        ///// 修改投资者信息
-        ///// </summary>
-        ///// <param name="account"></param>
-        ///// <param name="name"></param>
-        ///// <param name="broker"></param>
-        ///// <param name="bankfk"></param>
-        ///// <param name="bankac"></param>
-        //public void UpdateInvestorInfo(string account, string name, string broker, int bankfk, string bankac)
-        //{
-        //    if (!HaveAccount(account)) return;
-        //    IAccount acc = this[account];
-        //    acc.Name = name;
-        //    acc.Broker = broker;
-        //    acc.BankAC = bankac;
-        //    acc.BankID = bankfk;
-        //    ORM.MAccount.UpdateInvestorInfo(account, name, broker, bankfk, bankac);
-        //    AccountChanged(account);
-        //}
 
         /// <summary>
         /// 更新交易帐户货币
         /// </summary>
         /// <param name="account"></param>
         /// <param name="currency"></param>
-        public void UpdateAccountCurrency(string account, CurrencyType currency)
+        public void UpdateAccountCurrency(string id, CurrencyType currency)
         {
-            if (!HaveAccount(account)) return;
-            IAccount acc = this[account];
-            acc.Currency = currency;
-            ORM.MAccount.UpdateAccountCurrency(account, currency);
+            IAccount account = this[id];
+            if (account == null) return;
+            account.Currency = currency;
+            ORM.MAccount.UpdateAccountCurrency(id, currency);
             AccountChanged(account);
         }
         /// <summary>
@@ -86,12 +69,12 @@ namespace TradingLib.Core
         /// </summary>
         /// <param name="account"></param>
         /// <param name="id"></param>
-        public void UpdateManagerID(string account, int id)
+        public void UpdateManagerID(string id, int mgr_id)
         {
-            if (!HaveAccount(account)) return;
-            IAccount acc = this[account];
-            acc.Mgr_fk = id;
-            ORM.MAccount.UpdateManagerID(account, id);
+            IAccount account = this[id];
+            if (account == null) return;
+            account.Mgr_fk = mgr_id;
+            ORM.MAccount.UpdateManagerID(id, mgr_id);
             AccountChanged(account);
         }
 
@@ -100,12 +83,12 @@ namespace TradingLib.Core
         /// </summary>
         /// <param name="account"></param>
         /// <param name="id"></param>
-        public void UpdateAccountExStrategyTemplate(string account, int id)
+        public void UpdateAccountExStrategyTemplate(string id, int tempate_id)
         {
-            if (!HaveAccount(account)) return;
-            IAccount acc = this[account];
-            acc.ExStrategy_ID = id;
-            ORM.MAccount.UpdateAccountExStrategyTemplate(account, id);
+            IAccount account = this[id];
+            if (account == null) return;
+            account.ExStrategy_ID = tempate_id;
+            ORM.MAccount.UpdateAccountExStrategyTemplate(id, tempate_id);
             AccountChanged(account);
         }
 
@@ -114,11 +97,12 @@ namespace TradingLib.Core
         /// </summary>
         /// <param name="account"></param>
         /// <param name="templateid"></param>
-        public void UpdateAccountCommissionTemplate(string account, int templateid)
+        public void UpdateAccountCommissionTemplate(string id, int templateid)
         {
-            if (!HaveAccount(account)) return;
-            this[account].Commission_ID = templateid;
-            ORM.MAccount.UpdateAccountCommissionTemplate(account, templateid);
+            IAccount account = this[id];
+            if (account == null) return;
+            account.Commission_ID = templateid;
+            ORM.MAccount.UpdateAccountCommissionTemplate(id, templateid);
             AccountChanged(account);
         }
 
@@ -127,11 +111,12 @@ namespace TradingLib.Core
         /// </summary>
         /// <param name="account"></param>
         /// <param name="templateid"></param>
-        public void UpdateAccountMarginTemplate(string account, int templateid)
+        public void UpdateAccountMarginTemplate(string id, int templateid)
         {
-            if (!HaveAccount(account)) return;
-            this[account].Margin_ID = templateid;
-            ORM.MAccount.UpdateAccountMarginTemplate(account, templateid);
+            IAccount account = this[id];
+            if (account == null) return;
+            account.Margin_ID = templateid;
+            ORM.MAccount.UpdateAccountMarginTemplate(id, templateid);
             AccountChanged(account);
         }
 
@@ -141,19 +126,21 @@ namespace TradingLib.Core
         /// </summary>
         /// <param name="account"></param>
         /// <param name="intraday"></param>
-        public void UpdateAccountIntradyType(string account, bool intraday)
+        public void UpdateAccountIntradyType(string id, bool intraday)
         {
-            if (!HaveAccount(account)) return;
-            this[account].IntraDay = intraday;
-            ORM.MAccount.UpdateAccountInterday(account, intraday);
+            IAccount account = this[id];
+            if (account == null) return;
+            account.IntraDay = intraday;
+            ORM.MAccount.UpdateAccountInterday(id, intraday);
             AccountChanged(account);
         }
 
-        public void UpdateRouterGroup(string account, int gid)
+        public void UpdateRouterGroup(string id, int gid)
         {
-            if (!HaveAccount(account)) return;
-            this[account].RG_FK = gid;
-            ORM.MAccount.UpdateRouterGroup(account, gid);
+            IAccount account = this[id];
+            if (account == null) return;
+            account.RG_FK = gid;
+            ORM.MAccount.UpdateRouterGroup(id, gid);
             AccountChanged(account);
         }
 
@@ -162,12 +149,13 @@ namespace TradingLib.Core
         /// </summary>
         /// <param name="account"></param>
         /// <param name="rg"></param>
-        public void UpdateRouterGroup(string account, RouterGroup rg)
+        public void UpdateRouterGroup(string id, RouterGroup rg)
         {
             logger.Info("修改帐户路由组为:" + rg.Name);
-            if (!HaveAccount(account)) return;
-            this[account].RG_FK = rg.ID;
-            ORM.MAccount.UpdateRouterGroup(account, rg.ID);
+            IAccount account = this[id];
+            if (account == null) return;
+            account.RG_FK = rg.ID;
+            ORM.MAccount.UpdateRouterGroup(id, rg.ID);
             AccountChanged(account);
         }
 
@@ -180,10 +168,11 @@ namespace TradingLib.Core
         public void ActiveAccount(string id)
         {
             logger.Info("激活帐户:" + id);
-            if (!HaveAccount(id)) return;
+            IAccount account = this[id];
+            if (account == null) return;
             this[id].Execute = true;
-            TLCtxHelper.EventAccount.FireAccountActiveEvent(id);
-            AccountChanged(id);
+            TLCtxHelper.EventAccount.FireAccountActiveEvent(account);
+            AccountChanged(account);
         }
 
 
@@ -194,10 +183,11 @@ namespace TradingLib.Core
         public void InactiveAccount(string id)
         {
             logger.Info("冻结账户:" + id);
-            if (!HaveAccount(id)) return;
-            this[id].Execute = false;
-            TLCtxHelper.EventAccount.FireAccountInactiveEvent(id);
-            AccountChanged(id);
+            IAccount account = this[id];
+            if (account == null) return;
+            account.Execute = false;
+            TLCtxHelper.EventAccount.FireAccountInactiveEvent(account);
+            AccountChanged(account);
         }
 
 

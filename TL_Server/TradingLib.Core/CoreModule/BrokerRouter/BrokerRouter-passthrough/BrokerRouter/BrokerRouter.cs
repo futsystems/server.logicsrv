@@ -76,7 +76,7 @@ namespace TradingLib.Core
 
 
             StartProcessMsgOut();
-            TLCtxHelper.EventAccount.AccountInactiveEvent += new AccoundIDDel(EventAccount_AccountInactiveEvent);
+            TLCtxHelper.EventAccount.AccountInactiveEvent += new Action<IAccount>(EventAccount_AccountInactiveEvent);
         }
 
         /// <summary>
@@ -84,7 +84,7 @@ namespace TradingLib.Core
         /// 
         /// </summary>
         /// <param name="account"></param>
-        void EventAccount_AccountInactiveEvent(string account)
+        void EventAccount_AccountInactiveEvent(IAccount account)
         {
             
         }

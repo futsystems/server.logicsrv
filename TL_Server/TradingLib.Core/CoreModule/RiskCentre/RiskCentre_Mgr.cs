@@ -179,7 +179,7 @@ namespace TradingLib.Core
 
                 acct.Warn(false);//解除帐户警告
 
-                TLCtxHelper.EventAccount.FireAccountChangeEent(account);
+                TLCtxHelper.EventAccount.FireAccountChangeEent(acct);
             }
 
 
@@ -284,7 +284,7 @@ namespace TradingLib.Core
 
                 session.OperationSuccess("更新风控项目成功");
             }
-            TLCtxHelper.EventAccount.FireAccountChangeEent(account);
+            TLCtxHelper.EventAccount.FireAccountChangeEent(acct);
         }
 
         #endregion

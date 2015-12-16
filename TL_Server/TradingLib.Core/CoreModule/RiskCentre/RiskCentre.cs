@@ -101,7 +101,7 @@ namespace TradingLib.Core
             TLCtxHelper.EventIndicator.GotOrderErrorEvent += new OrderErrorDelegate(this.GotOrderError);
 
             //交易帐户激活
-            TLCtxHelper.EventAccount.AccountActiveEvent += new AccoundIDDel(this.ResetRuleSet);
+            TLCtxHelper.EventAccount.AccountActiveEvent += new Action<IAccount>(this.ResetRuleSet);
 
             //结算重置
             TLCtxHelper.EventSystem.SettleResetEvent += new EventHandler<SystemEventArgs>(EventSystem_SettleResetEvent);

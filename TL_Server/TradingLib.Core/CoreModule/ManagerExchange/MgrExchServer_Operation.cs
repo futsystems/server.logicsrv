@@ -53,12 +53,11 @@ namespace TradingLib.Core
         /// 向管理客户端转发帐户变动
         /// </summary>
         /// <param name="account"></param>
-        void newAccountChanged(string account)
+        void newAccountChanged(IAccount account)
         {
-            logger.Info("account changed,will send to manager montier");
-            IAccount acc = TLCtxHelper.ModuleAccountManager[account];
-            NotifyMGRAccountChangeUpdateResponse notify = ResponseTemplate<NotifyMGRAccountChangeUpdateResponse>.SrvSendNotifyResponse(account);
-            notify.oAccount = acc.GenAccountLite();
+            logger.Info(string.Format("Account:{0} Changed",account.ID));
+            NotifyMGRAccountChangeUpdateResponse notify = ResponseTemplate<NotifyMGRAccountChangeUpdateResponse>.SrvSendNotifyResponse(account.ID);
+            notify.oAccount = account.GenAccountLite();
             CachePacket(notify);
         }
 
@@ -66,17 +65,24 @@ namespace TradingLib.Core
         /// 有新帐号增加时 向服务端通知
         /// </summary>
         /// <param name="account"></param>
-        void newAccountAdded(string account)
+        void newAccountAdded(IAccount account)
         {
-            logger.Info("account added,will send to manager montier");
-            IAccount acc = TLCtxHelper.ModuleAccountManager[account];
-            if (acc != null)
-            {
-                NotifyMGRAccountChangeUpdateResponse notify = ResponseTemplate<NotifyMGRAccountChangeUpdateResponse>.SrvSendNotifyResponse(account);
-                notify.oAccount = acc.GenAccountLite();
-                CachePacket(notify);
-            }
+            logger.Info(string.Format("Account:{0} Created", account.ID));
+            NotifyMGRAccountChangeUpdateResponse notify = ResponseTemplate<NotifyMGRAccountChangeUpdateResponse>.SrvSendNotifyResponse(account.ID);
+            notify.oAccount = account.GenAccountLite();
+            CachePacket(notify);
+            
         }
+
+        void newAccountDeleted(IAccount account)
+        {
+            logger.Info(string.Format("Account:{0} Deleted", account.ID));
+            IEnumerable<ILocation> locations = GetNotifyTargets(account.GetNotifyPredicate());
+            NotifyMGRAccountChangeUpdateResponse notify = ResponseTemplate<NotifyMGRAccountChangeUpdateResponse>.SrvSendNotifyResponse(locations);
+            notify.oAccount = account.GenAccountLite();
+            CachePacket(notify);
+        }
+
 
         void newOrder(Order o)
         {

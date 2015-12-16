@@ -12,36 +12,42 @@ namespace TradingLib.Common
         /// <summary>
         /// 交易帐号冻结事件
         /// </summary>
-        public event AccoundIDDel AccountInactiveEvent;
+        public event Action<IAccount> AccountInactiveEvent;
 
         /// <summary>
         /// 交易帐号激活事件
         /// </summary>
-        public event AccoundIDDel AccountActiveEvent;
+        public event Action<IAccount> AccountActiveEvent;
 
 
         /// <summary>
         /// 添加交易帐号事件
         /// </summary>
-        public event AccoundIDDel AccountAddEvent;
+        public event Action<IAccount> AccountAddEvent;
 
 
         /// <summary>
         /// 交易帐号删除事件
         /// </summary>
-        public event AccoundIDDel AccountDelEvent;
+        public event Action<IAccount> AccountDelEvent;
 
 
         /// <summary>
         /// 交易帐号设置发送变动事件
         /// </summary>
-        public event AccoundIDDel AccountChangeEvent;
+        public event Action<IAccount> AccountChangeEvent;
 
 
         /// <summary>
         /// 交易帐户警告开启事件
         /// </summary>
         public event Action<string,string> AccountWarnOnEvent;
+
+        /// <summary>
+        /// 交易帐户警告关闭事件
+        /// </summary>
+        public event Action<string, string> AccountWarnOffEvent;
+
 
         /// <summary>
         /// 交易帐户出入金事件
@@ -79,10 +85,7 @@ namespace TradingLib.Common
             if(AccountWarnOnEvent != null)
                 AccountWarnOnEvent(account,message);
         }
-        /// <summary>
-        /// 交易帐户警告关闭事件
-        /// </summary>
-        public event Action<string,string> AccountWarnOffEvent;
+
 
         internal void FireAccountWarnOffEvent(string account,string message)
         {
@@ -92,33 +95,33 @@ namespace TradingLib.Common
 
 
 
-        internal void FireAccountInactiveEvent(string account)
+        internal void FireAccountInactiveEvent(IAccount account)
         {
-            if(AccountInactiveEvent != null)
+            if(AccountInactiveEvent != null && account!= null)
                 AccountInactiveEvent(account);
         }
 
-        internal void FireAccountActiveEvent(string account)
+        internal void FireAccountActiveEvent(IAccount account)
         {
-            if (AccountActiveEvent != null)
+            if (AccountActiveEvent != null && account != null)
                 AccountActiveEvent(account);
         }
 
-        internal void FireAccountAddEvent(string account)
+        internal void FireAccountAddEvent(IAccount account)
         {
-            if (AccountAddEvent != null)
+            if (AccountAddEvent != null && account != null)
                 AccountAddEvent(account);
         }
 
-        internal void FireAccountDelEvent(string account)
+        internal void FireAccountDelEvent(IAccount account)
         {
-            if (AccountDelEvent != null)
+            if (AccountDelEvent != null && account != null)
                 AccountDelEvent(account);
         }
 
-        internal void FireAccountChangeEent(string account)
+        internal void FireAccountChangeEent(IAccount account)
         {
-            if (AccountChangeEvent != null)
+            if (AccountChangeEvent != null && account != null)
                 AccountChangeEvent(account);
         }
 

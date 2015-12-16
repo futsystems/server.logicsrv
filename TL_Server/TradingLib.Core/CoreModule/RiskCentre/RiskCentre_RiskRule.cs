@@ -242,15 +242,12 @@ namespace TradingLib.Core
         /// 则需要重新加载风控规则,风控规则被处罚后，相关标志会处于状态位，解冻后需要恢复规则初始状态
         /// </summary>
         /// <param name="account"></param>
-        public void ResetRuleSet(string account)
+        public void ResetRuleSet(IAccount account)
         {
-            IAccount acc = TLCtxHelper.ModuleAccountManager[account];
-            if (acc != null)
-            {
-                acc.ClearAccountCheck();
-                acc.ClearOrderCheck();
-                LoadRuleItem(acc);
-            }
+            account.ClearAccountCheck();
+            account.ClearOrderCheck();
+            LoadRuleItem(account);
+            
         }
         #endregion
 

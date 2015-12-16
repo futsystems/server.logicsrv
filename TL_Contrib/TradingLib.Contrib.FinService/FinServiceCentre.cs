@@ -120,10 +120,10 @@ namespace TradingLib.Contrib.FinService
             TLCtxHelper.EventIndicator.GotPositionClosedEvent += new PositionRoundClosedDel(EventIndicator_GotPositionClosedEvent);
 
             //帐户添加事件
-            TLCtxHelper.EventAccount.AccountAddEvent += new AccoundIDDel(EventAccount_AccountAddEvent);
+            TLCtxHelper.EventAccount.AccountAddEvent += new Action<IAccount>(EventAccount_AccountAddEvent);
 
             //帐户激活事件
-            TLCtxHelper.EventAccount.AccountActiveEvent += new AccoundIDDel(EventAccount_AccountActiveEvent);
+            TLCtxHelper.EventAccount.AccountActiveEvent += new Action<IAccount>(EventAccount_AccountActiveEvent);
 
             //出入金事件
             TLCtxHelper.EventSystem.CashOperationRequest += new EventHandler<CashOperationEventArgs>(CashOperationEvent_CashOperationRequest);
@@ -273,17 +273,17 @@ namespace TradingLib.Contrib.FinService
         /// 比如默认添加某种类型的配资服务
         /// </summary>
         /// <param name="account"></param>
-        void EventAccount_AccountAddEvent(string account)
+        void EventAccount_AccountAddEvent(IAccount account)
         {
             if (_addservice)
             {
                 DBServicePlan sp = FinTracker.ServicePlaneTracker[_defaultspclassname];
-                IAccount acc = TLCtxHelper.ModuleAccountManager[account];
+                //IAccount acc = TLCtxHelper.ModuleAccountManager[account];
                 //如果是实盘帐号则默认给他开通配资服务
-                if (acc != null && sp != null && (acc.Category == QSEnumAccountCategory.SUBACCOUNT))
+                if (sp != null && (account.Category == QSEnumAccountCategory.SUBACCOUNT))
                 {
                     //如果帐户存在并且服务计划存在 则为该帐户添加对应的配资服务
-                    FinTracker.FinServiceTracker.AddFinService(account, sp.ID);
+                    FinTracker.FinServiceTracker.AddFinService(account.ID, sp.ID);
                 }
             }
         }
@@ -293,12 +293,12 @@ namespace TradingLib.Contrib.FinService
         /// 用于重置服务相关状态
         /// </summary>
         /// <param name="account"></param>
-        void EventAccount_AccountActiveEvent(string account)
+        void EventAccount_AccountActiveEvent(IAccount account)
         {
-            FinServiceStub stub = FinTracker.FinServiceTracker[account];
+            FinServiceStub stub = FinTracker.FinServiceTracker[account.ID];
             if (stub == null) return;//不存在对应的配资服务
 
-            stub.FinService.OnAccountActive(account);
+            stub.FinService.OnAccountActive(account.ID);
 
         }
     }

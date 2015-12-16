@@ -150,9 +150,13 @@ namespace TradingLib.Core
                     TLCtxHelper.ModuleAccountManager.DelAccount(acc.ID);
                 }
 
-                //删除管理员
+                Util.sleep(500);
+                //删除管理员 如果不执行等待 则超级管理员会无法获得帐户删除通知 等待1秒后帐户删除通知会正常的送达所有管理员
                 BasicTracker.ManagerTracker.DeleteManager(mgr);
                 NotifyManagerDelete(mgr);
+                Util.sleep(500);
+                //注销管理端登入会话
+                tl.ClearTerminalsForManager(mgr.Login);
             }
             
             session.OperationSuccess("删除管理员成功");
