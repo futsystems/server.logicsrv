@@ -27,9 +27,9 @@ namespace DataFeed.FastTick
             _cfgdb = new ConfigDB("FastTickDataFeed");
             if (!_cfgdb.HaveConfig("TickServerVersion"))
             {
-                _cfgdb.UpdateConfig("FastTickDataFeed", QSEnumCfgType.Int, 1, "行情服务器版本");
+                _cfgdb.UpdateConfig("TickServerVersion", QSEnumCfgType.Int, 1, "行情服务器版本");
             }
-            _tickversion = _cfgdb["FastTickDataFeed"].AsInt();
+            _tickversion = _cfgdb["TickServerVersion"].AsInt();
         }
 
 
