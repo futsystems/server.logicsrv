@@ -384,7 +384,7 @@ namespace TradingLib.Common
         /// 序列化成字符串 由子类提供序列化函数
         /// </summary>
         /// <returns></returns>
-        public  string Serialize()
+        public  virtual string Serialize()
         {
             StringBuilder sb = new StringBuilder();
             sb.Append(this.ContentSerialize());
@@ -399,7 +399,7 @@ namespace TradingLib.Common
         /// </summary>
         /// <param name="reqstr"></param>
         /// <returns></returns>
-        public  void Deserialize(string reqstr)
+        public virtual void Deserialize(string reqstr)
         {
             //LibUtil.Debug("deserialize -> " + reqstr);
             //1.将消息内容按'|'进行第一次解析

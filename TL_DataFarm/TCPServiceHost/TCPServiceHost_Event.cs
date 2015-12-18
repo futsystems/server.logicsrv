@@ -14,12 +14,12 @@ namespace TCPServiceHost
         /// <summary>
         /// 客户端连接建立
         /// </summary>
-        public event Action<IServiceHost, IConnection> SessionCreatedEvent;
+        public event Action<IServiceHost, IConnection> ConnectionCreatedEvent;
 
         /// <summary>
         /// 客户端连接断开事件
         /// </summary>
-        public event Action<IServiceHost, IConnection> SessionClosedEvent;
+        public event Action<IServiceHost, IConnection> ConnectionClosedEvent;
 
         /// <summary>
         /// 客户端请求事件
@@ -32,26 +32,29 @@ namespace TCPServiceHost
         public event Func<IServiceHost, IPacket, IPacket> ServiceEvent;
 
 
-        void OnSessionCreated(IConnection conn)
+        void OnConnectionCreated(IConnection conn)
         {
-            if (SessionCreatedEvent != null)
+            if (ConnectionCreatedEvent != null)
             {
-                SessionCreatedEvent(this, conn);
+                ConnectionCreatedEvent(this, conn);
             }
         }
 
-        void OnSessionClosed(IConnection conn)
+        void OnConnectionClosed(IConnection conn)
         {
-            if (SessionClosedEvent != null)
+            if (ConnectionClosedEvent != null)
             {
-                SessionClosedEvent(this, conn);
+                ConnectionClosedEvent(this, conn);
             }
         }
 
 
-        void OnRequestEvent(IPacket packet)
+        void OnRequestEvent(IConnection conn,IPacket packet)
         {
-
+            if (RequestEvent != null && packet!= null)
+            {
+                RequestEvent(this, conn, packet);
+            }
         }
 
         /// <summary>

@@ -423,17 +423,17 @@ namespace ZMQServiceHost
 
         void OnSessionCreated(IConnection conn)
         {
-            if (SessionCreatedEvent != null)
+            if (ConnectionCreatedEvent != null)
             {
-                SessionCreatedEvent(this, conn);
+                ConnectionCreatedEvent(this, conn);
             }
         }
 
         void OnSessionClosed(IConnection conn)
         {
-            if (SessionClosedEvent != null)
+            if (ConnectionClosedEvent != null)
             {
-                SessionClosedEvent(this, conn);
+                ConnectionClosedEvent(this, conn);
             }
         }
         private void HandleMessage(MessageTypes type, string body,string address)
@@ -475,11 +475,11 @@ namespace ZMQServiceHost
         /// <summary>
         /// 客户端连接建立
         /// </summary>
-        public event Action<IServiceHost, IConnection> SessionCreatedEvent;
+        public event Action<IServiceHost, IConnection> ConnectionCreatedEvent;
 
         /// <summary>
         /// 客户端连接关闭
         /// </summary>
-        public event Action<IServiceHost, IConnection> SessionClosedEvent;
+        public event Action<IServiceHost, IConnection> ConnectionClosedEvent;
     }
 }

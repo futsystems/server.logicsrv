@@ -59,12 +59,56 @@ namespace TradingLib.MDClient
             
         }
 
-        /// <summary>
-        /// 注册实时行情
-        /// </summary>
-        public void Register(string symbol)
+
+        public void RegisterSymbol(string symbol)
         {
-            MDRegisterSymbolsRequest request = RequestTemplate<MDRegisterSymbolsRequest>.CliSendRequest(NextRequestID);
+            this.RegisterSymbol(new string[] { symbol });
+        }
+        /// <summary>
+        /// 订阅合约实时行情
+        /// </summary>
+        public void RegisterSymbol(string[] symbols)
+        {
+            logger.Info(string.Format("Subscribe market data for symbol:{0}", string.Join(",", symbols)));
+            RegisterSymbolTickRequest request = RequestTemplate<RegisterSymbolTickRequest>.CliSendRequest(NextRequestID);
+            foreach (var symbol in symbols)
+            {
+                Symbol sym = this.GetSymbol(symbol);
+                if (sym == null)
+                {
+                    logger.Warn(string.Format("Symbol:{0} do not exist", symbol));
+                    continue;
+                }
+                request.SymbolList.Add(symbol);
+            }
+            histClient.TLSend(request);
+        }
+
+
+        public void UnRegisterSymbol(string symbol)
+        {
+            this.UnRegisterSymbol(new string[] { symbol });
+        }
+        /// <summary>
+        /// 注销合约实时行情
+        /// </summary>
+        /// <param name="symbol"></param>
+        public void UnRegisterSymbol(string[] symbols)
+        {
+            logger.Info(string.Format("Unsubscribe market data for symbol:{0}", string.Join(",",symbols)));
+            UnregisterSymbolTickRequest request = RequestTemplate<UnregisterSymbolTickRequest>.CliSendRequest(NextRequestID);
+                
+            foreach (var symbol in symbols)
+            {
+                Symbol sym = this.GetSymbol(symbol);
+                if (sym == null)
+                {
+                    logger.Warn(string.Format("Symbol:{0} do not exist", symbol));
+                    continue;
+                }
+                request.SymbolList.Add(symbol);
+            }
+            histClient.TLSend(request);
         }
 
         /// <summary>

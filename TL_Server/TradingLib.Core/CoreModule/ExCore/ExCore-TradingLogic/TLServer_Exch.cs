@@ -246,7 +246,7 @@ namespace TradingLib.Core
             logger.Info("Client:" + request.ClientID + " Request Mktdata: " + request.Content);
             if (newRegisterSymbols != null)
             {
-                newRegisterSymbols(request.ClientID, request.Symbols);
+                //newRegisterSymbols(request.ClientID, request.Symbols);
             }
         }
 

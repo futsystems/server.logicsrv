@@ -16,66 +16,38 @@ namespace TradingLib.Common
     /// </summary>
     public class RegisterSymbolTickRequest:RequestPacket
     {
-        List<string> symlist;
         public RegisterSymbolTickRequest()
         {
             _type = API.MessageTypes.REGISTERSYMTICK;
-            symlist = new List<string>();
+            this.SymbolList = new List<string>();
         }
+
 
         /// <summary>
-        /// 注册合约
+        /// 合约
         /// </summary>
-        /// <param name="symbol"></param>
-        public void Register(string symbol)
-        {
-            this.Register(new string[] { symbol });
-        }
+        public List<string> SymbolList { get; set; }
 
-        /// <summary>
-        /// 注册合约
-        /// </summary>
-        /// <param name="symbols"></param>
-        public void Register(string[] symbols)
-        {
-            foreach (string sym in symbols)
-            {
-                if (string.IsNullOrEmpty(sym) || symlist.Contains(sym))
-                    continue;
-                symlist.Add(sym);
-            }
-        }
 
-        public  List<string> SymbolList
-        {
-            get
-            {
-                return symlist;
-            }
-        }
-
-        public string Symbols
-        {
-            get
-            {
-                return string.Join(",", symlist.ToArray());
-            }  
-        }
 
         public override string ContentSerialize()
         {
-            return string.Join(",", symlist.ToArray());
+            string str = string.Empty;
+            if (this.SymbolList != null && this.SymbolList.Count > 0)
+            {
+                str = string.Join(" ", this.SymbolList.ToArray());
+            }
+            return str;
         }
 
-        public override void ContentDeserialize(string reqstr)
+        public override void ContentDeserialize(string contentstr)
         {
-            symlist.Clear();
-            string[] rec = reqstr.Split(',');
-            foreach (string sym in rec)
+            string[] syms = contentstr.Split(' ');
+            this.SymbolList.Clear();
+            foreach (var symbol in syms)
             {
-                if (string.IsNullOrEmpty(sym))
-                    continue;
-                symlist.Add(sym);
+                if (string.IsNullOrEmpty(symbol)) continue; 
+                this.SymbolList.Add(symbol);
             }
         }
     }
@@ -85,69 +57,39 @@ namespace TradingLib.Common
     /// </summary>
     public class UnregisterSymbolTickRequest : RequestPacket
     {
-        List<string> symlist;
         public UnregisterSymbolTickRequest()
         {
             _type = MessageTypes.UNREGISTERSYMTICK;
-            symlist = new List<string>();
+            this.SymbolList = new List<string>();
         }
 
         /// <summary>
-        /// 注册合约
+        /// 合约
         /// </summary>
-        /// <param name="symbol"></param>
-        public void Unregister(string symbol)
-        {
-            this.Unregister(new string[] { symbol });
-        }
+        public List<string> SymbolList { get; set; }
 
-        /// <summary>
-        /// 注册合约
-        /// </summary>
-        /// <param name="symbols"></param>
-        public void Unregister(string[] symbols)
-        {
-            foreach (string sym in symbols)
-            {
-                if (string.IsNullOrEmpty(sym) || symlist.Contains(sym))
-                    continue;
-                symlist.Add(sym);
-            }
-        }
 
-        public List<string> SymbolList
-        {
-            get
-            {
-                return symlist;
-            }
-        }
-
-        public string Symbols
-        {
-            get
-            {
-                return string.Join(",", symlist.ToArray());
-            }
-        }
 
         public override string ContentSerialize()
         {
-            return string.Join(",", symlist.ToArray());
+            string str = string.Empty;
+            if (this.SymbolList != null && this.SymbolList.Count > 0)
+            {
+                str = string.Join(" ", this.SymbolList.ToArray());
+            }
+            return str;
         }
 
-        public override void ContentDeserialize(string reqstr)
+        public override void ContentDeserialize(string contentstr)
         {
-            symlist.Clear();
-            string[] rec = reqstr.Split(',');
-            foreach (string sym in rec)
+            string[] syms = contentstr.Split(' ');
+            this.SymbolList.Clear();
+            foreach (var symbol in syms)
             {
-                if (string.IsNullOrEmpty(sym))
-                    continue;
-                symlist.Add(sym);
+                if (string.IsNullOrEmpty(symbol)) continue; 
+                this.SymbolList.Add(symbol);
             }
         }
-
 
     }
 

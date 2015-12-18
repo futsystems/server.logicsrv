@@ -71,24 +71,24 @@ namespace TradingLib.Common
         public TickNotify()
         {
             _type = MessageTypes.TICKNOTIFY;
+            this.Tick = null;
         }
 
         public Tick Tick { get; set; }
 
-        public override string ContentSerialize()
+        public override string Serialize()
         {
             if (this.Tick == null)
                 return string.Empty;
             return TickImpl.Serialize(Tick);
         }
 
-        public override void ContentDeserialize(string contentstr)
+        public override void Deserialize(string content)
         {
-            if (!string.IsNullOrEmpty(contentstr))
+            if (!string.IsNullOrEmpty(content))
             {
-                this.Tick = TickImpl.Deserialize(contentstr);
+                this.Tick = TickImpl.Deserialize(content);
             }
-
         }
     }
 

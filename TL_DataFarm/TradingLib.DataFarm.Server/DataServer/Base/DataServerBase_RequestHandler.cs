@@ -234,7 +234,7 @@ namespace TradingLib.DataFarm.Common
         /// <param name="request"></param>
         protected virtual void SrvOnUnregisterSymbolTick(IServiceHost host, IConnection conn, UnregisterSymbolTickRequest request)
         {
-            logger.Info(string.Format("Conn:{0} try to unregister symbol:{1}", conn.SessionID, request.Symbols));
+            logger.Info(string.Format("Conn:{0} try to unregister symbol:{1}", conn.SessionID, string.Join(",",request.SymbolList.ToArray())));
             OnUngisterSymbol(conn, request);
         }
 
@@ -246,7 +246,7 @@ namespace TradingLib.DataFarm.Common
         /// <param name="request"></param>
         protected virtual void SrvOnRegisterSymbolTick(IServiceHost host, IConnection conn, RegisterSymbolTickRequest request)
         {
-            logger.Info(string.Format("Conn:{0} try to register symbol:{1}", conn.SessionID, request.Symbols));
+            logger.Info(string.Format("Conn:{0} try to register symbol:{1}", conn.SessionID, string.Join(",", request.SymbolList.ToArray())));
             OnRegisterSymbol(conn, request);
             
         }
