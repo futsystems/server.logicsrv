@@ -20,6 +20,7 @@ namespace TradingLib.MDClient
 
         TLClient<TLSocket_TCP> realClient = null;
         TLClient<TLSocket_TCP> histClient = null;
+        IMDNotify _notify = null;
 
         int requestid = 0;
         object _reqidobj = new object();
@@ -65,6 +66,15 @@ namespace TradingLib.MDClient
         }
 
 
+        /// <summary>
+        /// 注册行情回调函数
+        /// </summary>
+        /// <param name="notify"></param>
+        public void Register(IMDNotify notify)
+        {
+            _notify = notify;
+        }
+
         public void Start()
         {
             logger.Info("Start MDClient");
@@ -108,7 +118,10 @@ namespace TradingLib.MDClient
                 case MessageTypes.TICKNOTIFY:
                     {
                         TickNotify response = obj as TickNotify;
-                        OnTick(response.Tick);
+                        if (_notify != null)
+                        {
+                            _notify.OnTickNotify(response.Tick);
+                        }
                         return;
                     }
                 case MessageTypes.XMARKETTIMERESPONSE:
@@ -138,7 +151,10 @@ namespace TradingLib.MDClient
                 case MessageTypes.BARRESPONSE:
                     {
                         RspQryBarResponse response = obj as RspQryBarResponse;
-                        OnQryBar(response.Bar, response.RspInfo, response.IsLast);
+                        if (_notify != null)
+                        {
+                            _notify.OnRspQryBar(response.Bar, response.RspInfo, response.RequestID, response.IsLast);
+                        }
                         return;
                     }
                 default:

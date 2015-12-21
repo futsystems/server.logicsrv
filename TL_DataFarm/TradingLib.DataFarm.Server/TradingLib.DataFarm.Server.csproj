@@ -64,7 +64,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BasicInfoTracker.cs" />
+    <Compile Include="MDBasicTracker.cs" />
     <Compile Include="DataBase\Compare.cs" />
     <Compile Include="DataBase\STSDBBase.cs" />
     <Compile Include="DataBase\Persist.cs" />

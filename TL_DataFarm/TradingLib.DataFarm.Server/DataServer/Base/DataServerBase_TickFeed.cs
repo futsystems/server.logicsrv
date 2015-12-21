@@ -181,6 +181,10 @@ namespace TradingLib.DataFarm.Common
         {
             foreach (var symbol in request.SymbolList)
             {
+                if (string.IsNullOrEmpty(symbol)) continue;
+                Symbol sym = MDBasicTracker.SymbolTracker[symbol];
+                if (sym == null) continue;
+
                 if (!symRegMap.Keys.Contains(symbol))
                 {
                     symRegMap.TryAdd(symbol, new  ConcurrentDictionary<string,IConnection>());
@@ -201,7 +205,9 @@ namespace TradingLib.DataFarm.Common
         void OnUngisterSymbol(IConnection conn, UnregisterSymbolTickRequest request)
         {
             foreach (var symbol in request.SymbolList)
-            { 
+            {
+                if (string.IsNullOrEmpty(symbol)) continue;
+
                 if (symRegMap.Keys.Contains(symbol))
                 {
                     ConcurrentDictionary<string, IConnection> regmap = symRegMap[symbol];
