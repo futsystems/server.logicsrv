@@ -36,6 +36,7 @@ namespace TradingLib.Core
     {
         #region 【委托检查1】
 
+        //List<string> _cnLocalExchange = new List<string>();
         /// <summary>
         /// 风控中心委托一段检查
         /// 如果未通过检查则则给出具体的错误报告
@@ -299,17 +300,22 @@ namespace TradingLib.Core
                         //}
                 }
             }
-            ////6.2检查价格是否在涨跌幅度内
-            //if (o.isLimit || o.isStop)
-            //{
-            //    decimal targetprice = o.isLimit ? o.LimitPrice : o.StopPrice;
-            //    Tick k = TLCtxHelper.ModuleDataRouter.GetTickSnapshot(o.Symbol);
-            //    if (targetprice > k.UpperLimit || targetprice < k.LowerLimit)
-            //    {
-            //        errortitle = "ORDERPRICE_OVERT_LIMIT";//保单价格超过涨跌幅
-            //        return false;
-            //    }
-            //}
+            //6.2检查价格是否在涨跌幅度内
+            if (o.isLimit || o.isStop)
+            {
+                decimal targetprice = o.isLimit ? o.LimitPrice : o.StopPrice;
+                Tick k = TLCtxHelper.ModuleDataRouter.GetTickSnapshot(o.Symbol);
+                //如果行情快照中包含有效的最高价和最低价限制 则判定价格是否在涨跌幅度内
+                if (k.UpperLimit.ValidPrice() && k.LowerLimit.ValidPrice())
+                {
+                    if (targetprice > k.UpperLimit || targetprice < k.LowerLimit)
+                    {
+                        errortitle = "ORDERPRICE_OVERT_LIMIT";//保单价格超过涨跌幅
+                        return false;
+                    }
+                }
+            }
+            
 
             return true;
 
