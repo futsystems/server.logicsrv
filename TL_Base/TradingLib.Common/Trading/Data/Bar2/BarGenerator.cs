@@ -59,17 +59,17 @@ namespace TradingLib.Common
 
         public void ProcessTick(Tick tick)
         {
-            if (tick.hasAsk)
+            if (tick.HasAsk())
             {
                 this._currentPartialBar.Ask = (double)tick.AskPrice;
                 this._currentPartialBar.EmptyBar = false;
             }
-            if (tick.hasBid)
+            if (tick.HasBid())
             {
                 this._currentPartialBar.Bid = (double)tick.BidPrice;
                 this._currentPartialBar.EmptyBar = false;
             }
-            if (tick.isTrade)
+            if (tick.IsTrade())
             {
                 this._currentPartialBar.Volume += tick.Size;
                 this._currentPartialBar.OpenInterest = tick.OpenInterest;
@@ -88,7 +88,7 @@ namespace TradingLib.Common
                 case BarConstructionType.Default:
                 case BarConstructionType.Trade:
                     {
-                        if (tick.isTrade)
+                        if (tick.IsTrade())
                         {
                             value = tick.Trade;
                             needUpdate = true;
@@ -97,7 +97,7 @@ namespace TradingLib.Common
                     }
                 case BarConstructionType.Ask:
                     {
-                        if (tick.hasAsk)
+                        if (tick.HasAsk())
                         {
                             value = tick.AskPrice;
                             needUpdate = true;
@@ -106,7 +106,7 @@ namespace TradingLib.Common
                     }
                 case BarConstructionType.Bid:
                     {
-                        if (tick.hasBid)
+                        if (tick.HasBid())
                         {
                             value = tick.BidPrice;
                             needUpdate = true;

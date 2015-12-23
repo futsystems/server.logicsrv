@@ -405,14 +405,14 @@ namespace TradingLib.Common
             decimal nprice=0;
             if (usebidask)
             {
-                if (isLong && k.hasBid)//多头看买价
+                if (isLong && k.HasBid())//多头看买价
                     nprice = k.BidPrice;
-                if (isShort && k.hasAsk)//空头看卖价
+                if (isShort && k.HasAsk())//空头看卖价
                     nprice = k.AskPrice;
             }
             else
             {
-                if (k.isTrade)
+                if (k.IsTrade())
                     nprice = k.Trade;
             }
             //position通过askbid来更新其对手价格然后得到last

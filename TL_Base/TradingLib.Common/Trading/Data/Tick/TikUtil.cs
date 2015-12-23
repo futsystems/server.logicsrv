@@ -181,5 +181,39 @@ namespace TradingLib.Common
         //        k.AddRange(BarImpl.ToTick(b));
         //    return k.ToArray();
         //}
+
+        public static DateTime DateTime(this Tick k)
+        {
+            return Util.ToDateTime(k.Date, k.Time);
+        }
+
+        /// <summary>
+        /// 是否
+        /// </summary>
+        /// <param name="k"></param>
+        /// <returns></returns>
+        public static bool IsTrade(this Tick k)
+        { 
+            return k.Trade!=0 && k.Size>0;
+        }
+
+        /// <summary>
+        /// 是否有Bid数据
+        /// </summary>
+        /// <param name="k"></param>
+        /// <returns></returns>
+        public static bool HasBid(this Tick k)
+        {
+            return k.BidPrice != 0 && k.BidSize != 0;
+        }
+
+        /// <summary>
+        /// 是否有Ask数据
+        /// </summary>
+        public static bool HasAsk(this Tick k)
+        {
+            return k.AskPrice != 0 && k.AskSize != 0;
+        }
+
     }
 }

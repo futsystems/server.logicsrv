@@ -158,10 +158,7 @@ namespace TradingLib.Common
                         {
                             Util.Info(close.ToString());
                         }
-                        
                     }
-                    
-                
                 }
                 settlement.CloseProfitByDate = closeprofit_posdetail;
                 //浮动盈亏

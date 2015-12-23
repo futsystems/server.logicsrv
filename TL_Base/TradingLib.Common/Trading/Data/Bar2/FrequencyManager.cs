@@ -308,7 +308,7 @@ namespace TradingLib.Common
         public void ProcessTick(Symbol symbol,Tick tick)
         {
             //logger.Info("process tick called,symbol:" + symbol.Symbol);
-            this.UpdateTime(tick.Datetime);
+            this.UpdateTime(tick.DateTime());
 
             //获得该合约所有的FreqInfo对象
             IEnumerable<FrequencyManager.FreqInfo> list = this.GetFreqInfosForSymbol(symbol);
@@ -349,12 +349,13 @@ namespace TradingLib.Common
 
             }
 
-            if (tick.Datetime < this._lastTickTime)
+            DateTime ticktime = tick.DateTime();
+            if (ticktime < this._lastTickTime)
             {
-                throw new Exception(string.Format("Out of order tick.  Received tick for symbol {2} with time {0} when previous tick time was {1}", tick.Datetime, this._currentTime, symbol.Symbol));
+                throw new Exception(string.Format("Out of order tick.  Received tick for symbol {2} with time {0} when previous tick time was {1}",ticktime, this._currentTime, symbol.Symbol));
             }
 
-            this._lastTickTime = tick.Datetime;
+            this._lastTickTime = ticktime;
 
             //this._x5e07af8ebe8a76be.ProcessTickInPaperBroker(symbol, tick);
             //foreach (KeyValuePair<FrequencyManager.FreqInfo, Tick> current6 in this._x273a8ba6bf9347ea)

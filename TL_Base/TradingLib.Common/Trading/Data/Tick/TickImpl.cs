@@ -9,6 +9,7 @@ namespace TradingLib.Common
     /// </summary>
     public struct TickImpl : Tick
     {
+        EnumTickType _type;
         int _symidx;
         DateTime  _datetime;
         Symbol _Sec;
@@ -28,6 +29,7 @@ namespace TradingLib.Common
         internal ulong _ask;//ask price
 
 
+        public EnumTickType Type { get { return _type; } set { _type = value; } }
         public int symidx { get { return _symidx; } set { _symidx = value; } }
         public string Symbol { get { return _sym; } set { _sym = value; } }
 
@@ -59,8 +61,11 @@ namespace TradingLib.Common
         public bool isIndex { get { return _size < 0; } }
 
         public bool hasBid { get { return (_bid != 0) && (_bs != 0); } }
+
         public bool hasAsk { get { return (_ask != 0) && (_os != 0); } }
+
         public bool isFullQuote { get { return hasBid && hasAsk; } }
+
         public bool isQuote { get { return (!isTrade && (hasBid || hasAsk)); } }
 
         public bool isTrade { get { return (_trade != 0) && (_size > 0); } }
@@ -89,7 +94,9 @@ namespace TradingLib.Common
         public TickImpl(string symbol)
         {
             _Sec = new SymbolImpl();
+            _type = EnumTickType.SNAPSHOT;//默认为快照行情 更新所有数据
             _sym = symbol;
+
             _be = "";
             _oe = "";
             _ex = "";
@@ -122,9 +129,10 @@ namespace TradingLib.Common
         {
             TickImpl k = new TickImpl();
             if (c.Symbol != "") k.Symbol = c.Symbol;
+            k.Type = c.Type;
             k.Time = c.Time;
             k.Date = c.Date;
-            k.Datetime = c.Datetime;
+            //k.Datetime = c.Datetime;
 
             k.Size = c.Size;
             k.Depth = c.Depth;
@@ -168,6 +176,7 @@ namespace TradingLib.Common
             TickImpl k = new TickImpl();
             if (b.Symbol != a.Symbol) return k; // don't combine different symbols
             if (b.Time < a.Time) return k; // don't process old updates
+            k.Type = a.Type;
             k.Time = b.Time;
             k.Date = b.Date;
             k.Datetime = b.Datetime;
@@ -236,7 +245,6 @@ namespace TradingLib.Common
             else return Symbol + " " + this.BidPrice + "x" + this.AskPrice + " (" + this.BidSize + "x" + this.AskSize + ") " + this.BidExchange + "x" + this.AskExchange;
         }
 
-        //"Iu'I^3"A'U^O"o 1/4 'Ou"Atick"I^i"A?
         int _vol;
         public int Vol { get { return _vol; } set { _vol = value; } }
 
@@ -389,7 +397,7 @@ namespace TradingLib.Common
             t.Exchange = r[(int)TickField.tex];
             t.BidExchange = r[(int)TickField.bidex];
             t.AskExchange = r[(int)TickField.askex];
-            t.Datetime = Util.ToDateTime(t.Date, t.Time);// t.Date * 1000000 + t.Time;
+            //t.Datetime = Util.ToDateTime(t.Date, t.Time);// t.Date * 1000000 + t.Time;
 
             if (decimal.TryParse(r[(int)TickField.upper], System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out d))
                 t.UpperLimit = d;

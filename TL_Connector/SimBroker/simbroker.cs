@@ -1078,7 +1078,7 @@ namespace Broker.SIM
 
             bool pairtickhavetrade(Tick k)
             {
-                if (k.isTrade)
+                if (k.IsTrade())
                 {
                     return true;
                 }

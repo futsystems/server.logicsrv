@@ -36,7 +36,7 @@ namespace TradingLib.Common
         /// <returns></returns>
         public bool newTick(Tick k)
         {
-            if (!k.isTrade) return false;
+            if (!k.IsTrade()) return false;
             return newPoint(k.Symbol, k.Trade);
         }
         /// <summary>
@@ -47,7 +47,7 @@ namespace TradingLib.Common
         /// <returns></returns>
         public bool newTick(Tick k, int idx)
         {
-            if (!k.isTrade) return false;
+            if (!k.IsTrade()) return false;
             return newPoint(idx, k.Trade);
         }
         /// <summary>
@@ -103,7 +103,7 @@ namespace TradingLib.Common
         /// <returns></returns>
         public bool newTick(Tick k)
         {
-            if (!k.isTrade) return false;
+            if (!k.IsTrade()) return false;
             return newPoint(k.Symbol, k.Trade);
         }
         /// <summary>
@@ -114,7 +114,7 @@ namespace TradingLib.Common
         /// <returns></returns>
         public bool newTick(Tick k, int idx)
         {
-            if (!k.isTrade) return false;
+            if (!k.IsTrade()) return false;
             return newPoint(idx, k.Trade);
         }
         /// <summary>

@@ -333,7 +333,7 @@ namespace TradingLib.Common
         public bool Fill(Tick t) { return Fill(t, false); }
         public bool Fill(Tick t, bool fillOPG)
         {
-            if (!t.isTrade) return false;//fill with trade 
+            if (!t.IsTrade()) return false;//fill with trade 
             if (t.Symbol != oSymbol.TickSymbol) return false;
             if (!fillOPG && TimeInForce == QSEnumTimeInForce.OPG) return false;
             if ((isLimit && Side && (t.Trade <= LimitPrice)) // buy limit
@@ -366,7 +366,7 @@ namespace TradingLib.Common
             if (!bidask)
                 return Fill(k, fillOPG);
             // buyer has to match with seller and vice verca利用ask,bid来成交Order
-            bool ok = Side ? k.hasAsk : k.hasBid;
+            bool ok = Side ? k.HasAsk() : k.HasBid();
             if (!ok) return false;
             //debug("got here 1");
             decimal p = Side ? k.AskPrice : k.BidPrice;

@@ -8,6 +8,12 @@ namespace TradingLib.API
     public interface Tick
     {
         /// <summary>
+        /// 行情格式类别
+        /// 不同的行情格式类别有不同的序列化和反序列化方式
+        /// </summary>
+        EnumTickType Type { get; }
+
+        /// <summary>
         /// symbol for tick
         /// </summary>
         string Symbol { get; set; }
@@ -21,18 +27,8 @@ namespace TradingLib.API
         /// tick time in 24 format (4:59pm => 1659)
         /// </summary>
         int Time { get; set; }
-       
-        /// <summary>
-        /// date and time represented as long, eg 8:05pm on 4th of July:
-        /// 200907042005.
-        /// this is not guaranteed to be set.
-        /// </summary>
-        DateTime Datetime { get; set; } // datetime as long
+               
         
-        /// <summary>
-        /// depth of last bid/ask quote
-        /// </summary>
-        int Depth { get; set; }
 
         #region Trade
         /// <summary>
@@ -90,10 +86,15 @@ namespace TradingLib.API
 
         #endregion
 
+        /// <summary>
+        /// depth of last bid/ask quote
+        /// </summary>
+        int Depth { get; set; }
 
-        bool isTrade { get; }
-        bool hasBid { get; }
-        bool hasAsk { get; }
+
+        //bool isTrade { get; }
+        //bool hasBid { get; }
+        //bool hasAsk { get; }
         bool isFullQuote { get; }
         bool isQuote { get; }
         bool isValid { get; }
@@ -146,21 +147,31 @@ namespace TradingLib.API
     /// 定义了行情传输过程中的内容类别
     /// 根据不同的内容可以解析出不同的行情内容
     /// 避免了每次都发送相同的内容 比如高开低收等不经常变化的变量
+    /// Tick行情为了兼容和体现不同交易所的行情报价 需要进行综合处理
+    /// 
     /// </summary>
-    public enum QSEnumTickContentType
+    public enum EnumTickType
     { 
         /// <summary>
         /// 成交信息
         /// </summary>
-        TC_TRADE=0,
+        TRADE=0,
         /// <summary>
-        /// 盘口报价信息
+        /// 报价信息
         /// </summary>
-        TC_QUOTE=1,
+        QUOTE=1,
+        /// <summary>
+        /// 深度行情信息
+        /// </summary>
+        LEVEL2=2,
+        /// <summary>
+        /// 统计信息 Open 
+        /// </summary>
+        SUMMARY=3,
         /// <summary>
         /// 快照数据
         /// </summary>
-        TC_SNAPSHOT=2,
+        SNAPSHOT=4,
 
     }
 

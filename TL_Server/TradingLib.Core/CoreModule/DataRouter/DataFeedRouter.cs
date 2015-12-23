@@ -474,11 +474,11 @@ namespace TradingLib.Core
         /// <returns></returns>
         private decimal somePrice(Tick k)
         {
-            if (k.isTrade)
+            if (k.IsTrade())
                 return k.Trade;
-            if (k.hasAsk)
+            if (k.HasAsk())
                 return k.AskPrice;
-            if (k.hasBid)
+            if (k.HasBid())
                 return k.BidPrice;
             else
                 return -1;

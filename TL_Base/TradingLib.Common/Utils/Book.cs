@@ -68,7 +68,7 @@ namespace TradingLib.Common
         public void GotTick(Tick k)
         {
             // ignore trades
-            if (k.isTrade) return;
+            if (k.IsTrade()) return;
             // make sure depth is valid for this book
             if ((k.Depth < 0) || (k.Depth >= maxbook)) return;
             if (Sym == null)
@@ -78,7 +78,7 @@ namespace TradingLib.Common
             // if depth is zero, must be a new book
             if (k.Depth == 0) Reset();
             // update buy book
-            if (k.hasBid)
+            if (k.HasBid())
             {
                 bidprice[k.Depth] = k.BidPrice;
                 bidsize[k.Depth] = k.StockBidSize;
@@ -87,7 +87,7 @@ namespace TradingLib.Common
                     ActualDepth = k.Depth;
             }
             // update sell book
-            if (k.hasAsk)
+            if (k.HasAsk())
             {
                 askprice[k.Depth] = k.AskPrice;
                 asksize[k.Depth] = k.StockAskSize;

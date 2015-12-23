@@ -195,7 +195,7 @@ namespace TradingLib.Common
 
             public void ProcessTick(Tick k)
             {
-                this.UpdateTime(k.Datetime);
+                this.UpdateTime(k.DateTime());
                 this._generator.ProcessTick(k);
             }
 
