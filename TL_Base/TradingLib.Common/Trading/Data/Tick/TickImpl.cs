@@ -293,56 +293,151 @@ namespace TradingLib.Common
         {
             const char d = ',';
             System.Text.StringBuilder sb = new System.Text.StringBuilder();
-            sb.Append(t.Symbol);
+            //合约,日期,时间,类型
+            sb.Append(t.Symbol);//0
             sb.Append(d);
-            sb.Append(t.Date);
+            sb.Append(t.Date);//1
             sb.Append(d);
-            sb.Append(t.Time);
+            sb.Append(t.Time);//2
             sb.Append(d);
-            // unused field
+            sb.Append((int)t.Type);//3 为Tick Type位
             sb.Append(d);
-            sb.Append(t.Trade.ToString("G0"));
-            sb.Append(d);
-            sb.Append(t.Size);
-            sb.Append(d);
-            sb.Append(t.Exchange);
-            sb.Append(d);
-            sb.Append(t.BidPrice.ToString("G0"));
-            sb.Append(d);
-            sb.Append(t.AskPrice.ToString("G0"));
-            sb.Append(d);
-            sb.Append(t.BidSize);
-            sb.Append(d);
-            sb.Append(t.AskSize);//10
-            sb.Append(d);
-            sb.Append(t.BidExchange);
-            sb.Append(d);
-            sb.Append(t.AskExchange);
-            sb.Append(d);
-            sb.Append(t.Depth);
-            //后期加入
-            sb.Append(d);
-            sb.Append(t.Vol);//14
-            sb.Append(d);
-            sb.Append(t.Open.ToString("G0"));
-            sb.Append(d);
-            sb.Append(t.High.ToString("G0"));
-            sb.Append(d);
-            sb.Append(t.Low.ToString("G0"));
-            sb.Append(d);
-            sb.Append(t.PreOpenInterest);//18
-            sb.Append(d);
-            sb.Append(t.OpenInterest);
-            sb.Append(d);
-            sb.Append(t.PreSettlement.ToString("G0"));
-            sb.Append(d);
-            sb.Append(t.Settlement);
-            sb.Append(d);
-            sb.Append(t.UpperLimit);
-            sb.Append(d);
-            sb.Append(t.LowerLimit);
-            sb.Append(d);
-            sb.Append(t.PreClose);
+
+            switch (t.Type)
+            {
+                //行情快照
+                #region 快照序列化
+                case EnumTickType.SNAPSHOT:
+                    {
+                        
+                        sb.Append(t.Trade.ToString("G0"));
+                        sb.Append(d);
+                        sb.Append(t.Size);
+                        sb.Append(d);
+                        sb.Append(t.Exchange);
+                        sb.Append(d);
+                        sb.Append(t.BidPrice.ToString("G0"));
+                        sb.Append(d);
+                        sb.Append(t.AskPrice.ToString("G0"));
+                        sb.Append(d);
+                        sb.Append(t.BidSize);
+                        sb.Append(d);
+                        sb.Append(t.AskSize);//10
+                        sb.Append(d);
+                        sb.Append(t.BidExchange);
+                        sb.Append(d);
+                        sb.Append(t.AskExchange);
+                        sb.Append(d);
+                        sb.Append(t.Depth);
+                        //后期加入
+                        sb.Append(d);
+                        sb.Append(t.Vol);//14
+                        sb.Append(d);
+                        sb.Append(t.Open.ToString("G0"));
+                        sb.Append(d);
+                        sb.Append(t.High.ToString("G0"));
+                        sb.Append(d);
+                        sb.Append(t.Low.ToString("G0"));
+                        sb.Append(d);
+                        sb.Append(t.PreOpenInterest);//18
+                        sb.Append(d);
+                        sb.Append(t.OpenInterest);
+                        sb.Append(d);
+                        sb.Append(t.PreSettlement.ToString("G0"));
+                        sb.Append(d);
+                        sb.Append(t.Settlement);
+                        sb.Append(d);
+                        sb.Append(t.UpperLimit);
+                        sb.Append(d);
+                        sb.Append(t.LowerLimit);
+                        sb.Append(d);
+                        sb.Append(t.PreClose);
+                        
+                        break;
+                    }
+                #endregion
+
+                #region 成交序列化
+                case EnumTickType.TRADE:
+                    {
+                        sb.Append(t.Trade);//4
+                        sb.Append(d);
+                        sb.Append(t.Size);//5
+                        sb.Append(d);
+                        sb.Append(t.Exchange);//6
+                        break;
+                    }
+                #endregion
+
+                #region 报价序列化
+                case EnumTickType.QUOTE:
+                    {
+                        sb.Append(t.BidPrice);//4
+                        sb.Append(d);
+                        sb.Append(t.AskPrice);//5
+                        sb.Append(d);
+                        sb.Append(t.BidSize);//6
+                        sb.Append(d);
+                        sb.Append(t.AskSize);//7
+                        sb.Append(d);
+                        sb.Append(t.BidExchange);//8
+                        sb.Append(d);
+                        sb.Append(t.AskExchange);//9
+                        break;
+                    }
+                #endregion
+
+                #region Level2报价
+                case EnumTickType.LEVEL2:
+                    {
+                        sb.Append(t.BidPrice);//4
+                        sb.Append(d);
+                        sb.Append(t.AskPrice);//5
+                        sb.Append(d);
+                        sb.Append(t.BidSize);//6
+                        sb.Append(d);
+                        sb.Append(t.AskSize);//7
+                        sb.Append(d);
+                        sb.Append(t.BidExchange);//8
+                        sb.Append(d);
+                        sb.Append(t.AskExchange);//9
+                        sb.Append(d);
+                        sb.Append(t.Depth);//10
+                        break;
+                    }
+                #endregion
+
+                #region 统计数据
+                case EnumTickType.SUMMARY:
+                    {
+                        sb.Append(t.Vol);//4
+                        sb.Append(d);
+                        sb.Append(t.Open);//5
+                        sb.Append(d);
+                        sb.Append(t.High);//6
+                        sb.Append(d);
+                        sb.Append(t.Low);//7
+                        sb.Append(d);
+                        sb.Append(t.PreOpenInterest);//8
+                        sb.Append(d);
+                        sb.Append(t.OpenInterest);//9
+                        sb.Append(d);
+                        sb.Append(t.PreSettlement);//10
+                        sb.Append(d);
+                        sb.Append(t.Settlement);//11
+                        sb.Append(d);
+                        sb.Append(t.UpperLimit);//12
+                        sb.Append(d);
+                        sb.Append(t.LowerLimit);//13
+                        sb.Append(d);
+                        sb.Append(t.PreClose);//14
+                        break;
+                    }
+                #endregion
+
+                default:
+                    break;
+            }
             sb.Append(d);
             sb.Append(t.DataFeed);
             return sb.ToString();
@@ -351,65 +446,190 @@ namespace TradingLib.Common
         public static Tick Deserialize(string msg)
         {
             string[] r = msg.Split(',');
+            if (r.Length < 4) return null;
+
             Tick t = new TickImpl();
             decimal d = 0;
             int i = 0;
+            EnumTickType type = EnumTickType.SNAPSHOT;
+            QSEnumDataFeedTypes df = QSEnumDataFeedTypes.DEFAULT;
+
             t.Symbol = r[(int)TickField.symbol];
-            if (decimal.TryParse(r[(int)TickField.trade], System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out d))
-                t.Trade = d;
-            if (decimal.TryParse(r[(int)TickField.bid], System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out d))
-                t.BidPrice = d;
-            if (decimal.TryParse(r[(int)TickField.ask], System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out d))
-                t.AskPrice = d;
-            if (int.TryParse(r[(int)TickField.tsize], out i))
-                t.Size = i;
-            if (int.TryParse(r[(int)TickField.asksize], out i))
-                t.AskSize = i;
-            if (int.TryParse(r[(int)TickField.bidsize], out i))
-                t.BidSize = i;
             if (int.TryParse(r[(int)TickField.time], out i))
                 t.Time = i;
             if (int.TryParse(r[(int)TickField.date], out i))
                 t.Date = i;
-            if (int.TryParse(r[(int)TickField.tdepth], out i))
-                t.Depth = i;
 
-            if (int.TryParse(r[(int)TickField.vol], out i))
-                t.Vol = i;
-            if (int.TryParse(r[(int)TickField.oi], out i))
-                t.OpenInterest = i;
-            if (int.TryParse(r[(int)TickField.preoi], out i))
-                t.PreOpenInterest = i;
-
-            if (decimal.TryParse(r[(int)TickField.open], System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out d))
-                t.Open = d;
-            if (decimal.TryParse(r[(int)TickField.high], System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out d))
-                t.High = d;
-            if (decimal.TryParse(r[(int)TickField.low], System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out d))
-                t.Low = d;
-            if (decimal.TryParse(r[(int)TickField.presettlement], System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out d))
-                t.PreSettlement = d;
-            if (decimal.TryParse(r[(int)TickField.settlement], System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out d))
-                t.Settlement = d;
-
-
-
-            t.Exchange = r[(int)TickField.tex];
-            t.BidExchange = r[(int)TickField.bidex];
-            t.AskExchange = r[(int)TickField.askex];
-            //t.Datetime = Util.ToDateTime(t.Date, t.Time);// t.Date * 1000000 + t.Time;
-
-            if (decimal.TryParse(r[(int)TickField.upper], System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out d))
-                t.UpperLimit = d;
-            if (decimal.TryParse(r[(int)TickField.lower], System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out d))
-                t.LowerLimit = d;
-            if (decimal.TryParse(r[(int)TickField.preclose], System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out d))
-                t.PreClose = d;
-            //
-            if (r.Length >= (int)TickField.datafeed+1)
+            //行情数据类型判断 如果类型为空 则为老格式数据 默认为SNAPSHOT数据
+            string tickType = r[(int)TickField.KUNUSED];
+            if (string.IsNullOrEmpty(tickType))
             {
-                t.DataFeed = (QSEnumDataFeedTypes)Enum.Parse(typeof(QSEnumDataFeedTypes), r[(int)TickField.datafeed]);
+                t.Type = EnumTickType.SNAPSHOT;
             }
+            else
+            {
+                //解析类别
+                if (Enum.TryParse<EnumTickType>(r[(int)TickField.KUNUSED], out type))
+                {
+                    t.Type = type;
+                }
+                else
+                {
+                    return null;
+                }
+            }
+            switch (t.Type)
+            {
+                #region 解析快照
+                case EnumTickType.SNAPSHOT:
+                    {
+                        if (decimal.TryParse(r[(int)TickField.trade], out d))
+                            t.Trade = d;
+                        if (decimal.TryParse(r[(int)TickField.bid], out d))
+                            t.BidPrice = d;
+                        if (decimal.TryParse(r[(int)TickField.ask], out d))
+                            t.AskPrice = d;
+                        if (int.TryParse(r[(int)TickField.tsize], out i))
+                            t.Size = i;
+                        if (int.TryParse(r[(int)TickField.asksize], out i))
+                            t.AskSize = i;
+                        if (int.TryParse(r[(int)TickField.bidsize], out i))
+                            t.BidSize = i;
+
+                        if (int.TryParse(r[(int)TickField.tdepth], out i))
+                            t.Depth = i;
+
+                        if (int.TryParse(r[(int)TickField.vol], out i))
+                            t.Vol = i;
+                        if (int.TryParse(r[(int)TickField.oi], out i))
+                            t.OpenInterest = i;
+                        if (int.TryParse(r[(int)TickField.preoi], out i))
+                            t.PreOpenInterest = i;
+
+                        if (decimal.TryParse(r[(int)TickField.open], System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out d))
+                            t.Open = d;
+                        if (decimal.TryParse(r[(int)TickField.high], System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out d))
+                            t.High = d;
+                        if (decimal.TryParse(r[(int)TickField.low], System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out d))
+                            t.Low = d;
+                        if (decimal.TryParse(r[(int)TickField.presettlement], System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out d))
+                            t.PreSettlement = d;
+                        if (decimal.TryParse(r[(int)TickField.settlement], System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out d))
+                            t.Settlement = d;
+
+
+
+                        t.Exchange = r[(int)TickField.tex];
+                        t.BidExchange = r[(int)TickField.bidex];
+                        t.AskExchange = r[(int)TickField.askex];
+                        //t.Datetime = Util.ToDateTime(t.Date, t.Time);// t.Date * 1000000 + t.Time;
+
+                        if (decimal.TryParse(r[(int)TickField.upper], System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out d))
+                            t.UpperLimit = d;
+                        if (decimal.TryParse(r[(int)TickField.lower], System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out d))
+                            t.LowerLimit = d;
+                        if (decimal.TryParse(r[(int)TickField.preclose], System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out d))
+                            t.PreClose = d;
+                        //
+                        if (r.Length >= (int)TickField.datafeed + 1)
+                        {
+                            t.DataFeed = (QSEnumDataFeedTypes)Enum.Parse(typeof(QSEnumDataFeedTypes), r[(int)TickField.datafeed]);
+                        }
+                        break;
+                    }
+                #endregion
+
+                #region 解析成交
+                case EnumTickType.TRADE:
+                    {
+                        if (decimal.TryParse(r[4], out d))//4
+                            t.Trade = d;
+                        if (int.TryParse(r[5], out i))//5
+                            t.Size = i;
+                        t.Exchange = r[6];//6
+                        if (Enum.TryParse<QSEnumDataFeedTypes>(r[7], out df))//7
+                            t.DataFeed = df;
+                        break;
+                    }
+                #endregion
+
+                #region 解析盘口
+                case EnumTickType.QUOTE:
+                    {
+                        if (decimal.TryParse(r[4], out d))//4
+                            t.BidPrice = d;
+                        if (decimal.TryParse(r[5], out d))//5
+                            t.AskPrice = d;
+                        if (int.TryParse(r[6], out i))//6
+                            t.BidSize = i;
+                        if (int.TryParse(r[7], out i))//7
+                            t.AskSize = i;
+                        t.BidExchange = r[8];//8
+                        t.AskExchange = r[9];//9
+                        if (Enum.TryParse<QSEnumDataFeedTypes>(r[10], out df))//10
+                            t.DataFeed = df;
+                        break;
+                    }
+                #endregion
+
+                #region 解析Level2
+                case EnumTickType.LEVEL2:
+                    {
+                        if (decimal.TryParse(r[4], out d))//4
+                            t.BidPrice = d;
+                        if (decimal.TryParse(r[5], out d))//5
+                            t.AskPrice = d;
+                        if (int.TryParse(r[6], out i))//6
+                            t.BidSize = i;
+                        if (int.TryParse(r[7], out i))//7
+                            t.AskSize = i;
+                        t.BidExchange = r[8];//8
+                        t.AskExchange = r[9];//9
+                        if (int.TryParse(r[10], out i))//10
+                            t.Depth = i;
+                        if (Enum.TryParse<QSEnumDataFeedTypes>(r[11], out df))//11
+                            t.DataFeed = df;
+                        break;
+                    }
+                #endregion
+
+                #region 解析Summary
+                case EnumTickType.SUMMARY:
+                    {
+                        if (int.TryParse(r[4], out i))//4
+                            t.Vol = i;
+                        if (decimal.TryParse(r[5], out d))//5
+                            t.Open = d;
+                        if (decimal.TryParse(r[6], out d))//6
+                            t.High = d;
+                        if (decimal.TryParse(r[7], out d))//7
+                            t.Low = d;
+
+                        if (int.TryParse(r[8], out i))//8
+                            t.PreOpenInterest = i;
+                        if (int.TryParse(r[9], out i))//9
+                            t.OpenInterest = i;
+
+                        if (decimal.TryParse(r[10], out d))//10
+                            t.PreSettlement = d;
+                        if (decimal.TryParse(r[11], out d))//11
+                            t.Settlement = d;
+                        if (decimal.TryParse(r[12], out d))//12
+                            t.UpperLimit = d;
+                        if (decimal.TryParse(r[13], out d))//13
+                            t.LowerLimit = d;
+                        if (decimal.TryParse(r[14], out d))//14
+                            t.PreClose = d;
+                        if (Enum.TryParse<QSEnumDataFeedTypes>(r[15], out df))//15
+                            t.DataFeed = df;
+                        break;
+                    }
+                #endregion
+
+                default:
+                    break;
+            }
+        
             return t;
         }
 

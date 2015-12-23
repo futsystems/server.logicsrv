@@ -11,7 +11,7 @@ namespace TradingLib.API
         /// 行情格式类别
         /// 不同的行情格式类别有不同的序列化和反序列化方式
         /// </summary>
-        EnumTickType Type { get; }
+        EnumTickType Type { get; set; }
 
         /// <summary>
         /// symbol for tick
@@ -114,14 +114,46 @@ namespace TradingLib.API
         /// </summary>
         int symidx { get; set; }
 
+        /// <summary>
+        /// 成交量
+        /// </summary>
         int Vol { get; set; }
+
+        /// <summary>
+        /// 开盘价
+        /// </summary>
         decimal Open { get; set; }
+
+        /// <summary>
+        /// 最高价
+        /// </summary>
         decimal High { get; set; }
+
+        /// <summary>
+        /// 最低价
+        /// </summary>
         decimal Low { get; set; }
+
+        /// <summary>
+        /// 昨日持仓量
+        /// </summary>
         int PreOpenInterest { get; set; }
+
+        /// <summary>
+        /// 持仓量
+        /// </summary>
         int OpenInterest { get; set; }
+
+        /// <summary>
+        /// 昨日结算价
+        /// </summary>
         decimal PreSettlement { get; set; }
+
+        /// <summary>
+        /// 结算价
+        /// </summary>
         decimal Settlement { get; set; }
+
         /// <summary>
         /// 涨停价
         /// </summary>
