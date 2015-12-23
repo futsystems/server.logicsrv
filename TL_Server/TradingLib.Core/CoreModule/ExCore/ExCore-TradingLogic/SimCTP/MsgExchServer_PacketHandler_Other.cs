@@ -590,7 +590,7 @@ namespace TradingLib.Core
                 for (int i = 0; i < symlist.Length; i++)
                 {
                     Tick k = TLCtxHelper.ModuleDataRouter.GetTickSnapshot(symlist[i].Symbol);// CmdUtils.GetTickSnapshot(symlist[i].Symbol);
-                    if (k == null || !k.isValid)
+                    if (k == null || !k.IsValid())
                     {
                         k = TLCtxHelper.ModuleSettleCentre.GetLastTickSnapshot(symlist[i].Symbol);
                     }

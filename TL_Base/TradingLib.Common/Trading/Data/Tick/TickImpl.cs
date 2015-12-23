@@ -58,21 +58,21 @@ namespace TradingLib.Common
         
 
 
-        public bool isIndex { get { return _size < 0; } }
+        //public bool isIndex { get { return _size < 0; } }
 
-        public bool hasBid { get { return (_bid != 0) && (_bs != 0); } }
+        //public bool hasBid { get { return (_bid != 0) && (_bs != 0); } }
 
-        public bool hasAsk { get { return (_ask != 0) && (_os != 0); } }
+        //public bool hasAsk { get { return (_ask != 0) && (_os != 0); } }
 
-        public bool isFullQuote { get { return hasBid && hasAsk; } }
+        //public bool isFullQuote { get { return hasBid && hasAsk; } }
 
-        public bool isQuote { get { return (!isTrade && (hasBid || hasAsk)); } }
+        //public bool isQuote { get { return (!isTrade && (hasBid || hasAsk)); } }
 
-        public bool isTrade { get { return (_trade != 0) && (_size > 0); } }
+        //public bool isTrade { get { return (_trade != 0) && (_size > 0); } }
 
-        public bool hasTick { get { return (isTrade || hasBid || hasAsk); } }
+        //public bool hasTick { get { return (isTrade || hasBid || hasAsk); } }
 
-        public bool isValid { get { return (_sym != "") && (isIndex || hasTick); } }
+        //public bool isValid { get { return (_sym != "") && (isIndex || hasTick); } }
 
 
         public bool hasVol { get { return _vol != 0; } }
@@ -84,8 +84,8 @@ namespace TradingLib.Common
         public bool hasPreOI { get { return _preoi != 0; } }
 
 
-        public bool atHigh(decimal high) { return (isTrade && (_trade >= high)); }
-        public bool atLow(decimal low) { return (isTrade && (_trade <= low)); }
+        //public bool atHigh(decimal high) { return (isTrade && (_trade >= high)); }
+        //public bool atLow(decimal low) { return (isTrade && (_trade <= low)); }
 
 
         
@@ -183,7 +183,7 @@ namespace TradingLib.Common
             k.Symbol = b.Symbol;
             k.Depth = b.Depth;
             k.symidx = b.symidx;
-            if (b.isTrade)
+            if (b.IsTrade())
             {
                 k.Trade = b.Trade;
                 k.Size = b.Size;
@@ -196,7 +196,7 @@ namespace TradingLib.Common
                 k.BidExchange = a.BidExchange;
                 k.AskExchange = a.AskExchange;
             }
-            if (b.hasAsk && b.hasBid)
+            if (b.HasAsk() && b.HasBid())
             {
                 k.BidPrice = b.BidPrice;
                 k.AskPrice = b.AskPrice;
@@ -209,7 +209,7 @@ namespace TradingLib.Common
                 k.Size = a.Size;
                 k.Exchange = a.Exchange;
             }
-            else if (b.hasAsk)
+            else if (b.HasAsk())
             {
                 k.AskPrice = b.AskPrice;
                 k.AskSize = b.AskSize;
@@ -222,7 +222,7 @@ namespace TradingLib.Common
                 k.Size = a.Size;
                 k.Exchange = a.Exchange;
             }
-            else if (b.hasBid)
+            else if (b.HasBid())
             {
                 k.BidPrice = b.BidPrice;
                 k.BidSize = b.BidSize;
@@ -240,8 +240,8 @@ namespace TradingLib.Common
 
         public override string ToString()
         {
-            if (!this.hasTick) return "";
-            if (this.isTrade) return Symbol + " " + this.Size + "@" + this.Trade + " " + this.Exchange;
+            if (!this.HasTick()) return "";
+            if (this.IsTrade()) return Symbol + " " + this.Size + "@" + this.Trade + " " + this.Exchange;
             else return Symbol + " " + this.BidPrice + "x" + this.AskPrice + " (" + this.BidSize + "x" + this.AskSize + ") " + this.BidExchange + "x" + this.AskExchange;
         }
 

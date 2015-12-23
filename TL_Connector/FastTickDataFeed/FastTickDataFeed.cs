@@ -227,7 +227,7 @@ namespace DataFeed.FastTick
                                 string tickcontent = p[1];
                                 Tick k = TickImpl.Deserialize(tickcontent);
                                 //Util.Debug("tick date:" + k.Date + " time time:" + k.Time);
-                                if (k.isValid)
+                                if (k.IsValid())
                                     NotifyTick(k);
                             }
                             else

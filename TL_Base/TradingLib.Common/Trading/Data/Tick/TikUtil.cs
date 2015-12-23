@@ -215,5 +215,40 @@ namespace TradingLib.Common
             return k.AskPrice != 0 && k.AskSize != 0;
         }
 
+        public static bool IsFullQuote(this Tick k)
+        {
+            return k.HasAsk() && k.HasBid();
+        }
+
+
+        /// <summary>
+        /// 是否是指数
+        /// </summary>
+        /// <param name="k"></param>
+        /// <returns></returns>
+        public static bool IsIndex(this Tick k)
+        {
+            return k.Size < 0;
+        }
+
+        /// <summary>
+        /// 是否有Tick数据 Trade/Quote
+        /// </summary>
+        /// <param name="k"></param>
+        /// <returns></returns>
+        public static bool HasTick(this Tick k)
+        {
+            return k.IsTrade() || k.HasAsk() || k.HasBid();
+        }
+
+        /// <summary>
+        /// Tick数据是否有效
+        /// </summary>
+        /// <param name="k"></param>
+        /// <returns></returns>
+        public static bool IsValid(this Tick k)
+        {
+            return (!string.IsNullOrEmpty(k.Symbol)) && k.HasTick() && k.IsIndex();
+        }
     }
 }

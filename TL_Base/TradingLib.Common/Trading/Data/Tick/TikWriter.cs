@@ -167,11 +167,11 @@ namespace TradingLib.Common
             // make sure we have a header
             if (!_hasheader) init(k.Symbol, k.Date, _path);
             // get types
-            bool t = k.isTrade;
-            bool fq = k.isFullQuote;
-            bool b = k.hasBid;
-            bool a = k.hasAsk;
-            bool i = k.isIndex;
+            bool t = k.IsTrade();
+            bool fq = k.IsFullQuote();
+            bool b = k.HasBid();
+            bool a = k.HasAsk();
+            bool i = k.IsIndex();
 
             // next we write tick type and the data
             if (!fq && b) // bid only

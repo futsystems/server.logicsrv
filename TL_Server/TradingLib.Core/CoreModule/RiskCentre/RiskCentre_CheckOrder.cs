@@ -283,7 +283,7 @@ namespace TradingLib.Core
             //if (periodContinuous)
             {
                 Tick tk = TLCtxHelper.ModuleDataRouter.GetTickSnapshot(o.Symbol);
-                if (tk == null || (!tk.isValid))
+                if (tk == null || (!tk.IsValid()))
                 {
                     errortitle = "SYMBOL_TICK_ERROR";//市场行情异常
                     return false;

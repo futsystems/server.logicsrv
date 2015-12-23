@@ -386,7 +386,7 @@ namespace TradingLib.Common
             foreach(string sym in syms)
             {
                 Tick k = this[sym];
-                if (k != null && k.isValid)
+                if (k != null && k.IsValid())
                 {
                     ticks.Add(k);
                 }

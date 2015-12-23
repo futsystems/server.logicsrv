@@ -158,7 +158,7 @@ namespace Broker.SIM
                 _quotestatus.Remove(o.id);
                 //debug("限价委托 记录盘口....", QSEnumDebugLevel.MUST);
                 Tick tick = FindTickSnapshot(o.Symbol);
-                if (tick != null && tick.isValid)
+                if (tick != null && tick.IsValid())
                 {
                     _quotestatus.Add(o.id, new LimitOrderQuoteStatus(o, tick));
                 }
@@ -400,7 +400,7 @@ namespace Broker.SIM
                     Tick tick = FindTickSnapshot(o.oSymbol.TickSymbol);
 
                     //如果是挂单 并且需要模拟实盘进行成交
-                    if (tick != null && tick.isValid)
+                    if (tick != null && tick.IsValid())
                     {
 
                         //1.以对方盘口价格进行成交
@@ -1035,7 +1035,7 @@ namespace Broker.SIM
                 { 
                     //if(k.isTrade )
                     Tick tick = tickpip[i];
-                    if (k != null && tick.isValid)
+                    if (k != null && tick.IsValid())
                     {
                         if (pairtick(tick, price, side))
                         {
@@ -1049,7 +1049,7 @@ namespace Broker.SIM
                 {
                     //if(k.isTrade )
                     Tick tick = tickpip[i];
-                    if (k != null && tick.isValid)
+                    if (k != null && tick.IsValid())
                     {
                         if (pairticktrade(tick, price))
                         {
@@ -1064,7 +1064,7 @@ namespace Broker.SIM
                 {
                     //if(k.isTrade )
                     Tick tick = tickpip[i];
-                    if (tick != null && tick.isValid)
+                    if (tick != null && tick.IsValid())
                     {
                         if (pairtickhavetrade(tick))
                         {
