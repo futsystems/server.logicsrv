@@ -322,5 +322,12 @@ namespace TradingLib.Common
         /// 域ID
         /// </summary>
         public int Domain_ID { get; set; }
+
+
+        public override string ToString()
+        {
+            return JsonMapper.ToJson(this);
+            //return string.Format("{0} {1} {2} Open:{3} {4} {5} {6} Close:{7} {8} {9} {10} Symbol:{11} ",Account,Settleday,Side,OpenDate,OpenTime,OpenTradeID,OpenPrice,CloseDate,CloseTime,CloseTradeID,ClosePrice)
+        }
     }
 }

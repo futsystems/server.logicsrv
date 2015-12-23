@@ -33,20 +33,7 @@ namespace TradingLib.API
         /// depth of last bid/ask quote
         /// </summary>
         int Depth { get; set; }
-        /*
-        /// <summary>
-        /// long representation of last trade
-        /// </summary>
-        ulong ltrade { get; set; }
-        /// <summary>
-        /// long representation of bid price
-        /// </summary>
-        ulong lbid { get; set; }
-        /// <summary>
-        /// long representation of ask price
-        /// </summary>
-        ulong lask { get; set; }
-         */
+
         #region Trade
         /// <summary>
         /// size of last trade
@@ -62,8 +49,7 @@ namespace TradingLib.API
         string Exchange { get; set; }
         #endregion
 
-
-        #region Bid
+        #region Quote
         /// <summary>
         /// bid price
         /// </summary>
@@ -83,10 +69,7 @@ namespace TradingLib.API
         /// bid exchange
         /// </summary>
         string BidExchange { get; set; }
-        #endregion
 
-
-        #region Ask
         /// <summary>
         /// offer price
         /// </summary>
@@ -104,6 +87,7 @@ namespace TradingLib.API
         /// ask exchange
         /// </summary>
         string AskExchange { get; set; }
+
         #endregion
 
 
@@ -165,9 +149,19 @@ namespace TradingLib.API
     /// </summary>
     public enum QSEnumTickContentType
     { 
-        TC_TRADE,//成交信息 最新成交价 数量 成交交易所等
-        TC_QUOTE,//报价信息 买价 买量 卖价 卖量 深度等
-        TC_SNAPSHOT,//当前市场快照 成交信息 报价信息 高开低手
+        /// <summary>
+        /// 成交信息
+        /// </summary>
+        TC_TRADE=0,
+        /// <summary>
+        /// 盘口报价信息
+        /// </summary>
+        TC_QUOTE=1,
+        /// <summary>
+        /// 快照数据
+        /// </summary>
+        TC_SNAPSHOT=2,
+
     }
 
     public class InvalidTick : Exception { }

@@ -136,7 +136,34 @@ namespace TradingLib.Common
                 settlement.Commission = this.GetTrades(exchange, settleday).Sum(f => f.Commission);
                 //平仓盈亏 为所有持仓对象下面的平仓明细的平仓盈亏累加
                 //settlement.CloseProfitByDate = this.GetPositions(exchange).Sum(pos => pos.PositionCloseDetail.Sum(pcd => pcd.CloseProfitByDate));
-                settlement.CloseProfitByDate = this.GetPositions(exchange).Sum(pos => pos.CalCloseProfitByDate());
+                //平仓盈亏核查 理论上成交累加的平仓盈亏和持仓明细累加的平仓盈亏应该一致
+                decimal closeprofit_commission = this.GetTrades(exchange, settleday).Sum(f => f.Profit);//累加某个交易所的所有成交平仓盈亏
+                decimal closeprofit_posdetail = this.GetPositions(exchange).Sum(pos => pos.CalCloseProfitByDate());
+                bool same = closeprofit_commission - closeprofit_posdetail < 1;
+                //两种计算方式不一致
+                if (!same)
+                {
+                    Util.Info("XXXXXXXXXXXXXXXXXXXX EXCHANGE SETTLE ERROR XXXXXXXXXXXXXXXXXXXXXXXXX");
+                    //输出信息
+                    foreach (var pos in this.GetPositions(exchange))
+                    {
+                        Util.Info(pos.ToString());
+                        //输出持仓明细
+                        foreach (var pd in pos.PositionDetailTotal)
+                        {
+                            Util.Info(pd.ToString());
+                        }
+                        //输出平仓明细
+                        foreach (var close in pos.PositionCloseDetail)
+                        {
+                            Util.Info(close.ToString());
+                        }
+                        
+                    }
+                    
+                
+                }
+                settlement.CloseProfitByDate = closeprofit_posdetail;
                 //浮动盈亏
                 //settlement.PositionProfitByDate = this.GetPositions(exchange).Sum(pos => pos.PositionDetailTotal.Sum(pd => pd.PositionProfitByDate));
                 settlement.PositionProfitByDate = this.GetPositions(exchange).Sum(pos => pos.CalPositionProfitByDate());
