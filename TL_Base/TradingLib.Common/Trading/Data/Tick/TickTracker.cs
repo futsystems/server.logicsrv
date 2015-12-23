@@ -416,6 +416,7 @@ namespace TradingLib.Common
         /// <returns></returns>
         public bool newTick(Tick k)
         {
+
             //检查是否记录了该symbol
             // get index
             int idx = getindex(k.Symbol);
@@ -425,6 +426,7 @@ namespace TradingLib.Common
             // update date/time
             time[idx] = k.Time;
             date[idx] = k.Date;
+
             // update bid/ask/last
             if (k.IsTrade())
             {

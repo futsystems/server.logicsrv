@@ -221,6 +221,7 @@ namespace DataFeed.FastTick
                         {
                             string tickstr = subscriber.Receive(Encoding.UTF8);
                             string[] p = tickstr.Split('^');
+                            //Util.Info("xxx");
                             if (p.Length > 1)
                             {
                                 string symbol = p[0];

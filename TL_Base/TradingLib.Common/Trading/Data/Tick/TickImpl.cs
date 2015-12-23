@@ -633,7 +633,19 @@ namespace TradingLib.Common
             return t;
         }
 
-        public void SetQuote(int date, int time, int sec, decimal bid, decimal ask, int bidsize, int asksize, string bidex, string askex)
+        /// <summary>
+        /// 设定Tick报价信息
+        /// </summary>
+        /// <param name="date"></param>
+        /// <param name="time"></param>
+        /// <param name="bid"></param>
+        /// <param name="ask"></param>
+        /// <param name="bidsize"></param>
+        /// <param name="asksize"></param>
+        /// <param name="bidex"></param>
+        /// <param name="askex"></param>
+        /// <param name="depth"></param>
+        public void SetQuote(int date, int time, decimal bid, decimal ask, int bidsize, int asksize, string bidex, string askex, int depth=0)
         {
             this.Date = date;
             this.Time = time;
@@ -645,35 +657,34 @@ namespace TradingLib.Common
             this.AskExchange = askex;
             this.Trade = 0;
             this.Size = 0;
-            this.Depth = 0;
-        }
-        //overload with depth field
-        public void SetQuote(int date, int time, int sec, decimal bid, decimal ask, int bidsize, int asksize, string bidex, string askex, int depth)
-        {
-            this.Date = date;
-            this.Time = time;
-            this.BidPrice = bid;
-            this.AskPrice = AskPrice;
-            this.BidSize = bidsize;
-            this.AskSize = asksize;
-            this.BidExchange = bidex;
-            this.AskExchange = askex;
-            this.Trade = 0;
-            this.Size = 0;
+            this.Exchange = string.Empty;
             this.Depth = depth;
         }
-        //date, time, sec, Convert.ToDecimal(r[(int)T.PRICE]), isize, r[(int)T.EXCH]
-        public void SetTrade(int date, int time, int sec, decimal price, int size, string exch)
+
+        /// <summary>
+        /// 设定成交数据
+        /// </summary>
+        /// <param name="date"></param>
+        /// <param name="time"></param>
+        /// <param name="price"></param>
+        /// <param name="size"></param>
+        /// <param name="exch"></param>
+        public void SetTrade(int date, int time, decimal price, int size, string exch)
         {
-            this.Exchange = exch;
+            
             this.Date = date;
             this.Time = time;
+
             this.Trade = price;
             this.Size = size;
+            this.Exchange = exch;
+
             this.BidPrice = 0;
             this.AskPrice = 0;
             this.AskSize = 0;
             this.BidSize = 0;
+            this.BidExchange = string.Empty;
+            this.AskExchange = string.Empty;
         }
 
 

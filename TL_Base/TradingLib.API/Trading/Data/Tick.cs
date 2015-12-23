@@ -91,15 +91,6 @@ namespace TradingLib.API
         /// </summary>
         int Depth { get; set; }
 
-
-        //bool isTrade { get; }
-        //bool hasBid { get; }
-        //bool hasAsk { get; }
-        //bool isFullQuote { get; }
-        //bool isQuote { get; }
-        //bool isValid { get; }
-        //bool isIndex { get; }
-
         bool hasVol { get; }
         bool hasOI { get; }
         bool hasOpen { get; }
