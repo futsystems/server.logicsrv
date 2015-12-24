@@ -462,7 +462,7 @@ namespace TradingLib.Common
 
             //行情数据类型判断 如果类型为空 则为老格式数据 默认为SNAPSHOT数据
             string tickType = r[(int)TickField.KUNUSED];
-            if (string.IsNullOrEmpty(tickType))
+            if (string.IsNullOrEmpty(tickType) || tickType == "unused")
             {
                 t.Type = EnumTickType.SNAPSHOT;
             }

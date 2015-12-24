@@ -144,6 +144,12 @@ namespace TradingLib.Core
             //设定交易日
             o.SettleDay = settleday;
 
+            if (!o.oSymbol.SecurityFamily.CheckSpecialHoliday())
+            {
+                errortitle = "SYMBOL_NOT_MARKETTIME";
+                needlog = false;
+                return false;
+            }
             /*
             periodAuctionPlace = o.oSymbol.SecurityFamily.IsInAuctionTime();//是否处于集合竞价报单时段
             periodAuctionExecution = o.oSymbol.SecurityFamily.IsInActionExutionTime();//是否处于集合竞价撮合时段
