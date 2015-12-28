@@ -106,7 +106,7 @@ namespace TradingLib.DataFarm.Common
             
             //行情过滤
             if (k == null) return;
-            if (!k.isValid) return;
+            if (!k.IsValid()) return;
             //logger.Debug("datafeed got tick");
             asyncTick.newTick(k);
 
@@ -118,7 +118,7 @@ namespace TradingLib.DataFarm.Common
             //更新行情最近更新时间
             if (!tickLastTimeMap.Keys.Contains(k.Symbol))
             {
-                tickLastTimeMap.Add(k.Symbol, k.Datetime);
+                tickLastTimeMap.Add(k.Symbol, k.DateTime());
             }
             //执行行情事件检查
 

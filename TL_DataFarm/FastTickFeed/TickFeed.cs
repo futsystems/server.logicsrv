@@ -260,7 +260,7 @@ namespace TradingLib.DataFarm
                                 string tickcontent = p[1];
                                 Tick k = TickImpl.Deserialize(tickcontent);
 
-                                if (k.isValid)
+                                if (k!=null && k.IsValid())
                                     OnTick(k);
                             }
                             else
