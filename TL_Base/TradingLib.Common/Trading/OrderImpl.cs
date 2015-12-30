@@ -317,8 +317,8 @@ namespace TradingLib.Common
                 this.xPrice = t.Open;//开盘价成交
                 this.xSize = UnsignedSize;//所有委托数量
                 this.xSize *= Side ? 1 : -1;
-                this.xTime = t.Time;
-                this.xDate = t.Date;
+                this.xTime = t.Time != 0 ? t.Time : Util.ToTLTime();
+                this.xDate = t.Date != 0 ? t.Date : Util.ToTLDate();
                 return true;
             }
             return false;
@@ -345,8 +345,8 @@ namespace TradingLib.Common
                 this.xPrice = t.Trade;
                 this.xSize = t.Size >= UnsignedSize ? UnsignedSize : t.Size;
                 this.xSize *= Side ? 1 : -1;
-                this.xTime = t.Time;
-                this.xDate = t.Date;
+                this.xTime = t.Time != 0 ? t.Time : Util.ToTLTime();
+                this.xDate = t.Date != 0 ? t.Date : Util.ToTLDate();
                 return true;
             }
             return false;
@@ -388,8 +388,9 @@ namespace TradingLib.Common
                 this.xSize = (s >= UnsignedSize ? UnsignedSize : s) * (Side ? 1 : -1);
                 //debug("askbid size:"+s.ToString()+"|");
                 //Util.Debug("tick date:" + k.Date + " ticktime:" + k.Time,QSEnumDebugLevel.ERROR);
-                this.xTime = k.Time;
-                this.xDate = k.Date;
+
+                this.xTime = k.Time != 0 ? k.Time : Util.ToTLTime();
+                this.xDate = k.Date != 0 ? k.Date : Util.ToTLDate();
                 return true;
             }
             return false;
