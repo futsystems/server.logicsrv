@@ -88,9 +88,9 @@ namespace TradingLib.Common
         //public bool atLow(decimal low) { return (isTrade && (_trade <= low)); }
 
 
+
+
         
-
-
         public TickImpl(string symbol)
         {
             _Sec = new SymbolImpl();
@@ -129,6 +129,9 @@ namespace TradingLib.Common
         {
             TickImpl k = new TickImpl();
             if (c.Symbol != "") k.Symbol = c.Symbol;
+
+            
+            k.Type = c.Type;
             k.Type = c.Type;
             k.Time = c.Time;
             k.Date = c.Date;
