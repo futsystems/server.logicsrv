@@ -35,6 +35,12 @@
     <Reference Include="clrzmq">
       <HintPath>..\..\lib\clrzmq.dll</HintPath>
     </Reference>
+    <Reference Include="Common.Logging">
+      <HintPath>..\..\lib\Common.Logging.dll</HintPath>
+    </Reference>
+    <Reference Include="Common.Logging.Core">
+      <HintPath>..\..\lib\Common.Logging.Core.dll</HintPath>
+    </Reference>
     <Reference Include="DotLiquid">
       <HintPath>..\..\lib\DotLiquid.dll</HintPath>
     </Reference>

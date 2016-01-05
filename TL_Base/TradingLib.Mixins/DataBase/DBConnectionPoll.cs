@@ -15,6 +15,7 @@ namespace TradingLib.Mixins.DataBase
         string _dbname;
         int _port;
         public DBConnectionPoll(string server, string user, string pass, string dbname = "quantshop", int port = 3306)
+            :base("DBConnectionPoll")
         {
             _server = server;
             _user = user;

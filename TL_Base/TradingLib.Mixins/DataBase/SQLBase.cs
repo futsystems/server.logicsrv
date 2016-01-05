@@ -76,7 +76,9 @@ namespace TradingLib.Mixins.DataBase
         {
             get
             {
+
                 if (conn == null) return false;
+                
                 if (conn.State == System.Data.ConnectionState.Open)
                     return true;
                 return false;
