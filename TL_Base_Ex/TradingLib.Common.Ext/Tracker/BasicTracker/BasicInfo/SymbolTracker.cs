@@ -281,14 +281,14 @@ namespace TradingLib.Common
 
         
         /// <summary>
-        /// 所有可交易的合约
-        /// 这里的可用 应该按照合约到期日进行判断,合约过期后就不需要在订阅
+        /// 所有合约
+        /// 过期合约直接不加载
         /// </summary>
         /// <returns></returns>
         public SymbolBasket GetBasketAvabile()
         {
             SymbolBasket basket = new SymbolBasketImpl();
-            foreach (Symbol s in symcodemap.Values.Where(s => s.IsTradeable).ToArray())
+            foreach (Symbol s in symcodemap.Values./*Where(s => s.IsTradeable).**/ToArray())
             {
                 basket.Add(s);
             }
