@@ -352,6 +352,7 @@ namespace TradingLib.Common
             return false;
         }
 
+
         /// <summary>
         /// fill against bid and ask rather than trade
         /// 
@@ -360,7 +361,7 @@ namespace TradingLib.Common
         /// <param name="smart"></param>
         /// <param name="fillOPG"></param>
         /// <returns></returns>
-        public bool Fill(Tick k, bool bidask, bool fillOPG)
+        public bool Fill(Tick k, bool bidask, bool fillOPG,bool fillall=false)
         {
             //如果不使用askbid来fill trade我们就使用成交价格来fill
             if (!bidask)
@@ -385,10 +386,14 @@ namespace TradingLib.Common
                 || isMarket)
             {
                 this.xPrice = p;
-                this.xSize = (s >= UnsignedSize ? UnsignedSize : s) * (Side ? 1 : -1);
-                //debug("askbid size:"+s.ToString()+"|");
-                //Util.Debug("tick date:" + k.Date + " ticktime:" + k.Time,QSEnumDebugLevel.ERROR);
-
+                if (fillall)//成交所有
+                {
+                    this.xSize = UnsignedSize * (Side ? 1 : -1);
+                }
+                else//根据盘口数量生成成交数量
+                {
+                    this.xSize = (s >= UnsignedSize ? UnsignedSize : s) * (Side ? 1 : -1);
+                }
                 this.xTime = k.Time != 0 ? k.Time : Util.ToTLTime();
                 this.xDate = k.Date != 0 ? k.Date : Util.ToTLDate();
                 return true;

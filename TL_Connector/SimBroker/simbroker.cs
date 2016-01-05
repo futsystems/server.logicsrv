@@ -53,6 +53,9 @@ namespace Broker.SIM
 
             }
         }
+
+        ConfigDB _cfgdb;
+        bool _fillall = false;
         /// <summary>
         /// 模拟交易服务,这里基本实现了委托,取消以及通过行情来成交委托的功能，但是单个tick能否成交多个委托的问题这里没有考虑
         /// 同时这里加入了委托 平仓检查,对于超买 超卖 会给出平今仓位不足的提示。
@@ -64,6 +67,13 @@ namespace Broker.SIM
         /// <param name="verb"></param>
         public SIMTrader()
         {
+            _cfgdb = new ConfigDB("SIMBroker");
+            if (!_cfgdb.HaveConfig("FillAll"))
+            {
+                _cfgdb.UpdateConfig("FillAll", QSEnumCfgType.Bool,false, "是否成交所有");
+            }
+            _fillall = _cfgdb["FillAll"].AsBool();
+
             asynctick = new AsyncResponse("SIMBroker");
             asynctick.GotTick +=new TickDelegate(asynctick_GotTick);
             _fillseq = random.Next(1000, 4000);
@@ -254,7 +264,7 @@ namespace Broker.SIM
                         continue;//如果该tick的合约与委托合约不一致则不用进行检查直接检查下一个委托
                     }
 
-                    bool filled = o.Fill(tick,_useBikAsk, false);
+                    bool filled = o.Fill(tick,_useBikAsk, false,_fillall);
                     // 如果没有成交,则直接返回
                     if (!filled)
                     {
@@ -404,7 +414,7 @@ namespace Broker.SIM
                     {
 
                         //1.以对方盘口价格进行成交
-                        filled = o.Fill(tick, _useBikAsk, false);
+                        filled = o.Fill(tick, _useBikAsk, false, _fillall);
 
                         //2.限价单如果没有成交我们按累计的盘口检查是否可以用最新价进行成交
                         LimitOrderQuoteStatus qs = null;
@@ -412,7 +422,7 @@ namespace Broker.SIM
                         _quotestatus.TryGetValue(o.id, out qs);
                         if (this._simLimitReal && o.isLimit && qs != null && qs.IsTradeFill)
                         {
-                            filled = o.Fill(tick, false, false);
+                            filled = o.Fill(tick, false, false, _fillall);
                         }
 
                     }

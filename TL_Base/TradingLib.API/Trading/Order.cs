@@ -223,7 +223,9 @@ namespace TradingLib.API
         /// </summary>
         /// <param name="t"></param>
         /// <returns></returns>
-        bool Fill(Tick t, bool bidask, bool fillopg);
+        bool Fill(Tick t, bool bidask, bool fillopg,bool fillall);
+
+        
 
         /// <summary>
         /// try to fill order as OPG order
