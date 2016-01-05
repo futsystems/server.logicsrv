@@ -36,6 +36,7 @@ namespace TradingLib.Core
 
         bool auctionEnable = false;
 
+        HaltedStateTracker _haltstatetracker;
         public RiskCentre():base(CoreName)
         {
             //1.加载配置文件
@@ -105,7 +106,9 @@ namespace TradingLib.Core
 
             //结算重置
             TLCtxHelper.EventSystem.SettleResetEvent += new EventHandler<SystemEventArgs>(EventSystem_SettleResetEvent);
-            
+
+
+            _haltstatetracker = new HaltedStateTracker();
         }
 
         void EventSystem_SettleResetEvent(object sender, SystemEventArgs e)
@@ -129,6 +132,9 @@ namespace TradingLib.Core
             ClearActiveAccount();
             
             LoadRuleItemAll();
+            
+            //重置熔断状态
+            _haltstatetracker.Reset();
         }
 
         #endregion

@@ -187,6 +187,7 @@
     <Compile Include="CoreModule\BrokerRouter\BrokerRouter-complex\BrokerRouter.cs" />
     <Compile Include="CoreModule\DataRouter\DataFeedRouter.cs" />
     <Compile Include="CoreModule\ManagerExchange\MgrExchServer_CTE.cs" />
+    <Compile Include="CoreModule\RiskCentre\HaltedState.cs" />
     <Compile Include="CoreModule\RiskCentre\RiskCentre_CheckAccount.cs" />
     <Compile Include="CoreModule\RiskCentre\RiskCentre_CTE.cs" />
     <Compile Include="CoreModule\RiskCentre\RiskCentre_FlatPositionCancelOrder.cs" />

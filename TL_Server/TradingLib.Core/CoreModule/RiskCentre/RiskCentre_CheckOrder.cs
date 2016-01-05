@@ -144,11 +144,24 @@ namespace TradingLib.Core
             //设定交易日
             o.SettleDay = settleday;
 
+            //特定交易日判定
             if (!o.oSymbol.SecurityFamily.CheckSpecialHoliday())
             {
                 errortitle = "SYMBOL_NOT_MARKETTIME";
                 needlog = false;
                 return false;
+            }
+
+            //熔断状态判定
+            if (new string[] { "IF", "IH", "IC" }.Contains(o.oSymbol.SecurityFamily.Code))
+            {
+                //股指处于熔断状态
+                if (_haltstatetracker.IsHalted)
+                {
+                    errortitle = "SYMBOL_NOT_MARKETTIME";
+                    needlog = false;
+                    return false;
+                }
             }
             /*
             periodAuctionPlace = o.oSymbol.SecurityFamily.IsInAuctionTime();//是否处于集合竞价报单时段

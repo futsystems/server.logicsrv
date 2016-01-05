@@ -111,7 +111,7 @@ namespace TradingLib.Mixins.DataBase
         {
             lock (this)
             {
-                logger.Info("----------- collect garbage ------------------");
+                //logger.Info("----------- collect garbage ------------------");
                 object o;
                 long now = DateTime.Now.Ticks;
                 IDictionaryEnumerator e = unlocked.GetEnumerator();

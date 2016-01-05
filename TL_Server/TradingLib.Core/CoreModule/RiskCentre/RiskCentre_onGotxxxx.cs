@@ -29,6 +29,8 @@ namespace TradingLib.Core
         void GotTick(Tick k)
         {
             //_posoffsetracker.GotTick(k);
+
+            _haltstatetracker.GotTick(k);
         }
 
         /// <summary>
