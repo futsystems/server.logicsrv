@@ -43,38 +43,38 @@ namespace Lottoqq.Account
             msg = string.Empty;
             bool re = true;
             //异化证券
-            if (symbol.SecurityType == SecurityType.INNOV)
-            {
-                //如果是LOTTO类型的证券,则需要检查是否具备秘籍服务,并且调用秘籍服务的CanTradeSymbol来判定是否有资格交易该合约
-                if (symbol.SecurityFamily.Code.Equals("LOTTO"))
-                {
-                    //检查秘籍服务是否可以交易该合约
-                    service = null;
-                    if (GetService("MJService", out service))
-                    {
-                        re = re && service.CanTradeSymbol(symbol, out msg);
-                        return re;
-                    }
-                    else
-                    {
-                        msg ="帐户无乐透服务,无法交易乐透期权!";
-                        return false;
-                    }
-                }
-                if (symbol.SecurityFamily.Code.Equals("MINI"))
-                {
-                    if (GetService("MiniService", out service))
-                    {
-                        re = re & service.CanTradeSymbol(symbol, out msg);
-                        return re;
-                    }
-                    else
-                    {
-                        msg = "帐户没有迷你合约交易服务,无法交易迷你合约";
-                    }
-                }
+            //if (symbol.SecurityType == SecurityType.INNOV)
+            //{
+            //    //如果是LOTTO类型的证券,则需要检查是否具备秘籍服务,并且调用秘籍服务的CanTradeSymbol来判定是否有资格交易该合约
+            //    if (symbol.SecurityFamily.Code.Equals("LOTTO"))
+            //    {
+            //        //检查秘籍服务是否可以交易该合约
+            //        service = null;
+            //        if (GetService("MJService", out service))
+            //        {
+            //            re = re && service.CanTradeSymbol(symbol, out msg);
+            //            return re;
+            //        }
+            //        else
+            //        {
+            //            msg ="帐户无乐透服务,无法交易乐透期权!";
+            //            return false;
+            //        }
+            //    }
+            //    if (symbol.SecurityFamily.Code.Equals("MINI"))
+            //    {
+            //        if (GetService("MiniService", out service))
+            //        {
+            //            re = re & service.CanTradeSymbol(symbol, out msg);
+            //            return re;
+            //        }
+            //        else
+            //        {
+            //            msg = "帐户没有迷你合约交易服务,无法交易迷你合约";
+            //        }
+            //    }
 
-            }
+            //}
             if (GetService("FinService", out service))
             {
                 return service.CanTradeSymbol(symbol, out msg);
@@ -94,16 +94,16 @@ namespace Lottoqq.Account
         {
             IAccountService service = null;
 
-            if (o.oSymbol.SecurityType == SecurityType.INNOV)
-            {
-                if (o.oSymbol.SecurityFamily.Code.Equals("MINI"))
-                {
-                    if (GetService("MiniService", out service))
-                    {
-                        return service.CanTakeOrder(o, out msg);
-                    }
-                }
-            }
+            //if (o.oSymbol.SecurityType == SecurityType.INNOV)
+            //{
+            //    if (o.oSymbol.SecurityFamily.Code.Equals("MINI"))
+            //    {
+            //        if (GetService("MiniService", out service))
+            //        {
+            //            return service.CanTakeOrder(o, out msg);
+            //        }
+            //    }
+            //}
             //如果有配资服务 则调用配资服务的保证金检查机制进行处理
             if (GetService("FinService", out service))
             {
@@ -123,20 +123,20 @@ namespace Lottoqq.Account
         {
             IAccountService service = null;
             //如果是异化合约,则我们按照异化合约的保证金直接进行计算可开手数
-            if (symbol.SecurityType == SecurityType.INNOV)
-            {
-                decimal fundavabile = GetFundAvabile(symbol);
+            //if (symbol.SecurityType == SecurityType.INNOV)
+            //{
+            //    decimal fundavabile = GetFundAvabile(symbol);
 
-                decimal fundperlot = decimal.MaxValue;
+            //    decimal fundperlot = decimal.MaxValue;
 
-                if (symbol.Margin > 0)
-                {
-                    fundperlot = symbol.Margin + (symbol.ExtraMargin > 0 ? symbol.ExtraMargin : 0);
-                }
+            //    if (symbol.Margin > 0)
+            //    {
+            //        fundperlot = symbol.Margin + (symbol.ExtraMargin > 0 ? symbol.ExtraMargin : 0);
+            //    }
 
-                Util.Debug("Fundavabile:" + fundavabile.ToString() + " fundperlot:" + fundperlot.ToString());
-                return (int)(fundavabile / fundperlot);
-            }
+            //    Util.Debug("Fundavabile:" + fundavabile.ToString() + " fundperlot:" + fundperlot.ToString());
+            //    return (int)(fundavabile / fundperlot);
+            //}
             //配资服务通过配资服务查询可开手数
             if (GetService("FinService", out service))
             {

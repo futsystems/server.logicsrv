@@ -110,11 +110,6 @@ namespace TradingLib.Common
         {
             //计算基准保证金
             decimal basemargin = 0;
-            //异化合约按照固定金额来计算
-            if (p.oSymbol.SecurityType == SecurityType.INNOV)
-            {
-                basemargin =  p.UnsignedSize * (p.oSymbol.Margin + (p.oSymbol.ExtraMargin > 0 ? p.oSymbol.ExtraMargin : 0));//通过固定保证金来计算持仓保证金占用
-            }
 
             decimal tprice = p.LastPrice;
             QSEnumMarginPrice s = account.GetParamMarginPriceType();
@@ -190,17 +185,6 @@ namespace TradingLib.Common
             {
                 basemarginfrozen = price * symbol.Multiple * size;
             }
-            else if (symbol.SecurityType == SecurityType.INNOV)//异化资金需求计算
-            {
-                if (symbol.Margin > 0)
-                {
-                    basemarginfrozen = symbol.Margin + (symbol.ExtraMargin > 0 ? symbol.ExtraMargin : 0);
-                }
-                else
-                {
-                    basemarginfrozen = decimal.MaxValue;
-                }
-            }
             else
                 basemarginfrozen = decimal.MaxValue;
 
@@ -256,17 +240,6 @@ namespace TradingLib.Common
             else if (symbol.SecurityType == SecurityType.OPT)//期权资金需求计算
             {
                 basemarginfrozen =  price * symbol.Multiple * size;
-            }
-            else if (symbol.SecurityType == SecurityType.INNOV)//异化资金需求计算
-            {
-                if (symbol.Margin > 0)
-                {
-                    basemarginfrozen =  symbol.Margin + (symbol.ExtraMargin > 0 ? symbol.ExtraMargin : 0);
-                }
-                else
-                {
-                    basemarginfrozen =  decimal.MaxValue;
-                }
             }
             else
                 basemarginfrozen = decimal.MaxValue;

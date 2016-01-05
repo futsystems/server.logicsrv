@@ -2771,17 +2771,17 @@ namespace TradingLib.Common
             {
                 return price * symbol.Multiple * size;
             }
-            else if (symbol.SecurityType == SecurityType.INNOV)//异化资金需求计算
-            {
-                if (symbol.Margin > 0)
-                {
-                    return symbol.Margin + (symbol.ExtraMargin > 0 ? symbol.ExtraMargin : 0);
-                }
-                else
-                {
-                    return decimal.MaxValue;
-                }
-            }
+            //else if (symbol.SecurityType == SecurityType.INNOV)//异化资金需求计算
+            //{
+            //    if (symbol.Margin > 0)
+            //    {
+            //        return symbol.Margin + (symbol.ExtraMargin > 0 ? symbol.ExtraMargin : 0);
+            //    }
+            //    else
+            //    {
+            //        return decimal.MaxValue;
+            //    }
+            //}
             else
                 return decimal.MaxValue;
             

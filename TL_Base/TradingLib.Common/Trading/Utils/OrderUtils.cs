@@ -100,17 +100,17 @@ namespace TradingLib.Common
             }
 
             //异化合约资金占用
-            if (symbol.SecurityType == SecurityType.INNOV)
-            {
-                if (symbol.Margin > 0)
-                {
-                    return (symbol.Margin + (symbol.ExtraMargin > 0 ? symbol.ExtraMargin : 0)) * o.UnsignedSize;
-                }
-                else
-                {
-                    return decimal.MaxValue;
-                }
-            }
+            //if (symbol.SecurityType == SecurityType.INNOV)
+            //{
+            //    if (symbol.Margin > 0)
+            //    {
+            //        return (symbol.Margin + (symbol.ExtraMargin > 0 ? symbol.ExtraMargin : 0)) * o.UnsignedSize;
+            //    }
+            //    else
+            //    {
+            //        return decimal.MaxValue;
+            //    }
+            //}
             return decimal.MaxValue;
         }
 

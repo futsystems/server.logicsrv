@@ -25,11 +25,6 @@ namespace TradingLib.Common
         {
             msg = string.Empty;
             bool re = true;
-            if (symbol.SecurityType == SecurityType.INNOV)
-            {
-                msg = "合约无法交易";
-                re = false;
-            }
             return re;
         }
 
