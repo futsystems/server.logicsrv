@@ -458,7 +458,8 @@ namespace TradingLib.Common
         /// <returns></returns>
         public static string Serialize(Order o)
         {
-            if (o.isFilled) return TradeImpl.Serialize((Trade)o);
+            
+            //if (o.isFilled) return TradeImpl.Serialize((Trade)o);//?在某些情况下 委托会被序列化成成交 导致通讯异常
             StringBuilder sb = new StringBuilder();
             char d = ',';
             sb.Append(o.Symbol);
