@@ -35,6 +35,7 @@ namespace TradingLib.Core
         string commentOverFlatPositionSize = "可平持仓数量不足";
 
         bool auctionEnable = false;
+        bool _haltEnable = false;
 
         HaltedStateTracker _haltstatetracker;
         public RiskCentre():base(CoreName)
@@ -85,6 +86,12 @@ namespace TradingLib.Core
                 _cfgdb.UpdateConfig("AuctionEnable", QSEnumCfgType.Bool,false, "集合竞价");
             }
             auctionEnable = _cfgdb["AuctionEnable"].AsBool();
+
+            if (!_cfgdb.HaveConfig("HaltEnable"))
+            {
+                _cfgdb.UpdateConfig("HaltEnable", QSEnumCfgType.Bool, false, "股指熔断");
+            }
+            _haltEnable = _cfgdb["HaltEnable"].AsBool();
 
 
             //订阅持仓回合关闭事件

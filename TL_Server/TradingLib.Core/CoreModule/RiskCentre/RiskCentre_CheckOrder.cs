@@ -153,14 +153,17 @@ namespace TradingLib.Core
             }
 
             //熔断状态判定
-            if (new string[] { "IF", "IH", "IC" }.Contains(o.oSymbol.SecurityFamily.Code))
+            if (_haltEnable)
             {
-                //股指处于熔断状态
-                if (_haltstatetracker.IsHalted)
+                if (new string[] { "IF", "IH", "IC" }.Contains(o.oSymbol.SecurityFamily.Code))
                 {
-                    errortitle = "SYMBOL_NOT_MARKETTIME";
-                    needlog = false;
-                    return false;
+                    //股指处于熔断状态
+                    if (_haltstatetracker.IsHalted)
+                    {
+                        errortitle = "SYMBOL_NOT_MARKETTIME";
+                        needlog = false;
+                        return false;
+                    }
                 }
             }
             /*
