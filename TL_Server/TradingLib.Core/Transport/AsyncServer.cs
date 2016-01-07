@@ -350,7 +350,8 @@ namespace TradingLib.Core
                         {
                             buffer = serviceRep.Receive(buffer, SocketFlags.DontWait, out size);
                             Message msg = Message.gotmessage(buffer);
-                            //v("ServerDNS Got Message:" + msg.Type.ToString() + "|" + msg.Content.ToString() + "|" + msg.Content.Length.ToString() + " message buffer size:" + size + " recevied size:" + buffer.Length.ToString());
+                            logger.Info(string.Format("$$$ RepSrv Got Message Type:{0} Content:{1}", msg.Type, msg.Content));
+                            //"*** RepSrv Got Message:" + msg.Type.ToString() + "|" + msg.Content.ToString() + "|" + msg.Content.Length.ToString() + " message buffer size:" + size + " recevied size:" + buffer.Length.ToString());
                             //如果消息无效则直接返回
                             if (!msg.isValid)
                                 return;
@@ -480,8 +481,9 @@ namespace TradingLib.Core
                 string front = string.Empty;
                 string address = string.Empty;
                 Message msg = Message.gotmessage(zmsg.Body);
+                logger.Info(string.Format("*** Frame count:{0} type:{1} content:{2}", zmsg.FrameCount, msg.Type, msg.Content));
 
-                //debug("Frames Count:" + zmsg.FrameCount.ToString() + " body:" + UTF8Encoding.Default.GetString(zmsg.Body) + " add:" + UTF8Encoding.Default.GetString(zmsg.Address),QSEnumDebugLevel.INFO);
+                //("Frames Count:" + zmsg.FrameCount.ToString() + " body:" + UTF8Encoding.Default.GetString(zmsg.Body) + " add:" + UTF8Encoding.Default.GetString(zmsg.Address),QSEnumDebugLevel.INFO);
                 //注意:进行地址有效性检查,如果有空地址 则直接返回。空地址会造成下道逻辑的错误
                 //带有2层地址,客户端从接入服务器登入
                 //if (TradingLib.Core.CoreGlobal.EnableAccess)//如果允许前置接入 则消息可以带有2层或者1层地址
