@@ -96,7 +96,6 @@
     <MSBuild Projects="TL_Contrib\TradingLib.Contrib.EmailServer\TradingLib.Contrib.EmailServer.csproj" Properties="Configuration=$(Configuration);" />
     <MSBuild Projects="TL_Contrib\TradingLib.Contrib.WebServer\TradingLib.Contrib.WebPortal.csproj" Properties="Configuration=$(Configuration);" />
     <MSBuild Projects="TL_Contrib\TradingLib.Contrib.FinService\TradingLib.Contrib.FinService.csproj" Properties="Configuration=$(Configuration);" />
-    <MSBuild Projects="TL_Contrib\TradingLib.Contrib.TradeFlow\TradingLib.Contrib.TradeFlow.csproj" Properties="Configuration=$(Configuration);" />
   </Target>
   
   <Target Name="Connector" DependsOnTargets="Base">
