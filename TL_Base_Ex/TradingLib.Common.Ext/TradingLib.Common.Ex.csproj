@@ -132,8 +132,6 @@
     <Compile Include="Accounts\Account_IAccTradingInfo.cs" />
     <Compile Include="Accounts\Account_IAccConfig.cs" />
     <Compile Include="Utils\Account\AccountUtils_BasicInfo.cs" />
-    <Compile Include="ClearCentre\Base_ClearCentre_GotXXXX.cs" />
-    <Compile Include="ClearCentre\Base_ClearCentre_TotalInfo.cs" />
     <Compile Include="Client\MgrClientInfo.cs" />
     <Compile Include="Client\TrdClientInfo.cs" />
     <Compile Include="Contex\CoreUtil.cs" />
@@ -205,7 +203,6 @@
     <Compile Include="Plugin\PluginHelper.cs" />
     <Compile Include="SrvObject\ContribSrvObject.cs" />
     <Compile Include="SrvObject\BaseObject.cs" />
-    <Compile Include="ClearCentre\Base_ClearCentre.cs" />
     <Compile Include="Wrapper\ClearCentreAdapterToBroker.cs" />
     <Compile Include="ClearCentre\CommissionHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

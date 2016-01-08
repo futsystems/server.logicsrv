@@ -109,5 +109,6 @@ namespace TradingLib.Core
             logger.Info("Account:" + op.Account + " 确认入金:" + op.Amount.ToString() + " 成功!");
             return true;
         }
+
     }
 }
