@@ -279,6 +279,7 @@ namespace TradingLib.Core
                 {
                     ZError error;
                     zmsg.Add(new ZFrame(msg));
+                    
                     if (!_tickpub.Send(zmsg, out error))
                     {
                         if (error == ZError.ETERM)
@@ -406,10 +407,12 @@ namespace TradingLib.Core
                         catch (ZException ex)
                         {
                             logger.Error(PROGRAME + ":MainThread[ZmqExcetion]" + ex.ToString());
+                            return;
                         }
                         catch (System.Exception ex)
                         {
                             logger.Error(PROGRAME + ":MainThread[Excetion]" + ex.ToString());
+                            return;
                         }
 
                     }

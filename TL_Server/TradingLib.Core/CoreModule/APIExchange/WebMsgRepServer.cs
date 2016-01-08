@@ -152,11 +152,13 @@ namespace TradingLib.Core
                         }
                         catch (ZException ex)
                         {
-                            logger.Error("deal wektask error:" + ex.ToString());
+                            logger.Error("deal wektask zmq error:" + ex.ToString());
+                            return;
                         }
                         catch (Exception ex)
                         {
                             logger.Error("deal wektask error:" + ex.ToString());
+                            return;
                         }
                     }
                 }
