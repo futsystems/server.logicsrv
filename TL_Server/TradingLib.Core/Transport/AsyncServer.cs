@@ -432,6 +432,7 @@ namespace TradingLib.Core
                 worker.Connect("inproc://backend");
                 worker.ReceiveReady += (s, e) =>
                 {
+                    logger.Info(string.Format("Worker:{0} recv message", id));
                     MessageProcess(worker, id);
                 };
                 var poller = new Poller(new List<ZmqSocket> { worker });
