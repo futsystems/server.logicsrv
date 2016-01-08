@@ -113,63 +113,112 @@ namespace TradingLib.Core
 
         private void WebTaskRoute()
         {
-            using (var context = ZmqContext.Create())
+            using (var context = new ZContext())
             {   //当server端返回信息时,我们同样需要借助一定的设备完成
-                using (ZmqSocket rep = context.CreateSocket(SocketType.REP))
+                using (ZSocket rep = new ZSocket(context, ZSocketType.REP))
                 {
                     //rep用于监听从web服务端过来的任务请求
                     rep.Bind("tcp://" + _address + ":" + _port.ToString());
-
-                    rep.ReceiveReady += (s, e) =>
+                    //让线程一直获取由socket发报过来的信息
+                    _mainthreadready = true;
+                    ZPollItem poller = ZPollItem.CreateReceiver();
+                    ZMessage request;
+                    ZError error;
+                    while (_srvgo)
                     {
                         try
                         {
-                            string str = rep.Receive(Encoding.UTF8);
-                            logger.Info("WebAPI Request:" + str);
-                            JsonReply re = handleWebTask(str);
-                            if (re != null)
+                            if (rep.PollIn(poller, out request, out error))
                             {
-                                rep.Send(re.ToJson(), Encoding.UTF8);
+
+                                string str = request.First().ReadString();
+                                logger.Info("WebAPI Request:" + str);
+                                JsonReply re = handleWebTask(str);
+                                if (re != null)
+                                {
+                                    rep.Send(new ZFrame(re.ToJson()));
+                                }
+                                else
+                                {
+                                    rep.Send(new ZFrame(WebAPIHelper.ReplyError("COMMAND_RESULT_ERROR").ToJson()));
+                                }
                             }
                             else
                             {
-                                rep.Send(WebAPIHelper.ReplyError("COMMAND_RESULT_ERROR").ToJson(), Encoding.UTF8);
+                                if (error == ZError.ETERM)
+                                    return;	// Interrupted
+                                throw new ZException(error);
                             }
-
+                        }
+                        catch (ZException ex)
+                        {
+                            logger.Error("deal wektask error:" + ex.ToString());
                         }
                         catch (Exception ex)
                         {
                             logger.Error("deal wektask error:" + ex.ToString());
                         }
-
-                    };
-                    var poller = new Poller(new List<ZmqSocket> { rep });
-
-                    //让线程一直获取由socket发报过来的信息
-                    _mainthreadready = true;
-                    while (_srvgo)
-                    {
-                        try
-                        {
-                            poller.Poll(PollerTimeOut);
-                            if(!_srvgo)
-                            {
-                                logger.Info("main thread stopped,stop socket");
-                                rep.Close();
-                            
-                            }
-                        }
-                        catch (ZmqException e)
-                        {
-                            logger.Error("%%%%main server message error" + e.ToString());
-                        }
-
                     }
-
                 }
-
-
             }
+
+            //using (var context = ZmqContext.Create())
+            //{   //当server端返回信息时,我们同样需要借助一定的设备完成
+            //    using (ZSocket rep = context.CreateSocket(SocketType.REP))
+            //    {
+            //        //rep用于监听从web服务端过来的任务请求
+            //        rep.Bind("tcp://" + _address + ":" + _port.ToString());
+
+            //        rep.ReceiveReady += (s, e) =>
+            //        {
+            //            try
+            //            {
+            //                string str = rep.Receive(Encoding.UTF8);
+            //                logger.Info("WebAPI Request:" + str);
+            //                JsonReply re = handleWebTask(str);
+            //                if (re != null)
+            //                {
+            //                    rep.Send(re.ToJson(), Encoding.UTF8);
+            //                }
+            //                else
+            //                {
+            //                    rep.Send(WebAPIHelper.ReplyError("COMMAND_RESULT_ERROR").ToJson(), Encoding.UTF8);
+            //                }
+
+            //            }
+            //            catch (Exception ex)
+            //            {
+            //                logger.Error("deal wektask error:" + ex.ToString());
+            //            }
+
+            //        };
+            //        var poller = new Poller(new List<ZmqSocket> { rep });
+
+            //        //让线程一直获取由socket发报过来的信息
+            //        _mainthreadready = true;
+            //        while (_srvgo)
+            //        {
+            //            try
+            //            {
+            //                poller.Poll(PollerTimeOut);
+            //                if(!_srvgo)
+            //                {
+            //                    logger.Info("main thread stopped,stop socket");
+            //                    rep.Close();
+                            
+            //                }
+            //            }
+            //            catch (ZmqException e)
+            //            {
+            //                logger.Error("%%%%main server message error" + e.ToString());
+            //            }
+
+            //        }
+
+            //    }
+
+
+            //}
 
         }
 

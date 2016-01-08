@@ -325,7 +325,7 @@ namespace TradingLib.Core
                     logger.Info("Try to start server at: " + _serveraddress + ":" + _port.ToString());
                     try
                     {   //注意从外层传入服务器监听地址
-                        _trans = new AsyncServer(PROGRAME, _serveraddress, _port, this.NumWorkers, this.EnableTPTracker, false);
+                        _trans = new AsyncServerZ4(PROGRAME, _serveraddress, _port, this.NumWorkers, this.EnableTPTracker, false);
                         //_trans.SendDebugEvent += new DebugDelegate(msgdebug);
                         _trans.GotTLMessageEvent += new HandleTLMessageDel(basehandle);
                         _trans.ProviderName = ProviderName;//将TLServerProviderName传递给传输层,用于客户端的名称查询
