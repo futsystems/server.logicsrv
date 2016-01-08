@@ -31,9 +31,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="clrzmq">
-      <HintPath>..\..\lib\clrzmq.dll</HintPath>
-    </Reference>
     <Reference Include="NLog">
       <HintPath>..\..\lib\NLog.dll</HintPath>
     </Reference>
@@ -41,6 +38,9 @@
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
+    <Reference Include="ZeroMQ">
+      <HintPath>..\..\lib\ZeroMQ.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="LoggerExtensions.cs" />
