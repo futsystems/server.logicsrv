@@ -56,14 +56,8 @@ namespace TraddingSrvCLI
                 //{
                 //    Console.WriteLine(h.Name + " - " + h.Date.ToString("D"));
                 //}
-
-                CalendarTracker v = BasicTracker.CalendarTracker;
-
-                CoreDaemon cd = new CoreDaemon();
-                //cd.SendDebugEvent +=new DebugDelegate(debug);
-                //启动核心守护
-                cd.Start();
-                
+                var core = new CoreThread();
+                core.Run();              
             }
             catch (Exception ex)
             {

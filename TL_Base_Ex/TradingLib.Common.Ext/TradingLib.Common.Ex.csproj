@@ -57,10 +57,6 @@
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.ServiceModel" />
     <Reference Include="System.Xml" />
-    <Reference Include="clrzmq">
-      <HintPath>..\..\lib\libzmq\clrzmq\clrzmq.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
     <Reference Include="TradingLib.API">
       <HintPath>..\..\lib\TradingLib\TradingLib.API.dll</HintPath>
       <Private>False</Private>

@@ -7,7 +7,6 @@ using TradingLib.API;
 using TradingLib.Common;
 using TradingLib.Core;
 using TradingLib.ORM;
-using ZeroMQ;
 using TradingLib.Logging;
 using Autofac;
 using Autofac.Configuration;
@@ -22,15 +21,6 @@ namespace TraddingSrvCLI
     /// </summary>
     public class CoreThread
     {
-
-        QSEnumCoreThreadStatus _status = QSEnumCoreThreadStatus.Standby;
-
-        /// <summary>
-        /// 核心线程状态标识
-        /// </summary>
-        public QSEnumCoreThreadStatus Status { get { return _status; } set { _status = value; } }
-
-
         /// <summary>
         /// 输出日志
         /// </summary>
@@ -85,55 +75,6 @@ namespace TraddingSrvCLI
             
         }
 
-
-        /// <summary>
-        /// 核心状态
-        /// </summary>
-        internal CoreThreadStatus CoreStatus
-        {
-            get
-            {
-                CoreThreadStatus _st = new CoreThreadStatus();
-                _st.Status = _status;
-                return _st;
-            }
-        }
-        public void Start()
-        {
-            _status = QSEnumCoreThreadStatus.Starting;
-            debug("Start core thread.....");
-            if (go)
-            {
-                _status = QSEnumCoreThreadStatus.Started;
-                return;
-            }
-            go = true;
-            thread = new Thread(Run);
-            thread.IsBackground = true;
-            thread.Start();
-        }
-
-
-        public void Stop()
-        {
-            _status = QSEnumCoreThreadStatus.Stopping;
-            debug("CoreThread Starting....");
-            if (!go)
-            {
-                _status = QSEnumCoreThreadStatus.Stopped;
-                return;
-            }
-            go = false;
-            int mainwait = 0;
-            while (thread.IsAlive && mainwait < 120)
-            {
-                //debug(string.Format("#{0} wait corethread stopping....", mainwait));
-                Thread.Sleep(1000);
-                mainwait++;
-            }
-            thread.Abort();
-            thread = null;
-        }
 
         /// <summary>
         /// 核心业务线程之外默认为5个线程
@@ -197,7 +138,8 @@ namespace TraddingSrvCLI
 
                                 TLCtxHelper.StartUpTime = Util.ToTLDateTime();
                                 //启动完毕
-                                _status = QSEnumCoreThreadStatus.Started;
+                                //_status = QSEnumCoreThreadStatus.Started;
+                                
                                 TLCtxHelper.PrintVersion();
                                 string memo = string.Format("StartUpTime:{0} Tradingday:{1} Settletime:{2} CCStatus:{3}", TLCtxHelper.StartUpTime, TLCtxHelper.ModuleSettleCentre.Tradingday,TLCtxHelper.ModuleSettleCentre.SettleTime, TLCtxHelper.ModuleClearCentre.Status);
                                 Util.Info(memo);
@@ -216,7 +158,7 @@ namespace TraddingSrvCLI
                     }
                     debug("******************************corethread stopped **********************************");
 
-                    _status = QSEnumCoreThreadStatus.Stopped;
+                    //_status = QSEnumCoreThreadStatus.Stopped;
                 }
             
         }

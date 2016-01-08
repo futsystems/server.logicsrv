@@ -189,16 +189,16 @@ namespace DataFeed.FastTick
             }
         }
 
-        ZmqSocket _subscriber;//sub socket which receive data
-        ZmqSocket _symbolreq;//push socket which tell tickserver to regist data
+        ZSocket _subscriber;//sub socket which receive data
+        ZSocket _symbolreq;//push socket which tell tickserver to regist data
         bool _tickgo;
         Thread _tickthread;
         bool _tickreceiveruning = false;
         private void TickHandler()
         {
-            using (var context = ZmqContext.Create())
+            using (var context = new ZContext())
             {
-                using ( ZmqSocket subscriber = context.CreateSocket(SocketType.SUB) ,symbolreq= context.CreateSocket(SocketType.REQ))
+                using (ZSocket subscriber = new ZSocket(context, ZSocketType.SUB), symbolreq = new ZSocket(context, ZSocketType.REQ))
                 {
                     string reqadd = "tcp://" + CurrentServer + ":" + reqport;
                     //debug("Connect to FastTick ReqServer:" + reqadd, QSEnumDebugLevel.INFO);
@@ -206,7 +206,7 @@ namespace DataFeed.FastTick
 
                     string subadd = "tcp://" + CurrentServer + ":" + port;
                     //debug("Subscribe to FastTick PubServer:" + subadd, QSEnumDebugLevel.INFO);
-                    debug(string.Format("Connect to FastTick Server:{0} ReqPort:{1} DataPort{2}",CurrentServer,reqport,port),QSEnumDebugLevel.INFO);
+                    debug(string.Format("Connect to FastTick Server:{0} ReqPort:{1} DataPort{2}", CurrentServer, reqport, port), QSEnumDebugLevel.INFO);
                     subscriber.Connect(subadd);
                     //订阅行情心跳数据
                     subscriber.Subscribe(Encoding.UTF8.GetBytes("TICKHEARTBEAT"));
@@ -214,70 +214,71 @@ namespace DataFeed.FastTick
                     //subscriber.SubscribeAll();
                     _symbolreq = symbolreq;
                     _subscriber = subscriber;
-                    
-                    subscriber.ReceiveReady += (s, e) =>
-                    {
-                        try
-                        {
-                            string tickstr = subscriber.Receive(Encoding.UTF8);
-                            string[] p = tickstr.Split('^');
-                            //Util.Info("xxx");
-                            if (p.Length > 1)
-                            {
-                                string symbol = p[0];
-                                string tickcontent = p[1];
-                                Tick k = TickImpl.Deserialize(tickcontent);
-                                //Util.Debug("tick date:" + k.Date + " time time:" + k.Time);
-                                if (k.IsValid())
-                                    NotifyTick(k);
-                            }
-                            else
-                            {
-                                //debug("tick str:" + tickstr, QSEnumDebugLevel.INFO);
-                            }
-                        }
-                        catch (Exception ex)
-                        {
-                            debug("Tick process error:" + ex.ToString(), QSEnumDebugLevel.ERROR);
-                        }
-                        //记录数据到达时间
-                        _lastheartbeat = DateTime.Now;
-                    };
-                    var poller = new Poller(new List<ZmqSocket> { subscriber });
 
-                    _tickreceiveruning = true;
-                    NotifyConnected();
-                    while (_tickgo)
-                    {
-                        try
-                        {
-                            poller.Poll(timeout);
-                            if (!_tickgo)
-                            {
-                                debug("Tick Thread Stopped,try to close socket", QSEnumDebugLevel.INFO);
-                                subscriber.Close();
-                                symbolreq.Close();
-                                debug("-----------------------", QSEnumDebugLevel.ERROR);
-                            }
-                        }
-                        catch (ZmqException ex)
-                        {
-                            debug("Tick Sock错误:" + ex.ToString(),QSEnumDebugLevel.ERROR);
-                            
-                        }
-                        catch (System.Exception ex)
-                        {
-                            debug("Tick数据处理错误"+ex.ToString(),QSEnumDebugLevel.ERROR);
-                        }
-                        
-                    }
-                    _tickreceiveruning = false;
-                    NotifyDisconnected();
+                    //    subscriber.ReceiveReady += (s, e) =>
+                    //    {
+                    //        try
+                    //        {
+                    //            string tickstr = subscriber.Receive(Encoding.UTF8);
+                    //            string[] p = tickstr.Split('^');
+                    //            //Util.Info("xxx");
+                    //            if (p.Length > 1)
+                    //            {
+                    //                string symbol = p[0];
+                    //                string tickcontent = p[1];
+                    //                Tick k = TickImpl.Deserialize(tickcontent);
+                    //                //Util.Debug("tick date:" + k.Date + " time time:" + k.Time);
+                    //                if (k.IsValid())
+                    //                    NotifyTick(k);
+                    //            }
+                    //            else
+                    //            {
+                    //                //debug("tick str:" + tickstr, QSEnumDebugLevel.INFO);
+                    //            }
+                    //        }
+                    //        catch (Exception ex)
+                    //        {
+                    //            debug("Tick process error:" + ex.ToString(), QSEnumDebugLevel.ERROR);
+                    //        }
+                    //        //记录数据到达时间
+                    //        _lastheartbeat = DateTime.Now;
+                    //    };
+                    //    var poller = new Poller(new List<ZmqSocket> { subscriber });
+
+                    //    _tickreceiveruning = true;
+                    //    NotifyConnected();
+                    //    while (_tickgo)
+                    //    {
+                    //        try
+                    //        {
+                    //            poller.Poll(timeout);
+                    //            if (!_tickgo)
+                    //            {
+                    //                debug("Tick Thread Stopped,try to close socket", QSEnumDebugLevel.INFO);
+                    //                subscriber.Close();
+                    //                symbolreq.Close();
+                    //                debug("-----------------------", QSEnumDebugLevel.ERROR);
+                    //            }
+                    //        }
+                    //        catch (ZmqException ex)
+                    //        {
+                    //            debug("Tick Sock错误:" + ex.ToString(),QSEnumDebugLevel.ERROR);
+
+                    //        }
+                    //        catch (System.Exception ex)
+                    //        {
+                    //            debug("Tick数据处理错误"+ex.ToString(),QSEnumDebugLevel.ERROR);
+                    //        }
+
+                    //    }
+                    //    _tickreceiveruning = false;
+                    //    NotifyDisconnected();
+                    //}
+                    //debug("----------step1", QSEnumDebugLevel.ERROR);
+                    //context.Terminate();
+                    //context.Dispose();
+                    //debug("content terminate", QSEnumDebugLevel.ERROR);
                 }
-                //debug("----------step1", QSEnumDebugLevel.ERROR);
-                //context.Terminate();
-                //context.Dispose();
-                //debug("content terminate", QSEnumDebugLevel.ERROR);
             }
             debug("----------step2", QSEnumDebugLevel.ERROR);
         }
@@ -299,10 +300,10 @@ namespace DataFeed.FastTick
                 {
                     try
                     {
-                        string rep = null;
-                        byte[] message = TradingLib.Common.Message.sendmessage(type, msg);
-                        _symbolreq.Send(message);//非阻塞
-                        rep = _symbolreq.Receive(Encoding.UTF8, timeout);
+                        //string rep = null;
+                        //byte[] message = TradingLib.Common.Message.sendmessage(type, msg);
+                        //_symbolreq.Send(message);//非阻塞
+                        //rep = _symbolreq.Receive(Encoding.UTF8, timeout);
 
                     }
                     catch (Exception ex)
@@ -319,17 +320,17 @@ namespace DataFeed.FastTick
             {
                 lock (_symbolreq)
                 {
-                    try
-                    {
-                        string rep = null;
-                        _symbolreq.Send(packet.Data);//非阻塞
-                        rep = _symbolreq.Receive(Encoding.UTF8, timeout);
+                    //try
+                    //{
+                    //    string rep = null;
+                    //    _symbolreq.Send(packet.Data);//非阻塞
+                    //    rep = _symbolreq.Receive(Encoding.UTF8, timeout);
 
-                    }
-                    catch (Exception ex)
-                    {
-                        debug("发送消息异常:" + ex.ToString());
-                    }
+                    //}
+                    //catch (Exception ex)
+                    //{
+                    //    debug("发送消息异常:" + ex.ToString());
+                    //}
                 }
             }
         }
