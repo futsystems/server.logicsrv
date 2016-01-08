@@ -144,7 +144,7 @@ namespace TraddingSrvCLI
                                 string memo = string.Format("StartUpTime:{0} Tradingday:{1} Settletime:{2} CCStatus:{3}", TLCtxHelper.StartUpTime, TLCtxHelper.ModuleSettleCentre.Tradingday,TLCtxHelper.ModuleSettleCentre.SettleTime, TLCtxHelper.ModuleClearCentre.Status);
                                 Util.Info(memo);
 
-                                while (go)
+                                while (true)
                                 {
                                     Thread.Sleep(1000);
                                 }
