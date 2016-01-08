@@ -276,24 +276,10 @@ namespace TradingLib.Core
         {
             workers = new List<Thread>(_worknum);
             using (ZmqContext context = ZmqContext.Create())
-            {   //当server端返回信息时,我们同样需要借助一定的设备完成
+            {   
                 using (ZmqSocket frontend = context.CreateSocket(SocketType.ROUTER), backend = context.CreateSocket(SocketType.DEALER), outchannel = context.CreateSocket(SocketType.DEALER), outClient = context.CreateSocket(SocketType.DEALER), publisher = context.CreateSocket(SocketType.PUB), serviceRep = context.CreateSocket(SocketType.REP))
                 {
-                    #region tcp keep alive
-                    //frontend.AddTcpAcceptFilter("192.168.1.1");//由防火墙来控制访问列表
-                    //a.消息大小设置 管理端不设置消息大小，需要上传 配置文件
-                    //if(_tlmode == QSEnumTLMode.TradingSrv)
-                    //    frontend.MaxMessageSize = 300;//普通交易消息的大小在100以内。我们设置成200 过滤掉大于200的消息这里是一个bug由于消息大小设置太小,导致逻辑服务器频繁断开接入服务器连接
-                    //frontend.ReceiveBufferSize = 200;
-                    //frontend.SendBufferSize = 200;
-
-                    //tcp keepalive的4个参数 connect端设置有效
-                    //frontend.TcpKeepalive = ZeroMQ.TcpKeepaliveBehaviour.Enable;
-                    //frontend.TcpKeepaliveCnt = 5;/* 判定断开前的KeepAlive探测次数 */
-                    //frontend.TcpKeepaliveIntvl = 1000;/* 两次KeepAlive探测间的时间间隔  */
-                    //frontend.TcpKeepaliveIdle = 120000;/*开始首次KeepAlive探测前的TCP空闭时间 */
-                    #endregion
-
+                    
                     //前端Router用于注册Client
                     frontend.Bind("tcp://" + _serverip + ":" + Port.ToString());
                     //后端用于向worker线程发送消息,worker再去执行
@@ -321,18 +307,21 @@ namespace TradingLib.Core
                     //fronted过来的信息我们路由到backend上去
                     frontend.ReceiveReady += (s, e) =>
                     {
+                        logger.Info("front recv message");
                         var zmsg = new ZMessage(e.Socket);
                         zmsg.Send(backend);
                     };
                     //backend过来的信息我们路由到frontend上去
                     backend.ReceiveReady += (s, e) =>
                     {
+                        //logger.Info("backend recv message");
                         var zmsg = new ZMessage(e.Socket);
                         zmsg.Send(frontend);
                     };
                     //output接受到的消息,我们通过front发送出去,所有发送给客户端的消息通过outClient发送到output,然后再通过front路由出去
                     outchannel.ReceiveReady += (s, e) =>
                     {
+                        //logger.Info("out channel recv message");
                         var zmsg = new ZMessage(e.Socket);
                         zmsg.Send(frontend);
                     };
@@ -474,7 +463,6 @@ namespace TradingLib.Core
         {
             try
             {
-                //服务端从这里得到客户端过来的消息
                 ZMessage zmsg = new ZMessage(worker);
                 //1.进行消息地址解析 zmessage 中含有多个frame frame[0]是消息主体,其余frame是附加的地址信息
                 //通过zmessage frame数量判断,获得对应的地址信息
@@ -484,9 +472,6 @@ namespace TradingLib.Core
                 logger.Info(string.Format("*** Frame count:{0} type:{1} content:{2}", zmsg.FrameCount, msg.Type, msg.Content));
 
                 //("Frames Count:" + zmsg.FrameCount.ToString() + " body:" + UTF8Encoding.Default.GetString(zmsg.Body) + " add:" + UTF8Encoding.Default.GetString(zmsg.Address),QSEnumDebugLevel.INFO);
-                //注意:进行地址有效性检查,如果有空地址 则直接返回。空地址会造成下道逻辑的错误
-                //带有2层地址,客户端从接入服务器登入
-                //if (TradingLib.Core.CoreGlobal.EnableAccess)//如果允许前置接入 则消息可以带有2层或者1层地址
                 //如果消息类型是前置发送到交易逻辑服务的心跳
                 if (msg.Type == MessageTypes.LOGICLIVEREQUEST)
                 {
@@ -495,10 +480,7 @@ namespace TradingLib.Core
                         front = zmsg.AddressToString();//获得第一层地址
                         zmsg.Unwrap();//分离第一层地址
                         address = zmsg.AddressToString();
-
                         LogicLiveRequest request = (LogicLiveRequest)PacketHelper.SrvRecvRequest(msg.Type, msg.Content, front, address);
-
-                        //Util.Debug(string.Format("LogicHeartBeat from:{0} address:{1}",front,address),QSEnumDebugLevel.DEBUG);
                         LogicLiveResponse response = ResponseTemplate<LogicLiveResponse>.SrvSendRspResponse(request);
 
                         ZMessage reply = new ZMessage(response.Data);
@@ -514,41 +496,28 @@ namespace TradingLib.Core
                     return;
 
                 }
-                if (true)
+
+                //根据Frame数量进行地址检查
+                if (zmsg.FrameCount == 3)
                 {
-                    if (zmsg.FrameCount == 3)
-                    {
-                        front = zmsg.AddressToString();//获得第一层地址
-                        zmsg.Unwrap();//分离第一层地址
-                        address = zmsg.AddressToString();
-                        //debug("Got 3 frame " + "front:" + front + " address:" + address, QSEnumDebugLevel.MUST);
-                        if (string.IsNullOrEmpty(front) || string.IsNullOrEmpty(address) || address.Length != 36) return;
-                    }
-                    //带有1层地址,客户直接连接到本地的router
-                    else if (zmsg.FrameCount == 2)
-                    {
-                        address = zmsg.AddressToString();
-                        //debug("Got 2 frame " + "front:" + front + " address:" + address, QSEnumDebugLevel.MUST);
-                        if (string.IsNullOrEmpty(address) || address.Length != 36) return;
-                    }
-                    else
-                    {
-                        return;
-                    }
+                    front = zmsg.AddressToString();//获得第一层地址
+                    zmsg.Unwrap();//分离第一层地址
+                    address = zmsg.AddressToString();
+                    //debug("Got 3 frame " + "front:" + front + " address:" + address, QSEnumDebugLevel.MUST);
+                    if (string.IsNullOrEmpty(front) || string.IsNullOrEmpty(address) || address.Length != 36) return;
                 }
-                else//如果不允许前置接入,则只有1层地址的消息可以被处理
+                //带有1层地址,客户直接连接到本地的router
+                else if (zmsg.FrameCount == 2)
                 {
-                    if (zmsg.FrameCount == 2)
-                    {
-                        address = zmsg.AddressToString();
-                        //debug("no access Got 2 frame " + "front:" + front + " address:" + address, QSEnumDebugLevel.MUST);
-                        if (string.IsNullOrEmpty(address) || address.Length != 36) return;
-                    }
-                    else
-                    {
-                        return;
-                    }
+                    address = zmsg.AddressToString();
+                    //debug("Got 2 frame " + "front:" + front + " address:" + address, QSEnumDebugLevel.MUST);
+                    if (string.IsNullOrEmpty(address) || address.Length != 36) return;
                 }
+                else
+                {
+                    return;
+                }
+               
 
                 //2.流控 超过消息频率则直接返回不进行该消息的处理(拒绝该消息) 交易服务器才执行流控,管理服务器不执行
                 //if (this._tlmode == QSEnumTLMode.TradingSrv && !zmqTP.NewZmessage(address,zmsg)) 

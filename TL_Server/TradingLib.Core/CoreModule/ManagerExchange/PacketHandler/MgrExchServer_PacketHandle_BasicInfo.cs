@@ -123,7 +123,6 @@ namespace TradingLib.Core
         {
             logger.Info(string.Format("管理员:{0} 请求查询交易所列表:{1}", session.AuthorizedID, request.ToString()));
             IExchange[] exchs = BasicTracker.ExchagneTracker.Exchanges;
-
             int totalnum = exchs.Length;
 
             for (int i = 0; i < totalnum; i++)
