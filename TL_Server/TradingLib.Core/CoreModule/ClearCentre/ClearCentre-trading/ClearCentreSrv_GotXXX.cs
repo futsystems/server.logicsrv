@@ -214,7 +214,19 @@ namespace TradingLib.Core
                 //累加持仓
                 acctk.GotFill(f,out accept);
                 //如果帐户维护器无法处理该成交 则直接返回 不用计算成交手续费或记录成交
-                if (!accept) return;
+                if (!accept)
+                {
+                    Order o = this.SentOrder(f.id);
+                    if (o != null)
+                    {
+                        //如果成交没有接受 则获得对应的委托将委托状态更新未reject;
+                        Order tmp = new OrderImpl(o);
+                        tmp.Status = QSEnumOrderStatus.Reject;
+                        this.GotOrder(tmp);
+
+                    }
+                    return;
+                }
 
                 totaltk.NewFill(f);//所有的成交都只有一次回报 都需要进行记录
                 pos = account.GetPosition(f.Symbol, positionside);//acctk.GetPosition(f.Account, f.symbol, positionside);
