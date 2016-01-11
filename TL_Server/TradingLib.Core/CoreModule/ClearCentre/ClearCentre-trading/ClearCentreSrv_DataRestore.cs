@@ -96,9 +96,10 @@ namespace TradingLib.Core
                 {
                     this.GotOrder(o);
                 }
+                bool accept = false;
                 foreach (Trade f in flist)
                 {
-                    this.GotFill(f);
+                    this.GotFill(f,out accept);
                 }
                 foreach (OrderAction action in clist)
                 {

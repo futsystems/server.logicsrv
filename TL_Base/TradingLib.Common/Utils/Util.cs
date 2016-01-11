@@ -1034,7 +1034,7 @@ namespace TradingLib.Common
         {
             List<string> rowoutput = new List<string>();
             PositionTracker pt = new PositionTracker();
-
+            bool accept= false;
             foreach (TradeImpl t in tradelist)
             {
                 string r = t.GetTradStr() + delimiter;
@@ -1042,7 +1042,7 @@ namespace TradingLib.Common
                 decimal cpl = 0;
                 decimal opl = 0;
                 int csize = 0;
-                cpl = pt.Adjust(t);
+                cpl = pt.Adjust(t,out accept);
                 opl = Calc.OpenPL(t.xPrice, pt[s]); // get any leftover open pl
                 if (cpl != 0) csize = t.xSize; // if we closed any pl, get the size
                 string[] pl = new string[] { opl.ToString("f2", System.Globalization.CultureInfo.InvariantCulture), cpl.ToString("f2", System.Globalization.CultureInfo.InvariantCulture), pt[s].Size.ToString(System.Globalization.CultureInfo.InvariantCulture), csize.ToString(System.Globalization.CultureInfo.InvariantCulture), pt[s].AvgPrice.ToString("f2", System.Globalization.CultureInfo.InvariantCulture) };

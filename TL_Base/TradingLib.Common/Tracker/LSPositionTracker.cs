@@ -86,17 +86,17 @@ namespace TradingLib.Common
         /// 用于更新持仓状态
         /// </summary>
         /// <param name="f"></param>
-        public void GotFill(Trade f)
+        public void GotFill(Trade f,out bool accept)
         {
             bool entryposition = f.IsEntryPosition;
             //开仓 多头 /平仓 空头
             if ((f.IsEntryPosition && f.Side) || ((!f.IsEntryPosition) && (!f.Side)))
             {
-                _ltk.GotFill(f);
+                _ltk.GotFill(f,out accept);
             }
             else
             {
-                _stk.GotFill(f);
+                _stk.GotFill(f,out accept);
             }
         }
 

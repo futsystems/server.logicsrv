@@ -176,9 +176,10 @@ namespace TradingLib.Common
             {
                 tk.GotPosition(pd);    
             }
+            bool accept = false;
             foreach(var fill in TradeBook[account.ID])
             {
-                tk.GotFill(fill);
+                tk.GotFill(fill,out accept);
             }
 
             foreach (var pos in tk.Positions)
@@ -219,11 +220,17 @@ namespace TradingLib.Common
         /// 记录成交
         /// </summary>
         /// <param name="fill"></param>
-        internal void GotFill(Trade fill)
+        internal void GotFill(Trade fill,out bool accept)
         {
-            OrdBook[fill.Account].GotFill(fill);
-            PosBook[fill.Account].GotFill(fill);
-            TradeBook[fill.Account].GotFill(fill);
+
+            PosBook[fill.Account].GotFill(fill,out accept);
+            //如果成交可接受 则用成交数据更新委托与成交列表
+            if (accept)
+            {
+                OrdBook[fill.Account].GotFill(fill);
+
+                TradeBook[fill.Account].GotFill(fill);
+            }
         }
 
         /// <summary>

@@ -76,7 +76,7 @@ namespace TradingLib.API
         /// </summary>
         /// <param name="newFill"></param>
         /// <returns></returns>
-        decimal Adjust(Trade newFill);
+        decimal Adjust(Trade newFill,out bool accept);
 
         /// <summary>
         /// 用持仓明细更新持仓状态 用于从隔夜持仓初始化持仓状态
