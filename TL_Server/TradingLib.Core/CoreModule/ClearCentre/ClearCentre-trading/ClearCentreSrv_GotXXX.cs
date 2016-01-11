@@ -182,10 +182,13 @@ namespace TradingLib.Core
 
         /// <summary>
         /// 清算中心获得成交
+        /// 增加成交处理标识符accept 如果成交异常无法体现在持仓上则返回false
+        /// 1.比如 多次平仓成交 造成的多余平仓成交 则后续操作不进行成交记录以及回报 并且要更新对应委托状态为拒绝
         /// </summary>
         /// <param name="f"></param>
-        public void GotFill(Trade f)
+        public void GotFill(Trade f,out bool accept)
         {
+            accept = false;
             try
             {
                 if (f == null || (!f.isValid)) return;
@@ -209,7 +212,22 @@ namespace TradingLib.Core
                 int beforesize = pos.UnsignedSize;
 
                 //累加持仓
-                acctk.GotFill(f);
+                acctk.GotFill(f,out accept);
+                //如果帐户维护器无法处理该成交 则直接返回 不用计算成交手续费或记录成交
+                if (!accept)
+                {
+                    Order o = this.SentOrder(f.id);
+                    if (o != null)
+                    {
+                        //如果成交没有接受 则获得对应的委托将委托状态更新未reject;
+                        Order tmp = new OrderImpl(o);
+                        tmp.Status = QSEnumOrderStatus.Reject;
+                        this.GotOrder(tmp);
+
+                    }
+                    return;
+                }
+
                 totaltk.NewFill(f);//所有的成交都只有一次回报 都需要进行记录
                 pos = account.GetPosition(f.Symbol, positionside);//acctk.GetPosition(f.Account, f.symbol, positionside);
                 int aftersize = pos.UnsignedSize;//查询该成交后数量

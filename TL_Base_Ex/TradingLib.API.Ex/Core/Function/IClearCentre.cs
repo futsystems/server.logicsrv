@@ -40,7 +40,7 @@ namespace TradingLib.API
         /// 记录成交
         /// </summary>
         /// <param name="f"></param>
-        void GotFill(Trade f);
+        void GotFill(Trade f,out bool accept);
         /// <summary>
         /// 记录行情
         /// </summary>

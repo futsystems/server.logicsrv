@@ -185,9 +185,13 @@ namespace TradingLib.Common
         /// <param name="fill"></param>
         public void GotFill(Trade fill)
         {
-            _orderTk.GotFill(fill);
-            _positionTk.GotFill(fill);
-            _tradeTk.Add(fill);
+            bool accept = false;
+            _positionTk.GotFill(fill, out accept);
+            if (accept)
+            {
+                _orderTk.GotFill(fill);
+                _tradeTk.Add(fill);
+            }
         }
 
         /// <summary>

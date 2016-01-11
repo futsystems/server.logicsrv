@@ -61,13 +61,19 @@ namespace TradingLib.Common
         {
             Adjust(p);
         }
+
+        public void GotFill(Trade f)
+        { 
+            bool accept= false;
+            GotFill(f, out accept);
+        }
         /// <summary>
         /// 获得一个成交对象
         /// </summary>
         /// <param name="f"></param>
-        public void GotFill(Trade f) 
+        public void GotFill(Trade f,out bool accept) 
         { 
-            Adjust(f); 
+            Adjust(f,out accept); 
         }
         #endregion
 
@@ -205,7 +211,7 @@ namespace TradingLib.Common
         /// </summary>
         /// <param name="fill"></param>
         /// <returns>any closed PL for adjustment</returns>
-        public decimal Adjust(Trade fill)
+        public decimal Adjust(Trade fill,out bool accept)
         {
             //设定默认帐户
             if (_defaultacct == string.Empty)
@@ -220,7 +226,7 @@ namespace TradingLib.Common
                 idx = getindex(fill.Symbol + fill.Account);
             }
 
-            cpl += this[idx].Adjust(fill);//调用position来处理fill.形成closedpl
+            cpl += this[idx].Adjust(fill,out accept);//调用position来处理fill.形成closedpl
             return cpl;
         }
 
