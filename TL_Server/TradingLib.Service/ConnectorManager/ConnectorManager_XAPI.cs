@@ -213,7 +213,6 @@ namespace TradingLib.ServiceManager
                 if (datafeed == null)
                     continue;
 
-                datafeed.SendLogItemEvent += new ILogItemDel(Util.Log);
                 datafeed.SetDataFeedConfig(cfg);
                 IDataFeed datafeedinterface = datafeed as IDataFeed;
                 datafeedInstList.Add(cfg.Token, datafeedinterface);
