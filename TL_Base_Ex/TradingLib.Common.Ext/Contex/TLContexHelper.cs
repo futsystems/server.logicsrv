@@ -2,9 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.IO;
 using TradingLib.API;
 using System.Reflection;
 using Autofac;
+using Common.Logging;
 
 namespace TradingLib.Common
 {
@@ -14,23 +16,11 @@ namespace TradingLib.Common
     public class TLCtxHelper:IDisposable
     {
         private static TLCtxHelper defaultInstance;
-        private TLContext ctx;
+        
+        private static ILog logger = LogManager.GetLogger("TLCtxHelper");
 
-        static ILifetimeScope _scope = null;
-        public static ILifetimeScope Scope {
 
-            get 
-            {
-                if (_scope == null)
-                    throw new NullReferenceException("Globle Scope not setted");
-                return _scope;
-            }
-        }
-
-        public static void RegisterScope(ILifetimeScope scope)
-        {
-            _scope = scope;
-        }
+        
 
         private IUtil m_util;
 
@@ -41,7 +31,21 @@ namespace TradingLib.Common
         public static long StartUpTime { get; set; }
 
 
-        public static bool IsReady { get; set; }
+        static bool _isReady = false;
+        /// <summary>
+        /// 全局对象就绪标识
+        /// 启动过程结束后 将该标识置为True
+        /// </summary>
+        public static bool IsReady
+        {
+            get { return _isReady; }
+            set
+            {
+                _isReady = true;
+                StartUpTime = Util.ToTLDateTime();//启动时间
+
+            }
+        }
 
         static TLVersion _version=null;
         /// <summary>
@@ -60,23 +64,30 @@ namespace TradingLib.Common
             
         }
 
+        /// <summary>
+        /// 输出版本信息
+        /// </summary>
         public static void PrintVersion()
         {
-            Util.Info("");
-            Util.WriteSectionLine();
-            Util.Info(string.Format(". Version:{0}", Version.Version));
-            Util.Info(string.Format(". Build:{0}", Version.BuildNum));
-            Util.Info(string.Format(". LastUpdate:{0}", "20141123"));
-            Util.Info(string.Format(". Author:{0}", "QianBo"));
+
+            logger.Info("");
+            logger.Info(string.Format(". StartUpTime:{0}", Util.ToDateTime(StartUpTime).ToString()));
+            logger.Info(string.Format(". Tradingday:{0}", TLCtxHelper.ModuleSettleCentre.Tradingday));
+            
+            logger.Info(string.Format(". Version:{0}", Version.Version));
+            logger.Info(string.Format(". VersionNo:{0}", Version.BuildNum));
+            logger.Info(string.Format(". Author:{0}", "QianBo"));
         }
 
 
         static TLCtxHelper()
         {
             defaultInstance = new TLCtxHelper();
-            IsReady = false;
         }
 
+        /// <summary>
+        /// 构造函数 初始化对象
+        /// </summary>
         private TLCtxHelper()
         {
             this.ctx = new TLContext();
@@ -85,6 +96,8 @@ namespace TradingLib.Common
             this.m_AccountEvent = new AccountEvent();
             this.m_ExContribEvent = new ExContribEvent();
         }
+
+
 
         public void Dispose()
         { 
@@ -103,6 +116,29 @@ namespace TradingLib.Common
             }
         }
 
+
+        #region scope
+        static ILifetimeScope _scope = null;
+        public static ILifetimeScope Scope
+        {
+
+            get
+            {
+                if (_scope == null)
+                    throw new NullReferenceException("Globle Scope not setted");
+                return _scope;
+            }
+        }
+
+        public static void RegisterScope(ILifetimeScope scope)
+        {
+            _scope = scope;
+        }
+        #endregion
+
+
+        #region CTX
+        private TLContext ctx;
         public static TLContext Ctx
         {
             get
@@ -112,6 +148,8 @@ namespace TradingLib.Common
                 return defaultInstance.ctx;
             }
         }
+        #endregion
+
 
 
         #region 全局事件
@@ -436,5 +474,57 @@ namespace TradingLib.Common
         #endregion
 
 
+        /// <summary>
+        /// 通过可执行文件目录下的build.md文件获得当前的程序版本
+        /// 如果有版本数据则更新到数据库
+        /// </summary>
+        public static void ParseVersion()
+        {
+            string fn = "build.md";
+            if (File.Exists("build.md"))
+            {
+                using (FileStream fs = File.Open(fn, FileMode.Open))
+                {
+                    using (StreamReader sr = new StreamReader(fs))
+                    {
+                        string line = sr.ReadLine();
+                        if (line.StartsWith("v"))
+                        {
+                            string[] rec = line.Split('-');
+                            string mainversion = rec[1];
+                            string commitno = rec[2];
+                            string[] versions = mainversion.Split('.');
+                            if (versions.Length == 3)
+                            {
+                                int major = 0;
+                                int.TryParse(versions[0], out major);
+                                int minor = 0;
+                                int.TryParse(versions[1], out minor);
+                                int fix = 0;
+                                int.TryParse(versions[2], out fix);
+
+                                int no = 0;
+                                int.TryParse(commitno, out no);
+                                if (major * minor * fix*no != 0)
+                                {
+                                    logger.Info(string.Format(". Parse Version Major:{0} Minor:{1} Fix:{2} CommitNo:{3}", major, minor, fix, no));
+                                    ORM.MSystem.UpdateVersion(major, minor, fix, no);
+                                    //重新加载版本信息
+                                    _version = ORM.MSystem.GetVersion();
+                                }
+                            }
+                                
+                        }
+                    }
+                }
+                
+            }
+        
+        }
+
     }
+
+
+
+
 }
