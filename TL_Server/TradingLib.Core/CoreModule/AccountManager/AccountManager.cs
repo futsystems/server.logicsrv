@@ -17,10 +17,22 @@ namespace TradingLib.Core
 
         protected ConcurrentDictionary<string, IAccount> AcctList = new ConcurrentDictionary<string, IAccount>();
 
+        ConfigDB _cfgdb;
+
+        bool _deleteAccountCheckEquity = false;
 
         public AccountManager():
             base(AccountManager.CoreName)
         {
+            //1.加载配置文件
+            _cfgdb = new ConfigDB(AccountManager.CoreName);
+
+            if (!_cfgdb.HaveConfig("DeleteAccountCheckEquity"))
+            {
+                _cfgdb.UpdateConfig("DeleteAccountCheckEquity", QSEnumCfgType.Bool, false, "删除交易帐户是否检查帐户权益");
+            }
+            _deleteAccountCheckEquity = _cfgdb["DeleteAccountCheckEquity"].AsBool();
+
             LoadAccount();
             
         }
