@@ -50,8 +50,8 @@
 		<LibFiles Include="lib\NLog.dll" />
 		<LibFiles Include="lib\NodaTime.dll" />
 								
-		<LibFiles Condition=" '$(OperatingPlatform)' == 'Windows' " Include="lib\libzmq\clrzmq\clrzmq.dll" />
-		<LibFiles Condition=" '$(OperatingPlatform)' == 'Unix' " Include="lib\libzmq\clrzmq-unix\clrzmq.dll" />
+		<LibFiles Condition=" '$(OperatingPlatform)' == 'Windows' " Include="lib\libzmq\clrzmq-4.x\win\ZeroMQ.dll" />
+		<LibFiles Condition=" '$(OperatingPlatform)' == 'Unix' " Include="lib\libzmq\clrzmq-4.x\mono\ZeroMQ.dll" />
   </ItemGroup>
   <ItemGroup>
     <BuildFilesExecute Include="Platform\TradingSrv\LogicSrv.exe" />
@@ -134,6 +134,7 @@
 		<MakeDir Directories="$(PackageDir)\Connector" />
 		<MakeDir Directories="$(PackageDir)\Account" />
 		<MakeDir Directories="$(PackageDir)\RuleSet" />
+		<MakeDir Directories="$(PackageDir)\RequiredLibraries" />
 		
 		<Copy SourceFiles="@(BuildFilesBase)" DestinationFolder="$(PackageDir)" ContinueOnError="false" />
 		<Copy SourceFiles="@(BuildFilesContrib)" DestinationFolder="$(PackageDir)\Contrib" ContinueOnError="false" />
@@ -141,7 +142,7 @@
 		<Copy SourceFiles="@(BuildFilesAccount)" DestinationFolder="$(PackageDir)\Account" ContinueOnError="false" />
 		<Copy SourceFiles="@(BuildFilesRuleSet)" DestinationFolder="$(PackageDir)\RuleSet" ContinueOnError="false" />
 
-		<Copy SourceFiles="@(LibFiles)" DestinationFolder="$(PackageDir)" ContinueOnError="false" />
+		<Copy SourceFiles="@(LibFiles)" DestinationFolder="$(PackageDir)\RequiredLibraries" ContinueOnError="false" />
 		
 		<Copy SourceFiles="@(BuildFilesExecute)" DestinationFolder="$(PackageDir)" ContinueOnError="false" />
 	</Target>
