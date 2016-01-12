@@ -73,7 +73,6 @@
 	</Target>
   
   <Target Name="Base">
-	<MSBuild Projects="TL_Base\HttpServer\HttpServer.csproj" Properties="Configuration=$(Configuration);" />
 	<MSBuild Projects="TL_Base\TradingLib.API\TradingLib.API.csproj" Properties="Configuration=$(Configuration);" />
 	<MSBuild Projects="TL_Base\TradingLib.Mixins\TradingLib.Mixins.csproj" Properties="Configuration=$(Configuration);" />
 	<MSBuild Projects="TL_Base\TradingLib.Common\TradingLib.Common.csproj" Properties="Configuration=$(Configuration);" />
@@ -91,11 +90,9 @@
   </Target>
   
   <Target Name="Contrib" DependsOnTargets="Base">
+	<MSBuild Projects="TL_Contrib\TradingLib.Contrib.APIService\TradingLib.Contrib.APIService.csproj" Properties="Configuration=$(Configuration);" />
     <MSBuild Projects="TL_Contrib\TradingLib.Contirb.LogServer\TradingLib.Contirb.LogServer.csproj" Properties="Configuration=$(Configuration);" />
     <MSBuild Projects="TL_Contrib\TradingLib.Contrib.CLIServer\TradingLib.Contrib.CLIServer.csproj" Properties="Configuration=$(Configuration);" />
-    <MSBuild Projects="TL_Contrib\TradingLib.Contrib.EmailServer\TradingLib.Contrib.EmailServer.csproj" Properties="Configuration=$(Configuration);" />
-    <MSBuild Projects="TL_Contrib\TradingLib.Contrib.WebServer\TradingLib.Contrib.WebPortal.csproj" Properties="Configuration=$(Configuration);" />
-    <MSBuild Projects="TL_Contrib\TradingLib.Contrib.FinService\TradingLib.Contrib.FinService.csproj" Properties="Configuration=$(Configuration);" />
   </Target>
   
   <Target Name="Connector" DependsOnTargets="Base">
