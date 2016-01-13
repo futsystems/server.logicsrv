@@ -43,6 +43,7 @@ namespace TradingLib.ServiceManager
         ConfigDB _cfgdb;
         string _defaultSimBrokerToken = "SIMBROKER";
         string _defaultDataFeedToken = "FASTTICK";
+        bool _startDefaultConnector = true;
         public ConnectorManager()
             : base(SMGName)
         {
@@ -59,6 +60,12 @@ namespace TradingLib.ServiceManager
                 _cfgdb.UpdateConfig("DefaultDataFeed", QSEnumCfgType.String, "FASTTICK", "默认行情通道配置名称");
             }
             _defaultDataFeedToken = _cfgdb["DefaultDataFeed"].AsString();
+
+            if (!_cfgdb.HaveConfig("StartDefaultConnector"))
+            {
+                _cfgdb.UpdateConfig("StartDefaultConnector", QSEnumCfgType.Bool, true, "是否启动默认通道");
+            }
+            _startDefaultConnector = _cfgdb["StartDefaultConnector"].AsBool();
 
         }
 
@@ -83,12 +90,6 @@ namespace TradingLib.ServiceManager
         public void Init()
         {
             Util.InitStatus(this.PROGRAME, true);
-            //if (!routerbinded)
-            //{
-            //    debug("未绑定数据与成交路由中心,请先绑定", QSEnumDebugLevel.ERROR);
-            //    return;
-            //}
-
             //加载接口类型
             LoadConnectorType();
 
@@ -102,7 +103,6 @@ namespace TradingLib.ServiceManager
             _defaultsimbroker = FindBroker(_defaultSimBrokerToken);//_defaultSimBrokerToken 通过数据库设置
             _defaultdatafeed = FindDataFeed(_defaultDataFeedToken);//_defaultDataFeedToken通过数据库设置
 
-
         }
 
         /// <summary>
@@ -111,8 +111,9 @@ namespace TradingLib.ServiceManager
         public void Start()
         {
             Util.StatusSection(this.PROGRAME, "STARTCONNECTOR", QSEnumInfoColor.INFODARKRED,true);
-            if (GlobalConfig.NeedStartDefaultConnector)
+            if (_startDefaultConnector)
             {
+                //TODO:启动动作判定
                 if (TLCtxHelper.ModuleSettleCentre.IsTradingday)//如果是交易日则需要启动实盘通道
                 {
                     logger.Info("正常交易日,启动所有通道");
@@ -144,6 +145,7 @@ namespace TradingLib.ServiceManager
             List<Type> brokerlist = PluginHelper.LoadBrokerType();
             List<Type> datafeedlist = PluginHelper.LoadDataFeedType();
 
+            //加载成交通道
             foreach(Type t in brokerlist)
             {
                 if (typeof(TLBrokerBase).IsAssignableFrom(t))
@@ -152,7 +154,7 @@ namespace TradingLib.ServiceManager
                 }
             }
 
-            //加载数据路由
+            //加载行情通道
             foreach (Type t in datafeedlist)
             {
                 if (typeof(TLDataFeedBase).IsAssignableFrom(t))

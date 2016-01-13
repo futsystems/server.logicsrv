@@ -51,7 +51,7 @@ namespace TradingLib.ServiceManager
                 if (ret)
                     itface.IsValid = true;
 
-                logger.Info(string.Format("Broker Interface[{0}] C# Plugin[{1}]:{2} C++ Dll:{3} Valid:{4}", itface.Name, itface.type_name, cs_success, cpp_success, ret));
+                logger.Debug(string.Format("Broker Interface[{0}] C# Plugin[{1}]:{2} C++ Dll:{3} Valid:{4}", itface.Name, itface.type_name, cs_success, cpp_success, ret));
             }
             foreach (ConnectorConfig cfg in BasicTracker.ConnectorConfigTracker.BrokerConfigs)
             {
@@ -59,7 +59,7 @@ namespace TradingLib.ServiceManager
                     continue;
                 if (!cfg.Interface.IsValid)
                     continue;
-                logger.Info(string.Format("Broker Config[{0}] Name:{1} SrvIP:{2} LoginID{3}", cfg.Token, cfg.Name, cfg.srvinfo_ipaddress, cfg.usrinfo_userid));
+                logger.Debug(string.Format("Broker Config[{0}] Name:{1} SrvIP:{2} LoginID{3}", cfg.Token, cfg.Name, cfg.srvinfo_ipaddress, cfg.usrinfo_userid));
             }
 
             foreach (ConnectorInterface itface in BasicTracker.ConnectorConfigTracker.DataFeedInterfaces)
@@ -72,7 +72,7 @@ namespace TradingLib.ServiceManager
                 if (ret)
                     itface.IsValid = true;
 
-                logger.Info(string.Format("DataFeed Interface[{0}] C# Plugin[{1}]:{2} C++ Dll:{3} Valid:{4}", itface.Name, itface.type_name, cs_success, cpp_success, ret));
+                logger.Debug(string.Format("DataFeed Interface[{0}] C# Plugin[{1}]:{2} C++ Dll:{3} Valid:{4}", itface.Name, itface.type_name, cs_success, cpp_success, ret));
             }
             foreach (ConnectorConfig cfg in BasicTracker.ConnectorConfigTracker.DataFeedConfigs)
             {
@@ -80,7 +80,7 @@ namespace TradingLib.ServiceManager
                     continue;
                 if (!cfg.Interface.IsValid)
                     continue;
-                logger.Info(string.Format("DataFeed Config[{0}] Name:{1} SrvIP:{2} LoginID{3}", cfg.Token, cfg.Name, cfg.srvinfo_ipaddress, cfg.usrinfo_userid));
+                logger.Debug(string.Format("DataFeed Config[{0}] Name:{1} SrvIP:{2} LoginID{3}", cfg.Token, cfg.Name, cfg.srvinfo_ipaddress, cfg.usrinfo_userid));
             }
         }
 

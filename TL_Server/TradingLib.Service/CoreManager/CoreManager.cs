@@ -84,7 +84,6 @@ namespace TradingLib.ServiceManager
             _riskCentre = TLCtxHelper.Scope.Resolve<IModuleRiskCentre>();//初始化风控中心 初始化账户风控规则
 
             logger.Info("[INIT CORE] DataFeedRouter");
-            //var scope = Container.BeginLifetimeScope();
             _datafeedRouter = TLCtxHelper.Scope.Resolve<IModuleDataRouter>();//Container.Resolve<IDataRouter>();//初始化数据路由
 
 
@@ -133,8 +132,6 @@ namespace TradingLib.ServiceManager
             _managerExchange.Start();
 
             _webmsgExchange.Start();
-
-            //_messageExchagne.RestoreSession();//恢复客户端连接
          
             _messageExchagne.Start();//交易服务启动
 

@@ -150,35 +150,39 @@ namespace TradingLib.ServiceManager
         /// 获得扩展模块列表
         /// </summary>
         /// <returns></returns>
-        private static List<string> GetContribList()
+        private  List<string> GetContribList()
         {
             List<string> list = new List<string>();
             try
-            {                     
+            {           
                 string fn = Util.GetConfigFile("contriblist.cfg");
-                //实例化一个文件流--->与写入文件相关联  
-                using (FileStream fs = new FileStream(fn, FileMode.Open))
+                if (File.Exists(fn))
                 {
-                    //实例化一个StreamWriter-->与fs相关联  
-                    using (StreamReader sw = new StreamReader(fs))
+                    //实例化一个文件流--->与写入文件相关联  
+                    using (FileStream fs = new FileStream(fn, FileMode.Open))
                     {
-                        while (sw.Peek() > 0)
+                        //实例化一个StreamWriter-->与fs相关联  
+                        using (StreamReader sw = new StreamReader(fs))
                         {
-                            string str = sw.ReadLine();
-                            if (string.IsNullOrEmpty(str) || str.StartsWith(";"))
+                            while (sw.Peek() > 0)
                             {
-                                continue;
+                                string str = sw.ReadLine();
+                                if (string.IsNullOrEmpty(str) || str.StartsWith(";"))
+                                {
+                                    continue;
+                                }
+                                list.Add(str);
                             }
-                            list.Add(str);
+                            sw.Close();
                         }
-                        sw.Close();
+                        fs.Close();
                     }
-                    fs.Close();
                 }
                 return list;
             }
             catch (Exception ex)
             {
+                logger.Error("GetContribList Error:" + ex.ToString());
                 return list;
             }
         }
