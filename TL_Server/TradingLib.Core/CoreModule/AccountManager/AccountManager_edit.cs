@@ -16,10 +16,11 @@ namespace TradingLib.Core
         /// <param name="acc"></param>
         /// <param name="pass"></param>
         /// <returns></returns>
-        public void UpdateAccountPass(string account, string pass)
+        public void UpdateAccountPass(string id, string pass)
         {
-            if (!HaveAccount(account)) return;
-            ORM.MAccount.UpdateAccountPass(account, pass);
+            IAccount account = this[id];
+            if (account == null) return;
+            ORM.MAccount.UpdateAccountPass(id, pass);
         }
 
         /// <summary>
@@ -151,7 +152,6 @@ namespace TradingLib.Core
         /// <param name="rg"></param>
         public void UpdateRouterGroup(string id, RouterGroup rg)
         {
-            logger.Info("修改帐户路由组为:" + rg.Name);
             IAccount account = this[id];
             if (account == null) return;
             account.RG_FK = rg.ID;
@@ -167,7 +167,6 @@ namespace TradingLib.Core
         /// <param name="id"></param>
         public void ActiveAccount(string id)
         {
-            logger.Info("激活帐户:" + id);
             IAccount account = this[id];
             if (account == null) return;
             this[id].Execute = true;
@@ -182,7 +181,6 @@ namespace TradingLib.Core
         /// <param name="id"></param>
         public void InactiveAccount(string id)
         {
-            logger.Info("冻结账户:" + id);
             IAccount account = this[id];
             if (account == null) return;
             account.Execute = false;
@@ -257,11 +255,12 @@ namespace TradingLib.Core
         /// <param name="ac"></param>
         /// <param name="pass"></param>
         /// <returns></returns>
-        public bool VaildAccount(string account, string pass)
+        public bool VaildAccount(string id, string pass)
         {
-            bool v = ORM.MAccount.ValidAccount(account, pass);
-            v = v && HaveAccount(account);//检查风控中心是否记录该账号
-            return v;
+            IAccount account = this[id];
+            if (account == null) return false;
+            //数据库验证交易帐户ID与密码
+            return ORM.MAccount.ValidAccount(id, pass);
         }
 
 
