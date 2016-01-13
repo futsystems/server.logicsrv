@@ -442,7 +442,7 @@ namespace TradingLib.Common
                     break;
             }
             sb.Append(d);
-            sb.Append(t.DataFeed);
+            sb.Append((int)t.DataFeed);
             return sb.ToString();
         }
 
