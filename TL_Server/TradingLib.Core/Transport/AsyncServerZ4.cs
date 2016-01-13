@@ -522,6 +522,7 @@ namespace TradingLib.Core
                 string address = cnt == 3 ? request[1].ReadString(Encoding.UTF8) : request[0].ReadString(Encoding.UTF8);
                 Message msg = Message.gotmessage(request.Last().Read());
                 //地址合法判定
+                logger.Info(string.Format("address:{0} front:{1}", address, front));
                 if (string.IsNullOrEmpty(address) || address.Length != 36) return;//地址为36字符UUID
                 if (cnt == 3 && string.IsNullOrEmpty(front)) return;//如果通过前置接入 则front不为空
                 //消息合法判定
