@@ -53,7 +53,7 @@ namespace Broker.Live
         {
             try
             {
-                debug("Resume trading info from clearcentre....", QSEnumDebugLevel.INFO);
+                logger.Info("Resume trading info from clearcentre....");
                 IEnumerable<TradingLib.API.Order> orderlist = ClearCentre.SelectBrokerOrders(this.Token);
                 IEnumerable<Trade> tradelist = ClearCentre.SelectBrokerTrades(this.Token);
                 IEnumerable<PositionDetail> positiondetaillist = ClearCentre.SelectBrokerPositionDetails(this.Token);
@@ -63,7 +63,7 @@ namespace Broker.Live
                 {
                     tk.GotPosition(pd);
                 }
-                debug(string.Format("Resumed {0} Positions", positiondetaillist.Count()), QSEnumDebugLevel.INFO);
+                logger.Info(string.Format("Resumed {0} Positions", positiondetaillist.Count()));
                 //恢复日内委托
                 foreach (TradingLib.API.Order o in orderlist)
                 {
@@ -75,20 +75,20 @@ namespace Broker.Live
                         }
                         else
                         {
-                            debug("Duplicate BrokerLocalOrderID,Order:" + o.GetOrderInfo(), QSEnumDebugLevel.WARN);
+                            logger.Warn("Duplicate BrokerLocalOrderID,Order:" + o.GetOrderInfo());
                         }
                     }
                     
                     tk.GotOrder(o);
 
                 }
-                debug(string.Format("Resumed {0} Orders", orderlist.Count()), QSEnumDebugLevel.INFO);
+                logger.Info(string.Format("Resumed {0} Orders", orderlist.Count()));
                 //恢复日内成交
                 foreach (Trade t in tradelist)
                 {
                     tk.GotFill(t);
                 }
-                debug(string.Format("Resumed {0} Trades", tradelist.Count()), QSEnumDebugLevel.INFO);
+                logger.Info(string.Format("Resumed {0} Trades", tradelist.Count()));
 
                 //恢复委托父子关系对 然后恢复到委托分拆器
                 List<FatherSonOrderPair> pairs = GetOrderPairs(orderlist);

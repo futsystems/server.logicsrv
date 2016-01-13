@@ -5,6 +5,7 @@ using System.Threading;
 using TradingLib.API;
 using TradingLib.Common;
 using TradingLib.BrokerXAPI;
+using TradingLib.API;
 
 /*
  * 模拟成交引擎
@@ -33,8 +34,6 @@ namespace Broker.SIM
     {
 
         public const string PROGRAM = "Broker.SIM";
-
-        AsyncResponse asynctick;
 
         int _fillseq = 2000;
         Random random = new Random();
@@ -74,8 +73,7 @@ namespace Broker.SIM
             }
             _fillall = _cfgdb["FillAll"].AsBool();
 
-            asynctick = new AsyncResponse("SIMBroker");
-            asynctick.GotTick +=new TickDelegate(asynctick_GotTick);
+            
             _fillseq = random.Next(1000, 4000);
         }
 
@@ -87,7 +85,7 @@ namespace Broker.SIM
         /// <summary>
         /// 模拟成交用Tick数据逐个成交还是用市场切片快速成交
         /// </summary>
-        bool _fillOrderTickByTick = false;
+        //bool _fillOrderTickByTick = false;
 
         /// <summary>
         /// 模拟成交用盘口数据成交还是用最新价成交
@@ -116,25 +114,9 @@ namespace Broker.SIM
             {
                 UpdateLimitOrderQuoteStatus(k);
             }
-
-            if(_fillOrderTickByTick)
-            {
-                asynctick.newTick(k);//为了保证其他组件运行流畅，在模拟成交部分我们将tick缓存到本地然后再进行成交处理
-            }
         }
 
-        void  asynctick_GotTick(Tick k)
-        {
- 	        try
-            {
-                processIn();//将委托与取消从ringbuffer移动到Queue中等待执行成交或取消 由于移动委托操作与委托模拟成交操作是在同一个线程内进行，因此这里queue不存在多线程操作的安全问题
-                processPaperTrading(k);
-            }
-            catch(Exception ex)
-            {
-            
-            }
-        }
+
 
         #region 限价委托 盘口记录器 
         Dictionary<long, LimitOrderQuoteStatus> _quotestatus = new Dictionary<long, LimitOrderQuoteStatus>();
@@ -175,7 +157,7 @@ namespace Broker.SIM
             }
             catch (Exception ex)
             {
-                debug("onLimitOrderQuened error" + ex.ToString(), QSEnumDebugLevel.ERROR);
+                logger.Error("onLimitOrderQuened error" + ex.ToString());
             }
         }
 
@@ -192,7 +174,7 @@ namespace Broker.SIM
             }
             catch(Exception ex)
             {
-                debug("onLimitOrderFilled error" + ex.ToString(), QSEnumDebugLevel.ERROR);
+                logger.Error("onLimitOrderFilled error" + ex.ToString());
             }
         }
 
@@ -213,122 +195,6 @@ namespace Broker.SIM
         }
 
         #endregion
-
-        #region tick驱动进行成交
-        //成交引擎 每个tick执行一次模拟撮合,可以改成每200ms定时执行一次模拟成交
-        /*
-         * 方式1.当有新的tick进来时,我们依照该tick数据进行模拟成交
-         * 
-         * 
-         * */
-        void processPaperTrading(Tick tick)
-        {
-            try
-            {
-                Order[] orders;
-                long[] cancels;
-                if (aq.Count == 0) return;//如果队列中没有委托 则直接返回
-
-                orders = aq.ToArray();
-                aq.Clear();
-
-                cancels = can.ToArray();
-                can.Clear();
-
-                //列表用于放置未成交的委托
-                List<Order> unfilled = new List<Order>();
-                // 遍历所有的委托 查询是否存在该委托对应的取消,如果存在该委托的取消,则取消该委托
-                for (int i = 0; i < orders.Length; i++)
-                {
-                    //获得对应的委托
-                    Order o = orders[i];
-
-                    //1.取消检查 查询是否有该委托的取消,若有取消 则直接返回,不对委托进行成交检查
-                    //遍历所有的委托 会将所有的有效取消消耗,若还有取消没有消耗,则是因为其他原因造成的死取消
-                    int cidx = gotcancel(o.id, cancels);
-                    if (cidx >= 0)
-                    {
-                        debug("PTT Server canceled: " + o.id, QSEnumDebugLevel.INFO);
-                        cancels[cidx] = 0;
-                        o.Status = QSEnumOrderStatus.Canceled;
-                        _ocache.Write(o);
-                        _ccache.Write(o.id);
-                        continue;
-                    }
-
-
-                    //2.成交检查 用Tick数据成交该委托 如果该委托与tick不一致则返回到未成交队列
-                    if (tick.Symbol != o.Symbol)
-                    {
-                        unfilled.Add(o);
-                        continue;//如果该tick的合约与委托合约不一致则不用进行检查直接检查下一个委托
-                    }
-
-                    bool filled = o.Fill(tick,_useBikAsk, false,_fillall);
-                    // 如果没有成交,则直接返回
-                    if (!filled)
-                    {
-                        unfilled.Add(o);
-                        continue;
-                    }
-                    else
-                    {
-                        //检查全部成交还是部分成交
-                        Trade fill = (Trade)o;
-                        fill.Broker = this.GetType().FullName;
-                        fill.TradeID = "000000";
-                        debug("PTT Server filled: " + fill.ToString(), QSEnumDebugLevel.INFO);
-
-                        bool partial = fill.UnsignedSize != o.UnsignedSize;//如果是部分成交 则需要将剩余未成交的委托 返还到委托队列
-                        if (partial)
-                        {
-                            o.Status = QSEnumOrderStatus.PartFilled;//标识 部分成交
-                            o.Size = (o.UnsignedSize - fill.UnsignedSize) * (o.Side ? 1 : -1);
-                            o.FilledSize += fill.UnsignedSize;//将成交的数量累加到委托中的 filled标识段
-                            unfilled.Add(o);
-                        }
-                        else
-                        {
-                            o.Status = QSEnumOrderStatus.Filled;//标识 全部成交
-                            o.FilledSize += fill.UnsignedSize;
-                        }
-                        //委托成交后 回报委托最新状态
-                        _ocache.Write(new OrderImpl(o));
-                        // 发送委托回报
-                        Trade nf = new TradeImpl(fill);
-                        //关于这里复制后再发出order，这里的process循环 fill order. fill是对order的一个引用，后面修改的数据会覆盖到前面的数据,而gotfillevent触发的时候可能是在另外一个线程中
-                        //运行的比如发送回client,或者记录信息等。这样就行程了多个线程对一个对象的访问可能会存在数据部同步的问题。
-                        _fcache.Write(nf);
-                    }
-                }
-                // add orders back
-                for (int i = 0; i < unfilled.Count; i++)
-                {
-                    aq.Enqueue(unfilled[i]);
-                }
-
-                // add cancels back
-                //取消均在委托发送之后才会取消,因此如果遍历了所有的委托都没有取消成功的取消，表明该委托已经被成交或者其他原因。
-                //我们将余下的取消默认取消成功
-                for (int i = 0; i < cancels.Length; i++)
-                {
-                    if (cancels[i] != 0)
-                    {
-                        //can.Enqueue(cancels[i]);
-                        _ccache.Write(cancels[i]);//？
-                    }
-                }
-
-
-            }
-            catch (Exception ex)
-            {
-                debug(PROGRAM + ":模拟撮合成交错误:" + ex.ToString() + ex.StackTrace.ToString(), QSEnumDebugLevel.ERROR);
-            }
-        }
-
-        #endregion
-
         /// <summary>
         /// 获得对应的开平标识
         /// </summary>
@@ -395,7 +261,7 @@ namespace Broker.SIM
                     int cidx = gotcancel(o.id, cancels);
                     if (cidx >= 0)
                     {
-                        debug("PTT Server canceled: " + o.id, QSEnumDebugLevel.INFO);
+                        logger.Info("PTT Server canceled: " + o.id);
                         cancels[cidx] = 0;
                         o.Status = QSEnumOrderStatus.Canceled;
                         _ocache.Write(o);
@@ -441,7 +307,7 @@ namespace Broker.SIM
                         //生成成交编号
                         fill.BrokerTradeID = NextFillSeq.ToString();//交易所成交编号 Broker端的成交编号
                         //Util.Debug("@@@@@@@@@@@@@@@@@@trade date:" + fill.xDate.ToString() + " tradetime:" + fill.xTime.ToString(),QSEnumDebugLevel.ERROR);
-                        debug("PTT Server Filled: " + fill.GetTradeDetail(), QSEnumDebugLevel.INFO);
+                        logger.Info("PTT Server Filled: " + fill.GetTradeDetail());
 
                         bool partial = fill.UnsignedSize != o.UnsignedSize;//如果是部分成交 则需要将剩余未成交的委托 返还到委托队列
                         if (partial)
@@ -467,10 +333,10 @@ namespace Broker.SIM
                         Trade nf = new TradeImpl(fill);
                         //关于这里复制后再发出order，这里的process循环 fill order. fill是对order的一个引用，后面修改的数据会覆盖到前面的数据,而gotfillevent触发的时候可能是在另外一个线程中
                         //运行的比如发送回client,或者记录信息等。这样就行程了多个线程对一个对象的访问可能会存在数据部同步的问题。
-                        debug("~~~~~~~~~~ cache fill,fill==null" + (nf == null).ToString());
+                        //logger.Info("~~~~~~~~~~ cache fill,fill==null" + (nf == null).ToString());
                         //debug("cache fill:" + nf.GetTradeDetail(), QSEnumDebugLevel.WARNING);
                         _fcache.Write(nf);
-                        debug("_fcache count:" + _fcache.Count.ToString());
+                        //logger.Info("_fcache count:" + _fcache.Count.ToString());
                     }
                 }
                 // add orders back
@@ -490,12 +356,10 @@ namespace Broker.SIM
                         //_ccache.Write(cancels[i]);//？
                     }
                 }
-                
-
             }
             catch (Exception ex)
             {
-                debug(PROGRAM+":模拟撮合成交错误:" + ex.ToString()+ex.StackTrace.ToString(),QSEnumDebugLevel.ERROR);
+                logger.Error("模拟撮合成交错误:" + ex.ToString()+ex.StackTrace.ToString());
             }
         
         }
@@ -541,7 +405,7 @@ namespace Broker.SIM
             }
             catch (Exception ex)
             {
-                debug(PROGRAM + ":move order from ringbufeer to queue error:" + ex.ToString(), QSEnumDebugLevel.ERROR);
+                logger.Error("move order from ringbufeer to queue error:" + ex.ToString());
             }
         }
 
@@ -559,7 +423,7 @@ namespace Broker.SIM
         /// <param name="o"></param>
         public void SendOrder(Order o)
         {
-            debug("PTT Server Got Order: " + o.GetOrderInfo(), QSEnumDebugLevel.INFO);
+            logger.Error("PTT Server Got Order: " + o.GetOrderInfo());
             //提交委托时 设定localorderid remoteorderid
             o.BrokerLocalOrderID = "";
             o.Status = QSEnumOrderStatus.Submited;
@@ -572,7 +436,7 @@ namespace Broker.SIM
 
         void queueOrder(Order o)
         {
-            debug("PTT Server Queue Order: " + o.GetOrderInfo(), QSEnumDebugLevel.INFO);
+            logger.Info("PTT Server Queue Order: " + o.GetOrderInfo());
             //模拟交易对新提交上来的order进行复制后保留,原来的order形成事件触发.这样本地的order fill process对order信息的修改就不会影响到对外触发事件的order.
             o.Status = QSEnumOrderStatus.Opened;//标识 委托状态为open,等待成交
             //将委托置入队列时 相当于交易所接受了委托 设定BrokerRemoteOrderID
@@ -598,7 +462,7 @@ namespace Broker.SIM
         /// <param name="id"></param>
         public void CancelOrder(long id)
         {
-            debug(" PTT Got Cancel: " + id, QSEnumDebugLevel.INFO);
+            logger.Info(" PTT Got Cancel: " + id);
             _cancelinCache.Write(id);
         }
 
@@ -607,11 +471,11 @@ namespace Broker.SIM
             if (id == 0) return;
             if (IsCancedQueued(id))
             {
-                debug("PTT have queued cancel:" + id.ToString(), QSEnumDebugLevel.INFO);//已经队列过取消
+                logger.Info("PTT have queued cancel:" + id.ToString());//已经队列过取消
                 return;
             }
             can.Enqueue(id);//取消如队列
-            debug(" PTT queueing cancel: " + id, QSEnumDebugLevel.INFO);
+            logger.Info(" PTT queueing cancel: " + id);
         }
 
         /// <summary>
@@ -642,7 +506,6 @@ namespace Broker.SIM
 
         void StartPTEngine()
         {
-            if (_fillOrderTickByTick) return;//如果需要逐个tick去进行成交 则不用启动成交扫描线程
             if (ptgo) return;
             ptgo = true;
             ptthread = new Thread(new ThreadStart(PTEngine));
@@ -735,9 +598,9 @@ namespace Broker.SIM
                     while (!_ocache.hasItems && _fcache.hasItems)
                     {
                         //debug("PPT fire Trade Event.............", QSEnumDebugLevel.INFO);
-                        debug("Procout fill out,cnt:" + _fcache.Count.ToString());
+                        //debug("Procout fill out,cnt:" + _fcache.Count.ToString());
                         Trade f = _fcache.Read();
-                        debug("read fill, fill==null " + (f == null).ToString());
+                        //debug("read fill, fill==null " + (f == null).ToString());
                         NotifyTrade(f);
 
                     }
@@ -751,7 +614,7 @@ namespace Broker.SIM
                 }
                 catch (Exception ex)
                 {
-                    debug("SIMBroker回传交易信息错误:"+ex.ToString());
+                    logger.Error("SIMBroker回传交易信息错误:"+ex.ToString());
                 }
             }
             
@@ -766,7 +629,7 @@ namespace Broker.SIM
         {
             try
             {
-                debug("从清算中心加载模拟交易记录", QSEnumDebugLevel.INFO);
+                logger.Info("从清算中心加载模拟交易记录");
                 //模拟委托直接加载分帐户侧委托
                 IEnumerable<Order> olist = this.ClearCentre.GetOrdersViaBroker(this.Token);//加载
                 lock (aq)
@@ -786,11 +649,11 @@ namespace Broker.SIM
                 IEnumerable<Trade> trades = this.ClearCentre.GetTradesViaBroker(this.Token);
                 //tryparse用于避免非数字brokerkey造成的异常
                 _fillseq = trades.Count() > 0 ? trades.Max(f => { int seq = 0; int.TryParse(f.BrokerTradeID, out seq); return seq; }) : _fillseq;
-                debug("Order Cnt:"+olist.Count().ToString() +" Trade Cnt:"+trades.Count().ToString()+" Max Fill Seq:" + _fillseq.ToString(), QSEnumDebugLevel.INFO);
+                logger.Info("Order Cnt:"+olist.Count().ToString() +" Trade Cnt:"+trades.Count().ToString()+" Max Fill Seq:" + _fillseq.ToString());
             }
             catch (Exception ex)
             {
-                debug("Resotore error:" + ex.ToString(), QSEnumDebugLevel.ERROR);
+                logger.Error("Resotore error:" + ex.ToString());
             }
         }
         bool _working = false;
@@ -818,23 +681,11 @@ namespace Broker.SIM
 
             //初始化参数
             ParseConfigInfo();
+            _useBikAsk = true;
+            _simLimitReal = false;
 
-            //加载配置参数 所有参数用,序列化后放入服务器参数第一字段
-            string[] rec = _srvinfo.Field1.Split(',');
-            if (rec.Length == 3)
-            {
-                _fillOrderTickByTick = bool.Parse(rec[0]);//0
-                _useBikAsk = bool.Parse(rec[1]);//1
-                _simLimitReal = bool.Parse(rec[2]);//0
-            }
-            else
-            {
-                _fillOrderTickByTick = false;
-                _useBikAsk = true;
-                _simLimitReal = false;
-            }
 
-            debug("模拟引擎启动,成交方式:" + (_fillOrderTickByTick ? "逐个Tick成交" : "市场断面扫描")+" 取价方式:"+(_useBikAsk?"盘口价":"最新价") +" 模拟实盘取价:"+ _simLimitReal.ToString(), QSEnumDebugLevel.INFO);
+            logger.Info("模拟引擎启动,成交方式:市场断面扫描 取价方式:"+(_useBikAsk?"盘口价":"最新价") +" 模拟实盘取价:"+ _simLimitReal.ToString());
             StartPTEngine();//启动模拟成交引擎
             StartProcOut();//启动对外消息发送线程
 

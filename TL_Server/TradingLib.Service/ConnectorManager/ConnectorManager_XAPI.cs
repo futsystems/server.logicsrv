@@ -132,8 +132,6 @@ namespace TradingLib.ServiceManager
                 return;
 
             //2.绑定底层事件和设定Broker设置
-            //绑定日志事件
-            broker.SendLogItemEvent += new ILogItemDel(Util.Log);
             //设定brokerconfg
             broker.SetBrokerConfig(cfg);
             

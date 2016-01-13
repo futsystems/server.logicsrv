@@ -92,7 +92,7 @@ namespace Broker.Live
             {
                 foreach (Trade f in histtrademap.Values)
                 {
-                    debug(f.GetTradStr());
+                    logger.Info(f.GetTradStr());
                     NotifyTrade(f);
                 }
                 //对外通知交易数据同步完毕
@@ -128,7 +128,7 @@ namespace Broker.Live
             {
                 foreach (Order o in histordermap.Values)
                 {
-                    debug(o.GetOrderStatus());
+                    logger.Info(o.GetOrderStatus());
                     NotifyOrder(o);
                 }
                 histtrademap.Clear();
@@ -149,7 +149,7 @@ namespace Broker.Live
         {
             string msg = string.Format("OpenData:{0} Settleday:{1} Side:{2} OpenPrice:{3} Volume:{4} Symbol:{5} Exchange:{6} CloseVol:{7}", position.OpenDate, position.SettleDay, position.Side, position.OpenPrice, position.Volume, position.Symbol, position.Exchange, position.CloseVolume);
 
-            debug("got positon detail:" + msg, QSEnumDebugLevel.INFO);
+            logger.Info("got positon detail:" + msg);
             //开仓日期与结算日不同 则为隔夜持仓
             if (position.OpenDate != position.SettleDay)
             {
@@ -243,7 +243,7 @@ namespace Broker.Live
         /// <param name="o"></param>
         public override void SendOrder(Order o)
         {
-            debug("XAPI[" + this.Token + "] Send Order: " + o.GetOrderInfo(true), QSEnumDebugLevel.INFO);
+            logger.Info("XAPI[" + this.Token + "] Send Order: " + o.GetOrderInfo(true));
             XOrderField order = new XOrderField();
 
             order.ID = o.id.ToString();
@@ -281,13 +281,13 @@ namespace Broker.Live
                 //交易信息维护器获得委托 //？将委托复制后加入到接口维护的map中 在发送子委托过程中 本地记录的Order就是分拆过程中产生的委托，改变这个委托将同步改变委托分拆器中的委托
                 //tk.GotOrder(lo);//原来引用的是分拆器发送过来的子委托 现在修改成本地复制后的委托
                 //对外触发成交侧委托数据用于记录该成交接口的交易数据
-                debug("Send Order Success,LocalID:" + order.BrokerLocalOrderID, QSEnumDebugLevel.INFO);
+                logger.Info("Send Order Success,LocalID:" + order.BrokerLocalOrderID);
 
             }
             else
             {
                 o.Status = QSEnumOrderStatus.Reject;
-                debug("Send Order Fail,will notify to client", QSEnumDebugLevel.WARN);
+                logger.Warn("Send Order Fail,will notify to client");
             }
 
             
@@ -302,8 +302,8 @@ namespace Broker.Live
 
             Order o = ClearCentre.SentOrder(oid);
             if (o == null)
-            { 
-                debug(string.Format("OrderID:{0} is not valid,can not be canceled",oid),QSEnumDebugLevel.WARN);
+            {
+                logger.Warn(string.Format("OrderID:{0} is not valid,can not be canceled", oid));
                 return;
             }
 
@@ -326,7 +326,7 @@ namespace Broker.Live
             }
             else
             {
-                debug("Cancel order fail,will notify to client");
+                logger.Info("Cancel order fail,will notify to client");
             }
 
         }
@@ -337,7 +337,7 @@ namespace Broker.Live
         #region 处理接口侧实时交易数据 委托 委托错误 委托操作错误 成交等回报数据
         Order getLocalOrder(ref XOrderField order)
         {
-            debug(string.Format("Got Order LocalID:{0} RemoteID:{1} Price:{2} TotalSize:{3} OffsetFlag:{4} OrderStatus:{5}", order.BrokerLocalOrderID, order.BrokerRemoteOrderID, order.LimitPrice, order.TotalSize, order.OffsetFlag, order.OrderStatus), QSEnumDebugLevel.INFO);
+            logger.Info(string.Format("Got Order LocalID:{0} RemoteID:{1} Price:{2} TotalSize:{3} OffsetFlag:{4} OrderStatus:{5}", order.BrokerLocalOrderID, order.BrokerRemoteOrderID, order.LimitPrice, order.TotalSize, order.OffsetFlag, order.OrderStatus));
 
             Order localorder = LocalID2Order(order.BrokerLocalOrderID);
             //如果本地委托不存在 则该委托为新委托，创建本地Order与之对应
@@ -365,7 +365,7 @@ namespace Broker.Live
                 
                 //将委托保存到map
                 localOrderID_map.TryAdd(localorder.BrokerLocalOrderID, localorder);
-                debug("Got New Order:" + localorder.GetOrderInfo(), QSEnumDebugLevel.ERROR);
+                logger.Info("Got New Order:" + localorder.GetOrderInfo());
             }
             else
             {
@@ -375,7 +375,7 @@ namespace Broker.Live
                 localorder.FilledSize = order.FilledSize;
                 localorder.Size = order.UnfilledSize;
 
-                debug("Order Updated:" + localorder.GetOrderInfo(), QSEnumDebugLevel.ERROR);
+                logger.Info("Order Updated:" + localorder.GetOrderInfo());
             }
 
             if (!string.IsNullOrEmpty(order.BrokerRemoteOrderID))//如果远端编号存在 则设定远端编号 同时入map
@@ -424,7 +424,7 @@ namespace Broker.Live
         /// <param name="error"></param>
         public override void ProcessOrderError(ref XOrderError error)
         {
-            debug(string.Format("OrderError LocalID:{0} RemoteID:{1} ErrorID:{2} ErrorMsg:{3}", error.Order.BrokerLocalOrderID, error.Order.BrokerRemoteOrderID, error.Error.ErrorID, error.Error.ErrorMsg), QSEnumDebugLevel.ERROR);
+            logger.Info(string.Format("OrderError LocalID:{0} RemoteID:{1} ErrorID:{2} ErrorMsg:{3}", error.Order.BrokerLocalOrderID, error.Order.BrokerRemoteOrderID, error.Error.ErrorID, error.Error.ErrorMsg));
             
         }
 
@@ -442,7 +442,7 @@ namespace Broker.Live
 
         Trade getLocalTrade(ref XTradeField trade)
         {
-            debug(string.Format("Got Fill,Seq:{6} LocalID:{0} RemoteID:{1} BrokerTradeID:{2} XPrice:{3} Side:{4} XSize:{5}", trade.BrokerLocalOrderID, trade.BrokerRemoteOrderID, trade.BrokerTradeID, trade.Price, trade.Side, trade.Size,trade.SequenceNo), QSEnumDebugLevel.INFO);
+            logger.Info(string.Format("Got Fill,Seq:{6} LocalID:{0} RemoteID:{1} BrokerTradeID:{2} XPrice:{3} Side:{4} XSize:{5}", trade.BrokerLocalOrderID, trade.BrokerRemoteOrderID, trade.BrokerTradeID, trade.Price, trade.Side, trade.Size, trade.SequenceNo));
 
             //CTP接口的成交通过远端编号与委托进行关联
             Order o = RemoteID2Order(trade.BrokerRemoteOrderID);
@@ -471,7 +471,7 @@ namespace Broker.Live
         /// <param name="trade"></param>
         public override void ProcessTrade(ref XTradeField trade)
         {
-            debug(string.Format("Got Fill, LocalID:{0} RemoteID:{1} BrokerTradeID:{2} XPrice:{3} Side:{4} XSize:{5}", trade.BrokerLocalOrderID, trade.BrokerRemoteOrderID, trade.BrokerTradeID,trade.Price,trade.Side,trade.Size), QSEnumDebugLevel.INFO);
+            logger.Info(string.Format("Got Fill, LocalID:{0} RemoteID:{1} BrokerTradeID:{2} XPrice:{3} Side:{4} XSize:{5}", trade.BrokerLocalOrderID, trade.BrokerRemoteOrderID, trade.BrokerTradeID, trade.Price, trade.Side, trade.Size));
 
             Trade t = getLocalTrade(ref trade);
             if (t != null)

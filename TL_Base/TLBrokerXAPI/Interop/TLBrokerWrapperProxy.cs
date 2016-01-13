@@ -75,7 +75,7 @@ namespace TradingLib.BrokerXAPI.Interop
         {
             //1.加载dll
 
-            Util.Info("Load Nativelib wrapper dll/so", this.GetType().Name);
+            //Util.Info("Load Nativelib wrapper dll/so", this.GetType().Name);
             NativeLib = new UnmanagedLibrary(path, dllname);
             //2.绑定导出函数到委托
             AssignCommonDelegates();
