@@ -79,6 +79,8 @@ namespace TradingLib.Core
         public Providers ProviderName { get { return _pn; } set { _pn = value; } }
 
 
+        ConfigDB _cfgdb;
+        bool _verbose = false;
         /// <summary>
         /// AsyncServer构造函数
         /// </summary>
@@ -100,7 +102,28 @@ namespace TradingLib.Core
             //zmqTP = new ZeromqThroughPut();
             //zmqTP.SendDebugEvent += new DebugDelegate(msgdebug);
 
+            //1.加载配置文件
+            _cfgdb = new ConfigDB(PROGRAME);
+            if (!_cfgdb.HaveConfig("Verbose"))
+            {
+                _cfgdb.UpdateConfig("Verbose", QSEnumCfgType.Bool,false, "是否打印底层通讯详细信息");
+            }
+            _verbose = _cfgdb["Verbose"].AsBool();
+
         }
+
+        /// <summary>
+        /// 详细输出日志信息
+        /// </summary>
+        /// <param name="msg"></param>
+        void v(string msg)
+        {
+            if (_verbose)
+            {
+                logger.Debug(msg);
+            }
+        }
+
 
         /// <summary>
         /// 主服务线程
@@ -366,17 +389,17 @@ namespace TradingLib.Core
                             {
                                 if (incoming[0] != null)
                                 {
-                                    logger.Info("front recv msg");
+                                    v("front recv msg");
                                     backend.Send(incoming[0]);
                                 }
                                 if (incoming[1] != null)
                                 {
-                                    logger.Info("backend recv msg");
+                                    v("backend recv msg");
                                     frontend.Send(incoming[1]);
                                 }
                                 if (incoming[2] != null)
                                 {
-                                    logger.Info("out channel recv msg");
+                                    v("out channel recv msg");
                                     frontend.Send(incoming[2]);
                                 }
 
@@ -481,21 +504,21 @@ namespace TradingLib.Core
                 {
                     try
                     {
-                        logger.Info(string.Format("Worker {0} wait message", id));
+                        v(string.Format("Worker {0} wait message", id));
                         if (null == (request = worker.ReceiveMessage(out error)))
                         {
                             if (error == ZError.ETERM)
                             {
-                                logger.Info("Work ZmqSocket TERM");
+                                logger.Error("Work ZmqSocket TERM");
                                 return;	// Interrupted
                             }
                             throw new ZException(error);
                         }
                         else
                         {
-                            logger.Info(string.Format("Worker {0} recv message", id));
+                            v(string.Format("Worker {0} recv message", id));
                             WorkTaskProc(worker,request,id);
-                            logger.Info(string.Format("Worker {0} finish", id));
+                            v(string.Format("Worker {0} finish", id));
                         }
 
                     }
