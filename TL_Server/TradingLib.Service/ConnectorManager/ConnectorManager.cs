@@ -140,7 +140,7 @@ namespace TradingLib.ServiceManager
         /// </summary>
         void LoadConnectorType()
         {
-            logger.Info("Load datafeed and broker connectors");
+            logger.Info("Load datafeed and broker types");
             //获得当前插件connecter中所有可用的交易通道插件以及数据通道插件 
             List<Type> brokerlist = PluginHelper.LoadBrokerType();
             List<Type> datafeedlist = PluginHelper.LoadDataFeedType();

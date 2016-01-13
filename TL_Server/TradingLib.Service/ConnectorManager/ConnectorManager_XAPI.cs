@@ -49,17 +49,23 @@ namespace TradingLib.ServiceManager
                 bool ret = cs_success && cpp_success;
                 //通过加载测试
                 if (ret)
+                {
                     itface.IsValid = true;
-
-                logger.Debug(string.Format("Broker Interface[{0}] C# Plugin[{1}]:{2} C++ Dll:{3} Valid:{4}", itface.Name, itface.type_name, cs_success, cpp_success, ret));
+                }
+                else
+                {
+                    logger.Warn(string.Format("Broker Interface[{0}] is not valid", itface.Name));
+                }
             }
             foreach (ConnectorConfig cfg in BasicTracker.ConnectorConfigTracker.BrokerConfigs)
             {
-                if (cfg.Interface == null)
-                    continue;
-                if (!cfg.Interface.IsValid)
-                    continue;
-                logger.Debug(string.Format("Broker Config[{0}] Name:{1} SrvIP:{2} LoginID{3}", cfg.Token, cfg.Name, cfg.srvinfo_ipaddress, cfg.usrinfo_userid));
+                bool valid = true;
+                if (cfg.Interface == null) valid = false;
+                if (!cfg.Interface.IsValid) valid = false;
+                if (!valid)
+                {
+                    logger.Warn(string.Format("Broker Config[{0}] Name:{1} is not valid", cfg.Token, cfg.Name));
+                }
             }
 
             foreach (ConnectorInterface itface in BasicTracker.ConnectorConfigTracker.DataFeedInterfaces)
@@ -70,17 +76,23 @@ namespace TradingLib.ServiceManager
                 bool ret = cs_success && cpp_success;
                 //通过加载测试
                 if (ret)
+                {
                     itface.IsValid = true;
-
-                logger.Debug(string.Format("DataFeed Interface[{0}] C# Plugin[{1}]:{2} C++ Dll:{3} Valid:{4}", itface.Name, itface.type_name, cs_success, cpp_success, ret));
+                }
+                else
+                {
+                    logger.Warn(string.Format("DataFeed Interface[{0}] is not valid"));
+                }
             }
             foreach (ConnectorConfig cfg in BasicTracker.ConnectorConfigTracker.DataFeedConfigs)
             {
-                if (cfg.Interface == null)
-                    continue;
-                if (!cfg.Interface.IsValid)
-                    continue;
-                logger.Debug(string.Format("DataFeed Config[{0}] Name:{1} SrvIP:{2} LoginID{3}", cfg.Token, cfg.Name, cfg.srvinfo_ipaddress, cfg.usrinfo_userid));
+                bool valid = true;
+                if (cfg.Interface == null) valid = false;
+                if (!cfg.Interface.IsValid) valid = false;
+                if (!valid)
+                {
+                    logger.Warn(string.Format("DataFeed Config[{0}] Name:{1} is not valid", cfg.Token, cfg.Name));
+                }
             }
         }
 
