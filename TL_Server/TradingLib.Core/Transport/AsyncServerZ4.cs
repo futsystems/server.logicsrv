@@ -521,10 +521,6 @@ namespace TradingLib.Core
                 string front = cnt == 3 ? request[0].ReadString(Encoding.UTF8) : string.Empty;
                 string address = cnt == 3 ? request[1].ReadString(Encoding.UTF8) : request[0].ReadString(Encoding.UTF8);
                 Message msg = Message.gotmessage(request.Last().Read());
-                //地址合法判定
-                logger.Info(string.Format("address:{0} front:{1}", address, front));
-                if (string.IsNullOrEmpty(address) || address.Length != 36) return;//地址为36字符UUID
-                if (cnt == 3 && string.IsNullOrEmpty(front)) return;//如果通过前置接入 则front不为空
                 //消息合法判定
                 if (!msg.isValid) return;
                 
@@ -553,6 +549,11 @@ namespace TradingLib.Core
                         }
                     }
                     return;
+                }
+                else//处理客户端消息 客户端消息需要检查地址信息
+                {
+                    if (string.IsNullOrEmpty(address) || address.Length != 36) return;//地址为36字符UUID
+                    if (cnt == 3 && string.IsNullOrEmpty(front)) return;//如果通过前置接入 则front不为空
                 }
 
                 //2.流控 超过消息频率则直接返回不进行该消息的处理(拒绝该消息) 交易服务器才执行流控,管理服务器不执行
