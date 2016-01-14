@@ -399,7 +399,7 @@ namespace TradingLib.Core
                                 }
                                 if (incoming[2] != null)
                                 {
-                                    v("out channel recv msg");
+                                    //v("out channel recv msg");
                                     frontend.Send(incoming[2]);
                                 }
 

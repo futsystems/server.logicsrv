@@ -109,7 +109,6 @@
     <Compile Include="Msic\IEmail.cs" />
     <Compile Include="Trading\BasicInfo\IExchange.cs" />
     <Compile Include="Msic\LibDelegates.cs" />
-    <Compile Include="Msic\TradingLibError.cs" />
     <Compile Include="Trading\Basket.cs" />
     <Compile Include="Msic\Constants.cs" />
     <Compile Include="Trading\BasicInfo\EnumCurrency.cs" />

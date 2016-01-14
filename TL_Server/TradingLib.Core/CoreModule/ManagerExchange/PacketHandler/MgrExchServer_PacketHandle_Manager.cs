@@ -174,10 +174,10 @@ namespace TradingLib.Core
         public void CTE_UpdateMangerPassword(ISession session,string oldpass,string newpass)
         {
             Manager manager = session.GetManager();
-           
-            if (ORM.MManager.ValidManager(manager.Login, oldpass))
+            if(manager.Pass.Equals(oldpass))
             {
                 ORM.MManager.UpdateManagerPass(manager.ID, newpass);
+                manager.Pass = newpass;
                 session.OperationSuccess("密码修改成功");
             }
             else

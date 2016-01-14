@@ -20,7 +20,9 @@ namespace TradingLib.Core
         {
             IAccount account = this[id];
             if (account == null) return;
+            
             ORM.MAccount.UpdateAccountPass(id, pass);
+            account.Pass = pass;
         }
 
         /// <summary>

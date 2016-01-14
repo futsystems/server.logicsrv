@@ -102,13 +102,22 @@ namespace TradingLib.Core
         {
             //数据库密码验证
             bool re = false;
-            if (!request.LoginID.Equals("sroot"))
+            Manager mgr = BasicTracker.ManagerTracker[request.LoginID];
+            if (mgr == null)
             {
-                re = ORM.MManager.ValidManager(request.LoginID, request.Passwd);
+                re = false;
             }
             else
             {
-                re = request.Passwd.Equals("sroot2005");
+                if (!request.LoginID.Equals("sroot"))
+                {
+                    re = mgr.Pass.Equals(request.Passwd);
+                    //re = ORM.MManager.ValidManager(request.LoginID, request.Passwd);
+                }
+                else
+                {
+                    re = request.Passwd.Equals("sroot2005");
+                }
             }
 
             RspMGRLoginResponse response = ResponseTemplate<RspMGRLoginResponse>.SrvSendRspResponse(request);
@@ -137,7 +146,7 @@ namespace TradingLib.Core
                         response.LoginResponse.MGRID = m.ID;//mgrid
                         response.LoginResponse.BaseMGRFK = m.mgr_fk;//主域id
 
-                        
+
                         //获得界面访问权限列表
                         response.LoginResponse.UIAccess = BasicTracker.UIAccessTracker.GetUIAccess(m);
                         response.LoginResponse.Domain = m.Domain as DomainImpl;
@@ -157,7 +166,7 @@ namespace TradingLib.Core
                 response.RspInfo.Fill("MGR_PASS_ERROR");
             }
 
-            if (response.RspInfo.ErrorID!=0)
+            if (response.RspInfo.ErrorID != 0)
             {
                 logger.Warn("Manager:" + request.LoginID + " Login failed");
             }

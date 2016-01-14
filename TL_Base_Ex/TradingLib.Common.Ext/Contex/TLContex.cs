@@ -221,6 +221,10 @@ namespace TradingLib.Common
                 TLCtxHelper.Ctx.debug(ex.Label + "\r\n reason@" + ex.Reason + "\r\n RawException:" + ex.RawException.Message.ToString(), QSEnumDebugLevel.ERROR);
                 session.OperationError(new FutsRspError(ex));
             }
+            catch (TLException ex)
+            {
+                session.OperationError(new FutsRspError(ex));
+            }
             catch (Exception ex)
             {
                 debug("MGR Message Handler error:" + ex.ToString(), QSEnumDebugLevel.ERROR);
