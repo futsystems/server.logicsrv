@@ -65,6 +65,7 @@
     <Compile Include="Account\AccountProfie.cs" />
     <Compile Include="Account\SessionInfo.cs" />
     <Compile Include="Exception\BaseException.cs" />
+    <Compile Include="Exception\DataRepositoryException.cs" />
     <Compile Include="Exception\TradingLibError.cs" />
     <Compile Include="Follow\EnumsFollow.cs" />
     <Compile Include="Follow\FollowItemDetail.cs" />

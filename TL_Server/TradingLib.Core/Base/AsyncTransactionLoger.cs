@@ -9,6 +9,29 @@ using TradingLib;
 
 namespace TradingLib.Core
 {
+    /// <summary>
+    /// 用于存放异常数据操作 放入队列或序列化到文件
+    /// 在储存系统可用时执行数据储存操作
+    /// </summary>
+    internal class DataRepositoryError
+    {
+        public DataRepositoryError(EnumDataRepositoryType type, object data)
+        {
+            this.RepositoryType = type;
+            this.RepositoryData = data;
+        }
+
+        /// <summary>
+        /// 数据操作类别
+        /// </summary>
+        public EnumDataRepositoryType RepositoryType { get; set; }
+
+        /// <summary>
+        /// 数据
+        /// </summary>
+        public object RepositoryData { get; set; }
+    }
+
     /*
      * 数据核心产生的一些问题
      * 1.系统会产生一些重复的单子(大多数是因为CTP回报Order多次,数据库没有进行对应检查,而进行的多次插入)
@@ -27,30 +50,26 @@ namespace TradingLib.Core
     {
         //注当缓存超过后系统记录的交易信息就会发生错误。因此这里我们需要放大缓存大小并且在控制面板中需要监视。
         const int MAXLOG = 100000;
-        //建立连接 注意这里的数据库读写是单线程的 是符合线程安全的
-        //mysqlDBTransaction mysql;// = new mysqlDB();
-        //FastDBTransaction fastdb;
-        RingBuffer<Order> _ocache;
-        RingBuffer<Order> _oupdatecache;
-        RingBuffer<Order> _osettlecache;
-        
-        RingBuffer<Trade> _tcache;
-        RingBuffer<Trade> _tsettlecache;
-        RingBuffer<long> _ccache;
-        RingBuffer<PositionRound> _postranscache;
-        RingBuffer<OrderAction> _oactioncache;
-        RingBuffer<PositionCloseDetail> _posclosecache;
-        RingBuffer<PositionDetail> _pdsettledcache;
-        RingBuffer<ExchangeSettlement> _exsettlecache;
-        RingBuffer<CashTransaction> _cashtxnsettlecash;
 
+        RingBuffer<Order> _ocache;//委托插入缓存
+        RingBuffer<Order> _oupdatecache;//委托更新缓存
+        RingBuffer<Order> _osettlecache;//委托结算缓存
+        
+        RingBuffer<Trade> _tcache;//成交插入缓存
+        RingBuffer<Trade> _tsettlecache;//成交结算缓存
+
+        RingBuffer<OrderAction> _oactioncache;//委托操作缓存
+        RingBuffer<PositionCloseDetail> _posclosecache;//平仓明细缓存
+        RingBuffer<PositionDetail> _pdsettledcache;//持仓明细结算缓存
+        RingBuffer<ExchangeSettlement> _exsettlecache;//交易所结算结算缓存
+        RingBuffer<CashTransaction> _cashtxnsettlecash;//出入金操作结算缓存
+        RingBuffer<DataRepositoryError> _datareperrorcache;//数据储存异常缓存
 
 
         public int OrderInCache { get { return _ocache.Count; } }
         public int TradeInCache { get { return _tcache.Count; } }
-        public int CancleInCache { get { return _ccache.Count; } }
+
         public int OrderUpdateInCache { get { return _oupdatecache.Count; } }
-        public int PosTransInCache { get { return _postranscache.Count; } }
         public int PosCloseInCache { get { return _posclosecache.Count; } }
 
         /// <summary>
@@ -103,279 +122,198 @@ namespace TradingLib.Core
         /// </summary>
         void readedata()
         {
-                while (_loggo)
+            while (_loggo)
+            {
+                try
                 {
-                    try
+                    #region 交易记录插入与更新
+                    //插入委托
+                    while (_ocache.hasItems)
                     {
+                        Order o = _ocache.Read();
                         try
                         {
-                            //插入委托
-                            while (_ocache.hasItems)
+                            bool re = ORM.MTradingInfo.InsertOrder(o);
+                            if (re)
                             {
-                                bool re = false;
-                                Order o = _ocache.Read();
-                                try
-                                {
-                                    ordert.Start();
-                                    re = ORM.MTradingInfo.InsertOrder(o);
-                                    ordert.Stop();
-                                }
-                                catch (Exception ex)
-                                {
-                                    logger.Error(ex.ToString());
-                                    throw (new QSTranLogOrderError(o));
-                                }
-                                string s = "交易日志:Order Inserted:" + o.GetOrderInfo();
-                                if (!re)
-                                {
-                                    _nrt++;
-                                    logger.Error(s + "失败");
-                                }
-                                else
-                                {
-                                    logger.Info(s + " 成功");
-                                }
-                                Thread.Sleep(_delay);
-
+                                logger.Debug(string.Format("Insert Order Success:{0}", o.GetOrderInfo()));
                             }
-                            //更新委托状态
-                            while (!_ocache.hasItems && _oupdatecache.hasItems)
-                            {
-                                bool re = false;
-                                Order o = _oupdatecache.Read();
-                                try
-                                {
-                                    updateordert.Start();
-                                    re = ORM.MTradingInfo.UpdateOrderStatus(o);
-                                    updateordert.Stop();
-                                }
-                                catch (Exception ex)
-                                {
-                                    logger.Error(ex.ToString());
-                                    throw (new QSTranLogOrderUpdateError(o));
-                                }
-                                string s = "交易日志:Order Update:" + o.GetOrderStatus();
-                                if (!re)
-                                {
-                                    _nrt++;
-                                    logger.Error(s + "失败");
-                                }
-                                else
-                                {
-                                    logger.Info(s + " 成功");
-                                }
-                                Thread.Sleep(_delay);
-                            }
-                            while (!_ocache.hasItems && !_oupdatecache.hasItems && _osettlecache.hasItems)
-                            {
-                                Order o = _osettlecache.Read();
-                                ORM.MTradingInfo.MarkOrderSettled(o);
-                            }
-                            while (_pdsettledcache.hasItems) 
-                            {
-                                PositionDetail pd = _pdsettledcache.Read();
-                                ORM.MSettlement.MarkPositionDetailSettled(pd);
-                            
-                            }
-
-                            while (_exsettlecache.hasItems)
-                            {
-                                ExchangeSettlement settle = _exsettlecache.Read();
-                                ORM.MSettlement.MarkExchangeSettlementSettled(settle);
-
-                            }
-                            while (_cashtxnsettlecash.hasItems)
-                            {
-                                CashTransaction txn = _cashtxnsettlecash.Read();
-                                ORM.MCashTransaction.MarkeCashTransactionSettled(txn);
-
-                            }
-                            //插入成交
-                            while (!_ocache.hasItems && _tcache.hasItems)
-                            {
-                                bool re = false;
-                                Trade f = _tcache.Read();
-                                try
-                                {
-                                    tradet.Start();
-                                    re = ORM.MTradingInfo.InsertTrade(f);
-                                    tradet.Stop();
-                                }
-                                catch (Exception ex)
-                                {
-                                    logger.Error(ex.ToString());
-                                    throw (new QSTranLogFillError(f));
-                                }
-                                string s = "交易日志:Trade Inserted:" + f.GetTradeInfo();
-                                if (!re)
-                                {
-                                    _nrt++;
-                                    logger.Error(s + " 失败");
-                                }
-                                else
-                                {
-                                    logger.Info(s + " 成功");
-                                }
-                                Thread.Sleep(_delay);
-
-                            }
-                            while (!_ocache.hasItems && !_tcache.hasItems && _tsettlecache.hasItems)
-                            {
-                                Trade f = _tsettlecache.Read();
-                                ORM.MTradingInfo.MarkeTradeSettled(f);
-                            }
-                            //插入取消
-                            while (!_ocache.hasItems && _ccache.hasItems)
-                            {
-                                bool re = false;
-                                long oid = _ccache.Read();
-                                try
-                                {
-                                    canclet.Start();
-                                    re = ORM.MTradingInfo.InsertCancel(Util.ToTLDate(DateTime.Now), Util.ToTLTime(DateTime.Now), oid);
-                                    canclet.Stop();
-                                }
-                                catch (Exception ex)
-                                {
-                                    logger.Error(ex.ToString());
-                                    throw (new QSTranLogCancelError(oid));
-                                }
-                                string s = "交易日志:Cancle inserted:" + oid.ToString();
-                                if (!re)
-                                {
-                                    _nrt++;
-                                    logger.Error(s + " 失败");
-                                }
-                                else
-                                {
-                                    logger.Info(s + " 成功");
-                                }
-                                Thread.Sleep(_delay);
-                            }
-
-                            while (!_ocache.hasItems && _oactioncache.hasItems)
-                            {
-                                bool re = false;
-                                OrderAction action = _oactioncache.Read();
-                                try
-                                {
-                                    re = ORM.MTradingInfo.InsertOrderAction(action);
-                                }
-                                catch (Exception ex)
-                                {
-                                    logger.Error(ex.ToString());
-                                }
-
-                                string s = "交易日志:OrderAction Inserted" + OrderActionImpl.Serialize(action);
-                                if (!re)
-                                {
-                                    _nrt++;
-                                    logger.Error(s + " 失败");
-                                }
-                                else
-                                {
-                                    logger.Info(s + " 成功");
-                                }
-                                Thread.Sleep(_delay);
-                            }
-
-                            //插入取消
-                            while (_postranscache.hasItems)
-                            {
-                                bool re = false;
-                                PositionRound pr = _postranscache.Read();
-                                try
-                                {
-                                    re = ORM.MTradingInfo.InsertPositionRound(pr);
-                                }
-                                catch (Exception ex)
-                                {
-                                    logger.Error(ex.ToString());
-                                    //throw (new QSTranLogCancelError(oid));
-                                }
-                                string s = "交易日志:PosTransaction Inserted:";// +oid.ToString();
-                                if (!re)
-                                {
-                                    _nrt++;
-                                    logger.Error(s + " 失败");
-                                }
-                                else
-                                {
-                                    logger.Info(s + " 成功");
-                                }
-                                Thread.Sleep(_delay);
-                            }
-
-                            while (_posclosecache.hasItems)
-                            {
-                                bool re = false;
-                                PositionCloseDetail close = _posclosecache.Read();
-                                try
-                                {
-                                    re = ORM.MSettlement.InsertPositionCloseDetail(close);
-                                }
-                                catch (Exception ex)
-                                {
-                                    logger.Error(ex.ToString());
-                                }
-                                string s = "平仓明细日志:PositionCloseDetail Inserted:";// +oid.ToString();
-                                if (!re)
-                                {
-                                    _nrt++;
-                                    logger.Error(s + " 失败");
-                                }
-                                else
-                                {
-                                    logger.Info(s + " 成功");
-                                }
-                                Thread.Sleep(_delay);
-                            }
-
-
-
-                            // clear current flag signal
-                            _logwaiting.Reset();
-
-                            // wait for a new signal to continue reading
-                            _logwaiting.WaitOne(SLEEP);
-                            //Thread.Sleep(1000);
-                        }
-                        //以下代码段通过捕捉交易日志插入部分的异常,将没有正常插入的数据重新返回到缓存队列
-                        //mysql则通过不断尝试进行数据库连接,当连接成功后重新将日志插入数据库
-                        catch (QSTranLogOrderError ex)
-                        {
-                            logger.Error(ex.OFail.ToString());
-                            logger.Error(PROGRAME + ":交易日志持久化发生错误:" + ex.ToString());
-                             //this.newOrder(ex.OFail);
-                        }
-                        catch (QSTranLogOrderUpdateError ex)
-                        {
-                            logger.Error(ex.OFail.ToString());
-                            logger.Error(PROGRAME + ":交易日志持久化发生错误:" + ex.ToString());
-                            //this.updateOrder(ex.OFail);
-                        }
-                        catch (QSTranLogFillError ex)
-                        {
-                            logger.Error(ex.FFail.ToString());
-                            logger.Error(PROGRAME + ":交易日志持久化发生错误:" + ex.ToString());
-                            //this.newTrade(ex.FFail);
-                        }
-                        catch (QSTranLogCancelError ex)
-                        {
-                            logger.Error(PROGRAME + ":交易日志持久化发生错误:" + ex.ToString());
-                            //this.newCancle(ex.CFail);
                         }
                         catch (Exception ex)
                         {
-                            logger.Error(PROGRAME + ":交易日志持久化发生错误:" + ex.ToString());
+                            throw new DataRepositoryException(EnumDataRepositoryType.InsertOrder, o, ex);
+                        }
+                        Thread.Sleep(_delay);
+                    }
+
+                    //更新委托状态
+                    while (!_ocache.hasItems && _oupdatecache.hasItems)
+                    {
+                        Order o = _oupdatecache.Read();
+                        try
+                        {
+                            bool re = ORM.MTradingInfo.UpdateOrderStatus(o);
+                            if (re)
+                            {
+                                logger.Debug(string.Format("Update Order Success:{0}", o.GetOrderInfo()));
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            throw new DataRepositoryException(EnumDataRepositoryType.UpdateOrder, o, ex);
+                        }
+                        Thread.Sleep(_delay);
+                    }
+
+                    //插入成交
+                    while (!_ocache.hasItems && _tcache.hasItems)
+                    {
+                        Trade f = _tcache.Read();
+                        try
+                        {
+                            bool re = ORM.MTradingInfo.InsertTrade(f);
+                            if (re)
+                            {
+                                logger.Debug(string.Format("Insert Trade Success:{0}", f.GetTradeInfo()));
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            throw new DataRepositoryException(EnumDataRepositoryType.InsertTrade, f, ex);
+                        }
+                        Thread.Sleep(_delay);
+                    }
+
+                    //委托操作插入
+                    while (!_ocache.hasItems && _oactioncache.hasItems)
+                    {
+                        OrderAction action = _oactioncache.Read();
+                        try
+                        {
+                            bool re = ORM.MTradingInfo.InsertOrderAction(action);
+                            if (re)
+                            {
+                                logger.Debug(string.Format("Insert OrderAction Success:{0}", action.ToString()));
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            throw new DataRepositoryException(EnumDataRepositoryType.InsertOrderAction, action, ex);
+                        }
+                        Thread.Sleep(_delay);
+                    }
+
+                    //插入平仓明细数据
+                    while (_posclosecache.hasItems)
+                    {
+                        PositionCloseDetail close = _posclosecache.Read();
+                        try
+                        {
+                            bool re = ORM.MSettlement.InsertPositionCloseDetail(close);
+                            if (re)
+                            {
+                                logger.Debug(string.Format("Insert PositionCloseDetail Success:{0}", close.ToString()));
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            throw new DataRepositoryException(EnumDataRepositoryType.InsertPositionCloseDetail, close, ex);
+                        }
+                        Thread.Sleep(_delay);
+                    }
+                    #endregion
+
+
+                    #region 更新结算标识
+                    //更新委托结算标识
+                    while (!_ocache.hasItems && !_oupdatecache.hasItems && _osettlecache.hasItems)
+                    {
+                        Order o = _osettlecache.Read();
+                        try
+                        {
+                            ORM.MTradingInfo.MarkOrderSettled(o);
+                        }
+                        catch (Exception ex)
+                        {
+                            throw new DataRepositoryException(EnumDataRepositoryType.SettleOrder, o, ex);
                         }
                     }
-                    catch (Exception ex)
+                    //更新成交结算标识
+                    while (!_ocache.hasItems && !_tcache.hasItems && _tsettlecache.hasItems)
                     {
-                        //在异常捕捉时，我们会将没有记录的交易信息返回缓存进行处理,如果在返回遗漏交易信息的时候发生错误,则我们这里还会产生异常,导致系统崩溃
-                        logger.Error(PROGRAME + ":异常捕捉产生错误,会发生遗漏委托记录" + ex.ToString());
+                        Trade f = _tsettlecache.Read();
+                        try
+                        {
+                            ORM.MTradingInfo.MarkeTradeSettled(f);
+                        }
+                        catch (Exception ex)
+                        {
+                            throw new DataRepositoryException(EnumDataRepositoryType.SettleTrade, f, ex);
+                        }
                     }
+                    //更新持仓明细结算标识
+                    while (_pdsettledcache.hasItems)
+                    {
+                        PositionDetail pd = _pdsettledcache.Read();
+                        try
+                        {
+                            ORM.MSettlement.MarkPositionDetailSettled(pd);
+                        }
+                        catch (Exception ex)
+                        {
+                            throw new DataRepositoryException(EnumDataRepositoryType.SettlePositionDetail, pd, ex);
+                        }
+                    }
+                    //更新交易所结算标识
+                    while (_exsettlecache.hasItems)
+                    {
+                        ExchangeSettlement settle = _exsettlecache.Read();
+                        try
+                        {
+                            ORM.MSettlement.MarkExchangeSettlementSettled(settle);
+                        }
+                        catch (Exception ex)
+                        {
+                            throw new DataRepositoryException(EnumDataRepositoryType.SettleExchangeSettlement,settle, ex);
+                        }
+
+                    }
+                    //更新出入金结算标识
+                    while (_cashtxnsettlecash.hasItems)
+                    {
+                        CashTransaction txn = _cashtxnsettlecash.Read();
+                        try
+                        {
+                            ORM.MCashTransaction.MarkeCashTransactionSettled(txn);
+                        }
+                        catch (Exception ex)
+                        {
+                            throw new DataRepositoryException(EnumDataRepositoryType.SettleCashTransaction, txn, ex);
+                        }
+                    }
+
+                    #endregion
+
+                    // clear current flag signal
+                    _logwaiting.Reset();
+
+                    // wait for a new signal to continue reading
+                    _logwaiting.WaitOne(SLEEP);
+                    //Thread.Sleep(1000);
                 }
+                
+                //以下代码段通过捕捉交易日志插入部分的异常,将没有正常插入的数据重新返回到缓存队列
+                //mysql则通过不断尝试进行数据库连接,当连接成功后重新将日志插入数据库
+                catch (DataRepositoryException ex)
+                {
+                    _datareperrorcache.Write(new DataRepositoryError(ex.RepositoryType, ex.RepositoryData));
+                    logger.Error(string.Format("数据储存发生错误 Method:{0} Data:{1} Error:{2}", ex.RepositoryType, ex.RepositoryData.ToString(), ex.InnerException.ToString()));
+                }
+                catch (Exception ex)
+                {
+                    logger.Error(PROGRAME + ":交易日志持久化发生错误:" + ex.ToString());
+                }
+            }
         }
 
         public const int SLEEPDEFAULTMS = 10;
@@ -464,25 +402,12 @@ namespace TradingLib.Core
             newlog();
         }
         
-
-
-        public void newCancle(long id)
-        {
-            _ccache.Write(id);
-            newlog();
-        }
-
         public void newOrderAction(OrderAction action)
         {
             _oactioncache.Write(action);
             newlog();
         }
 
-        public void newPositonRound(PositionRound pr)
-        {
-            _postranscache.Write(pr);
-            newlog();
-        }
 
         public void newPositionCloseDetail(PositionCloseDetail pc)
         {
@@ -546,13 +471,14 @@ namespace TradingLib.Core
             _osettlecache = new RingBuffer<Order>(maxbr);
             _tcache = new RingBuffer<Trade>(maxbr);
             _tsettlecache = new RingBuffer<Trade>(maxbr);
-            _ccache = new RingBuffer<long>(maxbr);
-            _postranscache = new RingBuffer<PositionRound>(maxbr);
+
             _oactioncache = new RingBuffer<OrderAction>(maxbr);
             _posclosecache = new RingBuffer<PositionCloseDetail>(maxbr);
             _pdsettledcache = new RingBuffer<PositionDetail>(maxbr);
             _exsettlecache = new RingBuffer<ExchangeSettlement>(maxbr);
             _cashtxnsettlecash = new RingBuffer<CashTransaction>(maxbr);
+
+            _datareperrorcache = new RingBuffer<DataRepositoryError>(maxbr);
         }
 
         void _brcache_BufferOverrunEvent()
