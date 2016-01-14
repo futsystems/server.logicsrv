@@ -19,13 +19,15 @@ namespace TradingLib.Core
     /// </summary>
     public class AsyncServerZ4 : BaseSrvObject, ITransport
     {
-        const int TimoutSecend = 1;
-
         /// <summary>
         /// 系统默认Poller超时时间
         /// </summary>
-        TimeSpan PollerTimeOut = new TimeSpan(0, 0, TimoutSecend);
+        TimeSpan PollerTimeOut = new TimeSpan(0, 0, 1);
 
+        /// <summary>
+        /// 系统Worker线程执行消息处理超时时间
+        /// </summary>
+        TimeSpan WorkerTimeOut = new TimeSpan(0, 0, 2);
         /// <summary>
         /// 交易消息事件,当接收到客户端发送上来的消息时,触发该事件,从而调用消息层对消息进行解析与处理
         /// 传递参数消息类别(操作号),消息体,前置地址,客户端标识
@@ -106,7 +108,7 @@ namespace TradingLib.Core
             _cfgdb = new ConfigDB(PROGRAME);
             if (!_cfgdb.HaveConfig("Verbose"))
             {
-                _cfgdb.UpdateConfig("Verbose", QSEnumCfgType.Bool,false, "是否打印底层通讯详细信息");
+                _cfgdb.UpdateConfig("Verbose", QSEnumCfgType.Bool, false, "是否打印底层通讯详细信息");
             }
             _verbose = _cfgdb["Verbose"].AsBool();
 
@@ -302,7 +304,7 @@ namespace TradingLib.Core
                 {
                     ZError error;
                     zmsg.Add(new ZFrame(msg));
-                    
+
                     if (!_tickpub.Send(zmsg, out error))
                     {
                         if (error == ZError.ETERM)
@@ -385,7 +387,7 @@ namespace TradingLib.Core
                     {
                         try
                         {
-                            if (sockets.PollIn(pollitems, out incoming, out error,PollerTimeOut))
+                            if (sockets.PollIn(pollitems, out incoming, out error, PollerTimeOut))
                             {
                                 if (incoming[0] != null)
                                 {
@@ -425,7 +427,7 @@ namespace TradingLib.Core
                                 this.SendTickHeartBeat();
                                 _lasthb = now;
                             }
-                            
+
                         }
                         catch (ZException ex)
                         {
@@ -445,7 +447,7 @@ namespace TradingLib.Core
         }
 
         void RepProc(ZSocket rep, ZMessage req)
-        { 
+        {
             byte[] buffer = req.First().Read();
             Message msg = Message.gotmessage(buffer);
 
@@ -480,7 +482,7 @@ namespace TradingLib.Core
                 default:
                     return;//其他类型的消息直接返回
             }
-            
+
         }
         /// <summary>
         /// 传输层消息翻译与分发,在backend中通过启动多个work来提高系统并发能力
@@ -517,20 +519,20 @@ namespace TradingLib.Core
                         else
                         {
                             v(string.Format("Worker {0} recv message", id));
-                            WorkTaskProc(worker,request,id);
+                            WorkTaskProc(worker, request, id);
                             v(string.Format("Worker {0} finish", id));
                         }
 
                     }
                     catch (ZException ex)
                     {
-                        logger.Error(string.Format("worker {0} proc zmq error:{1}", id,ex.ToString()));
+                        logger.Error(string.Format("worker {0} proc zmq error:{1}", id, ex.ToString()));
                     }
                     catch (Exception ex)
                     {
                         logger.Error(string.Format("worker {0} proc error:{1}", id, ex.ToString()));
                     }
-                    
+
                 }
             }
         }
@@ -546,9 +548,9 @@ namespace TradingLib.Core
                 Message msg = Message.gotmessage(request.Last().Read());
                 //消息合法判定
                 if (!msg.isValid) return;
-                
+
                 logger.Info(string.Format("Work {0} Recv Message Type:{1} Content:{2} Front:{3} Address:{4}", id, msg.Type, msg.Content, front, address));
-                
+
                 //处理前置的逻辑连接心跳
                 if (cnt == 3 && msg.Type == MessageTypes.LOGICLIVEREQUEST)
                 {
@@ -585,12 +587,79 @@ namespace TradingLib.Core
                 //    return true;
                 //}
 
-                //3.消息处理如果解析出来的消息是有效的则丢入处理流程进行处理，如果无效则不处理
-                handleMessage(msg.Type, msg.Content, front, address);
+                Timeout timeout = new Timeout();
+                timeout.MessageHandler = () =>
+                {
+                    //3.消息处理如果解析出来的消息是有效的则丢入处理流程进行处理，如果无效则不处理
+                    handleMessage(msg.Type, msg.Content, front, address);
+                };
+                bool re = timeout.DoWithTimeout(WorkerTimeOut);
+                if (re)
+                {
+                    logger.Warn(string.Format("Wroker:{0}  Handle Message TimeOut, type:{1} content:{2}",id, msg.Type, msg.Content));
+                }
+
             }
         }
     }
+
+    public class Timeout
+    {
+        private ManualResetEvent mTimeoutObject;
+        //标记变量
+        private bool mBoTimeout;
+        public Action MessageHandler;
+
+        public Timeout()
+        {
+            //  初始状态为 停止
+            this.mTimeoutObject =new ManualResetEvent(true);
+        }
+        ///<summary>
+        /// 指定超时时间 异步执行某个方法
+        ///</summary>
+        ///<returns>执行 是否超时</returns>
+        public bool DoWithTimeout(TimeSpan timeSpan)
+        {
+            if (this.MessageHandler == null)
+            {
+                return false;
+            }
+            this.mTimeoutObject.Reset();
+            this.mBoTimeout =true; //标记
+            this.MessageHandler.BeginInvoke(DoAsyncCallBack, null);
+            // 等待 信号Set
+            if (!this.mTimeoutObject.WaitOne(timeSpan, false))
+            {
+                this.mBoTimeout =true;
+            }
+            return this.mBoTimeout;
+        }
+        ///<summary>
+        /// 异步委托 回调函数
+        ///</summary>
+        ///<param name="result"></param>
+        private void DoAsyncCallBack(IAsyncResult result)
+        {
+            try
+            {
+                this.MessageHandler.EndInvoke(result);
+                // 指示方法的执行未超时
+                this.mBoTimeout =false; 
+            }
+            catch (Exception ex)
+            {
+                this.mBoTimeout =true;
+            }
+            finally
+            {
+                this.mTimeoutObject.Set();
+            }
+        }
+    }
+
 }
+    
 /*
  *      1.0版本的消息发送与接受
  *      发送
