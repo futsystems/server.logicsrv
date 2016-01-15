@@ -122,9 +122,10 @@ namespace TradingLib.Core
             return sb.ToString();
         }
 
-        public DataRepositoryLog Deserialize(string message)
+        static char[] x = new char[] { ' ' }; 
+        public static DataRepositoryLog Deserialize(string message)
         {
-            string[] rec = message.Split(new char[','], 2);
+            string[] rec = message.Split(x, 2);
             DataRepositoryLog log = new DataRepositoryLog();
 
             try

@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Threading;
+using System.Linq;
 using System.Text;
 using System.Diagnostics;//记得加入此引用
 using TradingLib.Common;
@@ -134,12 +135,29 @@ namespace TradingLib.Core
 
         public void Start()
         {
+            IEnumerable<DataRepositoryLog> logs = DataRepositoryLogger.LoadDataRepositoryLogs(TLCtxHelper.ModuleSettleCentre.Tradingday);
+            
+            int ordernum = logs.Where(l => l.RepositoryType == EnumDataRepositoryType.InsertOrder).Count();
+            int tradenum = logs.Where(l => l.RepositoryType == EnumDataRepositoryType.InsertTrade).Count();
+            int actionnum = logs.Where(l => l.RepositoryType == EnumDataRepositoryType.InsertOrderAction).Count();
+            int txnnum = logs.Where(l => l.RepositoryType == EnumDataRepositoryType.InsertCashTransaction).Count();
+            int closenum = logs.Where(l => l.RepositoryType == EnumDataRepositoryType.InsertPositionCloseDetail).Count();
+
+            logger.Info(string.Format("DataRepository load logs Order:{0} Trade:{1} Action:{2} CashTxn:{3} PositionClose:{4}", ordernum, tradenum, actionnum, txnnum, closenum));
+            //TODO::判断当前数据库数据与日志文件是否一致，不一致则删除当天数据库记录然后用日志进行数据恢复
+
             if (_loggo) return;
             _loggo = true;
+
+            //初始化
+            _log.Init();
+
             _logthread = new Thread(this.readedata);
             _logthread.Name = "AsyncTransaction logger";
             _logthread.IsBackground = true;
             ThreadTracker.Register(_logthread);
+
+
             _logthread.Start();
         }
 
