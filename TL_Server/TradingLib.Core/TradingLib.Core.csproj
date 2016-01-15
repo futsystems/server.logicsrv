@@ -75,6 +75,8 @@
       <Link>VersionInfo.cs</Link>
     </Compile>
     <Compile Include="Base\ClientTracker.cs" />
+    <Compile Include="Base\DataRepDump.cs" />
+    <Compile Include="Base\DataRepositoryLog.cs" />
     <Compile Include="Base\TIFTracker.cs" />
     <Compile Include="Base\TLServer_Generic.cs" />
     <Compile Include="CoreModule\AccountManager\AccountManager.cs" />

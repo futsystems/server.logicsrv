@@ -9,31 +9,7 @@ using TradingLib;
 
 namespace TradingLib.Core
 {
-    /// <summary>
-    /// 用于存放异常数据操作 放入队列或序列化到文件
-    /// 在储存系统可用时执行数据储存操作
-    /// 重要的交易数据通过异步数据储存组件进行存储
-    /// 数据包含:委托,成交,委托操作,平仓明细,出入金记录,（结算）持仓明细,交易所结算记录,以及相关记录的结算标识更新
-    /// 这些数据需要放到异步队列中储存，当数据储存出现异常时要有第二个备选方案用于储存记录，防止数据丢失
-    /// </summary>
-    internal class DataRepositoryError
-    {
-        public DataRepositoryError(EnumDataRepositoryType type, object data)
-        {
-            this.RepositoryType = type;
-            this.RepositoryData = data;
-        }
-
-        /// <summary>
-        /// 数据操作类别
-        /// </summary>
-        public EnumDataRepositoryType RepositoryType { get; set; }
-
-        /// <summary>
-        /// 数据
-        /// </summary>
-        public object RepositoryData { get; set; }
-    }
+    
 
     /*
      * 数据核心产生的一些问题
@@ -68,7 +44,7 @@ namespace TradingLib.Core
         RingBuffer<PositionDetail> _pdsettledcache;//持仓明细结算缓存
         RingBuffer<ExchangeSettlement> _exsettlecache;//交易所结算结算缓存
         RingBuffer<CashTransaction> _cashtxnsettlecash;//出入金操作结算缓存
-        RingBuffer<DataRepositoryError> _datareperrorcache;//数据储存异常缓存
+        RingBuffer<DataRepositoryLog> _datareperrorcache;//数据储存异常缓存
 
 
         public int OrderInCache { get { return _ocache.Count; } }
@@ -356,7 +332,7 @@ namespace TradingLib.Core
                 //mysql则通过不断尝试进行数据库连接,当连接成功后重新将日志插入数据库
                 catch (DataRepositoryException ex)
                 {
-                    _datareperrorcache.Write(new DataRepositoryError(ex.RepositoryType, ex.RepositoryData));
+                    _datareperrorcache.Write(new DataRepositoryLog(ex.RepositoryType, ex.RepositoryData));
                     logger.Error(string.Format("数据储存发生错误 Method:{0} Data:{1} Error:{2}", ex.RepositoryType, ex.RepositoryData.ToString(), ex.InnerException.ToString()));
                 }
                 catch (Exception ex)
@@ -553,7 +529,7 @@ namespace TradingLib.Core
             _exsettlecache = new RingBuffer<ExchangeSettlement>(maxbr);
             _cashtxnsettlecash = new RingBuffer<CashTransaction>(maxbr);
 
-            _datareperrorcache = new RingBuffer<DataRepositoryError>(maxbr);
+            _datareperrorcache = new RingBuffer<DataRepositoryLog>(maxbr);
         }
 
         void _brcache_BufferOverrunEvent()

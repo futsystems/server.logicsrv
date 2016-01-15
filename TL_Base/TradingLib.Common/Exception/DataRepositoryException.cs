@@ -11,6 +11,10 @@ namespace TradingLib.Common
     public enum EnumDataRepositoryType
     {
         /// <summary>
+        /// 位置
+        /// </summary>
+        Unknown=0,
+        /// <summary>
         /// 插入委托
         /// </summary>
         InsertOrder,

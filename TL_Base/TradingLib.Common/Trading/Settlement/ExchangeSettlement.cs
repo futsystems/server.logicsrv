@@ -59,6 +59,37 @@ namespace TradingLib.Common
         /// 是否结算
         /// </summary>
         public bool Settled { get; set; }
-        
+
+
+        public static string Serialize(ExchangeSettlement settle)
+        {
+            StringBuilder sb = new StringBuilder();
+            char d = ',';
+            sb.Append(settle.Settleday);
+            sb.Append(d);
+            sb.Append(settle.Account);
+            sb.Append(d);
+            sb.Append(settle.CloseProfitByDate);
+            sb.Append(d);
+            sb.Append(settle.PositionProfitByDate);
+            sb.Append(d);
+            sb.Append(settle.Exchange);
+            sb.Append(d);
+            sb.Append(settle.Settled);
+            return sb.ToString();
+        }
+
+        public new static ExchangeSettlement Deserialize(string message)
+        {
+            string[] rec = message.Split(',');
+            ExchangeSettlementImpl settle = new ExchangeSettlementImpl();
+            settle.Settleday = int.Parse(rec[0]);
+            settle.Account = rec[1];
+            settle.CloseProfitByDate = decimal.Parse(rec[2]);
+            settle.PositionProfitByDate = decimal.Parse(rec[3]);
+            settle.Exchange = rec[4];
+            settle.Settled = bool.Parse(rec[5]);
+            return settle;
+        }
     }
 }

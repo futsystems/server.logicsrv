@@ -138,7 +138,6 @@ namespace TradingLib.Common
 			}
         }
 
-		//public bool IsLogEnable{get{return (_log != null);}}
         /// <summary>e
         /// close the log
         /// </summary>
