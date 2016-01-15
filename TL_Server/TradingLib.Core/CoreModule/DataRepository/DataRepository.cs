@@ -91,7 +91,7 @@ namespace TradingLib.Core
         /// <param name="o"></param>
         public void NewOrder(Order o)
         {
-            _asynLoger.newOrder(o);
+            _asynLoger.NewOrder(o);
         }
 
         /// <summary>
@@ -100,7 +100,7 @@ namespace TradingLib.Core
         /// <param name="o"></param>
         public void UpdateOrder(Order o)
         {
-            _asynLoger.updateOrder(o);
+            _asynLoger.UpdateOrder(o);
         }
 
         /// <summary>
@@ -109,7 +109,7 @@ namespace TradingLib.Core
         /// <param name="f"></param>
         public void NewTrade(Trade f)
         {
-            _asynLoger.newTrade(f);
+            _asynLoger.NewTrade(f);
         }
 
 
@@ -119,7 +119,7 @@ namespace TradingLib.Core
         /// <param name="actoin"></param>
         public void NewOrderAction(OrderAction actoin)
         {
-            _asynLoger.newOrderAction(actoin);
+            _asynLoger.NewOrderAction(actoin);
             
         }
 
@@ -130,7 +130,7 @@ namespace TradingLib.Core
         /// <param name="pd"></param>
         public void NewPositionDetail(PositionDetail pd)
         {
-            _asynLoger.newPositionDetail(pd);
+            _asynLoger.NewPositionDetail(pd);
         }
 
 
@@ -140,12 +140,17 @@ namespace TradingLib.Core
         /// <param name="d"></param>
         public void NewPositionCloseDetail(PositionCloseDetail d)
         {
-            _asynLoger.newPositionCloseDetail(d);
+            _asynLoger.NewPositionCloseDetail(d);
         }
 
         public void NewExchangeSettlement(ExchangeSettlement settle)
         {
-            _asynLoger.newExchangeSettlement(settle);
+            _asynLoger.NewExchangeSettlement(settle);
+        }
+
+        public void NewCashTransaction(CashTransaction txn)
+        {
+            _asynLoger.NewCashTransaction(txn);
         }
         #endregion
 

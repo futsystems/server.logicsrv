@@ -54,6 +54,12 @@ namespace TradingLib.API
         /// <param name="settle"></param>
         void NewExchangeSettlement(ExchangeSettlement settle);
 
+        /// <summary>
+        /// 插入出入金记录
+        /// </summary>
+        /// <param name="txn"></param>
+        void NewCashTransaction(CashTransaction txn);
+
 
         /// <summary>
         /// 标注委托已结算

@@ -246,8 +246,8 @@ namespace TradingLib.Core
             //生成唯一序列号
             txn.TxnID = GenTxnID();
             acc.CashTrans(txn);
-            ORM.MCashTransaction.InsertCashTransaction(txn);
-
+            TLCtxHelper.ModuleDataRepository.NewCashTransaction(txn);
+            //ORM.MCashTransaction.InsertCashTransaction(txn);
             //TLCtxHelper.EventAccount.FireAccountCashOperationEvent(txn.Account,txn., Math.Abs(amount));
         }
 

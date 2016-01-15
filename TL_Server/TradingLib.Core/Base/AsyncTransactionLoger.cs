@@ -12,6 +12,9 @@ namespace TradingLib.Core
     /// <summary>
     /// 用于存放异常数据操作 放入队列或序列化到文件
     /// 在储存系统可用时执行数据储存操作
+    /// 重要的交易数据通过异步数据储存组件进行存储
+    /// 数据包含:委托,成交,委托操作,平仓明细,出入金记录,（结算）持仓明细,交易所结算记录,以及相关记录的结算标识更新
+    /// 这些数据需要放到异步队列中储存，当数据储存出现异常时要有第二个备选方案用于储存记录，防止数据丢失
     /// </summary>
     internal class DataRepositoryError
     {
@@ -58,6 +61,7 @@ namespace TradingLib.Core
         RingBuffer<PositionCloseDetail> _posclosecache;//平仓明细缓存
         RingBuffer<PositionDetail> _posdetailcache;//持仓明细缓存
         RingBuffer<ExchangeSettlement> _exsettlementcache;//交易所结算缓存
+        RingBuffer<CashTransaction> _cashtxncache;//出入金记录缓存
 
         RingBuffer<Order> _osettlecache;//委托结算缓存
         RingBuffer<Trade> _tsettlecache;//成交结算缓存
@@ -237,6 +241,7 @@ namespace TradingLib.Core
                         }
                         Thread.Sleep(_delay);
                     }
+                    //插入交易所结算记录
                     while (_exsettlementcache.hasItems)
                     {
                         ExchangeSettlement settle = _exsettlementcache.Read();
@@ -248,6 +253,21 @@ namespace TradingLib.Core
                         catch (Exception ex)
                         {
                             throw new DataRepositoryException(EnumDataRepositoryType.InsertExchangeSettlement, settle, ex);
+                        }
+                        Thread.Sleep(_delay);
+                    }
+                    //插入出入金记录
+                    while (_cashtxncache.hasItems)
+                    {
+                        CashTransaction txn = _cashtxncache.Read();
+                        try
+                        {
+                            ORM.MCashTransaction.InsertCashTransaction(txn);
+                            logger.Debug(string.Format("Insert CashTransaction Success:{0}", txn.ToString()));
+                        }
+                        catch (Exception ex)
+                        {
+                            throw new DataRepositoryException(EnumDataRepositoryType.InsertCashTransaction, txn, ex);
                         }
                         Thread.Sleep(_delay);
                     }
@@ -411,14 +431,14 @@ namespace TradingLib.Core
         /// 数据记录需要copy模式,否则引用对象得其他线程访问时候会出现数据错误 比如成交数目与实际成交数目无法对应等问题。
         /// </summary>
         /// <param name="k"></param>
-        public void newOrder(Order o)
+        public void NewOrder(Order o)
         {
             //debug("插入委托数据到数据库");
             Order oc = new OrderImpl(o);//复制委托 防止委托参数发生变化
             _ocache.Write(oc);
             newlog();
         }
-        public void updateOrder(Order o)
+        public void UpdateOrder(Order o)
         {
             //debug("插入委托数据到数据库");
             Order oc = new OrderImpl(o);
@@ -426,34 +446,40 @@ namespace TradingLib.Core
             newlog();
         }
         
-        public void newTrade(Trade f)
+        public void NewTrade(Trade f)
         {
             Trade nf = new TradeImpl(f);
             _tcache.Write(nf);
             newlog();
         }
         
-        public void newOrderAction(OrderAction action)
+        public void NewOrderAction(OrderAction action)
         {
             _oactioncache.Write(action);
             newlog();
         }
 
 
-        public void newPositionCloseDetail(PositionCloseDetail pc)
+        public void NewPositionCloseDetail(PositionCloseDetail pc)
         {
             _posclosecache.Write(pc);
             newlog();
         }
-        public void newPositionDetail(PositionDetail pd)
+        public void NewPositionDetail(PositionDetail pd)
         {
             _posdetailcache.Write(pd);
             newlog();
         }
 
-        public void newExchangeSettlement(ExchangeSettlement settle)
+        public void NewExchangeSettlement(ExchangeSettlement settle)
         {
             _exsettlementcache.Write(settle);
+            newlog();
+        }
+
+        public void NewCashTransaction(CashTransaction txn)
+        {
+            _cashtxncache.Write(txn);
             newlog();
         }
         #endregion
@@ -521,6 +547,7 @@ namespace TradingLib.Core
             _posclosecache = new RingBuffer<PositionCloseDetail>(maxbr);
             _posdetailcache = new RingBuffer<PositionDetail>(maxbr);
             _exsettlementcache = new RingBuffer<ExchangeSettlement>(maxbr);
+            _cashtxncache = new RingBuffer<CashTransaction>(maxbr);
 
             _pdsettledcache = new RingBuffer<PositionDetail>(maxbr);
             _exsettlecache = new RingBuffer<ExchangeSettlement>(maxbr);

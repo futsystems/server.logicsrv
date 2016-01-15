@@ -43,6 +43,11 @@ namespace TradingLib.Common
         InsertExchangeSettlement,
 
         /// <summary>
+        /// 插入出入金记录
+        /// </summary>
+        InsertCashTransaction,
+
+        /// <summary>
         /// 结算委托
         /// </summary>
         SettleOrder,
