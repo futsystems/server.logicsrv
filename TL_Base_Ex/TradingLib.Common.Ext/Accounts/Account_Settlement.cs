@@ -127,7 +127,8 @@ namespace TradingLib.Common
                         //保存结算持仓明细时要将结算日更新为当前
                         pd.Settleday = settleday;
                         //保存持仓明细到数据库
-                        ORM.MSettlement.InsertPositionDetail(pd);
+                        //ORM.MSettlement.InsertPositionDetail(pd);
+                        TLCtxHelper.ModuleDataRepository.NewPositionDetail(pd);
                         positiondetail_settle.Add(pd);
                     }
                 }
@@ -165,7 +166,8 @@ namespace TradingLib.Common
                 //settlement.PositionProfitByDate = this.GetPositions(exchange).Sum(pos => pos.PositionDetailTotal.Sum(pd => pd.PositionProfitByDate));
                 settlement.PositionProfitByDate = this.GetPositions(exchange).Sum(pos => pos.CalPositionProfitByDate());
                 ///3.保存结算记录到数据库
-                ORM.MSettlement.InsertExchangeSettlement(settlement);
+                //ORM.MSettlement.InsertExchangeSettlement(settlement);
+                TLCtxHelper.ModuleDataRepository.NewExchangeSettlement(settlement);
 
                 ///4.标注已结算数据 委托 成交 持仓
                 foreach (var o in  this.GetOrders(exchange, settleday))

@@ -33,6 +33,16 @@ namespace TradingLib.Common
         InsertPositionCloseDetail,
 
         /// <summary>
+        /// 插入持仓明细
+        /// </summary>
+        InsertPositionDetail,
+
+        /// <summary>
+        /// 插入交易所结算记录
+        /// </summary>
+        InsertExchangeSettlement,
+
+        /// <summary>
         /// 结算委托
         /// </summary>
         SettleOrder,

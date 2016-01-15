@@ -19,16 +19,41 @@ namespace TradingLib.API
         void NewOrder(Order o);
 
         /// <summary>
+        /// 更新委托
+        /// </summary>
+        /// <param name="o"></param>
+        void UpdateOrder(Order o);
+
+        /// <summary>
+        /// 插入成交
+        /// </summary>
+        /// <param name="f"></param>
+        void NewTrade(Trade f);
+
+        /// <summary>
         /// 插入委托操作
         /// </summary>
         /// <param name="?"></param>
         void NewOrderAction(OrderAction actoin);
 
         /// <summary>
-        /// 更新委托
+        /// 插入平仓明细数据
         /// </summary>
-        /// <param name="o"></param>
-        void UpdateOrder(Order o);
+        /// <param name="d"></param>
+        void NewPositionCloseDetail(PositionCloseDetail d);
+
+        /// <summary>
+        /// 插入持仓明细数据
+        /// </summary>
+        /// <param name="pd"></param>
+        void NewPositionDetail(PositionDetail pd);
+
+        /// <summary>
+        /// 插入交易所结算数据
+        /// </summary>
+        /// <param name="settle"></param>
+        void NewExchangeSettlement(ExchangeSettlement settle);
+
 
         /// <summary>
         /// 标注委托已结算
@@ -48,7 +73,6 @@ namespace TradingLib.API
         /// <param name="pd"></param>
         void MarkPositionDetailSettled(PositionDetail pd);
 
-
         /// <summary>
         /// 标注交易所结算已结算
         /// </summary>
@@ -62,18 +86,7 @@ namespace TradingLib.API
         void MarkCashTransactionSettled(CashTransaction txn);
 
 
-        /// <summary>
-        /// 插入成交
-        /// </summary>
-        /// <param name="f"></param>
-        void NewTrade(Trade f);
-
-
-        /// <summary>
-        /// 插入平仓明细数据
-        /// </summary>
-        /// <param name="d"></param>
-        void NewPositionCloseDetail(PositionCloseDetail d);
+        
 
 
         #region 加载交易记录

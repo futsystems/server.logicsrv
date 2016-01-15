@@ -53,13 +53,14 @@ namespace TradingLib.Core
 
         RingBuffer<Order> _ocache;//委托插入缓存
         RingBuffer<Order> _oupdatecache;//委托更新缓存
-        RingBuffer<Order> _osettlecache;//委托结算缓存
-        
         RingBuffer<Trade> _tcache;//成交插入缓存
-        RingBuffer<Trade> _tsettlecache;//成交结算缓存
-
         RingBuffer<OrderAction> _oactioncache;//委托操作缓存
         RingBuffer<PositionCloseDetail> _posclosecache;//平仓明细缓存
+        RingBuffer<PositionDetail> _posdetailcache;//持仓明细缓存
+        RingBuffer<ExchangeSettlement> _exsettlementcache;//交易所结算缓存
+
+        RingBuffer<Order> _osettlecache;//委托结算缓存
+        RingBuffer<Trade> _tsettlecache;//成交结算缓存
         RingBuffer<PositionDetail> _pdsettledcache;//持仓明细结算缓存
         RingBuffer<ExchangeSettlement> _exsettlecache;//交易所结算结算缓存
         RingBuffer<CashTransaction> _cashtxnsettlecash;//出入金操作结算缓存
@@ -221,6 +222,35 @@ namespace TradingLib.Core
                         }
                         Thread.Sleep(_delay);
                     }
+                    //插入持仓明细数据
+                    while (_posdetailcache.hasItems)
+                    {
+                        PositionDetail pd = _posdetailcache.Read();
+                        try
+                        {
+                            ORM.MSettlement.InsertPositionDetail(pd);
+                            logger.Debug(string.Format("Insert PositionDetail Success:{0}", pd.ToString()));
+                        }
+                        catch (Exception ex)
+                        {
+                            throw new DataRepositoryException(EnumDataRepositoryType.InsertPositionDetail, pd, ex);
+                        }
+                        Thread.Sleep(_delay);
+                    }
+                    while (_exsettlementcache.hasItems)
+                    {
+                        ExchangeSettlement settle = _exsettlementcache.Read();
+                        try
+                        {
+                            ORM.MSettlement.InsertExchangeSettlement(settle);
+                            logger.Debug(string.Format("Insert ExchangeSettlement Success:{0}", settle.ToString()));
+                        }
+                        catch (Exception ex)
+                        {
+                            throw new DataRepositoryException(EnumDataRepositoryType.InsertExchangeSettlement, settle, ex);
+                        }
+                        Thread.Sleep(_delay);
+                    }
                     #endregion
 
 
@@ -375,6 +405,7 @@ namespace TradingLib.Core
         }
         #endregion
 
+        #region 插入或更新交易数据
         /// <summary>
         /// 将新的需要记录的数据记录下来 从而实现异步处理防止阻塞通讯主线程
         /// 数据记录需要copy模式,否则引用对象得其他线程访问时候会出现数据错误 比如成交数目与实际成交数目无法对应等问题。
@@ -414,6 +445,19 @@ namespace TradingLib.Core
             _posclosecache.Write(pc);
             newlog();
         }
+        public void newPositionDetail(PositionDetail pd)
+        {
+            _posdetailcache.Write(pd);
+            newlog();
+        }
+
+        public void newExchangeSettlement(ExchangeSettlement settle)
+        {
+            _exsettlementcache.Write(settle);
+            newlog();
+        }
+        #endregion
+
         private void newlog()
         {
             /*
@@ -435,6 +479,7 @@ namespace TradingLib.Core
             }
             
         }
+
         /// <summary>
         /// called if bad barrequest is written or read.
         /// check bad counters to see if written or read.
@@ -474,6 +519,9 @@ namespace TradingLib.Core
 
             _oactioncache = new RingBuffer<OrderAction>(maxbr);
             _posclosecache = new RingBuffer<PositionCloseDetail>(maxbr);
+            _posdetailcache = new RingBuffer<PositionDetail>(maxbr);
+            _exsettlementcache = new RingBuffer<ExchangeSettlement>(maxbr);
+
             _pdsettledcache = new RingBuffer<PositionDetail>(maxbr);
             _exsettlecache = new RingBuffer<ExchangeSettlement>(maxbr);
             _cashtxnsettlecash = new RingBuffer<CashTransaction>(maxbr);
