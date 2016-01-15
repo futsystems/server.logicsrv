@@ -24,11 +24,20 @@ namespace TradingLib.Core
     /// <summary>
     ///模拟交易Broker用于将Order cancle trade交易信息安全的记录到数据库
     ///通过数据库操作缓存队列以及数据库重试连击技术，可以使得交易日志能够在数据库断开连接或者重新启动数据库的情况下交易日志信息部丢失
+    ///
+    /// 关键交易数据储存组件 需要确保交易数据记录完备
+    /// 1.数据库工作正常时实时将数据记录到数据库
+    /// 2.当数据库工作异常时将没有正确记录的数据放入缓存中,当数据库正常时重新进行数据操作
+    /// 3.同时将数据实时记录到本地磁盘文件,用于防止软件奔溃时恢复数据
+    /// 
     /// </summary>
     public class AsyncTransactionLoger:BaseSrvObject
     {
         //注当缓存超过后系统记录的交易信息就会发生错误。因此这里我们需要放大缓存大小并且在控制面板中需要监视。
         const int MAXLOG = 100000;
+
+        DataRepositoryLogger _log;
+        RingBuffer<DataRepositoryLog> _datarepcache;//储存日志缓存
 
         RingBuffer<Order> _ocache;//委托插入缓存
         RingBuffer<Order> _oupdatecache;//委托更新缓存
@@ -107,6 +116,13 @@ namespace TradingLib.Core
             {
                 try
                 {
+                    //记录关键交易数据储存日志
+                    while (_datarepcache.hasItems)
+                    {
+                        DataRepositoryLog log = _datarepcache.Read();
+                        _log.GotDataRepositoryLog(log);
+                    }
+
                     #region 交易记录插入与更新
                     //插入委托
                     while (_ocache.hasItems)
@@ -411,13 +427,16 @@ namespace TradingLib.Core
         {
             //debug("插入委托数据到数据库");
             Order oc = new OrderImpl(o);//复制委托 防止委托参数发生变化
+            _datarepcache.Write(new DataRepositoryLog(EnumDataRepositoryType.InsertOrder, oc));
             _ocache.Write(oc);
+
             newlog();
         }
         public void UpdateOrder(Order o)
         {
             //debug("插入委托数据到数据库");
             Order oc = new OrderImpl(o);
+            _datarepcache.Write(new DataRepositoryLog(EnumDataRepositoryType.UpdateOrder, oc));
             _oupdatecache.Write(oc);
             newlog();
         }
@@ -425,6 +444,7 @@ namespace TradingLib.Core
         public void NewTrade(Trade f)
         {
             Trade nf = new TradeImpl(f);
+            _datarepcache.Write(new DataRepositoryLog(EnumDataRepositoryType.InsertTrade,nf));
             _tcache.Write(nf);
             newlog();
         }
@@ -432,6 +452,7 @@ namespace TradingLib.Core
         public void NewOrderAction(OrderAction action)
         {
             _oactioncache.Write(action);
+            _datarepcache.Write(new DataRepositoryLog(EnumDataRepositoryType.InsertOrderAction,action));
             newlog();
         }
 
@@ -439,23 +460,32 @@ namespace TradingLib.Core
         public void NewPositionCloseDetail(PositionCloseDetail pc)
         {
             _posclosecache.Write(pc);
+            _datarepcache.Write(new DataRepositoryLog(EnumDataRepositoryType.InsertPositionCloseDetail, pc));
             newlog();
         }
+        /**
+         *  持仓明细与交易所结算数据是在结算过程中产生的结算数据,不需要通过DataRep日志系统进行记录
+         * 
+         * 
+         * */
         public void NewPositionDetail(PositionDetail pd)
         {
             _posdetailcache.Write(pd);
+            //_datarepcache.Write(new DataRepositoryLog(EnumDataRepositoryType.InsertPositionDetail,pd));
             newlog();
         }
 
         public void NewExchangeSettlement(ExchangeSettlement settle)
         {
             _exsettlementcache.Write(settle);
+            //_datarepcache.Write(new DataRepositoryLog(EnumDataRepositoryType.InsertExchangeSettlement,settle));
             newlog();
         }
 
         public void NewCashTransaction(CashTransaction txn)
         {
             _cashtxncache.Write(txn);
+            _datarepcache.Write(new DataRepositoryLog(EnumDataRepositoryType.InsertCashTransaction,txn));
             newlog();
         }
         #endregion
@@ -513,6 +543,9 @@ namespace TradingLib.Core
         /// <param name="maximb"></param>
         public AsyncTransactionLoger(int maxbr) : base("AsyncTransactionLoger")
         {
+            _log = new DataRepositoryLogger();
+            _datarepcache = new RingBuffer<DataRepositoryLog>(maxbr);
+
             _ocache = new RingBuffer<Order>(maxbr);
             _oupdatecache = new RingBuffer<Order>(maxbr);
             _osettlecache = new RingBuffer<Order>(maxbr);

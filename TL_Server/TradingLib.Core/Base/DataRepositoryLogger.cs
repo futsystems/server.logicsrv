@@ -9,23 +9,28 @@ using Common.Logging;
 
 namespace TradingLib.Core
 {
-    public class DataRepDump
+    /// <summary>
+    /// DataRepository日志记录器
+    /// </summary>
+    public class DataRepositoryLogger
     {
         StreamWriter _log = null;
         private string fn = string.Empty;
         private string _path = "Dump";
 
         ILog logger = null;
-        public DataRepDump(string path)
+        public DataRepositoryLogger()
         {
             logger = LogManager.GetLogger("DataRepositoryLog");
-            _path = path;
+            _currentTradingday = TLCtxHelper.ModuleSettleCentre.Tradingday;
+
             setfile();
         }
 
+        int _currentTradingday = 0;
         void setfile()
         {
-            fn = Path.Combine(_path, "DATA");
+            fn = Path.Combine(Util.DataRepositoryDir, string.Format("DATA.{0}.txt", _currentTradingday));
             try
             {
                 try
@@ -40,12 +45,21 @@ namespace TradingLib.Core
             catch (Exception) { _log = null; }
         }
 
+        /// <summary>
+        /// 获得DataRepositoryLog 并序列化输出到文件
+        /// </summary>
+        /// <param name="log"></param>
         public void GotDataRepositoryLog(DataRepositoryLog log)
         {
             try
             {
-                if (_log != null)
+                if (_log != null && log!=null)
                 {
+                    if (_currentTradingday != TLCtxHelper.ModuleSettleCentre.Tradingday)
+                    {
+                        _currentTradingday = TLCtxHelper.ModuleSettleCentre.Tradingday;
+                        setfile();
+                    }
                     string msg = DataRepositoryLog.Serialize(log);
                     if (!string.IsNullOrEmpty(msg))
                     {

@@ -520,7 +520,7 @@ namespace TradingLib.Common
             get
             {
 
-                return Path.Combine(new string[] { ParentDir, "TLDataBase" });
+                return Path.Combine(new string[] { ParentDir, "TLData" });
             }
         }
 
@@ -549,6 +549,17 @@ namespace TradingLib.Common
             get
             {
                 return ProgramData("TickData");
+            }
+        }
+
+        /// <summary>
+        /// 数据储存日志目录
+        /// </summary>
+        public static string DataRepositoryDir
+        {
+            get
+            {
+                return ProgramData("DataRepository");
             }
         }
 
