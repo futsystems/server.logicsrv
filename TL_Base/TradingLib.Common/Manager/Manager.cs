@@ -104,7 +104,7 @@ namespace TradingLib.Common
             mgr_fk = 0;
             BaseManager = null;
             domain_id = 0;
-
+            Pass = "123456";
         }
 
 
