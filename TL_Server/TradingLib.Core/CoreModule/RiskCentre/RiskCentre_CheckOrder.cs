@@ -166,6 +166,24 @@ namespace TradingLib.Core
                     }
                 }
             }
+
+            //中金所限制 开仓数量不能超过10手
+            if (_cffexLimit)
+            {
+                Order tmp = o;
+                //如果委托为开仓委托 且是股指
+                if (o.IsEntryPosition && new string[] { "IF", "IH", "IC" }.Contains(tmp.oSymbol.SecurityFamily.Code))
+                {
+                    //累加所有该品种的开仓成交数量
+                    int entry_size = account.Trades.Where(f => f.oSymbol.SecurityFamily.Code == tmp.oSymbol.SecurityFamily.Code).Where(f => f.IsEntryPosition).Sum(f => f.UnsignedSize);
+                    //int pending_size = account.GetPendingEntrySize(
+                    if (entry_size + o.UnsignedSize > 10)
+                    {
+                        errortitle = "SYMBOL_NOT_TRADEABLE";//合约不可交易
+                        return false;
+                    }
+                }
+            }
             /*
             periodAuctionPlace = o.oSymbol.SecurityFamily.IsInAuctionTime();//是否处于集合竞价报单时段
             periodAuctionExecution = o.oSymbol.SecurityFamily.IsInActionExutionTime();//是否处于集合竞价撮合时段

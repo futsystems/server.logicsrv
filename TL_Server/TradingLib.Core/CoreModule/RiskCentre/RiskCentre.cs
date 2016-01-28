@@ -36,6 +36,7 @@ namespace TradingLib.Core
 
         bool auctionEnable = false;
         bool _haltEnable = false;
+        bool _cffexLimit = false;//中金所限制
 
         HaltedStateTracker _haltstatetracker;
         public RiskCentre():base(CoreName)
@@ -92,6 +93,13 @@ namespace TradingLib.Core
                 _cfgdb.UpdateConfig("HaltEnable", QSEnumCfgType.Bool, false, "股指熔断");
             }
             _haltEnable = _cfgdb["HaltEnable"].AsBool();
+
+            if (!_cfgdb.HaveConfig("CFFEXLimit"))
+            {
+                _cfgdb.UpdateConfig("CFFEXLimit", QSEnumCfgType.Bool, false, "中金所限制");
+            }
+            _cffexLimit = _cfgdb["CFFEXLimit"].AsBool();
+
 
 
             //订阅持仓回合关闭事件
