@@ -687,7 +687,7 @@ namespace Broker.SIM
 
             //初始化参数
             ParseConfigInfo();
-            _useBikAsk = true;
+            //_useBikAsk = true;
             _simLimitReal = false;
 
 
