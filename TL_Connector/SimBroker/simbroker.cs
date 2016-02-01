@@ -73,6 +73,12 @@ namespace Broker.SIM
             }
             _fillall = _cfgdb["FillAll"].AsBool();
 
+            if (!_cfgdb.HaveConfig("UseBikAsk"))
+            {
+                _cfgdb.UpdateConfig("UseBikAsk", QSEnumCfgType.Bool, true, "是否按盘口成交");
+            }
+            _useBikAsk = _cfgdb["UseBikAsk"].AsBool();
+
             
             _fillseq = random.Next(1000, 4000);
         }
