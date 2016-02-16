@@ -156,7 +156,7 @@ namespace TradingLib.Common
     public static class AccountUtils_FinCal
     {
 
-        #region 对象过滤 返回对象不toarray避免的内存引用copy所有的计算只需要进行一次foreach循环
+        #region 对象过滤 用于过滤出不同品种类别的委托 成交 持仓等数据
         /// <summary>
         /// 
         /// </summary>
@@ -350,6 +350,12 @@ namespace TradingLib.Common
             return FilterTrades(account, SecurityType.FUT).Sum(fill => fill.GetCommission());
         }
 
+        /// <summary>
+        /// 计算期货现金值
+        /// 平仓盈亏 + 浮动盈亏 - 交易手续费
+        /// </summary>
+        /// <param name="account"></param>
+        /// <returns></returns>
         public static decimal CalFutCash(this IAccount account)
         {
             return CalFutRealizedPL(account) + CalFutUnRealizedPL(account) - CalFutCommission(account);
@@ -392,10 +398,10 @@ namespace TradingLib.Common
         /// </summary>
         /// <param name="account"></param>
         /// <returns></returns>
-        public static decimal CalOptSettlePositionValue(this IAccount account)
-        {
-            return FilterPositions(account, SecurityType.OPT).Sum(pos => pos.CalcSettlePositionValue());
-        }
+        //public static decimal CalOptSettlePositionValue(this IAccount account)
+        //{
+        //    return FilterPositions(account, SecurityType.OPT).Sum(pos => pos.CalcSettlePositionValue());
+        //}
         /// <summary>
         /// 期权平仓盈亏
         /// </summary>
@@ -452,108 +458,106 @@ namespace TradingLib.Common
 
         #region 异化合约财务计算
         /// <summary>
-        /// 异化合约持仓成本
+        /// 股票持仓成本
         /// </summary>
         /// <param name="acc"></param>
         /// <returns></returns>
-        public static decimal CalInnovPositionCost(this IAccount account)
+        public static decimal CalcStkPositionCost(this IAccount account)
         {
-            return FilterPositions(account, SecurityType.NIL).Sum(pos => pos.CalcPositionCostValue());
+            return FilterPositions(account, SecurityType.STK).Sum(pos => pos.CalcPositionCostValue());
         }
 
         /// <summary>
-        /// 异化合约持仓市值
+        /// 股票持仓市值
         /// </summary>
         /// <param name="acc"></param>
         /// <returns></returns>
-        public static decimal CalInnovPositionValue(this IAccount account)
+        public static decimal CalcStkPositionMarketValue(this IAccount account)
         {
-            return FilterPositions(account, SecurityType.NIL).Sum(pos => pos.CalcPositionMarketValue());
+            return FilterPositions(account, SecurityType.STK).Sum(pos => pos.CalcPositionMarketValue());
         }
 
         /// <summary>
-        /// 异化合约结算市值
+        /// 股票结算市值
         /// </summary>
         /// <param name="acc"></param>
         /// <returns></returns>
-        public static decimal CalInnovSettlePositionValue(this IAccount account)
+        //public static decimal CalcStkSettlePositionMarketValue(this IAccount account)
+        //{
+        //    return FilterPositions(account, SecurityType.STK).Sum(pos => pos.CalcSettlePositionValue());
+        //}
+
+        /// <summary>
+        /// 股票手续费
+        /// </summary>
+        /// <param name="acc"></param>
+        /// <returns></returns>
+        public static decimal CalcStkCommission(this IAccount account)
         {
-            return FilterPositions(account, SecurityType.NIL).Sum(pos => pos.CalcSettlePositionValue());
+            return FilterTrades(account, SecurityType.STK).Sum(fill => fill.GetCommission());
         }
 
         /// <summary>
-        /// 异化合约手续费
+        /// 股票平仓盈亏
         /// </summary>
         /// <param name="acc"></param>
         /// <returns></returns>
-        public static decimal CalInnovCommission(this IAccount account)
+        public static decimal CalcStkRealizedPL(this IAccount account)
         {
-            return FilterTrades(account, SecurityType.NIL).Sum(fill => fill.GetCommission());
+            return FilterPositions(account, SecurityType.STK).Sum(pos => pos.CalcRealizedPL());
         }
 
         /// <summary>
-        /// 异化合约平仓盈亏
+        /// 股票保证金
         /// </summary>
         /// <param name="acc"></param>
         /// <returns></returns>
-        public static decimal CalInnovRealizedPL(this IAccount account)
+        public static decimal CalcStkMargin(this IAccount account)
         {
-            return FilterPositions(account, SecurityType.NIL).Sum(pos => pos.CalcRealizedPL());
+            return FilterPositions(account, SecurityType.STK).Sum(pos => pos.CalcPositionMargin());
         }
 
         /// <summary>
-        /// 异化合约保证金
+        /// 股票冻结保证金
         /// </summary>
         /// <param name="acc"></param>
         /// <returns></returns>
-        public static decimal CalInnovMargin(this IAccount account)
+        public static decimal CalcStkMarginFrozen(this IAccount account)
         {
-            return FilterPositions(account, SecurityType.NIL).Sum(pos => pos.CalcPositionMargin());
+            return FilterPendingOrders(account, SecurityType.STK).Sum(e => account.CalOrderFundRequired(e, 0));
+
         }
 
         /// <summary>
-        /// 异化合约保证金冻结
+        /// 股票现金值
         /// </summary>
-        /// <param name="acc"></param>
+        /// <param name="account"></param>
         /// <returns></returns>
-        public static decimal CalInnovMarginFrozen(this IAccount account)
+        public static decimal CalcStkCash(this IAccount account)
         {
-            return FilterPendingOrders(account, SecurityType.NIL).Sum(e => account.CalOrderFundRequired(e, 0));
-
+            return account.CalcStkRealizedPL() - account.CalcStkCommission() - account.CalcStkPositionCost();
         }
 
-        public static decimal CalInnovCash(this IAccount account)
+        /// <summary>
+        /// 股票市值
+        /// </summary>
+        /// <param name="account"></param>
+        /// <returns></returns>
+        public static decimal CalcStkLiquidation(this IAccount account)
         {
-            return CalInnovRealizedPL(account) - CalInnovCommission(account) - CalInnovPositionCost(account);
+            return account.CalcStkPositionMarketValue() + account.CalcStkCash();
         }
 
-        public static decimal CalInnovLiquidation(this IAccount account)
+        /// <summary>
+        /// 股票资金占用
+        /// </summary>
+        /// <param name="account"></param>
+        /// <returns></returns>
+        public static decimal CalcStkMoneyUsed(this IAccount account)
         {
-            return CalInnovPositionValue(account) + CalInnovCash(account);
-        }
-
-        public static decimal CalInnovMoneyUsed(this IAccount account)
-        {
-            return CalInnovMargin(account) + CalInnovMarginFrozen(account);
+            return account.CalcStkMargin() + account.CalcStkMarginFrozen();
         }
         #endregion
 
-        //public static string GetCustName(this IAccount account)
-        //{
-        //    if (string.IsNullOrEmpty(account.Name))
-        //    {
-        //        return  "帐号[" + account.ID + "]";
-        //    }
-        //    return account.Name;
-        //}
-
-        //public static string GetCustBroker(this IAccount account)
-        //{
-        //    if (string.IsNullOrEmpty(account.Broker))
-        //    {
-        //        return GlobalConfig.DefaultBroker;
-        //    }
-        //    return account.Broker;
-        //}
     }
 }

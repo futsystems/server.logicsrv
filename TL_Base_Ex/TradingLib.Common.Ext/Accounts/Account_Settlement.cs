@@ -85,6 +85,16 @@ namespace TradingLib.Common
         /// 3.保存结算记录
         /// 4.标注结算标识
         /// 
+        /// 执行帐户某个交易所结算时 按交易所过滤持仓后
+        /// 品种不同 结算方式不同
+        /// 期货 逐日结算
+        /// 股票 逐笔结算
+        /// 
+        /// CloseProfitByDate
+        /// PositionProfitByDate
+        /// CloseProfitByTrade
+        /// PositionProfitByTrade
+        /// 
         /// </summary>
         /// <param name="exchange"></param>
         /// <param name="settleday"></param>
@@ -165,6 +175,8 @@ namespace TradingLib.Common
                 //浮动盈亏
                 //settlement.PositionProfitByDate = this.GetPositions(exchange).Sum(pos => pos.PositionDetailTotal.Sum(pd => pd.PositionProfitByDate));
                 settlement.PositionProfitByDate = this.GetPositions(exchange).Sum(pos => pos.CalPositionProfitByDate());
+                
+                
                 ///3.保存结算记录到数据库
                 //ORM.MSettlement.InsertExchangeSettlement(settlement);
                 TLCtxHelper.ModuleDataRepository.NewExchangeSettlement(settlement);

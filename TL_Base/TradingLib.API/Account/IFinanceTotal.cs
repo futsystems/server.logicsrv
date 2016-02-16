@@ -38,7 +38,7 @@ namespace TradingLib.API
         /// <summary>
         /// 帐户当日结算盯市盈亏 以结算价来计算收盘后的浮动盈亏
         /// </summary>
-        decimal SettleUnRealizedPL { get; }
+        //decimal SettleUnRealizedPL { get; }
 
         /// <summary>
         /// 手续费

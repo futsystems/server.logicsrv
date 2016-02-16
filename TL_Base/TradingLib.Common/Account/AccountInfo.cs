@@ -72,17 +72,17 @@ namespace TradingLib.Common
         public decimal OptMoneyUsed { get; set; }//期权资金占用
         public decimal OptAvabileFunds { get; set; }
 
-        public decimal InnovPositionCost { get; set; }//异化合约持仓成本
-        public decimal InnovPositionValue { get; set; }//异化合约持仓市值
-        public decimal InnovCommission { get; set; }//异化合约手续费
-        public decimal InnovRealizedPL { get; set; }//异化合约平仓盈亏
-        public decimal InnovMargin { get; set; }//异化合约保证金
-        public decimal InnovMarginFrozen { get; set; }//异化合约冻结
-        public decimal InnovCash { get; set; }//异化合约现金流
-        public decimal InnovMarketValue { get; set; }//异化合约市值
-        public decimal InnovLiquidation { get; set; }//异化合约净值
-        public decimal InnovMoneyUsed { get; set; }//异化合约资金占用
-        public decimal InnovAvabileFunds { get; set; }//异化合约可用资金
+        public decimal StkPositionCost { get; set; }//异化合约持仓成本
+        public decimal StkPositionValue { get; set; }//异化合约持仓市值
+        public decimal StkCommission { get; set; }//异化合约手续费
+        public decimal StkRealizedPL { get; set; }//异化合约平仓盈亏
+        public decimal StkMargin { get; set; }//异化合约保证金
+        public decimal StkMarginFrozen { get; set; }//异化合约冻结
+        public decimal StkCash { get; set; }//异化合约现金流
+        public decimal StkMarketValue { get; set; }//异化合约市值
+        public decimal StkLiquidation { get; set; }//异化合约净值
+        public decimal StkMoneyUsed { get; set; }//异化合约资金占用
+        public decimal StkAvabileFunds { get; set; }//异化合约可用资金
 
         
 
@@ -172,27 +172,27 @@ namespace TradingLib.Common
             sb.Append(info.OptAvabileFunds.ToString());//34
 
             sb.Append(d);
-            sb.Append(info.InnovPositionCost.ToString());
+            sb.Append(info.StkPositionCost);
             sb.Append(d);
-            sb.Append(info.InnovPositionValue.ToString());
+            sb.Append(info.StkPositionValue);
             sb.Append(d);
-            sb.Append(info.InnovCommission.ToString());
+            sb.Append(info.StkCommission);
             sb.Append(d);
-            sb.Append(info.InnovRealizedPL.ToString());
+            sb.Append(info.StkRealizedPL);
             sb.Append(d);
-            sb.Append(info.InnovMargin.ToString());
+            sb.Append(info.StkMargin);
             sb.Append(d);
-            sb.Append(info.InnovMarginFrozen.ToString());
+            sb.Append(info.StkMarginFrozen);
             sb.Append(d);
-            sb.Append(info.InnovCash.ToString());
+            sb.Append(info.StkCash);
             sb.Append(d);
-            sb.Append(info.InnovMarketValue.ToString());
+            sb.Append(info.StkMarketValue);
             sb.Append(d);
-            sb.Append(info.InnovLiquidation.ToString());
+            sb.Append(info.StkLiquidation);
             sb.Append(d);
-            sb.Append(info.InnovMoneyUsed.ToString());
+            sb.Append(info.StkMoneyUsed);
             sb.Append(d);
-            sb.Append(info.InnovAvabileFunds.ToString());//45
+            sb.Append(info.StkAvabileFunds);//45
 
             //
             sb.Append(d);
@@ -261,17 +261,17 @@ namespace TradingLib.Common
                 a.OptMoneyUsed = decimal.Parse(r[33]);
                 a.OptAvabileFunds = decimal.Parse(r[34]);
 
-                a.InnovPositionCost = decimal.Parse(r[35]);
-                a.InnovPositionValue = decimal.Parse(r[36]);
-                a.InnovCommission = decimal.Parse(r[37]);
-                a.InnovRealizedPL = decimal.Parse(r[38]);
-                a.InnovMargin = decimal.Parse(r[39]);
-                a.InnovMarginFrozen = decimal.Parse(r[40]);
-                a.InnovCash = decimal.Parse(r[41]);
-                a.InnovMarketValue = decimal.Parse(r[42]);
-                a.InnovLiquidation = decimal.Parse(r[43]);
-                a.InnovMoneyUsed = decimal.Parse(r[44]);
-                a.InnovAvabileFunds = decimal.Parse(r[45]);
+                a.StkPositionCost = decimal.Parse(r[35]);
+                a.StkPositionValue = decimal.Parse(r[36]);
+                a.StkCommission = decimal.Parse(r[37]);
+                a.StkRealizedPL = decimal.Parse(r[38]);
+                a.StkMargin = decimal.Parse(r[39]);
+                a.StkMarginFrozen = decimal.Parse(r[40]);
+                a.StkCash = decimal.Parse(r[41]);
+                a.StkMarketValue = decimal.Parse(r[42]);
+                a.StkLiquidation = decimal.Parse(r[43]);
+                a.StkMoneyUsed = decimal.Parse(r[44]);
+                a.StkAvabileFunds = decimal.Parse(r[45]);
 
                 a.Margin = decimal.Parse(r[46]);
                 a.MarginFrozen = decimal.Parse(r[47]);

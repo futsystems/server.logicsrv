@@ -93,16 +93,16 @@ namespace TradingLib.Common
             a.FutAvabileFunds = acc.AvabileFunds; ;
             a.OptAvabileFunds = acc.AvabileFunds;
 
-            a.InnovPositionCost = acc.CalInnovPositionCost();
-            a.InnovPositionValue = acc.CalInnovPositionValue();
-            a.InnovCommission = acc.CalInnovCommission() ;
-            a.InnovRealizedPL = acc.CalInnovRealizedPL();
-            a.InnovMargin = acc.CalInnovMargin();
-            a.InnovCash = acc.CalInnovCash();
-            a.InnovMarketValue = acc.CalInnovPositionValue();
-            a.InnovLiquidation = acc.CalInnovLiquidation();
-            a.InnovMoneyUsed = acc.CalInnovMoneyUsed();
-            a.InnovAvabileFunds = acc.AvabileFunds;
+            a.StkPositionCost = acc.CalcStkPositionCost();
+            a.StkPositionValue = acc.CalcStkPositionMarketValue();
+            a.StkCommission = acc.CalcStkCommission();
+            a.StkRealizedPL = acc.CalcStkRealizedPL();
+            a.StkMargin = acc.CalcStkMargin();
+            a.StkCash = acc.CalcStkCash();
+            a.StkMarketValue = acc.CalcStkPositionMarketValue();
+            a.StkLiquidation = acc.CalcStkLiquidation();
+            a.StkMoneyUsed = acc.CalcStkMoneyUsed();
+            a.StkAvabileFunds = acc.AvabileFunds;
 
             a.Margin = acc.Margin;
             a.MarginFrozen = acc.MarginFrozen;

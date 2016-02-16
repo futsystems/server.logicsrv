@@ -27,28 +27,32 @@ namespace TradingLib.Common
         /// 平仓盈亏
         /// 交易所结算盯市盈亏 计入 平仓盈亏中
         /// </summary>
-        public decimal RealizedPL { get { return this.PendingSettleCloseProfitByDate + this.PendingSettlePositionProfitByDate + this.CalFutRealizedPL() + this.CalOptRealizedPL() + this.CalInnovRealizedPL(); } }
+        public decimal RealizedPL { get { return this.PendingSettleCloseProfitByDate + this.PendingSettlePositionProfitByDate + this.CalFutRealizedPL() + this.CalOptRealizedPL() + this.CalcStkRealizedPL(); } }
 
         /// <summary>
         /// 浮动盈亏 
         /// </summary>
-        public decimal UnRealizedPL { get { return  + this.CalFutUnRealizedPL() + this.CalOptPositionValue() - this.CalOptPositionCost() + this.CalInnovPositionValue() - this.CalInnovPositionCost(); } }
+        public decimal UnRealizedPL { get { return  + this.CalFutUnRealizedPL() + this.CalOptPositionValue() - this.CalOptPositionCost() + this.CalcStkPositionMarketValue() - this.CalcStkPositionCost(); } }
 
         /// <summary>
         /// 盯市盈亏
         /// </summary>
-        public decimal SettleUnRealizedPL { get { return this.CalFutSettleUnRealizedPL() + this.CalOptSettlePositionValue() - this.CalOptPositionValue() + this.CalInnovSettlePositionValue() - this.CalInnovPositionValue(); } }
+        //public decimal SettleUnRealizedPL { get { return this.CalFutSettleUnRealizedPL() + this.CalOptSettlePositionValue() - this.CalOptPositionValue() + this.CalcStkSettlePositionMarketValue() - this.CalcStkPositionCost(); } }
 
         /// <summary>
         /// 手续费
         /// </summary>
-        public decimal Commission { get { return this.PendingSettleCommission + this.CalFutCommission() + this.CalOptCommission() + this.CalInnovCommission(); } }
+        public decimal Commission { get { return this.PendingSettleCommission + this.CalFutCommission() + this.CalOptCommission() + this.CalcStkCommission(); } }
 
         /// <summary>
         /// 净利润
         /// </summary>
         public decimal Profit { get { return RealizedPL + UnRealizedPL - Commission; } }
 
+        /// <summary>
+        /// 出入金数据通过CashTransaction进行统计获得
+        /// </summary>
+        #region 出入金金额
         ThreadSafeList<CashTransaction> cashtranslsit = new ThreadSafeList<CashTransaction>();
         /// <summary>
         /// 未结算入金
@@ -72,29 +76,30 @@ namespace TradingLib.Common
         /// </summary>
         public decimal CreditCashOut { get { return cashtranslsit.Where(tx => !tx.Settled && tx.TxnType == QSEnumCashOperation.WithDraw && tx.EquityType == QSEnumEquityType.CreditEquity).Sum(tx => tx.Amount); } }
 
+        #endregion
 
         /// <summary>
         /// 保证金占用
         /// 期货保证金占用 期权持仓成本 异化保证金
         /// </summary>
-        public decimal Margin { get { return this.CalFutMargin() + this.CalOptPositionCost() + this.CalInnovMargin(); } }
+        public decimal Margin { get { return this.CalFutMargin() + this.CalOptPositionCost() + this.CalcStkMargin(); } }
 
         /// <summary>
         /// 保证金冻结
         /// 期货保证金占用 期权资金占用 异化保证金占用
         /// </summary>
-        public decimal MarginFrozen { get { return this.CalFutMarginFrozen() + this.CalOptMoneyFrozen() + this.CalInnovMarginFrozen(); } }
+        public decimal MarginFrozen { get { return this.CalFutMarginFrozen() + this.CalOptMoneyFrozen() + this.CalcStkMarginFrozen(); } }
 
         /// <summary>
         /// 总占用资金
         /// </summary>
-        public decimal MoneyUsed{get{ return this.CalFutMoneyUsed() + this.CalOptMoneyUsed() + this.CalInnovMoneyUsed();}}
+        public decimal MoneyUsed{get{ return this.CalFutMoneyUsed() + this.CalOptMoneyUsed() + this.CalcStkMoneyUsed();}}
 
         /// <summary>
         /// 总净值
         /// 昨日权益 + 当前期货/期权/等品种的净值 + 入金 - 出金 + 待结算平仓盈亏 + 待结算盯市盈亏
         /// </summary>
-        public decimal TotalLiquidation { get { return LastEquity + this.CalFutLiquidation() + this.CalOptLiquidation() + this.CalInnovLiquidation() + CashIn - CashOut + PendingSettleCloseProfitByDate - PendingSettlePositionProfitByDate - PendingSettleCommission; } }//帐户总净值
+        public decimal TotalLiquidation { get { return LastEquity + this.CalFutLiquidation() + this.CalOptLiquidation() + this.CalcStkLiquidation() + CashIn - CashOut + PendingSettleCloseProfitByDate - PendingSettlePositionProfitByDate - PendingSettleCommission; } }//帐户总净值
         
         /// <summary>
         /// 总可用资金
@@ -142,46 +147,5 @@ namespace TradingLib.Common
         {
             cashtranslsit.Add(txn);
         }
-
-        ///// <summary>
-        ///// 入金
-        ///// </summary>
-        ///// <param name="amount"></param>
-        //public void Deposit(decimal amount)
-        //{
-        //    amount = Math.Abs(amount);
-        //    _cashin += amount;
-        //}
-
-        ///// <summary>
-        ///// 出金
-        ///// 入金,出金均是绝对值,用于记录金额
-        ///// </summary>
-        ///// <param name="amount"></param>
-        //public void Withdraw(decimal amount)
-        //{
-        //    amount = Math.Abs(amount);
-        //    _cashout += amount;
-        //}
-
-        ///// <summary>
-        ///// 优先资入金
-        ///// </summary>
-        ///// <param name="amount"></param>
-        //public void CreditDeposit(decimal amount)
-        //{
-        //    amount = Math.Abs(amount);
-        //    _creditcashin += amount;
-        //}
-
-        ///// <summary>
-        ///// 优先资金出金
-        ///// </summary>
-        ///// <param name="amount"></param>
-        //public void CreditWithdraw(decimal amount)
-        //{
-        //    amount = Math.Abs(amount);
-        //    _creditcashout += amount;
-        //}
     }
 }

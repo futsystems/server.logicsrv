@@ -135,15 +135,15 @@ namespace TradingLib.Common
             return p.UnsignedSize * p.LastPrice * p.oSymbol.Multiple;
         }
 
-        /// <summary>
-        /// 计算持仓结算市值
-        /// </summary>
-        /// <param name="p"></param>
-        /// <returns></returns>
-        public static decimal CalcSettlePositionValue(this Position p)
-        {
-            return p.UnsignedSize * (decimal)p.SettlementPrice* p.oSymbol.Multiple;
-        }
+        ///// <summary>
+        ///// 计算持仓结算市值
+        ///// </summary>
+        ///// <param name="p"></param>
+        ///// <returns></returns>
+        //public static decimal CalcSettlePositionValue(this Position p)
+        //{
+        //    return p.UnsignedSize * (decimal)p.SettlementPrice* p.oSymbol.Multiple;
+        //}
         #endregion
 
 

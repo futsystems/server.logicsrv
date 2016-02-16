@@ -200,7 +200,7 @@ namespace TradingLib.Common
         /// <summary>
         /// 结算时的盯市盈亏
         /// </summary>
-        public decimal SettleUnRealizedPL { get { return _acc.SettleUnRealizedPL; } }
+        //public decimal SettleUnRealizedPL { get { return _acc.SettleUnRealizedPL; } }
         /// <summary>
         /// 手续费
         /// </summary>
