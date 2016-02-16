@@ -82,7 +82,7 @@ namespace TradingLib.Common
         public static string ToEPF(Tick t)
         {
             string s = "";
-            if (!t.isTrade) s = "Q," + epfdate(t.Date) + "," + epftime(t.Time) + "," + t.BidPrice + "," + t.AskPrice + "," + t.BidSize + "," + t.AskSize + "," + t.BidExchange + "," + t.AskExchange;
+            if (!t.IsTrade()) s = "Q," + epfdate(t.Date) + "," + epftime(t.Time) + "," + t.BidPrice + "," + t.AskPrice + "," + t.BidSize + "," + t.AskSize + "," + t.BidExchange + "," + t.AskExchange;
             else s = "T," + epfdate(t.Date) + "," + epftime(t.Time) + "," + t.Trade + "," + (t.Size) + "," + t.Exchange;
             return s;
         }

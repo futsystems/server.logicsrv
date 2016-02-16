@@ -24,7 +24,7 @@ namespace TradingLib.DataFarm.Common
         /// </summary>
         /// <param name="host"></param>
         /// <param name="conn"></param>
-        void OnSessionCreated(IServiceHost host,IConnection conn)
+        void OnConnectionCreated(IServiceHost host, IConnection conn)
         {
             AddConnection(conn);
         }
@@ -35,10 +35,12 @@ namespace TradingLib.DataFarm.Common
         /// </summary>
         /// <param name="host"></param>
         /// <param name="conn"></param>
-        void OnSessionClosed(IServiceHost host, IConnection conn)
+        void OnConnectionClosed(IServiceHost host, IConnection conn)
         {
-
             RemoveConnection(conn);
+
+            //清理连接注册的行情合约
+            ClearSymbolRegisted(conn);
         }
 
         /// <summary>
@@ -51,7 +53,7 @@ namespace TradingLib.DataFarm.Common
             if (connectionMap.Keys.Contains(conn.SessionID))
             {
                 connectionMap.TryRemove(conn.SessionID, out target);
-                logger.Info(string.Format("Connection:{0} closed", conn.SessionID));
+                //logger.Info(string.Format("Connection:{0} closed", conn.SessionID));
             }
             else
             {
@@ -68,13 +70,15 @@ namespace TradingLib.DataFarm.Common
             if (!connectionMap.Keys.Contains(conn.SessionID))
             {
                 connectionMap.TryAdd(conn.SessionID, conn);
-                logger.Info(string.Format("Connection:{0} created", conn.SessionID));
+                //logger.Info(string.Format("Connection:{0} created", conn.SessionID));
             }
             else
             {
                 logger.Warn(string.Format("Connection:{0} already exit", conn.SessionID));
             }
         }
+
+
         /// <summary>
         /// 关闭某个连接
         /// </summary>

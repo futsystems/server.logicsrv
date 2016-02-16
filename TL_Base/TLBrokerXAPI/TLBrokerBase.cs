@@ -5,15 +5,18 @@ using System.Text;
 using TradingLib.API;
 using TradingLib.Common;
 using TradingLib.BrokerXAPI.Interop;
+using Common.Logging;
+
 
 
 namespace TradingLib.BrokerXAPI
 {
     public abstract class TLBrokerBase
     {
+        protected ILog logger = null;
         public TLBrokerBase()
         {
-            
+            logger = LogManager.GetLogger("TLBrokerBase");
         }
 
         public IBrokerClearCentre ClearCentre { get; set; }
@@ -79,7 +82,7 @@ namespace TradingLib.BrokerXAPI
         public event FillDelegate GotFillEvent;
         protected void NotifyTrade(Trade f)
         {
-            debug("Notify Trade:" + f.GetTradeDetail(), QSEnumDebugLevel.INFO);
+            logger.Info("Notify Trade:" + f.GetTradeDetail());
             if (GotFillEvent != null)
                 GotFillEvent(f);
         }
@@ -90,7 +93,7 @@ namespace TradingLib.BrokerXAPI
         public event OrderDelegate GotOrderEvent;
         protected void NotifyOrder(Order o)
         {
-            debug("Notify Order:" + o.GetOrderInfo(), QSEnumDebugLevel.INFO);
+            logger.Info("Notify Order:" + o.GetOrderInfo());
             if (GotOrderEvent != null)
                 GotOrderEvent(o);
         }
@@ -101,7 +104,7 @@ namespace TradingLib.BrokerXAPI
         public event LongDelegate GotCancelEvent;
         protected void NotifyCancel(long oid)
         {
-            debug("Notify Cancel:" + oid.ToString(), QSEnumDebugLevel.INFO);
+            logger.Info("Notify Cancel:" + oid.ToString());
             if (GotCancelEvent != null)
                 GotCancelEvent(oid);
         }
@@ -112,7 +115,7 @@ namespace TradingLib.BrokerXAPI
         public event OrderErrorDelegate GotOrderErrorEvent;
         protected void NotifyOrderError(Order o, RspInfo info)
         {
-            debug("Notify OrderError:" + o.GetOrderInfo(), QSEnumDebugLevel.INFO);
+            logger.Info("Notify OrderError:" + o.GetOrderInfo());
             if (GotOrderErrorEvent != null)
                 GotOrderErrorEvent(o, info);
         }
@@ -123,7 +126,7 @@ namespace TradingLib.BrokerXAPI
         public event OrderActionErrorDelegate GotOrderActionErrorEvent;
         protected void NotifyOrderOrderActionError(OrderAction acton, RspInfo info)
         {
-            debug("Notify OrderActionError:", QSEnumDebugLevel.INFO);
+            logger.Info("Notify OrderActionError:");
             if (GotOrderActionErrorEvent != null)
                 GotOrderActionErrorEvent(acton, info);
         }
@@ -132,7 +135,7 @@ namespace TradingLib.BrokerXAPI
         public event Action<PositionDetail> GotHistPositionDetail;
         protected void NotifyHistPositoinDetail(PositionDetail pos)
         {
-            debug("Notify HistPositionDetail", QSEnumDebugLevel.INFO);
+            logger.Info("Notify HistPositionDetail");
             if (GotHistPositionDetail != null)
                 GotHistPositionDetail(pos);
         }
@@ -252,9 +255,8 @@ namespace TradingLib.BrokerXAPI
         public void SetBrokerConfig(ConnectorConfig cfg)
         {
             _cfg = cfg;
-
-            
-           
+            //设定cfg后 重新生成logger用于更新 logger的 name
+            logger = LogManager.GetLogger(string.Format("Broker[{0}]", this.Name));
         }
 
         /// <summary>
@@ -306,38 +308,6 @@ namespace TradingLib.BrokerXAPI
 
         #endregion
 
-
-        #region 日志输出部分
-        /// <summary>
-        /// 对外发送日志事件
-        /// </summary>
-        public event ILogItemDel SendLogItemEvent;
-
-        bool _debugEnable = true;
-        /// <summary>
-        /// 是否输出日志
-        /// 如果禁用日志 则所有日志将不对外发送
-        /// </summary>
-        public bool DebugEnable { get { return _debugEnable; } set { _debugEnable = value; } }
-
-        QSEnumDebugLevel _debuglevel = QSEnumDebugLevel.INFO;
-        /// <summary>
-        /// 日志输出级别
-        /// </summary>
-        public QSEnumDebugLevel DebugLevel { get { return _debuglevel; } set { _debuglevel = value; } }
-
-        /// <summary>
-        /// 判断日志级别 然后再进行输出
-        /// 同时对外输出日志事件,用于被日志模块采集日志或分发
-        /// </summary>
-        /// <param name="msg"></param>
-        /// <param name="level"></param>
-        //[Conditional("DEBUG")]
-        protected void debug(string msg, QSEnumDebugLevel level = QSEnumDebugLevel.DEBUG)
-        {
-            Util.Log(msg, level);
-        }
-        #endregion
 
 
 

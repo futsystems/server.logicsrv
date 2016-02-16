@@ -405,7 +405,7 @@ namespace TradingLib.Core
                 foreach (string sym in syms)
                 {
                     Tick k = _ticktracker[sym];
-                    if (k.isValid)
+                    if (k.IsValid())
                         ticks.Add(k);
                 }
                 return ticks.ToArray();
@@ -474,11 +474,11 @@ namespace TradingLib.Core
         /// <returns></returns>
         private decimal somePrice(Tick k)
         {
-            if (k.isTrade)
+            if (k.IsTrade())
                 return k.Trade;
-            if (k.hasAsk)
+            if (k.HasAsk())
                 return k.AskPrice;
-            if (k.hasBid)
+            if (k.HasBid())
                 return k.BidPrice;
             else
                 return -1;
@@ -508,7 +508,7 @@ namespace TradingLib.Core
                         {
                             foreach (Tick k in this.GetTickSnapshot())
                             {
-                                if (k != null && k.isValid)
+                                if (k != null && k.IsValid())
                                 {
                                     string str = TickImpl.Serialize(k);
                                     sw.WriteLine(str);

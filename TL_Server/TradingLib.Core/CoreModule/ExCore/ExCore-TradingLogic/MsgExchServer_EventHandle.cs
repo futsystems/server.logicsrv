@@ -139,13 +139,22 @@ namespace TradingLib.Core
                     }
                     else
                     {
-                        login = TLCtxHelper.ModuleAccountManager.VaildAccount(request.LoginID, request.Passwd);
+                        account = TLCtxHelper.ModuleAccountManager[request.LoginID];
+                        if (account == null)
+                        {
+                            login = false;
+                        }
+                        else
+                        {
+                            //login = TLCtxHelper.ModuleAccountManager.VaildAccount(request.LoginID, request.Passwd);
+                            login = account.Pass.Equals(request.Passwd);
+                        }
                         response.Authorized = login;
                         if (login)
                         {
                             response.LoginID = request.LoginID;
                             response.Account = request.LoginID;
-                            account = TLCtxHelper.ModuleAccountManager[request.LoginID];
+                            
                             response.AccountType = account.Category;
 
 

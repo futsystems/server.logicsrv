@@ -405,14 +405,14 @@ namespace TradingLib.Common
             decimal nprice=0;
             if (usebidask)
             {
-                if (isLong && k.hasBid)//多头看买价
+                if (isLong && k.HasBid())//多头看买价
                     nprice = k.BidPrice;
-                if (isShort && k.hasAsk)//空头看卖价
+                if (isShort && k.HasAsk())//空头看卖价
                     nprice = k.AskPrice;
             }
             else
             {
-                if (k.isTrade)
+                if (k.IsTrade())
                     nprice = k.Trade;
             }
             //position通过askbid来更新其对手价格然后得到last
@@ -567,8 +567,9 @@ namespace TradingLib.Common
         /// </summary>
         /// <param name="t">The new fill you want this position to reflect.</param>
         /// <returns></returns>
-        public decimal Adjust(Trade t) 
+        public decimal Adjust(Trade t,out bool accept) 
         {
+            accept = false;
             //如果合约为空 则默认pos的合约
             if ((_sym == "") && t.isValid) _sym = t.Symbol;
             //合约不为空比较 当前持仓合约和adjusted pos的合约
@@ -584,8 +585,11 @@ namespace TradingLib.Common
             if (_acct == "") _acct = t.Account;
             if (_acct != t.Account) throw new Exception("Failed because adjustment account did not match position account.");
 
+            //成交设置成为可接受
+            accept = true;
+
             //1.保存成交数据
-            _tradelist.Add(t);
+            //_tradelist.Add(t);
 
             decimal cpl = 0;
             //2.处理成交
@@ -602,18 +606,24 @@ namespace TradingLib.Common
                     _postotallist.Add(d);//插入到Totallist便于访问
                     NewPositionDetail(t, d);//对外触发持仓明细事件
                 }
+                //保存成交数据
+                _tradelist.Add(t);
             }
             else//平仓金额 数量累加
             {
                 bool closefail = false;
-                
-
                 if (NeedGenPositionDetails)
                 {
                     cpl = ClosePosition(t,out closefail);//执行平仓操作
                     if (closefail)
                     {
+                        accept = false;
                         return 0;
+                    }
+                    else
+                    {
+                        //保存成交数据
+                        _tradelist.Add(t);
                     }
                 }
 

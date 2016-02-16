@@ -293,6 +293,13 @@ namespace TradingLib.Core
             {
                 throw new FutsRspError("交易帐户不存在");
             }
+
+            //检查交易帐户资金
+            if (_deleteAccountCheckEquity && (acc.NowEquity > 1 || acc.Credit > 1))
+            {
+                throw new FutsRspError(string.Format(string.Format("交易帐户:{0} 权益:{1} 信用额度:{2}未出金 无法删除", account, acc.NowEquity, acc.Credit)));
+            }
+
             this.DelAccount(account);
 
             session.OperationSuccess("交易帐户:" + account + " 删除成功");

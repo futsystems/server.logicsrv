@@ -21,6 +21,8 @@ namespace TradingLib.API
         IQFEED=4,//外盘IQFeed行情源
         SHZD=5,//上海直达接口 获取恒生行情
         ESUNNY=6,//易盛
+        OKCOIN=7,//OKCOIN
+        TONGSHI=8,//股票通视规范接口
     };
 
 

@@ -12,7 +12,9 @@ using TradingLib.Common;
 
 namespace TradingLib.BrokerXAPI
 {
-
+    /// <summary>
+    /// XAPI 适配底层c交易接口的 成交通道基类
+    /// </summary>
     public abstract class TLBroker :TLBrokerBase,IBroker,IDisposable
     {
         TLBrokerProxy _broker;
@@ -102,7 +104,15 @@ namespace TradingLib.BrokerXAPI
         {
             string msg = string.Empty;
             bool success = this.Start(out msg);
-            Util.Info("Start Broker:" + this.Token + " " + (success ? "成功" : "失败") + " msg:" + msg);
+            if (success)
+            {
+                logger.Info("Start Broker:" + this.Token + " " + (success ? "成功" : "失败") + " msg:" + msg);
+            }
+            else
+            {
+                logger.Error("Start Broker:" + this.Token + " " + (success ? "成功" : "失败") + " msg:" + msg);
+            }
+            
         }
         /// <summary>
         /// 启动接口
@@ -111,7 +121,7 @@ namespace TradingLib.BrokerXAPI
         public virtual bool Start(out string msg)
         {
             msg = string.Empty;
-            Util.Info("Try to start broker:" + this.Token,this.GetType().Name);
+            logger.Info(string.Format("Start Broker:{0}", this.Token));
             //初始化参数
             ParseConfigInfo();
             //初始化接口
@@ -128,7 +138,7 @@ namespace TradingLib.BrokerXAPI
             if (!_connected)
             {
                 msg = "接口连接服务端失败,请检查配置信息";
-                debug(msg, QSEnumDebugLevel.ERROR);
+                logger.Error(msg);
                 ResetResource();
                 return false;
             }
@@ -143,14 +153,14 @@ namespace TradingLib.BrokerXAPI
             if (!_loginreply)
             {
                 msg = "登入回报异常,请检查配置信息";
-                debug(msg, QSEnumDebugLevel.ERROR);
+                logger.Error(msg);
                 ResetResource();
                 return false;
             }
             if (!_loginsuccess)
             {
                 msg = "登入失败,请检查配置信息";
-                debug(msg, QSEnumDebugLevel.WARN);
+                logger.Error(msg);
                 ResetResource();
                 return false;
             }
@@ -162,7 +172,7 @@ namespace TradingLib.BrokerXAPI
             _notifythread.Start();
 
             msg = "接口:" + this.Token + "登入成功,可以接受交易请求";
-            debug(msg, QSEnumDebugLevel.INFO);
+            logger.Info(msg);
 
             //恢复该接口日内交易数据
             OnResume();
@@ -635,7 +645,7 @@ namespace TradingLib.BrokerXAPI
         bool _connected = false;
         void _wrapper_OnConnectedEvent()
         {
-            Util.Info("-----------TLBroker OnConnectedEvent-----------------------");
+            logger.Info("--Wrapper OnConnected Event");
             _connected = true;
             //请求登入
             _wrapper.Login(ref _usrinfo);
@@ -646,17 +656,17 @@ namespace TradingLib.BrokerXAPI
 
         void _wrapper_OnLoginEvent(ref XRspUserLoginField pRspUserLogin)
         {
-            Util.Info("-----------TLBroker OnLoginEvent-----------------------");
+            logger.Info(string.Format("--Wrapper OnLoginEvent Event ErrorID:{0} Message:{1}", pRspUserLogin.ErrorID, pRspUserLogin.ErrorMsg));
             _loginreply = true;
             if (pRspUserLogin.ErrorID == 0)
             {
                 _loginsuccess = true;
-                debug("交易帐户登入成功", QSEnumDebugLevel.INFO);
+                logger.Info("交易帐户登入成功");
             }
             else
             {
                 _loginsuccess = false;
-                debug("交易帐户登入失败", QSEnumDebugLevel.INFO);
+                logger.Info("交易帐户登入失败");
             }
         }
 

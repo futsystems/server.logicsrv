@@ -94,7 +94,6 @@ namespace TradingLib.Common
             if (!mgridmap.TryGetValue(mgr.ID, out target))
             {
                 target = new Manager();
-
                 target.AccLimit = mgr.AccLimit;
                 target.Login = mgr.Login;
                 target.Mobile = mgr.Mobile;

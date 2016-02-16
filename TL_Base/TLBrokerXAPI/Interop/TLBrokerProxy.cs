@@ -3,6 +3,8 @@ using System.Diagnostics.CodeAnalysis;
 using System.Runtime.InteropServices;
 using TradingLib.API;
 using TradingLib.Common;
+using Common.Logging;
+
 
 /*
  * 关于zmq的clr实现过程
@@ -49,7 +51,6 @@ namespace TradingLib.BrokerXAPI.Interop
 
         public virtual void Dispose()
         {
-            Util.DestoryStatus("TLBrokerProxy");
             Dispose(true);
             GC.SuppressFinalize(this);
         }
@@ -72,10 +73,13 @@ namespace TradingLib.BrokerXAPI.Interop
         public IntPtr Handle { get { return _Broker; } }
 
         IntPtr _Broker = IntPtr.Zero;
+
+        ILog logger = null;
         public TLBrokerProxy(string path, string dllname)
         {
+            logger = LogManager.GetLogger(dllname);
             //1.加载dll
-            Util.Info("Load Nativelib Broker dll/so",this.GetType().Name);
+            //Util.Info("Load Nativelib Broker dll/so",this.GetType().Name);
             NativeLib = new UnmanagedLibrary(path, dllname);
             //2.绑定导出函数到委托
             AssignCommonDelegates();

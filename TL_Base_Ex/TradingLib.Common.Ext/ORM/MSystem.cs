@@ -32,5 +32,18 @@ namespace TradingLib.ORM
                 return v;
             }
         }
+
+        /// <summary>
+        /// 更版本数据
+        /// </summary>
+        /// <param name="t"></param>
+        public static void UpdateVersion(int major, int minor, int fix, int no)
+        {
+            using (DBMySql db = new DBMySql())
+            {
+                string query = string.Format("UPDATE system SET maj='{0}' ,min='{1}' ,fix='{2}' ,date='{3}'",major,minor,fix,no);
+                db.Connection.Execute(query);
+            }
+        }
     }
 }

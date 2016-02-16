@@ -13,13 +13,14 @@ namespace TradingLib.MDClient
     /// 行情客户端接口
     /// 行情客户端接口维护2个Socket连接到服务端1个Socket用于实时行情数据,1个行情用于历史行情数据
     /// </summary>
-    public partial class MDClient
+    public partial class MDClient:IBasicInfo
     {
 
         ILog logger = LogManager.GetLogger("MDClient");
 
         TLClient<TLSocket_TCP> realClient = null;
         TLClient<TLSocket_TCP> histClient = null;
+        MDHandlerBase _handler = null;
 
         int requestid = 0;
         object _reqidobj = new object();
@@ -65,6 +66,15 @@ namespace TradingLib.MDClient
         }
 
 
+        /// <summary>
+        /// 注册行情回调函数
+        /// </summary>
+        /// <param name="notify"></param>
+        public void RegisterHandler(MDHandlerBase handler)
+        {
+            _handler = handler;
+        }
+
         public void Start()
         {
             logger.Info("Start MDClient");
@@ -105,6 +115,15 @@ namespace TradingLib.MDClient
             logger.Debug(string.Format("Hist Packet Type:{0} Content:{1}", obj.Type, obj.Content));
             switch (obj.Type)
             {
+                case MessageTypes.TICKNOTIFY:
+                    {
+                        TickNotify response = obj as TickNotify;
+                        if (_handler != null)
+                        {
+                            _handler.OnRtnTick(response.Tick);
+                        }
+                        return;
+                    }
                 case MessageTypes.XMARKETTIMERESPONSE:
                     {
                         RspXQryMarketTimeResponse response = obj as RspXQryMarketTimeResponse;
@@ -131,7 +150,11 @@ namespace TradingLib.MDClient
                     }
                 case MessageTypes.BARRESPONSE:
                     {
-                        logger.Info("got bar:" + obj.Content);
+                        RspQryBarResponse response = obj as RspQryBarResponse;
+                        if (_handler != null)
+                        {
+                            _handler.OnRspQryBar(response.Bar, response.RspInfo, response.RequestID, response.IsLast);
+                        }
                         return;
                     }
                 default:

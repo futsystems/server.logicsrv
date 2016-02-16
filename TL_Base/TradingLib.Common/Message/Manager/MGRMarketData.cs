@@ -118,6 +118,54 @@ namespace TradingLib.Common
 
     }
 
+
+    public class MDSetSymbolFilter : RequestPacket
+    {
+        public MDSetSymbolFilter()
+        {
+            _type = MessageTypes.MGRSETSYMBOLFILTER;
+            this.DataFeed = QSEnumDataFeedTypes.DEFAULT;
+            this.SymbolList = new List<string>();
+        }
+
+        /// <summary>
+        /// 合约
+        /// </summary>
+        public List<string> SymbolList { get; set; }
+        /// <summary>
+        /// 行情源
+        /// </summary>
+        public QSEnumDataFeedTypes DataFeed { get; set; }
+
+        public override string ContentSerialize()
+        {
+            StringBuilder sb = new StringBuilder();
+            char d = ',';
+            sb.Append((int)this.DataFeed);
+            sb.Append(d);
+            string str = string.Empty;
+            if (this.SymbolList != null && this.SymbolList.Count > 0)
+            {
+                str = string.Join(" ", this.SymbolList.ToArray());
+            }
+            sb.Append(str);
+
+            return sb.ToString();
+        }
+
+        public override void ContentDeserialize(string contentstr)
+        {
+            string[] rec = contentstr.Split(',');
+            this.DataFeed = (QSEnumDataFeedTypes)Enum.Parse(typeof(QSEnumDataFeedTypes), rec[0]);
+            string[] syms = rec[1].Split(' ');
+            this.SymbolList.Clear();
+            foreach (var symbol in syms)
+            {
+                this.SymbolList.Add(symbol);
+            }
+        }
+    }
+
     /// <summary>
     /// 请求查询已注册合约
     /// </summary>

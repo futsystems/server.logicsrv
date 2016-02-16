@@ -97,10 +97,10 @@ namespace TradingLib.Common
             //}
 
 
-            if (!config.HaveConfig("StartDefaultConnector"))
-            {
-                config.UpdateConfig("StartDefaultConnector", QSEnumCfgType.Bool,true, "启动时同步启动默认通道");
-            }
+            //if (!config.HaveConfig("StartDefaultConnector"))
+            //{
+            //    config.UpdateConfig("StartDefaultConnector", QSEnumCfgType.Bool,true, "启动时同步启动默认通道");
+            //}
 
             if (!config.HaveConfig("MainDomain"))
             {

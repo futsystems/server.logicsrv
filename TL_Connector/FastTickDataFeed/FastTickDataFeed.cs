@@ -7,6 +7,8 @@ using TradingLib.Common;
 using System.Threading;
 using ZeroMQ;
 using TradingLib.BrokerXAPI;
+using Common.Logging;
+
 
 namespace DataFeed.FastTick
 {
@@ -22,8 +24,11 @@ namespace DataFeed.FastTick
 
         ConfigDB _cfgdb;
         int _tickversion = 1;
+
         public FastTick()
+            :base("FastTick")
         {
+            //加载配置信息
             _cfgdb = new ConfigDB("FastTickDataFeed");
             if (!_cfgdb.HaveConfig("TickServerVersion"))
             {
@@ -52,9 +57,6 @@ namespace DataFeed.FastTick
             _usemaster = true;
         }
 
-        //int _timeout = 3;
-        //bool _switch = true;
-
         bool _usemaster = true;
 
         string CurrentServer
@@ -72,7 +74,7 @@ namespace DataFeed.FastTick
             port = _cfg.srvinfo_port;
             int.TryParse(_cfg.srvinfo_field1, out reqport);
 
-            debug(string.Format("MasterServer:{0} SlaveServer:{1} Port:{2} ReqPort:{3}", master, slave, port, reqport), QSEnumDebugLevel.INFO);
+            logger.Info(string.Format("MasterServer:{0} SlaveServer:{1} Port:{2} ReqPort:{3}", master, slave, port, reqport));
             
             StartTickHandler();
             
@@ -99,18 +101,18 @@ namespace DataFeed.FastTick
             int _wait = 0;
             while (_hbthread.IsAlive && (_wait++ < 5))
             {
-                debug("#:" + _wait.ToString() + "  FastTickHB is stoping...." + "MessageThread Status:" + _hbthread.IsAlive.ToString(), QSEnumDebugLevel.INFO);
+                logger.Info("#:" + _wait.ToString() + "  FastTickHB is stoping...." + "MessageThread Status:" + _hbthread.IsAlive.ToString());
                 Thread.Sleep(500);
             }
             if (!_hbthread.IsAlive)
             {
                 ThreadTracker.Unregister(_hbthread);
                 _hbthread = null;
-                debug("FastTickHB Stopped successfull...", QSEnumDebugLevel.INFO);
+                logger.Info("FastTickHB Stopped successfull...");
             }
             else
             {
-                debug("Some Error Happend In Stoping FastTickHB", QSEnumDebugLevel.ERROR);
+                logger.Error("Some Error Happend In Stoping FastTickHB");
             }
         }
 
@@ -119,15 +121,13 @@ namespace DataFeed.FastTick
         bool _hb = false;
         Thread _hbthread = null;
 
-        //bool _reconntick = true;
-        //bool _stoptick = false;
         private void HeartBeatWatch()
         {
             while (_hb)
             {
                 if (DateTime.Now.Subtract(_lastheartbeat).TotalSeconds > 5)
                 {
-                    debug("TickHeartBeat lost, try to ReConnect to tick server", QSEnumDebugLevel.ERROR);
+                    logger.Warn("TickHeartBeat lost, try to ReConnect to tick server");
                     if (_tickgo)
                     {
                         _usemaster = !_usemaster;
@@ -137,7 +137,7 @@ namespace DataFeed.FastTick
                         StartTickHandler();
                         //更新行情心跳时间
                         _lastheartbeat = DateTime.Now;
-                        debug("Connect to TickServer success", QSEnumDebugLevel.INFO);
+                       logger.Info("Connect to TickServer success");
                     }
                 }
                 Util.sleep(100);
@@ -155,18 +155,18 @@ namespace DataFeed.FastTick
             int _wait = 0;
             while (_tickthread.IsAlive && (_wait++ < 5))
             {
-                debug("#:" + _wait.ToString() + "  FastTick is stoping...." + "MessageThread Status:" + _tickthread.IsAlive.ToString(), QSEnumDebugLevel.INFO);
+                logger.Info("#:" + _wait.ToString() + "  FastTick is stoping...." + "MessageThread Status:" + _tickthread.IsAlive.ToString());
                 Thread.Sleep(500);
             }
             if (!_tickthread.IsAlive)
             {
                 ThreadTracker.Unregister(_tickthread);
                 _tickthread = null;
-                debug("FastTick Stopped successfull...", QSEnumDebugLevel.INFO);
+                logger.Info("FastTick Stopped successfull...");
             }
             else
             {
-                debug("Some Error Happend In Stoping FastTick", QSEnumDebugLevel.ERROR);
+                logger.Error("Some Error Happend In Stoping FastTick");
             }
         }
 
@@ -185,100 +185,93 @@ namespace DataFeed.FastTick
             {
                 Thread.Sleep(500);
                 i++;
-                debug("wait datafeed start....");
+                logger.Info("wait datafeed start....");
             }
         }
 
-        ZmqSocket _subscriber;//sub socket which receive data
-        ZmqSocket _symbolreq;//push socket which tell tickserver to regist data
+        ZSocket _subscriber;//sub socket which receive data
+        ZSocket _symbolreq;//push socket which tell tickserver to regist data
         bool _tickgo;
         Thread _tickthread;
         bool _tickreceiveruning = false;
         private void TickHandler()
         {
-            using (var context = ZmqContext.Create())
+            using (var context = new ZContext())
             {
-                using ( ZmqSocket subscriber = context.CreateSocket(SocketType.SUB) ,symbolreq= context.CreateSocket(SocketType.REQ))
+                using (ZSocket subscriber = new ZSocket(context, ZSocketType.SUB), symbolreq = new ZSocket(context, ZSocketType.REQ))
                 {
                     string reqadd = "tcp://" + CurrentServer + ":" + reqport;
-                    //debug("Connect to FastTick ReqServer:" + reqadd, QSEnumDebugLevel.INFO);
                     symbolreq.Connect(reqadd);
 
                     string subadd = "tcp://" + CurrentServer + ":" + port;
-                    //debug("Subscribe to FastTick PubServer:" + subadd, QSEnumDebugLevel.INFO);
-                    debug(string.Format("Connect to FastTick Server:{0} ReqPort:{1} DataPort{2}",CurrentServer,reqport,port),QSEnumDebugLevel.INFO);
+                    logger.Info(string.Format("Connect to FastTick Server:{0} ReqPort:{1} DataPort{2}", CurrentServer, reqport, port));
                     subscriber.Connect(subadd);
                     //订阅行情心跳数据
                     subscriber.Subscribe(Encoding.UTF8.GetBytes("TICKHEARTBEAT"));
-
                     //subscriber.SubscribeAll();
                     _symbolreq = symbolreq;
                     _subscriber = subscriber;
-                    
-                    subscriber.ReceiveReady += (s, e) =>
-                    {
-                        try
-                        {
-                            string tickstr = subscriber.Receive(Encoding.UTF8);
-                            string[] p = tickstr.Split('^');
-                            if (p.Length > 1)
-                            {
-                                string symbol = p[0];
-                                string tickcontent = p[1];
-                                Tick k = TickImpl.Deserialize(tickcontent);
-                                //Util.Debug("tick date:" + k.Date + " time time:" + k.Time);
-                                if (k.isValid)
-                                    NotifyTick(k);
-                            }
-                            else
-                            {
-                                //debug("tick str:" + tickstr, QSEnumDebugLevel.INFO);
-                            }
-                        }
-                        catch (Exception ex)
-                        {
-                            debug("Tick process error:" + ex.ToString(), QSEnumDebugLevel.ERROR);
-                        }
-                        //记录数据到达时间
-                        _lastheartbeat = DateTime.Now;
-                    };
-                    var poller = new Poller(new List<ZmqSocket> { subscriber });
 
                     _tickreceiveruning = true;
                     NotifyConnected();
+
+                    ZMessage tickdata;
+                    ZError error;
                     while (_tickgo)
                     {
                         try
                         {
-                            poller.Poll(timeout);
+                            if (null == (tickdata = subscriber.ReceiveMessage(out error)))
+                            {
+                                if (error == ZError.ETERM)
+                                    return;	// Interrupted
+                                throw new ZException(error);
+                            }
+                            else
+                            {
+
+                                string tickstr =tickdata.First().ReadString(Encoding.UTF8);
+                                string[] p = tickstr.Split('^');
+                                if (p.Length > 1)
+                                {
+                                    string symbol = p[0];
+                                    string tickcontent = p[1];
+                                    Tick k = TickImpl.Deserialize(tickcontent);
+                                    //logger.Debug("tick date:" + k.Date + " time time:" + k.Time);
+                                    if (k.IsValid())
+                                        NotifyTick(k);
+                                }
+                                else
+                                {
+                                    //debug("tick str:" + tickstr, QSEnumDebugLevel.INFO);
+                                }
+
+                                //记录数据到达时间
+                                _lastheartbeat = DateTime.Now;
+                            }
+
                             if (!_tickgo)
                             {
-                                debug("Tick Thread Stopped,try to close socket", QSEnumDebugLevel.INFO);
+                                logger.Info("Tick Thread Stopped,try to close socket");
                                 subscriber.Close();
                                 symbolreq.Close();
-                                debug("-----------------------", QSEnumDebugLevel.ERROR);
                             }
                         }
-                        catch (ZmqException ex)
+                        catch (ZException ex)
                         {
-                            debug("Tick Sock错误:" + ex.ToString(),QSEnumDebugLevel.ERROR);
-                            
+                            logger.Error("Tick Sock错误:" + ex.ToString());
+
                         }
                         catch (System.Exception ex)
                         {
-                            debug("Tick数据处理错误"+ex.ToString(),QSEnumDebugLevel.ERROR);
+                            logger.Error("Tick数据处理错误" + ex.ToString());
                         }
-                        
+
                     }
                     _tickreceiveruning = false;
                     NotifyDisconnected();
                 }
-                //debug("----------step1", QSEnumDebugLevel.ERROR);
-                //context.Terminate();
-                //context.Dispose();
-                //debug("content terminate", QSEnumDebugLevel.ERROR);
             }
-            debug("----------step2", QSEnumDebugLevel.ERROR);
         }
         #endregion
 
@@ -298,15 +291,27 @@ namespace DataFeed.FastTick
                 {
                     try
                     {
-                        string rep = null;
                         byte[] message = TradingLib.Common.Message.sendmessage(type, msg);
-                        _symbolreq.Send(message);//非阻塞
-                        rep = _symbolreq.Receive(Encoding.UTF8, timeout);
-
+                        _symbolreq.Send(new ZFrame(message));
+                        ZMessage response;
+                        ZError error;
+                        var poller = ZPollItem.CreateReceiver();
+                        if(_symbolreq.PollIn(poller,out response,out error,timeout))
+                        {
+                            logger.Debug(string.Format("Got Rep Response:", response.First().ReadString(Encoding.UTF8)));
+                        }
+                        else
+                        {
+                            if(error == ZError.ETERM)
+                            {
+                                return;
+                            }
+                            throw new ZException(error);                            
+                        }
                     }
                     catch (Exception ex)
                     {
-                        debug("发送消息异常:" + ex.ToString());
+                        logger.Error("发送消息异常:" + ex.ToString());
                     }
                 }
             }
@@ -320,14 +325,27 @@ namespace DataFeed.FastTick
                 {
                     try
                     {
-                        string rep = null;
-                        _symbolreq.Send(packet.Data);//非阻塞
-                        rep = _symbolreq.Receive(Encoding.UTF8, timeout);
-
+                        byte[] message = packet.Data;
+                        _symbolreq.Send(new ZFrame(message));
+                        ZMessage response;
+                        ZError error;
+                        var poller = ZPollItem.CreateReceiver();
+                        if (_symbolreq.PollIn(poller, out response, out error, timeout))
+                        {
+                            logger.Debug(string.Format("Got Rep Response:", response.First().ReadString(Encoding.UTF8)));
+                        }
+                        else
+                        {
+                            if (error == ZError.ETERM)
+                            {
+                                return;
+                            }
+                            throw new ZException(error);
+                        }
                     }
                     catch (Exception ex)
                     {
-                        debug("发送消息异常:" + ex.ToString());
+                        logger.Error("发送消息异常:" + ex.ToString());
                     }
                 }
             }
@@ -361,7 +379,7 @@ namespace DataFeed.FastTick
                         if (_tickversion == 1)
                         {
                             string tmpreq = (kv.Key.ToString() + ":" + sym.Symbol + "|" + sym.SecurityFamily.Exchange.EXCode);
-                            debug(Token + " RegisterSymbol " + tmpreq, QSEnumDebugLevel.INFO);
+                            logger.Info(Token + " RegisterSymbol " + tmpreq);
                             Send(TradingLib.API.MessageTypes.MGRREGISTERSYMBOLS, tmpreq);
                         }
                         else if (_tickversion == 2)
@@ -380,13 +398,12 @@ namespace DataFeed.FastTick
             }
             catch (Exception ex)
             {
-                debug(":请求市场数据异常" + ex.ToString(), QSEnumDebugLevel.ERROR);
+                logger.Error(":请求市场数据异常" + ex.ToString());
             }
         }
 
         /// <summary>
-        /// 将某个合约对象按FastTick进行拆分
-        /// 所有的合约均通过FastTick行情通道进行订阅
+        /// 将合约按DataFeed进行分组
         /// </summary>
         /// <param name="basket"></param>
         /// <returns></returns>
@@ -395,7 +412,7 @@ namespace DataFeed.FastTick
             Dictionary<QSEnumDataFeedTypes, List<Symbol>> map = new Dictionary<QSEnumDataFeedTypes, List<Symbol>>();
             foreach (Symbol sym in basket)
             {
-                QSEnumDataFeedTypes type = sym.SecurityFamily.DataFeed;////Symbol2DataFeedType(sym);
+                QSEnumDataFeedTypes type = sym.SecurityFamily.DataFeed;
                 if (map.Keys.Contains(type))
                 {
                     map[type].Add(sym);
@@ -407,39 +424,6 @@ namespace DataFeed.FastTick
                 }
             }
             return map;
-
-        }
-
-        /// <summary>
-        /// 按照一定的逻辑获得合约在FastTick中的行情通道类型
-        /// 通过合约判断该行情从哪个FastTick 通道中进行注册
-        /// </summary>
-        /// <param name="symbol"></param>
-        /// <returns></returns>
-        QSEnumDataFeedTypes Symbol2DataFeedType(Symbol symbol)
-        {
-            if (symbol.SecurityFamily.Exchange.Country == Country.CN)
-            {
-                if (symbol.SecurityFamily.Exchange.EXCode == "HKEX")//香港交易所通过香港直达期货公司订阅
-                {
-                    return QSEnumDataFeedTypes.SHZD;
-                }
-                if (symbol.SecurityType == SecurityType.FUT)
-                {
-                    return QSEnumDataFeedTypes.CTP;
-                }
-
-                if (symbol.SecurityType == SecurityType.OPT)
-                {
-                    return QSEnumDataFeedTypes.CTPOPT;
-                }
-            }
-            //国外行情通过IQFeed获取
-            if (symbol.SecurityFamily.Exchange.Country != Country.CN)
-            {
-                return QSEnumDataFeedTypes.IQFEED;
-            }
-            return QSEnumDataFeedTypes.CTP;
         }
         #endregion
 

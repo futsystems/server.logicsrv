@@ -3,6 +3,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Runtime.InteropServices;
 using TradingLib.API;
 using TradingLib.Common;
+using Common.Logging;
 
 /*
  * 关于zmq的clr实现过程
@@ -48,7 +49,6 @@ namespace TradingLib.BrokerXAPI.Interop
 
         public virtual void Dispose()
         {
-            Util.DestoryStatus("TLBrokerWrapperProxy");
             Dispose(true);
             GC.SuppressFinalize(this);
         }
@@ -71,20 +71,19 @@ namespace TradingLib.BrokerXAPI.Interop
         IntPtr _Wrapper = IntPtr.Zero;
 
         private IntPtr Wrapper { get { return _Wrapper; } }
+        ILog logger = null;
+
         public TLBrokerWrapperProxy(string path, string dllname)
         {
+            logger = LogManager.GetLogger(dllname);
             //1.加载dll
-
-            Util.Info("Load Nativelib wrapper dll/so", this.GetType().Name);
+            //Util.Info("Load Nativelib wrapper dll/so", this.GetType().Name);
             NativeLib = new UnmanagedLibrary(path, dllname);
             //2.绑定导出函数到委托
             AssignCommonDelegates();
 
             //3:创建对应的handle
             _Wrapper = _CreateBrokerWrapper();
-            //绑定事件
-            //_RegRtnTrade(this.Wrapper, FireRtnTrade);
-            
         }
 
         /// <summary>
@@ -152,15 +151,12 @@ namespace TradingLib.BrokerXAPI.Interop
         {
             try
             {
-                Util.Info("BrokerProxy Register TLBroker");
+                logger.Info("BrokerProxy Register TLBroker");
                 _Register(this.Wrapper, brokerproxy.Handle);
-
-                //注册完毕具体的broker对象后 绑定事件注意 直接用函数名来进行绑定会造成回调函数被回收导致c++调用回调时报错 要用原始的事件声明方式
-                //_RegOnConnected(this.Wrapper, FireOnConnected);
             }
             catch (Exception ex)
             {
-                Util.Error("Register BrokerProxy Error:" + ex.ToString());
+                logger.Error("Register BrokerProxy Error:" + ex.ToString());
             }
         }
 
@@ -175,13 +171,12 @@ namespace TradingLib.BrokerXAPI.Interop
         {
             try
             {
-                Util.Info("BrokerProxy Connect");
-                //Util.Info("~~~~~XServerInfoFieldSize:" + System.Runtime.InteropServices.Marshal.SizeOf(typeof(XServerInfoField)));
+                logger.Info("BrokerProxy Connect");
                 _Connect(this.Wrapper, ref pServerInfo);
             }
             catch (Exception ex)
             {
-                Util.Error("Connect Broker Error:" + ex.ToString());
+                logger.Error("Connect Broker Error:" + ex.ToString());
             }
         }
 
@@ -196,12 +191,12 @@ namespace TradingLib.BrokerXAPI.Interop
         {
             try
             {
-                Util.Info("BrokerProxy Disconnect");
+                logger.Info("BrokerProxy Disconnect");
                 _Disconnect(this.Wrapper);
             }
             catch (Exception ex)
             {
-                Util.Error("Disconnect Broker Error:" + ex.ToString());
+                logger.Error("Disconnect Broker Error:" + ex.ToString());
             }
         }
 
@@ -218,13 +213,12 @@ namespace TradingLib.BrokerXAPI.Interop
         {
             try
             {
-                Util.Info("BrokerProxy Login");
-                //Util.Debug("~~~~~XUserInfoFieldSize:" + System.Runtime.InteropServices.Marshal.SizeOf(typeof(XUserInfoField)));
+                logger.Info("BrokerProxy Login");
                 _Login(this.Wrapper, ref pUserInfo);
             }
             catch (Exception ex)
             {
-                Util.Error("Login Error:" + ex.ToString());
+                logger.Error("Login Error:" + ex.ToString());
             }
         }
 
@@ -240,14 +234,14 @@ namespace TradingLib.BrokerXAPI.Interop
         {
             try
             {
-                Util.Info("BrokerProxy SendOrder");
+                logger.Info("BrokerProxy SendOrder");
                 bool x =  _SendOrder(this.Wrapper, ref pOrder);
                 //Util.Info("**************** sendorder return:" + x.ToString());
                 return x;
             }
             catch (Exception ex)
             {
-                Util.Error("SendOrder Error:" + ex.ToString());
+                logger.Error("SendOrder Error:" + ex.ToString());
                 return false;
             }
         }
@@ -260,12 +254,12 @@ namespace TradingLib.BrokerXAPI.Interop
         {
             try
             {
-                Util.Info("BrokerProxy SendOrderAction");
+                logger.Info("BrokerProxy SendOrderAction");
                 return _SendOrderAction(this.Wrapper, ref pAction);
             }
             catch (Exception ex)
             {
-                Util.Error("SendOrderAction Error:" + ex.ToString());
+                logger.Error("SendOrderAction Error:" + ex.ToString());
                 return false;
             }
         }
@@ -277,11 +271,11 @@ namespace TradingLib.BrokerXAPI.Interop
         {
             try
             {
-                Util.Info("BrokerProxy QryInstrument");
+                logger.Info("BrokerProxy QryInstrument");
                 bool x =  _QryInstrument(this.Wrapper);
                 if(!x)
                 {
-                    Util.Warn("have not synced symbol data");
+                    logger.Warn("have not synced symbol data");
                 }
                 //Util.Error("**************** qry instrument return:" + x.ToString());
                 return x;
@@ -300,14 +294,14 @@ namespace TradingLib.BrokerXAPI.Interop
         {
             try
             {
-                Util.Info("BrokerProxy QryAccountInfo");
+                logger.Info("BrokerProxy QryAccountInfo");
                 bool x = _QryAccountInfo(this.Wrapper);
                 //Util.Info("**************** qry accountinfo return:" + x.ToString());
                 return x;
             }
             catch (Exception ex)
             {
-                Util.Error("QryAccountInfo Error:" + ex.ToString());
+                logger.Error("QryAccountInfo Error:" + ex.ToString());
                 return false;
             }
         }
@@ -319,14 +313,14 @@ namespace TradingLib.BrokerXAPI.Interop
         {
             try
             {
-                Util.Info("BrokerProxy QryOrder");
+                logger.Info("BrokerProxy QryOrder");
                 bool x = _QryOrder(this.Wrapper);
                 //Util.Info("**************** QryOrder return:" + x.ToString());
                 return x;
             }
             catch (Exception ex)
             {
-                Util.Error("QryOrder Error:" + ex.ToString());
+                logger.Error("QryOrder Error:" + ex.ToString());
                 return false;
             }
         }
@@ -338,14 +332,14 @@ namespace TradingLib.BrokerXAPI.Interop
         {
             try
             {
-                Util.Info("BrokerProxy QryTrade");
+                logger.Info("BrokerProxy QryTrade");
                 bool x = _QryTrade(this.Wrapper);
                 //Util.Info("**************** QryTrade return:" + x.ToString());
                 return x;
             }
             catch (Exception ex)
             {
-                Util.Error("QryTrade Error:" + ex.ToString());
+                logger.Error("QryTrade Error:" + ex.ToString());
                 return false;
             }
         }
@@ -357,14 +351,14 @@ namespace TradingLib.BrokerXAPI.Interop
         {
             try
             {
-                Util.Info("BrokerProxy QryPositionDetail");
+                logger.Info("BrokerProxy QryPositionDetail");
                 bool x = _QryPositionDetail(this.Wrapper);
                 //Util.Info("**************** QryPositionDetail return:" + x.ToString());
                 return x;
             }
             catch (Exception ex)
             {
-                Util.Error("QryPositionDetail Error:" + ex.ToString());
+                logger.Error("QryPositionDetail Error:" + ex.ToString());
                 return false;
             }
         }
@@ -378,14 +372,14 @@ namespace TradingLib.BrokerXAPI.Interop
         {
             try
             {
-                Util.Info("BrokerProxy Deposit");
+                logger.Info("BrokerProxy Deposit");
                 bool x = _Deposit(this.Wrapper, ref pCashOperation);
                 //Util.Info("**************** deposit return:" + x.ToString());
                 return x;
             }
             catch (Exception ex)
             {
-                Util.Error("_Deposit Error:" + ex.ToString());
+                logger.Error("_Deposit Error:" + ex.ToString());
                 return false;
             }
         }
@@ -397,42 +391,16 @@ namespace TradingLib.BrokerXAPI.Interop
         {
             try
             {
-                Util.Info("BrokerProxy Withdraw");
+                logger.Info("BrokerProxy Withdraw");
                 bool x = _Withdraw(this.Wrapper, ref pCashOperation);
                 return x;
             }
             catch (Exception ex)
             {
-                Util.Error("Withdraw Error:" + ex.ToString());
+                logger.Error("Withdraw Error:" + ex.ToString());
                 return false;
             }
         }
-
-
-
-
-        //[UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        //public delegate bool RestoreProc(IntPtr pWrapper);
-        //RestoreProc _Restore;
-        ///// <summary>
-        ///// 请求接口恢复日内交易数据
-        ///// </summary>
-        ///// <returns></returns>
-        //public bool Restore()
-        //{
-        //    try
-        //    {
-        //        Util.Info("BrokerProxy Restore");
-        //        bool x = _Restore(this.Wrapper);
-        //        //Util.Info("**************** qry Restore return:" + x.ToString());
-        //        return x;
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        Util.Error("Restore Error:" + ex.ToString());
-        //        return false;
-        //    }
-        //}
 
         #region 注册回调函数接口
         /// <summary>

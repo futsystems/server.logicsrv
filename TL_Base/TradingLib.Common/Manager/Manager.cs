@@ -20,6 +20,11 @@ namespace TradingLib.Common
         public string Login { get; set; }
 
         /// <summary>
+        /// 密码
+        /// </summary>
+        public string Pass { get; set; }
+
+        /// <summary>
         /// 对应UCenter UserID
         /// </summary>
         public int User_Id { get; set; }
@@ -99,7 +104,7 @@ namespace TradingLib.Common
             mgr_fk = 0;
             BaseManager = null;
             domain_id = 0;
-
+            Pass = "123456";
         }
 
 

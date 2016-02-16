@@ -31,7 +31,6 @@ namespace TradingLib.BrokerXAPI.Interop
         public static SafeLibraryHandle OpenHandle(string filename)
         {
             return LoadLibraryEx(filename, IntPtr.Zero, LoadLibraryFlags.LOAD_WITH_ALTERED_SEARCH_PATH);
-            //return LoadLibrary(filename);
         }
 
         /// <summary>

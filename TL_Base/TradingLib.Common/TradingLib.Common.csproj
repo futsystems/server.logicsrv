@@ -64,6 +64,9 @@
     <Compile Include="Account\AccountCreation.cs" />
     <Compile Include="Account\AccountProfie.cs" />
     <Compile Include="Account\SessionInfo.cs" />
+    <Compile Include="Exception\BaseException.cs" />
+    <Compile Include="Exception\DataRepositoryException.cs" />
+    <Compile Include="Exception\TradingLibError.cs" />
     <Compile Include="Follow\EnumsFollow.cs" />
     <Compile Include="Follow\FollowItemDetail.cs" />
     <Compile Include="Follow\FollowItemStruce.cs" />
@@ -171,7 +174,7 @@
     <Compile Include="Trading\Utils\PositionDetailUtil.cs" />
     <Compile Include="Trading\Utils\SymbolUtils.cs" />
     <Compile Include="Utils\ConfigFile.cs" />
-    <Compile Include="FutsError.cs" />
+    <Compile Include="Exception\FutsError.cs" />
     <Compile Include="Message\BrokerName.cs" />
     <Compile Include="Message\ConfirmSettlement.cs" />
     <Compile Include="Message\ContribCMD.cs" />

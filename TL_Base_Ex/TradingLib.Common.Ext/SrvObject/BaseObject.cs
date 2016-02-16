@@ -12,7 +12,10 @@ using System.Diagnostics;
 namespace TradingLib.Common
 {
     /// <summary>
-    /// 服务端服务对象的基类,实现日志输出,邮件通知,以及服务端对象名称标识
+    /// 服务端服务对象的基类
+    /// 1.对象名称
+    /// 2.对象UUID编号
+    /// 3.日志功能
     /// </summary>
     public class BaseSrvObject:IDisposable
     {
@@ -30,15 +33,16 @@ namespace TradingLib.Common
         {
             try
             {
-                logger = LogManager.GetLogger(programe);
-
                 PROGRAME = programe;
+                logger = LogManager.GetLogger(PROGRAME);
                 _uuid = System.Guid.NewGuid().ToString();
+
+                //将对象注册到全局CTX实现自动绑定
                 TLCtxHelper.Ctx.Register(this);
             }
             catch (Exception ex)
             {
-                Util.Debug("BaseSrvObject init error:" + ex.ToString());
+                logger.Error("BaseSrvObject init error:" + ex.ToString());
             }
         }
 

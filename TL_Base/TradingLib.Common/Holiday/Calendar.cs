@@ -43,7 +43,7 @@ namespace TradingLib.Common
         public Calendar(string fn)
         {
             DateTime now = DateTime.Now;
-            DateTime start = new DateTime(now.Year, 1, 1);//获得今年第一天,日历对象记录的是几年所有的假日信息
+            DateTime start = DateTime.Now.AddMonths(-1);//倒退1个月 获得接下来一年的所有假日
             if (!File.Exists(fn))
             {
                 throw new ArgumentException("holiday file do not exist");
@@ -71,6 +71,13 @@ namespace TradingLib.Common
         public bool IsHoliday(DateTime datetime)
         {
             //默认日历对象 任何一天都不是假期
+            if (_hc == null) return false;
+            bool holiday = _hc.OrderedHolidays.Any(hd => hd.Date.Year == datetime.Year && hd.Date.Month == datetime.Month && hd.Date.Day == datetime.Day);
+            return holiday;
+        }
+
+        public bool IsSpecialHoliday(DateTime datetime)
+        {
             if (_hc == null) return false;
             bool holiday = _hc.OrderedHolidays.Any(hd => hd.Date.Year == datetime.Year && hd.Date.Month == datetime.Month && hd.Date.Day == datetime.Day);
             return holiday;

@@ -73,10 +73,10 @@ namespace TradingLib.Common
         public decimal CalMargin(Position p,decimal price)
         {
             //异化合约按照固定金额来计算
-            if (p.oSymbol.SecurityType == SecurityType.INNOV)
-            {
-                return p.UnsignedSize * (p.oSymbol.Margin + (p.oSymbol.ExtraMargin > 0 ? p.oSymbol.ExtraMargin : 0));//通过固定保证金来计算持仓保证金占用
-            }
+            //if (p.oSymbol.SecurityType == SecurityType.INNOV)
+            //{
+            //    return p.UnsignedSize * (p.oSymbol.Margin + (p.oSymbol.ExtraMargin > 0 ? p.oSymbol.ExtraMargin : 0));//通过固定保证金来计算持仓保证金占用
+            //}
 
             //其余品种保证金按照最新价格计算
             if (this.MarginByMoney > 0)

@@ -74,6 +74,15 @@ namespace TCPServiceHost
             }
         }
 
+        #region SuperSocket 事件处理
+        /// <summary>
+        /// 连接建立事件
+        /// </summary>
+        /// <param name="session"></param>
+        void tcpSocketServer_NewSessionConnected(TLSessionBase session)
+        {
+            OnSessionCreated(session);
+        }
         /// <summary>
         /// 连接关闭事件
         /// </summary>
@@ -84,8 +93,7 @@ namespace TCPServiceHost
             OnSessionClosed(session);
         }
 
-
-        ConcurrentDictionary<string, IConnection> _sessionMap = new ConcurrentDictionary<string, IConnection>();
+        ConcurrentDictionary<string, IConnection> _connectionMap = new ConcurrentDictionary<string, IConnection>();
         /// <summary>
         /// 请求到达事件
         /// </summary>
@@ -98,6 +106,7 @@ namespace TCPServiceHost
             string sessionId = session.SessionID;
             switch (requestInfo.Message.Type)
             {
+                //服务查询
                 case MessageTypes.SERVICEREQUEST:
                     {
                         QryServiceRequest request = RequestTemplate<QryServiceRequest>.SrvRecvRequest("", sessionId, requestInfo.Message.Content);
@@ -107,6 +116,7 @@ namespace TCPServiceHost
                         logger.Info(string.Format("Got QryServiceRequest from:{0} request:{1} reponse:{2}", sessionId, request, response));
                         return;
                     }
+                //注册客户端
                 case MessageTypes.REGISTERCLIENT:
                     {
                         RegisterClientRequest request = RequestTemplate<RegisterClientRequest>.SrvRecvRequest("", sessionId, requestInfo.Message.Content);
@@ -114,7 +124,7 @@ namespace TCPServiceHost
                         {
                             IConnection conn = null;
                             //连接已经建立直接返回
-                            if (_sessionMap.TryGetValue(sessionId, out conn))
+                            if (_connectionMap.TryGetValue(sessionId, out conn))
                             {
                                 logger.Warn(string.Format("Client:{0} already exist", session.SessionID));
                                 return;
@@ -122,7 +132,7 @@ namespace TCPServiceHost
 
                             //创建连接
                             conn = new TCPSocketConnection(this, session);
-                            _sessionMap.TryAdd(sessionId, conn);
+                            _connectionMap.TryAdd(sessionId, conn);
 
                             //发送回报
                             RspRegisterClientResponse response = ResponseTemplate<RspRegisterClientResponse>.SrvSendRspResponse(request);
@@ -131,7 +141,7 @@ namespace TCPServiceHost
 
                             logger.Info(string.Format("Client:{0} registed to server", sessionId));
                             //向逻辑成抛出连接建立事件
-                            OnSessionCreated(conn);
+                            OnConnectionCreated(conn);
 
                         }
                         return;
@@ -139,33 +149,26 @@ namespace TCPServiceHost
                 default:
                     {
                         IConnection conn = null;
-                        if (!_sessionMap.TryGetValue(sessionId, out conn))
+                        if (!_connectionMap.TryGetValue(sessionId, out conn))
                         {
                             logger.Warn(string.Format("Client:{0} is not registed to server, ignore request", sessionId));
                             return;
                         }
 
                         IPacket packet = PacketHelper.SrvRecvRequest(requestInfo.Message.Type, requestInfo.Message.Content, "", sessionId);
-                        if (packet != null && RequestEvent != null)
-                        {
-                            RequestEvent(this, conn, packet);
-                        }
+                        OnRequestEvent(conn, packet);
+                        
                     }
                     return;
 
             }
         }
-
-        /// <summary>
-        /// 连接建立事件
-        /// </summary>
-        /// <param name="session"></param>
-        void tcpSocketServer_NewSessionConnected(TLSessionBase session)
-        {
-            OnSessionCreated(session);
-        }
+        #endregion
 
 
+
+
+        #region 启动 停止
         public void Start()
         {
             ConfigFile _cfg = ConfigFile.GetConfigFile("TCPServiceHost.cfg");
@@ -199,7 +202,9 @@ namespace TCPServiceHost
 
             DestoryServer();
             logger.Info(string.Format("ServiceHost:{0} stop success", _name));
-            
+
         }
+        #endregion
+
     }
 }

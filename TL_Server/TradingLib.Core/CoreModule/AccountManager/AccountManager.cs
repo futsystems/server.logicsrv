@@ -15,12 +15,24 @@ namespace TradingLib.Core
         const string CoreName = "AccountManager";
         public string CoreId { get { return this.PROGRAME; } }
 
-        protected ConcurrentDictionary<string, IAccount> AcctList = new ConcurrentDictionary<string, IAccount>();
+        protected ConcurrentDictionary<string, IAccount> _accMap = new ConcurrentDictionary<string, IAccount>();
 
+        ConfigDB _cfgdb;
+
+        bool _deleteAccountCheckEquity = false;
 
         public AccountManager():
             base(AccountManager.CoreName)
         {
+            //1.加载配置文件
+            _cfgdb = new ConfigDB(AccountManager.CoreName);
+
+            if (!_cfgdb.HaveConfig("DeleteAccountCheckEquity"))
+            {
+                _cfgdb.UpdateConfig("DeleteAccountCheckEquity", QSEnumCfgType.Bool, false, "删除交易帐户是否检查帐户权益");
+            }
+            _deleteAccountCheckEquity = _cfgdb["DeleteAccountCheckEquity"].AsBool();
+
             LoadAccount();
             
         }
@@ -45,7 +57,7 @@ namespace TradingLib.Core
             {
                 if (string.IsNullOrEmpty(id)) return null;
                 IAccount ac = null;
-                AcctList.TryGetValue(id, out ac);
+                _accMap.TryGetValue(id, out ac);
                 return ac;
             }
         }
@@ -57,21 +69,8 @@ namespace TradingLib.Core
         {
             get
             {
-                return AcctList.Values;
+                return _accMap.Values;
             }
-        }
-
-        ///// <summary>
-        ///// 查询是否有某个ID的账户
-        ///// </summary>
-        ///// <param name="a"></param>
-        ///// <returns></returns>
-        public bool HaveAccount(string account)
-        {
-            if (AcctList.ContainsKey(account))
-                return true;
-            else
-                return false;
         }
 
 
@@ -98,7 +97,7 @@ namespace TradingLib.Core
         /// <returns></returns>
         public void AddAccount(ref AccountCreation create)
         {
-            logger.Info("清算中心为user:" + create.UserID.ToString() + " 添加交易帐号到主柜员ID:" + create.BaseManagerID.ToString());
+            logger.Info("帐户中心为user:" + create.UserID.ToString() + " 添加交易帐号到主柜员ID:" + create.BaseManagerID.ToString());
 
             Manager mgr = BasicTracker.ManagerTracker[create.BaseManagerID];
 
@@ -133,7 +132,7 @@ namespace TradingLib.Core
 
         public void DelAccount(string id)
         {
-            logger.Info("清算中心删除交易帐户:" + id);
+            logger.Info("帐户中心删除交易帐户:" + id);
             IAccount account = this[id];
             if (account == null)
             {
@@ -143,7 +142,7 @@ namespace TradingLib.Core
             try
             {
 
-                AcctList.TryRemove(id, out account);
+                _accMap.TryRemove(id, out account);
                 //删除数据库
                 ORM.MAccount.DelAccount(id);//删除数据库记录
                 //删除内存记录
@@ -170,7 +169,6 @@ namespace TradingLib.Core
         /// <param name="accID"></param>
         private void LoadAccount(string account = null)
         {
-            logger.Info("Loading accounts form database.....");
             try
             {
                 IList<IAccount> accountlist = new List<IAccount>();
@@ -190,14 +188,15 @@ namespace TradingLib.Core
 
                 foreach (IAccount acc in accountlist)
                 {
-                    AcctList.TryAdd(acc.ID, acc);
-                    
+                    //1.将account添加在数据结构中
+                    _accMap.TryAdd(acc.ID, acc);
+                    //2.调用清算中心加载帐户
                     TLCtxHelper.ModuleClearCentre.CacheAccount(acc);
                 }
             }
             catch (Exception ex)
             {
-                Util.Debug(Util.GlobalPrefix + ex.ToString());
+                logger.Error("LoadAccount Error:" + ex.ToString());
             }
         }
     }

@@ -317,8 +317,8 @@ namespace TradingLib.Common
                 this.xPrice = t.Open;//开盘价成交
                 this.xSize = UnsignedSize;//所有委托数量
                 this.xSize *= Side ? 1 : -1;
-                this.xTime = t.Time;
-                this.xDate = t.Date;
+                this.xTime = t.Time != 0 ? t.Time : Util.ToTLTime();
+                this.xDate = t.Date != 0 ? t.Date : Util.ToTLDate();
                 return true;
             }
             return false;
@@ -333,7 +333,7 @@ namespace TradingLib.Common
         public bool Fill(Tick t) { return Fill(t, false); }
         public bool Fill(Tick t, bool fillOPG)
         {
-            if (!t.isTrade) return false;//fill with trade 
+            if (!t.IsTrade()) return false;//fill with trade 
             if (t.Symbol != oSymbol.TickSymbol) return false;
             if (!fillOPG && TimeInForce == QSEnumTimeInForce.OPG) return false;
             if ((isLimit && Side && (t.Trade <= LimitPrice)) // buy limit
@@ -345,12 +345,13 @@ namespace TradingLib.Common
                 this.xPrice = t.Trade;
                 this.xSize = t.Size >= UnsignedSize ? UnsignedSize : t.Size;
                 this.xSize *= Side ? 1 : -1;
-                this.xTime = t.Time;
-                this.xDate = t.Date;
+                this.xTime = t.Time != 0 ? t.Time : Util.ToTLTime();
+                this.xDate = t.Date != 0 ? t.Date : Util.ToTLDate();
                 return true;
             }
             return false;
         }
+
 
         /// <summary>
         /// fill against bid and ask rather than trade
@@ -360,13 +361,13 @@ namespace TradingLib.Common
         /// <param name="smart"></param>
         /// <param name="fillOPG"></param>
         /// <returns></returns>
-        public bool Fill(Tick k, bool bidask, bool fillOPG)
+        public bool Fill(Tick k, bool bidask, bool fillOPG,bool fillall=false)
         {
             //如果不使用askbid来fill trade我们就使用成交价格来fill
             if (!bidask)
                 return Fill(k, fillOPG);
             // buyer has to match with seller and vice verca利用ask,bid来成交Order
-            bool ok = Side ? k.hasAsk : k.hasBid;
+            bool ok = Side ? k.HasAsk() : k.HasBid();
             if (!ok) return false;
             //debug("got here 1");
             decimal p = Side ? k.AskPrice : k.BidPrice;
@@ -385,11 +386,16 @@ namespace TradingLib.Common
                 || isMarket)
             {
                 this.xPrice = p;
-                this.xSize = (s >= UnsignedSize ? UnsignedSize : s) * (Side ? 1 : -1);
-                //debug("askbid size:"+s.ToString()+"|");
-                //Util.Debug("tick date:" + k.Date + " ticktime:" + k.Time,QSEnumDebugLevel.ERROR);
-                this.xTime = k.Time;
-                this.xDate = k.Date;
+                if (fillall)//成交所有
+                {
+                    this.xSize = UnsignedSize * (Side ? 1 : -1);
+                }
+                else//根据盘口数量生成成交数量
+                {
+                    this.xSize = (s >= UnsignedSize ? UnsignedSize : s) * (Side ? 1 : -1);
+                }
+                this.xTime = k.Time != 0 ? k.Time : Util.ToTLTime();
+                this.xDate = k.Date != 0 ? k.Date : Util.ToTLDate();
                 return true;
             }
             return false;
@@ -452,7 +458,8 @@ namespace TradingLib.Common
         /// <returns></returns>
         public static string Serialize(Order o)
         {
-            if (o.isFilled) return TradeImpl.Serialize((Trade)o);
+            
+            //if (o.isFilled) return TradeImpl.Serialize((Trade)o);//?在某些情况下 委托会被序列化成成交 导致通讯异常
             StringBuilder sb = new StringBuilder();
             char d = ',';
             sb.Append(o.Symbol);

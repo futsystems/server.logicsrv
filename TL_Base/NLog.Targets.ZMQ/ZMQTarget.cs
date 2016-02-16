@@ -77,34 +77,34 @@ namespace NLog.Targets
 
         void LogProcess()
         {
-            using (ZmqContext ctx = ZmqContext.Create())
-            {
-                using (ZmqSocket socket = ctx.CreateSocket(SocketType.PUSH))
-                {
-                    string address = string.Format("tcp://{0}:{1}", _hostName, _port);
-                    debug(string.Format("LogCollectServer:{0}", address));
-                    try
-                    {
-                        socket.Connect(address);
-                    }
-                    catch (ZmqSocketException ex)
-                    {
-                        debug("address error:" + ex.ToString());
-                    }
+            //using (ZmqContext ctx = ZmqContext.Create())
+            //{
+            //    using (ZmqSocket socket = ctx.CreateSocket(SocketType.PUSH))
+            //    {
+            //        string address = string.Format("tcp://{0}:{1}", _hostName, _port);
+            //        debug(string.Format("LogCollectServer:{0}", address));
+            //        try
+            //        {
+            //            socket.Connect(address);
+            //        }
+            //        catch (ZmqSocketException ex)
+            //        {
+            //            debug("address error:" + ex.ToString());
+            //        }
 
-                    debug(string.Format("NLog-ZMQTarget will push log to remote:{0} with identity:{1}",address,_identity));
+            //        debug(string.Format("NLog-ZMQTarget will push log to remote:{0} with identity:{1}",address,_identity));
                     
-                    while (_running)
-                    {
-                        while (_buffer.hasItems)
-                        {
-                            socket.Send(string.Format("{0}/{1}", _identity, _buffer.Read()), Encoding.UTF8);
-                        }
-                        Thread.Sleep(50);
-                    }
-                }
+            //        while (_running)
+            //        {
+            //            while (_buffer.hasItems)
+            //            {
+            //                socket.Send(string.Format("{0}/{1}", _identity, _buffer.Read()), Encoding.UTF8);
+            //            }
+            //            Thread.Sleep(50);
+            //        }
+            //    }
 
-            }
+            //}
         }
 
         public ZMQTarget()

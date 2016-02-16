@@ -36,6 +36,7 @@ namespace TradingLib.Core
     {
         #region 【委托检查1】
 
+        //List<string> _cnLocalExchange = new List<string>();
         /// <summary>
         /// 风控中心委托一段检查
         /// 如果未通过检查则则给出具体的错误报告
@@ -143,6 +144,46 @@ namespace TradingLib.Core
             //设定交易日
             o.SettleDay = settleday;
 
+            //特定交易日判定
+            if (!o.oSymbol.SecurityFamily.CheckSpecialHoliday())
+            {
+                errortitle = "SYMBOL_NOT_MARKETTIME";
+                needlog = false;
+                return false;
+            }
+
+            //熔断状态判定
+            if (_haltEnable)
+            {
+                if (new string[] { "IF", "IH", "IC" }.Contains(o.oSymbol.SecurityFamily.Code))
+                {
+                    //股指处于熔断状态
+                    if (_haltstatetracker.IsHalted)
+                    {
+                        errortitle = "SYMBOL_NOT_MARKETTIME";
+                        needlog = false;
+                        return false;
+                    }
+                }
+            }
+
+            //中金所限制 开仓数量不能超过10手
+            if (_cffexLimit)
+            {
+                Order tmp = o;
+                //如果委托为开仓委托 且是股指
+                if (o.IsEntryPosition && new string[] { "IF", "IH", "IC" }.Contains(tmp.oSymbol.SecurityFamily.Code))
+                {
+                    //累加所有该品种的开仓成交数量
+                    int entry_size = account.Trades.Where(f => f.oSymbol.SecurityFamily.Code == tmp.oSymbol.SecurityFamily.Code).Where(f => f.IsEntryPosition).Sum(f => f.UnsignedSize);
+                    //int pending_size = account.GetPendingEntrySize(
+                    if (entry_size + o.UnsignedSize > 10)
+                    {
+                        errortitle = "SYMBOL_NOT_TRADEABLE";//合约不可交易
+                        return false;
+                    }
+                }
+            }
             /*
             periodAuctionPlace = o.oSymbol.SecurityFamily.IsInAuctionTime();//是否处于集合竞价报单时段
             periodAuctionExecution = o.oSymbol.SecurityFamily.IsInActionExutionTime();//是否处于集合竞价撮合时段
@@ -241,11 +282,11 @@ namespace TradingLib.Core
                 if (othersideentry || (orderside && haveshort) || ((!orderside) && havelong))//多头持仓操作
                 {
                     //如果为国外交易所 或者是中国香港交易所 则不允许锁仓
-                    if (o.oSymbol.SecurityFamily.Exchange.Country != Country.CN || o.oSymbol.SecurityFamily.Exchange.EXCode=="HKEX")
-                    {
-                        errortitle = "TWO_SIDE_POSITION_HOLD_FORBIDDEN";
-                        return false;
-                    }
+                    //if (o.oSymbol.SecurityFamily.Exchange.Country != Country.CN || o.oSymbol.SecurityFamily.Exchange.EXCode=="HKEX")
+                    //{
+                    //    errortitle = "TWO_SIDE_POSITION_HOLD_FORBIDDEN";
+                    //    return false;
+                    //}
                     //非期货品种无法进行锁仓操作 同时帐户设置是否允许锁仓操作
                     if ((o.oSymbol.SecurityType != SecurityType.FUT) || (!account.GetParamPositionLock()))
                     {
@@ -282,7 +323,7 @@ namespace TradingLib.Core
             //if (periodContinuous)
             {
                 Tick tk = TLCtxHelper.ModuleDataRouter.GetTickSnapshot(o.Symbol);
-                if (tk == null || (!tk.isValid))
+                if (tk == null || (!tk.IsValid()))
                 {
                     errortitle = "SYMBOL_TICK_ERROR";//市场行情异常
                     return false;
@@ -299,17 +340,22 @@ namespace TradingLib.Core
                         //}
                 }
             }
-            ////6.2检查价格是否在涨跌幅度内
-            //if (o.isLimit || o.isStop)
-            //{
-            //    decimal targetprice = o.isLimit ? o.LimitPrice : o.StopPrice;
-            //    Tick k = TLCtxHelper.ModuleDataRouter.GetTickSnapshot(o.Symbol);
-            //    if (targetprice > k.UpperLimit || targetprice < k.LowerLimit)
-            //    {
-            //        errortitle = "ORDERPRICE_OVERT_LIMIT";//保单价格超过涨跌幅
-            //        return false;
-            //    }
-            //}
+            //6.2检查价格是否在涨跌幅度内
+            if (o.isLimit || o.isStop)
+            {
+                decimal targetprice = o.isLimit ? o.LimitPrice : o.StopPrice;
+                Tick k = TLCtxHelper.ModuleDataRouter.GetTickSnapshot(o.Symbol);
+                //如果行情快照中包含有效的最高价和最低价限制 则判定价格是否在涨跌幅度内
+                if (k.UpperLimit.ValidPrice() && k.LowerLimit.ValidPrice())
+                {
+                    if (targetprice > k.UpperLimit || targetprice < k.LowerLimit)
+                    {
+                        errortitle = "ORDERPRICE_OVERT_LIMIT";//保单价格超过涨跌幅
+                        return false;
+                    }
+                }
+            }
+            
 
             return true;
 

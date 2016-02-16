@@ -47,6 +47,7 @@ namespace TradingLib.DataFarm.Common
         /// </summary>
         void LoadTickFeeds()
         {
+            
             if (_tickFeedLoad) return;
             string filter = this.ConfigFile["TickFeedFilter"].AsString();
             //如果TickFeed为* 加载所有 否则指定对应的类型
@@ -59,12 +60,13 @@ namespace TradingLib.DataFarm.Common
 
         protected void StartTickFeeds()
         {
+            logger.Info("Start TickFeed");
+            //启动异步行情处理组件
             if (asyncTick == null)
             {
                 asyncTick = new AsyncResponse("Tick");
                 asyncTick.GotTick +=new TickDelegate(asyncTick_GotTick);
             }
-            //启动Tick异步响应组件
             asyncTick.Start();
 
             //加载TickFeeds
@@ -104,7 +106,7 @@ namespace TradingLib.DataFarm.Common
             
             //行情过滤
             if (k == null) return;
-            if (!k.isValid) return;
+            if (!k.IsValid()) return;
             //logger.Debug("datafeed got tick");
             asyncTick.newTick(k);
 
@@ -113,14 +115,16 @@ namespace TradingLib.DataFarm.Common
         void asyncTick_GotTick(Tick k)
         {
             //logger.Debug("Process Tick");
+            //更新行情最近更新时间
             if (!tickLastTimeMap.Keys.Contains(k.Symbol))
             {
-                tickLastTimeMap.Add(k.Symbol, k.Datetime);
+                tickLastTimeMap.Add(k.Symbol, k.DateTime());
             }
             //执行行情事件检查
 
             //if(k.datetickLastTimeMap[k.Symbol])
             //logger.Info("async process tick");
+
             //转发实时行情
             NotifyTick2Connections(k);
 
@@ -145,15 +149,42 @@ namespace TradingLib.DataFarm.Common
             {
                 foreach (var conn in target.Values)
                 {
+                    //logger.Info("send tick:" + k.Symbol);
                     conn.SendTick(k);
                 }
             }
         }
 
+        /// <summary>
+        /// 注销某个连接的所有行情注册
+        /// </summary>
+        /// <param name="conn"></param>
+        void ClearSymbolRegisted(IConnection conn)
+        {
+            logger.Info(string.Format("Clear symbols registed for conn:{0}", conn.SessionID));
+            IConnection target = null;
+            foreach (var regpair in symRegMap)
+            {
+                if (regpair.Value.Keys.Contains(conn.SessionID))
+                {
+                    regpair.Value.TryRemove(conn.SessionID, out target);
+                }
+            }
+        }
+
+        /// <summary>
+        /// 某个连接注册合约行情
+        /// </summary>
+        /// <param name="conn"></param>
+        /// <param name="request"></param>
         void OnRegisterSymbol(IConnection conn, RegisterSymbolTickRequest request)
         {
             foreach (var symbol in request.SymbolList)
             {
+                if (string.IsNullOrEmpty(symbol)) continue;
+                Symbol sym = MDBasicTracker.SymbolTracker[symbol];
+                if (sym == null) continue;
+
                 if (!symRegMap.Keys.Contains(symbol))
                 {
                     symRegMap.TryAdd(symbol, new  ConcurrentDictionary<string,IConnection>());
@@ -166,17 +197,22 @@ namespace TradingLib.DataFarm.Common
             }
         }
 
-
+        /// <summary>
+        /// 某个连接注销合约行情
+        /// </summary>
+        /// <param name="conn"></param>
+        /// <param name="request"></param>
         void OnUngisterSymbol(IConnection conn, UnregisterSymbolTickRequest request)
         {
             foreach (var symbol in request.SymbolList)
-            { 
+            {
+                if (string.IsNullOrEmpty(symbol)) continue;
+
                 if (symRegMap.Keys.Contains(symbol))
                 {
                     ConcurrentDictionary<string, IConnection> regmap = symRegMap[symbol];
                     IConnection target = null;
                     regmap.TryRemove(conn.SessionID, out target);
-                    
                 }
             }
         }

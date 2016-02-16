@@ -44,6 +44,10 @@ namespace TradingLib.Common
         public string ID { get { return _id; } }
 
         /// <summary>
+        /// 密码
+        /// </summary>
+        public string Pass { get; set; }
+        /// <summary>
         /// 是否允许交易
         /// </summary>
         public bool Execute { get; set; }

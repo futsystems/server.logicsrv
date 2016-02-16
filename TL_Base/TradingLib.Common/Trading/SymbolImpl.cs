@@ -221,10 +221,10 @@ namespace TradingLib.Common
                      * 1.lotto 保证金手续费变化 底层乘数不变，相当于将波动率小的合约放大成波动率大的合约
                      * 2.mini  保证金手续费变化 底层成熟也变化，把成熟大的合约缩小成迷你合约
                      * */
-                    if (SecurityFamily.Type == API.SecurityType.INNOV && SecurityFamily.Code=="LOTO")
-                    {
-                        return ULSymbol != null ? ULSymbol.Multiple : 1;
-                    }
+                    //if (SecurityFamily.Type == API.SecurityType.INNOV && SecurityFamily.Code=="LOTO")
+                    //{
+                    //    return ULSymbol != null ? ULSymbol.Multiple : 1;
+                    //}
                     return SecurityFamily.Multiple;
                 }
                 else
@@ -246,18 +246,18 @@ namespace TradingLib.Common
                 if (SecurityFamily != null)
                 {
                     //只有异化合约的底层symbol代表其取Tick值，其余底层依赖关系
-                    if (SecurityFamily.Type == API.SecurityType.INNOV)
-                    {
-                        if (ULSymbol != null)
-                        {
-                            return ULSymbol.Symbol;
-                        }
-                        return Symbol;
-                    }
-                    else
-                    {
-                        return Symbol;
-                    }
+                    //if (SecurityFamily.Type == API.SecurityType.INNOV)
+                    //{
+                    //    if (ULSymbol != null)
+                    //    {
+                    //        return ULSymbol.Symbol;
+                    //    }
+                    //    return Symbol;
+                    //}
+                    //else
+                    //{
+                    return Symbol;
+                    //}
                 }
                 else
                 {
@@ -373,8 +373,13 @@ namespace TradingLib.Common
         {
             get
             {
+                //Sec为空 不可交易
+                if (this.SecurityFamily == null) return false;
+                //NIL IDX不可交易
+                if (this.SecurityFamily.Type == SecurityType.NIL) return false;
+                if (this.SecurityFamily.Type == SecurityType.IDX) return false;
                 //底层品种存在 底层品种可交易 当前合约可交易 是可交易的完备条件
-                if (this.Tradeable && this.SecurityFamily != null && this.SecurityFamily.Tradeable)
+                if (this.Tradeable &&  this.SecurityFamily.Tradeable)
                 {
                     return true;
                 }

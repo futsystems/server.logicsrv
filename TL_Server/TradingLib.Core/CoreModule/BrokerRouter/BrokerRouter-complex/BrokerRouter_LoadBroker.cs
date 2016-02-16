@@ -183,7 +183,16 @@ namespace TradingLib.Core
             }
             else
             {
-                logger.Error("Got Invalid Fill");
+                string msg = string.Empty;
+                if (fill==null)
+                {
+                    msg = " Fill is none";
+                }
+                else
+                {
+                    msg = string.Format("size:{0} price:{1}", fill.xSize, fill.xPrice);
+                }
+                logger.Error("Got Invalid Fill," + msg);
             }
         }
 

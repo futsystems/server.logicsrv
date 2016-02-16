@@ -35,7 +35,10 @@ namespace TradingLib.Core
         string commentOverFlatPositionSize = "可平持仓数量不足";
 
         bool auctionEnable = false;
+        bool _haltEnable = false;
+        bool _cffexLimit = false;//中金所限制
 
+        HaltedStateTracker _haltstatetracker;
         public RiskCentre():base(CoreName)
         {
             //1.加载配置文件
@@ -85,6 +88,19 @@ namespace TradingLib.Core
             }
             auctionEnable = _cfgdb["AuctionEnable"].AsBool();
 
+            if (!_cfgdb.HaveConfig("HaltEnable"))
+            {
+                _cfgdb.UpdateConfig("HaltEnable", QSEnumCfgType.Bool, false, "股指熔断");
+            }
+            _haltEnable = _cfgdb["HaltEnable"].AsBool();
+
+            if (!_cfgdb.HaveConfig("CFFEXLimit"))
+            {
+                _cfgdb.UpdateConfig("CFFEXLimit", QSEnumCfgType.Bool, false, "中金所限制");
+            }
+            _cffexLimit = _cfgdb["CFFEXLimit"].AsBool();
+
+
 
             //订阅持仓回合关闭事件
             TLCtxHelper.EventIndicator.GotPositionClosedEvent += new PositionRoundClosedDel(GotPostionRoundClosed);
@@ -105,7 +121,9 @@ namespace TradingLib.Core
 
             //结算重置
             TLCtxHelper.EventSystem.SettleResetEvent += new EventHandler<SystemEventArgs>(EventSystem_SettleResetEvent);
-            
+
+
+            _haltstatetracker = new HaltedStateTracker();
         }
 
         void EventSystem_SettleResetEvent(object sender, SystemEventArgs e)
@@ -129,6 +147,9 @@ namespace TradingLib.Core
             ClearActiveAccount();
             
             LoadRuleItemAll();
+            
+            //重置熔断状态
+            _haltstatetracker.Reset();
         }
 
         #endregion

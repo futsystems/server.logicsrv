@@ -24,6 +24,7 @@
 /Platform/**/log/
 /Platform/**/cache/
 /Platform/TLDataBase
+/Platform/TLData
 /Platform/TradingSrv/TLDataBase/LogServer/*
 /Platform/**/logs
 /Platform/Logs

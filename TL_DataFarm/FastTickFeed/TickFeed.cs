@@ -18,14 +18,13 @@ namespace TradingLib.DataFarm
     public class FastTickDataFeed : ITickFeed
     {
         ILog logger;
-
         TimeSpan timeout = new TimeSpan(0, 0, 1);
 
         string _master = "127.0.0.1";
         string _slave = "127.0.0.1";
         int _port = 6000;
         int _reqport = 6001;
-
+        bool _suball = false;
         public bool IsLive { get { return _tickreceiveruning; } }
 
         bool _usemaster = true;
@@ -48,6 +47,7 @@ namespace TradingLib.DataFarm
             _slave = _cfg["TickSrvSlave"].AsString();
             _port = _cfg["TickPort"].AsInt();
             _reqport = _cfg["ReqPort"].AsInt();
+            _suball = _cfg["SubscribeAll"].AsBool();
         }
 
         public FastTickDataFeed(string masterAddress, string slaveAddress, int dataport, int reqport)
@@ -234,8 +234,13 @@ namespace TradingLib.DataFarm
                    
                     //订阅行情心跳数据
                     subscriber.Subscribe(Encoding.UTF8.GetBytes("TICKHEARTBEAT"));
-                    string prefix ="HGZ5^";
-                    subscriber.Subscribe(Encoding.UTF8.GetBytes(prefix));
+
+                    if (_suball)
+                    {
+                        subscriber.SubscribeAll();
+                    }
+                    //string prefix ="HGZ5^";
+                    //subscriber.Subscribe(Encoding.UTF8.GetBytes(prefix));
                     //prefix = "HSIX5^";
                     //subscriber.Subscribe(Encoding.UTF8.GetBytes(prefix));
                     //subscriber.SubscribeAll();
@@ -255,7 +260,7 @@ namespace TradingLib.DataFarm
                                 string tickcontent = p[1];
                                 Tick k = TickImpl.Deserialize(tickcontent);
 
-                                if (k.isValid)
+                                if (k!=null && k.IsValid())
                                     OnTick(k);
                             }
                             else

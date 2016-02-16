@@ -104,13 +104,10 @@
 		<Month>10</Month>
 		<Day>10</Day>
 	</Holiday>
-	<Holiday name="(聖誕節後第一個周日)">
+	<Holiday name="圣诞节">
+		<Special></Special>
 		<Month>12</Month>
-		<Day>26</Day>
-	</Holiday>
-	<Holiday name="(聖誕節後第二個周日)">
-		<Month>12</Month>
-		<Day>27</Day>
+		<Day>25</Day>
 	</Holiday>
 </Holidays>
 

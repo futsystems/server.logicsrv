@@ -181,5 +181,216 @@ namespace TradingLib.Common
         //        k.AddRange(BarImpl.ToTick(b));
         //    return k.ToArray();
         //}
+
+        public static DateTime DateTime(this Tick k)
+        {
+            return Util.ToDateTime(k.Date, k.Time);
+        }
+
+        /// <summary>
+        /// 是否
+        /// </summary>
+        /// <param name="k"></param>
+        /// <returns></returns>
+        public static bool IsTrade(this Tick k)
+        { 
+            return k.Trade!=0 && k.Size>0;
+        }
+
+        /// <summary>
+        /// 是否有Bid数据
+        /// </summary>
+        /// <param name="k"></param>
+        /// <returns></returns>
+        public static bool HasBid(this Tick k)
+        {
+            return k.BidPrice != 0 && k.BidSize != 0;
+        }
+
+        /// <summary>
+        /// 是否有Ask数据
+        /// </summary>
+        public static bool HasAsk(this Tick k)
+        {
+            return k.AskPrice != 0 && k.AskSize != 0;
+        }
+
+        public static bool IsFullQuote(this Tick k)
+        {
+            return k.HasAsk() && k.HasBid();
+        }
+
+
+        /// <summary>
+        /// 是否是指数
+        /// </summary>
+        /// <param name="k"></param>
+        /// <returns></returns>
+        public static bool IsIndex(this Tick k)
+        {
+            return k.Size < 0;
+        }
+
+        /// <summary>
+        /// 是否有Tick数据 Trade/Quote
+        /// </summary>
+        /// <param name="k"></param>
+        /// <returns></returns>
+        public static bool HasTick(this Tick k)
+        {
+            return k.IsTrade() || k.HasAsk() || k.HasBid();
+        }
+
+        /// <summary>
+        /// 是否是统计信息
+        /// </summary>
+        /// <param name="k"></param>
+        /// <returns></returns>
+        public static bool IsSummary(this Tick k)
+        {
+            return k.Type == EnumTickType.SUMMARY;
+        }
+
+        /// <summary>
+        /// 是否是快照数据
+        /// </summary>
+        /// <param name="k"></param>
+        /// <returns></returns>
+        public static bool IsSnapshot(this Tick k)
+        {
+            return k.Type == EnumTickType.SNAPSHOT;
+        }
+
+        /// <summary>
+        /// Tick数据是否有效
+        /// 1.Snapshot 快照数据
+        /// 2.Trade Quote 数据 HasTick()
+        /// 3.Summary 统计数据
+        /// 4.Index 指数数据 没有Trade 没有盘口 只有Trade数据
+        /// </summary>
+        /// <param name="k"></param>
+        /// <returns></returns>
+        public static bool IsValid(this Tick k)
+        {
+            //合约不为空 有Trade或Quote数据
+            return (!string.IsNullOrEmpty(k.Symbol)) && (k.IsSnapshot() || k.HasTick() || k.IsSummary() || k.IsIndex());
+        }
+
+        /// <summary>
+        /// 用Tick数据k 更新快照snapshot
+        /// </summary>
+        /// <param name="snapshot"></param>
+        /// <param name="k"></param>
+        public static void UpdateSnapshot(this Tick snapshot, Tick k)
+        {
+            if (snapshot.Symbol != k.Symbol) return;
+
+            snapshot.Date = k.Date;
+            snapshot.Time = k.Time;
+
+            switch (k.Type)
+            {
+                case EnumTickType.TRADE:
+                    {
+                        if (k.IsTrade())
+                        {
+                            snapshot.Trade = k.Trade;
+                            snapshot.Size = k.Size;
+                            snapshot.Exchange = k.Exchange;
+                        }
+                        break;
+                    }
+                case EnumTickType.QUOTE:
+                    {
+                        if (k.HasAsk())
+                        {
+                            snapshot.AskPrice = k.AskPrice;
+                            snapshot.AskSize = k.AskSize;
+                            snapshot.AskExchange = k.AskExchange;
+                        }
+                        if (k.HasBid())
+                        {
+                            snapshot.BidPrice = k.BidPrice;
+                            snapshot.BidSize = k.BidSize;
+                            snapshot.BidExchange = k.BidExchange;
+                            snapshot.BidPrice = k.BidPrice;
+                        }
+                        break;
+                    }
+                case EnumTickType.LEVEL2:
+                    {
+                        if (k.HasAsk())
+                        {
+                            snapshot.AskPrice = k.AskPrice;
+                            snapshot.AskSize = k.AskSize;
+                            snapshot.AskExchange = k.AskExchange;
+                        }
+                        if (k.HasBid())
+                        {
+                            snapshot.BidPrice = k.BidPrice;
+                            snapshot.BidSize = k.BidSize;
+                            snapshot.BidExchange = k.BidExchange;
+                            snapshot.BidPrice = k.BidPrice;
+                        }
+                        snapshot.Depth = k.Depth;
+                        break;
+                    }
+                case EnumTickType.SUMMARY:
+                    {
+                        snapshot.Vol = k.Vol;
+                        snapshot.Open = k.Open;
+                        snapshot.High = k.High;
+                        snapshot.Low = k.Low;
+                        snapshot.PreOpenInterest = k.PreOpenInterest;
+                        snapshot.OpenInterest = k.OpenInterest;
+                        snapshot.PreSettlement = k.PreSettlement;
+                        snapshot.Settlement = k.Settlement;
+                        snapshot.UpperLimit = k.UpperLimit;
+                        snapshot.LowerLimit = k.LowerLimit;
+                        snapshot.PreClose = k.PreClose;
+                        break;
+                    }
+                case EnumTickType.SNAPSHOT:
+                    {
+                        if (k.IsTrade())
+                        {
+                            snapshot.Trade = k.Trade;
+                            snapshot.Size = k.Size;
+                            snapshot.Exchange = k.Exchange;
+                        }
+
+                        if (k.HasAsk())
+                        {
+                            snapshot.AskPrice = k.AskPrice;
+                            snapshot.AskSize = k.AskSize;
+                            snapshot.AskExchange = k.AskExchange;
+                        }
+                        if (k.HasBid())
+                        {
+                            snapshot.BidPrice = k.BidPrice;
+                            snapshot.BidSize = k.BidSize;
+                            snapshot.BidExchange = k.BidExchange;
+                            snapshot.BidPrice = k.BidPrice;
+                        }
+
+
+                        snapshot.Vol = k.Vol;
+                        snapshot.Open = k.Open;
+                        snapshot.High = k.High;
+                        snapshot.Low = k.Low;
+                        snapshot.PreOpenInterest = k.PreOpenInterest;
+                        snapshot.OpenInterest = k.OpenInterest;
+                        snapshot.PreSettlement = k.PreSettlement;
+                        snapshot.Settlement = k.Settlement;
+                        snapshot.UpperLimit = k.UpperLimit;
+                        snapshot.LowerLimit = k.LowerLimit;
+                        snapshot.PreClose = k.PreClose;
+
+                        break;
+                    }
+                default:
+                    break;
+            }
+        }
     }
 }

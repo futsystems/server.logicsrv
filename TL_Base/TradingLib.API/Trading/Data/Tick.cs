@@ -8,6 +8,12 @@ namespace TradingLib.API
     public interface Tick
     {
         /// <summary>
+        /// 行情格式类别
+        /// 不同的行情格式类别有不同的序列化和反序列化方式
+        /// </summary>
+        EnumTickType Type { get; set; }
+
+        /// <summary>
         /// symbol for tick
         /// </summary>
         string Symbol { get; set; }
@@ -21,32 +27,9 @@ namespace TradingLib.API
         /// tick time in 24 format (4:59pm => 1659)
         /// </summary>
         int Time { get; set; }
-       
-        /// <summary>
-        /// date and time represented as long, eg 8:05pm on 4th of July:
-        /// 200907042005.
-        /// this is not guaranteed to be set.
-        /// </summary>
-        DateTime Datetime { get; set; } // datetime as long
+               
         
-        /// <summary>
-        /// depth of last bid/ask quote
-        /// </summary>
-        int Depth { get; set; }
-        /*
-        /// <summary>
-        /// long representation of last trade
-        /// </summary>
-        ulong ltrade { get; set; }
-        /// <summary>
-        /// long representation of bid price
-        /// </summary>
-        ulong lbid { get; set; }
-        /// <summary>
-        /// long representation of ask price
-        /// </summary>
-        ulong lask { get; set; }
-         */
+
         #region Trade
         /// <summary>
         /// size of last trade
@@ -62,8 +45,7 @@ namespace TradingLib.API
         string Exchange { get; set; }
         #endregion
 
-
-        #region Bid
+        #region Quote
         /// <summary>
         /// bid price
         /// </summary>
@@ -83,10 +65,7 @@ namespace TradingLib.API
         /// bid exchange
         /// </summary>
         string BidExchange { get; set; }
-        #endregion
 
-
-        #region Ask
         /// <summary>
         /// offer price
         /// </summary>
@@ -104,16 +83,13 @@ namespace TradingLib.API
         /// ask exchange
         /// </summary>
         string AskExchange { get; set; }
+
         #endregion
 
-
-        bool isTrade { get; }
-        bool hasBid { get; }
-        bool hasAsk { get; }
-        bool isFullQuote { get; }
-        bool isQuote { get; }
-        bool isValid { get; }
-        bool isIndex { get; }
+        /// <summary>
+        /// depth of last bid/ask quote
+        /// </summary>
+        int Depth { get; set; }
 
         bool hasVol { get; }
         bool hasOI { get; }
@@ -129,14 +105,46 @@ namespace TradingLib.API
         /// </summary>
         int symidx { get; set; }
 
+        /// <summary>
+        /// 成交量
+        /// </summary>
         int Vol { get; set; }
+
+        /// <summary>
+        /// 开盘价
+        /// </summary>
         decimal Open { get; set; }
+
+        /// <summary>
+        /// 最高价
+        /// </summary>
         decimal High { get; set; }
+
+        /// <summary>
+        /// 最低价
+        /// </summary>
         decimal Low { get; set; }
+
+        /// <summary>
+        /// 昨日持仓量
+        /// </summary>
         int PreOpenInterest { get; set; }
+
+        /// <summary>
+        /// 持仓量
+        /// </summary>
         int OpenInterest { get; set; }
+
+        /// <summary>
+        /// 昨日结算价
+        /// </summary>
         decimal PreSettlement { get; set; }
+
+        /// <summary>
+        /// 结算价
+        /// </summary>
         decimal Settlement { get; set; }
+
         /// <summary>
         /// 涨停价
         /// </summary>
@@ -162,12 +170,32 @@ namespace TradingLib.API
     /// 定义了行情传输过程中的内容类别
     /// 根据不同的内容可以解析出不同的行情内容
     /// 避免了每次都发送相同的内容 比如高开低收等不经常变化的变量
+    /// Tick行情为了兼容和体现不同交易所的行情报价 需要进行综合处理
+    /// 
     /// </summary>
-    public enum QSEnumTickContentType
+    public enum EnumTickType
     { 
-        TC_TRADE,//成交信息 最新成交价 数量 成交交易所等
-        TC_QUOTE,//报价信息 买价 买量 卖价 卖量 深度等
-        TC_SNAPSHOT,//当前市场快照 成交信息 报价信息 高开低手
+        /// <summary>
+        /// 成交信息
+        /// </summary>
+        TRADE=0,
+        /// <summary>
+        /// 报价信息
+        /// </summary>
+        QUOTE=1,
+        /// <summary>
+        /// 深度行情信息
+        /// </summary>
+        LEVEL2=2,
+        /// <summary>
+        /// 统计信息 Open 
+        /// </summary>
+        SUMMARY=3,
+        /// <summary>
+        /// 快照数据
+        /// </summary>
+        SNAPSHOT=4,
+
     }
 
     public class InvalidTick : Exception { }

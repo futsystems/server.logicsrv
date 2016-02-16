@@ -458,7 +458,7 @@ namespace TradingLib.Common
         /// <returns></returns>
         public static decimal CalInnovPositionCost(this IAccount account)
         {
-            return FilterPositions(account, SecurityType.INNOV).Sum(pos => pos.CalcPositionCostValue());
+            return FilterPositions(account, SecurityType.NIL).Sum(pos => pos.CalcPositionCostValue());
         }
 
         /// <summary>
@@ -468,7 +468,7 @@ namespace TradingLib.Common
         /// <returns></returns>
         public static decimal CalInnovPositionValue(this IAccount account)
         {
-            return FilterPositions(account, SecurityType.INNOV).Sum(pos => pos.CalcPositionMarketValue());
+            return FilterPositions(account, SecurityType.NIL).Sum(pos => pos.CalcPositionMarketValue());
         }
 
         /// <summary>
@@ -478,7 +478,7 @@ namespace TradingLib.Common
         /// <returns></returns>
         public static decimal CalInnovSettlePositionValue(this IAccount account)
         {
-            return FilterPositions(account, SecurityType.INNOV).Sum(pos => pos.CalcSettlePositionValue());
+            return FilterPositions(account, SecurityType.NIL).Sum(pos => pos.CalcSettlePositionValue());
         }
 
         /// <summary>
@@ -488,7 +488,7 @@ namespace TradingLib.Common
         /// <returns></returns>
         public static decimal CalInnovCommission(this IAccount account)
         {
-            return FilterTrades(account, SecurityType.INNOV).Sum(fill => fill.GetCommission());
+            return FilterTrades(account, SecurityType.NIL).Sum(fill => fill.GetCommission());
         }
 
         /// <summary>
@@ -498,7 +498,7 @@ namespace TradingLib.Common
         /// <returns></returns>
         public static decimal CalInnovRealizedPL(this IAccount account)
         {
-            return FilterPositions(account, SecurityType.INNOV).Sum(pos => pos.CalcRealizedPL());
+            return FilterPositions(account, SecurityType.NIL).Sum(pos => pos.CalcRealizedPL());
         }
 
         /// <summary>
@@ -508,7 +508,7 @@ namespace TradingLib.Common
         /// <returns></returns>
         public static decimal CalInnovMargin(this IAccount account)
         {
-            return FilterPositions(account, SecurityType.INNOV).Sum(pos => pos.CalcPositionMargin());
+            return FilterPositions(account, SecurityType.NIL).Sum(pos => pos.CalcPositionMargin());
         }
 
         /// <summary>
@@ -518,7 +518,7 @@ namespace TradingLib.Common
         /// <returns></returns>
         public static decimal CalInnovMarginFrozen(this IAccount account)
         {
-            return FilterPendingOrders(account, SecurityType.INNOV).Sum(e => account.CalOrderFundRequired(e, 0));
+            return FilterPendingOrders(account, SecurityType.NIL).Sum(e => account.CalOrderFundRequired(e, 0));
 
         }
 

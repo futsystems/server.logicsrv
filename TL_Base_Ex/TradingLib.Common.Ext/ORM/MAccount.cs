@@ -43,6 +43,7 @@ namespace TradingLib.ORM
     internal class AccountFields
     {
         public string Account { get; set; }
+        public string Pass { get; set; }
         public QSEnumAccountCategory Account_Category { get; set; }
         public QSEnumOrderTransferType Order_Route_Type { get; set; }
 
@@ -691,6 +692,7 @@ namespace TradingLib.ORM
         static IAccount AccountFields2IAccount(AccountFields fields)
         {
             IAccount account = AccountBase.CreateAccount(fields.Account);
+            account.Pass = fields.Pass;
             //account.LastEquity = fields.LastEquity;
             //account.LastCredit = fields.LastCredit;
             account.UserID = fields.User_ID;

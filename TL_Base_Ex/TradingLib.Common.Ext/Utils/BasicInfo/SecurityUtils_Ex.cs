@@ -9,6 +9,7 @@ namespace TradingLib.Common
     public static class SecurityUtils_Ex
     {
 
+
         static QSEnumActionCheckResult MarketTimeCheck(IExchange exchange,DateTime extime,TradingRange range,out int settleday)
         {
             settleday = 0;
@@ -40,6 +41,8 @@ namespace TradingLib.Common
             settleday = tradingday.ToTLDate();
             return QSEnumActionCheckResult.Allowed;
         }
+
+
         /// <summary>
         /// 检查品种当前是否可以提交委托
         /// 交易小节完善后 可以通过交易小节具体判断 当前是否是否可以交易或撤单
@@ -67,6 +70,48 @@ namespace TradingLib.Common
             
         }
 
+        /// <summary>
+        /// 特殊假日判定
+        /// 如果当前允许交易则返回true 遇到特殊假日当前不能交易返回false
+        /// </summary>
+        /// <param name="sec"></param>
+        /// <returns></returns>
+        public static bool CheckSpecialHoliday(this SecurityFamily sec)
+        {
+            if (sec.Exchange.Country == Country.CN && sec.Currency == CurrencyType.RMB) return true;//国内交易所没有特殊假日
+
+            IExchange exchange = sec.Exchange;
+            DateTime extime = exchange.GetExchangeTime();//获得交易所时间
+            DateTime nextday = extime.AddDays(1);
+
+            //判定明天是否是特殊假日
+            bool special = exchange.IsInSpecialHoliday(nextday);
+            if (!special) return true;
+            
+            //香港交易所判定
+            if (sec.Exchange.Country == Country.CN && sec.Currency == CurrencyType.HKD)
+            {
+                //交易所时间在12点以后 即午后无交易
+                if (extime.Hour > 12)
+                {
+                    return false;
+                }
+            }
+            //新加坡交易所判定
+            if (sec.Exchange.Country == Country.SG)
+            { 
+            
+            }
+
+            //美国交易所判定
+            if (sec.Exchange.Country == Country.USA)
+            { 
+            
+            }
+
+
+            return true;
+        }
         /// <summary>
         /// 品种在几分钟后收盘
         /// </summary>

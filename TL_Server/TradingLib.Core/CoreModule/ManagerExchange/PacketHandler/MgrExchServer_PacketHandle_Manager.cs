@@ -78,6 +78,13 @@ namespace TradingLib.Core
                 //验证添加柜员帐户权限
                 manager.ValidRightAddManager(m);
 
+                int maxcnt = Math.Min(manager.Domain.AgentLimit, manager.AgentLimit);
+                int cnt = manager.GetVisibleManager().Count();
+                if (cnt >= maxcnt)
+                {
+                    throw new FutsRspError("可开柜员数量超过限制:" + maxcnt.ToString());
+                }
+
                 if (BasicTracker.ManagerTracker[m.Login] != null)
                 {
                     throw new FutsRspError("柜员登入ID不能重复:" + m.Login);
@@ -167,10 +174,10 @@ namespace TradingLib.Core
         public void CTE_UpdateMangerPassword(ISession session,string oldpass,string newpass)
         {
             Manager manager = session.GetManager();
-           
-            if (ORM.MManager.ValidManager(manager.Login, oldpass))
+            if(manager.Pass.Equals(oldpass))
             {
                 ORM.MManager.UpdateManagerPass(manager.ID, newpass);
+                manager.Pass = newpass;
                 session.OperationSuccess("密码修改成功");
             }
             else

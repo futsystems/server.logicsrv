@@ -24,7 +24,9 @@ namespace TradingLib.DataFarm.Common
 
                 
                 double d = br.ReadDouble();
-                tickData.Datetime = DateTime.FromOADate(d);
+                DateTime dt  = DateTime.FromOADate(d);
+                tickData.Date = Util.ToTLDate(dt);
+                tickData.Time = Util.ToTLTime(dt);
                 tickData.AskPrice = (decimal)br.ReadDouble();
                 tickData.AskSize = br.ReadInt32();
                 tickData.BidPrice = (decimal)br.ReadDouble();
@@ -33,7 +35,7 @@ namespace TradingLib.DataFarm.Common
                 tickData.Size = br.ReadInt32();
                 tickData.Vol = br.ReadInt32();
                 tickData.OpenInterest = br.ReadInt32();
-                return tickData.Datetime;
+                return dt;
             }
             return DateTime.MinValue;
         }
@@ -43,7 +45,10 @@ namespace TradingLib.DataFarm.Common
             Tick result = new TickImpl();
             int num = (int)startPos;
             double d = BitConverter.ToDouble(buffer, num);
-            result.Datetime = DateTime.FromOADate(d);
+            DateTime dt = DateTime.FromOADate(d);
+            result.Date = Util.ToTLDate(dt);
+            result.Time = Util.ToTLTime(dt);
+            
             num += 8;
             result.AskPrice = (decimal)BitConverter.ToDouble(buffer, num);
             num += 8;
@@ -66,7 +71,7 @@ namespace TradingLib.DataFarm.Common
 
         protected override void WriteItem(BinaryWriter bw, Tick tick)
         {
-            bw.Write(tick.Datetime.ToOADate());
+            bw.Write(tick.DateTime().ToOADate());
             bw.Write((double)tick.AskPrice);
             bw.Write(tick.AskSize);
             bw.Write((double)tick.BidPrice);
@@ -82,7 +87,7 @@ namespace TradingLib.DataFarm.Common
 
         protected override DateTime GetTime(Tick item)
         {
-            return item.Datetime;
+            return item.DateTime();
         }
 
         /// <summary>

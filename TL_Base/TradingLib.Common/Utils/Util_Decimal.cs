@@ -10,6 +10,19 @@ namespace TradingLib.Common
     {
 
         #region 格式化输出
+
+        /// <summary>
+        /// 是否是有效价格
+        /// 
+        /// </summary>
+        /// <param name="val"></param>
+        /// <returns></returns>
+        public static bool ValidPrice(this decimal val)
+        {
+            if (val <= 0) return false;
+            if (val == decimal.MaxValue) return false;
+            return true;
+        }
         /// <summary>
         /// decimal 格式化输出
         /// </summary>

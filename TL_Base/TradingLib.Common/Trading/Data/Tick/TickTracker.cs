@@ -386,7 +386,7 @@ namespace TradingLib.Common
             foreach(string sym in syms)
             {
                 Tick k = this[sym];
-                if (k != null && k.isValid)
+                if (k != null && k.IsValid())
                 {
                     ticks.Add(k);
                 }
@@ -416,6 +416,7 @@ namespace TradingLib.Common
         /// <returns></returns>
         public bool newTick(Tick k)
         {
+
             //检查是否记录了该symbol
             // get index
             int idx = getindex(k.Symbol);
@@ -425,20 +426,21 @@ namespace TradingLib.Common
             // update date/time
             time[idx] = k.Time;
             date[idx] = k.Date;
+
             // update bid/ask/last
-            if (k.isTrade)
+            if (k.IsTrade())
             {
                 last[idx] = k.Trade;
                 ex[idx] = k.Exchange;
                 ts[idx] = k.Size;
             }
-            if (k.hasAsk)
+            if (k.HasAsk())
             {
                 ask[idx] = k.AskPrice;
                 oe[idx] = k.AskExchange;
                 os[idx] = k.AskSize;
             }
-            if (k.hasBid)
+            if (k.HasBid())
             {
                 bid[idx] = k.BidPrice;
                 bs[idx] = k.BidSize;
@@ -510,7 +512,7 @@ namespace TradingLib.Common
 
         public void GotTick(Tick k)
         {
-            if (!k.hasBid) return;
+            if (!k.HasBid()) return;
             int idx = addindex(k.Symbol);
             this[idx] = k.BidPrice;
         }
@@ -528,7 +530,7 @@ namespace TradingLib.Common
 
         public void GotTick(Tick k)
         {
-            if (!k.hasAsk) return;
+            if (!k.HasAsk()) return;
             int idx = addindex(k.Symbol);
             this[idx] = k.AskPrice;
         }
@@ -546,7 +548,7 @@ namespace TradingLib.Common
 
         public void GotTick(Tick k)
         {
-            if (!k.isTrade) return;
+            if (!k.IsTrade()) return;
             int idx = addindex(k.Symbol);
             this[idx] = k.Trade;
         }
@@ -565,7 +567,7 @@ namespace TradingLib.Common
 
         public void GotTick(Tick k)
         {
-            if (!k.isTrade) return;
+            if (!k.IsTrade()) return;
             int idx = addindex(k.Symbol);
             this[idx] = k.Size;
         }
@@ -584,7 +586,7 @@ namespace TradingLib.Common
 
         public void GotTick(Tick k)
         {
-            if (!k.hasBid) return;
+            if (!k.HasBid()) return;
             int idx = addindex(k.Symbol);
             this[idx] = k.BidSize;
         }
@@ -603,7 +605,7 @@ namespace TradingLib.Common
 
         public void GotTick(Tick k)
         {
-            if (!k.hasAsk) return;
+            if (!k.HasAsk()) return;
             int idx = addindex(k.Symbol);
             this[idx] = k.AskSize;
         }
@@ -622,7 +624,7 @@ namespace TradingLib.Common
         public void GotTick(Tick k)
         {
             int idx = addindex(k.Symbol);
-            this[idx] = k.isTrade;
+            this[idx] = k.IsTrade();
         }
     }
     /// <summary>
@@ -639,7 +641,7 @@ namespace TradingLib.Common
         public void GotTick(Tick k)
         {
             int idx = addindex(k.Symbol);
-            this[idx] = k.hasBid;
+            this[idx] = k.HasBid();
         }
     }
     /// <summary>
@@ -656,7 +658,7 @@ namespace TradingLib.Common
         public void GotTick(Tick k)
         {
             int idx = addindex(k.Symbol);
-            this[idx] = k.hasAsk;
+            this[idx] = k.HasAsk();
         }
     }
 

@@ -218,7 +218,7 @@ namespace TradingLib.MDClient
         /// <summary>
         /// 市场时间段
         /// </summary>
-        public IEnumerable<MarketTime> MarketTimes
+        public IEnumerable<IMarketTime> MarketTimes
         {
             get
             {
@@ -229,7 +229,7 @@ namespace TradingLib.MDClient
         /// <summary>
         /// 交易所
         /// </summary>
-        public IEnumerable<Exchange> Exchanges
+        public IEnumerable<IExchange> Exchanges
         {
             get
             {
@@ -240,7 +240,7 @@ namespace TradingLib.MDClient
         /// <summary>
         /// 品种
         /// </summary>
-        public IEnumerable<SecurityFamilyImpl> Securities
+        public IEnumerable<SecurityFamily> Securities
         {
             get
             {
@@ -252,7 +252,7 @@ namespace TradingLib.MDClient
         /// <summary>
         /// 合约
         /// </summary>
-        public IEnumerable<SymbolImpl> Symbols
+        public IEnumerable<Symbol> Symbols
         {
             get
             {
@@ -290,7 +290,7 @@ namespace TradingLib.MDClient
             return null;
         }
 
-        public SecurityFamilyImpl GetSecurity(string code)
+        public SecurityFamily GetSecurity(string code)
         {
             SecurityFamilyImpl sec = null;
             if (securitynamemap.TryGetValue(code, out sec))
@@ -312,7 +312,7 @@ namespace TradingLib.MDClient
 
 
 
-        public SymbolImpl GetSymbol(string symbol)
+        public Symbol GetSymbol(string symbol)
         {
             SymbolImpl sym = null;
             if (symbolnamemap.TryGetValue(symbol, out sym))

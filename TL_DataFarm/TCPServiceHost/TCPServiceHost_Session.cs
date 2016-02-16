@@ -18,28 +18,38 @@ namespace TCPServiceHost
         {
             if (sessionMap.Keys.Contains(session.SessionID))
             {
-                logger.Error(string.Format("Session:{0} already created", session.SessionID));
+                logger.Error(string.Format("Session[{0}] already created", session.SessionID));
                 return;
             }
             sessionMap.TryAdd(session.SessionID, session);
-            logger.Info(string.Format("Session:{0} created success", session.SessionID));
+            logger.Info(string.Format("Session[{0}] created", session.SessionID));
         }
 
         void OnSessionClosed(TLSessionBase session)
         {
             if (!sessionMap.Keys.Contains(session.SessionID))
             {
-                logger.Error(string.Format("Session:{0} not exist!", session.SessionID));
+                logger.Error(string.Format("Session[{0}] not exist!", session.SessionID));
                 return;
             }
             TLSessionBase target = null;
             if (sessionMap.TryRemove(session.SessionID, out target))
             {
-                logger.Info(string.Format("Session:{0} closed success", session.SessionID));
+                logger.Info(string.Format("Session[{0}] closed", session.SessionID));
+                
             }
             else
             {
                 logger.Error("some error happend in close session");
+            }
+
+            //检查_connectionMap是否有对应的Connection对象 如果存在则向上抛出事件
+            if (_connectionMap.Keys.Contains(session.SessionID))
+            { 
+                IConnection conn=null;
+                _connectionMap.TryRemove(session.SessionID, out conn);
+                //向逻辑层抛出Connection关闭事件
+                OnConnectionClosed(conn);
             }
         }
 

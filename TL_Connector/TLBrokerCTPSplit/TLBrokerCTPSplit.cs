@@ -537,7 +537,7 @@ namespace Broker.Live
         {
             try
             {
-                debug("Resume trading info from clearcentre....", QSEnumDebugLevel.INFO);
+                logger.Info("Resume trading info from clearcentre....");
                 IEnumerable<Order> orderlist = ClearCentre.SelectBrokerOrders(this.Token);
                 IEnumerable<Trade> tradelist = ClearCentre.SelectBrokerTrades(this.Token);
                 IEnumerable<PositionDetail> positiondetaillist = ClearCentre.SelectBrokerPositionDetails(this.Token);
@@ -547,7 +547,7 @@ namespace Broker.Live
                 {
                     tk.GotPosition(pd);
                 }
-                debug(string.Format("Resumed {0} Positions", positiondetaillist.Count()), QSEnumDebugLevel.INFO);
+                logger.Info(string.Format("Resumed {0} Positions", positiondetaillist.Count()));
                 //恢复日内委托
                 foreach (Order o in orderlist)
                 {
@@ -559,7 +559,7 @@ namespace Broker.Live
                         }
                         else
                         {
-                            debug("Duplicate BrokerLocalOrderID,Order:" + o.GetOrderInfo(), QSEnumDebugLevel.WARN);
+                            logger.Warn("Duplicate BrokerLocalOrderID,Order:" + o.GetOrderInfo());
                         }
                     }
                     if (!string.IsNullOrEmpty(o.BrokerRemoteOrderID))//BrokerRemoteOrderID不为空
@@ -570,19 +570,19 @@ namespace Broker.Live
                         }
                         else
                         {
-                            debug("Duplicate BrokerRemoteOrderID,Order:" + o.GetOrderInfo(), QSEnumDebugLevel.WARN);
+                            logger.Warn("Duplicate BrokerRemoteOrderID,Order:" + o.GetOrderInfo());
                         }
                     }
                     tk.GotOrder(o);
 
                 }
-                debug(string.Format("Resumed {0} Orders", orderlist.Count()),QSEnumDebugLevel.INFO);
+                logger.Info(string.Format("Resumed {0} Orders", orderlist.Count()));
                 //恢复日内成交
                 foreach (Trade t in tradelist)
                 {
                     tk.GotFill(t);
                 }
-                debug(string.Format("Resumed {0} Trades", tradelist.Count()),QSEnumDebugLevel.INFO);
+                logger.Info(string.Format("Resumed {0} Trades", tradelist.Count()));
 
                 //恢复委托父子关系对 然后恢复到委托分拆器
                 List<FatherSonOrderPair> pairs = GetOrderPairs(orderlist);
@@ -699,7 +699,7 @@ namespace Broker.Live
         /// <param name="o"></param>
         void SendSonOrder(Order o)
         {
-            debug("XAPI[" + this.Token + "] Send SonOrder: " + o.GetOrderInfo(true), QSEnumDebugLevel.INFO);
+            logger.Info("XAPI[" + this.Token + "] Send SonOrder: " + o.GetOrderInfo(true));
             XOrderField order = new XOrderField();
 
             order.ID = o.id.ToString();
@@ -736,13 +736,13 @@ namespace Broker.Live
                 //交易信息维护器获得委托 //？将委托复制后加入到接口维护的map中 在发送子委托过程中 本地记录的Order就是分拆过程中产生的委托，改变这个委托将同步改变委托分拆器中的委托
                 tk.GotOrder(lo);//原来引用的是分拆器发送过来的子委托 现在修改成本地复制后的委托
                 //对外触发成交侧委托数据用于记录该成交接口的交易数据
-                debug("Send Order Success,LocalID:" + order.BrokerLocalOrderID, QSEnumDebugLevel.INFO);
+                logger.Info("Send Order Success,LocalID:" + order.BrokerLocalOrderID);
 
             }
             else
             {
                 o.Status = QSEnumOrderStatus.Reject;
-                debug("Send Order Fail,will notify to client", QSEnumDebugLevel.WARN);
+                logger.Info("Send Order Fail,will notify to client");
             }
 
             //发送子委托时 记录到数据库
@@ -770,7 +770,7 @@ namespace Broker.Live
             }
             else
             {
-                debug("Cancel order fail,will notify to client");
+                logger.Info("Cancel order fail,will notify to client");
             }
         }
 
@@ -856,7 +856,7 @@ namespace Broker.Live
 
         public override void ProcessOrderError(ref XOrderError error)
         {
-            debug(string.Format("OrderError LocalID:{0} RemoteID:{1} ErrorID:{2} ErrorMsg:{3}", error.Order.BrokerLocalOrderID, error.Order.BrokerRemoteOrderID, error.Error.ErrorID, error.Error.ErrorMsg), QSEnumDebugLevel.ERROR);
+            logger.Info(string.Format("OrderError LocalID:{0} RemoteID:{1} ErrorID:{2} ErrorMsg:{3}", error.Order.BrokerLocalOrderID, error.Order.BrokerRemoteOrderID, error.Error.ErrorID, error.Error.ErrorMsg));
             Order o = LocalID2Order(error.Order.BrokerLocalOrderID);
             if (o != null)
             {
@@ -896,7 +896,8 @@ namespace Broker.Live
                         norder.OffsetFlag = QSEnumOffsetFlag.OPEN;//开仓
                         
                         bool success = WrapperSendOrder(ref norder);
-                        debug(string.Format("平仓量超过持仓量,主帐户侧持仓缺失,下单进行补仓 市价{0} {1} 手 {2} {3}", norder.Side ? "买入" : "卖出", norder.TotalSize, norder.Symbol, success ? "成功" : "失败"), QSEnumDebugLevel.WARN);
+                        logger.Warn(string.Format("平仓量超过持仓量,主帐户侧持仓缺失,下单进行补仓 市价{0} {1} 手 {2} {3}", norder.Side ? "买入" : "卖出", norder.TotalSize, norder.Symbol, success ? "成功" : "失败"));
+
                     }
                     //资金不足
                     if (error.Error.ErrorID == 31)
@@ -910,7 +911,7 @@ namespace Broker.Live
 
         public override void ProcessOrderActionError(ref XOrderActionError error)
         {
-            debug(string.Format("OrderActionError LocalID:{0} RemoteID:{1} ErrorID:{2} ErrorMsg:{3}",error.OrderAction.BrokerLocalOrderID,error.OrderAction.BrokerRemoteOrderID,error.Error.ErrorID,error.Error.ErrorMsg),QSEnumDebugLevel.ERROR);
+            logger.Info(string.Format("OrderActionError LocalID:{0} RemoteID:{1} ErrorID:{2} ErrorMsg:{3}", error.OrderAction.BrokerLocalOrderID, error.OrderAction.BrokerRemoteOrderID, error.Error.ErrorID, error.Error.ErrorMsg));
             Order o = LocalID2Order(error.OrderAction.BrokerLocalOrderID);
             if (o != null)
             {

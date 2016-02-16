@@ -102,16 +102,6 @@ namespace TradingLib.API
         CCRESETFINISH,
     }
 
-    /// <summary>
-    /// Tick数据类别,用于区分不同的tick数据,减少tick数据的重复发送
-    /// </summary>
-    public enum QSEnumTickType
-    {
-        ALL,//包含所有数据
-        BASE,//包含基本的trade ask bid 数据
-        HOLC,//日内高开低收数据变化,开盘价固定,日内创新高 或者 新低的时候才有必要发送,收盘价就是当时的价格
-    }
-
 
 
     /// <summary>

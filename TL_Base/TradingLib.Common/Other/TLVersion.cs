@@ -43,6 +43,7 @@ namespace TradingLib.Common
         /// 修正版本号
         /// </summary>
         public int Fix { get; set; }
+
         /// <summary>
         /// 版本日期
         /// </summary>
@@ -55,6 +56,7 @@ namespace TradingLib.Common
 
 
         public PlatformID Platfrom { get; set; }
+
         /// <summary>
         /// 部署编号 用于区分不同柜台的部署编号
         /// </summary>
@@ -102,5 +104,7 @@ namespace TradingLib.Common
             v.DeployID = rec[6];
             return v;
         }
+
+       
     }
 }

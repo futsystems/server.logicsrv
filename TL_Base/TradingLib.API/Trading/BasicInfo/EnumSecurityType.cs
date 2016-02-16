@@ -14,18 +14,18 @@ namespace TradingLib.API
         FUT,//期货
         [Description("期权")] 
         OPT,//期权
-        CFD,
-        FOR,
+        //CFD,
+        //FOR,
         FOP,
-        WAR,
+        //WAR,
         FOX,
         [Description("指数")]
         IDX,
-        BND,
+        //BND,
         [Description("货币")]
         CASH,
-        BAG,
-        [Description("异化证券")]
-        INNOV,
+        //BAG,
+        //[Description("异化证券")]
+        //INNOV,
     }
 }

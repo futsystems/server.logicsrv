@@ -48,10 +48,10 @@
 		<LibFiles Include="lib\Common.Logging.dll" />
 		<LibFiles Include="lib\Common.Logging.NLog31.dll" />
 		<LibFiles Include="lib\NLog.dll" />
-		<LibFiles Include="lib\NodaTime.dll" />
-								
-		<LibFiles Condition=" '$(OperatingPlatform)' == 'Windows' " Include="lib\libzmq\clrzmq\clrzmq.dll" />
-		<LibFiles Condition=" '$(OperatingPlatform)' == 'Unix' " Include="lib\libzmq\clrzmq-unix\clrzmq.dll" />
+		<LibFiles Include="lib\NHttp.dll" />
+		<LibFiles Include="lib\NodaTime.dll" />					
+		<LibFiles Condition=" '$(OperatingPlatform)' == 'Windows' " Include="lib\libzmq\clrzmq-4.x\win\ZeroMQ.dll" />
+		<LibFiles Condition=" '$(OperatingPlatform)' == 'Unix' " Include="lib\libzmq\clrzmq-4.x\mono\ZeroMQ.dll" />
   </ItemGroup>
   <ItemGroup>
     <BuildFilesExecute Include="Platform\TradingSrv\LogicSrv.exe" />
@@ -73,7 +73,6 @@
 	</Target>
   
   <Target Name="Base">
-	<MSBuild Projects="TL_Base\HttpServer\HttpServer.csproj" Properties="Configuration=$(Configuration);" />
 	<MSBuild Projects="TL_Base\TradingLib.API\TradingLib.API.csproj" Properties="Configuration=$(Configuration);" />
 	<MSBuild Projects="TL_Base\TradingLib.Mixins\TradingLib.Mixins.csproj" Properties="Configuration=$(Configuration);" />
 	<MSBuild Projects="TL_Base\TradingLib.Common\TradingLib.Common.csproj" Properties="Configuration=$(Configuration);" />
@@ -91,12 +90,9 @@
   </Target>
   
   <Target Name="Contrib" DependsOnTargets="Base">
+	<MSBuild Projects="TL_Contrib\TradingLib.Contrib.APIService\TradingLib.Contrib.APIService.csproj" Properties="Configuration=$(Configuration);" />
     <MSBuild Projects="TL_Contrib\TradingLib.Contirb.LogServer\TradingLib.Contirb.LogServer.csproj" Properties="Configuration=$(Configuration);" />
     <MSBuild Projects="TL_Contrib\TradingLib.Contrib.CLIServer\TradingLib.Contrib.CLIServer.csproj" Properties="Configuration=$(Configuration);" />
-    <MSBuild Projects="TL_Contrib\TradingLib.Contrib.EmailServer\TradingLib.Contrib.EmailServer.csproj" Properties="Configuration=$(Configuration);" />
-    <MSBuild Projects="TL_Contrib\TradingLib.Contrib.WebServer\TradingLib.Contrib.WebPortal.csproj" Properties="Configuration=$(Configuration);" />
-    <MSBuild Projects="TL_Contrib\TradingLib.Contrib.FinService\TradingLib.Contrib.FinService.csproj" Properties="Configuration=$(Configuration);" />
-    <MSBuild Projects="TL_Contrib\TradingLib.Contrib.TradeFlow\TradingLib.Contrib.TradeFlow.csproj" Properties="Configuration=$(Configuration);" />
   </Target>
   
   <Target Name="Connector" DependsOnTargets="Base">
@@ -135,6 +131,7 @@
 		<MakeDir Directories="$(PackageDir)\Connector" />
 		<MakeDir Directories="$(PackageDir)\Account" />
 		<MakeDir Directories="$(PackageDir)\RuleSet" />
+		<MakeDir Directories="$(PackageDir)\RequiredLibraries" />
 		
 		<Copy SourceFiles="@(BuildFilesBase)" DestinationFolder="$(PackageDir)" ContinueOnError="false" />
 		<Copy SourceFiles="@(BuildFilesContrib)" DestinationFolder="$(PackageDir)\Contrib" ContinueOnError="false" />
@@ -142,7 +139,7 @@
 		<Copy SourceFiles="@(BuildFilesAccount)" DestinationFolder="$(PackageDir)\Account" ContinueOnError="false" />
 		<Copy SourceFiles="@(BuildFilesRuleSet)" DestinationFolder="$(PackageDir)\RuleSet" ContinueOnError="false" />
 
-		<Copy SourceFiles="@(LibFiles)" DestinationFolder="$(PackageDir)" ContinueOnError="false" />
+		<Copy SourceFiles="@(LibFiles)" DestinationFolder="$(PackageDir)\RequiredLibraries" ContinueOnError="false" />
 		
 		<Copy SourceFiles="@(BuildFilesExecute)" DestinationFolder="$(PackageDir)" ContinueOnError="false" />
 	</Target>

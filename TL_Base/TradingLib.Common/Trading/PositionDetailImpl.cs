@@ -398,8 +398,16 @@ namespace TradingLib.Common
         /// 域ID
         /// </summary>
         public int Domain_ID { get; set; }
-        
 
+        public override string ToString()
+        {
+            return JsonMapper.ToJson(this);
+        }
+
+        //public override string ToString()
+        //{
+        //    return string.Format("{0} {1} ")
+        //}
 
         public static string Serialize(PositionDetail p)
         {

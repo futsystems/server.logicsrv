@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading;
-using ZeroMQ;
 using TradingLib.API;
 using TradingLib.Common;
 using TradingLib.Contirb.Protocol;
@@ -27,7 +26,6 @@ namespace TradingLib.Contirb.LogServer
         RingBuffer<LogTaskEvent> taskeventlogcache = new RingBuffer<LogTaskEvent>(BUFFERSIZE);
         RingBuffer<LogPacketEvent> packetlogcache = new RingBuffer<LogPacketEvent>(BUFFERSIZE);
 
-        ZmqSocket _logpub = null;
         bool _loggo = false;
 
         int _port = 5569;
@@ -208,34 +206,11 @@ namespace TradingLib.Contirb.LogServer
             }
         }
 
-        /// <summary>
-        /// 将日志通过publisher进行分发,用于远程显示或记录日志
-        /// </summary>
-        /// <param name="l"></param>
-        void SendLog(ILogItem l)
-        {
-            //debug("send log:" + l.ToString(),QSEnumDebugLevel.INFO);
-            if (l == null)
-                return;
-            /**
-             * 通过网路分发日志,方便在其他服务器上通过网络连接到日志服务器上获取实时日志
-             * 
-             * **/
-            if (_logpub != null)
-            {
-                _logpub.Send(l.ToString(), Encoding.UTF8);
-            }
-        }
+
 
         
         void LogProcess()
         {
-            using (ZmqContext ctx = ZmqContext.Create())
-            {
-                using (ZmqSocket pub = ctx.CreateSocket(SocketType.PUB))
-                {
-                    pub.Bind("tcp://*:"+_port.ToString());
-                    _logpub = pub;
                     //debug("xxxxxxxxxxx start pubsrv..........", QSEnumDebugLevel.INFO);
                     while (_loggo)
                     {
@@ -245,7 +220,7 @@ namespace TradingLib.Contirb.LogServer
                             if (l == null)
                                 continue;
                             SaveLog(l);//保存日志到文本文件
-                            SendLog(l);//发送日志到网络
+                            
                         }
 
                         while (taskeventlogcache.hasItems)
@@ -265,9 +240,8 @@ namespace TradingLib.Contirb.LogServer
                         }
                         Thread.Sleep(50);
                     }
-                }
+                
 
-            }
         }
 
 

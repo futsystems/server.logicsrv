@@ -28,12 +28,13 @@ namespace TradingLib.DataFarm.API
         /// <summary>
         /// 客户端连接建立
         /// </summary>
-        event Action<IServiceHost, IConnection> SessionCreatedEvent;
+        event Action<IServiceHost, IConnection> ConnectionCreatedEvent;
 
         /// <summary>
         /// 客户端连接断开事件
         /// </summary>
-        event Action<IServiceHost, IConnection> SessionClosedEvent;
+        event Action<IServiceHost, IConnection> ConnectionClosedEvent;
+
         /// <summary>
         /// 客户端服务查询事件
         /// 客户端在连接服务端时,会进行服务查询,该操作为同步操作需要进行逻辑处理后直接回报给客户端

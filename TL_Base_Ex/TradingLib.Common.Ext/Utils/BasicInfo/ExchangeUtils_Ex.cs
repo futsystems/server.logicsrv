@@ -76,6 +76,17 @@ namespace TradingLib.Common
         }
 
         /// <summary>
+        /// 判定某个时间是否是特殊假日
+        /// </summary>
+        /// <param name="exchange"></param>
+        /// <param name="extime"></param>
+        /// <returns></returns>
+        public static bool IsInSpecialHoliday(this IExchange exchange, DateTime extime)
+        {
+            Calendar calendar = exchange.GetCalendar();
+            return calendar.IsSpecialHoliday(extime);
+        }
+        /// <summary>
         /// 交易所当前交易日
         /// </summary>
         /// <returns></returns>

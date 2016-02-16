@@ -239,6 +239,39 @@ namespace TradingLib.Common
 
         }
 
+        /// <summary>
+        /// 判断某个文件是否可写
+        /// </summary>
+        /// <param name="path"></param>
+        /// <returns></returns>
+        public static bool IsFileWritetable(string path)
+        {
+            FileStream stream = null;
+
+            try
+            {
+                if (!System.IO.File.Exists(path))
+                    return true;
+                System.IO.FileInfo file = new FileInfo(path);
+                stream = file.Open(FileMode.Open, FileAccess.ReadWrite, FileShare.None);
+            }
+            catch (IOException)
+            {
+                //the file is unavailable because it is:
+                //still being written to
+                //or being processed by another thread
+                //or does not exist (has already been processed)
+                return false;
+            }
+            finally
+            {
+                if (stream != null)
+                    stream.Close();
+            }
+
+            //file is not locked
+            return true;
+        }
 
         /// <summary>
         /// 安全的调用输出某个对象的ToString
@@ -487,7 +520,7 @@ namespace TradingLib.Common
             get
             {
 
-                return Path.Combine(new string[] { ParentDir, "TLDataBase" });
+                return Path.Combine(new string[] { ParentDir, "TLData" });
             }
         }
 
@@ -516,6 +549,17 @@ namespace TradingLib.Common
             get
             {
                 return ProgramData("TickData");
+            }
+        }
+
+        /// <summary>
+        /// 数据储存日志目录
+        /// </summary>
+        public static string DataRepositoryDir
+        {
+            get
+            {
+                return ProgramData("DataRepository");
             }
         }
 
@@ -1034,7 +1078,7 @@ namespace TradingLib.Common
         {
             List<string> rowoutput = new List<string>();
             PositionTracker pt = new PositionTracker();
-
+            bool accept= false;
             foreach (TradeImpl t in tradelist)
             {
                 string r = t.GetTradStr() + delimiter;
@@ -1042,7 +1086,7 @@ namespace TradingLib.Common
                 decimal cpl = 0;
                 decimal opl = 0;
                 int csize = 0;
-                cpl = pt.Adjust(t);
+                cpl = pt.Adjust(t,out accept);
                 opl = Calc.OpenPL(t.xPrice, pt[s]); // get any leftover open pl
                 if (cpl != 0) csize = t.xSize; // if we closed any pl, get the size
                 string[] pl = new string[] { opl.ToString("f2", System.Globalization.CultureInfo.InvariantCulture), cpl.ToString("f2", System.Globalization.CultureInfo.InvariantCulture), pt[s].Size.ToString(System.Globalization.CultureInfo.InvariantCulture), csize.ToString(System.Globalization.CultureInfo.InvariantCulture), pt[s].AvgPrice.ToString("f2", System.Globalization.CultureInfo.InvariantCulture) };

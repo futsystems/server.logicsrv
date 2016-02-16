@@ -99,6 +99,7 @@ namespace TradingLib.Common
             {
                 childNodes.Add(o.Name.ToString());
             }
+
             if (childNodes.Contains("WeekOfMonth"))
             {
                 int m = Int32.Parse(n.SelectSingleNode("./Month").InnerXml.ToString());
@@ -175,6 +176,14 @@ namespace TradingLib.Common
                         h.Date = dt;
                     }
                 }
+            }
+            if (childNodes.Contains("Special"))
+            {
+                h.Special = true;
+            }
+            else
+            {
+                h.Special = false;
             }
             return h;
         }
@@ -309,8 +318,12 @@ namespace TradingLib.Common
         #region Holiday Object
         public class Holiday : IComparable
         {
-            public System.DateTime Date;
-            public string Name;
+            public System.DateTime Date{get;set;}
+            public string Name{get;set;}
+            /// <summary>
+            /// 特殊假日 某些交易所针对特殊假日 有提前休市
+            /// </summary>
+            public bool Special{get;set;}
 
             #region IComparable Members
 

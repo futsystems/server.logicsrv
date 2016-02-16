@@ -56,6 +56,10 @@ namespace TradingLib.API
         string ID { get; }
 
         /// <summary>
+        /// 密码
+        /// </summary>
+        string Pass { get; set; }
+        /// <summary>
         /// 是否可以进行交易
         /// </summary>
         bool Execute { get; set; }

@@ -72,12 +72,11 @@ namespace TradingLib.DataFarm.Common
         /// </summary>
         protected void StartServiceHosts()
         {
+            logger.Info("Start ServiceHosts");
             if (!_serviceHostLoaded)
             {
                 LoadServiceHosts();
             }
-
-            logger.Info("Start ServiceHosts....");
             foreach (var h in _serviceHosts)
             {
                 StartServiceHost(h);
@@ -91,23 +90,25 @@ namespace TradingLib.DataFarm.Common
         /// <param name="host"></param>
         void StartServiceHost(IServiceHost host)
         {
-            host.SessionCreatedEvent += new Action<IServiceHost, IConnection>(OnSessionCreatedEvent);
-            host.SessionClosedEvent += new Action<IServiceHost, IConnection>(OnSessionClosedEvent);
+            host.ConnectionCreatedEvent += new Action<IServiceHost, IConnection>(OnConnectionCreatedEvent);
+            host.ConnectionClosedEvent += new Action<IServiceHost, IConnection>(OnConnectionClosedEvent);
             host.RequestEvent += new Action<IServiceHost, IConnection, IPacket>(OnRequestEvent);    //(OnRequestEvent);
             host.ServiceEvent += new Func<IServiceHost, IPacket, IPacket>(OnServiceEvent);
             host.Start();
         }
 
 
-        protected virtual void OnSessionClosedEvent(IServiceHost arg1, IConnection arg2)
+        protected virtual void OnConnectionClosedEvent(IServiceHost arg1, IConnection arg2)
         {
             logger.Info(string.Format("ServiceHost:{0} Connection:{1} Closed",arg1.Name,arg2.SessionID));
+            //如果是实时行情链接则注销所有注册合约
+            OnConnectionClosed(arg1, arg2);
         }
 
-        protected virtual void OnSessionCreatedEvent(IServiceHost arg1, IConnection arg2)
+        protected virtual void OnConnectionCreatedEvent(IServiceHost arg1, IConnection arg2)
         {
-            logger.Info(string.Format("ServiceHost:{0} Connection:{1} Closed", arg1.Name, arg2.SessionID));
-            OnSessionCreated(arg1, arg2);
+            logger.Info(string.Format("ServiceHost:{0} Connection:{1} Created", arg1.Name, arg2.SessionID));
+            OnConnectionCreated(arg1, arg2);
         }
 
 

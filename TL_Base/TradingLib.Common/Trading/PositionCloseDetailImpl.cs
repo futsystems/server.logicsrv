@@ -94,6 +94,7 @@ namespace TradingLib.Common
         /// </summary>
         public bool Side { get; set; }
 
+
         /// <summary>
         /// 平昨仓还是平今仓
         /// </summary>
@@ -322,5 +323,103 @@ namespace TradingLib.Common
         /// 域ID
         /// </summary>
         public int Domain_ID { get; set; }
+
+
+        /// <summary>
+        /// 序列化
+        /// </summary>
+        /// <param name="o"></param>
+        /// <returns></returns>
+        public static string Serialize(PositionCloseDetail close)
+        {
+            StringBuilder sb = new StringBuilder();
+            char d = ',';
+            sb.Append(close.Account);//0
+            sb.Append(d);
+            sb.Append(close.Settleday);//1
+            sb.Append(d);
+            sb.Append(close.Side);//2
+            sb.Append(d);
+            sb.Append(close.OpenDate);//3
+            sb.Append(d);
+            sb.Append(close.OpenTime);//4
+            sb.Append(d);
+            sb.Append(close.OpenTradeID);//5
+            sb.Append(d);
+            sb.Append(close.OpenPrice);//6
+            sb.Append(d);
+            sb.Append(close.CloseDate);//7
+            sb.Append(d);
+            sb.Append(close.CloseTime);//8
+            sb.Append(d);
+            sb.Append(close.CloseTradeID);//9
+            sb.Append(d);
+            sb.Append(close.ClosePrice);//10
+            sb.Append(d);
+            sb.Append(close.CloseVolume);//11
+            sb.Append(d);
+            sb.Append(close.IsCloseYdPosition);//12
+            sb.Append(d);
+            sb.Append(close.LastSettlementPrice);//13
+            sb.Append(d);
+            sb.Append(close.CloseAmount);//14
+            sb.Append(d);
+            sb.Append(close.ClosePointByDate);//15
+            sb.Append(d);
+            sb.Append(close.CloseProfitByTrade);//16
+            sb.Append(d);
+            sb.Append(close.ClosePointByDate);//17
+            sb.Append(d);
+            sb.Append(close.Exchange);//18
+            sb.Append(d);
+            sb.Append(close.Symbol);//19
+            sb.Append(d);
+            sb.Append(close.SecCode);//20
+            sb.Append(d);
+            sb.Append(close.Broker);//21
+            sb.Append(d);
+            sb.Append(close.Breed);//22
+            return sb.ToString();
+        }
+
+        public new static PositionCloseDetail Deserialize(string message)
+        {
+            string[] rec = message.Split(',');
+            PositionCloseDetailImpl close = new PositionCloseDetailImpl();
+            close.Account = rec[0];
+            close.Settleday = int.Parse(rec[1]);
+            close.Side = bool.Parse(rec[2]);
+
+            close.OpenDate = int.Parse(rec[3]);
+            close.OpenTime = int.Parse(rec[4]);
+            close.OpenTradeID = rec[5];
+            close.OpenPrice = decimal.Parse(rec[6]);
+
+            close.CloseDate = int.Parse(rec[7]);
+            close.CloseTime = int.Parse(rec[8]);
+            close.CloseTradeID = rec[9];
+            close.ClosePrice = decimal.Parse(rec[10]);
+            close.CloseVolume = int.Parse(rec[11]);
+            close.IsCloseYdPosition = bool.Parse(rec[12]);
+            close.LastSettlementPrice = decimal.Parse(rec[13]);
+            close.CloseAmount = decimal.Parse(rec[14]);
+            close.CloseProfitByDate = decimal.Parse(rec[15]);
+            close.CloseProfitByTrade = decimal.Parse(rec[16]);
+            close.ClosePointByDate = decimal.Parse(rec[17]);
+            close.Exchange = rec[18];
+            close.Symbol = rec[19];
+            close.SecCode = rec[20];
+            close.Broker = rec[21];
+            close.Breed = (QSEnumOrderBreedType)Enum.Parse(typeof(QSEnumOrderBreedType), rec[22]);
+            return close;
+
+        }
+
+
+        public override string ToString()
+        {
+            return JsonMapper.ToJson(this);
+            //return string.Format("{0} {1} {2} Open:{3} {4} {5} {6} Close:{7} {8} {9} {10} Symbol:{11} ",Account,Settleday,Side,OpenDate,OpenTime,OpenTradeID,OpenPrice,CloseDate,CloseTime,CloseTradeID,ClosePrice)
+        }
     }
 }
