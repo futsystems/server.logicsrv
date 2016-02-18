@@ -33,5 +33,7 @@ namespace TradingLib.API
         BrokerLocalOrderID,//成交侧本地委托编号
         BrokerRemoteOrderID,//成交侧远端委托编号
         BrokerTradeID,//成交侧成交编号
+        StampTax,//印花税
+        TransferFee,//过户费
     }
 }

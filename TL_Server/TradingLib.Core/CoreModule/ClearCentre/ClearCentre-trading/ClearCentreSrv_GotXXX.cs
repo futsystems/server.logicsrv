@@ -237,6 +237,8 @@ namespace TradingLib.Core
                 {
                     //计算标准手续费
                     f.Commission = account.CalCommission(f);
+                    f.StampTax = account.CalcStampTax(f);
+                    f.TransferFee = account.CalcTransferFee(f);
                 }
 
                 //生成持仓操作记录 同时结合beforeszie aftersize 设置fill PositionOperation,需要知道帐户的持仓信息才可以知道是开 加 减 平等信息

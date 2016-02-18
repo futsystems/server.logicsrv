@@ -859,6 +859,16 @@ namespace TradingLib.Common
         #endregion
 
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="field"></param>
+        /// <returns></returns>
+        public static string CleanProtocolString(string field)
+        {
+            if (string.IsNullOrEmpty(field)) return string.Empty;
+            return field.Replace(',', ' ').Replace('|',' ').Replace('^',' ');
+        }
 
         #region Security and symbol
 

@@ -22,6 +22,11 @@ namespace TradingLib.Common
         /// </summary>
         public string Symbol { get; set; }
 
+        /// <summary>
+        /// 合约名称
+        /// </summary>
+        public string Name { get; set; }
+
         //品种外键
         public int security_fk { get; set; }
         /// <summary>
@@ -549,6 +554,8 @@ namespace TradingLib.Common
             sb.Append(this.Tradeable.ToString());//该合约是否允许交易
             sb.Append(d);
             sb.Append(this.SymbolType);
+            sb.Append(d);
+            sb.Append(this.Name);
 
             return sb.ToString();
         }
@@ -572,6 +579,7 @@ namespace TradingLib.Common
             this.Month = rec[13];
             this.Tradeable = bool.Parse(rec[14]);
             this.SymbolType = (QSEnumSymbolType)Enum.Parse(typeof(QSEnumSymbolType), rec[15]);
+            this.Name = rec[16];
         }
     }
 }

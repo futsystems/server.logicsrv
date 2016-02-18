@@ -85,6 +85,7 @@ namespace TradingLib.Common
 
             SymbolImpl target = new SymbolImpl();
             target.Symbol = symbol.Symbol;
+            target.Name = symbol.Name;
             target.Domain_ID = symbol.Domain_ID;//更新域
             target.EntryCommission = symbol._entrycommission;
             target.ExitCommission = symbol._exitcommission;

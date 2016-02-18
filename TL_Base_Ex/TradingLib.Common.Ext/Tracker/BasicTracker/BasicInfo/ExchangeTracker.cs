@@ -102,6 +102,7 @@ namespace TradingLib.Common
                 target.Calendar = ex.Calendar;
                 target.TimeZoneID = ex.TimeZoneID;
                 target.CloseTime = ex.CloseTime;
+                target.SettleType = ex.SettleType;
 
                 ORM.MBasicInfo.UpdateExchange(target);
             }
@@ -115,6 +116,7 @@ namespace TradingLib.Common
                 target.Calendar = ex.Calendar;
                 target.TimeZoneID = ex.TimeZoneID;
                 target.CloseTime = ex.CloseTime;
+                target.SettleType = ex.SettleType;
 
                 ORM.MBasicInfo.InsertExchange(target);
                 ex.ID = target.ID;

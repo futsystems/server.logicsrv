@@ -305,12 +305,14 @@ namespace TradingLib.Core
                 //设定合约symbol为当前管理员域ID 避免管理端没有正常传输分区ID
                 symbol.Domain_ID = manager.Domain.ID;
 
+                //检查品种是否完毕
                 SecurityFamilyImpl rawsec = BasicTracker.SecurityTracker[symbol.Domain_ID, symbol.security_fk];
                 if (rawsec == null)
                 {
                     throw new FutsRspError("品种数据异常");
                 }
 
+                //如果是添加合约 检查合约是否存在
                 if (symbol.ID==0 && manager.Domain.GetSymbol(symbol.Symbol) != null)
                 {
                     throw new FutsRspError("已经存在合约:" + symbol.Symbol);

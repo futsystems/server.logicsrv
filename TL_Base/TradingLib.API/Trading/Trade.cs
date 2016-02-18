@@ -77,9 +77,21 @@ namespace TradingLib.API
         decimal Commission { get; set; }
 
         /// <summary>
+        /// 印花税
+        /// </summary>
+        decimal StampTax { get; set; }
+
+        /// <summary>
+        /// 过户费
+        /// </summary>
+        decimal TransferFee { get; set; }
+
+        /// <summary>
         /// 平仓盈亏
         /// </summary>
         decimal Profit { get; set; }
+
+        
 
         #endregion
 

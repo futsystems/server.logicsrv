@@ -118,7 +118,25 @@ namespace TradingLib.Common
             //    config.UpdateConfig("ProductType", QSEnumCfgType.String, QSEnumProductType.CounterSystem.ToString(), "服务类型,系统容器会按不同的服务类型加载不同的功能实现");
             
             //}
+
+            if (!config.HaveConfig("STKStampTaxRate"))
+            {
+                config.UpdateConfig("STKStampTaxRate", QSEnumCfgType.Decimal, 0.001, "股票印花税率");
+            }
         }
+
+        /// <summary>
+        /// 股票印花税率
+        /// </summary>
+        public static decimal STKStampTaxRate
+        {
+            get
+            {
+                return defaultinstance.config["STKStampTaxRate"].AsDecimal();
+            }
+        }
+
+
 
         /// <summary>
         /// 收盘前提前多少时间强平持仓

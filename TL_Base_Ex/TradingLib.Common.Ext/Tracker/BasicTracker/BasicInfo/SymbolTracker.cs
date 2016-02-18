@@ -519,6 +519,7 @@ namespace TradingLib.Common
                     target.Tradeable = sym.Tradeable;//更新交易标识
                     
                 }
+                target.Name = sym.Name;
                 target.ExpireDate = sym.ExpireDate;
                 target.SymbolType = sym.SymbolType;
 
@@ -529,6 +530,7 @@ namespace TradingLib.Common
             {
                 target = new SymbolImpl();
                 target.Symbol = sym.Symbol;
+                target.Name = sym.Name;
                 target.Domain_ID = sym.Domain_ID;//更新域
                 target.EntryCommission = sym._entrycommission;
                 target.ExitCommission = sym._exitcommission;

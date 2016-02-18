@@ -12,17 +12,17 @@ namespace TradingLib.Common
     /// </summary>
     public static class AccountUtils_CommissionMargin
     {
-        public static CommissionTemplate GetCommissionTemplate(this IAccount account)
+        static CommissionTemplate GetCommissionTemplate(this IAccount account)
         {
             return BasicTracker.CommissionTemplateTracker[account.Commission_ID];
         }
 
-        public static MarginTemplate GetMarginTemplate(this IAccount account)
+        static MarginTemplate GetMarginTemplate(this IAccount account)
         {
             return BasicTracker.MarginTemplateTracker[account.Margin_ID];
         }
 
-        public static CommissionTemplateItem GetCommissionTemplateItem(this IAccount account,Symbol symbol)
+        static CommissionTemplateItem GetCommissionTemplateItem(this IAccount account,Symbol symbol)
         {
             CommissionTemplate tmp = account.GetCommissionTemplate();
             if (tmp == null)
@@ -30,7 +30,7 @@ namespace TradingLib.Common
             return tmp[symbol.SecurityFamily.Code, symbol.GetMonth()];
         }
 
-        public static MarginTemplateItem GetMarginTemplateItem(this IAccount account, Symbol symbol)
+        static MarginTemplateItem GetMarginTemplateItem(this IAccount account, Symbol symbol)
         {
             MarginTemplate tmp = account.GetMarginTemplate();
             if (tmp == null)
@@ -39,6 +39,7 @@ namespace TradingLib.Common
             
         }
 
+        #region 计算手续费 保证金等数据
         /// <summary>
         /// 计算某个成交的手续费
         /// </summary>
@@ -97,6 +98,43 @@ namespace TradingLib.Common
                         return basecommission;
                 }
             }
+        }
+
+        /// <summary>
+        /// 计算印花税
+        /// </summary>
+        /// <param name="account"></param>
+        /// <param name="f"></param>
+        /// <returns></returns>
+        public static decimal CalcStampTax(this IAccount account, Trade f)
+        {
+            //股票计算印花税
+            if (f.oSymbol.SecurityFamily.Type == SecurityType.STK)
+            {
+                //平仓才收取印花税
+                if (!f.IsEntryPosition)
+                {
+                    return f.GetAmount() * GlobalConfig.STKStampTaxRate;
+                }
+            }
+            return 0;
+        }
+        
+        /// <summary>
+        /// 计算过户费
+        /// </summary>
+        /// <param name="account"></param>
+        /// <param name="f"></param>
+        /// <returns></returns>
+        public static decimal CalcTransferFee(this IAccount account, Trade f)
+        {
+            if (f.oSymbol.SecurityFamily.Type == SecurityType.STK)
+            {
+                //每1000手收取1元,不足1元按1元收取
+                int t = (f.UnsignedSize / 100) + f.UnsignedSize % 1000 > 0 ? 1 : 0;
+                return t * 1;
+            }
+            return 0;
         }
 
         /// <summary>
@@ -262,6 +300,10 @@ namespace TradingLib.Common
             }
         }
 
+        #endregion
+
+
+        #region 获得某个交易账户的MarginConfig CommissionConfig CTP接口返回数据
         /// <summary>
         /// 获得某个交易帐户 某个合约的保证金设置
         /// </summary>
@@ -301,7 +343,55 @@ namespace TradingLib.Common
             cfg.Account = account.ID;
             return cfg;
         }
-    
-    
+
+
+        /// <summary>
+        /// 获得某个交易帐户某个合约的手续费设置
+        /// </summary>
+        /// <param name="symbol"></param>
+        /// <returns></returns>
+        public static CommissionConfig GetCommissionConfig(this IAccount account, Symbol symbol)
+        {
+
+            //初始合约手续费设置
+            CommissionConfig cfg = symbol.GetCommissionConfig();
+            CommissionTemplateItem item = account.GetCommissionTemplateItem(symbol);
+            //如果手续费模板项目不为空则需要按照模板调整收费率
+            if (item != null)
+            {
+                if (item.ChargeType == QSEnumChargeType.Absolute)
+                {
+                    cfg.OpenRatioByMoney = item.OpenByMoney;
+                    cfg.OpenRatioByVolume = item.OpenByVolume;
+                    cfg.CloseRatioByMoney = item.CloseByMoney;
+                    cfg.CloseRatioByVolume = item.CloseByVolume;
+                    cfg.CloseTodayRatioByMoney = item.CloseTodayByMoney;
+                    cfg.CloseTodayRatioByVolume = item.CloseTodayByVolume;
+                }
+                else if (item.ChargeType == QSEnumChargeType.Relative)
+                {
+                    cfg.OpenRatioByMoney = cfg.OpenRatioByMoney == 0 ? 0 : cfg.OpenRatioByMoney + item.OpenByMoney;
+                    cfg.OpenRatioByVolume = cfg.OpenRatioByVolume == 0 ? 0 : cfg.OpenRatioByVolume + item.OpenByVolume;
+                    cfg.CloseRatioByMoney = cfg.CloseRatioByMoney == 0 ? 0 : cfg.CloseRatioByMoney + item.CloseByMoney;
+                    cfg.CloseRatioByVolume = cfg.CloseRatioByVolume == 0 ? 0 : cfg.CloseRatioByVolume + item.CloseByVolume;
+                    cfg.CloseTodayRatioByMoney = cfg.CloseTodayRatioByMoney == 0 ? 0 : cfg.CloseTodayRatioByMoney + item.CloseTodayByMoney;
+                    cfg.CloseTodayRatioByVolume = cfg.CloseTodayRatioByVolume == 0 ? 0 : cfg.CloseTodayRatioByVolume + item.CloseTodayByVolume;
+                }
+                else if (item.ChargeType == QSEnumChargeType.Percent)
+                {
+                    cfg.OpenRatioByMoney = cfg.OpenRatioByMoney * (1 + item.Percent);
+                    cfg.OpenRatioByVolume = cfg.OpenRatioByVolume * (1 + item.Percent);
+                    cfg.CloseRatioByMoney = cfg.CloseRatioByMoney * (1 + item.Percent);
+                    cfg.CloseRatioByVolume = cfg.CloseRatioByVolume * (1 + item.Percent);
+                    cfg.CloseTodayRatioByMoney = cfg.CloseTodayRatioByMoney * (1 + item.Percent);
+                    cfg.CloseTodayRatioByVolume = cfg.CloseTodayRatioByVolume * (1 + item.Percent);
+                }
+            }
+            cfg.Account = account.ID;
+            return cfg;
+
+        }
+        #endregion
+
     }
 }

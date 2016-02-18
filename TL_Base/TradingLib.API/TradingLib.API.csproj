@@ -52,7 +52,6 @@
     <Compile Include="Account\IAccCal.cs" />
     <Compile Include="Account\IAccOperation.cs" />
     <Compile Include="Account\IAccTradingInfo.cs" />
-    <Compile Include="Account\IAccConfig.cs" />
     <Compile Include="Account\IFinanceTotal.cs" />
     <Compile Include="EnumEquityType.cs" />
     <Compile Include="Msic\EnumAlgorithm.cs" />

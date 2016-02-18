@@ -92,6 +92,19 @@ namespace TradingLib.Common
         /// </summary>
         public decimal Commission { get { return _commission; } set { _commission = value; } }
 
+        decimal _stamptax = 0;
+        /// <summary>
+        /// 印花税
+        /// </summary>
+        public decimal StampTax { get { return _stamptax; } set { _stamptax = value; } }
+
+        decimal _transferfee = 0;
+        /// <summary>
+        /// 过户费
+        /// </summary>
+        public decimal TransferFee { get { return _transferfee; } set { _transferfee = value; } }
+
+
         decimal _profit = 0;
         /// <summary>
         /// 平仓盈亏
@@ -322,6 +335,8 @@ namespace TradingLib.Common
             this.OffsetFlag = copytrade.OffsetFlag;
             this.HedgeFlag = copytrade.HedgeFlag;
             this.Commission = copytrade.Commission;
+            this.StampTax = copytrade.StampTax;
+            this.TransferFee = copytrade.TransferFee;
             this.Profit = copytrade.Profit;
             
             this.Exchange = copytrade.Exchange;
@@ -390,7 +405,9 @@ namespace TradingLib.Common
             sb.Append(t.OffsetFlag.ToString()); sb.Append(d);
             sb.Append(t.BrokerLocalOrderID); sb.Append(d);
             sb.Append(t.BrokerRemoteOrderID); sb.Append(d);//
-            sb.Append(t.BrokerTradeID);
+            sb.Append(t.BrokerTradeID); sb.Append(d);
+            sb.Append(t.StampTax); sb.Append(d);
+            sb.Append(t.TransferFee); 
 
 
             return sb.ToString();
@@ -433,6 +450,9 @@ namespace TradingLib.Common
             t.BrokerLocalOrderID = rec[(int)TradeField.BrokerLocalOrderID];
             t.BrokerRemoteOrderID = rec[(int)TradeField.BrokerRemoteOrderID];
             t.BrokerTradeID = rec[(int)TradeField.BrokerTradeID];
+            t.StampTax = decimal.Parse(rec[(int)TradeField.StampTax]);
+            t.TransferFee = decimal.Parse(rec[(int)TradeField.TransferFee]);
+
             return t;
         }
 

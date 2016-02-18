@@ -133,5 +133,10 @@ namespace TradingLib.API
         /// </summary>
         QSEnumSymbolType SymbolType { get; set; }
 
+
+        /// <summary>
+        /// 名称 股票对应的 证券名称
+        /// </summary>
+        string Name { get; set; }
     }
 }
