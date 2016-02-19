@@ -64,6 +64,11 @@ namespace TradingLib.API
         /// 简称
         /// </summary>
         string Title { get; set; }
-        
+
+
+        /// <summary>
+        /// 结算方式
+        /// </summary>
+        QSEnumSettleType SettleType { get; set; }
     }
 }

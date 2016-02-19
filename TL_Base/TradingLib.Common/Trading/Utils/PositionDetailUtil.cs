@@ -10,22 +10,6 @@ namespace TradingLib.Common
     public static class PositionDetailUtil
     {
 
-        ///// <summary>
-        ///// 判断是否是历史持仓
-        ///// </summary>
-        ///// <param name="pos"></param>
-        ///// <param name="currtradingday"></param>
-        ///// <returns></returns>
-        //public static bool IsHisPosition(this PositionDetail pos)
-        //{
-        //    //如果交易日没有标注 表明该持仓明细是当日新开持仓明细 不为历史持仓，如果是历史持仓在写入历史持仓明细表的时候会加入交易日信息
-        //    if (pos.Settleday == 0)
-        //    {
-        //        return false;
-        //    }
-        //    return true;
-        //}
-
         /// <summary>
         /// 获得开仓时间
         /// </summary>
@@ -55,20 +39,39 @@ namespace TradingLib.Common
 
         /// <summary>
         /// 持仓成本
-        /// 今仓的持仓成本为 当日开仓价格 昨仓的平仓成本为 结算价格
+        /// 国内期货 今仓的持仓成本为 当日开仓价格 昨仓的平仓成本为 结算价格
+        /// 昨仓/今仓判断
+        /// 1.在交易日内由开仓成交生成的持仓明细为今仓
+        /// 2.从数据库加载的持仓明细为昨仓
         /// </summary>
         /// <param name="pos"></param>
         /// <returns></returns>
-        public static decimal PositionPrice(this PositionDetail pos)
+        public static decimal CostPrice(this PositionDetail pos)
         {
-            if (!pos.IsHisPosition)
-            {
-                return pos.OpenPrice;//开仓价
+            //按交易所结算方式设定来返回成本价
+            switch (pos.oSymbol.SecurityFamily.Exchange.SettleType)
+            { 
+                    //逐日结算 昨仓为昨日结算价 今仓为开仓价
+                case QSEnumSettleType.ByDate:
+                    return pos.IsHisPosition ? pos.LastSettlementPrice : pos.OpenPrice;
+                    //逐笔结算 为开仓价
+                case QSEnumSettleType.ByTrade:
+                    return pos.OpenPrice;
+                default:
+                    return pos.OpenPrice;
             }
-            else
-            {
-                return pos.LastSettlementPrice;//昨日结算价
-            }
+            //switch(pos.oSymbol.SecurityFamily.Type)
+            //{
+            //    //股票持仓的成本价为开仓价
+            //    case SecurityType.STK:
+            //        return pos.OpenPrice;
+            //    //国内期货 昨仓位昨日结算价 今仓为开仓价
+            //    case SecurityType.FUT:
+            //        return pos.IsHisPosition?pos.LastSettlementPrice:pos.OpenPrice;
+
+            //    default:
+            //        return pos.IsHisPosition?pos.LastSettlementPrice:pos.OpenPrice;
+            //}
         }
 
         /// <summary>

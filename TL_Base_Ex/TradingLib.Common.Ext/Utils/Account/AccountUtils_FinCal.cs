@@ -335,10 +335,10 @@ namespace TradingLib.Common
             return FilterPositions(account, SecurityType.FUT).Sum(pos => pos.CalcUnRealizedPL());
         }
 
-        public static decimal CalFutSettleUnRealizedPL(this IAccount account)
-        {
-            return FilterPositions(account, SecurityType.FUT).Sum(pos => pos.CalcSettleUnRealizedPL());
-        }
+        //public static decimal CalFutSettleUnRealizedPL(this IAccount account)
+        //{
+        //    return FilterPositions(account, SecurityType.FUT).Sum(pos => pos.CalcSettleUnRealizedPL());
+        //}
 
         public static decimal CalFutRealizedPL(this IAccount account)
         {
@@ -456,7 +456,7 @@ namespace TradingLib.Common
   
         #endregion
 
-        #region 异化合约财务计算
+        #region 股票合约财务计算
         /// <summary>
         /// 股票持仓成本
         /// </summary>
@@ -476,16 +476,6 @@ namespace TradingLib.Common
         {
             return FilterPositions(account, SecurityType.STK).Sum(pos => pos.CalcPositionMarketValue());
         }
-
-        /// <summary>
-        /// 股票结算市值
-        /// </summary>
-        /// <param name="acc"></param>
-        /// <returns></returns>
-        //public static decimal CalcStkSettlePositionMarketValue(this IAccount account)
-        //{
-        //    return FilterPositions(account, SecurityType.STK).Sum(pos => pos.CalcSettlePositionValue());
-        //}
 
         /// <summary>
         /// 股票手续费

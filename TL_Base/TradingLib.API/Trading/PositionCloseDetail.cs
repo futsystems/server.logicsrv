@@ -102,7 +102,10 @@ namespace TradingLib.API
         /// </summary>
         decimal ClosePointByDate { get; set; }
 
-
+        /// <summary>
+        /// 逐笔平仓盈亏点数
+        /// </summary>
+        decimal ClosePointByTrade { get; set; }
         /// <summary>
         /// 合约信息
         /// </summary>

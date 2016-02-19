@@ -20,6 +20,7 @@ namespace TradingLib.Common
         private string _calendar;//假日
         private string _timezoneid;//时区信息
         private int _closetime;//收盘时间
+        private QSEnumSettleType _settletype;//结算方式
 
         /// <summary>
         /// 交易所数据库编号
@@ -61,6 +62,10 @@ namespace TradingLib.Common
         /// </summary>
         public int CloseTime { get { return _closetime; } set { _closetime = value; } }
 
+        /// <summary>
+        /// 结算方式
+        /// </summary>
+        public QSEnumSettleType SettleType { get { return _settletype; } set { _settletype = value; } }
 
         public Exchange()
         {
@@ -200,6 +205,8 @@ namespace TradingLib.Common
             sb.Append(ex.TimeZoneID);
             sb.Append(d);
             sb.Append(ex.CloseTime);
+            sb.Append(d);
+            sb.Append(ex.SettleType.ToString());
             return sb.ToString();
         }
 
@@ -216,6 +223,7 @@ namespace TradingLib.Common
             ex.Calendar = rec[5];
             ex.TimeZoneID = rec[6];
             ex.CloseTime = int.Parse(rec[7]);
+            ex.SettleType = (QSEnumSettleType)Enum.Parse(typeof(QSEnumSettleType), rec[8]);
             return ex;
 
         }

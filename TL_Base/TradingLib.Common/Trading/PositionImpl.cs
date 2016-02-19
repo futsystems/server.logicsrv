@@ -642,7 +642,7 @@ namespace TradingLib.Common
             }
             else
             {
-                this._price = _postotallist.Where(pos1 => !pos1.IsClosed()).Sum(pos2 => pos2.Volume* pos2.PositionPrice()) / Math.Abs(this._size);
+                this._price = _postotallist.Where(pos1 => !pos1.IsClosed()).Sum(pos2 => pos2.Volume * pos2.CostPrice()) / Math.Abs(this._size);
             }
             Util.Debug("runing size:" + this._size.ToString() + " positiondetail size:" + _postotallist.Where(pos1 => !pos1.IsClosed()).Sum(pos2 => pos2.Volume));
             _closedpl += cpl; // update running closed pl 更新平仓盈亏
@@ -688,11 +688,11 @@ namespace TradingLib.Common
             }
             else
             {
-                decimal v = d.PositionPrice();
+                decimal v = d.CostPrice();
                 int s = d.Volume;
 
                 //通过加权计算获得当前的持仓均价
-                this._price = _postotallist.Where(pos1 => !pos1.IsClosed()).Sum(pos2 => pos2.Volume * pos2.PositionPrice()) / Math.Abs(this._size);
+                this._price = _postotallist.Where(pos1 => !pos1.IsClosed()).Sum(pos2 => pos2.Volume * pos2.CostPrice()) / Math.Abs(this._size);
             }   
             return 0;//开仓时 平仓成本为0
         }
@@ -746,6 +746,8 @@ namespace TradingLib.Common
         /// 利用平仓成交平掉对应的持仓明细 按照先开先平或者平今平昨的平仓逻辑
         /// 如果是净持仓 可能会导致逻辑异常 这里需要再分析一下
         /// 平仓操作会返回一个平仓盈亏 用于填充到adjust
+        /// 
+        /// 平仓操作根据交易所结算规 返回逐日或逐笔平仓数据
         /// </summary>
         /// <param name="close"></param>
         decimal  ClosePosition(Trade close,out bool closefail)
@@ -753,12 +755,16 @@ namespace TradingLib.Common
             closefail = false;
 
             int remainsize = close.UnsignedSize;
-            decimal closeprofit = 0;//平仓盈亏金额
+            decimal closeprofit = 0;//平仓盈亏金额 用于设定平仓成交的平仓盈亏金额
             decimal closepoint = 0;//平仓盈亏点数
+            bool bydate = close.oSymbol.SecurityFamily.Exchange.SettleType == QSEnumSettleType.ByDate;
 
             //先平历史持仓或者按照平今 平昨的规则进行
             foreach (PositionDetail p in _poshisnewlist)
             {
+                //上期所平今成交 不对历史持仓进行计算
+                if (close.oSymbol.SecurityFamily.Exchange.EXCode == "SHFE" && close.OffsetFlag == QSEnumOffsetFlag.CLOSETODAY) continue;
+
                 if (remainsize == 0) break; //剩余平仓数量为0 跳出 当有多余的持仓明细没有被平掉，而当前平仓成交已经使用完毕
                 if (p.IsClosed()) continue;//如果当前持仓明细已经关闭 则取下一条持仓明细
                 PositionCloseDetail closedetail = null;
@@ -773,8 +779,8 @@ namespace TradingLib.Common
                 }
                 if (closedetail != null)
                 {
-                    closeprofit += closedetail.CloseProfitByDate;//平仓盈亏金额
-                    closepoint += closedetail.ClosePointByDate;
+                    closeprofit += bydate ? closedetail.CloseProfitByDate : closedetail.CloseProfitByTrade;//平仓盈亏金额
+                    closepoint += bydate ? closedetail.ClosePointByDate : closedetail.ClosePointByTrade;
                     remainsize -= closedetail.CloseVolume;
                     NewPositionCloseDetail(close,closedetail);
                 }
@@ -800,8 +806,8 @@ namespace TradingLib.Common
                 }
                 if (closedetail != null)
                 {
-                    closeprofit += closedetail.CloseProfitByDate;
-                    closepoint += closedetail.ClosePointByDate;
+                    closeprofit += bydate ? closedetail.CloseProfitByDate : closedetail.CloseProfitByTrade;
+                    closepoint += bydate ? closedetail.ClosePointByDate : closedetail.ClosePointByTrade;
                     remainsize -= closedetail.CloseVolume;
                     NewPositionCloseDetail(close,closedetail);
                 }

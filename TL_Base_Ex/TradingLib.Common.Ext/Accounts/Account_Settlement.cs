@@ -137,7 +137,6 @@ namespace TradingLib.Common
                         //保存结算持仓明细时要将结算日更新为当前
                         pd.Settleday = settleday;
                         //保存持仓明细到数据库
-                        //ORM.MSettlement.InsertPositionDetail(pd);
                         TLCtxHelper.ModuleDataRepository.NewPositionDetail(pd);
                         positiondetail_settle.Add(pd);
                     }
@@ -145,11 +144,15 @@ namespace TradingLib.Common
                 ///2.统计手续费 平仓盈亏 盯市持仓盈亏
                 //手续费 手续费为所有成交手续费累加
                 settlement.Commission = this.GetTrades(exchange, settleday).Sum(f => f.Commission);
+
                 //平仓盈亏 为所有持仓对象下面的平仓明细的平仓盈亏累加
                 //settlement.CloseProfitByDate = this.GetPositions(exchange).Sum(pos => pos.PositionCloseDetail.Sum(pcd => pcd.CloseProfitByDate));
                 //平仓盈亏核查 理论上成交累加的平仓盈亏和持仓明细累加的平仓盈亏应该一致
                 decimal closeprofit_commission = this.GetTrades(exchange, settleday).Sum(f => f.Profit);//累加某个交易所的所有成交平仓盈亏
-                decimal closeprofit_posdetail = this.GetPositions(exchange).Sum(pos => pos.CalCloseProfitByDate());
+                //根据交易所结算模式返回逐日或逐笔平仓盈亏
+                decimal closeprofit_posdetail = exchange.SettleType == QSEnumSettleType.ByDate ? this.GetPositions(exchange).Sum(pos => pos.CalCloseProfitByDate()) : this.GetPositions(exchange).Sum(pos => pos.CalCloseProfitByTrade());
+                
+                
                 bool same = closeprofit_commission - closeprofit_posdetail < 1;
                 //两种计算方式不一致
                 if (!same)
@@ -172,13 +175,13 @@ namespace TradingLib.Common
                     }
                 }
                 settlement.CloseProfitByDate = closeprofit_posdetail;
+
                 //浮动盈亏
-                //settlement.PositionProfitByDate = this.GetPositions(exchange).Sum(pos => pos.PositionDetailTotal.Sum(pd => pd.PositionProfitByDate));
-                settlement.PositionProfitByDate = this.GetPositions(exchange).Sum(pos => pos.CalPositionProfitByDate());
+                //根据交易所结算规则返回逐日浮动盈亏或0 逐笔结算不将浮动盈亏结算进入当日权益
+                settlement.PositionProfitByDate = exchange.SettleType == QSEnumSettleType.ByDate ? this.GetPositions(exchange).Sum(pos => pos.CalPositionProfitByDate()) : 0;
                 
                 
                 ///3.保存结算记录到数据库
-                //ORM.MSettlement.InsertExchangeSettlement(settlement);
                 TLCtxHelper.ModuleDataRepository.NewExchangeSettlement(settlement);
 
                 ///4.标注已结算数据 委托 成交 持仓

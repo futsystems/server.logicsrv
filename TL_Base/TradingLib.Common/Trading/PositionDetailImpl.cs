@@ -61,7 +61,8 @@ namespace TradingLib.Common
         }
 
         /// <summary>
-        /// 设定Position持仓对象的 持仓明细对象，用于形成工作内存数据
+        /// 设定Position持仓对象
+        /// 开仓成交生成新的持仓明细
         /// </summary>
         /// <param name="pos"></param>
         public PositionDetailImpl(Position pos)
@@ -181,8 +182,12 @@ namespace TradingLib.Common
         /// <summary>
         /// 今结算价
         /// 通过实现动态结算价 可以在不同情况下获得不同的结算价格
-        /// 正常情况下，可以通过Position获得最新价 用于计算持仓盈亏
-        /// 当结算时,持仓获得了结算价,可以通结算价格计算结算时候的盯市盈亏或逐笔盈亏
+        /// 
+        /// 用于计算逐笔盈亏或逐日盈亏
+        /// 
+        /// 开仓成交生成持仓明细
+        /// 持仓未设定结算价 则SettlementPrice为持仓最新价 LastPrice
+        /// 持仓设定结算价   则SettlementPrice为持仓结算价
         /// </summary>
         public decimal SettlementPrice 
         {
@@ -318,7 +323,7 @@ namespace TradingLib.Common
                         return 0;
                     else
                     {
-                        return (this.SettlementPrice - this.PositionPrice()) * this.Volume * this.oSymbol.Multiple * (this.Side ? 1 : -1);
+                        return (this.SettlementPrice - this.CostPrice()) * this.Volume * this.oSymbol.Multiple * (this.Side ? 1 : -1);
                     }
                 }
             }

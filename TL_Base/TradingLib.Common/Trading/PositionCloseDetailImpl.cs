@@ -233,6 +233,22 @@ namespace TradingLib.Common
             set { _closePointByDate = value; }
         }
 
+        decimal? _closePointByTrade;
+
+        /// <summary>
+        /// 逐笔平仓盈亏点数
+        /// </summary>
+        public decimal ClosePointByTrade
+        {
+            get
+            {
+                if(_closePointByTrade!=null)
+                    return (decimal)_closePointByTrade;
+                return (ClosePrice - OpenPrice) * CloseVolume * (Side ? 1 : -1);
+            }
+            set { _closePointByTrade = value; }
+        }
+
         decimal? _closeamount;
         /// <summary>
         /// 平仓金额
@@ -370,6 +386,8 @@ namespace TradingLib.Common
             sb.Append(d);
             sb.Append(close.ClosePointByDate);//17
             sb.Append(d);
+            sb.Append(close.ClosePointByTrade);
+            sb.Append(d);
             sb.Append(close.Exchange);//18
             sb.Append(d);
             sb.Append(close.Symbol);//19
@@ -406,11 +424,12 @@ namespace TradingLib.Common
             close.CloseProfitByDate = decimal.Parse(rec[15]);
             close.CloseProfitByTrade = decimal.Parse(rec[16]);
             close.ClosePointByDate = decimal.Parse(rec[17]);
-            close.Exchange = rec[18];
-            close.Symbol = rec[19];
-            close.SecCode = rec[20];
-            close.Broker = rec[21];
-            close.Breed = (QSEnumOrderBreedType)Enum.Parse(typeof(QSEnumOrderBreedType), rec[22]);
+            close.ClosePointByTrade = decimal.Parse(rec[18]);
+            close.Exchange = rec[19];
+            close.Symbol = rec[20];
+            close.SecCode = rec[21];
+            close.Broker = rec[22];
+            close.Breed = (QSEnumOrderBreedType)Enum.Parse(typeof(QSEnumOrderBreedType), rec[23]);
             return close;
 
         }

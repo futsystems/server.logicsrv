@@ -108,10 +108,10 @@ namespace TradingLib.Common
         /// </summary>
         /// <param name="p"></param>
         /// <returns></returns>
-        public static decimal CalcSettleUnRealizedPL(this Position p)
-        {
-            return p.PositionDetailTotal.Where(pos => !pos.IsClosed()).Sum(pos => pos.PositionProfitByDate);
-        }
+        //public static decimal CalcSettleUnRealizedPL(this Position p)
+        //{
+        //    return p.PositionDetailTotal.Where(pos => !pos.IsClosed()).Sum(pos => pos.PositionProfitByDate);
+        //}
 
 
         #region 计算持仓市值
@@ -243,7 +243,7 @@ namespace TradingLib.Common
              持仓成本	上日持仓 * 昨结算价 * 合约乘数 + SUM（今日持仓 * 开仓价 * 合约乘数）
              持仓均价	持仓成本/总持仓/合约乘数 这里价格采用的持仓价，昨仓取的是昨日结算价
              * */
-            p.PositionCost = pos.PositionDetailTotal.Where(pd => !pd.IsClosed()).Sum(pd => pd.PositionPrice() * pd.Volume * p.Multiple);
+            p.PositionCost = pos.PositionDetailTotal.Where(pd => !pd.IsClosed()).Sum(pd => pd.CostPrice() * pd.Volume * p.Multiple);
             
             //开仓成本
             /*

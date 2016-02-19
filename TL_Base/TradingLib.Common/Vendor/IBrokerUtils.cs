@@ -53,10 +53,10 @@ namespace TradingLib.Common
             return FilterPositions(broker, SecurityType.FUT).Sum(pos => pos.CalcUnRealizedPL());
         }
 
-        public static decimal CalFutSettleUnRealizedPL(this IBroker broker)
-        {
-            return FilterPositions(broker, SecurityType.FUT).Sum(pos => pos.CalcSettleUnRealizedPL());
-        }
+        //public static decimal CalFutSettleUnRealizedPL(this IBroker broker)
+        //{
+        //    return FilterPositions(broker, SecurityType.FUT).Sum(pos => pos.CalcSettleUnRealizedPL());
+        //}
 
         public static decimal CalFutRealizedPL(this IBroker broker)
         {
