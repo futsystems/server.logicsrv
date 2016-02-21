@@ -4,7 +4,7 @@ namespace TradingLib.API
     /// <summary>
     /// Stock, Option, Future, Currency Forward, Forward, FOP, Warrant, ForEx, Index, Bond
     /// </summary>
-    public enum SecurityType : byte
+    public enum SecurityType //: byte
     {
 
         NIL,

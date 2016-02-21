@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using TradingLib.API;
-
+using TradingLib.Mixins.Json;
 
 namespace TradingLib.Common
 {
@@ -69,6 +69,20 @@ namespace TradingLib.Common
         /// 模板ID
         /// </summary>
         public int Template_ID { get; set; }
+
+        /// <summary>
+        /// 品种类别
+        /// </summary>
+        public SecurityType SecurityType { get; set; }
+
+        [NoJsonExportAttr()]
+        public string CommissionItemKey
+        {
+            get
+            {
+                return string.Format("{0}-{1}-{2}", this.SecurityType, this.Code, this.Month);
+            }
+        }
     }
 
 
@@ -77,17 +91,6 @@ namespace TradingLib.Common
     /// </summary>
     public class CommissionTemplateItem : CommissionTemplateItemSetting
     {
-        
-
-        /// <summary>
-        /// 获得该手续费项目的键值
-        /// </summary>
-        /// <returns></returns>
-        public string GetItemKey()
-        {
-            return string.Format("{0}-{1}", this.Code, this.Month);
-        }
-
 
         /// <summary>
         /// 计算手续费
@@ -95,27 +98,84 @@ namespace TradingLib.Common
         /// <param name="f"></param>
         /// <param name="offset"></param>
         /// <returns></returns>
-        public decimal CalCommission(Trade f, QSEnumOffsetFlag offset)
+        public decimal CalcCommission(decimal basecommission,Trade f)
         {
-            switch (offset)
+            decimal commission = 0;
+            switch (this.SecurityType)
             {
-                case QSEnumOffsetFlag.OPEN://开仓手续费
-                    return (this.OpenByMoney != 0 ? CalCommissionByMoney(f, this.OpenByMoney) : CalCommissionByVolume(f,this.OpenByVolume));
-                case QSEnumOffsetFlag.CLOSE://平仓手续费
-                case QSEnumOffsetFlag.CLOSEYESTERDAY:
-                    return (this.CloseByMoney != 0 ? CalCommissionByMoney(f, this.CloseByMoney) : CalCommissionByVolume(f,this.CloseByVolume));
-                case QSEnumOffsetFlag.CLOSETODAY://平今手续费
-                    return (this.CloseTodayByMoney != 0 ? CalCommissionByMoney(f, this.CloseTodayByMoney) : CalCommissionByVolume(f,this.CloseTodayByVolume));
+                case SecurityType.FUT:
+                    {
+                        switch (f.OffsetFlag)
+                        {
+                            case QSEnumOffsetFlag.OPEN://开仓手续费
+                                commission = (this.OpenByMoney != 0 ? CalCommissionByMoney(f, this.OpenByMoney) : CalCommissionByVolume(f, this.OpenByVolume));
+                                break;
+                            case QSEnumOffsetFlag.CLOSE://平仓手续费
+                            case QSEnumOffsetFlag.CLOSEYESTERDAY:
+                                commission = (this.CloseByMoney != 0 ? CalCommissionByMoney(f, this.CloseByMoney) : CalCommissionByVolume(f, this.CloseByVolume));
+                                break;
+                            case QSEnumOffsetFlag.CLOSETODAY://平今手续费
+                                commission = (this.CloseTodayByMoney != 0 ? CalCommissionByMoney(f, this.CloseTodayByMoney) : CalCommissionByVolume(f, this.CloseTodayByVolume));
+                                break;
+                            default:
+                                commission = (this.OpenByMoney != 0 ? CalCommissionByMoney(f, this.OpenByMoney) : CalCommissionByVolume(f, this.OpenByVolume));
+                                break;
+                        }
+                        break;
+                    }
+                case SecurityType.STK:
+                    {
+                        switch (f.OffsetFlag)
+                        {
+                            case QSEnumOffsetFlag.OPEN://开仓手续费
+                                commission = (this.OpenByMoney != 0 ? CalCommissionByMoney(f, this.OpenByMoney) : CalCommissionByVolume(f, this.OpenByVolume));
+                                break;
+                            case QSEnumOffsetFlag.CLOSE://平仓手续费
+                            case QSEnumOffsetFlag.CLOSEYESTERDAY:
+                            case QSEnumOffsetFlag.CLOSETODAY:
+                                commission = (this.CloseByMoney != 0 ? CalCommissionByMoney(f, this.CloseByMoney) : CalCommissionByVolume(f, this.CloseByVolume));
+                                break;
+                            default:
+                                commission = (this.OpenByMoney != 0 ? CalCommissionByMoney(f, this.OpenByMoney) : CalCommissionByVolume(f, this.OpenByVolume));
+                                break;
+                        }
+                        break;
+                    }
                 default:
-                    return (this.OpenByMoney != 0 ? CalCommissionByMoney(f, this.OpenByMoney) : CalCommissionByVolume(f,this.OpenByVolume));
+                    commission = 0;
+                    break;
             }
-        }
 
+            switch (this.ChargeType)
+            {
+                case QSEnumChargeType.Absolute:
+                    return commission;
+                case QSEnumChargeType.Relative:
+                    return basecommission + commission;
+                case QSEnumChargeType.Percent:
+                    return basecommission * (1 + this.Percent);
+                default:
+                    return basecommission;
+            }
+
+        }
+        /// <summary>
+        /// 按成交金额计算手续费
+        /// </summary>
+        /// <param name="f"></param>
+        /// <param name="commissionrate"></param>
+        /// <returns></returns>
         decimal CalCommissionByMoney(Trade f,decimal commissionrate)
         {
             return commissionrate * f.xPrice * f.UnsignedSize * f.oSymbol.Multiple;
         }
 
+        /// <summary>
+        /// 按成交手数计算手续费
+        /// </summary>
+        /// <param name="f"></param>
+        /// <param name="commissionrate"></param>
+        /// <returns></returns>
         decimal CalCommissionByVolume(Trade f, decimal commissionrate)
         {
             return commissionrate * f.UnsignedSize;

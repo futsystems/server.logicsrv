@@ -50,39 +50,44 @@ namespace TradingLib.Common
 
         Dictionary<string, CommissionTemplateItem> _itemamp = new Dictionary<string, CommissionTemplateItem>();
 
+        
         /// <summary>
         /// 添加手续费项目
         /// </summary>
         /// <param name="item"></param>
         public void AddItem(CommissionTemplateItem item)
         {
-            if (_itemamp.Keys.Contains(item.GetItemKey()))
+            if (_itemamp.Keys.Contains(item.CommissionItemKey))
             {
-                _itemamp[item.GetItemKey()] = item;
+                _itemamp[item.CommissionItemKey] = item;
             }
             else
             {
-                _itemamp.Add(item.GetItemKey(), item);
+                _itemamp.Add(item.CommissionItemKey, item);
             }
         }
 
-        /// <summary>
-        /// 获得手续费模板中的某个模板项，模板项按品种-月份 进行索引
-        /// </summary>
-        /// <param name="code"></param>
-        /// <returns></returns>
-        public CommissionTemplateItem this[string code,int month]
+        public CommissionTemplateItem this[string key]
         {
             get
             {
                 CommissionTemplateItem item = null;
-                string key = string.Format("{0}-{1}", code, month);
                 if (_itemamp.TryGetValue(key, out item))
                 {
                     return item;
                 }
                 return null;
             }
+        }
+        /// <summary>
+        /// 获得某个合约对应的手续费项
+        /// </summary>
+        /// <param name="symbol"></param>
+        /// <returns></returns>
+        public CommissionTemplateItem GetCommissionItem(Symbol symbol)
+        { 
+            //品种 月份 
+            return this[symbol.GetCommissionItemKey()];
         }
 
         /// <summary>
@@ -102,6 +107,8 @@ namespace TradingLib.Common
                 return _itemamp.Keys.Contains(string.Format("{0}-{1}", code, month));
             }
         }
+
+        
 
     }
 }

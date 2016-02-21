@@ -12,23 +12,42 @@ namespace TradingLib.Common
     /// </summary>
     public static class AccountUtils_CommissionMargin
     {
+        /// <summary>
+        /// 获得帐户设定的手续费模板
+        /// </summary>
+        /// <param name="account"></param>
+        /// <returns></returns>
         static CommissionTemplate GetCommissionTemplate(this IAccount account)
         {
             return BasicTracker.CommissionTemplateTracker[account.Commission_ID];
         }
 
+        /// <summary>
+        /// 获得帐户设定的保证金模板
+        /// </summary>
+        /// <param name="account"></param>
+        /// <returns></returns>
         static MarginTemplate GetMarginTemplate(this IAccount account)
         {
             return BasicTracker.MarginTemplateTracker[account.Margin_ID];
         }
 
-        static CommissionTemplateItem GetCommissionTemplateItem(this IAccount account,Symbol symbol)
+
+        /// <summary>
+        /// 获得某个合约的手续费项目
+        /// </summary>
+        /// <param name="account"></param>
+        /// <param name="symbol"></param>
+        /// <returns></returns>
+        static CommissionTemplateItem GetCommissionTemplateItem(this IAccount account, Symbol symbol)
         {
             CommissionTemplate tmp = account.GetCommissionTemplate();
             if (tmp == null)
                 return null;
-            return tmp[symbol.SecurityFamily.Code, symbol.GetMonth()];
+            return tmp.GetCommissionItem(symbol);
         }
+
+
 
         static MarginTemplateItem GetMarginTemplateItem(this IAccount account, Symbol symbol)
         {
@@ -36,8 +55,9 @@ namespace TradingLib.Common
             if (tmp == null)
                 return null;
             return tmp[symbol.SecurityFamily.Code, symbol.GetMonth()];
-            
+
         }
+
 
         #region 计算手续费 保证金等数据
         /// <summary>
@@ -76,9 +96,9 @@ namespace TradingLib.Common
             else
                 basecommission = commissionrate * f.UnsignedSize;
 
-            //获得该帐户某个合约的手续费模板项
+            //获得该帐户某个合约对应的手续费计算策略
             CommissionTemplateItem item = account.GetCommissionTemplateItem(f.oSymbol);
-
+            
             //没有设置手续费模板
             if (item == null)
             {
@@ -86,17 +106,7 @@ namespace TradingLib.Common
             }
             else
             {
-                switch (item.ChargeType)
-                {
-                    case QSEnumChargeType.Absolute:
-                        return item.CalCommission(f, f.OffsetFlag);
-                    case QSEnumChargeType.Relative:
-                        return basecommission + item.CalCommission(f, f.OffsetFlag);
-                    case QSEnumChargeType.Percent:
-                        return basecommission * (1 + item.Percent);
-                    default:
-                        return basecommission;
-                }
+                return item.CalcCommission(basecommission, f);
             }
         }
 

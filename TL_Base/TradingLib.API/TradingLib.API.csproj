@@ -63,6 +63,7 @@
     <Compile Include="Trading\CashTransaction.cs" />
     <Compile Include="Trading\Data\EnumBarElement.cs" />
     <Compile Include="Trading\Data\ISeries.cs" />
+    <Compile Include="Trading\EnumChargeType.cs" />
     <Compile Include="Trading\EnumQuote2Side.cs" />
     <Compile Include="Trading\EnumSettleType.cs" />
     <Compile Include="Trading\EnumStrategy.cs" />

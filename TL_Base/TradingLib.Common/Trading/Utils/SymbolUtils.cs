@@ -9,6 +9,22 @@ namespace TradingLib.Common
     public static class SymbolUtils
     {
         /// <summary>
+        /// 获得合约名称
+        /// </summary>
+        /// <param name="symbol"></param>
+        /// <returns></returns>
+        public static string GetName(this Symbol symbol)
+        {
+            if (!string.IsNullOrEmpty(symbol.Name)) return symbol.Name;
+            switch (symbol.SecurityFamily.Type)
+            { 
+                case SecurityType.FUT:
+                    return string.Format("{0}{1}", symbol.SecurityFamily.Name, symbol.GetFutNumSuffix());
+                default:
+                    return symbol.SecurityFamily.Code;
+            }
+        }
+        /// <summary>
         /// 按照某个合约的PriceTick显示对应的价格
         /// </summary>
         /// <param name="symbol"></param>
@@ -49,24 +65,51 @@ namespace TradingLib.Common
 
 
         /// <summary>
+        /// 获得合约手续费项目键值
+        /// 品种类型-代码代码-月份
+        /// </summary>
+        /// <param name="sym"></param>
+        /// <returns></returns>
+        public static string GetCommissionItemKey(this Symbol sym)
+        {
+            return string.Format("{0}-{1}-{2}", sym.SecurityFamily.Type, sym.SecurityFamily.Code, sym.GetMonth());
+        }
+
+        /// <summary>
         /// 获得合约月份
         /// </summary>
         /// <param name="sym"></param>
         /// <returns></returns>
         public static int GetMonth(this Symbol sym)
         {
-            //异化合约合约月份按底层所依赖的合约月份
-            //if (sym.SecurityFamily.Type == SecurityType.INNOV)
-            //{
-            //    return GetMonth(sym.ULSymbol);
-            //}
-            
-            //if (sym.SecurityFamily.Exchange.Country == Country.CN)
-            //{
-            //    string month = sym.Symbol.Substring(sym.Symbol.Length - 2, 2);
-            //}
-            string month = sym.ExpireDate.ToString().Substring(4, 2);
-            return int.Parse(month);
+            if (sym.SecurityFamily.Type == SecurityType.FUT)
+            {
+                string month = sym.ExpireDate.ToString().Substring(4, 2);//20150101
+                return int.Parse(month);
+            }
+            else
+            {
+                return 0;
+            }
+        }
+
+        /// <summary>
+        /// 获得期货合约后缀
+        /// 201501 
+        /// </summary>
+        /// <param name="sym"></param>
+        /// <returns></returns>
+        static string GetFutNumSuffix(this Symbol sym)
+        {
+            string expire = sym.ExpireDate.ToString();
+            if (expire.Length == 8)
+            {
+                return sym.ExpireDate.ToString().Substring(2, 4);
+            }
+            else
+            {
+                return "0000";
+            }
         }
 
 

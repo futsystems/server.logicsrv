@@ -26,13 +26,13 @@ namespace TradingLib.Common
             foreach (CommissionTemplateItem item in ORM.MCommission.SelectCommissionTemplateItems())
             {
                 commissionTemplateItemMap.TryAdd(item.ID, item);
-
                 CommissionTemplate tmp = this[item.Template_ID];
                 if (tmp != null)
                 {
                     tmp.AddItem(item);
                 }
             }
+
             //将手续费模板项目 注入到模板中
         }
 
@@ -132,9 +132,11 @@ namespace TradingLib.Common
                 //插入原始数据
                 t.ID = target.ID;
 
+                //插入手续费模板时 通过超级添加对应的期货,股票等手续费项
                 Domain domain = BasicTracker.DomainTracker.SuperDomain;
                 if (domain != null)
                 {
+                    //添加期货手续费
                     foreach (SecurityFamilyImpl sec in domain.GetSecurityFamilies().Where(sec=>sec.Type == SecurityType.FUT))
                     {
                         for (int i = 1; i <= 12; i++)
@@ -151,12 +153,36 @@ namespace TradingLib.Common
                             item.ChargeType = QSEnumChargeType.Relative;
                             item.Template_ID = target.ID;
                             item.Percent = 0;
+                            item.SecurityType = SecurityType.FUT;
                             ORM.MCommission.InsertCommissionTemplateItem(item);
 
                             //加入到内存数据结构
                             commissionTemplateItemMap.TryAdd(item.ID, item);
                             target.AddItem(item);
                         }
+                    }
+
+                    //添加股票手续费项
+                    foreach (SecurityFamilyImpl sec in domain.GetSecurityFamilies().Where(sec => sec.Type == SecurityType.STK))
+                    {
+                        CommissionTemplateItem item = new CommissionTemplateItem();
+                        item.Code = sec.Code;
+                        item.Month = 0;
+                        item.OpenByMoney = 0;
+                        item.OpenByVolume = 0;
+                        item.CloseByMoney = 0;
+                        item.CloseByVolume = 0;
+                        item.CloseTodayByMoney = 0;
+                        item.CloseTodayByVolume = 0;
+                        item.ChargeType = QSEnumChargeType.Relative;
+                        item.Template_ID = target.ID;
+                        item.Percent = 0;
+                        item.SecurityType = SecurityType.STK;
+                        ORM.MCommission.InsertCommissionTemplateItem(item);
+
+                        //加入到内存数据结构
+                        commissionTemplateItemMap.TryAdd(item.ID, item);
+                        target.AddItem(item);
                     }
                 }
                 

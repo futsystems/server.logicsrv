@@ -90,7 +90,7 @@ namespace TradingLib.ORM
         {
             using (DBMySql db = new DBMySql())
             {
-                string query = string.Format("INSERT INTO cfg_commission (`code`,`month`,`openbymoney`,`openbyvolume`,`closetodaybymoney`,`closetodaybyvolume`,`closebymoney`,`closebyvolume`,`chargetype`,`template_id`,`percent`) VALUES ( '{0}','{1}','{2}','{3}','{4}','{5}','{6}','{7}','{8}','{9}','{10}')", item.Code, item.Month, item.OpenByMoney, item.OpenByVolume, item.CloseTodayByMoney, item.CloseTodayByVolume, item.CloseByMoney, item.CloseByVolume, item.ChargeType, item.Template_ID, item.Percent);
+                string query = string.Format("INSERT INTO cfg_commission (`code`,`month`,`openbymoney`,`openbyvolume`,`closetodaybymoney`,`closetodaybyvolume`,`closebymoney`,`closebyvolume`,`chargetype`,`template_id`,`percent`,`securitytype`) VALUES ( '{0}','{1}','{2}','{3}','{4}','{5}','{6}','{7}','{8}','{9}','{10}','{11}')", item.Code, item.Month, item.OpenByMoney, item.OpenByVolume, item.CloseTodayByMoney, item.CloseTodayByVolume, item.CloseByMoney, item.CloseByVolume, item.ChargeType, item.Template_ID, item.Percent,item.SecurityType);
                 int row = db.Connection.Execute(query);
                 SetIdentity(db.Connection, id => item.ID = id, "id", "cfg_commission");
             }

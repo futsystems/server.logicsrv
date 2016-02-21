@@ -3,9 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.ComponentModel;
-using TradingLib.API;
 
-namespace TradingLib.Common
+namespace TradingLib.API
 {
     public enum  QSEnumChargeType
     {

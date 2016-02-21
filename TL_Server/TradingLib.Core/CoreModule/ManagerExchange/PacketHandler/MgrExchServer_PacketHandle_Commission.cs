@@ -228,7 +228,7 @@ namespace TradingLib.Core
 
                     //调用update更新或添加
                     BasicTracker.CommissionTemplateTracker.UpdateCommissionTemplateItem(t);
-                    session.NotifyMgr("NotifyCommissionTemplateItem", template[t.Code, t.Month]);
+                    session.NotifyMgr("NotifyCommissionTemplateItem", template[t.CommissionItemKey]);
                 }
 
             }
@@ -250,7 +250,7 @@ namespace TradingLib.Core
 
                         //调用update更新或添加
                         BasicTracker.CommissionTemplateTracker.UpdateCommissionTemplateItem(t);
-                        session.NotifyMgr("NotifyCommissionTemplateItem", template[t.Code, t.Month]);
+                        session.NotifyMgr("NotifyCommissionTemplateItem", template[t.CommissionItemKey]);
                     }
                 }
                 //更新所有品种所有月份
@@ -269,19 +269,18 @@ namespace TradingLib.Core
 
                         //调用update更新或添加
                         BasicTracker.CommissionTemplateTracker.UpdateCommissionTemplateItem(t);
-                        session.NotifyMgr("NotifyCommissionTemplateItem", template[t.Code, t.Month]);
+                        session.NotifyMgr("NotifyCommissionTemplateItem", template[t.CommissionItemKey]);
                     }
                 }
                 else //更新某个特定月份
                 {
-                    if (template[item.Code, item.Month] == null)
+                    if (template[item.CommissionItemKey] == null)
                     {
                         throw new FutsRspError("手续费模板项目不存在");
                     }
                     //调用update更新或添加
                     BasicTracker.CommissionTemplateTracker.UpdateCommissionTemplateItem(item);
-                    session.NotifyMgr("NotifyCommissionTemplateItem", template[item.Code, item.Month]);
-
+                    session.NotifyMgr("NotifyCommissionTemplateItem", template[item.CommissionItemKey]);
                 }
             }
             session.OperationSuccess("更新手续费项目功");
