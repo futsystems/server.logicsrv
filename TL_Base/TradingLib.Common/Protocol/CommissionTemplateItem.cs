@@ -49,6 +49,7 @@ namespace TradingLib.Protocol
             this.SetAllMonth = false;
             this.SetAllCodeMonth = false;
             this.Template_ID = item.Template_ID;
+            this.SecurityType = item.SecurityType;
             
         }
         /// <summary>

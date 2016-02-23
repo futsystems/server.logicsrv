@@ -242,25 +242,53 @@ namespace TradingLib.Common
         /// <param name="sec"></param>
         public void AddDefaultTemplateItem(CommissionTemplate tmp, SecurityFamilyImpl sec)
         {
-            for (int i = 1; i <= 12; i++)
+            switch (sec.Type)
             {
-                CommissionTemplateItem item = new CommissionTemplateItem();
-                item.Code = sec.Code;
-                item.Month = i;
-                item.OpenByMoney = 0;
-                item.OpenByVolume = 0;
-                item.CloseByMoney = 0;
-                item.CloseByVolume = 0;
-                item.CloseTodayByMoney = 0;
-                item.CloseTodayByVolume = 0;
-                item.ChargeType = QSEnumChargeType.Relative;
-                item.Template_ID = tmp.ID;
-                item.Percent = 0;
-                ORM.MCommission.InsertCommissionTemplateItem(item);
+                case SecurityType.FUT:
+                    for (int i = 1; i <= 12; i++)
+                    {
+                        CommissionTemplateItem item = new CommissionTemplateItem();
+                        item.Code = sec.Code;
+                        item.Month = i;
+                        item.OpenByMoney = 0;
+                        item.OpenByVolume = 0;
+                        item.CloseByMoney = 0;
+                        item.CloseByVolume = 0;
+                        item.CloseTodayByMoney = 0;
+                        item.CloseTodayByVolume = 0;
+                        item.ChargeType = QSEnumChargeType.Relative;
+                        item.Template_ID = tmp.ID;
+                        item.Percent = 0;
+                        ORM.MCommission.InsertCommissionTemplateItem(item);
 
-                //加入到内存数据结构
-                commissionTemplateItemMap.TryAdd(item.ID, item);
-                tmp.AddItem(item);
+                        //加入到内存数据结构
+                        commissionTemplateItemMap.TryAdd(item.ID, item);
+                        tmp.AddItem(item);
+                    }
+                    break;
+                case SecurityType.STK:
+                    {
+                        CommissionTemplateItem item = new CommissionTemplateItem();
+                        item.Code = sec.Code;
+                        item.Month = 0;
+                        item.OpenByMoney = 0;
+                        item.OpenByVolume = 0;
+                        item.CloseByMoney = 0;
+                        item.CloseByVolume = 0;
+                        item.CloseTodayByMoney = 0;
+                        item.CloseTodayByVolume = 0;
+                        item.ChargeType = QSEnumChargeType.Relative;
+                        item.Template_ID = tmp.ID;
+                        item.Percent = 0;
+                        ORM.MCommission.InsertCommissionTemplateItem(item);
+
+                        //加入到内存数据结构
+                        commissionTemplateItemMap.TryAdd(item.ID, item);
+                        tmp.AddItem(item);
+                    }
+                    break;
+                default:
+                    break;
             }
         }
     }

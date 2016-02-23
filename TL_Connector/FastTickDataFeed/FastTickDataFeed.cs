@@ -243,7 +243,7 @@ namespace DataFeed.FastTick
                                 }
                                 else
                                 {
-                                    //debug("tick str:" + tickstr, QSEnumDebugLevel.INFO);
+                                    //logger.Info("tick str:" + tickstr);
                                 }
 
                                 //记录数据到达时间

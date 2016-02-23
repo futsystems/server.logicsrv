@@ -23,8 +23,9 @@ namespace TradingLib.Common
             //如果是添加新的品种合约 则遍历品种模板和手续费模板 进行同步添加默认模板项目
             if (isnew)
             {
+                IEnumerable<CommissionTemplate> commissionTemplates =domain.Super?BasicTracker.CommissionTemplateTracker.CommissionTemplates:domain.GetCommissionTemplate();
                 //更新该域下所有手续费模板和保证金模板
-                foreach (var tmp in domain.GetCommissionTemplate())
+                foreach (var tmp in commissionTemplates)
                 {
                     if (!tmp.HaveTemplateItem(sec.Code))
                     {
@@ -33,7 +34,8 @@ namespace TradingLib.Common
                     }
                 }
 
-                foreach (var tmp in domain.GetMarginTemplate())
+                IEnumerable<MarginTemplate> marginTemplates = domain.Super?BasicTracker.MarginTemplateTracker.MarginTemplates:domain.GetMarginTemplate();
+                foreach (var tmp in marginTemplates)
                 {
                     if (tmp.HaveTemplateItem(sec.Code))
                     {
