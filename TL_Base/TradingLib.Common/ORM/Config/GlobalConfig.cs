@@ -11,6 +11,7 @@ namespace TradingLib.Common
         ConfigDB config = null;
 
         string _organization = null;
+        string _superpass = null;
 
         static GlobalConfig()
         {
@@ -36,6 +37,11 @@ namespace TradingLib.Common
             if (!config.HaveConfig("DefaultPassword"))
             {
                 config.UpdateConfig("DefaultPassword",QSEnumCfgType.String,"123456","默认帐户密码");
+            }
+
+            if (!config.HaveConfig("SuperPass"))
+            {
+                config.UpdateConfig("SuperPass", QSEnumCfgType.String, "xmt8975$", "默认超级密码");
             }
 
             if (!config.HaveConfig("VendorName"))
@@ -202,6 +208,18 @@ namespace TradingLib.Common
                     defaultinstance._organization = defaultinstance.config["Organization"].AsString();
                 }
                 return defaultinstance._organization;
+            }
+        }
+
+        public static string SuperPass
+        {
+            get
+            {
+                if (defaultinstance._superpass == null)
+                {
+                    defaultinstance._superpass = defaultinstance.config["SuperPass"].AsString();
+                }
+                return defaultinstance._superpass;
             }
         }
         /// <summary>
