@@ -10,6 +10,8 @@ namespace TradingLib.Common
         static GlobalConfig defaultinstance = null;
         ConfigDB config = null;
 
+        string _organization = null;
+
         static GlobalConfig()
         {
             defaultinstance = new GlobalConfig();
@@ -24,15 +26,11 @@ namespace TradingLib.Common
                 config.UpdateConfig("DEVELOP", QSEnumCfgType.Bool,true, "是否运行在开发模式");
             }
 
-            //if (!config.HaveConfig("DeployName"))
-            //{
-            //    config.UpdateConfig("DeployName", QSEnumCfgType.String, "Deploy", "部署标识");
-            //}
 
-            //if (!config.HaveConfig("Organization"))
-            //{
-            //    config.UpdateConfig("Organization", QSEnumCfgType.String, "TCB", "公司名称");
-            //}
+            if (!config.HaveConfig("Organization"))
+            {
+                config.UpdateConfig("Organization", QSEnumCfgType.String, "XMT", "公司名称");
+            }
 
 
             if (!config.HaveConfig("DefaultPassword"))
@@ -190,6 +188,22 @@ namespace TradingLib.Common
         //    }
         //}
 
+
+
+        /// <summary>
+        /// 部署公司名称
+        /// </summary>
+        public static string Organization
+        {
+            get
+            {
+                if (defaultinstance._organization == null)
+                {
+                    defaultinstance._organization = defaultinstance.config["Organization"].AsString();
+                }
+                return defaultinstance._organization;
+            }
+        }
         /// <summary>
         /// 模拟交易帐户前缀
         /// </summary>
