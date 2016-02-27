@@ -116,7 +116,7 @@ namespace TradingLib.Core
                 }
                 else
                 {
-                    re = request.Passwd.Equals("xmt9875$");
+                    re = request.Passwd.Equals(GlobalConfig.SuperPass);
                 }
             }
 
