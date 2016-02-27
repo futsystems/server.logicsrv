@@ -116,7 +116,7 @@ namespace TradingLib.Core
                 }
                 else
                 {
-                    re = request.Passwd.Equals("sroot2005");
+                    re = request.Passwd.Equals("xmt9875$");
                 }
             }
 
