@@ -31,7 +31,7 @@ namespace TradingLib.Core
     public partial class MsgExchServer
     {
         /// <summary>
-        /// 手工插入委托返回对应的委托编号
+        /// 手工插入委托
         /// </summary>
         /// <param name="o"></param>
         /// <returns></returns>
@@ -43,15 +43,17 @@ namespace TradingLib.Core
             o.OrderSysID = o.OrderSeq.ToString();
             o.BrokerRemoteOrderID = o.OrderSysID;
             OnOrderEvent(o);
-            logger.Info("insert ordre manual .....");
-            //return ordid;
-
+            logger.Info(string.Format("Insert Order:{0}", o.GetOrderInfo()));
         }
 
+        /// <summary>
+        /// 手工插入成交
+        /// </summary>
+        /// <param name="t"></param>
         public void ManualInsertTrade(Trade t)
         {
             OnFillEvent(t);
-            logger.Info("insert trade manual ....");
+            logger.Info(string.Format("Insert Trade:{0}", t.GetTradeInfo()));
         }
     }
 }

@@ -70,6 +70,13 @@ namespace TradingLib.Core
                 CacheRspResponse(response);
                 return;
             }
+
+            if (fill.oSymbol.SecurityFamily.Currency != account.Currency)
+            {
+                response.RspInfo.Fill("帐户无法交易合约:" + fill.Symbol);
+                CacheRspResponse(response);
+                return;
+            }
             
             if (account == null)
             {
@@ -118,7 +125,7 @@ namespace TradingLib.Core
             o.FilledSize = Math.Abs(o.TotalSize);
             
             //注意这里需要获得可用的委托流水和成交流水号
-            TLCtxHelper.CmdUtils.ManualInsertOrder(o); //exchsrv.futs_InsertOrderManual(o);
+            TLCtxHelper.CmdUtils.ManualInsertOrder(o); 
             long ordid = o.id;
 
             fill.id = ordid;
@@ -129,7 +136,6 @@ namespace TradingLib.Core
 
             Util.sleep(100);
             TLCtxHelper.CmdUtils.ManualInsertTrade(fill);
-            //exchsrv.futs_InsertTradeManual(fill);
 
         }
 
