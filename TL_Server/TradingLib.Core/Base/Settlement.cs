@@ -203,12 +203,12 @@ namespace TradingLib.Core
                         padCenterEx(t.Symbol, len_SYMBOL),
                         padLeftEx((t.xSize > 0 ? "买" : " 卖"), len_TBMM),
                         padLeftEx("投", len_TBMM),
-                        padCenterEx(Util.FormatDecimal(t.xPrice), len_PRICE),
+                        padCenterEx(t.xPrice.ToFormatStr(), len_PRICE),
                         padRightEx(t.UnsignedSize.ToString(), len_SIZE),
-                        padRightEx(Util.FormatDecimal(sym.GetMultiple() * t.xPrice * Math.Abs(t.xSize)), len_TURNOVER),
+                        padRightEx((sym.GetMultiple() * t.xPrice * Math.Abs(t.xSize)).ToFormatStr(), len_TURNOVER),
                         padLeftEx(GetCombFlag(t.OffsetFlag), len_TBMM),
-                        padRightEx(Util.FormatDecimal(t.Commission), len_PRICE),
-                        padRightEx(Util.FormatDecimal(t.Profit), len_COMMISSION),
+                        padRightEx(t.Commission.ToFormatStr(), len_PRICE),
+                        padRightEx(t.Profit.ToFormatStr(), len_COMMISSION),
                         padRightEx(t.TradeID, len_SEQID)
                         
                         ));
@@ -224,10 +224,10 @@ namespace TradingLib.Core
                         padCenterEx("", len_TBMM),
                         padCenterEx("", len_PRICE),
                         padRightEx(size.ToString(), len_SIZE),
-                        padRightEx(Util.FormatDecimal(tunover), len_TURNOVER),
+                        padRightEx(tunover.ToFormatStr(), len_TURNOVER),
                         padCenterEx("", len_TBMM),
-                        padRightEx(Util.FormatDecimal(commission), len_PRICE),
-                        padRightEx(Util.FormatDecimal(profit), len_COMMISSION),
+                        padRightEx(commission.ToFormatStr(), len_PRICE),
+                        padRightEx(profit.ToFormatStr(), len_COMMISSION),
                         padRightEx("", len_SEQID)
                     ));
                 settlelist.Add(sline);
@@ -277,10 +277,10 @@ namespace TradingLib.Core
                         padCenterEx(t.OpenDate.ToString(), len_DATE),
                         padLeftEx((t.Side ? "买" : " 卖"), len_TBMM),
                         padRightEx(t.CloseVolume.ToString(), len_SIZE),
-                        padCenterEx(Util.FormatDecimal(t.OpenPrice), len_PRICE),
-                        padCenterEx(Util.FormatDecimal(t.LastSettlementPrice), len_PRICE),
-                        padCenterEx(Util.FormatDecimal(t.ClosePrice), len_PRICE),
-                        padRightEx(Util.FormatDecimal(t.CloseProfitByDate), len_PROFIT)
+                        padCenterEx(t.OpenPrice.ToFormatStr(), len_PRICE),
+                        padCenterEx(t.LastSettlementPrice.ToFormatStr(), len_PRICE),
+                        padCenterEx(t.ClosePrice.ToFormatStr(), len_PRICE),
+                        padRightEx(t.CloseProfitByDate.ToFormatStr(), len_PROFIT)
                         ));
                 }
                 settlelist.Add(sline);
@@ -295,7 +295,7 @@ namespace TradingLib.Core
                         padCenterEx("", len_PRICE),
                         padCenterEx("", len_PRICE),
                         padCenterEx("", len_PRICE),
-                        padRightEx(Util.FormatDecimal(profit), len_PROFIT)
+                        padRightEx(profit.ToFormatStr(), len_PROFIT)
 
                         ));
                 settlelist.Add(sline);
@@ -351,12 +351,12 @@ namespace TradingLib.Core
                         padLeftEx("投", len_TBMM),
                         padLeftEx((pd.Side? "买" : " 卖"), len_TBMM),
                         padRightEx(pd.Volume.ToString(), len_SIZE),
-                        padCenterEx(Util.FormatDecimal(pd.OpenPrice), len_PRICE),
-                        padCenterEx(Util.FormatDecimal(pd.LastSettlementPrice), len_PRICE),
-                        padCenterEx(Util.FormatDecimal(pd.SettlementPrice), len_PRICE),
-                        padRightEx(Util.FormatDecimal(0), len_PROFIT),
-                        padRightEx(Util.FormatDecimal(pd.PositionProfitByDate), len_PROFIT),
-                        padRightEx(Util.FormatDecimal(pd.Margin), len_MARGIN)
+                        padCenterEx(pd.OpenPrice.ToFormatStr(), len_PRICE),
+                        padCenterEx(pd.LastSettlementPrice.ToFormatStr(), len_PRICE),
+                        padCenterEx(pd.SettlementPrice.ToFormatStr(), len_PRICE),
+                        padRightEx("0", len_PROFIT),
+                        padRightEx(pd.PositionProfitByDate.ToFormatStr(), len_PROFIT),
+                        padRightEx(pd.Margin.ToFormatStr(), len_MARGIN)
                         ));
                 }
                 settlelist.Add(sline);
@@ -371,9 +371,9 @@ namespace TradingLib.Core
                     padCenterEx("", len_PRICE),
                     padCenterEx("", len_PRICE),
                     padCenterEx("", len_PRICE),
-                    padRightEx(Util.FormatDecimal(unpl), len_PROFIT),
-                    padRightEx(Util.FormatDecimal(unplbydate), len_PROFIT),
-                    padRightEx(Util.FormatDecimal(hmargin), len_MARGIN)
+                    padRightEx(unpl.ToFormatStr(), len_PROFIT),
+                    padRightEx(unplbydate.ToFormatStr(), len_PROFIT),
+                    padRightEx(hmargin.ToFormatStr(), len_MARGIN)
                     ));
                 settlelist.Add(sline);
                 settlelist.Add(NewLine);
@@ -433,13 +433,13 @@ namespace TradingLib.Core
                         settlelist.Add(string.Format("|{0}|{1}|{2}|{3}|{4}|{5}|{6}|{7}|{8}|{9}|",
                         padCenterEx(pd.Symbol, len_SYMBOL),
                         padRightEx(longsize.ToString(), len_SIZE),
-                        padRightEx(Util.FormatDecimal(longprice), len_PRICE),
+                        padRightEx(longprice.ToFormatStr(), len_PRICE),
                         padRightEx(shortsize.ToString(), len_SIZE),
-                        padRightEx(Util.FormatDecimal(shortprice), len_PRICE),
-                        padCenterEx(Util.FormatDecimal(pd.LastSettlementPrice), len_PRICE),
-                        padCenterEx(Util.FormatDecimal(pd.SettlementPrice), len_PRICE),
-                        padRightEx(Util.FormatDecimal(settleunpl), len_PROFIT),
-                        padRightEx(Util.FormatDecimal(lmargin), len_MARGIN),
+                        padRightEx(shortprice.ToFormatStr(), len_PRICE),
+                        padCenterEx(pd.LastSettlementPrice.ToFormatStr(), len_PRICE),
+                        padCenterEx(pd.SettlementPrice.ToFormatStr(), len_PRICE),
+                        padRightEx(settleunpl.ToFormatStr(), len_PROFIT),
+                        padRightEx(lmargin.ToFormatStr(), len_MARGIN),
                         padLeftEx("投", len_TBMM)
                     ));
                         i++;
@@ -460,8 +460,8 @@ namespace TradingLib.Core
                     padCenterEx("", len_PRICE),
                     padCenterEx("", len_PRICE),
                     padCenterEx("", len_PRICE),
-                    padRightEx(Util.FormatDecimal(profit), len_PROFIT),
-                    padRightEx(Util.FormatDecimal(margin), len_MARGIN),
+                    padRightEx(profit.ToFormatStr(), len_PROFIT),
+                    padRightEx(margin.ToFormatStr(), len_MARGIN),
                     padCenterEx("", len_TBMM)
                     ));
                 settlelist.Add(sline);

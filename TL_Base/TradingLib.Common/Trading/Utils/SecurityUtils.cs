@@ -27,33 +27,20 @@ namespace TradingLib.Common
         }
 
         /// <summary>
-        /// 获得价格输出样式
+        /// 获得PriceTick对应的格式化输出样式
         /// </summary>
         /// <param name="sec"></param>
         /// <returns></returns>
         public static string GetPriceFormat(this SecurityFamily sec)
         {
-            return Util.GetPriceTickFormat(sec.PriceTick);
+            decimal pricetick = sec.PriceTick;
+            string[] p = pricetick.ToString().Split('.');
+            if (p.Length <= 1)
+                return "{0:F0}";
+            else
+                return "{0:F" + p[1].ToCharArray().Length.ToString() + "}";
+
+        
         }
-
-        /// <summary>
-        /// 获得品种交易小节
-        /// </summary>
-        /// <param name="sec"></param>
-        /// <param name="extime"></param>
-        /// <returns></returns>
-        //public static TradingRange JudgeRange(this SecurityFamily sec,DateTime extime)
-        //{
-        //    if (sec.MarketTime != null)
-        //    {
-        //        return sec.MarketTime.JudgeRange(extime);
-        //    }
-        //    else
-        //    {
-        //        return null;
-        //    }
-        //}
-
-
     }
 }

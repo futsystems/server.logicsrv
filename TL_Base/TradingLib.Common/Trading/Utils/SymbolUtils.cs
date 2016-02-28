@@ -24,44 +24,6 @@ namespace TradingLib.Common
                     return symbol.SecurityFamily.Code;
             }
         }
-        /// <summary>
-        /// 按照某个合约的PriceTick显示对应的价格
-        /// </summary>
-        /// <param name="symbol"></param>
-        /// <param name="price"></param>
-        /// <returns></returns>
-        public static string FormatPrice(this Symbol symbol, decimal price)
-        {
-            return Util.FormatDecimal(price, GetDisplayFormat(symbol));
-            
-        }
-
-        /// <summary>
-        /// 获得某个合约的数字显示方式
-        /// </summary>
-        /// <param name="sym"></param>
-        /// <returns></returns>
-        public static string GetDisplayFormat(Symbol sym)
-        {
-            if (sym == null) return "{0:F2}";
-            if (sym.SecurityFamily == null) return "{0:F2}";
-            return GetDisplayFormat(sym.SecurityFamily.PriceTick);
-        }
-        /// <summary>
-        /// 通过PriceTick得到数字显示格式
-        /// </summary>
-        /// <param name="pricetick"></param>
-        /// <returns></returns>
-        public static string GetDisplayFormat(decimal pricetick)
-        {
-            //1 0.2
-            string[] p = pricetick.ToString().Split('.');
-            if (p.Length <= 1)
-                return "{0:F0}";
-            else
-                return "{0:F" + p[1].ToCharArray().Length.ToString() + "}";
-
-        }
 
 
         /// <summary>

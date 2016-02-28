@@ -128,7 +128,7 @@ namespace TradingLib.Contrib.FinService
             decimal totalfee = target * this.BonusRate.AccountArgument.AsDecimal();
             decimal agentfee = target * this.BonusRate.AgentArgument.AsDecimal();
             //进行直客收费记录
-            string comment = SPNAME + " 盈亏:" + Util.FormatDecimal(profit) + "收费:" + Util.FormatDecimal(totalfee);
+            string comment = SPNAME + " 盈亏:" + profit.ToFormatStr() + "收费:" + totalfee.ToFormatStr();
 
             //计算代理收费记录
             AgentCommissionDel func = (Manager agent, Manager parent) =>
@@ -140,7 +140,7 @@ namespace TradingLib.Contrib.FinService
                 return fee;
             };
             FeeCharge(totalfee, agentfee, func, comment);
-            Util.Debug(SPNAME + " 帐户:" + this.Account.ID + " 盈亏:" + Util.FormatDecimal(profit) + " 分红:" + Util.FormatDecimal(totalfee));
+            Util.Debug(SPNAME + " 帐户:" + this.Account.ID + " 盈亏:" + profit.ToFormatStr() + " 分红:" + totalfee.ToFormatStr());
         }
 
 

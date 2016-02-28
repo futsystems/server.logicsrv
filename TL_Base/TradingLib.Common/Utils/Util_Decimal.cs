@@ -33,6 +33,30 @@ namespace TradingLib.Common
         {
             return string.Format(format, val);
         }
+
+        /// <summary>
+        /// decimal 按合约进行格式化输出
+        /// </summary>
+        /// <param name="val"></param>
+        /// <param name="symbol"></param>
+        /// <returns></returns>
+        public static string ToFormatStr(this decimal val, Symbol symbol)
+        {
+            if (symbol == null) return val.ToFormatStr();
+            if (symbol.SecurityFamily == null) return val.ToFormatStr();
+            return val.ToFormatStr(symbol.SecurityFamily);
+        }
+
+        /// <summary>
+        /// decimal 按品种进行格式化输出
+        /// </summary>
+        /// <param name="val"></param>
+        /// <param name="sec"></param>
+        /// <returns></returns>
+        public static string ToFormatStr(this decimal val, SecurityFamily sec)
+        {
+            return val.ToFormatStr(sec.GetPriceFormat());
+        }
         #endregion
         #region decimal 转换成中文大写
         private static String[] Ls_ShZ = { "零", "壹", "贰", "叁", "肆", "伍", "陆", "柒", "捌", "玖", "拾" };

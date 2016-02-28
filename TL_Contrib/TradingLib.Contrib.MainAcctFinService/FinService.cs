@@ -73,7 +73,7 @@ namespace TradingLib.Contrib.MainAcctFinService
             //按利息收取
             if (this.ServiceType == QSEnumFinServiceType.Interest)
             {
-                return string.Format("{0}以{1}{2}收取利息,金额:{3}", Util.GetEnumDescription(this.ChargeFreq), Util.FormatDecimal(this.ChargeValue), Util.GetEnumDescription(this.InterestType), Util.FormatDecimal(CalServiceFee()));
+                return string.Format("{0}以{1}{2}收取利息,金额:{3}", Util.GetEnumDescription(this.ChargeFreq), this.ChargeValue.ToFormatStr(), Util.GetEnumDescription(this.InterestType), CalServiceFee().ToFormatStr());
             }
             return "未设置";
         }

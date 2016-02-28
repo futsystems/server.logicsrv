@@ -164,7 +164,7 @@ namespace TradingLib.Contrib.MainAcctFinService
             Fee f = Fee.CreateCommissionFee(account.ID, commissionFee);
             f.ChargeTime = QSEnumChargeTime.AfterTimeSpan;
             f.ChargeMethod = fs != null ? fs.ChargeMethod : QSEnumChargeMethod.AutoDepositCredit;
-            f.Comment = string.Format("客户手续费:{0} 主帐户手续费:{1}", Util.FormatDecimal(account.Commission), Util.FormatDecimal(info.Commission));
+            f.Comment = string.Format("客户手续费:{0} 主帐户手续费:{1}", account.Commission.ToFormatStr(), info.Commission.ToFormatStr());
             if (f.Amount > 0)
             {
                 FinGlobal.FinServiceTracker.InsertFee(f);

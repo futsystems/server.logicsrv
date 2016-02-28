@@ -306,10 +306,10 @@ namespace TradingLib.Common
         ///// <param name="d"></param>
         ///// <param name="format"></param>
         ///// <returns></returns>
-        public static string FormatDecimal(decimal d, string format = "{0:F2}")
-        {
-            return string.Format(format, d);
-        }
+        //public static string FormatDecimal(decimal d, string format = "{0:F2}")
+        //{
+        //    return string.Format(format, d);
+        //}
         ///// <summary>
         ///// 格式化输出数字
         ///// </summary>
@@ -877,15 +877,15 @@ namespace TradingLib.Common
         /// </summary>
         /// <param name="pricetick"></param>
         /// <returns></returns>
-        public static string GetPriceTickFormat(decimal pricetick)
-        {
-            string[] p = pricetick.ToString().Split('.');
-            if (p.Length <= 1)
-                return "{0:F0}";
-            else
-                return "{0:F" + p[1].ToCharArray().Length.ToString() + "}";
+        //public static string GetPriceTickFormat(decimal pricetick)
+        //{
+        //    string[] p = pricetick.ToString().Split('.');
+        //    if (p.Length <= 1)
+        //        return "{0:F0}";
+        //    else
+        //        return "{0:F" + p[1].ToCharArray().Length.ToString() + "}";
 
-        }
+        //}
 
         #endregion
         public const string ZEROBUILD = "0";

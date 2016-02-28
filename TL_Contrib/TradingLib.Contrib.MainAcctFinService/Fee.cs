@@ -67,7 +67,7 @@ namespace TradingLib.Contrib.MainAcctFinService
         {
             get
             {
-                return string.Format("{0}-{1}-{2}-{3}",this.ID,this.Account, Util.GetEnumDescription(this.FeeType), Util.FormatDecimal(this.Amount));
+                return string.Format("{0}-{1}-{2}-{3}", this.ID, this.Account, Util.GetEnumDescription(this.FeeType), this.Amount.ToFormatStr());
             }
         }
     }

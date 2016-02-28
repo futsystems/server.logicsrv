@@ -367,10 +367,10 @@ namespace TradingLib.Common
         public override string ToString()
         {
                 //return Account + "," + Symbol + "," +Security+","+ EntryTime.ToString() + "," + EntrySize.ToString() + "," + EntryPrice.ToString() + "," + ExitTime.ToString() + "," + ExitSize.ToString() + "," + ExitPrice.ToString() + "," + Highest.ToString() + "," + Lowest.ToString() + "," + HoldSize.ToString()+","+EntryCommission.ToString()+","+ExitCommission.ToString()+","+Side.ToString()+","+WL.ToString()+","+Points.ToString()+","+TotalPoints.ToString()+","+Profit.ToString()+","+Commissoin.ToString()+","+NetProfit.ToString();
-            string nm =this.PRKey + " 方向:" + Side.ToString() + " 开仓:" + EntryTime.ToString() + "," + EntrySize.ToString() + "," + Util.FormatDecimal(EntryPrice) + " 平仓:" + ExitTime.ToString() + "," + ExitSize.ToString() + "," + Util.FormatDecimal(ExitPrice) + " 最高:" + Util.FormatDecimal(Highest) + " 最底:" + Util.FormatDecimal(Lowest) + " 持有数量:" + HoldSize.ToString() + " 开仓手续费:" + Util.FormatDecimal(EntryCommission) + " 平仓手续费:" + Util.FormatDecimal(ExitCommission);
+            string nm = this.PRKey + " 方向:" + Side.ToString() + " 开仓:" + EntryTime.ToString() + "," + EntrySize.ToString() + "," + EntryPrice.ToFormatStr() + " 平仓:" + ExitTime.ToString() + "," + ExitSize.ToString() + "," + ExitPrice.ToFormatStr() + " 最高:" + Highest.ToFormatStr() + " 最底:" + Lowest.ToFormatStr() + " 持有数量:" + HoldSize.ToString() + " 开仓手续费:" + EntryCommission.ToFormatStr() + " 平仓手续费:" + ExitCommission.ToFormatStr();
 
                 if (IsClosed)
-                    nm = nm + "盈亏:" + WL.ToString() + " 总点数:" + Util.FormatDecimal(TotalPoints) + " 总盈利:" + Util.FormatDecimal(Profit) + " 总手续费:" + Util.FormatDecimal(Commissoin) + " 净利润:" + Util.FormatDecimal(NetProfit);
+                    nm = nm + "盈亏:" + WL.ToString() + " 总点数:" + TotalPoints.ToFormatStr() + " 总盈利:" + Profit.ToFormatStr() + " 总手续费:" + Commissoin.ToFormatStr() + " 净利润:" + NetProfit.ToFormatStr();
                 return nm;
         }
 

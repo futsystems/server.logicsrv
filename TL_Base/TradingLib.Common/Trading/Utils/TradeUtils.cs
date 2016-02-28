@@ -42,7 +42,7 @@ namespace TradingLib.Common
         /// <returns></returns>
         public static string GetTradStr(this Trade f, string delimiter=",")
         {
-            string[] trade = new string[] { f.xDate.ToString(), f.xTime.ToString(), f.Symbol, (f.Side ? "BUY" : "SELL"), f.UnsignedSize.ToString(), f.oSymbol.FormatPrice(f.xPrice)};
+            string[] trade = new string[] { f.xDate.ToString(), f.xTime.ToString(), f.Symbol, (f.Side ? "BUY" : "SELL"), f.UnsignedSize.ToString(), f.xPrice.ToFormatStr(f.oSymbol)};
             return string.Join(delimiter,trade);
         }
 
@@ -55,7 +55,7 @@ namespace TradingLib.Common
             sb.Append(" " + f.OffsetFlag.ToString());
             sb.Append(f.Side ? " BOT" : " SOD");
             sb.Append(" " + Math.Abs(f.xSize).ToString());
-            sb.Append("@" + f.oSymbol.FormatPrice(f.xPrice));
+            sb.Append("@" + f.xPrice.ToFormatStr(f.oSymbol));
             sb.Append(" C:" + f.Commission.ToString());
             sb.Append(string.Format("Broker:{0} BLocalID:{1} BRemoteID:{2} TradeID:{3} OrderSysID:{4} Breed:{5}", f.Broker, f.BrokerLocalOrderID, f.BrokerRemoteOrderID, f.TradeID, f.OrderSysID, f.Breed));
             //sb.Append(" R:" + f.Broker + "/" + f.TradeID);
@@ -69,7 +69,7 @@ namespace TradingLib.Common
             sb.Append(" "+f.OffsetFlag.ToString());
             sb.Append(" " + Math.Abs(f.xSize).ToString());
             sb.Append(" " + f.Symbol);
-            sb.Append("  @" + f.oSymbol.FormatPrice(f.xPrice));
+            sb.Append("  @" + f.xPrice.ToFormatStr(f.oSymbol));
             sb.Append(" C:"+f.Commission.ToString());
             sb.Append(" R:" + f.Broker+"/"+f.TradeID);
 

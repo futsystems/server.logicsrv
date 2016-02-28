@@ -132,6 +132,7 @@
     <Compile Include="Trading\Settlement\AccountSettlement.cs" />
     <Compile Include="Trading\Settlement\CashTransactionImpl.cs" />
     <Compile Include="Trading\Settlement\ExchangeSettlement.cs" />
+    <Compile Include="Utils\ConsoleWriter.cs" />
     <Compile Include="Utils\DateTimeUtils.cs" />
     <Compile Include="Utils\ChinSpellcs.cs" />
     <Compile Include="Utils\Dequeue.cs" />
@@ -142,6 +143,7 @@
     <Compile Include="Tracker\HighLowTracker.cs" />
     <Compile Include="Trading\Utils\SecurityUtils.cs" />
     <Compile Include="Utils\Util_string.cs" />
+    <Compile Include="Utils\WinConsole.cs" />
     <Compile Include="Utils\XMLRspInfo\XMLRspInfoTracker.cs" />
     <Compile Include="Utils\XMLRspInfo\XMLRspInfo.cs" />
     <Compile Include="Vendor\BrokerAccountInfo.cs" />

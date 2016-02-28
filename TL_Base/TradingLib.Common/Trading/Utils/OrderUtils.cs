@@ -124,7 +124,7 @@ namespace TradingLib.Common
             sb.Append(" "+o.OffsetFlag.ToString());
             sb.Append(" "+Math.Abs(o.TotalSize).ToString());
             sb.Append(" " + o.Symbol);
-            sb.Append(" @" + (o.isMarket ? "Mkt" : (o.isLimit ? Util.FormatDecimal(o.LimitPrice) : Util.FormatDecimal(o.LimitPrice) + "stp")));
+            sb.Append(" @" + (o.isMarket ? "Mkt" : (o.isLimit ? o.LimitPrice.ToFormatStr() : o.LimitPrice.ToFormatStr() + "stp")));
             sb.Append(" ["+o.Account+"]");
             sb.Append(" ID:" + o.id.ToString());
             sb.Append(" T:"+Math.Abs(o.TotalSize).ToString()+" F:"+o.FilledSize.ToString()+" R:"+o.UnsignedSize.ToString());
