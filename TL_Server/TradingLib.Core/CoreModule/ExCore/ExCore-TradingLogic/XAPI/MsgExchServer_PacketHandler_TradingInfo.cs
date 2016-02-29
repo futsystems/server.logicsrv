@@ -21,18 +21,32 @@ namespace TradingLib.Core
         void SrvOnXQryOrder(XQryOrderRequest request, IAccount account)
         {
             logger.Info("XQryOrder :" + request.ToString());
-            Order[] orders = new Order[] { };
-            //合约为空 查询所有
+
+            IEnumerable<Order> tmplist = null;
+            //同时指定开始和结束时间 则通过数据库查询该时间段的记录
+            if (request.Start != 0 && request.End != 0)
+            {
+                tmplist = ORM.MTradingInfo.SelectOrders(request.Start, request.End, QSEnumOrderBreedType.ACCT);
+            }
+            else
+            {
+                //没有指定时间段则返回当前交易日的委托
+                tmplist = account.Orders.Where(o => !string.IsNullOrEmpty(o.OrderSysID));
+            }
             
-            orders = account.Orders.Where(o => !string.IsNullOrEmpty(o.OrderSysID)).ToArray();
-            
-            int totalnum = orders.Length;
+            //合约过滤
+            if (!string.IsNullOrEmpty(request.Symbol))
+            {
+                tmplist = tmplist.Where(o => o.Symbol == request.Symbol);
+            }
+
+            int totalnum = tmplist.Count();
             if (totalnum > 0)
             {
                 for (int i = 0; i < totalnum; i++)
                 {
                     RspXQryOrderResponse response = ResponseTemplate<RspXQryOrderResponse>.SrvSendRspResponse(request);
-                    response.Order = orders[i];
+                    response.Order = tmplist.ElementAt(i);
                     CacheRspResponse(response, i == totalnum - 1);
                 }
             }
@@ -54,17 +68,33 @@ namespace TradingLib.Core
         void SrvOnXQryTrade(XQryTradeRequest request, IAccount account)
         {
             logger.Info("XQryTrade :" + request.ToString());
-            Trade[] trades = account.Trades.ToArray();
 
-            int totalnum = trades.Length;
+            IEnumerable<Trade> tmplist = null;
+            //同时指定开始和结束时间 则通过数据库查询该时间段的记录
+            if (request.Start != 0 && request.End != 0)
+            {
+                tmplist = ORM.MTradingInfo.SelectTrades(request.Start, request.End, QSEnumOrderBreedType.ACCT);
+            }
+            else
+            {
+                //没有指定时间段则返回当前交易日的委托
+                tmplist = account.Trades;
+            }
+
+            //合约过滤
+            if (!string.IsNullOrEmpty(request.Symbol))
+            {
+                tmplist = tmplist.Where(o => o.Symbol == request.Symbol);
+            }
+
+
+            int totalnum = tmplist.Count();
             if (totalnum > 0)
             {
                 for (int i = 0; i < totalnum; i++)
                 {
                     RspXQryTradeResponse response = ResponseTemplate<RspXQryTradeResponse>.SrvSendRspResponse(request);
-                    response.Trade = trades[i];
-
-                    //logger.Info("转发当日成交:" + trades[i].ToString() + " side:" + trades[i].Side.ToString());
+                    response.Trade = tmplist.ElementAt(i);
                     CacheRspResponse(response, i == totalnum - 1);
                 }
             }

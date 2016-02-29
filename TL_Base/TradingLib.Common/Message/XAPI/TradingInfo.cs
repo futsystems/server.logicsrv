@@ -21,16 +21,45 @@ namespace TradingLib.Common
         public XQryOrderRequest()
         {
             _type = MessageTypes.XQRYORDER;
+            this.Symbol = string.Empty;
+            this.Start = 0;
+            this.End = 0;
         }
+        /// <summary>
+        /// 合约
+        /// </summary>
+        public string Symbol { get; set; }
+
+        /// <summary>
+        /// 开始时间
+        /// </summary>
+        public int Start { get; set; }
+
+        /// <summary>
+        /// 结束时间
+        /// </summary>
+        public int End { get; set; }
+
 
         public override string ContentSerialize()
         {
-            return "";
+            char d = ',';
+            StringBuilder sb = new StringBuilder();
+            sb.Append(this.Symbol);
+            sb.Append(d);
+            sb.Append(this.Start);
+            sb.Append(d);
+            sb.Append(this.End);
+
+            return sb.ToString();
         }
 
         public override void ContentDeserialize(string reqstr)
         {
-           
+            string[] rec = reqstr.Split(',');
+            this.Symbol = rec[0];
+            this.Start = int.Parse(rec[1]);
+            this.End = int.Parse(rec[2]);
         }
     }
 
@@ -64,18 +93,47 @@ namespace TradingLib.Common
         public XQryTradeRequest()
         {
             _type = MessageTypes.XQRYTRADE;
+            this.Symbol = string.Empty;
+            this.Start = 0;
+            this.End = 0;
         }
 
+
+        /// <summary>
+        /// 合约
+        /// </summary>
+        public string Symbol { get; set; }
+
+        /// <summary>
+        /// 开始时间
+        /// </summary>
+        public int Start { get; set; }
+
+        /// <summary>
+        /// 结束时间
+        /// </summary>
+        public int End { get; set; }
 
 
         public override string ContentSerialize()
         {
-            return "";
+            char d = ',';
+            StringBuilder sb = new StringBuilder();
+            sb.Append(this.Symbol);
+            sb.Append(d);
+            sb.Append(this.Start);
+            sb.Append(d);
+            sb.Append(this.End);
+
+            return sb.ToString();
         }
 
         public override void ContentDeserialize(string reqstr)
         {
-     
+            string[] rec = reqstr.Split(',');
+            this.Symbol = rec[0];
+            this.Start = int.Parse(rec[1]);
+            this.End = int.Parse(rec[2]);
         }
     }
 

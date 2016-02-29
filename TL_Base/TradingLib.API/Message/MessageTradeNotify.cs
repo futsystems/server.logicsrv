@@ -35,5 +35,6 @@ namespace TradingLib.API
         BrokerTradeID,//成交侧成交编号
         StampTax,//印花税
         TransferFee,//过户费
+        SecurityCode,//品种代码
     }
 }

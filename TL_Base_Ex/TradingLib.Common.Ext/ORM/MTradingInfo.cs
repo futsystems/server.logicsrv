@@ -247,7 +247,7 @@ namespace TradingLib.ORM
         /// 恢复日内Broker侧委托数据
         /// </summary>
         /// <returns></returns>
-        public static IList<Order> SelectBrokerOrders()
+        public static IEnumerable<Order> SelectBrokerOrders()
         {
             int settleday = TLCtxHelper.ModuleSettleCentre.Tradingday;
             return SelectOrders(settleday, settleday,QSEnumOrderBreedType.BROKER);
@@ -257,7 +257,7 @@ namespace TradingLib.ORM
         /// 获得日内Router侧的委托数据
         /// </summary>
         /// <returns></returns>
-        public static IList<Order> SelectRouterOrders()
+        public static IEnumerable<Order> SelectRouterOrders()
         {
             int settleday = TLCtxHelper.ModuleSettleCentre.Tradingday;
             return SelectOrders(settleday, settleday, QSEnumOrderBreedType.ROUTER);
@@ -268,22 +268,18 @@ namespace TradingLib.ORM
         /// <param name="begin"></param>
         /// <param name="end"></param>
         /// <returns></returns>
-        public static IList<Order> SelectOrders(int begin, int end,QSEnumOrderBreedType breed= QSEnumOrderBreedType.ACCT)
+        public static IEnumerable<Order> SelectOrders(int begin, int end,QSEnumOrderBreedType breed= QSEnumOrderBreedType.ACCT)
         {
             using (DBMySql db = new DBMySql())
             {
                 string query = string.Format("SELECT * FROM  {0}  WHERE settleday >='{1}' AND settleday <='{2}' AND breed='{3}'", "tmp_orders", begin, end, breed);
-                //Util.Debug(query);
                 List<Order> orders = db.Connection.Query<OrderImpl>(query).ToList<Order>();
 
                 string query2 = string.Format("SELECT * FROM  {0}  WHERE settleday >='{1}' AND settleday <='{2}' AND breed='{3}'", "log_orders", begin, end, breed);
-                //Util.Debug(query);
                 List<Order> orders2 = db.Connection.Query<OrderImpl>(query2).ToList<Order>();
                 
                 //合并委托记录
-                //orders.AddRange(orders2);
                 orders.Union(orders2, new OrderCompare());
-
                 return orders;
             }
         }

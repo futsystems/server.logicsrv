@@ -407,7 +407,8 @@ namespace TradingLib.Common
             sb.Append(t.BrokerRemoteOrderID); sb.Append(d);//
             sb.Append(t.BrokerTradeID); sb.Append(d);
             sb.Append(t.StampTax); sb.Append(d);
-            sb.Append(t.TransferFee); 
+            sb.Append(t.TransferFee); sb.Append(d);
+            sb.Append(t.SecurityCode);
 
 
             return sb.ToString();
@@ -452,6 +453,7 @@ namespace TradingLib.Common
             t.BrokerTradeID = rec[(int)TradeField.BrokerTradeID];
             t.StampTax = decimal.Parse(rec[(int)TradeField.StampTax]);
             t.TransferFee = decimal.Parse(rec[(int)TradeField.TransferFee]);
+            t.SecurityCode = rec[(int)TradeField.SecurityCode];
 
             return t;
         }
