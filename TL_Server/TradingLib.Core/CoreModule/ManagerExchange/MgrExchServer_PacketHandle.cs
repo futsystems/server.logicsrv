@@ -88,11 +88,14 @@ namespace TradingLib.Core
             //检查价格
             decimal targetprice = fill.xPrice;
             Tick k = TLCtxHelper.ModuleDataRouter.GetTickSnapshot(fill.Symbol);
-            if (targetprice > k.UpperLimit || targetprice < k.LowerLimit)
+            if (k.UpperLimit > 0 && k.LowerLimit > 0)
             {
-                response.RspInfo.Fill("ORDERPRICE_OVERT_LIMIT");
-                CacheRspResponse(response);
-                return;
+                if (targetprice > k.UpperLimit || targetprice < k.LowerLimit)
+                {
+                    response.RspInfo.Fill("ORDERPRICE_OVERT_LIMIT");
+                    CacheRspResponse(response);
+                    return;
+                }
             }
 
             //TODO:xxxxxx
