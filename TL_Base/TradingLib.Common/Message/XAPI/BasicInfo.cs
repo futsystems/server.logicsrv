@@ -163,15 +163,25 @@ namespace TradingLib.Common
         public XQrySymbolRequest()
         {
             _type = MessageTypes.XQRYSYMBOL;
+            this.Symbol = string.Empty;
         }
+
+        public string Symbol { get; set; }
         public override string ContentSerialize()
         {
-            return string.Empty;
+            return this.Symbol;
         }
 
         public override void ContentDeserialize(string contentstr)
         {
-
+            if (string.IsNullOrEmpty(contentstr))
+            {
+                this.Symbol = string.Empty;
+            }
+            else
+            {
+                this.Symbol = contentstr;
+            }
         }
 
     }

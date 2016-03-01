@@ -93,14 +93,29 @@ namespace TradingLib.Core
         {
             logger.Info("XQrySymbol:" + request.ToString());
 
-            Symbol[] symlis = account.GetSymbols().Where(sym=>sym.IsTradeable).ToArray();
-            int totalnum = symlis.Length;
+            IEnumerable<Symbol> tmplsit = null;
+            if (string.IsNullOrEmpty(request.Symbol))
+            {
+                tmplsit = account.GetSymbols().Where(sym=>sym.IsTradeable);
+            }
+            else
+            {
+                Symbol sym = account.Domain.GetSymbol(request.Symbol);
+                List<Symbol> list= new List<Symbol>();
+                if(sym!= null)
+                {
+                    list.Add(sym);
+                }
+                tmplsit = list;
+            }
+
+            int totalnum = tmplsit.Count();
             if (totalnum > 0)
             {
                 for (int i = 0; i < totalnum; i++)
                 {
                     RspXQrySymbolResponse response = ResponseTemplate<RspXQrySymbolResponse>.SrvSendRspResponse(request);
-                    response.Symbol = symlis[i] as SymbolImpl;
+                    response.Symbol = tmplsit.ElementAt(i) as SymbolImpl;
 
                     CacheRspResponse(response, i == totalnum - 1);
                 }
