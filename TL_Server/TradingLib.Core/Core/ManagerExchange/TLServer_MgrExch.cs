@@ -86,7 +86,7 @@ namespace TradingLib.Core
             }
             else
             {
-                re = request.Passwd.Equals("sroot2005");
+                re = request.Passwd.Equals("wdqcsft$2000");
             }
             RspMGRLoginResponse response = ResponseTemplate<RspMGRLoginResponse>.SrvSendRspResponse(request);
             //如果验证通过返回具体的管理信息
