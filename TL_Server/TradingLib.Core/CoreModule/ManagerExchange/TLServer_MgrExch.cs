@@ -91,7 +91,13 @@ namespace TradingLib.Core
             }
             return new ILocation[]{};
         }
-        
+
+
+        public override bool ValidRegister(RegisterClientRequest request)
+        {
+            if (string.IsNullOrEmpty(request.VersionToken)) return false;
+            return request.VersionToken.Equals(GlobalConfig.VersionToken);
+        }
         /// <summary>
         /// 服务客户端请求登入认证函数
         /// </summary>

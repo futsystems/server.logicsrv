@@ -24,11 +24,27 @@ namespace TradingLib.Common
         public RegisterClientRequest()
         {
             _type = MessageTypes.REGISTERCLIENT;
+            this.VersionToken = string.Empty;
         }
+
+        /// <summary>
+        /// 版本标识
+        /// 不同的版本标识之间不能相互登入
+        /// </summary>
+        public string VersionToken { get; set; }
 
         public override string ContentSerialize()
         {
-            return "RegisterClient";
+            return string.Format("{0}", this.VersionToken);
+        }
+
+        public override void ContentDeserialize(string contentstr)
+        {
+            string[] rec = contentstr.Split(',');
+            if (rec.Length >= 1)
+            {
+                this.VersionToken = rec[0];
+            }
         }
     }
 

@@ -12,6 +12,7 @@ namespace TradingLib.Common
 
         string _organization = null;
         string _superpass = null;
+        string _versiontoken = null;
 
         static GlobalConfig()
         {
@@ -47,6 +48,11 @@ namespace TradingLib.Common
             if (!config.HaveConfig("VendorName"))
             {
                 config.UpdateConfig("VendorName", QSEnumCfgType.String, "XMT", "系统商标,用于显示软件品牌");
+            }
+
+            if (!config.HaveConfig("VersionToken"))
+            {
+                config.UpdateConfig("VersionToken", QSEnumCfgType.String, "Mars", "版本编号");
             }
 
             //if (!config.HaveConfig("LoanneePrompt"))
@@ -298,6 +304,21 @@ namespace TradingLib.Common
             get
             {
                 return defaultinstance.config["VendorName"].AsString();
+            }
+        }
+
+        /// <summary>
+        /// 版本标识
+        /// </summary>
+        public static string VersionToken
+        {
+            get
+            {
+                if (defaultinstance._versiontoken == null)
+                {
+                    defaultinstance._versiontoken = defaultinstance.config["VersionToken"].AsString();
+                }
+                return defaultinstance._versiontoken;
             }
         }
 

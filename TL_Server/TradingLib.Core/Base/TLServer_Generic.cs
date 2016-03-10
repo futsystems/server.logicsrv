@@ -562,6 +562,11 @@ namespace TradingLib.Core
         /// <param name="address"></param>
         public virtual void SrvRegClient(RegisterClientRequest request,T1 client)
         {
+            if (!this.ValidRegister(request))
+            {
+                logger.Warn(string.Format("Client:{0} Register with token:{1} reject", request.ClientID, request.VersionToken));
+                return;
+            }
             //客户端发送的第一个消息就是注册到服务系统,我们需要为client记录address,front信息
             T1 _newcli = new T1();
 
@@ -670,6 +675,13 @@ namespace TradingLib.Core
         /// <param name="pass"></param>
         public virtual void AuthLogin(LoginRequest lr,T1 client){}
 
+
+        /// <summary>
+        /// 验证某个注册消息是否有效
+        /// 
+        /// </summary>
+        /// <param name="request"></param>
+        public virtual bool ValidRegister(RegisterClientRequest request) { return true; }
         /// <summary>
         /// 请求功能特征列表
         /// 由子类实现具体的功能列表推送
