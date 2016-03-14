@@ -9,9 +9,62 @@ namespace TradingLib.Common
     public static class SymbolUtils
     {
         /// <summary>
-        /// 获得合约名称
+        /// Calc base commission
         /// </summary>
         /// <param name="symbol"></param>
+        /// <param name="f"></param>
+        /// <returns></returns>
+        public static decimal CalcBaseCommission(this Symbol symbol, Trade f)
+        {
+            if (f.IsEntryPosition)
+            {
+                if (symbol.EntryCommission < 1)
+                {
+                    return symbol.EntryCommission * f.xPrice * f.UnsignedSize * f.oSymbol.Multiple;
+                }
+                else
+                {
+                    return symbol.EntryCommission * f.UnsignedSize;
+                }
+            }
+            else
+            {
+                decimal commission = 0;
+                foreach (var close in f.CloseDetails)
+                {
+                    if (!close.IsCloseYdPosition)
+                    {
+                        if (symbol.ExitCommission < 1)
+                        {
+                            commission += symbol.ExitCommission * close.ClosePrice * close.CloseVolume * close.oSymbol.Multiple;
+                        }
+                        else
+                        {
+                            commission += symbol.ExitCommission * close.CloseVolume;
+                        }
+                    }
+                    else
+                    {
+                        if (symbol.ExitCommissionToday < 1)
+                        {
+                            commission += symbol.ExitCommissionToday * close.ClosePrice * close.CloseVolume * close.oSymbol.Multiple;
+                        }
+                        else
+                        {
+                            commission += symbol.ExitCommissionToday * close.CloseVolume;
+                        }
+                    }
+                }
+                return commission;
+            }
+        }
+
+        /// <summary>
+        /// symbol name
+        /// </summary>
+        /// <param name="symbol"></param>
+        /// <param name="price"></param>
+        /// <param name="price"></param>
         /// <returns></returns>
         public static string GetName(this Symbol symbol)
         {
@@ -54,6 +107,7 @@ namespace TradingLib.Common
                 return 0;
             }
         }
+
 
         /// <summary>
         /// 获得期货合约后缀

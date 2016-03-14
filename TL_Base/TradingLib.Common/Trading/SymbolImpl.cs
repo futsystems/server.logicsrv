@@ -112,6 +112,38 @@ namespace TradingLib.Common
             }
         }
 
+        public decimal _exitcommissiontoday = 0;
+        /// <summary>
+        /// 平仓手续费
+        /// </summary>
+        public decimal ExitCommissionToday
+        {
+            get
+            {
+
+                if (_exitcommissiontoday < 0)
+                {
+                    if (SecurityFamily != null)
+                    {
+                        return SecurityFamily.ExitCommissionToday;
+                    }
+                    else
+                    {
+                        return 0;
+                    }
+                }
+                else
+                {
+                    return _exitcommissiontoday;
+                }
+
+            }
+            set
+            {
+                _exitcommissiontoday = value;
+            }
+        }
+
 
         public decimal _margin = 0;
         /// <summary>
@@ -556,6 +588,8 @@ namespace TradingLib.Common
             sb.Append(this.SymbolType);
             sb.Append(d);
             sb.Append(this.Name);
+            sb.Append(d);
+            sb.Append(this.ExitCommissionToday);
 
             return sb.ToString();
         }
@@ -580,6 +614,7 @@ namespace TradingLib.Common
             this.Tradeable = bool.Parse(rec[14]);
             this.SymbolType = (QSEnumSymbolType)Enum.Parse(typeof(QSEnumSymbolType), rec[15]);
             this.Name = rec[16];
+            this.ExitCommissionToday = decimal.Parse(rec[17]);
         }
     }
 }

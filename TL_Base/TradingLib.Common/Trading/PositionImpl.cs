@@ -772,6 +772,7 @@ namespace TradingLib.Common
                 {
                     //平仓明细
                     closedetail = this.ClosePosition(p,close,remainsize);
+                    close.CloseDetails.Add(closedetail);
                 }
                 catch (Exception ex)
                 {
@@ -799,6 +800,7 @@ namespace TradingLib.Common
                 {
                     //平仓明细
                     closedetail = this.ClosePosition(p, close,remainsize);
+                    close.CloseDetails.Add(closedetail);
                 }
                 catch (Exception ex)
                 {

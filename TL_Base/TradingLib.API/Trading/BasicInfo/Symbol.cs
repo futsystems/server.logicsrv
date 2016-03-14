@@ -42,6 +42,11 @@ namespace TradingLib.API
         /// </summary>
         decimal ExitCommission { get; set; }
 
+        /// <summary>
+        /// 平今手续费
+        /// </summary>
+        decimal ExitCommissionToday { get; set; }
+
 
         /// <summary>
         /// 保证金比例/保证金数额

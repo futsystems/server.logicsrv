@@ -68,37 +68,13 @@ namespace TradingLib.Common
         /// <returns></returns>
         public static decimal CalCommission(this IAccount account, Trade f)
         {
-            decimal commissionrate = 0;
-            if (f.IsEntryPosition)
-            {
-                commissionrate = f.oSymbol.EntryCommission;
-            }
-            //平仓
-            else
-            {
-                //进行特殊手续费判定并设定对应的手续费费率
-                //如果对应的合约是单边计费的或者有特殊计费方式的合约，则我们单独计算该部分费用,注这里还需要加入一个日内交易的判断,暂时不做(当前交易均为日内)
-                //获得平仓手续费特例
-                if (CommissionHelper.AnyCommissionSetting(SymbolHelper.genSecurityCode(f.Symbol), out commissionrate))
-                {
-                    //debug("合约:" + SymbolHelper.genSecurityCode(f.symbol) + "日内手续费费差异", QSEnumDebugLevel.MUST);
-                }
-                else//没有特殊费率参数,则为标准的出场费率
-                {
-                    commissionrate = f.oSymbol.ExitCommission;
-                }
-            }
-
             //计算标准手续费
-            decimal basecommission = 0;
-            if (commissionrate < 1)//百分比计算费率
-                basecommission = commissionrate * f.xPrice * f.UnsignedSize * f.oSymbol.Multiple;
-            else
-                basecommission = commissionrate * f.UnsignedSize;
+            decimal basecommission = f.oSymbol.CalcBaseCommission(f);
 
             //获得该帐户某个合约对应的手续费计算策略
             CommissionTemplateItem item = account.GetCommissionTemplateItem(f.oSymbol);
             
+            //没有设置手续费模板
             //没有设置手续费模板
             if (item == null)
             {
@@ -106,7 +82,17 @@ namespace TradingLib.Common
             }
             else
             {
-                return item.CalcCommission(basecommission, f);
+                switch (item.ChargeType)
+                {
+                    case QSEnumChargeType.Absolute:
+                        return item.CalCommission(f, f.OffsetFlag);
+                    case QSEnumChargeType.Relative:
+                        return basecommission + item.CalCommission(f, f.OffsetFlag);
+                    case QSEnumChargeType.Percent:
+                        return basecommission * (1 + item.Percent);
+                    default:
+                        return basecommission;
+                }
             }
         }
 

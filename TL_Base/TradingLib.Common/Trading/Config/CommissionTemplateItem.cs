@@ -92,93 +92,88 @@ namespace TradingLib.Common
     public class CommissionTemplateItem : CommissionTemplateItemSetting
     {
 
+
         /// <summary>
         /// 计算手续费
         /// </summary>
         /// <param name="f"></param>
         /// <param name="offset"></param>
         /// <returns></returns>
-        public decimal CalcCommission(decimal basecommission,Trade f)
+        public decimal CalCommission(Trade f, QSEnumOffsetFlag offset)
         {
             decimal commission = 0;
-            switch (this.SecurityType)
+            switch(f.oSymbol.SecurityFamily.Type)
             {
                 case SecurityType.FUT:
                     {
-                        switch (f.OffsetFlag)
+                        if (f.IsEntryPosition)
                         {
-                            case QSEnumOffsetFlag.OPEN://开仓手续费
-                                commission = (this.OpenByMoney != 0 ? CalCommissionByMoney(f, this.OpenByMoney) : CalCommissionByVolume(f, this.OpenByVolume));
-                                break;
-                            case QSEnumOffsetFlag.CLOSE://平仓手续费
-                            case QSEnumOffsetFlag.CLOSEYESTERDAY:
-                                commission = (this.CloseByMoney != 0 ? CalCommissionByMoney(f, this.CloseByMoney) : CalCommissionByVolume(f, this.CloseByVolume));
-                                break;
-                            case QSEnumOffsetFlag.CLOSETODAY://平今手续费
-                                commission = (this.CloseTodayByMoney != 0 ? CalCommissionByMoney(f, this.CloseTodayByMoney) : CalCommissionByVolume(f, this.CloseTodayByVolume));
-                                break;
-                            default:
-                                commission = (this.OpenByMoney != 0 ? CalCommissionByMoney(f, this.OpenByMoney) : CalCommissionByVolume(f, this.OpenByVolume));
-                                break;
+                            commission= (this.OpenByMoney != 0 ? CalcCommissionByMoney(f, this.OpenByMoney) : CalcCommissionByVolume(f, this.OpenByVolume));
                         }
-                        break;
+                        else
+                        {
+                            foreach (var close in f.CloseDetails)
+                            {
+
+                                if (!close.IsCloseYdPosition)
+                                {
+                                    commission += (this.CloseTodayByMoney != 0 ? CalcCommissionByMoney(close, this.CloseTodayByMoney) : CalcCommissionByVolume(close, this.CloseTodayByVolume));
+                                }
+
+                                else
+                                {
+                                    commission += (this.CloseByMoney != 0 ? CalcCommissionByMoney(close, this.CloseByMoney) : CalcCommissionByVolume(close, this.CloseByVolume));
+                                }
+                            }
+                        }
                     }
+                    break;
                 case SecurityType.STK:
                     {
                         switch (f.OffsetFlag)
                         {
                             case QSEnumOffsetFlag.OPEN://开仓手续费
-                                commission = (this.OpenByMoney != 0 ? CalCommissionByMoney(f, this.OpenByMoney) : CalCommissionByVolume(f, this.OpenByVolume));
+                                commission = (this.OpenByMoney != 0 ? CalcCommissionByMoney(f, this.OpenByMoney) : CalcCommissionByVolume(f, this.OpenByVolume));
                                 break;
                             case QSEnumOffsetFlag.CLOSE://平仓手续费
                             case QSEnumOffsetFlag.CLOSEYESTERDAY:
                             case QSEnumOffsetFlag.CLOSETODAY:
-                                commission = (this.CloseByMoney != 0 ? CalCommissionByMoney(f, this.CloseByMoney) : CalCommissionByVolume(f, this.CloseByVolume));
+                                commission = (this.CloseByMoney != 0 ? CalcCommissionByMoney(f, this.CloseByMoney) : CalcCommissionByVolume(f, this.CloseByVolume));
                                 break;
                             default:
-                                commission = (this.OpenByMoney != 0 ? CalCommissionByMoney(f, this.OpenByMoney) : CalCommissionByVolume(f, this.OpenByVolume));
+                                commission = (this.OpenByMoney != 0 ? CalcCommissionByMoney(f, this.OpenByMoney) : CalcCommissionByVolume(f, this.OpenByVolume));
                                 break;
                         }
-                        break;
                     }
-                default:
+                    break;
+                default :
                     commission = 0;
                     break;
             }
-
-            switch (this.ChargeType)
-            {
-                case QSEnumChargeType.Absolute:
-                    return commission;
-                case QSEnumChargeType.Relative:
-                    return basecommission + commission;
-                case QSEnumChargeType.Percent:
-                    return basecommission * (1 + this.Percent);
-                default:
-                    return basecommission;
-            }
+            return commission;
 
         }
-        /// <summary>
-        /// 按成交金额计算手续费
-        /// </summary>
-        /// <param name="f"></param>
-        /// <param name="commissionrate"></param>
-        /// <returns></returns>
-        decimal CalCommissionByMoney(Trade f,decimal commissionrate)
+
+
+        decimal CalcCommissionByMoney(Trade f,decimal commissionrate)
         {
             return commissionrate * f.xPrice * f.UnsignedSize * f.oSymbol.Multiple;
         }
 
-        /// <summary>
-        /// 按成交手数计算手续费
-        /// </summary>
-        /// <param name="f"></param>
-        /// <param name="commissionrate"></param>
-        /// <returns></returns>
-        decimal CalCommissionByVolume(Trade f, decimal commissionrate)
+        decimal CalcCommissionByVolume(Trade f, decimal commissionrate)
         {
             return commissionrate * f.UnsignedSize;
         }
+
+        decimal CalcCommissionByMoney(PositionCloseDetail close, decimal commissionrate)
+        {
+            return commissionrate * close.ClosePrice * close.CloseVolume * close.oSymbol.Multiple;
+        }
+
+        decimal CalcCommissionByVolume(PositionCloseDetail close, decimal commisionrate)
+        {
+            return commisionrate * close.CloseVolume;
+        }
+
     }
 }

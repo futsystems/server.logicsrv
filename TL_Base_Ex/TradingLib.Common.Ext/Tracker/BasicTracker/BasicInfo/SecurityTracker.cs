@@ -271,6 +271,7 @@ namespace TradingLib.Common
                 target.PriceTick = sec.PriceTick;
                 target.EntryCommission = sec.EntryCommission;
                 target.ExitCommission = sec.ExitCommission;
+                target.ExitCommissionToday = sec.ExitCommissionToday;
                 target.Margin = sec.Margin;
                 target.ExtraMargin = sec.ExtraMargin;
                 target.MaintanceMargin = sec.MaintanceMargin;
@@ -320,6 +321,7 @@ namespace TradingLib.Common
                 {
                     target.EntryCommission = sec.EntryCommission;
                     target.ExitCommission = sec.ExitCommission;
+                    target.ExitCommissionToday = sec.ExitCommissionToday;
                     target.Margin = sec.Margin;
                     target.ExtraMargin = sec.ExtraMargin;
                     target.MaintanceMargin = sec.MaintanceMargin;
@@ -352,6 +354,8 @@ namespace TradingLib.Common
                 target.PriceTick = sec.PriceTick;
                 target.EntryCommission = sec.EntryCommission;
                 target.ExitCommission = sec.ExitCommission;
+                target.ExitCommissionToday = sec.ExitCommissionToday;
+
                 target.Margin = sec.Margin;
                 target.ExtraMargin = sec.ExtraMargin;
                 target.MaintanceMargin = sec.MaintanceMargin;

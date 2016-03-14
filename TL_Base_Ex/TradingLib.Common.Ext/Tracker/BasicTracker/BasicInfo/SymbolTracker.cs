@@ -453,6 +453,8 @@ namespace TradingLib.Common
 
                 target.EntryCommission = sym._entrycommission;
                 target.ExitCommission = sym._exitcommission;
+                target.ExitCommissionToday = sym._exitcommissiontoday;
+
                 target.Margin = sym._margin;
                 target.ExtraMargin = sym._extramargin;
                 target.MaintanceMargin = sym._maintancemargin;
@@ -512,6 +514,7 @@ namespace TradingLib.Common
                 {
                     target.EntryCommission = sym._entrycommission;
                     target.ExitCommission = sym._exitcommission;
+                    target.ExitCommissionToday = sym._exitcommissiontoday;
 
                     target.Margin = sym._margin;
                     target.ExtraMargin = sym._extramargin;
@@ -534,6 +537,8 @@ namespace TradingLib.Common
                 target.Domain_ID = sym.Domain_ID;//更新域
                 target.EntryCommission = sym._entrycommission;
                 target.ExitCommission = sym._exitcommission;
+                target.ExitCommissionToday = sym._exitcommissiontoday;
+
                 target.Margin = sym._margin;
                 target.ExtraMargin = sym._extramargin;
                 target.MaintanceMargin = sym._maintancemargin;
