@@ -92,14 +92,21 @@ namespace TradingLib.Common
     public class MarginSet
     {
 
-        public MarginSet(bool bigside,string code, decimal margin,int netfrozensize,decimal frozen)
+        public MarginSet(bool bigside, SecurityFamily sec, decimal margin, int netfrozensize, decimal frozen)
         {
             this.MarginSide = bigside;
-            this.Code = code;
+            this.Code = sec.Code;
             this.Margin = margin;
             this.MarginFrozen = frozen;
             this.NetFronzenSize = netfrozensize;
+            this.Security = sec;
         }
+        
+        /// <summary>
+        /// 品种
+        /// </summary>
+        public SecurityFamily Security { get; set; }
+
         /// <summary>
         /// 键值 品种-方向
         /// </summary>
@@ -236,7 +243,7 @@ namespace TradingLib.Common
                 if (g.Count() == 1)
                 {
 
-                    MarginSet tmp = new MarginSet(g.ElementAt(0).Side ,g.Key, g.ElementAt(0).Margin, g.ElementAt(0).PendingOpenSize,g.ElementAt(0).MarginFrozen);
+                    MarginSet tmp = new MarginSet(g.ElementAt(0).Side ,account.GetSecurity(g.Key), g.ElementAt(0).Margin, g.ElementAt(0).PendingOpenSize,g.ElementAt(0).MarginFrozen);
                     tmp.BigHoldSize = g.ElementAt(0).HoldSize;
                     tmp.BigPendingOpenSize = g.ElementAt(0).PendingOpenSize;
                     tmp.SmallHoldSize = 0;
@@ -287,7 +294,7 @@ namespace TradingLib.Common
 
                     }
                     //有多空2边的统计 按大边占用保证金和 规则统计出来的保证金占用来体现当前保证金数据
-                    MarginSet tmp = new MarginSet(big.Side ,g.Key, big.Margin, netfrozensize,marginfrozen);
+                    MarginSet tmp = new MarginSet(big.Side ,account.GetSecurity(g.Key), big.Margin, netfrozensize,marginfrozen);
                     tmp.BigHoldSize = big.HoldSize;
                     tmp.BigPendingOpenSize = big.PendingOpenSize;
                     tmp.SmallHoldSize = small.HoldSize;
@@ -308,11 +315,11 @@ namespace TradingLib.Common
         {
             if (account.GetParamSideMargin())
             {
-                return account.CalFutMarginSet().Sum(ms => ms.Margin);
+                return account.CalFutMarginSet().Sum(ms => ms.Margin * account.GetExchangeRate(ms.Security));
             }
             else
             {
-                return FilterPositions(account, SecurityType.FUT).Sum(pos => account.CalPositionMargin(pos));
+                return FilterPositions(account, SecurityType.FUT).Sum(pos => account.CalPositionMargin(pos) * account.GetExchangeRate(pos.oSymbol.SecurityFamily));
             }
         }
 
@@ -320,11 +327,11 @@ namespace TradingLib.Common
         {
             if (account.GetParamSideMargin())
             {
-                return account.CalFutMarginSet().Sum(ms => ms.MarginFrozen);
+                return account.CalFutMarginSet().Sum(ms => ms.MarginFrozen * account.GetExchangeRate(ms.Security));
             }
             else
             {
-                return FilterPendingOrders(account, SecurityType.FUT).Where(o => o.IsEntryPosition).Sum(e => account.CalOrderMarginFrozen(e));
+                return FilterPendingOrders(account, SecurityType.FUT).Where(o => o.IsEntryPosition).Sum(e => account.CalOrderMarginFrozen(e) * account.GetExchangeRate(e.oSymbol.SecurityFamily));
             }
         }
 
@@ -332,22 +339,22 @@ namespace TradingLib.Common
 
         public static decimal CalFutUnRealizedPL(this IAccount account)
         {
-            return FilterPositions(account, SecurityType.FUT).Sum(pos => pos.CalcUnRealizedPL());
+            return FilterPositions(account, SecurityType.FUT).Sum(pos => pos.CalcUnRealizedPL() * account.GetExchangeRate(pos.oSymbol.SecurityFamily));
         }
 
         public static decimal CalFutSettleUnRealizedPL(this IAccount account)
         {
-            return FilterPositions(account, SecurityType.FUT).Sum(pos => pos.CalcSettleUnRealizedPL());
+            return FilterPositions(account, SecurityType.FUT).Sum(pos => pos.CalcSettleUnRealizedPL() * account.GetExchangeRate(pos.oSymbol.SecurityFamily));
         }
 
         public static decimal CalFutRealizedPL(this IAccount account)
         {
-            return FilterPositions(account, SecurityType.FUT).Sum(pos => pos.CalcRealizedPL());
+            return FilterPositions(account, SecurityType.FUT).Sum(pos => pos.CalcRealizedPL() * account.GetExchangeRate(pos.oSymbol.SecurityFamily));
         }
 
         public static decimal CalFutCommission(this IAccount account)
         {
-            return FilterTrades(account, SecurityType.FUT).Sum(fill => fill.GetCommission());
+            return FilterTrades(account, SecurityType.FUT).Sum(fill => fill.GetCommission() * account.GetExchangeRate(fill.oSymbol.SecurityFamily));
         }
 
         public static decimal CalFutCash(this IAccount account)

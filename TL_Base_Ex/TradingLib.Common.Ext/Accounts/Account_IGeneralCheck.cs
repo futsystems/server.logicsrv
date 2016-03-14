@@ -68,7 +68,7 @@ namespace TradingLib.Common
             {
                 decimal price = TLCtxHelper.ModuleDataRouter.GetAvabilePrice(symbol.Symbol);
 
-                decimal fundperlot = this.CalOrderMarginFrozen(symbol, 1);
+                decimal fundperlot = this.CalOrderMarginFrozen(symbol, 1)*this.GetExchangeRate(symbol.SecurityFamily);
 
                 decimal avabilefund = GetFundAvabile(symbol);
 
@@ -77,7 +77,7 @@ namespace TradingLib.Common
             }
             else
             {
-                decimal fundperlot = this.CalOrderMarginFrozen(symbol, 1);
+                decimal fundperlot = this.CalOrderMarginFrozen(symbol, 1) *this.GetExchangeRate(symbol.SecurityFamily);
 
                 decimal avabilefund = GetFundAvabile(symbol);
 
