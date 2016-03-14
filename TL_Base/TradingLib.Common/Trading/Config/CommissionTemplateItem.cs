@@ -97,28 +97,63 @@ namespace TradingLib.Common
         /// <returns></returns>
         public decimal CalCommission(Trade f, QSEnumOffsetFlag offset)
         {
-            switch (offset)
+            //switch (offset)
+            //{
+            //    case QSEnumOffsetFlag.OPEN://开仓手续费
+            //        return (this.OpenByMoney != 0 ? CalCommissionByMoney(f, this.OpenByMoney) : CalCommissionByVolume(f,this.OpenByVolume));
+            //    case QSEnumOffsetFlag.CLOSE://平仓手续费
+            //    case QSEnumOffsetFlag.CLOSEYESTERDAY:
+            //        return (this.CloseByMoney != 0 ? CalCommissionByMoney(f, this.CloseByMoney) : CalCommissionByVolume(f,this.CloseByVolume));
+            //    case QSEnumOffsetFlag.CLOSETODAY://平今手续费
+            //        return (this.CloseTodayByMoney != 0 ? CalCommissionByMoney(f, this.CloseTodayByMoney) : CalCommissionByVolume(f,this.CloseTodayByVolume));
+            //    default:
+            //        return (this.OpenByMoney != 0 ? CalCommissionByMoney(f, this.OpenByMoney) : CalCommissionByVolume(f,this.OpenByVolume));
+            //}
+            //开仓成交
+            if (f.IsEntryPosition)
             {
-                case QSEnumOffsetFlag.OPEN://开仓手续费
-                    return (this.OpenByMoney != 0 ? CalCommissionByMoney(f, this.OpenByMoney) : CalCommissionByVolume(f,this.OpenByVolume));
-                case QSEnumOffsetFlag.CLOSE://平仓手续费
-                case QSEnumOffsetFlag.CLOSEYESTERDAY:
-                    return (this.CloseByMoney != 0 ? CalCommissionByMoney(f, this.CloseByMoney) : CalCommissionByVolume(f,this.CloseByVolume));
-                case QSEnumOffsetFlag.CLOSETODAY://平今手续费
-                    return (this.CloseTodayByMoney != 0 ? CalCommissionByMoney(f, this.CloseTodayByMoney) : CalCommissionByVolume(f,this.CloseTodayByVolume));
-                default:
-                    return (this.OpenByMoney != 0 ? CalCommissionByMoney(f, this.OpenByMoney) : CalCommissionByVolume(f,this.OpenByVolume));
+                return (this.OpenByMoney != 0 ? CalcCommissionByMoney(f, this.OpenByMoney) : CalcCommissionByVolume(f, this.OpenByVolume));
+            }
+            else
+            { 
+                decimal commission = 0;
+                foreach (var close in f.CloseDetails)
+                {
+
+                    if (!close.IsCloseYdPosition)
+                    {
+                        commission += (this.CloseTodayByMoney != 0 ? CalcCommissionByMoney(close, this.CloseTodayByMoney) : CalcCommissionByVolume(close, this.CloseTodayByVolume));
+                    }
+
+                    else
+                    {
+                        commission += (this.CloseByMoney != 0 ? CalcCommissionByMoney(close, this.CloseByMoney) : CalcCommissionByVolume(close, this.CloseByVolume));
+                    }
+                }
+                return commission;
             }
         }
 
-        decimal CalCommissionByMoney(Trade f,decimal commissionrate)
+        decimal CalcCommissionByMoney(Trade f,decimal commissionrate)
         {
             return commissionrate * f.xPrice * f.UnsignedSize * f.oSymbol.Multiple;
         }
 
-        decimal CalCommissionByVolume(Trade f, decimal commissionrate)
+        decimal CalcCommissionByVolume(Trade f, decimal commissionrate)
         {
             return commissionrate * f.UnsignedSize;
         }
+
+        decimal CalcCommissionByMoney(PositionCloseDetail close, decimal commissionrate)
+        {
+            return commissionrate * close.ClosePrice * close.CloseVolume * close.oSymbol.Multiple;
+        }
+
+        decimal CalcCommissionByVolume(PositionCloseDetail close, decimal commisionrate)
+        {
+            return commisionrate * close.CloseVolume;
+        }
+
+
     }
 }

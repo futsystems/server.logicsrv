@@ -1,4 +1,6 @@
 using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.Text;
 using TradingLib.API;
 
@@ -97,6 +99,10 @@ namespace TradingLib.Common
         /// 平仓盈亏
         /// </summary>
         public decimal Profit { get { return _profit; } set { _profit = value; } }
+
+        readonly List<PositionCloseDetail> _closedetails = new List<PositionCloseDetail>();
+ 	
+        public List<PositionCloseDetail> CloseDetails { get { return _closedetails; } }
 
         #endregion
 

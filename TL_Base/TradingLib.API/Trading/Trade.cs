@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 
 namespace TradingLib.API
 {
@@ -116,6 +117,10 @@ namespace TradingLib.API
         /// </summary>
         CurrencyType Currency { get; set; }
 
+        /// <summary>
+        /// 如果是平仓成交则获得对应所有平仓明细
+        /// </summary>
+        List<PositionCloseDetail> CloseDetails { get; }
         #endregion
 
 
