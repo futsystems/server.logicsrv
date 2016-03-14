@@ -91,6 +91,7 @@
     <Compile Include="ORM\MAccountProfile.cs" />
     <Compile Include="ORM\MCashTransaction.cs" />
     <Compile Include="ORM\MCommission.cs" />
+    <Compile Include="ORM\MExchangeRate.cs" />
     <Compile Include="ORM\MMargin.cs" />
     <Compile Include="ORM\MStrategy.cs" />
     <Compile Include="ORM\MSystem.cs" />
@@ -98,9 +99,11 @@
     <Compile Include="Tracker\BasicTracker\BasicInfo\CalendarTracker.cs" />
     <Compile Include="Tracker\BasicTracker\ConnectorMap\AccountConnectorPair.cs" />
     <Compile Include="Tracker\BasicTracker\ConnectorMap\AccountConnectorTracker.cs" />
+    <Compile Include="Tracker\BasicTracker\ExchangeRateTracker.cs" />
     <Compile Include="Tracker\BasicTracker\Template\CommissionTemplateTracker.cs" />
     <Compile Include="Tracker\BasicTracker\Template\ExStrategyTemplateTracker.cs" />
     <Compile Include="Tracker\BasicTracker\Template\MarginTemplateTracker.cs" />
+    <Compile Include="Utils\Account\AccountUtils_ExchangeRate.cs" />
     <Compile Include="Utils\Account\AccountUtils_xx.cs" />
     <Compile Include="Utils\Account\AccountUtils_ExStrategy.cs" />
     <Compile Include="Utils\Account\AccountUtils_Args.cs" />
