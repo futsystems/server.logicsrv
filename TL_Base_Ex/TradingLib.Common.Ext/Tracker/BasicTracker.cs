@@ -46,6 +46,9 @@ namespace TradingLib.Common
 
         //交易帐户个人信息维护器
         AccountProfileTracker accprofiletracker;
+        
+        //汇率数据维护器
+        ExchangeRateTracker exchangeratetracker;
 
         static BasicTracker()
         {
@@ -302,6 +305,19 @@ namespace TradingLib.Common
                 if (defaultinstance.accprofiletracker == null)
                     defaultinstance.accprofiletracker = new AccountProfileTracker();
                 return defaultinstance.accprofiletracker;
+            }
+        }
+
+        /// <summary>
+        /// 汇率数据维护器
+        /// </summary>
+        public static ExchangeRateTracker ExchangeRateTracker
+        {
+            get
+            {
+                if (defaultinstance.exchangeratetracker == null)
+                    defaultinstance.exchangeratetracker = new ExchangeRateTracker();
+                return defaultinstance.exchangeratetracker;
             }
         }
 

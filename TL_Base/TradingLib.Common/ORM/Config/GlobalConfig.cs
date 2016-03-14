@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using TradingLib.API;
+
 
 namespace TradingLib.Common
 {
@@ -11,6 +13,8 @@ namespace TradingLib.Common
         ConfigDB config = null;
 
         string _organization = null;
+        bool _currencyload = false;
+        CurrencyType _baseCurrency = CurrencyType.RMB;
 
         static GlobalConfig()
         {
@@ -26,6 +30,10 @@ namespace TradingLib.Common
                 config.UpdateConfig("DEVELOP", QSEnumCfgType.Bool,true, "是否运行在开发模式");
             }
 
+            if (!config.HaveConfig("BaseCurrency"))
+            {
+                config.UpdateConfig("BaseCurrency", QSEnumCfgType.String,CurrencyType.RMB, "系统基础货币");
+            }
 
             if (!config.HaveConfig("Organization"))
             {
@@ -306,6 +314,22 @@ namespace TradingLib.Common
             get
             {
                 return defaultinstance.config["StartDefaultConnector"].AsBool();
+            }
+        }
+
+        /// <summary>
+        /// 系统基础货币
+        /// </summary>
+        public static CurrencyType BaseCurrency
+        {
+            get
+            {
+                if (!defaultinstance._currencyload)
+                {
+                    defaultinstance._baseCurrency = (CurrencyType)Enum.Parse(typeof(CurrencyType), defaultinstance.config["BaseCurrency"].AsString());
+                    defaultinstance._currencyload = true;
+                }
+                return defaultinstance._baseCurrency;
             }
         }
     }
