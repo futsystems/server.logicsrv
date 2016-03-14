@@ -60,7 +60,7 @@ namespace TradingLib.ORM
             {
                 string query = string.Format("INSERT INTO log_exchange_rate (`currency`,`askrate`,`intermediaterate`,`bidrate`,`updatetime`,`settleday`) VALUES ( '{0}','{1}','{2}','{3}','{4}','{5}')", rate.Currency, rate.AskRate, rate.IntermediateRate, rate.BidRate, rate.UpdateTime, rate.Settleday);
                 int row = db.Connection.Execute(query);
-                SetIdentity(db.Connection, id => rate.ID = id, "id", "info_exchange_rate");
+                SetIdentity(db.Connection, id => rate.ID = id, "id", "log_exchange_rate");
             }
         }
     }
