@@ -132,6 +132,7 @@ namespace TradingLib.Core
 
 
             _settlementPriceTracker.LoadSettlementPrice(this.Tradingday);
+            BasicTracker.ExchangeRateTracker.CreateExchangeRate(this.Tradingday);
             
         }
 
@@ -202,6 +203,7 @@ namespace TradingLib.Core
             //更新交易日
             _lastsettleday = this.Tradingday;
             _tradingday = Util.ToDateTime(this.Tradingday, DateTime.Now.ToTLTime()).AddDays(1).ToTLDate();
+            BasicTracker.ExchangeRateTracker.CreateExchangeRate(_tradingday);//创建下一个交易日的汇率数据
         }
 
         /// <summary>
