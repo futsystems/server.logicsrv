@@ -76,6 +76,11 @@ namespace TradingLib.Common
         public decimal ExitCommission { get; set; }
 
         /// <summary>
+        /// 平今手续费
+        /// </summary>
+        public decimal ExitCommissionToday { get; set; }
+
+        /// <summary>
         /// 保证金比例
         /// </summary>
         public decimal Margin { get; set; }
@@ -154,7 +159,10 @@ namespace TradingLib.Common
             sb.Append(d);
             sb.Append(this.mkttime_fk.ToString());//markettime
             sb.Append(d);
+            sb.Append(this.ExitCommissionToday);
+            sb.Append(d);
             sb.Append(this.DataFeed);
+            
             return sb.ToString();
         }
 
@@ -185,7 +193,8 @@ namespace TradingLib.Common
             this.exchange_fk = int.Parse(rec[13]);
             this.underlaying_fk = int.Parse(rec[14]);
             this.mkttime_fk = int.Parse(rec[15]);
-            this.DataFeed = (QSEnumDataFeedTypes)Enum.Parse(typeof(QSEnumDataFeedTypes), rec[16]);
+            this.ExitCommissionToday = decimal.Parse(rec[16]);
+            this.DataFeed = (QSEnumDataFeedTypes)Enum.Parse(typeof(QSEnumDataFeedTypes), rec[17]);
         }
     }
 }

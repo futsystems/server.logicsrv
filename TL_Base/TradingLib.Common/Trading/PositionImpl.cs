@@ -759,6 +759,7 @@ namespace TradingLib.Common
             //先平历史持仓或者按照平今 平昨的规则进行
             foreach (PositionDetail p in _poshisnewlist)
             {
+                if (close.oSymbol.SecurityFamily.Exchange.EXCode == "SHFE" && close.OffsetFlag == QSEnumOffsetFlag.CLOSETODAY) continue;
                 if (remainsize == 0) break; //剩余平仓数量为0 跳出 当有多余的持仓明细没有被平掉，而当前平仓成交已经使用完毕
                 if (p.IsClosed()) continue;//如果当前持仓明细已经关闭 则取下一条持仓明细
                 PositionCloseDetail closedetail = null;
@@ -766,6 +767,7 @@ namespace TradingLib.Common
                 {
                     //平仓明细
                     closedetail = this.ClosePosition(p,close,remainsize);
+                    close.CloseDetails.Add(closedetail);
                 }
                 catch (Exception ex)
                 {
@@ -793,6 +795,7 @@ namespace TradingLib.Common
                 {
                     //平仓明细
                     closedetail = this.ClosePosition(p, close,remainsize);
+                    close.CloseDetails.Add(closedetail);
                 }
                 catch (Exception ex)
                 {
