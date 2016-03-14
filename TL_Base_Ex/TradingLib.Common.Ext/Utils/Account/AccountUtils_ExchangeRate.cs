@@ -36,6 +36,7 @@ namespace TradingLib.Common
             {
                 ExchangeRate secRate = BasicTracker.ExchangeRateTracker[TLCtxHelper.ModuleSettleCentre.Tradingday, sec.Currency];
                 ExchangeRate accRate = BasicTracker.ExchangeRateTracker[TLCtxHelper.ModuleSettleCentre.Tradingday, account.Currency];
+                if (secRate == null || accRate == null) return 1;
                 //将品种货币换算成系统基础货币然后再换算成帐户货币
                 return secRate.IntermediateRate / accRate.IntermediateRate;
             }

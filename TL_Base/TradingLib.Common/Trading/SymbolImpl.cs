@@ -589,7 +589,7 @@ namespace TradingLib.Common
             sb.Append(d);
             sb.Append(this.Name);
             sb.Append(d);
-            sb.Append(this.ExitCommissionToday);
+            sb.Append(this._exitcommissiontoday);
 
             return sb.ToString();
         }
@@ -614,7 +614,7 @@ namespace TradingLib.Common
             this.Tradeable = bool.Parse(rec[14]);
             this.SymbolType = (QSEnumSymbolType)Enum.Parse(typeof(QSEnumSymbolType), rec[15]);
             this.Name = rec[16];
-            this.ExitCommissionToday = decimal.Parse(rec[17]);
+            this._exitcommissiontoday = decimal.Parse(rec[17]);
         }
     }
 }
