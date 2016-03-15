@@ -115,7 +115,7 @@ namespace TradingLib.Contrib.MainAcctFinService
                 if (broker != null && broker.IsLive)
                 {
                     //查询
-                    broker.QryAccountInfo();
+                    //broker.QryAccountInfo();
                 }
             }
         }

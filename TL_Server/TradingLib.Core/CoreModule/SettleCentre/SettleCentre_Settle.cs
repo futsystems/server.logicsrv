@@ -317,6 +317,8 @@ namespace TradingLib.Core
             //触发 系统重置操作事件
             TLCtxHelper.EventSystem.FireSettleResetEvet(this, new SystemEventArgs());
 
+
+
             this.IsInSettle = false;//标识系统结算完毕
         }
 

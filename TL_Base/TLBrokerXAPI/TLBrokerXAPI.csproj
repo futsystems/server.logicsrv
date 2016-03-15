@@ -66,6 +66,7 @@
     <Compile Include="Interop\TLBrokerWrapperProxy.cs" />
     <Compile Include="Interop\UnmanagedLibrary.cs" />
     <Compile Include="Struct.cs" />
+    <Compile Include="StructUtils.cs" />
     <Compile Include="TLBroker.cs" />
     <Compile Include="TLBrokerBase.cs" />
     <Compile Include="TLDataFeedBase.cs" />

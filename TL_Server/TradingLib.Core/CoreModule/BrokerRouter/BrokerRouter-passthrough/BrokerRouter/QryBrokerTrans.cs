@@ -53,7 +53,7 @@ namespace TradingLib.Core
 
                 _brokertoken = broker.Token;
                 //查询帐户信息
-                broker.QryAccountInfo();
+                //broker.QryAccountInfo();
 
                 if (TimeoutObject.WaitOne(timeoutMSec, false))
                 {

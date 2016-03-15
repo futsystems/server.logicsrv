@@ -55,7 +55,7 @@ namespace TradingLib.Core
             needlog = true;
 
             //bool periodAuctionPlace = false;
-           // bool periodAuctionExecution = false;
+            // bool periodAuctionExecution = false;
             //bool periodContinuous = false;
 
             //1 结算中心检查
@@ -152,6 +152,18 @@ namespace TradingLib.Core
                 return false;
             }
 
+            #region demo
+
+            {
+                ////交易所时间
+                //DateTime extime = o.oSymbol.SecurityFamily.Exchange.ConvertToExchangeTime(DateTime.Now);
+                //int span = o.oSymbol.SecurityFamily.Exchange.CloseTime - extime.ToTLTime();
+                //if (span > 0 && span < GlobalConfig.FlatTimeAheadOfMarketClose * 60)
+                //{
+
+                //}
+            }
+            #endregion
             //熔断状态判定
             if (_haltEnable)
             {
@@ -332,12 +344,12 @@ namespace TradingLib.Core
                 //6.2检查价格是否在涨跌幅度内
                 if (o.isLimit || o.isStop)
                 {
-                        //decimal targetprice = o.isLimit ? o.LimitPrice : o.StopPrice;
-                        //if (targetprice > tk.UpperLimit || targetprice < tk.LowerLimit)
-                        //{
-                        //    errortitle = "ORDERPRICE_OVERT_LIMIT";//保单价格超过涨跌幅
-                        //    return false;
-                        //}
+                    //decimal targetprice = o.isLimit ? o.LimitPrice : o.StopPrice;
+                    //if (targetprice > tk.UpperLimit || targetprice < tk.LowerLimit)
+                    //{
+                    //    errortitle = "ORDERPRICE_OVERT_LIMIT";//保单价格超过涨跌幅
+                    //    return false;
+                    //}
                 }
             }
             //6.2检查价格是否在涨跌幅度内
@@ -355,7 +367,7 @@ namespace TradingLib.Core
                     }
                 }
             }
-            
+
 
             return true;
 
@@ -411,9 +423,17 @@ namespace TradingLib.Core
                 if (_marketopencheck)
                 {
                     //日内交易检查
-                    if ((!inter) && account.IntraDay)//非内部委托并且帐户是日内交易帐户则要检查日内交易时间
+                    if ((!inter) && account.IntraDay)//非内部委托并且帐户是日内交易帐户 则系统强迫前5秒 不允许交易
                     {
-
+                        //交易所时间
+                        DateTime extime = o.oSymbol.SecurityFamily.Exchange.ConvertToExchangeTime(DateTime.Now);
+                        int span = o.oSymbol.SecurityFamily.Exchange.CloseTime - extime.ToTLTime();
+                        if (span>0 && span < (GlobalConfig.FlatTimeAheadOfMarketClose*60 + 5))
+                        {
+                            msg = "系统执行强平,日内帐户禁止交易";
+                            logger.Warn("Order reject by [IntraDay Check]" + o.GetOrderInfo());
+                            return false;
+                        }
                         //如果是强平时间段则不可交易 
                         //if (o.oSymbol.SecurityFamily.cl)
                         //{
