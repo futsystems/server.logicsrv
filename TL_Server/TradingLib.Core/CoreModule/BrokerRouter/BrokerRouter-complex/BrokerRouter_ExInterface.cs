@@ -98,7 +98,7 @@ namespace TradingLib.Core
         /// <returns></returns>
         bool BrokerSendOrder(Order o, out string errorTitle)
         {
-            logger.Info("BrokerSendOrder select broker and send through broker");
+            logger.Info("Select Broker Send Order Out");
             errorTitle = string.Empty;
             try
             {

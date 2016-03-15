@@ -113,7 +113,25 @@ namespace TradingLib.Core
         {
             if (action != null)
             {
-
+                Order order = TLCtxHelper.ModuleClearCentre.SentOrder(action.OrderID);
+                if (order == null)
+                {
+                    order = TLCtxHelper.ModuleBrokerRouter.SentRouterOrder(action.OrderID);
+                }
+                if (order == null)
+                {
+                    logger.Warn(string.Format("Order:{0} do not exist", action.OrderID));
+                }
+                if (order.Breed == QSEnumOrderBreedType.ROUTER)
+                {
+                    logger.Info("Reply OrderActionError To Spliter:" + order.GetOrderInfo() + " ErrorTitle:" + error.ErrorMessage);
+                    //LogRouterOrderUpdate(order);//更新路由侧委托
+                    //_splittracker.GotSonOrderError(order, error);
+                    _splittracker.GotSonOrderActionError(action, error);
+                    return;
+                }
+                logger.Info("Reply OrderActionError To MessageExch:" + order.GetOrderInfo() + " ErrorTitle:" + error.ErrorMessage);
+                _actionerrorcache.Write(new OrderActionErrorPack(action, error));
             }
             else
             {

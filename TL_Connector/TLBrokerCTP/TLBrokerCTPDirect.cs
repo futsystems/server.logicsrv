@@ -129,7 +129,6 @@ namespace Broker.Live
         /// </summary>
         BrokerTracker tk = null;
         IdTracker _sonidtk = null;
-        //OrderSplitTracker _splittracker = null;
 
         /// <summary>
         /// 初始化接口 停止后再次启动不会调用该函数
@@ -669,7 +668,8 @@ namespace Broker.Live
 
                     fatherOrder.Status = QSEnumOrderStatus.Reject;
                     fatherOrder.Comment = error.Error.ErrorMsg;
-                    NotifyOrder(fatherOrder); 
+                    NotifyOrder(fatherOrder);
+                    return;
                 }
                 else
                 {
@@ -684,6 +684,12 @@ namespace Broker.Live
                 action.Exchagne = error.OrderAction.Exchange;
                 action.Symbol = error.OrderAction.Symbol;
                 action.OrderID = fatherOrder.id;//*
+                action.FrontID = fatherOrder.FrontIDi;
+                action.SessionID = fatherOrder.SessionIDi;
+                action.OrderRef = fatherOrder.OrderRef;
+                action.OrderExchID = fatherOrder.OrderSysID;
+
+                //action.
 
                 RspInfo info = XErrorField2RspInfo(ref error.Error);
                 NotifyOrderOrderActionError(action, info);
