@@ -115,8 +115,8 @@ namespace TradingLib.Common
                         pos.SettlementPrice = target.Settlement;
                     }
 
-                    //如果没有正常获得结算价格 持仓结算价按对应的最新价进行结算
-                    if (pos.SettlementPrice == null)
+                    //如果没有正常获得结算价格 持仓结算价按对应的最新价进行结算 系统加载结算时候 会将价格以tick fill到系统，因此分帐户侧持仓结算价为-1
+                    if (pos.SettlementPrice == null || pos.SettlementPrice<0)
                     {
                         pos.SettlementPrice = pos.LastPrice;
                     }
@@ -127,7 +127,6 @@ namespace TradingLib.Common
                         //保存结算持仓明细时要将结算日更新为当前
                         pd.Settleday = settleday;
                         //保存持仓明细到数据库
-                        //ORM.MSettlement.InsertPositionDetail(pd);
                         TLCtxHelper.ModuleDataRepository.NewPositionDetail(pd);
                         positiondetail_settle.Add(pd);
                     }

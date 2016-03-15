@@ -727,7 +727,7 @@ namespace Broker.Live
                 }
 
                 //如果没有正常获得结算价格 持仓结算价按对应的最新价进行结算
-                if (pos.SettlementPrice == null)
+                if (pos.SettlementPrice == null || pos.SettlementPrice < 0)
                 {
                     pos.SettlementPrice = pos.LastPrice;
                 }

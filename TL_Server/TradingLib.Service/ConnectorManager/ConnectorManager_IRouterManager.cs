@@ -61,5 +61,17 @@ namespace TradingLib.ServiceManager
         /// 获得所有行情路由
         /// </summary>
         public IEnumerable<IDataFeed> DataFeeds { get { return datafeedInstList.Values; } }
+
+        /// <summary>
+        /// 重置所有交易通道
+        /// </summary>
+        public void Reset()
+        {
+            //1.停止所有通道
+            StopConnector();
+
+            //2.启动所有通道
+            StartConnector();
+        }
     }
 }
