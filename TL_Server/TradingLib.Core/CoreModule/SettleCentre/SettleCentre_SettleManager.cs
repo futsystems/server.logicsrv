@@ -241,6 +241,9 @@ namespace TradingLib.Core
             ////重置清算中心 用于加载对应的交易数据
             TLCtxHelper.ModuleClearCentre.Reset();
 
+            ///重新启动通道 用于Broker加载对应的交易数据
+            TLCtxHelper.ServiceRouterManager.Reset();
+
             //获得所有未平持仓 并查询是否有结算价记录 没有记录则插入到数据库
             foreach (Position pos in TLCtxHelper.ModuleClearCentre.TotalPositions.Where(pos => !pos.isFlat))
             {

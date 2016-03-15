@@ -143,7 +143,7 @@ namespace TradingLib.Core
                 //执行常规检查,step1检查不涉及帐户类的检查不用加锁 常规检查部分拒绝的委托不记录到数据库 避免记录很多无效委托
                 if (riskcheck)
                 {
-                    logger.Info("Got Order[Check1]:" + o.GetOrderInfo());
+                    logger.Info("Got Order[Check1]:" + o.id.ToString());
                     string errortitle = string.Empty;
                     bool needlog = true;
 
@@ -155,7 +155,7 @@ namespace TradingLib.Core
                         o.Comment = "风控拒绝:" + info.ErrorMessage;
                         ReplyErrorOrder(o, info, needlog);
 
-                        logger.Warn("委托(" + o.id.ToString() + ")被拒绝,ErrorID:" + errortitle + " ErrorMesssage:" + info.ErrorMessage + " needlog:" + needlog.ToString());
+                        logger.Warn(string.Format("Order[{0}] Is Reject / RspInfo:{1} NeedLog:{2}", o.id, info, needlog));
                         return;
                     }
                 }
@@ -177,7 +177,7 @@ namespace TradingLib.Core
                             o.Comment = "风控拒绝:" + info.ErrorMessage;
                             ReplyErrorOrder(o, info);
 
-                            logger.Warn("委托(" + o.id.ToString() + ")被拒绝,ErrorID:" + info.ErrorID.ToString() + " ErrorMesssage:" + info.ErrorMessage);
+                            logger.Warn(string.Format("Order[{0}] Is Reject / RspInfo:{1}", o.id, info));
                             return;
                         }
                     }

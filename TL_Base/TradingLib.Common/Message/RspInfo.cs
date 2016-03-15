@@ -40,6 +40,10 @@ namespace TradingLib.Common
 
         public string ErrorMessage { get; set; }
 
+        public override string ToString()
+        {
+            return string.Format("ErrID[{0}] ErrMsg[{1}]", this.ErrorID, this.ErrorMessage);
+        }
         public static string Serialize(RspInfo info)
         {
             return info.ErrorID.ToString() + "," + info.ErrorMessage.Replace(',', ' ');

@@ -30,7 +30,7 @@ namespace TradingLib.Common
         /// <summary>
         /// 成交管理器
         /// </summary>
-        ThreadSafeList<Trade> _tradeTk = null;
+        TradeTracker _tradeTk = null;
 
         IBroker _broker = null;
 
@@ -68,7 +68,7 @@ namespace TradingLib.Common
             _positionTk.NewPositionCloseDetailEvent += new Action<Trade,PositionCloseDetail>(NewPositionCloseDetail);
             _positionTk.NewPositionEvent += new Action<Position>(NewPosition);
 
-            _tradeTk = new ThreadSafeList<Trade>();
+            _tradeTk = new TradeTracker();
         }
 
         public void Clear()
@@ -190,7 +190,7 @@ namespace TradingLib.Common
             if (accept)
             {
                 _orderTk.GotFill(fill);
-                _tradeTk.Add(fill);
+                _tradeTk.GotFill(fill);
             }
         }
 
@@ -210,6 +210,14 @@ namespace TradingLib.Common
         public void GotPosition(PositionDetail pos)
         {
             _positionTk.GotPosition(pos);
+        }
+
+        /// <summary>
+        /// 清空已结算持仓
+        /// </summary>
+        public void DropSettled()
+        {
+            _positionTk.DropSettled();
         }
     }
 }

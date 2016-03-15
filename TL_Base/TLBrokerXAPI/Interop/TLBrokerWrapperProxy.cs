@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Diagnostics.CodeAnalysis;
 using System.Runtime.InteropServices;
 using TradingLib.API;
@@ -75,7 +76,7 @@ namespace TradingLib.BrokerXAPI.Interop
 
         public TLBrokerWrapperProxy(string path, string dllname)
         {
-            logger = LogManager.GetLogger(dllname);
+            logger = LogManager.GetLogger(Path.GetFileNameWithoutExtension(dllname));
             //1.加载dll
             //Util.Info("Load Nativelib wrapper dll/so", this.GetType().Name);
             NativeLib = new UnmanagedLibrary(path, dllname);
@@ -234,10 +235,8 @@ namespace TradingLib.BrokerXAPI.Interop
         {
             try
             {
-                logger.Info("BrokerProxy SendOrder");
-                bool x =  _SendOrder(this.Wrapper, ref pOrder);
-                //Util.Info("**************** sendorder return:" + x.ToString());
-                return x;
+                logger.Info(string.Format("SendOrder ID:{0} {1} {2} {3} {4}@{5}", pOrder.ID, (pOrder.Side ? "Buy" : "Sell"), pOrder.OffsetFlag, Math.Abs(pOrder.TotalSize), pOrder.Symbol, pOrder.LimitPrice));
+                return  _SendOrder(this.Wrapper, ref pOrder);
             }
             catch (Exception ex)
             {
@@ -254,7 +253,7 @@ namespace TradingLib.BrokerXAPI.Interop
         {
             try
             {
-                logger.Info("BrokerProxy SendOrderAction");
+                logger.Info(string.Format("SendOrderAction Action:{0} LocalID:{1} RemoteID:{2}", pAction.ActionFlag, pAction.BrokerLocalOrderID, pAction.BrokerRemoteOrderID));
                 return _SendOrderAction(this.Wrapper, ref pAction);
             }
             catch (Exception ex)

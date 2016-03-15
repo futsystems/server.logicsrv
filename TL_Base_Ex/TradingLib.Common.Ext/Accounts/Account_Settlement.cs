@@ -125,8 +125,8 @@ namespace TradingLib.Common
                         pos.SettlementPrice = target.Settlement;
                     }
 
-                    //如果没有正常获得结算价格 持仓结算价按对应的最新价进行结算
-                    if (pos.SettlementPrice == null)
+                    //如果没有正常获得结算价格 持仓结算价按对应的最新价进行结算 系统加载结算时候 会将价格以tick fill到系统，因此分帐户侧持仓结算价为-1
+                    if (pos.SettlementPrice == null || pos.SettlementPrice<0)
                     {
                         pos.SettlementPrice = pos.LastPrice;
                     }

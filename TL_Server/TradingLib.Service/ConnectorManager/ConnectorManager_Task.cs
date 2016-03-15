@@ -21,12 +21,7 @@ namespace TradingLib.ServiceManager
             if (TLCtxHelper.ModuleSettleCentre.IsTradingday)//如果是交易日则需要启动实盘通道
             {
                 logger.Info("正常交易日,重置所有路由通道");
-                
-                //1.停止所有通道
-                StopConnector();
-
-                //2.启动所有通道
-                StartConnector();
+                this.Reset();
             }
         }
 

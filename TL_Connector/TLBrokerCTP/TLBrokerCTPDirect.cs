@@ -128,6 +128,7 @@ namespace Broker.Live
         /// Borker交易信息维护器
         /// </summary>
         BrokerTracker tk = null;
+        IdTracker _sonidtk = null;
 
         /// <summary>
         /// 初始化接口 停止后再次启动不会调用该函数
@@ -136,408 +137,36 @@ namespace Broker.Live
         {
             base.InitBroker();
             tk = new BrokerTracker(this);
-            _sonidtk = new IdTracker(IdTracker.ConnectorOwnerIDStart + _cfg.ID);//用数据库ID作为委托编号生成器预留10个id用于系统其他地方使用
-
-            #region 初始化委托拆分维护器 绑定事件
-            _splittracker = new OrderSplitTracker(this.Token);
-            //委托分拆器发送子委托通过接口发送
-            _splittracker.SendSonOrderEvent += new OrderDelegate(SendSonOrder);
-            //委托分拆器发送取消委托通过接口取消
-            _splittracker.CancelSonOrderEvent += new OrderDelegate(CancelSonOrder);
-
-            //委托分拆器请求分拆委托,调用本地实现的分拆逻辑SplitOrder
-            _splittracker.SplitOrdereEvent += new Func<Order, List<Order>>(SplitOrder);
-
-            //委托分拆器更新父委托 本地对外通知父委托更新
-            _splittracker.GotFatherOrderEvent += new OrderDelegate(NotifyOrder);
-            //_splittracker.GotFatherCancelEvent += 
-            //委托分拆器更新成交 本地对外通知成交更新
-            _splittracker.GotFatherFillEvent += new FillDelegate(NotifyTrade);
-            //委托分拆器更新错误 本地对外通知错误更新
-            _splittracker.GotFatherOrderErrorEvent += new OrderErrorDelegate(NotifyOrderError);
-            //委托分拆器更新委托操作错误 本地对外通知更新
-            _splittracker.GotFatherOrderActionErrorEvent += new OrderActionErrorDelegate(NotifyOrderOrderActionError);
-            #endregion
-
+            _sonidtk = new IdTracker(IdTracker.ConnectorOwnerIDStart + _cfg.ID);//用数据库ID作为委托编号生成器预留10个id用于系统其他地方使用    
         }
-
-        /// <summary>
-        /// 记录从Broker交易信息维护器产生的平仓明细
-        /// </summary>
-        /// <param name="obj"></param>
-        void tk_NewPositionCloseDetailEvent(PositionCloseDetail obj)
-        {
-            this.LogBrokerPositionClose(obj);
-        }
-
-        IdTracker _sonidtk = null;
-        OrderSplitTracker _splittracker = null;
-
-        #region 委托拆分逻辑
-
-        List<Order> SplitOrder(Order o)
-        {
-            return SP_DirectOrder(o);
-        }
-        /// <summary>
-        /// 直接发送委托
-        /// 不分拆委托进行保证金降低
-        /// </summary>
-        /// <param name="o"></param>
-        /// <returns></returns>
-        List<Order> SP_DirectOrder(Order o)
-        {
-            List<Order> olist = new List<Order>();
-            Order neworder = new OrderImpl(o);
-            olist.Add(neworder);
-
-            ResetOrder(o, ref olist);
-
-            return olist;
-        }
-        /// <summary>
-        /// 将原始的分帐户侧委托分拆转义
-        /// </summary>
-        /// <param name="o"></param>
-        /// <returns></returns>
-        List<Order> SP_SplitOrder(Order o)
-        {
-            List<Order> olist = new List<Order>();
-
-            bool side = o.Side;//原始委托买入 或者卖出
-            bool isEntry = o.IsEntryPosition;//是否是开仓
-            bool posside = o.PositionSide;//持仓操作方向 是在多头操作 还是在空头操作
-
-            int longsize = tk.GetPosition(o.Symbol, true).UnsignedSize;
-            int shortsize = tk.GetPosition(o.Symbol, false).UnsignedSize;
-
-            IEnumerable<Order> longEntryOrders = tk.GetPendingEntryOrders(o.Symbol, true);
-            IEnumerable<Order> shortEntryOrders = tk.GetPendingEntryOrders(o.Symbol, false);
-            IEnumerable<Order> longExitOrders = tk.GetPendingExitOrders(o.Symbol, true);
-            IEnumerable<Order> shortExitOrders = tk.GetPendingExitOrders(o.Symbol, false);
-            int longPendingEntrySize = longEntryOrders.Sum(po => po.UnsignedSize);
-            int longPendingExitSize = longExitOrders.Sum(po => po.UnsignedSize);
-            int shortPendingEntrySize = shortEntryOrders.Sum(po => po.UnsignedSize);
-            int shortPendingExitSize = shortExitOrders.Sum(po => po.UnsignedSize);
-
-            Util.Info("当前持仓数量 多头:" + longsize.ToString() + " 空头:" + shortsize.ToString() + "待买开:" + longPendingEntrySize.ToString() + " 待卖平:" + longPendingExitSize.ToString() + " 待卖开:" + shortPendingEntrySize.ToString() + " 待买平" + shortPendingExitSize.ToString() + " 委托操作持仓方向:" + (posside ? "多头" : "空头") + " 开平:" + (isEntry ? "开" : "平") + " 方向:" + (side ? "买入" : "卖出") + " 数量:" + o.UnsignedSize.ToString());
-
-            //如果当前没有持仓 则直接开仓
-            if (longsize == 0 && shortsize == 0)
-            {
-                Order neworder = new OrderImpl(o);
-                //如果是平仓委托 将平仓标志转换成开仓
-                if (!neworder.IsEntryPosition)
-                {
-                    neworder.OffsetFlag = QSEnumOffsetFlag.OPEN;
-                }
-                olist.Add(neworder);
-            }
-            /*
-             * 持有2手多单,卖开2手转成卖平2手
-             * 
-             * 卖开/卖平，就不为能再转成卖平，需要转换成卖开
-             * 
-             * 此时再下买开，则需要跳转到空的方向去平，而不是直接判断多头方向，
-             * 系统需要往保证金减少的方向进行
-             * 并且委托只能在一个方向进行拆单
-             * 
-             * 规则2
-             * 多头2手
-             * 空头5手
-             * 
-             * 此时空头操作，买平2手，如果按照原来的逻辑，则进入多头检查，结果就是变成买开2手，这个逻辑要调整
-             * 要进入保证金多的方向进行检查
-             * 
-             * 如果进入空头部分检查，直接买平，如果空头有挂单，无可平持仓，则买开
-             * 
-             * */
-            int longcanexit = longsize - longPendingExitSize;//当前持有的多头持仓数量 - 处于挂单状态的卖平数量 = 当前可以挂卖平数量
-            int shortcanexit = shortsize - shortPendingExitSize;//当前持有的空头持仓数量 - 处于挂单状态的买平数量 = 当前可以挂买平数量
-
-            //如果同时持有多头和空头 则需要判断进入哪个持仓方向进行拆单
-            if (longsize > 0 && shortsize > 0)
-            {
-                //买入操作 希望进入空头判定 转换成买平操作
-                if (side)
-                {
-                    goto SHORTSIDE;
-                }
-                else//卖出操作 进入多头判定 转换成卖平操作
-                {
-                    goto LONGSIDE;
-                }
-            }
-
-
-
-            #region 持仓多头
-        //当前持有多头持仓 可以挂买开 卖平
-        LONGSIDE:
-            if (longsize > 0 && olist.Count == 0)
-            {
-                //当前委托为 多头持仓操作
-                if (posside)
-                {
-                    //买入开仓操作 原有委托方向不变
-                    if (isEntry)
-                    {
-                        Order neworder = new OrderImpl(o);
-                        olist.Add(neworder);
-                    }
-                    else//卖出平仓操作 
-                    {
-                        if (longcanexit > 0)//如果有可平持仓
-                        {
-                            if (o.UnsignedSize <= longcanexit) //检查数量是否足够，如果足够 则直接平仓
-                            {
-                                Order neworder = new OrderImpl(o);
-                                olist.Add(neworder);
-                            }
-                            else //否则拆单
-                            {
-                                //第一条委托平掉原来的持仓
-                                Order neworder1 = new OrderImpl(o);
-                                neworder1.TotalSize = -1 * longcanexit;
-                                neworder1.Size = neworder1.TotalSize;
-                                neworder1.OffsetFlag = QSEnumOffsetFlag.CLOSE;
-
-
-                                //第二条委托反向 卖出开仓
-                                Order neworder2 = new OrderImpl(o);
-                                neworder2.TotalSize = -1 * (o.UnsignedSize - neworder1.UnsignedSize);
-                                neworder2.Size = neworder2.TotalSize;
-                                neworder2.OffsetFlag = QSEnumOffsetFlag.OPEN;
-                                //
-                                olist.Add(neworder1);
-                                olist.Add(neworder2);
-                            }
-                        }
-                        else//已经被挂单占用 没有可平手数，则全部转换成开仓
-                        {
-                            Order neworder = new OrderImpl(o);
-                            neworder.OffsetFlag = QSEnumOffsetFlag.OPEN;
-                            olist.Add(neworder);
-                        }
-                    }
-                }
-                else//如果是空头持仓操作
-                {
-                    if (isEntry)//卖出开仓
-                    {
-                        if (longcanexit > 0)
-                        {
-                            if (o.UnsignedSize <= longcanexit)
-                            {
-                                Order neworder = new OrderImpl(o);
-                                neworder.OffsetFlag = QSEnumOffsetFlag.CLOSE;//变成卖出平仓
-                                olist.Add(neworder);
-                            }
-                            else
-                            {
-                                //第一条委托平掉原来的持仓
-                                Order neworder1 = new OrderImpl(o);
-                                neworder1.TotalSize = -1 * longcanexit;
-                                neworder1.Size = neworder1.TotalSize;
-                                neworder1.OffsetFlag = QSEnumOffsetFlag.CLOSE;
-
-                                //第二条委托反向 卖出开仓
-                                Order neworder2 = new OrderImpl(o);
-                                neworder2.TotalSize = -1 * (o.UnsignedSize - neworder1.UnsignedSize);
-                                neworder2.Size = neworder2.TotalSize;
-                                neworder2.OffsetFlag = QSEnumOffsetFlag.OPEN;
-
-                                //
-                                olist.Add(neworder1);
-                                olist.Add(neworder2);
-                            }
-                        }
-                        else//卖出开仓,直接开仓
-                        {
-                            Order neworder = new OrderImpl(o);
-                            olist.Add(neworder);
-                        }
-                    }
-                    else //买入平仓
-                    {
-                        Order neworder = new OrderImpl(o);
-                        neworder.OffsetFlag = QSEnumOffsetFlag.OPEN;
-                        olist.Add(neworder);
-                    }
-                }
-
-            }
-            #endregion
-
-            #region 持仓空头
-        SHORTSIDE:
-            //当前持有空头持仓
-            if (shortsize > 0 && olist.Count == 0)
-            {
-                if (posside)//多头持仓操作
-                {
-                    if (isEntry)//买入开仓
-                    {
-                        if (shortcanexit > 0)
-                        {
-                            if (o.UnsignedSize <= shortcanexit)//数量小于当前空头持仓 则直接买入平仓
-                            {
-                                Order neworder = new OrderImpl(o);
-                                neworder.OffsetFlag = QSEnumOffsetFlag.CLOSE;//变成买入平仓
-                                olist.Add(neworder);
-                            }
-                            else
-                            {
-                                //第一条委托平掉原来的持仓
-                                Order neworder1 = new OrderImpl(o);
-                                neworder1.TotalSize = shortcanexit;
-                                neworder1.Size = neworder1.TotalSize;
-                                neworder1.OffsetFlag = QSEnumOffsetFlag.CLOSE;
-
-                                //第二条委托反向 买入开仓
-                                Order neworder2 = new OrderImpl(o);
-                                neworder2.TotalSize = (o.UnsignedSize - neworder1.UnsignedSize);
-                                neworder2.Size = neworder2.TotalSize;
-                                neworder2.OffsetFlag = QSEnumOffsetFlag.OPEN;
-
-                                //
-                                olist.Add(neworder1);
-                                olist.Add(neworder2);
-                            }
-                        }
-                        else//没有空头持仓可以平 则直接开多仓
-                        {
-                            Order neworder = new OrderImpl(o);
-                            olist.Add(neworder);
-                        }
-
-                    }
-                    else//卖出平仓
-                    {
-                        Order neworder = new OrderImpl(o);
-                        neworder.OffsetFlag = QSEnumOffsetFlag.OPEN;
-                        olist.Add(neworder);
-                    }
-                }
-                else//空头持仓操作
-                {
-                    if (isEntry)//卖出开仓
-                    {
-                        Order neworder = new OrderImpl(o);
-                        neworder.OffsetFlag = QSEnumOffsetFlag.OPEN;
-                        olist.Add(neworder);
-                    }
-                    else//买入平仓
-                    {
-                        if (shortcanexit > 0)
-                        {
-                            if (o.UnsignedSize <= shortcanexit)//数量小于当前空头持仓 则直接买入平仓
-                            {
-                                Order neworder = new OrderImpl(o);
-                                neworder.OffsetFlag = QSEnumOffsetFlag.CLOSE;//变成买入平仓
-                                olist.Add(neworder);
-                            }
-                            else
-                            {
-                                //第一条委托平掉原来的持仓
-                                Order neworder1 = new OrderImpl(o);
-                                neworder1.TotalSize = shortcanexit;
-                                neworder1.Size = neworder1.TotalSize;
-                                neworder1.OffsetFlag = QSEnumOffsetFlag.CLOSE;
-
-                                //第二条委托反向 买入开仓
-                                Order neworder2 = new OrderImpl(o);
-                                neworder2.TotalSize = (o.UnsignedSize - neworder1.UnsignedSize);
-                                neworder2.Size = neworder2.TotalSize;
-                                neworder2.OffsetFlag = QSEnumOffsetFlag.OPEN;
-
-                                //
-                                olist.Add(neworder1);
-                                olist.Add(neworder2);
-                            }
-                        }
-                        else//空头没有持仓可以平，则直接转换成开仓
-                        {
-                            Order neworder = new OrderImpl(o);
-                            neworder.OffsetFlag = QSEnumOffsetFlag.OPEN;
-                            olist.Add(neworder);
-                        }
-
-                    }
-                }
-            }
-            #endregion
-
-            ResetOrder(o, ref olist);
-
-            return olist;
-        }
-
-        /// <summary>
-        /// 重置子委托相关字段
-        /// </summary>
-        /// <param name="olist"></param>
-        void ResetOrder(Order fatherorder, ref List<Order> olist)
-        {
-            //重置子委托的相关属性
-            foreach (Order order in olist)
-            {
-                //设定分解后委托父ID
-                order.FatherID = fatherorder.id;
-                order.FatherBreed = fatherorder.Breed;
-                //设定当前分解源
-                order.Breed = QSEnumOrderBreedType.BROKER;
-
-                order.Broker = this.Token;
-                order.id = _sonidtk.AssignId;
-
-                order.BrokerLocalOrderID = "";
-                order.BrokerRemoteOrderID = "";
-                order.OrderSeq = 0;
-                order.OrderRef = "";
-                order.FrontIDi = 0;
-                order.SessionIDi = 0;
-                if (order.OffsetFlag == QSEnumOffsetFlag.CLOSE)
-                {
-                    order.OffsetFlag = QSEnumOffsetFlag.CLOSETODAY;
-                }
-
-                //重置委托相关状态
-                order.Account = this.Token;
-            }
-
-
-        }
-        #endregion
-
 
         /// <summary>
         /// 停止时候要重置接口状态
         /// </summary>
-        public override void DestoryBroker()
+        public override void OnDisposed()
         {
-            Util.Debug("DestoryBroker ...............");
+            logger.Info("Clear Broker DataStruct");
             //清空接口交易状态维护器
             tk.Clear();
             tk = null;
 
-            //清空委托拆分器状态
-            _splittracker.Clear();
-            _splittracker = null;
-
             //清空委托map
             localOrderID_map.Clear();
             remoteOrderID_map.Clear();
+            fatherOrder_Map.Clear();
+            sonFathOrder_Map.Clear();
+            fatherSonOrder_Map.Clear();
+
         }
         /// <summary>
         /// 恢复日内交易状态
         /// 从数据库加载昨日持仓数据 和当日交易数据并填充到 成交接口维护器中 用于恢复日内交易状态
         /// </summary>
-        public override void OnResume()
+        public override void OnInit()
         {
             try
             {
-                logger.Info("Resume trading info from clearcentre....");
+                logger.Info("Load Trading Info From ClearCentre");
                 IEnumerable<Order> orderlist = ClearCentre.SelectBrokerOrders(this.Token);
                 IEnumerable<Trade> tradelist = ClearCentre.SelectBrokerTrades(this.Token);
                 IEnumerable<PositionDetail> positiondetaillist = ClearCentre.SelectBrokerPositionDetails(this.Token);
@@ -583,10 +212,16 @@ namespace Broker.Live
                     tk.GotFill(t);
                 }
                 logger.Info(string.Format("Resumed {0} Trades", tradelist.Count()));
+
                 List<FatherSonOrderPair> pairs = GetOrderPairs(orderlist);
                 foreach (FatherSonOrderPair pair in pairs)
                 {
-                    _splittracker.ResumeOrder(pair);
+                    fatherOrder_Map.TryAdd(pair.FatherOrder.id, pair.FatherOrder);
+                    fatherSonOrder_Map.TryAdd(pair.FatherOrder.id, pair.SonOrders.FirstOrDefault());
+                    foreach (var o in pair.SonOrders)
+                    {
+                        sonFathOrder_Map.TryAdd(o.id, pair.FatherOrder);
+                    } 
                 }
 
                 //数据恢复完毕后再绑定平仓明细事件
@@ -595,9 +230,19 @@ namespace Broker.Live
             }
             catch (Exception ex)
             {
-
+                logger.Error("Resue Data Error:" + ex.ToString());
             }
         }
+
+        /// <summary>
+        /// 记录从Broker交易信息维护器产生的平仓明细
+        /// </summary>
+        /// <param name="obj"></param>
+        void tk_NewPositionCloseDetailEvent(PositionCloseDetail obj)
+        {
+            this.LogBrokerPositionClose(obj);
+        }
+
 
         List<FatherSonOrderPair> GetOrderPairs(IEnumerable<Order> sonOrders)
         {
@@ -665,21 +310,162 @@ namespace Broker.Live
             }
             return null;
         }
+
+        ConcurrentDictionary<long, Order> fatherOrder_Map = new ConcurrentDictionary<long, Order>();
+        /// <summary>
+        /// 通过接口外侧ID找到原始委托
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        Order FatherID2Order(long id)
+        {
+            if (fatherOrder_Map.Keys.Contains(id))
+            {
+                return fatherOrder_Map[id];
+            }
+            return null;
+        }
+
+        //用于通过子委托ID找到对应的父委托
+        ConcurrentDictionary<long, Order> sonFathOrder_Map = new ConcurrentDictionary<long, Order>();
+        /// <summary>
+        /// 通过接口侧委托ID找到接口外侧委托
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        Order SonID2FatherOrder(long id)
+        {
+            if (sonFathOrder_Map.Keys.Contains(id))
+                return sonFathOrder_Map[id];
+            return null;
+        }
+
+        //用于通过父委托ID找到对应的子委托
+        ConcurrentDictionary<long, Order> fatherSonOrder_Map = new ConcurrentDictionary<long, Order>();//父子子委托映射关系
+        /// <summary>
+        /// 通过接口外侧委托ID找到接口内侧委托
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        Order FatherID2SonOrder(long id)
+        {
+            if (fatherSonOrder_Map.Keys.Contains(id))
+                return fatherSonOrder_Map[id];
+            return null;
+        }
         #endregion
 
+
+        #region IBroker交易接口
         public override void SendOrder(Order o)
         {
             //发送委托时 底层CTP接口有一个递增操作 该操作不是线程安全的，如果多个线程同时调用该函数则会出现orderref相同的情况从而出现下单错乱的问题。
             lock (this)
             {
-                _splittracker.SendFatherOrder(o);
-                Util.sleep(10);
+                //复制接口接受到的委托 并设置相关字段 lo相当于是原始委托o的一个子委托
+                Order lo = new OrderImpl(o);
+                //接口侧委托与接收到的委托为一对一的关系
+                lo.FatherID = o.id;
+                lo.FatherBreed = o.Breed;
+                //设定当前分解源
+                lo.Breed = QSEnumOrderBreedType.BROKER;
+
+                lo.Broker = this.Token;
+                lo.id = _sonidtk.AssignId;
+
+                lo.BrokerLocalOrderID = "";
+                lo.BrokerRemoteOrderID = "";
+                lo.OrderSeq = 0;
+                lo.OrderRef = "";
+                lo.FrontIDi = 0;
+                lo.SessionIDi = 0;
+                lo.Account = this.Token;
+
+                //通过接口发送委托
+                logger.Info("XAPI[" + this.Token + "] Send Order: " + lo.GetOrderInfo(true));
+                XOrderField order = new XOrderField();
+
+                order.ID = lo.id.ToString();
+                order.Date = lo.Date;
+                order.Time = lo.Time;
+                order.Symbol = lo.Symbol;
+                order.Exchange = lo.Exchange;
+                order.Side = lo.Side;
+                order.TotalSize = Math.Abs(lo.TotalSize);
+                order.FilledSize = 0;
+                order.UnfilledSize = 0;
+
+                order.LimitPrice = (double)lo.LimitPrice;
+                order.StopPrice = 0;
+
+                order.OffsetFlag = lo.OffsetFlag;
+
+                //o.Broker = this.Token;
+
+
+                //通过接口发送委托,如果成功会返回接口对应逻辑的近端委托编号 否则就是发送失败
+                bool success = WrapperSendOrder(ref order);
+                if (success)
+                {
+                    //更新接口侧外侧委托状态和近端编号
+                    lo.Status = QSEnumOrderStatus.Submited;
+                    lo.BrokerLocalOrderID = order.BrokerLocalOrderID;
+
+                    //更新接口外侧委托状态和近端编号 状态为Submited状态 表明已经通过接口提交
+                    o.Status = QSEnumOrderStatus.Submited;
+                    o.BrokerLocalOrderID = order.BrokerLocalOrderID;
+                    
+                    //近端ID委托map
+                    localOrderID_map.TryAdd(lo.BrokerLocalOrderID, lo);
+
+                    //记录父委托和子委托
+                    sonFathOrder_Map.TryAdd(lo.id, o);
+                    fatherOrder_Map.TryAdd(o.id, o);
+                    fatherSonOrder_Map.TryAdd(o.id, lo);
+
+                    //交易信息维护器获得委托 //？将委托复制后加入到接口维护的map中 在发送子委托过程中 本地记录的Order就是分拆过程中产生的委托，改变这个委托将同步改变委托分拆器中的委托
+                    tk.GotOrder(lo);//原来引用的是分拆器发送过来的子委托 现在修改成本地复制后的委托
+                    //对外触发成交侧委托数据用于记录该成交接口的交易数据
+                    logger.Info(string.Format("Send Order Success ID:{0} LocalID:{1}", order.ID, order.BrokerLocalOrderID));
+
+                }
+                else
+                {
+                    o.Status = QSEnumOrderStatus.Reject;
+                    logger.Warn("Send Order Fail,will notify to client");
+                }
+
+                //发送子委托时 记录到数据库
+                this.LogBrokerOrder(lo);
             }
         }
 
         public override void CancelOrder(long oid)
         {
-            _splittracker.CancelFatherOrder(oid);
+            lock (this)
+            {
+                logger.Info("XAPI[" + this.Token + "] Cancel Order:" + oid.ToString());
+                Order lo = FatherID2SonOrder(oid);
+                if (lo != null)
+                {
+                    XOrderActionField action = new XOrderActionField();
+                    action.ActionFlag = QSEnumOrderActionFlag.Delete;
+                    action.ID = lo.id.ToString();
+                    action.BrokerLocalOrderID = lo.BrokerLocalOrderID;
+                    action.BrokerRemoteOrderID = lo.BrokerRemoteOrderID;
+                    action.Exchange = lo.BrokerRemoteOrderID.Split(':')[0];//从RemoeOrderID获得交易所信息
+                    action.Price = 0;
+                    action.Size = 0;
+                    action.Symbol = lo.Symbol;
+
+                    bool ret = WrapperSendOrderAction(ref action);
+                    logger.Info(string.Format("Send OrderAction:{0}", ret ? "Success" : "Fail"));
+                }
+                else
+                {
+                    logger.Warn(string.Format("FatherOrder:{0} have no son order", oid));
+                }
+            }
         }
 
         public override void GotTick(Tick k)
@@ -691,100 +477,22 @@ namespace Broker.Live
                 tk.GotTick(k);
             }
         }
-        /// <summary>
-        /// 发送子委托
-        /// 委托状态要么是Submited,要么是reject
-        /// 如果底层发单异常,则返回的localid为空 以该字段是否为空来判断底层是否发单异常
-        /// </summary>
-        /// <param name="o"></param>
-        void SendSonOrder(Order o)
-        {
-            logger.Info("XAPI[" + this.Token + "] Send SonOrder: " + o.GetOrderInfo(true));
-            XOrderField order = new XOrderField();
-
-            order.ID = o.id.ToString();
-            order.Date = o.Date;
-            order.Time = o.Time;
-            order.Symbol = o.Symbol;
-            order.Exchange = o.Exchange;
-            order.Side = o.Side;
-            order.TotalSize = Math.Abs(o.TotalSize);
-            order.FilledSize = 0;
-            order.UnfilledSize = 0;
-
-            order.LimitPrice = (double)o.LimitPrice;
-            order.StopPrice = 0;
-
-            order.OffsetFlag = o.OffsetFlag;
-
-            o.Broker = this.Token;
+        #endregion
 
 
-            //通过接口发送委托,如果成功会返回接口对应逻辑的近端委托编号 否则就是发送失败
-            bool success = WrapperSendOrder(ref order);
-            if (success)
-            {
-                //0.更新子委托状态为Submited状态 表明已经通过接口提交
-                o.Status = QSEnumOrderStatus.Submited;
-                //1.发送委托时设定本地委托编号
-                o.BrokerLocalOrderID = order.BrokerLocalOrderID;
-
-                Order lo = new OrderImpl(o);
-                //近端ID委托map
-                localOrderID_map.TryAdd(o.BrokerLocalOrderID, lo);
-
-                //交易信息维护器获得委托 //？将委托复制后加入到接口维护的map中 在发送子委托过程中 本地记录的Order就是分拆过程中产生的委托，改变这个委托将同步改变委托分拆器中的委托
-                tk.GotOrder(lo);//原来引用的是分拆器发送过来的子委托 现在修改成本地复制后的委托
-                //对外触发成交侧委托数据用于记录该成交接口的交易数据
-                logger.Info("Send Order Success,LocalID:" + order.BrokerLocalOrderID);
-
-            }
-            else
-            {
-                o.Status = QSEnumOrderStatus.Reject;
-                logger.Warn("Send Order Fail,will notify to client");
-            }
-
-            //发送子委托时 记录到数据库
-            this.LogBrokerOrder(o);
-        }
-
-        void CancelSonOrder(Order o)
-        {
-            Util.Info("XAP[" + this.Token + "] 取消子委托:" + o.GetOrderInfo(true));
-            XOrderActionField action = new XOrderActionField();
-            action.ActionFlag = QSEnumOrderActionFlag.Delete;
-
-            action.ID = o.id.ToString();
-            action.BrokerLocalOrderID = o.BrokerLocalOrderID;
-            action.BrokerRemoteOrderID = o.BrokerRemoteOrderID;
-            action.Exchange = o.BrokerRemoteOrderID.Split(':')[0];//从RemoeOrderID获得交易所信息
-            action.Price = 0;
-            action.Size = 0;
-            action.Symbol = o.Symbol;
-
-
-            if (WrapperSendOrderAction(ref action))
-            {
-
-            }
-            else
-            {
-                logger.Info("Cancel order fail,will notify to client");
-            }
-        }
-
+        #region 处理接口侧数据回报
         public override void ProcessOrder(ref XOrderField order)
         {
+            logger.Info(order.InfoStr());
             //1.获得本地委托数据 更新相关状态后对外触发
-            Order o = LocalID2Order(order.BrokerLocalOrderID);
-            if (o != null)//本地记录了该委托 更新数量 状态 并对外发送
+            Order lo = LocalID2Order(order.BrokerLocalOrderID);
+            if (lo != null)//本地记录了该委托 更新数量 状态 并对外发送
             {
                 //更新委托
-                o.Status = order.OrderStatus;//更新委托状态
-                o.Comment = order.StatusMsg;//填充状态信息
-                o.FilledSize = order.FilledSize;//成交数量
-                o.Size = order.UnfilledSize * (o.Side ? 1 : -1);//更新当前数量
+                lo.Status = order.OrderStatus;//更新委托状态
+                lo.Comment = order.StatusMsg;//填充状态信息
+                lo.FilledSize = order.FilledSize;//成交数量
+                lo.Size = order.UnfilledSize * (lo.Side ? 1 : -1);//更新当前数量
 
                 //更新RemoteOrderId/OrderSysID
                 if (!string.IsNullOrEmpty(order.BrokerRemoteOrderID))//如果远端编号存在 则设定远端编号 同时入map
@@ -793,111 +501,131 @@ namespace Broker.Live
                     //需要设定了OrderSysID 否则只是Exch:空格 
                     if (!string.IsNullOrEmpty(ret[1]))
                     {
-                        o.BrokerRemoteOrderID = order.BrokerRemoteOrderID;
+                        lo.BrokerRemoteOrderID = order.BrokerRemoteOrderID;
                         //按照不同接口的实现 从RemoteOrderID中获得对应的OrderSysID
-                        o.OrderSysID = ret[1];
+                        lo.OrderSysID = ret[1];
                         //如果不存在该委托则加入该委托
                         if (!remoteOrderID_map.Keys.Contains(order.BrokerRemoteOrderID))
                         {
-                            remoteOrderID_map.TryAdd(order.BrokerRemoteOrderID, o);
+                            remoteOrderID_map.TryAdd(order.BrokerRemoteOrderID, lo);
                         }
                     }
                 }
-                Util.Info("更新子委托:" + o.GetOrderInfo(true));
-                //这个过程更新了OrderTracker中的状态，原来程序中o使用的是委托分拆器过来的委托,因此委托分拆器没有更新委托状态也能获得正常的回报 
-                /* 委托分拆器获得子委托回报 原来并没有去更新子委托，但是同样获得正常数据
-                 * 委托分拆器的委托在接口里被ordertracker维护了，在ordertracker获得委托更新时候同步更新了委托分拆器中的子委托
-                 * 但是在路由分拆过程中
-                 * 
-                 * 
-                 * 
-                 * */
-                tk.GotOrder(o);
-                this.LogBrokerOrderUpdate(o);
+                //更新接口侧委托
+                tk.GotOrder(lo);
+                this.LogBrokerOrderUpdate(lo);
 
+                if (lo.Status == QSEnumOrderStatus.Submited) return;//如果子委托为Submited状态 则不用更新父委托直接返回
 
-                //如果子委托是submited则不用更新组合状态
-                bool needupdatestatus = (o.Status != QSEnumOrderStatus.Submited);
-                if (!needupdatestatus) return;//如果不需要更新委托状态 直接返回
+                //更新对应的接口外侧委托
+                Order fatherOrder = FatherID2Order(lo.FatherID);
+                fatherOrder.Size = lo.Size;
+                fatherOrder.FilledSize = lo.FilledSize;
+                fatherOrder.Status = lo.Status;
 
-                _splittracker.GotSonOrder(o);
+                if (string.IsNullOrEmpty(fatherOrder.BrokerRemoteOrderID) && !string.IsNullOrEmpty(lo.BrokerRemoteOrderID))
+                {
+                    fatherOrder.BrokerRemoteOrderID = lo.BrokerRemoteOrderID;
+                    fatherOrder.OrderSysID = lo.OrderSysID;
+                }
+                this.NotifyOrder(fatherOrder);
+            }
+            else
+            {
+                logger.Warn(string.Format("Son Order LocalID:{0} is not handled by Broker:{1}", order.BrokerLocalOrderID, this.Token));
             }
         }
 
         public override void ProcessTrade(ref XTradeField trade)
         {
             //CTP接口的成交通过远端编号与委托进行关联
-            Order o = RemoteID2Order(trade.BrokerRemoteOrderID);
-            //
-            //Util.Debug("trade info,localid:" + trade.BrokerLocalOrderID + " remoteid:" + trade.BrokerRemoteOrderID, QSEnumDebugLevel.INFO);
-            if (o != null)
+            Order lo = RemoteID2Order(trade.BrokerRemoteOrderID);
+            if (lo != null)
             {
                 //Util.Debug("该成交是本地委托所属成交,进行回报处理", QSEnumDebugLevel.WARNING);
                 //子委托对应的成交
-                Trade sonfill = (Trade)(new OrderImpl(o));
+                Trade fill = (Trade)(new OrderImpl(lo));
                 //设定价格 数量 以及日期信息
-                sonfill.xSize = trade.Size * (trade.Side ? 1 : -1);
-                sonfill.xPrice = (decimal)trade.Price;
+                fill.xSize = trade.Size * (trade.Side ? 1 : -1);
+                fill.xPrice = (decimal)trade.Price;
 
-                sonfill.xDate = trade.Date;
-                sonfill.xTime = trade.Time;
+                fill.xDate = trade.Date;
+                fill.xTime = trade.Time;
                 //远端成交编号 在成交侧 需要将该字读填入TradeID 成交明细以TradeID来标识成交记录
-                sonfill.BrokerTradeID = trade.BrokerTradeID;
-                sonfill.TradeID = trade.BrokerTradeID;
+                fill.BrokerTradeID = trade.BrokerTradeID;
+                fill.TradeID = trade.BrokerTradeID;
 
-                Util.Info("获得子成交:" + sonfill.GetTradeDetail());
-                tk.GotFill(sonfill);
-                //记录接口侧成交数据
-                this.LogBrokerTrade(sonfill);
+                Util.Info("获得成交:" + fill.GetTradeDetail());
+                tk.GotFill(fill);
+                this.LogBrokerTrade(fill);
 
-                _splittracker.GotSonFill(sonfill);
+                //找对应的父委托生成父成交
+                Order fatherOrder = FatherID2Order(lo.FatherID);
+                Trade fatherfill = (Trade)(new OrderImpl(fatherOrder));
+                fatherfill.xSize = fill.xSize;
+                fatherfill.xPrice = fill.xPrice;
+                fatherfill.xDate = fill.xDate;
+                fatherfill.xTime = fill.xTime;
+
+                this.NotifyTrade(fatherfill);
+            }
+            else
+            {
+                logger.Warn(string.Format("Son Order RemoteID:{0} is not handled by Broker:{1}",trade.BrokerRemoteOrderID, this.Token));
             }
         }
 
         public override void ProcessOrderError(ref XOrderError error)
         {
             logger.Info(string.Format("OrderError LocalID:{0} RemoteID:{1} ErrorID:{2} ErrorMsg:{3}", error.Order.BrokerLocalOrderID, error.Order.BrokerRemoteOrderID, error.Error.ErrorID, error.Error.ErrorMsg));
-            Order o = LocalID2Order(error.Order.BrokerLocalOrderID);
-            if (o != null)
+            Order lo = LocalID2Order(error.Order.BrokerLocalOrderID);
+            if (lo != null)
             {
-                if (o.Status != QSEnumOrderStatus.Reject)//如果委托已经处于拒绝状态 则不用处理 接口可能会产生多次错误回报
+                if (lo.Status != QSEnumOrderStatus.Reject)//如果委托已经处于拒绝状态 则不用处理 接口可能会产生多次错误回报
                 {
-                    o.Status = QSEnumOrderStatus.Reject;
-                    o.Comment = error.Error.ErrorMsg;
-                    Util.Info("更新子委托:" + o.GetOrderInfo(true));
-                    tk.GotOrder(o);
+                    lo.Status = QSEnumOrderStatus.Reject;
+                    lo.Comment = error.Error.ErrorMsg;
+                    Util.Info("更新子委托:" + lo.GetOrderInfo(true));
+                    tk.GotOrder(lo);
                     //更新接口侧委托
-                    this.LogBrokerOrderUpdate(o);//更新日志
+                    this.LogBrokerOrderUpdate(lo);//更新日志
+
+                    Order fatherOrder = SonID2FatherOrder(lo.id);
+                    if (fatherOrder == null) return;
 
                     RspInfo info = new RspInfoImpl();
                     info.ErrorID = error.Error.ErrorID;
                     info.ErrorMessage = error.Error.ErrorMsg;
+                    fatherOrder.Status = QSEnumOrderStatus.Reject;
+                    fatherOrder.Comment = error.Error.ErrorMsg;
+                    NotifyOrderError(fatherOrder, info);
 
-                    _splittracker.GotSonOrderError(o, info);
+
+                    //_splittracker.GotSonOrderError(o, info);
                     //平仓量超过持仓量 只能修复 在主帐户对应方向执行买入操作 形成对应的持仓 这样就可以让分帐户侧成功平仓
-                    if (error.Error.ErrorID == 30)
-                    {
-                        //平仓缺失智能补单 这个功能可以在接口设置中进行参数化设置。同理 在撤单过程中，如果有委托已经撤除 也需要智能的进行本地同步
-                        XOrderField norder = new XOrderField();
+                    //if (error.Error.ErrorID == 30)
+                    //{
+                    //    //平仓缺失智能补单 这个功能可以在接口设置中进行参数化设置。同理 在撤单过程中，如果有委托已经撤除 也需要智能的进行本地同步
+                    //    XOrderField norder = new XOrderField();
 
-                        norder.ID = o.id.ToString();
-                        norder.Date = Util.ToTLDate();
-                        norder.Time = Util.ToTLTime();
-                        norder.Symbol = o.Symbol;
-                        norder.Exchange = o.Exchange;
-                        norder.Side = !o.Side;
-                        norder.TotalSize = Math.Abs(o.TotalSize);
-                        norder.FilledSize = 0;
-                        norder.UnfilledSize = 0;
+                    //    norder.ID = o.id.ToString();
+                    //    norder.Date = Util.ToTLDate();
+                    //    norder.Time = Util.ToTLTime();
+                    //    norder.Symbol = o.Symbol;
+                    //    norder.Exchange = o.Exchange;
+                    //    norder.Side = !o.Side;
+                    //    norder.TotalSize = Math.Abs(o.TotalSize);
+                    //    norder.FilledSize = 0;
+                    //    norder.UnfilledSize = 0;
 
-                        norder.LimitPrice = 0;
-                        norder.StopPrice = 0;
+                    //    norder.LimitPrice = 0;
+                    //    norder.StopPrice = 0;
 
-                        norder.OffsetFlag = QSEnumOffsetFlag.OPEN;//开仓
+                    //    norder.OffsetFlag = QSEnumOffsetFlag.OPEN;//开仓
 
-                        bool success = WrapperSendOrder(ref norder);
-                        logger.Warn(string.Format("平仓量超过持仓量,主帐户侧持仓缺失,下单进行补仓 市价{0} {1} 手 {2} {3}", norder.Side ? "买入" : "卖出", norder.TotalSize, norder.Symbol, success ? "成功" : "失败"));
-                    }
+                    //    bool success = WrapperSendOrder(ref norder);
+                    //    logger.Warn(string.Format("平仓量超过持仓量,主帐户侧持仓缺失,下单进行补仓 市价{0} {1} 手 {2} {3}", norder.Side ? "买入" : "卖出", norder.TotalSize, norder.Symbol, success ? "成功" : "失败"));
+                    //}
                     //资金不足
                     if (error.Error.ErrorID == 31)
                     {
@@ -906,42 +634,69 @@ namespace Broker.Live
                 }
 
             }
+            else
+            {
+                logger.Warn(string.Format("Son Order LocalID:{0} is not handled by Broker:{1}", error.Order.BrokerLocalOrderID, this.Token));
+            }
         }
 
         public override void ProcessOrderActionError(ref XOrderActionError error)
         {
             logger.Info(string.Format("OrderActionError LocalID:{0} RemoteID:{1} ErrorID:{2} ErrorMsg:{3}", error.OrderAction.BrokerLocalOrderID, error.OrderAction.BrokerRemoteOrderID, error.Error.ErrorID, error.Error.ErrorMsg));
-            Order o = LocalID2Order(error.OrderAction.BrokerLocalOrderID);
-            if (o != null)
+            Order lo = LocalID2Order(error.OrderAction.BrokerLocalOrderID);
+            if (lo != null)
             {
-                //生成对应的子委托OrderAction 关键是获得对应的子委托本地ID
-                OrderAction action = new OrderActionImpl();
-                action.Account = o.Account;
-                action.ActionFlag = error.OrderAction.ActionFlag;
-                action.Exchagne = error.OrderAction.Exchange;
-                action.Symbol = error.OrderAction.Symbol;
-                action.OrderID = o.id;//*
+                Order fatherOrder = SonID2FatherOrder(lo.id);
+                //如果没有对应的父委托则直接返回
+                if (fatherOrder == null)
+                {
+                    logger.Warn(string.Format("Sone Order ID:{0} do not have father order", lo.id));
+                    return;
+                }
 
-                //调用分解器处理子委托操作错误
-                _splittracker.GotSonOrderActionError(action, XErrorField2RspInfo(ref error.Error));
 
+                //A 可处理错误
                 //委托已经被撤销 不能再撤 有些代码需要判断后同步本地委托状态
                 if (error.Error.ErrorID == 26)
                 {
-                    o.Status = QSEnumOrderStatus.Canceled;
-                    o.Comment = error.Error.ErrorMsg;
-                    Util.Info("更新子委托:" + o.GetOrderInfo(true));
+                    lo.Status = QSEnumOrderStatus.Canceled;
+                    lo.Comment = error.Error.ErrorMsg;
+                    Util.Info("更新子委托:" + lo.GetOrderInfo(true));
 
-                    tk.GotOrder(o); //Broker交易信息管理器
+                    tk.GotOrder(lo); //Broker交易信息管理器
+                    this.LogBrokerOrderUpdate(lo);//委托跟新 更新到数据库
 
-                    this.LogBrokerOrderUpdate(o);//委托跟新 更新到数据库
-
-                    _splittracker.GotSonOrder(o);//委托分拆器获得子委托,用于对外更新父委托 这里采用委托更新还是委托操作错误更新，再研究
+                    fatherOrder.Status = QSEnumOrderStatus.Reject;
+                    fatherOrder.Comment = error.Error.ErrorMsg;
+                    NotifyOrder(fatherOrder);
+                    return;
                 }
                 else
                 {
 
                 }
+
+                //B 回报错误到父委托
+                //生成父委托对应的OrderAction Error并Notify
+                OrderAction action = new OrderActionImpl();
+                action.Account = fatherOrder.Account;
+                action.ActionFlag = error.OrderAction.ActionFlag;
+                action.Exchagne = error.OrderAction.Exchange;
+                action.Symbol = error.OrderAction.Symbol;
+                action.OrderID = fatherOrder.id;//*
+                action.FrontID = fatherOrder.FrontIDi;
+                action.SessionID = fatherOrder.SessionIDi;
+                action.OrderRef = fatherOrder.OrderRef;
+                action.OrderExchID = fatherOrder.OrderSysID;
+
+                //action.
+
+                RspInfo info = XErrorField2RspInfo(ref error.Error);
+                NotifyOrderOrderActionError(action, info);
+            }
+            else
+            {
+                logger.Warn(string.Format("Son Order LocalID:{0} is not handled by Broker:{1}", error.OrderAction.BrokerLocalOrderID, this.Token));
             }
         }
 
@@ -957,5 +712,65 @@ namespace Broker.Live
             info.ErrorMessage = error.ErrorMsg;
             return info;
         }
+        #endregion
+
+        public override void SettleExchange(IExchange exchange, int settleday)
+        {
+            List<PositionDetail> positiondetail_settle = new List<PositionDetail>();
+            foreach (var pos in this.GetPositions(exchange).Where(p => !p.isFlat))
+            {
+                //设定持仓结算价格
+                SettlementPrice target = TLCtxHelper.ModuleSettleCentre.GetSettlementPrice(settleday, pos.Symbol);
+                if (target != null && target.Settlement > 0)
+                {
+                    pos.SettlementPrice = target.Settlement;
+                }
+
+                //如果没有正常获得结算价格 持仓结算价按对应的最新价进行结算
+                if (pos.SettlementPrice == null || pos.SettlementPrice < 0)
+                {
+                    pos.SettlementPrice = pos.LastPrice;
+                }
+
+                //遍历该未平仓持仓对象下的所有持仓明细
+                foreach (PositionDetail pd in pos.PositionDetailTotal.Where(pd => !pd.IsClosed()))
+                {
+                    //保存结算持仓明细时要将结算日更新为当前
+                    pd.Settleday = settleday;
+                    //保存持仓明细到数据库
+                    TLCtxHelper.ModuleDataRepository.NewPositionDetail(pd);
+                    positiondetail_settle.Add(pd);
+                }
+            }
+
+            ///4.标注已结算数据 委托 成交 持仓
+            foreach (var o in this.GetOrders(exchange, settleday))
+            {
+                o.Settled = true;
+                TLCtxHelper.ModuleDataRepository.MarkOrderSettled(o);
+            }
+            foreach (var f in this.GetTrades(exchange, settleday))
+            {
+                f.Settled = true;
+                TLCtxHelper.ModuleDataRepository.MarkTradeSettled(f);
+            }
+            foreach (var pos in this.GetPositions(exchange))
+            {
+                pos.Settled = true;
+                //如果持仓有隔夜持仓 将对应的隔夜持仓标注成已结算否则会对隔夜持仓重复加载
+                foreach (var pd in pos.PositionDetailYdRef)
+                {
+                    TLCtxHelper.ModuleDataRepository.MarkPositionDetailSettled(pd);
+                }
+            }
+            //将已经结算的持仓从内存数据对象中屏蔽 持仓数据是一个状态数据,因此我们这里将上个周期的持仓对象进行屏蔽
+            tk.DropSettled();
+            ///5.加载持仓明晰和交易所结算记录
+            foreach (var pd in positiondetail_settle)
+            {
+                tk.GotPosition(pd);
+            }
+        }
+        
     }
 }

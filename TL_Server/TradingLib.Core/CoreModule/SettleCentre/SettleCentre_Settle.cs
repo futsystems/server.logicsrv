@@ -266,6 +266,12 @@ namespace TradingLib.Core
                             account.SettleExchange(exchange, settleday);
                         }
                     }
+
+                    //执行交易通道结算
+                    foreach (var broker in TLCtxHelper.ServiceRouterManager.Brokers)
+                    {
+                        broker.SettleExchange(exchange, settleday);
+                    }
                 }
             }
             catch (Exception ex)
@@ -316,6 +322,8 @@ namespace TradingLib.Core
             logger.Info("结算后系统重置");
             //触发 系统重置操作事件
             TLCtxHelper.EventSystem.FireSettleResetEvet(this, new SystemEventArgs());
+
+
 
             this.IsInSettle = false;//标识系统结算完毕
         }

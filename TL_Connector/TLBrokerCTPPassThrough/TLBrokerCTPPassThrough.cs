@@ -1,487 +1,487 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.Concurrent;
-using System.Linq;
-using System.Text;
-using TradingLib.API;
-using TradingLib.Common;
-using TradingLib.BrokerXAPI;
+﻿//using System;
+//using System.Collections.Generic;
+//using System.Collections.Concurrent;
+//using System.Linq;
+//using System.Text;
+//using TradingLib.API;
+//using TradingLib.Common;
+//using TradingLib.BrokerXAPI;
 
 
-namespace Broker.Live
-{
-    public class TLBrokerCTPPassThrough : TLBroker
-    {
+//namespace Broker.Live
+//{
+//    public class TLBrokerCTPPassThrough : TLBroker
+//    {
 
-        public TLBrokerCTPPassThrough()
-        {
+//        public TLBrokerCTPPassThrough()
+//        {
 
-        }
+//        }
 
 
-        /// <summary>
-        /// 销毁交易接口
-        /// </summary>
-        public override void DestoryBroker()
-        {
+//        /// <summary>
+//        /// 销毁交易接口
+//        /// </summary>
+//        public override void DestoryBroker()
+//        {
 
-            //清空委托map
-            localOrderID_map.Clear();
-            remoteOrderID_map.Clear();
+//            //清空委托map
+//            localOrderID_map.Clear();
+//            remoteOrderID_map.Clear();
 
-            //清空历史记录
-            histordermap.Clear();
-            histtrademap.Clear();
+//            //清空历史记录
+//            histordermap.Clear();
+//            histtrademap.Clear();
 
-        }
+//        }
 
-        /// <summary>
-        /// 恢复交易接口数据
-        /// PassThrough类型的CTP接口在本地不保存历史记录，全部通过接口的查询功能进行处理
-        /// 通过查询CTP接口的日内数据来恢复当前历史记录
-        /// </summary>
-        public override void OnResume()
-        {
-            ////清空历史记录
-            histordermap.Clear();
-            histtrademap.Clear();
+//        /// <summary>
+//        /// 恢复交易接口数据
+//        /// PassThrough类型的CTP接口在本地不保存历史记录，全部通过接口的查询功能进行处理
+//        /// 通过查询CTP接口的日内数据来恢复当前历史记录
+//        /// </summary>
+//        public override void OnResume()
+//        {
+//            ////清空历史记录
+//            histordermap.Clear();
+//            histtrademap.Clear();
 
-            ////查询委托 在委托处理完毕后会链式查询成交 整体恢复数据过程Position->Order->Trade 真个过程
-            ////获得所有历史数据 用于恢复当前最新交易状态
-            Util.sleep(1000);
-            //通知 数据恢复开始
-            NotifyExDataSyncStart();
+//            ////查询委托 在委托处理完毕后会链式查询成交 整体恢复数据过程Position->Order->Trade 真个过程
+//            ////获得所有历史数据 用于恢复当前最新交易状态
+//            Util.sleep(1000);
+//            //通知 数据恢复开始
+//            NotifyExDataSyncStart();
 
-            this.QryPositionDetail();
-            //查询帐户信息用于同步当前权益
-        }
+//            this.QryPositionDetail();
+//            //查询帐户信息用于同步当前权益
+//        }
 
-        /// <summary>
-        /// 响应行情 驱动本地相关数据计算
-        /// </summary>
-        /// <param name="k"></param>
-        public override void GotTick(Tick k)
-        {
+//        /// <summary>
+//        /// 响应行情 驱动本地相关数据计算
+//        /// </summary>
+//        /// <param name="k"></param>
+//        public override void GotTick(Tick k)
+//        {
             
-        }
+//        }
 
-        #region 处理接口查询获得的持仓明细 委托 成交等信息
-        SortedDictionary<string, Trade> histtrademap = new SortedDictionary<string, Trade>();
-        /// <summary>
-        /// 响应接口查询成交回报
-        /// </summary>
-        /// <param name="trade"></param>
-        /// <param name="islast"></param>
-        public override void ProcessQryTrade(ref XTradeField trade, bool islast)
-        {
-            if (trade.SequenceNo != -1)
-            {
-                //debug("c# trade seq:" + trade.SequenceNo.ToString(), QSEnumDebugLevel.ERROR);
-                Trade localtrade = getLocalTrade(ref trade);
-                //Util.Warn("key:" + key);
-                if (localtrade != null)
-                {
-                    string key = string.Format("{0}-{1}{2}", Util.ToTLDateTime(trade.Date, trade.Time).ToString(), trade.Exchange, trade.BrokerTradeID);
-                    if (!histtrademap.Keys.Contains(key))
-                    {
-                        histtrademap.Add(key, localtrade);
-                    }
-                }
-            }
-            if (islast)
-            {
-                foreach (Trade f in histtrademap.Values)
-                {
-                    logger.Info(f.GetTradStr());
-                    NotifyTrade(f);
-                }
-                //对外通知交易数据同步完毕
-                NotifyExDataSyncEnd();
-            }
-        }
+//        #region 处理接口查询获得的持仓明细 委托 成交等信息
+//        SortedDictionary<string, Trade> histtrademap = new SortedDictionary<string, Trade>();
+//        /// <summary>
+//        /// 响应接口查询成交回报
+//        /// </summary>
+//        /// <param name="trade"></param>
+//        /// <param name="islast"></param>
+//        public override void ProcessQryTrade(ref XTradeField trade, bool islast)
+//        {
+//            if (trade.SequenceNo != -1)
+//            {
+//                //debug("c# trade seq:" + trade.SequenceNo.ToString(), QSEnumDebugLevel.ERROR);
+//                Trade localtrade = getLocalTrade(ref trade);
+//                //Util.Warn("key:" + key);
+//                if (localtrade != null)
+//                {
+//                    string key = string.Format("{0}-{1}{2}", Util.ToTLDateTime(trade.Date, trade.Time).ToString(), trade.Exchange, trade.BrokerTradeID);
+//                    if (!histtrademap.Keys.Contains(key))
+//                    {
+//                        histtrademap.Add(key, localtrade);
+//                    }
+//                }
+//            }
+//            if (islast)
+//            {
+//                foreach (Trade f in histtrademap.Values)
+//                {
+//                    logger.Info(f.GetTradStr());
+//                    NotifyTrade(f);
+//                }
+//                //对外通知交易数据同步完毕
+//                NotifyExDataSyncEnd();
+//            }
+//        }
 
-        SortedDictionary<string, Order> histordermap = new SortedDictionary<string, Order>();
-        /// <summary>
-        /// 响应接口查询委托回报
-        /// </summary>
-        /// <param name="order"></param>
-        /// <param name="islast"></param>
-        public override void ProcessQryOrder(ref XOrderField order, bool islast)
-        {
-            //如果不为空委托 则进行委托处理(空委托的含义为 当前日内委托数据记录数为0)
-            if (order.SequenceNo != -1)
-            {
-                //debug("c# order seq:" + order.SequenceNo.ToString(), QSEnumDebugLevel.ERROR);
+//        SortedDictionary<string, Order> histordermap = new SortedDictionary<string, Order>();
+//        /// <summary>
+//        /// 响应接口查询委托回报
+//        /// </summary>
+//        /// <param name="order"></param>
+//        /// <param name="islast"></param>
+//        public override void ProcessQryOrder(ref XOrderField order, bool islast)
+//        {
+//            //如果不为空委托 则进行委托处理(空委托的含义为 当前日内委托数据记录数为0)
+//            if (order.SequenceNo != -1)
+//            {
+//                //debug("c# order seq:" + order.SequenceNo.ToString(), QSEnumDebugLevel.ERROR);
 
-                Order localorder = getLocalOrder(ref order);
-                if (localorder != null)
-                {
-                    string key = string.Format("{0}-{1}{2}", Util.ToTLDateTime(order.Date, order.Time).ToString(), order.Exchange, order.BrokerRemoteOrderID);
-                    if (!histordermap.Keys.Contains(key))
-                    {
-                        histordermap.Add(key, localorder);
-                    }
+//                Order localorder = getLocalOrder(ref order);
+//                if (localorder != null)
+//                {
+//                    string key = string.Format("{0}-{1}{2}", Util.ToTLDateTime(order.Date, order.Time).ToString(), order.Exchange, order.BrokerRemoteOrderID);
+//                    if (!histordermap.Keys.Contains(key))
+//                    {
+//                        histordermap.Add(key, localorder);
+//                    }
                     
-                }
-            }
-            if (islast)
-            {
-                foreach (Order o in histordermap.Values)
-                {
-                    logger.Info(o.GetOrderStatus());
-                    NotifyOrder(o);
-                }
-                histtrademap.Clear();
-                //委托查询完成后查询成交
-                Util.sleep(1000);
-                this.QryTrade();
-            }
-        }
+//                }
+//            }
+//            if (islast)
+//            {
+//                foreach (Order o in histordermap.Values)
+//                {
+//                    logger.Info(o.GetOrderStatus());
+//                    NotifyOrder(o);
+//                }
+//                histtrademap.Clear();
+//                //委托查询完成后查询成交
+//                Util.sleep(1000);
+//                this.QryTrade();
+//            }
+//        }
 
-        /// <summary>
-        /// CTP查询持仓明细反应的是当前最新持仓状态,我们需要将他还原成历史持仓
-        /// 清算中心初始化 首先是从数据库加载历史持仓 然后在历史持仓的基础上累加成交获得当前最新的持仓状态
-        /// 
-        /// </summary>
-        /// <param name="position"></param>
-        /// <param name="islast"></param>
-        public override void ProcessQryPositionDetail(ref XPositionDetail position, bool islast)
-        {
-            string msg = string.Format("OpenData:{0} Settleday:{1} Side:{2} OpenPrice:{3} Volume:{4} Symbol:{5} Exchange:{6} CloseVol:{7}", position.OpenDate, position.SettleDay, position.Side, position.OpenPrice, position.Volume, position.Symbol, position.Exchange, position.CloseVolume);
+//        /// <summary>
+//        /// CTP查询持仓明细反应的是当前最新持仓状态,我们需要将他还原成历史持仓
+//        /// 清算中心初始化 首先是从数据库加载历史持仓 然后在历史持仓的基础上累加成交获得当前最新的持仓状态
+//        /// 
+//        /// </summary>
+//        /// <param name="position"></param>
+//        /// <param name="islast"></param>
+//        public override void ProcessQryPositionDetail(ref XPositionDetail position, bool islast)
+//        {
+//            string msg = string.Format("OpenData:{0} Settleday:{1} Side:{2} OpenPrice:{3} Volume:{4} Symbol:{5} Exchange:{6} CloseVol:{7}", position.OpenDate, position.SettleDay, position.Side, position.OpenPrice, position.Volume, position.Symbol, position.Exchange, position.CloseVolume);
 
-            logger.Info("got positon detail:" + msg);
-            //开仓日期与结算日不同 则为隔夜持仓
-            if (position.OpenDate != position.SettleDay)
-            {
-                PositionDetail p = new PositionDetailImpl();
+//            logger.Info("got positon detail:" + msg);
+//            //开仓日期与结算日不同 则为隔夜持仓
+//            if (position.OpenDate != position.SettleDay)
+//            {
+//                PositionDetail p = new PositionDetailImpl();
 
-                p.OpenDate = position.OpenDate;
-                p.Settleday = position.SettleDay;
-                //CTP传递过来的LastSettlementPrice就是昨日的结算价格
-                p.LastSettlementPrice = (decimal)position.LastSettlementPrice;
+//                p.OpenDate = position.OpenDate;
+//                p.Settleday = position.SettleDay;
+//                //CTP传递过来的LastSettlementPrice就是昨日的结算价格
+//                p.LastSettlementPrice = (decimal)position.LastSettlementPrice;
 
-                //本地持仓明细在恢复持仓数据加载中 
-                //在结算时候 系统会将当日结算价格计入SettlementPrice,明日加载该隔夜持仓时 会将SettlementPrice赋值给LastSettlementPrice(跨过交易日)
-                p.SettlementPrice = (decimal)position.LastSettlementPrice;
-                //p.TradeID = position.BrokerTradeID;
+//                //本地持仓明细在恢复持仓数据加载中 
+//                //在结算时候 系统会将当日结算价格计入SettlementPrice,明日加载该隔夜持仓时 会将SettlementPrice赋值给LastSettlementPrice(跨过交易日)
+//                p.SettlementPrice = (decimal)position.LastSettlementPrice;
+//                //p.TradeID = position.BrokerTradeID;
 
-                p.OpenPrice = (decimal)position.OpenPrice;
-                p.Symbol = position.Symbol;
+//                p.OpenPrice = (decimal)position.OpenPrice;
+//                p.Symbol = position.Symbol;
 
-                //如果该持仓明细是历史持仓 则该持仓昨日结算时持仓数量 = 当前持仓数量 + 今日平仓量
-                p.Volume = position.Volume + position.CloseVolume;
-                p.CloseVolume = 0;//平仓量为0 平仓量由清算中心累加成交数据获得
-                p.Side = position.Side;
-                p.Exchange = position.Exchange;
+//                //如果该持仓明细是历史持仓 则该持仓昨日结算时持仓数量 = 当前持仓数量 + 今日平仓量
+//                p.Volume = position.Volume + position.CloseVolume;
+//                p.CloseVolume = 0;//平仓量为0 平仓量由清算中心累加成交数据获得
+//                p.Side = position.Side;
+//                p.Exchange = position.Exchange;
 
-                //标记该持仓明细是该接口发出
-                p.Broker = this.Token;
+//                //标记该持仓明细是该接口发出
+//                p.Broker = this.Token;
 
-                NotifyHistPositoinDetail(p);
-            }
-            if (islast)
-            {
-                histordermap.Clear();
-                //持仓数据查询完毕后查询委托
-                Util.sleep(1000);
-                this.QryOrder();
-            }
-        }
+//                NotifyHistPositoinDetail(p);
+//            }
+//            if (islast)
+//            {
+//                histordermap.Clear();
+//                //持仓数据查询完毕后查询委托
+//                Util.sleep(1000);
+//                this.QryOrder();
+//            }
+//        }
 
-        #endregion
+//        #endregion
 
-        #region 委托索引map用于按不同的方式定位委托
-        ConcurrentDictionary<string, Order> localOrderID_map = new ConcurrentDictionary<string, Order>();
-        /// <summary>
-        /// 通过成交对端localid查找委托
-        /// 本端向成交端提交委托时需要按一定的方式储存一个委托本地编号,用于远端定位
-        /// 具体来讲就是通过该编号可以按一定方法告知成交对端进行撤单
-        /// </summary>
-        /// <param name="localid"></param>
-        /// <returns></returns>
-        Order LocalID2Order(string localid)
-        {
-            Order o = null;
-            if (localOrderID_map.TryGetValue(localid, out o))
-            {
-                return o;
-            }
-            return null;
-        }
+//        #region 委托索引map用于按不同的方式定位委托
+//        ConcurrentDictionary<string, Order> localOrderID_map = new ConcurrentDictionary<string, Order>();
+//        /// <summary>
+//        /// 通过成交对端localid查找委托
+//        /// 本端向成交端提交委托时需要按一定的方式储存一个委托本地编号,用于远端定位
+//        /// 具体来讲就是通过该编号可以按一定方法告知成交对端进行撤单
+//        /// </summary>
+//        /// <param name="localid"></param>
+//        /// <returns></returns>
+//        Order LocalID2Order(string localid)
+//        {
+//            Order o = null;
+//            if (localOrderID_map.TryGetValue(localid, out o))
+//            {
+//                return o;
+//            }
+//            return null;
+//        }
 
-        /// <summary>
-        /// 交易所编号 委托 map
-        /// </summary>
-        ConcurrentDictionary<string, Order> remoteOrderID_map = new ConcurrentDictionary<string, Order>();
-        Order RemoteID2Order(string sysid)
-        {
-            Order o = null;
-            if (remoteOrderID_map.TryGetValue(sysid, out o))
-            {
-                return o;
-            }
-            return null;
-        }
+//        /// <summary>
+//        /// 交易所编号 委托 map
+//        /// </summary>
+//        ConcurrentDictionary<string, Order> remoteOrderID_map = new ConcurrentDictionary<string, Order>();
+//        Order RemoteID2Order(string sysid)
+//        {
+//            Order o = null;
+//            if (remoteOrderID_map.TryGetValue(sysid, out o))
+//            {
+//                return o;
+//            }
+//            return null;
+//        }
 
-        ConcurrentDictionary<long, Order> orderID_map = new ConcurrentDictionary<long, Order>();
-        Order ID2Order(long oid)
-        {
-            Order o = null;
-            if (orderID_map.TryGetValue(oid, out o))
-            {
-                return o;
-            }
-            return null;
-        }
-        #endregion
-
-
-        #region 通过接口向外发送委托 取消委托
-        /// <summary>
-        /// 提交委托
-        /// </summary>
-        /// <param name="o"></param>
-        public override void SendOrder(Order o)
-        {
-            logger.Info("XAPI[" + this.Token + "] Send Order: " + o.GetOrderInfo(true));
-            XOrderField order = new XOrderField();
-
-            order.ID = o.id.ToString();
-            order.Date = o.Date;
-            order.Time = o.Time;
-            order.Symbol = o.Symbol;
-            order.Exchange = o.Exchange;
-            order.Side = o.Side;
-            order.TotalSize = Math.Abs(o.TotalSize);
-            order.FilledSize = 0;
-            order.UnfilledSize = 0;
-
-            order.LimitPrice = (double)o.LimitPrice;
-            order.StopPrice = 0;
-
-            order.OffsetFlag = o.OffsetFlag;
-
-            o.Broker = this.Token;
+//        ConcurrentDictionary<long, Order> orderID_map = new ConcurrentDictionary<long, Order>();
+//        Order ID2Order(long oid)
+//        {
+//            Order o = null;
+//            if (orderID_map.TryGetValue(oid, out o))
+//            {
+//                return o;
+//            }
+//            return null;
+//        }
+//        #endregion
 
 
+//        #region 通过接口向外发送委托 取消委托
+//        /// <summary>
+//        /// 提交委托
+//        /// </summary>
+//        /// <param name="o"></param>
+//        public override void SendOrder(Order o)
+//        {
+//            logger.Info("XAPI[" + this.Token + "] Send Order: " + o.GetOrderInfo(true));
+//            XOrderField order = new XOrderField();
 
-            //通过接口发送委托,如果成功会返回接口对应逻辑的近端委托编号 否则就是发送失败
-            bool success = WrapperSendOrder(ref order);
-            if (success)
-            {
-                //0.更新子委托状态为Submited状态 表明已经通过接口提交
-                o.Status = QSEnumOrderStatus.Submited;
-                //1.发送委托时设定本地委托编号
-                o.BrokerLocalOrderID = order.BrokerLocalOrderID;
+//            order.ID = o.id.ToString();
+//            order.Date = o.Date;
+//            order.Time = o.Time;
+//            order.Symbol = o.Symbol;
+//            order.Exchange = o.Exchange;
+//            order.Side = o.Side;
+//            order.TotalSize = Math.Abs(o.TotalSize);
+//            order.FilledSize = 0;
+//            order.UnfilledSize = 0;
 
-                Order lo = new OrderImpl(o);
-                //近端ID委托map
-                //localOrderID_map.TryAdd(o.BrokerLocalOrderID, lo);
+//            order.LimitPrice = (double)o.LimitPrice;
+//            order.StopPrice = 0;
 
-                //交易信息维护器获得委托 //？将委托复制后加入到接口维护的map中 在发送子委托过程中 本地记录的Order就是分拆过程中产生的委托，改变这个委托将同步改变委托分拆器中的委托
-                //tk.GotOrder(lo);//原来引用的是分拆器发送过来的子委托 现在修改成本地复制后的委托
-                //对外触发成交侧委托数据用于记录该成交接口的交易数据
-                logger.Info("Send Order Success,LocalID:" + order.BrokerLocalOrderID);
+//            order.OffsetFlag = o.OffsetFlag;
 
-            }
-            else
-            {
-                o.Status = QSEnumOrderStatus.Reject;
-                logger.Warn("Send Order Fail,will notify to client");
-            }
+//            o.Broker = this.Token;
+
+
+
+//            //通过接口发送委托,如果成功会返回接口对应逻辑的近端委托编号 否则就是发送失败
+//            bool success = WrapperSendOrder(ref order);
+//            if (success)
+//            {
+//                //0.更新子委托状态为Submited状态 表明已经通过接口提交
+//                o.Status = QSEnumOrderStatus.Submited;
+//                //1.发送委托时设定本地委托编号
+//                o.BrokerLocalOrderID = order.BrokerLocalOrderID;
+
+//                Order lo = new OrderImpl(o);
+//                //近端ID委托map
+//                //localOrderID_map.TryAdd(o.BrokerLocalOrderID, lo);
+
+//                //交易信息维护器获得委托 //？将委托复制后加入到接口维护的map中 在发送子委托过程中 本地记录的Order就是分拆过程中产生的委托，改变这个委托将同步改变委托分拆器中的委托
+//                //tk.GotOrder(lo);//原来引用的是分拆器发送过来的子委托 现在修改成本地复制后的委托
+//                //对外触发成交侧委托数据用于记录该成交接口的交易数据
+//                logger.Info("Send Order Success,LocalID:" + order.BrokerLocalOrderID);
+
+//            }
+//            else
+//            {
+//                o.Status = QSEnumOrderStatus.Reject;
+//                logger.Warn("Send Order Fail,will notify to client");
+//            }
 
             
-        }
+//        }
 
-        /// <summary>
-        /// 取消委托
-        /// </summary>
-        /// <param name="oid"></param>
-        public override void CancelOrder(long oid)
-        {
+//        /// <summary>
+//        /// 取消委托
+//        /// </summary>
+//        /// <param name="oid"></param>
+//        public override void CancelOrder(long oid)
+//        {
 
-            Order o = ClearCentre.SentOrder(oid);
-            if (o == null)
-            {
-                logger.Warn(string.Format("OrderID:{0} is not valid,can not be canceled", oid));
-                return;
-            }
+//            Order o = ClearCentre.SentOrder(oid);
+//            if (o == null)
+//            {
+//                logger.Warn(string.Format("OrderID:{0} is not valid,can not be canceled", oid));
+//                return;
+//            }
 
-            Util.Info("XAP[" + this.Token + "] 取消委托:" + o.GetOrderInfo(true));
-            XOrderActionField action = new XOrderActionField();
-            action.ActionFlag = QSEnumOrderActionFlag.Delete;
+//            Util.Info("XAP[" + this.Token + "] 取消委托:" + o.GetOrderInfo(true));
+//            XOrderActionField action = new XOrderActionField();
+//            action.ActionFlag = QSEnumOrderActionFlag.Delete;
 
-            action.ID = o.id.ToString();
-            action.BrokerLocalOrderID = o.BrokerLocalOrderID;
-            action.BrokerRemoteOrderID = o.BrokerRemoteOrderID;
-            action.Exchange = o.BrokerRemoteOrderID.Split(':')[0];//从RemoeOrderID获得交易所信息
-            action.Price = 0;
-            action.Size = 0;
-            action.Symbol = o.Symbol;
-
-
-            if (WrapperSendOrderAction(ref action))
-            {
-
-            }
-            else
-            {
-                logger.Info("Cancel order fail,will notify to client");
-            }
-
-        }
-
-        #endregion
+//            action.ID = o.id.ToString();
+//            action.BrokerLocalOrderID = o.BrokerLocalOrderID;
+//            action.BrokerRemoteOrderID = o.BrokerRemoteOrderID;
+//            action.Exchange = o.BrokerRemoteOrderID.Split(':')[0];//从RemoeOrderID获得交易所信息
+//            action.Price = 0;
+//            action.Size = 0;
+//            action.Symbol = o.Symbol;
 
 
-        #region 处理接口侧实时交易数据 委托 委托错误 委托操作错误 成交等回报数据
-        Order getLocalOrder(ref XOrderField order)
-        {
-            logger.Info(string.Format("Got Order LocalID:{0} RemoteID:{1} Price:{2} TotalSize:{3} OffsetFlag:{4} OrderStatus:{5}", order.BrokerLocalOrderID, order.BrokerRemoteOrderID, order.LimitPrice, order.TotalSize, order.OffsetFlag, order.OrderStatus));
+//            if (WrapperSendOrderAction(ref action))
+//            {
 
-            Order localorder = LocalID2Order(order.BrokerLocalOrderID);
-            //如果本地委托不存在 则该委托为新委托，创建本地Order与之对应
-            if (localorder == null)
-            {
-                string symbol = order.Symbol;
-                bool side = order.Side;
-                int size = Math.Abs(order.UnfilledSize) * (side ? 1 : -1);
+//            }
+//            else
+//            {
+//                logger.Info("Cancel order fail,will notify to client");
+//            }
 
-                localorder = new OrderImpl(symbol, side, size);
-                localorder.Date = order.Date;
-                localorder.Time = order.Time;
-                localorder.Exchange = order.Exchange;
-                localorder.FilledSize = order.FilledSize;
-                localorder.TotalSize = Math.Abs(order.TotalSize) * (side ? 1 : -1);
+//        }
 
-                localorder.LimitPrice = (decimal)order.LimitPrice;
-                localorder.StopPrice = (decimal)order.StopPrice;
-                localorder.BrokerLocalOrderID = order.BrokerLocalOrderID;
-                localorder.BrokerRemoteOrderID = order.BrokerRemoteOrderID;
-                localorder.OffsetFlag = order.OffsetFlag;
-                localorder.Status = order.OrderStatus;
-                localorder.Comment = order.StatusMsg;
-                localorder.Broker = this.Token;
+//        #endregion
+
+
+//        #region 处理接口侧实时交易数据 委托 委托错误 委托操作错误 成交等回报数据
+//        Order getLocalOrder(ref XOrderField order)
+//        {
+//            logger.Info(string.Format("Got Order LocalID:{0} RemoteID:{1} Price:{2} TotalSize:{3} OffsetFlag:{4} OrderStatus:{5}", order.BrokerLocalOrderID, order.BrokerRemoteOrderID, order.LimitPrice, order.TotalSize, order.OffsetFlag, order.OrderStatus));
+
+//            Order localorder = LocalID2Order(order.BrokerLocalOrderID);
+//            //如果本地委托不存在 则该委托为新委托，创建本地Order与之对应
+//            if (localorder == null)
+//            {
+//                string symbol = order.Symbol;
+//                bool side = order.Side;
+//                int size = Math.Abs(order.UnfilledSize) * (side ? 1 : -1);
+
+//                localorder = new OrderImpl(symbol, side, size);
+//                localorder.Date = order.Date;
+//                localorder.Time = order.Time;
+//                localorder.Exchange = order.Exchange;
+//                localorder.FilledSize = order.FilledSize;
+//                localorder.TotalSize = Math.Abs(order.TotalSize) * (side ? 1 : -1);
+
+//                localorder.LimitPrice = (decimal)order.LimitPrice;
+//                localorder.StopPrice = (decimal)order.StopPrice;
+//                localorder.BrokerLocalOrderID = order.BrokerLocalOrderID;
+//                localorder.BrokerRemoteOrderID = order.BrokerRemoteOrderID;
+//                localorder.OffsetFlag = order.OffsetFlag;
+//                localorder.Status = order.OrderStatus;
+//                localorder.Comment = order.StatusMsg;
+//                localorder.Broker = this.Token;
                 
-                //将委托保存到map
-                localOrderID_map.TryAdd(localorder.BrokerLocalOrderID, localorder);
-                logger.Info("Got New Order:" + localorder.GetOrderInfo());
-            }
-            else
-            {
-                //更新委托参数
-                localorder.Status = order.OrderStatus;
-                localorder.Comment = order.StatusMsg;
-                localorder.FilledSize = order.FilledSize;
-                localorder.Size = order.UnfilledSize;
+//                //将委托保存到map
+//                localOrderID_map.TryAdd(localorder.BrokerLocalOrderID, localorder);
+//                logger.Info("Got New Order:" + localorder.GetOrderInfo());
+//            }
+//            else
+//            {
+//                //更新委托参数
+//                localorder.Status = order.OrderStatus;
+//                localorder.Comment = order.StatusMsg;
+//                localorder.FilledSize = order.FilledSize;
+//                localorder.Size = order.UnfilledSize;
 
-                logger.Info("Order Updated:" + localorder.GetOrderInfo());
-            }
+//                logger.Info("Order Updated:" + localorder.GetOrderInfo());
+//            }
 
-            if (!string.IsNullOrEmpty(order.BrokerRemoteOrderID))//如果远端编号存在 则设定远端编号 同时入map
-            {
-                string[] ret = order.BrokerRemoteOrderID.Split(':');
-                //需要设定了OrderSysID 否则只是Exch:空格 
-                if (!string.IsNullOrEmpty(ret[1]))
-                {
-                    localorder.BrokerRemoteOrderID = order.BrokerRemoteOrderID;
-                    //按照不同接口的实现 从RemoteOrderID中获得对应的OrderSysID
-                    localorder.OrderSysID = ret[1];
-                    //如果不存在该委托则加入该委托
-                    if (!remoteOrderID_map.Keys.Contains(order.BrokerRemoteOrderID))
-                    {
-                        remoteOrderID_map.TryAdd(order.BrokerRemoteOrderID, localorder);
-                    }
-                }
-            }
-            return localorder;
-        }
-        /// <summary>
-        /// 处理接口回报的委托
-        /// 监听主帐户过程中
-        /// 其它终端登入提交的委托通过BrokerLocalID进行识别
-        /// </summary>
-        /// <param name="order"></param>
-        public override void ProcessOrder(ref XOrderField order)
-        {
-            Order localorder = getLocalOrder(ref order);
+//            if (!string.IsNullOrEmpty(order.BrokerRemoteOrderID))//如果远端编号存在 则设定远端编号 同时入map
+//            {
+//                string[] ret = order.BrokerRemoteOrderID.Split(':');
+//                //需要设定了OrderSysID 否则只是Exch:空格 
+//                if (!string.IsNullOrEmpty(ret[1]))
+//                {
+//                    localorder.BrokerRemoteOrderID = order.BrokerRemoteOrderID;
+//                    //按照不同接口的实现 从RemoteOrderID中获得对应的OrderSysID
+//                    localorder.OrderSysID = ret[1];
+//                    //如果不存在该委托则加入该委托
+//                    if (!remoteOrderID_map.Keys.Contains(order.BrokerRemoteOrderID))
+//                    {
+//                        remoteOrderID_map.TryAdd(order.BrokerRemoteOrderID, localorder);
+//                    }
+//                }
+//            }
+//            return localorder;
+//        }
+//        /// <summary>
+//        /// 处理接口回报的委托
+//        /// 监听主帐户过程中
+//        /// 其它终端登入提交的委托通过BrokerLocalID进行识别
+//        /// </summary>
+//        /// <param name="order"></param>
+//        public override void ProcessOrder(ref XOrderField order)
+//        {
+//            Order localorder = getLocalOrder(ref order);
 
-            //bool newOrder = localorder.id == 0;
-            //向外回报委托
-            this.NotifyOrder(localorder);
+//            //bool newOrder = localorder.id == 0;
+//            //向外回报委托
+//            this.NotifyOrder(localorder);
 
-            //对外回报Order,BrokerRouter会处理该委托，并给该委托设定OrderID
-            //if (newOrder)
-            //{
-            //    debug("Broker Side Got OrderID Asigned:"+localorder.id, QSEnumDebugLevel.INFO);
-            //    orderID_map.TryAdd(localorder.id, localorder);
-            //}
-        }
+//            //对外回报Order,BrokerRouter会处理该委托，并给该委托设定OrderID
+//            //if (newOrder)
+//            //{
+//            //    debug("Broker Side Got OrderID Asigned:"+localorder.id, QSEnumDebugLevel.INFO);
+//            //    orderID_map.TryAdd(localorder.id, localorder);
+//            //}
+//        }
 
-        /// <summary>
-        /// 处理委托错误回报
-        /// </summary>
-        /// <param name="error"></param>
-        public override void ProcessOrderError(ref XOrderError error)
-        {
-            logger.Info(string.Format("OrderError LocalID:{0} RemoteID:{1} ErrorID:{2} ErrorMsg:{3}", error.Order.BrokerLocalOrderID, error.Order.BrokerRemoteOrderID, error.Error.ErrorID, error.Error.ErrorMsg));
+//        /// <summary>
+//        /// 处理委托错误回报
+//        /// </summary>
+//        /// <param name="error"></param>
+//        public override void ProcessOrderError(ref XOrderError error)
+//        {
+//            logger.Info(string.Format("OrderError LocalID:{0} RemoteID:{1} ErrorID:{2} ErrorMsg:{3}", error.Order.BrokerLocalOrderID, error.Order.BrokerRemoteOrderID, error.Error.ErrorID, error.Error.ErrorMsg));
             
-        }
+//        }
 
-        /// <summary>
-        /// 处理委托操作错误
-        /// </summary>
-        /// <param name="error"></param>
-        public override void ProcessOrderActionError(ref XOrderActionError error)
-        {
+//        /// <summary>
+//        /// 处理委托操作错误
+//        /// </summary>
+//        /// <param name="error"></param>
+//        public override void ProcessOrderActionError(ref XOrderActionError error)
+//        {
             
 
 
-        }
+//        }
 
 
-        Trade getLocalTrade(ref XTradeField trade)
-        {
-            logger.Info(string.Format("Got Fill,Seq:{6} LocalID:{0} RemoteID:{1} BrokerTradeID:{2} XPrice:{3} Side:{4} XSize:{5}", trade.BrokerLocalOrderID, trade.BrokerRemoteOrderID, trade.BrokerTradeID, trade.Price, trade.Side, trade.Size, trade.SequenceNo));
+//        Trade getLocalTrade(ref XTradeField trade)
+//        {
+//            logger.Info(string.Format("Got Fill,Seq:{6} LocalID:{0} RemoteID:{1} BrokerTradeID:{2} XPrice:{3} Side:{4} XSize:{5}", trade.BrokerLocalOrderID, trade.BrokerRemoteOrderID, trade.BrokerTradeID, trade.Price, trade.Side, trade.Size, trade.SequenceNo));
 
-            //CTP接口的成交通过远端编号与委托进行关联
-            Order o = RemoteID2Order(trade.BrokerRemoteOrderID);
-            if (o != null)
-            {
-                Trade fill = (Trade)(new OrderImpl(o));
-                //设定价格 数量 以及日期信息
-                fill.xSize = trade.Size * (trade.Side ? 1 : -1);
-                fill.xPrice = (decimal)trade.Price;
+//            //CTP接口的成交通过远端编号与委托进行关联
+//            Order o = RemoteID2Order(trade.BrokerRemoteOrderID);
+//            if (o != null)
+//            {
+//                Trade fill = (Trade)(new OrderImpl(o));
+//                //设定价格 数量 以及日期信息
+//                fill.xSize = trade.Size * (trade.Side ? 1 : -1);
+//                fill.xPrice = (decimal)trade.Price;
 
-                fill.xDate = trade.Date;
-                fill.xTime = trade.Time;
-                //远端成交编号 在成交侧 需要将该字读填入TradeID 成交明细以TradeID来标识成交记录
-                fill.BrokerTradeID = trade.BrokerTradeID;
-                fill.TradeID = trade.BrokerTradeID;
+//                fill.xDate = trade.Date;
+//                fill.xTime = trade.Time;
+//                //远端成交编号 在成交侧 需要将该字读填入TradeID 成交明细以TradeID来标识成交记录
+//                fill.BrokerTradeID = trade.BrokerTradeID;
+//                fill.TradeID = trade.BrokerTradeID;
 
-                Util.Info("获得成交:" + fill.GetTradeDetail());
+//                Util.Info("获得成交:" + fill.GetTradeDetail());
 
-                return fill;                
-            }
-            return null;
-        }
-        /// <summary>
-        /// 处理成交数据
-        /// </summary>
-        /// <param name="trade"></param>
-        public override void ProcessTrade(ref XTradeField trade)
-        {
-            logger.Info(string.Format("Got Fill, LocalID:{0} RemoteID:{1} BrokerTradeID:{2} XPrice:{3} Side:{4} XSize:{5}", trade.BrokerLocalOrderID, trade.BrokerRemoteOrderID, trade.BrokerTradeID, trade.Price, trade.Side, trade.Size));
+//                return fill;                
+//            }
+//            return null;
+//        }
+//        /// <summary>
+//        /// 处理成交数据
+//        /// </summary>
+//        /// <param name="trade"></param>
+//        public override void ProcessTrade(ref XTradeField trade)
+//        {
+//            logger.Info(string.Format("Got Fill, LocalID:{0} RemoteID:{1} BrokerTradeID:{2} XPrice:{3} Side:{4} XSize:{5}", trade.BrokerLocalOrderID, trade.BrokerRemoteOrderID, trade.BrokerTradeID, trade.Price, trade.Side, trade.Size));
 
-            Trade t = getLocalTrade(ref trade);
-            if (t != null)
-            {
-                this.NotifyTrade(t);
-            }
-        }
+//            Trade t = getLocalTrade(ref trade);
+//            if (t != null)
+//            {
+//                this.NotifyTrade(t);
+//            }
+//        }
 
-        #endregion
+//        #endregion
 
 
-    }
-}
+//    }
+//}

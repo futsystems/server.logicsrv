@@ -514,7 +514,7 @@ namespace Broker.Live
         /// <summary>
         /// 停止时候要重置接口状态
         /// </summary>
-        public override void  DestoryBroker()
+        public override void OnDisposed()
         {
             Util.Debug("DestoryBroker ...............");
             //清空接口交易状态维护器
@@ -533,7 +533,7 @@ namespace Broker.Live
         /// 恢复日内交易状态
         /// 从数据库加载昨日持仓数据 和当日交易数据并填充到 成交接口维护器中 用于恢复日内交易状态
         /// </summary>
-        public override void OnResume()
+        public override void OnInit()
         {
             try
             {

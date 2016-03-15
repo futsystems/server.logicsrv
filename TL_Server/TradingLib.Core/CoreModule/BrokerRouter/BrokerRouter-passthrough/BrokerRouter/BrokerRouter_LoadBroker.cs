@@ -44,145 +44,145 @@ namespace TradingLib.Core
             //    brokerbase.NewBrokerFillEvent += new FillDelegate(LogBrokerFillEvent);
             //    brokerbase.NewBrokerPositionCloseDetailEvent += new Action<PositionCloseDetail>(LogBrokerPositionCloseDetailEvent);
             //}
-            if (broker is TLBrokerBase)
-            {
-                TLBrokerBase brokerbase = broker as TLBrokerBase;
-                //隔夜持仓明细回报
-                brokerbase.GotHistPositionDetail += new Action<PositionDetail>(Broker_GotHistPositionDetail);
+            //if (broker is TLBrokerBase)
+            //{
+            //    TLBrokerBase brokerbase = broker as TLBrokerBase;
+            //    //隔夜持仓明细回报
+            //    brokerbase.GotHistPositionDetail += new Action<PositionDetail>(Broker_GotHistPositionDetail);
                 
-                //交易数据恢复开始 恢复结束
-                brokerbase.ExDataSyncEnd += new IConnecterParamDel(Broker_ExDataSyncEnd);
-                brokerbase.ExDataSyncStart += new IConnecterParamDel(Broker_ExDataSyncStart);
+            //    //交易数据恢复开始 恢复结束
+            //    brokerbase.ExDataSyncEnd += new IConnecterParamDel(Broker_ExDataSyncEnd);
+            //    brokerbase.ExDataSyncStart += new IConnecterParamDel(Broker_ExDataSyncStart);
 
-                //获得合约数据
-                brokerbase.GotSymbolEvent += new Action<XSymbol, bool>(brokerbase_GotSymbolEvent);
+            //    //获得合约数据
+            //    brokerbase.GotSymbolEvent += new Action<XSymbol, bool>(brokerbase_GotSymbolEvent);
 
-                brokerbase.GotRspInfoEvent += (rspinfo) => { Broker_GotRspInfoEvent(broker, rspinfo); };
+            //    brokerbase.GotRspInfoEvent += (rspinfo) => { Broker_GotRspInfoEvent(broker, rspinfo); };
 
-                brokerbase.GotTransferEvent += new Action<TLBroker, XTransferField, bool>(Broker_GotTransferEvent);
-                brokerbase.GotAccountInfoEvent += new Action<TLBroker,XAccountInfo, bool>(Broker_GotAccountInfoEvent);
-            }
+            //    brokerbase.GotTransferEvent += new Action<TLBroker, XTransferField, bool>(Broker_GotTransferEvent);
+            //    brokerbase.GotAccountInfoEvent += new Action<TLBroker,XAccountInfo, bool>(Broker_GotAccountInfoEvent);
+            //}
         }
 
-        void Broker_GotAccountInfoEvent(TLBroker broker,XAccountInfo arg1, bool arg2)
-        {
-            BrokerAccountInfo info = new BrokerAccountInfo();
-            info.CashIn = (decimal)arg1.Deposit;
-            info.CashOut = (decimal)arg1.WithDraw;
-            info.CloseProfit = (decimal)arg1.ClosePorifit;
-            info.Commission = (decimal)arg1.Commission;
-            info.LastEquity = (decimal)arg1.LastEquity;
-            info.PositionProfit = (decimal)arg1.PositoinProfit;
+        //void Broker_GotAccountInfoEvent(TLBroker broker,XAccountInfo arg1, bool arg2)
+        //{
+        //    BrokerAccountInfo info = new BrokerAccountInfo();
+        //    info.CashIn = (decimal)arg1.Deposit;
+        //    info.CashOut = (decimal)arg1.WithDraw;
+        //    info.CloseProfit = (decimal)arg1.ClosePorifit;
+        //    info.Commission = (decimal)arg1.Commission;
+        //    info.LastEquity = (decimal)arg1.LastEquity;
+        //    info.PositionProfit = (decimal)arg1.PositoinProfit;
 
-            BrokerAccountInfoEventArgs arg = new BrokerAccountInfoEventArgs();
-            arg.AccountInfo = info;
-            arg.BrokerToken = broker.Token;
+        //    BrokerAccountInfoEventArgs arg = new BrokerAccountInfoEventArgs();
+        //    arg.AccountInfo = info;
+        //    arg.BrokerToken = broker.Token;
 
 
-            TLCtxHelper.EventSystem.FireBrokerAccountInfoEvent(null,arg);
-        }
+        //    TLCtxHelper.EventSystem.FireBrokerAccountInfoEvent(null,arg);
+        //}
 
-        void Broker_GotTransferEvent(TLBroker arg1, XTransferField arg2, bool arg3)
-        {
-            logger.Info(string.Format("Broker:{0} {1}:{2} {3}",arg1.Token,Util.GetEnumDescription(arg2.TransType),arg2.Amount,(arg2.ErrorID==0?"成功":"失败")));
-            BrokerTransferEventArgs arg = new BrokerTransferEventArgs();
-            arg.BrokerToken = arg1.Token;
-            arg.Amount = (decimal)arg2.Amount;
-            arg.ErrorID = arg2.ErrorID;
-            arg.ErrorMsg = arg2.ErrorMsg;
-            arg.TransType = arg2.TransType;
-            //通过系统中继触发接口出入金事件
-            TLCtxHelper.EventSystem.FireBrokerTransferEvent(null, arg);
-        }
+        //void Broker_GotTransferEvent(TLBroker arg1, XTransferField arg2, bool arg3)
+        //{
+        //    logger.Info(string.Format("Broker:{0} {1}:{2} {3}",arg1.Token,Util.GetEnumDescription(arg2.TransType),arg2.Amount,(arg2.ErrorID==0?"成功":"失败")));
+        //    BrokerTransferEventArgs arg = new BrokerTransferEventArgs();
+        //    arg.BrokerToken = arg1.Token;
+        //    arg.Amount = (decimal)arg2.Amount;
+        //    arg.ErrorID = arg2.ErrorID;
+        //    arg.ErrorMsg = arg2.ErrorMsg;
+        //    arg.TransType = arg2.TransType;
+        //    //通过系统中继触发接口出入金事件
+        //    TLCtxHelper.EventSystem.FireBrokerTransferEvent(null, arg);
+        //}
 
-        void brokerbase_GotSymbolEvent(XSymbol arg1, bool arg2)
-        {
-            logger.Info(string.Format("Symbol:{0} Margin:{1} EntryCommission:{2} ExitCommission:{3} ExitTodayCommission:{4}", arg1.Symbol, arg1.Margin, arg1.EntryCommission, arg1.ExitCommission, arg1.ExitTodayCommission));
-        }
+        //void brokerbase_GotSymbolEvent(XSymbol arg1, bool arg2)
+        //{
+        //    logger.Info(string.Format("Symbol:{0} Margin:{1} EntryCommission:{2} ExitCommission:{3} ExitTodayCommission:{4}", arg1.Symbol, arg1.Margin, arg1.EntryCommission, arg1.ExitCommission, arg1.ExitTodayCommission));
+        //}
 
         /// <summary>
         /// 交易接口交易数据同步开始
         /// </summary>
         /// <param name="tocken"></param>
-        void Broker_ExDataSyncStart(string token)
-        {
-            logger.Info(string.Format("Broker:{0} SyncExData Start", token));
-            IAccount account = BasicTracker.ConnectorMapTracker.GetAccountForBroker(token);
-            if (account == null)
-            {
-                logger.Info(string.Format("Broker:{0} is not binded with any account", token));
-                return;
-            }
-            //取消交易帐户实时监控
-            TLCtxHelper.ModuleRiskCentre.DetachAccountCheck(account.ID);
-        }
+        //void Broker_ExDataSyncStart(string token)
+        //{
+        //    logger.Info(string.Format("Broker:{0} SyncExData Start", token));
+        //    IAccount account = BasicTracker.ConnectorMapTracker.GetAccountForBroker(token);
+        //    if (account == null)
+        //    {
+        //        logger.Info(string.Format("Broker:{0} is not binded with any account", token));
+        //        return;
+        //    }
+        //    //取消交易帐户实时监控
+        //    TLCtxHelper.ModuleRiskCentre.DetachAccountCheck(account.ID);
+        //}
 
         /// <summary>
         /// 交易接口交易数据同步完成
         /// </summary>
         /// <param name="tocken"></param>
-        void Broker_ExDataSyncEnd(string token)
-        {
-            logger.Info(string.Format("Broker:{0} SyncExData End", token));
-            IAccount account = BasicTracker.ConnectorMapTracker.GetAccountForBroker(token);
-            if (account == null)
-            {
-                logger.Info(string.Format("Broker:{0} is not binded with any account", token));
-                return;
-            }
-            //将交易帐户加入实时监控列表
-            TLCtxHelper.ModuleRiskCentre.AttachAccountCheck(account.ID);
-        }
+        //void Broker_ExDataSyncEnd(string token)
+        //{
+        //    logger.Info(string.Format("Broker:{0} SyncExData End", token));
+        //    IAccount account = BasicTracker.ConnectorMapTracker.GetAccountForBroker(token);
+        //    if (account == null)
+        //    {
+        //        logger.Info(string.Format("Broker:{0} is not binded with any account", token));
+        //        return;
+        //    }
+        //    //将交易帐户加入实时监控列表
+        //    TLCtxHelper.ModuleRiskCentre.AttachAccountCheck(account.ID);
+        //}
 
-        void Broker_GotRspInfoEvent(IBroker broker, RspInfo obj)
-        {
-            logger.Info(string.Format("Message from broker:{0} ErrorID:{1} ErrorMessage:{2}", "2", obj.ErrorID, obj.ErrorMessage));
-            //找到该broker对应的Account然后将对应的消息推送到管理端
-            IAccount account = BasicTracker.ConnectorMapTracker.GetAccountForBroker(broker.Token);
-            if (account == null)
-            {
-                logger.Info(string.Format("Broker:{0} is not binded with any account",broker.Token));
-            }
-            ConnectorConfig cfg = BasicTracker.ConnectorConfigTracker.GetBrokerConfig(broker.Token);
+        //void Broker_GotRspInfoEvent(IBroker broker, RspInfo obj)
+        //{
+        //    logger.Info(string.Format("Message from broker:{0} ErrorID:{1} ErrorMessage:{2}", "2", obj.ErrorID, obj.ErrorMessage));
+        //    //找到该broker对应的Account然后将对应的消息推送到管理端
+        //    IAccount account = BasicTracker.ConnectorMapTracker.GetAccountForBroker(broker.Token);
+        //    if (account == null)
+        //    {
+        //        logger.Info(string.Format("Broker:{0} is not binded with any account",broker.Token));
+        //    }
+        //    ConnectorConfig cfg = BasicTracker.ConnectorConfigTracker.GetBrokerConfig(broker.Token);
 
-            var predicate = account.GetNotifyPredicate();
-            ManagerNotify notify = new ManagerNotify();
-            notify.NotifyType = "主帐户交易通道";
-            notify.ErrorID = obj.ErrorID;
-            notify.ErrorMessage = string.Format("主帐户{0}:{1}",cfg != null ? (string.Format("{0}-{1}", cfg.Name, cfg.usrinfo_userid)) : "",obj.ErrorMessage);
+        //    var predicate = account.GetNotifyPredicate();
+        //    ManagerNotify notify = new ManagerNotify();
+        //    notify.NotifyType = "主帐户交易通道";
+        //    notify.ErrorID = obj.ErrorID;
+        //    notify.ErrorMessage = string.Format("主帐户{0}:{1}",cfg != null ? (string.Format("{0}-{1}", cfg.Name, cfg.usrinfo_userid)) : "",obj.ErrorMessage);
 
-            ManagerNotifyEventArgs arg = new ManagerNotifyEventArgs(predicate, notify);
-            TLCtxHelper.EventSystem.FireManagerNotifyEvent(this, arg);
-        }
+        //    ManagerNotifyEventArgs arg = new ManagerNotifyEventArgs(predicate, notify);
+        //    TLCtxHelper.EventSystem.FireManagerNotifyEvent(this, arg);
+        //}
 
 
 
-        void Broker_GotHistPositionDetail(PositionDetail pos)
-        {
-            //获得该委托的通道对象
-            IBroker broker = TLCtxHelper.ServiceRouterManager.FindBroker(pos.Broker);
+        //void Broker_GotHistPositionDetail(PositionDetail pos)
+        //{
+        //    //获得该委托的通道对象
+        //    IBroker broker = TLCtxHelper.ServiceRouterManager.FindBroker(pos.Broker);
 
-            //如果通道对象不存在则直接返回
-            if (broker == null)
-            {
-                logger.Warn(string.Format("Broker:{0} is not registed", pos.Broker));
-                return;
-            }
+        //    //如果通道对象不存在则直接返回
+        //    if (broker == null)
+        //    {
+        //        logger.Warn(string.Format("Broker:{0} is not registed", pos.Broker));
+        //        return;
+        //    }
 
-            //通过交易通道Broker Token获得绑定的交易帐户
-            IAccount account = BasicTracker.ConnectorMapTracker.GetAccountForBroker(pos.Broker);
-            if (account == null)
-            {
-                logger.Warn(string.Format("Broker:{0} is not binded with any account", pos.Broker));
-                return;
-            }
-            pos.Account = account.ID;
-            //设定合约
-            pos.oSymbol = account.Domain.GetSymbol(pos.Symbol);
+        //    //通过交易通道Broker Token获得绑定的交易帐户
+        //    IAccount account = BasicTracker.ConnectorMapTracker.GetAccountForBroker(pos.Broker);
+        //    if (account == null)
+        //    {
+        //        logger.Warn(string.Format("Broker:{0} is not binded with any account", pos.Broker));
+        //        return;
+        //    }
+        //    pos.Account = account.ID;
+        //    //设定合约
+        //    pos.oSymbol = account.Domain.GetSymbol(pos.Symbol);
 
-            TLCtxHelper.ModuleClearCentre.GotPosition(pos);
+        //    TLCtxHelper.ModuleClearCentre.GotPosition(pos);
 
-        }
+        //}
 
 
         /// <summary>
