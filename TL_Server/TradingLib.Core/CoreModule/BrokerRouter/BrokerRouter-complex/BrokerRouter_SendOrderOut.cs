@@ -87,7 +87,7 @@ namespace TradingLib.Core
             errorTitle = string.Empty;
             if (brokerclosemap.Count == 1)
             {
-                logger.Info("PositionDetails to be closed are  in same broker,send order directly.");
+                logger.Info("PositionDetails to be closed are in same broker,send order directly.");
                 o.Broker = brokerclosemap.Keys.First();//设定预发送委托的BrokerToken
                 return BrokerSendOrder(o, out errorTitle);
             }

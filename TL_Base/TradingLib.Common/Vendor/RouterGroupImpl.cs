@@ -70,53 +70,16 @@ namespace TradingLib.Common
 
         #region 获得平仓Broker
         /// <summary>
-        /// 返回所有Vendor
-        /// </summary>
-        /// <returns></returns>
-        //IEnumerable<Vendor> GetVendors()
-        //{
-        //    return routeritemmap.Values.Where(r => r.Vendor != null).Select(r => r.Vendor);
-        //}
-
-        /// <summary>
-        /// 获得IBroker成交路由
-        /// 路由选择主体逻辑
-        /// 1.开仓时由策略选择 按路由有限顺序或随机选择成交路由
-        /// 2.平仓时,按所平持仓所在通道进行选择,这里涉及到拆单的问题，比如第一次开仓在A帐户,第二次开仓在B帐户,平仓时一起平仓，则委托需要拆成2个 一个从A下单,另一个从B下单
-        /// 
+        /// 获得平仓Broker,根据持仓所在的Broker Token通过Token查找到对应的Broker
         /// </summary>
         /// <returns></returns>
         public IBroker GetBroker(string token)
         {
             //查找路由项目的主帐户标识
             return routeritemmap.Values.Where(item => item.GetBrokerToken().Equals(token)).Select(item=>item.Broker).FirstOrDefault();
-            //Vendor vendor = GetVendors().Where(v => v.GetBrokerToken().Equals(token)).FirstOrDefault();
-            //if (vendor != null)
-            //    return vendor.Broker;
-            //else
-            //    return null;
         }
 
-        /// <summary>
-        /// 返回默认的开仓通道，根据策略给出当前可用的开仓通道
-        /// </summary>
-        /// <returns></returns>
-        public IBroker GetBroker(Order o, decimal margintouse)
-        {
-            if (this.Strategy == QSEnumRouterStrategy.Priority)
-            {
-                return PriorityBroker(o, margintouse);
-            }
-            else if (this.Strategy == QSEnumRouterStrategy.Stochastic)
-            {
-                return StochasticBroker(o, margintouse);
-            }
-            else
-            {
-                return StochasticBroker(o, margintouse);
-            }
-
-        }
+        
 
 
         #endregion
@@ -141,6 +104,27 @@ namespace TradingLib.Common
         IEnumerable<RouterItem> GetRouterItemsForOpenSorted()
         {
             return routeritemmap.Values.Where(r => r.Active).Where(r => r.Broker != null).OrderBy(r => r.priority);
+        }
+
+        /// <summary>
+        /// 返回默认的开仓通道，根据策略给出当前可用的开仓通道
+        /// </summary>
+        /// <returns></returns>
+        public IBroker GetBroker(Order o, decimal margintouse)
+        {
+            if (this.Strategy == QSEnumRouterStrategy.Priority)
+            {
+                return PriorityBroker(o, margintouse);
+            }
+            else if (this.Strategy == QSEnumRouterStrategy.Stochastic)
+            {
+                return StochasticBroker(o, margintouse);
+            }
+            else
+            {
+                return StochasticBroker(o, margintouse);
+            }
+
         }
 
         IBroker StochasticBroker(Order o, decimal margintouse)

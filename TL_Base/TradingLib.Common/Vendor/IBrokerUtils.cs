@@ -96,5 +96,28 @@ namespace TradingLib.Common
         {
             return broker.Positions.Where(pos => pos.oSymbol.SecurityFamily.Exchange.EXCode == exchange.EXCode);
         }
+
+        /// <summary>
+        /// 获得交易帐户某个交易所的委托
+        /// </summary>
+        /// <param name="account"></param>
+        /// <param name="exchange"></param>
+        /// <returns></returns>
+        public static IEnumerable<Order> GetOrders(this IBroker broker, IExchange exchange, int settleday)
+        {
+            return broker.Orders.Where(o => o.oSymbol.SecurityFamily.Exchange.EXCode == exchange.EXCode && o.SettleDay == settleday);
+        }
+
+        /// <summary>
+        /// 获得交易帐户某个交易所的所有成交
+        /// </summary>
+        /// <param name="account"></param>
+        /// <param name="exchange"></param>
+        /// <returns></returns>
+        public static IEnumerable<Trade> GetTrades(this IBroker broker, IExchange exchange, int settleday)
+        {
+            return broker.Trades.Where(f => f.oSymbol.SecurityFamily.Exchange.EXCode == exchange.EXCode && f.SettleDay == settleday);
+        }
+
     }
 }

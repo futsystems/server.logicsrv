@@ -266,6 +266,12 @@ namespace TradingLib.Core
                             account.SettleExchange(exchange, settleday);
                         }
                     }
+
+                    //执行交易通道结算
+                    foreach (var broker in TLCtxHelper.ServiceRouterManager.Brokers)
+                    {
+                        broker.SettleExchange(exchange, settleday);
+                    }
                 }
             }
             catch (Exception ex)

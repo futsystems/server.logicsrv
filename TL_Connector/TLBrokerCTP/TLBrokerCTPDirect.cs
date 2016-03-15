@@ -714,6 +714,63 @@ namespace Broker.Live
         }
         #endregion
 
+        public override void SettleExchange(IExchange exchange, int settleday)
+        {
+            List<PositionDetail> positiondetail_settle = new List<PositionDetail>();
+            foreach (var pos in this.GetPositions(exchange).Where(p => !p.isFlat))
+            {
+                //设定持仓结算价格
+                SettlementPrice target = TLCtxHelper.ModuleSettleCentre.GetSettlementPrice(settleday, pos.Symbol);
+                if (target != null && target.Settlement > 0)
+                {
+                    pos.SettlementPrice = target.Settlement;
+                }
 
+                //如果没有正常获得结算价格 持仓结算价按对应的最新价进行结算
+                if (pos.SettlementPrice == null)
+                {
+                    pos.SettlementPrice = pos.LastPrice;
+                }
+
+                //遍历该未平仓持仓对象下的所有持仓明细
+                foreach (PositionDetail pd in pos.PositionDetailTotal.Where(pd => !pd.IsClosed()))
+                {
+                    //保存结算持仓明细时要将结算日更新为当前
+                    pd.Settleday = settleday;
+                    //保存持仓明细到数据库
+                    TLCtxHelper.ModuleDataRepository.NewPositionDetail(pd);
+                    positiondetail_settle.Add(pd);
+                }
+            }
+
+            ///4.标注已结算数据 委托 成交 持仓
+            foreach (var o in this.GetOrders(exchange, settleday))
+            {
+                o.Settled = true;
+                TLCtxHelper.ModuleDataRepository.MarkOrderSettled(o);
+            }
+            foreach (var f in this.GetTrades(exchange, settleday))
+            {
+                f.Settled = true;
+                TLCtxHelper.ModuleDataRepository.MarkTradeSettled(f);
+            }
+            foreach (var pos in this.GetPositions(exchange))
+            {
+                pos.Settled = true;
+                //如果持仓有隔夜持仓 将对应的隔夜持仓标注成已结算否则会对隔夜持仓重复加载
+                foreach (var pd in pos.PositionDetailYdRef)
+                {
+                    TLCtxHelper.ModuleDataRepository.MarkPositionDetailSettled(pd);
+                }
+            }
+            //将已经结算的持仓从内存数据对象中屏蔽 持仓数据是一个状态数据,因此我们这里将上个周期的持仓对象进行屏蔽
+            tk.DropSettled();
+            ///5.加载持仓明晰和交易所结算记录
+            foreach (var pd in positiondetail_settle)
+            {
+                tk.GotPosition(pd);
+            }
+        }
+        
     }
 }

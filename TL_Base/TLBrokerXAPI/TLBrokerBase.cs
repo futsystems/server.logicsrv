@@ -21,6 +21,16 @@ namespace TradingLib.BrokerXAPI
 
         public IBrokerClearCentre ClearCentre { get; set; }
 
+        /// <summary>
+        /// 执行交易所结算
+        /// </summary>
+        /// <param name="exchange"></param>
+        /// <param name="settleday"></param>
+        public virtual void SettleExchange(IExchange exchange, int settleday)
+        {
+            logger.Warn(string.Format("SettleExchange Exch:{0} Settleday:{1}", exchange.EXCode, settleday));
+        }
+
         #region 交易回报事件事件
         /// <summary>
         /// 当数据服务器登入成功后调用
