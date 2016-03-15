@@ -77,7 +77,7 @@ namespace TradingLib.Core
             NotifyResponsePacket notify= packet as NotifyResponsePacket;
             //查找以交易帐户登入的地址列表
             ILocation[] locationlist = ClientsForAccount(notify.Account).Select(client =>client.Location).ToArray();
-            logger.Info("交易帐户:" + notify.Account + " 链接端数量:" + locationlist.Length.ToString());
+            //logger.Info("交易帐户:" + notify.Account + " 链接端数量:" + locationlist.Length.ToString());
             return locationlist;
         }
         /// <summary>
@@ -180,7 +180,7 @@ namespace TradingLib.Core
         public  void SrvOnOrderInsert(ISession session,OrderInsertRequest request)
         {
             TLCtxHelper.Profiler.EnterSection("OrderInsert");
-            logger.Info("Got Order:" + request.Order.ToString());
+            logger.Info("Got Order:" + request.Order.GetOrderInfo());
 
             //检查插入委托请求是否有效
             if (!request.IsValid)
@@ -334,7 +334,7 @@ namespace TradingLib.Core
             notify.Order = o;
 
             TLSend(notify);
-            logger.Info("send ordernotify to client | " + o.ToString());
+            logger.Info(string.Format("Notify Order To Client:{0}", o.GetOrderInfo()));
         }
 
         internal void newOrderError(ErrorOrderNotify notify)
@@ -347,13 +347,13 @@ namespace TradingLib.Core
             if (string.IsNullOrEmpty(notify.Order.Account)) return;
 
             TLSend(notify);
-            logger.Info("send order error notify to client | " + notify.ToString());
+            logger.Info(string.Format("Notify Order Error To Client:{0} / RspInfo:{1}", notify.Order.GetOrderInfo(), notify.RspInfo));
         }
 
         internal void newOrderActionError(ErrorOrderActionNotify notify)
         {
             TLSend(notify);
-            logger.Info("send orderaction error notify to client | " + notify.ToString());
+            logger.Info(string.Format("Notify OrderAction Error To Client:{0} / RspInfo:{1}","",notify.RspInfo));
         }
         /// <summary>
         /// 向客户端发送成交回报
@@ -373,7 +373,7 @@ namespace TradingLib.Core
             notify.Trade = trade;
 
             TLSend(notify);
-            logger.Info("send Filld to client | " + trade.ToString());
+            logger.Info(string.Format("Notify Trade To Client:{0}", trade.GetTradeInfo()));
         }
 
 
@@ -388,7 +388,7 @@ namespace TradingLib.Core
             response.OrderAction = action;
 
             TLSend(response);
-            logger.Info("send Cancel to client | " + action.ToString());
+            logger.Info(string.Format("Notify OrderAction To Client:{0}", action.ToString()));
         }
 
         /// <summary>

@@ -53,7 +53,7 @@ namespace TradingLib.Core
         /// <param name="o"></param>
         bool XBrokerSendOrder(Order o,out string errorTitle)
         {
-            logger.Info("XBrokerSendOrder check if need split the order");
+            logger.Info("XBrokerSendOrder Check Split,Send Order Out");
             IAccount account = TLCtxHelper.ModuleAccountManager[o.Account];
             Position pos = account.GetPosition(o.Symbol, o.PositionSide);//获得该委托对应预操作的持仓对象
 
@@ -87,7 +87,7 @@ namespace TradingLib.Core
             errorTitle = string.Empty;
             if (brokerclosemap.Count == 1)
             {
-                logger.Info("PositionDetails to be closed are  in same broker,send order directly.");
+                logger.Info("PositionDetails to be closed are in same broker,send order directly.");
                 o.Broker = brokerclosemap.Keys.First();//设定预发送委托的BrokerToken
                 return BrokerSendOrder(o, out errorTitle);
             }

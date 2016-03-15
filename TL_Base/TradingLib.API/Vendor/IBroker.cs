@@ -59,9 +59,6 @@ namespace TradingLib.API
 
 
         #endregion
-        
-
-        
 
         //清算中心 用于交易通道查询当前的委托 仓位 以及其他相关数据
         IBrokerClearCentre ClearCentre { get; set; }
@@ -106,5 +103,14 @@ namespace TradingLib.API
         /// </summary>
         /// <param name="msg"></param>
         bool Start(out string msg);
+
+
+        /// <summary>
+        /// 执行交易所结算
+        /// </summary>
+        /// <param name="exchange"></param>
+        /// <param name="settleday"></param>
+        void SettleExchange(IExchange exchange, int settleday);
+        
     }
 }

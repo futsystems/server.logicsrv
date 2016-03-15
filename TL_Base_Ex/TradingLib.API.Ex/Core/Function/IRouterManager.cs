@@ -49,5 +49,12 @@ namespace TradingLib.API
         ///// </summary>
         IEnumerable<IDataFeed> DataFeeds { get; }
 
+
+        /// <summary>
+        /// 重置所有交易通道
+        /// 停止所有通道并执行重启操作
+        /// </summary>
+        void Reset();
+
     }
 }

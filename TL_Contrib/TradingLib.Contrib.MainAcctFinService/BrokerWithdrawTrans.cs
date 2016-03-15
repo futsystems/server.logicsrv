@@ -52,7 +52,7 @@ namespace TradingLib.Contrib.MainAcctFinService
                 var pass = args.GetValue(1).ToString();
                 _amount = (decimal)amount;
 
-                _broker.Withdraw(amount,pass);
+                //_broker.Withdraw(amount,pass);
 
                 if (TimeoutObject.WaitOne(timeoutMSec, false))
                 {
@@ -159,7 +159,7 @@ namespace TradingLib.Contrib.MainAcctFinService
             transmap.TryAdd(f.ID, new BrokerTransField(broker.Token, f));
 
             //调用接口执行出金操作
-            broker.Withdraw((double)f.Amount, "");
+            //broker.Withdraw((double)f.Amount, "");
         }
 
         /// <summary>

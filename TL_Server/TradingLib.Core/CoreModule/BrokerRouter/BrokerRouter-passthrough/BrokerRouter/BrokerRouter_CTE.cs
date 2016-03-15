@@ -14,17 +14,17 @@ namespace TradingLib.Core
 {
     public partial class BrokerRouterPassThrough
     {
-        [CoreCommandAttr(QSEnumCommandSource.CLI, "qrysymbol", "qrysymbol - 查询合约数据", "查询合约数据")]
-        public string CTE_PostionFlatSetList()
-        {
-            IBroker broker = TLCtxHelper.ServiceRouterManager.FindBroker("TK0001");
-            if (broker is TLBroker)
-            {
-                TLBroker b = broker as TLBroker;
-                b.QryInstrument();
-            }
-            return "good";
-        }
+        //[CoreCommandAttr(QSEnumCommandSource.CLI, "qrysymbol", "qrysymbol - 查询合约数据", "查询合约数据")]
+        //public string CTE_PostionFlatSetList()
+        //{
+        //    IBroker broker = TLCtxHelper.ServiceRouterManager.FindBroker("TK0001");
+        //    if (broker is TLBroker)
+        //    {
+        //        TLBroker b = broker as TLBroker;
+        //        b.QryInstrument();
+        //    }
+        //    return "good";
+        //}
 
 
         /// <summary>
@@ -303,76 +303,76 @@ namespace TradingLib.Core
 
         }
 
-        [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "MainAccountDeposit", "MainAccountDeposit - deposit to main account", "底层主帐户入金",QSEnumArgParseType.Json)]
-        public void CTE_MainAccountDeposit(ISession session, string request)
-        {
-            var manager = session.GetManager();
-            if (!manager.IsInRoot()) throw new FutsRspError("无权进行入金操作");
+        //[ContribCommandAttr(QSEnumCommandSource.MessageMgr, "MainAccountDeposit", "MainAccountDeposit - deposit to main account", "底层主帐户入金",QSEnumArgParseType.Json)]
+        //public void CTE_MainAccountDeposit(ISession session, string request)
+        //{
+        //    var manager = session.GetManager();
+        //    if (!manager.IsInRoot()) throw new FutsRspError("无权进行入金操作");
             
-            JsonData args = JsonMapper.ToObject(request);
-            var account = args["account"].ToString();
-            var amount = double.Parse(args["amount"].ToString());
-            var pass = args["pass"].ToString();
+        //    JsonData args = JsonMapper.ToObject(request);
+        //    var account = args["account"].ToString();
+        //    var amount = double.Parse(args["amount"].ToString());
+        //    var pass = args["pass"].ToString();
 
-            IAccount acc = TLCtxHelper.ModuleAccountManager[account];
-            if (!manager.RightAccessAccount(acc))
-            {
-                throw new FutsRspError("无权操作该帐户");
-            }
-            IBroker broker = BasicTracker.ConnectorMapTracker.GetBrokerForAccount(account);
+        //    IAccount acc = TLCtxHelper.ModuleAccountManager[account];
+        //    if (!manager.RightAccessAccount(acc))
+        //    {
+        //        throw new FutsRspError("无权操作该帐户");
+        //    }
+        //    IBroker broker = BasicTracker.ConnectorMapTracker.GetBrokerForAccount(account);
 
-            if (broker == null)
-            {
-                throw new FutsRspError("未绑定主帐户");
-            }
-            if (!broker.IsLive)
-            {
-                throw new FutsRspError("主帐户未连接");
-            }
-            if (broker is TLBroker)
-            {
-                TLBroker b = broker as TLBroker;
-                b.Deposit(amount,pass);
-                session.OperationSuccess("入金操作已提交,请查询主帐户信息");
-            }
-        }
+        //    if (broker == null)
+        //    {
+        //        throw new FutsRspError("未绑定主帐户");
+        //    }
+        //    if (!broker.IsLive)
+        //    {
+        //        throw new FutsRspError("主帐户未连接");
+        //    }
+        //    if (broker is TLBroker)
+        //    {
+        //        TLBroker b = broker as TLBroker;
+        //        b.Deposit(amount,pass);
+        //        session.OperationSuccess("入金操作已提交,请查询主帐户信息");
+        //    }
+        //}
 
 
 
-        [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "MainAccountWithdraw", "MainAccountWithdraw - withdraw from account", "底层主帐户出金", QSEnumArgParseType.Json)]
-        public void CTE_MainAccountWithdraw(ISession session, string request)
-        {
-            var manager = session.GetManager();
-            if (!manager.IsInRoot()) throw new FutsRspError("无权进行出金操作");
+        //[ContribCommandAttr(QSEnumCommandSource.MessageMgr, "MainAccountWithdraw", "MainAccountWithdraw - withdraw from account", "底层主帐户出金", QSEnumArgParseType.Json)]
+        //public void CTE_MainAccountWithdraw(ISession session, string request)
+        //{
+        //    var manager = session.GetManager();
+        //    if (!manager.IsInRoot()) throw new FutsRspError("无权进行出金操作");
             
-            JsonData args = JsonMapper.ToObject(request);
-            var account = args["account"].ToString();
-            var amount = double.Parse(args["amount"].ToString());
-            var pass = args["pass"].ToString();
+        //    JsonData args = JsonMapper.ToObject(request);
+        //    var account = args["account"].ToString();
+        //    var amount = double.Parse(args["amount"].ToString());
+        //    var pass = args["pass"].ToString();
 
-            IAccount acc = TLCtxHelper.ModuleAccountManager[account];
-            if (!manager.RightAccessAccount(acc))
-            {
-                throw new FutsRspError("无权操作该帐户");
-            }
-            IBroker broker = BasicTracker.ConnectorMapTracker.GetBrokerForAccount(account);
+        //    IAccount acc = TLCtxHelper.ModuleAccountManager[account];
+        //    if (!manager.RightAccessAccount(acc))
+        //    {
+        //        throw new FutsRspError("无权操作该帐户");
+        //    }
+        //    IBroker broker = BasicTracker.ConnectorMapTracker.GetBrokerForAccount(account);
 
-            if (broker == null)
-            {
-                throw new FutsRspError("未绑定主帐户");
-            }
-            if (!broker.IsLive)
-            {
-                throw new FutsRspError("主帐户未连接");
-            }
-            if (broker is TLBroker)
-            {
-                TLBroker b = broker as TLBroker;
-                b.Withdraw(amount,pass);
-                session.OperationSuccess("出金操作已提交,请查询主帐户信息");
-            }
+        //    if (broker == null)
+        //    {
+        //        throw new FutsRspError("未绑定主帐户");
+        //    }
+        //    if (!broker.IsLive)
+        //    {
+        //        throw new FutsRspError("主帐户未连接");
+        //    }
+        //    if (broker is TLBroker)
+        //    {
+        //        TLBroker b = broker as TLBroker;
+        //        b.Withdraw(amount,pass);
+        //        session.OperationSuccess("出金操作已提交,请查询主帐户信息");
+        //    }
 
-        }
+        //}
 
 
         /// <summary>
@@ -453,105 +453,105 @@ namespace TradingLib.Core
         /// 2.检查当前时间是否在白盘，如果在交易时间段则帐户冻结，系统自动将优先资金出金以保证资金安全
         /// 3.检查当前时间是否在夜盘，如果在夜盘则挂单,占用所有保证金,这样就不允许该帐户进行交易
         /// </summary>
-        [TaskAttr("检查冻结帐户[出金/挂单]", 2, 0, "每2秒检查一次冻结帐户进行出金或挂单")]
-        public void Task_CheckAccountFrozen()
-        {
-            //非交易日 不做逻辑检查
-            if (!TLCtxHelper.ModuleSettleCentre.IsTradingday) return;
+        //[TaskAttr("检查冻结帐户[出金/挂单]", 2, 0, "每2秒检查一次冻结帐户进行出金或挂单")]
+        //public void Task_CheckAccountFrozen()
+        //{
+        //    //非交易日 不做逻辑检查
+        //    if (!TLCtxHelper.ModuleSettleCentre.IsTradingday) return;
 
-            //遍历所有被冻结的交易帐户
-            foreach (IAccount account in TLCtxHelper.ModuleAccountManager.Accounts.Where(acc=>!acc.Execute))
-            {
-                //如果没有任何持仓，则表明强平结束/或手工冻结该帐户，可以进行出金操作，帐户的强平由风控规则和风控中心的补漏任务进行维护
-                if (!account.AnyPosition && account.Credit>0)
-                {
-                    IBroker broker = BasicTracker.ConnectorMapTracker.GetBrokerForAccount(account.ID);
-                    if (broker != null && broker.IsLive)
-                    {
-                        //如果在出金时间段内 则将优先资金出金
-                        if(IsInWithdrawTime())
-                        {
-                            if(broker is TLBroker)
-                            {
-                                //如果在可出金时间段,则将优先资金出掉 否则进行挂单
-                                logger.Info(string.Format("Account:{0} is blocked with position closed and in withdraw time,will withdraw credit:{1}", account.ID, account.Credit));
+        //    //遍历所有被冻结的交易帐户
+        //    foreach (IAccount account in TLCtxHelper.ModuleAccountManager.Accounts.Where(acc=>!acc.Execute))
+        //    {
+        //        //如果没有任何持仓，则表明强平结束/或手工冻结该帐户，可以进行出金操作，帐户的强平由风控规则和风控中心的补漏任务进行维护
+        //        if (!account.AnyPosition && account.Credit>0)
+        //        {
+        //            IBroker broker = BasicTracker.ConnectorMapTracker.GetBrokerForAccount(account.ID);
+        //            if (broker != null && broker.IsLive)
+        //            {
+        //                //如果在出金时间段内 则将优先资金出金
+        //                if(IsInWithdrawTime())
+        //                {
+        //                    if(broker is TLBroker)
+        //                    {
+        //                        //如果在可出金时间段,则将优先资金出掉 否则进行挂单
+        //                        logger.Info(string.Format("Account:{0} is blocked with position closed and in withdraw time,will withdraw credit:{1}", account.ID, account.Credit));
 
-                                double creditvalue = (double)account.Credit;
-                                //调用帐户管理模块执行出金操作
-                                CashTransaction txn = new CashTransactionImpl() { Account = account.ID, Amount = account.Credit, EquityType = QSEnumEquityType.CreditEquity, TxnType = QSEnumCashOperation.WithDraw };
-                                TLCtxHelper.ModuleAccountManager.CashOperation(txn);
+        //                        double creditvalue = (double)account.Credit;
+        //                        //调用帐户管理模块执行出金操作
+        //                        CashTransaction txn = new CashTransactionImpl() { Account = account.ID, Amount = account.Credit, EquityType = QSEnumEquityType.CreditEquity, TxnType = QSEnumCashOperation.WithDraw };
+        //                        TLCtxHelper.ModuleAccountManager.CashOperation(txn);
 
-                                //调用broker接口执行出金操作
-                                TLBroker b = broker as TLBroker;
-                                //执行出金操作
-                                b.Withdraw((double)creditvalue, "");
-                            }
-                        }
-                        else //如果不在出金时间段内 比如夜盘交易 则通过挂单来实现资金冻结
-                        {
-                            if (IsInNightTrading())
-                            {
+        //                        //调用broker接口执行出金操作
+        //                        TLBroker b = broker as TLBroker;
+        //                        //执行出金操作
+        //                        b.Withdraw((double)creditvalue, "");
+        //                    }
+        //                }
+        //                else //如果不在出金时间段内 比如夜盘交易 则通过挂单来实现资金冻结
+        //                {
+        //                    if (IsInNightTrading())
+        //                    {
                                 
-                                //冻结保证金为0
-                                if (account.MarginFrozen == 0)
-                                {
-                                    if (_activeSymbol != null)
-                                    {
-                                        decimal price = TLCtxHelper.ModuleDataRouter.GetTickSnapshot(_activeSymbol.Symbol).UpperLimit;
-                                        decimal margin = _activeSymbol.Margin * _activeSymbol.Multiple * price;
-                                        int size = (int)(account.Credit / margin);//获得优先资金可开手数
+        //                        //冻结保证金为0
+        //                        if (account.MarginFrozen == 0)
+        //                        {
+        //                            if (_activeSymbol != null)
+        //                            {
+        //                                decimal price = TLCtxHelper.ModuleDataRouter.GetTickSnapshot(_activeSymbol.Symbol).UpperLimit;
+        //                                decimal margin = _activeSymbol.Margin * _activeSymbol.Multiple * price;
+        //                                int size = (int)(account.Credit / margin);//获得优先资金可开手数
 
-                                        Order order = new OrderImpl(_activeSymbol.Symbol, size);
-                                        order.Account = account.ID;
-                                        order.Side = false;//卖出
-                                        order.OffsetFlag = QSEnumOffsetFlag.OPEN;
-                                        order.LimitPrice = price;
-                                        //logger.Debug(string.Format("credit:{0} margin:{1} size:{2} will place order", account.Credit, margin, size));
-                                        logger.Info(string.Format("Account:{0} is blocked with position closed and out withdraw time ,will frozen credit:{1} margin:{2} size:{3}", account.ID, account.Credit,margin,size));
-                                        //发送委托
-                                        this.SendOrder(order);
-                                    }
-                                    else
-                                    {
-                                        logger.Error("热门合约为空,请检查热门合约获取逻辑,尝试再次获得主力合约");
-                                        _activeSymbol = GetActiveSymbol();
-                                    }
-                                }
-                                else
-                                {
-                                    if (_activeSymbol == null)
-                                    {
-                                        logger.Error("尝试再次获得主力合约");
-                                        _activeSymbol = GetActiveSymbol();
-                                    }
-                                    if (_activeSymbol == null)
-                                    {
-                                        logger.Error("无法获得主力合约,请检查相关逻辑或设置");
-                                    }
-                                    decimal price = TLCtxHelper.ModuleDataRouter.GetTickSnapshot(_activeSymbol.Symbol).UpperLimit;
+        //                                Order order = new OrderImpl(_activeSymbol.Symbol, size);
+        //                                order.Account = account.ID;
+        //                                order.Side = false;//卖出
+        //                                order.OffsetFlag = QSEnumOffsetFlag.OPEN;
+        //                                order.LimitPrice = price;
+        //                                //logger.Debug(string.Format("credit:{0} margin:{1} size:{2} will place order", account.Credit, margin, size));
+        //                                logger.Info(string.Format("Account:{0} is blocked with position closed and out withdraw time ,will frozen credit:{1} margin:{2} size:{3}", account.ID, account.Credit,margin,size));
+        //                                //发送委托
+        //                                this.SendOrder(order);
+        //                            }
+        //                            else
+        //                            {
+        //                                logger.Error("热门合约为空,请检查热门合约获取逻辑,尝试再次获得主力合约");
+        //                                _activeSymbol = GetActiveSymbol();
+        //                            }
+        //                        }
+        //                        else
+        //                        {
+        //                            if (_activeSymbol == null)
+        //                            {
+        //                                logger.Error("尝试再次获得主力合约");
+        //                                _activeSymbol = GetActiveSymbol();
+        //                            }
+        //                            if (_activeSymbol == null)
+        //                            {
+        //                                logger.Error("无法获得主力合约,请检查相关逻辑或设置");
+        //                            }
+        //                            decimal price = TLCtxHelper.ModuleDataRouter.GetTickSnapshot(_activeSymbol.Symbol).UpperLimit;
                                         
 
-                                    //如果当前挂单不是对应的热门合约 则撤单【热门合约挂单所有手数为0】
-                                    foreach( var order in account.GetPendingOrders())
-                                    {
-                                        //如果是主力合约以涨停价卖出挂单
-                                        if (order.Symbol == _activeSymbol.Symbol && order.LimitPrice == price && order.OffsetFlag == QSEnumOffsetFlag.OPEN && order.Side== false)
-                                            continue;
+        //                            //如果当前挂单不是对应的热门合约 则撤单【热门合约挂单所有手数为0】
+        //                            foreach( var order in account.GetPendingOrders())
+        //                            {
+        //                                //如果是主力合约以涨停价卖出挂单
+        //                                if (order.Symbol == _activeSymbol.Symbol && order.LimitPrice == price && order.OffsetFlag == QSEnumOffsetFlag.OPEN && order.Side== false)
+        //                                    continue;
 
-                                        logger.Info("挂单非指定合约,撤单");
-                                        //撤掉所有委托
-                                        //account.CancelOrder(QSEnumOrderSource.RISKCENTRE,"撤掉非冻结委托");
-                                        account.CancelOrder(order, QSEnumOrderSource.RISKCENTRE, "撤掉非冻结委托");
-                                    }
-                                }
+        //                                logger.Info("挂单非指定合约,撤单");
+        //                                //撤掉所有委托
+        //                                //account.CancelOrder(QSEnumOrderSource.RISKCENTRE,"撤掉非冻结委托");
+        //                                account.CancelOrder(order, QSEnumOrderSource.RISKCENTRE, "撤掉非冻结委托");
+        //                            }
+        //                        }
 
-                            }
-                        }
-                    }//交易通道存在且处于活动状态
-                }
-            }
+        //                    }
+        //                }
+        //            }//交易通道存在且处于活动状态
+        //        }
+        //    }
             
-        }
+        //}
 
 
     }

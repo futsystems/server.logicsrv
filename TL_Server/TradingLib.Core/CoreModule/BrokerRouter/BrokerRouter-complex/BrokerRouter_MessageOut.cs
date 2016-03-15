@@ -33,8 +33,8 @@ namespace TradingLib.Core
         RingBuffer<Order> _ordercache = new RingBuffer<Order>(buffersize);
         RingBuffer<long> _cancelcache = new RingBuffer<long>(buffersize);
         RingBuffer<Trade> _fillcache = new RingBuffer<Trade>(buffersize);//成交缓存
-        RingBuffer<OrderErrorPack> _errorordernotifycache = new RingBuffer<OrderErrorPack>(buffersize);//委托消息缓存
-
+        RingBuffer<OrderErrorPack> _errorordernotifycache = new RingBuffer<OrderErrorPack>(buffersize);//委托错误缓存
+        RingBuffer<OrderActionErrorPack> _actionerrorcache = new RingBuffer<OrderActionErrorPack>(buffersize);//委托操作错误缓存
         Thread msgoutthread = null;
         bool msgoutgo = false;
         void msgoutprocess()
@@ -46,41 +46,32 @@ namespace TradingLib.Core
                     //转发委托
                     while (_ordercache.hasItems)
                     {
-                        TLCtxHelper.EventRouter.FireOrderEvent(_ordercache.Read());
-
-                        //if (GotOrderEvent != null)
-                        //    GotOrderEvent(_ordercache.Read());
+                        Order order = _ordercache.Read();
+                        TLCtxHelper.EventRouter.FireOrderEvent(order);
                     }
                     //转发成交
                     while (_fillcache.hasItems & !_ordercache.hasItems)
                     {
                         Trade fill = _fillcache.Read();
-                        //_tifengine.GotFill(fill);
-
                         TLCtxHelper.EventRouter.FireFillEvent(fill);
-
-                        //if (GotFillEvent != null)
-                        //    GotFillEvent(fill);
                     }
                     //转发取消
                     while (_cancelcache.hasItems & !_ordercache.hasItems & !_fillcache.hasItems)
                     {
                         long oid = _cancelcache.Read();
-                        //_tifengine.GotCancel(oid);
-                        //_ordHelper.GotCancel(oid);//发单辅助引擎得到委托
-
                         TLCtxHelper.EventRouter.FireCancelEvent(oid);
-                        //if (GotCancelEvent != null)
-                        //    GotCancelEvent(oid);
                     }
                     //转发委托错误
                     while (_errorordernotifycache.hasItems & !_cancelcache.hasItems & !_ordercache.hasItems & !_fillcache.hasItems)
                     {
                         OrderErrorPack error = _errorordernotifycache.Read();
-
                         TLCtxHelper.EventRouter.FireOrderError(error.Order, error.RspInfo);
-                        //if (GotOrderErrorEvent != null)
-                        //    GotOrderErrorEvent(error.Order, error.RspInfo);
+                    }
+                    //转发委托操作错误
+                    while (_actionerrorcache.hasItems & !_cancelcache.hasItems & !_ordercache.hasItems & !_fillcache.hasItems)
+                    {
+                        OrderActionErrorPack error = _actionerrorcache.Read();
+                        TLCtxHelper.EventRouter.FireOrderActionErrorEvent(error.OrderAction, error.RspInfo);
                     }
                     Thread.Sleep(100);
                 }
