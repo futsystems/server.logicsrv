@@ -28,6 +28,11 @@ namespace TraddingSrvCLI
             AppDomain.CurrentDomain.UnhandledException += new UnhandledExceptionEventHandler(CurrentDomain_UnhandledException);
             try
             {
+                DateTime now = DateTime.Now;
+                DateTime dt = TimeFrequency.NextRoundedTime(now, TimeSpan.FromMinutes(1));
+                logger.Info(string.Format("now:{0} next round:{1}", now, dt));
+
+
                 logger.Info("********* start core daemon *********");
                 System.OperatingSystem osInfo = System.Environment.OSVersion;
                 System.PlatformID platformID = osInfo.Platform;

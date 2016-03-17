@@ -31,7 +31,7 @@ namespace TradingLib.Core
             broker.GetSymbolTickEvent += new GetSymbolTickDel(Broker_GetSymbolTickEvent);
             //数据路由中Tick事件驱动交易通道中由Tick部分
             //DataFeedRouter.GotTickEvent += new TickDelegate(broker.GotTick);
-            this.GotTickEvent += new TickDelegate(broker.GotTick);
+            //this.GotTickEvent += new TickDelegate(broker.GotTick);
 
             //将清算中心绑定到交易通道
             broker.ClearCentre = new ClearCentreAdapterToBroker();

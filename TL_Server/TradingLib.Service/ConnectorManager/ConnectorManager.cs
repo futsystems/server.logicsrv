@@ -42,6 +42,7 @@ namespace TradingLib.ServiceManager
 
         ConfigDB _cfgdb;
         string _defaultSimBrokerToken = "SIMBROKER";
+        string _defaultSimBOBrokerToken = "SIMBROKER-BO";
         string _defaultDataFeedToken = "FASTTICK";
         bool _startDefaultConnector = true;
         public ConnectorManager()
@@ -60,6 +61,13 @@ namespace TradingLib.ServiceManager
                 _cfgdb.UpdateConfig("DefaultDataFeed", QSEnumCfgType.String, "FASTTICK", "默认行情通道配置名称");
             }
             _defaultDataFeedToken = _cfgdb["DefaultDataFeed"].AsString();
+
+            if (!_cfgdb.HaveConfig("DefaultSIMBOBroker"))
+            {
+                _cfgdb.UpdateConfig("DefaultSIMBOBroker", QSEnumCfgType.String, "SIMBROKER-BO", "默认二元期权成交配置名称");
+            }
+            _defaultSimBOBrokerToken = _cfgdb["DefaultSIMBOBroker"].AsString();
+
 
             if (!_cfgdb.HaveConfig("StartDefaultConnector"))
             {
@@ -102,7 +110,7 @@ namespace TradingLib.ServiceManager
             //根据设置 设定默认模拟成交接口
             _defaultsimbroker = FindBroker(_defaultSimBrokerToken);//_defaultSimBrokerToken 通过数据库设置
             _defaultdatafeed = FindDataFeed(_defaultDataFeedToken);//_defaultDataFeedToken通过数据库设置
-
+            _defaultsimbobroker = FindBroker(_defaultSimBOBrokerToken);//
         }
 
         /// <summary>

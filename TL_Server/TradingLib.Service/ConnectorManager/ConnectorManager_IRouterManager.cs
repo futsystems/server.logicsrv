@@ -16,6 +16,9 @@ namespace TradingLib.ServiceManager
         IDataFeed _defaultdatafeed = null;
         public IDataFeed DefaultDataFeed { get { return _defaultdatafeed; } }
 
+
+        IBroker _defaultsimbobroker = null;
+        public IBroker DefaultSimBOBroker { get { return _defaultsimbroker; } }
         /// <summary>
         /// 通过ConnectorID查找获得IBroker对象
         /// </summary>

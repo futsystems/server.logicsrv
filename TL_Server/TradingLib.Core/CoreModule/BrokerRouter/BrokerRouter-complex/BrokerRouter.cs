@@ -93,13 +93,13 @@ namespace TradingLib.Core
             this.Reset();
         }
 
-        event TickDelegate GotTickEvent;
-        public void GotTick(Tick k)
-        {
-            if (GotTickEvent != null)
-                GotTickEvent(k);
-            
-        }
+        //event TickDelegate GotTickEvent;
+        //public void GotTick(Tick k)
+        //{
+        //    if (GotTickEvent != null)
+        //        GotTickEvent(k);
+
+        //}
 
         /// <summary>
         /// Broker路由重置

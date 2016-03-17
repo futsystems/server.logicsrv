@@ -85,6 +85,14 @@ namespace TradingLib.BrokerXAPI
                 GotOrderEvent(o);
         }
 
+        public event BOOrderDelegate GotBOOrderEvent;
+        protected void NotifyBOOrder(BinaryOptionOrder o)
+        {
+            logger.Info("Notify BOOrder:" + o.ToString());
+            if (GotBOOrderEvent != null)
+                GotBOOrderEvent(o);          
+        }
+
         /// <summary>
         /// cancel acknowledgement, order is canceled
         /// </summary>
@@ -107,6 +115,14 @@ namespace TradingLib.BrokerXAPI
                 GotOrderErrorEvent(o, info);
         }
 
+        public event BOOrderErrorDelegate GotBOOrderErrorEvent;
+        protected void NotifyBOOrderError(BinaryOptionOrder o, RspInfo info)
+        {
+            logger.Info("Notify BOOrderError:" + o.ToString());
+            if (GotBOOrderErrorEvent != null)
+                GotBOOrderErrorEvent(o, info);
+        }
+
         /// <summary>
         /// 向外通知委托操作错误
         /// </summary>
@@ -118,7 +134,7 @@ namespace TradingLib.BrokerXAPI
                 GotOrderActionErrorEvent(acton, info);
         }
 
-
+        
         /// <summary>
         /// 获得当前Tick的市场快照,模拟成交时需要获得当前市场快照用于进行取价操作
         /// </summary>
@@ -208,7 +224,6 @@ namespace TradingLib.BrokerXAPI
             if (NewBrokerPositionCloseDetailEvent != null)
                 NewBrokerPositionCloseDetailEvent(detail);
         }
-        
 
 
         #endregion

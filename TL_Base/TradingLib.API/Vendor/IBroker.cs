@@ -24,7 +24,7 @@ namespace TradingLib.API
         /// 用于交易通道中需要有Tick进行驱动的逻辑,比如委托触发等
         /// </summary>
         /// <param name="k"></param>
-        void GotTick(Tick k);
+        //void GotTick(Tick k);
 
 
         #region 事件
