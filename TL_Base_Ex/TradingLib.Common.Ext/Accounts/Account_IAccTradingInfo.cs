@@ -14,6 +14,8 @@ namespace TradingLib.Common
         public bool AnyPosition { get { return this.GetAnyPosition(); } }
 
 
+
+
         /// <summary>
         /// 持仓维护器
         /// </summary>
@@ -40,6 +42,11 @@ namespace TradingLib.Common
         /// </summary>
         public OrderTracker TKOrder { get; set; }
 
+
+        /// <summary>
+        /// BO委托维护器
+        /// </summary>
+        public BOOrderTracker TKBOOrder { get; set; }
         /// <summary>
         /// 返回维护器所发送的委托数量
         /// </summary>

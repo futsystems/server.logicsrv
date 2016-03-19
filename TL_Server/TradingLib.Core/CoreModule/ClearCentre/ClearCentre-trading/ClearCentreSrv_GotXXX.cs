@@ -71,7 +71,7 @@ namespace TradingLib.Core
                     logger.Warn("symbol:" + o.Symbol + " not exist in basictracker, drop errororder");
                     return;
                 }
-                bool neworder = !totaltk.IsTracked(o.id);
+                bool neworder = !totaltk.IsTracked(o);
                 acctk.GotOrder(o);
 
                 if (_status == QSEnumClearCentreStatus.CCOPEN || TLCtxHelper.ModuleSettleCentre.SettleCentreStatus == QSEnumSettleCentreStatus.HISTSETTLE)
@@ -118,7 +118,7 @@ namespace TradingLib.Core
                 //帐户维护器获得委托 用于更新帐户委托数据与状态
                 acctk.GotOrder(o);
                 //通过整体数据维护器查看委托是否是新委托
-                bool neworder = !totaltk.IsTracked(o.id);
+                bool neworder = !totaltk.IsTracked(o);
                 //整体交易数据维护器和每个帐户交易数据维护器 维护的数据是统一对象，避免内存占用 当有新委托时 才调用整体交易数据维护器维护该委托
                 if (neworder)
                 {
@@ -143,6 +143,60 @@ namespace TradingLib.Core
             {
                 logger.Error("处理委托异常:" + ex.ToString());
             }
+        }
+
+
+        /// <summary>
+        /// 清算中心记录BO委托
+        /// </summary>
+        /// <param name="o"></param>
+        public void GotOrder(BinaryOptionOrder o)
+        {
+            try
+            { 
+                //检查交易帐户与合约
+                IAccount account = TLCtxHelper.ModuleAccountManager[o.Account];
+                if (account == null) return;
+                Symbol symbol = o.oSymbol;
+                if (symbol == null)
+                {
+                    logger.Warn("symbol:" + o.BinaryOption.Symbol + " not exist in basictracker, drop order");
+                    return;
+                }
+
+                //帐户维护器获得委托 用于更新帐户委托数据与状态
+                acctk.GotOrder(o);
+                //通过整体数据维护器查看委托是否是新委托
+                bool neworder = !totaltk.IsTracked(o);
+
+                //整体交易数据维护器和每个帐户交易数据维护器 维护的数据是统一对象，避免内存占用 当有新委托时 才调用整体交易数据维护器维护该委托
+                if (neworder)
+                {
+                    totaltk.NewOrder(o);
+                }
+
+                if (_status == QSEnumClearCentreStatus.CCOPEN || TLCtxHelper.ModuleSettleCentre.SettleCentreStatus == QSEnumSettleCentreStatus.HISTSETTLE)
+                {
+                    if (neworder)
+                    {
+                        logger.Info("Got Order:" + o.ToString());
+                        //TLCtxHelper.ModuleDataRepository.NewOrder(o);
+                    }
+                    else
+                    {
+                        logger.Info("Update Order:" + o.ToString());
+                        //TLCtxHelper.ModuleDataRepository.UpdateOrder(o);
+                    }
+                }
+
+
+
+            }
+            catch (Exception ex)
+            {
+                logger.Error("处理BO委托异常:" + ex.ToString());
+            }
+        
         }
 
         /// <summary>

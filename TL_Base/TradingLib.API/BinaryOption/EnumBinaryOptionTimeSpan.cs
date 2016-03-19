@@ -6,7 +6,7 @@ using System.ComponentModel;
 
 namespace TradingLib.API
 {
-    public enum EnumBOTimeSpan
+    public enum EnumBinaryOptionTimeSpan
     {
         [Description("1分钟")]
         MIN1,
@@ -16,5 +16,11 @@ namespace TradingLib.API
         MIN5,
         [Description("10分钟")]
         MIN10,
+        [Description("15分钟")]
+        MIN15,
+        [Description("30分钟")]
+        MIN30,
+        [Description("60分钟")]
+        MIN60,
     }
 }

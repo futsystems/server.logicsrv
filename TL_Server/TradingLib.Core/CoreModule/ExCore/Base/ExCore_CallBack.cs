@@ -31,10 +31,24 @@ namespace TradingLib.Core
         
         }
 
+
         protected virtual void NotifyOrder(Order o)
         { 
         
+        
         }
+
+        protected virtual void NotifyBOOrder(BinaryOptionOrder o)
+        { 
+        
+        }
+
+        protected virtual void NotifyBOOrderError(BinaryOptionOrder o, RspInfo e)
+        { 
+        
+        }
+
+
 
         protected virtual void NotifyFill(Trade f)
         { 

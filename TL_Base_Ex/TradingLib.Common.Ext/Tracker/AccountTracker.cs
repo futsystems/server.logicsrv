@@ -25,6 +25,8 @@ namespace TradingLib.Common
         //protected ConcurrentDictionary<string, ThreadSafeList<Trade>> TradeBook = new ConcurrentDictionary<string, ThreadSafeList<Trade>>();
         protected ConcurrentDictionary<string, TradeTracker> TradeBook = new ConcurrentDictionary<string, TradeTracker>();
 
+        protected ConcurrentDictionary<string, BOOrderTracker> BOOrderBook = new ConcurrentDictionary<string, BOOrderTracker>();
+
         #region 持仓创建事件和平仓明细事件
         void NewPositionCloseDetail(Trade close,PositionCloseDetail detail)
         {
@@ -87,6 +89,9 @@ namespace TradingLib.Common
             if (ttremove != null)
                 ttremove.Clear();
 
+            BOOrderTracker bootremove = null;
+            BOOrderBook.TryRemove(account.ID, out bootremove);//删除BO委托维护器
+
         }
         /// <summary>
         /// 为accouont生成交易记录内存数据结构
@@ -129,7 +134,11 @@ namespace TradingLib.Common
                 TradeBook.TryAdd(account.ID, tt);
             baseacc.TKTrade = tt;
 
-            
+
+            BOOrderTracker boot = new BOOrderTracker();
+            if (!BOOrderBook.ContainsKey(account.ID))
+                BOOrderBook.TryAdd(account.ID, boot);
+            baseacc.TKBOOrder = boot;
         }
 
 
@@ -141,6 +150,7 @@ namespace TradingLib.Common
             OrdBook.Clear();
             PosBook.Clear();
             TradeBook.Clear();
+            BOOrderBook.Clear();
         }
 
 
@@ -157,6 +167,7 @@ namespace TradingLib.Common
             OrdBook[account.ID].Clear();
             PosBook[account.ID].Clear();
             TradeBook[account.ID].Clear();
+            BOOrderBook[account.ID].Clear();
         }
         
         /// <summary>
@@ -216,6 +227,11 @@ namespace TradingLib.Common
             OrdBook[order.Account].GotOrder(order);//分账户记录
         }
 
+
+        internal void GotOrder(BinaryOptionOrder order)
+        {
+            BOOrderBook[order.Account].GotOrder(order);
+        }
         /// <summary>
         /// 记录成交
         /// </summary>

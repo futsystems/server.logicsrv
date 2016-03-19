@@ -68,7 +68,6 @@ namespace TradingLib.Core
 
 
 
-
         /// <summary>
         /// 发送内部产生的委托错误
         /// </summary>
@@ -80,6 +79,8 @@ namespace TradingLib.Core
             o.Comment = info.ErrorMessage;
             Broker_GotOrderError(o, info);
         }
+
+
 
 
         /// <summary>
@@ -104,6 +105,7 @@ namespace TradingLib.Core
                 logger.Error("Got Invalid OrderError");
             }
         }
+
 
         /// <summary>
         /// 获得委托操作错误

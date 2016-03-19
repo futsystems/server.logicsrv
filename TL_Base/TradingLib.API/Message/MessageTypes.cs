@@ -104,6 +104,7 @@ namespace TradingLib.API
         DOMREQUEST,//请求DOM市场Level2数据
         IMBALANCEREQUEST,//imbalance..查询这个是什么意思
 
+        BOSENDORDER=5300,//发送二元期权委托
 
         // responses or acks
         RESPONSE = 6000,
@@ -165,7 +166,8 @@ namespace TradingLib.API
         XTICKSNAPSHOTRESPONSE,//行情快照回报
         // END STANDARD MESSAGES
 
-
+        BOORDERNOTIFY = 6300,//二元委托回报
+        BOORDERERRORNOTIFY,//二元委托错误回报
 
         //////////////////////////////////////////////////////管理消息码///////////////////////////////////////////////////////////////////////////////////////////
         //MGR 服务端控制 行情服务,行情通道等

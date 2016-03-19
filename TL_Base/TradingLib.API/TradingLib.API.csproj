@@ -53,9 +53,12 @@
     <Compile Include="Account\IAccOperation.cs" />
     <Compile Include="Account\IAccTradingInfo.cs" />
     <Compile Include="Account\IFinanceTotal.cs" />
+    <Compile Include="BinaryOption\BinaryOption.cs" />
+    <Compile Include="BinaryOption\EnumBinaryOptionResultType.cs" />
+    <Compile Include="BinaryOption\EnumBinaryOptionSideType.cs" />
     <Compile Include="BinaryOption\EnumBinaryOptionType.cs" />
-    <Compile Include="BinaryOption\EnumBOOrderStatus.cs" />
-    <Compile Include="BinaryOption\EnumBOTimeSpan.cs" />
+    <Compile Include="BinaryOption\EnumBinaryOptionOrderStatus.cs" />
+    <Compile Include="BinaryOption\EnumBinaryOptionTimeSpan.cs" />
     <Compile Include="EnumEquityType.cs" />
     <Compile Include="Msic\EnumAlgorithm.cs" />
     <Compile Include="Msic\EnumMarginPrice.cs" />

@@ -56,6 +56,8 @@ namespace TradingLib.Core
             this.NotifyOrderError(order, info);
         }
 
+
+
         protected virtual void AmendOrderComment(ref Order o)
         {
             //更新委托状态
@@ -157,5 +159,23 @@ namespace TradingLib.Core
             //对外通知
             this.NotifyCancel(oid);
         }
+
+
+        #region 二元期权回报处理
+        void OnBOOrderErrorEvent(BinaryOptionOrder o, RspInfo info, bool needlog = true)
+        {
+
+            this.NotifyBOOrderError(o, info);
+        }
+
+        void OnBOOrderEvent(BinaryOptionOrder o)
+        {
+
+            this.NotifyBOOrder(o);
+        }
+        #endregion
+
+
+
     }
 }

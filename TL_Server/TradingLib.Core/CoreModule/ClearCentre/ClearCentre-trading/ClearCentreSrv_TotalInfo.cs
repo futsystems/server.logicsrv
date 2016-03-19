@@ -35,9 +35,9 @@ namespace TradingLib.Core
         /// </summary>
         /// <param name="oid"></param>
         /// <returns></returns>
-        public bool IsOrderTracked(long oid)
+        public bool IsOrderTracked(Order o)
         {
-            return totaltk.IsTracked(oid);
+            return totaltk.IsTracked(o);
         }
         /// <summary>
         /// 所有委托

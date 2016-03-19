@@ -34,9 +34,16 @@ namespace TradingLib.API
         IBroker DefaultSimBroker { get; }
 
         /// <summary>
+        /// 默认二元期权成交接口
+        /// </summary>
+        IBroker DefaultSimBOBroker { get; }
+
+        /// <summary>
         /// 默认行情通道
         /// </summary>
         IDataFeed DefaultDataFeed { get; }
+
+
 
         ///// <summary>
         ///// 获得所有成交路由

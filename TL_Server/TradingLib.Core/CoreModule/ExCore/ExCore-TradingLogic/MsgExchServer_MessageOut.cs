@@ -158,6 +158,36 @@ namespace TradingLib.Core
             _erractioncache.Write(new OrderActionErrorPack(a, e));
         }
 
+
+        /// <summary>
+        /// 向客户端发送委托更新回报
+        /// </summary>
+        /// <param name="o"></param>
+        protected override void NotifyBOOrder(BinaryOptionOrder o)
+        {
+            BOOrderNotify notify = ResponseTemplate<BOOrderNotify>.SrvSendNotifyResponse(o.Account);
+            notify.Order = o;
+
+            this.Send(notify);
+
+        }
+
+        /// <summary>
+        /// 向客户端发送委托错误回报
+        /// </summary>
+        /// <param name="o"></param>
+        /// <param name="e"></param>
+        protected override void NotifyBOOrderError(BinaryOptionOrder o, RspInfo e)
+        {
+            BOOrderErrorNotify notify = ResponseTemplate<BOOrderErrorNotify>.SrvSendNotifyResponse(o.Account);
+            notify.Order = o;
+            notify.RspInfo = e;
+
+            this.Send(notify);
+
+        }
+
+
         #region 消息发送总线 向管理端发送对应的消息
 
         /// <summary>

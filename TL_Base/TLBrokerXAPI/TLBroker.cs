@@ -298,17 +298,20 @@ namespace TradingLib.BrokerXAPI
         /// <param name="o"></param>
         public virtual void SendOrder(Order o)
         {
-            
+            throw new NotImplementedException();
         }
 
+        public virtual void SendOrder(BinaryOptionOrder o)
+        {
+            throw new NotImplementedException();
+        }
         /// <summary>
         /// 通过成交接口取消委托
         /// </summary>
         /// <param name="oid"></param>
         public virtual void CancelOrder(long oid)
         {
-            
-            
+            throw new NotImplementedException();
         }
 
         /// <summary>

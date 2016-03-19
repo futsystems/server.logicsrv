@@ -17,16 +17,21 @@ namespace Broker.SIM
         bool _working = false;
         const int buffersize = 1000;
         RingBuffer<BinaryOptionOrder> _ordercache = new RingBuffer<BinaryOptionOrder>(buffersize);
-        Queue<BinaryOptionOrder> aq = new Queue<BinaryOptionOrder>(buffersize);
-
         RingBuffer<BinaryOptionOrder> _ordernotifycache = new RingBuffer<BinaryOptionOrder>(buffersize);
 
 
         BOOrderBook orderbook = null;
+
         
+
+        ConfigDB _cfgdb;
         public BOSIMTrader()
         {
+            _cfgdb = new ConfigDB("BOSIMTrader");
+
             
+
+
             orderbook = new BOOrderBook();
             orderbook.OrderExitEvent += new Action<BinaryOptionOrder>(OnOrderExitEvent);
 
@@ -41,24 +46,35 @@ namespace Broker.SIM
 
         void OnSchedule()
         {
-            long dt = DateTime.Now.ToTLTime();
-            logger.Info("on schedule run:" + dt);
+            long dt = DateTime.Now.ToTLDateTime();
+            logger.Info("BOPTT Schedule:" + dt);
             orderbook.GotTime(dt);
             
         }
 
         void GotTick(Tick k)
         {
-            logger.Info("got tick:" + k.ToString());
+            //logger.Info("got tick:" + k.ToString());
             orderbook.GotTick(k);
         }
 
 
         void OnOrderExitEvent(BinaryOptionOrder obj)
         {
+            logger.Info("BOPTT Server Exit Order:" + obj.ToString());
             _ordernotifycache.Write(obj);
+            NewNotify();
         }
 
+
+        static ManualResetEvent _processwaiting = new ManualResetEvent(false);
+        static ManualResetEvent _notifywaiting = new ManualResetEvent(false);
+        public const int SLEEPDEFAULTMS = 10;
+        int _sleep = SLEEPDEFAULTMS;
+        /// <summary>
+        /// sleep time in milliseconds between checking read buffer
+        /// </summary>
+        public int SLEEP { get { return _sleep; } set { _sleep = value; } }
 
 
         public void Start()
@@ -72,7 +88,7 @@ namespace Broker.SIM
             logger.Info("Start BinaryOption Match Engine");
             msg = string.Empty;
             StartProcess();
-
+            StartProcOut();
             NotifyConnected();
             return true;
         }
@@ -117,54 +133,121 @@ namespace Broker.SIM
 
         void process()
         {
-            try
+            while (_working)
             {
-                while (_working)
+                try
                 {
+                    //关于环形缓冲使用,如果不等待信号或者一定时间会导致cpu一直尝试读取数据,导致每次获得的对象为空,即读写序号变化时 对象并没有放入对应的位置
                     while (_ordercache.hasItems)
                     {
-                        EntryOrder(_ordercache.Read());
+                        BinaryOptionOrder o = _ordercache.Read();
+                        if (o != null)
+                        {
+                            EntryOrder(o);
+                        }
                     }
 
-                    //对外通知回报
-                    while (_ordernotifycache.hasItems)
-                    {
-                        NotifyBOOrder(_ordernotifycache.Read());
-                    }
+                    // clear current flag signal
+                    _processwaiting.Reset();
+
+                    // wait for a new signal to continue reading
+                    _processwaiting.WaitOne(SLEEP);
 
                 }
-                Thread.Sleep(10);
+                catch (Exception ex)
+                {
+                    logger.Error("move order from ringbufeer to queue error:" + ex.ToString());
+                }
             }
-            catch (Exception ex)
-            {
-                logger.Error("move order from ringbufeer to queue error:" + ex.ToString());
-            }
+        
         }
 
 
+        private void NewProcess()
+        {
+            if ((processthread != null) && (processthread.ThreadState == System.Threading.ThreadState.WaitSleepJoin))
+            {
+                _processwaiting.Set();
+            }
+
+        }
+
         void EntryOrder(BinaryOptionOrder o)
         {
-            logger.Info("BOPTT Server Entry Order: " + o.ToString());
-            Tick k = TLCtxHelper.ModuleDataRouter.GetTickSnapshot(o.Symbol);
+            Tick k = TLCtxHelper.ModuleDataRouter.GetTickSnapshot(o.BinaryOption.Symbol);
             if(k == null)
             {
                 //回报错误
                 o.Status = EnumBOOrderStatus.Reject;
                 o.Comment = "品种行情不存在";
+
                 _ordernotifycache.Write(new BinaryOptionOrderImpl(o));
+                NewNotify();
             }
             else
             {
+                
                 BinaryOptionOrder tmp = new BinaryOptionOrderImpl(o);
                 //开权 并加入委托维护器
                 BinaryOptionOrderImpl.EntryOrder(tmp, k);
                 orderbook.GotOrder(tmp);
+                logger.Info("BOPTT Server Entry Order:" + tmp);
+
+                _ordernotifycache.Write(new BinaryOptionOrderImpl(tmp));
+                NewNotify();
             }
 
         }
         #endregion
 
+        #region 信息对外发送线程
+        void StartProcOut()
+        {
+            if (_read) return;//原来这里没有启动标识,则系统在长期运行后 次日重新启动模拟成交引擎,会导致有2个线程在处理procout
+            _read = true;
+            _readthread = new Thread(new ThreadStart(procout));
+            _readthread.IsBackground = true;
+            _readthread.Name = "SimBroker MessageOut";
+            _readthread.Start();
+            ThreadTracker.Register(_readthread);
+        }
+        bool _read = false;
+        Thread _readthread = null;
+        void procout()
+        {
+            while (_read)
+            {
+                try
+                {
+                    while (_ordernotifycache.hasItems)
+                    {
+                        BinaryOptionOrder o = _ordernotifycache.Read();
+                        NotifyBOOrder(o);
+                    }
 
+                    // clear current flag signal
+                    _notifywaiting.Reset();
+
+                    // wait for a new signal to continue reading
+                    _notifywaiting.WaitOne(SLEEP);
+                }
+                catch (Exception ex)
+                {
+                    logger.Error("SIMBroker回传交易信息错误:" + ex.ToString());
+                }
+            }
+
+        }
+
+        private void NewNotify()
+        {
+            if ((_readthread != null) && (_readthread.ThreadState == System.Threading.ThreadState.WaitSleepJoin))
+            {
+                _notifywaiting.Set();
+            }
+
+        }
+        #endregion
 
 
         #region 交易接口
@@ -173,24 +256,30 @@ namespace Broker.SIM
             throw new NotImplementedException();
         }
 
-        
 
+        int i = 0;
         public void SendOrder(BinaryOptionOrder o)
         {
-            logger.Error("BOPTT Server Got Order: " + o.ToString());
-            //提交委托时 设定localorderid remoteorderid
+            logger.Info("BOPTT Server Got Order: " + o.ToString());
 
+            BinaryOptionOrder tmp = null;
+            
+            //提交委托时 设定localorderid remoteorderid
             o.Status = EnumBOOrderStatus.Submited;
 
-            BinaryOptionOrder tmp = new BinaryOptionOrderImpl(o);
+            tmp = new BinaryOptionOrderImpl(o);
             _ordercache.Write(tmp);
+            NewProcess();
         }
 
         public void CancelOrder(long id)
         {
+   
             throw new NotImplementedException();
         }
 
+
+        
         #endregion
 
 

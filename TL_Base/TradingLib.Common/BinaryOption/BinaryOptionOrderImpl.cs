@@ -7,30 +7,26 @@ using TradingLib.API;
 
 namespace TradingLib.Common
 {
-    public class BinaryOptionOrderImpl:BinaryOptionOrder
+    public class BinaryOptionOrderImpl:BinaryOptionImpl,BinaryOptionOrder
     {
 
         public BinaryOptionOrderImpl()
         {
+
             this.ID = 0;
             this.Account = string.Empty;
             this.Date = Util.ToTLDate();
             this.Time = Util.ToTLTime();
-            this.Symbol = string.Empty;
             this.oSymbol = null;
-            this.LocalSymbol = string.Empty;
-
-
-            this.Side = true;
+            
             this.Amount = 0;
-            this.OptionType = EnumBinaryOptionType.UpDown;
-            this.SuccessRatio = 0.7M;
-            this.FailRatio = 1;
-            this.Result = false;
-            this.Status = EnumBOOrderStatus.Unknown;
-            this.TimeSpanType = EnumBOTimeSpan.MIN1;
-            this.NextRoundedTime = 0;
+            this.Side = EnumBinaryOptionSideType.Call;
+            this.BinaryOption = null;
 
+
+            this.Status = EnumBOOrderStatus.Unknown;
+            this.Comment = string.Empty;
+            this.Result = EnumBinaryOptionResultType.HOLD;
 
             this.EntryTime = 0;
             this.EntryPrice = 0;
@@ -40,8 +36,12 @@ namespace TradingLib.Common
             this.LastPrice = 0;
             this.Highest = decimal.MinValue;
             this.Lowest = decimal.MaxValue;
-        }
 
+            this.SettleDay = 0;
+            this.Settled = false;
+
+
+        }
 
         public BinaryOptionOrderImpl(BinaryOptionOrder o)
         {
@@ -49,38 +49,39 @@ namespace TradingLib.Common
             this.Account = o.Account;
             this.Date = o.Date;
             this.Time = o.Time;
-            this.Symbol = o.Symbol;
-            this.LocalSymbol = o.LocalSymbol;
             this.oSymbol = o.oSymbol;
 
-
             this.Amount = o.Amount;
-            this.SuccessRatio = o.SuccessRatio;
-            this.FailRatio = o.FailRatio;
-
-            this.OptionType = o.OptionType;
-            this.TimeSpanType = o.TimeSpanType;
-            this.Status = o.Status;
-
             this.Side = o.Side;
+            this.BinaryOption = o.BinaryOption;
             
             this.ExitTime = o.ExitTime;
             this.EntryTime = o.EntryTime;
-            this.NextRoundedTime = o.NextRoundedTime;
-
             this.ExitPrice = o.ExitPrice;
             this.EntryPrice = o.EntryPrice;
-            
 
             this.LastPrice = o.LastPrice;
             this.Highest = o.Highest;
             this.Lowest = o.Lowest;
 
+            this.Status = o.Status;
+            this.Comment = o.Comment;
             this.Result = o.Result;
 
-
+            this.SettleDay = o.SettleDay;
+            this.Settled = o.Settled;
 
         }
+
+        /// <summary>
+        /// 结算日
+        /// </summary>
+        public int SettleDay { get; set; }
+
+        /// <summary>
+        /// 结算标识
+        /// </summary>
+        public bool Settled { get; set; }
 
         /// <summary>
         /// 委托编号
@@ -92,7 +93,6 @@ namespace TradingLib.Common
         /// </summary>
         public string Account { get; set; }
 
-
         /// <summary>
         /// 日期
         /// </summary>
@@ -103,59 +103,33 @@ namespace TradingLib.Common
         /// </summary>
         public int Time { get; set; }
 
-
-        /// <summary>
-        /// 合约
-        /// </summary>
-        public string Symbol { get; set; }
-
-        /// <summary>
-        /// 本地合约编号
-        /// </summary>
-        public string LocalSymbol { get; set; }
-
         /// <summary>
         /// 合约对象
         /// </summary>
         public Symbol oSymbol { get; set; }
 
 
-
-        #region 金额以及回报率数据
         /// <summary>
         /// 下单金额
         /// </summary>
         public decimal Amount { get; set; }
 
+        /// <summary>
+        /// 下单方向
+        /// </summary>
+        public EnumBinaryOptionSideType Side { get; set; }
 
         /// <summary>
-        /// 成功返回系数
+        /// 二元期权
         /// </summary>
-        public decimal SuccessRatio { get; set; }
-
-        /// <summary>
-        /// 失败扣费系数
-        /// </summary>
-        public decimal FailRatio { get; set; }
+        public BinaryOption BinaryOption { get; set; }
 
 
-        #endregion
-
-        /// <summary>
-        /// 二元期权类别
-        /// </summary>
-        public EnumBinaryOptionType OptionType { get; set; }
-
-        /// <summary>
-        /// 时间间隔
-        /// </summary>
-        public EnumBOTimeSpan TimeSpanType { get; set; }     
 
         /// <summary>
         /// 委托状态
         /// </summary>
         public EnumBOOrderStatus Status { get; set; }
-
 
         string _comment = string.Empty;
         /// <summary>
@@ -163,36 +137,25 @@ namespace TradingLib.Common
         /// </summary>
         public string Comment { get { return _comment; } set { _comment = value; } }
 
+
         /// <summary>
-        /// 成交方向
+        /// 平权胜负
         /// </summary>
-        public bool Side { get; set; }
+        public EnumBinaryOptionResultType Result { get; set; }
 
 
-        #region 时间信息
+
+        #region 委托过程信息
         /// <summary>
         /// 开权时间
         /// </summary>
         public long EntryTime { get; set; }
-
-
-        /// <summary>
-        /// 下一轮时间
-        /// </summary>
-        public long NextRoundedTime { get; set; }
-
-        
 
         /// <summary>
         /// 平权时间
         /// </summary>
         public long ExitTime { get; set; }
 
-        #endregion
-
-
-
-        #region 价格信息
         /// <summary>
         /// 开权价格
         /// </summary>
@@ -220,11 +183,12 @@ namespace TradingLib.Common
 
         #endregion
 
-        /// <summary>
-        /// 平权胜负
-        /// </summary>
-        public bool Result { get; set; }
 
+
+
+
+
+        #region 响应行情与时间 事件
         /// <summary>
         /// 响应行情数据
         /// 注意 行情事件统一调整成系统本地时间
@@ -239,10 +203,8 @@ namespace TradingLib.Common
                 if (k.Symbol != (this.oSymbol != null ? this.oSymbol.TickSymbol : this.Symbol))//非本委托合约的行情直接返回
                     return;
 
-                long ktime = k.Date * 1000000 + k.Time;//130101
-
-                //行情事件大于我们设定的下次平权时间 则执行平权操作
-                if (ktime >= this.NextRoundedTime)
+                //当前大于我们设定的下次平权时间 则执行平权操作
+                if (Util.ToTLDateTime() > this.ExpireTime)
                 { 
                     //执行平权
                     BinaryOptionOrderImpl.ExitOrder(this as BinaryOptionOrder);
@@ -279,13 +241,18 @@ namespace TradingLib.Common
         {
             if (this.Status == EnumBOOrderStatus.Entry)
             {
-                if (time >= this.NextRoundedTime)
+                if (time >= this.ExpireTime)
                 {
                     //执行平权
                     BinaryOptionOrderImpl.ExitOrder(this as BinaryOptionOrder);
                 }
             }
         }
+
+        #endregion
+
+
+
         /// <summary>
         /// 浮动盈亏 根据不同的权类状态判定当前浮动盈亏,需要实时更新当前最新价格
         /// </summary>
@@ -297,22 +264,23 @@ namespace TradingLib.Common
                 {
                     case EnumBOOrderStatus.Entry:
                         {
-                            switch (this.OptionType)
+                            switch (this.BinaryOption.OptionType)
                             {
                                 //涨跌 价格高于开仓价格为赢 否则为数
-                                case EnumBinaryOptionType.UpDown:
-                                    if (this.Side)
+                                case EnumBinaryOptionType.CallPut:
+                                    if (this.Side == EnumBinaryOptionSideType.Call)
                                     {
-                                        if (this.LastPrice > this.EntryPrice) return this.Amount * this.SuccessRatio;
-                                        return -1 * this.Amount * this.FailRatio;
+                                        if (this.LastPrice > this.EntryPrice) return this.Amount * this.BinaryOption.Rate;
+                                        return -1 * this.Amount;
                                     }
-                                    else
+                                    else if(this.Side == EnumBinaryOptionSideType.Put)
                                     {
-                                        if (this.LastPrice < this.EntryPrice) return this.Amount * this.SuccessRatio;
-                                        return -1 * this.Amount * this.FailRatio;
+                                        if (this.LastPrice < this.EntryPrice) return this.Amount * this.BinaryOption.Rate;
+                                        return -1 * this.Amount ;
                                     }
-                                case EnumBinaryOptionType.RangeIn:
-                                case EnumBinaryOptionType.RangeOut:
+                                    return 0;
+                                case EnumBinaryOptionType.AboveDown:
+                                case EnumBinaryOptionType.Range:
                                     return 0;
                                 default:
                                     return 0;
@@ -333,67 +301,59 @@ namespace TradingLib.Common
             get
             {
                 if (_realizedpl != null) return (decimal)_realizedpl;
-                switch (this.Status)
+                switch(this.Result)
                 {
-                        //平权后 根据输赢计算 平权盈亏
-                    case EnumBOOrderStatus.Exit:
-                        {
-                            if (this.Result)
-                            {
-                                return this.Amount * this.SuccessRatio;
-                            }
-                            else
-                            {
-                                return this.Amount * this.FailRatio;
-                            }
-                        }
-                        //其余状态 平权盈亏为0
+                    case EnumBinaryOptionResultType.InTheMoney:
+                        return this.Amount * this.Rate;
+                    case EnumBinaryOptionResultType.OutOfTheMoney:
+                        return -1*this.Amount;
                     default:
                         return 0;
-                }
-                
+                }                
             }
             set
             {
-                if (this.Status == EnumBOOrderStatus.Exit)
+                //if (this.Status == EnumBOOrderStatus.Exit)
                 {
                     _realizedpl = value;
                 }
             }
         }
 
-
-        /// <summary>
-        /// 按开权时间计算某个时间间隔后的确权时间
-        /// 计算下一个Round时间
-        /// </summary>
-        /// <param name="dt"></param>
-        /// <param name="type"></param>
-        /// <returns></returns>
-        public static long CalcNextRoundedTime(long entrytime, EnumBOTimeSpan type)
-        { 
-            TimeSpan ts = TimeSpan.FromMinutes(1);
-            switch(type)
+        string GetProcessString()
+        {
+            switch (this.OptionType)
             {
-                case EnumBOTimeSpan.MIN1:
-                    ts = TimeSpan.FromMinutes(1);
-                    break;
-                case EnumBOTimeSpan.MIN2:
-                    ts = TimeSpan.FromMinutes(2);
-                    break;
-                case EnumBOTimeSpan.MIN5:
-                    ts = TimeSpan.FromMinutes(5);
-                    break;
-                case EnumBOTimeSpan.MIN10:
-                    ts = TimeSpan.FromMinutes(10);
-                    break;
+                case EnumBinaryOptionType.CallPut:
+                    {
+                        //买涨 3021@201603180000 
+                        switch (this.Status)
+                        {
+                            case EnumBOOrderStatus.Entry:
+                                return string.Format("{0} {1}@{2}",this.Side, this.EntryPrice, GetTime(this.EntryTime),GetTime(this.BinaryOption.ExpireTime));
+                            case EnumBOOrderStatus.Exit:
+                                return string.Format("{0} {1}@{2} {3}@{4} Profit:{8}",this.Side, this.EntryPrice, GetTime(this.EntryTime), this.ExitPrice, GetTime(this.ExitTime),this.RealizedPL);
+                            default:
+                                return "";
+                        }
+                    }
                 default:
-                    break;
+                    return "Not Support";
             }
-
-            DateTime dt =   TimeFrequency.NextRoundedTime(Util.ToDateTime(entrytime), ts);
-            return dt.ToTLDateTime();
         }
+
+        int GetTime(long time)
+        {
+            return Util.ToDateTime(time).ToTLTime();
+        }
+
+        public override string ToString()
+        {
+            //ID:635876700233953163[8500002] 1000/BO:CallPut CN1603@MIN2 Exp:20160319120300
+            return string.Format("ID:{0}[{1}] {2}/{3}  Status:[{4}] Process:{5} Result:{6}", this.ID, this.Account, this.Amount, this.BinaryOption, this.Status, GetProcessString(),this.Result);
+        }
+
+        
 
         /// <summary>
         /// 开权操作
@@ -403,11 +363,12 @@ namespace TradingLib.Common
         public static void EntryOrder(BinaryOptionOrder order, Tick k)
         {
             //记录开权时间
-            order.EntryTime = DateTime.Now.ToTLTime();
+            order.EntryTime = DateTime.Now.ToTLDateTime();
             //计算平权时间
-            order.NextRoundedTime = BinaryOptionOrderImpl.CalcNextRoundedTime(order.EntryTime, order.TimeSpanType);
+            //order.ExpireTime = BinaryOptionOrderImpl.CalcExpireTime(order.EntryTime, order.TimeSpanType);
             //记录开权价格
             order.EntryPrice = k.Trade;
+            order.LastPrice = k.Trade;
             order.Status = EnumBOOrderStatus.Entry;
         }
 
@@ -418,35 +379,35 @@ namespace TradingLib.Common
         /// <param name="order"></param>
         public static void ExitOrder(BinaryOptionOrder order)
         {
-            order.ExitTime = DateTime.Now.ToTLTime();
+            order.ExitTime = DateTime.Now.ToTLDateTime();
             order.ExitPrice = order.LastPrice;
             order.Status = EnumBOOrderStatus.Exit; 
 
             //判定最终输赢状态
-            switch (order.OptionType)
+            switch (order.BinaryOption.OptionType)
             {
-                case EnumBinaryOptionType.UpDown:
+                case EnumBinaryOptionType.CallPut:
                     {
-                        if (order.Side)
+                        if (order.Side == EnumBinaryOptionSideType.Call)
                         {
                             if (order.ExitPrice > order.EntryPrice)
                             {
-                                order.Result = true;
+                                order.Result = EnumBinaryOptionResultType.InTheMoney;
                             }
                             else
                             {
-                                order.Result = false;
+                                order.Result = EnumBinaryOptionResultType.OutOfTheMoney;
                             }
                         }
-                        else
+                        else if(order.Side == EnumBinaryOptionSideType.Put)
                         {
                             if (order.ExitPrice < order.EntryPrice)
                             {
-                                order.Result = true;
+                                order.Result = EnumBinaryOptionResultType.InTheMoney;
                             }
                             else
                             {
-                                order.Result = false;
+                                order.Result = EnumBinaryOptionResultType.OutOfTheMoney;
                             }
                         }
                     }
@@ -455,5 +416,97 @@ namespace TradingLib.Common
                     break;
             }
         }
+
+        /// <summary>
+        /// 复制委托状态
+        /// </summary>
+        /// <param name="from"></param>
+        /// <param name="to"></param>
+        public static void Copy(BinaryOptionOrder from, BinaryOptionOrder to)
+        {
+
+            to.EntryTime = from.EntryTime;
+            to.EntryPrice = from.EntryPrice;
+            to.ExitTime = from.ExitTime;
+            to.ExitPrice = from.ExitPrice;
+
+            to.LastPrice = from.LastPrice;
+            to.Highest = from.Highest;
+            to.Lowest = from.Lowest;
+
+            to.Comment = from.Comment;
+            to.Result = from.Result;
+            to.Status = from.Status;
+        }
+
+        public static string Serialize(BinaryOptionOrder o)
+        {
+            char d = ',';
+            StringBuilder sb = new StringBuilder();
+            sb.Append(o.ID);
+            sb.Append(d);
+            sb.Append(o.Account);
+            sb.Append(d);
+            sb.Append(o.Date);
+            sb.Append(d);
+            sb.Append(o.Time);
+            sb.Append(d);
+            sb.Append("");
+            sb.Append(d);
+            sb.Append(o.Amount);
+            sb.Append(d);
+            sb.Append(o.Side);
+            sb.Append(d);
+            sb.Append(o.Status);
+            sb.Append(d);
+            sb.Append(o.EntryTime);
+            sb.Append(d);
+            sb.Append(o.ExitTime);//14
+            sb.Append(d);
+            sb.Append(o.EntryPrice);
+            sb.Append(d);
+            sb.Append(o.ExitPrice);
+            sb.Append(d);
+            sb.Append(o.LastPrice);
+            sb.Append(d);
+            sb.Append(o.Highest);
+            sb.Append(d);
+            sb.Append(o.Lowest);
+            sb.Append(d);
+            sb.Append(o.Status);
+            sb.Append(d);
+            sb.Append(o.Result);
+            sb.Append(d);
+            sb.Append(o.Comment);//22
+            return sb.ToString();
+        }
+
+        public  static BinaryOptionOrder Deserialize(string message)
+        {
+
+            BinaryOptionOrder o = new BinaryOptionOrderImpl();
+            string[] rec = message.Split(',');
+            o.ID = long.Parse(rec[0]);
+            o.Account = rec[1];
+            o.Date = int.Parse(rec[2]);
+            o.Time = int.Parse(rec[3]);
+            o.Amount = decimal.Parse(rec[6]);
+           
+            o.Status = (EnumBOOrderStatus)Enum.Parse(typeof(EnumBOOrderStatus), rec[11]);
+            o.EntryTime = long.Parse(rec[12]);
+            o.ExitTime = long.Parse(rec[14]);
+
+            o.EntryPrice = decimal.Parse(rec[15]);
+            o.ExitPrice = decimal.Parse(rec[16]);
+            o.LastPrice = decimal.Parse(rec[17]);
+            o.Highest = decimal.Parse(rec[18]);
+            o.Lowest = decimal.Parse(rec[19]);
+
+            o.Side = rec[20].ParseEnum<EnumBinaryOptionSideType>();
+            o.Result = (EnumBinaryOptionResultType)Enum.Parse(typeof(EnumBinaryOptionResultType), rec[21]);
+            o.Comment = rec[22];
+            return o;
+        }
+            
     }
 }

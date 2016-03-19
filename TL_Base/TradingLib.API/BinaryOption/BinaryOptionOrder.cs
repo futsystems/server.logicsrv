@@ -10,6 +10,18 @@ namespace TradingLib.API
     /// </summary>
     public interface BinaryOptionOrder
     {
+
+        /// <summary>
+        /// 结算日
+        /// </summary>
+        int SettleDay { get; set; }
+
+        /// <summary>
+        /// 结算标识
+        /// </summary>
+        bool Settled { get; set; }
+
+
         /// <summary>
         /// 委托编号
         /// </summary>
@@ -31,25 +43,9 @@ namespace TradingLib.API
         int Time { get; set; }
 
         /// <summary>
-        /// 合约字头
-        /// </summary>
-        string Symbol { get; set; }
-
-        /// <summary>
-        /// 本地合约编号 用于多交易所时 合约字段冲突时 本地合约唯一标识
-        /// </summary>
-        string LocalSymbol { get; set; }
-
-        /// <summary>
         /// 合约对象
         /// </summary>
         Symbol oSymbol { get; set; }
-
-        /// <summary>
-        /// 方向
-        /// </summary>
-        bool Side { get; set; }
-
 
         /// <summary>
         /// 金额
@@ -58,14 +54,15 @@ namespace TradingLib.API
 
 
         /// <summary>
-        /// 二元期权类别
+        /// 下单方向
         /// </summary>
-        EnumBinaryOptionType OptionType { get; set; }
+        EnumBinaryOptionSideType Side { get; set; }
 
         /// <summary>
-        /// 时间间隔
+        /// 委托下单二元期权
         /// </summary>
-        EnumBOTimeSpan TimeSpanType { get; set; }
+        BinaryOption BinaryOption { get; set; }
+        
 
         /// <summary>
         /// 委托状态
@@ -78,29 +75,15 @@ namespace TradingLib.API
         string Comment { get; set; }
 
         /// <summary>
-        /// 成功返回系数
-        /// </summary>
-        decimal SuccessRatio { get; set; }
-
-        /// <summary>
-        /// 失败扣费系数
-        /// </summary>
-        decimal FailRatio { get; set; }
-
-        /// <summary>
         /// 平权胜负
         /// </summary>
-        bool Result { get; set; }
+        EnumBinaryOptionResultType Result { get; set; }
+
 
         /// <summary>
         /// 开权时间
         /// </summary>
         long EntryTime { get; set; }
-
-        /// <summary>
-        /// 下一轮时间
-        /// </summary>
-        long NextRoundedTime { get; set; }
 
         /// <summary>
         /// 开权价格
@@ -133,7 +116,7 @@ namespace TradingLib.API
         /// <summary>
         /// 最新价格
         /// </summary>
-        decimal LastPrice { get; }
+        decimal LastPrice { get; set; }
 
 
         /// <summary>

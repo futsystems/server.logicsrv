@@ -49,7 +49,7 @@ namespace TradingLib.Common
                 {
                     return info;
                 }
-                return defaulterror;
+                return new XMLRspInfo("UNKNOWN-"+code.ToString(), code, _token + "-未知错误:" + code.ToString());
             }
         }
 
@@ -67,7 +67,7 @@ namespace TradingLib.Common
                 {
                     return info;
                 }
-                return defaulterror;
+                return new XMLRspInfo(key, 999, string.Format("{0}-{1}", _token, key));
             }
         }
 

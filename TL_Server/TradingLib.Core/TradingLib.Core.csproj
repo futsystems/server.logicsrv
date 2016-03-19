@@ -82,6 +82,7 @@
     <Compile Include="CoreModule\AccountManager\AccountManager.cs" />
     <Compile Include="CoreModule\AccountManager\AccountManager_edit.cs" />
     <Compile Include="CoreModule\AccountManager\AccountManager_mgr.cs" />
+    <Compile Include="CoreModule\BinaryOption\BinaryOptionQuoteEngine.cs" />
     <Compile Include="CoreModule\BrokerRouter\BrokerRouter-passthrough\BrokerRouter\BrokerRouter.cs" />
     <Compile Include="CoreModule\BrokerRouter\BrokerRouter-passthrough\BrokerRouter\BrokerRouter_.cs" />
     <Compile Include="CoreModule\BrokerRouter\BrokerRouter-passthrough\BrokerRouter\BrokerRouter_ExInterface.cs" />
@@ -103,6 +104,8 @@
     <Compile Include="CoreModule\ClearCentre\ClearCentre-trading\ClearCentreSrv_AccountCashOperation.cs" />
     <Compile Include="CoreModule\DataRepository\DataRepository.cs" />
     <Compile Include="CoreModule\ExCore\ExCore-NoTrading\ExCoreNoTrading.cs" />
+    <Compile Include="CoreModule\ExCore\ExCore-TradingLogic\BinaryOption\MsgExchServer_BOOrderRequestHandler.cs" />
+    <Compile Include="CoreModule\ExCore\ExCore-TradingLogic\BinaryOption\MsgExchServer_BinaryOption.cs" />
     <Compile Include="CoreModule\ExCore\ExCore-TradingLogic\MsgExchServer_Notify.cs" />
     <Compile Include="CoreModule\ExCore\ExCore-TradingLogic\XAPI\MsgExchServer_PacketHandler_TradingInfo.cs" />
     <Compile Include="CoreModule\ExCore\ExCore-TradingLogic\XAPI\MsgExchServer_PacketHandler_BasicInfo.cs" />
@@ -198,6 +201,7 @@
     <Compile Include="CoreModule\RiskCentre\RiskCentre_onGotxxxx.cs" />
     <Compile Include="CoreModule\RiskCentre\RiskCentre_RiskRule.cs" />
     <Compile Include="CoreModule\RiskCentre\RiskCentre_Trading.cs" />
+    <Compile Include="CoreModule\RiskCentre\RiskCentre_CheckBOOrder.cs" />
     <Compile Include="CoreModule\SettleCentre\SettleCentre.cs" />
     <Compile Include="CoreModule\SettleCentre\SettleCentre_.cs" />
     <Compile Include="CoreModule\SettleCentre\SettleCentre_CTE.cs" />

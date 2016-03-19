@@ -18,7 +18,7 @@ namespace TradingLib.ServiceManager
 
 
         IBroker _defaultsimbobroker = null;
-        public IBroker DefaultSimBOBroker { get { return _defaultsimbroker; } }
+        public IBroker DefaultSimBOBroker { get { return _defaultsimbobroker; } }
         /// <summary>
         /// 通过ConnectorID查找获得IBroker对象
         /// </summary>

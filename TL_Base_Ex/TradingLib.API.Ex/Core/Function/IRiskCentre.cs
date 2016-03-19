@@ -93,6 +93,16 @@ namespace TradingLib.API
 
 
         /// <summary>
+        /// 二元期权委托检查
+        /// </summary>
+        /// <param name="o"></param>
+        /// <param name="account"></param>
+        /// <param name="needlog"></param>
+        /// <param name="errortitle"></param>
+        /// <param name="inter"></param>
+        /// <returns></returns>
+        bool CheckOrderStep(ref BinaryOptionOrder o, IAccount account, out bool needlog, out string errortitle, bool inter = false);
+        /// <summary>
         /// 警告某个交易帐户
         /// </summary>
         /// <param name="account"></param>

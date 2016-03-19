@@ -316,6 +316,9 @@ namespace TradingLib.Common
                         return RequestTemplate<MDRegisterSymbolsRequest>.SrvRecvRequest(frontid, clientid, content);
                     #endregion
 
+                    case MessageTypes.BOSENDORDER:
+                        return RequestTemplate<BOOrderInsertRequest>.SrvRecvRequest(frontid, clientid, content);
+
                     default:
                         throw new PacketTypeNotAvabile(type, content, frontid, clientid);
                 }

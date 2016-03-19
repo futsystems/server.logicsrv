@@ -38,6 +38,16 @@ namespace TradingLib.Core
         bool _haltEnable = false;
         bool _cffexLimit = false;//中金所限制
 
+
+        int _m1left = 30;//M1下单剩余时间
+        int _m2left = 60;//M2下单剩余时间
+        int _m5left = 150;//M5下单剩余时间
+        int _m10left = 300;//M10下单剩余时间
+        int _m15left = 450;//M15下单剩余时间
+        int _m30left = 900;//M30下单剩余时间
+        int _m60left = 1800;//M60下单剩余时间
+
+
         HaltedStateTracker _haltstatetracker;
         public RiskCentre():base(CoreName)
         {
@@ -99,6 +109,50 @@ namespace TradingLib.Core
                 _cfgdb.UpdateConfig("CFFEXLimit", QSEnumCfgType.Bool, false, "中金所限制");
             }
             _cffexLimit = _cfgdb["CFFEXLimit"].AsBool();
+
+
+
+            if (!_cfgdb.HaveConfig("BO-M1Left"))
+            {
+                _cfgdb.UpdateConfig("BO-M1Left", QSEnumCfgType.Int, 30, "M1下单剩余时间");
+            }
+            _m1left = _cfgdb["BO-M1Left"].AsInt();
+
+            if (!_cfgdb.HaveConfig("BO-M2Left"))
+            {
+                _cfgdb.UpdateConfig("BO-M2Left", QSEnumCfgType.Int, 60, "M2下单剩余时间");
+            }
+            _m2left = _cfgdb["BO-M2Left"].AsInt();
+
+            if (!_cfgdb.HaveConfig("BO-M5Left"))
+            {
+                _cfgdb.UpdateConfig("BO-M5Left", QSEnumCfgType.Int, 150, "M5下单剩余时间");
+            }
+            _m5left = _cfgdb["BO-M5Left"].AsInt();
+
+            if (!_cfgdb.HaveConfig("BO-M10Left"))
+            {
+                _cfgdb.UpdateConfig("BO-M10Left", QSEnumCfgType.Int, 300, "M10下单剩余时间");
+            }
+            _m10left = _cfgdb["BO-M10Left"].AsInt();
+
+            if (!_cfgdb.HaveConfig("BO-M15Left"))
+            {
+                _cfgdb.UpdateConfig("BO-M15Left", QSEnumCfgType.Int, 450, "M15下单剩余时间");
+            }
+            _m15left = _cfgdb["BO-M15Left"].AsInt();
+
+            if (!_cfgdb.HaveConfig("BO-M30Left"))
+            {
+                _cfgdb.UpdateConfig("BO-M30Left", QSEnumCfgType.Int, 900, "M30下单剩余时间");
+            }
+            _m30left = _cfgdb["BO-M30Left"].AsInt();
+
+            if (!_cfgdb.HaveConfig("BO-M60Left"))
+            {
+                _cfgdb.UpdateConfig("BO-M60Left", QSEnumCfgType.Int, 1800, "M60下单剩余时间");
+            }
+            _m60left = _cfgdb["BO-M60Left"].AsInt();
 
 
 

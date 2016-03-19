@@ -45,6 +45,26 @@ namespace TradingLib.Core
             OnOrderEvent(o);
         }
 
+        /// <summary>
+        /// 交易前段检查 回报错误
+        /// </summary>
+        /// <param name="o"></param>
+        /// <param name="info"></param>
+        /// <param name="needlog"></param>
+        protected void ReplyBOOrderError(BinaryOptionOrder o, RspInfo info, bool needlog = true)
+        {
+            OnBOOrderErrorEvent(o, info, needlog);
+        }
+
+        /// <summary>
+        /// 交易前段检查 回报委托
+        /// </summary>
+        /// <param name="o"></param>
+        protected void ReplyOrder(BinaryOptionOrder o)
+        {
+            OnBOOrderEvent(o);
+        }
+
 
         #region 交易操作入口
 

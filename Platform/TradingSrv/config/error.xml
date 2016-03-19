@@ -59,6 +59,13 @@
 <error id="MGR_NOT_EXIST" value="402" prompt="柜员不存在"/>
 <error id="PLATFORM_EXPIRED" value="410" prompt="柜台授权过期"/>
 
+<error id="BO_ERROR_AMOUNT_ZERO" value="1000" prompt="下单金额为零"/>
+<error id="BO_ERROR_MARKETDATA_NULL" value="1001" prompt="品种行情异常"/>
+<error id="BO_ERROR_SYMBOL_NOT_MARKETTIME" value="1002" prompt="品种停止交易"/>
+<error id="BO_ERROR_SYMBOL_NOT_EXIST" value="1003" prompt="品种不存在"/>
+<error id="BO_ERROR_SYMBOL_EXPIRE" value="1004" prompt="品种已过期"/>
+<error id="BO_ERROR_SYMBOL_NOTALLOWED" value="1005" prompt="品种不允许交易"/>
+
 
 
 </errors>

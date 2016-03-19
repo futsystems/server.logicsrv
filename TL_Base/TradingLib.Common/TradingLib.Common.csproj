@@ -64,8 +64,13 @@
     <Compile Include="Account\AccountCreation.cs" />
     <Compile Include="Account\AccountProfie.cs" />
     <Compile Include="Account\SessionInfo.cs" />
+    <Compile Include="BinaryOption\BinaryOptionImpl.cs" />
     <Compile Include="BinaryOption\BinaryOptionOrderImpl.cs" />
+    <Compile Include="BinaryOption\BinaryOptions.cs" />
+    <Compile Include="BinaryOption\BOUpDownOrder.cs" />
     <Compile Include="BinaryOption\BOUtils.cs" />
+    <Compile Include="BinaryOption\Utils\BinaryOptionUtisl.cs" />
+    <Compile Include="BinaryOption\Util_TimeSpan.cs" />
     <Compile Include="Exception\BaseException.cs" />
     <Compile Include="Exception\DataRepositoryException.cs" />
     <Compile Include="Exception\TradingLibError.cs" />
@@ -79,6 +84,7 @@
     <Compile Include="Holiday\Calendar.cs" />
     <Compile Include="Holiday\HolidayCalculator.cs" />
     <Compile Include="Manager\UIAccess.cs" />
+    <Compile Include="Message\BinaryOption\Order.cs" />
     <Compile Include="Message\Manager\MGRMarketData.cs" />
     <Compile Include="Message\Service.cs" />
     <Compile Include="Message\UpdateLocation.cs" />
@@ -103,6 +109,7 @@
     <Compile Include="Other\TLVersion.cs" />
     <Compile Include="Protocol\CommissionTemplateItem.cs" />
     <Compile Include="Protocol\LoginInfo.cs" />
+    <Compile Include="Tracker\BOOrderTracker.cs" />
     <Compile Include="Tracker\TradeTracker.cs" />
     <Compile Include="Trading\Comparers.cs" />
     <Compile Include="Trading\Config\CommissionTemplate.cs" />
@@ -142,10 +149,11 @@
     <Compile Include="Utils\LocationInfo.cs" />
     <Compile Include="Utils\QList.cs" />
     <Compile Include="Utils\Util_Decimal.cs" />
+    <Compile Include="Utils\Util_String.cs" />
     <Compile Include="Utils\Version.cs" />
     <Compile Include="Tracker\HighLowTracker.cs" />
     <Compile Include="Trading\Utils\SecurityUtils.cs" />
-    <Compile Include="Utils\Util_string.cs" />
+    <Compile Include="Utils\Util_string0.cs" />
     <Compile Include="Utils\WinConsole.cs" />
     <Compile Include="Utils\XMLRspInfo\XMLRspInfoTracker.cs" />
     <Compile Include="Utils\XMLRspInfo\XMLRspInfo.cs" />
