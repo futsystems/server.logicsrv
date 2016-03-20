@@ -23,7 +23,7 @@ namespace TradingLib.Common
             this.ExpireTime = BinaryOptionImpl.CalcExpireTime(now, type);
 
             this.Rate = rate;
-            this.ContractID = "{0}-{1}-{2}-{3}-{4}".Put(this.Symbol, this.OptionType, this.TimeSpanType, this.BornTime,this.ExpireTime);
+            this.ContractID = "{0}-{1}-{2}-{3}".Put(this.Symbol, this.OptionType, this.TimeSpanType,this.ExpireTime);
         }
     }
 
@@ -43,7 +43,7 @@ namespace TradingLib.Common
             this.ExpireTime = BinaryOptionImpl.CalcExpireTime(now, type);
 
             this.Rate = rate;
-            this.ContractID = "{0}-{1}-{2}-{3}-{4}".Put(this.Symbol, this.OptionType, this.TimeSpanType, this.BornTime, this.ExpireTime);
+            this.ContractID = "{0}-{1}-{2}-{3}".Put(this.Symbol, this.OptionType, this.TimeSpanType, this.ExpireTime);
         }
     }
 

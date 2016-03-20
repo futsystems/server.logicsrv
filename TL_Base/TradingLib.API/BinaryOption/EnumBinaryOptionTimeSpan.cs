@@ -9,18 +9,18 @@ namespace TradingLib.API
     public enum EnumBinaryOptionTimeSpan
     {
         [Description("1分钟")]
-        MIN1,
+        MIN1=1,
         [Description("2分钟")]
-        MIN2,
+        MIN2=2,
         [Description("5分钟")]
-        MIN5,
+        MIN5=5,
         [Description("10分钟")]
-        MIN10,
+        MIN10=10,
         [Description("15分钟")]
-        MIN15,
+        MIN15=15,
         [Description("30分钟")]
-        MIN30,
+        MIN30=30,
         [Description("60分钟")]
-        MIN60,
+        MIN60=60,
     }
 }

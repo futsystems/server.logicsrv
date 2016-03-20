@@ -51,6 +51,7 @@ namespace TradingLib.Core
         bool simpromptenable = false;
         string simprompt = string.Empty;
 
+        BinaryOptionQuoteEngine boEngine = null;
         public MsgExchServer()
             : base(MsgExchServer.CoreName)
         {
@@ -187,6 +188,9 @@ namespace TradingLib.Core
 
                 TLCtxHelper.EventAccount.AccountCashOperationEvent += new Action<string, QSEnumCashOperation, decimal>(EventAccount_AccountCashOperationEvent);
                 TLCtxHelper.EventAccount.AccountTradingNoticeEvent += new Action<string, string>(EventAccount_AccountTradingNoticeEvent);
+
+                boEngine = new BinaryOptionQuoteEngine(); 
+            
             }
             catch (Exception ex)
             {
