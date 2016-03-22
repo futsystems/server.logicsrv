@@ -60,6 +60,7 @@
     <Compile Include="BinaryOption\EnumBinaryOptionOrderStatus.cs" />
     <Compile Include="BinaryOption\EnumBinaryOptionTimeSpan.cs" />
     <Compile Include="EnumEquityType.cs" />
+    <Compile Include="Message\MessageCodecType.cs" />
     <Compile Include="Msic\EnumAlgorithm.cs" />
     <Compile Include="Msic\EnumMarginPrice.cs" />
     <Compile Include="Msic\EnumTransType.cs" />

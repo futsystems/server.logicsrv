@@ -30,7 +30,7 @@ namespace DataClient
 
         void handler_BarsRspEvent(List<BarImpl> arg1, RspInfo arg2, int arg3, bool arg4)
         {
-            debug("bar cnt:" + arg1.Count());
+            debug("bar cnt:" + arg1.Count() + " islast:" + arg4.ToString() + " requestid:" + arg3.ToString());
             //foreach (var bar in arg1)
             {
                 //debug("bar:" + bar.ToString());

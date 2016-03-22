@@ -139,7 +139,7 @@ namespace TradingLib.MDClient
 
         }
 
-        const int BUFFERSIZE = 1024;
+        const int BUFFERSIZE = 65535;
         byte[] buffer;
         int bufferoffset = 0;
 

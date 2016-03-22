@@ -9,20 +9,6 @@ using System.Runtime.Serialization;
 namespace TradingLib.Common
 {
     /// <summary>
-    /// 消息体编码类型
-    /// </summary>
-    public enum MessageCodec
-    {
-        /// <summary>
-        /// 字符串编码
-        /// </summary>
-        Codec_String = 0,
-        /// <summary>
-        /// 二进制消息编码
-        /// </summary>
-        Codec_Byte = 1,
-    }
-    /// <summary>
     /// 消息
     /// 固定头格式的消息
     /// |--4 Length--|--4 Type--|--content--|
@@ -46,12 +32,14 @@ namespace TradingLib.Common
         }
         public Message(MessageTypes type, string content,byte[] data, int len)
         {
-            Content = content;
             Type = type;
-            Tag = string.Empty;
-            ByteLength = len;
+            Content = content;
             Data = data;
+            ByteLength = len;
+            CodecType = EnumMessageCodeType.BINARY;
+            Tag = string.Empty;
         }
+
         //public Message(MessageTypes type, string body)
         //{
         //    Content = body;
@@ -72,14 +60,16 @@ namespace TradingLib.Common
         //{
         //    return "{" + Type.ToString() + ":" + Content + "}";
         //}
+
         public string Content;
         public byte[] Data;
-
         public MessageTypes Type;
         public int ByteLength;
+        public EnumMessageCodeType CodecType;
         public bool isValid { get { return Type != MessageTypes.UNKNOWN_MESSAGE; } }
-
         public const int SIZE = 1024;
+
+
         public static bool sendmessage(Message m, ref byte[] data)
         {
             return sendmessage(m.Type, m.Content, ref data);
@@ -228,6 +218,7 @@ namespace TradingLib.Common
                 // ensure we have enough data for message body
                 if (startidx + msglen > data.Length)
                     return false;
+
                 if (type == MessageTypes.BIN_BARRESPONSE)
                 {
                     msg = string.Empty;

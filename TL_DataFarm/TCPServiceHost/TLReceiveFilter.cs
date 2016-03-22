@@ -58,7 +58,7 @@ namespace TCPServiceHost
             byte[] data = null;
             if(length>0)
             {
-                if (type != MessageTypes.BARRESPONSEBIN)
+                if (type != MessageTypes.BIN_BARRESPONSE)
                 {
                     content = System.Text.Encoding.UTF8.GetString(bodyBuffer, offset, length);
                 }

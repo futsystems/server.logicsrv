@@ -189,6 +189,8 @@ namespace TradingLib.Common
         }
 
         #region 读写Bar不能修改 否则会造成数据格式不兼容
+
+        public static int SIZE { get { return 88; } }
         /// <summary>
         /// 将Bar数据写入
         /// </summary>

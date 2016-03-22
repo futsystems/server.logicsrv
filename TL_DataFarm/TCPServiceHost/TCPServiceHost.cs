@@ -35,8 +35,8 @@ namespace TCPServiceHost
 
             SuperSocket.SocketBase.Config.ServerConfig cfg = new SuperSocket.SocketBase.Config.ServerConfig();
             cfg.Port = _port;
-            cfg.SendBufferSize = 4096;
-            cfg.ReceiveBufferSize = 4096;
+            cfg.SendBufferSize = 65535;
+            cfg.ReceiveBufferSize = 65535;
             cfg.Ip = "0.0.0.0";
             cfg.ClearIdleSession = true;
             cfg.IdleSessionTimeOut = 60;

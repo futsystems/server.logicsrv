@@ -75,6 +75,8 @@ namespace TradingLib.DataFarm.Common
             conn.Send(response);
         }
 
+        //为什么超过一定数量的Bar一起发送 客户端就无法收到数据 socket缓存?
+        const int BARSENDSIZE = 90;
         /// <summary>
         /// 查询Bar数据
         /// </summary>
@@ -126,39 +128,48 @@ namespace TradingLib.DataFarm.Common
                             {
                                 //MemoryStream ms = new MemoryStream();
                                 //BinaryWriter b = new BinaryWriter(ms);
-                                //byte[] sizebyte = BitConverter.GetBytes(8+bars.Length*88);
+                                //byte[] sizebyte = BitConverter.GetBytes(8 + 1 + bars.Length * 88);
                                 //byte[] typebyte = BitConverter.GetBytes((int)MessageTypes.BARRESPONSE);
 
                                 //b.Write(sizebyte);
                                 //b.Write(typebyte);
-
-                                //for(int i=0;i<bars.Length;i++)
+                                //b.Write(true);
+                                //for (int i = 0; i < bars.Length; i++)
                                 //{
                                 //    BarImpl.Write(b, bars[i]);
-
                                 //    //RspQryBarResponseBin response = RspQryBarResponseBin.CreateResponse(request);
                                 //    //response.Bar = bars[i];
                                 //    //conn.Send(response);
-                                    
                                 //}
+
                                 //logger.Info("Size:" + ms.Position);
+                                //break;
+
                                 int j = 0;
                                 RspQryBarResponseBin response = RspQryBarResponseBin.CreateResponse(request);
+                                response.IsLast = false;
                                 for (int i = 0; i < bars.Length; i++)
                                 {
-                                        response.Add(bars[i]);
-                                        j++;
-                                        if (j == 50)
+                                    response.Add(bars[i]);
+                                    j++;
+                                    if (j == BARSENDSIZE)
+                                    {
+                                        //一定数目的Bar之后 发送数据 同时判断是否是最后一条
+                                        response.IsLast = (i == bars.Length-1);
+                                        conn.Send(response);
+                                        //不是最后一条数据则生成新的Response
+                                        if (!response.IsLast)
                                         {
-                                            conn.Send(response);
                                             response = RspQryBarResponseBin.CreateResponse(request);
-                                            j = 0;
+                                            response.IsLast = false;
                                         }
+                                        j = 0;
+                                    }
                                 }
-                                //RspQryBarResponseBin response = RspQryBarResponseBin.CreateResponse(request);
-                                //response.Bars = bars;
-                                if (j < 50)
+                                //如果不为最后一条 则标记为最后一条并发送
+                                if (!response.IsLast)
                                 {
+                                    response.IsLast = true;
                                     conn.Send(response);
                                 }
                                 break;

@@ -138,84 +138,96 @@ namespace TradingLib.Common
         }
     }
 
-    public class RspQryBarResponseBin:IPacket
+    public class RspQryBarResponseBin:RspResponsePacket
     {
         public QSEnumPacketType PacketType { get; protected set; }
 
         /// <summary>
         /// 请求数据包前置ID
         /// </summary>
-        public string FrontID { get; protected set; }
+        //public string FrontID { get; protected set; }
 
         /// <summary>
         /// 请求数据包客户端Client
         /// </summary>
-        public string ClientID { get; protected set; }
+        //public string ClientID { get; protected set; }
 
         /// <summary>
         /// 逻辑数据包RequestID
         /// </summary>
-        public int RequestID { get; protected set; }
+        //public int RequestID { get; protected set; }
 
 
         /// <summary>
         /// Packet对应的底层传输的二进制数据 用于提供给底层传输传进行传输
         /// </summary>
-        public byte[] Data { get { return this.SerializeBin(); } }
+        public override  byte[] Data { get { return this.SerializeBin(); } }
 
         /// <summary>
         /// 默认消息类型为未知类型
         /// </summary>
-        protected MessageTypes _type = MessageTypes.UNKNOWN_MESSAGE;
+        //protected MessageTypes _type = MessageTypes.UNKNOWN_MESSAGE;
 
         /// <summary>
         /// 消息类型
         /// </summary>
-        public MessageTypes Type { get { return _type; } }
+        //public MessageTypes Type { get { return _type; } }
 
         /// <summary>
         /// 消息内容
         /// 消息内容需要序列化对应的逻辑数据包
         /// </summary>
-        public string Content { get { return "Bin Bar Response"; } }
+        public override string Content { get { return "Bin Bar Response"; } }
 
 
         /// <summary>
         /// 二进制数据反序列化
         /// </summary>
         /// <param name="data"></param>
-        public void DeserializeBin(byte[] data)
+        public override void DeserializeBin(byte[] data)
         {
             MemoryStream ms = new MemoryStream(data);
             BinaryReader reader = new BinaryReader(ms);
+            this.RequestID = reader.ReadInt32();
+            this.IsLast = reader.ReadBoolean();
+
             List<BarImpl> barlsit = new List<BarImpl>();
 
-            for (int i = 0; i < data.Length / 88; i++)
+            for (int i = 0; i < (data.Length-1-4) / 88; i++)
             {
                 BarImpl bar = BarImpl.Read(reader);
                 this.Add(bar);
             }
         }
 
+        
+        
         /// <summary>
         /// 序列化成二进制
         /// </summary>
         /// <returns></returns>
-        public byte[] SerializeBin()
+        public override byte[] SerializeBin()
         {
+            //MemoryStream会根据写入的数据自动扩充底层数组大小
             MemoryStream ms = new MemoryStream();
             BinaryWriter b = new BinaryWriter(ms);
-            byte[] sizebyte = BitConverter.GetBytes(8 + this.Bars.Count * 88);
+            byte[] sizebyte = BitConverter.GetBytes(8 + 4 + 1 + this.Bars.Count * BarImpl.SIZE);
             byte[] typebyte = BitConverter.GetBytes((int)MessageTypes.BIN_BARRESPONSE);
 
             b.Write(sizebyte);
             b.Write(typebyte);
+            b.Write(this.RequestID);
+            b.Write(this.IsLast);
 
             for (int i = 0; i < this.Bars.Count; i++)
             {
                 BarImpl.Write(b, this.Bars[i]);
             }
-            return ms.GetBuffer();
+            byte[] buffer = new byte[ms.Length];
+
+            Array.Copy(ms.GetBuffer(), 0, buffer, 0, ms.Length);
+            //ms.Read(buffer, 0, buffer.Length);
+            return buffer;
         }
 
 
@@ -223,18 +235,19 @@ namespace TradingLib.Common
         /// 序列化成字符串 由子类提供序列化函数
         /// </summary>
         /// <returns></returns>
-        public virtual string Serialize()
+        public override string Serialize()
         {
             throw new NotImplementedException();
         }
 
+        
 
         /// <summary>
         /// 反序列化成对象
         /// </summary>
         /// <param name="reqstr"></param>
         /// <returns></returns>
-        public virtual void Deserialize(string reqstr)
+        public override  void Deserialize(string reqstr)
         {
             throw new NotImplementedException();
         }
@@ -261,7 +274,6 @@ namespace TradingLib.Common
             response.RequestID = request.RequestID;
             response.FrontID = request.FrontID;
             response.ClientID = request.ClientID;
-
             response.PacketType = QSEnumPacketType.RSPRESPONSE;
 
             return response;

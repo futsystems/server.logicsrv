@@ -348,7 +348,7 @@ namespace TradingLib.Common
         /// <summary>
         /// Packet对应的底层传输的二进制数据 用于提供给底层传输传进行传输
         /// </summary>
-        public byte[] Data { get { return Message.sendmessage(Type, Content); } }
+        public virtual byte[] Data { get { return Message.sendmessage(Type, Content); } }
 
         /// <summary>
         /// 默认消息类型为未知类型
@@ -364,14 +364,14 @@ namespace TradingLib.Common
         /// 消息内容
         /// 消息内容需要序列化对应的逻辑数据包
         /// </summary>
-        public string Content { get { return this.Serialize(); } }
+        public virtual string Content { get { return this.Serialize(); } }
 
 
         /// <summary>
         /// 二进制数据反序列化
         /// </summary>
         /// <param name="data"></param>
-        public void DeserializeBin(byte[] data)
+        public virtual void DeserializeBin(byte[] data)
         {
             throw new NotImplementedException();
         }
@@ -380,7 +380,7 @@ namespace TradingLib.Common
         /// 序列化成二进制
         /// </summary>
         /// <returns></returns>
-        public byte[] SerializeBin()
+        public virtual byte[] SerializeBin()
         {
             throw new NotImplementedException();
         }

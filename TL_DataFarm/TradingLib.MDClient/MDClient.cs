@@ -162,7 +162,7 @@ namespace TradingLib.MDClient
                         RspQryBarResponseBin response = obj as RspQryBarResponseBin;
                         if (_handler != null)
                         {
-                            _handler.OnRspQryBarBin(response.Bars, null, 0, true);
+                            _handler.OnRspQryBarBin(response.Bars, null,response.RequestID, response.IsLast);
                         }
                         return;
                     }
