@@ -106,11 +106,14 @@ namespace TradingLib.DataFarm.Common
                 //如果数据已缓存则直接查询
                 if (store.IsCached(request.Symbol, request.IntervalType, request.Interval))
                 {
-                    BarImpl[] bars = store.QryBar(request.Symbol, request.IntervalType, request.Interval, request.Start, request.End, (int)request.MaxCount, request.FromEnd).ToArray();
-
-                    logger.Info("got bar cnt:" + bars.Count());
                     Profiler pf = new Profiler();
-                    pf.EnterSection("send packet");
+                    pf.EnterSection("QRY  BAR");
+                    BarImpl[] bars = store.QryBar(request.Symbol, request.IntervalType, request.Interval, request.Start, request.End, (int)request.MaxCount, request.FromEnd).ToArray();
+                    pf.LeaveSection();
+
+                    //logger.Info("got bar cnt:" + bars.Count());
+                    
+                    pf.EnterSection("SEND BAR");
 
                     switch(request.BarResponseType)
                     {
@@ -179,8 +182,8 @@ namespace TradingLib.DataFarm.Common
                     }
                     
                     pf.LeaveSection();
-                    logger.Info(pf.GetStatsString());
-                    logger.Info("send bar finished");
+                    logger.Info(string.Format("----BarRequest Statistics QTY:{0}---- \n{1}", bars.Length, pf.GetStatsString()));
+                    //logger.Info("send bar finished");
                 }
                 else
                 {
