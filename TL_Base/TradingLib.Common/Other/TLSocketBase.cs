@@ -16,7 +16,7 @@ namespace TradingLib.Common
         /// <summary>
         /// Socket消息事件
         /// </summary>
-        public event Action<MessageTypes, string> MessageEvent;
+        public event Action<Message> MessageEvent;
 
         /// <summary>
         /// 处于Socket收到的消息
@@ -27,7 +27,7 @@ namespace TradingLib.Common
             
             if (MessageEvent != null)
             {
-                MessageEvent(message.Type, message.Content);
+                MessageEvent(message);
             }
         }
 

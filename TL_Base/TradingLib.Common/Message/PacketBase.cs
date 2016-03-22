@@ -366,6 +366,26 @@ namespace TradingLib.Common
         /// </summary>
         public string Content { get { return this.Serialize(); } }
 
+
+        /// <summary>
+        /// 二进制数据反序列化
+        /// </summary>
+        /// <param name="data"></param>
+        public void DeserializeBin(byte[] data)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// 序列化成二进制
+        /// </summary>
+        /// <returns></returns>
+        public byte[] SerializeBin()
+        {
+            throw new NotImplementedException();
+        }
+
+
         /// <summary>
         /// 消息逻辑包是否有效 做一个消息的初步检验
         /// </summary>

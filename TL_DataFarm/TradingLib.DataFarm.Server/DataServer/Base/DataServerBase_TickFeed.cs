@@ -42,28 +42,15 @@ namespace TradingLib.DataFarm.Common
         bool _tickFeedLoad = false;
 
         
-        /// <summary>
-        /// 加载行情服务
-        /// </summary>
-        void LoadTickFeeds()
-        {
-            
-            if (_tickFeedLoad) return;
-            string filter = this.ConfigFile["TickFeedFilter"].AsString();
-            //如果TickFeed为* 加载所有 否则指定对应的类型
-            foreach (var feed in LoadPlugins<ITickFeed>(_TickFeedFolder, filter))
-            {
-                _tickFeeds.Add(feed);
-            }
-            _tickFeedLoad = true;
-        }
+        
 
         protected void StartTickFeeds()
         {
-            logger.Info("Start TickFeed");
+            logger.Info("Start TickFeeds");
             //启动异步行情处理组件
             if (asyncTick == null)
             {
+                logger.Info("Start async tick process");
                 asyncTick = new AsyncResponse("Tick");
                 asyncTick.GotTick +=new TickDelegate(asyncTick_GotTick);
             }
@@ -78,6 +65,24 @@ namespace TradingLib.DataFarm.Common
                 StartTickFeed(feed);
             }
         }
+
+        /// <summary>
+        /// 加载行情服务
+        /// </summary>
+        void LoadTickFeeds()
+        {
+
+            if (_tickFeedLoad) return;
+            logger.Info("Load TickFeeds plugin");
+            string filter = this.ConfigFile["TickFeedFilter"].AsString();
+            //如果TickFeed为* 加载所有 否则指定对应的类型
+            foreach (var feed in LoadPlugins<ITickFeed>(_TickFeedFolder, filter))
+            {
+                _tickFeeds.Add(feed);
+            }
+            _tickFeedLoad = true;
+        }
+
 
         void StartTickFeed(ITickFeed tickfeed)
         {
@@ -103,11 +108,10 @@ namespace TradingLib.DataFarm.Common
         /// </summary>
         void TickFeed_OnTickEvent(ITickFeed tickfeed, Tick k)
         {
-            
+            //logger.Info("0000");
             //行情过滤
             if (k == null) return;
             if (!k.IsValid()) return;
-            //logger.Debug("datafeed got tick");
             asyncTick.newTick(k);
 
         }
@@ -149,7 +153,7 @@ namespace TradingLib.DataFarm.Common
             {
                 foreach (var conn in target.Values)
                 {
-                    //logger.Info("send tick:" + k.Symbol);
+                    logger.Info("send tick:" + k.Symbol);
                     conn.SendTick(k);
                 }
             }

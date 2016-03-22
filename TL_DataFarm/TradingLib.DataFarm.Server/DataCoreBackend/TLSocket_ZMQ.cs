@@ -30,7 +30,7 @@ namespace TradingLib.DataFarm.Common
         string _sessionId = string.Empty;
         public string SessionID { get { return _sessionId; } }
 
-        ZmqSocket _dealer = null;
+        ZSocket _dealer = null;
         string _id = string.Empty;
         Thread _thread = null;
 
@@ -103,7 +103,21 @@ namespace TradingLib.DataFarm.Common
                 throw new InvalidOperationException("dealer socket is null");
             lock (_dealer)
             {
-                _dealer.Send(msg);
+                using (ZMessage zmsg = new ZMessage())
+                {
+                    ZError error;
+                    zmsg.Add(new ZFrame(msg));
+
+                    if (!_dealer.Send(zmsg, out error))
+                    {
+                        if (error == ZError.ETERM)
+                        {
+                            logger.Error("got ZError.ETERM,return directly");
+                            return;	// Interrupted
+                        }
+                        throw new ZException(error);
+                    }
+                }
             }
         }
         
@@ -116,9 +130,9 @@ namespace TradingLib.DataFarm.Common
         /// <returns></returns>
         public override  RspQryServiceResponse QryService(QSEnumAPIType apiType,string version)
         {
-            using (ZmqContext ctx = ZmqContext.Create())
+            using (ZContext ctx = new ZContext())
             {
-                using (ZmqSocket socket= ctx.CreateSocket(SocketType.REQ))
+                using (ZSocket socket = new ZSocket(ctx,ZSocketType.REQ))
                 {
                     socket.Identity = Encoding.UTF8.GetBytes(System.Guid.NewGuid().ToString());
                     socket.Linger = new TimeSpan(0, 0, 0);
@@ -126,19 +140,51 @@ namespace TradingLib.DataFarm.Common
                     QryServiceRequest request = RequestTemplate<QryServiceRequest>.CliSendRequest(0);
                     request.APIType = apiType;
                     request.APIVersion = version;
-                    socket.Send(request.Data, socketTimeOut);
-                    
-                    byte[] data=new byte[1024];
-                    socket.Receive(data,socketTimeOut);//3秒内没有获得服务端回报则超时退出
-                    Message message = Message.gotmessage(data);
 
-                    RspQryServiceResponse response = null;
-                    if (message.isValid && message.Type == MessageTypes.SERVICERESPONSE)
+                    ZError error;
+                    ZMessage data;
+
+                    if (!socket.Send(new ZFrame(request.Data), out error))
                     {
-                        response = ResponseTemplate<RspQryServiceResponse>.CliRecvResponse(message.Content);
+                        if (error == ZError.ETERM)
+                        {
+                            logger.Error("got ZError.ETERM,return directly");
+                            return null;	// Interrupted
+                        }
+                        throw new ZException(error);
+                    }
+
+                    //socket.Send(request.Data, socketTimeOut);
+                    
+                    //byte[] data=new byte[1024];
+                    //socket.Receive(data,socketTimeOut);//3秒内没有获得服务端回报则超时退出
+
+
+                    
+
+                    if (null == (data = socket.ReceiveMessage(out error)))
+                    {
+                        if (error == ZError.ETERM)
+                        {
+                            logger.Error("Work ZmqSocket TERM");
+                            return null;	// Interrupted
+                        }
+                        throw new ZException(error);
+                    }
+                    else
+                    {
+                        Message message = Message.gotmessage(data.Last().Read());
+
+                        RspQryServiceResponse response = null;
+                        if (message.isValid && message.Type == MessageTypes.SERVICERESPONSE)
+                        {
+                            response = ResponseTemplate<RspQryServiceResponse>.CliRecvResponse(message);
+
+                        }
+                        return response;
 
                     }
-                    return response;
+                    
                     
                 }
 
@@ -149,9 +195,9 @@ namespace TradingLib.DataFarm.Common
         bool _processgo = false;
         private void MessageProcess()
         {
-            using (ZmqContext ctx = ZmqContext.Create())
+            using (ZContext ctx = new ZContext())
             {
-                using (_dealer = ctx.CreateSocket(SocketType.DEALER))
+                using (_dealer = new ZSocket(ctx,ZSocketType.DEALER))
                 {
                     _id = System.Guid.NewGuid().ToString();
                     _dealer.Identity = Encoding.UTF8.GetBytes(_id);
@@ -162,34 +208,55 @@ namespace TradingLib.DataFarm.Common
                     logger.Info("connect to MDCore:" + cstr);
 
                     
-                    _dealer.ReceiveReady += (s, e) =>
-                    {
-                        try
-                        {
-                            var zmsg = new ZMessage(e.Socket);
-                            Message msg = Message.gotmessage(zmsg.Body);
-                            if (msg.isValid)
-                            {
-                                HandleMessage(msg);
-                            }
-                        }
-                        catch (Exception ex)
-                        {
-                            logger.Error("Handle Data Error:" + ex.ToString());
-                        }
-                    };
-                    var poller = new Poller(new List<ZmqSocket> { _dealer });
+                    //_dealer.ReceiveReady += (s, e) =>
+                    //{
+                    //    try
+                    //    {
+                    //        var zmsg = new ZMessage(e.Socket);
+                    //        Message msg = Message.gotmessage(zmsg.Body);
+                    //        if (msg.isValid)
+                    //        {
+                    //            HandleMessage(msg);
+                    //        }
+                    //    }
+                    //    catch (Exception ex)
+                    //    {
+                    //        logger.Error("Handle Data Error:" + ex.ToString());
+                    //    }
+                    //};
+                    //var poller = new Poller(new List<ZmqSocket> { _dealer });
                     _running = true;
+                    ZError error;
+                    ZMessage message;
                     while (_processgo)
                     {
                         try
                         {
-                            poller.Poll(pollerTimeOut);
-                            if (!_processgo)
+                            //poller.Poll(pollerTimeOut);
+                            //if (!_processgo)
+                            //{
+                            //    logger.Info("messageroute thread stop,try to clear socket");
+                            //    _dealer.Close();
+                            //}
+                            if (null == (message = _dealer.ReceiveMessage(out error)))
                             {
-                                logger.Info("messageroute thread stop,try to clear socket");
-                                _dealer.Close();
+                                if (error == ZError.ETERM)
+                                {
+                                    logger.Error("Work ZmqSocket TERM");
+                                    return;	// Interrupted
+                                }
+                                throw new ZException(error);
                             }
+                            else
+                            {
+                                Message msg = Message.gotmessage(message.Last().Read());
+                                if (msg.isValid)
+                                {
+                                    HandleMessage(msg);
+                                }
+
+                            }
+
                         }
                         catch (Exception ex)
                         { 

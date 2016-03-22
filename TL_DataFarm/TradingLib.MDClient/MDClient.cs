@@ -157,6 +157,15 @@ namespace TradingLib.MDClient
                         }
                         return;
                     }
+                case MessageTypes.BIN_BARRESPONSE:
+                    {
+                        RspQryBarResponseBin response = obj as RspQryBarResponseBin;
+                        if (_handler != null)
+                        {
+                            _handler.OnRspQryBarBin(response.Bars, null, 0, true);
+                        }
+                        return;
+                    }
                 default:
                     logger.Warn(string.Format("Message Type:{0} not supported", obj.Type));
                     return;

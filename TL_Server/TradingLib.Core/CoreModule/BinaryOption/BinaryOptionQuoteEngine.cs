@@ -86,15 +86,23 @@ namespace TradingLib.Common
             {
                 if(flag[key])
                 {
-                    BinaryOption option = new BinaryOptionCallPut(sym.Symbol,key, 0.7M);
-                    logger.Info("Option Generated:" + option.ToString());
-                    optionmap.TryAdd(option.ContractID,option);
+                    //检查该品种 在对应时间间隔之是否处于交易状态,如果底层品种不交易则不生成对应二元期权
+                    int minute = (int)key;
+                    bool open = sym.SecurityFamily.IsMarketOpenAfterTime(TimeSpan.FromMinutes(minute));
+                    if (open)
+                    {
+                        BinaryOption option = new BinaryOptionCallPut(sym.Symbol, key, 0.7M);
+                        logger.Info("Option Generated:" + option.ToString());
+                        optionmap.TryAdd(option.ContractID, option);
+                    }
                 }
             }
         }
 
         #endregion
 
+
+        #region 数据集访问
         /// <summary>
         /// 返回所有底层可交易资产合约
         /// </summary>
@@ -104,18 +112,24 @@ namespace TradingLib.Common
         }
 
 
-
+        /// <summary>
+        /// 返回所有未过期二元期权
+        /// </summary>
+        IEnumerable<BinaryOption> BinaryOptions
+        {
+            get
+            {
+                long now = Util.ToTLDateTime();
+                return optionmap.Values.Where(o => o.IsExpired(now));
+            }
+        }
 
         /// <summary>
         /// 返回所有二元期权
         /// </summary>
-        public IEnumerable<BinaryOption> BinaryOptions
+        public IEnumerable<BinaryOption> GetBinaryOptions()
         {
-            get 
-            {
-                long now  = Util.ToTLDateTime();    
-                return optionmap.Values.Where(o=>o.IsExpired(now));
-            }
+            return this.BinaryOptions;
         }
 
         /// <summary>
@@ -127,6 +141,19 @@ namespace TradingLib.Common
         {
             return BinaryOptions.Where(o => o.OptionType == type);
         }
+
+
+        /// <summary>
+        /// 返回某个合约某种类别所有二元期权
+        /// </summary>
+        /// <param name="symbol"></param>
+        /// <param name="type"></param>
+        /// <returns></returns>
+        public IEnumerable<BinaryOption> GetBinaryOptions(string symbol, EnumBinaryOptionType type)
+        {
+            return BinaryOptions.Where(o => o.OptionType == type && o.Symbol == symbol);
+        }
+
 
         /// <summary>
         /// 查找某个合约 某种类别 某个时间间隔 某个到期时间 的二元期权
@@ -146,6 +173,8 @@ namespace TradingLib.Common
             }
             return null;
         }
+
+        #endregion
 
     }
 }

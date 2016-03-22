@@ -42,6 +42,29 @@ namespace TradingLib.Common
             return QSEnumActionCheckResult.Allowed;
         }
 
+        /// <summary>
+        /// 判定某个品种几分钟后是否可以下单
+        /// </summary>
+        /// <param name="sec"></param>
+        /// <param name="minute"></param>
+        /// <returns></returns>
+        public static bool IsMarketOpenAfterTime(this SecurityFamily sec,TimeSpan span)
+        {
+            IExchange exchange = sec.Exchange;
+            DateTime extime = exchange.GetExchangeTime() + span;//获得交易所时间
+            TradingRange range = sec.MarketTime.JudgeRange(extime);//根据交易所时间判定当前品种所属交易小节
+
+            //交易小节不存在表面 对应时间不在交易时间小节之内
+            if (range == null) return false;
+
+            //获得当前交易小节所属交易日 如果该交易日放假则不能交易
+            DateTime tradingday = range.TradingDay(extime);
+            if (exchange.IsInHoliday(tradingday)) return false;
+
+            return true;
+        }
+
+
 
         /// <summary>
         /// 检查品种当前是否可以提交委托
@@ -69,6 +92,7 @@ namespace TradingLib.Common
             return MarketTimeCheck(exchange, extime, range ,out settleday);
             
         }
+
 
         /// <summary>
         /// 特殊假日判定

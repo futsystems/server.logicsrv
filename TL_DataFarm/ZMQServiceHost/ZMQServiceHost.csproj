@@ -31,10 +31,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="clrzmq">
-      <HintPath>..\..\lib\clrzmq.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
     <Reference Include="Common.Logging">
       <HintPath>..\..\lib\Common.Logging.dll</HintPath>
       <EmbedInteropTypes>False</EmbedInteropTypes>
@@ -56,6 +52,9 @@
     <Reference Include="TradingLib.Common">
       <HintPath>..\..\lib\TradingLib\TradingLib.Common.dll</HintPath>
       <Private>False</Private>
+    </Reference>
+    <Reference Include="ZeroMQ">
+      <HintPath>..\..\lib\ZeroMQ.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>

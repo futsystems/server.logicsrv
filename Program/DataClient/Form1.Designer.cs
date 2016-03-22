@@ -217,7 +217,7 @@
             this.reg_symbol.Name = "reg_symbol";
             this.reg_symbol.Size = new System.Drawing.Size(63, 20);
             this.reg_symbol.TabIndex = 19;
-            this.reg_symbol.Text = "HGZ5";
+            this.reg_symbol.Text = "HSIM6";
             // 
             // kryptonLabel6
             // 

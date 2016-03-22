@@ -35,9 +35,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="clrzmq">
-      <HintPath>..\..\lib\clrzmq.dll</HintPath>
-    </Reference>
     <Reference Include="Common.Logging">
       <HintPath>..\..\lib\Common.Logging.dll</HintPath>
     </Reference>
@@ -86,10 +83,9 @@
     <Compile Include="Form1.Designer.cs">
       <DependentUpon>Form1.cs</DependentUpon>
     </Compile>
-    <Compile Include="MDClient.cs" />
+    <Compile Include="MDHandler.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="TLSocket_TCP.cs" />
     <EmbeddedResource Include="DebugControl.resx">
       <DependentUpon>DebugControl.cs</DependentUpon>
     </EmbeddedResource>

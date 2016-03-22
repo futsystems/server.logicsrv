@@ -60,10 +60,7 @@ namespace TradingLib.MDClient
         }
 
 
-        public void RegisterSymbol(string symbol)
-        {
-            this.RegisterSymbol(new string[] { symbol });
-        }
+
         /// <summary>
         /// 订阅合约实时行情
         /// </summary>
@@ -84,11 +81,6 @@ namespace TradingLib.MDClient
             histClient.TLSend(request);
         }
 
-
-        public void UnRegisterSymbol(string symbol)
-        {
-            this.UnRegisterSymbol(new string[] { symbol });
-        }
         /// <summary>
         /// 注销合约实时行情
         /// </summary>
@@ -111,6 +103,9 @@ namespace TradingLib.MDClient
             histClient.TLSend(request);
         }
 
+
+
+
         /// <summary>
         /// 底层查询Bar数据接口
         /// </summary>
@@ -120,40 +115,20 @@ namespace TradingLib.MDClient
         /// <param name="end"></param>
         /// <param name="maxcount"></param>
         /// <param name="fromend"></param>
-        public void QryBar(string symbol,int interval,DateTime start,DateTime end,int maxcount=1000,bool fromend = true)
+        public int QryBar(string symbol,int interval,DateTime start,DateTime end,int maxcount=1000,bool fromend = true)
         {
-            QryBarRequest request = RequestTemplate<QryBarRequest>.CliSendRequest(0);
+            int reqid = NextRequestID;
+            QryBarRequest request = RequestTemplate<QryBarRequest>.CliSendRequest(reqid);
             request.FromEnd = fromend;
             request.Symbol = symbol;
             request.MaxCount = maxcount;
             request.Interval = interval;
             request.Start = start;
             request.End = end;
+            request.BarResponseType = EnumBarResponseType.BINARY;
 
             histClient.TLSend(request);
-        }
-
-        /// <summary>
-        /// 返回一定数目的Bar数据
-        /// </summary>
-        /// <param name="symbol"></param>
-        /// <param name="interval"></param>
-        /// <param name="maxcount"></param>
-        public void QryBar(string symbol, int interval, int maxcount = 1000)
-        {
-            QryBar(symbol, interval, DateTime.MinValue, DateTime.MaxValue, maxcount, true);
-        }
-
-        /// <summary>
-        /// 查询某个时间段的Bar数据
-        /// </summary>
-        /// <param name="symbol"></param>
-        /// <param name="interval"></param>
-        /// <param name="start"></param>
-        /// <param name="end"></param>
-        public void QryBar(string symbol, int interval, DateTime start, DateTime end)
-        {
-            QryBar(symbol, interval, start, end, 0, true);
+            return reqid;
         }
     }
 }

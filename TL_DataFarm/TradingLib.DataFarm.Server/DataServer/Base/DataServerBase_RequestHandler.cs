@@ -12,8 +12,10 @@ namespace TradingLib.DataFarm.Common
 {
     public partial class DataServerBase
     {
-
-        //更新客户端心跳时间戳
+        /// <summary>
+        /// 更新客户端心跳时间戳
+        /// </summary>
+        /// <param name="conn"></param>
         void SrvUpdateHeartBeat(IConnection conn)
         {
             conn.LastHeartBeat = DateTime.Now;
@@ -54,6 +56,9 @@ namespace TradingLib.DataFarm.Common
         {
             FeatureResponse response = ResponseTemplate<FeatureResponse>.SrvSendRspResponse(request);
             response.Add(MessageTypes.XQRYMARKETTIME);
+            response.Add(MessageTypes.XQRYEXCHANGE);
+            response.Add(MessageTypes.XQRYSECURITY);
+            response.Add(MessageTypes.XQRYSYMBOL);
 
             conn.Send(response);
         }
@@ -99,17 +104,69 @@ namespace TradingLib.DataFarm.Common
                 //如果数据已缓存则直接查询
                 if (store.IsCached(request.Symbol, request.IntervalType, request.Interval))
                 {
-                    Bar[] bars = store.QryBar(request.Symbol, request.IntervalType, request.Interval, request.Start, request.End, (int)request.MaxCount, request.FromEnd).ToArray();
+                    BarImpl[] bars = store.QryBar(request.Symbol, request.IntervalType, request.Interval, request.Start, request.End, (int)request.MaxCount, request.FromEnd).ToArray();
 
                     logger.Info("got bar cnt:" + bars.Count());
                     Profiler pf = new Profiler();
                     pf.EnterSection("send packet");
-                    for (int i = 0; i < bars.Length; i++)
+
+                    switch(request.BarResponseType)
                     {
-                        RspQryBarResponse response = ResponseTemplate<RspQryBarResponse>.SrvSendRspResponse(request);
-                        response.Bar = bars[i];
-                        conn.SendResponse(response, i == bars.Length - 1);
+                        case EnumBarResponseType.PLAINTEXT:
+                            {
+                                for (int i = 0; i < bars.Length; i++)
+                                {
+                                    RspQryBarResponse response = ResponseTemplate<RspQryBarResponse>.SrvSendRspResponse(request);
+                                    response.Bar = bars[i];
+                                    conn.SendResponse(response, i == bars.Length - 1);
+                                }
+                                break;
+                            }
+                        case EnumBarResponseType.BINARY:
+                            {
+                                //MemoryStream ms = new MemoryStream();
+                                //BinaryWriter b = new BinaryWriter(ms);
+                                //byte[] sizebyte = BitConverter.GetBytes(8+bars.Length*88);
+                                //byte[] typebyte = BitConverter.GetBytes((int)MessageTypes.BARRESPONSE);
+
+                                //b.Write(sizebyte);
+                                //b.Write(typebyte);
+
+                                //for(int i=0;i<bars.Length;i++)
+                                //{
+                                //    BarImpl.Write(b, bars[i]);
+
+                                //    //RspQryBarResponseBin response = RspQryBarResponseBin.CreateResponse(request);
+                                //    //response.Bar = bars[i];
+                                //    //conn.Send(response);
+                                    
+                                //}
+                                //logger.Info("Size:" + ms.Position);
+                                int j = 0;
+                                RspQryBarResponseBin response = RspQryBarResponseBin.CreateResponse(request);
+                                for (int i = 0; i < bars.Length; i++)
+                                {
+                                        response.Add(bars[i]);
+                                        j++;
+                                        if (j == 50)
+                                        {
+                                            conn.Send(response);
+                                            response = RspQryBarResponseBin.CreateResponse(request);
+                                            j = 0;
+                                        }
+                                }
+                                //RspQryBarResponseBin response = RspQryBarResponseBin.CreateResponse(request);
+                                //response.Bars = bars;
+                                if (j < 50)
+                                {
+                                    conn.Send(response);
+                                }
+                                break;
+                            }
+                        default:
+                            break;
                     }
+                    
                     pf.LeaveSection();
                     logger.Info(pf.GetStatsString());
                     logger.Info("send bar finished");
@@ -120,8 +177,8 @@ namespace TradingLib.DataFarm.Common
                 }
             }
             catch (Exception ex)
-            { 
-                
+            {
+                logger.Error("SrvOnBarRequest Error:" + ex.ToString());
             }
         }
 

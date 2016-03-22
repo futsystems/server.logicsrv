@@ -17,6 +17,10 @@ namespace ZMQServiceHost
 {
     public class ZMQServiceHost:IServiceHost
     {
+        /// <summary>
+        /// 系统默认Poller超时时间
+        /// </summary>
+        TimeSpan PollerTimeOut = new TimeSpan(0, 0, 1);
 
         ILog logger = LogManager.GetLogger(_name);
 
@@ -147,14 +151,14 @@ namespace ZMQServiceHost
 
 
         //传输层前端
-        ZmqSocket _outputChanel;//用于服务端主动向客户端发送消息
+        ZSocket _outputChanel;//用于服务端主动向客户端发送消息
         private void MessageRoute()
         {
             workers = new List<Thread>(_worknum);
-            using (ZmqContext context = ZmqContext.Create())
+            using (ZContext context = new ZContext())
             {   
                 //当server端返回信息时,我们同样需要借助一定的设备完成
-                using (ZmqSocket frontend = context.CreateSocket(SocketType.ROUTER),backend = context.CreateSocket(SocketType.DEALER),outchannel = context.CreateSocket(SocketType.DEALER), outClient = context.CreateSocket(SocketType.DEALER))
+                using (ZSocket frontend = new ZSocket(context, ZSocketType.ROUTER), backend = new ZSocket(context, ZSocketType.DEALER), outchannel = new ZSocket(context, ZSocketType.DEALER), outClient = new ZSocket(context, ZSocketType.DEALER))
                 {
                     //前端Router用于注册Client
                     frontend.Bind("tcp://*:" + _port.ToString());
@@ -183,55 +187,99 @@ namespace ZMQServiceHost
                         object[] o = new object[] { context, workerid };
                         workers[workerid].Start(o);
                     }
-                    //fronted过来的信息我们路由到backend上去
-                    frontend.ReceiveReady += (s, e) =>
-                    {
-                        var zmsg = new ZMessage(e.Socket);
-                        zmsg.Send(backend);
-                    };
-                    //backend过来的信息我们路由到frontend上去
-                    backend.ReceiveReady += (s, e) =>
-                    {
-                        var zmsg = new ZMessage(e.Socket);
-                        zmsg.Send(frontend);
-                    };
-                    //output接受到的消息,我们通过front发送出去,所有发送给客户端的消息通过outClient发送到output,然后再通过front路由出去
-                    outchannel.ReceiveReady += (s, e) =>
-                    {
-                        var zmsg = new ZMessage(e.Socket);
-                        zmsg.Send(frontend);
-                    };
+
+                    List<ZSocket> sockets = new List<ZSocket>();
+                    sockets.Add(frontend);
+                    sockets.Add(backend);
+                    sockets.Add(outchannel);
 
 
-                    var poller = new Poller(new List<ZmqSocket> { frontend, backend, outchannel});
+                    List<ZPollItem> pollitems = new List<ZPollItem>();
+                    pollitems.Add(ZPollItem.CreateReceiver());
+                    pollitems.Add(ZPollItem.CreateReceiver());
+                    pollitems.Add(ZPollItem.CreateReceiver());
+
+                    // Switch messages between sockets
+                    ZError error;
+                    ZMessage[] incoming;
+
+
+                    ////fronted过来的信息我们路由到backend上去
+                    //frontend.ReceiveReady += (s, e) =>
+                    //{
+                    //    var zmsg = new ZMessage(e.Socket);
+                    //    zmsg.Send(backend);
+                    //};
+                    ////backend过来的信息我们路由到frontend上去
+                    //backend.ReceiveReady += (s, e) =>
+                    //{
+                    //    var zmsg = new ZMessage(e.Socket);
+                    //    zmsg.Send(frontend);
+                    //};
+                    ////output接受到的消息,我们通过front发送出去,所有发送给客户端的消息通过outClient发送到output,然后再通过front路由出去
+                    //outchannel.ReceiveReady += (s, e) =>
+                    //{
+                    //    var zmsg = new ZMessage(e.Socket);
+                    //    zmsg.Send(frontend);
+                    //};
+
+
+                    //var poller = new Poller(new List<ZmqSocket> { frontend, backend, outchannel});
                     //让线程一直获取由socket发报过来的信息
                     _mainthreadready = true;
                     while (_srvgo)
                     {
                         try
                         {
-                            poller.Poll(pollerTimeOut);//设定poll的time out可以防止该线程一直阻塞在poll，导致线程无法停止
-                            if (!_srvgo)
+                            //poller.Poll(pollerTimeOut);//设定poll的time out可以防止该线程一直阻塞在poll，导致线程无法停止
+                            //if (!_srvgo)
+                            //{
+                            //    logger.Info("messageroute thread stop,try to clear socket");
+                            //    frontend.Close();
+                            //    backend.Close();
+                            //    outchannel.Close();
+                            //    outClient.Close();
+                            //}
+                            //else//如果服务没有停止
+                            //{
+                            //    //DateTime now = DateTime.Now;
+                            //    //if ((now - _lasthb).TotalSeconds >= 5)
+                            //    //{
+                            //    //    this.SendTickHeartBeat();
+                            //    //    _lasthb = now;
+                            //    //}
+                            //}
+                            if (sockets.PollIn(pollitems, out incoming, out error, PollerTimeOut))
                             {
-                                logger.Info("messageroute thread stop,try to clear socket");
-                                frontend.Close();
-                                backend.Close();
-                                outchannel.Close();
-                                outClient.Close();
+                                if (incoming[0] != null)
+                                {
+                                    backend.Send(incoming[0]);
+                                }
+                                if (incoming[1] != null)
+                                {
+                                    frontend.Send(incoming[1]);
+                                }
+                                if (incoming[2] != null)
+                                {
+                                    frontend.Send(incoming[2]);
+                                }
                             }
-                            else//如果服务没有停止
+                            else
                             {
-                                //DateTime now = DateTime.Now;
-                                //if ((now - _lasthb).TotalSeconds >= 5)
-                                //{
-                                //    this.SendTickHeartBeat();
-                                //    _lasthb = now;
-                                //}
+                                if (error == ZError.ETERM)
+                                {
+                                    return;	// Interrupted
+                                }
+                                if (error != ZError.EAGAIN)
+                                {
+                                    throw new ZException(error);
+                                }
                             }
+
                         }
-                        catch (ZmqException e)
+                        catch (ZException e)
                         {
-                            logger.Error("MainThread[ZmqExcetion]" + e.ToString());
+                            logger.Error("MainThread[ZExcetion]" + e.ToString());
                         }
                         catch (System.Exception ex)
                         {
@@ -252,33 +300,49 @@ namespace ZMQServiceHost
         private void MessageWorkerProc(object olist)
         {
             object[] list = olist as object[];
-            ZmqContext wctx = (ZmqContext)list[0];
+            ZContext wctx = (ZContext)list[0];
             int id = int.Parse(list[1].ToString());
-            using (ZmqSocket worker = wctx.CreateSocket(SocketType.DEALER))
+            using (ZSocket worker = new ZSocket(wctx,ZSocketType.DEALER))
             {
                 //将worker连接到backend用于接收由backend中继转发过来的信息
                 worker.Connect("inproc://backend");
-                worker.ReceiveReady += (s, e) =>
-                {
-                    MessageProcess(worker, id);
-                };
-                var poller = new Poller(new List<ZmqSocket> { worker });
+                //worker.ReceiveReady += (s, e) =>
+                //{
+                //    MessageProcess(worker, id);
+                //};
+                //var poller = new Poller(new List<ZmqSocket> { worker });
+
+                ZError error;
+                ZMessage request;
+                var poller = ZPollItem.CreateReceiver();
 
                 while (_workergo)
                 {
                     try
                     {
-                        poller.Poll(pollerTimeOut);
-                        if (!_workergo)
+                        if (null == (request = worker.ReceiveMessage(out error)))
                         {
-                            logger.Info(string.Format("worker thread[{0}] stopped,close worker socket", id));
-                            worker.Close();
+                            if (error == ZError.ETERM)
+                            {
+                                logger.Error("Work ZmqSocket TERM");
+                                return;	// Interrupted
+                            }
+                            throw new ZException(error);
+                        }
+                        else
+                        {
+                            logger.Debug(string.Format("Worker {0} recv message", id));
+                            MessageProcess(worker, request, id);
                         }
 
                     }
-                    catch (ZmqException e)
+                    catch (ZException ex)
                     {
-                        logger.Error(string.Format("worker {0} proc error:", id) + e.ToString());
+                        logger.Error(string.Format("worker {0} proc zmq error:{1}", id, ex.ToString()));
+                    }
+                    catch (Exception ex)
+                    {
+                        logger.Error(string.Format("worker {0} proc error:{1}", id, ex.ToString()));
                     }
                 }
             }
@@ -295,16 +359,21 @@ namespace ZMQServiceHost
                 throw new InvalidOperationException("out channel is null");
             lock (_outputChanel)
             {
-                ZMessage zmsg = new ZMessage(data);
-                if (isReq)
+                using (ZMessage zmsg = new ZMessage())
                 {
-                    zmsg.Wrap(Encoding.UTF8.GetBytes(address), Encoding.UTF8.GetBytes(""));
+                    ZError error;
+                    zmsg.Add(new ZFrame(Encoding.UTF8.GetBytes(address)));
+                    zmsg.Add(new ZFrame(data));
+                    if (!_outputChanel.Send(zmsg, out error))
+                    {
+                        if (error == ZError.ETERM)
+                        {
+                            logger.Error("got ZError.ETERM,return directly");
+                            return;	// Interrupted
+                        }
+                        throw new ZException(error);
+                    }
                 }
-                else
-                {
-                    zmsg.Wrap(Encoding.UTF8.GetBytes(address), null);
-                }
-                zmsg.Send(_outputChanel);
             }
         }
 
@@ -315,28 +384,33 @@ namespace ZMQServiceHost
 
         /// <summary>
         /// MD_ZMQ服务端处理直接连接的客户端请求 每个请求均有一个对应的地址
-        /// 
         /// </summary>
         /// <param name="worker"></param>
         /// <param name="id"></param>
-        void MessageProcess(ZmqSocket worker, int id)
+        void MessageProcess(ZSocket worker, ZMessage req, int id)
         {
-            try
-            {
-                ZMessage zrequest = new ZMessage(worker);
-                string address = zrequest.AddressToString();
-                Message message = Message.gotmessage(zrequest.Body);
+            int cnt = req.Count;
 
+            if (cnt == 2 || cnt == 3)
+            {
+                //1.进行消息地址解析 zmessage 中含有多个frame frame[0]是消息主体,其余frame是附加的地址信息
+                string front = cnt == 3 ? req[0].ReadString(Encoding.UTF8) : string.Empty;
+                string address = cnt == 3 ? req[1].ReadString(Encoding.UTF8) : req[0].ReadString(Encoding.UTF8);
+                Message message = Message.gotmessage(req.Last().Read());
+                //消息合法判定
+                if (!message.isValid) return;
                 logger.Info(string.Format("ServiceHost got message type:{0} content:{1}", message.Type, message.Content));
+
+
                 //响应客户端服务查询
-                switch(message.Type)
+                switch (message.Type)
                 {
                     //响应客户端服务查询
                     case MessageTypes.SERVICEREQUEST:
                         {
                             QryServiceRequest request = RequestTemplate<QryServiceRequest>.SrvRecvRequest("", address, message.Content);
                             RspQryServiceResponse response = QryService(request);
-                            this.Send(response,true);
+                            this.Send(response, true);
                             logger.Info(string.Format("Got QryServiceRequest from:{0} request:{1} reponse:{2}", address, request, response));
                             return;
                         }
@@ -350,12 +424,12 @@ namespace ZMQServiceHost
                             {
                                 IConnection conn = null;
                                 //连接已经建立直接返回
-                                if (_sessionMap.TryGetValue(address,out conn))
+                                if (_sessionMap.TryGetValue(address, out conn))
                                 {
                                     logger.Warn(string.Format("Client:{0} already exist", address));
                                     return;
                                 }
-                                
+
                                 //创建连接
                                 conn = new ZMQConnection(this, address);
                                 _sessionMap.TryAdd(address, conn);
@@ -368,7 +442,7 @@ namespace ZMQServiceHost
                                 logger.Info(string.Format("Client:{0} registed to server", address));
                                 //向逻辑成抛出连接建立事件
                                 OnSessionCreated(conn);
-                                
+
                             }
                             return;
                         }
@@ -384,29 +458,14 @@ namespace ZMQServiceHost
                             IPacket packet = PacketHelper.SrvRecvRequest(message.Type, message.Content, "", address);
                             if (packet != null && RequestEvent != null)
                             {
-                                RequestEvent(this,conn,packet);
+                                RequestEvent(this, conn, packet);
                             }
                         }
                         return;
                 }
             }
-            catch (ZmqException e)
-            {
-                logger.Error("Worker[" + id.ToString() + "][ZmqExcetion]" + e.ToString());
-                return;
-            }
-            //捕捉QSTradingServerError(客户端向服务端请求操作所引发的异常)
-            catch (QSTradingServerError ex)
-            {
-                logger.Error("Worker[" + id.ToString() + "][QSExcetion]" + ex.Label + " " + ex.RawException.Message);
-                return;
-            }
-            catch (System.Exception ex)
-            {
-                logger.Error("Worker[" + id.ToString() + "][Excetion]" + ex.ToString());
-                return;
-            }
-    }
+        }
+    
 
 
         /// <summary>

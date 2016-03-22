@@ -210,6 +210,7 @@ namespace TradingLib.Core
                     }
                     break;
 
+
                 case MessageTypes.BOSENDORDER://请求二元委托
                     {
                         BOOrderInsertRequest request = packet as BOOrderInsertRequest;

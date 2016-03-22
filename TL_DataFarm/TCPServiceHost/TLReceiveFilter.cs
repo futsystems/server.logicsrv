@@ -55,11 +55,20 @@ namespace TCPServiceHost
             int totallen = BitConverter.ToInt32(header.Array,LENGTHOFFSET);
             MessageTypes type = (MessageTypes)BitConverter.ToInt32(header.Array,TYPEOFFSET);
             string content = string.Empty;
+            byte[] data = null;
             if(length>0)
             {
-                content = System.Text.Encoding.UTF8.GetString(bodyBuffer,offset,length);
+                if (type != MessageTypes.BARRESPONSEBIN)
+                {
+                    content = System.Text.Encoding.UTF8.GetString(bodyBuffer, offset, length);
+                }
+                else
+                {
+                    data = new byte[length];
+                    Array.Copy(bodyBuffer, offset, data, 0, length);
+                }
             }
-            Message message = new Message(type, content,totallen);
+            Message message = new Message(type, content,data,totallen);
 
             return new TLRequestInfo(type.ToString(),content,message);
         }

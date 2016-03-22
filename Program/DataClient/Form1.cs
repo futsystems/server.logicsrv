@@ -9,17 +9,42 @@ using System.Windows.Forms;
 using Common.Logging;
 using TradingLib.API;
 using TradingLib.Common;
-
+using TradingLib.MDClient;
 namespace DataClient
 {
 
     public partial class Form1 : Form
     {
         ILog logger = LogManager.GetLogger("main");
+        MDHandler handler = null;
+
         public Form1()
         {
             logger.Info("DataClient form init");
             InitializeComponent();
+            handler = new MDHandler();
+            handler.TickEvent += new Action<Tick>(handler_TickEvent);
+            handler.BarRspEvent += new Action<Bar, RspInfo, int, bool>(handler_BarRspEvent);
+            handler.BarsRspEvent += new Action<List<BarImpl>, RspInfo, int, bool>(handler_BarsRspEvent);
+        }
+
+        void handler_BarsRspEvent(List<BarImpl> arg1, RspInfo arg2, int arg3, bool arg4)
+        {
+            debug("bar cnt:" + arg1.Count());
+            //foreach (var bar in arg1)
+            {
+                //debug("bar:" + bar.ToString());
+            }
+        }
+
+        void handler_BarRspEvent(Bar arg1, RspInfo arg2, int arg3, bool arg4)
+        {
+            debug("requestid:" + arg3.ToString());
+        }
+
+        void handler_TickEvent(Tick obj)
+        {
+            debug("tick:" + obj.ToString());
         }
 
         void debug(string msg)
@@ -42,12 +67,9 @@ namespace DataClient
         TradingLib.MDClient.MDClient mdclient = null;
         private void btnMQClient_Click(object sender, EventArgs e)
         {
-            //logger.Info("start client");
-            //cli = new TLClient<TLSocket_TCP>("127.0.0.1", int.Parse(port.Text), "ZMQClient");
-            //cli.OnPacketEvent += new Action<IPacket>(cli_OnPacketEvent);
-            //cli.Start();
-
             mdclient = new TradingLib.MDClient.MDClient("127.0.0.1", 5060, 5060);
+            mdclient.RegisterHandler(handler);
+
             mdclient.Start();
             
         }
@@ -92,16 +114,7 @@ namespace DataClient
 
         private void btnQryBar_Click(object sender, EventArgs e)
         {
-            //QryBarRequest request = RequestTemplate<QryBarRequest>.CliSendRequest(0);
-            //request.FromEnd = fromend.Checked;
-            //request.Symbol = Symbol.Text;
-            //request.MaxCount = (int)maxcount.Value;
-            //request.Interval = (int)interval.Value;
-            //request.Start = start.Value;
-            //request.End = end.Value;
-
-            mdclient.QryBar(Symbol.Text,(int)interval.Value, start.Value, end.Value);
-            //cli.TLSend(request);
+            mdclient.QryBar(Symbol.Text,(int)interval.Value, start.Value, end.Value,(int)maxcount.Value);
         }
 
         private void btnRegisterSymbol_Click(object sender, EventArgs e)

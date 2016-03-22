@@ -39,6 +39,10 @@ namespace TradingLib.MDClient
             logger.Info("Bar:" + bar != null ? bar.ToString() : "Null");
         }
 
+        public virtual void OnRspQryBarBin(List<BarImpl> bars, RspInfo rsp, int requestID, bool isLast)
+        {
+            logger.Info("--");
+        }
 
     }
 }

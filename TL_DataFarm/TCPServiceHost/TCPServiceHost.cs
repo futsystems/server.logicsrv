@@ -93,6 +93,9 @@ namespace TCPServiceHost
             OnSessionClosed(session);
         }
 
+        /// <summary>
+        /// 用于维护已经正常Register的客户端  sessionMap用于维护底层Sockt连接
+        /// </summary>
         ConcurrentDictionary<string, IConnection> _connectionMap = new ConcurrentDictionary<string, IConnection>();
         /// <summary>
         /// 请求到达事件

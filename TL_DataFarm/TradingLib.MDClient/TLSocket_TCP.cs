@@ -51,12 +51,12 @@ namespace TradingLib.MDClient
             int len = s.Receive(tmp);
             byte[] data = new byte[len];
             Array.Copy(tmp, 0, data, 0, len);
-            Message message = Message.gotmessage(data);
+            Message message = Message.gotmessage(data,0);
 
             RspQryServiceResponse response = null;
             if (message.isValid && message.Type == MessageTypes.SERVICERESPONSE)
             {
-                response = ResponseTemplate<RspQryServiceResponse>.CliRecvResponse(message.Content);
+                response = ResponseTemplate<RspQryServiceResponse>.CliRecvResponse(message);
 
             }
             return response;
@@ -160,6 +160,10 @@ namespace TradingLib.MDClient
                         {
                             gotlen += msg.ByteLength;
                             j++;
+                            if (msg.Type == MessageTypes.BIN_BARRESPONSE)
+                            {
+                                int x = 0;
+                            }
                             HandleMessage(msg);
                         }
                         logger.Debug(string.Format("buffer len:{0} buffer offset:{1} ret len:{2} parse len:{3} cnt:{4}", buffer.Length, bufferoffset, ret, gotlen, j));

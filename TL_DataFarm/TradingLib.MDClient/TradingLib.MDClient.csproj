@@ -53,6 +53,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="IBasicInfo.cs" />
+    <Compile Include="MDClientHelper.cs" />
     <Compile Include="MDHandlerBase.cs" />
     <Compile Include="MDClient.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

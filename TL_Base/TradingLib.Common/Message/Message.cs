@@ -41,27 +41,40 @@ namespace TradingLib.Common
             m.Type = MessageTypes.UNKNOWN_MESSAGE;
             m.Content = string.Empty;
             m.ByteLength = 0;
+            m.Data = null;
             return m;
         }
-        public Message(MessageTypes type, string content, int len)
+        public Message(MessageTypes type, string content,byte[] data, int len)
         {
             Content = content;
             Type = type;
             Tag = string.Empty;
             ByteLength = len;
+            Data = data;
         }
-        public Message(MessageTypes type, string body)
-        {
-            Content = body;
-            Type = type;
-            Tag = string.Empty;
-            ByteLength = 0;
-        }
-        public string ToJsonString()
-        {
-            return "{" + Type.ToString() + ":" + Content + "}";
-        }
+        //public Message(MessageTypes type, string body)
+        //{
+        //    Content = body;
+        //    Type = type;
+        //    Tag = string.Empty;
+        //    ByteLength = 0;
+        //    Data = null;
+        //}
+        //public Message(MessageTypes type, byte[] data)
+        //{
+        //    Type = type;
+        //    Data = data;
+        //    Tag = string.Empty;
+        //    ByteLength = 0;
+        //    Content = string.Empty;
+        //}
+        //public string ToJsonString()
+        //{
+        //    return "{" + Type.ToString() + ":" + Content + "}";
+        //}
         public string Content;
+        public byte[] Data;
+
         public MessageTypes Type;
         public int ByteLength;
         public bool isValid { get { return Type != MessageTypes.UNKNOWN_MESSAGE; } }
@@ -87,6 +100,9 @@ namespace TradingLib.Common
         const int HEADERSIZE = 8;
         const int LENGTHOFFSET = 0;
         const int TYPEOFFSET = 4;
+
+
+
         public static bool sendmessage(MessageTypes type, string msg, ref byte[] data)
         {
             try
@@ -125,18 +141,19 @@ namespace TradingLib.Common
             // prepare vars to hold per-message attributes
             MessageTypes mt = MessageTypes.UNKNOWN_MESSAGE;
             string mc = string.Empty;
+            byte[] md = null;
             int ml = 0;
             bool done = false;
             // fetch all messages we can get
             while (msgok)
             {
                 // fetch a message and record success
-                msgok = gotmessage(start, data, ref mt, ref mc, ref ml, ref done);
+                msgok = gotmessage(start, data, ref mt, ref mc,ref md, ref ml, ref done);
                 // if we got a message
                 if (msgok) 
                 {
                     // save it
-                    msgs.Add(new Message(mt,mc,ml));
+                    msgs.Add(new Message(mt,mc,md,ml));
                     // save total length of messages we've read
                     totallen += ml;
                 }
@@ -172,11 +189,12 @@ namespace TradingLib.Common
             // prepare to get message parameters
             MessageTypes type = MessageTypes.UNKNOWN_MESSAGE;
             string body = string.Empty;
+            byte[] msgdata = null;
             int len = 0;
             bool done = false;
             // fetch message and return it if successful
-            if (gotmessage(start,data, ref type, ref body, ref len, ref done))
-                return new Message(type, body, len);
+            if (gotmessage(start, data, ref type, ref body, ref msgdata, ref len, ref done))
+                return new Message(type, body, msgdata, len);
             // return invalid message otherwise
             return NewMessage();
         }
@@ -184,11 +202,13 @@ namespace TradingLib.Common
         {
             return gotmessage(data, 0);
         }
-        public static bool gotmessage(byte[] data, ref MessageTypes type, ref string msg, ref int msglen, ref bool done)
-        {
-            return gotmessage(0, data, ref type, ref msg, ref msglen, ref done);
-        }
-        public static bool gotmessage(int startidx, byte[] data, ref MessageTypes type, ref string msg, ref int msglen, ref bool done)
+        //public static bool gotmessage(byte[] data, ref MessageTypes type, ref string msg,ref byte[] msgdata, ref int msglen, ref bool done)
+        //{
+        //    return gotmessage(0, data, ref type, ref msg,ref msgdata,ref msglen, ref done);
+        //}
+
+
+        public static bool gotmessage(int startidx, byte[] data, ref MessageTypes type, ref string msg, ref byte[] msgdata,ref int msglen, ref bool done)
         {
             try
             {
@@ -208,9 +228,18 @@ namespace TradingLib.Common
                 // ensure we have enough data for message body
                 if (startidx + msglen > data.Length)
                     return false;
-                // decode message to string
-                msg = System.Text.Encoding.UTF8.GetString(data, startidx+HEADERSIZE, msglen-HEADERSIZE);
-                
+                if (type == MessageTypes.BIN_BARRESPONSE)
+                {
+                    msg = string.Empty;
+                    msgdata = new byte[msglen - HEADERSIZE];
+                    Array.Copy(data, startidx + HEADERSIZE, msgdata, 0, msglen - HEADERSIZE);
+                }
+                else
+                {
+                    msgdata = null;
+                    // decode message to string
+                    msg = System.Text.Encoding.UTF8.GetString(data, startidx + HEADERSIZE, msglen - HEADERSIZE);
+                }
             }
             catch (Exception ex)
             {

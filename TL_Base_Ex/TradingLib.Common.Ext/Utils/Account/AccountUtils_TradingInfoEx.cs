@@ -214,6 +214,30 @@ namespace TradingLib.Common
         {
             return account.PositionsShort.Where(pos => !pos.isFlat && pos.Symbol.Equals(symbol)).Count() > 0;
         }
-        
+
+
+
+
+
+        ///// <summary>
+        ///// 获得某个帐户 所有已关闭二元期权委托
+        ///// </summary>
+        ///// <param name="account"></param>
+        ///// <returns></returns>
+        //public static IEnumerable<BinaryOptionOrder> GetBinaryOptionOrdersClosed(this IAccount account)
+        //{
+        //    return account.BinaryOptionOrders.Where(o => o.IsClose());
+        //}
+
+        ///// <summary>
+        ///// 获得某个帐户 所有处于Open状态的二元期权委托
+        ///// 
+        ///// </summary>
+        ///// <param name="account"></param>
+        ///// <returns></returns>
+        //public static IEnumerable<BinaryOptionOrder> GetBinaryOptionOrdersOpened(this IAccount account)
+        //{
+        //    return account.BinaryOptionOrders.Where(o => o.IsOpen());
+        //}
     }
 }

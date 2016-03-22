@@ -146,6 +146,8 @@ namespace TradingLib.Common
 
         public IEnumerable<Order> Orders { get { return _acc.Orders; } }//获得当日所有委托
         public IEnumerable<Trade> Trades { get { return _acc.Trades; } }//获得当日所有成交
+
+        public IEnumerable<BinaryOptionOrder> BinaryOptionOrders { get { return new List<BinaryOptionOrder>(); } }
         //public long[] Cancels { get { return _acc.Cancels; } }//获得当日所有取消
         public IEnumerable<PositionDetail> YdPositions { get { return _acc.YdPositions; } }
 

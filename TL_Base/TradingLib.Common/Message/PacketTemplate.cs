@@ -329,111 +329,118 @@ namespace TradingLib.Common
             }
         }
 
-        public static IPacket CliRecvResponse(MessageTypes type, string content)
+
+        public static IPacket CliRecvResponse(Message message)
         {
-            switch (type)
+            switch (message.Type)
             { 
+                case MessageTypes.BIN_BARRESPONSE:
+                    //return ResponseTemplate<RspQryBarResponseBin>.CliRecvResponse(message);
+                    RspQryBarResponseBin response = new RspQryBarResponseBin();
+                    response.DeserializeBin(message.Data);
+                    return response;
+
                 case MessageTypes.SERVICERESPONSE:
-                    return ResponseTemplate<RspQryServiceResponse>.CliRecvResponse(content);
+                    return ResponseTemplate<RspQryServiceResponse>.CliRecvResponse(message);
                 case MessageTypes.REGISTERCLIENTRESPONSE:
-                    return ResponseTemplate<RspRegisterClientResponse>.CliRecvResponse(content);
+                    return ResponseTemplate<RspRegisterClientResponse>.CliRecvResponse(message);
                 case MessageTypes.LOGICLIVERESPONSE:
-                    return ResponseTemplate<LogicLiveResponse>.CliRecvResponse(content);
+                    return ResponseTemplate<LogicLiveResponse>.CliRecvResponse(message);
                 case MessageTypes.FEATURERESPONSE:
-                    return ResponseTemplate<FeatureResponse>.CliRecvResponse(content);
+                    return ResponseTemplate<FeatureResponse>.CliRecvResponse(message);
                 case MessageTypes.VERSIONRESPONSE:
-                    return ResponseTemplate<VersionResponse>.CliRecvResponse(content);
+                    return ResponseTemplate<VersionResponse>.CliRecvResponse(message);
                 case MessageTypes.HEARTBEATRESPONSE:
-                    return ResponseTemplate<HeartBeatResponse>.CliRecvResponse(content);
+                    return ResponseTemplate<HeartBeatResponse>.CliRecvResponse(message);
                 case MessageTypes.LOGINRESPONSE:
-                    return ResponseTemplate<LoginResponse>.CliRecvResponse(content);
+                    return ResponseTemplate<LoginResponse>.CliRecvResponse(message);
                 case MessageTypes.BROKERNAMERESPONSE:
-                    return ResponseTemplate<BrokerNameResponse>.CliRecvResponse(content);
+                    return ResponseTemplate<BrokerNameResponse>.CliRecvResponse(message);
 
                 case MessageTypes.ORDERNOTIFY://委托通知
-                    return ResponseTemplate<OrderNotify>.CliRecvResponse(content);
+                    return ResponseTemplate<OrderNotify>.CliRecvResponse(message);
                 case MessageTypes.ERRORORDERNOTIFY://委托错误通知
-                    return ResponseTemplate<ErrorOrderNotify>.CliRecvResponse(content);
+                    return ResponseTemplate<ErrorOrderNotify>.CliRecvResponse(message);
                 case MessageTypes.EXECUTENOTIFY://成交通知
-                    return ResponseTemplate<TradeNotify>.CliRecvResponse(content);
+                    return ResponseTemplate<TradeNotify>.CliRecvResponse(message);
                 case MessageTypes.POSITIONUPDATENOTIFY://持仓更新通知
-                    return ResponseTemplate<PositionNotify>.CliRecvResponse(content);
+                    return ResponseTemplate<PositionNotify>.CliRecvResponse(message);
                 case MessageTypes.OLDPOSITIONNOTIFY://隔夜持仓通知
-                    return ResponseTemplate<HoldPositionNotify>.CliRecvResponse(content);
+                    return ResponseTemplate<HoldPositionNotify>.CliRecvResponse(message);
                 case MessageTypes.ORDERACTIONNOTIFY://委托操作通知
-                    return ResponseTemplate<OrderActionNotify>.CliRecvResponse(content);
+                    return ResponseTemplate<OrderActionNotify>.CliRecvResponse(message);
                 case MessageTypes.ERRORORDERACTIONNOTIFY://委托操作错误通知
-                    return ResponseTemplate<ErrorOrderActionNotify>.CliRecvResponse(content);
+                    return ResponseTemplate<ErrorOrderActionNotify>.CliRecvResponse(message);
                 case MessageTypes.CASHOPERATIONNOTIFY://出入金操作通知
-                    return ResponseTemplate<CashOperationNotify>.CliRecvResponse(content);
+                    return ResponseTemplate<CashOperationNotify>.CliRecvResponse(message);
                 case MessageTypes.TRADINGNOTICENOTIFY://交易通知
-                    return ResponseTemplate<TradingNoticeNotify>.CliRecvResponse(content);
+                    return ResponseTemplate<TradingNoticeNotify>.CliRecvResponse(message);
 
                 case MessageTypes.ORDERRESPONSE://查询委托回报
-                    return ResponseTemplate<RspQryOrderResponse>.CliRecvResponse(content);
+                    return ResponseTemplate<RspQryOrderResponse>.CliRecvResponse(message);
                 case MessageTypes.TRADERESPONSE://成交查询回报
-                    return ResponseTemplate<RspQryTradeResponse>.CliRecvResponse(content);
+                    return ResponseTemplate<RspQryTradeResponse>.CliRecvResponse(message);
                 case MessageTypes.POSITIONRESPONSE://持仓查询回报
-                    return ResponseTemplate<RspQryPositionResponse>.CliRecvResponse(content);
+                    return ResponseTemplate<RspQryPositionResponse>.CliRecvResponse(message);
                 case MessageTypes.POSITIONDETAILRESPONSE://查询持仓明细回报
-                    return ResponseTemplate<RspQryPositionDetailResponse>.CliRecvResponse(content);
+                    return ResponseTemplate<RspQryPositionDetailResponse>.CliRecvResponse(message);
                 case MessageTypes.SYMBOLRESPONSE://合约查询回报
-                    return ResponseTemplate<RspQrySymbolResponse>.CliRecvResponse(content);
+                    return ResponseTemplate<RspQrySymbolResponse>.CliRecvResponse(message);
                 case MessageTypes.SETTLEINFORESPONSE://结算信息回报
-                    return ResponseTemplate<RspQrySettleInfoResponse>.CliRecvResponse(content);
+                    return ResponseTemplate<RspQrySettleInfoResponse>.CliRecvResponse(message);
                 case MessageTypes.BARRESPONSE://历史数据回报
-                    return ResponseTemplate<RspQryBarResponse>.CliRecvResponse(content);
+                    return ResponseTemplate<RspQryBarResponse>.CliRecvResponse(message);
                 case MessageTypes.SETTLEINFOCONFIRMRESPONSE://结算确认回报
-                    return ResponseTemplate<RspQrySettleInfoConfirmResponse>.CliRecvResponse(content);
+                    return ResponseTemplate<RspQrySettleInfoConfirmResponse>.CliRecvResponse(message);
                 case MessageTypes.CONFIRMSETTLEMENTRESPONSE://确认结算回报
-                    return ResponseTemplate<RspConfirmSettlementResponse>.CliRecvResponse(content);
+                    return ResponseTemplate<RspConfirmSettlementResponse>.CliRecvResponse(message);
                 case MessageTypes.MAXORDERVOLRESPONSE://可下单手数回报
-                    return ResponseTemplate<RspQryMaxOrderVolResponse>.CliRecvResponse(content);
+                    return ResponseTemplate<RspQryMaxOrderVolResponse>.CliRecvResponse(message);
                 case MessageTypes.ACCOUNTINFORESPONSE://帐户信息查询
-                    return ResponseTemplate<RspQryAccountInfoResponse>.CliRecvResponse(content);
+                    return ResponseTemplate<RspQryAccountInfoResponse>.CliRecvResponse(message);
                 case MessageTypes.INVESTORRESPONSE://交易者信息查询
-                    return ResponseTemplate<RspQryInvestorResponse>.CliRecvResponse(content);
+                    return ResponseTemplate<RspQryInvestorResponse>.CliRecvResponse(message);
                 case MessageTypes.CONTRIBRESPONSE:
-                    return ResponseTemplate<RspContribResponse>.CliRecvResponse(content);
+                    return ResponseTemplate<RspContribResponse>.CliRecvResponse(message);
 
                 case MessageTypes.CHANGEPASSRESPONSE://修改密码回报
-                    return ResponseTemplate<RspReqChangePasswordResponse>.CliRecvResponse(content);
+                    return ResponseTemplate<RspReqChangePasswordResponse>.CliRecvResponse(message);
                 case MessageTypes.NOTICERESPONSE://查询系统通知回报
-                    return ResponseTemplate<RspQryNoticeResponse>.CliRecvResponse(content);
+                    return ResponseTemplate<RspQryNoticeResponse>.CliRecvResponse(message);
                 case MessageTypes.CONTRACTBANKRESPONSE://查询签约银行通知回报
-                    return ResponseTemplate<RspQryContractBankResponse>.CliRecvResponse(content);
+                    return ResponseTemplate<RspQryContractBankResponse>.CliRecvResponse(message);
                 case MessageTypes.REGISTERBANKACCOUNTRESPONSE://查询银行帐户回报
-                    return ResponseTemplate<RspQryRegisterBankAccountResponse>.CliRecvResponse(content);
+                    return ResponseTemplate<RspQryRegisterBankAccountResponse>.CliRecvResponse(message);
                 case MessageTypes.TRANSFERSERIALRESPONSE://查询出入金流水回报
-                    return ResponseTemplate<RspQryTransferSerialResponse>.CliRecvResponse(content);
+                    return ResponseTemplate<RspQryTransferSerialResponse>.CliRecvResponse(message);
                 case MessageTypes.INSTRUMENTCOMMISSIONRATERESPONSE://查询合约手续费率
-                    return ResponseTemplate<RspQryInstrumentCommissionRateResponse>.CliRecvResponse(content);
+                    return ResponseTemplate<RspQryInstrumentCommissionRateResponse>.CliRecvResponse(message);
                 case MessageTypes.INSTRUMENTMARGINRATERESPONSE://查询保证金率
-                    return ResponseTemplate<RspQryInstrumentMarginRateResponse>.CliRecvResponse(content);
+                    return ResponseTemplate<RspQryInstrumentMarginRateResponse>.CliRecvResponse(message);
                 case MessageTypes.MARKETDATARESPONSE://查询市场行情回报
-                    return ResponseTemplate<RspQryMarketDataResponse>.CliRecvResponse(content);
+                    return ResponseTemplate<RspQryMarketDataResponse>.CliRecvResponse(message);
                 case MessageTypes.TRADINGPARAMSRESPONSE://交易参数回报
-                    return ResponseTemplate<RspQryTradingParamsResponse>.CliRecvResponse(content);
+                    return ResponseTemplate<RspQryTradingParamsResponse>.CliRecvResponse(message);
 
                 case MessageTypes.XMARKETTIMERESPONSE://交易时间回报
-                    return ResponseTemplate<RspXQryMarketTimeResponse>.CliRecvResponse(content);
+                    return ResponseTemplate<RspXQryMarketTimeResponse>.CliRecvResponse(message);
                 case MessageTypes.XEXCHANGERESPNSE://交易所回报
-                    return ResponseTemplate<RspXQryExchangeResponse>.CliRecvResponse(content);
+                    return ResponseTemplate<RspXQryExchangeResponse>.CliRecvResponse(message);
                 case MessageTypes.XSECURITYRESPONSE://品种回报
-                    return ResponseTemplate<RspXQrySecurityResponse>.CliRecvResponse(content);
+                    return ResponseTemplate<RspXQrySecurityResponse>.CliRecvResponse(message);
                 case MessageTypes.XSYMBOLRESPONSE://合约回报
-                    return ResponseTemplate<RspXQrySymbolResponse>.CliRecvResponse(content);
+                    return ResponseTemplate<RspXQrySymbolResponse>.CliRecvResponse(message);
                 case MessageTypes.XYDPOSITIONRESPONSE://持仓回报
-                    return ResponseTemplate<RspXQryYDPositionResponse>.CliRecvResponse(content);
+                    return ResponseTemplate<RspXQryYDPositionResponse>.CliRecvResponse(message);
                 case MessageTypes.XORDERRESPONSE://委托回报
-                    return ResponseTemplate<RspXQryOrderResponse>.CliRecvResponse(content);
+                    return ResponseTemplate<RspXQryOrderResponse>.CliRecvResponse(message);
                 case MessageTypes.XTRADERESPONSE://成交回报
-                    return ResponseTemplate<RspXQryTradeResponse>.CliRecvResponse(content);
+                    return ResponseTemplate<RspXQryTradeResponse>.CliRecvResponse(message);
                 case MessageTypes.XTICKSNAPSHOTRESPONSE://行情快照回报
-                    return ResponseTemplate<RspXQryTickSnapShotResponse>.CliRecvResponse(content);
+                    return ResponseTemplate<RspXQryTickSnapShotResponse>.CliRecvResponse(message);
 
                 case MessageTypes.TICKNOTIFY:
-                    return ResponseTemplate<TickNotify>.CliRecvResponse(content);
+                    return ResponseTemplate<TickNotify>.CliRecvResponse(message);
 
                 case MessageTypes.TICKHEARTBEAT:
                     TickHeartBeatResponse tickhb = new TickHeartBeatResponse();
@@ -441,84 +448,84 @@ namespace TradingLib.Common
 
                 #region manager
                 case MessageTypes.MGROPERATIONRESPONSE:
-                    return ResponseTemplate<RspMGROperationResponse>.CliRecvResponse(content);
+                    return ResponseTemplate<RspMGROperationResponse>.CliRecvResponse(message);
                 case MessageTypes.MGRLOGINRESPONSE://登入回报
-                    return ResponseTemplate<RspMGRLoginResponse>.CliRecvResponse(content);
+                    return ResponseTemplate<RspMGRLoginResponse>.CliRecvResponse(message);
                 case MessageTypes.MGRQRYACCOUNTSRESPONSE://查询帐户列表回报
-                    return ResponseTemplate<RspMGRQryAccountResponse>.CliRecvResponse(content);
+                    return ResponseTemplate<RspMGRQryAccountResponse>.CliRecvResponse(message);
                 case MessageTypes.MGRACCOUNTINFOLITENOTIFY://帐户InfoLite通知回报
-                    return ResponseTemplate<NotifyMGRAccountInfoLiteResponse>.CliRecvResponse(content);
+                    return ResponseTemplate<NotifyMGRAccountInfoLiteResponse>.CliRecvResponse(message);
                 case MessageTypes.MGRRESUMEACCOUNTRESPONE://恢复交易帐户日内交易信息回报
-                    return ResponseTemplate<RspMGRResumeAccountResponse>.CliRecvResponse(content);
+                    return ResponseTemplate<RspMGRResumeAccountResponse>.CliRecvResponse(message);
                 case MessageTypes.MGRSESSIONSTATUSUPDATE://交易帐号登入 退出 事件回报
-                    return ResponseTemplate<NotifyMGRSessionUpdateNotify>.CliRecvResponse(content);
+                    return ResponseTemplate<NotifyMGRSessionUpdateNotify>.CliRecvResponse(message);
                 case MessageTypes.MGRACCOUNTINFORESPONSE://查询交易帐户信息回报
-                    return ResponseTemplate<RspMGRQryAccountInfoResponse>.CliRecvResponse(content);
+                    return ResponseTemplate<RspMGRQryAccountInfoResponse>.CliRecvResponse(message);
                 case MessageTypes.MGRACCOUNTCHANGEUPDATE://帐户变动回报
-                    return ResponseTemplate<NotifyMGRAccountChangeUpdateResponse>.CliRecvResponse(content);
+                    return ResponseTemplate<NotifyMGRAccountChangeUpdateResponse>.CliRecvResponse(message);
                 //case MessageTypes.MGRCONNECTORRESPONSE://查询通道回报
-                //    return ResponseTemplate<RspMGRQryConnectorResponse>.CliRecvResponse(content);
+                //    return ResponseTemplate<RspMGRQryConnectorResponse>.CliRecvResponse(message);
                 case MessageTypes.MGREXCHANGERESPONSE://查询交易所回报
-                    return ResponseTemplate<RspMGRQryExchangeResponse>.CliRecvResponse(content);
+                    return ResponseTemplate<RspMGRQryExchangeResponse>.CliRecvResponse(message);
                 case MessageTypes.MGRUPDATEEXCHANGERESPONSE://更新交易所回报
-                    return ResponseTemplate<RspMGRUpdateExchangeResponse>.CliRecvResponse(content);
+                    return ResponseTemplate<RspMGRUpdateExchangeResponse>.CliRecvResponse(message);
                 case MessageTypes.MGRMARKETTIMERESPONSE://查询交易时间段回报
-                    return ResponseTemplate<RspMGRQryMarketTimeResponse>.CliRecvResponse(content);
+                    return ResponseTemplate<RspMGRQryMarketTimeResponse>.CliRecvResponse(message);
                 case MessageTypes.MGRUPDATEMARKETTIMERESPONSE://更新交易时间段回报
-                    return ResponseTemplate<RspMGRUpdateMarketTimeResponse>.CliRecvResponse(content);
+                    return ResponseTemplate<RspMGRUpdateMarketTimeResponse>.CliRecvResponse(message);
                 case MessageTypes.MGRSECURITYRESPONSE://查询品种回报
-                    return ResponseTemplate<RspMGRQrySecurityResponse>.CliRecvResponse(content);
+                    return ResponseTemplate<RspMGRQrySecurityResponse>.CliRecvResponse(message);
                 case MessageTypes.MGRSYMBOLRESPONSE://查询合约回报
-                    return ResponseTemplate<RspMGRQrySymbolResponse>.CliRecvResponse(content);
+                    return ResponseTemplate<RspMGRQrySymbolResponse>.CliRecvResponse(message);
                 case MessageTypes.MGRRULECLASSRESPONSE://风控规则回报
-                    return ResponseTemplate<RspMGRQryRuleSetResponse>.CliRecvResponse(content);
+                    return ResponseTemplate<RspMGRQryRuleSetResponse>.CliRecvResponse(message);
                 case MessageTypes.MGRRULEITEMRESPONSE://查询风控项目回报
-                    return ResponseTemplate<RspMGRQryRuleItemResponse>.CliRecvResponse(content);
+                    return ResponseTemplate<RspMGRQryRuleItemResponse>.CliRecvResponse(message);
                 case MessageTypes.MGRUPDATERULEITEMRESPONSE://更新风控项目回报
-                    return ResponseTemplate<RspMGRUpdateRuleResponse>.CliRecvResponse(content);
+                    return ResponseTemplate<RspMGRUpdateRuleResponse>.CliRecvResponse(message);
                 case MessageTypes.MGRDELRULEITEMRESPONSE://删除风控规则项目回报
-                    return ResponseTemplate<RspMGRDelRuleItemResponse>.CliRecvResponse(content);
+                    return ResponseTemplate<RspMGRDelRuleItemResponse>.CliRecvResponse(message);
                 case MessageTypes.MGRSYSTEMSTATUSRESPONSE://请求系统状态回报
-                    return ResponseTemplate<RspMGRQrySystemStatusResponse>.CliRecvResponse(content);
+                    return ResponseTemplate<RspMGRQrySystemStatusResponse>.CliRecvResponse(message);
                 case MessageTypes.MGRORDERRESPONSE://请求查询历史委托回报
-                    return ResponseTemplate<RspMGRQryOrderResponse>.CliRecvResponse(content);
+                    return ResponseTemplate<RspMGRQryOrderResponse>.CliRecvResponse(message);
                 case MessageTypes.MGRTRADERESPONSE://请求查询历史成交回报
-                    return ResponseTemplate<RspMGRQryTradeResponse>.CliRecvResponse(content);
+                    return ResponseTemplate<RspMGRQryTradeResponse>.CliRecvResponse(message);
                 case MessageTypes.MGRPOSITIONRESPONSE://请求查询历史持仓回报
-                    return ResponseTemplate<RspMGRQryPositionResponse>.CliRecvResponse(content);
+                    return ResponseTemplate<RspMGRQryPositionResponse>.CliRecvResponse(message);
                 case MessageTypes.MGRCASHRESPONSE://请求出入金查询回报
-                    return ResponseTemplate<RspMGRQryCashResponse>.CliRecvResponse(content);
+                    return ResponseTemplate<RspMGRQryCashResponse>.CliRecvResponse(message);
                 case MessageTypes.MGRSETTLEMENTRESPONSE://请求查询结算单回报
-                    return ResponseTemplate<RspMGRQrySettleResponse>.CliRecvResponse(content);
+                    return ResponseTemplate<RspMGRQrySettleResponse>.CliRecvResponse(message);
                 //case MessageTypes.MGRCHANGEACCOUNTPASSRESPONSE://请求修改帐户密码回报
-                //    return ResponseTemplate<RspMGRChangeAccountPassResponse>.CliRecvResponse(content);
+                //    return ResponseTemplate<RspMGRChangeAccountPassResponse>.CliRecvResponse(message);
                 //case MessageTypes.MGRADDSECURITYRESPONSE://请求添加品种回报
-                //    return ResponseTemplate<RspMGRReqAddSecurityResponse>.CliRecvResponse(content);
+                //    return ResponseTemplate<RspMGRReqAddSecurityResponse>.CliRecvResponse(message);
                 case MessageTypes.MGRUPDATESECURITYRESPONSE://请求更新品种
-                    return ResponseTemplate<RspMGRUpdateSecurityResponse>.CliRecvResponse(content);
+                    return ResponseTemplate<RspMGRUpdateSecurityResponse>.CliRecvResponse(message);
 
                 //case MessageTypes.MGRADDSYMBOLRESPONSE://请求添加合约回报
-                //    return ResponseTemplate<RspMGRReqAddSymbolResponse>.CliRecvResponse(content);
+                //    return ResponseTemplate<RspMGRReqAddSymbolResponse>.CliRecvResponse(message);
                 case MessageTypes.MGRUPDATESYMBOLRESPONSE://请求更新合约回报
-                    return ResponseTemplate<RspMGRUpdateSymbolResponse>.CliRecvResponse(content);
+                    return ResponseTemplate<RspMGRUpdateSymbolResponse>.CliRecvResponse(message);
                 case MessageTypes.MGRCHANGEINVESTOR://请求修改投资者信息
-                    return ResponseTemplate<RspMGRReqChangeInvestorResponse>.CliRecvResponse(content);
+                    return ResponseTemplate<RspMGRReqChangeInvestorResponse>.CliRecvResponse(message);
                 case MessageTypes.MGRUPDATEPOSLOCKRESPONSE://请求修改帐户锁仓权限回报
-                    return ResponseTemplate<RspMGRReqUpdatePosLockResponse>.CliRecvResponse(content);
+                    return ResponseTemplate<RspMGRReqUpdatePosLockResponse>.CliRecvResponse(message);
                 //case MessageTypes.MGRMANAGERRESPONSE://查询管理员列表回报
-                //    return ResponseTemplate<RspMGRQryManagerResponse>.CliRecvResponse(content);
+                //    return ResponseTemplate<RspMGRQryManagerResponse>.CliRecvResponse(message);
                 case MessageTypes.MGRQRYACCTSERVICERESPONSE://查询帐户服务回报
-                    return ResponseTemplate<RspMGRQryAcctServiceResponse>.CliRecvResponse(content);
+                    return ResponseTemplate<RspMGRQryAcctServiceResponse>.CliRecvResponse(message);
                 case MessageTypes.MGRCONTRIBRESPONSE://扩展回报
-                    return ResponseTemplate<RspMGRContribResponse>.CliRecvResponse(content);
+                    return ResponseTemplate<RspMGRContribResponse>.CliRecvResponse(message);
                 case MessageTypes.MGRCONTRIBRNOTIFY://扩展回报
-                    return ResponseTemplate<NotifyMGRContribNotify>.CliRecvResponse(content);
+                    return ResponseTemplate<NotifyMGRContribNotify>.CliRecvResponse(message);
                 #endregion
 
 
                 #region 行情部分
                 case MessageTypes.MGRQRYSYMBOLSREGISTEDRESPONSE://FeedHandler请求查询已注册合约回报
-                    return ResponseTemplate<RspMDQrySymbolsRegistedResponse>.CliRecvResponse(content);
+                    return ResponseTemplate<RspMDQrySymbolsRegistedResponse>.CliRecvResponse(message);
                 #endregion
                 default:
                     throw new PacketError();
@@ -535,7 +542,7 @@ namespace TradingLib.Common
         /// </summary>
         /// <param name="frontid"></param>
         /// <param name="clientid"></param>
-        /// <param name="content"></param>
+        /// <param name="message"></param>
         /// <returns></returns>
         public static T SrvRecvRequest(string frontid, string clientid, string content)
         {
@@ -600,10 +607,10 @@ namespace TradingLib.Common
             return packet;
         }
 
-        public static T CliRecvResponse(string content)
+        public static T CliRecvResponse(Message message)
         {
             T packet = new T();
-            packet.Deserialize(content);
+            packet.Deserialize(message.Content);
             return packet;
         }
     }

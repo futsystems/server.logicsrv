@@ -337,7 +337,7 @@ namespace TradingLib.Common
                 //初始化底层Socket连接
                 _tlsocket = new T();
                 _tlsocket.Server = _serverAvabile[serverIdx];
-                _tlsocket.MessageEvent += new Action<MessageTypes, string>(handle);
+                _tlsocket.MessageEvent += new Action<Message>(handle);
                 //开始启动连接
                 _tlsocket.Connect();
 
@@ -376,7 +376,7 @@ namespace TradingLib.Common
                 //断开底层Sockt连接
                 _tlsocket.Disconnect();
                 //解除事件绑定
-                _tlsocket.MessageEvent -= new Action<MessageTypes, string>(handle);
+                _tlsocket.MessageEvent -= new Action<Message>(handle);
                 _tlsocket = null;
 
                 _connect = false;
@@ -736,16 +736,16 @@ namespace TradingLib.Common
 
         //int i = 0;
         //消息处理逻辑
-        void handle(MessageTypes type,string content)
+        void handle(Message message)
         {
             try
             {
-                logger.Debug(string.Format("Got Message type:{0} content:{1}", type, content));
-                if (type == MessageTypes.XEXCHANGERESPNSE)
+                logger.Debug(string.Format("Got Message type:{0} content:{1}", message.Type, message.Content));
+                if (message.Type == MessageTypes.XEXCHANGERESPNSE)
                 {
                     int i = 0;
                 }
-                IPacket packet = PacketHelper.CliRecvResponse(type, content);
+                IPacket packet = PacketHelper.CliRecvResponse(message);
                 //更新服务端消息回报时间戳
                 UpdateServerHeartbeat();
                 switch (packet.Type)

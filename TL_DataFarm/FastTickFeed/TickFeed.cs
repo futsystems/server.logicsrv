@@ -214,17 +214,17 @@ namespace TradingLib.DataFarm
 
 
 
-        ZmqSocket _subscriber;//sub socket receive real time market data
-        ZmqSocket _symbolreq;//req socket send request for subscribe
+        ZSocket _subscriber;//sub socket receive real time market data
+        ZSocket _symbolreq;//req socket send request for subscribe
         bool _tickgo;
         Thread _tickthread;
         bool _tickreceiveruning = false;
 
         private void TickHandler()
         {
-            using (var context = ZmqContext.Create())
+            using (var context = new ZContext())
             {
-                using (ZmqSocket subscriber = context.CreateSocket(SocketType.SUB), symbolreq = context.CreateSocket(SocketType.REQ))
+                using (ZSocket subscriber = new ZSocket(context, ZSocketType.SUB), symbolreq = new ZSocket(context, ZSocketType.REQ))
                 {
                     string reqadd = "tcp://" + CurrentServer + ":" + _reqport;
                     symbolreq.Connect(reqadd);
@@ -247,35 +247,8 @@ namespace TradingLib.DataFarm
                     _symbolreq = symbolreq;
                     _subscriber = subscriber;
 
-                    subscriber.ReceiveReady += (s, e) =>
-                    {
-                        try
-                        {
-                            string tickstr = subscriber.Receive(Encoding.UTF8);
-                            string[] p = tickstr.Split('^');
-                            if (p.Length > 1)
-                            {
-                                //logger.Info("tick str:" + tickstr);
-                                string symbol = p[0];
-                                string tickcontent = p[1];
-                                Tick k = TickImpl.Deserialize(tickcontent);
-
-                                if (k!=null && k.IsValid())
-                                    OnTick(k);
-                            }
-                            else
-                            {
-                                
-                            }
-                        }
-                        catch (Exception ex)
-                        {
-                            logger.Error("Tick process error:" + ex.ToString());
-                        }
-                        //记录数据到达时间
-                        _lastheartbeat = DateTime.Now;
-                    };
-                    var poller = new Poller(new List<ZmqSocket> { subscriber });
+                    ZMessage tickdata;
+                    ZError error;
 
                     _tickreceiveruning = true;
                     OnConnected();
@@ -283,7 +256,37 @@ namespace TradingLib.DataFarm
                     {
                         try
                         {
-                            poller.Poll(timeout);
+                            if (null == (tickdata = subscriber.ReceiveMessage(out error)))
+                            {
+                                if (error == ZError.ETERM)
+                                    return;	// Interrupted
+                                throw new ZException(error);
+                            }
+                            else
+                            {
+                                string tickstr = tickdata.First().ReadString(Encoding.UTF8);
+
+                                //logger.Info("ticksr:" + tickstr);
+                                string[] p = tickstr.Split('^');
+
+                                if (p.Length > 1)
+                                {
+                                    string symbol = p[0];
+                                    string tickcontent = p[1];
+                                    Tick k = TickImpl.Deserialize(tickcontent);
+                                    //logger.Debug("tick date:" + k.Date + " time time:" + k.Time);
+                                    if (k != null && k.IsValid())
+                                        OnTick(k);
+                                }
+                                else
+                                {
+                                    //logger.Info("tick str:" + tickstr);
+                                }
+
+                                //记录数据到达时间
+                                _lastheartbeat = DateTime.Now;
+                            }
+
                             if (!_tickgo)
                             {
                                 logger.Info("Tick Thread Stopped,try to close socket");
@@ -291,7 +294,7 @@ namespace TradingLib.DataFarm
                                 symbolreq.Close();
                             }
                         }
-                        catch (ZmqException ex)
+                        catch (ZException ex)
                         {
                             logger.Error("Tick Sock错误:" + ex.ToString());
 

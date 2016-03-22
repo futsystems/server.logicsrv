@@ -20,6 +20,24 @@ namespace TradingLib.DataFarm.Common
         private readonly List<IServiceHost> _serviceHosts = new List<IServiceHost>();
 
         bool _serviceHostLoaded = false;
+
+        /// <summary>
+        /// 启动ServiceHost
+        /// </summary>
+        protected void StartServiceHosts()
+        {
+            logger.Info("Start ServiceHosts");
+            if (!_serviceHostLoaded)
+            {
+                LoadServiceHosts();
+            }
+            foreach (var h in _serviceHosts)
+            {
+                StartServiceHost(h);
+            }
+        }
+
+
         /// <summary>
         /// 加载ServiceHost
         /// </summary>
@@ -67,21 +85,7 @@ namespace TradingLib.DataFarm.Common
             _serviceHostLoaded = true; 
         }
 
-        /// <summary>
-        /// 启动ServiceHost
-        /// </summary>
-        protected void StartServiceHosts()
-        {
-            logger.Info("Start ServiceHosts");
-            if (!_serviceHostLoaded)
-            {
-                LoadServiceHosts();
-            }
-            foreach (var h in _serviceHosts)
-            {
-                StartServiceHost(h);
-            }
-        }
+        
 
         /// <summary>
         /// 启动某个ServiceHost

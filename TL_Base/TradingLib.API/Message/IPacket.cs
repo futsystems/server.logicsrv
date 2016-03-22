@@ -86,6 +86,18 @@ namespace TradingLib.API
         string Serialize();
 
         /// <summary>
+        /// 二进制数据反序列化
+        /// </summary>
+        /// <param name="data"></param>
+        void DeserializeBin(byte[] data);
+
+        /// <summary>
+        /// 序列化成二进制
+        /// </summary>
+        /// <returns></returns>
+        byte[] SerializeBin();
+
+        /// <summary>
         /// 输出string用于打印
         /// </summary>
         /// <returns></returns>

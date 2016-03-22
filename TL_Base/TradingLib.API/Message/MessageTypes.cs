@@ -106,6 +106,7 @@ namespace TradingLib.API
 
         BOSENDORDER=5300,//发送二元期权委托
 
+
         // responses or acks
         RESPONSE = 6000,
         VERSIONRESPONSE,//版本回报
@@ -164,7 +165,10 @@ namespace TradingLib.API
         XTRADERESPONSE,//成交回报
         //UPDATELOCATIONRESPONSE,//更新地址回报
         XTICKSNAPSHOTRESPONSE,//行情快照回报
+        BIN_BARRESPONSE,//二进制Bar回报
+        
         // END STANDARD MESSAGES
+
 
         BOORDERNOTIFY = 6300,//二元委托回报
         BOORDERERRORNOTIFY,//二元委托错误回报
