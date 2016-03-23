@@ -98,17 +98,23 @@ namespace TradingLib.Common
             }
         }
 
-        public FrequencyManager(FrequencyPlugin fb, IEnumerable<KeyValuePair<Symbol, BarConstructionType>> symbols, bool synchronizebars = false)
+        public FrequencyManager(IEnumerable<KeyValuePair<Symbol, BarConstructionType>> symbols, bool synchronizebars = false)
         {
             foreach (var s in symbols)
             {
                 this.symbolBarConstructionTypeMap.Add(s.Key, BarUtils.GetBarConstruction(s.Key, s.Value));
             }
             this._synchronizeBars = synchronizebars;
-            this._mainfrequency = fb;
+            
+            this._mainfrequency = new TimeFrequency(new BarFrequency(BarInterval.CustomTime, 60));
+            this.RegisterFrequencies(this._mainfrequency);
+            this.RegisterFrequencies(new TimeFrequency(new BarFrequency(BarInterval.CustomTime, 180)));//3
+            this.RegisterFrequencies(new TimeFrequency(new BarFrequency(BarInterval.CustomTime, 300)));//5
+            this.RegisterFrequencies(new TimeFrequency(new BarFrequency(BarInterval.CustomTime, 900)));//15
+            this.RegisterFrequencies(new TimeFrequency(new BarFrequency(BarInterval.CustomTime, 1800)));//30
+            this.RegisterFrequencies(new TimeFrequency(new BarFrequency(BarInterval.CustomTime, 3600)));//60
+            //this.RegisterFrequencies(new TimeFrequency(new BarFrequency(BarInterval.CustomTime, 86400)));//1天
 
-            //
-            this.RegisterFrequencies(fb);
         }
 
         /// <summary>

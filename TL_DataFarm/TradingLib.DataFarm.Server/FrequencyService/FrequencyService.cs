@@ -34,7 +34,7 @@ namespace TradingLib.DataFarm.Common
         {
 
             //初始化FrequencyPlugin
-            TimeFrequency tm = new TimeFrequency(new BarFrequency(BarInterval.CustomTime,60));
+            //TimeFrequency tm = new TimeFrequency(new BarFrequency(BarInterval.CustomTime,60));
             
             //加载合约
             Symbol symbol = MDBasicTracker.SymbolTracker["CLK6"];
@@ -50,7 +50,8 @@ namespace TradingLib.DataFarm.Common
 
                 subscribeSymbolMap.TryAdd(symbol.Symbol, symbol);
 
-                frequencyManager = new FrequencyManager(tm, map);
+                frequencyManager = new FrequencyManager(map);
+
             }
 
 
