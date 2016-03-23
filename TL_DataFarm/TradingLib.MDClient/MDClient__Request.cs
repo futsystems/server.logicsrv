@@ -130,5 +130,16 @@ namespace TradingLib.MDClient
             histClient.TLSend(request);
             return reqid;
         }
+
+        public int DemoTick(int time, decimal price)
+        { 
+            int reqid = NextRequestID;
+            MDDemoTickRequest request = RequestTemplate<MDDemoTickRequest>.CliSendRequest(reqid);
+            request.Time = time;
+            request.Trade = price;
+
+            histClient.TLSend(request);
+            return reqid;
+        }
     }
 }

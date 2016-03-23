@@ -14,6 +14,8 @@ namespace TradingLib.DataFarm.Common
     {
         IHistDataStore _datastore = null;
 
+        
+
         public DataCore()
             :base("DataCore")
         {
@@ -68,14 +70,19 @@ namespace TradingLib.DataFarm.Common
                 }
                 _datastore.Commit();
             }
+
+            
         }
 
         public override void Start()
         {
             logger.Info("Start....");
 
+            //启动Bar数据生成器
+            this.StartFrequencyService();
+
             //启动TickFeed
-            this.StartTickFeeds();
+            //this.StartTickFeeds();
 
             //启动ServiceHost
             this.StartServiceHosts();

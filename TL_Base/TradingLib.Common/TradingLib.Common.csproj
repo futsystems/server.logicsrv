@@ -121,7 +121,7 @@
     <Compile Include="Trading\Data\Bar2\BarFrequency.cs" />
     <Compile Include="Trading\Data\Bar2\BarGenerator.cs" />
     <Compile Include="Trading\Data\Bar2\BarUtils.cs" />
-    <Compile Include="Trading\Data\Bar2\Enums.cs" />
+    <Compile Include="Trading\Data\Bar2\EnumBarConstructionType.cs" />
     <Compile Include="Trading\Data\Bar2\EventArgs.cs" />
     <Compile Include="Trading\Data\Bar2\Frequency.cs" />
     <Compile Include="Trading\Data\Bar2\FrequencyBarElementSeries.cs" />
@@ -143,11 +143,11 @@
     <Compile Include="Trading\Settlement\CashTransactionImpl.cs" />
     <Compile Include="Trading\Settlement\ExchangeSettlement.cs" />
     <Compile Include="Utils\ConsoleWriter.cs" />
-    <Compile Include="Utils\DateTimeUtils.cs" />
+    <Compile Include="Utils\Util_DateTime.cs" />
     <Compile Include="Utils\ChinSpellcs.cs" />
     <Compile Include="Utils\Dequeue.cs" />
     <Compile Include="Utils\LocationInfo.cs" />
-    <Compile Include="Utils\QList.cs" />
+    <Compile Include="Trading\Data\Bar2\QList.cs" />
     <Compile Include="Utils\Util_Decimal.cs" />
     <Compile Include="Utils\Util_String.cs" />
     <Compile Include="Utils\Version.cs" />

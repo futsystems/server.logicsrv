@@ -323,5 +323,17 @@ namespace TradingLib.DataFarm.Common
         }
 
 
+        void SrvOnMDDemoTick(IServiceHost host, IConnection conn, MDDemoTickRequest request)
+        {
+            logger.Info(string.Format("Conn:{0} send demotick request", conn.SessionID));
+            Tick k = new TickImpl("CNH6");
+            k.Date = 20160323;
+            k.Time = request.Time;
+            k.Trade = request.Trade;
+            k.Size = 1;
+
+            freqService.ProcessTick(k);
+
+        }
     }
 }

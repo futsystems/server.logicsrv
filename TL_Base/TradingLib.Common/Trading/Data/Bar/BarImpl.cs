@@ -98,7 +98,7 @@ namespace TradingLib.Common
         public BarImpl(Bar b)
         {
             _sym = b.Symbol;
-            h = b.Open;
+            h = b.High;
             l = b.Low;
             o = b.Open;
             c = b.Close;

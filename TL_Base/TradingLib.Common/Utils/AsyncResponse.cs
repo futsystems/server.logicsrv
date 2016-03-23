@@ -84,6 +84,7 @@ namespace TradingLib.Common
                 }
                 catch (Exception ex)
                 {
+                    
                     Util.Debug("process tick error:" + ex.ToString());
                 }
             }

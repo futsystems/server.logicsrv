@@ -17,6 +17,44 @@ namespace TradingLib.Common
         PLAINTEXT,
         BINARY,
     }
+
+    public class MDDemoTickRequest : RequestPacket
+    {
+        public MDDemoTickRequest()
+        {
+            _type = MessageTypes.MD_DEMOTICK;
+        }
+
+        /// <summary>
+        /// 时间
+        /// </summary>
+        public int Time { get; set; }
+
+        /// <summary>
+        /// 成交价格
+        /// </summary>
+        public decimal Trade { get; set; }
+
+        public override string ContentSerialize()
+        {
+            StringBuilder sb = new StringBuilder();
+            char d = ',';
+            sb.Append(this.Time);
+            sb.Append(d);
+            sb.Append(this.Trade);
+            return sb.ToString();
+        }
+
+        public override void ContentDeserialize(string contentstr)
+        {
+            string[] rec = contentstr.Split(',');
+            this.Time = int.Parse(rec[0]);
+            this.Trade = decimal.Parse(rec[1]);
+        }
+
+
+
+    }
     public class QryBarRequest:RequestPacket
     {
         public QryBarRequest()

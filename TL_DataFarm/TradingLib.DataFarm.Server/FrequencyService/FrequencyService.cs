@@ -29,10 +29,10 @@ namespace TradingLib.DataFarm.Common
         {
 
             //初始化FrequencyPlugin
-            TimeFrequency tm = new TimeFrequency(new BarFrequency(BarInterval.CustomTime,30));
+            TimeFrequency tm = new TimeFrequency(new BarFrequency(BarInterval.CustomTime,60));
             
             //加载合约
-            Symbol symbol = MDBasicTracker.SymbolTracker["HGZ5"];
+            Symbol symbol = MDBasicTracker.SymbolTracker["CNH6"];
             //Symbol symbol2 = MDBasicTracker.SymbolTracker["HSIX5"];
             if (symbol != null)
             {
@@ -54,6 +54,13 @@ namespace TradingLib.DataFarm.Common
 
             //注册频率发生器
             //frequencyManager.RegisterFrequencies(tm);
+
+            frequencyManager.NewFreqKeyBarEvent += new Action<FrequencyManager.FreqKey, SingleBarEventArgs>(frequencyManager_NewFreqKeyBarEvent);
+        }
+
+        void frequencyManager_NewFreqKeyBarEvent(FrequencyManager.FreqKey arg1, SingleBarEventArgs arg2)
+        {
+            logger.Warn(string.Format("Bar Generated Key:{0} Bar:{1}", arg1.Settings.BarFrequency, arg2.Bar));
         }
 
         void OnFreqKeyRegistedEvent(FrequencyManager.FreqKey obj)

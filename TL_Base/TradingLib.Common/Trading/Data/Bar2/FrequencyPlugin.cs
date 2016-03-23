@@ -22,6 +22,7 @@ namespace TradingLib.Common
         /// </summary>
         /// <returns></returns>
         public abstract FrequencyPlugin Clone();
+
         /// <summary>
         /// 是否是基于时间
         /// </summary>

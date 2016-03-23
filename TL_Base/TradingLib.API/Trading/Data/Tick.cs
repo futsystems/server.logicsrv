@@ -196,6 +196,11 @@ namespace TradingLib.API
         /// </summary>
         SNAPSHOT=4,
 
+        /// <summary>
+        /// 时间 用于更新当前序列时间
+        /// </summary>
+        TIME = 5,
+
     }
 
     public class InvalidTick : Exception { }

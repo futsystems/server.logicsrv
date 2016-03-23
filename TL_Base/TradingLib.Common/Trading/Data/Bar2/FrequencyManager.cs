@@ -21,11 +21,21 @@ namespace TradingLib.Common
         /// </summary>
         public event Action<FreqKey> FreqKeyRegistedEvent;
 
+        public event Action<FreqKey, SingleBarEventArgs> NewFreqKeyBarEvent;
+
+        void OnFreqKeyBar(FreqKey freqkey, SingleBarEventArgs bar)
+        {
+            if (NewFreqKeyBarEvent != null)
+            {
+                NewFreqKeyBarEvent(freqkey, bar);
+            }
+        }
+
         /// <summary>
         /// FreqKey与FreqInfo的Map
         /// </summary>
         Dictionary<FrequencyManager.FreqKey, FrequencyManager.FreqInfo> freqKeyInfoMap = new Dictionary<FreqKey, FreqInfo>();
-        
+
         /// <summary>
         /// 合约与该合约的所有FreqInfo的list Map
         /// </summary>
@@ -50,7 +60,7 @@ namespace TradingLib.Common
         /// <summary>
         /// 主频率
         /// </summary>
-        public FrequencyPlugin MainFrequency 
+        public FrequencyPlugin MainFrequency
         {
             get
             {
@@ -89,12 +99,15 @@ namespace TradingLib.Common
 
         public FrequencyManager(FrequencyPlugin fb, IEnumerable<KeyValuePair<Symbol, BarConstructionType>> symbols, bool synchronizebars = false)
         {
-            foreach(var s in symbols)
+            foreach (var s in symbols)
             {
-                this.symbolBarConstructionTypeMap.Add(s.Key,BarUtils.GetBarConstruction(s.Key,s.Value));
+                this.symbolBarConstructionTypeMap.Add(s.Key, BarUtils.GetBarConstruction(s.Key, s.Value));
             }
             this._synchronizeBars = synchronizebars;
             this._mainfrequency = fb;
+
+            //
+            this.RegisterFrequencies(fb);
         }
 
         /// <summary>
@@ -200,12 +213,12 @@ namespace TradingLib.Common
                 return target;
             }
             return new List<FrequencyManager.FreqInfo>();
-        
+
         }
 
         public void ProcessBar(Bar bar)
-        { 
-        
+        {
+
         }
 
 
@@ -244,6 +257,8 @@ namespace TradingLib.Common
         /// <param name="freqkey"></param>
         private void RegisterFreKey(FrequencyManager.FreqKey freqkey)
         {
+            logger.Info("RegisterFreKey:" + freqkey.ToString());
+
             if (this.freqKeyInfoMap.Keys.Contains(freqkey))
             {
                 logger.Warn(string.Format("FreqKey:{0} already registed", freqkey));
@@ -257,6 +272,7 @@ namespace TradingLib.Common
             //添加对应FreqKey的FreqInfo数据
             FrequencyManager.FreqInfo freqInfo = new FrequencyManager.FreqInfo(freqkey, this._synchronizeBars, this);
             freqInfo.Generator.Initialize(freqkey.Symbol, this.symbolBarConstructionTypeMap[freqkey.Symbol]);
+            
             //1.更新FreqKey到FreqInfo映射
             this.freqKeyInfoMap[freqkey] = freqInfo;
 
@@ -281,6 +297,11 @@ namespace TradingLib.Common
             }
         }
 
+        /// <summary>
+        /// 获得某个FreqKey对应的FreqInfo数据集
+        /// </summary>
+        /// <param name="freqkey"></param>
+        /// <returns></returns>
         private FrequencyManager.FreqInfo GetFreqInfoForFreqKey(FrequencyManager.FreqKey freqkey)
         {
             FrequencyManager.FreqInfo freqInfo;
@@ -300,15 +321,18 @@ namespace TradingLib.Common
             return this.freqKeyInfoMap.Values;
         }
 
+
+        public DateTime CurrentTime { get { return _currentTime; } }
         /// <summary>
         /// 处理行情数据
         /// </summary>
         /// <param name="symbol"></param>
         /// <param name="tick"></param>
-        public void ProcessTick(Symbol symbol,Tick tick)
+        public void ProcessTick(Symbol symbol, Tick tick)
         {
             //logger.Info("process tick called,symbol:" + symbol.Symbol);
-            this.UpdateTime(tick.DateTime());
+            DateTime ticktime = tick.DateTime();
+            this.UpdateTime(ticktime);
 
             //获得该合约所有的FreqInfo对象
             IEnumerable<FrequencyManager.FreqInfo> list = this.GetFreqInfosForSymbol(symbol);
@@ -317,7 +341,7 @@ namespace TradingLib.Common
             {
                 FreqInfoProcessTick(tick, info);
             }
-
+            //更新Frequency的PartialItem值
             foreach (var info in list)
             {
                 FreqInfoProcessTimeTick(info, this._currentTime);
@@ -326,6 +350,7 @@ namespace TradingLib.Common
             //遍历所有没有PartialBar的FreqKey
             if (this.freqKeyNoPartialBar.Count > 0)
             {
+                //检查将该合约对应的所有FreqInfo,如果有PartialItem则将该FreqKey从freqKeyNoPartialBar中移除
                 foreach (var info in list)
                 {
                     if (info.Frequency.Bars.HasPartialItem)
@@ -333,11 +358,13 @@ namespace TradingLib.Common
                         this.freqKeyNoPartialBar.Remove(info.FreqKey);
                     }
                 }
-                //遍历所有没有PartialBar的FreqKey列表然后调用对应的FreqInfo处理timetick
+
+                //遍历所有没有PartialBar的FreqKey列表然后调用对应的FreqInfo处理timetick 用于驱动其他其他合约Bar
                 foreach (FrequencyManager.FreqKey freqky in this.freqKeyNoPartialBar)
                 {
                     FreqInfoProcessTimeTick(this.GetFreqInfoForFreqKey(freqky), this._currentTime);
                 }
+
                 //然后再次检查没有PartialBar的FreqKey列表
                 foreach (FrequencyManager.FreqKey freqkey in this.freqKeyNoPartialBar)
                 {
@@ -349,10 +376,10 @@ namespace TradingLib.Common
 
             }
 
-            DateTime ticktime = tick.DateTime();
+            //行情最新事件记录
             if (ticktime < this._lastTickTime)
             {
-                throw new Exception(string.Format("Out of order tick.  Received tick for symbol {2} with time {0} when previous tick time was {1}",ticktime, this._currentTime, symbol.Symbol));
+                throw new Exception(string.Format("Out of order tick.  Received tick for symbol {2} with time {0} when previous tick time was {1}", ticktime, this._currentTime, symbol.Symbol));
             }
 
             this._lastTickTime = ticktime;
@@ -382,21 +409,22 @@ namespace TradingLib.Common
             }
         }
 
-        //更新Frequency的PartialItem为FreqInfo的PendingPartialBar
+        /// <summary>
+        /// 更新Frequency的PartialItem为FreqInfo的PendingPartialBar
+        /// FreqInfo的PendingPartilaBar由FrequecyGenerator处理Tick数据时 对外触发NewTickEventArgs附带了最新的Bar数据
+        /// </summary>
+        /// <param name="freqInfo"></param>
+        /// <param name="datetime"></param>
         private void FreqInfoProcessTimeTick(FrequencyManager.FreqInfo freqInfo, System.DateTime datetime)
         {
-            //如果FreqInfo的PendingPartialBar为空 且 其Frequency没有PartialItem
-            //如果FreqInfo.PendingPartialBar为空并且Frequency.WriteableBars没有PartialItem则用调用FreqInfo处理TimeTick
+            //如果FreqInfo.PendingPartialBar为空并且Frequency.WriteableBars没有PartialItem则用调用FreqInfo处理TimeTick用于生成一条PendingPartialBar
             if (freqInfo.PendingPartialBar == null && !freqInfo.Frequency.WriteableBars.HasPartialItem)
             {
                 //处理对应的时间Tick
-                //this.FreqInfoProcessTick(new Tick
-                //{
-                //    tickType = TickType.CurrentTime,
-                //    time = datetime
-                //}, freqInfo);
+                this.FreqInfoProcessTick(new TickImpl(datetime), freqInfo);
             }
-            //如果FreqInfo的PendingPartialBar不为空则将该PartialBar复制到WriteableBars的PartialItem 同时将freqInfo.PendingPartialBar置空
+            //freqInfo.PendingPartialBar 由freqgenerator实时行情驱动并更新
+            //如果FreqInfo的PendingPartialBar不为空则将该PartialBar复制到WriteableBars的PartialItem 同时将freqInfo.PendingPartialBar置空 表面已经将最新的Bar更新到freqInfo.Frequency.WriteableBars.PartialItem
             if (freqInfo.PendingPartialBar != null)
             {
                 freqInfo.Frequency.WriteableBars.PartialItem = freqInfo.PendingPartialBar;
@@ -404,13 +432,18 @@ namespace TradingLib.Common
             freqInfo.PendingPartialBar = null;
         }
 
-
+        /// <summary>
+        /// 某个FreqInfo触发Tick事件
+        /// </summary>
+        /// <param name="info"></param>
+        /// <param name="tick"></param>
         internal void OnFrequencyTick(FreqInfo info, Tick tick)
-        { 
-        
+        {
+
         }
         /// <summary>
         /// 更新当前时间(Tick时间)
+        /// 如果时间已经越过了某些FreqInfo的Bar下次更新时间,则需要把这些对应的Bar关闭掉,并且对外触发发送
         /// </summary>
         /// <param name="datetime"></param>
         void UpdateTime(DateTime datetime)
@@ -420,24 +453,29 @@ namespace TradingLib.Common
             {
                 this._currentTime = datetime;
 
+                //以下逻辑用于滚动更新每个FreqKey的更新时间
                 List<FreqInfo> list = new List<FreqInfo>();
-                //把更新时间小于等于当前时间的所有FreqInfo放入列表
+                //把下次更新时间小于等于当前时间的所有FreqInfo放入列表 同时调用FreqInfo处理Tick数据 这些FreqInfo需要更新Bar数据
                 while (this.sortedFreqInfoBarNextUpdate.Count > 0 && sortedFreqInfoBarNextUpdate.Peek().Priority <= datetime)
                 {
-                    //
-                    
                     FreqInfo freqinfo = sortedFreqInfoBarNextUpdate.Dequeue();//出队列
-                    logger.Debug(string.Format("Freq:{0} need to update",freqinfo));
-                    this.FreqInfoProcessTick(null, freqinfo);//调用FreqInfo处理TimeTick
+#if DEBUG
+                    logger.Info(string.Format("Freq {0} need to update bar", freqinfo));
+#endif
+                    Tick k = new TickImpl(datetime);
+                    this.FreqInfoProcessTick(k, freqinfo);//调用FreqInfo处理TimeTick
                     list.Add(freqinfo);
                 }
                 //然后记录这些FreqInfo的下一次更新时间
                 foreach (var current in list)
                 {
                     //将该FreqInfo的下一次更新时间入队列
+#if DEBUG
+                    logger.Info(string.Format("Freq {0} Enqueue NextUpdateTime:{1}", current, current.Generator.NextTimeUpdateNeeded));
+#endif
                     sortedFreqInfoBarNextUpdate.Enqueue(current, current.Generator.NextTimeUpdateNeeded);
                 }
-                //发送PendingBars
+                //时间检查过程中触发Bar发送
                 this.SendPendingBars();
             }
         }
@@ -450,30 +488,35 @@ namespace TradingLib.Common
             //logger.Debug("send pending bars");
             FrequencyNewBarEventHolder eventHolder = new FrequencyNewBarEventHolder();
             HashSet<FrequencyPlugin> hashset = new HashSet<FrequencyPlugin>();
-            //遍历所有有PendingBar的FreqKey 在map中找到对应freqKeySet的FreqInfo
+            //遍历所有有PendingBar的FreqKey 在map中找到对应freqKeySet的FreqInfo 同时将该FreqInfo下的待发送Bar添加到事件集合中
             foreach (FreqInfo current in this.freqKeySetPendingBar.Select(key => { return this.freqKeyInfoMap[key]; }))
             {
                 foreach (SingleBarEventArgs bar in current.PendingBarEvents)//遍历FreqInfo中的所有PendingBar 同时记录有BarEvent的FrequencyBase
-                {   //添加Bar事件 同时将对应的FrequencyBase添加到Hashset
+                {   
+                    //添加Bar事件 同时将对应的FrequencyBase添加到Hashset
                     eventHolder.AddEvent(current.FreqKey, bar);
                     hashset.Add(current.FreqKey.Settings);
                     logger.Debug(string.Format("FreqInfo for key:[{0}] Cached Bar:{1}", current.FreqKey, bar.Bar));
                 }
                 //清空FreqInfo的待发送Bar以及PartialBar 数据集的PartialBar是通过TickEvent来进行传递的 在下面一个循环中需要清空数据集Frequency的PartialItem
                 current.ClearPendingBars();//清空待发送的Bar
-                
             }
+            //处理完PendingBar后 清空
+            this.freqKeySetPendingBar.Clear();
+
 
             //通过FrequencyBase获得所有FreqInfo 清空FreqInfo的PartialBar并将对应的Frekey添加到没有PartialBar的HashSet
             if (eventHolder.EventList.Count > 0)
             {
-                logger.Debug("Clear Frequency's PartialItem");
+#if DEBUG
+                logger.Info("Clear Frequency's PartialItem");
+#endif
                 //遍历FrequencyBase所有的FreqInfo
                 foreach (FrequencyPlugin setting in hashset)
                 {
                     foreach (FrequencyManager.FreqInfo freqinfo in this.GetFreqInfosForFrequencyBase(setting))
                     {
-                        //如果是基于时间的FreqInfo
+                        //如果是基于时间的FreqInfo 同一种FrequencyPlugin的Bar数据是同一到期的
                         if (freqinfo.FreqKey.Settings.IsTimeBased)
                         {
                             freqinfo.Frequency.WriteableBars.ClearPartialItem();//清空PartialItem
@@ -484,24 +527,26 @@ namespace TradingLib.Common
 
 
                 //如果需要同步Bar
-                if (this._synchronizeBars)
-                {
-                    SynchronizeBars(eventHolder);
-                }
-
-                logger.Debug(string.Format("Update Frequency's Collection"));
+                //if (this._synchronizeBars)
+                //{
+                //    SynchronizeBars(eventHolder);
+                //}
+#if DEBUG
+                logger.Info(string.Format("Update Frequency's Collection"));
+#endif
                 //更新Frequency数据集
                 foreach (FrequencyNewBarEventArgs frequencyEvent in eventHolder.EventList)
                 {
                     //更新Frequency的Bar数据集
                     foreach (KeyValuePair<FrequencyManager.FreqKey, SingleBarEventArgs> pair in frequencyEvent.FrequencyEvents)
                     {
-                        
+
                         //通过FreqKey找到对应的FreqInfo同时更新BarCollection 该操作将会在数据集中添加Bar
                         this.freqKeyInfoMap[pair.Key].UpdateBarCollection(pair.Value.Bar, pair.Value.BarEndTime);
                         this._currentTime = pair.Value.BarEndTime;//更新当前时间为BarEndTime
                     }
 
+                    /** 频率转换
                     //获得FreqInfo对应的Frequency对象 更新Frequency对象的DestFrequencyConversion
                     foreach (KeyValuePair<FrequencyManager.FreqKey, SingleBarEventArgs> pair in frequencyEvent.FrequencyEvents)
                     {
@@ -520,25 +565,27 @@ namespace TradingLib.Common
                             }
                         }
                     }
+                     * **/
                 }
 
                 //IFrequencyProcess处理BarEvents
                 //this._x5e07af8ebe8a76be.ProcessBarEvents(eventHolder.EventList);
 
                 //遍历所有EventList通过FreqKey定位到FreqInfo 并通过FreqInfo调用SendNewBar对外触发Frequency的Bar事件
-                logger.Debug("FreqInfo Send out Bar Event");
+#if DEBUG
+                logger.Info("FreqInfo Send out Bar Event");
+#endif
                 foreach (FrequencyNewBarEventArgs frequencyEvents in eventHolder.EventList)
                 {
                     foreach (KeyValuePair<FrequencyManager.FreqKey, SingleBarEventArgs> pair in frequencyEvents.FrequencyEvents)
                     {
-                        this.freqKeyInfoMap[pair.Key].SendNewBar(pair.Value);
+                        FreqInfo info = this.freqKeyInfoMap[pair.Key];
+                        info.SendNewBar(pair.Value);
+                        this.OnFreqKeyBar(info.FreqKey, pair.Value);
+                        
                     }
                 }
-
             }
-
-
-
         }
 
 
@@ -586,7 +633,7 @@ namespace TradingLib.Common
                             }
                             if (barData != null)
                             {
-                                Bar barData2 = new BarImpl(current3.Value.Bar.Symbol,freqKey.Settings.BarFrequency, current3.Value.Bar.BarStartTime);
+                                Bar barData2 = new BarImpl(current3.Value.Bar.Symbol, freqKey.Settings.BarFrequency, current3.Value.Bar.BarStartTime);
                                 barData2.Open = (barData2.Close = (barData2.High = (barData2.Low = barData.Close)));
                                 barData2.Bid = barData.Bid;
                                 barData2.Ask = barData.Ask;
@@ -635,162 +682,180 @@ namespace TradingLib.Common
 
         #region FreqInfo定义
         internal class FreqInfo
-    {
-        private FrequencyManager _manager;
-        private FrequencyPlugin _frequencgen;
-        private IFrequencyGenerator _freqgenerator;
-        /// <summary>
-        /// Frequency数据发生器
-        /// </summary>
-        public IFrequencyGenerator Generator { get { return _freqgenerator; } }
-
-        private Frequency _frequency;
-        public Frequency Frequency { get { return _frequency; } }
-        private Bar _partialBar;
-
-        private Symbol _symbol;
-        private List<SingleBarEventArgs> _pendingBarEvents;
-        /// <summary>
-        /// 待发送Bar数据
-        /// </summary>
-        public List<SingleBarEventArgs> PendingBarEvents { get { return _pendingBarEvents; } }
-
-        private Bar _pendingPartialBar;
-        public Bar PendingPartialBar { get { return _pendingPartialBar; } set { _pendingPartialBar = value; } }
-
-        private FreqKey _key;
-        public FreqKey FreqKey { get { return _key; } }
-            
-        public FreqInfo(FreqKey key, bool synchronizeBars, FrequencyManager manager)
         {
-            this._key = key;
-            this._symbol = _key.Symbol;
-            this._manager = manager;
-            this._freqgenerator = _key.Settings.CreateFrequencyGenerator();
-            this._frequency = new Frequency(_key, synchronizeBars);
-            this._pendingBarEvents = new List<SingleBarEventArgs>();
+            ILog logger = null;
+            private FrequencyManager _manager;
+            private FrequencyPlugin _frequencgen;
+            private IFrequencyGenerator _freqgenerator;
+            /// <summary>
+            /// Frequency数据发生器
+            /// </summary>
+            public IFrequencyGenerator Generator { get { return _freqgenerator; } }
 
-            this._freqgenerator.NewBarEvent += new Action<SingleBarEventArgs>(_freqgenerator_NewBarEvent);
-            this._freqgenerator.NewTickEvent += new Action<NewTickEventArgs>(_freqgenerator_NewTickEvent);
-        }
+            private Frequency _frequency;
+            public Frequency Frequency { get { return _frequency; } }
+            private Bar _partialBar;
 
-        public override string ToString()
-        {
-            return string.Format("FreqInfo for Key:{0}", this._key);
-        }
-        /// <summary>
-        /// 更新Frequency的Bar数据
-        /// QList<>Add操作会清空PartialItem项
-        /// </summary>
-        /// <param name="bar"></param>
-        /// <param name="barEndTime"></param>
-        public void UpdateBarCollection(Bar bar,DateTime barEndTime)
-        {
-            this.Frequency.WriteableBars.Add(bar);
-            this.Frequency.CurrentBarEndTime = barEndTime;
-        }
+            private Symbol _symbol;
+            private List<SingleBarEventArgs> _pendingBarEvents;
+            /// <summary>
+            /// 待发送Bar数据
+            /// </summary>
+            public List<SingleBarEventArgs> PendingBarEvents { get { return _pendingBarEvents; } }
 
-        /// <summary>
-        /// 清空待发送Bar数据
-        /// </summary>
-        public void ClearPendingBars()
-        {
-            this._pendingBarEvents.Clear();
-            this._pendingPartialBar = null;
-        }
+            private Bar _pendingPartialBar;
+            public Bar PendingPartialBar { get { return _pendingPartialBar; } set { _pendingPartialBar = value; } }
 
-        /// <summary>
-        /// 发送Bar数据 通过Frequency的事件对外触发Bar数据
-        /// </summary>
-        /// <param name="args"></param>
-        public void SendNewBar(SingleBarEventArgs args)
-        {
-            this.Frequency.OnNewBar(args);
-        }
+            private FreqKey _key;
+            /// <summary>
+            /// FreqKey
+            /// </summary>
+            public FreqKey FreqKey { get { return _key; } }
 
-
-        /// <summary>
-        /// 处理Generator的Tick事件
-        /// 当处理完毕Tick后 该事件会携带当前的PartialBar 设定PartialBar
-        /// </summary>
-        /// <param name="obj"></param>
-        void _freqgenerator_NewTickEvent(NewTickEventArgs obj)
-        {
-            if (obj.Symbol.Symbol != this._symbol.Symbol)
+            public FreqInfo(FreqKey key, bool synchronizeBars, FrequencyManager manager)
             {
-                return;
-            }
-            this._pendingPartialBar = obj.PartialBar;//设置当前最新的PartialBar
-            this._manager.OnFrequencyTick(this, obj.Tick);
-        }
+                logger = LogManager.GetLogger("FreqInfo");
+                this._key = key;
+                this._symbol = _key.Symbol;
 
+                this._manager = manager;
+                //生成Bar数据生成器 FrequencyPlugin不同,可以按不同的逻辑生成Bar数据
+                this._freqgenerator = _key.Settings.CreateFrequencyGenerator();
+                //生成对应的Frequency数据结构
+                this._frequency = new Frequency(_key, synchronizeBars);
+                this._pendingBarEvents = new List<SingleBarEventArgs>();
+
+                //绑定freqgenerator事件 此处Bar生成事件 只是将Bar添加到待发送列表,不实际出发 需要通过SendNewBar进行发送
+                this._freqgenerator.NewBarEvent += new Action<SingleBarEventArgs>(_freqgenerator_NewBarEvent);
+                this._freqgenerator.NewTickEvent += new Action<NewTickEventArgs>(_freqgenerator_NewTickEvent);
+            }
+
+            public override string ToString()
+            {
+                return string.Format("FreqInfo for Key:{0}", this._key);
+            }
+            /// <summary>
+            /// 更新Frequency的Bar数据
+            /// QList<>Add操作会清空PartialItem项
+            /// </summary>
+            /// <param name="bar"></param>
+            /// <param name="barEndTime"></param>
+            public void UpdateBarCollection(Bar bar, DateTime barEndTime)
+            {
+                
+                this.Frequency.WriteableBars.Add(bar);
+                this.Frequency.CurrentBarEndTime = barEndTime;
+                logger.Info("UpdateBarCollection:" + bar.ToString() + " QTY:" + this.Frequency.WriteableBars.Count);
+            }
+
+            /// <summary>
+            /// 清空待发送Bar数据
+            /// </summary>
+            public void ClearPendingBars()
+            {
+                logger.Info("ClearPendingBars");
+                this._pendingBarEvents.Clear();
+                this._pendingPartialBar = null;
+            }
+
+            /// <summary>
+            /// 发送Bar数据 通过Frequency的事件对外触发Bar数据
+            /// </summary>
+            /// <param name="args"></param>
+            public void SendNewBar(SingleBarEventArgs args)
+            {
+                logger.Info("SendNewBar:" + args.Bar.ToString());
+                this.Frequency.OnNewBar(args);
+            }
+
+
+            /// <summary>
+            /// 处理Generator的Tick事件
+            /// 当处理完毕Tick后 该事件会携带当前的PartialBar 设定PartialBar
+            /// </summary>
+            /// <param name="obj"></param>
+            void _freqgenerator_NewTickEvent(NewTickEventArgs obj)
+            {
+                if (obj.Symbol.Symbol != this._symbol.Symbol)
+                {
+                    return;
+                }
+                this._pendingPartialBar = obj.PartialBar;//设置当前最新的PartialBar
+                this._manager.OnFrequencyTick(this, obj.Tick);
+            }
+
+            /// <summary>
+            /// 处理Generator生成的Bar事件
+            /// </summary>
+            /// <param name="obj"></param>
+            void _freqgenerator_NewBarEvent(SingleBarEventArgs obj)
+            {
+                //合约不一致直接返回
+                if (obj.Symbol.Symbol != this._symbol.Symbol)
+                {
+                    return;
+                }
+                bool flag = false;
+                //Bar不为空
+                if (!obj.Bar.EmptyBar)
+                {
+                    flag = true;
+                }
+                //或者SynchronizeBars为True并且Frequnecy的Bar list有数据
+                else if (this.Frequency.SynchronizeBars && (this.Frequency.WriteableBars.Count > 0 || this.PendingBarEvents.Count > 0))
+                {
+                    flag = true;
+                }
+                if (flag)
+                {
+                    this.PendingBarEvents.Add(obj);
+                }
+            }
+        }
+        #endregion
+
+        #region FreqKey定义
         /// <summary>
-        /// 处理Generator生成的Bar事件
+        /// 频率数据Key
+        /// Symbol-FrequencyPlugin组成了一个唯一键
+        /// 用什么样的Bar生成器为合约Symbol生成Bar数据
         /// </summary>
-        /// <param name="obj"></param>
-        void _freqgenerator_NewBarEvent(SingleBarEventArgs obj)
+        public class FreqKey
         {
-            //合约不一致直接返回
-            if (obj.Symbol.Symbol != this._symbol.Symbol)
+            public FrequencyPlugin Settings { get; set; }
+
+            public Symbol Symbol { get; set; }
+
+            public FreqKey(FrequencyPlugin setting, Symbol symbol)
             {
-                return;
+                this.Settings = setting;
+                this.Symbol = symbol;
             }
-            bool flag = false;
-            //Bar不为空
-            if (!obj.Bar.EmptyBar)
+
+            public override bool Equals(object obj)
             {
-                flag = true;
+                FreqKey key = obj as FreqKey;
+                return key != null && key.Symbol.Symbol == this.Symbol.Symbol && key.Settings.Equals(this.Settings);
             }
-            //或者SynchronizeBars为True并且Frequnecy的Bar list有数据
-            else if (this.Frequency.SynchronizeBars && (this.Frequency.WriteableBars.Count > 0 || this.PendingBarEvents.Count > 0))
+
+            public override int GetHashCode()
             {
-                flag = true;
+                int hashCode = this.Settings.GetHashCode();
+                int num = 0;
+                if (this.Symbol != null)
+                {
+                    num = this.Symbol.GetHashCode();
+                }
+                return hashCode ^ num;
             }
-            if (flag)
+
+            public override string ToString()
             {
-                this.PendingBarEvents.Add(obj);
+                return string.Format("Symbol:{0} - Freq:{1}", this.Symbol.Symbol, this.Settings);
             }
         }
-    }
-    #endregion
 
-    #region FreqKey定义
-    public class FreqKey
-    {
-        public FrequencyPlugin Settings { get; set; }
-
-        public Symbol Symbol { get; set; }
-
-        public FreqKey(FrequencyPlugin setting, Symbol symbol)
-        {
-            this.Settings = setting;
-            this.Symbol = symbol;
-        }
-
-        public override bool Equals(object obj)
-        {
-            FreqKey key = obj as FreqKey;
-            return key != null && key.Symbol.Symbol == this.Symbol.Symbol && key.Settings.Equals(this.Settings);
-        }
-
-        public override int GetHashCode()
-        {
-            int hashCode = this.Settings.GetHashCode();
-            int num = 0;
-            if (this.Symbol != null)
-            {
-                num = this.Symbol.GetHashCode();
-            }
-            return hashCode ^ num;
-        }
-
-        public override string ToString()
-        {
-            return string.Format("Symbol:{0} - Freq:{1}", this.Symbol.Symbol, this.Settings);
-        }
-    }
-
-    #endregion
+        #endregion
 
 
     }

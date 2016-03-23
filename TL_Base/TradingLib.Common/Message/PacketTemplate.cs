@@ -316,6 +316,9 @@ namespace TradingLib.Common
                         return RequestTemplate<MDRegisterSymbolsRequest>.SrvRecvRequest(frontid, clientid, content);
                     #endregion
 
+                    case MessageTypes.MD_DEMOTICK:
+                        return RequestTemplate<MDDemoTickRequest>.SrvRecvRequest(frontid, clientid, content);
+
                     case MessageTypes.BOSENDORDER:
                         return RequestTemplate<BOOrderInsertRequest>.SrvRecvRequest(frontid, clientid, content);
 

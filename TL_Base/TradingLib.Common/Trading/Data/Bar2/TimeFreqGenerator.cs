@@ -42,7 +42,7 @@ namespace TradingLib.Common
 
         public override string ToString()
         {
-            return string.Format("Time:{0}s", this._freq.Interval);
+            return string.Format("Time[{0}s]", this._freq.Interval);
         }
         /// <summary>
         /// 全复制
@@ -141,6 +141,7 @@ namespace TradingLib.Common
 
         public override bool IsTimeBased { get { return true; } }
 
+
         /// <summary>
         /// 以时间为间隔的Bar数据生成器
         /// </summary>
@@ -150,6 +151,9 @@ namespace TradingLib.Common
 
             bool _updated = false;
             TimeSpan _interval;
+            /// <summary>
+            /// Bar生成器
+            /// </summary>
             BarGenerator _generator;
 
             int _units = 0;
@@ -172,7 +176,14 @@ namespace TradingLib.Common
                 this._generator.NewTick += new Action<NewTickEventArgs>(_generator_NewTick);
             }
 
+            /// <summary>
+            /// Tick附带实时Bar事件
+            /// </summary>
             public event Action<NewTickEventArgs> NewTickEvent;
+
+            /// <summary>
+            /// Bar事件
+            /// </summary>
             public event Action<SingleBarEventArgs> NewBarEvent;
 
             void _generator_NewTick(NewTickEventArgs obj)
@@ -193,6 +204,10 @@ namespace TradingLib.Common
             
             }
 
+            /// <summary>
+            /// 处理实时行情
+            /// </summary>
+            /// <param name="k"></param>
             public void ProcessTick(Tick k)
             {
                 this.UpdateTime(k.DateTime());
@@ -202,10 +217,10 @@ namespace TradingLib.Common
             public void UpdateTime(DateTime datetime)
             {
                 DateTime round = TimeFrequency.RoundTime(datetime, this._interval);
-                //没有处理过tick数据 则更新当前的round时间为当前Bar的开始时间
+                //没有处理过tick数据 则更新当前的round时间为当前Bar的开始时间 closebar会执行update=false
                 if (!this._updated)
                 {
-                    logger.Debug(string.Format("DateTime:{0} SetBarStartTime:{1}", datetime, round));
+                    logger.Info(string.Format("DateTime:{0} SetBarStartTime:{1}", datetime, round));
                     this._generator.SetBarStartTime(round);
                     this._updated = true;
                 }
@@ -224,6 +239,9 @@ namespace TradingLib.Common
                 }
             }
 
+            /// <summary>
+            /// 下次Bar结束时间
+            /// </summary>
             public DateTime NextTimeUpdateNeeded
             {
                 get

@@ -166,7 +166,7 @@ namespace TradingLib.API
         //UPDATELOCATIONRESPONSE,//更新地址回报
         XTICKSNAPSHOTRESPONSE,//行情快照回报
         BIN_BARRESPONSE,//二进制Bar回报
-        
+        MD_DEMOTICK,//行情服务器测试Tick
         // END STANDARD MESSAGES
 
 

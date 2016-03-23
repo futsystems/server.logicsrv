@@ -194,6 +194,9 @@ namespace TradingLib.DataFarm.Common
                 case MessageTypes.BARREQUEST:
                     SrvOnBarRequest(host, conn, packet as QryBarRequest);
                     break;
+                case MessageTypes.MD_DEMOTICK:
+                    SrvOnMDDemoTick(host, conn, packet as MDDemoTickRequest);
+                    break;
                 default:
                     logger.Warn(string.Format("Message Type:{0} not handled", packet.Type));
                     break;

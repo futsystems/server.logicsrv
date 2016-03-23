@@ -169,6 +169,11 @@ namespace DataClient
             debug("x:" + string.Format(GetPriceFormat(decimal.Parse(pricetick.Text)), x));
         }
 
+        private void btnTick_Click(object sender, EventArgs e)
+        {
+            mdclient.DemoTick(int.Parse(md_time.Text), md_price.Value);
+        }
+
 
 
 

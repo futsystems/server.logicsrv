@@ -132,8 +132,8 @@ namespace TradingLib.DataFarm.Common
             //转发实时行情
             NotifyTick2Connections(k);
 
-            //生成Bar数据
-            //freqService.ProcessTick(k);
+            //Bar生成服务处理Tick
+            FrequencyServiceProcessTick(k);
 
             //保存行情
             //SaveTick(k);

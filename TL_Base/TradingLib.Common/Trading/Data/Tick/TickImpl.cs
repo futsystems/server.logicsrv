@@ -125,6 +125,42 @@ namespace TradingLib.Common
             _preclose = 0;
             _datafeed = QSEnumDataFeedTypes.DEFAULT;
         }
+
+        public TickImpl(DateTime time)
+        {
+
+            _Sec = new SymbolImpl();
+            _type = EnumTickType.TIME;//默认为快照行情 更新所有数据
+            _sym = "";
+
+            _be = "";
+            _oe = "";
+            _ex = "";
+            _bs = 0;
+            _os = 0;
+            _size = 0;
+            _depth = 0;
+            _date = time.ToTLDate();
+            _time = time.ToTLTime();
+            _trade = 0;
+            _bid = 0;
+            _ask = 0;
+            _datetime = DateTime.MinValue;
+            _symidx = 0;
+
+            _vol = 0;
+            _open = 0;
+            _high = 0;
+            _low = 0;
+            _preoi = 0;
+            _oi = 0;
+            _presettlement = 0;
+            _settlement = 0;
+            _upperlimit = 0;
+            _lowerlimit = 0;
+            _preclose = 0;
+            _datafeed = QSEnumDataFeedTypes.DEFAULT;
+        }
         public static TickImpl Copy(Tick c)
         {
             TickImpl k = new TickImpl();

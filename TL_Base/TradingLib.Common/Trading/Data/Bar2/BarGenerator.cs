@@ -19,20 +19,24 @@ namespace TradingLib.Common
         public BarConstructionType BarConstructionType { get { return _barConstructionType; } }
 
         private bool _updated;//是否更新过OHLC
+        public bool Updated { get { return _updated; } }
+
+
         /// <summary>
         /// Tick数据不进行更新 在处理Bar数据时进行更新
         /// </summary>
         private Bar _partialBar;
-        public Bar BarPartialBar { get { return _partialBar; } }
+        //public Bar BarPartialBar { get { return _partialBar; } }
 
         private Bar _currentPartialBar;
-        public Bar PartialBar { get { return _partialBar; } }
+        public Bar PartialBar { get { return _currentPartialBar; } }
 
 
         private Symbol _symbol;
         public Symbol Symbol { get { return _symbol; } }
 
         private bool _isTickSent;
+        public bool TickWareSent { get { return _updated; } }
 
         public DateTime BarStartTime { get {return _currentPartialBar.BarStartTime; } }
 
@@ -56,9 +60,14 @@ namespace TradingLib.Common
 
 
 
-
+        /// <summary>
+        /// 处理实时行情数据
+        /// </summary>
+        /// <param name="tick"></param>
         public void ProcessTick(Tick tick)
         {
+            //if (tick.Type == EnumTickType.TIME) return; 需要通过Time来触发一个PendingPartialBar
+            //更新Ask Bid Volume TradeCount 数据
             if (tick.HasAsk())
             {
                 this._currentPartialBar.Ask = (double)tick.AskPrice;
@@ -80,7 +89,7 @@ namespace TradingLib.Common
             //记录时间
             //this._currentPartialBar.BarUpdateTime = tick.Time;
 
-
+            //根据BarConstructionType来获得当前值并进行更新
             decimal value = 0;
             bool needUpdate = false;
             switch (this._barConstructionType)
@@ -119,7 +128,8 @@ namespace TradingLib.Common
 
             if (needUpdate)
             {
-                if (!this._updated)//没有更新过Bar则获得的第一个Trade设定为OHLC后面的Trade再更新HLC
+                //新进入的一个Bar,如果没有更新过Bar则获得的第一个Trade设定为OHLC后面的Trade再更新HLC,获得该Bar的第一个成交数据
+                if (!this._updated)
                 {
                     this._currentPartialBar.Open = (double)value;
                     this._currentPartialBar.High = (double)value;
@@ -134,6 +144,7 @@ namespace TradingLib.Common
                 {
                     this._currentPartialBar.Low = (double)value;
                 }
+
                 this._currentPartialBar.Close = (double)value;
 
                 //标记Tick数据已经处理 进而发送
@@ -142,27 +153,31 @@ namespace TradingLib.Common
 
             if (NewTick != null)
             { 
-                NewTick(new NewTickEventArgs(this._symbol,tick,this._currentPartialBar));
+                NewTick(new NewTickEventArgs(this._symbol,tick,this._currentPartialBar));//
             }
-
         }
+
 
         public event Action<SingleBarEventArgs> NewBar;
 
+        /// <summary>
+        /// 行情事件 附带当前Bar数据
+        /// </summary>
         public event Action<NewTickEventArgs> NewTick;
+
         /// <summary>
         /// 触发新的Bar
         /// </summary>
         /// <param name="barEndTime"></param>
         public void SendNewBar(DateTime barEndTime)
         {
-            bool flag = !this._updated && this._currentPartialBar.Close == 0;//update表示是否更新过OHLC
+            bool nodata = !this._updated && this._currentPartialBar.Close == 0;//update表示是否更新过OHLC
             //当前Tick我们无法确认该Bar数据已经结束,需要下一个Tick的时间来判定该Bar是否结束，比如10:30:59秒，在该秒内可能有多个Tick数据，只有当10:31:00这个Tick过来或定时器触发时候才表面10:30分这个Bar结束了
             Bar barClosed = this.CloseBar(barEndTime);
             SingleBarEventArgs e = new SingleBarEventArgs(this._symbol, new BarImpl(barClosed), barEndTime, this._isTickSent);
 
-            //如果没有更新过数据 则手工更新
-            if (flag)
+            //如果没有更新过数据 则手工更新 通过AskBid来更新OHLC
+            if (nodata)
             {
                 bool flag2 = (e.Bar.Bid != 0.0) && !double.IsNaN((double)e.Bar.Bid);
                 bool flag3 = (e.Bar.Ask != 0.0) && !double.IsNaN((double)e.Bar.Ask);
@@ -179,9 +194,10 @@ namespace TradingLib.Common
                     e.Bar.Open = e.Bar.High = e.Bar.Low = e.Bar.Close = e.Bar.Ask;
                 }
             }
-
+            //Bar时间有效 且Bar不为空则触发该Bar
             if (e.Bar.BarStartTime != System.DateTime.MinValue && !e.Bar.EmptyBar)//EmptyBar是只没有获得任何一个行情的Bar为空Bar
             {
+                logger.Info("NewBar Generated:" + e.Bar.ToString());
                 if (NewBar != null)
                 {
                     NewBar(e);
@@ -195,6 +211,7 @@ namespace TradingLib.Common
         /// <param name="barStartTime"></param>
         public void SetBarStartTime(DateTime barStartTime)
         {
+            
             this._currentPartialBar.BarStartTime = barStartTime;
             this._partialBar.BarStartTime = barStartTime;
         }
@@ -211,7 +228,7 @@ namespace TradingLib.Common
             //{
             //    this._currentPartialBar.BarEndTime = barEndTime;
             //}
-            logger.Debug(string.Format("Close Bar:{0}", this._currentPartialBar != null ? this._currentPartialBar.ToString() : "Null"));
+            logger.Info(string.Format("Close Bar:{0}", this._currentPartialBar != null ? this._currentPartialBar.ToString() : "Null"));
             
             Bar data = this._currentPartialBar;
             this._isTickSent = false;
@@ -221,7 +238,7 @@ namespace TradingLib.Common
 
             if (data != null)
             {
-                //下一个Bar的高开低收等于上一个Bar的收盘价
+                //默认下一个Bar的高开低收等于上一个Bar的收盘价 如果有有效tick驱动后 Open为该Bar内第一个Tick的数据
                 this._currentPartialBar.Open = this._currentPartialBar.Close = this._currentPartialBar.High = this._currentPartialBar.Low = data.Close;
                 this._currentPartialBar.Bid = data.Bid;
                 this._currentPartialBar.Ask = data.Ask;

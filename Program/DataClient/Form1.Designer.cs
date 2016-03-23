@@ -55,6 +55,11 @@
             this.debugControl1 = new TLDataClient.DebugControl();
             this.pricetick = new ComponentFactory.Krypton.Toolkit.KryptonTextBox();
             this.btnPriceFormat = new System.Windows.Forms.Button();
+            this.kryptonLabel7 = new ComponentFactory.Krypton.Toolkit.KryptonLabel();
+            this.md_time = new ComponentFactory.Krypton.Toolkit.KryptonTextBox();
+            this.kryptonLabel8 = new ComponentFactory.Krypton.Toolkit.KryptonLabel();
+            this.md_price = new ComponentFactory.Krypton.Toolkit.KryptonNumericUpDown();
+            this.btnTick = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // btnMQClient
@@ -316,11 +321,67 @@
             this.btnPriceFormat.UseVisualStyleBackColor = true;
             this.btnPriceFormat.Click += new System.EventHandler(this.btnPriceFormat_Click);
             // 
+            // kryptonLabel7
+            // 
+            this.kryptonLabel7.Location = new System.Drawing.Point(476, 288);
+            this.kryptonLabel7.Name = "kryptonLabel7";
+            this.kryptonLabel7.Size = new System.Drawing.Size(37, 20);
+            this.kryptonLabel7.TabIndex = 28;
+            this.kryptonLabel7.Values.Text = "Time";
+            // 
+            // md_time
+            // 
+            this.md_time.Location = new System.Drawing.Point(519, 288);
+            this.md_time.Name = "md_time";
+            this.md_time.Size = new System.Drawing.Size(63, 20);
+            this.md_time.TabIndex = 29;
+            this.md_time.Text = "130000";
+            // 
+            // kryptonLabel8
+            // 
+            this.kryptonLabel8.Location = new System.Drawing.Point(595, 288);
+            this.kryptonLabel8.Name = "kryptonLabel8";
+            this.kryptonLabel8.Size = new System.Drawing.Size(37, 20);
+            this.kryptonLabel8.TabIndex = 30;
+            this.kryptonLabel8.Values.Text = "Price";
+            // 
+            // md_price
+            // 
+            this.md_price.Location = new System.Drawing.Point(641, 286);
+            this.md_price.Maximum = new decimal(new int[] {
+            10000,
+            0,
+            0,
+            0});
+            this.md_price.Name = "md_price";
+            this.md_price.Size = new System.Drawing.Size(75, 22);
+            this.md_price.TabIndex = 31;
+            this.md_price.Value = new decimal(new int[] {
+            100,
+            0,
+            0,
+            0});
+            // 
+            // btnTick
+            // 
+            this.btnTick.Location = new System.Drawing.Point(735, 286);
+            this.btnTick.Name = "btnTick";
+            this.btnTick.Size = new System.Drawing.Size(62, 22);
+            this.btnTick.TabIndex = 32;
+            this.btnTick.Text = "Tick";
+            this.btnTick.UseVisualStyleBackColor = true;
+            this.btnTick.Click += new System.EventHandler(this.btnTick_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(812, 405);
+            this.Controls.Add(this.btnTick);
+            this.Controls.Add(this.md_price);
+            this.Controls.Add(this.kryptonLabel8);
+            this.Controls.Add(this.md_time);
+            this.Controls.Add(this.kryptonLabel7);
             this.Controls.Add(this.btnPriceFormat);
             this.Controls.Add(this.pricetick);
             this.Controls.Add(this.port);
@@ -384,6 +445,11 @@
         private ComponentFactory.Krypton.Toolkit.KryptonTextBox port;
         private ComponentFactory.Krypton.Toolkit.KryptonTextBox pricetick;
         private System.Windows.Forms.Button btnPriceFormat;
+        private ComponentFactory.Krypton.Toolkit.KryptonLabel kryptonLabel7;
+        private ComponentFactory.Krypton.Toolkit.KryptonTextBox md_time;
+        private ComponentFactory.Krypton.Toolkit.KryptonLabel kryptonLabel8;
+        private ComponentFactory.Krypton.Toolkit.KryptonNumericUpDown md_price;
+        private System.Windows.Forms.Button btnTick;
     }
 }
 
