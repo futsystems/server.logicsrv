@@ -47,6 +47,7 @@ namespace TradingLib.DataFarm.Common
             const string FILE_NAME = "test.stsdb4";
             engine = STSdb.FromFile(FILE_NAME);
 
+            
         }
 
 
@@ -63,30 +64,30 @@ namespace TradingLib.DataFarm.Common
         /// <param name="symbol"></param>
         /// <param name="type"></param>
         /// <param name="interval"></param>
-        public void RegisterSymbolFreq(string symbol,BarInterval type,int interval)
-        {
-            switch (type)
-            { 
-                case BarInterval.CustomTicks:
-                case BarInterval.CustomTime:
-                case BarInterval.CustomVol:
-                    break;
-                default:
-                    throw new ArgumentException("Type should be CustomTicks,CustomTime,CustomVol");
-            }
+        //public void RegisterSymbolFreq(string symbol,BarInterval type,int interval)
+        //{
+        //    switch (type)
+        //    { 
+        //        case BarInterval.CustomTicks:
+        //        case BarInterval.CustomTime:
+        //        case BarInterval.CustomVol:
+        //            break;
+        //        default:
+        //            throw new ArgumentException("Type should be CustomTicks,CustomTime,CustomVol");
+        //    }
 
-            string tbname = GetTableName(symbol, type, interval);
-            //如果tableMap已经有该表 则直接返回
-            if (tableMap.Keys.Contains(tbname)) return;
+        //    string tbname = GetTableName(symbol, type, interval);
+        //    //如果tableMap已经有该表 则直接返回
+        //    if (tableMap.Keys.Contains(tbname)) return;
 
-            var table = engine.OpenXTable<long, BarImpl>(tbname);
-            if (table == null)
-            {
-                logger.Error(string.Format("Table:{0} open error", tbname));
-            }
-            //将表添加到map
-            tableMap.TryAdd(tbname, table);  
-        }
+        //    var table = engine.OpenXTable<long, BarImpl>(tbname);
+        //    if (table == null)
+        //    {
+        //        logger.Error(string.Format("Table:{0} open error", tbname));
+        //    }
+        //    //将表添加到map
+        //    tableMap.TryAdd(tbname, table);  
+        //}
 
         /// <summary>
         /// 判断合约频率是否注册
@@ -96,16 +97,16 @@ namespace TradingLib.DataFarm.Common
         /// <param name="type"></param>
         /// <param name="interval"></param>
         /// <returns></returns>
-        public bool IsRegisted(string symbol, BarInterval type, int interval)
-        {
-            string tbname = GetTableName(symbol, type, interval);
+        //public bool IsRegisted(string symbol, BarInterval type, int interval)
+        //{
+        //    string tbname = GetTableName(symbol, type, interval);
 
-            if (tableMap.Keys.Contains(tbname))
-            {
-                return true;
-            }
-            return false;
-        }
+        //    if (tableMap.Keys.Contains(tbname))
+        //    {
+        //        return true;
+        //    }
+        //    return false;
+        //}
 
         /// <summary>
         /// 判断某个合约的频率数据是否缓存
@@ -117,7 +118,7 @@ namespace TradingLib.DataFarm.Common
         /// <returns></returns>
         public virtual bool IsCached(string symbol, BarInterval type, int interval)
         {
-            return this.IsRegisted(symbol, type, interval);
+            return true;// this.IsRegisted(symbol, type, interval);
         }
 
         public virtual void SetCached(string symbol, BarInterval type, int interval, bool cached)
@@ -130,28 +131,35 @@ namespace TradingLib.DataFarm.Common
         /// </summary>
         /// <param name="name"></param>
         /// <returns></returns>
-        protected ITable<long, BarImpl> GetTable(string name)
+        protected ITable<long, BarImpl> GetTable(string tbname)
         {
             ITable<long, BarImpl> table = null;
             //如果map直接存在该表 则直接返回
-            if (tableMap.TryGetValue(name, out table))
+            if (tableMap.TryGetValue(tbname, out table))
             {
                 return table;
             }
-            //数据库不包含对应的表则返回null
-            if (!engine.Exists(name))
-            {
-                logger.Info(string.Format("Table:{0} not exist", name));
-                return null;
-            }
-            table = engine.OpenXTable<long, BarImpl>(name);
-            if (table == null)
-            {
-                logger.Warn(string.Format("Table:{0} exist but can not get it", name));
-                return null;
-            }
-            //将表添加到map
-            tableMap.TryAdd(name, table);
+            //存在表则打开并加入到map
+            table = engine.OpenXTable<long, BarImpl>(tbname);
+            tableMap.TryAdd(tbname, table);
+
+            ////数据库包含对应的表
+            //if (engine.Exists(tbname))
+            //{
+                
+            //}
+            //else
+            //{
+
+            //    table = engine.OpenXTable<long, BarImpl>(name);
+            //    if (table == null)
+            //    {
+            //        logger.Warn(string.Format("Table:{0} exist but can not get it", name));
+            //        return null;
+            //    }
+            //    //将表添加到map
+            //    tableMap.TryAdd(name, table);
+            //}
 
             return table;
         }
@@ -162,9 +170,9 @@ namespace TradingLib.DataFarm.Common
         /// 如果Bar已经存在则用当前Bar去替换老的数据
         /// </summary>
         /// <param name="bar"></param>
-        public virtual void UpdateBar(BarImpl bar)
+        public virtual void UpdateBar(Symbol symbol,BarImpl bar)
         {
-            string tableName = GetTableName(bar.Symbol, bar.IntervalType, bar.Interval);
+            string tableName = GetTableName(symbol, bar.IntervalType, bar.Interval);
             var table = GetTable(tableName);
 
             if (table == null)
@@ -185,9 +193,9 @@ namespace TradingLib.DataFarm.Common
         /// 如果对应的键值已经存在则不执行插入
         /// </summary>
         /// <param name="bar"></param>
-        public virtual void InsertBar(BarImpl bar)
+        public virtual void InsertBar(Symbol symbol,BarImpl bar)
         {
-            string tableName = GetTableName(bar.Symbol, bar.IntervalType, bar.Interval);
+            string tableName = GetTableName(symbol, bar.IntervalType, bar.Interval);
             var table = GetTable(tableName);
 
             if (table == null)
@@ -216,7 +224,7 @@ namespace TradingLib.DataFarm.Common
         /// <param name="end">结束时间</param>
         /// <param name="fromEnd">数据访问按时间先后顺序进行,fromEnd表示从最近的数据开始</param>
         /// <returns></returns>
-        public virtual IEnumerable<BarImpl> QryBar(string symbol, BarInterval type,int interval, DateTime start, DateTime end,int maxcount, bool fromEnd)
+        public virtual IEnumerable<BarImpl> QryBar(Symbol symbol, BarInterval type,int interval, DateTime start, DateTime end,int maxcount, bool fromEnd)
         {
             string tableName = GetTableName(symbol, type, interval);
 
@@ -262,9 +270,10 @@ namespace TradingLib.DataFarm.Common
         /// <param name="type"></param>
         /// <param name="interval"></param>
         /// <returns></returns>
-        public static string GetTableName(string  symbol,BarInterval type,int interval)
+        public static string GetTableName(Symbol symbol,BarInterval type,int interval)
         {
-            return string.Format("{0}-{1}-{2}", symbol, (int)type, interval);
+            return string.Format("{0}-{1}", symbol.GetContinuousKey(), new BarFrequency(type, interval).ToUniqueId());
+            //return string.Format("{0}-{1}-{2}", symbol, (int)type, interval);
         }
     }
 }

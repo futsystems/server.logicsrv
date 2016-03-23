@@ -40,6 +40,16 @@ namespace TradingLib.DataFarm.Common
         {
             //从文件生成数据库引擎
             engine = STSdb.FromFile(_dbfile);
+
+            //logger.Info("Table Count:" + engine.Count);
+            foreach(var t in engine)
+            {
+                var table = engine.OpenXTable<long, BarImpl>(t.Name);
+
+                logger.Info(string.Format("TableName:{0} Record Num:{1}", t.Name, table.Count()));
+                
+            }
+            
         }
 
     }

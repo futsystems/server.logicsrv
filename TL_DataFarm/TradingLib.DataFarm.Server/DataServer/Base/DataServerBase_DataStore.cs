@@ -11,13 +11,25 @@ using Common.Logging;
 
 namespace TradingLib.DataFarm.Common
 {
+    internal class BarStoreStruct
+    {
+        public BarStoreStruct(Symbol symbol, BarImpl bar)
+        {
+            this.Symbol = symbol;
+            this.Bar = bar;
+        }
+
+        public Symbol Symbol { get; set; }
+
+        public BarImpl Bar { get; set; }
+    }
     public partial class DataServerBase
     {
 
         /// <summary>
         /// 启动数据储存服务
         /// </summary>
-        void StartDataStoreService()
+        protected void StartDataStoreService()
         {
             if (_saverunning) return;
             _saverunning = true;
@@ -29,7 +41,7 @@ namespace TradingLib.DataFarm.Common
         /// <summary>
         /// 停止数据储存服务
         /// </summary>
-        void StopDataStoreService()
+        protected void StopDataStoreService()
         {
             if (!_saverunning) return;
             _saverunning = false;
@@ -38,7 +50,7 @@ namespace TradingLib.DataFarm.Common
 
         #region 保存行情与Bar数据
         RingBuffer<Tick> tickbuffer = new RingBuffer<Tick>(10000);
-        RingBuffer<Bar> barbuffer = new RingBuffer<Bar>(10000);
+        RingBuffer<BarStoreStruct> barbuffer = new RingBuffer<BarStoreStruct>(10000);
 
         bool _saverunning = false;
         Thread datathread = null;
@@ -70,15 +82,12 @@ namespace TradingLib.DataFarm.Common
                     //实时插入Bar数据
                     while (barbuffer.hasItems)
                     {
-                        Bar b = barbuffer.Read();
+                        BarStoreStruct b = barbuffer.Read();
                         IHistDataStore store = GetHistDataSotre();
                         if (store != null)
-                        { 
-                            BarImpl bar = b as BarImpl;
-                            if(bar != null)
-                            {
-                                store.InsertBar(bar);
-                            }
+                        {
+                            store.InsertBar(b.Symbol,b.Bar);
+                            store.Commit();
                         }
                     }
 
@@ -104,9 +113,9 @@ namespace TradingLib.DataFarm.Common
         /// 保存Bar数据
         /// </summary>
         /// <param name="bar"></param>
-        public void SaveBar(Bar bar)
+        public void SaveBar(Symbol symbol,BarImpl bar)
         {
-            barbuffer.Write(bar);
+            barbuffer.Write(new BarStoreStruct(symbol, bar));
         }
 
         /// <summary>

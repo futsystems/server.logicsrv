@@ -56,13 +56,14 @@ namespace TradingLib.DataFarm.Common
         /// <returns></returns>
         public override bool IsCached(string symbol, BarInterval type, int interval)
         {
-            string tbname = GetTableName(symbol, type, interval);
-            bool cached = false;
-            if (!tableCachedMap.TryGetValue(tbname, out cached))
-            {
-                tableCachedMap.TryAdd(tbname, false);
-            }
-            return tableCachedMap[tbname];
+            //string tbname = GetTableName(symbol, type, interval);
+            //bool cached = false;
+            //if (!tableCachedMap.TryGetValue(tbname, out cached))
+            //{
+            //    tableCachedMap.TryAdd(tbname, false);
+            //}
+            //return tableCachedMap[tbname];
+            return true;
         }
 
         /// <summary>
@@ -74,8 +75,8 @@ namespace TradingLib.DataFarm.Common
         /// <param name="cached"></param>
         public override void SetCached(string symbol, BarInterval type, int interval, bool cached)
         {
-            string tbname = GetTableName(symbol, type, interval);
-            tableCachedMap[tbname] = cached;
+            //string tbname = GetTableName(symbol, type, interval);
+            //tableCachedMap[tbname] = cached;
         }
         /// <summary>
         /// 查看某表是否被缓存

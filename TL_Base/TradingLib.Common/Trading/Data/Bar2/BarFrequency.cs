@@ -104,6 +104,7 @@ namespace TradingLib.Common
         {
             return "Freq Type:" + this.Type.ToString() + " Interval:" + this.Interval.ToString();
         }
+
         public string ToUniqueId()
         {
             return string.Format("{0}-{1}", this.Interval, this.Type);

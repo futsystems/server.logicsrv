@@ -80,7 +80,13 @@ namespace TradingLib.DataFarm.Common
         public override void BackendQryBar(IServiceHost host, IConnection conn, QryBarRequest request)
         {
             logger.Info("try to qry bar from DataCoreBackend");
-            string tbkey = STSDBBase.GetTableName(request.Symbol, request.IntervalType, request.Interval);
+            Symbol symbol = MDBasicTracker.SymbolTracker[request.Symbol];
+            if (symbol == null)
+            {
+                logger.Warn(string.Format("Symbol:{0} do not exist", request.Symbol));
+                return;
+            }
+            string tbkey = STSDBBase.GetTableName(symbol, request.IntervalType, request.Interval);
             QryBarBackendQry target = null;
 
             //如果已经包含了该key对应的后端查询 则将本次查询加入到后端查询对象中的延迟查询对象列表
@@ -120,11 +126,18 @@ namespace TradingLib.DataFarm.Common
             {
                 size = obj.Data.Length;
             }
+            Symbol symbol = MDBasicTracker.SymbolTracker["IF1603"];
+            if (symbol == null)
+            {
+                logger.Warn(string.Format("Symbol:{0} do not exist", "IF1603"));
+                return;
+            }
+
             if (store != null)
             {
                 //更新内存Bar数据缓存
                 //i++;
-                store.UpdateBar(obj.Bar as BarImpl);
+                store.UpdateBar(symbol,obj.Bar as BarImpl);
                 //logger.Info("cnt:" + i.ToString() + " size:" + size.ToString());
                 //如果是最后一个Bar回报
                 if (obj.IsLast)

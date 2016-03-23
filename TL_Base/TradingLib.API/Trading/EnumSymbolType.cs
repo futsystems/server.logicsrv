@@ -16,8 +16,9 @@ namespace TradingLib.API
         /// </summary>
         [Description("标准合约")]
         Standard,
+
         /// <summary>
-        /// 月连续
+        /// 月连续01-12连续
         /// </summary>
         [Description("月连续")]
         MonthContinuous,

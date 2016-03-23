@@ -128,7 +128,10 @@ namespace TradingLib.DataFarm.Common
 
             //if(k.datetickLastTimeMap[k.Symbol])
             //logger.Info("async process tick");
-
+            if (k.Symbol == "CLK6")
+            {
+                int x = 0;
+            }
             //转发实时行情
             NotifyTick2Connections(k);
 

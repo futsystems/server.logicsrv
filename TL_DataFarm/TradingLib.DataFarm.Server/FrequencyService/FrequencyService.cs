@@ -17,13 +17,18 @@ namespace TradingLib.DataFarm.Common
 
         ILog logger = LogManager.GetLogger("FrequencyService");
 
-        public event Action<Bar> NewBarEvent;
+        //public event Action<Bar> NewBarEvent;
 
 
         FrequencyManager frequencyManager;
         ConcurrentDictionary<string, Symbol> subscribeSymbolMap = new ConcurrentDictionary<string, Symbol>();
         ConcurrentDictionary<BarFrequency, FrequencyPlugin> frequencyPluginMap = new ConcurrentDictionary<BarFrequency, FrequencyPlugin>();
 
+
+        /// <summary>
+        /// 产生Bar数据
+        /// </summary>
+        public event Action<FreqNewBarEventArgs> NewBarEvent;
 
         public FrequencyService()
         {
@@ -32,7 +37,7 @@ namespace TradingLib.DataFarm.Common
             TimeFrequency tm = new TimeFrequency(new BarFrequency(BarInterval.CustomTime,60));
             
             //加载合约
-            Symbol symbol = MDBasicTracker.SymbolTracker["CNH6"];
+            Symbol symbol = MDBasicTracker.SymbolTracker["CLK6"];
             //Symbol symbol2 = MDBasicTracker.SymbolTracker["HSIX5"];
             if (symbol != null)
             {
@@ -61,6 +66,15 @@ namespace TradingLib.DataFarm.Common
         void frequencyManager_NewFreqKeyBarEvent(FrequencyManager.FreqKey arg1, SingleBarEventArgs arg2)
         {
             logger.Warn(string.Format("Bar Generated Key:{0} Bar:{1}", arg1.Settings.BarFrequency, arg2.Bar));
+
+
+            //string key = string.Format("{0}-{1}",arg1.Symbol.GetContinuousKey(),arg1.Settings.BarFrequency.ToUniqueId());
+            //Bar tmp = new BarImpl(arg2.Bar);
+            //tmp.Symbol = arg1.Symbol.GetContinuousSymbol();//IF01,IF02;
+            if (NewBarEvent != null)
+            {
+                NewBarEvent(new FreqNewBarEventArgs() { Bar = new BarImpl(arg2.Bar), BarFrequency = arg1.Settings.BarFrequency, Symbol = arg1.Symbol });
+            }
         }
 
         void OnFreqKeyRegistedEvent(FrequencyManager.FreqKey obj)
@@ -81,10 +95,10 @@ namespace TradingLib.DataFarm.Common
                 logger.Info("Bar:" + b.ToString());
             }
 
-            if (NewBarEvent != null)
-            {
-                NewBarEvent(obj.Bar);
-            }
+            //if (NewBarEvent != null)
+            //{
+            //    NewBarEvent(obj.Bar);
+            //}
 
         }
 
@@ -96,9 +110,14 @@ namespace TradingLib.DataFarm.Common
         public void ProcessTick(Tick k)
         {
             Symbol target = null;
-            if (subscribeSymbolMap.TryGetValue(k.Symbol,out target))
+            if (subscribeSymbolMap.TryGetValue(k.Symbol, out target))
             {
-                frequencyManager.ProcessTick(target,k);
+                //不同行情源混合
+                //logger.Info(string.Format("date:{0} time:{1} datafeed:{2}", k.Date, k.Time, k.DataFeed));
+                if (k.DataFeed == QSEnumDataFeedTypes.IQFEED)
+                {
+                    frequencyManager.ProcessTick(target, k);
+                }
             }
         }
 

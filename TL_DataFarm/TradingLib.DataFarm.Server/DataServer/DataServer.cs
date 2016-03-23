@@ -37,7 +37,7 @@ namespace TradingLib.DataFarm.Common
 
 
             freqService = new FrequencyService();
-            freqService.NewBarEvent += new Action<Bar>(freqService_NewBarEvent);
+            //freqService.NewBarEvent += new Action<Bar>(freqService_NewBarEvent);
 
             //初始化数据库服务
             InitDataBaseService();

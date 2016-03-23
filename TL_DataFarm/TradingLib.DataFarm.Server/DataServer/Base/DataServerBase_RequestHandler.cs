@@ -97,10 +97,16 @@ namespace TradingLib.DataFarm.Common
                 }
 
                 //合约频率数据没有注册直接返回
-                if (!store.IsRegisted(request.Symbol, request.IntervalType, request.Interval))
+                //if (!store.IsRegisted(request.Symbol, request.IntervalType, request.Interval))
+                //{
+                //    logger.Warn(string.Format("SymbolFreq:{0}-{1}-{2} is not registed", request.Symbol, request.IntervalType, request.Interval));
+                //    throw new Exception("SymbolFreq not registed");
+                //}
+                Symbol symbol = MDBasicTracker.SymbolTracker[request.Symbol];
+                if (symbol == null)
                 {
-                    logger.Warn(string.Format("SymbolFreq:{0}-{1}-{2} is not registed", request.Symbol, request.IntervalType, request.Interval));
-                    throw new Exception("SymbolFreq not registed");
+                    logger.Warn(string.Format("Symbol:{0} do not exist", request.Symbol));
+                    return;
                 }
 
                 //如果数据已缓存则直接查询
@@ -108,7 +114,7 @@ namespace TradingLib.DataFarm.Common
                 {
                     Profiler pf = new Profiler();
                     pf.EnterSection("QRY  BAR");
-                    BarImpl[] bars = store.QryBar(request.Symbol, request.IntervalType, request.Interval, request.Start, request.End, (int)request.MaxCount, request.FromEnd).ToArray();
+                    BarImpl[] bars = store.QryBar(symbol, request.IntervalType, request.Interval, request.Start, request.End, (int)request.MaxCount, request.FromEnd).ToArray();
                     pf.LeaveSection();
 
                     //logger.Info("got bar cnt:" + bars.Count());

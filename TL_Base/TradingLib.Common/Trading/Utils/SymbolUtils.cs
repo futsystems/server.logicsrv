@@ -165,6 +165,27 @@ namespace TradingLib.Common
 
 
         /// <summary>
+        /// 获得合约对应的连续合约键值用于储存Bar数据
+        /// HKEX-HSI-01
+        /// </summary>
+        /// <param name="sym"></param>
+        /// <returns></returns>
+        public static string GetContinuousKey(this Symbol sym)
+        {
+            return string.Format("{0}-{1}-{2}", sym.SecurityFamily.Exchange.EXCode, sym.SecurityFamily.Code, sym.Month);
+        }
+
+
+        /// <summary>
+        /// 获得合约对应的连续合约编号
+        /// </summary>
+        /// <param name="sym"></param>
+        /// <returns></returns>
+        public static string GetContinuousSymbol(this Symbol sym)
+        {
+            return string.Format("{0}{1}", sym.SecurityFamily.Code, sym.Month);
+        }
+        /// <summary>
         /// 当日到期
         /// </summary>
         /// <returns></returns>
@@ -174,5 +195,7 @@ namespace TradingLib.Common
         //        return true;
         //    return false;
         //}
+
+
     }
 }

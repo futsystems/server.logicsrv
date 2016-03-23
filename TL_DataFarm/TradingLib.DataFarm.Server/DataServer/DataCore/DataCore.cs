@@ -32,8 +32,8 @@ namespace TradingLib.DataFarm.Common
 
             _datastore = STSDBFactory.CreateLocalDB();
             //从数据库加载有效合约进行注册
-            _datastore.RegisterSymbolFreq("HGZ5", BarInterval.CustomTime, 30);
-            _datastore.RegisterSymbolFreq("IF1511", BarInterval.CustomTime, 60);
+            //_datastore.RegisterSymbolFreq("HGZ5", BarInterval.CustomTime, 30);
+            //_datastore.RegisterSymbolFreq("IF1511", BarInterval.CustomTime, 60);
 
             foreach (var file in Directory.GetFiles("Import", "*.csv"))
             {
@@ -62,7 +62,7 @@ namespace TradingLib.DataFarm.Common
                             //logger.Info("datatime:" + rec[0] + " " + rec[1]);
                             b.BarStartTime = DateTime.ParseExact(rec[0] + " " + rec[1], "yyyy-MM-dd HH:mm", System.Globalization.CultureInfo.CurrentCulture);
                             //logger.Info("bar:" + b.ToString());
-                            _datastore.UpdateBar(b);
+                            //_datastore.UpdateBar(null,b);
                             //_datastore.Commit();
                         }
                     }
@@ -78,11 +78,14 @@ namespace TradingLib.DataFarm.Common
         {
             logger.Info("Start....");
 
+            //启动历史数据储存服务
+            this.StartDataStoreService();
+
             //启动Bar数据生成器
             this.StartFrequencyService();
 
             //启动TickFeed
-            //this.StartTickFeeds();
+            this.StartTickFeeds();
 
             //启动ServiceHost
             this.StartServiceHosts();

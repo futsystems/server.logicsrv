@@ -65,6 +65,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DataServer\Base\DataServerBase_FrequencyService.cs" />
+    <Compile Include="FrequencyService\EventArgs.cs" />
     <Compile Include="MDBasicTracker.cs" />
     <Compile Include="DataBase\Compare.cs" />
     <Compile Include="DataBase\STSDBBase.cs" />

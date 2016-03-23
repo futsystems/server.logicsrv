@@ -19,7 +19,7 @@ namespace TradingLib.DataFarm.API
         /// <param name="symbol"></param>
         /// <param name="type"></param>
         /// <param name="interval"></param>
-        void RegisterSymbolFreq(string symbol,BarInterval type,int interval);
+        //void RegisterSymbolFreq(string symbol,BarInterval type,int interval);
 
         /// <summary>
         /// 判断某个合约的频率数据是否注册
@@ -28,7 +28,7 @@ namespace TradingLib.DataFarm.API
         /// <param name="type"></param>
         /// <param name="interval"></param>
         /// <returns></returns>
-        bool IsRegisted(string symbol, BarInterval type, int interval);
+        //bool IsRegisted(string symbol, BarInterval type, int interval);
 
         /// <summary>
         /// 判断某个合约的频率数据是否缓存
@@ -67,18 +67,18 @@ namespace TradingLib.DataFarm.API
         /// <param name="maxcount">最大返回Bar数</param>
         /// <param name="fromEnd">是否数据结尾开始</param>
         /// <returns></returns>
-        IEnumerable<BarImpl> QryBar(string symbol, BarInterval type, int interval, DateTime start, DateTime end, int maxcount, bool fromEnd);
+        IEnumerable<BarImpl> QryBar(Symbol symbol, BarInterval type, int interval, DateTime start, DateTime end, int maxcount, bool fromEnd);
 
         /// <summary>
         /// 更新Bar数据
         /// </summary>
         /// <param name="bar"></param>
-        void UpdateBar(BarImpl bar);
+        void UpdateBar(Symbol symbol,BarImpl bar);
 
         /// <summary>
         /// 插入Bar数据
         /// </summary>
         /// <param name="bar"></param>
-        void InsertBar(BarImpl bar);
+        void InsertBar(Symbol symbol,BarImpl bar);
     }
 }

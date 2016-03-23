@@ -38,7 +38,7 @@ namespace TradingLib.DataFarm.Common
 
             localdb =  new STSLocalDB("test.stsdb4");
             localdb.Init();
-            localdb.RegisterSymbolFreq("HGZ5",BarInterval.CustomTime,30);
+            //localdb.RegisterSymbolFreq("HGZ5",BarInterval.CustomTime,30);
         }
         BinaryDataStore database = new BinaryDataStore();
 
@@ -58,7 +58,8 @@ namespace TradingLib.DataFarm.Common
             File.Delete(FILE_NAME);
             using (IStorageEngine engine = STSdb.FromFile(FILE_NAME))
             {
-                string name = STSDBBase.GetTableName("HGZ5", BarInterval.CustomTime, 30);
+                Symbol symbol = MDBasicTracker.SymbolTracker["HZG5"];
+                string name = STSDBBase.GetTableName(symbol, BarInterval.CustomTime, 30);
                 ITable<long, BarImpl> table = engine.OpenXTable<long, BarImpl>(name);
 
                 //table.Descriptor.KeyComparer = new TLLongComparer();
@@ -115,10 +116,10 @@ namespace TradingLib.DataFarm.Common
             DateTime start = new DateTime(2015,11,10,8,31,0);
             DateTime end = new DateTime(2015,11,10,8,40,0);
             logger.Info("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx");
-            foreach (var b in db.QryBar("HGZ5", BarInterval.CustomTime, 30, start,end,0,true))
-            {
-                logger.Info("got bar:" + b.ToString());
-            }
+            //foreach (var b in db.QryBar("HGZ5", BarInterval.CustomTime, 30, start,end,0,true))
+            //{
+            //    logger.Info("got bar:" + b.ToString());
+            //}
             logger.Info("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx");
 
             //foreach (var bar in store.Load(DateTime.MinValue,DateTime.MaxValue,5,true))
