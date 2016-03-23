@@ -104,6 +104,19 @@ namespace TradingLib.DataFarm.Common
 
 
         /// <summary>
+        /// 获得Bar PartialItem
+        /// </summary>
+        /// <param name="symbol"></param>
+        /// <param name="freq"></param>
+        /// <returns></returns>
+        public Bar GetPartialBar(Symbol symbol,BarFrequency freq)
+        {
+            Frequency data = frequencyManager.GetFrequency(symbol, freq);
+            if (data == null) return null;
+            if (data.Bars.HasPartialItem) return data.Bars.PartialItem;
+            return null;
+        }
+        /// <summary>
         /// 处理外部行情
         /// </summary>
         /// <param name="k"></param>

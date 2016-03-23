@@ -35,7 +35,7 @@ namespace TradingLib.Common
         /// FreqKey与FreqInfo的Map
         /// </summary>
         Dictionary<FrequencyManager.FreqKey, FrequencyManager.FreqInfo> freqKeyInfoMap = new Dictionary<FreqKey, FreqInfo>();
-
+        Dictionary<string, FrequencyManager.FreqInfo> freqKeyStrInfoMap = new Dictionary<string, FreqInfo>();
         /// <summary>
         /// 合约与该合约的所有FreqInfo的list Map
         /// </summary>
@@ -57,6 +57,7 @@ namespace TradingLib.Common
 
 
         FrequencyPlugin _mainfrequency = null;
+        
         /// <summary>
         /// 主频率
         /// </summary>
@@ -233,6 +234,19 @@ namespace TradingLib.Common
             return freqInfo.Frequency;
         }
 
+        public Frequency GetFrequency(Symbol symbol,BarFrequency freq)
+        {
+            string key = string.Format("{0}-{1}-{2}", symbol.SecurityFamily.Exchange.EXCode, symbol.Symbol, freq.ToUniqueId());
+            FrequencyManager.FreqInfo target = null;
+            if (freqKeyStrInfoMap.TryGetValue(key, out target))
+            {
+                return target.Frequency;
+            }
+            return null;
+        }
+
+
+
         /// <summary>
         /// 获得某个FrequencyBase对应的所有FreqInfo
         /// </summary>
@@ -275,6 +289,7 @@ namespace TradingLib.Common
             
             //1.更新FreqKey到FreqInfo映射
             this.freqKeyInfoMap[freqkey] = freqInfo;
+            this.freqKeyStrInfoMap[freqkey.ToFreqKey()] = freqInfo;
 
             //2.Symbol到FreqInfo List映射
             List<FrequencyManager.FreqInfo> list;
@@ -849,6 +864,15 @@ namespace TradingLib.Common
                 return hashCode ^ num;
             }
 
+            /// <summary>
+            /// 获得FreqKey
+            /// Exchange-symbol-interval-intervaltype
+            /// </summary>
+            /// <returns></returns>
+            public string ToFreqKey()
+            {
+                return string.Format("{0}-{1}-{2}", this.Symbol.SecurityFamily.Exchange.EXCode, this.Symbol.Symbol, this.Settings.BarFrequency.ToUniqueId());
+            }
             public override string ToString()
             {
                 return string.Format("Symbol:{0} - Freq:{1}", this.Symbol.Symbol, this.Settings);

@@ -114,9 +114,14 @@ namespace TradingLib.DataFarm.Common
                 {
                     Profiler pf = new Profiler();
                     pf.EnterSection("QRY  BAR");
-                    BarImpl[] bars = store.QryBar(symbol, request.IntervalType, request.Interval, request.Start, request.End, (int)request.MaxCount, request.FromEnd).ToArray();
+                    List<BarImpl> bars = store.QryBar(symbol, request.IntervalType, request.Interval, request.Start, request.End, (int)request.MaxCount, request.FromEnd).ToList();
                     pf.LeaveSection();
 
+                    Bar partial = freqService.GetPartialBar(symbol, new BarFrequency(request.IntervalType, request.Interval));
+                    if (partial != null)
+                    {
+                        bars.Add(new BarImpl(partial));
+                    }
                     //logger.Info("got bar cnt:" + bars.Count());
                     
                     pf.EnterSection("SEND BAR");
@@ -125,11 +130,11 @@ namespace TradingLib.DataFarm.Common
                     {
                         case EnumBarResponseType.PLAINTEXT:
                             {
-                                for (int i = 0; i < bars.Length; i++)
+                                for (int i = 0; i < bars.Count; i++)
                                 {
                                     RspQryBarResponse response = ResponseTemplate<RspQryBarResponse>.SrvSendRspResponse(request);
                                     response.Bar = bars[i];
-                                    conn.SendResponse(response, i == bars.Length - 1);
+                                    conn.SendResponse(response, i == bars.Count - 1);
                                 }
                                 break;
                             }
@@ -157,14 +162,14 @@ namespace TradingLib.DataFarm.Common
                                 int j = 0;
                                 RspQryBarResponseBin response = RspQryBarResponseBin.CreateResponse(request);
                                 response.IsLast = false;
-                                for (int i = 0; i < bars.Length; i++)
+                                for (int i = 0; i < bars.Count; i++)
                                 {
                                     response.Add(bars[i]);
                                     j++;
                                     if (j == BARSENDSIZE)
                                     {
                                         //一定数目的Bar之后 发送数据 同时判断是否是最后一条
-                                        response.IsLast = (i == bars.Length-1);
+                                        response.IsLast = (i == bars.Count-1);
                                         conn.Send(response);
                                         //不是最后一条数据则生成新的Response
                                         if (!response.IsLast)
@@ -188,7 +193,7 @@ namespace TradingLib.DataFarm.Common
                     }
                     
                     pf.LeaveSection();
-                    logger.Info(string.Format("----BarRequest Statistics QTY:{0}---- \n{1}", bars.Length, pf.GetStatsString()));
+                    logger.Info(string.Format("----BarRequest Statistics QTY:{0}---- \n{1}", bars.Count, pf.GetStatsString()));
                     //logger.Info("send bar finished");
                 }
                 else
