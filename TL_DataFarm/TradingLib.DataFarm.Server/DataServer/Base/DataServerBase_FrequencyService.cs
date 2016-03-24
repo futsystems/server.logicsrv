@@ -27,8 +27,9 @@ namespace TradingLib.DataFarm.Common
         {
             string key = string.Format("{0}-{1}", obj.Symbol.GetContinuousKey(), obj.BarFrequency.ToUniqueId());
             obj.Bar.Symbol = obj.Symbol.GetContinuousSymbol();
-
+#if DEBUG
             logger.Info(string.Format("New Bar Freq:{0} Bar:{1}", key, obj.Bar));
+#endif
             this.SaveBar(obj.Symbol, obj.Bar);
 
         }

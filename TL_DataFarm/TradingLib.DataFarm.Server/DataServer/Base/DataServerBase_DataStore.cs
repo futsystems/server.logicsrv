@@ -33,9 +33,9 @@ namespace TradingLib.DataFarm.Common
         {
             if (_saverunning) return;
             _saverunning = true;
-            datathread = new Thread(ProcessBuffer);
-            datathread.IsBackground = true;
-            datathread.Start();
+            _datathread = new Thread(ProcessBuffer);
+            _datathread.IsBackground = true;
+            _datathread.Start();
         }
 
         /// <summary>
@@ -53,7 +53,7 @@ namespace TradingLib.DataFarm.Common
         RingBuffer<BarStoreStruct> barbuffer = new RingBuffer<BarStoreStruct>(10000);
 
         bool _saverunning = false;
-        Thread datathread = null;
+        Thread _datathread = null;
         //List<Tick> tmpticklist = new List<Tick>();
         //List<Bar> tmpbarlist = new List<Bar>();
 
@@ -65,6 +65,19 @@ namespace TradingLib.DataFarm.Common
         int _barSaveThreshold = 10;
 
         bool _saveall = false;
+
+        const int SLEEPDEFAULTMS = 10;
+        static ManualResetEvent _logwaiting = new ManualResetEvent(false);
+
+        void NewData()
+        {
+            if ((_datathread != null) && (_datathread.ThreadState == System.Threading.ThreadState.WaitSleepJoin))
+            {
+                _logwaiting.Set();
+            }
+        }
+        DateTime _lastcommit = DateTime.Now;
+        TimeSpan _commitpriod = TimeSpan.FromMinutes(1);
         void ProcessBuffer()
         {
             while (_saverunning)
@@ -87,11 +100,27 @@ namespace TradingLib.DataFarm.Common
                         if (store != null)
                         {
                             store.InsertBar(b.Symbol,b.Bar);
-                            store.Commit();
+                            //store.Commit();
                         }
                     }
 
-                    Thread.Sleep(100);
+                    DateTime now = DateTime.Now;
+                    if (now - _lastcommit > _commitpriod)
+                    { 
+                        IHistDataStore store = GetHistDataSotre();
+                        if (store != null)
+                        {
+                            logger.Info("Commit:" + now.ToShortTimeString());
+                            store.Commit();
+                        }
+                        _lastcommit = now;
+                    }
+
+                    // clear current flag signal
+                    _logwaiting.Reset();
+
+                    // wait for a new signal to continue reading
+                    _logwaiting.WaitOne(SLEEPDEFAULTMS);
                 }
                 catch (Exception e)
                 {
@@ -107,6 +136,7 @@ namespace TradingLib.DataFarm.Common
         public void SaveTick(Tick k)
         {
             tickbuffer.Write(k);
+            NewData();
         }
 
         /// <summary>
@@ -116,6 +146,7 @@ namespace TradingLib.DataFarm.Common
         public void SaveBar(Symbol symbol,BarImpl bar)
         {
             barbuffer.Write(new BarStoreStruct(symbol, bar));
+            NewData();
         }
 
         /// <summary>
