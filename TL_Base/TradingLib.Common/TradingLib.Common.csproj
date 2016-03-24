@@ -149,7 +149,7 @@
     <Compile Include="Utils\LocationInfo.cs" />
     <Compile Include="Trading\Data\Bar2\QList.cs" />
     <Compile Include="Utils\Util_Decimal.cs" />
-    <Compile Include="Utils\Util_String.cs" />
+    <Compile Include="Utils\Util_string.cs" />
     <Compile Include="Utils\Version.cs" />
     <Compile Include="Tracker\HighLowTracker.cs" />
     <Compile Include="Trading\Utils\SecurityUtils.cs" />
