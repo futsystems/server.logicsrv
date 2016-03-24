@@ -90,7 +90,7 @@ namespace TradingLib.DataFarm.Common
             this.StartFrequencyService();
 
             //启动TickFeed
-            //this.StartTickFeeds();
+            this.StartTickFeeds();
 
             //启动ServiceHost
             this.StartServiceHosts();
