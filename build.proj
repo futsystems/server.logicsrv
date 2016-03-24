@@ -6,6 +6,7 @@
 <OperatingPlatform Condition="'$(OperatingPlatform)' == ''">Windows</OperatingPlatform>
 <clrzmqSuffix Condition="'$(OperatingPlatform)' == 'Unix'">-unix</clrzmqSuffix>
 <PackageDir>package\logicsrv</PackageDir>
+<PackageDirDataCore>package\build_datacore</PackageDirDataCore>
 </PropertyGroup>
 
   <ItemGroup>
@@ -168,11 +169,11 @@
 	</Target>
 	
 	<Target Name="PublishDataCore">
-		<MakeDir Directories="$(PackageDir)\DataCore\TickFeed" />
-		<MakeDir Directories="$(PackageDir)\DataCore\ServiceHost" />
-		<MakeDir Directories="$(PackageDir)\DataCore\RequiredLibraries" />
-		<Copy SourceFiles="@(DataCoreExe)" DestinationFolder="$(PackageDir)\DataCore" ContinueOnError="false" />
-		<Copy SourceFiles="@(DataCoreLibs)" DestinationFolder="$(PackageDir)\DataCore\RequiredLibraries" ContinueOnError="false" />
+		<MakeDir Directories="$(PackageDirDataCore)\DataCore\TickFeed" />
+		<MakeDir Directories="$(PackageDirDataCore)\DataCore\ServiceHost" />
+		<MakeDir Directories="$(PackageDirDataCore)\DataCore\RequiredLibraries" />
+		<Copy SourceFiles="@(DataCoreExe)" DestinationFolder="$(PackageDirDataCore)\DataCore" ContinueOnError="false" />
+		<Copy SourceFiles="@(DataCoreLibs)" DestinationFolder="$(PackageDirDataCore)\DataCore\RequiredLibraries" ContinueOnError="false" />
 	</Target>
 	
 
