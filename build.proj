@@ -2,7 +2,7 @@
 <PropertyGroup>
 <SolutionDir Condition="'$(SolutionDir)' == ''">$(MSBuildProjectDirectory)</SolutionDir>
 <BuildDir>build</BuildDir>
-<Configuration Condition="'$(Configuration)' == ''">Debug</Configuration>
+<Configuration Condition="'$(Configuration)' == ''">Release</Configuration>
 <OperatingPlatform Condition="'$(OperatingPlatform)' == ''">Windows</OperatingPlatform>
 <clrzmqSuffix Condition="'$(OperatingPlatform)' == 'Unix'">-unix</clrzmqSuffix>
 <PackageDir>package\logicsrv</PackageDir>
