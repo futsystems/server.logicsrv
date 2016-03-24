@@ -17,12 +17,9 @@ namespace TradingLib.DataFarm.Common
 
         ILog logger = LogManager.GetLogger("FrequencyService");
 
-        //public event Action<Bar> NewBarEvent;
-
-
-        FrequencyManager frequencyManager;
-        ConcurrentDictionary<string, Symbol> subscribeSymbolMap = new ConcurrentDictionary<string, Symbol>();
-        ConcurrentDictionary<BarFrequency, FrequencyPlugin> frequencyPluginMap = new ConcurrentDictionary<BarFrequency, FrequencyPlugin>();
+        //FrequencyManager frequencyManager;
+        //ConcurrentDictionary<string, Symbol> subscribeSymbolMap = new ConcurrentDictionary<string, Symbol>();
+        //ConcurrentDictionary<BarFrequency, FrequencyPlugin> frequencyPluginMap = new ConcurrentDictionary<BarFrequency, FrequencyPlugin>();
 
 
         /// <summary>
@@ -30,78 +27,103 @@ namespace TradingLib.DataFarm.Common
         /// </summary>
         public event Action<FreqNewBarEventArgs> NewBarEvent;
 
+        //public void Add(Symbol symbol)
+        //{
+        //    if (subscribeSymbolMap.Keys.Contains(symbol.Symbol))
+        //    {
+        //        logger.Info(string.Format("Symbol:{0} already registed", symbol.Symbol));
+        //    }
+        //    //添加合约到map
+        //    subscribeSymbolMap.TryAdd(symbol.Symbol, symbol);
+        //}
+
+        Dictionary<string, FrequencyManager> frequencyMgrMap = new Dictionary<string, FrequencyManager>();
+
+        FrequencyManager GetFrequencyManagerForExchange(string exchange)
+        {
+            FrequencyManager target = null;
+            if (frequencyMgrMap.TryGetValue(exchange, out target))
+            {
+                return target;
+            }
+            return null;
+        }
+
+
+        Dictionary<string, FrequencyManager> symbolFrequencyMgrMap = new Dictionary<string, FrequencyManager>();
+
+        FrequencyManager GetFrequencyManagerForSymbol(string symbol)
+        {
+            FrequencyManager target = null;
+            if (symbolFrequencyMgrMap.TryGetValue(symbol, out target))
+            {
+                return target;
+            }
+            return null;
+        }
+
+        /// <summary>
+        /// Bar数据生成器
+        /// </summary>
         public FrequencyService()
         {
+
+            //遍历所有交易所 为每个交易所生成频率发生器
+            foreach (var exchange in MDBasicTracker.ExchagneTracker.Exchanges)
+            {
+                FrequencyManager fm = new FrequencyManager(exchange.EXCode,exchange.DataFeed);
+                frequencyMgrMap.Add(exchange.EXCode, fm);
+                fm.NewFreqKeyBarEvent += new Action<FrequencyManager.FreqKey, SingleBarEventArgs>(OnNewFreqKeyBarEvent);
+
+            }
+
+            //遍历所有合约 并建立合约到FrequencyManager映射
+            foreach (var symbol in MDBasicTracker.SymbolTracker.Symbols)
+            {
+                FrequencyManager fm = GetFrequencyManagerForExchange(symbol.SecurityFamily.Exchange.EXCode);
+                if (fm != null)
+                {
+                    //FrequencyManager注册合约并建立直接映射
+                    fm.RegisterSymbol(symbol);
+                    symbolFrequencyMgrMap.Add(symbol.Symbol, fm);
+                }
+            }
 
             //初始化FrequencyPlugin
             //TimeFrequency tm = new TimeFrequency(new BarFrequency(BarInterval.CustomTime,60));
             
             //加载合约
-            Symbol symbol = MDBasicTracker.SymbolTracker["CLK6"];
+            //Symbol symbol = MDBasicTracker.SymbolTracker["CLK6"];
             //Symbol symbol2 = MDBasicTracker.SymbolTracker["HSIX5"];
-            if (symbol != null)
-            {
-                logger.Info("~~~~~got symbol:" + symbol.Symbol);
-                //fm = new FrequencyManager(fb,,false);
+            //if (symbol != null)
+            //{
+            //    logger.Info("~~~~~got symbol:" + symbol.Symbol);
+            //    //fm = new FrequencyManager(fb,,false);
 
-                Dictionary<Symbol, BarConstructionType> map = new Dictionary<Symbol, BarConstructionType>();
-                map.Add(symbol, BarConstructionType.Trade);
-                //map.Add(symbol2, BarConstructionType.Trade);
+            //    Dictionary<Symbol, BarConstructionType> map = new Dictionary<Symbol, BarConstructionType>();
+            //    map.Add(symbol, BarConstructionType.Trade);
+            //    //map.Add(symbol2, BarConstructionType.Trade);
 
-                subscribeSymbolMap.TryAdd(symbol.Symbol, symbol);
+            //    subscribeSymbolMap.TryAdd(symbol.Symbol, symbol);
 
-                frequencyManager = new FrequencyManager(map);
+            //    frequencyManager = new FrequencyManager();
+            //    frequencyManager.RegisterSymbol(symbol);
 
-            }
+            //}
 
-
-            //绑定事件
-            //frequencyManager.FreqKeyRegistedEvent += new Action<FrequencyManager.FreqKey>(OnFreqKeyRegistedEvent);
-
-            //注册频率发生器
-            //frequencyManager.RegisterFrequencies(tm);
-
-            frequencyManager.NewFreqKeyBarEvent += new Action<FrequencyManager.FreqKey, SingleBarEventArgs>(frequencyManager_NewFreqKeyBarEvent);
+            //frequencyManager.NewFreqKeyBarEvent += new Action<FrequencyManager.FreqKey, SingleBarEventArgs>(OnNewFreqKeyBarEvent);
         }
 
-        void frequencyManager_NewFreqKeyBarEvent(FrequencyManager.FreqKey arg1, SingleBarEventArgs arg2)
+        void OnNewFreqKeyBarEvent(FrequencyManager.FreqKey arg1, SingleBarEventArgs arg2)
         {
             logger.Warn(string.Format("Bar Generated Key:{0} Bar:{1}", arg1.Settings.BarFrequency, arg2.Bar));
-
-
-            //string key = string.Format("{0}-{1}",arg1.Symbol.GetContinuousKey(),arg1.Settings.BarFrequency.ToUniqueId());
-            //Bar tmp = new BarImpl(arg2.Bar);
-            //tmp.Symbol = arg1.Symbol.GetContinuousSymbol();//IF01,IF02;
             if (NewBarEvent != null)
             {
                 NewBarEvent(new FreqNewBarEventArgs() { Bar = new BarImpl(arg2.Bar), BarFrequency = arg1.Settings.BarFrequency, Symbol = arg1.Symbol });
             }
         }
 
-        void OnFreqKeyRegistedEvent(FrequencyManager.FreqKey obj)
-        {
-            Frequency frequency = frequencyManager[obj];
-            //如果Frequency不为空则订阅该Frequency的Bar事件
-            if (frequency != null)
-            {
-                frequency.SingleBarEvent += (e) => { OnFrequencySingleBarEvent(frequency, e); };
-            }
-        }
 
-        void OnFrequencySingleBarEvent(Frequency frequency,SingleBarEventArgs obj)
-        {
-            logger.Info(string.Format("Bar Generated:{0} frequency bar count:{1}", obj.Bar,frequency.Bars.Count));
-            foreach (var b in frequency.Bars.Items)
-            {
-                logger.Info("Bar:" + b.ToString());
-            }
-
-            //if (NewBarEvent != null)
-            //{
-            //    NewBarEvent(obj.Bar);
-            //}
-
-        }
 
 
         /// <summary>
@@ -112,27 +134,26 @@ namespace TradingLib.DataFarm.Common
         /// <returns></returns>
         public Bar GetPartialBar(Symbol symbol,BarFrequency freq)
         {
-            Frequency data = frequencyManager.GetFrequency(symbol, freq);
-            if (data == null) return null;
-            if (data.Bars.HasPartialItem) return data.Bars.PartialItem;
+            FrequencyManager fm = GetFrequencyManagerForExchange(symbol.SecurityFamily.Exchange.EXCode);
+            if (fm != null)
+            {
+                Frequency data = fm.GetFrequency(symbol, freq);
+                if (data == null) return null;
+                if (data.Bars.HasPartialItem) return data.Bars.PartialItem;
+            }
             return null;
         }
+
+
         /// <summary>
         /// 处理外部行情
         /// </summary>
         /// <param name="k"></param>
         public void ProcessTick(Tick k)
         {
-            Symbol target = null;
-            if (subscribeSymbolMap.TryGetValue(k.Symbol, out target))
-            {
-                //不同行情源混合
-                //logger.Info(string.Format("date:{0} time:{1} datafeed:{2}", k.Date, k.Time, k.DataFeed));
-                if (k.DataFeed == QSEnumDataFeedTypes.IQFEED)
-                {
-                    frequencyManager.ProcessTick(target, k);
-                }
-            }
+            FrequencyManager fm = GetFrequencyManagerForSymbol(k.Symbol);
+            if (fm == null) return;
+            fm.ProcessTick(k);
         }
 
     }

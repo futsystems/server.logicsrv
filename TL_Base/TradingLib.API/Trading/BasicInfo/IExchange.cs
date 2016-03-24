@@ -65,6 +65,10 @@ namespace TradingLib.API
         /// </summary>
         string Title { get; set; }
 
+        /// <summary>
+        /// 行情源
+        /// </summary>
+        QSEnumDataFeedTypes DataFeed { get; set; }
 
         /// <summary>
         /// 结算方式

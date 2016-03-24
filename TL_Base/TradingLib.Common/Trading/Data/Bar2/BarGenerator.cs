@@ -197,7 +197,9 @@ namespace TradingLib.Common
             //Bar时间有效 且Bar不为空则触发该Bar
             if (e.Bar.BarStartTime != System.DateTime.MinValue && !e.Bar.EmptyBar)//EmptyBar是只没有获得任何一个行情的Bar为空Bar
             {
+#if DEBUG
                 logger.Info("NewBar Generated:" + e.Bar.ToString());
+#endif
                 if (NewBar != null)
                 {
                     NewBar(e);
@@ -228,8 +230,9 @@ namespace TradingLib.Common
             //{
             //    this._currentPartialBar.BarEndTime = barEndTime;
             //}
+#if DEBUG
             logger.Info(string.Format("Close Bar:{0}", this._currentPartialBar != null ? this._currentPartialBar.ToString() : "Null"));
-            
+#endif   
             Bar data = this._currentPartialBar;
             this._isTickSent = false;
 

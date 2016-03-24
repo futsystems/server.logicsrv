@@ -103,7 +103,7 @@ namespace TradingLib.Common
                 target.TimeZoneID = ex.TimeZoneID;
                 target.CloseTime = ex.CloseTime;
                 target.SettleType = ex.SettleType;
-
+                target.DataFeed = ex.DataFeed;
                 ORM.MBasicInfo.UpdateExchange(target);
             }
             else
@@ -117,6 +117,7 @@ namespace TradingLib.Common
                 target.TimeZoneID = ex.TimeZoneID;
                 target.CloseTime = ex.CloseTime;
                 target.SettleType = ex.SettleType;
+                target.DataFeed = ex.DataFeed;
 
                 ORM.MBasicInfo.InsertExchange(target);
                 ex.ID = target.ID;

@@ -220,7 +220,9 @@ namespace TradingLib.Common
                 //没有处理过tick数据 则更新当前的round时间为当前Bar的开始时间 closebar会执行update=false
                 if (!this._updated)
                 {
+#if DEBUG
                     logger.Info(string.Format("DateTime:{0} SetBarStartTime:{1}", datetime, round));
+#endif
                     this._generator.SetBarStartTime(round);
                     this._updated = true;
                 }
