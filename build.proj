@@ -80,7 +80,8 @@
 		<DataCoreLibs Include="lib\Common.Logging.dll" />
 		<DataCoreLibs Include="lib\Common.Logging.NLog31.dll" />
 		<DataCoreLibs Include="lib\NLog.dll" />
-		<DataCoreLibs Include="lib\NodaTime.dll" />					
+		<DataCoreLibs Include="lib\NodaTime.dll" />			
+		<DataCoreLibs Include="lib\STSdb4.dll" />		
 		<DataCoreLibs Condition=" '$(OperatingPlatform)' == 'Windows' " Include="lib\libzmq\clrzmq-4.x\win\ZeroMQ.dll" />
 		<DataCoreLibs Condition=" '$(OperatingPlatform)' == 'Unix' " Include="lib\libzmq\clrzmq-4.x\mono\ZeroMQ.dll" />
 	</ItemGroup>
