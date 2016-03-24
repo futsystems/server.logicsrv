@@ -50,7 +50,7 @@ rule:
 exsrv:
 	$(XBUILD) /target:ExServer $(FLAGS) $(PROJ)
 
-exsrv:
+datacore:
 	$(XBUILD) /target:DataServer $(FLAGS) $(PROJ)
 	
 publish:
