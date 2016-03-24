@@ -15,7 +15,7 @@ using TradingLib.DataFarm.Common;
 
 namespace ZMQServiceHost
 {
-    public class ZMQServiceHost:IServiceHost
+    public class ZMQServiceHost : IServiceHost
     {
         /// <summary>
         /// 系统默认Poller超时时间
@@ -65,8 +65,8 @@ namespace ZMQServiceHost
 
 
         public ZMQServiceHost()
-        { 
-            
+        {
+
         }
         public void Start()
         {
@@ -156,7 +156,7 @@ namespace ZMQServiceHost
         {
             workers = new List<Thread>(_worknum);
             using (ZContext context = new ZContext())
-            {   
+            {
                 //当server端返回信息时,我们同样需要借助一定的设备完成
                 using (ZSocket frontend = new ZSocket(context, ZSocketType.ROUTER), backend = new ZSocket(context, ZSocketType.DEALER), outchannel = new ZSocket(context, ZSocketType.DEALER), outClient = new ZSocket(context, ZSocketType.DEALER))
                 {
@@ -174,7 +174,7 @@ namespace ZMQServiceHost
                     outchannel.ReceiveHighWatermark = 5000000;
                     //对外发送消息的对端socket
                     _outputChanel = outClient;
-                    
+
                     outClient.Connect("inproc://output");
                     outClient.SendHighWatermark = 5000000;
                     outClient.ReceiveHighWatermark = 5000000;
@@ -302,7 +302,7 @@ namespace ZMQServiceHost
             object[] list = olist as object[];
             ZContext wctx = (ZContext)list[0];
             int id = int.Parse(list[1].ToString());
-            using (ZSocket worker = new ZSocket(wctx,ZSocketType.DEALER))
+            using (ZSocket worker = new ZSocket(wctx, ZSocketType.DEALER))
             {
                 //将worker连接到backend用于接收由backend中继转发过来的信息
                 worker.Connect("inproc://backend");
@@ -350,7 +350,7 @@ namespace ZMQServiceHost
 
         public void Send(IPacket packet, bool isReq = false)
         {
-            this.Send(packet.Data, packet.ClientID, isReq);  
+            this.Send(packet.Data, packet.ClientID, isReq);
         }
 
         public void Send(byte[] data, string address, bool isReq = false)
@@ -362,7 +362,12 @@ namespace ZMQServiceHost
                 using (ZMessage zmsg = new ZMessage())
                 {
                     ZError error;
+
                     zmsg.Add(new ZFrame(Encoding.UTF8.GetBytes(address)));
+                    if (isReq)
+                    {
+                        zmsg.Add(new ZFrame(Encoding.UTF8.GetBytes("")));
+                    }
                     zmsg.Add(new ZFrame(data));
                     if (!_outputChanel.Send(zmsg, out error))
                     {
@@ -396,6 +401,7 @@ namespace ZMQServiceHost
                 //1.进行消息地址解析 zmessage 中含有多个frame frame[0]是消息主体,其余frame是附加的地址信息
                 string front = cnt == 3 ? req[0].ReadString(Encoding.UTF8) : string.Empty;
                 string address = cnt == 3 ? req[1].ReadString(Encoding.UTF8) : req[0].ReadString(Encoding.UTF8);
+
                 Message message = Message.gotmessage(req.Last().Read());
                 //消息合法判定
                 if (!message.isValid) return;
@@ -408,6 +414,15 @@ namespace ZMQServiceHost
                     //响应客户端服务查询
                     case MessageTypes.SERVICEREQUEST:
                         {
+                            //Req查询服务 address/空/message 按ZMQ协议 会有一个空格,Router Dealer的通讯则不包含空格
+                            if (string.IsNullOrEmpty(address))
+                            {
+                                address = front;
+                            }
+                            if (string.IsNullOrEmpty(address))
+                            {
+                                logger.Warn("Invalid ZMQ Packet Address");
+                            }
                             QryServiceRequest request = RequestTemplate<QryServiceRequest>.SrvRecvRequest("", address, message.Content);
                             RspQryServiceResponse response = QryService(request);
                             this.Send(response, true);
@@ -463,9 +478,10 @@ namespace ZMQServiceHost
                         }
                         return;
                 }
+
             }
         }
-    
+
 
 
         /// <summary>
@@ -495,9 +511,9 @@ namespace ZMQServiceHost
                 ConnectionClosedEvent(this, conn);
             }
         }
-        private void HandleMessage(MessageTypes type, string body,string address)
-        { 
-            
+        private void HandleMessage(MessageTypes type, string body, string address)
+        {
+
         }
 
         /// <summary>
@@ -511,8 +527,8 @@ namespace ZMQServiceHost
             if (ServiceEvent != null)
             {
                 IPacket packet = ServiceEvent(this, request);
-                
-                if (packet!=null && packet.Type == MessageTypes.SERVICERESPONSE)
+
+                if (packet != null && packet.Type == MessageTypes.SERVICERESPONSE)
                 {
                     response = packet as RspQryServiceResponse;
                     response.APIType = QSEnumAPIType.MD_ZMQ;
@@ -527,7 +543,7 @@ namespace ZMQServiceHost
             }
             return response;
         }
-        public event Action<IServiceHost,IConnection,IPacket> RequestEvent;
+        public event Action<IServiceHost, IConnection, IPacket> RequestEvent;
 
         public event Func<IServiceHost, IPacket, IPacket> ServiceEvent;
 

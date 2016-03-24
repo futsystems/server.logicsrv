@@ -18,8 +18,8 @@ namespace TradingLib.MDClient
 
         ILog logger = LogManager.GetLogger("MDClient");
 
-        TLClient<TLSocket_TCP> realClient = null;
-        TLClient<TLSocket_TCP> histClient = null;
+        TLClient<TLSocket_ZMQ> realClient = null;
+        TLClient<TLSocket_ZMQ> histClient = null;
         MDHandlerBase _handler = null;
 
         int requestid = 0;
@@ -58,8 +58,8 @@ namespace TradingLib.MDClient
         public MDClient(string[] realservers,int realport,string[] histservers,int histport)
         {
 
-            realClient = new TLClient<TLSocket_TCP>(realservers, realport, "MDClient-Real");
-            histClient = new TLClient<TLSocket_TCP>(histservers, histport, "MDClient-Hist");
+            realClient = new TLClient<TLSocket_ZMQ>(realservers, realport, "MDClient-Real");
+            histClient = new TLClient<TLSocket_ZMQ>(histservers, histport, "MDClient-Hist");
 
             //绑定事件
             WireEvent();

@@ -50,6 +50,9 @@
     <Reference Include="TradingLib.Common">
       <HintPath>..\..\lib\TradingLib\TradingLib.Common.dll</HintPath>
     </Reference>
+    <Reference Include="ZeroMQ">
+      <HintPath>..\..\lib\ZeroMQ.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="IBasicInfo.cs" />
@@ -61,6 +64,7 @@
     <Compile Include="MDClient__.cs" />
     <Compile Include="MDClient__Request.cs" />
     <Compile Include="MDClient__BasicInfo.cs" />
+    <Compile Include="TLSocket_ZMQ.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

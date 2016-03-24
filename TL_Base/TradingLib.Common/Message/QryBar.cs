@@ -224,17 +224,20 @@ namespace TradingLib.Common
         /// <param name="data"></param>
         public override void DeserializeBin(byte[] data)
         {
-            MemoryStream ms = new MemoryStream(data);
-            BinaryReader reader = new BinaryReader(ms);
-            this.RequestID = reader.ReadInt32();
-            this.IsLast = reader.ReadBoolean();
-
-            List<BarImpl> barlsit = new List<BarImpl>();
-
-            for (int i = 0; i < (data.Length-1-4) / 88; i++)
+            using (MemoryStream ms = new MemoryStream(data))
             {
-                BarImpl bar = BarImpl.Read(reader);
-                this.Add(bar);
+                using (BinaryReader reader = new BinaryReader(ms))
+                {
+                    this.RequestID = reader.ReadInt32();
+                    this.IsLast = reader.ReadBoolean();
+
+                    List<BarImpl> barlsit = new List<BarImpl>();
+                    while (ms.Position < ms.Length)
+                    {
+                        BarImpl bar = BarImpl.Read(reader);
+                        this.Add(bar);
+                    }
+                }
             }
         }
 
@@ -247,24 +250,29 @@ namespace TradingLib.Common
         public override byte[] SerializeBin()
         {
             //MemoryStream会根据写入的数据自动扩充底层数组大小
+            
+            
+
+
             MemoryStream ms = new MemoryStream();
             BinaryWriter b = new BinaryWriter(ms);
-            byte[] sizebyte = BitConverter.GetBytes(8 + 4 + 1 + this.Bars.Count * BarImpl.SIZE);
-            byte[] typebyte = BitConverter.GetBytes((int)MessageTypes.BIN_BARRESPONSE);
-
-            b.Write(sizebyte);
-            b.Write(typebyte);
-            b.Write(this.RequestID);
-            b.Write(this.IsLast);
-
             for (int i = 0; i < this.Bars.Count; i++)
             {
                 BarImpl.Write(b, this.Bars[i]);
             }
-            byte[] buffer = new byte[ms.Length];
+            int size = (int)ms.Length + 8 + 4 + 1;
+            byte[] buffer = new byte[size];
+            
+            byte[] sizebyte = BitConverter.GetBytes(size);
+            byte[] typebyte = BitConverter.GetBytes((int)MessageTypes.BIN_BARRESPONSE);
+            byte[] requestidbyte = BitConverter.GetBytes(this.RequestID);
+            byte[] islastbyte = BitConverter.GetBytes(this.IsLast);
 
-            Array.Copy(ms.GetBuffer(), 0, buffer, 0, ms.Length);
-            //ms.Read(buffer, 0, buffer.Length);
+            Array.Copy(sizebyte, 0, buffer, 0, sizebyte.Length);
+            Array.Copy(typebyte, 0, buffer, 4, typebyte.Length);
+            Array.Copy(requestidbyte, 0, buffer, 8, requestidbyte.Length);
+            Array.Copy(islastbyte, 0, buffer, 8 + 4, islastbyte.Length);
+            Array.Copy(ms.GetBuffer(), 0, buffer, 8 + 4 + 1, ms.Length);
             return buffer;
         }
 

@@ -83,10 +83,10 @@
   <Target Name="AfterBuild">
   </Target>
   -->
-  <Target Name="AfterBuild">
+    <Target Name="AfterBuild">
     <ItemGroup>
       <OutFiles Include="$(OutputPath)\$(AssemblyName).dll" />
     </ItemGroup>
-    <Copy SourceFiles="@(OutFiles)" DestinationFolder="..\..\Platform\DataSrv\ServiceHost" SkipUnchangedFiles="true" />
+    <Copy SourceFiles="@(OutFiles)" DestinationFolder="..\..\Platform\DataCore\ServiceHost" SkipUnchangedFiles="true" />
   </Target>
 </Project>
