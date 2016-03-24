@@ -39,6 +39,7 @@
   <ItemGroup>
     <BuildFilesRuleSet Include="lib\TradingLib\RuleSet\*" />
   </ItemGroup>
+  
   <ItemGroup>
 		<LibFiles Include="lib\Quartz.dll" />
 		<LibFiles Include="lib\MySql.Data.dll" />
@@ -59,6 +60,24 @@
   <ItemGroup>
     <ConfigFiles Include="Platform\TradingSrv\config\*" />
   </ItemGroup>
+  
+  <ItemGroup>
+		<DataCoreExe Include="Platform\DataCore\DataCoreSrv.exe" />
+		<DataCoreExe Include="Platform\DataCore\TradingLib.DataFarm.API.dll" />
+		<DataCoreExe Include="Platform\DataCore\TradingLib.DataFarm.Common.dll" />
+		<DataCoreExe Include="Platform\DataCore\TradingLib.DataFarm.Server.dll" />
+  </ItemGroup>
+    <ItemGroup>
+		<DataCoreLibs Include="lib\Quartz.dll" />
+		<DataCoreLibs Include="lib\MySql.Data.dll" />
+		<DataCoreLibs Include="lib\Common.Logging.Core.dll" />
+		<DataCoreLibs Include="lib\Common.Logging.dll" />
+		<DataCoreLibs Include="lib\Common.Logging.NLog31.dll" />
+		<DataCoreLibs Include="lib\NodaTime.dll" />					
+		<DataCoreLibs Condition=" '$(OperatingPlatform)' == 'Windows' " Include="lib\libzmq\clrzmq-4.x\win\ZeroMQ.dll" />
+		<DataCoreLibs Condition=" '$(OperatingPlatform)' == 'Unix' " Include="lib\libzmq\clrzmq-4.x\mono\ZeroMQ.dll" />
+	</ItemGroup>
+  
 
 
   
@@ -147,6 +166,15 @@
 		
 		<Copy SourceFiles="@(BuildFilesExecute)" DestinationFolder="$(PackageDir)" ContinueOnError="false" />
 	</Target>
+	
+	<Target Name="PublishData">
+		<MakeDir Directories="$(PackageDir)\DataCore\TickFeed" />
+		<MakeDir Directories="$(PackageDir)\DataCore\ServiceHost" />
+		<MakeDir Directories="$(PackageDir)\DataCore\RequiredLibraries" />
+		<Copy SourceFiles="@(DataCoreExe)" DestinationFolder="$(PackageDir)\DataCore" ContinueOnError="false" />
+		<Copy SourceFiles="@(DataCoreLibs)" DestinationFolder="$(PackageDir)\DataCore\RequiredLibraries" ContinueOnError="false" />
+	</Target>
+	
 
 
   <Target Name="Build" DependsOnTargets="Base">
