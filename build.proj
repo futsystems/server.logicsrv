@@ -162,8 +162,7 @@
 		<DataCoreExe Include="lib\TradingLib\TradingLib.Common.dll" />
 		<DataCoreExe Include="lib\TradingLib\TradingLib.Common.Ex.dll" />
 		<DataCoreExe Include="lib\TradingLib\TradingLib.Mixins.dll" />
-		<DataCoreExe Condition=" '$(OperatingPlatform)' == 'Windows' " Include="lib\libzmq\clrzmq-4.x\win\ZeroMQ.dll" />
-		<DataCoreExe Condition=" '$(OperatingPlatform)' == 'Unix' " Include="lib\libzmq\clrzmq-4.x\mono\ZeroMQ.dll" />
+		
 	</ItemGroup>
     <ItemGroup>
 		<DataCoreLibs Include="lib\Quartz.dll" />
@@ -174,6 +173,9 @@
 		<DataCoreLibs Include="lib\NLog.dll" />
 		<DataCoreLibs Include="lib\NodaTime.dll" />			
 		<DataCoreLibs Include="lib\STSdb4.dll" />		
+		<DataCoreLibs Include="lib\log4net.dll" />	
+		<DataCoreExe Condition=" '$(OperatingPlatform)' == 'Windows' " Include="lib\libzmq\clrzmq-4.x\win\ZeroMQ.dll" />
+		<DataCoreExe Condition=" '$(OperatingPlatform)' == 'Unix' " Include="lib\libzmq\clrzmq-4.x\mono\ZeroMQ.dll" />
 		
 	</ItemGroup>
 	
