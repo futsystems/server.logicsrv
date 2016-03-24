@@ -30,8 +30,10 @@ namespace TradingLib.DataFarm.Common
                 logger.Info("Exchange:" + exchange.EXCode);
             }
 
-            logger.Info("Created Loacal DataBase Engine");
-            _datastore = STSDBFactory.CreateLocalDB();
+            string histdbfile = _configFile["HistDBName"].AsString();
+            //string path = Path.Combine(new string[] { AppDomain.CurrentDomain.BaseDirectory, histdbfile });
+            logger.Info("Created Loacal DataBase Engine File:" + histdbfile);
+            _datastore = STSDBFactory.CreateLocalDB(histdbfile);
             logger.Info("....");
             
             //从数据库加载有效合约进行注册
