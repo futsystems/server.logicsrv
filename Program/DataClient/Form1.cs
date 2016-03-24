@@ -67,7 +67,7 @@ namespace DataClient
         TradingLib.MDClient.MDClient mdclient = null;
         private void btnMQClient_Click(object sender, EventArgs e)
         {
-            mdclient = new TradingLib.MDClient.MDClient("127.0.0.1", 5060, 5060);
+            mdclient = new TradingLib.MDClient.MDClient("121.40.171.230", 5060, 5060);
             mdclient.RegisterHandler(handler);
 
             mdclient.Start();
