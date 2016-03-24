@@ -118,8 +118,15 @@ namespace TradingLib.Common
             
         }
 
+        /// <summary>
+        /// 这里的data为接受到的数据大小 完整数据
+        /// </summary>
+        /// <param name="data"></param>
+        /// <param name="offset"></param>
+        /// <returns></returns>
         public static Message[] gotmessages(ref byte[] data, ref int offset)
         {
+
             // save original length
             int orglen = data.Length;
             // prepare to hold a sequence of messages from a buffer

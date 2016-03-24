@@ -149,11 +149,30 @@ namespace TradingLib.MDClient
             {
                 try
                 {
+                    /* 此处buffer为接受数据缓存大小,数据包有可能只到达一部分
+                     * 在没有比较gotmessage解析数据长度是否超过ret+bufferoffset长度时 可能出现对不完整的数据包解析 造成数据错误
+                     * 
+                     * gotmessages函数要求提供的pdata为实际数据长度,在函数内部通过 int orglen = data.Length; 来确定原来数据块的大小
+                     * 
+                     * 解决方案
+                     * 1.socket获得数据后将数据复制到对应的pdata中(包含所有有效数据)
+                     * 2.通过gotmessage解析后 如果还存有部分数据包内容 则将数据重新复制回buffer缓冲
+                     * 
+                     * */
+
                     int ret = _socket.Receive(buffer, bufferoffset, buffer.Length - bufferoffset, SocketFlags.None);
                     if (ret > 0)
                     {
+                        logger.Info(string.Format("buffer size:{0}", buffer.Length));
+                        byte[] pdata = new byte[ret + bufferoffset];
+                        Array.Copy(buffer, 0, pdata, 0, ret + bufferoffset);
+
                         //logger.Debug("socket recv bytes:" + ret + "raw data:" + HexToString(buffer, ret));
-                        Message[] messagelist = Message.gotmessages(ref buffer, ref bufferoffset);//消息不完整则会将数据copy到头部并且设定bufferoffset用于下一次读取数据时进行自动拼接
+                        Message[] messagelist = Message.gotmessages(ref pdata, ref bufferoffset);//消息不完整则会将数据copy到头部并且设定bufferoffset用于下一次读取数据时进行自动拼接
+                        if (bufferoffset != 0)
+                        {
+                            Array.Copy(pdata, 0,buffer, 0,bufferoffset);
+                        }
                         int gotlen = 0;
                         int j = 0;
                         foreach (var msg in messagelist)
