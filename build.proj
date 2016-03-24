@@ -178,8 +178,8 @@
 	
 	<Target Name="DataServer" DependsOnTargets="Base">
 		<MSBuild Projects="Program\DataCore\DataCore.csproj" Properties="Configuration=$(Configuration);" />
-		<MSBuild Projects="Futs.base\TL_DataFarm\FastTickFeed\FastTickFeed.csproj" Properties="Configuration=$(Configuration);" />
-		<MSBuild Projects="Futs.base\TL_DataFarm\TCPServiceHost\TCPServiceHost.csproj" Properties="Configuration=$(Configuration);" />
+		<MSBuild Projects="TL_DataFarm\FastTickFeed\FastTickFeed.csproj" Properties="Configuration=$(Configuration);" />
+		<MSBuild Projects="TL_DataFarm\TCPServiceHost\TCPServiceHost.csproj" Properties="Configuration=$(Configuration);" />
 	</Target>
 	<Target Name="PublishDataCore">
 		<MakeDir Directories="$(PackageDirDataCore)\DataCore\TickFeed" />
