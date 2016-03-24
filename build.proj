@@ -179,12 +179,13 @@
 		
 	</ItemGroup>
 	
-	<Target Name="DataServer" DependsOnTargets="Base">
+	<Target Name="BuildDataCore" DependsOnTargets="Base">
 		<MSBuild Projects="Program\DataCore\DataCore.csproj" Properties="Configuration=$(Configuration);" />
 		<MSBuild Projects="TL_DataFarm\FastTickFeed\FastTickFeed.csproj" Properties="Configuration=$(Configuration);" />
 		<MSBuild Projects="TL_DataFarm\TCPServiceHost\TCPServiceHost.csproj" Properties="Configuration=$(Configuration);" />
 	</Target>
-	<Target Name="PublishDataCore">
+	
+	<Target Name="ReleaseDataCore" DependsOnTargets="BuildDataCore">
 		<MakeDir Directories="$(PackageDirDataCore)\DataCore\TickFeed" />
 		<MakeDir Directories="$(PackageDirDataCore)\DataCore\ServiceHost" />
 		<MakeDir Directories="$(PackageDirDataCore)\DataCore\RequiredLibraries" />
