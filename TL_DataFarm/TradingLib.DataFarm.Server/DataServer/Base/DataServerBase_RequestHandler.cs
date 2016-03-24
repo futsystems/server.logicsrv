@@ -262,6 +262,7 @@ namespace TradingLib.DataFarm.Common
             logger.Info(string.Format("Conn:{0} qry security:{1}", conn.SessionID, request.ToString()));
             SecurityFamilyImpl[] seclist = MDBasicTracker.SecurityTracker.Securities.ToArray();
             int totalnum = seclist.Length;
+            int n = 0;
             if (totalnum > 0)
             {
                 for (int i = 0; i < totalnum; i++)
@@ -269,6 +270,12 @@ namespace TradingLib.DataFarm.Common
                     RspXQrySecurityResponse response = ResponseTemplate<RspXQrySecurityResponse>.SrvSendRspResponse(request);
                     response.SecurityFaimly = seclist[i];
                     conn.SendResponse(response, i == totalnum - 1);
+                    n++;
+                    if (n == 20)
+                    {
+                        Util.sleep(100);
+                        n = 0;
+                    }
                 }
             }
             else
@@ -291,6 +298,7 @@ namespace TradingLib.DataFarm.Common
             logger.Info(string.Format("Conn:{0} qry symbols:{1}", conn.SessionID, request.ToString()));
             SymbolImpl[] symlis = MDBasicTracker.SymbolTracker.Symbols.ToArray();
             int totalnum = symlis.Length;
+            int n = 0;
             if (totalnum > 0)
             {
                 for (int i = 0; i < totalnum; i++)
@@ -298,6 +306,12 @@ namespace TradingLib.DataFarm.Common
                     RspXQrySymbolResponse response = ResponseTemplate<RspXQrySymbolResponse>.SrvSendRspResponse(request);
                     response.Symbol = symlis[i];
                     conn.SendResponse(response, i == totalnum - 1);
+                    n++;
+                    if (n == 20)
+                    {
+                        Util.sleep(100);
+                        n = 0;
+                    }
                 }
             }
             else
