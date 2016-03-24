@@ -50,6 +50,9 @@ rule:
 exsrv:
 	$(XBUILD) /target:ExServer $(FLAGS) $(PROJ)
 
+exsrv:
+	$(XBUILD) /target:DataServer $(FLAGS) $(PROJ)
+	
 publish:
 	$(XBUILD) /target:Publish $(FLAGS) $(PROJ)
 	$(shell ./build.sh)

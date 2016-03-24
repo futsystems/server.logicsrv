@@ -105,17 +105,21 @@
 		<MSBuild Projects="TL_Connector\TLBrokerIB\TLBrokerIB.csproj" Properties="Configuration=$(Configuration);" />
   </Target>
 
-  <Target Name="Account" DependsOnTargets="Base">
+	<Target Name="Account" DependsOnTargets="Base">
 		<MSBuild Projects="Program\Lottoqq.Account\Lottoqq.Account.csproj" Properties="Configuration=$(Configuration);" />
-  </Target>
+	</Target>
 
-  <Target Name="RuleSet" DependsOnTargets="Base">
+	<Target Name="RuleSet" DependsOnTargets="Base">
 		<MSBuild Projects="TL_Strategy\RuleSet\RuleSet2\RuleSet2.csproj" Properties="Configuration=$(Configuration);" />
-  </Target>
+	</Target>
 
 	<Target Name="ExServer" DependsOnTargets="Base">
 		<MSBuild Projects="Program\TradingSrv\TradingSrv.csproj" Properties="Configuration=$(Configuration);" />
-  </Target>
+	</Target>
+	
+	<Target Name="DataServer" DependsOnTargets="Base">
+		<MSBuild Projects="Program\DataCore\DataCore.csproj" Properties="Configuration=$(Configuration);" />
+	</Target>
 
   
  	<Target Name="Test" DependsOnTargets="Compile">
