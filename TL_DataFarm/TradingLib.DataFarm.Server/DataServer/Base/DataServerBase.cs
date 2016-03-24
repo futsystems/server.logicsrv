@@ -23,6 +23,8 @@ namespace TradingLib.DataFarm.Common
             _name = name;
             logger = LogManager.GetLogger(name);
             _config = ConfigFile.GetConfigFile(name+".cfg");
+
+            _barbatchsize = _config["BarBatchSize"].AsInt();
         }
         /// <summary>
         /// 获取历史行情储存服务

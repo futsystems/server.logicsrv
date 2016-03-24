@@ -76,7 +76,7 @@ namespace TradingLib.DataFarm.Common
         }
 
         //为什么超过一定数量的Bar一起发送 客户端就无法收到数据 socket缓存?
-        const int BARSENDSIZE = 90;
+        int _barbatchsize = 1;
         /// <summary>
         /// 查询Bar数据
         /// </summary>
@@ -166,7 +166,7 @@ namespace TradingLib.DataFarm.Common
                                 {
                                     response.Add(bars[i]);
                                     j++;
-                                    if (j == BARSENDSIZE)
+                                    if (j == _barbatchsize)
                                     {
                                         //一定数目的Bar之后 发送数据 同时判断是否是最后一条
                                         response.IsLast = (i == bars.Count-1);

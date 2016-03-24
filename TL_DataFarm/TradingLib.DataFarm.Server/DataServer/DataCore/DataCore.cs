@@ -21,8 +21,8 @@ namespace TradingLib.DataFarm.Common
         {
             //初始化MySQL数据库连接池
             logger.Info("Init MySQL connection pool");
-            ConfigFile _configFile = ConfigFile.GetConfigFile("DataCore.cfg");
-            DBHelper.InitDBConfig(_configFile["DBAddress"].AsString(), _configFile["DBPort"].AsInt(), _configFile["DBName"].AsString(), _configFile["DBUser"].AsString(), _configFile["DBPass"].AsString());
+            //ConfigFile _configFile = ConfigFile.GetConfigFile("DataCore.cfg");
+            DBHelper.InitDBConfig(ConfigFile["DBAddress"].AsString(), ConfigFile["DBPort"].AsInt(), ConfigFile["DBName"].AsString(), ConfigFile["DBUser"].AsString(), ConfigFile["DBPass"].AsString());
 
 
             foreach (var exchange in MDBasicTracker.ExchagneTracker.Exchanges)
@@ -30,7 +30,7 @@ namespace TradingLib.DataFarm.Common
                 logger.Info("Exchange:" + exchange.EXCode);
             }
 
-            string histdbfile = _configFile["HistDBName"].AsString();
+            string histdbfile = ConfigFile["HistDBName"].AsString();
             //string path = Path.Combine(new string[] { AppDomain.CurrentDomain.BaseDirectory, histdbfile });
             logger.Info("Created Loacal DataBase Engine File:" + histdbfile);
             _datastore = STSDBFactory.CreateLocalDB(histdbfile);
