@@ -62,29 +62,7 @@
     <ConfigFiles Include="Platform\TradingSrv\config\*" />
   </ItemGroup>
   
-  <ItemGroup>
-		<DataCoreExe Include="Platform\DataCore\DataCoreSrv.exe" />
-		<DataCoreExe Include="Platform\DataCore\TradingLib.DataFarm.API.dll" />
-		<DataCoreExe Include="Platform\DataCore\TradingLib.DataFarm.Common.dll" />
-		<DataCoreExe Include="Platform\DataCore\TradingLib.DataFarm.Server.dll" />
-		<DataCoreExe Include="lib\TradingLib\TradingLib.API.dll" />
-		<DataCoreExe Include="lib\TradingLib\TradingLib.API.Ex.dll" />
-		<DataCoreExe Include="lib\TradingLib\TradingLib.Common.dll" />
-		<DataCoreExe Include="lib\TradingLib\TradingLib.Common.Ex.dll" />
-		<DataCoreExe Include="lib\TradingLib\TradingLib.Mixins.dll" />
-  </ItemGroup>
-    <ItemGroup>
-		<DataCoreLibs Include="lib\Quartz.dll" />
-		<DataCoreLibs Include="lib\MySql.Data.dll" />
-		<DataCoreLibs Include="lib\Common.Logging.Core.dll" />
-		<DataCoreLibs Include="lib\Common.Logging.dll" />
-		<DataCoreLibs Include="lib\Common.Logging.NLog31.dll" />
-		<DataCoreLibs Include="lib\NLog.dll" />
-		<DataCoreLibs Include="lib\NodaTime.dll" />			
-		<DataCoreLibs Include="lib\STSdb4.dll" />		
-		<DataCoreLibs Condition=" '$(OperatingPlatform)' == 'Windows' " Include="lib\libzmq\clrzmq-4.x\win\ZeroMQ.dll" />
-		<DataCoreLibs Condition=" '$(OperatingPlatform)' == 'Unix' " Include="lib\libzmq\clrzmq-4.x\mono\ZeroMQ.dll" />
-	</ItemGroup>
+	
   
 
 
@@ -144,9 +122,7 @@
 		<MSBuild Projects="Program\TradingSrv\TradingSrv.csproj" Properties="Configuration=$(Configuration);" />
 	</Target>
 	
-	<Target Name="DataServer" DependsOnTargets="Base">
-		<MSBuild Projects="Program\DataCore\DataCore.csproj" Properties="Configuration=$(Configuration);" />
-	</Target>
+
 
   
  	<Target Name="Test" DependsOnTargets="Compile">
@@ -175,12 +151,44 @@
 		<Copy SourceFiles="@(BuildFilesExecute)" DestinationFolder="$(PackageDir)" ContinueOnError="false" />
 	</Target>
 	
+	
+	<ItemGroup>
+		<DataCoreExe Include="Platform\DataCore\DataCoreSrv.exe" />
+		<DataCoreExe Include="Platform\DataCore\TradingLib.DataFarm.API.dll" />
+		<DataCoreExe Include="Platform\DataCore\TradingLib.DataFarm.Common.dll" />
+		<DataCoreExe Include="Platform\DataCore\TradingLib.DataFarm.Server.dll" />
+		<DataCoreExe Include="lib\TradingLib\TradingLib.API.dll" />
+		<DataCoreExe Include="lib\TradingLib\TradingLib.API.Ex.dll" />
+		<DataCoreExe Include="lib\TradingLib\TradingLib.Common.dll" />
+		<DataCoreExe Include="lib\TradingLib\TradingLib.Common.Ex.dll" />
+		<DataCoreExe Include="lib\TradingLib\TradingLib.Mixins.dll" />
+	</ItemGroup>
+    <ItemGroup>
+		<DataCoreLibs Include="lib\Quartz.dll" />
+		<DataCoreLibs Include="lib\MySql.Data.dll" />
+		<DataCoreLibs Include="lib\Common.Logging.Core.dll" />
+		<DataCoreLibs Include="lib\Common.Logging.dll" />
+		<DataCoreLibs Include="lib\Common.Logging.NLog31.dll" />
+		<DataCoreLibs Include="lib\NLog.dll" />
+		<DataCoreLibs Include="lib\NodaTime.dll" />			
+		<DataCoreLibs Include="lib\STSdb4.dll" />		
+		<DataCoreLibs Condition=" '$(OperatingPlatform)' == 'Windows' " Include="lib\libzmq\clrzmq-4.x\win\ZeroMQ.dll" />
+		<DataCoreLibs Condition=" '$(OperatingPlatform)' == 'Unix' " Include="lib\libzmq\clrzmq-4.x\mono\ZeroMQ.dll" />
+	</ItemGroup>
+	
+	<Target Name="DataServer" DependsOnTargets="Base">
+		<MSBuild Projects="Program\DataCore\DataCore.csproj" Properties="Configuration=$(Configuration);" />
+		<MSBuild Projects="Futs.base\TL_DataFarm\FastTickFeed\FastTickFeed.csproj" Properties="Configuration=$(Configuration);" />
+		<MSBuild Projects="Futs.base\TL_DataFarm\TCPServiceHost\TCPServiceHost.csproj" Properties="Configuration=$(Configuration);" />
+	</Target>
 	<Target Name="PublishDataCore">
 		<MakeDir Directories="$(PackageDirDataCore)\DataCore\TickFeed" />
 		<MakeDir Directories="$(PackageDirDataCore)\DataCore\ServiceHost" />
 		<MakeDir Directories="$(PackageDirDataCore)\DataCore\RequiredLibraries" />
 		<Copy SourceFiles="@(DataCoreExe)" DestinationFolder="$(PackageDirDataCore)\DataCore" ContinueOnError="false" />
 		<Copy SourceFiles="@(DataCoreLibs)" DestinationFolder="$(PackageDirDataCore)\DataCore\RequiredLibraries" ContinueOnError="false" />
+		<Copy SourceFiles="Platform\DataCore\TickFeed\FastTickFeed.dll" DestinationFolder="$(PackageDirDataCore)\DataCore\TickFeed" ContinueOnError="false" />
+		<Copy SourceFiles="Platform\DataCore\ServiceHost\TCPServiceHost.dll" DestinationFolder="$(PackageDirDataCore)\DataCore\ServiceHost" ContinueOnError="false" />
 	</Target>
 	
 
