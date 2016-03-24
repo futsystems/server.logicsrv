@@ -167,7 +167,7 @@
 		<Copy SourceFiles="@(BuildFilesExecute)" DestinationFolder="$(PackageDir)" ContinueOnError="false" />
 	</Target>
 	
-	<Target Name="PublishData">
+	<Target Name="PublishDataCore">
 		<MakeDir Directories="$(PackageDir)\DataCore\TickFeed" />
 		<MakeDir Directories="$(PackageDir)\DataCore\ServiceHost" />
 		<MakeDir Directories="$(PackageDir)\DataCore\RequiredLibraries" />

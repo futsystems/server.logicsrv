@@ -52,6 +52,9 @@ exsrv:
 
 datacore:
 	$(XBUILD) /target:DataServer $(FLAGS) $(PROJ)
+
+publishdatacore:
+	$(XBUILD) /target:PublishDataCore $(FLAGS) $(PROJ)
 	
 publish:
 	$(XBUILD) /target:Publish $(FLAGS) $(PROJ)
