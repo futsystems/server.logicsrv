@@ -114,7 +114,7 @@ namespace DataClient
 
         private void btnQryBar_Click(object sender, EventArgs e)
         {
-            mdclient.QryBar(Symbol.Text,(int)interval.Value, start.Value, end.Value,(int)maxcount.Value);
+            mdclient.QryBar(Symbol.Text,(int)interval.Value,DateTime.MinValue, end.Value,(int)maxcount.Value);
         }
 
         private void btnRegisterSymbol_Click(object sender, EventArgs e)

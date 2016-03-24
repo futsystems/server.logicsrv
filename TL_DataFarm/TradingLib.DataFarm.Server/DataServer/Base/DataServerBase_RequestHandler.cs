@@ -270,12 +270,12 @@ namespace TradingLib.DataFarm.Common
                     RspXQrySecurityResponse response = ResponseTemplate<RspXQrySecurityResponse>.SrvSendRspResponse(request);
                     response.SecurityFaimly = seclist[i];
                     conn.SendResponse(response, i == totalnum - 1);
-                    n++;
-                    if (n == 20)
-                    {
-                        Util.sleep(100);
-                        n = 0;
-                    }
+                    //n++;
+                    //if (n == 20)
+                    //{
+                    //    Util.sleep(100);
+                    //    n = 0;
+                    //}
                 }
             }
             else
@@ -306,12 +306,12 @@ namespace TradingLib.DataFarm.Common
                     RspXQrySymbolResponse response = ResponseTemplate<RspXQrySymbolResponse>.SrvSendRspResponse(request);
                     response.Symbol = symlis[i];
                     conn.SendResponse(response, i == totalnum - 1);
-                    n++;
-                    if (n == 20)
-                    {
-                        Util.sleep(100);
-                        n = 0;
-                    }
+                    //n++;
+                    //if (n == 20)
+                    //{
+                    //    Util.sleep(100);
+                    //    n = 0;
+                    //}
                 }
             }
             else

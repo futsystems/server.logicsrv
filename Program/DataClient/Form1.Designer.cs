@@ -106,7 +106,7 @@
             this.Symbol.Name = "Symbol";
             this.Symbol.Size = new System.Drawing.Size(63, 20);
             this.Symbol.TabIndex = 6;
-            this.Symbol.Text = "IF1511";
+            this.Symbol.Text = "CLK6";
             // 
             // kryptonLabel2
             // 
