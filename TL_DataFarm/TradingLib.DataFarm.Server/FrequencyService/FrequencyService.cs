@@ -71,7 +71,7 @@ namespace TradingLib.DataFarm.Common
             //遍历所有交易所 为每个交易所生成频率发生器
             foreach (var exchange in MDBasicTracker.ExchagneTracker.Exchanges)
             {
-                FrequencyManager fm = new FrequencyManager(exchange.EXCode,exchange.DataFeed);
+                FrequencyManager fm = new FrequencyManager(exchange.EXCode, exchange.DataFeed);
                 frequencyMgrMap.Add(exchange.EXCode, fm);
                 fm.NewFreqKeyBarEvent += new Action<FrequencyManager.FreqKey, SingleBarEventArgs>(OnNewFreqKeyBarEvent);
 
@@ -80,8 +80,7 @@ namespace TradingLib.DataFarm.Common
             //遍历所有合约 并建立合约到FrequencyManager映射
             foreach (var symbol in MDBasicTracker.SymbolTracker.Symbols)
             {
-                if (symbol.Symbol != "IF1604") continue;
-
+                //if (symbol.Symbol != "IF1604") continue;
                 FrequencyManager fm = GetFrequencyManagerForExchange(symbol.SecurityFamily.Exchange.EXCode);
                 if (fm != null)
                 {
@@ -90,31 +89,8 @@ namespace TradingLib.DataFarm.Common
                     symbolFrequencyMgrMap.Add(symbol.Symbol, fm);
                 }
             }
-
-            //初始化FrequencyPlugin
-            //TimeFrequency tm = new TimeFrequency(new BarFrequency(BarInterval.CustomTime,60));
-            
-            //加载合约
-            //Symbol symbol = MDBasicTracker.SymbolTracker["CLK6"];
-            //Symbol symbol2 = MDBasicTracker.SymbolTracker["HSIX5"];
-            //if (symbol != null)
-            //{
-            //    logger.Info("~~~~~got symbol:" + symbol.Symbol);
-            //    //fm = new FrequencyManager(fb,,false);
-
-            //    Dictionary<Symbol, BarConstructionType> map = new Dictionary<Symbol, BarConstructionType>();
-            //    map.Add(symbol, BarConstructionType.Trade);
-            //    //map.Add(symbol2, BarConstructionType.Trade);
-
-            //    subscribeSymbolMap.TryAdd(symbol.Symbol, symbol);
-
-            //    frequencyManager = new FrequencyManager();
-            //    frequencyManager.RegisterSymbol(symbol);
-
-            //}
-
-            //frequencyManager.NewFreqKeyBarEvent += new Action<FrequencyManager.FreqKey, SingleBarEventArgs>(OnNewFreqKeyBarEvent);
         }
+
 
         void OnNewFreqKeyBarEvent(FrequencyManager.FreqKey arg1, SingleBarEventArgs arg2)
         {
@@ -155,10 +131,6 @@ namespace TradingLib.DataFarm.Common
         /// <param name="k"></param>
         public void ProcessTick(Tick k)
         {
-            if (k.Symbol == "IF1604")
-            {
-                int i = 0;
-            }
             FrequencyManager fm = GetFrequencyManagerForSymbol(k.Symbol);
             if (fm == null) return;
             fm.ProcessTick(k);

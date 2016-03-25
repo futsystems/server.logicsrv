@@ -100,21 +100,21 @@ namespace TradingLib.DataFarm.Common
                         if (store != null)
                         {
                             store.InsertBar(b.Symbol,b.Bar);
-                            //store.Commit();
+                            store.Commit();
                         }
                     }
 
-                    DateTime now = DateTime.Now;
-                    if (now - _lastcommit > _commitpriod)
-                    { 
-                        IHistDataStore store = GetHistDataSotre();
-                        if (store != null)
-                        {
-                            logger.Info("Commit:" + now.ToShortTimeString());
-                            store.Commit();
-                        }
-                        _lastcommit = now;
-                    }
+                    //DateTime now = DateTime.Now;
+                    //if (now - _lastcommit > _commitpriod)
+                    //{ 
+                    //    IHistDataStore store = GetHistDataSotre();
+                    //    if (store != null)
+                    //    {
+                    //        logger.Info("Commit:" + now.ToShortTimeString());
+                    //        store.Commit();
+                    //    }
+                    //    _lastcommit = now;
+                    //}
 
                     // clear current flag signal
                     _logwaiting.Reset();
