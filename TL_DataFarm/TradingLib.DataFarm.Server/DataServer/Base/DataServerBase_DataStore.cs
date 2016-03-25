@@ -64,9 +64,9 @@ namespace TradingLib.DataFarm.Common
         int _saveThreshold = 100;//当缓存中未保存Tick大于等于该数时执行写库操作
         int _barSaveThreshold = 10;
 
-        bool _saveall = false;
+        bool _batchSave = true;
 
-        const int SLEEPDEFAULTMS = 10;
+        const int SLEEPDEFAULTMS = 100;
         static ManualResetEvent _logwaiting = new ManualResetEvent(false);
 
         void NewData()
@@ -100,22 +100,26 @@ namespace TradingLib.DataFarm.Common
                         if (store != null)
                         {
                             store.InsertBar(b.Symbol,b.Bar);
-                            store.Commit();
+                            if (!_batchSave)
+                            {
+                                store.Commit();
+                            }
                         }
                     }
-
-                    //DateTime now = DateTime.Now;
-                    //if (now - _lastcommit > _commitpriod)
-                    //{ 
-                    //    IHistDataStore store = GetHistDataSotre();
-                    //    if (store != null)
-                    //    {
-                    //        logger.Info("Commit:" + now.ToShortTimeString());
-                    //        store.Commit();
-                    //    }
-                    //    _lastcommit = now;
-                    //}
-
+                    if (_batchSave)
+                    {
+                        DateTime now = DateTime.Now;
+                        if (now - _lastcommit > _commitpriod)
+                        {
+                            IHistDataStore store = GetHistDataSotre();
+                            if (store != null)
+                            {
+                                logger.Info("Commit:" + now.ToShortTimeString());
+                                store.Commit();
+                            }
+                            _lastcommit = now;
+                        }
+                    }
                     // clear current flag signal
                     _logwaiting.Reset();
 
