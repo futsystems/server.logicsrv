@@ -8,7 +8,7 @@ using TradingLib.API;
 using TradingLib.Common;
 using TradingLib.DataFarm.API;
 
-namespace TradingLib.DataFarm.Common
+namespace TradingLib.Common.DataFarm
 {
     /// <summary>
     /// 用于维护到DataCore的ZMQ连接,用于DataFront启动时候加载基础数据

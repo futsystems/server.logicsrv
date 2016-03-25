@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using TradingLib.DataFarm.API;
 
-namespace TradingLib.DataFarm.Common
+namespace TradingLib.Common.DataFarm
 {
     public static class STSDBFactory
     {

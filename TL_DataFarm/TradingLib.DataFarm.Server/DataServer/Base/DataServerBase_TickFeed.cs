@@ -9,7 +9,7 @@ using TradingLib.Common;
 using TradingLib.DataFarm.API;
 using Common.Logging;
 
-namespace TradingLib.DataFarm.Common
+namespace TradingLib.Common.DataFarm
 {
     public partial class DataServerBase
     {

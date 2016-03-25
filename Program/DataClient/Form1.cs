@@ -176,6 +176,11 @@ namespace DataClient
             mdclient.DemoTick(int.Parse(md_time.Text), md_price.Value);
         }
 
+        private void btnReqMDHistTables_Click(object sender, EventArgs e)
+        {
+            mdclient.ReqMDHistTables();
+        }
+
 
 
 

@@ -18,7 +18,7 @@ using STSdb4.General.Extensions;
 using STSdb4.Storage;
 
 
-namespace TradingLib.DataFarm.Common
+namespace TradingLib.Common.DataFarm
 {
     /// <summary>
     ///  内存STSDB服务

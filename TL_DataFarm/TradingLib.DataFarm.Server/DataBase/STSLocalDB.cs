@@ -18,7 +18,7 @@ using STSdb4.General.Extensions;
 using STSdb4.Storage;
 
 
-namespace TradingLib.DataFarm.Common
+namespace TradingLib.Common.DataFarm
 {
     /// <summary>
     ///  写库数据服务器负责产生Bar数据并保存到数据库中
@@ -46,6 +46,7 @@ namespace TradingLib.DataFarm.Common
             foreach(var t in engine)
             {
                 var table = engine.OpenXTable<long, BarImpl>(t.Name);
+               
 
                 logger.Info(string.Format("TableName:{0} Record Num:{1}", t.Name, table.Count()));
                 

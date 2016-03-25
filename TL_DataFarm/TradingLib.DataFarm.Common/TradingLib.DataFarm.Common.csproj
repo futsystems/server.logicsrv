@@ -47,7 +47,6 @@
     <Compile Include="BinaryDataStore.cs" />
     <Compile Include="BinaryDataBase.cs" />
     <Compile Include="CloseWrapper.cs" />
-    <Compile Include="ConnectionUtils.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="QListDataBase.cs" />
     <Compile Include="TickDataBase.cs" />

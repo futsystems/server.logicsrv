@@ -8,7 +8,7 @@ using TradingLib.Common;
 using TradingLib.DataFarm.API;
 using Common.Logging;
 
-namespace TradingLib.DataFarm.Common
+namespace TradingLib.Common.DataFarm
 {
     public  abstract partial class DataServerBase
     {
@@ -26,6 +26,11 @@ namespace TradingLib.DataFarm.Common
 
             _barbatchsize = _config["BarBatchSize"].AsInt();
             _batchSave = _config["BatchSave"].AsBool();
+
+
+            //加载所有命令
+            ParseCommand();
+            //List<DataCommandInfo> list = this.FindCommand();
             
         }
         /// <summary>

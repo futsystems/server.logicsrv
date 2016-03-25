@@ -500,13 +500,23 @@ namespace TradingLib.Common
                     list.Add(argument8);
                 }
                 else if (parameterType == typeof(decimal))
-                { 
+                {
                     MethodArgument argument9 = new MethodArgument(info2.Name, QSEnumMethodArgumentType.Decimal)
                     {
                         Order = i + 1,
                         Value = 0
                     };
                     list.Add(argument9);
+                }
+                else
+                {
+                    MethodArgument argument9 = new MethodArgument(info2.Name, QSEnumMethodArgumentType.UserDefined)
+                    {
+                        Order = i + 1,
+                        Value = 0
+                    };
+                    list.Add(argument9);
+                    
                 }
                 //else if (parameterType == typeof(JsonRequest))
                 //{
@@ -603,6 +613,11 @@ namespace TradingLib.Common
                             case QSEnumMethodArgumentType.String:
                                 {
                                     objArray[argument.Order - 1] = Convert.ToString(argument.Value);
+                                    continue;
+                                }
+                            case QSEnumMethodArgumentType.UserDefined:
+                                {
+                                    objArray[argument.Order - 1] = argument.Value;
                                     continue;
                                 }
                             //case QSEnumMethodArgumentType.JsonRequest:

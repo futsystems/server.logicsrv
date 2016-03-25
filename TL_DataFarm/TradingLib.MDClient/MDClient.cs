@@ -22,6 +22,8 @@ namespace TradingLib.MDClient
         TLClient<TLSocket_TCP> histClient = null;
         MDHandlerBase _handler = null;
 
+        EventContrib _eventContrib = null;
+        public EventContrib EventContrib { get { return _eventContrib; } }
         int requestid = 0;
         object _reqidobj = new object();
         protected int NextRequestID
@@ -44,7 +46,8 @@ namespace TradingLib.MDClient
         /// <param name="histport"></param>
         public MDClient(string address, int realport, int histport)
             :this(new string[]{address},realport,new string[]{address},histport)
-        { 
+        {
+            _eventContrib = new EventContrib();
             
         }
 
@@ -166,6 +169,20 @@ namespace TradingLib.MDClient
                         }
                         return;
                     }
+
+                case MessageTypes.MGRCONTRIBRESPONSE:
+                    { 
+                        RspMGRContribResponse response = obj as RspMGRContribResponse;
+                        this._eventContrib.OnMGRContribResponse(response);
+                        return;
+                    }
+                case MessageTypes.MGRCONTRIBRNOTIFY:
+                    {
+                        NotifyMGRContribNotify notify = obj as NotifyMGRContribNotify;
+                        this._eventContrib.OnMGRContribNotifyResponse(notify);
+                        return;
+                    }
+
                 default:
                     logger.Warn(string.Format("Message Type:{0} not supported", obj.Type));
                     return;

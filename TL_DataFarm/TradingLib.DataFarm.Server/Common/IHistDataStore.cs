@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using TradingLib.API;
 using TradingLib.Common;
+using TradingLib.Common.DataFarm;
 
 namespace TradingLib.DataFarm.API
 {
@@ -80,5 +81,10 @@ namespace TradingLib.DataFarm.API
         /// </summary>
         /// <param name="bar"></param>
         void InsertBar(Symbol symbol,BarImpl bar);
+
+        /// <summary>
+        /// 表信息
+        /// </summary>
+        IEnumerable<HistTableInfo> HistTableInfo { get; }
     }
 }

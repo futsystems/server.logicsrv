@@ -9,7 +9,7 @@ using TradingLib.Common;
 using Common.Logging;
 using ZeroMQ;
 
-namespace TradingLib.DataFarm.Common
+namespace TradingLib.Common.DataFarm
 {
     /// <summary>
     /// 负责连接MDCore服务器

@@ -9,7 +9,7 @@ using TradingLib.Common;
 using TradingLib.DataFarm.API;
 using Common.Logging;
 
-namespace TradingLib.DataFarm.Common
+namespace TradingLib.Common.DataFarm
 {
     public partial class DataServerBase
     {
@@ -71,9 +71,9 @@ namespace TradingLib.DataFarm.Common
                         {
                             object o = Activator.CreateInstance(type);
 
-                            if (o is DataFarm.API.IServiceHost)
+                            if (o is IServiceHost)
                             {
-                                _serviceHosts.Add(o as DataFarm.API.IServiceHost);
+                                _serviceHosts.Add(o as IServiceHost);
                             }
                         }
                     }
@@ -197,6 +197,13 @@ namespace TradingLib.DataFarm.Common
                 case MessageTypes.MD_DEMOTICK:
                     SrvOnMDDemoTick(host, conn, packet as MDDemoTickRequest);
                     break;
+
+                
+                #region 管理操作
+                case MessageTypes.MGRCONTRIBREQUEST:
+                    SrvOnMGRContribRequest(host, conn, packet as MGRContribRequest);
+                    break;
+                #endregion
                 default:
                     logger.Warn(string.Format("Message Type:{0} not handled", packet.Type));
                     break;

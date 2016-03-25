@@ -6,7 +6,7 @@ using TradingLib.API;
 using TradingLib.Common;
 using TradingLib.DataFarm.API;
 
-namespace TradingLib.DataFarm.Common
+namespace TradingLib.Common.DataFarm
 {
     public static class ConnectionUtils
     {

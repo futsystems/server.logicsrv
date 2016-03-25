@@ -7,7 +7,7 @@ using Common.Logging;
 using TradingLib.API;
 using TradingLib.Common;
 
-namespace TradingLib.DataFarm.Common
+namespace TradingLib.Common.DataFarm
 {
     /// <summary>
     /// 维护Bar数据

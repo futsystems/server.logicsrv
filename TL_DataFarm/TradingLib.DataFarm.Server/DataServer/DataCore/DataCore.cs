@@ -8,7 +8,7 @@ using TradingLib.Common;
 using TradingLib.ORM;
 using TradingLib.DataFarm.API;
 
-namespace TradingLib.DataFarm.Common
+namespace TradingLib.Common.DataFarm
 {
     public class DataCore : DataServerBase
     {

@@ -141,5 +141,24 @@ namespace TradingLib.MDClient
             histClient.TLSend(request);
             return reqid;
         }
+
+        /// <summary>
+        /// 管理扩展请求
+        /// </summary>
+        /// <param name="moduleId">模块编号</param>
+        /// <param name="cmdStr">命令编号</param>
+        /// <param name="args">命令参数</param>
+        /// <returns></returns>
+        public int ReqMGRContribRequest(string moduleId, string cmdStr, string args)
+        {
+            int reqid = NextRequestID;
+            MGRContribRequest request = RequestTemplate<MGRContribRequest>.CliSendRequest(reqid);
+            request.ModuleID = moduleId;
+            request.CMDStr = cmdStr;
+            request.Parameters = args;
+
+            histClient.TLSend(request);
+            return reqid;
+        }
     }
 }

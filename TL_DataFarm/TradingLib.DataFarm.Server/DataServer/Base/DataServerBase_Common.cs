@@ -9,7 +9,7 @@ using TradingLib.Common;
 using TradingLib.DataFarm.API;
 using Common.Logging;
 
-namespace TradingLib.DataFarm.Common
+namespace TradingLib.Common.DataFarm
 {
     public partial class DataServerBase
     {
@@ -65,5 +65,30 @@ namespace TradingLib.DataFarm.Common
             }
             return list;
         }
+
+        /// <summary>
+        /// 获得所有命令
+        /// 通过扩展命令来响应行情服务器的远端管理
+        /// </summary>
+        /// <returns></returns>
+        public List<DataCommandInfo> FindCommand()
+        {
+            List<DataCommandInfo> list = new List<DataCommandInfo>();
+            Type type = this.GetType();
+            MethodInfo[] methodInfos = type.GetMethods();
+            foreach (MethodInfo mi in methodInfos)
+            {
+                DataCommandAttr[] attrs = (DataCommandAttr[])Attribute.GetCustomAttributes(mi, typeof(DataCommandAttr));
+                if (attrs != null && attrs.Length >= 1)
+                {
+                    foreach (DataCommandAttr attr in attrs)
+                    {
+                        list.Add(new DataCommandInfo(mi, attr, this));
+                    }
+                }
+            }
+            return list;
+        }
+
     }
 }

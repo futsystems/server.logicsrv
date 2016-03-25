@@ -6,7 +6,7 @@ using TradingLib.API;
 using TradingLib.Common;
 
 
-namespace TradingLib.DataFarm.Common
+namespace TradingLib.Common.DataFarm
 {
     /// <summary>
     /// 全局单例对象

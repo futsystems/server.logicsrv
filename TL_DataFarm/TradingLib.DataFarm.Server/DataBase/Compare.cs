@@ -5,7 +5,7 @@ using System.Text;
 
 using STSdb4.Data;
 
-namespace TradingLib.DataFarm.Common
+namespace TradingLib.Common.DataFarm
 {
     public class TLLongComparer : IComparer<IData>
     {

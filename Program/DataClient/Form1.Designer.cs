@@ -52,7 +52,6 @@
             this.btnQrySec = new System.Windows.Forms.Button();
             this.btnQrySymbol = new System.Windows.Forms.Button();
             this.port = new ComponentFactory.Krypton.Toolkit.KryptonTextBox();
-            this.debugControl1 = new TLDataClient.DebugControl();
             this.pricetick = new ComponentFactory.Krypton.Toolkit.KryptonTextBox();
             this.btnPriceFormat = new System.Windows.Forms.Button();
             this.kryptonLabel7 = new ComponentFactory.Krypton.Toolkit.KryptonLabel();
@@ -60,11 +59,14 @@
             this.kryptonLabel8 = new ComponentFactory.Krypton.Toolkit.KryptonLabel();
             this.md_price = new ComponentFactory.Krypton.Toolkit.KryptonNumericUpDown();
             this.btnTick = new System.Windows.Forms.Button();
+            this.debugControl1 = new TLDataClient.DebugControl();
+            this.btnReqMDHistTables = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // btnMQClient
             // 
-            this.btnMQClient.Location = new System.Drawing.Point(465, 12);
+            this.btnMQClient.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnMQClient.Location = new System.Drawing.Point(565, 12);
             this.btnMQClient.Name = "btnMQClient";
             this.btnMQClient.Size = new System.Drawing.Size(75, 23);
             this.btnMQClient.TabIndex = 2;
@@ -74,7 +76,8 @@
             // 
             // btnQryService
             // 
-            this.btnQryService.Location = new System.Drawing.Point(627, 12);
+            this.btnQryService.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnQryService.Location = new System.Drawing.Point(727, 12);
             this.btnQryService.Name = "btnQryService";
             this.btnQryService.Size = new System.Drawing.Size(75, 23);
             this.btnQryService.TabIndex = 3;
@@ -84,7 +87,8 @@
             // 
             // btnStopMQClient
             // 
-            this.btnStopMQClient.Location = new System.Drawing.Point(546, 12);
+            this.btnStopMQClient.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnStopMQClient.Location = new System.Drawing.Point(646, 12);
             this.btnStopMQClient.Name = "btnStopMQClient";
             this.btnStopMQClient.Size = new System.Drawing.Size(75, 23);
             this.btnStopMQClient.TabIndex = 4;
@@ -94,7 +98,8 @@
             // 
             // kryptonLabel1
             // 
-            this.kryptonLabel1.Location = new System.Drawing.Point(465, 53);
+            this.kryptonLabel1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.kryptonLabel1.Location = new System.Drawing.Point(565, 53);
             this.kryptonLabel1.Name = "kryptonLabel1";
             this.kryptonLabel1.Size = new System.Drawing.Size(51, 20);
             this.kryptonLabel1.TabIndex = 5;
@@ -102,7 +107,8 @@
             // 
             // Symbol
             // 
-            this.Symbol.Location = new System.Drawing.Point(522, 54);
+            this.Symbol.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.Symbol.Location = new System.Drawing.Point(622, 54);
             this.Symbol.Name = "Symbol";
             this.Symbol.Size = new System.Drawing.Size(63, 20);
             this.Symbol.TabIndex = 6;
@@ -110,7 +116,8 @@
             // 
             // kryptonLabel2
             // 
-            this.kryptonLabel2.Location = new System.Drawing.Point(591, 53);
+            this.kryptonLabel2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.kryptonLabel2.Location = new System.Drawing.Point(691, 53);
             this.kryptonLabel2.Name = "kryptonLabel2";
             this.kryptonLabel2.Size = new System.Drawing.Size(67, 20);
             this.kryptonLabel2.TabIndex = 7;
@@ -118,7 +125,8 @@
             // 
             // maxcount
             // 
-            this.maxcount.Location = new System.Drawing.Point(664, 52);
+            this.maxcount.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.maxcount.Location = new System.Drawing.Point(764, 52);
             this.maxcount.Maximum = new decimal(new int[] {
             10000,
             0,
@@ -135,7 +143,8 @@
             // 
             // fromend
             // 
-            this.fromend.Location = new System.Drawing.Point(725, 53);
+            this.fromend.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.fromend.Location = new System.Drawing.Point(825, 53);
             this.fromend.Name = "fromend";
             this.fromend.Size = new System.Drawing.Size(72, 20);
             this.fromend.TabIndex = 9;
@@ -143,14 +152,16 @@
             // 
             // start
             // 
-            this.start.Location = new System.Drawing.Point(507, 79);
+            this.start.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.start.Location = new System.Drawing.Point(607, 79);
             this.start.Name = "start";
             this.start.Size = new System.Drawing.Size(209, 21);
             this.start.TabIndex = 10;
             // 
             // kryptonLabel3
             // 
-            this.kryptonLabel3.Location = new System.Drawing.Point(465, 81);
+            this.kryptonLabel3.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.kryptonLabel3.Location = new System.Drawing.Point(565, 81);
             this.kryptonLabel3.Name = "kryptonLabel3";
             this.kryptonLabel3.Size = new System.Drawing.Size(36, 20);
             this.kryptonLabel3.TabIndex = 11;
@@ -158,7 +169,8 @@
             // 
             // kryptonLabel4
             // 
-            this.kryptonLabel4.Location = new System.Drawing.Point(465, 106);
+            this.kryptonLabel4.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.kryptonLabel4.Location = new System.Drawing.Point(565, 106);
             this.kryptonLabel4.Name = "kryptonLabel4";
             this.kryptonLabel4.Size = new System.Drawing.Size(31, 20);
             this.kryptonLabel4.TabIndex = 12;
@@ -166,14 +178,16 @@
             // 
             // end
             // 
-            this.end.Location = new System.Drawing.Point(507, 106);
+            this.end.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.end.Location = new System.Drawing.Point(607, 106);
             this.end.Name = "end";
             this.end.Size = new System.Drawing.Size(209, 21);
             this.end.TabIndex = 13;
             // 
             // btnQryBar
             // 
-            this.btnQryBar.Location = new System.Drawing.Point(725, 81);
+            this.btnQryBar.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnQryBar.Location = new System.Drawing.Point(825, 81);
             this.btnQryBar.Name = "btnQryBar";
             this.btnQryBar.Size = new System.Drawing.Size(75, 45);
             this.btnQryBar.TabIndex = 14;
@@ -183,7 +197,8 @@
             // 
             // interval
             // 
-            this.interval.Location = new System.Drawing.Point(533, 133);
+            this.interval.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.interval.Location = new System.Drawing.Point(633, 133);
             this.interval.Maximum = new decimal(new int[] {
             10000,
             0,
@@ -200,7 +215,8 @@
             // 
             // kryptonLabel5
             // 
-            this.kryptonLabel5.Location = new System.Drawing.Point(465, 133);
+            this.kryptonLabel5.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.kryptonLabel5.Location = new System.Drawing.Point(565, 133);
             this.kryptonLabel5.Name = "kryptonLabel5";
             this.kryptonLabel5.Size = new System.Drawing.Size(51, 20);
             this.kryptonLabel5.TabIndex = 15;
@@ -208,7 +224,8 @@
             // 
             // btnRegisterSymbol
             // 
-            this.btnRegisterSymbol.Location = new System.Drawing.Point(618, 165);
+            this.btnRegisterSymbol.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnRegisterSymbol.Location = new System.Drawing.Point(718, 165);
             this.btnRegisterSymbol.Name = "btnRegisterSymbol";
             this.btnRegisterSymbol.Size = new System.Drawing.Size(75, 22);
             this.btnRegisterSymbol.TabIndex = 17;
@@ -218,7 +235,8 @@
             // 
             // reg_symbol
             // 
-            this.reg_symbol.Location = new System.Drawing.Point(522, 165);
+            this.reg_symbol.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.reg_symbol.Location = new System.Drawing.Point(622, 165);
             this.reg_symbol.Name = "reg_symbol";
             this.reg_symbol.Size = new System.Drawing.Size(63, 20);
             this.reg_symbol.TabIndex = 19;
@@ -226,7 +244,8 @@
             // 
             // kryptonLabel6
             // 
-            this.kryptonLabel6.Location = new System.Drawing.Point(465, 164);
+            this.kryptonLabel6.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.kryptonLabel6.Location = new System.Drawing.Point(565, 164);
             this.kryptonLabel6.Name = "kryptonLabel6";
             this.kryptonLabel6.Size = new System.Drawing.Size(51, 20);
             this.kryptonLabel6.TabIndex = 18;
@@ -234,7 +253,8 @@
             // 
             // btnUnRegSymbol
             // 
-            this.btnUnRegSymbol.Location = new System.Drawing.Point(722, 165);
+            this.btnUnRegSymbol.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnUnRegSymbol.Location = new System.Drawing.Point(822, 165);
             this.btnUnRegSymbol.Name = "btnUnRegSymbol";
             this.btnUnRegSymbol.Size = new System.Drawing.Size(75, 22);
             this.btnUnRegSymbol.TabIndex = 20;
@@ -244,7 +264,8 @@
             // 
             // btnQryMT
             // 
-            this.btnQryMT.Location = new System.Drawing.Point(476, 202);
+            this.btnQryMT.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnQryMT.Location = new System.Drawing.Point(576, 202);
             this.btnQryMT.Name = "btnQryMT";
             this.btnQryMT.Size = new System.Drawing.Size(75, 22);
             this.btnQryMT.TabIndex = 21;
@@ -254,7 +275,8 @@
             // 
             // btnQryExchange
             // 
-            this.btnQryExchange.Location = new System.Drawing.Point(557, 202);
+            this.btnQryExchange.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnQryExchange.Location = new System.Drawing.Point(657, 202);
             this.btnQryExchange.Name = "btnQryExchange";
             this.btnQryExchange.Size = new System.Drawing.Size(75, 22);
             this.btnQryExchange.TabIndex = 22;
@@ -264,7 +286,8 @@
             // 
             // btnQrySec
             // 
-            this.btnQrySec.Location = new System.Drawing.Point(641, 202);
+            this.btnQrySec.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnQrySec.Location = new System.Drawing.Point(741, 202);
             this.btnQrySec.Name = "btnQrySec";
             this.btnQrySec.Size = new System.Drawing.Size(75, 22);
             this.btnQrySec.TabIndex = 23;
@@ -274,7 +297,8 @@
             // 
             // btnQrySymbol
             // 
-            this.btnQrySymbol.Location = new System.Drawing.Point(725, 202);
+            this.btnQrySymbol.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnQrySymbol.Location = new System.Drawing.Point(825, 202);
             this.btnQrySymbol.Name = "btnQrySymbol";
             this.btnQrySymbol.Size = new System.Drawing.Size(75, 22);
             this.btnQrySymbol.TabIndex = 24;
@@ -284,28 +308,17 @@
             // 
             // port
             // 
-            this.port.Location = new System.Drawing.Point(708, 12);
+            this.port.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.port.Location = new System.Drawing.Point(808, 12);
             this.port.Name = "port";
             this.port.Size = new System.Drawing.Size(81, 20);
             this.port.TabIndex = 25;
             this.port.Text = "5060";
             // 
-            // debugControl1
-            // 
-            this.debugControl1.Dock = System.Windows.Forms.DockStyle.Left;
-            this.debugControl1.EnableSearching = true;
-            this.debugControl1.ExternalTimeStamp = 0;
-            this.debugControl1.Location = new System.Drawing.Point(0, 0);
-            this.debugControl1.Margin = new System.Windows.Forms.Padding(2);
-            this.debugControl1.Name = "debugControl1";
-            this.debugControl1.Size = new System.Drawing.Size(450, 405);
-            this.debugControl1.TabIndex = 0;
-            this.debugControl1.TimeStamps = true;
-            this.debugControl1.UseExternalTimeStamp = false;
-            // 
             // pricetick
             // 
-            this.pricetick.Location = new System.Drawing.Point(477, 250);
+            this.pricetick.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.pricetick.Location = new System.Drawing.Point(577, 250);
             this.pricetick.Name = "pricetick";
             this.pricetick.Size = new System.Drawing.Size(63, 20);
             this.pricetick.TabIndex = 26;
@@ -313,7 +326,8 @@
             // 
             // btnPriceFormat
             // 
-            this.btnPriceFormat.Location = new System.Drawing.Point(557, 248);
+            this.btnPriceFormat.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnPriceFormat.Location = new System.Drawing.Point(657, 248);
             this.btnPriceFormat.Name = "btnPriceFormat";
             this.btnPriceFormat.Size = new System.Drawing.Size(91, 22);
             this.btnPriceFormat.TabIndex = 27;
@@ -323,7 +337,8 @@
             // 
             // kryptonLabel7
             // 
-            this.kryptonLabel7.Location = new System.Drawing.Point(476, 288);
+            this.kryptonLabel7.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.kryptonLabel7.Location = new System.Drawing.Point(576, 288);
             this.kryptonLabel7.Name = "kryptonLabel7";
             this.kryptonLabel7.Size = new System.Drawing.Size(37, 20);
             this.kryptonLabel7.TabIndex = 28;
@@ -331,7 +346,8 @@
             // 
             // md_time
             // 
-            this.md_time.Location = new System.Drawing.Point(519, 288);
+            this.md_time.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.md_time.Location = new System.Drawing.Point(619, 288);
             this.md_time.Name = "md_time";
             this.md_time.Size = new System.Drawing.Size(63, 20);
             this.md_time.TabIndex = 29;
@@ -339,7 +355,8 @@
             // 
             // kryptonLabel8
             // 
-            this.kryptonLabel8.Location = new System.Drawing.Point(595, 288);
+            this.kryptonLabel8.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.kryptonLabel8.Location = new System.Drawing.Point(695, 288);
             this.kryptonLabel8.Name = "kryptonLabel8";
             this.kryptonLabel8.Size = new System.Drawing.Size(37, 20);
             this.kryptonLabel8.TabIndex = 30;
@@ -347,7 +364,8 @@
             // 
             // md_price
             // 
-            this.md_price.Location = new System.Drawing.Point(641, 286);
+            this.md_price.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.md_price.Location = new System.Drawing.Point(741, 286);
             this.md_price.Maximum = new decimal(new int[] {
             10000,
             0,
@@ -364,7 +382,8 @@
             // 
             // btnTick
             // 
-            this.btnTick.Location = new System.Drawing.Point(735, 286);
+            this.btnTick.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnTick.Location = new System.Drawing.Point(835, 286);
             this.btnTick.Name = "btnTick";
             this.btnTick.Size = new System.Drawing.Size(62, 22);
             this.btnTick.TabIndex = 32;
@@ -372,11 +391,38 @@
             this.btnTick.UseVisualStyleBackColor = true;
             this.btnTick.Click += new System.EventHandler(this.btnTick_Click);
             // 
+            // debugControl1
+            // 
+            this.debugControl1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+                        | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.debugControl1.EnableSearching = true;
+            this.debugControl1.ExternalTimeStamp = 0;
+            this.debugControl1.Location = new System.Drawing.Point(0, 0);
+            this.debugControl1.Margin = new System.Windows.Forms.Padding(2);
+            this.debugControl1.Name = "debugControl1";
+            this.debugControl1.Size = new System.Drawing.Size(553, 491);
+            this.debugControl1.TabIndex = 0;
+            this.debugControl1.TimeStamps = true;
+            this.debugControl1.UseExternalTimeStamp = false;
+            // 
+            // btnReqMDHistTables
+            // 
+            this.btnReqMDHistTables.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnReqMDHistTables.Location = new System.Drawing.Point(577, 339);
+            this.btnReqMDHistTables.Name = "btnReqMDHistTables";
+            this.btnReqMDHistTables.Size = new System.Drawing.Size(108, 22);
+            this.btnReqMDHistTables.TabIndex = 33;
+            this.btnReqMDHistTables.Text = "查询历史数据表";
+            this.btnReqMDHistTables.UseVisualStyleBackColor = true;
+            this.btnReqMDHistTables.Click += new System.EventHandler(this.btnReqMDHistTables_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(812, 405);
+            this.ClientSize = new System.Drawing.Size(915, 491);
+            this.Controls.Add(this.btnReqMDHistTables);
             this.Controls.Add(this.btnTick);
             this.Controls.Add(this.md_price);
             this.Controls.Add(this.kryptonLabel8);
@@ -450,6 +496,7 @@
         private ComponentFactory.Krypton.Toolkit.KryptonLabel kryptonLabel8;
         private ComponentFactory.Krypton.Toolkit.KryptonNumericUpDown md_price;
         private System.Windows.Forms.Button btnTick;
+        private System.Windows.Forms.Button btnReqMDHistTables;
     }
 }
 

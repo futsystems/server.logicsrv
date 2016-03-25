@@ -17,7 +17,7 @@ using STSdb4.Database;
 using STSdb4.General.Extensions;
 using STSdb4.Storage;
 
-namespace TradingLib.DataFarm.Common
+namespace TradingLib.Common.DataFarm
 {
     /// <summary>
     /// 内存模式
@@ -46,8 +46,39 @@ namespace TradingLib.DataFarm.Common
         {
             const string FILE_NAME = "test.stsdb4";
             engine = STSdb.FromFile(FILE_NAME);
+        }
 
-            
+        public IEnumerable<HistTableInfo> HistTableInfo
+        {
+            get
+            {
+                List<HistTableInfo> infolist = new List<HistTableInfo>();
+                foreach (var t in engine)
+                {
+                    HistTableInfo info = new HistTableInfo()
+                    {
+                        Name = t.Name,
+                        CreateTime = t.CreateTime,
+                        AccessTime = t.AccessTime,
+                        ModifiedTime = t.ModifiedTime,
+                    };
+
+                    ITable<long, BarImpl> table = null;
+                    if (tableMap.TryGetValue(info.Name, out table))
+                    {
+                        info.Count = table.Count();
+                    }
+                    else
+                    {
+                        //存在表则打开并加入到map
+                        table = engine.OpenXTable<long, BarImpl>(info.Name);
+                        tableMap.TryAdd(info.Name, table);
+                    }
+                    infolist.Add(info);
+                }
+
+                return infolist;
+            }
         }
 
 

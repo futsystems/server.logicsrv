@@ -18,7 +18,7 @@ using STSdb4.Data;
 //using STSdb4.Storage;
 
 
-namespace TradingLib.DataFarm.Common
+namespace TradingLib.Common.DataFarm
 {
     public class TLLongPersist : IPersist<IData>
     {

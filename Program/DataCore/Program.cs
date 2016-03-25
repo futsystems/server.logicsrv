@@ -5,7 +5,8 @@ using System.Text;
 using TradingLib.API;
 using TradingLib.Common;
 using TradingLib.DataFarm.API;
-using TradingLib.DataFarm.Common;
+using TradingLib.Common.DataFarm;
+
 using Common.Logging;
 
 

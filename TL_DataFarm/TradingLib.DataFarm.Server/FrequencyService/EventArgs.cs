@@ -6,7 +6,7 @@ using TradingLib.API;
 using TradingLib.Common;
 
 
-namespace TradingLib.DataFarm
+namespace TradingLib.Common.DataFarm
 {
     /// <summary>
     /// FrequencyManager触发新Bar事件参数

@@ -83,6 +83,16 @@
     <Compile Include="Follow\SignalConfig.cs" />
     <Compile Include="Holiday\Calendar.cs" />
     <Compile Include="Holiday\HolidayCalculator.cs" />
+    <Compile Include="Json\Attributes.cs" />
+    <Compile Include="Json\IJsonWrapper.cs" />
+    <Compile Include="Json\JsonData.cs" />
+    <Compile Include="Json\JsonException.cs" />
+    <Compile Include="Json\JsonMapper.cs" />
+    <Compile Include="Json\JsonMockWrapper.cs" />
+    <Compile Include="Json\JsonReader.cs" />
+    <Compile Include="Json\JsonWriter.cs" />
+    <Compile Include="Json\Lexer.cs" />
+    <Compile Include="Json\ParserToken.cs" />
     <Compile Include="Manager\UIAccess.cs" />
     <Compile Include="Message\BinaryOption\Order.cs" />
     <Compile Include="Message\Manager\MGRMarketData.cs" />

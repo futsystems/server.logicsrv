@@ -64,7 +64,15 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Common\ConnectionUtils.cs" />
+    <Compile Include="Common\DataCommand.cs" />
+    <Compile Include="Common\DataCommandAttr.cs" />
+    <Compile Include="Common\DataCommandInfo.cs" />
+    <Compile Include="Common\IHistDataStore.cs" />
+    <Compile Include="DataBase\TableInfo.cs" />
     <Compile Include="DataServer\Base\DataServerBase_FrequencyService.cs" />
+    <Compile Include="DataServer\Base\DataCommand\DataServerBase_mgr.cs" />
+    <Compile Include="DataServer\Base\DataCommand\DataServerBase_DataBase.cs" />
     <Compile Include="FrequencyService\EventArgs.cs" />
     <Compile Include="MDBasicTracker.cs" />
     <Compile Include="DataBase\Compare.cs" />
@@ -75,7 +83,6 @@
     <Compile Include="DataBase\STSMemoryDB.cs" />
     <Compile Include="DataCoreBackend\DataCoreBackend.cs" />
     <Compile Include="DataCoreBackend\TLSocket_ZMQ.cs" />
-    <Compile Include="DataCoreBackend\zmessages.cs" />
     <Compile Include="DataServer\Base\DataServerBase.cs" />
     <Compile Include="DataServer\Base\DataServerBase_.cs" />
     <Compile Include="DataServer\Base\DataServerBase_ServiceHost.cs" />
@@ -116,7 +123,9 @@
       <Name>TradingLib.DataFarm.Common</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="DataServer\Manager\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
