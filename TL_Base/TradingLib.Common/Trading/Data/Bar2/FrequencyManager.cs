@@ -361,6 +361,7 @@ namespace TradingLib.Common
         }
 
 
+        public static Profiler pf = new Profiler();
         /// <summary>
         /// 处理行情数据
         /// </summary>
@@ -368,6 +369,7 @@ namespace TradingLib.Common
         /// <param name="tick"></param>
         public void ProcessTick(Tick tick)
         {
+            pf.EnterSection("PRECHECK  ");
             //非需要处理的行情源
             if (tick.DataFeed != this.datafeed) return;
             //查找合约
@@ -377,15 +379,14 @@ namespace TradingLib.Common
             //logger.Info("process tick called,symbol:" + symbol.Symbol);
             DateTime ticktime = tick.DateTime();
             Tick ttick = new TickImpl(ticktime);
+            pf.LeaveSection();
 
             //如果时间大于Frequency的当前时间 则需要检查是否有PendingBars需要发送 时间相等则不用发送
             if (ticktime >= symbolUpdateTimeMap[symbol.Symbol])
             {
+                pf.EnterSection("TIMECHECK  ");
                 //获得该合约所有的FreqInfo对象
                 IEnumerable<FrequencyManager.FreqInfo> list = this.GetFreqInfosForSymbol(symbol);
-
-                
-
                 #region A.执行该合约所有频率数据的时间检查 如果越过了下次更新时间 则处理TimeTick,并生成Bar数据并放到eventHolder,清空待发送Bar,清空对应数据集的PartialItem数据
                 FrequencyNewBarEventHolder eventHolder = new FrequencyNewBarEventHolder();
                 foreach (var freqinfo in list)
@@ -393,12 +394,15 @@ namespace TradingLib.Common
                     //如果当前时间大于该频率对应的下次更新时间,则调用该频处理TimeTick Close一个Bar
                     if (ticktime >= freqinfo.Generator.NextTimeUpdateNeeded)
                     {
+                        pf.EnterSection("TIMECHECK1");
                         this.FreqInfoProcessTick(ttick, freqinfo);
+                        pf.LeaveSection();
                     }
 
                     //如果FreqInfo有待发送的Bar数据 放入eventholder
                     if (freqinfo.PendingBarEvents.Count > 0)
                     {
+                        pf.EnterSection("TIMECHECK2");
                         foreach (SingleBarEventArgs bar in freqinfo.PendingBarEvents)
                         {
                             eventHolder.AddEvent(freqinfo.FreqKey, bar);
@@ -415,12 +419,14 @@ namespace TradingLib.Common
                             freqinfo.Frequency.WriteableBars.ClearPartialItem();//清空PartialItem
                             //this.freqKeyNoPartialBar.Add(freqinfo.FreqKey);//将对应的FreqKey添加到发送完毕的HashSet
                         }
+                        pf.LeaveSection();
                     }
 
                 }
                 #endregion
+                pf.LeaveSection();
 
-
+                pf.EnterSection("SENDBAR    ");
                 #region B.如果有待触发Bar数据 则更新Frequency的Bar集合并对外发送Bar数据
                 if (eventHolder.EventList.Count > 0)
                 {
@@ -466,20 +472,28 @@ namespace TradingLib.Common
                     }
                 }
                 #endregion
+                pf.LeaveSection();
 
+                pf.EnterSection("PROCESSTICK");
                 #region C.FreqInfo处理Tick并更新PartialItem
                 //遍历所有freqinfo 处理Tick数据并更新Frequency的PartialItem
                 foreach (var freqinfo in list)
                 {
-                    //FreqInfo处理tick数据    
+                    pf.EnterSection("PT01");
+                    //FreqInfo处理tick数据
                     FreqInfoProcessTick(tick, freqinfo);
+                    pf.LeaveSection();
+
+                    pf.EnterSection("PT02");
                     //FreqInfo处理TimeTick数据
                     FreqInfoProcessTimeTick(ttick, freqinfo);
+                    pf.LeaveSection();
                 }
                 #endregion
 
                 //更新该合约的最近Tick更新时间
                 symbolUpdateTimeMap[symbol.Symbol] = ticktime;
+                pf.LeaveSection();
 
             }
             else

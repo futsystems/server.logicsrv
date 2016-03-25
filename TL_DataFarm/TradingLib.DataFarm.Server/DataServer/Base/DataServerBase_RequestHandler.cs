@@ -195,6 +195,9 @@ namespace TradingLib.DataFarm.Common
                     pf.LeaveSection();
                     logger.Info(string.Format("----BarRequest Statistics QTY:{0}---- \n{1}", bars.Count, pf.GetStatsString()));
                     //logger.Info("send bar finished");
+
+                    logger.Info("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~``");
+                    logger.Info("----FrequencyManager Statistics---- \n" + FrequencyManager.pf.GetStatsString());
                 }
                 else
                 {

@@ -107,6 +107,9 @@
     <Compile Include="Other\TLClient.cs" />
     <Compile Include="Other\TLSocketBase.cs" />
     <Compile Include="Other\TLVersion.cs" />
+    <Compile Include="Profile\Profiler.cs" />
+    <Compile Include="Profile\SectionStackEntry.cs" />
+    <Compile Include="Profile\SectionStats.cs" />
     <Compile Include="Protocol\CommissionTemplateItem.cs" />
     <Compile Include="Protocol\LoginInfo.cs" />
     <Compile Include="Tracker\BOOrderTracker.cs" />

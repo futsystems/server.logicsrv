@@ -166,9 +166,6 @@
     <Compile Include="ORM\MRuleItem.cs" />
     <Compile Include="ORM\MSettlement.cs" />
     <Compile Include="ORM\MTradingInfo.cs" />
-    <Compile Include="Profile\Profiler.cs" />
-    <Compile Include="Profile\SectionStackEntry.cs" />
-    <Compile Include="Profile\SectionStats.cs" />
     <Compile Include="Tracker\AccountTracker.cs" />
     <Compile Include="Plugin\Attr\ContribEventAttr.cs" />
     <Compile Include="Plugin\Attr\CoreAttr.cs" />
@@ -226,7 +223,9 @@
     <Compile Include="Utils\Manager\ManagerUtils_Valid.cs" />
     <Compile Include="Utils\NotifyPredicateUtils.cs" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Profile\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
