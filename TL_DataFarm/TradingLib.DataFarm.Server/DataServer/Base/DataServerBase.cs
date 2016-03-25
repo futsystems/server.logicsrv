@@ -26,6 +26,7 @@ namespace TradingLib.DataFarm.Common
 
             _barbatchsize = _config["BarBatchSize"].AsInt();
             _batchSave = _config["BatchSave"].AsBool();
+            
         }
         /// <summary>
         /// 获取历史行情储存服务

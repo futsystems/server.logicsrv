@@ -99,6 +99,7 @@ namespace TradingLib.DataFarm.Common
                         IHistDataStore store = GetHistDataSotre();
                         if (store != null)
                         {
+                            logger.Info("b.symbol:" + (b.Symbol == null ? "null" : b.Symbol.Symbol) + " b.bar:" + (b.Bar == null ? "null" : b.Bar.ToString()));
                             store.InsertBar(b.Symbol,b.Bar);
                             if (!_batchSave)
                             {
