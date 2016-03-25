@@ -80,6 +80,8 @@ namespace TradingLib.DataFarm.Common
             //遍历所有合约 并建立合约到FrequencyManager映射
             foreach (var symbol in MDBasicTracker.SymbolTracker.Symbols)
             {
+                if (symbol.Symbol != "IF1604") continue;
+
                 FrequencyManager fm = GetFrequencyManagerForExchange(symbol.SecurityFamily.Exchange.EXCode);
                 if (fm != null)
                 {
@@ -153,6 +155,10 @@ namespace TradingLib.DataFarm.Common
         /// <param name="k"></param>
         public void ProcessTick(Tick k)
         {
+            if (k.Symbol == "IF1604")
+            {
+                int i = 0;
+            }
             FrequencyManager fm = GetFrequencyManagerForSymbol(k.Symbol);
             if (fm == null) return;
             fm.ProcessTick(k);

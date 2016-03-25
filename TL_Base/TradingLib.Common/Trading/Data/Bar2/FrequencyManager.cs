@@ -44,7 +44,7 @@ namespace TradingLib.Common
         /// 合约Map
         /// </summary>
         ConcurrentDictionary<string, Symbol> registedSymbols = new ConcurrentDictionary<string, Symbol>();
-
+        ConcurrentDictionary<string, DateTime> symbolUpdateTimeMap = new ConcurrentDictionary<string, DateTime>(); 
         /// <summary>
         /// FreqKey与FreqInfo的Map
         /// </summary>
@@ -58,13 +58,13 @@ namespace TradingLib.Common
         Dictionary<Symbol, List<FrequencyManager.FreqInfo>> symbolFreqInfoMap = new Dictionary<Symbol, List<FreqInfo>>();
 
         //有PendingBar的FreqKey列表
-        HashSet<FrequencyManager.FreqKey> freqKeySetPendingBar = new HashSet<FreqKey>();
+        //HashSet<FrequencyManager.FreqKey> freqKeySetPendingBar = new HashSet<FreqKey>();
 
         //发送了Bar没有PartialBar的FreKey列表
-        HashSet<FrequencyManager.FreqKey> freqKeyNoPartialBar = new HashSet<FreqKey>();
+        //HashSet<FrequencyManager.FreqKey> freqKeyNoPartialBar = new HashSet<FreqKey>();
 
         //FreqInfo对应的下一个Bar更新时间优先队列
-        PrioritySortedQueue<FreqInfo, DateTime> sortedFreqInfoBarNextUpdate = new PrioritySortedQueue<FreqInfo, DateTime>();
+        //PrioritySortedQueue<FreqInfo, DateTime> sortedFreqInfoBarNextUpdate = new PrioritySortedQueue<FreqInfo, DateTime>();
 
 
 
@@ -109,6 +109,7 @@ namespace TradingLib.Common
             this.synchronizeBars = synchronizebars;
 
             //添加默认Bar数据发生器
+            frequencyPluginList.Add(new TimeFrequency(new BarFrequency(BarInterval.CustomTime, 30)));//1
             frequencyPluginList.Add(new TimeFrequency(new BarFrequency(BarInterval.CustomTime, 60)));//1
             frequencyPluginList.Add(new TimeFrequency(new BarFrequency(BarInterval.CustomTime, 180)));//3
             frequencyPluginList.Add(new TimeFrequency(new BarFrequency(BarInterval.CustomTime, 300)));//5
@@ -148,6 +149,7 @@ namespace TradingLib.Common
             }
 
             registedSymbols.TryAdd(symbol.Symbol, symbol);
+            symbolUpdateTimeMap.TryAdd(symbol.Symbol, DateTime.MinValue);
 
             //遍历所有发生器列表生成key并注册
             foreach (var t in frequencyPluginList)
@@ -195,10 +197,10 @@ namespace TradingLib.Common
             list.Add(freqInfo);
 
             //新添加的FreqKey添加到NoPartialBar的列表中
-            this.freqKeyNoPartialBar.Add(freqInfo.FreqKey);
+            //this.freqKeyNoPartialBar.Add(freqInfo.FreqKey);
 
             //将该FreqInfo的下一个Bar更新时间添加到列表中
-            this.sortedFreqInfoBarNextUpdate.Enqueue(freqInfo, freqInfo.Generator.NextTimeUpdateNeeded);
+            //this.sortedFreqInfoBarNextUpdate.Enqueue(freqInfo, freqInfo.Generator.NextTimeUpdateNeeded);
 
             //if (FreqKeyRegistedEvent != null)
             //{
@@ -411,70 +413,146 @@ namespace TradingLib.Common
 
             //logger.Info("process tick called,symbol:" + symbol.Symbol);
             DateTime ticktime = tick.DateTime();
-            this.UpdateTime(ticktime);
+            Tick ttick = new TickImpl(ticktime);
 
-            //获得该合约所有的FreqInfo对象
-            IEnumerable<FrequencyManager.FreqInfo> list = this.GetFreqInfosForSymbol(symbol);
-            //遍历所有FreqInfo 并处理Tick数据
-            foreach (var info in list)
+            //如果时间大于Frequency的当前时间 则需要检查是否有PendingBars需要发送 时间相等则不用发送
+            if (ticktime >= symbolUpdateTimeMap[symbol.Symbol])
             {
-                FreqInfoProcessTick(tick, info);
-            }
-            //更新Frequency的PartialItem值
-            foreach (var info in list)
-            {
-                FreqInfoProcessTimeTick(info, this._currentTime);
-            }
+                //获得该合约所有的FreqInfo对象
+                IEnumerable<FrequencyManager.FreqInfo> list = this.GetFreqInfosForSymbol(symbol);
 
-            //遍历所有没有PartialBar的FreqKey
-            if (this.freqKeyNoPartialBar.Count > 0)
-            {
-                //检查将该合约对应的所有FreqInfo,如果有PartialItem则将该FreqKey从freqKeyNoPartialBar中移除
-                foreach (var info in list)
+                
+
+                #region A.执行该合约所有频率数据的时间检查 如果越过了下次更新时间 则处理TimeTick,并生成Bar数据并放到eventHolder,清空待发送Bar,清空对应数据集的PartialItem数据
+                FrequencyNewBarEventHolder eventHolder = new FrequencyNewBarEventHolder();
+                foreach (var freqinfo in list)
                 {
-                    if (info.Frequency.Bars.HasPartialItem)
+                    //如果当前时间大于该频率对应的下次更新时间,则调用该频处理TimeTick Close一个Bar
+                    if (ticktime >= freqinfo.Generator.NextTimeUpdateNeeded)
                     {
-                        this.freqKeyNoPartialBar.Remove(info.FreqKey);
+                        this.FreqInfoProcessTick(ttick, freqinfo);
+                    }
+
+                    //如果FreqInfo有待发送的Bar数据 放入eventholder
+                    if (freqinfo.PendingBarEvents.Count > 0)
+                    {
+                        foreach (SingleBarEventArgs bar in freqinfo.PendingBarEvents)
+                        {
+                            eventHolder.AddEvent(freqinfo.FreqKey, bar);
+#if DEBUG
+                            logger.Info(string.Format("FreqInfo for key:[{0}] Cached Bar:{1}", freqinfo.FreqKey, bar.Bar));
+#endif
+                        }
+                        //清空FreqInfo待发送Bar
+                        freqinfo.ClearPendingBars();
+
+                        //清空PartialItem同时添加到freqKeyNoPartialBar HashSet中
+                        if (freqinfo.FreqKey.Settings.IsTimeBased)
+                        {
+                            freqinfo.Frequency.WriteableBars.ClearPartialItem();//清空PartialItem
+                            //this.freqKeyNoPartialBar.Add(freqinfo.FreqKey);//将对应的FreqKey添加到发送完毕的HashSet
+                        }
+                    }
+
+                }
+                #endregion
+
+
+                #region B.如果有待触发Bar数据 则更新Frequency的Bar集合并对外发送Bar数据
+                if (eventHolder.EventList.Count > 0)
+                {
+#if DEBUG
+                    logger.Info(string.Format("Update frequency's collection, send out bar event"));
+#endif
+                    foreach (FrequencyNewBarEventArgs frequencyEvent in eventHolder.EventList)
+                    {
+                        foreach (KeyValuePair<FrequencyManager.FreqKey, SingleBarEventArgs> pair in frequencyEvent.FrequencyEvents)
+                        {
+                            FreqInfo info = this.freqKeyInfoMap[pair.Key];
+                            if (info == null)
+                            {
+                                logger.Warn("FreqKey:{0} havs no FreqInfo avabile".Put(pair.Key));
+                            }
+                            //通过FreqKey找到对应的FreqInfo同时更新BarCollection 该操作将会在数据集中添加Bar
+                            info.UpdateBarCollection(pair.Value.Bar, pair.Value.BarEndTime);
+                            info.SendNewBar(pair.Value);
+                            this.OnFreqKeyBar(info.FreqKey, pair.Value);
+                            //this._currentTime = pair.Value.BarEndTime;//更新当前时间为BarEndTime
+                        }
+
+                        /** 频率转换
+                        //获得FreqInfo对应的Frequency对象 更新Frequency对象的DestFrequencyConversion
+                        foreach (KeyValuePair<FrequencyManager.FreqKey, SingleBarEventArgs> pair in frequencyEvent.FrequencyEvents)
+                        {
+                            Frequency frequency = this.freqKeyInfoMap[pair.Key].Frequency;
+                            //目的Bar转换
+                            foreach (KeyValuePair<Frequency, QList<DateTime>> conversion in frequency.DestFrequencyConversion)
+                            {
+                                Frequency key = conversion.Key;
+                                QList<DateTime> value = conversion.Value;
+                                //设定最大回溯值
+                                value.MaxLookBack = frequency.Bars.MaxLookBack;
+                                //如果Frequency的Bar数量大于0 则将该Bar的StartTime添加到QList<DateTime>中
+                                if (key.Bars.Count > 0)
+                                {
+                                    value.Add(key.Bars.Current.BarStartTime);
+                                }
+                            }
+                        }
+                         * **/
                     }
                 }
+                #endregion
 
-                //遍历所有没有PartialBar的FreqKey列表然后调用对应的FreqInfo处理timetick 用于驱动其他其他合约Bar
-                foreach (FrequencyManager.FreqKey freqky in this.freqKeyNoPartialBar)
+                #region C.FreqInfo处理Tick并更新PartialItem 同时从freqKeyNoPartialBar移除有PartialItem的FreqInfo
+                //遍历所有freqinfo 处理Tick数据并更新Frequency的PartialItem
+                foreach (var freqinfo in list)
                 {
-                    FreqInfoProcessTimeTick(this.GetFreqInfoForFreqKey(freqky), this._currentTime);
+                    //FreqInfo处理tick数据    
+                    FreqInfoProcessTick(tick, freqinfo);
+                    //FreqInfo处理TimeTick数据
+                    FreqInfoProcessTimeTick(ttick, freqinfo);
                 }
 
-                //然后再次检查没有PartialBar的FreqKey列表
-                foreach (FrequencyManager.FreqKey freqkey in this.freqKeyNoPartialBar)
-                {
-                    if (this.GetFreqInfoForFreqKey(freqkey).Frequency.Bars.HasPartialItem)
-                    {
-                        this.freqKeyNoPartialBar.Remove(freqkey);
-                    }
-                }
+
+                //遍历所有没有PartialBar的FreqKey
+                //if (this.freqKeyNoPartialBar.Count > 0)
+                //{
+                //    //检查将该合约对应的所有FreqInfo,如果有PartialItem则将该FreqKey从freqKeyNoPartialBar中移除
+                //    foreach (var info in list)
+                //    {
+                //        if (info.Frequency.Bars.HasPartialItem)
+                //        {
+                //            this.freqKeyNoPartialBar.Remove(info.FreqKey);
+                //        }
+                //    }
+
+                //    ////遍历所有没有PartialBar的FreqKey列表然后调用对应的FreqInfo处理timetick 用于驱动其他其他合约Bar
+                //    //foreach (FrequencyManager.FreqKey freqky in this.freqKeyNoPartialBar)
+                //    //{
+                //    //    FreqInfoProcessTimeTick(ttick,this.GetFreqInfoForFreqKey(freqky));
+                //    //}
+
+                //    ////然后再次检查没有PartialBar的FreqKey列表
+                //    //foreach (FrequencyManager.FreqKey freqkey in this.freqKeyNoPartialBar)
+                //    //{
+                //    //    if (this.GetFreqInfoForFreqKey(freqkey).Frequency.Bars.HasPartialItem)
+                //    //    {
+                //    //        this.freqKeyNoPartialBar.Remove(freqkey);
+                //    //    }
+                //    //}
+
+                //}
+                #endregion
+
+                //更新该合约的最近Tick更新时间
+                symbolUpdateTimeMap[symbol.Symbol] = ticktime;
 
             }
-
-            //行情最新事件记录
-            if (ticktime < this._lastTickTime)
+            else
             {
-                throw new Exception(string.Format("Out of order tick.  Received tick for symbol {2} with time {0} when previous tick time was {1}", ticktime, this._currentTime, symbol.Symbol));
+                logger.Warn(string.Format("Out of order tick. Received tick for symbol {0} with time {1} when previous tick time was {2}", symbol.Symbol, ticktime, symbolUpdateTimeMap[symbol.Symbol]));
             }
-
-            this._lastTickTime = ticktime;
-
-            //this._x5e07af8ebe8a76be.ProcessTickInPaperBroker(symbol, tick);
-            //foreach (KeyValuePair<FrequencyManager.FreqInfo, Tick> current6 in this._x273a8ba6bf9347ea)
-            //{
-            //    //调用IFreqProcesser处理NewTick事件
-            //    //this._x5e07af8ebe8a76be.CallSystemNewTick(current6.Key.FreqKey.Symbol, current6.Value);
-            //}
-            //this._x273a8ba6bf9347ea.Clear();
-            //foreach (KeyValuePair<FrequencyManager.FreqInfo, TickData> current7 in this._x119edbbc1f9806a1)
-            //{
-            //    current7.Key.Frequency.SendTick(current7.Value);
-            //}
-            //this._x119edbbc1f9806a1.Clear();
         }
 
 
@@ -482,10 +560,10 @@ namespace TradingLib.Common
         {
             info.Generator.ProcessTick(tick);
             //如果FreqInfo有PendingBars则将他添加到有PendingBars的HastSet
-            if (info.PendingBarEvents.Count > 0)
-            {
-                freqKeySetPendingBar.Add(info.FreqKey);
-            }
+            //if (info.PendingBarEvents.Count > 0)
+            //{
+            //    freqKeySetPendingBar.Add(info.FreqKey);
+            //}
         }
 
         /// <summary>
@@ -494,13 +572,14 @@ namespace TradingLib.Common
         /// </summary>
         /// <param name="freqInfo"></param>
         /// <param name="datetime"></param>
-        private void FreqInfoProcessTimeTick(FrequencyManager.FreqInfo freqInfo, System.DateTime datetime)
+        private void FreqInfoProcessTimeTick(Tick tick,FrequencyManager.FreqInfo freqInfo)
         {
+            if (tick.Type != EnumTickType.TIME) return;
             //如果FreqInfo.PendingPartialBar为空并且Frequency.WriteableBars没有PartialItem则用调用FreqInfo处理TimeTick用于生成一条PendingPartialBar
             if (freqInfo.PendingPartialBar == null && !freqInfo.Frequency.WriteableBars.HasPartialItem)
             {
                 //处理对应的时间Tick
-                this.FreqInfoProcessTick(new TickImpl(datetime), freqInfo);
+                this.FreqInfoProcessTick(tick, freqInfo);
             }
             //freqInfo.PendingPartialBar 由freqgenerator实时行情驱动并更新
             //如果FreqInfo的PendingPartialBar不为空则将该PartialBar复制到WriteableBars的PartialItem 同时将freqInfo.PendingPartialBar置空 表面已经将最新的Bar更新到freqInfo.Frequency.WriteableBars.PartialItem
@@ -520,154 +599,172 @@ namespace TradingLib.Common
         {
 
         }
-        /// <summary>
-        /// 更新当前时间(Tick时间)
-        /// 如果时间已经越过了某些FreqInfo的Bar下次更新时间,则需要把这些对应的Bar关闭掉,并且对外触发发送
-        /// </summary>
-        /// <param name="datetime"></param>
-        void UpdateTime(DateTime datetime)
-        {
-            //如果时间大于Frequency的当前时间 则需要检查是否有PendingBars需要发送 时间相等则不用发送
-            if (datetime > this._currentTime)
-            {
-                this._currentTime = datetime;
 
-                //以下逻辑用于滚动更新每个FreqKey的更新时间
-                List<FreqInfo> list = new List<FreqInfo>();
-                //把下次更新时间小于等于当前时间的所有FreqInfo放入列表 同时调用FreqInfo处理Tick数据 这些FreqInfo需要更新Bar数据
-                while (this.sortedFreqInfoBarNextUpdate.Count > 0 && sortedFreqInfoBarNextUpdate.Peek().Priority <= datetime)
-                {
-                    FreqInfo freqinfo = sortedFreqInfoBarNextUpdate.Dequeue();//出队列
-#if DEBUG
-                    logger.Info(string.Format("Freq {0} need to update bar", freqinfo));
-#endif
-                    Tick k = new TickImpl(datetime);
-                    this.FreqInfoProcessTick(k, freqinfo);//调用FreqInfo处理TimeTick
-                    list.Add(freqinfo);
-                }
-                //然后记录这些FreqInfo的下一次更新时间
-                foreach (var current in list)
-                {
-                    //将该FreqInfo的下一次更新时间入队列
-#if DEBUG
-                    logger.Info(string.Format("Freq {0} Enqueue NextUpdateTime:{1}", current, current.Generator.NextTimeUpdateNeeded));
-#endif
-                    sortedFreqInfoBarNextUpdate.Enqueue(current, current.Generator.NextTimeUpdateNeeded);
-                }
-                //时间检查过程中触发Bar发送
-                this.SendPendingBars();
-            }
-        }
+//        /// <summary>
+//        /// 更新当前时间(Tick时间)
+//        /// 如果时间已经越过了某些FreqInfo的Bar下次更新时间,则需要把这些对应的Bar关闭掉,并且对外触发发送
+//        /// </summary>
+//        /// <param name="datetime"></param>
+//        void UpdateTime(Symbol symbol,DateTime datetime)
+//        {
+//            //如果时间大于Frequency的当前时间 则需要检查是否有PendingBars需要发送 时间相等则不用发送
+//            if (datetime > symbolUpdateTimeMap[symbol.Symbol])
+//            {
+//                //更新某个合约的最新更新时间
+//                symbolUpdateTimeMap[symbol.Symbol] = datetime;
 
-        /// <summary>
-        /// 发送Bars数据
-        /// </summary>
-        void SendPendingBars()
-        {
-            //logger.Debug("send pending bars");
-            FrequencyNewBarEventHolder eventHolder = new FrequencyNewBarEventHolder();
-            HashSet<FrequencyPlugin> hashset = new HashSet<FrequencyPlugin>();
-            //遍历所有有PendingBar的FreqKey 在map中找到对应freqKeySet的FreqInfo 同时将该FreqInfo下的待发送Bar添加到事件集合中
-            foreach (FreqInfo current in this.freqKeySetPendingBar.Select(key => { return this.freqKeyInfoMap[key]; }))
-            {
-                foreach (SingleBarEventArgs bar in current.PendingBarEvents)//遍历FreqInfo中的所有PendingBar 同时记录有BarEvent的FrequencyBase
-                {   
-                    //添加Bar事件 同时将对应的FrequencyBase添加到Hashset
-                    eventHolder.AddEvent(current.FreqKey, bar);
-                    hashset.Add(current.FreqKey.Settings);
-#if DEBUG
-                    logger.Info(string.Format("FreqInfo for key:[{0}] Cached Bar:{1}", current.FreqKey, bar.Bar));
-#endif
-                }
-                //清空FreqInfo的待发送Bar以及PartialBar 数据集的PartialBar是通过TickEvent来进行传递的 在下面一个循环中需要清空数据集Frequency的PartialItem
-                current.ClearPendingBars();//清空待发送的Bar
-            }
-            //处理完PendingBar后 清空
-            this.freqKeySetPendingBar.Clear();
+//                //以下逻辑用于滚动更新每个FreqKey的更新时间
+//                //List<FreqInfo> list = new List<FreqInfo>();
+
+//                //获得某个合约的所有频率信息
+//                IEnumerable<FreqInfo> freqinfolist = GetFreqInfosForSymbol(symbol);
+//                Tick k = new TickImpl(datetime);
+//                foreach (var freqinfo in freqinfolist)
+//                {
+//                    //如果当前时间大于该频率对应的下次更新时间,则调用该频率信息处理时间Tick 截掉上一个Bar
+//                    if (freqinfo.Generator.NextTimeUpdateNeeded <= datetime)
+//                    {
+//                        this.FreqInfoProcessTick(k, freqinfo);//调用FreqInfo处理TimeTick
+//                    }
+//                }
 
 
-            //通过FrequencyBase获得所有FreqInfo 清空FreqInfo的PartialBar并将对应的Frekey添加到没有PartialBar的HashSet
-            if (eventHolder.EventList.Count > 0)
-            {
-#if DEBUG
-                logger.Info("Clear Frequency's PartialItem");
-#endif
-                //遍历FrequencyBase所有的FreqInfo
-                foreach (FrequencyPlugin setting in hashset)
-                {
-                    foreach (FrequencyManager.FreqInfo freqinfo in this.GetFreqInfosForFrequencyBase(setting))
-                    {
-                        //如果是基于时间的FreqInfo 同一种FrequencyPlugin的Bar数据是同一到期的
-                        if (freqinfo.FreqKey.Settings.IsTimeBased)
-                        {
-                            freqinfo.Frequency.WriteableBars.ClearPartialItem();//清空PartialItem
-                            this.freqKeyNoPartialBar.Add(freqinfo.FreqKey);//将对应的FreqKey添加到发送完毕的HashSet
-                        }
-                    }
-                }
+
+////                //把下次更新时间小于等于当前时间的所有FreqInfo放入列表 同时调用FreqInfo处理Tick数据 这些FreqInfo需要更新Bar数据
+////                while (this.sortedFreqInfoBarNextUpdate.Count > 0 && sortedFreqInfoBarNextUpdate.Peek().Priority <= datetime)
+////                {
+////                    FreqInfo freqinfo = sortedFreqInfoBarNextUpdate.Dequeue();//出队列
+////#if DEBUG
+////                    logger.Info(string.Format("Freq {0} need to update bar", freqinfo));
+////#endif
+////                    Tick k = new TickImpl(datetime);
+////                    this.FreqInfoProcessTick(k, freqinfo);//调用FreqInfo处理TimeTick
+////                    list.Add(freqinfo);
+////                }
+////                //然后记录这些FreqInfo的下一次更新时间
+////                foreach (var current in list)
+////                {
+////                    //将该FreqInfo的下一次更新时间入队列
+////#if DEBUG
+////                    logger.Info(string.Format("Freq {0} Enqueue NextUpdateTime:{1}", current, current.Generator.NextTimeUpdateNeeded));
+////#endif
+////                    sortedFreqInfoBarNextUpdate.Enqueue(current, current.Generator.NextTimeUpdateNeeded);
+////                }
+//                //时间检查过程中触发Bar发送
+//                //this.SendPendingBars(symbol);
+//            }
+//        }
+
+//        /// <summary>
+//        /// 发送某个合约Bars数据
+//        /// </summary>
+//        void SendPendingBars(Symbol symbol)
+//        {
+//            //logger.Debug("send pending bars");
+//            FrequencyNewBarEventHolder eventHolder = new FrequencyNewBarEventHolder();
+//            HashSet<FrequencyPlugin> hashset = new HashSet<FrequencyPlugin>();
+
+//            //遍历所有有PendingBar的FreqKey 在map中找到对应freqKeySet的FreqInfo 同时将该FreqInfo下的待发送Bar添加到事件集合中
+//            foreach (FreqInfo current in this.freqKeySetPendingBar.Where(freq=>freq.Symbol.Symbol==symbol.Symbol).Select(key => { return this.freqKeyInfoMap[key]; }))
+//            {
+//                foreach (SingleBarEventArgs bar in current.PendingBarEvents)//遍历FreqInfo中的所有PendingBar 同时记录有BarEvent的FrequencyBase
+//                {   
+//                    //添加Bar事件 同时将对应的FrequencyBase添加到Hashset
+//                    eventHolder.AddEvent(current.FreqKey, bar);
+//                    hashset.Add(current.FreqKey.Settings);
+//#if DEBUG
+//                    logger.Info(string.Format("FreqInfo for key:[{0}] Cached Bar:{1}", current.FreqKey, bar.Bar));
+//#endif
+//                }
+//                //清空FreqInfo的待发送Bar以及PartialBar 数据集的PartialBar是通过TickEvent来进行传递的 在下面一个循环中需要清空数据集Frequency的PartialItem
+//                current.ClearPendingBars();//清空待发送的Bar
+//            }
+//            //处理完PendingBar后 清空
+//            this.freqKeySetPendingBar.Clear();
 
 
-                //如果需要同步Bar
-                //if (this._synchronizeBars)
-                //{
-                //    SynchronizeBars(eventHolder);
-                //}
-#if DEBUG
-                logger.Info(string.Format("Update Frequency's Collection"));
-#endif
-                //更新Frequency数据集
-                foreach (FrequencyNewBarEventArgs frequencyEvent in eventHolder.EventList)
-                {
-                    //更新Frequency的Bar数据集
-                    foreach (KeyValuePair<FrequencyManager.FreqKey, SingleBarEventArgs> pair in frequencyEvent.FrequencyEvents)
-                    {
+//            //通过FrequencyBase获得所有FreqInfo 清空FreqInfo的PartialBar并将对应的Frekey添加到没有PartialBar的HashSet
+//            if (eventHolder.EventList.Count > 0)
+//            {
+//#if DEBUG
+//                logger.Info("Clear Frequency's PartialItem");
+//#endif
+//                //遍历FrequencyBase所有的FreqInfo
+//                foreach (FrequencyPlugin setting in hashset)
+//                {
+//                    foreach (FrequencyManager.FreqInfo freqinfo in this.GetFreqInfosForFrequencyBase(setting))
+//                    {
+//                        //如果是基于时间的FreqInfo 同一种FrequencyPlugin的Bar数据是同一到期的
+//                        if (freqinfo.FreqKey.Settings.IsTimeBased)
+//                        {
+//                            freqinfo.Frequency.WriteableBars.ClearPartialItem();//清空PartialItem
+//                            this.freqKeyNoPartialBar.Add(freqinfo.FreqKey);//将对应的FreqKey添加到发送完毕的HashSet
+//                        }
+//                    }
+//                }
 
-                        //通过FreqKey找到对应的FreqInfo同时更新BarCollection 该操作将会在数据集中添加Bar
-                        this.freqKeyInfoMap[pair.Key].UpdateBarCollection(pair.Value.Bar, pair.Value.BarEndTime);
-                        this._currentTime = pair.Value.BarEndTime;//更新当前时间为BarEndTime
-                    }
 
-                    /** 频率转换
-                    //获得FreqInfo对应的Frequency对象 更新Frequency对象的DestFrequencyConversion
-                    foreach (KeyValuePair<FrequencyManager.FreqKey, SingleBarEventArgs> pair in frequencyEvent.FrequencyEvents)
-                    {
-                        Frequency frequency = this.freqKeyInfoMap[pair.Key].Frequency;
-                        //目的Bar转换
-                        foreach (KeyValuePair<Frequency, QList<DateTime>> conversion in frequency.DestFrequencyConversion)
-                        {
-                            Frequency key = conversion.Key;
-                            QList<DateTime> value = conversion.Value;
-                            //设定最大回溯值
-                            value.MaxLookBack = frequency.Bars.MaxLookBack;
-                            //如果Frequency的Bar数量大于0 则将该Bar的StartTime添加到QList<DateTime>中
-                            if (key.Bars.Count > 0)
-                            {
-                                value.Add(key.Bars.Current.BarStartTime);
-                            }
-                        }
-                    }
-                     * **/
-                }
+//                //如果需要同步Bar
+//                //if (this._synchronizeBars)
+//                //{
+//                //    SynchronizeBars(eventHolder);
+//                //}
+//#if DEBUG
+//                logger.Info(string.Format("Update Frequency's Collection"));
+//#endif
+//                //更新Frequency数据集
+//                foreach (FrequencyNewBarEventArgs frequencyEvent in eventHolder.EventList)
+//                {
+//                    //更新Frequency的Bar数据集
+//                    foreach (KeyValuePair<FrequencyManager.FreqKey, SingleBarEventArgs> pair in frequencyEvent.FrequencyEvents)
+//                    {
 
-                //IFrequencyProcess处理BarEvents
-                //this._x5e07af8ebe8a76be.ProcessBarEvents(eventHolder.EventList);
+//                        //通过FreqKey找到对应的FreqInfo同时更新BarCollection 该操作将会在数据集中添加Bar
+//                        this.freqKeyInfoMap[pair.Key].UpdateBarCollection(pair.Value.Bar, pair.Value.BarEndTime);
+//                        this._currentTime = pair.Value.BarEndTime;//更新当前时间为BarEndTime
+//                    }
 
-                //遍历所有EventList通过FreqKey定位到FreqInfo 并通过FreqInfo调用SendNewBar对外触发Frequency的Bar事件
-#if DEBUG
-                logger.Info("FreqInfo Send out Bar Event");
-#endif
-                foreach (FrequencyNewBarEventArgs frequencyEvents in eventHolder.EventList)
-                {
-                    foreach (KeyValuePair<FrequencyManager.FreqKey, SingleBarEventArgs> pair in frequencyEvents.FrequencyEvents)
-                    {
-                        FreqInfo info = this.freqKeyInfoMap[pair.Key];
-                        info.SendNewBar(pair.Value);
-                        this.OnFreqKeyBar(info.FreqKey, pair.Value);
+//                    /** 频率转换
+//                    //获得FreqInfo对应的Frequency对象 更新Frequency对象的DestFrequencyConversion
+//                    foreach (KeyValuePair<FrequencyManager.FreqKey, SingleBarEventArgs> pair in frequencyEvent.FrequencyEvents)
+//                    {
+//                        Frequency frequency = this.freqKeyInfoMap[pair.Key].Frequency;
+//                        //目的Bar转换
+//                        foreach (KeyValuePair<Frequency, QList<DateTime>> conversion in frequency.DestFrequencyConversion)
+//                        {
+//                            Frequency key = conversion.Key;
+//                            QList<DateTime> value = conversion.Value;
+//                            //设定最大回溯值
+//                            value.MaxLookBack = frequency.Bars.MaxLookBack;
+//                            //如果Frequency的Bar数量大于0 则将该Bar的StartTime添加到QList<DateTime>中
+//                            if (key.Bars.Count > 0)
+//                            {
+//                                value.Add(key.Bars.Current.BarStartTime);
+//                            }
+//                        }
+//                    }
+//                     * **/
+//                }
+
+//                //IFrequencyProcess处理BarEvents
+//                //this._x5e07af8ebe8a76be.ProcessBarEvents(eventHolder.EventList);
+
+//                //遍历所有EventList通过FreqKey定位到FreqInfo 并通过FreqInfo调用SendNewBar对外触发Frequency的Bar事件
+//#if DEBUG
+//                logger.Info("FreqInfo Send out Bar Event");
+//#endif
+//                foreach (FrequencyNewBarEventArgs frequencyEvents in eventHolder.EventList)
+//                {
+//                    foreach (KeyValuePair<FrequencyManager.FreqKey, SingleBarEventArgs> pair in frequencyEvents.FrequencyEvents)
+//                    {
+//                        FreqInfo info = this.freqKeyInfoMap[pair.Key];
+//                        info.SendNewBar(pair.Value);
+//                        this.OnFreqKeyBar(info.FreqKey, pair.Value);
                         
-                    }
-                }
-            }
-        }
+//                    }
+//                }
+//            }
+//        }
 
 
         private void SynchronizeBars(FrequencyManager.FrequencyNewBarEventHolder eventlist)
