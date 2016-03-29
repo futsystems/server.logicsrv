@@ -69,7 +69,7 @@ namespace TradingLib.Common
             {
                 return num;
             }
-            if (this.Bars.LookBack(num).BarStartTime == barEndDate)
+            if (this.Bars.LookBack(num).StartTime == barEndDate)
             {
                 num++;
                 if (num >= this.Bars.Count)
@@ -87,7 +87,7 @@ namespace TradingLib.Common
             {
                 return num;
             }
-            while (num > 0 && this.Bars.LookBack(num - 1).BarStartTime == barStartTime)
+            while (num > 0 && this.Bars.LookBack(num - 1).StartTime == barStartTime)
             {
                 num--;
             }
@@ -96,8 +96,8 @@ namespace TradingLib.Common
 
         private int x31273f27c463a242(int xe151e765248d06d8)
         {
-            System.DateTime barStartTime = this.Bars.LookBack(xe151e765248d06d8).BarStartTime;
-            while (xe151e765248d06d8 > 0 && this.Bars.LookBack(xe151e765248d06d8 - 1).BarStartTime == barStartTime)
+            System.DateTime barStartTime = this.Bars.LookBack(xe151e765248d06d8).StartTime;
+            while (xe151e765248d06d8 > 0 && this.Bars.LookBack(xe151e765248d06d8 - 1).StartTime == barStartTime)
             {
                 xe151e765248d06d8--;
             }
@@ -112,7 +112,7 @@ namespace TradingLib.Common
             }
             int num = 0;
             int num2 = System.Math.Min(this.Bars.Count - 1, 4);
-            while (this.Bars.LookBack(num2).BarStartTime > xb21f13a9707ad954 && num2 > 0)
+            while (this.Bars.LookBack(num2).StartTime > xb21f13a9707ad954 && num2 > 0)
             {
                 num = num2;
                 num2 *= 2;
@@ -125,7 +125,7 @@ namespace TradingLib.Common
             while (num2 - 1 > num)
             {
                 int num3 = (num2 + num) / 2;
-                System.DateTime barStartTime = this.Bars.LookBack(num3).BarStartTime;
+                System.DateTime barStartTime = this.Bars.LookBack(num3).StartTime;
                 if (barStartTime == xb21f13a9707ad954)
                 {
                     return num3;
@@ -139,11 +139,11 @@ namespace TradingLib.Common
                     num = num3;
                 }
             }
-            if (this.Bars.LookBack(num).BarStartTime <= xb21f13a9707ad954)
+            if (this.Bars.LookBack(num).StartTime <= xb21f13a9707ad954)
             {
                 return num;
             }
-            if (this.Bars.LookBack(num2).BarStartTime <= xb21f13a9707ad954)
+            if (this.Bars.LookBack(num2).StartTime <= xb21f13a9707ad954)
             {
                 return num2;
             }

@@ -65,7 +65,7 @@ namespace TradingLib.API
         /// <summary>
         /// 开始时间
         /// </summary>
-        DateTime BarStartTime { get; set; }
+        DateTime StartTime { get; set; }
 
         /// <summary>
         /// 频率类别

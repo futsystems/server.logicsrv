@@ -227,7 +227,7 @@ namespace TradingLib.Common
                     this._updated = true;
                 }
                 //如果roundtime大于PartialBar的起始时间 越过了一个Bar数据 调用generator发送Bar同时设定BarStartTime
-                if (round > this._generator.PartialBar.BarStartTime)
+                if (round > this._generator.PartialBar.StartTime)
                 {
                     //取下一个Bar时间 根据当前BarStartTime计算下一个BarStarTime
                     DateTime nextround = TimeFrequency.NextRoundedTime(this._generator.BarStartTime, this._interval);

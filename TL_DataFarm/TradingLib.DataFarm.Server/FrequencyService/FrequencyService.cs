@@ -92,6 +92,11 @@ namespace TradingLib.Common.DataFarm
         }
 
 
+        /// <summary>
+        /// 每天按交易所收盘时间定时更新交易日信息,在Bar数据生成后直接通过Map获得交易日数据 避免每个Bar去运算
+        /// </summary>
+        /// <param name="arg1"></param>
+        /// <param name="arg2"></param>
         void OnNewFreqKeyBarEvent(FrequencyManager.FreqKey arg1, SingleBarEventArgs arg2)
         {
 #if DEBUG
@@ -99,6 +104,8 @@ namespace TradingLib.Common.DataFarm
 #endif
             if (NewBarEvent != null)
             {
+                BarImpl b = new BarImpl(arg2.Bar);
+                b.TradingDay = 0;
                 NewBarEvent(new FreqNewBarEventArgs() { Bar = new BarImpl(arg2.Bar), BarFrequency = arg1.Settings.BarFrequency, Symbol = arg1.Symbol });
             }
         }

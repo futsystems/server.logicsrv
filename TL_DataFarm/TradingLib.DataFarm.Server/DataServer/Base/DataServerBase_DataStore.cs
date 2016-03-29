@@ -76,6 +76,18 @@ namespace TradingLib.Common.DataFarm
                 _logwaiting.Set();
             }
         }
+        void DBInsertBar(Bar b)
+        {
+            try
+            {
+                MBar.InsertBar(b);
+            }
+            catch (Exception ex)
+            {
+                logger.Error("InsertBar error:" + ex.ToString());
+            }
+        }
+
         DateTime _lastcommit = DateTime.Now;
         TimeSpan _commitpriod = TimeSpan.FromMinutes(1);
         void ProcessBuffer()
@@ -106,6 +118,8 @@ namespace TradingLib.Common.DataFarm
                                 store.Commit();
                             }
                         }
+                        //将Bar数据保存到数据库
+                        DBInsertBar(b.Bar);
                     }
                     if (_batchSave)
                     {

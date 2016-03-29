@@ -74,7 +74,7 @@ namespace TradingLib.Common
         /// <summary>
         /// Bar开始时间
         /// </summary>
-        public DateTime BarStartTime
+        public DateTime StartTime
         {
             get { return _starttime; }
             set { _starttime = value; }
@@ -109,9 +109,6 @@ namespace TradingLib.Common
             ask = b.Ask;
             bid = b.Bid;
 
-            //_bardate = b.BarDate;
-            //_updatetime = b.BarUpdateTime;
-
             _empty = b.EmptyBar;
             _tradesCount = b.TradeCount;
             _tradingday = b.TradingDay;
@@ -119,8 +116,7 @@ namespace TradingLib.Common
             _intervalType = b.IntervalType;
             units = b.Interval;
 
-            BarStartTime = b.BarStartTime;//结束时间
-            //BarEndTime = b.BarEndTime;//BarStartTime
+            _starttime = b.StartTime;
         }
 
         public BarImpl(int interval)
@@ -185,7 +181,7 @@ namespace TradingLib.Common
 
         public override string ToString()
         {
-            return string.Format("{6} {0}-OHLC({1},{2},{3},{4},{5})", this.Symbol, this.Open, this.High, this.Low, this.Close, this.Volume, this.BarStartTime);
+            return string.Format("{6} {0}-OHLC({1},{2},{3},{4},{5})", this.Symbol, this.Open, this.High, this.Low, this.Close, this.Volume, this.StartTime);
         }
 
         #region 读写Bar不能修改 否则会造成数据格式不兼容
@@ -198,7 +194,7 @@ namespace TradingLib.Common
         /// <param name="bar"></param>
         public static void Write(BinaryWriter writer,BarImpl bar)
         {
-            writer.Write(Util.ToTLDateTime(bar.BarStartTime));
+            writer.Write(Util.ToTLDateTime(bar.StartTime));
             writer.Write(bar.Symbol);
             writer.Write((int)bar.IntervalType);
             writer.Write(bar.Interval);
@@ -226,7 +222,7 @@ namespace TradingLib.Common
         {
             BarImpl bar = new BarImpl();
             long date = reader.ReadInt64();
-            bar.BarStartTime = Util.ToDateTime(date);
+            bar.StartTime = Util.ToDateTime(date);
             bar.Symbol = reader.ReadString();
             bar.IntervalType = (BarInterval)reader.ReadInt32();
             bar.Interval = reader.ReadInt32();
@@ -257,7 +253,7 @@ namespace TradingLib.Common
         {
             const char d = ',';
             System.Text.StringBuilder sb = new System.Text.StringBuilder();
-            sb.Append(b.BarStartTime);
+            sb.Append(b.StartTime);
             sb.Append(d);
             sb.Append(b.Symbol);
             sb.Append(d);
@@ -298,7 +294,7 @@ namespace TradingLib.Common
         {
             string[] r = msg.Split(',');
             Bar b = new BarImpl();
-            b.BarStartTime = DateTime.Parse(r[0]);
+            b.StartTime = DateTime.Parse(r[0]);
             b.Symbol = r[1];
             b.IntervalType = (BarInterval)int.Parse(r[2]);
             b.Interval = int.Parse(r[3]);

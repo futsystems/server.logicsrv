@@ -69,6 +69,7 @@
     <Compile Include="Common\DataCommandAttr.cs" />
     <Compile Include="Common\DataCommandInfo.cs" />
     <Compile Include="Common\IHistDataStore.cs" />
+    <Compile Include="DataBase\MBar.cs" />
     <Compile Include="DataBase\TableInfo.cs" />
     <Compile Include="DataServer\Base\DataServerBase_FrequencyService.cs" />
     <Compile Include="DataServer\Base\DataCommand\DataServerBase_mgr.cs" />

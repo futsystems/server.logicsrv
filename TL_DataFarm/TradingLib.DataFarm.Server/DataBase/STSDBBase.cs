@@ -214,7 +214,7 @@ namespace TradingLib.Common.DataFarm
 
             if (bar != null)
             {
-                long key = bar.BarStartTime.ToTLDateTime();
+                long key = bar.StartTime.ToTLDateTime();
                 table[key] = bar;
             }
         }
@@ -234,7 +234,7 @@ namespace TradingLib.Common.DataFarm
                 logger.Info(string.Format("Table:{0} do not exist", tableName));
                 return;
             }
-            long key = bar.BarStartTime.ToTLDateTime();
+            long key = bar.StartTime.ToTLDateTime();
             if (!table.Exists(key))
             {
                 table[key] = bar;

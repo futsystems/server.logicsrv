@@ -38,7 +38,7 @@ namespace TradingLib.Common
         private bool _isTickSent;
         public bool TickWareSent { get { return _updated; } }
 
-        public DateTime BarStartTime { get {return _currentPartialBar.BarStartTime; } }
+        public DateTime BarStartTime { get {return _currentPartialBar.StartTime; } }
 
         BarFrequency _freq;
         public BarGenerator(Symbol symbol,BarFrequency freq,BarConstructionType type)
@@ -195,7 +195,7 @@ namespace TradingLib.Common
                 }
             }
             //Bar时间有效 且Bar不为空则触发该Bar
-            if (e.Bar.BarStartTime != System.DateTime.MinValue && !e.Bar.EmptyBar)//EmptyBar是只没有获得任何一个行情的Bar为空Bar
+            if (e.Bar.StartTime != System.DateTime.MinValue && !e.Bar.EmptyBar)//EmptyBar是只没有获得任何一个行情的Bar为空Bar
             {
 #if DEBUG
                 logger.Info("NewBar Generated:" + e.Bar.ToString());
@@ -214,8 +214,8 @@ namespace TradingLib.Common
         public void SetBarStartTime(DateTime barStartTime)
         {
             
-            this._currentPartialBar.BarStartTime = barStartTime;
-            this._partialBar.BarStartTime = barStartTime;
+            this._currentPartialBar.StartTime = barStartTime;
+            this._partialBar.StartTime = barStartTime;
         }
 
         /// <summary>
