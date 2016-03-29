@@ -88,13 +88,14 @@ namespace TradingLib.Common
             this.synchronizeBars = synchronizebars;
 
             //添加默认Bar数据发生器
-            frequencyPluginList.Add(new TimeFrequency(new BarFrequency(BarInterval.CustomTime, 30)));//1
+            //frequencyPluginList.Add(new TimeFrequency(new BarFrequency(BarInterval.CustomTime, 30)));//1
             frequencyPluginList.Add(new TimeFrequency(new BarFrequency(BarInterval.CustomTime, 60)));//1
-            frequencyPluginList.Add(new TimeFrequency(new BarFrequency(BarInterval.CustomTime, 180)));//3
-            frequencyPluginList.Add(new TimeFrequency(new BarFrequency(BarInterval.CustomTime, 300)));//5
-            frequencyPluginList.Add(new TimeFrequency(new BarFrequency(BarInterval.CustomTime, 900)));//15
-            frequencyPluginList.Add(new TimeFrequency(new BarFrequency(BarInterval.CustomTime, 1800)));//30
-            frequencyPluginList.Add(new TimeFrequency(new BarFrequency(BarInterval.CustomTime, 3600)));//60
+            //frequencyPluginList.Add(new TimeFrequency(new BarFrequency(BarInterval.CustomTime, 180)));//3
+            //frequencyPluginList.Add(new TimeFrequency(new BarFrequency(BarInterval.CustomTime, 300)));//5
+            //frequencyPluginList.Add(new TimeFrequency(new BarFrequency(BarInterval.CustomTime, 900)));//15
+            //frequencyPluginList.Add(new TimeFrequency(new BarFrequency(BarInterval.CustomTime, 1800)));//30
+            //frequencyPluginList.Add(new TimeFrequency(new BarFrequency(BarInterval.CustomTime, 3600)));//60
+            ////
 
         }
 

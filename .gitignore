@@ -7,7 +7,7 @@
 *.tlog
 *.su
 *.stsdb4
-
+*.data
 #ееЁЩ.sdf
 *.sdf
 

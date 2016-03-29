@@ -60,7 +60,6 @@ namespace TradingLib.MDClient
         }
 
 
-
         /// <summary>
         /// 订阅合约实时行情
         /// </summary>
@@ -105,7 +104,10 @@ namespace TradingLib.MDClient
 
 
 
-
+        public int QryBar(string symbol, int interval, DateTime start, DateTime end)
+        {
+            return QryBar(symbol, interval, start, end,0);
+        }
         /// <summary>
         /// 底层查询Bar数据接口
         /// </summary>

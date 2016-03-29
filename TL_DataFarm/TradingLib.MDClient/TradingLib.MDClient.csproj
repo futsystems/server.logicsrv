@@ -57,6 +57,7 @@
   <ItemGroup>
     <Compile Include="EventContrib.cs" />
     <Compile Include="IBasicInfo.cs" />
+    <Compile Include="IHistData.cs" />
     <Compile Include="MDClientHelper.cs" />
     <Compile Include="MDHandlerBase.cs" />
     <Compile Include="MDClient.cs" />

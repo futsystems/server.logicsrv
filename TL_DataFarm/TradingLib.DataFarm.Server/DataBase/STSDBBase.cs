@@ -269,7 +269,7 @@ namespace TradingLib.Common.DataFarm
 
             //如果从最小开始或者到最大结束 设置对应的时间标识
             if(start == DateTime.MinValue) haveStart = false;
-            if(end == DateTime.MaxValue) haveEnd =true;
+            if(end == DateTime.MaxValue) haveEnd =false;
             if(fromEnd)
             {
                 records = table.Backward(end.ToTLDateTime(), haveEnd, start.ToTLDateTime(), haveStart)

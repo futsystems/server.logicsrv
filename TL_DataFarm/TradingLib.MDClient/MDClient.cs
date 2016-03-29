@@ -13,17 +13,30 @@ namespace TradingLib.MDClient
     /// 行情客户端接口
     /// 行情客户端接口维护2个Socket连接到服务端1个Socket用于实时行情数据,1个行情用于历史行情数据
     /// </summary>
-    public partial class MDClient:IBasicInfo
+    public partial class MDClient:IBasicInfo,IHistData
     {
+
+        #region 外部事件
+        public event Action<Tick> OnRtnTickEvent;
+        public event Action<List<BarImpl>, RspInfo, int, bool> BarsRspEvent;
+
+        public event Action<RspQryBarResponseBin> OnRspBarEvent;
+
+        #endregion
 
         ILog logger = LogManager.GetLogger("MDClient");
 
         TLClient<TLSocket_TCP> realClient = null;
         TLClient<TLSocket_TCP> histClient = null;
-        MDHandlerBase _handler = null;
+        
 
         EventContrib _eventContrib = null;
         public EventContrib EventContrib { get { return _eventContrib; } }
+
+
+        bool _inited = false;
+        public bool Inited { get { return _inited; } }
+
         int requestid = 0;
         object _reqidobj = new object();
         protected int NextRequestID
@@ -75,7 +88,7 @@ namespace TradingLib.MDClient
         /// <param name="notify"></param>
         public void RegisterHandler(MDHandlerBase handler)
         {
-            _handler = handler;
+            //_handler = handler;
         }
 
         public void Start()
@@ -121,9 +134,9 @@ namespace TradingLib.MDClient
                 case MessageTypes.TICKNOTIFY:
                     {
                         TickNotify response = obj as TickNotify;
-                        if (_handler != null)
+                        if (OnRtnTickEvent != null)
                         {
-                            _handler.OnRtnTick(response.Tick);
+                            OnRtnTickEvent(response.Tick);
                         }
                         return;
                     }
@@ -151,21 +164,23 @@ namespace TradingLib.MDClient
                         OnXQrySymbolResponse(response);
                         return;
                     }
-                case MessageTypes.BARRESPONSE:
-                    {
-                        RspQryBarResponse response = obj as RspQryBarResponse;
-                        if (_handler != null)
-                        {
-                            _handler.OnRspQryBar(response.Bar, response.RspInfo, response.RequestID, response.IsLast);
-                        }
-                        return;
-                    }
+                //case MessageTypes.BARRESPONSE:
+                //    {
+                //        RspQryBarResponse response = obj as RspQryBarResponse;
+                        
+                        
+                //        return;
+                //    }
                 case MessageTypes.BIN_BARRESPONSE:
                     {
                         RspQryBarResponseBin response = obj as RspQryBarResponseBin;
-                        if (_handler != null)
+                        if (BarsRspEvent != null)
                         {
-                            _handler.OnRspQryBarBin(response.Bars, null,response.RequestID, response.IsLast);
+                            BarsRspEvent(response.Bars, null, response.RequestID, response.IsLast);
+                        }
+                        if (OnRspBarEvent != null)
+                        {
+                            OnRspBarEvent(response);
                         }
                         return;
                     }

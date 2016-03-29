@@ -46,10 +46,11 @@ namespace TradingLib.Common.DataFarm
             foreach(var t in engine)
             {
                 var table = engine.OpenXTable<long, BarImpl>(t.Name);
-               
 
-                logger.Info(string.Format("TableName:{0} Record Num:{1}", t.Name, table.Count()));
-                
+                if (t.Name.StartsWith("CFFEX-IF"))
+                {
+                    logger.Info(string.Format("TableName:{0} Record Num:{1}", t.Name, table.Count()));
+                }
             }
 #endif   
         }

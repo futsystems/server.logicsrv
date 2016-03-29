@@ -185,7 +185,12 @@ namespace TradingLib.MDClient
                 BindData();
                 
                 //CoreService.TLClient.ReqXQryYDPositon();
+                if (!_inited)
+                {
+                    _inited = true;
+                }
             }
+
         }
 
         /// <summary>
