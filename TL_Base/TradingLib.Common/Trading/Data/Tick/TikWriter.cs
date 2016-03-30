@@ -107,7 +107,7 @@ namespace TradingLib.Common
         /// <returns></returns>
         public static string SafeFilename(string path,string realsymbol,int date)
         {
-            return Path.Combine(new string[] { path, "{0}-{1}{2}".Put(SafeSymbol(realsymbol), date, TikConst.DOT_EXT) });
+            return Path.Combine(new string[] { path, "{0}-{1}{2}".Put(realsymbol, date, TikConst.DOT_EXT) });
             //return path + "\\" + SafeSymbol(realsymbol) + TikConst.DOT_EXT;
         }
 
@@ -116,24 +116,24 @@ namespace TradingLib.Common
         /// </summary>
         /// <param name="realsymbol"></param>
         /// <returns></returns>
-        public static string SafeSymbol(string realsymbol)
-        {
-            char[] _invalid = Path.GetInvalidPathChars();
-            char[] _more = "/\\*?:".ToCharArray();
-            _more.CopyTo(_invalid, 0);
-            //_more.CopyTo(0,_invalid,_invalid.Length,_more.Length);
-            foreach (char c in _invalid)
-            {
-                int p = 0;
-                while (p != -1)
-                {
-                    p = realsymbol.IndexOf(c);
-                    if (p != -1)
-                        realsymbol = realsymbol.Remove(p, 1);
-                }
-            }
-            return realsymbol;
-        }
+        //public static string SafeSymbol(string realsymbol)
+        //{
+        //    char[] _invalid = Path.GetInvalidPathChars();
+        //    char[] _more = "/\\*?:".ToCharArray();
+        //    _more.CopyTo(_invalid, 0);
+        //    //_more.CopyTo(0,_invalid,_invalid.Length,_more.Length);
+        //    foreach (char c in _invalid)
+        //    {
+        //        int p = 0;
+        //        while (p != -1)
+        //        {
+        //            p = realsymbol.IndexOf(c);
+        //            if (p != -1)
+        //                realsymbol = realsymbol.Remove(p, 1);
+        //        }
+        //    }
+        //    return realsymbol;
+        //}
 
         /// <summary>
         /// write header for tick file
