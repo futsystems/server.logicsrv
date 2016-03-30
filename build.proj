@@ -156,7 +156,7 @@
 		<DataCoreExe Include="Platform\DataCore\DataCoreSrv.exe" />
 		<DataCoreExe Include="Platform\DataCore\DataCoreSrv.exe.config" />
 		<DataCoreExe Include="Platform\DataCore\TickStoreSrv.exe" />
-		<DataCoreExe Include="Platform\DataCore\TickStoreSrv.exe" />
+		<DataCoreExe Include="Platform\DataCore\TickStoreSrv.exe.config" />
 		
 		<DataCoreExe Include="Platform\DataCore\TradingLib.DataFarm.API.dll" />
 		<DataCoreExe Include="Platform\DataCore\TradingLib.DataFarm.Common.dll" />
