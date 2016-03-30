@@ -16,11 +16,11 @@ namespace TradingLib.Common.DataFarm
         public void Command_QryTableInfo(IServiceHost host, IConnection conn)
         {
             logger.Info("Conn:{0} QryHistTable Infomation".Put(conn.SessionID));
-            foreach (var t in GetHistDataSotre().HistTableInfo)
-            {
-                if(t.Name.StartsWith("CFFEX"))
-                logger.Info(t.ToString());
-            }
+            //foreach (var t in GetHistDataSotre().HistTableInfo)
+            //{
+            //    if(t.Name.StartsWith("CFFEX"))
+            //    logger.Info(t.ToString());
+            //}
             
         }
     }

@@ -152,7 +152,7 @@ namespace TradingLib.Common.DataFarm
                         {
                             QryBarBackendQry qbqry = target as QryBarBackendQry;
                             //设置缓存标志
-                            store.SetCached(qbqry.Symbol, qbqry.IntervalType, qbqry.Interval, true);
+                            //store.SetCached(qbqry.Symbol, qbqry.IntervalType, qbqry.Interval, true);
                             //遍历所有延迟请求进行处理
                             foreach (var request in target.RequestList)
                             {

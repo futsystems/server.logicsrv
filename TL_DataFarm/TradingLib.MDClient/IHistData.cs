@@ -19,7 +19,7 @@ namespace TradingLib.MDClient
         /// <param name="maxcount">最大返回数量</param>
         /// <param name="fromend"></param>
         /// <returns></returns>
-        int QryBar(string symbol, int interval, DateTime start, DateTime end);
+        int QryBar(string symbol, int interval, DateTime start, DateTime end,int maxcount);
 
         /// <summary>
         /// 行情服务器历史数据返回回调

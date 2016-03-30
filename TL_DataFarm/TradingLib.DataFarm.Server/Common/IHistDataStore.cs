@@ -6,7 +6,7 @@ using TradingLib.API;
 using TradingLib.Common;
 using TradingLib.Common.DataFarm;
 
-namespace TradingLib.DataFarm.API
+namespace TradingLib.API
 {
     /// <summary>
     /// 历史数据接口
@@ -40,7 +40,7 @@ namespace TradingLib.DataFarm.API
         /// <param name="type"></param>
         /// <param name="interval"></param>
         /// <returns></returns>
-        bool IsCached(string symbol, BarInterval type, int interval);
+        //bool IsCached(string symbol, BarInterval type, int interval);
 
         /// <summary>
         /// 保存
@@ -55,7 +55,7 @@ namespace TradingLib.DataFarm.API
         /// <param name="type"></param>
         /// <param name="interval"></param>
         /// <returns></returns>
-        void SetCached(string symbol, BarInterval type, int interval,bool cached);
+        //void SetCached(string symbol, BarInterval type, int interval,bool cached);
 
         /// <summary>
         /// 查询历史数据
@@ -80,11 +80,11 @@ namespace TradingLib.DataFarm.API
         /// 插入Bar数据
         /// </summary>
         /// <param name="bar"></param>
-        void InsertBar(Symbol symbol,BarImpl bar);
+        //void InsertBar(Symbol symbol,BarImpl bar);
 
         /// <summary>
         /// 表信息
         /// </summary>
-        IEnumerable<HistTableInfo> HistTableInfo { get; }
+        //IEnumerable<HistTableInfo> HistTableInfo { get; }
     }
 }

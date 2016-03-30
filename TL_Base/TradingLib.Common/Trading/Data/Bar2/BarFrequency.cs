@@ -107,7 +107,7 @@ namespace TradingLib.Common
 
         public string ToUniqueId()
         {
-            return string.Format("{0}-{1}", this.Interval, this.Type);
+            return string.Format("{0}-{1}",this.Type,this.Interval);
         }
 
         public override int GetHashCode()

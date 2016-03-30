@@ -370,9 +370,10 @@ namespace TradingLib.Common
         /// <param name="tick"></param>
         public void ProcessTick(Tick tick)
         {
+            
             pf.EnterSection("PRECHECK  ");
             //非需要处理的行情源
-            if (tick.DataFeed != this.datafeed) return;
+            if (this.DataFeed != QSEnumDataFeedTypes.DEFAULT && this.datafeed != tick.DataFeed ) return;
             //查找合约
             Symbol symbol = null;
             if (!registedSymbols.TryGetValue(tick.Symbol, out symbol)) return;

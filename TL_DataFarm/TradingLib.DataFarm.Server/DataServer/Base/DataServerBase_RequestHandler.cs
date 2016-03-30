@@ -110,7 +110,7 @@ namespace TradingLib.Common.DataFarm
                 }
 
                 //如果数据已缓存则直接查询
-                if (store.IsCached(request.Symbol, request.IntervalType, request.Interval))
+                //if (store.IsCached(request.Symbol, request.IntervalType, request.Interval))
                 {
                     Profiler pf = new Profiler();
                     pf.EnterSection("QRY  BAR");
@@ -199,10 +199,10 @@ namespace TradingLib.Common.DataFarm
                     logger.Info("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~``");
                     logger.Info("----FrequencyManager Statistics---- \n" + FrequencyManager.pf.GetStatsString());
                 }
-                else
-                {
-                    this.BackendQryBar(host, conn, request);
-                }
+                //else
+                //{
+                //    this.BackendQryBar(host, conn, request);
+                //}
             }
             catch (Exception ex)
             {
@@ -353,15 +353,19 @@ namespace TradingLib.Common.DataFarm
 
         void SrvOnMDDemoTick(IServiceHost host, IConnection conn, MDDemoTickRequest request)
         {
-            logger.Info(string.Format("Conn:{0} send demotick request", conn.SessionID));
-            Tick k = new TickImpl("CNH6");
-            k.Date = 20160323;
-            k.Time = request.Time;
-            k.Trade = request.Trade;
-            k.Size = 1;
+            //logger.Info(string.Format("Conn:{0} send demotick request", conn.SessionID));
+            //Tick k = new TickImpl("CNH6");
+            //k.Date = 20160323;
+            //k.Time = request.Time;
+            //k.Trade = request.Trade;
+            //k.Size = 1;
 
-            freqService.ProcessTick(k);
-
+            //freqService.ProcessTick(k);
+            //foreach (var bar in MBar.LoadBars("IF04", BarInterval.CustomTime, 60, DateTime.MinValue, DateTime.MaxValue, 1000, true))
+            //{
+            //    logger.Info("bar:" + bar.ToString());
+            //}
+            
         }
     }
 }

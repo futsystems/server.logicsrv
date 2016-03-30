@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using TradingLib.DataFarm.API;
+using TradingLib.API;
 
 namespace TradingLib.Common.DataFarm
 {

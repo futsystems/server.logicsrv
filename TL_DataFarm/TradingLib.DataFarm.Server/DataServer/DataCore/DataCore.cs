@@ -33,48 +33,14 @@ namespace TradingLib.Common.DataFarm
             string histdbfile = ConfigFile["HistDBName"].AsString();
             //string path = Path.Combine(new string[] { AppDomain.CurrentDomain.BaseDirectory, histdbfile });
             logger.Info("Created Loacal DataBase Engine File:" + histdbfile);
-            _datastore = STSDBFactory.CreateLocalDB(histdbfile);
+            _datastore = new MemoryBarDB();//STSDBFactory.CreateLocalDB(histdbfile);
             logger.Info("....");
             
             //从数据库加载有效合约进行注册
             //_datastore.RegisterSymbolFreq("HGZ5", BarInterval.CustomTime, 30);
             //_datastore.RegisterSymbolFreq("IF1511", BarInterval.CustomTime, 60);
 
-            //foreach (var file in Directory.GetFiles("Import", "*.csv"))
-            //{
-            //    logger.Info("File:" + file);
-            //    string line = string.Empty;
-            //    using (StreamReader  fs = new StreamReader (file,Encoding.UTF8))
-            //    {
-                    
-            //        while (line != null)
-            //        {
-            //            line = fs.ReadLine();
-            //            if (line != null && line.Length > 0)
-            //            {
-            //                BarImpl b = new BarImpl();
-            //                string[] rec = line.Split(',');
 
-            //                b.Symbol = "IF1511";
-            //                b.IntervalType = BarInterval.CustomTime;
-            //                b.Interval = 60;
-            //                b.Open = double.Parse(rec[2]);
-            //                b.High = double.Parse(rec[3]);
-            //                b.Low = double.Parse(rec[4]);
-            //                b.Close = double.Parse(rec[5]);
-            //                b.Volume = int.Parse(rec[6]);
-            //                b.OpenInterest = int.Parse(rec[7]);
-            //                //logger.Info("datatime:" + rec[0] + " " + rec[1]);
-            //                b.BarStartTime = DateTime.ParseExact(rec[0] + " " + rec[1], "yyyy-MM-dd HH:mm", System.Globalization.CultureInfo.CurrentCulture);
-            //                //logger.Info("bar:" + b.ToString());
-            //                //_datastore.UpdateBar(null,b);
-            //                //_datastore.Commit();
-            //            }
-            //        }
-                    
-            //    }
-            //    _datastore.Commit();
-            //}
 
             
         }
@@ -94,6 +60,49 @@ namespace TradingLib.Common.DataFarm
 
             //启动ServiceHost
             this.StartServiceHosts();
+            foreach (var file in Directory.GetFiles("Import", "*.csv"))
+            {
+                logger.Info("Import Bar File:{0} ".Put(file));
+                string line = string.Empty;
+                Profiler pf = new Profiler();
+                pf.EnterSection("Import");
+
+                using (StreamReader fs = new StreamReader(file, Encoding.UTF8))
+                {
+                    
+                    Symbol symbol = MDBasicTracker.SymbolTracker["GCJ6"];
+                    while (line != null)
+                    {
+                        line = fs.ReadLine();
+                        TimeSpan ts = TimeSpan.FromSeconds(60);
+                        if (line != null && line.Length > 0)
+                        {
+                            BarImpl b = new BarImpl();
+                            string[] rec = line.Split(',');
+
+                            b.Symbol = "GC04";
+                            b.IntervalType = BarInterval.CustomTime;
+                            b.Interval = 60;
+                            b.Open = double.Parse(rec[0]);
+                            b.High = double.Parse(rec[1]);
+                            b.Low = double.Parse(rec[2]);
+                            b.Close = double.Parse(rec[3]);
+                            b.Volume = int.Parse(rec[4]);
+                            b.OpenInterest = 0;
+
+                            //logger.Info("datatime:" + rec[5]);
+                            b.StartTime = DateTime.ParseExact(rec[5], "yyyyMMdd HH:mm:ss", null);
+                            b.StartTime = TimeFrequency.RoundTime(b.StartTime, ts);
+                            //logger.Info("bar:" + b.ToString());
+                            //MBar.InsertBar(b);
+                            SaveBar(symbol, b);
+                        }
+                    }
+                }
+                pf.LeaveSection();
+                logger.Info("Ret:\n" + pf.GetStatsString());
+            }
+
         }
 
         public override void Stop()

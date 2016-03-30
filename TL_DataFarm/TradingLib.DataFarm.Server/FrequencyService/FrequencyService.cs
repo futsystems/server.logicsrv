@@ -80,7 +80,7 @@ namespace TradingLib.Common.DataFarm
             //遍历所有合约 并建立合约到FrequencyManager映射
             foreach (var symbol in MDBasicTracker.SymbolTracker.Symbols)
             {
-                if (symbol.Symbol != "IF1604") continue;
+                //if (symbol.Symbol != "IF1604") continue;
                 FrequencyManager fm = GetFrequencyManagerForExchange(symbol.SecurityFamily.Exchange.EXCode);
                 if (fm != null)
                 {
