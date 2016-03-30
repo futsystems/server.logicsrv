@@ -13,7 +13,7 @@ namespace TradingLib.MDClient
     /// 行情客户端接口
     /// 行情客户端接口维护2个Socket连接到服务端1个Socket用于实时行情数据,1个行情用于历史行情数据
     /// </summary>
-    public partial class MDClient:IBasicInfo,IHistData
+    public partial class MDClient : IBasicInfo, IDataClient
     {
 
         #region 外部事件

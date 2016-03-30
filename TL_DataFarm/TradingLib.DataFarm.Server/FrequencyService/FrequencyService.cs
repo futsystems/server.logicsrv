@@ -72,7 +72,10 @@ namespace TradingLib.Common.DataFarm
             foreach (var exchange in MDBasicTracker.ExchagneTracker.Exchanges)
             {
                 FrequencyManager fm = new FrequencyManager(exchange.EXCode, exchange.DataFeed);
+                fm.RegisterAllBasicFrequency();
+
                 frequencyMgrMap.Add(exchange.EXCode, fm);
+
                 fm.NewFreqKeyBarEvent += new Action<FrequencyManager.FreqKey, SingleBarEventArgs>(OnNewFreqKeyBarEvent);
 
             }
