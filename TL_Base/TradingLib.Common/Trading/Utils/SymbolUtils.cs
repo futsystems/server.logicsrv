@@ -185,6 +185,16 @@ namespace TradingLib.Common
         {
             return string.Format("{0}{1}", sym.SecurityFamily.Code, sym.Month);
         }
+
+        /// <summary>
+        /// 获得以交易所-合约 组合的唯一字符串键
+        /// </summary>
+        /// <param name="sym"></param>
+        /// <returns></returns>
+        public static string GetUniqueKey(this Symbol sym)
+        {
+            return string.Format("{0}-{1}",sym.Exchange,sym.Symbol);
+        }
         /// <summary>
         /// 当日到期
         /// </summary>

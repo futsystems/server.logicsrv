@@ -37,8 +37,6 @@ namespace TradingLib.Contrib.CLI
 
 
             _port = _cfgdb["cmdport"].AsInt();
-            
-            
         }
         /// <summary>
         /// 销毁

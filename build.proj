@@ -155,6 +155,9 @@
 	<ItemGroup>
 		<DataCoreExe Include="Platform\DataCore\DataCoreSrv.exe" />
 		<DataCoreExe Include="Platform\DataCore\DataCoreSrv.exe.config" />
+		<DataCoreExe Include="Platform\DataCore\TickStoreSrv.exe" />
+		<DataCoreExe Include="Platform\DataCore\TickStoreSrv.exe" />
+		
 		<DataCoreExe Include="Platform\DataCore\TradingLib.DataFarm.API.dll" />
 		<DataCoreExe Include="Platform\DataCore\TradingLib.DataFarm.Common.dll" />
 		<DataCoreExe Include="Platform\DataCore\TradingLib.DataFarm.Server.dll" />
@@ -182,6 +185,7 @@
 	
 	<Target Name="BuildDataCore" DependsOnTargets="Base">
 		<MSBuild Projects="Program\DataCore\DataCore.csproj" Properties="Configuration=$(Configuration);" />
+		<MSBuild Projects="Program\TickServer\TickStore.csproj" Properties="Configuration=$(Configuration);" />
 		<MSBuild Projects="TL_DataFarm\FastTickFeed\FastTickFeed.csproj" Properties="Configuration=$(Configuration);" />
 		<MSBuild Projects="TL_DataFarm\TCPServiceHost\TCPServiceHost.csproj" Properties="Configuration=$(Configuration);" />
 		<MSBuild Projects="TL_DataFarm\ZMQServiceHost\ZMQServiceHost.csproj" Properties="Configuration=$(Configuration);" />

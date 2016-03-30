@@ -3,24 +3,21 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.IO;
-using System.Reflection;
 using TradingLib.API;
 using TradingLib.Common;
-using TradingLib.DataFarm.API;
-using Common.Logging;
+using System.Reflection;
 
 namespace TradingLib.Common.DataFarm
 {
-    public partial class DataServerBase
+    public class Plugin
     {
-
         /// <summary>
         /// 从某个目录加载某个类型的插件
         /// </summary>
         /// <param name="path"></param>
         /// <param name="type"></param>
         /// <returns></returns>
-        List<T> LoadPlugins<T>(string path, string filter = "*")
+        public static List<T> LoadPlugins<T>(string path, string filter = "*")
         {
             Type type = typeof(T);
             List<T> list = new List<T>();
@@ -33,7 +30,7 @@ namespace TradingLib.Common.DataFarm
             }
             catch (Exception ex)
             {
-                logger.Error(string.Format("Load {0} Error:{1}", typeof(T), ex));
+                //logger.Error(string.Format("Load {0} Error:{1}", typeof(T), ex));
             }
             if (aDLLs.Length == 0)
                 return new List<T>();
@@ -59,36 +56,11 @@ namespace TradingLib.Common.DataFarm
                     }
                     catch (Exception ex)
                     {
-                        logger.Error("Load plugin error:" + ex.ToString());
+                        //logger.Error("Load plugin error:" + ex.ToString());
                     }
                 }
             }
             return list;
         }
-
-        /// <summary>
-        /// 获得所有命令
-        /// 通过扩展命令来响应行情服务器的远端管理
-        /// </summary>
-        /// <returns></returns>
-        public List<DataCommandInfo> FindCommand()
-        {
-            List<DataCommandInfo> list = new List<DataCommandInfo>();
-            Type type = this.GetType();
-            MethodInfo[] methodInfos = type.GetMethods();
-            foreach (MethodInfo mi in methodInfos)
-            {
-                DataCommandAttr[] attrs = (DataCommandAttr[])Attribute.GetCustomAttributes(mi, typeof(DataCommandAttr));
-                if (attrs != null && attrs.Length >= 1)
-                {
-                    foreach (DataCommandAttr attr in attrs)
-                    {
-                        list.Add(new DataCommandInfo(mi, attr, this));
-                    }
-                }
-            }
-            return list;
-        }
-
     }
 }

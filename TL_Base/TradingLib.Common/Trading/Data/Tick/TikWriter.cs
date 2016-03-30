@@ -40,19 +40,14 @@ namespace TradingLib.Common
         {
 
         }
-        /// <summary>
-        /// create a tikwriter for a specific symbol on todays date.
-        /// auto-creates header
-        /// </summary>
-        /// <param name="realsymbol"></param>
-        public TikWriter(string realsymbol) : this(realsymbol, Util.ToTLDate(DateTime.Now)) { }
+
         /// <summary>
         /// create a tikwriter for specific symbol on specific date
         /// auto-creates header
         /// </summary>
         /// <param name="realsymbol"></param>
         /// <param name="date"></param>
-        public TikWriter(string realsymbol, int date) : this(Environment.CurrentDirectory, realsymbol, date) { }
+        //public TikWriter(string realsymbol) : this(Util.TLTickDir, realsymbol) { }
         /// <summary>
         /// create tikwriter with specific location, symbol and date.
         /// auto-creates header
@@ -60,31 +55,38 @@ namespace TradingLib.Common
         /// <param name="path"></param>
         /// <param name="realsymbol"></param>
         /// <param name="date"></param>
-        public TikWriter(string path, string realsymbol, int date)
+        public TikWriter(string path, string realsymbol,int date)
         {
-
-            init(realsymbol, date, path);
-
+            init(path, realsymbol, date);
         }
 
-        private void init(string realsymbol, int date, string path)
+        private void init(string path,string realsymbol,int date)
         {
-
-
             // store important stuff
             _realsymbol = realsymbol;
             _path = path;
             _date = date;
+
             // get filename from path and symbol
-            _file = SafeFilename(_realsymbol, _path, _date);
+            _file = SafeFilename(path,realsymbol,date);
 
-            // if file exists, assume it has a header
-            _hasheader = File.Exists(_file);
+            //// if file exists, assume it has a header
+            //_hasheader = File.Exists(_file);
 
-            if (!_hasheader)
-                Header(this, realsymbol);
-            else
+            //if (!_hasheader)
+            //    Header(this, realsymbol);
+            //else
+            //    OutStream = new FileStream(_file, FileMode.Open, FileAccess.Write, FileShare.Read);
+            if (File.Exists(_file))
+            {
                 OutStream = new FileStream(_file, FileMode.Open, FileAccess.Write, FileShare.Read);
+                _hasheader = true;
+            }
+            else
+            {
+                OutStream = new FileStream(this.Filepath, FileMode.Create, FileAccess.Write, FileShare.Read);
+                _hasheader = true;
+            }
 
         }
 
@@ -103,9 +105,10 @@ namespace TradingLib.Common
         /// <param name="path"></param>
         /// <param name="date"></param>
         /// <returns></returns>
-        public static string SafeFilename(string realsymbol, string path, int date)
+        public static string SafeFilename(string path,string realsymbol,int date)
         {
-            return path + "\\" + SafeSymbol(realsymbol) + date.ToString() + TikConst.DOT_EXT;
+            return Path.Combine(new string[] { path, "{0}-{1}{2}".Put(SafeSymbol(realsymbol), date, TikConst.DOT_EXT) });
+            //return path + "\\" + SafeSymbol(realsymbol) + TikConst.DOT_EXT;
         }
 
         /// <summary>
@@ -164,8 +167,32 @@ namespace TradingLib.Common
         /// <param name="k"></param>
         public void newTick(TickImpl k)
         {
+            //if (_date == 0 || _date != k.Date)
+            //{
+            //    init(_realsymbol, _path, k.Date);
+            //}
             // make sure we have a header
-            if (!_hasheader) init(k.Symbol, k.Date, _path);
+            //if (!_hasheader) init(k.Symbol, _path, k.Date);
+
+            //
+            if (!k.IsTrade()) return;
+            StringBuilder sb = new StringBuilder();
+            char d = ',';
+            sb.Append(k.Date);
+            sb.Append(d);
+            sb.Append(k.Time);
+            sb.Append(d);
+            sb.Append(k.Trade);
+            sb.Append(d);
+            sb.Append(k.Size);
+            sb.Append("\n");
+            Write(Encoding.UTF8.GetBytes(sb.ToString()));
+            // write to disk
+            Flush();
+            // count it
+            Count++;
+
+            return;
             // get types
             bool t = k.IsTrade();
             bool fq = k.IsFullQuote();

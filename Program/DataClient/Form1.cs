@@ -68,8 +68,8 @@ namespace DataClient
         private void btnMQClient_Click(object sender, EventArgs e)
         {
             //mdclient = new TradingLib.MDClient.MDClient("121.40.171.230", 5060, 5060);
-            //mdclient = new TradingLib.MDClient.MDClient("114.55.72.206", 5060, 5060);
-            mdclient = new TradingLib.MDClient.MDClient("127.0.0.1", 5060, 5060);
+            mdclient = new TradingLib.MDClient.MDClient("114.55.72.206", 5060, 5060);
+            //mdclient = new TradingLib.MDClient.MDClient("127.0.0.1", 5060, 5060);
             mdclient.RegisterHandler(handler);
             mdclient.BarsRspEvent += new Action<List<BarImpl>, RspInfo, int, bool>(mdclient_BarsRspEvent);
             mdclient.OnRspBarEvent += new Action<RspQryBarResponseBin>(mdclient_OnRspBarEvent);
