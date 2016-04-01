@@ -171,6 +171,10 @@ namespace TradingLib.Common.DataFarm
 #endif
                 return;
             }
+            if (k.Symbol == "rb1610")
+            {
+                logger.Info("rb1610 is comming");
+            }
             
             TikWriter tw;
 
