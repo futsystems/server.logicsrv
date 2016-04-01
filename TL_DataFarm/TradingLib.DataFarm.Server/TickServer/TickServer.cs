@@ -44,6 +44,7 @@ namespace TradingLib.Common.DataFarm
         bool tickFeedLoad = false;
         ConfigFile _config;
 
+        int _gcinterval = 1;
         const string NAME = "TickStore";
         public TickServer()
         {
@@ -54,6 +55,7 @@ namespace TradingLib.Common.DataFarm
             DBHelper.InitDBConfig(_config["DBAddress"].AsString(), _config["DBPort"].AsInt(), _config["DBName"].AsString(), _config["DBUser"].AsString(), _config["DBPass"].AsString());
 
 
+            _gcinterval = _config["GCInterval"].AsInt();
         }
 
 
@@ -144,7 +146,8 @@ namespace TradingLib.Common.DataFarm
             }
             return path;
         }
-        
+
+        DateTime _lastGCTime = DateTime.Now;
         /// <summary>
         /// 异步行情处理
         /// </summary>
@@ -232,6 +235,14 @@ namespace TradingLib.Common.DataFarm
                 {
                     logger.Error("Write tick error:" + ex.ToString());
                 }
+            }
+
+            //定时进行强制垃圾回收
+            DateTime now = DateTime.Now;
+            if (now.Subtract(_lastGCTime).TotalMinutes > _gcinterval)
+            {
+                _lastGCTime = now;
+                GC.Collect();
             }
         }
 
