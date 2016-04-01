@@ -160,9 +160,9 @@ namespace TradingLib.Common.DataFarm
             Symbol symbol = MDBasicTracker.SymbolTracker[k.Symbol];
             if(symbol == null)
             {
-#if DEBUG
+//#if DEBUG
                 logger.Warn("Symbol:{0} not exist".Put(k.Symbol));
-#endif
+//#endif
                 return;
             }
             
