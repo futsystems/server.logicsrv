@@ -80,11 +80,12 @@ namespace TradingLib.Common
             if (File.Exists(_file))
             {
                 OutStream = new FileStream(_file, FileMode.Open, FileAccess.Write, FileShare.Read);
+                OutStream.Position = OutStream.Length;
                 _hasheader = true;
             }
             else
             {
-                OutStream = new FileStream(this.Filepath, FileMode.Create, FileAccess.Write, FileShare.Read);
+                OutStream = new FileStream(_file, FileMode.Create, FileAccess.Write, FileShare.Read);
                 _hasheader = true;
             }
 
