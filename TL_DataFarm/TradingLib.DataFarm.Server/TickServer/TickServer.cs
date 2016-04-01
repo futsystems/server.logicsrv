@@ -154,12 +154,15 @@ namespace TradingLib.Common.DataFarm
         /// <param name="k"></param>
         void asyncTick_GotTick(Tick k)
         {
-            if (k.Symbol != "rb1610") return;
+            //if (k.Symbol != "rb1610") return;
+            //logger.Info("tick:" + k.ToString());
 
             Symbol symbol = MDBasicTracker.SymbolTracker[k.Symbol];
             if(symbol == null)
             {
-                //logger.Warn("Symbol:{0} not exist".Put(k.Symbol));
+#if DEBUG
+                logger.Warn("Symbol:{0} not exist".Put(k.Symbol));
+#endif
                 return;
             }
             
