@@ -235,6 +235,10 @@ namespace TradingLib.Common.DataFarm
                             dateMap[uniquekey] = k.Date;
                         }
                     }
+                    else
+                    {
+                        logger.Error("File {0} is not writeable".Put(fn));
+                    }
                 }
                 catch (IOException ex)
                 {
