@@ -80,6 +80,7 @@ namespace TradingLib.Common
             if (File.Exists(_file))
             {
                 OutStream = new FileStream(_file, FileMode.Open, FileAccess.Write, FileShare.Read);
+                //已经存在的文件 设置当前position为末尾 用于向文件追加数据
                 OutStream.Position = OutStream.Length;
                 _hasheader = true;
             }
@@ -177,7 +178,7 @@ namespace TradingLib.Common
 
             //
             if (!k.IsTrade()) return;
-            Console.Write("write tick to file");
+            //Console.Write("write tick to file");
             StringBuilder sb = new StringBuilder();
             char d = ',';
             sb.Append(k.Date);
