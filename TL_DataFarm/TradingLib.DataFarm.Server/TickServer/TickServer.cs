@@ -56,14 +56,12 @@ namespace TradingLib.Common.DataFarm
 
 
             _gcinterval = _config["GCInterval"].AsInt();
-            foreach (var ex in MDBasicTracker.ExchagneTracker.Exchanges)
-            {
-                logger.Info("ex:" + ex.EXCode);
-            }
-            foreach (var sec in MDBasicTracker.SecurityTracker.Securities)
-            {
-                logger.Info("sec:" + sec.Code);
-            }
+
+            int  num_ex = MDBasicTracker.ExchagneTracker.Exchanges.Count();
+            int num_sec = MDBasicTracker.SecurityTracker.Securities.Count();
+            int num_sym = MDBasicTracker.SymbolTracker.Symbols.Count();
+
+            logger.Info("Basic Info Statisitic, Exchange:{0} Security:{1} Symbol:{2}".Put(num_ex, num_sec, num_sym));
         }
 
 
