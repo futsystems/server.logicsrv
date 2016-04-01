@@ -145,24 +145,18 @@ namespace TradingLib.Common.DataFarm
             return path;
         }
         
-        //TikWriter GetTikWriter(Symbol symbol)
-        //{
-        //    TikWriter tk = null;
-        //    string key = symbol.GetUniqueKey();
-        //    if(!tikWriterMap.TryGetValue(key,out tk))
-        //    {
-        //        tk = new TikWriter(GetTickPath(symbol), symbol.Symbol, Util.ToTLDate());
-        //        tikWriterMap.TryAdd(key, tk);
-        //    }
-        //    return tk;
-            
-        //}
+        /// <summary>
+        /// 异步行情处理
+        /// </summary>
+        /// <param name="k"></param>
         void asyncTick_GotTick(Tick k)
         {
+            if (k.Symbol != "rb1610") return;
+
             Symbol symbol = MDBasicTracker.SymbolTracker[k.Symbol];
             if(symbol == null)
             {
-                logger.Warn("Symbol:{0} not exist".Put(k.Symbol));
+                //logger.Warn("Symbol:{0} not exist".Put(k.Symbol));
                 return;
             }
             
