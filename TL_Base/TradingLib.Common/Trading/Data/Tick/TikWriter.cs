@@ -176,6 +176,7 @@ namespace TradingLib.Common
 
             //
             if (!k.IsTrade()) return;
+            Console.Write("write tick to file");
             StringBuilder sb = new StringBuilder();
             char d = ',';
             sb.Append(k.Date);
