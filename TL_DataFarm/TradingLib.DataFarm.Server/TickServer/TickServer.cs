@@ -167,7 +167,7 @@ namespace TradingLib.Common.DataFarm
             if(symbol == null)
             {
 #if DEBUG
-                logger.Warn("Symbol:{0} not exist".Put(k.Symbol));
+                //logger.Warn("Symbol:{0} not exist".Put(k.Symbol));
 #endif
                 return;
             }

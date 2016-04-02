@@ -38,6 +38,10 @@ namespace TradingLib.Common
         /// </summary>
         Dictionary<string, FrequencyManager.FreqInfo> freqKeyStrInfoMap = new Dictionary<string, FreqInfo>();
 
+        /// <summary>
+        /// 记录某个合约的正确分钟线时间
+        /// </summary>
+        Dictionary<string, DateTime> symbolCorrectBarTimeMap = new Dictionary<string, DateTime>();
         
         /// <summary>
         /// 合约与该合约的所有FreqInfo的list Map
@@ -109,6 +113,20 @@ namespace TradingLib.Common
         }
 
 
+        /// <summary>
+        /// 获得某个合约的正确Bar时间
+        /// </summary>
+        /// <param name="symbol"></param>
+        /// <returns></returns>
+        public DateTime GetCorrectBarTime(Symbol symbol)
+        {
+            DateTime t = DateTime.MinValue;
+            if (symbolCorrectBarTimeMap.TryGetValue(symbol.Symbol, out t))
+            {
+                return t;
+            }
+            return DateTime.MinValue;
+        }
         #region 注册频率发生器,合约
         /// <summary>
         /// 注册其他频率发生器 用于生成对应的Bar数据
@@ -139,6 +157,7 @@ namespace TradingLib.Common
 
             registedSymbols.TryAdd(symbol.Symbol, symbol);
             symbolUpdateTimeMap.TryAdd(symbol.Symbol, DateTime.MinValue);
+            symbolCorrectBarTimeMap.Add(symbol.Symbol, DateTime.MinValue);//默认时间为最小时间
 
             //遍历所有发生器列表生成key并注册
             foreach (var t in frequencyPluginList)
@@ -457,6 +476,11 @@ namespace TradingLib.Common
                             info.UpdateBarCollection(pair.Value.Bar, pair.Value.BarEndTime);
                             info.SendNewBar(pair.Value);
                             this.OnFreqKeyBar(info.FreqKey, pair.Value);
+                            //第一个Bar有可能是中途开始的因此数据未必正确 需要记录第二个Bar的更新时间
+                            if(info.Frequency.Bars.Count == 2)
+                            {
+                                symbolCorrectBarTimeMap[pair.Value.Symbol.Symbol] = pair.Value.Bar.StartTime;
+                            }
                             //this._currentTime = pair.Value.BarEndTime;//更新当前时间为BarEndTime
                         }
 

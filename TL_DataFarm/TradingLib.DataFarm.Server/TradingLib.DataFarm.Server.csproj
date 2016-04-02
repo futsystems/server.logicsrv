@@ -76,6 +76,7 @@
     <Compile Include="DataServer\Base\DataServerBase_FrequencyService.cs" />
     <Compile Include="DataServer\Base\DataCommand\DataServerBase_mgr.cs" />
     <Compile Include="DataServer\Base\DataCommand\DataServerBase_DataBase.cs" />
+    <Compile Include="DataServer\Base\DataServerBase_.Restore.cs" />
     <Compile Include="FrequencyService\EventArgs.cs" />
     <Compile Include="MDBasicTracker.cs" />
     <Compile Include="DataBase\Compare.cs" />
