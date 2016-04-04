@@ -58,6 +58,9 @@ namespace TradingLib.Common.DataFarm
             //启动TickFeed
             this.StartTickFeeds();
 
+            //恢复历史数据
+            this.RestoreData();
+
             //启动ServiceHost
             this.StartServiceHosts();
             foreach (var file in Directory.GetFiles("Import", "*.csv"))

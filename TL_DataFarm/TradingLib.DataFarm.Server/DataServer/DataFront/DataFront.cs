@@ -24,7 +24,7 @@ namespace TradingLib.Common.DataFarm
         {
             logger.Info("DataFront..........");
 
-            _datastore = STSDBFactory.CreateMemoryDB();
+            _datastore = null;// STSDBFactory.CreateMemoryDB();
             //从数据库加载有效合约进行注册
             //_datastore.RegisterSymbolFreq("HGZ5", BarInterval.CustomTime, 30);
             //_datastore.RegisterSymbolFreq("IF1511", BarInterval.CustomTime, 60);

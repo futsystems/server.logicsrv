@@ -136,6 +136,21 @@ namespace TradingLib.Common.DataFarm
 
 
         /// <summary>
+        /// 获得某个合约内存中第一个有效Bar时间
+        /// </summary>
+        /// <param name="symbol"></param>
+        /// <returns></returns>
+        public DateTime GetFirstBarTime(Symbol symbol,BarInterval type,int interval)
+        { 
+             FrequencyManager fm = GetFrequencyManagerForExchange(symbol.SecurityFamily.Exchange.EXCode);
+             if (fm != null)
+             {
+                 Frequency data = fm.GetFrequency(symbol, new BarFrequency(type,interval));
+                 if (data == null) return DateTime.MaxValue;
+                 if(data.Bars.Count>=0) return DateTime.
+             }
+        }
+        /// <summary>
         /// 处理外部行情
         /// </summary>
         /// <param name="k"></param>

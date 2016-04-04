@@ -86,7 +86,7 @@ namespace TradingLib.Common.DataFarm
                 logger.Warn(string.Format("Symbol:{0} do not exist", request.Symbol));
                 return;
             }
-            string tbkey = STSDBBase.GetTableName(symbol, request.IntervalType, request.Interval);
+            string tbkey = string.Empty;//STSDBBase.GetTableName(symbol, request.IntervalType, request.Interval);
             QryBarBackendQry target = null;
 
             //如果已经包含了该key对应的后端查询 则将本次查询加入到后端查询对象中的延迟查询对象列表

@@ -58,6 +58,15 @@ namespace TradingLib.API
         //void SetCached(string symbol, BarInterval type, int interval,bool cached);
 
         /// <summary>
+        /// 恢复某个合约 某个频率的历史数据
+        /// </summary>
+        /// <param name="symbol"></param>
+        /// <param name="type"></param>
+        /// <param name="interval"></param>
+        /// <param name="currentTime"></param>
+        /// <returns></returns>
+        bool RestoreBar(Symbol symbol, BarInterval type, int interval, out DateTime lastBarTime);
+        /// <summary>
         /// 查询历史数据
         /// </summary>
         /// <param name="symbol">合约</param>

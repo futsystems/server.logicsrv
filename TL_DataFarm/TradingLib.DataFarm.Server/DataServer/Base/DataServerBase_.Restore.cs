@@ -15,12 +15,26 @@ namespace TradingLib.Common.DataFarm
         /// <summary>
         /// 恢复数据
         /// </summary>
-        public void RestoreData()
+        protected void RestoreData()
         {
+            IHistDataStore store = this.GetHistDataSotre();
+            if (store == null)
+            {
+                logger.Warn("HistDataSotre is null, can not restore data");
+            }
+
             //遍历所有合约执行合约的数据恢复
             foreach (var symbol in MDBasicTracker.SymbolTracker.Symbols)
-            { 
+            {
+                if (symbol.Symbol != "rb1610") continue;
                 
+                //从数据库加载历史数据 获得数据库最后一条Bar更新时间
+                DateTime lastBarTime = DateTime.MinValue;
+                store.RestoreBar(symbol, BarInterval.CustomTime, 60, out lastBarTime);
+
+                //从频率发生器获得该合约当前有效Bar时间
+                
+                logger.Info("Symbol:{0} LastBarTime:{1}".Put(symbol.Symbol, lastBarTime));
             }
         }
 

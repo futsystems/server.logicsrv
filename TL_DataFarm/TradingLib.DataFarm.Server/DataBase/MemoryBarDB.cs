@@ -25,6 +25,23 @@ namespace TradingLib.Common.DataFarm
         /// </summary>
         public int Interval { get; set; }
 
+        /// <summary>
+        /// 是否处于工作模式
+        /// </summary>
+        public bool Working { get; set; }
+
+
+        /// <summary>
+        /// 返回最后一个Bar时间
+        /// </summary>
+        public DateTime LastBarTime
+        {
+            get
+            {
+                if (barlist.Count == 0) return DateTime.MinValue;
+                return barlist.Last().Value.StartTime;
+            }
+        }
 
         public BarList(Symbol symbol, BarInterval type, int interval)
         {
@@ -33,6 +50,7 @@ namespace TradingLib.Common.DataFarm
             this.IntervalType = type;
             this.Interval = interval;
             this._key = "{0}-{1}-{2}-{3}".Put(symbol.Exchange,symbol.Symbol, type, interval);
+            this.Working = false;
         }
 
         string _key = string.Empty;
@@ -206,7 +224,7 @@ namespace TradingLib.Common.DataFarm
     public class MemoryBarDB:IHistDataStore
     {
 
-        const int MAXCOUNTLOADED = 100000;//默认最大10万条数据
+        const int MAXCOUNTLOADED = 10000;//默认最大10万条数据
 
         /// <summary>
         /// BarList
@@ -247,6 +265,30 @@ namespace TradingLib.Common.DataFarm
         }
 
         /// <summary>
+        /// 从数据库恢复某个合约多少条记录
+        /// 如果BarList已存在 则不执行数据恢复操作
+        /// </summary>
+        /// <param name="symbol"></param>
+        /// <param name="type"></param>
+        /// <param name="interval"></param>
+        /// <param name="maxcount"></param>
+        public bool RestoreBar(Symbol symbol, BarInterval type, int interval, out DateTime lastBarTime)
+        {
+            lastBarTime = DateTime.MaxValue;
+            //获得对应的BarList
+            BarList target = GetBarList(symbol, type, interval);
+
+            //从数据库加载对应的Bar数据 从最近的数据加载
+            IEnumerable<BarImpl> bars = MBar.LoadBars(GetBarSymbol(symbol), type, interval, DateTime.MinValue, DateTime.MaxValue, MAXCOUNTLOADED, true);
+
+            //添加到内存数据结构中
+            target.AppendBars(bars);
+
+            lastBarTime = target.LastBarTime;
+            return true;
+        }
+
+        /// <summary>
         /// 查询某个合约某个周期的Bar数据
         /// </summary>
         /// <param name="symbol"></param>
@@ -280,13 +322,6 @@ namespace TradingLib.Common.DataFarm
             //如果不存在 则添加该BarList 同时从数据库加载历史数据
             target = new BarList(symbol, type, interval);
             barlistmap.TryAdd(key, target);
-
-            //从数据库加载对应的Bar数据 从最近的数据加载
-            IEnumerable<BarImpl> bars = MBar.LoadBars(GetBarSymbol(symbol), type, interval, DateTime.MinValue, DateTime.MaxValue, MAXCOUNTLOADED, true);
-
-            //添加到内存数据结构中
-            target.AppendBars(bars);
-
             return target;
         }
 
