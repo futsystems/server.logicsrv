@@ -41,7 +41,10 @@ namespace TradingLib.Common.DataFarm
 #if DEBUG
             logger.Info(string.Format("New Bar Freq:{0} Bar:{1}", key, obj.Bar));
 #endif
+            //放入储存队列 写入数据库
             this.SaveBar(obj.Symbol, obj.Bar);
+            //检查Bar更新时间 用于修改恢复任务状态
+            this.CheckBarUpdateTime(obj.Symbol, obj.Bar);
 
         }
 

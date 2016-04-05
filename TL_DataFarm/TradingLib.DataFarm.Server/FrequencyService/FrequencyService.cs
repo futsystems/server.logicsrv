@@ -113,7 +113,14 @@ namespace TradingLib.Common.DataFarm
 
         void OnNewHistFreqKeyBarEvent(FrequencyManager.FreqKey arg1, SingleBarEventArgs arg2)
         {
+            //if (arg1.Symbol.Symbol == "GC04")
+            //{
+            //    int i = 1;
+            //}
+#if DEBUG
             logger.Warn(string.Format("Bar ReGenerated Key:{0} Bar:{1}", arg1.Settings.BarFrequency, arg2.Bar));
+#endif
+
             if (NewHistBarEvent != null)
             {
                 BarImpl b = new BarImpl(arg2.Bar);

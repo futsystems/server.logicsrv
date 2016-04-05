@@ -213,7 +213,7 @@ namespace TradingLib.Common
         /// <returns></returns>
         public static bool Header(TikWriter bw, string realsymbol)
         {
-            bw.OutStream = new FileStream(bw.Filepath, FileMode.Create, FileAccess.Write, FileShare.Read);
+            bw.OutStream = new FileStream(bw.Filepath, FileMode.Create, FileAccess.Write, FileShare.ReadWrite);
             // version
             bw.Write(TikConst.Version);
             bw.Write(TikConst.FILECURRENTVERSION);

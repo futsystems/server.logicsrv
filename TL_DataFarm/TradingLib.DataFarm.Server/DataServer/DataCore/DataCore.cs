@@ -98,7 +98,7 @@ namespace TradingLib.Common.DataFarm
                             b.StartTime = TimeFrequency.RoundTime(b.StartTime, ts);
                             //logger.Info("bar:" + b.ToString());
                             //MBar.InsertBar(b);
-                            SaveBar(symbol, b);
+                            //SaveBar(symbol, b);
                         }
                     }
                 }

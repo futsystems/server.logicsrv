@@ -80,11 +80,11 @@
     <Compile Include="FrequencyService\EventArgs.cs" />
     <Compile Include="MDBasicTracker.cs" />
     <Compile Include="DataBase\Compare.cs" />
-    <Compile Include="DataBase\STSDBBase.cs" />
+    <Compile Include="DataBase\delete\STSDBBase.cs" />
     <Compile Include="DataBase\Persist.cs" />
-    <Compile Include="DataBase\STSDBFactory.cs" />
-    <Compile Include="DataBase\STSLocalDB.cs" />
-    <Compile Include="DataBase\STSMemoryDB.cs" />
+    <Compile Include="DataBase\delete\STSDBFactory.cs" />
+    <Compile Include="DataBase\delete\STSLocalDB.cs" />
+    <Compile Include="DataBase\delete\STSMemoryDB.cs" />
     <Compile Include="DataCoreBackend\DataCoreBackend.cs" />
     <Compile Include="DataCoreBackend\TLSocket_ZMQ.cs" />
     <Compile Include="DataServer\Base\DataServerBase.cs" />

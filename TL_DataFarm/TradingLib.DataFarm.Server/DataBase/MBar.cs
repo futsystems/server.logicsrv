@@ -31,6 +31,10 @@ namespace TradingLib.Common.DataFarm
         {
             using (DBMySql db = new DBMySql())
             {
+                if (bar.Symbol == "GC04")
+                {
+                    int x = 0;
+                }
                 string query = String.Format("Insert into data_bar (`tradingday`,`starttime`,`symbol`,`open`,`high`,`low`,`close`,`volume`,`openinterest`,`tradecount`,`intervaltype`,`interval` ) values('{0}','{1}','{2}','{3}','{4}','{5}','{6}','{7}','{8}','{9}','{10}','{11}')", bar.TradingDay, bar.StartTime.ToTLDateTime(), bar.Symbol, bar.Open, bar.High, bar.Low, bar.Close, bar.Volume, bar.OpenInterest, bar.TradeCount, (int)bar.IntervalType, bar.Interval);
                 db.Connection.Execute(query);
             }

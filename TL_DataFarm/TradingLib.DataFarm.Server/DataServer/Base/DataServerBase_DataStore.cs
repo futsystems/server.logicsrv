@@ -118,7 +118,7 @@ namespace TradingLib.Common.DataFarm
                     }
 
                     //实时插入Bar数据
-                    while (barbuffer.hasItems)
+                    while (barbuffer.hasItems && _tickRestored)
                     {
                         BarStoreStruct b = barbuffer.Read();
                         IHistDataStore store = GetHistDataSotre();
@@ -148,7 +148,7 @@ namespace TradingLib.Common.DataFarm
                        
                     }
 
-                    //更新Bar
+                    //更新Bar缓存 用于从Tick历史数据加载生成Bar进行数据更新
                     while (barupdatebuffre.hasItems)
                     {
                         BarStoreStruct b = barupdatebuffre.Read();
@@ -229,6 +229,10 @@ namespace TradingLib.Common.DataFarm
         /// <param name="bar"></param>
         public void UpdateBar(Symbol symbol, BarImpl bar)
         {
+            if (symbol.Symbol == "GC04")
+            {
+                int i = 1;
+            }
             barupdatebuffre.Write(new BarStoreStruct(symbol, bar));
             NewData();
         

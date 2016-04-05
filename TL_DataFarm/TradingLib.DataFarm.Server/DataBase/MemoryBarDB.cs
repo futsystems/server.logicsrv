@@ -84,7 +84,7 @@ namespace TradingLib.Common.DataFarm
         /// 添加一组Bar数据
         /// </summary>
         /// <param name="source"></param>
-        public void AppendBars(IEnumerable<BarImpl> source)
+        public void RestoreBars(IEnumerable<BarImpl> source)
         {
             lock (_object)
             {
@@ -277,7 +277,7 @@ namespace TradingLib.Common.DataFarm
         /// <param name="maxcount"></param>
         public bool RestoreBar(Symbol symbol, BarInterval type, int interval, out DateTime lastBarTime)
         {
-            lastBarTime = DateTime.MaxValue;
+            lastBarTime = DateTime.MinValue;
             //获得对应的BarList
             BarList target = GetBarList(symbol, type, interval);
 
@@ -285,9 +285,12 @@ namespace TradingLib.Common.DataFarm
             IEnumerable<BarImpl> bars = MBar.LoadBars(GetBarSymbol(symbol), type, interval, DateTime.MinValue, DateTime.MaxValue, MAXCOUNTLOADED, true);
 
             //添加到内存数据结构中
-            target.AppendBars(bars);
-
-            lastBarTime = target.LastBarTime;
+            target.RestoreBars(bars);
+            //如果恢复的数据集数量大于零则取最后一个Bar的时间为最后Bar时间
+            if (bars.Count() > 0)
+            {
+                lastBarTime = bars.First().StartTime;
+            }
             return true;
         }
 

@@ -10,10 +10,137 @@ using Common.Logging;
 
 namespace TradingLib.Common.DataFarm
 {
+
+    internal class TickRestoreTask
+    {
+
+        public TickRestoreTask(Symbol symbol, DateTime start, DateTime end)
+        {
+            this.Symbol = symbol;
+            this.Start = start;
+            this.End = end;
+            this.IsRestored = false;
+            this.CreatedTime = DateTime.Now;
+            this.CanRestored = false;
+        }
+        /// <summary>
+        /// 恢复数据读取Tick数据的开始时间
+        /// 该时间为数据库储存的最近一个Bar对应的下个Round时间
+        /// </summary>
+        public DateTime Start { get; set; }
+
+        /// <summary>
+        /// 该时间为当前系统获得该合约的第一个Tick时间 对应的下一个Round时间
+        /// 如果FrequencyService没有获得该合约的Tick数据则获得Tick时间为DateTime.MaxValue
+        /// 因此在恢复线程中需要检查该变量
+        /// </summary>
+        public DateTime End { get; set; }
+
+        /// <summary>
+        /// 合约
+        /// </summary>
+        public Symbol Symbol { get; set; }
+
+        /// <summary>
+        /// 任务创建时间
+        /// </summary>
+        public DateTime CreatedTime { get; set; }
+
+        /// <summary>
+        /// 是否可以执行Tick数据恢复
+        /// </summary>
+        public bool CanRestored { get; set; }
+        /// <summary>
+        /// 数据恢复标识
+        /// </summary>
+        public bool IsRestored { get; set; }
+    }
+
     public partial class DataServerBase
     {
+
+        bool _tickRestored = false;
+        Profiler restoreProfile = new Profiler();
+
+        ThreadSafeList<TickRestoreTask> restoreTaskList = new ThreadSafeList<TickRestoreTask>();
+
+
+        void CheckBarUpdateTime(Symbol symbol, Bar b)
+        {
+            TickRestoreTask task = restoreTaskList.Where(t => t.Symbol.Symbol == symbol.Symbol && !t.IsRestored).FirstOrDefault();
+            
+            //如果当前生成的Bar时间已经超过了恢复结束时间 则标志可执行恢复
+            if (task != null)
+            {
+                if (b.StartTime >= task.End)
+                {
+                    task.CanRestored = true;
+                    logger.Info("Symbol:{0} can start restore tickfile,end:{1}".Put(symbol.Symbol, task.End));
+                }
+            }
+
+        }
+        bool _restorego = false;
+        System.Threading.Thread _restorethread = null;
+        void ProcessRestoreTask()
+        {
+            while (_restorego)
+            {
+                try
+                {
+                    //如果恢复任务列表中所有任务都已经恢复完毕则 则退出恢复线程
+                    if (restoreTaskList.Where(t => !t.IsRestored).Count() == 0)
+                    {
+                        _restorego = false;
+                    }
+                    //遍历所有未完成恢复任务
+                    foreach (var item in restoreTaskList.Where(t=>!t.IsRestored))
+                    {
+                        //1.如果没有取得对应合约的第一个Tick时间 则尝试获得该tick时间
+                        if (item.End == DateTime.MaxValue)
+                        {
+                            
+                            DateTime firstTickTime = freqService.GetFirstTickTime(item.Symbol);
+                            item.End = firstTickTime == DateTime.MaxValue ? firstTickTime : TimeFrequency.NextRoundedTime(firstTickTime, TimeSpan.FromMinutes(1));//1分钟K线下一个Bar开始时间
+                            //如果还是未MaxValue则判断任务创建时间 如果2分钟之后还没有对应的Tick数据则表明 当前处于停盘时间 将MaxValue减去1分钟 用于加载所有tick文件生成Bar数据
+                            if (item.End == DateTime.MaxValue)
+                            {
+                                //一定时间后 自动执行恢复操作 认定该合约当前没有行情 下次行情到达时候实时产生的Bar数据是完整的
+                                if (DateTime.Now.Subtract(item.CreatedTime).TotalMinutes > 2)
+                                {
+                                    item.End = DateTime.MaxValue.Subtract(TimeSpan.FromMinutes(1));
+                                    item.CanRestored = true;
+                                }
+                            }
+                            else
+                            {
+                                logger.Warn("symbol got first tick time:{0} end:{1}".Put(firstTickTime, item.End));
+                            }
+                        }
+
+                        //2.如果已经获得Item.End则执行Tick数据加载并恢复
+                        if (item.CanRestored)
+                        {
+                            restoreProfile.EnterSection("RestoreTick");
+                            logger.Warn("restore symbol:{0} tick file".Put(item.Symbol.Symbol));
+                            BackFillSymbol(item.Symbol, item.Start, item.End);
+                            restoreProfile.LeaveSection();
+                            item.IsRestored = true;
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    ex.ToString();
+                }
+                Util.sleep(1000);
+
+            }
+            logger.Info("Restore Tick finished");
+        }
         /// <summary>
         /// 恢复数据
+        /// 恢复数据过程中
         /// </summary>
         protected void RestoreData()
         {
@@ -28,6 +155,7 @@ namespace TradingLib.Common.DataFarm
             {
                 if (symbol.Symbol != "rb1610") continue;
 
+                restoreProfile.EnterSection("RestoreBar");
                 //1.从数据库加载历史数据 获得数据库最后一条Bar更新时间
                 DateTime lastBarTime = DateTime.MinValue;
                 store.RestoreBar(symbol, BarInterval.CustomTime, 60, out lastBarTime);
@@ -38,11 +166,29 @@ namespace TradingLib.Common.DataFarm
                 //如果没有任何Bar数据或Tick时间 需要过滤
                 DateTime start = lastBarTime == DateTime.MinValue ? lastBarTime : TimeFrequency.NextRoundedTime(lastBarTime, TimeSpan.FromMinutes(1));//最后一个Bar对应的下一个Bar开始时间
                 DateTime end = firstTickTime == DateTime.MaxValue ? firstTickTime : TimeFrequency.NextRoundedTime(firstTickTime, TimeSpan.FromMinutes(1));//1分钟K线下一个Bar开始时间
-                
-                //3.加载时间区间内的所有Tick数据重新恢复生成Bar数据
-                BackFillSymbol(symbol, lastBarTime, end);
+
+
+                logger.Warn("Symbol:{0} create restore task start:{1} end:{2}".Put(symbol.Symbol, start, end));
+                //将恢复任务加入列表
+                restoreTaskList.Add(new TickRestoreTask(symbol, start, DateTime.MaxValue));
+
+                restoreProfile.LeaveSection();
+
+                //restoreProfile.EnterSection("RestoreTick");
+                ////3.加载时间区间内的所有Tick数据重新恢复生成Bar数据
+                //BackFillSymbol(symbol, start, end);
+                //restoreProfile.LeaveSection();
             }
+            //Tick数据恢复完成
+            //_tickRestored = true;
+            _restorego = true;
+            _restorethread = new System.Threading.Thread(ProcessRestoreTask);
+            _restorethread.IsBackground = true;
+            _restorethread.Start();
+
+            logger.Info("\n"+restoreProfile.GetStatsString());
         }
+
 
         /// <summary>
         /// 将某个合约某个时间段内的Bar数据恢复
@@ -52,7 +198,7 @@ namespace TradingLib.Common.DataFarm
         /// <param name="end"></param>
         void BackFillSymbol(Symbol symbol,DateTime start,DateTime end)
         {
-
+            
             //遍历start和end之间所有tickfile进行处理
             long lstart = start.ToTLDateTime();
             long lend = end.ToTLDateTime();
@@ -87,7 +233,7 @@ namespace TradingLib.Common.DataFarm
                 if (File.Exists(fn))
                 {
                      //实例化一个文件流--->与写入文件相关联  
-                    using (FileStream fs = new FileStream(fn,FileMode.Open, FileAccess.Read, FileShare.Read))
+                    using (FileStream fs = new FileStream(fn, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
                     {
                         //实例化一个StreamWriter-->与fs相关联  
                         using (StreamReader sw = new StreamReader(fs))
