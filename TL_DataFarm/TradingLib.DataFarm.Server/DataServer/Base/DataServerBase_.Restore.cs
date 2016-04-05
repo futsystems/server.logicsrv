@@ -31,12 +31,16 @@ namespace TradingLib.Common.DataFarm
                 //1.从数据库加载历史数据 获得数据库最后一条Bar更新时间
                 DateTime lastBarTime = DateTime.MinValue;
                 store.RestoreBar(symbol, BarInterval.CustomTime, 60, out lastBarTime);
-
                 //2.从frequencyService获得该合约第一个Tick时间,通过该事件推算出下2个Bar的截止时间 则为恢复时间
                 DateTime firstTickTime = freqService.GetFirstTickTime(symbol);
 
+                //注意在恢复Tick数据之前 新生成的Bar数据插入后会影响LastBarTime
+                //如果没有任何Bar数据或Tick时间 需要过滤
+                DateTime start = lastBarTime == DateTime.MinValue ? lastBarTime : TimeFrequency.NextRoundedTime(lastBarTime, TimeSpan.FromMinutes(1));//最后一个Bar对应的下一个Bar开始时间
+                DateTime end = firstTickTime == DateTime.MaxValue ? firstTickTime : TimeFrequency.NextRoundedTime(firstTickTime, TimeSpan.FromMinutes(1));//1分钟K线下一个Bar开始时间
+                
                 //3.加载时间区间内的所有Tick数据重新恢复生成Bar数据
-                BackFillSymbol(symbol, lastBarTime, firstTickTime);
+                BackFillSymbol(symbol, lastBarTime, end);
             }
         }
 
@@ -72,11 +76,11 @@ namespace TradingLib.Common.DataFarm
             }
 
             //取tickfile结束时间和end中较小的一个日期为 tick回放结束日期
-            int flag = Math.Min(tickend, end.ToTLDate());
+            int enddate = Math.Min(tickend, end.ToTLDate());
 
             //tick数据缓存
             List<Tick> tmpticklist = new List<Tick>();
-            while(current.ToTLDate()<= flag)
+            while (current.ToTLDate() <= enddate)
             {
                 string fn = TikWriter.SafeFilename(path, symbol.Symbol, current.ToTLDate());
                 //如果该Tick文件存在
@@ -94,7 +98,7 @@ namespace TradingLib.Common.DataFarm
                                 Tick k = TickImpl.ReadTrade(str);
                                 k.Symbol = symbol.Symbol;
                                 DateTime ticktime = k.DateTime();
-                                //如果Tick时间在开始与结束之间 则需要回放该Tick数据
+                                //如果Tick时间在开始与结束之间 则需要回放该Tick数据 需要确保在盘中重启后 在start和end之间的所有数据均加载完毕
                                 if (ticktime >= start && ticktime <= end)
                                 {
                                     tmpticklist.Add(k);
