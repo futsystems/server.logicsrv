@@ -51,6 +51,7 @@ namespace TradingLib.Common.DataFarm
         #region 保存行情与Bar数据
         RingBuffer<Tick> tickbuffer = new RingBuffer<Tick>(10000);
         RingBuffer<BarStoreStruct> barbuffer = new RingBuffer<BarStoreStruct>(10000);
+        RingBuffer<BarStoreStruct> barupdatebuffre = new RingBuffer<BarStoreStruct>(10000);
 
         bool _saverunning = false;
         Thread _datathread = null;
@@ -88,6 +89,18 @@ namespace TradingLib.Common.DataFarm
             }
         }
 
+        void DBUpdateBar(Bar b)
+        {
+            try
+            {
+                MBar.UpdateBar(b);
+            }
+            catch (Exception ex)
+            {
+                logger.Error("UpdateBar error:" + ex.ToString());
+            }
+        }
+
         DateTime _lastcommit = DateTime.Now;
         TimeSpan _commitpriod = TimeSpan.FromMinutes(1);
         void ProcessBuffer()
@@ -109,18 +122,59 @@ namespace TradingLib.Common.DataFarm
                     {
                         BarStoreStruct b = barbuffer.Read();
                         IHistDataStore store = GetHistDataSotre();
+
+                        bool isinsert = true;
                         if (store != null)
                         {
+                            
                             //logger.Info("b.symbol:" + (b.Symbol == null ? "null" : b.Symbol.Symbol) + " b.bar:" + (b.Bar == null ? "null" : b.Bar.ToString()));
-                            store.UpdateBar(b.Symbol,b.Bar);
+                            store.UpdateBar(b.Symbol,b.Bar,out isinsert);
                             if (!_batchSave)
                             {
                                 store.Commit();
                             }
                         }
-                        //将Bar数据保存到数据库
-                        DBInsertBar(b.Bar);
+
+                        //如果BarList中已经有该Bar则更新数据否则插入
+                        if (isinsert)
+                        {
+                            
+                            DBInsertBar(b.Bar);
+                        }
+                        else
+                        {
+                            DBUpdateBar(b.Bar);
+                        }
+                       
                     }
+
+                    //更新Bar
+                    while (barupdatebuffre.hasItems)
+                    {
+                        BarStoreStruct b = barupdatebuffre.Read();
+                        IHistDataStore store = GetHistDataSotre();
+                        bool isinsert = true;
+                        if (store != null)
+                        {
+                            store.UpdateBar(b.Symbol, b.Bar, out isinsert);
+                            if (!_batchSave)
+                            {
+                                store.Commit();
+                            }
+                        }
+
+                        //如果BarList中已经有该Bar则更新数据否则插入
+                        if (isinsert)
+                        {
+
+                            DBInsertBar(b.Bar);
+                        }
+                        else
+                        {
+                            DBUpdateBar(b.Bar);
+                        }
+                    }
+
                     if (_batchSave)
                     {
                         DateTime now = DateTime.Now;
@@ -170,10 +224,13 @@ namespace TradingLib.Common.DataFarm
 
         /// <summary>
         /// 更新Bar数据
+        /// 从历史Tick数据恢复的Bar需要调用UpdateBar接口
         /// </summary>
         /// <param name="bar"></param>
-        public void UpdateBar(Bar bar)
-        { 
+        public void UpdateBar(Symbol symbol, BarImpl bar)
+        {
+            barupdatebuffre.Write(new BarStoreStruct(symbol, bar));
+            NewData();
         
         }
         #endregion

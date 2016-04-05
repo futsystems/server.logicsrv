@@ -19,11 +19,22 @@ namespace TradingLib.Common.DataFarm
         protected void StartFrequencyService()
         {
             freqService = new FrequencyService();
-            freqService.NewBarEvent += new Action<FreqNewBarEventArgs>(OnNewBarEvent);
+            freqService.NewRealTimeBarEvent += new Action<FreqNewBarEventArgs>(OnNewRealTimeBarEvent);
+            freqService.NewHistBarEvent += new Action<FreqNewBarEventArgs>(OnNewHistBarEvent);
 
         }
 
-        void OnNewBarEvent(FreqNewBarEventArgs obj)
+        /// <summary>
+        /// 回放tick所生成的Bar数据事件
+        /// </summary>
+        /// <param name="obj"></param>
+        void OnNewHistBarEvent(FreqNewBarEventArgs obj)
+        {
+            obj.Bar.Symbol = obj.Symbol.GetContinuousSymbol();
+            this.UpdateBar(obj.Symbol, obj.Bar);
+        }
+
+        void OnNewRealTimeBarEvent(FreqNewBarEventArgs obj)
         {
             string key = string.Format("{0}-{1}", obj.Symbol.GetContinuousKey(), obj.BarFrequency.ToUniqueId());
             obj.Bar.Symbol = obj.Symbol.GetContinuousSymbol();

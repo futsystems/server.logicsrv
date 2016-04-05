@@ -69,11 +69,14 @@ namespace TradingLib.Common.DataFarm
         /// 更新Bar
         /// </summary>
         /// <param name="bar"></param>
-        public void Update(BarImpl bar)
+        public void Update(BarImpl bar,out bool isInsert)
         {
             lock (_object)
             {
-                barlist[bar.StartTime.ToTLDateTime()] = bar;
+                long key = bar.StartTime.ToTLDateTime();
+                isInsert = !barlist.Keys.Contains(key);
+                
+                barlist[key] = bar;
             }
         }
 
@@ -255,13 +258,13 @@ namespace TradingLib.Common.DataFarm
         /// 如果对应的键值已经存在则不执行插入
         /// </summary>
         /// <param name="bar"></param>
-        public virtual void UpdateBar(Symbol symbol, BarImpl bar)
+        public virtual void UpdateBar(Symbol symbol, BarImpl bar,out bool isInsert)
         {
             //获得对应的BarList
             BarList target = GetBarList(symbol,bar.IntervalType,bar.Interval);
 
             //执行插入操作
-            target.Update(bar);
+            target.Update(bar,out isInsert);
         }
 
         /// <summary>

@@ -23,9 +23,14 @@ namespace TradingLib.Common.DataFarm
 
 
         /// <summary>
-        /// 产生Bar数据
+        /// 实时行情产生Bar数据
         /// </summary>
-        public event Action<FreqNewBarEventArgs> NewBarEvent;
+        public event Action<FreqNewBarEventArgs> NewRealTimeBarEvent;
+
+        /// <summary>
+        /// 历史Tick产生Bar回补数据
+        /// </summary>
+        public event Action<FreqNewBarEventArgs> NewHistBarEvent;
 
         //public void Add(Symbol symbol)
         //{
@@ -62,6 +67,8 @@ namespace TradingLib.Common.DataFarm
             return null;
         }
 
+        FrequencyManager restoreFrequencyMgr = null;
+
         /// <summary>
         /// Bar数据生成器
         /// </summary>
@@ -76,14 +83,18 @@ namespace TradingLib.Common.DataFarm
 
                 frequencyMgrMap.Add(exchange.EXCode, fm);
 
-                fm.NewFreqKeyBarEvent += new Action<FrequencyManager.FreqKey, SingleBarEventArgs>(OnNewFreqKeyBarEvent);
+                fm.NewFreqKeyBarEvent += new Action<FrequencyManager.FreqKey, SingleBarEventArgs>(OnNewRealTimeFreqKeyBarEvent);
 
             }
+            restoreFrequencyMgr = new FrequencyManager("Restore", QSEnumDataFeedTypes.DEFAULT);
+            restoreFrequencyMgr.RegisterAllBasicFrequency();
+            restoreFrequencyMgr.NewFreqKeyBarEvent += new Action<FrequencyManager.FreqKey, SingleBarEventArgs>(OnNewHistFreqKeyBarEvent);
+
 
             //遍历所有合约 并建立合约到FrequencyManager映射
             foreach (var symbol in MDBasicTracker.SymbolTracker.Symbols)
             {
-                //if (symbol.Symbol != "IF1604") continue;
+                if (symbol.Symbol != "rb1610") continue;
                 FrequencyManager fm = GetFrequencyManagerForExchange(symbol.SecurityFamily.Exchange.EXCode);
                 if (fm != null)
                 {
@@ -91,6 +102,24 @@ namespace TradingLib.Common.DataFarm
                     fm.RegisterSymbol(symbol);
                     symbolFrequencyMgrMap.Add(symbol.Symbol, fm);
                 }
+
+                restoreFrequencyMgr.RegisterSymbol(symbol);
+                
+            }
+
+            
+
+        }
+
+        void OnNewHistFreqKeyBarEvent(FrequencyManager.FreqKey arg1, SingleBarEventArgs arg2)
+        {
+            logger.Warn(string.Format("Bar ReGenerated Key:{0} Bar:{1}", arg1.Settings.BarFrequency, arg2.Bar));
+            if (NewHistBarEvent != null)
+            {
+                BarImpl b = new BarImpl(arg2.Bar);
+                b.TradingDay = 0;
+                NewHistBarEvent(new FreqNewBarEventArgs() { Bar = new BarImpl(arg2.Bar), BarFrequency = arg1.Settings.BarFrequency, Symbol = arg1.Symbol });
+            
             }
         }
 
@@ -100,16 +129,16 @@ namespace TradingLib.Common.DataFarm
         /// </summary>
         /// <param name="arg1"></param>
         /// <param name="arg2"></param>
-        void OnNewFreqKeyBarEvent(FrequencyManager.FreqKey arg1, SingleBarEventArgs arg2)
+        void OnNewRealTimeFreqKeyBarEvent(FrequencyManager.FreqKey arg1, SingleBarEventArgs arg2)
         {
 #if DEBUG
             logger.Warn(string.Format("Bar Generated Key:{0} Bar:{1}", arg1.Settings.BarFrequency, arg2.Bar));
 #endif
-            if (NewBarEvent != null)
+            if (NewRealTimeBarEvent != null)
             {
                 BarImpl b = new BarImpl(arg2.Bar);
                 b.TradingDay = 0;
-                NewBarEvent(new FreqNewBarEventArgs() { Bar = new BarImpl(arg2.Bar), BarFrequency = arg1.Settings.BarFrequency, Symbol = arg1.Symbol });
+                NewRealTimeBarEvent(new FreqNewBarEventArgs() { Bar = new BarImpl(arg2.Bar), BarFrequency = arg1.Settings.BarFrequency, Symbol = arg1.Symbol });
             }
         }
 
@@ -140,16 +169,17 @@ namespace TradingLib.Common.DataFarm
         /// </summary>
         /// <param name="symbol"></param>
         /// <returns></returns>
-        public DateTime GetFirstBarTime(Symbol symbol,BarInterval type,int interval)
+        public DateTime GetFirstTickTime(Symbol symbol)
         { 
              FrequencyManager fm = GetFrequencyManagerForExchange(symbol.SecurityFamily.Exchange.EXCode);
              if (fm != null)
              {
-                 Frequency data = fm.GetFrequency(symbol, new BarFrequency(type,interval));
-                 if (data == null) return DateTime.MaxValue;
-                 if(data.Bars.Count>=0) return DateTime.
+                 return fm.GetFirstTickTime(symbol);
              }
+             return DateTime.MaxValue;
         }
+
+
         /// <summary>
         /// 处理外部行情
         /// </summary>
@@ -159,6 +189,12 @@ namespace TradingLib.Common.DataFarm
             FrequencyManager fm = GetFrequencyManagerForSymbol(k.Symbol);
             if (fm == null) return;
             fm.ProcessTick(k);
+        }
+
+
+        public void RestoreTick(Tick k)
+        {
+            restoreFrequencyMgr.ProcessTick(k);
         }
 
     }

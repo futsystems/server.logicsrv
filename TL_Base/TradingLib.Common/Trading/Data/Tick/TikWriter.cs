@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.IO;
+using System.Linq;
 using TradingLib.API;
 
 namespace TradingLib.Common
@@ -113,6 +114,73 @@ namespace TradingLib.Common
             //return path + "\\" + SafeSymbol(realsymbol) + TikConst.DOT_EXT;
         }
 
+        /// <summary>
+        /// 获得某个合约的所有tick文件名
+        /// </summary>
+        /// <param name="path"></param>
+        /// <param name="realysymbol"></param>
+        /// <returns></returns>
+        public static IEnumerable<string> GetTickFiles(string path, string symbol)
+        {
+            string[] files = Directory.GetFiles(path);
+            return files.Where(fn => { string name = Path.GetFileName(fn); return name.StartsWith(symbol) && name.EndsWith(TikConst.DOT_EXT); });
+        }
+
+
+        /// <summary>
+        /// 判断某个文件夹下面是否有Tick文件
+        /// </summary>
+        /// <param name="path"></param>
+        /// <param name="symbol"></param>
+        /// <returns></returns>
+        public static bool HaveAnyTickFiles(string path, string symbol)
+        {
+            return GetTickFiles(path, symbol).Any();
+        }
+
+        /// <summary>
+        /// 获得某个合约最新的Tick文件日期
+        /// </summary>
+        /// <param name="path"></param>
+        /// <param name="symbol"></param>
+        /// <returns></returns>
+        public static int GetEndTickDate(string path, string symbol)
+        {
+            IEnumerable<string> tickfiles = GetTickFiles(path, symbol);
+            IEnumerable<int> datelist = tickfiles.Select(fn => GetTickFileDate(fn));
+
+            return datelist.Max();
+
+        }
+
+        public static int GetStartTickDate(string path, string symbol)
+        {
+            IEnumerable<string> tickfiles = GetTickFiles(path, symbol);
+            IEnumerable<int> datelist = tickfiles.Select(fn => GetTickFileDate(fn));
+
+            return datelist.Min();
+        }
+
+        static int GetTickFileDate(string fn)
+        {
+            string name = Path.GetFileNameWithoutExtension(fn);
+            string[] rec = name.Split('-');
+            return int.Parse(rec[1]);
+        }
+        /// <summary>
+        /// 获得某个合约的Tick文件储存目录
+        /// </summary>
+        /// <param name="symbol"></param>
+        /// <returns></returns>
+        public static string GetTickPath(Symbol symbol)
+        {
+            string path = Path.Combine(new string[] { Util.TLTickDir, symbol.Exchange, symbol.SecurityFamily.Code });
+            if (!Directory.Exists(path))
+            {
+                Directory.CreateDirectory(path);
+            }
+            return path;
+        }
         /// <summary>
         /// gets symbol that is safe to use as filename
         /// </summary>

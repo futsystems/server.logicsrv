@@ -36,6 +36,14 @@ namespace TradingLib.Common.DataFarm
             }
         }
 
+        public static void UpdateBar(Bar bar)
+        {
+            using (DBMySql db = new DBMySql())
+            {
+                string query = String.Format("Update  data_bar SET `open`={0},`high`={1},`low`={2},`close`={3},`volume`={4},`openinterest`={5},`tradecount`={6} WHERE `symbol`='{7}' AND `intervaltype`='{8}' AND `interval`='{9}' AND `starttime`='{10}'", bar.Open, bar.High, bar.Low, bar.Close, bar.Volume, bar.OpenInterest, bar.TradeCount, bar.Symbol,(int)bar.IntervalType, bar.Interval,bar.StartTime.ToTLDateTime());
+                db.Connection.Execute(query);
+            }
+        }
         /// <summary>
         /// 加载Bar数据
         /// </summary>

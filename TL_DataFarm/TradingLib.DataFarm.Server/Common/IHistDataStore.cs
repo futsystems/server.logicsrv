@@ -66,6 +66,7 @@ namespace TradingLib.API
         /// <param name="currentTime"></param>
         /// <returns></returns>
         bool RestoreBar(Symbol symbol, BarInterval type, int interval, out DateTime lastBarTime);
+
         /// <summary>
         /// 查询历史数据
         /// </summary>
@@ -83,7 +84,7 @@ namespace TradingLib.API
         /// 更新Bar数据
         /// </summary>
         /// <param name="bar"></param>
-        void UpdateBar(Symbol symbol,BarImpl bar);
+        void UpdateBar(Symbol symbol,BarImpl bar,out bool IsInsert);
 
         /// <summary>
         /// 插入Bar数据

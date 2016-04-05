@@ -143,15 +143,15 @@ namespace TradingLib.Common.DataFarm
         /// </summary>
         /// <param name="symbol"></param>
         /// <returns></returns>
-        string GetTickPath(Symbol symbol)
-        {
-            string path =  Path.Combine(new string[] { Util.TLTickDir, symbol.Exchange, symbol.SecurityFamily.Code });
-            if (!Directory.Exists(path))
-            {
-                Directory.CreateDirectory(path);
-            }
-            return path;
-        }
+        //string GetTickPath(Symbol symbol)
+        //{
+        //    string path =  Path.Combine(new string[] { Util.TLTickDir, symbol.Exchange, symbol.SecurityFamily.Code });
+        //    if (!Directory.Exists(path))
+        //    {
+        //        Directory.CreateDirectory(path);
+        //    }
+        //    return path;
+        //}
 
         DateTime _lastGCTime = DateTime.Now;
         /// <summary>
@@ -220,7 +220,7 @@ namespace TradingLib.Common.DataFarm
                         catch (IOException) { }
                     }
                     // ensure file is writable
-                    string path = GetTickPath(symbol);
+                    string path = TikWriter.GetTickPath(symbol);
                     string fn = TikWriter.SafeFilename(path,k.Symbol,k.Date);
                     if (TikUtil.IsFileWritetable(fn))
                     {

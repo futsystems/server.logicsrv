@@ -137,7 +137,7 @@ namespace TradingLib.Common.DataFarm
             {
                 //更新内存Bar数据缓存
                 //i++;
-                store.UpdateBar(symbol,obj.Bar as BarImpl);
+                //store.UpdateBar(symbol,obj.Bar as BarImpl);
                 //logger.Info("cnt:" + i.ToString() + " size:" + size.ToString());
                 //如果是最后一个Bar回报
                 if (obj.IsLast)

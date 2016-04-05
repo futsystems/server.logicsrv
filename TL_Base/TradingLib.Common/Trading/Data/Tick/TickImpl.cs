@@ -1,4 +1,5 @@
 using System;
+using System.Text;
 using TradingLib.API;
 
 namespace TradingLib.Common
@@ -777,6 +778,40 @@ namespace TradingLib.Common
             t.Exchange = ex.Trim();
             t.BidPrice = 0;
             return t;
+        }
+
+        public static string SaveTrade(Tick k)
+        {
+            if (k.IsTrade())
+            {
+                StringBuilder sb = new StringBuilder();
+                char d = ',';
+                sb.Append(k.Date);
+                sb.Append(d);
+                sb.Append(k.Time);
+                sb.Append(d);
+                sb.Append(k.Trade);
+                sb.Append(d);
+                sb.Append(k.Size);
+                sb.Append("\n");
+                return sb.ToString();
+            }
+            return null;
+        }
+
+        public static Tick ReadTrade(string tmp)
+        {
+            string[] rec = tmp.Split(',');
+            int  d = int.Parse(rec[0]);
+            int t = int.Parse(rec[1]);
+            decimal price = decimal.Parse(rec[2]);
+            int size = int.Parse(rec[3]);
+            TickImpl k = new TickImpl();
+            k.Date = d;
+            k.Time = t;
+            k.Trade = price;
+            k.Size = size;
+            return k;
         }
 
 

@@ -26,7 +26,12 @@ namespace TradingLib.Common
         /// <summary>
         /// 合约对应最新更新时间
         /// </summary>
-        ConcurrentDictionary<string, DateTime> symbolUpdateTimeMap = new ConcurrentDictionary<string, DateTime>(); 
+        ConcurrentDictionary<string, DateTime> symbolUpdateTimeMap = new ConcurrentDictionary<string, DateTime>();
+
+        /// <summary>
+        /// 合约对应的第一个行情事件
+        /// </summary>
+        Dictionary<string, DateTime> symbolFirstTickTime = new Dictionary<string, DateTime>();
 
         /// <summary>
         /// FreqKey与FreqInfo的Map
@@ -38,11 +43,7 @@ namespace TradingLib.Common
         /// </summary>
         Dictionary<string, FrequencyManager.FreqInfo> freqKeyStrInfoMap = new Dictionary<string, FreqInfo>();
 
-        /// <summary>
-        /// 记录某个合约的正确分钟线时间
-        /// </summary>
-        Dictionary<string, DateTime> symbolCorrectBarTimeMap = new Dictionary<string, DateTime>();
-        
+
         /// <summary>
         /// 合约与该合约的所有FreqInfo的list Map
         /// </summary>
@@ -105,27 +106,28 @@ namespace TradingLib.Common
         public void RegisterAllBasicFrequency()
         {
             frequencyPluginList.Add(new TimeFrequency(new BarFrequency(BarInterval.CustomTime, 60)));//1
-            frequencyPluginList.Add(new TimeFrequency(new BarFrequency(BarInterval.CustomTime, 180)));//3
-            frequencyPluginList.Add(new TimeFrequency(new BarFrequency(BarInterval.CustomTime, 300)));//5
-            frequencyPluginList.Add(new TimeFrequency(new BarFrequency(BarInterval.CustomTime, 900)));//15
-            frequencyPluginList.Add(new TimeFrequency(new BarFrequency(BarInterval.CustomTime, 1800)));//30
-            frequencyPluginList.Add(new TimeFrequency(new BarFrequency(BarInterval.CustomTime, 3600)));//60
+            //frequencyPluginList.Add(new TimeFrequency(new BarFrequency(BarInterval.CustomTime, 180)));//3
+            //frequencyPluginList.Add(new TimeFrequency(new BarFrequency(BarInterval.CustomTime, 300)));//5
+            //frequencyPluginList.Add(new TimeFrequency(new BarFrequency(BarInterval.CustomTime, 900)));//15
+            //frequencyPluginList.Add(new TimeFrequency(new BarFrequency(BarInterval.CustomTime, 1800)));//30
+            //frequencyPluginList.Add(new TimeFrequency(new BarFrequency(BarInterval.CustomTime, 3600)));//60
         }
 
 
         /// <summary>
-        /// 获得某个合约的正确Bar时间
+        /// 获得某个合约第一个Tick时间
+        /// 如果没有记录则返回时间为DateTime.MaxValue
         /// </summary>
         /// <param name="symbol"></param>
         /// <returns></returns>
-        public DateTime GetCorrectBarTime(Symbol symbol)
+        public DateTime GetFirstTickTime(Symbol symbol)
         {
-            DateTime t = DateTime.MinValue;
-            if (symbolCorrectBarTimeMap.TryGetValue(symbol.Symbol, out t))
+            DateTime t = DateTime.MaxValue;
+            if (symbolFirstTickTime.TryGetValue(symbol.Symbol,out t))
             {
                 return t;
             }
-            return DateTime.MinValue;
+            return DateTime.MaxValue;
         }
         #region 注册频率发生器,合约
         /// <summary>
@@ -157,7 +159,7 @@ namespace TradingLib.Common
 
             registedSymbols.TryAdd(symbol.Symbol, symbol);
             symbolUpdateTimeMap.TryAdd(symbol.Symbol, DateTime.MinValue);
-            symbolCorrectBarTimeMap.Add(symbol.Symbol, DateTime.MinValue);//默认时间为最小时间
+            //symbolCorrectBarTimeMap.Add(symbol.Symbol, DateTime.MinValue);//默认时间为最小时间
 
             //遍历所有发生器列表生成key并注册
             foreach (var t in frequencyPluginList)
@@ -408,12 +410,23 @@ namespace TradingLib.Common
 
             //logger.Info("process tick called,symbol:" + symbol.Symbol);
             DateTime ticktime = tick.DateTime();
+
+
+
             Tick ttick = new TickImpl(ticktime);
             pf.LeaveSection();
 
             //如果时间大于Frequency的当前时间 则需要检查是否有PendingBars需要发送 时间相等则不用发送
             if (ticktime >= symbolUpdateTimeMap[symbol.Symbol])
             {
+                //没有记录过合约第一个行情事件
+                if (tick.IsTrade())
+                {
+                    if (!symbolFirstTickTime.Keys.Contains(symbol.Symbol))
+                    {
+                        symbolFirstTickTime.Add(symbol.Symbol, ticktime);
+                    }
+                }
                 pf.EnterSection("TIMECHECK  ");
                 //获得该合约所有的FreqInfo对象
                 IEnumerable<FrequencyManager.FreqInfo> list = this.GetFreqInfosForSymbol(symbol);
@@ -476,11 +489,11 @@ namespace TradingLib.Common
                             info.UpdateBarCollection(pair.Value.Bar, pair.Value.BarEndTime);
                             info.SendNewBar(pair.Value);
                             this.OnFreqKeyBar(info.FreqKey, pair.Value);
-                            //第一个Bar有可能是中途开始的因此数据未必正确 需要记录第二个Bar的更新时间
-                            if(info.Frequency.Bars.Count == 2)
-                            {
-                                symbolCorrectBarTimeMap[pair.Value.Symbol.Symbol] = pair.Value.Bar.StartTime;
-                            }
+                            ////第一个Bar有可能是中途开始的因此数据未必正确 需要记录第二个Bar的更新时间
+                            //if(info.Frequency.Bars.Count == 2)
+                            //{
+                            //    symbolCorrectBarTimeMap[pair.Value.Symbol.Symbol] = pair.Value.Bar.StartTime;
+                            //}
                             //this._currentTime = pair.Value.BarEndTime;//更新当前时间为BarEndTime
                         }
 
@@ -533,7 +546,9 @@ namespace TradingLib.Common
             }
             else
             {
+               
                 logger.Warn(string.Format("Out of order tick. Received tick for symbol {0} with time {1} when previous tick time was {2}", symbol.Symbol, ticktime, symbolUpdateTimeMap[symbol.Symbol]));
+                Util.sleep(1);
             }
         }
 
