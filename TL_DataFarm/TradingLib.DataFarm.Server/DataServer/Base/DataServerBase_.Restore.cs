@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Concurrent;
 using System.Linq;
 using System.Text;
 using System.IO;
@@ -64,6 +65,8 @@ namespace TradingLib.Common.DataFarm
 
         ThreadSafeList<TickRestoreTask> restoreTaskList = new ThreadSafeList<TickRestoreTask>();
 
+        ConcurrentDictionary<string, bool> symbolRestoredMap = new ConcurrentDictionary<string, bool>();
+
 
         void CheckBarUpdateTime(Symbol symbol, Bar b)
         {
@@ -72,7 +75,8 @@ namespace TradingLib.Common.DataFarm
             //如果当前生成的Bar时间已经超过了恢复结束时间 则标志可执行恢复
             if (task != null)
             {
-                if (b.StartTime >= task.End)
+                //如果当前产生的Bar的结束时间超过了任务结束时间,则表明该结束时间内所有的Tick数据接收完毕
+                if (TimeFrequency.NextRoundedTime(b.StartTime,TimeSpan.FromMinutes(1)) >= task.End)
                 {
                     task.CanRestored = true;
                     logger.Info("Symbol:{0} can start restore tickfile,end:{1}".Put(symbol.Symbol, task.End));
@@ -123,7 +127,7 @@ namespace TradingLib.Common.DataFarm
                         {
                             restoreProfile.EnterSection("RestoreTick");
                             logger.Warn("restore symbol:{0} tick file".Put(item.Symbol.Symbol));
-                            BackFillSymbol(item.Symbol, item.Start, item.End);
+                            BackFillSymbol(item);
                             restoreProfile.LeaveSection();
                             item.IsRestored = true;
                         }
@@ -175,7 +179,7 @@ namespace TradingLib.Common.DataFarm
                 restoreProfile.LeaveSection();
 
                 //restoreProfile.EnterSection("RestoreTick");
-                ////3.加载时间区间内的所有Tick数据重新恢复生成Bar数据
+                //3.加载时间区间内的所有Tick数据重新恢复生成Bar数据
                 //BackFillSymbol(symbol, start, end);
                 //restoreProfile.LeaveSection();
             }
@@ -196,8 +200,11 @@ namespace TradingLib.Common.DataFarm
         /// <param name="symbol"></param>
         /// <param name="start"></param>
         /// <param name="end"></param>
-        void BackFillSymbol(Symbol symbol,DateTime start,DateTime end)
+        void BackFillSymbol(TickRestoreTask task)
         {
+            Symbol symbol = task.Symbol;
+            DateTime start = task.Start;
+            DateTime end = task.End;
             
             //遍历start和end之间所有tickfile进行处理
             long lstart = start.ToTLDateTime();
@@ -260,16 +267,25 @@ namespace TradingLib.Common.DataFarm
 
             //处理缓存中的Tick数据
             logger.Info("{0} need process {1} Ticks".Put(symbol.Symbol, tmpticklist.Count));
+            Tick tmp = tmpticklist.Last();
             foreach (var k in tmpticklist)
             {
                 freqService.RestoreTick(k);
+            }
+
+            //设置数据恢复标识
+            task.IsRestored = true;
+
+            //所有Tick数据恢复任务完成 则设置tickRestored标识
+            if (!restoreTaskList.Where(t => !t.IsRestored).Any())
+            {
+                //Tick数据恢复完成
+                _tickRestored = true;
             }
         }
 
        
         //string path = GetTickPath(symbol);
         //string fn = TikWriter.SafeFilename(path, k.Symbol, k.Date);
-
-        
     }
 }
