@@ -41,7 +41,9 @@ namespace TradingLib.Common.DataFarm
 #if DEBUG
             logger.Info(string.Format("New Bar Freq:{0} Bar:{1}", key, obj.Bar));
 #endif
+
             //放入储存队列 写入数据库
+            //如果没有执行恢复 且 为第一个Bar则不储存该Bar数据
             this.SaveBar(obj.Symbol, obj.Bar);
             //检查Bar更新时间 用于修改恢复任务状态
             this.CheckBarUpdateTime(obj.Symbol, obj.Bar);
