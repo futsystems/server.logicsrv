@@ -156,7 +156,7 @@ namespace TradingLib.Common.DataFarm
             {
                 foreach (var conn in target.Values)
                 {
-                    logger.Info("send tick:" + k.Symbol);
+                    //logger.Info("send tick:" + k.Symbol);
                     conn.SendTick(k);
                 }
             }
@@ -215,6 +215,12 @@ namespace TradingLib.Common.DataFarm
             {
                 if (string.IsNullOrEmpty(symbol)) continue;
 
+                //注销所有合约
+                if (symbol == "*")
+                {
+                    ClearSymbolRegisted(conn);
+                    break;
+                }
                 if (symRegMap.Keys.Contains(symbol))
                 {
                     ConcurrentDictionary<string, IConnection> regmap = symRegMap[symbol];

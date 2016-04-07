@@ -30,6 +30,15 @@ namespace TradingLib.MDClient
             client.UnRegisterSymbol(new string[] { symbol });
         }
 
+        /// <summary>
+        /// 注销所有合约
+        /// </summary>
+        /// <param name="client"></param>
+        public static void UnRegisterAllSymbols(this MDClient client)
+        {
+            client.UnRegisterSymbol(new string[] { "*" });
+        }
+
 
 
         /// <summary>

@@ -188,6 +188,10 @@ namespace TradingLib.MDClient
                 if (!_inited)
                 {
                     _inited = true;
+                    if (OnInitializedEvent != null)
+                    {
+                        OnInitializedEvent();
+                    }
                 }
             }
 

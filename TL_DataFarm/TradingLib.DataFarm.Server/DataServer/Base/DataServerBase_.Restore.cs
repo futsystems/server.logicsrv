@@ -126,7 +126,7 @@ namespace TradingLib.Common.DataFarm
                                 {
                                     item.End = DateTime.MaxValue.Subtract(TimeSpan.FromMinutes(1));
                                     item.CanRestored = true;
-                                    logger.Info("Symbol:{0} time elapse,end:{1} will restore tick ".Put(item.Symbol, item.End));
+                                    logger.Info("Symbol:{0} time elapse,end:{1} will restore tick ".Put(item.Symbol.Symbol, item.End));
                                 }
                             }
                             else

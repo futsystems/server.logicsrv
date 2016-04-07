@@ -91,11 +91,14 @@ namespace TradingLib.MDClient
                 
             foreach (var symbol in symbols)
             {
-                Symbol sym = this.GetSymbol(symbol);
-                if (sym == null)
+                if (symbol != "*")//过滤统配符
                 {
-                    logger.Warn(string.Format("Symbol:{0} do not exist", symbol));
-                    continue;
+                    Symbol sym = this.GetSymbol(symbol);
+                    if (sym == null)
+                    {
+                        logger.Warn(string.Format("Symbol:{0} do not exist", symbol));
+                        continue;
+                    }
                 }
                 request.SymbolList.Add(symbol);
             }

@@ -17,11 +17,23 @@ namespace TradingLib.MDClient
     {
 
         #region 外部事件
+        /// <summary>
+        /// 响应实时行情数据
+        /// </summary>
         public event Action<Tick> OnRtnTickEvent;
+
         public event Action<List<BarImpl>, RspInfo, int, bool> BarsRspEvent;
 
+        /// <summary>
+        /// 响应Bar数据查询
+        /// </summary>
         public event Action<RspQryBarResponseBin> OnRspBarEvent;
 
+        /// <summary>
+        /// 初始化完成事件
+        /// 行情客户端从服务端查询基础数据完成
+        /// </summary>
+        public event Action OnInitializedEvent;
         #endregion
 
         ILog logger = LogManager.GetLogger("MDClient");
@@ -232,7 +244,6 @@ namespace TradingLib.MDClient
         void realClient_OnConnectEvent()
         {
             logger.Info(string.Format("Real Socket Connected Server:{0} Port:{1}", histClient.CurrentServer.Address, histClient.CurrentServer.Port));
-       
         }
     }
 }
