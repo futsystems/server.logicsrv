@@ -143,9 +143,17 @@ namespace TradingLib.Common.DataFarm
 #endif
             if (NewRealTimeBarEvent != null)
             {
+                FrequencyManager fm = GetFrequencyManagerForExchange(arg1.Symbol.SecurityFamily.Exchange.EXCode);
+                Frequency data = null;
+                if (fm != null)
+                {
+                    data = fm.GetFrequency(arg1.Symbol, arg1.Settings.BarFrequency);
+                    if (data == null) return;
+                }
+
                 BarImpl b = new BarImpl(arg2.Bar);
                 b.TradingDay = 0;
-                NewRealTimeBarEvent(new FreqNewBarEventArgs() { Bar = new BarImpl(arg2.Bar), BarFrequency = arg1.Settings.BarFrequency, Symbol = arg1.Symbol });
+                NewRealTimeBarEvent(new FreqNewBarEventArgs() { Bar = new BarImpl(arg2.Bar), BarFrequency = arg1.Settings.BarFrequency, Symbol = arg1.Symbol,Frequency=data });
             }
         }
 

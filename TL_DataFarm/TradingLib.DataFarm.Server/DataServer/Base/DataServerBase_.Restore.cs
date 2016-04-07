@@ -67,6 +67,18 @@ namespace TradingLib.Common.DataFarm
 
         ConcurrentDictionary<string, bool> symbolRestoredMap = new ConcurrentDictionary<string, bool>();
 
+        /// <summary>
+        /// 某个合约是否已经恢复Tick数据
+        /// </summary>
+        /// <param name="symbol"></param>
+        /// <returns></returns>
+        bool IsSymbolRestored(Symbol symbol)
+        {
+            TickRestoreTask task = restoreTaskList.Where(t => t.Symbol.Symbol == symbol.Symbol && !t.IsRestored).FirstOrDefault();
+            if (task != null)
+                return task.IsRestored;
+            return false;
+        }
 
         void CheckBarUpdateTime(Symbol symbol, Bar b)
         {
@@ -114,11 +126,12 @@ namespace TradingLib.Common.DataFarm
                                 {
                                     item.End = DateTime.MaxValue.Subtract(TimeSpan.FromMinutes(1));
                                     item.CanRestored = true;
+                                    logger.Info("Symbol:{0} time elapse,end:{1} will restore tick ".Put(item.Symbol, item.End));
                                 }
                             }
                             else
                             {
-                                logger.Warn("symbol got first tick time:{0} end:{1}".Put(firstTickTime, item.End));
+                                logger.Warn("Symbol:{0} got first tick time:{1} end:{2}".Put(item.Symbol.Symbol,firstTickTime, item.End));
                             }
                         }
 
@@ -126,7 +139,7 @@ namespace TradingLib.Common.DataFarm
                         if (item.CanRestored)
                         {
                             restoreProfile.EnterSection("RestoreTick");
-                            logger.Warn("restore symbol:{0} tick file".Put(item.Symbol.Symbol));
+                            logger.Warn("Restore Symbol:{0} tick file".Put(item.Symbol.Symbol));
                             BackFillSymbol(item);
                             restoreProfile.LeaveSection();
                             item.IsRestored = true;

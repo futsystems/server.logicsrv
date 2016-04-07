@@ -41,10 +41,20 @@ namespace TradingLib.Common.DataFarm
 #if DEBUG
             logger.Info(string.Format("New Bar Freq:{0} Bar:{1}", key, obj.Bar));
 #endif
-
+            
             //放入储存队列 写入数据库
+            /* 如果在盘中启动 则FrequencyManger获得的行情数据可能是从某个Bar的中途开始的
+             * 因此第一个Bar数据是不一定完整的，因此需要过滤掉 从第二个Bar开始储存
+             * 
+             * 如果某个合约已经恢复了Tick数据 则表明后续的数据都是完整的 直接储存
+             * 包括定时任务每日清理Frequency后 开盘后获得实时数据生成的第一个Bar需要保存
+             * 
+             * */
             //如果没有执行恢复 且 为第一个Bar则不储存该Bar数据
-            this.SaveBar(obj.Symbol, obj.Bar);
+            if (!IsSymbolRestored(obj.Symbol) && obj.Frequency.Bars.Count >= 2)
+            {
+                this.SaveBar(obj.Symbol, obj.Bar);
+            }
             //检查Bar更新时间 用于修改恢复任务状态
             this.CheckBarUpdateTime(obj.Symbol, obj.Bar);
 

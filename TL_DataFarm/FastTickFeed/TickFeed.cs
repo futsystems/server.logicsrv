@@ -285,6 +285,11 @@ namespace TradingLib.DataFarm
 
                                 //记录数据到达时间
                                 _lastheartbeat = DateTime.Now;
+                                if(tickdata!= null)
+                                {
+                                    tickdata.Dispose();
+                                    
+                                }
                             }
 
                             if (!_tickgo)

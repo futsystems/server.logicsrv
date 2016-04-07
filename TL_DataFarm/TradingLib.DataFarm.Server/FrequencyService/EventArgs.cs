@@ -27,5 +27,11 @@ namespace TradingLib.Common.DataFarm
         /// Bar频率
         /// </summary>
         public BarFrequency BarFrequency { get; set; }
+
+
+        /// <summary>
+        /// Frequency数据集
+        /// </summary>
+        public Frequency Frequency { get; set; }
     }
 }
