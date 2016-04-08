@@ -740,7 +740,7 @@ namespace TradingLib.Common
         {
             try
             {
-                logger.Debug(string.Format("Got Message type:{0} content:{1}", message.Type, message.Content));
+                //logger.Debug(string.Format("Got Message type:{0} content:{1}", message.Type, message.Content));
                 if (message.Type == MessageTypes.XEXCHANGERESPNSE)
                 {
                     int i = 0;

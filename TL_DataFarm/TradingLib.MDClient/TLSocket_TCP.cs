@@ -163,7 +163,7 @@ namespace TradingLib.MDClient
                     int ret = _socket.Receive(buffer, bufferoffset, buffer.Length - bufferoffset, SocketFlags.None);
                     if (ret > 0)
                     {
-                        logger.Info(string.Format("buffer size:{0}", buffer.Length));
+                        //logger.Info(string.Format("buffer size:{0}", buffer.Length));
                         byte[] pdata = new byte[ret + bufferoffset];
                         Array.Copy(buffer, 0, pdata, 0, ret + bufferoffset);
 
@@ -185,7 +185,7 @@ namespace TradingLib.MDClient
                             }
                             HandleMessage(msg);
                         }
-                        logger.Debug(string.Format("buffer len:{0} buffer offset:{1} ret len:{2} parse len:{3} cnt:{4}", buffer.Length, bufferoffset, ret, gotlen, j));
+                        //logger.Debug(string.Format("buffer len:{0} buffer offset:{1} ret len:{2} parse len:{3} cnt:{4}", buffer.Length, bufferoffset, ret, gotlen, j));
                         
                     }
                     else if (ret == 0) // socket was shutdown

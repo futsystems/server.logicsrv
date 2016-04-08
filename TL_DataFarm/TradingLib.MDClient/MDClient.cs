@@ -6,6 +6,7 @@ using TradingLib.API;
 using TradingLib.Common;
 using Common.Logging;
 
+using TradingLib.DataCore;
 
 namespace TradingLib.MDClient
 {
@@ -140,7 +141,7 @@ namespace TradingLib.MDClient
 
         void histClient_OnPacketEvent(IPacket obj)
         {
-            logger.Debug(string.Format("Hist Packet Type:{0} Content:{1}", obj.Type, obj.Content));
+            //logger.Debug(string.Format("Hist Packet Type:{0} Content:{1}", obj.Type, obj.Content));
             switch (obj.Type)
             {
                 case MessageTypes.TICKNOTIFY:
@@ -150,6 +151,7 @@ namespace TradingLib.MDClient
                         {
                             OnRtnTickEvent(response.Tick);
                         }
+                        MDService.EventData.FireRtnTickEvent(response.Tick);
                         return;
                     }
                 case MessageTypes.XMARKETTIMERESPONSE:
@@ -194,6 +196,8 @@ namespace TradingLib.MDClient
                         {
                             OnRspBarEvent(response);
                         }
+                        MDService.EventData.FireOnRspBarEvent(response);
+
                         return;
                     }
 
