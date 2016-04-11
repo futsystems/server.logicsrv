@@ -10,5 +10,7 @@ namespace TradingLib.API
         USD,
         [Description("港币")]
         HKD,
+        [Description("欧元")]
+        EUR,
     }
 }

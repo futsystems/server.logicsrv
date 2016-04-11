@@ -18,5 +18,7 @@ namespace TradingLib.API
         UK,
         [Description("新加坡")]
         SG,
+        [Description("德国")]
+        DE,
     }
 }
