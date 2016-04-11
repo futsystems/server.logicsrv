@@ -136,7 +136,7 @@ namespace TradingLib.Common.DataFarm
                         }
 
                         //2.如果已经获得Item.End则执行Tick数据加载并恢复
-                        if (item.CanRestored)
+                        if (item.CanRestored && !item.IsRestored)
                         {
                             restoreProfile.EnterSection("RestoreTick");
                             logger.Warn("Restore Symbol:{0} tick file".Put(item.Symbol.Symbol));

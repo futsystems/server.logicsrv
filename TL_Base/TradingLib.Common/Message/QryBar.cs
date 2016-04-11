@@ -272,6 +272,7 @@ namespace TradingLib.Common
             Array.Copy(typebyte, 0, buffer, 4, typebyte.Length);
             Array.Copy(requestidbyte, 0, buffer, 8, requestidbyte.Length);
             Array.Copy(islastbyte, 0, buffer, 8 + 4, islastbyte.Length);
+
             Array.Copy(ms.GetBuffer(), 0, buffer, 8 + 4 + 1, ms.Length);
             return buffer;
         }
