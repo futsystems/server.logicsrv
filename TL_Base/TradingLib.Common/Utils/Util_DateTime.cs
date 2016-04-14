@@ -9,6 +9,25 @@ namespace TradingLib.Common
 {
     public static class DateTimeUtils
     {
+        const double DIFF_OA2JULIAND = 2415018.5;
+        public static double ToJulianDate(this DateTime date)
+        {
+            return date.ToOADate().OADateToJulianDate();
+        }
+
+
+        
+        public static double OADateToJulianDate(this double oadate)
+        {
+            return oadate + DIFF_OA2JULIAND;
+        }
+
+
+        public static double JulianDateToOADate(this double jdate)
+        {
+            return jdate - DIFF_OA2JULIAND;
+        }
+
         /// <summary>
         /// 判断某个时间是否是工作日
         /// </summary>
