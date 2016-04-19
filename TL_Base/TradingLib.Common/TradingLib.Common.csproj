@@ -123,6 +123,7 @@
     <Compile Include="Profile\SectionStats.cs" />
     <Compile Include="Protocol\CommissionTemplateItem.cs" />
     <Compile Include="Protocol\LoginInfo.cs" />
+    <Compile Include="Stock\PowerData.cs" />
     <Compile Include="Tracker\BOOrderTracker.cs" />
     <Compile Include="Tracker\TradeTracker.cs" />
     <Compile Include="Trading\Comparers.cs" />
