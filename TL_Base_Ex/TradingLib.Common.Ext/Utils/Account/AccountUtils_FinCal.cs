@@ -496,6 +496,30 @@ namespace TradingLib.Common
             return FilterTrades(account, SecurityType.STK).Sum(fill => fill.GetCommission());
         }
 
+
+        /// <summary>
+        /// 计算股票交易 资金流出
+        /// 买入股票成交金额
+        /// </summary>
+        /// <param name="account"></param>
+        /// <returns></returns>
+        public static decimal CalcStkCashOut(this IAccount account)
+        {
+            return FilterTrades(account, SecurityType.STK).Where(fill => fill.IsEntryPosition).Sum(fill => fill.GetAmount());
+        }
+
+        /// <summary>
+        /// 计算股票交易 资金流入
+        /// 卖出股票成交金额
+        /// </summary>
+        /// <param name="account"></param>
+        /// <returns></returns>
+        public static decimal CalcStkCashIn(this IAccount account)
+        {
+            return FilterTrades(account, SecurityType.STK).Where(fill => fill.IsEntryPosition).Sum(fill => fill.GetAmount());
+        }
+
+
         /// <summary>
         /// 股票平仓盈亏
         /// </summary>
@@ -524,7 +548,6 @@ namespace TradingLib.Common
         public static decimal CalcStkMarginFrozen(this IAccount account)
         {
             return FilterPendingOrders(account, SecurityType.STK).Sum(e => account.CalOrderFundRequired(e, 0));
-
         }
 
         /// <summary>
