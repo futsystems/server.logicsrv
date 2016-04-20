@@ -18,6 +18,10 @@ namespace TradingLib.Contrib.APIService
     {
 
 
+        public HttpAPIServer(string md5key)
+        {
+            _md5key = md5key;
+        }
         public void Start()
         {
             InitServer();
@@ -32,6 +36,7 @@ namespace TradingLib.Contrib.APIService
         Thread _httpthread = null;
         NHttp.HttpServer _server = null;
 
+        string _md5key = "123456";
 
         void HandleHttpRequest(HttpRequestEventArgs arg)
         {
@@ -44,9 +49,16 @@ namespace TradingLib.Contrib.APIService
             }
         }
 
+        
+
+
+
         object HandleRequest(HttpRequest request)
         {
+            RequestCheck reqcheck = new RequestCheck();
+
             string method = request.Params["method"];
+            reqcheck.AddParams("method", method);
             if (!string.IsNullOrEmpty(method))
             {
                 method = method.ToUpper();
@@ -55,6 +67,14 @@ namespace TradingLib.Contrib.APIService
                     #region ADD_USER
                     case "ADD_USER":
                         {
+                            reqcheck.AddParams("user_id", request.Params["user_id"]);
+                            string md5sign = reqcheck.GetMd5Sign(_md5key);
+                            if (request.Params["md5sign"] != md5sign)
+                            {
+                                return new JsonReply(100, string.Format("Md5Sign not valid"));
+                            }
+
+
                             int user_id = 0;
                             int.TryParse(request.Params["user_id"], out user_id);
                             if (user_id <= 0)
@@ -85,6 +105,13 @@ namespace TradingLib.Contrib.APIService
                     #region QRY_USER
                     case "QRY_USER":
                         {
+                            reqcheck.AddParams("user_id", request.Params["user_id"]);
+                            string md5sign = reqcheck.GetMd5Sign(_md5key);
+                            if (request.Params["md5sign"] != md5sign)
+                            {
+                                return new JsonReply(100, string.Format("Md5Sign not valid"));
+                            }
+
                             int user_id = 0;
                             int.TryParse(request.Params["user_id"], out user_id);
                             if (user_id <= 0)
@@ -120,7 +147,15 @@ namespace TradingLib.Contrib.APIService
 
                     #region DEPOSIT
                     case "DEPOSIT":
-                        { 
+                        {
+                            reqcheck.AddParams("account", request.Params["account"]);
+                            reqcheck.AddParams("amount", request.Params["amount"]);
+                            string md5sign = reqcheck.GetMd5Sign(_md5key);
+                            if (request.Params["md5sign"] != md5sign)
+                            {
+                                return new JsonReply(100, string.Format("Md5Sign not valid"));
+                            }
+
                             string account;
                             account = request.Params["account"];
                             if (string.IsNullOrEmpty(account))
@@ -152,6 +187,15 @@ namespace TradingLib.Contrib.APIService
                     #region WITHDRAW
                     case "WITHDRAW":
                         {
+                            reqcheck.AddParams("account", request.Params["account"]);
+                            reqcheck.AddParams("amount", request.Params["amount"]);
+                            string md5sign = reqcheck.GetMd5Sign(_md5key);
+                            if (request.Params["md5sign"] != md5sign)
+                            {
+                                return new JsonReply(100, string.Format("Md5Sign not valid"));
+                            }
+
+
                             string account;
                             account = request.Params["account"];
                             if (string.IsNullOrEmpty(account))
@@ -193,6 +237,13 @@ namespace TradingLib.Contrib.APIService
                     #region ACTIVE_ACCOUNT
                     case "ACTIVE_ACCOUNT":
                         {
+                            reqcheck.AddParams("account", request.Params["account"]);
+                            string md5sign = reqcheck.GetMd5Sign(_md5key);
+                            if (request.Params["md5sign"] != md5sign)
+                            {
+                                return new JsonReply(100, string.Format("Md5Sign not valid"));
+                            }
+
                             string account;
                             account = request.Params["account"];
                             if (string.IsNullOrEmpty(account))

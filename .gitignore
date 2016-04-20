@@ -25,6 +25,7 @@
 /Platform/**/cache/
 /Platform/**/Logs/
 /Platform/TLDataBase
+/Platform/TLData
 /Platform/FutsMoniter/logs
 /publish
 /package
