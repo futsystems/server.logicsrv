@@ -48,9 +48,9 @@ namespace TradingLib.Contrib.APIService
             string _WaitSign = string.Empty;
             foreach (var v in paramsMap)
             {
-                _WaitSign = v.Key + "=" + v.Value + MARK;
+                _WaitSign += v.Key + "=" + v.Value + MARK;
             }
-            _WaitSign = _WaitSign+"Md5Sign=" + md5key;
+            _WaitSign = _WaitSign+"md5Key=" + md5key;
 
             return Md5Encrypt(_WaitSign);
         }
