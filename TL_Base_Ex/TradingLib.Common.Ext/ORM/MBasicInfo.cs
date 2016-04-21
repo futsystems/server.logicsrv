@@ -181,7 +181,7 @@ namespace TradingLib.ORM
         {
             using (DBMySql db = new DBMySql())
             {
-                string query = string.Format("INSERT INTO info_symbols (`symbol`,`entrycommission`,`exitcommission`,`margin`,`extramargin`,`maintancemargin`,`strike`,`optionside`,`month`,`expiredate`,`security_fk`,`underlaying_fk`,`underlayingsymbol_fk`,`tradeable`,`domain_id`,`symboltype`,`name`,`exitcommissiontoday`) VALUES ( '{0}','{1}','{2}','{3}','{4}','{5}','{6}','{7}','{8}','{9}','{10}','{11}','{12}','{13}','{14}','{15}','{16}','{17}')", sym.Symbol, sym._entrycommission, sym._exitcommission, sym._margin, sym._extramargin, sym._maintancemargin, sym.Strike, sym.OptionSide, sym.Month, sym.ExpireDate, sym.security_fk, sym.underlaying_fk, sym.underlayingsymbol_fk, sym.Tradeable ? 1 : 0, sym.Domain_ID, sym.SymbolType,sym.ExitCommissionToday,sym.Name);
+                string query = string.Format("INSERT INTO info_symbols (`symbol`,`entrycommission`,`exitcommission`,`margin`,`extramargin`,`maintancemargin`,`strike`,`optionside`,`month`,`expiredate`,`security_fk`,`underlaying_fk`,`underlayingsymbol_fk`,`tradeable`,`domain_id`,`symboltype`,`name`,`exitcommissiontoday`) VALUES ( '{0}','{1}','{2}','{3}','{4}','{5}','{6}','{7}','{8}','{9}','{10}','{11}','{12}','{13}','{14}','{15}','{16}','{17}')", sym.Symbol, sym._entrycommission, sym._exitcommission, sym._margin, sym._extramargin, sym._maintancemargin, sym.Strike, sym.OptionSide, sym.Month, sym.ExpireDate, sym.security_fk, sym.underlaying_fk, sym.underlayingsymbol_fk, sym.Tradeable ? 1 : 0, sym.Domain_ID, sym.SymbolType,sym.Name,sym.ExitCommissionToday);
                 int row = db.Connection.Execute(query);
                 SetIdentity(db.Connection, id => sym.ID = id, "id", "info_symbols");
 
