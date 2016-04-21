@@ -21,8 +21,10 @@ namespace TradingLib.Common
         /// <returns></returns>
         public static decimal GetCommission(this Trade f)
         {
-            return f.Commission >= 0 ? f.Commission : 0;
+            decimal fee = f.Commission + f.TransferFee + f.StampTax;
+            return fee;
         }
+
 
         /// <summary>
         /// 返回某个成交的成交金额
@@ -59,9 +61,9 @@ namespace TradingLib.Common
             sb.Append(" C:" + f.Commission.ToString());
             sb.Append(string.Format("Broker:{0} BLocalID:{1} BRemoteID:{2} TradeID:{3} OrderSysID:{4} Breed:{5}", f.Broker, f.BrokerLocalOrderID, f.BrokerRemoteOrderID, f.TradeID, f.OrderSysID, f.Breed));
             //sb.Append(" R:" + f.Broker + "/" + f.TradeID);
-
             return sb.ToString();
         }
+
         public static string GetTradeInfo(this Trade f)
         {
             StringBuilder sb = new StringBuilder();

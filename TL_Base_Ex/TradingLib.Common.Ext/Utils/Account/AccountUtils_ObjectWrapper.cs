@@ -97,8 +97,8 @@ namespace TradingLib.Common
             a.StkPositionValue = acc.CalcStkPositionMarketValue();
             a.StkCommission = acc.CalcStkCommission();
             a.StkRealizedPL = acc.CalcStkRealizedPL();
-            a.StkMargin = acc.CalcStkMargin();
-            a.StkCash = acc.CalcStkCash();
+            a.StkMargin = 0;// acc.CalcStkMargin();
+            a.StkCash = 0;// acc.CalcStkCash();
             a.StkMarketValue = acc.CalcStkPositionMarketValue();
             a.StkLiquidation = acc.CalcStkLiquidation();
             a.StkMoneyUsed = acc.CalcStkMoneyUsed();

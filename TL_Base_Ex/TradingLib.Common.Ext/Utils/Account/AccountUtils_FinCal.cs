@@ -503,7 +503,7 @@ namespace TradingLib.Common
         /// </summary>
         /// <param name="account"></param>
         /// <returns></returns>
-        public static decimal CalcStkCashOut(this IAccount account)
+        public static decimal CalcStkPurchase(this IAccount account)
         {
             return FilterTrades(account, SecurityType.STK).Where(fill => fill.IsEntryPosition).Sum(fill => fill.GetAmount());
         }
@@ -514,9 +514,25 @@ namespace TradingLib.Common
         /// </summary>
         /// <param name="account"></param>
         /// <returns></returns>
-        public static decimal CalcStkCashIn(this IAccount account)
+        public static decimal CalcStkSale(this IAccount account)
         {
             return FilterTrades(account, SecurityType.STK).Where(fill => fill.IsEntryPosition).Sum(fill => fill.GetAmount());
+        }
+
+
+        public static decimal CalcStkMoneyNetChange(this IAccount account)
+        {
+            return account.CalcStkPurchase() - account.CalcStkSale();
+        }
+
+        /// <summary>
+        /// 股票冻结资金
+        /// </summary>
+        /// <param name="acc"></param>
+        /// <returns></returns>
+        public static decimal CalcStkMoneyFrozen(this IAccount account)
+        {
+            return FilterPendingOrders(account, SecurityType.STK).Sum(e => account.CalOrderFundRequired(e, 0));
         }
 
 
@@ -531,53 +547,29 @@ namespace TradingLib.Common
         }
 
         /// <summary>
-        /// 股票保证金
-        /// </summary>
-        /// <param name="acc"></param>
-        /// <returns></returns>
-        public static decimal CalcStkMargin(this IAccount account)
-        {
-            return FilterPositions(account, SecurityType.STK).Sum(pos => pos.CalcPositionMargin());
-        }
-
-        /// <summary>
-        /// 股票冻结保证金
-        /// </summary>
-        /// <param name="acc"></param>
-        /// <returns></returns>
-        public static decimal CalcStkMarginFrozen(this IAccount account)
-        {
-            return FilterPendingOrders(account, SecurityType.STK).Sum(e => account.CalOrderFundRequired(e, 0));
-        }
-
-        /// <summary>
-        /// 股票现金值
-        /// </summary>
-        /// <param name="account"></param>
-        /// <returns></returns>
-        public static decimal CalcStkCash(this IAccount account)
-        {
-            return account.CalcStkRealizedPL() - account.CalcStkCommission() - account.CalcStkPositionCost();
-        }
-
-        /// <summary>
-        /// 股票市值
+        /// 股票净值
         /// </summary>
         /// <param name="account"></param>
         /// <returns></returns>
         public static decimal CalcStkLiquidation(this IAccount account)
         {
-            return account.CalcStkPositionMarketValue() + account.CalcStkCash();
+            return account.CalcStkPositionMarketValue() - account.CalcStkPositionCost() + account.CalcStkRealizedPL() - account.CalcStkCommission();
         }
 
         /// <summary>
         /// 股票资金占用
+        /// 当日股票买入金额 - 卖出金额 + 冻结资金
+        /// 计算当日股票资金占用时 需要加上 资金净变动 买入 - 卖出
+        /// 而不是计算持仓的资金占用
+        /// 因为在结算时 需要将股票资金净变动体现到权益变化上
+        /// 资金账户减少  股票持仓增加
+        /// 股票持仓变少  资金账户增加
         /// </summary>
         /// <param name="account"></param>
         /// <returns></returns>
         public static decimal CalcStkMoneyUsed(this IAccount account)
         {
-            return account.CalcStkMargin() + account.CalcStkMarginFrozen();
+            return account.CalcStkMoneyNetChange()+ account.CalcStkMoneyFrozen();
         }
         #endregion
 
