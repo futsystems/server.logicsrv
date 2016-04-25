@@ -200,9 +200,10 @@ namespace TradingLib.Common
         public decimal UnRealizedPL { get { return _acc.UnRealizedPL; } }
 
         /// <summary>
-        /// 结算时的盯市盈亏
+        /// 证券市值
         /// </summary>
-        //public decimal SettleUnRealizedPL { get { return _acc.SettleUnRealizedPL; } }
+        public decimal SecurityMarketValue { get { return _acc.SecurityMarketValue; } }
+
         /// <summary>
         /// 手续费
         /// </summary>

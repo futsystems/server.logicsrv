@@ -55,8 +55,51 @@ namespace TradingLib.Common
         public int StockBidSize { get { return _bs * 100; } set { _bs = (int)((double)value / 100); } }
         public int StockAskSize { get { return _os * 100; } set { _os = (int)((double)value / 100); } }
         public int StockSize { get { return _size * 100; } set { _size = (int)(value / 100); } }
-       
-        
+
+
+        decimal _askprice2;
+        decimal _bidprice2;
+        int _asksize2;
+        int _bidsize2;
+
+        decimal _askprice3;
+        decimal _bidprice3;
+        int _asksize3;
+        int _bidsize3;
+
+        decimal _askprice4;
+        decimal _bidprice4 ;
+        int _asksize4;
+        int _bidsize4;
+
+        decimal _askprice5;
+        decimal _bidprice5;
+        int _asksize5;
+        int _bidsize5;
+
+
+
+        public decimal AskPrice2 { get { return _askprice2; } set { _askprice2 = value; } }
+        public decimal BidPrice2 { get { return _bidprice2; } set { _bidprice2 = value; } }
+        public int AskSize2 { get { return _asksize2; } set { _asksize2 = value; } }
+        public int BidSize2 { get { return _bidsize2; } set { _bidsize2 = value; } }
+
+        public decimal AskPrice3 { get { return _askprice3; } set { _askprice3 = value; } }
+        public decimal BidPrice3 { get { return _bidprice3; } set { _bidprice3 = value; } }
+        public int AskSize3 { get { return _asksize3; } set { _asksize3 = value; } }
+        public int BidSize3 { get { return _bidsize3; } set { _bidsize3 = value; } }
+
+        public decimal AskPrice4 { get { return _askprice4; } set { _askprice4 = value; } }
+        public decimal BidPrice4 { get { return _bidprice4; } set { _bidprice4 = value; } }
+        public int AskSize4 { get { return _asksize4; } set { _asksize4 = value; } }
+        public int BidSize4 { get { return _bidsize4; } set { _bidsize4 = value; } }
+
+        public decimal AskPrice5 { get { return _askprice5; } set { _askprice5 = value; } }
+        public decimal BidPrice5 { get { return _bidprice5; } set { _bidprice5 = value; } }
+        public int AskSize5 { get { return _asksize5; } set { _asksize5 = value; } }
+        public int BidSize5 { get { return _bidsize5; } set { _bidsize5 = value; } }
+
+
 
 
         //public bool isIndex { get { return _size < 0; } }
@@ -125,6 +168,28 @@ namespace TradingLib.Common
             _lowerlimit = 0;
             _preclose = 0;
             _datafeed = QSEnumDataFeedTypes.DEFAULT;
+
+            _askprice2 = 0;
+            _bidprice2 = 0;
+            _asksize2 = 0;
+            _bidsize2 = 0;
+
+            _askprice3 = 0;
+            _bidprice3 = 0;
+            _asksize3 = 0;
+            _bidsize3 = 0;
+
+            _askprice4 = 0;
+            _bidprice4 = 0;
+            _asksize4 = 0;
+            _bidsize4 = 0;
+
+
+            _askprice5 = 0;
+            _bidprice5 = 0;
+            _asksize5 = 0;
+            _bidsize5  = 0;
+
         }
 
         public TickImpl(DateTime time)
@@ -161,6 +226,28 @@ namespace TradingLib.Common
             _lowerlimit = 0;
             _preclose = 0;
             _datafeed = QSEnumDataFeedTypes.DEFAULT;
+
+            _askprice2 = 0;
+            _bidprice2 = 0;
+            _asksize2 = 0;
+            _bidsize2 = 0;
+
+            _askprice3 = 0;
+            _bidprice3 = 0;
+            _asksize3 = 0;
+            _bidsize3 = 0;
+
+            _askprice4 = 0;
+            _bidprice4 = 0;
+            _asksize4 = 0;
+            _bidsize4 = 0;
+
+
+            _askprice5 = 0;
+            _bidprice5 = 0;
+            _asksize5 = 0;
+            _bidsize5 = 0;
+
         }
         public static TickImpl Copy(Tick c)
         {
@@ -202,6 +289,26 @@ namespace TradingLib.Common
             k.LowerLimit = c.LowerLimit;
             k.PreClose = c.PreClose;
             k.DataFeed = c.DataFeed;
+
+            k.AskPrice2 = c.AskPrice2;
+            k.BidPrice2 = c.BidPrice2;
+            k.AskSize2 = c.AskSize2;
+            k.BidSize2 = c.BidSize2;
+
+            k.AskPrice3 = c.AskPrice3;
+            k.BidPrice3 = c.BidPrice3;
+            k.AskSize3 = c.AskSize3;
+            k.BidSize3 = c.BidSize3;
+
+            k.AskPrice4 = c.AskPrice4;
+            k.BidPrice4 = c.BidPrice4;
+            k.AskSize4 = c.AskSize4;
+            k.BidSize4 = c.BidSize4;
+
+            k.AskPrice5 = c.AskPrice5;
+            k.BidPrice5 = c.BidPrice5;
+            k.AskSize5 = c.AskSize5;
+            k.BidSize5 = c.BidSize5;
 
             return k;
         }

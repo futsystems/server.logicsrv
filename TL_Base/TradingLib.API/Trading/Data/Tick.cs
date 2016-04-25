@@ -84,6 +84,27 @@ namespace TradingLib.API
         /// </summary>
         string AskExchange { get; set; }
 
+
+        decimal AskPrice2 { get; set; }
+        decimal BidPrice2 { get; set; }
+        int AskSize2 { get; set; }
+        int BidSize2 { get; set; }
+
+        decimal AskPrice3 { get; set; }
+        decimal BidPrice3 { get; set; }
+        int AskSize3 { get; set; }
+        int BidSize3 { get; set; }
+
+        decimal AskPrice4 { get; set; }
+        decimal BidPrice4 { get; set; }
+        int AskSize4 { get; set; }
+        int BidSize4 { get; set; }
+
+        decimal AskPrice5 { get; set; }
+        decimal BidPrice5 { get; set; }
+        int AskSize5 { get; set; }
+        int BidSize5 { get; set; }
+
         #endregion
 
         /// <summary>

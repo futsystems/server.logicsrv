@@ -265,6 +265,8 @@ namespace TradingLib.DataFarm
                             else
                             {
                                 string tickstr = tickdata.First().ReadString(Encoding.UTF8);
+                                //清空数据否则会内存泄露
+                                tickdata.Clear();
 
                                 //logger.Info("ticksr:" + tickstr);
                                 string[] p = tickstr.Split('^');

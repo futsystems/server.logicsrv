@@ -20,6 +20,7 @@ namespace TradingLib.Common
         public decimal BuyPower { get; set; }//购买能力
         public decimal RealizedPL { get; set; }//平仓盈亏
         public decimal UnRealizedPL { get; set; }//浮动盈亏
+        public decimal SecurityMarketValue { get; set; }//证券市值
         public decimal Commission { get; set; }//手续费
         public decimal Profit { get; set; }//净利
         public int TotalPositionSize { get; set; }//所有持仓手数量
@@ -42,6 +43,8 @@ namespace TradingLib.Common
             sb.Append(info.RealizedPL);
             sb.Append(d);
             sb.Append(info.UnRealizedPL);
+            sb.Append(d);
+            sb.Append(info.SecurityMarketValue);
             sb.Append(d);
             sb.Append(info.Commission);
             sb.Append(d);
@@ -68,11 +71,12 @@ namespace TradingLib.Common
                 a.BuyPower = Decimal.Parse(r[3]);
                 a.RealizedPL = Decimal.Parse(r[4]);
                 a.UnRealizedPL = Decimal.Parse(r[5]);
-                a.Commission = Decimal.Parse(r[6]);
-                a.Profit = Decimal.Parse(r[7]);
-                a.Account = r[8];
-                a.TotalPositionSize = int.Parse(r[9]);
-                a.Credit = decimal.Parse(r[10]);
+                a.SecurityMarketValue = decimal.Parse(r[6]);
+                a.Commission = Decimal.Parse(r[7]);
+                a.Profit = Decimal.Parse(r[8]);
+                a.Account = r[9];
+                a.TotalPositionSize = int.Parse(r[10]);
+                a.Credit = decimal.Parse(r[11]);
             }
             return a;
         }

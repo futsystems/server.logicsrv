@@ -127,7 +127,7 @@ namespace TradingLib.Common
             info.Account = acc.ID;
             info.NowEquity = acc.NowEquity;
             info.Margin = acc.Margin;
-            info.ForzenMargin = acc.MarginFrozen;// acc.ForzenMargin;
+            info.ForzenMargin = acc.MarginFrozen;
             info.BuyPower = acc.AvabileFunds;
             info.RealizedPL = acc.RealizedPL;
             info.UnRealizedPL = acc.UnRealizedPL;

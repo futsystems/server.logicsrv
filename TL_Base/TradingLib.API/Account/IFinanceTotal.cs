@@ -85,6 +85,12 @@ namespace TradingLib.API
         /// </summary>
         decimal MoneyUsed { get; }
 
+
+        /// <summary>
+        /// 证券市值
+        /// </summary>
+        decimal SecurityMarketValue { get; }
+
         /// <summary>
         /// 总净值 帐户当前权益=总净值
         /// </summary>
