@@ -83,6 +83,7 @@ namespace TradingLib.Core
 
         ConfigDB _cfgdb;
         bool _verbose = false;
+        int _sendWaterMark = 20000;
         /// <summary>
         /// AsyncServer构造函数
         /// </summary>
@@ -111,6 +112,15 @@ namespace TradingLib.Core
                 _cfgdb.UpdateConfig("Verbose", QSEnumCfgType.Bool, false, "是否打印底层通讯详细信息");
             }
             _verbose = _cfgdb["Verbose"].AsBool();
+
+
+            if (!_cfgdb.HaveConfig("SendWaterMark"))
+            {
+                _cfgdb.UpdateConfig("SendWaterMark", QSEnumCfgType.Int, 20000, "系统发送水位");
+            }
+            _sendWaterMark = _cfgdb["SendWaterMark"].AsInt();
+
+            
 
         }
 
@@ -336,6 +346,13 @@ namespace TradingLib.Core
                 using (ZSocket publisher = new ZSocket(ctx, ZSocketType.PUB))//PubSocket 行情发布端口
                 using (ZSocket serviceRep = new ZSocket(ctx, ZSocketType.REP))//RepSocket 服务查询端口
                 {
+                    frontend.SendHighWatermark = _sendWaterMark;
+                    backend.SendHighWatermark = _sendWaterMark;
+                    outchannel.SendHighWatermark = _sendWaterMark;
+                    outClient.SendHighWatermark = _sendWaterMark;
+                    serviceRep.SendHighWatermark = _sendWaterMark;
+
+
                     //前端Router用于注册Client
                     frontend.Bind("tcp://" + _serverip + ":" + Port.ToString());
                     //后端用于向worker线程发送消息,worker再去执行
@@ -449,6 +466,8 @@ namespace TradingLib.Core
         void RepProc(ZSocket rep, ZMessage req)
         {
             byte[] buffer = req.First().Read();
+            req.Clear();
+
             Message msg = Message.gotmessage(buffer);
 
             logger.Info(string.Format("$$$ RepSrv Got Message Type:{0} Content:{1}", msg.Type, msg.Content));
@@ -546,6 +565,8 @@ namespace TradingLib.Core
                 string front = cnt == 3 ? request[0].ReadString(Encoding.UTF8) : string.Empty;
                 string address = cnt == 3 ? request[1].ReadString(Encoding.UTF8) : request[0].ReadString(Encoding.UTF8);
                 Message msg = Message.gotmessage(request.Last().Read());
+                request.Clear();
+
                 //消息合法判定
                 if (!msg.isValid) return;
 

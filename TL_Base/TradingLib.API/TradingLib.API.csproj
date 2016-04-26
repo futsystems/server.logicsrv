@@ -38,9 +38,6 @@
     <Reference Include="Common.Logging.Core">
       <HintPath>..\..\packages\Common.Logging.Core.3.0.0\lib\net40\Common.Logging.Core.dll</HintPath>
     </Reference>
-    <Reference Include="Common.Logging.NLog31">
-      <HintPath>..\..\packages\Common.Logging.NLog31.3.0.0\lib\net40\Common.Logging.NLog31.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />

@@ -231,6 +231,9 @@ namespace DataFeed.FastTick
                             {
 
                                 string tickstr =tickdata.First().ReadString(Encoding.UTF8);
+                                //清空zmessage 否则内存溢出
+                                tickdata.Clear();
+
                                 string[] p = tickstr.Split('^');
                                 if (p.Length > 1)
                                 {
@@ -299,6 +302,7 @@ namespace DataFeed.FastTick
                         if(_symbolreq.PollIn(poller,out response,out error,timeout))
                         {
                             logger.Debug(string.Format("Got Rep Response:", response.First().ReadString(Encoding.UTF8)));
+                            response.Clear();
                         }
                         else
                         {
@@ -333,6 +337,7 @@ namespace DataFeed.FastTick
                         if (_symbolreq.PollIn(poller, out response, out error, timeout))
                         {
                             logger.Debug(string.Format("Got Rep Response:", response.First().ReadString(Encoding.UTF8)));
+                            response.Clear();
                         }
                         else
                         {

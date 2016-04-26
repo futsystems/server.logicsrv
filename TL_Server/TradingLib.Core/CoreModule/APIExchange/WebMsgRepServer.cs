@@ -132,6 +132,8 @@ namespace TradingLib.Core
                             {
 
                                 string str = request.First().ReadString();
+                                request.Clear();
+
                                 logger.Info("WebAPI Request:" + str);
                                 JsonReply re = handleWebTask(str);
                                 if (re != null)
