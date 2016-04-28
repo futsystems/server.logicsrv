@@ -222,6 +222,11 @@ namespace TradingLib.API
         /// </summary>
         TIME = 5,
 
+        /// <summary>
+        /// 股票行情数据
+        /// </summary>
+        STKSNAPSHOT = 6,
+
     }
 
     public class InvalidTick : Exception { }
