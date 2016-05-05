@@ -180,7 +180,19 @@ namespace TradingLib.Contrib.APIService
 
                             TLCtxHelper.CmdAuthCashOperation.CashOperation(acc.ID, amount, QSEnumEquityType.OwnEquity, "", "API入金");
 
-                            return new JsonReply(0, string.Format("Deposit:{0} success",amount));
+                            return new JsonReply(0, string.Format("Deposit:{0} success",amount),new
+                                {
+                                    UserID = acc.UserID,
+                                    Account = acc.ID,
+                                    CashIn= acc.CashIn,
+                                    CashOut = acc.CashOut,
+                                    LastEquity = acc.LastEquity,
+                                    LastCredit = acc.LastCredit,
+                                    NowEquity = acc.NowEquity,
+                                    RealizedPL = acc.RealizedPL,
+                                    UnRealizedPL = acc.UnRealizedPL,
+                                    Commission = acc.Commission,
+                                });
                         }
                     #endregion
 
@@ -230,7 +242,19 @@ namespace TradingLib.Contrib.APIService
                             //执行出金操作
                             TLCtxHelper.CmdAuthCashOperation.CashOperation(acc.ID, amount*-1, QSEnumEquityType.OwnEquity, "", "API入金");
 
-                            return new JsonReply(0, string.Format("Withdraw:{0} success", amount));
+                            return new JsonReply(0, string.Format("Withdraw:{0} success", amount),new
+                                {
+                                    UserID = acc.UserID,
+                                    Account = acc.ID,
+                                    CashIn= acc.CashIn,
+                                    CashOut = acc.CashOut,
+                                    LastEquity = acc.LastEquity,
+                                    LastCredit = acc.LastCredit,
+                                    NowEquity = acc.NowEquity,
+                                    RealizedPL = acc.RealizedPL,
+                                    UnRealizedPL = acc.UnRealizedPL,
+                                    Commission = acc.Commission,
+                                });
                         }
                     #endregion
 
