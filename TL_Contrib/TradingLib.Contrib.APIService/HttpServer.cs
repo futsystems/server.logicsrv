@@ -68,6 +68,7 @@ namespace TradingLib.Contrib.APIService
                     case "ADD_USER":
                         {
                             reqcheck.AddParams("user_id", request.Params["user_id"]);
+                            reqcheck.AddParams("agent_id", request.Params["agent_id"]);
                             string md5sign = reqcheck.GetMd5Sign(_md5key);
                             if (request.Params["md5sign"] != md5sign)
                             {
@@ -87,7 +88,17 @@ namespace TradingLib.Contrib.APIService
                                 return new JsonReply(102, string.Format("UserID:{0}'s account already created", user_id));
                             }
 
-                            string account = TLCtxHelper.Ctx.ClearCentre.AddAccount(user_id);
+                            int agent_id = 0;
+                            int.TryParse(request.Params["agent_id"], out agent_id);
+                            exist = BasicTracker.ManagerTracker[agent_id] != null;
+                            if (!exist)
+                            {
+                                return new JsonReply(104, string.Format("Agent:{0}'s is not  exist", user_id));
+                            }
+                                
+
+                            string account = TLCtxHelper.Ctx.ClearCentre.AddAccount(user_id, agent_id);
+
                             if (string.IsNullOrEmpty(account))
                             {
                                 return new JsonReply(103, "Account create error");

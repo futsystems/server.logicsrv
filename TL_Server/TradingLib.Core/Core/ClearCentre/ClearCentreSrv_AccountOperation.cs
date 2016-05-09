@@ -505,12 +505,12 @@ namespace TradingLib.Core
         /// </summary>
         /// <param name="user_id"></param>
         /// <returns></returns>
-        public string AddAccount(int user_id)
+        public string AddAccount(int user_id,int agent_id)
         {
             AccountCreation create = new AccountCreation();
-            create.BaseManager = BasicTracker.ManagerTracker["root"];
+            create.BaseManager = BasicTracker.ManagerTracker[agent_id];
             create.Category = QSEnumAccountCategory.SIMULATION;
-            create.Domain = BasicTracker.DomainTracker[1];
+            create.Domain = BasicTracker.DomainTracker[1];//第一个分区
             create.RouterType = QSEnumOrderTransferType.SIM;
             create.UserID = user_id;
             this.AddAccount(ref create);
