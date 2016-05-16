@@ -173,6 +173,7 @@ namespace TradingLib.Core
             else
             {
                 
+                //
                 int size = account.CanOpenSize(symbol,request.Side,request.OffsetFlag);
 
                 logger.Info("got max opensize:" + size.ToString());

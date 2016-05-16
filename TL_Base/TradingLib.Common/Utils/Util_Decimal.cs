@@ -57,6 +57,20 @@ namespace TradingLib.Common
         {
             return val.ToFormatStr(sec.GetPriceFormat());
         }
+
+        /// <summary>
+        /// 获得小数位数
+        /// </summary>
+        /// <param name="val"></param>
+        /// <returns></returns>
+        public static int GetDecimalPlaces(this decimal val)
+        {
+            string[] p = val.ToString().Split('.');
+            if (p.Length <= 1)
+                return 0;
+            else
+                return p[1].ToCharArray().Length;
+        }
         #endregion
         #region decimal 转换成中文大写
         private static String[] Ls_ShZ = { "零", "壹", "贰", "叁", "肆", "伍", "陆", "柒", "捌", "玖", "拾" };

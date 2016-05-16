@@ -49,6 +49,8 @@ namespace TradingLib.Common
                 return this.AvabileFunds;
             if (symbol.SecurityType == SecurityType.OPT)
                 return this.AvabileFunds;
+            if (symbol.SecurityType == SecurityType.STK)
+                return this.AvabileFunds;
             else
                 return 0;
         }

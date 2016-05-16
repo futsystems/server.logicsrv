@@ -72,6 +72,25 @@ namespace TradingLib.Common
             lowerlimit.Clear();
             settlement.Clear();
             preclose.Clear();
+
+            ask2.Clear();
+            bid2.Clear();
+            ask3.Clear();
+            bid3.Clear();
+            ask4.Clear();
+            bid4.Clear();
+            ask5.Clear();
+            bid5.Clear();
+
+            asksize2.Clear();
+            bidsize2.Clear();
+            asksize3.Clear();
+            bidsize3.Clear();
+            asksize4.Clear();
+            bidsize4.Clear();
+            asksize5.Clear();
+            bidsize5.Clear();
+
         }
 
 
@@ -118,6 +137,25 @@ namespace TradingLib.Common
             settlement = new GenericTracker<decimal>(_estlabels);
             preclose = new GenericTracker<decimal>(_estlabels);
 
+            ask2 = new GenericTracker<decimal>(_estlabels);
+            bid2 = new GenericTracker<decimal>(_estlabels);
+            ask3 = new GenericTracker<decimal>(_estlabels);
+            bid3 = new GenericTracker<decimal>(_estlabels);
+            ask4 = new GenericTracker<decimal>(_estlabels);
+            bid4 = new GenericTracker<decimal>(_estlabels);
+            ask5 = new GenericTracker<decimal>(_estlabels);
+            bid5 = new GenericTracker<decimal>(_estlabels);
+
+            asksize2 = new GenericTracker<int>(_estlabels);
+            bidsize2 = new GenericTracker<int>(_estlabels);
+            asksize3 = new GenericTracker<int>(_estlabels);
+            bidsize3 = new GenericTracker<int>(_estlabels);
+            asksize4 = new GenericTracker<int>(_estlabels);
+            bidsize4 = new GenericTracker<int>(_estlabels);
+            asksize5 = new GenericTracker<int>(_estlabels);
+            bidsize5 = new GenericTracker<int>(_estlabels);
+
+
             // setup generic trackers to track tick information
             last.NewTxt += new TextIdxDelegate(last_NewTxt);
         }
@@ -158,6 +196,24 @@ namespace TradingLib.Common
             settlement.addindex(txt, 0);
             preclose.addindex(txt, 0);
 
+            ask2.addindex(txt, 0);
+            bid2.addindex(txt, 0);
+            ask3.addindex(txt, 0);
+            bid3.addindex(txt, 0);
+            ask4.addindex(txt, 0);
+            bid4.addindex(txt, 0);
+            ask5.addindex(txt, 0);
+            bid5.addindex(txt, 0);
+
+            asksize2.addindex(txt, 0);
+            bidsize2.addindex(txt, 0);
+            asksize3.addindex(txt, 0);
+            bidsize3.addindex(txt, 0);
+            asksize4.addindex(txt, 0);
+            bidsize4.addindex(txt, 0);
+            asksize5.addindex(txt, 0);
+            bidsize5.addindex(txt, 0);
+
             if (NewTxt!=null)
                 NewTxt(txt,idx);
         }
@@ -188,6 +244,28 @@ namespace TradingLib.Common
         GenericTracker<decimal> settlement;
         GenericTracker<decimal> preclose;
 
+        GenericTracker<decimal> ask2;
+        GenericTracker<decimal> bid2;
+        GenericTracker<int> asksize2;
+        GenericTracker<int> bidsize2;
+
+        GenericTracker<decimal> ask3;
+        GenericTracker<decimal> bid3;
+        GenericTracker<int> asksize3;
+        GenericTracker<int> bidsize3;
+
+        GenericTracker<decimal> ask4;
+        GenericTracker<decimal> bid4;
+        GenericTracker<int> asksize4;
+        GenericTracker<int> bidsize4;
+
+        GenericTracker<decimal> ask5;
+        GenericTracker<decimal> bid5;
+        GenericTracker<int> asksize5;
+        GenericTracker<int> bidsize5;
+
+
+            
         public string Display(int idx) { return this[idx].ToString(); }
         public string Display(string txt) { return this[txt].ToString(); }
 
@@ -370,6 +448,26 @@ namespace TradingLib.Common
                 k.LowerLimit = lowerlimit[idx];
                 k.Settlement = settlement[idx];
                 k.PreClose = preclose[idx];
+
+                k.AskPrice2 = ask2[idx];
+                k.BidPrice2 = bid2[idx];
+                k.AskPrice3 = ask2[idx];
+                k.BidPrice3 = bid2[idx];
+                k.AskPrice4 = ask2[idx];
+                k.BidPrice4 = bid2[idx];
+                k.AskPrice5 = ask2[idx];
+                k.BidPrice5 = bid2[idx];
+
+                k.AskSize2 = asksize2[idx];
+                k.BidSize2 = bidsize2[idx];
+                k.AskSize3 = asksize3[idx];
+                k.BidSize3 = bidsize3[idx];
+                k.AskSize4 = asksize4[idx];
+                k.BidSize4 = bidsize4[idx];
+                k.AskSize5 = asksize5[idx];
+                k.BidSize5 = bidsize5[idx];
+
+                
                 return k;
             }
         }
@@ -404,7 +502,7 @@ namespace TradingLib.Common
             get
             {
                 int idx = last.getindex(sym);
-                if (idx < 0) return new TickImpl();
+                if (idx < 0) return null;// new TickImpl();
                 return this[idx];
             }
         }
@@ -494,6 +592,29 @@ namespace TradingLib.Common
                 preclose[idx] = k.PreClose;
             }
 
+            //股票行情快照 保存盘口2-5
+            if (k.Type == EnumTickType.STKSNAPSHOT)
+            {
+                ask2[idx] = k.AskPrice2;
+                bid2[idx] = k.BidPrice2;
+                ask3[idx] = k.AskPrice3;
+                bid3[idx] = k.BidPrice3;
+                ask4[idx] = k.AskPrice4;
+                bid4[idx] = k.BidPrice4;
+                ask5[idx] = k.AskPrice5;
+                bid5[idx] = k.BidPrice5;
+
+                asksize2[idx] = k.AskSize2;
+                bidsize2[idx] = k.BidSize2;
+                asksize3[idx] = k.AskSize3;
+                bidsize3[idx] = k.BidSize3;
+                asksize4[idx] = k.AskSize4;
+                bidsize4[idx] = k.BidSize4;
+                asksize5[idx] = k.AskSize5;
+                bidsize5[idx] = k.BidSize5;
+
+
+            }
             return true;
         }
     }

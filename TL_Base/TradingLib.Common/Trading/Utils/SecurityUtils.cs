@@ -39,8 +39,18 @@ namespace TradingLib.Common
                 return "{0:F0}";
             else
                 return "{0:F" + p[1].ToCharArray().Length.ToString() + "}";
-
-        
         }
+
+        /// <summary>
+        /// 获得某个品种的小数位数
+        /// </summary>
+        /// <param name="sec"></param>
+        /// <returns></returns>
+        public static int GetDecimalPlaces(this SecurityFamily sec)
+        {
+            return sec.PriceTick.GetDecimalPlaces();
+        }
+
+
     }
 }

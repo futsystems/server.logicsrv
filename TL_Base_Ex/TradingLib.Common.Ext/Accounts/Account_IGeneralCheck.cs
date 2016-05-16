@@ -61,53 +61,69 @@ namespace TradingLib.Common
         /// </summary>
         /// <param name="symbol"></param>
         /// <returns></returns>
-        public virtual int CanOpenSize(Symbol symbol,bool side,QSEnumOffsetFlag flag)
+        public virtual int CanOpenSize(Symbol symbol, bool side, QSEnumOffsetFlag flag)
         {
-            //未启用单向大边
-            if (!this.GetParamSideMargin())
+            switch (symbol.SecurityType)
             {
-                decimal price = TLCtxHelper.ModuleDataRouter.GetAvabilePrice(symbol.Symbol);
-
-                decimal fundperlot = this.CalOrderMarginFrozen(symbol, 1)*this.GetExchangeRate(symbol.SecurityFamily);
-
-                decimal avabilefund = GetFundAvabile(symbol);
-
-                Util.Debug("QryCanOpenSize Fundavablie:" + avabilefund.ToString() + " Symbol:" + symbol.Symbol + " Price:" + price.ToString() + " Fundperlot:" + fundperlot.ToString());
-                return (int)(avabilefund / fundperlot);
-            }
-            else
-            {
-                decimal fundperlot = this.CalOrderMarginFrozen(symbol, 1) *this.GetExchangeRate(symbol.SecurityFamily);
-
-                decimal avabilefund = GetFundAvabile(symbol);
-
-                int canfronzensize = (int)(avabilefund / fundperlot);//通过当前可用资金 和 每手 占用资金来估算可开数量
-                //Util.Debug(string.Format("QryCanOpenSize[MarginSizde] fund:{0} perlot:{1}",avabilefund,fundperlot), QSEnumDebugLevel.INFO);
-                //单向大边情况下，大边就是该数值，如果是小边则是大边数量 + 可开数量 - 小边数量
-                MarginSet ms = this.CalFutMarginSet().Where(t => t.Code.Equals(symbol.SecurityFamily.Code)).FirstOrDefault();
-                if (ms == null)
-                {
-                    return canfronzensize;
-                }
-                else
-                {
-                    
-                    Util.Error(string.Format("QryCanOpenSize[MarginSizde] symbol:{0} side:{1} bigside:{2} bighold:{3} smalhold:{4} netfronzen:{5}  bigpending:{6} smallpending:{7} | fund:{8} prelot:{9}", symbol.Symbol, side, ms.MarginSide, ms.BigHoldSize, ms.SmallHoldSize, ms.NetFronzenSize, ms.BigPendingOpenSize, ms.SmallPendingOpenSize,avabilefund,fundperlot));
-                    //如果查询大边可开数量
-                    if (side == ms.MarginSide)
+                case SecurityType.FUT:
                     {
-                        //大边可开数量 = 净冻结数量 + 可用资金可开数量 - 大便待开数量
-                        return ms.NetFronzenSize + canfronzensize - ms.BigPendingOpenSize;
-                    }
-                    else
-                    {
-                        //大边持仓 - 小边持仓 + 净冻结数量 + 可用资金可开仓数量 - 小边待开仓数量
-                        return ms.BigHoldSize - ms.SmallHoldSize + ms.NetFronzenSize + canfronzensize - ms.SmallPendingOpenSize;
-                    }
-                    
-                }
+                        //未启用单向大边
+                        if (!this.GetParamSideMargin())
+                        {
+                            decimal price = TLCtxHelper.ModuleDataRouter.GetAvabilePrice(symbol.Symbol);
 
+                            decimal fundperlot = this.CalOrderMarginFrozen(symbol, 1) * this.GetExchangeRate(symbol.SecurityFamily);
+
+                            decimal avabilefund = GetFundAvabile(symbol);
+
+                            Util.Debug("QryCanOpenSize Fundavablie:" + avabilefund.ToString() + " Symbol:" + symbol.Symbol + " Price:" + price.ToString() + " Fundperlot:" + fundperlot.ToString());
+                            return (int)(avabilefund / fundperlot);
+                        }
+                        else
+                        {
+                            decimal fundperlot = this.CalOrderMarginFrozen(symbol, 1) * this.GetExchangeRate(symbol.SecurityFamily);
+
+                            decimal avabilefund = GetFundAvabile(symbol);
+
+                            int canfronzensize = (int)(avabilefund / fundperlot);//通过当前可用资金 和 每手 占用资金来估算可开数量
+                            //Util.Debug(string.Format("QryCanOpenSize[MarginSizde] fund:{0} perlot:{1}",avabilefund,fundperlot), QSEnumDebugLevel.INFO);
+                            //单向大边情况下，大边就是该数值，如果是小边则是大边数量 + 可开数量 - 小边数量
+                            MarginSet ms = this.CalFutMarginSet().Where(t => t.Code.Equals(symbol.SecurityFamily.Code)).FirstOrDefault();
+                            if (ms == null)
+                            {
+                                return canfronzensize;
+                            }
+                            else
+                            {
+
+                                Util.Error(string.Format("QryCanOpenSize[MarginSizde] symbol:{0} side:{1} bigside:{2} bighold:{3} smalhold:{4} netfronzen:{5}  bigpending:{6} smallpending:{7} | fund:{8} prelot:{9}", symbol.Symbol, side, ms.MarginSide, ms.BigHoldSize, ms.SmallHoldSize, ms.NetFronzenSize, ms.BigPendingOpenSize, ms.SmallPendingOpenSize, avabilefund, fundperlot));
+                                //如果查询大边可开数量
+                                if (side == ms.MarginSide)
+                                {
+                                    //大边可开数量 = 净冻结数量 + 可用资金可开数量 - 大便待开数量
+                                    return ms.NetFronzenSize + canfronzensize - ms.BigPendingOpenSize;
+                                }
+                                else
+                                {
+                                    //大边持仓 - 小边持仓 + 净冻结数量 + 可用资金可开仓数量 - 小边待开仓数量
+                                    return ms.BigHoldSize - ms.SmallHoldSize + ms.NetFronzenSize + canfronzensize - ms.SmallPendingOpenSize;
+                                }
+
+                            }
+
+                        }
+                    }
+                case SecurityType.STK:
+                    {
+                        decimal avabilefund = GetFundAvabile(symbol);
+                        //decimal price = TLCtxHelper.ModuleDataRouter.GetAvabilePrice(symbol.Symbol);
+                        decimal fundperlot = this.CalOrderMarginFrozen(symbol, 1) * this.GetExchangeRate(symbol.SecurityFamily);
+                        return (int)(avabilefund / fundperlot);
+                    }
+                default:
+                    return 0;
             }
+
         }
 
         public virtual IEnumerable<string> GetNotice()
