@@ -54,10 +54,6 @@ namespace TradingLib.Core
             errortitle = string.Empty;
             needlog = true;
 
-            //bool periodAuctionPlace = false;
-            // bool periodAuctionExecution = false;
-            //bool periodContinuous = false;
-
             //1 结算中心检查
             //1.1检查结算中心是否正常状态 如果历史结算状态则需要将结算记录补充完毕后才可以接受新的委托
             if (!TLCtxHelper.ModuleSettleCentre.IsNormal)
@@ -74,14 +70,6 @@ namespace TradingLib.Core
                 needlog = false;
                 return false;
             }
-
-            //1.2检查当前是否是交易日
-            //if (!TLCtxHelper.ModuleSettleCentre.IsTradingday)//非周六0->2:30 周六0:00->2:30有交易(金银夜盘交易)
-            //{
-            //    errortitle = "NOT_TRADINGDAY";//非交易日
-            //    needlog = false;
-            //    return false;
-            //}
 
             //1.3检查结算中心是否处于结算状态 结算状态不接受任何委托
             if (TLCtxHelper.ModuleSettleCentre.IsInSettle)
@@ -164,6 +152,10 @@ namespace TradingLib.Core
                 //}
             }
             #endregion
+
+
+
+
             //熔断状态判定
             if (_haltEnable)
             {
@@ -196,50 +188,8 @@ namespace TradingLib.Core
                     }
                 }
             }
-            /*
-            periodAuctionPlace = o.oSymbol.SecurityFamily.IsInAuctionTime();//是否处于集合竞价报单时段
-            periodAuctionExecution = o.oSymbol.SecurityFamily.IsInActionExutionTime();//是否处于集合竞价撮合时段
-            periodContinuous = o.oSymbol.SecurityFamily.IsInContinuous();//是否处于连续竞价阶段
 
-
-            //3.3检查合约交易时间段
-            if (_marketopencheck)
-            {
-                if (auctionEnable)
-                {
-                    //合约市场开市时间检查
-                    if ((!periodContinuous) && (!periodAuctionPlace))
-                    {
-                        errortitle = "SYMBOL_NOT_MARKETTIME";//非交易时间段
-                        return false;
-                    }
-
-                    //处于集合竞价 只允许限价单进入
-                    if (periodAuctionPlace && (!o.isLimit))
-                    {
-                        errortitle = "ACTION_NEED_LIMIT";
-                        return false;
-                    }
-                }
-                else //非集合竞价 检查合约正常连续竞价时间段
-                {
-                    if (!periodContinuous)
-                    {
-                        errortitle = "SYMBOL_NOT_MARKETTIME";//非交易时间段
-                        return false;
-                    }
-                }
-
-                ////合约市场开市时间检查(对不同的市场进行开市时间常规检查)
-                //if (!o.oSymbol.IsMarketTime)
-                //{
-                //    errortitle = "SYMBOL_NOT_MARKETTIME";//非交易时间段
-                //    return false;
-                //}
-            }
-            **/
-
-            //4.开仓标识与锁仓权限检查
+            //开仓标识与锁仓权限检查
             //4.1自动开平标识识别
             bool havelong = account.GetHaveLongPosition(o.Symbol);
             bool haveshort = account.GetHaveShortPosition(o.Symbol);
@@ -282,12 +232,12 @@ namespace TradingLib.Core
 
             //4.2检查锁仓方向
             //获得委托持仓操作方向
-            bool orderside = o.PositionSide;
 
             //开仓操作
             if (o.IsEntryPosition)
             {
-                //反待成交开仓委托
+                bool orderside = o.PositionSide;
+                //反向待成交开仓委托
                 bool othersideentry = account.GetPendingEntrySize(o.Symbol, !orderside) > 0;
 
                 //委托多头开仓操作,同时又空头头寸 或者 委托空头开仓操作，同时又有多头头寸 则表明在持有头寸的时候进行了反向头寸的操作
@@ -303,11 +253,42 @@ namespace TradingLib.Core
                     if ((o.oSymbol.SecurityType != SecurityType.FUT) || (!account.GetParamPositionLock()))
                     {
                         errortitle = "TWO_SIDE_POSITION_HOLD_FORBIDDEN";
+                        //QSEnumDebugLevel QSEnumDebugLevel  
+                        //QSEnumDebugLevel QSEnumDebugLevel  
+                        //QSEnumDebugLevel QSEnumDebugLevel  
+                        //QSEnumDebugLevel QSEnumDebugLevel  
+                        //QSEnumDebugLevel 
+
+
+
+
+
                         //debug("SecurityType:" + o.oSymbol.SecurityType.ToString() + " account PosLock:" + account.PosLock.ToString(), QSEnumDebugLevel.INFO);
                         return false;
                     }
                 }
             }
+
+            #region 按品种进行委托规则检查
+            switch (o.oSymbol.SecurityType)
+            { 
+                case SecurityType.FUT:
+                    break;
+                case SecurityType.STK:
+                    { 
+                        //不允许执行卖开操作  
+                        if (!o.Side && o.OffsetFlag == QSEnumOffsetFlag.OPEN)
+                        {
+                        }
+                            
+                   }
+                    break;
+                default:
+                    errortitle = "TWO_SIDE_POSITION_HOLD_FORBIDDEN";
+                    return false;
+            }
+            #endregion
+
 
 
             //5.委托数量检查
@@ -326,6 +307,8 @@ namespace TradingLib.Core
                     return false;
                 }
             }
+
+
 
             //6.委托价格检查
             //6.1查看数据通道是否有对应的合约价格 行情是否正常
