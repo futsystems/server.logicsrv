@@ -75,6 +75,7 @@
       <Link>VersionInfo.cs</Link>
     </Compile>
     <Compile Include="Base\ClientTracker.cs" />
+    <Compile Include="Base\ConstantErrorID.cs" />
     <Compile Include="Base\DataRepositoryLogger.cs" />
     <Compile Include="Base\DataRepositoryLog.cs" />
     <Compile Include="Base\TIFTracker.cs" />

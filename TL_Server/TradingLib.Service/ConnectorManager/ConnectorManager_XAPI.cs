@@ -227,6 +227,7 @@ namespace TradingLib.ServiceManager
                 IDataFeed datafeedinterface = datafeed as IDataFeed;
                 datafeedInstList.Add(cfg.Token, datafeedinterface);
 
+
                 datafeed.Connected += (string d) =>
                 {
                     logger.Info("DataFeed[" + d + "] Connected");

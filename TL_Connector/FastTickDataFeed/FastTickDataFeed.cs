@@ -213,6 +213,7 @@ namespace DataFeed.FastTick
                     _subscriber = subscriber;
 
                     _tickreceiveruning = true;
+                    //行情源连接事件 DataRouter会订阅该事件 同时进行合约注册操作 该过程可能会消耗比较多的时间，因此造成这里阻塞 导致心跳接受异常 需要将订阅操作放入线程池中运行
                     NotifyConnected();
 
                     ZMessage tickdata;
@@ -286,40 +287,40 @@ namespace DataFeed.FastTick
         /// </summary>
         /// <param name="type"></param>
         /// <param name="msg"></param>
-        void Send(TradingLib.API.MessageTypes type, string msg)
-        {
-            if (_symbolreq != null)
-            {
-                lock (_symbolreq)
-                {
-                    try
-                    {
-                        byte[] message = TradingLib.Common.Message.sendmessage(type, msg);
-                        _symbolreq.Send(new ZFrame(message));
-                        ZMessage response;
-                        ZError error;
-                        var poller = ZPollItem.CreateReceiver();
-                        if(_symbolreq.PollIn(poller,out response,out error,timeout))
-                        {
-                            logger.Debug(string.Format("Got Rep Response:", response.First().ReadString(Encoding.UTF8)));
-                            response.Clear();
-                        }
-                        else
-                        {
-                            if(error == ZError.ETERM)
-                            {
-                                return;
-                            }
-                            throw new ZException(error);                            
-                        }
-                    }
-                    catch (Exception ex)
-                    {
-                        logger.Error("发送消息异常:" + ex.ToString());
-                    }
-                }
-            }
-        }
+        //void Send(TradingLib.API.MessageTypes type, string msg)
+        //{
+        //    if (_symbolreq != null)
+        //    {
+        //        lock (_symbolreq)
+        //        {
+        //            try
+        //            {
+        //                byte[] message = TradingLib.Common.Message.sendmessage(type, msg);
+        //                _symbolreq.Send(new ZFrame(message));
+        //                ZMessage response;
+        //                ZError error;
+        //                var poller = ZPollItem.CreateReceiver();
+        //                if(_symbolreq.PollIn(poller,out response,out error,timeout))
+        //                {
+        //                    logger.Debug(string.Format("Got Rep Response:", response.First().ReadString(Encoding.UTF8)));
+        //                    response.Clear();
+        //                }
+        //                else
+        //                {
+        //                    if(error == ZError.ETERM)
+        //                    {
+        //                        return;
+        //                    }
+        //                    throw new ZException(error);                            
+        //                }
+        //            }
+        //            catch (Exception ex)
+        //            {
+        //                logger.Error("发送消息异常:" + ex.ToString());
+        //            }
+        //        }
+        //    }
+        //}
 
         void Send(IPacket packet)
         {
@@ -381,20 +382,20 @@ namespace DataFeed.FastTick
                     //注册合约协议格式 DATAFEED:SYMBOL|EXCHANGE
                     foreach (var sym in kv.Value)
                     {
-                        if (_tickversion == 1)
-                        {
-                            string tmpreq = (kv.Key.ToString() + ":" + sym.Symbol + "|" + sym.SecurityFamily.Exchange.EXCode);
-                            logger.Info(Token + " RegisterSymbol " + tmpreq);
-                            Send(TradingLib.API.MessageTypes.MGRREGISTERSYMBOLS, tmpreq);
-                        }
-                        else if (_tickversion == 2)
-                        {
+                        //if (_tickversion == 1)
+                        //{
+                        //    string tmpreq = (kv.Key.ToString() + ":" + sym.Symbol + "|" + sym.SecurityFamily.Exchange.EXCode);
+                        //    logger.Info(Token + " RegisterSymbol " + tmpreq);
+                        //    Send(TradingLib.API.MessageTypes.MGRREGISTERSYMBOLS, tmpreq);
+                        //}
+                        //else if (_tickversion == 2)
+                        //{
                             MDRegisterSymbolsRequest request = RequestTemplate<MDRegisterSymbolsRequest>.CliSendRequest(0);
                             request.DataFeed = kv.Key;
                             request.Exchange = sym.SecurityFamily.Exchange.EXCode;
                             request.SymbolList.Add(sym.Symbol);
                             Send(request);
-                        }
+                        
                     }
 
                 }

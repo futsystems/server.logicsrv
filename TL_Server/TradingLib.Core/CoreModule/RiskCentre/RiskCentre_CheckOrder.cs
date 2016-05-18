@@ -74,7 +74,7 @@ namespace TradingLib.Core
             //1.3检查结算中心是否处于结算状态 结算状态不接受任何委托
             if (TLCtxHelper.ModuleSettleCentre.IsInSettle)
             {
-                errortitle = "SETTLECENTRE_IN_SETTLE";//结算中心出入结算状态
+                errortitle = ConstErrorID.SETTLECENTRE_IN_SETTLE;//结算中心出入结算状态
                 needlog = false;
                 return false;
             }
@@ -92,7 +92,7 @@ namespace TradingLib.Core
             //3.1合约是否存在
             if (!account.TrckerOrderSymbol(ref o))
             {
-                errortitle = "SYMBOL_NOT_EXISTED";//合约不存在
+                errortitle = ConstErrorID.SYMBOL_NOT_EXISTED;//合约不存在
                 needlog = false;
                 return false;
             }
@@ -100,7 +100,7 @@ namespace TradingLib.Core
             //3.2合约是否可交易
             if (!o.oSymbol.IsTradeable)//合约不可交易
             {
-                errortitle = "SYMBOL_NOT_TRADEABLE";//合约不可交易
+                errortitle = ConstErrorID.SYMBOL_NOT_TRADEABLE;//合约不可交易
                 needlog = false;
                 return false;
             }
@@ -108,7 +108,7 @@ namespace TradingLib.Core
             int exday = o.oSymbol.SecurityFamily.Exchange.GetExchangeTime().ToTLDate();
             if (o.oSymbol.IsExpired(exday))
             {
-                errortitle = "SYMBOL_NOT_TRADEABLE";//合约不可交易
+                errortitle = ConstErrorID.SYMBOL_EXPIRED;//合约不可交易
                 needlog = false;
                 return false;
             }
@@ -125,7 +125,7 @@ namespace TradingLib.Core
             QSEnumActionCheckResult result = o.oSymbol.SecurityFamily.CheckPlaceOrder(out settleday);
             if (result != QSEnumActionCheckResult.Allowed)
             {
-                errortitle = "SYMBOL_NOT_MARKETTIME";
+                errortitle = ConstErrorID.SYMBOL_NOT_MARKETTIME;
                 needlog = false;
                 return false;
             }
@@ -135,7 +135,7 @@ namespace TradingLib.Core
             //特定交易日判定
             if (!o.oSymbol.SecurityFamily.CheckSpecialHoliday())
             {
-                errortitle = "SYMBOL_NOT_MARKETTIME";
+                errortitle = ConstErrorID.SYMBOL_NOT_MARKETTIME;
                 needlog = false;
                 return false;
             }
@@ -154,22 +154,6 @@ namespace TradingLib.Core
             #endregion
 
 
-
-
-            //熔断状态判定
-            if (_haltEnable)
-            {
-                if (new string[] { "IF", "IH", "IC" }.Contains(o.oSymbol.SecurityFamily.Code))
-                {
-                    //股指处于熔断状态
-                    if (_haltstatetracker.IsHalted)
-                    {
-                        errortitle = "SYMBOL_NOT_MARKETTIME";
-                        needlog = false;
-                        return false;
-                    }
-                }
-            }
 
             //中金所限制 开仓数量不能超过10手
             if (_cffexLimit)
@@ -243,59 +227,32 @@ namespace TradingLib.Core
                 //委托多头开仓操作,同时又空头头寸 或者 委托空头开仓操作，同时又有多头头寸 则表明在持有头寸的时候进行了反向头寸的操作
                 if (othersideentry || (orderside && haveshort) || ((!orderside) && havelong))//多头持仓操作
                 {
-                    //如果为国外交易所 或者是中国香港交易所 则不允许锁仓
-                    //if (o.oSymbol.SecurityFamily.Exchange.Country != Country.CN || o.oSymbol.SecurityFamily.Exchange.EXCode=="HKEX")
-                    //{
-                    //    errortitle = "TWO_SIDE_POSITION_HOLD_FORBIDDEN";
-                    //    return false;
-                    //}
                     //非期货品种无法进行锁仓操作 同时帐户设置是否允许锁仓操作
                     if ((o.oSymbol.SecurityType != SecurityType.FUT) || (!account.GetParamPositionLock()))
                     {
-                        errortitle = "TWO_SIDE_POSITION_HOLD_FORBIDDEN";
-                        //QSEnumDebugLevel QSEnumDebugLevel  
-                        //QSEnumDebugLevel QSEnumDebugLevel  
-                        //QSEnumDebugLevel QSEnumDebugLevel  
-                        //QSEnumDebugLevel QSEnumDebugLevel  
-                        //QSEnumDebugLevel 
-
-
-
-
-
-                        //debug("SecurityType:" + o.oSymbol.SecurityType.ToString() + " account PosLock:" + account.PosLock.ToString(), QSEnumDebugLevel.INFO);
+                        errortitle = ConstErrorID.POSITION_LOCK_FORBIDDEN;
                         return false;
                     }
                 }
-            }
 
-            #region 按品种进行委托规则检查
-            switch (o.oSymbol.SecurityType)
-            { 
-                case SecurityType.FUT:
-                    break;
-                case SecurityType.STK:
-                    { 
-                        //不允许执行卖开操作  
-                        if (!o.Side && o.OffsetFlag == QSEnumOffsetFlag.OPEN)
-                        {
-                        }
-                            
-                   }
-                    break;
-                default:
-                    errortitle = "TWO_SIDE_POSITION_HOLD_FORBIDDEN";
-                    return false;
+                //卖空检查
+                switch (o.oSymbol.SecurityType)
+                { 
+                    case SecurityType.STK:
+                        if (o.Side) break;
+                        errortitle = ConstErrorID.ORDER_SHORT_FORBIDDEN;
+                        return false;
+                    default:
+                        break;
+                }
             }
-            #endregion
-
 
 
             //5.委托数量检查
             //5.1委托总数不为0
             if (o.TotalSize == 0)
             {
-                errortitle = "ORDERSIZE_ZERO_ERROR";//委托数量为0
+                errortitle = ConstErrorID.ORDER_SIZE_ZERO;//委托数量为0
                 return false;
             }
             //5.2单次开仓数量小于设定值
@@ -303,7 +260,7 @@ namespace TradingLib.Core
             {
                 if (Math.Abs(o.TotalSize) > _orderlimitsize)
                 {
-                    errortitle = "ORDERSIZE_LIMIT";//委托数量超过最大委托手数
+                    errortitle = ConstErrorID.ORDER_SIZE_LIMIT;//委托数量超过最大委托手数
                     return false;
                 }
             }
@@ -345,7 +302,7 @@ namespace TradingLib.Core
                 {
                     if (targetprice > k.UpperLimit || targetprice < k.LowerLimit)
                     {
-                        errortitle = "ORDERPRICE_OVERT_LIMIT";//保单价格超过涨跌幅
+                        errortitle = ConstErrorID.ORDER_PRICE_LIMIT;//保单价格超过涨跌幅
                         return false;
                     }
                 }
