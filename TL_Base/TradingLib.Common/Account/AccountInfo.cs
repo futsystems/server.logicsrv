@@ -72,16 +72,14 @@ namespace TradingLib.Common
         public decimal OptMoneyUsed { get; set; }//期权资金占用
         public decimal OptAvabileFunds { get; set; }
 
-        public decimal StkPositionCost { get; set; }//异化合约持仓成本
-        public decimal StkPositionValue { get; set; }//异化合约持仓市值
-        public decimal StkCommission { get; set; }//异化合约手续费
-        public decimal StkRealizedPL { get; set; }//异化合约平仓盈亏
-        public decimal StkMargin { get; set; }//异化合约保证金
-        public decimal StkMarginFrozen { get; set; }//异化合约冻结
-        public decimal StkCash { get; set; }//异化合约现金流
-        public decimal StkMarketValue { get; set; }//异化合约市值
-        public decimal StkLiquidation { get; set; }//异化合约净值
-        public decimal StkMoneyUsed { get; set; }//异化合约资金占用
+
+        public decimal StkPositionCost { get; set; }//股票持仓成本
+        public decimal StkPositionValue { get; set; }//股票欧持仓市值
+        public decimal StkCommission { get; set; }//股票交易手续费
+        public decimal StkBuyAmount { get; set; }//股票买入金额
+        public decimal StkSellAmount { get; set; }//股票卖出金额
+        public decimal StkMoneyFronzen { get; set; }//股票冻结资金
+        public decimal StkRealizedPL { get; set; }//股票平仓盈亏
         public decimal StkAvabileFunds { get; set; }//异化合约可用资金
 
         
@@ -101,7 +99,7 @@ namespace TradingLib.Common
             char d=',';
             sb.Append(info.Account);
             sb.Append(d);
-            sb.Append(info.LastEquity.ToString());
+            sb.Append(info.LastEquity.ToString());//昨日权益
             sb.Append(d);
             sb.Append(info.NowEquity.ToString());
             sb.Append(d);
@@ -178,19 +176,19 @@ namespace TradingLib.Common
             sb.Append(d);
             sb.Append(info.StkCommission);
             sb.Append(d);
+            sb.Append(info.StkBuyAmount);
+            sb.Append(d);
+            sb.Append(info.StkSellAmount);
+            sb.Append(d);
+            sb.Append(info.StkMoneyFronzen);
+            sb.Append(d);
             sb.Append(info.StkRealizedPL);
             sb.Append(d);
-            sb.Append(info.StkMargin);
+            sb.Append(0);
             sb.Append(d);
-            sb.Append(info.StkMarginFrozen);
+            sb.Append(0);
             sb.Append(d);
-            sb.Append(info.StkCash);
-            sb.Append(d);
-            sb.Append(info.StkMarketValue);
-            sb.Append(d);
-            sb.Append(info.StkLiquidation);
-            sb.Append(d);
-            sb.Append(info.StkMoneyUsed);
+            sb.Append(0);
             sb.Append(d);
             sb.Append(info.StkAvabileFunds);//45
 
@@ -264,13 +262,13 @@ namespace TradingLib.Common
                 a.StkPositionCost = decimal.Parse(r[35]);
                 a.StkPositionValue = decimal.Parse(r[36]);
                 a.StkCommission = decimal.Parse(r[37]);
-                a.StkRealizedPL = decimal.Parse(r[38]);
-                a.StkMargin = decimal.Parse(r[39]);
-                a.StkMarginFrozen = decimal.Parse(r[40]);
-                a.StkCash = decimal.Parse(r[41]);
-                a.StkMarketValue = decimal.Parse(r[42]);
-                a.StkLiquidation = decimal.Parse(r[43]);
-                a.StkMoneyUsed = decimal.Parse(r[44]);
+                a.StkBuyAmount = decimal.Parse(r[38]);
+                a.StkSellAmount = decimal.Parse(r[39]);
+                a.StkMoneyFronzen = decimal.Parse(r[40]);
+                a.StkRealizedPL = decimal.Parse(r[41]);
+                //a.StkRealizedPL = decimal.Parse(r[42]);
+                //a.StkLiquidation = decimal.Parse(r[43]);
+                //a.StkMoneyUsed = decimal.Parse(r[44]);
                 a.StkAvabileFunds = decimal.Parse(r[45]);
 
                 a.Margin = decimal.Parse(r[46]);

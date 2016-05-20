@@ -503,7 +503,7 @@ namespace TradingLib.Common
         /// </summary>
         /// <param name="account"></param>
         /// <returns></returns>
-        public static decimal CalcStkPurchase(this IAccount account)
+        public static decimal CalcStkBuyAmount(this IAccount account)
         {
             return FilterTrades(account, SecurityType.STK).Where(fill => fill.IsEntryPosition).Sum(fill => fill.GetAmount());
         }
@@ -514,15 +514,21 @@ namespace TradingLib.Common
         /// </summary>
         /// <param name="account"></param>
         /// <returns></returns>
-        public static decimal CalcStkSale(this IAccount account)
+        public static decimal CalcStkSellAmount(this IAccount account)
         {
-            return FilterTrades(account, SecurityType.STK).Where(fill => fill.IsEntryPosition).Sum(fill => fill.GetAmount());
+            return FilterTrades(account, SecurityType.STK).Where(fill => !fill.IsEntryPosition).Sum(fill => fill.GetAmount());
         }
 
-
-        public static decimal CalcStkMoneyNetChange(this IAccount account)
+        /// <summary>
+        /// 计算当日股票买入卖出 净资金变动 
+        /// 该资金变动从账户资金扣除
+        /// 股票买卖即是 账户现金权益 与 证券市值之间的动态转化
+        /// </summary>
+        /// <param name="account"></param>
+        /// <returns></returns>
+        public static decimal CalcStkCash(this IAccount account)
         {
-            return account.CalcStkPurchase() - account.CalcStkSale();
+            return account.CalcStkSellAmount() - account.CalcStkBuyAmount() - account.CalcStkCommission();
         }
 
         /// <summary>
@@ -551,10 +557,10 @@ namespace TradingLib.Common
         /// </summary>
         /// <param name="account"></param>
         /// <returns></returns>
-        public static decimal CalcStkLiquidation(this IAccount account)
-        {
-            return account.CalcStkPositionMarketValue() - account.CalcStkPositionCost() + account.CalcStkRealizedPL() - account.CalcStkCommission();
-        }
+        //public static decimal CalcStkLiquidation(this IAccount account)
+        //{
+        //    return account.CalcStkPositionMarketValue() - account.CalcStkPositionCost() + account.CalcStkRealizedPL() - account.CalcStkCommission();
+        //}
 
         /// <summary>
         /// 股票资金占用
@@ -569,7 +575,7 @@ namespace TradingLib.Common
         /// <returns></returns>
         public static decimal CalcStkMoneyUsed(this IAccount account)
         {
-            return account.CalcStkMoneyNetChange()+ account.CalcStkMoneyFrozen();
+            return /*account.CalcStkMoneyNetChange()+ **/account.CalcStkMoneyFrozen();
         }
         #endregion
 

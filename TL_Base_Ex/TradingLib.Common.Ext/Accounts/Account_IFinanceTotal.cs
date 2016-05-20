@@ -68,10 +68,10 @@ namespace TradingLib.Common
 
 
         /// <summary>
-        /// 总净值
-        /// 昨日权益 + 当前期货/期权/等品种的净值 + 入金 - 出金 + 待结算平仓盈亏 + 待结算盯市盈亏
+        /// 账户总净值
+        /// 昨日权益 + 当前期货/期权/等品种的净值 + 入金 - 出金 + 待结算平仓盈亏 + 待结算盯市盈亏 - 待结算手续费
         /// </summary>
-        public decimal TotalLiquidation { get { return LastEquity + this.CalFutLiquidation() + this.CalOptLiquidation() + this.CalcStkLiquidation() + CashIn - CashOut + PendingSettleCloseProfitByDate + PendingSettlePositionProfitByDate - PendingSettleCommission; } }//帐户总净值
+        public decimal TotalLiquidation { get { return LastEquity + this.CalFutLiquidation() + this.CalOptLiquidation() + this.CalcStkCash()/*this.CalcStkLiquidation()**/ + CashIn - CashOut + PendingSettleCloseProfitByDate + PendingSettlePositionProfitByDate - PendingSettleCommission; } }//帐户总净值
         
         /// <summary>
         /// 总可用资金
@@ -104,7 +104,7 @@ namespace TradingLib.Common
         /// <summary>
         /// 当前优先资金 = 昨日优先资金 + 今日优先资入金 - 今日优先资金出金
         /// </summary>
-        public decimal Credit { get { return LastCredit + CreditCashIn - CreditCashOut + TLCtxHelper.ExContribEvent.GetFinAmmountAvabile(this.ID); } }
+        public decimal Credit { get { return LastCredit + CreditCashIn - CreditCashOut;/* + TLCtxHelper.ExContribEvent.GetFinAmmountAvabile(this.ID);**/ } }
 
 
         /// <summary>

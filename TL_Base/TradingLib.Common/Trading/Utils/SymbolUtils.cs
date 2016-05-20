@@ -10,6 +10,7 @@ namespace TradingLib.Common
     {
         /// <summary>
         /// Calc base commission
+        /// 按设定的手续费率计算手续费
         /// </summary>
         /// <param name="symbol"></param>
         /// <param name="f"></param>

@@ -44,7 +44,7 @@ namespace TradingLib.Common
 
 
         /// <summary>
-        /// 生成财务信息
+        /// 账户成财务信息
         /// </summary>
         /// <param name="acc"></param>
         /// <returns></returns>
@@ -96,12 +96,10 @@ namespace TradingLib.Common
             a.StkPositionCost = acc.CalcStkPositionCost();
             a.StkPositionValue = acc.CalcStkPositionMarketValue();
             a.StkCommission = acc.CalcStkCommission();
+            a.StkBuyAmount = acc.CalcStkBuyAmount();
+            a.StkSellAmount = acc.CalcStkSellAmount();
+            a.StkMoneyFronzen = acc.CalcStkMoneyFrozen();
             a.StkRealizedPL = acc.CalcStkRealizedPL();
-            a.StkMargin = 0;// acc.CalcStkMargin();
-            a.StkCash = 0;// acc.CalcStkCash();
-            a.StkMarketValue = acc.CalcStkPositionMarketValue();
-            a.StkLiquidation = acc.CalcStkLiquidation();
-            a.StkMoneyUsed = acc.CalcStkMoneyUsed();
             a.StkAvabileFunds = acc.AvabileFunds;
 
             a.Margin = acc.Margin;
@@ -135,6 +133,7 @@ namespace TradingLib.Common
             info.Profit = acc.Profit;
             info.TotalPositionSize = acc.GetTotalPositionSize();
             info.Credit = acc.Credit;
+            info.SecurityMarketValue = acc.SecurityMarketValue;
             return info;
         }
 
