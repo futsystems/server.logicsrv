@@ -77,7 +77,7 @@ namespace TradingLib.API
         /// <summary>
         /// 默认向服务端发送心跳信息间隔 30秒(每30秒告诉服务器,客户端在运行)
         /// </summary>
-        public const int HEARTBEATPERIOD = 30;//注意 clientsession文本化是按照heartbeat来进行的
+        public const int HEARTBEATPERIOD = 10;//注意 clientsession文本化是按照heartbeat来进行的
 
         /// <summary>
         /// 断开连接后多少秒尝试连接一次服务器 默认5秒尝试一次连接
