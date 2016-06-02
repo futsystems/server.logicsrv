@@ -525,7 +525,7 @@ namespace TradingLib.Core
                                 int voltd = pos.PositionDetailTodayNew.Sum(p => p.Volume);//今日持仓
                                 int volyd = pos.PositionDetailYdNew.Sum(p => p.Volume);//昨日持仓
                                 //这里加入系统日内判定，如果允许进行股票T+0交易 则总可平数量包含今仓数量
-                                canFlatSize = volyd;
+                                canFlatSize = _enableStkT0 ? volyd + voltd : volyd;
                                 int pendingExitSize = account.GetPendingExitSize(o.Symbol, o.PositionSide);
                                 if (canFlatSize < pendingExitSize + osize)
                                 {

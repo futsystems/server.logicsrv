@@ -47,6 +47,7 @@ namespace TradingLib.Core
         int _m30left = 900;//M30下单剩余时间
         int _m60left = 1800;//M60下单剩余时间
 
+        bool _enableStkT0 = false;
 
         HaltedStateTracker _haltstatetracker;
         public RiskCentre():base(CoreName)
@@ -154,7 +155,11 @@ namespace TradingLib.Core
             }
             _m60left = _cfgdb["BO-M60Left"].AsInt();
 
-
+            if (!_cfgdb.HaveConfig("EnableStkT0"))
+            {
+                _cfgdb.UpdateConfig("EnableStkT0", QSEnumCfgType.Bool,false, "股票交易T+0");
+            }
+            _enableStkT0 = _cfgdb["EnableStkT0"].AsBool();
 
             //订阅持仓回合关闭事件
             TLCtxHelper.EventIndicator.GotPositionClosedEvent += new PositionRoundClosedDel(GotPostionRoundClosed);
