@@ -297,6 +297,7 @@ namespace TradingLib.ORM
         {
             return IsAccountSettled(account, TLCtxHelper.ModuleSettleCentre.Tradingday);
         }
+
         /// <summary>
         /// 检查账户是否结算过,搜索结算信息表,如果该日有结算信息,则结算过,没有则没有结算过
         /// </summary>
@@ -324,7 +325,7 @@ namespace TradingLib.ORM
                 using (var transaction = db.Connection.BeginTransaction())
                 {
                     bool istransok = true;
-                    string query = string.Format("INSERT INTO log_settlement (`account`,`settleday`,`closeprofitbydate`,`positionprofitbydate`,`commission`,`cashin`,`cashout`,`lastequity`,`equitysettled`,`lastcredit`,`creditsettled`,`creditcashin`,`creditcashout`) values('{0}','{1}','{2}','{3}','{4}','{5}','{6}','{7}','{8}','{9}','{10}','{11}','{12}')", settle.Account, settle.Settleday, settle.CloseProfitByDate, settle.PositionProfitByDate, settle.Commission, settle.CashIn, settle.CashOut, settle.LastEquity, settle.EquitySettled, settle.LastCredit, settle.CreditSettled, settle.CreditCashIn, settle.CreditCashOut);
+                    string query = string.Format("INSERT INTO log_settlement (`account`,`settleday`,`closeprofitbydate`,`positionprofitbydate`,`commission`,`cashin`,`cashout`,`lastequity`,`equitysettled`,`lastcredit`,`creditsettled`,`creditcashin`,`creditcashout`,`assetbuyamount`,`assetsellamount`) values('{0}','{1}','{2}','{3}','{4}','{5}','{6}','{7}','{8}','{9}','{10}','{11}','{12}','{13}','{14}')", settle.Account, settle.Settleday, settle.CloseProfitByDate, settle.PositionProfitByDate, settle.Commission, settle.CashIn, settle.CashOut, settle.LastEquity, settle.EquitySettled, settle.LastCredit, settle.CreditSettled, settle.CreditCashIn, settle.CreditCashOut,settle.AssetBuyAmount,settle.AssetSellAmount);
                     istransok = istransok && (db.Connection.Execute(query) > 0);
 
                     query = string.Format("UPDATE accounts SET lastequity = '{0}',lastcredit='{1}' WHERE account = '{2}'", settle.EquitySettled,settle.CreditSettled, settle.Account);
@@ -542,7 +543,7 @@ namespace TradingLib.ORM
         {
             using (DBMySql db = new DBMySql())
             {
-                string query = String.Format("INSERT into log_settlement_exchange (`settleday`,`account`,`closeprofitbydate`,`positionprofitbydate`,`commission`,`exchange`) values('{0}','{1}','{2}','{3}','{4}','{5}')", settlement.Settleday, settlement.Account, settlement.CloseProfitByDate, settlement.PositionProfitByDate,settlement.Commission, settlement.Exchange);
+                string query = String.Format("INSERT into log_settlement_exchange (`settleday`,`account`,`closeprofitbydate`,`positionprofitbydate`,`commission`,`exchange`,`assetbuyamount`,`assetsellamount`) values('{0}','{1}','{2}','{3}','{4}','{5}','{6}','{7}')", settlement.Settleday, settlement.Account, settlement.CloseProfitByDate, settlement.PositionProfitByDate, settlement.Commission, settlement.Exchange,settlement.AssetBuyAmount,settlement.AssetSellAmount);
                 db.Connection.Execute(query);
             }
         }

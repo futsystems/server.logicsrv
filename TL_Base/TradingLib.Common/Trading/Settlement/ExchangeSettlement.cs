@@ -45,6 +45,16 @@ namespace TradingLib.Common
         public decimal PositionProfitByDate { get; set; }
 
         /// <summary>
+        /// 资产买入金额
+        /// </summary>
+        public decimal AssetBuyAmount { get; set; }
+
+        /// <summary>
+        /// 资产卖出金额
+        /// </summary>
+        public decimal AssetSellAmount { get; set; }
+
+        /// <summary>
         /// 手续费
         /// </summary>
         public decimal Commission { get; set; }
@@ -73,9 +83,13 @@ namespace TradingLib.Common
             sb.Append(d);
             sb.Append(settle.PositionProfitByDate);
             sb.Append(d);
+            sb.Append(settle.AssetBuyAmount);
+            sb.Append(d);
+            sb.Append(settle.AssetSellAmount);
             sb.Append(settle.Exchange);
             sb.Append(d);
             sb.Append(settle.Settled);
+           
             return sb.ToString();
         }
 
@@ -87,8 +101,10 @@ namespace TradingLib.Common
             settle.Account = rec[1];
             settle.CloseProfitByDate = decimal.Parse(rec[2]);
             settle.PositionProfitByDate = decimal.Parse(rec[3]);
-            settle.Exchange = rec[4];
-            settle.Settled = bool.Parse(rec[5]);
+            settle.AssetBuyAmount = decimal.Parse(rec[4]);
+            settle.AssetSellAmount = decimal.Parse(rec[5]);
+            settle.Exchange = rec[6];
+            settle.Settled = bool.Parse(rec[7]);
             return settle;
         }
     }

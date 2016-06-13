@@ -38,6 +38,27 @@ namespace TradingLib.Common
         }
 
         /// <summary>
+        /// 判断持仓是否是按保证金结算
+        /// 持仓结算模式
+        /// 1.保证金交易制度
+        /// 该模式下 建立持仓是以保证金占用的方式进行 以期货为代表，建立持仓时不发生资金与资产的转换
+        /// 2.全额交易制度
+        /// 该模式下 建立持仓是以资金与资产的转换方式进行 以股票为代表，建立持仓时资金减少 资产增加 结算时不对账面浮动盈亏进行结算
+        /// </summary>
+        /// <param name="pos"></param>
+        /// <returns></returns>
+        public static bool IsMarginTrading(this Position pos)
+        {
+            switch (pos.oSymbol.SecurityType)
+            { 
+                case SecurityType.FUT:
+                    return true;
+                default:
+                    return false;
+            }
+        }
+
+        /// <summary>
         /// 计算持仓保证金
         /// </summary>
         /// <param name="p"></param>
@@ -81,7 +102,28 @@ namespace TradingLib.Common
                 return p.oSymbol.Margin * p.UnsignedSize;
         }
 
-        #region 盘中快速计算平仓盈亏与浮动盈亏
+
+        /// <summary>
+        /// 获得某个持仓的计算持仓明细
+        /// </summary>
+        /// <param name="p"></param>
+        /// <returns></returns>
+        public static IEnumerable<PositionDetail> GetSettlePositionDetals(this Position pos)
+        {
+            switch (pos.oSymbol.SecurityType)
+            { 
+                    //股票持仓结算时进行持仓合并
+                case SecurityType.STK:
+                    return new List<PositionDetail>();
+                case SecurityType.FUT:
+                    return pos.PositionDetailTotal.Where(pd => !pd.IsClosed());
+                default:
+                    return pos.PositionDetailTotal.Where(pd => !pd.IsClosed());
+            }
+        }
+
+
+        #region 计算平仓盈亏与浮动盈亏
         /// <summary>
         /// 计算平仓盈亏
         /// </summary>
@@ -104,17 +146,7 @@ namespace TradingLib.Common
         #endregion
 
 
-        /// 计算结算时 持仓汇总的盯市盈亏 这里累加所有持仓明细的浮动盈亏获得
-        /// </summary>
-        /// <param name="p"></param>
-        /// <returns></returns>
-        //public static decimal CalcSettleUnRealizedPL(this Position p)
-        //{
-        //    return p.PositionDetailTotal.Where(pos => !pos.IsClosed()).Sum(pos => pos.PositionProfitByDate);
-        //}
-
-
-        #region 计算持仓市值
+        #region 计算持仓成本/市值
         /// <summary>
         /// 计算持仓成本
         /// </summary>
@@ -134,16 +166,6 @@ namespace TradingLib.Common
         {
             return p.UnsignedSize * p.LastPrice * p.oSymbol.Multiple;
         }
-
-        ///// <summary>
-        ///// 计算持仓结算市值
-        ///// </summary>
-        ///// <param name="p"></param>
-        ///// <returns></returns>
-        //public static decimal CalcSettlePositionValue(this Position p)
-        //{
-        //    return p.UnsignedSize * (decimal)p.SettlementPrice* p.oSymbol.Multiple;
-        //}
         #endregion
 
 
@@ -201,6 +223,28 @@ namespace TradingLib.Common
         }
         #endregion
 
+
+        #region 计算持仓买入/卖出金额
+        /// <summary>
+        /// 计算持仓对应的买入金额
+        /// </summary>
+        /// <param name="pos"></param>
+        /// <returns></returns>
+        public static decimal CalcBuyAmount(this Position pos)
+        {
+            return pos.Trades.Where(t => t.Side).Sum(t => t.GetAmount());
+        }
+
+        /// <summary>
+        /// 计算持仓对应的卖出金额
+        /// </summary>
+        /// <param name="pos"></param>
+        /// <returns></returns>
+        public static decimal CalcSellAmount(this Position pos)
+        {
+            return pos.Trades.Where(t => !t.Side).Sum(t => t.GetAmount());
+        }
+        #endregion
 
         /// <summary>
         /// 生成PositionEx用于通知客户端

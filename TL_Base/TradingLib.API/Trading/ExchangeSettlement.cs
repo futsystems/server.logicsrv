@@ -29,6 +29,16 @@ namespace TradingLib.API
         decimal PositionProfitByDate { get; set; }
 
         /// <summary>
+        /// 资产买入金额
+        /// </summary>
+        decimal AssetBuyAmount { get; set; }
+
+        /// <summary>
+        /// 资产卖出金额
+        /// </summary>
+        decimal AssetSellAmount { get; set; }
+
+        /// <summary>
         /// 手续费
         /// </summary>
         decimal Commission { get; set; }

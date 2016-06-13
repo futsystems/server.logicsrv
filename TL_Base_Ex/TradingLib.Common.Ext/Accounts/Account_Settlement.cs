@@ -41,12 +41,17 @@ namespace TradingLib.Common
             settlement.CreditCashIn = this.CreditCashIn;
             settlement.CreditCashOut = this.CreditCashOut;
 
-            settlement.CloseProfitByDate = PendingSettleCloseProfitByDate;
-            settlement.PositionProfitByDate = PendingSettlePositionProfitByDate;
+            //对交易所结算进行汇总
+            settlement.CloseProfitByDate = this.PendingSettleCloseProfitByDate;
+            settlement.PositionProfitByDate = this.PendingSettlePositionProfitByDate;
+            settlement.AssetBuyAmount = this.PendingSettleAssetBuyAmount;
+            settlement.AssetSellAmount = this.PendingSettleAssetSellAmount;
             settlement.Commission = PendingSettleCommission;
 
-            settlement.EquitySettled = settlement.LastEquity + settlement.CashIn - settlement.CashOut + settlement.CloseProfitByDate + settlement.PositionProfitByDate - settlement.Commission;
+            //结算权益 = 昨日权益 + 入金 - 出金 + 平仓盈亏 - 浮动盈亏 - 资产买入额 + 资产卖出额 - 手续费
+            settlement.EquitySettled = settlement.LastEquity + settlement.CashIn - settlement.CashOut + settlement.CloseProfitByDate + settlement.PositionProfitByDate - settlement.AssetBuyAmount + settlement.AssetSellAmount - settlement.Commission;
             settlement.CreditSettled = settlement.LastCredit + settlement.CreditCashIn - settlement.CreditCashOut;
+
 
             //保存结算记录
             ORM.MSettlement.InsertAccountSettlement(settlement);
@@ -108,6 +113,7 @@ namespace TradingLib.Common
                     Util.Warn(string.Format("Account:{0} have setteld in Exchange:{1} for date:{2}", this.ID, exchange.EXCode, settleday));
                     return;
                 }
+
                 ExchangeSettlement settlement = new ExchangeSettlementImpl();
                 settlement.Account = this.ID;
                 settlement.Exchange = exchange.EXCode;
@@ -131,8 +137,8 @@ namespace TradingLib.Common
                         pos.SettlementPrice = pos.LastPrice;
                     }
 
-                    //遍历该未平仓持仓对象下的所有持仓明细
-                    foreach (PositionDetail pd in pos.PositionDetailTotal.Where(pd => !pd.IsClosed()))
+                    //遍历该未平仓持仓对象下的所有持仓明细 获得持仓的持仓明细 期货持仓明细分别保存，股票类持仓进行合并
+                    foreach (PositionDetail pd in pos.GetSettlePositionDetals())
                     {
                         //保存结算持仓明细时要将结算日更新为当前
                         pd.Settleday = settleday;
@@ -143,43 +149,46 @@ namespace TradingLib.Common
                 }
                 ///2.统计手续费 平仓盈亏 盯市持仓盈亏
                 //手续费 手续费为所有成交手续费累加
-                settlement.Commission = this.GetTrades(exchange, settleday).Sum(f => f.Commission);
+                settlement.Commission = this.GetTrades(exchange, settleday).Sum(f => f.GetCommission());
 
                 //平仓盈亏 为所有持仓对象下面的平仓明细的平仓盈亏累加
                 //settlement.CloseProfitByDate = this.GetPositions(exchange).Sum(pos => pos.PositionCloseDetail.Sum(pcd => pcd.CloseProfitByDate));
                 //平仓盈亏核查 理论上成交累加的平仓盈亏和持仓明细累加的平仓盈亏应该一致
-                decimal closeprofit_commission = this.GetTrades(exchange, settleday).Sum(f => f.Profit);//累加某个交易所的所有成交平仓盈亏
+                //decimal closeprofit_commission = this.GetTrades(exchange, settleday).Sum(f => f.Profit);//累加某个交易所的所有成交平仓盈亏
                 //根据交易所结算模式返回逐日或逐笔平仓盈亏
-                decimal closeprofit_posdetail = exchange.SettleType == QSEnumSettleType.ByDate ? this.GetPositions(exchange).Sum(pos => pos.CalCloseProfitByDate()) : this.GetPositions(exchange).Sum(pos => pos.CalCloseProfitByTrade());
+                settlement.CloseProfitByDate = exchange.SettleType == QSEnumSettleType.ByDate ? this.GetPositions(exchange).Where(pos => pos.IsMarginTrading()).Sum(pos => pos.CalCloseProfitByDate()) : this.GetPositions(exchange).Where(pos => pos.IsMarginTrading()).Sum(pos => pos.CalCloseProfitByTrade());
                 
                 
-                bool same = closeprofit_commission - closeprofit_posdetail < 1;
-                //两种计算方式不一致
-                if (!same)
-                {
-                    Util.Info("XXXXXXXXXXXXXXXXXXXX EXCHANGE SETTLE ERROR XXXXXXXXXXXXXXXXXXXXXXXXX");
-                    //输出信息
-                    foreach (var pos in this.GetPositions(exchange))
-                    {
-                        Util.Info(pos.ToString());
-                        //输出持仓明细
-                        foreach (var pd in pos.PositionDetailTotal)
-                        {
-                            Util.Info(pd.ToString());
-                        }
-                        //输出平仓明细
-                        foreach (var close in pos.PositionCloseDetail)
-                        {
-                            Util.Info(close.ToString());
-                        }
-                    }
-                }
-                settlement.CloseProfitByDate = closeprofit_posdetail;
+                //bool same = closeprofit_commission - closeprofit_posdetail < 1;
+                ////两种计算方式不一致
+                //if (!same)
+                //{
+                //    Util.Info("XXXXXXXXXXXXXXXXXXXX EXCHANGE SETTLE ERROR XXXXXXXXXXXXXXXXXXXXXXXXX");
+                //    //输出信息
+                //    foreach (var pos in this.GetPositions(exchange))
+                //    {
+                //        Util.Info(pos.ToString());
+                //        //输出持仓明细
+                //        foreach (var pd in pos.PositionDetailTotal)
+                //        {
+                //            Util.Info(pd.ToString());
+                //        }
+                //        //输出平仓明细
+                //        foreach (var close in pos.PositionCloseDetail)
+                //        {
+                //            Util.Info(close.ToString());
+                //        }
+                //    }
+                //}
+                //settlement.CloseProfitByDate = closeprofit_posdetail;
 
                 //浮动盈亏
                 //根据交易所结算规则返回逐日浮动盈亏或0 逐笔结算不将浮动盈亏结算进入当日权益
-                settlement.PositionProfitByDate = exchange.SettleType == QSEnumSettleType.ByDate ? this.GetPositions(exchange).Sum(pos => pos.CalPositionProfitByDate()) : 0;
-                
+                settlement.PositionProfitByDate = exchange.SettleType == QSEnumSettleType.ByDate ? this.GetPositions(exchange).Where(pos=>pos.IsMarginTrading()).Sum(pos => pos.CalPositionProfitByDate()) : 0;
+
+                settlement.AssetBuyAmount = this.GetPositions(exchange).Where(pos => !pos.IsMarginTrading()).Sum(pos => pos.CalcBuyAmount());
+
+                settlement.AssetSellAmount = this.GetPositions(exchange).Where(pos => !pos.IsMarginTrading()).Sum(pos => pos.CalcSellAmount());
                 
                 ///3.保存结算记录到数据库
                 TLCtxHelper.ModuleDataRepository.NewExchangeSettlement(settlement);
@@ -258,13 +267,35 @@ namespace TradingLib.Common
         }
 
         /// <summary>
-        /// 待结算盯市浮动盈亏
+        /// 待结算浮动盈亏
         /// </summary>
         decimal PendingSettlePositionProfitByDate
         {
             get
             {
                 return PendingSettlement.Sum(settle => settle.PositionProfitByDate);
+            }
+        }
+
+        /// <summary>
+        /// 待结算资产买入金额
+        /// </summary>
+        decimal PendingSettleAssetBuyAmount
+        {
+            get
+            {
+                return PendingSettlement.Sum(settle => settle.AssetBuyAmount);
+            }
+        }
+
+        /// <summary>
+        /// 待结算卖出金额
+        /// </summary>
+        decimal PendingSettleAssetSellAmount
+        {
+            get
+            {
+                return PendingSettlement.Sum(settle => settle.AssetSellAmount);
             }
         }
     }
