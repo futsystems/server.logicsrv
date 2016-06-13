@@ -140,6 +140,7 @@ namespace TradingLib.Common
                     //遍历该未平仓持仓对象下的所有持仓明细 获得持仓的持仓明细 期货持仓明细分别保存，股票类持仓进行合并
                     foreach (PositionDetail pd in pos.GetSettlePositionDetals())
                     {
+                        if (pd == null) continue;
                         //保存结算持仓明细时要将结算日更新为当前
                         pd.Settleday = settleday;
                         //保存持仓明细到数据库

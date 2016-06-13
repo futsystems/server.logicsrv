@@ -8,6 +8,8 @@ namespace TradingLib.Common
 {
     /// <summary>
     /// A position type used to describe the position in a stock or instrument.
+    /// 持仓对象
+    /// 持仓对象是一个生成对象，通过持仓明细，成交生成当前最新的持仓状态
     /// </summary>
     [Serializable]
     public class PositionImpl : TradingLib.API.Position, IConvertible
@@ -129,32 +131,9 @@ namespace TradingLib.Common
         }
         #endregion
 
-        string _acct = "";
-        string _sym = "";
-        int _size = 0;
-        decimal _price = 0;
-        int _date = 0;
-        int _time = 0;
-        decimal _closedpl = 0;
-        decimal _last = 0;
-        //可空类型的结算价格
-        decimal? _settlementprice = null;
-        decimal? _lastsettlementprice = null;
-
-        bool usebidask = false;
-        Symbol _osymbol = null;
-        private decimal _highest = decimal.MinValue;
-        private decimal _lowest = decimal.MaxValue;
-
-        QSEnumPositionDirectionType _directiontype = QSEnumPositionDirectionType.BothSide;
-
-        decimal _openamount = 0;
-        int _openvol = 0;
-        decimal _closeamount = 0;
-        int _closevol=0;
+        
 
         
-        public QSEnumPositionDirectionType DirectionType { get { return _directiontype; } set { _directiontype = value; } }
 
         public PositionImpl()
             :this("",0,0,0,"",QSEnumPositionDirectionType.BothSide)
@@ -189,73 +168,9 @@ namespace TradingLib.Common
             if (!this.isValid) throw new Exception("Can't construct invalid position!"); 
         }
 
-        /// <summary>
-        /// 复制一个持仓数据
-        /// </summary>
-        /// <param name="p"></param>
-        //public PositionImpl(Position p)
-        //{
-        //    _sym = p.Symbol;
-        //    _osymbol = p.oSymbol;
-        //    _price = p.AvgPrice;
-        //    _size = p.Size;
-        //    _closedpl = p.ClosedPL;
-        //    _acct = p.Account;
-
-        //    _last = p.AvgPrice;
-        //    _osymbol = p.oSymbol;
-        //    //_settleprice = p.SettlePrice;
-        //    _directiontype = p.DirectionType;
-        //}
 
         /// <summary>
-        /// 通过成交生成一个持仓
-        /// 当持仓维护器为空没有隔夜仓时 需要指定该持仓的类型
-        /// 如果是双向持仓维护器 则为bothside
-        /// 如果单向持仓维护器 则明确对应的方向
-        /// </summary>
-        /// <param name="t"></param>
-        //private PositionImpl(Trade t,QSEnumPositionDirectionType type)
-        //{
-        //    if (!t.isValid) throw new Exception("Can't construct a position object from invalid trade.");
-        //    _sym = t.symbol;
-        //    _price = t.xprice;
-        //    _size = t.xsize;
-        //    _date = t.xdate;
-        //    _time = t.xtime;
-        //    _acct = t.Account;
-        //    _last = t.xprice;
-        //    _directiontype = type;
-        //    if (_size > 0) _size *= t.side ? 1 : -1;
-
-        //    _directiontype = type;
-        //    _osymbol = t.oSymbol;//将成交所引用的合约对象设置给position
-        //}
-
-        /// <summary>
-        /// 从持仓明细生成对应的持仓数据 用于恢复当日持仓状态
-        /// 此时持仓数据的价格按持仓明细的结算价取价，因为结算价之前的价格变动已经通过盯市盈亏的方式体现到帐户权益中了
-        /// </summary>
-        /// <param name="d"></param>
-        /// <param name="type"></param>
-        //public PositionImpl(PositionDetail d, QSEnumPositionDirectionType type)
-        //{
-        //    //_sym = d.Symbol;
-        //    //_price = d.SettlementPrice;//历史持仓明细中恢复到今日交易其成本价为结算持仓的结算价，因为昨日计算盯市盈亏时按结算价来计算浮动盈亏并已计入帐户财务数据
-        //    //_size = d.Side ? d.HoldSize() : d.HoldSize() * -1;//数量为具体的持仓数量
-
-        //    //_date = d.OpenDate;
-        //    //_time = d.OpenTime;
-        //    //_acct = d.Account;
-        //    //_last = d.SettlementPrice;//最新价以昨日结算价为准
-
-        //    //_directiontype = type;
-        //    //_osymbol = d.oSymbol;
-            
-        //}
-
-        /// <summary>
-        /// 是否有效
+        /// 持仓是否有效
         /// 合约不为空 价格和数量同时为0 或者同时不为0
         /// </summary>
         public bool isValid
@@ -266,17 +181,13 @@ namespace TradingLib.Common
 
 
         bool _settled = false;
-
         /// <summary>
         /// 是否已经结算
         /// </summary>
         public bool Settled { get { return _settled; } set { _settled = value; } }
+
         /// <summary>
         /// 浮动盈亏
-        /// 当第一次有持仓时,会造成_last为0 从而导致有一个时间片段计算的unrealziedpl为不准确的 
-        /// 在判断_last之后不会出现浮动盈亏数字异常的问题
-        /// 因此这里需要做出判断
-        ///
         /// </summary>
         public decimal UnRealizedPL{
             get 
@@ -285,8 +196,8 @@ namespace TradingLib.Common
             }
         }
 
-        
-        
+
+        decimal _closedpl = 0;
         /// <summary>
         /// 平仓盈亏
         /// </summary>
@@ -294,26 +205,31 @@ namespace TradingLib.Common
 
 
         #region 价格信息
+        decimal? _settlementprice = null;
         /// <summary>
         /// 结算价
         /// </summary>
         public decimal? SettlementPrice { get { return _settlementprice; } set { _settlementprice = value; } }
 
+        decimal? _lastsettlementprice = null;
         /// <summary>
         /// 昨日结算价
         /// </summary>
         public decimal? LastSettlementPrice { get { return _lastsettlementprice; } set { _lastsettlementprice = value; } }
 
+        private decimal _highest = decimal.MinValue;
         /// <summary>
         /// 最高价
         /// </summary>
         public decimal Highest { get { return _highest; } set { _highest = value; } }
 
+        private decimal _lowest = decimal.MaxValue;
         /// <summary>
         /// 最低价
         /// </summary>
         public decimal Lowest { get { return _lowest; } set { _lowest = value; } }
 
+        decimal _last = 0;
         /// <summary>
         /// 最新价格
         /// 如果没有正常获得tick数据则返回持仓均价
@@ -329,29 +245,39 @@ namespace TradingLib.Common
 
         #endregion
 
-
+        #region 基础信息
+        string _acct = "";
         /// <summary>
         /// 交易帐户
         /// </summary>
         public string Account { get { return _acct; } }
 
-
+        Symbol _osymbol = null;
         /// <summary>
         /// 合约对象
         /// </summary>
         public Symbol oSymbol { get { return _osymbol; } set { _osymbol = value; } }
 
-
+        string _sym = "";
         /// <summary>
         /// 合约
         /// </summary>
         public string Symbol { get { return _sym; } }
 
+        QSEnumPositionDirectionType _directiontype = QSEnumPositionDirectionType.BothSide;
+        /// <summary>
+        /// 持仓方向
+        /// </summary>
+        public QSEnumPositionDirectionType DirectionType { get { return _directiontype; } set { _directiontype = value; } }
+
+
+        decimal _price = 0;
         /// <summary>
         /// 持仓均价
         /// </summary>
         public decimal AvgPrice { get { return _price; } }
 
+        int _size = 0;
         /// <summary>
         /// 持仓数量
         /// </summary>
@@ -371,25 +297,34 @@ namespace TradingLib.Common
         /// </summary>
         public int FlatSize { get { return _size * -1; } }
 
+        #endregion
+
+
+
+        decimal _openamount = 0;
         /// <summary>
         /// 开仓金额
         /// </summary>
         public decimal OpenAmount { get { return _openamount; } }
 
+        int _openvol = 0;
         /// <summary>
         /// 开仓数量
         /// </summary>
         public int OpenVolume { get { return _openvol; } }
 
+        decimal _closeamount = 0;
         /// <summary>
         /// 平仓金额
         /// </summary>
         public decimal CloseAmount { get { return _closeamount; } }
 
+        int _closevol = 0;
         /// <summary>
         /// 平仓数量
         /// </summary>
         public int CloseVolume { get { return _closevol ; } }
+
 
         #region 行情驱动部分
         bool _gotTick = false;
@@ -402,27 +337,15 @@ namespace TradingLib.Common
             //更新最新的价格信息
             if (k.Symbol != (this.oSymbol != null ? this.oSymbol.TickSymbol : this.Symbol))//合约的行情比对或者模拟成交是按Tick进行的。应为异化合约只是合约代码和保证金手续费不同,异化合约依赖于底层合约
                 return;
-            decimal nprice=0;
-            if (usebidask)
-            {
-                if (isLong && k.HasBid())//多头看买价
-                    nprice = k.BidPrice;
-                if (isShort && k.HasAsk())//空头看卖价
-                    nprice = k.AskPrice;
-            }
-            else
-            {
-                if (k.IsTrade())
-                    nprice = k.Trade;
-            }
-            //position通过askbid来更新其对手价格然后得到last
-            if (nprice != 0)
+
+            //更新最新价
+            if (k.IsTrade())
             {
                 _gotTick = true;
-                _last = nprice;
+                _last = k.Trade;
             }
-            //更新最高最低价
-            //需要及时将开仓以来的最优 最差价格归0 否则相关策略会出错。
+
+            //更新最高最低价 持仓内的最高 最低价
             if (!isFlat)
             {
                 _highest = _highest >= _last ? _highest : _last;
@@ -448,14 +371,14 @@ namespace TradingLib.Common
                     {
                         c.LastSettlementPrice = k.PreSettlement;
                     }
-                    Util.Info("update presettlementprice for position[" + this.Account + "-" + this.Symbol + "] price:" + _lastsettlementprice.ToString() + " tick presettlement:" + k.PreSettlement.ToString());
+                    //Util.Info("update presettlementprice for position[" + this.Account + "-" + this.Symbol + "] price:" + _lastsettlementprice.ToString() + " tick presettlement:" + k.PreSettlement.ToString());
                 }
                 //检查昨结算价格是否异常 如果获得了昨日结算价格 但是又和行情中的昨结算价格不一致则有异常
-                if (_lastsettlementprice != null && k.PreSettlement > 0 && k.PreSettlement != _lastsettlementprice)
-                {
-                    //Util.Debug("tick:" + k.ToString() +" presettlement:"+k.PreSettlement.ToString());
-                    //Util.Debug("PreSettlement price error,it changed during trading,tick presetttle:"+k.PreSettlement.ToString() +" local presettlement:"+_lastsettlementprice.ToString(), QSEnumDebugLevel.ERROR);
-                }
+                //if (_lastsettlementprice != null && k.PreSettlement > 0 && k.PreSettlement != _lastsettlementprice)
+                //{
+                //    //Util.Debug("tick:" + k.ToString() +" presettlement:"+k.PreSettlement.ToString());
+                //    //Util.Debug("PreSettlement price error,it changed during trading,tick presetttle:"+k.PreSettlement.ToString() +" local presettlement:"+_lastsettlementprice.ToString(), QSEnumDebugLevel.ERROR);
+                //}
 
 
                 //从行情更新结算价格 更新所有持仓明细的行情
@@ -467,7 +390,7 @@ namespace TradingLib.Common
                     {
                         p.SettlementPrice = k.Settlement;
                     }
-                    Util.Info("update settlementprice for position[" + this.Account + "-" + this.Symbol + "] price:" + _settlementprice.ToString());
+                    //Util.Info("update settlementprice for position[" + this.Account + "-" + this.Symbol + "] price:" + _settlementprice.ToString());
                 }
             }
         }
@@ -721,7 +644,7 @@ namespace TradingLib.Common
             }
         }
 
-
+        #region 平仓开仓事件
         /// <summary>
         /// 平仓 产生新的平仓明细
         /// </summary>
@@ -745,7 +668,10 @@ namespace TradingLib.Common
                 NewPositionDetailEvent(open, detail);
         }
         public event Action<Trade, PositionDetail> NewPositionDetailEvent;
-        
+
+        #endregion
+
+
         /// <summary>
         /// 利用平仓成交平掉对应的持仓明细 按照先开先平或者平今平昨的平仓逻辑
         /// 如果是净持仓 可能会导致逻辑异常 这里需要再分析一下
@@ -834,8 +760,6 @@ namespace TradingLib.Common
 
         }
 
-
-
         /// <summary>
         /// 加载数据库的昨日持仓对象到工作状态
         /// </summary>
@@ -856,7 +780,6 @@ namespace TradingLib.Common
             //记录该持仓对应的接口信息和对应的数据源
             pd.Broker = p.Broker; //分帐户侧平历史持仓时 需要根据broker来寻找对应的接口 否则会导致系统不知道从哪个接口平掉该持仓
             pd.Breed = p.Breed;
-
 
             //加载到今日持仓明细列表中的昨日持仓明细列表，需要将对应的昨日结算价格设定为昨日持仓明细的结算价格 并且不能被行情更新
             pd.LastSettlementPrice = p.SettlementPrice;
@@ -881,12 +804,12 @@ namespace TradingLib.Common
             PositionDetail pos = new PositionDetailImpl(this);
             pos.Account = f.Account;
             pos.oSymbol = f.oSymbol;
-            pos.IsHisPosition = false;//日内持仓
+            pos.IsHisPosition = false;//通过成交生成的开仓明细均为日内持仓
 
             pos.OpenDate = f.xDate;
             pos.OpenTime = f.xTime;
             //pos.LastSettlementPrice = this.LastSettlementPrice != null ? (decimal)this.LastSettlementPrice : f.xPrice;//新开仓设定昨日结算价
-            pos.Settleday = f.SettleDay;//由成交开仓的 则该持仓明细对应的结算日与成交记录的结算日一致
+            pos.Settleday = f.SettleDay;//持仓明细对应的结算日与成交记录的结算日一致
             pos.Side = f.PositionSide;
             pos.Volume = Math.Abs(f.xSize);
             pos.OpenPrice = f.xPrice;
@@ -900,6 +823,8 @@ namespace TradingLib.Common
 
             return pos;
         }
+
+
 
         /// <summary>
         /// 执行平仓操作 返回平仓明细
@@ -955,24 +880,8 @@ namespace TradingLib.Common
 
 
         #region 静态函数
-        public static Position Deserialize(string msg)
-        {
-            string[] r = msg.Split(',');
-            string sym = r[(int)PositionField.symbol];
-            decimal price = Convert.ToDecimal(r[(int)PositionField.price], System.Globalization.CultureInfo.InvariantCulture);
-            decimal cpl = Convert.ToDecimal(r[(int)PositionField.closedpl], System.Globalization.CultureInfo.InvariantCulture);
-            int size = Convert.ToInt32(r[(int)PositionField.size]);
-            string act = r[(int)PositionField.account];
-            Position p = new PositionImpl(sym,price,size,cpl,act,QSEnumPositionDirectionType.BothSide);
-            return p;
-        }
 
-        public static string Serialize(Position p)
-        {
-            string[] r = new string[] { p.Symbol, p.AvgPrice.ToString("F2", System.Globalization.CultureInfo.InvariantCulture), p.Size.ToString("F0", System.Globalization.CultureInfo.InvariantCulture), p.ClosedPL.ToString("F2", System.Globalization.CultureInfo.InvariantCulture), p.Account };
-            return string.Join(",", r);
-        }
-
+        
         /// <summary>
         /// 从一组持仓明细生成持仓汇总
         /// </summary>

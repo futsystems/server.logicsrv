@@ -60,18 +60,6 @@ namespace TradingLib.Common
                 default:
                     return pos.OpenPrice;
             }
-            //switch(pos.oSymbol.SecurityFamily.Type)
-            //{
-            //    //股票持仓的成本价为开仓价
-            //    case SecurityType.STK:
-            //        return pos.OpenPrice;
-            //    //国内期货 昨仓位昨日结算价 今仓为开仓价
-            //    case SecurityType.FUT:
-            //        return pos.IsHisPosition?pos.LastSettlementPrice:pos.OpenPrice;
-
-            //    default:
-            //        return pos.IsHisPosition?pos.LastSettlementPrice:pos.OpenPrice;
-            //}
         }
 
         /// <summary>

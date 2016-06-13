@@ -114,13 +114,48 @@ namespace TradingLib.Common
             { 
                     //股票持仓结算时进行持仓合并
                 case SecurityType.STK:
-                    return new List<PositionDetail>();
+                    return new List<PositionDetail>() { pos.MergePositionDetail() };
                 case SecurityType.FUT:
                     return pos.PositionDetailTotal.Where(pd => !pd.IsClosed());
                 default:
                     return pos.PositionDetailTotal.Where(pd => !pd.IsClosed());
             }
         }
+
+        /// <summary>
+        /// 将某个持仓的持仓明细进行明细合并
+        /// 股票结算时 会将当日交易以及未平持仓进行成本合并
+        /// </summary>
+        /// <param name="pos"></param>
+        /// <returns></returns>
+        static PositionDetail MergePositionDetail(this Position pos)
+        {
+            if (pos.isFlat) return null;
+            PositionDetail oldPd = pos.PositionDetailTotal.FirstOrDefault();
+            if (oldPd == null) return null;
+
+            PositionDetail pd = new PositionDetailImpl(pos);
+            pd.Account = pos.Account;
+            pd.oSymbol = pos.oSymbol;
+            pd.IsHisPosition = false;//通过成交生成的开仓明细均为日内持仓
+
+            pd.OpenDate = Util.ToTLDate();
+            pd.OpenTime = Util.ToTLTime();
+
+            //pos.LastSettlementPrice = this.LastSettlementPrice != null ? (decimal)this.LastSettlementPrice : f.xPrice;//新开仓设定昨日结算价
+            //pd.Settleday = f.SettleDay;//持仓明细对应的结算日与成交记录的结算日一致
+            pd.Side = pos.isLong;
+            pd.Volume = pos.UnsignedSize;
+            pd.OpenPrice = pos.AvgPrice;//持仓合并明细时 将当前持仓均价设为OpenPrice
+            pd.TradeID = "settle-merge";
+            pd.HedgeFlag = "";
+
+            //成交数据会传递Broker字段,用于记录该成交是哪个成交接口回报的，对应开仓时,我们需要标记该持仓明细数序那个成交接口
+            pd.Broker = oldPd.Broker;
+            pd.Breed = oldPd.Breed;
+            return pd;
+        }
+        
 
 
         #region 计算平仓盈亏与浮动盈亏
