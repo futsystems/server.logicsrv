@@ -83,7 +83,7 @@ namespace TradingLib.Core
 
         ConfigDB _cfgdb;
         bool _verbose = false;
-        int _sendWaterMark = 20000;
+        int _highWaterMark = 1000000;
         /// <summary>
         /// AsyncServer构造函数
         /// </summary>
@@ -114,11 +114,11 @@ namespace TradingLib.Core
             _verbose = _cfgdb["Verbose"].AsBool();
 
 
-            if (!_cfgdb.HaveConfig("SendWaterMark"))
+            if (!_cfgdb.HaveConfig("HighWaterMark"))
             {
-                _cfgdb.UpdateConfig("SendWaterMark", QSEnumCfgType.Int, 20000, "系统发送水位");
+                _cfgdb.UpdateConfig("HighWaterMark", QSEnumCfgType.Int, 20000, "系统发送水位");
             }
-            _sendWaterMark = _cfgdb["SendWaterMark"].AsInt();
+            _highWaterMark = _cfgdb["HighWaterMark"].AsInt();
 
             
 
@@ -346,11 +346,16 @@ namespace TradingLib.Core
                 using (ZSocket publisher = new ZSocket(ctx, ZSocketType.PUB))//PubSocket 行情发布端口
                 using (ZSocket serviceRep = new ZSocket(ctx, ZSocketType.REP))//RepSocket 服务查询端口
                 {
-                    frontend.SendHighWatermark = _sendWaterMark;
-                    backend.SendHighWatermark = _sendWaterMark;
-                    outchannel.SendHighWatermark = _sendWaterMark;
-                    outClient.SendHighWatermark = _sendWaterMark;
-                    serviceRep.SendHighWatermark = _sendWaterMark;
+                    frontend.SendHighWatermark = _highWaterMark;
+                    frontend.ReceiveHighWatermark = _highWaterMark;
+                    backend.SendHighWatermark = _highWaterMark;
+                    backend.ReceiveHighWatermark = _highWaterMark;
+                    outchannel.SendHighWatermark = _highWaterMark;
+                    outchannel.ReceiveHighWatermark = _highWaterMark;
+                    outClient.SendHighWatermark = _highWaterMark;
+                    outClient.ReceiveHighWatermark = _highWaterMark;
+                    serviceRep.SendHighWatermark = _highWaterMark;
+                    serviceRep.ReceiveHighWatermark = _highWaterMark;
 
 
                     //前端Router用于注册Client

@@ -251,7 +251,7 @@ namespace DataFeed.FastTick
                                 }
                                 else
                                 {
-                                    logger.Info("tick str:" + tickstr);
+                                    //logger.Info("tick str:" + tickstr);
                                 }
 
                                 //记录数据到达时间
