@@ -284,10 +284,10 @@ namespace TradingLib.Core
             //通过查找本地需要注册的合约 当通道链接成功时进行注册
             SymbolBasket basket = GetDataFeedSymbols(df);
 
-            //如果通过该通道已注册的行情为0 则加载所有默认合约进行注册
+            //该通道没有注册过任何合约 则注册所有可交易合约
             if (basket.Count == 0)
             {
-                logger.Info(string.Format("DataFeed[{0}] have not registed any symbol,register all symbol we trade", df.Token));
+                logger.Info(string.Format("DataFeed[{0}] have not registed any symbol,register all symbols tradable", df.Token));
                 SymbolBasket nb = new SymbolBasketImpl();
 
                 foreach (Symbol sym in BasicTracker.SymbolTracker.BasketAvabile)
@@ -298,7 +298,11 @@ namespace TradingLib.Core
                         nb.Add(sym);
                     }
                 }
-                this.RegisterSymbols(nb);
+                Action<SymbolBasket> del = new Action<SymbolBasket>(this.RegisterSymbols);
+                del.BeginInvoke(nb, (re) => { logger.Info("RegisterSymbol Complate"); }, null);
+
+                //this.RegisterSymbols(nb);
+                //logger.Info("Register Basket async");
             }
             else//如果有对应的合约 则重新注册
             {

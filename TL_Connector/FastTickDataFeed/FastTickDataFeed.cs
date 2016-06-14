@@ -200,6 +200,10 @@ namespace DataFeed.FastTick
             {
                 using (ZSocket subscriber = new ZSocket(context, ZSocketType.SUB), symbolreq = new ZSocket(context, ZSocketType.REQ))
                 {
+                    subscriber.SendHighWatermark = 1000000;
+                    subscriber.ReceiveHighWatermark = 1000000;
+                    symbolreq.SendHighWatermark = 1000000;
+                    symbolreq.ReceiveHighWatermark = 1000000;
                     string reqadd = "tcp://" + CurrentServer + ":" + reqport;
                     symbolreq.Connect(reqadd);
 
@@ -247,7 +251,7 @@ namespace DataFeed.FastTick
                                 }
                                 else
                                 {
-                                    //logger.Info("tick str:" + tickstr);
+                                    logger.Info("tick str:" + tickstr);
                                 }
 
                                 //记录数据到达时间
@@ -282,45 +286,6 @@ namespace DataFeed.FastTick
 
 
         #region 通过请求端口执行API请求
-        /// <summary>
-        /// 通过本地push向对应的FastTickServer发送消息
-        /// </summary>
-        /// <param name="type"></param>
-        /// <param name="msg"></param>
-        //void Send(TradingLib.API.MessageTypes type, string msg)
-        //{
-        //    if (_symbolreq != null)
-        //    {
-        //        lock (_symbolreq)
-        //        {
-        //            try
-        //            {
-        //                byte[] message = TradingLib.Common.Message.sendmessage(type, msg);
-        //                _symbolreq.Send(new ZFrame(message));
-        //                ZMessage response;
-        //                ZError error;
-        //                var poller = ZPollItem.CreateReceiver();
-        //                if(_symbolreq.PollIn(poller,out response,out error,timeout))
-        //                {
-        //                    logger.Debug(string.Format("Got Rep Response:", response.First().ReadString(Encoding.UTF8)));
-        //                    response.Clear();
-        //                }
-        //                else
-        //                {
-        //                    if(error == ZError.ETERM)
-        //                    {
-        //                        return;
-        //                    }
-        //                    throw new ZException(error);                            
-        //                }
-        //            }
-        //            catch (Exception ex)
-        //            {
-        //                logger.Error("发送消息异常:" + ex.ToString());
-        //            }
-        //        }
-        //    }
-        //}
 
         void Send(IPacket packet)
         {
