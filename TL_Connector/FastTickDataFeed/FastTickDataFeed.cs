@@ -382,20 +382,11 @@ namespace DataFeed.FastTick
                     //注册合约协议格式 DATAFEED:SYMBOL|EXCHANGE
                     foreach (var sym in kv.Value)
                     {
-                        //if (_tickversion == 1)
-                        //{
-                        //    string tmpreq = (kv.Key.ToString() + ":" + sym.Symbol + "|" + sym.SecurityFamily.Exchange.EXCode);
-                        //    logger.Info(Token + " RegisterSymbol " + tmpreq);
-                        //    Send(TradingLib.API.MessageTypes.MGRREGISTERSYMBOLS, tmpreq);
-                        //}
-                        //else if (_tickversion == 2)
-                        //{
-                            MDRegisterSymbolsRequest request = RequestTemplate<MDRegisterSymbolsRequest>.CliSendRequest(0);
-                            request.DataFeed = kv.Key;
-                            request.Exchange = sym.SecurityFamily.Exchange.EXCode;
-                            request.SymbolList.Add(sym.Symbol);
-                            Send(request);
-                        
+                        MDRegisterSymbolsRequest request = RequestTemplate<MDRegisterSymbolsRequest>.CliSendRequest(0);
+                        request.DataFeed = kv.Key;
+                        request.Exchange = sym.SecurityFamily.Exchange.EXCode;
+                        request.SymbolList.Add(sym.GetFullSymbol());
+                        Send(request);
                     }
 
                 }

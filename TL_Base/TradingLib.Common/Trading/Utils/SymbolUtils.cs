@@ -196,17 +196,24 @@ namespace TradingLib.Common
         {
             return string.Format("{0}-{1}",sym.Exchange,sym.Symbol);
         }
+
         /// <summary>
-        /// 当日到期
+        /// 获得合约注册时 包含品种类别信息的合约字符串
+        /// symbol@type
         /// </summary>
+        /// <param name="sym"></param>
         /// <returns></returns>
-        //public static bool IsExpiredToday(this Symbol sym)
-        //{
-        //    if (sym.ExpireDate == Util.ToTLDate())
-        //        return true;
-        //    return false;
-        //}
-
-
+        public static string GetFullSymbol(this Symbol sym)
+        {
+            switch (sym.SecurityType)
+            { 
+                case SecurityType.FUT:
+                    return sym.Symbol;
+                case SecurityType.STK:
+                    return "{0}@STK".Put(sym.Symbol);
+                default:
+                    return "{0}@{1}".Put(sym.Symbol,sym.SecurityType.ToString());
+            }
+        }
     }
 }
