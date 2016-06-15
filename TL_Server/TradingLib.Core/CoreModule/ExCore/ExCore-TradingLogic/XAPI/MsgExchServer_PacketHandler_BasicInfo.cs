@@ -96,7 +96,33 @@ namespace TradingLib.Core
             IEnumerable<Symbol> tmplsit = null;
             if (string.IsNullOrEmpty(request.Symbol))
             {
-                tmplsit = account.GetSymbols().Where(sym=>sym.IsTradeable);
+                TrdClientInfo client = tl.GetClient(request.ClientID);
+                //股票交易终端只返回必要的合约数据 其余合约数据延迟加载
+                if (client != null && client.ProductInfo.Equals(ProductInfo.T_XTRADER_STOCK))
+                {
+                    List<Symbol> list = new List<Symbol>();
+                    foreach (var pos in account.Positions)
+                    { 
+                        if(pos.oSymbol == null) continue;
+                        if (!list.Contains(pos.oSymbol))
+                        {
+                            list.Add(pos.oSymbol);
+                        }
+                    }
+                    foreach (var order in account.Orders)
+                    {
+                        if (order.oSymbol == null) continue;
+                        if (!list.Contains(order.oSymbol))
+                        {
+                            list.Add(order.oSymbol);
+                        }
+                    }
+                    tmplsit = list;
+                }
+                else
+                {
+                    tmplsit = account.GetSymbols().Where(sym => sym.IsTradeable);
+                }
             }
             else
             {
