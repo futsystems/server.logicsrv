@@ -204,6 +204,10 @@ namespace TradingLib.Common
                     //查询行情快照
                     case MessageTypes.XQRYTICKSNAPSHOT:
                         return RequestTemplate<XQryTickSnapShotRequest>.SrvRecvRequest(frontid, clientid, content);
+                    //查询交易账户
+                    case MessageTypes.XQRYACCOUNT:
+                        return RequestTemplate<XQryAccountRequest>.SrvRecvRequest(frontid, clientid, content);
+
 
                     #region manager
                     case MessageTypes.MGRLOGINREQUEST://请求登入
@@ -441,6 +445,8 @@ namespace TradingLib.Common
                     return ResponseTemplate<RspXQryTradeResponse>.CliRecvResponse(message);
                 case MessageTypes.XTICKSNAPSHOTRESPONSE://行情快照回报
                     return ResponseTemplate<RspXQryTickSnapShotResponse>.CliRecvResponse(message);
+                case MessageTypes.XACCOUNTRESPONSE://交易账户回报
+                    return ResponseTemplate<RspXQryAccountResponse>.CliRecvResponse(message);
 
                 case MessageTypes.TICKNOTIFY:
                     return ResponseTemplate<TickNotify>.CliRecvResponse(message);

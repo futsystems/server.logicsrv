@@ -162,17 +162,25 @@ namespace TradingLib.Core
         void SrvOnXQryTickSnapShot(XQryTickSnapShotRequest request, IAccount account)
         {
             logger.Info("XQryTickSnapShot:" + request.ToString());
-            Symbol[] symlist = account.GetSymbols().Where(sym => sym.IsTradeable).ToArray();
-            int totalnum = symlist.Length;
+            IEnumerable<Symbol> symlist= null;
+            if (string.IsNullOrEmpty(request.Symbol))
+            {
+                symlist = account.GetSymbols().Where(sym => sym.IsTradeable);//未指定合约 则所有可交易合约
+            }
+            else
+            {
+                symlist = account.GetSymbols().Where(sym => sym.IsTradeable).Where(sym => sym.Symbol == request.Symbol);//获得某个合约
+            }
+
+            int totalnum = symlist.Count();
             if (totalnum > 0)
             {
                 for (int i = 0; i < totalnum; i++)
                 {
-                    Tick k = TLCtxHelper.ModuleDataRouter.GetTickSnapshot(symlist[i].Symbol);// CmdUtils.GetTickSnapshot(symlist[i].Symbol);
+                    Tick k = TLCtxHelper.ModuleDataRouter.GetTickSnapshot(symlist.ElementAt(i).Symbol);
                     if (k == null || !k.IsValid())
                     {
-                        k = TLCtxHelper.ModuleSettleCentre.GetLastTickSnapshot(symlist[i].Symbol);
-                        //MarketData md = TLCtxHelper.ModuleSettleCentre.GetSettlementPrice(TLCtxHelper.ModuleSettleCentre.Tradingday, symlist[i].Symbol);
+                        k = TLCtxHelper.ModuleSettleCentre.GetLastTickSnapshot(symlist.ElementAt(i).Symbol);
                     }
                     RspXQryTickSnapShotResponse response = ResponseTemplate<RspXQryTickSnapShotResponse>.SrvSendRspResponse(request);
                     response.Tick = k;
@@ -184,6 +192,20 @@ namespace TradingLib.Core
                 RspXQryTickSnapShotResponse response = ResponseTemplate<RspXQryTickSnapShotResponse>.SrvSendRspResponse(request);
                 CacheRspResponse(response);
             }
+        }
+
+        /// <summary>
+        /// 响应查询账户请求
+        /// 
+        /// </summary>
+        /// <param name="request"></param>
+        /// <param name="account"></param>
+        void SrvOnXQryAccount(XQryAccountRequest request, IAccount account)
+        {
+            logger.Info("XQryAccountRequest:" + request.ToString());
+            RspXQryAccountResponse respone = ResponseTemplate<RspXQryAccountResponse>.SrvSendRspResponse(request);
+            respone.Account = account.GenAccountLite();
+            CacheRspResponse(respone);
         }
 
     }

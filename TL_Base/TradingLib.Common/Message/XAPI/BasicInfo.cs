@@ -272,4 +272,57 @@ namespace TradingLib.Common
             this.Tick = TickImpl.Deserialize(content);
         }
     }
+
+
+    /// <summary>
+    /// 查交易账户请求
+    /// </summary>
+    public class XQryAccountRequest : RequestPacket
+    {
+        public XQryAccountRequest()
+        {
+            _type = MessageTypes.XQRYACCOUNT;
+        }
+
+      
+        public override string ContentSerialize()
+        {
+            return string.Empty;
+        }
+
+        public override void ContentDeserialize(string contentstr)
+        {
+          
+        }
+
+    }
+
+    /// <summary>
+    /// 查询交易账户回报
+    /// </summary>
+    public class RspXQryAccountResponse : RspResponsePacket
+    {
+        public RspXQryAccountResponse()
+        {
+            _type = MessageTypes.XACCOUNTRESPONSE;
+            this.Account = null;
+        }
+
+        public AccountLite Account { get; set; }
+
+        public override string ResponseSerialize()
+        {
+            if (this.Account == null)
+                return string.Empty;
+            return AccountLite.Serialize(this.Account);
+        }
+
+        public override void ResponseDeserialize(string content)
+        {
+            if (string.IsNullOrEmpty(content))
+                this.Account = null;
+            else
+                this.Account = AccountLite.Deserialize(content);
+        }
+    }
 }

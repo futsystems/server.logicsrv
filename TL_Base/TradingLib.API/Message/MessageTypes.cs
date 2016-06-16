@@ -100,6 +100,7 @@ namespace TradingLib.API
         XQRYTRADE,//查询成交
         UPDATELOCATION,//更新地址信息
         XQRYTICKSNAPSHOT,//查询行情快照
+        XQRYACCOUNT,//查询交易账户
 
         DOMREQUEST,//请求DOM市场Level2数据
         IMBALANCEREQUEST,//imbalance..查询这个是什么意思
@@ -165,6 +166,7 @@ namespace TradingLib.API
         XTRADERESPONSE,//成交回报
         //UPDATELOCATIONRESPONSE,//更新地址回报
         XTICKSNAPSHOTRESPONSE,//行情快照回报
+        XACCOUNTRESPONSE,//交易账户回报
         BIN_BARRESPONSE,//二进制Bar回报
         MD_DEMOTICK,//行情服务器测试Tick
         // END STANDARD MESSAGES

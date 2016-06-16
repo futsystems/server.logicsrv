@@ -198,6 +198,12 @@ namespace TradingLib.Core
                         SrvOnXQryTickSnapShot(request, account);
                     }
                     break;
+                case MessageTypes.XQRYACCOUNT://查询交易账户
+                    {
+                        XQryAccountRequest request = packet as XQryAccountRequest;
+                        SrvOnXQryAccount(request, account);
+                    }
+                    break;
 
                 case MessageTypes.CONTRIBREQUEST://扩展请求
                     {
