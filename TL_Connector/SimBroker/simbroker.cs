@@ -31,11 +31,11 @@ namespace Broker.SIM
     /// </summary>
     public class SIMTrader:TLBrokerBase, IBroker
     {
-
+        ConfigDB _cfgdb;
         public const string PROGRAM = "Broker.SIM";
 
         AsyncResponse asynctick;
-
+        bool _stickprice = false;
         int _fillseq = 2000;
         Random random = new Random();
         object _fillseqobj = new object();
@@ -67,6 +67,14 @@ namespace Broker.SIM
             asynctick = new AsyncResponse("SIMBroker");
             asynctick.GotTick +=new TickDelegate(asynctick_GotTick);
             _fillseq = random.Next(1000, 4000);
+
+            _cfgdb = new ConfigDB("SIMBroker");
+            if (!_cfgdb.HaveConfig("STICKLIMITPRICE"))
+            {
+                _cfgdb.UpdateConfig("STICKLIMITPRICE", QSEnumCfgType.Bool, false, "按委托限价成交");
+            }
+            _stickprice = _cfgdb["STICKLIMITPRICE"].AsBool();
+
         }
 
         /* 参数
@@ -490,6 +498,11 @@ namespace Broker.SIM
                         fill.BrokerTradeID = NextFillSeq.ToString();//交易所成交编号 Broker端的成交编号
                         //Util.Debug("@@@@@@@@@@@@@@@@@@trade date:" + fill.xDate.ToString() + " tradetime:" + fill.xTime.ToString(),QSEnumDebugLevel.ERROR);
                         debug("PTT Server Filled: " + fill.GetTradeDetail(), QSEnumDebugLevel.INFO);
+                        //如果是限价单 并且 需要按限价来成交 则成交价格为委托单限定价格，避免挂单6卖出，成交在8. 严格按照限价单价格进行
+                        if (_stickprice && o.isLimit)
+                        {
+                            fill.xPrice = o.LimitPrice;
+                        }
 
                         bool partial = fill.UnsignedSize != o.UnsignedSize;//如果是部分成交 则需要将剩余未成交的委托 返还到委托队列
                         if (partial)
