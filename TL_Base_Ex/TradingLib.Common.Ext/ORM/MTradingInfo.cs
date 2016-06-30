@@ -309,6 +309,7 @@ namespace TradingLib.ORM
         }
 
 
+
         /// <summary>
         /// 插入成交数据
         /// </summary>
@@ -412,16 +413,22 @@ namespace TradingLib.ORM
         /// <param name="begin"></param>
         /// <param name="end"></param>
         /// <returns></returns>
-        public static IList<Trade> SelectHistTrades(string account, int begin, int end)
+        public static IList<Trade> SelectTrades(string account, int begin, int end, QSEnumOrderBreedType breed = QSEnumOrderBreedType.ACCT)
         {
             using (DBMySql db = new DBMySql())
             {
-                string query = string.Format("SELECT * FROM  {0}  WHERE settleday >='{1}' AND settleday <='{2}' AND account='{3}'", "log_trades", begin, end, account);
+                string query = string.Format("SELECT * FROM  {0}  WHERE settleday >='{1}' AND settleday <='{2}' AND account='{3}' AND breed='{4}'", "tmp_trades", begin, end,account, breed);
                 List<Trade> trades = db.Connection.Query<TradeImpl>(query).ToList<Trade>();
 
+                string query2 = string.Format("SELECT * FROM  {0}  WHERE settleday >='{1}' AND settleday <='{2}'  AND account='{3}' AND breed='{4}'", "log_trades", begin, end,account, breed);
+                List<Trade> trades2 = db.Connection.Query<TradeImpl>(query2).ToList<Trade>();
+
+                trades.Union(trades2, new TradeCompare());
                 return trades;
             }
         }
+
+
 
         /// <summary>
         /// 插入委托操作

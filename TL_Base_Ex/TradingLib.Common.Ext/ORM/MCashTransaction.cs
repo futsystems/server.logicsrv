@@ -69,7 +69,7 @@ namespace TradingLib.ORM
         {
             using (DBMySql db = new DBMySql())
             {
-                string query = string.Format("SELECT * FROM log_cashtrans WHERE account='{0}' AND settleday>='{2}' AND settleday<='{3}'", account, begin, end);
+                string query = string.Format("SELECT * FROM log_cashtrans WHERE account='{0}' AND settleday>='{1}' AND settleday<='{2}'", account, begin, end);
                 return db.Connection.Query<CashTransactionImpl>(query);
             }
         }

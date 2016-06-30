@@ -128,7 +128,7 @@ namespace TradingLib.Core
             //查询历史持仓 计算保证金占用
             //IList<SettlePosition> positions = ORM.MTradingInfo.SelectHistPositions(s.Account, s.Settleday, s.Settleday);
             //成交明细
-            IList<Trade> trades = ORM.MTradingInfo.SelectHistTrades(s.Account, s.Settleday, s.Settleday);
+            IList<Trade> trades = ORM.MTradingInfo.SelectTrades(s.Account, s.Settleday, s.Settleday);
             //持仓明细
             IEnumerable<PositionDetail> positiondetails = ORM.MSettlement.SelectPositionDetails(s.Account,s.Settleday);
             //平仓明细

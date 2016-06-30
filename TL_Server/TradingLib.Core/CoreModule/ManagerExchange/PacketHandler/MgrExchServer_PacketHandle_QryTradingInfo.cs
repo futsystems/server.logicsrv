@@ -50,7 +50,7 @@ namespace TradingLib.Core
             //权限验证
             manager.ValidRightReadAccount(request.Account);
 
-            IList<Trade> trades = ORM.MTradingInfo.SelectHistTrades(request.Account, request.Start, request.End);
+            IList<Trade> trades = ORM.MTradingInfo.SelectTrades(request.Account, request.Start, request.End);
             int totalnum = trades.Count;
             if (totalnum > 0)
             {
