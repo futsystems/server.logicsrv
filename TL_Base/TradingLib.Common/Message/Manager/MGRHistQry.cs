@@ -14,34 +14,40 @@ namespace TradingLib.Common
         public MGRQryOrderRequest()
         {
             _type = MessageTypes.MGRQRYORDER;
-            this.TradingAccount = string.Empty;
-            this.Settleday = 0;
+            this.Account = string.Empty;
+            this.Start = 0;
+            this.End = 0;
         }
         /// <summary>
         /// 查询交易帐号
         /// </summary>
-        public string TradingAccount { get; set; }
+        public string Account { get; set; }
         
         /// <summary>
         /// 查询的结算日
         /// </summary>
-        public int Settleday { get; set; }
+        public int Start { get; set; }
+
+        public int End { get; set; }
 
         public override string ContentSerialize()
         {
             StringBuilder sb = new StringBuilder();
             char d = ',';
-            sb.Append(this.TradingAccount);
+            sb.Append(this.Account);
             sb.Append(d);
-            sb.Append(this.Settleday.ToString());
+            sb.Append(this.Start);
+            sb.Append(d);
+            sb.Append(this.End);
             return sb.ToString();
         }
 
         public override void ContentDeserialize(string contentstr)
         {
             string[] rec = contentstr.Split(',');
-            this.TradingAccount = rec[0];
-            this.Settleday = int.Parse(rec[1]);
+            this.Account = rec[0];
+            this.Start = int.Parse(rec[1]);
+            this.End = int.Parse(rec[2]);
         }
     }
 
@@ -85,34 +91,39 @@ namespace TradingLib.Common
         public MGRQryTradeRequest()
         {
             _type = MessageTypes.MGRQRYTRADE;
-            this.TradingAccount = string.Empty;
-            this.Settleday = 0;
+            this.Account = string.Empty;
+            this.Start = 0;
+            this.End = 0;
         }
         /// <summary>
         /// 查询交易帐号
         /// </summary>
-        public string TradingAccount { get; set; }
+        public string Account { get; set; }
 
         /// <summary>
         /// 查询的结算日
         /// </summary>
-        public int Settleday { get; set; }
+        public int Start { get; set; }
+        public int End { get; set; }
 
         public override string ContentSerialize()
         {
             StringBuilder sb = new StringBuilder();
             char d = ',';
-            sb.Append(this.TradingAccount);
+            sb.Append(this.Account);
             sb.Append(d);
-            sb.Append(this.Settleday.ToString());
+            sb.Append(this.Start);
+            sb.Append(d);
+            sb.Append(this.End);
             return sb.ToString();
         }
 
         public override void ContentDeserialize(string contentstr)
         {
             string[] rec = contentstr.Split(',');
-            this.TradingAccount = rec[0];
-            this.Settleday = int.Parse(rec[1]);
+            this.Account = rec[0];
+            this.Start = int.Parse(rec[1]);
+            this.End = int.Parse(rec[2]);
         }
 
     }
@@ -157,34 +168,35 @@ namespace TradingLib.Common
         public MGRQryPositionRequest()
         {
             _type = MessageTypes.MGRQRYPOSITION;
-            this.TradingAccount = string.Empty;
+            this.Account = string.Empty;
             this.Settleday = 0;
 
         }
         /// <summary>
         /// 查询交易帐号
         /// </summary>
-        public string TradingAccount { get; set; }
+        public string Account { get; set; }
 
         /// <summary>
         /// 查询的结算日
         /// </summary>
         public int Settleday { get; set; }
+        public int End { get; set; }
 
         public override string ContentSerialize()
         {
             StringBuilder sb = new StringBuilder();
             char d = ',';
-            sb.Append(this.TradingAccount);
+            sb.Append(this.Account);
             sb.Append(d);
-            sb.Append(this.Settleday.ToString());
+            sb.Append(this.Settleday);
             return sb.ToString();
         }
 
         public override void ContentDeserialize(string contentstr)
         {
             string[] rec = contentstr.Split(',');
-            this.TradingAccount = rec[0];
+            this.Account = rec[0];
             this.Settleday = int.Parse(rec[1]);
         }
 
@@ -198,19 +210,28 @@ namespace TradingLib.Common
         public RspMGRQryPositionResponse()
         {
             _type = MessageTypes.MGRPOSITIONRESPONSE;
-            this.PostionToSend = new PositionDetailImpl();
+            this.PostionToSend = null;
         }
 
         public PositionDetail PostionToSend { get; set; }
 
         public override string ResponseSerialize()
         {
+            if (this.PostionToSend == null)
+                return string.Empty;
             return PositionDetailImpl.Serialize(this.PostionToSend);
         }
 
         public override void ResponseDeserialize(string content)
         {
-            this.PostionToSend = PositionDetailImpl.Deserialize(content);
+            if (string.IsNullOrEmpty(content))
+            {
+                this.PostionToSend = null;
+            }
+            else
+            {
+                this.PostionToSend = PositionDetailImpl.Deserialize(content);
+            }
         }
     }
 
@@ -222,32 +243,40 @@ namespace TradingLib.Common
         public MGRQryCashRequest()
         {
             _type = MessageTypes.MGRQRYCASH;
+            this.Account = string.Empty;
+            this.Start = 0;
+            this.End = 0;
+
         }
         /// <summary>
         /// 查询交易帐号
         /// </summary>
-        public string TradingAccount { get; set; }
+        public string Account { get; set; }
 
         /// <summary>
         /// 查询的结算日
         /// </summary>
-        public int Settleday { get; set; }
+        public int Start { get; set; }
+        public int End { get; set; }
 
         public override string ContentSerialize()
         {
             StringBuilder sb = new StringBuilder();
             char d = ',';
-            sb.Append(this.TradingAccount);
+            sb.Append(this.Account);
             sb.Append(d);
-            sb.Append(this.Settleday.ToString());
+            sb.Append(this.Start);
+            sb.Append(d);
+            sb.Append(this.End);
             return sb.ToString();
         }
 
         public override void ContentDeserialize(string contentstr)
         {
             string[] rec = contentstr.Split(',');
-            this.TradingAccount = rec[0];
-            this.Settleday = int.Parse(rec[1]);
+            this.Account = rec[0];
+            this.Start = int.Parse(rec[1]);
+            this.End = int.Parse(rec[2]);
         }
 
     }
@@ -288,11 +317,13 @@ namespace TradingLib.Common
         public MGRQrySettleRequest()
         {
             _type = MessageTypes.MGRQRYSETTLEMENT;//查询结算单
+            this.Account = string.Empty;
+            this.Settleday = 0;
         }
         /// <summary>
         /// 查询交易帐号
         /// </summary>
-        public string TradingAccount { get; set; }
+        public string Account { get; set; }
 
         /// <summary>
         /// 查询的结算日
@@ -303,16 +334,16 @@ namespace TradingLib.Common
         {
             StringBuilder sb = new StringBuilder();
             char d = ',';
-            sb.Append(this.TradingAccount);
+            sb.Append(this.Account);
             sb.Append(d);
-            sb.Append(this.Settleday.ToString());
+            sb.Append(this.Settleday);
             return sb.ToString();
         }
 
         public override void ContentDeserialize(string contentstr)
         {
             string[] rec = contentstr.Split(',');
-            this.TradingAccount = rec[0];
+            this.Account = rec[0];
             this.Settleday = int.Parse(rec[1]);
         }
 

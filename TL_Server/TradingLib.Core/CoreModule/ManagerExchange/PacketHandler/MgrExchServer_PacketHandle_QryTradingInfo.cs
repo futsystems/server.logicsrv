@@ -16,9 +16,9 @@ namespace TradingLib.Core
                 logger.Info(string.Format("管理员:{0} 请求查询历史委托:{1}", session.AuthorizedID, request.ToString()));
 
                 //权限验证
-                manager.ValidRightReadAccount(request.TradingAccount);
+                manager.ValidRightReadAccount(request.Account);
 
-                IList<Order> orders = ORM.MTradingInfo.SelectHistOrders(request.TradingAccount, request.Settleday, request.Settleday);
+                IList<Order> orders = ORM.MTradingInfo.SelectOrders(request.Account, request.Start, request.End);
                 int totalnum = orders.Count;
                 if (totalnum > 0)
                 {
@@ -34,7 +34,6 @@ namespace TradingLib.Core
                 {
                     //返回空项目
                     RspMGRQryOrderResponse response = ResponseTemplate<RspMGRQryOrderResponse>.SrvSendRspResponse(request);
-                    //response.OrderToSend = new OrderImpl();
                     CacheRspResponse(response);
                 }
             }
@@ -49,9 +48,9 @@ namespace TradingLib.Core
             logger.Info(string.Format("管理员:{0} 请求查询历史成交:{1}", session.AuthorizedID, request.ToString()));
 
             //权限验证
-            manager.ValidRightReadAccount(request.TradingAccount);
+            manager.ValidRightReadAccount(request.Account);
 
-            IList<Trade> trades = ORM.MTradingInfo.SelectHistTrades(request.TradingAccount, request.Settleday, request.Settleday);
+            IList<Trade> trades = ORM.MTradingInfo.SelectHistTrades(request.Account, request.Start, request.End);
             int totalnum = trades.Count;
             if (totalnum > 0)
             {
@@ -77,9 +76,9 @@ namespace TradingLib.Core
             logger.Info(string.Format("管理员:{0} 请求查询历史持仓:{1}", session.AuthorizedID, request.ToString()));
 
             //权限验证
-            manager.ValidRightReadAccount(request.TradingAccount);
+            manager.ValidRightReadAccount(request.Account);
 
-            IList<PositionDetail> positions = ORM.MSettlement.SelectAccountPositionDetails(request.TradingAccount,request.Settleday).ToList();//ORM.MTradingInfo.selecth(request.TradingAccount, request.Settleday, request.Settleday);
+            IList<PositionDetail> positions = ORM.MSettlement.SelectAccountPositionDetails(request.Account,request.Settleday).ToList();//ORM.MTradingInfo.selecth(request.TradingAccount, request.Settleday, request.Settleday);
             int totalnum = positions.Count();
             if (totalnum > 0)
             {
@@ -105,9 +104,9 @@ namespace TradingLib.Core
             try
             {
                 //权限验证
-                manager.ValidRightReadAccount(request.TradingAccount);
+                manager.ValidRightReadAccount(request.Account);
 
-                CashTransaction[] cts = ORM.MCashTransaction.SelectHistCashTransactions(request.TradingAccount, request.Settleday, request.Settleday).ToArray();
+                CashTransaction[] cts = ORM.MCashTransaction.SelectHistCashTransactions(request.Account, request.Start, request.End).ToArray();
                 int totalnum = cts.Length;
                 if (totalnum > 0)
                 {
@@ -138,10 +137,10 @@ namespace TradingLib.Core
             try
             {
                 //权限验证
-                manager.ValidRightReadAccount(request.TradingAccount);
+                manager.ValidRightReadAccount(request.Account);
 
-                IAccount account = TLCtxHelper.ModuleAccountManager[request.TradingAccount];
-                AccountSettlement settlement = ORM.MSettlement.SelectSettlement(request.TradingAccount, request.Settleday);
+                IAccount account = TLCtxHelper.ModuleAccountManager[request.Account];
+                AccountSettlement settlement = ORM.MSettlement.SelectSettlement(request.Account, request.Settleday);
                 if (settlement != null)
                 {
                     List<string> settlelist = SettlementFactory.GenSettlementFile(settlement, account);
