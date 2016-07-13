@@ -34,7 +34,7 @@ namespace TradingLib.Common
         public static decimal GetAmount(this Trade f)
         {
             decimal multiple = f.oSymbol == null ? 1 : f.oSymbol.Multiple;
-            return Math.Abs(f.xSize) * multiple;
+            return  f.xPrice * Math.Abs(f.xSize) * multiple;
         }
 
         /// <summary>
