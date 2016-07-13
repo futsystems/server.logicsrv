@@ -133,7 +133,15 @@ namespace TradingLib.Common
             info.Profit = acc.Profit;
             info.TotalPositionSize = acc.GetTotalPositionSize();
             info.Credit = acc.Credit;
-            info.SecurityMarketValue = acc.SecurityMarketValue;
+
+            info.StkBuyAmount = acc.CalcStkBuyAmount();
+            info.StkSellAmount = acc.CalcStkSellAmount();
+            info.StkCommission = acc.CalcStkCommission();
+            info.StkMoneyFronzen = acc.CalcStkMoneyFrozen();
+            info.StkAvabileFunds = acc.AvabileFunds;
+            info.StkPositoinValue = acc.CalcStkPositionMarketValue();
+            info.StkPositionCost = acc.CalcStkPositionCost();
+            info.StkRealizedPL = acc.CalcStkRealizedPL();
             return info;
         }
 
