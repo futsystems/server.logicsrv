@@ -82,6 +82,10 @@ namespace TradingLib.Common
             sb.Append(c.Settled);
             sb.Append(d);
             sb.Append(c.DateTime);
+            sb.Append(d);
+            sb.Append(c.Operator);
+            sb.Append(d);
+            sb.Append(c.TxnID);
             return sb.ToString();
         }
 
@@ -98,6 +102,8 @@ namespace TradingLib.Common
             s.Settleday = int.Parse(rec[6]);
             s.Settled = bool.Parse(rec[7]);
             s.DateTime = long.Parse(rec[8]);
+            s.Operator = rec[9];
+            s.TxnID = rec[10];
             return s;
         
         }
