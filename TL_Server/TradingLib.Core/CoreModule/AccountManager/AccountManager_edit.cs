@@ -208,6 +208,53 @@ namespace TradingLib.Core
                 
             }
         }
+
+        /// <summary>
+        /// 执行分红操作
+        /// 讲分红操作生成对应的出入金操作
+        /// </summary>
+        /// <param name="txn"></param>
+        public void PowerOperation(PowerTransaction txn)
+        {
+            logger.Info("Dividend {0} into Account:{1}".Put(txn.Dividend, txn.Dividend));
+            IAccount acc = this[txn.Account];
+            if (acc == null)
+            {
+                throw new FutsRspError("交易帐户不存在");
+            }
+
+            //没有金额调整
+            if (txn.Dividend == 0 && txn.Amount == 0) return;
+
+
+            CashTransaction cashtxn = new CashTransactionImpl();
+            cashtxn.Account = txn.Account;
+
+            bool isdeposit = txn.Dividend > 0;
+            if (isdeposit)
+            {
+                cashtxn.Amount = txn.Dividend;
+            }
+            else
+            {
+                cashtxn.Amount = txn.Amount;
+            }
+            cashtxn.DateTime = Util.ToTLDateTime();
+            cashtxn.EquityType = QSEnumEquityType.OwnEquity;
+            cashtxn.Operator = "System";
+            cashtxn.Settled = false;
+            cashtxn.Settleday = txn.Settleday;
+
+            cashtxn.TxnType = isdeposit ? QSEnumCashOperation.Deposit : QSEnumCashOperation.WithDraw;
+
+            cashtxn.Comment = isdeposit?("持仓{0}[{1}] 分红:{2}".Put(txn.Size, txn.Symbol, txn.Dividend)):("持仓{0}[{1}] 应付:{2}".Put(txn.Size,txn.Symbol,txn.Amount));
+
+            cashtxn.TxnID = GenTxnID();
+            acc.CashTrans(cashtxn);
+            TLCtxHelper.ModuleDataRepository.NewCashTransaction(cashtxn);
+
+        
+        }
         /// <summary>
         /// 交易账户的资金操作
         /// amount带有符号，正数表示入金 负数表示出金
@@ -245,6 +292,7 @@ namespace TradingLib.Core
 
             //生成唯一序列号
             txn.TxnID = GenTxnID();
+
             acc.CashTrans(txn);
             TLCtxHelper.ModuleDataRepository.NewCashTransaction(txn);
             //ORM.MCashTransaction.InsertCashTransaction(txn);

@@ -93,6 +93,8 @@
     <Compile Include="ORM\MCommission.cs" />
     <Compile Include="ORM\MExchangeRate.cs" />
     <Compile Include="ORM\MMargin.cs" />
+    <Compile Include="ORM\MPowerData.cs" />
+    <Compile Include="ORM\MPowerTransaction.cs" />
     <Compile Include="ORM\MStrategy.cs" />
     <Compile Include="ORM\MSystem.cs" />
     <Compile Include="Tracker\BasicTracker\AccountProfileTracker.cs" />
@@ -100,6 +102,7 @@
     <Compile Include="Tracker\BasicTracker\ConnectorMap\AccountConnectorPair.cs" />
     <Compile Include="Tracker\BasicTracker\ConnectorMap\AccountConnectorTracker.cs" />
     <Compile Include="Tracker\BasicTracker\ExchangeRateTracker.cs" />
+    <Compile Include="Tracker\BasicTracker\PowrDataTracker.cs" />
     <Compile Include="Tracker\BasicTracker\Template\CommissionTemplateTracker.cs" />
     <Compile Include="Tracker\BasicTracker\Template\ExStrategyTemplateTracker.cs" />
     <Compile Include="Tracker\BasicTracker\Template\MarginTemplateTracker.cs" />

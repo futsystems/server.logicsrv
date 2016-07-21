@@ -3,14 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using TradingLib.API;
-
+using TradingLib.Common;
 
 namespace TradingLib.Common
 {
     /// <summary>
-    /// 除权数据
+    /// 除权操作
     /// </summary>
-    public class PowerData
+    public class PowerTransactionImpl:PowerTransaction
     {
         /// <summary>
         /// 结算日
@@ -18,30 +18,37 @@ namespace TradingLib.Common
         public int Settleday { get; set; }
 
         /// <summary>
+        /// 交易账户
+        /// </summary>
+        public string Account { get; set; }
+
+        /// <summary>
         /// 合约
         /// </summary>
         public string Symbol { get; set; }
 
+
         /// <summary>
-        /// 每股分红
+        /// 持仓
+        /// </summary>
+        public int Size { get; set; }
+
+
+        /// <summary>
+        /// 分红金额
         /// </summary>
         public decimal Dividend { get; set; }
 
 
         /// <summary>
-        /// 每股送多少股 10送1等
+        /// 送/配 股数
         /// </summary>
-        public decimal DonateShares { get; set; }
-
-        /// <summary>
-        /// 每股配多少股 10配2,配股价为10
-        /// </summary>
-        public decimal RationeShares { get; set; }
+        public int Shares { get; set; }
 
 
         /// <summary>
-        /// 配股价
+        /// 应支付金额
         /// </summary>
-        public decimal RationePrice { get; set; }
+        public decimal Amount { get; set; }
     }
 }

@@ -50,6 +50,8 @@ namespace TradingLib.Common
         //汇率数据维护器
         ExchangeRateTracker exchangeratetracker;
 
+        PowerDataTracker powerdatatracker;
+
         static BasicTracker()
         {
             defaultinstance = new BasicTracker();
@@ -203,6 +205,7 @@ namespace TradingLib.Common
         //    }
         //}
 
+        
         /// <summary>
         /// 域维护器
         /// </summary>
@@ -318,6 +321,20 @@ namespace TradingLib.Common
                 if (defaultinstance.exchangeratetracker == null)
                     defaultinstance.exchangeratetracker = new ExchangeRateTracker();
                 return defaultinstance.exchangeratetracker;
+            }
+        }
+
+
+        /// <summary>
+        /// 除权数据维护器
+        /// </summary>
+        public static PowerDataTracker PowerDataTracker
+        {
+            get
+            {
+                if (defaultinstance.powerdatatracker == null)
+                    defaultinstance.powerdatatracker = new PowerDataTracker();
+                return defaultinstance.powerdatatracker;
             }
         }
 

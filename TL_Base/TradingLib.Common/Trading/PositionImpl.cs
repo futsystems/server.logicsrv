@@ -682,6 +682,7 @@ namespace TradingLib.Common
         /// <param name="close"></param>
         decimal  ClosePosition(Trade close,out bool closefail)
         {
+            
             closefail = false;
 
             int remainsize = close.UnsignedSize;

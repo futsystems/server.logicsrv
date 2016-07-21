@@ -217,6 +217,73 @@ namespace TradingLib.Common
                 //将已经结算的持仓从内存数据对象中屏蔽 持仓数据是一个状态数据,因此我们这里将上个周期的持仓对象进行屏蔽
                 this.TKPosition.DropSettled();
 
+                //处理所有持仓生成除权操作数据集
+                List<PowerTransaction> powertrans = new List<PowerTransaction>();
+                //执行除权操作 遍历所有持仓
+                foreach (var pos in positiondetail_settle)
+                {
+                    PowerData pd = BasicTracker.PowerDataTracker[pos.Symbol];
+                    if (pd == null) continue;
+                    //执行分红操作
+                    if (pd.Dividend != 0)
+                    {
+                        PowerTransaction txn = new PowerTransactionImpl();
+                        txn.Settleday = settleday;
+                        txn.Account = this.ID;
+                        txn.Symbol = pos.Symbol;
+                        txn.Size = pos.Volume;
+
+                        txn.Dividend = txn.Size * pd.Dividend;//计算分红金额
+                        powertrans.Add(txn);
+                    }
+                    //执行送股操作
+                    if (pd.DonateShares != 0)
+                    {
+                        PowerTransaction txn = new PowerTransactionImpl();
+                        txn.Settleday = settleday;
+                        txn.Account = this.ID;
+                        txn.Symbol = pos.Symbol;
+                        txn.Size = pos.Volume;
+
+                        txn.Shares = (int)(pos.Volume * pd.DonateShares);
+
+                        if (txn.Shares > 0)
+                        {
+                            powertrans.Add(txn);
+                        }
+
+                    }
+                    //执行配股操作
+                    if (pd.RationeShares != 0 && pd.RationePrice != 0)
+                    {
+                        PowerTransaction txn = new PowerTransactionImpl();
+                        txn.Settleday = settleday;
+                        txn.Account = this.ID;
+                        txn.Symbol = pos.Symbol;
+                        txn.Size = pos.Volume;
+
+                        txn.Shares = (int)(pos.Volume * pd.RationeShares);
+
+                        if (txn.Shares > 0)
+                        {
+                            txn.Amount = txn.Shares * pd.RationePrice;
+                            powertrans.Add(txn);
+                        }
+                    }
+                }
+
+                //执行除权操作
+                foreach (var ptxn in powertrans)
+                {
+                    //根据除权操作执行交易账户出入金操作
+                    TLCtxHelper.ModuleAccountManager.PowerOperation(ptxn);
+
+                    //根据出去操作调整持仓
+                    if (ptxn.Shares > 0)
+                    { 
+                        
+                    }
+                }
 
                 ///5.加载持仓明晰和交易所结算记录
                 foreach (var pd in positiondetail_settle)

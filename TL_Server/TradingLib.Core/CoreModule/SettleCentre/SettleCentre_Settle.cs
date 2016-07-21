@@ -257,6 +257,12 @@ namespace TradingLib.Core
                         SaveSettlementPrice(exchange, settleday);
                     }
 
+                    if (!histmode)//常规结算模式 需要获取除权数据
+                    {
+                        //保存除权数据
+                        SavePowerData(exchange, settleday);
+                    }
+
                     DateTime now = DateTime.Now;
                     //执行交易帐户的交易所结算
                     foreach (var account in TLCtxHelper.ModuleAccountManager.Accounts)
@@ -390,6 +396,19 @@ namespace TradingLib.Core
             return k.Trade;
         }
 
+        /// <summary>
+        /// 保存某个交易日的除权数据
+        /// </summary>
+        /// <param name="exchange"></param>
+        /// <param name="settleday"></param>
+        void SavePowerData(IExchange exchange, int settleday)
+        { 
+            IEnumerable<PowerData> pds = null;
+            foreach(var pd in pds)
+            {
+                BasicTracker.PowerDataTracker.UpdatePowerData(pd);
+            }
+        }
         /// <summary>
         /// 保存交易所的结算价格
         /// </summary>

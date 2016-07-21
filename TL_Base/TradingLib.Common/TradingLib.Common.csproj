@@ -124,7 +124,7 @@
     <Compile Include="Profile\SectionStats.cs" />
     <Compile Include="Protocol\CommissionTemplateItem.cs" />
     <Compile Include="Protocol\LoginInfo.cs" />
-    <Compile Include="Stock\PowerData.cs" />
+    <Compile Include="Stock\PowerTransactionImpl.cs" />
     <Compile Include="Tracker\BOOrderTracker.cs" />
     <Compile Include="Tracker\TradeTracker.cs" />
     <Compile Include="Trading\Comparers.cs" />
@@ -155,6 +155,7 @@
     <Compile Include="Trading\MarketData.cs" />
     <Compile Include="Trading\MarketTime\MarketTime.cs" />
     <Compile Include="Trading\MarketTime\TradingRange.cs" />
+    <Compile Include="Stock\PowerData.cs" />
     <Compile Include="Trading\Settlement\AccountSettlement.cs" />
     <Compile Include="Trading\Settlement\CashTransactionImpl.cs" />
     <Compile Include="Trading\Settlement\ExchangeSettlement.cs" />

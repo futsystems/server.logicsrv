@@ -65,6 +65,13 @@ namespace TradingLib.API
         /// <param name="comment"></param>
         void CashOperation(CashTransaction txn);
 
+
+        /// <summary>
+        /// 执行分红操作
+        /// </summary>
+        /// <param name="txn"></param>
+        void PowerOperation(PowerTransaction txn);
+
         /// <summary>
         /// 更新手续费模板
         /// </summary>
