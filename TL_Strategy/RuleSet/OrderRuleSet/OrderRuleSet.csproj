@@ -57,6 +57,7 @@
     <Compile Include="RSPriceLimit.cs" />
     <Compile Include="RSTimeSpanPass.cs" />
     <Compile Include="RSTimeSpanBlock.cs" />
+    <Compile Include="RSPriceLimit2.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
