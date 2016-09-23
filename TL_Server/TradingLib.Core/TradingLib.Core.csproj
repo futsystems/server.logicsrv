@@ -62,10 +62,6 @@
       <HintPath>..\..\lib\TradingLib\TradingLib.Common.Ex.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="TradingLib.Mixins">
-      <HintPath>..\..\lib\TradingLib\TradingLib.Mixins.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
     <Reference Include="ZeroMQ">
       <HintPath>..\..\lib\ZeroMQ.dll</HintPath>
     </Reference>

@@ -17,7 +17,7 @@ using System.Collections.Specialized;
 using System.IO;
 
 
-namespace TradingLib.Common.Json
+namespace TradingLib.Mixins.Json
 {
     public class JsonData : IJsonWrapper, IEquatable<JsonData>
     {

@@ -58,9 +58,6 @@
       <HintPath>..\..\lib\TradingLib\TradingLib.Common.Ex.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="TradingLib.Mixins">
-      <HintPath>..\..\lib\TradingLib\TradingLib.Mixins.dll</HintPath>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="LogServer.cs" />

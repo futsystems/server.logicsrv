@@ -15,7 +15,7 @@ using System.Collections;
 using System.Collections.Specialized;
 
 
-namespace TradingLib.Common.Json
+namespace TradingLib.Mixins.Json
 {
     public class JsonMockWrapper : IJsonWrapper
     {

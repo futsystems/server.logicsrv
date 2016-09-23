@@ -17,7 +17,7 @@ using System.IO;
 using System.Reflection;
 
 
-namespace TradingLib.Common.Json
+namespace TradingLib.Mixins.Json
 {
     internal struct PropertyMetadata
     {

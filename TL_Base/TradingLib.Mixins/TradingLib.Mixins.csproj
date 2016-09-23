@@ -47,13 +47,6 @@
   <ItemGroup>
     <Compile Include="Delegate.cs" />
     <Compile Include="DotLiquid\TemplateTracker.cs" />
-    <Compile Include="Json\JsonProtocol\JsonRequest.cs" />
-    <Compile Include="DataBase\DBConnectionPoll.cs" />
-    <Compile Include="DataBase\MBase.cs" />
-    <Compile Include="DataBase\ObjectPoll.cs" />
-    <Compile Include="DataBase\SQLBase.cs" />
-    <Compile Include="DataBase\SQLMapper.cs" />
-    <Compile Include="Json\Attributes.cs" />
     <Compile Include="Log\ConsoleLogFactory.cs" />
     <Compile Include="Log\ConsoleLogger.cs" />
     <Compile Include="Log\ILogFactory.cs" />
@@ -65,24 +58,12 @@
     <Compile Include="Log\NullLogFactory.cs" />
     <Compile Include="Log\NullLogWriter.cs" />
     <Compile Include="ServiceNode.cs" />
-    <Compile Include="Json\JsonProtocol\JsonReply.cs" />
     <Compile Include="KeepLiveServer.cs" />
-    <Compile Include="Json\IJsonWrapper.cs" />
-    <Compile Include="Json\JsonData.cs" />
-    <Compile Include="Json\JsonException.cs" />
-    <Compile Include="Json\JsonMapper.cs" />
-    <Compile Include="Json\JsonMockWrapper.cs" />
-    <Compile Include="Json\JsonReader.cs" />
-    <Compile Include="Json\JsonWriter.cs" />
-    <Compile Include="Json\Lexer.cs" />
-    <Compile Include="Json\ParserToken.cs" />
     <Compile Include="LogServer.cs" />
     <Compile Include="m2net\Connection.cs" />
     <Compile Include="m2net\Request.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Collections\RingBuffer.cs" />
-    <Compile Include="TNetString\ByteArrayExtensions.cs" />
-    <Compile Include="TNetString\TNetStrings.cs" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

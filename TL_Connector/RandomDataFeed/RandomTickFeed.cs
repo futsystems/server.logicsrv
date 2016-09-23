@@ -8,7 +8,8 @@ using System.Threading;
 using ZeroMQ;
 using TradingLib.BrokerXAPI;
 using Common.Logging;
-
+using TradingLib.API;
+using TradingLib.Common;
 
 namespace DataFeed.RandomTickFeed
 {

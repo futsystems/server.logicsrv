@@ -9,7 +9,7 @@
 #endregion
 
 
-namespace TradingLib.Common.Json
+namespace TradingLib.Mixins.Json
 {
     internal enum ParserToken
     {

@@ -12,7 +12,7 @@
 using System;
 
 
-namespace TradingLib.Common.Json
+namespace TradingLib.Mixins.Json
 {
     public class JsonException : ApplicationException
     {

@@ -15,7 +15,7 @@ using System.IO;
 using System.Text;
 
 
-namespace TradingLib.Common.Json
+namespace TradingLib.Mixins.Json
 {
     public enum JsonToken
     {

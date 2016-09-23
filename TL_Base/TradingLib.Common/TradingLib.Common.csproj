@@ -53,9 +53,6 @@
       <HintPath>..\..\lib\TradingLib\TradingLib.API.dll</HintPath>
     </Reference>
     <Reference Include="System.Configuration" />
-    <Reference Include="TradingLib.Mixins">
-      <HintPath>..\..\lib\TradingLib\TradingLib.Mixins.dll</HintPath>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\..\Shared\VersionInfo.cs">
@@ -89,6 +86,8 @@
     <Compile Include="Json\JsonException.cs" />
     <Compile Include="Json\JsonMapper.cs" />
     <Compile Include="Json\JsonMockWrapper.cs" />
+    <Compile Include="Json\JsonProtocol\JsonReply.cs" />
+    <Compile Include="Json\JsonProtocol\JsonRequest.cs" />
     <Compile Include="Json\JsonReader.cs" />
     <Compile Include="Json\JsonWriter.cs" />
     <Compile Include="Json\Lexer.cs" />
@@ -104,12 +103,6 @@
     <Compile Include="Message\QryTradingParams.cs" />
     <Compile Include="Message\TradingNoticeNotify.cs" />
     <Compile Include="Message\XAPI\TradingInfo.cs" />
-    <Compile Include="ORM\Config\ConfigDB.cs" />
-    <Compile Include="ORM\Config\ConfigItem.cs" />
-    <Compile Include="ORM\Config\GlobalConfig.cs" />
-    <Compile Include="ORM\DBHelper.cs" />
-    <Compile Include="ORM\MConfig.cs" />
-    <Compile Include="ORM\MySqlBase.cs" />
     <Compile Include="Domain\DomainImpl.cs" />
     <Compile Include="Other\CashReport.cs" />
     <Compile Include="Other\ExchangeRate.cs" />
@@ -125,6 +118,8 @@
     <Compile Include="Protocol\CommissionTemplateItem.cs" />
     <Compile Include="Protocol\LoginInfo.cs" />
     <Compile Include="Stock\PowerTransactionImpl.cs" />
+    <Compile Include="TNetString\ByteArrayExtensions.cs" />
+    <Compile Include="TNetString\TNetStrings.cs" />
     <Compile Include="Tracker\BOOrderTracker.cs" />
     <Compile Include="Tracker\TradeTracker.cs" />
     <Compile Include="Trading\Comparers.cs" />
@@ -350,7 +345,9 @@
     <Compile Include="Vendor\VendorImpl.cs" />
     <Compile Include="Vendor\VendorUtils.cs" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="ORM\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
