@@ -31,12 +31,6 @@ namespace TradingLib.Common.DataFarm
             logger.Info("Conn:{0} MGRContrib Request ModuleID:{1} CMDStr:{2} Args:{3}".Put(conn.SessionID, request.ModuleID, request.CMDStr, request.Parameters));
 
             request.ModuleID = "DataFarm";
-
-            //foreach (var t in GetHistDataSotre().HistTableInfo)
-            //{
-            //    if(t.Name.StartsWith("CFFEX"))
-            //    logger.Info(t.ToString());
-            //}
             string key = string.Format("{0}-{1}", request.ModuleID.ToUpper(), request.CMDStr.ToUpper());
             DataCommand command = null;
             if (cmdmap.TryGetValue(key, out command))

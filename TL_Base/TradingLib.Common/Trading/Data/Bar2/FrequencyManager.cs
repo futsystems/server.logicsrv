@@ -129,6 +129,7 @@ namespace TradingLib.Common
             }
             return DateTime.MaxValue;
         }
+
         #region 注册频率发生器,合约
         /// <summary>
         /// 注册其他频率发生器 用于生成对应的Bar数据
@@ -403,7 +404,7 @@ namespace TradingLib.Common
             
             pf.EnterSection("PRECHECK  ");
             //非需要处理的行情源
-            if (this.DataFeed != QSEnumDataFeedTypes.DEFAULT && this.datafeed != tick.DataFeed ) return;
+            //if (this.DataFeed != QSEnumDataFeedTypes.DEFAULT && this.datafeed != tick.DataFeed ) return;
             //查找合约
             Symbol symbol = null;
             if (!registedSymbols.TryGetValue(tick.Symbol, out symbol)) return;

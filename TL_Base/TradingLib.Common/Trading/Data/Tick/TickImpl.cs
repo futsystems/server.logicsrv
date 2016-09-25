@@ -1082,15 +1082,19 @@ namespace TradingLib.Common
         public static Tick ReadTrade(string tmp)
         {
             string[] rec = tmp.Split(',');
-            int  d = int.Parse(rec[0]);
-            int t = int.Parse(rec[1]);
-            decimal price = decimal.Parse(rec[2]);
-            int size = int.Parse(rec[3]);
+            if (rec.Length < 4) return null;
+            long tldatetime = long.Parse(rec[0]);
+            int date = (int)(tldatetime / 1000000);
+            int time = (int)(tldatetime - date * 1000000);
+            decimal price = decimal.Parse(rec[1]);
+            int size = int.Parse(rec[2]);
+            int vol = int.Parse(rec[3]);
             TickImpl k = new TickImpl();
-            k.Date = d;
-            k.Time = t;
+            k.Date = date;
+            k.Time = time;
             k.Trade = price;
             k.Size = size;
+            k.Vol = vol;
             return k;
         }
 

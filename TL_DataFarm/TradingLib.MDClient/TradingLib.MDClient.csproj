@@ -50,6 +50,9 @@
     <Reference Include="TradingLib.Common">
       <HintPath>..\..\lib\TradingLib\TradingLib.Common.dll</HintPath>
     </Reference>
+    <Reference Include="TradingLib.MarketData">
+      <HintPath>..\..\..\Futs.Trader\TradingLib.MarketData\bin\Debug\TradingLib.MarketData.dll</HintPath>
+    </Reference>
     <Reference Include="ZeroMQ">
       <HintPath>..\..\lib\ZeroMQ.dll</HintPath>
     </Reference>

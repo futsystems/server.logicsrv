@@ -5,6 +5,7 @@ using System.Text;
 using TradingLib.API;
 using TradingLib.Common;
 using Common.Logging;
+using TradingLib.MarketData;
 
 
 namespace TradingLib.MDClient
@@ -14,6 +15,7 @@ namespace TradingLib.MDClient
     /// </summary>
     public partial class MDClient
     {
+        Dictionary<string, MDSymbol> mdSymbolMap = new Dictionary<string, MDSymbol>();
         /// <summary>
         /// 市场时间段map
         /// </summary>
@@ -215,6 +217,22 @@ namespace TradingLib.MDClient
                 target.ULSymbol = this.GetSymbol(target.underlaying_fk);
                 target.UnderlayingSymbol = this.GetSymbol(target.underlayingsymbol_fk);
             }
+
+            foreach (var target in symbolmap.Values)
+            {
+                MDSymbol symbol = new MDSymbol();
+                symbol.Symbol = target.Symbol;
+                symbol.SecCode = target.SecurityFamily.Code;
+                symbol.Name = target.GetName();
+                symbol.Currency = MDCurrency.RMB;
+                symbol.Exchange = target.Exchange;
+                symbol.Multiple = target.Multiple;
+                symbol.SecurityType = MDSecurityType.FUT;
+                symbol.SizeRate = 1;
+                symbol.NCode = 0;
+                mdSymbolMap.Add(symbol.UniqueKey, symbol);
+                
+            }
             logger.Info("MarketTime     Num:" + markettimemap.Count.ToString());
             logger.Info("Exchange       Num:" + exchangemap.Count.ToString());
             logger.Info("Security       Num:" + securitymap.Count.ToString());
@@ -266,6 +284,15 @@ namespace TradingLib.MDClient
             get
             {
                 return symbolmap.Values.ToArray();
+            }
+        }
+
+
+        public IEnumerable<MDSymbol> MDSymbols
+        {
+            get
+            {
+                return mdSymbolMap.Values;
             }
         }
 
