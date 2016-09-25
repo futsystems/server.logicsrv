@@ -37,9 +37,6 @@
     <Reference Include="Common.Logging.Core">
       <HintPath>..\..\lib\Common.Logging.Core.dll</HintPath>
     </Reference>
-    <Reference Include="STSdb4">
-      <HintPath>..\..\lib\STSdb4.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data" />
@@ -82,12 +79,6 @@
     <Compile Include="DataServer\Base\DataServerBase_.Restore.cs" />
     <Compile Include="FrequencyService\EventArgs.cs" />
     <Compile Include="MDBasicTracker.cs" />
-    <Compile Include="DataBase\Compare.cs" />
-    <Compile Include="DataBase\delete\STSDBBase.cs" />
-    <Compile Include="DataBase\Persist.cs" />
-    <Compile Include="DataBase\delete\STSDBFactory.cs" />
-    <Compile Include="DataBase\delete\STSLocalDB.cs" />
-    <Compile Include="DataBase\delete\STSMemoryDB.cs" />
     <Compile Include="DataCoreBackend\DataCoreBackend.cs" />
     <Compile Include="DataCoreBackend\TLSocket_ZMQ.cs" />
     <Compile Include="DataServer\Base\DataServerBase.cs" />
