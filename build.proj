@@ -104,7 +104,6 @@
 		<MSBuild Projects="TL_Connector\TLBrokerCTPSplit\TLBrokerCTPSplit.csproj" Properties="Configuration=$(Configuration);" />
 		<MSBuild Projects="TL_Connector\TLBrokerCTP\TLBrokerCTPDirect.csproj" Properties="Configuration=$(Configuration);" />
 		<MSBuild Projects="TL_Connector\TLBrokerCTPPassThrough\TLBrokerCTPPassThrough.csproj" Properties="Configuration=$(Configuration);" />
-		<MSBuild Projects="TL_Connector\TLBrokerCTPResverse\TLBrokerCTPResverse.csproj" Properties="Configuration=$(Configuration);" />
 		<MSBuild Projects="TL_Connector\TLBrokerIB\TLBrokerIB.csproj" Properties="Configuration=$(Configuration);" />
   </Target>
 
