@@ -11,17 +11,12 @@ namespace TradingLib.Common.DataFarm
 {
     /// <summary>
     /// 维护Bar数据
+    /// 
     /// </summary>
     public partial class FrequencyService
     {
 
         ILog logger = LogManager.GetLogger("FrequencyService");
-
-        //FrequencyManager frequencyManager;
-        //ConcurrentDictionary<string, Symbol> subscribeSymbolMap = new ConcurrentDictionary<string, Symbol>();
-        //ConcurrentDictionary<BarFrequency, FrequencyPlugin> frequencyPluginMap = new ConcurrentDictionary<BarFrequency, FrequencyPlugin>();
-
-
         /// <summary>
         /// 实时行情产生Bar数据
         /// </summary>
@@ -32,16 +27,10 @@ namespace TradingLib.Common.DataFarm
         /// </summary>
         public event Action<FreqNewBarEventArgs> NewHistBarEvent;
 
-        //public void Add(Symbol symbol)
-        //{
-        //    if (subscribeSymbolMap.Keys.Contains(symbol.Symbol))
-        //    {
-        //        logger.Info(string.Format("Symbol:{0} already registed", symbol.Symbol));
-        //    }
-        //    //添加合约到map
-        //    subscribeSymbolMap.TryAdd(symbol.Symbol, symbol);
-        //}
 
+        /// <summary>
+        /// 某个交易所的所有合约由同一个FrequencyManager进行维护
+        /// </summary>
         Dictionary<string, FrequencyManager> frequencyMgrMap = new Dictionary<string, FrequencyManager>();
 
         FrequencyManager GetFrequencyManagerForExchange(string exchange)
@@ -54,7 +43,9 @@ namespace TradingLib.Common.DataFarm
             return null;
         }
 
-
+        /// <summary>
+        /// 建立Symbol到FrequencyManager映射 用于快速查找某个合约的FrequencyManager
+        /// </summary>
         Dictionary<string, FrequencyManager> symbolFrequencyMgrMap = new Dictionary<string, FrequencyManager>();
 
         FrequencyManager GetFrequencyManagerForSymbol(string symbol)
@@ -70,7 +61,7 @@ namespace TradingLib.Common.DataFarm
         FrequencyManager restoreFrequencyMgr = null;
 
         /// <summary>
-        /// Bar数据生成器
+        /// Bar数据生成服务
         /// </summary>
         public FrequencyService()
         {
@@ -86,29 +77,26 @@ namespace TradingLib.Common.DataFarm
                 fm.NewFreqKeyBarEvent += new Action<FrequencyManager.FreqKey, SingleBarEventArgs>(OnNewRealTimeFreqKeyBarEvent);
 
             }
+
+            //恢复历史Tick所用的FrequencyManager
             restoreFrequencyMgr = new FrequencyManager("Restore", QSEnumDataFeedTypes.DEFAULT);
             restoreFrequencyMgr.RegisterAllBasicFrequency();
             restoreFrequencyMgr.NewFreqKeyBarEvent += new Action<FrequencyManager.FreqKey, SingleBarEventArgs>(OnNewHistFreqKeyBarEvent);
 
 
-            //遍历所有合约 并建立合约到FrequencyManager映射
+            //遍历所有合约 建立合约到FrequencyManager映射 同时将合约注册到FrequencyManager
             foreach (var symbol in MDBasicTracker.SymbolTracker.Symbols)
             {
                 if (symbol.Symbol != "CLX6") continue;
                 FrequencyManager fm = GetFrequencyManagerForExchange(symbol.SecurityFamily.Exchange.EXCode);
                 if (fm != null)
                 {
-                    //FrequencyManager注册合约并建立直接映射
                     fm.RegisterSymbol(symbol);
                     symbolFrequencyMgrMap.Add(symbol.Symbol, fm);
                 }
-
+                //同时向数据恢复FrequencyManager注册
                 restoreFrequencyMgr.RegisterSymbol(symbol);
-                
             }
-
-            
-
         }
 
         void OnNewHistFreqKeyBarEvent(FrequencyManager.FreqKey arg1, SingleBarEventArgs arg2)
@@ -126,7 +114,6 @@ namespace TradingLib.Common.DataFarm
                 BarImpl b = new BarImpl(arg2.Bar);
                 b.TradingDay = 0;
                 NewHistBarEvent(new FreqNewBarEventArgs() { Bar = new BarImpl(arg2.Bar), BarFrequency = arg1.Settings.BarFrequency, Symbol = arg1.Symbol });
-            
             }
         }
 
@@ -206,7 +193,10 @@ namespace TradingLib.Common.DataFarm
             fm.ProcessTick(k);
         }
 
-
+        /// <summary>
+        /// 恢复历史Tick
+        /// </summary>
+        /// <param name="k"></param>
         public void RestoreTick(Tick k)
         {
             restoreFrequencyMgr.ProcessTick(k);

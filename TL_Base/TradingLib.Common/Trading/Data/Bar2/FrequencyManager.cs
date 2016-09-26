@@ -12,7 +12,6 @@ namespace TradingLib.Common
     public class FrequencyManager
     {
         ILog logger = null;
-
         /// <summary>
         /// 频率发生器列表
         /// </summary>
@@ -272,13 +271,13 @@ namespace TradingLib.Common
         /// </summary>
         /// <param name="sourceFrequency"></param>
         /// <param name="destFrequency"></param>
-        public void RegisterFrequencyConversion(Frequency sourceFrequency, Frequency destFrequency)
-        {
-            if (!sourceFrequency.DestFrequencyConversion.ContainsKey(destFrequency))
-            {
-                sourceFrequency.DestFrequencyConversion[destFrequency] = new QList<DateTime>();
-            }
-        }
+        //public void RegisterFrequencyConversion(Frequency sourceFrequency, Frequency destFrequency)
+        //{
+        //    if (!sourceFrequency.DestFrequencyConversion.ContainsKey(destFrequency))
+        //    {
+        //        sourceFrequency.DestFrequencyConversion[destFrequency] = new QList<DateTime>();
+        //    }
+        //}
 
         /// <summary>
         /// Converts the lookback index from one frequency to another.
@@ -288,36 +287,36 @@ namespace TradingLib.Common
         /// <param name="sourceFrequency">Source frequency</param>
         /// <param name="destFrequency">Destination frequency.</param>
         /// <returns>index of destination frequency bar lookback</returns>
-        public int ConvertLookBack(int sourceLookBack, Frequency sourceFrequency, Frequency destFrequency)
-        {
-            if (!sourceFrequency.DestFrequencyConversion.ContainsKey(destFrequency))
-            {
-                string message = string.Concat(new object[]
-				{
-					"Cross-Frequency conversion not set up from ",
-					sourceFrequency.Symbol,
-					" ",
-					sourceFrequency.FrequencySettings.ToString(),
-					" to ",
-					destFrequency.Symbol,
-					" ",
-					destFrequency.FrequencySettings.ToString(),
-					".  Call FrequencyManager.RegisterFrequencyConversion() to enable this."
-				});
-                throw new Exception(message);
-            }
-            if (sourceLookBack >= sourceFrequency.Bars.Count)
-            {
-                return -1;
-            }
-            QList<DateTime> rList = sourceFrequency.DestFrequencyConversion[destFrequency];
-            if (sourceLookBack >= rList.Count)
-            {
-                return -1;
-            }
-            DateTime barStartTime = rList.LookBack(sourceLookBack);
-            return destFrequency.LookupStartDate(barStartTime);
-        }
+        //public int ConvertLookBack(int sourceLookBack, Frequency sourceFrequency, Frequency destFrequency)
+        //{
+        //    if (!sourceFrequency.DestFrequencyConversion.ContainsKey(destFrequency))
+        //    {
+        //        string message = string.Concat(new object[]
+        //        {
+        //            "Cross-Frequency conversion not set up from ",
+        //            sourceFrequency.Symbol,
+        //            " ",
+        //            sourceFrequency.FrequencySettings.ToString(),
+        //            " to ",
+        //            destFrequency.Symbol,
+        //            " ",
+        //            destFrequency.FrequencySettings.ToString(),
+        //            ".  Call FrequencyManager.RegisterFrequencyConversion() to enable this."
+        //        });
+        //        throw new Exception(message);
+        //    }
+        //    if (sourceLookBack >= sourceFrequency.Bars.Count)
+        //    {
+        //        return -1;
+        //    }
+        //    QList<DateTime> rList = sourceFrequency.DestFrequencyConversion[destFrequency];
+        //    if (sourceLookBack >= rList.Count)
+        //    {
+        //        return -1;
+        //    }
+        //    DateTime barStartTime = rList.LookBack(sourceLookBack);
+        //    return destFrequency.LookupStartDate(barStartTime);
+        //}
 
 
         /// <summary>
@@ -420,7 +419,7 @@ namespace TradingLib.Common
             //如果时间大于Frequency的当前时间 则需要检查是否有PendingBars需要发送 时间相等则不用发送
             if (ticktime >= symbolUpdateTimeMap[symbol.Symbol])
             {
-                //没有记录过合约第一个行情事件
+                //记录过合约第一个行情时间
                 if (tick.IsTrade())
                 {
                     if (!symbolFirstTickTime.Keys.Contains(symbol.Symbol))

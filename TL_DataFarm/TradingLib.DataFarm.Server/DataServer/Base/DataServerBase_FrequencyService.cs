@@ -60,6 +60,10 @@ namespace TradingLib.Common.DataFarm
 
         }
 
+        /// <summary>
+        /// 处理TickFeed接受到的实时行情数据
+        /// </summary>
+        /// <param name="k"></param>
         void FrequencyServiceProcessTick(Tick k)
         {
             freqService.ProcessTick(k);

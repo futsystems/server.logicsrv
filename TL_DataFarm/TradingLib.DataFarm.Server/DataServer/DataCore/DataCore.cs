@@ -63,6 +63,7 @@ namespace TradingLib.Common.DataFarm
 
             //启动ServiceHost
             this.StartServiceHosts();
+
             foreach (var file in Directory.GetFiles("Import", "*.csv"))
             {
                 logger.Info("Import Bar File:{0} ".Put(file));
