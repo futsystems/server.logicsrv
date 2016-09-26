@@ -167,9 +167,9 @@ namespace TradingLib.Contrib.ResponseHost
         /// 订阅行情
         /// </summary>
         /// <param name="symbol"></param>
-        protected void RegisterSymbol(string symbol)
+        protected void RegisterSymbol(string uexchange,string symbol)
         {
-            _basket.Add(GetSymbol(symbol));
+            _basket.Add(GetSymbol(uexchange,symbol));
         }
         
         /// <summary>
@@ -177,9 +177,9 @@ namespace TradingLib.Contrib.ResponseHost
         /// </summary>
         /// <param name="symbol"></param>
         /// <returns></returns>
-        protected Symbol GetSymbol(string symbol)
+        protected Symbol GetSymbol(string uexchange,string symbol)
         {
-            return this.Account.Domain.GetSymbol(symbol);
+            return this.Account.Domain.GetSymbol(uexchange, symbol);
         }
 
         /// <summary>
@@ -189,7 +189,7 @@ namespace TradingLib.Contrib.ResponseHost
         /// <returns></returns>
         protected Tick GetTickSnapshot(string symbol)
         {
-            return TLCtxHelper.ModuleDataRouter.GetTickSnapshot(symbol);
+            return TLCtxHelper.ModuleDataRouter.GetTickSnapshot("",symbol);
         }
 
 

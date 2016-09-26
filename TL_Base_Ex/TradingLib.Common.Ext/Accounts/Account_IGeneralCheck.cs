@@ -70,7 +70,7 @@ namespace TradingLib.Common
                         //未启用单向大边
                         if (!this.GetParamSideMargin())
                         {
-                            decimal price = TLCtxHelper.ModuleDataRouter.GetAvabilePrice(symbol.Symbol);
+                            decimal price = TLCtxHelper.ModuleDataRouter.GetAvabilePrice(symbol.Exchange,symbol.Symbol);
 
                             decimal fundperlot = this.CalOrderMarginFrozen(symbol, 1) * this.GetExchangeRate(symbol.SecurityFamily);
 

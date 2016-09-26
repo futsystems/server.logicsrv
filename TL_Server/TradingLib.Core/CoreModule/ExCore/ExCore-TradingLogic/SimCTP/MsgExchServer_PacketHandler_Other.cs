@@ -158,7 +158,7 @@ namespace TradingLib.Core
         void SrvOnQryMaxOrderVol(QryMaxOrderVolRequest request, IAccount account)
         {
             logger.Info("QryMaxOrderVol :" + request.ToString());
-            Symbol symbol = account.Domain.GetSymbol(request.Symbol);
+            Symbol symbol = account.Domain.GetSymbol(request.Symbol,request.Symbol);
             RspQryMaxOrderVolResponse response = ResponseTemplate<RspQryMaxOrderVolResponse>.SrvSendRspResponse(request);
             if(symbol == null)
             {
@@ -532,7 +532,7 @@ namespace TradingLib.Core
             else
             {
                 RspQryInstrumentCommissionRateResponse response = ResponseTemplate<RspQryInstrumentCommissionRateResponse>.SrvSendRspResponse(request);
-                Symbol sym = account.Domain.GetSymbol(request.Symbol);
+                Symbol sym = account.Domain.GetSymbol(request.Exchange,request.Symbol);
                 if (sym == null)
                 {
                     response.RspInfo.Fill("SYMBOL_NOT_EXISTED");
@@ -557,7 +557,7 @@ namespace TradingLib.Core
             else 
             {
                 RspQryInstrumentMarginRateResponse response = ResponseTemplate<RspQryInstrumentMarginRateResponse>.SrvSendRspResponse(request);
-                Symbol sym = account.Domain.GetSymbol(request.Symbol);
+                Symbol sym = account.Domain.GetSymbol(request.Exchange,request.Symbol);
                 if (sym == null)
                 {
                     response.RspInfo.Fill("SYMBOL_NOT_EXISTED");
@@ -590,7 +590,7 @@ namespace TradingLib.Core
                 Symbol[] symlist = account.GetSymbols().ToArray();//获得交易帐户可交易列表
                 for (int i = 0; i < symlist.Length; i++)
                 {
-                    Tick k = TLCtxHelper.ModuleDataRouter.GetTickSnapshot(symlist[i].Symbol);// CmdUtils.GetTickSnapshot(symlist[i].Symbol);
+                    Tick k = TLCtxHelper.ModuleDataRouter.GetTickSnapshot(symlist[i].Exchange,symlist[i].Symbol);// CmdUtils.GetTickSnapshot(symlist[i].Symbol);
                     if (k == null || !k.IsValid())
                     {
                         k = TLCtxHelper.ModuleSettleCentre.GetLastTickSnapshot(symlist[i].Symbol);

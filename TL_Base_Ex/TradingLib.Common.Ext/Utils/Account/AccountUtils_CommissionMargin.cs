@@ -198,7 +198,7 @@ namespace TradingLib.Common
         {
             if (offset != QSEnumOffsetFlag.OPEN) return 0;//开仓意外的委托不占用保证金，释放保证金
             size = Math.Abs(size);
-            decimal price = TLCtxHelper.ModuleDataRouter.GetAvabilePrice(symbol.Symbol);//获得某合约当前价格
+            decimal price = TLCtxHelper.ModuleDataRouter.GetAvabilePrice(symbol.Exchange,symbol.Symbol);//获得某合约当前价格
             switch (symbol.SecurityType)
             {
                 case SecurityType.FUT:
@@ -283,7 +283,7 @@ namespace TradingLib.Common
             decimal basemarginfrozen = 0;
             Symbol symbol = o.oSymbol;
             int size = o.UnsignedSize;
-            decimal currentPrice = TLCtxHelper.ModuleDataRouter.GetAvabilePrice(symbol.Symbol);//获得某合约当前价格
+            decimal currentPrice = TLCtxHelper.ModuleDataRouter.GetAvabilePrice(symbol.Exchange,symbol.Symbol);//获得某合约当前价格
             //取价算法 市委托 取得合约当前价格，限价或追价 取设定价格
             decimal price = o.isMarket ? currentPrice : (o.isLimit ? o.LimitPrice : o.StopPrice);
 

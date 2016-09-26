@@ -144,5 +144,64 @@ namespace TradingLib.Core
                 CacheRspResponse(response);
             }
         }
+
+        /// <summary>
+        /// 响应查询账户请求
+        /// 
+        /// </summary>
+        /// <param name="request"></param>
+        /// <param name="account"></param>
+        void SrvOnXQryAccount(XQryAccountRequest request, IAccount account)
+        {
+            logger.Info("XQryAccountRequest:" + request.ToString());
+            RspXQryAccountResponse respone = ResponseTemplate<RspXQryAccountResponse>.SrvSendRspResponse(request);
+            respone.Account = account.GenAccountLite();
+            CacheRspResponse(respone);
+        }
+
+        /// <summary>
+        /// 查询账户财务数据
+        /// </summary>
+        /// <param name="request"></param>
+        /// <param name="account"></param>
+        void SrvOnQryAccountFinance(XQryAccountFinanceRequest request, IAccount account)
+        {
+            logger.Info("QryAccountFinance :" + request.ToString());
+            AccountInfo info = account.GenAccountInfo();
+            RspXQryAccountFinanceResponse response = ResponseTemplate<RspXQryAccountFinanceResponse>.SrvSendRspResponse(request);
+            response.Report = info;
+            CachePacket(response);
+        }
+
+
+        void SrvOnXQryMaxVol(XQryMaxOrderVolRequest request, IAccount account)
+        {
+            logger.Info("QryMaxOrderVol :" + request.ToString());
+            Symbol symbol = account.Domain.GetSymbol(request.Exchange, request.Symbol);
+            RspXQryMaxOrderVolResponse response = ResponseTemplate<RspXQryMaxOrderVolResponse>.SrvSendRspResponse(request);
+            if (symbol == null)
+            {
+                response.RspInfo.Fill("SYMBOL_NOT_EXISTED");
+                CachePacket(response);
+            }
+            if (account == null)
+            {
+                response.RspInfo.Fill("TRADING_ACCOUNT_NOT_FOUND");
+                CachePacket(response);
+            }
+            else
+            {
+                int size = account.CanOpenSize(symbol, request.Side, request.OffsetFlag);
+
+                logger.Info("got max opensize:" + size.ToString());
+                response.Symbol = request.Symbol;
+                response.MaxVol = size >= 0 ? size : 0;
+                response.OffsetFlag = request.OffsetFlag;
+                response.Side = request.Side;
+
+                CacheRspResponse(response, true);
+            }
+
+        }
     }
 }

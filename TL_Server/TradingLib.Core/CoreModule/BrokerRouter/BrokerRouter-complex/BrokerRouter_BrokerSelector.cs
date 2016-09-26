@@ -63,7 +63,7 @@ namespace TradingLib.Core
                     //开仓委托按委托 通过RouterGroup的路由策略返回委托
                     if (o.IsEntryPosition)
                     {
-                        decimal price = TLCtxHelper.ModuleDataRouter.GetAvabilePrice(o.Symbol);
+                        decimal price = TLCtxHelper.ModuleDataRouter.GetAvabilePrice(o.Exchange,o.Symbol);
                         decimal margin = o.CalFundRequired(price);
                         return rg.GetBroker(o, margin);
                     }

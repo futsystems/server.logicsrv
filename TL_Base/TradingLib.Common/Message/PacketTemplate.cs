@@ -207,7 +207,12 @@ namespace TradingLib.Common
                     //查询交易账户
                     case MessageTypes.XQRYACCOUNT:
                         return RequestTemplate<XQryAccountRequest>.SrvRecvRequest(frontid, clientid, content);
-
+                    //查询最大下单量
+                    case MessageTypes.XQRYMAXORDERVOL:
+                        return RequestTemplate<XQryMaxOrderVolRequest>.SrvRecvRequest(frontid, clientid, content);
+                    //查询账户财务信息
+                    case MessageTypes.XQRYACCOUNTFINANCE:
+                        return RequestTemplate<XQryAccountFinanceRequest>.SrvRecvRequest(frontid, clientid, content);
 
                     #region manager
                     case MessageTypes.MGRLOGINREQUEST://请求登入
@@ -447,6 +452,10 @@ namespace TradingLib.Common
                     return ResponseTemplate<RspXQryTickSnapShotResponse>.CliRecvResponse(message);
                 case MessageTypes.XACCOUNTRESPONSE://交易账户回报
                     return ResponseTemplate<RspXQryAccountResponse>.CliRecvResponse(message);
+                case MessageTypes.XQRYMAXORDERVOLRESPONSE://最大下单数量回报
+                    return ResponseTemplate<RspXQryMaxOrderVolResponse>.CliRecvResponse(message);
+                case  MessageTypes.XQRYACCOUNTFINANCERESPONSE://账户财务数据回报
+                    return ResponseTemplate<RspXQryAccountFinanceResponse>.CliRecvResponse(message);
 
                 case MessageTypes.TICKNOTIFY:
                     return ResponseTemplate<TickNotify>.CliRecvResponse(message);

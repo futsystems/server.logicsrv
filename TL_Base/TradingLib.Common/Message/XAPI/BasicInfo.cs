@@ -164,23 +164,28 @@ namespace TradingLib.Common
         {
             _type = MessageTypes.XQRYSYMBOL;
             this.Symbol = string.Empty;
+            this.Exchange = string.Empty;
         }
 
+        public string Exchange { get; set; }
         public string Symbol { get; set; }
         public override string ContentSerialize()
         {
-            return this.Symbol;
+            return this.Exchange+","+this.Symbol;
         }
 
         public override void ContentDeserialize(string contentstr)
         {
             if (string.IsNullOrEmpty(contentstr))
             {
+                this.Exchange = string.Empty;
                 this.Symbol = string.Empty;
             }
             else
             {
-                this.Symbol = contentstr;
+                string[] rec = contentstr.Split(',');
+                this.Exchange = rec[0];
+                this.Symbol = rec[1];
             }
         }
 
@@ -226,18 +231,27 @@ namespace TradingLib.Common
         public XQryTickSnapShotRequest()
         {
             _type = MessageTypes.XQRYTICKSNAPSHOT;
+
+            this.Exchange = string.Empty;
             this.Symbol = string.Empty;
         }
 
+        public string Exchange { get; set; }
         public string Symbol { get; set; }
+
         public override string ContentSerialize()
         {
-            return this.Symbol;
+            return string.Format("{0},{1}", this.Exchange, this.Symbol);
         }
 
         public override void ContentDeserialize(string contentstr)
         {
-            this.Symbol = contentstr;
+            string[] rec = contentstr.Split(',');
+            if (rec.Length == 2)
+            {
+                this.Exchange = rec[0];
+                this.Symbol = rec[1];
+            }
         }
 
     }
@@ -323,6 +337,60 @@ namespace TradingLib.Common
                 this.Account = null;
             else
                 this.Account = AccountLite.Deserialize(content);
+        }
+    }
+
+
+
+    /// <summary>
+    /// 查交易账户财务信息请求
+    /// </summary>
+    public class XQryAccountFinanceRequest : RequestPacket
+    {
+        public XQryAccountFinanceRequest()
+        {
+            _type = MessageTypes.XQRYACCOUNTFINANCE;
+        }
+
+
+        public override string ContentSerialize()
+        {
+            return string.Empty;
+        }
+
+        public override void ContentDeserialize(string contentstr)
+        {
+
+        }
+
+    }
+
+    /// <summary>
+    /// 查询交易账户财务信息回报
+    /// </summary>
+    public class RspXQryAccountFinanceResponse : RspResponsePacket
+    {
+        public RspXQryAccountFinanceResponse()
+        {
+            _type = MessageTypes.XQRYACCOUNTFINANCERESPONSE;
+            this.Report = null;
+        }
+
+        public AccountInfo Report { get; set; }
+
+        public override string ResponseSerialize()
+        {
+            if (this.Report == null)
+                return string.Empty;
+            return AccountInfo.Serialize(this.Report);
+        }
+
+        public override void ResponseDeserialize(string content)
+        {
+            if (string.IsNullOrEmpty(content))
+                this.Report = null;
+            else
+                this.Report = AccountInfo.Deserialize(content);
         }
     }
 }

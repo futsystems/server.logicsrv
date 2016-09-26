@@ -313,7 +313,7 @@ namespace TradingLib.Core
                 }
 
                 //如果是添加合约 检查合约是否存在
-                if (symbol.ID==0 && manager.Domain.GetSymbol(symbol.Symbol) != null)
+                if (symbol.ID==0 && manager.Domain.GetSymbol(symbol.Exchange,symbol.Symbol) != null)
                 {
                     throw new FutsRspError("已经存在合约:" + symbol.Symbol);
                 }

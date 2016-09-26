@@ -394,6 +394,7 @@ namespace TradingLib.Core
 
 
         #region 获得行情数据
+        //TODO SymbolKey
         /// <summary>
         /// 获得所有当前市场数据快照
         /// 当前订阅的Basket mb 对应的Tick 行情由TickTracker维护
@@ -401,23 +402,23 @@ namespace TradingLib.Core
         /// <returns></returns>
         public Tick[] GetTickSnapshot()
         {
-            if (mb.Count > 0)
-            {
-                string[] syms = mb.ToSymArray();
-                List<Tick> ticks = new List<Tick>();
+            //if (mb.Count > 0)
+            //{
+            //    string[] syms = mb.ToSymArray();
+            //    List<Tick> ticks = new List<Tick>();
 
-                foreach (string sym in syms)
-                {
-                    Tick k = _ticktracker[sym];
-                    if (k.IsValid())
-                        ticks.Add(k);
-                }
-                return ticks.ToArray();
-            }
-            else
-            {
+            //    foreach (string sym in syms)
+            //    {
+            //        Tick k = _ticktracker[sym];
+            //        if (k.IsValid())
+            //            ticks.Add(k);
+            //    }
+            //    return ticks.ToArray();
+            //}
+            //else
+            //{
                 return _ticktracker.GetTicks();
-            }
+            //}
         }
 
         /// <summary>
@@ -425,9 +426,9 @@ namespace TradingLib.Core
         /// </summary>
         /// <param name="symbol"></param>
         /// <returns></returns>
-        public Tick GetTickSnapshot(string symbol)
+        public Tick GetTickSnapshot(string exchange,string symbol)
         {
-            return _ticktracker[symbol];
+            return _ticktracker[exchange,symbol];
         }
 
         /// <summary>
@@ -453,15 +454,16 @@ namespace TradingLib.Core
             return true;
         }
 
+        //TODO SymbolKey
         /// <summary>
         /// 获得某个合约的有效价格
         /// 如果返回-1则价格无效
         /// </summary>
         /// <param name="symbol"></param>
         /// <returns></returns>
-        public decimal GetAvabilePrice(string symbol)
+        public decimal GetAvabilePrice(string exchange,string symbol)
         {
-            Tick k = GetTickSnapshot(symbol);//获得当前合约的最新数据
+            Tick k = GetTickSnapshot(exchange,symbol);//获得当前合约的最新数据
             if (k == null) return -1;
 
             decimal price = somePrice(k);

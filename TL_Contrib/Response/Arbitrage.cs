@@ -195,7 +195,7 @@ namespace Response
         public override void OnInit()
         {
             Log("oninit called, try to register symbol", QSEnumDebugLevel.INFO);
-            this.RegisterSymbol("IF1502");
+            this.RegisterSymbol("","IF1502");
             PrepareArgs();
         }
 
@@ -469,8 +469,8 @@ namespace Response
         int _lots = 0;
         void PrepareArgs()
         {
-            _leg1symbol = GetSymbol(this.SymbolLeg1.AsString());
-            _leg2symbol = GetSymbol(this.SymbolLeg2.AsString());
+            _leg1symbol = GetSymbol("",this.SymbolLeg1.AsString());
+            _leg2symbol = GetSymbol("",this.SymbolLeg2.AsString());
 
             _t1Over = Leg1Orver.AsInt();
             _t1Wait = Leg1Wait.AsInt();

@@ -19,6 +19,7 @@ namespace TradingLib.Common
         {
             _type = MessageTypes.QRYINSTRUMENTCOMMISSIONRATE;
             this.TradingAccount = string.Empty;
+            this.Exchange = string.Empty;
             this.Symbol = string.Empty;
         }
 
@@ -32,9 +33,12 @@ namespace TradingLib.Common
         /// </summary>
         public string Symbol { get; set; }
 
+
+        public string Exchange { get; set; }
+
         public override string ContentSerialize()
         {
-            return TradingAccount + "," + Symbol;
+            return TradingAccount + "," + Symbol +"," + this.Exchange;
         }
 
         public override void ContentDeserialize(string contentstr)
@@ -42,6 +46,7 @@ namespace TradingLib.Common
             string[] rec = contentstr.Split(',');
             this.TradingAccount = rec[0];
             this.Symbol = rec[1];
+            this.Exchange = rec[2];
         }
     }
 
@@ -164,6 +169,7 @@ namespace TradingLib.Common
             _type = MessageTypes.QRYINSTRUMENTMARGINRATE;
             this.TradingAccount = string.Empty;
             this.Symbol = string.Empty;
+            this.Exchange = string.Empty;
         }
 
         /// <summary>
@@ -176,9 +182,14 @@ namespace TradingLib.Common
         /// </summary>
         public string Symbol { get; set; }
 
+        /// <summary>
+        /// 交易所
+        /// </summary>
+        public string Exchange { get; set; }
+
         public override string ContentSerialize()
         {
-            return TradingAccount + "," + Symbol;
+            return TradingAccount + "," + Symbol + "," + this.Exchange;
         }
 
         public override void ContentDeserialize(string contentstr)
@@ -186,6 +197,7 @@ namespace TradingLib.Common
             string[] rec = contentstr.Split(',');
             this.TradingAccount = rec[0];
             this.Symbol = rec[1];
+            this.Exchange = rec[2];
         }
     }
 

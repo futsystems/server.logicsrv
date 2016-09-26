@@ -155,7 +155,7 @@ namespace Broker.SIM
             {
                 _quotestatus.Remove(o.id);
                 //debug("限价委托 记录盘口....", QSEnumDebugLevel.MUST);
-                Tick tick = FindTickSnapshot(o.Symbol);
+                Tick tick = TLCtxHelper.ModuleDataRouter.GetTickSnapshot(o.Exchange, o.Symbol);
                 if (tick != null && tick.IsValid())
                 {
                     _quotestatus.Add(o.id, new LimitOrderQuoteStatus(o, tick));
@@ -279,7 +279,7 @@ namespace Broker.SIM
                     //2.成交检查 用Tick数据成交该委托 注意我们是遍历所有的委托 然后取对应的tick数据 去进行成交
                     bool filled = false;
 
-                    Tick tick = FindTickSnapshot(o.oSymbol.TickSymbol);
+                    Tick tick = TLCtxHelper.ModuleDataRouter.GetTickSnapshot(o.Exchange, o.Symbol);//FindTickSnapshot(o.oSymbol.TickSymbol);
 
                     //如果是挂单 并且需要模拟实盘进行成交
                     if (tick != null && tick.IsValid())

@@ -556,7 +556,7 @@ namespace TradingLib.Core
                 logger.Info("Position:" + pos.GetPositionKey() + " is in Exchange:SHFE, we need to check Close/CloseToday Split");
                 int voltd = pos.PositionDetailTodayNew.Sum(p => p.Volume);//今日持仓
                 int volyd = pos.PositionDetailYdNew.Sum(p => p.Volume);//昨日持仓
-                Tick snapshot = TLCtxHelper.ModuleDataRouter.GetTickSnapshot(pos.Account);
+                Tick snapshot = TLCtxHelper.ModuleDataRouter.GetTickSnapshot(pos.oSymbol.Exchange,pos.oSymbol.Symbol);
                 if (volyd != 0)
                 {
                     Order oyd = new OrderImpl(pos.Symbol, volyd * (side ? 1 : -1) * -1);

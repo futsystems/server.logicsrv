@@ -117,7 +117,7 @@ namespace TradingLib.Core
             }
             
             //行情检查
-            Tick tk = TLCtxHelper.ModuleDataRouter.GetTickSnapshot(o.BinaryOption.Symbol);
+            Tick tk = TLCtxHelper.ModuleDataRouter.GetTickSnapshot("",o.BinaryOption.Symbol);
             if (tk == null || (!tk.IsValid()))
             {
                 errortitle = "BO_ERROR_MARKETDATA_NULL";//市场行情异常

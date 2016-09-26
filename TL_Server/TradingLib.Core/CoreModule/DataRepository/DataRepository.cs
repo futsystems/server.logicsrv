@@ -187,18 +187,18 @@ namespace TradingLib.Core
 
 
 
-
+        //TODO SymbolKey
         /// <summary>
         /// 获得某个交易帐户的合约对象
         /// </summary>
         /// <param name="account"></param>
         /// <param name="symbol"></param>
         /// <returns></returns>
-        Symbol GetAccountSymbol(string account, string symbol)
+        Symbol GetAccountSymbol(string account,string exchange, string symbol)
         {
             IAccount acc = TLCtxHelper.ModuleAccountManager[account];
             if (acc == null) return null;
-            return acc.Domain.GetSymbol(symbol);
+            return acc.Domain.GetSymbol(exchange,symbol);
         }
 
         //TODO:数据过滤 没有合约对象的委托,成交,持仓
@@ -210,7 +210,7 @@ namespace TradingLib.Core
         public IEnumerable<Trade> SelectAcctTrades(int tradingday)
         {
             //填充对象oSymbol
-            IEnumerable<Trade> trades = ORM.MTradingInfo.SelectTradesUnSettled(tradingday).Select(f => { f.oSymbol = GetAccountSymbol(f.Account, f.Symbol); return f; }).Where(f=>f.oSymbol!= null);
+            IEnumerable<Trade> trades = ORM.MTradingInfo.SelectTradesUnSettled(tradingday).Select(f => { f.oSymbol = GetAccountSymbol(f.Account,f.Exchange, f.Symbol); return f; }).Where(f=>f.oSymbol!= null);
             logger.Info("数据库恢复前次结算以来成交数据:" + trades.Count().ToString() + "条");
             return trades;
         }
@@ -221,7 +221,7 @@ namespace TradingLib.Core
         /// <returns></returns>
         public IEnumerable<Order> SelectAcctOrders(int tradingday)
         {
-            IEnumerable<Order> orders = ORM.MTradingInfo.SelectOrdersUnSettled(tradingday).Select(o => { o.oSymbol = GetAccountSymbol(o.Account, o.Symbol); return o; }).Where(o=>o.oSymbol!=null);
+            IEnumerable<Order> orders = ORM.MTradingInfo.SelectOrdersUnSettled(tradingday).Select(o => { o.oSymbol = GetAccountSymbol(o.Account,o.Exchange, o.Symbol); return o; }).Where(o=>o.oSymbol!=null);
             logger.Info("数据库恢复前次结算以来委托数据:" + orders.Count().ToString() + "条");
             return orders;
         }
@@ -236,7 +236,7 @@ namespace TradingLib.Core
         /// <returns></returns>
         public IEnumerable<PositionDetail> SelectAcctPositionDetails()
         {
-            IEnumerable<PositionDetail> positions = ORM.MSettlement.SelecteAccountPositionDetailsUnSettled().Select(pos => { pos.oSymbol = GetAccountSymbol(pos.Account, pos.Symbol); return pos; }).Where(pos=>pos.oSymbol!=null);
+            IEnumerable<PositionDetail> positions = ORM.MSettlement.SelecteAccountPositionDetailsUnSettled().Select(pos => { pos.oSymbol = GetAccountSymbol(pos.Account,pos.Exchange,pos.Symbol); return pos; }).Where(pos=>pos.oSymbol!=null);
             logger.Info("数据库恢复前次结算持仓明细数据:" + positions.Count().ToString() + "条");
             return positions;
         }
@@ -283,7 +283,7 @@ namespace TradingLib.Core
         /// <returns></returns>
         public IEnumerable<Trade> SelectBrokerTrades(string token)
         {
-            return ORM.MTradingInfo.SelectBrokerTrades().Where(t => t.Broker.Equals(token)).Select(t => { t.oSymbol = GetSymbolViaToken(t.Account, t.Symbol); return t; });
+            return ORM.MTradingInfo.SelectBrokerTrades().Where(t => t.Broker.Equals(token)).Select(t => { t.oSymbol = GetSymbolViaToken(t.Account,t.Exchange, t.Symbol); return t; });
         }
 
         /// <summary>
@@ -293,7 +293,7 @@ namespace TradingLib.Core
         /// <returns></returns>
         public IEnumerable<Order> SelectBrokerOrders(string token)
         {
-            return ORM.MTradingInfo.SelectBrokerOrders().Where(o => o.Broker.Equals(token)).Select(o => { o.oSymbol = GetSymbolViaToken(o.Account, o.Symbol); return o; });
+            return ORM.MTradingInfo.SelectBrokerOrders().Where(o => o.Broker.Equals(token)).Select(o => { o.oSymbol = GetSymbolViaToken(o.Account,o.Exchange, o.Symbol); return o; });
         }
 
         /// <summary>
@@ -303,7 +303,7 @@ namespace TradingLib.Core
         /// <returns></returns>
         public IEnumerable<PositionDetail> SelectBrokerPositionDetails(string token)
         {
-            return ORM.MSettlement.SelectBrokerPositionDetails(TLCtxHelper.ModuleSettleCentre.LastSettleday).Where(p => p.Broker.Equals(token)).Select(pos => { pos.oSymbol = GetSymbolViaToken(pos.Account, pos.Symbol); return pos; });
+            return ORM.MSettlement.SelectBrokerPositionDetails(TLCtxHelper.ModuleSettleCentre.LastSettleday).Where(p => p.Broker.Equals(token)).Select(pos => { pos.oSymbol = GetSymbolViaToken(pos.Account,pos.Exchange, pos.Symbol); return pos; });
         }
 
 
@@ -317,7 +317,7 @@ namespace TradingLib.Core
         {
             return ORM.MTradingInfo.SelectRouterOrders().Select(ro => { Order fo = TLCtxHelper.ModuleClearCentre.SentOrder(ro.FatherID); ro.oSymbol = fo != null ? fo.oSymbol : null; return ro; });
         }
-
+        //TODO SymbolKey
         /// <summary>
         /// 接口侧交易信息 Account字段为对应的BrokerToken信息
         /// 通过Token找到对应的IBroker从而可以获得该域,则就可以获得对应的合约
@@ -325,12 +325,12 @@ namespace TradingLib.Core
         /// <param name="token"></param>
         /// <param name="symbol"></param>
         /// <returns></returns>
-        Symbol GetSymbolViaToken(string token, string symbol)
+        Symbol GetSymbolViaToken(string token,string exchange, string symbol)
         {
             Domain domain = BasicTracker.ConnectorConfigTracker.GetBrokerDomain(token);
             Symbol sym = null;
             if (domain != null)
-                sym = domain.GetSymbol(symbol);
+                sym = domain.GetSymbol(exchange,symbol);
             else
                 sym = null;// BasicTracker.DomainTracker.SuperDomain.GetSymbol(symbol); 如果没有对应的合约这里需要进行容错处理
             return sym;

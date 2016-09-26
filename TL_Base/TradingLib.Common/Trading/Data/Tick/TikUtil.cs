@@ -392,5 +392,17 @@ namespace TradingLib.Common
                     break;
             }
         }
+
+        /// <summary>
+        /// 获得Tick对应合约的唯一键值
+        /// 比如在维护合约快照时 如果深圳和上海2个相同代码的合约行情到达，就需要区分交易所
+        /// 因此需要加入交易所来形成唯一键
+        /// </summary>
+        /// <param name="k"></param>
+        /// <returns></returns>
+        public static string GetSymbolUniqueKey(this Tick k)
+        {
+            return string.Format("{0}-{1}", k.Exchange, k.Symbol);
+        }
     }
 }

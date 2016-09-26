@@ -274,7 +274,7 @@ namespace TradingLib.Core
             //6.1连续竞价阶段需要检查合约有效性是否有正常的价格 集合竞价阶段 该合约可能还没有行情
             //if (periodContinuous)
             {
-                Tick tk = TLCtxHelper.ModuleDataRouter.GetTickSnapshot(o.Symbol);
+                Tick tk = TLCtxHelper.ModuleDataRouter.GetTickSnapshot(o.Exchange,o.Symbol);
                 if (tk == null || (!tk.IsValid()))
                 {
                     errortitle = "SYMBOL_TICK_ERROR";//市场行情异常
@@ -296,7 +296,7 @@ namespace TradingLib.Core
             if (o.isLimit || o.isStop)
             {
                 decimal targetprice = o.isLimit ? o.LimitPrice : o.StopPrice;
-                Tick k = TLCtxHelper.ModuleDataRouter.GetTickSnapshot(o.Symbol);
+                Tick k = TLCtxHelper.ModuleDataRouter.GetTickSnapshot(o.Exchange,o.Symbol);
                 //如果行情快照中包含有效的最高价和最低价限制 则判定价格是否在涨跌幅度内
                 if (k.UpperLimit.ValidPrice() && k.LowerLimit.ValidPrice())
                 {

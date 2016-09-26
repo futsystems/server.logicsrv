@@ -82,7 +82,7 @@ namespace RuleSet2.Account
                 //如果品种列表为空 或者 持仓品种在对应的列表内 则执行检查
                 if (sec_list.Count == 0 || sec_list.Contains(pos.oSymbol.SecurityFamily.Code))
                 {
-                    Tick k = TLCtxHelper.ModuleDataRouter.GetTickSnapshot(pos.Symbol);
+                    Tick k = TLCtxHelper.ModuleDataRouter.GetTickSnapshot(pos.oSymbol.Exchange,pos.oSymbol.Symbol);
                     if (k == null) continue;
                     decimal val = k.Settlement > 0 ? k.Settlement : k.PreClose;//从结算价和preclose中获得有效昨日价格
                     decimal pect = (k.Trade - val) / val;

@@ -14,20 +14,20 @@ namespace TradingLib.Common
         /// </summary>
         /// <param name="symbol"></param>
         /// <returns></returns>
-        public decimal GetAvabilePrice(string symbol)
-        {
-            return TLCtxHelper.ModuleDataRouter.GetAvabilePrice(symbol);
-        }
+        //public decimal GetAvabilePrice(string symbol)
+        //{
+        //    return TLCtxHelper.ModuleDataRouter.GetAvabilePrice(symbol);
+        //}
 
         /// <summary>
         /// 获得合约市场快照
         /// </summary>
         /// <param name="symbol"></param>
         /// <returns></returns>
-        public Tick GetTickSnapshot(string symbol)
-        {
-            return TLCtxHelper.ModuleDataRouter.GetTickSnapshot(symbol);
-        }
+        //public Tick GetTickSnapshot(string symbol)
+        //{
+        //    return TLCtxHelper.ModuleDataRouter.GetTickSnapshot(symbol);
+        //}
 
 
         public void AssignOrderID(ref Order o)

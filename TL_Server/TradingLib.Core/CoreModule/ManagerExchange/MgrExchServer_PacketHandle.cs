@@ -62,7 +62,7 @@ namespace TradingLib.Core
             IAccount account = TLCtxHelper.ModuleAccountManager[fill.Account];
             if (account == null) return;
 
-            fill.oSymbol = account.Domain.GetSymbol(fill.Symbol);
+            fill.oSymbol = account.Domain.GetSymbol(fill.Exchange,fill.Symbol);
 
             if (fill.oSymbol == null)
             {
@@ -87,7 +87,7 @@ namespace TradingLib.Core
 
             //检查价格
             decimal targetprice = fill.xPrice;
-            Tick k = TLCtxHelper.ModuleDataRouter.GetTickSnapshot(fill.Symbol);
+            Tick k = TLCtxHelper.ModuleDataRouter.GetTickSnapshot(fill.Exchange,fill.Symbol);
             if (k.UpperLimit > 0 && k.LowerLimit > 0)
             {
                 if (targetprice > k.UpperLimit || targetprice < k.LowerLimit)

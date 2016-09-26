@@ -121,6 +121,7 @@
     <Compile Include="Utils\Account\AccountUtils_ExStrategy.cs" />
     <Compile Include="Utils\Account\AccountUtils_Args.cs" />
     <Compile Include="Utils\Account\AccountUtils_SessionInfo.cs" />
+    <Compile Include="Utils\Account\AccountUtils_MaxOrderVol.cs" />
     <Compile Include="Utils\BasicInfo\ExchangeUtils_Ex.cs" />
     <Compile Include="Utils\BasicInfo\SecurityUtils_Ex.cs" />
     <Compile Include="Utils\BasicInfo\SymbolUtils_Ex.cs" />

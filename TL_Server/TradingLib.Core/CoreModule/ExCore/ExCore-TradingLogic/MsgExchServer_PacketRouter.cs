@@ -150,6 +150,9 @@ namespace TradingLib.Core
                         SrvOnQryTradingParams(request, account);
                     }
                     break;
+
+
+                //XAPI 调用接口
                 case MessageTypes.XQRYMARKETTIME://查询交易时间段
                     {
                         XQryMarketTimeRequest request = packet as XQryMarketTimeRequest;
@@ -204,7 +207,18 @@ namespace TradingLib.Core
                         SrvOnXQryAccount(request, account);
                     }
                     break;
-
+                case MessageTypes.XQRYMAXORDERVOL://查询最大下单量
+                    {
+                        XQryMaxOrderVolRequest request = packet as XQryMaxOrderVolRequest;
+                        SrvOnXQryMaxVol(request, account);
+                    }
+                    break;
+                case MessageTypes.XQRYACCOUNTFINANCE://查询财务数据
+                    {
+                        XQryAccountFinanceRequest request = packet as XQryAccountFinanceRequest;
+                        SrvOnQryAccountFinance(request, account);
+                    }
+                    break;
                 case MessageTypes.CONTRIBREQUEST://扩展请求
                     {
                         ContribRequest request = packet as ContribRequest;

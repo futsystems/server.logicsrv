@@ -490,7 +490,7 @@ namespace TradingLib.ORM
             IAccount account = TLCtxHelper.ModuleAccountManager[info.Account];
             if (account == null)
                 return null;
-            PositionRoundImpl pr = new PositionRoundImpl(info.Account, account.Domain.GetSymbol(info.Symbol), info.Side);
+            PositionRoundImpl pr = new PositionRoundImpl(info.Account, account.Domain.GetSymbol("",info.Symbol), info.Side);
 
             pr.EntryTime = info.EntryTime;
             pr.EntrySize = info.EntrySize;

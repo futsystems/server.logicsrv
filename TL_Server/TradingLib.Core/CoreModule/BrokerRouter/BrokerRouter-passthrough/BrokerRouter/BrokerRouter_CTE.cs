@@ -417,7 +417,7 @@ namespace TradingLib.Core
             Tick tmpk = null;
             foreach (Tick k in TLCtxHelper.ModuleDataRouter.GetTickSnapshot())
             {
-                Symbol s = BasicTracker.SymbolTracker[1][k.Symbol];//从主域获得对应的合约
+                Symbol s = BasicTracker.SymbolTracker[1][k.Exchange,k.Symbol];//从主域获得对应的合约
                 if (s != null && s.SecurityFamily.Code == _frozenCode)//如果是用于冻结的品种
                 { 
                     if(tmpk == null) tmpk = k;

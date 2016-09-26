@@ -174,7 +174,7 @@ namespace Broker.SIM
 
         void EntryOrder(BinaryOptionOrder o)
         {
-            Tick k = TLCtxHelper.ModuleDataRouter.GetTickSnapshot(o.BinaryOption.Symbol);
+            Tick k = TLCtxHelper.ModuleDataRouter.GetTickSnapshot("",o.BinaryOption.Symbol);
             if(k == null)
             {
                 //回报错误

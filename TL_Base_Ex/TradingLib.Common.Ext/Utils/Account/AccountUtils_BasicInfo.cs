@@ -46,10 +46,11 @@ namespace TradingLib.Common
         {
             return account.GetSymbols().Where(sym=>sym.SecurityFamily.Type == type).Select(sym => { return account.Symbol2Instrument(sym); });
         }
-
+        
+        //TODO SK合约键值修改
         public static bool TrckerOrderSymbol(this IAccount account, ref Order o)
         {
-            Symbol symbol = account.Domain.GetSymbol(o.Symbol);
+            Symbol symbol = account.Domain.GetSymbol(o.Exchange,o.Symbol);
             //TODO:增加合约可交易判定
             if (symbol == null)
             {
@@ -61,10 +62,10 @@ namespace TradingLib.Common
                 return true;
             }
         }
-
+        //TODO SK合约键值修改
         public static bool TrckerOrderSymbol(this IAccount account, ref BinaryOptionOrder o)
         {
-            Symbol symbol = account.Domain.GetSymbol(o.BinaryOption.Symbol);
+            Symbol symbol = account.Domain.GetSymbol("",o.BinaryOption.Symbol);
             //TODO:增加合约可交易判定
             if (symbol == null)
             {

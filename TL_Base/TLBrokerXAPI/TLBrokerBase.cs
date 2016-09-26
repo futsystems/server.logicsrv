@@ -135,16 +135,16 @@ namespace TradingLib.BrokerXAPI
         }
 
         
-        /// <summary>
-        /// 获得当前Tick的市场快照,模拟成交时需要获得当前市场快照用于进行取价操作
-        /// </summary>
-        public event GetSymbolTickDel GetSymbolTickEvent;
-        protected Tick FindTickSnapshot(string symbol)
-        {
-            if (GetSymbolTickEvent != null)
-                return GetSymbolTickEvent(symbol);
-            return null;
-        }
+        ///// <summary>
+        ///// 获得当前Tick的市场快照,模拟成交时需要获得当前市场快照用于进行取价操作
+        ///// </summary>
+        //public event GetSymbolTickDel GetSymbolTickEvent;
+        //protected Tick FindTickSnapshot(string symbol)
+        //{
+        //    if (GetSymbolTickEvent != null)
+        //        return GetSymbolTickEvent(symbol);
+        //    return null;
+        //}
         #endregion
 
         #region 配置信息

@@ -7,5 +7,9 @@ using TradingLib.API;
 
 namespace TradingLib.Common
 {
-   
+    public static class AccountUtils_xxx
+    {
+            
+    
+    }
 }

@@ -59,20 +59,21 @@ namespace TradingLib.Common
                 return null;
             }
         }
+        //TODO SmbolKey 合约键值修改
         /// <summary>
         /// 获得某个域下某个symbol
         /// </summary>
         /// <param name="domin_id"></param>
         /// <param name="symbol"></param>
         /// <returns></returns>
-        internal SymbolImpl this[int domain_id, string symbol]
+        internal SymbolImpl this[int domain_id,string uexchage, string usymbol]
         {
             get
             {
                 DBSymbolTracker tracker = null;
                 if (domainsymboltracker.TryGetValue(domain_id, out tracker))
                 {
-                    return tracker[symbol];
+                    return tracker[uexchage,usymbol];
                 }
                 return null;
             }
@@ -131,6 +132,8 @@ namespace TradingLib.Common
             domainsymboltracker[domain.ID].SyncSymbol(sym);
         }
     }
+
+
     /// <summary>
     /// 合约管理器用于获得合约对象
     /// 合约管理器从数据库加载并维护了所有合约列表,委托,成交,持仓均是通过对合约的引用来实现合约数据的索引
@@ -169,17 +172,21 @@ namespace TradingLib.Common
                     ORM.MBasicInfo.DeleteSymbol(sym.ID);
                     continue;
                 }
-                symcodemap[sym.Symbol] = sym;
+                //TODO SymbolKey 需要数据绑定后再进行合约键值计算否则得到没有交易所字段的键值
+                //symcodemap[sym.UniqueKey] = sym;
                 idxcodemap[sym.ID] = sym;
 
             }
 
             //易话合约底层绑定
-            foreach (SymbolImpl sym in symcodemap.Values)
+            foreach (SymbolImpl sym in idxcodemap.Values)
             {
                 sym.ULSymbol = this[sym.underlaying_fk];
                 sym.UnderlayingSymbol = this[sym.underlayingsymbol_fk];
                 sym.SecurityFamily = BasicTracker.SecurityTracker[sym.Domain_ID,sym.security_fk];
+
+                //绑定数据完备后 再进行合约键值Map初始化
+                symcodemap[sym.UniqueKey] = sym;
             }
 
             //获得月连续合约
@@ -189,7 +196,8 @@ namespace TradingLib.Common
                 SymbolImpl std = FindStdSymbolForMonthContinuous(symbol);
                 if (std != null)
                 {
-                    monthContinuousMap.Add(std.Symbol,symbol);
+                    //TODO SymbolKey
+                    monthContinuousMap.Add(std.UniqueKey, symbol);
                 }
             }
         }
@@ -236,17 +244,19 @@ namespace TradingLib.Common
                 return monthContinuousMap;
             }
         }
+
+        //TODO SmbolKey 合约键值修改
         /// <summary>
         /// 通过合约代码获得合约对象
         /// </summary>
         /// <param name="symbol"></param>
         /// <returns></returns>
-        public SymbolImpl this[string symbol]
+        public SymbolImpl this[string uexchange,string usymbol]
         {
             get
             {
                 SymbolImpl sym = null;
-                if (symcodemap.TryGetValue(symbol, out sym))
+                if (symcodemap.TryGetValue(string.Format("{0}-{1}",uexchange,usymbol), out sym))
                 {
                     return sym;
                 }
@@ -349,18 +359,20 @@ namespace TradingLib.Common
                 int currentday = tradingday != 0 ? tradingday : sym.SecurityFamily.Exchange.GetExchangeTime().ToTLDate();
                 if (sym.IsExpired(currentday))//下个交易日是否过期
                     continue;
-
-                symcodemap[sym.Symbol] = sym;
+                //TODO SymbolKey
+                //symcodemap[sym.UniqueKey] = sym;
                 idxcodemap[sym.ID] = sym;
 
             }
 
             //易话合约底层绑定
-            foreach (SymbolImpl sym in symcodemap.Values)
+            foreach (SymbolImpl sym in idxcodemap.Values)
             {
                 sym.ULSymbol = this[sym.underlaying_fk];
                 sym.UnderlayingSymbol = this[sym.underlayingsymbol_fk];
                 sym.SecurityFamily = BasicTracker.SecurityTracker[sym.Domain_ID, sym.security_fk];
+
+                symcodemap[sym.UniqueKey] = sym;
             }
 
            
@@ -372,7 +384,8 @@ namespace TradingLib.Common
                 SymbolImpl std = FindStdSymbolForMonthContinuous(symbol);
                 if (std != null)
                 {
-                    monthContinuousMap.Add(std.Symbol, symbol);
+                    //TODO SymbolKey
+                    monthContinuousMap.Add(std.UniqueKey, symbol);
                 }
             }
         }
@@ -428,16 +441,16 @@ namespace TradingLib.Common
                 target.OptionSide = sym.OptionSide;
                 target.Month = sym.Month;
                 target.ExpireDate = sym.ExpireDate;
-
+                
                 SecurityFamilyImpl sec = BasicTracker.SecurityTracker[target.Domain_ID, sym.SecurityFamily.Code];
                 target.SecurityFamily = sec;
                 target.security_fk = sec != null ? sec.ID : 0;
-
-                SymbolImpl ulsymbol = BasicTracker.SymbolTracker[target.Domain_ID, sym.ULSymbol != null ? sym.ULSymbol.Symbol : ""];
+                //TOD SymbolKey
+                SymbolImpl ulsymbol = BasicTracker.SymbolTracker[target.Domain_ID,sym.ULSymbol != null ? sym.ULSymbol.Exchange:"", sym.ULSymbol != null ? sym.ULSymbol.Symbol : ""];
                 target.underlaying_fk = ulsymbol!=null?ulsymbol.ID:0;
                 target.ULSymbol =ulsymbol;
 
-                SymbolImpl layingsymbol = BasicTracker.SymbolTracker[target.Domain_ID, sym.UnderlayingSymbol != null ? sym.UnderlayingSymbol.Symbol : ""];
+                SymbolImpl layingsymbol = BasicTracker.SymbolTracker[target.Domain_ID,sym.UnderlayingSymbol != null ?sym.Exchange:"", sym.UnderlayingSymbol != null ? sym.UnderlayingSymbol.Symbol : ""];
                 target.underlayingsymbol_fk = layingsymbol!=null?layingsymbol.underlayingsymbol_fk:0;
                 target.UnderlayingSymbol = layingsymbol;
                 //target.Tradeable = sym.Tradeable;//更新交易标识
@@ -467,12 +480,12 @@ namespace TradingLib.Common
                 SecurityFamilyImpl sec = BasicTracker.SecurityTracker[target.Domain_ID, sym.SecurityFamily.Code];
                 target.SecurityFamily = sec;
                 target.security_fk = sec!=null?sec.ID:0;
-
-                SymbolImpl ulsymbol = BasicTracker.SymbolTracker[target.Domain_ID, sym.ULSymbol != null ? sym.ULSymbol.Symbol : ""];
+                //TOD SymbolKey
+                SymbolImpl ulsymbol = BasicTracker.SymbolTracker[target.Domain_ID,sym.ULSymbol != null ?sym.ULSymbol.Exchange:"", sym.ULSymbol != null ? sym.ULSymbol.Symbol : ""];
                 target.underlaying_fk = ulsymbol != null ? ulsymbol.ID : 0;
                 target.ULSymbol = ulsymbol;
 
-                SymbolImpl layingsymbol = BasicTracker.SymbolTracker[target.Domain_ID, sym.UnderlayingSymbol != null ? sym.UnderlayingSymbol.Symbol : ""];
+                SymbolImpl layingsymbol = BasicTracker.SymbolTracker[target.Domain_ID, sym.UnderlayingSymbol != null ?sym.UnderlayingSymbol.Exchange:"", sym.UnderlayingSymbol != null ? sym.UnderlayingSymbol.Symbol : ""];
                 target.underlayingsymbol_fk = layingsymbol != null ? layingsymbol.underlayingsymbol_fk : 0;
                 target.UnderlayingSymbol = layingsymbol;
 
@@ -480,17 +493,18 @@ namespace TradingLib.Common
 
 
                 ORM.MBasicInfo.InsertSymbol(target);
-
-                symcodemap[target.Symbol] = target;
+                //TODO SymbolKey
+                symcodemap[target.UniqueKey] = target;
                 idxcodemap[target.ID] = target;
 
+                //TOD SymbolKey
                 //建立月连续与标准合约关系
                 if (target.SymbolType == QSEnumSymbolType.MonthContinuous)
                 {
                     SymbolImpl std = FindStdSymbolForMonthContinuous(target);
                     if (std != null)
                     {
-                        monthContinuousMap.Add(std.Symbol, target);
+                        monthContinuousMap.Add(std.UniqueKey, target);
                     }
                 }
                 if (target.SymbolType == QSEnumSymbolType.Standard)
@@ -498,7 +512,7 @@ namespace TradingLib.Common
                     SymbolImpl month = FindMonthContinuousSymbolForStd(target);
                     if (month != null)
                     {
-                        monthContinuousMap.Add(target.Symbol, month);
+                        monthContinuousMap.Add(target.UniqueKey, month);
                     }
                 }
             }
@@ -561,8 +575,8 @@ namespace TradingLib.Common
                     Util.Debug("合约对象没有品种数据,不插入该合约信息");
                 }
                 ORM.MBasicInfo.InsertSymbol(target);
-                
-                symcodemap[target.Symbol] = target;
+                //TOD SymbolKey
+                symcodemap[target.UniqueKey] = target;
                 idxcodemap[target.ID] = target;
 
                 //建立月连续与标准合约关系
@@ -571,7 +585,7 @@ namespace TradingLib.Common
                     SymbolImpl std = FindStdSymbolForMonthContinuous(target);
                     if (std != null)
                     {
-                        monthContinuousMap.Add(std.Symbol, target);
+                        monthContinuousMap.Add(std.UniqueKey, target);
                     }
                 }
                 if (target.SymbolType == QSEnumSymbolType.Standard)
@@ -579,7 +593,7 @@ namespace TradingLib.Common
                     SymbolImpl month = FindMonthContinuousSymbolForStd(target);
                     if (month != null)
                     {
-                        monthContinuousMap.Add(target.Symbol, month);
+                        monthContinuousMap.Add(target.UniqueKey, month);
                     }
                 }
 

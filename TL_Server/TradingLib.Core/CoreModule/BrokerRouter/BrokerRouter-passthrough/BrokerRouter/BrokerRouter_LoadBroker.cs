@@ -28,7 +28,7 @@ namespace TradingLib.Core
             broker.GotOrderActionErrorEvent += new OrderActionErrorDelegate(Broker_GotOrderActionErrorEvent);
 
             //获得某个symbol的tick数据
-            broker.GetSymbolTickEvent += new GetSymbolTickDel(Broker_GetSymbolTickEvent);
+            //broker.GetSymbolTickEvent += new GetSymbolTickDel(Broker_GetSymbolTickEvent);
             //数据路由中Tick事件驱动交易通道中由Tick部分
             //DataFeedRouter.GotTickEvent += new TickDelegate(broker.GotTick);
             //this.GotTickEvent += new TickDelegate(broker.GotTick);
@@ -190,18 +190,18 @@ namespace TradingLib.Core
         /// </summary>
         /// <param name="symbol"></param>
         /// <returns></returns>
-        Tick Broker_GetSymbolTickEvent(string symbol)
-        {
-            try
-            {
-                return TLCtxHelper.ModuleDataRouter.GetTickSnapshot(symbol);
-            }
-            catch (Exception ex)
-            {
-                logger.Error(PROGRAME + ":get symbol tick snapshot error:" + ex.ToString());
-                return null;
-            }
-        }
+        //Tick Broker_GetSymbolTickEvent(string symbol)
+        //{
+        //    try
+        //    {
+        //        return TLCtxHelper.ModuleDataRouter.GetTickSnapshot(symbol);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        logger.Error(PROGRAME + ":get symbol tick snapshot error:" + ex.ToString());
+        //        return null;
+        //    }
+        //}
 
 
 
@@ -364,7 +364,7 @@ namespace TradingLib.Core
                     }
 
                     localorder.Account = account.ID;
-                    localorder.oSymbol = account.Domain.GetSymbol(localorder.Symbol);
+                    localorder.oSymbol = account.Domain.GetSymbol(localorder.Exchange,localorder.Symbol);
                     //设定委托编号
                     TLCtxHelper.ModuleExCore.AssignOrderID(ref localorder);
                     //将路由中心处理获得的id传递给接口侧id

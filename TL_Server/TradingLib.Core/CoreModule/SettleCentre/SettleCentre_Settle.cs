@@ -423,7 +423,7 @@ namespace TradingLib.Core
                 data.Exchange = exchange.EXCode;
                 data.SettleDay = settleday;
 
-                Tick k = TLCtxHelper.ModuleDataRouter.GetTickSnapshot(sym.Symbol);
+                Tick k = TLCtxHelper.ModuleDataRouter.GetTickSnapshot(sym.Exchange,sym.Symbol);
                 if (k != null)
                 {
                     data.AskPrice = k.AskPrice;

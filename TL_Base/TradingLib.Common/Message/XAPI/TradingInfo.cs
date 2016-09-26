@@ -208,4 +208,145 @@ namespace TradingLib.Common
         }
     }
 
+
+    public class XQryMaxOrderVolRequest : RequestPacket
+    {
+        /// <summary>
+        /// 交易帐户
+        /// </summary>
+        public string Account { get; set; }
+
+        /// <summary>
+        /// 交易所
+        /// </summary>
+        public string Exchange {get;set;}
+
+        /// <summary>
+        /// 合约
+        /// </summary>
+        public string Symbol { get; set; }
+
+        /// <summary>
+        /// 方向
+        /// </summary>
+        public bool Side { get; set; }
+
+        /// <summary>
+        /// 开平标识
+        /// </summary>
+        public QSEnumOffsetFlag OffsetFlag { get; set; }
+
+
+        public XQryMaxOrderVolRequest()
+        {
+            _type = MessageTypes.XQRYMAXORDERVOL;
+            Account = string.Empty;
+            Symbol = string.Empty;
+            Exchange = string.Empty;
+            Side = false;
+            OffsetFlag = QSEnumOffsetFlag.UNKNOWN;
+
+        }
+        public override bool IsValid
+        {
+            get
+            {
+                if (string.IsNullOrEmpty(Account))
+                    return false;
+                return true;
+            }
+        }
+
+        public override string ContentSerialize()
+        {
+            StringBuilder sb = new StringBuilder();
+            char d = ',';
+            sb.Append(Account);
+            sb.Append(d);
+            sb.Append(Exchange);
+            sb.Append(d);
+            sb.Append(Symbol);
+            sb.Append(d);
+            sb.Append(Side.ToString());
+            sb.Append(d);
+            sb.Append(OffsetFlag.ToString());
+            return sb.ToString();
+        }
+
+        public override void ContentDeserialize(string reqstr)
+        {
+            string[] rec = reqstr.Split(',');
+            Account = rec[0];
+            Exchange = rec[1];
+            Symbol = rec[2];
+            Side = bool.Parse(rec[3]);
+            QSEnumOffsetFlag offset = QSEnumOffsetFlag.OPEN;
+            Enum.TryParse<QSEnumOffsetFlag>(rec[4], out offset);//(QSEnumOffsetFlag)Enum.TryParse(typeof(QSEnumOffsetFlag), rec[2]);
+            OffsetFlag = offset;
+
+        }
+
+
+    }
+
+    public class RspXQryMaxOrderVolResponse : RspResponsePacket
+    {
+
+        public RspXQryMaxOrderVolResponse()
+        {
+            Exchange = string.Empty;
+            Symbol = string.Empty;
+            MaxVol = 0;
+            Side = true;
+            OffsetFlag = QSEnumOffsetFlag.UNKNOWN;
+            _type = MessageTypes.XQRYMAXORDERVOLRESPONSE;
+        }
+
+        public string Exchange { get; set; }
+
+        public string Symbol { get; set; }
+
+        /// <summary>
+        /// 方向
+        /// </summary>
+        public bool Side { get; set; }
+        /// <summary>
+        /// 开平标识
+        /// </summary>
+        public QSEnumOffsetFlag OffsetFlag { get; set; }
+
+
+        public int MaxVol { get; set; }
+
+        public override string ResponseSerialize()
+        {
+            //Util.Debug("response serialized: side:" + Side.ToString(), QSEnumDebugLevel.ERROR);
+            StringBuilder sb = new StringBuilder();
+            char d = ',';
+            sb.Append(Exchange);
+            sb.Append(d);
+            sb.Append(Symbol);
+            sb.Append(d);
+            sb.Append(Side.ToString());
+            sb.Append(d);
+            sb.Append(((int)OffsetFlag).ToString());
+            sb.Append(d);
+            sb.Append(MaxVol.ToString());
+            return sb.ToString();
+
+        }
+
+        public override void ResponseDeserialize(string content)
+        {
+            string[] rec = content.Split(',');
+            Exchange = rec[0];
+            Symbol = rec[1];
+            Side = bool.Parse(rec[2]);
+            QSEnumOffsetFlag offset = QSEnumOffsetFlag.OPEN;
+            Enum.TryParse<QSEnumOffsetFlag>(rec[3], out offset);//(QSEnumOffsetFlag)Enum.TryParse(typeof(QSEnumOffsetFlag), rec[2]);
+            OffsetFlag = offset;
+            MaxVol = int.Parse(rec[4]);
+        }
+    }
+
 }

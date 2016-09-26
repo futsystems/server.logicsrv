@@ -143,5 +143,11 @@ namespace TradingLib.API
         /// 名称 股票对应的 证券名称
         /// </summary>
         string Name { get; set; }
+
+        /// <summary>
+        /// 通过组合 交易所-合约 形成唯一键值
+        /// 股票中 上海和深圳两个交易所的代码有可能会发生重复
+        /// </summary>
+        string UniqueKey { get;}
     }
 }

@@ -65,7 +65,7 @@ namespace TradingLib.Core
                                     }
                                 case QSEnumPendingThresholdType.ByTicks:
                                     {
-                                        Tick k = TLCtxHelper.ModuleDataRouter.GetTickSnapshot(item.SignalTrade.Symbol);
+                                        Tick k = TLCtxHelper.ModuleDataRouter.GetTickSnapshot(item.SignalTrade.Exchange,item.SignalTrade.Symbol);
                                         if(k !=null && item.WorkingOrder.LimitPrice>0 && k.Trade >0)
                                         {
                                             //当前成交价格与报单价diff
@@ -170,7 +170,7 @@ namespace TradingLib.Core
                 //开平标识
                 o.OffsetFlag = QSEnumOffsetFlag.OPEN;
 
-                Tick k = TLCtxHelper.ModuleDataRouter.GetTickSnapshot(item.SignalTrade.Symbol);
+                Tick k = TLCtxHelper.ModuleDataRouter.GetTickSnapshot(item.SignalTrade.Exchange,item.SignalTrade.Symbol);
 
                 //价格
                 decimal price = 0;
@@ -239,7 +239,7 @@ namespace TradingLib.Core
                 //开平标识
                 o.OffsetFlag = QSEnumOffsetFlag.CLOSE;
 
-                Tick k = TLCtxHelper.ModuleDataRouter.GetTickSnapshot(item.SignalTrade.Symbol);
+                Tick k = TLCtxHelper.ModuleDataRouter.GetTickSnapshot(item.SignalTrade.Exchange,item.SignalTrade.Symbol);
                 //价格
                 decimal price = 0;
                 switch (this.Config.ExitPriceType)

@@ -60,7 +60,7 @@ namespace TradingLib.API
         /// <summary>
         /// 请求获得某个symbol的Tick快照数据
         /// </summary>
-        event GetSymbolTickDel GetSymbolTickEvent;
+        //event GetSymbolTickDel GetSymbolTickEvent;
 
 
         #endregion

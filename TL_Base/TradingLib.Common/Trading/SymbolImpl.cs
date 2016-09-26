@@ -12,15 +12,41 @@ namespace TradingLib.Common
     /// </summary>
     public class SymbolImpl:Symbol
     {
+
+        string _uniqueKey = string.Empty;
+        /// <summary>
+        /// 唯一键
+        /// </summary>
+        public string UniqueKey
+        {
+            get 
+            {
+                //return _uniqueKey; 
+                return string.Format("{0}-{1}",Exchange,Symbol);
+            }
+        }
+
+
         /// <summary>
         /// 数据库序号
         /// </summary>
         public int ID { get; set; }
 
+
+        string _symbol = string.Empty;
         /// <summary>
         /// 合约代码
         /// </summary>
-        public string Symbol { get; set; }
+        public string Symbol {get;set;}
+        //{
+        //    get { return _symbol; }
+        //    set 
+        //    {
+        //        _symbol = value;
+        //        _uniqueKey = string.Format("{0}-{2}")
+        //    }
+        
+        //}
 
         /// <summary>
         /// 合约名称
@@ -29,6 +55,7 @@ namespace TradingLib.Common
 
         //品种外键
         public int security_fk { get; set; }
+
         /// <summary>
         /// 该合约属于哪个品种
         /// </summary>
@@ -36,6 +63,7 @@ namespace TradingLib.Common
 
         //异化合约底层外键
         public int underlaying_fk { get; set; }
+
         /// <summary>
         /// 异化合约的底层合约对象
         /// </summary>
@@ -44,6 +72,7 @@ namespace TradingLib.Common
 
         //底层合约外键
         public int underlayingsymbol_fk { get; set; }
+
         /// <summary>
         /// 底层合约 常规合约中 期权合约的底层标的
         /// </summary>

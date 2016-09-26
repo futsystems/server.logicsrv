@@ -121,7 +121,7 @@ namespace TradingLib.Common
             {
                 if (underlaying.Domain_ID != domain.ID)
                 {
-                    underlaying = BasicTracker.SymbolTracker[domain.ID, underlaying.Symbol];
+                    underlaying = BasicTracker.SymbolTracker[domain.ID,underlaying.Exchange, underlaying.Symbol];
                 }
                 if (underlaying == null)
                 {
@@ -142,7 +142,7 @@ namespace TradingLib.Common
             {
                 if (underlayingsymbol.Domain_ID != domain.ID)
                 {
-                    underlayingsymbol = BasicTracker.SymbolTracker[domain.ID, underlayingsymbol.Symbol];
+                    underlayingsymbol = BasicTracker.SymbolTracker[domain.ID,underlayingsymbol.Exchange, underlayingsymbol.Symbol];
                 }
                 if (underlayingsymbol == null)
                 {
@@ -207,16 +207,17 @@ namespace TradingLib.Common
         {
             return BasicTracker.SecurityTracker[domain.ID, id];
         }
-
+        
+        //TODO SmbolKey 合约键值修改
         /// <summary>
         /// 获得某个域下的合约
         /// </summary>
         /// <param name="domain"></param>
         /// <param name="symbol"></param>
         /// <returns></returns>
-        public static SymbolImpl GetSymbol(this Domain domain, string symbol)
+        public static SymbolImpl GetSymbol(this Domain domain,string uexchange, string usymbol)
         {
-            return BasicTracker.SymbolTracker[domain.ID, symbol];
+            return BasicTracker.SymbolTracker[domain.ID, uexchange, usymbol];
         }
 
         public static SymbolImpl GetSymbol(this Domain domain, int id)

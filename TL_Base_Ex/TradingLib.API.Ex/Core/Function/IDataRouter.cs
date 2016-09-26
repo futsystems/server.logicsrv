@@ -15,19 +15,20 @@ namespace TradingLib.API
         /// <param name="b"></param>
         void RegisterSymbols(SymbolBasket b);
 
+        //TODO SymbolKey
         /// <summary>
         /// 获得某个合约的市场行情快照
         /// </summary>
         /// <param name="symbol"></param>
         /// <returns></returns>
-        Tick GetTickSnapshot(string symbol);
+        Tick GetTickSnapshot(string exchange,string symbol);
 
         /// <summary>
         /// 获得某个合约的当前有效价格
         /// </summary>
         /// <param name="symbol"></param>
         /// <returns></returns>
-        decimal GetAvabilePrice(string symbol);
+        decimal GetAvabilePrice(string exchange,string symbol);
 
         void ExcludeSymbol(string symbol);
 

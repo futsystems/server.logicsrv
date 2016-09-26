@@ -27,7 +27,7 @@ namespace TradingLib.Core
             broker.GotOrderActionErrorEvent += new OrderActionErrorDelegate(Broker_GotOrderActionErrorEvent);
             
             //获得某个symbol的tick数据
-            broker.GetSymbolTickEvent += new GetSymbolTickDel(Broker_GetSymbolTickEvent);
+            //broker.GetSymbolTickEvent += new GetSymbolTickDel(Broker_GetSymbolTickEvent);
             //数据路由中Tick事件驱动交易通道中由Tick部分
             //TLCtxHelper.EventRouter.GotTickEvent += new TickDelegate(broker.GotTick);
             
@@ -48,23 +48,23 @@ namespace TradingLib.Core
 
 
         #region Broker向本地回报操作
-        /// <summary>
-        /// 交易接口查询某个symbol的当前最新Tick快照
-        /// </summary>
-        /// <param name="symbol"></param>
-        /// <returns></returns>
-        Tick Broker_GetSymbolTickEvent(string symbol)
-        {
-            try
-            {
-                return TLCtxHelper.ModuleDataRouter.GetTickSnapshot(symbol);
-            }
-            catch (Exception ex)
-            {
-                logger.Info(PROGRAME + ":get symbol tick snapshot error:" + ex.ToString());
-                return null;
-            }
-        }
+        ///// <summary>
+        ///// 交易接口查询某个symbol的当前最新Tick快照
+        ///// </summary>
+        ///// <param name="symbol"></param>
+        ///// <returns></returns>
+        //Tick Broker_GetSymbolTickEvent(string symbol)
+        //{
+        //    try
+        //    {
+        //        return TLCtxHelper.ModuleDataRouter.GetTickSnapshot(symbol);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        logger.Info(PROGRAME + ":get symbol tick snapshot error:" + ex.ToString());
+        //        return null;
+        //    }
+        //}
 
 
 

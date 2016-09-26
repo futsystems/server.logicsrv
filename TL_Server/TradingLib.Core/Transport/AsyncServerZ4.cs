@@ -613,16 +613,16 @@ namespace TradingLib.Core
                 //    return true;
                 //}
 
-                Timeout timeout = new Timeout();
-                timeout.MessageHandler = () =>
-                {
+                //Timeout timeout = new Timeout();
+                //timeout.MessageHandler = () =>
+                //{
                     //3.消息处理如果解析出来的消息是有效的则丢入处理流程进行处理，如果无效则不处理
                     handleMessage(msg.Type, msg.Content, front, address);
-                };
-                bool re = timeout.DoWithTimeout(WorkerTimeOut);
-                if (re)
+                //};
+                //bool re = timeout.DoWithTimeout(WorkerTimeOut);
+                //if (re)
                 {
-                    logger.Warn(string.Format("Wroker:{0}  Handle Message TimeOut, type:{1} content:{2}",id, msg.Type, msg.Content));
+                //    logger.Warn(string.Format("Wroker:{0}  Handle Message TimeOut, type:{1} content:{2}",id, msg.Type, msg.Content));
                 }
 
             }
@@ -635,8 +635,7 @@ namespace TradingLib.Core
         //标记变量
         private bool mBoTimeout;
         public Action MessageHandler;
-
-        public Timeout()
+        public Timeout(AsyncServerZ4 srv)
         {
             //  初始状态为 停止
             this.mTimeoutObject =new ManualResetEvent(true);
@@ -675,6 +674,7 @@ namespace TradingLib.Core
             }
             catch (Exception ex)
             {
+                
                 this.mBoTimeout =true;
             }
             finally

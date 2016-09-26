@@ -126,7 +126,8 @@ namespace TradingLib.Core
             }
             else
             {
-                Symbol sym = account.Domain.GetSymbol(request.Symbol);
+                //TODO SmbolKey
+                Symbol sym = account.Domain.GetSymbol(request.Exchange,request.Symbol);
                 List<Symbol> list= new List<Symbol>();
                 if(sym!= null)
                 {
@@ -169,7 +170,18 @@ namespace TradingLib.Core
             }
             else
             {
-                symlist = account.GetSymbols().Where(sym => sym.IsTradeable).Where(sym => sym.Symbol == request.Symbol);//获得某个合约
+
+                symlist = account.GetSymbols().Where(sym => sym.IsTradeable).Where(sym =>
+                {
+                    if (string.IsNullOrEmpty(request.Exchange))//没有设定交易所 则单独比较Symbol
+                    {
+                        return sym.Symbol == request.Symbol;
+                    }
+                    else
+                    {
+                        return sym.UniqueKey == string.Format("{0}-{1}", request.Exchange, request.Symbol);
+                    }
+                });//获得某个合约
             }
 
             int totalnum = symlist.Count();
@@ -178,7 +190,7 @@ namespace TradingLib.Core
                 for (int i = 0; i < totalnum; i++)
                 {
                     Symbol sym = symlist.ElementAt(i);
-                    Tick k = TLCtxHelper.ModuleDataRouter.GetTickSnapshot(sym.Symbol);
+                    Tick k = TLCtxHelper.ModuleDataRouter.GetTickSnapshot(sym.Exchange,sym.Symbol);
                     if (k == null || !k.IsValid())
                     {
                         k = TLCtxHelper.ModuleSettleCentre.GetLastTickSnapshot(sym.Symbol);
@@ -199,19 +211,9 @@ namespace TradingLib.Core
             }
         }
 
-        /// <summary>
-        /// 响应查询账户请求
-        /// 
-        /// </summary>
-        /// <param name="request"></param>
-        /// <param name="account"></param>
-        void SrvOnXQryAccount(XQryAccountRequest request, IAccount account)
-        {
-            logger.Info("XQryAccountRequest:" + request.ToString());
-            RspXQryAccountResponse respone = ResponseTemplate<RspXQryAccountResponse>.SrvSendRspResponse(request);
-            respone.Account = account.GenAccountLite();
-            CacheRspResponse(respone);
-        }
+       
+
+
 
     }
 }

@@ -34,6 +34,7 @@ namespace TradingLib.Common
             return (decimal)this[idx].Trade;
         }
 
+        //TODO SymbolKey
         /// <summary>
         /// gets decimal value of last trade price given label
         /// </summary>
@@ -41,11 +42,18 @@ namespace TradingLib.Common
         /// <returns></returns>
         public decimal ValueDecimal(string txt)
         {
-            return (decimal)this[txt].Trade;
+            string[] rec = txt.Split(',');
+            if (rec.Length != 2) return decimal.MinValue;
+            return (decimal)this[rec[0],rec[1]].Trade;
         }
 
         public object Value(int idx) { return this[idx]; }
-        public object Value(string txt) { return this[txt]; }
+        public object Value(string txt) 
+        {
+            string[] rec = txt.Split(',');
+            if (rec.Length != 2) return null;
+            return this[rec[0],rec[1]]; 
+        }
 
         public void Clear()
         {
@@ -267,7 +275,13 @@ namespace TradingLib.Common
 
             
         public string Display(int idx) { return this[idx].ToString(); }
-        public string Display(string txt) { return this[txt].ToString(); }
+        public string Display(string txt) 
+        {
+            string[] rec = txt.Split(',');
+            if (rec.Length != 2) return string.Empty;
+            return this[rec[0],rec[1]].ToString(); 
+        
+        }
 
         public string getlabel(int idx) { return last.getlabel(idx); }
 
@@ -398,19 +412,19 @@ namespace TradingLib.Common
         /// </summary>
         /// <param name="idx"></param>
         /// <returns></returns>
-        public Tick Tick(int idx)
-        {
-            return this[idx];
-        }
+        //public Tick Tick(int idx)
+        //{
+        //    return this[idx];
+        //}
         /// <summary>
         /// get a tick in tick format
         /// </summary>
         /// <param name="sym"></param>
         /// <returns></returns>
-        public Tick Tick(string sym)
-        {
-            return this[sym];
-        }
+        //public Tick Tick(string sym)
+        //{
+        //    return this[sym];
+        //}
         /// <summary>
         /// get a tick in tick format
         /// </summary>
@@ -420,7 +434,11 @@ namespace TradingLib.Common
         {
             get
             {
-                Tick k = new TickImpl(last.getlabel(idx));
+                string key = last.getlabel(idx);
+                string[] rec = key.Split('-');
+
+                Tick k = new TickImpl(rec[1]);
+                k.Exchange = rec[0];
                 k.Date = date[idx];
                 k.Time = time[idx];
 
@@ -478,30 +496,40 @@ namespace TradingLib.Common
         /// <returns></returns>
         public Tick[] GetTicks()
         {
-            string[] syms = last.ToLabelArray();
+            //string[] syms = last.ToLabelArray();
             List<Tick> ticks = new List<Tick>();
-                
-            foreach(string sym in syms)
+
+            for (int i = 0; i < this.Count; i++)
             {
-                Tick k = this[sym];
+                Tick k = this[i];
                 if (k != null && k.IsValid())
                 {
                     ticks.Add(k);
                 }
             }
+                //foreach (string sym in syms)
+                //{
+                //    Tick k = this[sym];
+                //    if (k != null && k.IsValid())
+                //    {
+                //        ticks.Add(k);
+                //    }
+                //}
             return ticks.ToArray();
         }
 
+        //TODO SymbolKey
         /// <summary>
         /// get a tick in tick format
         /// </summary>
         /// <param name="sym"></param>
         /// <returns></returns>
-        public Tick this[string sym]
+        public Tick this[string exchange,string sym]
         {
             get
             {
-                int idx = last.getindex(sym);
+                string key = string.Format("{0}-{1}", exchange, sym);
+                int idx = last.getindex(key);
                 if (idx < 0) return null;// new TickImpl();
                 return this[idx];
             }
@@ -514,13 +542,13 @@ namespace TradingLib.Common
         /// <returns></returns>
         public bool newTick(Tick k)
         {
-
+            string key = k.GetSymbolUniqueKey();
             //检查是否记录了该symbol
             // get index
-            int idx = getindex(k.Symbol);
+            int idx = getindex(key);
             // add if unknown
             if (idx < 0)
-                idx = addindex(k.Symbol);
+                idx = addindex(key);
             // update date/time
             time[idx] = k.Time;
             date[idx] = k.Date;
