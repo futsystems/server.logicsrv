@@ -100,10 +100,6 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\TradingLib\TradingLib.Core.dll</HintPath>
     </Reference>
-    <Reference Include="TradingLib.Mixins, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\lib\TradingLib\TradingLib.Mixins.dll</HintPath>
-    </Reference>
     <Reference Include="TradingLib.ServiceManager, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\TradingLib\TradingLib.ServiceManager.dll</HintPath>
