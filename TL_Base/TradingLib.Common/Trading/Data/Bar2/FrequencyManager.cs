@@ -412,14 +412,13 @@ namespace TradingLib.Common
             DateTime ticktime = tick.DateTime();
 
 
-
             Tick ttick = new TickImpl(ticktime);
             pf.LeaveSection();
 
             //如果时间大于Frequency的当前时间 则需要检查是否有PendingBars需要发送 时间相等则不用发送
-            if (ticktime >= symbolUpdateTimeMap[symbol.Symbol])
+            if (ticktime >= symbolUpdateTimeMap[symbol.Symbol])//Tick数据必须按时间顺序进入 如果出现时间错乱则处理逻辑会被打乱 比如 产生一个时间很大的Tick 结果后面正常的Tick数据无法被有效处理
             {
-                //记录过合约第一个行情时间
+                //记录每个合约的第一个有效Tick时间
                 if (tick.IsTrade())
                 {
                     if (!symbolFirstTickTime.Keys.Contains(symbol.Symbol))
@@ -546,9 +545,7 @@ namespace TradingLib.Common
             }
             else
             {
-               
                 logger.Warn(string.Format("Out of order tick. Received tick for symbol {0} with time {1} when previous tick time was {2}", symbol.Symbol, ticktime, symbolUpdateTimeMap[symbol.Symbol]));
-                Util.sleep(1);
             }
         }
 
@@ -694,27 +691,8 @@ namespace TradingLib.Common
         internal class FreqInfo
         {
             ILog logger = null;
+
             private FrequencyManager _manager;
-            private FrequencyPlugin _frequencgen;
-            private IFrequencyGenerator _freqgenerator;
-            /// <summary>
-            /// Frequency数据发生器
-            /// </summary>
-            public IFrequencyGenerator Generator { get { return _freqgenerator; } }
-
-            private Frequency _frequency;
-            public Frequency Frequency { get { return _frequency; } }
-            private Bar _partialBar;
-
-            private Symbol _symbol;
-            private List<SingleBarEventArgs> _pendingBarEvents;
-            /// <summary>
-            /// 待发送Bar数据
-            /// </summary>
-            public List<SingleBarEventArgs> PendingBarEvents { get { return _pendingBarEvents; } }
-
-            private Bar _pendingPartialBar;
-            public Bar PendingPartialBar { get { return _pendingPartialBar; } set { _pendingPartialBar = value; } }
 
             private FreqKey _key;
             /// <summary>
@@ -722,15 +700,45 @@ namespace TradingLib.Common
             /// </summary>
             public FreqKey FreqKey { get { return _key; } }
 
+
+            private IFrequencyGenerator _freqgenerator;
+            /// <summary>
+            /// Frequency数据发生器
+            /// </summary>
+            public IFrequencyGenerator Generator { get { return _freqgenerator; } }
+
+            private Frequency _frequency;
+            /// <summary>
+            /// Bar数据集
+            /// </summary>
+            public Frequency Frequency { get { return _frequency; } }
+
+
+            private List<SingleBarEventArgs> _pendingBarEvents;
+            /// <summary>
+            /// 待发送Bar数据
+            /// </summary>
+            public List<SingleBarEventArgs> PendingBarEvents { get { return _pendingBarEvents; } }
+
+            private Bar _pendingPartialBar;
+            /// <summary>
+            /// 当前实时Bar数据
+            /// </summary>
+            public Bar PendingPartialBar { get { return _pendingPartialBar; } set { _pendingPartialBar = value; } }
+
+            
+
+
+
             public FreqInfo(FreqKey key, bool synchronizeBars, FrequencyManager manager)
             {
                 logger = LogManager.GetLogger("FreqInfo");
                 this._key = key;
-                this._symbol = _key.Symbol;
-
                 this._manager = manager;
+
                 //生成Bar数据生成器 FrequencyPlugin不同,可以按不同的逻辑生成Bar数据
                 this._freqgenerator = _key.Settings.CreateFrequencyGenerator();
+
                 //生成对应的Frequency数据结构
                 this._frequency = new Frequency(_key, synchronizeBars);
                 this._pendingBarEvents = new List<SingleBarEventArgs>();
@@ -792,7 +800,7 @@ namespace TradingLib.Common
             /// <param name="obj"></param>
             void _freqgenerator_NewTickEvent(NewTickEventArgs obj)
             {
-                if (obj.Symbol.Symbol != this._symbol.Symbol)
+                if (obj.Symbol.Symbol != this._key.Symbol.Symbol)
                 {
                     return;
                 }
@@ -807,7 +815,7 @@ namespace TradingLib.Common
             void _freqgenerator_NewBarEvent(SingleBarEventArgs obj)
             {
                 //合约不一致直接返回
-                if (obj.Symbol.Symbol != this._symbol.Symbol)
+                if (obj.Symbol.Symbol != this._key.Symbol.Symbol)
                 {
                     return;
                 }

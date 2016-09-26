@@ -82,7 +82,12 @@ namespace TradingLib.Common
             return new TimeFreqGenerator(this.BarLength);
         }
 
-
+        /// <summary>
+        /// 计算给定时刻的下一个周期开始时刻
+        /// </summary>
+        /// <param name="date"></param>
+        /// <param name="period"></param>
+        /// <returns></returns>
         public static DateTime NextRoundedTime(DateTime date, TimeSpan period)
         {
             DateTime time = RoundTime(date, period);
@@ -98,6 +103,12 @@ namespace TradingLib.Common
             return RoundTime(time, period);
         }
 
+        /// <summary>
+        /// 计算给定时刻的当前周期开始时刻
+        /// </summary>
+        /// <param name="date"></param>
+        /// <param name="period"></param>
+        /// <returns></returns>
         public static DateTime RoundTime(DateTime date, TimeSpan period)
         {
             DateTime time;
@@ -152,7 +163,7 @@ namespace TradingLib.Common
             bool _updated = false;
             TimeSpan _interval;
             /// <summary>
-            /// Bar生成器
+            /// Bar数据累加器
             /// </summary>
             BarGenerator _generator;
 

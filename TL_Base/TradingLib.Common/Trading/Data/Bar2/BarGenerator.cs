@@ -8,7 +8,7 @@ using Common.Logging;
 namespace TradingLib.Common
 {
     /// <summary>
-    /// Bar生成器 用于处理行情数据更新Bar数据
+    /// Bar数据累加器 用于处理行情数据更新Bar数据 比如累加成交量 更新 OHLC等
     /// 具体Bar开始和结束由IFrequencyGeneratro进行管理
     /// </summary>
     public class BarGenerator
@@ -157,7 +157,9 @@ namespace TradingLib.Common
             }
         }
 
-
+        /// <summary>
+        /// Bar事件 当有Bar结束是对外发送
+        /// </summary>
         public event Action<SingleBarEventArgs> NewBar;
 
         /// <summary>
@@ -165,8 +167,10 @@ namespace TradingLib.Common
         /// </summary>
         public event Action<NewTickEventArgs> NewTick;
 
+
         /// <summary>
-        /// 触发新的Bar
+        /// 产生一个Bar
+        /// 该操作由外部的IFreqGenerator根据具体的条件来进行调用触发
         /// </summary>
         /// <param name="barEndTime"></param>
         public void SendNewBar(DateTime barEndTime)
@@ -235,7 +239,7 @@ namespace TradingLib.Common
 #endif   
             Bar data = this._currentPartialBar;
             this._isTickSent = false;
-
+            //重新创建临时Bar数据
             this._currentPartialBar = new BarImpl(this._symbol.Symbol, this._freq, barEndTime);
             this._updated = false;
 
