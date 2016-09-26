@@ -79,7 +79,6 @@
   
   <Target Name="Base">
 	<MSBuild Projects="TL_Base\TradingLib.API\TradingLib.API.csproj" Properties="Configuration=$(Configuration);" />
-	<MSBuild Projects="TL_Base\TradingLib.Mixins\TradingLib.Mixins.csproj" Properties="Configuration=$(Configuration);" />
 	<MSBuild Projects="TL_Base\TradingLib.Common\TradingLib.Common.csproj" Properties="Configuration=$(Configuration);" />
 	<MSBuild Projects="TL_Base\TLBrokerXAPI\TLBrokerXAPI.csproj" Properties="Configuration=$(Configuration);" />
 	<MSBuild Projects="TL_Base\NLog.Targets.ZMQ\NLog.Targets.ZMQ.csproj" Properties="Configuration=$(Configuration);" />
@@ -165,8 +164,6 @@
 		<DataCoreExe Include="lib\TradingLib\TradingLib.API.Ex.dll" />
 		<DataCoreExe Include="lib\TradingLib\TradingLib.Common.dll" />
 		<DataCoreExe Include="lib\TradingLib\TradingLib.Common.Ex.dll" />
-		<DataCoreExe Include="lib\TradingLib\TradingLib.Mixins.dll" />
-		
 	</ItemGroup>
     <ItemGroup>
 		<DataCoreLibs Include="lib\Quartz.dll" />
