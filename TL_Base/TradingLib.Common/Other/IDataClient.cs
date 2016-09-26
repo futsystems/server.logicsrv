@@ -25,7 +25,7 @@ namespace TradingLib.API
         /// 注册合约行情
         /// </summary>
         /// <param name="symbols"></param>
-        void RegisterSymbol(string[] symbols);
+        void RegisterSymbol(string exchange,string[] symbols);
 
 
         /// <summary>

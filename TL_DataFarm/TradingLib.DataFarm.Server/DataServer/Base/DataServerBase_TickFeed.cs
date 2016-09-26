@@ -20,7 +20,7 @@ namespace TradingLib.Common.DataFarm
         private readonly List<ITickFeed> _TickFeeds = new List<ITickFeed>();
 
 
-        ConcurrentDictionary<string, ConcurrentDictionary<string, IConnection>> symRegMap = new ConcurrentDictionary<string, ConcurrentDictionary<string, IConnection>>();
+        ConcurrentDictionary<string, ConcurrentDictionary<string, IConnection>> symKeyRegMap = new ConcurrentDictionary<string, ConcurrentDictionary<string, IConnection>>();
 
         /// <summary>
         /// 保存合约的成交数据
@@ -152,7 +152,8 @@ namespace TradingLib.Common.DataFarm
         void NotifyTick2Connections(Tick k)
         {
             ConcurrentDictionary<string, IConnection> target = null;
-            if (symRegMap.TryGetValue(k.Symbol, out target))
+
+            if (symKeyRegMap.TryGetValue(k.GetSymbolUniqueKey(), out target))
             {
                 foreach (var conn in target.Values)
                 {
@@ -170,7 +171,7 @@ namespace TradingLib.Common.DataFarm
         {
             logger.Info(string.Format("Clear symbols registed for conn:{0}", conn.SessionID));
             IConnection target = null;
-            foreach (var regpair in symRegMap)
+            foreach (var regpair in symKeyRegMap)
             {
                 if (regpair.Value.Keys.Contains(conn.SessionID))
                 {
@@ -186,17 +187,24 @@ namespace TradingLib.Common.DataFarm
         /// <param name="request"></param>
         void OnRegisterSymbol(IConnection conn, RegisterSymbolTickRequest request)
         {
+            if (string.IsNullOrEmpty(request.Exchange))
+            {
+                logger.Warn("Register Symbol Tick Need Exhcnange");
+                return;
+            }
             foreach (var symbol in request.SymbolList)
             {
                 if (string.IsNullOrEmpty(symbol)) continue;
+                string key = string.Format("{0}-{1}", request.Exchange, symbol);
+                
                 Symbol sym = MDBasicTracker.SymbolTracker[symbol];
                 if (sym == null) continue;
 
-                if (!symRegMap.Keys.Contains(symbol))
+                if (!symKeyRegMap.Keys.Contains(key))
                 {
-                    symRegMap.TryAdd(symbol, new  ConcurrentDictionary<string,IConnection>());
+                    symKeyRegMap.TryAdd(key, new ConcurrentDictionary<string, IConnection>());
                 }
-                ConcurrentDictionary<string,IConnection> regmap = symRegMap[symbol];
+                ConcurrentDictionary<string, IConnection> regmap = symKeyRegMap[key];
                 if(!regmap.Keys.Contains(conn.SessionID))
                 {
                     regmap.TryAdd(conn.SessionID,conn);
@@ -221,9 +229,9 @@ namespace TradingLib.Common.DataFarm
                     ClearSymbolRegisted(conn);
                     break;
                 }
-                if (symRegMap.Keys.Contains(symbol))
+                if (symKeyRegMap.Keys.Contains(symbol))
                 {
-                    ConcurrentDictionary<string, IConnection> regmap = symRegMap[symbol];
+                    ConcurrentDictionary<string, IConnection> regmap = symKeyRegMap[symbol];
                     IConnection target = null;
                     regmap.TryRemove(conn.SessionID, out target);
                 }

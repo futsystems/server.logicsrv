@@ -77,6 +77,9 @@ namespace TradingLib.Common
         int _asksize5;
         int _bidsize5;
 
+        bool _marketOpen;
+        bool _quoteUpdate;
+
 
 
         public decimal AskPrice2 { get { return _askprice2; } set { _askprice2 = value; } }
@@ -133,8 +136,12 @@ namespace TradingLib.Common
 
 
 
+        /// <summary>
+        /// 交易所开启或关闭
+        /// </summary>
+        public bool MarketOpen { get { return _marketOpen; } set { _marketOpen = value; } }
 
-        
+        public bool QuoteUpdate { get { return _quoteUpdate; } set { _quoteUpdate = value; } }
         public TickImpl(string symbol)
         {
             _Sec = new SymbolImpl();
@@ -189,6 +196,9 @@ namespace TradingLib.Common
             _bidprice5 = 0;
             _asksize5 = 0;
             _bidsize5  = 0;
+
+            _marketOpen = false;
+            _quoteUpdate = false;
 
         }
 
@@ -247,6 +257,8 @@ namespace TradingLib.Common
             _bidprice5 = 0;
             _asksize5 = 0;
             _bidsize5 = 0;
+            _marketOpen = false;
+            _quoteUpdate = false;
 
         }
         public static TickImpl Copy(Tick c)
@@ -309,7 +321,8 @@ namespace TradingLib.Common
             k.BidPrice5 = c.BidPrice5;
             k.AskSize5 = c.AskSize5;
             k.BidSize5 = c.BidSize5;
-
+            k.MarketOpen = c.MarketOpen;
+            k.QuoteUpdate = c.QuoteUpdate;
             return k;
         }
         /// <summary>

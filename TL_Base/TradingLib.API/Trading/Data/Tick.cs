@@ -185,6 +185,16 @@ namespace TradingLib.API
         /// 行情源
         /// </summary>
         QSEnumDataFeedTypes DataFeed { get; set; }
+
+        /// <summary>
+        /// 交易所开启或关闭
+        /// </summary>
+        bool MarketOpen { get; set; }
+
+        /// <summary>
+        /// 用于定时更新报价 用于实时行情系统过滤过多盘口数据
+        /// </summary>
+        bool QuoteUpdate { get; set; }
     }
 
     /// <summary>

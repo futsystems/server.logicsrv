@@ -253,7 +253,7 @@
     <Compile Include="Message\QryTrade.cs" />
     <Compile Include="Message\Register.cs" />
     <Compile Include="Message\RspInfo.cs" />
-    <Compile Include="Message\Symbols.cs" />
+    <Compile Include="Message\MarketData\Symbols.cs" />
     <Compile Include="Message\Trading.cs" />
     <Compile Include="Message\Version.cs" />
     <Compile Include="Other\ClientInfo.cs" />

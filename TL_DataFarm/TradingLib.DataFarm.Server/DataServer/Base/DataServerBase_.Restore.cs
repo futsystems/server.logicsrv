@@ -187,7 +187,7 @@ namespace TradingLib.Common.DataFarm
 
                 logger.Warn("Symbol:{0} create restore task start:{1} end:{2}".Put(symbol.Symbol, start, end));
                 //将恢复任务加入列表
-                restoreTaskList.Add(new TickRestoreTask(symbol, start, DateTime.MaxValue));
+                //restoreTaskList.Add(new TickRestoreTask(symbol, start, DateTime.MaxValue));
 
                 restoreProfile.LeaveSection();
 

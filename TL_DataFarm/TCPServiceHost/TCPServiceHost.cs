@@ -105,66 +105,73 @@ namespace TCPServiceHost
         /// <param name="requestInfo"></param>
         void tcpSocketServer_NewRequestReceived(TLSessionBase session, TLRequestInfo requestInfo)
         {
-            logger.Debug(string.Format("Message type:{0} content:{1} sessoin:{2}", requestInfo.Message.Type, requestInfo.Message.Content, session.SessionID));
-
-            string sessionId = session.SessionID;
-            switch (requestInfo.Message.Type)
+            try
             {
-                //服务查询
-                case MessageTypes.SERVICEREQUEST:
-                    {
-                        QryServiceRequest request = RequestTemplate<QryServiceRequest>.SrvRecvRequest("", sessionId, requestInfo.Message.Content);
-                        RspQryServiceResponse response = QryService(request);
-                        byte[] data = response.Data;
-                        session.Send(data, 0, data.Length);
-                        logger.Info(string.Format("Got QryServiceRequest from:{0} request:{1} reponse:{2}", sessionId, request, response));
-                        return;
-                    }
-                //注册客户端
-                case MessageTypes.REGISTERCLIENT:
-                    {
-                        RegisterClientRequest request = RequestTemplate<RegisterClientRequest>.SrvRecvRequest("", sessionId, requestInfo.Message.Content);
-                        if (request != null)
+                logger.Debug(string.Format("Message type:{0} content:{1} sessoin:{2}", requestInfo.Message.Type, requestInfo.Message.Content, session.SessionID));
+
+                string sessionId = session.SessionID;
+                switch (requestInfo.Message.Type)
+                {
+                    //服务查询
+                    case MessageTypes.SERVICEREQUEST:
+                        {
+                            QryServiceRequest request = RequestTemplate<QryServiceRequest>.SrvRecvRequest("", sessionId, requestInfo.Message.Content);
+                            RspQryServiceResponse response = QryService(request);
+                            byte[] data = response.Data;
+                            session.Send(data, 0, data.Length);
+                            logger.Info(string.Format("Got QryServiceRequest from:{0} request:{1} reponse:{2}", sessionId, request, response));
+                            return;
+                        }
+                    //注册客户端
+                    case MessageTypes.REGISTERCLIENT:
+                        {
+                            RegisterClientRequest request = RequestTemplate<RegisterClientRequest>.SrvRecvRequest("", sessionId, requestInfo.Message.Content);
+                            if (request != null)
+                            {
+                                IConnection conn = null;
+                                //连接已经建立直接返回
+                                if (_connectionMap.TryGetValue(sessionId, out conn))
+                                {
+                                    logger.Warn(string.Format("Client:{0} already exist", session.SessionID));
+                                    return;
+                                }
+
+                                //创建连接
+                                conn = new TCPSocketConnection(this, session);
+                                _connectionMap.TryAdd(sessionId, conn);
+
+                                //发送回报
+                                RspRegisterClientResponse response = ResponseTemplate<RspRegisterClientResponse>.SrvSendRspResponse(request);
+                                response.SessionID = sessionId;
+                                conn.Send(response);
+
+                                logger.Info(string.Format("Client:{0} registed to server", sessionId));
+                                //向逻辑成抛出连接建立事件
+                                OnConnectionCreated(conn);
+
+                            }
+                            return;
+                        }
+                    default:
                         {
                             IConnection conn = null;
-                            //连接已经建立直接返回
-                            if (_connectionMap.TryGetValue(sessionId, out conn))
+                            if (!_connectionMap.TryGetValue(sessionId, out conn))
                             {
-                                logger.Warn(string.Format("Client:{0} already exist", session.SessionID));
+                                logger.Warn(string.Format("Client:{0} is not registed to server, ignore request", sessionId));
                                 return;
                             }
 
-                            //创建连接
-                            conn = new TCPSocketConnection(this, session);
-                            _connectionMap.TryAdd(sessionId, conn);
-
-                            //发送回报
-                            RspRegisterClientResponse response = ResponseTemplate<RspRegisterClientResponse>.SrvSendRspResponse(request);
-                            response.SessionID = sessionId;
-                            conn.Send(response);
-
-                            logger.Info(string.Format("Client:{0} registed to server", sessionId));
-                            //向逻辑成抛出连接建立事件
-                            OnConnectionCreated(conn);
+                            IPacket packet = PacketHelper.SrvRecvRequest(requestInfo.Message.Type, requestInfo.Message.Content, "", sessionId);
+                            OnRequestEvent(conn, packet);
 
                         }
                         return;
-                    }
-                default:
-                    {
-                        IConnection conn = null;
-                        if (!_connectionMap.TryGetValue(sessionId, out conn))
-                        {
-                            logger.Warn(string.Format("Client:{0} is not registed to server, ignore request", sessionId));
-                            return;
-                        }
 
-                        IPacket packet = PacketHelper.SrvRecvRequest(requestInfo.Message.Type, requestInfo.Message.Content, "", sessionId);
-                        OnRequestEvent(conn, packet);
-                        
-                    }
-                    return;
-
+                }
+            }
+            catch (Exception ex)
+            {
+                logger.Error("Handle MessageType:{0} Content:{1} Error:{2}".Put(requestInfo.Message.Type, requestInfo.Message.Content, ex));
             }
         }
         #endregion

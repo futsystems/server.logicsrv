@@ -345,7 +345,8 @@ namespace TradingLib.Common.DataFarm
         /// <param name="request"></param>
         protected virtual void SrvOnRegisterSymbolTick(IServiceHost host, IConnection conn, RegisterSymbolTickRequest request)
         {
-            logger.Info(string.Format("Conn:{0} try to register symbol:{1}", conn.SessionID, string.Join(",", request.SymbolList.ToArray())));
+            
+            logger.Info(string.Format("Conn:{0} Register {1} {2}", conn.SessionID,request.Exchange, string.Join(",", request.SymbolList.ToArray())));
             OnRegisterSymbol(conn, request);
             
         }

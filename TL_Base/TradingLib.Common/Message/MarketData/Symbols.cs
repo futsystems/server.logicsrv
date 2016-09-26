@@ -19,10 +19,12 @@ namespace TradingLib.Common
         public RegisterSymbolTickRequest()
         {
             _type = API.MessageTypes.REGISTERSYMTICK;
+            this.Exchange = string.Empty;
             this.SymbolList = new List<string>();
         }
 
 
+        public string Exchange { get; set; }
         /// <summary>
         /// 合约
         /// </summary>
@@ -35,19 +37,23 @@ namespace TradingLib.Common
             string str = string.Empty;
             if (this.SymbolList != null && this.SymbolList.Count > 0)
             {
-                str = string.Join(" ", this.SymbolList.ToArray());
+                str = string.Join(",", this.SymbolList.ToArray());
             }
-            return str;
+            return this.Exchange +" "+str;
         }
 
         public override void ContentDeserialize(string contentstr)
         {
-            string[] syms = contentstr.Split(' ');
-            this.SymbolList.Clear();
-            foreach (var symbol in syms)
+            string[] rec = contentstr.Split(' ');
+            if (rec.Length == 2)
             {
-                if (string.IsNullOrEmpty(symbol)) continue; 
-                this.SymbolList.Add(symbol);
+                this.Exchange = rec[0];
+                this.SymbolList.Clear();
+                foreach (var symbol in rec[1].Split(','))
+                {
+                    if (string.IsNullOrEmpty(symbol)) continue;
+                    this.SymbolList.Add(symbol);
+                }
             }
         }
     }
