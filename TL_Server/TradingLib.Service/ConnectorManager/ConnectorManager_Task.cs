@@ -35,8 +35,8 @@ namespace TradingLib.ServiceManager
             Util.sleep(500);
             StartBrokerViaToken(_defaultSimBrokerToken);
             Util.sleep(500);
-            StartBrokerViaToken(_defaultSimBOBrokerToken);
-            Util.sleep(500);
+            //StartBrokerViaToken(_defaultSimBOBrokerToken);
+            //Util.sleep(500);
 
             //2.启动实盘通道
             logger.Info("Start Broker Connector");

@@ -306,7 +306,7 @@ namespace TradingLib.Core
             }
             else//如果有对应的合约 则重新注册
             {
-                logger.Info("DataFeed:" + df.Token + "connected,register symbols: " + string.Join(",", basket.ToSymArray()));
+                logger.Info("DataFeed:" + df.Token + "connected,register symbols: " + string.Join(",", basket.ToSymArray()).Truncat(50,"...."));
                 df.RegisterSymbols(basket);
             }
         }
@@ -337,7 +337,7 @@ namespace TradingLib.Core
             try
             {
                 //遍历所有的security,然后选择对应的数据通道请求行情数据
-                logger.Info("request market data to datafeed:" + string.Join(",", b.ToSymArray()));
+                logger.Info("request market data to datafeed:" + string.Join(",", b.ToSymArray()).Truncat(50, "...."));
                 //将请求的合约按行情通道进行分组,然后统一调用行情通道的订阅合约函数
                 Dictionary<IDataFeed, SymbolBasket> registermap = new Dictionary<IDataFeed, SymbolBasket>();
                 //遍历合约列表然后按照对应的接口进行分类,最后统一进行注册防止过度调用接口的注册函数[假设是多个接口 多个行情字头可能每个合约对应的数据接口都不一致]

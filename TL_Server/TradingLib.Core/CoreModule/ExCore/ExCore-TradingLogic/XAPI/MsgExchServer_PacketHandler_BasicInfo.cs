@@ -177,10 +177,15 @@ namespace TradingLib.Core
             {
                 for (int i = 0; i < totalnum; i++)
                 {
-                    Tick k = TLCtxHelper.ModuleDataRouter.GetTickSnapshot(symlist.ElementAt(i).Symbol);
+                    Symbol sym = symlist.ElementAt(i);
+                    Tick k = TLCtxHelper.ModuleDataRouter.GetTickSnapshot(sym.Symbol);
                     if (k == null || !k.IsValid())
                     {
-                        k = TLCtxHelper.ModuleSettleCentre.GetLastTickSnapshot(symlist.ElementAt(i).Symbol);
+                        k = TLCtxHelper.ModuleSettleCentre.GetLastTickSnapshot(sym.Symbol);
+                    }
+                    if (sym.SecurityType == SecurityType.STK)
+                    {
+                        k.Type = EnumTickType.STKSNAPSHOT;
                     }
                     RspXQryTickSnapShotResponse response = ResponseTemplate<RspXQryTickSnapShotResponse>.SrvSendRspResponse(request);
                     response.Tick = k;

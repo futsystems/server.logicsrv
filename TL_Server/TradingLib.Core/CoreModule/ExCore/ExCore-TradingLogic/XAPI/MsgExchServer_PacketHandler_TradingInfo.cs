@@ -106,6 +106,11 @@ namespace TradingLib.Core
             }
         }
 
+        /// <summary>
+        /// 查询隔夜持仓
+        /// </summary>
+        /// <param name="request"></param>
+        /// <param name="account"></param>
         void SrvOnXQryYDPosition(XQryYDPositionRequest request, IAccount account)
         {
             logger.Info("XQryYDPosition :" + request.ToString());

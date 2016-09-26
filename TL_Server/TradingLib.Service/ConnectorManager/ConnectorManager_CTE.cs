@@ -66,7 +66,7 @@ namespace TradingLib.ServiceManager
             }
             catch (Exception ex)
             {
-                logger.Error("start broker error:" + ex.ToString());
+                logger.Error("start broker error:" + name + ex.ToString());
             }
         }
 
@@ -79,7 +79,7 @@ namespace TradingLib.ServiceManager
             }
             catch (Exception ex)
             {
-                logger.Error("start broker error:" + ex.ToString());
+                logger.Error("start broker error:"+name + ex.ToString());
             }
         }
         
@@ -94,7 +94,7 @@ namespace TradingLib.ServiceManager
             }
             catch (Exception ex)
             {
-                logger.Error("start datafeed error:" + ex.ToString());
+                logger.Error("start datafeed error:" +name + ex.ToString());
             }
         }
 
@@ -109,7 +109,7 @@ namespace TradingLib.ServiceManager
             }
             catch (Exception ex)
             {
-                logger.Error("stop datafeed error:" + ex.ToString());
+                logger.Error("stop datafeed error:"+name + ex.ToString());
             }
         }
         

@@ -451,12 +451,12 @@ namespace TradingLib.Common
 
                 k.AskPrice2 = ask2[idx];
                 k.BidPrice2 = bid2[idx];
-                k.AskPrice3 = ask2[idx];
-                k.BidPrice3 = bid2[idx];
-                k.AskPrice4 = ask2[idx];
-                k.BidPrice4 = bid2[idx];
-                k.AskPrice5 = ask2[idx];
-                k.BidPrice5 = bid2[idx];
+                k.AskPrice3 = ask3[idx];
+                k.BidPrice3 = bid3[idx];
+                k.AskPrice4 = ask4[idx];
+                k.BidPrice4 = bid4[idx];
+                k.AskPrice5 = ask5[idx];
+                k.BidPrice5 = bid5[idx];
 
                 k.AskSize2 = asksize2[idx];
                 k.BidSize2 = bidsize2[idx];
