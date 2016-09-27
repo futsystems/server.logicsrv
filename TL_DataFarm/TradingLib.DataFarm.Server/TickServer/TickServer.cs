@@ -156,6 +156,13 @@ namespace TradingLib.Common.DataFarm
         DateTime _lastGCTime = DateTime.Now;
         /// <summary>
         /// 异步行情处理
+        /// X 成交
+        /// A 卖盘报价
+        /// B 买盘报价
+        /// Q 双边报价
+        /// F 统计信息
+        /// T 交易所时间
+        /// H 系统心跳
         /// </summary>
         /// <param name="k"></param>
         void asyncTick_GotTick(Tick k)

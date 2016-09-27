@@ -79,6 +79,7 @@ namespace TradingLib.Common
 
         bool _marketOpen;
         bool _quoteUpdate;
+        string _updateType;
 
 
 
@@ -141,7 +142,16 @@ namespace TradingLib.Common
         /// </summary>
         public bool MarketOpen { get { return _marketOpen; } set { _marketOpen = value; } }
 
+        /// <summary>
+        /// 是否更新过盘口报价
+        /// </summary>
         public bool QuoteUpdate { get { return _quoteUpdate; } set { _quoteUpdate = value; } }
+
+        /// <summary>
+        /// 更新类别
+        /// </summary>
+        public string UpdateType { get { return _updateType; } set { _updateType = value; } }
+
         public TickImpl(string symbol)
         {
             _Sec = new SymbolImpl();
@@ -199,6 +209,7 @@ namespace TradingLib.Common
 
             _marketOpen = false;
             _quoteUpdate = false;
+            _updateType = "H";
 
         }
 
@@ -259,8 +270,10 @@ namespace TradingLib.Common
             _bidsize5 = 0;
             _marketOpen = false;
             _quoteUpdate = false;
+            _updateType = "S";
 
         }
+
         public static TickImpl Copy(Tick c)
         {
             TickImpl k = new TickImpl();
@@ -268,10 +281,8 @@ namespace TradingLib.Common
 
             
             k.Type = c.Type;
-            k.Type = c.Type;
             k.Time = c.Time;
             k.Date = c.Date;
-            //k.Datetime = c.Datetime;
 
             k.Size = c.Size;
             k.Depth = c.Depth;
@@ -279,10 +290,10 @@ namespace TradingLib.Common
 
             k.BidPrice = c.BidPrice;
             k.AskPrice = c.AskPrice;
-            //k.bs = c.bs;
+
             k.StockBidSize = c.StockBidSize;
             k.StockAskSize = c.StockAskSize;
-            //k.os = c.os;
+
             k.BidExchange = c.BidExchange;
             k.AskExchange = c.AskExchange;
             k.Exchange = c.Exchange;
@@ -323,8 +334,10 @@ namespace TradingLib.Common
             k.BidSize5 = c.BidSize5;
             k.MarketOpen = c.MarketOpen;
             k.QuoteUpdate = c.QuoteUpdate;
+            k.UpdateType = c.UpdateType;
             return k;
         }
+
         /// <summary>
         /// this constructor creates a new tick by combining two ticks
         /// this is to handle tick updates that only provide bid/ask changes.
@@ -448,6 +461,253 @@ namespace TradingLib.Common
         /// 行情源
         /// </summary>
         public QSEnumDataFeedTypes DataFeed { get { return _datafeed; } set { _datafeed = value; } }
+
+
+
+        /// <summary>
+        /// TickImpl包含了Tick所需要的所有数据
+        /// 可以为成交Tick,也可以为报价Tick,时间Tick,甚至是维护状态数据的一个数据结构
+        /// 关键是UpdateType决定了其Tick类别
+        /// 
+        /// </summary>
+        /// <param name="updateType"></param>
+        /// <returns></returns>
+        public static Tick NewTick(Tick snapshot,string updateType)
+        {
+            Tick k = TickImpl.Copy(snapshot);
+            k.UpdateType = updateType;
+            return k;
+        }
+
+        static char[] spliter = new char[] { ',', ',' };
+        static char d = ',';
+        /// <summary>
+        /// 快速替换序列化后的行情数据的合约 避免多次序列化与创建Tick对象
+        /// </summary>
+        /// <param name="tick"></param>
+        /// <param name="symbol"></param>
+        /// <returns></returns>
+        public static string ReplaceTickSymbol(string tick, string symbol)
+        {
+            string[] rec = tick.Split(spliter, 3);
+            StringBuilder sb = new StringBuilder();
+            sb.Append(rec[0]);
+            sb.Append(d);
+            sb.Append(symbol);
+            sb.Append(d);
+            sb.Append(rec[2]);
+            return sb.ToString();
+        }
+        /// <summary>
+        /// 序列化方式2
+        /// 通过UpdateType来实现差异序列化 使得行情报价更加完善
+        /// UpdateType
+        /// 成交
+        /// T,Symbol,Date,Time,DataFeed,Price,Size,Vol,Ask,Bid,Exchange
+        /// 盘口
+        /// Q,Symbol,Date,Time,DataFeed,AskPrice,BidPrice,AskSize,BidSize,AskExchange,BidExchange
+        /// A,Symbol,Date,Time,DataFeed,AskPrice,AskSize,AskExchange
+        /// B,Symbol,Date,Time,DataFeed,BidPrice,BidSize,BidExchange
+        /// 快照
+        /// S,Symbol,Date,Time,Price,Size,Exchange,AskPrice,AskSize,AskExchange,BidPrice,BidSize,BidExchange,Vol,Open,High,Low,PreClose,PreSettle,Settle,PreOI,OI,UpLimit,LowLimit
+        /// 
+        /// </summary>
+        /// <param name="k"></param>
+        /// <returns></returns>
+        public static string Serialize2(Tick k)
+        {
+            const char d = ',';
+            StringBuilder sb = new StringBuilder();
+            if (k.UpdateType == "H")
+                return "H,";
+            sb.Append(k.UpdateType);//0
+            sb.Append(d);
+            sb.Append(k.Symbol);//1
+            sb.Append(d);
+            sb.Append(k.Date);//2
+            sb.Append(d);
+            sb.Append(k.Time);//3
+            sb.Append(d);
+            sb.Append((int)k.DataFeed);//4
+            sb.Append(d);
+            sb.Append("");//5 留2个前置空位 防止以后需要加入统一的前置字段
+            sb.Append(d);
+            sb.Append("");//6
+            sb.Append(d);
+            switch (k.UpdateType)
+            {
+                case "X":
+                    {
+                        sb.Append(k.Trade);
+                        sb.Append(d);
+                        sb.Append(k.Size);
+                        sb.Append(d);
+                        sb.Append(k.Vol);
+                        sb.Append(d);
+                        sb.Append(k.AskPrice);
+                        sb.Append(d);
+                        sb.Append(k.BidPrice);
+                        sb.Append(d);
+                        sb.Append(k.Exchange);
+                        sb.Append(d);
+                        break;
+                    }
+                case "A":
+                    {
+                        sb.Append(k.AskPrice);
+                        sb.Append(d);
+                        sb.Append(k.AskSize);
+                        sb.Append(d);
+                        sb.Append(k.AskExchange);
+                        sb.Append(d);
+                        sb.Append(k.Exchange);
+                        break;
+                    }
+                case "B":
+                    {
+                        sb.Append(k.BidPrice);
+                        sb.Append(d);
+                        sb.Append(k.BidSize);
+                        sb.Append(d);
+                        sb.Append(k.BidExchange);
+                        sb.Append(d);
+                        sb.Append(k.Exchange);
+                        break;
+                    }
+                case "Q":
+                    {
+                        sb.Append(k.AskPrice);
+                        sb.Append(d);
+                        sb.Append(k.AskSize);
+                        sb.Append(d);
+                        sb.Append(k.AskExchange);
+                        sb.Append(d);
+                        sb.Append(k.BidPrice);
+                        sb.Append(d);
+                        sb.Append(k.BidSize);
+                        sb.Append(d);
+                        sb.Append(k.BidExchange);
+                        sb.Append(d);
+                        sb.Append(k.Exchange);
+                        break;
+                    }
+                case "F":
+                    {
+                        sb.Append(k.Open);
+                        sb.Append(d);
+                        sb.Append(k.High);
+                        sb.Append(d);
+                        sb.Append(k.Low);
+                        sb.Append(d);
+                        sb.Append(k.PreClose);
+                        sb.Append(d);
+                        sb.Append(k.OpenInterest);
+                        sb.Append(d);
+                        sb.Append(k.PreOpenInterest);
+                        sb.Append(d);
+                        sb.Append(k.Settlement);
+                        sb.Append(d);
+                        sb.Append(k.PreSettlement);
+                        sb.Append(d);
+                        sb.Append(k.Exchange);
+                        sb.Append(d);
+                        sb.Append(k.MarketOpen);
+                        break;
+                    }
+                case "T":
+                    {
+                        sb.Append(k.Exchange);
+                        break;
+                    }
+            }
+            return sb.ToString();
+        }
+
+        public static Tick Deserialize2(string msg)
+        {
+            if (msg == "H,")
+            {
+                Tick heartbeat = new TickImpl();
+                heartbeat.UpdateType = "H";
+            }
+            string[] r = msg.Split(',');
+            if (r.Length <= 5) return null;
+            Tick k = new TickImpl();
+            k.UpdateType = r[0];
+            k.Symbol = r[1];
+            k.Date = int.Parse(r[2]);
+            k.Time = int.Parse(r[3]);
+            k.DataFeed = (QSEnumDataFeedTypes)int.Parse(r[4]);
+
+            switch (k.UpdateType)
+            {
+                case "X":
+                    {
+                        k.Trade = decimal.Parse(r[7]);
+                        k.Size = int.Parse(r[8]);
+                        k.Vol = int.Parse(r[9]);
+                        k.AskPrice = decimal.Parse(r[10]);
+                        k.BidPrice = decimal.Parse(r[11]);
+                        k.Exchange = r[12];
+                        break;
+                    }
+                case "A":
+                    {
+                        k.AskPrice = decimal.Parse(r[7]);
+                        k.AskSize = int.Parse(r[8]);
+                        k.AskExchange = r[9];
+                        k.Exchange = r[10];
+                        break;
+                    }
+                case "B":
+                    {
+                        k.BidPrice = decimal.Parse(r[7]);
+                        k.BidSize = int.Parse(r[8]);
+                        k.BidExchange = r[9];
+                        k.Exchange = r[10];
+                        break;
+                    }
+                case "Q":
+                    {
+                        k.AskPrice = decimal.Parse(r[7]);
+                        k.AskSize = int.Parse(r[8]);
+                        k.AskExchange = r[9];
+                        k.BidPrice = decimal.Parse(r[10]);
+                        k.BidSize = int.Parse(r[11]);
+                        k.BidExchange = r[12];
+                        k.Exchange = r[13];
+                        break;
+                    }
+                case "F":
+                    {
+                        k.Open = decimal.Parse(r[7]);
+                        k.High = decimal.Parse(r[8]);
+                        k.Low = decimal.Parse(r[9]);
+                        k.PreClose = decimal.Parse(r[10]);
+                        k.OpenInterest = int.Parse(r[11]);
+                        k.PreOpenInterest = int.Parse(r[12]);
+                        k.Settlement = decimal.Parse(r[13]);
+                        k.PreSettlement = decimal.Parse(r[14]);
+                        k.Exchange = r[15];
+                        k.MarketOpen = bool.Parse(r[16]);
+                        break;
+                    }
+                case "T":
+                    {
+                        k.Exchange = r[7];
+                        break;
+                    }
+                default:
+                    return null;
+            }
+
+            return k;
+
+
+        }
+
+
+
 
         public static string Serialize(Tick t)
         {

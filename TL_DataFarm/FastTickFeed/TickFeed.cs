@@ -269,21 +269,25 @@ namespace TradingLib.DataFarm
                                 tickdata.Clear();
 
                                 //logger.Info("ticksr:" + tickstr);
-                                string[] p = tickstr.Split('^');
+                                Tick k = TickImpl.Deserialize2(tickstr);
+                                if (k != null && k.UpdateType != "H")
+                                    OnTick(k);
 
-                                if (p.Length > 1)
-                                {
-                                    string symbol = p[0];
-                                    string tickcontent = p[1];
-                                    Tick k = TickImpl.Deserialize(tickcontent);
-                                    //logger.Debug("tick date:" + k.Date + " time time:" + k.Time);
-                                    if (k != null && k.IsValid())
-                                        OnTick(k);
-                                }
-                                else
-                                {
-                                    //logger.Info("tick str:" + tickstr);
-                                }
+                                //string[] p = tickstr.Split('^');
+
+                                //if (p.Length > 1)
+                                //{
+                                //    string symbol = p[0];
+                                //    string tickcontent = p[1];
+                                //    Tick k = TickImpl.Deserialize(tickcontent);
+                                //    logger.Debug("tick date:" + k.Date + " time time:" + k.Time);
+                                //    if (k != null && k.IsValid())
+                                //        OnTick(k);
+                                //}
+                                //else
+                                //{
+                                //    logger.Info("tick str:" + tickstr);
+                                //}
 
                                 //记录数据到达时间
                                 _lastheartbeat = DateTime.Now;

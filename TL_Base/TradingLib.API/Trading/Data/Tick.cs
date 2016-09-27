@@ -186,6 +186,12 @@ namespace TradingLib.API
         /// </summary>
         QSEnumDataFeedTypes DataFeed { get; set; }
 
+
+        /// <summary>
+        /// 更新类别
+        /// </summary>
+        string UpdateType { get; set; }
+
         /// <summary>
         /// 交易所开启或关闭
         /// </summary>
