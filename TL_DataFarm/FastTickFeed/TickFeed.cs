@@ -235,12 +235,12 @@ namespace TradingLib.DataFarm
                     //订阅行情心跳数据
                     subscriber.Subscribe(Encoding.UTF8.GetBytes("TICKHEARTBEAT"));
 
-                    if (_suball)
-                    {
-                        subscriber.SubscribeAll();
-                    }
-                    //string prefix ="HGZ5^";
-                    //subscriber.Subscribe(Encoding.UTF8.GetBytes(prefix));
+                    //if (_suball)
+                    //{
+                    //    subscriber.SubscribeAll();
+                    //}
+                    string prefix ="X,";
+                    subscriber.Subscribe(Encoding.UTF8.GetBytes(prefix));
                     //prefix = "HSIX5^";
                     //subscriber.Subscribe(Encoding.UTF8.GetBytes(prefix));
                     //subscriber.SubscribeAll();

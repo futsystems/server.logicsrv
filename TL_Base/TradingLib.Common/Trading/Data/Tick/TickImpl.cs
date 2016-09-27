@@ -413,9 +413,30 @@ namespace TradingLib.Common
 
         public override string ToString()
         {
-            if (!this.HasTick()) return "";
-            if (this.IsTrade()) return Symbol + " " + this.Size + "@" + this.Trade + " " + this.Exchange;
-            else return Symbol + " " + this.BidPrice + "x" + this.AskPrice + " (" + this.BidSize + "x" + this.AskSize + ") " + this.BidExchange + "x" + this.AskExchange;
+            switch (this.UpdateType)
+            {
+                case "H":
+                    return "HeartBeat";
+                case "X":
+                    return Symbol + " " + this.Size + "@" + this.Trade + " " + this.Exchange;
+                case "Q":
+                    return Symbol + " " + this.BidPrice + "x" + this.AskPrice + " (" + this.BidSize + "x" + this.AskSize + ") " + this.BidExchange + "x" + this.AskExchange;
+                case "A":
+                    return Symbol + " Ask:" + this.AskPrice + "/" + this.AskSize + " " + this.AskExchange;
+                case "B":
+                    return Symbol + " Bid:" + this.BidPrice + "/" + this.BidSize + " " + this.BidExchange;
+                case "F":
+                    return Symbol + " O:" + this.Open + " H:" + this.High + " L:" + this.Low + " PreClose:" + this.PreClose + " Settle:" + this.PreSettlement + "/" + this.Settlement + " OI:" + this.PreOpenInterest + "/" + this.OpenInterest + " MktOpen:" + this.MarketOpen;
+                case "T":
+                    return "Time:" + Util.ToTLDateTime(this.Date, this.Time) + "@" + this.Exchange;
+                default:
+                    return "UNKNOWN TICK";
+
+                //    if (!this.HasTick()) return "";
+                //    if (this.IsTrade()) return Symbol + " " + this.Size + "@" + this.Trade + " " + this.Exchange;
+                //    else return Symbol + " " + this.BidPrice + "x" + this.AskPrice + " /" + this.BidSize + "x" + this.AskSize + " " + this.BidExchange + "x" + this.AskExchange;
+                //}
+            }
         }
 
         int _vol;

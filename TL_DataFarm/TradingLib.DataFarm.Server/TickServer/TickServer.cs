@@ -163,6 +163,11 @@ namespace TradingLib.Common.DataFarm
         /// F 统计信息
         /// T 交易所时间
         /// H 系统心跳
+        /// 为了避免接受过多Tick数据 需要执行严格的行情注册机制 通过在实时行情分发服务端执行的鼓励，可以降低行情处理端的资源消耗
+        /// 由于使用updatetype作为类别处理，因此后期可以根据不同的业务需要 增加类别来实现实时行情的定向分发。
+        /// 但是原则上还是使用通用的行情协议，这样有助于整个系统运行
+        /// 比如
+        /// 用于记录成交Tick的程序 则需要注册 X,
         /// </summary>
         /// <param name="k"></param>
         void asyncTick_GotTick(Tick k)
@@ -171,6 +176,8 @@ namespace TradingLib.Common.DataFarm
             //logger.Info("tick:" + k.ToString());
 
             Symbol symbol = MDBasicTracker.SymbolTracker[k.Symbol];
+            return;
+
             if(symbol == null)
             {
 #if DEBUG
