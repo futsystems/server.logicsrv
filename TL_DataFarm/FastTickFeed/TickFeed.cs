@@ -241,6 +241,8 @@ namespace TradingLib.DataFarm
                     //}
                     string prefix ="X,";
                     subscriber.Subscribe(Encoding.UTF8.GetBytes(prefix));
+
+                    subscriber.Subscribe(Encoding.UTF8.GetBytes("E,"));
                     //prefix = "HSIX5^";
                     //subscriber.Subscribe(Encoding.UTF8.GetBytes(prefix));
                     //subscriber.SubscribeAll();
