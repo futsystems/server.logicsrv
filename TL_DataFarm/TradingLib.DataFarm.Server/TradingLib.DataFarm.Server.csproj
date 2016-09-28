@@ -53,12 +53,6 @@
     <Reference Include="TradingLib.Common.Ex">
       <HintPath>..\..\lib\TradingLib\TradingLib.Common.Ex.dll</HintPath>
     </Reference>
-    <Reference Include="TradingLib.MarketData">
-      <HintPath>..\..\..\Futs.Trader\TradingLib.MarketData\bin\Debug\TradingLib.MarketData.dll</HintPath>
-    </Reference>
-    <Reference Include="TradingLib.Mixins">
-      <HintPath>..\..\lib\TradingLib\TradingLib.Mixins.dll</HintPath>
-    </Reference>
     <Reference Include="ZeroMQ">
       <HintPath>..\..\lib\ZeroMQ.dll</HintPath>
     </Reference>

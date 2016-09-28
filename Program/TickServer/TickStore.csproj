@@ -50,9 +50,6 @@
     <Reference Include="TradingLib.Common">
       <HintPath>..\..\lib\TradingLib\TradingLib.Common.dll</HintPath>
     </Reference>
-    <Reference Include="TradingLib.Mixins">
-      <HintPath>..\..\lib\TradingLib\TradingLib.Mixins.dll</HintPath>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Program.cs" />
