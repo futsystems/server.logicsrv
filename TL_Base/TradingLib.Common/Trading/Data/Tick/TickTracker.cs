@@ -47,7 +47,11 @@ namespace TradingLib.Common
             return (decimal)this[rec[0],rec[1]].Trade;
         }
 
-        public object Value(int idx) { return this[idx]; }
+        public object Value(int idx) 
+        { 
+            return this[idx]; 
+        }
+
         public object Value(string txt) 
         {
             string[] rec = txt.Split(',');
@@ -100,8 +104,6 @@ namespace TradingLib.Common
             bidsize5.Clear();
 
         }
-
-
         int _estlabels = 100;
         /// <summary>
         /// create ticktracker
@@ -311,120 +313,103 @@ namespace TradingLib.Common
 
 
 
-        /// <summary>
-        /// get the bid
-        /// </summary>
-        /// <param name="idx"></param>
-        /// <returns></returns>
-        public decimal Bid(int idx) { return bid[idx]; }
-        /// <summary>
-        /// get the bid
-        /// </summary>
-        /// <param name="idx"></param>
-        /// <returns></returns>
-        public decimal Bid(string sym) { return bid[sym]; }
-        /// <summary>
-        /// get the ask
-        /// </summary>
-        /// <param name="idx"></param>
-        /// <returns></returns>
-        public decimal Ask(int idx) { return ask[idx]; }
-        /// <summary>
-        /// get the ask
-        /// </summary>
-        /// <param name="sym"></param>
-        /// <returns></returns>
-        public decimal Ask(string sym) { return ask[sym]; }
-        /// <summary>
-        /// get the last trade
-        /// </summary>
-        /// <param name="idx"></param>
-        /// <returns></returns>
-        public decimal Last(int idx) { return last[idx]; }
-        /// <summary>
-        /// get the last trade
-        /// </summary>
-        /// <param name="sym"></param>
-        /// <returns></returns>
-        public decimal Last(string sym) { return last[sym]; }
-        /// <summary>
-        /// whether we have a bid
-        /// </summary>
-        /// <param name="idx"></param>
-        /// <returns></returns>
-        public bool HasBid(int idx) { if (idx < 0) return false; return bid[idx] != 0; }
-        /// <summary>
-        /// whether we have a bid
-        /// </summary>
-        /// <param name="idx"></param>
-        /// <returns></returns>
-        public bool HasBid(string sym) { return bid[sym] != 0; }
-        /// <summary>
-        /// whether we have a ask
-        /// </summary>
-        /// <param name="idx"></param>
-        /// <returns></returns>
-        public bool HasAsk(string sym) {  return ask[sym] != 0; }
-        /// <summary>
-        /// whether we have a ask
-        /// </summary>
-        /// <param name="idx"></param>
-        /// <returns></returns>
-        public bool HasAsk(int idx) { if (idx < 0) return false; return ask[idx] != 0; }
-        /// <summary>
-        /// whether we have a last price
-        /// </summary>
-        /// <param name="idx"></param>
-        /// <returns></returns>
-        public bool HasLast(int idx) { if (idx < 0) return false; return last[idx] != 0; }
-        /// <summary>
-        /// whether we have a last price
-        /// </summary>
-        /// <param name="idx"></param>
-        /// <returns></returns>
-        public bool HasLast(string sym) { return last[sym] != 0; }
-        /// <summary>
-        /// whether we have a bid/ask and last
-        /// </summary>
-        /// <param name="sym"></param>
-        /// <returns></returns>
-        public bool HasAll(string sym) { return HasBid(sym) && HasAsk(sym) && HasLast(sym); }
-        /// <summary>
-        /// whether we have a bid/ask and last
-        /// </summary>
-        /// <param name="sym"></param>
-        /// <returns></returns>
-        public bool HasAll(int idx) { if (idx < 0) return false; return HasBid(idx) && HasAsk(idx) && HasLast(idx); }
-        /// <summary>
-        /// whether we have a bid/ask
-        /// </summary>
-        /// <param name="sym"></param>
-        /// <returns></returns>
-        public bool HasQuote(string sym) { return HasBid(sym) && HasAsk(sym); }
-        /// <summary>
-        /// whether we have a bid/ask
-        /// </summary>
-        /// <param name="sym"></param>
-        /// <returns></returns>
-        public bool HasQuote(int idx) { if (idx < 0) return false; return HasBid(idx) && HasAsk(idx); }
-        /// <summary>
-        /// get a tick in tick format
-        /// </summary>
-        /// <param name="idx"></param>
-        /// <returns></returns>
-        //public Tick Tick(int idx)
-        //{
-        //    return this[idx];
-        //}
-        /// <summary>
-        /// get a tick in tick format
-        /// </summary>
-        /// <param name="sym"></param>
-        /// <returns></returns>
-        //public Tick Tick(string sym)
-        //{
-        //    return this[sym];
-        //}
+        ///// <summary>
+        ///// get the bid
+        ///// </summary>
+        ///// <param name="idx"></param>
+        ///// <returns></returns>
+        //public decimal Bid(int idx) { return bid[idx]; }
+        ///// <summary>
+        ///// get the bid
+        ///// </summary>
+        ///// <param name="idx"></param>
+        ///// <returns></returns>
+        //public decimal Bid(string sym) { return bid[sym]; }
+        ///// <summary>
+        ///// get the ask
+        ///// </summary>
+        ///// <param name="idx"></param>
+        ///// <returns></returns>
+        //public decimal Ask(int idx) { return ask[idx]; }
+        ///// <summary>
+        ///// get the ask
+        ///// </summary>
+        ///// <param name="sym"></param>
+        ///// <returns></returns>
+        //public decimal Ask(string sym) { return ask[sym]; }
+        ///// <summary>
+        ///// get the last trade
+        ///// </summary>
+        ///// <param name="idx"></param>
+        ///// <returns></returns>
+        //public decimal Last(int idx) { return last[idx]; }
+        ///// <summary>
+        ///// get the last trade
+        ///// </summary>
+        ///// <param name="sym"></param>
+        ///// <returns></returns>
+        //public decimal Last(string sym) { return last[sym]; }
+        ///// <summary>
+        ///// whether we have a bid
+        ///// </summary>
+        ///// <param name="idx"></param>
+        ///// <returns></returns>
+        //public bool HasBid(int idx) { if (idx < 0) return false; return bid[idx] != 0; }
+        ///// <summary>
+        ///// whether we have a bid
+        ///// </summary>
+        ///// <param name="idx"></param>
+        ///// <returns></returns>
+        //public bool HasBid(string sym) { return bid[sym] != 0; }
+        ///// <summary>
+        ///// whether we have a ask
+        ///// </summary>
+        ///// <param name="idx"></param>
+        ///// <returns></returns>
+        //public bool HasAsk(string sym) {  return ask[sym] != 0; }
+        ///// <summary>
+        ///// whether we have a ask
+        ///// </summary>
+        ///// <param name="idx"></param>
+        ///// <returns></returns>
+        //public bool HasAsk(int idx) { if (idx < 0) return false; return ask[idx] != 0; }
+        ///// <summary>
+        ///// whether we have a last price
+        ///// </summary>
+        ///// <param name="idx"></param>
+        ///// <returns></returns>
+        //public bool HasLast(int idx) { if (idx < 0) return false; return last[idx] != 0; }
+        ///// <summary>
+        ///// whether we have a last price
+        ///// </summary>
+        ///// <param name="idx"></param>
+        ///// <returns></returns>
+        //public bool HasLast(string sym) { return last[sym] != 0; }
+        ///// <summary>
+        ///// whether we have a bid/ask and last
+        ///// </summary>
+        ///// <param name="sym"></param>
+        ///// <returns></returns>
+        //public bool HasAll(string sym) { return HasBid(sym) && HasAsk(sym) && HasLast(sym); }
+        ///// <summary>
+        ///// whether we have a bid/ask and last
+        ///// </summary>
+        ///// <param name="sym"></param>
+        ///// <returns></returns>
+        //public bool HasAll(int idx) { if (idx < 0) return false; return HasBid(idx) && HasAsk(idx) && HasLast(idx); }
+        ///// <summary>
+        ///// whether we have a bid/ask
+        ///// </summary>
+        ///// <param name="sym"></param>
+        ///// <returns></returns>
+        //public bool HasQuote(string sym) { return HasBid(sym) && HasAsk(sym); }
+        ///// <summary>
+        ///// whether we have a bid/ask
+        ///// </summary>
+        ///// <param name="sym"></param>
+        ///// <returns></returns>
+        //public bool HasQuote(int idx) { if (idx < 0) return false; return HasBid(idx) && HasAsk(idx); }
+
         /// <summary>
         /// get a tick in tick format
         /// </summary>
@@ -438,6 +423,7 @@ namespace TradingLib.Common
                 string[] rec = key.Split('-');
 
                 Tick k = new TickImpl(rec[1]);
+                k.UpdateType = "S";//全数据快照
                 k.Exchange = rec[0];
                 k.Date = date[idx];
                 k.Time = time[idx];
@@ -457,7 +443,7 @@ namespace TradingLib.Common
                 k.Open = open[idx];
                 k.High = open[idx];
                 k.Low = low[idx];
-                k.PreSettlement = presettle[idx];
+                k.PreClose = preclose[idx];
 
                 k.Vol = volume[idx];
                 k.OpenInterest = oi[idx];
@@ -465,7 +451,9 @@ namespace TradingLib.Common
                 k.UpperLimit = upperlimit[idx];
                 k.LowerLimit = lowerlimit[idx];
                 k.Settlement = settlement[idx];
-                k.PreClose = preclose[idx];
+                k.PreSettlement = presettle[idx];
+
+               
 
                 k.AskPrice2 = ask2[idx];
                 k.BidPrice2 = bid2[idx];
@@ -496,7 +484,6 @@ namespace TradingLib.Common
         /// <returns></returns>
         public Tick[] GetTicks()
         {
-            //string[] syms = last.ToLabelArray();
             List<Tick> ticks = new List<Tick>();
 
             for (int i = 0; i < this.Count; i++)
@@ -507,14 +494,6 @@ namespace TradingLib.Common
                     ticks.Add(k);
                 }
             }
-                //foreach (string sym in syms)
-                //{
-                //    Tick k = this[sym];
-                //    if (k != null && k.IsValid())
-                //    {
-                //        ticks.Add(k);
-                //    }
-                //}
             return ticks.ToArray();
         }
 
@@ -530,11 +509,114 @@ namespace TradingLib.Common
             {
                 string key = string.Format("{0}-{1}", exchange, sym);
                 int idx = last.getindex(key);
-                if (idx < 0) return null;// new TickImpl();
+                if (idx < 0) return null;
                 return this[idx];
             }
         }
 
+        /// <summary>
+        /// 更新Tick数据到Tick快照维护器
+        /// </summary>
+        /// <param name="k"></param>
+        public void UpdateTick(Tick k)
+        {
+            if(k == null) return;
+            if(string.IsNullOrEmpty(k.Symbol) || string.IsNullOrEmpty(k.Exchange)) return;
+            
+            string key = k.GetSymbolUniqueKey();
+            int idx = getindex(key);
+            if (idx < 0)
+                idx = addindex(key);
+
+
+            switch (k.UpdateType)
+            {
+                case "X":
+                    {
+                        time[idx] = k.Date;
+                        time[idx] = k.Time;
+                        last[idx] = k.Trade;
+                        ts[idx] = k.Size;
+                        volume[idx] = k.Vol;
+                        ex[idx] = k.Exchange;
+                        break;
+                    }
+                case "A":
+                    {
+                        ask[idx] = k.AskPrice;
+                        os[idx] = k.AskSize;
+                        oe[idx] = k.AskExchange;
+                        ex[idx] = k.Exchange;
+                        break;
+                    }
+                case "B":
+                    {
+                        bid[idx] = k.BidPrice;
+                        bs[idx] = k.BidSize;
+                        be[idx] = k.BidExchange;
+                        ex[idx] = k.Exchange;
+                        break;
+                    }
+                case "Q":
+                    {
+                        ask[idx] = k.AskPrice;
+                        oe[idx] = k.AskExchange;
+                        os[idx] = k.AskSize;
+                        bid[idx] = k.BidPrice;
+                        bs[idx] = k.BidSize;
+                        be[idx] = k.BidExchange;
+                        ex[idx] = k.Exchange;
+                        break;
+                    }
+                case "F":
+                    {
+                        open[idx] = k.Open;
+                        high[idx] = k.High;
+                        low[idx] = k.Low;
+                        preclose[idx] = k.PreClose;
+                        oi[idx] = k.OpenInterest;
+                        preoi[idx] = k.PreOpenInterest;
+                        settlement[idx] = k.Settlement;
+                        presettle[idx] = k.PreSettlement;
+                        ex[idx] = k.Exchange;
+                        break;
+                    }
+                case "S":
+                    {
+                        time[idx] = k.Date;
+                        time[idx] = k.Time;
+                        last[idx] = k.Trade;
+                        ts[idx] = k.Size;
+                        volume[idx] = k.Vol;
+                        ex[idx] = k.Exchange;
+
+                        ask[idx] = k.AskPrice;
+                        os[idx] = k.AskSize;
+                        oe[idx] = k.AskExchange;
+
+                        bid[idx] = k.BidPrice;
+                        bs[idx] = k.BidSize;
+                        be[idx] = k.BidExchange;
+
+                        open[idx] = k.Open;
+                        high[idx] = k.High;
+                        low[idx] = k.Low;
+                        preclose[idx] = k.PreClose;
+                        oi[idx] = k.OpenInterest;
+                        preoi[idx] = k.PreOpenInterest;
+                        settlement[idx] = k.Settlement;
+                        presettle[idx] = k.PreSettlement;
+
+                        upperlimit[idx] = k.UpperLimit;
+                        lowerlimit[idx] = k.LowerLimit;
+
+                        break;
+
+                    }
+                default:
+                    break;
+            }
+        }
         /// <summary>
         /// update the tracker with a new tick
         /// </summary>

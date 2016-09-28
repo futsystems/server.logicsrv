@@ -30,6 +30,13 @@ namespace TradingLib.DataFarm.API
         /// <param name="prefix"></param>
         void Unregister(byte[] prefix);
 
+        /// <summary>
+        /// 注册合约
+        /// </summary>
+        /// <param name="feed"></param>
+        /// <param name="exchange"></param>
+        /// <param name="symbols"></param>
+        void RegisterSymbols(QSEnumDataFeedTypes feed, string exchange, List<string> symbols);
 
         /// <summary>
         /// 行情到达事件

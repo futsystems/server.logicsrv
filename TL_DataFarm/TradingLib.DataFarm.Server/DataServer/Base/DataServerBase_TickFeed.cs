@@ -17,9 +17,11 @@ namespace TradingLib.Common.DataFarm
         /// TickFeed插件目录
         /// </summary>
         private readonly string _TickFeedFolder = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "TickFeed");
-        private readonly List<ITickFeed> _TickFeeds = new List<ITickFeed>();
-
-
+       
+        /// <summary>
+        /// 实时行情注册map
+        /// 合约唯一键值 与 Connection的映射关系
+        /// </summary>
         ConcurrentDictionary<string, ConcurrentDictionary<string, IConnection>> symKeyRegMap = new ConcurrentDictionary<string, ConcurrentDictionary<string, IConnection>>();
 
         /// <summary>
@@ -41,6 +43,8 @@ namespace TradingLib.Common.DataFarm
 
         bool _tickFeedLoad = false;
 
+        string _prefixStr = string.Empty;
+        List<string> _prefixList = new List<string>();
         
         
 
@@ -98,9 +102,22 @@ namespace TradingLib.Common.DataFarm
             logger.Info(string.Format("TickFeed[{0}] disconnected", tickfeed.Name));
         }
 
+        
         void TickFeed_OnConnectEvent(ITickFeed tickfeed)
         {
-            logger.Info(string.Format("TickFeed[{0}] connected",tickfeed.Name));
+            _prefixStr = ConfigFile["Prefix"].AsString();
+
+            logger.Info(string.Format("TickFeed[{0}] connected, will register prefix:{1}",tickfeed.Name,_prefixStr));
+            
+            //异步执行订阅操作
+            foreach (var prefix in _prefixStr.Split(' '))
+            {
+                _prefixList.Add(prefix);
+                tickfeed.Register(Encoding.UTF8.GetBytes(prefix));
+            }
+            IEnumerable<string> symbols = MDBasicTracker.SymbolTracker.Symbols.Where(sym=>sym.Exchange=="NYMEX").Select(sym=>sym.Symbol);
+            tickfeed.RegisterSymbols(QSEnumDataFeedTypes.IQFEED, "NYMEX", symbols.ToList());
+
         }
 
         /// <summary>
@@ -108,17 +125,19 @@ namespace TradingLib.Common.DataFarm
         /// </summary>
         void TickFeed_OnTickEvent(ITickFeed tickfeed, Tick k)
         {
-            //logger.Info("0000");
             //行情过滤
             if (k == null) return;
-            if (!k.IsValid()) return;
             asyncTick.newTick(k);
 
         }
 
+        /// <summary>
+        /// 合约快照维护期
+        /// </summary>
+        TickTracker tickTracker = new TickTracker(1000);
+
         void asyncTick_GotTick(Tick k)
         {
-            //logger.Debug("Process Tick");
             //更新行情最近更新时间
             if (!tickLastTimeMap.Keys.Contains(k.Symbol))
             {
@@ -126,22 +145,22 @@ namespace TradingLib.Common.DataFarm
             }
             //执行行情事件检查
 
-            //if(k.datetickLastTimeMap[k.Symbol])
-            //logger.Info("async process tick");
-            if (k.Symbol == "CLK6")
+            //更新合约快照维护器 用于维护当前合约的一个最新状态
+            tickTracker.UpdateTick(k);
+
+            //如果是成交数据,盘口双边报价,统计数据 则我们生成行情快照对外发送 这里可以使用定时发送或者根据行情源事件类型来触发发送,为了提高效率与可考虑采用500ms快照方式发送，这样即保证时效性，又节约资源
+            if (k.UpdateType == "X" || k.UpdateType == "Q" || k.UpdateType == "F")
             {
-                int x = 0;
+                //转发实时行情
+                Tick snapshot = tickTracker[k.Exchange, k.Symbol];
+                NotifyTick2Connections(snapshot);
             }
-            //转发实时行情
-            NotifyTick2Connections(k);
 
-            //Bar生成服务处理Tick
-            FrequencyServiceProcessTick(k);
-
-            //保存行情
-            //SaveTick(k);
-
-            //
+            //通过成交数据以及合约市场事件 驱动Bar数据生成器生成Bar数据
+            if (k.UpdateType == "X" || k.UpdateType == "E")
+            {
+                FrequencyServiceProcessTick(k);
+            }
         }
 
 
@@ -197,7 +216,7 @@ namespace TradingLib.Common.DataFarm
                 if (string.IsNullOrEmpty(symbol)) continue;
                 string key = string.Format("{0}-{1}", request.Exchange, symbol);
                 
-                Symbol sym = MDBasicTracker.SymbolTracker["",symbol];
+                Symbol sym = MDBasicTracker.SymbolTracker[request.Exchange,symbol];
                 if (sym == null) continue;
 
                 if (!symKeyRegMap.Keys.Contains(key))
@@ -208,6 +227,12 @@ namespace TradingLib.Common.DataFarm
                 if(!regmap.Keys.Contains(conn.SessionID))
                 {
                     regmap.TryAdd(conn.SessionID,conn);
+                    //客户端订阅后发送当前市场快照
+                    Tick k = tickTracker[request.Exchange, symbol];
+                    if (k != null)
+                    {
+                        conn.SendTick(k);
+                    }
                 }
             }
         }

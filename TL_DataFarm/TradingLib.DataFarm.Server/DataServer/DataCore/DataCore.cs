@@ -30,6 +30,7 @@ namespace TradingLib.Common.DataFarm
                 logger.Info("Exchange:" + exchange.EXCode);
             }
 
+            
             string histdbfile = ConfigFile["HistDBName"].AsString();
             //string path = Path.Combine(new string[] { AppDomain.CurrentDomain.BaseDirectory, histdbfile });
             logger.Info("Created Loacal DataBase Engine File:" + histdbfile);

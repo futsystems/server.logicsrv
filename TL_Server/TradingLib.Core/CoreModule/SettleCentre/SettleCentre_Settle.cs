@@ -403,11 +403,11 @@ namespace TradingLib.Core
         /// <param name="settleday"></param>
         void SavePowerData(IExchange exchange, int settleday)
         { 
-            IEnumerable<PowerData> pds = null;
-            foreach(var pd in pds)
-            {
-                BasicTracker.PowerDataTracker.UpdatePowerData(pd);
-            }
+            //IEnumerable<PowerData> pds = null;
+            //foreach(var pd in pds)
+            //{
+            //    BasicTracker.PowerDataTracker.UpdatePowerData(pd);
+            //}
         }
         /// <summary>
         /// 保存交易所的结算价格

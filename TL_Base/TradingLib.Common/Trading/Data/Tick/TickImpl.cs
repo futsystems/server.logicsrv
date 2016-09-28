@@ -642,6 +642,51 @@ namespace TradingLib.Common
                     {
                         break;
                     }
+                case "S":
+                    {
+                        sb.Append(k.Trade);
+                        sb.Append(d);
+                        sb.Append(k.Size);
+                        sb.Append(d);
+                        sb.Append(k.Vol);
+                        sb.Append(d);
+                        sb.Append(k.Exchange);
+                        sb.Append(d);
+                        sb.Append(k.AskPrice);
+                        sb.Append(d);
+                        sb.Append(k.AskSize);
+                        sb.Append(d);
+                        sb.Append(k.AskExchange);
+                        sb.Append(d);
+                        sb.Append(k.BidPrice);
+                        sb.Append(d);
+                        sb.Append(k.BidSize);
+                        sb.Append(d);
+                        sb.Append(k.BidExchange);
+                        sb.Append(d);
+                        sb.Append(k.Open);
+                        sb.Append(d);
+                        sb.Append(k.High);
+                        sb.Append(d);
+                        sb.Append(k.Low);
+                        sb.Append(d);
+                        sb.Append(k.PreClose);
+                        sb.Append(d);
+                        sb.Append(k.OpenInterest);
+                        sb.Append(d);
+                        sb.Append(k.PreOpenInterest);
+                        sb.Append(d);
+                        sb.Append(k.Settlement);
+                        sb.Append(d);
+                        sb.Append(k.PreSettlement);
+                        sb.Append(d);
+                        sb.Append(k.UpperLimit);
+                        sb.Append(d);
+                        sb.Append(k.LowerLimit);
+                        sb.Append(d);
+                        sb.Append(k.MarketOpen);
+                        break;
+                    }
                 case "E"://合约交易所状态 比如MarketOpen,MarketClose,Halted熔断 等状态
                     {
                         sb.Append(k.Exchange);
@@ -726,6 +771,32 @@ namespace TradingLib.Common
                 case "T":
                     {
                         break;
+                    }
+                case "S":
+                    {
+                        k.Trade = decimal.Parse(r[7]);
+                        k.Size = int.Parse(r[8]);
+                        k.Vol = int.Parse(r[9]);
+                        k.Exchange = r[10];
+                        k.AskPrice = decimal.Parse(r[11]);
+                        k.AskSize = int.Parse(r[12]);
+                        k.AskExchange = r[13];
+                        k.BidPrice = decimal.Parse(r[14]);
+                        k.BidSize = int.Parse(r[15]);
+                        k.BidExchange = r[16];
+                        k.Open = decimal.Parse(r[17]);
+                        k.High = decimal.Parse(r[18]);
+                        k.Low = decimal.Parse(r[19]);
+                        k.PreClose = decimal.Parse(r[20]);
+                        k.OpenInterest = int.Parse(r[21]);
+                        k.PreOpenInterest = int.Parse(r[22]);
+                        k.Settlement = decimal.Parse(r[23]);
+                        k.PreSettlement = decimal.Parse(r[24]);
+                        k.UpperLimit = decimal.Parse(r[25]);
+                        k.LowerLimit = decimal.Parse(r[26]);
+                        k.MarketOpen = bool.Parse(r[27]);
+                        break;
+
                     }
                 case "E":
                     {

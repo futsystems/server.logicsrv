@@ -47,8 +47,8 @@ namespace TradingLib.DataFarm
             _slave = _cfg["TickSrvSlave"].AsString();
             _port = _cfg["TickPort"].AsInt();
             _reqport = _cfg["ReqPort"].AsInt();
-            _suball = _cfg["SubscribeAll"].AsBool();
         }
+
 
 
         /// <summary>
@@ -225,6 +225,56 @@ namespace TradingLib.DataFarm
         }
 
 
+        /// <summary>
+        /// 注册市场数据
+        /// </summary>
+        /// <param name="symbols"></param>
+        public void RegisterSymbols(QSEnumDataFeedTypes feed, string exchange, List<string> symbols)
+        {
+            logger.Info(string.Format("Register Symbol,{0},{1}@{2}", exchange, string.Join(" ", symbols.ToArray()), feed));
+            foreach (var sym in symbols)
+            {
+                MDRegisterSymbolsRequest request = RequestTemplate<MDRegisterSymbolsRequest>.CliSendRequest(0);
+                request.DataFeed = feed;
+                request.Exchange = exchange;
+                request.SymbolList.Add(sym);
+                Send(request);
+            }
+        }
+        void Send(IPacket packet)
+        {
+            if (_symbolreq != null)
+            {
+                lock (_symbolreq)
+                {
+                    try
+                    {
+                        byte[] message = packet.Data;
+                        _symbolreq.Send(new ZFrame(message));
+                        ZMessage response;
+                        ZError error;
+                        var poller = ZPollItem.CreateReceiver();
+                        if (_symbolreq.PollIn(poller, out response, out error, timeout))
+                        {
+                            logger.Debug(string.Format("Got Rep Response:", response.First().ReadString(Encoding.UTF8)));
+                            response.Clear();
+                        }
+                        else
+                        {
+                            if (error == ZError.ETERM)
+                            {
+                                return;
+                            }
+                            throw new ZException(error);
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        logger.Error("发送消息异常:" + ex.ToString());
+                    }
+                }
+            }
+        }
 
 
 

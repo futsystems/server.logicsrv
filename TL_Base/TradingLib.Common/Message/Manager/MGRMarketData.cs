@@ -56,6 +56,7 @@ namespace TradingLib.Common
 
     /// <summary>
     /// 注册合约数据
+    /// 
     /// </summary>
     public class MDRegisterSymbolsRequest : RequestPacket
     {
