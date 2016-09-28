@@ -428,7 +428,10 @@ namespace TradingLib.Common
                 case "F":
                     return Symbol + " O:" + this.Open + " H:" + this.High + " L:" + this.Low + " PreClose:" + this.PreClose + " Settle:" + this.PreSettlement + "/" + this.Settlement + " OI:" + this.PreOpenInterest + "/" + this.OpenInterest + " MktOpen:" + this.MarketOpen;
                 case "T":
-                    return "Time:" + Util.ToTLDateTime(this.Date, this.Time) + "@" + this.Exchange;
+                    return "Time:" + Util.ToTLDateTime(this.Date, this.Time);
+                //快照模式 该模式用于维护某个Tick的当前最新市场状态
+                case "S":
+                    return Symbol + " Snapshot";
                 default:
                     return "UNKNOWN TICK";
 
@@ -557,7 +560,7 @@ namespace TradingLib.Common
             sb.Append(d);
             switch (k.UpdateType)
             {
-                case "X":
+                case "X"://成交数据
                     {
                         sb.Append(k.Trade);
                         sb.Append(d);
@@ -573,7 +576,7 @@ namespace TradingLib.Common
                         sb.Append(d);
                         break;
                     }
-                case "A":
+                case "A"://卖盘报价
                     {
                         sb.Append(k.AskPrice);
                         sb.Append(d);
@@ -584,7 +587,7 @@ namespace TradingLib.Common
                         sb.Append(k.Exchange);
                         break;
                     }
-                case "B":
+                case "B"://买盘报价
                     {
                         sb.Append(k.BidPrice);
                         sb.Append(d);
@@ -595,7 +598,7 @@ namespace TradingLib.Common
                         sb.Append(k.Exchange);
                         break;
                     }
-                case "Q":
+                case "Q"://双边盘口快照
                     {
                         sb.Append(k.AskPrice);
                         sb.Append(d);
@@ -612,7 +615,7 @@ namespace TradingLib.Common
                         sb.Append(k.Exchange);
                         break;
                     }
-                case "F":
+                case "F"://统计数据
                     {
                         sb.Append(k.Open);
                         sb.Append(d);
@@ -635,9 +638,16 @@ namespace TradingLib.Common
                         sb.Append(k.MarketOpen);
                         break;
                     }
-                case "T":
+                case "T"://行情源时间Tick
+                    {
+                        break;
+                    }
+                case "E"://合约交易所状态 比如MarketOpen,MarketClose,Halted熔断 等状态
                     {
                         sb.Append(k.Exchange);
+                        sb.Append(d);
+                        sb.Append(k.MarketOpen);
+                        //sb.Append(d);
                         break;
                     }
             }
@@ -715,7 +725,12 @@ namespace TradingLib.Common
                     }
                 case "T":
                     {
+                        break;
+                    }
+                case "E":
+                    {
                         k.Exchange = r[7];
+                        k.MarketOpen = bool.Parse(r[8]);
                         break;
                     }
                 default:

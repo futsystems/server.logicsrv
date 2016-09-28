@@ -56,7 +56,7 @@ namespace TradingLib.Common
 
         static void HistSource_gotTick(TradingLib.API.Tick t)
         {
-            _tw.newTick((TickImpl)t);
+            _tw.NewTick((TickImpl)t);
         }
 
         private static TikWriter _tw;
@@ -129,10 +129,10 @@ namespace TradingLib.Common
             {
                 TikWriter tw = new TikWriter();
                 foreach (Tick k in ticks)
-                    tw.newTick(k);
+                    tw.NewTick(k);
                 tw.Close();
                 if (debs != null)
-                    debs(tw.RealSymbol + " saved " + tw.Count + " ticks to: " + tw.Filepath);
+                    debs(tw.Symbol + " saved " + tw.Count + " ticks to: " + tw.Filepath);
 
             }
             catch (Exception ex)
@@ -155,10 +155,10 @@ namespace TradingLib.Common
             try
             {
                 foreach (Tick k in ticks)
-                    tw.newTick(k);
+                    tw.NewTick(k);
                 tw.Close();
                 if (debs != null)
-                    debs(tw.RealSymbol + " saved " + tw.Count + " ticks to: " + tw.Filepath);
+                    debs(tw.Symbol + " saved " + tw.Count + " ticks to: " + tw.Filepath);
 
             }
             catch (Exception ex)

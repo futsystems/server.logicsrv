@@ -77,10 +77,11 @@ namespace TradingLib.Common.DataFarm
         /// </summary>
         ConcurrentDictionary<string, QryBarBackendQry> symfreqQryMap = new ConcurrentDictionary<string, QryBarBackendQry>();
         
+        //TODO Market SymbolKey
         public override void BackendQryBar(IServiceHost host, IConnection conn, QryBarRequest request)
         {
             logger.Info("try to qry bar from DataCoreBackend");
-            Symbol symbol = MDBasicTracker.SymbolTracker[request.Symbol];
+            Symbol symbol = MDBasicTracker.SymbolTracker["",request.Symbol];
             if (symbol == null)
             {
                 logger.Warn(string.Format("Symbol:{0} do not exist", request.Symbol));
@@ -126,7 +127,7 @@ namespace TradingLib.Common.DataFarm
             {
                 size = obj.Data.Length;
             }
-            Symbol symbol = MDBasicTracker.SymbolTracker["IF1603"];
+            Symbol symbol = MDBasicTracker.SymbolTracker["","IF1603"];
             if (symbol == null)
             {
                 logger.Warn(string.Format("Symbol:{0} do not exist", "IF1603"));

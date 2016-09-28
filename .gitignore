@@ -27,6 +27,7 @@
 /Platform/TLData
 /Platform/TradingSrv/TLDataBase/LogServer/*
 /Platform/**/logs
+/Platform/**/TickData
 /Platform/Logs
 /Platform/DataSrv/database/*
 /Platform/DataCore/database/*

@@ -12,16 +12,16 @@ namespace TradingLib.Common
     /// </summary>
     public class TikWriter : BinaryWriter
     {
-        bool _hasheader = false;
-        string _realsymbol = string.Empty;
+        string _symbol = string.Empty;
         string _file = string.Empty;
-        string _path = Util.TLTickDir;
+        string _path = string.Empty;
+
         public string FolderPath { get { return _path; } set { _path = value; } }
         int _date = 0;
         /// <summary>
         /// real symbol represented by tick file
         /// </summary>
-        public string RealSymbol { get { return _realsymbol; } }
+        public string Symbol { get { return _symbol; } }
         /// <summary>
         /// path of this file
         /// </summary>
@@ -30,6 +30,7 @@ namespace TradingLib.Common
         /// date represented by data
         /// </summary>
         public int Date { get { return _date; } }
+
         /// <summary>
         /// ticks written
         /// </summary>
@@ -56,42 +57,49 @@ namespace TradingLib.Common
         /// <param name="path"></param>
         /// <param name="realsymbol"></param>
         /// <param name="date"></param>
-        public TikWriter(string path, string realsymbol,int date)
-        {
-            init(path, realsymbol, date);
-        }
-
-        private void init(string path,string realsymbol,int date)
+        public TikWriter(string path, string symbol,int date)
         {
             // store important stuff
-            _realsymbol = realsymbol;
+            _symbol = symbol;
             _path = path;
             _date = date;
 
             // get filename from path and symbol
-            _file = SafeFilename(path,realsymbol,date);
+            _file = GetTickFileName(path, symbol, date);//Path.Combine(new string[] { path, "{0}-{1}{2}".Put(_symbol, _date, TikConst.DOT_EXT) });
 
-            //// if file exists, assume it has a header
-            //_hasheader = File.Exists(_file);
-
-            //if (!_hasheader)
-            //    Header(this, realsymbol);
-            //else
-            //    OutStream = new FileStream(_file, FileMode.Open, FileAccess.Write, FileShare.Read);
             if (File.Exists(_file))
             {
                 OutStream = new FileStream(_file, FileMode.Open, FileAccess.Write, FileShare.Read);
                 //已经存在的文件 设置当前position为末尾 用于向文件追加数据
                 OutStream.Position = OutStream.Length;
-                _hasheader = true;
             }
             else
             {
                 OutStream = new FileStream(_file, FileMode.Create, FileAccess.Write, FileShare.Read);
-                _hasheader = true;
             }
-
         }
+
+        /// <summary>
+        /// 获得某个合约的Tick文件储存目录
+        /// </summary>
+        /// <param name="symbol"></param>
+        /// <returns></returns>
+        public static string GetTickPath(string baseDir, Symbol symbol)
+        {
+            string path = Path.Combine(new string[] { baseDir, symbol.Exchange, symbol.SecurityFamily.Code });
+            if (!Directory.Exists(path))
+            {
+                Directory.CreateDirectory(path);
+            }
+            return path;
+        }
+
+        public static string GetTickFileName(string path, string symbol, int date)
+        {
+            return Path.Combine(new string[] { path, "{0}-{1}{2}".Put(symbol, date, TikConst.DOT_EXT) });
+        }
+
+
 
         /// <summary>
         /// close a tickfile
@@ -99,19 +107,6 @@ namespace TradingLib.Common
         public override void Close()
         {
             base.Close();
-        }
-
-        /// <summary>
-        /// gets symbol safe to use as filename
-        /// </summary>
-        /// <param name="realsymbol"></param>
-        /// <param name="path"></param>
-        /// <param name="date"></param>
-        /// <returns></returns>
-        public static string SafeFilename(string path,string realsymbol,int date)
-        {
-            return Path.Combine(new string[] { path, "{0}-{1}{2}".Put(realsymbol, date, TikConst.DOT_EXT) });
-            //return path + "\\" + SafeSymbol(realsymbol) + TikConst.DOT_EXT;
         }
 
         /// <summary>
@@ -167,172 +162,16 @@ namespace TradingLib.Common
             string[] rec = name.Split('-');
             return int.Parse(rec[1]);
         }
-        /// <summary>
-        /// 获得某个合约的Tick文件储存目录
-        /// </summary>
-        /// <param name="symbol"></param>
-        /// <returns></returns>
-        public static string GetTickPath(Symbol symbol)
-        {
-            string path = Path.Combine(new string[] { Util.TLTickDir, symbol.Exchange, symbol.SecurityFamily.Code });
-            if (!Directory.Exists(path))
-            {
-                Directory.CreateDirectory(path);
-            }
-            return path;
-        }
-        /// <summary>
-        /// gets symbol that is safe to use as filename
-        /// </summary>
-        /// <param name="realsymbol"></param>
-        /// <returns></returns>
-        //public static string SafeSymbol(string realsymbol)
-        //{
-        //    char[] _invalid = Path.GetInvalidPathChars();
-        //    char[] _more = "/\\*?:".ToCharArray();
-        //    _more.CopyTo(_invalid, 0);
-        //    //_more.CopyTo(0,_invalid,_invalid.Length,_more.Length);
-        //    foreach (char c in _invalid)
-        //    {
-        //        int p = 0;
-        //        while (p != -1)
-        //        {
-        //            p = realsymbol.IndexOf(c);
-        //            if (p != -1)
-        //                realsymbol = realsymbol.Remove(p, 1);
-        //        }
-        //    }
-        //    return realsymbol;
-        //}
 
-        /// <summary>
-        /// write header for tick file
-        /// </summary>
-        /// <param name="bw"></param>
-        /// <param name="realsymbol"></param>
-        /// <returns></returns>
-        public static bool Header(TikWriter bw, string realsymbol)
-        {
-            bw.OutStream = new FileStream(bw.Filepath, FileMode.Create, FileAccess.Write, FileShare.ReadWrite);
-            // version
-            bw.Write(TikConst.Version);
-            bw.Write(TikConst.FILECURRENTVERSION);
-            // full symbol name
-            bw.Write(realsymbol); // 
-            // fields end
-            bw.Write(TikConst.StartData);
-            // flag header as created
-            bw._hasheader = true;
-            return true;
-        }
-
+        
+       
         /// <summary>
         /// write a tick to file
         /// </summary>
         /// <param name="k"></param>
-        public void newTick(Tick k) { newTick((TickImpl)k); }
-        /// <summary>
-        /// write a tick to file
-        /// </summary>
-        /// <param name="k"></param>
-        public void newTick(TickImpl k)
+        public void NewTick(Tick k)
         {
-            //if (_date == 0 || _date != k.Date)
-            //{
-            //    init(_realsymbol, _path, k.Date);
-            //}
-            // make sure we have a header
-            //if (!_hasheader) init(k.Symbol, _path, k.Date);
-
-            //
-            if (!k.IsTrade()) return;
-            //Console.Write("write tick to file");
-            StringBuilder sb = new StringBuilder();
-            char d = ',';
-            sb.Append(k.Date);
-            sb.Append(d);
-            sb.Append(k.Time);
-            sb.Append(d);
-            sb.Append(k.Trade);
-            sb.Append(d);
-            sb.Append(k.Size);
-            sb.Append("\n");
-            Write(Encoding.UTF8.GetBytes(sb.ToString()));
-            // write to disk
-            Flush();
-            // count it
-            Count++;
-
-            return;
-            // get types
-            bool t = k.IsTrade();
-            bool fq = k.IsFullQuote();
-            bool b = k.HasBid();
-            bool a = k.HasAsk();
-            bool i = k.IsIndex();
-
-            // next we write tick type and the data
-            if (!fq && b) // bid only
-            {
-                Write(TikConst.TickBid);
-                Write(k.Date);
-                Write(k.Time);
-                Write(k._bid);
-                Write(k.BidSize);
-                Write(k.BidExchange);
-                Write(k.Depth);
-            }
-            else if (!fq && a) // ask only
-            {
-                Write(TikConst.TickAsk);
-                Write(k.Date);
-                Write(k.Time);
-                Write(k._ask);
-                Write(k.AskSize);
-                Write(k.AskExchange);
-                Write(k.Depth);
-            }
-            else if ((t && !fq) || i) // trade or index
-            {
-                Write(TikConst.TickTrade);
-                Write(k.Date);
-                Write(k.Time);
-                Write(k._trade);
-                Write(k.Depth);
-                Write(k.Exchange);
-            }
-            else if (t && fq) // full quote
-            {
-                Write(TikConst.TickFull);
-                Write(k.Date);
-                Write(k.Time);
-                Write(k._trade);
-                Write(k.Depth);
-                Write(k.Exchange);
-                Write(k._bid);
-                Write(k.BidSize);
-                Write(k.BidExchange);
-                Write(k._ask);
-                Write(k.AskSize);
-                Write(k.AskExchange);
-                Write(k.Depth);
-
-            }
-            else if (!t && fq) // quote only
-            {
-                Write(TikConst.TickQuote);
-                Write(k.Date);
-                Write(k.Time);
-                Write(k._bid);
-                Write(k.BidSize);
-                Write(k.BidExchange);
-                Write(k._ask);
-                Write(k.AskSize);
-                Write(k.AskExchange);
-                Write(k.Depth);
-            }
-            // end tick
-            Write(TikConst.EndTick);
+            Write(Encoding.UTF8.GetBytes(TickImpl.Serialize2(k)+"\n"));
             // write to disk
             Flush();
             // count it

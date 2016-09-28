@@ -74,7 +74,7 @@ namespace TradingLib.Common.DataFarm
                 using (StreamReader fs = new StreamReader(file, Encoding.UTF8))
                 {
                     
-                    Symbol symbol = MDBasicTracker.SymbolTracker["GCJ6"];
+                    Symbol symbol = MDBasicTracker.SymbolTracker["","GCJ6"];
                     while (line != null)
                     {
                         line = fs.ReadLine();

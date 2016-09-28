@@ -35,16 +35,16 @@ namespace TradingLib.Common.DataFarm
                 if (sym.IsExpired(exday))
                     continue;
 
-                symcodemap[sym.Symbol] = sym;
                 idxcodemap[sym.ID] = sym;
             }
 
             //易话合约底层绑定
-            foreach (SymbolImpl sym in symcodemap.Values)
+            foreach (SymbolImpl sym in idxcodemap.Values)
             {
                 sym.ULSymbol = this[sym.underlaying_fk];
                 sym.UnderlayingSymbol = this[sym.underlayingsymbol_fk];
                 sym.SecurityFamily = MDBasicTracker.SecurityTracker[sym.security_fk];
+                symcodemap[sym.UniqueKey] = sym;
             }
         }
 
@@ -54,12 +54,13 @@ namespace TradingLib.Common.DataFarm
         /// </summary>
         /// <param name="symbol"></param>
         /// <returns></returns>
-        public SymbolImpl this[string symbol]
+        public SymbolImpl this[string exchange,string symbol]
         {
             get
             {
+                string key = exchange + "-" + symbol;
                 SymbolImpl sym = null;
-                if (symcodemap.TryGetValue(symbol, out sym))
+                if (symcodemap.TryGetValue(key, out sym))
                 {
                     return sym;
                 }
@@ -210,11 +211,11 @@ namespace TradingLib.Common.DataFarm
                 target.SecurityFamily = sec;
                 target.security_fk = sec != null ? sec.ID : 0;
 
-                SymbolImpl ulsymbol =MDBasicTracker.SymbolTracker[sym.ULSymbol != null ? sym.ULSymbol.Symbol : ""];
+                SymbolImpl ulsymbol =MDBasicTracker.SymbolTracker[sym.ULSymbol != null ?sym.Exchange:"",sym.ULSymbol != null ? sym.ULSymbol.Symbol : ""];
                 target.underlaying_fk = ulsymbol != null ? ulsymbol.ID : 0;
                 target.ULSymbol = ulsymbol;
 
-                SymbolImpl layingsymbol =MDBasicTracker.SymbolTracker[sym.UnderlayingSymbol != null ? sym.UnderlayingSymbol.Symbol : ""];
+                SymbolImpl layingsymbol =MDBasicTracker.SymbolTracker[sym.UnderlayingSymbol != null ?sym.UnderlayingSymbol.Exchange:"",sym.UnderlayingSymbol != null ? sym.UnderlayingSymbol.Symbol : ""];
                 target.underlayingsymbol_fk = layingsymbol != null ? layingsymbol.underlayingsymbol_fk : 0;
                 target.UnderlayingSymbol = layingsymbol;
                 //target.Tradeable = sym.Tradeable;//更新交易标识
@@ -243,11 +244,11 @@ namespace TradingLib.Common.DataFarm
                 target.SecurityFamily = sec;
                 target.security_fk = sec != null ? sec.ID : 0;
 
-                SymbolImpl ulsymbol =MDBasicTracker.SymbolTracker[sym.ULSymbol != null ? sym.ULSymbol.Symbol : ""];
+                SymbolImpl ulsymbol =MDBasicTracker.SymbolTracker[sym.ULSymbol != null ?sym.Exchange:"",sym.ULSymbol != null ? sym.ULSymbol.Symbol : ""];
                 target.underlaying_fk = ulsymbol != null ? ulsymbol.ID : 0;
                 target.ULSymbol = ulsymbol;
 
-                SymbolImpl layingsymbol =MDBasicTracker.SymbolTracker[sym.UnderlayingSymbol != null ? sym.UnderlayingSymbol.Symbol : ""];
+                SymbolImpl layingsymbol =MDBasicTracker.SymbolTracker[sym.UnderlayingSymbol != null ?sym.UnderlayingSymbol.Exchange:"",sym.UnderlayingSymbol != null ? sym.UnderlayingSymbol.Symbol : ""];
                 target.underlayingsymbol_fk = layingsymbol != null ? layingsymbol.underlayingsymbol_fk : 0;
                 target.UnderlayingSymbol = layingsymbol;
 

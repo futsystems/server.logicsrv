@@ -146,6 +146,7 @@
     <Compile Include="Trading\Data\Bar2\TimeFreqGenerator.cs" />
     <Compile Include="Trading\Data\Bar\BarRequest.cs" />
     <Compile Include="Trading\Data\Bar\BarUtils.cs" />
+    <Compile Include="Trading\Data\Tick\TickRepository.cs" />
     <Compile Include="Trading\MarginConfig.cs" />
     <Compile Include="Trading\MarketData.cs" />
     <Compile Include="Trading\MarketTime\MarketTime.cs" />

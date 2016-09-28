@@ -233,7 +233,7 @@ namespace TradingLib.DataFarm
                     logger.Info(string.Format("Connect to FastTick Server:{0} ReqPort:{1} DataPort{2}", CurrentServer, _reqport, _port));
                    
                     //订阅行情心跳数据
-                    subscriber.Subscribe(Encoding.UTF8.GetBytes("TICKHEARTBEAT"));
+                    subscriber.Subscribe(Encoding.UTF8.GetBytes("H,"));
 
                     //if (_suball)
                     //{

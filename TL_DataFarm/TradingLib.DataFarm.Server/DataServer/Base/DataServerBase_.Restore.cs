@@ -226,7 +226,7 @@ namespace TradingLib.Common.DataFarm
             //获得Tick文件的开始和结束日期
             int tickend = -1;
             int tickstart = -1;
-            string path = TikWriter.GetTickPath(symbol);
+            string path = TikWriter.GetTickPath("",symbol);
             if (TikWriter.HaveAnyTickFiles(path, symbol.Symbol))
             {
                 tickend = TikWriter.GetEndTickDate(path, symbol.Symbol);
@@ -248,7 +248,7 @@ namespace TradingLib.Common.DataFarm
             List<Tick> tmpticklist = new List<Tick>();
             while (current.ToTLDate() <= enddate)
             {
-                string fn = TikWriter.SafeFilename(path, symbol.Symbol, current.ToTLDate());
+                string fn = TikWriter.GetTickFileName(path, symbol.Symbol, current.ToTLDate());
                 //如果该Tick文件存在
                 if (File.Exists(fn))
                 {

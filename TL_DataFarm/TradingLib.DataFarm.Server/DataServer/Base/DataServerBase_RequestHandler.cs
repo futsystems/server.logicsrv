@@ -102,7 +102,7 @@ namespace TradingLib.Common.DataFarm
                 //    logger.Warn(string.Format("SymbolFreq:{0}-{1}-{2} is not registed", request.Symbol, request.IntervalType, request.Interval));
                 //    throw new Exception("SymbolFreq not registed");
                 //}
-                Symbol symbol = MDBasicTracker.SymbolTracker[request.Symbol];
+                Symbol symbol = MDBasicTracker.SymbolTracker["",request.Symbol];
                 if (symbol == null)
                 {
                     logger.Warn(string.Format("Symbol:{0} do not exist", request.Symbol));

@@ -197,7 +197,7 @@ namespace TradingLib.Common.DataFarm
                 if (string.IsNullOrEmpty(symbol)) continue;
                 string key = string.Format("{0}-{1}", request.Exchange, symbol);
                 
-                Symbol sym = MDBasicTracker.SymbolTracker[symbol];
+                Symbol sym = MDBasicTracker.SymbolTracker["",symbol];
                 if (sym == null) continue;
 
                 if (!symKeyRegMap.Keys.Contains(key))
