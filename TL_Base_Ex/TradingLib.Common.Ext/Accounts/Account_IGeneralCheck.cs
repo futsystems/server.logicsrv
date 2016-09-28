@@ -125,7 +125,7 @@ namespace TradingLib.Common
                         else//卖出
                         {
                             Position pos  = this.GetPosition(symbol.Symbol,true);
-                            int pendingSize = this.GetPendingExitSize(symbol.Symbol,true)
+                            int pendingSize = this.GetPendingExitSize(symbol.Symbol, true);
                             int ydsize = pos.PositionDetailYdNew.Sum(p => p.Volume); //隔夜仓可平
 
                             return ydsize - pendingSize;
