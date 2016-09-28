@@ -32,14 +32,8 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Xml" />
     <Reference Include="TradingLib.API">
       <HintPath>..\..\lib\TradingLib\TradingLib.API.dll</HintPath>
-    </Reference>
-    <Reference Include="TradingLib.Common">
-      <HintPath>..\..\lib\TradingLib\TradingLib.Common.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -48,7 +42,6 @@
     <Compile Include="IDataStore.cs" />
     <Compile Include="IServiceHost.cs" />
     <Compile Include="ITickFeed.cs" />
-    <Compile Include="MDMessageType.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

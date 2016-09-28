@@ -20,6 +20,7 @@ namespace TradingLib.Common.DataFarm
         /// GC回收内存时间
         /// </summary>
         DateTime _lastGCTime = DateTime.Now;
+
         /// <summary>
         /// Tick数据仓库组件
         /// </summary>
@@ -39,35 +40,36 @@ namespace TradingLib.Common.DataFarm
         AsyncResponse asyncTick;
 
         bool tickFeedLoad = false;
+
+        /// <summary>
+        /// 配置文件
+        /// </summary>
         ConfigFile _config;
 
         int _gcinterval = 1;
+        int _statusinterval = 1;
         string _basedir = string.Empty;
+        string _prefixStr = string.Empty;
+        List<string> _prefixList = new List<string>();
         const string NAME = "TickStore";
         public TickServer()
         {
             _config = ConfigFile.GetConfigFile(NAME + ".cfg");
-            //初始化MySQL数据库连接池
-            logger.Info("Init MySQL connection pool");
-            DBHelper.InitDBConfig(_config["DBAddress"].AsString(), _config["DBPort"].AsInt(), _config["DBName"].AsString(), _config["DBUser"].AsString(), _config["DBPass"].AsString());
 
             _gcinterval = _config["GCInterval"].AsInt();
             _basedir = _config["BaseDir"].AsString();
+            _prefixStr = _config["Prefix"].AsString();
+            foreach (var prefix in _prefixStr.Split(' '))
+            {
+                _prefixList.Add(prefix);
+            }
 
             tickRepository = new TickRepository(_basedir);
-           
-            int  num_ex = MDBasicTracker.ExchagneTracker.Exchanges.Count();
-            int num_sec = MDBasicTracker.SecurityTracker.Securities.Count();
-            int num_sym = MDBasicTracker.SymbolTracker.Symbols.Count();
-
-            logger.Info("Basic Info Statisitic, Exchange:{0} Security:{1} Symbol:{2}".Put(num_ex, num_sec, num_sym));
         }
-
-
 
         public void Start()
         {
-            logger.Info("Start TickFeeds");
+            logger.Info("Start TickStoreServer");
             //启动异步行情处理组件
             if (asyncTick == null)
             {
@@ -75,6 +77,7 @@ namespace TradingLib.Common.DataFarm
                 asyncTick = new AsyncResponse("Tick");
                 asyncTick.GotTick += new TickDelegate(asyncTick_GotTick);
             }
+
             asyncTick.Start();
 
             //加载TickFeeds
@@ -92,7 +95,6 @@ namespace TradingLib.Common.DataFarm
         /// </summary>
         void LoadTickFeeds()
         {
-
             if (tickFeedLoad) return;
             logger.Info("Load TickFeeds plugin");
             //如果TickFeed为* 加载所有 否则指定对应的类型
@@ -121,7 +123,21 @@ namespace TradingLib.Common.DataFarm
         void TickFeed_OnConnectEvent(ITickFeed tickfeed)
         {
             logger.Info(string.Format("TickFeed[{0}] connected", tickfeed.Name));
+            if (_prefixList.Count == 0)
+            {
+                logger.Info("Register every tick form server");
+                tickfeed.Register(new byte[0]);
+            }
+            else
+            {
+                logger.Info("Register Prefix:" + _prefixStr);
+                foreach (var prefix in _prefixList)
+                {
+                    tickfeed.Register(Encoding.UTF8.GetBytes(prefix));
+                }
+            }
         }
+
 
         /// <summary>
         /// 响应行情源获得行情回报
@@ -134,6 +150,14 @@ namespace TradingLib.Common.DataFarm
 
         }
 
+
+        DateTime _lastreset = DateTime.Now;
+        int _lastMinTiks = 0;
+        void LogStatus()
+        { 
+            string msg = string.Format("WriterCount:{0},{1} Tiks/LastMinut",tickRepository.WriterCount,_lastMinTiks);
+            logger.Info(msg);
+        }
         /// <summary>
         /// 异步行情处理
         /// X 成交
@@ -152,29 +176,26 @@ namespace TradingLib.Common.DataFarm
         /// <param name="k"></param>
         void asyncTick_GotTick(Tick k)
         {
-            Symbol symbol = MDBasicTracker.SymbolTracker[k.Exchange,k.Symbol];
-            if(symbol == null)
+            if (string.IsNullOrEmpty(k.Exchange) || string.IsNullOrEmpty(k.Symbol))
             {
-                logger.Warn("Symbol:{0} not exist".Put(k.Symbol));
-                return;
+                logger.Warn("Error Tick:" + TickImpl.Serialize2(k));
             }
+            _lastMinTiks++;
 
-            tickRepository.NewTick(symbol, k);
+            tickRepository.NewTick(k);
+
 
             //定时进行强制垃圾回收
             DateTime now = DateTime.Now;
             if (now.Subtract(_lastGCTime).TotalMinutes > _gcinterval)
             {
                 _lastGCTime = now;
+                LogStatus();
+
+                _lastMinTiks = 0;
                 GC.Collect();
             }
+            
         }
-
-
-
-
-
-
-
     }
 }

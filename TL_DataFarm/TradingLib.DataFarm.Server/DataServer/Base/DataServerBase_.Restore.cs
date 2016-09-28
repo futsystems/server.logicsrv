@@ -226,7 +226,7 @@ namespace TradingLib.Common.DataFarm
             //获得Tick文件的开始和结束日期
             int tickend = -1;
             int tickstart = -1;
-            string path = TikWriter.GetTickPath("",symbol);
+            string path = TikWriter.GetTickPath("","","");
             if (TikWriter.HaveAnyTickFiles(path, symbol.Symbol))
             {
                 tickend = TikWriter.GetEndTickDate(path, symbol.Symbol);

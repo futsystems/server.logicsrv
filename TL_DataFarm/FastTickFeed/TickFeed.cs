@@ -50,14 +50,33 @@ namespace TradingLib.DataFarm
             _suball = _cfg["SubscribeAll"].AsBool();
         }
 
-        public FastTickDataFeed(string masterAddress, string slaveAddress, int dataport, int reqport)
+
+        /// <summary>
+        /// 订阅前缀
+        /// </summary>
+        /// <param name="prefix"></param>
+        public void Register(byte[] prefix)
         {
-            logger = LogManager.GetLogger(this.Name);
-            _master = masterAddress;
-            _slave = slaveAddress;
-            _port = dataport;
-            _reqport = reqport;
+            if (_tickgo)
+            {
+                _subscriber.Subscribe(prefix);
+            }
         }
+
+        
+
+        /// <summary>
+        /// 取消订阅前缀
+        /// </summary>
+        /// <param name="prefix"></param>
+        public void Unregister(byte[] prefix)
+        {
+            if (_tickgo)
+            {
+                _subscriber.Unsubscribe(prefix);
+            }
+        }
+
 
         public event Action<ITickFeed,Tick> TickEvent;
         void OnTick(Tick k)
@@ -110,7 +129,6 @@ namespace TradingLib.DataFarm
             _hbthread.IsBackground = true;
             _hbthread.Name = "FasktTickDF HBWatch";
             _hbthread.Start();
-            ThreadTracker.Register(_hbthread);
             _lastheartbeat = DateTime.Now;
         }
 
@@ -126,7 +144,6 @@ namespace TradingLib.DataFarm
             }
             if (!_hbthread.IsAlive)
             {
-                ThreadTracker.Unregister(_hbthread);
                 _hbthread = null;
                 logger.Info("FastTickHB Stopped successfull...");
             }
@@ -176,14 +193,12 @@ namespace TradingLib.DataFarm
             _tickthread.IsBackground = true;
             _tickthread.Name = "FasktTickDF TickHandler";
             _tickthread.Start();
-            ThreadTracker.Register(_tickthread);
-
+           
             int i = 0;
             while (!_tickreceiveruning & i < 5)
             {
                 Thread.Sleep(500);
                 i++;
-                logger.Info("wait datafeed start....");
             }
         }
 
@@ -200,7 +215,6 @@ namespace TradingLib.DataFarm
             }
             if (!_tickthread.IsAlive)
             {
-                ThreadTracker.Unregister(_tickthread);
                 _tickthread = null;
                 logger.Info("FastTick Stopped successfull...");
             }
@@ -235,17 +249,6 @@ namespace TradingLib.DataFarm
                     //订阅行情心跳数据
                     subscriber.Subscribe(Encoding.UTF8.GetBytes("H,"));
 
-                    //if (_suball)
-                    //{
-                    //    subscriber.SubscribeAll();
-                    //}
-                    string prefix ="X,";
-                    subscriber.Subscribe(Encoding.UTF8.GetBytes(prefix));
-
-                    subscriber.Subscribe(Encoding.UTF8.GetBytes("E,"));
-                    //prefix = "HSIX5^";
-                    //subscriber.Subscribe(Encoding.UTF8.GetBytes(prefix));
-                    //subscriber.SubscribeAll();
                     _symbolreq = symbolreq;
                     _subscriber = subscriber;
 
@@ -275,28 +278,11 @@ namespace TradingLib.DataFarm
                                 if (k != null && k.UpdateType != "H")
                                     OnTick(k);
 
-                                //string[] p = tickstr.Split('^');
-
-                                //if (p.Length > 1)
-                                //{
-                                //    string symbol = p[0];
-                                //    string tickcontent = p[1];
-                                //    Tick k = TickImpl.Deserialize(tickcontent);
-                                //    logger.Debug("tick date:" + k.Date + " time time:" + k.Time);
-                                //    if (k != null && k.IsValid())
-                                //        OnTick(k);
-                                //}
-                                //else
-                                //{
-                                //    logger.Info("tick str:" + tickstr);
-                                //}
-
                                 //记录数据到达时间
                                 _lastheartbeat = DateTime.Now;
                                 if(tickdata!= null)
                                 {
                                     tickdata.Dispose();
-                                    
                                 }
                             }
 

@@ -26,14 +26,17 @@ namespace TradingLib.Common
             _basedir = basedir;
         }
 
+        public int WriterCount { get { return tikWriterMap.Count; } }
+
+
         /// <summary>
         /// 写入Tick
         /// </summary>
         /// <param name="symbol"></param>
         /// <param name="k"></param>
-        public void NewTick(Symbol symbol,Tick k)
+        public void NewTick(Tick k)
         {
-            string uniquekey = symbol.UniqueKey;
+            string uniquekey = string.Format("{0}-{1}", k.Exchange, k.Symbol);
             int tickDate = k.Date;
 
             int lastdate = 0;
@@ -72,7 +75,6 @@ namespace TradingLib.Common
                     {
                         try
                         {
-
                             //向前面一个tw写入结束标识 
                             tw.Close();
                         }
@@ -82,13 +84,13 @@ namespace TradingLib.Common
                         }
                     }
                     // ensure file is writable
-                    string path = TikWriter.GetTickPath(_basedir, symbol);
-                    string fn = TikWriter.GetTickFileName(path, symbol.Symbol, tickDate);
+                    string path = TikWriter.GetTickPath(_basedir, k.Exchange,k.Symbol);
+                    string fn = TikWriter.GetTickFileName(path,k.Symbol, tickDate);
 
                     if (TikUtil.IsFileWritetable(fn))
                     {
                         // open new stream
-                        tw = new TikWriter(path,symbol.Symbol,tickDate);
+                        tw = new TikWriter(path, k.Symbol, tickDate);
                         // save tick
                         tw.NewTick(k);
                         // save stream

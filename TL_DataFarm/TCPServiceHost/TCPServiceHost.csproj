@@ -78,10 +78,6 @@
       <Project>{FE184B78-DFA2-4E10-98CD-C6EAC59D84D9}</Project>
       <Name>TradingLib.DataFarm.API</Name>
     </ProjectReference>
-    <ProjectReference Include="..\TradingLib.DataFarm.Common\TradingLib.DataFarm.Common.csproj">
-      <Project>{E1F793B7-B731-4379-BAD6-4A6EA64D0576}</Project>
-      <Name>TradingLib.DataFarm.Common</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

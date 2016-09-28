@@ -12,6 +12,25 @@ namespace TradingLib.DataFarm.API
     public interface ITickFeed
     {
         string Name { get; }
+
+        /// <summary>
+        /// 注册前缀订阅
+        /// 定于成交
+        /// X,
+        /// 订阅CLX6的成交数据
+        /// X,CLX6
+        /// 只需要将对应的实时行情前置注册进去 就可以实现行情订阅
+        /// </summary>
+        /// <param name="prefix"></param>
+        void Register(byte[] prefix);
+
+        /// <summary>
+        /// 取消订阅
+        /// </summary>
+        /// <param name="prefix"></param>
+        void Unregister(byte[] prefix);
+
+
         /// <summary>
         /// 行情到达事件
         /// </summary>

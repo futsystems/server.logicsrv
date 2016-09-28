@@ -84,9 +84,9 @@ namespace TradingLib.Common
         /// </summary>
         /// <param name="symbol"></param>
         /// <returns></returns>
-        public static string GetTickPath(string baseDir, Symbol symbol)
+        public static string GetTickPath(string baseDir, string exchange,string symbol)
         {
-            string path = Path.Combine(new string[] { baseDir, symbol.Exchange, symbol.SecurityFamily.Code });
+            string path = Path.Combine(new string[] { baseDir, exchange, symbol });
             if (!Directory.Exists(path))
             {
                 Directory.CreateDirectory(path);
