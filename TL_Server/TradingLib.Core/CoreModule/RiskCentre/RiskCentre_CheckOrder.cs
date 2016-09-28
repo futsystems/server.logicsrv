@@ -255,13 +255,26 @@ namespace TradingLib.Core
                 errortitle = ConstErrorID.ORDER_SIZE_ZERO;//委托数量为0
                 return false;
             }
+
             //5.2单次开仓数量小于设定值
             if (o.IsEntryPosition)//开仓
             {
-                if (Math.Abs(o.TotalSize) > _orderlimitsize)
+                if (o.oSymbol.SecurityType == SecurityType.FUT)
                 {
-                    errortitle = ConstErrorID.ORDER_SIZE_LIMIT;//委托数量超过最大委托手数
-                    return false;
+                    if (Math.Abs(o.TotalSize) > _orderlimitsize)
+                    {
+                        errortitle = ConstErrorID.ORDER_SIZE_LIMIT;//委托数量超过最大委托手数
+                        return false;
+                    }
+                }
+
+                if (o.oSymbol.SecurityType == SecurityType.STK)
+                {
+                    if (Math.Abs(o.TotalSize) / 100 < 1 || Math.Abs(o.TotalSize) % 100 !=0)
+                    {
+                        errortitle = ConstErrorID.STK_ENTRYSIZE_100;
+                        return false;
+                    }
                 }
             }
 

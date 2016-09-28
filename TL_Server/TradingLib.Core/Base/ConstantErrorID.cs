@@ -61,5 +61,11 @@ namespace TradingLib.Core
         /// 禁止锁仓
         /// </summary>
         public static string POSITION_LOCK_FORBIDDEN = "POSITION_LOCK_FORBIDDEN";
+
+
+        /// <summary>
+        /// 股票开仓最少100股限定
+        /// </summary>
+        public static string STK_ENTRYSIZE_100 = "STK_ENTRYSIZE_100";
     }
 }

@@ -115,10 +115,21 @@ namespace TradingLib.Common
                     }
                 case SecurityType.STK:
                     {
-                        decimal avabilefund = GetFundAvabile(symbol);
-                        //decimal price = TLCtxHelper.ModuleDataRouter.GetAvabilePrice(symbol.Symbol);
-                        decimal fundperlot = this.CalOrderMarginFrozen(symbol, 1) * this.GetExchangeRate(symbol.SecurityFamily);
-                        return (int)(avabilefund / fundperlot);
+                        //买入
+                        if (side)
+                        {
+                            decimal avabilefund = GetFundAvabile(symbol);
+                            decimal fundperlot = this.CalOrderMarginFrozen(symbol, 1) * this.GetExchangeRate(symbol.SecurityFamily);
+                            return (int)(avabilefund / fundperlot);
+                        }
+                        else//卖出
+                        {
+                            Position pos  = this.GetPosition(symbol.Symbol,true);
+                            int pendingSize = this.GetPendingExitSize(symbol.Symbol,true)
+                            int ydsize = pos.PositionDetailYdNew.Sum(p => p.Volume); //隔夜仓可平
+
+                            return ydsize - pendingSize;
+                        }
                     }
                 default:
                     return 0;

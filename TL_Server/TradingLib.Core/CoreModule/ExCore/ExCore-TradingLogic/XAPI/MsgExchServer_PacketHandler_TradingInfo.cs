@@ -198,6 +198,7 @@ namespace TradingLib.Core
                 response.MaxVol = size >= 0 ? size : 0;
                 response.OffsetFlag = request.OffsetFlag;
                 response.Side = request.Side;
+                response.Exchange = request.Exchange;
 
                 CacheRspResponse(response, true);
             }
