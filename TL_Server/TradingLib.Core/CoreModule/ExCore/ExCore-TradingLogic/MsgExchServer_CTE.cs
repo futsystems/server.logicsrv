@@ -125,7 +125,7 @@ namespace TradingLib.Core
             foreach (Tick k in TLCtxHelper.ModuleDataRouter.GetTickSnapshot())
             {
                 if(k!= null && k.IsValid())
-                    sb.Append(TickImpl.Serialize(k)+Environment.NewLine);
+                    sb.Append(TickImpl.Serialize2(k)+Environment.NewLine);
             }
             return sb.ToString();
         }

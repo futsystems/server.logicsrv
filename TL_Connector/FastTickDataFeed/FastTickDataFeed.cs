@@ -25,6 +25,10 @@ namespace DataFeed.FastTick
         ConfigDB _cfgdb;
         int _tickversion = 1;
 
+        string _prefixStr = string.Empty;
+        List<string> _prefixList = new List<string>();
+
+
         public FastTick()
             :base("FastTick")
         {
@@ -35,6 +39,17 @@ namespace DataFeed.FastTick
                 _cfgdb.UpdateConfig("TickServerVersion", QSEnumCfgType.Int, 1, "行情服务器版本");
             }
             _tickversion = _cfgdb["TickServerVersion"].AsInt();
+
+            if (!_cfgdb.HaveConfig("TickPrefix"))
+            {
+                _cfgdb.UpdateConfig("TickPrefix", QSEnumCfgType.String, "X, Q, F, S,", "实时行情类别");
+            }
+            _prefixStr = _cfgdb["TickPrefix"].AsString();
+            foreach (var prefix in _prefixStr.Split(' '))
+            {
+                _prefixList.Add(prefix);
+            }
+
         }
 
 
@@ -211,8 +226,8 @@ namespace DataFeed.FastTick
                     logger.Info(string.Format("Connect to FastTick Server:{0} ReqPort:{1} DataPort{2}", CurrentServer, reqport, port));
                     subscriber.Connect(subadd);
                     //订阅行情心跳数据
-                    subscriber.Subscribe(Encoding.UTF8.GetBytes("TICKHEARTBEAT"));
-                    //subscriber.SubscribeAll();
+                    subscriber.Subscribe(Encoding.UTF8.GetBytes("H,"));
+
                     _symbolreq = symbolreq;
                     _subscriber = subscriber;
 
@@ -239,20 +254,12 @@ namespace DataFeed.FastTick
                                 //清空zmessage 否则内存溢出
                                 tickdata.Clear();
 
-                                string[] p = tickstr.Split('^');
-                                if (p.Length > 1)
-                                {
-                                    string symbol = p[0];
-                                    string tickcontent = p[1];
-                                    Tick k = TickImpl.Deserialize(tickcontent);
-                                    //logger.Debug("tick date:" + k.Date + " time time:" + k.Time);
+                                //logger.Info("ticksr:" + tickstr);
+                                Tick k = TickImpl.Deserialize2(tickstr);
+                                if (k != null && k.UpdateType != "H")
                                     if (k.IsValid())
                                         NotifyTick(k);
-                                }
-                                else
-                                {
-                                    //logger.Info("tick str:" + tickstr);
-                                }
+
 
                                 //记录数据到达时间
                                 _lastheartbeat = DateTime.Now;
@@ -330,33 +337,70 @@ namespace DataFeed.FastTick
         {
             try
             {
+                //按交易所分组
+                Dictionary<string, List<Symbol>> exSymMap = new Dictionary<string, List<Symbol>>();
+                foreach (Symbol sym in symbols)
+                {
+                    
+                    List<Symbol> list = null;
+                    if (!exSymMap.TryGetValue(sym.Exchange, out list))
+                    {
+                        list = new List<Symbol>();
+                        exSymMap.Add(sym.Exchange, list);
+                    }
+                    list.Add(sym);
+                }
+                //注册交易下所有合约
+                foreach (var pair in exSymMap)
+                {
+                    MDRegisterSymbolsRequest request = RequestTemplate<MDRegisterSymbolsRequest>.CliSendRequest(0);
+                    Exchange exch = BasicTracker.ExchagneTracker[pair.Key];
+                    if (exch == null)
+                    {
+                        logger.Warn("Exchange:{0} do not exist".Put(pair.Key));
+                    }
+                    request.DataFeed = exch.DataFeed;
+                    request.Exchange = pair.Key;
+                    foreach(var sym in pair.Value)
+                    {
+                        request.SymbolList.Add(sym.GetFullSymbol());
+                        foreach (var prefix in _prefixList)
+                        {
+                            string p = prefix + sym.Symbol;
+                            _subscriber.Subscribe(Encoding.UTF8.GetBytes(p));
+                        }
+        
+                    }
+                    Send(request); //?股票为何单个注册
+                }
+
                 //TODO 更合理的方式是按交易所分组 单个交易所的行情 是统一一个行情源订阅的 这样可以实现 以交易所 批量订阅多个合约避免多次循环订阅的问题
 
                 //将合约按照行情源类型进行分组
-                Dictionary<QSEnumDataFeedTypes, List<Symbol>> map = SplitSymbolViaDataFeedType(symbols);
+                //Dictionary<QSEnumDataFeedTypes, List<Symbol>> map = SplitSymbolViaDataFeedType(symbols);
 
-                foreach (KeyValuePair<QSEnumDataFeedTypes, List<Symbol>> kv in map)
-                {
-                    //string symlist = string.Join(",", kv.Value.Select(sym=>sym.Symbol));
-                    //将合约字头逐个向publisher进行订阅
-                    foreach (Symbol s in kv.Value)
-                    {
-                        string prefix = s.Symbol + "^";
-                        _subscriber.Subscribe(Encoding.UTF8.GetBytes(prefix));//subscribe对应的symbol字头用于获得tick数据
-                    }
+                //foreach (KeyValuePair<QSEnumDataFeedTypes, List<Symbol>> kv in map)
+                //{
+                //    //string symlist = string.Join(",", kv.Value.Select(sym=>sym.Symbol));
+                //    //将合约字头逐个向publisher进行订阅
+                //    foreach (Symbol s in kv.Value)
+                //    {
+                //        string prefix = s.Symbol + "^";
+                //        _subscriber.Subscribe(Encoding.UTF8.GetBytes(prefix));//subscribe对应的symbol字头用于获得tick数据
+                //    }
 
-                    //通过FastTickServer的管理端口 请求FastTickServer向行情源订阅行情数据,Publisher的订阅是内部的一个分发订阅 不会产生向行情源订阅实际数据
-                    //注册合约协议格式 DATAFEED:SYMBOL|EXCHANGE
-                    foreach (var sym in kv.Value)
-                    {
-                        MDRegisterSymbolsRequest request = RequestTemplate<MDRegisterSymbolsRequest>.CliSendRequest(0);
-                        request.DataFeed = kv.Key;
-                        request.Exchange = sym.SecurityFamily.Exchange.EXCode;
-                        request.SymbolList.Add(sym.GetFullSymbol());
-                        Send(request); //?股票为何单个注册
-                    }
+                //    //通过FastTickServer的管理端口 请求FastTickServer向行情源订阅行情数据,Publisher的订阅是内部的一个分发订阅 不会产生向行情源订阅实际数据
+                //    //注册合约协议格式 DATAFEED:SYMBOL|EXCHANGE
+                //    foreach (var sym in kv.Value)
+                //    {
+                //        MDRegisterSymbolsRequest request = RequestTemplate<MDRegisterSymbolsRequest>.CliSendRequest(0);
+                //        request.DataFeed = kv.Key;
+                //        request.Exchange = sym.SecurityFamily.Exchange.EXCode;
+                //        request.SymbolList.Add(sym.GetFullSymbol());
+                //        //Send(request); //?股票为何单个注册
+                //    }
 
-                }
+                //}
 
                 
             }

@@ -241,7 +241,7 @@ namespace DataFeed.RandomTickFeed
                                 {
                                     string symbol = p[0];
                                     string tickcontent = p[1];
-                                    Tick k = TickImpl.Deserialize(tickcontent);
+                                    Tick k = TickImpl.Deserialize2(tickcontent);
                                     //logger.Debug("tick date:" + k.Date + " time time:" + k.Time);
                                     if (k.IsValid())
                                         NotifyTick(k);

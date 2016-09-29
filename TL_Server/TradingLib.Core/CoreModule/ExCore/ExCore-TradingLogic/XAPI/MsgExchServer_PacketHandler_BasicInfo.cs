@@ -163,52 +163,72 @@ namespace TradingLib.Core
         void SrvOnXQryTickSnapShot(XQryTickSnapShotRequest request, IAccount account)
         {
             logger.Info("XQryTickSnapShot:" + request.ToString());
-            IEnumerable<Symbol> symlist= null;
-            if (string.IsNullOrEmpty(request.Symbol))
+            Symbol sym = account.Domain.GetSymbol(request.Exchange, request.Symbol);
+            RspXQryTickSnapShotResponse response = null;
+            if (sym != null)
             {
-                symlist = account.GetSymbols().Where(sym => sym.IsTradeable);//未指定合约 则所有可交易合约
-            }
-            else
-            {
-
-                symlist = account.GetSymbols().Where(sym => sym.IsTradeable).Where(sym =>
+                Tick k = TLCtxHelper.ModuleDataRouter.GetTickSnapshot(sym.Exchange, sym.Symbol);
+                if (k != null)
                 {
-                    if (string.IsNullOrEmpty(request.Exchange))//没有设定交易所 则单独比较Symbol
-                    {
-                        return sym.Symbol == request.Symbol;
-                    }
-                    else
-                    {
-                        return sym.UniqueKey == string.Format("{0}-{1}", request.Exchange, request.Symbol);
-                    }
-                });//获得某个合约
-            }
-
-            int totalnum = symlist.Count();
-            if (totalnum > 0)
-            {
-                for (int i = 0; i < totalnum; i++)
-                {
-                    Symbol sym = symlist.ElementAt(i);
-                    Tick k = TLCtxHelper.ModuleDataRouter.GetTickSnapshot(sym.Exchange,sym.Symbol);
-                    if (k == null || !k.IsValid())
-                    {
-                        k = TLCtxHelper.ModuleSettleCentre.GetLastTickSnapshot(sym.Symbol);
-                    }
-                    if (sym.SecurityType == SecurityType.STK)
-                    {
-                        k.Type = EnumTickType.STKSNAPSHOT;
-                    }
-                    RspXQryTickSnapShotResponse response = ResponseTemplate<RspXQryTickSnapShotResponse>.SrvSendRspResponse(request);
-                    response.Tick = k;
-                    CacheRspResponse(response, i == totalnum - 1);
+                    response = ResponseTemplate<RspXQryTickSnapShotResponse>.SrvSendRspResponse(request);
+                    response.Tick = TickImpl.NewTick(k, "S");
+                    CacheRspResponse(response);
+                    return;
                 }
             }
-            else
-            {
-                RspXQryTickSnapShotResponse response = ResponseTemplate<RspXQryTickSnapShotResponse>.SrvSendRspResponse(request);
-                CacheRspResponse(response);
-            }
+
+            response = ResponseTemplate<RspXQryTickSnapShotResponse>.SrvSendRspResponse(request);
+            CacheRspResponse(response);
+            
+
+
+            //IEnumerable<Symbol> symlist= null;
+            //if (string.IsNullOrEmpty(request.Symbol))
+            //{
+            //    symlist = account.GetSymbols().Where(sym => sym.IsTradeable);//未指定合约 则所有可交易合约
+            //}
+            //else
+            //{
+            //    Symbol sym = account.Domain.GetSymbol(request.Exchange, request.Symbol);
+
+            //    symlist = account.GetSymbols().Where(sym => sym.IsTradeable).Where(sym =>
+            //    {
+            //        if (string.IsNullOrEmpty(request.Exchange))//没有设定交易所 则单独比较Symbol
+            //        {
+            //            return sym.Symbol == request.Symbol;
+            //        }
+            //        else
+            //        {
+            //            return sym.UniqueKey == string.Format("{0}-{1}", request.Exchange, request.Symbol);
+            //        }
+            //    });//获得某个合约
+            //}
+
+            //int totalnum = symlist.Count();
+            //if (totalnum > 0)
+            //{
+            //    for (int i = 0; i < totalnum; i++)
+            //    {
+            //        Symbol sym = symlist.ElementAt(i);
+            //        Tick k = TLCtxHelper.ModuleDataRouter.GetTickSnapshot(sym.Exchange,sym.Symbol);
+            //        if (k == null || !k.IsValid())
+            //        {
+            //            k = TLCtxHelper.ModuleSettleCentre.GetLastTickSnapshot(sym.Symbol);
+            //        }
+            //        if (sym.SecurityType == SecurityType.STK)
+            //        {
+            //            k.Type = EnumTickType.STKSNAPSHOT;
+            //        }
+            //        RspXQryTickSnapShotResponse response = ResponseTemplate<RspXQryTickSnapShotResponse>.SrvSendRspResponse(request);
+            //        response.Tick = k;
+            //        CacheRspResponse(response, i == totalnum - 1);
+            //    }
+            //}
+            //else
+            //{
+            //    RspXQryTickSnapShotResponse response = ResponseTemplate<RspXQryTickSnapShotResponse>.SrvSendRspResponse(request);
+            //    CacheRspResponse(response);
+            //}
         }
 
        

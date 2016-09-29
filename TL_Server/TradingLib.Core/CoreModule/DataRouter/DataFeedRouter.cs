@@ -400,7 +400,7 @@ namespace TradingLib.Core
         /// 当前订阅的Basket mb 对应的Tick 行情由TickTracker维护
         /// </summary>
         /// <returns></returns>
-        public Tick[] GetTickSnapshot()
+        public IEnumerable<Tick> GetTickSnapshot()
         {
             //if (mb.Count > 0)
             //{
@@ -516,7 +516,7 @@ namespace TradingLib.Core
                             {
                                 if (k != null && k.IsValid())
                                 {
-                                    string str = TickImpl.Serialize(k);
+                                    string str = TickImpl.Serialize2(k);
                                     sw.WriteLine(str);
                                 }
                             }
@@ -552,7 +552,7 @@ namespace TradingLib.Core
                         while (sw.Peek() > 0)
                         {
                             string str = sw.ReadLine();
-                            Tick k = TickImpl.Deserialize(str);
+                            Tick k = TickImpl.Deserialize2(str);
                             //通过缓存行情快照可以恢复到重启时间点的状态,这样浮动盈亏计算就不会应为缺失数据而计算错误，从而导致错误触发强平
                             //this.GotTick(k);//需要对外触发Tick然后驱动position的浮动盈亏
                             newtick(k, true);

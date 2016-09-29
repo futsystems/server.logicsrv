@@ -39,12 +39,12 @@ namespace TradingLib.Common
 
         public override string ResponseSerialize()
         {
-            return TickImpl.Serialize(this.TickToSend);
+            return TickImpl.Serialize2(this.TickToSend);
         }
 
         public override void ResponseDeserialize(string content)
         {
-            this.TickToSend = TickImpl.Deserialize(content);
+            this.TickToSend = TickImpl.Deserialize2(content);
         }
     }
 }

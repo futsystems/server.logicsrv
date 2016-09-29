@@ -80,14 +80,14 @@ namespace TradingLib.Common
         {
             if (this.Tick == null)
                 return string.Empty;
-            return TickImpl.Serialize(Tick);
+            return TickImpl.Serialize2(Tick);
         }
 
         public override void Deserialize(string content)
         {
             if (!string.IsNullOrEmpty(content))
             {
-                this.Tick = TickImpl.Deserialize(content);
+                this.Tick = TickImpl.Deserialize2(content);
             }
         }
     }

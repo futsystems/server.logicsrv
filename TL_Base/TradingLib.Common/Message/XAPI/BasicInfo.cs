@@ -273,7 +273,7 @@ namespace TradingLib.Common
         {
             if (this.Tick == null)
                 return string.Empty;
-            return TickImpl.Serialize(this.Tick);
+            return TickImpl.Serialize2(this.Tick);
         }
 
         public override void ResponseDeserialize(string content)
@@ -283,7 +283,7 @@ namespace TradingLib.Common
                 this.Tick = null;
                 return;
             }
-            this.Tick = TickImpl.Deserialize(content);
+            this.Tick = TickImpl.Deserialize2(content);
         }
     }
 

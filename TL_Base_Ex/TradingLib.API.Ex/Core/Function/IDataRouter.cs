@@ -38,7 +38,7 @@ namespace TradingLib.API
         /// 获得所有行情快照
         /// </summary>
         /// <returns></returns>
-        Tick[] GetTickSnapshot();
+        IEnumerable<Tick> GetTickSnapshot();
 
         /// <summary>
         /// 加载行情通道
