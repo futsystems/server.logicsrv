@@ -9,6 +9,8 @@ namespace TradingLib.Common
     /// 其实TickTracker维护了一个市场行情快照
     /// 当不同的合约有成交数据 报价数据产生时,用于更新本地行情快照 将最新的数据更新到对应的字段
     /// 当使用时 通过symbol进行索引 获得对应的行情快照
+    /// 
+    /// 这里直接使用S类型的Tick 是否会更理想，在这个数据维护器中，获得一个行情快照 需要从多个数据维护期中查找数据 效率明显比直接获取Tick对象要慢很多
     /// </summary>
     public class TickTracker : GenericTrackerI, GotTickIndicator
     {

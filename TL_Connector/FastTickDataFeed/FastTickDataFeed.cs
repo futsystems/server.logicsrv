@@ -330,6 +330,8 @@ namespace DataFeed.FastTick
         {
             try
             {
+                //TODO 更合理的方式是按交易所分组 单个交易所的行情 是统一一个行情源订阅的 这样可以实现 以交易所 批量订阅多个合约避免多次循环订阅的问题
+
                 //将合约按照行情源类型进行分组
                 Dictionary<QSEnumDataFeedTypes, List<Symbol>> map = SplitSymbolViaDataFeedType(symbols);
 
@@ -351,7 +353,7 @@ namespace DataFeed.FastTick
                         request.DataFeed = kv.Key;
                         request.Exchange = sym.SecurityFamily.Exchange.EXCode;
                         request.SymbolList.Add(sym.GetFullSymbol());
-                        Send(request);
+                        Send(request); //?股票为何单个注册
                     }
 
                 }
