@@ -145,24 +145,7 @@ namespace TradingLib.Core
             return "";
         }
 
-         [CoreCommandAttr(QSEnumCommandSource.CLI,
-                            "excludesym",
-                            "excludesym - 排除行情系统的合约",
-                            "从行情系统排除某个合约")]
-        public void ExcludeSymbol(string symbol)
-        {
-
-            TLCtxHelper.ModuleDataRouter.ExcludeSymbol(symbol);
-        }
-
-         [CoreCommandAttr(QSEnumCommandSource.CLI,
-                    "includesym",
-                    "includesym - 包含行情系统的合约",
-                    "从行情系统包含某个合约")]
-         public void IncludeSymbol(string symbol)
-         {
-             TLCtxHelper.ModuleDataRouter.IncludeSymbol(symbol);
-         }
+       
 
 
         [CoreCommandAttr(QSEnumCommandSource.CLI,

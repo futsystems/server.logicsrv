@@ -24,60 +24,21 @@ namespace TradingLib.Core
         const string CoreName = "DataFeedRouter";
         public string CoreId { get { return this.PROGRAME; } }
 
-        //TickWatcher _tickwatcher;
-        //List<MktTime> _mkttimespanlist = new List<MktTime>();
-
         ConfigDB _cfgdb;
-        int _symidlespan = 5;
-        int _massalertspan = 5;
-        int _alertspan = 10;
         public DataFeedRouter()
             : base(DataFeedRouter.CoreName)
         {
             //1.加载配置文件
             _cfgdb = new ConfigDB(DataFeedRouter.CoreName);
-            if (!_cfgdb.HaveConfig("SymbolIdleSpan"))
-            {
-                _cfgdb.UpdateConfig("SymbolIdleSpan", QSEnumCfgType.Int,10, "合约行情处于非激活状态的判定时间,多少秒后该合约判定为行情异常");
-            }
-            _symidlespan = _cfgdb["SymbolIdleSpan"].AsInt();
-
-            if (!_cfgdb.HaveConfig("MassAlertSpan"))
-            {
-                _cfgdb.UpdateConfig("MassAlertSpan", QSEnumCfgType.Int,5, "行情通道整体异常,多少秒内在行情时间端内没有任何Tick,则行情通道触发MassAlert");
-            }
-            _massalertspan = _cfgdb["MassAlertSpan"].AsInt();
-
-            if (!_cfgdb.HaveConfig("AlertSpan"))
-            {
-                _cfgdb.UpdateConfig("AlertSpan", QSEnumCfgType.Int,10, "单个合约行情异常，合约当前行情时间距离上次行情时间超过设定时间后，则触发行情Alert");
-            }
-            _alertspan = _cfgdb["AlertSpan"].AsInt();
+            
 
             _ticktracker = new TickTracker();
             asynctick = new AsyncResponse("DataFeedRouter");
             asynctick.GotTick += new TickDelegate(asynctick_GotTick);
             //建立合约列表用于记录所维护的行情数据
             mb = new SymbolBasketImpl();
-            //生成TickWatcher用于维护行情数据状态
-            //_tickwatcher = new TickWatcher(true, _ticktracker);
-
-
-            //_tickwatcher.SymbolIdleSpan = _symidlespan;//单个行情延迟5秒 则该合约处于非活动状态
-            //_tickwatcher.AlertThreshold = _alertspan;//行情时间间隔超过5秒触发报警
-            //_tickwatcher.GotAlert += new SymDelegate(_tickwatcher_GotAlert);
-            //_tickwatcher.GotFirstTick += new SymDelegate(_tickwatcher_GotFirstTick);
-
-            //_tickwatcher.MassAlertThreshold = _massalertspan;//行情整体报警 5秒内没有更新任何行情则报警
-            //_tickwatcher.GotMassAlert += new Int32Delegate(_tickwatcher_GotMassAlert);
-            //_tickwatcher.GotMassAlertCleard += new Int32Delegate(_tickwatcher_GotMassAlertCleard);
-
+            
             _snapshotcahefile = Path.Combine(new string[] { "cache", "ticksnapshot" });
-            //_mkttimespanlist.Add(new MktTime(90000, 113000));//上午 9:00:00-11:30:00
-            //_mkttimespanlist.Add(new MktTime(130000, 151500));//下午13:00:00-15:15:00
-            //_mkttimespanlist.Add(new MktTime(210000, 235959));//夜盘23:59:59秒
-            //_mkttimespanlist.Add(new MktTime(0, 23000));//凌晨00:00:00-2:30:00
-
             //订阅重置事件
             TLCtxHelper.EventSystem.SettleResetEvent += new EventHandler<SystemEventArgs>(EventSystem_SettleResetEvent);
 
@@ -113,123 +74,6 @@ namespace TradingLib.Core
 
         }
         
-        #region 行情自我诊断与维护系统
-
-        /* 行情监控系统
-         * 1.在设定的开始于结束时间段内 如果最新行情时间与当前时间偏差达到设定阀值时 触发行情异常警报 如果行情恢复 则警报解除
-         * 2.在某个交易时间段前更新时间段 准备等待行情
-         * 
-         * 
-         * 
-         * 
-         * 
-         * */
-        /// <summary>
-        /// 更新当前行情时间段
-        /// </summary>
-        //[TaskAttr("更新TickWatcher", 1, 0, "自动更新TickWatch时间段设置")]
-        //public void Task_UpdateTickWatcher()
-        //{
-        //    bool isinspan = false;
-        //    foreach (MktTime t in _mkttimespanlist)
-        //    {
-        //        //如果当前时间在某个时间段内，则更新tickwatcher的开始与结束时间
-        //        if(t.IsInSpan(Util.ToTLTime()))
-        //        {
-        //            isinspan = true;
-        //            //如果TickWatcher没有设定开始于结束时间 则设定
-        //            if (!_tickwatcher.TimeSpanSetted)
-        //            {
-        //                Util.Warn("Now we are in Tick TimeSpan,but have not set TickWatcher,set TimeSpan as:" + t.ToString());
-        //                _tickwatcher.UpdateTimeSpan(t.StartTime, t.EndTime);
-        //            }
-        //        }
-        //    }
-        //    //debug("now:" + Util.ToTLTime() + " inspan:" + isinspan.ToString(), QSEnumDebugLevel.INFO);
-        //    //如果不在时间段内 则需要判断当前时间 是否是某个时间段的前5秒,在某个时间段的前30秒更新TickWatcher的TimeSpan
-        //    if (!isinspan)
-        //    {
-        //        bool preset = false;
-        //        foreach (MktTime t in _mkttimespanlist)
-        //        {
-        //            int diff = t.StartDiff;//距离开始还有多少秒
-        //            //Util.Debug("Time diff  Now:" + now.ToString() + " Start:" + t.StartTime.ToString() + " Diff:" + diff.ToString(), QSEnumDebugLevel.WARNING);
-        //            if (diff<=5)
-        //            {
-        //                preset = true;
-        //                if (!_tickwatcher.TimeSpanSetted || (_tickwatcher.TimeSpanSetted && (_tickwatcher.StartAlertTime != t.StartTime || _tickwatcher.StopAlertTime != t.EndTime)))
-        //                {
-        //                    Util.Warn("Tick will come in less than 5 secends,set TimeSpan first:" + t.ToString());
-        //                    _tickwatcher.UpdateTimeSpan(t.StartTime, t.EndTime);
-        //                }
-                        
-                        
-        //                //debug(t.ToString() + " will be active in less than 30s.. diff:"+diff.ToString(), QSEnumDebugLevel.WARNING);
-        //            }
-        //        }
-        //        //如果不再行情覆盖时间段内
-        //        if (!preset && _tickwatcher.TimeSpanSetted)
-        //        {
-        //            logger.Warn("we are levae Tick TimeSpan ,reset TickWatcher");
-        //            _tickwatcher.Reset();
-        //        }
-        //    }
-            
-        //}
-
-        ///// <summary>
-        ///// 行情异常解除
-        ///// </summary>
-        ///// <param name="val"></param>
-        //void _tickwatcher_GotMassAlertCleard(int val)
-        //{
-        //    logger.Warn("MassAlart cleard, the latest tick time:" + val.ToString());
-        //}
-
-        ///// <summary>
-        ///// 行情异常报警
-        ///// 报警后我们要执行相关任务 比如重启行情通道等
-        ///// </summary>
-        ///// <param name="val"></param>
-        //void _tickwatcher_GotMassAlert(int val)
-        //{
-        //    logger.Warn("MassAlert," + "the latest tick time:" + _tickwatcher.RecentTime.ToString() + " there is no tick in " + _tickwatcher.MassAlertThreshold.ToString() + " secends");
-            
-        //    /* 如果我们在夜盘没有订阅任何数据 则接口会一直重启
-        //    IDataFeed df = TLCtxHelper.Ctx.RouterManager.DefaultDataFeed;
-        //    debug("Reconnect Default DataFeed:"+df.Token, QSEnumDebugLevel.INFO);
-        //    if (df != null)
-        //    {
-        //        if (df.IsLive)
-        //        {
-        //            df.Stop();
-        //            Util.sleep(500);
-        //        }
-        //        df.Start();
-        //    }
-        //    **/
-        //}
-
-        ///// <summary>
-        ///// 首个行情到达
-        ///// </summary>
-        ///// <param name="sym"></param>
-        //void _tickwatcher_GotFirstTick(string sym)
-        //{
-        //    logger.Info("symbol:" + sym + "'s tick first arive..");
-        //}
-
-        ///// <summary>
-        ///// 单个行情延迟警报
-        ///// </summary>
-        ///// <param name="sym"></param>
-        //void _tickwatcher_GotAlert(string sym)
-        //{
-        //    logger.Warn("symbol:" + sym + " have no tick in " + _tickwatcher.AlertThreshold.ToString() + " secends.");
-        //}
-
-        #endregion
-
 
         /// <summary>
         /// 加载行情通道
@@ -239,9 +83,15 @@ namespace TradingLib.Core
         public void LoadDataFeed(IDataFeed datafeed)
         { 
             //将数据通道的Tick转发到datafeedrouter然后再转发到TradingServer
-            logger.Info("load datafeed:xxxxxxxxxxxxxxxxxxxxxx");
+            logger.Info("Load datafeed:"+datafeed.Name);
             datafeed.GotTickEvent +=new TickDelegate(GotTick);
             datafeed.Connected += new IConnecterParamDel(datafeed_Connected);
+            datafeed.Disconnected += new IConnecterParamDel(datafeed_Disconnected);
+            
+        }
+
+        void datafeed_Disconnected(string tocken)
+        {
             
         }
 
@@ -402,23 +252,7 @@ namespace TradingLib.Core
         /// <returns></returns>
         public IEnumerable<Tick> GetTickSnapshot()
         {
-            //if (mb.Count > 0)
-            //{
-            //    string[] syms = mb.ToSymArray();
-            //    List<Tick> ticks = new List<Tick>();
-
-            //    foreach (string sym in syms)
-            //    {
-            //        Tick k = _ticktracker[sym];
-            //        if (k.IsValid())
-            //            ticks.Add(k);
-            //    }
-            //    return ticks.ToArray();
-            //}
-            //else
-            //{
-                return _ticktracker.GetTicks();
-            //}
+            return _ticktracker.GetTicks();
         }
 
         /// <summary>
@@ -429,29 +263,6 @@ namespace TradingLib.Core
         public Tick GetTickSnapshot(string exchange,string symbol)
         {
             return _ticktracker[exchange,symbol];
-        }
-
-        /// <summary>
-        /// 判定某个合约的市场行情是否处于活动状态
-        /// 合约行情故障类型
-        /// 1.行情整体没有获得过任何行情 live为false
-        /// 2.当前行情整体处于报警状态
-        /// 3.单个合约 行情严重延迟
-        /// 在不同的行情时间端内切换时,是否工作正常。比如live状态如何重置
-        /// </summary>
-        /// <param name="symbol"></param>
-        /// <returns></returns>
-        public bool IsTickLive(string symbol)
-        {
-            //debug("tickwatch live:" + _tickwatcher.isLive.ToString() + " massalert:" + _tickwatcher.isMassAlerting.ToString() + " symbollive:" + _tickwatcher.IsSymbolTickLive(symbol).ToString(),QSEnumDebugLevel.INFO);
-            //if (!_tickwatcher.isLive) return false;//如果行情整体处于idle状态则 单个合约一定处于非活动状态
-            //如果处于行情整体报警状态 则处于非活动状态
-            //if (_tickwatcher.isMassAlerting)
-            //{
-            //    return false;
-            //}
-            //return _tickwatcher.IsSymbolTickLive(symbol);
-            return true;
         }
 
         //TODO SymbolKey
@@ -495,8 +306,6 @@ namespace TradingLib.Core
 
         #region 将行情快照保存到本地文件 用于服务器恢复是获得当前数据
         string _snapshotcahefile = "";
-        //const string basketfn = @"cache\basket";
-
         DateTime _lastsnapshottime = DateTime.Now;
 
         [TaskAttr("保存行情快照", 30, 0, "保存行情路由系统的行情快照,用于系统崩溃胡快速重启恢复到最近的行情数据,没有行情数据风控系统可能会出现错误平仓")]
@@ -633,25 +442,10 @@ namespace TradingLib.Core
             //历史结算不响应外部行情数据
             if (TLCtxHelper.ModuleSettleCentre.SettleMode == QSEnumSettleMode.LiveMode)
             {
-                //利用异步处理tick组件来接受并处理tick数据,这样当有多个数据源时,就不会存在线程问题。
-                //在asynctick中统一缓存然后由唯一的线程对外发送tick数据
-                //debug("datafeed got tick ??????????????", QSEnumDebugLevel.INFO);
                 asynctick.newTick(k);
             }
         }
 
-        public void ExcludeSymbol(string symbol)
-        {
-            if (!excludesymbol.Contains(symbol))
-                excludesymbol.Add(symbol);
-        }
-
-        public void IncludeSymbol(string symbol)
-        {
-            if (excludesymbol.Contains(symbol))
-                excludesymbol.Remove(symbol);
-        }
-        List<string> excludesymbol = new List<string>();
 
         Dictionary<string, SymbolImpl> _monthSymbolPair = null;
         bool _cacheMonthSymbol = false;
@@ -659,10 +453,9 @@ namespace TradingLib.Core
         //维持了其他基于tick数据操作的线程安全 因为有多个datafeed时完全有可能在同一时刻有2个线程在调用ontick函数
         void asynctick_GotTick(Tick k)
         {
-            if (excludesymbol.Contains(k.Symbol))
-                return;
-            //debug("it is tick here..............", QSEnumDebugLevel.INFO);
+          
             newtick(k, false);
+
             if(_monthSymbolPair == null && !_cacheMonthSymbol)
             {
                 _cacheMonthSymbol = true;
@@ -687,7 +480,6 @@ namespace TradingLib.Core
 
         void newtick(Tick k,bool ishist=false)
         {
-            //debug("got tick:" + TickImpl.Serialize(k), QSEnumDebugLevel.INFO);
             try
             {
                 if (GlobalConfig.IsDevelop)//如果处于开发环境则需要替换行情的时间
@@ -698,17 +490,8 @@ namespace TradingLib.Core
 
                 _ticktracker.GotTick(k);//维护每个symbol的tick快照
 
-                //如果是历史行情加载，tickwatcher不用监控该tick
-                //if(!ishist)
-                    //_tickwatcher.GotTick(k);
-
                 TLCtxHelper.EventRouter.FireTickEvent(k);
 
-                //if (GotTickEvent != null)
-                //{
-                    //debug("fire raw tick event", QSEnumDebugLevel.INFO);
-                //    GotTickEvent(k);
-                //}
             }
             catch (Exception ex)
             {
@@ -728,14 +511,12 @@ namespace TradingLib.Core
         {
             Util.StartStatus(this.PROGRAME);
             asynctick.Start();
-            //_tickwatcher.Start();
         }
 
         public void Stop()
         {
             Util.StopStatus(this.PROGRAME);
             asynctick.Stop();
-            //_tickwatcher.Stop();
         }
 
         public override void Dispose()
@@ -743,11 +524,6 @@ namespace TradingLib.Core
             Util.DestoryStatus(this.PROGRAME);
             base.Dispose();
             asynctick.GotTick -= new TickDelegate(asynctick_GotTick);
-            //_tickwatcher.GotAlert -= new SymDelegate(_tickwatcher_GotAlert);
-            //_tickwatcher.GotFirstTick -= new SymDelegate(_tickwatcher_GotFirstTick);
-
-            //_tickwatcher.GotMassAlert -= new Int32Delegate(_tickwatcher_GotMassAlert);
-            //_tickwatcher.GotMassAlertCleard -= new Int32Delegate(_tickwatcher_GotMassAlertCleard);
         }
 
     }

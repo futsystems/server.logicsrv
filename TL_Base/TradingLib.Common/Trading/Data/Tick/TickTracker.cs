@@ -153,7 +153,7 @@ namespace TradingLib.Common
                         snapshot.AskExchange = k.AskExchange;
 
                         snapshot.BidPrice = k.BidPrice;
-                        snapshot.BidPrice = k.BidSize;
+                        snapshot.BidSize = k.BidSize;
                         snapshot.BidExchange = k.BidExchange;
 
                         snapshot.AskPrice2 = k.AskPrice2;

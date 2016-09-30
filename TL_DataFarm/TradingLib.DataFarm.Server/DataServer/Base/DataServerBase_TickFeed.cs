@@ -134,7 +134,7 @@ namespace TradingLib.Common.DataFarm
         /// <summary>
         /// 合约快照维护期
         /// </summary>
-        TickTracker tickTracker = new TickTracker(1000);
+        TickTracker tickTracker = new TickTracker();
 
         void asyncTick_GotTick(Tick k)
         {

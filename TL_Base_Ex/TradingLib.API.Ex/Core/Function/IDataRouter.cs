@@ -30,9 +30,6 @@ namespace TradingLib.API
         /// <returns></returns>
         decimal GetAvabilePrice(string exchange,string symbol);
 
-        void ExcludeSymbol(string symbol);
-
-        void IncludeSymbol(string symbol);
 
         /// <summary>
         /// 获得所有行情快照
