@@ -115,6 +115,10 @@ namespace TradingLib.Common
                 //更新
                 target.Name = t.Name;
                 target.Description = t.Description;
+                target.STKCommissioinRate = t.STKCommissioinRate;
+                target.STKTransferFee = t.STKStampTaxRate;
+                target.STKStampTaxRate = t.STKStampTaxRate;
+
                 ORM.MCommission.UpdateCommissionTemplate(target);
             }
             else
@@ -125,6 +129,10 @@ namespace TradingLib.Common
                 target.Description = t.Description;
                 target.Domain_ID = t.Domain_ID;
                 target.Manager_ID = t.Manager_ID;
+                target.STKCommissioinRate = t.STKCommissioinRate;
+                target.STKTransferFee = t.STKStampTaxRate;
+                target.STKStampTaxRate = t.STKStampTaxRate;
+
 
                 ORM.MCommission.InsertCommissionTemplate(target);
                 //放入内存数据结构
@@ -163,27 +171,27 @@ namespace TradingLib.Common
                     }
 
                     //添加股票手续费项
-                    foreach (SecurityFamilyImpl sec in domain.GetSecurityFamilies().Where(sec => sec.Type == SecurityType.STK))
-                    {
-                        CommissionTemplateItem item = new CommissionTemplateItem();
-                        item.Code = sec.Code;
-                        item.Month = 0;
-                        item.OpenByMoney = 0;
-                        item.OpenByVolume = 0;
-                        item.CloseByMoney = 0;
-                        item.CloseByVolume = 0;
-                        item.CloseTodayByMoney = 0;
-                        item.CloseTodayByVolume = 0;
-                        item.ChargeType = QSEnumChargeType.Relative;
-                        item.Template_ID = target.ID;
-                        item.Percent = 0;
-                        item.SecurityType = SecurityType.STK;
-                        ORM.MCommission.InsertCommissionTemplateItem(item);
+                    //foreach (SecurityFamilyImpl sec in domain.GetSecurityFamilies().Where(sec => sec.Type == SecurityType.STK))
+                    //{
+                    //    CommissionTemplateItem item = new CommissionTemplateItem();
+                    //    item.Code = sec.Code;
+                    //    item.Month = 0;
+                    //    item.OpenByMoney = 0;
+                    //    item.OpenByVolume = 0;
+                    //    item.CloseByMoney = 0;
+                    //    item.CloseByVolume = 0;
+                    //    item.CloseTodayByMoney = 0;
+                    //    item.CloseTodayByVolume = 0;
+                    //    item.ChargeType = QSEnumChargeType.Relative;
+                    //    item.Template_ID = target.ID;
+                    //    item.Percent = 0;
+                    //    item.SecurityType = SecurityType.STK;
+                    //    ORM.MCommission.InsertCommissionTemplateItem(item);
 
-                        //加入到内存数据结构
-                        commissionTemplateItemMap.TryAdd(item.ID, item);
-                        target.AddItem(item);
-                    }
+                    //    //加入到内存数据结构
+                    //    commissionTemplateItemMap.TryAdd(item.ID, item);
+                    //    target.AddItem(item);
+                    //}
                 }
                 
             }

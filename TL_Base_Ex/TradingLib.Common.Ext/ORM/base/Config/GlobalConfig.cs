@@ -141,6 +141,15 @@ namespace TradingLib.Common
             {
                 config.UpdateConfig("STKStampTaxRate", QSEnumCfgType.Decimal, 0.001, "股票印花税率");
             }
+            if (!config.HaveConfig("STKCommissionRate"))
+            {
+                config.UpdateConfig("STKCommissionRate", QSEnumCfgType.Decimal, 0.0003, "股票交易手续费");
+            }
+            if (!config.HaveConfig("STKTransferFee"))
+            {
+                config.UpdateConfig("STKTransferFee", QSEnumCfgType.Decimal,1, "股票过户费");
+            }
+
         }
 
         /// <summary>
@@ -151,6 +160,28 @@ namespace TradingLib.Common
             get
             {
                 return defaultinstance.config["STKStampTaxRate"].AsDecimal();
+            }
+        }
+
+        /// <summary>
+        /// 股票交易手续费
+        /// </summary>
+        public static decimal STKCommissionRate
+        {
+            get
+            {
+                return defaultinstance.config["STKCommissionRate"].AsDecimal();
+            }
+        }
+
+        /// <summary>
+        /// 股票过户费
+        /// </summary>
+        public static decimal STKTransferFee
+        {
+            get
+            {
+                return defaultinstance.config["STKTransferFee"].AsDecimal();
             }
         }
 

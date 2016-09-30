@@ -34,6 +34,25 @@ namespace TradingLib.Common
         public int Manager_ID { get; set; }
 
 
+        /// <summary>
+        /// 股票交易手续费率
+        /// </summary>
+        public decimal STKCommissioinRate { get; set; }
+
+
+        /// <summary>
+        /// 过户费率
+        /// </summary>
+        public decimal STKTransferFee { get; set; }
+
+
+        /// <summary>
+        /// 印花税率
+        /// </summary>
+        public decimal STKStampTaxRate { get; set; }
+
+
+
         public override string ToString()
         {
             return this.Name;

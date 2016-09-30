@@ -21,7 +21,7 @@ namespace TradingLib.ORM
         {
             using (DBMySql db = new DBMySql())
             {
-                string query = string.Format("UPDATE cfg_commission_template SET name='{0}',description='{1}' WHERE id='{2}'", t.Name, t.Description, t.ID);
+                string query = string.Format("UPDATE cfg_commission_template SET name='{0}',description='{1}',stkcommissionrate='{3}',stktransferfee='{4}',stkstamptaxrate='{5}' WHERE id='{2}'", t.Name, t.Description, t.ID,t.STKCommissioinRate,t.STKTransferFee,t.STKStampTaxRate);
                 db.Connection.Execute(query);
             }
         }
@@ -50,7 +50,7 @@ namespace TradingLib.ORM
         {
             using (DBMySql db = new DBMySql())
             {
-                string query = string.Format("INSERT INTO cfg_commission_template (`name`,`description`,`domain_id`,`manager_id`) VALUES ( '{0}','{1}','{2}','{3}')", t.Name, t.Description, t.Domain_ID,t.Manager_ID);
+                string query = string.Format("INSERT INTO cfg_commission_template (`name`,`description`,`domain_id`,`manager_id`,`stkcommissionrate`,`stktransferfee`,`stkstamptaxrate`) VALUES ( '{0}','{1}','{2}','{3}','{4}','{5}','{6}')", t.Name, t.Description, t.Domain_ID, t.Manager_ID, t.STKCommissioinRate, t.STKTransferFee, t.STKStampTaxRate);
                 int row = db.Connection.Execute(query);
                 SetIdentity(db.Connection, id => t.ID = id, "id", "cfg_commission_template");
             }

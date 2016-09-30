@@ -68,6 +68,14 @@ namespace TradingLib.Common
         /// <returns></returns>
         public static decimal CalCommission(this IAccount account, Trade f)
         {
+            //股票通过交易手续费计算
+            if (f.oSymbol.SecurityFamily.Type == SecurityType.STK)
+            {
+                CommissionTemplate template = account.GetCommissionTemplate();
+                return f.GetAmount() * (template == null ? GlobalConfig.STKCommissionRate : template.STKCommissioinRate / 10000);
+            }
+
+
             //计算标准手续费
             decimal basecommission = f.oSymbol.CalcBaseCommission(f);
 
@@ -107,10 +115,11 @@ namespace TradingLib.Common
             //股票计算印花税
             if (f.oSymbol.SecurityFamily.Type == SecurityType.STK)
             {
+                CommissionTemplate template = account.GetCommissionTemplate();
                 //平仓才收取印花税
                 if (!f.IsEntryPosition)
                 {
-                    return f.GetAmount() * GlobalConfig.STKStampTaxRate;
+                    return f.GetAmount() * (template == null ? GlobalConfig.STKStampTaxRate : template.STKStampTaxRate / 10000);
                 }
             }
             return 0;
@@ -126,9 +135,10 @@ namespace TradingLib.Common
         {
             if (f.oSymbol.SecurityFamily.Type == SecurityType.STK)
             {
-                //每1000手收取1元,不足1元按1元收取
-                int t = (f.UnsignedSize / 100) + f.UnsignedSize % 1000 > 0 ? 1 : 0;
-                return t * 1;
+                CommissionTemplate template = account.GetCommissionTemplate();
+                //每1000股收取1元,不足1元按1元收取
+                int t = (f.UnsignedSize / 1000) + f.UnsignedSize % 1000 > 0 ? 1 : 0;
+                return t * (template == null ? GlobalConfig.STKTransferFee : template.STKTransferFee);
             }
             return 0;
         }
