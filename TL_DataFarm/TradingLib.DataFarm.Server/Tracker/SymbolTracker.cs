@@ -266,22 +266,10 @@ namespace TradingLib.Common.DataFarm
         public void UpdateSymbol(SymbolImpl sym, bool updateall = true)
         {
             SymbolImpl target = null;
-            if (symcodemap.TryGetValue(sym.Symbol, out target))//已经存在该合约
+            if (symcodemap.TryGetValue(sym.UniqueKey, out target))//已经存在该合约
             {
-
-                if (updateall)
-                {
-                    target.EntryCommission = sym._entrycommission;
-                    target.ExitCommission = sym._exitcommission;
-
-                    target.Margin = sym._margin;
-                    target.ExtraMargin = sym._extramargin;
-                    target.MaintanceMargin = sym._maintancemargin;
-
-                    target.Tradeable = sym.Tradeable;//更新交易标识
-                    //target.ExpireMonth = sym.ExpireMonth;
-                }
                 target.ExpireDate = sym.ExpireDate;
+                target.Month = SymbolImpl.GetMonthFromExpireDate(target.ExpireDate);
 
                 ORM.MBasicInfo.UpdateSymbol(target);
 
@@ -290,32 +278,36 @@ namespace TradingLib.Common.DataFarm
             {
                 target = new SymbolImpl();
                 target.Symbol = sym.Symbol;
-                target.Domain_ID = sym.Domain_ID;//更新域
-                target.EntryCommission = sym._entrycommission;
-                target.ExitCommission = sym._exitcommission;
-                target.Margin = sym._margin;
-                target.ExtraMargin = sym._extramargin;
-                target.MaintanceMargin = sym._maintancemargin;
+                target.Domain_ID = 1;//更新域
+                target.EntryCommission = 0;
+                target.ExitCommission = 0;
+                target.Margin = 0;
+                target.ExtraMargin = 0;
+                target.MaintanceMargin = 0;
                 target.Strike = sym.Strike;
                 target.OptionSide = sym.OptionSide;
-                //target.ExpireMonth = sym.ExpireMonth;
                 target.ExpireDate = sym.ExpireDate;
+                target.Month = SymbolImpl.GetMonthFromExpireDate(target.ExpireDate);
 
                 target.security_fk = sym.security_fk;
                 target.SecurityFamily =MDBasicTracker.SecurityTracker[target.security_fk];
+
                 target.underlaying_fk = sym.underlaying_fk;
                 target.ULSymbol =MDBasicTracker.SymbolTracker[target.underlaying_fk] as SymbolImpl;
+
                 target.underlayingsymbol_fk = sym.underlayingsymbol_fk;
                 target.UnderlayingSymbol =MDBasicTracker.SymbolTracker[target.underlayingsymbol_fk] as SymbolImpl;
-                target.Tradeable = sym.Tradeable;//更新交易标识
+
+                target.Tradeable = true;
 
                 if (target.security_fk == 0 || target.SecurityFamily == null)
                 {
                     Util.Debug("合约对象没有品种数据,不插入该合约信息");
                 }
+
                 ORM.MBasicInfo.InsertSymbol(target);
 
-                symcodemap[target.Symbol] = target;
+                symcodemap[target.UniqueKey] = target;
                 idxcodemap[target.ID] = target;
 
                 sym.ID = target.ID;

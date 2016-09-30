@@ -115,9 +115,15 @@ namespace TradingLib.Common.DataFarm
                 _prefixList.Add(prefix);
                 tickfeed.Register(Encoding.UTF8.GetBytes(prefix));
             }
-            IEnumerable<string> symbols = MDBasicTracker.SymbolTracker.Symbols.Where(sym=>sym.Exchange=="NYMEX").Select(sym=>sym.Symbol);
-            tickfeed.RegisterSymbols(QSEnumDataFeedTypes.IQFEED, "NYMEX", symbols.ToList());
+            //IEnumerable<string> symbols = MDBasicTracker.SymbolTracker.Symbols.Where(sym=>sym.Exchange=="NYMEX").Select(sym=>sym.Symbol);
+            //tickfeed.RegisterSymbols(QSEnumDataFeedTypes.IQFEED, "NYMEX", symbols.ToList());
 
+            foreach (var g in MDBasicTracker.SymbolTracker.Symbols.GroupBy(sym => sym.Exchange))
+            { 
+                IExchange exch = MDBasicTracker.ExchagneTracker[g.Key];
+                List<Symbol> list = g.ToList<Symbol>();
+                tickfeed.RegisterSymbols(exch, list);
+            }
         }
 
         /// <summary>

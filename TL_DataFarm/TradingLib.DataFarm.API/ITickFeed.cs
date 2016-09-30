@@ -38,6 +38,8 @@ namespace TradingLib.DataFarm.API
         /// <param name="symbols"></param>
         void RegisterSymbols(QSEnumDataFeedTypes feed, string exchange, List<string> symbols);
 
+
+        void RegisterSymbols(IExchange exch, List<Symbol> symbols);
         /// <summary>
         /// 行情到达事件
         /// </summary>

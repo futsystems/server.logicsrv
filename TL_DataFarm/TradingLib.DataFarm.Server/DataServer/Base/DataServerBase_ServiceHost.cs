@@ -198,6 +198,10 @@ namespace TradingLib.Common.DataFarm
                     SrvOnMDDemoTick(host, conn, packet as MDDemoTickRequest);
                     break;
 
+                //更新合约
+                case MessageTypes.MGRUPDATESYMBOL:
+                    SrvOnMGRUpdateSymbol(host, conn, packet as MGRUpdateSymbolRequest);
+                    break;
                 
                 #region 管理操作
                 case MessageTypes.MGRCONTRIBREQUEST:

@@ -594,5 +594,15 @@ namespace TradingLib.Common
             this.Name = rec[16];
             this._exitcommissiontoday = decimal.Parse(rec[17]);
         }
+
+        /// <summary>
+        /// 从到期日获得该合约月份
+        /// </summary>
+        /// <param name="expiredate"></param>
+        /// <returns></returns>
+        public static string GetMonthFromExpireDate(int expiredate)
+        {
+            return expiredate.ToString().Substring(4,2);
+        }
     }
 }

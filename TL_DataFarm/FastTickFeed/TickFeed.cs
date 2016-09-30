@@ -241,6 +241,38 @@ namespace TradingLib.DataFarm
                 Send(request);
             }
         }
+
+        /// <summary>
+        /// 注册市场数据
+        /// </summary>
+        /// <param name="symbols"></param>
+        public void RegisterSymbols(IExchange exch,List<Symbol> symbols)
+        {
+            try
+            {
+               
+                    MDRegisterSymbolsRequest request = RequestTemplate<MDRegisterSymbolsRequest>.CliSendRequest(0);
+
+                    request.DataFeed = exch.DataFeed;
+                    request.Exchange = exch.EXCode;
+                    foreach (var sym in symbols)
+                    {
+                        request.SymbolList.Add(sym.GetFullSymbol());
+                        //foreach (var prefix in _prefixList)
+                        //{
+                        //    string p = prefix + sym.Symbol;
+                        //    _subscriber.Subscribe(Encoding.UTF8.GetBytes(p));
+                        //}
+
+                    }
+                    Send(request); //?股票为何单个注册
+                
+            }
+            catch (Exception ex)
+            {
+                logger.Error(":请求市场数据异常" + ex.ToString());
+            }
+        }
         void Send(IPacket packet)
         {
             if (_symbolreq != null)
