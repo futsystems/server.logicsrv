@@ -192,8 +192,6 @@ namespace TradingLib.Core
             else
             {
                 int size = account.CanOpenSize(symbol, request.Side, request.OffsetFlag);
-
-                logger.Info("got max opensize:" + size.ToString());
                 response.Symbol = request.Symbol;
                 response.MaxVol = size >= 0 ? size : 0;
                 response.OffsetFlag = request.OffsetFlag;

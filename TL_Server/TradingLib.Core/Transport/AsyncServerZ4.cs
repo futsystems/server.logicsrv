@@ -413,12 +413,12 @@ namespace TradingLib.Core
                             {
                                 if (incoming[0] != null)
                                 {
-                                    v("front recv msg");
+                                    //v("front recv msg");
                                     backend.Send(incoming[0]);
                                 }
                                 if (incoming[1] != null)
                                 {
-                                    v("backend recv msg");
+                                    //v("backend recv msg");
                                     frontend.Send(incoming[1]);
                                 }
                                 if (incoming[2] != null)
@@ -530,7 +530,7 @@ namespace TradingLib.Core
                 {
                     try
                     {
-                        v(string.Format("Worker {0} wait message", id));
+                        //v(string.Format("Worker {0} wait message", id));
                         if (null == (request = worker.ReceiveMessage(out error)))
                         {
                             if (error == ZError.ETERM)
@@ -542,9 +542,9 @@ namespace TradingLib.Core
                         }
                         else
                         {
-                            v(string.Format("Worker {0} recv message", id));
+                            //v(string.Format("Worker {0} recv message", id));
                             WorkTaskProc(worker, request, id);
-                            v(string.Format("Worker {0} finish", id));
+                            //v(string.Format("Worker {0} finish", id));
                         }
 
                     }
@@ -617,13 +617,13 @@ namespace TradingLib.Core
                 //timeout.MessageHandler = () =>
                 //{
                     //3.消息处理如果解析出来的消息是有效的则丢入处理流程进行处理，如果无效则不处理
-                    handleMessage(msg.Type, msg.Content, front, address);
-                //};
-                //bool re = timeout.DoWithTimeout(WorkerTimeOut);
-                //if (re)
-                {
-                //    logger.Warn(string.Format("Wroker:{0}  Handle Message TimeOut, type:{1} content:{2}",id, msg.Type, msg.Content));
-                }
+                handleMessage(msg.Type, msg.Content, front, address);
+                ////};
+                ////bool re = timeout.DoWithTimeout(WorkerTimeOut);
+                ////if (re)
+                //{
+                ////    logger.Warn(string.Format("Wroker:{0}  Handle Message TimeOut, type:{1} content:{2}",id, msg.Type, msg.Content));
+                //}
 
             }
         }
