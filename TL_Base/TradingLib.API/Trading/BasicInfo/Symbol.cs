@@ -16,11 +16,6 @@ namespace TradingLib.API
         /// </summary>
         string Symbol { get; set; }
 
-        /// <summary>
-        /// 计价合约,异化合约不存在对应的合约行情
-        /// 需要通过底层合约获得对应的行情合约
-        /// </summary>
-        string TickSymbol { get; }
 
         /// <summary>
         /// 底层合约用于异化合约的生成
@@ -85,7 +80,9 @@ namespace TradingLib.API
         /// </summary>
         CurrencyType Currency { get; }
        
-
+        /// <summary>
+        /// 交易所
+        /// </summary>
         string Exchange { get; }
 
         /// <summary>

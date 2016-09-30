@@ -168,51 +168,7 @@ namespace TradingLib.Core
                             SrvOnMGRResumeAccount(packet as MGRResumeAccountRequest, session, manager);
                             break;
                         }
-                    //case MessageTypes.MGRQRYACCOUNTINFO://查询帐户信息
-                    //    {
-                    //        SrvOnMGRQryAccountInfo(packet as MGRQryAccountInfoRequest, session, manager);
-                    //        break;
-                    //    }
-                    //case MessageTypes.MGRCASHOPERATION://出入金操作
-                    //    {
-                    //        SrvOnMGRCashOperation(packet as MGRCashOperationRequest, session, manager);
-                    //        break;
-                    //    }
-                    //case MessageTypes.MGRUPDATEACCOUNTCATEGORY://更新帐户类别
-                    //    {
-                    //        SrvOnMGRUpdateAccountCategory(packet as MGRUpdateCategoryRequest, session, manager);
-                    //        break;
-                    //    }
-                    //case MessageTypes.MGRUPDATEACCOUNTEXECUTE://更新帐户执行权限
-                    //    {
-                    //        SrvOnMGRUpdateAccountExecute(packet as MGRUpdateExecuteRequest, session, manager);
-                    //        break;
-                    //    }
-                    //case MessageTypes.MGRUPDATEACCOUNTINTRADAY://更新日内交易权限
-                    //    {
-                    //        SrvOnMGRUpdateAccountIntraday(packet as MGRUpdateIntradayRequest, session, manager);
-                    //        break;
-                    //    }
-                    //case MessageTypes.MGRUPDATEACCOUNTROUTETRANSFERTYPE://更新路由类别哦
-                    //    {
-                    //        SrvOnMGRUpdateRouteType(packet as MGRUpdateRouteTypeRequest, session, manager);
-                    //        break;
-                    //    }
-                    //case MessageTypes.MGROPENCLEARCENTRE://请求开启清算中心
-                    //    {
-                    //        SrvOnMGROpenClearCentre(packet as MGRReqOpenClearCentreRequest, session, manager);
-                    //        break;
-                    //    }
-                    //case MessageTypes.MGRCLOSECLEARCENTRE://请求关闭清算中心
-                    //    {
-                    //        SrvOnMGRCloseClearCentre(packet as MGRReqCloseClearCentreRequest, session, manager);
-                    //        break;
-                    //    }
-                    //case MessageTypes.MGRADDACCOUNT://请求添加交易帐号
-                    //    {
-                    //        SrvOnMGRAddAccount(packet as MGRAddAccountRequest, session, manager);
-                    //        break;
-                    //    }
+                
                     case MessageTypes.MGRQRYEXCHANGE://请求查询交易所
                         {
                             SrvOnMGRQryExchange(packet as MGRQryExchangeRequuest, session, manager);
@@ -274,6 +230,7 @@ namespace TradingLib.Core
                     //        SrvOnMGRDelRuleItem(packet as MGRDelRuleItemRequest, session, manager);
                     //        break;
                     //    }
+
                     case MessageTypes.MGRQRYORDER://请求查询历史委托
                         {
                             SrvOnMGRQryOrder(packet as MGRQryOrderRequest, session, manager);

@@ -13,6 +13,12 @@ namespace TradingLib.Common
     public class SymbolImpl:Symbol
     {
 
+        /// <summary>
+        /// 数据库序号
+        /// </summary>
+        public int ID { get; set; }
+
+
         string _uniqueKey = string.Empty;
         /// <summary>
         /// 唯一键
@@ -21,16 +27,9 @@ namespace TradingLib.Common
         {
             get 
             {
-                //return _uniqueKey; 
                 return string.Format("{0}-{1}",Exchange,Symbol);
             }
         }
-
-
-        /// <summary>
-        /// 数据库序号
-        /// </summary>
-        public int ID { get; set; }
 
 
         string _symbol = string.Empty;
@@ -38,20 +37,12 @@ namespace TradingLib.Common
         /// 合约代码
         /// </summary>
         public string Symbol {get;set;}
-        //{
-        //    get { return _symbol; }
-        //    set 
-        //    {
-        //        _symbol = value;
-        //        _uniqueKey = string.Format("{0}-{2}")
-        //    }
-        
-        //}
 
         /// <summary>
         /// 合约名称
         /// </summary>
         public string Name { get; set; }
+
 
         //品种外键
         public int security_fk { get; set; }
@@ -60,6 +51,7 @@ namespace TradingLib.Common
         /// 该合约属于哪个品种
         /// </summary>
         public SecurityFamily SecurityFamily { get; set; }
+
 
         //异化合约底层外键
         public int underlaying_fk { get; set; }
@@ -282,52 +274,11 @@ namespace TradingLib.Common
             {
                 if (SecurityFamily != null)
                 {
-                    //如果该合约是异化合约,则其乘数参数为底层合约的参数
-                    /* 异化方法
-                     * 1.lotto 保证金手续费变化 底层乘数不变，相当于将波动率小的合约放大成波动率大的合约
-                     * 2.mini  保证金手续费变化 底层成熟也变化，把成熟大的合约缩小成迷你合约
-                     * */
-                    //if (SecurityFamily.Type == API.SecurityType.INNOV && SecurityFamily.Code=="LOTO")
-                    //{
-                    //    return ULSymbol != null ? ULSymbol.Multiple : 1;
-                    //}
                     return SecurityFamily.Multiple;
                 }
                 else
                 {
                     return 1;
-                }
-            }
-        }
-       
-        /// <summary>
-        /// 底层行情合约
-        /// 用于异化证券的合约转换
-        /// </summary>
-        public string TickSymbol
-        {
-            get
-            {
-                //是否设定底层合约族
-                if (SecurityFamily != null)
-                {
-                    //只有异化合约的底层symbol代表其取Tick值，其余底层依赖关系
-                    //if (SecurityFamily.Type == API.SecurityType.INNOV)
-                    //{
-                    //    if (ULSymbol != null)
-                    //    {
-                    //        return ULSymbol.Symbol;
-                    //    }
-                    //    return Symbol;
-                    //}
-                    //else
-                    //{
-                    return Symbol;
-                    //}
-                }
-                else
-                {
-                    return Symbol;
                 }
             }
         }
@@ -358,6 +309,7 @@ namespace TradingLib.Common
         /// 月份
         /// </summary>
         public string Month { get { return _month; } set { _month = value; } }
+
 
         QSEnumSymbolType _symboltype = QSEnumSymbolType.Standard;
         /// <summary>
@@ -404,7 +356,7 @@ namespace TradingLib.Common
 
 
 
-
+        //TODO 统一通过全名函数来获得合约全名 比如在合约注册时所用
         public static string Serialize(Symbol symbol)
         {
             List<string> p = new List<string>();
@@ -458,12 +410,7 @@ namespace TradingLib.Common
             return "Symbol:" + Symbol + " Security:" + Util.SafeToString(SecurityFamily) + " entrycommision:" + EntryCommission.ToString() + " exitcommission:" + ExitCommission.ToString() + " SecurityID:" + security_fk.ToString();
         }
 
-
-        //int _expiremonth = 0;
-        //public int ExpireMonth { get { return _expiremonth; } set { _expiremonth = value; } }
-
-        //public int ExpireMonth { get; set; }
-
+        #region 辅助函数 转换国外合约月份字母
         public static string MonthLetter2Num(string month)
         {
             if (month == "F")
@@ -579,6 +526,8 @@ namespace TradingLib.Common
                 throw new ArgumentException("Month must in (01,02....12)");
             }
         }
+        #endregion
+
 
         public string Serialize()
         {

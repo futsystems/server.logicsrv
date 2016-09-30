@@ -200,7 +200,7 @@ namespace TradingLib.Common
             //持权状态才处理行情更新
             if (this.Status == EnumBOOrderStatus.Entry)
             {
-                if (k.Symbol != (this.oSymbol != null ? this.oSymbol.TickSymbol : this.Symbol))//非本委托合约的行情直接返回
+                if (k.Symbol != (this.oSymbol != null ? this.oSymbol.Symbol : this.Symbol))//非本委托合约的行情直接返回
                     return;
 
                 //当前大于我们设定的下次平权时间 则执行平权操作

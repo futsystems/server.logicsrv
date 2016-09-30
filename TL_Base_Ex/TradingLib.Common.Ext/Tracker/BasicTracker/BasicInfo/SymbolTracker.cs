@@ -521,7 +521,7 @@ namespace TradingLib.Common
         public void UpdateSymbol(SymbolImpl sym,bool updateall = true)
         {
             SymbolImpl target = null;
-            if (symcodemap.TryGetValue(sym.Symbol, out target))//已经存在该合约
+            if (symcodemap.TryGetValue(sym.UniqueKey, out target))//已经存在该合约
             {
 
                 if (updateall)

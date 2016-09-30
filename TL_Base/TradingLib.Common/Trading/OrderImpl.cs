@@ -308,7 +308,7 @@ namespace TradingLib.Common
         public bool FillAuction(Tick t)
         {
             //合约不一致直接返回
-            if (t.Symbol != oSymbol.TickSymbol) return false;
+            if (t.Symbol != oSymbol.Symbol) return false;
             //买入 委托价格大于等于开盘价 或者 卖出 委托价格小于等于开盘价
             if ((isLimit && Side && (t.Open <= LimitPrice)) // buy limit
                 || (isLimit && !Side && (t.Open >= LimitPrice))// sell limit
@@ -334,7 +334,7 @@ namespace TradingLib.Common
         public bool Fill(Tick t, bool fillOPG)
         {
             if (!t.IsTrade()) return false;//fill with trade 
-            if (t.Symbol != oSymbol.TickSymbol) return false;
+            if (t.Symbol != oSymbol.Symbol) return false;
             if (!fillOPG && TimeInForce == QSEnumTimeInForce.OPG) return false;
             if ((isLimit && Side && (t.Trade <= LimitPrice)) // buy limit
                 || (isLimit && !Side && (t.Trade >= LimitPrice))// sell limit
@@ -377,7 +377,7 @@ namespace TradingLib.Common
                 s = Side ? k.StockAskSize : k.StockBidSize;
             else
                 s = Side ? k.AskSize : k.BidSize;
-            if (k.Symbol != oSymbol.TickSymbol) return false;
+            if (k.Symbol != oSymbol.Symbol) return false;
             if (!fillOPG && TimeInForce == QSEnumTimeInForce.OPG) return false;
             if ((isLimit && Side && (p <= LimitPrice)) // buy limit
                 || (isLimit && !Side && (p >= LimitPrice))// sell limit

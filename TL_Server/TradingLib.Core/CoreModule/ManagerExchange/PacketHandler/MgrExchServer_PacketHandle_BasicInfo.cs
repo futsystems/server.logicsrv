@@ -311,6 +311,7 @@ namespace TradingLib.Core
                 {
                     throw new FutsRspError("品种数据异常");
                 }
+                symbol.SecurityFamily = rawsec;
 
                 //如果是添加合约 检查合约是否存在
                 if (symbol.ID==0 && manager.Domain.GetSymbol(symbol.Exchange,symbol.Symbol) != null)
