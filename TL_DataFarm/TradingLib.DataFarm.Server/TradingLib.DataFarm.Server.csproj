@@ -71,8 +71,8 @@
     <Compile Include="DataBase\MemoryBarDB.cs" />
     <Compile Include="DataBase\TableInfo.cs" />
     <Compile Include="DataServer\Base\DataServerBase_FrequencyService.cs" />
-    <Compile Include="DataServer\Base\DataCommand\DataServerBase_ContribRequest.cs" />
-    <Compile Include="DataServer\Base\DataCommand\DataServerBase_DataBase.cs" />
+    <Compile Include="DataServer\Base\RequestHandler\DataServerBase_ContribRequest.cs" />
+    <Compile Include="DataServer\Base\DataCommand\DataServerBase_Demo.cs" />
     <Compile Include="DataServer\Base\DataServerBase_.Restore.cs" />
     <Compile Include="DataServer\Base\RequestHandler\DataServerBase_Manager.cs" />
     <Compile Include="FrequencyService\EventArgs.cs" />

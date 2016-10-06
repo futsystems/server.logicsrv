@@ -209,6 +209,14 @@ namespace TradingLib.Common.DataFarm
                 case MessageTypes.MGRUPDATESECURITY:
                     SrvOnMGRUpdateSecurity(host, conn, packet as MGRUpdateSecurityRequest);
                     break;
+                //更新交易所
+                case MessageTypes.MGRUPDATEEXCHANGE:
+                    SrvOnMGRUpdateExchange(host, conn, packet as MGRUpdateExchangeRequest);
+                    break;
+                //更新交易小节
+                case MessageTypes.MGRUPDATEMARKETTIME:
+                    SrvOnMGRUpdateMarketTime(host, conn, packet as MGRUpdateMarketTimeRequest);
+                    break;
                 //扩展命令
                 case MessageTypes.MGRCONTRIBREQUEST:
                     SrvOnMGRContribRequest(host, conn, packet as MGRContribRequest);

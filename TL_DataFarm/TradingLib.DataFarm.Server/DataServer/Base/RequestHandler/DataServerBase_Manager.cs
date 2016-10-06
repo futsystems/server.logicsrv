@@ -100,6 +100,47 @@ namespace TradingLib.Common.DataFarm
 
         }
 
+        /// <summary>
+        /// 更新交易所
+        /// </summary>
+        /// <param name="host"></param>
+        /// <param name="conn"></param>
+        /// <param name="request"></param>
+        void SrvOnMGRUpdateExchange(IServiceHost host, IConnection conn, MGRUpdateExchangeRequest request)
+        {
+            logger.Info(string.Format("Conn:{0} 请求更新交易所信息:{1}", conn.SessionID, request.ToString()));
+
+            if (request.Exchange != null)
+            {
+                MDBasicTracker.ExchagneTracker.UpdateExchange(request.Exchange);
+               
+                RspMGRUpdateExchangeResponse response = ResponseTemplate<RspMGRUpdateExchangeResponse>.SrvSendRspResponse(request);
+                response.Exchange = MDBasicTracker.ExchagneTracker[request.Exchange.ID];
+                conn.SendResponse(response);
+            }
+            
+        }
+
+        /// <summary>
+        /// 更新交易小节
+        /// </summary>
+        /// <param name="request"></param>
+        /// <param name="session"></param>
+        /// <param name="manager"></param>
+        void SrvOnMGRUpdateMarketTime(IServiceHost host, IConnection conn, MGRUpdateMarketTimeRequest request)
+        {
+            logger.Info(string.Format("Conn:{0} 请求查询交易时间段:{1}", conn.SessionID, request.ToString()));
+            if (request.MarketTime != null)
+            {
+                MDBasicTracker.MarketTimeTracker.UpdateMarketTime(request.MarketTime);
+                RspMGRUpdateMarketTimeResponse response = ResponseTemplate<RspMGRUpdateMarketTimeResponse>.SrvSendRspResponse(request);
+                response.MarketTime = MDBasicTracker.MarketTimeTracker[request.MarketTime.ID];
+
+                conn.SendResponse(response);
+            }
+        }
+
+
 
     }
 }
