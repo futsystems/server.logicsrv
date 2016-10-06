@@ -26,9 +26,11 @@ namespace ZMQServiceHost
             this.LoginID = string.Empty;
             this.IPAddress = string.Empty;
             this.LastHeartBeat = DateTime.Now;
+            this.Command = null;
 
         }
 
+        public Command Command { get; set; }
         /// <summary>
         /// Connection所处ServiceHost
         /// </summary>

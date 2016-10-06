@@ -71,9 +71,10 @@
     <Compile Include="DataBase\MemoryBarDB.cs" />
     <Compile Include="DataBase\TableInfo.cs" />
     <Compile Include="DataServer\Base\DataServerBase_FrequencyService.cs" />
-    <Compile Include="DataServer\Base\DataCommand\DataServerBase_mgr.cs" />
+    <Compile Include="DataServer\Base\DataCommand\DataServerBase_ContribRequest.cs" />
     <Compile Include="DataServer\Base\DataCommand\DataServerBase_DataBase.cs" />
     <Compile Include="DataServer\Base\DataServerBase_.Restore.cs" />
+    <Compile Include="DataServer\Base\RequestHandler\DataServerBase_Manager.cs" />
     <Compile Include="FrequencyService\EventArgs.cs" />
     <Compile Include="MDBasicTracker.cs" />
     <Compile Include="DataCoreBackend\DataCoreBackend.cs" />
@@ -81,7 +82,7 @@
     <Compile Include="DataServer\Base\DataServerBase.cs" />
     <Compile Include="DataServer\Base\DataServerBase_.cs" />
     <Compile Include="DataServer\Base\DataServerBase_ServiceHost.cs" />
-    <Compile Include="DataServer\Base\DataServerBase_RequestHandler.cs" />
+    <Compile Include="DataServer\Base\RequestHandler\DataServerBase_RequestHandler.cs" />
     <Compile Include="DataServer\Base\DataServerBase_Connection.cs" />
     <Compile Include="DataServer\Base\DataServerBase_DataStore.cs" />
     <Compile Include="DataServer\Base\DataServerBase_TickFeed.cs" />

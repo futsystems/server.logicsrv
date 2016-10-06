@@ -606,6 +606,14 @@ namespace TradingLib.Common
             return packet;
         }
 
+        public static T SrvSendRspResponse(string front, string clientid, int reqId)
+        {
+            T packet = new T();
+            packet.BindSession(front, clientid, reqId);
+            return packet;
+        }
+
+
         public static T SrvSendNotifyResponse(string account)
         {
             T packet = new T();

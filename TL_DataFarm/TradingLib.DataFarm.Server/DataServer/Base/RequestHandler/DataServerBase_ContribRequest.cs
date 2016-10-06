@@ -35,8 +35,9 @@ namespace TradingLib.Common.DataFarm
             DataCommand command = null;
             if (cmdmap.TryGetValue(key, out command))
             {
-
+                conn.Command = new Command(request.RequestID,request.ModuleID, request.CMDStr, request.Parameters);
                 command.ExecuteCmd(host, conn, request.Parameters);
+                conn.Command = null;
             }
             else
             {

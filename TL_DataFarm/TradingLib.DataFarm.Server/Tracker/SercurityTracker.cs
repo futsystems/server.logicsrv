@@ -198,7 +198,7 @@ namespace TradingLib.Common.DataFarm
             }
 
         }
-        public void UpdateSecurity(SecurityFamilyImpl sec, bool updateall)
+        public void UpdateSecurity(SecurityFamilyImpl sec)
         {
             SecurityFamilyImpl target = null;
             if (idxcodemap.TryGetValue(sec.ID, out target))//品种存在 更新品种 通过ID进行更新 用于更新品种Code
@@ -222,15 +222,14 @@ namespace TradingLib.Common.DataFarm
                 target.Multiple = sec.Multiple;
                 target.PriceTick = sec.PriceTick;
 
-                if (updateall)
-                {
-                    target.EntryCommission = sec.EntryCommission;
-                    target.ExitCommission = sec.ExitCommission;
-                    target.Margin = sec.Margin;
-                    target.ExtraMargin = sec.ExtraMargin;
-                    target.MaintanceMargin = sec.MaintanceMargin;
-                    target.Tradeable = sec.Tradeable;
-                }
+
+                target.EntryCommission = sec.EntryCommission;
+                target.ExitCommission = sec.ExitCommission;
+                target.Margin = sec.Margin;
+                target.ExtraMargin = sec.ExtraMargin;
+                target.MaintanceMargin = sec.MaintanceMargin;
+                target.Tradeable = sec.Tradeable;
+                
 
                 //数据库更新
                 ORM.MBasicInfo.UpdateSecurity(target);

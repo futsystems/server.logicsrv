@@ -308,6 +308,14 @@ namespace TradingLib.Common
             this.RequestID = session.RequestID;
             this.PacketType = QSEnumPacketType.RSPRESPONSE;
         }
+
+        public void BindSession(string front, string clientid, int reqId)
+        {
+            this.FrontID = front;
+            this.ClientID = clientid;
+            this.RequestID = reqId;
+            this.PacketType = QSEnumPacketType.RSPRESPONSE;
+        }
     }
 
     /// <summary>

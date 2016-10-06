@@ -8,6 +8,7 @@ using TradingLib.DataFarm.API;
 
 namespace TradingLib.Common.DataFarm
 {
+    
     public class DataCommand
     {
         private DataCommandInfo m_info;
@@ -28,8 +29,6 @@ namespace TradingLib.Common.DataFarm
         {
             m_wrapper.Execute(host,conn,parameters);
         }
-
-
     }
 
     internal class DataCommandWrapper

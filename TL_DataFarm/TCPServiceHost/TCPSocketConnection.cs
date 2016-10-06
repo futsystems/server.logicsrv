@@ -27,6 +27,8 @@ namespace TCPServiceHost
             } 
         }
 
+
+        public Command Command { get; set; }
         public string SessionID
         {
             get { return _session.SessionID; }
@@ -57,6 +59,7 @@ namespace TCPServiceHost
             _session = session;
             _serviceHost = host;
             this.LastHeartBeat = DateTime.Now;
+            this.Command = null;
         }
 
 

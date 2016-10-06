@@ -370,35 +370,6 @@ namespace TradingLib.Common.DataFarm
         }
 
 
-        void SrvOnMGRUpdateSymbol(IServiceHost host, IConnection conn, MGRUpdateSymbolRequest request)
-        {
-            logger.Info(string.Format("Conn:{0} 请求查询合约:{1}",conn.SessionID, request.ToString()));
-
-            SymbolImpl symbol = request.Symbol;
-            symbol.Domain_ID = 1;
-
-            //检查品种
-            SecurityFamilyImpl sec = MDBasicTracker.SecurityTracker[symbol.security_fk];
-            if (sec == null)
-            {
-                throw new FutsRspError("品种数据异常");
-            }
-            symbol.SecurityFamily = sec;
-
-            //如果是添加合约 检查合约是否存在
-            if (symbol.ID == 0 && MDBasicTracker.SymbolTracker[symbol.Exchange, symbol.Symbol] != null)
-            {
-                throw new FutsRspError("已经存在合约:" + symbol.Symbol);
-            }
-
-            //调用该域更新该合约
-            MDBasicTracker.SymbolTracker.UpdateSymbol(symbol);
-
-            RspMGRUpdateSymbolResponse response = ResponseTemplate<RspMGRUpdateSymbolResponse>.SrvSendRspResponse(request);
-            SymbolImpl localsymbol = MDBasicTracker.SymbolTracker[symbol.ID];
-            response.Symbol = localsymbol;
-
-            conn.SendResponse(response);
-        }
+        
     }
 }

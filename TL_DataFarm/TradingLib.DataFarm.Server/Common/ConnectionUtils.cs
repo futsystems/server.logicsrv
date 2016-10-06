@@ -34,6 +34,22 @@ namespace TradingLib.Common.DataFarm
             conn.Send(response);
         }
 
+        /// <summary>
+        /// 将某个对象放入JsonReply返回给管理端
+        /// </summary>
+        /// <param name="session"></param>
+        /// <param name="obj"></param>
+        /// <param name="islast"></param>
+        public static void SendContribResponse(this IConnection conn, object obj, bool islast = true)
+        {
+            RspMGRContribResponse response = ResponseTemplate<RspMGRContribResponse>.SrvSendRspResponse(null, conn.SessionID, conn.Command.RequestId);
+            response.ModuleID = conn.Command.ModuleID;
+            response.CMDStr = conn.Command.CMDStr;
+            response.IsLast = islast;
+            response.Result = Mixins.Json.JsonReply.SuccessReply(obj).ToJson();
+
+            conn.Send(response);
+        }
 
     }
 }
