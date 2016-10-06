@@ -77,6 +77,10 @@ namespace TradingLib.Common.DataFarm
                 _logwaiting.Set();
             }
         }
+        /// <summary>
+        /// 数据库插入Bar记录
+        /// </summary>
+        /// <param name="b"></param>
         void DBInsertBar(Bar b)
         {
             try
@@ -89,6 +93,10 @@ namespace TradingLib.Common.DataFarm
             }
         }
 
+        /// <summary>
+        /// 数据库更新Bar记录
+        /// </summary>
+        /// <param name="b"></param>
         void DBUpdateBar(Bar b)
         {
             try
@@ -126,7 +134,6 @@ namespace TradingLib.Common.DataFarm
                         bool isinsert = true;
                         if (store != null)
                         {
-                            
                             //logger.Info("b.symbol:" + (b.Symbol == null ? "null" : b.Symbol.Symbol) + " b.bar:" + (b.Bar == null ? "null" : b.Bar.ToString()));
                             store.UpdateBar(b.Symbol,b.Bar,out isinsert);
                             if (!_batchSave)

@@ -17,7 +17,17 @@ namespace TradingLib.Common.DataFarm
         /// ServiceHost插件目录
         /// </summary>
         private readonly string _ServiceHostFolder = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "ServiceHost");
+
+        /// <summary>
+        /// IServiceHost插件 用于实现不同协议的行情服务
+        /// </summary>
         private readonly List<IServiceHost> _serviceHosts = new List<IServiceHost>();
+
+        /// <summary>
+        /// 扩展命令Map
+        /// </summary>
+        Dictionary<string, DataCommand> cmdmap = new Dictionary<string, DataCommand>();
+
 
         bool _serviceHostLoaded = false;
 
@@ -35,6 +45,9 @@ namespace TradingLib.Common.DataFarm
             {
                 StartServiceHost(h);
             }
+
+            //加载所有命令
+            ParseCommand();
         }
 
 
@@ -101,6 +114,14 @@ namespace TradingLib.Common.DataFarm
             host.Start();
         }
 
+        void ParseCommand()
+        {
+            foreach (var info in this.FindCommand())
+            {
+                string key = "{0}-{1}".Put("DataFarm".ToUpper(), info.Attr.CmdStr.ToUpper());
+                cmdmap.Add(key, new DataCommand(this, info));
+            }
+        }
 
         protected virtual void OnConnectionClosedEvent(IServiceHost arg1, IConnection arg2)
         {

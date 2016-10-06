@@ -65,6 +65,7 @@ namespace TradingLib.Common.DataFarm
         SortedList<long, BarImpl> barlist = new SortedList<long, BarImpl>();
 
         object _object = new object();
+
         /// <summary>
         /// 更新Bar
         /// </summary>
@@ -95,68 +96,6 @@ namespace TradingLib.Common.DataFarm
             }
         }
 
-
-        /// <summary>
-        /// 搜索某个时间段的键值
-        /// </summary>
-        /// <param name="start"></param>
-        /// <param name="end"></param>
-        /// <param name="seekStart"></param>
-        /// <param name="seekEnd"></param>
-        //void SeekKey(DateTime start, DateTime end, out long seekStart, out long seekEnd)
-        //{ 
-            
-        //}
-
-        /// <summary>
-        /// 查找某个对应的Index
-        /// </summary>
-        /// <param name="date"></param>
-        /// <returns></returns>
-        //int SeekDate(DateTime date)
-        //{
-        //    if (date == DateTime.MinValue)
-        //    {
-        //        return 0;
-        //    }
-        //    if (date == DateTime.MaxValue)
-        //    {
-        //        return barlist.Count;
-        //    }
-
-        //    int start = 0;
-        //    int end = barlist.Count - 1;
-
-        //    while (end - start >= 10L)
-        //    {
-        //        int current = (start + end) / 2;
-        //        DateTime dateTime = .StartTime;
-               
-        //        //如果当前日期与查找日期相同 则返回num2为对应的索引
-        //        if (dateTime == date)
-        //        {
-        //            end = current;
-        //        }
-        //        else if (dateTime < date)//如果当前日期小于查找的日期
-        //        {
-        //            start = current;
-        //        }
-        //        else
-        //        {
-        //            end = current;
-        //        }
-        //    }
-        //    for (int idx = start; idx <= end; idx += 1)
-        //    {
-        //        DateTime dateTime = barlist[idx].StartTime;
-        //        if (dateTime >= date)
-        //        {
-        //            return idx;
-        //        }
-        //    }
-        //    return end +1;
-        //}
-
         /// <summary>
         /// 从数据集中查询结果
         /// </summary>
@@ -171,17 +110,6 @@ namespace TradingLib.Common.DataFarm
         {
             lock (_object)
             {
-
-                //int startIdx = this.SeekDate(start);
-                //int endIdx = this.SeekDate(end);
-
-                //return new List<BarImpl>();
-                ////获得对应区间内的所有数据集合
-                //List<BarImpl> records = new List<BarImpl>();
-                //for (int i = startIdx; i <= endIdx; i++)
-                //{
-                //    records.Add(barlist[i]);
-                //}
                 long lstart = long.MinValue;
                 long lend = long.MaxValue;
                 if(start != DateTime.MinValue) lstart = start.ToTLDateTime();
@@ -214,16 +142,12 @@ namespace TradingLib.Common.DataFarm
                     {
                         return tmp;
                     }
-
-                    //return fromEnd ? records.Take(maxcount).Reverse() : records.Take(maxcount);
                 }
                 
             }
         }
-
-
-
     }
+
     public class MemoryBarDB:IHistDataStore
     {
 
@@ -247,6 +171,23 @@ namespace TradingLib.Common.DataFarm
             return string.Format("{0}-{1}-{2}",symbol.SecurityFamily.Exchange.EXCode,symbol.GetContinuousSymbol(), new BarFrequency(type, interval).ToUniqueId());
         }
 
+        BarList GetBarList(Symbol symbol, BarInterval type, int interval)
+        {
+            string key = GetBarListName(symbol, type, interval);
+            BarList target = null;
+            //查找对应的BarList如果存在直接返回
+            if (barlistmap.TryGetValue(key, out target))
+            {
+                return target;
+            }
+
+            //如果不存在 则添加该BarList 同时从数据库加载历史数据
+            target = new BarList(symbol, type, interval);
+            barlistmap.TryAdd(key, target);
+            return target;
+        }
+
+
         public void Commit()
         { 
         
@@ -268,8 +209,8 @@ namespace TradingLib.Common.DataFarm
         }
 
         /// <summary>
-        /// 从数据库恢复某个合约多少条记录
-        /// 如果BarList已存在 则不执行数据恢复操作
+        /// 从数据库恢复某个合约的Bar数据记录
+        /// 在启动服务 恢复数据过程中 执行该操作
         /// </summary>
         /// <param name="symbol"></param>
         /// <param name="type"></param>
@@ -315,21 +256,7 @@ namespace TradingLib.Common.DataFarm
         }
 
 
-        BarList GetBarList(Symbol symbol, BarInterval type, int interval)
-        {
-            string key = GetBarListName(symbol, type, interval);
-            BarList target = null;
-            //查找对应的BarList如果存在直接返回
-            if (barlistmap.TryGetValue(key, out target))
-            {
-                return target;
-            }
-
-            //如果不存在 则添加该BarList 同时从数据库加载历史数据
-            target = new BarList(symbol, type, interval);
-            barlistmap.TryAdd(key, target);
-            return target;
-        }
+       
 
 
         string GetBarSymbol(Symbol symbol)

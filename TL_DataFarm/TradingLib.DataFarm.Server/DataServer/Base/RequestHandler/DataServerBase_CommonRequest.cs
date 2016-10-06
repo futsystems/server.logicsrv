@@ -140,25 +140,6 @@ namespace TradingLib.Common.DataFarm
                             }
                         case EnumBarResponseType.BINARY:
                             {
-                                //MemoryStream ms = new MemoryStream();
-                                //BinaryWriter b = new BinaryWriter(ms);
-                                //byte[] sizebyte = BitConverter.GetBytes(8 + 1 + bars.Length * 88);
-                                //byte[] typebyte = BitConverter.GetBytes((int)MessageTypes.BARRESPONSE);
-
-                                //b.Write(sizebyte);
-                                //b.Write(typebyte);
-                                //b.Write(true);
-                                //for (int i = 0; i < bars.Length; i++)
-                                //{
-                                //    BarImpl.Write(b, bars[i]);
-                                //    //RspQryBarResponseBin response = RspQryBarResponseBin.CreateResponse(request);
-                                //    //response.Bar = bars[i];
-                                //    //conn.Send(response);
-                                //}
-
-                                //logger.Info("Size:" + ms.Position);
-                                //break;
-
                                 int j = 0;
                                 RspQryBarResponseBin response = RspQryBarResponseBin.CreateResponse(request);
                                 response.IsLast = false;

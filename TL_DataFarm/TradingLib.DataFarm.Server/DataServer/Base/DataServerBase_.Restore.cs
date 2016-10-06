@@ -204,6 +204,8 @@ namespace TradingLib.Common.DataFarm
             _restorethread.Start();
 
             logger.Info("\n"+restoreProfile.GetStatsString());
+
+            _tickRestored = true;
         }
 
 

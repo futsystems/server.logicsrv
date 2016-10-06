@@ -66,7 +66,7 @@ namespace TradingLib.Common.DataFarm
             //启动TickFeeds
             foreach (var feed in _tickFeeds)
             {
-                //StartTickFeed(feed);
+                StartTickFeed(feed);
             }
         }
 

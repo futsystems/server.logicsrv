@@ -12,20 +12,6 @@ namespace TradingLib.Common.DataFarm
 {
     public partial class DataServerBase
     {
-
-        Dictionary<string, DataCommand> cmdmap = new Dictionary<string, DataCommand>();
-
-
-        void ParseCommand()
-        {
-            foreach (var info in this.FindCommand())
-            { 
-                string key = "{0}-{1}".Put("DataFarm".ToUpper(),info.Attr.CmdStr.ToUpper());
-                cmdmap.Add(key, new DataCommand(this, info));
-            }
-        }
-
-
         void SrvOnMGRContribRequest(IServiceHost host, IConnection conn, MGRContribRequest request)
         {
             logger.Info("Conn:{0} MGRContrib Request ModuleID:{1} CMDStr:{2} Args:{3}".Put(conn.SessionID, request.ModuleID, request.CMDStr, request.Parameters));

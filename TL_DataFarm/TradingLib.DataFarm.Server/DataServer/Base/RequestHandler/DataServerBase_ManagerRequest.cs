@@ -129,7 +129,7 @@ namespace TradingLib.Common.DataFarm
         /// <param name="manager"></param>
         void SrvOnMGRUpdateMarketTime(IServiceHost host, IConnection conn, MGRUpdateMarketTimeRequest request)
         {
-            logger.Info(string.Format("Conn:{0} 请求查询交易时间段:{1}", conn.SessionID, request.ToString()));
+            logger.Info(string.Format("Conn:{0} 请求更新交易时间段:{1}", conn.SessionID, request.ToString()));
             if (request.MarketTime != null)
             {
                 MDBasicTracker.MarketTimeTracker.UpdateMarketTime(request.MarketTime);
