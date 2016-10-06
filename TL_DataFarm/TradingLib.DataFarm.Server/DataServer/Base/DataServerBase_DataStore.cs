@@ -136,10 +136,10 @@ namespace TradingLib.Common.DataFarm
                         {
                             //logger.Info("b.symbol:" + (b.Symbol == null ? "null" : b.Symbol.Symbol) + " b.bar:" + (b.Bar == null ? "null" : b.Bar.ToString()));
                             store.UpdateBar(b.Symbol,b.Bar,out isinsert);
-                            if (!_batchSave)
-                            {
-                                store.Commit();
-                            }
+                            //if (!_batchSave)
+                            //{
+                            //    store.Commit();
+                            //}
                         }
 
                         //如果BarList中已经有该Bar则更新数据否则插入

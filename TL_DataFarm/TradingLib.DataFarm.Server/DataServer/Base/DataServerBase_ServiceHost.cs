@@ -171,6 +171,10 @@ namespace TradingLib.Common.DataFarm
 
             switch (packet.Type)
             {
+                //响应客户端登入请求
+                case MessageTypes.LOGINREQUEST:
+                    SrvOnLoginRequest(host, conn, packet as LoginRequest);
+                    break;
                 //响应客户端版本查询
                 case MessageTypes.VERSIONREQUEST:
                     SrvOnVersionRequest(host, conn, packet as VersionRequest);

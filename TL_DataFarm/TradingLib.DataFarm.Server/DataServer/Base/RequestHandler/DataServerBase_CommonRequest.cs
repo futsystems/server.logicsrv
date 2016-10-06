@@ -75,6 +75,17 @@ namespace TradingLib.Common.DataFarm
             conn.Send(response);
         }
 
+        void SrvOnLoginRequest(IServiceHost host, IConnection conn, LoginRequest request)
+        {
+            LoginResponse response = ResponseTemplate<LoginResponse>.SrvSendRspResponse(request);
+            response.Account = "9999";
+            response.AccountType = QSEnumAccountCategory.SUBACCOUNT;
+            response.Authorized = true;
+            response.Date = 20161006;
+            response.RspInfo = new RspInfoImpl();
+            conn.Send(response);
+        }
+
         //为什么超过一定数量的Bar一起发送 客户端就无法收到数据 socket缓存?
         int _barbatchsize = 1;
         /// <summary>
