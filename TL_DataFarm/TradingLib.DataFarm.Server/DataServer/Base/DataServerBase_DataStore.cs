@@ -51,6 +51,8 @@ namespace TradingLib.Common.DataFarm
         #region 保存行情与Bar数据
         RingBuffer<Tick> tickbuffer = new RingBuffer<Tick>(10000);
         RingBuffer<BarStoreStruct> barbuffer = new RingBuffer<BarStoreStruct>(10000);
+        RingBuffer<BarStoreStruct> partialBarBuffer = new RingBuffer<BarStoreStruct>(10000);
+
         RingBuffer<BarStoreStruct> barupdatebuffre = new RingBuffer<BarStoreStruct>(10000);
 
         bool _saverunning = false;
@@ -155,6 +157,13 @@ namespace TradingLib.Common.DataFarm
                        
                     }
 
+                    while (!barbuffer.hasItems && partialBarBuffer.hasItems)
+                    {
+                        BarStoreStruct b = partialBarBuffer.Read();
+                        IHistDataStore store = GetHistDataSotre();
+                        store.UpdatePartialBar(b.Symbol, b.Bar);
+                    }
+
                     //更新Bar缓存 用于从Tick历史数据加载生成Bar进行数据更新
                     while (barupdatebuffre.hasItems)
                     {
@@ -229,6 +238,16 @@ namespace TradingLib.Common.DataFarm
             NewData();
         }
 
+        /// <summary>
+        /// 更新PartialBar数据
+        /// </summary>
+        /// <param name="symbol"></param>
+        /// <param name="partialbar"></param>
+        public void UpdatePartialBar(Symbol symbol, BarImpl partialbar)
+        {
+            partialBarBuffer.Write(new BarStoreStruct(symbol, partialbar));
+            NewData();
+        }
         /// <summary>
         /// 更新Bar数据
         /// 从历史Tick数据恢复的Bar需要调用UpdateBar接口

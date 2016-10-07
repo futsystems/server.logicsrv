@@ -78,7 +78,7 @@ namespace TradingLib.API
         /// <param name="maxcount">最大返回Bar数</param>
         /// <param name="fromEnd">是否数据结尾开始</param>
         /// <returns></returns>
-        IEnumerable<BarImpl> QryBar(Symbol symbol, BarInterval type, int interval, DateTime start, DateTime end, int maxcount, bool fromEnd);
+        IEnumerable<BarImpl> QryBar(Symbol symbol, BarInterval type, int interval, DateTime start, DateTime end,int startIndex, int maxcount, bool fromEnd);
 
         /// <summary>
         /// 更新Bar数据
@@ -86,6 +86,13 @@ namespace TradingLib.API
         /// <param name="bar"></param>
         void UpdateBar(Symbol symbol,BarImpl bar,out bool IsInsert);
 
+
+        /// <summary>
+        /// 更新某个Symbol对应的PartialBar
+        /// </summary>
+        /// <param name="symbol"></param>
+        /// <param name="partail"></param>
+        void UpdatePartialBar(Symbol symbol, BarImpl partail);
         /// <summary>
         /// 插入Bar数据
         /// </summary>

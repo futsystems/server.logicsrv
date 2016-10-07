@@ -74,11 +74,21 @@ namespace TradingLib.Common
         /// </summary>
         public event Action<FreqKey, SingleBarEventArgs> NewFreqKeyBarEvent;
 
+        public event Action<FreqKey, PartialBarUpdateEventArgs> FreqKeyPartialBarUpdateEvent;
+
         void OnFreqKeyBar(FreqKey freqkey, SingleBarEventArgs bar)
         {
             if (NewFreqKeyBarEvent != null)
             {
                 NewFreqKeyBarEvent(freqkey, bar);
+            }
+        }
+
+        void OnFreqKeyPartialBar(FreqKey freqkey, PartialBarUpdateEventArgs bar)
+        {
+            if (FreqKeyPartialBarUpdateEvent != null)
+            {
+                FreqKeyPartialBarUpdateEvent(freqkey, bar);
             }
         }
 
@@ -441,7 +451,7 @@ namespace TradingLib.Common
                         pf.LeaveSection();
                     }
 
-                    //如果FreqInfo有待发送的Bar数据 放入eventholder
+                    //如果FreqInfo有待发送的Bar数据 放入eventholder 在处理时间Tick后 有Bar结束 则清空freqInfo的pendingBar同时清空Frequency的partialItem
                     if (freqinfo.PendingBarEvents.Count > 0)
                     {
                         pf.EnterSection("TIMECHECK2");
@@ -452,10 +462,10 @@ namespace TradingLib.Common
                             logger.Info(string.Format("FreqInfo for key:[{0}] Cached Bar:{1}", freqinfo.FreqKey, bar.Bar));
 #endif
                         }
-                        //清空FreqInfo待发送Bar
+                        //清空FreqInfo待发送Bar 以及 PartialBar
                         freqinfo.ClearPendingBars();
 
-                        //清空PartialItem同时添加到freqKeyNoPartialBar HashSet中
+                        //清空PartialItem同时添加到freqKeyNoPartialBar HashSet中 
                         if (freqinfo.FreqKey.Settings.IsTimeBased)
                         {
                             freqinfo.Frequency.WriteableBars.ClearPartialItem();//清空PartialItem
@@ -535,6 +545,11 @@ namespace TradingLib.Common
                     //FreqInfo处理TimeTick数据
                     FreqInfoProcessTimeTick(ttick, freqinfo);
                     pf.LeaveSection();
+
+                    if (freqinfo.Frequency.WriteableBars.HasPartialItem)
+                    {
+                        OnFreqKeyPartialBar(freqinfo.FreqKey, new PartialBarUpdateEventArgs(freqinfo.FreqKey.Symbol, freqinfo.Frequency.WriteableBars.PartialItem));
+                    }
                 }
                 #endregion
 
@@ -570,7 +585,7 @@ namespace TradingLib.Common
         {
             if (tick.Type != EnumTickType.TIME) return;
             //如果FreqInfo.PendingPartialBar为空并且Frequency.WriteableBars没有PartialItem则用调用FreqInfo处理TimeTick用于生成一条PendingPartialBar
-            if (freqInfo.PendingPartialBar == null && !freqInfo.Frequency.WriteableBars.HasPartialItem)
+            if (freqInfo.PendingPartialBar == null && !freqInfo.Frequency.WriteableBars.HasPartialItem)//当
             {
                 //处理对应的时间Tick
                 this.FreqInfoProcessTick(tick, freqInfo);

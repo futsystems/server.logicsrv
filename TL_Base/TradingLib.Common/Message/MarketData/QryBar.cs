@@ -66,50 +66,61 @@ namespace TradingLib.Common
             this.Symbol = string.Empty;
             this.IntervalType = BarInterval.CustomTime;
             this.Interval = 30;
-            this.MaxCount = 500;
-            this.Start = DateTime.MinValue;
-            this.End = DateTime.MaxValue;
+            this.MaxCount = 800;
+            this.StartIndex = 0;
+            this.StartTime = DateTime.MinValue;
+            this.EndTime = DateTime.MaxValue;
             this.FromEnd = true;
             this.BarResponseType = EnumBarResponseType.PLAINTEXT;
         }
 
+        /// <summary>
+        /// 交易所
+        /// </summary>
         public string Exchange { get; set; }
+
         /// <summary>
         /// 合约
         /// </summary>
         public string Symbol { get; set; }
 
         /// <summary>
-        /// 开始时间
+        /// 间隔类别
         /// </summary>
-        public DateTime Start { get; set; }
+        public BarInterval IntervalType { get; set; }
 
         /// <summary>
-        /// 结束
+        /// 间隔数
         /// </summary>
-        public DateTime End { get; set; }
+        public int Interval { get; set; }
+
+        /// <summary>
+        /// 开始时间 时间区间
+        /// </summary>
+        public DateTime StartTime { get; set; }
+
+        /// <summary>
+        /// 结束时间
+        /// </summary>
+        public DateTime EndTime { get; set; }
 
         /// <summary>
         /// 最大返回Bar个数
         /// </summary>
-        public long MaxCount { get; set; }
+        public int MaxCount { get; set; }
 
+        /// <summary>
+        /// 返回数据开始位置 默认从0开始
+        /// 比如查询2000个Bar 下次补充数据从 2000个开始再查2000个
+        /// </summary>
+        public int StartIndex { get; set; }
 
         /// <summary>
         /// 是否从最新的数据开始
         /// </summary>
         public bool FromEnd { get; set; }
 
-        /// <summary>
-        /// 间隔类别
-        /// </summary>
-        public BarInterval IntervalType { get; set; }
 
-
-        /// <summary>
-        /// 间隔数
-        /// </summary>
-        public int Interval { get; set; }
 
 
         /// <summary>
@@ -129,9 +140,11 @@ namespace TradingLib.Common
             sb.Append(d);
             sb.Append(this.Interval);
             sb.Append(d);
-            sb.Append(this.Start);
+            sb.Append(this.StartTime);
             sb.Append(d);
-            sb.Append(this.End);
+            sb.Append(this.EndTime);
+            sb.Append(d);
+            sb.Append(this.StartIndex);
             sb.Append(d);
             sb.Append(this.MaxCount);
             sb.Append(d);
@@ -148,11 +161,12 @@ namespace TradingLib.Common
             this.Symbol = rec[1];
             this.IntervalType = (BarInterval)int.Parse(rec[2]);
             this.Interval = int.Parse(rec[3]);
-            this.Start = DateTime.Parse(rec[4]);
-            this.End = DateTime.Parse(rec[5]);
-            this.MaxCount = long.Parse(rec[6]);
-            this.FromEnd = bool.Parse(rec[7]);
-            this.BarResponseType = (EnumBarResponseType)Enum.Parse(typeof(EnumBarResponseType), rec[8]);
+            this.StartTime = DateTime.Parse(rec[4]);
+            this.EndTime = DateTime.Parse(rec[5]);
+            this.StartIndex = int.Parse(rec[6]);
+            this.MaxCount = int.Parse(rec[7]);
+            this.FromEnd = bool.Parse(rec[8]);
+            this.BarResponseType = (EnumBarResponseType)Enum.Parse(typeof(EnumBarResponseType), rec[9]);
         }
 
 

@@ -38,6 +38,20 @@ namespace TradingLib.Common
             this.PartialBar = bar;
         }
     }
+
+    public class PartialBarUpdateEventArgs : EventArgs
+    {
+        public Bar PartialBar { get; set; }
+
+        public Symbol Symbol { get; set; }
+
+        public PartialBarUpdateEventArgs(Symbol symbol, Bar partialbar)
+        {
+            this.Symbol = symbol;
+            this.PartialBar = partialbar;
+        }
+    }
+
     public class SingleBarEventArgs:EventArgs
     {
         public bool TickWereSent { get; set; }
@@ -56,4 +70,6 @@ namespace TradingLib.Common
             this.TickWereSent = tickSent;
         }
     }
+
+
 }

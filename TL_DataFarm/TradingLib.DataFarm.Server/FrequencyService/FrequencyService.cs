@@ -23,9 +23,16 @@ namespace TradingLib.Common.DataFarm
         public event Action<FreqNewBarEventArgs> NewRealTimeBarEvent;
 
         /// <summary>
+        /// 实时更新PartialBar数据
+        /// </summary>
+        public event Action<FreqUpdatePartialBarEventArgs> UpdatePartialBarEvent;
+
+        /// <summary>
         /// 历史Tick产生Bar回补数据
         /// </summary>
         public event Action<FreqNewBarEventArgs> NewHistBarEvent;
+
+        
 
 
         /// <summary>
@@ -75,6 +82,7 @@ namespace TradingLib.Common.DataFarm
                 frequencyMgrMap.Add(exchange.EXCode, fm);
 
                 fm.NewFreqKeyBarEvent += new Action<FrequencyManager.FreqKey, SingleBarEventArgs>(OnNewRealTimeFreqKeyBarEvent);
+                fm.FreqKeyPartialBarUpdateEvent += new Action<FrequencyManager.FreqKey, PartialBarUpdateEventArgs>(OnFreqKeyPartialBarUpdateEvent);
 
             }
 
@@ -96,6 +104,16 @@ namespace TradingLib.Common.DataFarm
                 }
                 //同时向数据恢复FrequencyManager注册
                 restoreFrequencyMgr.RegisterSymbol(symbol);
+            }
+        }
+
+        void OnFreqKeyPartialBarUpdateEvent(FrequencyManager.FreqKey arg1, PartialBarUpdateEventArgs arg2)
+        {
+            if (UpdatePartialBarEvent != null)
+            {
+                logger.Info("PartialBar Update:" + arg2.PartialBar.ToString());
+
+                UpdatePartialBarEvent(new FreqUpdatePartialBarEventArgs() { BarFrequency = arg1.Settings.BarFrequency, Symbol = arg1.Symbol, PartialBar = new BarImpl(arg2.PartialBar) });
             }
         }
 

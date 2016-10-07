@@ -34,4 +34,23 @@ namespace TradingLib.Common.DataFarm
         /// </summary>
         public Frequency Frequency { get; set; }
     }
+
+    public class FreqUpdatePartialBarEventArgs : System.EventArgs
+    {
+        /// <summary>
+        /// 合约
+        /// </summary>
+        public Symbol Symbol { get; set; }
+
+        /// <summary>
+        /// Bar频率
+        /// </summary>
+        public BarFrequency BarFrequency { get; set; }
+
+
+        /// <summary>
+        /// Frequency数据集
+        /// </summary>
+        public BarImpl PartialBar { get; set; }
+    }
 }

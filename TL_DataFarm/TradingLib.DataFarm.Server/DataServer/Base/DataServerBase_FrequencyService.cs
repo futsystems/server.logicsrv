@@ -21,8 +21,11 @@ namespace TradingLib.Common.DataFarm
             freqService = new FrequencyService();
             freqService.NewRealTimeBarEvent += new Action<FreqNewBarEventArgs>(OnNewRealTimeBarEvent);
             freqService.NewHistBarEvent += new Action<FreqNewBarEventArgs>(OnNewHistBarEvent);
+            freqService.UpdatePartialBarEvent += new Action<FreqUpdatePartialBarEventArgs>(freqService_UpdatePartialBarEvent);
 
         }
+
+        
 
         /// <summary>
         /// 回放tick所生成的Bar数据事件
@@ -33,6 +36,12 @@ namespace TradingLib.Common.DataFarm
             obj.Bar.Symbol = obj.Symbol.GetContinuousSymbol();
             this.UpdateBar(obj.Symbol, obj.Bar);
         }
+
+        void freqService_UpdatePartialBarEvent(FreqUpdatePartialBarEventArgs obj)
+        {
+            this.UpdatePartialBar(obj.Symbol, obj.PartialBar);
+        }
+
 
         void OnNewRealTimeBarEvent(FreqNewBarEventArgs obj)
         {

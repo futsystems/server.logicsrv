@@ -81,6 +81,34 @@ namespace TradingLib.Common.DataFarm
             }
         }
 
+
+        bool _hasPartial = false;
+        public bool HasPartialBar
+        {
+            get { return _hasPartial; }
+        }
+
+        public void ClearPartialBar()
+        {
+            _hasPartial = false;
+        }
+
+        BarImpl _partialBar = null;
+        public BarImpl PartialBar
+        {
+            get 
+            { 
+                if (_hasPartial) 
+                    return _partialBar;
+                return null;
+            }
+            set
+            {
+                _hasPartial = true;
+                _partialBar = value;
+            }
+        }
+
         /// <summary>
         /// 添加一组Bar数据
         /// </summary>
@@ -96,6 +124,7 @@ namespace TradingLib.Common.DataFarm
             }
         }
 
+        
         /// <summary>
         /// 从数据集中查询结果
         /// </summary>
@@ -104,44 +133,51 @@ namespace TradingLib.Common.DataFarm
         /// <param name="start"></param>
         /// <param name="end"></param>
         /// <param name="maxcount"></param>
-        /// <param name="fromEnd"></param>
+        /// <param name="fromEnd">是否先返回最新的数据</param>
         /// <returns></returns>
-        public IEnumerable<BarImpl> QryBar(DateTime start, DateTime end, int maxcount, bool fromEnd)
+        public IEnumerable<BarImpl> QryBar(DateTime start, DateTime end, int startIndex, int maxcount, bool fromEnd)
         {
             lock (_object)
             {
-                long lstart = long.MinValue;
-                long lend = long.MaxValue;
-                if(start != DateTime.MinValue) lstart = start.ToTLDateTime();
-                if(end != DateTime.MaxValue) lend = end.ToTLDateTime();
-
-                IEnumerable<BarImpl> records = barlist.Where(v => v.Key >= lstart && v.Key <= lend).Select(v=>v.Value);
-
-                if (maxcount <= 0)
+                IEnumerable<BarImpl> records = null;
+                if (start != DateTime.MinValue || end != DateTime.MaxValue)
                 {
-                    if (fromEnd)
-                    {
-                        records.Reverse();
-                        return records;
-                    }
-                    else
-                    {
-                        return records;
-                    }
+                    long lstart = long.MinValue;
+                    long lend = long.MaxValue;
+                    if (start != DateTime.MinValue) lstart = start.ToTLDateTime();
+                    if (end != DateTime.MaxValue) lend = end.ToTLDateTime();
+
+                    //执行时间过滤
+                    records = barlist.Where(v => v.Key >= lstart && v.Key <= lend).Select(v => v.Value);
                 }
                 else
                 {
-                    var tmp = records.Take(maxcount);
+                    records = barlist.Select(v => v.Value);//不执行时间检查
+                }
 
-                    if (fromEnd)
-                    {
-                        tmp.Reverse();
-                        return tmp;
-                    }
-                    else
-                    {
-                        return tmp;
-                    }
+                BarImpl partial = this.PartialBar;
+                if(partial != null)
+                {
+                    records = records.Concat(new BarImpl[] { partial });
+                }
+
+                if (maxcount <= 0)
+                {
+                    records = records.Take(Math.Max(0, records.Count() - startIndex));
+                }
+                else //设定最大数量 返回数据要求 按时间先后排列
+                {
+                    //startIndex 首先从数据序列开头截取对应数量的数据
+                    //maxcount 然后从数据序列末尾截取最大数量的数据
+                    records = records.Take(Math.Max(0,records.Count()-startIndex)).Skip(Math.Max(0, (records.Count()-startIndex) - maxcount));//返回序列后段元素
+                }
+                if (fromEnd)
+                {
+                    return records.Reverse();
+                }
+                else
+                {
+                    return records;
                 }
                 
             }
@@ -208,6 +244,19 @@ namespace TradingLib.Common.DataFarm
             target.Update(bar,out isInsert);
         }
 
+        public void ClearPartialBar(Symbol symbol,BarFrequency freq)
+        {
+            BarList target = GetBarList(symbol, freq.Type, freq.Interval);
+
+            target.ClearPartialBar();
+        }
+
+        public void UpdatePartialBar(Symbol symbol, BarImpl partail)
+        {
+            BarList target = GetBarList(symbol,partail.IntervalType,partail.Interval);
+
+            target.PartialBar = partail;
+        }
         /// <summary>
         /// 从数据库恢复某个合约的Bar数据记录
         /// 在启动服务 恢复数据过程中 执行该操作
@@ -246,13 +295,13 @@ namespace TradingLib.Common.DataFarm
         /// <param name="maxcount"></param>
         /// <param name="fromEnd"></param>
         /// <returns></returns>
-        public IEnumerable<BarImpl> QryBar(Symbol symbol, BarInterval type, int interval, DateTime start, DateTime end, int maxcount, bool fromEnd)
+        public IEnumerable<BarImpl> QryBar(Symbol symbol, BarInterval type, int interval, DateTime start, DateTime end, int startIndex, int maxcount, bool fromEnd)
         {
             //获得对应的BarList
             BarList target = GetBarList(symbol, type, interval);
           
             //执行查询返回结果
-            return target.QryBar(start, end, maxcount, fromEnd);
+            return target.QryBar(start, end,startIndex,maxcount, fromEnd);
         }
 
 

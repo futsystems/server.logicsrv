@@ -86,6 +86,7 @@ namespace TradingLib.Common.DataFarm
             conn.Send(response);
         }
 
+        Profiler pf = new Profiler();
         //为什么超过一定数量的Bar一起发送 客户端就无法收到数据 socket缓存?
         int _barbatchsize = 1;
         /// <summary>
@@ -99,20 +100,12 @@ namespace TradingLib.Common.DataFarm
             try
             {
                 logger.Info("Got Qry Bar Request:" + request.ToString());
-                //查询Bar数据
                 IHistDataStore store = this.GetHistDataSotre();
                 if (store == null)
                 {
                     logger.Warn("HistDataSotre is null, can not provider QryBar service");
                     throw new Exception("DataStore not inited");
                 }
-
-                //合约频率数据没有注册直接返回
-                //if (!store.IsRegisted(request.Symbol, request.IntervalType, request.Interval))
-                //{
-                //    logger.Warn(string.Format("SymbolFreq:{0}-{1}-{2} is not registed", request.Symbol, request.IntervalType, request.Interval));
-                //    throw new Exception("SymbolFreq not registed");
-                //}
                 Symbol symbol = MDBasicTracker.SymbolTracker[request.Exchange,request.Symbol];
                 if (symbol == null)
                 {
@@ -120,81 +113,66 @@ namespace TradingLib.Common.DataFarm
                     return;
                 }
 
-                //如果数据已缓存则直接查询
-                //if (store.IsCached(request.Symbol, request.IntervalType, request.Interval))
+                pf.EnterSection("QRY  BAR");
+                List<BarImpl> bars = store.QryBar(symbol, request.IntervalType, request.Interval, request.StartTime, request.EndTime,request.StartIndex,request.MaxCount, request.FromEnd).ToList();
+                pf.LeaveSection();
+
+                pf.EnterSection("SEND BAR");
+
+                switch(request.BarResponseType)
                 {
-                    Profiler pf = new Profiler();
-                    pf.EnterSection("QRY  BAR");
-                    List<BarImpl> bars = store.QryBar(symbol, request.IntervalType, request.Interval, request.Start, request.End, (int)request.MaxCount, request.FromEnd).ToList();
-                    pf.LeaveSection();
-
-                    Bar partial = freqService.GetPartialBar(symbol, new BarFrequency(request.IntervalType, request.Interval));
-                    if (partial != null)
-                    {
-                        bars.Add(new BarImpl(partial));
-                    }
-                    //logger.Info("got bar cnt:" + bars.Count());
-                    
-                    pf.EnterSection("SEND BAR");
-
-                    switch(request.BarResponseType)
-                    {
-                        case EnumBarResponseType.PLAINTEXT:
+                    case EnumBarResponseType.PLAINTEXT:
+                        {
+                            for (int i = 0; i < bars.Count; i++)
                             {
-                                for (int i = 0; i < bars.Count; i++)
-                                {
-                                    RspQryBarResponse response = ResponseTemplate<RspQryBarResponse>.SrvSendRspResponse(request);
-                                    response.Bar = bars[i];
-                                    conn.SendResponse(response, i == bars.Count - 1);
-                                }
-                                break;
+                                RspQryBarResponse response = ResponseTemplate<RspQryBarResponse>.SrvSendRspResponse(request);
+                                response.Bar = bars[i];
+                                conn.SendResponse(response, i == bars.Count - 1);
                             }
-                        case EnumBarResponseType.BINARY:
-                            {
-                                int j = 0;
-                                RspQryBarResponseBin response = RspQryBarResponseBin.CreateResponse(request);
-                                response.IsLast = false;
-                                for (int i = 0; i < bars.Count; i++)
-                                {
-                                    response.Add(bars[i]);
-                                    j++;
-                                    if (j == _barbatchsize)
-                                    {
-                                        //一定数目的Bar之后 发送数据 同时判断是否是最后一条
-                                        response.IsLast = (i == bars.Count-1);
-                                        conn.Send(response);
-                                        //不是最后一条数据则生成新的Response
-                                        if (!response.IsLast)
-                                        {
-                                            response = RspQryBarResponseBin.CreateResponse(request);
-                                            response.IsLast = false;
-                                        }
-                                        j = 0;
-                                    }
-                                }
-                                //如果不为最后一条 则标记为最后一条并发送
-                                if (!response.IsLast)
-                                {
-                                    response.IsLast = true;
-                                    conn.Send(response);
-                                }
-                                break;
-                            }
-                        default:
                             break;
-                    }
-                    
-                    pf.LeaveSection();
-                    logger.Info(string.Format("----BarRequest Statistics QTY:{0}---- \n{1}", bars.Count, pf.GetStatsString()));
-                    //logger.Info("send bar finished");
-
-                    logger.Info("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~``");
-                    logger.Info("----FrequencyManager Statistics---- \n" + FrequencyManager.pf.GetStatsString());
+                        }
+                    case EnumBarResponseType.BINARY:
+                        {
+                            int j = 0;
+                            RspQryBarResponseBin response = RspQryBarResponseBin.CreateResponse(request);
+                            response.IsLast = false;
+                            for (int i = 0; i < bars.Count; i++)
+                            {
+                                response.Add(bars[i]);
+                                j++;
+                                if (j == _barbatchsize)
+                                {
+                                    //一定数目的Bar之后 发送数据 同时判断是否是最后一条
+                                    response.IsLast = (i == bars.Count-1);
+                                    conn.Send(response);
+                                    //不是最后一条数据则生成新的Response
+                                    if (!response.IsLast)
+                                    {
+                                        response = RspQryBarResponseBin.CreateResponse(request);
+                                        response.IsLast = false;
+                                    }
+                                    j = 0;
+                                }
+                            }
+                            //如果不为最后一条 则标记为最后一条并发送
+                            if (!response.IsLast)
+                            {
+                                response.IsLast = true;
+                                conn.Send(response);
+                            }
+                            break;
+                        }
+                    default:
+                        break;
                 }
-                //else
-                //{
-                //    this.BackendQryBar(host, conn, request);
-                //}
+                    
+                pf.LeaveSection();
+                logger.Info(string.Format("----BarRequest Statistics QTY:{0}---- \n{1}", bars.Count, pf.GetStatsString()));
+                //logger.Info("send bar finished");
+
+                logger.Info("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~``");
+                logger.Info("----FrequencyManager Statistics---- \n" + FrequencyManager.pf.GetStatsString());
+                
             }
             catch (Exception ex)
             {
