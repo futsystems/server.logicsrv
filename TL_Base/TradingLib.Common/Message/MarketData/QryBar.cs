@@ -55,12 +55,15 @@ namespace TradingLib.Common
 
 
     }
+
+
     public class QryBarRequest:RequestPacket
     {
         public QryBarRequest()
         {
             _type = MessageTypes.BARREQUEST;
-            this.Symbol = "";
+            this.Exchange = string.Empty;
+            this.Symbol = string.Empty;
             this.IntervalType = BarInterval.CustomTime;
             this.Interval = 30;
             this.MaxCount = 500;
@@ -70,6 +73,7 @@ namespace TradingLib.Common
             this.BarResponseType = EnumBarResponseType.PLAINTEXT;
         }
 
+        public string Exchange { get; set; }
         /// <summary>
         /// 合约
         /// </summary>
@@ -117,6 +121,8 @@ namespace TradingLib.Common
         {
             StringBuilder sb = new StringBuilder();
             char d=',';
+            sb.Append(this.Exchange);
+            sb.Append(d);
             sb.Append(this.Symbol);
             sb.Append(d);
             sb.Append((int)this.IntervalType);
@@ -138,14 +144,15 @@ namespace TradingLib.Common
         public override void ContentDeserialize(string contentstr)
         {
             string[] rec = contentstr.Split(',');
-            this.Symbol = rec[0];
-            this.IntervalType = (BarInterval)int.Parse(rec[1]);
-            this.Interval = int.Parse(rec[2]);
-            this.Start = DateTime.Parse(rec[3]);
-            this.End = DateTime.Parse(rec[4]);
-            this.MaxCount = long.Parse(rec[5]);
-            this.FromEnd = bool.Parse(rec[6]);
-            this.BarResponseType = (EnumBarResponseType)Enum.Parse(typeof(EnumBarResponseType), rec[7]);
+            this.Exchange = rec[0];
+            this.Symbol = rec[1];
+            this.IntervalType = (BarInterval)int.Parse(rec[2]);
+            this.Interval = int.Parse(rec[3]);
+            this.Start = DateTime.Parse(rec[4]);
+            this.End = DateTime.Parse(rec[5]);
+            this.MaxCount = long.Parse(rec[6]);
+            this.FromEnd = bool.Parse(rec[7]);
+            this.BarResponseType = (EnumBarResponseType)Enum.Parse(typeof(EnumBarResponseType), rec[8]);
         }
 
 
@@ -251,9 +258,6 @@ namespace TradingLib.Common
         {
             //MemoryStream会根据写入的数据自动扩充底层数组大小
             
-            
-
-
             MemoryStream ms = new MemoryStream();
             BinaryWriter b = new BinaryWriter(ms);
             for (int i = 0; i < this.Bars.Count; i++)

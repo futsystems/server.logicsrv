@@ -347,7 +347,6 @@ namespace TradingLib.Common
             switch (message.Type)
             { 
                 case MessageTypes.BIN_BARRESPONSE:
-                    //return ResponseTemplate<RspQryBarResponseBin>.CliRecvResponse(message);
                     RspQryBarResponseBin response = new RspQryBarResponseBin();
                     response.DeserializeBin(message.Data);
                     return response;

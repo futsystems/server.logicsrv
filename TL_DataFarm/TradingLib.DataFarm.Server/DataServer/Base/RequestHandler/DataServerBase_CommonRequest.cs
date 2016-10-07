@@ -113,7 +113,7 @@ namespace TradingLib.Common.DataFarm
                 //    logger.Warn(string.Format("SymbolFreq:{0}-{1}-{2} is not registed", request.Symbol, request.IntervalType, request.Interval));
                 //    throw new Exception("SymbolFreq not registed");
                 //}
-                Symbol symbol = MDBasicTracker.SymbolTracker["",request.Symbol];
+                Symbol symbol = MDBasicTracker.SymbolTracker[request.Exchange,request.Symbol];
                 if (symbol == null)
                 {
                     logger.Warn(string.Format("Symbol:{0} do not exist", request.Symbol));
@@ -325,7 +325,7 @@ namespace TradingLib.Common.DataFarm
         /// <param name="request"></param>
         protected virtual void SrvOnUnregisterSymbolTick(IServiceHost host, IConnection conn, UnregisterSymbolTickRequest request)
         {
-            logger.Info(string.Format("Conn:{0} try to unregister symbol:{1}", conn.SessionID, string.Join(",",request.SymbolList.ToArray())));
+            logger.Info(string.Format("Conn:{0} Unregister {1},{2}", conn.SessionID,request.Exchange,string.Join(" ",request.SymbolList.ToArray())));
             OnUngisterSymbol(conn, request);
         }
 
@@ -338,7 +338,7 @@ namespace TradingLib.Common.DataFarm
         protected virtual void SrvOnRegisterSymbolTick(IServiceHost host, IConnection conn, RegisterSymbolTickRequest request)
         {
             
-            logger.Info(string.Format("Conn:{0} Register {1} {2}", conn.SessionID,request.Exchange, string.Join(",", request.SymbolList.ToArray())));
+            logger.Info(string.Format("Conn:{0} Register {1},{2}", conn.SessionID,request.Exchange, string.Join(" ", request.SymbolList.ToArray())));
             OnRegisterSymbol(conn, request);
             
         }
