@@ -189,6 +189,7 @@ namespace TradingLib.API
         MGRQRYSYMBOLSREGISTED,//查询已注册合约
         MGRQRYSYMBOLSREGISTEDRESPONSE,//查询已注册合约回报
         MGRSETSYMBOLFILTER,//设置合约过滤条件
+        MGRUPLOADBARDATA,//上传Bar历史数据
 
         // START MANAGER MESSAGES
         MGRQRYACCOUNTS=8000,//查询帐户列表

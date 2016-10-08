@@ -44,6 +44,10 @@ namespace TCPServiceHost
             cfg.ClearIdleSessionInterval = 120;
             cfg.MaxConnectionNumber = 1024;
             cfg.Mode = SuperSocket.SocketBase.SocketMode.Tcp;
+            cfg.LogAllSocketException = true;
+            cfg.LogBasicSessionActivity = true;
+            cfg.MaxRequestLength = 1024*10*10;
+            
             //cfg.SyncSend = false;
 
             if (!tcpSocketServer.Setup(cfg))
@@ -161,7 +165,7 @@ namespace TCPServiceHost
                                 return;
                             }
 
-                            IPacket packet = PacketHelper.SrvRecvRequest(requestInfo.Message.Type, requestInfo.Message.Content, "", sessionId);
+                            IPacket packet = PacketHelper.SrvRecvRequest(requestInfo.Message, "", sessionId);
                             OnRequestEvent(conn, packet);
 
                         }

@@ -539,7 +539,8 @@ namespace TradingLib.Common
 
                 if (_tlsocket != null && _tlsocket.IsConnected)
                 {
-                    _tlsocket.Send(package.Data);
+                    byte[] data = package.Data;
+                    _tlsocket.Send(data);
                     return 0;
                 }
                 else

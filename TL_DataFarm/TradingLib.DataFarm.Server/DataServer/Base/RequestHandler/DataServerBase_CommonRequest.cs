@@ -114,7 +114,7 @@ namespace TradingLib.Common.DataFarm
                 }
 
                 pf.EnterSection("QRY  BAR");
-                List<BarImpl> bars = store.QryBar(symbol, request.IntervalType, request.Interval, request.StartTime, request.EndTime,request.StartIndex,request.MaxCount, request.FromEnd).ToList();
+                List<BarImpl> bars = store.QryBar(symbol, request.IntervalType, request.Interval, request.StartTime, request.EndTime,request.StartIndex,request.MaxCount, request.FromEnd,request.HavePartial).ToList();
                 pf.LeaveSection();
 
                 pf.EnterSection("SEND BAR");

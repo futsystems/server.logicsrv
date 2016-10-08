@@ -38,7 +38,7 @@ namespace TradingLib.Common
         private bool _isTickSent;
         public bool TickWareSent { get { return _updated; } }
 
-        public DateTime BarStartTime { get {return _currentPartialBar.StartTime; } }
+        public DateTime BarEndTime { get {return _currentPartialBar.EndTime; } }
 
         BarFrequency _freq;
         public BarGenerator(Symbol symbol,BarFrequency freq,BarConstructionType type)
@@ -173,12 +173,12 @@ namespace TradingLib.Common
         /// 该操作由外部的IFreqGenerator根据具体的条件来进行调用触发
         /// </summary>
         /// <param name="barEndTime"></param>
-        public void SendNewBar(DateTime barEndTime)
+        public void SendNewBar(DateTime nextEndTime)
         {
             bool nodata = !this._updated && this._currentPartialBar.Close == 0;//update表示是否更新过OHLC
             //当前Tick我们无法确认该Bar数据已经结束,需要下一个Tick的时间来判定该Bar是否结束，比如10:30:59秒，在该秒内可能有多个Tick数据，只有当10:31:00这个Tick过来或定时器触发时候才表面10:30分这个Bar结束了
-            Bar barClosed = this.CloseBar(barEndTime);
-            SingleBarEventArgs e = new SingleBarEventArgs(this._symbol, new BarImpl(barClosed), barEndTime, this._isTickSent);
+            Bar barClosed = this.CloseBar(nextEndTime);
+            SingleBarEventArgs e = new SingleBarEventArgs(this._symbol, new BarImpl(barClosed), barClosed.EndTime, this._isTickSent);
 
             //如果没有更新过数据 则手工更新 通过AskBid来更新OHLC
             if (nodata)
@@ -199,7 +199,7 @@ namespace TradingLib.Common
                 }
             }
             //Bar时间有效 且Bar不为空则触发该Bar
-            if (e.Bar.StartTime != System.DateTime.MinValue && !e.Bar.EmptyBar)//EmptyBar是只没有获得任何一个行情的Bar为空Bar
+            if (e.Bar.EndTime != System.DateTime.MinValue && !e.Bar.EmptyBar)//EmptyBar是只没有获得任何一个行情的Bar为空Bar
             {
 #if DEBUG
                 logger.Info("NewBar Generated:" + e.Bar.ToString());
@@ -215,11 +215,11 @@ namespace TradingLib.Common
         /// 设定Bar起始时间
         /// </summary>
         /// <param name="barStartTime"></param>
-        public void SetBarStartTime(DateTime barStartTime)
+        public void SetBarEndTime(DateTime barEndTime)
         {
-            
-            this._currentPartialBar.StartTime = barStartTime;
-            this._partialBar.StartTime = barStartTime;
+
+            this._currentPartialBar.EndTime = barEndTime;
+            this._partialBar.EndTime = barEndTime;
         }
 
         /// <summary>
@@ -227,7 +227,7 @@ namespace TradingLib.Common
         /// 结束一个Bar的时候会同时生成下一个Bar数据
         /// </summary>
         /// <param name="barEndTime"></param>
-        private Bar CloseBar(DateTime barEndTime)
+        private Bar CloseBar(DateTime nextEndTime)
         {
              //设定Bar结束时间
             //if (this._currentPartialBar != null)
@@ -240,7 +240,7 @@ namespace TradingLib.Common
             Bar data = this._currentPartialBar;
             this._isTickSent = false;
             //重新创建临时Bar数据
-            this._currentPartialBar = new BarImpl(this._symbol.Symbol, this._freq, barEndTime);
+            this._currentPartialBar = new BarImpl(this._symbol.Symbol, this._freq, nextEndTime);
             this._updated = false;
 
             if (data != null)

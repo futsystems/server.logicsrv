@@ -80,7 +80,7 @@ namespace TradingLib.Common
                 case QSEnumBarElement.Ask:
                     return bar.Ask;
                 case QSEnumBarElement.BarDate:
-                    return bar.StartTime.ToOADate();
+                    return bar.EndTime.ToOADate();
                 case QSEnumBarElement.OpenInterest:
                     return (double)bar.OpenInterest;
                 default:
@@ -431,12 +431,12 @@ namespace TradingLib.Common
             {
                 int num2 = (num + i) / 2;
                 Bar barData = bars.LookBack(num2);
-                if (barData.StartTime == date)
+                if (barData.EndTime == date)
                 {
                     result = num2;
                     break;
                 }
-                if (date > barData.StartTime)
+                if (date > barData.EndTime)
                 {
                     i = num2 - 1;
                 }

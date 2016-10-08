@@ -88,7 +88,7 @@ namespace TradingLib.Common
         /// <param name="date"></param>
         /// <param name="period"></param>
         /// <returns></returns>
-        public static DateTime NextRoundedTime(DateTime date, TimeSpan period)
+        public static DateTime BarEndTime(DateTime date, TimeSpan period)
         {
             DateTime time = RoundTime(date, period);
             TimeSpan span = period;
@@ -105,6 +105,7 @@ namespace TradingLib.Common
 
         /// <summary>
         /// 计算给定时刻的当前周期开始时刻
+        /// 计算给定时刻的当前周期结束时间
         /// </summary>
         /// <param name="date"></param>
         /// <param name="period"></param>
@@ -124,7 +125,7 @@ namespace TradingLib.Common
                     time = time.AddDays(-1.0);
                 }
             }
-            else if (period.TotalDays < 365.0)
+            else if (period.TotalDays < 365.0)//大于1个月小于1年
             {
                 time = new DateTime(date.Year, date.Month, 1, 0, 0, 0);
                 if (period.TotalDays == 30.0)
@@ -227,28 +228,28 @@ namespace TradingLib.Common
 
             public void UpdateTime(DateTime datetime)
             {
-                DateTime round = TimeFrequency.RoundTime(datetime, this._interval);
+                DateTime endtime = TimeFrequency.BarEndTime(datetime, this._interval);
                 //没有处理过tick数据 则更新当前的round时间为当前Bar的开始时间 closebar会执行update=false
                 if (!this._updated)
                 {
 #if DEBUG
-                    logger.Info(string.Format("DateTime:{0} SetBarStartTime:{1}", datetime, round));
+                    logger.Info(string.Format("DateTime:{0} SetBarEndTime:{1}", datetime, endtime));
 #endif
-                    this._generator.SetBarStartTime(round);
+                    this._generator.SetBarEndTime(endtime);
                     this._updated = true;
                 }
                 //如果roundtime大于PartialBar的起始时间 越过了一个Bar数据 调用generator发送Bar同时设定BarStartTime
-                if (round > this._generator.PartialBar.StartTime)
+                if (endtime > this._generator.PartialBar.EndTime)
                 {
                     //取下一个Bar时间 根据当前BarStartTime计算下一个BarStarTime
-                    DateTime nextround = TimeFrequency.NextRoundedTime(this._generator.BarStartTime, this._interval);
-                    if (round < nextround)
+                    DateTime nextend = TimeFrequency.BarEndTime(this._generator.BarEndTime, this._interval);
+                    if (endtime < nextend)
                     {
                         throw new Exception("Error in time rounding logic");
                     }
                     //发送当前Generator中的Bar数据 同时设定下一个Bar的开始时间
-                    this._generator.SendNewBar(nextround);//结束时间按Bar的开始时间以及间隔计算获得
-                    this._generator.SetBarStartTime(round);//Bar的开始时间按当前实际时间Round获得
+                    this._generator.SendNewBar(nextend);//结束时间按Bar的开始时间以及间隔计算获得
+                    this._generator.SetBarEndTime(endtime);//Bar的结束时间按当前实际时间Round获得
                 }
             }
 
@@ -263,7 +264,7 @@ namespace TradingLib.Common
                     {
                         return DateTime.MinValue;
                     }
-                    return TimeFrequency.NextRoundedTime(this._generator.BarStartTime, this._interval);
+                    return TimeFrequency.BarEndTime(this._generator.BarEndTime, this._interval);
                 }
             }
 

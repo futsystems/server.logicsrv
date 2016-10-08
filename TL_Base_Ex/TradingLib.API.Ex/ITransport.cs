@@ -1,4 +1,5 @@
 ﻿using System;
+using TradingLib.Common;
 
 namespace TradingLib.API
 {
@@ -30,7 +31,7 @@ namespace TradingLib.API
         /// <summary>
         /// 收到客户端提交上来的消息,类别,消息体,前置,客户端地址
         /// </summary>
-        event HandleTLMessageDel GotTLMessageEvent;
+        event Action<Message,string,string> GotTLMessageEvent;
         /// <summary>
         /// 是否启用流控
         /// </summary>

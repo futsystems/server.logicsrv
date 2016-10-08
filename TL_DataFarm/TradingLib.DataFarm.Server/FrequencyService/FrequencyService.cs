@@ -111,7 +111,7 @@ namespace TradingLib.Common.DataFarm
         {
             if (UpdatePartialBarEvent != null)
             {
-                logger.Info("PartialBar Update:" + arg2.PartialBar.ToString());
+                //logger.Info("PartialBar Update:" + arg2.PartialBar.ToString());
 
                 UpdatePartialBarEvent(new FreqUpdatePartialBarEventArgs() { BarFrequency = arg1.Settings.BarFrequency, Symbol = arg1.Symbol, PartialBar = new BarImpl(arg2.PartialBar) });
             }

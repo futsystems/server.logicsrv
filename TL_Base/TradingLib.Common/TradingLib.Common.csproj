@@ -94,6 +94,7 @@
     <Compile Include="Json\ParserToken.cs" />
     <Compile Include="Manager\UIAccess.cs" />
     <Compile Include="Message\BinaryOption\Order.cs" />
+    <Compile Include="Message\Common\UtilStruct.cs" />
     <Compile Include="Message\Manager\MGRMarketData.cs" />
     <Compile Include="Message\Service.cs" />
     <Compile Include="Message\UpdateLocation.cs" />

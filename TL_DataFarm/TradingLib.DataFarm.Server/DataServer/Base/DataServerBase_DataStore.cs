@@ -23,6 +23,39 @@ namespace TradingLib.Common.DataFarm
 
         public BarImpl Bar { get; set; }
     }
+
+    internal class BarUploadStruct
+    {
+        public BarUploadStruct(string key, IEnumerable<BarImpl> bars)
+        {
+            this.Key = key;
+            this.Bars = bars;
+        }
+
+        public string Key { get; set; }
+
+        public IEnumerable<BarImpl> Bars { get; set; }
+    }
+
+    internal class BarDeleteStruct
+    {
+
+        public BarDeleteStruct(Symbol symbol, BarInterval intervaltype, int interval, int[] ids)
+        {
+            this.Symbol = symbol;
+            this.IntervalType = intervaltype;
+            this.Interval = interval;
+            this.IDs = ids;
+        }
+
+        public Symbol Symbol { get; set; }
+
+        public BarInterval IntervalType { get; set; }
+
+        public int Interval { get; set;}
+
+        public int[] IDs { get; set; }
+    }
     public partial class DataServerBase
     {
 
@@ -51,6 +84,8 @@ namespace TradingLib.Common.DataFarm
         #region 保存行情与Bar数据
         RingBuffer<Tick> tickbuffer = new RingBuffer<Tick>(10000);
         RingBuffer<BarStoreStruct> barbuffer = new RingBuffer<BarStoreStruct>(10000);
+        RingBuffer<BarDeleteStruct> deleteBarBuffer = new RingBuffer<BarDeleteStruct>(1000);
+        RingBuffer<BarUploadStruct> uploadBarBuffer = new RingBuffer<BarUploadStruct>(10000);
         RingBuffer<BarStoreStruct> partialBarBuffer = new RingBuffer<BarStoreStruct>(10000);
 
         RingBuffer<BarStoreStruct> barupdatebuffre = new RingBuffer<BarStoreStruct>(10000);
@@ -83,7 +118,7 @@ namespace TradingLib.Common.DataFarm
         /// 数据库插入Bar记录
         /// </summary>
         /// <param name="b"></param>
-        void DBInsertBar(Bar b)
+        void DBInsertBar(BarImpl b)
         {
             try
             {
@@ -99,7 +134,7 @@ namespace TradingLib.Common.DataFarm
         /// 数据库更新Bar记录
         /// </summary>
         /// <param name="b"></param>
-        void DBUpdateBar(Bar b)
+        void DBUpdateBar(BarImpl b)
         {
             try
             {
@@ -115,6 +150,13 @@ namespace TradingLib.Common.DataFarm
         TimeSpan _commitpriod = TimeSpan.FromMinutes(1);
         void ProcessBuffer()
         {
+            IHistDataStore store = GetHistDataSotre();
+            if (store == null)
+            {
+                logger.Error("HistDataStore is null");
+                return;
+            }
+
             while (_saverunning)
             {
                 try
@@ -131,36 +173,24 @@ namespace TradingLib.Common.DataFarm
                     while (barbuffer.hasItems && _tickRestored)
                     {
                         BarStoreStruct b = barbuffer.Read();
-                        IHistDataStore store = GetHistDataSotre();
+                        store.UpdateBar(b.Symbol,b.Bar);
+                        
+                    }
+                    while (!barbuffer.hasItems && deleteBarBuffer.hasItems)
+                    {
+                        BarDeleteStruct b = deleteBarBuffer.Read();
+                        store.DeleteBar(b.Symbol, b.IntervalType, b.Interval,b.IDs);
+                    }
 
-                        bool isinsert = true;
-                        if (store != null)
-                        {
-                            //logger.Info("b.symbol:" + (b.Symbol == null ? "null" : b.Symbol.Symbol) + " b.bar:" + (b.Bar == null ? "null" : b.Bar.ToString()));
-                            store.UpdateBar(b.Symbol,b.Bar,out isinsert);
-                            //if (!_batchSave)
-                            //{
-                            //    store.Commit();
-                            //}
-                        }
-
-                        //如果BarList中已经有该Bar则更新数据否则插入
-                        if (isinsert)
-                        {
-                            
-                            DBInsertBar(b.Bar);
-                        }
-                        else
-                        {
-                            DBUpdateBar(b.Bar);
-                        }
-                       
+                    while (!barbuffer.hasItems && uploadBarBuffer.hasItems)
+                    {
+                        BarUploadStruct b = uploadBarBuffer.Read();
+                        store.UploadBar(b.Key, b.Bars);
                     }
 
                     while (!barbuffer.hasItems && partialBarBuffer.hasItems)
                     {
                         BarStoreStruct b = partialBarBuffer.Read();
-                        IHistDataStore store = GetHistDataSotre();
                         store.UpdatePartialBar(b.Symbol, b.Bar);
                     }
 
@@ -168,43 +198,23 @@ namespace TradingLib.Common.DataFarm
                     while (barupdatebuffre.hasItems)
                     {
                         BarStoreStruct b = barupdatebuffre.Read();
-                        IHistDataStore store = GetHistDataSotre();
-                        bool isinsert = true;
-                        if (store != null)
-                        {
-                            store.UpdateBar(b.Symbol, b.Bar, out isinsert);
-                            if (!_batchSave)
-                            {
-                                store.Commit();
-                            }
-                        }
-
-                        //如果BarList中已经有该Bar则更新数据否则插入
-                        if (isinsert)
-                        {
-
-                            DBInsertBar(b.Bar);
-                        }
-                        else
-                        {
-                            DBUpdateBar(b.Bar);
-                        }
+                        store.UpdateBar(b.Symbol, b.Bar);
                     }
 
-                    if (_batchSave)
-                    {
-                        DateTime now = DateTime.Now;
-                        if (now - _lastcommit > _commitpriod)
-                        {
-                            IHistDataStore store = GetHistDataSotre();
-                            if (store != null)
-                            {
-                                logger.Info("Commit:" + now.ToShortTimeString());
-                                store.Commit();
-                            }
-                            _lastcommit = now;
-                        }
-                    }
+                    //if (_batchSave)
+                    //{
+                    //    DateTime now = DateTime.Now;
+                    //    if (now - _lastcommit > _commitpriod)
+                    //    {
+                    //        IHistDataStore store = GetHistDataSotre();
+                    //        if (store != null)
+                    //        {
+                    //            logger.Info("Commit:" + now.ToShortTimeString());
+                    //            store.Commit();
+                    //        }
+                    //        _lastcommit = now;
+                    //    }
+                    //}
                     // clear current flag signal
                     _logwaiting.Reset();
 
@@ -232,9 +242,21 @@ namespace TradingLib.Common.DataFarm
         /// 保存Bar数据
         /// </summary>
         /// <param name="bar"></param>
-        public void SaveBar(Symbol symbol,BarImpl bar)
+        public void UpdateBar2(Symbol symbol,BarImpl bar)
         {
             barbuffer.Write(new BarStoreStruct(symbol, bar));
+            NewData();
+        }
+
+        public void UploadBars(string key, IEnumerable<BarImpl> bars)
+        {
+            uploadBarBuffer.Write(new BarUploadStruct(key, bars));
+            NewData();
+        }
+
+        public void DeleteBar(Symbol symbol, BarInterval intervalType, int interval, int[] ids)
+        {
+            deleteBarBuffer.Write(new BarDeleteStruct(symbol, intervalType, interval, ids));
             NewData();
         }
 
@@ -255,13 +277,8 @@ namespace TradingLib.Common.DataFarm
         /// <param name="bar"></param>
         public void UpdateBar(Symbol symbol, BarImpl bar)
         {
-            if (symbol.Symbol == "GC04")
-            {
-                int i = 1;
-            }
             barupdatebuffre.Write(new BarStoreStruct(symbol, bar));
             NewData();
-        
         }
         #endregion
     }

@@ -58,14 +58,16 @@ namespace TCPServiceHost
             byte[] data = null;
             if(length>0)
             {
-                if (type != MessageTypes.BIN_BARRESPONSE)
+                switch (type)
                 {
-                    content = System.Text.Encoding.UTF8.GetString(bodyBuffer, offset, length);
-                }
-                else
-                {
-                    data = new byte[length];
-                    Array.Copy(bodyBuffer, offset, data, 0, length);
+                    case MessageTypes.BIN_BARRESPONSE:
+                    case MessageTypes.MGRUPLOADBARDATA:
+                        data = new byte[length];
+                        Array.Copy(bodyBuffer, offset, data, 0, length);
+                        break;
+                    default:
+                        content = System.Text.Encoding.UTF8.GetString(bodyBuffer, offset, length);
+                        break;
                 }
             }
             Message message = new Message(type, content,data,totallen);

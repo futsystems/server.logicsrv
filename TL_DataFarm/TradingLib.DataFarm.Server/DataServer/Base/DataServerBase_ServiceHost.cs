@@ -246,6 +246,10 @@ namespace TradingLib.Common.DataFarm
                 case MessageTypes.MGRCONTRIBREQUEST:
                     SrvOnMGRContribRequest(host, conn, packet as MGRContribRequest);
                     break;
+
+                case MessageTypes.MGRUPLOADBARDATA:
+                    SrvOnMGRUploadBarData(host, conn, packet as UploadBarDataRequest);
+                    break;
                 #endregion
                 default:
                     logger.Warn(string.Format("Message Type:{0} not handled", packet.Type));

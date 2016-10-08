@@ -101,7 +101,7 @@ namespace TradingLib.Common
         public static long CalcExpireTime(long entrytime, EnumBinaryOptionTimeSpan type)
         {
             TimeSpan ts = BinaryOptionImpl.TimeSpanTypeToTimeSpan(type);
-            DateTime dt = TimeFrequency.NextRoundedTime(Util.ToDateTime(entrytime), ts);
+            DateTime dt = TimeFrequency.BarEndTime(Util.ToDateTime(entrytime), ts);
             return dt.ToTLDateTime();
         }
 

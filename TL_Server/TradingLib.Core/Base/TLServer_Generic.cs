@@ -327,7 +327,7 @@ namespace TradingLib.Core
                     {   //注意从外层传入服务器监听地址
                         _trans = new AsyncServerZ4(PROGRAME, _serveraddress, _port, this.NumWorkers, this.EnableTPTracker, false);
                         //_trans.SendDebugEvent += new DebugDelegate(msgdebug);
-                        _trans.GotTLMessageEvent += new HandleTLMessageDel(basehandle);
+                        _trans.GotTLMessageEvent += new Action<Message,string,string>(basehandle);
                         _trans.ProviderName = ProviderName;//将TLServerProviderName传递给传输层,用于客户端的名称查询
 
                         //我们在其他服务均启动成功后再启动传输服务。应为传输服务的某些请求以其他服务为基础
@@ -840,16 +840,16 @@ namespace TradingLib.Core
         /// <param name="front"></param>
         /// <param name="address"></param>
         /// <returns></returns>
-        public long basehandle(MessageTypes type, string msg, string front, string address)
+        public void basehandle(Message message, string front, string address)
         {
             long result = NORETURNRESULT;
             try
             {
-                IPacket packet = PacketHelper.SrvRecvRequest(type, msg, front, address);
+                IPacket packet = PacketHelper.SrvRecvRequest(message, front, address);
                 //debug("<<<<<< Rev Packet:" + packet.ToString(), QSEnumDebugLevel.INFO);
                 T1 client = _clients[address];
                 Client2Session session = client!=null?CreateSession(client):null;
-                switch (type)
+                switch (message.Type)
                 {
                     case MessageTypes.REGISTERCLIENT://注册
                         SrvRegClient(packet as RegisterClientRequest,client);
@@ -885,9 +885,9 @@ namespace TradingLib.Core
                         break;
                     default:
                         //如果客户端没有注册到服务器则 不接受任何其他类型的功能请求 要求客户端有效注册到服务器
-                        if (client == null) return -1;
+                        if (client == null) return;
                         //如果该客户端没有认证通过则 不接受任何其他类型的操作请求
-                        if (!client.Authorized) return -1;//如果授权通过表面已经绑定了对应的状态对象
+                        if (!client.Authorized) return;//如果授权通过表面已经绑定了对应的状态对象
 
                         OnSessionStated(session,client);
                         result = handle(session,packet);//外传到子类中去扩展消息类型 通过子类扩展允许tlserver实现更多功能请求
@@ -907,7 +907,7 @@ namespace TradingLib.Core
                 logger.Error("****** Can not find PacketClass for Type:" + ex.Type.ToString());
                 logger.Error(string.Format("Message Type:{0} Content:{1} FrontID:{2} Client:{3}", ex.Type.ToString(), ex.Content, ex.FrontID, ex.ClientID));
             }
-            return result;
+            return;
 
         }
         #endregion

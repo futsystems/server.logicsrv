@@ -88,7 +88,7 @@ namespace TradingLib.Common.DataFarm
             if (task != null)
             {
                 //如果当前产生的Bar的结束时间超过了任务结束时间,则表明该结束时间内所有的Tick数据接收完毕
-                if (TimeFrequency.NextRoundedTime(b.StartTime,TimeSpan.FromMinutes(1)) >= task.End)
+                if (TimeFrequency.BarEndTime(b.EndTime,TimeSpan.FromMinutes(1)) >= task.End)
                 {
                     task.CanRestored = true;
                     logger.Info("Symbol:{0} can start restore tickfile,end:{1}".Put(symbol.Symbol, task.End));
@@ -117,7 +117,7 @@ namespace TradingLib.Common.DataFarm
                         {
                             
                             DateTime firstTickTime = freqService.GetFirstTickTime(item.Symbol);
-                            item.End = firstTickTime == DateTime.MaxValue ? firstTickTime : TimeFrequency.NextRoundedTime(firstTickTime, TimeSpan.FromMinutes(1));//1分钟K线下一个Bar开始时间
+                            item.End = firstTickTime == DateTime.MaxValue ? firstTickTime : TimeFrequency.BarEndTime(firstTickTime, TimeSpan.FromMinutes(1));//1分钟K线下一个Bar开始时间
                             //如果还是未MaxValue则判断任务创建时间 如果2分钟之后还没有对应的Tick数据则表明 当前处于停盘时间 将MaxValue减去1分钟 用于加载所有tick文件生成Bar数据
                             if (item.End == DateTime.MaxValue)
                             {
@@ -181,8 +181,8 @@ namespace TradingLib.Common.DataFarm
 
                 //注意在恢复Tick数据之前 新生成的Bar数据插入后会影响LastBarTime
                 //如果没有任何Bar数据或Tick时间 需要过滤
-                DateTime start = lastBarTime == DateTime.MinValue ? lastBarTime : TimeFrequency.NextRoundedTime(lastBarTime, TimeSpan.FromMinutes(1));//最后一个Bar对应的下一个Bar开始时间
-                DateTime end = firstTickTime == DateTime.MaxValue ? firstTickTime : TimeFrequency.NextRoundedTime(firstTickTime, TimeSpan.FromMinutes(1));//1分钟K线下一个Bar开始时间
+                DateTime start = lastBarTime == DateTime.MinValue ? lastBarTime : TimeFrequency.BarEndTime(lastBarTime, TimeSpan.FromMinutes(1));//最后一个Bar对应的下一个Bar开始时间
+                DateTime end = firstTickTime == DateTime.MaxValue ? firstTickTime : TimeFrequency.BarEndTime(firstTickTime, TimeSpan.FromMinutes(1));//1分钟K线下一个Bar开始时间
 
 
                 logger.Warn("Symbol:{0} create restore task start:{1} end:{2}".Put(symbol.Symbol, start, end));

@@ -96,8 +96,8 @@ namespace TradingLib.Common.DataFarm
                             b.OpenInterest = 0;
 
                             //logger.Info("datatime:" + rec[5]);
-                            b.StartTime = DateTime.ParseExact(rec[5], "yyyyMMdd HH:mm:ss", null);
-                            b.StartTime = TimeFrequency.RoundTime(b.StartTime, ts);
+                            b.EndTime = DateTime.ParseExact(rec[5], "yyyyMMdd HH:mm:ss", null);
+                            b.EndTime = TimeFrequency.RoundTime(b.EndTime, ts);
                             //logger.Info("bar:" + b.ToString());
                             //MBar.InsertBar(b);
                             //SaveBar(symbol, b);

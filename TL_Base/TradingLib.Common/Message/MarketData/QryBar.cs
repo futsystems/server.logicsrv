@@ -72,6 +72,7 @@ namespace TradingLib.Common
             this.EndTime = DateTime.MaxValue;
             this.FromEnd = true;
             this.BarResponseType = EnumBarResponseType.PLAINTEXT;
+            this.HavePartial = true;
         }
 
         /// <summary>
@@ -120,7 +121,10 @@ namespace TradingLib.Common
         /// </summary>
         public bool FromEnd { get; set; }
 
-
+        /// <summary>
+        /// 包含Partial
+        /// </summary>
+        public bool HavePartial { get; set; }
 
 
         /// <summary>
@@ -151,6 +155,8 @@ namespace TradingLib.Common
             sb.Append(this.FromEnd);
             sb.Append(d);
             sb.Append(this.BarResponseType);
+            sb.Append(d);
+            sb.Append(this.HavePartial);
             return sb.ToString();
         }
 
@@ -167,6 +173,7 @@ namespace TradingLib.Common
             this.MaxCount = int.Parse(rec[7]);
             this.FromEnd = bool.Parse(rec[8]);
             this.BarResponseType = (EnumBarResponseType)Enum.Parse(typeof(EnumBarResponseType), rec[9]);
+            this.HavePartial = bool.Parse(rec[10]);
         }
 
 
@@ -196,6 +203,8 @@ namespace TradingLib.Common
                 this.Bar = BarImpl.Deserialize(content);
         }
     }
+
+
 
     public class RspQryBarResponseBin:RspResponsePacket
     {

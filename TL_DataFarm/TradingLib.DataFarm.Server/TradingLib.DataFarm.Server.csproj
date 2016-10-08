@@ -67,6 +67,7 @@
     <Compile Include="Common\DataCommandInfo.cs" />
     <Compile Include="Common\IHistDataStore.cs" />
     <Compile Include="Common\PluginHelper.cs" />
+    <Compile Include="DataBase\BarList.cs" />
     <Compile Include="DataBase\MBar.cs" />
     <Compile Include="DataBase\MemoryBarDB.cs" />
     <Compile Include="DataBase\TableInfo.cs" />

@@ -61,283 +61,288 @@ namespace TradingLib.Common
     }
     public class PacketHelper
     {
-        public static IPacket SrvRecvRequest(MessageTypes type,string content,string frontid, string clientid)
+        public static IPacket SrvRecvRequest(Message message,string frontid, string clientid)
         {
             try
             {
-                switch (type)
+                switch (message.Type)
                 {
+
                     case MessageTypes.SERVICEREQUEST:
-                        return RequestTemplate<QryServiceRequest>.SrvRecvRequest(frontid, clientid, content);
+                        return RequestTemplate<QryServiceRequest>.SrvRecvRequest(frontid, clientid, message.Content);
                     //逻辑活动请求
                     case MessageTypes.LOGICLIVEREQUEST:
-                        return RequestTemplate<LogicLiveRequest>.SrvRecvRequest(frontid, clientid, content);
+                        return RequestTemplate<LogicLiveRequest>.SrvRecvRequest(frontid, clientid, message.Content);
                     //客户端注册
                     case MessageTypes.REGISTERCLIENT:
-                        return RequestTemplate<RegisterClientRequest>.SrvRecvRequest(frontid, clientid, content);
+                        return RequestTemplate<RegisterClientRequest>.SrvRecvRequest(frontid, clientid, message.Content);
                     //请求注销
                     case MessageTypes.CLEARCLIENT:
-                        return RequestTemplate<UnregisterClientRequest>.SrvRecvRequest(frontid, clientid, content);
+                        return RequestTemplate<UnregisterClientRequest>.SrvRecvRequest(frontid, clientid, message.Content);
                     //发送心跳
                     case MessageTypes.HEARTBEAT:
-                        return RequestTemplate<HeartBeat>.SrvRecvRequest(frontid, clientid, content);
+                        return RequestTemplate<HeartBeat>.SrvRecvRequest(frontid, clientid, message.Content);
 
                     //功能码请求
                     case MessageTypes.FEATUREREQUEST:
-                        return RequestTemplate<FeatureRequest>.SrvRecvRequest(frontid, clientid, content);
+                        return RequestTemplate<FeatureRequest>.SrvRecvRequest(frontid, clientid, message.Content);
                     //版本查询与连接初始化
                     case MessageTypes.VERSIONREQUEST:
-                        return RequestTemplate<VersionRequest>.SrvRecvRequest(frontid, clientid, content);
+                        return RequestTemplate<VersionRequest>.SrvRecvRequest(frontid, clientid, message.Content);
                     //发送心跳请求
                     case MessageTypes.HEARTBEATREQUEST:
-                        return RequestTemplate<HeartBeatRequest>.SrvRecvRequest(frontid, clientid, content);
+                        return RequestTemplate<HeartBeatRequest>.SrvRecvRequest(frontid, clientid, message.Content);
                     //请求登入
                     case MessageTypes.LOGINREQUEST:
-                        return RequestTemplate<LoginRequest>.SrvRecvRequest(frontid, clientid, content);
+                        return RequestTemplate<LoginRequest>.SrvRecvRequest(frontid, clientid, message.Content);
 
 
                     //服务查询
                     case MessageTypes.BROKERNAMEREQUEST:
-                        return RequestTemplate<BrokerNameRequest>.SrvRecvRequest(frontid, clientid, content);
+                        return RequestTemplate<BrokerNameRequest>.SrvRecvRequest(frontid, clientid, message.Content);
                     //注册合约
                     case MessageTypes.REGISTERSYMTICK:
-                        return RequestTemplate<RegisterSymbolTickRequest>.SrvRecvRequest(frontid, clientid, content);
+                        return RequestTemplate<RegisterSymbolTickRequest>.SrvRecvRequest(frontid, clientid, message.Content);
                     //注销合约
                     case MessageTypes.UNREGISTERSYMTICK:
-                        return RequestTemplate<UnregisterSymbolTickRequest>.SrvRecvRequest(frontid, clientid, content);
+                        return RequestTemplate<UnregisterSymbolTickRequest>.SrvRecvRequest(frontid, clientid, message.Content);
                     //发送委托
                     case MessageTypes.SENDORDER:
-                        return RequestTemplate<OrderInsertRequest>.SrvRecvRequest(frontid, clientid, content);
+                        return RequestTemplate<OrderInsertRequest>.SrvRecvRequest(frontid, clientid, message.Content);
                     //发送委托操作
                     case MessageTypes.SENDORDERACTION:
-                        return RequestTemplate<OrderActionRequest>.SrvRecvRequest(frontid, clientid, content);
+                        return RequestTemplate<OrderActionRequest>.SrvRecvRequest(frontid, clientid, message.Content);
                     //查询交易员
                     case MessageTypes.QRYINVESTOR:
-                        return RequestTemplate<QryInvestorRequest>.SrvRecvRequest(frontid, clientid, content);
+                        return RequestTemplate<QryInvestorRequest>.SrvRecvRequest(frontid, clientid, message.Content);
                     //账户信息查询
                     case MessageTypes.QRYACCOUNTINFO:
-                        return RequestTemplate<QryAccountInfoRequest>.SrvRecvRequest(frontid, clientid, content);
+                        return RequestTemplate<QryAccountInfoRequest>.SrvRecvRequest(frontid, clientid, message.Content);
                     //查询合约
                     case MessageTypes.QRYSYMBOL:
-                        return RequestTemplate<QrySymbolRequest>.SrvRecvRequest(frontid, clientid, content);
+                        return RequestTemplate<QrySymbolRequest>.SrvRecvRequest(frontid, clientid, message.Content);
                     //查询结算确认
                     case MessageTypes.QRYSETTLEINFOCONFIRM:
-                        return RequestTemplate<QrySettleInfoConfirmRequest>.SrvRecvRequest(frontid, clientid, content);
+                        return RequestTemplate<QrySettleInfoConfirmRequest>.SrvRecvRequest(frontid, clientid, message.Content);
                     //查询结算信息
                     case MessageTypes.QRYSETTLEINFO:
-                        return RequestTemplate<QrySettleInfoRequest>.SrvRecvRequest(frontid, clientid, content);
+                        return RequestTemplate<QrySettleInfoRequest>.SrvRecvRequest(frontid, clientid, message.Content);
                     //查询委托
                     case MessageTypes.QRYORDER:
-                        return RequestTemplate<QryOrderRequest>.SrvRecvRequest(frontid, clientid, content);
+                        return RequestTemplate<QryOrderRequest>.SrvRecvRequest(frontid, clientid, message.Content);
                     //查询成交
                     case MessageTypes.QRYTRADE:
-                        return RequestTemplate<QryTradeRequest>.SrvRecvRequest(frontid, clientid, content);
+                        return RequestTemplate<QryTradeRequest>.SrvRecvRequest(frontid, clientid, message.Content);
                     //查询持仓
                     case MessageTypes.QRYPOSITION:
-                        return RequestTemplate<QryPositionRequest>.SrvRecvRequest(frontid, clientid, content);
+                        return RequestTemplate<QryPositionRequest>.SrvRecvRequest(frontid, clientid, message.Content);
                     //查询持仓明细
                     case MessageTypes.QRYPOSITIONDETAIL:
-                        return RequestTemplate<QryPositionDetailRequest>.SrvRecvRequest(frontid, clientid, content);
+                        return RequestTemplate<QryPositionDetailRequest>.SrvRecvRequest(frontid, clientid, message.Content);
                     //查询最大保单
                     case MessageTypes.QRYMAXORDERVOL:
-                        return RequestTemplate<QryMaxOrderVolRequest>.SrvRecvRequest(frontid, clientid, content);
+                        return RequestTemplate<QryMaxOrderVolRequest>.SrvRecvRequest(frontid, clientid, message.Content);
                     //确认结算单
                     case MessageTypes.CONFIRMSETTLEMENT:
-                        return RequestTemplate<ConfirmSettlementRequest>.SrvRecvRequest(frontid, clientid, content);
+                        return RequestTemplate<ConfirmSettlementRequest>.SrvRecvRequest(frontid, clientid, message.Content);
                     //查询历史行情
                     case MessageTypes.BARREQUEST:
-                        return RequestTemplate<QryBarRequest>.SrvRecvRequest(frontid, clientid, content);
+                        return RequestTemplate<QryBarRequest>.SrvRecvRequest(frontid, clientid, message.Content);
                     //扩展命令请求
                     case MessageTypes.CONTRIBREQUEST:
-                        return RequestTemplate<ContribRequest>.SrvRecvRequest(frontid, clientid, content);
+                        return RequestTemplate<ContribRequest>.SrvRecvRequest(frontid, clientid, message.Content);
                     //请求修改密码
                     case MessageTypes.REQCHANGEPASS:
-                        return RequestTemplate<ReqChangePasswordRequest>.SrvRecvRequest(frontid, clientid, content);
+                        return RequestTemplate<ReqChangePasswordRequest>.SrvRecvRequest(frontid, clientid, message.Content);
                     //请求查询系统通知
                     case MessageTypes.QRYNOTICE:
-                        return RequestTemplate<QryNoticeRequest>.SrvRecvRequest(frontid, clientid, content);
+                        return RequestTemplate<QryNoticeRequest>.SrvRecvRequest(frontid, clientid, message.Content);
                     //请求查询签约银行列表
                     case MessageTypes.QRYCONTRACTBANK:
-                        return RequestTemplate<QryContractBankRequest>.SrvRecvRequest(frontid, clientid, content);
+                        return RequestTemplate<QryContractBankRequest>.SrvRecvRequest(frontid, clientid, message.Content);
                     //请求查询银行帐户
                     case MessageTypes.QRYREGISTERBANKACCOUNT:
-                        return RequestTemplate<QryRegisterBankAccountRequest>.SrvRecvRequest(frontid, clientid, content);
+                        return RequestTemplate<QryRegisterBankAccountRequest>.SrvRecvRequest(frontid, clientid, message.Content);
                     //查询出入金流水记录
                     case MessageTypes.QRYTRANSFERSERIAL:
-                        return RequestTemplate<QryTransferSerialRequest>.SrvRecvRequest(frontid, clientid, content);
+                        return RequestTemplate<QryTransferSerialRequest>.SrvRecvRequest(frontid, clientid, message.Content);
                     //查询合约手续费率
                     case MessageTypes.QRYINSTRUMENTCOMMISSIONRATE:
-                        return RequestTemplate<QryInstrumentCommissionRateRequest>.SrvRecvRequest(frontid, clientid, content);
+                        return RequestTemplate<QryInstrumentCommissionRateRequest>.SrvRecvRequest(frontid, clientid, message.Content);
                     //查询合约保证金率
                     case MessageTypes.QRYINSTRUMENTMARGINRATE:
-                        return RequestTemplate<QryInstrumentMarginRateRequest>.SrvRecvRequest(frontid, clientid, content);
+                        return RequestTemplate<QryInstrumentMarginRateRequest>.SrvRecvRequest(frontid, clientid, message.Content);
                     //查询市场行情
                     case MessageTypes.QRYMARKETDATA:
-                        return RequestTemplate<QryMarketDataRequest>.SrvRecvRequest(frontid, clientid, content);
+                        return RequestTemplate<QryMarketDataRequest>.SrvRecvRequest(frontid, clientid, message.Content);
                     //查询交易参数
                     case MessageTypes.QRYTRADINGPARAMS:
-                        return RequestTemplate<QryTradingParamsRequest>.SrvRecvRequest(frontid, clientid, content);
+                        return RequestTemplate<QryTradingParamsRequest>.SrvRecvRequest(frontid, clientid, message.Content);
                     //查询交易时间段
                     case MessageTypes.XQRYMARKETTIME:
-                        return RequestTemplate<XQryMarketTimeRequest>.SrvRecvRequest(frontid, clientid, content);
+                        return RequestTemplate<XQryMarketTimeRequest>.SrvRecvRequest(frontid, clientid, message.Content);
                     //查询交易所
                     case MessageTypes.XQRYEXCHANGE:
-                        return RequestTemplate<XQryExchangeRequuest>.SrvRecvRequest(frontid, clientid, content);
+                        return RequestTemplate<XQryExchangeRequuest>.SrvRecvRequest(frontid, clientid, message.Content);
                     //查询品种
                     case MessageTypes.XQRYSECURITY:
-                        return RequestTemplate<XQrySecurityRequest>.SrvRecvRequest(frontid, clientid, content);
+                        return RequestTemplate<XQrySecurityRequest>.SrvRecvRequest(frontid, clientid, message.Content);
                     //查询合约
                     case MessageTypes.XQRYSYMBOL:
-                        return RequestTemplate<XQrySymbolRequest>.SrvRecvRequest(frontid, clientid, content);
+                        return RequestTemplate<XQrySymbolRequest>.SrvRecvRequest(frontid, clientid, message.Content);
                     //查询隔夜持仓
                     case MessageTypes.XQRYYDPOSITION:
-                        return RequestTemplate<XQryYDPositionRequest>.SrvRecvRequest(frontid, clientid, content);
+                        return RequestTemplate<XQryYDPositionRequest>.SrvRecvRequest(frontid, clientid, message.Content);
                     //查询委托
                     case MessageTypes.XQRYORDER:
-                        return RequestTemplate<XQryOrderRequest>.SrvRecvRequest(frontid,clientid,content);
+                        return RequestTemplate<XQryOrderRequest>.SrvRecvRequest(frontid,clientid,message.Content);
                     //查询成交
                     case MessageTypes.XQRYTRADE:
-                        return RequestTemplate<XQryTradeRequest>.SrvRecvRequest(frontid, clientid, content);
+                        return RequestTemplate<XQryTradeRequest>.SrvRecvRequest(frontid, clientid, message.Content);
                     //更新地址信息
                     case MessageTypes.UPDATELOCATION:
-                        return RequestTemplate<UpdateLocationInfoRequest>.SrvRecvRequest(frontid, clientid, content);
+                        return RequestTemplate<UpdateLocationInfoRequest>.SrvRecvRequest(frontid, clientid, message.Content);
                     //查询行情快照
                     case MessageTypes.XQRYTICKSNAPSHOT:
-                        return RequestTemplate<XQryTickSnapShotRequest>.SrvRecvRequest(frontid, clientid, content);
+                        return RequestTemplate<XQryTickSnapShotRequest>.SrvRecvRequest(frontid, clientid, message.Content);
                     //查询交易账户
                     case MessageTypes.XQRYACCOUNT:
-                        return RequestTemplate<XQryAccountRequest>.SrvRecvRequest(frontid, clientid, content);
+                        return RequestTemplate<XQryAccountRequest>.SrvRecvRequest(frontid, clientid, message.Content);
                     //查询最大下单量
                     case MessageTypes.XQRYMAXORDERVOL:
-                        return RequestTemplate<XQryMaxOrderVolRequest>.SrvRecvRequest(frontid, clientid, content);
+                        return RequestTemplate<XQryMaxOrderVolRequest>.SrvRecvRequest(frontid, clientid, message.Content);
                     //查询账户财务信息
                     case MessageTypes.XQRYACCOUNTFINANCE:
-                        return RequestTemplate<XQryAccountFinanceRequest>.SrvRecvRequest(frontid, clientid, content);
+                        return RequestTemplate<XQryAccountFinanceRequest>.SrvRecvRequest(frontid, clientid, message.Content);
 
                     #region manager
                     case MessageTypes.MGRLOGINREQUEST://请求登入
-                        return RequestTemplate<MGRLoginRequest>.SrvRecvRequest(frontid, clientid, content);
+                        return RequestTemplate<MGRLoginRequest>.SrvRecvRequest(frontid, clientid, message.Content);
                     case MessageTypes.MGRQRYACCOUNTS://请求帐户列表
-                        return RequestTemplate<MGRQryAccountRequest>.SrvRecvRequest(frontid, clientid, content);
+                        return RequestTemplate<MGRQryAccountRequest>.SrvRecvRequest(frontid, clientid, message.Content);
                     case MessageTypes.MGRWATCHACCOUNTS://请求设定观察帐户列表
-                        return RequestTemplate<MGRWatchAccountRequest>.SrvRecvRequest(frontid, clientid, content);
+                        return RequestTemplate<MGRWatchAccountRequest>.SrvRecvRequest(frontid, clientid, message.Content);
                     case MessageTypes.MGRRESUMEACCOUNT://请求恢复交易帐号日内交易信息
-                        return RequestTemplate<MGRResumeAccountRequest>.SrvRecvRequest(frontid, clientid, content);
+                        return RequestTemplate<MGRResumeAccountRequest>.SrvRecvRequest(frontid, clientid, message.Content);
                     case MessageTypes.MGRQRYACCOUNTINFO://请求查询交易帐号信息
-                        return RequestTemplate<MGRQryAccountInfoRequest>.SrvRecvRequest(frontid, clientid, content);
+                        return RequestTemplate<MGRQryAccountInfoRequest>.SrvRecvRequest(frontid, clientid, message.Content);
                     case MessageTypes.MGRCASHOPERATION://请求出入金操作
-                        return RequestTemplate<MGRCashOperationRequest>.SrvRecvRequest(frontid, clientid, content);
+                        return RequestTemplate<MGRCashOperationRequest>.SrvRecvRequest(frontid, clientid, message.Content);
                     case MessageTypes.MGRUPDATEACCOUNTCATEGORY://请求修改帐户类别
-                        return RequestTemplate<MGRUpdateCategoryRequest>.SrvRecvRequest(frontid, clientid, content);
+                        return RequestTemplate<MGRUpdateCategoryRequest>.SrvRecvRequest(frontid, clientid, message.Content);
                     case MessageTypes.MGRUPDATEACCOUNTINTRADAY://请求修改日内参数
-                        return RequestTemplate<MGRUpdateIntradayRequest>.SrvRecvRequest(frontid, clientid, content);
+                        return RequestTemplate<MGRUpdateIntradayRequest>.SrvRecvRequest(frontid, clientid, message.Content);
                     case MessageTypes.MGRUPDATEACCOUNTROUTETRANSFERTYPE://请求修改路由类别
-                        return RequestTemplate<MGRUpdateRouteTypeRequest>.SrvRecvRequest(frontid, clientid, content);
+                        return RequestTemplate<MGRUpdateRouteTypeRequest>.SrvRecvRequest(frontid, clientid, message.Content);
                     case MessageTypes.MGRUPDATEACCOUNTEXECUTE://请求修改帐户交易权限
-                        return RequestTemplate<MGRUpdateExecuteRequest>.SrvRecvRequest(frontid, clientid, content);
+                        return RequestTemplate<MGRUpdateExecuteRequest>.SrvRecvRequest(frontid, clientid, message.Content);
                     case MessageTypes.MGROPENCLEARCENTRE://请求开启清算中心
-                        return RequestTemplate<MGRReqOpenClearCentreRequest>.SrvRecvRequest(frontid, clientid, content);
+                        return RequestTemplate<MGRReqOpenClearCentreRequest>.SrvRecvRequest(frontid, clientid, message.Content);
                     case MessageTypes.MGRCLOSECLEARCENTRE://请求关闭清算中心
-                        return RequestTemplate<MGRReqCloseClearCentreRequest>.SrvRecvRequest(frontid, clientid, content);
+                        return RequestTemplate<MGRReqCloseClearCentreRequest>.SrvRecvRequest(frontid, clientid, message.Content);
                     //case MessageTypes.MGRQRYCONNECTOR://请求查询通道列表
-                    //    return RequestTemplate<MGRQryConnectorRequest>.SrvRecvRequest(frontid, clientid, content);
+                    //    return RequestTemplate<MGRQryConnectorRequest>.SrvRecvRequest(frontid, clientid, message.Content);
                     //case MessageTypes.MGRSTARTBROKER://请求启动成交通道
-                    //    return RequestTemplate<MGRReqStartBrokerRequest>.SrvRecvRequest(frontid, clientid, content);
+                    //    return RequestTemplate<MGRReqStartBrokerRequest>.SrvRecvRequest(frontid, clientid, message.Content);
                     //case MessageTypes.MGRSTOPBROKER://请求停止成交通道
-                    //    return RequestTemplate<MGRReqStopBrokerRequest>.SrvRecvRequest(frontid, clientid, content);
+                    //    return RequestTemplate<MGRReqStopBrokerRequest>.SrvRecvRequest(frontid, clientid, message.Content);
                     //case MessageTypes.MGRSTARTDATAFEED://请求启动行情通道
-                    //    return RequestTemplate<MGRReqStartDataFeedRequest>.SrvRecvRequest(frontid,clientid,content);
+                    //    return RequestTemplate<MGRReqStartDataFeedRequest>.SrvRecvRequest(frontid,clientid,message.Content);
                     //case MessageTypes.MGRSTOPDATAFEED://请求停止行情通道
-                    //    return RequestTemplate<MGRReqStopDataFeedRequest>.SrvRecvRequest(frontid, clientid, content);
+                    //    return RequestTemplate<MGRReqStopDataFeedRequest>.SrvRecvRequest(frontid, clientid, message.Content);
                     case MessageTypes.MGRADDACCOUNT://请求添加交易帐号
-                        return RequestTemplate<MGRAddAccountRequest>.SrvRecvRequest(frontid, clientid, content);
+                        return RequestTemplate<MGRAddAccountRequest>.SrvRecvRequest(frontid, clientid, message.Content);
                     case MessageTypes.MGRQRYEXCHANGE://请求查询交易所
-                        return RequestTemplate<MGRQryExchangeRequuest>.SrvRecvRequest(frontid, clientid, content);
+                        return RequestTemplate<MGRQryExchangeRequuest>.SrvRecvRequest(frontid, clientid, message.Content);
                     case MessageTypes.MGRUPDATEEXCHANGE://请求更新交易所
-                        return RequestTemplate<MGRUpdateExchangeRequest>.SrvRecvRequest(frontid, clientid, content);
+                        return RequestTemplate<MGRUpdateExchangeRequest>.SrvRecvRequest(frontid, clientid, message.Content);
                     case MessageTypes.MGRQRYMARKETTIME://请求查询交易时间段
-                        return RequestTemplate<MGRQryMarketTimeRequest>.SrvRecvRequest(frontid, clientid, content);
+                        return RequestTemplate<MGRQryMarketTimeRequest>.SrvRecvRequest(frontid, clientid, message.Content);
                     case MessageTypes.MGRUPDATEMARKETTIME://请求更新交易时间段
-                        return RequestTemplate<MGRUpdateMarketTimeRequest>.SrvRecvRequest(frontid, clientid, content);
+                        return RequestTemplate<MGRUpdateMarketTimeRequest>.SrvRecvRequest(frontid, clientid, message.Content);
                     case MessageTypes.MGRQRYSECURITY://请求查询品种列表
-                        return RequestTemplate<MGRQrySecurityRequest>.SrvRecvRequest(frontid, clientid, content);
+                        return RequestTemplate<MGRQrySecurityRequest>.SrvRecvRequest(frontid, clientid, message.Content);
                     case MessageTypes.MGRUPDATESECURITY://更新品种信息
-                        return RequestTemplate<MGRUpdateSecurityRequest>.SrvRecvRequest(frontid, clientid, content);
+                        return RequestTemplate<MGRUpdateSecurityRequest>.SrvRecvRequest(frontid, clientid, message.Content);
                     case MessageTypes.MGRQRYSYMBOL://请求查询合约列表
-                        return RequestTemplate<MGRQrySymbolRequest>.SrvRecvRequest(frontid, clientid, content);
+                        return RequestTemplate<MGRQrySymbolRequest>.SrvRecvRequest(frontid, clientid, message.Content);
                     case MessageTypes.MGRUPDATESYMBOL://请求更新合约
-                        return RequestTemplate<MGRUpdateSymbolRequest>.SrvRecvRequest(frontid, clientid, content);
+                        return RequestTemplate<MGRUpdateSymbolRequest>.SrvRecvRequest(frontid, clientid, message.Content);
                     case MessageTypes.MGRQRYRULECLASS://请求风控规则列表
-                        return RequestTemplate<MGRQryRuleSetRequest>.SrvRecvRequest(frontid, clientid, content);
+                        return RequestTemplate<MGRQryRuleSetRequest>.SrvRecvRequest(frontid, clientid, message.Content);
                     case MessageTypes.MGRUPDATERULEITEM://请求更新风控规则
-                        return RequestTemplate<MGRUpdateRuleRequest>.SrvRecvRequest(frontid, clientid, content);
+                        return RequestTemplate<MGRUpdateRuleRequest>.SrvRecvRequest(frontid, clientid, message.Content);
                     case MessageTypes.MGRQRYRULEITEM://请求查询帐户风控项
-                        return RequestTemplate<MGRQryRuleItemRequest>.SrvRecvRequest(frontid, clientid, content);
+                        return RequestTemplate<MGRQryRuleItemRequest>.SrvRecvRequest(frontid, clientid, message.Content);
                     case MessageTypes.MGRDELRULEITEM://请求删除帐户风控项
-                        return RequestTemplate<MGRDelRuleItemRequest>.SrvRecvRequest(frontid, clientid, content);
+                        return RequestTemplate<MGRDelRuleItemRequest>.SrvRecvRequest(frontid, clientid, message.Content);
                     case MessageTypes.MGRQRYSYSTEMSTATUS://请求查询系统状态
-                        return RequestTemplate<MGRQrySystemStatusRequest>.SrvRecvRequest(frontid,clientid,content);
+                        return RequestTemplate<MGRQrySystemStatusRequest>.SrvRecvRequest(frontid,clientid,message.Content);
                     case MessageTypes.MGRQRYORDER://请求查询历史委托
-                        return RequestTemplate<MGRQryOrderRequest>.SrvRecvRequest(frontid, clientid, content);
+                        return RequestTemplate<MGRQryOrderRequest>.SrvRecvRequest(frontid, clientid, message.Content);
                     case MessageTypes.MGRQRYTRADE://请求查询历史成交
-                        return RequestTemplate<MGRQryTradeRequest>.SrvRecvRequest(frontid, clientid, content);
+                        return RequestTemplate<MGRQryTradeRequest>.SrvRecvRequest(frontid, clientid, message.Content);
                     case MessageTypes.MGRQRYPOSITION://请求查询结算持仓
-                        return RequestTemplate<MGRQryPositionRequest>.SrvRecvRequest(frontid, clientid, content);
+                        return RequestTemplate<MGRQryPositionRequest>.SrvRecvRequest(frontid, clientid, message.Content);
                     case MessageTypes.MGRQRYCASH://请求查询出入金记录
-                        return RequestTemplate<MGRQryCashRequest>.SrvRecvRequest(frontid, clientid, content);
+                        return RequestTemplate<MGRQryCashRequest>.SrvRecvRequest(frontid, clientid, message.Content);
                     case MessageTypes.MGRQRYSETTLEMENT://请求查询结算单
-                        return RequestTemplate<MGRQrySettleRequest>.SrvRecvRequest(frontid, clientid, content);
+                        return RequestTemplate<MGRQrySettleRequest>.SrvRecvRequest(frontid, clientid, message.Content);
                     case MessageTypes.MGRCHANGEACCOUNTPASS://请求修改帐户密码
-                        return RequestTemplate<MGRChangeAccountPassRequest>.SrvRecvRequest(frontid, clientid, content);
+                        return RequestTemplate<MGRChangeAccountPassRequest>.SrvRecvRequest(frontid, clientid, message.Content);
                     //case MessageTypes.MGRADDSECURITY://请求添加品种
-                    //    return RequestTemplate<MGRReqAddSecurityRequest>.SrvRecvRequest(frontid, clientid, content);
+                    //    return RequestTemplate<MGRReqAddSecurityRequest>.SrvRecvRequest(frontid, clientid, message.Content);
 
                     //case MessageTypes.MGRADDSYMBOL://请求添加合约
-                    //    return RequestTemplate<MGRReqAddSymbolRequest>.SrvRecvRequest(frontid, clientid, content);
+                    //    return RequestTemplate<MGRReqAddSymbolRequest>.SrvRecvRequest(frontid, clientid, message.Content);
                     case MessageTypes.MGRCHANGEINVESTOR://请求修改投资者信息
-                        return RequestTemplate<MGRReqChangeInvestorRequest>.SrvRecvRequest(frontid, clientid, content);
+                        return RequestTemplate<MGRReqChangeInvestorRequest>.SrvRecvRequest(frontid, clientid, message.Content);
                     case MessageTypes.MGRUPDATEPOSLOCK://请求修改帐户锁仓权限
-                        return RequestTemplate<MGRReqUpdatePosLockRequest>.SrvRecvRequest(frontid, clientid, content);
+                        return RequestTemplate<MGRReqUpdatePosLockRequest>.SrvRecvRequest(frontid, clientid, message.Content);
                     //case MessageTypes.MGRQRYMANAGER://查询管理员列表
-                    //    return RequestTemplate<MGRQryManagerRequest>.SrvRecvRequest(frontid, clientid, content);
+                    //    return RequestTemplate<MGRQryManagerRequest>.SrvRecvRequest(frontid, clientid, message.Content);
                     //case MessageTypes.MGRADDMANAGER://请求添加管理员
-                    //    return RequestTemplate<MGRReqAddManagerRequest>.SrvRecvRequest(frontid, clientid, content);
+                    //    return RequestTemplate<MGRReqAddManagerRequest>.SrvRecvRequest(frontid, clientid, message.Content);
                     //case MessageTypes.MGRUPDATEMANAGER://请求更新管理员
-                    //    return RequestTemplate<MGRReqUpdateManagerRequest>.SrvRecvRequest(frontid, clientid, content);
+                    //    return RequestTemplate<MGRReqUpdateManagerRequest>.SrvRecvRequest(frontid, clientid, message.Content);
                     case MessageTypes.MGRQRYACCTSERVICE://请求查询帐户服务
-                        return RequestTemplate<MGRQryAcctServiceRequest>.SrvRecvRequest(frontid, clientid, content);
+                        return RequestTemplate<MGRQryAcctServiceRequest>.SrvRecvRequest(frontid, clientid, message.Content);
                     case MessageTypes.MGRCONTRIBREQUEST://扩展请求
-                        return RequestTemplate<MGRContribRequest>.SrvRecvRequest(frontid, clientid, content);
+                        return RequestTemplate<MGRContribRequest>.SrvRecvRequest(frontid, clientid, message.Content);
                     case MessageTypes.MGRUPDATEPASS://请求修改密码
-                        return RequestTemplate<MGRUpdatePassRequest>.SrvRecvRequest(frontid, clientid, content);
+                        return RequestTemplate<MGRUpdatePassRequest>.SrvRecvRequest(frontid, clientid, message.Content);
                     case MessageTypes.MGRINSERTTRADE://请求插入成交
-                        return RequestTemplate<MGRReqInsertTradeRequest>.SrvRecvRequest(frontid, clientid, content);
+                        return RequestTemplate<MGRReqInsertTradeRequest>.SrvRecvRequest(frontid, clientid, message.Content);
                     case MessageTypes.MGRDELACCOUNT://请求删除帐户
-                        return RequestTemplate<MGRReqDelAccountRequest>.SrvRecvRequest(frontid, clientid, content);
+                        return RequestTemplate<MGRReqDelAccountRequest>.SrvRecvRequest(frontid, clientid, message.Content);
                     #endregion
 
                     #region 行情部分
                     case MessageTypes.MGRSTARTDATAFEED://启动行情通道
-                        return RequestTemplate<MDReqStartDataFeedRequest>.SrvRecvRequest(frontid, clientid, content);
+                        return RequestTemplate<MDReqStartDataFeedRequest>.SrvRecvRequest(frontid, clientid, message.Content);
                     case MessageTypes.MGRSTOPDATAFEED://停止行情通道
-                        return RequestTemplate<MDReqStopDataFeedRequest>.SrvRecvRequest(frontid, clientid, content);
+                        return RequestTemplate<MDReqStopDataFeedRequest>.SrvRecvRequest(frontid, clientid, message.Content);
                     case MessageTypes.MGRREGISTERSYMBOLS://注册行情
-                        return RequestTemplate<MDRegisterSymbolsRequest>.SrvRecvRequest(frontid, clientid, content);
+                        return RequestTemplate<MDRegisterSymbolsRequest>.SrvRecvRequest(frontid, clientid, message.Content);
                     #endregion
 
                     case MessageTypes.MD_DEMOTICK:
-                        return RequestTemplate<MDDemoTickRequest>.SrvRecvRequest(frontid, clientid, content);
+                        return RequestTemplate<MDDemoTickRequest>.SrvRecvRequest(frontid, clientid, message.Content);
 
                     case MessageTypes.BOSENDORDER:
-                        return RequestTemplate<BOOrderInsertRequest>.SrvRecvRequest(frontid, clientid, content);
+                        return RequestTemplate<BOOrderInsertRequest>.SrvRecvRequest(frontid, clientid, message.Content);
 
+                    case MessageTypes.MGRUPLOADBARDATA:
+                        UploadBarDataRequest request = new UploadBarDataRequest();
+                        request.DeserializeBin(message.Data);
+                        return request;
                     default:
-                        throw new PacketTypeNotAvabile(type, content, frontid, clientid);
+                        throw new PacketTypeNotAvabile(message.Type, message.Content, frontid, clientid);
                 }
             }
             catch (Exception ex)
             {
-                throw new PacketParseError(ex, type, content,frontid,clientid);
+                throw new PacketParseError(ex, message.Type, message.Content,frontid,clientid);
             }
         }
 

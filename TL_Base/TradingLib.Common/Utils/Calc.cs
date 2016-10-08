@@ -1781,7 +1781,7 @@ namespace TradingLib.Common
             int year = (bardate - (month * 100) - day) / 10000;
             return new int[] { year, month, day };
         }
-        public static int[] Date(Bar bar) { return Date(Util.ToTLDate(bar.StartTime)); }
+        public static int[] Date(Bar bar) { return Date(Util.ToTLDate(bar.EndTime)); }
 
         public static double HH(double[] array) { return Max(array); }
 

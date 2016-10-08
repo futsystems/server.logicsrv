@@ -12,6 +12,40 @@ namespace TradingLib.Common.DataFarm
 {
     public partial class DataServerBase
     {
+        [DataCommandAttr("UpdateBar", "UpdateBar -  update bar data", "更新某个bar的相关数据",QSEnumArgParseType.Json)]
+        public void CTE_UpdateBar(IServiceHost host, IConnection conn,string args)
+        {
+            logger.Info("UpdateBar data:" + args);
+            BarImpl bar = TradingLib.Mixins.Json.JsonMapper.ToObject<BarImpl>(args);
+            if (bar != null)
+            {
+                Symbol symbol = MDBasicTracker.SymbolTracker[bar.Exchange, bar.Symbol];
+                if (symbol != null)
+                {
+                    UpdateBar2(symbol, bar);
+                }
+            }
+
+        }
+
+        [DataCommandAttr("DeleteBar", "DeleteBar -  delete bar data", "删除某个Bar数据", QSEnumArgParseType.Json)]
+        public void CTE_Delete(IServiceHost host, IConnection conn, string args)
+        {
+            logger.Info("Delete data:" + args);
+
+            var data = TradingLib.Mixins.Json.JsonMapper.ToObject(args);
+            string exchange = data["Exchange"].ToString();
+            string symbol = data["Symbol"].ToString();
+            int interval = int.Parse(data["Interval"].ToString());
+            BarInterval intervalType = (BarInterval)int.Parse(data["IntervalType"].ToString());
+            int[] ids = TradingLib.Mixins.Json.JsonMapper.ToObject<int[]>(data["ID"].ToJson());
+            Symbol sym = MDBasicTracker.SymbolTracker[exchange,symbol];
+            if (sym != null)
+            {
+                DeleteBar(sym, intervalType, interval, ids);
+            }
+        }
+
 
         //查询日历列表
         [DataCommandAttr("QryCalendarList", "QryCalendarList -  qry calendar list", "查询日历对象列表")]
@@ -140,6 +174,18 @@ namespace TradingLib.Common.DataFarm
             }
         }
 
+
+        void SrvOnMGRUploadBarData(IServiceHost host, IConnection conn, UploadBarDataRequest request)
+        {
+            logger.Info(string.Format("Conn:{0} Upload  {1} Bars", conn.SessionID,request.Header.BarCount));
+
+            string key = string.Format("{0}-{1}-{2}-{3}", request.Header.Exchange, request.Header.Symbol, request.Header.IntervalType, request.Header.Interval);
+            this.UploadBars(key, request.Bars);
+            //foreach (var bar in request.Bars)
+            //{
+            //    logger.Info("Bar:" + bar.ToString());
+            //}
+        }
 
 
     }

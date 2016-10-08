@@ -62,7 +62,7 @@ namespace TradingLib.Common.DataFarm
             //如果没有执行恢复 且 为第一个Bar则不储存该Bar数据
             if (!IsSymbolRestored(obj.Symbol) && obj.Frequency.Bars.Count >= 2)
             {
-                this.SaveBar(obj.Symbol, obj.Bar);
+                this.UpdateBar2(obj.Symbol, obj.Bar);
             }
             //检查Bar更新时间 用于修改恢复任务状态
             this.CheckBarUpdateTime(obj.Symbol, obj.Bar);

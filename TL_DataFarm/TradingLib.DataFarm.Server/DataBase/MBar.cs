@@ -24,27 +24,50 @@ namespace TradingLib.Common.DataFarm
     public class MBar : MBase
     {
         /// <summary>
-        /// 将Bar插入数据库
+        /// 插入Bar数据
         /// </summary>
         /// <param name="bar"></param>
-        public static void InsertBar(Bar bar)
+        public static void InsertBar(BarImpl bar)
         {
             using (DBMySql db = new DBMySql())
             {
-                if (bar.Symbol == "GC04")
-                {
-                    int x = 0;
-                }
-                string query = String.Format("Insert into data_bar (`tradingday`,`starttime`,`symbol`,`open`,`high`,`low`,`close`,`volume`,`openinterest`,`tradecount`,`intervaltype`,`interval` ) values('{0}','{1}','{2}','{3}','{4}','{5}','{6}','{7}','{8}','{9}','{10}','{11}')", bar.TradingDay, bar.StartTime.ToTLDateTime(), bar.Symbol, bar.Open, bar.High, bar.Low, bar.Close, bar.Volume, bar.OpenInterest, bar.TradeCount, (int)bar.IntervalType, bar.Interval);
+                string query = String.Format("Insert into data_bar (`tradingday`,`symbol`,`endtime`,`open`,`high`,`low`,`close`,`volume`,`openinterest`,`tradecount`,`intervaltype`,`interval` ) values('{0}','{1}','{2}','{3}','{4}','{5}','{6}','{7}','{8}','{9}','{10}','{11}')", bar.TradingDay, bar.Symbol, bar.EndTime.ToTLDateTime(), bar.Open, bar.High, bar.Low, bar.Close, bar.Volume, bar.OpenInterest, bar.TradeCount, (int)bar.IntervalType, bar.Interval);
+                db.Connection.Execute(query);
+                SetIdentity(db.Connection, id => bar.ID = id, "id", "data_bar");
+            }
+        }
+
+        /// <summary>
+        /// 更新Bar数据
+        /// </summary>
+        /// <param name="bar"></param>
+        public static void UpdateBar(BarImpl bar)
+        {
+            using (DBMySql db = new DBMySql())
+            {
+                string query = String.Format("Update  data_bar SET `open`={0},`high`={1},`low`={2},`close`={3},`volume`={4},`openinterest`={5},`tradecount`={6}, `tradingday`={7} WHERE `id`='{8}'", bar.Open, bar.High, bar.Low, bar.Close, bar.Volume, bar.OpenInterest, bar.TradeCount, bar.TradingDay, bar.ID);
+                
+                //if (bar.ID > 0)
+                //{
+                //    query = String.Format("Update  data_bar SET `open`={0},`high`={1},`low`={2},`close`={3},`volume`={4},`openinterest`={5},`tradecount`={6} `tradingday`={7} WHERE `id`='{8}'", bar.Open, bar.High, bar.Low, bar.Close, bar.Volume, bar.OpenInterest, bar.TradeCount,bar.TradingDay,bar.ID);
+                //}
+                //else
+                //{
+                //    query = String.Format("Update  data_bar SET `open`={0},`high`={1},`low`={2},`close`={3},`volume`={4},`openinterest`={5},`tradecount`={6} WHERE `symbol`='{7}' AND `intervaltype`='{8}' AND `interval`='{9}' AND `endtime`='{10}'", bar.Open, bar.High, bar.Low, bar.Close, bar.Volume, bar.OpenInterest, bar.TradeCount, bar.Symbol, (int)bar.IntervalType, bar.Interval, bar.EndTime.ToTLDateTime());
+                //}
                 db.Connection.Execute(query);
             }
         }
 
-        public static void UpdateBar(Bar bar)
+        /// <summary>
+        /// 删除某条记录
+        /// </summary>
+        /// <param name="id"></param>
+        public static void DeleteBar(int id)
         {
             using (DBMySql db = new DBMySql())
             {
-                string query = String.Format("Update  data_bar SET `open`={0},`high`={1},`low`={2},`close`={3},`volume`={4},`openinterest`={5},`tradecount`={6} WHERE `symbol`='{7}' AND `intervaltype`='{8}' AND `interval`='{9}' AND `starttime`='{10}'", bar.Open, bar.High, bar.Low, bar.Close, bar.Volume, bar.OpenInterest, bar.TradeCount, bar.Symbol,(int)bar.IntervalType, bar.Interval,bar.StartTime.ToTLDateTime());
+                string query = string.Format("DELETE FROM data_bar WHERE id = '{0}'", id); 
                 db.Connection.Execute(query);
             }
         }
@@ -64,17 +87,17 @@ namespace TradingLib.Common.DataFarm
             using (DBMySql db = new DBMySql())
             {
                 string qrystr = "SELECT ";
-                qrystr += "a.tradingday,a.symbol,a.open,a.high,a.low,a.close,a.volume,a.openinterest,a.tradecount,a.interval,a.intervaltype,STR_TO_DATE(starttime,'%Y%m%d%H%i%s') as starttime FROM data_bar a WHERE `symbol` = '{0}' AND `intervaltype` = {1} AND `interval` = {2} ".Put(symbol, (int)type, interval);
+                qrystr += "a.id,a.tradingday,a.symbol,a.open,a.high,a.low,a.close,a.volume,a.openinterest,a.tradecount,a.interval,a.intervaltype,STR_TO_DATE(endtime,'%Y%m%d%H%i%s') as endtime FROM data_bar a WHERE `symbol` = '{0}' AND `intervaltype` = {1} AND `interval` = {2} ".Put(symbol, (int)type, interval);
 
                 if (start != DateTime.MinValue)
                 {
-                    qrystr += "AND `startime`>={0} ".Put(start.ToTLDateTime());
+                    qrystr += "AND `endtime`>={0} ".Put(start.ToTLDateTime());
                 }
                 if (end != DateTime.MaxValue)
                 {
-                    qrystr += "AND `starttime`<={0} ".Put(end.ToTLDateTime());
+                    qrystr += "AND `endtime`<={0} ".Put(end.ToTLDateTime());
                 }
-                qrystr += "ORDER BY `starttime` ";
+                qrystr += "ORDER BY `endtime` ";
                 if (fromEnd)
                 {
                     qrystr += "DESC ";

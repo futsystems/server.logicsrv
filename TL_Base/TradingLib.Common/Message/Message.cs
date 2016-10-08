@@ -226,25 +226,29 @@ namespace TradingLib.Common
                 if (startidx + msglen > data.Length)
                     return false;
 
-                if (type == MessageTypes.BIN_BARRESPONSE)
+                switch (type)
                 {
-                    msg = string.Empty;
-                    msgdata = new byte[msglen - HEADERSIZE];
-                    Array.Copy(data, startidx + HEADERSIZE, msgdata, 0, msglen - HEADERSIZE);
-                }
-                else
-                {
-                    msgdata = null;
-                    // decode message to string
-                    msg = System.Text.Encoding.UTF8.GetString(data, startidx + HEADERSIZE, msglen - HEADERSIZE);
+                    case MessageTypes.BIN_BARRESPONSE:
+                    case MessageTypes.MGRUPLOADBARDATA:
+                        {
+                            msg = string.Empty;
+                            msgdata = new byte[msglen - HEADERSIZE];
+                            Array.Copy(data, startidx + HEADERSIZE, msgdata, 0, msglen - HEADERSIZE);
+                            return true;
+                        }
+                    default:
+                        {
+                            msgdata = null;
+                            // decode message to string
+                            msg = System.Text.Encoding.UTF8.GetString(data, startidx + HEADERSIZE, msglen - HEADERSIZE);
+                            return true;
+                        }
                 }
             }
             catch (Exception ex)
             {
                 return false;
             }
-            return true;
-
         }
 
 

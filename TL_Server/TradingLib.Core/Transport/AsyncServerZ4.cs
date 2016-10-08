@@ -32,7 +32,7 @@ namespace TradingLib.Core
         /// 交易消息事件,当接收到客户端发送上来的消息时,触发该事件,从而调用消息层对消息进行解析与处理
         /// 传递参数消息类别(操作号),消息体,前置地址,客户端标识
         /// </summary>
-        public event HandleTLMessageDel GotTLMessageEvent;
+        public event Action<Message,string,string> GotTLMessageEvent;
 
         bool _enableThroutPutTracker = true;
         /// <summary>
@@ -47,13 +47,13 @@ namespace TradingLib.Core
         /// <param name="front">前置地址</param>
         /// <param name="address">客户端地址/标识</param>
         /// <returns></returns>
-        private long handleMessage(MessageTypes type, string msg, string front, string address)
+        private void handleMessage(Message message, string front, string address)
         {
             if (GotTLMessageEvent != null)
             {
-                return GotTLMessageEvent(type, msg, front, address);
+                GotTLMessageEvent(message, front, address);
             }
-            return -1;
+            return;
         }
 
 
@@ -580,7 +580,7 @@ namespace TradingLib.Core
                 //处理前置的逻辑连接心跳
                 if (cnt == 3 && msg.Type == MessageTypes.LOGICLIVEREQUEST)
                 {
-                    LogicLiveRequest req = (LogicLiveRequest)PacketHelper.SrvRecvRequest(msg.Type, msg.Content, front, address);
+                    LogicLiveRequest req = (LogicLiveRequest)PacketHelper.SrvRecvRequest(msg, front, address);
                     LogicLiveResponse rep = ResponseTemplate<LogicLiveResponse>.SrvSendRspResponse(req);
 
                     using (ZMessage zmsg = new ZMessage())
@@ -617,7 +617,7 @@ namespace TradingLib.Core
                 //timeout.MessageHandler = () =>
                 //{
                     //3.消息处理如果解析出来的消息是有效的则丢入处理流程进行处理，如果无效则不处理
-                handleMessage(msg.Type, msg.Content, front, address);
+                handleMessage(msg, front, address);
                 ////};
                 ////bool re = timeout.DoWithTimeout(WorkerTimeOut);
                 ////if (re)

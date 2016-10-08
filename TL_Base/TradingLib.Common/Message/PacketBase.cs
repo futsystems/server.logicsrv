@@ -354,19 +354,20 @@ namespace TradingLib.Common
         public int RequestID { get; protected set; }
 
         /// <summary>
-        /// Packet对应的底层传输的二进制数据 用于提供给底层传输传进行传输
-        /// </summary>
-        public virtual byte[] Data { get { return Message.sendmessage(Type, Content); } }
-
-        /// <summary>
         /// 默认消息类型为未知类型
         /// </summary>
         protected MessageTypes _type = MessageTypes.UNKNOWN_MESSAGE;
-
         /// <summary>
         /// 消息类型
         /// </summary>
         public MessageTypes Type { get { return _type; } }
+
+
+        /// <summary>
+        /// Packet对应的底层传输的二进制数据 用于提供给底层传输传进行传输
+        /// </summary>
+        public virtual byte[] Data { get { return Message.sendmessage(Type, Content); } }
+
 
         /// <summary>
         /// 消息内容

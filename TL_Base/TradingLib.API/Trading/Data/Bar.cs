@@ -63,9 +63,9 @@ namespace TradingLib.API
         int TradingDay { get; set; }
 
         /// <summary>
-        /// 开始时间
+        /// Bar结束时间
         /// </summary>
-        DateTime StartTime { get; set; }
+        DateTime EndTime { get; set; }
 
         /// <summary>
         /// 频率类别

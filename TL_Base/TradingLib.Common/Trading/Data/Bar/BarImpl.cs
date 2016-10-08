@@ -12,8 +12,13 @@ namespace TradingLib.Common
     [Serializable]
     public class BarImpl : Bar
     {
+        int _id = 0;
+        public int ID { get { return _id; } set { _id = value; } }
         string _sym = "";
         public string Symbol { get { return _sym; } set { _sym = value; } }
+
+        string _exchange = string.Empty;
+        public string Exchange { get { return _exchange; } set { _exchange = value; } }
 
         private double h = double.MinValue;//最高价
         public double High { get { return h; } set { h = value; } }
@@ -46,7 +51,7 @@ namespace TradingLib.Common
         /// <summary>
         /// 交易日
         /// </summary>
-        public int TradingDay { get { return _tradesCount; } set { _tradingday = value; } }
+        public int TradingDay { get { return _tradingday; } set { _tradingday = value; } }
 
 
 
@@ -70,26 +75,40 @@ namespace TradingLib.Common
         public int Interval { get { return units; } set { units = value; } }
 
 
-        DateTime _starttime = DateTime.MinValue;
+        DateTime _endtime = DateTime.MinValue;
         /// <summary>
-        /// Bar开始时间
+        /// Bar结束时间
         /// </summary>
-        public DateTime StartTime
+        public DateTime EndTime
         {
-            get { return _starttime; }
-            set { _starttime = value; }
+            get { return _endtime; }
+            set { _endtime = value; }
         }
 
 
         //public BarImpl() : this(BarInterval.FiveMin) { }
 
-        public BarImpl(string symbol, BarFrequency bf, DateTime startTime)
+        public BarImpl(string symbol, BarFrequency bf, DateTime endTime)
         {
             this._sym = symbol;
-            this._starttime = startTime;
+            this._endtime = endTime;
             this._intervalType = bf.Type;
             this.units = bf.Interval;
 
+        }
+
+        public void CopyData(BarImpl source)
+        {
+            this.Open = source.Open;
+            this.High = source.High;
+            this.Low = source.Low;
+            this.Close = source.Close;
+            this.Volume = source.Volume;
+            this.OpenInterest = source.OpenInterest;
+            this.TradeCount = source.TradeCount;
+            this.TradingDay = source.TradingDay;
+            this.Ask = source.Ask;
+            this.Bid = source.Bid;
         }
         public Bar Clone()
         {
@@ -116,7 +135,7 @@ namespace TradingLib.Common
             _intervalType = b.IntervalType;
             units = b.Interval;
 
-            _starttime = b.StartTime;
+            _endtime = b.EndTime;
         }
 
         public BarImpl(int interval)
@@ -181,12 +200,10 @@ namespace TradingLib.Common
 
         public override string ToString()
         {
-            return string.Format("{6} {0}-OHLC({1},{2},{3},{4},{5})", this.Symbol, this.Open, this.High, this.Low, this.Close, this.Volume, this.StartTime);
+            return string.Format("{6} {0}-OHLC({1},{2},{3},{4},{5})", this.Symbol, this.Open, this.High, this.Low, this.Close, this.Volume, this.EndTime);
         }
 
         #region 读写Bar不能修改 否则会造成数据格式不兼容
-
-        public static int SIZE { get { return 88; } }
         /// <summary>
         /// 将Bar数据写入
         /// </summary>
@@ -194,7 +211,7 @@ namespace TradingLib.Common
         /// <param name="bar"></param>
         public static void Write(BinaryWriter writer,BarImpl bar)
         {
-            writer.Write(Util.ToTLDateTime(bar.StartTime));
+            writer.Write(Util.ToTLDateTime(bar.EndTime));
             writer.Write(bar.Symbol);
             writer.Write((int)bar.IntervalType);
             writer.Write(bar.Interval);
@@ -211,6 +228,7 @@ namespace TradingLib.Common
             writer.Write(bar.TradeCount);
             writer.Write(bar.TradingDay);
             writer.Write(bar.EmptyBar);
+            writer.Write(bar.ID);
         }
 
         /// <summary>
@@ -222,7 +240,7 @@ namespace TradingLib.Common
         {
             BarImpl bar = new BarImpl();
             long date = reader.ReadInt64();
-            bar.StartTime = Util.ToDateTime(date);
+            bar.EndTime = Util.ToDateTime(date);
             bar.Symbol = reader.ReadString();
             bar.IntervalType = (BarInterval)reader.ReadInt32();
             bar.Interval = reader.ReadInt32();
@@ -239,6 +257,7 @@ namespace TradingLib.Common
             bar.TradeCount = reader.ReadInt32();
             bar.TradingDay = reader.ReadInt32();
             bar.EmptyBar = reader.ReadBoolean();
+            bar.ID = reader.ReadInt32();
             return bar;
         }
         #endregion
@@ -253,7 +272,7 @@ namespace TradingLib.Common
         {
             const char d = ',';
             System.Text.StringBuilder sb = new System.Text.StringBuilder();
-            sb.Append(b.StartTime);
+            sb.Append(b.EndTime);
             sb.Append(d);
             sb.Append(b.Symbol);
             sb.Append(d);
@@ -294,7 +313,7 @@ namespace TradingLib.Common
         {
             string[] r = msg.Split(',');
             Bar b = new BarImpl();
-            b.StartTime = DateTime.Parse(r[0]);
+            b.EndTime = DateTime.Parse(r[0]);
             b.Symbol = r[1];
             b.IntervalType = (BarInterval)int.Parse(r[2]);
             b.Interval = int.Parse(r[3]);

@@ -470,7 +470,7 @@ namespace ZMQServiceHost
                                 return;
                             }
 
-                            IPacket packet = PacketHelper.SrvRecvRequest(message.Type, message.Content, "", address);
+                            IPacket packet = PacketHelper.SrvRecvRequest(message,"", address);
                             if (packet != null && RequestEvent != null)
                             {
                                 RequestEvent(this, conn, packet);
