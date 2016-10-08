@@ -61,12 +61,14 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Common\BarMerger.cs" />
     <Compile Include="Common\ConnectionUtils.cs" />
     <Compile Include="Common\DataCommand.cs" />
     <Compile Include="Common\DataCommandAttr.cs" />
     <Compile Include="Common\DataCommandInfo.cs" />
     <Compile Include="Common\IHistDataStore.cs" />
     <Compile Include="Common\PluginHelper.cs" />
+    <Compile Include="ConstantData.cs" />
     <Compile Include="DataBase\BarList.cs" />
     <Compile Include="DataBase\MBar.cs" />
     <Compile Include="DataBase\MemoryBarDB.cs" />

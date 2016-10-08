@@ -14,9 +14,6 @@ namespace TradingLib.Common.DataFarm
     {
 
         ILog logger = LogManager.GetLogger("MemoryBarDB");
-
-        const int MAXCOUNTLOADED = 10000;//默认最大10万条数据
-
         /// <summary>
         /// BarList
         /// </summary>
@@ -118,15 +115,17 @@ namespace TradingLib.Common.DataFarm
             bool isInsert = false;
             BarList target = GetBarList(symbol,bar.IntervalType,bar.Interval);
             target.Update(bar,out isInsert);
+
+            if (bar.Interval != 60) return;//数据库只保存1分钟数据
             if (isInsert)
             {
                 DBInsertBar(bar);//插入Bar则必然会将该Bar插入到数据库 且获得数据库唯一ID
             }
             else
             {
-                //更新Bar则会更新内存中Bar的相关数据 且通过datetime获得的该Bar有数据库唯一ID
+                //更新Bar则会更新内存中Bar的相关数据 且通过datetime获得的该Bar有数据库唯一ID 获得当前缓存的targetBar后更新
                 BarImpl targetBar = target[bar.EndTime.ToTLDateTime()];
-                DBUpdateBar(bar);
+                DBUpdateBar(targetBar);
             }
         }
 
@@ -138,6 +137,7 @@ namespace TradingLib.Common.DataFarm
             foreach (var bar in bars)
             {
                 target.Update(bar, out isInsert);
+                if (bar.Interval != 60) continue;
                 if (isInsert)
                 {
                     DBInsertBar(bar);//插入Bar则必然会将该Bar插入到数据库 且获得数据库唯一ID
@@ -146,7 +146,7 @@ namespace TradingLib.Common.DataFarm
                 {
                     //更新Bar则会更新内存中Bar的相关数据 且通过datetime获得的该Bar有数据库唯一ID
                     BarImpl targetBar = target[bar.EndTime.ToTLDateTime()];
-                    DBUpdateBar(bar);
+                    DBUpdateBar(targetBar);
                 }
             }
         }
@@ -199,16 +199,38 @@ namespace TradingLib.Common.DataFarm
             //获得对应的BarList
             BarList target = GetBarList(symbol, type, interval);
 
-            //从数据库加载对应的Bar数据 从最近的数据加载
-            IEnumerable<BarImpl> bars = MBar.LoadBars(GetBarSymbol(symbol), type, interval, DateTime.MinValue, DateTime.MaxValue, MAXCOUNTLOADED, true);
-
+            //从数据库加载对应的Bar数据 从最近的数据加载 分钟级别数据加载1年,日级别数据加载3年
+            IEnumerable<BarImpl> bars = MBar.LoadBars(GetBarSymbol(symbol), type, interval, DateTime.Now.AddMonths(-6));//, ConstantData.MAXBARCNT);
             //添加到内存数据结构中
-            target.RestoreBars(bars);
+            //target.RestoreBars(bars);
+            target.RestoreBars(bars.Skip(Math.Max(0, bars.Count()-ConstantData.MAXBARCACHED)));
             //如果恢复的数据集数量大于零则取最后一个Bar的时间为最后Bar时间
             if (bars.Count() > 0)
             {
                 lastBarTime = bars.First().EndTime;
             }
+            IEnumerable<BarImpl> list = null;
+
+            target = GetBarList(GetBarListKey(symbol, type, 180));//3
+            list = BarMerger.Merge(bars, TimeSpan.FromMinutes(3));
+            target.RestoreBars(list.Skip(Math.Max(0, list.Count() - ConstantData.MAXBARCACHED)));
+
+            target = GetBarList(GetBarListKey(symbol, type, 300));//5
+            list = BarMerger.Merge(bars, TimeSpan.FromMinutes(5));
+            target.RestoreBars(list.Skip(Math.Max(0, list.Count() - ConstantData.MAXBARCACHED)));
+
+            target = GetBarList(GetBarListKey(symbol, type, 900));//15
+            list = BarMerger.Merge(bars, TimeSpan.FromMinutes(15));
+            target.RestoreBars(list.Skip(Math.Max(0, list.Count() - ConstantData.MAXBARCACHED)));
+
+            target = GetBarList(GetBarListKey(symbol, type, 1800));//30
+            list = BarMerger.Merge(bars, TimeSpan.FromMinutes(30));
+            target.RestoreBars(list.Skip(Math.Max(0, list.Count() - ConstantData.MAXBARCACHED)));
+
+            target = GetBarList(GetBarListKey(symbol, type, 3600));//60
+            list = BarMerger.Merge(bars, TimeSpan.FromMinutes(60));
+            target.RestoreBars(list.Skip(Math.Max(0, list.Count() - ConstantData.MAXBARCACHED)));
+
             return true;
         }
 
@@ -223,7 +245,7 @@ namespace TradingLib.Common.DataFarm
         /// <param name="maxcount"></param>
         /// <param name="fromEnd"></param>
         /// <returns></returns>
-        public IEnumerable<BarImpl> QryBar(Symbol symbol, BarInterval type, int interval, DateTime start, DateTime end, int startIndex, int maxcount, bool fromEnd ,bool havePartail)
+        public List<BarImpl> QryBar(Symbol symbol, BarInterval type, int interval, DateTime start, DateTime end, int startIndex, int maxcount, bool fromEnd ,bool havePartail)
         {
             BarList target = GetBarList(symbol, type, interval);
             return target.QryBar(start, end, startIndex, maxcount, fromEnd, havePartail);

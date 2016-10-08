@@ -12,6 +12,15 @@ namespace TradingLib.Common.DataFarm
 {
     public partial class DataServerBase
     {
+        [DataCommandAttr("Demo", "Demo -  demo function", "测试操作", QSEnumArgParseType.Json)]
+        public void CTE_Demo(IServiceHost host, IConnection conn, string args)
+        {
+            logger.Info("Demo Function");
+            
+
+        }
+
+
         [DataCommandAttr("UpdateBar", "UpdateBar -  update bar data", "更新某个bar的相关数据",QSEnumArgParseType.Json)]
         public void CTE_UpdateBar(IServiceHost host, IConnection conn,string args)
         {
@@ -180,11 +189,8 @@ namespace TradingLib.Common.DataFarm
             logger.Info(string.Format("Conn:{0} Upload  {1} Bars", conn.SessionID,request.Header.BarCount));
 
             string key = string.Format("{0}-{1}-{2}-{3}", request.Header.Exchange, request.Header.Symbol, request.Header.IntervalType, request.Header.Interval);
+            request.Bars.ForEach(bar => { bar.Exchange = request.Header.Exchange; bar.Symbol = request.Header.Symbol; bar.IntervalType = request.Header.IntervalType; bar.Interval = request.Header.Interval; });
             this.UploadBars(key, request.Bars);
-            //foreach (var bar in request.Bars)
-            //{
-            //    logger.Info("Bar:" + bar.ToString());
-            //}
         }
 
 

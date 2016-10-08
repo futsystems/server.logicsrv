@@ -10,27 +10,6 @@ namespace TradingLib.Common.DataFarm
     public class BarList
     {
         /// <summary>
-        /// 合约
-        /// </summary>
-        //public Symbol Symbol { get; set; }
-
-        /// <summary>
-        /// 间隔类别
-        /// </summary>
-        //public BarInterval IntervalType { get; set; }
-
-        /// <summary>
-        /// 间隔
-        /// </summary>
-        //public int Interval { get; set; }
-
-        /// <summary>
-        /// 是否处于工作模式
-        /// </summary>
-        public bool Working { get; set; }
-
-
-        /// <summary>
         /// 返回最后一个Bar时间
         /// </summary>
         public DateTime LastBarTime
@@ -44,13 +23,7 @@ namespace TradingLib.Common.DataFarm
 
         public BarList(string key)
         {
-
-            //this.Symbol = symbol;
-            //this.IntervalType = type;
-            //this.Interval = interval;
-            //this._key = "{0}-{1}-{2}-{3}".Put(symbol.Exchange, symbol.Symbol, type, interval);
             this._key = key;
-            this.Working = false;
         }
 
         string _key = string.Empty;
@@ -174,10 +147,13 @@ namespace TradingLib.Common.DataFarm
         /// <param name="maxcount"></param>
         /// <param name="fromEnd">是否先返回最新的数据</param>
         /// <returns></returns>
-        public IEnumerable<BarImpl> QryBar(DateTime start, DateTime end, int startIndex, int maxcount, bool fromEnd, bool havePartail)
+        public List<BarImpl> QryBar(DateTime start, DateTime end, int startIndex, int maxcount, bool fromEnd, bool havePartail)
         {
             lock (_object)
             {
+                //整理控制返回Bar数量
+                maxcount = Math.Min(maxcount, ConstantData.MAXBARCNT);
+
                 IEnumerable<BarImpl> records = null;
                 if (start != DateTime.MinValue || end != DateTime.MaxValue)
                 {
@@ -202,7 +178,7 @@ namespace TradingLib.Common.DataFarm
                         records = records.Concat(new BarImpl[] { partial });
                     }
                 }
-
+                //限制有效返回数量 返回数量为最大返回Bar个数
                 //截取数据集
                 if (maxcount <= 0)
                 {
@@ -218,11 +194,11 @@ namespace TradingLib.Common.DataFarm
                 //数据翻转
                 if (fromEnd)
                 {
-                    return records.Reverse();
+                    return records.Reverse().ToList();
                 }
                 else
                 {
-                    return records;
+                    return records.ToList();
                 }
 
             }

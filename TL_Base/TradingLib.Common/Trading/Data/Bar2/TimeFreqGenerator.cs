@@ -119,16 +119,16 @@ namespace TradingLib.Common
             }
             else if (period.TotalDays < 30.0)
             {
-                time = new DateTime(date.Year, date.Month, date.Day, 0, 0, 0);
+                time = new DateTime(date.Year, date.Month, date.Day, 0, 0, 0);// 小于月的周期 则为当前星期的星期一
                 while (time.DayOfWeek != DayOfWeek.Monday)
                 {
                     time = time.AddDays(-1.0);
                 }
             }
-            else if (period.TotalDays < 365.0)//大于1个月小于1年
+            else if (period.TotalDays < 365.0)//大于1个月小于1年 按月
             {
                 time = new DateTime(date.Year, date.Month, 1, 0, 0, 0);
-                if (period.TotalDays == 30.0)
+                if (period.TotalDays == 30.0) //按30天/月为周期 则为该月第一天
                 {
                     return time;
                 }
@@ -136,12 +136,13 @@ namespace TradingLib.Common
             else
             {
                 time = new DateTime(date.Year, 1, 1, 0, 0, 0);
-                if (period.TotalDays == 365.0)
+                if (period.TotalDays == 365.0) //按365天/年为周期 则为该年的第一天 
                 {
                     return time;
                 }
             }
-            long num = date.Ticks - time.Ticks;
+
+            long num = date.Ticks - time.Ticks;//计算时间差值 除周期取余,当前时间减去余数则为当前时间的Round
             long num2 = 0;
             if (period.Ticks != 0)
             {
@@ -150,6 +151,53 @@ namespace TradingLib.Common
             return new DateTime(date.Ticks - num2);
         }
 
+        /// <summary>
+        /// 计算某个时间所处周期
+        /// 该周期为Bar的结束值
+        /// </summary>
+        /// <param name="date"></param>
+        /// <param name="period"></param>
+        /// <returns></returns>
+        public static DateTime RoundTime2(DateTime date, TimeSpan period)
+        {
+            DateTime time;
+            if (period.TotalDays < 7.0)
+            {
+                time = new DateTime(date.Year, date.Month, date.Day, 0, 0, 0);
+            }
+            else if (period.TotalDays < 30.0)
+            {
+                time = new DateTime(date.Year, date.Month, date.Day, 0, 0, 0);// 小于月的周期 则为当前星期的周日
+                while (time.DayOfWeek != DayOfWeek.Sunday)
+                {
+                    time = time.AddDays(1);
+                }
+            }
+            else if (period.TotalDays < 365.0)//大于1个月小于1年 按月
+            {
+                time = new DateTime(date.Year, date.Month, 1, 0, 0, 0);
+                if (period.TotalDays == 30.0) //按30天/月为周期 则为该月第一天
+                {
+                    return time.AddMonths(1);
+                }
+            }
+            else
+            {
+                time = new DateTime(date.Year,1, 1, 0, 0, 0);
+                if (period.TotalDays == 365.0) //按365天/年为周期 则为该年的第一天 
+                {
+                    return time.AddYears(1);
+                }
+            }
+
+            long num = date.Ticks - time.Ticks;//计算时间差值 除周期取余,当前时间减去余数则为当前周期的开始 再加一个周期为该周期的结束
+            long num2 = 0;
+            if (period.Ticks != 0)
+            {
+                num2 = num % period.Ticks;
+            }
+            return new DateTime(date.Ticks - num2 + period.Ticks);
+        }
 
         public override bool IsTimeBased { get { return true; } }
 

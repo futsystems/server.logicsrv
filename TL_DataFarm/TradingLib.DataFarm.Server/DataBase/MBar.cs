@@ -46,15 +46,6 @@ namespace TradingLib.Common.DataFarm
             using (DBMySql db = new DBMySql())
             {
                 string query = String.Format("Update  data_bar SET `open`={0},`high`={1},`low`={2},`close`={3},`volume`={4},`openinterest`={5},`tradecount`={6}, `tradingday`={7} WHERE `id`='{8}'", bar.Open, bar.High, bar.Low, bar.Close, bar.Volume, bar.OpenInterest, bar.TradeCount, bar.TradingDay, bar.ID);
-                
-                //if (bar.ID > 0)
-                //{
-                //    query = String.Format("Update  data_bar SET `open`={0},`high`={1},`low`={2},`close`={3},`volume`={4},`openinterest`={5},`tradecount`={6} `tradingday`={7} WHERE `id`='{8}'", bar.Open, bar.High, bar.Low, bar.Close, bar.Volume, bar.OpenInterest, bar.TradeCount,bar.TradingDay,bar.ID);
-                //}
-                //else
-                //{
-                //    query = String.Format("Update  data_bar SET `open`={0},`high`={1},`low`={2},`close`={3},`volume`={4},`openinterest`={5},`tradecount`={6} WHERE `symbol`='{7}' AND `intervaltype`='{8}' AND `interval`='{9}' AND `endtime`='{10}'", bar.Open, bar.High, bar.Low, bar.Close, bar.Volume, bar.OpenInterest, bar.TradeCount, bar.Symbol, (int)bar.IntervalType, bar.Interval, bar.EndTime.ToTLDateTime());
-                //}
                 db.Connection.Execute(query);
             }
         }
@@ -71,6 +62,7 @@ namespace TradingLib.Common.DataFarm
                 db.Connection.Execute(query);
             }
         }
+
         /// <summary>
         /// 加载Bar数据
         /// </summary>
@@ -82,7 +74,7 @@ namespace TradingLib.Common.DataFarm
         /// <param name="maxcount"></param>
         /// <param name="fromEnd"></param>
         /// <returns></returns>
-        public static IEnumerable<BarImpl> LoadBars(string symbol, BarInterval type, int interval, DateTime start, DateTime end, int maxcount, bool fromEnd)
+        public static IEnumerable<BarImpl> LoadBars(string symbol, BarInterval type, int interval, DateTime start)//;//, DateTime end, int maxcount)
         {
             using (DBMySql db = new DBMySql())
             {
@@ -93,25 +85,26 @@ namespace TradingLib.Common.DataFarm
                 {
                     qrystr += "AND `endtime`>={0} ".Put(start.ToTLDateTime());
                 }
-                if (end != DateTime.MaxValue)
-                {
-                    qrystr += "AND `endtime`<={0} ".Put(end.ToTLDateTime());
-                }
+                //if (end != DateTime.MaxValue)
+                //{
+                //    qrystr += "AND `endtime`<={0} ".Put(end.ToTLDateTime());
+                //}
                 qrystr += "ORDER BY `endtime` ";
-                if (fromEnd)
-                {
-                    qrystr += "DESC ";
-                }
-                else
-                {
-                    qrystr += "ASC ";
-                }
-                if (maxcount > 0)
-                {
-                    qrystr += "LIMIT {0}".Put(maxcount);
-                }
+                //if (fromEnd)
+                //{
+                //qrystr += "DESC ";//降序截取 否则获得的数据是最老的数据
+                //}
+                //else
+                //{
+                qrystr += "ASC ";
+                //}
+                //if (maxcount > 0)
+                //{
+                //    qrystr += "LIMIT {0}".Put(maxcount);
+                //}
 
                 IEnumerable<BarImpl> bars = db.Connection.Query<BarImpl>(qrystr);//, (bar, fields) => { bar.StartTime = Util.ToDateTime(fields.StarTtime); bar.IntervalType = (BarInterval)fields.Intervaltype; return bar; }, null, null, false, "starttime", null, null);
+                
                 return bars;
             }
         }
