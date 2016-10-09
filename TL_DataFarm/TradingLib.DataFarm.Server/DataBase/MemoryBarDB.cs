@@ -184,6 +184,28 @@ namespace TradingLib.Common.DataFarm
             target.PartialBar = partail;
         }
 
+        /// <summary>
+        /// 更新历史Bar系统恢复数据完毕后的PartialBar
+        /// </summary>
+        /// <param name="symbol"></param>
+        /// <param name="histPartial"></param>
+        public void UpdateHistPartialBar(Symbol symbol, BarImpl histPartial)
+        {
+            BarList target = GetBarList(symbol, histPartial.IntervalType, histPartial.Interval);
+            target.HistPartialBar = histPartial;
+        }
+
+        /// <summary>
+        /// 更新实时Bar系统的第一个生成的Bar
+        /// </summary>
+        /// <param name="symbol"></param>
+        /// <param name="firstRealBar"></param>
+        public void UpdateFirstRealBar(Symbol symbol, BarImpl firstRealBar)
+        {
+            BarList target = GetBarList(symbol, firstRealBar.IntervalType, firstRealBar.Interval);
+            target.FirstRealBar = firstRealBar;
+        }
+
 
         /// <summary>
         /// 从数据库恢复某个合约的Bar数据记录

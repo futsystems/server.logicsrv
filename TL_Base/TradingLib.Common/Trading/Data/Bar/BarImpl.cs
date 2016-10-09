@@ -85,6 +85,19 @@ namespace TradingLib.Common
             set { _endtime = value; }
         }
 
+        Tick _firstTick = null;
+        /// <summary>
+        /// 生成Bar的第一个Tick
+        /// </summary>
+        public Tick FirstTick { get { return _firstTick; } set { _firstTick = value; } }
+
+        Tick _lastTick = null;
+        /// <summary>
+        /// 生成Bar的最后一个Tick
+        /// </summary>
+        public Tick LastTick { get { return _lastTick; } set { _lastTick = value; } }
+
+
         bool _mergeComplete = false;
         public bool MergeComplete { get { return _mergeComplete; } set { _mergeComplete = value; } }
         //public BarImpl() : this(BarInterval.FiveMin) { }
@@ -114,6 +127,12 @@ namespace TradingLib.Common
         public Bar Clone()
         {
             return new BarImpl(this);
+        }
+        public BarImpl(BarImpl b)
+            :this(b as Bar)
+        {
+            _firstTick = b._firstTick;
+            _lastTick = b.LastTick;
         }
         public BarImpl(Bar b)
         {

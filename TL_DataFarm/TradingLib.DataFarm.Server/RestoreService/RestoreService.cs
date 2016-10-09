@@ -10,6 +10,50 @@ using Common.Logging;
 
 namespace TradingLib.Common.DataFarm
 {
+    /// <summary>
+    /// 关于盘中启动 数据实时恢复
+    /// !------------!-----!---!------------!
+    /// T1           T3    T4  T5           T2
+    /// T1:某个周期开始时刻
+    /// T2:某个周期结束时刻
+    /// T3:数据库保存的最新的Bar数据结束时刻
+    /// T4:服务启动时刻 此刻实时Bar系统接受实时Tick开始工作
+    /// T5:恢复数据时刻 此刻从本地加载Tick数据并驱动历史Bar系统开始工作
+    /// 
+    /// 在进行Tick数据截取时从数据库加载历史文件获得时间T3,在T3基础上,获得1个小时周期的开始时刻T1,在T1时刻之后的所有Tick数据
+    /// 都要加载 这样可以保证数据完备
+    /// 
+    /// 以1小时为周期单位考虑
+    /// 实时Bar系统的PartialBar从T4时刻开始
+    /// 历史Bar系统的PartialBar到T5时刻结束
+    /// 理论上可以将实时Bar系统与历史Bar系统的PartialBar进行合并
+    /// Open:历史系统
+    /// High:Max(历史,实时)
+    /// Low:Min(历史,实时)
+    /// Close:实时
+    /// Vol:实时最后一个Tick - 历史第一个Tick
+    /// 
+    /// 由于实时系统和历史系统数据处理是并行处理，因此无法有效判断时间先后，只能将两个系统的相关数据放到一个中间点进行处理
+    /// 1.实时系统第一个产生的Bar数据 放入RealBarList(存放所有合约启动后第一个实时数据生成的Bar) 该Bar有可能数据不完整 需要历史数据合并
+    /// 2.历史系统处理完历史数据后 将系统当前的PartialBar放入 HistPartialBarList 注：在这个Bar之前的所有Bar数据都可以保证是完备的,包括PartialBar本身
+    /// 也是从完整的周期开始，因此也是完备的
+    /// 
+    /// Bar保存原则
+    /// HistBar全部更新,由Tick数据加载时截断时间点做Bar完备性保证
+    /// RealBar第一个不更新
+    /// 比较HistPartialBar与RealFirstBar会出现如下几种情况
+    /// 1.HistPartialBar 无效,比如没有有效成交
+    /// 2.HistPartialBar 大于 RealFirtBar 历史PartialBar时间在RealFirstBar之后,表明HistPartialBar之前已经完成了RealFirstBar对应时间的Bar的生成而RealFirstBar之后所有Bar数据都是完备的 不用做数据拼接
+    /// 3.HistPartialBar 小于 RealFirstBar 数据出现缺失,导致HistPartilBar无法正常到RealFirstBar实现拼接（按启动顺序 实时系统先启动，历史系统后启动 可以保证 HistPartBar大于等于RealFirstBar）
+    /// 4.HistPartialBar 等于 RealFirstBar 将两者数据合并生成的Bar更新到缓存
+    /// 
+    /// 1分钟基础周期数据 不使用以上拼接方式进行,而是等待第一个Bar生成之后 在执行数据恢复操作，这样可以保证所有的Bar数据是完备的 相当于是上面第一种比较情况 HistPartialBar > FirstRealBar
+    /// 
+    /// Eod数据只能动态生成，如果要保证周线完备 则需要加载1周的数据来实现当前最新状态，因此日线级别以上的数据统一通过Merge的方式来实现,只要更新最后一个Bar
+    /// 
+    /// 
+    /// 
+    /// </summary>
     public class RestoreService
     {
         ILog logger = LogManager.GetLogger("RestoreService");
@@ -18,6 +62,8 @@ namespace TradingLib.Common.DataFarm
         /// 历史Tick产生Bar回补数据
         /// </summary>
         public event Action<FreqNewBarEventArgs> NewHistBarEvent;
+
+        public event Action<Symbol, BarImpl> NewHistPartialBarEvent;
 
 
         ConcurrentDictionary<string, RestoreTask> restoreTaskMap = new ConcurrentDictionary<string, RestoreTask>();
@@ -265,7 +311,17 @@ namespace TradingLib.Common.DataFarm
                 restoreFrequencyMgr.ProcessTick(k);
             }
 
-            //1分钟数据恢复完毕后 执行其他周期数据恢复
+            //历史Tick恢复完毕后 获取所有周期上的PartialBar
+            IEnumerable<Frequency> frequencyList = restoreFrequencyMgr.GetFrequency(task.Symbol);
+            foreach (var freq in frequencyList)
+            {
+                if (freq.WriteableBars.HasPartialItem)
+                {
+                    if (NewHistPartialBarEvent != null)
+                        NewHistPartialBarEvent(task.Symbol, freq.WriteableBars.PartialItem as BarImpl);
+                }
+            }
+
 
             ////设置数据恢复标识
             task.IsRestored = true;

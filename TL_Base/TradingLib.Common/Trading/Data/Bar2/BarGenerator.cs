@@ -25,11 +25,11 @@ namespace TradingLib.Common
         /// <summary>
         /// Tick数据不进行更新 在处理Bar数据时进行更新
         /// </summary>
-        private Bar _partialBar;
+        //private BarImpl _partialBar;
         //public Bar BarPartialBar { get { return _partialBar; } }
 
-        private Bar _currentPartialBar;
-        public Bar PartialBar { get { return _currentPartialBar; } }
+        private BarImpl _currentPartialBar;
+        public BarImpl PartialBar { get { return _currentPartialBar; } }
 
 
         private Symbol _symbol;
@@ -135,6 +135,9 @@ namespace TradingLib.Common
                     this._currentPartialBar.High = (double)value;
                     this._currentPartialBar.Low = (double)value;
                     this._updated = true;
+                    //保存第一个Tick
+                    this._currentPartialBar.FirstTick = tick;
+
                 }
                 else if ((double)value > this._currentPartialBar.High)
                 {
@@ -149,6 +152,8 @@ namespace TradingLib.Common
 
                 //标记Tick数据已经处理 进而发送
                 this._isTickSent = true;
+                this._currentPartialBar.LastTick = tick;
+
             }
 
             if (NewTick != null)
@@ -177,7 +182,7 @@ namespace TradingLib.Common
         {
             bool nodata = !this._updated && this._currentPartialBar.Close == 0;//update表示是否更新过OHLC
             //当前Tick我们无法确认该Bar数据已经结束,需要下一个Tick的时间来判定该Bar是否结束，比如10:30:59秒，在该秒内可能有多个Tick数据，只有当10:31:00这个Tick过来或定时器触发时候才表面10:30分这个Bar结束了
-            Bar barClosed = this.CloseBar(nextEndTime);
+            BarImpl barClosed = this.CloseBar(nextEndTime);
             SingleBarEventArgs e = new SingleBarEventArgs(this._symbol, new BarImpl(barClosed), barClosed.EndTime, this._isTickSent);
 
             //如果没有更新过数据 则手工更新 通过AskBid来更新OHLC
@@ -219,7 +224,7 @@ namespace TradingLib.Common
         {
 
             this._currentPartialBar.EndTime = barEndTime;
-            this._partialBar.EndTime = barEndTime;
+            //this._partialBar.EndTime = barEndTime;
         }
 
         /// <summary>
@@ -227,7 +232,7 @@ namespace TradingLib.Common
         /// 结束一个Bar的时候会同时生成下一个Bar数据
         /// </summary>
         /// <param name="barEndTime"></param>
-        private Bar CloseBar(DateTime nextEndTime)
+        private BarImpl CloseBar(DateTime nextEndTime)
         {
              //设定Bar结束时间
             //if (this._currentPartialBar != null)
@@ -237,7 +242,7 @@ namespace TradingLib.Common
 //#if DEBUG
 //            logger.Debug(string.Format("Close Bar:{0}", this._currentPartialBar != null ? this._currentPartialBar.ToString() : "Null"));
 //#endif   
-            Bar data = this._currentPartialBar;
+            BarImpl data = this._currentPartialBar;
             this._isTickSent = false;
             //重新创建临时Bar数据
             this._currentPartialBar = new BarImpl(this._symbol.Symbol, this._freq, nextEndTime);
@@ -251,7 +256,7 @@ namespace TradingLib.Common
                 this._currentPartialBar.Ask = data.Ask;
             }
 
-            this._partialBar = this._currentPartialBar.Clone();
+            //this._partialBar = this._currentPartialBar.Clone();
             return data;
         }
     

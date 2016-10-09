@@ -35,8 +35,14 @@ namespace TradingLib.Common.DataFarm
         {
             logger.Info("[Start Restore Service]");
             restoresrv.NewHistBarEvent += new Action<FreqNewBarEventArgs>(OnNewHistBarEvent);
+            restoresrv.NewHistPartialBarEvent += new Action<Symbol, BarImpl>(restoresrv_NewHistPartialBarEvent);
             restoresrv.Start();
 
+        }
+
+        void restoresrv_NewHistPartialBarEvent(Symbol arg1, BarImpl arg2)
+        {
+            
         }
 
 

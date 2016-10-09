@@ -4,11 +4,13 @@ using System.Linq;
 using System.Text;
 using TradingLib.API;
 using TradingLib.Common;
+using Common.Logging;
 
 namespace TradingLib.Common.DataFarm
 {
     public class BarList
     {
+        ILog logger = LogManager.GetLogger("BarList");
         /// <summary>
         /// 返回最后一个Bar时间
         /// </summary>
@@ -120,6 +122,72 @@ namespace TradingLib.Common.DataFarm
             }
         }
 
+
+        BarImpl _histPartialBar = null;
+        /// <summary>
+        /// 启动时加载历史Tick恢复Bar数据完毕后获得的PartialBar
+        /// 
+        /// </summary>
+        public BarImpl HistPartialBar
+        {
+            get { return _histPartialBar; }
+            set { _histPartialBar = value; }
+        }
+
+        BarImpl _firstRealBar = null;
+        /// <summary>
+        /// 实时Bar系统生成的第一个Bar数据
+        /// </summary>
+        public BarImpl FirstRealBar
+        {
+            get { return _firstRealBar; }
+            set { _firstRealBar = value; }
+        }
+
+        void Merge()
+        {
+            //当FirstRealBar和HistPartialBar都生成完毕 则可执行数据合并
+            if (this.FirstRealBar != null && this.HistPartialBar != null)
+            {
+                //HistPartialBar时间在FirstRealBar之后 则表明FristRealBar对应周期的Bar数据已经在历史Bar恢复中完成 且FirstRealBar之后所有的Bar数据都是完毕的
+                if (this.HistPartialBar.EndTime > this.FirstRealBar.EndTime)
+                {
+                    //数据完毕不用做任何操作
+                    logger.Info(string.Format("BarList[{0}] HistPartialBar'Time > FirstRealBar'Time /Data Complete", this.Key));
+                }
+                //HistPartialBar时间小于FirstRealBar,表明加载的历史数据无法与实时数据重叠 有数据缺失
+                if (this.HistPartialBar.EndTime < this.FirstRealBar.EndTime)
+                {
+                    logger.Warn(string.Format("BarList[{0}] HistPartialBar'Time < FirstRealBar'Time /Data Miss", this.Key));
+                }
+
+                if (this.HistPartialBar.EndTime == this.FirstRealBar.EndTime)
+                {
+                    BarImpl tmp = MergeBar(this.HistPartialBar, this.FirstRealBar);
+                    bool insert = false;
+                    this.Update(tmp, out insert);
+                    logger.Info(string.Format("BarList[{0}] HistPartialBar'Time = FirstRealBar'Time /Data Merge", this.Key));
+                }
+            }
+        }
+
+        /// <summary>
+        /// A在时间前段 B在时间后段
+        /// </summary>
+        /// <param name="a"></param>
+        /// <param name="b"></param>
+        /// <returns></returns>
+        static BarImpl MergeBar(BarImpl a, BarImpl b)
+        {
+            BarImpl tmp = new BarImpl(a.Symbol, new BarFrequency(a.IntervalType, a.Interval),a.EndTime);
+            tmp.Open = a.Open;
+            tmp.High = Math.Max(a.High, b.High);
+            tmp.Low = Math.Min(a.Low, a.Low);
+            tmp.Close = b.Close;
+            tmp.OpenInterest = b.OpenInterest;
+            tmp.Volume = b.LastTick.Vol - a.FirstTick.Vol;//用tick数据相减 可以获得准确的成交量信息，否则Hist Real相互叠加 无法准确获得成交量数据
+            return tmp;
+        }
         /// <summary>
         /// 添加一组Bar数据
         /// 从数据库加载一组Bar并添加到内存中

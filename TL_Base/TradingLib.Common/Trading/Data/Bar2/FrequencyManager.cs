@@ -271,6 +271,21 @@ namespace TradingLib.Common
             return null;
         }
 
+        /// <summary>
+        /// 获取某个合约所有周期数据信息
+        /// </summary>
+        /// <param name="symbol"></param>
+        /// <returns></returns>
+        public IEnumerable<Frequency> GetFrequency(Symbol symbol)
+        {
+            List<FreqInfo> target = null;
+            if (symbolFreqInfoMap.TryGetValue(symbol, out target))
+            {
+                return target.Select(info=>info.Frequency);
+            }
+            return new List<Frequency>();
+        }
+
         #endregion
 
 
