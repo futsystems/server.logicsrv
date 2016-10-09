@@ -192,7 +192,7 @@ namespace TradingLib.Common.DataFarm
         void BackFillSymbol(RestoreTask task)
         {
             Symbol symbol = task.Symbol;
-            DateTime start = task.IntradayHistBarEnd;
+            DateTime start = TimeFrequency.RoundTime(task.IntradayHistBarEnd, TimeSpan.FromHours(1));//获得该1分钟Bar对应1小时周期的开始 这样可以恢复所有周期对应的Bar数据
             DateTime end = task.IntradayRealBarStart;
 
             //遍历start和end之间所有tickfile进行处理
@@ -264,6 +264,8 @@ namespace TradingLib.Common.DataFarm
             {
                 restoreFrequencyMgr.ProcessTick(k);
             }
+
+            //1分钟数据恢复完毕后 执行其他周期数据恢复
 
             ////设置数据恢复标识
             task.IsRestored = true;

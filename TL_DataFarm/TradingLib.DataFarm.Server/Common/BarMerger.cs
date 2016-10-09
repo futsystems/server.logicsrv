@@ -39,10 +39,10 @@ namespace TradingLib.Common.DataFarm
                 {
                     j++;
                     //正常跨越了一个Bar 则标记上一个Bar为完整 BarImpl增加一个MergeComplete标记
-                    if (tmp != null)
-                    { 
-                        
-                    }
+                    //if (tmp != null)
+                    //{
+                    //    tmp.MergeComplete = true;
+                    //}
                     tmp = new BarImpl();
                     tmp.EndTime = targetEnd;
                     target.Add(tmp);
@@ -57,8 +57,14 @@ namespace TradingLib.Common.DataFarm
                 tmp.Close = sbar.Close;
                 tmp.Volume += sbar.Volume;
 
+                //if (sbar.EndTime == targetEnd)//如果source bar对应的结束时间与目标周期的结束时间一致,则该Bar结束
+                //{
+                //    tmp.MergeComplete = true;
+                //}
+
                 currentEnd = targetEnd;
             }
+            //tmp = target.Last();
             return target;
         }
     }

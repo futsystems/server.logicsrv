@@ -154,7 +154,29 @@ namespace TradingLib.Common.DataFarm
                 //整理控制返回Bar数量
                 maxcount = Math.Min(maxcount, ConstantData.MAXBARCNT);
 
-                IEnumerable<BarImpl> records = null;
+                IEnumerable<BarImpl> records = barlist.Values ;
+                BarImpl partial = this.PartialBar;
+                if (partial != null)
+                {
+                    /*
+                     *  当从1分钟数据合并生成3，5，15，30等其他周期的数据时，由于1分钟数据的不完整可能导致合并后的其他周期的最后一个Bar数据不完整
+                     *  处理方法
+                     *  1.判断完整性 将不完整的Bar剔除
+                     *  2.保留该Bar,该Bar的Open数据是正确的，将实时系统生成的PartialBar数据与该Bar执行逻辑合并
+                     * 
+                     * */
+                    //合并PartialBar时需要检查 数据集中最后一个数据与PartialBar的时间 如果一致 则更新数据集中的数据即可
+                    if (records.Count() > 0 && partial.EndTime != records.Last().EndTime)
+                    {
+                        records.Last().CopyData(partial);
+                    }
+                    else
+                    {
+                        records = records.Concat(new BarImpl[] { partial });
+                    }
+                }
+
+
                 if (start != DateTime.MinValue || end != DateTime.MaxValue)
                 {
                     long lstart = long.MinValue;
@@ -162,22 +184,20 @@ namespace TradingLib.Common.DataFarm
                     if (start != DateTime.MinValue) lstart = start.ToTLDateTime();
                     if (end != DateTime.MaxValue) lend = end.ToTLDateTime();
                     //执行时间过滤
-                    records = barlist.Where(v => v.Key >= lstart && v.Key <= lend).Select(v => v.Value);
-                }
-                else
-                {
-                    records = barlist.Select(v => v.Value);//不执行时间检查
+                    records = records.Where(bar => bar.EndTime >= start && bar.EndTime <= end);//barlist.Where(v => v.Key >= lstart && v.Key <= lend).Select(v => v.Value);
                 }
 
-                //合并PartialBar
-                if (havePartail)
-                {
-                    BarImpl partial = this.PartialBar;
-                    if (partial != null)
-                    {
-                        records = records.Concat(new BarImpl[] { partial });
-                    }
-                }
+
+                //合并PartialBar 如果查询不是从最新一个Bar开始 则不需要合并
+                //if (havePartail && startIndex ==0)
+                //{
+                //    BarImpl partial = this.PartialBar;
+                //    if (partial != null)
+                //    {
+                //        if (partial.EndTime != re)
+                //        records = records.Concat(new BarImpl[] { partial });
+                //    }
+                //}
                 //限制有效返回数量 返回数量为最大返回Bar个数
                 //截取数据集
                 if (maxcount <= 0)

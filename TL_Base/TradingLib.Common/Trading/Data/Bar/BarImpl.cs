@@ -85,7 +85,8 @@ namespace TradingLib.Common
             set { _endtime = value; }
         }
 
-
+        bool _mergeComplete = false;
+        public bool MergeComplete { get { return _mergeComplete; } set { _mergeComplete = value; } }
         //public BarImpl() : this(BarInterval.FiveMin) { }
 
         public BarImpl(string symbol, BarFrequency bf, DateTime endTime)
