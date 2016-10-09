@@ -52,7 +52,13 @@ namespace TradingLib.Common.DataFarm
     /// Eod数据只能动态生成，如果要保证周线完备 则需要加载1周的数据来实现当前最新状态，因此日线级别以上的数据统一通过Merge的方式来实现,只要更新最后一个Bar
     /// 
     /// 
+    /// 同时在BarList中合并PartialBar时 依然有一定的逻辑
+    /// 如果历史Partial不存在则返回实时Partial
+    /// 如果存在 则比较时间 实时Partial时间较新则返回实时Partial,时间相等则需要合并，时间小于 逻辑出错
     /// 
+    /// 同样 在将PartialBar与当前BarList合并时 1分钟基础数据是完备的所有储存在list中的Bar都是FrequencyManager生成的，但是其他周期的Bar数据是通过1分钟基础数据Merge而成，因此可能
+    /// 会在第一个记录中包含了PartialBar
+    /// 比如在启动时候 通过1分钟数据Merge出了1小时数据，但是该小时还没有结束，因此需要考虑到这个问题 这里通过Partial的时间与list最后一个记录的时间比较即可
     /// </summary>
     public class RestoreService
     {
@@ -315,7 +321,7 @@ namespace TradingLib.Common.DataFarm
             IEnumerable<Frequency> frequencyList = restoreFrequencyMgr.GetFrequency(task.Symbol);
             foreach (var freq in frequencyList)
             {
-                if (freq.WriteableBars.HasPartialItem)
+                if (freq.WriteableBars.HasPartialItem)//数据恢复时候 Tick文件含有E类别Tick MarketClose 关闭Bar之后 由于没有任何成交Tick驱动 则没有PartialBar 此处刚好完备
                 {
                     if (NewHistPartialBarEvent != null)
                         NewHistPartialBarEvent(task.Symbol, freq.WriteableBars.PartialItem as BarImpl);
