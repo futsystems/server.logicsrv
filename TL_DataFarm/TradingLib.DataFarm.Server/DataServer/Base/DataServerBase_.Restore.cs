@@ -42,7 +42,7 @@ namespace TradingLib.Common.DataFarm
 
         void restoresrv_NewHistPartialBarEvent(Symbol arg1, BarImpl arg2)
         {
-            
+            GetHistDataSotre().UpdateHistPartialBar(arg1, arg2);
         }
 
 

@@ -102,12 +102,30 @@ namespace TradingLib.API
         /// <param name="interval"></param>
         /// <param name="ids"></param>
         void DeleteBar(Symbol symbol, BarInterval type, int interval, int[] ids);
+
+        /// <summary>
+        /// 更新实时Bar系统的第一个Bar数据
+        /// </summary>
+        /// <param name="symbol"></param>
+        /// <param name="firstRealBar"></param>
+        void UpdateFirstRealBar(Symbol symbol, BarImpl firstRealBar);
+
+
         /// <summary>
         /// 更新某个Symbol对应的PartialBar
         /// </summary>
         /// <param name="symbol"></param>
         /// <param name="partail"></param>
         void UpdatePartialBar(Symbol symbol, BarImpl partail);
+
+        /// <summary>
+        /// 更新某个合约 数据恢复完毕后 历史Bar系统的PartialBar
+        /// </summary>
+        /// <param name="symbol"></param>
+        /// <param name="histPartial"></param>
+        void UpdateHistPartialBar(Symbol symbol, BarImpl histPartial);
+
+
         /// <summary>
         /// 插入Bar数据
         /// </summary>

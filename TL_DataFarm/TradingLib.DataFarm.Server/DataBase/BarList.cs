@@ -131,7 +131,11 @@ namespace TradingLib.Common.DataFarm
         public BarImpl HistPartialBar
         {
             get { return _histPartialBar; }
-            set { _histPartialBar = value; }
+            set 
+            { 
+                _histPartialBar = value;
+                MergePartialBar();
+            }
         }
 
         BarImpl _firstRealBar = null;
@@ -141,10 +145,17 @@ namespace TradingLib.Common.DataFarm
         public BarImpl FirstRealBar
         {
             get { return _firstRealBar; }
-            set { _firstRealBar = value; }
+            set 
+            { 
+                _firstRealBar = value;
+                MergePartialBar();
+            }
         }
 
-        void Merge()
+        /// <summary>
+        /// 合并HistPartialBar与FirstRealBar
+        /// </summary>
+        void MergePartialBar()
         {
             //当FirstRealBar和HistPartialBar都生成完毕 则可执行数据合并
             if (this.FirstRealBar != null && this.HistPartialBar != null)
@@ -188,6 +199,7 @@ namespace TradingLib.Common.DataFarm
             tmp.Volume = b.LastTick.Vol - a.FirstTick.Vol;//用tick数据相减 可以获得准确的成交量信息，否则Hist Real相互叠加 无法准确获得成交量数据
             return tmp;
         }
+
         /// <summary>
         /// 添加一组Bar数据
         /// 从数据库加载一组Bar并添加到内存中
@@ -204,6 +216,35 @@ namespace TradingLib.Common.DataFarm
             }
         }
 
+        BarImpl GetPartialBar()
+        { 
+            BarImpl partial = this.PartialBar;
+            if (partial != null)//实时PartialBar存在 则需要检查HistPartialBar 并进行合并
+            {
+                if (this.HistPartialBar != null)
+                {
+                    if (partial.EndTime > this.HistPartialBar.EndTime) return partial;
+                    if (partial.EndTime == this.HistPartialBar.EndTime)
+                    {
+                        return BarList.MergeBar(this.HistPartialBar, partial);
+                    }
+                    if (partial.EndTime < this.HistPartialBar.EndTime)
+                    {
+                        logger.Error("logic error:real partial time < hist partil time");
+                        return null;
+                    }
+                }
+                else //HistPartialBar不存在 则返回partial
+                {
+                    return partial;
+                }
+            }
+            else //如果实时PartialBar为空 表面没有实时数据驱动生成Bar 则直接返回历史PartialBar 且当前BarList中的数据最近部分也是由历史Bar系统生成
+            {
+                return this.HistPartialBar;
+            }
+            return partial;
+        }
 
         /// <summary>
         /// 从数据集中查询结果
@@ -223,7 +264,7 @@ namespace TradingLib.Common.DataFarm
                 maxcount = Math.Min(maxcount, ConstantData.MAXBARCNT);
 
                 IEnumerable<BarImpl> records = barlist.Values ;
-                BarImpl partial = this.PartialBar;
+                BarImpl partial = GetPartialBar();
                 if (partial != null)
                 {
                     /*
@@ -234,7 +275,7 @@ namespace TradingLib.Common.DataFarm
                      * 
                      * */
                     //合并PartialBar时需要检查 数据集中最后一个数据与PartialBar的时间 如果一致 则更新数据集中的数据即可
-                    if (records.Count() > 0 && partial.EndTime != records.Last().EndTime)
+                    if (records.Count() > 0 && partial.EndTime == records.Last().EndTime)
                     {
                         records.Last().CopyData(partial);
                     }

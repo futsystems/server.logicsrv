@@ -30,7 +30,7 @@ namespace TradingLib.Common
         /// <summary>
         /// 合约对应的第一个行情事件
         /// </summary>
-        Dictionary<string, DateTime> symbolFirstTickTime = new Dictionary<string, DateTime>();
+        //Dictionary<string, DateTime> symbolFirstTickTime = new Dictionary<string, DateTime>();
 
         /// <summary>
         /// FreqKey与FreqInfo的Map
@@ -129,15 +129,15 @@ namespace TradingLib.Common
         /// </summary>
         /// <param name="symbol"></param>
         /// <returns></returns>
-        public DateTime GetFirstTickTime(Symbol symbol)
-        {
-            DateTime t = DateTime.MaxValue;
-            if (symbolFirstTickTime.TryGetValue(symbol.Symbol,out t))
-            {
-                return t;
-            }
-            return DateTime.MaxValue;
-        }
+        //public DateTime GetFirstTickTime(Symbol symbol)
+        //{
+        //    DateTime t = DateTime.MaxValue;
+        //    if (symbolFirstTickTime.TryGetValue(symbol.Symbol,out t))
+        //    {
+        //        return t;
+        //    }
+        //    return DateTime.MaxValue;
+        //}
 
         #region 注册频率发生器,合约
         /// <summary>
@@ -444,13 +444,13 @@ namespace TradingLib.Common
             if (ticktime >= symbolUpdateTimeMap[symbol.Symbol])//Tick数据必须按时间顺序进入 如果出现时间错乱则处理逻辑会被打乱 比如 产生一个时间很大的Tick 结果后面正常的Tick数据无法被有效处理
             {
                 //记录每个合约的第一个有效Tick时间
-                if (tick.IsTrade())
-                {
-                    if (!symbolFirstTickTime.Keys.Contains(symbol.Symbol))
-                    {
-                        symbolFirstTickTime.Add(symbol.Symbol, ticktime);
-                    }
-                }
+                //if (tick.IsTrade())
+                //{
+                //    if (!symbolFirstTickTime.Keys.Contains(symbol.Symbol))
+                //    {
+                //        symbolFirstTickTime.Add(symbol.Symbol, ticktime);
+                //    }
+                //}
                 pf.EnterSection("TIMECHECK  ");
                 //获得该合约所有的FreqInfo对象
                 IEnumerable<FrequencyManager.FreqInfo> list = this.GetFreqInfosForSymbol(symbol);
@@ -464,6 +464,11 @@ namespace TradingLib.Common
                         pf.EnterSection("TIMECHECK1");
                         this.FreqInfoProcessTick(ttick, freqinfo);
                         pf.LeaveSection();
+                    }
+                    if (tick.UpdateType == "E")
+                    {
+                        //FreqInfo处理MarketEvent 类型的Tick用于 Close一个Bar
+                        FreqInfoProcessTick(tick, freqinfo);
                     }
 
                     //如果FreqInfo有待发送的Bar数据 放入eventholder 在处理时间Tick后 有Bar结束 则清空freqInfo的pendingBar同时清空Frequency的partialItem
@@ -557,22 +562,25 @@ namespace TradingLib.Common
 
                 pf.EnterSection("PROCESSTICK");
                 #region C.FreqInfo处理Tick并更新PartialItem
-                //遍历所有freqinfo 处理Tick数据并更新Frequency的PartialItem
-                foreach (var freqinfo in list)
+                if (tick.UpdateType == "X")//成交类型的Tick才在最后处理，用于生成新的Bar 时间或事件类的提前处理
                 {
-                    pf.EnterSection("PT01");
-                    //FreqInfo处理tick数据
-                    FreqInfoProcessTick(tick, freqinfo);
-                    pf.LeaveSection();
-
-                    pf.EnterSection("PT02");
-                    //FreqInfo处理TimeTick数据
-                    FreqInfoProcessTimeTick(ttick, freqinfo);
-                    pf.LeaveSection();
-
-                    if (freqinfo.Frequency.WriteableBars.HasPartialItem)
+                    //遍历所有freqinfo 处理Tick数据并更新Frequency的PartialItem
+                    foreach (var freqinfo in list)
                     {
-                        OnFreqKeyPartialBar(freqinfo.FreqKey, new PartialBarUpdateEventArgs(freqinfo.FreqKey.Symbol, freqinfo.Frequency.WriteableBars.PartialItem));
+                        pf.EnterSection("PT01");
+                        //FreqInfo处理tick数据
+                        FreqInfoProcessTick(tick, freqinfo);
+                        pf.LeaveSection();
+
+                        pf.EnterSection("PT02");
+                        //FreqInfo处理TimeTick数据
+                        FreqInfoProcessTimeTick(ttick, freqinfo);
+                        pf.LeaveSection();
+
+                        if (freqinfo.Frequency.WriteableBars.HasPartialItem)
+                        {
+                            OnFreqKeyPartialBar(freqinfo.FreqKey, new PartialBarUpdateEventArgs(freqinfo.FreqKey.Symbol, freqinfo.Frequency.WriteableBars.PartialItem));
+                        }
                     }
                 }
                 #endregion

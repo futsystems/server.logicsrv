@@ -186,15 +186,15 @@ namespace TradingLib.Common.DataFarm
         /// </summary>
         /// <param name="symbol"></param>
         /// <returns></returns>
-        public DateTime GetFirstTickTime(Symbol symbol)
-        { 
-             FrequencyManager fm = GetFrequencyManagerForExchange(symbol.SecurityFamily.Exchange.EXCode);
-             if (fm != null)
-             {
-                 return fm.GetFirstTickTime(symbol);
-             }
-             return DateTime.MaxValue;
-        }
+        //public DateTime GetFirstTickTime(Symbol symbol)
+        //{ 
+        //     FrequencyManager fm = GetFrequencyManagerForExchange(symbol.SecurityFamily.Exchange.EXCode);
+        //     if (fm != null)
+        //     {
+        //         return fm.GetFirstTickTime(symbol);
+        //     }
+        //     return DateTime.MaxValue;
+        //}
 
 
         /// <summary>
