@@ -432,6 +432,8 @@ namespace TradingLib.Common
                 //快照模式 该模式用于维护某个Tick的当前最新市场状态
                 case "S":
                     return Symbol + " Snapshot";
+                case "E":
+                    return "Market:" + MarketOpen.ToString();
                 default:
                     return "UNKNOWN TICK";
             }

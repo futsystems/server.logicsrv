@@ -170,24 +170,25 @@ namespace TradingLib.Common.DataFarm
                     }
 
                     //实时插入Bar数据
-                    while (barbuffer.hasItems && _tickRestored)
+                    while (barbuffer.hasItems)
                     {
                         BarStoreStruct b = barbuffer.Read();
                         store.UpdateBar(b.Symbol,b.Bar);
                         
                     }
+                    //删除Bar数据
                     while (!barbuffer.hasItems && deleteBarBuffer.hasItems)
                     {
                         BarDeleteStruct b = deleteBarBuffer.Read();
                         store.DeleteBar(b.Symbol, b.IntervalType, b.Interval,b.IDs);
                     }
-
+                    //上传Bar数据
                     while (!barbuffer.hasItems && uploadBarBuffer.hasItems)
                     {
                         BarUploadStruct b = uploadBarBuffer.Read();
                         store.UploadBar(b.Key, b.Bars);
                     }
-
+                    //更新PartialBar数据
                     while (!barbuffer.hasItems && partialBarBuffer.hasItems)
                     {
                         BarStoreStruct b = partialBarBuffer.Read();
@@ -195,11 +196,11 @@ namespace TradingLib.Common.DataFarm
                     }
 
                     //更新Bar缓存 用于从Tick历史数据加载生成Bar进行数据更新
-                    while (barupdatebuffre.hasItems)
-                    {
-                        BarStoreStruct b = barupdatebuffre.Read();
-                        store.UpdateBar(b.Symbol, b.Bar);
-                    }
+                    //while (barupdatebuffre.hasItems)
+                    //{
+                    //    BarStoreStruct b = barupdatebuffre.Read();
+                    //    store.UpdateBar(b.Symbol, b.Bar);
+                    //}
 
                     //if (_batchSave)
                     //{

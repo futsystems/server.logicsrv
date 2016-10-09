@@ -11,7 +11,7 @@ namespace TradingLib.Common
 {
     public class FrequencyManager
     {
-        ILog logger = null;
+        ILog logger = LogManager.GetLogger("FrequencyManager");
         /// <summary>
         /// 频率发生器列表
         /// </summary>
@@ -96,7 +96,7 @@ namespace TradingLib.Common
         public FrequencyManager(string name, QSEnumDataFeedTypes datafeed,BarConstructionType type = BarConstructionType.Trade, bool synchronizebars = false)
         {
             this.fmName = name;
-            logger = LogManager.GetLogger(this.fmName);
+            //logger = LogManager.GetLogger(this.fmName);
             this.datafeed = datafeed;
             this.constructtype = type;
             this.synchronizeBars = synchronizebars;
@@ -186,7 +186,7 @@ namespace TradingLib.Common
         private void RegisterFreKey(FrequencyManager.FreqKey freqkey)
         {
 #if DEBUG
-            logger.Info("RegisterFreKey:" + freqkey.ToString());
+            logger.Debug("RegisterFreKey:" + freqkey.ToString());
 #endif
             if (this.freqKeyInfoMap.Keys.Contains(freqkey))
             {
@@ -459,9 +459,12 @@ namespace TradingLib.Common
                         {
                             eventHolder.AddEvent(freqinfo.FreqKey, bar);
 #if DEBUG
-                            logger.Info(string.Format("FreqInfo for key:[{0}] Cached Bar:{1}", freqinfo.FreqKey, bar.Bar));
+                            logger.Debug(string.Format("FreqInfo[{0}] Cached Bar:{1}", freqinfo.FreqKey, bar.Bar));
 #endif
                         }
+#if DEBUG
+                        logger.Debug(string.Format("FreqInfo[{0}] Clear PendingBar and PartialBar",freqinfo.FreqKey));
+#endif
                         //清空FreqInfo待发送Bar 以及 PartialBar
                         freqinfo.ClearPendingBars();
 
@@ -483,7 +486,7 @@ namespace TradingLib.Common
                 if (eventHolder.EventList.Count > 0)
                 {
 #if DEBUG
-                    logger.Info(string.Format("Update frequency's collection, send out bar event"));
+                    //logger.Info(string.Format("Update frequency's collection, send out bar event"));
 #endif
                     foreach (FrequencyNewBarEventArgs frequencyEvent in eventHolder.EventList)
                     {
@@ -494,9 +497,15 @@ namespace TradingLib.Common
                             {
                                 logger.Warn("FreqKey:{0} havs no FreqInfo avabile".Put(pair.Key));
                             }
+#if DEBUG
+                            logger.Debug("UpdateBarCollection:" + pair.Value.Bar.ToString() + " QTY:" + info.Frequency.WriteableBars.Count);
+#endif
                             //通过FreqKey找到对应的FreqInfo同时更新BarCollection 该操作将会在数据集中添加Bar
                             info.UpdateBarCollection(pair.Value.Bar, pair.Value.BarEndTime);
                             info.SendNewBar(pair.Value);
+#if DEBUG
+                            logger.Debug(string.Format("FreqInfo[{0}] Emit Bar:{1}", info.FreqKey, pair.Value.Bar));
+#endif
                             this.OnFreqKeyBar(info.FreqKey, pair.Value);
                             ////第一个Bar有可能是中途开始的因此数据未必正确 需要记录第二个Bar的更新时间
                             //if(info.Frequency.Bars.Count == 2)
@@ -779,7 +788,7 @@ namespace TradingLib.Common
                 this.Frequency.WriteableBars.Add(bar);
                 this.Frequency.CurrentBarEndTime = barEndTime;
 #if DEBUG
-                logger.Info("UpdateBarCollection:" + bar.ToString() + " QTY:" + this.Frequency.WriteableBars.Count);
+                //logger.Debug("UpdateBarCollection:" + bar.ToString() + " QTY:" + this.Frequency.WriteableBars.Count);
 #endif
             }
 
@@ -789,7 +798,7 @@ namespace TradingLib.Common
             public void ClearPendingBars()
             {
 #if DEBUG
-                logger.Info("ClearPendingBars");
+                //logger.Info("ClearPendingBars");
 #endif
                 this._pendingBarEvents.Clear();
                 this._pendingPartialBar = null;
@@ -802,7 +811,7 @@ namespace TradingLib.Common
             public void SendNewBar(SingleBarEventArgs args)
             {
 #if DEBUG
-                logger.Info("SendNewBar:" + args.Bar.ToString());
+                //logger.Info("SendNewBar:" + args.Bar.ToString());
 #endif
                 this.Frequency.OnNewBar(args);
             }

@@ -56,11 +56,17 @@ namespace TradingLib.Common.DataFarm
             //启动Bar数据生成器
             this.StartFrequencyService();
 
+            //初始化数据恢复服务
+            this.InitRestoreService();
+
             //启动TickFeed
             this.StartTickFeeds();
 
             //恢复历史数据
-            this.RestoreData();
+            this.LoadData();
+
+            //启动数据恢复服务
+            this.StartRestoreService();
 
             //启动ServiceHost
             this.StartServiceHosts();

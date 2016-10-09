@@ -20,22 +20,13 @@ namespace TradingLib.Common.DataFarm
         {
             freqService = new FrequencyService();
             freqService.NewRealTimeBarEvent += new Action<FreqNewBarEventArgs>(OnNewRealTimeBarEvent);
-            freqService.NewHistBarEvent += new Action<FreqNewBarEventArgs>(OnNewHistBarEvent);
             freqService.UpdatePartialBarEvent += new Action<FreqUpdatePartialBarEventArgs>(freqService_UpdatePartialBarEvent);
 
         }
 
         
 
-        /// <summary>
-        /// 回放tick所生成的Bar数据事件
-        /// </summary>
-        /// <param name="obj"></param>
-        void OnNewHistBarEvent(FreqNewBarEventArgs obj)
-        {
-            obj.Bar.Symbol = obj.Symbol.GetContinuousSymbol();
-            this.UpdateBar(obj.Symbol, obj.Bar);
-        }
+       
 
         void freqService_UpdatePartialBarEvent(FreqUpdatePartialBarEventArgs obj)
         {
@@ -60,12 +51,21 @@ namespace TradingLib.Common.DataFarm
              * 
              * */
             //如果没有执行恢复 且 为第一个Bar则不储存该Bar数据
-            if (!IsSymbolRestored(obj.Symbol) && obj.Frequency.Bars.Count >= 2)
+            //if (!IsSymbolRestored(obj.Symbol) && obj.Frequency.Bars.Count >= 2)
+            //{
+            //    this.UpdateBar2(obj.Symbol, obj.Bar);
+            //}
+            //实时Bar系统产生的第一个Bar数据记录该Bar结束时间，该事件之后的所有的Bar均为完整的Bar
+            if(obj.Frequency.Bars.Count == 1)
+            {
+                restoresrv.OnIntradayRealBarGenerated(obj.Symbol, obj.Bar.EndTime);
+            }
+            if (obj.Frequency.Bars.Count >= 2)
             {
                 this.UpdateBar2(obj.Symbol, obj.Bar);
             }
             //检查Bar更新时间 用于修改恢复任务状态
-            this.CheckBarUpdateTime(obj.Symbol, obj.Bar);
+            //this.CheckBarUpdateTime(obj.Symbol, obj.Bar);
 
         }
 

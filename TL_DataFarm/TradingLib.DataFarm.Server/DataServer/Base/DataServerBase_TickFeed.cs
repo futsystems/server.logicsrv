@@ -144,6 +144,9 @@ namespace TradingLib.Common.DataFarm
 
         void asyncTick_GotTick(Tick k)
         {
+            Symbol symbol = MDBasicTracker.SymbolTracker[k.Exchange,k.Symbol];
+            if(symbol == null) return;
+
             //更新行情最近更新时间
             if (!tickLastTimeMap.Keys.Contains(k.Symbol))
             {
@@ -167,6 +170,12 @@ namespace TradingLib.Common.DataFarm
             {
                 FrequencyServiceProcessTick(k);
             }
+
+            if (k.UpdateType == "S")
+            {
+                RestoreServiceProcessTickSnapshot(symbol, k);
+            }
+
         }
 
 

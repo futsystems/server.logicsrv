@@ -27,10 +27,7 @@ namespace TradingLib.Common.DataFarm
         /// </summary>
         public event Action<FreqUpdatePartialBarEventArgs> UpdatePartialBarEvent;
 
-        /// <summary>
-        /// 历史Tick产生Bar回补数据
-        /// </summary>
-        public event Action<FreqNewBarEventArgs> NewHistBarEvent;
+        
 
         
 
@@ -65,7 +62,7 @@ namespace TradingLib.Common.DataFarm
             return null;
         }
 
-        FrequencyManager restoreFrequencyMgr = null;
+        //FrequencyManager restoreFrequencyMgr = null;
 
         /// <summary>
         /// Bar数据生成服务
@@ -87,9 +84,9 @@ namespace TradingLib.Common.DataFarm
             }
 
             //恢复历史Tick所用的FrequencyManager
-            restoreFrequencyMgr = new FrequencyManager("Restore", QSEnumDataFeedTypes.DEFAULT);
-            restoreFrequencyMgr.RegisterAllBasicFrequency();
-            restoreFrequencyMgr.NewFreqKeyBarEvent += new Action<FrequencyManager.FreqKey, SingleBarEventArgs>(OnNewHistFreqKeyBarEvent);
+            //restoreFrequencyMgr = new FrequencyManager("Restore", QSEnumDataFeedTypes.DEFAULT);
+            //restoreFrequencyMgr.RegisterAllBasicFrequency();
+            //restoreFrequencyMgr.NewFreqKeyBarEvent += new Action<FrequencyManager.FreqKey, SingleBarEventArgs>(OnNewHistFreqKeyBarEvent);
 
 
             //遍历所有合约 建立合约到FrequencyManager映射 同时将合约注册到FrequencyManager
@@ -103,7 +100,7 @@ namespace TradingLib.Common.DataFarm
                     symbolFrequencyMgrMap.Add(symbol.Symbol, fm);
                 }
                 //同时向数据恢复FrequencyManager注册
-                restoreFrequencyMgr.RegisterSymbol(symbol);
+                //restoreFrequencyMgr.RegisterSymbol(symbol);
             }
         }
 
@@ -117,23 +114,23 @@ namespace TradingLib.Common.DataFarm
             }
         }
 
-        void OnNewHistFreqKeyBarEvent(FrequencyManager.FreqKey arg1, SingleBarEventArgs arg2)
-        {
-            //if (arg1.Symbol.Symbol == "GC04")
-            //{
-            //    int i = 1;
-            //}
-#if DEBUG
-            logger.Warn(string.Format("Bar ReGenerated Key:{0} Bar:{1}", arg1.Settings.BarFrequency, arg2.Bar));
-#endif
+//        void OnNewHistFreqKeyBarEvent(FrequencyManager.FreqKey arg1, SingleBarEventArgs arg2)
+//        {
+//            //if (arg1.Symbol.Symbol == "GC04")
+//            //{
+//            //    int i = 1;
+//            //}
+//#if DEBUG
+//            logger.Warn(string.Format("Bar ReGenerated Key:{0} Bar:{1}", arg1.Settings.BarFrequency, arg2.Bar));
+//#endif
 
-            if (NewHistBarEvent != null)
-            {
-                BarImpl b = new BarImpl(arg2.Bar);
-                b.TradingDay = 0;
-                NewHistBarEvent(new FreqNewBarEventArgs() { Bar = new BarImpl(arg2.Bar), BarFrequency = arg1.Settings.BarFrequency, Symbol = arg1.Symbol });
-            }
-        }
+//            if (NewHistBarEvent != null)
+//            {
+//                BarImpl b = new BarImpl(arg2.Bar);
+//                b.TradingDay = 0;
+//                NewHistBarEvent(new FreqNewBarEventArgs() { Bar = new BarImpl(arg2.Bar), BarFrequency = arg1.Settings.BarFrequency, Symbol = arg1.Symbol });
+//            }
+//        }
 
 
         /// <summary>
@@ -211,14 +208,7 @@ namespace TradingLib.Common.DataFarm
             fm.ProcessTick(k);
         }
 
-        /// <summary>
-        /// 恢复历史Tick
-        /// </summary>
-        /// <param name="k"></param>
-        public void RestoreTick(Tick k)
-        {
-            restoreFrequencyMgr.ProcessTick(k);
-        }
+      
 
     }
 }

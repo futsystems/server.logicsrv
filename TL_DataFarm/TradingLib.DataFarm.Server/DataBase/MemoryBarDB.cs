@@ -188,6 +188,7 @@ namespace TradingLib.Common.DataFarm
         /// <summary>
         /// 从数据库恢复某个合约的Bar数据记录
         /// 在启动服务 恢复数据过程中 执行该操作
+        /// 恢复数据分为 恢复日内数据和恢复EOD数据
         /// </summary>
         /// <param name="symbol"></param>
         /// <param name="type"></param>
@@ -199,39 +200,26 @@ namespace TradingLib.Common.DataFarm
             //获得对应的BarList
             BarList target = GetBarList(symbol, type, interval);
 
-            //从数据库加载对应的Bar数据 从最近的数据加载 分钟级别数据加载1年,日级别数据加载3年
-            IEnumerable<BarImpl> bars = MBar.LoadBars(GetBarSymbol(symbol), type, interval, DateTime.Now.AddMonths(-6));//, ConstantData.MAXBARCNT);
-            //添加到内存数据结构中
-            //target.RestoreBars(bars);
+            //从数据库加载对应的Bar数据 从最近的数据加载 分钟级别数据加载6个月,日级别数据加载3年
+            IEnumerable<BarImpl> bars = MBar.LoadBars(GetBarSymbol(symbol), type, interval, DateTime.Now.AddMonths(-6));
             target.RestoreBars(bars.Skip(Math.Max(0, bars.Count()-ConstantData.MAXBARCACHED)));
-            //如果恢复的数据集数量大于零则取最后一个Bar的时间为最后Bar时间
-            if (bars.Count() > 0)
-            {
-                lastBarTime = bars.First().EndTime;
-            }
-            IEnumerable<BarImpl> list = null;
+            lastBarTime = target.LastBarTime;
+            
 
-            target = GetBarList(GetBarListKey(symbol, type, 180));//3
-            list = BarMerger.Merge(bars, TimeSpan.FromMinutes(3));
-            target.RestoreBars(list.Skip(Math.Max(0, list.Count() - ConstantData.MAXBARCACHED)));
-
-            target = GetBarList(GetBarListKey(symbol, type, 300));//5
-            list = BarMerger.Merge(bars, TimeSpan.FromMinutes(5));
-            target.RestoreBars(list.Skip(Math.Max(0, list.Count() - ConstantData.MAXBARCACHED)));
-
-            target = GetBarList(GetBarListKey(symbol, type, 900));//15
-            list = BarMerger.Merge(bars, TimeSpan.FromMinutes(15));
-            target.RestoreBars(list.Skip(Math.Max(0, list.Count() - ConstantData.MAXBARCACHED)));
-
-            target = GetBarList(GetBarListKey(symbol, type, 1800));//30
-            list = BarMerger.Merge(bars, TimeSpan.FromMinutes(30));
-            target.RestoreBars(list.Skip(Math.Max(0, list.Count() - ConstantData.MAXBARCACHED)));
-
-            target = GetBarList(GetBarListKey(symbol, type, 3600));//60
-            list = BarMerger.Merge(bars, TimeSpan.FromMinutes(60));
-            target.RestoreBars(list.Skip(Math.Max(0, list.Count() - ConstantData.MAXBARCACHED)));
+            this.MergeRestore(bars, symbol, type, 180);//3
+            this.MergeRestore(bars, symbol, type, 300);//5
+            this.MergeRestore(bars, symbol, type, 900);//15
+            this.MergeRestore(bars, symbol, type, 1800);//30
+            this.MergeRestore(bars, symbol, type, 3600);//60
 
             return true;
+        }
+
+        void MergeRestore(IEnumerable<BarImpl> source,Symbol symbol,BarInterval intervalType, int interval)
+        {
+            BarList target = GetBarList(GetBarListKey(symbol, intervalType, interval));
+            IEnumerable<BarImpl> list = BarMerger.Merge(source, TimeSpan.FromSeconds(interval));
+            target.RestoreBars(list.Skip(Math.Max(0, list.Count() - ConstantData.MAXBARCACHED)));
         }
 
         /// <summary>

@@ -38,7 +38,11 @@ namespace TradingLib.Common.DataFarm
                 if (currentEnd != targetEnd)
                 {
                     j++;
-                    
+                    //正常跨越了一个Bar 则标记上一个Bar为完整 BarImpl增加一个MergeComplete标记
+                    if (tmp != null)
+                    { 
+                        
+                    }
                     tmp = new BarImpl();
                     tmp.EndTime = targetEnd;
                     target.Add(tmp);
