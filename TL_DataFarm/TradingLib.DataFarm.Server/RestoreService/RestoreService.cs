@@ -117,7 +117,7 @@ namespace TradingLib.Common.DataFarm
         /// </summary>
         /// <param name="symbol"></param>
         /// <param name="time"></param>
-        public void OnIntradayRealBarGenerated(Symbol symbol, DateTime time)
+        public void OnIntradayFirstRealBar(Symbol symbol,BarImpl bar)
         {
             RestoreTask task = null;
             if (!restoreTaskMap.TryGetValue(symbol.UniqueKey, out task))
@@ -125,7 +125,8 @@ namespace TradingLib.Common.DataFarm
                 logger.Warn(string.Format("Symbol:{0} has no restore task registed", symbol.UniqueKey));
                 return;
             }
-            task.IntradayRealBarStart = time;
+            task.IntradayFirstRealBar = bar;
+            task.IntradayRealBarStart = bar.EndTime;
         }
 
         /// <summary>
@@ -181,11 +182,23 @@ namespace TradingLib.Common.DataFarm
                     foreach (var item in restoreTaskMap.Values.Where(t => !t.IsRestored))
                     {
                         if (item.Symbol.Symbol != "CLX6") continue;
-                        //合约获得行情快照 且当前合约处于收盘状态 直接加载Tick数据执行数据恢复
-                        if (item.HaveGotTickSnapshot && !item.TickSnapshot.MarketOpen)
+                        
+                        if (item.HaveGotTickSnapshot)
                         {
-                            item.CanRestored = true;
+                            //合约处于收盘状态 直接加载数据恢复
+                            if (!item.TickSnapshot.MarketOpen)
+                            {
+                                item.CanRestored = true;
+                            }
+                            //合约处于开盘状态 需要等待第一个Bar生成之后才开始恢复历史数据
+                            if(item.TickSnapshot.MarketOpen && item.IntradayFirstRealBar != null)
+                            {
+                                logger.Info("FristRealBar Generated,now begin restore tick data");
+                                item.CanRestored = true;
+                            }
                         }
+
+
                         ////1.如果没有取得对应合约的第一个Tick时间 则尝试获得该tick时间
                         //if (item.End == DateTime.MaxValue)
                         //{
@@ -234,7 +247,7 @@ namespace TradingLib.Common.DataFarm
             logger.Info("Restore Tick finished");
         }
 
-        string _basedir = "E:\\data";
+        string _basedir = "D:\\worktable\\Futs.base\\Platform\\DataCore-T\\TickData\\";
         /// <summary>
         /// 将某个合约某个时间段内的Bar数据恢复
         /// </summary>
@@ -244,7 +257,7 @@ namespace TradingLib.Common.DataFarm
         void BackFillSymbol(RestoreTask task)
         {
             Symbol symbol = task.Symbol;
-            DateTime start = TimeFrequency.RoundTime(task.IntradayHistBarEnd, TimeSpan.FromHours(1));//获得该1分钟Bar对应1小时周期的开始 这样可以恢复所有周期对应的Bar数据
+            DateTime start = task.IntradayHistBarEnd;// TimeFrequency.RoundTime(task.IntradayHistBarEnd, TimeSpan.FromHours(1));//获得该1分钟Bar对应1小时周期的开始 这样可以恢复所有周期对应的Bar数据
             DateTime end = task.IntradayRealBarStart;
 
             //遍历start和end之间所有tickfile进行处理
@@ -296,7 +309,8 @@ namespace TradingLib.Common.DataFarm
                                 k.Symbol = symbol.Symbol;
                                 DateTime ticktime = k.DateTime();
                                 //如果Tick时间在开始与结束之间 则需要回放该Tick数据 需要确保在盘中重启后 在start和end之间的所有数据均加载完毕
-                                if (ticktime >= start && ticktime <= end)
+                               
+                                if (ticktime >= start && ticktime < end)
                                 {
                                     tmpticklist.Add(k);
                                 }
@@ -308,6 +322,9 @@ namespace TradingLib.Common.DataFarm
                 }
                 current = current.AddDays(1);
             }
+            //Tick加载结束时间为FirstRealBar的结束时间 因此需要用TimeTick进行驱动将FristRealBar进行关闭
+            Tick timeTick = TickImpl.NewTimeTick(task.Symbol, task.IntradayRealBarStart);
+            tmpticklist.Add(timeTick);
 
             //处理缓存中的Tick数据
             logger.Info("{0} need process {1} Ticks".Put(symbol.Symbol, tmpticklist.Count));

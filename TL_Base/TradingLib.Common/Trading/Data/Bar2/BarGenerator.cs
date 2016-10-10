@@ -80,10 +80,24 @@ namespace TradingLib.Common
             }
             if (tick.IsTrade())
             {
-                this._currentPartialBar.Volume += tick.Size;
+                
                 this._currentPartialBar.OpenInterest = tick.OpenInterest;
                 this._currentPartialBar.EmptyBar = false;
                 this._currentPartialBar.TradeCount++;
+
+                //成交量计算
+                //1.成交数量累加 问题是数据异常导致某个成交出现多次 会造成成交量错误
+                //this._currentPartialBar.Volume += tick.Size;
+                //2.通过行情系统总成交量相减 获得准确的区间成交量
+                if (this._currentPartialBar.FirstTick == null)
+                {
+                    this._currentPartialBar.Volume = tick.Size;//Bar的第一个成交 则取该成交数量为vol
+                }
+                else
+                {
+                    this._currentPartialBar.Volume = this._currentPartialBar.FirstTick.Size + (tick.Vol - this._currentPartialBar.FirstTick.Vol);//通过Vol相减获得成交量 避免多个成交数据造成的误差
+                }
+
 
             }
             //记录时间

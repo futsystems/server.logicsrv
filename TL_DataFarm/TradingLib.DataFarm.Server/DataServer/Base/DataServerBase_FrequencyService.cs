@@ -58,7 +58,7 @@ namespace TradingLib.Common.DataFarm
             //实时Bar系统产生的第一个Bar数据记录该Bar结束时间，该事件之后的所有的Bar均为完整的Bar
             if(obj.Frequency.Bars.Count == 1)
             {
-                restoresrv.OnIntradayRealBarGenerated(obj.Symbol, obj.Bar.EndTime);
+                restoresrv.OnIntradayFirstRealBar(obj.Symbol, obj.Bar);
             }
             if (obj.Frequency.Bars.Count >= 2)
             {

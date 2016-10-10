@@ -31,6 +31,7 @@
 /Platform/Logs
 /Platform/DataSrv/database/*
 /Platform/DataCore/database/*
+/Platform/DataCore-T/*
 /Platform/DataFront/database/*
 /publish
 /package

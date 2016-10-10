@@ -22,6 +22,7 @@ namespace TradingLib.Common.DataFarm
             this.IsRestored = false;
             this.CreatedTime = DateTime.Now;
             this.CanRestored = false;
+            this.IntradayFirstRealBar = null;
             //this.TickSnapshot = null;
         }
 
@@ -36,6 +37,10 @@ namespace TradingLib.Common.DataFarm
         /// </summary>
         public DateTime IntradayRealBarStart { get; set; }
 
+        /// <summary>
+        /// 实时Bar系统生成的第一个Bar数据
+        /// </summary>
+        public BarImpl IntradayFirstRealBar { get; set; }
 
         Tick _snapshot = null;
         /// <summary>

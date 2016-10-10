@@ -500,6 +500,24 @@ namespace TradingLib.Common
             return k;
         }
 
+        /// <summary>
+        /// 创建TimeTick
+        /// </summary>
+        /// <param name="symbol"></param>
+        /// <param name="time"></param>
+        /// <returns></returns>
+        public static Tick NewTimeTick(Symbol symbol, DateTime time)
+        {
+            Tick k = new TickImpl();
+            k.Symbol = symbol.Symbol;
+            k.Exchange = symbol.Exchange;
+            k.UpdateType = "T";
+            k.Date = time.ToTLDate();
+            k.Time = time.ToTLTime();
+            
+            return k;
+        }
+
         static char[] spliter = new char[] { ',', ',' };
         static char d = ',';
         /// <summary>

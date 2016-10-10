@@ -99,7 +99,7 @@ namespace TradingLib.Common.DataFarm
         {
             try
             {
-                logger.Info("Got Qry Bar Request:" + request.ToString());
+                //logger.Info("Got Qry Bar Request:" + request.ToString());
                 IHistDataStore store = this.GetHistDataSotre();
                 if (store == null)
                 {

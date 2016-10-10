@@ -115,11 +115,11 @@ namespace TradingLib.Common
         public void RegisterAllBasicFrequency()
         {
             frequencyPluginList.Add(new TimeFrequency(new BarFrequency(BarInterval.CustomTime, 60)));//1
-            frequencyPluginList.Add(new TimeFrequency(new BarFrequency(BarInterval.CustomTime, 180)));//3
-            frequencyPluginList.Add(new TimeFrequency(new BarFrequency(BarInterval.CustomTime, 300)));//5
-            frequencyPluginList.Add(new TimeFrequency(new BarFrequency(BarInterval.CustomTime, 900)));//15
-            frequencyPluginList.Add(new TimeFrequency(new BarFrequency(BarInterval.CustomTime, 1800)));//30
-            frequencyPluginList.Add(new TimeFrequency(new BarFrequency(BarInterval.CustomTime, 3600)));//60
+            //frequencyPluginList.Add(new TimeFrequency(new BarFrequency(BarInterval.CustomTime, 180)));//3
+            //frequencyPluginList.Add(new TimeFrequency(new BarFrequency(BarInterval.CustomTime, 300)));//5
+            //frequencyPluginList.Add(new TimeFrequency(new BarFrequency(BarInterval.CustomTime, 900)));//15
+            //frequencyPluginList.Add(new TimeFrequency(new BarFrequency(BarInterval.CustomTime, 1800)));//30
+            //frequencyPluginList.Add(new TimeFrequency(new BarFrequency(BarInterval.CustomTime, 3600)));//60
         }
 
 
@@ -425,7 +425,8 @@ namespace TradingLib.Common
         /// <param name="tick"></param>
         public void ProcessTick(Tick tick)
         {
-            
+            if (tick.Symbol != "CLX6") return;
+
             pf.EnterSection("PRECHECK  ");
             //非需要处理的行情源
             //if (this.DataFeed != QSEnumDataFeedTypes.DEFAULT && this.datafeed != tick.DataFeed ) return;
@@ -443,22 +444,13 @@ namespace TradingLib.Common
             //如果时间大于Frequency的当前时间 则需要检查是否有PendingBars需要发送 时间相等则不用发送
             if (ticktime >= symbolUpdateTimeMap[symbol.Symbol])//Tick数据必须按时间顺序进入 如果出现时间错乱则处理逻辑会被打乱 比如 产生一个时间很大的Tick 结果后面正常的Tick数据无法被有效处理
             {
-                //记录每个合约的第一个有效Tick时间
-                //if (tick.IsTrade())
-                //{
-                //    if (!symbolFirstTickTime.Keys.Contains(symbol.Symbol))
-                //    {
-                //        symbolFirstTickTime.Add(symbol.Symbol, ticktime);
-                //    }
-                //}
                 pf.EnterSection("TIMECHECK  ");
-                //获得该合约所有的FreqInfo对象
                 IEnumerable<FrequencyManager.FreqInfo> list = this.GetFreqInfosForSymbol(symbol);
                 #region A.执行该合约所有频率数据的时间检查 如果越过了下次更新时间 则处理TimeTick,并生成Bar数据并放到eventHolder,清空待发送Bar,清空对应数据集的PartialItem数据
                 FrequencyNewBarEventHolder eventHolder = new FrequencyNewBarEventHolder();
                 foreach (var freqinfo in list)
                 {
-                    //如果当前时间大于该频率对应的下次更新时间,则调用该频处理TimeTick Close一个Bar
+                    //如果当前时间大于该频率对应的下次更新时间,则调用该频处理TimeTick Close一个Bar //历史恢复数据时候 通过截取Tick在末尾增加一个时间Tick进行处理
                     if (ticktime >= freqinfo.Generator.NextTimeUpdateNeeded)
                     {
                         pf.EnterSection("TIMECHECK1");
@@ -470,7 +462,6 @@ namespace TradingLib.Common
                         //FreqInfo处理MarketEvent 类型的Tick用于 Close一个Bar
                         FreqInfoProcessTick(tick, freqinfo);
                     }
-
                     //如果FreqInfo有待发送的Bar数据 放入eventholder 在处理时间Tick后 有Bar结束 则清空freqInfo的pendingBar同时清空Frequency的partialItem
                     if (freqinfo.PendingBarEvents.Count > 0)
                     {

@@ -312,8 +312,23 @@ namespace TradingLib.Common
                 }
             }
 
+            /*
+             * 
+             *  public DateTime NextTimeUpdateNeeded
+            {
+                get
+                {
+                    if (!this._updated)
+                    {
+                        return DateTime.MinValue;
+                    }
+                    return TimeFrequency.NextRoundedTime(this._generator.BarStartTime, this._interval); 10:01:00 开始10:02分结束 10：02进入下一个Bar
+                }
+            }
+            **/
+
             /// <summary>
-            /// 下次Bar结束时间
+            /// 下次Bar关闭时间
             /// </summary>
             public DateTime NextTimeUpdateNeeded
             {
@@ -323,7 +338,7 @@ namespace TradingLib.Common
                     {
                         return DateTime.MinValue;
                     }
-                    return TimeFrequency.BarEndTime(this._generator.BarEndTime, this._interval);
+                    return this._generator.BarEndTime;// Frequency.BarEndTime(this._generator.BarEndTime, this._interval); 10:01的Bar Tick时间10：00：21 会与10：02进行比较
                 }
             }
 
