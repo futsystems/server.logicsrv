@@ -46,11 +46,6 @@
 		<WeekOfMonth>1</WeekOfMonth>
 	</Holiday>
 
-	<Holiday name="Columbus Day">
-		<Month>10</Month>
-		<DayOfWeek>1</DayOfWeek>
-		<WeekOfMonth>2</WeekOfMonth>
-	</Holiday>
 
 	<Holiday name="Veterans Day">
 		<Month>11</Month>

@@ -30,6 +30,7 @@ namespace TradingLib.Common.DataFarm
             restoresrv = new RestoreService(path);
 
         }
+
         /// <summary>
         /// 启动数据恢复服务
         /// </summary>
@@ -38,12 +39,21 @@ namespace TradingLib.Common.DataFarm
             logger.Info("[Start Restore Service]");
             restoresrv.NewHistBarEvent += new Action<FreqNewBarEventArgs>(OnNewHistBarEvent);
             restoresrv.NewHistPartialBarEvent += new Action<Symbol, BarImpl>(restoresrv_NewHistPartialBarEvent);
+            //restoresrv.QryTradingDay += new Func<SecurityFamily, DateTime, int>(restoresrv_QryTradingDay);
             restoresrv.Start();
 
         }
 
+        //int restoresrv_QryTradingDay(SecurityFamily arg1, DateTime arg2)
+        //{
+        //    return eodservice.GetTradingDay(arg1, arg2);
+        //}
+
+        
+
         void restoresrv_NewHistPartialBarEvent(Symbol arg1, BarImpl arg2)
         {
+            arg2.TradingDay = eodservice.GetTradingDay(arg1.SecurityFamily, arg2.EndTime);
             GetHistDataSotre().UpdateHistPartialBar(arg1, arg2);
         }
 
@@ -54,6 +64,7 @@ namespace TradingLib.Common.DataFarm
         /// <param name="obj"></param>
         void OnNewHistBarEvent(FreqNewBarEventArgs obj)
         {
+            obj.Bar.TradingDay = eodservice.GetTradingDay(obj.Symbol.SecurityFamily, obj.Bar.EndTime);
             obj.Bar.Symbol = obj.Symbol.GetContinuousSymbol();
             this.UpdateBar2(obj.Symbol, obj.Bar);
         }

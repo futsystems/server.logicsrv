@@ -50,6 +50,9 @@ namespace TradingLib.Common.DataFarm
              * 包括定时任务每日清理Frequency后 开盘后获得实时数据生成的第一个Bar需要保存
              * 
              * */
+            //计算交易日
+            obj.Bar.TradingDay = eodservice.GetTradingDay(obj.Symbol.SecurityFamily, obj.Bar.EndTime);
+
             if(obj.Frequency.Bars.Count == 1) 
             {
                 //记录1分钟的第一个Bar 用于获取该Bar结束时间 Tick数据恢复以该结束，该事件之后的所有实时Bar都是完整的

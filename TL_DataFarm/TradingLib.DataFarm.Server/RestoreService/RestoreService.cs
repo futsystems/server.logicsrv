@@ -71,6 +71,7 @@ namespace TradingLib.Common.DataFarm
 
         public event Action<Symbol, BarImpl> NewHistPartialBarEvent;
 
+        //public event Func<SecurityFamily,DateTime ,int> QryTradingDay;
 
         ConcurrentDictionary<string, RestoreTask> restoreTaskMap = new ConcurrentDictionary<string, RestoreTask>();
 
@@ -367,10 +368,15 @@ namespace TradingLib.Common.DataFarm
 
             if (NewHistBarEvent != null)
             {
-                BarImpl b = new BarImpl(arg2.Bar);
-                b.TradingDay = 0;
-                NewHistBarEvent(new FreqNewBarEventArgs() { Bar = new BarImpl(arg2.Bar), BarFrequency = arg1.Settings.BarFrequency, Symbol = arg1.Symbol });
+                //arg2.Bar.TradingDay = GetTradingDay(arg1.Symbol.SecurityFamily,arg2.Bar.EndTime);
+                NewHistBarEvent(new FreqNewBarEventArgs() { Bar = arg2.Bar as BarImpl, BarFrequency = arg1.Settings.BarFrequency, Symbol = arg1.Symbol });
             }
         }
+
+        //int GetTradingDay(SecurityFamily sec,DateTime time)
+        //{
+        //    if (QryTradingDay != null) return QryTradingDay(sec,time);
+        //    return 0;
+        //}
     }
 }

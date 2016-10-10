@@ -78,6 +78,9 @@
     <Compile Include="DataServer\Base\DataCommand\DataServerBase_Demo.cs" />
     <Compile Include="DataServer\Base\DataServerBase_.Restore.cs" />
     <Compile Include="DataServer\Base\RequestHandler\DataServerBase_ManagerRequest.cs" />
+    <Compile Include="DataServer\Base\DataServerBase_Eod.cs" />
+    <Compile Include="EodDataService\EodDataService.cs" />
+    <Compile Include="EodDataService\EventArgs.cs" />
     <Compile Include="FrequencyService\EventArgs.cs" />
     <Compile Include="MDBasicTracker.cs" />
     <Compile Include="DataCoreBackend\DataCoreBackend.cs" />
