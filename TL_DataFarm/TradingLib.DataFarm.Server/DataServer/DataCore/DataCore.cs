@@ -70,50 +70,6 @@ namespace TradingLib.Common.DataFarm
 
             //启动ServiceHost
             this.StartServiceHosts();
-
-            foreach (var file in Directory.GetFiles("Import", "*.csv"))
-            {
-                logger.Info("Import Bar File:{0} ".Put(file));
-                string line = string.Empty;
-                Profiler pf = new Profiler();
-                pf.EnterSection("Import");
-
-                using (StreamReader fs = new StreamReader(file, Encoding.UTF8))
-                {
-                    
-                    Symbol symbol = MDBasicTracker.SymbolTracker["","GCJ6"];
-                    while (line != null)
-                    {
-                        line = fs.ReadLine();
-                        TimeSpan ts = TimeSpan.FromSeconds(60);
-                        if (line != null && line.Length > 0)
-                        {
-                            BarImpl b = new BarImpl();
-                            string[] rec = line.Split(',');
-
-                            b.Symbol = "GC04";
-                            b.IntervalType = BarInterval.CustomTime;
-                            b.Interval = 60;
-                            b.Open = double.Parse(rec[0]);
-                            b.High = double.Parse(rec[1]);
-                            b.Low = double.Parse(rec[2]);
-                            b.Close = double.Parse(rec[3]);
-                            b.Volume = int.Parse(rec[4]);
-                            b.OpenInterest = 0;
-
-                            //logger.Info("datatime:" + rec[5]);
-                            b.EndTime = DateTime.ParseExact(rec[5], "yyyyMMdd HH:mm:ss", null);
-                            b.EndTime = TimeFrequency.RoundTime(b.EndTime, ts);
-                            //logger.Info("bar:" + b.ToString());
-                            //MBar.InsertBar(b);
-                            //SaveBar(symbol, b);
-                        }
-                    }
-                }
-                pf.LeaveSection();
-                logger.Info("Ret:\n" + pf.GetStatsString());
-            }
-
         }
 
         public override void Stop()

@@ -75,9 +75,10 @@ namespace TradingLib.Common.DataFarm
         ConcurrentDictionary<string, RestoreTask> restoreTaskMap = new ConcurrentDictionary<string, RestoreTask>();
 
         FrequencyManager restoreFrequencyMgr = null;
-        public RestoreService()
+        string _basedir = string.Empty;
+        public RestoreService(string tickpath)
         {
-            
+            _basedir = tickpath;
 
             //恢复历史Tick所用的FrequencyManager
             restoreFrequencyMgr = new FrequencyManager("Restore", QSEnumDataFeedTypes.DEFAULT);
@@ -247,7 +248,7 @@ namespace TradingLib.Common.DataFarm
             logger.Info("Restore Tick finished");
         }
 
-        string _basedir = "D:\\worktable\\Futs.base\\Platform\\DataCore-T\\TickData\\";
+        
         /// <summary>
         /// 将某个合约某个时间段内的Bar数据恢复
         /// </summary>
