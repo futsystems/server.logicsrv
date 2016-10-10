@@ -106,19 +106,19 @@ namespace TradingLib.Common.DataFarm
             _hasPartial = false;
         }
 
-        BarImpl _partialBar = null;
-        public BarImpl PartialBar
+        BarImpl _realPartialBar = null;
+        public BarImpl RealPartialBar
         {
             get
             {
                 if (_hasPartial)
-                    return _partialBar;
+                    return _realPartialBar;
                 return null;
             }
             set
             {
                 _hasPartial = true;
-                _partialBar = value;
+                _realPartialBar = value;
             }
         }
 
@@ -154,6 +154,7 @@ namespace TradingLib.Common.DataFarm
 
         /// <summary>
         /// 合并HistPartialBar与FirstRealBar
+        /// 当第一个Bar生成完毕时 也就是第一个RealPartialBar关闭时 此时需要用合并后的数据去更新数据集,注：第一个Bar都没有执行数据集的更新
         /// </summary>
         void MergePartialBar()
         {
@@ -197,6 +198,9 @@ namespace TradingLib.Common.DataFarm
             tmp.Close = b.Close;
             tmp.OpenInterest = b.OpenInterest;
             tmp.Volume = b.LastTick.Vol - a.FirstTick.Vol;//用tick数据相减 可以获得准确的成交量信息，否则Hist Real相互叠加 无法准确获得成交量数据
+            tmp.FirstTick = a.FirstTick;
+            tmp.LastTick = b.LastTick;
+
             return tmp;
         }
 
@@ -216,34 +220,47 @@ namespace TradingLib.Common.DataFarm
             }
         }
 
+        /// <summary>
+        /// 获得PartialBar
+        /// </summary>
+        /// <returns></returns>
         BarImpl GetPartialBar()
         { 
-            BarImpl partial = this.PartialBar;
-            if (partial != null)//实时PartialBar存在 则需要检查HistPartialBar 并进行合并
+            BarImpl realPartial = this.RealPartialBar;
+            /*
+             *  实时PartialBar存在 
+             *  在1分钟周期上的第一个Bar上是不完备的,第一个Bar之后的PartialBar是完备的
+             *  在其他日内周期上的PartialBar也有可能不完备 需要与历史Tick回补完毕后的最后一个PartialBar执行合并
+             * 
+             * */
+            if (realPartial != null)//实时PartialBar存在
             {
                 if (this.HistPartialBar != null)
                 {
-                    if (partial.EndTime > this.HistPartialBar.EndTime) return partial;
-                    if (partial.EndTime == this.HistPartialBar.EndTime)
+                    //实时Partial时间在历史Partial之后 则表明已经越过了恢复时刻的那个周期，直接返回RealPartial
+                    if (realPartial.EndTime > this.HistPartialBar.EndTime) return realPartial;
+                    //实时Partial与历史Partail在一个周期，则历史Partial在周期的前半部分，RealPartial在周期的后半部分 需要进行2个PartialBar的合并
+                    if (realPartial.EndTime == this.HistPartialBar.EndTime)
                     {
-                        return BarList.MergeBar(this.HistPartialBar, partial);
+                        return BarList.MergeBar(this.HistPartialBar, realPartial);
                     }
-                    if (partial.EndTime < this.HistPartialBar.EndTime)
+                    //实时Partial在历史Partial之前 数据处理异常逻辑
+                    if (realPartial.EndTime < this.HistPartialBar.EndTime)
                     {
                         logger.Error("logic error:real partial time < hist partil time");
                         return null;
                     }
+                    return null;
                 }
                 else //HistPartialBar不存在 则返回partial
                 {
-                    return partial;
+                    return realPartial;
                 }
             }
-            else //如果实时PartialBar为空 表面没有实时数据驱动生成Bar 则直接返回历史PartialBar 且当前BarList中的数据最近部分也是由历史Bar系统生成
+            else//实时PartialBar不存在 则表明没有实时Tick驱动生成Partial 直接返回历史PartialBar
             {
                 return this.HistPartialBar;
             }
-            return partial;
         }
 
         /// <summary>

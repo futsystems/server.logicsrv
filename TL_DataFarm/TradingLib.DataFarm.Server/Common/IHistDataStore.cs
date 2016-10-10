@@ -116,7 +116,7 @@ namespace TradingLib.API
         /// </summary>
         /// <param name="symbol"></param>
         /// <param name="partail"></param>
-        void UpdatePartialBar(Symbol symbol, BarImpl partail);
+        void UpdateRealPartialBar(Symbol symbol, BarImpl partail);
 
         /// <summary>
         /// 更新某个合约 数据恢复完毕后 历史Bar系统的PartialBar

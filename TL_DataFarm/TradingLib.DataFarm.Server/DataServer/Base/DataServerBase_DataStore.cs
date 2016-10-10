@@ -192,7 +192,7 @@ namespace TradingLib.Common.DataFarm
                     while (!barbuffer.hasItems && partialBarBuffer.hasItems)
                     {
                         BarStoreStruct b = partialBarBuffer.Read();
-                        store.UpdatePartialBar(b.Symbol, b.Bar);
+                        store.UpdateRealPartialBar(b.Symbol, b.Bar);
                     }
 
                     //更新Bar缓存 用于从Tick历史数据加载生成Bar进行数据更新

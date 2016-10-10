@@ -99,7 +99,7 @@ namespace TradingLib.Common.DataFarm
         /// </summary>
         /// <param name="symbol"></param>
         /// <param name="time"></param>
-        public void OnIntradayHistBarLoaded(Symbol symbol,DateTime time)
+        public void OnIntraday1MinHistBarLoaded(Symbol symbol,DateTime time)
         {
             logger.Debug(string.Format("Intraday Hist Bar Loaded, Symbol:{0} Time:{1}", symbol.UniqueKey, time));
             RestoreTask task = null;
@@ -108,7 +108,7 @@ namespace TradingLib.Common.DataFarm
                 logger.Warn(string.Format("Symbol:{0} has no restore task registed", symbol.UniqueKey));
                 return;
             }
-            task.IntradayHistBarEnd = time;
+            task.Intraday1MinHistBarEnd = time;
         }
 
         /// <summary>
@@ -117,7 +117,7 @@ namespace TradingLib.Common.DataFarm
         /// </summary>
         /// <param name="symbol"></param>
         /// <param name="time"></param>
-        public void OnIntradayFirstRealBar(Symbol symbol,BarImpl bar)
+        public void OnIntraday1MinFirstRealBar(Symbol symbol,BarImpl bar)
         {
             RestoreTask task = null;
             if (!restoreTaskMap.TryGetValue(symbol.UniqueKey, out task))
@@ -125,8 +125,8 @@ namespace TradingLib.Common.DataFarm
                 logger.Warn(string.Format("Symbol:{0} has no restore task registed", symbol.UniqueKey));
                 return;
             }
-            task.IntradayFirstRealBar = bar;
-            task.IntradayRealBarStart = bar.EndTime;
+            task.Intraday1MinFirstRealBar = bar;
+            task.Intraday1MinRealBarStart = bar.EndTime;
         }
 
         /// <summary>
@@ -191,7 +191,7 @@ namespace TradingLib.Common.DataFarm
                                 item.CanRestored = true;
                             }
                             //合约处于开盘状态 需要等待第一个Bar生成之后才开始恢复历史数据
-                            if(item.TickSnapshot.MarketOpen && item.IntradayFirstRealBar != null)
+                            if(item.TickSnapshot.MarketOpen && item.HaveFirst1MinRealBar)
                             {
                                 logger.Info("FristRealBar Generated,now begin restore tick data");
                                 item.CanRestored = true;
@@ -257,8 +257,9 @@ namespace TradingLib.Common.DataFarm
         void BackFillSymbol(RestoreTask task)
         {
             Symbol symbol = task.Symbol;
-            DateTime start = task.IntradayHistBarEnd;// TimeFrequency.RoundTime(task.IntradayHistBarEnd, TimeSpan.FromHours(1));//获得该1分钟Bar对应1小时周期的开始 这样可以恢复所有周期对应的Bar数据
-            DateTime end = task.IntradayRealBarStart;
+            //DateTime start = task.Intraday1MinHistBarEnd;
+            DateTime start = TimeFrequency.RoundTime(task.Intraday1MinFirstRealBar.EndTime, TimeSpan.FromHours(1));//获得该1分钟Bar对应1小时周期的开始 这样可以恢复所有周期对应的Bar数据
+            DateTime end = task.Intraday1MinRealBarStart;
 
             //遍历start和end之间所有tickfile进行处理
             long lstart = start.ToTLDateTime();
@@ -323,7 +324,7 @@ namespace TradingLib.Common.DataFarm
                 current = current.AddDays(1);
             }
             //Tick加载结束时间为FirstRealBar的结束时间 因此需要用TimeTick进行驱动将FristRealBar进行关闭
-            Tick timeTick = TickImpl.NewTimeTick(task.Symbol, task.IntradayRealBarStart);
+            Tick timeTick = TickImpl.NewTimeTick(task.Symbol, task.Intraday1MinRealBarStart);
             tmpticklist.Add(timeTick);
 
             //处理缓存中的Tick数据

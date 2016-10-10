@@ -128,12 +128,12 @@ namespace TradingLib.Common
         {
             return new BarImpl(this);
         }
-        public BarImpl(BarImpl b)
-            :this(b as Bar)
-        {
-            _firstTick = b._firstTick;
-            _lastTick = b.LastTick;
-        }
+        //public BarImpl(BarImpl b)
+        //    :this(b as Bar)
+        //{
+        //    _firstTick = b._firstTick;
+        //    _lastTick = b.LastTick;
+        //}
         public BarImpl(Bar b)
         {
             _sym = b.Symbol;

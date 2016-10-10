@@ -281,7 +281,6 @@ namespace TradingLib.Common
                         DateTime nextend = TimeFrequency.BarEndTime(this._generator.BarEndTime, this._interval);
                         this._generator.SendNewBar(nextend);
                     }
-                    
                 }
             }
 

@@ -50,23 +50,21 @@ namespace TradingLib.Common.DataFarm
              * 包括定时任务每日清理Frequency后 开盘后获得实时数据生成的第一个Bar需要保存
              * 
              * */
-            //如果没有执行恢复 且 为第一个Bar则不储存该Bar数据
-            //if (!IsSymbolRestored(obj.Symbol) && obj.Frequency.Bars.Count >= 2)
-            //{
-            //    this.UpdateBar2(obj.Symbol, obj.Bar);
-            //}
-            //实时Bar系统产生的第一个Bar数据记录该Bar结束时间，该事件之后的所有的Bar均为完整的Bar
-            if(obj.Frequency.Bars.Count == 1)
+            if(obj.Frequency.Bars.Count == 1) 
             {
-                restoresrv.OnIntradayFirstRealBar(obj.Symbol, obj.Bar);
+                //记录1分钟的第一个Bar 用于获取该Bar结束时间 Tick数据恢复以该结束，该事件之后的所有实时Bar都是完整的
+                if (obj.BarFrequency.Interval == 60)
+                {
+                    restoresrv.OnIntraday1MinFirstRealBar(obj.Symbol, obj.Bar);
+                }
+                //将实时Bar生成的第一个不完整的Bar放到数据集中
+                GetHistDataSotre().UpdateFirstRealBar(obj.Symbol, obj.Bar);
             }
             if (obj.Frequency.Bars.Count >= 2)
             {
                 this.UpdateBar2(obj.Symbol, obj.Bar);
             }
-            //检查Bar更新时间 用于修改恢复任务状态
-            //this.CheckBarUpdateTime(obj.Symbol, obj.Bar);
-
+            
         }
 
         /// <summary>

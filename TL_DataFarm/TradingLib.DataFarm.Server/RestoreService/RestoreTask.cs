@@ -17,30 +17,42 @@ namespace TradingLib.Common.DataFarm
         public RestoreTask(Symbol symbol)
         {
             this.Symbol = symbol;
-            this.IntradayHistBarEnd = DateTime.MinValue;
-            this.IntradayRealBarStart = DateTime.MaxValue;
+            this.Intraday1MinHistBarEnd = DateTime.MinValue;
+            this.Intraday1MinRealBarStart = DateTime.MaxValue;
             this.IsRestored = false;
             this.CreatedTime = DateTime.Now;
             this.CanRestored = false;
-            this.IntradayFirstRealBar = null;
-            //this.TickSnapshot = null;
+
+            this.HaveFirst1MinRealBar = false;
+            this.HaveGotTickSnapshot = false;
         }
 
         /// <summary>
         /// 数据库加载历史Bar数据最新的一个Bar周期
         /// 在该Bar周期之后的所有Tick数据需要被加载
         /// </summary>
-        public DateTime IntradayHistBarEnd { get; set; }
+        public DateTime Intraday1MinHistBarEnd { get; set; }
 
         /// <summary>
         /// 实时Bar生成系统生成的第一个Bar不保存,这里的结束时间记录的是第二个Bar的结束时间
         /// </summary>
-        public DateTime IntradayRealBarStart { get; set; }
+        public DateTime Intraday1MinRealBarStart { get; set; }
 
+
+        public bool HaveFirst1MinRealBar { get; set; }
+        BarImpl _first1minbar = null;
         /// <summary>
         /// 实时Bar系统生成的第一个Bar数据
         /// </summary>
-        public BarImpl IntradayFirstRealBar { get; set; }
+        public BarImpl Intraday1MinFirstRealBar 
+        {
+            get { return _first1minbar; }
+            set {
+                if (value == null) return;
+                _first1minbar = value;
+                this.HaveFirst1MinRealBar = true;
+            }
+        }
 
         Tick _snapshot = null;
         /// <summary>
@@ -50,9 +62,9 @@ namespace TradingLib.Common.DataFarm
         {
             get { return _snapshot; } 
             set{
-                
+                if (value == null) return;
                 _snapshot = value;
-                HaveGotTickSnapshot = true;
+                this.HaveGotTickSnapshot = true;
             }
         }
 

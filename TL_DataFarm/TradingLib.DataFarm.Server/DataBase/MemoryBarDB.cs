@@ -174,18 +174,18 @@ namespace TradingLib.Common.DataFarm
         }
 
         /// <summary>
-        /// 更新PartialBar
+        /// 更新实时Bar系统的PartialBar
         /// </summary>
         /// <param name="symbol"></param>
         /// <param name="partail"></param>
-        public void UpdatePartialBar(Symbol symbol, BarImpl partail)
+        public void UpdateRealPartialBar(Symbol symbol, BarImpl realPartail)
         {
-            BarList target = GetBarList(symbol,partail.IntervalType,partail.Interval);
-            target.PartialBar = partail;
+            BarList target = GetBarList(symbol, realPartail.IntervalType, realPartail.Interval);
+            target.RealPartialBar = realPartail;
         }
 
         /// <summary>
-        /// 更新历史Bar系统恢复数据完毕后的PartialBar
+        /// 历史Bar系统回放完Tick后生成的PartialBar
         /// </summary>
         /// <param name="symbol"></param>
         /// <param name="histPartial"></param>

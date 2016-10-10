@@ -180,7 +180,8 @@ namespace TradingLib.Common.DataFarm
                 //1.从数据库加载历史数据 获得数据库最后一条Bar更新时间
                 DateTime intradayHistBarEndTime = DateTime.MinValue;
                 store.RestoreBar(symbol, BarInterval.CustomTime, 60, out intradayHistBarEndTime);
-                restoresrv.OnIntradayHistBarLoaded(symbol, intradayHistBarEndTime);
+
+                restoresrv.OnIntraday1MinHistBarLoaded(symbol, intradayHistBarEndTime);
 
 
                 //2.从frequencyService获得该合约第一个Tick时间,通过该事件推算出下2个Bar的截止时间 则为恢复时间

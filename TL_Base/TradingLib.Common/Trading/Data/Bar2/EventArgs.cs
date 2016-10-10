@@ -41,11 +41,11 @@ namespace TradingLib.Common
 
     public class PartialBarUpdateEventArgs : EventArgs
     {
-        public Bar PartialBar { get; set; }
+        public BarImpl PartialBar { get; set; }
 
         public Symbol Symbol { get; set; }
 
-        public PartialBarUpdateEventArgs(Symbol symbol, Bar partialbar)
+        public PartialBarUpdateEventArgs(Symbol symbol, BarImpl partialbar)
         {
             this.Symbol = symbol;
             this.PartialBar = partialbar;
