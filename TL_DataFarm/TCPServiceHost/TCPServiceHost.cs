@@ -49,7 +49,7 @@ namespace TCPServiceHost
             cfg.LogBasicSessionActivity = true;
             cfg.MaxRequestLength = 1024*10*10;
             //cfg.SendTimeOut = 
-            cfg.SyncSend = true;//同步发送
+            cfg.SyncSend = true;//同步发送 异步发送在Linux环境下会造成发送异常
             
 
             if (!tcpSocketServer.Setup(cfg))
