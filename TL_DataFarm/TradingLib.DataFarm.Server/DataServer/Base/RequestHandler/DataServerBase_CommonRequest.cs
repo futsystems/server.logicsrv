@@ -99,7 +99,7 @@ namespace TradingLib.Common.DataFarm
         {
             try
             {
-                //logger.Info("Got Qry Bar Request:" + request.ToString());
+                logger.Info("Got Qry Bar Request:" + request.ToString());
                 IHistDataStore store = this.GetHistDataSotre();
                 if (store == null)
                 {
@@ -113,26 +113,11 @@ namespace TradingLib.Common.DataFarm
                     return;
                 }
 
-                //pf.EnterSection("QRY  BAR");
+                pf.EnterSection("QRY  BAR");
                 List<BarImpl> bars = store.QryBar(symbol, request.IntervalType, request.Interval, request.StartTime, request.EndTime,request.StartIndex,request.MaxCount, request.FromEnd,request.HavePartial);
-                //pf.LeaveSection();
-                //BarMerger.Merge(bars, TimeSpan.FromMinutes(3));
-                //pf.EnterSection("SEND BAR");
-                //List<BarImpl> bars = null;
-                //bars = store.QryBar(symbol, request.IntervalType, 60, request.StartTime, request.EndTime, 0, 50000, request.FromEnd, request.HavePartial).ToList();
+                pf.LeaveSection();
 
-                //if (request.Interval == 300)
-                //{
-                //    pf.EnterSection("MERGE 300");
-                //    bars = BarMerger.Merge(bars, TimeSpan.FromMinutes(5));
-                //    pf.LeaveSection();
-                //    logger.Info("----Statistics---- \n" + pf.GetStatsString());
-
-                //}
-                //if (request.Interval == 900)
-                //{
-                //    bars = BarMerger.Merge(bars, TimeSpan.FromMinutes(15));
-                //}
+                pf.EnterSection("SEND BAR");
                 switch(request.BarResponseType)
                 {
                     case EnumBarResponseType.PLAINTEXT:
@@ -179,13 +164,8 @@ namespace TradingLib.Common.DataFarm
                     default:
                         break;
                 }
-                    
-                //pf.LeaveSection();
-                //logger.Info(string.Format("----BarRequest Statistics QTY:{0}---- \n{1}", bars.Count, pf.GetStatsString()));
-                ////logger.Info("send bar finished");
-
-                //logger.Info("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~``");
-                //logger.Info("----FrequencyManager Statistics---- \n" + FrequencyManager.pf.GetStatsString());
+                pf.LeaveSection();
+                logger.Info(string.Format("----BarRequest Statistics QTY:{0}---- \n{1}", bars.Count, pf.GetStatsString()));
                 
             }
             catch (Exception ex)

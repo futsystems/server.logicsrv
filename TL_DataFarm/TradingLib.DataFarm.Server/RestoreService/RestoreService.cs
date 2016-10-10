@@ -277,6 +277,7 @@ namespace TradingLib.Common.DataFarm
                 tickstart = TikWriter.GetStartTickDate(path, symbol.Symbol);
             }
 
+            logger.Info(string.Format("BackFill Symbol:{0} Start:{1} End:{2}", task.Symbol.Symbol, start, end));
 
             //如果tickfile 开始时间大于数据库加载Bar对应的最新更新时间 则将开始时间设置为tick文件开始时间
             DateTime current = start;
@@ -293,6 +294,7 @@ namespace TradingLib.Common.DataFarm
             while (current.ToTLDate() <= enddate)
             {
                 string fn = TikWriter.GetTickFileName(path, symbol.Symbol, current.ToTLDate());
+                logger.Info("File:" + fn);
                 //如果该Tick文件存在
                 if (File.Exists(fn))
                 {
