@@ -66,6 +66,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="LogFactory.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TCPServiceHost.cs" />
     <Compile Include="TCPServiceHost_.cs" />

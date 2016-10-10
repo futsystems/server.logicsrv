@@ -33,6 +33,7 @@ namespace TCPServiceHost
         {
             tcpSocketServer = new TLServerBase();
 
+
             SuperSocket.SocketBase.Config.ServerConfig cfg = new SuperSocket.SocketBase.Config.ServerConfig();
             cfg.Port = _port;
             cfg.SendBufferSize = 65535;
@@ -47,8 +48,9 @@ namespace TCPServiceHost
             cfg.LogAllSocketException = true;
             cfg.LogBasicSessionActivity = true;
             cfg.MaxRequestLength = 1024*10*10;
+            //cfg.SendTimeOut = 
+            cfg.SyncSend = true;//同步发送
             
-            //cfg.SyncSend = false;
 
             if (!tcpSocketServer.Setup(cfg))
             {
