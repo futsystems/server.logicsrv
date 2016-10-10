@@ -259,7 +259,7 @@ namespace TradingLib.Common.DataFarm
         {
             Symbol symbol = task.Symbol;
             //DateTime start = task.Intraday1MinHistBarEnd;
-            DateTime start = TimeFrequency.RoundTime(task.Intraday1MinFirstRealBar.EndTime, TimeSpan.FromHours(1));//获得该1分钟Bar对应1小时周期的开始 这样可以恢复所有周期对应的Bar数据
+            DateTime start = TimeFrequency.RoundTime(task.Intraday1MinHistBarEnd, TimeSpan.FromHours(1));//获得该1分钟Bar对应1小时周期的开始 这样可以恢复所有周期对应的Bar数据
             DateTime end = task.Intraday1MinRealBarStart;
 
             //遍历start和end之间所有tickfile进行处理
