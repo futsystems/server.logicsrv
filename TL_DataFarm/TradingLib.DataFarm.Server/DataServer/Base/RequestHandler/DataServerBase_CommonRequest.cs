@@ -280,8 +280,16 @@ namespace TradingLib.Common.DataFarm
                 logger.Warn(string.Format("Symbol:{0} do not exist", request.Symbol));
                 return;
             }
-
-            List<MinuteData> mdlist = GetHistDataSotre().QryMinuteData(symbol, request.Tradingday);
+            int tradingday = request.Tradingday;
+            if (tradingday == 0)
+            {
+                MarketDay md = eodservice.GetCurrentMarketDay(symbol.SecurityFamily);
+                if (md != null)
+                {
+                    tradingday = md.TradingDay;
+                }
+            }
+            List<MinuteData> mdlist = GetHistDataSotre().QryMinuteData(symbol, tradingday);
 
             int j = 0;
             RspXQryMinuteDataResponse response = RspXQryMinuteDataResponse.CreateResponse(request);

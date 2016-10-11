@@ -20,6 +20,13 @@ namespace TradingLib.Common.DataFarm
 
         public TaskService()
         {
+            
+        }
+
+        bool _inited = false;
+        public void Init()
+        {
+            if (_inited) return;
             //初始化定时任务
             //设置Quartz后台任务线程数为2 这里累计增加3个线程(1个是触发线程，2个是任务运行线程)
             System.Collections.Specialized.NameValueCollection kv = new System.Collections.Specialized.NameValueCollection();
@@ -30,9 +37,10 @@ namespace TradingLib.Common.DataFarm
 
             _scheduler.ListenerManager.AddTriggerListener(new TrgierListener(), GroupMatcher<TriggerKey>.AnyGroup());
             _scheduler.ListenerManager.AddJobListener(new JobListener(), GroupMatcher<JobKey>.AnyGroup());
+            _inited = true;
         }
 
-        public void RegisterTask(DataTaskBase task)
+        public void RegisterTask(DataTask task)
         {
             //将任务添加到本地map
             //taskUUIDMap.TryAdd(task.TaskUUID, task);
@@ -83,8 +91,8 @@ namespace TradingLib.Common.DataFarm
             logger.Info("Start Task Service");
             _scheduler.Start();
 
-            DataTaskBase task = new DataTaskBase("demo", QSEnumTaskType.CIRCULATE, TimeSpan.FromSeconds(1), null);
-            this.RegisterTask(task);
+            //DataTask task = new DataTaskBase("demo",TimeSpan.FromSeconds(1), null);
+            //this.RegisterTask(task);
         }
     }
 }

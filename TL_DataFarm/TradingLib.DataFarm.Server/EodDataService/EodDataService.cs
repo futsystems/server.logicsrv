@@ -102,8 +102,8 @@ namespace TradingLib.Common.DataFarm
             {
                 tradeMap.Add(symbol.UniqueKey, new TradeCache(symbol));
             }
-
-            
+            //注册定时任务
+            InitMarketDayTask();
         }
 
      

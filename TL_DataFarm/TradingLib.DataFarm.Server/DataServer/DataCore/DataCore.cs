@@ -83,7 +83,7 @@ namespace TradingLib.Common.DataFarm
             logger.Info("Start....");
 
             //初始化任务调度服务
-            this.InitTaskService();
+            Global.TaskService.Init();
            
             //启动历史数据储存服务
             this.StartDataStoreService();
@@ -117,7 +117,7 @@ namespace TradingLib.Common.DataFarm
             this.StartSendService();
 
             //启动任务调度服务
-            this.StartTaskService();
+            Global.TaskService.Start();
             
         }
 

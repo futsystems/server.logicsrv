@@ -101,5 +101,93 @@ namespace TradingLib.Common.DataFarm
 
             }
         }
+
+        /// <summary>
+        /// 初始化任务
+        /// 每个品种开盘前5分钟定时任务 用于执行该品种的开盘前初始化操作
+        /// </summary>
+        void InitMarketDayTask()
+        {
+            Dictionary<DateTime, List<SecurityFamily>> openTimeMap = new Dictionary<DateTime, List<SecurityFamily>>();
+            Dictionary<DateTime, List<SecurityFamily>> closeTimeMap = new Dictionary<DateTime, List<SecurityFamily>>();
+            foreach (var security in MDBasicTracker.SecurityTracker.Securities)
+            { 
+                MarketDay md = GetCurrentMarketDay(security);
+                if(md == null) continue;
+
+                DateTime localPreOpenTime = security.Exchange.ConvertToSystemTime(md.MarketOpen.AddMinutes(-5));//将品种开盘时间转换成本地时间 提前5分钟进入开盘状态
+                List<SecurityFamily> target = null;
+                if (!openTimeMap.TryGetValue(localPreOpenTime, out target))
+                {
+                    target = new List<SecurityFamily>();
+                    openTimeMap.Add(localPreOpenTime, target);
+                }
+                target.Add(security);
+
+                DateTime localPostCloseTime = security.Exchange.ConvertToSystemTime(md.MarketClose.AddMinutes(15));//将品种收盘时间转换成本地时间 延迟15分钟进入收盘状态
+                if (!closeTimeMap.TryGetValue(localPostCloseTime, out target))
+                {
+                    target = new List<SecurityFamily>();
+                    closeTimeMap.Add(localPostCloseTime, target);
+                }
+                target.Add(security);
+            }
+            foreach (var p in openTimeMap)
+            {
+                RegisterOpenTask(p.Key, p.Value);
+            }
+            foreach (var p in closeTimeMap)
+            {
+                RegisterCloseTask(p.Key, p.Value);
+            }
+
+            logger.Info("MarketDayTask Registed");
+        }
+
+        /// <summary>
+        /// 注册开盘Task
+        /// </summary>
+        /// <param name="time"></param>
+        /// <param name="list"></param>
+        void RegisterOpenTask(DateTime time, List<SecurityFamily> list)
+        {
+            logger.Info(string.Format("Register Open Task,Time:{0} Sec:{1}", time.ToTLTime(), string.Join(",", list.Select(sec => sec.Code).ToArray())));
+            DataTask task = new DataTask("OpenTask-" + time.ToString("HH:mm:ss"), string.Format("{0} {1} {2} * * ?", time.Second, time.Minute, time.Hour), delegate() { OpenMarket(list); });
+            Global.TaskService.RegisterTask(task);
+        }
+
+        void RegisterCloseTask(DateTime time, List<SecurityFamily> list)
+        {
+            logger.Info(string.Format("Register Close Task,Time:{0} Sec:{1}", time.ToTLTime(), string.Join(",", list.Select(sec => sec.Code).ToArray())));
+            DataTask task = new DataTask("CloseTask-" + time.ToString("HH:mm:ss"), string.Format("{0} {1} {2} * * ?", time.Second, time.Minute, time.Hour), delegate() { logger.Info("Task:" + time.ToString()); });
+            Global.TaskService.RegisterTask(task);
+        
+        }
+
+        /// <summary>
+        /// 开盘作业
+        /// </summary>
+        /// <param name="security"></param>
+        void OpenMarket(List<SecurityFamily> seclist)
+        { 
+            
+            IEnumerable<string> secCodeList = seclist.Select(sec=>sec.Code);
+            logger.Info(string.Format("1Open Market for securities:{0}", string.Join(",", secCodeList.ToArray())));
+            foreach (var symbol in MDBasicTracker.SymbolTracker.Symbols.Where(sym => secCodeList.Contains(sym.SecurityFamily.Code)))
+            { 
+                //禁止过期合约并加入换月合约
+                
+                //清空TradeCache
+                TradeCache cache = null;
+                if (!tradeMap.TryGetValue(symbol.UniqueKey, out cache))
+                {
+                    cache = new TradeCache(symbol);
+                    tradeMap.Add(symbol.UniqueKey, cache);
+                }
+                cache.Clear();
+            
+                //
+            }
+        }
     }
 }
