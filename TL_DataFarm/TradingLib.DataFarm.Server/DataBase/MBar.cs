@@ -31,9 +31,9 @@ namespace TradingLib.Common.DataFarm
         {
             using (DBMySql db = new DBMySql())
             {
-                string query = String.Format("Insert into data_bar (`tradingday`,`symbol`,`endtime`,`open`,`high`,`low`,`close`,`volume`,`openinterest`,`tradecount`,`intervaltype`,`interval` ) values('{0}','{1}','{2}','{3}','{4}','{5}','{6}','{7}','{8}','{9}','{10}','{11}')", bar.TradingDay, bar.Symbol, bar.EndTime.ToTLDateTime(), bar.Open, bar.High, bar.Low, bar.Close, bar.Volume, bar.OpenInterest, bar.TradeCount, (int)bar.IntervalType, bar.Interval);
+                string query = String.Format("Insert into data_intraday (`tradingday`,`symbol`,`endtime`,`open`,`high`,`low`,`close`,`volume`,`openinterest`,`tradecount`,`intervaltype`,`interval` ) values('{0}','{1}','{2}','{3}','{4}','{5}','{6}','{7}','{8}','{9}','{10}','{11}')", bar.TradingDay, bar.Symbol, bar.EndTime.ToTLDateTime(), bar.Open, bar.High, bar.Low, bar.Close, bar.Volume, bar.OpenInterest, bar.TradeCount, (int)bar.IntervalType, bar.Interval);
                 db.Connection.Execute(query);
-                SetIdentity(db.Connection, id => bar.ID = id, "id", "data_bar");
+                SetIdentity(db.Connection, id => bar.ID = id, "id", "data_intraday");
             }
         }
 
@@ -45,7 +45,7 @@ namespace TradingLib.Common.DataFarm
         {
             using (DBMySql db = new DBMySql())
             {
-                string query = String.Format("Update  data_bar SET `open`={0},`high`={1},`low`={2},`close`={3},`volume`={4},`openinterest`={5},`tradecount`={6}, `tradingday`={7} WHERE `id`='{8}'", bar.Open, bar.High, bar.Low, bar.Close, bar.Volume, bar.OpenInterest, bar.TradeCount, bar.TradingDay, bar.ID);
+                string query = String.Format("Update  data_intraday SET `open`={0},`high`={1},`low`={2},`close`={3},`volume`={4},`openinterest`={5},`tradecount`={6}, `tradingday`={7} WHERE `id`='{8}'", bar.Open, bar.High, bar.Low, bar.Close, bar.Volume, bar.OpenInterest, bar.TradeCount, bar.TradingDay, bar.ID);
                 db.Connection.Execute(query);
             }
         }
@@ -58,7 +58,7 @@ namespace TradingLib.Common.DataFarm
         {
             using (DBMySql db = new DBMySql())
             {
-                string query = string.Format("DELETE FROM data_bar WHERE id = '{0}'", id); 
+                string query = string.Format("DELETE FROM data_intraday WHERE id = '{0}'", id); 
                 db.Connection.Execute(query);
             }
         }
@@ -79,7 +79,7 @@ namespace TradingLib.Common.DataFarm
             using (DBMySql db = new DBMySql())
             {
                 string qrystr = "SELECT ";
-                qrystr += "a.id,a.tradingday,a.symbol,a.open,a.high,a.low,a.close,a.volume,a.openinterest,a.tradecount,a.interval,a.intervaltype,STR_TO_DATE(endtime,'%Y%m%d%H%i%s') as endtime FROM data_bar a WHERE `symbol` = '{0}' AND `intervaltype` = {1} AND `interval` = {2} ".Put(symbol, (int)type, interval);
+                qrystr += "a.id,a.tradingday,a.symbol,a.open,a.high,a.low,a.close,a.volume,a.openinterest,a.tradecount,a.interval,a.intervaltype,STR_TO_DATE(endtime,'%Y%m%d%H%i%s') as endtime FROM data_intraday a WHERE `symbol` = '{0}' AND `intervaltype` = {1} AND `interval` = {2} ".Put(symbol, (int)type, interval);
 
                 if (start != DateTime.MinValue)
                 {
