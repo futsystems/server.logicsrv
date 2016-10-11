@@ -115,7 +115,7 @@ namespace TradingLib.Common.DataFarm
             //将恢复完毕的日级别数据 发送到Barlist
             if (EodBarResotred != null)
             {
-                EodBarResotred(task.Symbol, eodlist);
+                EodBarResotred(task.Symbol, eodlist.Take(Math.Max(0,eodlist.Count()-1)));//最后一个Bar不更新到缓存 放入EodBarStruct 作为EODPartial来处理,通过1分钟K线的处理来决定是否关闭该EODBar
             }
 
             //用最后一个Eod 创建struct
@@ -189,10 +189,12 @@ namespace TradingLib.Common.DataFarm
                 }
                 if (bar.TradingDay == eod.EODBar.TradingDay)
                 {
+                    eod.EODBar.EndTime = bar.EndTime;
                     eod.EODBar.High = Math.Max(eod.EODBar.High, bar.High);
                     eod.EODBar.Low = Math.Max(eod.EODBar.Low, bar.Low);
                     eod.EODBar.Close = bar.Close;
                     eod.EODBar.Volume = eod.ClosedVol + bar.Volume;
+
 
                     //触发Eod更新事件 用于更新到BarList
                     UpdateEodPartialBar(eod);
@@ -233,7 +235,7 @@ namespace TradingLib.Common.DataFarm
                 }
                 if (bar.TradingDay == eod.EODBar.TradingDay)
                 {
-
+                    eod.EODBar.EndTime = bar.EndTime;
                     eod.EODBar.High = Math.Max(eod.EODBar.High, bar.High);
                     eod.EODBar.Low = Math.Max(eod.EODBar.Low, bar.Low);
                     eod.EODBar.Close = bar.Close;

@@ -52,59 +52,6 @@ namespace TradingLib.Common.DataFarm
         }
 
 
-        public void Commit()
-        { 
-        
-        }
-
-        ///// <summary>
-        ///// 数据库插入Bar记录
-        ///// </summary>
-        ///// <param name="b"></param>
-        //void DBInsertBar(BarImpl b)
-        //{
-        //    try
-        //    {
-        //        MBar.InsertBar(b);
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        logger.Error("InsertBar error:" + ex.ToString());
-        //    }
-        //}
-
-        ///// <summary>
-        ///// 数据库删除Bar记录
-        ///// </summary>
-        ///// <param name="id"></param>
-        //void DBDeleteBar(int id)
-        //{
-        //    try
-        //    {
-        //        MBar.DeleteBar(id);
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        logger.Error("DeleteBar error:" + ex.ToString());
-        //    }
-        //}
-
-        ///// <summary>
-        ///// 数据库更新Bar记录
-        ///// </summary>
-        ///// <param name="b"></param>
-        //void DBUpdateBar(BarImpl b)
-        //{
-        //    try
-        //    {
-        //        MBar.UpdateBar(b);
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        logger.Error("UpdateBar error:" + ex.ToString());
-        //    }
-        //}
-
         /// <summary>
         /// 插入一条Bar数据
         /// 如果对应的键值已经存在则不执行插入
@@ -128,42 +75,17 @@ namespace TradingLib.Common.DataFarm
             }
             else
             {
-                dest = target[source.EndTime.ToTLDateTime()];//更新的Bar 通过键值来获得dest
+                dest = target[source.GetTimeKey()];//更新的Bar 通过键值来获得dest 不能使用EndTime 日线数据EndTime代表的是当前最新时间
             }
 
         }
 
-        //public void UploadBar(string key, IEnumerable<BarImpl> bars)
-        //{
-        //    bool isInsert = false;
-        //    BarList target = GetBarList(key);
-
-        //    foreach (var bar in bars)
-        //    {
-        //        target.Update(bar, out isInsert);
-        //        if (bar.Interval != 60) continue;
-        //        if (isInsert)
-        //        {
-        //            DBInsertBar(bar);//插入Bar则必然会将该Bar插入到数据库 且获得数据库唯一ID
-        //        }
-        //        else
-        //        {
-        //            //更新Bar则会更新内存中Bar的相关数据 且通过datetime获得的该Bar有数据库唯一ID
-        //            BarImpl targetBar = target[bar.EndTime.ToTLDateTime()];
-        //            DBUpdateBar(targetBar);
-        //        }
-        //    }
-        //}
 
         public void DeleteBar(Symbol symbol, BarInterval type, int interval, int[] ids)
         {
             if (ids == null || ids.Length == 0) return;
             BarList target = GetBarList(symbol, type, interval);
             target.Delete(ids);
-            //foreach (var id in ids)
-            //{
-            //    DBDeleteBar(id);
-            //}
         }
 
         /// <summary>

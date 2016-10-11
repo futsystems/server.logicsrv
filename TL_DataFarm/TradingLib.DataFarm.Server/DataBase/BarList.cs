@@ -81,12 +81,12 @@ namespace TradingLib.Common.DataFarm
             }
         }
 
-        public BarImpl this[long datetime]
+        public BarImpl this[long key]
         {
             get
             {
                 BarImpl target = null;
-                if (barlist.TryGetValue(datetime, out target))
+                if (barlist.TryGetValue(key, out target))
                 {
                     return target;
                 }

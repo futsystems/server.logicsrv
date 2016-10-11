@@ -45,7 +45,7 @@ namespace TradingLib.API
         /// <summary>
         /// 保存
         /// </summary>
-        void Commit();
+        //void Commit();
 
 
         /// <summary>

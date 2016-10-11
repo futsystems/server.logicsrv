@@ -35,10 +35,12 @@ namespace TradingLib.Common.DataFarm
 
         void eodservice_EodBarResotred(Symbol arg1, IEnumerable<BarImpl> arg2)
         {
-            foreach(var bar in arg2)
+
+            foreach (var bar in arg2)
             {
                 this.UpdateBar2(arg1, bar);
             }
+            
         }
     }
 }
