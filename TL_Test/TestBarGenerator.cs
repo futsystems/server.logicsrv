@@ -17,8 +17,10 @@ namespace TL_Test
         [Test]
         public void Text_BarFrequency()
         {
+            DBHelper.InitDBConfig("127.0.0.1", 3306, "db-market", "root", "123456");
+            Symbol symbol = MDBasicTracker.SymbolTracker["NYMEX", "CLX6"];
+
             BarFrequency bfreq = new BarFrequency(BarInterval.CustomTime,60);
-            Symbol symbol = new SymbolImpl();
 
             BarGenerator bg = new BarGenerator(symbol, bfreq, BarConstructionType.Trade);
 

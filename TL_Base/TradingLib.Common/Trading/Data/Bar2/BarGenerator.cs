@@ -148,7 +148,7 @@ namespace TradingLib.Common
                     this._updated = true;
                     //保存第一个Tick
                     this._currentPartialBar.FirstTick = tick;
-                    //this._currentPartialBar.TradingDay = GetTradingDay(_symbol.SecurityFamily, tick.DateTime());//Bar第一个Tick的时间来判定交易日
+                    this._currentPartialBar.TradingDay = GetTradingDay(_symbol.SecurityFamily, tick.DateTime());//Bar第一个Tick的时间来判定交易日
 
                 }
                 else if ((double)value > this._currentPartialBar.High)
@@ -180,14 +180,14 @@ namespace TradingLib.Common
         /// <param name="symbol"></param>
         /// <param name="exTime"></param>
         /// <returns></returns>
-        //public static int GetTradingDay(SecurityFamily sec, DateTime exTime)
-        //{
-        //    TradingRange range = sec.MarketTime.JudgeRange(exTime);//根据交易所时间判定当前品种所属交易小节
-        //    if (range == null) return 0;
-        //    DateTime tradingday = range.TradingDay(exTime);
-        //    //if (sec.Exchange.IsInHoliday(tradingday)) return 0;
-        //    return tradingday.ToTLDate();
-        //}
+        public static int GetTradingDay(SecurityFamily sec, DateTime exTime)
+        {
+            TradingRange range = sec.MarketTime.JudgeRange(exTime);//根据交易所时间判定当前品种所属交易小节
+            if (range == null) return 0;
+            DateTime tradingday = range.TradingDay(exTime);
+            //if (sec.Exchange.IsInHoliday(tradingday)) return 0;
+            return tradingday.ToTLDate();
+        }
 
         /// <summary>
         /// Bar事件 当有Bar结束是对外发送

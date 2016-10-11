@@ -163,11 +163,11 @@ namespace TL_Test
             Console.WriteLine(string.Format("{0} -> {1} 星期天预备时间进入星期一", exTime, md));
             Assert.AreEqual(md.TradingDay, 20161017);
 
-            //星期天下午开盘前 预备时间
-            exTime = new DateTime(2016, 10, 10, 17, 58, 01);
-            md = GetCurrentMarketDay(symbol, exTime);
-            Console.WriteLine(string.Format("{0} -> {1}", exTime, md));
-            Assert.AreEqual(md.TradingDay, 20161017);
+            ////星期天下午开盘前 预备时间
+            //exTime = new DateTime(2016, 10, 10, 17, 58, 01);
+            //md = GetCurrentMarketDay(symbol, exTime);
+            //Console.WriteLine(string.Format("{0} -> {1}", exTime, md));
+            //Assert.AreEqual(md.TradingDay, 20161017);
         }
     }
 }

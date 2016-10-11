@@ -251,7 +251,7 @@ namespace TradingLib.Common.DataFarm
                 //设定交易日
                 if (bar.TradingDay == 0)
                 {
-                    //bar.TradingDay =BarGenerator.GetTradingDay(sec, bar.EndTime);
+                    bar.TradingDay =BarGenerator.GetTradingDay(sec, bar.EndTime);
                 }
             
             });
