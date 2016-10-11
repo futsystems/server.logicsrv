@@ -131,6 +131,7 @@ namespace TradingLib.Common.DataFarm
             }
             eodBarMap.Add(task.Symbol.UniqueKey, st);
 
+            //如果操作执行完成前已经有最新的Bar数据到达，则将这些没有处理的数据应用到当前EODPartial
             List<BarImpl> minbarlist = null;
             if (eodPendingMinBarMap.TryGetValue(task.Symbol.UniqueKey, out minbarlist))
             {

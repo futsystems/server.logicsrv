@@ -25,7 +25,7 @@ namespace TradingLib.Common.DataFarm
 
         void eodservice_EodBarUpdate(EodBarEventArgs obj)
         {
-            //throw new NotImplementedException();
+            //throw new NotImplementedException(); ?日线数据是否需要每次都去更新下该值，日线只要当天绑定一个PartialBar即可
             this.UpdateRealPartialBar(obj.Symbol, obj.EodPartialBar);
         }
 
