@@ -65,7 +65,7 @@ namespace TradingLib.API
         /// <param name="interval"></param>
         /// <param name="currentTime"></param>
         /// <returns></returns>
-        bool RestoreBar(Symbol symbol, BarInterval type, int interval, out DateTime lastBarTime);
+        bool RestoreIntradayBar(Symbol symbol, BarInterval type, int interval, out DateTime lastBarTime);
 
         /// <summary>
         /// 恢复日线数据
@@ -92,15 +92,17 @@ namespace TradingLib.API
         /// 更新Bar数据
         /// </summary>
         /// <param name="bar"></param>
-        void UpdateBar(Symbol symbol,BarImpl bar);
+        void UpdateBar(Symbol symbol, BarImpl source, out BarImpl dest, out bool isInsert);
 
+
+        void UpdateBar(string key, BarImpl source, out BarImpl dest, out bool isInsert);
 
         /// <summary>
         /// 上传Bar数据
         /// </summary>
         /// <param name="key"></param>
         /// <param name="bars"></param>
-        void UploadBar(string key, IEnumerable<BarImpl> bars);
+        //void UploadBar(string key, IEnumerable<BarImpl> bars);
 
         /// <summary>
         /// 删除Bar数据

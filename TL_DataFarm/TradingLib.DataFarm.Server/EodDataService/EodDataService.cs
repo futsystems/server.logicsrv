@@ -89,38 +89,9 @@ namespace TradingLib.Common.DataFarm
             {
                 throw new Exception("EOD Data Serivce need HistDataStore");
             }
-            //获得当前交易日
-            //foreach (var exchange in MDBasicTracker.ExchagneTracker.Exchanges)
-            //{ 
-                
-            //}
         }
 
-        /// <summary>
-        /// 判定某个合约交易所当前时间对应交易日
-        /// </summary>
-        /// <param name="symbol"></param>
-        /// <returns></returns>
-        //public int GetTradingDay(SecurityFamily sec)
-        //{
-        //    return GetTradingDay(sec, sec.Exchange.GetExchangeTime());
-        //}
-
-        
-        /// <summary>
-        /// 判定某个合约交易日信息
-        /// </summary>
-        /// <param name="symbol"></param>
-        /// <param name="exTime"></param>
-        /// <returns></returns>
-        //public int GetTradingDay(SecurityFamily sec, DateTime exTime)
-        //{
-        //    TradingRange range = sec.MarketTime.JudgeRange(exTime);//根据交易所时间判定当前品种所属交易小节
-        //    if (range == null) return 0;
-        //    DateTime tradingday = range.TradingDay(exTime);
-        //    //if (sec.Exchange.IsInHoliday(tradingday)) return 0;
-        //    return tradingday.ToTLDate();
-        //}
+     
 
         /// <summary>
         /// 1分钟Bar数据恢复完毕

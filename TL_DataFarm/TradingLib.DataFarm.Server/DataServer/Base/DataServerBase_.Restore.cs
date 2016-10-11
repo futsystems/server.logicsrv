@@ -40,7 +40,6 @@ namespace TradingLib.Common.DataFarm
             restoresrv.NewHistBarEvent += new Action<FreqNewBarEventArgs>(OnNewHistBarEvent);
             restoresrv.NewHistPartialBarEvent += new Action<Symbol, BarImpl>(restoresrv_NewHistPartialBarEvent);
             restoresrv.RestoreTaskCompleteEvent += new Action<RestoreTask>(restoresrv_RestoreTaskCompleteEvent);
-            //restoresrv.QryTradingDay += new Func<SecurityFamily, DateTime, int>(restoresrv_QryTradingDay);
             restoresrv.Start();
 
         }
@@ -50,16 +49,9 @@ namespace TradingLib.Common.DataFarm
             eodservice.On1MinBarRestored(obj);
         }
 
-        //int restoresrv_QryTradingDay(SecurityFamily arg1, DateTime arg2)
-        //{
-        //    return eodservice.GetTradingDay(arg1, arg2);
-        //}
-
-        
-
         void restoresrv_NewHistPartialBarEvent(Symbol arg1, BarImpl arg2)
         {
-            GetHistDataSotre().UpdateHistPartialBar(arg1, arg2);
+            UpdateHistPartialBar(arg1, arg2);
         }
 
 
@@ -102,7 +94,7 @@ namespace TradingLib.Common.DataFarm
                 restoreProfile.EnterSection("RestoreBar");
                 //1.从数据库加载历史数据 获得数据库最后一条Bar更新时间
                 DateTime intradayHistBarEndTime = DateTime.MinValue;
-                store.RestoreBar(symbol, BarInterval.CustomTime, 60, out intradayHistBarEndTime);
+                store.RestoreIntradayBar(symbol, BarInterval.CustomTime, 60, out intradayHistBarEndTime);
                 restoresrv.OnIntraday1MinHistBarLoaded(symbol, intradayHistBarEndTime);
 
                 //2.从数据库加载日线数据 获得最后一条日线更新时间

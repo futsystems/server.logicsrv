@@ -57,109 +57,113 @@ namespace TradingLib.Common.DataFarm
         
         }
 
-        /// <summary>
-        /// 数据库插入Bar记录
-        /// </summary>
-        /// <param name="b"></param>
-        void DBInsertBar(BarImpl b)
-        {
-            try
-            {
-                MBar.InsertBar(b);
-            }
-            catch (Exception ex)
-            {
-                logger.Error("InsertBar error:" + ex.ToString());
-            }
-        }
+        ///// <summary>
+        ///// 数据库插入Bar记录
+        ///// </summary>
+        ///// <param name="b"></param>
+        //void DBInsertBar(BarImpl b)
+        //{
+        //    try
+        //    {
+        //        MBar.InsertBar(b);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        logger.Error("InsertBar error:" + ex.ToString());
+        //    }
+        //}
 
-        /// <summary>
-        /// 数据库删除Bar记录
-        /// </summary>
-        /// <param name="id"></param>
-        void DBDeleteBar(int id)
-        {
-            try
-            {
-                MBar.DeleteBar(id);
-            }
-            catch (Exception ex)
-            {
-                logger.Error("DeleteBar error:" + ex.ToString());
-            }
-        }
+        ///// <summary>
+        ///// 数据库删除Bar记录
+        ///// </summary>
+        ///// <param name="id"></param>
+        //void DBDeleteBar(int id)
+        //{
+        //    try
+        //    {
+        //        MBar.DeleteBar(id);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        logger.Error("DeleteBar error:" + ex.ToString());
+        //    }
+        //}
 
-        /// <summary>
-        /// 数据库更新Bar记录
-        /// </summary>
-        /// <param name="b"></param>
-        void DBUpdateBar(BarImpl b)
-        {
-            try
-            {
-                MBar.UpdateBar(b);
-            }
-            catch (Exception ex)
-            {
-                logger.Error("UpdateBar error:" + ex.ToString());
-            }
-        }
+        ///// <summary>
+        ///// 数据库更新Bar记录
+        ///// </summary>
+        ///// <param name="b"></param>
+        //void DBUpdateBar(BarImpl b)
+        //{
+        //    try
+        //    {
+        //        MBar.UpdateBar(b);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        logger.Error("UpdateBar error:" + ex.ToString());
+        //    }
+        //}
 
         /// <summary>
         /// 插入一条Bar数据
         /// 如果对应的键值已经存在则不执行插入
         /// </summary>
         /// <param name="bar"></param>
-        public virtual void UpdateBar(Symbol symbol, BarImpl bar)
+        public virtual void UpdateBar(Symbol symbol, BarImpl source,out BarImpl dest,out bool isInsert)
         {
-            bool isInsert = false;
-            BarList target = GetBarList(symbol,bar.IntervalType,bar.Interval);
-            target.Update(bar,out isInsert);
+            string key = GetBarListKey(symbol, source.IntervalType, source.Interval);
 
-            if (bar.Interval != 60) return;//数据库只保存1分钟数据
+            this.UpdateBar(key, source, out dest, out isInsert);
+        }
+
+        public void UpdateBar(string key, BarImpl source,out BarImpl dest,out bool isInsert)
+        {
+            BarList target = GetBarList(key);
+            target.Update(source, out isInsert);
+
             if (isInsert)
             {
-                DBInsertBar(bar);//插入Bar则必然会将该Bar插入到数据库 且获得数据库唯一ID
+                dest = source;//插入的Bar 原来的Bar就是dest
             }
             else
             {
-                //更新Bar则会更新内存中Bar的相关数据 且通过datetime获得的该Bar有数据库唯一ID 获得当前缓存的targetBar后更新
-                BarImpl targetBar = target[bar.EndTime.ToTLDateTime()];
-                DBUpdateBar(targetBar);
+                dest = target[source.EndTime.ToTLDateTime()];//更新的Bar 通过键值来获得dest
             }
+
         }
 
-        public void UploadBar(string key, IEnumerable<BarImpl> bars)
-        {
-            bool isInsert = false;
-            BarList target = GetBarList(key);
+        //public void UploadBar(string key, IEnumerable<BarImpl> bars)
+        //{
+        //    bool isInsert = false;
+        //    BarList target = GetBarList(key);
 
-            foreach (var bar in bars)
-            {
-                target.Update(bar, out isInsert);
-                if (bar.Interval != 60) continue;
-                if (isInsert)
-                {
-                    DBInsertBar(bar);//插入Bar则必然会将该Bar插入到数据库 且获得数据库唯一ID
-                }
-                else
-                {
-                    //更新Bar则会更新内存中Bar的相关数据 且通过datetime获得的该Bar有数据库唯一ID
-                    BarImpl targetBar = target[bar.EndTime.ToTLDateTime()];
-                    DBUpdateBar(targetBar);
-                }
-            }
-        }
+        //    foreach (var bar in bars)
+        //    {
+        //        target.Update(bar, out isInsert);
+        //        if (bar.Interval != 60) continue;
+        //        if (isInsert)
+        //        {
+        //            DBInsertBar(bar);//插入Bar则必然会将该Bar插入到数据库 且获得数据库唯一ID
+        //        }
+        //        else
+        //        {
+        //            //更新Bar则会更新内存中Bar的相关数据 且通过datetime获得的该Bar有数据库唯一ID
+        //            BarImpl targetBar = target[bar.EndTime.ToTLDateTime()];
+        //            DBUpdateBar(targetBar);
+        //        }
+        //    }
+        //}
 
         public void DeleteBar(Symbol symbol, BarInterval type, int interval, int[] ids)
         {
             if (ids == null || ids.Length == 0) return;
             BarList target = GetBarList(symbol, type, interval);
             target.Delete(ids);
-            foreach (var id in ids)
-            {
-                DBDeleteBar(id);
-            }
+            //foreach (var id in ids)
+            //{
+            //    DBDeleteBar(id);
+            //}
         }
 
         /// <summary>
@@ -216,14 +220,14 @@ namespace TradingLib.Common.DataFarm
         /// <param name="type"></param>
         /// <param name="interval"></param>
         /// <param name="maxcount"></param>
-        public bool RestoreBar(Symbol symbol, BarInterval type, int interval, out DateTime lastBarTime)
+        public bool RestoreIntradayBar(Symbol symbol, BarInterval type, int interval, out DateTime lastBarTime)
         {
             lastBarTime = DateTime.MinValue;
             //获得对应的BarList
             BarList target = GetBarList(symbol, type, interval);
 
             //从数据库加载对应的Bar数据 从最近的数据加载 分钟级别数据加载6个月,日级别数据加载3年
-            IEnumerable<BarImpl> bars = MBar.LoadBars(GetBarSymbol(symbol), type, interval, DateTime.Now.AddMonths(-6));
+            IEnumerable<BarImpl> bars = MBar.LoadIntradayBars(GetBarSymbol(symbol), type, interval, DateTime.Now.AddMonths(-6));
             target.RestoreBars(bars.Skip(Math.Max(0, bars.Count()-ConstantData.MAXBARCACHED)));
             lastBarTime = target.LastBarTime;
             

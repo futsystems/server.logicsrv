@@ -45,8 +45,8 @@ namespace TradingLib.Common.DataFarm
 
         string _prefixStr = string.Empty;
         List<string> _prefixList = new List<string>();
-        
-        
+
+        bool _acceptTick = true;
 
         protected void StartTickFeeds()
         {
@@ -133,7 +133,10 @@ namespace TradingLib.Common.DataFarm
         {
             //行情过滤
             if (k == null) return;
-            asyncTick.newTick(k);
+            if (_acceptTick)
+            {
+                asyncTick.newTick(k);
+            }
 
         }
 

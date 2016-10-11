@@ -51,7 +51,7 @@ namespace TradingLib.Common.DataFarm
         {
             lock (_object)
             {
-                long key = bar.EndTime.ToTLDateTime();
+                long key = bar.GetTimeKey();
                 isInsert = !barlist.Keys.Contains(key);
                 if (isInsert)
                 {
@@ -162,18 +162,18 @@ namespace TradingLib.Common.DataFarm
             if (this.FirstRealBar != null && this.HistPartialBar != null)
             {
                 //HistPartialBar时间在FirstRealBar之后 则表明FristRealBar对应周期的Bar数据已经在历史Bar恢复中完成 且FirstRealBar之后所有的Bar数据都是完毕的
-                if (this.HistPartialBar.EndTime > this.FirstRealBar.EndTime)
+                if (this.HistPartialBar.GetTimeKey() > this.FirstRealBar.GetTimeKey())
                 {
                     //数据完毕不用做任何操作
                     logger.Info(string.Format("BarList[{0}] HistPartialBar'Time > FirstRealBar'Time /Data Complete", this.Key));
                 }
                 //HistPartialBar时间小于FirstRealBar,表明加载的历史数据无法与实时数据重叠 有数据缺失
-                if (this.HistPartialBar.EndTime < this.FirstRealBar.EndTime)
+                if (this.HistPartialBar.GetTimeKey() < this.FirstRealBar.GetTimeKey())
                 {
                     logger.Warn(string.Format("BarList[{0}] HistPartialBar'Time < FirstRealBar'Time /Data Miss", this.Key));
                 }
 
-                if (this.HistPartialBar.EndTime == this.FirstRealBar.EndTime)
+                if (this.HistPartialBar.GetTimeKey() == this.FirstRealBar.GetTimeKey())
                 {
                     BarImpl tmp = MergeBar(this.HistPartialBar, this.FirstRealBar);
                     bool insert = false;
@@ -215,7 +215,7 @@ namespace TradingLib.Common.DataFarm
             {
                 foreach (var b in source)
                 {
-                    barlist[b.EndTime.ToTLDateTime()] = b;
+                    barlist[b.GetTimeKey()] = b;
                 }
             }
         }
@@ -238,14 +238,14 @@ namespace TradingLib.Common.DataFarm
                 if (this.HistPartialBar != null)
                 {
                     //实时Partial时间在历史Partial之后 则表明已经越过了恢复时刻的那个周期，直接返回RealPartial
-                    if (realPartial.EndTime > this.HistPartialBar.EndTime) return realPartial;
+                    if (realPartial.GetTimeKey() > this.HistPartialBar.GetTimeKey()) return realPartial;
                     //实时Partial与历史Partail在一个周期，则历史Partial在周期的前半部分，RealPartial在周期的后半部分 需要进行2个PartialBar的合并
-                    if (realPartial.EndTime == this.HistPartialBar.EndTime)
+                    if (realPartial.GetTimeKey() == this.HistPartialBar.GetTimeKey())
                     {
                         return BarList.MergeBar(this.HistPartialBar, realPartial);
                     }
                     //实时Partial在历史Partial之前 数据处理异常逻辑
-                    if (realPartial.EndTime < this.HistPartialBar.EndTime)
+                    if (realPartial.GetTimeKey() < this.HistPartialBar.GetTimeKey())
                     {
                         logger.Error("logic error:real partial time < hist partil time");
                         return null;
@@ -294,7 +294,7 @@ namespace TradingLib.Common.DataFarm
                          * 
                          * */
                         //合并PartialBar时需要检查 数据集中最后一个数据与PartialBar的时间 如果一致 则更新数据集中的数据即可
-                        if (records.Count() > 0 && partial.EndTime == records.Last().EndTime)
+                        if (records.Count() > 0 && partial.GetTimeKey() == records.Last().GetTimeKey())
                         {
                             records.Last().CopyData(partial);
                         }

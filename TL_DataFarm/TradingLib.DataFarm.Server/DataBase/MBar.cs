@@ -27,7 +27,7 @@ namespace TradingLib.Common.DataFarm
         /// 插入Bar数据
         /// </summary>
         /// <param name="bar"></param>
-        public static void InsertBar(BarImpl bar)
+        public static void InsertIntradayBar(BarImpl bar)
         {
             using (DBMySql db = new DBMySql())
             {
@@ -41,7 +41,7 @@ namespace TradingLib.Common.DataFarm
         /// 更新Bar数据
         /// </summary>
         /// <param name="bar"></param>
-        public static void UpdateBar(BarImpl bar)
+        public static void UpdateIntradayBar(BarImpl bar)
         {
             using (DBMySql db = new DBMySql())
             {
@@ -54,7 +54,7 @@ namespace TradingLib.Common.DataFarm
         /// 删除某条记录
         /// </summary>
         /// <param name="id"></param>
-        public static void DeleteBar(int id)
+        public static void DeleteIntradayBar(int id)
         {
             using (DBMySql db = new DBMySql())
             {
@@ -74,7 +74,7 @@ namespace TradingLib.Common.DataFarm
         /// <param name="maxcount"></param>
         /// <param name="fromEnd"></param>
         /// <returns></returns>
-        public static IEnumerable<BarImpl> LoadBars(string symbol, BarInterval type, int interval, DateTime start)//;//, DateTime end, int maxcount)
+        public static IEnumerable<BarImpl> LoadIntradayBars(string symbol, BarInterval type, int interval, DateTime start)//;//, DateTime end, int maxcount)
         {
             using (DBMySql db = new DBMySql())
             {
@@ -106,6 +106,48 @@ namespace TradingLib.Common.DataFarm
                 IEnumerable<BarImpl> bars = db.Connection.Query<BarImpl>(qrystr);//, (bar, fields) => { bar.StartTime = Util.ToDateTime(fields.StarTtime); bar.IntervalType = (BarInterval)fields.Intervaltype; return bar; }, null, null, false, "starttime", null, null);
                 
                 return bars;
+            }
+        }
+
+
+
+        /// <summary>
+        /// 插入Bar数据
+        /// </summary>
+        /// <param name="bar"></param>
+        public static void InsertEodBar(BarImpl bar)
+        {
+            using (DBMySql db = new DBMySql())
+            {
+                string query = String.Format("Insert into data_eod (`tradingday`,`symbol`,`endtime`,`open`,`high`,`low`,`close`,`volume`,`openinterest`,`tradecount`,`intervaltype`,`interval` ) values('{0}','{1}','{2}','{3}','{4}','{5}','{6}','{7}','{8}','{9}','{10}','{11}')", bar.TradingDay, bar.Symbol, bar.EndTime.ToTLDateTime(), bar.Open, bar.High, bar.Low, bar.Close, bar.Volume, bar.OpenInterest, bar.TradeCount, (int)bar.IntervalType, bar.Interval);
+                db.Connection.Execute(query);
+                SetIdentity(db.Connection, id => bar.ID = id, "id", "data_eod");
+            }
+        }
+
+        /// <summary>
+        /// 更新Bar数据
+        /// </summary>
+        /// <param name="bar"></param>
+        public static void UpdateEodBar(BarImpl bar)
+        {
+            using (DBMySql db = new DBMySql())
+            {
+                string query = String.Format("Update  data_eod SET `open`={0},`high`={1},`low`={2},`close`={3},`volume`={4},`openinterest`={5},`tradecount`={6}, `tradingday`={7} WHERE `id`='{8}'", bar.Open, bar.High, bar.Low, bar.Close, bar.Volume, bar.OpenInterest, bar.TradeCount, bar.TradingDay, bar.ID);
+                db.Connection.Execute(query);
+            }
+        }
+
+        /// <summary>
+        /// 删除某条记录
+        /// </summary>
+        /// <param name="id"></param>
+        public static void DeleteEodBar(int id)
+        {
+            using (DBMySql db = new DBMySql())
+            {
+                string query = string.Format("DELETE FROM data_eod WHERE id = '{0}'", id);
+                db.Connection.Execute(query);
             }
         }
 

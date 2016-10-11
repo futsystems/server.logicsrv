@@ -31,7 +31,7 @@ namespace TradingLib.Common.DataFarm
         void freqService_UpdatePartialBarEvent(FreqUpdatePartialBarEventArgs obj)
         {
             //更新Partial数据
-            this.UpdatePartialBar(obj.Symbol, obj.PartialBar);
+            this.UpdateRealPartialBar(obj.Symbol, obj.PartialBar);
             //更新EOD数据
             this.eodservice.On1MinPartialBarUpdate(obj.Symbol, obj.PartialBar);
         }
@@ -64,7 +64,7 @@ namespace TradingLib.Common.DataFarm
                     restoresrv.OnIntraday1MinFirstRealBar(obj.Symbol, obj.Bar);
                 }
                 //将实时Bar生成的第一个不完整的Bar放到数据集中
-                GetHistDataSotre().UpdateFirstRealBar(obj.Symbol, obj.Bar);
+                this.UpdateFirstRealBar(obj.Symbol, obj.Bar);
             }
             if (obj.Frequency.Bars.Count >= 2)
             {

@@ -51,7 +51,6 @@ namespace TradingLib.Common.DataFarm
                     UpdateBar2(symbol, bar);
                 }
             }
-
         }
 
         [DataCommandAttr("DeleteBar", "DeleteBar -  delete bar data", "删除某个Bar数据", QSEnumArgParseType.Json)]
@@ -70,6 +69,26 @@ namespace TradingLib.Common.DataFarm
             {
                 DeleteBar(sym, intervalType, interval, ids);
             }
+        }
+
+        /// <summary>
+        /// 系统启动后 默认不接受Tick数据
+        /// 比如需要执行相关维护 上传数据等 需要等数据操作完毕后再接受Tick数据
+        /// </summary>
+        /// <param name="host"></param>
+        /// <param name="conn"></param>
+        [DataCommandAttr("StartFeedTick", "StartFeedTick -  start feed tick", "系统开始接受实时Tick数据")]
+        public void CTE_StartFeedTick(IServiceHost host, IConnection conn)
+        {
+            logger.Info("StartFeedTick");
+            _acceptTick = true;
+        }
+
+        [DataCommandAttr("StopFeedTick", "StopFeedTick -  stop feed tick", "系统停止接受实时Tick数据")]
+        public void CTE_StopFeedTick(IServiceHost host, IConnection conn)
+        {
+            logger.Info("StopFeedTick");
+            _acceptTick = false;
         }
 
 

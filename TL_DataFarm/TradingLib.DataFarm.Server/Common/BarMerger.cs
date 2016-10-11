@@ -30,6 +30,8 @@ namespace TradingLib.Common.DataFarm
                     eod.TradingDay = tradingday;
                     eod.Interval = 1;
                     eod.IntervalType = BarInterval.Day;
+                    eod.Exchange = sbar.Exchange;
+                    eod.Symbol = sbar.Symbol;
                     eod.EndTime = sbar.EndTime;
                     eod.Open = sbar.Open;
                     eod.High = sbar.High;

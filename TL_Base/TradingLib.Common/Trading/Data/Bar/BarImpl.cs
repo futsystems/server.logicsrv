@@ -98,9 +98,9 @@ namespace TradingLib.Common
         public Tick LastTick { get { return _lastTick; } set { _lastTick = value; } }
 
 
-        bool _mergeComplete = false;
-        public bool MergeComplete { get { return _mergeComplete; } set { _mergeComplete = value; } }
-        //public BarImpl() : this(BarInterval.FiveMin) { }
+
+        
+
 
         public BarImpl(string symbol, BarFrequency bf, DateTime endTime)
         {
