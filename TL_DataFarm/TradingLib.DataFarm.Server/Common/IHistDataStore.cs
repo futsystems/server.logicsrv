@@ -68,6 +68,14 @@ namespace TradingLib.API
         bool RestoreBar(Symbol symbol, BarInterval type, int interval, out DateTime lastBarTime);
 
         /// <summary>
+        /// 恢复日线数据
+        /// </summary>
+        /// <param name="symbol"></param>
+        /// <param name="lastBarTime"></param>
+        void RestoreEodBar(Symbol symbol, out DateTime lastBarTime);
+
+
+        /// <summary>
         /// 查询历史数据
         /// </summary>
         /// <param name="symbol">合约</param>

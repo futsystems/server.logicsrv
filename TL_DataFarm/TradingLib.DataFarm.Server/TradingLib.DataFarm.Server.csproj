@@ -62,6 +62,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Common\BarMerger.cs" />
+    <Compile Include="Common\BasicInfoUtil.cs" />
     <Compile Include="Common\ConnectionUtils.cs" />
     <Compile Include="Common\DataCommand.cs" />
     <Compile Include="Common\DataCommandAttr.cs" />

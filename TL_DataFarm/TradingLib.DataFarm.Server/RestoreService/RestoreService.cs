@@ -71,7 +71,10 @@ namespace TradingLib.Common.DataFarm
 
         public event Action<Symbol, BarImpl> NewHistPartialBarEvent;
 
-        //public event Func<SecurityFamily,DateTime ,int> QryTradingDay;
+        /// <summary>
+        /// 1分钟数据恢复任务完成
+        /// </summary>
+        public event Action<RestoreTask> RestoreTaskCompleteEvent;
 
         ConcurrentDictionary<string, RestoreTask> restoreTaskMap = new ConcurrentDictionary<string, RestoreTask>();
 
@@ -112,6 +115,19 @@ namespace TradingLib.Common.DataFarm
             }
             task.Intraday1MinHistBarEnd = time;
         }
+
+        public void OnEodHistBarLoaded(Symbol symbol, DateTime time)
+        {
+            logger.Debug(string.Format("Eod Hist Bar Loaded, Symbol:{0} Time:{1}", symbol.UniqueKey, time));
+            RestoreTask task = null;
+            if (!restoreTaskMap.TryGetValue(symbol.UniqueKey, out task))
+            {
+                logger.Warn(string.Format("Symbol:{0} has no restore task registed", symbol.UniqueKey));
+                return;
+            }
+            task.Intraday1MinHistBarEnd = time;
+        }
+
 
         /// <summary>
         /// 响应实时Bar系统生成的第一个Bar数据
@@ -351,8 +367,17 @@ namespace TradingLib.Common.DataFarm
             }
 
 
+            //日内数据库恢复完毕后 执行Eod数据恢复
+            if (RestoreTaskCompleteEvent != null)
+            {
+                RestoreTaskCompleteEvent(task);
+            }
+
             ////设置数据恢复标识
             task.IsRestored = true;
+
+
+            //1分钟线Tick数据恢复完毕后 执行日线数据恢复
 
             ////所有Tick数据恢复任务完成 则设置tickRestored标识
             //if (!restoreTaskList.Where(t => !t.IsRestored).Any())
@@ -362,6 +387,11 @@ namespace TradingLib.Common.DataFarm
             //}
         }
 
+        /// <summary>
+        /// 数据恢复产生的Bar数据 触发事件用于保存到BarList
+        /// </summary>
+        /// <param name="arg1"></param>
+        /// <param name="arg2"></param>
         void OnNewHistFreqKeyBarEvent(FrequencyManager.FreqKey arg1, SingleBarEventArgs arg2)
         {
             logger.Info(string.Format("Bar Restored Freq:{0} Bar:{1}", arg1.Settings.BarFrequency.ToUniqueId(), arg2.Bar));
@@ -373,10 +403,6 @@ namespace TradingLib.Common.DataFarm
             }
         }
 
-        //int GetTradingDay(SecurityFamily sec,DateTime time)
-        //{
-        //    if (QryTradingDay != null) return QryTradingDay(sec,time);
-        //    return 0;
-        //}
+       
     }
 }

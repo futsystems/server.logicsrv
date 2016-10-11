@@ -108,5 +108,31 @@ namespace TradingLib.Common.DataFarm
                 return bars;
             }
         }
+
+        /// <summary>
+        /// 加载日级别数据
+        /// </summary>
+        /// <param name="symbol"></param>
+        /// <param name="start"></param>
+        /// <param name="type"></param>
+        /// <param name="interval"></param>
+        /// <returns></returns>
+        public static IEnumerable<BarImpl> LoadEodBars(string symbol, DateTime start, BarInterval type = BarInterval.Day, int interval = 1)
+        {
+            using (DBMySql db = new DBMySql())
+            {
+                string qrystr = "SELECT ";
+                qrystr += "a.id,a.tradingday,a.symbol,a.open,a.high,a.low,a.close,a.volume,a.openinterest,a.tradecount,a.interval,a.intervaltype,STR_TO_DATE(endtime,'%Y%m%d%H%i%s') as endtime FROM data_eod a WHERE `symbol` = '{0}' AND `intervaltype` = {1} AND `interval` = {2} ".Put(symbol, (int)type, interval);
+
+                if (start != DateTime.MinValue)
+                {
+                    qrystr += "AND `endtime`>={0} ".Put(start.ToTLDateTime());
+                }
+                qrystr += "ORDER BY `endtime` ";
+                qrystr += "ASC ";
+                IEnumerable<BarImpl> bars = db.Connection.Query<BarImpl>(qrystr);
+                return bars;
+            }
+        }
     }
 }

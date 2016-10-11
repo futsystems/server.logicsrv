@@ -30,7 +30,10 @@ namespace TradingLib.Common.DataFarm
 
         void freqService_UpdatePartialBarEvent(FreqUpdatePartialBarEventArgs obj)
         {
+            //更新Partial数据
             this.UpdatePartialBar(obj.Symbol, obj.PartialBar);
+            //更新EOD数据
+            this.eodservice.On1MinPartialBarUpdate(obj.Symbol, obj.PartialBar);
         }
 
 
@@ -51,7 +54,7 @@ namespace TradingLib.Common.DataFarm
              * 
              * */
             //计算交易日
-            obj.Bar.TradingDay = eodservice.GetTradingDay(obj.Symbol.SecurityFamily, obj.Bar.EndTime);
+            //obj.Bar.TradingDay = eodservice.GetTradingDay(obj.Symbol.SecurityFamily, obj.Bar.EndTime);
 
             if(obj.Frequency.Bars.Count == 1) 
             {
@@ -65,7 +68,10 @@ namespace TradingLib.Common.DataFarm
             }
             if (obj.Frequency.Bars.Count >= 2)
             {
+                //保存到数据集
                 this.UpdateBar2(obj.Symbol, obj.Bar);
+                //更新EOD数据
+                this.eodservice.On1MinBarClose(obj.Symbol, obj.Bar);
             }
             
         }

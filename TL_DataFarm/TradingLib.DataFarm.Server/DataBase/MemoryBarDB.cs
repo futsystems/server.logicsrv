@@ -237,12 +237,32 @@ namespace TradingLib.Common.DataFarm
             return true;
         }
 
+       
+
         void MergeRestore(IEnumerable<BarImpl> source,Symbol symbol,BarInterval intervalType, int interval)
         {
             BarList target = GetBarList(GetBarListKey(symbol, intervalType, interval));
             IEnumerable<BarImpl> list = BarMerger.Merge(source, TimeSpan.FromSeconds(interval));
             target.RestoreBars(list.Skip(Math.Max(0, list.Count() - ConstantData.MAXBARCACHED)));
         }
+
+        /// <summary>
+        /// 从数据库恢复某个合约的日线数据
+        /// </summary>
+        /// <param name="symbol"></param>
+        /// <param name="lastBarTime"></param>
+        public void RestoreEodBar(Symbol symbol, out DateTime lastBarTime)
+        {
+            lastBarTime = DateTime.MinValue;
+            //获得对应的BarList
+            BarList target = GetBarList(symbol, BarInterval.Day, 1);
+
+            IEnumerable<BarImpl> bars = MBar.LoadEodBars(GetBarSymbol(symbol), DateTime.MinValue);
+            target.RestoreBars(bars.Skip(Math.Max(0, bars.Count() - ConstantData.MAXBARCACHED)));
+            lastBarTime = target.LastBarTime;
+        }
+
+
 
         /// <summary>
         /// 查询某个合约某个周期的Bar数据

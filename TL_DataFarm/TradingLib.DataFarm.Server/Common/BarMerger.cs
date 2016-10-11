@@ -10,6 +10,55 @@ namespace TradingLib.Common.DataFarm
     public class BarMerger
     {
         /// <summary>
+        /// 将1分钟Bar数据生成日线数据
+        /// </summary>
+        /// <param name="source"></param>
+        /// <returns></returns>
+        public static List<BarImpl> MergeEOD(IEnumerable<BarImpl> source)
+        {
+            List<BarImpl> eodlist = new List<BarImpl>();
+            int tradingday = 0;
+            BarImpl sbar = null;
+            BarImpl eod = null;
+            for (int i = 0; i < source.Count(); i++)
+            {
+                sbar = source.ElementAt(i);
+                if (sbar.TradingDay > tradingday)
+                {
+                    tradingday = sbar.TradingDay;
+                    eod = new BarImpl();
+                    eod.TradingDay = tradingday;
+                    eod.Interval = 1;
+                    eod.IntervalType = BarInterval.Day;
+                    eod.EndTime = sbar.EndTime;
+                    eod.Open = sbar.Open;
+                    eod.High = sbar.High;
+                    eod.Low = sbar.Low;
+                    eod.Close = sbar.Close;
+                    eod.Volume = sbar.Volume;
+
+
+                    eodlist.Add(eod);
+                }
+                //该1分钟线在该日线对应交易日内
+                if (sbar.TradingDay == tradingday)
+                {
+                    eod.EndTime = sbar.EndTime;
+
+                    eod.High = Math.Max(eod.High, sbar.High);
+                    eod.Low = Math.Min(eod.Low, sbar.Low);
+                    eod.Close = sbar.Close;
+                    eod.Volume += sbar.Volume;
+                }
+
+                if (sbar.TradingDay < tradingday)
+                { 
+                    //逻辑异常
+                }
+            }
+            return eodlist;
+        }
+        /// <summary>
         /// 将1分钟Bar生成不同频率的Bar
         /// </summary>
         /// <param name="source"></param>

@@ -39,9 +39,15 @@ namespace TradingLib.Common.DataFarm
             logger.Info("[Start Restore Service]");
             restoresrv.NewHistBarEvent += new Action<FreqNewBarEventArgs>(OnNewHistBarEvent);
             restoresrv.NewHistPartialBarEvent += new Action<Symbol, BarImpl>(restoresrv_NewHistPartialBarEvent);
+            restoresrv.RestoreTaskCompleteEvent += new Action<RestoreTask>(restoresrv_RestoreTaskCompleteEvent);
             //restoresrv.QryTradingDay += new Func<SecurityFamily, DateTime, int>(restoresrv_QryTradingDay);
             restoresrv.Start();
 
+        }
+
+        void restoresrv_RestoreTaskCompleteEvent(RestoreTask obj)
+        {
+            eodservice.On1MinBarRestored(obj);
         }
 
         //int restoresrv_QryTradingDay(SecurityFamily arg1, DateTime arg2)
@@ -53,7 +59,6 @@ namespace TradingLib.Common.DataFarm
 
         void restoresrv_NewHistPartialBarEvent(Symbol arg1, BarImpl arg2)
         {
-            arg2.TradingDay = eodservice.GetTradingDay(arg1.SecurityFamily, arg2.EndTime);
             GetHistDataSotre().UpdateHistPartialBar(arg1, arg2);
         }
 
@@ -64,7 +69,6 @@ namespace TradingLib.Common.DataFarm
         /// <param name="obj"></param>
         void OnNewHistBarEvent(FreqNewBarEventArgs obj)
         {
-            obj.Bar.TradingDay = eodservice.GetTradingDay(obj.Symbol.SecurityFamily, obj.Bar.EndTime);
             obj.Bar.Symbol = obj.Symbol.GetContinuousSymbol();
             this.UpdateBar2(obj.Symbol, obj.Bar);
         }
@@ -99,9 +103,12 @@ namespace TradingLib.Common.DataFarm
                 //1.从数据库加载历史数据 获得数据库最后一条Bar更新时间
                 DateTime intradayHistBarEndTime = DateTime.MinValue;
                 store.RestoreBar(symbol, BarInterval.CustomTime, 60, out intradayHistBarEndTime);
-
                 restoresrv.OnIntraday1MinHistBarLoaded(symbol, intradayHistBarEndTime);
 
+                //2.从数据库加载日线数据 获得最后一条日线更新时间
+                DateTime eodHistBarEndTime = DateTime.MinValue;
+                store.RestoreEodBar(symbol, out eodHistBarEndTime);
+                restoresrv.OnEodHistBarLoaded(symbol, eodHistBarEndTime);
 
                 restoreProfile.LeaveSection();
             }

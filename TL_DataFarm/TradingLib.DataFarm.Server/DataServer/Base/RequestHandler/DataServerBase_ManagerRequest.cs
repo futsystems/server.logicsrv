@@ -20,6 +20,23 @@ namespace TradingLib.Common.DataFarm
 
         }
 
+        //[DataCommandAttr("RectifyTradingday", "RectifyTradingday -  update bar data", "更新某个bar的相关数据", QSEnumArgParseType.Json)]
+        //public void CTE_UpdateBar(IServiceHost host, IConnection conn, string args)
+        //{
+        //    logger.Info("UpdateBar data:" + args);
+        //    BarImpl bar = TradingLib.Mixins.Json.JsonMapper.ToObject<BarImpl>(args);
+        //    if (bar != null)
+        //    {
+        //        Symbol symbol = MDBasicTracker.SymbolTracker[bar.Exchange, bar.Symbol];
+        //        if (symbol != null)
+        //        {
+                    
+        //            UpdateBar2(symbol, bar);
+        //        }
+        //    }
+
+        //}
+
 
         [DataCommandAttr("UpdateBar", "UpdateBar -  update bar data", "更新某个bar的相关数据",QSEnumArgParseType.Json)]
         public void CTE_UpdateBar(IServiceHost host, IConnection conn,string args)
@@ -183,13 +200,41 @@ namespace TradingLib.Common.DataFarm
             }
         }
 
-
+        /// <summary>
+        /// 上传Bar数据
+        /// Header指定交易所,Bar合约 CL11 表示CL 11月份合约
+        /// 所有合约都是品种+2位月份数字表示
+        /// </summary>
+        /// <param name="host"></param>
+        /// <param name="conn"></param>
+        /// <param name="request"></param>
         void SrvOnMGRUploadBarData(IServiceHost host, IConnection conn, UploadBarDataRequest request)
         {
             logger.Info(string.Format("Conn:{0} Upload  {1} Bars", conn.SessionID,request.Header.BarCount));
 
             string key = string.Format("{0}-{1}-{2}-{3}", request.Header.Exchange, request.Header.Symbol, request.Header.IntervalType, request.Header.Interval);
-            request.Bars.ForEach(bar => { bar.Exchange = request.Header.Exchange; bar.Symbol = request.Header.Symbol; bar.IntervalType = request.Header.IntervalType; bar.Interval = request.Header.Interval; });
+
+
+            SecurityFamily sec = MDBasicTracker.SecurityTracker.GetSecurityOfContinuousSymbol(request.Header.Symbol);
+            if (sec == null)
+            {
+                logger.Error("Symbol:{0} have no security avabile".Put(request.Header.Symbol));
+            }
+            request.Bars.ForEach(bar => 
+            { 
+                bar.Exchange = request.Header.Exchange; 
+                bar.Symbol = request.Header.Symbol; 
+                bar.IntervalType = request.Header.IntervalType; 
+                bar.Interval = request.Header.Interval;
+
+                //设定交易日
+                if (bar.TradingDay == 0)
+                {
+                    bar.TradingDay =BarGenerator.GetTradingDay(sec, bar.EndTime);
+                }
+            
+            });
+            
             this.UploadBars(key, request.Bars);
         }
 

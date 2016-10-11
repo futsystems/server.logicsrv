@@ -47,38 +47,69 @@ namespace TradingLib.Common
             }
         }
 
-        public BarFrequency(BarInterval interval)
-        {
-            switch (interval)
-            {
-                case BarInterval.Day:
-                case BarInterval.FifteenMin:
-                case BarInterval.FiveMin:
-                case BarInterval.Hour:
-                case BarInterval.Minute:
-                case BarInterval.ThreeMin:
-                case BarInterval.ThirtyMin:
-                    {
-                        _type = BarInterval.CustomTime;
-                        _interval = (int)interval;
-                    }
-                    break;
-                default:
-                    _type = BarInterval.CustomTime;
-                    _interval = 60;
-                    break;
-            }
-            timespan = new TimeSpan(0, 0, _interval);
-            return;
-        }
+        //public BarFrequency(BarInterval interval)
+        //{
+        //    switch (interval)
+        //    {
+        //        case BarInterval.Day:
+        //        case BarInterval.FifteenMin:
+        //        case BarInterval.FiveMin:
+        //        case BarInterval.Hour:
+        //        case BarInterval.Minute:
+        //        case BarInterval.ThreeMin:
+        //        case BarInterval.ThirtyMin:
+        //            {
+        //                _type = BarInterval.CustomTime;
+        //                _interval = (int)interval;
+        //            }
+        //            break;
+        //        default:
+        //            _type = BarInterval.CustomTime;
+        //            _interval = 60;
+        //            break;
+        //    }
+        //    timespan = new TimeSpan(0, 0, _interval);
+        //    return;
+        //}
 
         public BarFrequency(BarInterval type, int interval)
         {
             _interval = interval;
-            switch (_type)
+            switch (type)
             {
-                case BarInterval.CustomTicks:
                 case BarInterval.CustomTime:
+                    timespan = new TimeSpan(0, 0, _interval);
+                    _type = type;
+                    break;
+                case BarInterval.Day:
+                    timespan = TimeSpan.FromDays(_interval);
+                    _type = type;
+                    break;
+                case BarInterval.Minute:
+                    timespan = TimeSpan.FromSeconds(60);
+                    _type = BarInterval.CustomTime;
+                    break;
+                case BarInterval.ThreeMin:
+                    timespan = TimeSpan.FromSeconds(180);
+                    _type = BarInterval.CustomTime;
+                    break;
+                case BarInterval.FiveMin:
+                    timespan = TimeSpan.FromSeconds(300);
+                    _type = BarInterval.CustomTime;
+                    break;
+                case BarInterval.FifteenMin:
+                    timespan = TimeSpan.FromSeconds(900);
+                    _type = BarInterval.CustomTime;
+                    break;
+                case BarInterval.ThirtyMin:
+                    timespan = TimeSpan.FromSeconds(1800);
+                    _type = BarInterval.CustomTime;
+                    break;
+                case BarInterval.Hour:
+                    timespan = TimeSpan.FromSeconds(3600);
+                    _type = BarInterval.CustomTime;
+                    break;
+                case BarInterval.CustomTicks:
                 case BarInterval.CustomVol:
                     _type = type;
                     break;
@@ -86,7 +117,7 @@ namespace TradingLib.Common
                     _type = BarInterval.CustomTime;
                     break;
             }
-            timespan = new TimeSpan(0, 0, _interval);
+            //timespan = new TimeSpan(0, 0, _interval);
             return;
         }
 

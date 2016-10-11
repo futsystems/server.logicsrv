@@ -11,7 +11,7 @@ namespace TradingLib.Common.DataFarm
     /// 数据恢复任务
     /// 系统启动过程中用于将合约对应Bar数据恢复到当前最新状态
     /// </summary>
-    internal class RestoreTask
+    public class RestoreTask
     {
 
         public RestoreTask(Symbol symbol)
@@ -19,6 +19,7 @@ namespace TradingLib.Common.DataFarm
             this.Symbol = symbol;
             this.Intraday1MinHistBarEnd = DateTime.MinValue;
             this.Intraday1MinRealBarStart = DateTime.MaxValue;
+            this.EodHistBarEnd = DateTime.MinValue;
             this.IsRestored = false;
             this.CreatedTime = DateTime.Now;
             this.CanRestored = false;
@@ -39,7 +40,19 @@ namespace TradingLib.Common.DataFarm
         public DateTime Intraday1MinRealBarStart { get; set; }
 
 
+        /// <summary>
+        /// 数据库加载日线数据后 最近的一个Bar时间
+        /// </summary>
+        public DateTime EodHistBarEnd { get; set; }
+
+
+
+
         public bool HaveFirst1MinRealBar { get; set; }
+
+
+
+
         BarImpl _first1minbar = null;
         /// <summary>
         /// 实时Bar系统生成的第一个Bar数据

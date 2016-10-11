@@ -17,7 +17,28 @@ namespace TradingLib.Common.DataFarm
         public void InitEodService()
         {
             logger.Info("[Init EOD Service]");
-            eodservice = new EodDataService();
+            eodservice = new EodDataService(GetHistDataSotre());
+            eodservice.EodBarResotred += new Action<Symbol, IEnumerable<BarImpl>>(eodservice_EodBarResotred);
+            eodservice.EodBarClose += new Action<EodBarEventArgs>(eodservice_EodBarClose);
+            eodservice.EodBarUpdate += new Action<EodBarEventArgs>(eodservice_EodBarUpdate);
+        }
+
+        void eodservice_EodBarUpdate(EodBarEventArgs obj)
+        {
+            //throw new NotImplementedException();
+        }
+
+        void eodservice_EodBarClose(EodBarEventArgs obj)
+        {
+            //throw new NotImplementedException();
+        }
+
+        void eodservice_EodBarResotred(Symbol arg1, IEnumerable<BarImpl> arg2)
+        {
+            foreach(var bar in arg2)
+            {
+                this.UpdateBar2(arg1, bar);
+            }
         }
     }
 }
