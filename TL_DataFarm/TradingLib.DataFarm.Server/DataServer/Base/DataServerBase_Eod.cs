@@ -26,11 +26,13 @@ namespace TradingLib.Common.DataFarm
         void eodservice_EodBarUpdate(EodBarEventArgs obj)
         {
             //throw new NotImplementedException();
+            this.UpdateRealPartialBar(obj.Symbol, obj.EodPartialBar);
         }
 
         void eodservice_EodBarClose(EodBarEventArgs obj)
         {
             //throw new NotImplementedException();
+            this.UpdateBar2(obj.Symbol, obj.EodPartialBar);
         }
 
         void eodservice_EodBarResotred(Symbol arg1, IEnumerable<BarImpl> arg2)
