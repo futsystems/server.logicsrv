@@ -25,9 +25,7 @@ namespace TL_Test
         /// <returns></returns>
         MarketDay GetCurrentMarketDay(Symbol symbol, DateTime exTime)
         {
-            DateTime start = exTime.AddDays(-20);
-            DateTime end = exTime;
-            Dictionary<int, MarketDay> mdmap = symbol.SecurityFamily.GetMarketDay(start, end);
+            Dictionary<int, MarketDay> mdmap = symbol.SecurityFamily.GetMarketDays(exTime,10);
 
             MarketDay current = null;
             MarketDay nextMarketDay = symbol.SecurityFamily.GetNextMarketDay(exTime);
@@ -163,6 +161,12 @@ namespace TL_Test
             exTime = new DateTime(2016, 10, 16, 17, 55, 01);
             md = GetCurrentMarketDay(symbol, exTime);
             Console.WriteLine(string.Format("{0} -> {1} 星期天预备时间进入星期一", exTime, md));
+            Assert.AreEqual(md.TradingDay, 20161017);
+
+            //星期天下午开盘前 预备时间
+            exTime = new DateTime(2016, 10, 10, 17, 58, 01);
+            md = GetCurrentMarketDay(symbol, exTime);
+            Console.WriteLine(string.Format("{0} -> {1}", exTime, md));
             Assert.AreEqual(md.TradingDay, 20161017);
         }
     }
