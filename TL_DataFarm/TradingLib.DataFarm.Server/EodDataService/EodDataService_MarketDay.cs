@@ -85,6 +85,9 @@ namespace TradingLib.Common.DataFarm
         Dictionary<string, MarketDay> currentMarketDayMap = new Dictionary<string, MarketDay>();
         Dictionary<string, Dictionary<int, MarketDay>> lasttMarketDaysMap = new Dictionary<string, Dictionary<int, MarketDay>>();
 
+        /// <summary>
+        /// 初始化MarketDay
+        /// </summary>
         void InitMarketDay()
         {
 

@@ -7,6 +7,7 @@ using TradingLib.Common;
 using Common.Logging;
 
 
+
 namespace TradingLib.Common.DataFarm
 {
     
@@ -78,13 +79,12 @@ namespace TradingLib.Common.DataFarm
 
         Dictionary<string, TradeCache> tradeMap = new Dictionary<string, TradeCache>();
 
-        /// <summary>
-        /// 维护交易所对应交易日
-        /// </summary>
-        Dictionary<string, int> tradingdayMap = new Dictionary<string, int>();
 
         IHistDataStore _store = null;
         string _tickpath = string.Empty;
+        
+
+
         public EodDataService(IHistDataStore store,string tickpath)
         {
             _store = store;
@@ -102,6 +102,8 @@ namespace TradingLib.Common.DataFarm
             {
                 tradeMap.Add(symbol.UniqueKey, new TradeCache(symbol));
             }
+
+            
         }
 
      

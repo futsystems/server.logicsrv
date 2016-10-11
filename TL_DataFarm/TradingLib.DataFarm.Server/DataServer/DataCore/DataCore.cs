@@ -82,11 +82,13 @@ namespace TradingLib.Common.DataFarm
         {
             logger.Info("Start....");
 
-            
-
+            //初始化任务调度服务
+            this.InitTaskService();
+           
             //启动历史数据储存服务
             this.StartDataStoreService();
 
+            
             //初始化EOD服务
             this.InitEodService();
 
@@ -114,6 +116,8 @@ namespace TradingLib.Common.DataFarm
             //启动发送服务
             this.StartSendService();
 
+            //启动任务调度服务
+            this.StartTaskService();
             
         }
 
