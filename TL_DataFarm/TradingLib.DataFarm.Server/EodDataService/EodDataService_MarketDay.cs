@@ -172,7 +172,8 @@ namespace TradingLib.Common.DataFarm
         { 
             
             IEnumerable<string> secCodeList = seclist.Select(sec=>sec.Code);
-            logger.Info(string.Format("1Open Market for securities:{0}", string.Join(",", secCodeList.ToArray())));
+            logger.Info(string.Format("Open Market for securities:{0}", string.Join(",", secCodeList.ToArray())));
+            //处理单个合约事务
             foreach (var symbol in MDBasicTracker.SymbolTracker.Symbols.Where(sym => secCodeList.Contains(sym.SecurityFamily.Code)))
             { 
                 //禁止过期合约并加入换月合约
@@ -186,7 +187,18 @@ namespace TradingLib.Common.DataFarm
                 }
                 cache.Clear();
             
-                //
+                //初始化Eod数据
+            }
+            //更新品种当前MarketDay
+            foreach (var sec in seclist)
+            {
+                Dictionary<int, MarketDay> mdMap = null;
+                //更新MarketDay
+                MarketDay current = GetCurrentMarketDay(sec,10,out mdMap);
+                MarketDay old = currentMarketDayMap[sec.Code];
+                currentMarketDayMap[sec.Code] = current;
+                lasttMarketDaysMap[sec.Code] = mdMap;
+                logger.Info(string.Format("Secirotu:{0} MarketDay Move From {1} To {2}", sec.Code, old, current));
             }
         }
     }
