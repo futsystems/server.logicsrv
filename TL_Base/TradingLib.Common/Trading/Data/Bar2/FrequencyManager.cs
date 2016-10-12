@@ -417,6 +417,18 @@ namespace TradingLib.Common
         }
 
 
+
+        public void Clear(Symbol symbol)
+        {
+            symbolUpdateTimeMap[symbol.Symbol] = DateTime.MinValue;
+
+            foreach (var freqinfo in GetFreqInfosForSymbol(symbol))
+            {
+                freqinfo.Clear();
+            }
+
+
+        }
         //public static Profiler pf = new Profiler();
         /// <summary>
         /// 处理行情数据
@@ -765,9 +777,25 @@ namespace TradingLib.Common
             /// </summary>
             public Bar PendingPartialBar { get { return _pendingPartialBar; } set { _pendingPartialBar = value; } }
 
-            
 
+            /// <summary>
+            /// 清空FreqInfo中数据结构的数据
+            /// </summary>
+            public void Clear()
+            {
+                //底层frequency数据集清空
+                _frequency.WriteableBars.Clear();
+                _frequency.WriteableBars.ClearPartialItem();
 
+                //FreqInfo数据集清空
+                this.ClearPendingBars();
+
+                
+                //重新生成generator
+                this._freqgenerator = _key.Settings.CreateFrequencyGenerator();
+                this._freqgenerator.NewBarEvent += new Action<SingleBarEventArgs>(_freqgenerator_NewBarEvent);
+                this._freqgenerator.NewTickEvent += new Action<NewTickEventArgs>(_freqgenerator_NewTickEvent);
+            }
 
             public FreqInfo(FreqKey key, bool synchronizeBars, FrequencyManager manager)
             {
@@ -775,13 +803,14 @@ namespace TradingLib.Common
                 this._key = key;
                 this._manager = manager;
 
-                //生成Bar数据生成器 FrequencyPlugin不同,可以按不同的逻辑生成Bar数据
-                this._freqgenerator = _key.Settings.CreateFrequencyGenerator();
+                
 
                 //生成对应的Frequency数据结构
                 this._frequency = new Frequency(_key, synchronizeBars);
                 this._pendingBarEvents = new List<SingleBarEventArgs>();
 
+                //生成Bar数据生成器 FrequencyPlugin不同,可以按不同的逻辑生成Bar数据
+                this._freqgenerator = _key.Settings.CreateFrequencyGenerator();
                 //绑定freqgenerator事件 此处Bar生成事件 只是将Bar添加到待发送列表,不实际出发 需要通过SendNewBar进行发送
                 this._freqgenerator.NewBarEvent += new Action<SingleBarEventArgs>(_freqgenerator_NewBarEvent);
                 this._freqgenerator.NewTickEvent += new Action<NewTickEventArgs>(_freqgenerator_NewTickEvent);

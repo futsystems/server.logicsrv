@@ -348,6 +348,7 @@ namespace TradingLib.Common.DataFarm
                 }
                 current = current.AddDays(1);
             }
+
             //如果没有历史Tick数据则不用添加TimeTick用于关闭Bar
             if (tmpticklist.Count > 0)
             {
@@ -365,7 +366,10 @@ namespace TradingLib.Common.DataFarm
 
             //处理缓存中的Tick数据
             logger.Info("{0} need process {1} Ticks".Put(symbol.Symbol, tmpticklist.Count));
-            //Tick tmp = tmpticklist.Last();
+
+            //处理历史Tick之前 执行Clear 将原来历史Bar中某个合约的数据清空掉，避免之前Tick恢复造成的脏数据
+            restoreFrequencyMgr.Clear(task.Symbol);
+            //Feed Tick
             foreach (var k in tmpticklist)
             {
                 restoreFrequencyMgr.ProcessTick(k);
@@ -391,16 +395,6 @@ namespace TradingLib.Common.DataFarm
 
             ////设置数据恢复标识
             task.IsRestored = true;
-
-
-            //1分钟线Tick数据恢复完毕后 执行日线数据恢复
-
-            ////所有Tick数据恢复任务完成 则设置tickRestored标识
-            //if (!restoreTaskList.Where(t => !t.IsRestored).Any())
-            //{
-            //    //Tick数据恢复完成
-            //    _tickRestored = true;
-            //}
         }
 
         /// <summary>
