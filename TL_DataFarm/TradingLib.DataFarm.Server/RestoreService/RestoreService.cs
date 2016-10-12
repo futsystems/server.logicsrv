@@ -382,7 +382,7 @@ namespace TradingLib.Common.DataFarm
                 if (freq.WriteableBars.HasPartialItem)//数据恢复时候 Tick文件含有E类别Tick MarketClose 关闭Bar之后 由于没有任何成交Tick驱动 则没有PartialBar 此处刚好完备
                 {
                     if (NewHistPartialBarEvent != null)
-                        NewHistPartialBarEvent(task.Symbol, freq.WriteableBars.PartialItem as BarImpl);
+                        NewHistPartialBarEvent(task.Symbol, freq.WriteableBars.PartialItem as BarImpl); //将HistPartialBar设定到 BarList时 会执行Merge操作 如果异常会导致 任务进入死循环 一致执行BackFill
                 }
             }
 

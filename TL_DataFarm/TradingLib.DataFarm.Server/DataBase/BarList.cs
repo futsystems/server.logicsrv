@@ -189,19 +189,29 @@ namespace TradingLib.Common.DataFarm
         /// <param name="a"></param>
         /// <param name="b"></param>
         /// <returns></returns>
-        static BarImpl MergeBar(BarImpl a, BarImpl b)
+        BarImpl MergeBar(BarImpl a, BarImpl b)
         {
-            BarImpl tmp = new BarImpl(a.Symbol, new BarFrequency(a.IntervalType, a.Interval),a.EndTime);
-            tmp.Open = a.Open;
-            tmp.High = Math.Max(a.High, b.High);
-            tmp.Low = Math.Min(a.Low, a.Low);
-            tmp.Close = b.Close;
-            tmp.OpenInterest = b.OpenInterest;
-            tmp.Volume = b.LastTick.Vol - a.FirstTick.Vol;//用tick数据相减 可以获得准确的成交量信息，否则Hist Real相互叠加 无法准确获得成交量数据
-            tmp.FirstTick = a.FirstTick;
-            tmp.LastTick = b.LastTick;
+            try
+            {
+                BarImpl tmp = new BarImpl(a.Symbol, new BarFrequency(a.IntervalType, a.Interval), a.EndTime);
+                tmp.Open = a.Open;
+                tmp.High = Math.Max(a.High, b.High);
+                tmp.Low = Math.Min(a.Low, a.Low);
+                tmp.Close = b.Close;
+                tmp.OpenInterest = b.OpenInterest;
+                tmp.Volume = b.LastTick.Vol - a.FirstTick.Vol;//用tick数据相减 可以获得准确的成交量信息，否则Hist Real相互叠加 无法准确获得成交量数据
+                tmp.FirstTick = a.FirstTick;
+                tmp.LastTick = b.LastTick;
 
-            return tmp;
+                return tmp;
+            }
+            catch (Exception ex)
+            {
+                logger.Info(string.Format("BarA:{0} BarB:{1} BLasttick:{2} AFirstTick:{3}", a == null ? "Null" : a.ToString(), b == null ? "Null" : b.ToString(), b.LastTick == null ? "Null" : b.LastTick.Vol.ToString(), a.FirstTick == null ? "Null" : a.FirstTick.Vol.ToString()));
+                logger.Error("Merge Bar Error:" + ex.ToString());
+
+                return b;
+            }
         }
 
         /// <summary>
