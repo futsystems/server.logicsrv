@@ -103,15 +103,17 @@ namespace TradingLib.Common.DataFarm
             {
                 for (int i = 0; i < totalnum; i++)
                 {
-                    conn.SendContribResponse(items[i], i == totalnum - 1);
+                    this.SendContribResponse(conn,items[i], i == totalnum - 1);
                 }
             }
             else
             {
-                conn.SendContribResponse(null);
+                this.SendContribResponse(conn,null);
             }
             
         }
+
+
 
         /// <summary>
         /// 更新合约
@@ -147,7 +149,7 @@ namespace TradingLib.Common.DataFarm
             SymbolImpl localsymbol = MDBasicTracker.SymbolTracker[symbol.ID];
             response.Symbol = localsymbol;
 
-            conn.SendResponse(response);
+            this.SendData(conn, response);
         }
 
         /// <summary>
@@ -175,7 +177,7 @@ namespace TradingLib.Common.DataFarm
             RspMGRUpdateSecurityResponse response = ResponseTemplate<RspMGRUpdateSecurityResponse>.SrvSendRspResponse(request);
             response.SecurityFaimly = MDBasicTracker.SecurityTracker[sec.ID];
 
-            conn.SendResponse(response);
+            this.SendData(conn, response);
 
         }
 
@@ -195,7 +197,7 @@ namespace TradingLib.Common.DataFarm
                
                 RspMGRUpdateExchangeResponse response = ResponseTemplate<RspMGRUpdateExchangeResponse>.SrvSendRspResponse(request);
                 response.Exchange = MDBasicTracker.ExchagneTracker[request.Exchange.ID];
-                conn.SendResponse(response);
+                this.SendData(conn, response);
             }
             
         }
@@ -215,7 +217,7 @@ namespace TradingLib.Common.DataFarm
                 RspMGRUpdateMarketTimeResponse response = ResponseTemplate<RspMGRUpdateMarketTimeResponse>.SrvSendRspResponse(request);
                 response.MarketTime = MDBasicTracker.MarketTimeTracker[request.MarketTime.ID];
 
-                conn.SendResponse(response);
+                this.SendData(conn, response);
             }
         }
 

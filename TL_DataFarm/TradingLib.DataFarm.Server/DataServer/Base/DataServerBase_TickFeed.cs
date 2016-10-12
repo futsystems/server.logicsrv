@@ -194,7 +194,11 @@ namespace TradingLib.Common.DataFarm
                 foreach (var conn in target.Values)
                 {
                     //logger.Info("send tick:" + k.Symbol);
-                    conn.SendTick(k);
+                    //conn.SendTick(k);
+                        TickNotify ticknotify = new TickNotify();
+                        ticknotify.Tick = k;
+                        //conn.Send(ticknotify);
+                        this.SendData(conn, ticknotify);
                 }
             }
         }
@@ -248,7 +252,11 @@ namespace TradingLib.Common.DataFarm
                     Tick k = tickTracker[request.Exchange, symbol];
                     if (k != null)
                     {
-                        conn.SendTick(k);
+                        //conn.SendTick(k);
+                        TickNotify ticknotify = new TickNotify();
+                        ticknotify.Tick = k;
+                        //conn.Send(ticknotify);
+                        this.SendData(conn, ticknotify);
                     }
                 }
             }

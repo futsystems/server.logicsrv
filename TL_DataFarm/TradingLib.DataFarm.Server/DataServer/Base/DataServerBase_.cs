@@ -10,9 +10,5 @@ using Common.Logging;
 
 namespace TradingLib.Common.DataFarm
 {
-    public partial class DataServerBase
-    {
-        
-        
-    }
+    
 }

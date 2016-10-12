@@ -75,6 +75,9 @@ namespace TradingLib.Common.DataFarm
 
             //启动ServiceHost
             this.StartServiceHosts();
+
+            //启动发送服务
+            this.StartSendService();
         }
 
         public override void Stop()

@@ -32,11 +32,20 @@ namespace TradingLib.Common.DataFarm
                 response.CMDStr = "Qry";
                 response.RspInfo.Fill(new FutsRspError("命令不支持"));
 
-                conn.SendResponse(response);
+                this.SendData(conn, response);
 
             }
+        }
 
-            
+        void SendContribResponse(IConnection conn, object obj, bool islast = true)
+        {
+            RspMGRContribResponse response = ResponseTemplate<RspMGRContribResponse>.SrvSendRspResponse(null, conn.SessionID, conn.Command.RequestId);
+            response.ModuleID = conn.Command.ModuleID;
+            response.CMDStr = conn.Command.CMDStr;
+            response.IsLast = islast;
+            response.Result = Mixins.Json.JsonReply.SuccessReply(obj).ToJson();
+
+            this.SendData(conn, response);
         }
     }
 }

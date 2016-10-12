@@ -42,7 +42,8 @@ namespace TradingLib.Common.DataFarm
             v.DeployID = "demo";
             response.Version = v;
 
-            conn.Send(response);
+            //conn.Send(response);
+            this.SendData(conn, response);
 
         }
 
@@ -60,7 +61,8 @@ namespace TradingLib.Common.DataFarm
             response.Add(MessageTypes.XQRYSECURITY);
             response.Add(MessageTypes.XQRYSYMBOL);
 
-            conn.Send(response);
+            //conn.Send(response);
+            this.SendData(conn, response);
         }
 
         /// <summary>
@@ -72,7 +74,8 @@ namespace TradingLib.Common.DataFarm
         void SrvOnHeartbeatRequest(IServiceHost host, IConnection conn, HeartBeatRequest request)
         {
             HeartBeatResponse response = ResponseTemplate<HeartBeatResponse>.SrvSendRspResponse(request);
-            conn.Send(response);
+            //conn.Send(response);
+            this.SendData(conn, response);
         }
 
         void SrvOnLoginRequest(IServiceHost host, IConnection conn, LoginRequest request)
@@ -83,7 +86,8 @@ namespace TradingLib.Common.DataFarm
             response.Authorized = true;
             response.Date = 20161006;
             response.RspInfo = new RspInfoImpl();
-            conn.Send(response);
+            //conn.Send(response);
+            this.SendData(conn, response);
         }
 
         Profiler pf = new Profiler();
@@ -126,7 +130,9 @@ namespace TradingLib.Common.DataFarm
                             {
                                 RspQryBarResponse response = ResponseTemplate<RspQryBarResponse>.SrvSendRspResponse(request);
                                 response.Bar = bars[i];
-                                conn.SendResponse(response, i == bars.Count - 1);
+                                response.IsLast = i == bars.Count - 1;
+                                //conn.SendResponse(response, i == bars.Count - 1);
+                                this.SendData(conn, response);
                             }
                             break;
                         }
@@ -143,7 +149,8 @@ namespace TradingLib.Common.DataFarm
                                 {
                                     //一定数目的Bar之后 发送数据 同时判断是否是最后一条
                                     response.IsLast = (i == bars.Count-1);
-                                    conn.Send(response);
+                                    //conn.Send(response);
+                                    this.SendData(conn, response);
                                     //不是最后一条数据则生成新的Response
                                     if (!response.IsLast)
                                     {
@@ -157,7 +164,8 @@ namespace TradingLib.Common.DataFarm
                             if (!response.IsLast)
                             {
                                 response.IsLast = true;
-                                conn.Send(response);
+                                //conn.Send(response);
+                                this.SendData(conn, response);
                             }
                             break;
                         }
@@ -191,7 +199,9 @@ namespace TradingLib.Common.DataFarm
             {
                 RspXQryExchangeResponse response = ResponseTemplate<RspXQryExchangeResponse>.SrvSendRspResponse(request);
                 response.Exchange = exchs[i] as Exchange;
-                conn.SendResponse(response, i == totalnum - 1);
+                response.IsLast = i==totalnum - 1;
+                //conn.SendResponse(response, i == totalnum - 1);
+                this.SendData(conn, response);
             }
         }
 
@@ -211,7 +221,9 @@ namespace TradingLib.Common.DataFarm
             {
                 RspXQryMarketTimeResponse response = ResponseTemplate<RspXQryMarketTimeResponse>.SrvSendRspResponse(request);
                 response.MarketTime = mts[i];
-                conn.SendResponse(response, i == totalnum - 1);
+                response.IsLast = i == totalnum - 1;
+                //conn.SendResponse(response, i == totalnum - 1);
+                this.SendData(conn, response);
             }
             
         }
@@ -236,7 +248,9 @@ namespace TradingLib.Common.DataFarm
                 {
                     RspXQrySecurityResponse response = ResponseTemplate<RspXQrySecurityResponse>.SrvSendRspResponse(request);
                     response.SecurityFaimly = seclist[i];
-                    conn.SendResponse(response, i == totalnum - 1);
+                    response.IsLast = i == totalnum - 1;
+                    //conn.SendResponse(response, i == totalnum - 1);
+                    this.SendData(conn, response);
                     //n++;
                     //if (n == 20)
                     //{
@@ -248,7 +262,7 @@ namespace TradingLib.Common.DataFarm
             else
             {
                 RspXQrySecurityResponse response = ResponseTemplate<RspXQrySecurityResponse>.SrvSendRspResponse(request);
-                conn.SendResponse(response);
+                this.SendData(conn, response);
             }
         }
 
@@ -272,7 +286,9 @@ namespace TradingLib.Common.DataFarm
                 {
                     RspXQrySymbolResponse response = ResponseTemplate<RspXQrySymbolResponse>.SrvSendRspResponse(request);
                     response.Symbol = symlis[i];
-                    conn.SendResponse(response, i == totalnum - 1);
+                    response.IsLast = i == totalnum - 1;
+                    //conn.SendResponse(response, i == totalnum - 1);
+                    this.SendData(conn, response);
                     //n++;
                     //if (n == 20)
                     //{
@@ -284,7 +300,7 @@ namespace TradingLib.Common.DataFarm
             else
             {
                 RspXQrySymbolResponse response = ResponseTemplate<RspXQrySymbolResponse>.SrvSendRspResponse(request);
-                conn.SendResponse(response);
+                this.SendData(conn, response);
             }
         }
 
