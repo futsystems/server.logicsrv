@@ -187,12 +187,13 @@ namespace TradingLib.Common.DataFarm
                     //创建新的EODBar
                     eod.EODBar = CreateEod(bar);
                     eod.ClosedVol = 0;
+                    eod.EODBar.Open = bar.Open;
                 }
                 if (bar.TradingDay == eod.EODBar.TradingDay)
                 {
                     eod.EODBar.EndTime = bar.EndTime;
                     eod.EODBar.High = Math.Max(eod.EODBar.High, bar.High);
-                    eod.EODBar.Low = Math.Max(eod.EODBar.Low, bar.Low);
+                    eod.EODBar.Low = Math.Min(eod.EODBar.Low, bar.Low);
                     eod.EODBar.Close = bar.Close;
                     eod.EODBar.Volume = eod.ClosedVol + bar.Volume;
 
@@ -238,7 +239,7 @@ namespace TradingLib.Common.DataFarm
                 {
                     eod.EODBar.EndTime = bar.EndTime;
                     eod.EODBar.High = Math.Max(eod.EODBar.High, bar.High);
-                    eod.EODBar.Low = Math.Max(eod.EODBar.Low, bar.Low);
+                    eod.EODBar.Low = Math.Min(eod.EODBar.Low, bar.Low);
                     eod.EODBar.Close = bar.Close;
                     eod.EODBar.Volume = eod.ClosedVol + bar.Volume;
                     eod.ClosedVol = eod.ClosedVol + bar.Volume;//将当前1分钟的成交量计入ClosedVol

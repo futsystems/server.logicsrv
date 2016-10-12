@@ -199,7 +199,7 @@ namespace TradingLib.Common.DataFarm
                     //遍历所有未完成恢复任务
                     foreach (var item in restoreTaskMap.Values.Where(t => !t.IsRestored))
                     {
-                        if (item.Symbol.Symbol != "CLX6") continue;
+                        //if (item.Symbol.Symbol != "CLX6") continue;
                         
                         if (item.HaveGotTickSnapshot)
                         {

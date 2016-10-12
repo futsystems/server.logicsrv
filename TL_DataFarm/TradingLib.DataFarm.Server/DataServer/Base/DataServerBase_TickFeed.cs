@@ -149,7 +149,6 @@ namespace TradingLib.Common.DataFarm
         {
             Symbol symbol = MDBasicTracker.SymbolTracker[k.Exchange,k.Symbol];
             if(symbol == null) return;
-
             //更新行情最近更新时间
             if (!tickLastTimeMap.Keys.Contains(k.Symbol))
             {

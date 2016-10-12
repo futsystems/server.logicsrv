@@ -425,7 +425,7 @@ namespace TradingLib.Common
         /// <param name="tick"></param>
         public void ProcessTick(Tick tick)
         {
-            if (tick.Symbol != "CLX6") return;
+            //if (tick.Symbol != "CLX6") return;
 
             //pf.EnterSection("PRECHECK  ");
             //非需要处理的行情源

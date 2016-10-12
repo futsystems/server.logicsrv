@@ -92,7 +92,7 @@ namespace TradingLib.Common.DataFarm
             //遍历所有合约 建立合约到FrequencyManager映射 同时将合约注册到FrequencyManager
             foreach (var symbol in MDBasicTracker.SymbolTracker.Symbols)
             {
-                if (symbol.Symbol != "CLX6") continue;
+                //if (symbol.Symbol != "CLX6") continue;
                 FrequencyManager fm = GetFrequencyManagerForExchange(symbol.SecurityFamily.Exchange.EXCode);
                 if (fm != null)
                 {

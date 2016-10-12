@@ -89,7 +89,7 @@ namespace TradingLib.Common.DataFarm
             //遍历所有合约执行合约的数据恢复
             foreach (var symbol in MDBasicTracker.SymbolTracker.Symbols)
             {
-                if (symbol.Symbol != "CLX6") continue;
+                //if (symbol.Symbol != "CLX6") continue;
 
                 restoreProfile.EnterSection("RestoreBar");
                 //1.从数据库加载历史数据 获得数据库最后一条Bar更新时间
