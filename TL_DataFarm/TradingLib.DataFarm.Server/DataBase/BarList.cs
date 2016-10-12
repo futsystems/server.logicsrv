@@ -252,7 +252,7 @@ namespace TradingLib.Common.DataFarm
                     //实时Partial与历史Partail在一个周期，则历史Partial在周期的前半部分，RealPartial在周期的后半部分 需要进行2个PartialBar的合并
                     if (realPartial.GetTimeKey() == this.HistPartialBar.GetTimeKey())
                     {
-                        return BarList.MergeBar(this.HistPartialBar, realPartial);
+                        return MergeBar(this.HistPartialBar, realPartial);
                     }
                     //实时Partial在历史Partial之前 数据处理异常逻辑
                     if (realPartial.GetTimeKey() < this.HistPartialBar.GetTimeKey())
