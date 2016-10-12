@@ -200,20 +200,25 @@ namespace TradingLib.Common.DataFarm
                     foreach (var item in restoreTaskMap.Values.Where(t => !t.IsRestored))
                     {
                         //if (item.Symbol.Symbol != "CLX6") continue;
-                        
+
                         if (item.HaveGotTickSnapshot)
                         {
                             //合约处于收盘状态 直接加载数据恢复
                             if (!item.TickSnapshot.MarketOpen)
                             {
-                                item.CanRestored = true;
+                                //item.CanRestored = true;
                             }
                             //合约处于开盘状态 需要等待第一个Bar生成之后才开始恢复历史数据
-                            if(item.TickSnapshot.MarketOpen && item.HaveFirst1MinRealBar)
+                            if (item.TickSnapshot.MarketOpen && item.HaveFirst1MinRealBar)
                             {
                                 logger.Info("FristRealBar Generated,now begin restore tick data");
                                 item.CanRestored = true;
                             }
+                        }
+                        else
+                        { 
+                        
+                            
                         }
 
 
@@ -343,9 +348,20 @@ namespace TradingLib.Common.DataFarm
                 }
                 current = current.AddDays(1);
             }
-            //Tick加载结束时间为FirstRealBar的结束时间 因此需要用TimeTick进行驱动将FristRealBar进行关闭
-            Tick timeTick = TickImpl.NewTimeTick(task.Symbol, task.Intraday1MinRealBarStart);
-            tmpticklist.Add(timeTick);
+            //如果没有历史Tick数据则不用添加TimeTick用于关闭Bar
+            if (tmpticklist.Count > 0)
+            {
+                DateTime dt = task.Intraday1MinRealBarStart;
+                //Tick加载结束时间为FirstRealBar的结束时间 因此需要用TimeTick进行驱动将FristRealBar进行关闭
+                //处于MarketClose状态 直接汇率历史数据 此时firstRealBar还没有产生,对应的时间为最大值时间 将目标时间修改为最后一个Bar的时间
+                if (dt == DateTime.MaxValue)
+                { 
+                    Tick k = tmpticklist.Last();
+                    dt = Util.ToDateTime(k.Date, k.Time);
+                }
+                Tick timeTick = TickImpl.NewTimeTick(task.Symbol, dt);
+                tmpticklist.Add(timeTick);
+            }
 
             //处理缓存中的Tick数据
             logger.Info("{0} need process {1} Ticks".Put(symbol.Symbol, tmpticklist.Count));
