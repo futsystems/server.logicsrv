@@ -795,6 +795,8 @@ namespace TradingLib.Common
                 this._freqgenerator = _key.Settings.CreateFrequencyGenerator();
                 this._freqgenerator.NewBarEvent += new Action<SingleBarEventArgs>(_freqgenerator_NewBarEvent);
                 this._freqgenerator.NewTickEvent += new Action<NewTickEventArgs>(_freqgenerator_NewTickEvent);
+
+                this._freqgenerator.Initialize(this.FreqKey.Symbol,BarConstructionType.Trade);
             }
 
             public FreqInfo(FreqKey key, bool synchronizeBars, FrequencyManager manager)

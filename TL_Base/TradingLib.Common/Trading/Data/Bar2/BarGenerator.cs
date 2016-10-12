@@ -57,9 +57,6 @@ namespace TradingLib.Common
         
         }
 
-
-
-
         /// <summary>
         /// 处理实时行情数据
         /// </summary>
