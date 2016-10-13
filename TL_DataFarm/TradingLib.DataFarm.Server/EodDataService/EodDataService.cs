@@ -313,5 +313,16 @@ namespace TradingLib.Common.DataFarm
             return new List<Tick>();
         }
 
+
+        public List<PriceVol> QryPriceVol(Symbol symbol, int date)
+        {
+            string key = symbol.UniqueKey;
+            TradeCache cache = null;
+            if (tradeMap.TryGetValue(key, out cache))
+            {
+                return cache.QryPriceVol();
+            }
+            return new List<PriceVol>();
+        }
     }
 }

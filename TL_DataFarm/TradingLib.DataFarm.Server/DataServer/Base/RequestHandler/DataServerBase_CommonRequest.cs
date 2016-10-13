@@ -217,6 +217,47 @@ namespace TradingLib.Common.DataFarm
             }
 
         }
+
+        protected void SrvOnQryPriceVolRequest(IServiceHost host, IConnection conn, XQryPriceVolRequest request)
+        {
+            logger.Info("Got Qry PriceVol Request:" + request.ToString());
+            Symbol symbol = MDBasicTracker.SymbolTracker[request.Exchange, request.Symbol];
+            if (symbol == null)
+            {
+                logger.Warn(string.Format("Symbol:{0} do not exist", request.Symbol));
+                return;
+            }
+
+            List<PriceVol> pvlist = eodservice.QryPriceVol(symbol, request.Tradingday);
+
+            int j = 0;
+            RspXQryPriceVolResponse response = RspXQryPriceVolResponse.CreateResponse(request);
+            response.IsLast = false;
+            for (int i = 0; i < pvlist.Count; i++)
+            {
+                response.Add(pvlist[i]);
+                j++;
+                if (j == _barbatchsize)
+                {
+                    //一定数目的Bar之后 发送数据 同时判断是否是最后一条
+                    response.IsLast = (i == pvlist.Count - 1);
+                    this.SendData(conn, response);
+                    //不是最后一条数据则生成新的Response
+                    if (!response.IsLast)
+                    {
+                        response = RspXQryPriceVolResponse.CreateResponse(request);
+                        response.IsLast = false;
+                    }
+                    j = 0;
+                }
+            }
+            //如果不为最后一条 则标记为最后一条并发送
+            if (!response.IsLast)
+            {
+                response.IsLast = true;
+                this.SendData(conn, response);
+            }
+        }
         /// <summary>
         /// 查询交易所数据
         /// </summary>

@@ -96,6 +96,7 @@
     <Compile Include="Message\BinaryOption\Order.cs" />
     <Compile Include="Message\Common\UtilStruct.cs" />
     <Compile Include="Message\Manager\MGRMarketData.cs" />
+    <Compile Include="Message\MarketData\QryPriceVol.cs" />
     <Compile Include="Message\MarketData\QryTrade.cs" />
     <Compile Include="Message\Service.cs" />
     <Compile Include="Message\UpdateLocation.cs" />
@@ -148,6 +149,7 @@
     <Compile Include="Trading\Data\Bar2\TimeFreqGenerator.cs" />
     <Compile Include="Trading\Data\Bar\BarRequest.cs" />
     <Compile Include="Trading\Data\Bar\BarUtils.cs" />
+    <Compile Include="Trading\Data\PriceVol.cs" />
     <Compile Include="Trading\Data\Tick\TickRepository.cs" />
     <Compile Include="Trading\MarginConfig.cs" />
     <Compile Include="Trading\MarketData.cs" />

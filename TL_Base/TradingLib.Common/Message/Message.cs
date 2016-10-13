@@ -230,6 +230,7 @@ namespace TradingLib.Common
                 {
                     case MessageTypes.BIN_BARRESPONSE:
                     case MessageTypes.XQRYTRADSPLITRESPONSE:
+                    case MessageTypes.XQRYPRICEVOLRESPONSE:
                     case MessageTypes.MGRUPLOADBARDATA:
                         {
                             msg = string.Empty;

@@ -7,7 +7,7 @@ using TradingLib.Common;
 
 namespace TradingLib.Common.DataFarm
 {
-
+    
     public class TradeCache
     {
 
@@ -15,6 +15,7 @@ namespace TradingLib.Common.DataFarm
         {
             this.Symbol = symbol;
             this.TradeList = new List<Tick>();
+            this.PriceVolList = new SortedDictionary<decimal, PriceVol>();
         }
 
         /// <summary>
@@ -32,6 +33,10 @@ namespace TradingLib.Common.DataFarm
         /// </summary>
         public List<Tick> TradeList { get; set; }
 
+        /// <summary>
+        /// 量价分布列表
+        /// </summary>
+        public SortedDictionary<decimal, PriceVol> PriceVolList { get; set; }
 
         object _object = new object();
         /// <summary>
@@ -42,17 +47,27 @@ namespace TradingLib.Common.DataFarm
         {
             lock (_object)
             {
-                //if (k.UpdateType != "X") return;
                 TradeList.Add(k);
+
+                PriceVol pv = null;
+                if (!this.PriceVolList.TryGetValue(k.Trade, out pv))
+                {
+                    pv = new PriceVol(k.Trade);
+                    this.PriceVolList.Add(k.Trade,pv);
+                }
+                pv.Vol += k.Size;
             }
         }
 
-        
+        /// <summary>
+        /// 清空所有缓存数据
+        /// </summary>
         public void Clear()
         {
             lock (_object)
             {
                 this.TradeList.Clear();
+                this.PriceVolList.Clear();
             }
         }
 
@@ -80,5 +95,15 @@ namespace TradingLib.Common.DataFarm
                 return records.ToList() ;
             }
         }
+
+        /// <summary>
+        /// 查询价格成交量分布
+        /// </summary>
+        /// <returns></returns>
+        public List<PriceVol> QryPriceVol()
+        {
+            return this.PriceVolList.Values.ToList();
+        }
+        
     }
 }
