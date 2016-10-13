@@ -8,7 +8,8 @@ namespace TradingLib.Common
 {
     public static class UtilTradingRange
     {
-        
+
+       
         /// <summary>
         /// 判断某个时间是否在交易小节之内
         /// 注意给定的时间为与交易时间段时区相同的时间

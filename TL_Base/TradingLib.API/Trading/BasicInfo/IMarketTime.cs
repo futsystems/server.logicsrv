@@ -18,6 +18,11 @@ namespace TradingLib.API
         string Description { get; }
 
         /// <summary>
+        /// Range列表
+        /// </summary>
+        SortedDictionary<string, TradingRange> RangeList{get;}
+
+        /// <summary>
         /// 获得当前交易小节
         /// </summary>
         /// <param name="time"></param>

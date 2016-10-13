@@ -159,7 +159,8 @@
     <Compile Include="Trading\MarketTime\MarketDay.cs" />
     <Compile Include="Trading\MarketTime\TradingRange.cs" />
     <Compile Include="Stock\PowerData.cs" />
-    <Compile Include="Trading\MarketTime\UtilTradingRange.cs" />
+    <Compile Include="Trading\Utils\Util_MarketTime.cs" />
+    <Compile Include="Trading\Utils\Util_TradingRange.cs" />
     <Compile Include="Trading\Settlement\AccountSettlement.cs" />
     <Compile Include="Trading\Settlement\CashTransactionImpl.cs" />
     <Compile Include="Trading\Settlement\ExchangeSettlement.cs" />
@@ -169,11 +170,12 @@
     <Compile Include="Utils\Dequeue.cs" />
     <Compile Include="Utils\LocationInfo.cs" />
     <Compile Include="Trading\Data\Bar2\QList.cs" />
+    <Compile Include="Utils\Util_DayOfWeek.cs" />
     <Compile Include="Utils\Util_Decimal.cs" />
     <Compile Include="Utils\Util_string.cs" />
     <Compile Include="Utils\Version.cs" />
     <Compile Include="Tracker\HighLowTracker.cs" />
-    <Compile Include="Trading\Utils\SecurityUtils.cs" />
+    <Compile Include="Trading\Utils\Util_Security.cs" />
     <Compile Include="Utils\Util_string0.cs" />
     <Compile Include="Utils\WinConsole.cs" />
     <Compile Include="Utils\XMLRspInfo\XMLRspInfoTracker.cs" />

@@ -76,9 +76,13 @@ namespace TradingLib.Common
     public class MarketDay
     {
 
-        public MarketDay()
+        public MarketDay(int tradingday,IEnumerable<MarketSession> sessionList)
         {
-            this.TradingDay = 0;
+            this.TradingDay = tradingday;
+            foreach (var session in sessionList)
+            {
+                marketSessionMap.Add(session.TimeKey, session);
+            }
         }
 
         /// <summary>
@@ -131,22 +135,53 @@ namespace TradingLib.Common
             }
         }
 
-        public void Init(int tradingday, IEnumerable<MarketSession> sessionList)
-        {
-            marketSessionMap.Clear();
+        //public void Init(int tradingday, IEnumerable<MarketSession> sessionList)
+        //{
+        //    marketSessionMap.Clear();
 
-            this.TradingDay = tradingday;
-            foreach (var session in sessionList)
+        //    this.TradingDay = tradingday;
+        //    foreach (var session in sessionList)
+        //    {
+        //        marketSessionMap.Add(session.TimeKey, session);
+        //    }
+        //}
+
+        //public void AddSession(MarketSession ms)
+        //{
+        //    marketSessionMap.Add(ms.TimeKey, ms);
+        //}
+
+        /// <summary>
+        /// 注rangelist是date所对应的weekday的TradingRangeList
+        /// </summary>
+        /// <param name="date"></param>
+        /// <param name="rangelist"></param>
+        /// <returns></returns>
+        public static MarketDay CreateMarketDay(DateTime date, List<TradingRange> rangelist)
+        {
+            DateTime sstart, send;
+            List<MarketSession> sessionList = new List<MarketSession>();
+            foreach (var range in rangelist)
             {
-                marketSessionMap.Add(session.TimeKey, session);
+                DateTime seek = date;
+                while (seek.DayOfWeek != range.StartDay)
+                {
+                    seek = seek.AddDays(-1);
+                }
+                sstart = Util.ToDateTime(seek.ToTLDate(), range.StartTime);
+                seek = date;
+                while (seek.DayOfWeek != range.EndDay)
+                {
+                    seek = seek.AddDays(-1);
+                }
+                send = Util.ToDateTime(seek.ToTLDate(), range.EndTime);
+
+                MarketSession ms = new MarketSession(sstart, send);
+                sessionList.Add(ms);
             }
-        }
+            return new MarketDay(date.ToTLDate(), sessionList);
 
-        public void AddSession(MarketSession ms)
-        {
-            marketSessionMap.Add(ms.TimeKey, ms);
         }
-
 
         public override string ToString()
         {

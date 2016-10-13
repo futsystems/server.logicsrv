@@ -5,12 +5,15 @@ using System.Text;
 using NUnit.Framework;
 using TradingLib.API;
 using TradingLib.Common;
-
+using TradingLib.Common.DataFarm;
+using TradingLib.ORM;
 namespace TL_Test
 {
     [TestFixture]
     public class TestBarGenerator
     {
+        
+
         [Test]
         public void Text_BarFrequency()
         {
@@ -37,7 +40,7 @@ namespace TL_Test
             //构造后默认PartialBar不为Null
             Assert.NotNull(bg.PartialBar);
             //初始化后默认的BarStartTime为MinValue
-            Assert.True(bg.BarStartTime == DateTime.MinValue);
+            Assert.True(bg.BarEndTime == DateTime.MinValue);
 
             Assert.AreEqual(0, bg.PartialBar.Open);
             Assert.False(bg.TickWareSent);
@@ -92,14 +95,14 @@ namespace TL_Test
 
 
             //触发一个新Bar后 BarGenerator生成一个新的PartialBar
-            DateTime nextround = TimeFrequency.NextRoundedTime(DateTime.Now, TimeSpan.FromSeconds(60));
+            DateTime nextround = TimeFrequency.BarEndTime(DateTime.Now, TimeSpan.FromSeconds(60));
             bg.SendNewBar(nextround);
 
             Assert.False(bg.TickWareSent);
             Assert.False(bg.Updated);
 
             //下一个Bar的起始时间为上一个Bar的开始时间
-            Assert.AreEqual(nextround, bg.PartialBar.BarStartTime);
+            Assert.AreEqual(nextround, bg.PartialBar.EndTime);
 
             //同时将上一个Bar的收盘价更新到当前Bar
             Assert.AreEqual(1000, bg.PartialBar.Open);
@@ -156,24 +159,33 @@ namespace TL_Test
         [Test]
         public void Text_FrequencyManager()
         {
+            DBHelper.InitDBConfig("127.0.0.1",3306,"db-market","root","123456");
+            Symbol symbol = MDBasicTracker.SymbolTracker["NYMEX", "CLX6"];
             //初始化FrequencyPlugin
             TimeFrequency tm = new TimeFrequency(new BarFrequency(BarInterval.CustomTime, 60));
             Dictionary<Symbol, BarConstructionType> map = new Dictionary<Symbol, BarConstructionType>();
-            Symbol symbol = new SymbolImpl();
-            symbol.Symbol = "CNH6";
+            //Symbol symbol = new SymbolImpl();
+            //symbol.Symbol = "CNH6";
 
             map.Add(symbol, BarConstructionType.Trade);
             //map.Add(symbol2, BarConstructionType.Trade);
-            FrequencyManager fm = new FrequencyManager(tm, map);
+            FrequencyManager fm = new FrequencyManager("debug",QSEnumDataFeedTypes.DEFAULT);
+            fm.RegisterAllBasicFrequency();
+            fm.RegisterSymbol(symbol);
+
 
             FrequencyManager.FreqKey key = new FrequencyManager.FreqKey(tm, symbol);
 
-            Frequency frequency = fm[new FrequencyManager.FreqKey(tm, symbol)];
+            Frequency frequency = fm.GetFrequency(symbol, tm.BarFrequency);
 
             Assert.AreEqual(0, frequency.WriteableBars.Count);
-            Assert.AreEqual(DateTime.MinValue, fm.CurrentTime);
+
 
             Tick k = new TickImpl();
+            k.Exchange = symbol.Exchange;
+            k.Symbol = symbol.Symbol;
+            k.UpdateType = "X";
+
             k.Date = 20160323;
             k.Time = 143000;
 
@@ -186,14 +198,14 @@ namespace TL_Test
             k.Trade = 2001;
             k.Size = 10;
 
-            fm.ProcessTick(symbol, k);
+            fm.ProcessTick(k);
             //处理tick后 当前时间更新为该合约时间
-            Assert.AreEqual(k.DateTime(), fm.CurrentTime);
+            //Assert.AreEqual(k.DateTime(), fm.CurrentTime);
             fm.NewFreqKeyBarEvent += new Action<FrequencyManager.FreqKey, SingleBarEventArgs>(fm_NewFreqKeyBarEvent);
 
             //143000开始 143059结束,143100代表一个新的Bar开始 00-59为一个周期
             k.Time = 143059;
-            fm.ProcessTick(symbol, k);
+            fm.ProcessTick(k);
             Assert.AreEqual(0, frequency.WriteableBars.Count);
             //Console.WriteLine("Bar:" + frequency.Bars.Current);
 
@@ -201,22 +213,22 @@ namespace TL_Test
             //新开始一个Bar Hit Open
             k.Time = 143100;
             k.Trade = 2000;
-            fm.ProcessTick(symbol, k);
+            fm.ProcessTick(k);
             //有对应的Bar生成 frequency.WriteableBars增加1
             Assert.AreEqual(1, frequency.WriteableBars.Count);
-            Console.WriteLine("Bar:" + frequency.Bars.Current);
+            //Console.WriteLine("Bar:" + frequency.Bars.Current);
             Assert.AreEqual(2000, frequency.WriteableBars.PartialItem.Open);
             Assert.AreEqual(2000, frequency.WriteableBars.PartialItem.High);
             Assert.AreEqual(2000, frequency.WriteableBars.PartialItem.Low);
             Assert.AreEqual(2000, frequency.WriteableBars.PartialItem.Close);
 
             k.Time = 143159;
-            fm.ProcessTick(symbol, k);
+            fm.ProcessTick(k);
             Assert.AreEqual(1, frequency.WriteableBars.Count);
 
             //Hit High
             k.Trade = 2002;
-            fm.ProcessTick(symbol,k);
+            fm.ProcessTick(k);
             Assert.AreEqual(1, frequency.WriteableBars.Count);
             Assert.AreEqual(2000, frequency.WriteableBars.PartialItem.Open);
             Assert.AreEqual(2002, frequency.WriteableBars.PartialItem.High);
@@ -225,7 +237,7 @@ namespace TL_Test
 
             //Hit Low
             k.Trade = 1990;
-            fm.ProcessTick(symbol, k);
+            fm.ProcessTick(k);
             Assert.AreEqual(1, frequency.WriteableBars.Count);
             Assert.AreEqual(2000, frequency.WriteableBars.PartialItem.Open);
             Assert.AreEqual(2002, frequency.WriteableBars.PartialItem.High);
@@ -235,7 +247,7 @@ namespace TL_Test
 
 
             k.Time = 143200;
-            fm.ProcessTick(symbol, k);
+            fm.ProcessTick(k);
             //有对应的Bar生成 frequency.WriteableBars增加1
             Assert.AreEqual(2, frequency.WriteableBars.Count);
             Console.WriteLine("Bar:"+frequency.Bars.Current);
