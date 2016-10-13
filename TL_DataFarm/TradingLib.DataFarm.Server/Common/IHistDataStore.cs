@@ -88,6 +88,14 @@ namespace TradingLib.API
         /// <returns></returns>
         List<BarImpl> QryBar(Symbol symbol, BarInterval type, int interval, DateTime start, DateTime end,int startIndex, int maxcount, bool fromEnd,bool havePartail);
 
+
+        /// <summary>
+        /// 查询分时数据
+        /// </summary>
+        /// <param name="symbol"></param>
+        /// <param name="tradingday"></param>
+        /// <returns></returns>
+        List<MinuteData> QryMinuteData(Symbol symbol, int tradingday);
         /// <summary>
         /// 更新Bar数据
         /// </summary>

@@ -207,8 +207,17 @@ namespace TradingLib.Common.DataFarm
             return target.QryBar(start, end, startIndex, maxcount, fromEnd, havePartail);
         }
 
-
-       
+        /// <summary>
+        /// 查询分时数据
+        /// </summary>
+        /// <param name="symbol"></param>
+        /// <param name="tradingday"></param>
+        /// <returns></returns>
+        public List<MinuteData> QryMinuteData(Symbol symbol, int tradingday)
+        {
+            BarList target = GetBarList(symbol, BarInterval.CustomTime, 60);
+            return target.QryMinuteData(tradingday);
+        }
 
 
         string GetBarSymbol(Symbol symbol)

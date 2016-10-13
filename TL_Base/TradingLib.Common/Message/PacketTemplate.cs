@@ -340,6 +340,8 @@ namespace TradingLib.Common
                         return RequestTemplate<XQryTradeSplitRequest>.SrvRecvRequest(frontid, clientid, message.Content);
                     case MessageTypes.XQRYPRICEVOL://查询价格成交量分布
                         return RequestTemplate<XQryPriceVolRequest>.SrvRecvRequest(frontid, clientid, message.Content);
+                    case MessageTypes.XQRYMINUTEDATA://查询分时数据
+                        return RequestTemplate<XQryMinuteDataRequest>.SrvRecvRequest(frontid, clientid, message.Content);
                     default:
                         throw new PacketTypeNotAvabile(message.Type, message.Content, frontid, clientid);
                 }
@@ -370,6 +372,12 @@ namespace TradingLib.Common
                 case MessageTypes.XQRYPRICEVOLRESPONSE:
                     {
                         RspXQryPriceVolResponse response = new RspXQryPriceVolResponse();
+                        response.DeserializeBin(message.Data);
+                        return response;
+                    }
+                case MessageTypes.XQRYMINUTEDATARESPONSE:
+                    {
+                        RspXQryMinuteDataResponse response = new RspXQryMinuteDataResponse();
                         response.DeserializeBin(message.Data);
                         return response;
                     }

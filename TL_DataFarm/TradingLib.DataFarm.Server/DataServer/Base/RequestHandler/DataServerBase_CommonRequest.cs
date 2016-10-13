@@ -175,7 +175,13 @@ namespace TradingLib.Common.DataFarm
                 logger.Error("SrvOnBarRequest Error:" + ex.ToString());
             }
         }
-
+        
+        /// <summary>
+        /// 查询分笔成交数据
+        /// </summary>
+        /// <param name="host"></param>
+        /// <param name="conn"></param>
+        /// <param name="request"></param>
         protected void SrvOnQryTradeSplitRequest(IServiceHost host, IConnection conn, XQryTradeSplitRequest request)
         {
             logger.Info("Got Qry Trads Request:" + request.ToString());
@@ -218,6 +224,12 @@ namespace TradingLib.Common.DataFarm
 
         }
 
+        /// <summary>
+        /// 查询价格成交量数据
+        /// </summary>
+        /// <param name="host"></param>
+        /// <param name="conn"></param>
+        /// <param name="request"></param>
         protected void SrvOnQryPriceVolRequest(IServiceHost host, IConnection conn, XQryPriceVolRequest request)
         {
             logger.Info("Got Qry PriceVol Request:" + request.ToString());
@@ -258,6 +270,51 @@ namespace TradingLib.Common.DataFarm
                 this.SendData(conn, response);
             }
         }
+
+        protected void SrvOnQryMinuteDataRequest(IServiceHost host, IConnection conn, XQryMinuteDataRequest request)
+        {
+            
+            Symbol symbol = MDBasicTracker.SymbolTracker[request.Exchange, request.Symbol];
+            if (symbol == null)
+            {
+                logger.Warn(string.Format("Symbol:{0} do not exist", request.Symbol));
+                return;
+            }
+
+            List<MinuteData> mdlist = GetHistDataSotre().QryMinuteData(symbol, request.Tradingday);
+
+            int j = 0;
+            RspXQryMinuteDataResponse response = RspXQryMinuteDataResponse.CreateResponse(request);
+            response.IsLast = false;
+            for (int i = 0; i < mdlist.Count; i++)
+            {
+                response.Add(mdlist[i]);
+                j++;
+                if (j == _barbatchsize)
+                {
+                    //一定数目的Bar之后 发送数据 同时判断是否是最后一条
+                    response.IsLast = (i == mdlist.Count - 1);
+                    this.SendData(conn, response);
+                    //不是最后一条数据则生成新的Response
+                    if (!response.IsLast)
+                    {
+                        response = RspXQryMinuteDataResponse.CreateResponse(request);
+                        response.IsLast = false;
+                    }
+                    j = 0;
+                }
+            }
+            //如果不为最后一条 则标记为最后一条并发送
+            if (!response.IsLast)
+            {
+                response.IsLast = true;
+                this.SendData(conn, response);
+                logger.Info("Got Qry MinuteData Request:" + request.ToString() + " res cnt:" + response.MinuteDataList.Count);
+            }
+        }
+
+
+
         /// <summary>
         /// 查询交易所数据
         /// </summary>

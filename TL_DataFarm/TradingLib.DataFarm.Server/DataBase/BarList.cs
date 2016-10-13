@@ -273,6 +273,36 @@ namespace TradingLib.Common.DataFarm
             }
         }
 
+        public List<MinuteData> QryMinuteData(int tradingday)
+        {
+            lock (_object)
+            {
+                IEnumerable<BarImpl> records = barlist.Values;
+
+                BarImpl partial = GetPartialBar();
+                if (partial != null)
+                {
+                    /*
+                        *  当从1分钟数据合并生成3，5，15，30等其他周期的数据时，由于1分钟数据的不完整可能导致合并后的其他周期的最后一个Bar数据不完整
+                        *  处理方法
+                        *  1.判断完整性 将不完整的Bar剔除
+                        *  2.保留该Bar,该Bar的Open数据是正确的，将实时系统生成的PartialBar数据与该Bar执行逻辑合并
+                        * 
+                        * */
+                    //合并PartialBar时需要检查 数据集中最后一个数据与PartialBar的时间 如果一致 则更新数据集中的数据即可
+                    if (records.Count() > 0 && partial.GetTimeKey() == records.Last().GetTimeKey())
+                    {
+                        records.Last().CopyData(partial);
+                    }
+                    else
+                    {
+                        records = records.Concat(new BarImpl[] { partial });
+                    }
+                }
+
+                return records.Where(bar => bar.TradingDay == tradingday).Select(bar=>new MinuteData(bar.EndTime.ToTLDate(),bar.EndTime.ToTLTime(),bar.Close,bar.Volume,0)).ToList();
+            }
+        }
         /// <summary>
         /// 从数据集中查询结果
         /// </summary>
