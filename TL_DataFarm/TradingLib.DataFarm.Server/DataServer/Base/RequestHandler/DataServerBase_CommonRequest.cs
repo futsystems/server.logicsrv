@@ -41,8 +41,6 @@ namespace TradingLib.Common.DataFarm
             v.Fix = 0;
             v.DeployID = "demo";
             response.Version = v;
-
-            //conn.Send(response);
             this.SendData(conn, response);
 
         }
@@ -61,7 +59,6 @@ namespace TradingLib.Common.DataFarm
             response.Add(MessageTypes.XQRYSECURITY);
             response.Add(MessageTypes.XQRYSYMBOL);
 
-            //conn.Send(response);
             this.SendData(conn, response);
         }
 
@@ -74,7 +71,7 @@ namespace TradingLib.Common.DataFarm
         void SrvOnHeartbeatRequest(IServiceHost host, IConnection conn, HeartBeatRequest request)
         {
             HeartBeatResponse response = ResponseTemplate<HeartBeatResponse>.SrvSendRspResponse(request);
-            //conn.Send(response);
+
             this.SendData(conn, response);
         }
 
@@ -86,7 +83,7 @@ namespace TradingLib.Common.DataFarm
             response.Authorized = true;
             response.Date = 20161006;
             response.RspInfo = new RspInfoImpl();
-            //conn.Send(response);
+
             this.SendData(conn, response);
         }
 
@@ -103,7 +100,7 @@ namespace TradingLib.Common.DataFarm
         {
             try
             {
-                logger.Info("Got Qry Bar Request:" + request.ToString());
+                //logger.Info("Got Qry Bar Request:" + request.ToString());
                 IHistDataStore store = this.GetHistDataSotre();
                 if (store == null)
                 {
@@ -117,11 +114,11 @@ namespace TradingLib.Common.DataFarm
                     return;
                 }
 
-                pf.EnterSection("QRY  BAR");
+                //pf.EnterSection("QRY  BAR");
                 List<BarImpl> bars = store.QryBar(symbol, request.IntervalType, request.Interval, request.StartTime, request.EndTime,request.StartIndex,request.MaxCount, request.FromEnd,request.HavePartial);
-                pf.LeaveSection();
+                //pf.LeaveSection();
 
-                pf.EnterSection("SEND BAR");
+                //pf.EnterSection("SEND BAR");
                 switch(request.BarResponseType)
                 {
                     case EnumBarResponseType.PLAINTEXT:
@@ -131,7 +128,6 @@ namespace TradingLib.Common.DataFarm
                                 RspQryBarResponse response = ResponseTemplate<RspQryBarResponse>.SrvSendRspResponse(request);
                                 response.Bar = bars[i];
                                 response.IsLast = i == bars.Count - 1;
-                                //conn.SendResponse(response, i == bars.Count - 1);
                                 this.SendData(conn, response);
                             }
                             break;
@@ -149,7 +145,6 @@ namespace TradingLib.Common.DataFarm
                                 {
                                     //一定数目的Bar之后 发送数据 同时判断是否是最后一条
                                     response.IsLast = (i == bars.Count-1);
-                                    //conn.Send(response);
                                     this.SendData(conn, response);
                                     //不是最后一条数据则生成新的Response
                                     if (!response.IsLast)
@@ -164,7 +159,6 @@ namespace TradingLib.Common.DataFarm
                             if (!response.IsLast)
                             {
                                 response.IsLast = true;
-                                //conn.Send(response);
                                 this.SendData(conn, response);
                             }
                             break;
@@ -172,8 +166,8 @@ namespace TradingLib.Common.DataFarm
                     default:
                         break;
                 }
-                pf.LeaveSection();
-                logger.Info(string.Format("----BarRequest Statistics QTY:{0}---- \n{1}", bars.Count, pf.GetStatsString()));
+                //pf.LeaveSection();
+                //logger.Info(string.Format("----BarRequest Statistics QTY:{0}---- \n{1}", bars.Count, pf.GetStatsString()));
                 
             }
             catch (Exception ex)
@@ -200,7 +194,6 @@ namespace TradingLib.Common.DataFarm
                 RspXQryExchangeResponse response = ResponseTemplate<RspXQryExchangeResponse>.SrvSendRspResponse(request);
                 response.Exchange = exchs[i] as Exchange;
                 response.IsLast = i==totalnum - 1;
-                //conn.SendResponse(response, i == totalnum - 1);
                 this.SendData(conn, response);
             }
         }
@@ -222,7 +215,6 @@ namespace TradingLib.Common.DataFarm
                 RspXQryMarketTimeResponse response = ResponseTemplate<RspXQryMarketTimeResponse>.SrvSendRspResponse(request);
                 response.MarketTime = mts[i];
                 response.IsLast = i == totalnum - 1;
-                //conn.SendResponse(response, i == totalnum - 1);
                 this.SendData(conn, response);
             }
             
@@ -249,14 +241,7 @@ namespace TradingLib.Common.DataFarm
                     RspXQrySecurityResponse response = ResponseTemplate<RspXQrySecurityResponse>.SrvSendRspResponse(request);
                     response.SecurityFaimly = seclist[i];
                     response.IsLast = i == totalnum - 1;
-                    //conn.SendResponse(response, i == totalnum - 1);
                     this.SendData(conn, response);
-                    //n++;
-                    //if (n == 20)
-                    //{
-                    //    Util.sleep(100);
-                    //    n = 0;
-                    //}
                 }
             }
             else
@@ -287,14 +272,7 @@ namespace TradingLib.Common.DataFarm
                     RspXQrySymbolResponse response = ResponseTemplate<RspXQrySymbolResponse>.SrvSendRspResponse(request);
                     response.Symbol = symlis[i];
                     response.IsLast = i == totalnum - 1;
-                    //conn.SendResponse(response, i == totalnum - 1);
                     this.SendData(conn, response);
-                    //n++;
-                    //if (n == 20)
-                    //{
-                    //    Util.sleep(100);
-                    //    n = 0;
-                    //}
                 }
             }
             else

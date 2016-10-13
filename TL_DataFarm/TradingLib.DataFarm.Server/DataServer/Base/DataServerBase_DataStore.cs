@@ -107,7 +107,7 @@ namespace TradingLib.Common.DataFarm
             if (_saverunning) return;
             _saverunning = true;
             _datathread = new Thread(ProcessBuffer);
-            _datathread.IsBackground = true;
+            _datathread.IsBackground = false;
             _datathread.Start();
         }
 
@@ -135,12 +135,9 @@ namespace TradingLib.Common.DataFarm
         //Dictionary<string, Dictionary<BarFrequency, List<Bar>>> tmpSymbolBars = new Dictionary<string, Dictionary<BarFrequency, List<Bar>>>();
 
 
-        int _saveThreshold = 100;//当缓存中未保存Tick大于等于该数时执行写库操作
-        int _barSaveThreshold = 10;
-
         bool _batchSave = true;
 
-        const int SLEEPDEFAULTMS = 100;
+        const int SLEEPDEFAULTMS = 10000;
         static ManualResetEvent _logwaiting = new ManualResetEvent(false);
 
         void NewData()

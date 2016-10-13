@@ -149,6 +149,7 @@ namespace TradingLib.Common.DataFarm
         {
             Symbol symbol = MDBasicTracker.SymbolTracker[k.Exchange,k.Symbol];
             if(symbol == null) return;
+            //if (symbol.Exchange != "HKEX") return;
             //更新行情最近更新时间
             if (!tickLastTimeMap.Keys.Contains(k.Symbol))
             {
@@ -160,7 +161,7 @@ namespace TradingLib.Common.DataFarm
             tickTracker.UpdateTick(k);
 
             //如果是成交数据,盘口双边报价,统计数据 则我们生成行情快照对外发送 这里可以使用定时发送或者根据行情源事件类型来触发发送,为了提高效率与可考虑采用500ms快照方式发送，这样即保证时效性，又节约资源
-            if (k.UpdateType == "X" || k.UpdateType == "Q" || k.UpdateType == "F")
+            if (k.UpdateType == "X" || k.UpdateType == "Q" || k.UpdateType == "F" || k.UpdateType == "S")
             {
                 //转发实时行情
                 Tick snapshot = tickTracker[k.Exchange, k.Symbol];
@@ -252,10 +253,8 @@ namespace TradingLib.Common.DataFarm
                     Tick k = tickTracker[request.Exchange, symbol];
                     if (k != null)
                     {
-                        //conn.SendTick(k);
                         TickNotify ticknotify = new TickNotify();
                         ticknotify.Tick = k;
-                        //conn.Send(ticknotify);
                         this.SendData(conn, ticknotify);
                     }
                 }

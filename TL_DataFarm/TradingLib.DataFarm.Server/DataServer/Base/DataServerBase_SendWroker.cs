@@ -34,7 +34,7 @@ namespace TradingLib.Common.DataFarm
                 if (_sendgo) return;
                 _sendgo = true;
                 _sendthread = new Thread(ProcessSend);
-                //_datathread.IsBackground = true;
+                _datathread.IsBackground = false;
                 _sendthread.Start();
             }
 
@@ -49,7 +49,7 @@ namespace TradingLib.Common.DataFarm
             {
                 if ((_sendthread != null) && (_sendthread.ThreadState == System.Threading.ThreadState.WaitSleepJoin))
                 {
-                    _logwaiting.Set();
+                    _sendwaiting.Set();
                 }
             }
 
@@ -66,14 +66,21 @@ namespace TradingLib.Common.DataFarm
                 {
                     while (sendbuffer.hasItems)
                     {
-                        SendStruct st = sendbuffer.Read();
-                        st.Connection.Send(st.Packet);
+                        try
+                        {
+                            SendStruct st = sendbuffer.Read();
+                            st.Connection.Send(st.Packet);
+                        }
+                        catch (Exception ex)
+                        {
+                            logger.Error("Send Data Error:" + ex.ToString());
+                        }
                     }
                     // clear current flag signal
-                    _logwaiting.Reset();
-
+                    _sendwaiting.Reset();
+                    //logger.Info("process send");
                     // wait for a new signal to continue reading
-                    _logwaiting.WaitOne(SLEEPDEFAULTMS);
+                    _sendwaiting.WaitOne(SLEEPDEFAULTMS);
 
                 }
             }

@@ -79,7 +79,7 @@ namespace TradingLib.Common.DataFarm
             using (DBMySql db = new DBMySql())
             {
                 string qrystr = "SELECT ";
-                qrystr += "a.id,a.tradingday,a.symbol,a.open,a.high,a.low,a.close,a.volume,a.openinterest,a.tradecount,a.interval,a.intervaltype,STR_TO_DATE(endtime,'%Y%m%d%H%i%s') as endtime FROM data_intraday a WHERE `symbol` = '{0}' AND `intervaltype` = {1} AND `interval` = {2} ".Put(symbol, (int)type, interval);
+                qrystr += "a.id,a.tradingday,a.symbol,a.open,a.high,a.low,a.close,a.volume,a.openinterest,a.tradecount,a.interval,a.intervaltype,STR_TO_DATE(endtime,'%Y%m%d%H%i%s') as endtime FROM data_intraday a WHERE `symbol` = '{0}'".Put(symbol);//, (int)type, interval);
 
                 if (start != DateTime.MinValue)
                 {
@@ -164,7 +164,7 @@ namespace TradingLib.Common.DataFarm
             using (DBMySql db = new DBMySql())
             {
                 string qrystr = "SELECT ";
-                qrystr += "a.id,a.tradingday,a.symbol,a.open,a.high,a.low,a.close,a.volume,a.openinterest,a.tradecount,a.interval,a.intervaltype,STR_TO_DATE(endtime,'%Y%m%d%H%i%s') as endtime FROM data_eod a WHERE `symbol` = '{0}' AND `intervaltype` = {1} AND `interval` = {2} ".Put(symbol, (int)type, interval);
+                qrystr += "a.id,a.tradingday,a.symbol,a.open,a.high,a.low,a.close,a.volume,a.openinterest,a.tradecount,a.interval,a.intervaltype,STR_TO_DATE(endtime,'%Y%m%d%H%i%s') as endtime FROM data_eod a WHERE `symbol` = '{0}'".Put(symbol);//, (int)type, interval);
 
                 if (start != DateTime.MinValue)
                 {

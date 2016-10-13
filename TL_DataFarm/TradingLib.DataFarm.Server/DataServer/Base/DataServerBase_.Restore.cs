@@ -86,6 +86,7 @@ namespace TradingLib.Common.DataFarm
                 logger.Warn("HistDataSotre is null, can not restore data");
             }
 
+            pf.EnterSection("DB Load");
             //遍历所有合约执行合约的数据恢复
             foreach (var symbol in MDBasicTracker.SymbolTracker.Symbols)
             {
@@ -104,7 +105,8 @@ namespace TradingLib.Common.DataFarm
 
                 restoreProfile.LeaveSection();
             }
-
+            pf.LeaveSection();
+            logger.Info(pf.GetStatsString());
         
         }
     }
