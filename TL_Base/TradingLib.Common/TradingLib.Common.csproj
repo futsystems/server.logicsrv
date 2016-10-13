@@ -96,6 +96,7 @@
     <Compile Include="Message\BinaryOption\Order.cs" />
     <Compile Include="Message\Common\UtilStruct.cs" />
     <Compile Include="Message\Manager\MGRMarketData.cs" />
+    <Compile Include="Message\MarketData\QryTrade.cs" />
     <Compile Include="Message\Service.cs" />
     <Compile Include="Message\UpdateLocation.cs" />
     <Compile Include="Message\XAPI\BasicInfo.cs" />

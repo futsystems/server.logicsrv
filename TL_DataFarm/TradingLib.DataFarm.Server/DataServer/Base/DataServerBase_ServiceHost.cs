@@ -219,6 +219,10 @@ namespace TradingLib.Common.DataFarm
                 case MessageTypes.BARREQUEST:
                     SrvOnBarRequest(host, conn, packet as QryBarRequest);
                     break;
+                //查询成交数据
+                case MessageTypes.XQRYTRADSPLIT:
+                    SrvOnQryTradeSplitRequest(host, conn, packet as XQryTradeSplitRequest);
+                    break;
                 case MessageTypes.MD_DEMOTICK:
                     SrvOnMDDemoTick(host, conn, packet as MDDemoTickRequest);
                     break;

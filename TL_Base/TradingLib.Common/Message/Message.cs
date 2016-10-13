@@ -229,6 +229,7 @@ namespace TradingLib.Common
                 switch (type)
                 {
                     case MessageTypes.BIN_BARRESPONSE:
+                    case MessageTypes.XQRYTRADSPLITRESPONSE:
                     case MessageTypes.MGRUPLOADBARDATA:
                         {
                             msg = string.Empty;

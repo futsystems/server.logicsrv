@@ -83,6 +83,7 @@
     <Compile Include="DataServer\Base\DataServerBase_SendWroker.cs" />
     <Compile Include="EodDataService\EodDataService.cs" />
     <Compile Include="EodDataService\EventArgs.cs" />
+    <Compile Include="EodDataService\TradeCache.cs" />
     <Compile Include="FrequencyService\EventArgs.cs" />
     <Compile Include="MDBasicTracker.cs" />
     <Compile Include="DataCoreBackend\DataCoreBackend.cs" />

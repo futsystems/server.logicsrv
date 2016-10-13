@@ -42,7 +42,7 @@ namespace TradingLib.Common.DataFarm
             string key = string.Format("{0}-{1}", obj.Symbol.GetContinuousKey(), obj.BarFrequency.ToUniqueId());
             obj.Bar.Symbol = obj.Symbol.GetContinuousSymbol();
 #if DEBUG
-            logger.Info(string.Format("New Bar Freq:{0} Bar:{1}", key, obj.Bar));
+            //logger.Info(string.Format("New Bar Freq:{0} Bar:{1}", key, obj.Bar));
 #endif
             
             //放入储存队列 写入数据库

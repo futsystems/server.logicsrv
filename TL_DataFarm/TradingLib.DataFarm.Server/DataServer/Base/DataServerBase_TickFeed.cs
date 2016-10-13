@@ -174,10 +174,18 @@ namespace TradingLib.Common.DataFarm
                 FrequencyServiceProcessTick(k);
             }
 
+            //Eod服务保存成交数据
+            if (k.UpdateType == "X")
+            {
+                EodServiceProcessTick(k);
+            }
+
             if (k.UpdateType == "S")
             {
                 RestoreServiceProcessTickSnapshot(symbol, k);
             }
+
+
 
         }
 

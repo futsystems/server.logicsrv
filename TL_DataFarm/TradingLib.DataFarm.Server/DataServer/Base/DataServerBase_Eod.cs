@@ -44,5 +44,10 @@ namespace TradingLib.Common.DataFarm
             }
             
         }
+
+        void EodServiceProcessTick(Tick k)
+        {
+            eodservice.OnTick(k);
+        }
     }
 }

@@ -62,6 +62,7 @@ namespace TCPServiceHost
                 {
                     case MessageTypes.BIN_BARRESPONSE:
                     case MessageTypes.MGRUPLOADBARDATA:
+                    case MessageTypes.XQRYTRADSPLITRESPONSE:
                         data = new byte[length];
                         Array.Copy(bodyBuffer, offset, data, 0, length);
                         break;

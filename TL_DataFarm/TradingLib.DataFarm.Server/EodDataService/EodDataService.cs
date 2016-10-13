@@ -76,6 +76,8 @@ namespace TradingLib.Common.DataFarm
 
         Dictionary<string, BarImpl> eodPendingMinPartialBarMap = new Dictionary<string, BarImpl>();
 
+        Dictionary<string, TradeCache> tradeMap = new Dictionary<string, TradeCache>();
+
         /// <summary>
         /// 维护交易所对应交易日
         /// </summary>
@@ -88,6 +90,11 @@ namespace TradingLib.Common.DataFarm
             if (_store == null)
             {
                 throw new Exception("EOD Data Serivce need HistDataStore");
+            }
+
+            foreach (var symbol in MDBasicTracker.SymbolTracker.Symbols)
+            {
+                tradeMap.Add(symbol.UniqueKey, new TradeCache(symbol));
             }
         }
 
@@ -282,6 +289,28 @@ namespace TradingLib.Common.DataFarm
                 EodBarClose(new EodBarEventArgs(eod.Symbol, eod.EODBar));
             }
         
+        }
+
+
+        public void OnTick(Tick k)
+        {
+            string key = k.GetSymbolUniqueKey();
+            TradeCache cache = null;
+            if (tradeMap.TryGetValue(key,out cache))
+            {
+                cache.NewTrade(k);
+            }
+        }
+
+        public List<Tick> QryTrade(Symbol symbol, int startIdx, int count, int date)
+        {
+            string key = symbol.UniqueKey;
+            TradeCache cache = null;
+            if (tradeMap.TryGetValue(key, out cache))
+            {
+                return cache.QryTrade(startIdx, count);
+            }
+            return new List<Tick>();
         }
 
     }

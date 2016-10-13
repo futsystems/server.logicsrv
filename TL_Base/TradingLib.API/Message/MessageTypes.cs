@@ -103,6 +103,7 @@ namespace TradingLib.API
         XQRYACCOUNT,//查询交易账户
         XQRYMAXORDERVOL,//查询可下单数
         XQRYACCOUNTFINANCE,//查询账户财务信息
+        XQRYTRADSPLIT,//查询成交数据
         DOMREQUEST,//请求DOM市场Level2数据
         IMBALANCEREQUEST,//imbalance..查询这个是什么意思
 
@@ -170,7 +171,9 @@ namespace TradingLib.API
         XACCOUNTRESPONSE,//交易账户回报
         XQRYMAXORDERVOLRESPONSE,//可下单回报
         XQRYACCOUNTFINANCERESPONSE,//查询交易账户财务信息
+        
         BIN_BARRESPONSE,//二进制Bar回报
+        XQRYTRADSPLITRESPONSE,//成交明细回报
         MD_DEMOTICK,//行情服务器测试Tick
         // END STANDARD MESSAGES
 

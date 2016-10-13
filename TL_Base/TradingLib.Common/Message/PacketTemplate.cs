@@ -336,6 +336,8 @@ namespace TradingLib.Common
                         UploadBarDataRequest request = new UploadBarDataRequest();
                         request.DeserializeBin(message.Data);
                         return request;
+                    case MessageTypes.XQRYTRADSPLIT://查询成交明细
+                        return RequestTemplate<XQryTradeSplitRequest>.SrvRecvRequest(frontid, clientid, message.Content);
                     default:
                         throw new PacketTypeNotAvabile(message.Type, message.Content, frontid, clientid);
                 }
@@ -350,11 +352,19 @@ namespace TradingLib.Common
         public static IPacket CliRecvResponse(Message message)
         {
             switch (message.Type)
-            { 
+            {
                 case MessageTypes.BIN_BARRESPONSE:
-                    RspQryBarResponseBin response = new RspQryBarResponseBin();
-                    response.DeserializeBin(message.Data);
-                    return response;
+                    {
+                        RspQryBarResponseBin response = new RspQryBarResponseBin();
+                        response.DeserializeBin(message.Data);
+                        return response;
+                    }
+                case MessageTypes.XQRYTRADSPLITRESPONSE:
+                    {
+                        RspXQryTradeSplitResponse response = new RspXQryTradeSplitResponse();
+                        response.DeserializeBin(message.Data);
+                        return response;
+                    }
 
                 case MessageTypes.SERVICERESPONSE:
                     return ResponseTemplate<RspQryServiceResponse>.CliRecvResponse(message);
