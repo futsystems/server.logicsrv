@@ -404,7 +404,7 @@ namespace TradingLib.Common.DataFarm
         /// <param name="arg2"></param>
         void OnNewHistFreqKeyBarEvent(FrequencyManager.FreqKey arg1, SingleBarEventArgs arg2)
         {
-            logger.Info(string.Format("Bar Restored Freq:{0} Bar:{1}", arg1.Settings.BarFrequency.ToUniqueId(), arg2.Bar));
+            //logger.Info(string.Format("Bar Restored Freq:{0} Bar:{1}", arg1.Settings.BarFrequency.ToUniqueId(), arg2.Bar));
 
             if (NewHistBarEvent != null)
             {

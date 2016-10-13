@@ -291,7 +291,7 @@ namespace TradingLib.Common
                 if (!this._updated)
                 {
 #if DEBUG
-                    logger.Info(string.Format("DateTime:{0} SetBarEndTime:{1}", datetime, endtime));
+                    //logger.Info(string.Format("DateTime:{0} SetBarEndTime:{1}", datetime, endtime));
 #endif
                     this._generator.SetBarEndTime(endtime);
                     this._updated = true;
