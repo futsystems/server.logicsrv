@@ -84,14 +84,20 @@ namespace TradingLib.Common.DataFarm
         Dictionary<string, int> tradingdayMap = new Dictionary<string, int>();
 
         IHistDataStore _store = null;
-        public EodDataService( IHistDataStore store)
+        string _tickpath = string.Empty;
+        public EodDataService(IHistDataStore store,string tickpath)
         {
             _store = store;
             if (_store == null)
             {
                 throw new Exception("EOD Data Serivce need HistDataStore");
             }
+            _tickpath = tickpath;
 
+            //初始化MarketDay
+            InitMarketDay();
+
+            //初始化成交Map 用于维护当前MarketDay的数据
             foreach (var symbol in MDBasicTracker.SymbolTracker.Symbols)
             {
                 tradeMap.Add(symbol.UniqueKey, new TradeCache(symbol));
@@ -153,7 +159,6 @@ namespace TradingLib.Common.DataFarm
             {
                 On1MinPartialBarUpdate(task.Symbol,partialBar);
             }
-
         }
         
 
@@ -302,27 +307,6 @@ namespace TradingLib.Common.DataFarm
             }
         }
 
-        public List<Tick> QryTrade(Symbol symbol, int startIdx, int count, int date)
-        {
-            string key = symbol.UniqueKey;
-            TradeCache cache = null;
-            if (tradeMap.TryGetValue(key, out cache))
-            {
-                return cache.QryTrade(startIdx, count);
-            }
-            return new List<Tick>();
-        }
-
-
-        public List<PriceVol> QryPriceVol(Symbol symbol, int date)
-        {
-            string key = symbol.UniqueKey;
-            TradeCache cache = null;
-            if (tradeMap.TryGetValue(key, out cache))
-            {
-                return cache.QryPriceVol();
-            }
-            return new List<PriceVol>();
-        }
+        
     }
 }

@@ -8,22 +8,25 @@ namespace TradingLib.Common
 {
     public static class Util_Security
     {
+
+       
         /// <summary>
         /// 生成开始与结束日期之间Security的MarketDay
         /// 开始与结束时间应当使用交易所对应的本地时间
+        /// 
+        /// 返回某天及以前多少个MarketDay 以map形式返回
         /// </summary>
         /// <param name="security"></param>
         /// <param name="start"></param>
         /// <param name="end"></param>
         /// <returns></returns>
-        public static Dictionary<int,MarketDay> GetMarketDay(this SecurityFamily security, DateTime start, DateTime end)
+        public static Dictionary<int,MarketDay> GetMarketDays(this SecurityFamily security,DateTime end,int lastCnt)
         {
-            if (start > end) throw new Exception("Start should smaller then end");
-
             Dictionary<DayOfWeek, List<TradingRange>> dayRangeMap = security.MarketTime.GetRangeOfWeekDay();
-            DateTime date = start;
+            DateTime date = end;
             Dictionary<int, MarketDay> mdmap = new Dictionary<int, MarketDay>();
-            while (date <= end)
+            int i = 0;
+            while (mdmap.Count < lastCnt)
             {
                 DayOfWeek dayofweek = date.DayOfWeek;
                 List<TradingRange> rangelist = null;
@@ -33,7 +36,7 @@ namespace TradingLib.Common
                     var item = MarketDay.CreateMarketDay(date, rangelist);
                     mdmap.Add(item.TradingDay,item);
                 }
-                date = date.AddDays(1);
+                date = date.AddDays(-1);
             }
             return mdmap;
         }

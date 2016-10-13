@@ -16,13 +16,18 @@ namespace TradingLib.Common.DataFarm
         EodDataService eodservice = null;
         public void InitEodService()
         {
+            string path = this.ConfigFile["TickPath"].AsString();
             logger.Info("[Init EOD Service]");
-            eodservice = new EodDataService(GetHistDataSotre());
+            eodservice = new EodDataService(GetHistDataSotre(), path);
             eodservice.EodBarResotred += new Action<Symbol, IEnumerable<BarImpl>>(eodservice_EodBarResotred);
             eodservice.EodBarClose += new Action<EodBarEventArgs>(eodservice_EodBarClose);
             eodservice.EodBarUpdate += new Action<EodBarEventArgs>(eodservice_EodBarUpdate);
         }
 
+        public void StartEodService()
+        {
+            eodservice.RestoreTickBakcground();
+        }
         void eodservice_EodBarUpdate(EodBarEventArgs obj)
         {
             //throw new NotImplementedException(); ?日线数据是否需要每次都去更新下该值，日线只要当天绑定一个PartialBar即可

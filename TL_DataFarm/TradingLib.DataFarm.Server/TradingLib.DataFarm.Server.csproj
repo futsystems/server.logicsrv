@@ -69,6 +69,7 @@
     <Compile Include="Common\DataCommandInfo.cs" />
     <Compile Include="Common\IHistDataStore.cs" />
     <Compile Include="Common\PluginHelper.cs" />
+    <Compile Include="Common\Util.cs" />
     <Compile Include="ConstantData.cs" />
     <Compile Include="DataBase\BarList.cs" />
     <Compile Include="DataBase\MBar.cs" />
@@ -82,9 +83,12 @@
     <Compile Include="DataServer\Base\DataServerBase_Eod.cs" />
     <Compile Include="DataServer\Base\DataServerBase_SendWroker.cs" />
     <Compile Include="EodDataService\EodDataService.cs" />
-    <Compile Include="EodDataService\EodDataService_.cs" />
+    <Compile Include="EodDataService\EodDataService_MarketDay.cs" />
     <Compile Include="EodDataService\EventArgs.cs" />
     <Compile Include="EodDataService\TradeCache.cs" />
+    <Compile Include="EodDataService\EodDataService_.cs" />
+    <Compile Include="EodDataService\EodDataService_Qry.cs" />
+    <Compile Include="EodDataService\EodDataService_Restore.cs" />
     <Compile Include="FrequencyService\EventArgs.cs" />
     <Compile Include="MDBasicTracker.cs" />
     <Compile Include="DataCoreBackend\DataCoreBackend.cs" />

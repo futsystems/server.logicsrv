@@ -32,19 +32,17 @@ namespace TL_Test
             MarketDay current = null;
             MarketDay nextMarketDay = symbol.SecurityFamily.GetNextMarketDay(exTime);
             MarketDay lastMarketDay = symbol.SecurityFamily.GetLastMarketDay(exTime);
-            bool next = false;
             //当天不是交易日
             if (!mdmap.TryGetValue(exTime.ToTLDate(), out current))
             {
-                
-                //离下一个开盘时间大于5分钟 则current设定为LastMarketDay
-                if (nextMarketDay.MarketOpen.Subtract(exTime).TotalMinutes >= 5)
+                //离下一个开盘时间小于5分钟 则current设定为nextMarketDay 否则就为上一个MarketDay
+                if (nextMarketDay.MarketOpen.Subtract(exTime).TotalMinutes < 5)
                 {
-                    current = lastMarketDay;
+                    current = nextMarketDay;
                 }
                 else
                 {
-                    current = nextMarketDay;
+                    current = lastMarketDay;
                 }
             }
             else
@@ -53,16 +51,11 @@ namespace TL_Test
                 {
                     current = lastMarketDay;
                 }
-                //离下一个开盘事件大于5分钟 则为当前交易日 
-                if (nextMarketDay.MarketOpen.Subtract(exTime).TotalMinutes >= 5)
-                {
-                    current = current;
-                }
-                else
+                //离下一个开盘小于5分钟 则为下一个交易日 
+                if (nextMarketDay.MarketOpen.Subtract(exTime).TotalMinutes < 5)
                 {
                     current = nextMarketDay;
                 }
-                
             }
 
             //离开盘时间大于5分钟 则current设定为LastMarketDay
