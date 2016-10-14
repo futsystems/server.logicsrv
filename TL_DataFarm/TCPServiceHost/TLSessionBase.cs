@@ -23,11 +23,6 @@ namespace TCPServiceHost
 
         }
 
-        public override void Send(byte[] data, int offset, int length)
-        {
-            
-        }
-
         
         
     }
