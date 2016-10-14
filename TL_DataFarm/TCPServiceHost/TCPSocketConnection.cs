@@ -71,13 +71,13 @@ namespace TCPServiceHost
         /// <param name="packet"></param>
         public void Send(IPacket packet)
         {
-            lock (_obj)
-            {
-                byte[] data = packet.Data;
-                _session.Send(data, 0, data.Length);
-                //bool re = _session.TrySend(data, 0, data.Length);
-                //logger.Info(string.Format("send data lenght:{0} ret:{1}", data.Length, re));
-            }
+
+            byte[] data = packet.Data;
+            _session.Send(data, 0, data.Length);
+            //bool re = _session.TrySend(data, 0, data.Length);
+            //logger.Info(string.Format("send data lenght:{0} ret:{1}", data.Length, re));
+            
+            
         }
 
         

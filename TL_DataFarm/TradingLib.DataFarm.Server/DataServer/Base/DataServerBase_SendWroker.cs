@@ -62,18 +62,21 @@ namespace TradingLib.Common.DataFarm
             
             void ProcessSend()
             {
+                SendStruct st = null; 
                 while (_sendgo)
                 {
                     while (sendbuffer.hasItems)
                     {
                         try
                         {
-                            SendStruct st = sendbuffer.Read();
+                            st = sendbuffer.Read();
                             st.Connection.Send(st.Packet);
                         }
                         catch (Exception ex)
                         {
-                            logger.Error("Send Data Error:" + ex.ToString());
+
+                            logger.Error(string.Format("Conn:{0} Send Data:{1} Error:{2}", st.Connection.SessionID, st.Packet.ToString(), ex.ToString()));
+
                         }
                     }
                     // clear current flag signal
