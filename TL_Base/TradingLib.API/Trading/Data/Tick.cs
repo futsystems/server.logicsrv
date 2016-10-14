@@ -201,6 +201,15 @@ namespace TradingLib.API
         /// 用于定时更新报价 用于实时行情系统过滤过多盘口数据
         /// </summary>
         bool QuoteUpdate { get; set; }
+
+        bool AskUpdate { get; set; }
+
+        bool BidUpdate { get; set; }
+
+        /// <summary>
+        /// 定时发送Tick时 所使用的成交量累加器
+        /// </summary>
+        int IntervalSize { get; set; }
     }
 
     /// <summary>

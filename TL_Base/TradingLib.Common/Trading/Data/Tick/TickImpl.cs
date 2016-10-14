@@ -148,6 +148,24 @@ namespace TradingLib.Common
         /// </summary>
         public bool QuoteUpdate { get { return _quoteUpdate; } set { _quoteUpdate = value; } }
 
+
+        bool _askUpdate;
+        /// <summary>
+        /// 是否更新过盘口报价
+        /// </summary>
+        public bool AskUpdate { get { return _askUpdate; } set { _askUpdate = value; } }
+
+
+        bool _bidUpdate;
+        /// <summary>
+        /// 是否更新过盘口报价
+        /// </summary>
+        public bool BidUpdate { get { return _bidUpdate; } set { _bidUpdate = value; } }
+
+        int _intervalSize;
+
+        public int IntervalSize { get { return _intervalSize; } set { _intervalSize = value; } }
+
         /// <summary>
         /// 更新类别
         /// </summary>
@@ -210,6 +228,10 @@ namespace TradingLib.Common
 
             _marketOpen = false;
             _quoteUpdate = false;
+            _askUpdate = false;
+            _bidUpdate = false;
+            _intervalSize = 0;
+
             _updateType = "H";
 
         }
@@ -271,6 +293,10 @@ namespace TradingLib.Common
             _bidsize5 = 0;
             _marketOpen = false;
             _quoteUpdate = false;
+            _askUpdate = false;
+            _bidUpdate = false;
+            _intervalSize = 0;
+
             _updateType = "S";
 
         }
@@ -336,6 +362,9 @@ namespace TradingLib.Common
             k.MarketOpen = c.MarketOpen;
             k.QuoteUpdate = c.QuoteUpdate;
             k.UpdateType = c.UpdateType;
+            k.AskUpdate = c.AskUpdate;
+            k.BidUpdate = c.BidUpdate;
+            k.IntervalSize = c.IntervalSize;
             return k;
         }
 
