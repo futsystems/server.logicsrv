@@ -44,7 +44,7 @@ namespace TradingLib.Common.DataFarm
     /// 1.定时任务在交易所收盘后 执行收盘操作 更新交易日,结算价,持仓量等信息更新
     /// 2.分钟数据关闭时 计算结算日
     /// </summary>
-    public class EodDataService
+    public partial class EodDataService
     {
 
         ILog logger = LogManager.GetLogger("EodDataService");

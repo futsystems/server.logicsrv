@@ -7,7 +7,9 @@ using TradingLib.API;
 namespace TradingLib.Common
 {
     public static class UtilTradingRange
-    {/// <summary>
+    {
+        
+        /// <summary>
         /// 判断某个时间是否在交易小节之内
         /// 注意给定的时间为与交易时间段时区相同的时间
         /// </summary>
@@ -30,7 +32,7 @@ namespace TradingLib.Common
                 //以上通过排除法 将不在区间外的时间排除
                 return true;
             }
-            else //星期6到星期一
+            else //星期日到星期一
             {
                 if (w < range.StartDay && w > range.EndDay) return false;
                 if (w == range.StartDay && t < range.StartTime) return false;
@@ -43,6 +45,15 @@ namespace TradingLib.Common
         /// 判断交易小节上某个时间点 所属交易日
         /// 注该日期需要和对应的交易所时间一致
         /// 交易小节是一个规律性的时间段规则，需要提供具体的交易时间才可以判定交易日
+        /// Sunday = 0,
+        /// Monday = 1,
+        /// Tuesday = 2,
+        /// Wednesday = 3,
+        /// Thursday = 4,
+        /// Friday = 5,
+        /// Saturday = 6,
+        /// 
+        /// 注交易小节只属于一个交易日，如果跨越了多个交易日则无从判定交易日。不符合实际业务逻辑
         /// </summary>
         /// <param name="time"></param>
         /// <returns></returns>
