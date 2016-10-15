@@ -20,7 +20,14 @@ namespace TCPServiceHost
         
         protected override void HandleException(Exception e)
         {
+            logger.Error("ex:" + e.ToString());
+            base.HandleException(e);
+        }
 
+        protected override void OnSessionClosed(CloseReason reason)
+        {
+            logger.Info("Session Closed:" + reason.ToString());
+            base.OnSessionClosed(reason);
         }
 
         

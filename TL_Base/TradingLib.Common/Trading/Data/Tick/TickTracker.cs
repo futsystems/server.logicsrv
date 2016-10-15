@@ -136,6 +136,7 @@ namespace TradingLib.Common
                         snapshot.PreOpenInterest = k.PreOpenInterest;
                         snapshot.Settlement = k.Settlement;
                         snapshot.PreSettlement = k.PreSettlement;
+                        snapshot.Vol = k.Vol;
                         snapshot.Exchange = k.Exchange;
                         break;
                     }

@@ -156,8 +156,10 @@
     <Compile Include="Trading\MarginConfig.cs" />
     <Compile Include="Trading\MarketData.cs" />
     <Compile Include="Trading\MarketTime\MarketTime.cs" />
+    <Compile Include="Trading\MarketTime\MarketDay.cs" />
     <Compile Include="Trading\MarketTime\TradingRange.cs" />
     <Compile Include="Stock\PowerData.cs" />
+    <Compile Include="Trading\MarketTime\UtilTradingRange.cs" />
     <Compile Include="Trading\Settlement\AccountSettlement.cs" />
     <Compile Include="Trading\Settlement\CashTransactionImpl.cs" />
     <Compile Include="Trading\Settlement\ExchangeSettlement.cs" />

@@ -62,6 +62,15 @@ namespace TradingLib.Common.DataFarm
         }
 
         /// <summary>
+        /// 判定当前连接是否有效
+        /// </summary>
+        /// <param name="sessionId"></param>
+        /// <returns></returns>
+        bool IsConnectionRegisted(string sessionId)
+        {
+            return connectionMap.Keys.Contains(sessionId);
+        }
+        /// <summary>
         /// 添加连接
         /// </summary>
         /// <param name="conn"></param>

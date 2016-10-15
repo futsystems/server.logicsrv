@@ -670,6 +670,8 @@ namespace TradingLib.Common
                         sb.Append(d);
                         sb.Append(k.PreClose);
                         sb.Append(d);
+                        sb.Append(k.Vol);
+                        sb.Append(d);
                         sb.Append(k.OpenInterest);
                         sb.Append(d);
                         sb.Append(k.PreOpenInterest);
@@ -839,12 +841,13 @@ namespace TradingLib.Common
                         k.High = decimal.Parse(r[8]);
                         k.Low = decimal.Parse(r[9]);
                         k.PreClose = decimal.Parse(r[10]);
-                        k.OpenInterest = int.Parse(r[11]);
-                        k.PreOpenInterest = int.Parse(r[12]);
-                        k.Settlement = decimal.Parse(r[13]);
-                        k.PreSettlement = decimal.Parse(r[14]);
-                        k.Exchange = r[15];
-                        k.MarketOpen = bool.Parse(r[16]);
+                        k.Vol = int.Parse(r[11]);
+                        k.OpenInterest = int.Parse(r[12]);
+                        k.PreOpenInterest = int.Parse(r[13]);
+                        k.Settlement = decimal.Parse(r[14]);
+                        k.PreSettlement = decimal.Parse(r[15]);
+                        k.Exchange = r[16];
+                        k.MarketOpen = bool.Parse(r[17]);
                         break;
                     }
                 case "T":

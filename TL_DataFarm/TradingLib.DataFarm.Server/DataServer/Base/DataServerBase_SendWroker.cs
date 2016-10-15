@@ -59,7 +59,15 @@ namespace TradingLib.Common.DataFarm
                 NewSend();
             }
 
-            
+
+            int getRequestId(IPacket packet)
+            {
+                if (packet is RspResponsePacket)
+                {
+                    return (packet as RspResponsePacket).RequestID;
+                }
+                return 0;
+            }
             void ProcessSend()
             {
                 SendStruct st = null; 
@@ -70,12 +78,18 @@ namespace TradingLib.Common.DataFarm
                         try
                         {
                             st = sendbuffer.Read();
-                            st.Connection.Send(st.Packet);
+
+                            if (IsConnectionRegisted(st.Connection.SessionID))
+                            {
+                                st.Connection.Send(st.Packet);
+                            }
                         }
                         catch (Exception ex)
                         {
 
                             logger.Error(string.Format("Conn:{0} Send Data:{1} Error:{2}", st.Connection.SessionID, st.Packet.ToString(), ex.ToString()));
+
+                            logger.Error(string.Format("RequestID:{0} BufferSize:{1}", getRequestId(st.Packet), sendbuffer.BufferSize));
 
                         }
                     }

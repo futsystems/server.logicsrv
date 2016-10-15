@@ -24,10 +24,22 @@ namespace TradingLib.Common.DataFarm
             //ConfigFile _configFile = ConfigFile.GetConfigFile("DataCore.cfg");
             DBHelper.InitDBConfig(ConfigFile["DBAddress"].AsString(), ConfigFile["DBPort"].AsInt(), ConfigFile["DBName"].AsString(), ConfigFile["DBUser"].AsString(), ConfigFile["DBPass"].AsString());
 
-
+            //初始化交易所
             foreach (var exchange in MDBasicTracker.ExchagneTracker.Exchanges)
             {
                 logger.Info("Exchange:" + exchange.EXCode);
+                //DateTime extime = exchange.GetExchangeTime();//获得交易所时间
+                //TradingRange range = sec.MarketTime.JudgeRange(extime);//根据交易所时间判定当前品种所属交易小节
+
+            }
+
+            foreach (var security in MDBasicTracker.SecurityTracker.Securities)
+            {
+                DateTime extime = security.Exchange.GetExchangeTime();//获得交易所当前时间
+
+                //TradingRange range = security.MarketTime.JudgeRange(extime);//判定当前时间所在交易小节
+
+                
             }
 
             
