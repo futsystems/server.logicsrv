@@ -57,17 +57,21 @@ namespace TradingLib.Common
 
         public override string ToString()
         {
-            return string.Format("{0}-{2}", this.Start.ToString("MM/dd HHmm"), this.End.ToString("MM/dd HHmm"));
+            return string.Format("{0}-{1}", this.Start.ToString("MM/dd HH:mm"), this.End.ToString("MM/dd HH:mm"));
         }
     }
 
 
     /// <summary>
     /// 交易日对象
-    /// 用于定义一个交易 并界定对应的交易小节
+    /// 用于定义一个交易日 并界定对应的交易小节
     /// 
     /// 系统运行时 对应交易所开盘时间点执行定时任务 判定当前是否交易如果不交易则不执行初始化操作，如果是交易则执行初始化操作
     /// 并加载当前交易信息将TradingDay执行初始化
+    /// 
+    /// 由于交易所收盘时刻以及节假日，周末等情况，会导致交易所交易日与常规的自然日有很大不同
+    /// 比如原油 星期日下午18点开始进入交易 到星期一下午17点结束，交易记录的结算日都记到星期一
+    /// 比如上期所 星期五夜盘-星期六凌晨 的交易记录的结算日都记到星期一
     /// </summary>
     public class MarketDay
     {
@@ -90,7 +94,42 @@ namespace TradingLib.Common
 
         SortedDictionary<long, MarketSession> marketSessionMap = new SortedDictionary<long, MarketSession>();
 
+        /// <summary>
+        /// 开盘时间
+        /// </summary>
+        public DateTime MarketOpen
+        {
+            get
+            {
+                if (marketSessionMap.Count == 0)
+                    throw new Exception("MarketDay have no session avabile");
+                return marketSessionMap.First().Value.Start;
+            }
+        }
 
+        /// <summary>
+        /// 判定某个时间是否在交易日内
+        /// </summary>
+        /// <param name="datetime"></param>
+        /// <returns></returns>
+        public bool IsInMarketDay(DateTime datetime)
+        {
+            if (datetime > this.MarketClose) return false;
+            if (datetime < this.MarketOpen) return false;
+            return true;
+        }
+        /// <summary>
+        /// 收盘时间
+        /// </summary>
+        public DateTime MarketClose
+        {
+            get
+            {
+                if (marketSessionMap.Count == 0)
+                    throw new Exception("MarketDay have no session avabile");
+                return marketSessionMap.Last().Value.End;
+            }
+        }
 
         public void Init(int tradingday, IEnumerable<MarketSession> sessionList)
         {
@@ -102,6 +141,12 @@ namespace TradingLib.Common
                 marketSessionMap.Add(session.TimeKey, session);
             }
         }
+
+        public void AddSession(MarketSession ms)
+        {
+            marketSessionMap.Add(ms.TimeKey, ms);
+        }
+
 
         public override string ToString()
         {

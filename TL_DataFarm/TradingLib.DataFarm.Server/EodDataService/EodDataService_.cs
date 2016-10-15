@@ -65,9 +65,86 @@ namespace TradingLib.Common.DataFarm
                     if (range.StartDay == range.EndDay)
                     {
                         if (range.SettleFlag == QSEnumRangeSettleFlag.T)
+                        {
                             dayRangeMap[range.EndDay].Add(range);
+                        }
+                        if (range.SettleFlag == QSEnumRangeSettleFlag.T1)
+                        {
+                            DayOfWeek nextday;
+                            if (range.StartDay == DayOfWeek.Saturday)
+                            {
+                                nextday = DayOfWeek.Sunday;
+                            }
+                            else
+                            {
+                                nextday = (range.StartDay + 1);
+                            }
+                            while (!dayRangeMap.Keys.Contains(nextday))
+                            {
+                                if (nextday == DayOfWeek.Saturday)
+                                {
+                                    nextday = DayOfWeek.Sunday;
+                                }
+                                else
+                                {
+                                    nextday += 1;
+                                }
+                            }
+                            dayRangeMap[nextday].Add(range);
+                        }
+                    }
+                    else if (range.StartDay < range.EndDay)//开始时间小于结束时间
+                    {
+           
+                        if (range.SettleFlag == QSEnumRangeSettleFlag.T1)
+                        {
+                            DayOfWeek nextday;
+                            if (range.StartDay == DayOfWeek.Saturday)
+                            {
+                                nextday = DayOfWeek.Sunday;
+                            }
+                            else
+                            {
+                                nextday = (range.StartDay + 1);
+                            }
+                            while (!dayRangeMap.Keys.Contains(nextday))
+                            {
+                                if (nextday == DayOfWeek.Saturday)
+                                {
+                                    nextday = DayOfWeek.Sunday;
+                                }
+                                else
+                                {
+                                    nextday += 1;
+                                }
+                            }
+                            dayRangeMap[nextday].Add(range);
+                        }
+
+                        //当跨越了2个weekday 则不可能是T如果是T表示明天交易日的交易 会进入第jint天.
+                        //只有前一天的交易日 算入今天 没有明天的交易算入今天
                     }
 
+                }
+
+                DateTime exTime = security.Exchange.GetExchangeTime();//当前交易所日期
+                //列出该日期前后各10天对应的MarketDay
+                DateTime start = exTime.AddDays(-10);
+                DateTime end = exTime.AddDays(10);
+
+
+                //2.根据当前处于周几 就可以得知当天是否是交易日
+                DayOfWeek currentday = security.Exchange.GetExchangeTime().DayOfWeek;
+
+
+                if (!dayRangeMap.Keys.Contains(currentday))//?还是要根据具体的交易小节来判定当天的情况
+                {
+                    //当前不是交易日 直接加载上一个交易日数据
+
+                }
+                else
+                { 
+                    //将交易小节映射成具体的MarektSession 包含具体的时间 然后再进行时间判定
                 }
             }
         }

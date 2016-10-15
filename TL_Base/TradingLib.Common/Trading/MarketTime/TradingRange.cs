@@ -143,6 +143,10 @@ namespace TradingLib.Common
             }
         }
 
+        public override string ToString()
+        {
+            return RangeKey;
+        }
         public override int GetHashCode()
         {
             return RangeKey.GetHashCode();

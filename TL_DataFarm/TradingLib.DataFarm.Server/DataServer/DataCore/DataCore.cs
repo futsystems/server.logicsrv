@@ -35,11 +35,128 @@ namespace TradingLib.Common.DataFarm
 
             foreach (var security in MDBasicTracker.SecurityTracker.Securities)
             {
-                DateTime extime = security.Exchange.GetExchangeTime();//获得交易所当前时间
+                MarketTime mt = security.MarketTime as MarketTime;
 
-                //TradingRange range = security.MarketTime.JudgeRange(extime);//判定当前时间所在交易小节
+                Dictionary<DayOfWeek, List<TradingRange>> dayRangeMap = new Dictionary<DayOfWeek, List<TradingRange>>();
+                //遍历所有收盘小节 有收盘的weekday就是有交易日的
+                foreach (var range in mt.RangeList.Values.Where(rg => rg.MarketClose))
+                {
+                    dayRangeMap.Add(range.EndDay, new List<TradingRange>());
+                }
 
+                //将交易小节放到交易日列表中
+                foreach (var range in mt.RangeList.Values)
+                {
+                    if (range.StartDay == range.EndDay)
+                    {
+                        if (range.SettleFlag == QSEnumRangeSettleFlag.T)
+                        {
+                            dayRangeMap[range.EndDay].Add(range);
+                        }
+                        if (range.SettleFlag == QSEnumRangeSettleFlag.T1)
+                        {
+                            DayOfWeek nextday;
+                            if (range.StartDay == DayOfWeek.Saturday)
+                            {
+                                nextday = DayOfWeek.Sunday;
+                            }
+                            else
+                            {
+                                nextday = (range.StartDay + 1);
+                            }
+                            while (!dayRangeMap.Keys.Contains(nextday))
+                            {
+                                if (nextday == DayOfWeek.Saturday)
+                                {
+                                    nextday = DayOfWeek.Sunday;
+                                }
+                                else
+                                {
+                                    nextday += 1;
+                                }
+                            }
+                            dayRangeMap[nextday].Add(range);
+                        }
+                    }
+                    else if (range.StartDay < range.EndDay)//开始时间小于结束时间
+                    {
+
+                        if (range.SettleFlag == QSEnumRangeSettleFlag.T1)
+                        {
+                            DayOfWeek nextday;
+                            if (range.StartDay == DayOfWeek.Saturday)
+                            {
+                                nextday = DayOfWeek.Sunday;
+                            }
+                            else
+                            {
+                                nextday = (range.StartDay + 1);
+                            }
+                            while (!dayRangeMap.Keys.Contains(nextday))
+                            {
+                                if (nextday == DayOfWeek.Saturday)
+                                {
+                                    nextday = DayOfWeek.Sunday;
+                                }
+                                else
+                                {
+                                    nextday += 1;
+                                }
+                            }
+                            dayRangeMap[nextday].Add(range);
+                        }
+
+                        //当跨越了2个weekday 则不可能是T如果是T表示明天交易日的交易 会进入第jint天.
+                        //只有前一天的交易日 算入今天 没有明天的交易算入今天
+                    }
+
+                }
+                //当前交易所日期 列出该日期前后各10天对应的MarketDay
+                DateTime exTime = security.Exchange.GetExchangeTime();
+                DateTime start= exTime.AddDays(-10);
+                DateTime end = exTime.AddDays(10);
+
+                DateTime date = start;
+                Dictionary<int, MarketDay> marketDayMap = new Dictionary<int, MarketDay>();
+                while (date <= end)
+                {
+                    DayOfWeek dayofweek = date.DayOfWeek;
+                    List<TradingRange> rangelist = null;
+                    //如果当前日期是交易日 则通过tradinglist 生成MarketDay
+                    if(dayRangeMap.TryGetValue(dayofweek,out rangelist))
+                    {
+                        int tradingday = date.ToTLDate();
+                        MarketDay md = new MarketDay();
+                        md.TradingDay = tradingday;
+                        DateTime sstart, send;
+                        foreach (var range in rangelist)
+                        {
+                            DateTime seek = date;
+                            while (seek.DayOfWeek != range.StartDay)
+                            {
+                                seek = seek.AddDays(-1);
+                            }
+                            sstart = Util.ToDateTime(seek.ToTLDate(), range.StartTime);
+                            seek = date;
+                            while (seek.DayOfWeek != range.EndDay)
+                            {
+                                seek = seek.AddDays(-1);
+                            }
+                            send = Util.ToDateTime(seek.ToTLDate(), range.EndTime);
+
+                            MarketSession ms = new MarketSession(sstart, send);
+                            md.AddSession(ms);
+                        }
+                        marketDayMap.Add(md.TradingDay, md);
+                        DateTime d = md.MarketOpen;
+                    }
+                    date = date.AddDays(1);
+                }
                 
+                //获得单个品种的前后若干天的MarketDay信息 通过这些MarketDay信息 我们可以判定当前时间是处于MarketDay中 还是不处于MarketDay
+                
+
+                int i = 0;
             }
 
             
