@@ -14,7 +14,7 @@ namespace TCPServiceHost
         ILog logger = LogManager.GetLogger("TLSession");
         protected override void OnSessionStarted()
         {
-            logger.Info("Session Started");
+            logger.Info(string.Format("Session:{0} Started", this.SessionID));
         }
 
         
@@ -26,9 +26,11 @@ namespace TCPServiceHost
 
         protected override void OnSessionClosed(CloseReason reason)
         {
-            logger.Info("Session Closed:" + reason.ToString());
+            logger.Info(string.Format("Session:{0} Closed:{1}", this.SessionID, reason));
             base.OnSessionClosed(reason);
         }
+
+        
 
         
         
