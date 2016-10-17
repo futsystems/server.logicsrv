@@ -173,6 +173,19 @@ namespace TradingLib.Common.DataFarm
             
             IEnumerable<string> secCodeList = seclist.Select(sec=>sec.Code);
             logger.Info(string.Format("Open Market for securities:{0}", string.Join(",", secCodeList.ToArray())));
+            //更新品种当前MarketDay
+            foreach (var sec in seclist)
+            {
+                Dictionary<int, MarketDay> mdMap = null;
+                //更新MarketDay
+                MarketDay current = GetCurrentMarketDay(sec,10,out mdMap);
+                MarketDay old = currentMarketDayMap[sec.Code];
+                currentMarketDayMap[sec.Code] = current;
+                lasttMarketDaysMap[sec.Code] = mdMap;
+                logger.Info(string.Format("Secirotu:{0} MarketDay Move From {1} To {2}", sec.Code, old, current));
+            }
+
+
             //处理单个合约事务
             foreach (var symbol in MDBasicTracker.SymbolTracker.Symbols.Where(sym => secCodeList.Contains(sym.SecurityFamily.Code)))
             { 
@@ -186,20 +199,19 @@ namespace TradingLib.Common.DataFarm
                     tradeMap.Add(symbol.UniqueKey, cache);
                 }
                 cache.Clear();
+
+                MinuteDataCache mdcache = null;
+                if (minutedataMap.TryGetValue(symbol.UniqueKey, out mdcache))
+                { 
+                    //将原来的数据放入历史缓存 系统会提供多日分时数据查询
+                }
+                mdcache = new MinuteDataCache(symbol, GetCurrentMarketDay(symbol.SecurityFamily));
+                mdcache.RestoreMinuteData(new List<BarImpl>());//执行Restore操作 否则后面会不响应实时数据
+                minutedataMap[symbol.UniqueKey] = mdcache;
             
                 //初始化Eod数据
             }
-            //更新品种当前MarketDay
-            foreach (var sec in seclist)
-            {
-                Dictionary<int, MarketDay> mdMap = null;
-                //更新MarketDay
-                MarketDay current = GetCurrentMarketDay(sec,10,out mdMap);
-                MarketDay old = currentMarketDayMap[sec.Code];
-                currentMarketDayMap[sec.Code] = current;
-                lasttMarketDaysMap[sec.Code] = mdMap;
-                logger.Info(string.Format("Secirotu:{0} MarketDay Move From {1} To {2}", sec.Code, old, current));
-            }
+            
         }
     }
 }
