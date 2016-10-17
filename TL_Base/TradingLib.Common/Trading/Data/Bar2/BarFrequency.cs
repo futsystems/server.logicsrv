@@ -137,6 +137,12 @@ namespace TradingLib.Common
             return false;
         }
 
+        static BarFrequency _minute = new BarFrequency(BarInterval.CustomTime, 60);
+        public static BarFrequency Minute { get { return _minute; } }
+
+        static BarFrequency _day = new BarFrequency(BarInterval.Day, 1);
+        public static BarFrequency Day { get { return _day; } }
+
         public override string ToString()
         {
             return "Freq Type:" + this.Type.ToString() + " Interval:" + this.Interval.ToString();

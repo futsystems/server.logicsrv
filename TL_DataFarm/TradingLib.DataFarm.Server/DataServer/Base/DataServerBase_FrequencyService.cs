@@ -32,8 +32,11 @@ namespace TradingLib.Common.DataFarm
         {
             //更新Partial数据
             this.UpdateRealPartialBar(obj.Symbol, obj.PartialBar);
-            //更新EOD数据
-            this.eodservice.On1MinPartialBarUpdate(obj.Symbol, obj.PartialBar);
+            if (obj.PartialBar.GetBarFrequency() == BarFrequency.Minute)
+            {
+                //更新EOD数据
+                this.eodservice.On1MinPartialBarUpdate(obj.Symbol, obj.PartialBar);
+            }
         }
 
 
@@ -84,8 +87,11 @@ namespace TradingLib.Common.DataFarm
             {
                 //保存到数据集
                 this.UpdateBar2(obj.Symbol, obj.Bar);
-                //更新EOD数据
-                this.eodservice.On1MinBarClose(obj.Symbol, obj.Bar);
+                if (obj.Bar.GetBarFrequency() == BarFrequency.Minute)
+                {
+                    //更新EOD数据
+                    this.eodservice.On1MinBarClose(obj.Symbol, obj.Bar);
+                }
             }
             
         }
