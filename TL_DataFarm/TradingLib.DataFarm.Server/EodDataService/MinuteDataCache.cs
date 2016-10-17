@@ -87,33 +87,11 @@ namespace TradingLib.Common.DataFarm
         /// <param name="k"></param>
         public void RestoreMinuteData(List<BarImpl> barList)
         {
-            //lock (_object)
-            //{
                 foreach (var bar in barList)
                 {
                     GotBar(bar);
                 }
-                //Tick lastTick = TradeList.LastOrDefault();
-                ////没有恢复到任何历史Tick 则将临时Tick列表中的所有Tick数据导入
-                //if (lastTick == null)
-                //{
-                //    foreach (var k in tmpList)
-                //    {
-                //        GotTick(k);
-                //    }
-                //}
-                //else
-                //{
-                //    foreach (var k in tmpList)
-                //    {
-                //        if (k.Vol > lastTick.Vol)//利用总成交量进行拼接数据 总成交量大于 恢复Tick的最后一个Tick的成交量 的所有Tick合并到列表中
-                //        {
-                //            GotTick(k);
-                //        }
-                //    }
-                //}
                 restored = true;
-            //}
         }
 
         void GotBar(Bar bar)
@@ -127,29 +105,23 @@ namespace TradingLib.Common.DataFarm
                 target.Close = bar.Close;
                 target.Vol = bar.Volume;
                 target.AvgPrice = 0;
-                long dt = bar.EndTime.ToTLDateTime();
-                if (dt > _latestBarKey)
-                {
-                    _latestBarKey = dt;
-                }
 
-                int idx = locationMap[key];
-                for(int i=idx-1;i>=0;i--)
+                if (key > _latestBarKey)
                 {
-                    MinuteData md = this.MinuteDataMap.ElementAt(i).Value;
-                    if (md.Vol == 0)
-                    {
-                        md.Close = target.Close;
-                    }
-                    else
-                    {
-                        break;
-                    }
+                    _latestBarKey = key;
                 }
-                
-                //foreach (var cache in this.MinuteDataMap.Where(p => p.Key < _latestBarKey))
-                //{ 
-                
+                //int idx = locationMap[key];
+                //for(int i=idx-1;i>=0;i--)
+                //{
+                //    MinuteData md = this.MinuteDataMap.ElementAt(i).Value;
+                //    if (md.Vol == 0)
+                //    {
+                //        md.Close = target.Close;
+                //    }
+                //    else
+                //    {
+                //        break;
+                //    }
                 //}
             }
         }
