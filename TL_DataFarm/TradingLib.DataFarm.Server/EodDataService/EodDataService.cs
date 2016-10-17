@@ -233,6 +233,13 @@ namespace TradingLib.Common.DataFarm
             {
                 eodPendingMinPartialBarMap[symbol.UniqueKey] = bar;
             }
+
+            MinuteDataCache cache = null;
+            if (minutedataMap.TryGetValue(symbol.UniqueKey, out cache))
+            {
+                cache.On1MinBarClosed(bar);
+            }
+
         }
 
         /// <summary>
@@ -280,6 +287,14 @@ namespace TradingLib.Common.DataFarm
                 }
                 list.Add(bar);
             }
+
+            MinuteDataCache cache = null;
+            if (minutedataMap.TryGetValue(symbol.UniqueKey, out cache))
+            {
+                cache.On1MinBarClosed(bar);
+            }
+
+
         }
 
         /// <summary>

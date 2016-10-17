@@ -139,10 +139,10 @@ namespace TradingLib.Common.DataFarm
                     }
                 }
                 
-                foreach (var cache in this.MinuteDataMap.Where(p => p.Key < _latestBarKey))
-                { 
+                //foreach (var cache in this.MinuteDataMap.Where(p => p.Key < _latestBarKey))
+                //{ 
                 
-                }
+                //}
             }
         }
 
