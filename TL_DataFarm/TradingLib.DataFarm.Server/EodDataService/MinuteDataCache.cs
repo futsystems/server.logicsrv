@@ -94,12 +94,19 @@ namespace TradingLib.Common.DataFarm
                 restored = true;
         }
 
+        /// <summary>
+        /// 实时Bar数据生成服务 需要过滤非1分钟周期的数据 否则1小时Bar进来会将最近的事件更新到1小时周期上， 获得图像就是右侧有一条水平线
+        /// </summary>
+        /// <param name="bar"></param>
         void GotBar(Bar bar)
         {
             MinuteData target = null;
             //找到对应的分时数据更新数值
             long key = bar.EndTime.ToTLDateTime();
-            
+            if (key == 20161016191800)
+            {
+                int x = 0;
+            }
             if (this.MinuteDataMap.TryGetValue(bar.EndTime.ToTLDateTime(), out target))
             {
                 target.Close = bar.Close;
@@ -110,8 +117,40 @@ namespace TradingLib.Common.DataFarm
                 {
                     _latestBarKey = key;
                 }
-                //int idx = locationMap[key];
-                //for(int i=idx-1;i>=0;i--)
+                //获得当前序号
+                int idx = locationMap[key];
+
+                //当天第一分钟直接赋值,其余的需要检查前面的数据 是否为空
+                if (idx != 0)
+                {
+                    List<MinuteData> zeroDataList = new List<MinuteData>();
+                    MinuteData firstValueData = null;
+                    for (int i = idx - 1; i >= 0; i--)
+                    {
+                        MinuteData md = this.MinuteDataMap.ElementAt(i).Value;
+                        if (md.Vol == 0)
+                        {
+                            zeroDataList.Add(md);
+                        }
+                        else //中间没有间隔有数据记录，前面的空的数据对象已被填充，遇到有数据的直接跳出
+                        {
+                            firstValueData = md;
+                            break;
+                        }
+                    }
+                    if (firstValueData != null)
+                    {
+                        foreach (var d in zeroDataList)
+                        {
+                            d.Close = firstValueData.Close;
+                        }
+                    }
+                    else//当前值前面所有的数据都没有 则取昨日收盘价/结算价
+                    { 
+                        
+                    }
+                }
+
                 //{
                 //    MinuteData md = this.MinuteDataMap.ElementAt(i).Value;
                 //    if (md.Vol == 0)
