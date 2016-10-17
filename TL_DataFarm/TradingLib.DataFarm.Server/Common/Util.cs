@@ -11,7 +11,7 @@ namespace TradingLib.Common.DataFarm
 {
     public class MDUtil
     {
-        static ILog logger = LogManager.GetLogger("Util");
+        //static ILog logger = LogManager.GetLogger("Util");
         /// <summary>
         /// 从Tick目录加载某个时间段之间的所有Tick数据
         /// </summary>
@@ -28,7 +28,7 @@ namespace TradingLib.Common.DataFarm
             while (current<= endDate)
             {
                 string fn = TikWriter.GetTickFileName(path, symbol.Symbol, current.ToTLDate());
-                logger.Info("Tick file:" + fn);
+                //logger.Info("Tick file:" + fn);
                 //如果该Tick文件存在
                 if (File.Exists(fn))
                 {

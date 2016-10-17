@@ -170,6 +170,9 @@ namespace TradingLib.Common.DataFarm
             {
                 On1MinPartialBarUpdate(task.Symbol,partialBar);
             }
+
+            //恢复分时数据 分时数据需要等待1分钟数据恢复完毕后才可以完全加载
+            this.RestoreMinuteData(task.Symbol);
         }
         
 

@@ -204,95 +204,25 @@ namespace TradingLib.Common.DataFarm
         void BackFillSymbol(RestoreTask task)
         {
             Symbol symbol = task.Symbol;
-            //DateTime start = task.Intraday1MinHistBarEnd;
             DateTime start = TimeFrequency.RoundTime(task.Intraday1MinHistBarEnd, TimeSpan.FromHours(1));//获得该1分钟Bar对应1小时周期的开始 这样可以恢复所有周期对应的Bar数据
             DateTime end = task.First1MinRoundtime;
-
-            //遍历start和end之间所有tickfile进行处理
-            long lstart = start.ToTLDateTime();
-            long lend = end.ToTLDateTime();
-
-            //获得Tick文件的开始和结束日期
-            //int tickstart = -1;
-            //int tickend = -1;
             string path = TikWriter.GetTickPath(_basedir, symbol.Exchange, symbol.Symbol);
-            //if (TikWriter.HaveAnyTickFiles(path, symbol.Symbol))
-            //{
-            //    tickend = TikWriter.GetEndTickDate(path, symbol.Symbol);
-            //    tickstart = TikWriter.GetStartTickDate(path, symbol.Symbol);
-            //}
-
-            logger.Info(string.Format("BackFill Symbol:{0} Start:{1} End:{2}", task.Symbol.Symbol, start, end));
-
-            ////如果tickfile 开始时间大于数据库加载Bar对应的最新更新时间 则将开始时间设置为tick文件开始时间
-            //DateTime current = start;
-            //if (tickstart > current.ToTLDate())
-            //{
-            //    current = Util.ToDateTime(tickstart, 0);
-            //}
-
-            ////取tickfile结束时间和end中较小的一个日期为 tick回放结束日期
-            //int enddate = Math.Min(tickend, end.ToTLDate());
 
             //tick数据缓存
             List<Tick> tmpticklist = MDUtil.LoadTick(path, symbol, start,end);
-
-            //while (current.ToTLDate() <= enddate)
-            //{
-            //    string fn = TikWriter.GetTickFileName(path, symbol.Symbol, current.ToTLDate());
-            //    logger.Info("File:" + fn);
-            //    //如果该Tick文件存在
-            //    if (File.Exists(fn))
-            //    {
-            //        //实例化一个文件流--->与写入文件相关联  
-            //        using (FileStream fs = new FileStream(fn, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
-            //        {
-            //            //实例化一个StreamWriter-->与fs相关联  
-            //            using (StreamReader sw = new StreamReader(fs))
-            //            {
-            //                while (sw.Peek() > 0)
-            //                {
-            //                    string str = sw.ReadLine();
-            //                    if (string.IsNullOrEmpty(str))
-            //                        continue;
-            //                    Tick k = TickImpl.Deserialize2(str);
-            //                    k.Symbol = symbol.Symbol;
-            //                    DateTime ticktime = k.DateTime();
-            //                    //如果Tick时间在开始与结束之间 则需要回放该Tick数据 需要确保在盘中重启后 在start和end之间的所有数据均加载完毕
-                               
-            //                    if (ticktime >= start && ticktime < end)
-            //                    {
-            //                        tmpticklist.Add(k);
-            //                    }
-            //                }
-            //                sw.Close();
-            //            }
-            //            fs.Close();
-            //        }
-            //    }
-            //    current = current.AddDays(1);
-            //}
-
             //如果没有历史Tick数据则不用添加TimeTick用于关闭Bar
             if (tmpticklist.Count > 0)
             {
-                DateTime dt = task.First1MinRoundtime;//Intraday1MinRealBarStart;
-                //Tick加载结束时间为FirstRealBar的结束时间 因此需要用TimeTick进行驱动将FristRealBar进行关闭
-                //处于MarketClose状态 直接汇率历史数据 此时firstRealBar还没有产生,对应的时间为最大值时间 将目标时间修改为最后一个Bar的时间
-                if (dt == DateTime.MaxValue)
-                { 
-                    Tick k = tmpticklist.Last();
-                    dt = Util.ToDateTime(k.Date, k.Time);
-                }
+                DateTime dt = task.First1MinRoundtime;
                 Tick timeTick = TickImpl.NewTimeTick(task.Symbol, dt);
                 tmpticklist.Add(timeTick);
             }
 
-            //处理缓存中的Tick数据
-            logger.Info("{0} need process {1} Ticks".Put(symbol.Symbol, tmpticklist.Count));
+            logger.Info(string.Format("BackFill Symbol:{0} Start:{1} End:{2} Tick CNT:{3}", task.Symbol.Symbol, start, end, tmpticklist.Count));
 
             //处理历史Tick之前 执行Clear 将原来历史Bar中某个合约的数据清空掉，避免之前Tick恢复造成的脏数据
             restoreFrequencyMgr.Clear(task.Symbol);
+            
             //Feed Tick
             foreach (var k in tmpticklist)
             {
@@ -329,7 +259,6 @@ namespace TradingLib.Common.DataFarm
         void OnNewHistFreqKeyBarEvent(FrequencyManager.FreqKey arg1, SingleBarEventArgs arg2)
         {
             //logger.Info(string.Format("Bar Restored Freq:{0} Bar:{1}", arg1.Settings.BarFrequency.ToUniqueId(), arg2.Bar));
-
             if (NewHistBarEvent != null)
             {
                 //arg2.Bar.TradingDay = GetTradingDay(arg1.Symbol.SecurityFamily,arg2.Bar.EndTime);

@@ -33,7 +33,7 @@ namespace TradingLib.Common.DataFarm
                 //if (symbol.Symbol != "CLX6") continue;
                 this.RestoreTick(symbol);
 
-                this.RestoreMinuteData(symbol);
+                
             }
         }
 
@@ -57,7 +57,6 @@ namespace TradingLib.Common.DataFarm
             MinuteDataCache cache = null;
             if (minutedataMap.TryGetValue(symbol.UniqueKey, out cache))
             { 
-                //
                 List<BarImpl> barlist = _store.QryBar(symbol, BarInterval.CustomTime, 60, cache.MarketDay.MarketOpen, cache.MarketDay.MarketClose, 0, 0, false, true);
                 cache.RestoreMinuteData(barlist);
             }
