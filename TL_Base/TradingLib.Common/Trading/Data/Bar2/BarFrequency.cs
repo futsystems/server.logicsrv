@@ -127,6 +127,15 @@ namespace TradingLib.Common
             return;
         }
 
+        public static bool operator ==(BarFrequency a, BarFrequency b)
+        {
+            return a.Equals(b);
+        }
+        public static bool operator !=(BarFrequency a, BarFrequency b)
+        {
+            return !a.Equals(b);
+        } 
+
         public override bool Equals(object obj)
         {
             if (obj is BarFrequency)

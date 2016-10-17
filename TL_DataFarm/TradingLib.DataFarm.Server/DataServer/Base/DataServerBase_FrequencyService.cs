@@ -32,7 +32,7 @@ namespace TradingLib.Common.DataFarm
         {
             //更新Partial数据
             this.UpdateRealPartialBar(obj.Symbol, obj.PartialBar);
-            if (obj.PartialBar.GetBarFrequency() == BarFrequency.Minute)
+            if (obj.PartialBar.GetBarFrequency()==BarFrequency.Minute)
             {
                 //更新EOD数据
                 this.eodservice.On1MinPartialBarUpdate(obj.Symbol, obj.PartialBar);

@@ -103,10 +103,6 @@ namespace TradingLib.Common.DataFarm
             MinuteData target = null;
             //找到对应的分时数据更新数值
             long key = bar.EndTime.ToTLDateTime();
-            if (key == 20161016191800)
-            {
-                int x = 0;
-            }
             if (this.MinuteDataMap.TryGetValue(bar.EndTime.ToTLDateTime(), out target))
             {
                 target.Close = bar.Close;
@@ -150,18 +146,6 @@ namespace TradingLib.Common.DataFarm
                         
                     }
                 }
-
-                //{
-                //    MinuteData md = this.MinuteDataMap.ElementAt(i).Value;
-                //    if (md.Vol == 0)
-                //    {
-                //        md.Close = target.Close;
-                //    }
-                //    else
-                //    {
-                //        break;
-                //    }
-                //}
             }
         }
 
