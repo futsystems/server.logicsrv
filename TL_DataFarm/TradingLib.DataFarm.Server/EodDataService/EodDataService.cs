@@ -240,7 +240,7 @@ namespace TradingLib.Common.DataFarm
             MinuteDataCache cache = null;
             if (minutedataMap.TryGetValue(symbol.UniqueKey, out cache))
             {
-                cache.On1MinBarClosed(bar);
+                cache.On1MinPartialBarUpdate(bar);
             }
 
         }
