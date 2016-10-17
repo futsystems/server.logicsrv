@@ -25,7 +25,7 @@ namespace TradingLib.Common.DataFarm
             DateTime current = startDate;
             //tick数据缓存
             List<Tick> tmpticklist = new List<Tick>();
-            while (current<= endDate)
+            while (current.ToTLDate()<= endDate.ToTLDate())//20171011103000 - 20171012093000 比较时间不能包含时间否则最后一天数据无法加载
             {
                 string fn = TikWriter.GetTickFileName(path, symbol.Symbol, current.ToTLDate());
                 //logger.Info("Tick file:" + fn);

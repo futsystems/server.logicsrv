@@ -220,7 +220,7 @@ namespace TradingLib.Common
 
         public override string ToString()
         {
-            return string.Format("{7}/{6} {0}-OHLC({1},{2},{3},{4},{5})", this.Symbol, this.Open, this.High, this.Low, this.Close, this.Volume, this.EndTime.ToTLDateTime(),this.TradingDay);
+            return string.Format("{6} {0}-OHLC({1},{2},{3},{4},{5})", this.Symbol, this.Open, this.High, this.Low, this.Close, this.Volume, this.EndTime.ToTLDateTime());
         }
 
         #region 读写Bar不能修改 否则会造成数据格式不兼容
