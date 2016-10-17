@@ -173,7 +173,7 @@ namespace TradingLib.Common.DataFarm
                         //没有对应行情源的时间 则不执行后续操作
                         if (dftime == null) continue;
 
-                        //if (item.Symbol.Symbol != "CLX6") continue;
+                        if (item.Symbol.Symbol != "CLX6") continue;
                         if (dftime.Cover1Minute)
                         {
                             item.First1MinRoundtime = dftime.First1MinRoundEnd;
@@ -259,7 +259,7 @@ namespace TradingLib.Common.DataFarm
         /// <param name="arg2"></param>
         void OnNewHistFreqKeyBarEvent(FrequencyManager.FreqKey arg1, SingleBarEventArgs arg2)
         {
-            //logger.Info(string.Format("Bar Restored Freq:{0} Bar:{1}", arg1.Settings.BarFrequency.ToUniqueId(), arg2.Bar));
+            logger.Info(string.Format("Bar Restored Freq:{0} Bar:{1}", arg1.Settings.BarFrequency.ToUniqueId(), arg2.Bar));
             if (NewHistBarEvent != null)
             {
                 //arg2.Bar.TradingDay = GetTradingDay(arg1.Symbol.SecurityFamily,arg2.Bar.EndTime);
