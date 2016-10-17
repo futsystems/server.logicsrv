@@ -173,6 +173,7 @@ namespace TradingLib.Common.DataFarm
                         //没有对应行情源的时间 则不执行后续操作
                         if (dftime == null) continue;
 
+                        //if (item.Symbol.Symbol != "CLX6") continue;
                         if (dftime.Cover1Minute)
                         {
                             item.First1MinRoundtime = dftime.First1MinRoundEnd;
@@ -188,7 +189,7 @@ namespace TradingLib.Common.DataFarm
                 {
                     logger.Error("Restore Task Error:" + ex.ToString());
                 }
-                Util.sleep(5000);
+                Util.sleep(1000);
 
             }
             logger.Info("Restore Tick finished");
