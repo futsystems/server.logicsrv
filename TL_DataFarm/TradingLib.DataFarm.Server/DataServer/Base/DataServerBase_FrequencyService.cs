@@ -58,13 +58,27 @@ namespace TradingLib.Common.DataFarm
 
             if(obj.Frequency.Bars.Count == 1) 
             {
-                //记录1分钟的第一个Bar 用于获取该Bar结束时间 Tick数据恢复以该结束，该事件之后的所有实时Bar都是完整的
+                //将实时Bar生成的第一个不完整的Bar放到数据集中 
+                this.UpdateFirstRealBar(obj.Symbol, obj.Bar);
+
+                //如果是1分钟Bar则根据时间进行判定 如果在恢复时间之后的周期 则直接保存
                 if (obj.BarFrequency.Interval == 60)
                 {
-                    restoresrv.OnIntraday1MinFirstRealBar(obj.Symbol, obj.Bar);
+                    QSEnumDataFeedTypes df = obj.Symbol.SecurityFamily.Exchange.DataFeed;
+                    DataFeedTime dfTime = GetDataFeedTime(df);
+                    if (dfTime == null)
+                    {
+                        logger.Error(string.Format("DataFeed:{0} generated bar,but no time updated", df));
+                    }
+                    else
+                    {
+                        //如果生成的Bar数据周期 在行情源第一个1分钟周期之后 则该数据完备,直接储存
+                        if (obj.Bar.EndTime > dfTime.First1MinRoundEnd)
+                        {
+                            this.UpdateBar2(obj.Symbol, obj.Bar);
+                        }
+                    }
                 }
-                //将实时Bar生成的第一个不完整的Bar放到数据集中
-                this.UpdateFirstRealBar(obj.Symbol, obj.Bar);
             }
             if (obj.Frequency.Bars.Count >= 2)
             {

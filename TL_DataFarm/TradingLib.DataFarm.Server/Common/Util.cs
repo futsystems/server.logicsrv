@@ -25,7 +25,7 @@ namespace TradingLib.Common.DataFarm
             DateTime current = startDate;
             //tick数据缓存
             List<Tick> tmpticklist = new List<Tick>();
-            while (current.ToTLDate() <= endDate.ToTLDate())
+            while (current<= endDate)
             {
                 string fn = TikWriter.GetTickFileName(path, symbol.Symbol, current.ToTLDate());
                 logger.Info("Tick file:" + fn);
@@ -43,6 +43,7 @@ namespace TradingLib.Common.DataFarm
                                     continue;
                                 Tick k = TickImpl.Deserialize2(str);
                                 k.Symbol = symbol.Symbol;
+                                k.Exchange = symbol.Exchange;
                                 DateTime ticktime = k.DateTime();
                                 if (ticktime >= startDate && ticktime < endDate)
                                 {

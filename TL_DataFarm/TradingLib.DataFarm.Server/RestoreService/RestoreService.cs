@@ -138,50 +138,6 @@ namespace TradingLib.Common.DataFarm
         }
 
 
-        /// <summary>
-        /// 响应实时Bar系统生成的第一个Bar数据
-        /// 第一个Bar结束时间之后的所有Bar均为完整的Bar数据
-        /// </summary>
-        /// <param name="symbol"></param>
-        /// <param name="time"></param>
-        public void OnIntraday1MinFirstRealBar(Symbol symbol,BarImpl bar)
-        {
-            RestoreTask task = null;
-            if (!restoreTaskMap.TryGetValue(symbol.UniqueKey, out task))
-            {
-                logger.Warn(string.Format("Symbol:{0} has no restore task registed", symbol.UniqueKey));
-                return;
-            }
-            task.Intraday1MinFirstRealBar = bar;
-            //task.Intraday1MinRealBarStart = bar.EndTime;
-        }
-
-        /// <summary>
-        /// TickFeed注册合约之后会收到行情源发送过来的一个行情快照
-        /// 该行情快照包含该合约当前的市场状态
-        /// 如果当前合约处于不交易状态 在直接加载Tick文件进行数据回补
-        /// 如果当前合约处于交易状态 则需要等待Bar生成之后再执行数据回补
-        /// </summary>
-        /// <param name="symbol"></param>
-        /// <param name="k"></param>
-        //public void OnTickSnapshot(Symbol symbol, Tick k)
-        //{
-        //    if (k.UpdateType != "S")
-        //    {
-        //        return;
-        //    }
-        //    RestoreTask task = null;
-        //    if (!restoreTaskMap.TryGetValue(symbol.UniqueKey, out task))
-        //    {
-        //        logger.Warn(string.Format("Symbol:{0} has no restore task registed", symbol.UniqueKey));
-        //        return;
-        //    }
-        //    if (!task.HaveGotTickSnapshot)
-        //    {
-        //        logger.Debug(string.Format("Got First TickSnapshot,Symbol:{0} Market:{1}", symbol.UniqueKey, k.MarketOpen ? "Open" : "Close"));
-        //        task.TickSnapshot = k;
-        //    }
-        //}
 
         public void Start()
         {
@@ -208,8 +164,6 @@ namespace TradingLib.Common.DataFarm
                     {
                         _restorego = false;
                     }
-
-
 
                     //遍历所有未完成恢复任务
                     foreach (var item in restoreTaskMap.Values.Where(t => !t.IsRestored))
@@ -252,72 +206,72 @@ namespace TradingLib.Common.DataFarm
             Symbol symbol = task.Symbol;
             //DateTime start = task.Intraday1MinHistBarEnd;
             DateTime start = TimeFrequency.RoundTime(task.Intraday1MinHistBarEnd, TimeSpan.FromHours(1));//获得该1分钟Bar对应1小时周期的开始 这样可以恢复所有周期对应的Bar数据
-            DateTime end = task.First1MinRoundtime;//.Intraday1MinRealBarStart;
+            DateTime end = task.First1MinRoundtime;
 
             //遍历start和end之间所有tickfile进行处理
             long lstart = start.ToTLDateTime();
             long lend = end.ToTLDateTime();
 
             //获得Tick文件的开始和结束日期
-            
-            int tickstart = -1;
-            int tickend = -1;
+            //int tickstart = -1;
+            //int tickend = -1;
             string path = TikWriter.GetTickPath(_basedir, symbol.Exchange, symbol.Symbol);
-            if (TikWriter.HaveAnyTickFiles(path, symbol.Symbol))
-            {
-                tickend = TikWriter.GetEndTickDate(path, symbol.Symbol);
-                tickstart = TikWriter.GetStartTickDate(path, symbol.Symbol);
-            }
+            //if (TikWriter.HaveAnyTickFiles(path, symbol.Symbol))
+            //{
+            //    tickend = TikWriter.GetEndTickDate(path, symbol.Symbol);
+            //    tickstart = TikWriter.GetStartTickDate(path, symbol.Symbol);
+            //}
 
             logger.Info(string.Format("BackFill Symbol:{0} Start:{1} End:{2}", task.Symbol.Symbol, start, end));
 
-            //如果tickfile 开始时间大于数据库加载Bar对应的最新更新时间 则将开始时间设置为tick文件开始时间
-            DateTime current = start;
-            if (tickstart > current.ToTLDate())
-            {
-                current = Util.ToDateTime(tickstart, 0);
-            }
+            ////如果tickfile 开始时间大于数据库加载Bar对应的最新更新时间 则将开始时间设置为tick文件开始时间
+            //DateTime current = start;
+            //if (tickstart > current.ToTLDate())
+            //{
+            //    current = Util.ToDateTime(tickstart, 0);
+            //}
 
-            //取tickfile结束时间和end中较小的一个日期为 tick回放结束日期
-            int enddate = Math.Min(tickend, end.ToTLDate());
+            ////取tickfile结束时间和end中较小的一个日期为 tick回放结束日期
+            //int enddate = Math.Min(tickend, end.ToTLDate());
 
             //tick数据缓存
-            List<Tick> tmpticklist = new List<Tick>();
-            while (current.ToTLDate() <= enddate)
-            {
-                string fn = TikWriter.GetTickFileName(path, symbol.Symbol, current.ToTLDate());
-                logger.Info("File:" + fn);
-                //如果该Tick文件存在
-                if (File.Exists(fn))
-                {
-                    //实例化一个文件流--->与写入文件相关联  
-                    using (FileStream fs = new FileStream(fn, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
-                    {
-                        //实例化一个StreamWriter-->与fs相关联  
-                        using (StreamReader sw = new StreamReader(fs))
-                        {
-                            while (sw.Peek() > 0)
-                            {
-                                string str = sw.ReadLine();
-                                if (string.IsNullOrEmpty(str))
-                                    continue;
-                                Tick k = TickImpl.Deserialize2(str);
-                                k.Symbol = symbol.Symbol;
-                                DateTime ticktime = k.DateTime();
-                                //如果Tick时间在开始与结束之间 则需要回放该Tick数据 需要确保在盘中重启后 在start和end之间的所有数据均加载完毕
+            List<Tick> tmpticklist = MDUtil.LoadTick(path, symbol, start,end);
+
+            //while (current.ToTLDate() <= enddate)
+            //{
+            //    string fn = TikWriter.GetTickFileName(path, symbol.Symbol, current.ToTLDate());
+            //    logger.Info("File:" + fn);
+            //    //如果该Tick文件存在
+            //    if (File.Exists(fn))
+            //    {
+            //        //实例化一个文件流--->与写入文件相关联  
+            //        using (FileStream fs = new FileStream(fn, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
+            //        {
+            //            //实例化一个StreamWriter-->与fs相关联  
+            //            using (StreamReader sw = new StreamReader(fs))
+            //            {
+            //                while (sw.Peek() > 0)
+            //                {
+            //                    string str = sw.ReadLine();
+            //                    if (string.IsNullOrEmpty(str))
+            //                        continue;
+            //                    Tick k = TickImpl.Deserialize2(str);
+            //                    k.Symbol = symbol.Symbol;
+            //                    DateTime ticktime = k.DateTime();
+            //                    //如果Tick时间在开始与结束之间 则需要回放该Tick数据 需要确保在盘中重启后 在start和end之间的所有数据均加载完毕
                                
-                                if (ticktime >= start && ticktime < end)
-                                {
-                                    tmpticklist.Add(k);
-                                }
-                            }
-                            sw.Close();
-                        }
-                        fs.Close();
-                    }
-                }
-                current = current.AddDays(1);
-            }
+            //                    if (ticktime >= start && ticktime < end)
+            //                    {
+            //                        tmpticklist.Add(k);
+            //                    }
+            //                }
+            //                sw.Close();
+            //            }
+            //            fs.Close();
+            //        }
+            //    }
+            //    current = current.AddDays(1);
+            //}
 
             //如果没有历史Tick数据则不用添加TimeTick用于关闭Bar
             if (tmpticklist.Count > 0)

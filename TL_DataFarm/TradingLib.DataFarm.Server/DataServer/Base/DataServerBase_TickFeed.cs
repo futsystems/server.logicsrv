@@ -147,6 +147,15 @@ namespace TradingLib.Common.DataFarm
 
         Dictionary<QSEnumDataFeedTypes, DataFeedTime> dfTimeMap = new Dictionary<QSEnumDataFeedTypes, DataFeedTime>();
 
+        DataFeedTime GetDataFeedTime(QSEnumDataFeedTypes df)
+        { 
+            DataFeedTime target = null;
+            if(dfTimeMap.TryGetValue(df,out target))
+            {
+                return target;
+            }
+            return null;
+        }
         void asyncTick_GotTick(Tick k)
         {
             //更新行情源时间 
