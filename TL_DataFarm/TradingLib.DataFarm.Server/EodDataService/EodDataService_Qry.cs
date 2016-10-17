@@ -57,5 +57,22 @@ namespace TradingLib.Common.DataFarm
             }
             return new List<PriceVol>();
         }
+
+        /// <summary>
+        /// 查询分时数据
+        /// </summary>
+        /// <param name="symbol"></param>
+        /// <param name="date"></param>
+        /// <returns></returns>
+        public List<MinuteData> QryMinuteData(Symbol symbol, int date)
+        {
+            string key = symbol.UniqueKey;
+            MinuteDataCache cache = null;
+            if (minutedataMap.TryGetValue(key, out cache))
+            {
+                return cache.QryMinuteDate();
+            }
+            return new List<MinuteData>();
+        }
     }
 }

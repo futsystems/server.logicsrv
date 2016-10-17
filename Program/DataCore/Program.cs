@@ -17,6 +17,8 @@ namespace DataCoreSrv
         
         static void Main(string[] args)
         {
+            //DateTime dt = new DateTime(2011, 1, 1, 24, 0, 0);
+
             DataCore df = new DataCore();
 
             df.Start();

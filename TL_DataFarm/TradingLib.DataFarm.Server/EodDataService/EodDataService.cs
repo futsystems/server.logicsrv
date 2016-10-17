@@ -79,6 +79,8 @@ namespace TradingLib.Common.DataFarm
 
         Dictionary<string, TradeCache> tradeMap = new Dictionary<string, TradeCache>();
 
+        //分时数据Map
+        Dictionary<string, MinuteDataCache> minutedataMap = new Dictionary<string, MinuteDataCache>();
 
         IHistDataStore _store = null;
         string _tickpath = string.Empty;
@@ -100,8 +102,15 @@ namespace TradingLib.Common.DataFarm
             //初始化成交Map 用于维护当前MarketDay的数据
             foreach (var symbol in MDBasicTracker.SymbolTracker.Symbols)
             {
-                tradeMap.Add(symbol.UniqueKey, new TradeCache(symbol));
+                tradeMap.Add(symbol.UniqueKey, new TradeCache(symbol));//初始化话分笔成交缓存
+
+                MarketDay md = GetCurrentMarketDay(symbol.SecurityFamily);
+                if (md == null) continue;
+                minutedataMap.Add(symbol.UniqueKey, new MinuteDataCache(symbol, md));//初始化分时数据缓存
             }
+
+            
+
             //注册定时任务
             InitMarketDayTask();
         }

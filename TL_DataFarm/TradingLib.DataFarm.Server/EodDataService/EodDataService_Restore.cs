@@ -30,8 +30,10 @@ namespace TradingLib.Common.DataFarm
             //该操作可以再启动后就放入后台线程执行,应为启动后 Tick数据就再接受会进入tmplist,当恢复Tick完毕后会自行合并到TradeList具体参考TradeCache的相关代码
             foreach (var symbol in MDBasicTracker.SymbolTracker.Symbols)
             {
-                //if (symbol.Symbol != "CLX6") continue;
+                if (symbol.Symbol != "CLX6") continue;
                 this.RestoreTick(symbol);
+
+                this.RestoreMinuteData(symbol);
             }
         }
 
@@ -45,9 +47,19 @@ namespace TradingLib.Common.DataFarm
             string path = TikWriter.GetTickPath(_tickpath, symbol.Exchange, symbol.Symbol);
             if (tradeMap.TryGetValue(symbol.UniqueKey, out cache))
             {
-
                 List<Tick> tmplist = MDUtil.LoadTick(path, symbol, md.MarketOpen, md.MarketClose);
                 cache.RestoreTrade(tmplist);
+            }
+        }
+
+        void RestoreMinuteData(Symbol symbol)
+        {
+            MinuteDataCache cache = null;
+            if (minutedataMap.TryGetValue(symbol.UniqueKey, out cache))
+            { 
+                //
+                List<BarImpl> barlist = _store.QryBar(symbol, BarInterval.CustomTime, 60, cache.MarketDay.MarketOpen, cache.MarketDay.MarketClose, 0, 0, false, true);
+                cache.RestoreMinuteData(barlist);
             }
         }
     }

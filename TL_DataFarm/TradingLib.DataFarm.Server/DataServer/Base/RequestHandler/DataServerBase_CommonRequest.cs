@@ -289,7 +289,7 @@ namespace TradingLib.Common.DataFarm
                     tradingday = md.TradingDay;
                 }
             }
-            List<MinuteData> mdlist = GetHistDataSotre().QryMinuteData(symbol, tradingday);
+            List<MinuteData> mdlist = eodservice.QryMinuteData(symbol, tradingday);////GetHistDataSotre().QryMinuteData(symbol, tradingday);
 
             int j = 0;
             RspXQryMinuteDataResponse response = RspXQryMinuteDataResponse.CreateResponse(request);
