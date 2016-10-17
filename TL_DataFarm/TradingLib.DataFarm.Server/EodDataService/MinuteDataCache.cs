@@ -57,24 +57,32 @@ namespace TradingLib.Common.DataFarm
 
         Dictionary<long, int> locationMap = new Dictionary<long, int>();
 
-        bool restored = true;
+        bool restored = false;
         object _object = new object();
 
 
         long _latestBarKey = 0;
         public void On1MinBarClosed(Bar bar)
         {
-            this.GotBar(bar);
+            if (restored)
+            {
+                this.GotBar(bar);
+            }
         }
 
         public void On1MinPartialBarUpdate(Bar bar)
         {
-            this.GotBar(bar);
+            if (restored)
+            {
+                this.GotBar(bar);
+            }
         }
 
         //List<Bar> tmpList = new List<Tick>();
         /// <summary>
-        /// 恢复历史成交数据
+        /// 恢复1分钟Bar数据
+        /// 启动后 当行情源1分钟过去之后 系统开始恢复历史Tick数据
+        /// 恢复完毕后再开始接受实时数据
         /// </summary>
         /// <param name="k"></param>
         public void RestoreMinuteData(List<BarImpl> barList)
@@ -104,7 +112,7 @@ namespace TradingLib.Common.DataFarm
                 //        }
                 //    }
                 //}
-                //restored = true;
+                restored = true;
             //}
         }
 
