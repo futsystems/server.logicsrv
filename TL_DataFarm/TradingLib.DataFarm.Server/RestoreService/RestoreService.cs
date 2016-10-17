@@ -80,10 +80,12 @@ namespace TradingLib.Common.DataFarm
 
         FrequencyManager restoreFrequencyMgr = null;
         string _basedir = string.Empty;
-        public RestoreService(string tickpath)
+        Dictionary<QSEnumDataFeedTypes, DataFeedTime> datafeedTimeMap = null;
+
+        public RestoreService(string tickpath,Dictionary<QSEnumDataFeedTypes, DataFeedTime> dfmap)
         {
             _basedir = tickpath;
-
+            datafeedTimeMap = dfmap;
             //恢复历史Tick所用的FrequencyManager
             restoreFrequencyMgr = new FrequencyManager("Restore", QSEnumDataFeedTypes.DEFAULT);
             restoreFrequencyMgr.RegisterAllBasicFrequency();
@@ -94,11 +96,18 @@ namespace TradingLib.Common.DataFarm
                 restoreTaskMap.TryAdd(symbol.UniqueKey, new RestoreTask(symbol));
                 restoreFrequencyMgr.RegisterSymbol(symbol);
             }
-
-
-
-
         }
+
+        DataFeedTime GetDataFeedTime(QSEnumDataFeedTypes datafeed)
+        {
+            DataFeedTime target = null;
+            if (datafeedTimeMap.TryGetValue(datafeed, out target))
+            {
+                return target;
+            }
+            return null;
+        }
+
         /// <summary>
         /// 响应日内分钟数据加载完毕事件
         /// </summary>
@@ -144,7 +153,7 @@ namespace TradingLib.Common.DataFarm
                 return;
             }
             task.Intraday1MinFirstRealBar = bar;
-            task.Intraday1MinRealBarStart = bar.EndTime;
+            //task.Intraday1MinRealBarStart = bar.EndTime;
         }
 
         /// <summary>
@@ -155,24 +164,24 @@ namespace TradingLib.Common.DataFarm
         /// </summary>
         /// <param name="symbol"></param>
         /// <param name="k"></param>
-        public void OnTickSnapshot(Symbol symbol, Tick k)
-        {
-            if (k.UpdateType != "S")
-            {
-                return;
-            }
-            RestoreTask task = null;
-            if (!restoreTaskMap.TryGetValue(symbol.UniqueKey, out task))
-            {
-                logger.Warn(string.Format("Symbol:{0} has no restore task registed", symbol.UniqueKey));
-                return;
-            }
-            if (!task.HaveGotTickSnapshot)
-            {
-                logger.Debug(string.Format("Got First TickSnapshot,Symbol:{0} Market:{1}", symbol.UniqueKey, k.MarketOpen ? "Open" : "Close"));
-                task.TickSnapshot = k;
-            }
-        }
+        //public void OnTickSnapshot(Symbol symbol, Tick k)
+        //{
+        //    if (k.UpdateType != "S")
+        //    {
+        //        return;
+        //    }
+        //    RestoreTask task = null;
+        //    if (!restoreTaskMap.TryGetValue(symbol.UniqueKey, out task))
+        //    {
+        //        logger.Warn(string.Format("Symbol:{0} has no restore task registed", symbol.UniqueKey));
+        //        return;
+        //    }
+        //    if (!task.HaveGotTickSnapshot)
+        //    {
+        //        logger.Debug(string.Format("Got First TickSnapshot,Symbol:{0} Market:{1}", symbol.UniqueKey, k.MarketOpen ? "Open" : "Close"));
+        //        task.TickSnapshot = k;
+        //    }
+        //}
 
         public void Start()
         {
@@ -185,6 +194,9 @@ namespace TradingLib.Common.DataFarm
         }
         bool _restorego = false;
         System.Threading.Thread _restorethread = null;
+
+
+        
         void ProcessRestoreTask()
         {
             while (_restorego)
@@ -196,64 +208,22 @@ namespace TradingLib.Common.DataFarm
                     {
                         _restorego = false;
                     }
+
+
+
                     //遍历所有未完成恢复任务
                     foreach (var item in restoreTaskMap.Values.Where(t => !t.IsRestored))
                     {
-                        //if (item.Symbol.Symbol != "CLX6") continue;
+                        QSEnumDataFeedTypes df = item.Symbol.SecurityFamily.Exchange.DataFeed;
+                        DataFeedTime dftime = GetDataFeedTime(df);
+                        //没有对应行情源的时间 则不执行后续操作
+                        if (dftime == null) continue;
 
-                        if (item.HaveGotTickSnapshot)
+                        if (dftime.Cover1Minute)
                         {
-                            //合约处于收盘状态 直接加载数据恢复
-                            if (!item.TickSnapshot.MarketOpen)
-                            {
-                                //item.CanRestored = true;
-                            }
-                            //合约处于开盘状态 需要等待第一个Bar生成之后才开始恢复历史数据
-                            if (item.TickSnapshot.MarketOpen && item.HaveFirst1MinRealBar)
-                            {
-                                logger.Info("FristRealBar Generated,now begin restore tick data");
-                                item.CanRestored = true;
-                            }
+                            item.First1MinRoundtime = dftime.First1MinRoundEnd;
+                            item.CanRestored = true;
                         }
-                        else
-                        { 
-                        
-                            
-                        }
-
-
-                        ////1.如果没有取得对应合约的第一个Tick时间 则尝试获得该tick时间
-                        //if (item.End == DateTime.MaxValue)
-                        //{
-
-                        //    DateTime firstTickTime = freqService.GetFirstTickTime(item.Symbol);
-                        //    item.End = firstTickTime == DateTime.MaxValue ? firstTickTime : TimeFrequency.BarEndTime(firstTickTime, TimeSpan.FromMinutes(1));//1分钟K线下一个Bar开始时间
-                        //    //如果还是未MaxValue则判断任务创建时间 如果2分钟之后还没有对应的Tick数据则表明 当前处于停盘时间 将MaxValue减去1分钟 用于加载所有tick文件生成Bar数据
-                        //    if (item.End == DateTime.MaxValue)
-                        //    {
-                        //        //一定时间后 自动执行恢复操作 认定该合约当前没有行情 下次行情到达时候实时产生的Bar数据是完整的
-                        //        if (DateTime.Now.Subtract(item.CreatedTime).TotalMinutes > 2)
-                        //        {
-                        //            item.End = DateTime.MaxValue.Subtract(TimeSpan.FromMinutes(1));
-                        //            item.CanRestored = true;
-                        //            logger.Info("Symbol:{0} time elapse,end:{1} will restore tick ".Put(item.Symbol.Symbol, item.End));
-                        //        }
-                        //    }
-                        //    else
-                        //    {
-                        //        logger.Warn("Symbol:{0} got first tick time:{1} end:{2}".Put(item.Symbol.Symbol, firstTickTime, item.End));
-                        //    }
-                        //}
-
-                        ////2.如果已经获得Item.End则执行Tick数据加载并恢复
-                        //if (item.CanRestored && !item.IsRestored)
-                        //{
-                        //    restoreProfile.EnterSection("RestoreTick");
-                        //    logger.Warn("Restore Symbol:{0} tick file".Put(item.Symbol.Symbol));
-                        //    BackFillSymbol(item);
-                        //    restoreProfile.LeaveSection();
-                        //    item.IsRestored = true;
-                        //}
                         if (item.CanRestored)
                         {
                             BackFillSymbol(item);
@@ -264,7 +234,7 @@ namespace TradingLib.Common.DataFarm
                 {
                     logger.Error("Restore Task Error:" + ex.ToString());
                 }
-                Util.sleep(1000);
+                Util.sleep(5000);
 
             }
             logger.Info("Restore Tick finished");
@@ -282,7 +252,7 @@ namespace TradingLib.Common.DataFarm
             Symbol symbol = task.Symbol;
             //DateTime start = task.Intraday1MinHistBarEnd;
             DateTime start = TimeFrequency.RoundTime(task.Intraday1MinHistBarEnd, TimeSpan.FromHours(1));//获得该1分钟Bar对应1小时周期的开始 这样可以恢复所有周期对应的Bar数据
-            DateTime end = task.Intraday1MinRealBarStart;
+            DateTime end = task.First1MinRoundtime;//.Intraday1MinRealBarStart;
 
             //遍历start和end之间所有tickfile进行处理
             long lstart = start.ToTLDateTime();
@@ -352,7 +322,7 @@ namespace TradingLib.Common.DataFarm
             //如果没有历史Tick数据则不用添加TimeTick用于关闭Bar
             if (tmpticklist.Count > 0)
             {
-                DateTime dt = task.Intraday1MinRealBarStart;
+                DateTime dt = task.First1MinRoundtime;//Intraday1MinRealBarStart;
                 //Tick加载结束时间为FirstRealBar的结束时间 因此需要用TimeTick进行驱动将FristRealBar进行关闭
                 //处于MarketClose状态 直接汇率历史数据 此时firstRealBar还没有产生,对应的时间为最大值时间 将目标时间修改为最后一个Bar的时间
                 if (dt == DateTime.MaxValue)

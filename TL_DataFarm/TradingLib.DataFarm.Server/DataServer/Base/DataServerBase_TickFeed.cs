@@ -29,7 +29,7 @@ namespace TradingLib.Common.DataFarm
         /// 用户客户端查询成交数据
         /// 系统启动时需要加载
         /// </summary>
-        Dictionary<string, ThreadSafeList<Tick>> symbolTradsMap = new Dictionary<string, ThreadSafeList<Tick>>();
+        //Dictionary<string, ThreadSafeList<Tick>> symbolTradsMap = new Dictionary<string, ThreadSafeList<Tick>>();
 
         /// <summary>
         /// 记录了每个合约最近更新时间,当前tick时间要大于等于最近更新时间否则过滤掉
@@ -145,8 +145,23 @@ namespace TradingLib.Common.DataFarm
         /// </summary>
         TickTracker tickTracker = new TickTracker();
 
+        Dictionary<QSEnumDataFeedTypes, DataFeedTime> dfTimeMap = new Dictionary<QSEnumDataFeedTypes, DataFeedTime>();
+
         void asyncTick_GotTick(Tick k)
         {
+            //更新行情源时间 
+            if (k.UpdateType == "T")
+            {
+                DataFeedTime dft = null;
+                if (!dfTimeMap.TryGetValue(k.DataFeed, out dft))
+                {
+                    dft = new DataFeedTime(k.DataFeed);
+                    dft.StartTime = k.DateTime();
+                    dfTimeMap.Add(k.DataFeed, dft);
+                }
+                dft.CurrentTime = k.DateTime();
+            }
+
             Symbol symbol = MDBasicTracker.SymbolTracker[k.Exchange,k.Symbol];
             if(symbol == null) return;
             //if (symbol.Exchange != "HKEX") return;
@@ -165,7 +180,12 @@ namespace TradingLib.Common.DataFarm
             {
                 //转发实时行情
                 Tick snapshot = tickTracker[k.Exchange, k.Symbol];
+                //if (k.UpdateType == "X")
+                //{
+                //    snapshot.MarketOpen = true;
+                //}
                 NotifyTick2Connections(snapshot);
+               
             }
 
             //通过成交数据以及合约市场事件 驱动Bar数据生成器生成Bar数据
@@ -180,12 +200,12 @@ namespace TradingLib.Common.DataFarm
                 EodServiceProcessTick(k);
             }
 
-            if (k.UpdateType == "S")
-            {
-                RestoreServiceProcessTickSnapshot(symbol, k);
-            }
+            //if (k.UpdateType == "S")
+            //{
+            //    RestoreServiceProcessTickSnapshot(symbol, k);
+            //}
 
-
+            
 
         }
 

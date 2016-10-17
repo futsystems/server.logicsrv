@@ -18,30 +18,35 @@ namespace TradingLib.Common.DataFarm
         {
             this.Symbol = symbol;
             this.Intraday1MinHistBarEnd = DateTime.MinValue;
-            this.Intraday1MinRealBarStart = DateTime.MaxValue;
+            //this.Intraday1MinRealBarStart = DateTime.MaxValue;
             this.EodHistBarEnd = DateTime.MinValue;
             this.IsRestored = false;
             this.CreatedTime = DateTime.Now;
             this.CanRestored = false;
 
             this.HaveFirst1MinRealBar = false;
-            this.HaveGotTickSnapshot = false;
+            //this.HaveGotTickSnapshot = false;
+            this.First1MinRoundtime = DateTime.MinValue;
         }
 
         /// <summary>
-        /// 数据库加载历史Bar数据最新的一个Bar周期
-        /// 在该Bar周期之后的所有Tick数据需要被加载
+        /// 数据库加载日内数据后 最近的一个Bar结束时间
         /// </summary>
         public DateTime Intraday1MinHistBarEnd { get; set; }
 
+        //TODO 储存Bar逻辑
         /// <summary>
-        /// 实时Bar生成系统生成的第一个Bar不保存,这里的结束时间记录的是第二个Bar的结束时间
+        /// 行情源第一个1分钟Round结束时间
+        /// 通过该时刻来作为历史Tick数据加载的结束时间
+        /// 无论是开盘还是收盘 主力还是非主力 当时间跨越过1分钟后 则该时刻之前的数据就是完整的,而之后的Bar需要被储存,
+        /// 这里原先第一个Bar不储存的方法有漏洞
+        /// 如果非主力合约 中间一段时间没有数据 过了1分钟 数据恢复完毕之后 才有Tick数据过来 生成第一个Bar 则该Bar是完整的,可以直接储存
         /// </summary>
-        public DateTime Intraday1MinRealBarStart { get; set; }
+        public DateTime First1MinRoundtime { get; set; }
 
 
         /// <summary>
-        /// 数据库加载日线数据后 最近的一个Bar时间
+        /// 数据库加载日线数据后 最近的一个Bar结束时间
         /// </summary>
         public DateTime EodHistBarEnd { get; set; }
 
@@ -49,9 +54,6 @@ namespace TradingLib.Common.DataFarm
 
 
         public bool HaveFirst1MinRealBar { get; set; }
-
-
-
 
         BarImpl _first1minbar = null;
         /// <summary>
@@ -67,24 +69,24 @@ namespace TradingLib.Common.DataFarm
             }
         }
 
-        Tick _snapshot = null;
-        /// <summary>
-        /// 标记该合约当前是否处于交易状态
-        /// </summary>
-        public Tick TickSnapshot 
-        {
-            get { return _snapshot; } 
-            set{
-                if (value == null) return;
-                _snapshot = value;
-                this.HaveGotTickSnapshot = true;
-            }
-        }
+        //Tick _snapshot = null;
+        ///// <summary>
+        ///// 标记该合约当前是否处于交易状态
+        ///// </summary>
+        //public Tick TickSnapshot 
+        //{
+        //    get { return _snapshot; } 
+        //    set{
+        //        if (value == null) return;
+        //        _snapshot = value;
+        //        this.HaveGotTickSnapshot = true;
+        //    }
+        //}
 
-        /// <summary>
-        /// 是否获得行情快照
-        /// </summary>
-        public bool HaveGotTickSnapshot { get; set; }
+        ///// <summary>
+        ///// 是否获得行情快照
+        ///// </summary>
+        //public bool HaveGotTickSnapshot { get; set; }
 
 
         /// <summary>
@@ -101,6 +103,7 @@ namespace TradingLib.Common.DataFarm
         /// 是否可以执行Tick数据恢复
         /// </summary>
         public bool CanRestored { get; set; }
+
         /// <summary>
         /// 数据恢复标识
         /// </summary>

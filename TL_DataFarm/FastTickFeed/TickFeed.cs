@@ -330,6 +330,7 @@ namespace TradingLib.DataFarm
                    
                     //订阅行情心跳数据
                     subscriber.Subscribe(Encoding.UTF8.GetBytes("H,"));
+                    subscriber.Subscribe(Encoding.UTF8.GetBytes("T,"));
 
                     _symbolreq = symbolreq;
                     _subscriber = subscriber;
@@ -354,12 +355,11 @@ namespace TradingLib.DataFarm
                                 string tickstr = tickdata.First().ReadString(Encoding.UTF8);
                                 //清空数据否则会内存泄露
                                 tickdata.Clear();
-
+                                
                                 //logger.Info("ticksr:" + tickstr);
                                 Tick k = TickImpl.Deserialize2(tickstr);
                                 if (k != null && k.UpdateType != "H")
                                     OnTick(k);
-
                                 //记录数据到达时间
                                 _lastheartbeat = DateTime.Now;
                                 if(tickdata!= null)

@@ -88,7 +88,6 @@ namespace TradingLib.Common.DataFarm
             //启动历史数据储存服务
             this.StartDataStoreService();
 
-            
             //初始化EOD服务
             this.InitEodService();
 
