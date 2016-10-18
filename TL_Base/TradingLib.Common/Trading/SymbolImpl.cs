@@ -405,6 +405,17 @@ namespace TradingLib.Common
             }
         }
 
+        string _session = string.Empty;
+        /// <summary>
+        /// 交易小节
+        /// </summary>
+        public string TradingSession 
+        { 
+            get { return _session; }
+            set { _session = value; } 
+        }
+
+
         public override string ToString()
         {
             return "Symbol:" + Symbol + " Security:" + Util.SafeToString(SecurityFamily) + " entrycommision:" + EntryCommission.ToString() + " exitcommission:" + ExitCommission.ToString() + " SecurityID:" + security_fk.ToString();
@@ -568,6 +579,8 @@ namespace TradingLib.Common
             sb.Append(this.Name);
             sb.Append(d);
             sb.Append(this._exitcommissiontoday);
+            sb.Append(d);
+            sb.Append(this._session);
 
             return sb.ToString();
         }
@@ -593,6 +606,7 @@ namespace TradingLib.Common
             this.SymbolType = (QSEnumSymbolType)Enum.Parse(typeof(QSEnumSymbolType), rec[15]);
             this.Name = rec[16];
             this._exitcommissiontoday = decimal.Parse(rec[17]);
+            this._session = rec[18];
         }
 
         /// <summary>

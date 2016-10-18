@@ -200,16 +200,21 @@ namespace TradingLib.Common.DataFarm
                 }
                 cache.Clear();
 
+                //滚动MinuteDataCache
                 MinuteDataCache mdcache = null;
                 if (minutedataMap.TryGetValue(symbol.UniqueKey, out mdcache))
                 { 
                     //将原来的数据放入历史缓存 系统会提供多日分时数据查询
                 }
-                mdcache = new MinuteDataCache(symbol, GetCurrentMarketDay(symbol.SecurityFamily));
+                MarketDay md = GetCurrentMarketDay(symbol.SecurityFamily);
+                mdcache = new MinuteDataCache(symbol,md);
                 mdcache.RestoreMinuteData(new List<BarImpl>());//执行Restore操作 否则后面会不响应实时数据
                 minutedataMap[symbol.UniqueKey] = mdcache;
             
                 //初始化Eod数据
+
+
+                symbol.TradingSession = md.ToSessionString();
             }
             
         }

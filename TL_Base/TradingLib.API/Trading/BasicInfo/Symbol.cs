@@ -137,6 +137,12 @@ namespace TradingLib.API
 
 
         /// <summary>
+        /// 交易所小节
+        /// </summary>
+        string TradingSession { get; set; }
+
+
+        /// <summary>
         /// 名称 股票对应的 证券名称
         /// </summary>
         string Name { get; set; }

@@ -107,6 +107,9 @@ namespace TradingLib.Common.DataFarm
                 MarketDay md = GetCurrentMarketDay(symbol.SecurityFamily);
                 if (md == null) continue;
                 minutedataMap.Add(symbol.UniqueKey, new MinuteDataCache(symbol, md));//初始化分时数据缓存
+
+                //设定合约交易小节字段
+                symbol.TradingSession = md.ToSessionString();
             }
 
             

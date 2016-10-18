@@ -59,6 +59,17 @@ namespace TradingLib.Common
         {
             return string.Format("{0}-{1}", this.Start.ToString("MM/dd HH:mm"), this.End.ToString("MM/dd HH:mm"));
         }
+
+        /// <summary>
+        /// 生成SessionString用于查询合约时附带 分时图绘制
+        /// </summary>
+        /// <returns></returns>
+        public string ToSessionString()
+        {
+            return string.Format("{0}-{1}", this.Start.ToTLDateTime(), this.End.ToTLDateTime());
+        }
+
+
     }
 
 
@@ -135,22 +146,6 @@ namespace TradingLib.Common
             }
         }
 
-        //public void Init(int tradingday, IEnumerable<MarketSession> sessionList)
-        //{
-        //    marketSessionMap.Clear();
-
-        //    this.TradingDay = tradingday;
-        //    foreach (var session in sessionList)
-        //    {
-        //        marketSessionMap.Add(session.TimeKey, session);
-        //    }
-        //}
-
-        //public void AddSession(MarketSession ms)
-        //{
-        //    marketSessionMap.Add(ms.TimeKey, ms);
-        //}
-
         /// <summary>
         /// 注rangelist是date所对应的weekday的TradingRangeList
         /// </summary>
@@ -186,6 +181,11 @@ namespace TradingLib.Common
         public override string ToString()
         {
             return string.Format("{0}:{1}", this.TradingDay, string.Join(",", this.MarketSessions.Select(s => s.ToString()).ToArray()));
+        }
+
+        public string ToSessionString()
+        {
+            return string.Format("{0}:{1}", this.TradingDay, string.Join(" ", this.MarketSessions.Select(s => s.ToSessionString()).ToArray()));
         }
     }
 }
