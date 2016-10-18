@@ -6,6 +6,8 @@ using System.IO;
 using TradingLib.API;
 using TradingLib.Common;
 using TradingLib.DataFarm.API;
+using TradingLib.ORM;
+
 using Common.Logging;
 
 namespace TradingLib.Common.DataFarm
@@ -16,16 +18,58 @@ namespace TradingLib.Common.DataFarm
         protected ConfigFile _config;
 
         protected ConfigFile ConfigFile { get { return _config; } }
-
+        protected ConfigDB _cfgdb;
         string _name;
+
+        int _tradebatchsize = 500;
+        int _barbatchsize = 500;
+        int _pricevolbatchsize = 100;
+        int _minutedatabatchsize = 500;
         public DataServerBase(string name)
         {
             _name = name;
             logger = LogManager.GetLogger(name);
             _config = ConfigFile.GetConfigFile(name+".cfg");
 
-            _barbatchsize = _config["BarBatchSize"].AsInt();
-            _batchSave = _config["BatchSave"].AsBool();
+            //初始化MySQL数据库连接池
+            logger.Info("Init MySQL connection pool");
+            //ConfigFile _configFile = ConfigFile.GetConfigFile("DataCore.cfg");
+            DBHelper.InitDBConfig(ConfigFile["DBAddress"].AsString(), ConfigFile["DBPort"].AsInt(), ConfigFile["DBName"].AsString(), ConfigFile["DBUser"].AsString(), ConfigFile["DBPass"].AsString());
+
+
+            //_barbatchsize = _config["BarBatchSize"].AsInt();
+            //_batchSave = _config["BatchSave"].AsBool();
+
+            _cfgdb = new ConfigDB("DataFarm");
+
+            if (!_cfgdb.HaveConfig("TradeBatchSendSize"))
+            {
+                _cfgdb.UpdateConfig("TradeBatchSendSize", QSEnumCfgType.Int,500, "分笔数据单个回报包含数据量");
+            }
+
+            _tradebatchsize = _cfgdb["TradeBatchSendSize"].AsInt();
+
+            if (!_cfgdb.HaveConfig("BarBatchSendSize"))
+            {
+                _cfgdb.UpdateConfig("BarBatchSendSize", QSEnumCfgType.Int, 500, "Bar数据单个回报包含数据量");
+            }
+
+            _barbatchsize = _cfgdb["BarBatchSendSize"].AsInt();
+
+            if (!_cfgdb.HaveConfig("PriceVolBatchSendSize"))
+            {
+                _cfgdb.UpdateConfig("PriceVolBatchSendSize", QSEnumCfgType.Int, 100, "价格成交量分布数据单个回报包含数据量");
+            }
+
+            _pricevolbatchsize = _cfgdb["PriceVolBatchSendSize"].AsInt();
+
+            if (!_cfgdb.HaveConfig("MinuteDataBatchSendSize"))
+            {
+                _cfgdb.UpdateConfig("MinuteDataBatchSendSize", QSEnumCfgType.Int, 500, "分时数据单个回报包含数据量");
+            }
+
+            _minutedatabatchsize = _cfgdb["MinuteDataBatchSendSize"].AsInt();
+
         }
         /// <summary>
         /// 获取历史行情储存服务

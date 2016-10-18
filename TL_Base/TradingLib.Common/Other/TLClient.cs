@@ -540,6 +540,7 @@ namespace TradingLib.Common
                 if (_tlsocket != null && _tlsocket.IsConnected)
                 {
                     byte[] data = package.Data;
+                    logger.Debug(string.Format("Send Type:{0} Content:{1}", package.Type, package.Content));
                     _tlsocket.Send(data);
                     return 0;
                 }
@@ -741,7 +742,7 @@ namespace TradingLib.Common
         {
             try
             {
-                //logger.Debug(string.Format("Got Message type:{0} content:{1}", message.Type, message.Content));
+                logger.Debug(string.Format("Recv Type:{0} Content:{1}", message.Type, message.Content));
                 if (message.Type == MessageTypes.XQRYTRADSPLITRESPONSE)
                 {
                     int i = 0;

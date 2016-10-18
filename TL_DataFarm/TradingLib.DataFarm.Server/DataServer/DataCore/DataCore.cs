@@ -19,11 +19,7 @@ namespace TradingLib.Common.DataFarm
         public DataCore()
             :base("DataCore")
         {
-            //初始化MySQL数据库连接池
-            logger.Info("Init MySQL connection pool");
-            //ConfigFile _configFile = ConfigFile.GetConfigFile("DataCore.cfg");
-            DBHelper.InitDBConfig(ConfigFile["DBAddress"].AsString(), ConfigFile["DBPort"].AsInt(), ConfigFile["DBName"].AsString(), ConfigFile["DBUser"].AsString(), ConfigFile["DBPass"].AsString());
-
+            
             //初始化交易所
             foreach (var exchange in MDBasicTracker.ExchagneTracker.Exchanges)
             {

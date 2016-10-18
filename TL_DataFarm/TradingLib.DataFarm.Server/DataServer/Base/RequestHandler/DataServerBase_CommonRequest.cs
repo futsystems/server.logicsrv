@@ -89,7 +89,6 @@ namespace TradingLib.Common.DataFarm
 
         Profiler pf = new Profiler();
         //为什么超过一定数量的Bar一起发送 客户端就无法收到数据 socket缓存?
-        int _barbatchsize = 1;
         /// <summary>
         /// 查询Bar数据
         /// </summary>
@@ -201,7 +200,7 @@ namespace TradingLib.Common.DataFarm
             {
                 response.Add(trades[i]);
                 j++;
-                if (j == _barbatchsize)
+                if (j == _tradebatchsize)
                 {
                     //一定数目的Bar之后 发送数据 同时判断是否是最后一条
                     response.IsLast = (i == trades.Count - 1);
@@ -249,7 +248,7 @@ namespace TradingLib.Common.DataFarm
             {
                 response.Add(pvlist[i]);
                 j++;
-                if (j == _barbatchsize)
+                if (j == _pricevolbatchsize)
                 {
                     //一定数目的Bar之后 发送数据 同时判断是否是最后一条
                     response.IsLast = (i == pvlist.Count - 1);
@@ -302,7 +301,7 @@ namespace TradingLib.Common.DataFarm
             {
                 response.Add(mdlist[i]);
                 j++;
-                if (j == _barbatchsize)
+                if (j == _minutedatabatchsize)
                 {
                     //一定数目的Bar之后 发送数据 同时判断是否是最后一条
                     response.IsLast = (i == mdlist.Count - 1);
