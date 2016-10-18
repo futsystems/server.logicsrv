@@ -77,10 +77,10 @@ namespace TradingLib.Common.DataFarm
 
         Dictionary<string, BarImpl> eodPendingMinPartialBarMap = new Dictionary<string, BarImpl>();
 
-        Dictionary<string, TradeCache> tradeMap = new Dictionary<string, TradeCache>();
+        
 
         //分时数据Map
-        Dictionary<string, MinuteDataCache> minutedataMap = new Dictionary<string, MinuteDataCache>();
+        //Dictionary<string, MinuteDataCache> minutedataMap = new Dictionary<string, MinuteDataCache>();
 
         IHistDataStore _store = null;
         string _tickpath = string.Empty;
@@ -99,20 +99,8 @@ namespace TradingLib.Common.DataFarm
             //初始化MarketDay
             InitMarketDay();
 
-            //初始化成交Map 用于维护当前MarketDay的数据
-            foreach (var symbol in MDBasicTracker.SymbolTracker.Symbols)
-            {
-                tradeMap.Add(symbol.UniqueKey, new TradeCache(symbol));//初始化话分笔成交缓存
-
-                MarketDay md = GetCurrentMarketDay(symbol.SecurityFamily);
-                if (md == null) continue;
-                minutedataMap.Add(symbol.UniqueKey, new MinuteDataCache(symbol, md));//初始化分时数据缓存
-
-                //设定合约交易小节字段
-                symbol.TradingSession = md.ToSessionString();
-            }
-
-            
+            //初始化数据缓存
+            InitDataCache();
 
             //注册定时任务
             InitMarketDayTask();
@@ -241,7 +229,7 @@ namespace TradingLib.Common.DataFarm
             }
 
             MinuteDataCache cache = null;
-            if (minutedataMap.TryGetValue(symbol.UniqueKey, out cache))
+            if (currentMinuteDataMap.TryGetValue(symbol.UniqueKey, out cache))
             {
                 cache.On1MinPartialBarUpdate(bar);
             }
@@ -295,7 +283,7 @@ namespace TradingLib.Common.DataFarm
             }
 
             MinuteDataCache cache = null;
-            if (minutedataMap.TryGetValue(symbol.UniqueKey, out cache))
+            if (currentMinuteDataMap.TryGetValue(symbol.UniqueKey, out cache))
             {
                 cache.On1MinBarClosed(bar);
             }
@@ -333,7 +321,7 @@ namespace TradingLib.Common.DataFarm
         {
             string key = k.GetSymbolUniqueKey();
             TradeCache cache = null;
-            if (tradeMap.TryGetValue(key,out cache))
+            if (currentTradeMap.TryGetValue(key, out cache))
             {
                 cache.NewTrade(k);
             }

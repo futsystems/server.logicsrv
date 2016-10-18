@@ -15,7 +15,7 @@ namespace TradingLib.Common.DataFarm
         public MarketDay GetCurrentMarketDay(SecurityFamily security)
         {
             MarketDay md = null;
-            if (currentMarketDayMap.TryGetValue(security.Code, out md))
+            if (currentSecCodeMarketDayMap.TryGetValue(security.Code, out md))
             {
                 return md;
             }
@@ -34,7 +34,7 @@ namespace TradingLib.Common.DataFarm
         {
             string key = symbol.UniqueKey;
             TradeCache cache = null;
-            if (tradeMap.TryGetValue(key, out cache))
+            if (currentTradeMap.TryGetValue(key, out cache))
             {
                 return cache.QryTrade(startIdx, count);
             }
@@ -51,7 +51,7 @@ namespace TradingLib.Common.DataFarm
         {
             string key = symbol.UniqueKey;
             TradeCache cache = null;
-            if (tradeMap.TryGetValue(key, out cache))
+            if (currentTradeMap.TryGetValue(key, out cache))
             {
                 return cache.QryPriceVol();
             }
@@ -67,11 +67,18 @@ namespace TradingLib.Common.DataFarm
         public List<MinuteData> QryMinuteData(Symbol symbol, int date)
         {
             string key = symbol.UniqueKey;
-            MinuteDataCache cache = null;
-            if (minutedataMap.TryGetValue(key, out cache))
+            //通过合约找到 多日分时数据Map
+            Dictionary<int, MinuteDataCache> cachemap = null;
+            if (minuteDataMap.TryGetValue(symbol.UniqueKey, out cachemap))
             {
-                return cache.QryMinuteDate();
+                //通过交易日找到对应的分时数据
+                MinuteDataCache cache = null;
+                if (cachemap.TryGetValue(date, out cache))
+                {
+                    return cache.QryMinuteDate();
+                }
             }
+            
             return new List<MinuteData>();
         }
     }

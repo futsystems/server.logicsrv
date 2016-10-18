@@ -83,13 +83,15 @@
     <Compile Include="DataServer\Base\DataServerBase_Eod.cs" />
     <Compile Include="DataServer\Base\DataServerBase_SendWroker.cs" />
     <Compile Include="EodDataService\EodDataService.cs" />
-    <Compile Include="EodDataService\EodDataService_MarketDay.cs" />
+    <Compile Include="EodDataService\EodDataService_DataCache.cs" />
     <Compile Include="EodDataService\EventArgs.cs" />
     <Compile Include="EodDataService\MinuteDataCache.cs" />
     <Compile Include="EodDataService\TradeCache.cs" />
     <Compile Include="EodDataService\EodDataService_.cs" />
     <Compile Include="EodDataService\EodDataService_Qry.cs" />
     <Compile Include="EodDataService\EodDataService_Restore.cs" />
+    <Compile Include="EodDataService\EodDataService_Helper.cs" />
+    <Compile Include="EodDataService\EodDataService_Task.cs" />
     <Compile Include="Global.cs" />
     <Compile Include="TaskService\Listener.cs" />
     <Compile Include="FrequencyService\EventArgs.cs" />

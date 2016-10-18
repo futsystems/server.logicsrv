@@ -14,11 +14,14 @@ namespace TradingLib.Common.DataFarm
     public class MinuteDataCache
     {
 
-        public MinuteDataCache(Symbol symbol,MarketDay marketday)
+        
+        public MinuteDataCache(Symbol symbol,MarketDay marketday,bool restored=false)
         {
             this.Symbol = symbol;
             this.MinuteDataMap = new Dictionary<long, MinuteData>();
             this.MarketDay = marketday;
+            this._restored = restored;
+            this.TradingDay = marketday.TradingDay;
 
             int i=0;
             //初始化所有分时数据
@@ -51,20 +54,20 @@ namespace TradingLib.Common.DataFarm
         public int TradingDay { get; set; }
 
         /// <summary>
-        /// 量价分布列表
+        /// 某个交易日的分时数据
         /// </summary>
         public Dictionary<long, MinuteData> MinuteDataMap { get; set; }
 
         Dictionary<long, int> locationMap = new Dictionary<long, int>();
 
-        bool restored = false;
+        bool _restored = false;
         object _object = new object();
 
 
         long _latestBarKey = 0;
         public void On1MinBarClosed(Bar bar)
         {
-            if (restored)
+            if (_restored)
             {
                 this.GotBar(bar);
             }
@@ -72,13 +75,12 @@ namespace TradingLib.Common.DataFarm
 
         public void On1MinPartialBarUpdate(Bar bar)
         {
-            if (restored)
+            if (_restored)
             {
                 this.GotBar(bar);
             }
         }
 
-        //List<Bar> tmpList = new List<Tick>();
         /// <summary>
         /// 恢复1分钟Bar数据
         /// 启动后 当行情源1分钟过去之后 系统开始恢复历史Tick数据
@@ -91,7 +93,7 @@ namespace TradingLib.Common.DataFarm
                 {
                     GotBar(bar);
                 }
-                restored = true;
+                _restored = true;
         }
 
         /// <summary>
