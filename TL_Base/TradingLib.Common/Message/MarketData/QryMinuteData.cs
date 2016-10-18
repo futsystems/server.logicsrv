@@ -69,6 +69,7 @@ namespace TradingLib.Common
         {
             _type = MessageTypes.XQRYMINUTEDATARESPONSE;
             this.MinuteDataList = new List<MinuteData>();
+            //this.IsHist = false;
         }
 
         public void Add(MinuteData data)
@@ -77,6 +78,7 @@ namespace TradingLib.Common
         }
 
 
+        //public bool IsHist { get; set; }
         public List<MinuteData> MinuteDataList { get; set; }
 
         /// <summary>
@@ -105,6 +107,7 @@ namespace TradingLib.Common
                 {
                     this.RequestID = reader.ReadInt32();
                     this.IsLast = reader.ReadBoolean();
+                    //this.IsHist = reader.ReadBoolean();
 
                     List<MinuteData> mdlist = new List<MinuteData>();
                     while (ms.Position < ms.Length)
@@ -132,18 +135,20 @@ namespace TradingLib.Common
             {
                 MinuteData.Write(b, this.MinuteDataList[i]);
             }
-            int size = (int)ms.Length + 8 + 4 + 1;
+            int size = (int)ms.Length + 8 + 4 + 1 +1;
             byte[] buffer = new byte[size];
 
             byte[] sizebyte = BitConverter.GetBytes(size);
             byte[] typebyte = BitConverter.GetBytes((int)this.Type);
             byte[] requestidbyte = BitConverter.GetBytes(this.RequestID);
             byte[] islastbyte = BitConverter.GetBytes(this.IsLast);
+            //byte[] ishistbyte = BitConverter.GetBytes(this.IsHist);
 
             Array.Copy(sizebyte, 0, buffer, 0, sizebyte.Length);
             Array.Copy(typebyte, 0, buffer, 4, typebyte.Length);
             Array.Copy(requestidbyte, 0, buffer, 8, requestidbyte.Length);
             Array.Copy(islastbyte, 0, buffer, 8 + 4, islastbyte.Length);
+            //Array.Copy(ishistbyte, 0, buffer, 8 + 4 + 1, ishistbyte.Length);
 
             Array.Copy(ms.GetBuffer(), 0, buffer, 8 + 4 + 1, ms.Length);
             return buffer;

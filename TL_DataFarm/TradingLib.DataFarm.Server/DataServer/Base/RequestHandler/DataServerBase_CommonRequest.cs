@@ -280,15 +280,19 @@ namespace TradingLib.Common.DataFarm
                 logger.Warn(string.Format("Symbol:{0} do not exist", request.Symbol));
                 return;
             }
+            MarketDay md = eodservice.GetCurrentMarketDay(symbol.SecurityFamily);
+            if (md == null)
+            {
+                logger.Warn(string.Format("Sec:{0} have no marketday", symbol.SecurityFamily.Code));
+                return;
+            }
+
             int tradingday = request.Tradingday;
             if (tradingday == 0)
             {
-                MarketDay md = eodservice.GetCurrentMarketDay(symbol.SecurityFamily);
-                if (md != null)
-                {
-                    tradingday = md.TradingDay;
-                }
+                tradingday = md.TradingDay;
             }
+
             List<MinuteData> mdlist = eodservice.QryMinuteData(symbol, tradingday);////GetHistDataSotre().QryMinuteData(symbol, tradingday);
 
             int j = 0;

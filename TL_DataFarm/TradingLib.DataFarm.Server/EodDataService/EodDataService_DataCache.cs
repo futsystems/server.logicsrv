@@ -121,7 +121,7 @@ namespace TradingLib.Common.DataFarm
             
             IEnumerable<string> secCodeList = seclist.Select(sec=>sec.Code);
             logger.Info(string.Format("Open Market for securities:{0}", string.Join(",", secCodeList.ToArray())));
-
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                
             //更新品种当前MarketDay
             foreach (var sec in seclist)
             {
@@ -139,7 +139,6 @@ namespace TradingLib.Common.DataFarm
                     logger.Info(string.Format("Security:{0} MarketDay Move From {1} To {2}", sec.Code, old, current));
                 }
             }
-
 
             //处理单个合约事务
             foreach (var symbol in MDBasicTracker.SymbolTracker.Symbols.Where(sym => secCodeList.Contains(sym.SecurityFamily.Code)))
@@ -197,11 +196,7 @@ namespace TradingLib.Common.DataFarm
                     currentMinuteDataMap[symbol.UniqueKey] = item;
                     symbol.TradingSession = md.ToSessionString();//设定合约交易小节字段
                 }
-
-                
-
             }
-            
         }
     }
 }
