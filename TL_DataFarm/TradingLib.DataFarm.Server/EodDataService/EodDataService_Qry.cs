@@ -64,8 +64,9 @@ namespace TradingLib.Common.DataFarm
         /// <param name="symbol"></param>
         /// <param name="date"></param>
         /// <returns></returns>
-        public List<MinuteData> QryMinuteData(Symbol symbol, int date)
+        public List<MinuteData> QryMinuteData(Symbol symbol, int date,DateTime start)
         {
+            List<MinuteData> list = new List<MinuteData>();
             string key = symbol.UniqueKey;
             //通过合约找到 多日分时数据Map
             Dictionary<int, MinuteDataCache> cachemap = null;
@@ -75,11 +76,11 @@ namespace TradingLib.Common.DataFarm
                 MinuteDataCache cache = null;
                 if (cachemap.TryGetValue(date, out cache))
                 {
-                    return cache.QryMinuteDate();
+                    list= cache.QryMinuteDate(start);
                 }
             }
-            
-            return new List<MinuteData>();
+
+            return list;
         }
     }
 }

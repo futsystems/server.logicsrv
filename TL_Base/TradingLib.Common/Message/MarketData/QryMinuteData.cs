@@ -16,6 +16,7 @@ namespace TradingLib.Common
             this.Exchange = string.Empty;
             this.Symbol = string.Empty;
             this.Tradingday = 0;
+            this.Start = DateTime.MinValue;
         }
 
         /// <summary>
@@ -33,6 +34,10 @@ namespace TradingLib.Common
         /// </summary>
         public int Tradingday { get; set; }
 
+        /// <summary>
+        /// 开始时间
+        /// </summary>
+        public DateTime Start { get; set; }
 
         public override string ContentSerialize()
         {
@@ -43,6 +48,8 @@ namespace TradingLib.Common
             sb.Append(this.Symbol);
             sb.Append(d);
             sb.Append((int)this.Tradingday);
+            sb.Append(d);
+            sb.Append(this.Start);
             return sb.ToString();
         }
 
@@ -52,6 +59,7 @@ namespace TradingLib.Common
             this.Exchange = rec[0];
             this.Symbol = rec[1];
             this.Tradingday = int.Parse(rec[2]);
+            this.Start = DateTime.Parse(rec[3]);
         }
 
 
@@ -69,7 +77,6 @@ namespace TradingLib.Common
         {
             _type = MessageTypes.XQRYMINUTEDATARESPONSE;
             this.MinuteDataList = new List<MinuteData>();
-            //this.IsHist = false;
         }
 
         public void Add(MinuteData data)
@@ -107,7 +114,6 @@ namespace TradingLib.Common
                 {
                     this.RequestID = reader.ReadInt32();
                     this.IsLast = reader.ReadBoolean();
-                    //this.IsHist = reader.ReadBoolean();
 
                     List<MinuteData> mdlist = new List<MinuteData>();
                     while (ms.Position < ms.Length)
@@ -135,20 +141,18 @@ namespace TradingLib.Common
             {
                 MinuteData.Write(b, this.MinuteDataList[i]);
             }
-            int size = (int)ms.Length + 8 + 4 + 1 +1;
+            int size = (int)ms.Length + 8 + 4 + 1;
             byte[] buffer = new byte[size];
 
             byte[] sizebyte = BitConverter.GetBytes(size);
             byte[] typebyte = BitConverter.GetBytes((int)this.Type);
             byte[] requestidbyte = BitConverter.GetBytes(this.RequestID);
             byte[] islastbyte = BitConverter.GetBytes(this.IsLast);
-            //byte[] ishistbyte = BitConverter.GetBytes(this.IsHist);
 
             Array.Copy(sizebyte, 0, buffer, 0, sizebyte.Length);
             Array.Copy(typebyte, 0, buffer, 4, typebyte.Length);
             Array.Copy(requestidbyte, 0, buffer, 8, requestidbyte.Length);
             Array.Copy(islastbyte, 0, buffer, 8 + 4, islastbyte.Length);
-            //Array.Copy(ishistbyte, 0, buffer, 8 + 4 + 1, ishistbyte.Length);
 
             Array.Copy(ms.GetBuffer(), 0, buffer, 8 + 4 + 1, ms.Length);
             return buffer;

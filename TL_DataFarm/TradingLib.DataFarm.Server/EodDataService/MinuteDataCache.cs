@@ -157,9 +157,17 @@ namespace TradingLib.Common.DataFarm
          /// <param name="startIndex"></param>
          /// <param name="count"></param>
          /// <returns></returns>
-        public List<MinuteData> QryMinuteDate()
+        public List<MinuteData> QryMinuteDate(DateTime start)
         {
-            return this.MinuteDataMap.Where(d => d.Key <= _latestBarKey).Select(d => d.Value).ToList();
+            if (start == DateTime.MinValue)
+            {
+                return this.MinuteDataMap.Where(d => d.Key <= _latestBarKey).Select(d => d.Value).ToList();
+            }
+            else
+            {
+                return this.MinuteDataMap.Where(d => d.Key <= _latestBarKey).Select(d => d.Value).Where(d => d.DateTime >= start).ToList();
+                
+            }
         }
 
     }

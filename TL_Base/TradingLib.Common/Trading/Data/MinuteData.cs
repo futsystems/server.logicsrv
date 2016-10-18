@@ -20,12 +20,16 @@ namespace TradingLib.Common
             this.Close = close;
             this.Vol = vol;
             this.AvgPrice = avgprice;
+            this.DateTime = Util.ToDateTime(this.Date, this.Time);
         }
 
-        public MinuteData()
-            :this(0,0,0,0,0)
-        {
-        }
+        //public MinuteData()
+        //    :this(0,0,0,0,0)
+        //{
+        //    this.DateTime = DateTime.MinValue;
+        //}
+
+        public DateTime DateTime { get; private set; }
         /// <summary>
         /// 日期
         /// </summary>
@@ -60,13 +64,13 @@ namespace TradingLib.Common
 
         public static MinuteData Read(BinaryReader reader)
         {
-            MinuteData data = new MinuteData();
-            data.Date = reader.ReadInt32();
-            data.Time = reader.ReadInt32();
-            data.Close = reader.ReadDouble();
-            data.AvgPrice = reader.ReadDouble();
-            data.Vol = reader.ReadInt32();
-            return data;
+            int date = reader.ReadInt32();
+            int time = reader.ReadInt32();
+            double close = reader.ReadDouble();
+            double avg = reader.ReadDouble();
+            int vol = reader.ReadInt32();
+            return new MinuteData(date, time, close, vol, avg);
+            
         }
 
     }

@@ -25,13 +25,6 @@ namespace TradingLib.Common.DataFarm
         ConcurrentDictionary<string, ConcurrentDictionary<string, IConnection>> symKeyRegMap = new ConcurrentDictionary<string, ConcurrentDictionary<string, IConnection>>();
 
         /// <summary>
-        /// 保存合约的成交数据
-        /// 用户客户端查询成交数据
-        /// 系统启动时需要加载
-        /// </summary>
-        //Dictionary<string, ThreadSafeList<Tick>> symbolTradsMap = new Dictionary<string, ThreadSafeList<Tick>>();
-
-        /// <summary>
         /// 记录了每个合约最近更新时间,当前tick时间要大于等于最近更新时间否则过滤掉
         /// </summary>
         Dictionary<string, DateTime> tickLastTimeMap = new Dictionary<string, DateTime>();

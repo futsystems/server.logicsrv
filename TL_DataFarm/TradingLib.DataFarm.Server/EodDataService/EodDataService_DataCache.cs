@@ -65,6 +65,11 @@ namespace TradingLib.Common.DataFarm
             foreach (var security in MDBasicTracker.SecurityTracker.Securities)
             {
                 MarketDay md = GetCurrentMarketDay(security, 10, out mdMap);
+                //比如下午收盘后 当天是20161018 是一个交易日但是 GetCurrentMarketDay 返回的是当前可用的 则返回了20161019这个交易日,所以这里增加当前交易日验证 用于将下一个交易日也添加到缓存
+                if (!mdMap.Keys.Contains(md.TradingDay))
+                {
+                    mdMap[md.TradingDay] = md;
+                }
                 currentSecCodeMarketDayMap.Add(security.Code, md);
                 latestSecCodeMarketDaysMap.Add(security.Code, mdMap);
 
