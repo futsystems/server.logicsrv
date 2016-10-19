@@ -37,9 +37,6 @@ namespace TradingLib.Common.DataFarm
             DBHelper.InitDBConfig(ConfigFile["DBAddress"].AsString(), ConfigFile["DBPort"].AsInt(), ConfigFile["DBName"].AsString(), ConfigFile["DBUser"].AsString(), ConfigFile["DBPass"].AsString());
 
 
-            //_barbatchsize = _config["BarBatchSize"].AsInt();
-            //_batchSave = _config["BatchSave"].AsBool();
-
             _cfgdb = new ConfigDB("DataFarm");
 
             if (!_cfgdb.HaveConfig("TradeBatchSendSize"))

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.Concurrent;
+using System.Threading;
 using System.Linq;
 using System.Text;
 using TradingLib.API;
@@ -10,6 +11,18 @@ using Common.Logging;
 
 namespace TCPServiceHost
 {
+    internal class MessageItem
+    {
+        public MessageItem(IConnection conn,IPacket packet)
+        {
+            this.Connection = conn;
+            this.Packet = packet;
+        }
+
+        public IConnection Connection {get;set;}
+
+        public IPacket Packet {get;set;}
+    }
     public partial class TCPServiceHost:IServiceHost
     {
         ILog logger = LogManager.GetLogger(_name);
@@ -24,20 +37,81 @@ namespace TCPServiceHost
         TLServerBase tcpSocketServer = null;
         bool _started = false;
 
+        
+
+        bool _workergo = false;
+        Thread _workerthread = null;
+        RingBuffer<MessageItem> _itembuffer = new RingBuffer<MessageItem>(2000);
+        static ManualResetEvent _processwaiting = new ManualResetEvent(false);
+        void StartProcess()
+        {
+            if (_workergo) return;
+            _workergo = true;
+            _workerthread = new Thread(WorkProcess);
+            _workerthread.IsBackground = false;
+            _workerthread.Start();
+        }
+
+        void NewPacket()
+        {
+            if ((_workerthread != null) && (_workerthread.ThreadState == System.Threading.ThreadState.WaitSleepJoin))
+            {
+                _processwaiting.Set();
+            }
+        }
+
+        void WorkProcess()
+        {
+            while (_workergo)
+            {
+                MessageItem item=null;
+                while (_itembuffer.hasItems)
+                {
+                    try
+                    {
+                        item = _itembuffer.Read();
+                        OnRequestEvent(item.Connection, item.Packet);
+                    }
+                    catch (Exception ex)
+                    {
+                        if (item != null)
+                        {
+                            logger.Error(string.Format("Conn:{0} Packet{1} {2} Process Error:{3}", item.Connection.SessionID, item.Packet.Type, item.Packet.Content, ex.ToString()));
+                        }
+                        else
+                        {
+                            logger.Error("Error:" + ex.ToString());
+                        }
+                    }
+                }
+
+                // clear current flag signal
+                _processwaiting.Reset();
+                //logger.Info("process send");
+                // wait for a new signal to continue reading
+                _processwaiting.WaitOne(1000);
+            }
+        }
+        ConfigFile _cfg = null;
+        //是否启用单独的Worker线程处理消息
+        bool _workerendable = false;
         int _port = 5060;
+        int _sendBufferSize = 65535;
+        int _recvBufferSize = 65535;
 
         /// <summary>
         /// 初始化服务
         /// </summary>
         void InitServer()
         {
+
             tcpSocketServer = new TLServerBase();
 
 
             SuperSocket.SocketBase.Config.ServerConfig cfg = new SuperSocket.SocketBase.Config.ServerConfig();
             cfg.Port = _port;
-            cfg.SendBufferSize = 65535;
-            cfg.ReceiveBufferSize = 65535;
+            cfg.SendBufferSize = _sendBufferSize;
+            cfg.ReceiveBufferSize = _recvBufferSize;
             cfg.Ip = "0.0.0.0";
             
             cfg.ClearIdleSession = true;
@@ -58,16 +132,16 @@ namespace TCPServiceHost
                 logger.Error("Setup TcpSocket Error");
             }
 
-            //tcpSocketServer.Config.ReceiveBufferSize = 4096;
-            //tcpSocketServer.Config.SendBufferSize = 20480;
-            //tcpSocketServer.Setup(
-            
-
             logger.Info("recv buffersize:" + tcpSocketServer.Config.SendBufferSize);
 
             tcpSocketServer.NewSessionConnected += new SuperSocket.SocketBase.SessionHandler<TLSessionBase>(tcpSocketServer_NewSessionConnected);
             tcpSocketServer.NewRequestReceived += new SuperSocket.SocketBase.RequestHandler<TLSessionBase, TLRequestInfo>(tcpSocketServer_NewRequestReceived);
             tcpSocketServer.SessionClosed += new SuperSocket.SocketBase.SessionHandler<TLSessionBase, SuperSocket.SocketBase.CloseReason>(tcpSocketServer_SessionClosed);
+            if (_workerendable)
+            {
+                StartProcess();
+            }
+        
         }
 
         void DestoryServer()
@@ -169,7 +243,16 @@ namespace TCPServiceHost
                             }
 
                             IPacket packet = PacketHelper.SrvRecvRequest(requestInfo.Message, "", sessionId);
-                            OnRequestEvent(conn, packet);
+
+                            if (_workerendable)
+                            {
+                                _itembuffer.Write(new MessageItem(conn, packet));
+                                NewPacket();
+                            }
+                            else
+                            {
+                                OnRequestEvent(conn, packet);
+                            }
 
                         }
                         return;
@@ -189,8 +272,12 @@ namespace TCPServiceHost
         #region 启动 停止
         public void Start()
         {
-            ConfigFile _cfg = ConfigFile.GetConfigFile("TCPServiceHost.cfg");
+            _cfg = ConfigFile.GetConfigFile("TCPServiceHost.cfg");
             _port = _cfg["HistPort"].AsInt();
+            _workerendable = _cfg["WorkerEnable"].AsBool();
+            _sendBufferSize = _cfg["SendBufferSize"].AsInt();
+            _recvBufferSize = _cfg["RecvBufferSize"].AsInt();
+
 
             logger.Info(string.Format("Start Transport Service:{0} at:{1}", _name, _port));
             if (_started)

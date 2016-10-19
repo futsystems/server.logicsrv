@@ -540,7 +540,7 @@ namespace TradingLib.Common
                 if (_tlsocket != null && _tlsocket.IsConnected)
                 {
                     byte[] data = package.Data;
-                    logger.Debug(string.Format("Send Type:{0} Content:{1}", package.Type, package.Content));
+                    //logger.Debug(string.Format("Send Type:{0} Content:{1}", package.Type, package.Content));
                     _tlsocket.Send(data);
                     return 0;
                 }
@@ -742,12 +742,16 @@ namespace TradingLib.Common
         {
             try
             {
-                logger.Debug(string.Format("Recv Type:{0} Content:{1}", message.Type, message.Content));
-                if (message.Type == MessageTypes.XQRYTRADSPLITRESPONSE)
-                {
-                    int i = 0;
-                }
+                
+                //if (message.Type == MessageTypes.XQRYTRADSPLITRESPONSE)
+                //{
+                //    int i = 0;
+                //}
                 IPacket packet = PacketHelper.CliRecvResponse(message);
+                //if (message.Type != MessageTypes.TICKNOTIFY)
+                //{
+                //    logger.Debug(string.Format("Recv Type:{0} Content:{1} Size:{2} ReqId:{3}", message.Type, message.Content, message.ByteLength,packet is RspResponsePacket? (packet as RspResponsePacket).RequestID:0));
+                //}
                 //更新服务端消息回报时间戳
                 UpdateServerHeartbeat();
                 switch (packet.Type)
