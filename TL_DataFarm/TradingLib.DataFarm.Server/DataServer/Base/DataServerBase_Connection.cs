@@ -30,7 +30,7 @@ namespace TradingLib.Common.DataFarm
 
         void ClearDeadClient()
         {
-            logger.Info("clean dead connection");
+            //logger.Info("clean dead connection");
             foreach (var conn in connectionMap.Values.ToList())
             {
                 //10秒钟没有活动 则直接杀死该Connection
