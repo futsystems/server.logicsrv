@@ -91,6 +91,13 @@ namespace TradingLib.Common.DataFarm
             _acceptTick = false;
         }
 
+        [DataCommandAttr("ResetSnapshot", "ResetSnapshot -  reset snapshot", "重置快照数据")]
+        public void CTE_ResetSnapshot(IServiceHost host, IConnection conn)
+        {
+            logger.Info("ResetSnapshot");
+            this.ResetAllSnapshot();
+        }
+
 
         //查询日历列表
         [DataCommandAttr("QryCalendarList", "QryCalendarList -  qry calendar list", "查询日历对象列表")]

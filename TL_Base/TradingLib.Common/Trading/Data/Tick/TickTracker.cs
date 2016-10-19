@@ -13,7 +13,7 @@ namespace TradingLib.Common
     /// 
     /// 这里直接使用S类型的Tick 是否会更理想，在这个数据维护器中，获得一个行情快照 需要从多个数据维护期中查找数据 效率明显比直接获取Tick对象要慢很多
     /// </summary>
-    public class TickTracker: GotTickIndicator
+    public class TickTracker
     {
         public void GotTick(Tick k)
         {
@@ -22,7 +22,7 @@ namespace TradingLib.Common
 
         public void Clear()
         {
-            tickSnapMap.Clear();
+            tickSnapshotMap.Clear();
         }
 
         /// <summary>
@@ -30,9 +30,10 @@ namespace TradingLib.Common
         /// </summary>
         public TickTracker()
         {
+
         }
 
-        public int Count { get { return tickSnapMap.Count; } }
+        public int Count { get { return tickSnapshotMap.Count; } }
 
         /// <summary>
         /// 返回所有行情Tick
@@ -40,10 +41,18 @@ namespace TradingLib.Common
         /// <returns></returns>
         public IEnumerable<Tick> GetTicks()
         {
-            return tickSnapMap.Values;
+            return tickSnapshotMap.Values;
         }
 
-        ConcurrentDictionary<string, Tick> tickSnapMap = new ConcurrentDictionary<string, Tick>();
+        public IEnumerable<Tick> TickSnapshots
+        {
+            get
+            {
+                return tickSnapshotMap.Values;
+            }
+        }
+
+        ConcurrentDictionary<string, Tick> tickSnapshotMap = new ConcurrentDictionary<string, Tick>();
 
         //TODO SymbolKey
         /// <summary>
@@ -57,7 +66,7 @@ namespace TradingLib.Common
             {
                 string key = string.Format("{0}-{1}", exchange, sym);
                 Tick snapshot = null;
-                if (tickSnapMap.TryGetValue(key, out snapshot))
+                if (tickSnapshotMap.TryGetValue(key, out snapshot))
                 {
                     return snapshot;
                 }
@@ -77,13 +86,13 @@ namespace TradingLib.Common
             string key = k.GetSymbolUniqueKey();
 
             Tick snapshot = null;
-            if (!tickSnapMap.TryGetValue(key, out snapshot))
+            if (!tickSnapshotMap.TryGetValue(key, out snapshot))
             {
                 snapshot = new TickImpl();
                 snapshot.UpdateType = "S";
                 snapshot.Symbol = k.Symbol;
                 snapshot.Exchange = k.Exchange;
-                tickSnapMap.TryAdd(key, snapshot);
+                tickSnapshotMap.TryAdd(key, snapshot);
             }
             snapshot.DataFeed = k.DataFeed;
 

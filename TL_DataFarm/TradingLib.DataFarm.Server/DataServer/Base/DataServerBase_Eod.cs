@@ -22,6 +22,74 @@ namespace TradingLib.Common.DataFarm
             eodservice.EodBarResotred += new Action<Symbol, IEnumerable<BarImpl>>(eodservice_EodBarResotred);
             eodservice.EodBarClose += new Action<EodBarEventArgs>(eodservice_EodBarClose);
             eodservice.EodBarUpdate += new Action<EodBarEventArgs>(eodservice_EodBarUpdate);
+
+            eodservice.SecurityEntryMarketDay += new Action<SecurityFamily, MarketDay>(eodservice_SecurityEntryMarketDay);
+        }
+
+
+        void eodservice_SecurityEntryMarketDay(SecurityFamily arg1, MarketDay arg2)
+        {
+            //重置快照数据
+            foreach (var snapshot in tickTracker.TickSnapshots)
+            {
+                Symbol symbol = MDBasicTracker.SymbolTracker[snapshot.Exchange, snapshot.Symbol];
+                if (symbol == null) continue;
+
+                //属于对应品种
+                if (symbol.SecurityFamily.Code == arg1.Code)
+                {
+                                                                                       
+                    decimal lastclose = snapshot.Trade;//昨日收盘价 为最后一个成交价
+                    //根据交易所不同盘中/盘后会给出当前交易日的结算价与持仓统计
+                    decimal lastsettle = snapshot.Settlement;
+                    int lastoi = snapshot.OpenInterest;
+                    DateTime dt = GetDataFeedTime(symbol.SecurityFamily.Exchange.DataFeed).CurrentTime;
+
+                    snapshot.Reset();
+                    if (dt != null)
+                    {
+                        snapshot.Date = dt.ToTLDate();
+                        snapshot.Time = dt.ToTLTime();
+                    }
+                    snapshot.PreClose = lastclose;
+                    snapshot.PreSettlement = lastsettle;
+                    snapshot.PreOpenInterest = lastoi;
+
+                    NotifyTick2Connections(snapshot);
+                }
+            }
+        }
+
+        /// <summary>
+        /// 重置所有快照数据
+        /// </summary>
+        void ResetAllSnapshot()
+        {
+            //重置快照数据
+            foreach (var snapshot in tickTracker.TickSnapshots)
+            {
+                Symbol symbol = MDBasicTracker.SymbolTracker[snapshot.Exchange, snapshot.Symbol];
+                if (symbol == null) continue;
+
+                decimal lastclose = snapshot.Trade;//昨日收盘价 为最后一个成交价
+                //根据交易所不同盘中/盘后会给出当前交易日的结算价与持仓统计
+                decimal lastsettle = snapshot.Settlement;
+                int lastoi = snapshot.OpenInterest;
+                lastsettle = 100;
+                DateTime dt = GetDataFeedTime(symbol.SecurityFamily.Exchange.DataFeed).CurrentTime;
+
+                snapshot.Reset();
+                if (dt != null)
+                {
+                    snapshot.Date = dt.ToTLDate();
+                    snapshot.Time = dt.ToTLTime();
+                }
+                snapshot.PreClose = lastclose;
+                snapshot.PreSettlement = lastsettle;
+                snapshot.PreOpenInterest = lastoi;
+
+                NotifyTick2Connections(snapshot);
+            }
         }
 
         public void StartEodService()

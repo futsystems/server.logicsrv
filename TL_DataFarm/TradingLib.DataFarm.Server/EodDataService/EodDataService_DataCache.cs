@@ -140,28 +140,34 @@ namespace TradingLib.Common.DataFarm
                 {
                     currentSecCodeMarketDayMap[sec.Code] = current;
                     latestSecCodeMarketDaysMap[sec.Code][current.TradingDay] = current;
-
+                    if (SecurityEntryMarketDay != null)
+                    {
+                        SecurityEntryMarketDay(sec, current);
+                    }
                     logger.Info(string.Format("Security:{0} MarketDay Move From {1} To {2}", sec.Code, old, current));
                 }
             }
 
+            //禁止过期合约并加入换月合约
+
+
             //处理单个合约事务
             foreach (var symbol in MDBasicTracker.SymbolTracker.Symbols.Where(sym => secCodeList.Contains(sym.SecurityFamily.Code)))
             { 
-                //禁止过期合约并加入换月合约
+                
 
-                MarketDay md = GetCurrentMarketDay(symbol.SecurityFamily);
-                if (md == null) continue;
+                MarketDay currentMarketDay = GetCurrentMarketDay(symbol.SecurityFamily);
+                if (currentMarketDay == null) continue;
 
                 //清空TradeCache
                 TradeCache tradeCache = null;
                 if (!currentTradeMap.TryGetValue(symbol.UniqueKey, out tradeCache))
                 {
                     tradeCache = new TradeCache(symbol);
-                    tradeCache.TradingDay = md.TradingDay;
+                    tradeCache.TradingDay = currentMarketDay.TradingDay;
                     currentTradeMap[symbol.UniqueKey] = tradeCache;
                 }
-                if (tradeCache.TradingDay != md.TradingDay)
+                if (tradeCache.TradingDay != currentMarketDay.TradingDay)
                 {
                     tradeCache.Clear();
                 }
@@ -180,7 +186,7 @@ namespace TradingLib.Common.DataFarm
                         {
                             var item = new MinuteDataCache(symbol, marketDay);
                             cachemap.Add(item.TradingDay, item);
-                            if(item.TradingDay == md.TradingDay)
+                            if (item.TradingDay == currentMarketDay.TradingDay)
                             {
                                 currentMinuteDataMap[symbol.UniqueKey] = item;
                             }
@@ -194,12 +200,34 @@ namespace TradingLib.Common.DataFarm
                 //    currentMinuteDataMap[symbol.UniqueKey] = 
                 //}
                 //如果当前分时数据的交易日与MarketDay交易日不一致 则滚段该分时数据
-                if (currentMinuteDataMap[symbol.UniqueKey].TradingDay != md.TradingDay)
+                if (currentMinuteDataMap[symbol.UniqueKey].TradingDay != currentMarketDay.TradingDay)
                 {
-                    var item = new MinuteDataCache(symbol, md, true);
+                    var item = new MinuteDataCache(symbol, currentMarketDay, true);
                     cachemap[item.TradingDay] = item;
                     currentMinuteDataMap[symbol.UniqueKey] = item;
-                    symbol.TradingSession = md.ToSessionString();//设定合约交易小节字段
+                    symbol.TradingSession = currentMarketDay.ToSessionString();//设定合约交易小节字段
+                }
+
+                //关闭EODBar
+                EodBarStruct eod = null;
+                //如果没有对应合约的EODBar 则创建当前交易日的Bar
+                if (!eodBarMap.TryGetValue(symbol.UniqueKey, out eod))
+                {
+                    BarImpl bar = CreateEod(symbol, currentMarketDay);
+                    eod = new EodBarStruct(symbol, bar, 0);
+                    eodBarMap.Add(symbol.UniqueKey, eod);
+                    //如何获得新合约的昨日收盘价等信息
+                }
+                else
+                {
+                    //表明上个交易日的Bar没有关闭 执行关闭
+                    if (eod.EODBar.TradingDay != currentMarketDay.TradingDay)
+                    {
+                        CloseEodPartialBar(eod);
+                        //创建新的EODBar
+                        eod.EODBar = CreateEod(symbol, currentMarketDay);
+                        //eod.EODBar.Open = 
+                    }
                 }
             }
         }

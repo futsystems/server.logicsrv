@@ -13,6 +13,10 @@ namespace TradingLib.Common.DataFarm
 {
     /// <summary>
     /// 维护客户端连接
+    /// 1.连接创建 连接关闭
+    /// 2.定时清除无效连接
+    /// 3.发送数据异常清理异常连接
+    /// 
     /// </summary>
     public partial class DataServerBase
     {
@@ -30,11 +34,10 @@ namespace TradingLib.Common.DataFarm
 
         void ClearDeadClient()
         {
-            //logger.Info("clean dead connection");
             foreach (var conn in connectionMap.Values.ToList())
             {
-                //10秒钟没有活动 则直接杀死该Connection
-                if (DateTime.Now.Subtract(conn.LastHeartBeat).TotalSeconds > _connectionDeatPeriod)
+                //关闭超时连接
+                if (DateTime.Now.Subtract(conn.LastHeartBeat).TotalSeconds > _connectionDeadPeriod)
                 {
                     CloseConnection(conn);
                 }

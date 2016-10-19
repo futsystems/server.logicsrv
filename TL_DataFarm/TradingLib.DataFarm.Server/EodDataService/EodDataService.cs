@@ -66,6 +66,12 @@ namespace TradingLib.Common.DataFarm
         public event Action<Symbol, IEnumerable<BarImpl>> EodBarResotred;
 
         /// <summary>
+        /// 某个品种进入某个交易日
+        /// 比如 早上开盘前品种判定交易日后进入交易日 此时需要执行Tick数据清空操作
+        /// </summary>
+        public event Action<SecurityFamily, MarketDay> SecurityEntryMarketDay;
+
+        /// <summary>
         /// 保存当前交易日日线数据
         /// </summary>
         Dictionary<string, EodBarStruct> eodBarMap = new Dictionary<string, EodBarStruct>();
@@ -177,6 +183,17 @@ namespace TradingLib.Common.DataFarm
             eod.IntervalType = BarInterval.Day;
             eod.Interval = 1;
 
+            return eod;
+        }
+
+        BarImpl CreateEod(Symbol symbol, MarketDay marketDay)
+        {
+            BarImpl eod = new BarImpl();
+            eod.Exchange = symbol.Exchange;
+            eod.Symbol = symbol.Symbol;
+            eod.TradingDay = marketDay.TradingDay;
+            eod.IntervalType = BarInterval.Day;
+            eod.Interval = 1;
             return eod;
         }
 

@@ -404,5 +404,42 @@ namespace TradingLib.Common
         {
             return string.Format("{0}-{1}", k.Exchange, k.Symbol);
         }
+
+        public static void Reset(this Tick k)
+        {
+            
+            k.Trade = 0;
+            k.Size = 0;
+            k.AskPrice = 0;
+            k.AskPrice2 = 0;
+            k.AskPrice3 = 0;
+            k.AskPrice4 = 0;
+            k.AskPrice5 = 0;
+            k.BidPrice = 0;
+            k.BidPrice2 = 0;
+            k.BidPrice3 = 0;
+            k.BidPrice4 = 0;
+            k.BidPrice5 = 0;
+            k.AskSize = 0;
+            k.AskSize2 = 0;
+            k.AskSize3 = 0;
+            k.AskSize4 = 0;
+            k.AskSize5 = 0;
+            k.BidSize = 0;
+            k.BidSize2 = 0;
+            k.BidSize3 = 0;
+            k.BidSize4 = 0;
+            k.BidSize5 = 0;
+            k.Open = 0;
+            k.High = 0;
+            k.Low = 0;
+            k.PreClose = 0;
+            k.Settlement = 0;
+            k.PreSettlement = 0;
+            k.OpenInterest = 0;
+            k.PreOpenInterest = 0;
+
+
+        }
     }
 }
