@@ -62,6 +62,12 @@ namespace TradingLib.DataFarm.API
         void Send(IPacket packet);
 
         /// <summary>
+        /// 关闭会话
+        /// </summary>
+        void Close();
+
+
+        /// <summary>
         /// 扩展命令信息
         /// 如果IConnection请求的是扩展命令,则在命令解析过程中将命令信息设置到该对象 用于结果返回
         /// </summary>

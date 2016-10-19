@@ -19,6 +19,28 @@ namespace TradingLib.Common.DataFarm
         ConcurrentDictionary<string, IConnection> connectionMap = new ConcurrentDictionary<string, IConnection>();
 
         /// <summary>
+        /// 注册定时任务
+        /// </summary>
+        protected void RegisterTask()
+        {
+            logger.Info("Register Connection WatchTask");
+            DataTask task = new DataTask("ConnectionWathTask",TimeSpan.FromSeconds(2),delegate() { ClearDeadClient(); });
+            Global.TaskService.RegisterTask(task);
+        }
+
+        void ClearDeadClient()
+        {
+            logger.Info("clean dead connection");
+            foreach (var conn in connectionMap.Values.ToList())
+            {
+                //10秒钟没有活动 则直接杀死该Connection
+                if (DateTime.Now.Subtract(conn.LastHeartBeat).TotalSeconds > _connectionDeatPeriod)
+                {
+                    CloseConnection(conn);
+                }
+            }
+        }
+        /// <summary>
         /// IServiceHost接受客户端注册创建连接对象
         /// 逻辑层记录并维护连接对象
         /// </summary>
@@ -38,9 +60,24 @@ namespace TradingLib.Common.DataFarm
         void OnConnectionClosed(IServiceHost host, IConnection conn)
         {
             RemoveConnection(conn);
-
             //清理连接注册的行情合约
             ClearSymbolRegisted(conn);
+        }
+
+        /// <summary>
+        /// 添加连接
+        /// </summary>
+        /// <param name="conn"></param>
+        void AddConnection(IConnection conn)
+        {
+            if (!connectionMap.Keys.Contains(conn.SessionID))
+            {
+                connectionMap.TryAdd(conn.SessionID, conn);
+            }
+            else
+            {
+                logger.Warn(string.Format("Connection:{0} already exit", conn.SessionID));
+            }
         }
 
         /// <summary>
@@ -61,31 +98,7 @@ namespace TradingLib.Common.DataFarm
             }
         }
 
-        /// <summary>
-        /// 判定当前连接是否有效
-        /// </summary>
-        /// <param name="sessionId"></param>
-        /// <returns></returns>
-        bool IsConnectionRegisted(string sessionId)
-        {
-            return connectionMap.Keys.Contains(sessionId);
-        }
-        /// <summary>
-        /// 添加连接
-        /// </summary>
-        /// <param name="conn"></param>
-        void AddConnection(IConnection conn)
-        {
-            if (!connectionMap.Keys.Contains(conn.SessionID))
-            {
-                connectionMap.TryAdd(conn.SessionID, conn);
-                //logger.Info(string.Format("Connection:{0} created", conn.SessionID));
-            }
-            else
-            {
-                logger.Warn(string.Format("Connection:{0} already exit", conn.SessionID));
-            }
-        }
+        
 
 
         /// <summary>
@@ -94,7 +107,15 @@ namespace TradingLib.Common.DataFarm
         /// <param name="conn"></param>
         public virtual void CloseConnection(IConnection conn)
         {
+            logger.Warn("Close Connection:" + conn.SessionID);
+            //逻辑清理
             RemoveConnection(conn);
+            //清理连接注册的行情合约
+            ClearSymbolRegisted(conn);
+
+            //关闭connection
+            conn.Close();
+            
         }
 
         /// <summary>
@@ -110,6 +131,16 @@ namespace TradingLib.Common.DataFarm
                 return target;
             }
             return null;
+        }
+
+        /// <summary>
+        /// 判定当前连接是否有效
+        /// </summary>
+        /// <param name="sessionId"></param>
+        /// <returns></returns>
+        bool IsConnectionRegisted(string sessionId)
+        {
+            return connectionMap.Keys.Contains(sessionId);
         }
     }
 }

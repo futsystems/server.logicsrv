@@ -74,7 +74,6 @@
     <Compile Include="DataBase\BarList.cs" />
     <Compile Include="DataBase\MBar.cs" />
     <Compile Include="DataBase\MemoryBarDB.cs" />
-    <Compile Include="DataBase\TableInfo.cs" />
     <Compile Include="DataServer\Base\DataServerBase_FrequencyService.cs" />
     <Compile Include="DataServer\Base\RequestHandler\DataServerBase_ContribRequest.cs" />
     <Compile Include="DataServer\Base\DataCommand\DataServerBase_Demo.cs" />

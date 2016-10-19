@@ -80,6 +80,14 @@ namespace TCPServiceHost
             
         }
 
+        /// <summary>
+        /// 关闭Socket
+        /// </summary>
+        public void Close()
+        {
+            _session.Close();
+        }
+
         
     }
 }

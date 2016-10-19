@@ -91,6 +91,11 @@ namespace TradingLib.Common.DataFarm
 
                             logger.Error(string.Format("RequestID:{0} BufferSize:{1}", getRequestId(st.Packet), sendbuffer.BufferSize));
 
+                            //数据发送异常后 关闭该Socket
+                            if (st.Connection != null)
+                            {
+                                CloseConnection(st.Connection);
+                            }
                         }
                     }
                     // clear current flag signal

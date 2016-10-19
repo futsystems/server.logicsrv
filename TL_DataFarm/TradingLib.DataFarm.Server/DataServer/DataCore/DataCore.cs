@@ -24,54 +24,13 @@ namespace TradingLib.Common.DataFarm
             foreach (var exchange in MDBasicTracker.ExchagneTracker.Exchanges)
             {
                 logger.Info("Exchange:" + exchange.EXCode);
-                //DateTime extime = exchange.GetExchangeTime();//获得交易所时间
-                //TradingRange range = sec.MarketTime.JudgeRange(extime);//根据交易所时间判定当前品种所属交易小节
-
             }
 
-            //foreach (var security in MDBasicTracker.SecurityTracker.Securities)
-            //{
-            //    DateTime exTime = new DateTime(2016, 10, 14, 10, 01, 01);
-            //    MarketDay nextMarketDay = security.GetNextMarketDay(exTime);
-               
-            //    //列出该品种前20天(包含当前时间)对应的MarketDay
-            //    //DateTime exTime = security.Exchange.GetExchangeTime();
-            //    //DateTime start= exTime.AddDays(-20);
-            //    //DateTime end = exTime;
-            //    //Dictionary<int,MarketDay> mdmap = security.GetMarketDay(start, end);
-
-            //    //MarketDay current = null;
-            //    ////当天不是交易日,则取下一个MarketDay
-            //    //if (!mdmap.TryGetValue(exTime.ToTLDate(), out current))
-            //    //{
-            //    //    current = security.GetNextMarketDay(exTime);
-            //    //}
-
-            //    ////离开盘时间大于5分钟 则current设定为LastMarketDay
-            //    //if (current.MarketOpen.Subtract(exTime).TotalMinutes > 5)
-            //    //{
-            //    //    current = security.GetLastMarketDay(exTime);
-            //    //}
-            //    ////通过以上判定 就获得了该品种当前需要加载的数据 启动之后 后期就通过定时任务来切换MarketDay
-            //    //logger.Info(string.Format("Sec:{0} ExTime:{1} MarketDady:{2}", security.Code, exTime, current));
-               
-
-            //}
-
-            
             string histdbfile = ConfigFile["HistDBName"].AsString();
             //string path = Path.Combine(new string[] { AppDomain.CurrentDomain.BaseDirectory, histdbfile });
             logger.Info("Created Loacal DataBase Engine File:" + histdbfile);
             _datastore = new MemoryBarDB();//STSDBFactory.CreateLocalDB(histdbfile);
             logger.Info("....");
-            
-            //从数据库加载有效合约进行注册
-            //_datastore.RegisterSymbolFreq("HGZ5", BarInterval.CustomTime, 30);
-            //_datastore.RegisterSymbolFreq("IF1511", BarInterval.CustomTime, 60);
-
-
-
-            
         }
 
         public override void Start()
@@ -110,6 +69,9 @@ namespace TradingLib.Common.DataFarm
 
             //启动发送服务
             this.StartSendService();
+
+            //注册任务
+            this.RegisterTask();
 
             //启动任务调度服务
             Global.TaskService.Start();

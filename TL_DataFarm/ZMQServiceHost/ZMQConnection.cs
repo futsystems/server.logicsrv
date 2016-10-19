@@ -64,5 +64,10 @@ namespace ZMQServiceHost
         {
             _host.Send(packet);
         }
+
+        public void Close()
+        { 
+            
+        }
     }
 }

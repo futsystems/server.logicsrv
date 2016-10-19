@@ -19,7 +19,7 @@ namespace TradingLib.Common.DataFarm
         /// <param name="security"></param>
         /// <param name="lastMarketDaysMap"></param>
         /// <returns></returns>
-        MarketDay GetCurrentMarketDay(SecurityFamily security, int lastCnt, out Dictionary<int, MarketDay> lastMarketDaysMap)
+        MarketDay CalcMarketDay(SecurityFamily security, int lastCnt, out Dictionary<int, MarketDay> lastMarketDaysMap)
         {
             DateTime exTime = security.Exchange.GetExchangeTime();
             lastMarketDaysMap = security.GetMarketDays(exTime, 10);

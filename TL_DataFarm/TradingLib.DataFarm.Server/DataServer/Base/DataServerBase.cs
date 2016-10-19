@@ -25,6 +25,7 @@ namespace TradingLib.Common.DataFarm
         int _barbatchsize = 500;
         int _pricevolbatchsize = 100;
         int _minutedatabatchsize = 500;
+        int _connectionDeatPeriod = 15;
         public DataServerBase(string name)
         {
             _name = name;
@@ -66,6 +67,13 @@ namespace TradingLib.Common.DataFarm
             }
 
             _minutedatabatchsize = _cfgdb["MinuteDataBatchSendSize"].AsInt();
+
+            if (!_cfgdb.HaveConfig("ConnectionDeadPeriod"))
+            {
+                _cfgdb.UpdateConfig("ConnectionDeadPeriod", QSEnumCfgType.Int, 15, "客户端多久没有心跳后关闭连接");
+            }
+
+            _connectionDeatPeriod = _cfgdb["ConnectionDeadPeriod"].AsInt();
 
         }
         /// <summary>

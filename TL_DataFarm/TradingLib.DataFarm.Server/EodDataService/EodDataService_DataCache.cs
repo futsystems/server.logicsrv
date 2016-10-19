@@ -64,8 +64,8 @@ namespace TradingLib.Common.DataFarm
             Dictionary<int, MarketDay> mdMap = null;
             foreach (var security in MDBasicTracker.SecurityTracker.Securities)
             {
-                MarketDay md = GetCurrentMarketDay(security, 10, out mdMap);
-                //比如下午收盘后 当天是20161018 是一个交易日但是 GetCurrentMarketDay 返回的是当前可用的 则返回了20161019这个交易日,所以这里增加当前交易日验证 用于将下一个交易日也添加到缓存
+                MarketDay md = CalcMarketDay(security, 10, out mdMap);
+                //比如下午收盘后 当天是20161018 是一个交易日但是 CalcMarketDay 返回的是当前可用的 则返回了20161019这个交易日,所以这里增加当前交易日验证 用于将下一个交易日也添加到缓存
                 if (!mdMap.Keys.Contains(md.TradingDay))
                 {
                     mdMap[md.TradingDay] = md;
@@ -132,7 +132,7 @@ namespace TradingLib.Common.DataFarm
             {
                 Dictionary<int, MarketDay> mdMap = null;
                 //计算当前MarketDay
-                MarketDay current = GetCurrentMarketDay(sec,10,out mdMap);
+                MarketDay current = CalcMarketDay(sec, 10, out mdMap);
                 MarketDay old = currentSecCodeMarketDayMap[sec.Code];
 
                 //计算获得的MarketDay与缓存中交易日不一致 则表明需要执行交易日切换

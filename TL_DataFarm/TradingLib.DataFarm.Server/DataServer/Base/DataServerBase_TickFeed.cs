@@ -27,7 +27,7 @@ namespace TradingLib.Common.DataFarm
         /// <summary>
         /// 记录了每个合约最近更新时间,当前tick时间要大于等于最近更新时间否则过滤掉
         /// </summary>
-        Dictionary<string, DateTime> tickLastTimeMap = new Dictionary<string, DateTime>();
+        //Dictionary<string, DateTime> tickLastTimeMap = new Dictionary<string, DateTime>();
 
         readonly List<ITickFeed> _tickFeeds = new List<ITickFeed>();
 
@@ -167,11 +167,12 @@ namespace TradingLib.Common.DataFarm
             Symbol symbol = MDBasicTracker.SymbolTracker[k.Exchange,k.Symbol];
             if(symbol == null) return;
             //if (symbol.Exchange != "HKEX") return;
+
             //更新行情最近更新时间
-            if (!tickLastTimeMap.Keys.Contains(k.Symbol))
-            {
-                tickLastTimeMap.Add(k.Symbol, k.DateTime());
-            }
+            //if (!tickLastTimeMap.Keys.Contains(k.Symbol))
+            //{
+            //    tickLastTimeMap.Add(k.Symbol, k.DateTime());
+            //}
             //执行行情事件检查
 
             //更新合约快照维护器 用于维护当前合约的一个最新状态
@@ -182,12 +183,7 @@ namespace TradingLib.Common.DataFarm
             {
                 //转发实时行情
                 Tick snapshot = tickTracker[k.Exchange, k.Symbol];
-                //if (k.UpdateType == "X")
-                //{
-                //    snapshot.MarketOpen = true;
-                //}
                 NotifyTick2Connections(snapshot);
-               
             }
 
             //通过成交数据以及合约市场事件 驱动Bar数据生成器生成Bar数据
@@ -206,9 +202,6 @@ namespace TradingLib.Common.DataFarm
             //{
             //    RestoreServiceProcessTickSnapshot(symbol, k);
             //}
-
-            
-
         }
 
 
@@ -219,17 +212,13 @@ namespace TradingLib.Common.DataFarm
         void NotifyTick2Connections(Tick k)
         {
             ConcurrentDictionary<string, IConnection> target = null;
-
             if (symKeyRegMap.TryGetValue(k.GetSymbolUniqueKey(), out target))
             {
                 foreach (var conn in target.Values)
                 {
-                    //logger.Info("send tick:" + k.Symbol);
-                    //conn.SendTick(k);
-                        TickNotify ticknotify = new TickNotify();
-                        ticknotify.Tick = k;
-                        //conn.Send(ticknotify);
-                        this.SendData(conn, ticknotify);
+                    TickNotify ticknotify = new TickNotify();
+                    ticknotify.Tick = k;
+                    this.SendData(conn, ticknotify);
                 }
             }
         }

@@ -242,6 +242,7 @@ namespace TCPServiceHost
                                 return;
                             }
 
+                            
                             IPacket packet = PacketHelper.SrvRecvRequest(requestInfo.Message, "", sessionId);
 
                             if (_workerendable)
