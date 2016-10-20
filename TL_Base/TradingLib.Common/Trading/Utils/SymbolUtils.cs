@@ -135,7 +135,7 @@ namespace TradingLib.Common
             int year, month;
             string sec;
             sym.ParseFututureContract(out sec, out year, out month);
-            return string.Format("{0}{1}", year, month).Substring(2);
+            return string.Format("{0}{1:D2}", year, month).Substring(2);
         }
 
 
