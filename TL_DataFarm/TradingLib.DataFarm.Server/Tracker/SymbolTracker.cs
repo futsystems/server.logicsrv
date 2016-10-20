@@ -270,6 +270,7 @@ namespace TradingLib.Common.DataFarm
             {
                 target.ExpireDate = sym.ExpireDate;
                 target.Month = sym.Month;
+                target.Name = sym.Name;
 
                 ORM.MBasicInfo.UpdateSymbol(target);
 
@@ -288,7 +289,7 @@ namespace TradingLib.Common.DataFarm
                 target.OptionSide = sym.OptionSide;
                 target.ExpireDate = sym.ExpireDate;
                 target.Month = sym.Month;//月份与到期日期没有必然关联
-
+                target.Name = sym.Name;
                 target.security_fk = sym.security_fk;
                 target.SecurityFamily =MDBasicTracker.SecurityTracker[target.security_fk];
 

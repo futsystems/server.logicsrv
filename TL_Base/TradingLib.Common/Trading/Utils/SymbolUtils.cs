@@ -73,7 +73,7 @@ namespace TradingLib.Common
             switch (symbol.SecurityFamily.Type)
             { 
                 case SecurityType.FUT:
-                    return string.Format("{0}{1}", symbol.SecurityFamily.Name, symbol.GetFutNumSuffix());
+                    return string.Format("{0}{1}", symbol.SecurityFamily.Name, symbol.GetFutureNumSuffix());
                 default:
                     return symbol.SecurityFamily.Code;
             }
@@ -116,17 +116,26 @@ namespace TradingLib.Common
         /// </summary>
         /// <param name="sym"></param>
         /// <returns></returns>
-        static string GetFutNumSuffix(this Symbol sym)
+        //static string GetFutNumSuffix(this Symbol sym)
+        //{
+
+        //    string expire = sym.ExpireDate.ToString();
+        //    if (expire.Length == 8)
+        //    {
+        //        return sym.ExpireDate.ToString().Substring(2, 4);
+        //    }
+        //    else
+        //    {
+        //        return "0000";
+        //    }
+        //}
+
+        public static string GetFutureNumSuffix(this Symbol sym)
         {
-            string expire = sym.ExpireDate.ToString();
-            if (expire.Length == 8)
-            {
-                return sym.ExpireDate.ToString().Substring(2, 4);
-            }
-            else
-            {
-                return "0000";
-            }
+            int year, month;
+            string sec;
+            sym.ParseFututureContract(out sec, out year, out month);
+            return string.Format("{0}{1}", year, month).Substring(2);
         }
 
 
