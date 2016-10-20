@@ -217,6 +217,51 @@ namespace TradingLib.Common
         }
 
 
+        /// <summary>
+        /// 将合约进行解析
+        /// </summary>
+        /// <param name="symbol"></param>
+        /// <param name="secCode"></param>
+        /// <param name="year"></param>
+        /// <param name="month"></param>
+        public static void ParseFututureContract(this Symbol sym, out string secCode, out int year, out int month)
+        {
+            string symbol = sym.Symbol;
+            string expire = symbol.Substring(symbol.Length - 4, 4);
+            int num = 0;
+            secCode = string.Empty;
+            year = 0;
+            month = 0;
+            //后四位是数字 解析后判定月份和年份
+            if (int.TryParse(expire, out num))
+            {
+                month = int.Parse(expire.ToString().Substring(expire.Length - 2, 2));
+                year = 2000 + int.Parse(expire.ToString().Substring(0, 2));
+                secCode = symbol.Substring(0, symbol.Length - 4);
+            }
+            else
+            {
+                expire = symbol.Substring(symbol.Length - 2, 2);//获取后面两位 年
+                //后两位是数字 
+                if (int.TryParse(expire, out num))
+                {
+                    year = 2000 + int.Parse(expire);
+                    month = int.Parse(SymbolImpl.MonthLetter2Num(symbol.Substring(symbol.Length - 3, 1)));
+                    secCode = symbol.Substring(0, symbol.Length - 3);
+                }
+                else
+                {
+                    expire = symbol.Substring(symbol.Length - 1, 1);//获取后面1位 年
+                    if (int.TryParse(expire, out num))
+                    {
+                        year = 2000 + (10 + num);
+                        month = int.Parse(SymbolImpl.MonthLetter2Num(symbol.Substring(symbol.Length - 2, 1)));
+                        secCode = symbol.Substring(0, symbol.Length - 2);
+                    }
+                }
+            }
+        }
+
         
     }
 }

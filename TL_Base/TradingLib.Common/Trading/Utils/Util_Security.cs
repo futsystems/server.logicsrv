@@ -137,5 +137,31 @@ namespace TradingLib.Common
         }
 
 
+        /// <summary>
+        /// 生成合约
+        /// </summary>
+        /// <param name="sec"></param>
+        /// <param name="year"></param>
+        /// <param name="month"></param>
+        /// <returns></returns>
+        public static string CreateFutureContract(this SecurityFamily sec,int year,int month)
+        {
+            
+            //中国交易所用数字作为合约后缀
+            if (sec.Exchange.Country == Country.CN && sec.Exchange.EXCode != "HKEX")//中国交易所 非香港交易所 合约按中国格式生成
+            {
+                string str = string.Format("{0}{1:D2}", year, month);
+                if (sec.Exchange.EXCode.Equals("CZCE"))
+                {
+                    return sec.Code + str.ToString().Substring(3);
+                }
+                else
+                {
+                    return sec.Code + str.ToString().Substring(2);
+                }
+            }
+            return string.Format("{0}{1}{2}", sec.Code, SymbolImpl.MonthNum2Letter(month.ToString("D2")), year.ToString().Substring(3, 1));
+        }
+
     }
 }

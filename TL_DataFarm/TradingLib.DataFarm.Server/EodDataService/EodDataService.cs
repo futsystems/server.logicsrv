@@ -71,6 +71,11 @@ namespace TradingLib.Common.DataFarm
         /// </summary>
         public event Action<SecurityFamily, MarketDay> SecurityEntryMarketDay;
 
+
+        /// <summary>
+        /// 合约到期后新合约生成
+        /// </summary>
+        public event Action<Symbol,Symbol> SymbolExpiredEvent;
         /// <summary>
         /// 保存当前交易日日线数据
         /// </summary>

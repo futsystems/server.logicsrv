@@ -70,6 +70,9 @@ namespace TradingLib.Common
                     return strTmp + endWith;
             }
             return oldStr;
-        }   
+        }
+
+
+
     }
 }

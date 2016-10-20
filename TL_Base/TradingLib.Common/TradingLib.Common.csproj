@@ -159,6 +159,7 @@
     <Compile Include="Trading\MarketTime\MarketDay.cs" />
     <Compile Include="Trading\MarketTime\TradingRange.cs" />
     <Compile Include="Stock\PowerData.cs" />
+    <Compile Include="Trading\SymbolInfo.cs" />
     <Compile Include="Trading\Utils\Util_MarketTime.cs" />
     <Compile Include="Trading\Utils\Util_TradingRange.cs" />
     <Compile Include="Trading\Settlement\AccountSettlement.cs" />

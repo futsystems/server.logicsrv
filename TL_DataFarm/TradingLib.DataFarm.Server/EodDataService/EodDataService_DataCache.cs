@@ -148,8 +148,67 @@ namespace TradingLib.Common.DataFarm
                 }
             }
 
-            //禁止过期合约并加入换月合约
+            //获得过期合约
+            List<SymbolImpl> expiredList = new List<SymbolImpl>();
+            foreach (var symbol in MDBasicTracker.SymbolTracker.Symbols.Where(sym => secCodeList.Contains(sym.SecurityFamily.Code)))
+            {
+                MarketDay currentMarketDay = GetCurrentMarketDay(symbol.SecurityFamily);
+                if (currentMarketDay == null) continue;
+                
+                //合约过期
+                if (currentMarketDay.TradingDay > symbol.ExpireDate)
+                {
+                    expiredList.Add(symbol);
+                }
+                
+            }
 
+            //过期合约换月
+            foreach(var symbol in expiredList)
+            {
+                int year,month;
+                string sec;
+                symbol.ParseFututureContract(out sec, out year, out month);
+                string newsymbol = symbol.SecurityFamily.CreateFutureContract(year + 1, month);
+
+                DateTime olddt = Util.ToDateTime(symbol.ExpireDate, 0);
+                DateTime newdt;
+                try
+                {
+                    newdt = new DateTime(year + 1, olddt.Month, olddt.Day);
+                }
+                catch (Exception ex)
+                {
+                    newdt = (new DateTime(year + 1, olddt.Month, 1)).AddMonths(1).AddDays(-1);//上月月底
+                }
+        
+                //创建新的合约
+                SymbolImpl nextSymbol = new SymbolImpl();
+                nextSymbol.Symbol = newsymbol;
+                nextSymbol.SymbolType = symbol.SymbolType;
+                nextSymbol.security_fk = symbol.security_fk;
+                nextSymbol.SecurityFamily = symbol.SecurityFamily;
+                nextSymbol.Strike = 0;
+                nextSymbol.OptionSide = QSEnumOptionSide.NULL;
+                nextSymbol.ExpireDate = Util.ToTLDate(newdt);
+
+                symbol.Tradeable = false;
+                MDBasicTracker.SymbolTracker.UpdateSymbol(symbol);
+                //调用该域更新该合约
+                MDBasicTracker.SymbolTracker.UpdateSymbol(nextSymbol);
+                if (SymbolExpiredEvent != null)
+                {
+                    try
+                    {
+                        SymbolExpiredEvent(symbol, nextSymbol);
+                    }
+                    catch (Exception ex)
+                    {
+                        logger.Error("SymbolExpire Error:" + ex.ToString());
+                    }
+                }
+                
+            }
 
             //处理单个合约事务
             foreach (var symbol in MDBasicTracker.SymbolTracker.Symbols.Where(sym => secCodeList.Contains(sym.SecurityFamily.Code)))

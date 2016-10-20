@@ -41,6 +41,7 @@ namespace TradingLib.Common.DataFarm
 
         bool _acceptTick = true;
 
+        ITickFeed _defaultFeed = null;
         protected void StartTickFeeds()
         {
             logger.Info("Start TickFeeds");
@@ -59,6 +60,10 @@ namespace TradingLib.Common.DataFarm
             //启动TickFeeds
             foreach (var feed in _tickFeeds)
             {
+                if (_defaultFeed == null)
+                {
+                    _defaultFeed = feed;
+                }
                 StartTickFeed(feed);
             }
         }

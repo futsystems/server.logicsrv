@@ -25,6 +25,59 @@ namespace TradingLib.Common.DataFarm
             {
                 logger.Info("Exchange:" + exchange.EXCode);
             }
+            foreach (var symbol in MDBasicTracker.SymbolTracker.Symbols)
+            {
+
+                //int year,month;
+                //string sec;
+                //symbol.ParseFututureContract(out sec, out year, out month);
+                //string newsymbol = symbol.SecurityFamily.CreateFutureContract(year + 1, month);
+
+                //DateTime olddt = Util.ToDateTime(symbol.ExpireDate, 0);
+                //DateTime newdt;
+                //try
+                //{
+                //    newdt = new DateTime(year + 1, olddt.Month, olddt.Day);
+                //}
+                //catch (Exception ex)
+                //{
+                //    newdt = (new DateTime(year + 1, olddt.Month, 1)).AddMonths(1).AddDays(-1);//上月月底
+                //}
+        
+                ////创建新的合约
+                //SymbolImpl nextSymbol = new SymbolImpl();
+                //nextSymbol.Symbol = newsymbol;
+                //nextSymbol.SymbolType = symbol.SymbolType;
+                //nextSymbol.security_fk = symbol.security_fk;
+                //nextSymbol.SecurityFamily = symbol.SecurityFamily;
+                //nextSymbol.Strike = 0;
+                //nextSymbol.OptionSide = QSEnumOptionSide.NULL;
+                //nextSymbol.ExpireDate = Util.ToTLDate(newdt);
+
+                ////调用该域更新该合约
+                //MDBasicTracker.SymbolTracker.UpdateSymbol(nextSymbol);
+
+
+
+                ////合约过期
+                //if (currentMarketDay.TradingDay > symbol.ExpireDate)
+                //{
+                //    symbol.Tradeable = false;
+                //    MDBasicTracker.SymbolTracker.UpdateSymbol(symbol);
+                //    //进入下一年度合约
+                //    SymbolImpl nextSymbol = new SymbolImpl();
+
+                //    nextSymbol.Symbol = newsymbol;
+                //    nextSymbol.SymbolType = symbol.SymbolType;
+                //    nextSymbol.security_fk = symbol.security_fk;
+                //    nextSymbol.Strike = 0;
+                //    nextSymbol.OptionSide = QSEnumOptionSide.NULL;
+                //    //nextSymbol.ExpireDate = 
+
+                //}
+
+            }
+
 
             string histdbfile = ConfigFile["HistDBName"].AsString();
             //string path = Path.Combine(new string[] { AppDomain.CurrentDomain.BaseDirectory, histdbfile });
