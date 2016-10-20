@@ -273,15 +273,15 @@ namespace TradingLib.Common
                 this.UpdateTime(k.DateTime());
                 this._generator.ProcessTick(k);
 
-                if (k.UpdateType == "E")
-                {
-                    if (k.MarketOpen == false)
-                    { 
-                        //取当前周期的下一个周期 并发送当前Bar
-                        DateTime nextend = TimeFrequency.BarEndTime(this._generator.BarEndTime, this._interval);
-                        this._generator.SendNewBar(nextend);
-                    }
-                }
+                //if (k.UpdateType == "E")
+                //{
+                //    if (k.MarketOpen == false)
+                //    { 
+                //        //取当前周期的下一个周期 并发送当前Bar
+                //        DateTime nextend = TimeFrequency.BarEndTime(this._generator.BarEndTime, this._interval);
+                //        this._generator.SendNewBar(nextend);
+                //    }
+                //}
             }
 
             public void UpdateTime(DateTime datetime)

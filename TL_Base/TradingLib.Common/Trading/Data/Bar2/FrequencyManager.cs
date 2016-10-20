@@ -469,11 +469,11 @@ namespace TradingLib.Common
                         this.FreqInfoProcessTick(ttick, freqinfo);
                         //pf.LeaveSection();
                     }
-                    if (tick.UpdateType == "E")
-                    {
-                        //FreqInfo处理MarketEvent 类型的Tick用于 Close一个Bar
-                        FreqInfoProcessTick(tick, freqinfo);
-                    }
+                    //if (tick.UpdateType == "E")
+                    //{
+                    //    //FreqInfo处理MarketEvent 类型的Tick用于 Close一个Bar
+                    //    FreqInfoProcessTick(tick, freqinfo);
+                    //}
                     //如果FreqInfo有待发送的Bar数据 放入eventholder 在处理时间Tick后 有Bar结束 则清空freqInfo的pendingBar同时清空Frequency的partialItem
                     if (freqinfo.PendingBarEvents.Count > 0)
                     {
