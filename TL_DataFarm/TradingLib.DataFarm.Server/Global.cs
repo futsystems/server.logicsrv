@@ -18,6 +18,22 @@ namespace TradingLib.Common.DataFarm
 
         }
 
+        TickTracker ticktracker = null;
+
+        /// <summary>
+        /// 合约快照维护器
+        /// </summary>
+        public static TickTracker TickTracker
+        {
+            get
+            {
+                if (defaulatinstance.ticktracker == null)
+                {
+                    defaulatinstance.ticktracker = new TickTracker();
+                }
+                return defaulatinstance.ticktracker;
+            }
+        }
         TaskService taskservice = null;
         /// <summary>
         /// 全局任务服务

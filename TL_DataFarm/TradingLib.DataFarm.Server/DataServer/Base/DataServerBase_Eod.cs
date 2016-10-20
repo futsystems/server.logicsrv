@@ -30,7 +30,7 @@ namespace TradingLib.Common.DataFarm
         void eodservice_SecurityEntryMarketDay(SecurityFamily arg1, MarketDay arg2)
         {
             //重置快照数据
-            foreach (var snapshot in tickTracker.TickSnapshots)
+            foreach (var snapshot in Global.TickTracker.TickSnapshots)
             {
                 Symbol symbol = MDBasicTracker.SymbolTracker[snapshot.Exchange, snapshot.Symbol];
                 if (symbol == null) continue;
@@ -66,7 +66,7 @@ namespace TradingLib.Common.DataFarm
         void ResetAllSnapshot()
         {
             //重置快照数据
-            foreach (var snapshot in tickTracker.TickSnapshots)
+            foreach (var snapshot in Global.TickTracker.TickSnapshots)
             {
                 Symbol symbol = MDBasicTracker.SymbolTracker[snapshot.Exchange, snapshot.Symbol];
                 if (symbol == null) continue;

@@ -136,7 +136,7 @@ namespace TradingLib.Common.DataFarm
         /// <summary>
         /// 合约快照维护期
         /// </summary>
-        TickTracker tickTracker = new TickTracker();
+        //TickTracker tickTracker = new TickTracker();
 
         Dictionary<QSEnumDataFeedTypes, DataFeedTime> dfTimeMap = new Dictionary<QSEnumDataFeedTypes, DataFeedTime>();
 
@@ -176,13 +176,13 @@ namespace TradingLib.Common.DataFarm
             //执行行情事件检查
 
             //更新合约快照维护器 用于维护当前合约的一个最新状态
-            tickTracker.UpdateTick(k);
+            Global.TickTracker.UpdateTick(k);
 
             //如果是成交数据,盘口双边报价,统计数据 则我们生成行情快照对外发送 这里可以使用定时发送或者根据行情源事件类型来触发发送,为了提高效率与可考虑采用500ms快照方式发送，这样即保证时效性，又节约资源
             if (k.UpdateType == "X" || k.UpdateType == "Q" || k.UpdateType == "F" || k.UpdateType == "S")
             {
                 //转发实时行情
-                Tick snapshot = tickTracker[k.Exchange, k.Symbol];
+                Tick snapshot = Global.TickTracker[k.Exchange, k.Symbol];
                 NotifyTick2Connections(snapshot);
             }
 
@@ -269,7 +269,7 @@ namespace TradingLib.Common.DataFarm
                 {
                     regmap.TryAdd(conn.SessionID,conn);
                     //客户端订阅后发送当前市场快照
-                    Tick k = tickTracker[request.Exchange, symbol];
+                    Tick k = Global.TickTracker[request.Exchange, symbol];
                     if (k != null)
                     {
                         TickNotify ticknotify = new TickNotify();
