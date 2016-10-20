@@ -48,7 +48,7 @@ namespace TradingLib.Common.DataFarm
             string path = TikWriter.GetTickPath(_tickpath, symbol.Exchange, symbol.Symbol);
             if (currentTradeMap.TryGetValue(symbol.UniqueKey, out cache))
             {
-                List<Tick> tmplist = MDUtil.LoadTick(path, symbol, md.MarketOpen, md.MarketClose);
+                List<Tick> tmplist = MDUtil.LoadTick(path, symbol, md.MarketOpen, md.MarketClose).Where(k=>k.UpdateType=="X").ToList();
                 cache.RestoreTrade(tmplist);
             }
         }
