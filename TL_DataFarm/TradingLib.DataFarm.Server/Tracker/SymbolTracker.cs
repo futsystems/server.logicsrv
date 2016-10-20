@@ -269,7 +269,7 @@ namespace TradingLib.Common.DataFarm
             if (symcodemap.TryGetValue(sym.UniqueKey, out target))//已经存在该合约
             {
                 target.ExpireDate = sym.ExpireDate;
-                target.Month = SymbolImpl.GetMonthFromExpireDate(target.ExpireDate);
+                target.Month = sym.Month;
 
                 ORM.MBasicInfo.UpdateSymbol(target);
 
@@ -287,7 +287,7 @@ namespace TradingLib.Common.DataFarm
                 target.Strike = sym.Strike;
                 target.OptionSide = sym.OptionSide;
                 target.ExpireDate = sym.ExpireDate;
-                target.Month = SymbolImpl.GetMonthFromExpireDate(target.ExpireDate);
+                target.Month = sym.Month;//月份与到期日期没有必然关联
 
                 target.security_fk = sym.security_fk;
                 target.SecurityFamily =MDBasicTracker.SecurityTracker[target.security_fk];
