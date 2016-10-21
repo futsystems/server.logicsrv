@@ -71,21 +71,18 @@ namespace TradingLib.Common.DataFarm
 
         public event Action<Symbol, BarImpl> NewHistPartialBarEvent;
 
-        /// <summary>
-        /// 1分钟数据恢复任务完成
-        /// </summary>
-        public event Action<RestoreTask> EODRestoreEvent;
-
         ConcurrentDictionary<string, RestoreTask> restoreTaskMap = new ConcurrentDictionary<string, RestoreTask>();
 
         FrequencyManager restoreFrequencyMgr = null;
         string _basedir = string.Empty;
         Dictionary<QSEnumDataFeedTypes, DataFeedTime> datafeedTimeMap = null;
 
-        public RestoreService(string tickpath,Dictionary<QSEnumDataFeedTypes, DataFeedTime> dfmap)
+        EodDataService _eodsrv = null;
+        public RestoreService(string tickpath,Dictionary<QSEnumDataFeedTypes, DataFeedTime> dfmap,EodDataService eodsrv)
         {
             _basedir = tickpath;
             datafeedTimeMap = dfmap;
+            _eodsrv = eodsrv;
             //恢复历史Tick所用的FrequencyManager
             restoreFrequencyMgr = new FrequencyManager("Restore", QSEnumDataFeedTypes.DEFAULT);
             restoreFrequencyMgr.RegisterAllBasicFrequency();
@@ -188,7 +185,6 @@ namespace TradingLib.Common.DataFarm
                             //if (item.Symbol.Symbol != "CLZ6") continue;
                             if (dftime.Cover1Minute)
                             {
-                                
                                 DateTime extime = Global.TimeZoneHelper.ConvertToTimeZone(df, dftime.First1MinRoundEnd, item.oSymbol.SecurityFamily.Exchange);
                                 if (extime != DateTime.MinValue)
                                 {
@@ -196,15 +192,17 @@ namespace TradingLib.Common.DataFarm
                                     item.Exchange1MinRoundtime = extime;
                                     BackFillSymbol(item);
                                 }
-                                
                             }
                         }
 
                         //Tick数据恢复完毕后恢复EOD数据
                         if (item.IsTickFilled && item.IsTickFillSuccess && !item.IsEODRestored)
                         {
-                            if (EODRestoreEvent != null)
-                                EODRestoreEvent(item);
+                            item.IsEODRestored = true;
+                            _eodsrv.EODRestoreBar(item);
+                            _eodsrv.EODRestoreMinuteData(item);
+                            _eodsrv.EODRestoreTradeSplit(item);
+                            item.IsEODRestoreSuccess = true;
                         }
 
                         if (item.IsTickFillSuccess && item.IsEODRestoreSuccess)
@@ -225,7 +223,30 @@ namespace TradingLib.Common.DataFarm
             logger.Info("Restore Tick finished");
         }
 
-        
+
+        /// <summary>
+        /// 重置某个恢复任务状态 用于重新执行数据恢复
+        /// </summary>
+        /// <param name="exchange"></param>
+        /// <param name="symbol"></param>
+        public void ResetTask(string exchange, string symbol)
+        {
+            RestoreTask task = null;
+            string key = string.Format("{0}-{1}",exchange,symbol);
+            if (!restoreTaskMap.TryGetValue(key, out task))
+            {
+                logger.Warn(string.Format("Symbol:{0} has no restore task registed", key));
+                return;
+            }
+            task.IsEODRestored = false;
+            task.IsEODRestoreSuccess = false;
+            task.IsTickFilled = false;
+            task.IsTickFillSuccess = false;
+            task.Complete = false;
+            task.CompleteTime = DateTime.MinValue;
+        }
+
+
         /// <summary>
         /// 将某个合约某个时间段内的Bar数据恢复
         /// </summary>
@@ -253,7 +274,7 @@ namespace TradingLib.Common.DataFarm
                     tmpticklist.Add(timeTick);
                 }
 
-                logger.Info(string.Format("BackFill Symbol:{0} Start:{1} End:{2} Tick CNT:{3}", task.oSymbol.Symbol, start, end, tmpticklist.Count));
+                logger.Info(string.Format("Symbol:{0} Fill Tick Start:{1} End:{2} Tick CNT:{3}", task.oSymbol.Symbol, start, end, tmpticklist.Count));
 
                 //处理历史Tick之前 执行Clear 将原来历史Bar中某个合约的数据清空掉，避免之前Tick恢复造成的脏数据
                 restoreFrequencyMgr.Clear(task.oSymbol);
@@ -274,13 +295,6 @@ namespace TradingLib.Common.DataFarm
                             NewHistPartialBarEvent(task.oSymbol, freq.WriteableBars.PartialItem as BarImpl); //将HistPartialBar设定到 BarList时 会执行Merge操作 如果异常会导致 任务进入死循环 一致执行BackFill
                     }
                 }
-
-
-                ////日内数据库恢复完毕后 执行Eod数据恢复
-                //if (RestoreTaskCompleteEvent != null)
-                //{
-                //    RestoreTaskCompleteEvent(task);
-                //}
                 task.IsTickFillSuccess = true;
             }
             catch (Exception ex)

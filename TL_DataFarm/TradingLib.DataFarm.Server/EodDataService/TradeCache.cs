@@ -65,6 +65,8 @@ namespace TradingLib.Common.DataFarm
         }
 
         bool restored = true;
+
+        
         /// <summary>
         /// 恢复历史成交数据
         /// </summary>
@@ -116,15 +118,20 @@ namespace TradingLib.Common.DataFarm
         /// <summary>
         /// 清空所有缓存数据
         /// </summary>
-        public void Clear()
+        public void Clear(bool restoreReset = false)
         {
             lock (_object)
             {
                 this.tmpList.Clear();
                 this.TradeList.Clear();
                 this.PriceVolList.Clear();
+                if (restoreReset)
+                {
+                    restored = false;
+                }
             }
         }
+
 
          /// <summary>
          /// 查询成交数据

@@ -115,7 +115,7 @@ namespace TradingLib.Common.DataFarm
             this.StartRestoreService();
 
             //启动EOD服务
-            this.StartEodService();
+            //this.StartEodService();
 
             //启动ServiceHost
             this.StartServiceHosts();

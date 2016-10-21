@@ -125,16 +125,15 @@ namespace TradingLib.Common.DataFarm
         /// 注短时间终端启动恢复 从数据库加载的日线数据都比较多，因此以该日期进行查询获得1分钟数据对日线来讲都是完备的
         /// </summary>
         /// <param name="task"></param>
-        public void EodRestore(RestoreTask task)
+        public void EODRestoreBar(RestoreTask task)
         {
 
             try
             {
-                task.IsEODRestored = true;
 
                 IEnumerable<BarImpl> list = _store.QryBar(task.oSymbol, BarInterval.CustomTime, 60, task.EodHistBarEnd, DateTime.MaxValue, 0, 0, false, false);
                 IEnumerable<BarImpl> eodlist = BarMerger.MergeEOD(list);
-
+                logger.Info(string.Format("Symbol:{0} Restore Bar from:{1} cnt:{2}",task.oSymbol.Symbol, task.EodHistBarEnd, eodlist.Count()));
                 //数据恢复后 日线数据最后一条数据最关键，该数据如果在收盘时刻启动则日线完备，如果在盘中启动则日线不完备
                 //如果数据操作由延迟，导致已经有完整的1分钟Bar数据到达，而日线数据还没有回复完毕，则我们将1分钟数据先放到list中，待日线数据恢复完毕后再用该数据执行驱动 PartialBar只要保持一个
 
@@ -159,7 +158,7 @@ namespace TradingLib.Common.DataFarm
                 {
                     st = new EodBarStruct(task.oSymbol, null, 0);
                 }
-                eodBarMap.Add(task.oSymbol.UniqueKey, st);
+                eodBarMap[task.oSymbol.UniqueKey] = st;
 
                 //如果操作执行完成前已经有最新的Bar数据到达，则将这些没有处理的数据应用到当前EODPartial
                 List<BarImpl> minbarlist = null;
@@ -169,18 +168,16 @@ namespace TradingLib.Common.DataFarm
                     {
                         On1MinBarClose(task.oSymbol, bar);
                     }
+                    eodPendingMinBarMap.Remove(task.oSymbol.UniqueKey);
                 }
 
                 BarImpl partialBar = null;
                 if (eodPendingMinPartialBarMap.TryGetValue(task.oSymbol.UniqueKey, out partialBar))
                 {
                     On1MinPartialBarUpdate(task.oSymbol, partialBar);
+
+                    eodPendingMinPartialBarMap.Remove(task.oSymbol.UniqueKey);
                 }
-
-                //恢复分时数据 分时数据需要等待1分钟数据恢复完毕后才可以完全加载
-                this.RestoreMinuteData(task.oSymbol);
-
-                task.IsEODRestoreSuccess = true;
             }
             catch (Exception ex)
             {
@@ -188,6 +185,29 @@ namespace TradingLib.Common.DataFarm
                 logger.Error(string.Format("Symbol:{0} EOD Restore Error:{1}", task.oSymbol.Symbol, ex.ToString()));
             }
         }
+
+        /// <summary>
+        /// 恢复日内分时数据
+        /// </summary>
+        /// <param name="task"></param>
+        public void EODRestoreMinuteData(RestoreTask task)
+        { 
+            //恢复分时数据 分时数据需要等待1分钟数据恢复完毕后才可以完全加载
+            this.RestoreMinuteData(task.oSymbol);
+
+            
+        }
+
+        /// <summary>
+        /// 恢复日内成交明细
+        /// </summary>
+        /// <param name="task"></param>
+        public void EODRestoreTradeSplit(RestoreTask task)
+        {
+            this.RestoreTick(task.oSymbol);
+        }
+
+
         
 
 

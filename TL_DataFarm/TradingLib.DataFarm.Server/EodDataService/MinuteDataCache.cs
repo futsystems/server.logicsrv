@@ -150,37 +150,9 @@ namespace TradingLib.Common.DataFarm
                             d.Close = firstValueData.Close;
                         }
                     }
-                    //else//当前值前面所有的数据都没有 则取昨日收盘价/结算价
-                    //{
-
-                    //    Tick snapshot = Global.TickTracker[this.Symbol.Exchange, this.Symbol.Symbol];
-                    //    if (snapshot != null)
-                    //    {
-                    //        //获得昨日收盘价/结算价
-                    //        decimal price = GetYdPrice(snapshot,this.Symbol);
-                    //        foreach (var d in zeroDataList)
-                    //        {
-                    //            d.Close = (double)price;
-                    //        }
-                    //    }
-                    //}
                 }
             }
         }
-
-        //decimal GetYdPrice(Tick k, Symbol symbol)
-        //{
-        //    switch (symbol.SecurityType)
-        //    { 
-        //        case SecurityType.FUT:
-        //            return k.PreSettlement;
-        //        case SecurityType.STK:
-        //            return k.PreClose;
-        //        default:
-        //            return k.PreClose;
-        //    }
-        //    //如果是新上合约 没有昨日收盘价格或结算价 则取今日开盘价
-        //}
 
         /// <summary>
          /// 查询成交数据

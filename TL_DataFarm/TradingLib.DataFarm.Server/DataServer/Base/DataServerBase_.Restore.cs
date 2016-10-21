@@ -75,7 +75,7 @@ namespace TradingLib.Common.DataFarm
             string path = this.ConfigFile["TickPath"].AsString();
             logger.Info("[Init Restore Service] TickPath:"+path);
 
-            restoresrv = new RestoreService(path,dfTimeMap);
+            restoresrv = new RestoreService(path,dfTimeMap,eodservice);
 
         }
 
@@ -87,14 +87,8 @@ namespace TradingLib.Common.DataFarm
             logger.Info("[Start Restore Service]");
             restoresrv.NewHistBarEvent += new Action<FreqNewBarEventArgs>(OnNewHistBarEvent);
             restoresrv.NewHistPartialBarEvent += new Action<Symbol, BarImpl>(restoresrv_NewHistPartialBarEvent);
-            restoresrv.EODRestoreEvent+=new Action<RestoreTask>(restoresrv_EODRestoreEvent); 
             restoresrv.Start();
 
-        }
-
-        void restoresrv_EODRestoreEvent(RestoreTask obj)
-        {
-            eodservice.EodRestore(obj);
         }
 
         void restoresrv_NewHistPartialBarEvent(Symbol arg1, BarImpl arg2)

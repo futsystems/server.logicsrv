@@ -106,6 +106,16 @@ namespace TradingLib.Common.DataFarm
             SendContribResponse(conn, taskarray);
         }
 
+        [DataCommandAttr("ResetRestoreTask", "ResetRestoreTask -  reset restore task", "重置恢复任务状态",QSEnumArgParseType.Json)]
+        public void CTE_ResetRestoreTask(IServiceHost host, IConnection conn,string args)
+        {
+            logger.Info("ResetRestoreTask:"+args);
+            var data = TradingLib.Mixins.Json.JsonMapper.ToObject(args);
+            string exchange = data["exchange"].ToString();
+            string symbol = data["symbol"].ToString();
+            restoresrv.ResetTask(exchange,symbol);
+        }
+
 
         //查询日历列表
         [DataCommandAttr("QryCalendarList", "QryCalendarList -  qry calendar list", "查询日历对象列表")]
