@@ -3,11 +3,101 @@ using System.Collections.Generic;
 using System.Text;
 using System.IO.Compression;
 using System.IO;
+using ZLib;
 
 namespace TradingLib.Common
 {
+    public class ZlibNet
+    {
+        public static byte[] Compress(byte[] inData)
+        {
+            //压缩
+            //bytes = new Byte[fs.Length];
+            //fs.Read(bytes, 0, bytes.Length);
+
+            //fs.Close();
+            //fs.Dispose();
+
+            //output = new FileStream(path, FileMode.Create, FileAccess.ReadWrite);
+
+
+            //ZOutputStream zOut = new ZOutputStream(output, zlibConst.Z_DEFAULT_COMPRESSION);
+            //zOut.Write(bytes, 0, bytes.Length);
+            //zOut.finish();
+            //zOut.Close();
+            
+            byte[] outData = null;
+            Stream outStream = new MemoryStream();
+            ZOutputStream outZStream = new ZOutputStream(outStream, zlibConst.Z_DEFAULT_COMPRESSION);
+            //Stream inStream = new MemoryStream(inData);
+            try
+            {
+                outZStream.Write(inData, 0, inData.Length);
+                outZStream.finish();
+                outZStream.Flush();
+                //CopyStream(inStream, outZStream);
+                outStream.Seek(0, SeekOrigin.Begin);        // 将outStream设置到头，以便从头读取数据
+                int outLength = (int)outStream.Length;
+                outData = new byte[outLength];
+                int k = outStream.Read(outData, 0, outLength);        // outStream此时包括了解压缩后的数据，将其放入到字节数组desBuffer中
+            }
+            finally
+            {
+                outZStream.Close();
+                outStream.Close();
+                //inStream.Close();
+            }
+            return outData;
+            
+        }
+
+        public static byte[] Decompress(byte[] inData)
+        {
+            byte[] outData=null;
+            Stream outStream = new MemoryStream();
+            ZOutputStream outZStream = new ZOutputStream(outStream);
+            Stream inStream = new MemoryStream(inData, 0, inData.Length);
+            try
+            {
+                CopyStream(inStream, outZStream);
+                outStream.Seek(0, SeekOrigin.Begin);        // 将outStream设置到头，以便从头读取数据
+                int outLength = (int)outStream.Length;
+                outData = new byte[outLength];
+                int k = outStream.Read(outData, 0, outLength);        // outStream此时包括了解压缩后的数据，将其放入到字节数组desBuffer中
+            }
+            finally
+            {
+                outZStream.Close();
+                outStream.Close();
+                inStream.Close();
+            }
+            return outData;
+        }
+
+        private static void CopyStream(System.IO.Stream input, System.IO.Stream output)
+        {
+            int i = (int)input.Length;
+            byte[] buffer = new byte[i];
+            int len = 0;
+            try
+            {
+                while ((len = input.Read(buffer, 0, i)) > 0)
+                {
+                    output.Write(buffer, 0, len);           // output如果为ZOutputStream，则此处进行实际的压缩 或 解压缩
+                }
+                output.Flush();
+            }
+            catch (Exception ex)
+            {
+             
+
+            }
+        }
+
+    }
     public class GZip
     {
+
         public static string Compress(string text)
         {
             // convert text to bytes

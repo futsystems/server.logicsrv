@@ -98,14 +98,16 @@ namespace TradingLib.Common
         /// <param name="data"></param>
         public override void DeserializeBin(byte[] data)
         {
-            using (MemoryStream ms = new MemoryStream(data))
+            this.RequestID = BitConverter.ToInt16(data, 0);
+            this.IsLast = BitConverter.ToBoolean(data, 4);
+            byte[] zipData = new byte[data.Length - 5];
+            Array.Copy(data, 5, zipData, 0, data.Length - 5);
+            byte[] rawData = ZlibNet.Decompress(zipData);
+
+            using (MemoryStream ms = new MemoryStream(rawData))
             {
                 using (BinaryReader reader = new BinaryReader(ms))
                 {
-                    this.RequestID = reader.ReadInt32();
-                    this.IsLast = reader.ReadBoolean();
-
-                    List<PriceVol> pvlist = new List<PriceVol>();
                     while (ms.Position < ms.Length)
                     {
                         PriceVol pv = PriceVol.Read(reader);
@@ -123,15 +125,14 @@ namespace TradingLib.Common
         /// <returns></returns>
         public override byte[] SerializeBin()
         {
-            //MemoryStream会根据写入的数据自动扩充底层数组大小
-
             MemoryStream ms = new MemoryStream();
             BinaryWriter b = new BinaryWriter(ms);
             for (int i = 0; i < this.PriceVols.Count; i++)
             {
                 PriceVol.Write(b, this.PriceVols[i]);
             }
-            int size = (int)ms.Length + 8 + 4 + 1;
+            byte[] zipData = ZlibNet.Compress(ms.ToArray());
+            int size = (int)zipData.Length + 8 + 4 + 1;
             byte[] buffer = new byte[size];
 
             byte[] sizebyte = BitConverter.GetBytes(size);
@@ -144,7 +145,7 @@ namespace TradingLib.Common
             Array.Copy(requestidbyte, 0, buffer, 8, requestidbyte.Length);
             Array.Copy(islastbyte, 0, buffer, 8 + 4, islastbyte.Length);
 
-            Array.Copy(ms.GetBuffer(), 0, buffer, 8 + 4 + 1, ms.Length);
+            Array.Copy(zipData, 0, buffer, 8 + 4 + 1, zipData.Length);
             return buffer;
         }
 

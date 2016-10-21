@@ -23,6 +23,7 @@ namespace TradingLib.API
         ESUNNY=6,//易盛
         OKCOIN=7,//OKCOIN
         TONGSHI=8,//股票通视规范接口
+        WSDATA=9,//威盛数据
     };
 
 
