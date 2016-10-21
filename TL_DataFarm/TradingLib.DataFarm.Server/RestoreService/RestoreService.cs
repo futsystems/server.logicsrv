@@ -182,7 +182,7 @@ namespace TradingLib.Common.DataFarm
                             //没有对应行情源的时间 则不执行后续操作
                             if (dftime == null) continue;
 
-                            //if (item.Symbol.Symbol != "CLZ6") continue;
+                            //if (item.oSymbol.Symbol != "CLX7") continue;
                             if (dftime.Cover1Minute)
                             {
                                 DateTime extime = Global.TimeZoneHelper.ConvertToTimeZone(df, dftime.First1MinRoundEnd, item.oSymbol.SecurityFamily.Exchange);

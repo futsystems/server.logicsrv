@@ -162,10 +162,20 @@ namespace TradingLib.Common.DataFarm
             symbol.SecurityFamily = sec;
 
             //如果是添加合约 检查合约是否存在
-            if (symbol.ID == 0 && MDBasicTracker.SymbolTracker[symbol.Exchange, symbol.Symbol] != null)
+            if (symbol.ID == 0)
             {
-                throw new FutsRspError("已经存在合约:" + symbol.Symbol);
+                if (MDBasicTracker.SymbolTracker[symbol.Exchange, symbol.Symbol] != null)
+                {
+                    throw new FutsRspError("已经存在合约:" + symbol.Symbol);
+                }
+                string code;int year, month;
+                symbol.ParseFututureContract(out code, out year, out month);
+                if (string.Format("{0:D2}", month) != symbol.Month)
+                {
+                    throw new FutsRspError(string.Format("Symbol:{0} set error month:{1}", symbol.Symbol, symbol.Month));
+                }
             }
+
 
             //调用该域更新该合约
             MDBasicTracker.SymbolTracker.UpdateSymbol(symbol);

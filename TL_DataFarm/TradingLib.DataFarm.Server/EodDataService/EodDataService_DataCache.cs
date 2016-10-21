@@ -191,6 +191,7 @@ namespace TradingLib.Common.DataFarm
                 nextSymbol.Strike = 0;
                 nextSymbol.OptionSide = QSEnumOptionSide.NULL;
                 nextSymbol.ExpireDate = Util.ToTLDate(newdt);
+                nextSymbol.Month = symbol.Month;//换月 月份一致
 
                 symbol.Tradeable = false;
                 MDBasicTracker.SymbolTracker.UpdateSymbol(symbol);

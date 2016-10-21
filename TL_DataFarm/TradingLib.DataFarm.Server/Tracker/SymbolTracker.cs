@@ -269,7 +269,7 @@ namespace TradingLib.Common.DataFarm
             if (symcodemap.TryGetValue(sym.UniqueKey, out target))//已经存在该合约
             {
                 target.ExpireDate = sym.ExpireDate;
-                target.Month = sym.Month;
+                target.Tradeable = sym.Tradeable;
                 target.Name = sym.Name;
 
                 ORM.MBasicInfo.UpdateSymbol(target);
@@ -299,7 +299,7 @@ namespace TradingLib.Common.DataFarm
                 target.underlayingsymbol_fk = sym.underlayingsymbol_fk;
                 target.UnderlayingSymbol =MDBasicTracker.SymbolTracker[target.underlayingsymbol_fk] as SymbolImpl;
 
-                target.Tradeable = true;
+                target.Tradeable = sym.Tradeable;
 
                 if (target.security_fk == 0 || target.SecurityFamily == null)
                 {
