@@ -87,14 +87,14 @@ namespace TradingLib.Common.DataFarm
             logger.Info("[Start Restore Service]");
             restoresrv.NewHistBarEvent += new Action<FreqNewBarEventArgs>(OnNewHistBarEvent);
             restoresrv.NewHistPartialBarEvent += new Action<Symbol, BarImpl>(restoresrv_NewHistPartialBarEvent);
-            restoresrv.RestoreTaskCompleteEvent += new Action<RestoreTask>(restoresrv_RestoreTaskCompleteEvent);
+            restoresrv.EODRestoreEvent+=new Action<RestoreTask>(restoresrv_EODRestoreEvent); 
             restoresrv.Start();
 
         }
 
-        void restoresrv_RestoreTaskCompleteEvent(RestoreTask obj)
+        void restoresrv_EODRestoreEvent(RestoreTask obj)
         {
-            eodservice.On1MinBarRestored(obj);
+            eodservice.EodRestore(obj);
         }
 
         void restoresrv_NewHistPartialBarEvent(Symbol arg1, BarImpl arg2)

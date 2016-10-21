@@ -22,9 +22,13 @@ namespace TradingLib.Common.DataFarm
             this.EodHistBarEnd = DateTime.MinValue;
             this.First1MinRoundtime = DateTime.MinValue;
 
-            this.IsRestored = false;
-            this.CanRestored = false;
+            this.IsTickFilled = false;
+            this.IsTickFillSuccess = false;
+
+            this.IsEODRestored = false;
+            this.IsEODRestoreSuccess = false;
             
+            this.Completed = false;
         }
 
         /// <summary>
@@ -56,16 +60,29 @@ namespace TradingLib.Common.DataFarm
         /// </summary>
         public DateTime First1MinRoundtime { get; set; }
 
+        /// <summary>
+        /// 历史Tick数据恢复标识
+        /// </summary>
+        public bool IsTickFilled { get; set; }
+        /// <summary>
+        /// 历史Tick数据回补成功
+        /// </summary>
+        public bool IsTickFillSuccess { get; set; }
 
         /// <summary>
-        /// 是否可以执行Tick数据恢复
+        /// EOD数据恢复标识
         /// </summary>
-        public bool CanRestored { get; set; }
+        public bool IsEODRestored { get; set; }
 
         /// <summary>
-        /// 数据恢复标识
+        /// 日级别数据恢复成功
         /// </summary>
-        public bool IsRestored { get; set; }
+        public bool IsEODRestoreSuccess { get; set; }
+
+        /// <summary>
+        /// 任务执行完成
+        /// </summary>
+        public bool Completed { get; set; }
     }
 
 

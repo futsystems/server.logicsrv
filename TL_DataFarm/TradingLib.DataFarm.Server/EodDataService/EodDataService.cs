@@ -125,56 +125,68 @@ namespace TradingLib.Common.DataFarm
         /// 注短时间终端启动恢复 从数据库加载的日线数据都比较多，因此以该日期进行查询获得1分钟数据对日线来讲都是完备的
         /// </summary>
         /// <param name="task"></param>
-        public void On1MinBarRestored(RestoreTask task)
+        public void EodRestore(RestoreTask task)
         {
 
-            IEnumerable<BarImpl> list =  _store.QryBar(task.Symbol, BarInterval.CustomTime, 60, task.EodHistBarEnd, DateTime.MaxValue, 0, 0, false, false);
-            IEnumerable<BarImpl> eodlist = BarMerger.MergeEOD(list);
-
-            //数据恢复后 日线数据最后一条数据最关键，该数据如果在收盘时刻启动则日线完备，如果在盘中启动则日线不完备
-            //如果数据操作由延迟，导致已经有完整的1分钟Bar数据到达，而日线数据还没有回复完毕，则我们将1分钟数据先放到list中，待日线数据恢复完毕后再用该数据执行驱动 PartialBar只要保持一个
-
-
-            //将除了最后一条数据之前的数据统一对外发送到BarList 更新数据集并保存 用最后一条数据 创建EodBarStruct放入map
-            //如果最后一个Bar已经完备，则新生成的1分钟Bar 会导致关闭该Bar 如果在同一个交易日内则进行数据更新
-
-            //将恢复完毕的日级别数据 发送到Barlist
-            if (EodBarResotred != null)
+            try
             {
-                EodBarResotred(task.Symbol, eodlist.Take(Math.Max(0,eodlist.Count()-1)));//最后一个Bar不更新到缓存 放入EodBarStruct 作为EODPartial来处理,通过1分钟K线的处理来决定是否关闭该EODBar
-            }
+                task.IsEODRestored = true;
 
-            //用最后一个Eod 创建struct
-            BarImpl lasteod = eodlist.LastOrDefault();
-            EodBarStruct st = null;
-            if (lasteod != null)
-            {
-                st = new EodBarStruct(task.Symbol, lasteod, lasteod.Volume);
-            }
-            else
-            {
-                st = new EodBarStruct(task.Symbol, null, 0);
-            }
-            eodBarMap.Add(task.Symbol.UniqueKey, st);
+                IEnumerable<BarImpl> list = _store.QryBar(task.Symbol, BarInterval.CustomTime, 60, task.EodHistBarEnd, DateTime.MaxValue, 0, 0, false, false);
+                IEnumerable<BarImpl> eodlist = BarMerger.MergeEOD(list);
 
-            //如果操作执行完成前已经有最新的Bar数据到达，则将这些没有处理的数据应用到当前EODPartial
-            List<BarImpl> minbarlist = null;
-            if (eodPendingMinBarMap.TryGetValue(task.Symbol.UniqueKey, out minbarlist))
-            {
-                foreach (var bar in minbarlist)
+                //数据恢复后 日线数据最后一条数据最关键，该数据如果在收盘时刻启动则日线完备，如果在盘中启动则日线不完备
+                //如果数据操作由延迟，导致已经有完整的1分钟Bar数据到达，而日线数据还没有回复完毕，则我们将1分钟数据先放到list中，待日线数据恢复完毕后再用该数据执行驱动 PartialBar只要保持一个
+
+
+                //将除了最后一条数据之前的数据统一对外发送到BarList 更新数据集并保存 用最后一条数据 创建EodBarStruct放入map
+                //如果最后一个Bar已经完备，则新生成的1分钟Bar 会导致关闭该Bar 如果在同一个交易日内则进行数据更新
+
+                //将恢复完毕的日级别数据 发送到Barlist
+                if (EodBarResotred != null)
                 {
-                    On1MinBarClose(task.Symbol, bar);
+                    EodBarResotred(task.Symbol, eodlist.Take(Math.Max(0, eodlist.Count() - 1)));//最后一个Bar不更新到缓存 放入EodBarStruct 作为EODPartial来处理,通过1分钟K线的处理来决定是否关闭该EODBar
                 }
-            }
 
-            BarImpl partialBar = null;
-            if (eodPendingMinPartialBarMap.TryGetValue(task.Symbol.UniqueKey, out partialBar))
+                //用最后一个Eod 创建struct
+                BarImpl lasteod = eodlist.LastOrDefault();
+                EodBarStruct st = null;
+                if (lasteod != null)
+                {
+                    st = new EodBarStruct(task.Symbol, lasteod, lasteod.Volume);
+                }
+                else
+                {
+                    st = new EodBarStruct(task.Symbol, null, 0);
+                }
+                eodBarMap.Add(task.Symbol.UniqueKey, st);
+
+                //如果操作执行完成前已经有最新的Bar数据到达，则将这些没有处理的数据应用到当前EODPartial
+                List<BarImpl> minbarlist = null;
+                if (eodPendingMinBarMap.TryGetValue(task.Symbol.UniqueKey, out minbarlist))
+                {
+                    foreach (var bar in minbarlist)
+                    {
+                        On1MinBarClose(task.Symbol, bar);
+                    }
+                }
+
+                BarImpl partialBar = null;
+                if (eodPendingMinPartialBarMap.TryGetValue(task.Symbol.UniqueKey, out partialBar))
+                {
+                    On1MinPartialBarUpdate(task.Symbol, partialBar);
+                }
+
+                //恢复分时数据 分时数据需要等待1分钟数据恢复完毕后才可以完全加载
+                this.RestoreMinuteData(task.Symbol);
+
+                task.IsEODRestoreSuccess = true;
+            }
+            catch (Exception ex)
             {
-                On1MinPartialBarUpdate(task.Symbol,partialBar);
+                task.IsEODRestoreSuccess = false;
+                logger.Error(string.Format("Symbol:{0} EOD Restore Error:{1}", task.Symbol.Symbol, ex.ToString()));
             }
-
-            //恢复分时数据 分时数据需要等待1分钟数据恢复完毕后才可以完全加载
-            this.RestoreMinuteData(task.Symbol);
         }
         
 
