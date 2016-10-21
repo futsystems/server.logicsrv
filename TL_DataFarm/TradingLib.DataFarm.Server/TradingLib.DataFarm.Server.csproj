@@ -37,6 +37,9 @@
     <Reference Include="Common.Logging.Core">
       <HintPath>..\..\lib\Common.Logging.Core.dll</HintPath>
     </Reference>
+    <Reference Include="NodaTime">
+      <HintPath>..\..\lib\NodaTime.dll</HintPath>
+    </Reference>
     <Reference Include="Quartz">
       <HintPath>..\..\lib\Quartz.dll</HintPath>
     </Reference>
@@ -118,6 +121,7 @@
     <Compile Include="TaskService\Task.cs" />
     <Compile Include="TaskService\TaskService.cs" />
     <Compile Include="TickServer\TickServer.cs" />
+    <Compile Include="TimeZone\TimeZoneHelper.cs" />
     <Compile Include="Tracker\SercurityTracker.cs" />
     <Compile Include="Tracker\SymbolTracker.cs" />
   </ItemGroup>

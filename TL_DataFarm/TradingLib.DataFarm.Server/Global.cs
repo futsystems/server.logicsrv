@@ -53,6 +53,20 @@ namespace TradingLib.Common.DataFarm
         }
 
 
+        TimeZoneHelper timezonehelper = null;
+
+        public static TimeZoneHelper TimeZoneHelper
+        {
+            get
+            {
+                if (defaulatinstance.timezonehelper == null)
+                {
+                    defaulatinstance.timezonehelper = new TimeZoneHelper();
+                }
+                return defaulatinstance.timezonehelper;
+            }
+        }
+
 
     }
 }

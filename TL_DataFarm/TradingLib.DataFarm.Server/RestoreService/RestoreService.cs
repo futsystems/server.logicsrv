@@ -125,6 +125,11 @@ namespace TradingLib.Common.DataFarm
             task.Intraday1MinHistBarEnd = time;
         }
 
+        /// <summary>
+        /// 响应Eod数据加载 记录最后日线时间
+        /// </summary>
+        /// <param name="symbol"></param>
+        /// <param name="time"></param>
         public void OnEodHistBarLoaded(Symbol symbol, DateTime time)
         {
             logger.Debug(string.Format("Eod Hist Bar Loaded, Symbol:{0} Time:{1}", symbol.UniqueKey, time));
@@ -134,7 +139,7 @@ namespace TradingLib.Common.DataFarm
                 logger.Warn(string.Format("Symbol:{0} has no restore task registed", symbol.UniqueKey));
                 return;
             }
-            task.Intraday1MinHistBarEnd = time;
+            task.EodHistBarEnd = time;
         }
 
 
@@ -183,7 +188,12 @@ namespace TradingLib.Common.DataFarm
                             //if (item.Symbol.Symbol != "CLZ6") continue;
                             if (dftime.Cover1Minute)
                             {
-                                item.First1MinRoundtime = dftime.First1MinRoundEnd;
+                                
+                                DateTime extime = Global.TimeZoneHelper.ConvertToTimeZone(df, dftime.First1MinRoundEnd, item.oSymbol.SecurityFamily.Exchange);
+                                if (extime == DateTime.MinValue) continue;
+                                item.DataFeed1MinRoundTime = dftime.First1MinRoundEnd;
+                                item.Exchange1MinRoundtime = extime;
+                                //item.First1MinRoundtime = dftime.First1MinRoundEnd;
                                 BackFillSymbol(item);
                                 
                             }
@@ -229,7 +239,7 @@ namespace TradingLib.Common.DataFarm
 
                 Symbol symbol = task.oSymbol;
                 DateTime start = TimeFrequency.RoundTime(task.Intraday1MinHistBarEnd, TimeSpan.FromHours(1));//获得该1分钟Bar对应1小时周期的开始 这样可以恢复所有周期对应的Bar数据
-                DateTime end = task.First1MinRoundtime;
+                DateTime end = task.Exchange1MinRoundtime;
                 string path = TikWriter.GetTickPath(_basedir, symbol.Exchange, symbol.Symbol);
 
                 //tick数据缓存
@@ -237,7 +247,7 @@ namespace TradingLib.Common.DataFarm
                 //如果没有历史Tick数据则不用添加TimeTick用于关闭Bar
                 if (tmpticklist.Count > 0)
                 {
-                    DateTime dt = task.First1MinRoundtime;
+                    DateTime dt = task.Exchange1MinRoundtime;
                     Tick timeTick = TickImpl.NewTimeTick(task.oSymbol, dt);
                     tmpticklist.Add(timeTick);
                 }

@@ -22,10 +22,13 @@ namespace TradingLib.Common
 
             this.oSymbol = null;
             this.Symbol = string.Empty;
+            this.Exchange = string.Empty;
 
             this.Intraday1MinHistBarEnd = DateTime.MinValue;
             this.EodHistBarEnd = DateTime.MinValue;
-            this.First1MinRoundtime = DateTime.MinValue;
+
+            this.DataFeed1MinRoundTime = DateTime.MinValue;
+            this.Exchange1MinRoundtime = DateTime.MinValue;
 
             this.IsTickFilled = false;
             this.IsTickFillSuccess = false;
@@ -42,10 +45,13 @@ namespace TradingLib.Common
 
             this.oSymbol = symbol;
             this.Symbol = this.oSymbol.Symbol;
+            this.Exchange = this.oSymbol.Exchange;
 
             this.Intraday1MinHistBarEnd = DateTime.MinValue;
             this.EodHistBarEnd = DateTime.MinValue;
-            this.First1MinRoundtime = DateTime.MinValue;
+
+            this.DataFeed1MinRoundTime = DateTime.MinValue;
+            this.Exchange1MinRoundtime = DateTime.MinValue;
 
             this.IsTickFilled = false;
             this.IsTickFillSuccess = false;
@@ -66,6 +72,10 @@ namespace TradingLib.Common
         /// 合约
         /// </summary>
         public string Symbol { get; set; }
+        /// <summary>
+        /// 交易所
+        /// </summary>
+        public string Exchange { get; set; }
         /// <summary>
         /// 任务创建时间
         /// </summary>
@@ -93,8 +103,13 @@ namespace TradingLib.Common
         /// 这里原先第一个Bar不储存的方法有漏洞
         /// 如果非主力合约 中间一段时间没有数据 过了1分钟 数据恢复完毕之后 才有Tick数据过来 生成第一个Bar 则该Bar是完整的,可以直接储存
         /// </summary>
-        public DateTime First1MinRoundtime { get; set; }
+        public DateTime Exchange1MinRoundtime { get; set; }
 
+        /// <summary>
+        /// 行情源1分钟Round时间
+        /// 该时间为启动1分钟之后 截取的数据完备的最小周期结束时间
+        /// </summary>
+        public DateTime DataFeed1MinRoundTime { get; set; }
         /// <summary>
         /// 历史Tick数据恢复标识
         /// </summary>
