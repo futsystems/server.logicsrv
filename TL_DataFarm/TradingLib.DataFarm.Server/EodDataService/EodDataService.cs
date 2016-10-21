@@ -132,7 +132,7 @@ namespace TradingLib.Common.DataFarm
             {
                 task.IsEODRestored = true;
 
-                IEnumerable<BarImpl> list = _store.QryBar(task.Symbol, BarInterval.CustomTime, 60, task.EodHistBarEnd, DateTime.MaxValue, 0, 0, false, false);
+                IEnumerable<BarImpl> list = _store.QryBar(task.oSymbol, BarInterval.CustomTime, 60, task.EodHistBarEnd, DateTime.MaxValue, 0, 0, false, false);
                 IEnumerable<BarImpl> eodlist = BarMerger.MergeEOD(list);
 
                 //数据恢复后 日线数据最后一条数据最关键，该数据如果在收盘时刻启动则日线完备，如果在盘中启动则日线不完备
@@ -145,7 +145,7 @@ namespace TradingLib.Common.DataFarm
                 //将恢复完毕的日级别数据 发送到Barlist
                 if (EodBarResotred != null)
                 {
-                    EodBarResotred(task.Symbol, eodlist.Take(Math.Max(0, eodlist.Count() - 1)));//最后一个Bar不更新到缓存 放入EodBarStruct 作为EODPartial来处理,通过1分钟K线的处理来决定是否关闭该EODBar
+                    EodBarResotred(task.oSymbol, eodlist.Take(Math.Max(0, eodlist.Count() - 1)));//最后一个Bar不更新到缓存 放入EodBarStruct 作为EODPartial来处理,通过1分钟K线的处理来决定是否关闭该EODBar
                 }
 
                 //用最后一个Eod 创建struct
@@ -153,39 +153,39 @@ namespace TradingLib.Common.DataFarm
                 EodBarStruct st = null;
                 if (lasteod != null)
                 {
-                    st = new EodBarStruct(task.Symbol, lasteod, lasteod.Volume);
+                    st = new EodBarStruct(task.oSymbol, lasteod, lasteod.Volume);
                 }
                 else
                 {
-                    st = new EodBarStruct(task.Symbol, null, 0);
+                    st = new EodBarStruct(task.oSymbol, null, 0);
                 }
-                eodBarMap.Add(task.Symbol.UniqueKey, st);
+                eodBarMap.Add(task.oSymbol.UniqueKey, st);
 
                 //如果操作执行完成前已经有最新的Bar数据到达，则将这些没有处理的数据应用到当前EODPartial
                 List<BarImpl> minbarlist = null;
-                if (eodPendingMinBarMap.TryGetValue(task.Symbol.UniqueKey, out minbarlist))
+                if (eodPendingMinBarMap.TryGetValue(task.oSymbol.UniqueKey, out minbarlist))
                 {
                     foreach (var bar in minbarlist)
                     {
-                        On1MinBarClose(task.Symbol, bar);
+                        On1MinBarClose(task.oSymbol, bar);
                     }
                 }
 
                 BarImpl partialBar = null;
-                if (eodPendingMinPartialBarMap.TryGetValue(task.Symbol.UniqueKey, out partialBar))
+                if (eodPendingMinPartialBarMap.TryGetValue(task.oSymbol.UniqueKey, out partialBar))
                 {
-                    On1MinPartialBarUpdate(task.Symbol, partialBar);
+                    On1MinPartialBarUpdate(task.oSymbol, partialBar);
                 }
 
                 //恢复分时数据 分时数据需要等待1分钟数据恢复完毕后才可以完全加载
-                this.RestoreMinuteData(task.Symbol);
+                this.RestoreMinuteData(task.oSymbol);
 
                 task.IsEODRestoreSuccess = true;
             }
             catch (Exception ex)
             {
                 task.IsEODRestoreSuccess = false;
-                logger.Error(string.Format("Symbol:{0} EOD Restore Error:{1}", task.Symbol.Symbol, ex.ToString()));
+                logger.Error(string.Format("Symbol:{0} EOD Restore Error:{1}", task.oSymbol.Symbol, ex.ToString()));
             }
         }
         

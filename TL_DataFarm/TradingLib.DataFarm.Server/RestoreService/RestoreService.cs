@@ -152,7 +152,11 @@ namespace TradingLib.Common.DataFarm
         System.Threading.Thread _restorethread = null;
 
 
-        
+
+        /// <summary>
+        /// 所有恢复任务
+        /// </summary>
+        public IEnumerable<RestoreTask> RestoreTasks { get { return restoreTaskMap.Values; } }
         void ProcessRestoreTask()
         {
             while (_restorego)
@@ -166,12 +170,12 @@ namespace TradingLib.Common.DataFarm
                     //}
 
                     //遍历所有未完成恢复任务
-                    foreach (var item in restoreTaskMap.Values.Where(t => !t.Completed))
+                    foreach (var item in restoreTaskMap.Values.Where(t => !t.Complete))
                     {
                         //恢复历史Tick生成1分钟Bar
                         if (!item.IsTickFilled)
                         {
-                            QSEnumDataFeedTypes df = item.Symbol.SecurityFamily.Exchange.DataFeed;
+                            QSEnumDataFeedTypes df = item.oSymbol.SecurityFamily.Exchange.DataFeed;
                             DataFeedTime dftime = GetDataFeedTime(df);
                             //没有对应行情源的时间 则不执行后续操作
                             if (dftime == null) continue;
@@ -194,7 +198,8 @@ namespace TradingLib.Common.DataFarm
 
                         if (item.IsTickFillSuccess && item.IsEODRestoreSuccess)
                         {
-                            item.Completed = true;
+                            item.Complete = true;
+                            item.CompleteTime = DateTime.Now;
                         }
 
                     }
@@ -222,7 +227,7 @@ namespace TradingLib.Common.DataFarm
             {
                 task.IsTickFilled = true;
 
-                Symbol symbol = task.Symbol;
+                Symbol symbol = task.oSymbol;
                 DateTime start = TimeFrequency.RoundTime(task.Intraday1MinHistBarEnd, TimeSpan.FromHours(1));//获得该1分钟Bar对应1小时周期的开始 这样可以恢复所有周期对应的Bar数据
                 DateTime end = task.First1MinRoundtime;
                 string path = TikWriter.GetTickPath(_basedir, symbol.Exchange, symbol.Symbol);
@@ -233,14 +238,14 @@ namespace TradingLib.Common.DataFarm
                 if (tmpticklist.Count > 0)
                 {
                     DateTime dt = task.First1MinRoundtime;
-                    Tick timeTick = TickImpl.NewTimeTick(task.Symbol, dt);
+                    Tick timeTick = TickImpl.NewTimeTick(task.oSymbol, dt);
                     tmpticklist.Add(timeTick);
                 }
 
-                logger.Info(string.Format("BackFill Symbol:{0} Start:{1} End:{2} Tick CNT:{3}", task.Symbol.Symbol, start, end, tmpticklist.Count));
+                logger.Info(string.Format("BackFill Symbol:{0} Start:{1} End:{2} Tick CNT:{3}", task.oSymbol.Symbol, start, end, tmpticklist.Count));
 
                 //处理历史Tick之前 执行Clear 将原来历史Bar中某个合约的数据清空掉，避免之前Tick恢复造成的脏数据
-                restoreFrequencyMgr.Clear(task.Symbol);
+                restoreFrequencyMgr.Clear(task.oSymbol);
 
                 //Feed Tick
                 foreach (var k in tmpticklist)
@@ -249,13 +254,13 @@ namespace TradingLib.Common.DataFarm
                 }
 
                 //历史Tick恢复完毕后 获取所有周期上的PartialBar
-                IEnumerable<Frequency> frequencyList = restoreFrequencyMgr.GetFrequency(task.Symbol);
+                IEnumerable<Frequency> frequencyList = restoreFrequencyMgr.GetFrequency(task.oSymbol);
                 foreach (var freq in frequencyList)
                 {
                     if (freq.WriteableBars.HasPartialItem)//数据恢复时候 Tick文件含有E类别Tick MarketClose 关闭Bar之后 由于没有任何成交Tick驱动 则没有PartialBar 此处刚好完备
                     {
                         if (NewHistPartialBarEvent != null)
-                            NewHistPartialBarEvent(task.Symbol, freq.WriteableBars.PartialItem as BarImpl); //将HistPartialBar设定到 BarList时 会执行Merge操作 如果异常会导致 任务进入死循环 一致执行BackFill
+                            NewHistPartialBarEvent(task.oSymbol, freq.WriteableBars.PartialItem as BarImpl); //将HistPartialBar设定到 BarList时 会执行Merge操作 如果异常会导致 任务进入死循环 一致执行BackFill
                     }
                 }
 
@@ -270,7 +275,7 @@ namespace TradingLib.Common.DataFarm
             catch (Exception ex)
             {
                 task.IsTickFillSuccess = false;
-                logger.Error(string.Format("Symbol:{0} TickFill Error:{1}", task.Symbol.Symbol, ex));
+                logger.Error(string.Format("Symbol:{0} TickFill Error:{1}", task.oSymbol.Symbol, ex));
             }
         }
 

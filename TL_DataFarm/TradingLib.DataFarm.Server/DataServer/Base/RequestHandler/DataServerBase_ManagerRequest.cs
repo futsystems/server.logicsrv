@@ -98,6 +98,14 @@ namespace TradingLib.Common.DataFarm
             this.ResetAllSnapshot();
         }
 
+        [DataCommandAttr("QryRestoreTask", "QryRestoreTask -  qry restore task", "查询恢复任务状态")]
+        public void CTE_QryRestoreTask(IServiceHost host, IConnection conn)
+        {
+            logger.Info("QryRestoreTask");
+            RestoreTask[] taskarray = restoresrv.RestoreTasks.ToArray();
+            SendContribResponse(conn, taskarray);
+        }
+
 
         //查询日历列表
         [DataCommandAttr("QryCalendarList", "QryCalendarList -  qry calendar list", "查询日历对象列表")]

@@ -121,6 +121,7 @@
     <Compile Include="Profile\SectionStats.cs" />
     <Compile Include="Protocol\CommissionTemplateItem.cs" />
     <Compile Include="Protocol\LoginInfo.cs" />
+    <Compile Include="Protocol\DataFarm\RestoreTask.cs" />
     <Compile Include="Stock\PowerTransactionImpl.cs" />
     <Compile Include="TNetString\ByteArrayExtensions.cs" />
     <Compile Include="TNetString\TNetStrings.cs" />
