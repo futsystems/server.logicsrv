@@ -190,11 +190,12 @@ namespace TradingLib.Common.DataFarm
                             {
                                 
                                 DateTime extime = Global.TimeZoneHelper.ConvertToTimeZone(df, dftime.First1MinRoundEnd, item.oSymbol.SecurityFamily.Exchange);
-                                if (extime == DateTime.MinValue) continue;
-                                item.DataFeed1MinRoundTime = dftime.First1MinRoundEnd;
-                                item.Exchange1MinRoundtime = extime;
-                                //item.First1MinRoundtime = dftime.First1MinRoundEnd;
-                                BackFillSymbol(item);
+                                if (extime != DateTime.MinValue)
+                                {
+                                    item.DataFeed1MinRoundTime = dftime.First1MinRoundEnd;
+                                    item.Exchange1MinRoundtime = extime;
+                                    BackFillSymbol(item);
+                                }
                                 
                             }
                         }
