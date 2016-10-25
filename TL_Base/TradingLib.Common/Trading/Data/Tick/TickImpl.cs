@@ -857,7 +857,7 @@ namespace TradingLib.Common
                         k.AskPrice = decimal.Parse(r[10]);
                         k.BidPrice = decimal.Parse(r[11]);
                         k.Exchange = r[12];
-                        if (r.Length >= 14)
+                        if (r.Length >= 14 && !string.IsNullOrEmpty(r[13]))
                         {
                             k.TradeFlag = int.Parse(r[13]);
                         }
