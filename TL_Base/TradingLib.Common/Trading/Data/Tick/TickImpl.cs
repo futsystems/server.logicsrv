@@ -857,7 +857,14 @@ namespace TradingLib.Common
                         k.AskPrice = decimal.Parse(r[10]);
                         k.BidPrice = decimal.Parse(r[11]);
                         k.Exchange = r[12];
-                        k.TradeFlag = int.Parse(r[13]);
+                        if (r.Length >= 14)
+                        {
+                            k.TradeFlag = int.Parse(r[13]);
+                        }
+                        else
+                        {
+                            k.TradeFlag = TickImpl.CalcTradeFlag(k.Trade, k.AskPrice, k.BidPrice);
+                        }
                         break;
                     }
                 case "A":

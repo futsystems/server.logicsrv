@@ -44,6 +44,7 @@ namespace TradingLib.Common.DataFarm
                                 Tick k = TickImpl.Deserialize2(str);
                                 k.Symbol = symbol.Symbol;
                                 k.Exchange = symbol.Exchange;
+                                
                                 DateTime ticktime = k.DateTime();
                                 if (ticktime >= startDate && ticktime < endDate)
                                 {
