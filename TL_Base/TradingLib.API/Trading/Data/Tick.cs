@@ -43,6 +43,11 @@ namespace TradingLib.API
         /// trade exchange
         /// </summary>
         string Exchange { get; set; }
+
+        /// <summary>
+        /// 交易标识
+        /// </summary>
+        int TradeFlag { get; set;}
         #endregion
 
         #region Quote

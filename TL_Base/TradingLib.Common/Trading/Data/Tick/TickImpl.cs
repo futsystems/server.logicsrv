@@ -81,6 +81,7 @@ namespace TradingLib.Common
         bool _marketOpen;
         bool _quoteUpdate;
         string _updateType;
+        int _tradeflag;
 
 
 
@@ -171,6 +172,38 @@ namespace TradingLib.Common
         /// </summary>
         public string UpdateType { get { return _updateType; } set { _updateType = value; } }
 
+        /// <summary>
+        /// 交易标识
+        /// </summary>
+        public int TradeFlag {
+            get
+            {
+                return _tradeflag;
+                //if(_tradeflag>=0) return _tradeflag;
+                //if (this.AskPrice * this.BidPrice * this.Trade != 0)
+                //{
+                //    //成交价格离 卖价更近 则为主动买入
+                //    if (Math.Abs(this.Trade - this.AskPrice) < Math.Abs(this.Trade - this.BidPrice))
+                //    {
+                //        _tradeflag = 0;
+                //    }
+                //    else
+                //    {
+                //        _tradeflag = 1;
+                //    }
+                //}
+                //else
+                //{
+                //    _tradeflag = -1;
+                //}
+                //return _tradeflag;
+            }
+            set
+            {
+                _tradeflag = value;
+            }
+        }
+
         public TickImpl(string symbol)
         {
             _Sec = new SymbolImpl();
@@ -233,7 +266,7 @@ namespace TradingLib.Common
             _intervalSize = 0;
 
             _updateType = "H";
-
+            _tradeflag = -1;
         }
 
         public TickImpl(DateTime time)
@@ -298,6 +331,7 @@ namespace TradingLib.Common
             _intervalSize = 0;
 
             _updateType = "S";
+            _tradeflag = -1;
 
         }
 
@@ -365,9 +399,25 @@ namespace TradingLib.Common
             k.AskUpdate = c.AskUpdate;
             k.BidUpdate = c.BidUpdate;
             k.IntervalSize = c.IntervalSize;
+            k.TradeFlag = c.TradeFlag;
             return k;
         }
 
+        /// <summary>
+        /// 0:主动买
+        /// 1:主动卖
+        /// </summary>
+        /// <param name="trade"></param>
+        /// <param name="ask"></param>
+        /// <param name="bid"></param>
+        /// <returns></returns>
+        public static int CalcTradeFlag(decimal trade, decimal ask, decimal bid)
+        {
+            //离Ask更近 为主动买 否则为主动卖
+            if (Math.Abs(ask - trade) <= Math.Abs(bid - trade)) return 0;
+            return 1;
+
+        }
         /// <summary>
         /// this constructor creates a new tick by combining two ticks
         /// this is to handle tick updates that only provide bid/ask changes.
@@ -619,6 +669,7 @@ namespace TradingLib.Common
                         sb.Append(d);
                         sb.Append(k.Exchange);
                         sb.Append(d);
+                        sb.Append(k.TradeFlag);
                         break;
                     }
                 case "A"://卖盘报价
@@ -806,6 +857,7 @@ namespace TradingLib.Common
                         k.AskPrice = decimal.Parse(r[10]);
                         k.BidPrice = decimal.Parse(r[11]);
                         k.Exchange = r[12];
+                        k.TradeFlag = int.Parse(r[13]);
                         break;
                     }
                 case "A":
@@ -924,6 +976,8 @@ namespace TradingLib.Common
             writer.Write((double)k.Trade);
             writer.Write(k.Size);
             writer.Write(k.Vol);
+            writer.Write(k.TradeFlag);
+            
         }
 
         public static Tick ReadTradeSplit(BinaryReader reader)
@@ -935,6 +989,7 @@ namespace TradingLib.Common
             k.Trade = (decimal)reader.ReadDouble();
             k.Size = reader.ReadInt32();
             k.Vol = reader.ReadInt32();
+            k.TradeFlag = reader.ReadInt32();
             return k;
 
         }

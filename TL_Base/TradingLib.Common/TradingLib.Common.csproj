@@ -182,6 +182,7 @@
     <Compile Include="Utils\WinConsole.cs" />
     <Compile Include="Utils\XMLRspInfo\XMLRspInfoTracker.cs" />
     <Compile Include="Utils\XMLRspInfo\XMLRspInfo.cs" />
+    <Compile Include="Utils\Util_string_convert.cs" />
     <Compile Include="Vendor\BrokerAccountInfo.cs" />
     <Compile Include="Vendor\ConnectorStatus.cs" />
     <Compile Include="Vendor\ConnectorConfig.cs" />
