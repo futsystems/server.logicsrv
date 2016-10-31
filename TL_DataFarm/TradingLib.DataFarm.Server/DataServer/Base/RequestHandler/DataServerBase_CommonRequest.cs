@@ -463,7 +463,7 @@ namespace TradingLib.Common.DataFarm
             logger.Info(string.Format("Conn:{0} Qry TickSnapshot {1} {2}", conn.SessionID, request.Exchange, request.Symbol));
 
             //查询单个合约的行情快照
-            if (string.IsNullOrEmpty(request.Exchange) && string.IsNullOrEmpty(request.Symbol))
+            if (!string.IsNullOrEmpty(request.Exchange) && !string.IsNullOrEmpty(request.Symbol))
             {
                 //客户端订阅后发送当前市场快照
                 Tick k = Global.TickTracker[request.Exchange, request.Symbol];
