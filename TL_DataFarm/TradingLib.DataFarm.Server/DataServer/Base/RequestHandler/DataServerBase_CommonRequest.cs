@@ -462,24 +462,25 @@ namespace TradingLib.Common.DataFarm
         {
             logger.Info(string.Format("Conn:{0} Qry TickSnapshot {1} {2}", conn.SessionID, request.Exchange, request.Symbol));
 
-            //查询单个合约的行情快照
-            if (!string.IsNullOrEmpty(request.Exchange) && !string.IsNullOrEmpty(request.Symbol))
+            //查询所有行情快照
+            if (string.IsNullOrEmpty(request.Exchange) && string.IsNullOrEmpty(request.Symbol))
             {
+                foreach (var tick in Global.TickTracker.TickSnapshots)
+                {
+                    TickNotify ticknotify = new TickNotify();
+                    ticknotify.Tick = tick;
+                    this.SendData(conn, ticknotify);
+                }
+            }
+            else //查询单个合约的行情快照
+            {
+
                 //客户端订阅后发送当前市场快照
                 Tick k = Global.TickTracker[request.Exchange, request.Symbol];
                 if (k != null)
                 {
                     TickNotify ticknotify = new TickNotify();
                     ticknotify.Tick = k;
-                    this.SendData(conn, ticknotify);
-                }
-            }
-            else //查询所有行情快照
-            {
-                foreach (var tick in Global.TickTracker.TickSnapshots)
-                {
-                    TickNotify ticknotify = new TickNotify();
-                    ticknotify.Tick = tick;
                     this.SendData(conn, ticknotify);
                 }
             }
