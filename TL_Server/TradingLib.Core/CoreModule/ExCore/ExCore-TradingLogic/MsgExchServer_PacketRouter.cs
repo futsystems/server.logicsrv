@@ -65,12 +65,7 @@ namespace TradingLib.Core
                         SrvOnQryMaxOrderVol(request, account);
                     }
                     break;
-                case MessageTypes.QRYSETTLEINFO://查询结算信息
-                    {
-                        QrySettleInfoRequest request = packet as QrySettleInfoRequest;
-                        SrvOnQrySettleInfo(request);
-                    }
-                    break;
+
                 case MessageTypes.QRYSETTLEINFOCONFIRM://查询结算确认
                     {
                         QrySettleInfoConfirmRequest request = packet as QrySettleInfoConfirmRequest;
@@ -219,6 +214,14 @@ namespace TradingLib.Core
                         SrvOnQryAccountFinance(request, account);
                     }
                     break;
+
+                case MessageTypes.XQRYSETTLEINFO://查询结算信息
+                    {
+                        XQrySettleInfoRequest request = packet as XQrySettleInfoRequest;
+                        SrvOnXQrySettleInfo(request);
+                    }
+                    break;
+
                 case MessageTypes.CONTRIBREQUEST://扩展请求
                     {
                         ContribRequest request = packet as ContribRequest;

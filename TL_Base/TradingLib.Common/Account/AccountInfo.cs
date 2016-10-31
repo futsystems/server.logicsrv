@@ -38,6 +38,8 @@ namespace TradingLib.Common
         public bool Execute { get; set; }//冻结
         public bool IntraDay { get; set; }//日内
 
+        public decimal CommissionFrozen { get; set; }//冻结手续费
+
         //补充 增加总帐户的资金占用 资金冻结 | 资金占用+资金冻结 = moneyused
         /// <summary>
         /// 保证金占用
@@ -206,6 +208,8 @@ namespace TradingLib.Common
             sb.Append(d);
             sb.Append(info.CreditCashOut);
             sb.Append(d);
+            sb.Append(info.CommissionFrozen);
+            sb.Append(d);
             sb.Append(info.Name);
             return sb.ToString();
         }
@@ -277,7 +281,8 @@ namespace TradingLib.Common
                 a.LastCredit = decimal.Parse(r[49]);
                 a.CreditCashIn = decimal.Parse(r[50]);
                 a.CreditCashOut = decimal.Parse(r[51]);
-                a.Name = r[52];
+                a.CommissionFrozen = decimal.Parse(r[52]);
+                a.Name = r[53];
             }
             return a;
         }

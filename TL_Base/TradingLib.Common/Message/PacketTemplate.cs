@@ -125,8 +125,8 @@ namespace TradingLib.Common
                     case MessageTypes.QRYSETTLEINFOCONFIRM:
                         return RequestTemplate<QrySettleInfoConfirmRequest>.SrvRecvRequest(frontid, clientid, message.Content);
                     //查询结算信息
-                    case MessageTypes.QRYSETTLEINFO:
-                        return RequestTemplate<QrySettleInfoRequest>.SrvRecvRequest(frontid, clientid, message.Content);
+                    case MessageTypes.XQRYSETTLEINFO:
+                        return RequestTemplate<XQrySettleInfoRequest>.SrvRecvRequest(frontid, clientid, message.Content);
                     //查询委托
                     case MessageTypes.QRYORDER:
                         return RequestTemplate<QryOrderRequest>.SrvRecvRequest(frontid, clientid, message.Content);
@@ -428,8 +428,8 @@ namespace TradingLib.Common
                     return ResponseTemplate<RspQryPositionDetailResponse>.CliRecvResponse(message);
                 case MessageTypes.SYMBOLRESPONSE://合约查询回报
                     return ResponseTemplate<RspQrySymbolResponse>.CliRecvResponse(message);
-                case MessageTypes.SETTLEINFORESPONSE://结算信息回报
-                    return ResponseTemplate<RspQrySettleInfoResponse>.CliRecvResponse(message);
+                case MessageTypes.XSETTLEINFORESPONSE://结算信息回报
+                    return ResponseTemplate<RspXQrySettleInfoResponse>.CliRecvResponse(message);
                 case MessageTypes.BARRESPONSE://历史数据回报
                     return ResponseTemplate<RspQryBarResponse>.CliRecvResponse(message);
                 case MessageTypes.SETTLEINFOCONFIRMRESPONSE://结算确认回报

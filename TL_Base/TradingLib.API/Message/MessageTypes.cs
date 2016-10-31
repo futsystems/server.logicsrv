@@ -70,7 +70,7 @@ namespace TradingLib.API
         QRYINVESTOR,//交易者信息查询
         QRYSYMBOL,//查询合约
         QRYSETTLEINFOCONFIRM,//查询结算
-        QRYSETTLEINFO,
+        XQRYSETTLEINFO,
         QRYORDER,//查询委托
         QRYTRADE,//查询成交
         QRYPOSITION,//查询持仓
@@ -139,7 +139,7 @@ namespace TradingLib.API
         INVESTORRESPONSE,//交易者信息回报
         SYMBOLRESPONSE,//合约查询回报
         SETTLEINFOCONFIRMRESPONSE,//结算确认回报
-        SETTLEINFORESPONSE,
+        XSETTLEINFORESPONSE,
         ORDERRESPONSE,//查询委托回报
         TRADERESPONSE,//查询成交回报
         POSITIONRESPONSE,//查询持仓回报

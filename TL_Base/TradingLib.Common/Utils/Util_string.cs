@@ -72,7 +72,48 @@ namespace TradingLib.Common
             return oldStr;
         }
 
+        public static string PadLeftEx(this string str, int totalByteCount)
+        {
+            Encoding coding = Encoding.GetEncoding("gb2312");
+            int dcount = 0;
+            foreach (char ch in str.ToCharArray())//判断字符是2位还是1位 如果是2位就将移位+1
+            {
+                if (coding.GetByteCount(ch.ToString()) == 2)
+                    dcount++;
+            }
+            string w = str.PadRight(totalByteCount - dcount);
+            return w;
+        }
 
+
+        public static string PadRightEx(this string str, int totalByteCount)
+        {
+            Encoding coding = Encoding.GetEncoding("gb2312");
+            int dcount = 0;
+            foreach (char ch in str.ToCharArray())//判断字符是2位还是1位 如果是2位就将移位+1
+            {
+                if (coding.GetByteCount(ch.ToString()) == 2)
+                    dcount++;
+            }
+
+            string w = str.PadLeft(totalByteCount - dcount);
+            return w;
+        }
+
+        public static string PadCenterEx(this string str, int totalByteCount)
+        {
+            Encoding coding = Encoding.GetEncoding("gb2312");
+            int dcount = 0;
+            foreach (char ch in str.ToCharArray())//判断字符是2位还是1位 如果是2位就将移位+1
+            {
+                if (coding.GetByteCount(ch.ToString()) == 2)
+                    dcount++;
+            }
+            int strcnt = dcount + str.Length;
+            int remaincnt = totalByteCount - strcnt;
+            int leftcnt = remaincnt / 2;
+            return str.PadLeft(leftcnt + strcnt - dcount).PadRight(totalByteCount - dcount);
+        }
 
     }
 }

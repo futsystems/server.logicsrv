@@ -112,7 +112,7 @@ namespace TradingLib.Common
         /// <summary>
         /// 当前日期
         /// </summary>
-        public int Date { get; set; }
+        public int TradingDay { get; set; }
 
         /// <summary>
         /// 前置整数编号
@@ -163,7 +163,7 @@ namespace TradingLib.Common
             Account = "";
             FrontUUID = "";
             ClientUUID = "";
-            Date = 0;
+            TradingDay = 0;
             FrontIDi = 0;
             SessionIDi = 0;
             AccountType = QSEnumAccountCategory.SUBACCOUNT;
@@ -191,13 +191,13 @@ namespace TradingLib.Common
             sb.Append(d);
             sb.Append(this.ClientUUID);
             sb.Append(d);
-            sb.Append(this.Date.ToString());
+            sb.Append(this.TradingDay);
             sb.Append(d);
-            sb.Append(this.FrontIDi.ToString());
+            sb.Append(this.FrontIDi);
             sb.Append(d);
-            sb.Append(this.SessionIDi.ToString());
+            sb.Append(this.SessionIDi);
             sb.Append(d);
-            sb.Append(this.AccountType.ToString());
+            sb.Append(this.AccountType);
             sb.Append(d);
             sb.Append(this.NickName);
             sb.Append(d);
@@ -220,7 +220,7 @@ namespace TradingLib.Common
             this.Account = r[2];
             this.FrontUUID = r[3];
             this.ClientUUID = r[4];
-            this.Date = int.Parse(r[5]);
+            this.TradingDay = int.Parse(r[5]);
             this.FrontIDi = int.Parse(r[6]);
             this.SessionIDi = int.Parse(r[7]);
             this.AccountType = (QSEnumAccountCategory)Enum.Parse(typeof(QSEnumAccountCategory), r[8]);

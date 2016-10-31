@@ -261,7 +261,7 @@
     <Compile Include="Message\QryOrder.cs" />
     <Compile Include="Message\QryPosition.cs" />
     <Compile Include="Message\QryRegisterBankAccount.cs" />
-    <Compile Include="Message\QrySettleInfo.cs" />
+    <Compile Include="Message\XAPI\Settlement.cs" />
     <Compile Include="Message\QrySettleInfoConfirm.cs" />
     <Compile Include="Message\QrySymbol.cs" />
     <Compile Include="Message\QryTrade.cs" />

@@ -11,7 +11,7 @@ using TradingLib.API;
 
 namespace TradingLib.Common
 {
-    public class QrySettleInfoRequest:RequestPacket
+    public class XQrySettleInfoRequest:RequestPacket
     {
         /// <summary>
         /// 交易帐号
@@ -24,9 +24,9 @@ namespace TradingLib.Common
         public int Tradingday { get; set; }
 
 
-        public QrySettleInfoRequest()
+        public XQrySettleInfoRequest()
         {
-            _type = MessageTypes.QRYSETTLEINFO;
+            _type = MessageTypes.XQRYSETTLEINFO;
         }
 
         public override string ContentSerialize()
@@ -42,7 +42,7 @@ namespace TradingLib.Common
         }
     }
 
-    public class RspQrySettleInfoResponse : RspResponsePacket
+    public class RspXQrySettleInfoResponse : RspResponsePacket
     {
         public string TradingAccount { get; set; }
         public int Tradingday { get; set; }
@@ -50,9 +50,9 @@ namespace TradingLib.Common
         public string SettlementContent { get; set; }
         public int SequenceNo { get; set; }
 
-        public RspQrySettleInfoResponse()
+        public RspXQrySettleInfoResponse()
         {
-            _type = MessageTypes.SETTLEINFORESPONSE;
+            _type = MessageTypes.XSETTLEINFORESPONSE;
             TradingAccount = string.Empty;
             Tradingday = 0;
             SettlementID = 0;

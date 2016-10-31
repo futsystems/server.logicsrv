@@ -202,41 +202,7 @@ namespace TradingLib.Core
             CachePacket(response);
         }
 
-        void SrvOnQrySettleInfo(QrySettleInfoRequest request)
-        {
-            logger.Info("QrySettleInfo :" + request.ToString());
-            AccountSettlement settlement = null;
-            //如果查询日期为0 则查询上个结算日
-            IAccount account = TLCtxHelper.ModuleAccountManager[request.Account];
-            //判断account是否为空
-            int settleday = request.Tradingday;
-            if (settleday == 0)
-            {
-                logger.Info("Request Tradingday:0 ,try to get the settlement of lastsettleday:" + TLCtxHelper.ModuleSettleCentre.LastSettleday);
-                settleday = TLCtxHelper.ModuleSettleCentre.LastSettleday;
-            }
-            settlement = ORM.MSettlement.SelectSettlement(request.Account, settleday);
-            if (settlement != null)
-            {
-                logger.Info("got settlement....");
-                List<string> settlelist = SettlementFactory.GenSettlementFile(settlement,account);
-                for (int i = 0; i < settlelist.Count; i++)
-                {
-                    RspQrySettleInfoResponse response = ResponseTemplate<RspQrySettleInfoResponse>.SrvSendRspResponse(request);
-                    response.Tradingday = settlement.Settleday;
-                    response.TradingAccount = settlement.Account;
-                    response.SettlementContent = settlelist[i] + "\n";
-                    CacheRspResponse(response, i == settlelist.Count - 1);
-                }
-            }
-            else
-            {
-                RspQrySettleInfoResponse response = ResponseTemplate<RspQrySettleInfoResponse>.SrvSendRspResponse(request);
-                logger.Warn("can not find settlement for account:" + request.Account + " for settleday:" + request.Tradingday.ToString());
-                response.RspInfo.Fill("SELLTEINFO_NOT_FOUND");
-                CachePacket(response);
-            }
-        }
+        
 
         void SrvOnQrySettleInfoConfirm(QrySettleInfoConfirmRequest request)
         {
