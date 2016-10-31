@@ -479,7 +479,7 @@ namespace TradingLib.Common.DataFarm
                 foreach (var tick in Global.TickTracker.TickSnapshots)
                 {
                     TickNotify ticknotify = new TickNotify();
-                    ticknotify.Tick = k;
+                    ticknotify.Tick = tick;
                     this.SendData(conn, ticknotify);
                 }
             }
