@@ -492,6 +492,16 @@ namespace TradingLib.Core
 
                 TLCtxHelper.EventRouter.FireTickEvent(k);
 
+                //if (k.UpdateType == "X" || k.UpdateType == "Q" || k.UpdateType == "F" || k.UpdateType == "S")
+                //{
+                //    //转发实时行情
+                //    Tick snapshot = _ticktracker[k.Exchange, k.Symbol];
+
+                //    //向系统内触发快照信息
+                //    TLCtxHelper.EventRouter.FireTickEvent(TickImpl.NewTick(snapshot,"S"));
+                //}
+                
+
             }
             catch (Exception ex)
             {

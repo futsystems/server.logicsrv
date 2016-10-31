@@ -11,6 +11,7 @@ namespace TradingLib.Common
     /// </summary>
     public class ProductInfo
     {
-        public static string T_XTRADER_STOCK = "XTrader.Stock";
+        public const string T_XTRADER_STOCK = "XTrader.Stock";
+        public const string T_XTRADER_FUTURE = "XTrader.Future";
     }
 }

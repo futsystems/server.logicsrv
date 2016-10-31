@@ -285,7 +285,7 @@ namespace TradingLib.Core
         /// <param name="tick">行情数据</param>
         public void SendTick(Tick k)
         {
-            string tickstr = k.Symbol + "^" + TickImpl.Serialize2(k);
+            string tickstr = TickImpl.Serialize2(k);
             SendTick(tickstr);
         }
 
@@ -295,7 +295,7 @@ namespace TradingLib.Core
         /// </summary>
         void SendTickHeartBeat()
         {
-            string tickstr = "TICKHEARTBEAT";
+            string tickstr = "H,";
             SendTick(tickstr);
         }
 

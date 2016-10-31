@@ -235,8 +235,14 @@ namespace TradingLib.Common
         /// <param name="month"></param>
         public static void ParseFututureContract(this Symbol sym, out string secCode, out int year, out int month)
         {
+            
             string symbol = sym.Symbol;
             string expire = symbol.Substring(symbol.Length - 4, 4);
+            //郑州CF610 格式
+            if (sym.SecurityFamily.Exchange.EXCode == "CZCE")
+            {
+                expire = "1" + symbol.Substring(symbol.Length - 3, 3);
+            }
             int num = 0;
             secCode = string.Empty;
             year = 0;

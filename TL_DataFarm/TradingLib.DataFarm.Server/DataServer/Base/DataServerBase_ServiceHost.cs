@@ -215,6 +215,10 @@ namespace TradingLib.Common.DataFarm
                 case MessageTypes.UNREGISTERSYMTICK:
                     SrvOnUnregisterSymbolTick(host, conn, packet as UnregisterSymbolTickRequest);
                     break;
+                //查询行情快照
+                case MessageTypes.XQRYTICKSNAPSHOT:
+                    SrvOnXQryTickSnapshot(host, conn, packet as XQryTickSnapShotRequest);
+                    break;
                 //查询历史Bar数据
                 case MessageTypes.BARREQUEST:
                     SrvOnBarRequest(host, conn, packet as QryBarRequest);
