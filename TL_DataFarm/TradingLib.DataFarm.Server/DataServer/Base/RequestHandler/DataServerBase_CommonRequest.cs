@@ -465,23 +465,26 @@ namespace TradingLib.Common.DataFarm
             //查询所有行情快照
             if (string.IsNullOrEmpty(request.Exchange) && string.IsNullOrEmpty(request.Symbol))
             {
-                foreach (var tick in Global.TickTracker.TickSnapshots)
+                
+                Tick[] list = Global.TickTracker.TickSnapshots.ToArray();
+                for (int i = 0; i < list.Length; i++)
                 {
-                    TickNotify ticknotify = new TickNotify();
-                    ticknotify.Tick = tick;
-                    this.SendData(conn, ticknotify);
+                    RspXQryTickSnapShotResponse response = ResponseTemplate<RspXQryTickSnapShotResponse>.SrvSendRspResponse(request);
+                    response.Tick = list[i];
+                    response.IsLast = i == list.Length - 1;
+                    this.SendData(conn, response);
+                    
                 }
             }
             else //查询单个合约的行情快照
             {
-
                 //客户端订阅后发送当前市场快照
                 Tick k = Global.TickTracker[request.Exchange, request.Symbol];
                 if (k != null)
                 {
-                    TickNotify ticknotify = new TickNotify();
-                    ticknotify.Tick = k;
-                    this.SendData(conn, ticknotify);
+                    RspXQryTickSnapShotResponse response = ResponseTemplate<RspXQryTickSnapShotResponse>.SrvSendRspResponse(request);
+                    response.Tick = k;
+                    this.SendData(conn, response);
                 }
             }
 

@@ -70,14 +70,19 @@ namespace TradingLib.Common
                         //未启用单向大边
                         if (!this.GetParamSideMargin())
                         {
-                            decimal price = TLCtxHelper.ModuleDataRouter.GetAvabilePrice(symbol.Exchange,symbol.Symbol);
+                            if (flag == QSEnumOffsetFlag.OPEN)
+                            {
+                                decimal price = TLCtxHelper.ModuleDataRouter.GetAvabilePrice(symbol.Exchange, symbol.Symbol);
 
-                            decimal fundperlot = this.CalOrderMarginFrozen(symbol, 1) * this.GetExchangeRate(symbol.SecurityFamily);
+                                decimal fundperlot = this.CalOrderMarginFrozen(symbol, 1) * this.GetExchangeRate(symbol.SecurityFamily);
 
-                            decimal avabilefund = GetFundAvabile(symbol);
+                                decimal avabilefund = GetFundAvabile(symbol);
 
-                            Util.Debug("QryCanOpenSize Fundavablie:" + avabilefund.ToString() + " Symbol:" + symbol.Symbol + " Price:" + price.ToString() + " Fundperlot:" + fundperlot.ToString());
-                            return (int)(avabilefund / fundperlot);
+                                Util.Debug("QryCanOpenSize Fundavablie:" + avabilefund.ToString() + " Symbol:" + symbol.Symbol + " Price:" + price.ToString() + " Fundperlot:" + fundperlot.ToString());
+                                return (int)(avabilefund / fundperlot);
+                            }
+
+                            return 0;
                         }
                         else
                         {
