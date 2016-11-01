@@ -81,7 +81,7 @@ namespace TradingLib.Common.DataFarm
             response.Account = "9999";
             response.AccountType = QSEnumAccountCategory.SUBACCOUNT;
             response.Authorized = true;
-            response.Date = 20161006;
+            response.TradingDay = 20161006;
             response.RspInfo = new RspInfoImpl();
 
             this.SendData(conn, response);
@@ -285,6 +285,7 @@ namespace TradingLib.Common.DataFarm
                 logger.Warn(string.Format("Sec:{0} have no marketday", symbol.SecurityFamily.Code));
                 return;
             }
+            logger.Info(string.Format("Sec:{0} marketday:{1}", symbol.SecurityFamily.Code, md.ToSessionString()));
 
             int tradingday = request.Tradingday;
             if (tradingday == 0)
