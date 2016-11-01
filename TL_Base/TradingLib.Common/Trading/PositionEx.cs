@@ -29,6 +29,10 @@ namespace TradingLib.Common
         public string Symbol { get; set; }
 
         /// <summary>
+        /// 交易所
+        /// </summary>
+        public string Exchange { get; set; }
+        /// <summary>
         /// 乘数
         /// </summary>
         public int Multiple { get; set; }
@@ -253,6 +257,8 @@ namespace TradingLib.Common
             sb.Append(p.Margin);
             sb.Append(d);
             sb.Append(p.CloseProfitByTrade);
+            sb.Append(d);
+            sb.Append(p.Exchange);
             return sb.ToString();
 
         }
@@ -291,6 +297,7 @@ namespace TradingLib.Common
             p.OpenCost = decimal.Parse(rec[26]);
             p.Margin = decimal.Parse(rec[27]);
             p.CloseProfitByTrade = decimal.Parse(rec[28]);
+            p.Exchange = rec[29];
             return p;
         }
     }

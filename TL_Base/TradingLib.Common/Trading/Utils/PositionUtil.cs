@@ -291,6 +291,7 @@ namespace TradingLib.Common
             PositionEx p = new PositionEx();
             p.Account = pos.Account;
             p.Symbol = pos.Symbol;
+            p.Exchange = pos.oSymbol.Exchange;
             p.Multiple = pos.oSymbol.Multiple;
             
             p.AvgPrice = pos.AvgPrice;//持仓均价
