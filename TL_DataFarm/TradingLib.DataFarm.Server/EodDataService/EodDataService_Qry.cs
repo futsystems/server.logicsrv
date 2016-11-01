@@ -78,7 +78,8 @@ namespace TradingLib.Common.DataFarm
                 MinuteDataCache cache = null;
                 if (cachemap.TryGetValue(date, out cache))
                 {
-                    list= cache.QryMinuteDate(start);
+                    logger.Info("got date:" + date.ToString());
+                    list = cache.QryMinuteDate(start);
                 }
             }
 
