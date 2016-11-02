@@ -221,6 +221,12 @@ namespace TradingLib.Core
                         SrvOnXQrySettleInfo(request);
                     }
                     break;
+                case MessageTypes.XQRYEXCHANGERATE://查询汇率信息
+                    {
+                        XQryExchangeRateRequest request = packet as XQryExchangeRateRequest;
+                        SrvOnXQryExchangeRate(request,account);
+                    }
+                    break;
 
                 case MessageTypes.CONTRIBREQUEST://扩展请求
                     {

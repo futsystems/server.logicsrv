@@ -393,4 +393,56 @@ namespace TradingLib.Common
                 this.Report = AccountInfo.Deserialize(content);
         }
     }
+
+
+    /// <summary>
+    /// 查询汇率信息
+    /// </summary>
+    public class XQryExchangeRateRequest : RequestPacket
+    {
+        public XQryExchangeRateRequest()
+        {
+            _type = MessageTypes.XQRYEXCHANGERATE;
+        }
+
+        public override string ContentSerialize()
+        {
+            return string.Empty;
+        }
+
+        public override void ContentDeserialize(string contentstr)
+        {
+
+        }
+    }
+
+    /// <summary>
+    /// 查询汇率信息回报
+    /// </summary>
+    public class RspXQryExchangeRateResponse : RspResponsePacket
+    {
+        public RspXQryExchangeRateResponse()
+        {
+            _type = MessageTypes.XQRYEXCHANGERATERESPONSE;
+            ExchangeRate = null;
+        }
+
+        public ExchangeRate ExchangeRate { get; set; }
+        public override string ResponseSerialize()
+        {
+            if (this.ExchangeRate == null) return string.Empty;
+            return TradingLib.Common.ExchangeRate.Serialize(this.ExchangeRate);
+        }
+
+        public override void ResponseDeserialize(string content)
+        {
+            if (string.IsNullOrEmpty(content))
+            {
+                this.ExchangeRate = null;
+                return;
+            }
+            this.ExchangeRate = TradingLib.Common.ExchangeRate.Deserialize(content);
+        }
+    }
+
 }

@@ -106,6 +106,7 @@ namespace TradingLib.API
         XQRYTRADSPLIT,//查询成交数据
         XQRYPRICEVOL,//查询价格成交量
         XQRYMINUTEDATA,//查询分时数据
+        XQRYEXCHANGERATE,//查询汇率数据
         DOMREQUEST,//请求DOM市场Level2数据
         IMBALANCEREQUEST,//imbalance..查询这个是什么意思
 
@@ -178,6 +179,7 @@ namespace TradingLib.API
         XQRYTRADSPLITRESPONSE,//成交明细回报
         XQRYPRICEVOLRESPONSE,//价格成交量回报
         XQRYMINUTEDATARESPONSE,//分时数据回报
+        XQRYEXCHANGERATERESPONSE,//汇率数据回报
         MD_DEMOTICK,//行情服务器测试Tick
         // END STANDARD MESSAGES
 

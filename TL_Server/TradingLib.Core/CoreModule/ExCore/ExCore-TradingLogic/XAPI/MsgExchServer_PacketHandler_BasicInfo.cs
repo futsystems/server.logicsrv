@@ -231,9 +231,25 @@ namespace TradingLib.Core
             //}
         }
 
-       
 
 
+        /// <summary>
+        /// 查询汇率信息
+        /// </summary>
+        /// <param name="request"></param>
+        /// <param name="account"></param>
+        void SrvOnXQryExchangeRate(XQryExchangeRateRequest request, IAccount account)
+        {
+            logger.Info("XQryExchangeRate:" + request.ToString());
+            IEnumerable<ExchangeRate> ratelist = BasicTracker.ExchangeRateTracker.GetExchangeRates(TLCtxHelper.ModuleSettleCentre.Tradingday);
+            for (int i = 0; i < ratelist.Count(); i++)
+            {
+                RspXQryExchangeRateResponse response = ResponseTemplate<RspXQryExchangeRateResponse>.SrvSendRspResponse(request);
+                response.ExchangeRate = ratelist.ElementAt(i);
+                CacheRspResponse(response, i == ratelist.Count() - 1);
+            }
+        
+        }
 
     }
 }

@@ -214,6 +214,9 @@ namespace TradingLib.Common
                     //查询账户财务信息
                     case MessageTypes.XQRYACCOUNTFINANCE:
                         return RequestTemplate<XQryAccountFinanceRequest>.SrvRecvRequest(frontid, clientid, message.Content);
+                    //查询汇率信息
+                    case MessageTypes.XQRYEXCHANGERATE:
+                        return RequestTemplate<XQryExchangeRateRequest>.SrvRecvRequest(frontid, clientid, message.Content);
 
                     #region manager
                     case MessageTypes.MGRLOGINREQUEST://请求登入
@@ -489,6 +492,8 @@ namespace TradingLib.Common
                     return ResponseTemplate<RspXQryMaxOrderVolResponse>.CliRecvResponse(message);
                 case  MessageTypes.XQRYACCOUNTFINANCERESPONSE://账户财务数据回报
                     return ResponseTemplate<RspXQryAccountFinanceResponse>.CliRecvResponse(message);
+                case MessageTypes.XQRYEXCHANGERATERESPONSE://汇率数据回报
+                    return ResponseTemplate<RspXQryExchangeRateResponse>.CliRecvResponse(message);
 
                 case MessageTypes.TICKNOTIFY:
                     return ResponseTemplate<TickNotify>.CliRecvResponse(message);
