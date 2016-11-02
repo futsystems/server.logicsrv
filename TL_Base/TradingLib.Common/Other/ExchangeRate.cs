@@ -58,5 +58,40 @@ namespace TradingLib.Common
         /// 更新时间
         /// </summary>
         public long UpdateTime { get; set; }
+
+        public static ExchangeRate Deserialize(string content)
+        {
+            ExchangeRate rate = new ExchangeRate();
+            string[] rec = content.Split(',');
+            rate.ID = int.Parse(rec[0]);
+            rate.Settleday = int.Parse(rec[1]);
+            rate.Currency = rec[2].ParseEnum<CurrencyType>();
+            rate.AskRate = decimal.Parse(rec[3]);
+            rate.IntermediateRate = decimal.Parse(rec[4]);
+            rate.BidRate = decimal.Parse(rec[5]);
+            rate.UpdateTime = long.Parse(rec[6]);
+
+            return rate;
+        }
+
+        public static string Serialize(ExchangeRate rate)
+        {
+            StringBuilder sb = new StringBuilder();
+            char d = ',';
+            sb.Append(rate.ID);
+            sb.Append(d);
+            sb.Append(rate.Settleday);
+            sb.Append(d);
+            sb.Append(rate.Currency);
+            sb.Append(d);
+            sb.Append(rate.AskRate);
+            sb.Append(d);
+            sb.Append(rate.IntermediateRate);
+            sb.Append(d);
+            sb.Append(rate.BidRate);
+            sb.Append(d);
+            sb.Append(rate.UpdateTime);
+            return sb.ToString();
+        }
     }
 }

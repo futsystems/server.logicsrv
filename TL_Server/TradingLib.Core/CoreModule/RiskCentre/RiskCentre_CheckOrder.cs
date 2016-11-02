@@ -113,12 +113,12 @@ namespace TradingLib.Core
                 return false;
             }
 
-            if (o.oSymbol.SecurityFamily.Currency != account.Currency)
-            {
-                errortitle = "SYMBOL_NOT_TRADEABLE";//合约不可交易
-                needlog = false;
-                return false;
-            }
+            //if (o.oSymbol.SecurityFamily.Currency != account.Currency)
+            //{
+            //    errortitle = "SYMBOL_NOT_TRADEABLE";//合约不可交易
+            //    needlog = false;
+            //    return false;
+            //}
 
             //交易时间检查
             int settleday = 0;

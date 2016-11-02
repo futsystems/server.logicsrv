@@ -29,7 +29,7 @@ namespace TradingLib.Common
         /// <returns></returns>
         public static IEnumerable<Symbol> GetSymbols(this IAccount account)
         {
-            return account.Domain.GetSymbols().Where(sym=>sym.IsTradeable).Where(s=>s.Currency == account.Currency);
+            return account.Domain.GetSymbols().Where(sym=>sym.IsTradeable);//支持不同币种实时汇率换算.Where(s=>s.Currency == account.Currency);
         }
 
         /// <summary>

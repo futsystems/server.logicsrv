@@ -209,6 +209,11 @@ namespace TradingLib.Core
                             SrvOnMGRUpdateSymbol(packet as MGRUpdateSymbolRequest, session, manager);
                             break;
                         }
+                    case MessageTypes.MGRQRYEXCHANGERATE://请求查询汇率
+                        {
+                            SrvOnQryExchagneRate(packet as MGRQryExchangeRateRequuest, session, manager);
+                            break;
+                        }
 
                     //case MessageTypes.MGRQRYRULECLASS://请求查询风控规则列表
                     //    {

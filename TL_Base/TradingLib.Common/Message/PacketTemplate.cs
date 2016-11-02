@@ -240,6 +240,7 @@ namespace TradingLib.Common
                         return RequestTemplate<MGRReqOpenClearCentreRequest>.SrvRecvRequest(frontid, clientid, message.Content);
                     case MessageTypes.MGRCLOSECLEARCENTRE://请求关闭清算中心
                         return RequestTemplate<MGRReqCloseClearCentreRequest>.SrvRecvRequest(frontid, clientid, message.Content);
+
                     //case MessageTypes.MGRQRYCONNECTOR://请求查询通道列表
                     //    return RequestTemplate<MGRQryConnectorRequest>.SrvRecvRequest(frontid, clientid, message.Content);
                     //case MessageTypes.MGRSTARTBROKER://请求启动成交通道
@@ -268,6 +269,8 @@ namespace TradingLib.Common
                         return RequestTemplate<MGRQrySymbolRequest>.SrvRecvRequest(frontid, clientid, message.Content);
                     case MessageTypes.MGRUPDATESYMBOL://请求更新合约
                         return RequestTemplate<MGRUpdateSymbolRequest>.SrvRecvRequest(frontid, clientid, message.Content);
+                    case MessageTypes.MGRQRYEXCHANGERATE://请求查询汇率
+                        return RequestTemplate<MGRQryExchangeRateRequuest>.SrvRecvRequest(frontid, clientid, message.Content);
                     case MessageTypes.MGRQRYRULECLASS://请求风控规则列表
                         return RequestTemplate<MGRQryRuleSetRequest>.SrvRecvRequest(frontid, clientid, message.Content);
                     case MessageTypes.MGRUPDATERULEITEM://请求更新风控规则
@@ -525,6 +528,8 @@ namespace TradingLib.Common
                     return ResponseTemplate<RspMGRQrySecurityResponse>.CliRecvResponse(message);
                 case MessageTypes.MGRSYMBOLRESPONSE://查询合约回报
                     return ResponseTemplate<RspMGRQrySymbolResponse>.CliRecvResponse(message);
+                case MessageTypes.MGRQRYEXCHANGERATERESPONSE://查询汇率回报
+                    return ResponseTemplate<RspMGRQryExchangeRateResponse>.CliRecvResponse(message);
                 case MessageTypes.MGRRULECLASSRESPONSE://风控规则回报
                     return ResponseTemplate<RspMGRQryRuleSetResponse>.CliRecvResponse(message);
                 case MessageTypes.MGRRULEITEMRESPONSE://查询风控项目回报

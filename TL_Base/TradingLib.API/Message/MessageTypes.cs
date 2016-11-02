@@ -227,6 +227,8 @@ namespace TradingLib.API
         MGRUPDATESECURITY,//更新品种信息
         MGRQRYSYMBOL,//查询合约信息
         MGRUPDATESYMBOL,//更新合约信息
+        MGRQRYEXCHANGERATE,//查询汇率信息
+        
 
         
 
@@ -278,6 +280,7 @@ namespace TradingLib.API
         MGRSYMBOLRESPONSE,//合约信息回报
         //MGRADDSYMBOLRESPONSE,//添加合约回报
         MGRUPDATESYMBOLRESPONSE,//更新合约回报
+        MGRQRYEXCHANGERATERESPONSE,//查询汇率信息回报
 
         MGRRULECLASSRESPONSE,//风控规则回报
         MGRRULEITEMRESPONSE,//帐户风控规则回报
@@ -296,9 +299,6 @@ namespace TradingLib.API
         MGRUPDATEPOSLOCKRESPONSE,//修改帐户锁仓权限回报
         MGRMANAGERRESPONSE,//查询管理员列表回报
         MGRQRYACCTSERVICERESPONSE,//查询交易帐户服务回报
-
-
-
 
         MGRCONTRIBRESPONSE,//管理扩展回报
         MGRCONTRIBRNOTIFY,//管理扩展通知

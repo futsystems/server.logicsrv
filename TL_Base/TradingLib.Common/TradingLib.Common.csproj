@@ -95,6 +95,7 @@
     <Compile Include="Manager\UIAccess.cs" />
     <Compile Include="Message\BinaryOption\Order.cs" />
     <Compile Include="Message\Common\UtilStruct.cs" />
+    <Compile Include="Message\Manager\MGRExchangeRate.cs" />
     <Compile Include="Message\Manager\MGRMarketData.cs" />
     <Compile Include="Message\MarketData\QryMinuteData.cs" />
     <Compile Include="Message\MarketData\QryPriceVol.cs" />

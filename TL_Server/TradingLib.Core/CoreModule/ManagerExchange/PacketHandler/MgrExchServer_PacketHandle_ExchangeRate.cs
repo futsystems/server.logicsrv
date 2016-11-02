@@ -17,16 +17,7 @@ namespace TradingLib.Core
         public void CTE_QryExchangeRates(ISession session)
         {
             Manager manager = session.GetManager();
-            //if (!manager.BaseManager.IsRoot())//
-            //{
-            //    throw new FutsRspError("无权查询手续费模板");
-            //}
-
             ExchangeRate[] rates = BasicTracker.ExchangeRateTracker.GetExchangeRates(TLCtxHelper.ModuleSettleCentre.Tradingday).ToArray();
-            //for (int i = 0; i < rates.Length; i++)
-            //{
-            //    session.ReplyMgr(rates[i], i == rates.Length - 1);
-            //}
             session.ReplyMgr(rates);
         }
 
@@ -45,8 +36,30 @@ namespace TradingLib.Core
 
             //通知汇率更新
             session.NotifyMgr("NotifyExchangeRateUpdate", BasicTracker.ExchangeRateTracker[rate.ID]);
+            session.OperationSuccess("更新汇率成功");
         }
 
+
+
+        /// <summary>
+        /// 查询汇率信息
+        /// </summary>
+        /// <param name="request"></param>
+        /// <param name="session"></param>
+        /// <param name="manager"></param>
+        void SrvOnQryExchagneRate(MGRQryExchangeRateRequuest request, ISession session, Manager manager)
+        {
+            logger.Info(string.Format("管理员:{0} 请求查询汇率信息:{1}", session.AuthorizedID, request.ToString()));
+            IEnumerable<ExchangeRate> ratelist = BasicTracker.ExchangeRateTracker.GetExchangeRates(TLCtxHelper.ModuleSettleCentre.Tradingday);
+
+            for (int i = 0; i < ratelist.Count(); i++)
+            {
+                RspMGRQryExchangeRateResponse response = ResponseTemplate<RspMGRQryExchangeRateResponse>.SrvSendRspResponse(request);
+                response.ExchangeRate = ratelist.ElementAt(i);
+
+                CacheRspResponse(response, i == ratelist.Count() - 1);
+            }
+        }
 
     }
 }
