@@ -117,6 +117,7 @@ namespace TradingLib.Common.DataFarm
         }
       
 
+
         /// <summary>
         /// 开盘作业
         /// </summary>
@@ -148,25 +149,52 @@ namespace TradingLib.Common.DataFarm
                 }
             }
 
-            //获得过期合约
+            //处理过期合约
             List<SymbolImpl> expiredList = new List<SymbolImpl>();
-            foreach (var symbol in MDBasicTracker.SymbolTracker.Symbols.Where(sym => secCodeList.Contains(sym.SecurityFamily.Code)))
+            foreach (var symbol in MDBasicTracker.SymbolTracker.Symbols.Where(sym => secCodeList.Contains(sym.SecurityFamily.Code)).ToArray())//ToArray 合约过期操作会在symbolls中增加数据
             {
                 MarketDay currentMarketDay = GetCurrentMarketDay(symbol.SecurityFamily);
                 if (currentMarketDay == null) continue;
-                
+
                 //合约过期
                 if (currentMarketDay.TradingDay > symbol.ExpireDate)
                 {
-                    expiredList.Add(symbol);
+                    ExpireSymbol(symbol);
                 }
-                
             }
+            
 
-            //过期合约换月
-            foreach(var symbol in expiredList)
+            //处理单个合约事务
+            foreach (var symbol in MDBasicTracker.SymbolTracker.Symbols.Where(sym => secCodeList.Contains(sym.SecurityFamily.Code)))
+            { 
+                MarketDay currentMarketDay = GetCurrentMarketDay(symbol.SecurityFamily);
+                if (currentMarketDay == null)
+                {
+                    logger.Error(string.Format("Symbol:{0} have no current marektday", symbol.Symbol));
+                    continue;
+                }
+
+                //清空TradeCache
+                ClearTradeCache(symbol, currentMarketDay);
+
+                //滚动MinuteDataCache
+                RollMinuteData(symbol, currentMarketDay);
+
+                //关闭EODBar
+                CloseEODBar(symbol, currentMarketDay);
+            }
+        }
+
+
+        /// <summary>
+        /// 检查
+        /// </summary>
+        /// <param name="secCodeList"></param>
+        void ExpireSymbol(SymbolImpl symbol)
+        {
+            try
             {
-                int year,month;
+                int year, month;
                 string sec;
                 symbol.ParseFututureContract(out sec, out year, out month);
                 string newsymbol = symbol.SecurityFamily.CreateFutureContract(year + 1, month);
@@ -181,7 +209,7 @@ namespace TradingLib.Common.DataFarm
                 {
                     newdt = (new DateTime(year + 1, olddt.Month, 1)).AddMonths(1).AddDays(-1);//上月月底
                 }
-        
+
                 //创建新的合约
                 SymbolImpl nextSymbol = new SymbolImpl();
                 nextSymbol.Symbol = newsymbol;
@@ -208,18 +236,23 @@ namespace TradingLib.Common.DataFarm
                         logger.Error("SymbolExpire Error:" + ex.ToString());
                     }
                 }
-                
             }
+            catch (Exception ex)
+            {
+                logger.Error("Expire Symbol:" + symbol.Symbol + " Error:" + ex.ToString());
+            }
+            
+        }
 
-            //处理单个合约事务
-            foreach (var symbol in MDBasicTracker.SymbolTracker.Symbols.Where(sym => secCodeList.Contains(sym.SecurityFamily.Code)))
-            { 
-                
-
-                MarketDay currentMarketDay = GetCurrentMarketDay(symbol.SecurityFamily);
-                if (currentMarketDay == null) continue;
-
-                //清空TradeCache
+        /// <summary>
+        /// 清空某个合约的分笔成交缓存
+        /// </summary>
+        /// <param name="symbol"></param>
+        /// <param name="currentMarketDay"></param>
+        void ClearTradeCache(SymbolImpl symbol, MarketDay currentMarketDay)
+        {
+            try
+            {
                 TradeCache tradeCache = null;
                 if (!currentTradeMap.TryGetValue(symbol.UniqueKey, out tradeCache))
                 {
@@ -231,8 +264,17 @@ namespace TradingLib.Common.DataFarm
                 {
                     tradeCache.Clear();
                 }
-          
-                //滚动MinuteDataCache
+            }
+            catch (Exception ex)
+            {
+                logger.Error(string.Format("Clear Symbol:{0} Trade Cache Error:{1}", symbol.Symbol, ex));
+            }
+        }
+
+        void RollMinuteData(SymbolImpl symbol, MarketDay currentMarketDay)
+        {
+            try
+            {
                 Dictionary<int, MinuteDataCache> cachemap = null;
                 if (!minuteDataMap.TryGetValue(symbol.UniqueKey, out cachemap))
                 {
@@ -254,11 +296,6 @@ namespace TradingLib.Common.DataFarm
                     }
                 }
 
-                //MinuteDataCache minuteDataCache = null;
-                //if (!currentMinuteDataMap.TryGetValue(symbol.UniqueKey, out minuteDataCache))
-                //{
-                //    currentMinuteDataMap[symbol.UniqueKey] = 
-                //}
                 //如果当前分时数据的交易日与MarketDay交易日不一致 则滚段该分时数据
                 if (currentMinuteDataMap[symbol.UniqueKey].TradingDay != currentMarketDay.TradingDay)
                 {
@@ -267,8 +304,22 @@ namespace TradingLib.Common.DataFarm
                     currentMinuteDataMap[symbol.UniqueKey] = item;
                     symbol.TradingSession = currentMarketDay.ToSessionString();//设定合约交易小节字段
                 }
+            }
+            catch (Exception ex)
+            {
+                logger.Error(string.Format("Roll Symbol:{0} MinuteData Error:{1}", symbol.Symbol, ex));
+            }
+        }
 
-                //关闭EODBar
+        /// <summary>
+        /// 关闭日线数据
+        /// </summary>
+        /// <param name="symbol"></param>
+        /// <param name="currentMarketDay"></param>
+        void CloseEODBar(SymbolImpl symbol, MarketDay currentMarketDay)
+        {
+            try
+            {
                 EodBarStruct eod = null;
                 //如果没有对应合约的EODBar 则创建当前交易日的Bar
                 if (!eodBarMap.TryGetValue(symbol.UniqueKey, out eod))
@@ -289,6 +340,10 @@ namespace TradingLib.Common.DataFarm
                         //eod.EODBar.Open = 
                     }
                 }
+            }
+            catch (Exception ex)
+            {
+                logger.Error(string.Format("Close Symbol:{0} EOD Bar Error:{1}", symbol.Symbol, ex));
             }
         }
     }
