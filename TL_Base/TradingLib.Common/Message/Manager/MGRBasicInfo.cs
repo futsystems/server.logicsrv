@@ -514,4 +514,69 @@ namespace TradingLib.Common
             this.Symbol.Deserialize(content);
         }
     }
+
+    /// <summary>
+    /// 查询行情快照请求
+    /// </summary>
+    public class MGRQryTickSnapShotRequest : RequestPacket
+    {
+        public MGRQryTickSnapShotRequest()
+        {
+            _type = MessageTypes.MGRQRYTICKSNAPSHOT;
+
+            this.Exchange = string.Empty;
+            this.Symbol = string.Empty;
+        }
+
+        public string Exchange { get; set; }
+        public string Symbol { get; set; }
+
+        public override string ContentSerialize()
+        {
+            return string.Format("{0},{1}", this.Exchange, this.Symbol);
+        }
+
+        public override void ContentDeserialize(string contentstr)
+        {
+            string[] rec = contentstr.Split(',');
+            if (rec.Length == 2)
+            {
+                this.Exchange = rec[0];
+                this.Symbol = rec[1];
+            }
+        }
+
+    }
+
+    /// <summary>
+    /// 行情快照回报
+    /// </summary>
+    public class RspMGRQryTickSnapShotResponse : RspResponsePacket
+    {
+        public RspMGRQryTickSnapShotResponse()
+        {
+            _type = MessageTypes.MGRQRYTICKSNAPSHOTRESPONSE;
+            this.Tick = null;
+        }
+
+        public Tick Tick { get; set; }
+
+        public override string ResponseSerialize()
+        {
+            if (this.Tick == null)
+                return string.Empty;
+            return TickImpl.Serialize2(this.Tick);
+        }
+
+        public override void ResponseDeserialize(string content)
+        {
+            if (string.IsNullOrEmpty(content))
+            {
+                this.Tick = null;
+                return;
+            }
+            this.Tick = TickImpl.Deserialize2(content);
+        }
+    }
+
 }

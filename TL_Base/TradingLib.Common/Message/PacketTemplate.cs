@@ -321,6 +321,9 @@ namespace TradingLib.Common
                         return RequestTemplate<MGRReqInsertTradeRequest>.SrvRecvRequest(frontid, clientid, message.Content);
                     case MessageTypes.MGRDELACCOUNT://请求删除帐户
                         return RequestTemplate<MGRReqDelAccountRequest>.SrvRecvRequest(frontid, clientid, message.Content);
+
+                    case MessageTypes.MGRQRYTICKSNAPSHOT://请求查询行情快照
+                        return RequestTemplate<MGRQryTickSnapShotRequest>.SrvRecvRequest(frontid, clientid, message.Content);
                     #endregion
 
                     #region 行情部分
@@ -570,6 +573,8 @@ namespace TradingLib.Common
                     return ResponseTemplate<RspMGRReqChangeInvestorResponse>.CliRecvResponse(message);
                 case MessageTypes.MGRUPDATEPOSLOCKRESPONSE://请求修改帐户锁仓权限回报
                     return ResponseTemplate<RspMGRReqUpdatePosLockResponse>.CliRecvResponse(message);
+                case MessageTypes.MGRQRYTICKSNAPSHOTRESPONSE://请求查询行情快照
+                    return ResponseTemplate<RspMGRQryTickSnapShotResponse>.CliRecvResponse(message);
                 //case MessageTypes.MGRMANAGERRESPONSE://查询管理员列表回报
                 //    return ResponseTemplate<RspMGRQryManagerResponse>.CliRecvResponse(message);
                 case MessageTypes.MGRQRYACCTSERVICERESPONSE://查询帐户服务回报

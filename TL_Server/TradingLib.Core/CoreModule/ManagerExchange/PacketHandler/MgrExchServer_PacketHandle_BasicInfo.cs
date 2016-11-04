@@ -688,5 +688,48 @@ namespace TradingLib.Core
                 CacheRspResponse(response);
             }
         }
+
+        /// <summary>
+        /// 从行情数据中心获得行情快照,
+        /// 如果没有对应的快照需要获得最近的结算价数据信息
+        /// </summary>
+        /// <param name="request"></param>
+        /// <param name="account"></param>
+        void SrvOnMGRQryTickSnapShot(MGRQryTickSnapShotRequest request, ISession session, Manager manager)
+        {
+            logger.Info(string.Format("管理员:{0} 请求查询合约快照:{1}", session.AuthorizedID, request.ToString()));
+            RspMGRQryTickSnapShotResponse response = null;
+            if (string.IsNullOrEmpty(request.Exchange) && string.IsNullOrEmpty(request.Symbol))
+            {
+                IEnumerable<Tick> ticks = TLCtxHelper.ModuleDataRouter.GetTickSnapshot();
+                for (int i = 0; i < ticks.Count(); i++)
+                { 
+                    response  =ResponseTemplate<RspMGRQryTickSnapShotResponse>.SrvSendRspResponse(request);
+                    response.Tick = TickImpl.NewTick(ticks.ElementAt(i), "S");
+                    CacheRspResponse(response, i == ticks.Count() - 1);
+                }
+                return;
+            }
+            else
+            {
+                Symbol sym = manager.Domain.GetSymbol(request.Exchange, request.Symbol);
+                if (sym != null)
+                {
+                    Tick k = TLCtxHelper.ModuleDataRouter.GetTickSnapshot(sym.Exchange, sym.Symbol);
+                    if (k != null)
+                    {
+                        response = ResponseTemplate<RspMGRQryTickSnapShotResponse>.SrvSendRspResponse(request);
+                        response.Tick = TickImpl.NewTick(k, "S");
+                        CacheRspResponse(response);
+                        return;
+                    }
+                }
+            }
+
+            response = ResponseTemplate<RspMGRQryTickSnapShotResponse>.SrvSendRspResponse(request);
+            CacheRspResponse(response);
+        }
+
+
     }
 }

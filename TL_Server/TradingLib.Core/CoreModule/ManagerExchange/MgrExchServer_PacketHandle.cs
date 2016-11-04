@@ -214,6 +214,11 @@ namespace TradingLib.Core
                             SrvOnQryExchagneRate(packet as MGRQryExchangeRateRequuest, session, manager);
                             break;
                         }
+                    case MessageTypes.MGRQRYTICKSNAPSHOT://请求查询行情快照
+                        {
+                            SrvOnMGRQryTickSnapShot(packet as MGRQryTickSnapShotRequest, session, manager);
+                            break;
+                        }
 
                     //case MessageTypes.MGRQRYRULECLASS://请求查询风控规则列表
                     //    {

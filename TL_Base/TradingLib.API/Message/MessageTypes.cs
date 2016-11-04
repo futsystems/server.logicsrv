@@ -230,6 +230,8 @@ namespace TradingLib.API
         MGRQRYSYMBOL,//查询合约信息
         MGRUPDATESYMBOL,//更新合约信息
         MGRQRYEXCHANGERATE,//查询汇率信息
+        MGRQRYTICKSNAPSHOT,//查询行情快照
+
         
 
         
@@ -283,6 +285,8 @@ namespace TradingLib.API
         //MGRADDSYMBOLRESPONSE,//添加合约回报
         MGRUPDATESYMBOLRESPONSE,//更新合约回报
         MGRQRYEXCHANGERATERESPONSE,//查询汇率信息回报
+        MGRQRYTICKSNAPSHOTRESPONSE,//查询行情快照回报
+
 
         MGRRULECLASSRESPONSE,//风控规则回报
         MGRRULEITEMRESPONSE,//帐户风控规则回报
