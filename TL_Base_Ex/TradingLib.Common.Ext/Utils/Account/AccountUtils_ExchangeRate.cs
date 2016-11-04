@@ -24,18 +24,19 @@ namespace TradingLib.Common
             //品种货币与帐户货币一直则返回1
             if (sec.Currency == account.Currency) return 1;
 
+            
             //帐户货币为主货币
             if (account.Currency == GlobalConfig.BaseCurrency)
             {
                 //获得品种货币对应的汇率 返回中间汇率
-                ExchangeRate secRate = BasicTracker.ExchangeRateTracker[TLCtxHelper.ModuleSettleCentre.Tradingday, sec.Currency];
+                ExchangeRate secRate = account.Domain.GetExchangeRate(TLCtxHelper.ModuleSettleCentre.Tradingday, sec.Currency);
                 if (secRate == null) return 1;//没有找到品种汇率 则默认返回1
                 return secRate.IntermediateRate;
             }
             else
             {
-                ExchangeRate secRate = BasicTracker.ExchangeRateTracker[TLCtxHelper.ModuleSettleCentre.Tradingday, sec.Currency];
-                ExchangeRate accRate = BasicTracker.ExchangeRateTracker[TLCtxHelper.ModuleSettleCentre.Tradingday, account.Currency];
+                ExchangeRate secRate = account.Domain.GetExchangeRate(TLCtxHelper.ModuleSettleCentre.Tradingday, sec.Currency);
+                ExchangeRate accRate = account.Domain.GetExchangeRate(TLCtxHelper.ModuleSettleCentre.Tradingday, account.Currency);
                 if (secRate == null || accRate == null) return 1;
                 //将品种货币换算成系统基础货币然后再换算成帐户货币
                 return secRate.IntermediateRate / accRate.IntermediateRate;

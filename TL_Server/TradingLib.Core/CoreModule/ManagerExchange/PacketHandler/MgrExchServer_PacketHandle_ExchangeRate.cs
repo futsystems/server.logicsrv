@@ -17,7 +17,7 @@ namespace TradingLib.Core
         public void CTE_QryExchangeRates(ISession session)
         {
             Manager manager = session.GetManager();
-            ExchangeRate[] rates = BasicTracker.ExchangeRateTracker.GetExchangeRates(TLCtxHelper.ModuleSettleCentre.Tradingday).ToArray();
+            ExchangeRate[] rates = manager.Domain.GetExchangeRates(TLCtxHelper.ModuleSettleCentre.Tradingday).ToArray();
             session.ReplyMgr(rates);
         }
 
@@ -32,10 +32,10 @@ namespace TradingLib.Core
 
             ExchangeRate rate = Mixins.Json.JsonMapper.ToObject<ExchangeRate>(json);
             //更新汇率信息
-            BasicTracker.ExchangeRateTracker.UpdateExchangeRate(rate);
+            manager.Domain.UpdateExchangeRate(rate);
 
             //通知汇率更新
-            session.NotifyMgr("NotifyExchangeRateUpdate", BasicTracker.ExchangeRateTracker[rate.ID]);
+            session.NotifyMgr("NotifyExchangeRateUpdate",manager.Domain.GetExchangeRate(rate.ID));
             session.OperationSuccess("更新汇率成功");
         }
 
@@ -50,7 +50,7 @@ namespace TradingLib.Core
         void SrvOnQryExchagneRate(MGRQryExchangeRateRequuest request, ISession session, Manager manager)
         {
             logger.Info(string.Format("管理员:{0} 请求查询汇率信息:{1}", session.AuthorizedID, request.ToString()));
-            IEnumerable<ExchangeRate> ratelist = BasicTracker.ExchangeRateTracker.GetExchangeRates(TLCtxHelper.ModuleSettleCentre.Tradingday);
+            IEnumerable<ExchangeRate> ratelist = manager.Domain.GetExchangeRates(TLCtxHelper.ModuleSettleCentre.Tradingday);
 
             for (int i = 0; i < ratelist.Count(); i++)
             {

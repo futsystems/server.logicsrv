@@ -241,7 +241,7 @@ namespace TradingLib.Core
         void SrvOnXQryExchangeRate(XQryExchangeRateRequest request, IAccount account)
         {
             logger.Info("XQryExchangeRate:" + request.ToString());
-            IEnumerable<ExchangeRate> ratelist = BasicTracker.ExchangeRateTracker.GetExchangeRates(TLCtxHelper.ModuleSettleCentre.Tradingday);
+            IEnumerable<ExchangeRate> ratelist = account.Domain.GetExchangeRates(TLCtxHelper.ModuleSettleCentre.Tradingday);
             for (int i = 0; i < ratelist.Count(); i++)
             {
                 RspXQryExchangeRateResponse response = ResponseTemplate<RspXQryExchangeRateResponse>.SrvSendRspResponse(request);

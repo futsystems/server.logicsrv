@@ -24,15 +24,28 @@ namespace TradingLib.ORM
         }
 
         /// <summary>
+        /// 获取某个分区的汇率设置
+        /// </summary>
+        /// <param name="domain_id"></param>
+        /// <returns></returns>
+        public static IEnumerable<ExchangeRate> SelectExchangeRates(int domain_id)
+        {
+            using (DBMySql db = new DBMySql())
+            {
+                string query = string.Format("SELECT * FROM log_exchange_rate WHERE domain_id='{0}'", domain_id);
+                return db.Connection.Query<ExchangeRate>(query);
+            }
+        }
+        /// <summary>
         /// 获取某个结算日的汇率信息
         /// </summary>
         /// <param name="settleday"></param>
         /// <returns></returns>
-        public static IEnumerable<ExchangeRate> SelectExchangeRates(int settleday)
+        public static IEnumerable<ExchangeRate> SelectExchangeRates(int domain_id,int settleday)
         {
             using (DBMySql db = new DBMySql())
             {
-                string query = string.Format("SELECT * FROM log_exchange_rate WHERE settleday='{0}'", settleday);
+                string query = string.Format("SELECT * FROM log_exchange_rate WHERE settleday='{0}' AND domain_id='{1}'", settleday,domain_id);
                 return db.Connection.Query<ExchangeRate>(query);
             }
         }
@@ -58,7 +71,7 @@ namespace TradingLib.ORM
         {
             using (DBMySql db = new DBMySql())
             {
-                string query = string.Format("INSERT INTO log_exchange_rate (`currency`,`askrate`,`intermediaterate`,`bidrate`,`updatetime`,`settleday`) VALUES ( '{0}','{1}','{2}','{3}','{4}','{5}')", rate.Currency, rate.AskRate, rate.IntermediateRate, rate.BidRate, rate.UpdateTime, rate.Settleday);
+                string query = string.Format("INSERT INTO log_exchange_rate (`currency`,`askrate`,`intermediaterate`,`bidrate`,`updatetime`,`settleday`,`domain_id`) VALUES ( '{0}','{1}','{2}','{3}','{4}','{5}','{6}')", rate.Currency, rate.AskRate, rate.IntermediateRate, rate.BidRate, rate.UpdateTime, rate.Settleday,rate.Domain_ID);
                 int row = db.Connection.Execute(query);
                 SetIdentity(db.Connection, id => rate.ID = id, "id", "log_exchange_rate");
             }

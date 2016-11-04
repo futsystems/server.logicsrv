@@ -118,15 +118,20 @@ namespace TradingLib.Core
                     logger.Debug("superdomain:" + superdomain.ID.ToString() + " adddomain:" + addeddomain.ID.ToString());
                     if (superdomain != null && addeddomain != null)
                     {
+                        //添加品种
                         foreach (SecurityFamilyImpl sec in superdomain.GetSecurityFamilies())
                         {
                             addeddomain.SyncSecurity(sec);
                         }
 
+                        //添加合约
                         foreach (SymbolImpl sym in superdomain.GetSymbols())
                         {
                             addeddomain.SyncSymbol(sym);
                         }
+
+                        //添加汇率数据
+                        addeddomain.CreateExchangeRates(TLCtxHelper.ModuleSettleCentre.Tradingday);
                     }
                     
                 }

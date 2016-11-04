@@ -53,18 +53,78 @@ namespace TradingLib.Common
         }
     }
 
-
     public class ExchangeRateTracker
     {
+        Dictionary<int, DBExchangeRateTracker> domainExchangeRateMap = new Dictionary<int, DBExchangeRateTracker>();
+
+        public ExchangeRateTracker()
+        {
+            //加载所有Domain的汇率数据
+            foreach (Domain domain in BasicTracker.DomainTracker.Domains)
+            {
+                if (!domainExchangeRateMap.Keys.Contains(domain.ID))
+                {
+                    domainExchangeRateMap.Add(domain.ID, new DBExchangeRateTracker(domain));
+                }
+            }
+        }
+
+        /// <summary>
+        /// 获得某个分区汇率
+        /// </summary>
+        /// <param name="domain_id"></param>
+        /// <returns></returns>
+        public DBExchangeRateTracker this[int domain_id]
+        {
+            get
+            {
+                DBExchangeRateTracker target = null;
+                if (domainExchangeRateMap.TryGetValue(domain_id, out target))
+                {
+                    return target;
+                }
+                Domain domain = BasicTracker.DomainTracker[domain_id];
+                if (domain != null)
+                { 
+                    target = new DBExchangeRateTracker(domain);
+                    domainExchangeRateMap.Add(domain.ID, target);
+                }
+                return target;
+            }
+        }
+
+        /// <summary>
+        /// 创建某个交易的所有汇率数据
+        /// </summary>
+        /// <param name="settleday"></param>
+        public void CreateExchangeRates(int settleday)
+        {
+            foreach (var t in domainExchangeRateMap.Values)
+            {
+                t.CreateExchangeRates(settleday);
+            }
+        }
+    }
+    
+
+    public class DBExchangeRateTracker
+    {
+
+        /// <summary>
+        /// 分区编号
+        /// </summary>
+        public Domain Domain{ get; private set; }
+
         Dictionary<int, ExchangeRateStruct> exchangeratestructmap = new Dictionary<int, ExchangeRateStruct>();
 
         Dictionary<int, ExchangeRate> exchangerateidmap = new Dictionary<int, ExchangeRate>();
 
 
-        public ExchangeRateTracker()
+        public DBExchangeRateTracker(Domain domain)
         {
+            this.Domain = domain;
             //汇率数据初始化时 按交易日生成一组数据 用于索引到某个交易日的汇率数据
-            foreach (var rate in ORM.MExchangeRate.SelectExchangeRates())
+            foreach (var rate in ORM.MExchangeRate.SelectExchangeRates(domain.ID))
             {
                 exchangerateidmap.Add(rate.ID, rate);
                 if (!exchangeratestructmap.Keys.Contains(rate.Settleday))
@@ -133,7 +193,7 @@ namespace TradingLib.Common
         /// <summary>
         /// 生成某日汇率表
         /// </summary>
-        public void CreateExchangeRate(int settleday)
+        public void CreateExchangeRates(int settleday)
         {
 
             if (!exchangeratestructmap.Keys.Contains(settleday))//如果不存在对应交易日的汇率数据
@@ -150,6 +210,7 @@ namespace TradingLib.Common
                     foreach (var rate in rates)
                     {
                         ExchangeRate target = new ExchangeRate();
+                        target.Domain_ID = this.Domain.ID;
                         target.Settleday = settleday;
                         target.Currency = rate.Currency;
                         target.AskRate = rate.AskRate;
@@ -169,6 +230,7 @@ namespace TradingLib.Common
                     if (rate == null)
                     {
                         ExchangeRate target = new ExchangeRate();
+                        target.Domain_ID = this.Domain.ID;
                         target.Settleday = settleday;
                         target.Currency = c;
                         target.AskRate = 1;
@@ -204,6 +266,7 @@ namespace TradingLib.Common
             else
             {
                 target = new ExchangeRate();
+                target.Domain_ID = rate.Domain_ID;
                 target.Settleday = rate.Settleday;
                 target.Currency = rate.Currency;
                 target.AskRate = rate.AskRate;

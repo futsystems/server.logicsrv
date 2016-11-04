@@ -15,6 +15,7 @@ namespace TradingLib.Common
         public ExchangeRate()
         {
             this.ID = 0;
+            this.Domain_ID = 0;
             this.Settleday = 0;
             this.Currency = CurrencyType.RMB;
             this.AskRate = 1;
@@ -28,6 +29,11 @@ namespace TradingLib.Common
         /// </summary>
         public int ID { get; set; }
 
+
+        /// <summary>
+        /// 分区编号
+        /// </summary>
+        public int Domain_ID { get; set; }
 
         /// <summary>
         /// 结算日 标注该汇率数据属于哪个结算日
@@ -70,7 +76,7 @@ namespace TradingLib.Common
             rate.IntermediateRate = decimal.Parse(rec[4]);
             rate.BidRate = decimal.Parse(rec[5]);
             rate.UpdateTime = long.Parse(rec[6]);
-
+            rate.Domain_ID = int.Parse(rec[7]);
             return rate;
         }
 
@@ -91,6 +97,8 @@ namespace TradingLib.Common
             sb.Append(rate.BidRate);
             sb.Append(d);
             sb.Append(rate.UpdateTime);
+            sb.Append(d);
+            sb.Append(rate.Domain_ID);
             return sb.ToString();
         }
     }

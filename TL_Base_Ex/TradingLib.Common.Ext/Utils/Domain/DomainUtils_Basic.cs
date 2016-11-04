@@ -226,5 +226,46 @@ namespace TradingLib.Common
         }
 
         #endregion
+
+
+        #region 汇率
+
+        public static ExchangeRate GetExchangeRate(this Domain domain, int tradingday, CurrencyType currency)
+        {
+            return BasicTracker.ExchangeRateTracker[domain.ID][tradingday, currency];
+        }
+
+        public static ExchangeRate GetExchangeRate(this Domain domain, int id)
+        {
+            return BasicTracker.ExchangeRateTracker[domain.ID][id];
+        }
+
+        /// <summary>
+        /// 更新汇率数据
+        /// </summary>
+        /// <param name="domain"></param>
+        /// <param name="rate"></param>
+        public static void UpdateExchangeRate(this Domain domain, ExchangeRate rate)
+        {
+            BasicTracker.ExchangeRateTracker[domain.ID].UpdateExchangeRate(rate);
+        }
+
+        /// <summary>
+        /// 获取某个交易日的所有汇率数据
+        /// </summary>
+        /// <param name="domain"></param>
+        /// <param name="tradingday"></param>
+        /// <returns></returns>
+        public static IEnumerable<ExchangeRate> GetExchangeRates(this Domain domain, int tradingday)
+        {
+            return BasicTracker.ExchangeRateTracker[domain.ID].GetExchangeRates(tradingday);
+        }
+
+
+        public static void CreateExchangeRates(this Domain domain, int tradingday)
+        {
+            BasicTracker.ExchangeRateTracker[domain.ID].CreateExchangeRates(tradingday);
+        }
+        #endregion
     }
 }
