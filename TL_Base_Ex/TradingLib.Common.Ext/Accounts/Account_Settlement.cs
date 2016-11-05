@@ -150,14 +150,14 @@ namespace TradingLib.Common
                 }
                 ///2.统计手续费 平仓盈亏 盯市持仓盈亏
                 //手续费 手续费为所有成交手续费累加
-                settlement.Commission = this.GetTrades(exchange, settleday).Sum(f => f.GetCommission());
+                settlement.Commission = this.GetTrades(exchange, settleday).Sum(f => f.GetCommission() * this.GetExchangeRate(f.oSymbol.SecurityFamily));
 
                 //平仓盈亏 为所有持仓对象下面的平仓明细的平仓盈亏累加
                 //settlement.CloseProfitByDate = this.GetPositions(exchange).Sum(pos => pos.PositionCloseDetail.Sum(pcd => pcd.CloseProfitByDate));
                 //平仓盈亏核查 理论上成交累加的平仓盈亏和持仓明细累加的平仓盈亏应该一致
                 //decimal closeprofit_commission = this.GetTrades(exchange, settleday).Sum(f => f.Profit);//累加某个交易所的所有成交平仓盈亏
                 //根据交易所结算模式返回逐日或逐笔平仓盈亏
-                settlement.CloseProfitByDate = exchange.SettleType == QSEnumSettleType.ByDate ? this.GetPositions(exchange).Where(pos => pos.IsMarginTrading()).Sum(pos => pos.CalCloseProfitByDate()) : this.GetPositions(exchange).Where(pos => pos.IsMarginTrading()).Sum(pos => pos.CalCloseProfitByTrade());
+                settlement.CloseProfitByDate = exchange.SettleType == QSEnumSettleType.ByDate ? this.GetPositions(exchange).Where(pos => pos.IsMarginTrading()).Sum(pos => pos.CalCloseProfitByDate()*this.GetExchangeRate(pos.oSymbol.SecurityFamily)) : this.GetPositions(exchange).Where(pos => pos.IsMarginTrading()).Sum(pos => pos.CalCloseProfitByTrade()*this.GetExchangeRate(pos.oSymbol.SecurityFamily));
                 
                 
                 //bool same = closeprofit_commission - closeprofit_posdetail < 1;
@@ -187,9 +187,9 @@ namespace TradingLib.Common
                 //根据交易所结算规则返回逐日浮动盈亏或0 逐笔结算不将浮动盈亏结算进入当日权益
                 settlement.PositionProfitByDate = exchange.SettleType == QSEnumSettleType.ByDate ? this.GetPositions(exchange).Where(pos=>pos.IsMarginTrading()).Sum(pos => pos.CalPositionProfitByDate()) : 0;
 
-                settlement.AssetBuyAmount = this.GetPositions(exchange).Where(pos => !pos.IsMarginTrading()).Sum(pos => pos.CalcBuyAmount());
+                settlement.AssetBuyAmount = this.GetPositions(exchange).Where(pos => !pos.IsMarginTrading()).Sum(pos => pos.CalcBuyAmount()*this.GetExchangeRate(pos.oSymbol.SecurityFamily));
 
-                settlement.AssetSellAmount = this.GetPositions(exchange).Where(pos => !pos.IsMarginTrading()).Sum(pos => pos.CalcSellAmount());
+                settlement.AssetSellAmount = this.GetPositions(exchange).Where(pos => !pos.IsMarginTrading()).Sum(pos => pos.CalcSellAmount()*this.GetExchangeRate(pos.oSymbol.SecurityFamily));
                 
                 ///3.保存结算记录到数据库
                 TLCtxHelper.ModuleDataRepository.NewExchangeSettlement(settlement);
