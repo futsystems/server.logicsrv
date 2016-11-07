@@ -66,6 +66,10 @@ namespace TradingLib.Common
             _acc.FlatPosition(source, comment);
         }
 
+        public void FlatPosition(Position pos,int flatSize, QSEnumOrderSource source,string forceReason)
+        {
+            _acc.FlatPosition(pos,flatSize, source, forceReason);
+        }
         /// <summary>
         /// 冻结帐户
         /// </summary>

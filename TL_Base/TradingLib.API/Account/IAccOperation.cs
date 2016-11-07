@@ -37,6 +37,15 @@ namespace TradingLib.API
         void FlatPosition(Position pos, QSEnumOrderSource source, string forcereason);//平掉某个持仓
 
         /// <summary>
+        /// 平掉部分或全部持仓
+        /// </summary>
+        /// <param name="pos"></param>
+        /// <param name="source"></param>
+        /// <param name="num"></param>
+        /// <param name="forceReason"></param>
+        void FlatPosition(Position pos,int flatSize, QSEnumOrderSource source, string forceReason);
+
+        /// <summary>
         /// 撤掉帐户下所有委托
         /// </summary>
         void CancelOrder(QSEnumOrderSource source,string cancelreason);

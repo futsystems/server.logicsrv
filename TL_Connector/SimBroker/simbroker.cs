@@ -55,6 +55,7 @@ namespace Broker.SIM
 
         ConfigDB _cfgdb;
         bool _fillall = false;
+        int _minFillSize = 0;
         /// <summary>
         /// 模拟交易服务,这里基本实现了委托,取消以及通过行情来成交委托的功能，但是单个tick能否成交多个委托的问题这里没有考虑
         /// 同时这里加入了委托 平仓检查,对于超买 超卖 会给出平今仓位不足的提示。
@@ -79,7 +80,12 @@ namespace Broker.SIM
             }
             _useBikAsk = _cfgdb["UseBikAsk"].AsBool();
 
-            
+            if (!_cfgdb.HaveConfig("MinFillSize"))
+            {
+                _cfgdb.UpdateConfig("MinFillSize", QSEnumCfgType.Int, 0, "最小成交数量");
+            }
+            _minFillSize = _cfgdb["MinFillSize"].AsInt();
+
             _fillseq = random.Next(1000, 4000);
         }
 
@@ -272,6 +278,7 @@ namespace Broker.SIM
                         o.Status = QSEnumOrderStatus.Canceled;
                         _ocache.Write(o);
                         _ccache.Write(o.id);
+                        NewSend();
                         continue;
                     }
 
@@ -286,7 +293,7 @@ namespace Broker.SIM
                     {
 
                         //1.以对方盘口价格进行成交
-                        filled = o.Fill(tick, _useBikAsk, false, _fillall);
+                        filled = o.Fill(tick, _useBikAsk, false, _fillall,_minFillSize);
 
                         //2.限价单如果没有成交我们按累计的盘口检查是否可以用最新价进行成交
                         LimitOrderQuoteStatus qs = null;
@@ -294,7 +301,7 @@ namespace Broker.SIM
                         _quotestatus.TryGetValue(o.id, out qs);
                         if (this._simLimitReal && o.isLimit && qs != null && qs.IsTradeFill)
                         {
-                            filled = o.Fill(tick, false, false, _fillall);
+                            filled = o.Fill(tick, false, false, _fillall,_minFillSize);
                         }
 
                     }
@@ -343,6 +350,7 @@ namespace Broker.SIM
                         //debug("cache fill:" + nf.GetTradeDetail(), QSEnumDebugLevel.WARNING);
                         _fcache.Write(nf);
                         //logger.Info("_fcache count:" + _fcache.Count.ToString());
+                        NewSend();
                     }
                 }
                 // add orders back
@@ -467,6 +475,7 @@ namespace Broker.SIM
                 onLimitOrderQuened(oc);
 
             _ocache.Write(o);//发送委托回报
+            NewSend();
         }
 
         /// <summary>
@@ -584,12 +593,22 @@ namespace Broker.SIM
         RingBuffer<Order> _ocache = new RingBuffer<Order>(buffersize);
         RingBuffer<long> _ccache = new RingBuffer<long>(buffersize);
         RingBuffer<Trade> _fcache = new RingBuffer<Trade>(buffersize);
+        static ManualResetEvent _sendwaiting = new ManualResetEvent(false);
+        const int SLEEPDEFAULTMS = 10000;
+        void NewSend()
+        {
+            if ((_readthread != null) && (_readthread.ThreadState == System.Threading.ThreadState.WaitSleepJoin))
+            {
+                _sendwaiting.Set();
+            }
+        }
+
         void StartProcOut()
         {
             if (_read) return;//原来这里没有启动标识,则系统在长期运行后 次日重新启动模拟成交引擎,会导致有2个线程在处理procout
             _read = true;
             _readthread = new Thread(new ThreadStart(procout));
-            _readthread.IsBackground = true;
+            //_readthread.IsBackground = true;
             _readthread.Name = "SimBroker MessageOut";
             _readthread.Start();
             ThreadTracker.Register(_readthread);
@@ -623,7 +642,12 @@ namespace Broker.SIM
                         NotifyCancel(c);
 
                     }
-                    Thread.Sleep(1);
+                    //Thread.Sleep(1);//这里会循环检查_ocache 导致获得null对象 写入操作没有完成
+                    // clear current flag signal
+                    _sendwaiting.Reset();
+                    //logger.Info("process send");
+                    // wait for a new signal to continue reading
+                    _sendwaiting.WaitOne(SLEEPDEFAULTMS);
                 }
                 catch (Exception ex)
                 {

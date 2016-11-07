@@ -54,6 +54,18 @@ namespace TradingLib.Common
         }
 
         /// <summary>
+        /// 平掉部分仓位
+        /// </summary>
+        /// <param name="pos"></param>
+        /// <param name="source"></param>
+        /// <param name="num"></param>
+        /// <param name="forceReason"></param>
+        public void FlatPosition(Position pos,int flatSize,QSEnumOrderSource source, string forceReason)
+        {
+            TLCtxHelper.ModuleRiskCentre.FlatPosition(pos, flatSize, source, forceReason);
+        }
+
+        /// <summary>
         /// 撤掉帐户下所有委托
         /// </summary>
         public void CancelOrder(QSEnumOrderSource source, string cancelreason)

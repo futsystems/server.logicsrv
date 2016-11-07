@@ -213,80 +213,80 @@ namespace TradingLib.Core
             {
                 try
                 {
-                    #region 数据储存日志处理
-                    //记录关键交易数据储存日志
-                    while (_datarepcache.hasItems)
-                    {
-                        DataRepositoryLog log = _datarepcache.Read();
-                        _log.GotDataRepositoryLog(log);
-                    }
-                    #endregion
+                    //#region 数据储存日志处理
+                    ////记录关键交易数据储存日志
+                    //while (_datarepcache.hasItems)
+                    //{
+                    //    DataRepositoryLog log = _datarepcache.Read();
+                    //    _log.GotDataRepositoryLog(log);
+                    //}
+                    //#endregion
 
-                    #region 储存异常处理
-                    //异常储存记录 需要判定数据库连接有效后执行数据储存
-                    while (_datareperrorcache.hasItems)
-                    {
-                        try
-                        {
-                            //1.判定数据库连接可用 如果不可用 则直接跳转到末尾不执行数据库的数据操作以及新的数据写入操作
-                            bool dbconn = true;
-                            if (!dbconn)
-                            {
-                                goto PASSDBOPERATION;
-                            }
+                    //#region 储存异常处理
+                    ////异常储存记录 需要判定数据库连接有效后执行数据储存
+                    //while (_datareperrorcache.hasItems)
+                    //{
+                    //    try
+                    //    {
+                    //        //1.判定数据库连接可用 如果不可用 则直接跳转到末尾不执行数据库的数据操作以及新的数据写入操作
+                    //        bool dbconn = true;
+                    //        if (!dbconn)
+                    //        {
+                    //            goto PASSDBOPERATION;
+                    //        }
 
-                            //2.将上次数据储存异常过程中的数据重新插入到数据库
-                            DataRepositoryLog log = _datareperrorcache.Read();
-                            switch (log.RepositoryType)
-                            {
-                                case EnumDataRepositoryType.InsertOrder:
-                                    DBInsertOrder(log.RepositoryData as Order);
-                                    break;
-                                case EnumDataRepositoryType.UpdateOrder:
-                                    DBUpdateOrder(log.RepositoryData as Order);
-                                    break;
-                                case EnumDataRepositoryType.InsertTrade:
-                                    DBInsertTrade(log.RepositoryData as Trade);
-                                    break;
-                                case EnumDataRepositoryType.InsertPositionCloseDetail:
-                                    DBInsertPositionCloseDetail(log.RepositoryData as PositionCloseDetail);
-                                    break;
-                                case EnumDataRepositoryType.InsertPositionDetail:
-                                    DBInsertPositionDetail(log.RepositoryData as PositionDetail);
-                                    break;
-                                case EnumDataRepositoryType.InsertExchangeSettlement:
-                                    DBInsertExchangeSettlement(log.RepositoryData as ExchangeSettlement);
-                                    break;
-                                case EnumDataRepositoryType.InsertCashTransaction:
-                                    DBInsertCashTransaction(log.RepositoryData as CashTransaction);
-                                    break;
+                    //        //2.将上次数据储存异常过程中的数据重新插入到数据库
+                    //        DataRepositoryLog log = _datareperrorcache.Read();
+                    //        switch (log.RepositoryType)
+                    //        {
+                    //            case EnumDataRepositoryType.InsertOrder:
+                    //                DBInsertOrder(log.RepositoryData as Order);
+                    //                break;
+                    //            case EnumDataRepositoryType.UpdateOrder:
+                    //                DBUpdateOrder(log.RepositoryData as Order);
+                    //                break;
+                    //            case EnumDataRepositoryType.InsertTrade:
+                    //                DBInsertTrade(log.RepositoryData as Trade);
+                    //                break;
+                    //            case EnumDataRepositoryType.InsertPositionCloseDetail:
+                    //                DBInsertPositionCloseDetail(log.RepositoryData as PositionCloseDetail);
+                    //                break;
+                    //            case EnumDataRepositoryType.InsertPositionDetail:
+                    //                DBInsertPositionDetail(log.RepositoryData as PositionDetail);
+                    //                break;
+                    //            case EnumDataRepositoryType.InsertExchangeSettlement:
+                    //                DBInsertExchangeSettlement(log.RepositoryData as ExchangeSettlement);
+                    //                break;
+                    //            case EnumDataRepositoryType.InsertCashTransaction:
+                    //                DBInsertCashTransaction(log.RepositoryData as CashTransaction);
+                    //                break;
 
-                                case EnumDataRepositoryType.SettleOrder:
-                                    DBSettleOrder(log.RepositoryData as Order);
-                                    break;
-                                case EnumDataRepositoryType.SettleTrade:
-                                    DBSettleTrade(log.RepositoryData as Trade);
-                                    break;
-                                case EnumDataRepositoryType.SettlePositionDetail:
-                                    DBSettlePositionDetail(log.RepositoryData as PositionDetail);
-                                    break;
-                                case EnumDataRepositoryType.SettleExchangeSettlement:
-                                    DBSettleExchangeSettlement(log.RepositoryData as ExchangeSettlement);
-                                    break;
-                                case EnumDataRepositoryType.SettleCashTransaction:
-                                    DBSettleCashTransaction(log.RepositoryData as CashTransaction);
-                                    break;
-                                default:
-                                    break;
-                            }
-                        }
-                        catch (Exception ex)
-                        {
-                            logger.Error("Handle DataRepositorylog Error:" + ex.ToString());
-                        }
-                    }
+                    //            case EnumDataRepositoryType.SettleOrder:
+                    //                DBSettleOrder(log.RepositoryData as Order);
+                    //                break;
+                    //            case EnumDataRepositoryType.SettleTrade:
+                    //                DBSettleTrade(log.RepositoryData as Trade);
+                    //                break;
+                    //            case EnumDataRepositoryType.SettlePositionDetail:
+                    //                DBSettlePositionDetail(log.RepositoryData as PositionDetail);
+                    //                break;
+                    //            case EnumDataRepositoryType.SettleExchangeSettlement:
+                    //                DBSettleExchangeSettlement(log.RepositoryData as ExchangeSettlement);
+                    //                break;
+                    //            case EnumDataRepositoryType.SettleCashTransaction:
+                    //                DBSettleCashTransaction(log.RepositoryData as CashTransaction);
+                    //                break;
+                    //            default:
+                    //                break;
+                    //        }
+                    //    }
+                    //    catch (Exception ex)
+                    //    {
+                    //        logger.Error("Handle DataRepositorylog Error:" + ex.ToString());
+                    //    }
+                    //}
 
-                    #endregion
+                    //#endregion
 
                     #region 交易记录插入与更新
                     //插入委托
@@ -385,7 +385,7 @@ namespace TradingLib.Core
 
                     #endregion
 
-                    PASSDBOPERATION:
+                    //PASSDBOPERATION:
                     // clear current flag signal
                     _logwaiting.Reset();
 

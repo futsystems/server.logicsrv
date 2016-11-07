@@ -361,7 +361,7 @@ namespace TradingLib.Common
         /// <param name="smart"></param>
         /// <param name="fillOPG"></param>
         /// <returns></returns>
-        public bool Fill(Tick k, bool bidask, bool fillOPG,bool fillall=false)
+        public bool Fill(Tick k, bool bidask, bool fillOPG,bool fillall=false,int minFillSize=0)
         {
             //如果不使用askbid来fill trade我们就使用成交价格来fill
             if (!bidask)
@@ -392,6 +392,7 @@ namespace TradingLib.Common
                 }
                 else//根据盘口数量生成成交数量
                 {
+                    s = s > minFillSize ? s : minFillSize;
                     this.xSize = (s >= UnsignedSize ? UnsignedSize : s) * (Side ? 1 : -1);
                 }
                 this.xTime = k.Time != 0 ? k.Time : Util.ToTLTime();

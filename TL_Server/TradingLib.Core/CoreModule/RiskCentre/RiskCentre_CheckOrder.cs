@@ -133,12 +133,12 @@ namespace TradingLib.Core
             o.SettleDay = settleday;
 
             //特定交易日判定
-            if (!o.oSymbol.SecurityFamily.CheckSpecialHoliday())
-            {
-                errortitle = ConstErrorID.SYMBOL_NOT_MARKETTIME;
-                needlog = false;
-                return false;
-            }
+            //if (!o.oSymbol.SecurityFamily.CheckSpecialHoliday())
+            //{
+            //    errortitle = ConstErrorID.SYMBOL_NOT_MARKETTIME;
+            //    needlog = false;
+            //    return false;
+            //}
 
             #region demo
 

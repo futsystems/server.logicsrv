@@ -39,6 +39,17 @@ namespace TradingLib.Core
         {
             AssignOrderID(ref o);
             long ordid = o.id;
+            //交易时间检查
+            int settleday = 0;
+            QSEnumActionCheckResult result = o.oSymbol.SecurityFamily.CheckPlaceOrder(out settleday);
+            if (result != QSEnumActionCheckResult.Allowed)
+            {
+                o.Status = QSEnumOrderStatus.Reject;
+                return;
+            }
+
+            o.SettleDay = settleday;
+
             //设定委托相关编号
             o.OrderSysID = o.OrderSeq.ToString();
             o.BrokerRemoteOrderID = o.OrderSysID;
@@ -52,6 +63,17 @@ namespace TradingLib.Core
         /// <param name="t"></param>
         public void ManualInsertTrade(Trade t)
         {
+            int settleday = 0;
+            Symbol symbol = BasicTracker.DomainTracker.SuperDomain.GetSymbol(t.Exchange,t.Symbol);
+            if (symbol == null) return;
+
+            QSEnumActionCheckResult result = symbol.SecurityFamily.CheckPlaceOrder(out settleday);
+            if (result != QSEnumActionCheckResult.Allowed)
+            {
+                return;
+            }
+            t.SettleDay = settleday;
+
             OnFillEvent(t);
             logger.Info(string.Format("Insert Trade:{0}", t.GetTradeInfo()));
         }

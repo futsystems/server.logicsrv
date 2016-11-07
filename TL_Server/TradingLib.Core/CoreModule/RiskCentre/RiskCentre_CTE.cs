@@ -29,7 +29,7 @@ namespace TradingLib.Core
         [TaskAttr("检查强平任务队列",0,250,"调度系统每秒检查强平任务队列")]
         public void Task_ProcessPositionFlatSet()
         {
-            this.ProcessPositionFlat();
+            this.ProcessRiskTask();
         }
 
 

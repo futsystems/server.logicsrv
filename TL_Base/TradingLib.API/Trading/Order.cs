@@ -223,7 +223,7 @@ namespace TradingLib.API
         /// </summary>
         /// <param name="t"></param>
         /// <returns></returns>
-        bool Fill(Tick t, bool bidask, bool fillopg,bool fillall);
+        bool Fill(Tick t, bool bidask, bool fillopg,bool fillall,int minFillSize);
 
         
 

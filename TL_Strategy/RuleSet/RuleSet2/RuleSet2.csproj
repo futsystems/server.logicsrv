@@ -46,6 +46,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Account\RSHoldRatio.cs" />
     <Compile Include="Account\RSMaxChnage.cs" />
     <Compile Include="Account\RSTime.cs" />
     <Compile Include="Order\RSSecurityBlock.cs" />

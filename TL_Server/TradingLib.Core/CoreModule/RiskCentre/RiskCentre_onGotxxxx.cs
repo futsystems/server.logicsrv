@@ -1,4 +1,4 @@
-﻿using System;
+﻿﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -16,7 +16,7 @@ namespace TradingLib.Core
 
 
     //服务端风险控制模块,根据每个账户的设定，实时的检查Order是否符合审查要求予以确认或者决绝
-    public partial class RiskCentre 
+    public partial class RiskCentre
     {
 
 
@@ -29,10 +29,10 @@ namespace TradingLib.Core
         void GotTick(Tick k)
         {
             //_posoffsetracker.GotTick(k);
-
             _haltstatetracker.GotTick(k);
         }
 
+        
         /// <summary>
         /// 获得取消
         /// 取消事务是在处理队列中进行异步处理
@@ -41,60 +41,18 @@ namespace TradingLib.Core
         /// <param name="oid"></param>
         void GotOrder(Order o)
         {
-            if (o.Status == QSEnumOrderStatus.Canceled || o.Status == QSEnumOrderStatus.Filled)//取消或者全部成交
+            if (o.Status == QSEnumOrderStatus.Canceled)
             {
-                long oid = o.id;
                 foreach (RiskTaskSet ps in posflatlist)
                 {
-                    switch (ps.TaskType)
+                    if (ps.PendingOrders.Contains(o.id))
                     {
+                        ps.PendingOrders.Remove(o.id);
+                    }
 
-                        case QSEnumRiskTaskType.FlatPosition:
-                            {
-                                //如果不需要先撤单的 则跳过
-                                if (!ps.NeedCancelFirst)
-                                {
-                                    //发送委托列表需要响应撤单,成绩,拒绝 三种状态，应为发送强平委托时 有可能未成交被撤单，也有可能成交，也有可能被拒绝 拒绝部分在 GotOrderError进行响应处理
-                                    if (ps.OrderIDList.Contains(oid))
-                                        ps.OrderIDList.Remove(oid);
-                                }
-                                else//需要先撤单的 则检查撤单列表
-                                {
-                                    if (o.Status == QSEnumOrderStatus.Canceled)//如果在平某个持仓前需要撤单的，则检查待成交委托
-                                    {
-                                        //如果待成交委托列表中包含对应的ID则先删除该委托
-                                        if (ps.PendingOrders.Contains(oid))
-                                        {
-                                            ps.PendingOrders.Remove(oid);
-                                        }
-                                        //如果所有待成交委托均撤单完成 则标志canceldone
-                                        if (ps.PendingOrders.Count == 0)
-                                        {
-                                            ps.CancelDone = true;
-                                        }
-                                    }
-                                }
-                            }
-                            break;
-                        case QSEnumRiskTaskType.CancelOrder:
-                        case QSEnumRiskTaskType.FlatAllPositions:
-                            {
-                                if (o.Status == QSEnumOrderStatus.Canceled)
-                                {
-                                    if (ps.OrderCancels.Contains(oid))//如果待取消委托列表包含该委托 则从该列表中删除
-                                    {
-                                        ps.OrderCancels.Remove(oid);
-                                    }
-                                    //如果待取消列表长度为0 则所有委托已经被成功取消
-                                    if (ps.OrderCancels.Count == 0)
-                                    {
-                                        ps.CancelDone = true;
-                                    }
-                                }
-                            }
-                            break;
-                        default:
-                            break;
+                    if (ps.FlatOrderIDList.Contains(o.id))
+                    {
+                        ps.FlatOrderIDList.Remove(o.id);
                     }
                 }
             }
@@ -112,8 +70,8 @@ namespace TradingLib.Core
             foreach (RiskTaskSet ps in posflatlist)
             {
                 //如果委托被拒绝 并且委托ID是本地发送过去的ID 则将positionflatset的委托ID置0
-                if (ps.OrderIDList.Contains(order.id) && order.Status == QSEnumOrderStatus.Reject)
-                    ps.OrderIDList.Remove(order.id);
+                if (ps.FlatOrderIDList.Contains(order.id) && order.Status == QSEnumOrderStatus.Reject)
+                    ps.FlatOrderIDList.Remove(order.id);
             }
         }
 
@@ -131,21 +89,21 @@ namespace TradingLib.Core
         /// <param name="pos"></param>
         void GotPostionRoundClosed(PositionRound pr, Position pos)
         {
-            string key = pos.GetPositionKey();
+            //string key = pos.GetPositionKey();
 
-            RiskTaskSet[] list = posflatlist.Where(task => task.TaskType == QSEnumRiskTaskType.FlatPosition && task.Position.GetPositionKey().Equals(key)).ToArray();
+            //RiskTaskSet[] list = posflatlist.Where(task => task.TaskType == QSEnumRiskTaskType.FlatPosition && task.Position.GetPositionKey().Equals(key)).ToArray();
 
-            foreach (RiskTaskSet tmp in list)
-            {
-                logger.Info("Position:" + tmp.Position.GetPositionKey() + " 已经平掉,从队列中移除");
-                posflatlist.Remove(tmp);
-                //通过事件中继触发事件
-                TLCtxHelper.EventSystem.FirePositionFlatEvent(this, new PositionFlatEventArgs(tmp.Position));
-                //if (PositionFlatEvent != null)
-                //{
-                //    PositionFlatEvent(this, new PositionFlatEventArgs(tmp.Position));
-                //}
-            }
+            //foreach (RiskTaskSet tmp in list)
+            //{
+            //    logger.Info("Position:" + tmp.Position.GetPositionKey() + " 已经平掉,从队列中移除");
+            //    posflatlist.Remove(tmp);
+            //    //通过事件中继触发事件
+            //    TLCtxHelper.EventSystem.FirePositionFlatEvent(this, new PositionFlatEventArgs(tmp.Position));
+            //    //if (PositionFlatEvent != null)
+            //    //{
+            //    //    PositionFlatEvent(this, new PositionFlatEventArgs(tmp.Position));
+            //    //}
+            //}
         }
 
         #endregion
