@@ -319,6 +319,13 @@ namespace Broker.SIM
                         //模拟成交需要按照交易所设定对应的开平标识
                         //生成成交编号
                         fill.BrokerTradeID = NextFillSeq.ToString();//交易所成交编号 Broker端的成交编号
+                        string timeZoneID = fill.oSymbol.SecurityFamily.Exchange.TimeZoneID;
+                        if (timeZoneID != "Asia/Singapore" && timeZoneID != "Asia/Hong_Kong" && timeZoneID != "Asia/Shanghai")
+                        {
+                            //将交易所时间转换成本地时间
+                            fill.xDate = Util.ToTLDate();
+                            fill.xTime = Util.ToTLTime();
+                        }
                         //Util.Debug("@@@@@@@@@@@@@@@@@@trade date:" + fill.xDate.ToString() + " tradetime:" + fill.xTime.ToString(),QSEnumDebugLevel.ERROR);
                         logger.Info("PTT Server Filled: " + fill.GetTradeDetail());
 

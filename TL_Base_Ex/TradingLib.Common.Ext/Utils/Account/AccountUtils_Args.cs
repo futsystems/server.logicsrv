@@ -54,16 +54,14 @@ namespace TradingLib.Common
         /// </summary>
         /// <param name="account"></param>
         /// <returns></returns>
-        public static bool GetParamPositionLock(this IAccount account)
+        public static bool GetParamPositionLock(this IAccount account,SecurityFamily sec)
         {
             ExStrategy s = account.GetExStrategy();
             if (s != null)
                 return s.PositionLock;
-            //RMB帐户支持锁仓 其他货币不支持锁仓
-            if (account.Currency == CurrencyType.RMB)
-            {
+
+            if (sec.Currency == CurrencyType.RMB)
                 return true;
-            }
             return false;
 
         }

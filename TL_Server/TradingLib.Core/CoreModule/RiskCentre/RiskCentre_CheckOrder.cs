@@ -228,7 +228,7 @@ namespace TradingLib.Core
                 if (othersideentry || (orderside && haveshort) || ((!orderside) && havelong))//多头持仓操作
                 {
                     //非期货品种无法进行锁仓操作 同时帐户设置是否允许锁仓操作
-                    if ((o.oSymbol.SecurityType != SecurityType.FUT) || (!account.GetParamPositionLock()))
+                    if ((o.oSymbol.SecurityType != SecurityType.FUT) || (!account.GetParamPositionLock(o.oSymbol.SecurityFamily)))
                     {
                         errortitle = ConstErrorID.POSITION_LOCK_FORBIDDEN;
                         return false;
