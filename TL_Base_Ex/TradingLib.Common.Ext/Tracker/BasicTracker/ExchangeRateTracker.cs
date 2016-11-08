@@ -156,6 +156,7 @@ namespace TradingLib.Common
 
         /// <summary>
         /// 获得某个交易日某个货币的汇率数据
+        /// 
         /// </summary>
         /// <param name="settleday"></param>
         /// <param name="currency"></param>
@@ -203,7 +204,7 @@ namespace TradingLib.Common
                 DateTime dt = Util.ToDateTime(settleday, 0);
                 DateTime lastday = dt.AddDays(-1);//上一日
                 //查询上日汇率信息
-                IEnumerable<ExchangeRate> rates = ORM.MExchangeRate.SelectExchangeRates(Util.ToTLDate(lastday));
+                IEnumerable<ExchangeRate> rates = ORM.MExchangeRate.SelectExchangeRates(this.Domain.ID,Util.ToTLDate(lastday));
                 //如果上日汇率存在 则复制对应的汇率信息
                 if (rates.Count() > 0)
                 {
