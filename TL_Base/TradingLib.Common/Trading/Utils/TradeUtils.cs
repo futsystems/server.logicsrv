@@ -51,7 +51,7 @@ namespace TradingLib.Common
 
         public static string GetTradeDetail(this Trade f)
         {
-            Util.Debug("TradeDetail~~~~~~~~~~~~ 00 f==null" + (f == null).ToString());
+            //Util.Debug("TradeDetail~~~~~~~~~~~~ 00 f==null" + (f == null).ToString());
             StringBuilder sb = new StringBuilder();
             sb.Append(f.Account + " " + f.Symbol + " ");
             sb.Append(" T:" + f.GetDateTime().ToString());

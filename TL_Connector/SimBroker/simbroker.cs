@@ -451,7 +451,7 @@ namespace Broker.SIM
         /// <param name="o"></param>
         public void SendOrder(Order o)
         {
-            logger.Error("PTT Server Got Order: " + o.GetOrderInfo());
+            logger.Info("PTT Server Got Order: " + o.GetOrderInfo());
             //提交委托时 设定localorderid remoteorderid
             o.BrokerLocalOrderID = "";
             o.Status = QSEnumOrderStatus.Submited;
