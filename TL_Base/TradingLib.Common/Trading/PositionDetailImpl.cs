@@ -356,6 +356,7 @@ namespace TradingLib.Common
         decimal? _margin;
         /// <summary>
         /// 投资者保证金
+        /// 
         /// </summary>
         public decimal Margin
         {
@@ -373,7 +374,7 @@ namespace TradingLib.Common
                         return this.Volume * this.SettlementPrice * oSymbol.Multiple * oSymbol.Margin;
                     }
                     else
-                        return oSymbol.Margin * this.SettlementPrice;
+                        return this.Volume * oSymbol.Margin;
                 }
             }
 
