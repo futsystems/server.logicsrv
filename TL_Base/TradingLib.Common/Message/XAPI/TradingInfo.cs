@@ -348,5 +348,4 @@ namespace TradingLib.Common
             MaxVol = int.Parse(rec[4]);
         }
     }
-
 }

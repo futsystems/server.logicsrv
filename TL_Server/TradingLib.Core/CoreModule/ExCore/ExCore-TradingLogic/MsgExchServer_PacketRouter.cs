@@ -47,10 +47,10 @@ namespace TradingLib.Core
                         SrvOnQryPosition(request, account);
                     }
                     break;
-                case MessageTypes.QRYPOSITIONDETAIL://查询持仓明细
+                case MessageTypes.XQRYPOSITIONDETAIL://查询持仓明细
                     {
-                        QryPositionDetailRequest request = packet as QryPositionDetailRequest;
-                        SrvOnQryPositionDetail(request, account);
+                        XQryPositionDetailRequest request = packet as XQryPositionDetailRequest;
+                        SrvOnXQryPositionDetail(request, account);
                     }
                     break;
                 case MessageTypes.QRYACCOUNTINFO://查询帐户信息
@@ -218,7 +218,7 @@ namespace TradingLib.Core
                 case MessageTypes.XQRYSETTLEINFO://查询结算信息
                     {
                         XQrySettleInfoRequest request = packet as XQrySettleInfoRequest;
-                        SrvOnXQrySettleInfo(request);
+                        SrvOnXQrySettleInfo(request,account);
                     }
                     break;
                 case MessageTypes.XQRYEXCHANGERATE://查询汇率信息

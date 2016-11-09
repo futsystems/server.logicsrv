@@ -137,8 +137,8 @@ namespace TradingLib.Common
                     case MessageTypes.QRYPOSITION:
                         return RequestTemplate<QryPositionRequest>.SrvRecvRequest(frontid, clientid, message.Content);
                     //查询持仓明细
-                    case MessageTypes.QRYPOSITIONDETAIL:
-                        return RequestTemplate<QryPositionDetailRequest>.SrvRecvRequest(frontid, clientid, message.Content);
+                    case MessageTypes.XQRYPOSITIONDETAIL:
+                        return RequestTemplate<XQryPositionDetailRequest>.SrvRecvRequest(frontid, clientid, message.Content);
                     //查询最大保单
                     case MessageTypes.QRYMAXORDERVOL:
                         return RequestTemplate<QryMaxOrderVolRequest>.SrvRecvRequest(frontid, clientid, message.Content);
@@ -433,8 +433,8 @@ namespace TradingLib.Common
                     return ResponseTemplate<RspQryTradeResponse>.CliRecvResponse(message);
                 case MessageTypes.POSITIONRESPONSE://持仓查询回报
                     return ResponseTemplate<RspQryPositionResponse>.CliRecvResponse(message);
-                case MessageTypes.POSITIONDETAILRESPONSE://查询持仓明细回报
-                    return ResponseTemplate<RspQryPositionDetailResponse>.CliRecvResponse(message);
+                case MessageTypes.XPOSITIONDETAILRESPONSE://查询持仓明细回报
+                    return ResponseTemplate<RspXQryPositionDetailResponse>.CliRecvResponse(message);
                 case MessageTypes.SYMBOLRESPONSE://合约查询回报
                     return ResponseTemplate<RspQrySymbolResponse>.CliRecvResponse(message);
                 case MessageTypes.XSETTLEINFORESPONSE://结算信息回报

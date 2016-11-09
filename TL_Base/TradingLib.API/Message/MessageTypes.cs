@@ -85,7 +85,7 @@ namespace TradingLib.API
         QRYCONTRACTBANK,//查询签约银行
         QRYREGISTERBANKACCOUNT,//查询银期转账帐户
         QRYTRANSFERSERIAL,//查询转账流水
-        QRYPOSITIONDETAIL,//查询持仓明细
+        XQRYPOSITIONDETAIL,//查询持仓明细
         QRYINSTRUMENTCOMMISSIONRATE,//查询合约手续费率
         QRYINSTRUMENTMARGINRATE,//查询合约保证金率
         QRYMARKETDATA,//查询市场行情
@@ -107,6 +107,8 @@ namespace TradingLib.API
         XQRYPRICEVOL,//查询价格成交量
         XQRYMINUTEDATA,//查询分时数据
         XQRYEXCHANGERATE,//查询汇率数据
+
+
         DOMREQUEST,//请求DOM市场Level2数据
         IMBALANCEREQUEST,//imbalance..查询这个是什么意思
 
@@ -156,7 +158,7 @@ namespace TradingLib.API
         CONTRACTBANKRESPONSE,//查询签约银行回报
         REGISTERBANKACCOUNTRESPONSE,//查询银期签约帐户回报
         TRANSFERSERIALRESPONSE,//查询转账流水回报
-        POSITIONDETAILRESPONSE,//查询持仓明细回报
+        XPOSITIONDETAILRESPONSE,//查询持仓明细回报
         INSTRUMENTCOMMISSIONRATERESPONSE,//查询合约手续费率回报
         INSTRUMENTMARGINRATERESPONSE,//查询合约保证金率回报
         MARKETDATARESPONSE,//查询市场行情回报
@@ -180,6 +182,9 @@ namespace TradingLib.API
         XQRYPRICEVOLRESPONSE,//价格成交量回报
         XQRYMINUTEDATARESPONSE,//分时数据回报
         XQRYEXCHANGERATERESPONSE,//汇率数据回报
+     
+
+
         MD_DEMOTICK,//行情服务器测试Tick
         // END STANDARD MESSAGES
 

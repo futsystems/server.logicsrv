@@ -92,11 +92,11 @@ namespace TradingLib.Common
     /// <summary>
     /// 持仓明细查询
     /// </summary>
-    public class QryPositionDetailRequest : RequestPacket
+    public class XQryPositionDetailRequest : RequestPacket
     {
-        public QryPositionDetailRequest()
+        public XQryPositionDetailRequest()
         {
-            _type = MessageTypes.QRYPOSITIONDETAIL;
+            _type = MessageTypes.XQRYPOSITIONDETAIL;
             this.TradingAccount = string.Empty;
             this.Symbol = string.Empty;
         }
@@ -120,24 +120,31 @@ namespace TradingLib.Common
     /// <summary>
     /// 持仓明细查询回报
     /// </summary>
-    public class RspQryPositionDetailResponse : RspResponsePacket
+    public class RspXQryPositionDetailResponse : RspResponsePacket
     {
-        public RspQryPositionDetailResponse()
+        public RspXQryPositionDetailResponse()
         {
-            _type = MessageTypes.POSITIONDETAILRESPONSE;
-            this.PositionDetailToSend = new PositionDetailImpl();
+            _type = MessageTypes.XPOSITIONDETAILRESPONSE;
+            this.PositionDetail = null;
         }
 
-        public PositionDetail PositionDetailToSend { get; set; }
+        public PositionDetail PositionDetail { get; set; }
 
         public override string ResponseSerialize()
         {
-            return PositionDetailImpl.Serialize(this.PositionDetailToSend);
+            if (this.PositionDetail == null) return string.Empty;
+            return PositionDetailImpl.Serialize(this.PositionDetail);
         }
 
         public override void ResponseDeserialize(string content)
         {
-            this.PositionDetailToSend = PositionDetailImpl.Deserialize(content);
+            if (string.IsNullOrEmpty(content))
+            {
+                this.PositionDetail = null;
+                return;
+            }
+            
+            this.PositionDetail = PositionDetailImpl.Deserialize(content);
         }
     }
 }

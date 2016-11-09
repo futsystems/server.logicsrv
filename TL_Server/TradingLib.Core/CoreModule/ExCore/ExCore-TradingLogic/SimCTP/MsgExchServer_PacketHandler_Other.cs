@@ -117,38 +117,7 @@ namespace TradingLib.Core
         }
 
 
-        /// <summary>
-        /// 查询持仓明细
-        /// 注意查询持仓明细 是指查询昨日留仓持仓明细
-        /// </summary>
-        /// <param name="request"></param>
-        /// <param name="account"></param>
-        void SrvOnQryPositionDetail(QryPositionDetailRequest request, IAccount account)
-        {
-            logger.Info("QryPositionDetail" + request.ToString());
-            List<PositionDetail> list = new List<PositionDetail>();
-            foreach (Position p in account.Positions)
-            {
-                foreach (PositionDetail pd in p.PositionDetailTotal)
-                {
-                    list.Add(pd);
-                }
-            }
-            if (list.Count > 0)
-            {
-                for (int i = 0; i < list.Count; i++)
-                {
-                    RspQryPositionDetailResponse response = ResponseTemplate<RspQryPositionDetailResponse>.SrvSendRspResponse(request);
-                    response.PositionDetailToSend = list[i];
-                    CacheRspResponse(response, i == list.Count - 1);
-                }
-            }
-            else
-            {   //发送空的持仓回报
-                RspQryPositionDetailResponse response = ResponseTemplate<RspQryPositionDetailResponse>.SrvSendRspResponse(request);
-                CacheRspResponse(response);
-            }
-        }
+        
 
         /// <summary>
         /// 查询可开手数

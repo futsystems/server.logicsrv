@@ -208,12 +208,10 @@ namespace TradingLib.Core
 
         }
 
-        void SrvOnXQrySettleInfo(XQrySettleInfoRequest request)
+        void SrvOnXQrySettleInfo(XQrySettleInfoRequest request,IAccount account)
         {
             logger.Info("QrySettleInfo :" + request.ToString());
             AccountSettlement settlement = null;
-            //如果查询日期为0 则查询上个结算日
-            IAccount account = TLCtxHelper.ModuleAccountManager[request.Account];
             //判断account是否为空
             int settleday = request.Tradingday;
             if (settleday == 0)
@@ -221,7 +219,7 @@ namespace TradingLib.Core
                 logger.Info("Request Tradingday:0 ,try to get the settlement of lastsettleday:" + TLCtxHelper.ModuleSettleCentre.LastSettleday);
                 settleday = TLCtxHelper.ModuleSettleCentre.LastSettleday;
             }
-            settlement = ORM.MSettlement.SelectSettlement(request.Account, settleday);
+            settlement = ORM.MSettlement.SelectSettlement(account.ID, settleday);
             if (settlement != null)
             {
                 logger.Info("got settlement....");
@@ -238,9 +236,43 @@ namespace TradingLib.Core
             else
             {
                 RspXQrySettleInfoResponse response = ResponseTemplate<RspXQrySettleInfoResponse>.SrvSendRspResponse(request);
-                logger.Warn("can not find settlement for account:" + request.Account + " for settleday:" + request.Tradingday.ToString());
+                logger.Warn("can not find settlement for account:" + account.ID + " for settleday:" + request.Tradingday.ToString());
                 response.RspInfo.Fill("SELLTEINFO_NOT_FOUND");
                 CachePacket(response);
+            }
+        }
+
+
+        /// <summary>
+        /// 查询持仓明细
+        /// 注意查询持仓明细 是指查询昨日留仓持仓明细
+        /// </summary>
+        /// <param name="request"></param>
+        /// <param name="account"></param>
+        void SrvOnXQryPositionDetail(XQryPositionDetailRequest request, IAccount account)
+        {
+            logger.Info("XQryPositionDetail" + request.ToString());
+            List<PositionDetail> list = new List<PositionDetail>();
+            foreach (Position p in account.Positions)
+            {
+                foreach (PositionDetail pd in p.PositionDetailTotal)
+                {
+                    list.Add(pd);
+                }
+            }
+            if (list.Count > 0)
+            {
+                for (int i = 0; i < list.Count; i++)
+                {
+                    RspXQryPositionDetailResponse response = ResponseTemplate<RspXQryPositionDetailResponse>.SrvSendRspResponse(request);
+                    response.PositionDetail = list[i];
+                    CacheRspResponse(response, i == list.Count - 1);
+                }
+            }
+            else
+            {   //发送空的持仓回报
+                RspXQryPositionDetailResponse response = ResponseTemplate<RspXQryPositionDetailResponse>.SrvSendRspResponse(request);
+                CacheRspResponse(response);
             }
         }
     }
