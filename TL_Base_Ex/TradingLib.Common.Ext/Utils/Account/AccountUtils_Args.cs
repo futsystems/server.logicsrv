@@ -15,6 +15,7 @@ namespace TradingLib.Common
     {
         /// <summary>
         /// 获得交易账户单向大边保证金设置
+        /// 默认不执行单向大边
         /// </summary>
         /// <param name="account"></param>
         /// <returns></returns>
@@ -23,16 +24,6 @@ namespace TradingLib.Common
             ExStrategy s = account.GetExStrategy();
             if (s != null)
                 return s.SideMargin;
-            //如果提供了合约国内交易所（排除香港交易所）默认使用单向大边
-            //if (symbol!= null && symbol.SecurityFamily.Exchange.Country == Country.CN && symbol.SecurityFamily.Exchange.EXCode != "HKEX")
-            //{
-            //    return true;
-            //}
-            //默认RMB帐户实行单向大边
-            if (account.Currency == CurrencyType.RMB)
-            {
-                return true;
-            }
             return false;
         }
 

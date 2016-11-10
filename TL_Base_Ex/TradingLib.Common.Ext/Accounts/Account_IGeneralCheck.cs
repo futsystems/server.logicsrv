@@ -38,16 +38,14 @@ namespace TradingLib.Common
             msg = string.Empty;
             //如果是平仓委托 则直接返回
             if (!o.IsEntryPosition) return true;
-            //获得对应方向的持仓
-            Position pos = GetPosition(o.Symbol, o.PositionSide);
 
             //获得某个帐户交易某个合约的可用资金
-            decimal avabile = GetFundAvabile(o.oSymbol);
+            decimal avabilefund = GetFundAvabile(o.oSymbol);
 
             //可用资金大于需求资金则可以接受该委托
-            decimal required = CalOrderFundRequired(o);
+            decimal requiredfund = CalOrderFundRequired(o);
             //Util.Debug("[CanFundTakeOrder Check] Fundavabile:" + avabile.ToString() + " Required:" + required);
-            if (required > avabile)
+            if (requiredfund > avabilefund)
             {
                 msg = "资金不足";
                 return false;
@@ -78,7 +76,7 @@ namespace TradingLib.Common
 
                                 decimal avabilefund = GetFundAvabile(symbol);
 
-                                Util.Debug("QryCanOpenSize Fundavablie:" + avabilefund.ToString() + " Symbol:" + symbol.Symbol + " Price:" + price.ToString() + " Fundperlot:" + fundperlot.ToString());
+                                //Util.Debug("QryCanOpenSize Fundavablie:" + avabilefund.ToString() + " Symbol:" + symbol.Symbol + " Price:" + price.ToString() + " Fundperlot:" + fundperlot.ToString());
                                 return (int)(avabilefund / fundperlot);
                             }
 

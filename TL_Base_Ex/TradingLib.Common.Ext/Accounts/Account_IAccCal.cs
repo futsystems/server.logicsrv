@@ -25,8 +25,7 @@ namespace TradingLib.Common
                         //需要判断是否启用单向大边
                         if (!this.GetParamSideMargin())
                         {
-                            //decimal price = TLCtxHelper.CmdUtils.GetAvabilePrice(o.Symbol);
-                            return this.CalOrderMarginFrozen(o);
+                            return this.CalOrderMarginFrozen(o) * this.GetExchangeRate(o.oSymbol.SecurityFamily);
                         }
                         else
                         {
@@ -36,6 +35,7 @@ namespace TradingLib.Common
                             return marginfrozenwill - marginfrozennow;//纳入开仓委托的单向大边冻结保证金 - 当前冻结保证金 为该委托所需冻结保证金
                         }
                     }
+                //股票占用资金为报单价格*数量
                 case SecurityType.STK:
                     {
                         return o.LimitPrice * o.UnsignedSize;

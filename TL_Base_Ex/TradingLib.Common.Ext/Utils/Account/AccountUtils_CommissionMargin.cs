@@ -249,36 +249,8 @@ namespace TradingLib.Common
                     return decimal.MaxValue;
 
             }
-            
-
-            //if (symbol.SecurityType == SecurityType.FUT)//期货资金需求计算
-            //{
-                
-            //}
-            //else if (symbol.SecurityType == SecurityType.OPT)//期权资金需求计算
-            //{
-            //    basemarginfrozen = price * symbol.Multiple * size;
-            //}
-            //else
-            //    basemarginfrozen = decimal.MaxValue;
-
-            ////获得保证金模板
-            //MarginTemplateItem item = account.GetMarginTemplateItem(symbol);
-            //if (item == null) return basemarginfrozen;
-
-            //switch (item.ChargeType)
-            //{
-            //    case QSEnumChargeType.Absolute:
-            //        return item.CalMarginFrozen(symbol, size, price);
-            //    case QSEnumChargeType.Relative:
-            //        return basemarginfrozen + item.CalMarginFrozen(symbol, size, price);
-            //    case QSEnumChargeType.Percent:
-            //        return basemarginfrozen * (1 + item.Percent);
-            //    default:
-            //        return basemarginfrozen;
-            //}
-
         }
+
         /// <summary>
         /// 计算委托的保证金冻结
         /// </summary>
