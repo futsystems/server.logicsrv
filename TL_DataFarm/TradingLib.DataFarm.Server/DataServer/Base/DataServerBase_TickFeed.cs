@@ -168,7 +168,10 @@ namespace TradingLib.Common.DataFarm
                 }
                 dft.CurrentTime = k.DateTime();
             }
-
+            if (k.Exchange == "HKEX")
+            {
+                logger.Info("k exchange:" + k.Exchange + " symbol:" + k.Symbol + " Tick:" + k.ToString());
+            }
             Symbol symbol = MDBasicTracker.SymbolTracker[k.Exchange,k.Symbol];
             if(symbol == null) return;
             //if (symbol.Exchange != "HKEX") return;
