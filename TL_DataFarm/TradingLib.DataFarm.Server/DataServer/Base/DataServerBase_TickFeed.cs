@@ -168,10 +168,10 @@ namespace TradingLib.Common.DataFarm
                 }
                 dft.CurrentTime = k.DateTime();
             }
-            if (k.Exchange == "HKEX")
-            {
-                logger.Info("k exchange:" + k.Exchange + " symbol:" + k.Symbol + " Tick:" + k.ToString());
-            }
+            //if (k.Exchange == "HKEX")
+            //{
+            //    //logger.Info("k exchange:" + k.Exchange + " symbol:" + k.Symbol + " Tick:" + k.ToString());
+            //}
             Symbol symbol = MDBasicTracker.SymbolTracker[k.Exchange,k.Symbol];
             if(symbol == null) return;
             //if (symbol.Exchange != "HKEX") return;
@@ -191,7 +191,7 @@ namespace TradingLib.Common.DataFarm
             {
                 //转发实时行情
                 Tick snapshot = Global.TickTracker[k.Exchange, k.Symbol];
-                logger.Info("notifytick");
+                //logger.Info("notifytick");
                 NotifyTick2Connections(snapshot);
             }
 
@@ -227,7 +227,7 @@ namespace TradingLib.Common.DataFarm
                 {
                     TickNotify ticknotify = new TickNotify();
                     ticknotify.Tick = k;
-                    logger.Info("send tick");
+                    //logger.Info("send tick");
                     this.SendData(conn, ticknotify);
                 }
             }

@@ -750,15 +750,15 @@ namespace TradingLib.Common
                         sb.Append(d);
                         sb.Append(k.Exchange);//10
                         sb.Append(d);
-                        sb.Append(k.AskPrice.ToString("G0"));//11
+                        sb.Append(k.AskPrice);//11
                         sb.Append(d);
-                        sb.Append(k.AskPrice2.ToString("G0"));//12
+                        sb.Append(k.AskPrice2);//12
                         sb.Append(d);
-                        sb.Append(k.AskPrice3.ToString("G0"));//13
+                        sb.Append(k.AskPrice3);//13
                         sb.Append(d);
-                        sb.Append(k.AskPrice4.ToString("G0"));//14
+                        sb.Append(k.AskPrice4);//14
                         sb.Append(d);
-                        sb.Append(k.AskPrice5.ToString("G0"));//15
+                        sb.Append(k.AskPrice5);//15
                         sb.Append(d);
                         sb.Append(k.AskSize);//16
                         sb.Append(d);
@@ -773,15 +773,15 @@ namespace TradingLib.Common
                         sb.Append(k.AskExchange);//21
 
                         sb.Append(d);
-                        sb.Append(k.BidPrice.ToString("G0"));//22
+                        sb.Append(k.BidPrice);//22
                         sb.Append(d);
-                        sb.Append(k.BidPrice2.ToString("G0"));//23
+                        sb.Append(k.BidPrice2);//23
                         sb.Append(d);
-                        sb.Append(k.BidPrice3.ToString("G0"));//24
+                        sb.Append(k.BidPrice3);//24
                         sb.Append(d);
-                        sb.Append(k.BidPrice4.ToString("G0"));//25
+                        sb.Append(k.BidPrice4);//25
                         sb.Append(d);
-                        sb.Append(k.BidPrice5.ToString("G0"));//26
+                        sb.Append(k.BidPrice5);//26
                         sb.Append(d);
                         sb.Append(k.BidSize);//27
                         sb.Append(d);
