@@ -191,6 +191,7 @@ namespace TradingLib.Common.DataFarm
             {
                 //转发实时行情
                 Tick snapshot = Global.TickTracker[k.Exchange, k.Symbol];
+                logger.Info("notifytick");
                 NotifyTick2Connections(snapshot);
             }
 
@@ -226,6 +227,7 @@ namespace TradingLib.Common.DataFarm
                 {
                     TickNotify ticknotify = new TickNotify();
                     ticknotify.Tick = k;
+                    logger.Info("send tick");
                     this.SendData(conn, ticknotify);
                 }
             }
