@@ -412,6 +412,11 @@ namespace TradingLib.Common.DataFarm
                     if (k.UpdateType == "X")
                     {
                         double trade = (double)k.Trade;
+                        if (eod.EODBar.Open == 0)
+                        {
+                            logger.Info(eod.Symbol.Symbol+" EOD:" + eod.EODBar.ToString() + " Set Open Price");
+                            eod.EODBar.Open = trade;//OpenMarket任务执行之后 上一个交易EOD关闭 并生成当前交易日的EOD 此时Open为0 通过第一个成交价格 设定Open
+                        }
                         eod.EODBar.High = Math.Max(eod.EODBar.High, trade);
                         eod.EODBar.Low = Math.Min(eod.EODBar.Low, trade);
                         eod.EODBar.Close = trade;
