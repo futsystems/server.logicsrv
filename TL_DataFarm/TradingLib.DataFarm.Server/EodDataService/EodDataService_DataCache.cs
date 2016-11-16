@@ -32,11 +32,6 @@ namespace TradingLib.Common.DataFarm
     public partial class EodDataService
     {
         /// <summary>
-        /// 合约当前分笔成交数据
-        /// </summary>
-        Dictionary<string, TradeCache> currentTradeMap = new Dictionary<string, TradeCache>();
-
-        /// <summary>
         /// 当前品种的MarketDay
         /// </summary>
         Dictionary<string, MarketDay> currentSecCodeMarketDayMap = new Dictionary<string, MarketDay>();
@@ -47,14 +42,21 @@ namespace TradingLib.Common.DataFarm
         Dictionary<string, Dictionary<int, MarketDay>> latestSecCodeMarketDaysMap = new Dictionary<string, Dictionary<int, MarketDay>>();
 
         /// <summary>
-        /// 合约的最近10日分时数据
+        /// 合约当前分笔成交数据
         /// </summary>
-        Dictionary<string, Dictionary<int, MinuteDataCache>> minuteDataMap = new Dictionary<string, Dictionary<int, MinuteDataCache>>();
+        Dictionary<string, TradeCache> currentTradeMap = new Dictionary<string, TradeCache>();
 
         /// <summary>
         /// 合约当前分时数据
         /// </summary>
         Dictionary<string, MinuteDataCache> currentMinuteDataMap = new Dictionary<string, MinuteDataCache>();
+
+        /// <summary>
+        /// 合约的最近10日分时数据
+        /// </summary>
+        Dictionary<string, Dictionary<int, MinuteDataCache>> minuteDataMap = new Dictionary<string, Dictionary<int, MinuteDataCache>>();
+
+        
 
         /// <summary>
         /// 初始化MarketDay

@@ -66,6 +66,10 @@ namespace TradingLib.Common.DataFarm
 
 
         long _latestBarKey = 0;
+        /// <summary>
+        /// 1分钟Bar数据结束
+        /// </summary>
+        /// <param name="bar"></param>
         public void On1MinBarClosed(Bar bar)
         {
             if (_restored)
@@ -74,6 +78,11 @@ namespace TradingLib.Common.DataFarm
             }
         }
 
+        /// <summary>
+        /// 1分钟Bar数据更新
+        /// 成交价格更新 成交量更新
+        /// </summary>
+        /// <param name="bar"></param>
         public void On1MinPartialBarUpdate(Bar bar)
         {
             if (_restored)
@@ -156,6 +165,7 @@ namespace TradingLib.Common.DataFarm
 
         /// <summary>
          /// 查询成交数据
+        /// Cache初始化时就已经生成了对应时间节点的所有数据 通过_latestBarKey来指定当前有效数据位置
          /// </summary>
          /// <param name="startIndex"></param>
          /// <param name="count"></param>

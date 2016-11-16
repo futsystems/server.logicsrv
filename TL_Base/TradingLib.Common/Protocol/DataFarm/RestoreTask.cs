@@ -72,10 +72,12 @@ namespace TradingLib.Common
         /// 合约
         /// </summary>
         public string Symbol { get; set; }
+
         /// <summary>
         /// 交易所
         /// </summary>
         public string Exchange { get; set; }
+
         /// <summary>
         /// 任务创建时间
         /// </summary>
@@ -87,7 +89,7 @@ namespace TradingLib.Common
         public DateTime CompleteTime { get; set; }
 
         /// <summary>
-        /// 数据库加载日内数据后 最近的一个Bar结束时间
+        /// 数据库加载日内数据后 最近的一个1分钟Bar结束时间
         /// </summary>
         public DateTime Intraday1MinHistBarEnd { get; set; }
 
@@ -110,10 +112,12 @@ namespace TradingLib.Common
         /// 该时间为启动1分钟之后 截取的数据完备的最小周期结束时间
         /// </summary>
         public DateTime DataFeed1MinRoundTime { get; set; }
+
         /// <summary>
         /// 历史Tick数据恢复标识
         /// </summary>
         public bool IsTickFilled { get; set; }
+
         /// <summary>
         /// 历史Tick数据回补成功
         /// </summary>

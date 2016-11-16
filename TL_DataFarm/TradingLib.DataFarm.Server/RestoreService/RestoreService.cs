@@ -65,10 +65,13 @@ namespace TradingLib.Common.DataFarm
         ILog logger = LogManager.GetLogger("RestoreService");
 
         /// <summary>
-        /// 历史Tick产生Bar回补数据
+        /// 历史Tick回补产生的Bar数据
         /// </summary>
         public event Action<FreqNewBarEventArgs> NewHistBarEvent;
 
+        /// <summary>
+        /// 历史Tick回补最后产生的PartialBar数据
+        /// </summary>
         public event Action<Symbol, BarImpl> NewHistPartialBarEvent;
 
         ConcurrentDictionary<string, RestoreTask> restoreTaskMap = new ConcurrentDictionary<string, RestoreTask>();
@@ -95,6 +98,12 @@ namespace TradingLib.Common.DataFarm
             }
         }
 
+        /// <summary>
+        /// 行情源有TimeTick
+        /// 通过记录行情源TimeTick 可以判断启动后 该行情源是否已经跨越了1分钟 1分钟跨越后 就可以开始恢复Tick数据 以确保1分钟周期数据完备
+        /// </summary>
+        /// <param name="datafeed"></param>
+        /// <returns></returns>
         DataFeedTime GetDataFeedTime(QSEnumDataFeedTypes datafeed)
         {
             DataFeedTime target = null;
@@ -107,6 +116,7 @@ namespace TradingLib.Common.DataFarm
 
         /// <summary>
         /// 响应日内分钟数据加载完毕事件
+        /// 记录数据库1分钟Bar数据时间
         /// </summary>
         /// <param name="symbol"></param>
         /// <param name="time"></param>
@@ -165,12 +175,6 @@ namespace TradingLib.Common.DataFarm
             {
                 try
                 {
-                    //如果恢复任务列表中所有任务都已经恢复完毕则 则退出恢复线程
-                    //if (restoreTaskMap.Values.Where(t => !t.Complete).Count() == 0)
-                    //{
-                    //    _restorego = false;
-                    //}
-
                     //遍历所有未完成恢复任务
                     foreach (var item in restoreTaskMap.Values.Where(t => !t.Complete))
                     {
@@ -270,14 +274,14 @@ namespace TradingLib.Common.DataFarm
                 if (tmpticklist.Count > 0)
                 {
                     DateTime dt = task.Exchange1MinRoundtime;
-                    Tick timeTick = TickImpl.NewTimeTick(task.oSymbol, dt);
+                    Tick timeTick = TickImpl.NewTimeTick(symbol, dt);
                     tmpticklist.Add(timeTick);
                 }
 
                 logger.Info(string.Format("Symbol:{0} Fill Tick Start:{1} End:{2} Tick CNT:{3}", task.oSymbol.Symbol, start, end, tmpticklist.Count));
 
                 //处理历史Tick之前 执行Clear 将原来历史Bar中某个合约的数据清空掉，避免之前Tick恢复造成的脏数据
-                restoreFrequencyMgr.Clear(task.oSymbol);
+                restoreFrequencyMgr.Clear(symbol);
 
                 //Feed Tick
                 foreach (var k in tmpticklist)
@@ -292,7 +296,7 @@ namespace TradingLib.Common.DataFarm
                     if (freq.WriteableBars.HasPartialItem)//数据恢复时候 Tick文件含有E类别Tick MarketClose 关闭Bar之后 由于没有任何成交Tick驱动 则没有PartialBar 此处刚好完备
                     {
                         if (NewHistPartialBarEvent != null)
-                            NewHistPartialBarEvent(task.oSymbol, freq.WriteableBars.PartialItem as BarImpl); //将HistPartialBar设定到 BarList时 会执行Merge操作 如果异常会导致 任务进入死循环 一致执行BackFill
+                            NewHistPartialBarEvent(symbol, freq.WriteableBars.PartialItem as BarImpl); //将HistPartialBar设定到 BarList时 会执行Merge操作 如果异常会导致 任务进入死循环 一致执行BackFill
                     }
                 }
                 task.IsTickFillSuccess = true;
