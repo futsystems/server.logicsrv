@@ -348,6 +348,7 @@ namespace TradingLib.Common.DataFarm
                 //如果没有对应合约的EODBar 则创建当前交易日的Bar
                 if (!eodBarMap.TryGetValue(symbol.UniqueKey, out eod))
                 {
+                    logger.Info("no eodbar struct");
                     BarImpl bar = CreateEod(symbol, currentMarketDay);
                     eod = new EodBarStruct(symbol, bar, 0);
                     eodBarMap.Add(symbol.UniqueKey, eod);
@@ -358,6 +359,7 @@ namespace TradingLib.Common.DataFarm
                     //表明上个交易日的Bar没有关闭 执行关闭
                     if (eod.EODBar.TradingDay != currentMarketDay.TradingDay)
                     {
+                        logger.Info("close eod bar start");
                         CloseEodPartialBar(eod);
                         logger.Info("Close EOD Bar:" + eod.EODBar.ToString());
                         //创建新的EODBar
