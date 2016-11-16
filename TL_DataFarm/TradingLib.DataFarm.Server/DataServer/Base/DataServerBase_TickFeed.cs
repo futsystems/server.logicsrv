@@ -202,7 +202,7 @@ namespace TradingLib.Common.DataFarm
             }
 
             //Eod服务保存成交数据
-            if (k.UpdateType == "X")
+            if (k.UpdateType == "X" || k.UpdateType == "F" || k.UpdateType == "S")
             {
                 EodServiceProcessTick(k);
             }

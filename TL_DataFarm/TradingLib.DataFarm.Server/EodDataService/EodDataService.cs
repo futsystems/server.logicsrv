@@ -33,6 +33,12 @@ namespace TradingLib.Common.DataFarm
         /// 已关闭的1分钟Bar成交量累加
         /// </summary>
         public int ClosedVol { get; set; }
+
+        /// <summary>
+        /// 标识该Eod Bar是否已经数据恢复完毕
+        /// 通过当天1分钟Bar数据更新OHLC 恢复完毕后由Tick数据进行恢复
+        /// </summary>
+        public bool Restored { get; set; }
     }
 
 
@@ -133,7 +139,8 @@ namespace TradingLib.Common.DataFarm
                 IEnumerable<BarImpl> eodlist = BarMerger.MergeEOD(list);
                 logger.Info(string.Format("Symbol:{0} Restore Bar from:{1} cnt:{2}", task.oSymbol.Symbol, task.EodHistBarEndTradingDay, eodlist.Count()));
                 //数据恢复后 日线数据最后一条数据最关键，该数据如果在收盘时刻启动则日线完备，如果在盘中启动则日线不完备
-                //如果数据操作由延迟，导致已经有完整的1分钟Bar数据到达，而日线数据还没有回复完毕，则我们将1分钟数据先放到list中，待日线数据恢复完毕后再用该数据执行驱动 PartialBar只要保持一个
+                //如果数据操作由延迟，导致已经有完整的1分钟Bar数据到达，而日线数据还没有回复完毕，则我们将1分钟数据先放到list中，待日线数据恢复完毕后再用该数据执行驱动 PartialBar则只要更新最后一个
+                //1分钟的Bar数据只是用来更新EOD的高开低收 以及没有实时行情时候的成交量数据 待回复完毕后由实时Tick负责更新
 
 
                 //将除了最后一条数据之前的数据统一对外发送到BarList 更新数据集并保存 用最后一条数据 创建EodBarStruct放入map
@@ -176,6 +183,8 @@ namespace TradingLib.Common.DataFarm
 
                     eodPendingMinPartialBarMap.Remove(task.oSymbol.UniqueKey);
                 }
+
+                st.Restored = true;
             }
             catch (Exception ex)
             {
@@ -243,37 +252,38 @@ namespace TradingLib.Common.DataFarm
             EodBarStruct eod = null;
             if (eodBarMap.TryGetValue(symbol.UniqueKey, out eod))
             {
-                //如果没有恢复Eod最后一条数据则创建该数据
-                if (eod.EODBar == null)
+                if (!eod.Restored)
                 {
-                    eod.EODBar = CreateEod(bar);
-                    eod.ClosedVol = 0;
-                }
+                    //如果没有恢复Eod最后一条数据则创建该数据
+                    if (eod.EODBar == null)
+                    {
+                        eod.EODBar = CreateEod(bar);
+                        eod.ClosedVol = 0;
+                    }
 
-                //新交易日 将原来EOD关闭
-                if (bar.TradingDay > eod.EODBar.TradingDay)
-                {
-                    CloseEodPartialBar(eod);
-                    //创建新的EODBar
-                    eod.EODBar = CreateEod(bar);
-                    eod.ClosedVol = 0;
-                    eod.EODBar.Open = bar.Open;
-                }
-                if (bar.TradingDay == eod.EODBar.TradingDay)
-                {
-                    //eod.EODBar.EndTime = bar.EndTime;
-                    eod.EODBar.High = Math.Max(eod.EODBar.High, bar.High);
-                    eod.EODBar.Low = Math.Min(eod.EODBar.Low, bar.Low);
-                    eod.EODBar.Close = bar.Close;
-                    eod.EODBar.Volume = eod.ClosedVol + bar.Volume;
+                    //新交易日 将原来EOD关闭
+                    if (bar.TradingDay > eod.EODBar.TradingDay)
+                    {
+                        CloseEodPartialBar(eod);
+                        //创建新的EODBar
+                        eod.EODBar = CreateEod(bar);
+                        eod.ClosedVol = 0;
+                        eod.EODBar.Open = bar.Open;
+                    }
+                    if (bar.TradingDay == eod.EODBar.TradingDay)
+                    {
+                        eod.EODBar.High = Math.Max(eod.EODBar.High, bar.High);
+                        eod.EODBar.Low = Math.Min(eod.EODBar.Low, bar.Low);
+                        eod.EODBar.Close = bar.Close;
+                        eod.EODBar.Volume = eod.ClosedVol + bar.Volume;
 
-
-                    //触发Eod更新事件 用于更新到BarList
-                    UpdateEodPartialBar(eod);
-                }
-                if (bar.TradingDay < eod.EODBar.TradingDay)
-                {
-                    logger.Error("Eod logic error, EodBar:{0} MinBar:{1}".Put(eod.EODBar, bar));
+                        //触发Eod更新事件 用于更新到BarList
+                        UpdateEodPartialBar(eod);
+                    }
+                    if (bar.TradingDay < eod.EODBar.TradingDay)
+                    {
+                        logger.Error("Eod logic error, EodBar:{0} MinBar:{1}".Put(eod.EODBar, bar));
+                    }
                 }
             }
             else
@@ -281,6 +291,7 @@ namespace TradingLib.Common.DataFarm
                 eodPendingMinPartialBarMap[symbol.UniqueKey] = bar;
             }
 
+            //更新分时数据
             MinuteDataCache cache = null;
             if (currentMinuteDataMap.TryGetValue(symbol.UniqueKey, out cache))
             {
@@ -299,29 +310,31 @@ namespace TradingLib.Common.DataFarm
             EodBarStruct eod = null;
             if (eodBarMap.TryGetValue(symbol.UniqueKey, out eod))
             {
-                if (eod.EODBar == null)
+                if (!eod.Restored)
                 {
-                    eod.EODBar = CreateEod(bar);
-                    eod.ClosedVol = 0;
-                }
-                //新交易日 将原来EOD关闭
-                if (bar.TradingDay > eod.EODBar.TradingDay)
-                {
-                    CloseEodPartialBar(eod);
-                    //创建新的EODBar
-                    eod.EODBar = CreateEod(bar);
-                    eod.ClosedVol = 0;
-                }
-                if (bar.TradingDay == eod.EODBar.TradingDay)
-                {
-                    //eod.EODBar.EndTime = bar.EndTime;
-                    eod.EODBar.High = Math.Max(eod.EODBar.High, bar.High);
-                    eod.EODBar.Low = Math.Min(eod.EODBar.Low, bar.Low);
-                    eod.EODBar.Close = bar.Close;
-                    eod.EODBar.Volume = eod.ClosedVol + bar.Volume;
-                    eod.ClosedVol = eod.ClosedVol + bar.Volume;//将当前1分钟的成交量计入ClosedVol
+                    if (eod.EODBar == null)
+                    {
+                        eod.EODBar = CreateEod(bar);
+                        eod.ClosedVol = 0;
+                    }
+                    //新交易日 将原来EOD关闭
+                    if (bar.TradingDay > eod.EODBar.TradingDay)
+                    {
+                        CloseEodPartialBar(eod);
+                        //创建新的EODBar
+                        eod.EODBar = CreateEod(bar);
+                        eod.ClosedVol = 0;
+                    }
+                    if (bar.TradingDay == eod.EODBar.TradingDay)
+                    {
+                        eod.EODBar.High = Math.Max(eod.EODBar.High, bar.High);
+                        eod.EODBar.Low = Math.Min(eod.EODBar.Low, bar.Low);
+                        eod.EODBar.Close = bar.Close;
+                        eod.EODBar.Volume = eod.ClosedVol + bar.Volume;
+                        eod.ClosedVol = eod.ClosedVol + bar.Volume;//将当前1分钟的成交量计入ClosedVol
 
-                    UpdateEodPartialBar(eod);
+                        UpdateEodPartialBar(eod);
+                    }
                 }
             }
             else
@@ -335,6 +348,7 @@ namespace TradingLib.Common.DataFarm
                 list.Add(bar);
             }
 
+            //更新分时数据
             MinuteDataCache cache = null;
             if (currentMinuteDataMap.TryGetValue(symbol.UniqueKey, out cache))
             {
@@ -376,10 +390,35 @@ namespace TradingLib.Common.DataFarm
         public void OnTick(Tick k)
         {
             string key = k.GetSymbolUniqueKey();
-            TradeCache cache = null;
-            if (currentTradeMap.TryGetValue(key, out cache))
+
+            if (k.UpdateType == "X")
             {
-                cache.NewTrade(k);
+                TradeCache cache = null;
+                if (currentTradeMap.TryGetValue(key, out cache))
+                {
+                    cache.NewTrade(k);
+                }
+            }
+
+            EodBarStruct eod = null;
+            if (eodBarMap.TryGetValue(key, out eod))
+            {
+                if (eod.Restored)
+                {
+                    if (k.UpdateType == "X")
+                    {
+                        double trade = (double)k.Trade;
+                        eod.EODBar.High = Math.Max(eod.EODBar.High, trade);
+                        eod.EODBar.Low = Math.Min(eod.EODBar.Low, trade);
+                        eod.EODBar.Close = trade;
+                        eod.EODBar.Volume = k.Vol;
+                    }
+                    if (k.UpdateType == "S" || k.UpdateType == "F")
+                    {
+                        eod.EODBar.Volume = k.Vol;
+                        eod.EODBar.OpenInterest = k.OpenInterest;
+                    }
+                }
             }
         }
 
