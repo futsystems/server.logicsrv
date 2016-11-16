@@ -25,7 +25,7 @@ namespace TradingLib.Common
             this.Exchange = string.Empty;
 
             this.Intraday1MinHistBarEnd = DateTime.MinValue;
-            this.EodHistBarEnd = DateTime.MinValue;
+            this.EodHistBarEndTradingDay = int.MinValue;
 
             this.DataFeed1MinRoundTime = DateTime.MinValue;
             this.Exchange1MinRoundtime = DateTime.MinValue;
@@ -48,7 +48,7 @@ namespace TradingLib.Common
             this.Exchange = this.oSymbol.Exchange;
 
             this.Intraday1MinHistBarEnd = DateTime.MinValue;
-            this.EodHistBarEnd = DateTime.MinValue;
+            this.EodHistBarEndTradingDay = int.MinValue;
 
             this.DataFeed1MinRoundTime = DateTime.MinValue;
             this.Exchange1MinRoundtime = DateTime.MinValue;
@@ -94,9 +94,9 @@ namespace TradingLib.Common
         public DateTime Intraday1MinHistBarEnd { get; set; }
 
         /// <summary>
-        /// 数据库加载日线数据后 最近的一个Bar结束时间
+        /// 数据库加载日线数据后 最近的一个Bar结束交易日
         /// </summary>
-        public DateTime EodHistBarEnd { get; set; }
+        public int EodHistBarEndTradingDay { get; set; }
 
         /// <summary>
         /// 行情源第一个1分钟Round结束时间

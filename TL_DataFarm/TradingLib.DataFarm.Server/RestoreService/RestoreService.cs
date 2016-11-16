@@ -93,6 +93,7 @@ namespace TradingLib.Common.DataFarm
 
             foreach (var symbol in MDBasicTracker.SymbolTracker.Symbols)
             {
+                if (symbol.Symbol != "HSIX6") continue;
                 restoreTaskMap.TryAdd(symbol.UniqueKey, new RestoreTask(symbol));
                 restoreFrequencyMgr.RegisterSymbol(symbol);
             }
@@ -137,16 +138,16 @@ namespace TradingLib.Common.DataFarm
         /// </summary>
         /// <param name="symbol"></param>
         /// <param name="time"></param>
-        public void OnEodHistBarLoaded(Symbol symbol, DateTime time)
+        public void OnEodHistBarLoaded(Symbol symbol, int tradingday)
         {
-            logger.Debug(string.Format("Eod Hist Bar Loaded, Symbol:{0} Time:{1}", symbol.UniqueKey, time));
+            logger.Debug(string.Format("Eod Hist Bar Loaded, Symbol:{0} TradingDay:{1}", symbol.UniqueKey, tradingday));
             RestoreTask task = null;
             if (!restoreTaskMap.TryGetValue(symbol.UniqueKey, out task))
             {
                 logger.Warn(string.Format("Symbol:{0} has no restore task registed", symbol.UniqueKey));
                 return;
             }
-            task.EodHistBarEnd = time;
+            task.EodHistBarEndTradingDay = tradingday;
         }
 
 

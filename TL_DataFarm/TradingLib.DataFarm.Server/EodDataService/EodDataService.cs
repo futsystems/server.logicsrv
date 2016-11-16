@@ -128,9 +128,10 @@ namespace TradingLib.Common.DataFarm
             try
             {
 
-                IEnumerable<BarImpl> list = _store.QryBar(task.oSymbol, BarInterval.CustomTime, 60, task.EodHistBarEnd, DateTime.MaxValue, 0, 0, false, false);
+                //加载从最后一个EodBar结束时间以来的1分钟数据 合并成EodBar数据
+                IEnumerable<BarImpl> list = _store.QryBar(task.oSymbol, BarInterval.CustomTime, 60, task.EodHistBarEndTradingDay + 1,int.MaxValue, 0, 0, false);
                 IEnumerable<BarImpl> eodlist = BarMerger.MergeEOD(list);
-                logger.Info(string.Format("Symbol:{0} Restore Bar from:{1} cnt:{2}",task.oSymbol.Symbol, task.EodHistBarEnd, eodlist.Count()));
+                logger.Info(string.Format("Symbol:{0} Restore Bar from:{1} cnt:{2}", task.oSymbol.Symbol, task.EodHistBarEndTradingDay, eodlist.Count()));
                 //数据恢复后 日线数据最后一条数据最关键，该数据如果在收盘时刻启动则日线完备，如果在盘中启动则日线不完备
                 //如果数据操作由延迟，导致已经有完整的1分钟Bar数据到达，而日线数据还没有回复完毕，则我们将1分钟数据先放到list中，待日线数据恢复完毕后再用该数据执行驱动 PartialBar只要保持一个
 
@@ -214,6 +215,7 @@ namespace TradingLib.Common.DataFarm
             eod.Exchange = minbar.Exchange;
             eod.Symbol = minbar.Symbol;
             eod.TradingDay = minbar.TradingDay;
+            eod.EndTime = Util.ToDateTime(eod.TradingDay, 0);
             eod.IntervalType = BarInterval.Day;
             eod.Interval = 1;
 
@@ -259,7 +261,7 @@ namespace TradingLib.Common.DataFarm
                 }
                 if (bar.TradingDay == eod.EODBar.TradingDay)
                 {
-                    eod.EODBar.EndTime = bar.EndTime;
+                    //eod.EODBar.EndTime = bar.EndTime;
                     eod.EODBar.High = Math.Max(eod.EODBar.High, bar.High);
                     eod.EODBar.Low = Math.Min(eod.EODBar.Low, bar.Low);
                     eod.EODBar.Close = bar.Close;
@@ -312,7 +314,7 @@ namespace TradingLib.Common.DataFarm
                 }
                 if (bar.TradingDay == eod.EODBar.TradingDay)
                 {
-                    eod.EODBar.EndTime = bar.EndTime;
+                    //eod.EODBar.EndTime = bar.EndTime;
                     eod.EODBar.High = Math.Max(eod.EODBar.High, bar.High);
                     eod.EODBar.Low = Math.Min(eod.EODBar.Low, bar.Low);
                     eod.EODBar.Close = bar.Close;

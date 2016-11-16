@@ -72,7 +72,7 @@ namespace TradingLib.API
         /// </summary>
         /// <param name="symbol"></param>
         /// <param name="lastBarTime"></param>
-        void RestoreEodBar(Symbol symbol, out DateTime lastBarTime);
+        void RestoreEodBar(Symbol symbol, out int lastBarTradingday);
 
 
         /// <summary>
@@ -88,6 +88,20 @@ namespace TradingLib.API
         /// <returns></returns>
         List<BarImpl> QryBar(Symbol symbol, BarInterval type, int interval, DateTime start, DateTime end,int startIndex, int maxcount, bool fromEnd,bool havePartail);
 
+        /// <summary>
+        /// 查询历史数据
+        /// 通过TradingDay进行过滤
+        /// </summary>
+        /// <param name="symbol"></param>
+        /// <param name="type"></param>
+        /// <param name="interval"></param>
+        /// <param name="start"></param>
+        /// <param name="end"></param>
+        /// <param name="startIndex"></param>
+        /// <param name="maxcount"></param>
+        /// <param name="havePartial"></param>
+        /// <returns></returns>
+        List<BarImpl> QryBar(Symbol symbol, BarInterval type, int interval, int start, int end, int startIndex, int maxcount, bool havePartial);
 
         /// <summary>
         /// 查询分时数据
@@ -96,6 +110,7 @@ namespace TradingLib.API
         /// <param name="tradingday"></param>
         /// <returns></returns>
         List<MinuteData> QryMinuteData(Symbol symbol, int tradingday);
+
         /// <summary>
         /// 更新Bar数据
         /// </summary>
@@ -104,6 +119,7 @@ namespace TradingLib.API
 
 
         void UpdateBar(string key, BarImpl source, out BarImpl dest, out bool isInsert);
+
 
         /// <summary>
         /// 上传Bar数据

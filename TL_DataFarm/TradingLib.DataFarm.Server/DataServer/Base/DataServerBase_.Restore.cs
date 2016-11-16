@@ -133,7 +133,6 @@ namespace TradingLib.Common.DataFarm
             foreach (var symbol in MDBasicTracker.SymbolTracker.Symbols)
             {
                 //if (symbol.Symbol != "CLX6") continue;
-
                 restoreProfile.EnterSection("RestoreBar");
                 //1.从数据库加载历史数据 获得数据库最后一条Bar更新时间
                 DateTime intradayHistBarEndTime = DateTime.MinValue;
@@ -141,9 +140,9 @@ namespace TradingLib.Common.DataFarm
                 restoresrv.OnIntraday1MinHistBarLoaded(symbol, intradayHistBarEndTime);
 
                 //2.从数据库加载日线数据 获得最后一条日线更新时间
-                DateTime eodHistBarEndTime = DateTime.MinValue;
-                store.RestoreEodBar(symbol, out eodHistBarEndTime);
-                restoresrv.OnEodHistBarLoaded(symbol, eodHistBarEndTime);
+                int eodHistBarEndTradingDay = int.MinValue;
+                store.RestoreEodBar(symbol, out eodHistBarEndTradingDay);
+                restoresrv.OnEodHistBarLoaded(symbol, eodHistBarEndTradingDay);
 
                 restoreProfile.LeaveSection();
             }

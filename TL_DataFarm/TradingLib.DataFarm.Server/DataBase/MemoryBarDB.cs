@@ -177,15 +177,15 @@ namespace TradingLib.Common.DataFarm
         /// </summary>
         /// <param name="symbol"></param>
         /// <param name="lastBarTime"></param>
-        public void RestoreEodBar(Symbol symbol, out DateTime lastBarTime)
+        public void RestoreEodBar(Symbol symbol, out int lastBarTradingDay)
         {
-            lastBarTime = DateTime.MinValue;
+            lastBarTradingDay = int.MinValue;
             //获得对应的BarList
             BarList target = GetBarList(symbol, BarInterval.Day, 1);
 
             IEnumerable<BarImpl> bars = MBar.LoadEodBars(GetBarSymbol(symbol), DateTime.MinValue);
             target.RestoreBars(bars.Skip(Math.Max(0, bars.Count() - ConstantData.MAXBARCACHED)));
-            lastBarTime = target.LastBarTime;
+            lastBarTradingDay = target.LastBarTradingDay;
         }
 
 
@@ -207,6 +207,23 @@ namespace TradingLib.Common.DataFarm
             return target.QryBar(start, end, startIndex, maxcount, fromEnd, havePartail);
         }
 
+        /// <summary>
+        /// 通过交易日查询Bar数据
+        /// </summary>
+        /// <param name="symbol"></param>
+        /// <param name="type"></param>
+        /// <param name="interval"></param>
+        /// <param name="start"></param>
+        /// <param name="end"></param>
+        /// <param name="startIndex"></param>
+        /// <param name="maxcount"></param>
+        /// <param name="havePartial"></param>
+        /// <returns></returns>
+        public List<BarImpl> QryBar(Symbol symbol, BarInterval type, int interval, int start, int end, int startIndex, int maxcount, bool havePartial)
+        {
+            BarList target = GetBarList(symbol, type, interval);
+            return target.QryBar(start, end, startIndex, maxcount, havePartial);
+        }
         /// <summary>
         /// 查询分时数据
         /// </summary>

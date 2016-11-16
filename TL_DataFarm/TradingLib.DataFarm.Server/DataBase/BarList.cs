@@ -23,6 +23,18 @@ namespace TradingLib.Common.DataFarm
             }
         }
 
+        /// <summary>
+        /// 返回最后一个Bar的交易日
+        /// </summary>
+        public int LastBarTradingDay
+        {
+            get
+            {
+                if (barlist.Count == 0) return int.MinValue;
+                return barlist.Last().Value.TradingDay;
+            }
+        }
+
         public BarList(string key)
         {
             this._key = key;
@@ -302,6 +314,70 @@ namespace TradingLib.Common.DataFarm
 
                 return records.Where(bar => bar.TradingDay == tradingday).Select(bar=>new MinuteData(bar.EndTime.ToTLDate(),bar.EndTime.ToTLTime(),bar.Close,bar.Volume,0)).ToList();
             }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="start"></param>
+        /// <param name="end"></param>
+        /// <param name="startIndex"></param>
+        /// <param name="maxcount"></param>
+        /// <param name="havePartial"></param>
+        /// <returns></returns>
+        public List<BarImpl> QryBar(int start, int end, int startIndex, int maxcount, bool havePartial)
+        {
+            lock (_object)
+            {
+                IEnumerable<BarImpl> records = barlist.Values;
+                if (havePartial)
+                {
+                    BarImpl partial = GetPartialBar();
+                    if (partial != null)
+                    {
+                        /*
+                         *  当从1分钟数据合并生成3，5，15，30等其他周期的数据时，由于1分钟数据的不完整可能导致合并后的其他周期的最后一个Bar数据不完整
+                         *  处理方法
+                         *  1.判断完整性 将不完整的Bar剔除
+                         *  2.保留该Bar,该Bar的Open数据是正确的，将实时系统生成的PartialBar数据与该Bar执行逻辑合并
+                         * 
+                         * */
+                        //合并PartialBar时需要检查 数据集中最后一个数据与PartialBar的时间 如果一致 则更新数据集中的数据即可
+                        if (records.Count() > 0 && partial.GetTimeKey() == records.Last().GetTimeKey())
+                        {
+                            records.Last().CopyData(partial);
+                        }
+                        else
+                        {
+                            records = records.Concat(new BarImpl[] { partial });
+                        }
+                    }
+                }
+
+                if (start != int.MinValue || end != int.MaxValue)
+                {
+                    //执行时间过滤
+                    records = records.Where(bar => bar.TradingDay >= start && bar.TradingDay <= end);
+                }
+
+                //限制有效返回数量 返回数量为最大返回Bar个数
+                //截取数据集
+                if (maxcount <= 0)
+                {
+                    records = records.Take(Math.Max(0, records.Count() - startIndex));
+                }
+                else //设定最大数量 返回数据要求 按时间先后排列
+                {
+                    //startIndex 首先从数据序列开头截取对应数量的数据
+                    //maxcount 然后从数据序列末尾截取最大数量的数据
+                    records = records.Take(Math.Max(0, records.Count() - startIndex)).Skip(Math.Max(0, (records.Count() - startIndex) - maxcount));//返回序列后段元素
+                }
+
+                return records.ToList();
+            }
+
+
+
         }
         /// <summary>
         /// 从数据集中查询结果
