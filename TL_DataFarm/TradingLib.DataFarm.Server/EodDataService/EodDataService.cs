@@ -165,6 +165,7 @@ namespace TradingLib.Common.DataFarm
                 }
                 eodBarMap[task.oSymbol.UniqueKey] = st;
 
+                //bool restored = false;
                 //如果操作执行完成前已经有最新的Bar数据到达，则将这些没有处理的数据应用到当前EODPartial
                 List<BarImpl> minbarlist = null;
                 if (eodPendingMinBarMap.TryGetValue(task.oSymbol.UniqueKey, out minbarlist))
@@ -174,6 +175,7 @@ namespace TradingLib.Common.DataFarm
                         On1MinBarClose(task.oSymbol, bar);
                     }
                     eodPendingMinBarMap.Remove(task.oSymbol.UniqueKey);
+                    //restored = true;
                 }
 
                 BarImpl partialBar = null;
@@ -182,9 +184,11 @@ namespace TradingLib.Common.DataFarm
                     On1MinPartialBarUpdate(task.oSymbol, partialBar);
 
                     eodPendingMinPartialBarMap.Remove(task.oSymbol.UniqueKey);
+                    //restored = true;
                 }
-
-                st.Restored = true;
+                //停盘时刻 Bar和PartialBar都没有 OnTick中需要执行 UpdateEodPartialBar(eod);否则数据集中没有PartialBar导致 无法获得当天的日线数据 由于PartialBar为同一个，所以第一次UpdateEodPartialBar(eod)之后 后续的update只是做相同的赋值操作
+                //数据恢复完毕后
+                st.Restored = true;// restored;
             }
             catch (Exception ex)
             {
@@ -418,6 +422,7 @@ namespace TradingLib.Common.DataFarm
                         eod.EODBar.Volume = k.Vol;
                         eod.EODBar.OpenInterest = k.OpenInterest;
                     }
+                    UpdateEodPartialBar(eod);
                 }
             }
         }
