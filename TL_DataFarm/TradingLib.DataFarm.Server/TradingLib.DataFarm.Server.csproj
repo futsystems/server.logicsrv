@@ -87,8 +87,8 @@
     <Compile Include="EodDataService\EodDataService.cs" />
     <Compile Include="EodDataService\EodDataService_DataCache.cs" />
     <Compile Include="EodDataService\EventArgs.cs" />
-    <Compile Include="EodDataService\MinuteDataCache.cs" />
-    <Compile Include="EodDataService\TradeCache.cs" />
+    <Compile Include="EodDataService\DataCache\MinuteDataCache.cs" />
+    <Compile Include="EodDataService\DataCache\TradeCache.cs" />
     <Compile Include="EodDataService\EodDataService_.cs" />
     <Compile Include="EodDataService\EodDataService_Qry.cs" />
     <Compile Include="EodDataService\EodDataService_Restore.cs" />

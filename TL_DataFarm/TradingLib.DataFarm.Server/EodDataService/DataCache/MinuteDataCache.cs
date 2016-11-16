@@ -52,7 +52,7 @@ namespace TradingLib.Common.DataFarm
         /// <summary>
         /// 交易日
         /// </summary>
-        public int TradingDay { get; set; }
+        public int TradingDay { get; private set; }
 
         /// <summary>
         /// 某个交易日的分时数据

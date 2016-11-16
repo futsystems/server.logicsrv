@@ -66,7 +66,13 @@ namespace TradingLib.Common.DataFarm
 
         bool restored = true;
 
-        
+        /// <summary>
+        /// 数据是否恢复完毕
+        /// 启动时需要恢复数据
+        /// 连续运行 开收盘作业 不需要进行数据恢复
+        /// </summary>
+        public bool Restored { get { return restored; } set { restored = value; } }
+
         /// <summary>
         /// 恢复历史成交数据
         /// </summary>

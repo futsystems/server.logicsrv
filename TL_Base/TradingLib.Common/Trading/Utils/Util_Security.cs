@@ -11,10 +11,8 @@ namespace TradingLib.Common
 
        
         /// <summary>
-        /// 生成开始与结束日期之间Security的MarketDay
-        /// 开始与结束时间应当使用交易所对应的本地时间
-        /// 
         /// 返回某天及以前多少个MarketDay 以map形式返回
+        /// 指定时间 并返回该时间之前的一组MarketDay(可以包含指定时间当天的MarketDay)
         /// </summary>
         /// <param name="security"></param>
         /// <param name="start"></param>
@@ -25,7 +23,6 @@ namespace TradingLib.Common
             Dictionary<DayOfWeek, List<TradingRange>> dayRangeMap = security.MarketTime.GetRangeOfWeekDay();
             DateTime date = end;
             Dictionary<int, MarketDay> mdmap = new Dictionary<int, MarketDay>();
-            int i = 0;
             while (mdmap.Count < lastCnt)
             {
                 DayOfWeek dayofweek = date.DayOfWeek;

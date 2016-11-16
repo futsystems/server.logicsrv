@@ -25,7 +25,7 @@ namespace TradingLib.Common.DataFarm
                 MarketDay md = GetCurrentMarketDay(security);
                 if (md == null) continue;
 
-                int localPreOpenTime = security.Exchange.ConvertToSystemTime(md.MarketOpen.AddMinutes(-5)).ToTLTime();//将品种开盘时间转换成本地时间 提前5分钟进入开盘状态
+                int localPreOpenTime = security.Exchange.ConvertToSystemTime(md.MarketOpen.AddMinutes(-PREOPENMINITE)).ToTLTime();//将品种开盘时间转换成本地时间 提前5分钟进入开盘状态
                 List<SecurityFamily> target = null;
                 if (!openTimeMap.TryGetValue(localPreOpenTime, out target))
                 {

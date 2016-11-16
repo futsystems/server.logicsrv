@@ -133,22 +133,8 @@ namespace TradingLib.Common.DataFarm
             //更新品种当前MarketDay
             foreach (var sec in seclist)
             {
-                Dictionary<int, MarketDay> mdMap = null;
-                //计算当前MarketDay
-                MarketDay current = CalcMarketDay(sec, 10, out mdMap);
-                MarketDay old = currentSecCodeMarketDayMap[sec.Code];
-
-                //计算获得的MarketDay与缓存中交易日不一致 则表明需要执行交易日切换
-                if (current.TradingDay != old.TradingDay)
-                {
-                    currentSecCodeMarketDayMap[sec.Code] = current;
-                    latestSecCodeMarketDaysMap[sec.Code][current.TradingDay] = current;
-                    if (SecurityEntryMarketDay != null)
-                    {
-                        SecurityEntryMarketDay(sec, current);
-                    }
-                    logger.Info(string.Format("Security:{0} MarketDay Move From {1} To {2}", sec.Code, old, current));
-                }
+                //初始化品种MarketDay
+                InitSecMarketDay(sec);
             }
 
             //处理过期合约
@@ -187,7 +173,38 @@ namespace TradingLib.Common.DataFarm
             }
         }
 
+        /// <summary>
+        /// 初始化品种的MarketDay
+        /// 每个开盘前5分钟执行MarketDay初始化
+        /// 后续开盘作业根据MarketDay执行 分笔成交重置以及分时数据滚动等
+        /// </summary>
+        /// <param name="sec"></param>
+        void InitSecMarketDay(SecurityFamily sec)
+        {
+            try
+            {
+                Dictionary<int, MarketDay> mdMap = null;
+                //计算当前MarketDay
+                MarketDay current = CalcMarketDay(sec, 10, out mdMap);
+                MarketDay old = currentSecCodeMarketDayMap[sec.Code];
 
+                //计算获得的MarketDay与缓存中交易日不一致 则表明需要执行交易日切换
+                if (current.TradingDay != old.TradingDay)
+                {
+                    currentSecCodeMarketDayMap[sec.Code] = current;
+                    latestSecCodeMarketDaysMap[sec.Code][current.TradingDay] = current;
+                    if (SecurityEntryMarketDay != null)
+                    {
+                        SecurityEntryMarketDay(sec, current);
+                    }
+                    logger.Info(string.Format("Security:{0} MarketDay Move From {1} To {2}", sec.Code, old, current));
+                }
+            }
+            catch (Exception ex)
+            {
+                logger.Error("Init Sec MarketDay error:" + ex.ToString());
+            }
+        }
         /// <summary>
         /// 检查
         /// </summary>
@@ -243,7 +260,6 @@ namespace TradingLib.Common.DataFarm
             {
                 logger.Error("Expire Symbol:" + symbol.Symbol + " Error:" + ex.ToString());
             }
-            
         }
 
         /// <summary>
@@ -260,6 +276,7 @@ namespace TradingLib.Common.DataFarm
                 {
                     tradeCache = new TradeCache(symbol);
                     tradeCache.TradingDay = currentMarketDay.TradingDay;
+                    tradeCache.Restored = true;//连续运行 不需要执行数据恢复 Tick直接进入列表不进入TmpList
                     currentTradeMap[symbol.UniqueKey] = tradeCache;
                 }
                 if (tradeCache.TradingDay != currentMarketDay.TradingDay)
@@ -273,6 +290,11 @@ namespace TradingLib.Common.DataFarm
             }
         }
 
+        /// <summary>
+        /// 滚动某个合约的分时数据
+        /// </summary>
+        /// <param name="symbol"></param>
+        /// <param name="currentMarketDay"></param>
         void RollMinuteData(SymbolImpl symbol, MarketDay currentMarketDay)
         {
             try

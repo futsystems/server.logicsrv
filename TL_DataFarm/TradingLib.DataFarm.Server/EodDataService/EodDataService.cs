@@ -49,6 +49,7 @@ namespace TradingLib.Common.DataFarm
     {
 
         ILog logger = LogManager.GetLogger("EodDataService");
+
         /// <summary>
         /// 日线数据更新事件
         /// </summary>
@@ -67,15 +68,17 @@ namespace TradingLib.Common.DataFarm
 
         /// <summary>
         /// 某个品种进入某个交易日
-        /// 比如 早上开盘前品种判定交易日后进入交易日 此时需要执行Tick数据清空操作
+        /// 比如 早上开盘前品种判定交易日后进入交易日 此时需要执行Tick快照数据清空操作
         /// </summary>
         public event Action<SecurityFamily, MarketDay> SecurityEntryMarketDay;
 
 
         /// <summary>
         /// 合约到期后新合约生成
+        /// 用于触发事件后向行情源订阅新合约行情
         /// </summary>
         public event Action<Symbol,Symbol> SymbolExpiredEvent;
+
         /// <summary>
         /// 保存当前交易日日线数据
         /// </summary>
@@ -90,14 +93,8 @@ namespace TradingLib.Common.DataFarm
 
         
 
-        //分时数据Map
-        //Dictionary<string, MinuteDataCache> minutedataMap = new Dictionary<string, MinuteDataCache>();
-
         IHistDataStore _store = null;
         string _tickpath = string.Empty;
-        
-
-
         public EodDataService(IHistDataStore store,string tickpath)
         {
             _store = store;
@@ -370,7 +367,10 @@ namespace TradingLib.Common.DataFarm
         
         }
 
-
+        /// <summary>
+        /// 响应实时成交数据
+        /// </summary>
+        /// <param name="k"></param>
         public void OnTick(Tick k)
         {
             string key = k.GetSymbolUniqueKey();
