@@ -93,7 +93,7 @@ namespace TradingLib.Common.DataFarm
 
             foreach (var symbol in MDBasicTracker.SymbolTracker.Symbols)
             {
-                if (symbol.Symbol != "HSIX6") continue;
+                //if (symbol.Symbol != "HSIX6") continue;
                 restoreTaskMap.TryAdd(symbol.UniqueKey, new RestoreTask(symbol));
                 restoreFrequencyMgr.RegisterSymbol(symbol);
             }
