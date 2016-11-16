@@ -359,9 +359,9 @@ namespace TradingLib.Common.DataFarm
                     if (eod.EODBar.TradingDay != currentMarketDay.TradingDay)
                     {
                         CloseEodPartialBar(eod);
+                        logger.Info("Close EOD Bar:" + eod.EODBar.ToString());
                         //创建新的EODBar
                         eod.EODBar = CreateEod(symbol, currentMarketDay);
-                        //eod.EODBar.Open = 
                     }
                 }
             }
