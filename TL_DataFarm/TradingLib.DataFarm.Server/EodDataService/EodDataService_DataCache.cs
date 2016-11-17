@@ -349,21 +349,23 @@ namespace TradingLib.Common.DataFarm
                 if (!eodBarMap.TryGetValue(symbol.UniqueKey, out eod))
                 {
                     logger.Info("no eodbar struct");
-                    BarImpl bar = CreateEod(symbol, currentMarketDay);
-                    eod = new EodBarStruct(symbol, bar, 0);
+                    //BarImpl bar = CreateEod(symbol, currentMarketDay);
+                    eod = new EodBarStruct(symbol, null, 0);
                     eodBarMap.Add(symbol.UniqueKey, eod);
                     //如何获得新合约的昨日收盘价等信息
                 }
                 else
                 {
                     //表明上个交易日的Bar没有关闭 执行关闭
-                    if (eod.EODBar.TradingDay != currentMarketDay.TradingDay)
+                    if (eod.EODBar!= null && eod.EODBar.TradingDay != currentMarketDay.TradingDay)
                     {
                         logger.Info("close eod bar start");
                         CloseEodPartialBar(eod);
                         logger.Info("Close EOD Bar:" + eod.EODBar.ToString());
-                        //创建新的EODBar
-                        eod.EODBar = CreateEod(symbol, currentMarketDay);
+
+                        eod.EODBar = null;//重置当前EODBar 等待开盘后第一个成家触发生成Bar
+                        //创建新的EODBar //新的EODBar需要由第一个1分钟Bar进行驱动 如果没有对应的行情则不用生成EODBar
+                        //eod.EODBar = CreateEod(symbol, currentMarketDay);
                     }
                 }
             }
