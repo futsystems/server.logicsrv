@@ -34,7 +34,7 @@ namespace TradingLib.Common.DataFarm
                 if (_sendgo) return;
                 _sendgo = true;
                 _sendthread = new Thread(ProcessSend);
-                _datathread.IsBackground = false;
+                _sendthread.IsBackground = false;
                 _sendthread.Start();
             }
 
