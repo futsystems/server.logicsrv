@@ -26,6 +26,7 @@ namespace TradingLib.Common.DataFarm
         int _pricevolbatchsize = 100;
         int _minutedatabatchsize = 500;
         int _connectionDeadPeriod = 15;
+        bool _syncdb = false;//是否更新数据到数据库 行情服务器组只维护一个历史行情数据库 其余行情服务器只从该数据库加载数据
         public DataServerBase(string name)
         {
             _name = name;
@@ -74,6 +75,13 @@ namespace TradingLib.Common.DataFarm
             }
 
             _connectionDeadPeriod = _cfgdb["ConnectionDeadPeriod"].AsInt();
+
+            if (!_cfgdb.HaveConfig("SyncDB"))
+            {
+                _cfgdb.UpdateConfig("SyncDB", QSEnumCfgType.Bool, true, "是否同步更新数据库");
+            }
+
+            _syncdb = _cfgdb["SyncDB"].AsBool();
 
         }
         /// <summary>

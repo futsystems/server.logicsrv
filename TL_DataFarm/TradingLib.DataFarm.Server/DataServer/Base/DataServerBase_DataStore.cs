@@ -49,53 +49,7 @@ namespace TradingLib.Common.DataFarm
         public EnumDBOperationType OperationType { get; set; }
     }
 
-    //internal class BarStoreStruct
-    //{
-    //    public BarStoreStruct(Symbol symbol, BarImpl bar)
-    //    {
-    //        this.Symbol = symbol;
-    //        this.Bar = bar;
-    //    }
-
-    //    public Symbol Symbol { get; set; }
-
-    //    public BarImpl Bar { get; set; }
-    //}
-
-    //internal class BarUploadStruct
-    //{
-    //    public BarUploadStruct(string key, IEnumerable<BarImpl> bars)
-    //    {
-    //        this.Key = key;
-    //        this.Bars = bars;
-    //    }
-
-    //    public string Key { get; set; }
-
-    //    public IEnumerable<BarImpl> Bars { get; set; }
-    //}
-
-
-
-    //internal class BarDeleteStruct
-    //{
-
-    //    public BarDeleteStruct(Symbol symbol, BarInterval intervaltype, int interval, int[] ids)
-    //    {
-    //        this.Symbol = symbol;
-    //        this.IntervalType = intervaltype;
-    //        this.Interval = interval;
-    //        this.IDs = ids;
-    //    }
-
-    //    public Symbol Symbol { get; set; }
-
-    //    public BarInterval IntervalType { get; set; }
-
-    //    public int Interval { get; set;}
-
-    //    public int[] IDs { get; set; }
-    //}
+    
     public partial class DataServerBase
     {
 
@@ -104,11 +58,18 @@ namespace TradingLib.Common.DataFarm
         /// </summary>
         protected void StartDataStoreService()
         {
-            if (_saverunning) return;
-            _saverunning = true;
-            _datathread = new Thread(ProcessBuffer);
-            _datathread.IsBackground = false;
-            _datathread.Start();
+            if (_syncdb)
+            {
+                if (_saverunning) return;
+                _saverunning = true;
+                _datathread = new Thread(ProcessBuffer);
+                _datathread.IsBackground = false;
+                _datathread.Start();
+            }
+            else
+            {
+                logger.Info("Do not Sync DataBase, no need to start store service");
+            }
         }
 
         /// <summary>
@@ -122,20 +83,10 @@ namespace TradingLib.Common.DataFarm
         }
 
         #region 保存行情与Bar数据
-        RingBuffer<Tick> tickbuffer = new RingBuffer<Tick>(10000);
-
         RingBuffer<BarDBOperation> dbopbuffer = new RingBuffer<BarDBOperation>(200000);//数据库操作缓存
 
         bool _saverunning = false;
         Thread _datathread = null;
-        //List<Tick> tmpticklist = new List<Tick>();
-        //List<Bar> tmpbarlist = new List<Bar>();
-
-        //Dictionary<string, List<Tick>> tmpSymbolTicks = new Dictionary<string, List<Tick>>();
-        //Dictionary<string, Dictionary<BarFrequency, List<Bar>>> tmpSymbolBars = new Dictionary<string, Dictionary<BarFrequency, List<Bar>>>();
-
-
-        bool _batchSave = true;
 
         const int SLEEPDEFAULTMS = 10000;
         static ManualResetEvent _logwaiting = new ManualResetEvent(false);
@@ -231,14 +182,6 @@ namespace TradingLib.Common.DataFarm
             {
                 try
                 {
-
-                    //实时插入Tick数据
-                    while (tickbuffer.hasItems)
-                    {
-                        Tick k = tickbuffer.Read();
-                            
-                    }
-
                     while (dbopbuffer.hasItems)
                     {
                         BarDBOperation op = dbopbuffer.Read();
@@ -279,18 +222,9 @@ namespace TradingLib.Common.DataFarm
             }
         }
 
-        /// <summary>
-        /// 储存行情
-        /// </summary>
-        /// <param name="k"></param>
-        public void SaveTick(Tick k)
-        {
-            tickbuffer.Write(k);
-            NewData();
-        }
 
         /// <summary>
-        /// 保存Bar数据
+        /// 更新Bar数据
         /// </summary>
         /// <param name="bar"></param>
         public void UpdateBar2(Symbol symbol,BarImpl bar)
@@ -300,28 +234,9 @@ namespace TradingLib.Common.DataFarm
 
             GetHistDataSotre().UpdateBar(symbol, bar, out dest, out isInsert);
 
-            if ((dest.IntervalType == BarInterval.CustomTime && dest.Interval == 60) || (dest.IntervalType == BarInterval.Day && dest.Interval == 1))
+            //只处理1分钟与日级别Bar数据
+            if (_syncdb)
             {
-                if (isInsert)
-                {
-                    dbopbuffer.Write(new BarDBOperation(dest, EnumDBOperationType.Insert));
-                }
-                else
-                {
-                    dbopbuffer.Write(new BarDBOperation(dest, EnumDBOperationType.Update));
-                }
-            }
-            NewData();
-        }
-
-        public void UploadBars(string key, IEnumerable<BarImpl> bars)
-        {
-            foreach (var bar in bars)
-            {
-                bool isInsert = false;
-                BarImpl dest = null;
-
-                GetHistDataSotre().UpdateBar(key, bar, out dest, out isInsert);
                 if ((dest.IntervalType == BarInterval.CustomTime && dest.Interval == 60) || (dest.IntervalType == BarInterval.Day && dest.Interval == 1))
                 {
                     if (isInsert)
@@ -337,11 +252,40 @@ namespace TradingLib.Common.DataFarm
             }
         }
 
+        /// <summary>
+        /// 更新一组Bar数据
+        /// </summary>
+        /// <param name="key"></param>
+        /// <param name="bars"></param>
+        public void UploadBars(string key, IEnumerable<BarImpl> bars)
+        {
+            foreach (var bar in bars)
+            {
+                bool isInsert = false;
+                BarImpl dest = null;
+
+                GetHistDataSotre().UpdateBar(key, bar, out dest, out isInsert);
+                if (_syncdb)
+                {
+                    if ((dest.IntervalType == BarInterval.CustomTime && dest.Interval == 60) || (dest.IntervalType == BarInterval.Day && dest.Interval == 1))
+                    {
+                        if (isInsert)
+                        {
+                            dbopbuffer.Write(new BarDBOperation(dest, EnumDBOperationType.Insert));
+                        }
+                        else
+                        {
+                            dbopbuffer.Write(new BarDBOperation(dest, EnumDBOperationType.Update));
+                        }
+                    }
+                    NewData();
+                }
+            }
+        }
+
         public void DeleteBar(Symbol symbol, BarInterval intervalType, int interval, int[] ids)
         {
             GetHistDataSotre().DeleteBar(symbol, intervalType, interval, ids);
-
-            //deleteBarBuffer.Write(new BarDeleteStruct(symbol, intervalType, interval, ids));
             NewData();
         }
 
@@ -364,16 +308,7 @@ namespace TradingLib.Common.DataFarm
         {
             GetHistDataSotre().UpdateFirstRealBar(symbol,partialbar);
         }
-        /// <summary>
-        /// 更新Bar数据
-        /// 从历史Tick数据恢复的Bar需要调用UpdateBar接口
-        /// </summary>
-        /// <param name="bar"></param>
-        //public void UpdateBar(Symbol symbol, BarImpl bar)
-        //{
-        //    barupdatebuffre.Write(new BarStoreStruct(symbol, bar));
-        //    NewData();
-        //}
+       
         #endregion
     }
 }

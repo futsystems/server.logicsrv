@@ -18,7 +18,7 @@ namespace TradingLib.Common.DataFarm
         {
             string path = this.ConfigFile["TickPath"].AsString();
             logger.Info("[Init EOD Service]");
-            eodservice = new EodDataService(GetHistDataSotre(), path);
+            eodservice = new EodDataService(GetHistDataSotre(), path,_syncdb);
             eodservice.EodBarResotred += new Action<Symbol, IEnumerable<BarImpl>>(eodservice_EodBarResotred);
             eodservice.EodBarClose += new Action<EodBarEventArgs>(eodservice_EodBarClose);
             eodservice.EodBarUpdate += new Action<EodBarEventArgs>(eodservice_EodBarUpdate);

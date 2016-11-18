@@ -41,6 +41,12 @@ namespace TradingLib.Common.DataFarm
         [DataCommandAttr("UpdateBar", "UpdateBar -  update bar data", "更新某个bar的相关数据",QSEnumArgParseType.Json)]
         public void CTE_UpdateBar(IServiceHost host, IConnection conn,string args)
         {
+            if (!_syncdb)
+            {
+                logger.Warn("Update Bar Not Supported");
+                return;
+            }
+
             logger.Info("UpdateBar data:" + args);
             BarImpl bar = TradingLib.Mixins.Json.JsonMapper.ToObject<BarImpl>(args);
             if (bar != null)
@@ -56,6 +62,13 @@ namespace TradingLib.Common.DataFarm
         [DataCommandAttr("DeleteBar", "DeleteBar -  delete bar data", "删除某个Bar数据", QSEnumArgParseType.Json)]
         public void CTE_Delete(IServiceHost host, IConnection conn, string args)
         {
+            if (!_syncdb)
+            {
+                logger.Warn("DeleteBar Not Supported");
+                return;
+            }
+
+
             logger.Info("Delete data:" + args);
 
             var data = TradingLib.Mixins.Json.JsonMapper.ToObject(args);
@@ -148,7 +161,14 @@ namespace TradingLib.Common.DataFarm
         /// <param name="request"></param>
         void SrvOnMGRUpdateSymbol(IServiceHost host, IConnection conn, MGRUpdateSymbolRequest request)
         {
-            logger.Info(string.Format("Conn:{0} 请求查询合约:{1}", conn.SessionID, request.ToString()));
+            if (!_syncdb)
+            {
+                logger.Warn("UpdateSymbol Not Supported");
+                return;
+            }
+
+
+            logger.Info(string.Format("Conn:{0} 请求更新合约:{1}", conn.SessionID, request.ToString()));
 
             SymbolImpl symbol = request.Symbol;
             symbol.Domain_ID = 1;
@@ -178,7 +198,7 @@ namespace TradingLib.Common.DataFarm
 
 
             //调用该域更新该合约
-            MDBasicTracker.SymbolTracker.UpdateSymbol(symbol);
+            MDBasicTracker.SymbolTracker.UpdateSymbol(symbol,true);
 
             RspMGRUpdateSymbolResponse response = ResponseTemplate<RspMGRUpdateSymbolResponse>.SrvSendRspResponse(request);
             SymbolImpl localsymbol = MDBasicTracker.SymbolTracker[symbol.ID];
@@ -195,6 +215,13 @@ namespace TradingLib.Common.DataFarm
         /// <param name="request"></param>
         void SrvOnMGRUpdateSecurity(IServiceHost host, IConnection conn, MGRUpdateSecurityRequest request)
         {
+            if (!_syncdb)
+            {
+                logger.Warn("UpdateSecurity Not Supported");
+                return;
+            }
+
+
             logger.Info(string.Format("Conn:{0} 请求更新品种:{1}",conn.SessionID, request.ToString()));
 
             SecurityFamilyImpl sec = request.SecurityFaimly;
@@ -224,6 +251,13 @@ namespace TradingLib.Common.DataFarm
         /// <param name="request"></param>
         void SrvOnMGRUpdateExchange(IServiceHost host, IConnection conn, MGRUpdateExchangeRequest request)
         {
+            if (!_syncdb)
+            {
+                logger.Warn("Update Exchange Not Supported");
+                return;
+            }
+
+
             logger.Info(string.Format("Conn:{0} 请求更新交易所信息:{1}", conn.SessionID, request.ToString()));
 
             if (request.Exchange != null)
@@ -245,6 +279,12 @@ namespace TradingLib.Common.DataFarm
         /// <param name="manager"></param>
         void SrvOnMGRUpdateMarketTime(IServiceHost host, IConnection conn, MGRUpdateMarketTimeRequest request)
         {
+            if (!_syncdb)
+            {
+                logger.Warn("Update MarketTime Not Supported");
+                return;
+            }
+
             logger.Info(string.Format("Conn:{0} 请求更新交易时间段:{1}", conn.SessionID, request.ToString()));
             if (request.MarketTime != null)
             {
@@ -266,6 +306,13 @@ namespace TradingLib.Common.DataFarm
         /// <param name="request"></param>
         void SrvOnMGRUploadBarData(IServiceHost host, IConnection conn, UploadBarDataRequest request)
         {
+            if (!_syncdb)
+            {
+                logger.Warn("Upload Bar Not Supported");
+                return;
+            }
+
+
             logger.Info(string.Format("Conn:{0} Upload  {1} Bars", conn.SessionID,request.Header.BarCount));
 
             string key = string.Format("{0}-{1}-{2}-{3}", request.Header.Exchange, request.Header.Symbol, request.Header.IntervalType, request.Header.Interval);

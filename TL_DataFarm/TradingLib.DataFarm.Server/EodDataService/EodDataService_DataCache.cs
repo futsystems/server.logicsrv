@@ -241,9 +241,9 @@ namespace TradingLib.Common.DataFarm
                 nextSymbol.Month = symbol.Month;//换月 月份一致
 
                 symbol.Tradeable = false;
-                MDBasicTracker.SymbolTracker.UpdateSymbol(symbol);
+                MDBasicTracker.SymbolTracker.UpdateSymbol(symbol,_syncDB);
                 //调用该域更新该合约
-                MDBasicTracker.SymbolTracker.UpdateSymbol(nextSymbol);
+                MDBasicTracker.SymbolTracker.UpdateSymbol(nextSymbol, _syncDB);
                 if (SymbolExpiredEvent != null)
                 {
                     try

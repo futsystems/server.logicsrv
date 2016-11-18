@@ -263,7 +263,7 @@ namespace TradingLib.Common.DataFarm
             }
         }
 
-        public void UpdateSymbol(SymbolImpl sym, bool updateall = true)
+        public void UpdateSymbol(SymbolImpl sym, bool syncdb)
         {
             SymbolImpl target = null;
             if (symcodemap.TryGetValue(sym.UniqueKey, out target))//已经存在该合约
@@ -271,8 +271,10 @@ namespace TradingLib.Common.DataFarm
                 target.ExpireDate = sym.ExpireDate;
                 target.Tradeable = sym.Tradeable;
                 target.Name = sym.Name;
-
-                ORM.MBasicInfo.UpdateSymbol(target);
+                if (syncdb)
+                {
+                    ORM.MBasicInfo.UpdateSymbol(target);
+                }
 
             }
             else//不存在该合约
@@ -305,8 +307,10 @@ namespace TradingLib.Common.DataFarm
                 {
                     Util.Debug("合约对象没有品种数据,不插入该合约信息");
                 }
-
-                ORM.MBasicInfo.InsertSymbol(target);
+                if (syncdb)
+                {
+                    ORM.MBasicInfo.InsertSymbol(target);
+                }
 
                 symcodemap[target.UniqueKey] = target;
                 idxcodemap[target.ID] = target;

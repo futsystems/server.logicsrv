@@ -101,7 +101,8 @@ namespace TradingLib.Common.DataFarm
 
         IHistDataStore _store = null;
         string _tickpath = string.Empty;
-        public EodDataService(IHistDataStore store,string tickpath)
+        bool _syncDB = false;
+        public EodDataService(IHistDataStore store,string tickpath,bool syncdb)
         {
             _store = store;
             if (_store == null)
@@ -109,6 +110,9 @@ namespace TradingLib.Common.DataFarm
                 throw new Exception("EOD Data Serivce need HistDataStore");
             }
             _tickpath = tickpath;
+
+            //是否执行同步数据库操作
+            _syncDB = syncdb;
 
             //初始化MarketDay
             InitMarketDay();
