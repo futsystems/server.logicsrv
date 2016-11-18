@@ -176,12 +176,14 @@ namespace TradingLib.Common.DataFarm
         /// <param name="k"></param>
         void asyncTick_GotTick(Tick k)
         {
+            //时间Tick直接返回
+            if (k.UpdateType == "T") return;
+
             if (string.IsNullOrEmpty(k.Exchange) || string.IsNullOrEmpty(k.Symbol))
             {
                 logger.Warn("Error Tick:" + TickImpl.Serialize2(k));
             }
-            //时间Tick直接返回
-            if (k.UpdateType == "T") return;
+            
 
             _lastMinTiks++;
 
