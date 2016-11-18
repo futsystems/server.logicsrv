@@ -39,6 +39,8 @@ namespace TradingLib.Common.DataFarm
             DBHelper.InitDBConfig(ConfigFile["DBAddress"].AsString(), ConfigFile["DBPort"].AsInt(), ConfigFile["DBName"].AsString(), ConfigFile["DBUser"].AsString(), ConfigFile["DBPass"].AsString());
 
 
+            _syncdb = ConfigFile["SyncDB"].AsBool();
+
             _cfgdb = new ConfigDB("DataFarm");
 
             if (!_cfgdb.HaveConfig("TradeBatchSendSize"))
@@ -76,12 +78,12 @@ namespace TradingLib.Common.DataFarm
 
             _connectionDeadPeriod = _cfgdb["ConnectionDeadPeriod"].AsInt();
 
-            if (!_cfgdb.HaveConfig("SyncDB"))
-            {
-                _cfgdb.UpdateConfig("SyncDB", QSEnumCfgType.Bool, true, "是否同步更新数据库");
-            }
+            //if (!_cfgdb.HaveConfig("SyncDB"))
+            //{
+            //    _cfgdb.UpdateConfig("SyncDB", QSEnumCfgType.Bool, true, "是否同步更新数据库");
+            //}
 
-            _syncdb = _cfgdb["SyncDB"].AsBool();
+            //_syncdb = _cfgdb["SyncDB"].AsBool();
 
         }
         /// <summary>
