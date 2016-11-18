@@ -180,6 +180,9 @@ namespace TradingLib.Common.DataFarm
             {
                 logger.Warn("Error Tick:" + TickImpl.Serialize2(k));
             }
+            //时间Tick直接返回
+            if (k.UpdateType == "T") return;
+
             _lastMinTiks++;
 
             tickRepository.NewTick(k);
