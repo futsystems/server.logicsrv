@@ -194,13 +194,13 @@ namespace TradingLib.Common
                         //如果心跳当前状态正常,则请求一个心跳 请求后心跳状态处于非正常状态 不会再重复发送请求
                         if (IsHeartbeatOk)
                         {
-                            //logger.Info("heartbeat request at: " + DateTime.Now.ToString()+" _heartbeatdeadat:"+_heartbeatdeadat.ToString() + " _diff:"+diff.ToString());
+                            //logger.Info("heartbeat request at: " + DateTime.Now.ToString() + " _heartbeatdeadat:" + _hbDeadTimeSpan.ToString() + " _diff:" + diff.ToString());
                             //当得到响应请求后,_recvheartbeat = !_recvheartbeat; 因此在发送了一个hearbeatrequest后 在没有得到服务器反馈前不会再次重新发送
                             RequestHeartBeat();
                         }
                         else if (diff > _hbDeadTimeSpan)//心跳间隔超时后,我们请求服务端的心跳回报,如果服务端的心跳响应超过心跳死亡时间,则我们尝试 重新建立连接
                         {
-                            //logger.Info("xxxxxxxxxxxxxxx diff:" + diff.ToString() + " dead:" + _heartbeatdeadat.ToString());
+                            //logger.Info("xxxxxxxxxxxxxxx diff:" + diff.ToString() + " dead:" + _hbDeadTimeSpan.ToString());
                             StartReconnect();
                         }
                     }
@@ -375,14 +375,28 @@ namespace TradingLib.Common
                 UnRegister();
                 //断开底层Sockt连接
                 _tlsocket.Disconnect();
+
+                //分步骤进行 isconntected 执行unregister并disconnect 如果已经关闭则直接接触事件绑定 并置空
+                ////解除事件绑定
+                //_tlsocket.MessageEvent -= new Action<Message>(handle);
+                //_tlsocket = null;
+
+                
+                //_connect = false;
+                //if (OnDisconnectEvent != null)
+                //    OnDisconnectEvent();
+            }
+
+            if (_tlsocket != null)
+            {
                 //解除事件绑定
                 _tlsocket.MessageEvent -= new Action<Message>(handle);
                 _tlsocket = null;
-
-                _connect = false;
-                if (OnDisconnectEvent != null)
-                    OnDisconnectEvent();
             }
+            //标志连接标识并触发连接断开标志
+            _connect = false;
+            if (OnDisconnectEvent != null)
+                OnDisconnectEvent();
         }
 
 
@@ -609,6 +623,7 @@ namespace TradingLib.Common
             _requestheartbeat = !_recvheartbeat;
             //发送请求心跳响应
             HeartBeatRequest hbr = RequestTemplate<HeartBeatRequest>.CliSendRequest(requestid++);
+            //logger.Info("request heartbeat");
             TLSend(hbr);
         }
 
@@ -685,6 +700,7 @@ namespace TradingLib.Common
         /// <param name="response"></param>
         void CliOnHeartbeatResponse(HeartBeatResponse response)
         {
+            //logger.Info("on heartbeat Response");
             _recvheartbeat = !_recvheartbeat;
         }
 
