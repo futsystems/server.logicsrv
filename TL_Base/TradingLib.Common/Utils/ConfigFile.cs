@@ -68,6 +68,7 @@ namespace TradingLib.Common
 			//{
 			//    Directory.CreateDirectory(_path);
 			//}
+
             bool hasCfgFile = File.Exists(_fileName);
             if (hasCfgFile == false)
             {
@@ -110,6 +111,16 @@ namespace TradingLib.Common
             {
                 this.Set(key, value.Value);
             }
+        }
+
+        /// <summary>
+        /// 是否包含参数相
+        /// </summary>
+        /// <param name="key"></param>
+        /// <returns></returns>
+        public bool ContainsKey(string key)
+        {
+            return configData.ContainsKey(key);
         }
 
         public CfgValue Get(string key)
