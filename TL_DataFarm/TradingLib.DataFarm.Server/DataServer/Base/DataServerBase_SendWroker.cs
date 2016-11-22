@@ -70,40 +70,47 @@ namespace TradingLib.Common.DataFarm
             }
             void ProcessSend()
             {
-                SendStruct st = null; 
+                SendStruct st = null;
                 while (_sendgo)
                 {
-                    while (sendbuffer.hasItems)
+                    try
                     {
-                        try
+                        while (sendbuffer.hasItems)
                         {
-                            st = sendbuffer.Read();
-
-                            if (IsConnectionRegisted(st.Connection.SessionID))
+                            try
                             {
-                                st.Connection.Send(st.Packet);
+                                st = sendbuffer.Read();
+
+                                if (IsConnectionRegisted(st.Connection.SessionID))
+                                {
+                                    st.Connection.Send(st.Packet);
+                                }
+                            }
+                            catch (Exception ex)
+                            {
+
+                                logger.Error(string.Format("Conn:{0} Send Data:{1} Error:{2}", st.Connection.SessionID, st.Packet.ToString(), ex.ToString()));
+
+                                logger.Error(string.Format("RequestID:{0} BufferSize:{1}", getRequestId(st.Packet), sendbuffer.BufferSize));
+
+                                //数据发送异常后 关闭该Socket
+                                if (st != null && st.Connection != null)
+                                {
+                                    CloseConnection(st.Connection);
+                                }
                             }
                         }
-                        catch (Exception ex)
-                        {
+                        // clear current flag signal
+                        _sendwaiting.Reset();
+                        //logger.Info("process send");
+                        // wait for a new signal to continue reading
+                        _sendwaiting.WaitOne(SLEEPDEFAULTMS);
 
-                            logger.Error(string.Format("Conn:{0} Send Data:{1} Error:{2}", st.Connection.SessionID, st.Packet.ToString(), ex.ToString()));
-
-                            logger.Error(string.Format("RequestID:{0} BufferSize:{1}", getRequestId(st.Packet), sendbuffer.BufferSize));
-
-                            //数据发送异常后 关闭该Socket
-                            if (st!= null && st.Connection != null)
-                            {
-                                CloseConnection(st.Connection);
-                            }
-                        }
                     }
-                    // clear current flag signal
-                    _sendwaiting.Reset();
-                    //logger.Info("process send");
-                    // wait for a new signal to continue reading
-                    _sendwaiting.WaitOne(SLEEPDEFAULTMS);
-
+                }
+                catch (Exception ex)
+                {
+                    logger.Error("process error:"+ex.ToString())
                 }
             }
         }
