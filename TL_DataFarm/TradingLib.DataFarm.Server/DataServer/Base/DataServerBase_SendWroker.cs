@@ -80,7 +80,11 @@ namespace TradingLib.Common.DataFarm
                             try
                             {
                                 st = sendbuffer.Read();
-
+                                if (st == null)
+                                {
+                                    logger.Error("Send Buffer Got Null Struct");
+                                    continue;
+                                }
                                 if (IsConnectionRegisted(st.Connection.SessionID))
                                 {
                                     st.Connection.Send(st.Packet);
