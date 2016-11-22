@@ -53,6 +53,9 @@ namespace Broker.SIM
 
             }
         }
+
+        bool _shfeTradeExuction = false;
+
         /// <summary>
         /// 模拟交易服务,这里基本实现了委托,取消以及通过行情来成交委托的功能，但是单个tick能否成交多个委托的问题这里没有考虑
         /// 同时这里加入了委托 平仓检查,对于超买 超卖 会给出平今仓位不足的提示。
@@ -74,6 +77,13 @@ namespace Broker.SIM
                 _cfgdb.UpdateConfig("STICKLIMITPRICE", QSEnumCfgType.Bool, false, "按委托限价成交");
             }
             _stickprice = _cfgdb["STICKLIMITPRICE"].AsBool();
+
+            if (!_cfgdb.HaveConfig("SHFETradeExecution"))
+            {
+                _cfgdb.UpdateConfig("SHFETradeExecution", QSEnumCfgType.Bool,false, "中金所最新价撮合");
+            }
+ 	        _shfeTradeExuction = _cfgdb["SHFETradeExecution"].AsBool();
+
 
         }
 
@@ -355,6 +365,8 @@ namespace Broker.SIM
         //            }
         //    }
         //}
+
+        Dictionary<long, Order> firstPendingOrder = new Dictionary<long, TradingLib.API.Order>();//第一次扫描没有成交的委托 则用最新价进行成交
         #region 市场快照扫描成交
         //市场端面扫描模拟成交
         /*
@@ -470,7 +482,27 @@ namespace Broker.SIM
                         }
                         else
                         {
-                            filled = o.Fill(tick, _useBikAsk, false);
+                            if (_shfeTradeExuction && o.oSymbol.SecurityFamily.Exchange.EXCode == "SHFE")
+                            {
+                                //已经记录了该委托表明 在接受委托时 已经执行过一次成交扫描 且没有成交 表明 买单 挂单价 小于 卖一
+                                if (firstPendingOrder.Keys.Contains(o.id))
+                                {
+                                   filled = o.Fill(tick, false, false);//使用最新价成交
+                                }
+                                else
+                                {
+ 	                                //1.以对方盘口价格进行成交
+                                    filled = o.Fill(tick, _useBikAsk, false);
+ 	                                if (!filled)
+                                    {
+                                        firstPendingOrder.Add(o.id, o);
+                                    }
+ 	                            }
+                            }
+                            else
+                            {
+                                filled = o.Fill(tick, _useBikAsk, false);
+                            }
                         }
 
                         //2.限价单如果没有成交我们按累计的盘口检查是否可以用最新价进行成交

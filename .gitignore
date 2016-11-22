@@ -26,6 +26,7 @@
 /Platform/**/Logs/
 /Platform/TLDataBase
 /Platform/TLData
+/Platform/DataCore/TickData/**
 /Platform/FutsMoniter/logs
 /publish
 /package
