@@ -80,9 +80,10 @@ namespace TradingLib.Common.DataFarm
                             try
                             {
                                 st = sendbuffer.Read();
+                                //在某个特定情况下 会出现 待发送数据结构为null的情况 多个线程对sendbuffer的访问 形成竞争
                                 if (st == null)
                                 {
-                                    logger.Error("Send Buffer Got Null Struct");
+                                    logger.Error("XXXX Send Buffer Got Null Struct");
                                     continue;
                                 }
                                 if (IsConnectionRegisted(st.Connection.SessionID))
@@ -95,7 +96,7 @@ namespace TradingLib.Common.DataFarm
 
                                 logger.Error(string.Format("Conn:{0} Send Data:{1} Error:{2}", st.Connection.SessionID, st.Packet.ToString(), ex.ToString()));
 
-                                logger.Error(string.Format("RequestID:{0} BufferSize:{1}", getRequestId(st.Packet), sendbuffer.BufferSize));
+                                logger.Error(string.Format("RequestID:{0} BufferSize:{1}", getRequestId(st.Packet), sendbuffer.Count));
 
                                 //数据发送异常后 关闭该Socket
                                 if (st != null && st.Connection != null)
@@ -113,7 +114,7 @@ namespace TradingLib.Common.DataFarm
                     }
                     catch (Exception ex)
                     {
-                        logger.Error("process error:" + ex.ToString());
+                        logger.Error("SendWorker Process  error:" + ex.ToString());
                     }
                 }
                 
