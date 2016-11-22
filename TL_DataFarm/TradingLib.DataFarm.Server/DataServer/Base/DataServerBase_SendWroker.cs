@@ -107,11 +107,12 @@ namespace TradingLib.Common.DataFarm
                         _sendwaiting.WaitOne(SLEEPDEFAULTMS);
 
                     }
+                    catch (Exception ex)
+                    {
+                        logger.Error("process error:" + ex.ToString());
+                    }
                 }
-                catch (Exception ex)
-                {
-                    logger.Error("process error:"+ex.ToString())
-                }
+                
             }
         }
     
