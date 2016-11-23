@@ -68,8 +68,8 @@ namespace TradingLib.Common
             this.Interval = 30;
             this.MaxCount = 800;
             this.StartIndex = 0;
-            this.StartTime = DateTime.MinValue;
-            this.EndTime = DateTime.MaxValue;
+            this.Start = DateTime.MinValue.ToTLDateTime();
+            this.End = DateTime.MaxValue.ToTLDateTime();
             this.FromEnd = true;
             this.BarResponseType = EnumBarResponseType.PLAINTEXT;
             this.HavePartial = true;
@@ -98,12 +98,12 @@ namespace TradingLib.Common
         /// <summary>
         /// 开始时间 时间区间
         /// </summary>
-        public DateTime StartTime { get; set; }
+        public long Start { get; set; }
 
         /// <summary>
         /// 结束时间
         /// </summary>
-        public DateTime EndTime { get; set; }
+        public long End { get; set; }
 
         /// <summary>
         /// 最大返回Bar个数
@@ -144,9 +144,9 @@ namespace TradingLib.Common
             sb.Append(d);
             sb.Append(this.Interval);
             sb.Append(d);
-            sb.Append(this.StartTime);
+            sb.Append(this.Start);
             sb.Append(d);
-            sb.Append(this.EndTime);
+            sb.Append(this.End);
             sb.Append(d);
             sb.Append(this.StartIndex);
             sb.Append(d);
@@ -167,8 +167,8 @@ namespace TradingLib.Common
             this.Symbol = rec[1];
             this.IntervalType = (BarInterval)int.Parse(rec[2]);
             this.Interval = int.Parse(rec[3]);
-            this.StartTime = DateTime.Parse(rec[4]);
-            this.EndTime = DateTime.Parse(rec[5]);
+            this.Start = long.Parse(rec[4]);
+            this.End = long.Parse(rec[5]);
             this.StartIndex = int.Parse(rec[6]);
             this.MaxCount = int.Parse(rec[7]);
             this.FromEnd = bool.Parse(rec[8]);

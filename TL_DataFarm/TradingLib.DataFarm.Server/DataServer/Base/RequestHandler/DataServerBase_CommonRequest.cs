@@ -114,7 +114,7 @@ namespace TradingLib.Common.DataFarm
                 }
 
                 //pf.EnterSection("QRY  BAR");
-                List<BarImpl> bars = store.QryBar(symbol, request.IntervalType, request.Interval, request.StartTime, request.EndTime,request.StartIndex,request.MaxCount, request.FromEnd,request.HavePartial);
+                List<BarImpl> bars = store.QryBar(symbol, request.IntervalType, request.Interval, request.Start.ToDateTimeEx(DateTime.MinValue), request.End.ToDateTimeEx(DateTime.MaxValue),request.StartIndex,request.MaxCount, request.FromEnd,request.HavePartial);
                 //pf.LeaveSection();
 
                 //pf.EnterSection("SEND BAR");
@@ -293,7 +293,7 @@ namespace TradingLib.Common.DataFarm
                 tradingday = md.TradingDay;
             }
 
-            List<MinuteData> mdlist = eodservice.QryMinuteData(symbol, tradingday,request.Start);////GetHistDataSotre().QryMinuteData(symbol, tradingday);
+            List<MinuteData> mdlist = eodservice.QryMinuteData(symbol, tradingday,request.Start.ToDateTimeEx(DateTime.MinValue));////GetHistDataSotre().QryMinuteData(symbol, tradingday);
 
             int j = 0;
             RspXQryMinuteDataResponse response = RspXQryMinuteDataResponse.CreateResponse(request);

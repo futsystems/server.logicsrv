@@ -91,8 +91,8 @@ namespace TradingLib.Common.DataFarm
             brequest.Symbol = request.Symbol;
             brequest.MaxCount = -1;// request.MaxCount;
             brequest.Interval = request.Interval;
-            brequest.StartTime = DateTime.MinValue;
-            brequest.EndTime = DateTime.MaxValue;
+            brequest.Start = DateTime.MinValue.ToTLDateTime();
+            brequest.End = DateTime.MaxValue.ToTLDateTime();
 
             zmqclient.TLSend(brequest);
             return brequest.RequestID;

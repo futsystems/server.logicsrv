@@ -16,7 +16,7 @@ namespace TradingLib.Common
             this.Exchange = string.Empty;
             this.Symbol = string.Empty;
             this.Tradingday = 0;
-            this.Start = DateTime.MinValue;
+            this.Start = DateTime.MinValue.ToTLDateTime();
         }
 
         /// <summary>
@@ -37,7 +37,7 @@ namespace TradingLib.Common
         /// <summary>
         /// 开始时间
         /// </summary>
-        public DateTime Start { get; set; }
+        public long Start { get; set; }
 
         public override string ContentSerialize()
         {
@@ -59,7 +59,7 @@ namespace TradingLib.Common
             this.Exchange = rec[0];
             this.Symbol = rec[1];
             this.Tradingday = int.Parse(rec[2]);
-            this.Start = DateTime.Parse(rec[3]);
+            this.Start = long.Parse(rec[3]);
         }
 
 

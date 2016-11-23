@@ -175,6 +175,7 @@
     <Compile Include="Trading\Data\Bar2\QList.cs" />
     <Compile Include="Utils\Util_DayOfWeek.cs" />
     <Compile Include="Utils\Util_Decimal.cs" />
+    <Compile Include="Utils\Util_long.cs" />
     <Compile Include="Utils\Util_string.cs" />
     <Compile Include="Utils\Version.cs" />
     <Compile Include="Tracker\HighLowTracker.cs" />
