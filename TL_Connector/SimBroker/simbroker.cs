@@ -482,7 +482,7 @@ namespace Broker.SIM
                         }
                         else
                         {
-                            if (_cffexTradeExuction && o.oSymbol.SecurityFamily.Exchange.EXCode == "CFFEX")
+                            if (_cffexTradeExuction && o.oSymbol.SecurityFamily.Exchange.EXCode == "CFFEX" && tick.Time>= o.Time)
                             {
                                 //已经记录了该委托表明 在接受委托时 已经执行过一次成交扫描 且没有成交 表明 买单 挂单价 小于 卖一
                                 if (firstPendingOrder.Keys.Contains(o.id))
