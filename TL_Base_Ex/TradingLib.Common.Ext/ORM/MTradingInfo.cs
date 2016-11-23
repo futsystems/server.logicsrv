@@ -279,8 +279,8 @@ namespace TradingLib.ORM
                 List<Order> orders2 = db.Connection.Query<OrderImpl>(query2).ToList<Order>();
 
                 //合并委托记录
-                orders.Union(orders2, new OrderCompare());
-                return orders;
+                return orders.Union(orders2, new OrderCompare());
+                //return orders;
             }
         }
 
@@ -303,8 +303,8 @@ namespace TradingLib.ORM
                 List<Order> orders2 = db.Connection.Query<OrderImpl>(query2).ToList<Order>();
 
                 //合并委托记录
-                orders.Union(orders2, new OrderCompare());
-                return orders;
+                return orders.Union(orders2, new OrderCompare()).ToList() ;
+                //return orders;
             }
         }
 
@@ -402,8 +402,8 @@ namespace TradingLib.ORM
                 string query2 = string.Format("SELECT * FROM  {0}  WHERE settleday >='{1}' AND settleday <='{2}' AND breed='{3}'", "log_trades", begin, end, breed);
                 List<Trade> trades2 = db.Connection.Query<TradeImpl>(query2).ToList<Trade>();
 
-                trades.Union(trades2, new TradeCompare());
-                return trades;
+                return trades.Union(trades2, new TradeCompare()).ToList();
+                //return trades;
             }
         }
 
@@ -423,8 +423,9 @@ namespace TradingLib.ORM
                 string query2 = string.Format("SELECT * FROM  {0}  WHERE settleday >='{1}' AND settleday <='{2}'  AND account='{3}' AND breed='{4}'", "log_trades", begin, end,account, breed);
                 List<Trade> trades2 = db.Connection.Query<TradeImpl>(query2).ToList<Trade>();
 
-                trades.Union(trades2, new TradeCompare());
-                return trades;
+                //trades.Add(new TradeImpl());
+                return trades.Union(trades2, new TradeCompare()).ToList() ;
+                //return trades;
             }
         }
 

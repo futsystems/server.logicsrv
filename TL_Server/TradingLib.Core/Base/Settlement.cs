@@ -275,16 +275,18 @@ namespace TradingLib.Core
                         padCenterEx("开仓价", len_PRICE),
                         padCenterEx("昨结算", len_PRICE),
                         padCenterEx("成交价", len_PRICE),
-                        padCenterEx("平仓盈亏", len_PROFIT)
+                        padCenterEx("平仓盈亏(基)", len_PROFIT)
                         ));
                     settlelist.Add(sline);
 
                     foreach (PositionCloseDetail t in positionclose)
                     {
                         SecurityFamily sym = account.GetSecurity(t.SecCode);
+                        decimal rate = account.GetExchangeRate(s.Settleday, sym);
+
                         i++;
                         size += t.CloseVolume;
-                        profit += t.CloseProfitByDate;
+                        profit += t.CloseProfitByDate * rate;
                         settlelist.Add(string.Format("|{0}|{1}|{2}|{3}|{4}|{5}|{6}|{7}|{8}|{9}|{10}|",
                             padCenterEx(t.CloseDate.ToString(), len_DATE),
                             padCenterEx(BasicTracker.ExchagneTracker.GetExchangeTitle(t.Exchange), len_EXCH),
@@ -296,7 +298,7 @@ namespace TradingLib.Core
                             padCenterEx(t.OpenPrice.ToFormatStr(), len_PRICE),
                             padCenterEx(t.LastSettlementPrice.ToFormatStr(), len_PRICE),
                             padCenterEx(t.ClosePrice.ToFormatStr(), len_PRICE),
-                            padRightEx(t.CloseProfitByDate.ToFormatStr(), len_PROFIT)
+                            padRightEx((t.CloseProfitByDate*rate).ToFormatStr(), len_PROFIT)
                             ));
                     }
                     settlelist.Add(sline);

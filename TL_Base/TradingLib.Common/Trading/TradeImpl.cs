@@ -419,6 +419,12 @@ namespace TradingLib.Common
 
             return sb.ToString();
         }
+
+        public override int GetHashCode()
+        {
+            int code = string.Format("{0}-{1}-{2}", this.Account, this.xDate, this.TradeID).GetHashCode();
+            return code;
+        }
         /// <summary>
         /// Deserialize string to Trade
         /// </summary>

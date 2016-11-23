@@ -46,13 +46,13 @@ namespace TradingLib.Common
         /// <returns></returns>
         public bool Equals(Trade x, Trade y)
         {
-            if ((x.Account == y.Account) && (x.id == y.id) && (x.xDate == y.xDate)) return true;
+            if ((x.Account == y.Account) && (x.TradeID == y.TradeID) && (x.xDate == y.xDate)) return true;
             return false;
         }
 
         public int GetHashCode(Trade obj)
         {
-            return string.Format("{0}-{1}-{2}", obj.Account, obj.xDate, obj.id).GetHashCode();
+            return string.Format("{0}-{1}-{2}", obj.Account, obj.xDate, obj.TradeID).GetHashCode();
         }
     }
 }
