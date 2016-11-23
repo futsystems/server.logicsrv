@@ -371,13 +371,13 @@ namespace TradingLib.Core
             logger.Info("Trade       Saved:" + tnum.ToString()+" NumQry:"+tmp_tnum.ToString());
             logger.Info("OrderAction Saved:" + cnum.ToString());
             //logger.Info("PosTrans    Saved:" + prnum.ToString());
-            //如果日内数量与转储的数量一致 表面正常结算且已经正常保存到log表
-            if (tmp_onum==onum && tmp_tnum == tnum)
-            {
-                ORM.MTradingInfo.ClearIntradayOrders(tradingday);
-                ORM.MTradingInfo.ClearIntradayTrades(tradingday);
-                ORM.MTradingInfo.ClearIntradayOrderActions(tradingday);
-            }
+            //如果日内数量与转储的数量一致 表面正常结算且已经正常保存到log表 取消删除操作 定时任务中 删除1个月以前的数据
+            //if (tmp_onum==onum && tmp_tnum == tnum)
+            //{
+            //    ORM.MTradingInfo.ClearIntradayOrders(tradingday);
+            //    ORM.MTradingInfo.ClearIntradayTrades(tradingday);
+            //    ORM.MTradingInfo.ClearIntradayOrderActions(tradingday);
+            //}
             
         }
 
