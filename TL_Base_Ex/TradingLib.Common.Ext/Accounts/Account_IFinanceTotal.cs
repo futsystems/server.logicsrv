@@ -80,21 +80,27 @@ namespace TradingLib.Common
         public decimal AvabileFunds { get { return TotalLiquidation - MoneyUsed + this.Credit + GetAvabileAdjustment(); } }//帐户总可用资金
 
         /// <summary>
+        /// 可取资金
+        /// 可取资金在不同情况下有不同的计算方式 这里暂时用可用资金进行代替
+        /// </summary>
+        public decimal DesirableFunds { get { return this.AvabileFunds; } }
+
+        /// <summary>
         /// 获得可用资金期货部分调整
         /// 取决于交易参数中浮盈是否可以开仓
         /// </summary>
         /// <returns></returns>
         decimal GetAvabileAdjustment()
         {
-            decimal futunpl = this.CalFutUnRealizedPL();
-            decimal futclosepl = this.CalFutRealizedPL();
-            if (futunpl <= 0) return 0;//如果当前处于浮亏状态，则可用资金调整为0，按正常算法计算可用资金
-            //如果浮动盈亏大于0 则按照设置来判断浮盈是否可以开仓
-            if (this.GetParamIncludePositionProfit())
+            decimal futunpl = this.CalFutUnRealizedPL();//浮动盈亏
+            decimal futclosepl = this.CalFutRealizedPL();//平仓盈亏
+            //if (futunpl <= 0) return 0;//如果当前处于浮亏状态，则可用资金调整为0，按正常算法计算可用资金
+            //根据可用资金是否包含浮动盈亏与平仓盈亏 进行补差
+            if (!this.GetParamIncludePositionProfit())
             {
                 return -1 * futunpl;
             }
-            if (this.GetParamIncludeCloseProfit())
+            if (!this.GetParamIncludeCloseProfit())
             {
                 return -1 * futclosepl;
             }
