@@ -79,6 +79,21 @@ namespace TradingLib.Common
             }
         }
 
+        /// <summary>
+        /// 通过合约 来获得默认交易所
+        /// </summary>
+        /// <param name="symbol"></param>
+        /// <returns></returns>
+        internal string GetDefaultExchange(int domain_id,string symbol)
+        {
+            DBSymbolTracker tracker = null;
+            if (domainsymboltracker.TryGetValue(domain_id, out tracker))
+            {
+                return tracker.GetDefaultExchange(symbol);
+            }
+            return null;
+        }
+
         internal SymbolImpl this[int domain_id, int  idx]
         {
             get
@@ -265,6 +280,21 @@ namespace TradingLib.Common
                     return null;
                 }
             }
+        }
+
+        /// <summary>
+        /// 通过合约获得默认交易所
+        /// </summary>
+        /// <param name="usymbol"></param>
+        /// <returns></returns>
+        public string GetDefaultExchange(string usymbol)
+        {
+            SymbolImpl sym = symcodemap.Values.FirstOrDefault(s => s.Symbol == usymbol);
+            if (sym != null)
+            {
+                return sym.Exchange;
+            }
+            return string.Empty;
         }
 
         /// <summary>

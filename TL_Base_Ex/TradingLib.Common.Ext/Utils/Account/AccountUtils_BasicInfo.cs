@@ -50,6 +50,12 @@ namespace TradingLib.Common
         //TODO SK合约键值修改
         public static bool TrckerOrderSymbol(this IAccount account, ref Order o)
         {
+            //如果客户端没有提供交易所 则自动判定交易所
+            if (string.IsNullOrEmpty(o.Exchange))
+            {
+                o.Exchange = account.Domain.GetDefaultExchange(o.Symbol);
+            }
+
             Symbol symbol = account.Domain.GetSymbol(o.Exchange,o.Symbol);
             //TODO:增加合约可交易判定
             if (symbol == null)

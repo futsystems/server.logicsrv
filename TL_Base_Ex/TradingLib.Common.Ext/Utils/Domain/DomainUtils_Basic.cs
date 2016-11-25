@@ -215,9 +215,20 @@ namespace TradingLib.Common
         /// <param name="domain"></param>
         /// <param name="symbol"></param>
         /// <returns></returns>
-        public static SymbolImpl GetSymbol(this Domain domain,string uexchange, string usymbol)
+        public static SymbolImpl GetSymbol(this Domain domain, string uexchange, string usymbol)
         {
             return BasicTracker.SymbolTracker[domain.ID, uexchange, usymbol];
+        }
+
+        /// <summary>
+        /// 获得某个域下 某个合约的默认交易所 用于自动识别未提供交易所的情况
+        /// </summary>
+        /// <param name="domain"></param>
+        /// <param name="usymbol"></param>
+        /// <returns></returns>
+        public static string GetDefaultExchange(this Domain domain, string usymbol)
+        {
+            return BasicTracker.SymbolTracker.GetDefaultExchange(domain.ID, usymbol);
         }
 
         public static SymbolImpl GetSymbol(this Domain domain, int id)
