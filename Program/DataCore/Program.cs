@@ -14,15 +14,31 @@ namespace DataCoreSrv
 {
     class Program
     {
-        
+
+        const string PROGRAME = "DataCore";
+        static ILog logger = LogManager.GetLogger(PROGRAME);
         static void Main(string[] args)
         {
-            //DateTime dt = new DateTime(2011, 1, 1, 24, 0, 0);
+            try
+            {
+                AppDomain.CurrentDomain.UnhandledException += new UnhandledExceptionEventHandler(CurrentDomain_UnhandledException);
 
-            DataCore df = new DataCore();
+                DataCore df = new DataCore();
 
-            df.Start();
-            System.Threading.Thread.Sleep(10000);
+                df.Start();
+                System.Threading.Thread.Sleep(int.MaxValue);
+                logger.Info("******************** exit");
+            }
+            catch (Exception ex)
+            {
+                logger.Error("Run DataCore Error:" + ex.ToString());
+            }
+        }
+
+        static void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)
+        {
+            Exception ex = (Exception)e.ExceptionObject;
+            logger.Error("UnhandledException:" + ex.ToString());
         }
     }
 }
