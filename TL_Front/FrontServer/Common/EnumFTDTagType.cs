@@ -38,6 +38,20 @@ namespace CTPService
         /// 0
         /// </summary>
         FTDTagKeepAlive,
-        FTDTagTarget
+
+        /// <summary>
+        /// 
+        /// </summary>
+        FTDTagTarget,
+
+        /// <summary>
+        /// 建立Socket连接后的第一个初始化数据包
+        /// </summary>
+        FTDTagRegister=7,
+
+        /// <summary>
+        /// 未知
+        /// </summary>
+        FTDTagUnknown,
     }
 }

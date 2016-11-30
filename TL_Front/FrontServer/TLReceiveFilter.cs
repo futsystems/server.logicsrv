@@ -8,6 +8,8 @@ using SuperSocket.Facility.Protocol;
 using TradingLib.API;
 using TradingLib.Common;
 using System.Runtime.InteropServices;
+using CTPService.Struct;
+using CTPService.Struct.V12;
 
 
 namespace CTPService
@@ -63,47 +65,91 @@ namespace CTPService
         protected override TLRequestInfo ResolveRequestInfo(ArraySegment<byte> header, byte[] bodyBuffer, int offset, int length)
         {
 
-            int bFtdtype = header.Array[FTDTYPEOFFSET];
+            EnumFTDType bFtdtype = (EnumFTDType)header.Array[FTDTYPEOFFSET];
             int bExLen = header.Array[EXLENOFFSET];
             int wPktLen = Endian.SwapInt16((BitConverter.ToInt16(header.Array, PKTLENOFFSET)));//字节序变化
 
             byte[] data = new byte[length];
             Array.Copy(bodyBuffer, offset, data, 0, length);
 
-            if (bExLen > 0)
+            string key = string.Empty;
+            EnumFTDTagType ftdTag = EnumFTDTagType.FTDTagUnknown;
+            ftd_hdr ftdhdr = new ftd_hdr();
+            List<PktData<IFieldId>> fieldList = new List<PktData<IFieldId>>();
+
+            if (bFtdtype == EnumFTDType.FTDTypeNone)
             {
-                int ftdTag = (int)data[0];
-                if (ftdTag == (int)EnumFTDTagType.FTDTagKeepAlive)
-                { 
-                    //心跳
-                }
-                if (ftdTag == 7)
+                ftdTag = (EnumFTDTagType)(int)data[0];
+                if (ftdTag ==  EnumFTDTagType.FTDTagRegister)
                 { 
                     //连接后第一个数据包初始化
+                    key = string.Format("REGISTER {0} {1}", bFtdtype, ftdTag);
+                }
+                if (ftdTag == EnumFTDTagType.FTDTagKeepAlive)
+                {
+                    //心跳
+                    key = string.Format("HEARTBEAT {0} {1}",bFtdtype,ftdTag);
                 }
             }
 
-            if (data.Length > 100)
+
+            if (bFtdtype == EnumFTDType.FTDTypeFTDC)
             {
+                try
+                {
+                    //解析FTD报头
+                    ftdhdr = ByteSwapHelp.BytesToStruct<Struct.ftd_hdr>(data);
+                    //根据tid进行数据解析
+                    switch ((EnumTransactionID)ftdhdr.dTransId)
+                    {
 
-                //解析FTD报头
-                ftd_hdr ftd_hdr = ByteSwapHelp.BytesToStruct<ftd_hdr>(data);
-                
-                //解析FTDC报头
-                ftdc_hdr ftdc_hdr = ByteSwapHelp.BytesToStruct<ftdc_hdr>(data, Constanst.FTD_HDRLEN);
+                        //请求登入
+                        case EnumTransactionID.T_REQ_LOGIN:
+                            {
+                                fieldList = ParsePktDataV12(data, ftdhdr.wFtdcLen, ftdhdr.wFiCount);
+                                break;
+                            }
+                        default:
+                            throw new Exception(string.Format("TransactionID:{0} pkt not handled", (EnumTransactionID)ftdhdr.dTransId));
+                    }
+                    //解析FTDC报头
+                    //Struct.ftdc_hdr ftdc_hdr = ByteSwapHelp.BytesToStruct<Struct.ftdc_hdr>(data, Constanst.FTD_HDRLEN);//通过fid 获得对应的结构体数据类别
 
-                //解析FTDC中的业务结构体
-                LCThostFtdcReqUserLoginField obj2 = ByteSwapHelp.BytesToStruct<LCThostFtdcReqUserLoginField>(data, Constanst.FTD_HDRLEN + Constanst.FTDC_HDRLEN);
-
-                //解析后面4个公私有流的类型 此处一共5个FTDC包
-                TdTpPkt topic = ByteSwapHelp.BytesToStruct<TdTpPkt>(data, Constanst.FTD_HDRLEN + Constanst.FTDC_HDRLEN + ftdc_hdr.wFiLen);
-
-             
+                    key = string.Format("FTD Data Ver:{0} Tid:{1} SeqType:{2} SeqNo:{3} Enc:{4} ReqID:{5} Chain:{6} FieldCnt:{7} FtdcLen:{8}", ftdhdr.bVersion, ftdhdr.dTransId, (EnumSeqType)ftdhdr.wSeqSn, ftdhdr.dSeqNo, (EnumEncType)ftdhdr.bEnctype, ftdhdr.dReqId, (EnumChainType)ftdhdr.bChain, ftdhdr.wFiCount, ftdhdr.wFtdcLen);
+                }
+                catch (Exception ex)
+                {
+                    key = ex.ToString();
+                }
             }
-
-            return null;// new TLRequestInfo(type.ToString(), content, message);
+            return new TLRequestInfo(key, bFtdtype,ftdTag,ftdhdr,fieldList,data);
         }
 
+
+        /// <summary>
+        /// 从数据包中解析 业务数据
+        /// </summary>
+        /// <param name="data"></param>
+        /// <param name="len"></param>
+        /// <param name="cnt"></param>
+        /// <returns></returns>
+        List<PktData<IFieldId>> ParsePktDataV12(byte[] data,int len, int cnt)
+        {
+            List<PktData<IFieldId>> list = new List<PktData<IFieldId>>(); 
+            int offset = 0;
+            for (int i = 0; i < cnt; i++)
+            {
+                Struct.ftdc_hdr ftdc_hdr = ByteSwapHelp.BytesToStruct<Struct.ftdc_hdr>(data, offset + Constanst.FTD_HDRLEN);
+                EnumFiledID fieldID = (EnumFiledID)ftdc_hdr.wFiId;
+                IFieldId ftdc_data = StructHelperV12.BytesToStruct(data, offset + Constanst.FTD_HDRLEN + Constanst.FTDC_HDRLEN, fieldID);
+
+                list.Add(new PktData<IFieldId>() { FTDCHeader = ftdc_hdr, FTDCData = ftdc_data });
+
+                offset += Constanst.FTDC_HDRLEN + ftdc_hdr.wFiLen;
+            }
+            return list;
+        }
           
+
     }
 }

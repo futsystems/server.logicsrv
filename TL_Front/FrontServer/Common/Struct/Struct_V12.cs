@@ -3,130 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Runtime.InteropServices;
+using CTPService.Struct;
 
-
-namespace CTPService
+namespace CTPService.Struct.V12
 {
-    public interface IByteSwap
-    {
-        void Swap();
-    }
-
-    public interface IFieldId : IByteSwap
-    {
-        ushort FieldId { get; }
-
-    }
-
-
-    public interface ITFieldId
-    {
-
-    }
-
-    /// <summary>
-    /// FTD报头
-    /// </summary>
-    [StructLayout(LayoutKind.Sequential, Pack = 1)]
-    public struct proto_hdr
-    {
-        /// <summary>
-        /// FTD报文类型
-        /// </summary>
-        public byte bFtdtype;
-        /// <summary>
-        /// FTD扩充长度
-        /// </summary>
-        public byte bExLen;
-        /// <summary>
-        /// 信息正文长度
-        /// </summary>
-        public byte wPktLen;
-    }
-
-    /// <summary>
-    /// FTDC报头
-    /// </summary>
-    [StructLayout(LayoutKind.Sequential,Pack = 1)]
-    public struct ftd_hdr : IByteSwap
-    {
-        public byte bHead;
-
-        /// <summary>
-        /// 压缩类别 0为无,3为LZ
-        /// </summary>
-        public byte bEnctype;
-
-        /// <summary>
-        /// 版本号
-        /// </summary>
-        public byte bVersion;
-
-        /// <summary>
-        /// 报文链
-        /// </summary>
-        public byte bChain;
-
-        /// <summary>
-        /// 类别0-req,2-rtn,4-qry
-        /// </summary>
-        public ushort wSeqSn;
-
-        /// <summary>
-        /// tid
-        /// </summary>
-        public uint dTransId;
-
-        /// <summary>
-        /// 序列号
-        /// </summary>
-        public uint dSeqNo;
-
-        /// <summary>
-        /// 数据域数量
-        /// </summary>
-        public ushort wFiCount;
-
-        /// <summary>
-        /// FTDC信息正文长度 未压缩长度 ,包含(tid+len)
-        /// </summary>
-        public ushort wFtdcLen;
-
-        /// <summary>
-        /// 请求编号
-        /// </summary>
-        public uint dReqId;
-
-        public void Swap()
-        {
-            wSeqSn = ByteSwapHelp.ReverseBytes(wSeqSn);
-            dTransId = ByteSwapHelp.ReverseBytes(dTransId);
-            dSeqNo = ByteSwapHelp.ReverseBytes(dSeqNo);
-            wFiCount = ByteSwapHelp.ReverseBytes(wFiCount);
-            wFtdcLen = ByteSwapHelp.ReverseBytes(wFtdcLen);
-            dReqId = ByteSwapHelp.ReverseBytes(dReqId);
-        }
-    }
-
-    /// <summary>
-    /// ftdc_报头
-    /// </summary>
-    [StructLayout(LayoutKind.Sequential, Pack = 1)]
-    public struct ftdc_hdr : IByteSwap
-    {
-        public ushort wFiId;
-
-        public ushort wFiLen;
-
-        public void Swap()
-        {
-            wFiId = ByteSwapHelp.ReverseBytes(wFiId);
-            wFiLen = ByteSwapHelp.ReverseBytes(wFiLen);
-        }
-    }
+    
 
     [StructLayout(LayoutKind.Sequential, Pack = 1)]
-    public struct TopicData : IByteSwap
+    public struct TopicData : IFieldId
     {
         public ushort wSeqSn;
 
@@ -137,6 +21,13 @@ namespace CTPService
             wSeqSn = ByteSwapHelp.ReverseBytes(wSeqSn);
             dSeqNo = ByteSwapHelp.ReverseBytes(dSeqNo);
         }
+
+        public ushort FieldId
+        {
+            get { return 4097; }
+        }
+
+
     }
     /// <summary>
     /// TopicPkt
@@ -174,6 +65,9 @@ namespace CTPService
 
         }
     }
+
+
+
 
 
     /// <summary>
@@ -479,8 +373,19 @@ namespace CTPService
         [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 9)]
         public string FFEXTime;
 
+        /// <summary>
+        /// 能源中心
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 9)]
+        public string INETime;
+
+
         public void Swap()
-        { }
+        {
+            FrontID = ByteSwapHelp.ReverseBytes(FrontID);
+            SessionID = ByteSwapHelp.ReverseBytes(SessionID);
+        
+        }
 
         public ushort FieldId
         {
@@ -502,7 +407,7 @@ namespace CTPService
             ret.DCETime = input.DCETime;
             ret.CZCETime = input.CZCETime;
             ret.FFEXTime = input.FFEXTime;
-
+            ret.INETime = input.INETime;
             return ret;
         }
     }
@@ -568,6 +473,13 @@ namespace CTPService
         [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 9)]
         public string FFEXTime;
 
+        /// <summary>
+        /// 能源中心
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 9)]
+        public string INETime;
+
+
         public void Swap()
         {
             FrontID = ByteSwapHelp.ReverseBytes(FrontID);
@@ -594,6 +506,7 @@ namespace CTPService
             ret.DCETime = input.DCETime;
             ret.CZCETime = input.CZCETime;
             ret.FFEXTime = input.FFEXTime;
+            ret.INETime = input.INETime;
 
             return ret;
         }
@@ -1102,7 +1015,9 @@ namespace CTPService
         public string ErrorMsg;
 
         public void Swap()
-        { }
+        {
+            ErrorID = ByteSwapHelp.ReverseBytes(ErrorID);
+        }
 
         public ushort FieldId
         {

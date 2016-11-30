@@ -5,23 +5,19 @@ using System.Text;
 
 namespace CTPService
 {
-    public enum EnumFTDType
+    public enum EnumSeqType
     {
         /// <summary>
-        /// 报文无意义 一般用于心跳
+        /// 请求
         /// </summary>
-        FTDTypeNone = 0,
-
+        SeqReq=0,
         /// <summary>
-        /// 报文中为压缩数据
+        /// 回报
         /// </summary>
-        FTDTypeCompressed, 
-
+        SeqRtn=2,
         /// <summary>
-        /// 正常域数据内容
+        /// 查询
         /// </summary>
-        FTDTypeFTDC
+        SeqQry=4,
     }
-
-
 }

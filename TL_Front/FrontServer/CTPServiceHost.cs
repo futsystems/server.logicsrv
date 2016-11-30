@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Concurrent;
 using System.Linq;
 using System.Text;
 using TradingLib.API;
@@ -9,7 +10,7 @@ using Common.Logging;
 
 namespace CTPService
 {
-    public class CTPServiceHost
+    public partial class CTPServiceHost
     {
 
         ILog logger = LogManager.GetLogger(_name);
@@ -63,19 +64,99 @@ namespace CTPService
             
         }
 
+
+        ConcurrentDictionary<string, IConnection> connectionMap = new ConcurrentDictionary<string, IConnection>();
+
         void ctpSocketServer_SessionClosed(TLSessionBase session, SuperSocket.SocketBase.CloseReason value)
         {
-            logger.Info(string.Format("Session:{0} Closed", session.SessionID));
+            //logger.Info(string.Format("Session:{0} Closed", session.SessionID));
+            OnSessionClosed(session);
         }
 
         void ctpSocketServer_NewRequestReceived(TLSessionBase session, TLRequestInfo requestInfo)
         {
-            logger.Info(string.Format("Session:{0} Request:{1} ", session.SessionID, ""));
+            logger.Info(string.Format("Session:{0} Request:{1} ", session.SessionID, requestInfo.Key));
+            IConnection conn = null;
+
+            if (requestInfo.FTDType == EnumFTDType.FTDTypeNone)
+            { 
+                EnumFTDTagType tag = requestInfo.FTDTag;
+                switch (tag)
+                {
+                    case EnumFTDTagType.FTDTagKeepAlive:
+                        { 
+                            logger.Info(string.Format("Session:{0} HeartBeat",session.SessionID));
+                            break;
+                        }
+                    case EnumFTDTagType.FTDTagRegister:
+                        {
+                            logger.Info(string.Format("Session:{0} Register", session.SessionID));
+                            
+                            //连接已经建立直接返回
+                            if (_connectionMap.TryGetValue(session.SessionID, out conn))
+                            {
+                                logger.Warn(string.Format("Client:{0} already exist", session.SessionID));
+                                return;
+                            }
+
+                            //创建连接
+                            conn = CreateConnection(session.SessionID);
+                            _connectionMap.TryAdd(session.SessionID, conn);
+
+                            break;
+                        }
+                    default:
+                        logger.Warn(string.Format("FTD Tag:{0} not handled", tag));
+                        break;
+                }
+            
+            }
+
+            if (requestInfo.FTDType == EnumFTDType.FTDTypeFTDC)
+            {
+                
+                if (!_connectionMap.TryGetValue(session.SessionID, out conn))
+                {
+                    logger.Warn(string.Format("Client:{0} is not registed to server, ignore request", session.SessionID));
+                    return;
+                }
+
+                EnumTransactionID transId = (EnumTransactionID)requestInfo.FTDHeader.dTransId;
+                switch (transId)
+                {
+                    //登入
+                    case EnumTransactionID.T_REQ_LOGIN:
+                        {
+                            byte[] demo = new byte[] { 0x02, 00, 00, 08, 04, 0xec, 00, 00, 00, 00 };
+
+                            byte[] dst = new byte[demo.Length];
+                            int dstLen = 0;
+                            Struct.V12.StructHelperV12.LZ_Compress(ref dst, ref dstLen, demo, demo.Length);
+
+                            logger.Info("Login Request");
+                            LoginResponse response = ResponseTemplate<LoginResponse>.SrvSendRspResponse("", "", (int)requestInfo.FTDHeader.dReqId);
+                            response.LoginID = "0000";
+                            response.TradingDay = 20170101;
+                            response.FrontIDi = 8;
+                            response.SessionIDi = 9;
+
+
+                            conn.SendToClient(response);
+                            break;
+                        }
+                    default:
+                        logger.Warn(string.Format("Transaction:{0} logic not handled", transId));
+                        break;
+
+                }
+            }
         }
 
         void ctpSocketServer_NewSessionConnected(TLSessionBase session)
         {
-            logger.Info(string.Format("Session:{0} Created", session.SessionID));
+            //logger.Info(string.Format("Session:{0} Created", session.SessionID));
+            OnSessionCreated(session);
+
         }
 
 

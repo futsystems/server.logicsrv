@@ -73,20 +73,31 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Common\ByteUtil.cs" />
     <Compile Include="Common\Constanst.cs" />
     <Compile Include="Common\Endian .cs" />
-    <Compile Include="Common\Enum.cs" />
+    <Compile Include="Common\EnumChainType.cs" />
+    <Compile Include="Common\EnumEncType.cs" />
+    <Compile Include="Common\Enums.cs" />
+    <Compile Include="Common\EnumSeqType.cs" />
+    <Compile Include="Common\Struct\Enum.cs" />
     <Compile Include="Common\EnumFTDTagType.cs" />
     <Compile Include="Common\EnumFTDType.cs" />
     <Compile Include="Common\IByteSwap.cs" />
-    <Compile Include="Common\Struct.cs" />
+    <Compile Include="Common\Struct\StructHelperV12.cs" />
+    <Compile Include="Common\Struct\Struct_V12.cs" />
+    <Compile Include="Common\Struct\StructBase.cs" />
+    <Compile Include="CTPConnection.cs" />
     <Compile Include="CTPServiceHost.cs" />
+    <Compile Include="API\IConnection.cs" />
+    <Compile Include="CTPServiceHost_.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TLReceiveFilter.cs" />
     <Compile Include="TLRequestInfo.cs" />
     <Compile Include="TLServerBase.cs" />
     <Compile Include="TLSessionBase.cs" />
+    <Compile Include="CTPServiceHost_Connection.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config">
