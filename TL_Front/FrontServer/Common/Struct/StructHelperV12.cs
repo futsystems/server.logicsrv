@@ -56,102 +56,51 @@ namespace CTPService.Struct.V12
         public static byte[] FillRsp<T>(ref LCThostFtdcRspInfoField rsp, ref T field, EnumSeqType seqType, EnumTransactionID transId, int fieldCount, int reqId)
             where T:IByteSwap
         {
-            //proftd_hdr proftdHeader = new proftd_hdr();
             proto_hdr protoHeader = new proto_hdr();
             ftd_hdr ftdHeader = new ftd_hdr();
 
-            ftdc_hdr fieldHeader = new ftdc_hdr();
             ftdc_hdr rspHeader = new ftdc_hdr();
+            Type rspType = typeof(LCThostFtdcRspInfoField);
+            int rspSize = Marshal.SizeOf(rspType);
+            InitFTDCHeader(ref rspHeader, rspSize, (EnumFiledID)rsp.FieldId);
 
+            ftdc_hdr fieldHeader = new ftdc_hdr();
             IFieldId tmp = field as IFieldId;
             Type type = typeof(T);
             int fieldSize = Marshal.SizeOf(type);
-            Type rspType = typeof(LCThostFtdcRspInfoField);
-            int rspSize = Marshal.SizeOf(rspType);
-
-            //初始化ftdc_hdr
             InitFTDCHeader(ref fieldHeader, fieldSize, (EnumFiledID)tmp.FieldId);
-
-            InitFTDCHeader(ref rspHeader, rspSize, (EnumFiledID)rsp.FieldId);
 
             //初始化proftd_hdr
             int ftdcLen = Constanst.FTDC_HDRLEN + fieldSize + Constanst.FTDC_HDRLEN + rspSize; //FTDC正文长度 = 报头长度 + 结构体长度
             int pktLen = Constanst.PROFTD_HDRLEN + ftdcLen;//数据包总长度
             FillRspHeader(ref protoHeader,ref ftdHeader,(ushort)pktLen, seqType, transId, (ushort)fieldCount, (uint)reqId);
 
-            //打包数据
-            //IntPtr bufferProtoHeader = Marshal.AllocHGlobal(Constanst.PROTO_HDRLEN);
-            //IntPtr bufferFtdHeader = Marshal.AllocHGlobal(Constanst.FTD_HDRLEN);
-
-            //IntPtr bufferInfoHeader = Marshal.AllocHGlobal(Constanst.FTDC_HDRLEN);
-            //IntPtr bufferInfo = Marshal.AllocHGlobal(rspSize);
-
-            //IntPtr bufferFieldHeader = Marshal.AllocHGlobal(Constanst.FTDC_HDRLEN);
-            //IntPtr bufferField = Marshal.AllocHGlobal(fieldSize);
-
             int offset = 0;
             try
             {
                 Byte[] bytes = new Byte[pktLen];
+
                 Array.Copy(ByteSwapHelp.StructToBytes<proto_hdr>(protoHeader), 0,bytes, 0, Constanst.PROTO_HDRLEN);
                 Array.Copy(ByteSwapHelp.StructToBytes<ftd_hdr>(ftdHeader), 0, bytes, Constanst.PROTO_HDRLEN, Constanst.FTD_HDRLEN);
-                proto_hdr tmp0 = ByteSwapHelp.BytesToStruct<Struct.proto_hdr>(bytes, 0);
-                ftd_hdr tmp1 = ByteSwapHelp.BytesToStruct<Struct.ftd_hdr>(bytes, 4);
-
-                //Array.Copy(ByteSwapHelp.StructToBytes<ftdc_hdr>(rspHeader), 0, bytes, Constanst.PROFTD_HDRLEN, Constanst.FTDC_HDRLEN);
-                //Array.Copy(ByteSwapHelp.StructToBytes<LCThostFtdcRspInfoField>(rsp), 0, bytes, Constanst.PROFTD_HDRLEN + , rspSize);
+                //proto_hdr tmp0 = ByteSwapHelp.BytesToStruct<Struct.proto_hdr>(bytes, 0);
+                //ftd_hdr tmp1 = ByteSwapHelp.BytesToStruct<Struct.ftd_hdr>(bytes, 4);
 
                 offset = 0;
                 Array.Copy(ByteSwapHelp.StructToBytes<ftdc_hdr>(rspHeader), 0, bytes, offset + Constanst.PROFTD_HDRLEN, Constanst.FTDC_HDRLEN);
                 Array.Copy(ByteSwapHelp.StructToBytes<LCThostFtdcRspInfoField>(rsp), 0, bytes, offset + Constanst.PROFTD_HDRLEN + Constanst.FTDC_HDRLEN, rspSize);
-
-                ftdc_hdr tmp2 = ByteSwapHelp.BytesToStruct<ftdc_hdr>(bytes, offset + Constanst.PROFTD_HDRLEN);
-                LCThostFtdcRspInfoField tmp3 = ByteSwapHelp.BytesToStruct<LCThostFtdcRspInfoField>(bytes, offset + Constanst.PROFTD_HDRLEN + Constanst.FTDC_HDRLEN);
+                //ftdc_hdr tmp2 = ByteSwapHelp.BytesToStruct<ftdc_hdr>(bytes, offset + Constanst.PROFTD_HDRLEN);
+                //LCThostFtdcRspInfoField tmp3 = ByteSwapHelp.BytesToStruct<LCThostFtdcRspInfoField>(bytes, offset + Constanst.PROFTD_HDRLEN + Constanst.FTDC_HDRLEN);
 
                 offset += Constanst.FTDC_HDRLEN + rspSize;
                 Array.Copy(ByteSwapHelp.StructToBytes<ftdc_hdr>(fieldHeader), 0, bytes, offset + Constanst.PROFTD_HDRLEN, Constanst.FTDC_HDRLEN);
                 Array.Copy(ByteSwapHelp.StructToBytes<T>(field), 0, bytes, offset + Constanst.PROFTD_HDRLEN + Constanst.FTDC_HDRLEN, fieldSize);
-
-                ftdc_hdr tmp4 = ByteSwapHelp.BytesToStruct<ftdc_hdr>(bytes, offset + Constanst.PROFTD_HDRLEN);
-                LCThostFtdcRspUserLoginField tmp5 = ByteSwapHelp.BytesToStruct<LCThostFtdcRspUserLoginField>(bytes, offset + Constanst.PROFTD_HDRLEN + Constanst.FTDC_HDRLEN);
-
-
-                //Marshal.StructureToPtr(protoHeader, bufferProtoHeader, false);
-                //Marshal.StructureToPtr(ftdHeader, bufferFtdHeader, false);
-
-                //Marshal.StructureToPtr(rspHeader, bufferInfoHeader, false);
-                //Marshal.StructureToPtr(rsp, bufferInfo, false);
-
-                //Marshal.StructureToPtr(fieldHeader, bufferFieldHeader, false);
-                //Marshal.StructureToPtr(field, bufferField, false);
-
-                //Byte[] bytes = new Byte[pktLen];
-
-                //Marshal.Copy(bufferProtoHeader, bytes, 0, Constanst.PROTO_HDRLEN);
-                //proto_hdr tmp0 = ByteSwapHelp.BytesToStruct<Struct.proto_hdr>(bytes, 0);
-
-                //Marshal.Copy(bufferFtdHeader, bytes,0,Constanst.FTD_HDRLEN);
-                //ftd_hdr tmp1 = ByteSwapHelp.BytesToStruct<Struct.ftd_hdr>(bytes, 4);
-
-                //offset = 0;
-                //Marshal.Copy(bufferInfoHeader, bytes, offset + Constanst.PROFTD_HDRLEN, Constanst.FTDC_HDRLEN);
-                //Marshal.Copy(bufferInfo, bytes,offset + Constanst.PROFTD_HDRLEN + Constanst.FTDC_HDRLEN, rspSize);
-                //offset += Constanst.FTDC_HDRLEN + rspSize;
-                //Marshal.Copy(bufferFieldHeader, bytes, offset + Constanst.PROFTD_HDRLEN, Constanst.FTDC_HDRLEN);
-                //Marshal.Copy(bufferField, bytes, offset + Constanst.PROFTD_HDRLEN + Constanst.FTDC_HDRLEN, fieldSize);
+                //ftdc_hdr tmp4 = ByteSwapHelp.BytesToStruct<ftdc_hdr>(bytes, offset + Constanst.PROFTD_HDRLEN);
+                //LCThostFtdcRspUserLoginField tmp5 = ByteSwapHelp.BytesToStruct<LCThostFtdcRspUserLoginField>(bytes, offset + Constanst.PROFTD_HDRLEN + Constanst.FTDC_HDRLEN);
 
                 return bytes;
             }
             finally
             {
-                //Marshal.FreeHGlobal(bufferProtoHeader);
-                //Marshal.FreeHGlobal(bufferFtdHeader);
-
-                //Marshal.FreeHGlobal(bufferInfoHeader);
-                //Marshal.FreeHGlobal(bufferInfo);
-
-                //Marshal.FreeHGlobal(bufferFieldHeader);
-                //Marshal.FreeHGlobal(bufferField);
             }
         }
 
