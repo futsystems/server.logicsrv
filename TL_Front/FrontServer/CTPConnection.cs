@@ -45,7 +45,7 @@ namespace CTPService
                     {
                         LoginResponse response = packet as LoginResponse;
 
-                        CThostFtdcRspUserLoginField field = new CThostFtdcRspUserLoginField();
+                        LCThostFtdcRspUserLoginField field = new LCThostFtdcRspUserLoginField();
                         field.TradingDay = response.TradingDay.ToString();
                         field.MaxOrderRef = "1";
                         field.UserID = response.LoginID;
@@ -62,22 +62,23 @@ namespace CTPService
                         field.FFEXTime = time;
                         field.INETime = time;
 
-                        CThostFtdcRspInfoField rsp = new CThostFtdcRspInfoField();
+                        LCThostFtdcRspInfoField rsp = new LCThostFtdcRspInfoField();
                         rsp.ErrorID = response.RspInfo.ErrorID;
                         rsp.ErrorMsg = response.RspInfo.ErrorMessage;
 
-                        byte[] data = StructHelperV12.FillRsp<CThostFtdcRspUserLoginField>(ref rsp, ref field, EnumSeqType.SeqReq, EnumTransactionID.T_RSP_LOGIN, 1, response.RequestID);
+                        byte[] data = StructHelperV12.FillRsp<LCThostFtdcRspUserLoginField>(ref rsp, ref field, EnumSeqType.SeqReq, EnumTransactionID.T_RSP_LOGIN, 1, response.RequestID);
 
                         Send(data);
-                        //return;
+                        return;
 
+                        /*
                         // 服务端数据不压缩 直接发送给客户端接口 客户端接口可以直接识别
                         int pktLen = 0;
                         byte[] encData = StructHelperV12.EncPkt(data,out pktLen);
 
                         logger.Info("RawBytes:" + ByteUtil.ByteToHex(data, ' '));
                         logger.Info("EncBytes:" + ByteUtil.ByteToHex(encData, ' ',pktLen));
-                        Send(encData,pktLen);
+                        //Send(encData,pktLen);
 
 
                         EnumFTDType bFtdtype = (EnumFTDType)encData[0];
@@ -132,7 +133,7 @@ namespace CTPService
                                 //key = ex.ToString();
                             }
                         }
-                        
+                        **/
 
                         break;
                     }

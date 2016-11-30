@@ -53,7 +53,7 @@ namespace CTPService.Struct.V12
             ftd_hdr.dReqId = reqId;
         }
 
-        public static byte[] FillRsp<T>(ref CThostFtdcRspInfoField rsp, ref T field, EnumSeqType seqType, EnumTransactionID transId, int fieldCount, int reqId)
+        public static byte[] FillRsp<T>(ref LCThostFtdcRspInfoField rsp, ref T field, EnumSeqType seqType, EnumTransactionID transId, int fieldCount, int reqId)
             where T:IByteSwap
         {
             //proftd_hdr proftdHeader = new proftd_hdr();
@@ -63,10 +63,10 @@ namespace CTPService.Struct.V12
             ftdc_hdr fieldHeader = new ftdc_hdr();
             ftdc_hdr rspHeader = new ftdc_hdr();
 
-            ITFieldId tmp = field as ITFieldId;
+            IFieldId tmp = field as IFieldId;
             Type type = typeof(T);
             int fieldSize = Marshal.SizeOf(type);
-            Type rspType = typeof(CThostFtdcRspInfoField);
+            Type rspType = typeof(LCThostFtdcRspInfoField);
             int rspSize = Marshal.SizeOf(rspType);
 
             //初始化ftdc_hdr
@@ -103,7 +103,7 @@ namespace CTPService.Struct.V12
 
                 offset = 0;
                 Array.Copy(ByteSwapHelp.StructToBytes<ftdc_hdr>(rspHeader), 0, bytes, offset + Constanst.PROFTD_HDRLEN, Constanst.FTDC_HDRLEN);
-                Array.Copy(ByteSwapHelp.StructToBytes<CThostFtdcRspInfoField>(rsp), 0, bytes, offset + Constanst.PROFTD_HDRLEN + Constanst.FTDC_HDRLEN, rspSize);
+                Array.Copy(ByteSwapHelp.StructToBytes<LCThostFtdcRspInfoField>(rsp), 0, bytes, offset + Constanst.PROFTD_HDRLEN + Constanst.FTDC_HDRLEN, rspSize);
 
                 ftdc_hdr tmp2 = ByteSwapHelp.BytesToStruct<ftdc_hdr>(bytes, offset + Constanst.PROFTD_HDRLEN);
                 LCThostFtdcRspInfoField tmp3 = ByteSwapHelp.BytesToStruct<LCThostFtdcRspInfoField>(bytes, offset + Constanst.PROFTD_HDRLEN + Constanst.FTDC_HDRLEN);
@@ -173,10 +173,10 @@ namespace CTPService.Struct.V12
                 dstData = new byte[DstLen];
                 Array.Copy(srcdata, 0, dstData, 0, 8);//复制前面8个字节
                 LZ_Compress(ref dstData, ref DstLen, srcdata, SrcLen);
-                //dstData[5] = Constanst.THOST_ENC_LZ;
-                //byte[] sb = BitConverter.GetBytes(ByteSwapHelp.ReverseBytes((ushort)(DstLen - 4)));
-                //dstData[2] = sb[0];
-                //dstData[3] = sb[1];
+                dstData[5] = Constanst.THOST_ENC_LZ;
+                byte[] sb = BitConverter.GetBytes(ByteSwapHelp.ReverseBytes((ushort)(DstLen - 4)));
+                dstData[2] = sb[0];
+                dstData[3] = sb[1];
                 pktLen = DstLen;
             }
             return dstData;
