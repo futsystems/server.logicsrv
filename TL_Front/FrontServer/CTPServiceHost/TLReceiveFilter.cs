@@ -143,7 +143,7 @@ namespace CTPService
                 EnumFiledID fieldID = (EnumFiledID)ftdc_hdr.wFiId;
                 IFieldId ftdc_data = StructHelperV12.BytesToStruct(data, offset + Constanst.FTD_HDRLEN + Constanst.FTDC_HDRLEN, fieldID);
 
-                list.Add(new PktData<IFieldId>() { FTDCHeader = ftdc_hdr, FTDCData = ftdc_data });
+                list.Add(new PktData<IFieldId>() { FTDCHeader = ftdc_hdr, FTDCData = ftdc_data ,Data = ftdc_data});
 
                 offset += Constanst.FTDC_HDRLEN + ftdc_hdr.wFiLen;
             }

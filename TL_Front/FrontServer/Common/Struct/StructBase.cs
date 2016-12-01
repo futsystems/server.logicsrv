@@ -149,5 +149,7 @@ namespace CTPService.Struct
         public ftdc_hdr FTDCHeader;
 
         public IFieldId FTDCData;
+
+        public object Data;
     }
 }

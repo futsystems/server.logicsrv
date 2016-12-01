@@ -17,7 +17,7 @@ namespace CTPService
         /// <summary>
         /// 用于维护已经正常Register的客户端  sessionMap用于维护底层Sockt连接
         /// </summary>
-        ConcurrentDictionary<string, IConnection> _connectionMap = new ConcurrentDictionary<string, IConnection>();
+        ConcurrentDictionary<string, FrontServer.IConnection> _connectionMap = new ConcurrentDictionary<string, FrontServer.IConnection>();
 
         void OnSessionCreated(TLSessionBase session)
         {
@@ -51,14 +51,14 @@ namespace CTPService
             //检查_connectionMap是否有对应的Connection对象 如果存在则向上抛出事件
             if (_connectionMap.Keys.Contains(session.SessionID))
             {
-                IConnection conn = null;
+                FrontServer.IConnection conn = null;
                 _connectionMap.TryRemove(session.SessionID, out conn);
                 //向逻辑层抛出Connection关闭事件
                 //OnConnectionClosed(conn);
             }
         }
 
-        public IConnection CreateConnection(string sessionID)
+        public FrontServer.IConnection CreateConnection(string sessionID)
         {
             if (!sessionMap.Keys.Contains(sessionID))
             {
@@ -68,7 +68,7 @@ namespace CTPService
             TLSessionBase target = null;
             if (sessionMap.TryGetValue(sessionID, out target))
             {
-                IConnection connection = new CTPConnection(target);
+                FrontServer.IConnection connection = new CTPConnection(target);
                 return connection;
             }
             return null;

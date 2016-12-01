@@ -12,7 +12,7 @@ using CTPService.Struct.V12;
 
 namespace CTPService
 {
-    public class CTPConnection:IConnection
+    public class CTPConnection : FrontServer.IConnection
     {
         TLSessionBase _session = null;
         ILog logger = LogManager.GetLogger("conn");
@@ -30,6 +30,12 @@ namespace CTPService
         /// 回话编号
         /// </summary>
         public string SessionID { get; set; }
+
+        public void HandleLogicMessage(IPacket packet)
+        { 
+        
+        }
+
 
         /// <summary>
         /// 向客户端发送数据包

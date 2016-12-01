@@ -22,6 +22,12 @@ namespace CTPService
         public string Name { get { return _name; } }
 
 
+        FrontServer.MQServer _mqServer = null;
+        public CTPServiceHost(FrontServer.MQServer mqServer)
+        {
+            _mqServer = mqServer;
+        }
+
         TLServerBase ctpSocketServer = null;
         bool _started = false;
         int _port = 55622;
@@ -65,18 +71,20 @@ namespace CTPService
         }
 
 
-        ConcurrentDictionary<string, IConnection> connectionMap = new ConcurrentDictionary<string, IConnection>();
+        ConcurrentDictionary<string, FrontServer.IConnection> connectionMap = new ConcurrentDictionary<string, FrontServer.IConnection>();
 
         void ctpSocketServer_SessionClosed(TLSessionBase session, SuperSocket.SocketBase.CloseReason value)
         {
             //logger.Info(string.Format("Session:{0} Closed", session.SessionID));
             OnSessionClosed(session);
+            //逻辑服务器注销客户端
+            _mqServer.LogicUnRegister(session.SessionID);
         }
 
         void ctpSocketServer_NewRequestReceived(TLSessionBase session, TLRequestInfo requestInfo)
         {
             logger.Info(string.Format("Session:{0} Request:{1} ", session.SessionID, requestInfo.Key));
-            IConnection conn = null;
+            FrontServer.IConnection conn = null;
 
             if (requestInfo.FTDType == EnumFTDType.FTDTypeNone)
             { 
@@ -102,7 +110,8 @@ namespace CTPService
                             //创建连接
                             conn = CreateConnection(session.SessionID);
                             _connectionMap.TryAdd(session.SessionID, conn);
-
+                            //客户端发送初始化数据包后执行逻辑服务器客户端注册操作
+                            _mqServer.LogicRegister(conn);
                             break;
                         }
                     default:
@@ -127,21 +136,38 @@ namespace CTPService
                     //登入
                     case EnumTransactionID.T_REQ_LOGIN:
                         {
-                            byte[] demo = new byte[] { 0x02, 00, 00, 08, 04, 0xec, 00, 00, 00, 00 };
+                            var data = requestInfo.FTDFields[0].FTDCData;
+                            if (data is Struct.V12.LCThostFtdcReqUserLoginField)
+                            {
+                                Struct.V12.LCThostFtdcReqUserLoginField field = (Struct.V12.LCThostFtdcReqUserLoginField)requestInfo.FTDFields[0].FTDCData;
+                                LoginRequest request = RequestTemplate<LoginRequest>.CliSendRequest((int)requestInfo.FTDHeader.dReqId);
+                                request.LoginID = field.UserID;
+                                request.Passwd = field.Password;
+                                request.MAC = field.MacAddress;
+                                request.IPAddress = field.ClientIPAddress;
+                                request.LoginType = 1;
+                                request.ProductInfo = field.UserProductInfo;
 
-                            byte[] dst = new byte[demo.Length];
-                            int dstLen = 0;
-                            Struct.V12.StructHelperV12.LZ_Compress(ref dst, ref dstLen, demo, demo.Length);
+                                _mqServer.TLSend(session.SessionID, request);
+                                logger.Info(string.Format("Session:{0} Request Login User:{1} Pass:{2}",session.SessionID, request.LoginID, request.Passwd));
+                            }
+                                //request.LoginID = requestInfo.FTDFields
+                            //byte[] demo = new byte[] { 0x02, 00, 00, 08, 04, 0xec, 00, 00, 00, 00 };
 
-                            logger.Info("Login Request");
-                            LoginResponse response = ResponseTemplate<LoginResponse>.SrvSendRspResponse("", "", (int)requestInfo.FTDHeader.dReqId);
-                            response.LoginID = "0000";
-                            response.TradingDay = 20170101;
-                            response.FrontIDi = 8;
-                            response.SessionIDi = 9;
+                            //byte[] dst = new byte[demo.Length];
+                            //int dstLen = 0;
+                            //Struct.V12.StructHelperV12.LZ_Compress(ref dst, ref dstLen, demo, demo.Length);
+
+                            //logger.Info("Login Request");
+                            //LoginResponse response = ResponseTemplate<LoginResponse>.SrvSendRspResponse("", "", (int)requestInfo.FTDHeader.dReqId);
+                            //response.LoginID = "0000";
+                            //response.TradingDay = 20170101;
+                            //response.FrontIDi = 8;
+                            //response.SessionIDi = 9;
 
 
-                            conn.SendToClient(response);
+                            //conn.SendToClient(response);
+
                             break;
                         }
                     default:

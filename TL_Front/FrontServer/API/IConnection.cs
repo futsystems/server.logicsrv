@@ -6,7 +6,7 @@ using TradingLib.API;
 using TradingLib.Common;
 
 
-namespace CTPService
+namespace FrontServer
 {
     public interface IConnection
     {
@@ -28,6 +28,13 @@ namespace CTPService
         /// </summary>
         /// <param name="packet"></param>
         void ForwardToLogic(IPacket packet);
+
+
+        /// <summary>
+        /// 处理逻辑服务端发送过来的消息
+        /// </summary>
+        /// <param name="packet"></param>
+        void HandleLogicMessage(IPacket packet);
 
         /// <summary>
         /// 关闭会话

@@ -37,27 +37,31 @@
   <ItemGroup>
     <Reference Include="Common.Logging">
       <HintPath>..\..\lib\Common.Logging.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="Common.Logging.Core">
       <HintPath>..\..\lib\Common.Logging.Core.dll</HintPath>
-    </Reference>
-    <Reference Include="log4net">
-      <HintPath>..\..\lib\log4net.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="SuperSocket.Common">
       <HintPath>..\..\lib\supersocket\1.6.6\SuperSocket.Common.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="SuperSocket.Facility">
       <HintPath>..\..\lib\supersocket\1.6.6\SuperSocket.Facility.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="SuperSocket.SocketBase">
       <HintPath>..\..\lib\supersocket\1.6.6\SuperSocket.SocketBase.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="SuperSocket.SocketEngine">
       <HintPath>..\..\lib\supersocket\1.6.6\SuperSocket.SocketEngine.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="SuperWebSocket">
       <HintPath>..\..\lib\supersocket\1.6.6\SuperWebSocket.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.configuration" />
@@ -70,6 +74,9 @@
     </Reference>
     <Reference Include="TradingLib.Common">
       <HintPath>..\..\lib\TradingLib\TradingLib.Common.dll</HintPath>
+    </Reference>
+    <Reference Include="ZeroMQ">
+      <HintPath>..\..\lib\ZeroMQ.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -87,17 +94,18 @@
     <Compile Include="Common\Struct\StructHelperV12.cs" />
     <Compile Include="Common\Struct\Struct_V12.cs" />
     <Compile Include="Common\Struct\StructBase.cs" />
-    <Compile Include="CTPConnection.cs" />
-    <Compile Include="CTPServiceHost.cs" />
+    <Compile Include="CTPServiceHost\CTPConnection.cs" />
+    <Compile Include="CTPServiceHost\CTPServiceHost.cs" />
     <Compile Include="API\IConnection.cs" />
-    <Compile Include="CTPServiceHost_.cs" />
+    <Compile Include="CTPServiceHost\CTPServiceHost_.cs" />
+    <Compile Include="MQServer.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="TLReceiveFilter.cs" />
-    <Compile Include="TLRequestInfo.cs" />
-    <Compile Include="TLServerBase.cs" />
-    <Compile Include="TLSessionBase.cs" />
-    <Compile Include="CTPServiceHost_Connection.cs" />
+    <Compile Include="CTPServiceHost\TLReceiveFilter.cs" />
+    <Compile Include="CTPServiceHost\TLRequestInfo.cs" />
+    <Compile Include="CTPServiceHost\TLServerBase.cs" />
+    <Compile Include="CTPServiceHost\TLSessionBase.cs" />
+    <Compile Include="CTPServiceHost\CTPServiceHost_Connection.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config">

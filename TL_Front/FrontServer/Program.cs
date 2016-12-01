@@ -16,6 +16,7 @@ namespace FrontServer
         static void Main(string[] args)
         {
             ILog logger = LogManager.GetLogger("Main");
+            /*
             byte[] demo = new byte[] { 0x02, 00, 00, 08, 04, 0xec, 00, 00, 00, 00 };
             int pktLen = demo.Length*2;
             byte[] encData = new byte[pktLen];
@@ -46,7 +47,11 @@ namespace FrontServer
             logger.Info("result:" + ByteUtil.ByteToHex(dst, ' ',dstLen));
 
             //int size = Marshal.SizeOf(CTPService.FTDC_Header);
-            CTPServiceHost host = new CTPServiceHost();
+             * */
+            MQServer mqServer = new MQServer();
+
+            CTPServiceHost host = new CTPServiceHost(mqServer);
+            mqServer.Start();
             host.Start();
 
             System.Threading.Thread.Sleep(int.MaxValue);
