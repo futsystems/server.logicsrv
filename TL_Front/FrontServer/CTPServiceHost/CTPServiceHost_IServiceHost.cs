@@ -6,7 +6,7 @@ using System.Text;
 using TradingLib.API;
 using TradingLib.Common;
 using Common.Logging;
-using CTPService.Struct.V12;
+
 
 namespace CTPService
 {
@@ -22,6 +22,7 @@ namespace CTPService
         {
             try
             {
+                string hex = string.Empty;
                 CTPConnection conn = GetConnection(connection.SessionID);
                 if (conn == null)
                 {
@@ -35,7 +36,7 @@ namespace CTPService
                         {
                             LoginResponse response = packet as LoginResponse;
                             //将数据转换成CTP业务结构体
-                            LCThostFtdcRspUserLoginField field = new LCThostFtdcRspUserLoginField();
+                            Struct.V12.LCThostFtdcRspUserLoginField field = new Struct.V12.LCThostFtdcRspUserLoginField();
                             field.TradingDay = response.TradingDay.ToString();
                             field.MaxOrderRef = "1";
                             field.UserID = response.LoginID;
@@ -52,15 +53,50 @@ namespace CTPService
                             field.FFEXTime = time;
                             field.INETime = time;
 
-                            LCThostFtdcRspInfoField rsp = new LCThostFtdcRspInfoField();
+                            Struct.V12.LCThostFtdcRspInfoField rsp = new Struct.V12.LCThostFtdcRspInfoField();
                             rsp.ErrorID = response.RspInfo.ErrorID;
                             rsp.ErrorMsg = string.Format("CTP:{0}", response.RspInfo.ErrorMessage);
 
                             //打包数据
-                            byte[] data = StructHelperV12.FillRsp<LCThostFtdcRspUserLoginField>(ref rsp, ref field, EnumSeqType.SeqReq, EnumTransactionID.T_RSP_LOGIN, 1, response.RequestID);
+                            byte[] data = Struct.V12.StructHelperV12.PackRsp<Struct.V12.LCThostFtdcRspUserLoginField>(ref rsp, ref field, EnumSeqType.SeqReq, EnumTransactionID.T_RSP_LOGIN, response.RequestID,conn.NextSeqId);
+
+                            int encPktLen = 0;
+                            byte[] encData = Struct.V12.StructHelperV12.EncPkt(data, out encPktLen);
+
+                            //hex = "0200008501030c4ce43001e502e1f5e301e355e4d5fdc8b7efefefefefe21003e1983230313631323031e131323a32303a3337e13838383838e638353632303030383032e654726164696e67486f7374696e67efef04a515665831ec31323a32303a3337e131323a32303a3338e131323a32303a3338e131323a32303a3337e12d2d3a2d2d3a2d2de1";
+                            //encData = ByteUtil.HexToByte(hex);
+                            //encPktLen = encData.Length;
 
                             //发送数据
-                            conn.Send(data);
+                            conn.Send(encData, encPktLen);
+                            break;
+                        }
+                    //投资者查询回报
+                    case MessageTypes.INVESTORRESPONSE:
+                        {
+                            RspQryInvestorResponse response = packet as RspQryInvestorResponse;
+
+                            Struct.V12.LCThostFtdcInvestorField field = new Struct.V12.LCThostFtdcInvestorField();
+                            field.BrokerID = "88888";
+                            field.InvestorID = response.TradingAccount;
+                            field.InvestorName = response.NickName;
+                            field.IdentifiedCardType = TThostFtdcIdCardTypeType.IDCard;
+                            field.IdentifiedCardNo = "999900130711111111111";
+                            field.Telephone = response.Mobile;
+                            field.Mobile = response.Mobile;
+                            field.Address = "";
+                            field.OpenDate = "20150101";
+                            //打包数据
+                            byte[] data = Struct.V12.StructHelperV12.PackRsp<Struct.V12.LCThostFtdcInvestorField>(ref field, EnumSeqType.SeqQry, EnumTransactionID.T_RSP_USRINF, response.RequestID, conn.NextSeqId);
+                            int encPktLen = 0;
+                            byte[] encData = Struct.V12.StructHelperV12.EncPkt(data, out encPktLen);
+
+                            //hex = "0200008d01030c4ce104e28009e301e101018ce302e106018838353632303030383032e33838383838efe4c7aeb2a8efefefefefe231333230353832313938333034313934353134efefe6013138303531313336313637efefc9ccb3c7c2b7333431bac5d7cfb9e0e2b4f3cfc332323033cad2efefefefefe13230313230393137e13138303531313336313637efefefeb";
+                            //encData = ByteUtil.HexToByte(hex);
+                            //encPktLen = encData.Length;
+
+                            //发送数据
+                            conn.Send(encData, encPktLen);
                             break;
                         }
                     default:

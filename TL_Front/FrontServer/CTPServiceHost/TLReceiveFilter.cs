@@ -71,7 +71,7 @@ namespace CTPService
 
             byte[] data = new byte[length];
             Array.Copy(bodyBuffer, offset, data, 0, length);
-
+            
             string key = string.Empty;
             EnumFTDTagType ftdTag = EnumFTDTagType.FTDTagUnknown;
             ftd_hdr ftdhdr = new ftd_hdr();
@@ -103,8 +103,14 @@ namespace CTPService
                     switch ((EnumTransactionID)ftdhdr.dTransId)
                     {
 
-                        //请求登入
+                        //用户登录请求 ReqUserLogin
                         case EnumTransactionID.T_REQ_LOGIN:
+                            {
+                                fieldList = ParsePktDataV12(data, ftdhdr.wFtdcLen, ftdhdr.wFiCount);
+                                break;
+                            }
+                        //请求查询投资者 ReqQryInvestor
+                        case EnumTransactionID.T_QRY_USRINF:
                             {
                                 fieldList = ParsePktDataV12(data, ftdhdr.wFtdcLen, ftdhdr.wFiCount);
                                 break;
@@ -112,9 +118,6 @@ namespace CTPService
                         default:
                             throw new Exception(string.Format("TransactionID:{0} pkt not handled", (EnumTransactionID)ftdhdr.dTransId));
                     }
-                    //解析FTDC报头
-                    //Struct.ftdc_hdr ftdc_hdr = ByteSwapHelp.BytesToStruct<Struct.ftdc_hdr>(data, Constanst.FTD_HDRLEN);//通过fid 获得对应的结构体数据类别
-
                     key = string.Format("FTD Data Ver:{0} Tid:{1} SeqType:{2} SeqNo:{3} Enc:{4} ReqID:{5} Chain:{6} FieldCnt:{7} FtdcLen:{8}", ftdhdr.bVersion, ftdhdr.dTransId, (EnumSeqType)ftdhdr.wSeqSn, ftdhdr.dSeqNo, (EnumEncType)ftdhdr.bEnctype, ftdhdr.dReqId, (EnumChainType)ftdhdr.bChain, ftdhdr.wFiCount, ftdhdr.wFtdcLen);
                 }
                 catch (Exception ex)

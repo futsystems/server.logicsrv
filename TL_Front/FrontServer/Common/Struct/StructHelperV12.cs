@@ -24,6 +24,11 @@ namespace CTPService.Struct.V12
                     {
                         return ByteSwapHelp.BytesToStruct<LCThostFtdcReqUserLoginField>(data, offset);
                     }
+                    //请求查询投资者
+                case EnumFiledID.F_QRY_USRINF:
+                    {
+                        return ByteSwapHelp.BytesToStruct<LCThostFtdcQryInvestorField>(data, offset);
+                    }
                 default:
                     throw new Exception(string.Format("FieldID:{0} pkt not handled", fieldID));
             }
@@ -35,7 +40,7 @@ namespace CTPService.Struct.V12
             hdr.wFiLen = (ushort)size;
         }
 
-        public static void FillRspHeader(ref proto_hdr proto_hdr, ref ftd_hdr ftd_hdr, ushort pktLen, EnumSeqType seqType, EnumTransactionID transId, ushort fieldCount, uint reqId)
+        public static void FillRspHeader(ref proto_hdr proto_hdr, ref ftd_hdr ftd_hdr, ushort pktLen, EnumSeqType seqType, EnumTransactionID transId, ushort fieldCount, uint reqId,uint seqId)
         {
             proto_hdr.bFtdtype = (byte)EnumFTDType.FTDTypeFTDC;
             proto_hdr.bExLen = 0;
@@ -47,13 +52,70 @@ namespace CTPService.Struct.V12
             ftd_hdr.bChain = (byte)'L';
             ftd_hdr.wSeqSn = (ushort)seqType;
             ftd_hdr.dTransId = (uint)transId;
-            ftd_hdr.dSeqNo = 0;//这里应该是递增的变量 需改动 
+            ftd_hdr.dSeqNo = seqId;//这里应该是递增的变量 需改动 
             ftd_hdr.wFiCount = fieldCount;
             ftd_hdr.wFtdcLen = (ushort)(pktLen - 4 - Constanst.FTD_HDRLEN);
             ftd_hdr.dReqId = reqId;
         }
 
-        public static byte[] FillRsp<T>(ref LCThostFtdcRspInfoField rsp, ref T field, EnumSeqType seqType, EnumTransactionID transId, int fieldCount, int reqId)
+        /// <summary>
+        /// 打包查询回报
+        /// 只包含查询结果域 不包含RspInfo域
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="field"></param>
+        /// <param name="seqType"></param>
+        /// <param name="transId"></param>
+        /// <param name="reqId"></param>
+        /// <returns></returns>
+        public static byte[] PackRsp<T>(ref T field, EnumSeqType seqType, EnumTransactionID transId, int reqId,int seqId)
+            where T : IByteSwap
+        {
+            proto_hdr protoHeader = new proto_hdr();
+            ftd_hdr ftdHeader = new ftd_hdr();
+
+            ftdc_hdr fieldHeader = new ftdc_hdr();
+            IFieldId tmp = field as IFieldId;
+            Type type = typeof(T);
+            int fieldSize = Marshal.SizeOf(type);
+            InitFTDCHeader(ref fieldHeader, fieldSize, (EnumFiledID)tmp.FieldId);
+
+            //初始化proftd_hdr
+            int ftdcLen = Constanst.FTDC_HDRLEN + fieldSize;
+            int pktLen = Constanst.PROFTD_HDRLEN + ftdcLen;//数据包总长度
+            FillRspHeader(ref protoHeader, ref ftdHeader, (ushort)pktLen, seqType, transId,(ushort)1, (uint)reqId,(uint)seqId);
+
+            int offset = 0;
+            try
+            {
+                Byte[] bytes = new Byte[pktLen];
+
+                Array.Copy(ByteSwapHelp.StructToBytes<proto_hdr>(protoHeader), 0, bytes, 0, Constanst.PROTO_HDRLEN);
+                Array.Copy(ByteSwapHelp.StructToBytes<ftd_hdr>(ftdHeader), 0, bytes, Constanst.PROTO_HDRLEN, Constanst.FTD_HDRLEN);
+
+                offset = 0;
+                Array.Copy(ByteSwapHelp.StructToBytes<ftdc_hdr>(fieldHeader), 0, bytes, offset + Constanst.PROFTD_HDRLEN, Constanst.FTDC_HDRLEN);
+                Array.Copy(ByteSwapHelp.StructToBytes<T>(field), 0, bytes, offset + Constanst.PROFTD_HDRLEN + Constanst.FTDC_HDRLEN, fieldSize);
+                return bytes;
+            }
+            finally
+            {
+            }
+        }
+
+        /// <summary>
+        /// 打包查询回报
+        /// 包含查询结果域 与 RspInfo 域
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="rsp"></param>
+        /// <param name="field"></param>
+        /// <param name="seqType"></param>
+        /// <param name="transId"></param>
+        /// <param name="fieldCount"></param>
+        /// <param name="reqId"></param>
+        /// <returns></returns>
+        public static byte[] PackRsp<T>(ref LCThostFtdcRspInfoField rsp, ref T field, EnumSeqType seqType, EnumTransactionID transId,int reqId,int seqId)
             where T:IByteSwap
         {
             proto_hdr protoHeader = new proto_hdr();
@@ -73,7 +135,7 @@ namespace CTPService.Struct.V12
             //初始化proftd_hdr
             int ftdcLen = Constanst.FTDC_HDRLEN + fieldSize + Constanst.FTDC_HDRLEN + rspSize; //FTDC正文长度 = 报头长度 + 结构体长度
             int pktLen = Constanst.PROFTD_HDRLEN + ftdcLen;//数据包总长度
-            FillRspHeader(ref protoHeader,ref ftdHeader,(ushort)pktLen, seqType, transId, (ushort)fieldCount, (uint)reqId);
+            FillRspHeader(ref protoHeader, ref ftdHeader, (ushort)pktLen, seqType, transId, (ushort)2, (uint)reqId, (uint)seqId);
 
             int offset = 0;
             try
@@ -120,7 +182,7 @@ namespace CTPService.Struct.V12
             {
                 DstLen *= 2;  //保证足够存储空间
                 dstData = new byte[DstLen];
-                Array.Copy(srcdata, 0, dstData, 0, 8);//复制前面8个字节
+                //Array.Copy(srcdata, 0, dstData, 0, 8);//复制前面8个字节
                 LZ_Compress(ref dstData, ref DstLen, srcdata, SrcLen);
                 dstData[5] = Constanst.THOST_ENC_LZ;
                 byte[] sb = BitConverter.GetBytes(ByteSwapHelp.ReverseBytes((ushort)(DstLen - 4)));
@@ -131,13 +193,23 @@ namespace CTPService.Struct.V12
             return dstData;
         }
 
-
-        public static void LZ_Uncompress(ref byte[] dstBuf, ref int dstLen, byte[] srcBuf, int startIdx, int srcLen)
+        /// <summary>
+        /// 将某个数据包进行解码
+        /// </summary>
+        /// <param name="dstBuf"></param>
+        /// <param name="dstLen"></param>
+        /// <param name="srcBuf"></param>
+        /// <param name="srcLen"></param>
+        public static void LZ_Uncompress(ref byte[] dstBuf, ref int dstLen, byte[] srcBuf,int srcLen)
         {
 
             int srcInd = 8;
             int dstInd = 8;
-            startIdx = 0;
+            int startIdx = 0;
+            for (int i = 0; i < 8; i++)
+            {
+                dstBuf[i] = srcBuf[i];
+            }
             while (srcInd < srcLen && dstInd < dstLen)
             {
                 if (srcBuf[startIdx + srcInd] == 0xe0) // 转义字节
@@ -147,16 +219,25 @@ namespace CTPService.Struct.V12
                 }
                 else if ((srcBuf[srcInd] & 0xf0) == 0xe0) // 压缩的空字节
                 {
-                    if (dstInd + (srcBuf[startIdx + srcInd] & 0x0f) > dstLen) { break; }
-
+                    if (dstInd + (srcBuf[startIdx + srcInd] & 0x0f) > dstLen) 
+                    {
+                        break; 
+                    }
+                    if (srcInd == 136)
+                    {
+                        int i = 0;
+                    }
                     dstInd += (srcBuf[startIdx + srcInd] & 0x0f);
                     srcInd++;
                 }
                 else // 普通字节
                 {
-                    dstBuf[dstInd++] = srcBuf[startIdx + srcInd++]; 
+                    dstBuf[dstInd++] = srcBuf[startIdx + srcInd++];
                 }
             }
+
+            dstLen = dstInd;
+            
         }
 
         /// <summary>
@@ -172,7 +253,12 @@ namespace CTPService.Struct.V12
             int dstInd=8;
             int i=0;
             int iNum=0;
-            //int offset = 0;
+            //复制前面8个字节
+            for (i = 0; i < 8; i++)
+            {
+                dstBuf[i] = srcBuf[i];
+            }
+
             while(srcInd < srcLen)
             {
                 if (srcBuf[srcInd] != 0)

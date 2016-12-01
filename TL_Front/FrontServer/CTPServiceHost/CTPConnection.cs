@@ -37,7 +37,26 @@ namespace CTPService
         /// Connection所在的ServiceHost对象
         /// </summary>
         public FrontServer.IServiceHost ServiceHost { get { return _serviceHost; } }
-    
+
+        int _seqId = 0;
+        object _seqIDLock = new object();
+        /// <summary>
+        /// Connection应答序号
+        /// </summary>
+        public int NextSeqId
+        { 
+            get
+            {
+                lock (_seqIDLock)
+                {
+                    int seq = _seqId;
+                    _seqId++;
+                    return seq;
+                    
+                }
+            }
+
+        }
 
         public void HandleLogicMessage(IPacket packet)
         { 
@@ -80,7 +99,7 @@ namespace CTPService
                         rsp.ErrorID = response.RspInfo.ErrorID;
                         rsp.ErrorMsg = response.RspInfo.ErrorMessage;
 
-                        byte[] data = StructHelperV12.FillRsp<LCThostFtdcRspUserLoginField>(ref rsp, ref field, EnumSeqType.SeqReq, EnumTransactionID.T_RSP_LOGIN, 1, response.RequestID);
+                        byte[] data = StructHelperV12.PackRsp<LCThostFtdcRspUserLoginField>(ref rsp, ref field, EnumSeqType.SeqReq, EnumTransactionID.T_RSP_LOGIN, response.RequestID,1);
 
                         Send(data);
                         return;

@@ -93,8 +93,9 @@
     <Compile Include="Common\EnumFTDType.cs" />
     <Compile Include="Common\IByteSwap.cs" />
     <Compile Include="Common\Struct\StructHelperV12.cs" />
-    <Compile Include="Common\Struct\Struct_V12.cs" />
+    <Compile Include="Common\Struct\Struct_tmp.cs" />
     <Compile Include="Common\Struct\StructBase.cs" />
+    <Compile Include="Common\Struct\Struct_V12.cs" />
     <Compile Include="CTPServiceHost\CTPConnection.cs" />
     <Compile Include="CTPServiceHost\CTPServiceHost.cs" />
     <Compile Include="API\IConnection.cs" />
