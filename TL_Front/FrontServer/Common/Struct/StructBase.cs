@@ -67,7 +67,10 @@ namespace CTPService.Struct
         public byte bVersion;
 
         /// <summary>
-        /// 报文链
+        /// 报文链 
+        /// 76 L
+        /// 67 C
+        /// 
         /// </summary>
         public byte bChain;
 

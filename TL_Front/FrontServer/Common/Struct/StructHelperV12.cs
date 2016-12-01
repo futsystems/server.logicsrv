@@ -29,6 +29,26 @@ namespace CTPService.Struct.V12
                     {
                         return ByteSwapHelp.BytesToStruct<LCThostFtdcQryInvestorField>(data, offset);
                     }
+                    //请求查询投资者结算确认
+                case EnumFiledID.F_QRY_SETCONFIRM:
+                    {
+                        return ByteSwapHelp.BytesToStruct<LCThostFtdcQrySettlementInfoConfirmField>(data, offset);
+                    }
+                    //请求查询客户通知
+                case EnumFiledID.F_QRY_NOTICE:
+                    {
+                        return ByteSwapHelp.BytesToStruct<LCThostFtdcQryNoticeField>(data, offset);
+                    }
+                    //请求查询交易通知
+                case EnumFiledID.F_QRY_TDNOTICE:
+                    {
+                        return ByteSwapHelp.BytesToStruct<LCThostFtdcQryTradingNoticeField>(data, offset);
+                    }
+                    //请求查询投资者结算结果
+                case EnumFiledID.F_QRY_SMI:
+                    {
+                        return ByteSwapHelp.BytesToStruct<LCThostFtdcQrySettlementInfoField>(data, offset);
+                    }
                 default:
                     throw new Exception(string.Format("FieldID:{0} pkt not handled", fieldID));
             }
@@ -40,7 +60,7 @@ namespace CTPService.Struct.V12
             hdr.wFiLen = (ushort)size;
         }
 
-        public static void FillRspHeader(ref proto_hdr proto_hdr, ref ftd_hdr ftd_hdr, ushort pktLen, EnumSeqType seqType, EnumTransactionID transId, ushort fieldCount, uint reqId,uint seqId)
+        public static void FillRspHeader(ref proto_hdr proto_hdr, ref ftd_hdr ftd_hdr, ushort pktLen, EnumSeqType seqType, EnumTransactionID transId, ushort fieldCount, uint reqId,uint seqId,bool isLast)
         {
             proto_hdr.bFtdtype = (byte)EnumFTDType.FTDTypeFTDC;
             proto_hdr.bExLen = 0;
@@ -49,13 +69,45 @@ namespace CTPService.Struct.V12
             ftd_hdr.bHead = Constanst.FTDC_HEAD;
             ftd_hdr.bVersion = Constanst.FTDC_VER;
             ftd_hdr.bEnctype = Constanst.THOST_ENC_NONE;
-            ftd_hdr.bChain = (byte)'L';
+            ftd_hdr.bChain = isLast ? (byte)'L' : (byte)'C';
             ftd_hdr.wSeqSn = (ushort)seqType;
             ftd_hdr.dTransId = (uint)transId;
             ftd_hdr.dSeqNo = seqId;//这里应该是递增的变量 需改动 
             ftd_hdr.wFiCount = fieldCount;
             ftd_hdr.wFtdcLen = (ushort)(pktLen - 4 - Constanst.FTD_HDRLEN);
             ftd_hdr.dReqId = reqId;
+        }
+
+        /// <summary>
+        /// 打包查询回报
+        /// 该查询不包含任何有效回报字段
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="field"></param>
+        /// <param name="seqType"></param>
+        /// <param name="transId"></param>
+        /// <param name="reqId"></param>
+        /// <returns></returns>
+        public static byte[] PackRsp(EnumSeqType seqType, EnumTransactionID transId, int reqId, int seqId,bool isLast=true)
+        {
+            proto_hdr protoHeader = new proto_hdr();
+            ftd_hdr ftdHeader = new ftd_hdr();
+
+            //初始化proftd_hdr
+            int ftdcLen = 0;
+            int pktLen = Constanst.PROFTD_HDRLEN + ftdcLen;//数据包总长度
+            FillRspHeader(ref protoHeader, ref ftdHeader, (ushort)pktLen, seqType, transId, 0, (uint)reqId, (uint)seqId,isLast);
+            try
+            {
+                Byte[] bytes = new Byte[pktLen];
+
+                Array.Copy(ByteSwapHelp.StructToBytes<proto_hdr>(protoHeader), 0, bytes, 0, Constanst.PROTO_HDRLEN);
+                Array.Copy(ByteSwapHelp.StructToBytes<ftd_hdr>(ftdHeader), 0, bytes, Constanst.PROTO_HDRLEN, Constanst.FTD_HDRLEN);
+                return bytes;
+            }
+            finally
+            {
+            }
         }
 
         /// <summary>
@@ -68,7 +120,7 @@ namespace CTPService.Struct.V12
         /// <param name="transId"></param>
         /// <param name="reqId"></param>
         /// <returns></returns>
-        public static byte[] PackRsp<T>(ref T field, EnumSeqType seqType, EnumTransactionID transId, int reqId,int seqId)
+        public static byte[] PackRsp<T>(ref T field, EnumSeqType seqType, EnumTransactionID transId, int reqId,int seqId,bool isLast=true)
             where T : IByteSwap
         {
             proto_hdr protoHeader = new proto_hdr();
@@ -83,7 +135,7 @@ namespace CTPService.Struct.V12
             //初始化proftd_hdr
             int ftdcLen = Constanst.FTDC_HDRLEN + fieldSize;
             int pktLen = Constanst.PROFTD_HDRLEN + ftdcLen;//数据包总长度
-            FillRspHeader(ref protoHeader, ref ftdHeader, (ushort)pktLen, seqType, transId,(ushort)1, (uint)reqId,(uint)seqId);
+            FillRspHeader(ref protoHeader, ref ftdHeader, (ushort)pktLen, seqType, transId,(ushort)1, (uint)reqId,(uint)seqId,isLast);
 
             int offset = 0;
             try
@@ -115,7 +167,7 @@ namespace CTPService.Struct.V12
         /// <param name="fieldCount"></param>
         /// <param name="reqId"></param>
         /// <returns></returns>
-        public static byte[] PackRsp<T>(ref LCThostFtdcRspInfoField rsp, ref T field, EnumSeqType seqType, EnumTransactionID transId,int reqId,int seqId)
+        public static byte[] PackRsp<T>(ref LCThostFtdcRspInfoField rsp, ref T field, EnumSeqType seqType, EnumTransactionID transId,int reqId,int seqId,bool isLast=true)
             where T:IByteSwap
         {
             proto_hdr protoHeader = new proto_hdr();
@@ -135,7 +187,7 @@ namespace CTPService.Struct.V12
             //初始化proftd_hdr
             int ftdcLen = Constanst.FTDC_HDRLEN + fieldSize + Constanst.FTDC_HDRLEN + rspSize; //FTDC正文长度 = 报头长度 + 结构体长度
             int pktLen = Constanst.PROFTD_HDRLEN + ftdcLen;//数据包总长度
-            FillRspHeader(ref protoHeader, ref ftdHeader, (ushort)pktLen, seqType, transId, (ushort)2, (uint)reqId, (uint)seqId);
+            FillRspHeader(ref protoHeader, ref ftdHeader, (ushort)pktLen, seqType, transId, (ushort)2, (uint)reqId, (uint)seqId, isLast);
 
             int offset = 0;
             try

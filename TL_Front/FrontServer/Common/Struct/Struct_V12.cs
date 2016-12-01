@@ -755,7 +755,671 @@ namespace CTPService.Struct.V12
 
     #endregion
 
+    #region 查询投资者结算确认
+
+    /// <summary>
+    /// 查询结算信息确认域
+    /// </summary>
+    [StructLayout(LayoutKind.Sequential)]
+    public struct CThostFtdcQrySettlementInfoConfirmField : ITFieldId
+    {
+        /// <summary>
+        /// 经纪公司代码
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 11)]
+        public string BrokerID;
+        /// <summary>
+        /// 投资者代码
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 13)]
+        public string InvestorID;
+
+        public ushort FieldId
+        {
+            get { return 9304; }
+        }
+
+        public void Swap()
+        { }
+
+        public static implicit operator CThostFtdcQrySettlementInfoConfirmField(LCThostFtdcQrySettlementInfoConfirmField input)
+        {
+            CThostFtdcQrySettlementInfoConfirmField ret = new CThostFtdcQrySettlementInfoConfirmField();
+            ret.BrokerID = input.BrokerID;
+            ret.InvestorID = input.InvestorID;
+
+            return ret;
+        }
+    }
+    [StructLayout(LayoutKind.Sequential, Pack = 1)]
+    public struct LCThostFtdcQrySettlementInfoConfirmField : IFieldId
+    {
+        /// <summary>
+        /// 经纪公司代码
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 11)]
+        public string BrokerID;
+        /// <summary>
+        /// 投资者代码
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 13)]
+        public string InvestorID;
+
+        public ushort FieldId
+        {
+            get { return 9304; }
+        }
+
+        public void Swap()
+        { }
+
+        public static implicit operator LCThostFtdcQrySettlementInfoConfirmField(CThostFtdcQrySettlementInfoConfirmField input)
+        {
+            LCThostFtdcQrySettlementInfoConfirmField ret = new LCThostFtdcQrySettlementInfoConfirmField();
+            ret.BrokerID = input.BrokerID;
+            ret.InvestorID = input.InvestorID;
+
+            return ret;
+        }
+    }
+
+    /// <summary>
+    /// 投资者结算结果确认信息
+    /// </summary>
+    [StructLayout(LayoutKind.Sequential)]
+    public struct CThostFtdcSettlementInfoConfirmField : ITFieldId
+    {
+        /// <summary>
+        /// 经纪公司代码
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 11)]
+        public string BrokerID;
+        /// <summary>
+        /// 投资者代码
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 13)]
+        public string InvestorID;
+        /// <summary>
+        /// 确认日期
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 9)]
+        public string ConfirmDate;
+        /// <summary>
+        /// 确认时间
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 9)]
+        public string ConfirmTime;
+
+        public ushort FieldId
+        {
+            get { return 1039; }
+        }
+
+        public void Swap()
+        { }
+
+        public static implicit operator CThostFtdcSettlementInfoConfirmField(LCThostFtdcSettlementInfoConfirmField input)
+        {
+            CThostFtdcSettlementInfoConfirmField ret = new CThostFtdcSettlementInfoConfirmField();
+            ret.BrokerID = input.BrokerID;
+            ret.InvestorID = input.InvestorID;
+            ret.ConfirmDate = input.ConfirmDate;
+            ret.ConfirmTime = input.ConfirmTime;
+
+            return ret;
+        }
+    }
+    [StructLayout(LayoutKind.Sequential, Pack = 1)]
+    public struct LCThostFtdcSettlementInfoConfirmField : IFieldId
+    {
+        /// <summary>
+        /// 经纪公司代码
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 11)]
+        public string BrokerID;
+        /// <summary>
+        /// 投资者代码
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 13)]
+        public string InvestorID;
+        /// <summary>
+        /// 确认日期
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 9)]
+        public string ConfirmDate;
+        /// <summary>
+        /// 确认时间
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 9)]
+        public string ConfirmTime;
+
+        public ushort FieldId
+        {
+            get { return 1039; }
+        }
+
+        public void Swap()
+        { }
+
+        public static implicit operator LCThostFtdcSettlementInfoConfirmField(CThostFtdcSettlementInfoConfirmField input)
+        {
+            LCThostFtdcSettlementInfoConfirmField ret = new LCThostFtdcSettlementInfoConfirmField();
+            ret.BrokerID = input.BrokerID;
+            ret.InvestorID = input.InvestorID;
+            ret.ConfirmDate = input.ConfirmDate;
+            ret.ConfirmTime = input.ConfirmTime;
+
+            return ret;
+        }
+    }
+    #endregion
+
+    #region 查询通知
+    /// <summary>
+    /// 查询客户通知
+    /// </summary>
+    [StructLayout(LayoutKind.Sequential)]
+    public struct CThostFtdcQryNoticeField : ITFieldId
+    {
+        /// <summary>
+        /// 经纪公司代码
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 11)]
+        public string BrokerID;
+
+        public ushort FieldId
+        {
+            get { return 9301; }
+        }
+
+        public void Swap()
+        { }
+
+        public static implicit operator CThostFtdcQryNoticeField(LCThostFtdcQryNoticeField input)
+        {
+            CThostFtdcQryNoticeField ret = new CThostFtdcQryNoticeField();
+            ret.BrokerID = input.BrokerID;
+
+            return ret;
+        }
+    }
+    /// <summary>
+    /// 查询客户通知
+    /// </summary>
+    [StructLayout(LayoutKind.Sequential, Pack = 1)]
+    public struct LCThostFtdcQryNoticeField : IFieldId
+    {
+        /// <summary>
+        /// 经纪公司代码
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 11)]
+        public string BrokerID;
+
+        public ushort FieldId
+        {
+            get { return 9301; }
+        }
+
+        public void Swap()
+        { }
+
+        public static implicit operator LCThostFtdcQryNoticeField(CThostFtdcQryNoticeField input)
+        {
+            LCThostFtdcQryNoticeField ret = new LCThostFtdcQryNoticeField();
+            ret.BrokerID = input.BrokerID;
+
+            return ret;
+        }
+    }
+
+    /// <summary>
+    /// 客户通知
+    /// </summary>
+    [StructLayout(LayoutKind.Sequential)]
+    public struct CThostFtdcNoticeField : ITFieldId
+    {
+        /// <summary>
+        /// 经纪公司代码
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 11)]
+        public string BrokerID;
+        /// <summary>
+        /// 消息正文
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 501)]
+        public string Content;
+        /// <summary>
+        /// 经纪公司通知内容序列号
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 2)]
+        public string SequenceLabel;
+
+        public ushort FieldId
+        {
+            get { return 9302; }
+        }
+
+        public void Swap()
+        { }
+
+        public static implicit operator CThostFtdcNoticeField(LCThostFtdcNoticeField input)
+        {
+            CThostFtdcNoticeField ret = new CThostFtdcNoticeField();
+            ret.BrokerID = input.BrokerID;
+            ret.Content = input.Content;
+            ret.SequenceLabel = input.SequenceLabel;
+
+            return ret;
+        }
+    }
+    [StructLayout(LayoutKind.Sequential, Pack = 1)]
+    public struct LCThostFtdcNoticeField : IFieldId
+    {
+        /// <summary>
+        /// 经纪公司代码
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 11)]
+        public string BrokerID;
+        /// <summary>
+        /// 消息正文
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 501)]
+        public string Content;
+        /// <summary>
+        /// 经纪公司通知内容序列号
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 2)]
+        public string SequenceLabel;
+
+        public ushort FieldId
+        {
+            get { return 9302; }
+        }
+
+        public void Swap()
+        { }
+
+        public static implicit operator LCThostFtdcNoticeField(CThostFtdcNoticeField input)
+        {
+            LCThostFtdcNoticeField ret = new LCThostFtdcNoticeField();
+            ret.BrokerID = input.BrokerID;
+            ret.Content = input.Content;
+            ret.SequenceLabel = input.SequenceLabel;
+
+            return ret;
+        }
+    }
+    #endregion
+
+    #region 交易通知
+    /// <summary>
+    /// 查询交易事件通知
+    /// </summary>
+    [StructLayout(LayoutKind.Sequential)]
+    public struct CThostFtdcQryTradingNoticeField
+    {
+        /// <summary>
+        /// 经纪公司代码
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 11)]
+        public string BrokerID;
+        /// <summary>
+        /// 投资者代码
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 13)]
+        public string InvestorID;
+
+        public ushort FieldId
+        {
+            get { return 9350; }
+        }
+
+        public void Swap()
+        { }
+
+        public static implicit operator CThostFtdcQryTradingNoticeField(LCThostFtdcQryTradingNoticeField input)
+        {
+            CThostFtdcQryTradingNoticeField ret = new CThostFtdcQryTradingNoticeField();
+            ret.BrokerID = input.BrokerID;
+            ret.InvestorID = input.InvestorID;
+
+            return ret;
+        }
+
+    }
+
+    /// <summary>
+    /// 查询交易事件通知
+    /// </summary>
+    [StructLayout(LayoutKind.Sequential, Pack = 1)]
+    public struct LCThostFtdcQryTradingNoticeField : IFieldId
+    {
+        /// <summary>
+        /// 经纪公司代码
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 11)]
+        public string BrokerID;
+        /// <summary>
+        /// 投资者代码
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 13)]
+        public string InvestorID;
+
+        public ushort FieldId
+        {
+            get { return 9350; }
+        }
+
+        public void Swap()
+        { }
+
+        public static implicit operator LCThostFtdcQryTradingNoticeField(CThostFtdcQryTradingNoticeField input)
+        {
+            LCThostFtdcQryTradingNoticeField ret = new LCThostFtdcQryTradingNoticeField();
+            ret.BrokerID = input.BrokerID;
+            ret.InvestorID = input.InvestorID;
+
+            return ret;
+        }
+
+    }
+
+
+    /// <summary>
+    /// 用户事件通知
+    /// </summary>
+    [StructLayout(LayoutKind.Sequential, Pack = 1)]
+    public struct LCThostFtdcTradingNoticeField : IFieldId
+    {
+        /// <summary>
+        /// 经纪公司代码
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 11)]
+        public string BrokerID;
+        /// <summary>
+        /// 投资者范围
+        /// </summary>
+        public TThostFtdcInvestorRangeType InvestorRange;
+        /// <summary>
+        /// 投资者代码
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 13)]
+        public string InvestorID;
+        /// <summary>
+        /// 序列系列号
+        /// </summary>
+        public short SequenceSeries;
+        /// <summary>
+        /// 用户代码
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 16)]
+        public string UserID;
+        /// <summary>
+        /// 发送时间
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 9)]
+        public string SendTime;
+        /// <summary>
+        /// 序列号
+        /// </summary>
+        public int SequenceNo;
+        /// <summary>
+        /// 消息正文
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 501)]
+        public string FieldContent;
+
+
+        public ushort FieldId
+        {
+            get { return 9350; }
+        }
+
+        public void Swap()
+        { }
+    }
+
+    /// <summary>
+    /// 用户事件通知
+    /// </summary>
+    [StructLayout(LayoutKind.Sequential)]
+    public struct CThostFtdcTradingNoticeField
+    {
+        /// <summary>
+        /// 经纪公司代码
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 11)]
+        public string BrokerID;
+        /// <summary>
+        /// 投资者范围
+        /// </summary>
+        public TThostFtdcInvestorRangeType InvestorRange;
+        /// <summary>
+        /// 投资者代码
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 13)]
+        public string InvestorID;
+        /// <summary>
+        /// 序列系列号
+        /// </summary>
+        public short SequenceSeries;
+        /// <summary>
+        /// 用户代码
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 16)]
+        public string UserID;
+        /// <summary>
+        /// 发送时间
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 9)]
+        public string SendTime;
+        /// <summary>
+        /// 序列号
+        /// </summary>
+        public int SequenceNo;
+        /// <summary>
+        /// 消息正文
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 501)]
+        public string FieldContent;
+    }
 
 
 
+    #endregion
+
+    #region 查询投资者结算结果信息
+    /// <summary>
+    /// 查询投资者结算结果
+    /// </summary>
+    [StructLayout(LayoutKind.Sequential)]
+    public struct CThostFtdcQrySettlementInfoField : ITFieldId
+    {
+        /// <summary>
+        /// 经纪公司代码
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 11)]
+        public string BrokerID;
+        /// <summary>
+        /// 投资者代码
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 13)]
+        public string InvestorID;
+        /// <summary>
+        /// 交易日
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 9)]
+        public string TradingDay;
+
+        public ushort FieldId
+        {
+            get { return 1804; }
+        }
+
+        public void Swap()
+        { }
+
+        public static implicit operator CThostFtdcQrySettlementInfoField(LCThostFtdcQrySettlementInfoField input)
+        {
+            CThostFtdcQrySettlementInfoField ret = new CThostFtdcQrySettlementInfoField();
+            ret.BrokerID = input.BrokerID;
+            ret.InvestorID = input.InvestorID;
+            ret.TradingDay = input.TradingDay;
+
+            return ret;
+        }
+    }
+
+    [StructLayout(LayoutKind.Sequential, Pack = 1)]
+    public struct LCThostFtdcQrySettlementInfoField : IFieldId
+    {
+        /// <summary>
+        /// 经纪公司代码
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 11)]
+        public string BrokerID;
+        /// <summary>
+        /// 投资者代码
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 13)]
+        public string InvestorID;
+        /// <summary>
+        /// 交易日
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 9)]
+        public string TradingDay;
+
+        public ushort FieldId
+        {
+            get { return 1804; }
+        }
+
+        public void Swap()
+        { }
+
+        public static implicit operator LCThostFtdcQrySettlementInfoField(CThostFtdcQrySettlementInfoField input)
+        {
+            LCThostFtdcQrySettlementInfoField ret = new LCThostFtdcQrySettlementInfoField();
+            ret.BrokerID = input.BrokerID;
+            ret.InvestorID = input.InvestorID;
+            ret.TradingDay = input.TradingDay;
+
+            return ret;
+        }
+    }
+
+
+    /// <summary>
+    /// 投资者结算结果
+    /// </summary>
+    [StructLayout(LayoutKind.Sequential)]
+    public struct CThostFtdcSettlementInfoField : ITFieldId
+    {
+        /// <summary>
+        /// 交易日
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 9)]
+        public string TradingDay;
+        /// <summary>
+        /// 结算编号
+        /// </summary>
+        public int SettlementID;
+        /// <summary>
+        /// 经纪公司代码
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 11)]
+        public string BrokerID;
+        /// <summary>
+        /// 投资者代码
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 13)]
+        public string InvestorID;
+        /// <summary>
+        /// 序号
+        /// </summary>
+        public int SequenceNo;
+        /// <summary>
+        /// 消息正文
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 501)]
+        public string Content;
+
+        public ushort FieldId
+        {
+            get { return 27; }
+        }
+
+        public void Swap()
+        { }
+
+        public static implicit operator CThostFtdcSettlementInfoField(LCThostFtdcSettlementInfoField input)
+        {
+            CThostFtdcSettlementInfoField ret = new CThostFtdcSettlementInfoField();
+            ret.TradingDay = input.TradingDay;
+            ret.SettlementID = input.SettlementID;
+            ret.BrokerID = input.BrokerID;
+            ret.InvestorID = input.InvestorID;
+            ret.SequenceNo = input.SequenceNo;
+            ret.Content = input.Content;
+
+            return ret;
+        }
+    }
+    [StructLayout(LayoutKind.Sequential, Pack = 1)]
+    public struct LCThostFtdcSettlementInfoField : IFieldId
+    {
+        /// <summary>
+        /// 交易日
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 9)]
+        public string TradingDay;
+        /// <summary>
+        /// 结算编号
+        /// </summary>
+        public int SettlementID;
+        /// <summary>
+        /// 经纪公司代码
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 11)]
+        public string BrokerID;
+        /// <summary>
+        /// 投资者代码
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 13)]
+        public string InvestorID;
+        /// <summary>
+        /// 序号
+        /// </summary>
+        public int SequenceNo;
+        /// <summary>
+        /// 消息正文
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 501)]
+        public string Content;
+
+        public ushort FieldId
+        {
+            get { return 27; }
+        }
+
+        public void Swap()
+        {
+            SettlementID = ByteSwapHelp.ReverseBytes(SettlementID);
+            SequenceNo = ByteSwapHelp.ReverseBytes(SequenceNo);
+        }
+
+        public static implicit operator LCThostFtdcSettlementInfoField(CThostFtdcSettlementInfoField input)
+        {
+            LCThostFtdcSettlementInfoField ret = new LCThostFtdcSettlementInfoField();
+            ret.TradingDay = input.TradingDay;
+            ret.SettlementID = input.SettlementID;
+            ret.BrokerID = input.BrokerID;
+            ret.InvestorID = input.InvestorID;
+            ret.SequenceNo = input.SequenceNo;
+            ret.Content = input.Content;
+
+            return ret;
+        }
+    }
+    #endregion
 }

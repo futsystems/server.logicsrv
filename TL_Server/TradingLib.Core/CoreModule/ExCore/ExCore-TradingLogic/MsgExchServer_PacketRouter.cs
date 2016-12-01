@@ -69,7 +69,7 @@ namespace TradingLib.Core
                 case MessageTypes.QRYSETTLEINFOCONFIRM://查询结算确认
                     {
                         QrySettleInfoConfirmRequest request = packet as QrySettleInfoConfirmRequest;
-                        SrvOnQrySettleInfoConfirm(request);
+                        SrvOnQrySettleInfoConfirm(request,account);
                     }
                     break;
                 case MessageTypes.CONFIRMSETTLEMENT://确认结算信息
@@ -93,7 +93,7 @@ namespace TradingLib.Core
                 case MessageTypes.QRYNOTICE://请求查询交易系统通知
                     {
                         QryNoticeRequest request = packet as QryNoticeRequest;
-                        SrvOnQryNotice(request);
+                        SrvOnQryNotice(request,account);
                     }
                     break;
                 case MessageTypes.QRYSYMBOL://查询合约列表

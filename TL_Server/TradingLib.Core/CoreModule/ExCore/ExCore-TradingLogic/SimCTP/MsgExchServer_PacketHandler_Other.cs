@@ -173,13 +173,13 @@ namespace TradingLib.Core
 
         
 
-        void SrvOnQrySettleInfoConfirm(QrySettleInfoConfirmRequest request)
+        void SrvOnQrySettleInfoConfirm(QrySettleInfoConfirmRequest request,IAccount account)
         {
             logger.Info("QrySettleInfoConfirm :" + request.ToString());
 
             RspQrySettleInfoConfirmResponse response = ResponseTemplate<RspQrySettleInfoConfirmResponse>.SrvSendRspResponse(request);
             
-            IAccount account = TLCtxHelper.ModuleAccountManager[request.Account];
+            //IAccount account = TLCtxHelper.ModuleAccountManager[request.Account];
             logger.Info("confirm stamp:" + account.SettlementConfirmTimeStamp.ToString());
 
             response.TradingAccount = request.Account;
@@ -276,12 +276,10 @@ namespace TradingLib.Core
         /// 查询通知
         /// </summary>
         /// <param name="request"></param>
-        void SrvOnQryNotice(QryNoticeRequest request)
+        void SrvOnQryNotice(QryNoticeRequest request,IAccount account)
         {
             logger.Info("QryNoticeRequest:" + request.ToString());
             RspQryNoticeResponse response = ResponseTemplate<RspQryNoticeResponse>.SrvSendRspResponse(request);
-
-            IAccount account = TLCtxHelper.ModuleAccountManager[request.Account];
             if (account != null)
             {
                 if (account.Category == QSEnumAccountCategory.SUBACCOUNT)

@@ -31,7 +31,7 @@ namespace CTPService
         T_RTN_MD = 0xf101,
         T_RSP_SEQSN = 0xf102,
         T_REQ_SETCONFIRM = 0x4013,
-        T_RSP_SETCONFIRM = 0x4014,
+        T_RSP_CONFIRMSET = 0x4014,
         T_RSP_BFTDETAIL = 0x401c,
         T_QRY_INST = 0x802e,
         T_RSP_INST = 0x802f,
@@ -92,9 +92,18 @@ namespace CTPService
         T_REQ_RMPKACT = 0x4020,
         T_QRY_TRANSBK = 0x8048,
         T_QRY_POSDETAIL = 0x8050,
+        /// <summary>
+        /// 32854 查询结算确认信息
+        /// </summary>
         T_QRY_SETCONFIRM = 0x8056,
+        T_RSP_SETCONFIRM = 0x8057,
+
         T_QRY_POSCOMBDETAIL = 0x8067,
+        /// <summary>
+        /// CFMMCKEY
+        /// </summary>
         T_QRY_CFMMCKEY = 0x8077,
+        T_RSP_CFMMCKEY = 0x8078,
         T_QRY_WROFFSET = 0x807b,
         T_QRY_PRODGM = 0x8081,
         T_QRY_EXCHGMGR = 0x8083,

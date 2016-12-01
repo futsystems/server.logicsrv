@@ -115,6 +115,30 @@ namespace CTPService
                                 fieldList = ParsePktDataV12(data, ftdhdr.wFtdcLen, ftdhdr.wFiCount);
                                 break;
                             }
+                        //请求查询结算信息确认 ReqQrySettlementInfoConfirm
+                        case EnumTransactionID.T_QRY_SETCONFIRM:
+                            {
+                                fieldList = ParsePktDataV12(data, ftdhdr.wFtdcLen, ftdhdr.wFiCount);
+                                break;
+                            }
+                        //请求查询客户通知 ReqQryNotice
+                        case EnumTransactionID.T_QRY_NOTICE:
+                            {
+                                fieldList = ParsePktDataV12(data, ftdhdr.wFtdcLen, ftdhdr.wFiCount);
+                                break;
+                            }
+                        //请求查询交易通知 ReqQryTradingNotice
+                        case EnumTransactionID.T_QRY_TDNOTICE:
+                            {
+                                fieldList = ParsePktDataV12(data, ftdhdr.wFtdcLen, ftdhdr.wFiCount);
+                                break;
+                            }
+                        //请求查询投资者结算结果
+                        case EnumTransactionID.T_QRY_SMI:
+                            {
+                                fieldList = ParsePktDataV12(data, ftdhdr.wFtdcLen, ftdhdr.wFiCount);
+                                break;
+                            }
                         default:
                             throw new Exception(string.Format("TransactionID:{0} pkt not handled", (EnumTransactionID)ftdhdr.dTransId));
                     }

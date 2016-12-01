@@ -99,8 +99,67 @@ namespace CTPService
                             conn.Send(encData, encPktLen);
                             break;
                         }
+                        //查询投资者结算确认信息
+                    case MessageTypes.SETTLEINFOCONFIRMRESPONSE:
+                        {
+                            RspQrySettleInfoConfirmResponse response = packet as RspQrySettleInfoConfirmResponse;
+                            Struct.V12.LCThostFtdcSettlementInfoConfirmField field = new Struct.V12.LCThostFtdcSettlementInfoConfirmField();
+                            field.BrokerID = "88888";
+                            field.InvestorID = response.TradingAccount;
+                            field.ConfirmDate = response.ConfirmDay.ToString();
+                            field.ConfirmTime = Util.ToDateTime(response.ConfirmDay, response.ConfirmTime).ToString("HH:mm:ss");
+
+                            //打包数据
+                            byte[] data = Struct.V12.StructHelperV12.PackRsp(EnumSeqType.SeqQry, EnumTransactionID.T_RSP_SETCONFIRM, response.RequestID, conn.NextSeqId);
+                            int encPktLen = 0;
+                            byte[] encData = Struct.V12.StructHelperV12.EncPkt(data, out encPktLen);
+
+                            //hex = "0200000d01030c4ce104e28057e302e704";
+                            //encData = ByteUtil.HexToByte(hex);
+                            //encPktLen = encData.Length;
+                            //发送数据
+                            conn.Send(encData, encPktLen);
+                            break;
+                        }
+                        //请求查询客户通知
+                    case MessageTypes.NOTICERESPONSE:
+                        {
+                            RspQryNoticeResponse response = packet as RspQryNoticeResponse;
+                            Struct.V12.LCThostFtdcNoticeField field = new Struct.V12.LCThostFtdcNoticeField();
+                            field.BrokerID = "888888";
+                            field.Content = response.NoticeContent;
+
+                            //打包数据
+                            byte[] data = Struct.V12.StructHelperV12.PackRsp<Struct.V12.LCThostFtdcNoticeField>(ref field, EnumSeqType.SeqQry, EnumTransactionID.T_RSP_NOTICE, response.RequestID, conn.NextSeqId);
+                            int encPktLen = 0;
+                            byte[] encData = Struct.V12.StructHelperV12.EncPkt(data, out encPktLen);
+
+                            conn.Send(encData, encPktLen);
+                            break;
+                        }
+                        //查询结算信息回报
+                    case MessageTypes.XSETTLEINFORESPONSE:
+                        {
+                            RspXQrySettleInfoResponse response = packet as RspXQrySettleInfoResponse;
+                            Struct.V12.LCThostFtdcSettlementInfoField field = new Struct.V12.LCThostFtdcSettlementInfoField();
+                            field.Content = response.SettlementContent;
+                            field.TradingDay = response.Tradingday.ToString();
+                            field.InvestorID = response.TradingAccount;
+                            field.SettlementID = response.SettlementID;
+                            field.SequenceNo = response.SequenceNo;
+
+                            //打包数据
+                            byte[] data = Struct.V12.StructHelperV12.PackRsp<Struct.V12.LCThostFtdcSettlementInfoField>(ref field, EnumSeqType.SeqQry, EnumTransactionID.T_RSP_SMI, response.RequestID, conn.NextSeqId,response.IsLast);
+                            int encPktLen = 0;
+                            byte[] encData = Struct.V12.StructHelperV12.EncPkt(data, out encPktLen);
+
+                            conn.Send(encData, encPktLen);
+                            break;
+
+                        }
+
                     default:
-                        logger.Warn(string.Format("Logic Packet:{0} not handled", packet.ToString()));
+                        logger.Warn(string.Format("Logic Packet:{0} not handled", packet.Type));
                         break;
                 }
 

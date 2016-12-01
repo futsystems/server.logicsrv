@@ -86,9 +86,9 @@ namespace CTPService
             try
             {
                 logger.Info(string.Format("Session:{0} Request:{1} ", session.SessionID, requestInfo.Key));
-                logger.Info("*** " + requestInfo.Body.Length.ToString());
-                logger.Info(ByteUtil.ByteToHex(requestInfo.Body, ' '));
-                logger.Info("***");
+                //logger.Info("*** " + requestInfo.Body.Length.ToString());
+                //logger.Info(ByteUtil.ByteToHex(requestInfo.Body, ' '));
+                //logger.Info("***");
 
                 CTPConnection conn = null;
 
@@ -155,7 +155,7 @@ namespace CTPService
                                     request.ProductInfo = field.UserProductInfo;
 
                                     _mqServer.TLSend(session.SessionID, request);
-                                    logger.Info(string.Format("Session:{0} Request Login User:{1} Pass:{2}", session.SessionID, request.LoginID, request.Passwd));
+                                    logger.Info(string.Format("Session:{0} >> Request Login User:{1} Pass:{2}", session.SessionID, request.LoginID, request.Passwd));
                                 }
                                 break;
                             }
@@ -168,7 +168,73 @@ namespace CTPService
                                     Struct.V12.LCThostFtdcQryInvestorField field = (Struct.V12.LCThostFtdcQryInvestorField)data;
                                     QryInvestorRequest request = RequestTemplate<QryInvestorRequest>.CliSendRequest((int)requestInfo.FTDHeader.dReqId);
                                     _mqServer.TLSend(session.SessionID, request);
-                                    logger.Info(string.Format("Session:{0} QryInvestorInfo", session.SessionID));
+                                    logger.Info(string.Format("Session:{0} >> QryInvestorInfo", session.SessionID));
+                                }
+                                break;
+                            }
+                        //查询结算确认
+                        case EnumTransactionID.T_QRY_SETCONFIRM:
+                            {
+                                var data = requestInfo.FTDFields[0].FTDCData;
+                                if (data is Struct.V12.LCThostFtdcQrySettlementInfoConfirmField)
+                                {
+                                    Struct.V12.LCThostFtdcQrySettlementInfoConfirmField field = (Struct.V12.LCThostFtdcQrySettlementInfoConfirmField)data;
+                                    QrySettleInfoConfirmRequest request = RequestTemplate<QrySettleInfoConfirmRequest>.CliSendRequest((int)requestInfo.FTDHeader.dReqId);
+                                    _mqServer.TLSend(session.SessionID, request);
+                                    logger.Info(string.Format("Session:{0} >> QrySettlementConfirmInfo", session.SessionID));
+                                }
+                                break;
+                            }
+                        //请求查询客户通知
+                        case EnumTransactionID.T_QRY_NOTICE:
+                            {
+                                var data = requestInfo.FTDFields[0].FTDCData;
+                                if (data is Struct.V12.LCThostFtdcQryNoticeField)
+                                {
+                                    Struct.V12.LCThostFtdcQryNoticeField field = (Struct.V12.LCThostFtdcQryNoticeField)data;
+                                    QryNoticeRequest request = RequestTemplate<QryNoticeRequest>.CliSendRequest((int)requestInfo.FTDHeader.dReqId);
+                                    
+                                    _mqServer.TLSend(session.SessionID, request);
+                                    logger.Info(string.Format("Session:{0} >> QryNoticeRequest", session.SessionID));
+                                }
+                                break;
+                            }
+                        //请求查询交易通知
+                        case EnumTransactionID.T_QRY_TDNOTICE:
+                            {
+                                var data = requestInfo.FTDFields[0].FTDCData;
+                                if (data is Struct.V12.LCThostFtdcQryTradingNoticeField)
+                                {
+                                    Struct.V12.LCThostFtdcQryTradingNoticeField field = (Struct.V12.LCThostFtdcQryTradingNoticeField)data;
+                                    logger.Info(string.Format("Session:{0} >> QryTradingNoticeRequest", session.SessionID));
+
+                                    Struct.V12.LCThostFtdcTradingNoticeField response = new Struct.V12.LCThostFtdcTradingNoticeField();
+                                    //response.FieldContent = "市场有风险，投资需谨慎";
+                                    //打包数据
+                                    byte[] rdata = Struct.V12.StructHelperV12.PackRsp<Struct.V12.LCThostFtdcTradingNoticeField>(ref response, EnumSeqType.SeqQry, EnumTransactionID.T_RSP_NOTICE, (int)requestInfo.FTDHeader.dReqId, conn.NextSeqId);
+                                    int encPktLen = 0;
+                                    byte[] encData = Struct.V12.StructHelperV12.EncPkt(rdata, out encPktLen);
+
+                                    conn.Send(encData, encPktLen);
+
+                                }
+                                break;
+                            }
+                        //请求查询投资者结算结果
+                        case EnumTransactionID.T_QRY_SMI:
+                            {
+                                var data = requestInfo.FTDFields[0].FTDCData;
+                                if (data is Struct.V12.LCThostFtdcQrySettlementInfoField)
+                                {
+                                    Struct.V12.LCThostFtdcQrySettlementInfoField field = (Struct.V12.LCThostFtdcQrySettlementInfoField)data;
+                                    XQrySettleInfoRequest request = RequestTemplate<XQrySettleInfoRequest>.CliSendRequest((int)requestInfo.FTDHeader.dReqId);
+
+                                    request.Tradingday = string.IsNullOrEmpty(field.TradingDay) ? 0 : int.Parse(field.TradingDay);
+
+
+                                    _mqServer.TLSend(session.SessionID, request);
+                                    logger.Info(string.Format("Session:{0} >> XQrySettleInfoRequest", session.SessionID));
+
                                 }
                                 break;
                             }
