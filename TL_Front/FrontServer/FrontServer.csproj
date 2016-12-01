@@ -80,6 +80,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="API\IServiceHost.cs" />
     <Compile Include="Common\ByteUtil.cs" />
     <Compile Include="Common\Constanst.cs" />
     <Compile Include="Common\Endian .cs" />
@@ -98,6 +99,7 @@
     <Compile Include="CTPServiceHost\CTPServiceHost.cs" />
     <Compile Include="API\IConnection.cs" />
     <Compile Include="CTPServiceHost\CTPServiceHost_.cs" />
+    <Compile Include="CTPServiceHost\CTPServiceHost_IServiceHost.cs" />
     <Compile Include="MQServer.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -11,6 +11,11 @@ namespace FrontServer
     public interface IConnection
     {
         /// <summary>
+        /// Connection所在的ServiceHost对象
+        /// </summary>
+        IServiceHost ServiceHost { get; }
+
+        /// <summary>
         /// 回话编号
         /// </summary>
         string SessionID { get; set; }
@@ -28,13 +33,7 @@ namespace FrontServer
         /// </summary>
         /// <param name="packet"></param>
         void ForwardToLogic(IPacket packet);
-
-
-        /// <summary>
-        /// 处理逻辑服务端发送过来的消息
-        /// </summary>
-        /// <param name="packet"></param>
-        void HandleLogicMessage(IPacket packet);
+        
 
         /// <summary>
         /// 关闭会话

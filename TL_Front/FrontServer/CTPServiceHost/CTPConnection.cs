@@ -17,8 +17,9 @@ namespace CTPService
         TLSessionBase _session = null;
         ILog logger = LogManager.GetLogger("conn");
 
-        public CTPConnection(TLSessionBase session)
-        { 
+        public CTPConnection(CTPServiceHost host, TLSessionBase session)
+        {
+            _serviceHost = host;
             _session = session;
 
             this.SessionID = _session.SessionID;
@@ -30,6 +31,13 @@ namespace CTPService
         /// 回话编号
         /// </summary>
         public string SessionID { get; set; }
+
+        FrontServer.IServiceHost _serviceHost = null;
+        /// <summary>
+        /// Connection所在的ServiceHost对象
+        /// </summary>
+        public FrontServer.IServiceHost ServiceHost { get { return _serviceHost; } }
+    
 
         public void HandleLogicMessage(IPacket packet)
         { 
@@ -149,12 +157,12 @@ namespace CTPService
             }
         }
 
-        void Send(byte[] data)
+        public void Send(byte[] data)
         {
             _session.Send(data, 0, data.Length);
         }
 
-        void Send(byte[] data, int len)
+        public void Send(byte[] data, int len)
         {
             _session.Send(data, 0, len);
         }

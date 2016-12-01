@@ -10,7 +10,7 @@ using Common.Logging;
 
 namespace CTPService
 {
-    public partial class CTPServiceHost
+    public partial class CTPServiceHost:FrontServer.IServiceHost
     {
 
         ILog logger = LogManager.GetLogger(_name);
@@ -84,7 +84,7 @@ namespace CTPService
         void ctpSocketServer_NewRequestReceived(TLSessionBase session, TLRequestInfo requestInfo)
         {
             logger.Info(string.Format("Session:{0} Request:{1} ", session.SessionID, requestInfo.Key));
-            FrontServer.IConnection conn = null;
+            CTPConnection conn = null;
 
             if (requestInfo.FTDType == EnumFTDType.FTDTypeNone)
             { 
@@ -184,6 +184,8 @@ namespace CTPService
             OnSessionCreated(session);
 
         }
+
+
 
 
         public void Start()

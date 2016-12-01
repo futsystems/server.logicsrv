@@ -145,18 +145,19 @@ namespace FrontServer
                                     Message message = Message.gotmessage(incoming.Last().Read());//读取消息
                                     logger.Info(string.Format("LogicResponse Type:{0} Content:{1} Frames:{2}", message.Type, message.Content, cnt));
 
-                                    if (!string.IsNullOrEmpty(address))
+                                    if (!string.IsNullOrEmpty(clientId))
                                     {
-                                        IConnection conn = GetConnection(address);
+                                        IConnection conn = GetConnection(clientId);
 
                                         if (conn != null)
                                         {
                                             IPacket packet = PacketHelper.CliRecvResponse(message);
-                                            conn.HandleLogicMessage(packet);
+                                            //调用Connection对应的ServiceHost处理逻辑消息包
+                                            conn.ServiceHost.HandleLogicMessage(conn,packet);
                                         }
                                         else
                                         {
-                                            logger.Warn(string.Format("Client:{0} do not exist", address));
+                                            logger.Warn(string.Format("Client:{0} do not exist", clientId));
                                         }
                                     }
                                     
