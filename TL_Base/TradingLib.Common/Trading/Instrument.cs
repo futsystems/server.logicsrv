@@ -112,31 +112,31 @@ namespace TradingLib.Common
         {
             StringBuilder sb = new StringBuilder();
             char d = ',';
-            sb.Append(instrument.Symbol);
+            sb.Append(instrument.Symbol);//0
             sb.Append(d);
-            sb.Append(instrument.Name);
+            sb.Append(instrument.Name);//1
             sb.Append(d);
-            sb.Append(instrument.Security);
+            sb.Append(instrument.Security);//2
             sb.Append(d);
-            sb.Append(instrument.ExchangeID);
+            sb.Append(instrument.ExchangeID);//3
             sb.Append(d);
-            sb.Append(instrument.EntryCommission);
+            sb.Append(instrument.EntryCommission);//4
             sb.Append(d);
-            sb.Append(instrument.ExitCommission);
+            sb.Append(instrument.ExitCommission);//5
             sb.Append(d);
-            sb.Append(instrument.Margin);
+            sb.Append(instrument.Margin);//6
             sb.Append(d);
-            sb.Append(instrument.SecurityType.ToString());
+            sb.Append(instrument.SecurityType.ToString());//7
             sb.Append(d);
-            sb.Append(instrument.Multiple);
+            sb.Append(instrument.Multiple);//8
             sb.Append(d);
-            sb.Append(instrument.PriceTick);
+            sb.Append(instrument.PriceTick);//9
             sb.Append(d);
-            sb.Append(instrument.ExpireMonth);
+            sb.Append(instrument.ExpireMonth);//10
             sb.Append(d);
             sb.Append(instrument.ExpireDate);
             sb.Append(d);
-            sb.Append(instrument.Tradeable.ToString());
+            sb.Append(instrument.Tradeable);
             return sb.ToString();
         }
 
@@ -155,9 +155,9 @@ namespace TradingLib.Common
             instrument.SecurityType = (SecurityType)Enum.Parse(typeof(SecurityType), rec[7]);
             instrument.Multiple = int.Parse(rec[8]);
             instrument.PriceTick = decimal.Parse(rec[9]);
-            //instrument.ExpireMonth = int.Parse(rec[10]);
-            instrument.ExpireDate = int.Parse(rec[10]);
-            instrument.Tradeable = bool.Parse(rec[11]);
+            instrument.ExpireMonth = int.Parse(rec[10]);
+            instrument.ExpireDate = int.Parse(rec[11]);
+            instrument.Tradeable = bool.Parse(rec[12]);
             return instrument;
         }
 

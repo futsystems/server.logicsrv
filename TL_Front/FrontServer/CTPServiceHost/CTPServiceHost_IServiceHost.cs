@@ -166,10 +166,66 @@ namespace CTPService
                             field.ConfirmTime = Util.ToDateTime(response.ConfirmDay, response.ConfirmTime).ToString("HH:mm:ss");
 
                             //打包数据
-                            byte[] data = Struct.V12.StructHelperV12.PackRsp<Struct.V12.LCThostFtdcSettlementInfoConfirmField>(ref field, EnumSeqType.SeqQry, EnumTransactionID.T_RSP_CONFIRMSET, response.RequestID, conn.NextSeqId);
+                            byte[] data = Struct.V12.StructHelperV12.PackRsp<Struct.V12.LCThostFtdcSettlementInfoConfirmField>(ref field, EnumSeqType.SeqReq, EnumTransactionID.T_RSP_CONFIRMSET, response.RequestID, conn.NextSeqId);
                             int encPktLen = 0;
                             byte[] encData = Struct.V12.StructHelperV12.EncPkt(data, out encPktLen);
 
+                            conn.Send(encData, encPktLen);
+                            break;
+                        }
+                        //查询合约回报
+                    case MessageTypes.SYMBOLRESPONSE:
+                        {
+                            RspQrySymbolResponse response = packet as RspQrySymbolResponse;
+                            Struct.V12.LCThostFtdcInstrumentField field = new Struct.V12.LCThostFtdcInstrumentField();
+                            field.InstrumentID = response.InstrumentToSend.Symbol;
+                            field.ExchangeInstID = response.InstrumentToSend.Symbol;
+                            field.InstrumentName = response.InstrumentToSend.Name;
+                            field.ProductID = response.InstrumentToSend.Security;
+                            field.ExchangeID = response.InstrumentToSend.ExchangeID;
+                            field.ProductClass = TThostFtdcProductClassType.Futures;
+
+                            field.MaxMarketOrderVolume = 1000;
+                            field.MinMarketOrderVolume = 1;
+                            field.MaxLimitOrderVolume = 1000;
+                            field.MinLimitOrderVolume = 1;
+
+                            field.VolumeMultiple = response.InstrumentToSend.Multiple;
+                            field.PriceTick = (double)response.InstrumentToSend.PriceTick;
+                            field.CreateDate = response.InstrumentToSend.ExpireDate.ToString();
+                            field.DeliveryYear = response.InstrumentToSend.ExpireDate / 10000;
+                            field.DeliveryMonth = response.InstrumentToSend.ExpireDate / 100 - (response.InstrumentToSend.ExpireDate / 10000) * 100;
+                            
+                            field.EndDelivDate = response.InstrumentToSend.ExpireDate.ToString();
+                            field.ExpireDate = response.InstrumentToSend.ExpireDate.ToString();
+                            field.OpenDate = response.InstrumentToSend.ExpireDate.ToString();
+                            field.StartDelivDate = response.InstrumentToSend.ExpireDate.ToString();
+
+                            field.IsTrading = 1;
+                            field.InstLifePhase = TThostFtdcInstLifePhaseType.Started;
+
+                            field.PositionDateType = TThostFtdcPositionDateTypeType.UseHistory;
+                            field.PositionType = TThostFtdcPositionTypeType.Gross;
+
+                            field.LongMarginRatio = 0.1;
+                            field.ShortMarginRatio = 0.1;
+
+                            //field.MaxMarginSideAlgorithm = TThostFtdcMaxMarginSideAlgorithmType.NO;
+                            //field.UnderlyingInstrID = "";
+                            //field.StrikePrice = 0;
+                            //field.OptionsType = (TThostFtdcOptionsTypeType)(byte)'0';// TThostFtdcOptionsTypeType.CallOptions;
+                            //field.UnderlyingMultiple = 0;
+                            //field.CombinationType = TThostFtdcCombinationTypeType.Future;
+                            //if (!response.IsLast) return;
+                            //打包数据
+                            byte[] data = Struct.V12.StructHelperV12.PackRsp<Struct.V12.LCThostFtdcInstrumentField>(ref field, EnumSeqType.SeqQry, EnumTransactionID.T_RSP_INST, response.RequestID, conn.NextSeqId,response.IsLast);
+                            int encPktLen = 0;
+                            byte[] encData = Struct.V12.StructHelperV12.EncPkt(data, out encPktLen);
+
+                            //hex = "0200028201030c43e104e2802fe30de1040468e319e10301165a43363132efeb435a4345e5b6afc1a6c3ba363132ec5a43363132efeb5a43efee31e207e0e0e30ce3c8e301e203e0e8e301e3643fc999999999999a3230313531313235e13230313531323038e13230313631323037e13230313631323037e13230313631323037e131e30132323fc999999999999a3fc999999999999a30efefe17fe0efffffffffffffe13ff0e630e10301164647373031efeb435a4345e5b2a3c1a7373031ee4647373031efeb4647efee31e207e0e1e301e3c8e301e203e0e8e301e3143ff0e63230313531323233e13230313630313138e13230313730313136e13230313730313136e13230313730313136e131e30132323fb1e0eb851eb851e0eb3fb1e0eb851eb851e0eb30efefe17fe0efffffffffffffe17fe0efffffffffffff30e1030116637331373031efea444345e6d3f1c3d7b5e0edb7db31373031e9637331373031efea6373efee31e207e0e1e301e203e0e8e301e203e0e8e301e30a3ff0e63230313531323234e13230313630313138e13230313730313136e13230313730313136e13230313730313136e131e30132323fb1e0eb851eb851e0eb3fb1e0eb851eb851e0eb30efefe17fe0efffffffffffffe17fe0efffffffffffff30e1030116666231373031efea444345e6d6d0c3dcb6c8cfcbceacb0e0e531373031e5666231373031efea6662efee31e207e0e1e301e203e0e8e301e203e0e8e301e201f43fa999999999999a3230313531323234e13230313630313138e13230313730313136e13230313730313136e13230313730313136e131e30132323fc999999999999a3fc999999999999a30efefe17fe0efffffffffffffe17fe0efffffffffffff30";
+                            //encData = ByteUtil.HexToByte(hex);
+                            //encPktLen = encData.Length;
+                            //encData[7] = (byte)'L';
                             conn.Send(encData, encPktLen);
                             break;
                         }

@@ -98,7 +98,7 @@ namespace TradingLib.Core
         /// <param name="time"></param>
         public void DropDeadClient(DateTime deadtime)
         {
-            IEnumerable<T> clients = clientMap.Values.Where(e=>e.FrontType != QSEnumFrontType.EVAccess && e.FrontType != QSEnumFrontType.WebAccess && e.HeartBeat<=deadtime);
+            IEnumerable<T> clients = clientMap.Values.Where(e=>e.FrontType != QSEnumFrontType.EVAccess && e.FrontType != QSEnumFrontType.WebAccess && e.FrontType != QSEnumFrontType.FastAccess&& e.HeartBeat<=deadtime);
 
             foreach (T c in clients)
             {

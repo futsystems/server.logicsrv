@@ -123,7 +123,7 @@ namespace FrontServer
                     //"tcp://" + _serverip + ":" + Port.ToString()
                     string address = string.Format("tcp://{0}:{1}", _logicServer, _logicPort);
 
-                    backend.SetOption(ZSocketOption.IDENTITY, Encoding.UTF8.GetBytes("front"));
+                    backend.SetOption(ZSocketOption.IDENTITY, Encoding.UTF8.GetBytes("front-001"));
                     backend.Connect(address);
                     _backend = backend;
 

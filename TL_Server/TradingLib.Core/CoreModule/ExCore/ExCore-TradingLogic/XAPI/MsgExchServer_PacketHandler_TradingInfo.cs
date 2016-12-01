@@ -224,14 +224,26 @@ namespace TradingLib.Core
             {
                 logger.Info("got settlement....");
                 List<string> settlelist = SettlementFactory.GenSettlementFile(settlement, account);
-                for (int i = 0; i < settlelist.Count; i++)
+                if (settlelist.Count > 0)
+                {
+                    for (int i = 0; i < settlelist.Count; i++)
+                    {
+                        RspXQrySettleInfoResponse response = ResponseTemplate<RspXQrySettleInfoResponse>.SrvSendRspResponse(request);
+                        response.Tradingday = settlement.Settleday;
+                        response.TradingAccount = settlement.Account;
+                        response.SettlementContent = settlelist[i] + "\n";
+                        CacheRspResponse(response, i == settlelist.Count - 1);
+                    }
+                }
+                else
                 {
                     RspXQrySettleInfoResponse response = ResponseTemplate<RspXQrySettleInfoResponse>.SrvSendRspResponse(request);
                     response.Tradingday = settlement.Settleday;
                     response.TradingAccount = settlement.Account;
-                    response.SettlementContent = settlelist[i] + "\n";
-                    CacheRspResponse(response, i == settlelist.Count - 1);
+                    response.SettlementContent = "无结算信息";
+                    CachePacket(response);
                 }
+
             }
             else
             {

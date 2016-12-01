@@ -133,14 +133,20 @@ namespace CTPService
                                 fieldList = ParsePktDataV12(data, ftdhdr.wFtdcLen, ftdhdr.wFiCount);
                                 break;
                             }
-                        //请求查询投资者结算结果
+                        //请求查询投资者结算结果 ReqQrySettlementInfo
                         case EnumTransactionID.T_QRY_SMI:
                             {
                                 fieldList = ParsePktDataV12(data, ftdhdr.wFtdcLen, ftdhdr.wFiCount);
                                 break;
                             }
-                        //投资者结算结果确认
+                        //投资者结算结果确认 ReqSettlementInfoConfirm
                         case EnumTransactionID.T_REQ_SETCONFIRM:
+                            {
+                                fieldList = ParsePktDataV12(data, ftdhdr.wFtdcLen, ftdhdr.wFiCount);
+                                break;
+                            }
+                        //请求查询合约 ReqQryInstrument
+                        case EnumTransactionID.T_QRY_INST:
                             {
                                 fieldList = ParsePktDataV12(data, ftdhdr.wFtdcLen, ftdhdr.wFiCount);
                                 break;

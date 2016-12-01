@@ -255,6 +255,24 @@ namespace CTPService
                                 break;
                                 
                             }
+                        //请求查询合约 ReqQryInstrument
+                        case EnumTransactionID.T_QRY_INST:
+                            {
+                                var data = requestInfo.FTDFields[0].FTDCData;
+                                if (data is Struct.V12.LCThostFtdcQryInstrumentField)
+                                {
+                                    Struct.V12.LCThostFtdcQryInstrumentField field = (Struct.V12.LCThostFtdcQryInstrumentField)data;
+
+                                    QrySymbolRequest request = RequestTemplate<QrySymbolRequest>.CliSendRequest((int)requestInfo.FTDHeader.dReqId);
+                                    request.SecurityType = SecurityType.FUT;//查询期货合约
+
+
+                                    _mqServer.TLSend(session.SessionID, request);
+                                    logger.Info(string.Format("Session:{0} >> QrySymbolRequest", session.SessionID));
+
+                                }
+                                break;
+                            }
                         default:
                             logger.Warn(string.Format("Transaction:{0} logic not handled", transId));
                             break;

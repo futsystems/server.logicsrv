@@ -1422,4 +1422,477 @@ namespace CTPService.Struct.V12
         }
     }
     #endregion
+
+    #region 查询合约
+    /// <summary>
+    /// 查询合约
+    /// </summary>
+    [StructLayout(LayoutKind.Sequential)]
+    public struct CThostFtdcQryInstrumentField : ITFieldId
+    {
+        /// <summary>
+        /// 合约代码
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 31)]
+        public string InstrumentID;
+        /// <summary>
+        /// 交易所代码
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 9)]
+        public string ExchangeID;
+        /// <summary>
+        /// 合约在交易所的代码
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 31)]
+        public string ExchangeInstID;
+        /// <summary>
+        /// 产品代码
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 31)]
+        public string ProductID;
+
+        public ushort FieldId
+        {
+            get { return 1815; }
+        }
+
+        public void Swap()
+        { }
+
+        public static implicit operator CThostFtdcQryInstrumentField(LCThostFtdcQryInstrumentField input)
+        {
+            CThostFtdcQryInstrumentField ret = new CThostFtdcQryInstrumentField();
+            ret.InstrumentID = input.InstrumentID;
+            ret.ExchangeID = input.ExchangeID;
+            ret.ExchangeInstID = input.ExchangeInstID;
+            ret.ProductID = input.ProductID;
+
+            return ret;
+        }
+    }
+    /// <summary>
+    /// 查询合约
+    /// </summary>
+    [StructLayout(LayoutKind.Sequential, Pack = 1)]
+    public struct LCThostFtdcQryInstrumentField : IFieldId
+    {
+        /// <summary>
+        /// 合约代码
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 31)]
+        public string InstrumentID;
+        /// <summary>
+        /// 交易所代码
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 9)]
+        public string ExchangeID;
+        /// <summary>
+        /// 合约在交易所的代码
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 31)]
+        public string ExchangeInstID;
+        /// <summary>
+        /// 产品代码
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 31)]
+        public string ProductID;
+
+        public ushort FieldId
+        {
+            get { return 1815; }
+        }
+
+        public void Swap()
+        { }
+
+        public static implicit operator LCThostFtdcQryInstrumentField(CThostFtdcQryInstrumentField input)
+        {
+            LCThostFtdcQryInstrumentField ret = new LCThostFtdcQryInstrumentField();
+            ret.InstrumentID = input.InstrumentID;
+            ret.ExchangeID = input.ExchangeID;
+            ret.ExchangeInstID = input.ExchangeInstID;
+            ret.ProductID = input.ProductID;
+
+            return ret;
+        }
+    }
+
+    /// <summary>
+    /// 合约
+    /// </summary>
+    [StructLayout(LayoutKind.Sequential)]
+    public struct CThostFtdcInstrumentField : ITFieldId
+    {
+        /// <summary>
+        /// 合约代码
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 31)]
+        public string InstrumentID;
+        /// <summary>
+        /// 交易所代码
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 9)]
+        public string ExchangeID;
+        /// <summary>
+        /// 合约名称
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 21)]
+        public string InstrumentName;
+        /// <summary>
+        /// 合约在交易所的代码
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 31)]
+        public string ExchangeInstID;
+        /// <summary>
+        /// 产品代码
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 31)]
+        public string ProductID;
+        /// <summary>
+        /// 产品类型
+        /// </summary>
+        public TThostFtdcProductClassType ProductClass;
+        /// <summary>
+        /// 交割年份
+        /// </summary>
+        public int DeliveryYear;
+        /// <summary>
+        /// 交割月
+        /// </summary>
+        public int DeliveryMonth;
+        /// <summary>
+        /// 市价单最大下单量
+        /// </summary>
+        public int MaxMarketOrderVolume;
+        /// <summary>
+        /// 市价单最小下单量
+        /// </summary>
+        public int MinMarketOrderVolume;
+        /// <summary>
+        /// 限价单最大下单量
+        /// </summary>
+        public int MaxLimitOrderVolume;
+        /// <summary>
+        /// 限价单最小下单量
+        /// </summary>
+        public int MinLimitOrderVolume;
+        /// <summary>
+        /// 合约数量乘数
+        /// </summary>
+        public int VolumeMultiple;
+        /// <summary>
+        /// 最小变动价位
+        /// </summary>
+        public double PriceTick;
+        /// <summary>
+        /// 创建日
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 9)]
+        public string CreateDate;
+        /// <summary>
+        /// 上市日
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 9)]
+        public string OpenDate;
+        /// <summary>
+        /// 到期日
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 9)]
+        public string ExpireDate;
+        /// <summary>
+        /// 开始交割日
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 9)]
+        public string StartDelivDate;
+        /// <summary>
+        /// 结束交割日
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 9)]
+        public string EndDelivDate;
+        /// <summary>
+        /// 合约生命周期状态
+        /// </summary>
+        public TThostFtdcInstLifePhaseType InstLifePhase;
+        /// <summary>
+        /// 当前是否交易
+        /// </summary>
+        public int IsTrading;
+        /// <summary>
+        /// 持仓类型
+        /// </summary>
+        public TThostFtdcPositionTypeType PositionType;
+        /// <summary>
+        /// 持仓日期类型
+        /// </summary>
+        public TThostFtdcPositionDateTypeType PositionDateType;
+        /// <summary>
+        /// 多头保证金率
+        /// </summary>
+        public double LongMarginRatio;
+        /// <summary>
+        /// 空头保证金率
+        /// </summary>
+        public double ShortMarginRatio;
+        /// <summary>
+        /// 是否使用大额单边保证金算法
+        /// </summary>
+        public TThostFtdcMaxMarginSideAlgorithmType MaxMarginSideAlgorithm;
+
+        ///基础商品代码
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 31)]
+        public string UnderlyingInstrID;
+        ///执行价
+        public double StrikePrice;
+        ///期权类型
+        public TThostFtdcOptionsTypeType OptionsType;
+        ///合约基础商品乘数
+        public double UnderlyingMultiple;
+        ///组合类型
+        public TThostFtdcCombinationTypeType CombinationType;
+
+
+        public ushort FieldId
+        {
+            get { return 3; }
+        }
+
+        public void Swap()
+        { }
+
+        public static implicit operator CThostFtdcInstrumentField(LCThostFtdcInstrumentField input)
+        {
+            CThostFtdcInstrumentField ret = new CThostFtdcInstrumentField();
+            ret.InstrumentID = input.InstrumentID;
+            ret.ExchangeID = input.ExchangeID;
+            ret.InstrumentName = input.InstrumentName;
+            ret.ExchangeInstID = input.ExchangeInstID;
+            ret.ProductID = input.ProductID;
+            ret.ProductClass = input.ProductClass;
+            ret.DeliveryYear = input.DeliveryYear;
+            ret.DeliveryMonth = input.DeliveryMonth;
+            ret.MaxMarketOrderVolume = input.MaxMarketOrderVolume;
+            ret.MinMarketOrderVolume = input.MinMarketOrderVolume;
+            ret.MaxLimitOrderVolume = input.MaxLimitOrderVolume;
+            ret.MinLimitOrderVolume = input.MinLimitOrderVolume;
+            ret.VolumeMultiple = input.VolumeMultiple;
+            ret.PriceTick = input.PriceTick;
+            ret.CreateDate = input.CreateDate;
+            ret.OpenDate = input.OpenDate;
+            ret.ExpireDate = input.ExpireDate;
+            ret.StartDelivDate = input.StartDelivDate;
+            ret.EndDelivDate = input.EndDelivDate;
+            ret.InstLifePhase = input.InstLifePhase;
+            ret.IsTrading = input.IsTrading;
+            ret.PositionType = input.PositionType;
+            ret.PositionDateType = input.PositionDateType;
+            ret.LongMarginRatio = input.LongMarginRatio;
+            ret.ShortMarginRatio = input.ShortMarginRatio;
+            ret.MaxMarginSideAlgorithm = input.MaxMarginSideAlgorithm;
+            ret.UnderlyingInstrID = input.UnderlyingInstrID;
+            ret.StrikePrice = input.StrikePrice;
+            ret.OptionsType = input.OptionsType;
+            ret.UnderlyingMultiple = input.UnderlyingMultiple;
+            ret.CombinationType = input.CombinationType;
+
+            return ret;
+        }
+    }
+    [StructLayout(LayoutKind.Sequential, Pack = 1)]
+    public struct LCThostFtdcInstrumentField : IFieldId, ICloneable
+    {
+        /// <summary>
+        /// 合约代码
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 31)]
+        public string InstrumentID;
+        /// <summary>
+        /// 交易所代码
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 9)]
+        public string ExchangeID;
+        /// <summary>
+        /// 合约名称
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 21)]
+        public string InstrumentName;
+        /// <summary>
+        /// 合约在交易所的代码
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 31)]
+        public string ExchangeInstID;
+        /// <summary>
+        /// 产品代码
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 31)]
+        public string ProductID;
+        /// <summary>
+        /// 产品类型
+        /// </summary>
+        public TThostFtdcProductClassType ProductClass;
+        /// <summary>
+        /// 交割年份
+        /// </summary>
+        public int DeliveryYear;
+        /// <summary>
+        /// 交割月
+        /// </summary>
+        public int DeliveryMonth;
+        /// <summary>
+        /// 市价单最大下单量
+        /// </summary>
+        public int MaxMarketOrderVolume;
+        /// <summary>
+        /// 市价单最小下单量
+        /// </summary>
+        public int MinMarketOrderVolume;
+        /// <summary>
+        /// 限价单最大下单量
+        /// </summary>
+        public int MaxLimitOrderVolume;
+        /// <summary>
+        /// 限价单最小下单量
+        /// </summary>
+        public int MinLimitOrderVolume;
+        /// <summary>
+        /// 合约数量乘数
+        /// </summary>
+        public int VolumeMultiple;
+        /// <summary>
+        /// 最小变动价位
+        /// </summary>
+        public double PriceTick;
+        /// <summary>
+        /// 创建日
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 9)]
+        public string CreateDate;
+        /// <summary>
+        /// 上市日
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 9)]
+        public string OpenDate;
+        /// <summary>
+        /// 到期日
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 9)]
+        public string ExpireDate;
+        /// <summary>
+        /// 开始交割日
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 9)]
+        public string StartDelivDate;
+        /// <summary>
+        /// 结束交割日
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 9)]
+        public string EndDelivDate;
+        /// <summary>
+        /// 合约生命周期状态
+        /// </summary>
+        public TThostFtdcInstLifePhaseType InstLifePhase;
+        /// <summary>
+        /// 当前是否交易
+        /// </summary>
+        public int IsTrading;
+        /// <summary>
+        /// 持仓类型
+        /// </summary>
+        public TThostFtdcPositionTypeType PositionType;
+        /// <summary>
+        /// 持仓日期类型
+        /// </summary>
+        public TThostFtdcPositionDateTypeType PositionDateType;
+        /// <summary>
+        /// 多头保证金率
+        /// </summary>
+        public double LongMarginRatio;
+        /// <summary>
+        /// 空头保证金率
+        /// </summary>
+        public double ShortMarginRatio;
+        /// <summary>
+        /// 是否使用大额单边保证金算法
+        /// </summary>
+        public TThostFtdcMaxMarginSideAlgorithmType MaxMarginSideAlgorithm;
+
+        ///基础商品代码
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 31)]
+        public string UnderlyingInstrID;
+        ///执行价
+        public double StrikePrice;
+        ///期权类型
+        public TThostFtdcOptionsTypeType OptionsType;
+        ///合约基础商品乘数
+        public double UnderlyingMultiple;
+        ///组合类型
+        public TThostFtdcCombinationTypeType CombinationType;
+
+
+        public ushort FieldId
+        {
+            get { return 3; }
+        }
+
+        public void Swap()
+        {
+            DeliveryYear = ByteSwapHelp.ReverseBytes(DeliveryYear);
+            DeliveryMonth = ByteSwapHelp.ReverseBytes(DeliveryMonth);
+            MaxMarketOrderVolume = ByteSwapHelp.ReverseBytes(MaxMarketOrderVolume);
+            MinMarketOrderVolume = ByteSwapHelp.ReverseBytes(MinMarketOrderVolume);
+            MaxLimitOrderVolume = ByteSwapHelp.ReverseBytes(MaxLimitOrderVolume);
+            MinLimitOrderVolume = ByteSwapHelp.ReverseBytes(MinLimitOrderVolume);
+            VolumeMultiple = ByteSwapHelp.ReverseBytes(VolumeMultiple);
+            PriceTick = ByteSwapHelp.ReverseBytes(PriceTick);
+            IsTrading = ByteSwapHelp.ReverseBytes(IsTrading);
+            LongMarginRatio = ByteSwapHelp.ReverseBytes(LongMarginRatio);
+            ShortMarginRatio = ByteSwapHelp.ReverseBytes(ShortMarginRatio);
+
+            StrikePrice = ByteSwapHelp.ReverseBytes(StrikePrice);
+            UnderlyingMultiple = ByteSwapHelp.ReverseBytes(UnderlyingMultiple);
+        }
+
+        public static implicit operator LCThostFtdcInstrumentField(CThostFtdcInstrumentField input)
+        {
+            LCThostFtdcInstrumentField ret = new LCThostFtdcInstrumentField();
+            ret.InstrumentID = input.InstrumentID;
+            ret.ExchangeID = input.ExchangeID;
+            ret.InstrumentName = input.InstrumentName;
+            ret.ExchangeInstID = input.ExchangeInstID;
+            ret.ProductID = input.ProductID;
+            ret.ProductClass = input.ProductClass;
+            ret.DeliveryYear = input.DeliveryYear;
+            ret.DeliveryMonth = input.DeliveryMonth;
+            ret.MaxMarketOrderVolume = input.MaxMarketOrderVolume;
+            ret.MinMarketOrderVolume = input.MinMarketOrderVolume;
+            ret.MaxLimitOrderVolume = input.MaxLimitOrderVolume;
+            ret.MinLimitOrderVolume = input.MinLimitOrderVolume;
+            ret.VolumeMultiple = input.VolumeMultiple;
+            ret.PriceTick = input.PriceTick;
+            ret.CreateDate = input.CreateDate;
+            ret.OpenDate = input.OpenDate;
+            ret.ExpireDate = input.ExpireDate;
+            ret.StartDelivDate = input.StartDelivDate;
+            ret.EndDelivDate = input.EndDelivDate;
+            ret.InstLifePhase = input.InstLifePhase;
+            ret.IsTrading = input.IsTrading;
+            ret.PositionType = input.PositionType;
+            ret.PositionDateType = input.PositionDateType;
+            ret.LongMarginRatio = input.LongMarginRatio;
+            ret.ShortMarginRatio = input.ShortMarginRatio;
+            ret.MaxMarginSideAlgorithm = input.MaxMarginSideAlgorithm;
+            ret.UnderlyingInstrID = input.UnderlyingInstrID;
+            ret.StrikePrice = input.StrikePrice;
+            ret.OptionsType = input.OptionsType;
+            ret.UnderlyingMultiple = input.UnderlyingMultiple;
+            ret.CombinationType = input.CombinationType;
+
+            return ret;
+        }
+
+        public object Clone()
+        {
+            return this.MemberwiseClone();
+        }
+    }
+    #endregion 
 }
