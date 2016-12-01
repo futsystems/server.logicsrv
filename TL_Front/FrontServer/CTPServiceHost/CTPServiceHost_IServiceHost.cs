@@ -165,8 +165,8 @@ namespace CTPService
                             field.ConfirmDate = response.ConfirmDay.ToString();
                             field.ConfirmTime = Util.ToDateTime(response.ConfirmDay, response.ConfirmTime).ToString("HH:mm:ss");
 
-                            //打包数据
-                            byte[] data = Struct.V12.StructHelperV12.PackRsp<Struct.V12.LCThostFtdcSettlementInfoConfirmField>(ref field, EnumSeqType.SeqReq, EnumTransactionID.T_RSP_CONFIRMSET, response.RequestID, conn.NextSeqId);
+                            //打包数据 SeqType 为SeqQry 否则博弈会开在查询合约
+                            byte[] data = Struct.V12.StructHelperV12.PackRsp<Struct.V12.LCThostFtdcSettlementInfoConfirmField>(ref field, EnumSeqType.SeqQry, EnumTransactionID.T_RSP_CONFIRMSET, response.RequestID, conn.NextSeqId);
                             int encPktLen = 0;
                             byte[] encData = Struct.V12.StructHelperV12.EncPkt(data, out encPktLen);
 
@@ -192,19 +192,20 @@ namespace CTPService
 
                             field.VolumeMultiple = response.InstrumentToSend.Multiple;
                             field.PriceTick = (double)response.InstrumentToSend.PriceTick;
-                            field.CreateDate = response.InstrumentToSend.ExpireDate.ToString();
-                            field.DeliveryYear = response.InstrumentToSend.ExpireDate / 10000;
-                            field.DeliveryMonth = response.InstrumentToSend.ExpireDate / 100 - (response.InstrumentToSend.ExpireDate / 10000) * 100;
                             
-                            field.EndDelivDate = response.InstrumentToSend.ExpireDate.ToString();
-                            field.ExpireDate = response.InstrumentToSend.ExpireDate.ToString();
-                            field.OpenDate = response.InstrumentToSend.ExpireDate.ToString();
-                            field.StartDelivDate = response.InstrumentToSend.ExpireDate.ToString();
+                            //field.CreateDate = response.InstrumentToSend.ExpireDate.ToString();
+                            //field.DeliveryYear = response.InstrumentToSend.ExpireDate / 10000;
+                            //field.DeliveryMonth = response.InstrumentToSend.ExpireDate / 100 - (response.InstrumentToSend.ExpireDate / 10000) * 100;
+                            
+                            //field.EndDelivDate = response.InstrumentToSend.ExpireDate.ToString();
+                            //field.ExpireDate = response.InstrumentToSend.ExpireDate.ToString();
+                            //field.OpenDate = response.InstrumentToSend.ExpireDate.ToString();
+                            //field.StartDelivDate = response.InstrumentToSend.ExpireDate.ToString();
 
                             field.IsTrading = 1;
                             field.InstLifePhase = TThostFtdcInstLifePhaseType.Started;
 
-                            field.PositionDateType = TThostFtdcPositionDateTypeType.UseHistory;
+                            field.PositionDateType = TThostFtdcPositionDateTypeType.NoUseHistory;
                             field.PositionType = TThostFtdcPositionTypeType.Gross;
 
                             field.LongMarginRatio = 0.1;
