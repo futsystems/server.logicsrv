@@ -273,6 +273,25 @@ namespace CTPService
                                 }
                                 break;
                             }
+                        //请求查询报单 ReqQryOrder
+                        case EnumTransactionID.T_QRY_ORDER:
+                            {
+                                var data = requestInfo.FTDFields[0].FTDCData;
+                                if (data is Struct.V12.LCThostFtdcQryOrderField)
+                                {
+                                    Struct.V12.LCThostFtdcQryOrderField field = (Struct.V12.LCThostFtdcQryOrderField)data;
+
+                                    QryOrderRequest request = RequestTemplate<QryOrderRequest>.CliSendRequest((int)requestInfo.FTDHeader.dReqId);
+                                    request.Symbol = request.Symbol;
+                                    
+
+
+                                    _mqServer.TLSend(session.SessionID, request);
+                                    logger.Info(string.Format("Session:{0} >> QryOrderRequest", session.SessionID));
+
+                                }
+                                break;
+                            }
                         default:
                             logger.Warn(string.Format("Transaction:{0} logic not handled", transId));
                             break;

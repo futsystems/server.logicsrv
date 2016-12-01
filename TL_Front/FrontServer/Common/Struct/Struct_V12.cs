@@ -1895,4 +1895,876 @@ namespace CTPService.Struct.V12
         }
     }
     #endregion 
+
+    #region 查询委托
+    /// <summary>
+    /// 查询报单
+    /// </summary>
+    [StructLayout(LayoutKind.Sequential)]
+    public struct CThostFtdcQryOrderField : ITFieldId
+    {
+        /// <summary>
+        /// 经纪公司代码
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 11)]
+        public string BrokerID;
+        /// <summary>
+        /// 投资者代码
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 13)]
+        public string InvestorID;
+        /// <summary>
+        /// 合约代码
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 31)]
+        public string InstrumentID;
+        /// <summary>
+        /// 交易所代码
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 9)]
+        public string ExchangeID;
+        /// <summary>
+        /// 报单编号
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 21)]
+        public string OrderSysID;
+        /// <summary>
+        /// 开始时间
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 9)]
+        public string InsertTimeStart;
+        /// <summary>
+        /// 结束时间
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 9)]
+        public string InsertTimeEnd;
+
+        public ushort FieldId
+        {
+            get { return 1792; }
+        }
+
+        public void Swap()
+        { }
+
+        public static implicit operator CThostFtdcQryOrderField(LCThostFtdcQryOrderField input)
+        {
+            CThostFtdcQryOrderField ret = new CThostFtdcQryOrderField();
+            ret.BrokerID = input.BrokerID;
+            ret.InvestorID = input.InvestorID;
+            ret.InstrumentID = input.InstrumentID;
+            ret.ExchangeID = input.ExchangeID;
+            ret.OrderSysID = input.OrderSysID;
+            ret.InsertTimeStart = input.InsertTimeStart;
+            ret.InsertTimeEnd = input.InsertTimeEnd;
+
+            return ret;
+        }
+    }
+    [StructLayout(LayoutKind.Sequential, Pack = 1)]
+    public struct LCThostFtdcQryOrderField : IFieldId
+    {
+        /// <summary>
+        /// 经纪公司代码
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 11)]
+        public string BrokerID;
+        /// <summary>
+        /// 投资者代码
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 13)]
+        public string InvestorID;
+        /// <summary>
+        /// 合约代码
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 31)]
+        public string InstrumentID;
+        /// <summary>
+        /// 交易所代码
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 9)]
+        public string ExchangeID;
+        /// <summary>
+        /// 报单编号
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 21)]
+        public string OrderSysID;
+        /// <summary>
+        /// 开始时间
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 9)]
+        public string InsertTimeStart;
+        /// <summary>
+        /// 结束时间
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 9)]
+        public string InsertTimeEnd;
+
+        public ushort FieldId
+        {
+            get { return 1792; }
+        }
+
+        public void Swap()
+        { }
+
+        public static implicit operator LCThostFtdcQryOrderField(CThostFtdcQryOrderField input)
+        {
+            LCThostFtdcQryOrderField ret = new LCThostFtdcQryOrderField();
+            ret.BrokerID = input.BrokerID;
+            ret.InvestorID = input.InvestorID;
+            ret.InstrumentID = input.InstrumentID;
+            ret.ExchangeID = input.ExchangeID;
+            ret.OrderSysID = input.OrderSysID;
+            ret.InsertTimeStart = input.InsertTimeStart;
+            ret.InsertTimeEnd = input.InsertTimeEnd;
+
+            return ret;
+        }
+    }
+
+
+    /// <summary>
+    /// 报单
+    /// </summary>
+    [StructLayout(LayoutKind.Sequential)]
+    public struct CThostFtdcOrderField : ITFieldId
+    {
+        /// <summary>
+        /// 经纪公司代码
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 11)]
+        public string BrokerID;
+        /// <summary>
+        /// 投资者代码
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 13)]
+        public string InvestorID;
+        /// <summary>
+        /// 合约代码
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 31)]
+        public string InstrumentID;
+        /// <summary>
+        /// 报单引用
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 13)]
+        public string OrderRef;
+        /// <summary>
+        /// 用户代码
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 16)]
+        public string UserID;
+        /// <summary>
+        /// 报单价格条件
+        /// </summary>
+        public TThostFtdcOrderPriceTypeType OrderPriceType;
+        /// <summary>
+        /// 买卖方向
+        /// </summary>
+        public TThostFtdcDirectionType Direction;
+        /// <summary>
+        /// 组合开平标志
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 5)]
+        public string CombOffsetFlag;
+        /// <summary>
+        /// 组合投机套保标志
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 5)]
+        public string CombHedgeFlag;
+        /// <summary>
+        /// 价格
+        /// </summary>
+        public double LimitPrice;
+        /// <summary>
+        /// 数量
+        /// </summary>
+        public int VolumeTotalOriginal;
+        /// <summary>
+        /// 有效期类型
+        /// </summary>
+        public TThostFtdcTimeConditionType TimeCondition;
+        /// <summary>
+        /// GTD日期
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 9)]
+        public string GTDDate;
+        /// <summary>
+        /// 成交量类型
+        /// </summary>
+        public TThostFtdcVolumeConditionType VolumeCondition;
+        /// <summary>
+        /// 最小成交量
+        /// </summary>
+        public int MinVolume;
+        /// <summary>
+        /// 触发条件
+        /// </summary>
+        public TThostFtdcContingentConditionType ContingentCondition;
+        /// <summary>
+        /// 止损价
+        /// </summary>
+        public double StopPrice;
+        /// <summary>
+        /// 强平原因
+        /// </summary>
+        public TThostFtdcForceCloseReasonType ForceCloseReason;
+        /// <summary>
+        /// 自动挂起标志
+        /// </summary>
+        public int IsAutoSuspend;
+        /// <summary>
+        /// 业务单元
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 21)]
+        public string BusinessUnit;
+        /// <summary>
+        /// 请求编号
+        /// </summary>
+        public int RequestID;
+        /// <summary>
+        /// 本地报单编号
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 13)]
+        public string OrderLocalID;
+        /// <summary>
+        /// 交易所代码
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 9)]
+        public string ExchangeID;
+        /// <summary>
+        /// 会员代码
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 11)]
+        public string ParticipantID;
+        /// <summary>
+        /// 客户代码
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 11)]
+        public string ClientID;
+        /// <summary>
+        /// 合约在交易所的代码
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 31)]
+        public string ExchangeInstID;
+        /// <summary>
+        /// 交易所交易员代码
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 21)]
+        public string TraderID;
+        /// <summary>
+        /// 安装编号
+        /// </summary>
+        public int InstallID;
+        /// <summary>
+        /// 报单提交状态
+        /// </summary>
+        public TThostFtdcOrderSubmitStatusType OrderSubmitStatus;
+        /// <summary>
+        /// 报单提示序号
+        /// </summary>
+        public int NotifySequence;
+        /// <summary>
+        /// 交易日
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 9)]
+        public string TradingDay;
+        /// <summary>
+        /// 结算编号
+        /// </summary>
+        public int SettlementID;
+        /// <summary>
+        /// 报单编号
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 21)]
+        public string OrderSysID;
+        /// <summary>
+        /// 报单来源
+        /// </summary>
+        public TThostFtdcOrderSourceType OrderSource;
+        /// <summary>
+        /// 报单状态
+        /// </summary>
+        public TThostFtdcOrderStatusType OrderStatus;
+        /// <summary>
+        /// 报单类型
+        /// </summary>
+        public TThostFtdcOrderTypeType OrderType;
+        /// <summary>
+        /// 今成交数量
+        /// </summary>
+        public int VolumeTraded;
+        /// <summary>
+        /// 剩余数量
+        /// </summary>
+        public int VolumeTotal;
+        /// <summary>
+        /// 报单日期
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 9)]
+        public string InsertDate;
+        /// <summary>
+        /// 委托时间
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 9)]
+        public string InsertTime;
+        /// <summary>
+        /// 激活时间
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 9)]
+        public string ActiveTime;
+        /// <summary>
+        /// 挂起时间
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 9)]
+        public string SuspendTime;
+        /// <summary>
+        /// 最后修改时间
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 9)]
+        public string UpdateTime;
+        /// <summary>
+        /// 撤销时间
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 9)]
+        public string CancelTime;
+        /// <summary>
+        /// 最后修改交易所交易员代码
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 21)]
+        public string ActiveTraderID;
+        /// <summary>
+        /// 结算会员编号
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 11)]
+        public string ClearingPartID;
+        /// <summary>
+        /// 序号
+        /// </summary>
+        public int SequenceNo;
+        /// <summary>
+        /// 前置编号
+        /// </summary>
+        public int FrontID;
+        /// <summary>
+        /// 会话编号
+        /// </summary>
+        public int SessionID;
+        /// <summary>
+        /// 用户端产品信息
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 11)]
+        public string UserProductInfo;
+        /// <summary>
+        /// 状态信息
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 81)]
+        public string StatusMsg;
+        /// <summary>
+        /// 用户强评标志
+        /// </summary>
+        public int UserForceClose;
+        /// <summary>
+        /// 操作用户代码
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 16)]
+        public string ActiveUserID;
+        /// <summary>
+        /// 经纪公司报单编号
+        /// </summary>
+        public int BrokerOrderSeq;
+        /// <summary>
+        /// 相关报单
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 21)]
+        public string RelativeOrderSysID;
+        /// <summary>
+        /// 郑商所成交数量
+        /// </summary>
+        public int ZCETotalTradedVolume;
+        /// <summary>
+        /// 互换单标志
+        /// </summary>
+        public int IsSwapOrder;
+
+        ///营业部编号
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 9)]
+        public string BranchID;
+        ///投资单元代码
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 17)]
+        public string InvestUnitID;
+        ///资金账号
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 13)]
+        public string AccountID;
+        ///币种代码
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 4)]
+        public string CurrencyID;
+        ///IP地址
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 16)]
+        public string IPAddress;
+        ///Mac地址
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 21)]
+        public string MacAddress;
+
+        public ushort FieldId
+        {
+            get { return 1025; }
+        }
+
+        public void Swap()
+        { }
+
+        public static implicit operator CThostFtdcOrderField(LCThostFtdcOrderField input)
+        {
+            CThostFtdcOrderField ret = new CThostFtdcOrderField();
+            ret.BrokerID = input.BrokerID;
+            ret.InvestorID = input.InvestorID;
+            ret.InstrumentID = input.InstrumentID;
+            ret.OrderRef = input.OrderRef;
+            ret.UserID = input.UserID;
+            ret.OrderPriceType = input.OrderPriceType;
+            ret.Direction = input.Direction;
+            ret.CombOffsetFlag = input.CombOffsetFlag;
+            ret.CombHedgeFlag = input.CombHedgeFlag;
+            ret.LimitPrice = input.LimitPrice;
+            ret.VolumeTotalOriginal = input.VolumeTotalOriginal;
+            ret.TimeCondition = input.TimeCondition;
+            ret.GTDDate = input.GTDDate;
+            ret.VolumeCondition = input.VolumeCondition;
+            ret.MinVolume = input.MinVolume;
+            ret.ContingentCondition = input.ContingentCondition;
+            ret.StopPrice = input.StopPrice;
+            ret.ForceCloseReason = input.ForceCloseReason;
+            ret.IsAutoSuspend = input.IsAutoSuspend;
+            ret.BusinessUnit = input.BusinessUnit;
+            ret.RequestID = input.RequestID;
+            ret.OrderLocalID = input.OrderLocalID;
+            ret.ExchangeID = input.ExchangeID;
+            ret.ParticipantID = input.ParticipantID;
+            ret.ClientID = input.ClientID;
+            ret.ExchangeInstID = input.ExchangeInstID;
+            ret.TraderID = input.TraderID;
+            ret.InstallID = input.InstallID;
+            ret.OrderSubmitStatus = input.OrderSubmitStatus;
+            ret.NotifySequence = input.NotifySequence;
+            ret.TradingDay = input.TradingDay;
+            ret.SettlementID = input.SettlementID;
+            ret.OrderSysID = input.OrderSysID;
+            ret.OrderSource = input.OrderSource;
+            ret.OrderStatus = input.OrderStatus;
+            ret.OrderType = input.OrderType;
+            ret.VolumeTraded = input.VolumeTraded;
+            ret.VolumeTotal = input.VolumeTotal;
+            ret.InsertDate = input.InsertDate;
+            ret.InsertTime = input.InsertTime;
+            ret.ActiveTime = input.ActiveTime;
+            ret.SuspendTime = input.SuspendTime;
+            ret.UpdateTime = input.UpdateTime;
+            ret.CancelTime = input.CancelTime;
+            ret.ActiveTraderID = input.ActiveTraderID;
+            ret.ClearingPartID = input.ClearingPartID;
+            ret.SequenceNo = input.SequenceNo;
+            ret.FrontID = input.FrontID;
+            ret.SessionID = input.SessionID;
+            ret.UserProductInfo = input.UserProductInfo;
+            ret.StatusMsg = input.StatusMsg;
+            ret.UserForceClose = input.UserForceClose;
+            ret.ActiveUserID = input.ActiveUserID;
+            ret.BrokerOrderSeq = input.BrokerOrderSeq;
+            ret.RelativeOrderSysID = input.RelativeOrderSysID;
+            ret.ZCETotalTradedVolume = input.ZCETotalTradedVolume;
+            ret.IsSwapOrder = input.IsSwapOrder;
+
+            ret.BranchID = input.BranchID;
+            ret.InvestUnitID = input.InvestUnitID;
+            ret.AccountID = input.AccountID;
+            ret.CurrencyID = input.CurrencyID;
+            ret.IPAddress = input.IPAddress;
+            ret.MacAddress = input.MacAddress;
+
+            return ret;
+        }
+    }
+    [StructLayout(LayoutKind.Sequential, Pack = 1)]
+    public struct LCThostFtdcOrderField : IFieldId
+    {
+        /// <summary>
+        /// 经纪公司代码
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 11)]
+        public string BrokerID;
+        /// <summary>
+        /// 投资者代码
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 13)]
+        public string InvestorID;
+        /// <summary>
+        /// 合约代码
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 31)]
+        public string InstrumentID;
+        /// <summary>
+        /// 报单引用
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 13)]
+        public string OrderRef;
+        /// <summary>
+        /// 用户代码
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 16)]
+        public string UserID;
+        /// <summary>
+        /// 报单价格条件
+        /// </summary>
+        public TThostFtdcOrderPriceTypeType OrderPriceType;
+        /// <summary>
+        /// 买卖方向
+        /// </summary>
+        public TThostFtdcDirectionType Direction;
+        /// <summary>
+        /// 组合开平标志
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 5)]
+        public string CombOffsetFlag;
+        /// <summary>
+        /// 组合投机套保标志
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 5)]
+        public string CombHedgeFlag;
+        /// <summary>
+        /// 价格
+        /// </summary>
+        public double LimitPrice;
+        /// <summary>
+        /// 数量
+        /// </summary>
+        public int VolumeTotalOriginal;
+        /// <summary>
+        /// 有效期类型
+        /// </summary>
+        public TThostFtdcTimeConditionType TimeCondition;
+        /// <summary>
+        /// GTD日期
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 9)]
+        public string GTDDate;
+        /// <summary>
+        /// 成交量类型
+        /// </summary>
+        public TThostFtdcVolumeConditionType VolumeCondition;
+        /// <summary>
+        /// 最小成交量
+        /// </summary>
+        public int MinVolume;
+        /// <summary>
+        /// 触发条件
+        /// </summary>
+        public TThostFtdcContingentConditionType ContingentCondition;
+        /// <summary>
+        /// 止损价
+        /// </summary>
+        public double StopPrice;
+        /// <summary>
+        /// 强平原因
+        /// </summary>
+        public TThostFtdcForceCloseReasonType ForceCloseReason;
+        /// <summary>
+        /// 自动挂起标志
+        /// </summary>
+        public int IsAutoSuspend;
+        /// <summary>
+        /// 业务单元
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 21)]
+        public string BusinessUnit;
+        /// <summary>
+        /// 请求编号
+        /// </summary>
+        public int RequestID;
+        /// <summary>
+        /// 本地报单编号
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 13)]
+        public string OrderLocalID;
+        /// <summary>
+        /// 交易所代码
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 9)]
+        public string ExchangeID;
+        /// <summary>
+        /// 会员代码
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 11)]
+        public string ParticipantID;
+        /// <summary>
+        /// 客户代码
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 11)]
+        public string ClientID;
+        /// <summary>
+        /// 合约在交易所的代码
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 31)]
+        public string ExchangeInstID;
+        /// <summary>
+        /// 交易所交易员代码
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 21)]
+        public string TraderID;
+        /// <summary>
+        /// 安装编号
+        /// </summary>
+        public int InstallID;
+        /// <summary>
+        /// 报单提交状态
+        /// </summary>
+        public TThostFtdcOrderSubmitStatusType OrderSubmitStatus;
+        /// <summary>
+        /// 报单提示序号
+        /// </summary>
+        public int NotifySequence;
+        /// <summary>
+        /// 交易日
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 9)]
+        public string TradingDay;
+        /// <summary>
+        /// 结算编号
+        /// </summary>
+        public int SettlementID;
+        /// <summary>
+        /// 报单编号
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 21)]
+        public string OrderSysID;
+        /// <summary>
+        /// 报单来源
+        /// </summary>
+        public TThostFtdcOrderSourceType OrderSource;
+        /// <summary>
+        /// 报单状态
+        /// </summary>
+        public TThostFtdcOrderStatusType OrderStatus;
+        /// <summary>
+        /// 报单类型
+        /// </summary>
+        public TThostFtdcOrderTypeType OrderType;
+        /// <summary>
+        /// 今成交数量
+        /// </summary>
+        public int VolumeTraded;
+        /// <summary>
+        /// 剩余数量
+        /// </summary>
+        public int VolumeTotal;
+        /// <summary>
+        /// 报单日期
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 9)]
+        public string InsertDate;
+        /// <summary>
+        /// 委托时间
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 9)]
+        public string InsertTime;
+        /// <summary>
+        /// 激活时间
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 9)]
+        public string ActiveTime;
+        /// <summary>
+        /// 挂起时间
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 9)]
+        public string SuspendTime;
+        /// <summary>
+        /// 最后修改时间
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 9)]
+        public string UpdateTime;
+        /// <summary>
+        /// 撤销时间
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 9)]
+        public string CancelTime;
+        /// <summary>
+        /// 最后修改交易所交易员代码
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 21)]
+        public string ActiveTraderID;
+        /// <summary>
+        /// 结算会员编号
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 11)]
+        public string ClearingPartID;
+        /// <summary>
+        /// 序号
+        /// </summary>
+        public int SequenceNo;
+        /// <summary>
+        /// 前置编号
+        /// </summary>
+        public int FrontID;
+        /// <summary>
+        /// 会话编号
+        /// </summary>
+        public int SessionID;
+        /// <summary>
+        /// 用户端产品信息
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 11)]
+        public string UserProductInfo;
+        /// <summary>
+        /// 状态信息
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 81)]
+        public string StatusMsg;
+        /// <summary>
+        /// 用户强评标志
+        /// </summary>
+        public int UserForceClose;
+        /// <summary>
+        /// 操作用户代码
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 16)]
+        public string ActiveUserID;
+        /// <summary>
+        /// 经纪公司报单编号
+        /// </summary>
+        public int BrokerOrderSeq;
+        /// <summary>
+        /// 相关报单
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 21)]
+        public string RelativeOrderSysID;
+        /// <summary>
+        /// 郑商所成交数量
+        /// </summary>
+        public int ZCETotalTradedVolume;
+        /// <summary>
+        /// 互换单标志
+        /// </summary>
+        public int IsSwapOrder;
+
+        ///营业部编号
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 9)]
+        public string BranchID;
+        ///投资单元代码
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 17)]
+        public string InvestUnitID;
+        ///资金账号
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 13)]
+        public string AccountID;
+        ///币种代码
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 4)]
+        public string CurrencyID;
+        ///IP地址
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 16)]
+        public string IPAddress;
+        ///Mac地址
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 21)]
+        public string MacAddress;
+        public ushort FieldId
+        {
+            get { return 1025; }
+        }
+
+        public void Swap()
+        {
+            LimitPrice = ByteSwapHelp.ReverseBytes(LimitPrice);
+            VolumeTotalOriginal = ByteSwapHelp.ReverseBytes(VolumeTotalOriginal);
+            MinVolume = ByteSwapHelp.ReverseBytes(MinVolume);
+            StopPrice = ByteSwapHelp.ReverseBytes(StopPrice);
+            IsAutoSuspend = ByteSwapHelp.ReverseBytes(IsAutoSuspend);
+            RequestID = ByteSwapHelp.ReverseBytes(RequestID);
+            InstallID = ByteSwapHelp.ReverseBytes(InstallID);
+            NotifySequence = ByteSwapHelp.ReverseBytes(NotifySequence);
+            SettlementID = ByteSwapHelp.ReverseBytes(SettlementID);
+            VolumeTraded = ByteSwapHelp.ReverseBytes(VolumeTraded);
+            VolumeTotal = ByteSwapHelp.ReverseBytes(VolumeTotal);
+            SequenceNo = ByteSwapHelp.ReverseBytes(SequenceNo);
+            FrontID = ByteSwapHelp.ReverseBytes(FrontID);
+            SessionID = ByteSwapHelp.ReverseBytes(SessionID);
+            UserForceClose = ByteSwapHelp.ReverseBytes(UserForceClose);
+            BrokerOrderSeq = ByteSwapHelp.ReverseBytes(BrokerOrderSeq);
+            ZCETotalTradedVolume = ByteSwapHelp.ReverseBytes(ZCETotalTradedVolume);
+            IsSwapOrder = ByteSwapHelp.ReverseBytes(IsSwapOrder);
+        }
+
+        public static implicit operator LCThostFtdcOrderField(CThostFtdcOrderField input)
+        {
+            LCThostFtdcOrderField ret = new LCThostFtdcOrderField();
+            ret.BrokerID = input.BrokerID;
+            ret.InvestorID = input.InvestorID;
+            ret.InstrumentID = input.InstrumentID;
+            ret.OrderRef = input.OrderRef;
+            ret.UserID = input.UserID;
+            ret.OrderPriceType = input.OrderPriceType;
+            ret.Direction = input.Direction;
+            ret.CombOffsetFlag = input.CombOffsetFlag;
+            ret.CombHedgeFlag = input.CombHedgeFlag;
+            ret.LimitPrice = input.LimitPrice;
+            ret.VolumeTotalOriginal = input.VolumeTotalOriginal;
+            ret.TimeCondition = input.TimeCondition;
+            ret.GTDDate = input.GTDDate;
+            ret.VolumeCondition = input.VolumeCondition;
+            ret.MinVolume = input.MinVolume;
+            ret.ContingentCondition = input.ContingentCondition;
+            ret.StopPrice = input.StopPrice;
+            ret.ForceCloseReason = input.ForceCloseReason;
+            ret.IsAutoSuspend = input.IsAutoSuspend;
+            ret.BusinessUnit = input.BusinessUnit;
+            ret.RequestID = input.RequestID;
+            ret.OrderLocalID = input.OrderLocalID;
+            ret.ExchangeID = input.ExchangeID;
+            ret.ParticipantID = input.ParticipantID;
+            ret.ClientID = input.ClientID;
+            ret.ExchangeInstID = input.ExchangeInstID;
+            ret.TraderID = input.TraderID;
+            ret.InstallID = input.InstallID;
+            ret.OrderSubmitStatus = input.OrderSubmitStatus;
+            ret.NotifySequence = input.NotifySequence;
+            ret.TradingDay = input.TradingDay;
+            ret.SettlementID = input.SettlementID;
+            ret.OrderSysID = input.OrderSysID;
+            ret.OrderSource = input.OrderSource;
+            ret.OrderStatus = input.OrderStatus;
+            ret.OrderType = input.OrderType;
+            ret.VolumeTraded = input.VolumeTraded;
+            ret.VolumeTotal = input.VolumeTotal;
+            ret.InsertDate = input.InsertDate;
+            ret.InsertTime = input.InsertTime;
+            ret.ActiveTime = input.ActiveTime;
+            ret.SuspendTime = input.SuspendTime;
+            ret.UpdateTime = input.UpdateTime;
+            ret.CancelTime = input.CancelTime;
+            ret.ActiveTraderID = input.ActiveTraderID;
+            ret.ClearingPartID = input.ClearingPartID;
+            ret.SequenceNo = input.SequenceNo;
+            ret.FrontID = input.FrontID;
+            ret.SessionID = input.SessionID;
+            ret.UserProductInfo = input.UserProductInfo;
+            ret.StatusMsg = input.StatusMsg;
+            ret.UserForceClose = input.UserForceClose;
+            ret.ActiveUserID = input.ActiveUserID;
+            ret.BrokerOrderSeq = input.BrokerOrderSeq;
+            ret.RelativeOrderSysID = input.RelativeOrderSysID;
+            ret.ZCETotalTradedVolume = input.ZCETotalTradedVolume;
+            ret.IsSwapOrder = input.IsSwapOrder;
+
+            ret.BranchID = input.BranchID;
+            ret.InvestUnitID = input.InvestUnitID;
+            ret.AccountID = input.AccountID;
+            ret.CurrencyID = input.CurrencyID;
+            ret.IPAddress = input.IPAddress;
+            ret.MacAddress = input.MacAddress;
+
+
+            return ret;
+        }
+    }
+
+    #endregion
+
 }

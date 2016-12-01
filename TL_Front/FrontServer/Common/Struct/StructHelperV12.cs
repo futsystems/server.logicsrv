@@ -59,6 +59,11 @@ namespace CTPService.Struct.V12
                     {
                         return ByteSwapHelp.BytesToStruct<LCThostFtdcQryInstrumentField>(data, offset);
                     }
+                    //请求查询报单
+                case EnumFiledID.F_QRY_ORDER:
+                    {
+                        return ByteSwapHelp.BytesToStruct<LCThostFtdcQryOrderField>(data, offset); 
+                    }
                 default:
                     throw new Exception(string.Format("FieldID:{0} pkt not handled", fieldID));
             }

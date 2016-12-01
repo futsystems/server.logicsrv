@@ -230,11 +230,27 @@ namespace CTPService
                             conn.Send(encData, encPktLen);
                             break;
                         }
+                        //委托查询回报
+                    case MessageTypes.ORDERRESPONSE:
+                        {
+                            RspQryOrderResponse response = packet as RspQryOrderResponse;
+                            Struct.V12.LCThostFtdcOrderField field = new Struct.V12.LCThostFtdcOrderField();
+
+                            byte[] data = Struct.V12.StructHelperV12.PackRsp(EnumSeqType.SeqQry, EnumTransactionID.T_RSP_QRYORD, response.RequestID, conn.NextSeqId, response.IsLast);
+                            int encPktLen = 0;
+                            byte[] encData = Struct.V12.StructHelperV12.EncPkt(data, out encPktLen);
+
+                            conn.Send(encData, encPktLen);
+
+                            break;
+
+                        }
 
                     default:
                         logger.Warn(string.Format("Logic Packet:{0} not handled", packet.Type));
                         break;
                 }
+                
 
             }
             catch (Exception ex)
