@@ -202,14 +202,13 @@ namespace TradingLib.Core
             CachePacket(response);
         }
 
-        void SrvOnConfirmSettlement(ConfirmSettlementRequest request)
+        void SrvOnConfirmSettlement(ConfirmSettlementRequest request,IAccount account)
         {
             logger.Info("ConfirmSettlement :" + request.ToString());
             
             //获得结算时间
             long timestamp = Util.ToTLDateTime(TLCtxHelper.ModuleSettleCentre.Tradingday, Util.ToTLTime());
-            ORM.MSettlement.ConfirmeSettle(request.Account, TLCtxHelper.ModuleSettleCentre.Tradingday, timestamp);
-            IAccount account = TLCtxHelper.ModuleAccountManager[request.Account];
+            ORM.MSettlement.ConfirmeSettle(account.ID, TLCtxHelper.ModuleSettleCentre.Tradingday, timestamp);
             account.SettlementConfirmTimeStamp = timestamp;
 
             //发送结算确认

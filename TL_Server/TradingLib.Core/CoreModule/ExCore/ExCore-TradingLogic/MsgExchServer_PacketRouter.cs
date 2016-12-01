@@ -75,7 +75,7 @@ namespace TradingLib.Core
                 case MessageTypes.CONFIRMSETTLEMENT://确认结算信息
                     {
                         ConfirmSettlementRequest request = packet as ConfirmSettlementRequest;
-                        SrvOnConfirmSettlement(request);
+                        SrvOnConfirmSettlement(request,account);
                     }
                     break;
                 case MessageTypes.QRYINVESTOR://查询投资者信息

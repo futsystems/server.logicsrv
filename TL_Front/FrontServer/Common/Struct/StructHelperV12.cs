@@ -49,6 +49,11 @@ namespace CTPService.Struct.V12
                     {
                         return ByteSwapHelp.BytesToStruct<LCThostFtdcQrySettlementInfoField>(data, offset);
                     }
+                    //投资者结算结果确认
+                case EnumFiledID.F_REQ_SETCONFIRM:
+                    {
+                        return ByteSwapHelp.BytesToStruct<LCThostFtdcSettlementInfoConfirmField>(data, offset);
+                    }
                 default:
                     throw new Exception(string.Format("FieldID:{0} pkt not handled", fieldID));
             }

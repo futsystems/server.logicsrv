@@ -238,6 +238,23 @@ namespace CTPService
                                 }
                                 break;
                             }
+                            //投资者结算结果确认
+                        case EnumTransactionID.T_REQ_SETCONFIRM:
+                            {
+                                var data = requestInfo.FTDFields[0].FTDCData;
+                                if (data is Struct.V12.LCThostFtdcSettlementInfoConfirmField)
+                                {
+                                    Struct.V12.LCThostFtdcSettlementInfoConfirmField field = (Struct.V12.LCThostFtdcSettlementInfoConfirmField)data;
+                                    ConfirmSettlementRequest request = RequestTemplate<ConfirmSettlementRequest>.CliSendRequest((int)requestInfo.FTDHeader.dReqId);
+                                    //request.Account = field.InvestorID;
+
+                                    _mqServer.TLSend(session.SessionID, request);
+                                    logger.Info(string.Format("Session:{0} >> ConfirmSettlementRequest", session.SessionID));
+
+                                }
+                                break;
+                                
+                            }
                         default:
                             logger.Warn(string.Format("Transaction:{0} logic not handled", transId));
                             break;

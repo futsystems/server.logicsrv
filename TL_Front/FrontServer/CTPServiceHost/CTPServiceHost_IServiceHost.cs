@@ -157,6 +157,22 @@ namespace CTPService
                             break;
 
                         }
+                        //结算单确认回报
+                    case MessageTypes.CONFIRMSETTLEMENTRESPONSE:
+                        {
+                            RspConfirmSettlementResponse response = packet as RspConfirmSettlementResponse;
+                            Struct.V12.LCThostFtdcSettlementInfoConfirmField field = new Struct.V12.LCThostFtdcSettlementInfoConfirmField();
+                            field.ConfirmDate = response.ConfirmDay.ToString();
+                            field.ConfirmTime = Util.ToDateTime(response.ConfirmDay, response.ConfirmTime).ToString("HH:mm:ss");
+
+                            //打包数据
+                            byte[] data = Struct.V12.StructHelperV12.PackRsp<Struct.V12.LCThostFtdcSettlementInfoConfirmField>(ref field, EnumSeqType.SeqQry, EnumTransactionID.T_RSP_CONFIRMSET, response.RequestID, conn.NextSeqId);
+                            int encPktLen = 0;
+                            byte[] encData = Struct.V12.StructHelperV12.EncPkt(data, out encPktLen);
+
+                            conn.Send(encData, encPktLen);
+                            break;
+                        }
 
                     default:
                         logger.Warn(string.Format("Logic Packet:{0} not handled", packet.Type));
