@@ -12,6 +12,64 @@ using CTPService.Struct.V12;
 
 namespace CTPService
 {
+    /// <summary>
+    /// 连接状态
+    /// 记录连接相关信息
+    /// </summary>
+    public class ConnectionState
+    {
+        public ConnectionState()
+        {
+            this.LastHeartBeat = DateTime.Now;
+            this.CTPVersion = string.Empty;
+            this.MACAddress = string.Empty;
+            this.IPAddress = string.Empty;
+            this.Authorized = false;
+            this.LoginID = string.Empty;
+            this.BrokerID = string.Empty;
+
+        }
+        /// <summary>
+        /// 最近心跳时间
+        /// </summary>
+        public DateTime LastHeartBeat { get; set; }
+
+        /// <summary>
+        /// CTP
+        /// </summary>
+        public string CTPVersion { get; set; }
+
+        /// <summary>
+        /// MAC 地址
+        /// </summary>
+        public string MACAddress { get; set; }
+
+        /// <summary>
+        /// 网络地址
+        /// </summary>
+        public string IPAddress { get; set; }
+
+        /// <summary>
+        /// 是否已认证
+        /// </summary>
+        public bool Authorized { get; set; }
+
+        /// <summary>
+        /// 登入ID
+        /// </summary>
+        public string LoginID { get; set; }
+
+        /// <summary>
+        /// BrokerID
+        /// </summary>
+        public string BrokerID { get; set; }
+
+        /// <summary>
+        /// 客户端信息
+        /// </summary>
+        public string ProductInfo { get; set; }
+    }
+
     public class CTPConnection : FrontServer.IConnection
     {
         TLSessionBase _session = null;
@@ -23,6 +81,8 @@ namespace CTPService
             _session = session;
 
             this.SessionID = _session.SessionID;
+            this.State = new ConnectionState();
+            this.State.IPAddress = session.RemoteEndPoint.ToString();
         }
 
         
@@ -30,7 +90,7 @@ namespace CTPService
         /// <summary>
         /// 回话编号
         /// </summary>
-        public string SessionID { get; set; }
+        public string SessionID { get; private set; }
 
         FrontServer.IServiceHost _serviceHost = null;
         /// <summary>
@@ -57,6 +117,17 @@ namespace CTPService
             }
 
         }
+
+        public ConnectionState State { get; private set; }
+
+        /// <summary>
+        /// 更新心跳状态
+        /// </summary>
+        public void UpdateHeartBeat()
+        {
+            this.State.LastHeartBeat = DateTime.Now;
+        }
+
 
         public void HandleLogicMessage(IPacket packet)
         { 

@@ -23,24 +23,24 @@ namespace CTPService
         {
             if (sessionMap.Keys.Contains(session.SessionID))
             {
-                logger.Error(string.Format("Session[{0}] already created", session.SessionID));
+                logger.Error(string.Format("Session:{0} already created", session.SessionID));
                 return;
             }
             sessionMap.TryAdd(session.SessionID, session);
-            logger.Info(string.Format("Session[{0}] created", session.SessionID));
+            logger.Info(string.Format("Session:{0} >> Created", session.SessionID));
         }
 
         void OnSessionClosed(TLSessionBase session)
         {
             if (!sessionMap.Keys.Contains(session.SessionID))
             {
-                logger.Error(string.Format("Session[{0}] not exist!", session.SessionID));
+                logger.Error(string.Format("Session:{0} not exist!", session.SessionID));
                 return;
             }
             TLSessionBase target = null;
             if (sessionMap.TryRemove(session.SessionID, out target))
             {
-                logger.Info(string.Format("Session[{0}] closed", session.SessionID));
+                logger.Info(string.Format("Session:{0} >> Closed", session.SessionID));
 
             }
             else

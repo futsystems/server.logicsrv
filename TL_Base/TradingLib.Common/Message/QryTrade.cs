@@ -106,22 +106,22 @@ namespace TradingLib.Common
     public class RspQryTradeResponse : RspResponsePacket
     {
         public RspQryTradeResponse()
-            : this(null, true)
-        {
-        }
-        public RspQryTradeResponse(Trade trade, bool islast)
         {
             _type = MessageTypes.TRADERESPONSE;
-            TradeToSend = trade;
-            IsLast = islast;
+            this.TradeToSend = null;
         }
+        //public RspQryTradeResponse(Trade trade, bool islast)
+        //{
+        //    _type = MessageTypes.TRADERESPONSE;
+        //    TradeToSend = trade;
+        //    IsLast = islast;
+        //}
 
         public Trade TradeToSend { get; set; }
         public override string ResponseSerialize()
         {
             if (TradeToSend == null)
                 return "";
-
             return TradeImpl.Serialize(TradeToSend);
         }
 

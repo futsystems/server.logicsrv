@@ -85,7 +85,7 @@ namespace CTPService
         {
             try
             {
-                logger.Info(string.Format("Session:{0} Request:{1} ", session.SessionID, requestInfo.Key));
+                logger.Debug(string.Format("Session:{0} Request:{1} ", session.SessionID, requestInfo.Key));
                 //logger.Info("*** " + requestInfo.Body.Length.ToString());
                 //logger.Info(ByteUtil.ByteToHex(requestInfo.Body, ' '));
                 //logger.Info("***");
@@ -99,12 +99,18 @@ namespace CTPService
                     {
                         case EnumFTDTagType.FTDTagKeepAlive:
                             {
-                                logger.Info(string.Format("Session:{0} HeartBeat", session.SessionID));
+                                logger.Info(string.Format("Session:{0} >> HeartBeat", session.SessionID));
+                                if (_connectionMap.TryGetValue(session.SessionID, out conn))
+                                {
+                                    //更新connection最近心跳时间
+                                    conn.UpdateHeartBeat();
+
+                                }
                                 break;
                             }
                         case EnumFTDTagType.FTDTagRegister:
                             {
-                                logger.Info(string.Format("Session:{0} Register", session.SessionID));
+                                logger.Info(string.Format("Session:{0} >> Register", session.SessionID));
 
                                 //连接已经建立直接返回
                                 if (_connectionMap.TryGetValue(session.SessionID, out conn))
@@ -118,13 +124,14 @@ namespace CTPService
                                 _connectionMap.TryAdd(session.SessionID, conn);
                                 //客户端发送初始化数据包后执行逻辑服务器客户端注册操作
                                 _mqServer.LogicRegister(conn);
+                                logger.Info(string.Format("Session:{0} Registed Remote EndPoint:{1}", conn.SessionID, conn.State.IPAddress));
                                 break;
                             }
                         default:
                             logger.Warn(string.Format("FTD Tag:{0} not handled", tag));
                             break;
                     }
-
+                    return;
                 }
 
                 if (requestInfo.FTDType == EnumFTDType.FTDTypeFTDC)
@@ -133,8 +140,20 @@ namespace CTPService
                     if (!_connectionMap.TryGetValue(session.SessionID, out conn))
                     {
                         logger.Warn(string.Format("Client:{0} is not registed to server, ignore request", session.SessionID));
+                        //关闭连接
+                        session.Close();
+                        //逻辑服务器注销客户端
+                        _mqServer.LogicUnRegister(session.SessionID);
                         return;
                     }
+                    conn.UpdateHeartBeat();
+
+                    if (requestInfo.FTDFields.Count == 0)
+                    {
+                        logger.Warn(string.Format("Client:{0} empty request,ingore", session.SessionID));
+                        return;
+                    }
+
 
                     EnumTransactionID transId = (EnumTransactionID)requestInfo.FTDHeader.dTransId;
                     switch (transId)
@@ -155,7 +174,13 @@ namespace CTPService
                                     request.ProductInfo = field.UserProductInfo;
 
                                     _mqServer.TLSend(session.SessionID, request);
-                                    logger.Info(string.Format("Session:{0} >> ReqUserLogin User:{1} Pass:{2}", session.SessionID, request.LoginID, request.Passwd));
+                                    conn.State.MACAddress = field.MacAddress;
+                                    conn.State.CTPVersion = requestInfo.FTDHeader.bVersion.ToString();
+                                    conn.State.BrokerID = field.BrokerID;
+                                    conn.State.LoginID = field.UserID;
+                                    conn.State.ProductInfo = field.UserProductInfo;
+
+                                    logger.Info(string.Format("Session:{0} >> ReqUserLogin BrokerID:{1} User:{2} CTPVer:{3} ProductInfo:{4}", session.SessionID, field.BrokerID, field.UserID, requestInfo.FTDHeader.bVersion, field.UserProductInfo));
                                 }
                                 break;
                             }

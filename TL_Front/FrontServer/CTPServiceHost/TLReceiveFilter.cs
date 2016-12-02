@@ -8,6 +8,7 @@ using SuperSocket.Facility.Protocol;
 using TradingLib.API;
 using TradingLib.Common;
 using System.Runtime.InteropServices;
+using Common.Logging;
 using CTPService.Struct;
 using CTPService.Struct.V12;
 
@@ -20,6 +21,8 @@ namespace CTPService
     /// </summary>
     public class TLReceiveFilter : FixedHeaderReceiveFilter<TLRequestInfo>
     {
+        ILog logger = LogManager.GetLogger("TLReceiveFilter");
+
         public TLReceiveFilter()
             : base(4)
         { 
@@ -206,7 +209,8 @@ namespace CTPService
                 }
                 catch (Exception ex)
                 {
-                    key = ex.ToString();
+                    logger.Error("Parse Data Error:" + ex.ToString());
+                    return null;
                 }
             }
             return new TLRequestInfo(key, bFtdtype,ftdTag,ftdhdr,fieldList,data);

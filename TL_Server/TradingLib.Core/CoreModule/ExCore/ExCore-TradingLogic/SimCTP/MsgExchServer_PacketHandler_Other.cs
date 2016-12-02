@@ -25,6 +25,7 @@ namespace TradingLib.Core
             {
                 orders = account.Orders.Where(o=>!string.IsNullOrEmpty(o.OrderSysID)).ToArray();
             }
+
             int totalnum = orders.Length;
             if (totalnum > 0)
             {
@@ -39,7 +40,6 @@ namespace TradingLib.Core
             {
                 //返回空
                 RspQryOrderResponse response = ResponseTemplate<RspQryOrderResponse>.SrvSendRspResponse(request);
-                response.OrderToSend = new OrderImpl();
                 CacheRspResponse(response);
             }
 
@@ -74,7 +74,6 @@ namespace TradingLib.Core
             else
             {
                 RspQryTradeResponse response = ResponseTemplate<RspQryTradeResponse>.SrvSendRspResponse(request);
-                response.TradeToSend = new TradeImpl();
                 CacheRspResponse(response);
             }
         }
@@ -111,7 +110,6 @@ namespace TradingLib.Core
             else
             {
                 RspQryPositionResponse response = ResponseTemplate<RspQryPositionResponse>.SrvSendRspResponse(request);
-                response.PositionToSend = new PositionEx();
                 CacheRspResponse(response);
             }
         }

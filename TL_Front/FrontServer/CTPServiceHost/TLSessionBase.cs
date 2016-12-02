@@ -14,7 +14,8 @@ namespace CTPService
         ILog logger = LogManager.GetLogger("TLSession");
         protected override void OnSessionStarted()
         {
-            logger.Info(string.Format("Session:{0} Started", this.SessionID));
+            logger.Debug(string.Format("Session:{0} Started", this.SessionID));
+            base.OnSessionStarted();
         }
 
         
@@ -26,7 +27,7 @@ namespace CTPService
 
         protected override void OnSessionClosed(CloseReason reason)
         {
-            logger.Info(string.Format("Session:{0} Closed:{1}", this.SessionID, reason));
+            logger.Debug(string.Format("Session:{0} Closed:{1}", this.SessionID, reason));
             base.OnSessionClosed(reason);
         }
 

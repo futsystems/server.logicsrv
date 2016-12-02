@@ -123,6 +123,7 @@ namespace TradingLib.Common
         public RspQryOrderResponse()
         {
             _type = MessageTypes.ORDERRESPONSE;
+            this.OrderToSend = null;
         }
 
         Order _order = null;

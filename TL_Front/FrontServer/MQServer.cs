@@ -143,7 +143,7 @@ namespace FrontServer
                                 {
                                     string clientId = incoming[0].ReadString(Encoding.UTF8);//读取地址
                                     Message message = Message.gotmessage(incoming.Last().Read());//读取消息
-                                    logger.Info(string.Format("LogicResponse Type:{0} Content:{1} Frames:{2}", message.Type, message.Content, cnt));
+                                    logger.Debug(string.Format("LogicResponse Frames:{2} Type:{0} Content:{1} ", message.Type, message.Content, cnt));
 
                                     if (!string.IsNullOrEmpty(clientId))
                                     {

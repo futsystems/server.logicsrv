@@ -43,7 +43,7 @@ namespace CTPService
                             field.SystemName = "FutsSystems";
                             field.FrontID = response.FrontIDi;
                             field.SessionID = response.SessionIDi;
-                            field.BrokerID = "88888";
+                            field.BrokerID = conn.State.BrokerID;
 
                             string time = DateTime.Now.ToString("HH:mm:ss");
                             field.LoginTime = time;
@@ -57,6 +57,11 @@ namespace CTPService
                             rsp.ErrorID = response.RspInfo.ErrorID;
                             rsp.ErrorMsg = string.Format("CTP:{0}", response.RspInfo.ErrorMessage);
 
+                            if (response.RspInfo.ErrorID == 0)
+                            {
+                                conn.State.Authorized = true;
+                            }
+
                             //打包数据
                             byte[] data = Struct.V12.StructHelperV12.PackRsp<Struct.V12.LCThostFtdcRspUserLoginField>(ref rsp, ref field, EnumSeqType.SeqReq, EnumTransactionID.T_RSP_LOGIN, response.RequestID,conn.NextSeqId);
 
@@ -69,6 +74,7 @@ namespace CTPService
 
                             //发送数据
                             conn.Send(encData, encPktLen);
+                            logger.Info(string.Format("LogicSrv Reply Session:{0} -> LoginResponse", conn.SessionID));
                             break;
                         }
                     //投资者查询回报
@@ -77,11 +83,11 @@ namespace CTPService
                             RspQryInvestorResponse response = packet as RspQryInvestorResponse;
 
                             Struct.V12.LCThostFtdcInvestorField field = new Struct.V12.LCThostFtdcInvestorField();
-                            field.BrokerID = "88888";
+                            field.BrokerID = conn.State.BrokerID;
                             field.InvestorID = response.TradingAccount;
                             field.InvestorName = response.NickName;
                             field.IdentifiedCardType = TThostFtdcIdCardTypeType.IDCard;
-                            field.IdentifiedCardNo = "999900130711111111111";
+                            field.IdentifiedCardNo = "88888888";
                             field.Telephone = response.Mobile;
                             field.Mobile = response.Mobile;
                             field.Address = "";
@@ -97,6 +103,7 @@ namespace CTPService
 
                             //发送数据
                             conn.Send(encData, encPktLen);
+                            logger.Info(string.Format("LogicSrv Reply Session:{0} -> RspQryInvestorResponse", conn.SessionID));
                             break;
                         }
                         //查询投资者结算确认信息
@@ -104,8 +111,8 @@ namespace CTPService
                         {
                             RspQrySettleInfoConfirmResponse response = packet as RspQrySettleInfoConfirmResponse;
                             Struct.V12.LCThostFtdcSettlementInfoConfirmField field = new Struct.V12.LCThostFtdcSettlementInfoConfirmField();
-                            field.BrokerID = "88888";
-                            field.InvestorID = response.TradingAccount;
+                            field.BrokerID = conn.State.BrokerID;
+                            field.InvestorID = conn.State.LoginID; ;
                             field.ConfirmDate = response.ConfirmDay.ToString();
                             field.ConfirmTime = Util.ToDateTime(response.ConfirmDay, response.ConfirmTime).ToString("HH:mm:ss");
 
@@ -119,6 +126,7 @@ namespace CTPService
                             //encPktLen = encData.Length;
                             //发送数据
                             conn.Send(encData, encPktLen);
+                            logger.Info(string.Format("LogicSrv Reply Session:{0} -> RspQrySettleInfoConfirmResponse", conn.SessionID));
                             break;
                         }
                         //请求查询客户通知
@@ -126,7 +134,7 @@ namespace CTPService
                         {
                             RspQryNoticeResponse response = packet as RspQryNoticeResponse;
                             Struct.V12.LCThostFtdcNoticeField field = new Struct.V12.LCThostFtdcNoticeField();
-                            field.BrokerID = "888888";
+                            field.BrokerID = conn.State.BrokerID;
                             field.Content = response.NoticeContent;
 
                             //打包数据
@@ -135,6 +143,7 @@ namespace CTPService
                             byte[] encData = Struct.V12.StructHelperV12.EncPkt(data, out encPktLen);
 
                             conn.Send(encData, encPktLen);
+                            logger.Info(string.Format("LogicSrv Reply Session:{0} -> RspQryNoticeResponse", conn.SessionID));
                             break;
                         }
                         //查询结算信息回报
@@ -154,6 +163,7 @@ namespace CTPService
                             byte[] encData = Struct.V12.StructHelperV12.EncPkt(data, out encPktLen);
 
                             conn.Send(encData, encPktLen);
+                            logger.Info(string.Format("LogicSrv Reply Session:{0} -> RspXQrySettleInfoResponse", conn.SessionID));
                             break;
 
                         }
@@ -171,6 +181,7 @@ namespace CTPService
                             byte[] encData = Struct.V12.StructHelperV12.EncPkt(data, out encPktLen);
 
                             conn.Send(encData, encPktLen);
+                            logger.Info(string.Format("LogicSrv Reply Session:{0} -> RspConfirmSettlementResponse", conn.SessionID));
                             break;
                         }
                         //查询合约回报
@@ -228,20 +239,30 @@ namespace CTPService
                             //encPktLen = encData.Length;
                             //encData[7] = (byte)'L';
                             conn.Send(encData, encPktLen);
+                            logger.Info(string.Format("LogicSrv Reply Session:{0} -> RspQrySymbolResponse", conn.SessionID));
                             break;
                         }
                         //委托查询回报
                     case MessageTypes.ORDERRESPONSE:
                         {
                             RspQryOrderResponse response = packet as RspQryOrderResponse;
-                            Struct.V12.LCThostFtdcOrderField field = new Struct.V12.LCThostFtdcOrderField();
-
-                            byte[] data = Struct.V12.StructHelperV12.PackRsp(EnumSeqType.SeqQry, EnumTransactionID.T_RSP_QRYORD, response.RequestID, conn.NextSeqId, response.IsLast);
                             int encPktLen = 0;
-                            byte[] encData = Struct.V12.StructHelperV12.EncPkt(data, out encPktLen);
+                            byte[] encData = null;
+                            if (response.OrderToSend == null)
+                            {
+                                byte[] data = Struct.V12.StructHelperV12.PackRsp(EnumSeqType.SeqQry, EnumTransactionID.T_RSP_QRYORD, response.RequestID, conn.NextSeqId, response.IsLast);
+                                encData = Struct.V12.StructHelperV12.EncPkt(data, out encPktLen);
+                            }
+                            else
+                            {
+                                Struct.V12.LCThostFtdcOrderField field = new Struct.V12.LCThostFtdcOrderField();
+
+                                byte[] data = Struct.V12.StructHelperV12.PackRsp(ref field,EnumSeqType.SeqQry, EnumTransactionID.T_RSP_QRYORD, response.RequestID, conn.NextSeqId, response.IsLast);
+                                encData = Struct.V12.StructHelperV12.EncPkt(data, out encPktLen);
+                            }
 
                             conn.Send(encData, encPktLen);
-
+                            logger.Info(string.Format("LogicSrv Reply Session:{0} -> RspQryOrderResponse", conn.SessionID));
                             break;
 
                         }
@@ -249,30 +270,46 @@ namespace CTPService
                     case MessageTypes.TRADERESPONSE:
                         {
                             RspQryTradeResponse response = packet as RspQryTradeResponse;
-
-                            Struct.V12.LCThostFtdcTradeField field = new Struct.V12.LCThostFtdcTradeField();
-
-                            byte[] data = Struct.V12.StructHelperV12.PackRsp(EnumSeqType.SeqQry, EnumTransactionID.T_RSP_QRYTD, response.RequestID, conn.NextSeqId, response.IsLast);
                             int encPktLen = 0;
-                            byte[] encData = Struct.V12.StructHelperV12.EncPkt(data, out encPktLen);
+                            byte[] encData = null;
+                            if (response.TradeToSend == null)
+                            {
+                                byte[] data = Struct.V12.StructHelperV12.PackRsp(EnumSeqType.SeqQry, EnumTransactionID.T_RSP_QRYTD, response.RequestID, conn.NextSeqId, response.IsLast);
+                                encData = Struct.V12.StructHelperV12.EncPkt(data, out encPktLen);
+                            }
+                            else
+                            {
+                                Struct.V12.LCThostFtdcTradeField field = new Struct.V12.LCThostFtdcTradeField();
+
+                                byte[] data = Struct.V12.StructHelperV12.PackRsp(ref field,EnumSeqType.SeqQry, EnumTransactionID.T_RSP_QRYTD, response.RequestID, conn.NextSeqId, response.IsLast);
+                                encData = Struct.V12.StructHelperV12.EncPkt(data, out encPktLen);
+                            }
 
                             conn.Send(encData, encPktLen);
-
+                            logger.Info(string.Format("LogicSrv Reply Session:{0} -> RspQryTradeResponse", conn.SessionID));
                             break;
                         }
                         //查询投资者持仓
                     case MessageTypes.POSITIONRESPONSE:
                         {
                             RspQryPositionResponse response = packet as RspQryPositionResponse;
-
-                            Struct.V12.LCThostFtdcInvestorPositionField field = new Struct.V12.LCThostFtdcInvestorPositionField();
-
-                            byte[] data = Struct.V12.StructHelperV12.PackRsp(EnumSeqType.SeqQry, EnumTransactionID.T_RSP_INVPOS, response.RequestID, conn.NextSeqId, response.IsLast);
                             int encPktLen = 0;
-                            byte[] encData = Struct.V12.StructHelperV12.EncPkt(data, out encPktLen);
+                            byte[] encData = null;
+                            if (response.PositionToSend == null)
+                            {
+                                byte[] data = Struct.V12.StructHelperV12.PackRsp(EnumSeqType.SeqQry, EnumTransactionID.T_RSP_INVPOS, response.RequestID, conn.NextSeqId, response.IsLast);
+                                encData = Struct.V12.StructHelperV12.EncPkt(data, out encPktLen);
+                            }
+                            else
+                            {
+                                Struct.V12.LCThostFtdcInvestorPositionField field = new Struct.V12.LCThostFtdcInvestorPositionField();
+
+                                byte[] data = Struct.V12.StructHelperV12.PackRsp(ref field,EnumSeqType.SeqQry, EnumTransactionID.T_RSP_INVPOS, response.RequestID, conn.NextSeqId, response.IsLast);
+                                encData = Struct.V12.StructHelperV12.EncPkt(data, out encPktLen);
+                            }
 
                             conn.Send(encData, encPktLen);
-
+                            logger.Info(string.Format("LogicSrv Reply Session:{0} -> RspQryPositionResponse", conn.SessionID));
                             break;
                         }
                         //查询交易账户回报
@@ -306,6 +343,7 @@ namespace CTPService
                             byte[] encData = Struct.V12.StructHelperV12.EncPkt(data, out encPktLen);
 
                             conn.Send(encData, encPktLen);
+                            logger.Info(string.Format("LogicSrv Reply Session:{0} -> RspQryAccountInfoResponse", conn.SessionID));
                             break;
                         }
                         //银行回报
@@ -319,9 +357,6 @@ namespace CTPService
                             field.BankBrchID = response.BankBrchID;
                             field.BankName = response.BankName;
 
-
-
-
                             //打包数据
                             byte[] data = Struct.V12.StructHelperV12.PackRsp<Struct.V12.LCThostFtdcContractBankField>(ref field, EnumSeqType.SeqQry, EnumTransactionID.T_RSP_CONTBK, response.RequestID, conn.NextSeqId, response.IsLast);
                             int encPktLen = 0;
@@ -332,6 +367,7 @@ namespace CTPService
                             //encPktLen = encData.Length;
 
                             conn.Send(encData, encPktLen);
+                            logger.Info(string.Format("LogicSrv Reply Session:{0} -> RspQryContractBankResponse", conn.SessionID));
                             break;
                         }
                         //签约关系回报
@@ -364,6 +400,7 @@ namespace CTPService
                             byte[] encData = Struct.V12.StructHelperV12.EncPkt(data, out encPktLen);
 
                             conn.Send(encData, encPktLen);
+                            logger.Info(string.Format("LogicSrv Reply Session:{0} -> RspQryRegisterBankAccountResponse", conn.SessionID));
                             break;
                         }
                     default:

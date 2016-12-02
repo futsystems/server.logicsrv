@@ -68,7 +68,7 @@ namespace TradingLib.Common
         public RspQryPositionResponse()
         {
             _type = MessageTypes.POSITIONRESPONSE;
-            PositionToSend = new PositionEx();
+            this.PositionToSend = null;
         }
 
         public PositionEx PositionToSend { get; set; }

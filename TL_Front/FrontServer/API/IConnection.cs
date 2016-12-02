@@ -18,7 +18,7 @@ namespace FrontServer
         /// <summary>
         /// 回话编号
         /// </summary>
-        string SessionID { get; set; }
+        string SessionID { get; }
 
         /// <summary>
         /// 向客户端发送数据包
