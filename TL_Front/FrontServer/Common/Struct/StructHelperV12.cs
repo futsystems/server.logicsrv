@@ -69,6 +69,16 @@ namespace CTPService.Struct.V12
                     {
                         return ByteSwapHelp.BytesToStruct<LCThostFtdcQryTradeField>(data, offset); 
                     }
+                    //请求查询投资者持仓
+                case EnumFiledID.F_QRY_INVPOS:
+                    {
+                        return ByteSwapHelp.BytesToStruct<LCThostFtdcQryInvestorPositionField>(data, offset); 
+                    }
+                    //请求查询资金账户
+                case EnumFiledID.F_QRY_TDACC:
+                    {
+                        return ByteSwapHelp.BytesToStruct<LCThostFtdcQryTradingAccountField>(data, offset); 
+                    }
                 default:
                     throw new Exception(string.Format("FieldID:{0} pkt not handled", fieldID));
             }

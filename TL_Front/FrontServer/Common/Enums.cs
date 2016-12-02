@@ -109,6 +109,7 @@ namespace CTPService
         T_QRY_EXCHGMGR = 0x8083,
         T_QRY_EXHMGRADJ = 0x8085,
         T_QRY_CONTBK = 0x8103,
+        T_RSP_CONTBK = 0x8104,
         T_QRY_PKORDACT = 0x8107,
         T_QRY_TDALGO = 0x810b,
         T_REQ_EXECORD = 0x4026,

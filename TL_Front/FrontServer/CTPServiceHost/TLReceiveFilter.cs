@@ -163,6 +163,18 @@ namespace CTPService
                                 fieldList = ParsePktDataV12(data, ftdhdr.wFtdcLen, ftdhdr.wFiCount);
                                 break;
                             }
+                        //请求查询投资者持仓 ReqQryInvestorPosition
+                        case EnumTransactionID.T_QRY_INVPOS:
+                            {
+                                fieldList = ParsePktDataV12(data, ftdhdr.wFtdcLen, ftdhdr.wFiCount);
+                                break;
+                            }
+                        //请求查询资金账户 ReqQryTradingAccount
+                        case EnumTransactionID.T_QRY_TDACC:
+                            {
+                                fieldList = ParsePktDataV12(data, ftdhdr.wFtdcLen, ftdhdr.wFiCount);
+                                break;
+                            }
                         default:
                             throw new Exception(string.Format("TransactionID:{0} pkt not handled", (EnumTransactionID)ftdhdr.dTransId));
                     }

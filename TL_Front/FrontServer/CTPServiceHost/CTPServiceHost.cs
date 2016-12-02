@@ -139,7 +139,7 @@ namespace CTPService
                     EnumTransactionID transId = (EnumTransactionID)requestInfo.FTDHeader.dTransId;
                     switch (transId)
                     {
-                        //用户登入
+                        //用户登入 ReqUserLogin
                         case EnumTransactionID.T_REQ_LOGIN:
                             {
                                 var data = requestInfo.FTDFields[0].FTDCData;
@@ -155,11 +155,11 @@ namespace CTPService
                                     request.ProductInfo = field.UserProductInfo;
 
                                     _mqServer.TLSend(session.SessionID, request);
-                                    logger.Info(string.Format("Session:{0} >> Request Login User:{1} Pass:{2}", session.SessionID, request.LoginID, request.Passwd));
+                                    logger.Info(string.Format("Session:{0} >> ReqUserLogin User:{1} Pass:{2}", session.SessionID, request.LoginID, request.Passwd));
                                 }
                                 break;
                             }
-                        //查询投资者
+                        //查询投资者 ReqQryInvestor
                         case EnumTransactionID.T_QRY_USRINF:
                             {
                                 var data = requestInfo.FTDFields[0].FTDCData;
@@ -168,11 +168,11 @@ namespace CTPService
                                     Struct.V12.LCThostFtdcQryInvestorField field = (Struct.V12.LCThostFtdcQryInvestorField)data;
                                     QryInvestorRequest request = RequestTemplate<QryInvestorRequest>.CliSendRequest((int)requestInfo.FTDHeader.dReqId);
                                     _mqServer.TLSend(session.SessionID, request);
-                                    logger.Info(string.Format("Session:{0} >> QryInvestorInfo", session.SessionID));
+                                    logger.Info(string.Format("Session:{0} >> ReqQryInvestor", session.SessionID));
                                 }
                                 break;
                             }
-                        //查询结算确认
+                        //查询结算确认 ReqQrySettlementInfoConfirm
                         case EnumTransactionID.T_QRY_SETCONFIRM:
                             {
                                 var data = requestInfo.FTDFields[0].FTDCData;
@@ -181,11 +181,11 @@ namespace CTPService
                                     Struct.V12.LCThostFtdcQrySettlementInfoConfirmField field = (Struct.V12.LCThostFtdcQrySettlementInfoConfirmField)data;
                                     QrySettleInfoConfirmRequest request = RequestTemplate<QrySettleInfoConfirmRequest>.CliSendRequest((int)requestInfo.FTDHeader.dReqId);
                                     _mqServer.TLSend(session.SessionID, request);
-                                    logger.Info(string.Format("Session:{0} >> QrySettlementConfirmInfo", session.SessionID));
+                                    logger.Info(string.Format("Session:{0} >> ReqQrySettlementInfoConfirm", session.SessionID));
                                 }
                                 break;
                             }
-                        //请求查询客户通知
+                        //请求查询客户通知 ReqQryNotice
                         case EnumTransactionID.T_QRY_NOTICE:
                             {
                                 var data = requestInfo.FTDFields[0].FTDCData;
@@ -195,18 +195,18 @@ namespace CTPService
                                     QryNoticeRequest request = RequestTemplate<QryNoticeRequest>.CliSendRequest((int)requestInfo.FTDHeader.dReqId);
                                     
                                     _mqServer.TLSend(session.SessionID, request);
-                                    logger.Info(string.Format("Session:{0} >> QryNoticeRequest", session.SessionID));
+                                    logger.Info(string.Format("Session:{0} >> ReqQryNotice", session.SessionID));
                                 }
                                 break;
                             }
-                        //请求查询交易通知
+                        //请求查询交易通知 ReqQryTradingNotice
                         case EnumTransactionID.T_QRY_TDNOTICE:
                             {
                                 var data = requestInfo.FTDFields[0].FTDCData;
                                 if (data is Struct.V12.LCThostFtdcQryTradingNoticeField)
                                 {
                                     Struct.V12.LCThostFtdcQryTradingNoticeField field = (Struct.V12.LCThostFtdcQryTradingNoticeField)data;
-                                    logger.Info(string.Format("Session:{0} >> QryTradingNoticeRequest", session.SessionID));
+                                    logger.Info(string.Format("Session:{0} >> ReqQryTradingNotice", session.SessionID));
 
                                     Struct.V12.LCThostFtdcTradingNoticeField response = new Struct.V12.LCThostFtdcTradingNoticeField();
                                     //response.FieldContent = "市场有风险，投资需谨慎";
@@ -220,7 +220,7 @@ namespace CTPService
                                 }
                                 break;
                             }
-                        //请求查询投资者结算结果
+                        //请求查询投资者结算结果 ReqQrySettlementInfo
                         case EnumTransactionID.T_QRY_SMI:
                             {
                                 var data = requestInfo.FTDFields[0].FTDCData;
@@ -233,12 +233,12 @@ namespace CTPService
 
 
                                     _mqServer.TLSend(session.SessionID, request);
-                                    logger.Info(string.Format("Session:{0} >> XQrySettleInfoRequest", session.SessionID));
+                                    logger.Info(string.Format("Session:{0} >> ReqQrySettlementInfo", session.SessionID));
 
                                 }
                                 break;
                             }
-                            //投资者结算结果确认
+                        //投资者结算结果确认 ReqSettlementInfoConfirm
                         case EnumTransactionID.T_REQ_SETCONFIRM:
                             {
                                 var data = requestInfo.FTDFields[0].FTDCData;
@@ -249,7 +249,7 @@ namespace CTPService
                                     //request.Account = field.InvestorID;
 
                                     _mqServer.TLSend(session.SessionID, request);
-                                    logger.Info(string.Format("Session:{0} >> ConfirmSettlementRequest", session.SessionID));
+                                    logger.Info(string.Format("Session:{0} >> ReqSettlementInfoConfirm", session.SessionID));
 
                                 }
                                 break;
@@ -268,7 +268,7 @@ namespace CTPService
 
 
                                     _mqServer.TLSend(session.SessionID, request);
-                                    logger.Info(string.Format("Session:{0} >> QrySymbolRequest", session.SessionID));
+                                    logger.Info(string.Format("Session:{0} >> ReqQryInstrument", session.SessionID));
 
                                 }
                                 break;
@@ -287,12 +287,12 @@ namespace CTPService
 
 
                                     _mqServer.TLSend(session.SessionID, request);
-                                    logger.Info(string.Format("Session:{0} >> QryOrderRequest", session.SessionID));
+                                    logger.Info(string.Format("Session:{0} >> ReqQryOrder", session.SessionID));
 
                                 }
                                 break;
                             }
-                        //查询成交
+                        //查询成交 ReqQryTrade
                         case EnumTransactionID.T_QRY_TRADE:
                             {
                                 var data = requestInfo.FTDFields[0].FTDCData;
@@ -305,7 +305,41 @@ namespace CTPService
 
 
                                     _mqServer.TLSend(session.SessionID, request);
-                                    logger.Info(string.Format("Session:{0} >> QryTradeRequest", session.SessionID));
+                                    logger.Info(string.Format("Session:{0} >> ReqQryTrade", session.SessionID));
+
+                                }
+                                break;
+                            }
+                        //请求查询投资者持仓 ReqQryInvestorPosition
+                        case EnumTransactionID.T_QRY_INVPOS:
+                            {
+                                var data = requestInfo.FTDFields[0].FTDCData;
+                                if (data is Struct.V12.LCThostFtdcQryInvestorPositionField)
+                                {
+                                    Struct.V12.LCThostFtdcQryInvestorPositionField field = (Struct.V12.LCThostFtdcQryInvestorPositionField)data;
+
+                                    QryPositionRequest request = RequestTemplate<QryPositionRequest>.CliSendRequest((int)requestInfo.FTDHeader.dReqId);
+
+
+                                    _mqServer.TLSend(session.SessionID, request);
+                                    logger.Info(string.Format("Session:{0} >> ReqQryInvestorPosition", session.SessionID));
+
+                                }
+                                break;
+                            }
+                            //请求查询资金账户 ReqQryTradingAccount
+                        case EnumTransactionID.T_QRY_TDACC:
+                            {
+                                var data = requestInfo.FTDFields[0].FTDCData;
+                                if (data is Struct.V12.LCThostFtdcQryTradingAccountField)
+                                {
+                                    Struct.V12.LCThostFtdcQryTradingAccountField field = (Struct.V12.LCThostFtdcQryTradingAccountField)data;
+
+                                    QryAccountInfoRequest request = RequestTemplate<QryAccountInfoRequest>.CliSendRequest((int)requestInfo.FTDHeader.dReqId);
+
+
+                                    _mqServer.TLSend(session.SessionID, request);
+                                    logger.Info(string.Format("Session:{0} >> ReqQryTradingAccount", session.SessionID));
 
                                 }
                                 break;

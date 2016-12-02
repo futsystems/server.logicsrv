@@ -3279,4 +3279,1090 @@ namespace CTPService.Struct.V12
     }
     #endregion
 
+    #region 查询持仓
+    /// <summary>
+    /// 查询投资者持仓
+    /// </summary>
+    [StructLayout(LayoutKind.Sequential)]
+    public struct CThostFtdcQryInvestorPositionField:ITFieldId
+    {
+        /// <summary>
+        /// 经纪公司代码
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 11)]
+        public string BrokerID;
+        /// <summary>
+        /// 投资者代码
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 13)]
+        public string InvestorID;
+        /// <summary>
+        /// 合约代码
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 31)]
+        public string InstrumentID;
+
+        public ushort FieldId
+        {
+            get { return 0x702; }
+        }
+
+        public void Swap()
+        {
+
+        }
+
+        public static implicit operator CThostFtdcQryInvestorPositionField(LCThostFtdcQryInvestorPositionField input)
+        {
+            CThostFtdcQryInvestorPositionField ret = new CThostFtdcQryInvestorPositionField();
+            ret.BrokerID = input.BrokerID;
+            ret.InvestorID = input.InvestorID;
+            ret.InstrumentID = input.InstrumentID;
+            return ret;
+        }
+    }
+
+    /// <summary>
+    /// 查询投资者持仓
+    /// </summary>
+     [StructLayout(LayoutKind.Sequential, Pack = 1)]
+    public struct LCThostFtdcQryInvestorPositionField : IFieldId
+    {
+        /// <summary>
+        /// 经纪公司代码
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 11)]
+        public string BrokerID;
+        /// <summary>
+        /// 投资者代码
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 13)]
+        public string InvestorID;
+        /// <summary>
+        /// 合约代码
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 31)]
+        public string InstrumentID;
+
+         public ushort FieldId
+        {
+            get { return 0x702; }
+        }
+
+         public void Swap()
+         {
+
+         }
+
+         public static implicit operator LCThostFtdcQryInvestorPositionField(CThostFtdcQryInvestorPositionField input)
+         {
+             LCThostFtdcQryInvestorPositionField ret = new LCThostFtdcQryInvestorPositionField();
+             ret.BrokerID = input.BrokerID;
+             ret.InvestorID = input.InvestorID;
+             ret.InstrumentID = input.InstrumentID;
+             return ret;
+         }
+    }
+
+
+     /// <summary>
+     /// 投资者持仓
+     /// </summary>
+     [StructLayout(LayoutKind.Sequential)]
+     public struct CThostFtdcInvestorPositionField:ITFieldId
+     {
+         /// <summary>
+         /// 合约代码
+         /// </summary>
+         [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 31)]
+         public string InstrumentID;
+         /// <summary>
+         /// 经纪公司代码
+         /// </summary>
+         [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 11)]
+         public string BrokerID;
+         /// <summary>
+         /// 投资者代码
+         /// </summary>
+         [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 13)]
+         public string InvestorID;
+         /// <summary>
+         /// 持仓多空方向
+         /// </summary>
+         public TThostFtdcPosiDirectionType PosiDirection;
+         /// <summary>
+         /// 投机套保标志
+         /// </summary>
+         public TThostFtdcHedgeFlagType HedgeFlag;
+         /// <summary>
+         /// 持仓日期
+         /// </summary>
+         public TThostFtdcPositionDateType PositionDate;
+         /// <summary>
+         /// 上日持仓
+         /// </summary>
+         public int YdPosition;
+         /// <summary>
+         /// 今日持仓
+         /// </summary>
+         public int Position;
+         /// <summary>
+         /// 多头冻结
+         /// </summary>
+         public int LongFrozen;
+         /// <summary>
+         /// 空头冻结
+         /// </summary>
+         public int ShortFrozen;
+         /// <summary>
+         /// 开仓冻结金额
+         /// </summary>
+         public double LongFrozenAmount;
+         /// <summary>
+         /// 开仓冻结金额
+         /// </summary>
+         public double ShortFrozenAmount;
+         /// <summary>
+         /// 开仓量
+         /// </summary>
+         public int OpenVolume;
+         /// <summary>
+         /// 平仓量
+         /// </summary>
+         public int CloseVolume;
+         /// <summary>
+         /// 开仓金额
+         /// </summary>
+         public double OpenAmount;
+         /// <summary>
+         /// 平仓金额
+         /// </summary>
+         public double CloseAmount;
+         /// <summary>
+         /// 持仓成本
+         /// </summary>
+         public double PositionCost;
+         /// <summary>
+         /// 上次占用的保证金
+         /// </summary>
+         public double PreMargin;
+         /// <summary>
+         /// 占用的保证金
+         /// </summary>
+         public double UseMargin;
+         /// <summary>
+         /// 冻结的保证金
+         /// </summary>
+         public double FrozenMargin;
+         /// <summary>
+         /// 冻结的资金
+         /// </summary>
+         public double FrozenCash;
+         /// <summary>
+         /// 冻结的手续费
+         /// </summary>
+         public double FrozenCommission;
+         /// <summary>
+         /// 资金差额
+         /// </summary>
+         public double CashIn;
+         /// <summary>
+         /// 手续费
+         /// </summary>
+         public double Commission;
+         /// <summary>
+         /// 平仓盈亏
+         /// </summary>
+         public double CloseProfit;
+         /// <summary>
+         /// 持仓盈亏
+         /// </summary>
+         public double PositionProfit;
+         /// <summary>
+         /// 上次结算价
+         /// </summary>
+         public double PreSettlementPrice;
+         /// <summary>
+         /// 本次结算价
+         /// </summary>
+         public double SettlementPrice;
+         /// <summary>
+         /// 交易日
+         /// </summary>
+         [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 9)]
+         public string TradingDay;
+         /// <summary>
+         /// 结算编号
+         /// </summary>
+         public int SettlementID;
+         /// <summary>
+         /// 开仓成本
+         /// </summary>
+         public double OpenCost;
+         /// <summary>
+         /// 交易所保证金
+         /// </summary>
+         public double ExchangeMargin;
+         /// <summary>
+         /// 组合成交形成的持仓
+         /// </summary>
+         public int CombPosition;
+         /// <summary>
+         /// 组合多头冻结
+         /// </summary>
+         public int CombLongFrozen;
+         /// <summary>
+         /// 组合空头冻结
+         /// </summary>
+         public int CombShortFrozen;
+         /// <summary>
+         /// 逐日盯市平仓盈亏
+         /// </summary>
+         public double CloseProfitByDate;
+         /// <summary>
+         /// 逐笔对冲平仓盈亏
+         /// </summary>
+         public double CloseProfitByTrade;
+         /// <summary>
+         /// 今日持仓
+         /// </summary>
+         public int TodayPosition;
+         /// <summary>
+         /// 保证金率
+         /// </summary>
+         public double MarginRateByMoney;
+         /// <summary>
+         /// 保证金率(按手数)
+         /// </summary>
+         public double MarginRateByVolume;
+
+         ///执行冻结
+         public int StrikeFrozen;
+         ///执行冻结金额
+         public double StrikeFrozenAmount;
+         ///放弃执行冻结
+         public int AbandonFrozen;
+
+         public ushort FieldId
+         {
+             get { return 0xd; }
+         }
+
+         public void Swap()
+         {
+
+         }
+
+     }
+
+     /// <summary>
+     /// 投资者持仓
+     /// </summary>
+     [StructLayout(LayoutKind.Sequential, Pack = 1)]
+     public struct LCThostFtdcInvestorPositionField :IFieldId
+     {
+         /// <summary>
+         /// 合约代码
+         /// </summary>
+         [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 31)]
+         public string InstrumentID;
+         /// <summary>
+         /// 经纪公司代码
+         /// </summary>
+         [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 11)]
+         public string BrokerID;
+         /// <summary>
+         /// 投资者代码
+         /// </summary>
+         [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 13)]
+         public string InvestorID;
+         /// <summary>
+         /// 持仓多空方向
+         /// </summary>
+         public TThostFtdcPosiDirectionType PosiDirection;
+         /// <summary>
+         /// 投机套保标志
+         /// </summary>
+         public TThostFtdcHedgeFlagType HedgeFlag;
+         /// <summary>
+         /// 持仓日期
+         /// </summary>
+         public TThostFtdcPositionDateType PositionDate;
+         /// <summary>
+         /// 上日持仓
+         /// </summary>
+         public int YdPosition;
+         /// <summary>
+         /// 今日持仓
+         /// </summary>
+         public int Position;
+         /// <summary>
+         /// 多头冻结
+         /// </summary>
+         public int LongFrozen;
+         /// <summary>
+         /// 空头冻结
+         /// </summary>
+         public int ShortFrozen;
+         /// <summary>
+         /// 开仓冻结金额
+         /// </summary>
+         public double LongFrozenAmount;
+         /// <summary>
+         /// 开仓冻结金额
+         /// </summary>
+         public double ShortFrozenAmount;
+         /// <summary>
+         /// 开仓量
+         /// </summary>
+         public int OpenVolume;
+         /// <summary>
+         /// 平仓量
+         /// </summary>
+         public int CloseVolume;
+         /// <summary>
+         /// 开仓金额
+         /// </summary>
+         public double OpenAmount;
+         /// <summary>
+         /// 平仓金额
+         /// </summary>
+         public double CloseAmount;
+         /// <summary>
+         /// 持仓成本
+         /// </summary>
+         public double PositionCost;
+         /// <summary>
+         /// 上次占用的保证金
+         /// </summary>
+         public double PreMargin;
+         /// <summary>
+         /// 占用的保证金
+         /// </summary>
+         public double UseMargin;
+         /// <summary>
+         /// 冻结的保证金
+         /// </summary>
+         public double FrozenMargin;
+         /// <summary>
+         /// 冻结的资金
+         /// </summary>
+         public double FrozenCash;
+         /// <summary>
+         /// 冻结的手续费
+         /// </summary>
+         public double FrozenCommission;
+         /// <summary>
+         /// 资金差额
+         /// </summary>
+         public double CashIn;
+         /// <summary>
+         /// 手续费
+         /// </summary>
+         public double Commission;
+         /// <summary>
+         /// 平仓盈亏
+         /// </summary>
+         public double CloseProfit;
+         /// <summary>
+         /// 持仓盈亏
+         /// </summary>
+         public double PositionProfit;
+         /// <summary>
+         /// 上次结算价
+         /// </summary>
+         public double PreSettlementPrice;
+         /// <summary>
+         /// 本次结算价
+         /// </summary>
+         public double SettlementPrice;
+         /// <summary>
+         /// 交易日
+         /// </summary>
+         [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 9)]
+         public string TradingDay;
+         /// <summary>
+         /// 结算编号
+         /// </summary>
+         public int SettlementID;
+         /// <summary>
+         /// 开仓成本
+         /// </summary>
+         public double OpenCost;
+         /// <summary>
+         /// 交易所保证金
+         /// </summary>
+         public double ExchangeMargin;
+         /// <summary>
+         /// 组合成交形成的持仓
+         /// </summary>
+         public int CombPosition;
+         /// <summary>
+         /// 组合多头冻结
+         /// </summary>
+         public int CombLongFrozen;
+         /// <summary>
+         /// 组合空头冻结
+         /// </summary>
+         public int CombShortFrozen;
+         /// <summary>
+         /// 逐日盯市平仓盈亏
+         /// </summary>
+         public double CloseProfitByDate;
+         /// <summary>
+         /// 逐笔对冲平仓盈亏
+         /// </summary>
+         public double CloseProfitByTrade;
+         /// <summary>
+         /// 今日持仓
+         /// </summary>
+         public int TodayPosition;
+         /// <summary>
+         /// 保证金率
+         /// </summary>
+         public double MarginRateByMoney;
+         /// <summary>
+         /// 保证金率(按手数)
+         /// </summary>
+         public double MarginRateByVolume;
+
+         ///执行冻结
+         public int StrikeFrozen;
+         ///执行冻结金额
+         public double StrikeFrozenAmount;
+         ///放弃执行冻结
+         public int AbandonFrozen;
+
+         public ushort FieldId
+         {
+             get { return 0xd; }
+         }
+
+         public void Swap()
+         {
+             YdPosition = ByteSwapHelp.ReverseBytes(YdPosition);
+             Position = ByteSwapHelp.ReverseBytes(Position);
+             LongFrozen = ByteSwapHelp.ReverseBytes(LongFrozen);
+             ShortFrozen = ByteSwapHelp.ReverseBytes(LongFrozen);
+             LongFrozenAmount = ByteSwapHelp.ReverseBytes(LongFrozenAmount);
+             ShortFrozenAmount = ByteSwapHelp.ReverseBytes(ShortFrozenAmount);
+             OpenVolume = ByteSwapHelp.ReverseBytes(OpenVolume);
+             CloseVolume = ByteSwapHelp.ReverseBytes(CloseVolume);
+             OpenAmount = ByteSwapHelp.ReverseBytes(OpenAmount);
+             CloseAmount = ByteSwapHelp.ReverseBytes(CloseAmount);
+             PositionCost = ByteSwapHelp.ReverseBytes(PositionCost);
+             PreMargin = ByteSwapHelp.ReverseBytes(PreMargin);
+             UseMargin = ByteSwapHelp.ReverseBytes(UseMargin);
+             FrozenMargin = ByteSwapHelp.ReverseBytes(FrozenMargin);
+             FrozenCash = ByteSwapHelp.ReverseBytes(FrozenCash);
+             FrozenCommission = ByteSwapHelp.ReverseBytes(FrozenCommission);
+             CashIn = ByteSwapHelp.ReverseBytes(CashIn);
+             Commission = ByteSwapHelp.ReverseBytes(Commission);
+             CloseProfit = ByteSwapHelp.ReverseBytes(CloseProfit);
+             PositionProfit = ByteSwapHelp.ReverseBytes(PositionProfit);
+             PreSettlementPrice = ByteSwapHelp.ReverseBytes(PreSettlementPrice);
+             SettlementPrice = ByteSwapHelp.ReverseBytes(SettlementPrice);
+             SettlementID = ByteSwapHelp.ReverseBytes(SettlementID);
+             OpenCost = ByteSwapHelp.ReverseBytes(OpenCost);
+             ExchangeMargin = ByteSwapHelp.ReverseBytes(ExchangeMargin);
+             CombPosition = ByteSwapHelp.ReverseBytes(CombPosition);
+             CombLongFrozen = ByteSwapHelp.ReverseBytes(CombLongFrozen);
+             CombShortFrozen = ByteSwapHelp.ReverseBytes(CombShortFrozen);
+             CloseProfitByDate = ByteSwapHelp.ReverseBytes(CloseProfitByDate);
+             CloseProfitByTrade = ByteSwapHelp.ReverseBytes(CloseProfitByTrade);
+             TodayPosition = ByteSwapHelp.ReverseBytes(TodayPosition);
+             MarginRateByMoney = ByteSwapHelp.ReverseBytes(MarginRateByMoney);
+             MarginRateByVolume = ByteSwapHelp.ReverseBytes(MarginRateByVolume);
+
+             StrikeFrozen = ByteSwapHelp.ReverseBytes(StrikeFrozen);
+             StrikeFrozenAmount = ByteSwapHelp.ReverseBytes(StrikeFrozenAmount);
+             AbandonFrozen = ByteSwapHelp.ReverseBytes(AbandonFrozen);
+         }
+
+     }
+    #endregion
+
+    #region 查询账户资金
+     /// <summary>
+     /// 查询资金账户
+     /// </summary>
+     [StructLayout(LayoutKind.Sequential)]
+     public struct CThostFtdcQryTradingAccountField : ITFieldId
+     {
+         /// <summary>
+         /// 经纪公司代码
+         /// </summary>
+         [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 11)]
+         public string BrokerID;
+         /// <summary>
+         /// 投资者代码
+         /// </summary>
+         [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 13)]
+         public string InvestorID;
+
+         ///币种代码
+         [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 4)]
+         public string CurrencyID;
+
+
+         public ushort FieldId
+         {
+             get { return 1795; }
+         }
+
+         public void Swap()
+         { }
+
+         public static implicit operator CThostFtdcQryTradingAccountField(LCThostFtdcQryTradingAccountField input)
+         {
+             CThostFtdcQryTradingAccountField ret = new CThostFtdcQryTradingAccountField();
+             ret.BrokerID = input.BrokerID;
+             ret.InvestorID = input.InvestorID;
+             ret.CurrencyID = input.CurrencyID;
+             return ret;
+         }
+     }
+     [StructLayout(LayoutKind.Sequential, Pack = 1)]
+     public struct LCThostFtdcQryTradingAccountField : IFieldId
+     {
+         /// <summary>
+         /// 经纪公司代码
+         /// </summary>
+         [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 11)]
+         public string BrokerID;
+         /// <summary>
+         /// 投资者代码
+         /// </summary>
+         [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 13)]
+         public string InvestorID;
+
+         ///币种代码
+         [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 4)]
+         public string CurrencyID;
+
+         public ushort FieldId
+         {
+             get { return 1795; }
+         }
+
+         public void Swap()
+         { }
+
+         public static implicit operator LCThostFtdcQryTradingAccountField(CThostFtdcQryTradingAccountField input)
+         {
+             LCThostFtdcQryTradingAccountField ret = new LCThostFtdcQryTradingAccountField();
+             ret.BrokerID = input.BrokerID;
+             ret.InvestorID = input.InvestorID;
+             ret.CurrencyID = input.CurrencyID;
+
+             return ret;
+         }
+     }
+
+
+     /// <summary>
+     /// 资金账户
+     /// </summary>
+     [StructLayout(LayoutKind.Sequential)]
+     public struct CThostFtdcTradingAccountField : ITFieldId
+     {
+         /// <summary>
+         /// 经纪公司代码
+         /// </summary>
+         [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 11)]
+         public string BrokerID;
+         /// <summary>
+         /// 投资者帐号
+         /// </summary>
+         [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 13)]
+         public string AccountID;
+         /// <summary>
+         /// 上次质押金额
+         /// </summary>
+         public double PreMortgage;
+         /// <summary>
+         /// 上次信用额度
+         /// </summary>
+         public double PreCredit;
+         /// <summary>
+         /// 上次存款额
+         /// </summary>
+         public double PreDeposit;
+         /// <summary>
+         /// 上次结算准备金
+         /// </summary>
+         public double PreBalance;
+         /// <summary>
+         /// 上次占用的保证金
+         /// </summary>
+         public double PreMargin;
+         /// <summary>
+         /// 利息基数
+         /// </summary>
+         public double InterestBase;
+         /// <summary>
+         /// 利息收入
+         /// </summary>
+         public double Interest;
+         /// <summary>
+         /// 入金金额
+         /// </summary>
+         public double Deposit;
+         /// <summary>
+         /// 出金金额
+         /// </summary>
+         public double Withdraw;
+         /// <summary>
+         /// 冻结的保证金
+         /// </summary>
+         public double FrozenMargin;
+         /// <summary>
+         /// 冻结的资金
+         /// </summary>
+         public double FrozenCash;
+         /// <summary>
+         /// 冻结的手续费
+         /// </summary>
+         public double FrozenCommission;
+         /// <summary>
+         /// 当前保证金总额
+         /// </summary>
+         public double CurrMargin;
+         /// <summary>
+         /// 资金差额
+         /// </summary>
+         public double CashIn;
+         /// <summary>
+         /// 手续费
+         /// </summary>
+         public double Commission;
+         /// <summary>
+         /// 平仓盈亏
+         /// </summary>
+         public double CloseProfit;
+         /// <summary>
+         /// 持仓盈亏
+         /// </summary>
+         public double PositionProfit;
+         /// <summary>
+         /// 期货结算准备金
+         /// </summary>
+         public double Balance;
+         /// <summary>
+         /// 可用资金
+         /// </summary>
+         public double Available;
+         /// <summary>
+         /// 可取资金
+         /// </summary>
+         public double WithdrawQuota;
+         /// <summary>
+         /// 基本准备金
+         /// </summary>
+         public double Reserve;
+         /// <summary>
+         /// 交易日
+         /// </summary>
+         [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 9)]
+         public string TradingDay;
+         /// <summary>
+         /// 结算编号
+         /// </summary>
+         public int SettlementID;
+         /// <summary>
+         /// 信用额度
+         /// </summary>
+         public double Credit;
+         /// <summary>
+         /// 质押金额
+         /// </summary>
+         public double Mortgage;
+         /// <summary>
+         /// 交易所保证金
+         /// </summary>
+         public double ExchangeMargin;
+         /// <summary>
+         /// 投资者交割保证金
+         /// </summary>
+         public double DeliveryMargin;
+         /// <summary>
+         /// 交易所交割保证金
+         /// </summary>
+         public double ExchangeDeliveryMargin;
+         /// <summary>
+         /// 保底期货结算准备金
+         /// </summary>
+         public double ReserveBalance;
+
+         ///币种代码
+         [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 4)]
+         public string CurrencyID;
+         ///上次货币质入金额
+         public double PreFundMortgageIn;
+         ///上次货币质出金额
+         public double PreFundMortgageOut;
+         ///货币质入金额
+         public double FundMortgageIn;
+         ///货币质出金额
+         public double FundMortgageOut;
+         ///货币质押余额
+         public double FundMortgageAvailable;
+         ///可质押货币金额
+         public double MortgageableFund;
+         ///特殊产品占用保证金
+         public double SpecProductMargin;
+         ///特殊产品冻结保证金
+         public double SpecProductFrozenMargin;
+         ///特殊产品手续费
+         public double SpecProductCommission;
+         ///特殊产品冻结手续费
+         public double SpecProductFrozenCommission;
+         ///特殊产品持仓盈亏
+         public double SpecProductPositionProfit;
+         ///特殊产品平仓盈亏
+         public double SpecProductCloseProfit;
+         ///根据持仓盈亏算法计算的特殊产品持仓盈亏
+         public double SpecProductPositionProfitByAlg;
+         ///特殊产品交易所保证金
+         public double SpecProductExchangeMargin;
+
+         public ushort FieldId
+         {
+             get { return 12; }
+         }
+
+         public void Swap()
+         { }
+
+         public static implicit operator CThostFtdcTradingAccountField(LCThostFtdcTradingAccountField input)
+         {
+             CThostFtdcTradingAccountField ret = new CThostFtdcTradingAccountField();
+             ret.BrokerID = input.BrokerID;
+             ret.AccountID = input.AccountID;
+             ret.PreMortgage = input.PreMortgage;
+             ret.PreCredit = input.PreCredit;
+             ret.PreDeposit = input.PreDeposit;
+             ret.PreBalance = input.PreBalance;
+             ret.PreMargin = input.PreMargin;
+             ret.InterestBase = input.InterestBase;
+             ret.Interest = input.Interest;
+             ret.Deposit = input.Deposit;
+             ret.Withdraw = input.Withdraw;
+             ret.FrozenMargin = input.FrozenMargin;
+             ret.FrozenCash = input.FrozenCash;
+             ret.FrozenCommission = input.FrozenCommission;
+             ret.CurrMargin = input.CurrMargin;
+             ret.CashIn = input.CashIn;
+             ret.Commission = input.Commission;
+             ret.CloseProfit = input.CloseProfit;
+             ret.PositionProfit = input.PositionProfit;
+             ret.Balance = input.Balance;
+             ret.Available = input.Available;
+             ret.WithdrawQuota = input.WithdrawQuota;
+             ret.Reserve = input.Reserve;
+             ret.TradingDay = input.TradingDay;
+             ret.SettlementID = input.SettlementID;
+             ret.Credit = input.Credit;
+             ret.Mortgage = input.Mortgage;
+             ret.ExchangeMargin = input.ExchangeMargin;
+             ret.DeliveryMargin = input.DeliveryMargin;
+             ret.ExchangeDeliveryMargin = input.ExchangeDeliveryMargin;
+             ret.ReserveBalance = input.ReserveBalance;
+
+             ret.CurrencyID = input.CurrencyID;
+             ret.PreFundMortgageIn = input.PreFundMortgageIn;
+             ret.PreFundMortgageOut = input.PreFundMortgageOut;
+             ret.FundMortgageIn = input.FundMortgageIn;
+             ret.FundMortgageOut = input.FundMortgageOut;
+             ret.FundMortgageAvailable = input.FundMortgageAvailable;
+             ret.MortgageableFund = input.MortgageableFund;
+
+             ret.SpecProductMargin=input.SpecProductMargin;
+             ret.SpecProductFrozenMargin=input.SpecProductFrozenMargin;
+             ret.SpecProductCommission = input.SpecProductCommission;
+             ret.SpecProductFrozenCommission = input.SpecProductPositionProfit;
+             ret.SpecProductPositionProfit = input.SpecProductPositionProfit;
+             ret.SpecProductCloseProfit = input.SpecProductCloseProfit;
+             ret.SpecProductPositionProfitByAlg = input.SpecProductPositionProfitByAlg;
+             ret.SpecProductExchangeMargin = input.SpecProductExchangeMargin;
+             return ret;
+         }
+     }
+     /// <summary>
+     /// 资金账户
+     /// </summary>
+     [StructLayout(LayoutKind.Sequential, Pack = 1)]
+     public struct LCThostFtdcTradingAccountField : IFieldId
+     {
+         /// <summary>
+         /// 经纪公司代码
+         /// </summary>
+         [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 11)]
+         public string BrokerID;
+         /// <summary>
+         /// 投资者帐号
+         /// </summary>
+         [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 13)]
+         public string AccountID;
+         /// <summary>
+         /// 上次质押金额
+         /// </summary>
+         public double PreMortgage;
+         /// <summary>
+         /// 上次信用额度
+         /// </summary>
+         public double PreCredit;
+         /// <summary>
+         /// 上次存款额
+         /// </summary>
+         public double PreDeposit;
+         /// <summary>
+         /// 上次结算准备金
+         /// </summary>
+         public double PreBalance;
+         /// <summary>
+         /// 上次占用的保证金
+         /// </summary>
+         public double PreMargin;
+         /// <summary>
+         /// 利息基数
+         /// </summary>
+         public double InterestBase;
+         /// <summary>
+         /// 利息收入
+         /// </summary>
+         public double Interest;
+         /// <summary>
+         /// 入金金额
+         /// </summary>
+         public double Deposit;
+         /// <summary>
+         /// 出金金额
+         /// </summary>
+         public double Withdraw;
+         /// <summary>
+         /// 冻结的保证金
+         /// </summary>
+         public double FrozenMargin;
+         /// <summary>
+         /// 冻结的资金
+         /// </summary>
+         public double FrozenCash;
+         /// <summary>
+         /// 冻结的手续费
+         /// </summary>
+         public double FrozenCommission;
+         /// <summary>
+         /// 当前保证金总额
+         /// </summary>
+         public double CurrMargin;
+         /// <summary>
+         /// 资金差额
+         /// </summary>
+         public double CashIn;
+         /// <summary>
+         /// 手续费
+         /// </summary>
+         public double Commission;
+         /// <summary>
+         /// 平仓盈亏
+         /// </summary>
+         public double CloseProfit;
+         /// <summary>
+         /// 持仓盈亏
+         /// </summary>
+         public double PositionProfit;
+         /// <summary>
+         /// 期货结算准备金
+         /// </summary>
+         public double Balance;
+         /// <summary>
+         /// 可用资金
+         /// </summary>
+         public double Available;
+         /// <summary>
+         /// 可取资金
+         /// </summary>
+         public double WithdrawQuota;
+         /// <summary>
+         /// 基本准备金
+         /// </summary>
+         public double Reserve;
+         /// <summary>
+         /// 交易日
+         /// </summary>
+         [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 9)]
+         public string TradingDay;
+         /// <summary>
+         /// 结算编号
+         /// </summary>
+         public int SettlementID;
+         /// <summary>
+         /// 信用额度
+         /// </summary>
+         public double Credit;
+         /// <summary>
+         /// 质押金额
+         /// </summary>
+         public double Mortgage;
+         /// <summary>
+         /// 交易所保证金
+         /// </summary>
+         public double ExchangeMargin;
+         /// <summary>
+         /// 投资者交割保证金
+         /// </summary>
+         public double DeliveryMargin;
+         /// <summary>
+         /// 交易所交割保证金
+         /// </summary>
+         public double ExchangeDeliveryMargin;
+         /// <summary>
+         /// 保底期货结算准备金
+         /// </summary>
+         public double ReserveBalance;
+
+         ///币种代码
+         [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 4)]
+         public string CurrencyID;
+         ///上次货币质入金额
+         public double PreFundMortgageIn;
+         ///上次货币质出金额
+         public double PreFundMortgageOut;
+         ///货币质入金额
+         public double FundMortgageIn;
+         ///货币质出金额
+         public double FundMortgageOut;
+         ///货币质押余额
+         public double FundMortgageAvailable;
+         ///可质押货币金额
+         public double MortgageableFund;
+         ///特殊产品占用保证金
+         public double SpecProductMargin;
+         ///特殊产品冻结保证金
+         public double SpecProductFrozenMargin;
+         ///特殊产品手续费
+         public double SpecProductCommission;
+         ///特殊产品冻结手续费
+         public double SpecProductFrozenCommission;
+         ///特殊产品持仓盈亏
+         public double SpecProductPositionProfit;
+         ///特殊产品平仓盈亏
+         public double SpecProductCloseProfit;
+         ///根据持仓盈亏算法计算的特殊产品持仓盈亏
+         public double SpecProductPositionProfitByAlg;
+         ///特殊产品交易所保证金
+         public double SpecProductExchangeMargin;
+
+
+
+         public ushort FieldId
+         {
+             get { return 12; }
+         }
+
+         public void Swap()
+         {
+             PreMortgage = ByteSwapHelp.ReverseBytes(PreMortgage);
+             PreCredit = ByteSwapHelp.ReverseBytes(PreCredit);
+             PreDeposit = ByteSwapHelp.ReverseBytes(PreDeposit);
+             PreBalance = ByteSwapHelp.ReverseBytes(PreBalance);
+             PreMargin = ByteSwapHelp.ReverseBytes(PreMargin);
+             InterestBase = ByteSwapHelp.ReverseBytes(InterestBase);
+             Interest = ByteSwapHelp.ReverseBytes(Interest);
+             Deposit = ByteSwapHelp.ReverseBytes(Deposit);
+             Withdraw = ByteSwapHelp.ReverseBytes(Withdraw);
+             FrozenMargin = ByteSwapHelp.ReverseBytes(FrozenMargin);
+             FrozenCash = ByteSwapHelp.ReverseBytes(FrozenCash);
+             FrozenCommission = ByteSwapHelp.ReverseBytes(FrozenCommission);
+             CurrMargin = ByteSwapHelp.ReverseBytes(CurrMargin);
+             CashIn = ByteSwapHelp.ReverseBytes(CashIn);
+             Commission = ByteSwapHelp.ReverseBytes(Commission);
+             CloseProfit = ByteSwapHelp.ReverseBytes(CloseProfit);
+             PositionProfit = ByteSwapHelp.ReverseBytes(PositionProfit);
+             Balance = ByteSwapHelp.ReverseBytes(Balance);
+             Available = ByteSwapHelp.ReverseBytes(Available);
+             WithdrawQuota = ByteSwapHelp.ReverseBytes(WithdrawQuota);
+             Reserve = ByteSwapHelp.ReverseBytes(Reserve);
+             SettlementID = ByteSwapHelp.ReverseBytes(SettlementID);
+             Credit = ByteSwapHelp.ReverseBytes(Credit);
+             Mortgage = ByteSwapHelp.ReverseBytes(Mortgage);
+             ExchangeMargin = ByteSwapHelp.ReverseBytes(ExchangeMargin);
+             DeliveryMargin = ByteSwapHelp.ReverseBytes(DeliveryMargin);
+             ExchangeDeliveryMargin = ByteSwapHelp.ReverseBytes(ExchangeDeliveryMargin);
+             ReserveBalance = ByteSwapHelp.ReverseBytes(ReserveBalance);
+
+             PreFundMortgageIn = ByteSwapHelp.ReverseBytes(PreFundMortgageIn);
+             PreFundMortgageOut = ByteSwapHelp.ReverseBytes(PreFundMortgageOut);
+             FundMortgageIn = ByteSwapHelp.ReverseBytes(FundMortgageIn);
+             FundMortgageOut = ByteSwapHelp.ReverseBytes(FundMortgageOut);
+             FundMortgageAvailable = ByteSwapHelp.ReverseBytes(FundMortgageAvailable);
+             MortgageableFund = ByteSwapHelp.ReverseBytes(MortgageableFund);
+
+             SpecProductMargin = ByteSwapHelp.ReverseBytes(SpecProductMargin);
+             SpecProductFrozenMargin = ByteSwapHelp.ReverseBytes(SpecProductFrozenMargin);
+             SpecProductCommission = ByteSwapHelp.ReverseBytes(SpecProductCommission);
+             SpecProductFrozenCommission = ByteSwapHelp.ReverseBytes(SpecProductPositionProfit);
+             SpecProductPositionProfit = ByteSwapHelp.ReverseBytes(SpecProductPositionProfit);
+             SpecProductCloseProfit = ByteSwapHelp.ReverseBytes(SpecProductCloseProfit);
+             SpecProductPositionProfitByAlg = ByteSwapHelp.ReverseBytes(SpecProductPositionProfitByAlg);
+             SpecProductExchangeMargin = ByteSwapHelp.ReverseBytes(SpecProductExchangeMargin);
+         }
+
+         public static implicit operator LCThostFtdcTradingAccountField(CThostFtdcTradingAccountField input)
+         {
+             LCThostFtdcTradingAccountField ret = new LCThostFtdcTradingAccountField();
+             ret.BrokerID = input.BrokerID;
+             ret.AccountID = input.AccountID;
+             ret.PreMortgage = input.PreMortgage;
+             ret.PreCredit = input.PreCredit;
+             ret.PreDeposit = input.PreDeposit;
+             ret.PreBalance = input.PreBalance;
+             ret.PreMargin = input.PreMargin;
+             ret.InterestBase = input.InterestBase;
+             ret.Interest = input.Interest;
+             ret.Deposit = input.Deposit;
+             ret.Withdraw = input.Withdraw;
+             ret.FrozenMargin = input.FrozenMargin;
+             ret.FrozenCash = input.FrozenCash;
+             ret.FrozenCommission = input.FrozenCommission;
+             ret.CurrMargin = input.CurrMargin;
+             ret.CashIn = input.CashIn;
+             ret.Commission = input.Commission;
+             ret.CloseProfit = input.CloseProfit;
+             ret.PositionProfit = input.PositionProfit;
+             ret.Balance = input.Balance;
+             ret.Available = input.Available;
+             ret.WithdrawQuota = input.WithdrawQuota;
+             ret.Reserve = input.Reserve;
+             ret.TradingDay = input.TradingDay;
+             ret.SettlementID = input.SettlementID;
+             ret.Credit = input.Credit;
+             ret.Mortgage = input.Mortgage;
+             ret.ExchangeMargin = input.ExchangeMargin;
+             ret.DeliveryMargin = input.DeliveryMargin;
+             ret.ExchangeDeliveryMargin = input.ExchangeDeliveryMargin;
+             ret.ReserveBalance = input.ReserveBalance;
+
+             ret.CurrencyID = input.CurrencyID;
+             ret.PreFundMortgageIn = input.PreFundMortgageIn;
+             ret.PreFundMortgageOut = input.PreFundMortgageOut;
+             ret.FundMortgageIn = input.FundMortgageIn;
+             ret.FundMortgageOut = input.FundMortgageOut;
+             ret.FundMortgageAvailable = input.FundMortgageAvailable;
+             ret.MortgageableFund = input.MortgageableFund;
+
+             ret.SpecProductMargin = input.SpecProductMargin;
+             ret.SpecProductFrozenMargin = input.SpecProductFrozenMargin;
+             ret.SpecProductCommission = input.SpecProductCommission;
+             ret.SpecProductFrozenCommission = input.SpecProductPositionProfit;
+             ret.SpecProductPositionProfit = input.SpecProductPositionProfit;
+             ret.SpecProductCloseProfit = input.SpecProductCloseProfit;
+             ret.SpecProductPositionProfitByAlg = input.SpecProductPositionProfitByAlg;
+             ret.SpecProductExchangeMargin = input.SpecProductExchangeMargin;
+
+             return ret;
+         }
+     }
+    #endregion
 }

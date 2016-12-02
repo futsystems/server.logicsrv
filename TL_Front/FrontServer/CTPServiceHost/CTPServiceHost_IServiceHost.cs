@@ -260,7 +260,56 @@ namespace CTPService
 
                             break;
                         }
+                        //查询投资者持仓
+                    case MessageTypes.POSITIONRESPONSE:
+                        {
+                            RspQryPositionResponse response = packet as RspQryPositionResponse;
 
+                            Struct.V12.LCThostFtdcInvestorPositionField field = new Struct.V12.LCThostFtdcInvestorPositionField();
+
+                            byte[] data = Struct.V12.StructHelperV12.PackRsp(EnumSeqType.SeqQry, EnumTransactionID.T_RSP_INVPOS, response.RequestID, conn.NextSeqId, response.IsLast);
+                            int encPktLen = 0;
+                            byte[] encData = Struct.V12.StructHelperV12.EncPkt(data, out encPktLen);
+
+                            conn.Send(encData, encPktLen);
+
+                            break;
+                        }
+                        //查询交易账户回报
+                    case MessageTypes.ACCOUNTINFORESPONSE:
+                        {
+                            RspQryAccountInfoResponse response = packet as RspQryAccountInfoResponse;
+                            Struct.V12.LCThostFtdcTradingAccountField field = new Struct.V12.LCThostFtdcTradingAccountField();
+
+                            TradingLib.Common.AccountInfo info = response.AccInfo;
+                            field.AccountID = info.Account;
+                            field.BrokerID = "88888";
+                            field.CloseProfit = (double)info.RealizedPL;
+                            field.Commission = (double)info.Commission;
+                            field.PositionProfit = (double)info.UnRealizedPL;
+                            field.PreBalance = (double)info.LastEquity;
+                            field.Balance = (double)info.NowEquity;
+
+                            field.Deposit = (double)info.CashIn;
+                            field.Withdraw = (double)info.CashOut;
+                            field.CurrMargin = (double)info.FutMarginUsed;
+                            field.FrozenMargin = (double)info.FutMarginFrozen;
+                            field.Credit = (double)info.Credit;
+                            field.PreCredit = (double)info.LastCredit;
+
+                            field.Available = (double)info.AvabileFunds;
+                            field.TradingDay = "";
+
+                            //打包数据
+                            byte[] data = Struct.V12.StructHelperV12.PackRsp<Struct.V12.LCThostFtdcTradingAccountField>(ref field, EnumSeqType.SeqQry, EnumTransactionID.T_RSP_TDACC, response.RequestID, conn.NextSeqId);
+                            int encPktLen = 0;
+                            byte[] encData = Struct.V12.StructHelperV12.EncPkt(data, out encPktLen);
+
+                            conn.Send(encData, encPktLen);
+                            break;
+
+                        
+                        }
                     default:
                         logger.Warn(string.Format("Logic Packet:{0} not handled", packet.Type));
                         break;
