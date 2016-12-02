@@ -79,6 +79,16 @@ namespace CTPService.Struct.V12
                     {
                         return ByteSwapHelp.BytesToStruct<LCThostFtdcQryTradingAccountField>(data, offset); 
                     }
+                    //查询签约银行
+                case EnumFiledID.F_QRY_CONTBK:
+                    {
+                        return ByteSwapHelp.BytesToStruct<LCThostFtdcQryContractBankField>(data, offset);
+                    }
+                    //查询银行签约关系
+                case EnumFiledID.F_QRY_ACCREG:
+                    {
+                        return ByteSwapHelp.BytesToStruct<LCThostFtdcQryAccountregisterField>(data, offset);
+                    }
                 default:
                     throw new Exception(string.Format("FieldID:{0} pkt not handled", fieldID));
             }
@@ -378,4 +388,7 @@ namespace CTPService.Struct.V12
             dstLen = dstInd;
         }
     }
+
+   
+
 }

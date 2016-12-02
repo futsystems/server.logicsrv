@@ -344,6 +344,38 @@ namespace CTPService
                                 }
                                 break;
                             }
+                            //请求查询签约银行 ReqQryContractBank
+                        case EnumTransactionID.T_QRY_CONTBK:
+                            {
+                                var data = requestInfo.FTDFields[0].FTDCData;
+                                if (data is Struct.V12.LCThostFtdcQryContractBankField)
+                                {
+                                    Struct.V12.LCThostFtdcQryContractBankField field = (Struct.V12.LCThostFtdcQryContractBankField)data;
+
+                                    QryContractBankRequest request = RequestTemplate<QryContractBankRequest>.CliSendRequest((int)requestInfo.FTDHeader.dReqId);
+
+                                    _mqServer.TLSend(session.SessionID, request);
+                                    logger.Info(string.Format("Session:{0} >> ReqQryContractBank", session.SessionID));
+
+                                }
+                                break;
+                            }
+                            //请求查询银期签约关系 ReqQryAccountregister
+                        case EnumTransactionID.T_QRY_ACCREG:
+                            {
+                                var data = requestInfo.FTDFields[0].FTDCData;
+                                if (data is Struct.V12.LCThostFtdcQryAccountregisterField)
+                                {
+                                    Struct.V12.LCThostFtdcQryAccountregisterField field = (Struct.V12.LCThostFtdcQryAccountregisterField)data;
+
+                                    QryRegisterBankAccountRequest request = RequestTemplate<QryRegisterBankAccountRequest>.CliSendRequest((int)requestInfo.FTDHeader.dReqId);
+
+                                    _mqServer.TLSend(session.SessionID, request);
+                                    logger.Info(string.Format("Session:{0} >> ReqQryAccountregister", session.SessionID));
+
+                                }
+                                break;
+                            }
                         default:
                             logger.Warn(string.Format("Transaction:{0} logic not handled", transId));
                             break;

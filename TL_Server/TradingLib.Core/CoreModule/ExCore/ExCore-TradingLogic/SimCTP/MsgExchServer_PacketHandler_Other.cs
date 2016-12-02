@@ -381,10 +381,9 @@ namespace TradingLib.Core
         /// 这里所有查询均返回同样的帐户
         /// </summary>
         /// <param name="request"></param>
-        void SrvOnRegisterBankAccount(QryRegisterBankAccountRequest request)
+        void SrvOnRegisterBankAccount(QryRegisterBankAccountRequest request,IAccount account)
         {
             logger.Info("QryRegisterBankAccount:" + request.ToString());
-            IAccount account = TLCtxHelper.ModuleAccountManager[request.TradingAccount];
             if (account != null)
             {
                 RspQryRegisterBankAccountResponse response = ResponseTemplate<RspQryRegisterBankAccountResponse>.SrvSendRspResponse(request);

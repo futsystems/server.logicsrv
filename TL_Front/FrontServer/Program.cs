@@ -53,6 +53,10 @@ namespace FrontServer
 
                 //委托回报
                 hex = "0200000e01030c4ce104e28001e20178e71a";
+
+                //签约银行回报
+                hex = "0200015801030c43e104e28104e2017ce10a04e0e2e33a2470e1793838383838e631e330303030e1b9a4c9ccd2f8d0d0efefefefefefe32470e1793838383838e63130e230303030e1d5d0c9ccd2f8d0d0efefefefefefe32470e1793838383838e63131e230303030e1d6d0d0c5d2f8d0d0efefefefefefe32470e1793838383838e63132e230303030e1c3f1c9fad2f8d0d0efefefefefefe32470e1793838383838e63133e230303030e1c6bdb0b2d2f8d0d0efefefefefefe32470e1793838383838e632e330303030e1c5a9d2b5d2f8d0d0efefefefefefe32470e1793838383838e633e330303030e1d6d0b9fad2f8d0d0efefefefefefe32470e1793838383838e634e330303030e1bda8c9e0e8d2f8d0d0efefefefefefe32470e1793838383838e635e330303030e1bdbbcda8d2f8d0d0efefefefefefe32470e1793838383838e636e330303030e1c6d6b7a2d2f8d0d0efefefefefefe3";
+                hex = "0200007501030c4ce104e28104e2017de1030177e33a2470e1793838383838e637e330303030e1d0cbd2b5d2f8d0d0efefefefefefe32470e1793838383838e638e330303030e1bbe0e3b7e0e1d2f8d0d0efefefefefefe32470e1793838383838e639e330303030e1b9e0e2b4f3d2f8d0d0efefefefefefe3";
                 byte[] srcData = ByteUtil.HexToByte(hex);
                 logger.Info("**** remtoe compressed data size" + srcData.Length.ToString());
                 string rawhexcompressed = ByteUtil.ByteToHex(srcData, ' ');

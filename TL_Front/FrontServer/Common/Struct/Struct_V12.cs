@@ -4365,4 +4365,512 @@ namespace CTPService.Struct.V12
          }
      }
     #endregion
+
+    #region 查询签约银行
+     /// <summary>
+     /// 查询签约银行请求
+     /// </summary>
+     [StructLayout(LayoutKind.Sequential)]
+     public struct CThostFtdcQryContractBankField : ITFieldId
+     {
+         /// <summary>
+         /// 经纪公司代码
+         /// </summary>
+         [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 11)]
+         public string BrokerID;
+         /// <summary>
+         /// 银行代码
+         /// </summary>
+         [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 4)]
+         public string BankID;
+         /// <summary>
+         /// 银行分中心代码
+         /// </summary>
+         [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 5)]
+         public string BankBrchID;
+
+         public ushort FieldId
+         {
+             get { return 9321; }
+         }
+
+         public void Swap()
+         { }
+
+         public static implicit operator CThostFtdcQryContractBankField(LCThostFtdcQryContractBankField input)
+         {
+             CThostFtdcQryContractBankField ret = new CThostFtdcQryContractBankField();
+             ret.BrokerID = input.BrokerID;
+             ret.BankID = input.BankID;
+             ret.BankBrchID = input.BankBrchID;
+
+             return ret;
+         }
+     }
+     [StructLayout(LayoutKind.Sequential, Pack = 1)]
+     public struct LCThostFtdcQryContractBankField : IFieldId
+     {
+         /// <summary>
+         /// 经纪公司代码
+         /// </summary>
+         [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 11)]
+         public string BrokerID;
+         /// <summary>
+         /// 银行代码
+         /// </summary>
+         [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 4)]
+         public string BankID;
+         /// <summary>
+         /// 银行分中心代码
+         /// </summary>
+         [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 5)]
+         public string BankBrchID;
+
+         public ushort FieldId
+         {
+             get { return 9321; }
+         }
+
+         public void Swap()
+         { }
+
+         public static implicit operator LCThostFtdcQryContractBankField(CThostFtdcQryContractBankField input)
+         {
+             LCThostFtdcQryContractBankField ret = new LCThostFtdcQryContractBankField();
+             ret.BrokerID = input.BrokerID;
+             ret.BankID = input.BankID;
+             ret.BankBrchID = input.BankBrchID;
+
+             return ret;
+         }
+
+     }
+        /// <summary>
+        /// 查询签约银行响应
+        /// </summary>
+        [StructLayout(LayoutKind.Sequential)]
+        public struct CThostFtdcContractBankField : ITFieldId
+        {
+            /// <summary>
+            /// 经纪公司代码
+            /// </summary>
+            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 11)]
+            public string BrokerID;
+            /// <summary>
+            /// 银行代码
+            /// </summary>
+            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 4)]
+            public string BankID;
+            /// <summary>
+            /// 银行分中心代码
+            /// </summary>
+            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 5)]
+            public string BankBrchID;
+            /// <summary>
+            /// 银行名称
+            /// </summary>
+            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 101)]
+            public string BankName;
+
+            public ushort FieldId
+            {
+                get { return 9328; }
+            }
+
+            public void Swap()
+            { }
+
+            public static implicit operator CThostFtdcContractBankField(LCThostFtdcContractBankField input)
+            {
+                CThostFtdcContractBankField ret = new CThostFtdcContractBankField();
+                ret.BrokerID = input.BrokerID;
+                ret.BankID = input.BankID;
+                ret.BankBrchID = input.BankBrchID;
+                ret.BankName = input.BankName;
+
+                return ret;
+            }
+        }
+
+        [StructLayout(LayoutKind.Sequential, Pack = 1)]
+        public struct LCThostFtdcContractBankField : IFieldId
+        {
+            /// <summary>
+            /// 经纪公司代码
+            /// </summary>
+            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 11)]
+            public string BrokerID;
+            /// <summary>
+            /// 银行代码
+            /// </summary>
+            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 4)]
+            public string BankID;
+            /// <summary>
+            /// 银行分中心代码
+            /// </summary>
+            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 5)]
+            public string BankBrchID;
+            /// <summary>
+            /// 银行名称
+            /// </summary>
+            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 101)]
+            public string BankName;
+
+            public ushort FieldId
+            {
+                get { return 9328; }
+            }
+
+            public void Swap()
+            { }
+
+            public static implicit operator LCThostFtdcContractBankField(CThostFtdcContractBankField input)
+            {
+                LCThostFtdcContractBankField ret = new LCThostFtdcContractBankField();
+                ret.BrokerID = input.BrokerID;
+                ret.BankID = input.BankID;
+                ret.BankBrchID = input.BankBrchID;
+                ret.BankName = input.BankName;
+
+                return ret;
+            }
+        }
+
+        
+     
+    #endregion
+
+    #region 查询签约关系
+
+        /// <summary>
+        /// 请求查询银期签约关系
+        /// </summary>
+        [StructLayout(LayoutKind.Sequential)]
+        public struct CThostFtdcQryAccountregisterField : ITFieldId
+        {
+            /// <summary>
+            /// 经纪公司代码
+            /// </summary>
+            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 11)]
+            public string BrokerID;
+            /// <summary>
+            /// 投资者帐号
+            /// </summary>
+            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 13)]
+            public string AccountID;
+            /// <summary>
+            /// 银行编码
+            /// </summary>
+            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 4)]
+            public string BankID;
+
+            public ushort FieldId
+            {
+                get { return 12305; }
+            }
+
+            public void Swap()
+            { }
+
+            public static implicit operator CThostFtdcQryAccountregisterField(LCThostFtdcQryAccountregisterField input)
+            {
+                CThostFtdcQryAccountregisterField ret = new CThostFtdcQryAccountregisterField();
+                ret.BrokerID = input.BrokerID;
+                ret.AccountID = input.AccountID;
+                ret.BankID = input.BankID;
+
+                return ret;
+            }
+        }
+        [StructLayout(LayoutKind.Sequential, Pack = 1)]
+        /// <summary>
+        /// 请求查询银期签约关系
+        /// </summary>
+        public struct LCThostFtdcQryAccountregisterField : IFieldId
+        {
+            /// <summary>
+            /// 经纪公司代码
+            /// </summary>
+            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 11)]
+            public string BrokerID;
+            /// <summary>
+            /// 投资者帐号
+            /// </summary>
+            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 13)]
+            public string AccountID;
+            /// <summary>
+            /// 银行编码
+            /// </summary>
+            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 4)]
+            public string BankID;
+
+            public ushort FieldId
+            {
+                get { return 12305; }
+            }
+
+            public void Swap()
+            { }
+
+            public static implicit operator LCThostFtdcQryAccountregisterField(CThostFtdcQryAccountregisterField input)
+            {
+                LCThostFtdcQryAccountregisterField ret = new LCThostFtdcQryAccountregisterField();
+                ret.BrokerID = input.BrokerID;
+                ret.AccountID = input.AccountID;
+                ret.BankID = input.BankID;
+
+                return ret;
+            }
+        }
+
+        /// <summary>
+        /// 客户开销户信息表
+        /// </summary>
+        [StructLayout(LayoutKind.Sequential)]
+        public struct CThostFtdcAccountregisterField : ITFieldId
+        {
+            /// <summary>
+            /// 交易日期
+            /// </summary>
+            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 9)]
+            public string TradeDay;
+            /// <summary>
+            /// 银行编码
+            /// </summary>
+            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 4)]
+            public string BankID;
+            /// <summary>
+            /// 银行分支机构编码
+            /// </summary>
+            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 5)]
+            public string BankBranchID;
+            /// <summary>
+            /// 银行帐号
+            /// </summary>
+            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 41)]
+            public string BankAccount;
+            /// <summary>
+            /// 期货公司编码
+            /// </summary>
+            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 11)]
+            public string BrokerID;
+            /// <summary>
+            /// 期货公司分支机构编码
+            /// </summary>
+            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 31)]
+            public string BrokerBranchID;
+            /// <summary>
+            /// 投资者帐号
+            /// </summary>
+            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 13)]
+            public string AccountID;
+            /// <summary>
+            /// 证件类型
+            /// </summary>
+            public TThostFtdcIdCardTypeType IdCardType;
+            /// <summary>
+            /// 证件号码
+            /// </summary>
+            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 51)]
+            public string IdentifiedCardNo;
+            /// <summary>
+            /// 客户姓名
+            /// </summary>
+            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 51)]
+            public string CustomerName;
+            /// <summary>
+            /// 币种代码
+            /// </summary>
+            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 4)]
+            public string CurrencyID;
+            /// <summary>
+            /// 开销户类别
+            /// </summary>
+            public TThostFtdcOpenOrDestroyType OpenOrDestroy;
+            /// <summary>
+            /// 签约日期
+            /// </summary>
+            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 9)]
+            public string RegDate;
+            /// <summary>
+            /// 解约日期
+            /// </summary>
+            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 9)]
+            public string OutDate;
+            /// <summary>
+            /// 交易ID
+            /// </summary>
+            public int TID;
+            /// <summary>
+            /// 客户类型
+            /// </summary>
+            public TThostFtdcCustTypeType CustType;
+            /// <summary>
+            /// 银行帐号类型
+            /// </summary>
+            public TThostFtdcBankAccTypeType BankAccType;
+
+            /// <summary>
+            /// 长客户姓名
+            /// </summary>
+            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 161)]
+            public string LongCustomerName;
+
+            public ushort FieldId
+            {
+                get { return 12306; }
+            }
+
+            public void Swap()
+            { }
+
+            public static implicit operator CThostFtdcAccountregisterField(LCThostFtdcAccountregisterField input)
+            {
+                CThostFtdcAccountregisterField ret = new CThostFtdcAccountregisterField();
+                ret.TradeDay = input.TradeDay;
+                ret.BankID = input.BankID;
+                ret.BankBranchID = input.BankBranchID;
+                ret.BankAccount = input.BankAccount;
+                ret.BrokerID = input.BrokerID;
+                ret.BrokerBranchID = input.BrokerBranchID;
+                ret.AccountID = input.AccountID;
+                ret.IdCardType = input.IdCardType;
+                ret.IdentifiedCardNo = input.IdentifiedCardNo;
+                ret.CustomerName = input.CustomerName;
+                ret.CurrencyID = input.CurrencyID;
+                ret.OpenOrDestroy = input.OpenOrDestroy;
+                ret.RegDate = input.RegDate;
+                ret.OutDate = input.OutDate;
+                ret.TID = input.TID;
+                ret.CustType = input.CustType;
+                ret.BankAccType = input.BankAccType;
+                ret.LongCustomerName = input.LongCustomerName;
+                return ret;
+            }
+        }
+        [StructLayout(LayoutKind.Sequential, Pack = 1)]
+        public struct LCThostFtdcAccountregisterField : IFieldId
+        {
+            /// <summary>
+            /// 交易日期
+            /// </summary>
+            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 9)]
+            public string TradeDay;
+            /// <summary>
+            /// 银行编码
+            /// </summary>
+            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 4)]
+            public string BankID;
+            /// <summary>
+            /// 银行分支机构编码
+            /// </summary>
+            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 5)]
+            public string BankBranchID;
+            /// <summary>
+            /// 银行帐号
+            /// </summary>
+            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 41)]
+            public string BankAccount;
+            /// <summary>
+            /// 期货公司编码
+            /// </summary>
+            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 11)]
+            public string BrokerID;
+            /// <summary>
+            /// 期货公司分支机构编码
+            /// </summary>
+            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 31)]
+            public string BrokerBranchID;
+            /// <summary>
+            /// 投资者帐号
+            /// </summary>
+            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 13)]
+            public string AccountID;
+            /// <summary>
+            /// 证件类型
+            /// </summary>
+            public TThostFtdcIdCardTypeType IdCardType;
+            /// <summary>
+            /// 证件号码
+            /// </summary>
+            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 51)]
+            public string IdentifiedCardNo;
+            /// <summary>
+            /// 客户姓名
+            /// </summary>
+            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 51)]
+            public string CustomerName;
+            /// <summary>
+            /// 币种代码
+            /// </summary>
+            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 4)]
+            public string CurrencyID;
+            /// <summary>
+            /// 开销户类别
+            /// </summary>
+            public TThostFtdcOpenOrDestroyType OpenOrDestroy;
+            /// <summary>
+            /// 签约日期
+            /// </summary>
+            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 9)]
+            public string RegDate;
+            /// <summary>
+            /// 解约日期
+            /// </summary>
+            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 9)]
+            public string OutDate;
+            /// <summary>
+            /// 交易ID
+            /// </summary>
+            public int TID;
+            /// <summary>
+            /// 客户类型
+            /// </summary>
+            public TThostFtdcCustTypeType CustType;
+            /// <summary>
+            /// 银行帐号类型
+            /// </summary>
+            public TThostFtdcBankAccTypeType BankAccType;
+
+            /// <summary>
+            /// 长客户姓名
+            /// </summary>
+            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 161)]
+            public string LongCustomerName;
+
+            public ushort FieldId
+            {
+                get { return 12306; }
+            }
+
+            public void Swap()
+            {
+                TID = ByteSwapHelp.ReverseBytes(TID);
+            }
+
+            public static implicit operator LCThostFtdcAccountregisterField(CThostFtdcAccountregisterField input)
+            {
+                LCThostFtdcAccountregisterField ret = new LCThostFtdcAccountregisterField();
+                ret.TradeDay = input.TradeDay;
+                ret.BankID = input.BankID;
+                ret.BankBranchID = input.BankBranchID;
+                ret.BankAccount = input.BankAccount;
+                ret.BrokerID = input.BrokerID;
+                ret.BrokerBranchID = input.BrokerBranchID;
+                ret.AccountID = input.AccountID;
+                ret.IdCardType = input.IdCardType;
+                ret.IdentifiedCardNo = input.IdentifiedCardNo;
+                ret.CustomerName = input.CustomerName;
+                ret.CurrencyID = input.CurrencyID;
+                ret.OpenOrDestroy = input.OpenOrDestroy;
+                ret.RegDate = input.RegDate;
+                ret.OutDate = input.OutDate;
+                ret.TID = input.TID;
+                ret.CustType = input.CustType;
+                ret.BankAccType = input.BankAccType;
+                ret.LongCustomerName = input.LongCustomerName;
+                return ret;
+            }
+        }
+    #endregion
 }

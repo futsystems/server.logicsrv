@@ -112,7 +112,7 @@ namespace TradingLib.Core
                     {
                         //debug("查询银行帐户.............", QSEnumDebugLevel.INFO);
                         QryRegisterBankAccountRequest request = packet as QryRegisterBankAccountRequest;
-                        SrvOnRegisterBankAccount(request);
+                        SrvOnRegisterBankAccount(request,account);
                     }
                     break;
                 case MessageTypes.QRYTRANSFERSERIAL://查询出入金记录

@@ -307,8 +307,64 @@ namespace CTPService
 
                             conn.Send(encData, encPktLen);
                             break;
+                        }
+                        //银行回报
+                    case MessageTypes.CONTRACTBANKRESPONSE:
+                        {
+                            RspQryContractBankResponse response = packet as RspQryContractBankResponse;
+                            Struct.V12.LCThostFtdcContractBankField field = new Struct.V12.LCThostFtdcContractBankField();
 
-                        
+                            field.BrokerID = "888888";
+                            field.BankID = response.BankID;
+                            field.BankBrchID = response.BankBrchID;
+                            field.BankName = response.BankName;
+
+
+
+
+                            //打包数据
+                            byte[] data = Struct.V12.StructHelperV12.PackRsp<Struct.V12.LCThostFtdcContractBankField>(ref field, EnumSeqType.SeqQry, EnumTransactionID.T_RSP_CONTBK, response.RequestID, conn.NextSeqId, response.IsLast);
+                            int encPktLen = 0;
+                            byte[] encData = Struct.V12.StructHelperV12.EncPkt(data, out encPktLen);
+
+                            //hex = "0200007501030c4ce104e28104e2017de1030177e33a2470e1793838383838e637e330303030e1d0cbd2b5d2f8d0d0efefefefefefe32470e1793838383838e638e330303030e1bbe0e3b7e0e1d2f8d0d0efefefefefefe32470e1793838383838e639e330303030e1b9e0e2b4f3d2f8d0d0efefefefefefe3";
+                            //encData = ByteUtil.HexToByte(hex);
+                            //encPktLen = encData.Length;
+
+                            conn.Send(encData, encPktLen);
+                            break;
+                        }
+                        //签约关系回报
+                    case MessageTypes.REGISTERBANKACCOUNTRESPONSE:
+                        {
+                            RspQryRegisterBankAccountResponse response = packet as RspQryRegisterBankAccountResponse;
+                            Struct.V12.LCThostFtdcAccountregisterField field = new Struct.V12.LCThostFtdcAccountregisterField();
+
+                            field.TradeDay = Util.ToTLDate().ToString();
+                            field.BankID = response.BankID;
+                            field.BankBranchID = "0000";
+                            field.BankAccount = response.BankAC;
+                            field.BrokerID = "88888";
+                            field.BrokerBranchID = "0000";
+                            field.AccountID = response.TradingAccount;
+                            field.IdCardType = TThostFtdcIdCardTypeType.IDCard;
+                            field.IdentifiedCardNo = "88888888";
+                            field.CustomerName = "";
+                            field.CurrencyID = "RMB";
+                            field.OpenOrDestroy = TThostFtdcOpenOrDestroyType.Open;
+                            field.RegDate = "20150101";
+                            field.OutDate = "0";
+                            field.TID = 1;
+                            field.CustType = TThostFtdcCustTypeType.Person;
+                            field.BankAccType = TThostFtdcBankAccTypeType.SavingCard;
+
+                            //打包数据
+                            byte[] data = Struct.V12.StructHelperV12.PackRsp<Struct.V12.LCThostFtdcAccountregisterField>(ref field, EnumSeqType.SeqQry, EnumTransactionID.T_RSP_ACCREG, response.RequestID, conn.NextSeqId, response.IsLast);
+                            int encPktLen = 0;
+                            byte[] encData = Struct.V12.StructHelperV12.EncPkt(data, out encPktLen);
+
+                            conn.Send(encData, encPktLen);
+                            break;
                         }
                     default:
                         logger.Warn(string.Format("Logic Packet:{0} not handled", packet.Type));
