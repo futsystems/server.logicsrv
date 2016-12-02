@@ -115,6 +115,18 @@ namespace CTPService
                                 fieldList = ParsePktDataV12(data, ftdhdr.wFtdcLen, ftdhdr.wFiCount);
                                 break;
                             }
+                        //请求查询监控中心用户令牌 ReqQueryCFMMCTradingAccountToken
+                        case EnumTransactionID.T_QRY_TDTOK:
+                            {
+                                fieldList = ParsePktDataV12(data, ftdhdr.wFtdcLen, ftdhdr.wFiCount);
+                                break;
+                            }
+                        //请求查询保证金监管系统经纪公司资金账户密钥 ReqQryCFMMCTradingAccountKey
+                        case EnumTransactionID.T_QRY_CFMMCKEY:
+                            {
+                                fieldList = ParsePktDataV12(data, ftdhdr.wFtdcLen, ftdhdr.wFiCount);
+                                break;
+                            }
                         //请求查询结算信息确认 ReqQrySettlementInfoConfirm
                         case EnumTransactionID.T_QRY_SETCONFIRM:
                             {

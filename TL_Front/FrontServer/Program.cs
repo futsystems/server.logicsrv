@@ -57,6 +57,11 @@ namespace FrontServer
                 //签约银行回报
                 hex = "0200015801030c43e104e28104e2017ce10a04e0e2e33a2470e1793838383838e631e330303030e1b9a4c9ccd2f8d0d0efefefefefefe32470e1793838383838e63130e230303030e1d5d0c9ccd2f8d0d0efefefefefefe32470e1793838383838e63131e230303030e1d6d0d0c5d2f8d0d0efefefefefefe32470e1793838383838e63132e230303030e1c3f1c9fad2f8d0d0efefefefefefe32470e1793838383838e63133e230303030e1c6bdb0b2d2f8d0d0efefefefefefe32470e1793838383838e632e330303030e1c5a9d2b5d2f8d0d0efefefefefefe32470e1793838383838e633e330303030e1d6d0b9fad2f8d0d0efefefefefefe32470e1793838383838e634e330303030e1bda8c9e0e8d2f8d0d0efefefefefefe32470e1793838383838e635e330303030e1bdbbcda8d2f8d0d0efefefefefefe32470e1793838383838e636e330303030e1c6d6b7a2d2f8d0d0efefefefefefe3";
                 hex = "0200007501030c4ce104e28104e2017de1030177e33a2470e1793838383838e637e330303030e1d0cbd2b5d2f8d0d0efefefefefefe32470e1793838383838e638e330303030e1bbe0e3b7e0e1d2f8d0d0efefefefefefe32470e1793838383838e639e330303030e1b9e0e2b4f3d2f8d0d0efefefefefefe3";
+
+                //查询TDTOK
+                hex = "0200003201000c4c00010000811b000000010001001c00000010250f00183838383838000000000000383536323030303830320000";
+                //T_RSP_TDTOK
+                hex = "0200003301030c4ce101e2811ce301e102e175e310e355e4d5fdc8b7efefefefefe2250fe1183838383838e638353632303030383032e3";
                 byte[] srcData = ByteUtil.HexToByte(hex);
                 logger.Info("**** remtoe compressed data size" + srcData.Length.ToString());
                 string rawhexcompressed = ByteUtil.ByteToHex(srcData, ' ');
@@ -93,20 +98,20 @@ namespace FrontServer
 
                 ftdc_hdr tmp2 = ByteSwapHelp.BytesToStruct<ftdc_hdr>(dstData, offset + Constanst.PROFTD_HDRLEN);
                 EnumFiledID fieldid = (EnumFiledID)tmp2.wFiId;
-                int fieldsize = Marshal.SizeOf(typeof(LCThostFtdcInstrumentField));
-                LCThostFtdcInstrumentField tmp3 = ByteSwapHelp.BytesToStruct<LCThostFtdcInstrumentField>(dstData, offset + Constanst.PROFTD_HDRLEN + Constanst.FTDC_HDRLEN);
+                int fieldsize = Marshal.SizeOf(typeof(CThostFtdcRspInfoField));
+                CThostFtdcRspInfoField tmp3 = ByteSwapHelp.BytesToStruct<CThostFtdcRspInfoField>(dstData, offset + Constanst.PROFTD_HDRLEN + Constanst.FTDC_HDRLEN);
 
-                //offset += Constanst.FTDC_HDRLEN + rspSize;
-                //ftdc_hdr tmp4 = ByteSwapHelp.BytesToStruct<ftdc_hdr>(dstData, offset + Constanst.PROFTD_HDRLEN);
-                //EnumFiledID fieldid2 = (EnumFiledID)tmp2.wFiId;
-                //LCThostFtdcRspUserLoginField tmp5 = ByteSwapHelp.BytesToStruct<LCThostFtdcRspUserLoginField>(dstData, offset + Constanst.PROFTD_HDRLEN + Constanst.FTDC_HDRLEN);
+                offset += Constanst.FTDC_HDRLEN + rspSize;
+                ftdc_hdr tmp4 = ByteSwapHelp.BytesToStruct<ftdc_hdr>(dstData, offset + Constanst.PROFTD_HDRLEN);
+                EnumFiledID fieldid2 = (EnumFiledID)tmp2.wFiId;
+                LCThostFtdcRspUserLoginField tmp5 = ByteSwapHelp.BytesToStruct<LCThostFtdcRspUserLoginField>(dstData, offset + Constanst.PROFTD_HDRLEN + Constanst.FTDC_HDRLEN);
 
                 //logger.Info("**** remote raw data size" + dstLen.ToString());
                 //string rawhex = ByteUtil.ByteToHex(dstData, ' ', dstLen);
                 //logger.Info(rawhex);
 
                 //将业务数据用本地方法打包
-                byte[] data1 = StructHelperV12.PackRsp<LCThostFtdcInstrumentField>(ref tmp3, EnumSeqType.SeqQry, EnumTransactionID.T_RSP_USRINF, (int)tmp1.dReqId, (int)tmp1.dSeqNo);
+                byte[] data1 = StructHelperV12.PackRsp<CThostFtdcRspInfoField>(ref tmp3, EnumSeqType.SeqQry, EnumTransactionID.T_RSP_USRINF, (int)tmp1.dReqId, (int)tmp1.dSeqNo);
                 logger.Info("**** local raw data size:" + data1.Length.ToString());
                 logger.Info(ByteUtil.ByteToHex(data1, ' '));
 

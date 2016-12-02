@@ -185,6 +185,57 @@ namespace CTPService
                                 }
                                 break;
                             }
+                        //*请求查询保证金监管系统经纪公司资金账户密钥 ReqQryCFMMCTradingAccountKey
+                        case EnumTransactionID.T_QRY_CFMMCKEY:
+                            {
+                                var data = requestInfo.FTDFields[0].FTDCData;
+                                if (data is Struct.V12.LCThostFtdcQryCFMMCTradingAccountKeyField)
+                                {
+                                    Struct.V12.LCThostFtdcQryCFMMCTradingAccountKeyField field = (Struct.V12.LCThostFtdcQryCFMMCTradingAccountKeyField)data;
+
+                                    logger.Info(string.Format("Session:{0} >> ReqQryCFMMCTradingAccountKey", session.SessionID));
+
+                                    Struct.V12.LCThostFtdcCFMMCTradingAccountKeyField response = new Struct.V12.LCThostFtdcCFMMCTradingAccountKeyField();
+                                    response.BrokerID = "888888";
+                                    response.AccountID = "00000";
+                                    response.CurrentKey = "";
+                                    response.KeyID = 1;
+                                    response.ParticipantID = "";
+
+                                    byte[] rdata = Struct.V12.StructHelperV12.PackRsp<Struct.V12.LCThostFtdcCFMMCTradingAccountKeyField>(ref response, EnumSeqType.SeqQry, EnumTransactionID.T_RSP_CFMMCKEY, (int)requestInfo.FTDHeader.dReqId, conn.NextSeqId);
+                                    int encPktLen = 0;
+                                    byte[] encData = Struct.V12.StructHelperV12.EncPkt(rdata, out encPktLen);
+
+                                    conn.Send(encData, encPktLen);
+                                }
+                                break;
+                            }
+                        //请求查询监控中心用户令牌 ReqQueryCFMMCTradingAccountToken
+                        case EnumTransactionID.T_QRY_TDTOK:
+                            {
+                                //T_RSP_TDTOK 返回包含LCThostFtdcRspInfoField + LCThostFtdcQueryCFMMCTradingAccountTokenField 2个数据域
+                                var data = requestInfo.FTDFields[0].FTDCData;
+                                if (data is Struct.V12.LCThostFtdcQueryCFMMCTradingAccountTokenField)
+                                {
+                                    Struct.V12.LCThostFtdcQueryCFMMCTradingAccountTokenField field = (Struct.V12.LCThostFtdcQueryCFMMCTradingAccountTokenField)data;
+
+                                    logger.Info(string.Format("Session:{0} >> ReqQueryCFMMCTradingAccountToken", session.SessionID));
+
+                                    Struct.V12.LCThostFtdcRspInfoField rsp = new Struct.V12.LCThostFtdcRspInfoField();
+                                    rsp.ErrorID = 0;
+                                    rsp.ErrorMsg = "正确";
+
+
+                                    byte[] rdata = Struct.V12.StructHelperV12.PackRsp<Struct.V12.LCThostFtdcQueryCFMMCTradingAccountTokenField>(ref rsp, ref field, EnumSeqType.SeqQry, EnumTransactionID.T_RSP_TDTOK, (int)requestInfo.FTDHeader.dReqId, conn.NextSeqId);
+                                    int encPktLen = 0;
+                                    byte[] encData = Struct.V12.StructHelperV12.EncPkt(rdata, out encPktLen);
+
+                                    conn.Send(encData, encPktLen);
+                                    //CTP柜台 此后还会进行T_RTN_TDTOK
+
+                                }
+                                break;
+                            }
                         //请求查询客户通知 ReqQryNotice
                         case EnumTransactionID.T_QRY_NOTICE:
                             {

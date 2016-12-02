@@ -34,6 +34,16 @@ namespace CTPService.Struct.V12
                     {
                         return ByteSwapHelp.BytesToStruct<LCThostFtdcQrySettlementInfoConfirmField>(data, offset);
                     }
+                    //请求查询保证金监管系统经纪公司资金账户密钥
+                case EnumFiledID.F_QRY_CFMMCKEY:
+                    {
+                        return ByteSwapHelp.BytesToStruct<LCThostFtdcQryCFMMCTradingAccountKeyField>(data, offset);
+                    }
+                    //请求查询监控中心用户令牌
+                case EnumFiledID.F_QRY_TDTOK:
+                    {
+                        return ByteSwapHelp.BytesToStruct<LCThostFtdcQueryCFMMCTradingAccountTokenField>(data, offset);
+                    }
                     //请求查询客户通知
                 case EnumFiledID.F_QRY_NOTICE:
                     {

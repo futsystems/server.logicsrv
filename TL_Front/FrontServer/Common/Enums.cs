@@ -238,7 +238,8 @@ namespace CTPService
         F_QRY_MMOPFEE = 0x86d,
         F_QRY_MMINSTFEE = 0x86f,
         F_REQ_BATORDACT = 0x83a,
-        F_QRY_PRODEXHRATE = 0x858
+        F_QRY_PRODEXHRATE = 0x858,
+        F_QRY_TDTOK = 0x250f,
     };
 
 

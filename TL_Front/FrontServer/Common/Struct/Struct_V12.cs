@@ -4873,4 +4873,244 @@ namespace CTPService.Struct.V12
             }
         }
     #endregion
+
+        #region  资金账户密钥
+        /// <summary>
+        /// 请求查询保证金监管系统经纪公司资金账户密钥
+        /// </summary>
+        [StructLayout(LayoutKind.Sequential)]
+        public struct CThostFtdcQryCFMMCTradingAccountKeyField : ITFieldId
+        {
+            /// <summary>
+            /// 经纪公司代码
+            /// </summary>
+            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 11)]
+            public string BrokerID;
+            /// <summary>
+            /// 投资者代码
+            /// </summary>
+            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 13)]
+            public string InvestorID;
+
+            public ushort FieldId
+            {
+                get { return 9475; }
+            }
+
+            public void Swap()
+            { }
+
+            public static implicit operator CThostFtdcQryCFMMCTradingAccountKeyField(LCThostFtdcQryCFMMCTradingAccountKeyField input)
+            {
+                CThostFtdcQryCFMMCTradingAccountKeyField ret = new CThostFtdcQryCFMMCTradingAccountKeyField();
+                ret.BrokerID = input.BrokerID;
+                ret.InvestorID = input.InvestorID;
+
+                return ret;
+            }
+        }
+        [StructLayout(LayoutKind.Sequential, Pack = 1)]
+        public struct LCThostFtdcQryCFMMCTradingAccountKeyField : IFieldId
+        {
+            /// <summary>
+            /// 经纪公司代码
+            /// </summary>
+            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 11)]
+            public string BrokerID;
+            /// <summary>
+            /// 投资者代码
+            /// </summary>
+            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 13)]
+            public string InvestorID;
+
+            public ushort FieldId
+            {
+                get { return 9475; }
+            }
+
+            public void Swap()
+            { }
+
+            public static implicit operator LCThostFtdcQryCFMMCTradingAccountKeyField(CThostFtdcQryCFMMCTradingAccountKeyField input)
+            {
+                LCThostFtdcQryCFMMCTradingAccountKeyField ret = new LCThostFtdcQryCFMMCTradingAccountKeyField();
+                ret.BrokerID = input.BrokerID;
+                ret.InvestorID = input.InvestorID;
+
+                return ret;
+            }
+        }
+
+        /// <summary>
+        /// 保证金监管系统经纪公司资金账户密钥
+        /// </summary>
+        [StructLayout(LayoutKind.Sequential)]
+        public struct CThostFtdcCFMMCTradingAccountKeyField : ITFieldId
+        {
+            /// <summary>
+            /// 经纪公司代码
+            /// </summary>
+            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 11)]
+            public string BrokerID;
+            /// <summary>
+            /// 经纪公司统一编码
+            /// </summary>
+            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 11)]
+            public string ParticipantID;
+            /// <summary>
+            /// 投资者帐号
+            /// </summary>
+            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 13)]
+            public string AccountID;
+            /// <summary>
+            /// 密钥编号
+            /// </summary>
+            public int KeyID;
+            /// <summary>
+            /// 动态密钥
+            /// </summary>
+            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 21)]
+            public string CurrentKey;
+
+            public ushort FieldId
+            {
+                get { return 9474; }
+            }
+
+            public void Swap()
+            { }
+
+            public static implicit operator CThostFtdcCFMMCTradingAccountKeyField(LCThostFtdcCFMMCTradingAccountKeyField input)
+            {
+                CThostFtdcCFMMCTradingAccountKeyField ret = new CThostFtdcCFMMCTradingAccountKeyField();
+                ret.BrokerID = input.BrokerID;
+                ret.ParticipantID = input.ParticipantID;
+                ret.AccountID = input.AccountID;
+                ret.KeyID = input.KeyID;
+                ret.CurrentKey = input.CurrentKey;
+
+                return ret;
+            }
+        }
+        [StructLayout(LayoutKind.Sequential, Pack = 1)]
+        public struct LCThostFtdcCFMMCTradingAccountKeyField : IFieldId
+        {
+            /// <summary>
+            /// 经纪公司代码
+            /// </summary>
+            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 11)]
+            public string BrokerID;
+            /// <summary>
+            /// 经纪公司统一编码
+            /// </summary>
+            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 11)]
+            public string ParticipantID;
+            /// <summary>
+            /// 投资者帐号
+            /// </summary>
+            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 13)]
+            public string AccountID;
+            /// <summary>
+            /// 密钥编号
+            /// </summary>
+            public int KeyID;
+            /// <summary>
+            /// 动态密钥
+            /// </summary>
+            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 21)]
+            public string CurrentKey;
+
+            public ushort FieldId
+            {
+                get { return 9474; }
+            }
+
+            public void Swap()
+            {
+                KeyID = ByteSwapHelp.ReverseBytes(KeyID);
+            }
+
+            public static implicit operator LCThostFtdcCFMMCTradingAccountKeyField(CThostFtdcCFMMCTradingAccountKeyField input)
+            {
+                LCThostFtdcCFMMCTradingAccountKeyField ret = new LCThostFtdcCFMMCTradingAccountKeyField();
+                ret.BrokerID = input.BrokerID;
+                ret.ParticipantID = input.ParticipantID;
+                ret.AccountID = input.AccountID;
+                ret.KeyID = input.KeyID;
+                ret.CurrentKey = input.CurrentKey;
+
+                return ret;
+            }
+        }
+    #endregion
+
+    #region 请求查询监控中心用户令牌
+        /// <summary>
+        /// 查询监控中心用户令牌
+        /// </summary>
+        [StructLayout(LayoutKind.Sequential)]
+        public struct CThostFtdcQueryCFMMCTradingAccountTokenField : ITFieldId
+        {
+            /// <summary>
+            /// 经纪公司代码
+            /// </summary>
+            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 11)]
+            public string BrokerID;
+
+            /// <summary>
+            /// 投资者代码
+            /// </summary>
+            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 13)]
+            public string InvestorID;
+
+            public ushort FieldId
+            {
+                get { return 9487; }
+            }
+
+            public void Swap()
+            { }
+
+            public static implicit operator CThostFtdcQueryCFMMCTradingAccountTokenField(LCThostFtdcQueryCFMMCTradingAccountTokenField input)
+            {
+                CThostFtdcQueryCFMMCTradingAccountTokenField ret = new CThostFtdcQueryCFMMCTradingAccountTokenField();
+                ret.BrokerID = input.BrokerID;
+                ret.InvestorID = input.InvestorID;
+
+                return ret;
+            }
+        }
+        [StructLayout(LayoutKind.Sequential, Pack = 1)]
+        public struct LCThostFtdcQueryCFMMCTradingAccountTokenField : IFieldId
+        {
+            /// <summary>
+            /// 经纪公司代码
+            /// </summary>
+            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 11)]
+            public string BrokerID;
+            /// <summary>
+            /// 投资者代码
+            /// </summary>
+            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 13)]
+            public string InvestorID;
+
+            public ushort FieldId
+            {
+                get { return 9487; }
+            }
+
+            public void Swap()
+            { }
+
+            public static implicit operator LCThostFtdcQueryCFMMCTradingAccountTokenField(CThostFtdcQueryCFMMCTradingAccountTokenField input)
+            {
+                LCThostFtdcQueryCFMMCTradingAccountTokenField ret = new LCThostFtdcQueryCFMMCTradingAccountTokenField();
+                ret.BrokerID = input.BrokerID;
+                ret.InvestorID = input.InvestorID;
+
+                return ret;
+            }
+        }
+
+    #endregion
 }
