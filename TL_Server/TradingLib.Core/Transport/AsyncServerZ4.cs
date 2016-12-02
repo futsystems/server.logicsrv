@@ -580,6 +580,7 @@ namespace TradingLib.Core
                 //处理前置的逻辑连接心跳
                 if (cnt == 3 && msg.Type == MessageTypes.LOGICLIVEREQUEST)
                 {
+                    logger.Info("logic heart beat");
                     LogicLiveRequest req = (LogicLiveRequest)PacketHelper.SrvRecvRequest(msg, front, address);
                     LogicLiveResponse rep = ResponseTemplate<LogicLiveResponse>.SrvSendRspResponse(req);
 

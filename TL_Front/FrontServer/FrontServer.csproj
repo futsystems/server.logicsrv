@@ -109,6 +109,7 @@
     <Compile Include="CTPServiceHost\TLServerBase.cs" />
     <Compile Include="CTPServiceHost\TLSessionBase.cs" />
     <Compile Include="CTPServiceHost\CTPServiceHost_Connection.cs" />
+    <Compile Include="WatchDog.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config">

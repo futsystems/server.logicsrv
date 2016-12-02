@@ -22,13 +22,30 @@ namespace FrontServer
         }
 
 
+
+        /// <summary>
+        /// 当前MQServer是否处于工作状态
+        /// </summary>
+        public bool IsLive { get { return _srvgo; } }
+
+        bool _stopped = false;
+        public bool IsStopped { get { return _stopped; } }
         public void Start()
         {
             if (_srvgo) return;
             _srvgo = true;
+            logger.Info("Start MQServer");
             mainThread = new Thread(MessageProcess);
             mainThread.IsBackground = true;
             mainThread.Start();
+        }
+
+        public void Stop()
+        {
+            if (!_srvgo) return;
+            logger.Info("Stop MQServer");
+            _srvgo = false;
+            mainThread.Join();
         }
 
         int _logicPort=5570;
@@ -36,6 +53,7 @@ namespace FrontServer
         bool _srvgo = false;
         TimeSpan pollerTimeOut = new TimeSpan(0, 0, 1);
         ZSocket _backend = null;
+        ZContext _ctx = null;
         Thread mainThread = null;
 
         object _obj = new object();
@@ -85,6 +103,19 @@ namespace FrontServer
             return null;
         }
 
+        /// <summary>
+        /// 发送逻辑服务端心跳
+        /// 用于确认逻辑服务器连接可用
+        /// </summary>
+        public void LogicHeartBeat()
+        {
+            logger.Debug("Send Logic HeartBeat");
+            LogicLiveRequest request = RequestTemplate<LogicLiveRequest>.CliSendRequest(0);
+            this.TLSend(_localAddress, request);
+            _lastHeartBeatSend = DateTime.Now;
+        }
+
+
         public void TLSend(string address, IPacket packet)
         {
             this.TLSend(address, packet.Data);
@@ -114,22 +145,36 @@ namespace FrontServer
             }
         }
 
+        public DateTime LastHeartBeatRecv { get { return _lastHeartBeatRecv; } }
+
+        DateTime _lastHeartBeatSend = DateTime.Now;
+        DateTime _lastHeartBeatRecv = DateTime.Now;
+
+        string _localAddress = "front-01";
         void MessageProcess()
         {
-            using (var ctx = new ZContext())
+            _lastHeartBeatRecv = DateTime.Now;
+            _lastHeartBeatSend = DateTime.Now;
+            _stopped = false;
+            using(var ctx = new ZContext())
             {
-                using (ZSocket backend = new ZSocket(ctx, ZSocketType.DEALER))
+                _ctx = ctx;
+                using(ZSocket backend = new ZSocket(ctx, ZSocketType.DEALER))
                 {
-                    //"tcp://" + _serverip + ":" + Port.ToString()
                     string address = string.Format("tcp://{0}:{1}", _logicServer, _logicPort);
 
                     backend.SetOption(ZSocketOption.IDENTITY, Encoding.UTF8.GetBytes("front-001"));
                     backend.Connect(address);
+                    
+                    backend.Linger = new TimeSpan(0);//需设置 否则底层socket无法释放 导致无法正常关闭服务
+                    backend.ReceiveTimeout = new TimeSpan(0, 0, 1);
+                    logger.Info(string.Format("Connect to logic server:{0}", address));
                     _backend = backend;
 
                     ZError error;
                     ZMessage incoming;
                     ZPollItem item = ZPollItem.CreateReceiver();
+                    logger.Info("MQServer MessageProcess Started");
                     while (_srvgo)
                     {
                         try
@@ -138,7 +183,6 @@ namespace FrontServer
                             if (incoming != null)
                             {
                                 int cnt = incoming.Count;
-                                
                                 if (cnt == 2)
                                 {
                                     string clientId = incoming[0].ReadString(Encoding.UTF8);//读取地址
@@ -147,22 +191,31 @@ namespace FrontServer
 
                                     if (!string.IsNullOrEmpty(clientId))
                                     {
-                                        IConnection conn = GetConnection(clientId);
+                                        IPacket packet = PacketHelper.CliRecvResponse(message);
 
-                                        if (conn != null)
+                                        if (clientId == _localAddress)//本地心跳
                                         {
-                                            IPacket packet = PacketHelper.CliRecvResponse(message);
-                                            //调用Connection对应的ServiceHost处理逻辑消息包
-                                            conn.ServiceHost.HandleLogicMessage(conn,packet);
+                                            if (packet.Type == MessageTypes.LOGICLIVERESPONSE)
+                                            {
+                                                _lastHeartBeatRecv = DateTime.Now;
+                                            }
                                         }
                                         else
                                         {
-                                            logger.Warn(string.Format("Client:{0} do not exist", clientId));
+                                            IConnection conn = GetConnection(clientId);
+                                            if (conn != null)
+                                            {
+                                                //调用Connection对应的ServiceHost处理逻辑消息包
+                                                conn.ServiceHost.HandleLogicMessage(conn, packet);
+                                            }
+                                            else
+                                            {
+                                                logger.Warn(string.Format("Client:{0} do not exist", clientId));
+                                            }
                                         }
                                     }
-                                    
-                                    
                                 }
+                                incoming.Clear();
                             }
                             else
                             {
@@ -181,10 +234,10 @@ namespace FrontServer
                             logger.Error("Poll Message Error:"+ex.ToString());
                         }
                     }
-
                 }
-
             }
+            _stopped = true;
+            logger.Info("MQServer MessageProcess Stoppd");
         }
     }
 }
