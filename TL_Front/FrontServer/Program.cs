@@ -145,8 +145,7 @@ namespace FrontServer
             host.Start();
             watchDog.Join();
 
-
-            System.Threading.Thread.Sleep(int.MaxValue);
+            
         }
     }
 }

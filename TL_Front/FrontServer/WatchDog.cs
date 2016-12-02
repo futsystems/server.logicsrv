@@ -19,7 +19,10 @@ namespace FrontServer
         {
             _mqServer = mqserver;
         }
-        ManualResetEvent manualEvent = new ManualResetEvent(true);
+        ManualResetEvent manualEvent = new ManualResetEvent(false);
+        /// <summary>
+        /// 启动服务并阻塞当前线程
+        /// </summary>
         public void Join()
         {
             if (timer != null) return;
@@ -28,8 +31,33 @@ namespace FrontServer
             timer.Elapsed += new System.Timers.ElapsedEventHandler(timer_Elapsed);
             timer.Start();
             logger.Info("WatchDog Started");
+
+            //System.Threading.ThreadPool.QueueUserWorkItem(o => {
+            //    while (true)
+            //    {
+            //        if (Console.ReadKey().Key == ConsoleKey.D)
+            //        {
+            //            logger.Info("Echo");
+            //            Release();
+            //        }
+            //        else if (Console.ReadKey().Key == ConsoleKey.F4)
+            //        {
+            //            logger.Info("??");
+            //            //捕捉Esc Set ManualResetEvent
+            //            Release();
+            //        }
+            //    }
+            //});
+            manualEvent.WaitOne();
+            
+
         }
 
+        public void Release()
+        {
+            logger.Info("Stop WatchDog Service");
+            manualEvent.Set();
+        }
         void timer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
         {
             if (_mqServer.IsLive)
