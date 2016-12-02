@@ -74,7 +74,7 @@ namespace CTPService
 
                             //发送数据
                             conn.Send(encData, encPktLen);
-                            logger.Info(string.Format("LogicSrv Reply Session:{0} -> LoginResponse", conn.SessionID));
+                            if (response.IsLast) logger.Info(string.Format("LogicSrv Reply Session:{0} -> LoginResponse", conn.SessionID));
                             break;
                         }
                     //投资者查询回报
@@ -103,7 +103,7 @@ namespace CTPService
 
                             //发送数据
                             conn.Send(encData, encPktLen);
-                            logger.Info(string.Format("LogicSrv Reply Session:{0} -> RspQryInvestorResponse", conn.SessionID));
+                            if (response.IsLast) logger.Info(string.Format("LogicSrv Reply Session:{0} -> RspQryInvestorResponse", conn.SessionID));
                             break;
                         }
                         //查询投资者结算确认信息
@@ -126,7 +126,7 @@ namespace CTPService
                             //encPktLen = encData.Length;
                             //发送数据
                             conn.Send(encData, encPktLen);
-                            logger.Info(string.Format("LogicSrv Reply Session:{0} -> RspQrySettleInfoConfirmResponse", conn.SessionID));
+                            if (response.IsLast) logger.Info(string.Format("LogicSrv Reply Session:{0} -> RspQrySettleInfoConfirmResponse", conn.SessionID));
                             break;
                         }
                         //请求查询客户通知
@@ -143,7 +143,7 @@ namespace CTPService
                             byte[] encData = Struct.V12.StructHelperV12.EncPkt(data, out encPktLen);
 
                             conn.Send(encData, encPktLen);
-                            logger.Info(string.Format("LogicSrv Reply Session:{0} -> RspQryNoticeResponse", conn.SessionID));
+                            if (response.IsLast) logger.Info(string.Format("LogicSrv Reply Session:{0} -> RspQryNoticeResponse", conn.SessionID));
                             break;
                         }
                         //查询结算信息回报
@@ -163,7 +163,7 @@ namespace CTPService
                             byte[] encData = Struct.V12.StructHelperV12.EncPkt(data, out encPktLen);
 
                             conn.Send(encData, encPktLen);
-                            logger.Info(string.Format("LogicSrv Reply Session:{0} -> RspXQrySettleInfoResponse", conn.SessionID));
+                            if (response.IsLast) logger.Info(string.Format("LogicSrv Reply Session:{0} -> RspXQrySettleInfoResponse", conn.SessionID));
                             break;
 
                         }
@@ -239,7 +239,7 @@ namespace CTPService
                             //encPktLen = encData.Length;
                             //encData[7] = (byte)'L';
                             conn.Send(encData, encPktLen);
-                            logger.Info(string.Format("LogicSrv Reply Session:{0} -> RspQrySymbolResponse", conn.SessionID));
+                            if (response.IsLast) logger.Info(string.Format("LogicSrv Reply Session:{0} -> RspQrySymbolResponse", conn.SessionID));
                             break;
                         }
                         //委托查询回报
@@ -262,7 +262,7 @@ namespace CTPService
                             }
 
                             conn.Send(encData, encPktLen);
-                            logger.Info(string.Format("LogicSrv Reply Session:{0} -> RspQryOrderResponse", conn.SessionID));
+                            if (response.IsLast) logger.Info(string.Format("LogicSrv Reply Session:{0} -> RspQryOrderResponse", conn.SessionID));
                             break;
 
                         }
@@ -286,7 +286,7 @@ namespace CTPService
                             }
 
                             conn.Send(encData, encPktLen);
-                            logger.Info(string.Format("LogicSrv Reply Session:{0} -> RspQryTradeResponse", conn.SessionID));
+                            if (response.IsLast) logger.Info(string.Format("LogicSrv Reply Session:{0} -> RspQryTradeResponse", conn.SessionID));
                             break;
                         }
                         //查询投资者持仓
@@ -309,7 +309,7 @@ namespace CTPService
                             }
 
                             conn.Send(encData, encPktLen);
-                            logger.Info(string.Format("LogicSrv Reply Session:{0} -> RspQryPositionResponse", conn.SessionID));
+                            if (response.IsLast) logger.Info(string.Format("LogicSrv Reply Session:{0} -> RspQryPositionResponse", conn.SessionID));
                             break;
                         }
                         //查询交易账户回报
@@ -343,7 +343,7 @@ namespace CTPService
                             byte[] encData = Struct.V12.StructHelperV12.EncPkt(data, out encPktLen);
 
                             conn.Send(encData, encPktLen);
-                            logger.Info(string.Format("LogicSrv Reply Session:{0} -> RspQryAccountInfoResponse", conn.SessionID));
+                            if (response.IsLast) logger.Info(string.Format("LogicSrv Reply Session:{0} -> RspQryAccountInfoResponse", conn.SessionID));
                             break;
                         }
                         //银行回报
@@ -367,7 +367,7 @@ namespace CTPService
                             //encPktLen = encData.Length;
 
                             conn.Send(encData, encPktLen);
-                            logger.Info(string.Format("LogicSrv Reply Session:{0} -> RspQryContractBankResponse", conn.SessionID));
+                            if (response.IsLast) logger.Info(string.Format("LogicSrv Reply Session:{0} -> RspQryContractBankResponse", conn.SessionID));
                             break;
                         }
                         //签约关系回报
@@ -400,7 +400,7 @@ namespace CTPService
                             byte[] encData = Struct.V12.StructHelperV12.EncPkt(data, out encPktLen);
 
                             conn.Send(encData, encPktLen);
-                            logger.Info(string.Format("LogicSrv Reply Session:{0} -> RspQryRegisterBankAccountResponse", conn.SessionID));
+                            if (response.IsLast) logger.Info(string.Format("LogicSrv Reply Session:{0} -> RspQryRegisterBankAccountResponse", conn.SessionID));
                             break;
                         }
                     default:

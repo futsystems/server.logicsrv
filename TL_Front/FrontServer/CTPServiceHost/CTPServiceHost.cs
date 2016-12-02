@@ -23,6 +23,9 @@ namespace CTPService
 
 
         FrontServer.MQServer _mqServer = null;
+        //心跳包
+        byte[] heartBeatPkt = new byte[] { 0, 6, 0, 0, 7, 4, 0, 0, 0, 0x27 };
+
         public CTPServiceHost(FrontServer.MQServer mqServer)
         {
             _mqServer = mqServer;
@@ -99,12 +102,13 @@ namespace CTPService
                     {
                         case EnumFTDTagType.FTDTagKeepAlive:
                             {
-                                logger.Info(string.Format("Session:{0} >> HeartBeat", session.SessionID));
+                                logger.Debug(string.Format("Session:{0} >> HeartBeat", session.SessionID));
                                 if (_connectionMap.TryGetValue(session.SessionID, out conn))
                                 {
                                     //更新connection最近心跳时间
                                     conn.UpdateHeartBeat();
-
+                                    //返回心跳包
+                                    conn.Send(heartBeatPkt);
                                 }
                                 break;
                             }
