@@ -49,7 +49,7 @@ namespace CTPService
             //MessageTypes type = (MessageTypes)BitConverter.ToInt32(header, offset + TYPEOFFSET);
             int bFtdtype = header[offset + FTDTYPEOFFSET];
             int bExLen = header[offset + EXLENOFFSET];
-            int wPktLen = Endian.SwapInt16(BitConverter.ToInt16(header, offset + PKTLENOFFSET));
+            int wPktLen = ByteSwapHelp.ReverseBytes(BitConverter.ToInt16(header, offset + PKTLENOFFSET));
 
             return bExLen + wPktLen;
             //return 0;
@@ -70,7 +70,7 @@ namespace CTPService
 
             EnumFTDType bFtdtype = (EnumFTDType)header.Array[FTDTYPEOFFSET];
             int bExLen = header.Array[EXLENOFFSET];
-            int wPktLen = Endian.SwapInt16((BitConverter.ToInt16(header.Array, PKTLENOFFSET)));//字节序变化
+            int wPktLen = ByteSwapHelp.ReverseBytes((BitConverter.ToInt16(header.Array, PKTLENOFFSET)));//字节序变化
 
             byte[] data = new byte[length];
             Array.Copy(bodyBuffer, offset, data, 0, length);

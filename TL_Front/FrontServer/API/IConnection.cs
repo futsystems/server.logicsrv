@@ -21,21 +21,6 @@ namespace FrontServer
         string SessionID { get; }
 
         /// <summary>
-        /// 向客户端发送数据包
-        /// 逻辑服务器返回的数据包转换成客户端协议支持的数据包对外发送
-        /// </summary>
-        /// <param name="packet"></param>
-        void SendToClient(IPacket packet);
-
-        /// <summary>
-        /// 向逻辑服务器发送数据包
-        /// 客户端提交上来的请求转换成内部数据格式 向逻辑服务器发送
-        /// </summary>
-        /// <param name="packet"></param>
-        void ForwardToLogic(IPacket packet);
-        
-
-        /// <summary>
         /// 关闭会话
         /// </summary>
         void Close();

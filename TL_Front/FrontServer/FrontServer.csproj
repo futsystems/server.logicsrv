@@ -82,20 +82,19 @@
   <ItemGroup>
     <Compile Include="API\IServiceHost.cs" />
     <Compile Include="Common\ByteUtil.cs" />
-    <Compile Include="Common\Constanst.cs" />
-    <Compile Include="Common\Endian .cs" />
-    <Compile Include="Common\EnumChainType.cs" />
-    <Compile Include="Common\EnumEncType.cs" />
-    <Compile Include="Common\Enums.cs" />
-    <Compile Include="Common\EnumSeqType.cs" />
-    <Compile Include="Common\Struct\Enum.cs" />
-    <Compile Include="Common\EnumFTDTagType.cs" />
-    <Compile Include="Common\EnumFTDType.cs" />
+    <Compile Include="CTPServiceHost\Protocol\Constanst.cs" />
+    <Compile Include="CTPServiceHost\Protocol\EnumChainType.cs" />
+    <Compile Include="CTPServiceHost\Protocol\EnumEncType.cs" />
+    <Compile Include="CTPServiceHost\Protocol\Enums.cs" />
+    <Compile Include="CTPServiceHost\Protocol\EnumSeqType.cs" />
+    <Compile Include="CTPServiceHost\Protocol\Struct\Enum.cs" />
+    <Compile Include="CTPServiceHost\Protocol\EnumFTDTagType.cs" />
+    <Compile Include="CTPServiceHost\Protocol\EnumFTDType.cs" />
     <Compile Include="Common\IByteSwap.cs" />
-    <Compile Include="Common\Struct\StructHelperV12.cs" />
-    <Compile Include="Common\Struct\Struct_tmp.cs" />
-    <Compile Include="Common\Struct\StructBase.cs" />
-    <Compile Include="Common\Struct\Struct_V12.cs" />
+    <Compile Include="CTPServiceHost\Protocol\Struct\StructHelperV12.cs" />
+    <Compile Include="CTPServiceHost\Protocol\Struct\Struct_tmp.cs" />
+    <Compile Include="CTPServiceHost\Protocol\Struct\StructBase.cs" />
+    <Compile Include="CTPServiceHost\Protocol\Struct\Struct_V12.cs" />
     <Compile Include="CTPServiceHost\CTPConnection.cs" />
     <Compile Include="CTPServiceHost\CTPServiceHost.cs" />
     <Compile Include="API\IConnection.cs" />
@@ -115,6 +114,10 @@
     <None Include="app.config">
       <SubType>Designer</SubType>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="SockServiceHost\" />
+    <Folder Include="WSServiceHost\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
