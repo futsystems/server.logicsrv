@@ -846,7 +846,7 @@ namespace TradingLib.Common
             k.Date = int.Parse(r[2]);
             k.Time = int.Parse(r[3]);
             k.DataFeed = (QSEnumDataFeedTypes)int.Parse(r[4]);
-
+            decimal val = 0;
             switch (k.UpdateType)
             {
                 case "X":
@@ -903,7 +903,8 @@ namespace TradingLib.Common
                         k.Vol = int.Parse(r[11]);
                         k.OpenInterest = int.Parse(r[12]);
                         k.PreOpenInterest = int.Parse(r[13]);
-                        k.Settlement = decimal.Parse(r[14]);
+                        //k.Settlement = decimal.Parse(r[14]);
+                        if (decimal.TryParse(r[14], out val)) k.Settlement = val;//CTP当日结算价为double.max 实时行情系统传输后 会导致此处解析异常
                         k.PreSettlement = decimal.Parse(r[15]);
                         k.Exchange = r[16];
                         k.MarketOpen = bool.Parse(r[17]);
@@ -951,7 +952,9 @@ namespace TradingLib.Common
                         k.PreClose = decimal.Parse(r[36]);
                         k.OpenInterest = int.Parse(r[37]);
                         k.PreOpenInterest = int.Parse(r[38]);
-                        k.Settlement = decimal.Parse(r[39]);
+                        
+                        if (decimal.TryParse(r[39], out val)) k.Settlement = val;
+                        
                         k.PreSettlement = decimal.Parse(r[40]);
                         k.UpperLimit = decimal.Parse(r[41]);
                         k.LowerLimit = decimal.Parse(r[42]);

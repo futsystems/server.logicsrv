@@ -116,7 +116,7 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="SockServiceHost\" />
+    <Folder Include="TLServiceHost\" />
     <Folder Include="WSServiceHost\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

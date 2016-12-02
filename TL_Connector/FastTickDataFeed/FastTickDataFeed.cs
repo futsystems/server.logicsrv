@@ -237,6 +237,7 @@ namespace DataFeed.FastTick
 
                     ZMessage tickdata;
                     ZError error;
+                    string tickstr = string.Empty;
                     while (_tickgo)
                     {
                         try
@@ -250,7 +251,7 @@ namespace DataFeed.FastTick
                             else
                             {
 
-                                string tickstr =tickdata.First().ReadString(Encoding.UTF8);
+                                tickstr =tickdata.First().ReadString(Encoding.UTF8);
                                 //清空zmessage 否则内存溢出
                                 tickdata.Clear();
 
