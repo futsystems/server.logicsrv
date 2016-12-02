@@ -2767,4 +2767,516 @@ namespace CTPService.Struct.V12
 
     #endregion
 
+    #region 查询成交
+    /// <summary>
+    /// 查询成交
+    /// </summary>
+    [StructLayout(LayoutKind.Sequential)]
+    public struct CThostFtdcQryTradeField : ITFieldId
+    {
+        /// <summary>
+        /// 经纪公司代码
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 11)]
+        public string BrokerID;
+        /// <summary>
+        /// 投资者代码
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 13)]
+        public string InvestorID;
+        /// <summary>
+        /// 合约代码
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 31)]
+        public string InstrumentID;
+        /// <summary>
+        /// 交易所代码
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 9)]
+        public string ExchangeID;
+        /// <summary>
+        /// 成交编号
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 21)]
+        public string TradeID;
+        /// <summary>
+        /// 开始时间
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 9)]
+        public string TradeTimeStart;
+        /// <summary>
+        /// 结束时间
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 9)]
+        public string TradeTimeEnd;
+
+        public ushort FieldId
+        {
+            get { return 1793; }
+        }
+
+        public void Swap()
+        { }
+
+        public static implicit operator CThostFtdcQryTradeField(LCThostFtdcQryTradeField input)
+        {
+            CThostFtdcQryTradeField ret = new CThostFtdcQryTradeField();
+            ret.BrokerID = input.BrokerID;
+            ret.InvestorID = input.InvestorID;
+            ret.InstrumentID = input.InstrumentID;
+            ret.ExchangeID = input.ExchangeID;
+            ret.TradeID = input.TradeID;
+            ret.TradeTimeStart = input.TradeTimeStart;
+            ret.TradeTimeEnd = input.TradeTimeEnd;
+
+            return ret;
+        }
+    }
+    [StructLayout(LayoutKind.Sequential, Pack = 1)]
+    public struct LCThostFtdcQryTradeField : IFieldId
+    {
+        /// <summary>
+        /// 经纪公司代码
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 11)]
+        public string BrokerID;
+        /// <summary>
+        /// 投资者代码
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 13)]
+        public string InvestorID;
+        /// <summary>
+        /// 合约代码
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 31)]
+        public string InstrumentID;
+        /// <summary>
+        /// 交易所代码
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 9)]
+        public string ExchangeID;
+        /// <summary>
+        /// 成交编号
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 21)]
+        public string TradeID;
+        /// <summary>
+        /// 开始时间
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 9)]
+        public string TradeTimeStart;
+        /// <summary>
+        /// 结束时间
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 9)]
+        public string TradeTimeEnd;
+
+        public ushort FieldId
+        {
+            get { return 1793; }
+        }
+
+        public void Swap()
+        { }
+
+        public static implicit operator LCThostFtdcQryTradeField(CThostFtdcQryTradeField input)
+        {
+            LCThostFtdcQryTradeField ret = new LCThostFtdcQryTradeField();
+            ret.BrokerID = input.BrokerID;
+            ret.InvestorID = input.InvestorID;
+            ret.InstrumentID = input.InstrumentID;
+            ret.ExchangeID = input.ExchangeID;
+            ret.TradeID = input.TradeID;
+            ret.TradeTimeStart = input.TradeTimeStart;
+            ret.TradeTimeEnd = input.TradeTimeEnd;
+
+            return ret;
+        }
+    }
+
+    /// <summary>
+    /// 成交
+    /// </summary>
+    [StructLayout(LayoutKind.Sequential)]
+    public struct CThostFtdcTradeField : ITFieldId
+    {
+        /// <summary>
+        /// 经纪公司代码
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 11)]
+        public string BrokerID;
+        /// <summary>
+        /// 投资者代码
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 13)]
+        public string InvestorID;
+        /// <summary>
+        /// 合约代码
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 31)]
+        public string InstrumentID;
+        /// <summary>
+        /// 报单引用
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 13)]
+        public string OrderRef;
+        /// <summary>
+        /// 用户代码
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 16)]
+        public string UserID;
+        /// <summary>
+        /// 交易所代码
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 9)]
+        public string ExchangeID;
+        /// <summary>
+        /// 成交编号
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 21)]
+        public string TradeID;
+        /// <summary>
+        /// 买卖方向
+        /// </summary>
+        public TThostFtdcDirectionType Direction;
+        /// <summary>
+        /// 报单编号
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 21)]
+        public string OrderSysID;
+        /// <summary>
+        /// 会员代码
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 11)]
+        public string ParticipantID;
+        /// <summary>
+        /// 客户代码
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 11)]
+        public string ClientID;
+        /// <summary>
+        /// 交易角色
+        /// </summary>
+        public TThostFtdcTradingRoleType TradingRole;
+        /// <summary>
+        /// 合约在交易所的代码
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 31)]
+        public string ExchangeInstID;
+        /// <summary>
+        /// 开平标志
+        /// </summary>
+        public TThostFtdcOffsetFlagType OffsetFlag;
+        /// <summary>
+        /// 投机套保标志
+        /// </summary>
+        public TThostFtdcHedgeFlagType HedgeFlag;
+        /// <summary>
+        /// 价格
+        /// </summary>
+        public double Price;
+        /// <summary>
+        /// 数量
+        /// </summary>
+        public int Volume;
+        /// <summary>
+        /// 成交时期
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 9)]
+        public string TradeDate;
+        /// <summary>
+        /// 成交时间
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 9)]
+        public string TradeTime;
+        /// <summary>
+        /// 成交类型
+        /// </summary>
+        public TThostFtdcTradeTypeType TradeType;
+        /// <summary>
+        /// 成交价来源
+        /// </summary>
+        public TThostFtdcPriceSourceType PriceSource;
+        /// <summary>
+        /// 交易所交易员代码
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 21)]
+        public string TraderID;
+        /// <summary>
+        /// 本地报单编号
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 13)]
+        public string OrderLocalID;
+        /// <summary>
+        /// 结算会员编号
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 11)]
+        public string ClearingPartID;
+        /// <summary>
+        /// 业务单元
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 21)]
+        public string BusinessUnit;
+        /// <summary>
+        /// 序号
+        /// </summary>
+        public int SequenceNo;
+        /// <summary>
+        /// 交易日
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 9)]
+        public string TradingDay;
+        /// <summary>
+        /// 结算编号
+        /// </summary>
+        public int SettlementID;
+        /// <summary>
+        /// 经纪公司报单编号
+        /// </summary>
+        public int BrokerOrderSeq;
+        /// <summary>
+        /// 成交来源
+        /// </summary>
+        public TThostFtdcTradeSourceType TradeSource;
+
+        public ushort FieldId
+        {
+            get { return 1033; }
+        }
+
+        public void Swap()
+        { }
+
+        public static implicit operator CThostFtdcTradeField(LCThostFtdcTradeField input)
+        {
+            CThostFtdcTradeField ret = new CThostFtdcTradeField();
+            ret.BrokerID = input.BrokerID;
+            ret.InvestorID = input.InvestorID;
+            ret.InstrumentID = input.InstrumentID;
+            ret.OrderRef = input.OrderRef;
+            ret.UserID = input.UserID;
+            ret.ExchangeID = input.ExchangeID;
+            ret.TradeID = input.TradeID;
+            ret.Direction = input.Direction;
+            ret.OrderSysID = input.OrderSysID;
+            ret.ParticipantID = input.ParticipantID;
+            ret.ClientID = input.ClientID;
+            ret.TradingRole = input.TradingRole;
+            ret.ExchangeInstID = input.ExchangeInstID;
+            ret.OffsetFlag = input.OffsetFlag;
+            ret.HedgeFlag = input.HedgeFlag;
+            ret.Price = input.Price;
+            ret.Volume = input.Volume;
+            ret.TradeDate = input.TradeDate;
+            ret.TradeTime = input.TradeTime;
+            ret.TradeType = input.TradeType;
+            ret.PriceSource = input.PriceSource;
+            ret.TraderID = input.TraderID;
+            ret.OrderLocalID = input.OrderLocalID;
+            ret.ClearingPartID = input.ClearingPartID;
+            ret.BusinessUnit = input.BusinessUnit;
+            ret.SequenceNo = input.SequenceNo;
+            ret.TradingDay = input.TradingDay;
+            ret.SettlementID = input.SettlementID;
+            ret.BrokerOrderSeq = input.BrokerOrderSeq;
+            ret.TradeSource = input.TradeSource;
+
+            return ret;
+        }
+    }
+    [StructLayout(LayoutKind.Sequential, Pack = 1)]
+    public struct LCThostFtdcTradeField : IFieldId
+    {
+        /// <summary>
+        /// 经纪公司代码
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 11)]
+        public string BrokerID;
+        /// <summary>
+        /// 投资者代码
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 13)]
+        public string InvestorID;
+        /// <summary>
+        /// 合约代码
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 31)]
+        public string InstrumentID;
+        /// <summary>
+        /// 报单引用
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 13)]
+        public string OrderRef;
+        /// <summary>
+        /// 用户代码
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 16)]
+        public string UserID;
+        /// <summary>
+        /// 交易所代码
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 9)]
+        public string ExchangeID;
+        /// <summary>
+        /// 成交编号
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 21)]
+        public string TradeID;
+        /// <summary>
+        /// 买卖方向
+        /// </summary>
+        public TThostFtdcDirectionType Direction;
+        /// <summary>
+        /// 报单编号
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 21)]
+        public string OrderSysID;
+        /// <summary>
+        /// 会员代码
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 11)]
+        public string ParticipantID;
+        /// <summary>
+        /// 客户代码
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 11)]
+        public string ClientID;
+        /// <summary>
+        /// 交易角色
+        /// </summary>
+        public TThostFtdcTradingRoleType TradingRole;
+        /// <summary>
+        /// 合约在交易所的代码
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 31)]
+        public string ExchangeInstID;
+        /// <summary>
+        /// 开平标志
+        /// </summary>
+        public TThostFtdcOffsetFlagType OffsetFlag;
+        /// <summary>
+        /// 投机套保标志
+        /// </summary>
+        public TThostFtdcHedgeFlagType HedgeFlag;
+        /// <summary>
+        /// 价格
+        /// </summary>
+        public double Price;
+        /// <summary>
+        /// 数量
+        /// </summary>
+        public int Volume;
+        /// <summary>
+        /// 成交时期
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 9)]
+        public string TradeDate;
+        /// <summary>
+        /// 成交时间
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 9)]
+        public string TradeTime;
+        /// <summary>
+        /// 成交类型
+        /// </summary>
+        public TThostFtdcTradeTypeType TradeType;
+        /// <summary>
+        /// 成交价来源
+        /// </summary>
+        public TThostFtdcPriceSourceType PriceSource;
+        /// <summary>
+        /// 交易所交易员代码
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 21)]
+        public string TraderID;
+        /// <summary>
+        /// 本地报单编号
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 13)]
+        public string OrderLocalID;
+        /// <summary>
+        /// 结算会员编号
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 11)]
+        public string ClearingPartID;
+        /// <summary>
+        /// 业务单元
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 21)]
+        public string BusinessUnit;
+        /// <summary>
+        /// 序号
+        /// </summary>
+        public int SequenceNo;
+        /// <summary>
+        /// 交易日
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 9)]
+        public string TradingDay;
+        /// <summary>
+        /// 结算编号
+        /// </summary>
+        public int SettlementID;
+        /// <summary>
+        /// 经纪公司报单编号
+        /// </summary>
+        public int BrokerOrderSeq;
+        /// <summary>
+        /// 成交来源
+        /// </summary>
+        public TThostFtdcTradeSourceType TradeSource;
+
+        public ushort FieldId
+        {
+            get { return 1033; }
+        }
+
+        public void Swap()
+        {
+            Price = ByteSwapHelp.ReverseBytes(Price);
+            Volume = ByteSwapHelp.ReverseBytes(Volume);
+            SequenceNo = ByteSwapHelp.ReverseBytes(SequenceNo);
+            SettlementID = ByteSwapHelp.ReverseBytes(SettlementID);
+            BrokerOrderSeq = ByteSwapHelp.ReverseBytes(BrokerOrderSeq);
+        }
+
+        public static implicit operator LCThostFtdcTradeField(CThostFtdcTradeField input)
+        {
+            LCThostFtdcTradeField ret = new LCThostFtdcTradeField();
+            ret.BrokerID = input.BrokerID;
+            ret.InvestorID = input.InvestorID;
+            ret.InstrumentID = input.InstrumentID;
+            ret.OrderRef = input.OrderRef;
+            ret.UserID = input.UserID;
+            ret.ExchangeID = input.ExchangeID;
+            ret.TradeID = input.TradeID;
+            ret.Direction = input.Direction;
+            ret.OrderSysID = input.OrderSysID;
+            ret.ParticipantID = input.ParticipantID;
+            ret.ClientID = input.ClientID;
+            ret.TradingRole = input.TradingRole;
+            ret.ExchangeInstID = input.ExchangeInstID;
+            ret.OffsetFlag = input.OffsetFlag;
+            ret.HedgeFlag = input.HedgeFlag;
+            ret.Price = input.Price;
+            ret.Volume = input.Volume;
+            ret.TradeDate = input.TradeDate;
+            ret.TradeTime = input.TradeTime;
+            ret.TradeType = input.TradeType;
+            ret.PriceSource = input.PriceSource;
+            ret.TraderID = input.TraderID;
+            ret.OrderLocalID = input.OrderLocalID;
+            ret.ClearingPartID = input.ClearingPartID;
+            ret.BusinessUnit = input.BusinessUnit;
+            ret.SequenceNo = input.SequenceNo;
+            ret.TradingDay = input.TradingDay;
+            ret.SettlementID = input.SettlementID;
+            ret.BrokerOrderSeq = input.BrokerOrderSeq;
+            ret.TradeSource = input.TradeSource;
+
+            return ret;
+        }
+    }
+    #endregion
+
 }

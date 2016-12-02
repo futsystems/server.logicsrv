@@ -282,12 +282,30 @@ namespace CTPService
                                     Struct.V12.LCThostFtdcQryOrderField field = (Struct.V12.LCThostFtdcQryOrderField)data;
 
                                     QryOrderRequest request = RequestTemplate<QryOrderRequest>.CliSendRequest((int)requestInfo.FTDHeader.dReqId);
-                                    request.Symbol = request.Symbol;
+                                    //request.Symbol = request.Symbol;
                                     
 
 
                                     _mqServer.TLSend(session.SessionID, request);
                                     logger.Info(string.Format("Session:{0} >> QryOrderRequest", session.SessionID));
+
+                                }
+                                break;
+                            }
+                        //查询成交
+                        case EnumTransactionID.T_QRY_TRADE:
+                            {
+                                var data = requestInfo.FTDFields[0].FTDCData;
+                                if (data is Struct.V12.LCThostFtdcQryTradeField)
+                                {
+                                    Struct.V12.LCThostFtdcQryTradeField field = (Struct.V12.LCThostFtdcQryTradeField)data;
+
+                                    QryTradeRequest request = RequestTemplate<QryTradeRequest>.CliSendRequest((int)requestInfo.FTDHeader.dReqId);
+                                    //request.Symbol = field.InstrumentID;
+
+
+                                    _mqServer.TLSend(session.SessionID, request);
+                                    logger.Info(string.Format("Session:{0} >> QryTradeRequest", session.SessionID));
 
                                 }
                                 break;

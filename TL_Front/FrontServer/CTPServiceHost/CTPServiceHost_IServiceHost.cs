@@ -245,6 +245,21 @@ namespace CTPService
                             break;
 
                         }
+                        //查询成交回报
+                    case MessageTypes.TRADERESPONSE:
+                        {
+                            RspQryTradeResponse response = packet as RspQryTradeResponse;
+
+                            Struct.V12.LCThostFtdcTradeField field = new Struct.V12.LCThostFtdcTradeField();
+
+                            byte[] data = Struct.V12.StructHelperV12.PackRsp(EnumSeqType.SeqQry, EnumTransactionID.T_RSP_QRYTD, response.RequestID, conn.NextSeqId, response.IsLast);
+                            int encPktLen = 0;
+                            byte[] encData = Struct.V12.StructHelperV12.EncPkt(data, out encPktLen);
+
+                            conn.Send(encData, encPktLen);
+
+                            break;
+                        }
 
                     default:
                         logger.Warn(string.Format("Logic Packet:{0} not handled", packet.Type));
