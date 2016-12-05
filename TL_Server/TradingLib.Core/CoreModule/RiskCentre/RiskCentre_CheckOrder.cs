@@ -319,6 +319,27 @@ namespace TradingLib.Core
                         return false;
                     }
                 }
+
+                //涨停 不允许买入
+                if (k.UpperLimit.ValidPrice() && k.Trade == k.UpperLimit)
+                {
+                    if (o.Side)
+                    {
+                        errortitle = "RISKCENTRE_CHECK_ERROR";
+                        return false;
+                    }
+                }
+
+                //跌停 不允许卖出
+                if (k.LowerLimit.ValidPrice() && k.Trade == k.LowerLimit)
+                {
+                    if (!o.Side)
+                    {
+                        errortitle = "RISKCENTRE_CHECK_ERROR";
+                        return false;
+                    }
+                }
+
             }
 
 
