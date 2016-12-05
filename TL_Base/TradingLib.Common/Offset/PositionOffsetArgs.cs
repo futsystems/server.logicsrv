@@ -22,8 +22,90 @@ namespace TradingLib.Common
             Value = 0;
             Start = 0;
             Size = 0;
-            
+            Fired = false;
+            FlatOrderRefList = new List<string>();
         }
+
+        
+
+        string _account;
+        /// <summary>
+        /// 该监控所对应的账户
+        /// </summary>
+        public string Account { get { return _account; } }
+
+        string _symbol;
+        /// <summary>
+        /// 该监控的合约
+        /// </summary>
+        public string Symbol { get { return _symbol; } }
+
+        bool _side = false;
+        public bool Side { get { return _side; } }
+
+        QSEnumPositionOffsetDirection _direction;
+        /// <summary>
+        /// 止盈还是止损标识
+        /// </summary>
+        public QSEnumPositionOffsetDirection Direction { get { return _direction; } }
+
+        /// <summary>
+        /// 止盈是否有效
+        /// </summary>
+        public bool Enable { get; set; }
+
+        /// <summary>
+        /// 止盈方式
+        /// </summary>
+        public QSEnumPositionOffsetType OffsetType { get; set; }
+
+        /// <summary>
+        /// 止盈值
+        /// </summary>
+        public decimal Value { get; set; }
+
+        /// <summary>
+        /// 跟踪止盈的启动值
+        /// </summary>
+        public decimal Start { get; set; }
+
+        /// <summary>
+        /// 止盈手数
+        /// </summary>
+        public int Size { get; set; }
+
+
+        /// <summary>
+        /// 是否已经触发
+        /// </summary>
+        public bool Fired { get; set; }
+
+
+        /// <summary>
+        /// 止盈止损触发委托ID
+        /// 用于监控对应ID委托状态
+        /// </summary>
+        public List<string> FlatOrderRefList { get; set; }
+
+
+
+        /// <summary>
+        /// 用一个止盈止损参数来更新当前止盈止损参数
+        /// </summary>
+        /// <param name="args"></param>
+        public void UpdateArgs(PositionOffsetArg args)
+        {
+            //account symbol direction相同的情况下才可以传递参数
+            if((Account == args.Account) && (Symbol == args.Symbol) &&(Direction == args.Direction))
+            {
+                Enable = args.Enable;
+                OffsetType = args.OffsetType;
+                Value = args.Value;
+                Start = args.Start;
+                Size = args.Size;
+            }
+        }
+
 
         /// <summary>
         /// 计算止损价格
@@ -106,68 +188,6 @@ namespace TradingLib.Common
             return hitprice;
         }
 
-        string _account;
-        /// <summary>
-        /// 该监控所对应的账户
-        /// </summary>
-        public string Account { get { return _account; } }
-
-        string _symbol;
-        /// <summary>
-        /// 该监控的合约
-        /// </summary>
-        public string Symbol { get { return _symbol; } }
-
-        bool _side = false;
-        public bool Side { get { return _side; } }
-
-        QSEnumPositionOffsetDirection _direction;
-        /// <summary>
-        /// 止盈还是止损标识
-        /// </summary>
-        public QSEnumPositionOffsetDirection Direction { get { return _direction; } }
-
-        /// <summary>
-        /// 止盈是否有效
-        /// </summary>
-        public bool Enable { get; set; }
-
-        /// <summary>
-        /// 止盈方式
-        /// </summary>
-        public QSEnumPositionOffsetType OffsetType { get; set; }
-
-        /// <summary>
-        /// 止盈值
-        /// </summary>
-        public decimal Value { get; set; }
-
-        /// <summary>
-        /// 跟踪止盈的启动值
-        /// </summary>
-        public decimal Start { get; set; }
-
-        /// <summary>
-        /// 止盈手数
-        /// </summary>
-        public int Size { get; set; }
-
-        /// <summary>
-        /// 用一个止盈止损参数来更新当前止盈止损参数
-        /// </summary>
-        /// <param name="args"></param>
-        public void UpdateArgs(PositionOffsetArg args)
-        {
-            //account symbol direction相同的情况下才可以传递参数
-            if((Account == args.Account) && (Symbol == args.Symbol) &&(Direction == args.Direction))
-            {
-                Enable = args.Enable;
-                OffsetType = args.OffsetType;
-                Value = args.Value;
-                Start = args.Start;
-                Size = args.Size;
-            }
-        }
         /// <summary>
         /// 计算针对某个position其触发的止盈止损价格
         /// </summary>
@@ -187,10 +207,81 @@ namespace TradingLib.Common
                     return price;
                 }
         }
+
+        /// <summary>
+        /// 根据止盈止损参数检查 是否需要发送委托
+        /// </summary>
+        /// <param name="pos"></param>
+        /// <param name="k"></param>
+        /// <returns></returns>
+        public bool NeedSendOrder(Position pos,Tick k)
+        {
+            if (!this.Enable) return false;
+
+            decimal hitprice = TargetPrice(pos);
+            bool side = pos.DirectionType == QSEnumPositionDirectionType.Long;
+            if (this.Direction == QSEnumPositionOffsetDirection.LOSS)
+            {
+                if (side)
+                {
+                    if (k.Trade <= hitprice)
+                    {
+                        return true;
+                    }
+                    return false;
+                }
+                else
+                {
+                    if (k.Trade >= hitprice)
+                    {
+                        return true;
+                    }
+                    return false;
+                }
+            }
+            else
+            {
+                if (this.OffsetType == QSEnumPositionOffsetType.TRAILING)
+                {
+                    //decimal hitprice = ProfitTakePrice;
+                    if (hitprice > 0)
+                    {
+                        if (k.Trade <= hitprice)
+                        {
+                            return true;//执行止盈
+                        }
+                    }
+                }
+                else
+                {
+                    //Util.Debug("profittakeprice:" + ProfitTakePrice.ToString() + " profit arg enable:" + this.ProfitArg.Enable.ToString());
+                    //decimal hitprice = ProfitTakePrice;
+                    if (side)
+                    {
+                        if (k.Trade >= hitprice)
+                        {
+                            return true;//执行止盈
+                        }
+                        return false;
+                    }
+                    else//空
+                    {
+                        if (k.Trade <= hitprice)
+                        {
+                            return true;
+                        }
+                        return false;
+                    }
+                }
+                return false;//不止盈
+            }
+        }
+
         public override string ToString()
         {
             return Util.GetEnumDescription(Direction) + " " + (Enable ? "有效" : "无效") + " 类型:" + OffsetType.ToString() +" V:"+Value.ToString() +" S:"+Size.ToString() +" St:"+Start.ToString();
         }
+
         public static string Serialize(PositionOffsetArg po)
         {
             const char d = ',';
