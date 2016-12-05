@@ -62,6 +62,11 @@ namespace FrontServer
                 hex = "0200003201000c4c00010000811b000000010001001c00000010250f00183838383838000000000000383536323030303830320000";
                 //T_RSP_TDTOK
                 hex = "0200003301030c4ce101e2811ce301e102e175e310e355e4d5fdc8b7efefefefefe2250fe1183838383838e638353632303030383032e3";
+
+                //可开回报
+                hex = "0200003f01030c4ce101e24012e303e102e19be35ae355e4d5fdc8b7efefefefefe2040ee13e3838383838e638353632303030383032e3617531373031efea303031e4";
+                hex = "0200003f01030c4ce101e24012e304e102e19be35be355e4d5fdc8b7efefefefefe2040ee13e3838383838e638353632303030383032e3617531373031efea313031e4";
+                hex = "0200003f01030c4ce101e24012e305e102e19be35ce355e4d5fdc8b7efefefefefe2040ee13e3838383838e638353632303030383032e3617531373031efea303031e4";
                 byte[] srcData = ByteUtil.HexToByte(hex);
                 logger.Info("**** remtoe compressed data size" + srcData.Length.ToString());
                 string rawhexcompressed = ByteUtil.ByteToHex(srcData, ' ');
@@ -104,7 +109,7 @@ namespace FrontServer
                 offset += Constanst.FTDC_HDRLEN + rspSize;
                 ftdc_hdr tmp4 = ByteSwapHelp.BytesToStruct<ftdc_hdr>(dstData, offset + Constanst.PROFTD_HDRLEN);
                 EnumFiledID fieldid2 = (EnumFiledID)tmp2.wFiId;
-                LCThostFtdcRspUserLoginField tmp5 = ByteSwapHelp.BytesToStruct<LCThostFtdcRspUserLoginField>(dstData, offset + Constanst.PROFTD_HDRLEN + Constanst.FTDC_HDRLEN);
+                LCThostFtdcQueryMaxOrderVolumeField tmp5 = ByteSwapHelp.BytesToStruct<LCThostFtdcQueryMaxOrderVolumeField>(dstData, offset + Constanst.PROFTD_HDRLEN + Constanst.FTDC_HDRLEN);
 
                 //logger.Info("**** remote raw data size" + dstLen.ToString());
                 //string rawhex = ByteUtil.ByteToHex(dstData, ' ', dstLen);

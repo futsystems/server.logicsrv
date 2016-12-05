@@ -202,6 +202,12 @@ namespace CTPService
                                 fieldList = ParsePktDataV12(data, ftdhdr.wFtdcLen, ftdhdr.wFiCount);
                                 break;
                             }
+                        //查询最大报单数量请求 ReqQueryMaxOrderVolume
+                        case EnumTransactionID.T_QRY_MAXORDVOL:
+                            {
+                                fieldList = ParsePktDataV12(data, ftdhdr.wFtdcLen, ftdhdr.wFiCount);
+                                break;
+                            }
                         default:
                             throw new Exception(string.Format("TransactionID:{0} pkt not handled", (EnumTransactionID)ftdhdr.dTransId));
                     }

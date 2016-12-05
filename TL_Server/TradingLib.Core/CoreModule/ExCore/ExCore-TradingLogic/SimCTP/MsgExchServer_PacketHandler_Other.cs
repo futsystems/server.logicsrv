@@ -125,7 +125,7 @@ namespace TradingLib.Core
         void SrvOnQryMaxOrderVol(QryMaxOrderVolRequest request, IAccount account)
         {
             logger.Info("QryMaxOrderVol :" + request.ToString());
-            Symbol symbol = account.Domain.GetSymbol(request.Symbol,request.Symbol);
+            Symbol symbol = account.Domain.GetSymbol(request.Symbol);
             RspQryMaxOrderVolResponse response = ResponseTemplate<RspQryMaxOrderVolResponse>.SrvSendRspResponse(request);
             if(symbol == null)
             {

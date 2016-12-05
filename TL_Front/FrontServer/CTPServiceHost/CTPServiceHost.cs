@@ -456,6 +456,25 @@ namespace CTPService
                                 }
                                 break;
                             }
+                            //查询最大报单数量请求 ReqQueryMaxOrderVolume
+                        case EnumTransactionID.T_QRY_MAXORDVOL:
+                            {
+                                var data = requestInfo.FTDFields[0].FTDCData;
+                                if (data is Struct.V12.LCThostFtdcQueryMaxOrderVolumeField)
+                                {
+                                    Struct.V12.LCThostFtdcQueryMaxOrderVolumeField field = (Struct.V12.LCThostFtdcQueryMaxOrderVolumeField)data;
+
+                                    QryMaxOrderVolRequest request = RequestTemplate<QryMaxOrderVolRequest>.CliSendRequest((int)requestInfo.FTDHeader.dReqId);
+                                    request.Side = field.Direction == TThostFtdcDirectionType.Buy ? true : false;
+                                    request.Symbol = field.InstrumentID;
+                                    request.OffsetFlag =CTPConvert.ConvOffsetFlag(field.OffsetFlag);
+
+                                    _mqServer.TLSend(session.SessionID, request);
+                                    logger.Info(string.Format("Session:{0} >> ReqQueryMaxOrderVolume", session.SessionID));
+
+                                }
+                                break;
+                            }
                         default:
                             logger.Warn(string.Format("Transaction:{0} logic not handled", transId));
                             break;
@@ -468,6 +487,9 @@ namespace CTPService
                 logger.Error("Request Handler Error:" + ex.ToString());
             }
         }
+
+        
+
 
         void ctpSocketServer_NewSessionConnected(TLSessionBase session)
         {

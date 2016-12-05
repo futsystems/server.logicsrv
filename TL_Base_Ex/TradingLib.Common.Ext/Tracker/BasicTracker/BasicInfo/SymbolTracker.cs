@@ -270,6 +270,10 @@ namespace TradingLib.Common
         {
             get
             {
+                if (string.IsNullOrEmpty(uexchange))
+                {
+                    return symcodemap.Values.FirstOrDefault(s => s.Symbol == usymbol);
+                }
                 SymbolImpl sym = null;
                 if (symcodemap.TryGetValue(string.Format("{0}-{1}",uexchange,usymbol), out sym))
                 {

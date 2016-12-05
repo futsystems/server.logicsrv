@@ -4874,7 +4874,7 @@ namespace CTPService.Struct.V12
         }
     #endregion
 
-        #region  资金账户密钥
+    #region  资金账户密钥
         /// <summary>
         /// 请求查询保证金监管系统经纪公司资金账户密钥
         /// </summary>
@@ -5112,5 +5112,136 @@ namespace CTPService.Struct.V12
             }
         }
 
+    #endregion
+
+    #region 查询最大报单数量请求
+        /// <summary>
+        /// 查询最大报单数量
+        /// </summary>
+        [StructLayout(LayoutKind.Sequential)]
+        public struct CThostFtdcQueryMaxOrderVolumeField : ITFieldId
+        {
+            /// <summary>
+            /// 经纪公司代码
+            /// </summary>
+            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 11)]
+            public string BrokerID;
+            /// <summary>
+            /// 投资者代码
+            /// </summary>
+            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 13)]
+            public string InvestorID;
+            /// <summary>
+            /// 合约代码
+            /// </summary>
+            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 31)]
+            public string InstrumentID;
+            /// <summary>
+            /// 买卖方向
+            /// </summary>
+            public TThostFtdcDirectionType Direction;
+            /// <summary>
+            /// 开平标志
+            /// </summary>
+            public TThostFtdcOffsetFlagType OffsetFlag;
+            /// <summary>
+            /// 投机套保标志
+            /// </summary>
+            public TThostFtdcHedgeFlagType HedgeFlag;
+            /// <summary>
+            /// 最大允许报单数量
+            /// </summary>
+            public int MaxVolume;
+
+            public ushort FieldId
+            {
+                get { return 1038; }
+            }
+
+            public void Swap()
+            { }
+
+            public static implicit operator CThostFtdcQueryMaxOrderVolumeField(LCThostFtdcQueryMaxOrderVolumeField input)
+            {
+                CThostFtdcQueryMaxOrderVolumeField ret = new CThostFtdcQueryMaxOrderVolumeField();
+                ret.BrokerID = input.BrokerID;
+                ret.InvestorID = input.InvestorID;
+                ret.InstrumentID = input.InstrumentID;
+                ret.Direction = input.Direction;
+                ret.OffsetFlag = input.OffsetFlag;
+                ret.HedgeFlag = input.HedgeFlag;
+
+                return ret;
+            }
+        }
+        
+        
+        /// <summary>
+        /// 查询最大报单数量
+        /// </summary>
+        [StructLayout(LayoutKind.Sequential, Pack = 1)]
+        public struct LCThostFtdcQueryMaxOrderVolumeField : IFieldId
+        {
+            /// <summary>
+            /// 经纪公司代码
+            /// </summary>
+            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 11)]
+            public string BrokerID;
+
+            /// <summary>
+            /// 投资者代码
+            /// </summary>
+            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 13)]
+            public string InvestorID;
+
+            /// <summary>
+            /// 合约代码
+            /// </summary>
+            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 31)]
+            public string InstrumentID;
+
+            /// <summary>
+            /// 买卖方向
+            /// </summary>
+            public TThostFtdcDirectionType Direction;
+
+            /// <summary>
+            /// 开平标志
+            /// </summary>
+            public TThostFtdcOffsetFlagType OffsetFlag;
+
+            /// <summary>
+            /// 投机套保标志
+            /// </summary>
+            public TThostFtdcHedgeFlagType HedgeFlag;
+
+            /// <summary>
+            /// 最大允许报单数量
+            /// </summary>
+            public int MaxVolume;
+
+            public ushort FieldId
+            {
+                get { return 1038; }
+            }
+
+            public void Swap()
+            {
+                MaxVolume = ByteSwapHelp.ReverseBytes(MaxVolume);
+            }
+
+            public static implicit operator LCThostFtdcQueryMaxOrderVolumeField(CThostFtdcQueryMaxOrderVolumeField input)
+            {
+                LCThostFtdcQueryMaxOrderVolumeField ret = new LCThostFtdcQueryMaxOrderVolumeField();
+                ret.BrokerID = input.BrokerID;
+                ret.InvestorID = input.InvestorID;
+                ret.InstrumentID = input.InstrumentID;
+                ret.Direction = input.Direction;
+                ret.OffsetFlag = input.OffsetFlag;
+                ret.HedgeFlag = input.HedgeFlag;
+
+                return ret;
+            }
+        }
     #endregion
 }

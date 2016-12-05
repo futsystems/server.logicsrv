@@ -220,6 +220,10 @@ namespace TradingLib.Common
             return BasicTracker.SymbolTracker[domain.ID, uexchange, usymbol];
         }
 
+        public static SymbolImpl GetSymbol(this Domain domain, string usymbol)
+        {
+            return BasicTracker.SymbolTracker[domain.ID, "", usymbol];
+        }
         /// <summary>
         /// 获得某个域下 某个合约的默认交易所 用于自动识别未提供交易所的情况
         /// </summary>

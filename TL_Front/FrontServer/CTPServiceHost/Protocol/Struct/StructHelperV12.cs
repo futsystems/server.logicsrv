@@ -99,6 +99,12 @@ namespace CTPService.Struct.V12
                     {
                         return ByteSwapHelp.BytesToStruct<LCThostFtdcQryAccountregisterField>(data, offset);
                     }
+                    //查询最大报单数量请求 ReqQueryMaxOrderVolume
+                case EnumFiledID.F_QRY_MAXORDVOL:
+                    {
+                        return ByteSwapHelp.BytesToStruct<LCThostFtdcQueryMaxOrderVolumeField>(data, offset);
+                    }
+            
                 default:
                     throw new Exception(string.Format("FieldID:{0} pkt not handled", fieldID));
             }

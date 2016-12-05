@@ -86,6 +86,7 @@ namespace CTPService
         T_REQ_AUTHINF = 0x3010,
         T_REQ_LOGOUT = 0x3002,
         T_QRY_MAXORDVOL = 0x4011,
+        T_RSP_MAXORDVOL = 0x4012,
         T_REQ_PKORDACT = 0x4004,
         T_QRY_EXCHG = 0x802a,
         T_REQ_RMPKORD = 0x401d,

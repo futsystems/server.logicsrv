@@ -403,6 +403,31 @@ namespace CTPService
                             if (response.IsLast) logger.Info(string.Format("LogicSrv Reply Session:{0} -> RspQryRegisterBankAccountResponse", conn.SessionID));
                             break;
                         }
+                    case MessageTypes.MAXORDERVOLRESPONSE:
+                        {
+                            RspQryMaxOrderVolResponse response = packet as RspQryMaxOrderVolResponse;
+                            Struct.V12.LCThostFtdcQueryMaxOrderVolumeField field = new Struct.V12.LCThostFtdcQueryMaxOrderVolumeField();
+                            field.BrokerID = conn.State.BrokerID;
+                            field.InvestorID = conn.State.LoginID;
+                            field.Direction = response.Side ? TThostFtdcDirectionType.Buy : TThostFtdcDirectionType.Sell;
+                            field.HedgeFlag = TThostFtdcHedgeFlagType.Speculation;
+                            field.InstrumentID = response.Symbol;
+                            field.MaxVolume = response.MaxVol;
+                            field.OffsetFlag = CTPConvert.ConvOffsetFlag(response.OffsetFlag);
+
+                            Struct.V12.LCThostFtdcRspInfoField rsp = new Struct.V12.LCThostFtdcRspInfoField();
+                            rsp.ErrorID = 0;
+                            rsp.ErrorMsg = "正确";
+
+                            //打包数据
+                            byte[] data = Struct.V12.StructHelperV12.PackRsp<Struct.V12.LCThostFtdcQueryMaxOrderVolumeField>(ref rsp,ref field, EnumSeqType.SeqQry, EnumTransactionID.T_RSP_MAXORDVOL, response.RequestID, conn.NextSeqId, response.IsLast);
+                            int encPktLen = 0;
+                            byte[] encData = Struct.V12.StructHelperV12.EncPkt(data, out encPktLen);
+
+                            conn.Send(encData, encPktLen);
+                            if (response.IsLast) logger.Info(string.Format("LogicSrv Reply Session:{0} -> RspQryRegisterBankAccountResponse", conn.SessionID));
+                            break;
+                        }
                     default:
                         logger.Warn(string.Format("Logic Packet:{0} not handled", packet.Type));
                         break;

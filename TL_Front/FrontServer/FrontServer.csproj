@@ -83,6 +83,7 @@
     <Compile Include="API\IServiceHost.cs" />
     <Compile Include="Common\ByteUtil.cs" />
     <Compile Include="CTPServiceHost\Protocol\Constanst.cs" />
+    <Compile Include="CTPServiceHost\Protocol\Convert.cs" />
     <Compile Include="CTPServiceHost\Protocol\EnumChainType.cs" />
     <Compile Include="CTPServiceHost\Protocol\EnumEncType.cs" />
     <Compile Include="CTPServiceHost\Protocol\Enums.cs" />
