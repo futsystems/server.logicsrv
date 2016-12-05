@@ -179,6 +179,17 @@ namespace TradingLib.API
         int DiscountNum { get; set; }
 
 
+        /// <summary>
+        /// 是否支持大额单边保证金算法
+        /// </summary>
+        bool Cfg_MaxMarginSide { get; set; }
+
+        /// <summary>
+        /// 是否支持综合持仓
+        /// Gross可以同时持有多头与空头持仓
+        /// </summary>
+        bool Cfg_GrossPosition { get; set; }
+
         #endregion
     }
 }

@@ -37,6 +37,9 @@ namespace TradingLib.Common
             this.Switch_Router = true;
             this.Misc_InsertTrade = false;
 
+            this.Cfg_GrossPosition = true;
+            this.Cfg_MaxMarginSide = true;
+
 
         }
         /// <summary>
@@ -183,6 +186,16 @@ namespace TradingLib.Common
         /// </summary>
         public bool Misc_InsertTrade { get; set; }
 
+        /// <summary>
+        /// 是否支持大额单边保证金算法
+        /// </summary>
+        public bool Cfg_MaxMarginSide { get; set; }
+
+        /// <summary>
+        /// 是否支持综合持仓
+        /// Gross可以同时持有多头与空头持仓
+        /// </summary>
+        public bool Cfg_GrossPosition { get; set; }
         /// <summary>
         /// 
         /// </summary>

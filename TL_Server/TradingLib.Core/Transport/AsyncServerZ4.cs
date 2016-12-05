@@ -444,7 +444,7 @@ namespace TradingLib.Core
                                 }
                             }
                             DateTime now = DateTime.Now;
-                            if ((now - _lasthb).TotalSeconds >= 5)
+                            if ((now - _lasthb).TotalSeconds >= 5)//每5秒钟发送行情心跳
                             {
                                 this.SendTickHeartBeat();
                                 _lasthb = now;

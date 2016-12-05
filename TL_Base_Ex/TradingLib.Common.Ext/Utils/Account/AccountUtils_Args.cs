@@ -24,7 +24,7 @@ namespace TradingLib.Common
             ExStrategy s = account.GetExStrategy();
             if (s != null)
                 return s.SideMargin;
-            return false;
+            return account.Domain.Cfg_MaxMarginSide;
         }
 
         /// <summary>
@@ -50,10 +50,7 @@ namespace TradingLib.Common
             ExStrategy s = account.GetExStrategy();
             if (s != null)
                 return s.PositionLock;
-
-            if (sec.Currency == CurrencyType.RMB)
-                return true;
-            return false;
+            return account.Domain.Cfg_GrossPosition;
 
         }
 

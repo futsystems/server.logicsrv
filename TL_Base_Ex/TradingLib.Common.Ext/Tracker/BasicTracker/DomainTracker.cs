@@ -111,6 +111,9 @@ namespace TradingLib.Common
                 target.IsProduction = domain.IsProduction;
                 target.DiscountNum = domain.DiscountNum;
                 target.Dedicated = domain.Dedicated;
+
+                target.Cfg_GrossPosition = domain.Cfg_GrossPosition;
+                target.Cfg_MaxMarginSide = domain.Cfg_MaxMarginSide;
                 ORM.MDomain.UpdateDomain(target);
                 
             }
@@ -146,6 +149,9 @@ namespace TradingLib.Common
                 target.IsProduction = domain.IsProduction;
                 target.DiscountNum = domain.DiscountNum;
                 target.Dedicated = domain.Dedicated;
+
+                target.Cfg_GrossPosition = domain.Cfg_GrossPosition;
+                target.Cfg_MaxMarginSide = domain.Cfg_MaxMarginSide;
 
                 ORM.MDomain.InsertDomain(target);
                 domain.ID = target.ID;

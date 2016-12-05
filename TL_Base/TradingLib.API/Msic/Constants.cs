@@ -54,9 +54,9 @@ namespace TradingLib.API
 
         //====心跳机制常量==================================================================================
         //行情心跳机制
-        public const int TICKHEARTBEATMS = 15 * 1000;//发送行情heartbeat的间隔
+        public const int TICKHEARTBEATMS = 5 * 1000;//发送行情heartbeat的间隔
 
-        public const int TICKHEARTBEATDEADMS = TICKHEARTBEATMS * 4; //在多少时间内没有收到tickheartbead则重新建立行情连接
+        public const int TICKHEARTBEATDEADMS = TICKHEARTBEATMS * 3; //在多少时间内没有收到tickheartbead则重新建立行情连接
 
         public const int TICKHEARTBEATCHECKFREQ = 1 * 1000;//行情心跳维护线程的检查频率
         /// <summary>
