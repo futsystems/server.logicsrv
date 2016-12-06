@@ -127,7 +127,7 @@ namespace CTPService
                 }
             }
         }
-        int _seqRtnId = 0;
+        int _seqRtnId = 1;
         /// <summary>
         /// 下一个RTN回报序号
         /// </summary>

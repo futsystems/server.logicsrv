@@ -539,6 +539,27 @@ namespace CTPService
 
                             break;
                         }
+                        //成交回报
+                    case MessageTypes.EXECUTENOTIFY:
+                        {
+                            TradeNotify notify = packet as TradeNotify;
+                            Struct.V12.LCThostFtdcTradeField field = new Struct.V12.LCThostFtdcTradeField();
+
+                            CTPConvert.ConvTrade(notify.Trade, ref field);
+                            field.BrokerID = conn.State.BrokerID;
+                            field.ClearingPartID = conn.State.BrokerID;
+                            field.ParticipantID = conn.State.BrokerID;
+
+                            //打包数据
+                            byte[] data = Struct.V12.StructHelperV12.PackRsp<Struct.V12.LCThostFtdcTradeField>(ref field, EnumSeqType.SeqRtn, EnumTransactionID.T_RTN_TRADE, 0, conn.NextSeqRtnId);
+
+                            int encPktLen = 0;
+                            byte[] encData = Struct.V12.StructHelperV12.EncPkt(data, out encPktLen);
+
+                            conn.Send(encData, encPktLen);
+                            logger.Info(string.Format("LogicSrv Reply Session:{0} -> TradeNotify", conn.SessionID));
+                            break;
+                        }
                     default:
                         logger.Warn(string.Format("Logic Packet:{0} not handled", packet.Type));
                         break;
