@@ -18,6 +18,8 @@ namespace FrontServer
         {
             ILog logger = LogManager.GetLogger("Main");
 
+            //logger.Info((char)TThostFtdcOffsetFlagType.CloseToday);
+            //return;
             if (false)
             {
                 EnumTransactionID x = (EnumTransactionID)32854;
@@ -67,6 +69,10 @@ namespace FrontServer
                 hex = "0200003f01030c4ce101e24012e303e102e19be35ae355e4d5fdc8b7efefefefefe2040ee13e3838383838e638353632303030383032e3617531373031efea303031e4";
                 hex = "0200003f01030c4ce101e24012e304e102e19be35be355e4d5fdc8b7efefefefefe2040ee13e3838383838e638353632303030383032e3617531373031efea313031e4";
                 hex = "0200003f01030c4ce101e24012e305e102e19be35ce355e4d5fdc8b7efefefefefe2040ee13e3838383838e638353632303030383032e3617531373031efea303031e4";
+
+                //委托回报
+                hex = "0200010401030c4ce102e2f001e302e101027fe40401027b3838383838e638353632303030383032e36331373031efeb202020202020202020203935e138353632303030383032e6323030e431e44098e0ece80133e931e431e830e43030353632303035efe15f202020202020203131323237e1444345e630303536e73031323234313832e36331373031efeb3030353632303035efe10130e43230313631323036e401efe6306130e7013230313631323036e130393a34393a3437efefefefefe10518ba1ac750425344535635343030e1b1a8b5a5d2d1cce0e1bdbbefefefefefefe201e0e238efefefefec3139322e3136382e302e313032e3334334364438423641313831e9";
+                hex = "0200011801030c4ce102e2f001e303e101027fe40401027b3838383838e638353632303030383032e36331373031efeb202020202020202020203935e138353632303030383032e6323030e431e44098e0ece80133e931e431e830e42020202020202020202020203130393239333738e45f202020202020203131323237e1444345e630303536e73031323234313832e36331373031efeb3030353632303035efe10133e3013230313631323036e401202020203130393239333738e9303330e7013230313631323036e130393a34393a3438efefefefeb50f8e30518ba1ac750425344535635343030e1ceb4b3c9bdbbefefefefefefe601e0e238efefefefec3139322e3136382e302e313032e3334334364438423641313831e9";
                 byte[] srcData = ByteUtil.HexToByte(hex);
                 logger.Info("**** remtoe compressed data size" + srcData.Length.ToString());
                 string rawhexcompressed = ByteUtil.ByteToHex(srcData, ' ');
@@ -103,8 +109,8 @@ namespace FrontServer
 
                 ftdc_hdr tmp2 = ByteSwapHelp.BytesToStruct<ftdc_hdr>(dstData, offset + Constanst.PROFTD_HDRLEN);
                 EnumFiledID fieldid = (EnumFiledID)tmp2.wFiId;
-                int fieldsize = Marshal.SizeOf(typeof(CThostFtdcRspInfoField));
-                CThostFtdcRspInfoField tmp3 = ByteSwapHelp.BytesToStruct<CThostFtdcRspInfoField>(dstData, offset + Constanst.PROFTD_HDRLEN + Constanst.FTDC_HDRLEN);
+                int fieldsize = Marshal.SizeOf(typeof(LCThostFtdcOrderField));
+                LCThostFtdcOrderField tmp3 = ByteSwapHelp.BytesToStruct<LCThostFtdcOrderField>(dstData, offset + Constanst.PROFTD_HDRLEN + Constanst.FTDC_HDRLEN);
 
                 offset += Constanst.FTDC_HDRLEN + rspSize;
                 ftdc_hdr tmp4 = ByteSwapHelp.BytesToStruct<ftdc_hdr>(dstData, offset + Constanst.PROFTD_HDRLEN);
@@ -116,7 +122,7 @@ namespace FrontServer
                 //logger.Info(rawhex);
 
                 //将业务数据用本地方法打包
-                byte[] data1 = StructHelperV12.PackRsp<CThostFtdcRspInfoField>(ref tmp3, EnumSeqType.SeqQry, EnumTransactionID.T_RSP_USRINF, (int)tmp1.dReqId, (int)tmp1.dSeqNo);
+                byte[] data1 = StructHelperV12.PackRsp<LCThostFtdcOrderField>(ref tmp3, EnumSeqType.SeqQry, EnumTransactionID.T_RSP_USRINF, (int)tmp1.dReqId, (int)tmp1.dSeqNo);
                 logger.Info("**** local raw data size:" + data1.Length.ToString());
                 logger.Info(ByteUtil.ByteToHex(data1, ' '));
 

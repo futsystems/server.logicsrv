@@ -68,6 +68,17 @@ namespace CTPService
         /// 客户端信息
         /// </summary>
         public string ProductInfo { get; set; }
+
+
+        /// <summary>
+        /// 前置编号
+        /// </summary>
+        public int FrontID { get; set; }
+
+        /// <summary>
+        /// 会话编号
+        /// </summary>
+        public int SessionID { get; set; }
     }
 
     public class CTPConnection : FrontServer.IConnection
@@ -101,7 +112,7 @@ namespace CTPService
         int _seqId = 0;
         object _seqIDLock = new object();
         /// <summary>
-        /// Connection应答序号
+        /// 下一个Req回报序号
         /// </summary>
         public int NextSeqId
         { 
@@ -115,7 +126,23 @@ namespace CTPService
                     
                 }
             }
+        }
+        int _seqRtnId = 0;
+        /// <summary>
+        /// 下一个RTN回报序号
+        /// </summary>
+        public int NextSeqRtnId
+        {
+            get
+            {
+                lock (_seqIDLock)
+                {
+                    int seq = _seqRtnId;
+                    _seqRtnId++;
+                    return seq;
 
+                }
+            }
         }
 
         public ConnectionState State { get; private set; }

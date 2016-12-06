@@ -99,12 +99,16 @@ namespace CTPService.Struct.V12
                     {
                         return ByteSwapHelp.BytesToStruct<LCThostFtdcQryAccountregisterField>(data, offset);
                     }
-                    //查询最大报单数量请求 ReqQueryMaxOrderVolume
+                    //查询最大报单数量请求
                 case EnumFiledID.F_QRY_MAXORDVOL:
                     {
                         return ByteSwapHelp.BytesToStruct<LCThostFtdcQueryMaxOrderVolumeField>(data, offset);
                     }
-            
+                    //报单录入请求
+                case EnumFiledID.F_REQ_ORDINSERT:
+                    {
+                        return ByteSwapHelp.BytesToStruct<LCThostFtdcInputOrderField>(data, offset);
+                    }
                 default:
                     throw new Exception(string.Format("FieldID:{0} pkt not handled", fieldID));
             }
@@ -192,6 +196,41 @@ namespace CTPService.Struct.V12
             int ftdcLen = Constanst.FTDC_HDRLEN + fieldSize;
             int pktLen = Constanst.PROFTD_HDRLEN + ftdcLen;//数据包总长度
             FillRspHeader(ref protoHeader, ref ftdHeader, (ushort)pktLen, seqType, transId,(ushort)1, (uint)reqId,(uint)seqId,isLast);
+
+            int offset = 0;
+            try
+            {
+                Byte[] bytes = new Byte[pktLen];
+
+                Array.Copy(ByteSwapHelp.StructToBytes<proto_hdr>(protoHeader), 0, bytes, 0, Constanst.PROTO_HDRLEN);
+                Array.Copy(ByteSwapHelp.StructToBytes<ftd_hdr>(ftdHeader), 0, bytes, Constanst.PROTO_HDRLEN, Constanst.FTD_HDRLEN);
+
+                offset = 0;
+                Array.Copy(ByteSwapHelp.StructToBytes<ftdc_hdr>(fieldHeader), 0, bytes, offset + Constanst.PROFTD_HDRLEN, Constanst.FTDC_HDRLEN);
+                Array.Copy(ByteSwapHelp.StructToBytes<T>(field), 0, bytes, offset + Constanst.PROFTD_HDRLEN + Constanst.FTDC_HDRLEN, fieldSize);
+                return bytes;
+            }
+            finally
+            {
+            }
+        }
+
+        public static byte[] PackNotify<T>(ref T field, EnumSeqType seqType, EnumTransactionID transId, int seqId)
+            where T : IByteSwap
+        {
+            proto_hdr protoHeader = new proto_hdr();
+            ftd_hdr ftdHeader = new ftd_hdr();
+
+            ftdc_hdr fieldHeader = new ftdc_hdr();
+            IFieldId tmp = field as IFieldId;
+            Type type = typeof(T);
+            int fieldSize = Marshal.SizeOf(type);
+            InitFTDCHeader(ref fieldHeader, fieldSize, (EnumFiledID)tmp.FieldId);
+
+            //初始化proftd_hdr
+            int ftdcLen = Constanst.FTDC_HDRLEN + fieldSize;
+            int pktLen = Constanst.PROFTD_HDRLEN + ftdcLen;//数据包总长度
+            FillRspHeader(ref protoHeader, ref ftdHeader, (ushort)pktLen, seqType, transId, (ushort)1, (uint)0, (uint)seqId, true);
 
             int offset = 0;
             try

@@ -60,6 +60,8 @@ namespace CTPService
                             if (response.RspInfo.ErrorID == 0)
                             {
                                 conn.State.Authorized = true;
+                                conn.State.FrontID = field.FrontID;
+                                conn.State.SessionID = field.SessionID;
                             }
 
                             //打包数据
@@ -257,6 +259,12 @@ namespace CTPService
                             {
                                 Struct.V12.LCThostFtdcOrderField field = new Struct.V12.LCThostFtdcOrderField();
 
+                                CTPConvert.ConvOrder(response.OrderToSend, ref field);
+                                field.BrokerID = conn.State.BrokerID;
+                                field.FrontID = response.OrderToSend.FrontIDi;
+                                field.SessionID = response.OrderToSend.SessionIDi;
+                                field.ParticipantID = conn.State.BrokerID;
+
                                 byte[] data = Struct.V12.StructHelperV12.PackRsp(ref field,EnumSeqType.SeqQry, EnumTransactionID.T_RSP_QRYORD, response.RequestID, conn.NextSeqId, response.IsLast);
                                 encData = Struct.V12.StructHelperV12.EncPkt(data, out encPktLen);
                             }
@@ -403,6 +411,7 @@ namespace CTPService
                             if (response.IsLast) logger.Info(string.Format("LogicSrv Reply Session:{0} -> RspQryRegisterBankAccountResponse", conn.SessionID));
                             break;
                         }
+                        //查询可开
                     case MessageTypes.MAXORDERVOLRESPONSE:
                         {
                             RspQryMaxOrderVolResponse response = packet as RspQryMaxOrderVolResponse;
@@ -426,6 +435,43 @@ namespace CTPService
 
                             conn.Send(encData, encPktLen);
                             if (response.IsLast) logger.Info(string.Format("LogicSrv Reply Session:{0} -> RspQryRegisterBankAccountResponse", conn.SessionID));
+                            break;
+                        }
+                        //委托回报
+                    case MessageTypes.ORDERNOTIFY:
+                        {
+                            OrderNotify notify = packet as OrderNotify;
+                            Struct.V12.LCThostFtdcOrderField field = new Struct.V12.LCThostFtdcOrderField();
+
+                            CTPConvert.ConvOrder(notify.Order, ref field);
+                            field.BrokerID = conn.State.BrokerID;
+                            field.FrontID = notify.Order.FrontIDi;
+                            field.SessionID = notify.Order.SessionIDi;
+                            field.ParticipantID = conn.State.BrokerID;
+
+                            //打包数据
+                            byte[] data = Struct.V12.StructHelperV12.PackNotify<Struct.V12.LCThostFtdcOrderField>(ref field, EnumSeqType.SeqRtn, EnumTransactionID.T_RTN_ORDER, conn.NextSeqRtnId);
+
+                            //从数据包加载数据
+                            var tmp0 = ByteSwapHelp.BytesToStruct<Struct.proto_hdr>(data, 0);
+                            var tmp1 = ByteSwapHelp.BytesToStruct<Struct.ftd_hdr>(data, 4);
+                            EnumTransactionID transid = (EnumTransactionID)tmp1.dTransId;
+
+                            var tmp2 = ByteSwapHelp.BytesToStruct<Struct.ftdc_hdr>(data, 0 + Constanst.PROFTD_HDRLEN);
+                            EnumFiledID fieldid = (EnumFiledID)tmp2.wFiId;
+
+
+                            int encPktLen = 0;
+                            byte[] encData = Struct.V12.StructHelperV12.EncPkt(data, out encPktLen);
+
+                            conn.Send(encData, encPktLen);
+                            logger.Info(string.Format("LogicSrv Reply Session:{0} -> OrderNotify", conn.SessionID));
+                            break;
+                        }
+                        //委托异常通知
+                    case MessageTypes.ERRORORDERNOTIFY:
+                        {
+
                             break;
                         }
                     default:

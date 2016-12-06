@@ -6,7 +6,35 @@ using System.Text;
 namespace CTPService
 {
 
+    //public enum TThostFtdcClientIDType :byte
+    //{
+    
+    //}
+    //public enum TThostFtdcExchangeIDType : byte
+    //{ 
+    //    /// <summary>
+    //    /// 上海期货交易所
+    //    /// </summary>
+    //    SHE = (byte)'S',
+    //    /// <summary>
+    //    /// 郑州商品交易所
+    //    /// </summary>
+    //    CZCE = (byte)'Z',
+    //    /// <summary>
+    //    /// 大连商品交易所
+    //    /// </summary>
+    //    DCE = (byte)'D',
+    //    /// <summary>
+    //    /// 中国金融期货交易所
+    //    /// </summary>
+    //    CFFEX = (byte)'J',
+    //    /// <summary>
+    //    /// 上海国际能源交易中心股份有限公司
+    //    /// </summary>
+    //    INE = (byte)'N',
 
+
+    //}
     public enum TThostFtdcCombinationTypeType : byte
     {
         Future = (byte)'0',
@@ -26,6 +54,9 @@ namespace CTPService
 
     }
 
+    /// <summary>
+    /// 期权类别
+    /// </summary>
     public enum TThostFtdcOptionsTypeType : byte
     {
         CallOptions = (byte)'1',

@@ -475,6 +475,46 @@ namespace CTPService
                                 }
                                 break;
                             }
+                            //报单录入请求 ReqOrderInsert
+                        case EnumTransactionID.T_REQ_ORDINSERT:
+                            {
+                                var data = requestInfo.FTDFields[0].FTDCData;
+                                if (data is Struct.V12.LCThostFtdcInputOrderField)
+                                {
+                                    Struct.V12.LCThostFtdcInputOrderField field = (Struct.V12.LCThostFtdcInputOrderField)data;
+
+                                    OrderInsertRequest request = RequestTemplate<OrderInsertRequest>.CliSendRequest((int)requestInfo.FTDHeader.dReqId);
+
+                                    Order order = new OrderImpl();
+                                    order.Account = field.InvestorID;
+                                    order.Symbol = field.InstrumentID;
+                                    order.Side = field.Direction == TThostFtdcDirectionType.Buy ? true : false;
+                                    order.TotalSize = field.VolumeTotalOriginal;
+                                    order.Size = order.TotalSize;
+
+                                    if (field.OrderPriceType == TThostFtdcOrderPriceTypeType.AnyPrice)
+                                    {
+                                        order.LimitPrice = 0;
+                                        order.StopPrice = 0;
+                                    }
+                                    else if (field.OrderPriceType == TThostFtdcOrderPriceTypeType.LimitPrice)
+                                    {
+                                        order.LimitPrice = (decimal)field.LimitPrice;
+                                        order.StopPrice = 0;
+                                    }
+
+                                    order.TimeInForce = QSEnumTimeInForce.DAY;
+                                    order.Currency = CurrencyType.RMB;
+                                    order.OrderRef = field.OrderRef;
+                                    order.OffsetFlag = CTPConvert.ConvOffsetFlag(field.CombOffsetFlag_0);
+
+                                    request.Order = order;
+                                    _mqServer.TLSend(session.SessionID, request);
+                                    logger.Info(string.Format("Session:{0} >> ReqOrderInsert", session.SessionID));
+
+                                }
+                                break;
+                            }
                         default:
                             logger.Warn(string.Format("Transaction:{0} logic not handled", transId));
                             break;

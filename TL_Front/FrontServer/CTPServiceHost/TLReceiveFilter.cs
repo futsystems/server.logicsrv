@@ -208,6 +208,12 @@ namespace CTPService
                                 fieldList = ParsePktDataV12(data, ftdhdr.wFtdcLen, ftdhdr.wFiCount);
                                 break;
                             }
+                        //报单录入请求 ReqOrderInsert
+                        case EnumTransactionID.T_REQ_ORDINSERT:
+                            {
+                                fieldList = ParsePktDataV12(data, ftdhdr.wFtdcLen, ftdhdr.wFiCount);
+                                break;
+                            }
                         default:
                             throw new Exception(string.Format("TransactionID:{0} pkt not handled", (EnumTransactionID)ftdhdr.dTransId));
                     }
