@@ -89,6 +89,12 @@ namespace FrontServer
                 hex = "0200004d01030c4ce101e2300be303e102e1cae351e355e30e4354503ad4adbfdac1e0eeb2bbc6a5c5e0e4efefefefe50304e16d3838383838e638353632303030383032e6313131efefe8313131efefe8";
                 //交易账户修改 300e
                 hex = "0200008801000c4c00010000300e0000000100010072000000a12460006e38383838380000000000003835363230303038303200000031313100000000000000000000000000000000000000000000000000000000000000000000000000003131310000000000000000000000000000000000000000000000000000000000000000000000000000434e5900";
+                
+                //查询银行流水
+                hex = "0200003a01000c4c0004000082000000000c00010024000000ed300d00203838383838000000000000383536323030303830320000000000000000000000";
+
+                //银行流水记录
+                hex = "020000b201030c4ce104e28201e20185e1010197e3f3300c0193e39e3230313631323036e13230313631323037e132323a30363a3438e1323032303031e531e330303030e13039353538383031303031313438313637373138efe73238383537303531e53838383838efefe838353632303030383032e338353632303030383032e501e0ee31333230353832313938333034313934353134efefe3434e59e13ff0efe731efefefefe2bdbbd2d7b3c9b9a6efefefefed";
                 byte[] srcData = ByteUtil.HexToByte(hex);
                 logger.Info("**** remtoe compressed data size" + srcData.Length.ToString());
                 string rawhexcompressed = ByteUtil.ByteToHex(srcData, ' ');
@@ -126,7 +132,7 @@ namespace FrontServer
                 ftdc_hdr tmp2 = ByteSwapHelp.BytesToStruct<ftdc_hdr>(dstData, offset + Constanst.PROFTD_HDRLEN);
                 EnumFiledID fieldid = (EnumFiledID)tmp2.wFiId;
                 int fieldsize = Marshal.SizeOf(typeof(LCThostFtdcOrderField));
-                LCThostFtdcOrderField tmp3 = ByteSwapHelp.BytesToStruct<LCThostFtdcOrderField>(dstData, offset + Constanst.PROFTD_HDRLEN + Constanst.FTDC_HDRLEN);
+                LCThostFtdcTransferSerialField tmp3 = ByteSwapHelp.BytesToStruct<LCThostFtdcTransferSerialField>(dstData, offset + Constanst.PROFTD_HDRLEN + Constanst.FTDC_HDRLEN);
                 //LCThostFtdcInputOrderField tmp3 = ByteSwapHelp.BytesToStruct<LCThostFtdcInputOrderField>(dstData, offset + Constanst.PROFTD_HDRLEN + Constanst.FTDC_HDRLEN);
 
                 offset += Constanst.FTDC_HDRLEN + rspSize;
@@ -139,7 +145,7 @@ namespace FrontServer
                 //logger.Info(rawhex);
 
                 //将业务数据用本地方法打包
-                byte[] data1 = StructHelperV12.PackRsp<LCThostFtdcOrderField>(ref tmp3, EnumSeqType.SeqQry, EnumTransactionID.T_RSP_USRINF, (int)tmp1.dReqId, (int)tmp1.dSeqNo);
+                byte[] data1 = StructHelperV12.PackRsp<LCThostFtdcTransferSerialField>(ref tmp3, EnumSeqType.SeqQry, EnumTransactionID.T_RSP_USRINF, (int)tmp1.dReqId, (int)tmp1.dSeqNo);
                 logger.Info("**** local raw data size:" + data1.Length.ToString());
                 logger.Info(ByteUtil.ByteToHex(data1, ' '));
 

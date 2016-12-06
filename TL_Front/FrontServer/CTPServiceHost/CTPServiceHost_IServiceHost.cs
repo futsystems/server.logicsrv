@@ -586,6 +586,41 @@ namespace CTPService
 
                             break;
                         }
+                        //查询出入金记录
+                    case MessageTypes.TRANSFERSERIALRESPONSE:
+                        {
+                            RspQryTransferSerialResponse response = packet as RspQryTransferSerialResponse;
+                            Struct.V12.LCThostFtdcTransferSerialField field = new Struct.V12.LCThostFtdcTransferSerialField();
+
+                            DateTime dt = Util.ToDateTime(response.Date, response.Time);
+                            field.TradeDate = response.Date.ToString();
+                            field.TradeTime = dt.ToString("HH:mm:ss");
+                            field.InvestorID = conn.State.LoginID;
+                            field.AccountID = conn.State.LoginID;
+                            field.BankAccount = response.BankAccount;
+                            field.TradeAmount = (double)response.Amount;
+                            field.CurrencyID = "CNY";
+                            field.AvailabilityFlag = TThostFtdcAvailabilityFlagType.Valid;
+                            field.BankAccType = TThostFtdcBankAccTypeType.SavingCard;
+                            field.BankSerial = response.TransRef;
+                            field.FutureSerial = 0;
+                            field.ErrorID = 0;
+                            field.ErrorMsg = "交易成功";
+                            field.TradeCode = "202001";//根据此编号区别银行到期货 还是期货到银行
+
+
+
+                            //打包数据
+                            byte[] data = Struct.V12.StructHelperV12.PackRsp<Struct.V12.LCThostFtdcTransferSerialField>(ref field, EnumSeqType.SeqQry, EnumTransactionID.T_RSP_TFSN, response.RequestID, conn.NextSeqQryId);
+
+                            int encPktLen = 0;
+                            byte[] encData = Struct.V12.StructHelperV12.EncPkt(data, out encPktLen);
+
+                            conn.Send(encData, encPktLen);
+                            logger.Info(string.Format("LogicSrv Reply Session:{0} -> RspQryTransferSerialResponse", conn.SessionID));
+
+                            break;
+                        }
                     default:
                         logger.Warn(string.Format("Logic Packet:{0} not handled", packet.Type));
                         break;

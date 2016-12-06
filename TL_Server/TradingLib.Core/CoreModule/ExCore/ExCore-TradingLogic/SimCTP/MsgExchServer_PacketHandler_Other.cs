@@ -409,12 +409,12 @@ namespace TradingLib.Core
         /// 查询出入金记录
         /// </summary>
         /// <param name="request"></param>
-        void SrvOnQryTransferSerial(QryTransferSerialRequest request)
+        void SrvOnQryTransferSerial(QryTransferSerialRequest request,IAccount account)
         {
             //TODO:交易CTP接口查询出入金记录
             logger.Info("QryTransferSerialRequest:" + request.ToString());
-            CashTransaction[] cts = ORM.MCashTransaction.SelectHistCashTransactions(request.TradingAccount, 0, 0).ToArray();
-            IAccount account = TLCtxHelper.ModuleAccountManager[request.TradingAccount];
+            CashTransaction[] cts = ORM.MCashTransaction.SelectHistCashTransactions(account.ID, TLCtxHelper.ModuleSettleCentre.Tradingday, TLCtxHelper.ModuleSettleCentre.Tradingday).ToArray();
+            //IAccount account = TLCtxHelper.ModuleAccountManager[request.TradingAccount];
             int totalnum = cts.Length;
             logger.Info("total transfer num:" + totalnum.ToString());
             if (totalnum > 0)

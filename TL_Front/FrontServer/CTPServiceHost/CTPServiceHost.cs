@@ -591,6 +591,23 @@ namespace CTPService
                                 }
                                 break;
                             }
+                            //请求查询转帐流水 ReqQryTransferSerial
+                        case EnumTransactionID.T_QRY_TFSN:
+                            {
+                                var data = requestInfo.FTDFields[0].FTDCData;
+                                if (data is Struct.V12.LCThostFtdcQryTransferSerialField)
+                                {
+                                    Struct.V12.LCThostFtdcQryTransferSerialField field = (Struct.V12.LCThostFtdcQryTransferSerialField)data;
+
+                                    QryTransferSerialRequest request = RequestTemplate<QryTransferSerialRequest>.CliSendRequest((int)requestInfo.FTDHeader.dReqId);
+                                    
+                                    _mqServer.TLSend(session.SessionID, request);
+                                    logger.Info(string.Format("Session:{0} >> ReqQryTransferSerial", session.SessionID));
+
+                                }
+                                break;
+                                break;
+                            }
                         default:
                             logger.Warn(string.Format("Transaction:{0} logic not handled", transId));
                             break;

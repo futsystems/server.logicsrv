@@ -118,7 +118,7 @@ namespace TradingLib.Core
                 case MessageTypes.QRYTRANSFERSERIAL://查询出入金记录
                     {
                         QryTransferSerialRequest request = packet as QryTransferSerialRequest;
-                        SrvOnQryTransferSerial(request);
+                        SrvOnQryTransferSerial(request,account);
                     }
                     break;
                 case MessageTypes.QRYINSTRUMENTCOMMISSIONRATE://查询合约手续费率

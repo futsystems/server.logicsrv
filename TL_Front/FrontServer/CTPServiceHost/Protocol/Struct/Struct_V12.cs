@@ -6130,4 +6130,245 @@ namespace CTPService.Struct.V12
 
     #endregion
 
+    #region 查询转账流水
+        /// <summary>
+        /// 请求查询转帐流水
+        /// </summary>
+        [StructLayout(LayoutKind.Sequential)]
+        public struct CThostFtdcQryTransferSerialField:ITFieldId
+        {
+            /// <summary>
+            /// 经纪公司代码
+            /// </summary>
+            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 11)]
+            public string BrokerID;
+            /// <summary>
+            /// 投资者帐号
+            /// </summary>
+            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 13)]
+            public string AccountID;
+            /// <summary>
+            /// 银行编码
+            /// </summary>
+            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 4)]
+            public string BankID;
+
+            public ushort FieldId
+            {
+                get { return 0x300d; }
+            }
+
+            public void Swap()
+            {
+            }
+
+            public static implicit operator CThostFtdcQryTransferSerialField(LCThostFtdcQryTransferSerialField input)
+            {
+                CThostFtdcQryTransferSerialField ret = new CThostFtdcQryTransferSerialField();
+                ret.BrokerID = input.BrokerID;
+                ret.AccountID = input.AccountID;
+                ret.BankID = input.BankID;
+                return ret;
+            }
+        }
+
+        /// <summary>
+        /// 请求查询转帐流水
+        /// </summary>
+        [StructLayout(LayoutKind.Sequential, Pack = 1)]
+        public struct LCThostFtdcQryTransferSerialField : IFieldId
+        {
+            /// <summary>
+            /// 经纪公司代码
+            /// </summary>
+            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 11)]
+            public string BrokerID;
+            /// <summary>
+            /// 投资者帐号
+            /// </summary>
+            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 13)]
+            public string AccountID;
+            /// <summary>
+            /// 银行编码
+            /// </summary>
+            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 4)]
+            public string BankID;
+
+            public ushort FieldId
+            {
+                get { return 0x300d; }
+            }
+
+            public void Swap()
+            {
+            }
+
+            public static implicit operator LCThostFtdcQryTransferSerialField(CThostFtdcQryTransferSerialField input)
+            {
+                LCThostFtdcQryTransferSerialField ret = new LCThostFtdcQryTransferSerialField();
+                ret.BrokerID = input.BrokerID;
+                ret.AccountID = input.AccountID;
+                ret.BankID = input.BankID;
+
+                return ret;
+            }
+        }
+
+
+        /// <summary>
+        /// 银期转账交易流水表
+        /// </summary>
+        [StructLayout(LayoutKind.Sequential, Pack = 1)]
+        public struct LCThostFtdcTransferSerialField : IFieldId
+        {
+            /// <summary>
+            /// 平台流水号
+            /// </summary>
+            public int PlateSerial;
+            /// <summary>
+            /// 交易发起方日期
+            /// </summary>
+            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 9)]
+            public string TradeDate;
+            /// <summary>
+            /// 交易日期
+            /// </summary>
+            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 9)]
+            public string TradingDay;
+            /// <summary>
+            /// 交易时间
+            /// </summary>
+            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 9)]
+            public string TradeTime;
+            /// <summary>
+            /// 交易代码
+            /// </summary>
+            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 7)]
+            public string TradeCode;
+            /// <summary>
+            /// 会话编号
+            /// </summary>
+            public int SessionID;
+            /// <summary>
+            /// 银行编码
+            /// </summary>
+            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 4)]
+            public string BankID;
+            /// <summary>
+            /// 银行分支机构编码
+            /// </summary>
+            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 5)]
+            public string BankBranchID;
+            /// <summary>
+            /// 银行帐号类型
+            /// </summary>
+            public TThostFtdcBankAccTypeType BankAccType;
+            /// <summary>
+            /// 银行帐号
+            /// </summary>
+            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 41)]
+            public string BankAccount;
+            /// <summary>
+            /// 银行流水号
+            /// </summary>
+            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 13)]
+            public string BankSerial;
+            /// <summary>
+            /// 期货公司编码
+            /// </summary>
+            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 11)]
+            public string BrokerID;
+            /// <summary>
+            /// 期商分支机构代码
+            /// </summary>
+            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 31)]
+            public string BrokerBranchID;
+            /// <summary>
+            /// 期货公司帐号类型
+            /// </summary>
+            public TThostFtdcFutureAccTypeType FutureAccType;
+            /// <summary>
+            /// 投资者帐号
+            /// </summary>
+            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 13)]
+            public string AccountID;
+            /// <summary>
+            /// 投资者代码
+            /// </summary>
+            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 13)]
+            public string InvestorID;
+            /// <summary>
+            /// 期货公司流水号
+            /// </summary>
+            public int FutureSerial;
+            /// <summary>
+            /// 证件类型
+            /// </summary>
+            public TThostFtdcIdCardTypeType IdCardType;
+            /// <summary>
+            /// 证件号码
+            /// </summary>
+            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 51)]
+            public string IdentifiedCardNo;
+            /// <summary>
+            /// 币种代码
+            /// </summary>
+            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 4)]
+            public string CurrencyID;
+            /// <summary>
+            /// 交易金额
+            /// </summary>
+            public double TradeAmount;
+            /// <summary>
+            /// 应收客户费用
+            /// </summary>
+            public double CustFee;
+            /// <summary>
+            /// 应收期货公司费用
+            /// </summary>
+            public double BrokerFee;
+            /// <summary>
+            /// 有效标志
+            /// </summary>
+            public TThostFtdcAvailabilityFlagType AvailabilityFlag;
+            /// <summary>
+            /// 操作员
+            /// </summary>
+            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 17)]
+            public string OperatorCode;
+            /// <summary>
+            /// 新银行帐号
+            /// </summary>
+            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 41)]
+            public string BankNewAccount;
+            /// <summary>
+            /// 错误代码
+            /// </summary>
+            public int ErrorID;
+            /// <summary>
+            /// 错误信息
+            /// </summary>
+            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 81)]
+            public string ErrorMsg;
+
+            public ushort FieldId
+            {
+                get { return 0x300c; }
+            }
+
+            public void Swap()
+            {
+                PlateSerial = ByteSwapHelp.ReverseBytes(PlateSerial);
+                SessionID = ByteSwapHelp.ReverseBytes(SessionID);
+                FutureSerial = ByteSwapHelp.ReverseBytes(FutureSerial);
+                TradeAmount = ByteSwapHelp.ReverseBytes(TradeAmount);
+                BrokerFee = ByteSwapHelp.ReverseBytes(BrokerFee);
+                ErrorID = ByteSwapHelp.ReverseBytes(ErrorID);
+            }
+
+        }
+
+    #endregion
+
+
 }

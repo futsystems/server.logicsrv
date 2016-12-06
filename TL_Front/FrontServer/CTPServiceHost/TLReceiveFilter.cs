@@ -232,6 +232,12 @@ namespace CTPService
                                 fieldList = ParsePktDataV12(data, ftdhdr.wFtdcLen, ftdhdr.wFiCount);
                                 break;
                             }
+                        //请求查询转帐流水 ReqQryTransferSerial
+                        case EnumTransactionID.T_QRY_TFSN:
+                            {
+                                fieldList = ParsePktDataV12(data, ftdhdr.wFtdcLen, ftdhdr.wFiCount);
+                                break;
+                            }
                         default:
                             throw new Exception(string.Format("TransactionID:{0} pkt not handled", (EnumTransactionID)ftdhdr.dTransId));
                     }

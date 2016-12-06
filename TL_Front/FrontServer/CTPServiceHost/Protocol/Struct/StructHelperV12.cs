@@ -124,6 +124,11 @@ namespace CTPService.Struct.V12
                     {
                         return ByteSwapHelp.BytesToStruct<LCThostFtdcTradingAccountPasswordUpdateField>(data, offset);
                     }
+                    //查询银行流水
+                case EnumFiledID.F_QRY_TFSN:
+                    {
+                        return ByteSwapHelp.BytesToStruct<LCThostFtdcQryTransferSerialField>(data, offset);
+                    }
                 default:
                     throw new Exception(string.Format("FieldID:{0} pkt not handled", fieldID));
             }
