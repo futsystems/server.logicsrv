@@ -71,6 +71,89 @@ namespace CTPService
             }
         }
 
+
+        /// <summary>
+        /// 转换持仓
+        /// </summary>
+        /// <param name="source"></param>
+        /// <param name="dest"></param>
+        public static void ConvPosition(PositionEx source, ref Struct.V12.LCThostFtdcInvestorPositionField dest)
+        {
+            //dest.BrokerID;
+            dest.InvestorID = source.Account;
+            dest.InstrumentID = source.Symbol;
+            dest.PosiDirection = source.Side ? TThostFtdcPosiDirectionType.Long : TThostFtdcPosiDirectionType.Short;
+            dest.YdPosition = source.YdPosition;
+            dest.TodayPosition = source.TodayPosition;
+            dest.Position = source.Position;
+            dest.PositionDate = TThostFtdcPositionDateType.Today;
+
+            dest.OpenAmount = (double)source.OpenAmount;
+            dest.OpenVolume = source.OpenVolume;
+            dest.CloseAmount = (double)source.CloseAmount;
+            dest.CloseVolume = source.CloseVolume;
+
+            dest.CloseProfit = (double)source.CloseProfit;
+            dest.PositionProfit = (double)source.UnRealizedProfit;
+            dest.PositionCost = (double)source.PositionCost;
+            dest.OpenCost = (double)source.OpenCost;
+            dest.CloseProfitByDate = (double)source.CloseProfitByDate;
+            dest.CloseProfitByTrade = (double)source.CloseProfitByTrade;
+
+            dest.HedgeFlag = TThostFtdcHedgeFlagType.Speculation;
+            dest.Commission = (double)source.Commission;
+            dest.PreSettlementPrice = (double)source.LastSettlementPrice;
+            dest.SettlementPrice = (double)source.SettlementPrice;
+            dest.UseMargin = (double)source.Margin;
+            dest.SettlementID = 1;
+
+        }
+
+        /// <summary>
+        /// 转换成交
+        /// </summary>
+        /// <param name="source"></param>
+        /// <param name="dest"></param>
+        public static void ConvTrade(Trade source, ref Struct.V12.LCThostFtdcTradeField dest)
+        {
+            //dest.BrokerID;
+            dest.BusinessUnit = "8000cac";
+            //dest.ClearingPartID;
+            //dest.ParticipantID;
+            dest.ClientID = source.Account;
+            dest.UserID = source.Account;
+            dest.InstrumentID = source.Account;
+
+            dest.Direction = source.Side ? TThostFtdcDirectionType.Buy : TThostFtdcDirectionType.Sell;
+            dest.OffsetFlag = ConvOffsetFlag(source.OffsetFlag);
+            dest.HedgeFlag = TThostFtdcHedgeFlagType.Speculation;
+
+            dest.ExchangeID = source.Exchange;
+            dest.InstrumentID = source.Symbol;
+            dest.ExchangeInstID = source.Symbol;
+
+            dest.BrokerOrderSeq = source.OrderSeq;
+            dest.SequenceNo = source.OrderSeq;
+            dest.OrderLocalID = "";
+            dest.OrderRef = source.OrderRef;
+            dest.TradeID = source.TradeID;
+            dest.OrderSysID = source.OrderSysID;
+
+            dest.Price = (double)source.xPrice;
+            dest.Volume = source.xSize;
+            DateTime dt = Util.ToDateTime(source.xDate,source.xTime);
+            dest.TradeTime = dt.ToString("HH:mm:ss");
+            dest.TradeDate = source.xDate.ToString();
+
+            dest.TradingRole = TThostFtdcTradingRoleType.Broker;
+            dest.PriceSource = TThostFtdcPriceSourceType.LastPrice;
+            dest.TradeType = TThostFtdcTradeTypeType.Common;
+            dest.TradeSource = TThostFtdcTradeSourceType.NORMAL;
+            dest.SettlementID = 1;
+
+
+        }
+
         /// <summary>
         /// 委托转换
         /// </summary>

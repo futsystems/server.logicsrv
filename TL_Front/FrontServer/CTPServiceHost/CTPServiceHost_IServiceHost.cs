@@ -289,6 +289,11 @@ namespace CTPService
                             {
                                 Struct.V12.LCThostFtdcTradeField field = new Struct.V12.LCThostFtdcTradeField();
 
+                                CTPConvert.ConvTrade(response.TradeToSend, ref field);
+                                field.BrokerID = conn.State.BrokerID;
+                                field.ClearingPartID = conn.State.BrokerID;
+                                field.ParticipantID = conn.State.BrokerID;
+
                                 byte[] data = Struct.V12.StructHelperV12.PackRsp(ref field,EnumSeqType.SeqQry, EnumTransactionID.T_RSP_QRYTD, response.RequestID, conn.NextSeqId, response.IsLast);
                                 encData = Struct.V12.StructHelperV12.EncPkt(data, out encPktLen);
                             }
@@ -311,6 +316,9 @@ namespace CTPService
                             else
                             {
                                 Struct.V12.LCThostFtdcInvestorPositionField field = new Struct.V12.LCThostFtdcInvestorPositionField();
+                                CTPConvert.ConvPosition(response.PositionToSend, ref field);
+                                field.BrokerID = conn.State.BrokerID;
+                               
 
                                 byte[] data = Struct.V12.StructHelperV12.PackRsp(ref field,EnumSeqType.SeqQry, EnumTransactionID.T_RSP_INVPOS, response.RequestID, conn.NextSeqId, response.IsLast);
                                 encData = Struct.V12.StructHelperV12.EncPkt(data, out encPktLen);
