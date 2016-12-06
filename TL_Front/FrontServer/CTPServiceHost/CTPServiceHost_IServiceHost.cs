@@ -65,7 +65,7 @@ namespace CTPService
                             }
 
                             //打包数据
-                            byte[] data = Struct.V12.StructHelperV12.PackRsp<Struct.V12.LCThostFtdcRspUserLoginField>(ref rsp, ref field, EnumSeqType.SeqReq, EnumTransactionID.T_RSP_LOGIN, response.RequestID, conn.NextSeqQryId);
+                            byte[] data = Struct.V12.StructHelperV12.PackRsp<Struct.V12.LCThostFtdcRspUserLoginField>(ref rsp, ref field, EnumSeqType.SeqReq, EnumTransactionID.T_RSP_LOGIN, response.RequestID,0);//登入回报 默认Seq为0
 
                             int encPktLen = 0;
                             byte[] encData = Struct.V12.StructHelperV12.EncPkt(data, out encPktLen);

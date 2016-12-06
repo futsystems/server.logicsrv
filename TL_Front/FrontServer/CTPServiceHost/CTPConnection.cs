@@ -109,7 +109,7 @@ namespace CTPService
         /// </summary>
         public FrontServer.IServiceHost ServiceHost { get { return _serviceHost; } }
 
-        int _seqQryId = 0;
+        int _seqQryId = 1;
         object _seqIDLock = new object();
         /// <summary>
         /// 下一个Req回报序号
@@ -127,6 +127,9 @@ namespace CTPService
                 }
             }
         }
+        /// <summary>
+        /// RTN 需要需要从1开始 否则CTP客户端接口无法正常解析回报数据
+        /// </summary>
         int _seqRtnId = 1;
         /// <summary>
         /// 下一个RTN回报序号
