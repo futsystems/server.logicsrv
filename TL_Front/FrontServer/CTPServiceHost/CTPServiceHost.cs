@@ -562,6 +562,35 @@ namespace CTPService
                                 }
                                 break;
                             }
+                        //资金账户口令更新请求 ReqTradingAccountPasswordUpdate
+                        case EnumTransactionID.T_REQ_MODACCPASS:
+                            {
+                                var data = requestInfo.FTDFields[0].FTDCData;
+                                if (data is Struct.V12.LCThostFtdcTradingAccountPasswordUpdateField)
+                                {
+                                    Struct.V12.LCThostFtdcTradingAccountPasswordUpdateField field = (Struct.V12.LCThostFtdcTradingAccountPasswordUpdateField)data;
+
+                                    //Struct.V12.LCThostFtdcTradingAccountPasswordUpdateField response = new Struct.V12.LCThostFtdcUserPasswordUpdateField();
+
+                                    field.BrokerID = conn.State.BrokerID;
+                                    field.AccountID = conn.State.LoginID;
+
+                                    Struct.V12.LCThostFtdcRspInfoField rsp = new Struct.V12.LCThostFtdcRspInfoField();
+                                    rsp.ErrorID = 1;
+                                    rsp.ErrorMsg = string.Format("CTP:{0}","原始密码错误");
+
+                                    //打包数据
+                                    byte[] data1 = Struct.V12.StructHelperV12.PackRsp<Struct.V12.LCThostFtdcTradingAccountPasswordUpdateField>(ref rsp, ref field, EnumSeqType.SeqReq, EnumTransactionID.T_RSP_MODACCPASS,(int)requestInfo.FTDHeader.dReqId, conn.NextSeqReqId);
+
+                                    int encPktLen = 0;
+                                    byte[] encData = Struct.V12.StructHelperV12.EncPkt(data1, out encPktLen);
+
+                                    conn.Send(encData, encPktLen);
+                                    logger.Info(string.Format("LogicSrv Reply Session:{0} -> RspReqChangePasswordResponse", conn.SessionID));
+
+                                }
+                                break;
+                            }
                         default:
                             logger.Warn(string.Format("Transaction:{0} logic not handled", transId));
                             break;
