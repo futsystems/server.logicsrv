@@ -251,12 +251,12 @@ namespace TradingLib.Core
         /// 请求修改密码
         /// </summary>
         /// <param name="request"></param>
-        void SrvOnReqChangePassword(ReqChangePasswordRequest request)
+        void SrvOnReqChangePassword(ReqChangePasswordRequest request,IAccount account)
         {
             logger.Info("ReqChangePassword:" + request.ToString());
 
             RspReqChangePasswordResponse response = ResponseTemplate<RspReqChangePasswordResponse>.SrvSendRspResponse(request);
-            bool valid = TLCtxHelper.ModuleAccountManager.VaildAccount(request.Account, request.OldPassword);
+            bool valid = TLCtxHelper.ModuleAccountManager.VaildAccount(account.ID, request.OldPassword);
             if(!valid)
             {
                 response.RspInfo.Fill("OLD_PASS_ERROR");
@@ -265,7 +265,7 @@ namespace TradingLib.Core
             }
 
             //修改密码返回
-            TLCtxHelper.ModuleAccountManager.UpdateAccountPass(request.Account, request.NewPassword);
+            TLCtxHelper.ModuleAccountManager.UpdateAccountPass(account.ID, request.NewPassword);
             CachePacket(response);
         }
 

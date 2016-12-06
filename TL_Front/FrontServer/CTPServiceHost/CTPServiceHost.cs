@@ -543,6 +543,25 @@ namespace CTPService
                                  }
                                  break;
                             }
+                            //用户口令更新请求 ReqUserPasswordUpdate
+                        case EnumTransactionID.T_REQ_MODPASS:
+                            { 
+                                var data = requestInfo.FTDFields[0].FTDCData;
+                                if (data is Struct.V12.LCThostFtdcUserPasswordUpdateField)
+                                {
+                                    Struct.V12.LCThostFtdcUserPasswordUpdateField field = (Struct.V12.LCThostFtdcUserPasswordUpdateField)data;
+
+                                    ReqChangePasswordRequest request = RequestTemplate<ReqChangePasswordRequest>.CliSendRequest((int)requestInfo.FTDHeader.dReqId);
+
+                                    request.OldPassword = field.OldPassword;
+                                    request.NewPassword = field.NewPassword;
+
+                                    _mqServer.TLSend(session.SessionID, request);
+                                    logger.Info(string.Format("Session:{0} >> ReqUserPasswordUpdate", session.SessionID));
+
+                                }
+                                break;
+                            }
                         default:
                             logger.Warn(string.Format("Transaction:{0} logic not handled", transId));
                             break;

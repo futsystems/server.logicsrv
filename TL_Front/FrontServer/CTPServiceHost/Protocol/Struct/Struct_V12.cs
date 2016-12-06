@@ -5927,4 +5927,105 @@ namespace CTPService.Struct.V12
             }
         }
     #endregion
+
+    #region 用户口令更改
+        /// <summary>
+        /// 用户口令变更
+        /// </summary>
+        [StructLayout(LayoutKind.Sequential)]
+        public struct CThostFtdcUserPasswordUpdateField : ITFieldId
+        {
+            /// <summary>
+            /// 经纪公司代码
+            /// </summary>
+            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 11)]
+            public string BrokerID;
+            /// <summary>
+            /// 用户代码
+            /// </summary>
+            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 16)]
+            public string UserID;
+            /// <summary>
+            /// 原来的口令
+            /// </summary>
+            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 41)]
+            public string OldPassword;
+            /// <summary>
+            /// 新的口令
+            /// </summary>
+            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 41)]
+            public string NewPassword;
+
+            public ushort FieldId
+            {
+                get { return 0x304; }
+            }
+
+            public void Swap()
+            {
+            }
+
+            public static implicit operator LCThostFtdcUserPasswordUpdateField(CThostFtdcUserPasswordUpdateField input)
+            {
+                LCThostFtdcUserPasswordUpdateField ret = new LCThostFtdcUserPasswordUpdateField();
+                ret.BrokerID = input.BrokerID;
+                ret.UserID = input.UserID;
+                ret.OldPassword = input.OldPassword;
+                ret.NewPassword = input.NewPassword;
+
+                return ret;
+            }
+
+        }
+
+        /// <summary>
+        /// 用户口令变更
+        /// </summary>
+        [StructLayout(LayoutKind.Sequential, Pack = 1)]
+        public struct LCThostFtdcUserPasswordUpdateField : IFieldId
+        {
+            /// <summary>
+            /// 经纪公司代码
+            /// </summary>
+            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 11)]
+            public string BrokerID;
+            /// <summary>
+            /// 用户代码
+            /// </summary>
+            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 16)]
+            public string UserID;
+            /// <summary>
+            /// 原来的口令
+            /// </summary>
+            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 41)]
+            public string OldPassword;
+            /// <summary>
+            /// 新的口令
+            /// </summary>
+            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 41)]
+            public string NewPassword;
+
+            public ushort FieldId
+            {
+                get { return 0x304; }
+            }
+
+            public void Swap()
+            {
+            }
+
+            public static implicit operator CThostFtdcUserPasswordUpdateField(LCThostFtdcUserPasswordUpdateField input)
+            {
+                CThostFtdcUserPasswordUpdateField ret = new CThostFtdcUserPasswordUpdateField();
+                ret.BrokerID = input.BrokerID;
+                ret.UserID = input.UserID;
+                ret.OldPassword = input.OldPassword;
+                ret.NewPassword = input.NewPassword;
+
+                return ret;
+            }
+        }
+
+    #endregion
+
 }

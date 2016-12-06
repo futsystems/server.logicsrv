@@ -14,7 +14,6 @@ namespace CTPService
     {
         /// <summary>
         /// 将逻辑服务端的消息进行处理 转换成ServiceHost支持协议内容
-        /// 如果不需发送消息到客户端则返回null
         /// </summary>
         /// <param name="packet"></param>
         /// <returns></returns>
@@ -560,6 +559,31 @@ namespace CTPService
 
                             conn.Send(encData, encPktLen);
                             logger.Info(string.Format("LogicSrv Reply Session:{0} -> TradeNotify", conn.SessionID));
+                            break;
+                        }
+                        //修改密码回报
+                    case MessageTypes.CHANGEPASSRESPONSE:
+                        {
+                            RspReqChangePasswordResponse response = packet as RspReqChangePasswordResponse;
+
+                            Struct.V12.LCThostFtdcUserPasswordUpdateField field = new Struct.V12.LCThostFtdcUserPasswordUpdateField();
+
+                            field.BrokerID = conn.State.BrokerID;
+                            field.UserID = conn.State.LoginID;
+
+                            Struct.V12.LCThostFtdcRspInfoField rsp = new Struct.V12.LCThostFtdcRspInfoField();
+                            rsp.ErrorID = response.RspInfo.ErrorID;
+                            rsp.ErrorMsg = string.Format("CTP:{0}", response.RspInfo.ErrorMessage);
+
+                            //打包数据
+                            byte[] data = Struct.V12.StructHelperV12.PackRsp<Struct.V12.LCThostFtdcUserPasswordUpdateField>(ref rsp, ref field, EnumSeqType.SeqReq, EnumTransactionID.T_RSP_MODPASS, response.RequestID, conn.NextSeqReqId);
+
+                            int encPktLen = 0;
+                            byte[] encData = Struct.V12.StructHelperV12.EncPkt(data, out encPktLen);
+
+                            conn.Send(encData, encPktLen);
+                            logger.Info(string.Format("LogicSrv Reply Session:{0} -> RspReqChangePasswordResponse", conn.SessionID));
+
                             break;
                         }
                     default:

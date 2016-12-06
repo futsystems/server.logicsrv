@@ -58,6 +58,7 @@ namespace CTPService
         T_QRY_MD = 0x8030,
         T_RSP_QRYMD = 0x8031,
         T_REQ_MODPASS = 0x300a,
+        T_RSP_MODPASS = 0x300b,
         T_REQ_CANCEL = 0x4006,
         T_QRY_PKORD = 0x8105,
         T_RSP_QRYPK = 0x8106,

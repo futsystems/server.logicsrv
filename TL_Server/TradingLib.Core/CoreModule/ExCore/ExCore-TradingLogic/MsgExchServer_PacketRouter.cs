@@ -87,7 +87,7 @@ namespace TradingLib.Core
                 case MessageTypes.REQCHANGEPASS://请求修改交易帐户密码
                     {
                         ReqChangePasswordRequest request = packet as ReqChangePasswordRequest;
-                        SrvOnReqChangePassword(request);
+                        SrvOnReqChangePassword(request,account);
                     }
                     break;
                 case MessageTypes.QRYNOTICE://请求查询交易系统通知

@@ -114,6 +114,11 @@ namespace CTPService.Struct.V12
                     {
                         return ByteSwapHelp.BytesToStruct<LCThostFtdcInputOrderActionField>(data, offset);
                     }
+                    //用户口令变更
+                case EnumFiledID.F_REQ_MODPASS:
+                    {
+                        return ByteSwapHelp.BytesToStruct<LCThostFtdcUserPasswordUpdateField>(data, offset);
+                    }
                 default:
                     throw new Exception(string.Format("FieldID:{0} pkt not handled", fieldID));
             }
