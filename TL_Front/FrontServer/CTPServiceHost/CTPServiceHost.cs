@@ -515,6 +515,34 @@ namespace CTPService
                                 }
                                 break;
                             }
+                            //报单操作请求 ReqOrderAction 
+                        case EnumTransactionID.T_REQ_CANCEL:
+                            { 
+                                 var data = requestInfo.FTDFields[0].FTDCData;
+                                 if (data is Struct.V12.LCThostFtdcInputOrderActionField)
+                                 {
+                                     Struct.V12.LCThostFtdcInputOrderActionField field = (Struct.V12.LCThostFtdcInputOrderActionField)data;
+
+                                     OrderActionRequest request = RequestTemplate<OrderActionRequest>.CliSendRequest((int)requestInfo.FTDHeader.dReqId);
+
+                                     OrderAction action = new OrderActionImpl();
+                                     action.ActionFlag = QSEnumOrderActionFlag.Delete;
+                                     action.Account = field.InvestorID;
+                                     action.FrontID = field.FrontID;
+                                     action.SessionID = field.SessionID;
+                                     action.Symbol = field.InstrumentID;
+                                     action.OrderRef = field.OrderRef;
+                                     action.Exchagne = field.ExchangeID;
+                                     action.OrderExchID = field.OrderSysID;
+                                     action.RequestID = field.RequestID;
+
+                                     request.OrderAction = action;
+
+                                     _mqServer.TLSend(session.SessionID, request);
+                                     logger.Info(string.Format("Session:{0} >> ReqOrderAction", session.SessionID));
+                                 }
+                                 break;
+                            }
                         default:
                             logger.Warn(string.Format("Transaction:{0} logic not handled", transId));
                             break;

@@ -140,7 +140,7 @@ namespace CTPService
             dest.OrderSysID = source.OrderSysID;
 
             dest.Price = (double)source.xPrice;
-            dest.Volume = source.xSize;
+            dest.Volume = Math.Abs(source.xSize);
             DateTime dt = Util.ToDateTime(source.xDate,source.xTime);
             dest.TradeTime = dt.ToString("HH:mm:ss");
             dest.TradeDate = source.xDate.ToString();

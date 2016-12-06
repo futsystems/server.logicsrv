@@ -5691,4 +5691,240 @@ namespace CTPService.Struct.V12
     #endregion
 
 
+    #region 报单操作
+        /// <summary>
+        /// 输入报单操作
+        /// </summary>
+        [StructLayout(LayoutKind.Sequential)]
+        public struct CThostFtdcInputOrderActionField : ITFieldId
+        {
+            /// <summary>
+            /// 经纪公司代码
+            /// </summary>
+            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 11)]
+            public string BrokerID;
+            /// <summary>
+            /// 投资者代码
+            /// </summary>
+            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 13)]
+            public string InvestorID;
+            /// <summary>
+            /// 报单操作引用
+            /// </summary>
+            public int OrderActionRef;
+            /// <summary>
+            /// 报单引用
+            /// </summary>
+            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 13)]
+            public string OrderRef;
+            /// <summary>
+            /// 请求编号
+            /// </summary>
+            public int RequestID;
+            /// <summary>
+            /// 前置编号
+            /// </summary>
+            public int FrontID;
+            /// <summary>
+            /// 会话编号
+            /// </summary>
+            public int SessionID;
+            /// <summary>
+            /// 交易所代码
+            /// </summary>
+            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 9)]
+            public string ExchangeID;
+            /// <summary>
+            /// 报单编号
+            /// </summary>
+            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 21)]
+            public string OrderSysID;
+            /// <summary>
+            /// 操作标志
+            /// </summary>
+            public TThostFtdcActionFlagType ActionFlag;
+            /// <summary>
+            /// 价格
+            /// </summary>
+            public double LimitPrice;
+            /// <summary>
+            /// 数量变化
+            /// </summary>
+            public int VolumeChange;
+            /// <summary>
+            /// 用户代码
+            /// </summary>
+            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 16)]
+            public string UserID;
+            /// <summary>
+            /// 合约代码
+            /// </summary>
+            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 31)]
+            public string InstrumentID;
+
+            ///投资单元代码
+            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 17)]
+            public string InvestUnitID;
+            ///IP地址
+            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 16)]
+            public string IPAddress;
+            ///Mac地址
+            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 21)]
+            public string MacAddress;
+
+            public ushort FieldId
+            {
+                get { return 1028; }
+            }
+
+            public void Swap()
+            { }
+
+            public static implicit operator CThostFtdcInputOrderActionField(LCThostFtdcInputOrderActionField input)
+            {
+                CThostFtdcInputOrderActionField ret = new CThostFtdcInputOrderActionField();
+                ret.BrokerID = input.BrokerID;
+                ret.InvestorID = input.InvestorID;
+                ret.OrderActionRef = input.OrderActionRef;
+                ret.OrderRef = input.OrderRef;
+                ret.RequestID = input.RequestID;
+                ret.FrontID = input.FrontID;
+                ret.SessionID = input.SessionID;
+                ret.ExchangeID = input.ExchangeID;
+                ret.OrderSysID = input.OrderSysID;
+                ret.ActionFlag = input.ActionFlag;
+                ret.LimitPrice = input.LimitPrice;
+                ret.VolumeChange = input.VolumeChange;
+                ret.UserID = input.UserID;
+                ret.InstrumentID = input.InstrumentID;
+
+                ret.InvestUnitID = input.InvestUnitID;
+                ret.IPAddress = input.IPAddress;
+                ret.MacAddress = input.MacAddress;
+
+                return ret;
+            }
+        }
+        /// <summary>
+        /// 输入报单操作
+        /// </summary>
+        [StructLayout(LayoutKind.Sequential, Pack = 1)]
+        public struct LCThostFtdcInputOrderActionField : IFieldId
+        {
+            /// <summary>
+            /// 经纪公司代码
+            /// </summary>
+            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 11)]
+            public string BrokerID;
+            /// <summary>
+            /// 投资者代码
+            /// </summary>
+            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 13)]
+            public string InvestorID;
+            /// <summary>
+            /// 报单操作引用
+            /// </summary>
+            public int OrderActionRef;
+            /// <summary>
+            /// 报单引用
+            /// </summary>
+            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 13)]
+            public string OrderRef;
+            /// <summary>
+            /// 请求编号
+            /// </summary>
+            public int RequestID;
+            /// <summary>
+            /// 前置编号
+            /// </summary>
+            public int FrontID;
+            /// <summary>
+            /// 会话编号
+            /// </summary>
+            public int SessionID;
+            /// <summary>
+            /// 交易所代码
+            /// </summary>
+            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 9)]
+            public string ExchangeID;
+            /// <summary>
+            /// 报单编号
+            /// </summary>
+            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 21)]
+            public string OrderSysID;
+            /// <summary>
+            /// 操作标志
+            /// </summary>
+            public TThostFtdcActionFlagType ActionFlag;
+            /// <summary>
+            /// 价格
+            /// </summary>
+            public double LimitPrice;
+            /// <summary>
+            /// 数量变化
+            /// </summary>
+            public int VolumeChange;
+            /// <summary>
+            /// 用户代码
+            /// </summary>
+            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 16)]
+            public string UserID;
+            /// <summary>
+            /// 合约代码
+            /// </summary>
+            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 31)]
+            public string InstrumentID;
+
+            ///投资单元代码
+            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 17)]
+            public string InvestUnitID;
+            ///IP地址
+            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 16)]
+            public string IPAddress;
+            ///Mac地址
+            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 21)]
+            public string MacAddress;
+
+
+            public ushort FieldId
+            {
+                get { return 1028; }
+            }
+
+            public void Swap()
+            {
+                OrderActionRef = ByteSwapHelp.ReverseBytes(OrderActionRef);
+                RequestID = ByteSwapHelp.ReverseBytes(RequestID);
+                FrontID = ByteSwapHelp.ReverseBytes(FrontID);
+                SessionID = ByteSwapHelp.ReverseBytes(SessionID);
+                LimitPrice = ByteSwapHelp.ReverseBytes(LimitPrice);
+                VolumeChange = ByteSwapHelp.ReverseBytes(VolumeChange);
+            }
+
+            public static implicit operator LCThostFtdcInputOrderActionField(CThostFtdcInputOrderActionField input)
+            {
+                LCThostFtdcInputOrderActionField ret = new LCThostFtdcInputOrderActionField();
+                ret.BrokerID = input.BrokerID;
+                ret.InvestorID = input.InvestorID;
+                ret.OrderActionRef = input.OrderActionRef;
+                ret.OrderRef = input.OrderRef;
+                ret.RequestID = input.RequestID;
+                ret.FrontID = input.FrontID;
+                ret.SessionID = input.SessionID;
+                ret.ExchangeID = input.ExchangeID;
+                ret.OrderSysID = input.OrderSysID;
+                ret.ActionFlag = input.ActionFlag;
+                ret.LimitPrice = input.LimitPrice;
+                ret.VolumeChange = input.VolumeChange;
+                ret.UserID = input.UserID;
+                ret.InstrumentID = input.InstrumentID;
+
+                ret.InvestUnitID = input.InvestUnitID;
+                ret.IPAddress = input.IPAddress;
+                ret.MacAddress = input.MacAddress;
+
+                return ret;
+            }
+        }
+    #endregion
 }

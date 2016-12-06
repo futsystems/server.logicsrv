@@ -546,7 +546,9 @@ namespace CTPService
                             Struct.V12.LCThostFtdcTradeField field = new Struct.V12.LCThostFtdcTradeField();
 
                             CTPConvert.ConvTrade(notify.Trade, ref field);
+                            
                             field.BrokerID = conn.State.BrokerID;
+                            field.InvestorID = conn.State.LoginID;
                             field.ClearingPartID = conn.State.BrokerID;
                             field.ParticipantID = conn.State.BrokerID;
 

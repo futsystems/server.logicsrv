@@ -109,6 +109,11 @@ namespace CTPService.Struct.V12
                     {
                         return ByteSwapHelp.BytesToStruct<LCThostFtdcInputOrderField>(data, offset);
                     }
+                    //委托操作 撤单
+                case EnumFiledID.F_REQ_CANCEL:
+                    {
+                        return ByteSwapHelp.BytesToStruct<LCThostFtdcInputOrderActionField>(data, offset);
+                    }
                 default:
                     throw new Exception(string.Format("FieldID:{0} pkt not handled", fieldID));
             }
