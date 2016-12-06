@@ -231,7 +231,7 @@ namespace CTPService
                                     response.KeyID = 1;
                                     response.ParticipantID = "";
 
-                                    byte[] rdata = Struct.V12.StructHelperV12.PackRsp<Struct.V12.LCThostFtdcCFMMCTradingAccountKeyField>(ref response, EnumSeqType.SeqQry, EnumTransactionID.T_RSP_CFMMCKEY, (int)requestInfo.FTDHeader.dReqId, conn.NextSeqId);
+                                    byte[] rdata = Struct.V12.StructHelperV12.PackRsp<Struct.V12.LCThostFtdcCFMMCTradingAccountKeyField>(ref response, EnumSeqType.SeqQry, EnumTransactionID.T_RSP_CFMMCKEY, (int)requestInfo.FTDHeader.dReqId, conn.NextSeqQryId);
                                     int encPktLen = 0;
                                     byte[] encData = Struct.V12.StructHelperV12.EncPkt(rdata, out encPktLen);
 
@@ -255,7 +255,7 @@ namespace CTPService
                                     rsp.ErrorMsg = "正确";
 
 
-                                    byte[] rdata = Struct.V12.StructHelperV12.PackRsp<Struct.V12.LCThostFtdcQueryCFMMCTradingAccountTokenField>(ref rsp, ref field, EnumSeqType.SeqQry, EnumTransactionID.T_RSP_TDTOK, (int)requestInfo.FTDHeader.dReqId, conn.NextSeqId);
+                                    byte[] rdata = Struct.V12.StructHelperV12.PackRsp<Struct.V12.LCThostFtdcQueryCFMMCTradingAccountTokenField>(ref rsp, ref field, EnumSeqType.SeqQry, EnumTransactionID.T_RSP_TDTOK, (int)requestInfo.FTDHeader.dReqId, conn.NextSeqQryId);
                                     int encPktLen = 0;
                                     byte[] encData = Struct.V12.StructHelperV12.EncPkt(rdata, out encPktLen);
 
@@ -291,7 +291,7 @@ namespace CTPService
                                     Struct.V12.LCThostFtdcTradingNoticeField response = new Struct.V12.LCThostFtdcTradingNoticeField();
                                     //response.FieldContent = "市场有风险，投资需谨慎";
                                     //打包数据
-                                    byte[] rdata = Struct.V12.StructHelperV12.PackRsp<Struct.V12.LCThostFtdcTradingNoticeField>(ref response, EnumSeqType.SeqQry, EnumTransactionID.T_RSP_NOTICE, (int)requestInfo.FTDHeader.dReqId, conn.NextSeqId);
+                                    byte[] rdata = Struct.V12.StructHelperV12.PackRsp<Struct.V12.LCThostFtdcTradingNoticeField>(ref response, EnumSeqType.SeqQry, EnumTransactionID.T_RSP_NOTICE, (int)requestInfo.FTDHeader.dReqId, conn.NextSeqQryId);
                                     int encPktLen = 0;
                                     byte[] encData = Struct.V12.StructHelperV12.EncPkt(rdata, out encPktLen);
 

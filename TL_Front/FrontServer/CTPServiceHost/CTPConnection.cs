@@ -109,19 +109,19 @@ namespace CTPService
         /// </summary>
         public FrontServer.IServiceHost ServiceHost { get { return _serviceHost; } }
 
-        int _seqId = 0;
+        int _seqQryId = 0;
         object _seqIDLock = new object();
         /// <summary>
         /// 下一个Req回报序号
         /// </summary>
-        public int NextSeqId
+        public int NextSeqQryId
         { 
             get
             {
                 lock (_seqIDLock)
                 {
-                    int seq = _seqId;
-                    _seqId++;
+                    int seq = _seqQryId;
+                    _seqQryId++;
                     return seq;
                     
                 }
@@ -139,6 +139,24 @@ namespace CTPService
                 {
                     int seq = _seqRtnId;
                     _seqRtnId++;
+                    return seq;
+
+                }
+            }
+        }
+
+        int _seqReqId = 0;
+        /// <summary>
+        /// 下一个REQ回报序号
+        /// </summary>
+        public int NextSeqReqId
+        {
+            get
+            {
+                lock (_seqIDLock)
+                {
+                    int seq = _seqReqId;
+                    _seqReqId++;
                     return seq;
 
                 }

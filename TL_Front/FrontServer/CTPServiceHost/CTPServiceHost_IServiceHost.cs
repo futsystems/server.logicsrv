@@ -65,7 +65,7 @@ namespace CTPService
                             }
 
                             //打包数据
-                            byte[] data = Struct.V12.StructHelperV12.PackRsp<Struct.V12.LCThostFtdcRspUserLoginField>(ref rsp, ref field, EnumSeqType.SeqReq, EnumTransactionID.T_RSP_LOGIN, response.RequestID,conn.NextSeqId);
+                            byte[] data = Struct.V12.StructHelperV12.PackRsp<Struct.V12.LCThostFtdcRspUserLoginField>(ref rsp, ref field, EnumSeqType.SeqReq, EnumTransactionID.T_RSP_LOGIN, response.RequestID, conn.NextSeqQryId);
 
                             int encPktLen = 0;
                             byte[] encData = Struct.V12.StructHelperV12.EncPkt(data, out encPktLen);
@@ -77,6 +77,15 @@ namespace CTPService
                             //发送数据
                             conn.Send(encData, encPktLen);
                             if (response.IsLast) logger.Info(string.Format("LogicSrv Reply Session:{0} -> LoginResponse", conn.SessionID));
+
+                            //topicData回报
+                            hex = "0200008501030c4ce43001e502e1f5e301e355e4d5fdc8b7efefefefefe21003e1983230313631323031e131323a32303a3337e13838383838e638353632303030383032e654726164696e67486f7374696e67efef04a515665831ec31323a32303a3337e131323a32303a3338e131323a32303a3338e131323a32303a3337e12d2d3a2d2d3a2d2de1";
+                            encData = ByteUtil.HexToByte(hex);
+                            encPktLen = encData.Length;
+
+                            conn.Send(encData, encPktLen);
+
+
                             break;
                         }
                     //投资者查询回报
@@ -95,7 +104,7 @@ namespace CTPService
                             field.Address = "";
                             field.OpenDate = "20150101";
                             //打包数据
-                            byte[] data = Struct.V12.StructHelperV12.PackRsp<Struct.V12.LCThostFtdcInvestorField>(ref field, EnumSeqType.SeqQry, EnumTransactionID.T_RSP_USRINF, response.RequestID, conn.NextSeqId);
+                            byte[] data = Struct.V12.StructHelperV12.PackRsp<Struct.V12.LCThostFtdcInvestorField>(ref field, EnumSeqType.SeqQry, EnumTransactionID.T_RSP_USRINF, response.RequestID, conn.NextSeqQryId);
                             int encPktLen = 0;
                             byte[] encData = Struct.V12.StructHelperV12.EncPkt(data, out encPktLen);
 
@@ -119,7 +128,7 @@ namespace CTPService
                             field.ConfirmTime = Util.ToDateTime(response.ConfirmDay, response.ConfirmTime).ToString("HH:mm:ss");
 
                             //打包数据
-                            byte[] data = Struct.V12.StructHelperV12.PackRsp(EnumSeqType.SeqQry, EnumTransactionID.T_RSP_SETCONFIRM, response.RequestID, conn.NextSeqId);
+                            byte[] data = Struct.V12.StructHelperV12.PackRsp(EnumSeqType.SeqQry, EnumTransactionID.T_RSP_SETCONFIRM, response.RequestID, conn.NextSeqQryId);
                             int encPktLen = 0;
                             byte[] encData = Struct.V12.StructHelperV12.EncPkt(data, out encPktLen);
 
@@ -140,7 +149,7 @@ namespace CTPService
                             field.Content = response.NoticeContent;
 
                             //打包数据
-                            byte[] data = Struct.V12.StructHelperV12.PackRsp<Struct.V12.LCThostFtdcNoticeField>(ref field, EnumSeqType.SeqQry, EnumTransactionID.T_RSP_NOTICE, response.RequestID, conn.NextSeqId);
+                            byte[] data = Struct.V12.StructHelperV12.PackRsp<Struct.V12.LCThostFtdcNoticeField>(ref field, EnumSeqType.SeqQry, EnumTransactionID.T_RSP_NOTICE, response.RequestID, conn.NextSeqQryId);
                             int encPktLen = 0;
                             byte[] encData = Struct.V12.StructHelperV12.EncPkt(data, out encPktLen);
 
@@ -160,7 +169,7 @@ namespace CTPService
                             field.SequenceNo = response.SequenceNo;
 
                             //打包数据
-                            byte[] data = Struct.V12.StructHelperV12.PackRsp<Struct.V12.LCThostFtdcSettlementInfoField>(ref field, EnumSeqType.SeqQry, EnumTransactionID.T_RSP_SMI, response.RequestID, conn.NextSeqId,response.IsLast);
+                            byte[] data = Struct.V12.StructHelperV12.PackRsp<Struct.V12.LCThostFtdcSettlementInfoField>(ref field, EnumSeqType.SeqQry, EnumTransactionID.T_RSP_SMI, response.RequestID, conn.NextSeqQryId, response.IsLast);
                             int encPktLen = 0;
                             byte[] encData = Struct.V12.StructHelperV12.EncPkt(data, out encPktLen);
 
@@ -178,7 +187,7 @@ namespace CTPService
                             field.ConfirmTime = Util.ToDateTime(response.ConfirmDay, response.ConfirmTime).ToString("HH:mm:ss");
 
                             //打包数据 SeqType 为SeqQry 否则博弈会开在查询合约
-                            byte[] data = Struct.V12.StructHelperV12.PackRsp<Struct.V12.LCThostFtdcSettlementInfoConfirmField>(ref field, EnumSeqType.SeqQry, EnumTransactionID.T_RSP_CONFIRMSET, response.RequestID, conn.NextSeqId);
+                            byte[] data = Struct.V12.StructHelperV12.PackRsp<Struct.V12.LCThostFtdcSettlementInfoConfirmField>(ref field, EnumSeqType.SeqReq, EnumTransactionID.T_RSP_CONFIRMSET, response.RequestID, conn.NextSeqReqId);
                             int encPktLen = 0;
                             byte[] encData = Struct.V12.StructHelperV12.EncPkt(data, out encPktLen);
 
@@ -232,7 +241,7 @@ namespace CTPService
                             //field.CombinationType = TThostFtdcCombinationTypeType.Future;
                             //if (!response.IsLast) return;
                             //打包数据
-                            byte[] data = Struct.V12.StructHelperV12.PackRsp<Struct.V12.LCThostFtdcInstrumentField>(ref field, EnumSeqType.SeqQry, EnumTransactionID.T_RSP_INST, response.RequestID, conn.NextSeqId,response.IsLast);
+                            byte[] data = Struct.V12.StructHelperV12.PackRsp<Struct.V12.LCThostFtdcInstrumentField>(ref field, EnumSeqType.SeqQry, EnumTransactionID.T_RSP_INST, response.RequestID, conn.NextSeqQryId, response.IsLast);
                             int encPktLen = 0;
                             byte[] encData = Struct.V12.StructHelperV12.EncPkt(data, out encPktLen);
 
@@ -252,7 +261,7 @@ namespace CTPService
                             byte[] encData = null;
                             if (response.OrderToSend == null)
                             {
-                                byte[] data = Struct.V12.StructHelperV12.PackRsp(EnumSeqType.SeqQry, EnumTransactionID.T_RSP_QRYORD, response.RequestID, conn.NextSeqId, response.IsLast);
+                                byte[] data = Struct.V12.StructHelperV12.PackRsp(EnumSeqType.SeqQry, EnumTransactionID.T_RSP_QRYORD, response.RequestID, conn.NextSeqQryId, response.IsLast);
                                 encData = Struct.V12.StructHelperV12.EncPkt(data, out encPktLen);
                             }
                             else
@@ -265,7 +274,7 @@ namespace CTPService
                                 field.SessionID = response.OrderToSend.SessionIDi;
                                 field.ParticipantID = conn.State.BrokerID;
 
-                                byte[] data = Struct.V12.StructHelperV12.PackRsp(ref field,EnumSeqType.SeqQry, EnumTransactionID.T_RSP_QRYORD, response.RequestID, conn.NextSeqId, response.IsLast);
+                                byte[] data = Struct.V12.StructHelperV12.PackRsp(ref field, EnumSeqType.SeqQry, EnumTransactionID.T_RSP_QRYORD, response.RequestID, conn.NextSeqQryId, response.IsLast);
                                 encData = Struct.V12.StructHelperV12.EncPkt(data, out encPktLen);
                             }
 
@@ -282,7 +291,7 @@ namespace CTPService
                             byte[] encData = null;
                             if (response.TradeToSend == null)
                             {
-                                byte[] data = Struct.V12.StructHelperV12.PackRsp(EnumSeqType.SeqQry, EnumTransactionID.T_RSP_QRYTD, response.RequestID, conn.NextSeqId, response.IsLast);
+                                byte[] data = Struct.V12.StructHelperV12.PackRsp(EnumSeqType.SeqQry, EnumTransactionID.T_RSP_QRYTD, response.RequestID, conn.NextSeqQryId, response.IsLast);
                                 encData = Struct.V12.StructHelperV12.EncPkt(data, out encPktLen);
                             }
                             else
@@ -294,7 +303,7 @@ namespace CTPService
                                 field.ClearingPartID = conn.State.BrokerID;
                                 field.ParticipantID = conn.State.BrokerID;
 
-                                byte[] data = Struct.V12.StructHelperV12.PackRsp(ref field,EnumSeqType.SeqQry, EnumTransactionID.T_RSP_QRYTD, response.RequestID, conn.NextSeqId, response.IsLast);
+                                byte[] data = Struct.V12.StructHelperV12.PackRsp(ref field, EnumSeqType.SeqQry, EnumTransactionID.T_RSP_QRYTD, response.RequestID, conn.NextSeqQryId, response.IsLast);
                                 encData = Struct.V12.StructHelperV12.EncPkt(data, out encPktLen);
                             }
 
@@ -310,7 +319,7 @@ namespace CTPService
                             byte[] encData = null;
                             if (response.PositionToSend == null)
                             {
-                                byte[] data = Struct.V12.StructHelperV12.PackRsp(EnumSeqType.SeqQry, EnumTransactionID.T_RSP_INVPOS, response.RequestID, conn.NextSeqId, response.IsLast);
+                                byte[] data = Struct.V12.StructHelperV12.PackRsp(EnumSeqType.SeqQry, EnumTransactionID.T_RSP_INVPOS, response.RequestID, conn.NextSeqQryId, response.IsLast);
                                 encData = Struct.V12.StructHelperV12.EncPkt(data, out encPktLen);
                             }
                             else
@@ -318,9 +327,9 @@ namespace CTPService
                                 Struct.V12.LCThostFtdcInvestorPositionField field = new Struct.V12.LCThostFtdcInvestorPositionField();
                                 CTPConvert.ConvPosition(response.PositionToSend, ref field);
                                 field.BrokerID = conn.State.BrokerID;
-                               
 
-                                byte[] data = Struct.V12.StructHelperV12.PackRsp(ref field,EnumSeqType.SeqQry, EnumTransactionID.T_RSP_INVPOS, response.RequestID, conn.NextSeqId, response.IsLast);
+
+                                byte[] data = Struct.V12.StructHelperV12.PackRsp(ref field, EnumSeqType.SeqQry, EnumTransactionID.T_RSP_INVPOS, response.RequestID, conn.NextSeqQryId, response.IsLast);
                                 encData = Struct.V12.StructHelperV12.EncPkt(data, out encPktLen);
                             }
 
@@ -354,7 +363,7 @@ namespace CTPService
                             field.TradingDay = "";
 
                             //打包数据
-                            byte[] data = Struct.V12.StructHelperV12.PackRsp<Struct.V12.LCThostFtdcTradingAccountField>(ref field, EnumSeqType.SeqQry, EnumTransactionID.T_RSP_TDACC, response.RequestID, conn.NextSeqId);
+                            byte[] data = Struct.V12.StructHelperV12.PackRsp<Struct.V12.LCThostFtdcTradingAccountField>(ref field, EnumSeqType.SeqQry, EnumTransactionID.T_RSP_TDACC, response.RequestID, conn.NextSeqQryId);
                             int encPktLen = 0;
                             byte[] encData = Struct.V12.StructHelperV12.EncPkt(data, out encPktLen);
 
@@ -374,7 +383,7 @@ namespace CTPService
                             field.BankName = response.BankName;
 
                             //打包数据
-                            byte[] data = Struct.V12.StructHelperV12.PackRsp<Struct.V12.LCThostFtdcContractBankField>(ref field, EnumSeqType.SeqQry, EnumTransactionID.T_RSP_CONTBK, response.RequestID, conn.NextSeqId, response.IsLast);
+                            byte[] data = Struct.V12.StructHelperV12.PackRsp<Struct.V12.LCThostFtdcContractBankField>(ref field, EnumSeqType.SeqQry, EnumTransactionID.T_RSP_CONTBK, response.RequestID, conn.NextSeqQryId, response.IsLast);
                             int encPktLen = 0;
                             byte[] encData = Struct.V12.StructHelperV12.EncPkt(data, out encPktLen);
 
@@ -411,7 +420,7 @@ namespace CTPService
                             field.BankAccType = TThostFtdcBankAccTypeType.SavingCard;
 
                             //打包数据
-                            byte[] data = Struct.V12.StructHelperV12.PackRsp<Struct.V12.LCThostFtdcAccountregisterField>(ref field, EnumSeqType.SeqQry, EnumTransactionID.T_RSP_ACCREG, response.RequestID, conn.NextSeqId, response.IsLast);
+                            byte[] data = Struct.V12.StructHelperV12.PackRsp<Struct.V12.LCThostFtdcAccountregisterField>(ref field, EnumSeqType.SeqQry, EnumTransactionID.T_RSP_ACCREG, response.RequestID, conn.NextSeqQryId, response.IsLast);
                             int encPktLen = 0;
                             byte[] encData = Struct.V12.StructHelperV12.EncPkt(data, out encPktLen);
 
@@ -437,7 +446,7 @@ namespace CTPService
                             rsp.ErrorMsg = "正确";
 
                             //打包数据
-                            byte[] data = Struct.V12.StructHelperV12.PackRsp<Struct.V12.LCThostFtdcQueryMaxOrderVolumeField>(ref rsp,ref field, EnumSeqType.SeqQry, EnumTransactionID.T_RSP_MAXORDVOL, response.RequestID, conn.NextSeqId, response.IsLast);
+                            byte[] data = Struct.V12.StructHelperV12.PackRsp<Struct.V12.LCThostFtdcQueryMaxOrderVolumeField>(ref rsp, ref field, EnumSeqType.SeqQry, EnumTransactionID.T_RSP_MAXORDVOL, response.RequestID, conn.NextSeqQryId, response.IsLast);
                             int encPktLen = 0;
                             byte[] encData = Struct.V12.StructHelperV12.EncPkt(data, out encPktLen);
 
@@ -479,6 +488,54 @@ namespace CTPService
                         //委托异常通知
                     case MessageTypes.ERRORORDERNOTIFY:
                         {
+                            ErrorOrderNotify notify = packet as ErrorOrderNotify;
+                            Struct.V12.LCThostFtdcInputOrderField field = new Struct.V12.LCThostFtdcInputOrderField();
+
+                            field.BrokerID = conn.State.BrokerID;
+                            field.BusinessUnit = "";
+                            field.CombHedgeFlag_0 = TThostFtdcHedgeFlagType.Speculation;
+                            field.CombOffsetFlag_0 = TThostFtdcOffsetFlagType.Open;
+                            field.Direction =  notify.Order.Side?TThostFtdcDirectionType.Buy:TThostFtdcDirectionType.Sell;
+                            field.ContingentCondition = TThostFtdcContingentConditionType.Immediately;
+                            field.UserForceClose = 0;
+                            field.ForceCloseReason = TThostFtdcForceCloseReasonType.NotForceClose;
+
+                            field.InstrumentID = notify.Order.Symbol;
+                            field.InvestorID = notify.Order.Symbol;
+                            field.UserID = conn.State.LoginID;
+                            field.OrderRef = notify.Order.OrderRef;
+                            field.IsAutoSuspend = 0;
+                            field.MinVolume = 0;
+                            field.OrderPriceType = notify.Order.isLimit? TThostFtdcOrderPriceTypeType.LimitPrice: TThostFtdcOrderPriceTypeType.AnyPrice;
+                            field.LimitPrice = (double)notify.Order.LimitPrice;
+                            field.StopPrice = (double)notify.Order.StopPrice;
+                            field.VolumeTotalOriginal = Math.Abs(notify.Order.TotalSize);
+                            field.RequestID = notify.Order.RequestID;
+
+                            Struct.V12.LCThostFtdcRspInfoField rsp = new Struct.V12.LCThostFtdcRspInfoField();
+                            rsp.ErrorID = notify.RspInfo.ErrorID;
+                            rsp.ErrorMsg = string.Format("CTP:{0}", notify.RspInfo.ErrorMessage);
+
+                            if (notify.RspInfo.ErrorID == 0)
+                            {
+                                conn.State.Authorized = true;
+                            }
+
+                            //打包数据
+                            byte[] data = Struct.V12.StructHelperV12.PackRsp<Struct.V12.LCThostFtdcInputOrderField>(ref rsp, ref field, EnumSeqType.SeqReq, EnumTransactionID.T_RSP_ORDINSERT, notify.Order.RequestID,conn.NextSeqReqId);
+
+                            int encPktLen = 0;
+                            byte[] encData = Struct.V12.StructHelperV12.EncPkt(data, out encPktLen);
+
+                            //hex = "0200008501030c4ce43001e502e1f5e301e355e4d5fdc8b7efefefefefe21003e1983230313631323031e131323a32303a3337e13838383838e638353632303030383032e654726164696e67486f7374696e67efef04a515665831ec31323a32303a3337e131323a32303a3338e131323a32303a3338e131323a32303a3337e12d2d3a2d2d3a2d2de1";
+                            //encData = ByteUtil.HexToByte(hex);
+                            //encPktLen = encData.Length;
+
+                            //发送数据
+                            conn.Send(encData, encPktLen);
+                            logger.Info(string.Format("LogicSrv Reply Session:{0} -> ErrorOrderNotify", conn.SessionID));
+
+
 
                             break;
                         }
