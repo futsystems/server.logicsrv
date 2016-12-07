@@ -57,6 +57,7 @@
   </ItemGroup>
   <ItemGroup>
     <BuildFilesExecute Include="Platform\TradingSrv\LogicSrv.exe" />
+	<BuildFilesExecute Include="Platform\TradingSrv\FrontSrv.exe" />
   </ItemGroup>
   <ItemGroup>
     <ConfigFiles Include="Platform\TradingSrv\config\*" />
@@ -117,6 +118,7 @@
 
 	<Target Name="ExServer" DependsOnTargets="Base">
 		<MSBuild Projects="Program\TradingSrv\TradingSrv.csproj" Properties="Configuration=$(Configuration);" />
+		<MSBuild Projects="Program\FrontServer\FrontServer.csproj" Properties="Configuration=$(Configuration);" />
 	</Target>
 	
 

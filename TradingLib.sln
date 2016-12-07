@@ -165,7 +165,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "old", "old", "{EABC5D42-262
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WSServiceHost", "TL_DataFarm\WSServiceHost\WSServiceHost.csproj", "{362F7730-7694-47D1-A428-732B50497616}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FrontServer", "TL_Front\FrontServer\FrontServer.csproj", "{9ED95542-483E-4D46-82CB-83D94D20A93C}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FrontServer", "Program\FrontServer\FrontServer.csproj", "{9ED95542-483E-4D46-82CB-83D94D20A93C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
