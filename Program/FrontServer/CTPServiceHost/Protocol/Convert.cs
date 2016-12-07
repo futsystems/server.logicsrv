@@ -9,6 +9,13 @@ namespace CTPService
 {
     public class  CTPConvert
     {
+        public static string ConvUTF82GB2312(string text)
+        {
+            byte[] bs = Encoding.GetEncoding("UTF-8").GetBytes(text);
+            bs = Encoding.Convert(Encoding.GetEncoding("UTF-8"), Encoding.GetEncoding("GB2312"), bs);
+            return Encoding.GetEncoding("GB2312").GetString(bs);
+        }  
+
         public static QSEnumOffsetFlag ConvOffsetFlag(TThostFtdcOffsetFlagType offset)
         {
             switch (offset)
