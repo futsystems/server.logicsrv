@@ -35,6 +35,10 @@ namespace FrontServer
             if (_srvgo) return;
             _srvgo = true;
             logger.Info("Start MQServer");
+            ConfigFile _configFile = ConfigFile.GetConfigFile("frontsrv.cfg");
+            _logicPort = _configFile["LogicPort"].AsInt();
+            _logicServer = _configFile["LogicServer"].AsString();
+
             mainThread = new Thread(MessageProcess);
             mainThread.IsBackground = true;
             mainThread.Start();

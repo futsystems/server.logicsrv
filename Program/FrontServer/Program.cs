@@ -13,11 +13,13 @@ namespace FrontServer
 {
     class Program
     {
-
+        const string PROGRAME = "FrontSrv";
+        static ILog logger = LogManager.GetLogger(PROGRAME);
         static void Main(string[] args)
         {
-            ILog logger = LogManager.GetLogger("Main");
-
+            
+            AppDomain.CurrentDomain.UnhandledException += new UnhandledExceptionEventHandler(CurrentDomain_UnhandledException);
+            #region 调试
             //logger.Info((char)TThostFtdcOffsetFlagType.CloseToday);
             //return;
             if (false)
@@ -171,6 +173,7 @@ namespace FrontServer
                 logger.Info("Row            OK:" + (rawhex == localrawhex).ToString());
                 return;
             }
+            #endregion
 
             //创建MQServer
             MQServer mqServer = new MQServer();
@@ -185,6 +188,12 @@ namespace FrontServer
             watchDog.Join();
 
             
+        }
+
+        static void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)
+        {
+            Exception ex = (Exception)e.ExceptionObject;
+            logger.Error("UnhandledException:" + ex.ToString());
         }
     }
 }
