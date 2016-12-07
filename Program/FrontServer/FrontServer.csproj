@@ -82,6 +82,7 @@
   <ItemGroup>
     <Compile Include="API\IServiceHost.cs" />
     <Compile Include="Common\ByteUtil.cs" />
+    <Compile Include="CTPServiceHost\Protocol\CNStringMarshaler.cs" />
     <Compile Include="CTPServiceHost\Protocol\Constanst.cs" />
     <Compile Include="CTPServiceHost\Protocol\Convert.cs" />
     <Compile Include="CTPServiceHost\Protocol\EnumChainType.cs" />

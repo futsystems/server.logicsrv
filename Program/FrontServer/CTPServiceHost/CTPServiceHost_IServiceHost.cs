@@ -14,6 +14,9 @@ namespace CTPService
     {
         /// <summary>
         /// 将逻辑服务端的消息进行处理 转换成ServiceHost支持协议内容
+        /// 问题
+        /// 1.Windows Encoding.Default 在中文Win7中采用的是GB2312 这样结构体string字段打包过程中会通过该编码进行序列化
+        /// 2.Linux系统根据设置的不同 默认Mono会采用UTF-8作为编码 为了FrontSrv也采用GB2312 需要生成对应的Locale并应用到当前环境
         /// </summary>
         /// <param name="packet"></param>
         /// <returns></returns>
@@ -145,12 +148,17 @@ namespace CTPService
                             RspQryNoticeResponse response = packet as RspQryNoticeResponse;
                             Struct.V12.LCThostFtdcNoticeField field = new Struct.V12.LCThostFtdcNoticeField();
                             field.BrokerID = conn.State.BrokerID;
-                            field.Content = "测试";// CTPConvert.ConvUTF82GB2312(response.NoticeContent);
-
+                            field.Content = response.NoticeContent;// "测试";//Encoding.UTF8.GetBytes("测试");//"测试"; CTPConvert.ConvUTF82GB2312(response.NoticeContent);
+                            //logger.Info(ByteUtil.ByteToHex(Encoding.Default.GetBytes(field.Content)));
+                            //logger.Info(string.Format("Encoding:{0}", Encoding.Default));
                             //打包数据
                             byte[] data = Struct.V12.StructHelperV12.PackRsp<Struct.V12.LCThostFtdcNoticeField>(ref field, EnumSeqType.SeqQry, EnumTransactionID.T_RSP_NOTICE, response.RequestID, conn.NextSeqQryId);
+
+                            //logger.Info(ByteUtil.ByteToHex(data));
                             int encPktLen = 0;
                             byte[] encData = Struct.V12.StructHelperV12.EncPkt(data, out encPktLen);
+
+                            //logger.Info(ByteUtil.ByteToHex(encData, ' ', encPktLen));
 
                             conn.Send(encData, encPktLen);
                             if (response.IsLast) logger.Info(string.Format("LogicSrv Reply Session:{0} -> RspQryNoticeResponse", conn.SessionID));

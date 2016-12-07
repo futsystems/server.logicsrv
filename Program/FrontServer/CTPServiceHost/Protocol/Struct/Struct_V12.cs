@@ -1012,7 +1012,7 @@ namespace CTPService.Struct.V12
             return ret;
         }
     }
-    [StructLayout(LayoutKind.Sequential, Pack = 1)]
+    [StructLayout(LayoutKind.Sequential,Pack = 1)]
     public struct LCThostFtdcNoticeField : IFieldId
     {
         /// <summary>
@@ -1023,6 +1023,9 @@ namespace CTPService.Struct.V12
         /// <summary>
         /// 消息正文
         /// </summary>
+        //[MarshalAs(UnmanagedType.ByValTStr, MarshalTypeRef = typeof(CTPService.CNStringMarshaler),SizeConst = 501)]
+        //public fixed byte Content[501];
+        //[MarshalAs(UnmanagedType.CustomMarshaler,MarshalTypeRef = typeof(CTPService.CNStringMarshaler))]
         [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 501)]
         public string Content;
         /// <summary>
