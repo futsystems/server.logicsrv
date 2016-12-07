@@ -39,7 +39,7 @@ namespace CTPService
         void InitServer()
         {
             ctpSocketServer = new TLServerBase();
-            ConfigFile _configFile = ConfigFile.GetConfigFile("frontsrv.cfg");
+            ConfigFile _configFile = ConfigFile.GetConfigFile("frontsrv_srv.cfg");
             _port = _configFile["CTPExPort"].AsInt();
 
             SuperSocket.SocketBase.Config.ServerConfig cfg = new SuperSocket.SocketBase.Config.ServerConfig();
