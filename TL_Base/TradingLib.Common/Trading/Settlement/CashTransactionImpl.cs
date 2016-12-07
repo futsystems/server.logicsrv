@@ -24,7 +24,6 @@ namespace TradingLib.Common
         /// </summary>
         public QSEnumCashOperation TxnType { get; set; }
 
-
         /// <summary>
         /// 资金类别
         /// </summary>
@@ -55,11 +54,15 @@ namespace TradingLib.Common
         /// </summary>
         public long DateTime { get; set; }
 
-
         /// <summary>
         /// 操作者
         /// </summary>
         public string Operator { get; set; }
+
+        /// <summary>
+        /// 银行账户
+        /// </summary>
+        public string BankAccount { get; set; }
 
         public static string Serialize(CashTransaction c)
         {
@@ -86,6 +89,8 @@ namespace TradingLib.Common
             sb.Append(c.Operator);
             sb.Append(d);
             sb.Append(c.TxnID);
+            sb.Append(d);
+            sb.Append(c.BankAccount);
             return sb.ToString();
         }
 
@@ -104,6 +109,7 @@ namespace TradingLib.Common
             s.DateTime = long.Parse(rec[8]);
             s.Operator = rec[9];
             s.TxnID = rec[10];
+            s.BankAccount = rec[11];
             return s;
         
         }

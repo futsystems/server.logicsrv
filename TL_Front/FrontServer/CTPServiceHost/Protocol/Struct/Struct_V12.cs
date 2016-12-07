@@ -6370,5 +6370,423 @@ namespace CTPService.Struct.V12
 
     #endregion
 
+    #region 查询持仓明细
+        /// <summary>
+        /// 查询投资者持仓明细
+        /// </summary>
+        [StructLayout(LayoutKind.Sequential)]
+        public struct CThostFtdcQryInvestorPositionDetailField : ITFieldId
+        {
+            /// <summary>
+            /// 经纪公司代码
+            /// </summary>
+            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 11)]
+            public string BrokerID;
+            /// <summary>
+            /// 投资者代码
+            /// </summary>
+            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 13)]
+            public string InvestorID;
+            /// <summary>
+            /// 合约代码
+            /// </summary>
+            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 31)]
+            public string InstrumentID;
+
+            public ushort FieldId
+            {
+                get { return 9296; }
+            }
+
+            public void Swap()
+            { }
+
+            public static implicit operator CThostFtdcQryInvestorPositionDetailField(LCThostFtdcQryInvestorPositionDetailField input)
+            {
+                CThostFtdcQryInvestorPositionDetailField ret = new CThostFtdcQryInvestorPositionDetailField();
+                ret.BrokerID = input.BrokerID;
+                ret.InvestorID = input.InvestorID;
+                ret.InstrumentID = input.InstrumentID;
+
+                return ret;
+            }
+        }
+        /// <summary>
+        /// 查询投资者持仓明细
+        /// </summary>
+        [StructLayout(LayoutKind.Sequential, Pack = 1)]
+        public struct LCThostFtdcQryInvestorPositionDetailField : IFieldId
+        {
+            /// <summary>
+            /// 经纪公司代码
+            /// </summary>
+            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 11)]
+            public string BrokerID;
+            /// <summary>
+            /// 投资者代码
+            /// </summary>
+            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 13)]
+            public string InvestorID;
+            /// <summary>
+            /// 合约代码
+            /// </summary>
+            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 31)]
+            public string InstrumentID;
+
+            public ushort FieldId
+            {
+                get { return 9296; }
+            }
+
+            public void Swap()
+            { }
+
+            public static implicit operator LCThostFtdcQryInvestorPositionDetailField(CThostFtdcQryInvestorPositionDetailField input)
+            {
+                LCThostFtdcQryInvestorPositionDetailField ret = new LCThostFtdcQryInvestorPositionDetailField();
+                ret.BrokerID = input.BrokerID;
+                ret.InvestorID = input.InvestorID;
+                ret.InstrumentID = input.InstrumentID;
+
+                return ret;
+            }
+        }
+
+
+        /// <summary>
+        /// 投资者持仓明细
+        /// </summary>
+        [StructLayout(LayoutKind.Sequential)]
+        public struct CThostFtdcInvestorPositionDetailField : ITFieldId
+        {
+            /// <summary>
+            /// 合约代码
+            /// </summary>
+            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 31)]
+            public string InstrumentID;
+            /// <summary>
+            /// 经纪公司代码
+            /// </summary>
+            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 11)]
+            public string BrokerID;
+            /// <summary>
+            /// 投资者代码
+            /// </summary>
+            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 13)]
+            public string InvestorID;
+            /// <summary>
+            /// 投机套保标志
+            /// </summary>
+            public TThostFtdcHedgeFlagType HedgeFlag;
+            /// <summary>
+            /// 买卖
+            /// </summary>
+            public TThostFtdcDirectionType Direction;
+            /// <summary>
+            /// 开仓日期
+            /// </summary>
+            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 9)]
+            public string OpenDate;
+            /// <summary>
+            /// 成交编号
+            /// </summary>
+            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 21)]
+            public string TradeID;
+            /// <summary>
+            /// 数量
+            /// </summary>
+            public int Volume;
+            /// <summary>
+            /// 开仓价
+            /// </summary>
+            public double OpenPrice;
+            /// <summary>
+            /// 交易日
+            /// </summary>
+            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 9)]
+            public string TradingDay;
+            /// <summary>
+            /// 结算编号
+            /// </summary>
+            public int SettlementID;
+            /// <summary>
+            /// 成交类型
+            /// </summary>
+            public TThostFtdcTradeTypeType TradeType;
+            /// <summary>
+            /// 组合合约代码
+            /// </summary>
+            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 31)]
+            public string CombInstrumentID;
+            /// <summary>
+            /// 交易所代码
+            /// </summary>
+            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 9)]
+            public string ExchangeID;
+            /// <summary>
+            /// 逐日盯市平仓盈亏
+            /// </summary>
+            public double CloseProfitByDate;
+            /// <summary>
+            /// 逐笔对冲平仓盈亏
+            /// </summary>
+            public double CloseProfitByTrade;
+            /// <summary>
+            /// 逐日盯市持仓盈亏
+            /// </summary>
+            public double PositionProfitByDate;
+            /// <summary>
+            /// 逐笔对冲持仓盈亏
+            /// </summary>
+            public double PositionProfitByTrade;
+            /// <summary>
+            /// 投资者保证金
+            /// </summary>
+            public double Margin;
+            /// <summary>
+            /// 交易所保证金
+            /// </summary>
+            public double ExchMargin;
+            /// <summary>
+            /// 保证金率
+            /// </summary>
+            public double MarginRateByMoney;
+            /// <summary>
+            /// 保证金率(按手数)
+            /// </summary>
+            public double MarginRateByVolume;
+            /// <summary>
+            /// 昨结算价
+            /// </summary>
+            public double LastSettlementPrice;
+            /// <summary>
+            /// 结算价
+            /// </summary>
+            public double SettlementPrice;
+            /// <summary>
+            /// 平仓量
+            /// </summary>
+            public int CloseVolume;
+            /// <summary>
+            /// 平仓金额
+            /// </summary>
+            public double CloseAmount;
+
+            public ushort FieldId
+            {
+                get { return 9297; }
+            }
+
+            public void Swap()
+            { }
+
+            public static implicit operator CThostFtdcInvestorPositionDetailField(LCThostFtdcInvestorPositionDetailField input)
+            {
+                CThostFtdcInvestorPositionDetailField ret = new CThostFtdcInvestorPositionDetailField();
+                ret.InstrumentID = input.InstrumentID;
+                ret.BrokerID = input.BrokerID;
+                ret.InvestorID = input.InvestorID;
+                ret.HedgeFlag = input.HedgeFlag;
+                ret.Direction = input.Direction;
+                ret.OpenDate = input.OpenDate;
+                ret.TradeID = input.TradeID;
+                ret.Volume = input.Volume;
+                ret.OpenPrice = input.OpenPrice;
+                ret.TradingDay = input.TradingDay;
+                ret.SettlementID = input.SettlementID;
+                ret.TradeType = input.TradeType;
+                ret.CombInstrumentID = input.CombInstrumentID;
+                ret.ExchangeID = input.ExchangeID;
+                ret.CloseProfitByDate = input.CloseProfitByDate;
+                ret.CloseProfitByTrade = input.CloseProfitByTrade;
+                ret.PositionProfitByDate = input.PositionProfitByDate;
+                ret.PositionProfitByTrade = input.PositionProfitByTrade;
+                ret.Margin = input.Margin;
+                ret.ExchMargin = input.ExchMargin;
+                ret.MarginRateByMoney = input.MarginRateByMoney;
+                ret.MarginRateByVolume = input.MarginRateByVolume;
+                ret.LastSettlementPrice = input.LastSettlementPrice;
+                ret.SettlementPrice = input.SettlementPrice;
+                ret.CloseVolume = input.CloseVolume;
+                ret.CloseAmount = input.CloseAmount;
+
+                return ret;
+            }
+        }
+        [StructLayout(LayoutKind.Sequential, Pack = 1)]
+        public struct LCThostFtdcInvestorPositionDetailField : IFieldId
+        {
+            /// <summary>
+            /// 合约代码
+            /// </summary>
+            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 31)]
+            public string InstrumentID;
+            /// <summary>
+            /// 经纪公司代码
+            /// </summary>
+            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 11)]
+            public string BrokerID;
+            /// <summary>
+            /// 投资者代码
+            /// </summary>
+            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 13)]
+            public string InvestorID;
+            /// <summary>
+            /// 投机套保标志
+            /// </summary>
+            public TThostFtdcHedgeFlagType HedgeFlag;
+            /// <summary>
+            /// 买卖
+            /// </summary>
+            public TThostFtdcDirectionType Direction;
+            /// <summary>
+            /// 开仓日期
+            /// </summary>
+            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 9)]
+            public string OpenDate;
+            /// <summary>
+            /// 成交编号
+            /// </summary>
+            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 21)]
+            public string TradeID;
+            /// <summary>
+            /// 数量
+            /// </summary>
+            public int Volume;
+            /// <summary>
+            /// 开仓价
+            /// </summary>
+            public double OpenPrice;
+            /// <summary>
+            /// 交易日
+            /// </summary>
+            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 9)]
+            public string TradingDay;
+            /// <summary>
+            /// 结算编号
+            /// </summary>
+            public int SettlementID;
+            /// <summary>
+            /// 成交类型
+            /// </summary>
+            public TThostFtdcTradeTypeType TradeType;
+            /// <summary>
+            /// 组合合约代码
+            /// </summary>
+            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 31)]
+            public string CombInstrumentID;
+            /// <summary>
+            /// 交易所代码
+            /// </summary>
+            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 9)]
+            public string ExchangeID;
+            /// <summary>
+            /// 逐日盯市平仓盈亏
+            /// </summary>
+            public double CloseProfitByDate;
+            /// <summary>
+            /// 逐笔对冲平仓盈亏
+            /// </summary>
+            public double CloseProfitByTrade;
+            /// <summary>
+            /// 逐日盯市持仓盈亏
+            /// </summary>
+            public double PositionProfitByDate;
+            /// <summary>
+            /// 逐笔对冲持仓盈亏
+            /// </summary>
+            public double PositionProfitByTrade;
+            /// <summary>
+            /// 投资者保证金
+            /// </summary>
+            public double Margin;
+            /// <summary>
+            /// 交易所保证金
+            /// </summary>
+            public double ExchMargin;
+            /// <summary>
+            /// 保证金率
+            /// </summary>
+            public double MarginRateByMoney;
+            /// <summary>
+            /// 保证金率(按手数)
+            /// </summary>
+            public double MarginRateByVolume;
+            /// <summary>
+            /// 昨结算价
+            /// </summary>
+            public double LastSettlementPrice;
+            /// <summary>
+            /// 结算价
+            /// </summary>
+            public double SettlementPrice;
+            /// <summary>
+            /// 平仓量
+            /// </summary>
+            public int CloseVolume;
+            /// <summary>
+            /// 平仓金额
+            /// </summary>
+            public double CloseAmount;
+
+            public ushort FieldId
+            {
+                get { return 9297; }
+            }
+
+            public void Swap()
+            {
+                Volume = ByteSwapHelp.ReverseBytes(Volume);
+                OpenPrice = ByteSwapHelp.ReverseBytes(OpenPrice);
+                SettlementID = ByteSwapHelp.ReverseBytes(SettlementID);
+                CloseProfitByDate = ByteSwapHelp.ReverseBytes(CloseProfitByDate);
+                CloseProfitByTrade = ByteSwapHelp.ReverseBytes(CloseProfitByTrade);
+                PositionProfitByDate = ByteSwapHelp.ReverseBytes(PositionProfitByDate);
+                PositionProfitByTrade = ByteSwapHelp.ReverseBytes(PositionProfitByTrade);
+                Margin = ByteSwapHelp.ReverseBytes(Margin);
+                ExchMargin = ByteSwapHelp.ReverseBytes(ExchMargin);
+                MarginRateByMoney = ByteSwapHelp.ReverseBytes(MarginRateByMoney);
+                MarginRateByVolume = ByteSwapHelp.ReverseBytes(MarginRateByVolume);
+                LastSettlementPrice = ByteSwapHelp.ReverseBytes(LastSettlementPrice);
+                SettlementPrice = ByteSwapHelp.ReverseBytes(SettlementPrice);
+                CloseVolume = ByteSwapHelp.ReverseBytes(CloseVolume);
+                CloseAmount = ByteSwapHelp.ReverseBytes(CloseAmount);
+            }
+
+            public static implicit operator LCThostFtdcInvestorPositionDetailField(CThostFtdcInvestorPositionDetailField input)
+            {
+                LCThostFtdcInvestorPositionDetailField ret = new LCThostFtdcInvestorPositionDetailField();
+                ret.InstrumentID = input.InstrumentID;
+                ret.BrokerID = input.BrokerID;
+                ret.InvestorID = input.InvestorID;
+                ret.HedgeFlag = input.HedgeFlag;
+                ret.Direction = input.Direction;
+                ret.OpenDate = input.OpenDate;
+                ret.TradeID = input.TradeID;
+                ret.Volume = input.Volume;
+                ret.OpenPrice = input.OpenPrice;
+                ret.TradingDay = input.TradingDay;
+                ret.SettlementID = input.SettlementID;
+                ret.TradeType = input.TradeType;
+                ret.CombInstrumentID = input.CombInstrumentID;
+                ret.ExchangeID = input.ExchangeID;
+                ret.CloseProfitByDate = input.CloseProfitByDate;
+                ret.CloseProfitByTrade = input.CloseProfitByTrade;
+                ret.PositionProfitByDate = input.PositionProfitByDate;
+                ret.PositionProfitByTrade = input.PositionProfitByTrade;
+                ret.Margin = input.Margin;
+                ret.ExchMargin = input.ExchMargin;
+                ret.MarginRateByMoney = input.MarginRateByMoney;
+                ret.MarginRateByVolume = input.MarginRateByVolume;
+                ret.LastSettlementPrice = input.LastSettlementPrice;
+                ret.SettlementPrice = input.SettlementPrice;
+                ret.CloseVolume = input.CloseVolume;
+                ret.CloseAmount = input.CloseAmount;
+
+                return ret;
+            }
+        }
+    #endregion
+
 
 }

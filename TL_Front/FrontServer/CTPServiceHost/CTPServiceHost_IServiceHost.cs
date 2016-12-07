@@ -590,35 +590,102 @@ namespace CTPService
                     case MessageTypes.TRANSFERSERIALRESPONSE:
                         {
                             RspQryTransferSerialResponse response = packet as RspQryTransferSerialResponse;
-                            Struct.V12.LCThostFtdcTransferSerialField field = new Struct.V12.LCThostFtdcTransferSerialField();
-
-                            DateTime dt = Util.ToDateTime(response.Date, response.Time);
-                            field.TradeDate = response.Date.ToString();
-                            field.TradeTime = dt.ToString("HH:mm:ss");
-                            field.InvestorID = conn.State.LoginID;
-                            field.AccountID = conn.State.LoginID;
-                            field.BankAccount = response.BankAccount;
-                            field.TradeAmount = (double)response.Amount;
-                            field.CurrencyID = "CNY";
-                            field.AvailabilityFlag = TThostFtdcAvailabilityFlagType.Valid;
-                            field.BankAccType = TThostFtdcBankAccTypeType.SavingCard;
-                            field.BankSerial = response.TransRef;
-                            field.FutureSerial = 0;
-                            field.ErrorID = 0;
-                            field.ErrorMsg = "交易成功";
-                            field.TradeCode = "202001";//根据此编号区别银行到期货 还是期货到银行
-
-
-
-                            //打包数据
-                            byte[] data = Struct.V12.StructHelperV12.PackRsp<Struct.V12.LCThostFtdcTransferSerialField>(ref field, EnumSeqType.SeqQry, EnumTransactionID.T_RSP_TFSN, response.RequestID, conn.NextSeqQryId);
-
+                            byte[] encData = null;
                             int encPktLen = 0;
-                            byte[] encData = Struct.V12.StructHelperV12.EncPkt(data, out encPktLen);
 
+                            if (response.CashTransaction == null)
+                            {
+                                byte[] data = Struct.V12.StructHelperV12.PackRsp(EnumSeqType.SeqQry, EnumTransactionID.T_RSP_TFSN, response.RequestID, conn.NextSeqQryId, response.IsLast);
+                                encData = Struct.V12.StructHelperV12.EncPkt(data, out encPktLen);
+                            }
+                            else
+                            {
+                                Struct.V12.LCThostFtdcTransferSerialField field = new Struct.V12.LCThostFtdcTransferSerialField();
+
+                                DateTime dt = Util.ToDateTime(response.CashTransaction.DateTime);
+                                field.TradeDate = Util.ToTLDate(dt).ToString();
+                                field.TradeTime = dt.ToString("HH:mm:ss");
+                                field.InvestorID = conn.State.LoginID;
+                                field.AccountID = conn.State.LoginID;
+                                field.BankAccount = response.CashTransaction.BankAccount;
+                                field.TradeAmount = (double)response.CashTransaction.Amount;
+                                field.CurrencyID = "CNY";
+                                field.AvailabilityFlag = TThostFtdcAvailabilityFlagType.Valid;
+                                field.BankAccType = TThostFtdcBankAccTypeType.SavingCard;
+                                field.BankSerial = response.CashTransaction.TxnRef;
+                                field.FutureSerial = 0;
+                                field.ErrorID = 0;
+                                field.ErrorMsg = "交易成功";
+                                field.TradeCode = response.CashTransaction.TxnType == QSEnumCashOperation.Deposit ? "202001" : "202002";//根据此编号区别银行到期货 还是期货到银行
+
+
+
+                                //打包数据
+                                byte[] data = Struct.V12.StructHelperV12.PackRsp<Struct.V12.LCThostFtdcTransferSerialField>(ref field, EnumSeqType.SeqQry, EnumTransactionID.T_RSP_TFSN, response.RequestID, conn.NextSeqQryId, response.IsLast);
+
+                                encPktLen = 0;
+                                encData = Struct.V12.StructHelperV12.EncPkt(data, out encPktLen);
+                            }
                             conn.Send(encData, encPktLen);
                             logger.Info(string.Format("LogicSrv Reply Session:{0} -> RspQryTransferSerialResponse", conn.SessionID));
 
+                            break;
+                        }
+                        //查询持仓明细回报
+                    case MessageTypes.XPOSITIONDETAILRESPONSE:
+                        {
+                            RspXQryPositionDetailResponse response = packet as RspXQryPositionDetailResponse;
+
+                            byte[] encData = null;
+                            int encPktLen = 0;
+                            if (response.PositionDetail == null)
+                            {
+                                byte[] data = Struct.V12.StructHelperV12.PackRsp(EnumSeqType.SeqQry, EnumTransactionID.T_RSP_POSDETAIL, response.RequestID, conn.NextSeqQryId, response.IsLast);
+                                encData = Struct.V12.StructHelperV12.EncPkt(data, out encPktLen);
+                            }
+                            else
+                            {
+                                Struct.V12.LCThostFtdcInvestorPositionDetailField field = new Struct.V12.LCThostFtdcInvestorPositionDetailField();
+
+                                field.BrokerID = conn.State.BrokerID;
+                                field.InstrumentID = response.PositionDetail.Symbol;
+                                field.InvestorID = response.PositionDetail.Account;
+                                field.ExchangeID = response.PositionDetail.Exchange;
+                                field.TradeID = response.PositionDetail.TradeID;
+
+                                field.CloseAmount = (double)response.PositionDetail.CloseAmount;
+                                field.CloseVolume = response.PositionDetail.CloseVolume;
+                                field.Volume = response.PositionDetail.Volume;
+
+                                field.HedgeFlag = TThostFtdcHedgeFlagType.Speculation;
+                                field.Direction = response.PositionDetail.Side ? TThostFtdcDirectionType.Buy : TThostFtdcDirectionType.Sell;
+                                field.TradeType = TThostFtdcTradeTypeType.Common;
+
+                                field.LastSettlementPrice = (double)response.PositionDetail.LastSettlementPrice;
+                                field.SettlementPrice = (double)response.PositionDetail.SettlementPrice;
+                                field.ExchMargin = 0;
+                                field.Margin = (double)response.PositionDetail.Margin;
+                                field.MarginRateByMoney = 0;
+                                field.MarginRateByVolume = 0;
+                                field.OpenDate = response.PositionDetail.OpenDate.ToString();
+                                field.OpenPrice = (double)response.PositionDetail.OpenPrice;
+
+                                field.CloseProfitByDate = (double)response.PositionDetail.CloseProfitByDate;
+                                field.CloseProfitByTrade = (double)response.PositionDetail.CloseProfitByTrade;
+                                field.PositionProfitByDate = 0;
+                                field.PositionProfitByTrade = 0;
+
+                                field.SettlementID = 1;
+
+                                //field.TradingDay = 0;
+                                //打包数据
+                                byte[] data = Struct.V12.StructHelperV12.PackRsp<Struct.V12.LCThostFtdcInvestorPositionDetailField>(ref field, EnumSeqType.SeqQry, EnumTransactionID.T_RSP_POSDETAIL, response.RequestID, conn.NextSeqQryId, response.IsLast);
+
+                                encPktLen = 0;
+                                encData = Struct.V12.StructHelperV12.EncPkt(data, out encPktLen);
+                            }
+                            conn.Send(encData, encPktLen);
+                            logger.Info(string.Format("LogicSrv Reply Session:{0} -> RspXQryPositionDetailResponse", conn.SessionID));
                             break;
                         }
                     default:

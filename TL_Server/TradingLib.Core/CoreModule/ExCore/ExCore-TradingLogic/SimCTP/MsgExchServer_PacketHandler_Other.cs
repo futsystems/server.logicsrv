@@ -414,23 +414,16 @@ namespace TradingLib.Core
             //TODO:交易CTP接口查询出入金记录
             logger.Info("QryTransferSerialRequest:" + request.ToString());
             CashTransaction[] cts = ORM.MCashTransaction.SelectHistCashTransactions(account.ID, TLCtxHelper.ModuleSettleCentre.Tradingday, TLCtxHelper.ModuleSettleCentre.Tradingday).ToArray();
-            //IAccount account = TLCtxHelper.ModuleAccountManager[request.TradingAccount];
             int totalnum = cts.Length;
-            logger.Info("total transfer num:" + totalnum.ToString());
+            AccountProfile profile = BasicTracker.AccountProfileTracker[account.ID];
+            string bankacc = string.IsNullOrEmpty(profile.BankAC)?"":profile.BankAC;
             if (totalnum > 0)
             {
                 for (int i = 0; i < totalnum; i++)
                 {
                     RspQryTransferSerialResponse response = ResponseTemplate<RspQryTransferSerialResponse>.SrvSendRspResponse(request);
-                    CashTransaction t = cts[i];
-                    AccountProfile profile = BasicTracker.AccountProfileTracker[account.ID];
-
-                    response.Date = Util.ToTLDate(t.DateTime);
-                    response.Time = 0;// Util.ToTLTime(t.DateTime);
-                    response.TradingAccount = request.TradingAccount;
-                    response.BankAccount = profile.BankAC;
-                    response.Amount = t.Amount;
-                    response.TransRef = "";//t.TransRef;
+                    response.CashTransaction = cts[i];
+                    response.CashTransaction.BankAccount = bankacc;
                     CacheRspResponse(response, i == totalnum - 1);
                 }
             }

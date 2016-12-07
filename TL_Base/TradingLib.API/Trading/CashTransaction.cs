@@ -39,6 +39,11 @@ namespace TradingLib.API
         string TxnRef { get; set; }
 
         /// <summary>
+        /// 银行账户
+        /// </summary>
+        string BankAccount { get; set; }
+
+        /// <summary>
         /// 备注
         /// </summary>
         string Comment { get; set; }

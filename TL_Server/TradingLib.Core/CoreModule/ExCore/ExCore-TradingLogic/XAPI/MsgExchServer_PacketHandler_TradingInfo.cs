@@ -267,7 +267,7 @@ namespace TradingLib.Core
             List<PositionDetail> list = new List<PositionDetail>();
             foreach (Position p in account.Positions)
             {
-                foreach (PositionDetail pd in p.PositionDetailTotal)
+                foreach (PositionDetail pd in p.PositionDetailTotal.Where(tmp => tmp.Volume > 0))
                 {
                     list.Add(pd);
                 }

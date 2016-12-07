@@ -96,6 +96,7 @@ namespace CTPService
         T_REQ_RMPKACT = 0x4020,
         T_QRY_TRANSBK = 0x8048,
         T_QRY_POSDETAIL = 0x8050,
+        T_RSP_POSDETAIL = 0x8051,
         /// <summary>
         /// 32854 查询结算确认信息
         /// </summary>

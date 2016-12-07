@@ -606,6 +606,21 @@ namespace CTPService
 
                                 }
                                 break;
+                            }
+                            //请求查询投资者持仓明细 ReqQryInvestorPositionDetail
+                        case EnumTransactionID.T_QRY_POSDETAIL:
+                            {
+                                var data = requestInfo.FTDFields[0].FTDCData;
+                                if (data is Struct.V12.LCThostFtdcQryInvestorPositionDetailField)
+                                {
+                                    Struct.V12.LCThostFtdcQryInvestorPositionDetailField field = (Struct.V12.LCThostFtdcQryInvestorPositionDetailField)data;
+                                    
+                                    XQryPositionDetailRequest request = RequestTemplate<XQryPositionDetailRequest>.CliSendRequest((int)requestInfo.FTDHeader.dReqId);
+                                    
+                                    _mqServer.TLSend(session.SessionID, request);
+                                    logger.Info(string.Format("Session:{0} >> ReqQryInvestorPositionDetail", session.SessionID));
+
+                                }
                                 break;
                             }
                         default:

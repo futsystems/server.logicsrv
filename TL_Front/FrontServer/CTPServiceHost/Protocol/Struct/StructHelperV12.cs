@@ -129,6 +129,11 @@ namespace CTPService.Struct.V12
                     {
                         return ByteSwapHelp.BytesToStruct<LCThostFtdcQryTransferSerialField>(data, offset);
                     }
+                    //查询持仓明细
+                case EnumFiledID.F_QRY_POSDETAIL:
+                    {
+                        return ByteSwapHelp.BytesToStruct<LCThostFtdcQryInvestorPositionDetailField>(data, offset);
+                    }
                 default:
                     throw new Exception(string.Format("FieldID:{0} pkt not handled", fieldID));
             }
