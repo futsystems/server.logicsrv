@@ -247,6 +247,12 @@ namespace CTPService
             dest.VolumeTraded = Math.Abs(source.FilledSize);
 
         }
-        
+
+
+        public static void ConvRspInfo(RspInfo source, ref Struct.V12.LCThostFtdcRspInfoField dest)
+        {
+            dest.ErrorID = source.ErrorID;
+            dest.ErrorMsg = string.Format("CTP:{0}",source.ErrorMessage).ToByteArray(81,CTPEncoding);
+        }
     }
 }

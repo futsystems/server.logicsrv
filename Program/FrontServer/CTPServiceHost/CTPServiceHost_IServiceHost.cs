@@ -56,8 +56,8 @@ namespace CTPService
                             field.INETime = time;
 
                             Struct.V12.LCThostFtdcRspInfoField rsp = new Struct.V12.LCThostFtdcRspInfoField();
-                            rsp.ErrorID = response.RspInfo.ErrorID;
-                            rsp.ErrorMsg = string.Format("CTP:{0}", response.RspInfo.ErrorMessage);
+                            CTPConvert.ConvRspInfo(response.RspInfo, ref rsp);
+                           
 
                             if (response.RspInfo.ErrorID == 0)
                             {
@@ -389,7 +389,7 @@ namespace CTPService
                             field.BrokerID = "888888";
                             field.BankID = response.BankID;
                             field.BankBrchID = response.BankBrchID;
-                            field.BankName = response.BankName;
+                            field.BankName = response.BankName.ToByteArray(101,CTPConvert.CTPEncoding);
 
                             //打包数据
                             byte[] data = Struct.V12.StructHelperV12.PackRsp<Struct.V12.LCThostFtdcContractBankField>(ref field, EnumSeqType.SeqQry, EnumTransactionID.T_RSP_CONTBK, response.RequestID, conn.NextSeqQryId, response.IsLast);
@@ -452,7 +452,7 @@ namespace CTPService
 
                             Struct.V12.LCThostFtdcRspInfoField rsp = new Struct.V12.LCThostFtdcRspInfoField();
                             rsp.ErrorID = 0;
-                            rsp.ErrorMsg = "正确";
+                            rsp.ErrorMsg = "正确".ToByteArray(81,CTPConvert.CTPEncoding);
 
                             //打包数据
                             byte[] data = Struct.V12.StructHelperV12.PackRsp<Struct.V12.LCThostFtdcQueryMaxOrderVolumeField>(ref rsp, ref field, EnumSeqType.SeqQry, EnumTransactionID.T_RSP_MAXORDVOL, response.RequestID, conn.NextSeqQryId, response.IsLast);
@@ -522,8 +522,7 @@ namespace CTPService
                             field.RequestID = notify.Order.RequestID;
 
                             Struct.V12.LCThostFtdcRspInfoField rsp = new Struct.V12.LCThostFtdcRspInfoField();
-                            rsp.ErrorID = notify.RspInfo.ErrorID;
-                            rsp.ErrorMsg = string.Format("CTP:{0}", notify.RspInfo.ErrorMessage);
+                            CTPConvert.ConvRspInfo(notify.RspInfo, ref rsp);
 
                             if (notify.RspInfo.ErrorID == 0)
                             {
@@ -582,8 +581,7 @@ namespace CTPService
                             field.UserID = conn.State.LoginID;
 
                             Struct.V12.LCThostFtdcRspInfoField rsp = new Struct.V12.LCThostFtdcRspInfoField();
-                            rsp.ErrorID = response.RspInfo.ErrorID;
-                            rsp.ErrorMsg = string.Format("CTP:{0}", response.RspInfo.ErrorMessage);
+                            CTPConvert.ConvRspInfo(response.RspInfo, ref rsp);
 
                             //打包数据
                             byte[] data = Struct.V12.StructHelperV12.PackRsp<Struct.V12.LCThostFtdcUserPasswordUpdateField>(ref rsp, ref field, EnumSeqType.SeqReq, EnumTransactionID.T_RSP_MODPASS, response.RequestID, conn.NextSeqReqId);

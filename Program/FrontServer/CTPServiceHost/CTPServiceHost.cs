@@ -175,7 +175,7 @@ namespace CTPService
 
                                 Struct.V12.LCThostFtdcRspInfoField rsp = new Struct.V12.LCThostFtdcRspInfoField();
                                 rsp.ErrorID = 1;
-                                rsp.ErrorMsg = "CTP:协议版本不支持 请使用6.3.6(V12)";
+                                rsp.ErrorMsg = "CTP:协议版本不支持 请使用6.3.6(V12)".ToByteArray(81,CTPConvert.CTPEncoding);
 
 
                                 byte[] rdata = Struct.V12.StructHelperV12.PackRsp<Struct.V12.LCThostFtdcRspUserLoginField>(ref rsp, ref response, EnumSeqType.SeqReq, EnumTransactionID.T_RSP_LOGIN, (int)requestInfo.FTDHeader.dReqId, 0);//登入回报 默认Seq为0
@@ -345,7 +345,7 @@ namespace CTPService
 
                                     Struct.V12.LCThostFtdcRspInfoField rsp = new Struct.V12.LCThostFtdcRspInfoField();
                                     rsp.ErrorID = 0;
-                                    rsp.ErrorMsg = "正确";
+                                    rsp.ErrorMsg = "正确".ToByteArray(81,CTPConvert.CTPEncoding);
 
 
                                     byte[] rdata = Struct.V12.StructHelperV12.PackRsp<Struct.V12.LCThostFtdcQueryCFMMCTradingAccountTokenField>(ref rsp, ref field, EnumSeqType.SeqQry, EnumTransactionID.T_RSP_TDTOK, (int)requestInfo.FTDHeader.dReqId, conn.NextSeqQryId);
@@ -734,7 +734,7 @@ namespace CTPService
 
                                     Struct.V12.LCThostFtdcRspInfoField rsp = new Struct.V12.LCThostFtdcRspInfoField();
                                     rsp.ErrorID = 1;
-                                    rsp.ErrorMsg = string.Format("CTP:{0}","原始密码错误");
+                                    rsp.ErrorMsg = string.Format("CTP:{0}", "原始密码错误").ToByteArray(81, CTPConvert.CTPEncoding);
 
                                     //打包数据
                                     byte[] data1 = Struct.V12.StructHelperV12.PackRsp<Struct.V12.LCThostFtdcTradingAccountPasswordUpdateField>(ref rsp, ref field, EnumSeqType.SeqReq, EnumTransactionID.T_RSP_MODACCPASS,(int)requestInfo.FTDHeader.dReqId, conn.NextSeqReqId);

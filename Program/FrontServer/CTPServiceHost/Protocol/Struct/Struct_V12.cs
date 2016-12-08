@@ -40,8 +40,11 @@ namespace CTPService.Struct.V12
         /// <summary>
         /// 错误信息
         /// </summary>
-        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 81)]
-        public string ErrorMsg;
+        //[MarshalAs(UnmanagedType.ByValTStr, SizeConst = 81)]
+        //public string ErrorMsg;
+
+        [MarshalAs(UnmanagedType.ByValArray, SizeConst = 81)]
+        public byte[] ErrorMsg;
 
         public void Swap()
         {
@@ -72,8 +75,11 @@ namespace CTPService.Struct.V12
         /// <summary>
         /// 错误信息
         /// </summary>
-        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 81)]
-        public string ErrorMsg;
+        //[MarshalAs(UnmanagedType.ByValTStr, SizeConst = 81)]
+        //public string ErrorMsg;
+
+        [MarshalAs(UnmanagedType.ByValArray, SizeConst = 81)]
+        public byte[] ErrorMsg;
 
         public void Swap()
         {
@@ -4487,8 +4493,11 @@ namespace CTPService.Struct.V12
             /// <summary>
             /// 银行名称
             /// </summary>
-            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 101)]
-            public string BankName;
+            //[MarshalAs(UnmanagedType.ByValTStr, SizeConst = 101)]
+            //public string BankName;
+
+            [MarshalAs(UnmanagedType.ByValArray, SizeConst = 101)]
+            public byte[] BankName;
 
             public ushort FieldId
             {
@@ -4531,8 +4540,11 @@ namespace CTPService.Struct.V12
             /// <summary>
             /// 银行名称
             /// </summary>
-            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 101)]
-            public string BankName;
+            //[MarshalAs(UnmanagedType.ByValTStr, SizeConst = 101)]
+            //public string BankName;
+
+            [MarshalAs(UnmanagedType.ByValArray, SizeConst = 101)]
+            public byte[] BankName;
 
             public ushort FieldId
             {
