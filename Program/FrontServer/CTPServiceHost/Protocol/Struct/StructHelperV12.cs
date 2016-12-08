@@ -134,6 +134,11 @@ namespace CTPService.Struct.V12
                     {
                         return ByteSwapHelp.BytesToStruct<LCThostFtdcQryInvestorPositionDetailField>(data, offset);
                     }
+                    //客户端认证请求 ReqAuthenticate
+                case EnumFiledID.F_REQ_AUTHINF:
+                    {
+                        return ByteSwapHelp.BytesToStruct<LCThostFtdcAuthenticationInfoField>(data, offset);
+                    }
                 default:
                     throw new Exception(string.Format("FieldID:{0} pkt not handled", fieldID));
             }

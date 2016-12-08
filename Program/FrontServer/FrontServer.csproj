@@ -118,6 +118,7 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="TinnyServiceHost\" />
     <Folder Include="TLServiceHost\" />
     <Folder Include="WSServiceHost\" />
   </ItemGroup>

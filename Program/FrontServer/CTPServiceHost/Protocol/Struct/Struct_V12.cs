@@ -6820,5 +6820,206 @@ namespace CTPService.Struct.V12
         }
     #endregion
 
+    #region 客户端认证
+        /// <summary>
+        /// 客户端认证信息
+        /// </summary>
+        [StructLayout(LayoutKind.Sequential)]
+        public struct CThostFtdcAuthenticationInfoField:ITFieldId
+        {
+            /// <summary>
+            /// 经纪公司代码
+            /// </summary>
+            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 11)]
+            public string BrokerID;
+            /// <summary>
+            /// 用户代码
+            /// </summary>
+            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 16)]
+            public string UserID;
+            /// <summary>
+            /// 用户端产品信息
+            /// </summary>
+            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 11)]
+            public string UserProductInfo;
+            /// <summary>
+            /// 认证信息
+            /// </summary>
+            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 129)]
+            public string AuthInfo;
+            /// <summary>
+            /// 是否为认证结果
+            /// </summary>
+            public int IsResult;
+            public void Swap()
+            {
+            }
 
+            public ushort FieldId
+            {
+                get { return 0x1012; }
+            }
+            public static implicit operator CThostFtdcAuthenticationInfoField(LCThostFtdcAuthenticationInfoField input)
+            {
+                CThostFtdcAuthenticationInfoField ret = new CThostFtdcAuthenticationInfoField();
+                ret.BrokerID = input.BrokerID;
+                ret.UserID = input.UserID;
+                ret.UserProductInfo = input.UserProductInfo;
+                ret.AuthInfo = input.AuthInfo;
+                ret.IsResult = input.IsResult;
+
+                return ret;
+            }
+
+        }
+
+        /// <summary>
+        /// 客户端认证信息
+        /// </summary>
+        [StructLayout(LayoutKind.Sequential, Pack = 1)]
+        public struct LCThostFtdcAuthenticationInfoField : IFieldId
+        {
+            /// <summary>
+            /// 经纪公司代码
+            /// </summary>
+            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 11)]
+            public string BrokerID;
+            /// <summary>
+            /// 用户代码
+            /// </summary>
+            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 16)]
+            public string UserID;
+            /// <summary>
+            /// 用户端产品信息
+            /// </summary>
+            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 11)]
+            public string UserProductInfo;
+            /// <summary>
+            /// 认证信息
+            /// </summary>
+            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 129)]
+            public string AuthInfo;
+            /// <summary>
+            /// 是否为认证结果
+            /// </summary>
+            public int IsResult;
+
+            public void Swap()
+            {
+                IsResult = ByteSwapHelp.ReverseBytes(IsResult);
+            }
+            public ushort FieldId
+            {
+                get { return 0x1012; }
+            }
+            public static implicit operator LCThostFtdcAuthenticationInfoField(CThostFtdcAuthenticationInfoField input)
+            {
+                LCThostFtdcAuthenticationInfoField ret = new LCThostFtdcAuthenticationInfoField();
+                ret.BrokerID = input.BrokerID;
+                ret.UserID = input.UserID;
+                ret.UserProductInfo = input.UserProductInfo;
+                ret.AuthInfo = input.AuthInfo;
+                ret.IsResult = input.IsResult;
+
+                return ret;
+            }
+            
+
+        }
+
+        ///// <summary>
+        ///// 客户端认证请求
+        ///// </summary>
+        //[StructLayout(LayoutKind.Sequential)]
+        //public struct CThostFtdcReqAuthenticateField:ITFieldId
+        //{
+        //    /// <summary>
+        //    /// 经纪公司代码
+        //    /// </summary>
+        //    [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 11)]
+        //    public string BrokerID;
+        //    /// <summary>
+        //    /// 用户代码
+        //    /// </summary>
+        //    [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 16)]
+        //    public string UserID;
+        //    /// <summary>
+        //    /// 用户端产品信息
+        //    /// </summary>
+        //    [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 11)]
+        //    public string UserProductInfo;
+        //    /// <summary>
+        //    /// 认证码
+        //    /// </summary>
+        //    [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 17)]
+        //    public string AuthCode;
+
+        //    public void Swap()
+        //    {
+        //    }
+        //    public ushort FieldId
+        //    {
+        //        get { return 0x1010; }
+        //    }
+        //    public static implicit operator CThostFtdcReqAuthenticateField(LCThostFtdcReqAuthenticateField input)
+        //    {
+        //        CThostFtdcReqAuthenticateField ret = new CThostFtdcReqAuthenticateField();
+        //        ret.BrokerID = input.BrokerID;
+        //        ret.UserID = input.UserID;
+        //        ret.UserProductInfo = input.UserProductInfo;
+        //        ret.AuthCode = input.AuthCode;
+
+        //        return ret;
+        //    }
+        //}
+
+        ///// <summary>
+        ///// 客户端认证请求
+        ///// </summary>
+        //[StructLayout(LayoutKind.Sequential, Pack = 1)]
+        //public struct LCThostFtdcReqAuthenticateField : IFieldId
+        //{
+        //    /// <summary>
+        //    /// 经纪公司代码
+        //    /// </summary>
+        //    [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 11)]
+        //    public string BrokerID;
+        //    /// <summary>
+        //    /// 用户代码
+        //    /// </summary>
+        //    [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 16)]
+        //    public string UserID;
+        //    /// <summary>
+        //    /// 用户端产品信息
+        //    /// </summary>
+        //    [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 11)]
+        //    public string UserProductInfo;
+        //    /// <summary>
+        //    /// 认证码
+        //    /// </summary>
+        //    [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 17)]
+        //    public string AuthCode;
+
+        //    public ushort FieldId
+        //    {
+        //        get { return 0x1010; }
+        //    }
+
+        //    public void Swap()
+        //    {
+            
+        //    }
+        //    public static implicit operator LCThostFtdcReqAuthenticateField(CThostFtdcReqAuthenticateField input)
+        //    {
+        //        LCThostFtdcReqAuthenticateField ret = new LCThostFtdcReqAuthenticateField();
+        //        ret.BrokerID = input.BrokerID;
+        //        ret.UserID = input.UserID;
+        //        ret.UserProductInfo = input.UserProductInfo;
+        //        ret.AuthCode = input.AuthCode;
+
+        //        return ret;
+        //    }
+
+        //}
+    #endregion
 }

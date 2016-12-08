@@ -162,6 +162,37 @@ namespace CTPService
 
                     EnumTransactionID transId = (EnumTransactionID)requestInfo.FTDHeader.dTransId;
 
+                    if (transId == EnumTransactionID.T_REQ_AUTHINF)
+                    { 
+
+                        var data = requestInfo.FTDFields[0].FTDCData;
+                        if (data is Struct.V12.LCThostFtdcAuthenticationInfoField)
+                        {
+                            Struct.V12.LCThostFtdcAuthenticationInfoField field = (Struct.V12.LCThostFtdcAuthenticationInfoField)data;
+
+                            Struct.V12.LCThostFtdcAuthenticationInfoField response  = (Struct.V12.LCThostFtdcAuthenticationInfoField)data;
+                            response.BrokerID = field.BrokerID;
+                            response.UserProductInfo = field.UserProductInfo;
+                            response.UserID = field.UserID;
+                            response.AuthInfo = field.AuthInfo;
+                            response.IsResult = 1;
+
+                            byte[] rdata = Struct.V12.StructHelperV12.PackRsp<Struct.V12.LCThostFtdcAuthenticationInfoField>(ref response, EnumSeqType.SeqReq, EnumTransactionID.T_RSP_AUTHINF, (int)requestInfo.FTDHeader.dReqId, 0);//登入回报 默认Seq为0
+                            int encPktLen = 0;
+                            byte[] encData = Struct.V12.StructHelperV12.EncPkt(rdata, out encPktLen);
+
+                            conn.Send(encData, encPktLen);
+
+                            logger.Info(string.Format("Session:{0} >> ReqAuthenticationInfo", session.SessionID));
+                            return;
+                        }
+                        else
+                        {
+                            logger.Warn(string.Format("Request:{0} Data Field do not macth", transId));
+                        }
+
+                        return;
+                    }
                     //登入请求直接处理 其他请求检查是否处于授权状态
                     if (transId == EnumTransactionID.T_REQ_LOGIN)
                     {
@@ -792,6 +823,27 @@ namespace CTPService
                                 }
                                 break;
                             }
+                            //客户端认证请求 ReqAuthenticate
+                        //case EnumTransactionID.T_REQ_AUTH:
+                        //    {
+                        //        var data = requestInfo.FTDFields[0].FTDCData;
+                        //        if (data is Struct.V12.LCThostFtdcAuthenticationInfoField)
+                        //        {
+                        //            Struct.V12.LCThostFtdcAuthenticationInfoField field = (Struct.V12.LCThostFtdcAuthenticationInfoField)data;
+
+
+                        //            XQryPositionDetailRequest request = RequestTemplate<XQryPositionDetailRequest>.CliSendRequest((int)requestInfo.FTDHeader.dReqId);
+
+                        //            _mqServer.TLSend(session.SessionID, request);
+                        //            logger.Info(string.Format("Session:{0} >> ReqQryInvestorPositionDetail", session.SessionID));
+
+                        //        }
+                        //        else
+                        //        {
+                        //            logger.Warn(string.Format("Request:{0} Data Field do not macth", transId));
+                        //        }
+                        //        break;
+                        //    }
                         default:
                             logger.Warn(string.Format("Transaction:{0} logic not handled", transId));
                             break;
