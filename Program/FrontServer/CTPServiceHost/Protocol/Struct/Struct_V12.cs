@@ -1349,8 +1349,11 @@ namespace CTPService.Struct.V12
         /// <summary>
         /// 消息正文
         /// </summary>
-        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 501)]
-        public string Content;
+        //[MarshalAs(UnmanagedType.ByValTStr, SizeConst = 501)]
+        //public string Content;
+
+        [MarshalAs(UnmanagedType.ByValArray, SizeConst = 501)]
+        public byte[] Content;
 
         public ushort FieldId
         {
@@ -1402,8 +1405,11 @@ namespace CTPService.Struct.V12
         /// <summary>
         /// 消息正文
         /// </summary>
-        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 501)]
-        public string Content;
+        //[MarshalAs(UnmanagedType.ByValTStr, SizeConst = 501)]
+        //public string Content;
+
+        [MarshalAs(UnmanagedType.ByValArray, SizeConst = 501)]
+        public byte[] Content;
 
         public ushort FieldId
         {
@@ -6360,8 +6366,10 @@ namespace CTPService.Struct.V12
             /// <summary>
             /// 错误信息
             /// </summary>
-            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 81)]
-            public string ErrorMsg;
+            //[MarshalAs(UnmanagedType.ByValTStr, SizeConst = 81)]
+            //public string ErrorMsg;
+            [MarshalAs(UnmanagedType.ByValArray, SizeConst = 81)]
+            public byte[] ErrorMsg;
 
             public ushort FieldId
             {

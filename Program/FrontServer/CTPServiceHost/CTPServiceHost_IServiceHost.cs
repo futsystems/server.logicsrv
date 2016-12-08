@@ -171,7 +171,7 @@ namespace CTPService
                         {
                             RspXQrySettleInfoResponse response = packet as RspXQrySettleInfoResponse;
                             Struct.V12.LCThostFtdcSettlementInfoField field = new Struct.V12.LCThostFtdcSettlementInfoField();
-                            field.Content = response.SettlementContent;
+                            field.Content = response.SettlementContent.ToByteArray(501, CTPConvert.CTPEncoding);
                             field.TradingDay = response.Tradingday.ToString();
                             field.InvestorID = response.TradingAccount;
                             field.SettlementID = response.SettlementID;
@@ -625,7 +625,7 @@ namespace CTPService
                                 field.BankSerial = response.CashTransaction.TxnRef;
                                 field.FutureSerial = 0;
                                 field.ErrorID = 0;
-                                field.ErrorMsg = "交易成功";
+                                field.ErrorMsg = "交易成功".ToByteArray(81,CTPConvert.CTPEncoding);
                                 field.TradeCode = response.CashTransaction.TxnType == QSEnumCashOperation.Deposit ? "202001" : "202002";//根据此编号区别银行到期货 还是期货到银行
 
 
