@@ -6927,6 +6927,93 @@ namespace CTPService.Struct.V12
 
         }
 
+
+        ///// <summary>
+        ///// 客户端认证信息
+        ///// </summary>
+        //[StructLayout(LayoutKind.Sequential)]
+        //public struct CThostFtdcRspAuthenticateField : ITFieldId
+        //{
+        //    /// <summary>
+        //    /// 经纪公司代码
+        //    /// </summary>
+        //    [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 11)]
+        //    public string BrokerID;
+        //    /// <summary>
+        //    /// 用户代码
+        //    /// </summary>
+        //    [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 16)]
+        //    public string UserID;
+        //    /// <summary>
+        //    /// 用户端产品信息
+        //    /// </summary>
+        //    [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 11)]
+        //    public string UserProductInfo;
+
+        //    public void Swap()
+        //    {
+        //    }
+
+        //    public ushort FieldId
+        //    {
+        //        get { return 0x1012; }
+        //    }
+        //    public static implicit operator CThostFtdcRspAuthenticateField(LCThostFtdcAuthenticationInfoField input)
+        //    {
+        //        CThostFtdcRspAuthenticateField ret = new CThostFtdcRspAuthenticateField();
+        //        ret.BrokerID = input.BrokerID;
+        //        ret.UserID = input.UserID;
+        //        ret.UserProductInfo = input.UserProductInfo;
+
+        //        return ret;
+        //    }
+
+        //}
+
+        ///// <summary>
+        ///// 客户端认证信息
+        ///// </summary>
+        //[StructLayout(LayoutKind.Sequential, Pack = 1)]
+        //public struct LCThostFtdcRspAuthenticateField : IFieldId
+        //{
+        //    /// <summary>
+        //    /// 经纪公司代码
+        //    /// </summary>
+        //    [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 11)]
+        //    public string BrokerID;
+        //    /// <summary>
+        //    /// 用户代码
+        //    /// </summary>
+        //    [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 16)]
+        //    public string UserID;
+        //    /// <summary>
+        //    /// 用户端产品信息
+        //    /// </summary>
+        //    [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 11)]
+        //    public string UserProductInfo;
+            
+
+        //    public void Swap()
+        //    {
+                
+        //    }
+        //    public ushort FieldId
+        //    {
+        //        get { return 0x1012; }
+        //    }
+        //    public static implicit operator LCThostFtdcRspAuthenticateField(CThostFtdcRspAuthenticateField input)
+        //    {
+        //        LCThostFtdcRspAuthenticateField ret = new LCThostFtdcRspAuthenticateField();
+        //        ret.BrokerID = input.BrokerID;
+        //        ret.UserID = input.UserID;
+        //        ret.UserProductInfo = input.UserProductInfo;
+
+        //        return ret;
+        //    }
+
+
+        //}
+
         ///// <summary>
         ///// 客户端认证请求
         ///// </summary>
