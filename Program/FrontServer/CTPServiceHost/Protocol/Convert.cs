@@ -7,8 +7,19 @@ using TradingLib.Common;
 
 namespace CTPService
 {
+    /// <summary>
+    /// 关于结构体封送
+    /// 1.windows 默认为GB2312编码 在结构体Marshal.StructureToPtr过程中使用的编码为GB2312
+    /// 2.Mono 默认为UTF-8编码 在结构体Marshal.StructureToPtr过程中使用的是UTF8编码
+    /// 因此在CTP协议实现过程中遇到 客户端使用编码为GB2312与服务端Linux服务端编码不匹配导致的乱码问题
+    /// 解决方案
+    /// 1.从底层解决 找到切换Mono默认封送结构体 对string字段进行序列化的编码
+    /// 2.找到包含中文的相关字段直接用byte[]最为结构体字段进行数据封送
+    /// </summary>
     public class  CTPConvert
     {
+        public static Encoding CTPEncoding = Encoding.GetEncoding("GB2312");
+
         public static string ConvUTF82GB2312(string text)
         {
             byte[] bs = Encoding.GetEncoding("UTF-8").GetBytes(text);
@@ -79,6 +90,7 @@ namespace CTPService
         }
 
 
+        
         /// <summary>
         /// 转换持仓
         /// </summary>
@@ -161,6 +173,7 @@ namespace CTPService
 
         }
 
+       
         /// <summary>
         /// 委托转换
         /// </summary>
@@ -228,7 +241,7 @@ namespace CTPService
             dest.OrderSubmitStatus = ConvTLStatus2TThostFtdcOrderSubmitStatusType(source.Status);
             dest.OrderStatus = ConvTLStatus2TThostFtdcOrderStatusType(source.Status);
 
-            dest.StatusMsg = source.Comment;
+            dest.StatusMsg = source.Comment.ToByteArray(81,CTPEncoding);
             dest.VolumeTotal = Math.Abs(source.Size);
             dest.VolumeTotalOriginal = Math.Abs(source.TotalSize);
             dest.VolumeTraded = Math.Abs(source.FilledSize);

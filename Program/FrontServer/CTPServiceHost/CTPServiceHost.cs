@@ -203,6 +203,7 @@ namespace CTPService
                             conn.State.ProductInfo = field.UserProductInfo;
 
                             logger.Info(string.Format("Session:{0} >> ReqUserLogin BrokerID:{1} User:{2} CTPVer:{3} ProductInfo:{4}", session.SessionID, field.BrokerID, field.UserID, requestInfo.FTDHeader.bVersion, field.UserProductInfo));
+                            return;
                         }
                         else
                         {

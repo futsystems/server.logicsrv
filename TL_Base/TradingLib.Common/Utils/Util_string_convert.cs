@@ -147,5 +147,22 @@ namespace TradingLib.Common
             }
             return x * 10000 + y;
         }
+
+
+        /// <summary>
+        /// 将字符串按某个编码转换成某个长度的Byte数组
+        /// </summary>
+        /// <param name="val">字符串</param>
+        /// <param name="size">目标Byte数组长度</param>
+        /// <param name="encoding">编码</param>
+        /// <returns></returns>
+        public static byte[] ToByteArray(this string val, int size, Encoding encoding)
+        {
+            byte[] dest = new byte[size];
+            byte[] source = encoding.GetBytes(val);
+            int len = source.Length <= size ? source.Length : size;
+            Array.Copy(source, 0, dest, 0, len);
+            return dest;
+        }
     }
 }

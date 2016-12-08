@@ -72,10 +72,10 @@ namespace TradingLib.Common
             bool hasCfgFile = File.Exists(_fileName);
             if (hasCfgFile == false)
             {
-                StreamWriter writer = new StreamWriter(File.Create(_fileName), Encoding.Default);
+                StreamWriter writer = new StreamWriter(File.Create(_fileName), Encoding.UTF8);
                 writer.Close();
             }
-            StreamReader reader = new StreamReader(_fileName, Encoding.Default);
+            StreamReader reader = new StreamReader(_fileName, Encoding.UTF8);
             string line;
 
             int indx = 0;
@@ -143,7 +143,7 @@ namespace TradingLib.Common
 
         public void Save()
         {
-            StreamWriter writer = new StreamWriter(fullFileName, false, Encoding.Default);
+            StreamWriter writer = new StreamWriter(fullFileName, false, Encoding.UTF8);
             foreach (string key in configData.Keys)
             {
                 if (key.StartsWith(";"))

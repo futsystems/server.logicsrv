@@ -135,6 +135,8 @@ namespace FrontServer
                         ZError error;
                         zmsg.Add(new ZFrame(Encoding.UTF8.GetBytes(address)));
                         zmsg.Add(new ZFrame(data));
+                        logger.Info("adds:" + CTPService.ByteUtil.ByteToHex(Encoding.UTF8.GetBytes(address)));
+                        logger.Info("data:" + CTPService.ByteUtil.ByteToHex(data));
                         if (!_backend.Send(zmsg, out error))
                         {
                             if (error == ZError.ETERM)
@@ -155,6 +157,7 @@ namespace FrontServer
         DateTime _lastHeartBeatRecv = DateTime.Now;
 
         string _localAddress = "front-01";
+        Random rd = new Random();
         void MessageProcess()
         {
             _lastHeartBeatRecv = DateTime.Now;
@@ -166,8 +169,8 @@ namespace FrontServer
                 using(ZSocket backend = new ZSocket(ctx, ZSocketType.DEALER))
                 {
                     string address = string.Format("tcp://{0}:{1}", _logicServer, _logicPort);
-
-                    backend.SetOption(ZSocketOption.IDENTITY, Encoding.UTF8.GetBytes("front-001"));
+                    _localAddress = "front-" + rd.Next(1000, 9999).ToString();
+                    backend.SetOption(ZSocketOption.IDENTITY, Encoding.UTF8.GetBytes(_localAddress));
                     backend.Connect(address);
                     
                     backend.Linger = new TimeSpan(0);//需设置 否则底层socket无法释放 导致无法正常关闭服务

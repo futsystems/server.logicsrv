@@ -23,11 +23,11 @@ namespace FrontServer
             ////System.Globalization.CultureInfo info = new System.Globalization.CultureInfo("zh-CN");
             
             //System.Threading.Thread.CurrentThread.CurrentCulture = new System.Globalization.CultureInfo("zh-CN");
-            //logger.Info(string.Format("Encoding1:{0}", Encoding.Default));//936
+            logger.Info(string.Format("Encoding1:{0}", Encoding.Default));//936
             //logger.Info(string.Format("{0}-{1}", Encoding.Default.CodePage, Encoding.Default.WindowsCodePage));
 
             //Encoding c = Encoding.GetEncoding(936);
-            //logger.Info(string.Format("Encoding2:{0}", c));//936
+            logger.Info(ByteUtil.ByteToHex(Encoding.Default.GetBytes("测试"))) ;//936
             //return;
             if (false)
             {

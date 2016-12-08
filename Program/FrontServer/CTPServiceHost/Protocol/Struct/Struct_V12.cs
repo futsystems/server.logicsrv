@@ -986,8 +986,10 @@ namespace CTPService.Struct.V12
         /// <summary>
         /// 消息正文
         /// </summary>
-        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 501)]
-        public string Content;
+        //[MarshalAs(UnmanagedType.ByValTStr, SizeConst = 501)]
+        //public string Content;
+        [MarshalAs(UnmanagedType.ByValArray, SizeConst = 501)]
+        public byte[] Content;
         /// <summary>
         /// 经纪公司通知内容序列号
         /// </summary>
@@ -1026,8 +1028,11 @@ namespace CTPService.Struct.V12
         //[MarshalAs(UnmanagedType.ByValTStr, MarshalTypeRef = typeof(CTPService.CNStringMarshaler),SizeConst = 501)]
         //public fixed byte Content[501];
         //[MarshalAs(UnmanagedType.CustomMarshaler,MarshalTypeRef = typeof(CTPService.CNStringMarshaler))]
-        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 501)]
-        public string Content;
+        //[MarshalAs(UnmanagedType.ByValTStr, SizeConst = 501)]
+        //public string Content;
+
+        [MarshalAs(UnmanagedType.ByValArray, SizeConst = 501)]
+        public byte[] Content;
         /// <summary>
         /// 经纪公司通知内容序列号
         /// </summary>
@@ -2262,8 +2267,10 @@ namespace CTPService.Struct.V12
         /// <summary>
         /// 状态信息
         /// </summary>
-        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 81)]
-        public string StatusMsg;
+        //[MarshalAs(UnmanagedType.ByValTStr, SizeConst = 81)]
+        //public string StatusMsg;
+        [MarshalAs(UnmanagedType.ByValArray, SizeConst = 81)]
+        public byte[] StatusMsg;
         /// <summary>
         /// 用户强评标志
         /// </summary>
@@ -2621,8 +2628,10 @@ namespace CTPService.Struct.V12
         /// <summary>
         /// 状态信息
         /// </summary>
-        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 81)]
-        public string StatusMsg;
+        //[MarshalAs(UnmanagedType.ByValTStr, SizeConst = 81)]
+        //public string StatusMsg;
+        [MarshalAs(UnmanagedType.ByValArray, SizeConst = 81)]
+        public byte[] StatusMsg;
         /// <summary>
         /// 用户强评标志
         /// </summary>

@@ -148,8 +148,10 @@ namespace CTPService
                             RspQryNoticeResponse response = packet as RspQryNoticeResponse;
                             Struct.V12.LCThostFtdcNoticeField field = new Struct.V12.LCThostFtdcNoticeField();
                             field.BrokerID = conn.State.BrokerID;
-                            field.Content = response.NoticeContent;// "测试";//Encoding.UTF8.GetBytes("测试");//"测试"; CTPConvert.ConvUTF82GB2312(response.NoticeContent);
-                            //logger.Info(ByteUtil.ByteToHex(Encoding.Default.GetBytes(field.Content)));
+
+
+                            field.Content = response.NoticeContent.ToByteArray(501, CTPConvert.CTPEncoding);//"测试".ToByteArray(501, CTPConvert.CTPEncoding);// Encoding.GetEncoding("GB2312").GetBytes("测试".PadLeftEx(501));//Encoding.UTF8.GetBytes("测试");//"测试"; CTPConvert.ConvUTF82GB2312(response.NoticeContent);
+                            //logger.Info(ByteUtil.ByteToHex(field.Content));
                             //logger.Info(string.Format("Encoding:{0}", Encoding.Default));
                             //打包数据
                             byte[] data = Struct.V12.StructHelperV12.PackRsp<Struct.V12.LCThostFtdcNoticeField>(ref field, EnumSeqType.SeqQry, EnumTransactionID.T_RSP_NOTICE, response.RequestID, conn.NextSeqQryId);
