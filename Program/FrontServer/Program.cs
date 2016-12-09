@@ -198,13 +198,17 @@ namespace FrontServer
             //创建MQServer
             MQServer mqServer = new MQServer();
             //创建CTP ServiceHost
-            CTPServiceHost host = new CTPServiceHost(mqServer);
+            CTPServiceHost ctphost = new CTPServiceHost(mqServer);
+            //创建XL ServiceHost
+            XLServiceHost.XLServiceHost xlhost = new XLServiceHost.XLServiceHost(mqServer);
 
             //创建WatchDog
             WatchDog watchDog = new WatchDog(mqServer);
+
             //依次启动服务
             mqServer.Start();
-            host.Start();
+            ctphost.Start();
+            xlhost.Start();
             watchDog.Join();
 
             

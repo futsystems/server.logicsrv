@@ -67,7 +67,7 @@ namespace CTPService
         /// <returns></returns>
         protected override TLRequestInfo ResolveRequestInfo(ArraySegment<byte> header, byte[] bodyBuffer, int offset, int length)
         {
-
+            
             EnumFTDType bFtdtype = (EnumFTDType)header.Array[FTDTYPEOFFSET];
             int bExLen = header.Array[EXLENOFFSET];
             int wPktLen = ByteSwapHelp.ReverseBytes((BitConverter.ToInt16(header.Array, PKTLENOFFSET)));//字节序变化

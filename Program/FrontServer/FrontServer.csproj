@@ -75,6 +75,9 @@
     <Reference Include="TradingLib.Common">
       <HintPath>..\..\lib\TradingLib\TradingLib.Common.dll</HintPath>
     </Reference>
+    <Reference Include="TradingLib.XLProtocol">
+      <HintPath>..\..\lib\TradingLib\TradingLib.XLProtocol.dll</HintPath>
+    </Reference>
     <Reference Include="ZeroMQ">
       <HintPath>..\..\lib\ZeroMQ.dll</HintPath>
     </Reference>
@@ -111,6 +114,14 @@
     <Compile Include="CTPServiceHost\TLSessionBase.cs" />
     <Compile Include="CTPServiceHost\CTPServiceHost_Connection.cs" />
     <Compile Include="WatchDog.cs" />
+    <Compile Include="XLServiceHost\XLConnection.cs" />
+    <Compile Include="XLServiceHost\XLReceiveFilter.cs" />
+    <Compile Include="XLServiceHost\XLRequestInfo.cs" />
+    <Compile Include="XLServiceHost\XLServerBase.cs" />
+    <Compile Include="XLServiceHost\ServiceHost.cs" />
+    <Compile Include="XLServiceHost\XLSessionBase.cs" />
+    <Compile Include="XLServiceHost\ServiceHost_.cs" />
+    <Compile Include="XLServiceHost\ServiceHost_Connection.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config">
@@ -118,7 +129,6 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="TinnyServiceHost\" />
     <Folder Include="TLServiceHost\" />
     <Folder Include="WSServiceHost\" />
   </ItemGroup>

@@ -124,8 +124,6 @@ namespace CTPService
                    (value & 0x00FF000000000000UL) >> 40 | (value & 0xFF00000000000000UL) >> 56;
         }
 
-
-
         public static double ReverseBytes(double value)
         {
             long bit = BitConverter.DoubleToInt64Bits(value);
