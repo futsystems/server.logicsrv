@@ -107,18 +107,18 @@ namespace FrontServer.XLServiceHost
         /// </summary>
         public FrontServer.IServiceHost ServiceHost { get { return _serviceHost; } }
 
-        int _seqQryId = 1;
+        uint _seqQryId = 1;
         object _seqIDLock = new object();
         /// <summary>
         /// 下一个Req回报序号
         /// </summary>
-        public int NextSeqQryId
+        public uint NextSeqQryId
         {
             get
             {
                 lock (_seqIDLock)
                 {
-                    int seq = _seqQryId;
+                    uint seq = _seqQryId;
                     _seqQryId++;
                     return seq;
 
@@ -128,17 +128,17 @@ namespace FrontServer.XLServiceHost
         /// <summary>
         /// RTN 需要需要从1开始 否则CTP客户端接口无法正常解析回报数据
         /// </summary>
-        int _seqRtnId = 1;
+        uint _seqRtnId = 1;
         /// <summary>
         /// 下一个RTN回报序号
         /// </summary>
-        public int NextSeqRtnId
+        public uint NextSeqRtnId
         {
             get
             {
                 lock (_seqIDLock)
                 {
-                    int seq = _seqRtnId;
+                    uint seq = _seqRtnId;
                     _seqRtnId++;
                     return seq;
 
@@ -146,17 +146,17 @@ namespace FrontServer.XLServiceHost
             }
         }
 
-        int _seqReqId = 0;
+        uint _seqReqId = 0;
         /// <summary>
         /// 下一个REQ回报序号
         /// </summary>
-        public int NextSeqReqId
+        public uint NextSeqReqId
         {
             get
             {
                 lock (_seqIDLock)
                 {
-                    int seq = _seqReqId;
+                    uint seq = _seqReqId;
                     _seqReqId++;
                     return seq;
 

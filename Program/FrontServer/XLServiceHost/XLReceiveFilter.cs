@@ -68,7 +68,7 @@ namespace FrontServer.XLServiceHost
             
             string key = string.Format("XL Data Ver:{0} Tid:{1} SeqType:{2} SeqNo:{3} Enc:{4} ReqID:{5} Chain:{6} FieldCnt:{7} FtdcLen:{8}", dataHeader.Version,protoHeader.XLMessageType,(XLEnumSeqType)dataHeader.SeqType,dataHeader.SeqNo, dataHeader.Enctype, dataHeader.RequestID, dataHeader.IsLast, dataHeader.FieldCount, dataHeader.FieldLength);
                
-            return new XLRequestInfo(key,pkt);
+            return new XLRequestInfo(key,dataHeader,pkt);
         }
 
 

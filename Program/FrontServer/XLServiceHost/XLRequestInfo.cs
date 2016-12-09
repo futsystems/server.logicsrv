@@ -12,11 +12,13 @@ namespace FrontServer.XLServiceHost
 {
     public class XLRequestInfo : RequestInfo<XLPacketData>
     {
-        public XLRequestInfo(string key, XLPacketData data)
+        public XLRequestInfo(string key,XLDataHeader header,  XLPacketData data)
             : base(key, data)
         {
-
+            DataHeader = header;
         }
-        
+
+        public XLDataHeader DataHeader;
+
     }
 }
