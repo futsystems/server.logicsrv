@@ -285,9 +285,27 @@ namespace FrontServer
                         //    conn.State.FrontID = field.FrontID;
                         //    conn.State.SessionID = field.SessionID;
                         //}
+                        logger.Info(string.Format("LogicSrv Reply Session:{0} -> LoginResponse", conn.SessionID));
                         break;
                     }
+                case MessageTypes.CHANGEPASSRESPONSE:
+                    {
+                        RspReqChangePasswordResponse response = lpkt as RspReqChangePasswordResponse;
 
+                        XLRspUserPasswordUpdateField field = new XLRspUserPasswordUpdateField();
+
+                        field.UserID = "";
+
+                        ErrorField rsp = ConvertRspInfo(response.RspInfo);
+                        XLPacketData pkt = new XLPacketData(XLMessageType.T_RSP_UPDATEPASS);
+                        pkt.AddField(rsp);
+                        pkt.AddField(field);
+
+                        conn.ResponseXLPacket(pkt, (uint)response.RequestID, response.IsLast);
+                        logger.Info(string.Format("LogicSrv Reply Session:{0} -> RspReqChangePasswordResponse", conn.SessionID));
+
+                        break;
+                    }
                 default:
                     logger.Warn(string.Format("Logic Packet:{0} not handled", lpkt.Type));
                     break;
@@ -299,13 +317,13 @@ namespace FrontServer
         {
             switch (pkt.MessageType)
             {
+                    //用户登入
                 case XLMessageType.T_REQ_LOGIN:
                     {
                         var data = pkt.FieldList[0].FieldData;
                         if (data is XLReqLoginField)
                         {
                             XLReqLoginField field = (XLReqLoginField)data;
-
                             LoginRequest request = RequestTemplate<LoginRequest>.CliSendRequest(requestId);
                             request.LoginID = field.UserID;
                             request.Passwd = field.Password;
@@ -313,28 +331,30 @@ namespace FrontServer
                             request.IPAddress = field.ClientIPAddress;
                             request.LoginType = 1;
                             request.ProductInfo = field.UserProductInfo;
+                            this.TLSend(conn.SessionID, request);
+                            logger.Info(string.Format("Session:{0} >> ReqUserLogin", conn.SessionID));
+                        }
+                        else
+                        {
+                            logger.Warn(string.Format("Request:{0} Data Field do not macth", pkt.MessageType));
+                        }
+                        break;
+                    }
+                    //更新密码
+                case XLMessageType.T_REQ_UPDATEPASS:
+                    {
+                        var data = pkt.FieldList[0].FieldData;
+                        if (data is XLReqUserPasswordUpdateField)
+                        {
+                            XLReqUserPasswordUpdateField field = (XLReqUserPasswordUpdateField)data;
+
+                            ReqChangePasswordRequest request = RequestTemplate<ReqChangePasswordRequest>.CliSendRequest(requestId);
+
+                            request.OldPassword = field.OldPassword;
+                            request.NewPassword = field.NewPassword;
 
                             this.TLSend(conn.SessionID, request);
-
-
-                            //XLPacketData pktData = new XLPacketData(XLMessageType.T_RSP_LOGIN);
-                            //ErrorField rsp = new ErrorField();
-                            //rsp.ErrorID = 0;
-                            //rsp.ErrorMsg = "正确";
-
-                            //XLRspLoginField response = new XLRspLoginField();
-                            //response.Name = "测试";
-                            //response.TradingDay = 20150101;
-                            //response.UserID = request.UserID;
-
-                            //pktData.AddField(rsp);
-                            //pktData.AddField(response);
-                            //byte[] ret = XLPacketData.PackToBytes(pktData, XLEnumSeqType.SeqReq, conn.NextSeqReqId, requestInfo.DataHeader.RequestID, true);
-                            //conn.Send(ret);
-
-                            logger.Info(string.Format("Session:{0} >> ReqUserLogin", conn.SessionID));
-
-
+                            logger.Info(string.Format("Session:{0} >> ReqUserPasswordUpdate", conn.SessionID));
 
                         }
                         else

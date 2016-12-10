@@ -62,13 +62,21 @@ namespace FrontServer.XLServiceHost
         protected override XLRequestInfo ResolveRequestInfo(ArraySegment<byte> header, byte[] bodyBuffer, int offset, int length)
         {
 
-            XLProtocolHeader protoHeader = XLStructHelp.BytesToStruct<XLProtocolHeader>(header.Array, 0);
-            XLDataHeader dataHeader;
-            XLPacketData pkt = XLPacketData.Deserialize((XLMessageType)protoHeader.XLMessageType,bodyBuffer, offset,out dataHeader);
-            
-            string key = string.Format("XL Data Ver:{0} Tid:{1} SeqType:{2} SeqNo:{3} Enc:{4} ReqID:{5} Chain:{6} FieldCnt:{7} FtdcLen:{8}", dataHeader.Version,protoHeader.XLMessageType,(XLEnumSeqType)dataHeader.SeqType,dataHeader.SeqNo, dataHeader.Enctype, dataHeader.RequestID, dataHeader.IsLast, dataHeader.FieldCount, dataHeader.FieldLength);
-               
-            return new XLRequestInfo(key,dataHeader,pkt);
+            try
+            {
+                XLProtocolHeader protoHeader = XLStructHelp.BytesToStruct<XLProtocolHeader>(header.Array, 0);
+                XLDataHeader dataHeader;
+                XLPacketData pkt = XLPacketData.Deserialize((XLMessageType)protoHeader.XLMessageType, bodyBuffer, offset, out dataHeader);
+
+                string key = string.Format("XL Data Ver:{0} Tid:{1} SeqType:{2} SeqNo:{3} Enc:{4} ReqID:{5} Chain:{6} FieldCnt:{7} FtdcLen:{8}", dataHeader.Version, protoHeader.XLMessageType, (XLEnumSeqType)dataHeader.SeqType, dataHeader.SeqNo, dataHeader.Enctype, dataHeader.RequestID, dataHeader.IsLast, dataHeader.FieldCount, dataHeader.FieldLength);
+
+                return new XLRequestInfo(key, dataHeader, pkt);
+            }
+            catch (Exception ex)
+            {
+                logger.Error("Request Parse Error:" + ex.ToString());
+                return null;
+            }
         }
 
 

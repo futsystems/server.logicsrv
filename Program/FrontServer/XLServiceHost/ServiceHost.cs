@@ -85,6 +85,7 @@ namespace FrontServer.XLServiceHost
         {
             try
             {
+                if (requestInfo == null) return;
                 logger.Info(string.Format("PacketData Received,Type:{0} Key:{1}", requestInfo.Body.MessageType, requestInfo.Key));
                 XLConnection conn = null;
                 //SessionID 检查连接对象
