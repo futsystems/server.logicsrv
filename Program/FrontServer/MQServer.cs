@@ -294,7 +294,7 @@ namespace FrontServer
 
                         XLRspUserPasswordUpdateField field = new XLRspUserPasswordUpdateField();
 
-                        field.UserID = "";
+                        //field.UserID = "";
 
                         ErrorField rsp = ConvertRspInfo(response.RspInfo);
                         XLPacketData pkt = new XLPacketData(XLMessageType.T_RSP_UPDATEPASS);
