@@ -95,7 +95,7 @@ namespace FrontServer.XLServiceHost
         }
 
 
-
+        public bool IsXLProtocol { get { return true; } }
         /// <summary>
         /// 回话编号
         /// </summary>
@@ -200,6 +200,25 @@ namespace FrontServer.XLServiceHost
         public void Close()
         {
             _session.Close();
+        }
+
+        /// <summary>
+        /// 应答XLPacketData
+        /// </summary>
+        /// <param name="data"></param>
+        public void ResponseXLPacket(XLPacketData data, uint requestID, bool isLast)
+        {
+            byte[] ret = XLPacketData.PackToBytes(data, XLEnumSeqType.SeqReq, this.NextSeqReqId, requestID, isLast);
+            this.Send(ret);
+        }
+
+        /// <summary>
+        /// 通知XLPacketData
+        /// </summary>
+        /// <param name="data"></param>
+        public void NotifyXLPacket(XLPacketData data)
+        {
+            
         }
     }
 }

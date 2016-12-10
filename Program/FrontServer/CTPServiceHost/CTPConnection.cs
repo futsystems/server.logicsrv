@@ -5,6 +5,7 @@ using System.Text;
 using TradingLib.API;
 using TradingLib.Common;
 using Common.Logging;
+using TradingLib.XLProtocol;
 
 using CTPService.Struct;
 using CTPService.Struct.V12;
@@ -96,7 +97,8 @@ namespace CTPService
             this.State.IPAddress = session.RemoteEndPoint.ToString();
         }
 
-        
+
+        public bool IsXLProtocol { get { return false; } }
 
         /// <summary>
         /// 回话编号
@@ -202,6 +204,24 @@ namespace CTPService
         public void Close()
         {
             _session.Close();
+        }
+
+        /// <summary>
+        /// 应答XLPacketData
+        /// </summary>
+        /// <param name="data"></param>
+        public void ResponseXLPacket(XLPacketData data, uint requestID, bool isLast)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// 通知XLPacketData
+        /// </summary>
+        /// <param name="data"></param>
+        public void NotifyXLPacket(XLPacketData data)
+        {
+            throw new NotImplementedException();
         }
     }
 }

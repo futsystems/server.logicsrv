@@ -7,7 +7,10 @@ using System.Threading;
 using ZeroMQ;
 using TradingLib.API;
 using TradingLib.Common;
+using TradingLib.XLProtocol;
+using TradingLib.XLProtocol.V1;
 using Common.Logging;
+
 
 namespace FrontServer
 {
@@ -212,8 +215,15 @@ namespace FrontServer
                                             IConnection conn = GetConnection(clientId);
                                             if (conn != null)
                                             {
-                                                //调用Connection对应的ServiceHost处理逻辑消息包
-                                                conn.ServiceHost.HandleLogicMessage(conn, packet);
+                                                if (conn.IsXLProtocol)
+                                                {
+                                                    this.HandleLogicMessage(conn, packet);
+                                                }
+                                                else
+                                                {
+                                                    //调用Connection对应的ServiceHost处理逻辑消息包
+                                                    conn.ServiceHost.HandleLogicMessage(conn, packet);
+                                                }
                                             }
                                             else
                                             {
@@ -245,6 +255,107 @@ namespace FrontServer
             }
             _stopped = true;
             logger.Info("MQServer MessageProcess Stoppd");
+        }
+
+
+        void HandleLogicMessage(IConnection conn, IPacket lpkt)
+        {
+            switch (lpkt.Type)
+            {
+                case MessageTypes.LOGINRESPONSE:
+                    {
+                        LoginResponse response = lpkt as LoginResponse;
+                        //将数据转换成CTP业务结构体
+                        XLRspLoginField field = new XLRspLoginField();
+                        field.TradingDay = response.TradingDay;
+                        field.UserID = response.LoginID;
+                        field.Name = response.NickName;
+
+                        ErrorField rsp = ConvertRspInfo(response.RspInfo);
+
+                        XLPacketData pkt = new XLPacketData(XLMessageType.T_RSP_LOGIN);
+                        pkt.AddField(rsp);
+                        pkt.AddField(field);
+
+
+                        conn.ResponseXLPacket(pkt, (uint)response.RequestID, response.IsLast);
+                        //if (response.RspInfo.ErrorID == 0)
+                        //{
+                        //    conn.State.Authorized = true;
+                        //    conn.State.FrontID = field.FrontID;
+                        //    conn.State.SessionID = field.SessionID;
+                        //}
+                        break;
+                    }
+
+                default:
+                    logger.Warn(string.Format("Logic Packet:{0} not handled", lpkt.Type));
+                    break;
+
+            }
+        }
+
+        public void HandleXLPacketData(IConnection conn, XLPacketData pkt,int requestId)
+        {
+            switch (pkt.MessageType)
+            {
+                case XLMessageType.T_REQ_LOGIN:
+                    {
+                        var data = pkt.FieldList[0].FieldData;
+                        if (data is XLReqLoginField)
+                        {
+                            XLReqLoginField field = (XLReqLoginField)data;
+
+                            LoginRequest request = RequestTemplate<LoginRequest>.CliSendRequest(requestId);
+                            request.LoginID = field.UserID;
+                            request.Passwd = field.Password;
+                            request.MAC = field.MacAddress;
+                            request.IPAddress = field.ClientIPAddress;
+                            request.LoginType = 1;
+                            request.ProductInfo = field.UserProductInfo;
+
+                            this.TLSend(conn.SessionID, request);
+
+
+                            //XLPacketData pktData = new XLPacketData(XLMessageType.T_RSP_LOGIN);
+                            //ErrorField rsp = new ErrorField();
+                            //rsp.ErrorID = 0;
+                            //rsp.ErrorMsg = "正确";
+
+                            //XLRspLoginField response = new XLRspLoginField();
+                            //response.Name = "测试";
+                            //response.TradingDay = 20150101;
+                            //response.UserID = request.UserID;
+
+                            //pktData.AddField(rsp);
+                            //pktData.AddField(response);
+                            //byte[] ret = XLPacketData.PackToBytes(pktData, XLEnumSeqType.SeqReq, conn.NextSeqReqId, requestInfo.DataHeader.RequestID, true);
+                            //conn.Send(ret);
+
+                            logger.Info(string.Format("Session:{0} >> ReqUserLogin", conn.SessionID));
+
+
+
+                        }
+                        else
+                        {
+                            logger.Warn(string.Format("Request:{0} Data Field do not macth", pkt.MessageType));
+                        }
+                        break;
+                    }
+                default:
+                    logger.Warn(string.Format("Packet:{0} logic not handled", pkt.MessageType));
+                    break;
+            }
+        }
+
+
+        ErrorField ConvertRspInfo(RspInfo info)
+        {
+            ErrorField field = new ErrorField();
+            field.ErrorID = info.ErrorID;
+            field.ErrorMsg = info.ErrorMessage;
+            return field;
         }
     }
 }

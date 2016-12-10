@@ -105,47 +105,9 @@ namespace FrontServer.XLServiceHost
                     logger.Warn(string.Format("Client:{0} empty request,ingore", session.SessionID));
                     return;
                 }
+                _mqServer.HandleXLPacketData(conn, requestInfo.Body,(int)requestInfo.DataHeader.RequestID);
 
-
-                switch (requestInfo.Body.MessageType)
-                {
-                    case XLMessageType.T_REQ_LOGIN:
-                        {
-                            var data = requestInfo.Body.FieldList[0].FieldData;
-                            if (data is XLReqLoginField)
-                            {
-                                XLReqLoginField request = (XLReqLoginField)data;
-
-                                XLPacketData pktData = new XLPacketData(XLMessageType.T_RSP_LOGIN);
-                                ErrorField rsp = new ErrorField();
-                                rsp.ErrorID = 0;
-                                rsp.ErrorMsg = "正确";
-
-                                XLRspLoginField response = new XLRspLoginField();
-                                response.Name = "测试";
-                                response.TradingDay = 20150101;
-                                response.UserID = request.UserID;
-
-                                pktData.AddField(rsp);
-                                pktData.AddField(response);
-                                byte[] ret = XLPacketData.PackToBytes(pktData, XLEnumSeqType.SeqReq, conn.NextSeqReqId, requestInfo.DataHeader.RequestID, true);
-                                conn.Send(ret);
-
-                                logger.Info(string.Format("Session:{0} >> ReqUserLogin", session.SessionID));
-
-                                
-
-                            }
-                            else
-                            {
-                                logger.Warn(string.Format("Request:{0} Data Field do not macth", requestInfo.Body.MessageType));
-                            }
-                            break;
-                        }
-                    default:
-                        logger.Warn(string.Format("Packet:{0} logic not handled", requestInfo.Body.MessageType));
-                        break;
-                }
+                
             }
             catch (Exception ex)
             {
