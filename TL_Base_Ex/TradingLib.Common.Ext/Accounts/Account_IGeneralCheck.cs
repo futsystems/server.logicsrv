@@ -14,14 +14,12 @@ namespace TradingLib.Common
     public partial class AccountBase
     {
         /// <summary>
-        /// 检查帐户是否可以交易某个合约,在帐户是否可以交易合约逻辑部分
-        /// 我们可以按照合约的种类去查询对应的服务是否支持该合约。
-        /// 具体的检查逻辑可以在扩展模块的服务对象中去实现
+        /// 检查账户是否可以交易某个合约
         /// </summary>
         /// <param name="symbol"></param>
         /// <param name="msg"></param>
         /// <returns></returns>
-        public bool CanTakeSymbol(Symbol symbol, out string msg)
+        public bool CheckSymbolAllowd(Symbol symbol, out string msg)
         {
             msg = string.Empty;
             bool re = true;
@@ -29,11 +27,11 @@ namespace TradingLib.Common
         }
 
         /// <summary>
-        /// 检查某个帐户是否可以执行某个委托Order
+        /// 账户下开仓委托 进行账户资金充足性检查
         /// </summary>
         /// <param name="o"></param>
         /// <returns></returns>
-        public bool CanFundTakeOrder(Order o, out string msg)
+        public bool CheckEquityAdequacy(Order o, out string msg)
         {
             msg = string.Empty;
             //如果是平仓委托 则直接返回
@@ -59,7 +57,7 @@ namespace TradingLib.Common
         /// </summary>
         /// <param name="symbol"></param>
         /// <returns></returns>
-        public virtual int CanOpenSize(Symbol symbol, bool side, QSEnumOffsetFlag flag)
+        public int CheckMaxOrderSize(Symbol symbol, bool side, QSEnumOffsetFlag flag)
         {
             switch (symbol.SecurityType)
             {
@@ -75,8 +73,6 @@ namespace TradingLib.Common
                                 decimal fundperlot = this.CalOrderMarginFrozen(symbol, 1) * this.GetExchangeRate(symbol.SecurityFamily);
 
                                 decimal avabilefund = GetFundAvabile(symbol);
-
-                                //Util.Debug("QryCanOpenSize Fundavablie:" + avabilefund.ToString() + " Symbol:" + symbol.Symbol + " Price:" + price.ToString() + " Fundperlot:" + fundperlot.ToString());
                                 return (int)(avabilefund / fundperlot);
                             }
 

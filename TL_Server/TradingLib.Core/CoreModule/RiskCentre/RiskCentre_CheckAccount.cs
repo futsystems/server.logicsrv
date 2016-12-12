@@ -20,7 +20,7 @@ namespace TradingLib.Core
                 if (!a.RuleItemLoaded)
                     LoadRuleItem(a);
                 string msg = string.Empty;
-                if (!a.CheckAccount(out msg) && msg != string.Empty)//账户检查不通过并且有返回消息则我们打印消息
+                if (!a.CheckAccountRule(out msg) && msg != string.Empty)//账户检查不通过并且有返回消息则我们打印消息
                 {
                     logger.Warn(msg);
                 }

@@ -6,14 +6,15 @@ using TradingLib.API;
 
 namespace TradingLib.Common
 {
+    /// <summary>
+    /// 账户 交易信息
+    /// </summary>
     public partial class AccountBase 
     {
         /// <summary>
         /// 是否有持仓
         /// </summary>
         public bool AnyPosition { get { return this.GetAnyPosition(); } }
-
-
 
 
         /// <summary>

@@ -24,7 +24,7 @@ namespace TradingLib.Common
         /// <param name="o"></param>
         /// <param name="msg"></param>
         /// <returns></returns>
-        public bool CheckOrder(Order o, out string msg)
+        public bool CheckOrderRule(Order o, out string msg)
         {
             msg = "";
             foreach (IOrderCheck rc in _ordchekMap.Values)
@@ -71,7 +71,7 @@ namespace TradingLib.Common
         /// </summary>
         /// <param name="msg"></param>
         /// <returns></returns>
-        public bool CheckAccount(out string msg)
+        public bool CheckAccountRule(out string msg)
         {
             msg = "";
             foreach (IAccountCheck rc in _accchekMap.Values)

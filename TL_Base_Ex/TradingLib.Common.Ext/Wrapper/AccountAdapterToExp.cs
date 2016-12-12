@@ -177,10 +177,10 @@ namespace TradingLib.Common
         //}
 
 
-        public int CanOpenSize(Symbol symbol,bool side,QSEnumOffsetFlag offset)
-        {
-            return _acc.CanOpenSize(symbol,side,offset);
-        }
+        //public int CanOpenSize(Symbol symbol,bool side,QSEnumOffsetFlag offset)
+        //{
+        //    return _acc.CanOpenSize(symbol,side,offset);
+        //}
         #endregion
 
         #region 【IFinanceTotal】
@@ -279,11 +279,11 @@ namespace TradingLib.Common
         /// </summary>
         /// <param name="o"></param>
         /// <returns></returns>
-        public bool CanFundTakeOrder(Order o)
-        {
-            string msg;
-            return _acc.CanFundTakeOrder(o,out msg);
-        }
+        //public bool CanFundTakeOrder(Order o)
+        //{
+        //    string msg;
+        //    return _acc.CanFundTakeOrder(o,out msg);
+        //}
         /// <summary>
         /// 获得某个合约的可用资金
         /// </summary>

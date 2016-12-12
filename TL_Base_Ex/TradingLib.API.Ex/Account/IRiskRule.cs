@@ -22,14 +22,14 @@ namespace TradingLib.API
         /// <param name="o"></param>
         /// <param name="msg"></param>
         /// <returns></returns>
-        bool CheckOrder(Order o, out string msg);
+        bool CheckOrderRule(Order o, out string msg);
 
         /// <summary>
         /// 检查账户状态
         /// </summary>
         /// <param name="msg"></param>
         /// <returns></returns>
-        bool CheckAccount(out string msg);
+        bool CheckAccountRule(out string msg);
 
         /// <summary>
         /// 清除委托检查

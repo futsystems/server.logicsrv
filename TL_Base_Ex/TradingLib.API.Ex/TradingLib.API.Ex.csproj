@@ -46,7 +46,6 @@
       <Link>VersionInfo.cs</Link>
     </Compile>
     <Compile Include="Account\IAccountIndicator.cs" />
-    <Compile Include="Account\IAccountService.cs" />
     <Compile Include="Account\IRiskRule.cs" />
     <Compile Include="Contrib\EnumContribCommandHandleType.cs" />
     <Compile Include="Contrib\IPlugin.cs" />

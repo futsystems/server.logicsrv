@@ -423,7 +423,7 @@ namespace TradingLib.Core
                 //3.合约交易权限检查(如果帐户存在特殊服务,可由特殊服务进行合约交易权限检查) 有关特殊服务的主力合约控制与检查放入到对应的特殊服务实现中
                 //if (!inter)
                 {
-                    if (!account.CanTakeSymbol(o.oSymbol, out msg))
+                    if (!account.CheckSymbolAllowd(o.oSymbol, out msg))
                     {
                         logger.Info("Order rejected by[Account CanTakeSymbol Check]" + o.GetOrderInfo());
                         return false;
@@ -436,7 +436,7 @@ namespace TradingLib.Core
                 bool entryposition = o.IsEntryPosition;
                 if (entryposition)//开仓执行资金检查
                 {
-                    if (!account.CanFundTakeOrder(o, out msg))
+                    if (!account.CheckEquityAdequacy(o, out msg))
                     {
                         logger.Info("Order rejected by[Order Margin Check]" + o.GetOrderInfo());
                         return false;
@@ -583,7 +583,7 @@ namespace TradingLib.Core
                 //5.账号所应用的风控规则检查 内部委托不执行帐户个性的自定义检查
                 if (!inter)
                 {
-                    if (!account.CheckOrder(o, out msg))//如果通过风控检查 则置委托状态为Placed
+                    if (!account.CheckOrderRule(o, out msg))//如果通过风控检查 则置委托状态为Placed
                     {
                         logger.Info("Order rejected by[Order Rule Check]" + o.GetOrderInfo());
                         

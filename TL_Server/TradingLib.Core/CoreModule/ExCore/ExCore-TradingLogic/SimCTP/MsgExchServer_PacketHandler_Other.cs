@@ -141,7 +141,7 @@ namespace TradingLib.Core
             {
                 
                 //
-                int size = account.CanOpenSize(symbol,request.Side,request.OffsetFlag);
+                int size = account.CheckMaxOrderSize(symbol,request.Side,request.OffsetFlag);
 
                 logger.Info("got max opensize:" + size.ToString());
                 response.Symbol = request.Symbol;

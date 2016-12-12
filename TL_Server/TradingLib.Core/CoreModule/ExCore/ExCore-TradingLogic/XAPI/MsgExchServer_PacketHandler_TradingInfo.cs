@@ -196,7 +196,7 @@ namespace TradingLib.Core
             }
             else
             {
-                int size = account.CanOpenSize(symbol, request.Side, request.OffsetFlag);
+                int size = account.CheckMaxOrderSize(symbol, request.Side, request.OffsetFlag);
                 response.Symbol = request.Symbol;
                 response.MaxVol = size >= 0 ? size : 0;
                 response.OffsetFlag = request.OffsetFlag;

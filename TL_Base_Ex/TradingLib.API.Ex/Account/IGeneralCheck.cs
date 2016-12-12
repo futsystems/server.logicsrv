@@ -6,34 +6,31 @@ using System.Text;
 namespace TradingLib.API
 {
     /// <summary>
-    /// 帐户核心常规检查 用于主风控逻辑的相关检查
-    /// 合约交易权限检查
-    /// 委托保证金检查
-    /// 可开数量等
+    /// 检查账户某合约交易授权
+    /// 开仓委托资金检查
+    /// 查询账户可下单最大数量
     /// </summary>
     public interface IGeneralCheck
     {
         /// <summary>
-        /// 检查某个帐户是否可以接受某个委托 
-        /// 用于保证金资金检查
+        /// 检查账户资金是否充足
         /// </summary>
         /// <param name="o"></param>
         /// <returns></returns>
-        bool CanFundTakeOrder(Order order,out string msg);
+        bool CheckEquityAdequacy(Order order, out string msg);
 
         /// <summary>
-        /// 检查某个帐号是否能够交易某个合约
+        /// 检查账户某合约交易授权
         /// </summary>
         /// <param name="symbol"></param>
         /// <returns></returns>
-        bool CanTakeSymbol(Symbol symbol,out string msg);
+        bool CheckSymbolAllowd(Symbol symbol, out string msg);
 
         /// <summary>
-        /// 返回帐户可某个合约的手数
-        /// 逻辑中包含一些特殊的保证金处理
+        /// 查询账户可下单最大数量
         /// </summary>
         /// <param name="symbol"></param>
         /// <returns></returns>
-        int CanOpenSize(Symbol symbol,bool side,QSEnumOffsetFlag offset);
+        int CheckMaxOrderSize(Symbol symbol,bool side,QSEnumOffsetFlag offset);
     }
 }
