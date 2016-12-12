@@ -29,6 +29,7 @@ namespace TradingLib.Common
             ExpireMonth = 0;
             ExpireDate = 0;
             Tradeable = false;
+            Currency = CurrencyType.RMB;
 
         }
         /// <summary>
@@ -98,6 +99,10 @@ namespace TradingLib.Common
         /// </summary>
         public bool Tradeable { get; set; }
 
+        /// <summary>
+        /// 货币
+        /// </summary>
+        public CurrencyType Currency { get; set; }
         string _serializedstring = string.Empty;
         public string GetSerializedString()
         {
@@ -137,6 +142,8 @@ namespace TradingLib.Common
             sb.Append(instrument.ExpireDate);
             sb.Append(d);
             sb.Append(instrument.Tradeable);
+            sb.Append(d);
+            sb.Append(instrument.Currency);
             return sb.ToString();
         }
 
@@ -158,6 +165,7 @@ namespace TradingLib.Common
             instrument.ExpireMonth = int.Parse(rec[10]);
             instrument.ExpireDate = int.Parse(rec[11]);
             instrument.Tradeable = bool.Parse(rec[12]);
+            instrument.Currency = rec[13].ParseEnum<CurrencyType>();
             return instrument;
         }
 

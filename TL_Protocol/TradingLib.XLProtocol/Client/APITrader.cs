@@ -26,14 +26,19 @@ namespace TradingLib.XLProtocol.Client
 
 
         /// <summary>
-        /// 服务端登入回报
+        /// 登入回报
         /// </summary>
         public event Action<XLRspLoginField, ErrorField, uint, bool> OnRspUserLogin = delegate { };
 
         /// <summary>
-        /// 服务端修改密码回报
+        /// 修改密码回报
         /// </summary>
         public event Action<XLRspUserPasswordUpdateField, ErrorField, uint, bool> OnRspUserPasswordUpdate = delegate { };
+
+        /// <summary>
+        /// 服查询合约回报
+        /// </summary>
+        public event Action<XLSymbolField, ErrorField, uint, bool> OnRspQrySymbol = delegate { };
 
         #endregion
         string _serverIP = string.Empty;
@@ -109,6 +114,20 @@ namespace TradingLib.XLProtocol.Client
                             OnRspUserPasswordUpdate(response, rsp, dataHeader.RequestID, (int)dataHeader.IsLast == 1 ? true : false);
                             break;
                         }
+                    case XLMessageType.T_RSP_SYMBOL:
+                        {
+                            XLSymbolField response;
+                            if (pkt.FieldList.Count > 0)
+                            {
+                                response = (XLSymbolField)pkt.FieldList[0].FieldData;
+                            }
+                            else
+                            {
+                                response = new XLSymbolField();
+                            }
+                            OnRspQrySymbol(response, new ErrorField(), dataHeader.RequestID, (int)dataHeader.IsLast == 1 ? true : false);
+                            break;
+                        }
                     default:
                         logger.Info(string.Format("Unhandled Pkt:{0}", msgType));
                         break;
@@ -156,6 +175,19 @@ namespace TradingLib.XLProtocol.Client
             XLPacketData pktData = new XLPacketData(XLMessageType.T_REQ_UPDATEPASS);
             pktData.AddField(req);
             return SendPktData(pktData, XLEnumSeqType.SeqReq, requestID);
+        }
+        
+        /// <summary>
+        /// 请求查询合约
+        /// </summary>
+        /// <param name="req"></param>
+        /// <param name="requestID"></param>
+        /// <returns></returns>
+        public bool QrySymbol(XLQrySymbolField req, uint requestID)
+        {
+            XLPacketData pktData = new XLPacketData(XLMessageType.T_QRY_SYMBOL);
+            pktData.AddField(req);
+            return SendPktData(pktData, XLEnumSeqType.SeqQry, requestID);
         }
         #endregion
 

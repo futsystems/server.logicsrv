@@ -312,7 +312,6 @@ namespace TradingLib.Core
         void SrvOnQrySymbol(QrySymbolRequest request,IAccount account)
         {
             logger.Info("QrySymbol:" + request.ToString());
-            Util.sleep(1000);
             Instrument[] instruments = new Instrument[]{};
             if (request.SecurityType != SecurityType.NIL && string.IsNullOrEmpty(request.ExchID) && string.IsNullOrEmpty(request.Symbol) && string.IsNullOrEmpty(request.Security))
             {

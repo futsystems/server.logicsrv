@@ -27,6 +27,10 @@ namespace TradingLib.XLProtocol.V1
                     return XLStructHelp.StructToBytes<XLReqUserPasswordUpdateField>((XLReqUserPasswordUpdateField)field);
                 case XLFieldType.F_RSP_UPDATEPASS:
                     return XLStructHelp.StructToBytes<XLRspUserPasswordUpdateField>((XLRspUserPasswordUpdateField)field);
+                case XLFieldType.F_QRY_SYMBOL:
+                    return XLStructHelp.StructToBytes<XLQrySymbolField>((XLQrySymbolField)field);
+                case XLFieldType.F_RSP_SYMBOL:
+                    return XLStructHelp.StructToBytes<XLSymbolField>((XLSymbolField)field);
                 default:
                     throw new Exception(string.Format("FieldType:{0} not supported", fieldType));
             }
@@ -46,6 +50,10 @@ namespace TradingLib.XLProtocol.V1
                     return XLStructHelp.BytesToStruct<XLReqUserPasswordUpdateField>(data, offset);
                 case XLFieldType.F_RSP_UPDATEPASS:
                     return XLStructHelp.BytesToStruct<XLRspUserPasswordUpdateField>(data, offset);
+                case XLFieldType.F_QRY_SYMBOL:
+                    return XLStructHelp.BytesToStruct<XLQrySymbolField>(data, offset);
+                case XLFieldType.F_RSP_SYMBOL:
+                    return XLStructHelp.BytesToStruct<XLSymbolField>(data, offset);
                 default:
                     throw new Exception(string.Format("FieldType:{0} not supported", type));
             }

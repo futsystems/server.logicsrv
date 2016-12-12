@@ -123,6 +123,92 @@ namespace TradingLib.XLProtocol.V1
     #endregion
 
     #region 查询合约
+    /// <summary>
+    /// 查询合约
+    /// </summary>
+    [StructLayout(LayoutKind.Sequential, Pack = 1)]
+    public struct XLQrySymbolField : IXLField
+    {
+        /// <summary>
+        /// 合约代码
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 31)]
+        public string SymbolID;
+        /// <summary>
+        /// 交易所代码
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 9)]
+        public string ExchangeID;
+        /// <summary>
+        /// 产品代码
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 31)]
+        public string SecurityID;
+
+        /// <summary>
+        /// 域类别
+        /// </summary>
+        public ushort FieldID { get { return (ushort)XLFieldType.F_QRY_SYMBOL; } }
+    }
+
+    [StructLayout(LayoutKind.Sequential, Pack = 1)]
+    public struct XLSymbolField : IXLField
+    {
+        /// <summary>
+        /// 合约代码
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 31)]
+        public string SymbolID;
+        /// <summary>
+        /// 交易所代码
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 9)]
+        public string ExchangeID;
+        /// <summary>
+        /// 合约名称
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 21)]
+        public string SymbolName;
+
+        /// <summary>
+        /// 产品代码
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 31)]
+        public string SecurityID;
+
+        /// <summary>
+        /// 产品类型
+        /// </summary>
+        public XLSecurityType SecurityType;
+
+        /// <summary>
+        /// 合约乘数
+        /// </summary>
+        public int Multiple;
+
+        /// <summary>
+        /// 最小变动价位
+        /// </summary>
+        public double PriceTick;
+
+        /// <summary>
+        /// 到期日
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 9)]
+        public string ExpireDate;
+
+        /// <summary>
+        /// 计价货币
+        /// </summary>
+        public XLCurrencyType Currency;
+
+        /// <summary>
+        /// 域类别
+        /// </summary>
+        public ushort FieldID { get { return (ushort)XLFieldType.F_RSP_SYMBOL; } }
+
+       
+    }
     #endregion
 
     #region 查询委托

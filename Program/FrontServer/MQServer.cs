@@ -306,6 +306,41 @@ namespace FrontServer
 
                         break;
                     }
+                case MessageTypes.SYMBOLRESPONSE:
+                    {
+                        RspQrySymbolResponse response = lpkt as RspQrySymbolResponse;
+
+                        if (response.InstrumentToSend != null)
+                        {
+                            XLSymbolField field = new XLSymbolField();
+                            field.SymbolID = response.InstrumentToSend.Symbol;
+                            field.ExchangeID = response.InstrumentToSend.ExchangeID;
+                            field.SymbolName = response.InstrumentToSend.Name;
+                            field.SecurityID = response.InstrumentToSend.Security;
+                            field.SecurityType = ConvSecurityType(response.InstrumentToSend.SecurityType);
+                            field.Multiple = response.InstrumentToSend.Multiple;
+                            field.PriceTick = (double)response.InstrumentToSend.PriceTick;
+                            field.ExpireDate = response.InstrumentToSend.ExpireDate.ToString();
+                            field.Currency = ConvCurrencyType(response.InstrumentToSend.Currency);
+
+
+                            XLPacketData pkt = new XLPacketData(XLMessageType.T_RSP_SYMBOL);
+                            pkt.AddField(field);
+
+                            conn.ResponseXLPacket(pkt, (uint)response.RequestID, response.IsLast);
+                            logger.Info(string.Format("LogicSrv Reply Session:{0} -> RspQrySymbolResponse", conn.SessionID));
+
+                        }
+                        else
+                        {
+                            XLPacketData pkt = new XLPacketData(XLMessageType.T_RSP_SYMBOL);
+                            conn.ResponseXLPacket(pkt, (uint)response.RequestID, response.IsLast);
+                            logger.Info(string.Format("LogicSrv Reply Session:{0} -> RspQrySymbolResponse", conn.SessionID));
+                        }
+
+                        break;
+
+                    }
                 default:
                     logger.Warn(string.Format("Logic Packet:{0} not handled", lpkt.Type));
                     break;
@@ -363,12 +398,68 @@ namespace FrontServer
                         }
                         break;
                     }
+                case XLMessageType.T_QRY_SYMBOL:
+                    {
+                        var data = pkt.FieldList[0].FieldData;
+                        if (data is XLQrySymbolField)
+                        {
+                            XLQrySymbolField field = (XLQrySymbolField)data;
+
+                            QrySymbolRequest request = RequestTemplate<QrySymbolRequest>.CliSendRequest(requestId);
+
+                            request.ExchID = field.ExchangeID;
+                            request.Symbol = field.SymbolID;
+                            request.Security = field.SecurityID;
+
+                            this.TLSend(conn.SessionID, request);
+                            logger.Info(string.Format("Session:{0} >> QrySymbolRequest", conn.SessionID));
+
+                        }
+                        else
+                        {
+                            logger.Warn(string.Format("Request:{0} Data Field do not macth", pkt.MessageType));
+                        }
+                        break;
+                    }
                 default:
                     logger.Warn(string.Format("Packet:{0} logic not handled", pkt.MessageType));
                     break;
             }
         }
 
+        /// <summary>
+        /// 转换合约类别
+        /// </summary>
+        /// <param name="type"></param>
+        /// <returns></returns>
+        XLSecurityType ConvSecurityType(SecurityType type)
+        {
+            switch (type)
+            {
+                case SecurityType.FUT: return XLSecurityType.Future;
+                case SecurityType.STK: return XLSecurityType.STK;
+                default:
+                    return XLSecurityType.Future;
+            }
+        }
+
+        /// <summary>
+        /// 转换货币
+        /// </summary>
+        /// <param name="type"></param>
+        /// <returns></returns>
+        XLCurrencyType ConvCurrencyType(CurrencyType type)
+        {
+            switch (type)
+            {
+                case CurrencyType.RMB: return XLCurrencyType.RMB;
+                case CurrencyType.USD: return XLCurrencyType.USD;
+                case CurrencyType.HKD: return XLCurrencyType.HKD;
+                case CurrencyType.EUR: return XLCurrencyType.EUR;
+                default:
+                    return XLCurrencyType.RMB;
+            }
+        }
 
         ErrorField ConvertRspInfo(RspInfo info)
         {

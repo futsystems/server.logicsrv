@@ -107,6 +107,7 @@ namespace TradingLib.Common
             //instrument.ExpireMonth = symbol.ExpireMonth;
             instrument.ExpireDate = symbol.ExpireDate;
             instrument.Tradeable = symbol.IsTradeable;
+            instrument.Currency = symbol.Currency;
             return instrument;
         }
     }
