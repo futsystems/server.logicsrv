@@ -362,6 +362,25 @@ namespace FrontServer
                         if (response.IsLast) logger.Info(string.Format("LogicSrv Reply Session:{0} -> RspQryOrderResponse", conn.SessionID));
                         break;
                     }
+                    //委托实时通知
+                case MessageTypes.ORDERNOTIFY:
+                    {
+                        OrderNotify notify = lpkt as OrderNotify;
+                        XLPacketData pkt = new XLPacketData(XLMessageType.T_RTN_ORDER);
+                        if (notify.Order != null)
+                        {
+                            XLOrderField field = ConvOrder(notify.Order);
+                            pkt.AddField(field);
+
+                            conn.NotifyXLPacket(pkt);
+                        }
+                        else
+                        {
+                            logger.Warn("Order notify, order is null");
+                        }
+                        logger.Info(string.Format("LogicSrv Reply Session:{0} -> OrderNotify", conn.SessionID));
+                        break;
+                    }
                     //查询成交回报
                 case MessageTypes.TRADERESPONSE:
                     {
@@ -380,6 +399,26 @@ namespace FrontServer
                             conn.ResponseXLPacket(pkt, (uint)response.RequestID, response.IsLast);
                         }
                         if (response.IsLast) logger.Info(string.Format("LogicSrv Reply Session:{0} -> RspQryTradeResponse", conn.SessionID));
+                        break;
+                    }
+                    //成交实时通知
+                case MessageTypes.EXECUTENOTIFY:
+                    {
+                        TradeNotify notify = lpkt as TradeNotify;
+                        XLPacketData pkt = new XLPacketData(XLMessageType.T_RTN_TRADE);
+
+                        if (notify.Trade != null)
+                        {
+                            XLTradeField field = ConvTrade(notify.Trade);
+                            pkt.AddField(field);
+
+                            conn.NotifyXLPacket(pkt);
+                        }
+                        else
+                        {
+                            logger.Warn("Trade notify, trade is null");
+                        }
+                        logger.Info(string.Format("LogicSrv Reply Session:{0} -> TradeNotify", conn.SessionID));
                         break;
                     }
                 default:

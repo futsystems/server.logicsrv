@@ -218,7 +218,8 @@ namespace FrontServer.XLServiceHost
         /// <param name="data"></param>
         public void NotifyXLPacket(XLPacketData data)
         {
-            
+            byte[] ret = XLPacketData.PackToBytes(data, XLEnumSeqType.SeqRtn, this.NextSeqRtnId, 0, true);
+            this.Send(ret);
         }
     }
 }

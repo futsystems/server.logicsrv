@@ -51,6 +51,15 @@ namespace TradingLib.XLProtocol.Client
         public event Action<XLTradeField, ErrorField, uint, bool> OnRspQryTrade = delegate { };
 
 
+        /// <summary>
+        /// 委托实时通知
+        /// </summary>
+        public event Action<XLOrderField> OnRtnOrder = delegate { };
+
+        /// <summary>
+        /// 成交实时通知
+        /// </summary>
+        public event Action<XLTradeField> OnRtnTrade = delegate { };
         #endregion
         string _serverIP = string.Empty;
         int _port = 0;
@@ -154,6 +163,13 @@ namespace TradingLib.XLProtocol.Client
                             break;
                             
                         }
+                    case XLMessageType.T_RTN_ORDER:
+                        {
+                            XLOrderField notify = (XLOrderField)pkt.FieldList[0].FieldData;
+                            OnRtnOrder(notify);
+                            break;
+                        }
+
                     case XLMessageType.T_RSP_TRADE:
                         {
                             XLTradeField response;
@@ -168,7 +184,12 @@ namespace TradingLib.XLProtocol.Client
                             OnRspQryTrade(response, new ErrorField(), dataHeader.RequestID, (int)dataHeader.IsLast == 1 ? true : false);
                             break;
                         }
-
+                    case XLMessageType.T_RTN_TRADE:
+                        {
+                            XLTradeField notify = (XLTradeField)pkt.FieldList[0].FieldData;
+                            OnRtnTrade(notify);
+                            break;
+                        }
 
                     default:
                         logger.Info(string.Format("Unhandled Pkt:{0}", msgType));
