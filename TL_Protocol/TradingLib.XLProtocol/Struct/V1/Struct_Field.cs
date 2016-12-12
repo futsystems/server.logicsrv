@@ -212,6 +212,184 @@ namespace TradingLib.XLProtocol.V1
     #endregion
 
     #region 查询委托
+    [StructLayout(LayoutKind.Sequential, Pack = 1)]
+    public struct XLQryOrderField : IXLField
+    {
+        /// <summary>
+        /// 合约代码
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 31)]
+        public string SymbolID;
+        /// <summary>
+        /// 交易所代码
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 9)]
+        public string ExchangeID;
+        /// <summary>
+        /// 报单编号
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 21)]
+        public string OrderSysID;
+        /// <summary>
+        /// 开始时间
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 9)]
+        public string InsertTimeStart;
+        /// <summary>
+        /// 结束时间
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 9)]
+        public string InsertTimeEnd;
+
+        /// <summary>
+        /// 域类别
+        /// </summary>
+        public ushort FieldID { get { return (ushort)XLFieldType.F_QRY_ORDER; } }
+    }
+
+    /// <summary>
+    /// 报单
+    /// </summary>
+    [StructLayout(LayoutKind.Sequential, Pack = 1)]
+    public struct XLOrderField : IXLField
+    {
+        /// <summary>
+        /// 交易日
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 9)]
+        public string TradingDay;
+
+        /// <summary>
+        /// 报单日期
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 9)]
+        public string Date;
+
+        /// <summary>
+        /// 委托时间
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 9)]
+        public string Time;
+
+        /// <summary>
+        /// 投资者代码
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 13)]
+        public string UserID;
+
+        /// <summary>
+        /// 合约代码
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 31)]
+        public string SymbolID;
+
+        /// <summary>
+        /// 交易所代码
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 9)]
+        public string ExchangeID;
+
+        /// <summary>
+        /// 价格
+        /// </summary>
+        public double LimitPrice;
+
+        /// <summary>
+        /// 止损价
+        /// </summary>
+        public double StopPrice;
+
+        /// <summary>
+        /// 报单类别
+        /// </summary>
+        public XLOrderType OrderType;
+
+        /// <summary>
+        /// 总数量
+        /// </summary>
+        public int VolumeTotal;
+
+        /// <summary>
+        /// 成交数量
+        /// </summary>
+        public int VolumeFilled;
+
+        /// <summary>
+        /// 未成交数量
+        /// </summary>
+        public int VolumeUnfilled;
+
+        /// <summary>
+        /// 买卖方向
+        /// </summary>
+        public XLDirectionType Direction;
+
+        /// <summary>
+        /// 开平标志
+        /// </summary>
+        public XLOffsetFlagType OffsetFlag;
+
+        /// <summary>
+        /// 组合投机套保标志
+        /// </summary>
+        public XLHedgeFlagType HedgeFlag;
+
+       
+
+        
+
+        /// <summary>
+        /// 本地报单引用
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 13)]
+        public string OrderRef;
+
+        /// <summary>
+        /// 远端报单编号
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 21)]
+        public string OrderSysID;
+
+        /// <summary>
+        /// 请求编号
+        /// </summary>
+        public int RequestID;
+
+        /// <summary>
+        /// 柜台委托全局编号
+        /// </summary>
+        public long OrderID;
+
+        /// <summary>
+        /// 报单状态
+        /// </summary>
+        public XLOrderStatus OrderStatus;
+
+        /// <summary>
+        /// 委托状态消息
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 256)]
+        public string StatusMsg;
+
+        /// <summary>
+        /// 用户强评标志
+        /// </summary>
+        public int ForceClose;
+
+        /// <summary>
+        /// 强平原因
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 256)]
+        public string ForceCloseReason;
+
+
+
+        /// <summary>
+        /// 域类别
+        /// </summary>
+        public ushort FieldID { get { return (ushort)XLFieldType.F_RSP_ORDER; } }
+    }
+
     #endregion
 
     #region 查询成交

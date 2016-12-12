@@ -306,6 +306,7 @@ namespace FrontServer
 
                         break;
                     }
+                    //合约回报
                 case MessageTypes.SYMBOLRESPONSE:
                     {
                         RspQrySymbolResponse response = lpkt as RspQrySymbolResponse;
@@ -338,6 +339,27 @@ namespace FrontServer
                             logger.Info(string.Format("LogicSrv Reply Session:{0} -> RspQrySymbolResponse", conn.SessionID));
                         }
 
+                        break;
+
+                    }
+                    //委托回报
+                case MessageTypes.ORDERRESPONSE:
+                    {
+                        RspQryOrderResponse response = lpkt as RspQryOrderResponse;
+                        XLPacketData pkt = new XLPacketData(XLMessageType.T_RSP_ORDER);
+
+                        if (response.OrderToSend != null)
+                        {
+                            XLOrderField field = ConvOrder(response.OrderToSend);
+                            pkt.AddField(field);
+
+                            conn.ResponseXLPacket(pkt, (uint)response.RequestID, response.IsLast);
+                        }
+                        else
+                        {
+                            conn.ResponseXLPacket(pkt, (uint)response.RequestID, response.IsLast);
+                        }
+                        if (response.IsLast) logger.Info(string.Format("LogicSrv Reply Session:{0} -> RspQryOrderResponse", conn.SessionID));
                         break;
 
                     }
@@ -398,6 +420,7 @@ namespace FrontServer
                         }
                         break;
                     }
+                    //查询合约
                 case XLMessageType.T_QRY_SYMBOL:
                     {
                         var data = pkt.FieldList[0].FieldData;
@@ -421,6 +444,27 @@ namespace FrontServer
                         }
                         break;
                     }
+                    //查询委托
+                case XLMessageType.T_QRY_ORDER:
+                    {
+                        var data = pkt.FieldList[0].FieldData;
+                        if (data is XLQryOrderField)
+                        {
+                            XLQryOrderField field = (XLQryOrderField)data;
+
+                            QryOrderRequest request = RequestTemplate<QryOrderRequest>.CliSendRequest(requestId);
+                            this.TLSend(conn.SessionID, request);
+                            logger.Info(string.Format("Session:{0} >> QryOrderRequest", conn.SessionID));
+
+                        }
+                        else
+                        {
+                            logger.Warn(string.Format("Request:{0} Data Field do not macth", pkt.MessageType));
+                        }
+                        break;
+                    }
+                   
+
                 default:
                     logger.Warn(string.Format("Packet:{0} logic not handled", pkt.MessageType));
                     break;
@@ -442,6 +486,94 @@ namespace FrontServer
                     return XLSecurityType.Future;
             }
         }
+
+        XLOrderField ConvOrder(Order order)
+        {
+            XLOrderField o = new XLOrderField();
+            DateTime dt = Util.ToDateTime(order.Date,order.Time);
+            o.TradingDay = order.SettleDay.ToString();
+            o.Date = order.Date.ToString();
+            o.Time = dt.ToString("HH:mm:ss");
+            o.UserID = order.Account;
+            o.SymbolID = order.Symbol;
+            o.ExchangeID = order.Exchange;
+            o.LimitPrice = (double)order.LimitPrice;
+            o.StopPrice = (double)order.StopPrice;
+            if (o.LimitPrice > 0)
+            {
+                o.OrderType = XLOrderType.Limit;
+            }
+            else
+            {
+                o.OrderType = XLOrderType.Market;
+            }
+
+            o.VolumeTotal = Math.Abs(order.TotalSize);
+            o.VolumeFilled = Math.Abs(order.FilledSize);
+            o.VolumeUnfilled = Math.Abs(order.Size);
+
+            o.Direction = order.Side ? XLDirectionType.Buy : XLDirectionType.Sell;
+            o.OffsetFlag = ConvOffSet(order.OffsetFlag);
+            o.HedgeFlag = XLHedgeFlagType.Speculation;
+
+            o.OrderRef = order.OrderRef;
+            o.OrderSysID = order.OrderSysID;
+            o.RequestID = order.RequestID;
+            o.OrderID = order.id;
+            o.OrderStatus = ConvOrderStatus(order.Status);
+            o.StatusMsg = order.Comment;
+            o.ForceClose = order.ForceClose ? 1 : 0;
+            o.ForceCloseReason = order.ForceCloseReason;
+
+            return o;
+
+
+        }
+
+        /// <summary>
+        /// 转换开平标识
+        /// </summary>
+        /// <param name="offset"></param>
+        /// <returns></returns>
+        XLOffsetFlagType ConvOffSet(QSEnumOffsetFlag offset)
+        {
+            switch (offset)
+            {
+                case QSEnumOffsetFlag.OPEN: return XLOffsetFlagType.Open;
+                case QSEnumOffsetFlag.CLOSE: return XLOffsetFlagType.Close;
+                case QSEnumOffsetFlag.CLOSETODAY: return XLOffsetFlagType.CloseToday;
+                case QSEnumOffsetFlag.CLOSEYESTERDAY: return XLOffsetFlagType.CloseYesterday;
+                case QSEnumOffsetFlag.FORCECLOSE: return XLOffsetFlagType.ForceClose;
+                case QSEnumOffsetFlag.FORCEOFF: return XLOffsetFlagType.ForceOff;
+                case QSEnumOffsetFlag.UNKNOWN: return XLOffsetFlagType.Unknown;
+                default:
+                    return XLOffsetFlagType.Unknown;
+            }
+        }
+
+        /// <summary>
+        /// 转换委托状态
+        /// </summary>
+        /// <param name="status"></param>
+        /// <returns></returns>
+        XLOrderStatus ConvOrderStatus(QSEnumOrderStatus status)
+        {
+            switch (status)
+            {
+                case QSEnumOrderStatus.Canceled: return XLOrderStatus.Canceled;
+                case QSEnumOrderStatus.Filled: return XLOrderStatus.Filled;
+                case QSEnumOrderStatus.Opened: return XLOrderStatus.Opened;
+                case QSEnumOrderStatus.PartFilled: return XLOrderStatus.PartFilled;
+                case QSEnumOrderStatus.Placed: return XLOrderStatus.Placed;
+                case QSEnumOrderStatus.PreSubmited: return XLOrderStatus.PreSubmited;
+                case QSEnumOrderStatus.Reject: return XLOrderStatus.Reject;
+                case QSEnumOrderStatus.Submited: return XLOrderStatus.Submited;
+                case QSEnumOrderStatus.Unknown: return XLOrderStatus.Unknown;
+                default:
+                    return XLOrderStatus.Unknown;
+            }
+        }
+
 
         /// <summary>
         /// 转换货币

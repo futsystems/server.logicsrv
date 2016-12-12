@@ -36,9 +36,14 @@ namespace TradingLib.XLProtocol.Client
         public event Action<XLRspUserPasswordUpdateField, ErrorField, uint, bool> OnRspUserPasswordUpdate = delegate { };
 
         /// <summary>
-        /// 服查询合约回报
+        /// 查询合约回报
         /// </summary>
         public event Action<XLSymbolField, ErrorField, uint, bool> OnRspQrySymbol = delegate { };
+
+        /// <summary>
+        /// 查询委托回报
+        /// </summary>
+        public event Action<XLOrderField, ErrorField, uint, bool> OnRspQryOrder = delegate { };
 
         #endregion
         string _serverIP = string.Empty;
@@ -128,6 +133,21 @@ namespace TradingLib.XLProtocol.Client
                             OnRspQrySymbol(response, new ErrorField(), dataHeader.RequestID, (int)dataHeader.IsLast == 1 ? true : false);
                             break;
                         }
+                    case XLMessageType.T_RSP_ORDER:
+                        {
+                            XLOrderField response;
+                            if (pkt.FieldList.Count > 0)
+                            {
+                                response = (XLOrderField)pkt.FieldList[0].FieldData;
+                            }
+                            else
+                            {
+                                response = new XLOrderField();
+                            }
+                            OnRspQryOrder(response, new ErrorField(), dataHeader.RequestID, (int)dataHeader.IsLast == 1 ? true : false);
+                            break;
+                            
+                        }
                     default:
                         logger.Info(string.Format("Unhandled Pkt:{0}", msgType));
                         break;
@@ -186,6 +206,19 @@ namespace TradingLib.XLProtocol.Client
         public bool QrySymbol(XLQrySymbolField req, uint requestID)
         {
             XLPacketData pktData = new XLPacketData(XLMessageType.T_QRY_SYMBOL);
+            pktData.AddField(req);
+            return SendPktData(pktData, XLEnumSeqType.SeqQry, requestID);
+        }
+
+        /// <summary>
+        /// 请求查询委托
+        /// </summary>
+        /// <param name="req"></param>
+        /// <param name="requestID"></param>
+        /// <returns></returns>
+        public bool QryOrder(XLQryOrderField req, uint requestID)
+        {
+            XLPacketData pktData = new XLPacketData(XLMessageType.T_QRY_ORDER);
             pktData.AddField(req);
             return SendPktData(pktData, XLEnumSeqType.SeqQry, requestID);
         }
