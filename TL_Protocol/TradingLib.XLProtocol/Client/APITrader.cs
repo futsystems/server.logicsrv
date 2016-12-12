@@ -45,6 +45,12 @@ namespace TradingLib.XLProtocol.Client
         /// </summary>
         public event Action<XLOrderField, ErrorField, uint, bool> OnRspQryOrder = delegate { };
 
+        /// <summary>
+        /// 查询成交回报
+        /// </summary>
+        public event Action<XLTradeField, ErrorField, uint, bool> OnRspQryTrade = delegate { };
+
+
         #endregion
         string _serverIP = string.Empty;
         int _port = 0;
@@ -148,6 +154,22 @@ namespace TradingLib.XLProtocol.Client
                             break;
                             
                         }
+                    case XLMessageType.T_RSP_TRADE:
+                        {
+                            XLTradeField response;
+                            if (pkt.FieldList.Count > 0)
+                            {
+                                response = (XLTradeField)pkt.FieldList[0].FieldData;
+                            }
+                            else
+                            {
+                                response = new XLTradeField();
+                            }
+                            OnRspQryTrade(response, new ErrorField(), dataHeader.RequestID, (int)dataHeader.IsLast == 1 ? true : false);
+                            break;
+                        }
+
+
                     default:
                         logger.Info(string.Format("Unhandled Pkt:{0}", msgType));
                         break;
@@ -222,6 +244,20 @@ namespace TradingLib.XLProtocol.Client
             pktData.AddField(req);
             return SendPktData(pktData, XLEnumSeqType.SeqQry, requestID);
         }
+
+        /// <summary>
+        /// 请求查询成交
+        /// </summary>
+        /// <param name="req"></param>
+        /// <param name="requestID"></param>
+        /// <returns></returns>
+        public bool QryTrade(XLQryTradeField req, uint requestID)
+        {
+            XLPacketData pktData = new XLPacketData(XLMessageType.T_QRY_TRADE);
+            pktData.AddField(req);
+            return SendPktData(pktData, XLEnumSeqType.SeqQry, requestID);
+        }
+
         #endregion
 
 

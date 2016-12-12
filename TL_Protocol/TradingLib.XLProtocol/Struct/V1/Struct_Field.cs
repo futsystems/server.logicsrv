@@ -230,16 +230,6 @@ namespace TradingLib.XLProtocol.V1
         /// </summary>
         [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 21)]
         public string OrderSysID;
-        /// <summary>
-        /// 开始时间
-        /// </summary>
-        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 9)]
-        public string InsertTimeStart;
-        /// <summary>
-        /// 结束时间
-        /// </summary>
-        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 9)]
-        public string InsertTimeEnd;
 
         /// <summary>
         /// 域类别
@@ -393,6 +383,122 @@ namespace TradingLib.XLProtocol.V1
     #endregion
 
     #region 查询成交
+    [StructLayout(LayoutKind.Sequential, Pack = 1)]
+    public struct XLQryTradeField : IXLField
+    {
+        /// <summary>
+        /// 合约代码
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 31)]
+        public string SymbolID;
+        /// <summary>
+        /// 交易所代码
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 9)]
+        public string ExchangeID;
+        /// <summary>
+        /// 成交编号
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 21)]
+        public string TradeID;
+
+        /// <summary>
+        /// 域类别
+        /// </summary>
+        public ushort FieldID { get { return (ushort)XLFieldType.F_QRY_TRADE; } }
+    }
+
+    /// <summary>
+    /// 成交
+    /// </summary>
+    [StructLayout(LayoutKind.Sequential, Pack = 1)]
+    public struct XLTradeField : IXLField
+    {
+        /// <summary>
+        /// 交易日
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 9)]
+        public string TradingDay;
+
+        /// <summary>
+        /// 成交时期
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 9)]
+        public string Date;
+
+        /// <summary>
+        /// 成交时间
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 9)]
+        public string Time;
+
+        /// <summary>
+        /// 投资者代码
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 13)]
+        public string UserID;
+
+
+        /// <summary>
+        /// 合约代码
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 31)]
+        public string SymbolID;
+
+        /// <summary>
+        /// 交易所代码
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 9)]
+        public string ExchangeID;
+
+        /// <summary>
+        /// 报单引用
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 13)]
+        public string OrderRef;
+
+        /// <summary>
+        /// 报单编号
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 21)]
+        public string OrderSysID;
+
+        /// <summary>
+        /// 成交编号
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 21)]
+        public string TradeID;
+
+        /// <summary>
+        /// 买卖方向
+        /// </summary>
+        public XLDirectionType Direction;
+
+        /// <summary>
+        /// 开平标志
+        /// </summary>
+        public XLOffsetFlagType OffsetFlag;
+
+        /// <summary>
+        /// 投机套保标志
+        /// </summary>
+        public XLHedgeFlagType HedgeFlag;
+
+        /// <summary>
+        /// 价格
+        /// </summary>
+        public double Price;
+
+        /// <summary>
+        /// 数量
+        /// </summary>
+        public int Volume;
+
+        /// <summary>
+        /// 域类别
+        /// </summary>
+        public ushort FieldID { get { return (ushort)XLFieldType.F_RSP_TRADE; } }
+    }
     #endregion 
 
     #region 查询持仓

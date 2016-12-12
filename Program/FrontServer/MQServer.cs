@@ -342,7 +342,7 @@ namespace FrontServer
                         break;
 
                     }
-                    //委托回报
+                    //查询委托回报
                 case MessageTypes.ORDERRESPONSE:
                     {
                         RspQryOrderResponse response = lpkt as RspQryOrderResponse;
@@ -361,7 +361,26 @@ namespace FrontServer
                         }
                         if (response.IsLast) logger.Info(string.Format("LogicSrv Reply Session:{0} -> RspQryOrderResponse", conn.SessionID));
                         break;
+                    }
+                    //查询成交回报
+                case MessageTypes.TRADERESPONSE:
+                    {
+                        RspQryTradeResponse response = lpkt as RspQryTradeResponse;
+                        XLPacketData pkt = new XLPacketData(XLMessageType.T_RSP_TRADE);
 
+                        if (response.TradeToSend != null)
+                        {
+                            XLTradeField field = ConvTrade(response.TradeToSend);
+                            pkt.AddField(field);
+
+                            conn.ResponseXLPacket(pkt, (uint)response.RequestID, response.IsLast);
+                        }
+                        else
+                        {
+                            conn.ResponseXLPacket(pkt, (uint)response.RequestID, response.IsLast);
+                        }
+                        if (response.IsLast) logger.Info(string.Format("LogicSrv Reply Session:{0} -> RspQryTradeResponse", conn.SessionID));
+                        break;
                     }
                 default:
                     logger.Warn(string.Format("Logic Packet:{0} not handled", lpkt.Type));
@@ -463,8 +482,25 @@ namespace FrontServer
                         }
                         break;
                     }
-                   
+                    //查询成交
+                case XLMessageType.T_QRY_TRADE:
+                    {
+                        var data = pkt.FieldList[0].FieldData;
+                        if (data is XLQryTradeField)
+                        {
+                            XLQryTradeField field = (XLQryTradeField)data;
 
+                            QryTradeRequest request = RequestTemplate<QryTradeRequest>.CliSendRequest(requestId);
+                            this.TLSend(conn.SessionID, request);
+                            logger.Info(string.Format("Session:{0} >> QryTradeRequest", conn.SessionID));
+
+                        }
+                        else
+                        {
+                            logger.Warn(string.Format("Request:{0} Data Field do not macth", pkt.MessageType));
+                        }
+                        break;
+                    }
                 default:
                     logger.Warn(string.Format("Packet:{0} logic not handled", pkt.MessageType));
                     break;
@@ -486,7 +522,28 @@ namespace FrontServer
                     return XLSecurityType.Future;
             }
         }
+        XLTradeField ConvTrade(Trade trade)
+        {
+            XLTradeField f = new XLTradeField();
+            DateTime dt = Util.ToDateTime(trade.xDate, trade.xTime);
+            f.TradingDay = trade.SettleDay.ToString();
+            f.Date = trade.xDate.ToString();
+            f.Time = dt.ToString("HH:mm:ss");
+            f.UserID = trade.Account;
+            f.SymbolID = trade.Symbol;
+            f.ExchangeID = trade.Exchange;
+            f.OrderRef = trade.OrderRef;
+            f.OrderSysID = trade.OrderSysID;
+            f.TradeID = trade.TradeID;
+            f.Direction = trade.Side ? XLDirectionType.Buy : XLDirectionType.Sell;
+            f.OffsetFlag = ConvOffSet(trade.OffsetFlag);
+            f.HedgeFlag = XLHedgeFlagType.Speculation;
+            f.Price = (double)trade.xPrice;
+            f.Volume = trade.xSize;
 
+            return f;
+            
+        }
         XLOrderField ConvOrder(Order order)
         {
             XLOrderField o = new XLOrderField();
