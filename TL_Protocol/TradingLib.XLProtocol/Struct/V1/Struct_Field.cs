@@ -502,6 +502,132 @@ namespace TradingLib.XLProtocol.V1
     #endregion 
 
     #region 查询持仓
+    /// <summary>
+    /// 查询投资者持仓
+    /// </summary>
+    [StructLayout(LayoutKind.Sequential, Pack = 1)]
+    public struct XLQryPositionField : IXLField
+    {
+        /// <summary>
+        /// 合约代码
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 31)]
+        public string SymbolID;
+        /// <summary>
+        /// 交易所代码
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 9)]
+        public string ExchangeID;
+
+        /// <summary>
+        /// 域类别
+        /// </summary>
+        public ushort FieldID { get { return (ushort)XLFieldType.F_QRY_POSITION; } }
+    }
+
+    /// <summary>
+    /// 投资者持仓
+    /// </summary>
+    [StructLayout(LayoutKind.Sequential, Pack = 1)]
+    public struct XLPositionField : IXLField
+    {
+        /// <summary>
+        /// 交易日
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 9)]
+        public string TradingDay;
+
+        /// <summary>
+        /// 投资者代码
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 13)]
+        public string UserID;
+
+        /// <summary>
+        /// 合约代码
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 31)]
+        public string SymbolID;
+
+        /// <summary>
+        /// 交易所代码
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 9)]
+        public string ExchangeID;
+
+        /// <summary>
+        /// 持仓多空方向
+        /// </summary>
+        public XLPosiDirectionType PosiDirection;
+
+        /// <summary>
+        /// 投机套保标志
+        /// </summary>
+        public XLHedgeFlagType HedgeFlag;
+
+        /// <summary>
+        /// 上日持仓
+        /// </summary>
+        public int YdPosition;
+
+        /// <summary>
+        /// 今日持仓
+        /// </summary>
+        public int Position;
+
+        /// <summary>
+        /// 今日持仓
+        /// </summary>
+        public int TodayPosition;
+
+        /// <summary>
+        /// 开仓量
+        /// </summary>
+        public int OpenVolume;
+
+        /// <summary>
+        /// 平仓量
+        /// </summary>
+        public int CloseVolume;
+
+        /// <summary>
+        /// 开仓成本
+        /// </summary>
+        public double OpenCost;
+
+        /// <summary>
+        /// 持仓成本
+        /// </summary>
+        public double PositionCost;
+
+        /// <summary>
+        /// 占用的保证金
+        /// </summary>
+        public double Margin;
+
+        /// <summary>
+        /// 平仓盈亏
+        /// </summary>
+        public double CloseProfit;
+
+        /// <summary>
+        /// 持仓盈亏
+        /// </summary>
+        public double PositionProfit;
+
+        /// <summary>
+        /// 手续费
+        /// </summary>
+        public double Commission;
+
+
+        /// <summary>
+        /// 域类别
+        /// </summary>
+        public ushort FieldID { get { return (ushort)XLFieldType.F_RSP_POSITION; } }
+
+       
+    }
     #endregion
 
     #region 查询账户资金

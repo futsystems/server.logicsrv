@@ -39,6 +39,10 @@ namespace TradingLib.XLProtocol.V1
                     return XLStructHelp.StructToBytes<XLQryTradeField>((XLQryTradeField)field);
                 case XLFieldType.F_RSP_TRADE:
                     return XLStructHelp.StructToBytes<XLTradeField>((XLTradeField)field);
+                case XLFieldType.F_QRY_POSITION:
+                    return XLStructHelp.StructToBytes<XLQryPositionField>((XLQryPositionField)field);
+                case XLFieldType.F_RSP_POSITION:
+                    return XLStructHelp.StructToBytes<XLPositionField>((XLPositionField)field);
                 default:
                     throw new Exception(string.Format("FieldType:{0} not supported", fieldType));
             }
@@ -70,6 +74,10 @@ namespace TradingLib.XLProtocol.V1
                     return XLStructHelp.BytesToStruct<XLQryTradeField>(data, offset);
                 case XLFieldType.F_RSP_TRADE:
                     return XLStructHelp.BytesToStruct<XLTradeField>(data, offset);
+                case XLFieldType.F_QRY_POSITION:
+                    return XLStructHelp.BytesToStruct<XLQryPositionField>(data, offset);
+                case XLFieldType.F_RSP_POSITION:
+                    return XLStructHelp.BytesToStruct<XLPositionField>(data, offset);
                 default:
                     throw new Exception(string.Format("FieldType:{0} not supported", type));
             }

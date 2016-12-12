@@ -421,6 +421,46 @@ namespace FrontServer
                         logger.Info(string.Format("LogicSrv Reply Session:{0} -> TradeNotify", conn.SessionID));
                         break;
                     }
+                    //查询持仓回报
+                case MessageTypes.POSITIONRESPONSE:
+                    {
+                        RspQryPositionResponse response = lpkt as RspQryPositionResponse;
+                        XLPacketData pkt = new XLPacketData(XLMessageType.T_RSP_POSITION);
+
+                        if (response.PositionToSend != null)
+                        {
+                            XLPositionField field = ConvPosition(response.PositionToSend);
+                            pkt.AddField(field);
+
+                            conn.ResponseXLPacket(pkt, (uint)response.RequestID, response.IsLast);
+                        }
+                        else
+                        {
+                            conn.ResponseXLPacket(pkt, (uint)response.RequestID, response.IsLast);
+                        }
+                        if (response.IsLast) logger.Info(string.Format("LogicSrv Reply Session:{0} -> RspQryPositionResponse", conn.SessionID));
+                        break;
+                    }
+                    //持仓实时更新
+                case MessageTypes.POSITIONUPDATENOTIFY:
+                    {
+                        PositionNotify notify = lpkt as PositionNotify;
+                        XLPacketData pkt = new XLPacketData(XLMessageType.T_RTN_POSITIONUPDATE);
+
+                        if (notify.Position != null)
+                        {
+                            XLPositionField field = ConvPosition(notify.Position);
+                            pkt.AddField(field);
+
+                            conn.NotifyXLPacket(pkt);
+                        }
+                        else
+                        {
+                            logger.Warn("Position notify, trade is null");
+                        }
+                        logger.Info(string.Format("LogicSrv Reply Session:{0} -> PositionNotify", conn.SessionID));
+                        break;
+                    }
                 default:
                     logger.Warn(string.Format("Logic Packet:{0} not handled", lpkt.Type));
                     break;
@@ -540,6 +580,27 @@ namespace FrontServer
                         }
                         break;
                     }
+                    //查询持仓
+                case XLMessageType.T_QRY_POSITION:
+                    {
+                        var data = pkt.FieldList[0].FieldData;
+                        if (data is XLQryPositionField)
+                        {
+                            XLQryPositionField field = (XLQryPositionField)data;
+
+                            QryPositionRequest request = RequestTemplate<QryPositionRequest>.CliSendRequest(requestId);
+                            this.TLSend(conn.SessionID, request);
+                            logger.Info(string.Format("Session:{0} >> QryPositionRequest", conn.SessionID));
+
+                        }
+                        else
+                        {
+                            logger.Warn(string.Format("Request:{0} Data Field do not macth", pkt.MessageType));
+                        }
+                        break;
+                    }
+
+
                 default:
                     logger.Warn(string.Format("Packet:{0} logic not handled", pkt.MessageType));
                     break;
@@ -560,6 +621,31 @@ namespace FrontServer
                 default:
                     return XLSecurityType.Future;
             }
+        }
+
+        XLPositionField ConvPosition(PositionEx pos)
+        {
+            XLPositionField p = new XLPositionField();
+
+            p.TradingDay = pos.Tradingday.ToString();
+            p.UserID = pos.Account;
+            p.SymbolID = pos.Symbol;
+            p.ExchangeID = pos.Exchange;
+            p.PosiDirection = pos.Side ? XLPosiDirectionType.Long : XLPosiDirectionType.Short;
+            p.HedgeFlag = XLHedgeFlagType.Speculation;
+            p.YdPosition = pos.YdPosition;
+            p.Position = pos.Position;
+            p.TodayPosition = pos.TodayPosition;
+            p.OpenVolume = pos.OpenVolume;
+            p.CloseVolume = pos.CloseVolume;
+            p.OpenCost = (double)pos.OpenCost;
+            p.PositionCost = (double)pos.PositionCost;
+            p.Margin = (double)pos.Margin;
+            p.CloseProfit = (double)pos.CloseProfit;
+            p.PositionProfit = (double)pos.UnRealizedProfit;
+            p.Commission = (double)pos.Commission;
+            return p;
+
         }
         XLTradeField ConvTrade(Trade trade)
         {

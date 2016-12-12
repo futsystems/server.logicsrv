@@ -50,6 +50,10 @@ namespace TradingLib.XLProtocol.Client
         /// </summary>
         public event Action<XLTradeField, ErrorField, uint, bool> OnRspQryTrade = delegate { };
 
+        /// <summary>
+        /// 查询持仓回报
+        /// </summary>
+        public event Action<XLPositionField, ErrorField, uint, bool> OnRspQryPosition = delegate { };
 
         /// <summary>
         /// 委托实时通知
@@ -60,6 +64,11 @@ namespace TradingLib.XLProtocol.Client
         /// 成交实时通知
         /// </summary>
         public event Action<XLTradeField> OnRtnTrade = delegate { };
+
+        /// <summary>
+        /// 持仓实时通知
+        /// </summary>
+        public event Action<XLPositionField> OnRtnPosition = delegate { };
         #endregion
         string _serverIP = string.Empty;
         int _port = 0;
@@ -190,7 +199,26 @@ namespace TradingLib.XLProtocol.Client
                             OnRtnTrade(notify);
                             break;
                         }
-
+                    case XLMessageType.T_RSP_POSITION:
+                        {
+                            XLPositionField response;
+                            if (pkt.FieldList.Count > 0)
+                            {
+                                response = (XLPositionField)pkt.FieldList[0].FieldData;
+                            }
+                            else
+                            {
+                                response = new XLPositionField();
+                            }
+                            OnRspQryPosition(response, new ErrorField(), dataHeader.RequestID, (int)dataHeader.IsLast == 1 ? true : false);
+                            break;
+                        }
+                    case XLMessageType.T_RTN_POSITIONUPDATE:
+                        {
+                            XLPositionField notify = (XLPositionField)pkt.FieldList[0].FieldData;
+                            OnRtnPosition(notify);
+                            break;
+                        }
                     default:
                         logger.Info(string.Format("Unhandled Pkt:{0}", msgType));
                         break;
@@ -279,6 +307,18 @@ namespace TradingLib.XLProtocol.Client
             return SendPktData(pktData, XLEnumSeqType.SeqQry, requestID);
         }
 
+        /// <summary>
+        /// 查询持仓
+        /// </summary>
+        /// <param name="req"></param>
+        /// <param name="requestID"></param>
+        /// <returns></returns>
+        public bool QryPosition(XLQryPositionField req, uint requestID)
+        {
+            XLPacketData pktData = new XLPacketData(XLMessageType.T_QRY_POSITION);
+            pktData.AddField(req);
+            return SendPktData(pktData, XLEnumSeqType.SeqQry, requestID);
+        }
         #endregion
 
 
