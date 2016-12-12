@@ -109,9 +109,6 @@
 		<MSBuild Projects="TL_Connector\TLBrokerIB\TLBrokerIB.csproj" Properties="Configuration=$(Configuration);" />
   </Target>
 
-	<Target Name="Account" DependsOnTargets="Base">
-		<MSBuild Projects="Program\Lottoqq.Account\Lottoqq.Account.csproj" Properties="Configuration=$(Configuration);" />
-	</Target>
 
 	<Target Name="RuleSet" DependsOnTargets="Base">
 		<MSBuild Projects="TL_Strategy\RuleSet\RuleSet2\RuleSet2.csproj" Properties="Configuration=$(Configuration);" />
@@ -136,7 +133,6 @@
 	<Target Name="Publish">
 		<MakeDir Directories="$(PackageDir)\Contrib" />
 		<MakeDir Directories="$(PackageDir)\Connector" />
-		<MakeDir Directories="$(PackageDir)\Account" />
 		<MakeDir Directories="$(PackageDir)\RuleSet" />
 		<MakeDir Directories="$(PackageDir)\RequiredLibraries" />
 		

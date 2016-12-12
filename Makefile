@@ -17,7 +17,7 @@ PACKFILES = build/clrzmq.* README.md AUTHORS LICENSE
 .PHONY=all release package clean
 
 #build base server and so on ...
-all:clean release base server contrib connector account rule exsrv
+all:clean release base server contrib connector rule exsrv
 
 
 release:
@@ -40,9 +40,6 @@ contrib:
 
 connector:
 	$(XBUILD) /target:Connector $(FLAGS) $(PROJ)
-
-account:
-	$(XBUILD) /target:Account $(FLAGS) $(PROJ)
 
 rule:
 	$(XBUILD) /target:RuleSet $(FLAGS) $(PROJ)
