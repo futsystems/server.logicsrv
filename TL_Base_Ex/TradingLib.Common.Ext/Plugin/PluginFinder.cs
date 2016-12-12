@@ -37,7 +37,6 @@ namespace TradingLib.Common
             searchPathList.Add("RuleSet");
             searchPathList.Add("Contrib");
 			searchPathList.Add("Connector");
-            searchPathList.Add("Account");
 
             this.DesiredInterfaces = new List<Type>();
             this.AvailableTypes = new Dictionary<Type, List<Type>>();
