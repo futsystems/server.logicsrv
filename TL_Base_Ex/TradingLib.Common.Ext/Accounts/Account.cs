@@ -12,7 +12,17 @@ namespace TradingLib.Common
     /// </summary>
     public partial class AccountBase : IAccount
     {
-        
+
+        /// <summary>
+        /// 创建交易账户对象
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public static IAccount CreateAccount(string id)
+        {
+            return new AccountBase(id);
+        }
+
         public AccountBase(string AccountID)
         {
             _id = AccountID;

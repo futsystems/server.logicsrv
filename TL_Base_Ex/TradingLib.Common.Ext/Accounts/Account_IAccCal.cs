@@ -16,7 +16,7 @@ namespace TradingLib.Common
         /// </summary>
         /// <param name="o"></param>
         /// <returns></returns>
-        public virtual decimal CalOrderFundRequired(Order o, decimal defaultvalue = 0)
+        public decimal CalOrderFundRequired(Order o, decimal defaultvalue = 0)
         {
             switch (o.oSymbol.SecurityType)
             {
@@ -54,7 +54,7 @@ namespace TradingLib.Common
         /// </summary>
         /// <param name="symbol"></param>
         /// <returns></returns>
-        public virtual decimal GetFundAvabile(Symbol symbol)
+        public decimal GetFundAvabile(Symbol symbol)
         {
             //常规状态下合约的可用资金即为帐户的可用资金
             if (symbol.SecurityType == SecurityType.FUT)

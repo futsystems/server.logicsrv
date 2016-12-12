@@ -129,17 +129,14 @@
     <Compile Include="Utils\Domain\DomainUtils_CommissionMargin.cs" />
     <Compile Include="Utils\Domain\DomainUtils_ExStrategy.cs" />
     <Compile Include="Wrapper\AccountAdapterToExp.cs" />
-    <Compile Include="Accounts\AccountFilter.cs" />
     <Compile Include="Accounts\Account_IAccCal.cs" />
     <Compile Include="Contex\Event\EventArgs\CashOperationEventArgs.cs" />
     <Compile Include="Utils\Account\AccountUtils_ObjectWrapper.cs" />
     <Compile Include="Utils\Account\AccountUtils_CommissionMargin.cs" />
-    <Compile Include="Accounts\Account_Factory.cs" />
     <Compile Include="Accounts\Account_IFinanceTotal.cs" />
     <Compile Include="Accounts\Account_IGeneralCheck.cs" />
     <Compile Include="Accounts\Account_IAccOperation.cs" />
     <Compile Include="Accounts\Account_IRiskRule.cs" />
-    <Compile Include="Accounts\Account_IAccountService.cs" />
     <Compile Include="Utils\Account\AccountUtils_FinCal.cs" />
     <Compile Include="Utils\Account\AccountUtils_TradingInfoEx.cs" />
     <Compile Include="Accounts\Account_IAccTradingInfo.cs" />
@@ -200,7 +197,6 @@
     <Compile Include="Plugin\Attr\CoreCommandAttr.cs" />
     <Compile Include="Contrib\TaskProc.cs" />
     <Compile Include="Plugin\Attr\MethodArgumentType.cs" />
-    <Compile Include="Filter.cs" />
     <Compile Include="Utils\RspInfoUtils.cs" />
     <Compile Include="WebAPI\WebAPIHelper.cs" />
     <Compile Include="ORM\MBasicInfo.cs" />

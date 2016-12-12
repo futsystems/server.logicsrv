@@ -27,29 +27,6 @@ namespace TradingLib.API
     public interface IAccount : IFinanceTotal, IAccCal, IAccTradingInfo, IAccOperation, IGeneralCheck, IRiskRule, IAccountIndicator
     {
 
-        #region 交易帐号服务类相关操作
-        /// <summary>
-        /// 绑定交易帐户服务
-        /// </summary>
-        /// <param name="service"></param>
-        /// <param name="force"></param>
-        void BindService(IAccountService service, bool force = true);
-
-        /// <summary>
-        /// 解绑帐户服务
-        /// </summary>
-        /// <param name="service"></param>
-        void UnBindService(IAccountService service);
-
-        /// <summary>
-        /// 获得某个交易帐户服务
-        /// </summary>
-        /// <param name="sn"></param>
-        /// <param name="service"></param>
-        /// <returns></returns>
-        bool GetService(string sn, out IAccountService service);
-        #endregion
-
         /// <summary>
         /// 交易帐号对应的数据库全局ID
         /// </summary>

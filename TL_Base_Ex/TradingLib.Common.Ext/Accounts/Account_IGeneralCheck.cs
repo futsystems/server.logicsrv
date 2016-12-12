@@ -21,7 +21,7 @@ namespace TradingLib.Common
         /// <param name="symbol"></param>
         /// <param name="msg"></param>
         /// <returns></returns>
-        public virtual bool CanTakeSymbol(Symbol symbol, out string msg)
+        public bool CanTakeSymbol(Symbol symbol, out string msg)
         {
             msg = string.Empty;
             bool re = true;
@@ -33,7 +33,7 @@ namespace TradingLib.Common
         /// </summary>
         /// <param name="o"></param>
         /// <returns></returns>
-        public virtual bool CanFundTakeOrder(Order o, out string msg)
+        public bool CanFundTakeOrder(Order o, out string msg)
         {
             msg = string.Empty;
             //如果是平仓委托 则直接返回
