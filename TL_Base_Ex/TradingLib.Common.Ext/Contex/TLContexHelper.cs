@@ -496,16 +496,18 @@ namespace TradingLib.Common
                             string[] versions = mainversion.Split('.');
                             if (versions.Length == 3)
                             {
+                                bool parseflag = true;
                                 int major = 0;
-                                int.TryParse(versions[0], out major);
+                                parseflag = parseflag && int.TryParse(versions[0], out major);
                                 int minor = 0;
-                                int.TryParse(versions[1], out minor);
+                                parseflag = parseflag && int.TryParse(versions[1], out minor);
                                 int fix = 0;
-                                int.TryParse(versions[2], out fix);
+                                parseflag = parseflag && int.TryParse(versions[2], out fix);
 
                                 int no = 0;
-                                int.TryParse(commitno, out no);
-                                if (major * minor * fix*no != 0)
+                                parseflag = parseflag && int.TryParse(commitno, out no);
+
+                                if (parseflag)
                                 {
                                     logger.Info(string.Format(". Parse Version Major:{0} Minor:{1} Fix:{2} CommitNo:{3}", major, minor, fix, no));
                                     ORM.MSystem.UpdateVersion(major, minor, fix, no);
