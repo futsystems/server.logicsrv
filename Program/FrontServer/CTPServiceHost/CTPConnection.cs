@@ -94,7 +94,11 @@ namespace CTPService
 
             this.SessionID = _session.SessionID;
             this.State = new ConnectionState();
-            this.State.IPAddress = session.RemoteEndPoint.ToString();
+            string[] remote = session.RemoteEndPoint.ToString().Split(':');
+            if (remote.Length == 2)
+            {
+                this.State.IPAddress = remote[0];
+            }
         }
 
 

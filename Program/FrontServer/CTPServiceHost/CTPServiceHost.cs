@@ -222,7 +222,7 @@ namespace CTPService
                             request.LoginID = field.UserID;
                             request.Passwd = field.Password;
                             request.MAC = field.MacAddress;
-                            request.IPAddress = field.ClientIPAddress;
+                            request.IPAddress = conn.State.IPAddress;//初始化后 从Session获得IP地址信息//field.ClientIPAddress;
                             request.LoginType = 1;
                             request.ProductInfo = field.UserProductInfo;
 
