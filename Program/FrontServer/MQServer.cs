@@ -491,8 +491,24 @@ namespace FrontServer
 
                         if (response.IsLast) logger.Info(string.Format("LogicSrv Reply Session:{0} -> RspQryAccountInfoResponse", conn.SessionID));
                         break;
-                        
+                    }
+                case MessageTypes.MAXORDERVOLRESPONSE:
+                    {
+                        RspQryMaxOrderVolResponse response = lpkt as RspQryMaxOrderVolResponse;
+                        XLPacketData pkt = new XLPacketData(XLMessageType.T_RSP_MAXORDVOL);
+                        XLQryMaxOrderVolumeField field = new XLQryMaxOrderVolumeField();
 
+                        field.Direction = response.Side ? XLDirectionType.Buy : XLDirectionType.Sell;
+                        field.HedgeFlag = XLHedgeFlagType.Speculation;
+                        field.SymbolID = response.Symbol;
+                        field.MaxVolume = response.MaxVol;
+                        field.OffsetFlag =ConvOffSet(response.OffsetFlag);
+
+                        pkt.AddField(field);
+                        conn.ResponseXLPacket(pkt, (uint)response.RequestID, response.IsLast);
+
+                        if (response.IsLast) logger.Info(string.Format("LogicSrv Reply Session:{0} -> RspQryMaxOrderVolResponse", conn.SessionID));
+                        break;
                     }
                 default:
                     logger.Warn(string.Format("Logic Packet:{0} not handled", lpkt.Type));
@@ -651,6 +667,30 @@ namespace FrontServer
                         }
                         break;
                     }
+                //查询最大报单数量
+                case XLMessageType.T_QRY_MAXORDVOL:
+                    {
+                        var data = pkt.FieldList[0].FieldData;
+                        if (data is XLQryMaxOrderVolumeField)
+                        {
+                            XLQryMaxOrderVolumeField field = (XLQryMaxOrderVolumeField)data;
+
+                            QryMaxOrderVolRequest request = RequestTemplate<QryMaxOrderVolRequest>.CliSendRequest(requestId);
+                            request.Side = field.Direction == XLDirectionType.Buy? true : false;
+                            request.Symbol = field.SymbolID;
+                            //request.ex = field.ExchangeID;
+                            request.OffsetFlag = ConvOffSet(field.OffsetFlag);
+
+                            this.TLSend(conn.SessionID, request);
+                            logger.Info(string.Format("Session:{0} >> ReqQueryMaxOrderVolume", conn.SessionID));
+
+                        }
+                        else
+                        {
+                            logger.Warn(string.Format("Request:{0} Data Field do not macth", pkt.MessageType));
+                        }
+                        break;
+                    }
 
                 default:
                     logger.Warn(string.Format("Packet:{0} logic not handled", pkt.MessageType));
@@ -781,6 +821,21 @@ namespace FrontServer
                 case QSEnumOffsetFlag.UNKNOWN: return XLOffsetFlagType.Unknown;
                 default:
                     return XLOffsetFlagType.Unknown;
+            }
+        }
+        QSEnumOffsetFlag ConvOffSet(XLOffsetFlagType offset)
+        {
+            switch (offset)
+            {
+                case XLOffsetFlagType.Open: return QSEnumOffsetFlag.OPEN;
+                case XLOffsetFlagType.Close: return QSEnumOffsetFlag.CLOSE;
+                case XLOffsetFlagType.CloseToday: return QSEnumOffsetFlag.CLOSETODAY;
+                case XLOffsetFlagType.CloseYesterday: return QSEnumOffsetFlag.CLOSEYESTERDAY;
+                case XLOffsetFlagType.ForceClose: return QSEnumOffsetFlag.FORCECLOSE;
+                case XLOffsetFlagType.ForceOff: return QSEnumOffsetFlag.FORCEOFF;
+                case XLOffsetFlagType.Unknown: return QSEnumOffsetFlag.UNKNOWN;
+                default:
+                    return QSEnumOffsetFlag.UNKNOWN;
             }
         }
 

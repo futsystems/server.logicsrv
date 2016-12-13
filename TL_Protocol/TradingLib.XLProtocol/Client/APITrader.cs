@@ -61,6 +61,11 @@ namespace TradingLib.XLProtocol.Client
         public event Action<XLTradingAccountField, ErrorField, uint, bool> OnRspQryTradingAccount = delegate { };
 
         /// <summary>
+        /// 查询最大报单数量回报
+        /// </summary>
+        public event Action<XLQryMaxOrderVolumeField, ErrorField, uint, bool> OnRspQryMaxOrderVol = delegate { };
+
+        /// <summary>
         /// 委托实时通知
         /// </summary>
         public event Action<XLOrderField> OnRtnOrder = delegate { };
@@ -230,6 +235,12 @@ namespace TradingLib.XLProtocol.Client
                             OnRspQryTradingAccount(response, new ErrorField(), dataHeader.RequestID, (int)dataHeader.IsLast == 1 ? true : false);
                             break;
                         }
+                    case XLMessageType.T_RSP_MAXORDVOL:
+                        {
+                            XLQryMaxOrderVolumeField response = (XLQryMaxOrderVolumeField)pkt.FieldList[0].FieldData;
+                            OnRspQryMaxOrderVol(response, new ErrorField(), dataHeader.RequestID, (int)dataHeader.IsLast == 1 ? true : false);
+                            break;
+                        }
                     default:
                         logger.Info(string.Format("Unhandled Pkt:{0}", msgType));
                         break;
@@ -340,6 +351,19 @@ namespace TradingLib.XLProtocol.Client
         public bool QryTradingAccount(XLQryTradingAccountField req, uint requestID)
         {
             XLPacketData pktData = new XLPacketData(XLMessageType.T_QRY_ACCOUNT);
+            pktData.AddField(req);
+            return SendPktData(pktData, XLEnumSeqType.SeqQry, requestID);
+        }
+
+        /// <summary>
+        /// 查询最大报单数量
+        /// </summary>
+        /// <param name="req"></param>
+        /// <param name="requestID"></param>
+        /// <returns></returns>
+        public bool QryMaxOrderVol(XLQryMaxOrderVolumeField req, uint requestID)
+        {
+            XLPacketData pktData = new XLPacketData(XLMessageType.T_QRY_MAXORDVOL);
             pktData.AddField(req);
             return SendPktData(pktData, XLEnumSeqType.SeqQry, requestID);
         }

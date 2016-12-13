@@ -721,6 +721,52 @@ namespace TradingLib.XLProtocol.V1
     #endregion
 
     #region 查询最大报单数量
+    /// <summary>
+    /// 查询最大报单数量
+    /// </summary>
+    [StructLayout(LayoutKind.Sequential, Pack = 1)]
+    public struct XLQryMaxOrderVolumeField : IXLField
+    {
+
+        /// <summary>
+        /// 合约代码
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 31)]
+        public string SymbolID;
+
+        /// <summary>
+        /// 交易所代码
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 9)]
+        public string ExchangeID;
+
+        /// <summary>
+        /// 买卖方向
+        /// </summary>
+        public XLDirectionType Direction;
+
+        /// <summary>
+        /// 开平标志
+        /// </summary>
+        public XLOffsetFlagType OffsetFlag;
+
+        /// <summary>
+        /// 投机套保标志
+        /// </summary>
+        public XLHedgeFlagType HedgeFlag;
+
+        /// <summary>
+        /// 最大允许报单数量
+        /// </summary>
+        public int MaxVolume;
+
+        /// <summary>
+        /// 域类别
+        /// </summary>
+        public ushort FieldID { get { return (ushort)XLFieldType.F_QRY_MAXORDVOL; } }
+        
+    }
+        
     #endregion
 
     #region 提交委托
