@@ -141,6 +141,10 @@ namespace TradingLib.XLProtocol.Client
             _socketClient.Close();
         }
 
+        bool _verb = true;
+
+        public bool Verbose { get { return _verb; } set { _verb = value; } }
+
         void _socketClient_DataReceived(XLProtocolHeader header, byte[] data, int offset)
         {
             try
@@ -148,7 +152,7 @@ namespace TradingLib.XLProtocol.Client
                 XLMessageType msgType = (XLMessageType)header.XLMessageType;
                 XLDataHeader dataHeader;
                 XLPacketData pkt = XLPacketData.Deserialize(msgType, data, offset, out dataHeader);
-                logger.Debug(string.Format("PktData Recv Type:{0} Size:{1}", msgType,dataHeader.FieldLength + XLConstants.PROTO_HEADER_LEN + XLConstants.DATA_HEADER_LEN));
+                if(_verb) logger.Debug(string.Format("PktData Recv Type:{0} Size:{1}", msgType,dataHeader.FieldLength + XLConstants.PROTO_HEADER_LEN + XLConstants.DATA_HEADER_LEN));
                 switch (msgType)
                 {
                     case XLMessageType.T_RSP_LOGIN:
@@ -427,7 +431,7 @@ namespace TradingLib.XLProtocol.Client
         bool SendPktData(XLPacketData pktData, XLEnumSeqType seqType,uint requestID)
         {
             byte[] data = XLPacketData.PackToBytes(pktData, XLEnumSeqType.SeqReq, 0, requestID, true);
-            logger.Debug(string.Format("PktData Send Type:{0} Size:{1}", pktData.MessageType, data.Length));
+            if (_verb) logger.Debug(string.Format("PktData Send Type:{0} Size:{1}", pktData.MessageType, data.Length));
             //logger.Info(string.Format("PktData Send Type:{0} Data:{1} RequestID:{2}", pktData.MessageType, JsonConvert.SerializeObject(pktData), requestID));
             return SendData(data, data.Length);
         }

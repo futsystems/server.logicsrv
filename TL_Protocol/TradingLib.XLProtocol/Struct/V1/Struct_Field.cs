@@ -802,11 +802,6 @@ namespace TradingLib.XLProtocol.V1
         public string OrderRef;
 
         /// <summary>
-        /// 请求编号
-        /// </summary>
-        public int RequestID;
-
-        /// <summary>
         /// 报单类别
         /// </summary>
         public XLOrderType OrderType;
@@ -840,6 +835,11 @@ namespace TradingLib.XLProtocol.V1
         /// 数量
         /// </summary>
         public int VolumeTotalOriginal;
+
+        /// <summary>
+        /// 请求编号
+        /// </summary>
+        public int RequestID;
 
         /// <summary>
         /// 域类别
@@ -887,16 +887,6 @@ namespace TradingLib.XLProtocol.V1
         /// 操作标志
         /// </summary>
         public XLActionFlagType ActionFlag;
-
-        /// <summary>
-        /// 价格
-        /// </summary>
-        public double LimitPrice;
-
-        /// <summary>
-        /// 数量变化
-        /// </summary>
-        public int VolumeChange;
 
         /// <summary>
         /// 请求编号

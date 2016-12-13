@@ -115,6 +115,9 @@
     <Compile Include="CTPServiceHost\TLSessionBase.cs" />
     <Compile Include="CTPServiceHost\CTPServiceHost_Connection.cs" />
     <Compile Include="WatchDog.cs" />
+    <Compile Include="WSServiceHost\ServiceHost.cs" />
+    <Compile Include="WSServiceHost\ServiceHost_Connection.cs" />
+    <Compile Include="WSServiceHost\WSConnection.cs" />
     <Compile Include="XLServiceHost\XLConnection.cs" />
     <Compile Include="XLServiceHost\XLReceiveFilter.cs" />
     <Compile Include="XLServiceHost\XLRequestInfo.cs" />
@@ -131,7 +134,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="TLServiceHost\" />
-    <Folder Include="WSServiceHost\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

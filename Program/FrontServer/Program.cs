@@ -23,11 +23,11 @@ namespace FrontServer
             ////System.Globalization.CultureInfo info = new System.Globalization.CultureInfo("zh-CN");
             
             //System.Threading.Thread.CurrentThread.CurrentCulture = new System.Globalization.CultureInfo("zh-CN");
-            logger.Info(string.Format("Encoding1:{0}", Encoding.Default));//936
+            //logger.Info(string.Format("Encoding1:{0}", Encoding.Default));//936
             //logger.Info(string.Format("{0}-{1}", Encoding.Default.CodePage, Encoding.Default.WindowsCodePage));
 
             //Encoding c = Encoding.GetEncoding(936);
-            logger.Info(ByteUtil.ByteToHex(Encoding.Default.GetBytes("测试"))) ;//936
+            //logger.Info(ByteUtil.ByteToHex(Encoding.Default.GetBytes("测试"))) ;//936
             //return;
             if (false)
             {
@@ -197,10 +197,15 @@ namespace FrontServer
 
             //创建MQServer
             MQServer mqServer = new MQServer();
+
             //创建CTP ServiceHost
             CTPServiceHost ctphost = new CTPServiceHost(mqServer);
+
             //创建XL ServiceHost
             XLServiceHost.XLServiceHost xlhost = new XLServiceHost.XLServiceHost(mqServer);
+
+            //创建WebSocket ServiceHost
+            WSServiceHost.WSServiceHost wshost = new WSServiceHost.WSServiceHost(mqServer);
 
             //创建WatchDog
             WatchDog watchDog = new WatchDog(mqServer);
@@ -209,6 +214,7 @@ namespace FrontServer
             mqServer.Start();
             ctphost.Start();
             xlhost.Start();
+            wshost.Start();
             watchDog.Join();
 
             
