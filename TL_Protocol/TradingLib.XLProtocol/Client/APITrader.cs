@@ -56,6 +56,11 @@ namespace TradingLib.XLProtocol.Client
         public event Action<XLPositionField, ErrorField, uint, bool> OnRspQryPosition = delegate { };
 
         /// <summary>
+        /// 查询交易账户回报
+        /// </summary>
+        public event Action<XLTradingAccountField, ErrorField, uint, bool> OnRspQryTradingAccount = delegate { };
+
+        /// <summary>
         /// 委托实时通知
         /// </summary>
         public event Action<XLOrderField> OnRtnOrder = delegate { };
@@ -219,6 +224,12 @@ namespace TradingLib.XLProtocol.Client
                             OnRtnPosition(notify);
                             break;
                         }
+                    case XLMessageType.T_RSP_ACCOUNT:
+                        {
+                            XLTradingAccountField response = (XLTradingAccountField)pkt.FieldList[0].FieldData;
+                            OnRspQryTradingAccount(response, new ErrorField(), dataHeader.RequestID, (int)dataHeader.IsLast == 1 ? true : false);
+                            break;
+                        }
                     default:
                         logger.Info(string.Format("Unhandled Pkt:{0}", msgType));
                         break;
@@ -316,6 +327,19 @@ namespace TradingLib.XLProtocol.Client
         public bool QryPosition(XLQryPositionField req, uint requestID)
         {
             XLPacketData pktData = new XLPacketData(XLMessageType.T_QRY_POSITION);
+            pktData.AddField(req);
+            return SendPktData(pktData, XLEnumSeqType.SeqQry, requestID);
+        }
+
+        /// <summary>
+        /// 查询交易账户
+        /// </summary>
+        /// <param name="req"></param>
+        /// <param name="requestID"></param>
+        /// <returns></returns>
+        public bool QryTradingAccount(XLQryTradingAccountField req, uint requestID)
+        {
+            XLPacketData pktData = new XLPacketData(XLMessageType.T_QRY_ACCOUNT);
             pktData.AddField(req);
             return SendPktData(pktData, XLEnumSeqType.SeqQry, requestID);
         }

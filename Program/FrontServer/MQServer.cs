@@ -461,6 +461,39 @@ namespace FrontServer
                         logger.Info(string.Format("LogicSrv Reply Session:{0} -> PositionNotify", conn.SessionID));
                         break;
                     }
+                    //账户查询回报
+                case MessageTypes.ACCOUNTINFORESPONSE:
+                    {
+                        RspQryAccountInfoResponse response = lpkt as RspQryAccountInfoResponse;
+                        XLPacketData pkt = new XLPacketData(XLMessageType.T_RSP_ACCOUNT);
+
+                        XLTradingAccountField field = new XLTradingAccountField();
+                        AccountInfo info = response.AccInfo;
+
+                        field.PreCredit = (double)info.LastCredit;
+                        field.Credit = (double)info.Credit;
+
+                        field.PreEquity = (double)info.LastEquity;
+                        field.Deposit = (double)info.CashIn;
+                        field.Withdraw = (double)info.CashOut;
+                        field.FrozenMargin = (double)info.FutMarginFrozen;
+                        field.Margin = (double)info.FutMarginUsed;
+
+                        field.Commission = (double)info.Commission;
+                        field.CloseProfit = (double)info.RealizedPL;
+                        field.PositionProfit = (double)info.UnRealizedPL;
+                        
+                        field.NowEquity = (double)info.NowEquity;
+                        field.Available = (double)info.AvabileFunds;//当前可用
+
+                        pkt.AddField(field);
+                        conn.ResponseXLPacket(pkt, (uint)response.RequestID, response.IsLast);
+
+                        if (response.IsLast) logger.Info(string.Format("LogicSrv Reply Session:{0} -> RspQryAccountInfoResponse", conn.SessionID));
+                        break;
+                        
+
+                    }
                 default:
                     logger.Warn(string.Format("Logic Packet:{0} not handled", lpkt.Type));
                     break;
@@ -599,7 +632,25 @@ namespace FrontServer
                         }
                         break;
                     }
+                //查询交易账户
+                case XLMessageType.T_QRY_ACCOUNT:
+                    {
+                        var data = pkt.FieldList[0].FieldData;
+                        if (data is XLQryTradingAccountField)
+                        {
+                            XLQryTradingAccountField field = (XLQryTradingAccountField)data;
 
+                            QryAccountInfoRequest request = RequestTemplate<QryAccountInfoRequest>.CliSendRequest(requestId);
+                            this.TLSend(conn.SessionID, request);
+                            logger.Info(string.Format("Session:{0} >> QryAccountInfoRequest", conn.SessionID));
+
+                        }
+                        else
+                        {
+                            logger.Warn(string.Format("Request:{0} Data Field do not macth", pkt.MessageType));
+                        }
+                        break;
+                    }
 
                 default:
                     logger.Warn(string.Format("Packet:{0} logic not handled", pkt.MessageType));

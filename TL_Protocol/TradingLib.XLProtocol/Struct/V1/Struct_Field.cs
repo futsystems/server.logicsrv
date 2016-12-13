@@ -631,6 +631,93 @@ namespace TradingLib.XLProtocol.V1
     #endregion
 
     #region 查询账户资金
+    [StructLayout(LayoutKind.Sequential, Pack = 1)]
+    public struct XLQryTradingAccountField : IXLField
+    {
+        /// <summary>
+        /// 投资者代码
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 13)]
+        public string UserID;
+
+        /// <summary>
+        /// 域类别
+        /// </summary>
+        public ushort FieldID { get { return (ushort)XLFieldType.F_QRY_ACCOUNT; } }
+    }
+
+    /// <summary>
+    /// 资金账户
+    /// </summary>
+    [StructLayout(LayoutKind.Sequential, Pack = 1)]
+    public struct XLTradingAccountField : IXLField
+    {
+        /// <summary>
+        /// 上日信用额度
+        /// </summary>
+        public double PreCredit;
+
+        /// <summary>
+        /// 当前信用额度
+        /// </summary>
+        public double Credit;
+
+        /// <summary>
+        /// 上日权益
+        /// </summary>
+        public double PreEquity;
+
+        /// <summary>
+        /// 入金金额
+        /// </summary>
+        public double Deposit;
+
+        /// <summary>
+        /// 出金金额
+        /// </summary>
+        public double Withdraw;
+
+        /// <summary>
+        /// 冻结的保证金
+        /// </summary>
+        public double FrozenMargin;
+
+        /// <summary>
+        /// 占用保证金
+        /// </summary>
+        public double Margin;
+
+        /// <summary>
+        /// 手续费
+        /// </summary>
+        public double Commission;
+
+        /// <summary>
+        /// 平仓盈亏
+        /// </summary>
+        public double CloseProfit;
+
+        /// <summary>
+        /// 持仓盈亏
+        /// </summary>
+        public double PositionProfit;
+
+        /// <summary>
+        /// 当前权益
+        /// </summary>
+        public double NowEquity;
+
+        /// <summary>
+        /// 可用资金
+        /// </summary>
+        public double Available;
+
+        /// <summary>
+        /// 域类别
+        /// </summary>
+        public ushort FieldID { get { return (ushort)XLFieldType.F_RSP_ACCOUNT; } }
+
+    }
     #endregion
 
     #region 查询最大报单数量
