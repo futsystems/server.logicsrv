@@ -770,19 +770,89 @@ namespace TradingLib.XLProtocol.V1
     #endregion
 
     #region 提交委托
+    /// <summary>
+    /// 输入报单
+    /// </summary>
+    [StructLayout(LayoutKind.Sequential, Pack = 1)]
+    public struct XLInputOrderField : IXLField
+    {
+       
+        /// <summary>
+        /// 投资者代码
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 13)]
+        public string UserID;
+
+        /// <summary>
+        /// 合约代码
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 31)]
+        public string SymbolID;
+
+        /// <summary>
+        /// 交易所代码
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 9)]
+        public string ExchangeID;
+
+        /// <summary>
+        /// 报单引用
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 13)]
+        public string OrderRef;
+
+        /// <summary>
+        /// 请求编号
+        /// </summary>
+        public int RequestID;
+
+        /// <summary>
+        /// 报单类别
+        /// </summary>
+        public XLOrderType OrderType;
+
+        /// <summary>
+        /// 买卖方向
+        /// </summary>
+        public XLDirectionType Direction;
+
+        /// <summary>
+        /// 组合开平标志
+        /// </summary>
+        public XLOffsetFlagType OffsetFlag;
+       
+        /// <summary>
+        /// 组合投机套保标志
+        /// </summary>
+        public XLHedgeFlagType HedgeFlag;
+       
+        /// <summary>
+        /// 价格
+        /// </summary>
+        public double LimitPrice;
+
+        /// <summary>
+        /// 止损价
+        /// </summary>
+        public double StopPrice;
+
+        /// <summary>
+        /// 数量
+        /// </summary>
+        public int VolumeTotalOriginal;
+
+        /// <summary>
+        /// 域类别
+        /// </summary>
+        public ushort FieldID { get { return (ushort)XLFieldType.F_REQ_INSERTORDER; } }
+        
+
+    }
     #endregion
 
     #region 提交委托操作
     #endregion
 
-    #region 委托回报
-    #endregion
-
-    #region 成交回报
-    #endregion
-
-    #region 持仓更新回报
-    #endregion
 
 
     #region 订阅行情

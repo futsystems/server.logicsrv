@@ -510,6 +510,48 @@ namespace FrontServer
                         if (response.IsLast) logger.Info(string.Format("LogicSrv Reply Session:{0} -> RspQryMaxOrderVolResponse", conn.SessionID));
                         break;
                     }
+                    //错误委托回报
+                case MessageTypes.ERRORORDERNOTIFY:
+                    {
+                        ErrorOrderNotify notify = lpkt as ErrorOrderNotify;
+                        XLPacketData pkt = new XLPacketData(XLMessageType.T_RSP_INSERTORDER);
+
+                        XLInputOrderField field = new XLInputOrderField();
+                        field.HedgeFlag = XLHedgeFlagType.Speculation;
+                        field.OffsetFlag = ConvOffSet(notify.Order.OffsetFlag);
+                        field.Direction = notify.Order.Side ? XLDirectionType.Buy : XLDirectionType.Sell;
+                       
+                        field.SymbolID = notify.Order.Symbol;
+                        field.UserID = notify.Order.Account;
+                        field.OrderRef = notify.Order.OrderRef;
+                       
+                        field.LimitPrice = (double)notify.Order.LimitPrice;
+                        field.StopPrice = (double)notify.Order.StopPrice;
+                        field.VolumeTotalOriginal = Math.Abs(notify.Order.TotalSize);
+                        field.RequestID = notify.Order.RequestID;
+
+                        if (field.LimitPrice == 0)
+                        {
+                            field.OrderType = XLOrderType.Market;
+                        }
+                        else
+                        {
+                            field.OrderType = XLOrderType.Limit;
+                        }
+                        ErrorField rsp = new ErrorField();
+                        rsp.ErrorID = notify.RspInfo.ErrorID;
+                        rsp.ErrorMsg = notify.RspInfo.ErrorMessage;
+
+                        pkt.AddField(rsp);
+                        pkt.AddField(field);
+
+                        conn.ResponseXLPacket(pkt, (uint)notify.Order.RequestID,true);
+
+                        logger.Info(string.Format("LogicSrv Reply Session:{0} -> ErrorOrderNotify", conn.SessionID));
+                        break;
+
+
+                    }
                 default:
                     logger.Warn(string.Format("Logic Packet:{0} not handled", lpkt.Type));
                     break;
@@ -681,6 +723,56 @@ namespace FrontServer
                             //request.ex = field.ExchangeID;
                             request.OffsetFlag = ConvOffSet(field.OffsetFlag);
 
+                            this.TLSend(conn.SessionID, request);
+                            logger.Info(string.Format("Session:{0} >> ReqQueryMaxOrderVolume", conn.SessionID));
+
+                        }
+                        else
+                        {
+                            logger.Warn(string.Format("Request:{0} Data Field do not macth", pkt.MessageType));
+                        }
+                        break;
+                    }
+                    //提交委托
+                case XLMessageType.T_REQ_INSERTORDER:
+                    {
+                        var data = pkt.FieldList[0].FieldData;
+                        if (data is XLInputOrderField)
+                        {
+                            XLInputOrderField field = (XLInputOrderField)data;
+
+                            OrderInsertRequest request = RequestTemplate<OrderInsertRequest>.CliSendRequest(requestId);
+
+                            Order order = new OrderImpl();
+                            order.Account = field.UserID;
+                            order.Symbol = field.SymbolID;
+                            order.Exchange = field.ExchangeID;
+
+                            order.Side = field.Direction == XLDirectionType.Buy ? true : false;
+                            order.TotalSize = field.VolumeTotalOriginal;
+                            order.Size = order.TotalSize;
+
+                            if (field.OrderType == XLOrderType.Market)
+                            {
+                                order.LimitPrice = 0;
+                                order.StopPrice = 0;
+                            }
+                            else if (field.OrderType == XLOrderType.Limit)
+                            {
+                                order.LimitPrice = (decimal)field.LimitPrice;
+                                order.StopPrice = 0;
+                            }
+
+                            order.TimeInForce = QSEnumTimeInForce.DAY;
+                            order.Currency = CurrencyType.RMB;
+                            order.OrderRef = field.OrderRef;
+                            order.RequestID = field.RequestID;
+
+                            order.HedgeFlag = QSEnumHedgeFlag.Speculation;
+                            order.OffsetFlag = ConvOffSet(field.OffsetFlag);
+                            
+
+                            request.Order = order;
                             this.TLSend(conn.SessionID, request);
                             logger.Info(string.Format("Session:{0} >> ReqQueryMaxOrderVolume", conn.SessionID));
 

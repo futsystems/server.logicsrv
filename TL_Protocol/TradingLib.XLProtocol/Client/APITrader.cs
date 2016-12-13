@@ -65,6 +65,13 @@ namespace TradingLib.XLProtocol.Client
         /// </summary>
         public event Action<XLQryMaxOrderVolumeField, ErrorField, uint, bool> OnRspQryMaxOrderVol = delegate { };
 
+
+        /// <summary>
+        /// 提交委托回报
+        /// 当委托参数异常或者柜台拒绝委托时 给出该回报
+        /// </summary>
+        public event Action<XLInputOrderField, ErrorField, uint, bool> OnRspOrderInsert = delegate { };
+
         /// <summary>
         /// 委托实时通知
         /// </summary>
@@ -241,6 +248,13 @@ namespace TradingLib.XLProtocol.Client
                             OnRspQryMaxOrderVol(response, new ErrorField(), dataHeader.RequestID, (int)dataHeader.IsLast == 1 ? true : false);
                             break;
                         }
+                    case XLMessageType.T_RSP_INSERTORDER:
+                        {
+                            ErrorField rsp = (ErrorField)pkt.FieldList[0].FieldData;
+                            XLInputOrderField response = (XLInputOrderField)pkt.FieldList[1].FieldData;
+                            OnRspOrderInsert(response, rsp, dataHeader.RequestID, (int)dataHeader.IsLast == 1 ? true : false);
+                            break;
+                        }
                     default:
                         logger.Info(string.Format("Unhandled Pkt:{0}", msgType));
                         break;
@@ -367,6 +381,20 @@ namespace TradingLib.XLProtocol.Client
             pktData.AddField(req);
             return SendPktData(pktData, XLEnumSeqType.SeqQry, requestID);
         }
+
+        /// <summary>
+        /// 请求提交委托
+        /// </summary>
+        /// <param name="req"></param>
+        /// <param name="requestID"></param>
+        /// <returns></returns>
+        public bool ReqOrderInsert(XLInputOrderField req, uint requestID)
+        {
+            XLPacketData pktData = new XLPacketData(XLMessageType.T_REQ_INSERTORDER);
+            pktData.AddField(req);
+            return SendPktData(pktData, XLEnumSeqType.SeqReq, requestID);
+        }
+
         #endregion
 
 
