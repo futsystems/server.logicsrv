@@ -83,6 +83,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="API\IConnectionState.cs" />
     <Compile Include="API\IServiceHost.cs" />
     <Compile Include="Common\ByteUtil.cs" />
     <Compile Include="CTPServiceHost\Protocol\CNStringMarshaler.cs" />

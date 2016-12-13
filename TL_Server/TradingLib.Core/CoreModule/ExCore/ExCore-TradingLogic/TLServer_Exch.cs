@@ -230,11 +230,11 @@ namespace TradingLib.Core
         /// 取消委托,参数为全局委托编号
         /// </summary>
         /// <param name="msg"></param>
-        public void SrvOnOrderAction(ISession session, OrderActionRequest request)
-        {
-            if (newOrderActionRequest != null)
-                newOrderActionRequest(request);
-        }
+        //public void SrvOnOrderAction(ISession session, OrderActionRequest request)
+        //{
+        //    if (newOrderActionRequest != null)
+        //        newOrderActionRequest(request);
+        //}
 
         /// <summary>
         /// 客户端请求注册symbol数据
@@ -285,9 +285,9 @@ namespace TradingLib.Core
                 case MessageTypes.SENDORDER:
                     SrvOnOrderInsert(session,packet as OrderInsertRequest);
                     break;
-                case MessageTypes.SENDORDERACTION:
-                    SrvOnOrderAction(session,packet as OrderActionRequest);
-                    break;
+                //case MessageTypes.SENDORDERACTION:
+                //    SrvOnOrderAction(session,packet as OrderActionRequest);
+                //    break;
                 case MessageTypes.REGISTERSYMTICK:
                     SrvRegStocks(session,packet as RegisterSymbolTickRequest);
                     break;
@@ -410,7 +410,7 @@ namespace TradingLib.Core
         #region 交易消息交换服务端事件列表
         public event LoginRequestDel<TrdClientInfo> newLoginRequest;//登入服务器
         public event OrderDelegate newSendOrderRequest;//发送委托
-        public event OrderActionRequestDel newOrderActionRequest;//发送委托操作
+        //public event Action<ISession> newOrderActionRequest;//发送委托操作
         public event SymbolRegisterDel newRegisterSymbols;//订阅市场数据
         public event MessageArrayDelegate newFeatureRequest;//请求功能列表
         public event PacketRequestDel newPacketRequest;//其他逻辑宝请求

@@ -17,7 +17,7 @@ namespace CTPService
     /// 连接状态
     /// 记录连接相关信息
     /// </summary>
-    public class ConnectionState
+    public class ConnectionState : FrontServer.IConnectionState
     {
         public ConnectionState()
         {
@@ -109,6 +109,10 @@ namespace CTPService
         /// </summary>
         public string SessionID { get; private set; }
 
+        /// <summary>
+        /// 返回用户ID
+        /// </summary>
+        public string UserID { get { return this.State.LoginID; } }
         FrontServer.IServiceHost _serviceHost = null;
         /// <summary>
         /// Connection所在的ServiceHost对象
@@ -174,6 +178,7 @@ namespace CTPService
 
         public ConnectionState State { get; private set; }
 
+        public FrontServer.IConnectionState IState { get { return this.State; } }
         /// <summary>
         /// 更新心跳状态
         /// </summary>

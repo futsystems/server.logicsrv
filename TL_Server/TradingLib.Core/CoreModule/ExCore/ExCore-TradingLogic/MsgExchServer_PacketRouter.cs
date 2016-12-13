@@ -29,6 +29,12 @@ namespace TradingLib.Core
             switch (packet.Type)
             {
 
+                case MessageTypes.SENDORDERACTION://提交委托
+                    {
+                        OrderActionRequest request = packet as OrderActionRequest;
+                        SrvOnOrderActionRequest(request, account);
+                    }
+                    break;
                 case MessageTypes.QRYORDER://查询委托
                     {
                         QryOrderRequest request = packet as QryOrderRequest;

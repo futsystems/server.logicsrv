@@ -21,6 +21,8 @@ namespace FrontServer
         /// </summary>
         string SessionID { get; }
 
+        IConnectionState IState { get; }
+
         /// <summary>
         /// 是否是XLProtocol协议
         /// 如果是该协议类别 逻辑部分在MQServer中进行统一处理

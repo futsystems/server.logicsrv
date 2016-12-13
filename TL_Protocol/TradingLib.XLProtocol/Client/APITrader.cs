@@ -73,6 +73,11 @@ namespace TradingLib.XLProtocol.Client
         public event Action<XLInputOrderField, ErrorField, uint, bool> OnRspOrderInsert = delegate { };
 
         /// <summary>
+        /// 委托操作回报
+        /// 委托操作异常 服务端通给出对应回报
+        /// </summary>
+        public event Action<XLInputOrderActionField, ErrorField, uint, bool> OnRspOrderAction = delegate { };
+        /// <summary>
         /// 委托实时通知
         /// </summary>
         public event Action<XLOrderField> OnRtnOrder = delegate { };
@@ -255,6 +260,13 @@ namespace TradingLib.XLProtocol.Client
                             OnRspOrderInsert(response, rsp, dataHeader.RequestID, (int)dataHeader.IsLast == 1 ? true : false);
                             break;
                         }
+                    case XLMessageType.T_RSP_ORDERACTION:
+                        {
+                            ErrorField rsp = (ErrorField)pkt.FieldList[0].FieldData;
+                            XLInputOrderActionField response = (XLInputOrderActionField)pkt.FieldList[1].FieldData;
+                            OnRspOrderAction(response, rsp, dataHeader.RequestID, (int)dataHeader.IsLast == 1 ? true : false);
+                            break;
+                        }
                     default:
                         logger.Info(string.Format("Unhandled Pkt:{0}", msgType));
                         break;
@@ -391,6 +403,19 @@ namespace TradingLib.XLProtocol.Client
         public bool ReqOrderInsert(XLInputOrderField req, uint requestID)
         {
             XLPacketData pktData = new XLPacketData(XLMessageType.T_REQ_INSERTORDER);
+            pktData.AddField(req);
+            return SendPktData(pktData, XLEnumSeqType.SeqReq, requestID);
+        }
+
+        /// <summary>
+        /// 提交委托操作
+        /// </summary>
+        /// <param name="req"></param>
+        /// <param name="requestID"></param>
+        /// <returns></returns>
+        public bool ReqOrderAction(XLInputOrderActionField req, uint requestID)
+        {
+            XLPacketData pktData = new XLPacketData(XLMessageType.T_REQ_ORDERACTION);
             pktData.AddField(req);
             return SendPktData(pktData, XLEnumSeqType.SeqReq, requestID);
         }

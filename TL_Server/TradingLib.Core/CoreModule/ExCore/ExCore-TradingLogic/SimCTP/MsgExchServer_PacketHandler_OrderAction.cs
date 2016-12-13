@@ -15,12 +15,11 @@ namespace TradingLib.Core
         /// 响应客户端委托操作
         /// </summary>
         /// <param name="request"></param>
-        void tl_newOrderActionRequest(OrderActionRequest request)
+        void SrvOnOrderActionRequest(OrderActionRequest request,IAccount account)
         {
             OrderAction action = request.OrderAction;
+            action.RequestID = request.RequestID;
             Order o = null;
-
-            IAccount account = TLCtxHelper.ModuleAccountManager[request.OrderAction.Account];
 
             //1.通过交易系统分配的全局委托ID进行识别委托
             if (action.OrderID != 0)

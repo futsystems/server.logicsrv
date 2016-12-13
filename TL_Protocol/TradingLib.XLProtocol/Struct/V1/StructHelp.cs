@@ -51,6 +51,8 @@ namespace TradingLib.XLProtocol.V1
                     return XLStructHelp.StructToBytes<XLQryMaxOrderVolumeField>((XLQryMaxOrderVolumeField)field);
                 case XLFieldType.F_REQ_INSERTORDER:
                     return XLStructHelp.StructToBytes<XLInputOrderField>((XLInputOrderField)field);
+                case XLFieldType.F_REQ_ORDERACTION:
+                    return XLStructHelp.StructToBytes<XLInputOrderActionField>((XLInputOrderActionField)field);
                 default:
                     throw new Exception(string.Format("FieldType:{0} not supported", fieldType));
             }
@@ -94,6 +96,8 @@ namespace TradingLib.XLProtocol.V1
                     return XLStructHelp.BytesToStruct<XLQryMaxOrderVolumeField>(data, offset);
                 case XLFieldType.F_REQ_INSERTORDER:
                     return XLStructHelp.BytesToStruct<XLInputOrderField>(data, offset);
+                case XLFieldType.F_REQ_ORDERACTION:
+                    return XLStructHelp.BytesToStruct<XLInputOrderActionField>(data, offset);
                 default:
                     throw new Exception(string.Format("FieldType:{0} not supported", type));
             }

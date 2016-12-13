@@ -851,6 +851,65 @@ namespace TradingLib.XLProtocol.V1
     #endregion
 
     #region 提交委托操作
+    /// <summary>
+    /// 输入报单操作
+    /// 报单引用3钟方式
+    /// 1.提交报单后系统会分配给该委托一个唯一ID作为编号 通过该编号可以进行撤单
+    /// 2.通过委托ExchangeID + OrderSysID 组合键形成委托编号
+    /// </summary>
+    [StructLayout(LayoutKind.Sequential, Pack = 1)]
+    public struct XLInputOrderActionField : IXLField
+    {
+        /// <summary>
+        /// 投资者代码
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 13)]
+        public string UserID;
+
+        /// <summary>
+        /// 委托系统编号
+        /// </summary>
+        public long OrderID;
+
+        /// <summary>
+        /// 交易所代码
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 9)]
+        public string ExchangeID;
+
+        /// <summary>
+        /// 报单编号
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 21)]
+        public string OrderSysID;
+
+        /// <summary>
+        /// 操作标志
+        /// </summary>
+        public XLActionFlagType ActionFlag;
+
+        /// <summary>
+        /// 价格
+        /// </summary>
+        public double LimitPrice;
+
+        /// <summary>
+        /// 数量变化
+        /// </summary>
+        public int VolumeChange;
+
+        /// <summary>
+        /// 请求编号
+        /// </summary>
+        public int RequestID;
+
+        /// <summary>
+        /// 域类别
+        /// </summary>
+        public ushort FieldID { get { return (ushort)XLFieldType.F_REQ_ORDERACTION; } }
+
+
+    }
     #endregion
 
 

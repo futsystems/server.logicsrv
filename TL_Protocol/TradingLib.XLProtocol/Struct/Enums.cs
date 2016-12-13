@@ -6,7 +6,24 @@ using System.Text;
 namespace TradingLib.XLProtocol
 {
     /// <summary>
-    /// TFtdcPosiDirectionType是一个持仓多空方向类型
+    ///操作标志类型
+    /// </summary>
+    public enum XLActionFlagType : byte
+    {
+        /// <summary>
+        /// 删除
+        /// </summary>
+        Delete = (byte)'0',
+
+        /// <summary>
+        /// 修改
+        /// </summary>
+        Modify = (byte)'3'
+    }
+
+
+    /// <summary>
+    ///持仓多空方向类型
     /// </summary>
     public enum XLPosiDirectionType : byte
     {

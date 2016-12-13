@@ -123,7 +123,7 @@ namespace TradingLib.Core
                 //处理Order提交
                 tl.newSendOrderRequest += new OrderDelegate(tl_newSendOrderRequest);
                 //处理OrderAction操作
-                tl.newOrderActionRequest += new OrderActionRequestDel(tl_newOrderActionRequest);
+                //tl.newOrderActionRequest += new OrderActionRequestDel(tl_newOrderActionRequest);
 
                 //处理其他请求消息
                 tl.newPacketRequest += new PacketRequestDel(tl_newPacketRequest);

@@ -279,12 +279,11 @@ namespace FrontServer
 
 
                         conn.ResponseXLPacket(pkt, (uint)response.RequestID, response.IsLast);
-                        //if (response.RspInfo.ErrorID == 0)
-                        //{
-                        //    conn.State.Authorized = true;
-                        //    conn.State.FrontID = field.FrontID;
-                        //    conn.State.SessionID = field.SessionID;
-                        //}
+                        if (response.RspInfo.ErrorID == 0)
+                        {
+                            conn.IState.Authorized = true;
+                            conn.IState.LoginID = response.LoginID;
+                        }
                         logger.Info(string.Format("LogicSrv Reply Session:{0} -> LoginResponse", conn.SessionID));
                         break;
                     }
@@ -549,8 +548,33 @@ namespace FrontServer
 
                         logger.Info(string.Format("LogicSrv Reply Session:{0} -> ErrorOrderNotify", conn.SessionID));
                         break;
+                    }
+                case MessageTypes.ERRORORDERACTIONNOTIFY:
+                    {
+                        ErrorOrderActionNotify notify = lpkt as ErrorOrderActionNotify;
+                        XLPacketData pkt = new XLPacketData(XLMessageType.T_RSP_ORDERACTION);
 
+                        XLInputOrderActionField field = new XLInputOrderActionField();
+                        field.UserID = notify.OrderAction.Account;
+                        field.ExchangeID = notify.OrderAction.Exchagne;
+                        field.OrderSysID = notify.OrderAction.OrderExchID;
 
+                        field.OrderID = notify.OrderAction.OrderID;
+                        field.ActionFlag = notify.OrderAction.ActionFlag == QSEnumOrderActionFlag.Delete ? XLActionFlagType.Delete : XLActionFlagType.Modify;
+
+                        field.RequestID = notify.OrderAction.RequestID;
+
+                        ErrorField rsp = new ErrorField();
+                        rsp.ErrorID = notify.RspInfo.ErrorID;
+                        rsp.ErrorMsg = notify.RspInfo.ErrorMessage;
+
+                        pkt.AddField(rsp);
+                        pkt.AddField(field);
+
+                        conn.ResponseXLPacket(pkt, (uint)notify.OrderAction.RequestID, true);
+
+                        logger.Info(string.Format("LogicSrv Reply Session:{0} -> ErrorOrderActionNotify", conn.SessionID));
+                        break;
                     }
                 default:
                     logger.Warn(string.Format("Logic Packet:{0} not handled", lpkt.Type));
@@ -744,7 +768,7 @@ namespace FrontServer
                             OrderInsertRequest request = RequestTemplate<OrderInsertRequest>.CliSendRequest(requestId);
 
                             Order order = new OrderImpl();
-                            order.Account = field.UserID;
+                            order.Account = string.IsNullOrEmpty(field.UserID) ? conn.IState.LoginID : field.UserID;
                             order.Symbol = field.SymbolID;
                             order.Exchange = field.ExchangeID;
 
@@ -783,7 +807,37 @@ namespace FrontServer
                         }
                         break;
                     }
+                    //提交委托操作
+                case XLMessageType.T_REQ_ORDERACTION:
+                    {
+                        var data = pkt.FieldList[0].FieldData;
+                        if (data is XLInputOrderActionField)
+                        {
+                            XLInputOrderActionField field = (XLInputOrderActionField)data;
 
+                            OrderActionRequest request = RequestTemplate<OrderActionRequest>.CliSendRequest(requestId);
+
+                            OrderAction action = new OrderActionImpl();
+                            action.Account = string.IsNullOrEmpty(field.UserID) ? conn.IState.LoginID : field.UserID;
+                            action.ActionFlag = QSEnumOrderActionFlag.Delete;
+
+                            action.Exchagne = field.ExchangeID;
+                            action.OrderExchID = field.OrderSysID;
+
+                            action.OrderID = field.OrderID;
+
+                            request.OrderAction = action;
+
+                            this.TLSend(conn.SessionID, request);
+                            logger.Info(string.Format("Session:{0} >> OrderActionRequest", conn.SessionID));
+
+                        }
+                        else
+                        {
+                            logger.Warn(string.Format("Request:{0} Data Field do not macth", pkt.MessageType));
+                        }
+                        break;
+                    }
                 default:
                     logger.Warn(string.Format("Packet:{0} logic not handled", pkt.MessageType));
                     break;
