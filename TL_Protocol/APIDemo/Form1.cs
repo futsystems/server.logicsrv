@@ -26,7 +26,7 @@ namespace APIClient
             WireEvent();
             debugControl1.TimeStamps = false;
             exAddress.Text = "121.40.201.40";
-            //exAddress.Text = "127.0.0.1";
+            exAddress.Text = "127.0.0.1";
         }
 
         void ControlLogFactoryAdapter_SendDebugEvent(string obj)
@@ -62,6 +62,20 @@ namespace APIClient
 
             btnWSStart.Click += new EventHandler(btnWSStart_Click);
             btnWSStop.Click += new EventHandler(btnWSStop_Click);
+            wsBtnLogin.Click += new EventHandler(wsBtnLogin_Click);
+        }
+
+        void wsBtnLogin_Click(object sender, EventArgs e)
+        {
+            if (websocket == null || websocket.State != WebSocketState.Open) return;
+            XLPacketData pkt = new XLPacketData(XLMessageType.T_REQ_LOGIN);
+            XLReqLoginField field = new XLReqLoginField();
+            field.UserID = wsUser.Text;
+            field.Password = wsPassword.Text;
+            field.UserProductInfo = "WebSocket";
+            field.MacAddress = "XXXX";
+            pkt.AddField(field);
+            websocket.Send(XLPacketData.PackJsonRequest(pkt, (int)++_requestId));
         }
 
         void btnWSStop_Click(object sender, EventArgs e)

@@ -10,6 +10,7 @@ using TradingLib.Common;
 using TradingLib.XLProtocol;
 using TradingLib.XLProtocol.V1;
 using Common.Logging;
+using Newtonsoft.Json;
 
 namespace FrontServer.WSServiceHost
 {
@@ -96,6 +97,7 @@ namespace FrontServer.WSServiceHost
                 conn.UpdateHeartBeat();
 
                 //Json数据转换成XLPacketData并进行处理
+                //JsonConvert.DeserializeObject<>
                 //_mqServer.HandleXLPacketData(conn, requestInfo.Body, (int)requestInfo.DataHeader.RequestID);
 
 

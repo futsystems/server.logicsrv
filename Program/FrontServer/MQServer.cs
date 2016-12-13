@@ -590,7 +590,7 @@ namespace FrontServer
                     //用户登入
                 case XLMessageType.T_REQ_LOGIN:
                     {
-                        var data = pkt.FieldList[0].FieldData;
+                        var data = pkt.FieldList[0];
                         if (data is XLReqLoginField)
                         {
                             XLReqLoginField field = (XLReqLoginField)data;
@@ -613,7 +613,7 @@ namespace FrontServer
                     //更新密码
                 case XLMessageType.T_REQ_UPDATEPASS:
                     {
-                        var data = pkt.FieldList[0].FieldData;
+                        var data = pkt.FieldList[0];
                         if (data is XLReqUserPasswordUpdateField)
                         {
                             XLReqUserPasswordUpdateField field = (XLReqUserPasswordUpdateField)data;
@@ -636,7 +636,7 @@ namespace FrontServer
                     //查询合约
                 case XLMessageType.T_QRY_SYMBOL:
                     {
-                        var data = pkt.FieldList[0].FieldData;
+                        var data = pkt.FieldList[0];
                         if (data is XLQrySymbolField)
                         {
                             XLQrySymbolField field = (XLQrySymbolField)data;
@@ -660,7 +660,7 @@ namespace FrontServer
                     //查询委托
                 case XLMessageType.T_QRY_ORDER:
                     {
-                        var data = pkt.FieldList[0].FieldData;
+                        var data = pkt.FieldList[0];
                         if (data is XLQryOrderField)
                         {
                             XLQryOrderField field = (XLQryOrderField)data;
@@ -679,7 +679,7 @@ namespace FrontServer
                     //查询成交
                 case XLMessageType.T_QRY_TRADE:
                     {
-                        var data = pkt.FieldList[0].FieldData;
+                        var data = pkt.FieldList[0];
                         if (data is XLQryTradeField)
                         {
                             XLQryTradeField field = (XLQryTradeField)data;
@@ -698,7 +698,7 @@ namespace FrontServer
                     //查询持仓
                 case XLMessageType.T_QRY_POSITION:
                     {
-                        var data = pkt.FieldList[0].FieldData;
+                        var data = pkt.FieldList[0];
                         if (data is XLQryPositionField)
                         {
                             XLQryPositionField field = (XLQryPositionField)data;
@@ -717,7 +717,7 @@ namespace FrontServer
                 //查询交易账户
                 case XLMessageType.T_QRY_ACCOUNT:
                     {
-                        var data = pkt.FieldList[0].FieldData;
+                        var data = pkt.FieldList[0];
                         if (data is XLQryTradingAccountField)
                         {
                             XLQryTradingAccountField field = (XLQryTradingAccountField)data;
@@ -736,7 +736,7 @@ namespace FrontServer
                 //查询最大报单数量
                 case XLMessageType.T_QRY_MAXORDVOL:
                     {
-                        var data = pkt.FieldList[0].FieldData;
+                        var data = pkt.FieldList[0];
                         if (data is XLQryMaxOrderVolumeField)
                         {
                             XLQryMaxOrderVolumeField field = (XLQryMaxOrderVolumeField)data;
@@ -760,7 +760,7 @@ namespace FrontServer
                     //提交委托
                 case XLMessageType.T_REQ_INSERTORDER:
                     {
-                        var data = pkt.FieldList[0].FieldData;
+                        var data = pkt.FieldList[0];
                         if (data is XLInputOrderField)
                         {
                             XLInputOrderField field = (XLInputOrderField)data;
@@ -810,7 +810,7 @@ namespace FrontServer
                     //提交委托操作
                 case XLMessageType.T_REQ_ORDERACTION:
                     {
-                        var data = pkt.FieldList[0].FieldData;
+                        var data = pkt.FieldList[0];
                         if (data is XLInputOrderActionField)
                         {
                             XLInputOrderActionField field = (XLInputOrderActionField)data;

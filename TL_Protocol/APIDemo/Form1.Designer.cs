@@ -52,11 +52,16 @@
             this.exAddress = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
             this.tabPage2 = new System.Windows.Forms.TabPage();
+            this.btnWSStop = new System.Windows.Forms.Button();
+            this.btnWSStart = new System.Windows.Forms.Button();
             this.wsAddress = new System.Windows.Forms.TextBox();
             this.label5 = new System.Windows.Forms.Label();
-            this.btnWSStart = new System.Windows.Forms.Button();
             this.debugControl1 = new APIClient.DebugControl();
-            this.btnWSStop = new System.Windows.Forms.Button();
+            this.wsPassword = new System.Windows.Forms.TextBox();
+            this.label6 = new System.Windows.Forms.Label();
+            this.wsUser = new System.Windows.Forms.TextBox();
+            this.label7 = new System.Windows.Forms.Label();
+            this.wsBtnLogin = new System.Windows.Forms.Button();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tabPage2.SuspendLayout();
@@ -293,6 +298,11 @@
             // 
             // tabPage2
             // 
+            this.tabPage2.Controls.Add(this.wsPassword);
+            this.tabPage2.Controls.Add(this.label6);
+            this.tabPage2.Controls.Add(this.wsUser);
+            this.tabPage2.Controls.Add(this.label7);
+            this.tabPage2.Controls.Add(this.wsBtnLogin);
             this.tabPage2.Controls.Add(this.btnWSStop);
             this.tabPage2.Controls.Add(this.btnWSStart);
             this.tabPage2.Controls.Add(this.wsAddress);
@@ -304,6 +314,24 @@
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "WebSocket/Json";
             this.tabPage2.UseVisualStyleBackColor = true;
+            // 
+            // btnWSStop
+            // 
+            this.btnWSStop.Location = new System.Drawing.Point(310, 7);
+            this.btnWSStop.Name = "btnWSStop";
+            this.btnWSStop.Size = new System.Drawing.Size(92, 23);
+            this.btnWSStop.TabIndex = 6;
+            this.btnWSStop.Text = "停止交易接口";
+            this.btnWSStop.UseVisualStyleBackColor = true;
+            // 
+            // btnWSStart
+            // 
+            this.btnWSStart.Location = new System.Drawing.Point(212, 7);
+            this.btnWSStart.Name = "btnWSStart";
+            this.btnWSStart.Size = new System.Drawing.Size(92, 23);
+            this.btnWSStart.TabIndex = 5;
+            this.btnWSStart.Text = "启动交易接口";
+            this.btnWSStart.UseVisualStyleBackColor = true;
             // 
             // wsAddress
             // 
@@ -322,15 +350,6 @@
             this.label5.TabIndex = 2;
             this.label5.Text = "URL";
             // 
-            // btnWSStart
-            // 
-            this.btnWSStart.Location = new System.Drawing.Point(212, 7);
-            this.btnWSStart.Name = "btnWSStart";
-            this.btnWSStart.Size = new System.Drawing.Size(92, 23);
-            this.btnWSStart.TabIndex = 5;
-            this.btnWSStart.Text = "启动交易接口";
-            this.btnWSStart.UseVisualStyleBackColor = true;
-            // 
             // debugControl1
             // 
             this.debugControl1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
@@ -346,14 +365,48 @@
             this.debugControl1.TimeStamps = true;
             this.debugControl1.UseExternalTimeStamp = false;
             // 
-            // btnWSStop
+            // wsPassword
             // 
-            this.btnWSStop.Location = new System.Drawing.Point(310, 7);
-            this.btnWSStop.Name = "btnWSStop";
-            this.btnWSStop.Size = new System.Drawing.Size(92, 23);
-            this.btnWSStop.TabIndex = 6;
-            this.btnWSStop.Text = "停止交易接口";
-            this.btnWSStop.UseVisualStyleBackColor = true;
+            this.wsPassword.Location = new System.Drawing.Point(200, 40);
+            this.wsPassword.Name = "wsPassword";
+            this.wsPassword.Size = new System.Drawing.Size(53, 21);
+            this.wsPassword.TabIndex = 15;
+            this.wsPassword.Text = "123456";
+            // 
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.Location = new System.Drawing.Point(138, 43);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(59, 12);
+            this.label6.TabIndex = 14;
+            this.label6.Text = "Password:";
+            // 
+            // wsUser
+            // 
+            this.wsUser.Location = new System.Drawing.Point(55, 40);
+            this.wsUser.Name = "wsUser";
+            this.wsUser.Size = new System.Drawing.Size(77, 21);
+            this.wsUser.TabIndex = 13;
+            this.wsUser.Text = "8500001";
+            // 
+            // label7
+            // 
+            this.label7.AutoSize = true;
+            this.label7.Location = new System.Drawing.Point(6, 43);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(47, 12);
+            this.label7.TabIndex = 12;
+            this.label7.Text = "UserID:";
+            // 
+            // wsBtnLogin
+            // 
+            this.wsBtnLogin.Location = new System.Drawing.Point(310, 38);
+            this.wsBtnLogin.Name = "wsBtnLogin";
+            this.wsBtnLogin.Size = new System.Drawing.Size(75, 23);
+            this.wsBtnLogin.TabIndex = 11;
+            this.wsBtnLogin.Text = "登入";
+            this.wsBtnLogin.UseVisualStyleBackColor = true;
             // 
             // Form1
             // 
@@ -405,6 +458,11 @@
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.Button btnWSStart;
         private System.Windows.Forms.Button btnWSStop;
+        private System.Windows.Forms.TextBox wsPassword;
+        private System.Windows.Forms.Label label6;
+        private System.Windows.Forms.TextBox wsUser;
+        private System.Windows.Forms.Label label7;
+        private System.Windows.Forms.Button wsBtnLogin;
     }
 }
 

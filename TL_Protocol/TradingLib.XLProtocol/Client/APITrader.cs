@@ -157,15 +157,15 @@ namespace TradingLib.XLProtocol.Client
                 {
                     case XLMessageType.T_RSP_LOGIN:
                         {
-                            ErrorField rsp = (ErrorField)pkt.FieldList[0].FieldData;
-                            XLRspLoginField response = (XLRspLoginField)pkt.FieldList[1].FieldData;
+                            ErrorField rsp = (ErrorField)pkt.FieldList[0];
+                            XLRspLoginField response = (XLRspLoginField)pkt.FieldList[1];
                             OnRspUserLogin(response, rsp, dataHeader.RequestID, (int)dataHeader.IsLast == 1 ? true : false);
                             break;
                         }
                     case XLMessageType.T_RSP_UPDATEPASS:
                         {
-                            ErrorField rsp = (ErrorField)pkt.FieldList[0].FieldData;
-                            XLRspUserPasswordUpdateField response = (XLRspUserPasswordUpdateField)pkt.FieldList[1].FieldData;
+                            ErrorField rsp = (ErrorField)pkt.FieldList[0];
+                            XLRspUserPasswordUpdateField response = (XLRspUserPasswordUpdateField)pkt.FieldList[1];
                             OnRspUserPasswordUpdate(response, rsp, dataHeader.RequestID, (int)dataHeader.IsLast == 1 ? true : false);
                             break;
                         }
@@ -174,7 +174,7 @@ namespace TradingLib.XLProtocol.Client
                             XLSymbolField response;
                             if (pkt.FieldList.Count > 0)
                             {
-                                response = (XLSymbolField)pkt.FieldList[0].FieldData;
+                                response = (XLSymbolField)pkt.FieldList[0];
                             }
                             else
                             {
@@ -188,7 +188,7 @@ namespace TradingLib.XLProtocol.Client
                             XLOrderField response;
                             if (pkt.FieldList.Count > 0)
                             {
-                                response = (XLOrderField)pkt.FieldList[0].FieldData;
+                                response = (XLOrderField)pkt.FieldList[0];
                             }
                             else
                             {
@@ -200,7 +200,7 @@ namespace TradingLib.XLProtocol.Client
                         }
                     case XLMessageType.T_RTN_ORDER:
                         {
-                            XLOrderField notify = (XLOrderField)pkt.FieldList[0].FieldData;
+                            XLOrderField notify = (XLOrderField)pkt.FieldList[0];
                             OnRtnOrder(notify);
                             break;
                         }
@@ -210,7 +210,7 @@ namespace TradingLib.XLProtocol.Client
                             XLTradeField response;
                             if (pkt.FieldList.Count > 0)
                             {
-                                response = (XLTradeField)pkt.FieldList[0].FieldData;
+                                response = (XLTradeField)pkt.FieldList[0];
                             }
                             else
                             {
@@ -221,7 +221,7 @@ namespace TradingLib.XLProtocol.Client
                         }
                     case XLMessageType.T_RTN_TRADE:
                         {
-                            XLTradeField notify = (XLTradeField)pkt.FieldList[0].FieldData;
+                            XLTradeField notify = (XLTradeField)pkt.FieldList[0];
                             OnRtnTrade(notify);
                             break;
                         }
@@ -230,7 +230,7 @@ namespace TradingLib.XLProtocol.Client
                             XLPositionField response;
                             if (pkt.FieldList.Count > 0)
                             {
-                                response = (XLPositionField)pkt.FieldList[0].FieldData;
+                                response = (XLPositionField)pkt.FieldList[0];
                             }
                             else
                             {
@@ -241,33 +241,33 @@ namespace TradingLib.XLProtocol.Client
                         }
                     case XLMessageType.T_RTN_POSITIONUPDATE:
                         {
-                            XLPositionField notify = (XLPositionField)pkt.FieldList[0].FieldData;
+                            XLPositionField notify = (XLPositionField)pkt.FieldList[0];
                             OnRtnPosition(notify);
                             break;
                         }
                     case XLMessageType.T_RSP_ACCOUNT:
                         {
-                            XLTradingAccountField response = (XLTradingAccountField)pkt.FieldList[0].FieldData;
+                            XLTradingAccountField response = (XLTradingAccountField)pkt.FieldList[0];
                             OnRspQryTradingAccount(response, new ErrorField(), dataHeader.RequestID, (int)dataHeader.IsLast == 1 ? true : false);
                             break;
                         }
                     case XLMessageType.T_RSP_MAXORDVOL:
                         {
-                            XLQryMaxOrderVolumeField response = (XLQryMaxOrderVolumeField)pkt.FieldList[0].FieldData;
+                            XLQryMaxOrderVolumeField response = (XLQryMaxOrderVolumeField)pkt.FieldList[0];
                             OnRspQryMaxOrderVol(response, new ErrorField(), dataHeader.RequestID, (int)dataHeader.IsLast == 1 ? true : false);
                             break;
                         }
                     case XLMessageType.T_RSP_INSERTORDER:
                         {
-                            ErrorField rsp = (ErrorField)pkt.FieldList[0].FieldData;
-                            XLInputOrderField response = (XLInputOrderField)pkt.FieldList[1].FieldData;
+                            ErrorField rsp = (ErrorField)pkt.FieldList[0];
+                            XLInputOrderField response = (XLInputOrderField)pkt.FieldList[1];
                             OnRspOrderInsert(response, rsp, dataHeader.RequestID, (int)dataHeader.IsLast == 1 ? true : false);
                             break;
                         }
                     case XLMessageType.T_RSP_ORDERACTION:
                         {
-                            ErrorField rsp = (ErrorField)pkt.FieldList[0].FieldData;
-                            XLInputOrderActionField response = (XLInputOrderActionField)pkt.FieldList[1].FieldData;
+                            ErrorField rsp = (ErrorField)pkt.FieldList[0];
+                            XLInputOrderActionField response = (XLInputOrderActionField)pkt.FieldList[1];
                             OnRspOrderAction(response, rsp, dataHeader.RequestID, (int)dataHeader.IsLast == 1 ? true : false);
                             break;
                         }

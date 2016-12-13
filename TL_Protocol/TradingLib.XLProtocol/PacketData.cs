@@ -33,7 +33,7 @@ namespace TradingLib.XLProtocol
             _messageType = msgType;
         }
 
-        public XLPacketData(XLMessageType msgType, List<XLFieldData<IXLField>> fields)
+        public XLPacketData(XLMessageType msgType, List<IXLField> fields)
         {
             _messageType = msgType;
             _fieldList.AddRange(fields);
@@ -47,11 +47,11 @@ namespace TradingLib.XLProtocol
 
 
 
-        List<XLFieldData<IXLField>> _fieldList = new List<XLFieldData<IXLField>>();
+        List<IXLField> _fieldList = new List<IXLField>();
         /// <summary>
         /// 业务数据结
         /// </summary>
-        public List<XLFieldData<IXLField>> FieldList { get { return _fieldList; } }
+        public List<IXLField> FieldList { get { return _fieldList; } }
 
 
         /// <summary>
@@ -60,13 +60,14 @@ namespace TradingLib.XLProtocol
         /// <param name="field"></param>
         public void AddField(IXLField field)
         {
-            XLFieldHeader header = new XLFieldHeader();
-            int fieldLen = Marshal.SizeOf(field);
-            FillFieldHeader(ref header, field.FieldID, (ushort)fieldLen);
+            //XLFieldHeader header = new XLFieldHeader();
+            //int fieldLen = Marshal.SizeOf(field);
+            //FillFieldHeader(ref header, field.FieldID, (ushort)fieldLen);
 
-            _fieldList.Add(new XLFieldData<IXLField>() { FieldHeader = header,FieldData = field});
+            _fieldList.Add(field);// (new XLFieldData<IXLField>() { FieldHeader = header, FieldData = field });
         }
 
+       
 
 
         #region 二进制 序列化与反序列化
@@ -79,8 +80,18 @@ namespace TradingLib.XLProtocol
         {
             XLProtocolHeader protoHeader = new XLProtocolHeader();
             XLDataHeader dataHeader = new XLDataHeader();
+            List<XLFieldHeader> hdList = new List<XLFieldHeader>();
+            ushort fieldLength = 0;
+            foreach (var field in packet.FieldList)
+            {  
+                XLFieldHeader header = new XLFieldHeader();
+                int fieldLen = Marshal.SizeOf(field);
+                FillFieldHeader(ref header, field.FieldID, (ushort)fieldLen);
+                hdList.Add(header);
+                fieldLength += (ushort)(header.FieldLength + XLConstants.FIELD_HEADER_LEN);
+            }
 
-            ushort fieldLength = (ushort)packet.FieldList.Sum(d => (d.FieldHeader.FieldLength + XLConstants.FIELD_HEADER_LEN));
+            //ushort fieldLength = (ushort)packet.FieldList.Sum(d => (d.FieldHeader.FieldLength + XLConstants.FIELD_HEADER_LEN));
             ushort pktLen = (ushort)(XLConstants.PROTO_HEADER_LEN + XLConstants.DATA_HEADER_LEN + fieldLength);
             ushort fieldCount = (ushort)packet.FieldList.Count;
             FillProtoHeader(ref protoHeader, packet.MessageType, pktLen);
@@ -95,12 +106,14 @@ namespace TradingLib.XLProtocol
             Array.Copy(XLStructHelp.StructToBytes<XLDataHeader>(dataHeader), 0, data, offset, XLConstants.DATA_HEADER_LEN);
             offset += XLConstants.DATA_HEADER_LEN;
 
+            int i = 0;
             //遍历所有业务数据域 转换成byte数组
             foreach (var field in packet.FieldList)
             {
-                Array.Copy(XLStructHelp.StructToBytes<XLFieldHeader>(field.FieldHeader), 0, data, offset, XLConstants.FIELD_HEADER_LEN);
-                Array.Copy(XLStructHelp.StructToBytes(field.FieldData), 0, data, offset + XLConstants.FIELD_HEADER_LEN, field.FieldHeader.FieldLength);
-                offset += (XLConstants.FIELD_HEADER_LEN + field.FieldHeader.FieldLength);
+                Array.Copy(XLStructHelp.StructToBytes<XLFieldHeader>(hdList[i]), 0, data, offset, XLConstants.FIELD_HEADER_LEN);
+                Array.Copy(XLStructHelp.StructToBytes(field), 0, data, offset + XLConstants.FIELD_HEADER_LEN, hdList[i].FieldLength);
+                offset += (XLConstants.FIELD_HEADER_LEN + hdList[i].FieldLength);
+                i++;
               }
 
             return data;
@@ -119,7 +132,7 @@ namespace TradingLib.XLProtocol
             dataHeader = XLStructHelp.BytesToStruct<XLDataHeader>(data, _offset);
             _offset += XLConstants.DATA_HEADER_LEN;
 
-            List<XLFieldData<IXLField>> list = new List<XLFieldData<IXLField>>();
+            List<IXLField> list = new List<IXLField>();
             for (int i = 0; i < dataHeader.FieldCount; i++)
             {
                 XLFieldHeader fieldHeader = XLStructHelp.BytesToStruct<XLFieldHeader>(data, _offset);
@@ -133,7 +146,7 @@ namespace TradingLib.XLProtocol
                     default:
                         throw new Exception(string.Format("Version:{0} not supported", dataHeader.Version));
                 }
-                list.Add(new XLFieldData<IXLField> { FieldHeader = fieldHeader, FieldData = fieldData });
+                list.Add(fieldData);// (new XLFieldData<IXLField> { FieldHeader = fieldHeader, FieldData = fieldData });
                 _offset += XLConstants.FIELD_HEADER_LEN + fieldHeader.FieldLength;
             }
 
@@ -149,9 +162,9 @@ namespace TradingLib.XLProtocol
         /// </summary>
         /// <param name="packet"></param>
         /// <returns></returns>
-        public static string PackToJson(XLPacketData packet)
+        public static string PackJsonRequest(XLPacketData packet,int requestID)
         {
-            return string.Empty;
+            return Newtonsoft.Json.JsonConvert.SerializeObject(new { MessageType = packet.MessageType, Field = packet.FieldList[0], RequestID = requestID });
         }
 
 
@@ -203,5 +216,18 @@ namespace TradingLib.XLProtocol
         }
         #endregion
 
+    }
+
+    public struct PacketJ
+    {
+        /// <summary>
+        /// 消息类别
+        /// </summary>
+        public XLMessageType XLMessageType { get; set; }
+
+        /// <summary>
+        /// 域
+        /// </summary>
+        public List<IXLField> FieldList { get; set; }
     }
 }
