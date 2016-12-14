@@ -233,13 +233,11 @@
     <Compile Include="CoreModule\ExCore\Base\ExCore.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SettlementPriceTracker.cs" />
-    <Compile Include="Transport\FastTickSrvMgrClient.cs" />
     <Compile Include="Transport\PushServer.cs" />
     <Compile Include="Transport\ThroughtPutTracker.cs" />
     <Compile Include="Transport\ZeromqThroughPut.cs" />
     <Compile Include="Base\AsyncTransactionLoger.cs" />
     <Compile Include="Base\TIFEngine.cs" />
-    <Compile Include="Transport\zmessages.cs" />
     <Compile Include="Transport\AsyncServerZ4.cs" />
   </ItemGroup>
   <ItemGroup />

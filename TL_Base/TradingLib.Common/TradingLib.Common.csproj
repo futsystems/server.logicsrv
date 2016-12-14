@@ -111,7 +111,6 @@
     <Compile Include="Domain\DomainImpl.cs" />
     <Compile Include="Other\CashReport.cs" />
     <Compile Include="Other\ExchangeRate.cs" />
-    <Compile Include="Other\IDataClient.cs" />
     <Compile Include="Other\ManagerNotify.cs" />
     <Compile Include="Other\ProductInfo.cs" />
     <Compile Include="Other\TLClient.cs" />
