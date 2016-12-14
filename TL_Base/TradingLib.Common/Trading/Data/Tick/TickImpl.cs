@@ -78,6 +78,31 @@ namespace TradingLib.Common
         int _asksize5;
         int _bidsize5;
 
+        decimal _askprice6;
+        decimal _bidprice6;
+        int _asksize6;
+        int _bidsize6;
+
+        decimal _askprice7;
+        decimal _bidprice7;
+        int _asksize7;
+        int _bidsize7;
+
+        decimal _askprice8;
+        decimal _bidprice8;
+        int _asksize8;
+        int _bidsize8;
+
+        decimal _askprice9;
+        decimal _bidprice9;
+        int _asksize9;
+        int _bidsize9;
+
+        decimal _askprice10;
+        decimal _bidprice10;
+        int _asksize10;
+        int _bidsize10;
+
         bool _marketOpen;
         bool _quoteUpdate;
         string _updateType;
@@ -105,24 +130,32 @@ namespace TradingLib.Common
         public int AskSize5 { get { return _asksize5; } set { _asksize5 = value; } }
         public int BidSize5 { get { return _bidsize5; } set { _bidsize5 = value; } }
 
+        public decimal AskPrice6 { get { return _askprice6; } set { _askprice6 = value; } }
+        public decimal BidPrice6 { get { return _bidprice6; } set { _bidprice6 = value; } }
+        public int AskSize6 { get { return _asksize6; } set { _asksize6 = value; } }
+        public int BidSize6 { get { return _bidsize6; } set { _bidsize6 = value; } }
+
+        public decimal AskPrice7 { get { return _askprice7; } set { _askprice7 = value; } }
+        public decimal BidPrice7 { get { return _bidprice7; } set { _bidprice7 = value; } }
+        public int AskSize7 { get { return _asksize7; } set { _asksize7 = value; } }
+        public int BidSize7 { get { return _bidsize7; } set { _bidsize7 = value; } }
+
+        public decimal AskPrice8 { get { return _askprice8; } set { _askprice8 = value; } }
+        public decimal BidPrice8 { get { return _bidprice8; } set { _bidprice8 = value; } }
+        public int AskSize8 { get { return _asksize8; } set { _asksize8 = value; } }
+        public int BidSize8 { get { return _bidsize8; } set { _bidsize8 = value; } }
+
+        public decimal AskPrice9 { get { return _askprice9; } set { _askprice9 = value; } }
+        public decimal BidPrice9 { get { return _bidprice9; } set { _bidprice9 = value; } }
+        public int AskSize9 { get { return _asksize9; } set { _asksize9 = value; } }
+        public int BidSize9 { get { return _bidsize9; } set { _bidsize9 = value; } }
+
+        public decimal AskPrice10 { get { return _askprice10; } set { _askprice10 = value; } }
+        public decimal BidPrice10 { get { return _bidprice10; } set { _bidprice10 = value; } }
+        public int AskSize10 { get { return _asksize10; } set { _asksize10 = value; } }
+        public int BidSize10 { get { return _bidsize10; } set { _bidsize10 = value; } }
 
 
-
-        //public bool isIndex { get { return _size < 0; } }
-
-        //public bool hasBid { get { return (_bid != 0) && (_bs != 0); } }
-
-        //public bool hasAsk { get { return (_ask != 0) && (_os != 0); } }
-
-        //public bool isFullQuote { get { return hasBid && hasAsk; } }
-
-        //public bool isQuote { get { return (!isTrade && (hasBid || hasAsk)); } }
-
-        //public bool isTrade { get { return (_trade != 0) && (_size > 0); } }
-
-        //public bool hasTick { get { return (isTrade || hasBid || hasAsk); } }
-
-        //public bool isValid { get { return (_sym != "") && (isIndex || hasTick); } }
 
 
         public bool hasVol { get { return _vol != 0; } }
@@ -132,11 +165,6 @@ namespace TradingLib.Common
         public bool hasHigh { get { return _high != 0; } }
         public bool hasLow { get { return _low != 0; } }
         public bool hasPreOI { get { return _preoi != 0; } }
-
-
-        //public bool atHigh(decimal high) { return (isTrade && (_trade >= high)); }
-        //public bool atLow(decimal low) { return (isTrade && (_trade <= low)); }
-
 
 
         /// <summary>
@@ -259,6 +287,31 @@ namespace TradingLib.Common
             _asksize5 = 0;
             _bidsize5  = 0;
 
+            _askprice6 = 0;
+            _bidprice6 = 0;
+            _asksize6 = 0;
+            _bidsize6 = 0;
+
+            _askprice7 = 0;
+            _bidprice7 = 0;
+            _asksize7 = 0;
+            _bidsize7 = 0;
+
+            _askprice8 = 0;
+            _bidprice8 = 0;
+            _asksize8 = 0;
+            _bidsize8 = 0;
+
+            _askprice9 = 0;
+            _bidprice9 = 0;
+            _asksize9 = 0;
+            _bidsize9 = 0;
+
+            _askprice10 = 0;
+            _bidprice10 = 0;
+            _asksize10 = 0;
+            _bidsize10 = 0;
+
             _marketOpen = false;
             _quoteUpdate = false;
             _askUpdate = false;
@@ -270,70 +323,15 @@ namespace TradingLib.Common
         }
 
         public TickImpl(DateTime time)
+            :this(string.Empty)
         {
-
-            _Sec = new SymbolImpl();
             _type = EnumTickType.TIME;//默认为快照行情 更新所有数据
-            _sym = "";
-
-            _be = "";
-            _oe = "";
-            _ex = "";
-            _bs = 0;
-            _os = 0;
-            _size = 0;
-            _depth = 0;
             _date = time.ToTLDate();
             _time = time.ToTLTime();
-            _trade = 0;
-            _bid = 0;
-            _ask = 0;
-            _datetime = DateTime.MinValue;
-            _symidx = 0;
-
-            _vol = 0;
-            _open = 0;
-            _high = 0;
-            _low = 0;
-            _preoi = 0;
-            _oi = 0;
-            _presettlement = 0;
-            _settlement = 0;
-            _upperlimit = 0;
-            _lowerlimit = 0;
-            _preclose = 0;
-            _datafeed = QSEnumDataFeedTypes.DEFAULT;
-
-            _askprice2 = 0;
-            _bidprice2 = 0;
-            _asksize2 = 0;
-            _bidsize2 = 0;
-
-            _askprice3 = 0;
-            _bidprice3 = 0;
-            _asksize3 = 0;
-            _bidsize3 = 0;
-
-            _askprice4 = 0;
-            _bidprice4 = 0;
-            _asksize4 = 0;
-            _bidsize4 = 0;
-
-
-            _askprice5 = 0;
-            _bidprice5 = 0;
-            _asksize5 = 0;
-            _bidsize5 = 0;
-            _marketOpen = false;
-            _quoteUpdate = false;
-            _askUpdate = false;
-            _bidUpdate = false;
-            _intervalSize = 0;
-
-            _updateType = "S";
-            _tradeflag = -1;
-
+            _datetime = time;
+            _updateType = "T";
         }
+
 
         public static TickImpl Copy(Tick c)
         {
@@ -393,6 +391,33 @@ namespace TradingLib.Common
             k.BidPrice5 = c.BidPrice5;
             k.AskSize5 = c.AskSize5;
             k.BidSize5 = c.BidSize5;
+
+            k.AskPrice6 = c.AskPrice6;
+            k.BidPrice6 = c.BidPrice6;
+            k.AskSize6 = c.AskSize6;
+            k.BidSize6 = c.BidSize6;
+
+            k.AskPrice7 = c.AskPrice7;
+            k.BidPrice7 = c.BidPrice7;
+            k.AskSize7 = c.AskSize7;
+            k.BidSize7 = c.BidSize7;
+
+            k.AskPrice8 = c.AskPrice8;
+            k.BidPrice8 = c.BidPrice8;
+            k.AskSize8 = c.AskSize8;
+            k.BidSize8 = c.BidSize8;
+
+            k.AskPrice9 = c.AskPrice9;
+            k.BidPrice9 = c.BidPrice9;
+            k.AskSize9 = c.AskSize9;
+            k.BidSize9 = c.BidSize9;
+
+            k.AskPrice10 = c.AskPrice10;
+            k.BidPrice10 = c.BidPrice10;
+            k.AskSize10 = c.AskSize10;
+            k.BidSize10 = c.BidSize10;
+
+
             k.MarketOpen = c.MarketOpen;
             k.QuoteUpdate = c.QuoteUpdate;
             k.UpdateType = c.UpdateType;
@@ -819,6 +844,129 @@ namespace TradingLib.Common
                         sb.Append(k.MarketOpen);//43
                         break;
                     }
+                case "2U"://Level2 Update
+                    {
+                        sb.Append(k.Depth);
+                        sb.Append(d);
+                        switch (k.Depth)
+                        {
+                            case 1:
+                                {
+                                    sb.Append(k.AskPrice);
+                                    sb.Append(d);
+                                    sb.Append(k.AskSize);
+                                    sb.Append(d);
+                                    sb.Append(k.BidPrice);
+                                    sb.Append(d);
+                                    sb.Append(k.BidSize);
+                                    break;
+                                }
+                            case 2:
+                                {
+                                    sb.Append(k.AskPrice2);
+                                    sb.Append(d);
+                                    sb.Append(k.AskSize2);
+                                    sb.Append(d);
+                                    sb.Append(k.BidPrice2);
+                                    sb.Append(d);
+                                    sb.Append(k.BidSize2);
+                                    break;
+                                }
+                            case 3:
+                                {
+                                    sb.Append(k.AskPrice3);
+                                    sb.Append(d);
+                                    sb.Append(k.AskSize3);
+                                    sb.Append(d);
+                                    sb.Append(k.BidPrice3);
+                                    sb.Append(d);
+                                    sb.Append(k.BidSize3);
+                                    break;
+                                }
+                            case 4:
+                                {
+                                    sb.Append(k.AskPrice4);
+                                    sb.Append(d);
+                                    sb.Append(k.AskSize4);
+                                    sb.Append(d);
+                                    sb.Append(k.BidPrice4);
+                                    sb.Append(d);
+                                    sb.Append(k.BidSize4);
+                                    break;
+                                }
+                            case 5:
+                                {
+                                    sb.Append(k.AskPrice5);
+                                    sb.Append(d);
+                                    sb.Append(k.AskSize5);
+                                    sb.Append(d);
+                                    sb.Append(k.BidPrice5);
+                                    sb.Append(d);
+                                    sb.Append(k.BidSize5);
+                                    break;
+                                }
+                            case 6:
+                                {
+                                    sb.Append(k.AskPrice6);
+                                    sb.Append(d);
+                                    sb.Append(k.AskSize6);
+                                    sb.Append(d);
+                                    sb.Append(k.BidPrice6);
+                                    sb.Append(d);
+                                    sb.Append(k.BidSize6);
+                                    break;
+                                }
+                            case 7:
+                                {
+                                    sb.Append(k.AskPrice7);
+                                    sb.Append(d);
+                                    sb.Append(k.AskSize7);
+                                    sb.Append(d);
+                                    sb.Append(k.BidPrice7);
+                                    sb.Append(d);
+                                    sb.Append(k.BidSize7);
+                                    break;
+                                }
+                            case 8:
+                                {
+                                    sb.Append(k.AskPrice8);
+                                    sb.Append(d);
+                                    sb.Append(k.AskSize8);
+                                    sb.Append(d);
+                                    sb.Append(k.BidPrice8);
+                                    sb.Append(d);
+                                    sb.Append(k.BidSize8);
+                                    break;
+                                }
+                            case 9:
+                                {
+                                    sb.Append(k.AskPrice9);
+                                    sb.Append(d);
+                                    sb.Append(k.AskSize9);
+                                    sb.Append(d);
+                                    sb.Append(k.BidPrice9);
+                                    sb.Append(d);
+                                    sb.Append(k.BidSize9);
+                                    break;
+                                }
+                            case 10:
+                                {
+                                    sb.Append(k.AskPrice10);
+                                    sb.Append(d);
+                                    sb.Append(k.AskSize10);
+                                    sb.Append(d);
+                                    sb.Append(k.BidPrice10);
+                                    sb.Append(d);
+                                    sb.Append(k.BidSize10);
+                                    break;
+                                }
+                        }
+                        sb.Append(d);
+                        sb.Append(k.Exchange);
+                        break;
+                        
+
+                    }
                 case "E"://合约交易所状态 比如MarketOpen,MarketClose,Halted熔断 等状态
                     {
                         sb.Append(k.Exchange);
@@ -961,6 +1109,96 @@ namespace TradingLib.Common
                         k.MarketOpen = bool.Parse(r[43]);
                         break;
 
+                    }
+                case "2U":
+                    {
+                        k.Depth = int.Parse(r[7]);
+                        switch (k.Depth)
+                        {
+                            case 1:
+                                {
+                                    k.AskPrice = decimal.Parse(r[8]);
+                                    k.AskSize = int.Parse(r[9]);
+                                    k.BidPrice = decimal.Parse(r[10]);
+                                    k.BidSize = int.Parse(r[11]);
+                                    break;
+                                }
+                            case 2:
+                                {
+                                    k.AskPrice2 = decimal.Parse(r[8]);
+                                    k.AskSize2 = int.Parse(r[9]);
+                                    k.BidPrice2 = decimal.Parse(r[10]);
+                                    k.BidSize2 = int.Parse(r[11]);
+                                    break;
+                                }
+                            case 3:
+                                {
+                                    k.AskPrice3 = decimal.Parse(r[8]);
+                                    k.AskSize3 = int.Parse(r[9]);
+                                    k.BidPrice3 = decimal.Parse(r[10]);
+                                    k.BidSize3 = int.Parse(r[11]);
+                                    break;
+                                }
+                            case 4:
+                                {
+                                    k.AskPrice4 = decimal.Parse(r[8]);
+                                    k.AskSize4 = int.Parse(r[9]);
+                                    k.BidPrice4 = decimal.Parse(r[10]);
+                                    k.BidSize4 = int.Parse(r[11]);
+                                    break;
+                                }
+                            case 5:
+                                {
+                                    k.AskPrice5 = decimal.Parse(r[8]);
+                                    k.AskSize5 = int.Parse(r[9]);
+                                    k.BidPrice5 = decimal.Parse(r[10]);
+                                    k.BidSize5 = int.Parse(r[11]);
+                                    break;
+                                }
+                            case 6:
+                                {
+                                    k.AskPrice6 = decimal.Parse(r[8]);
+                                    k.AskSize6 = int.Parse(r[9]);
+                                    k.BidPrice6 = decimal.Parse(r[10]);
+                                    k.BidSize6 = int.Parse(r[11]);
+                                    break;
+                                }
+                            case 7:
+                                {
+                                    k.AskPrice7 = decimal.Parse(r[8]);
+                                    k.AskSize7 = int.Parse(r[9]);
+                                    k.BidPrice7 = decimal.Parse(r[10]);
+                                    k.BidSize7 = int.Parse(r[11]);
+                                    break;
+                                }
+                            case 8:
+                                {
+                                    k.AskPrice8 = decimal.Parse(r[8]);
+                                    k.AskSize8 = int.Parse(r[9]);
+                                    k.BidPrice8 = decimal.Parse(r[10]);
+                                    k.BidSize8 = int.Parse(r[11]);
+                                    break;
+                                }
+                            case 9:
+                                {
+                                    k.AskPrice9 = decimal.Parse(r[8]);
+                                    k.AskSize9 = int.Parse(r[9]);
+                                    k.BidPrice9 = decimal.Parse(r[10]);
+                                    k.BidSize9 = int.Parse(r[11]);
+                                    break;
+                                }
+                            case 10:
+                                {
+                                    k.AskPrice10 = decimal.Parse(r[8]);
+                                    k.AskSize10 = int.Parse(r[9]);
+                                    k.BidPrice10 = decimal.Parse(r[10]);
+                                    k.BidSize10 = int.Parse(r[11]);
+                                    break;
+                                }
+
+                        }
+                        k.Exchange = r[12];
+                        break;
                     }
                 case "E":
                     {

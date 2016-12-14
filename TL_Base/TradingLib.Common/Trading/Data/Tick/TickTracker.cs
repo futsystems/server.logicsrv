@@ -200,6 +200,94 @@ namespace TradingLib.Common
                         break;
 
                     }
+                case "2U":
+                    {
+                        snapshot.Depth = k.Depth;
+                        switch (k.Depth)
+                        {
+                            case 1:
+                                {
+                                    snapshot.AskPrice = k.AskPrice;
+                                    snapshot.AskSize = k.AskSize;
+                                    snapshot.BidPrice = k.BidPrice;
+                                    snapshot.BidSize = k.BidSize;
+                                    break;
+                                }
+                            case 2:
+                                {
+                                    snapshot.AskPrice2 = k.AskPrice2;
+                                    snapshot.AskSize2 = k.AskSize2;
+                                    snapshot.BidPrice2 = k.BidPrice2;
+                                    snapshot.BidSize2 = k.BidSize2;
+                                    break;
+                                }
+                            case 3:
+                                {
+                                    snapshot.AskPrice3 = k.AskPrice3;
+                                    snapshot.AskSize3 = k.AskSize3;
+                                    snapshot.BidPrice3 = k.BidPrice3;
+                                    snapshot.BidSize3 = k.BidSize3;
+                                    break;
+                                }
+                            case 4:
+                                {
+                                    snapshot.AskPrice4 = k.AskPrice4;
+                                    snapshot.AskSize4 = k.AskSize4;
+                                    snapshot.BidPrice4 = k.BidPrice4;
+                                    snapshot.BidSize4 = k.BidSize4;
+                                    break;
+                                }
+                            case 5:
+                                {
+                                    snapshot.AskPrice5 = k.AskPrice5;
+                                    snapshot.AskSize5 = k.AskSize5;
+                                    snapshot.BidPrice5 = k.BidPrice5;
+                                    snapshot.BidSize5 = k.BidSize5;
+                                    break;
+                                }
+                            case 6:
+                                {
+                                    snapshot.AskPrice6 = k.AskPrice6;
+                                    snapshot.AskSize6 = k.AskSize6;
+                                    snapshot.BidPrice6 = k.BidPrice6;
+                                    snapshot.BidSize6 = k.BidSize6;
+                                    break;
+                                }
+                            case 7:
+                                {
+                                    snapshot.AskPrice7 = k.AskPrice7;
+                                    snapshot.AskSize7 = k.AskSize7;
+                                    snapshot.BidPrice7 = k.BidPrice7;
+                                    snapshot.BidSize7 = k.BidSize7;
+                                    break;
+                                }
+                            case 8:
+                                {
+                                    snapshot.AskPrice8 = k.AskPrice8;
+                                    snapshot.AskSize8 = k.AskSize8;
+                                    snapshot.BidPrice8 = k.BidPrice8;
+                                    snapshot.BidSize8 = k.BidSize8;
+                                    break;
+                                }
+                            case 9:
+                                {
+                                    snapshot.AskPrice9 = k.AskPrice9;
+                                    snapshot.AskSize9 = k.AskSize9;
+                                    snapshot.BidPrice9 = k.BidPrice9;
+                                    snapshot.BidSize9 = k.BidSize9;
+                                    break;
+                                }
+                            case 10:
+                                {
+                                    snapshot.AskPrice10 = k.AskPrice10;
+                                    snapshot.AskSize10 = k.AskSize10;
+                                    snapshot.BidPrice10 = k.BidPrice10;
+                                    snapshot.BidSize10 = k.BidSize10;
+                                    break;
+                                }
+                        }
+                        break;
+                    }
                 default:
                     break;
             }

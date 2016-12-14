@@ -50,7 +50,7 @@ namespace TradingLib.API
         int TradeFlag { get; set;}
         #endregion
 
-        #region Quote
+        #region Quote/Level2
         /// <summary>
         /// bid price
         /// </summary>
@@ -110,12 +110,40 @@ namespace TradingLib.API
         int AskSize5 { get; set; }
         int BidSize5 { get; set; }
 
-        #endregion
+        decimal AskPrice6 { get; set; }
+        decimal BidPrice6 { get; set; }
+        int AskSize6 { get; set; }
+        int BidSize6 { get; set; }
+
+        decimal AskPrice7 { get; set; }
+        decimal BidPrice7 { get; set; }
+        int AskSize7 { get; set; }
+        int BidSize7 { get; set; }
+
+        decimal AskPrice8 { get; set; }
+        decimal BidPrice8 { get; set; }
+        int AskSize8 { get; set; }
+        int BidSize8 { get; set; }
+
+        decimal AskPrice9 { get; set; }
+        decimal BidPrice9 { get; set; }
+        int AskSize9 { get; set; }
+        int BidSize9 { get; set; }
+
+        decimal AskPrice10 { get; set; }
+        decimal BidPrice10 { get; set; }
+        int AskSize10 { get; set; }
+        int BidSize10 { get; set; }
 
         /// <summary>
-        /// depth of last bid/ask quote
+        /// 上次报价深度
+        /// 获得Level2数据后根据深度 更新对应深度盘口上的数据
         /// </summary>
         int Depth { get; set; }
+
+        #endregion
+
+
 
         bool hasVol { get; }
         bool hasOI { get; }
