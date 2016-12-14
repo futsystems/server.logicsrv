@@ -22,7 +22,7 @@
 		<div>
 				<div class="control-group">
 		      <div class="controls">
-						<input id='sockjs_address' type="text"class="input" value='http://127.0.0.1:41655/'></input> <button class="btn btn-success" onclick='onCreateSocket()'>CreateSocket</button>
+						<input id='sockjs_address' type="text"class="input" value='ws://127.0.0.1:41655/'></input> <button class="btn btn-success" onclick='onCreateSocket()'>CreateSocket</button>
           </div>
 				</div>
 				<div class="control-group">
@@ -34,7 +34,7 @@
 				
 				<div class="control-group">
 					<div class="controls">
-						<input id='username' type="text" placeholder="username" class="input-small" value='888001'> <input id='password' type="text" placeholder="password" class="input-small" value='123456'> <button class="btn btn-success" onclick='onLogin()'>Login</button>
+						<input id='username' type="text" placeholder="username" class="input-small" value='8500001'> <input id='password' type="text" placeholder="password" class="input-small" value='123456'> <button class="btn btn-success" onclick='onLogin()'>Login</button>
           </div>
 				</div>
 				<div class="control-group">
@@ -106,6 +106,7 @@
 <script>
 //连接对象
 var conn;
+var requestID=0;
 function debug(msg)
 {
 	kendoConsole.log(msg);
@@ -156,7 +157,7 @@ function onClearSymbols()
 */
 function onLogin()
 {
-	var dic = {'msgtype':'LoginRequest','payload':{'username':$("#username").val(),'password':$("#password").val()}};
+	var dic = {"MessageType":1000,"Request":{"UserID":$("#username").val(),"Password":$("#password").val(),"UserProductInfo":"WebSocket HTML","MacAddress":"XXXX","ClientIPAddress":null,"FieldID":100},"RequestID":++requestID};
 	send(dic);
 }
 /*
@@ -164,7 +165,7 @@ function onLogin()
 */
 function onQrySymbols()
 {
-	var dic = {'msgtype':'QrySymbols','payload':{'exchange':$("#qrysym_exchange").val(),'symbol':'', 'sec_code':$("#qrysym_code").val(),'sec_type':'FUT'}};
+	var dic = {"MessageType":2000,"Request":{"SymbolID":null,"ExchangeID":$("#qrysym_exchange").val(),"SecurityID":$("#qrysym_code").val(),"FieldID":104},"RequestID":++requestID};
 	send(dic);
 }
 
@@ -205,7 +206,8 @@ function onCancelOrder()
 */
 function onQryOrder()
 {
-	var dic = {'msgtype':'QryOrder','payload':''}
+	//{"MessageType":3000,"Request":{},"RequestID":++requestID}; 请求字段可以缺省 不需要的字段可以全部留空 服务端取默认值
+	var dic = {"MessageType":3000,"Request":{"SymbolID":null,"ExchangeID":null,"OrderSysID":null,"FieldID":106},"RequestID":++requestID};
 	send(dic);
 }
 
@@ -245,13 +247,13 @@ function onCreateSocket()
 		conn.close();
 	}
 	address = $("#sockjs_address").val();
-	debug('address:'+address);
+	debug('connect to server:'+address);
 	conn = new WebSocket(address);
 	//消息回调
 	conn.onmessage = onSockMessage;
 	//conn.onheartbeat = onHeartbeat;
 	conn.onopen = function() {
-		debug('socket open');
+		debug('websocket connected');
 	};
 
 	
