@@ -11,9 +11,9 @@ using CTPService.Struct;
 
 namespace CTPService
 {
-    public class TLRequestInfo : RequestInfo<byte[]>
+    public class CTPRequestInfo : RequestInfo<byte[]>
     {
-        public TLRequestInfo(string key, EnumFTDType ftdtype, EnumFTDTagType ftdtag,ftd_hdr ftdhdr, List<PktData<IFieldId>> ftdfields, byte[] data)
+        public CTPRequestInfo(string key, EnumFTDType ftdtype, EnumFTDTagType ftdtag, ftd_hdr ftdhdr, List<PktData<IFieldId>> ftdfields, byte[] data)
             : base(key, data)
         {
             this.FTDType = ftdtype;

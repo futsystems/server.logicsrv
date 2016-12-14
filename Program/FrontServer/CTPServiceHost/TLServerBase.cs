@@ -7,10 +7,10 @@ using SuperSocket.SocketBase.Protocol;
 
 namespace CTPService
 {
-    public class TLServerBase : AppServer<TLSessionBase,TLRequestInfo>
+    public class CTPServerBase : AppServer<CTPSessionBase, CTPRequestInfo>
     {
-        public TLServerBase()
-            : base(new DefaultReceiveFilterFactory<TLReceiveFilter, TLRequestInfo>())
+        public CTPServerBase()
+            : base(new DefaultReceiveFilterFactory<CTPReceiveFilter, CTPRequestInfo>())
         {
 
         }

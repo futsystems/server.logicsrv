@@ -19,11 +19,11 @@ namespace CTPService
     /// 头部定长协议
     /// 用于头部长度固定，头部中包含消息体长度的协议类型
     /// </summary>
-    public class TLReceiveFilter : FixedHeaderReceiveFilter<TLRequestInfo>
+    public class CTPReceiveFilter : FixedHeaderReceiveFilter<CTPRequestInfo>
     {
-        ILog logger = LogManager.GetLogger("TLReceiveFilter");
+        ILog logger = LogManager.GetLogger("CTPReceiveFilter");
 
-        public TLReceiveFilter()
+        public CTPReceiveFilter()
             : base(4)
         { 
             
@@ -65,7 +65,7 @@ namespace CTPService
         /// <param name="offset"></param>
         /// <param name="length"></param>
         /// <returns></returns>
-        protected override TLRequestInfo ResolveRequestInfo(ArraySegment<byte> header, byte[] bodyBuffer, int offset, int length)
+        protected override CTPRequestInfo ResolveRequestInfo(ArraySegment<byte> header, byte[] bodyBuffer, int offset, int length)
         {
             
             EnumFTDType bFtdtype = (EnumFTDType)header.Array[FTDTYPEOFFSET];
@@ -261,7 +261,7 @@ namespace CTPService
                     return null;
                 }
             }
-            return new TLRequestInfo(key, bFtdtype,ftdTag,ftdhdr,fieldList,data);
+            return new CTPRequestInfo(key, bFtdtype, ftdTag, ftdhdr, fieldList, data);
         }
 
 

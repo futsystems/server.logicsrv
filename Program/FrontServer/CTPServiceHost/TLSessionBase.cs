@@ -9,9 +9,9 @@ using Common.Logging;
 
 namespace CTPService
 {
-    public class TLSessionBase : AppSession<TLSessionBase, TLRequestInfo>
+    public class CTPSessionBase : AppSession<CTPSessionBase, CTPRequestInfo>
     {
-        ILog logger = LogManager.GetLogger("TLSession");
+        ILog logger = LogManager.GetLogger("CTPSession");
         protected override void OnSessionStarted()
         {
             logger.Debug(string.Format("Session:{0} Started", this.SessionID));

@@ -84,10 +84,10 @@ namespace CTPService
 
     public class CTPConnection : FrontServer.IConnection
     {
-        TLSessionBase _session = null;
+        CTPSessionBase _session = null;
         ILog logger = LogManager.GetLogger("conn");
 
-        public CTPConnection(CTPServiceHost host, TLSessionBase session)
+        public CTPConnection(CTPServiceHost host, CTPSessionBase session)
         {
             _serviceHost = host;
             _session = session;

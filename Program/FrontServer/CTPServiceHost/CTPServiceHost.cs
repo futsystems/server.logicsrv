@@ -31,14 +31,14 @@ namespace CTPService
             _mqServer = mqServer;
         }
 
-        TLServerBase ctpSocketServer = null;
+        CTPServerBase ctpSocketServer = null;
         bool _started = false;
         int _port = 55622;
         int _sendBufferSize = 4069;
         int _recvBufferSize = 4069;
         void InitServer()
         {
-            ctpSocketServer = new TLServerBase();
+            ctpSocketServer = new CTPServerBase();
             ConfigFile _configFile = ConfigFile.GetConfigFile("frontsrv_ctp.cfg");
             _port = _configFile["Port"].AsInt();
 
@@ -68,16 +68,16 @@ namespace CTPService
 
             logger.Info("recv buffersize:" + ctpSocketServer.Config.SendBufferSize);
 
-            ctpSocketServer.NewSessionConnected += new SuperSocket.SocketBase.SessionHandler<TLSessionBase>(ctpSocketServer_NewSessionConnected);
-            ctpSocketServer.NewRequestReceived += new SuperSocket.SocketBase.RequestHandler<TLSessionBase, TLRequestInfo>(ctpSocketServer_NewRequestReceived);
-            ctpSocketServer.SessionClosed += new SuperSocket.SocketBase.SessionHandler<TLSessionBase, SuperSocket.SocketBase.CloseReason>(ctpSocketServer_SessionClosed);
+            ctpSocketServer.NewSessionConnected += new SuperSocket.SocketBase.SessionHandler<CTPSessionBase>(ctpSocketServer_NewSessionConnected);
+            ctpSocketServer.NewRequestReceived += new SuperSocket.SocketBase.RequestHandler<CTPSessionBase, CTPRequestInfo>(ctpSocketServer_NewRequestReceived);
+            ctpSocketServer.SessionClosed += new SuperSocket.SocketBase.SessionHandler<CTPSessionBase, SuperSocket.SocketBase.CloseReason>(ctpSocketServer_SessionClosed);
             
         }
 
 
         ConcurrentDictionary<string, FrontServer.IConnection> connectionMap = new ConcurrentDictionary<string, FrontServer.IConnection>();
 
-        void ctpSocketServer_SessionClosed(TLSessionBase session, SuperSocket.SocketBase.CloseReason value)
+        void ctpSocketServer_SessionClosed(CTPSessionBase session, SuperSocket.SocketBase.CloseReason value)
         {
             //logger.Info(string.Format("Session:{0} Closed", session.SessionID));
             OnSessionClosed(session);
@@ -85,7 +85,7 @@ namespace CTPService
             _mqServer.LogicUnRegister(session.SessionID);
         }
 
-        void ctpSocketServer_NewRequestReceived(TLSessionBase session, TLRequestInfo requestInfo)
+        void ctpSocketServer_NewRequestReceived(CTPSessionBase session, CTPRequestInfo requestInfo)
         {
             try
             {
@@ -857,10 +857,10 @@ namespace CTPService
             }
         }
 
-        
 
 
-        void ctpSocketServer_NewSessionConnected(TLSessionBase session)
+
+        void ctpSocketServer_NewSessionConnected(CTPSessionBase session)
         {
             //logger.Info(string.Format("Session:{0} Created", session.SessionID));
             OnSessionCreated(session);

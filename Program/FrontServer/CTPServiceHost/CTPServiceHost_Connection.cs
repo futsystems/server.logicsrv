@@ -13,13 +13,13 @@ namespace CTPService
     public partial class CTPServiceHost
     {
 
-        ConcurrentDictionary<string, TLSessionBase> sessionMap = new ConcurrentDictionary<string, TLSessionBase>();
+        ConcurrentDictionary<string, CTPSessionBase> sessionMap = new ConcurrentDictionary<string, CTPSessionBase>();
         /// <summary>
         /// 用于维护已经正常Register的客户端  sessionMap用于维护底层Sockt连接
         /// </summary>
         ConcurrentDictionary<string, CTPConnection> _connectionMap = new ConcurrentDictionary<string, CTPConnection>();
 
-        void OnSessionCreated(TLSessionBase session)
+        void OnSessionCreated(CTPSessionBase session)
         {
             if (sessionMap.Keys.Contains(session.SessionID))
             {
@@ -30,14 +30,14 @@ namespace CTPService
             logger.Info(string.Format("Session:{0} >> Created", session.SessionID));
         }
 
-        void OnSessionClosed(TLSessionBase session)
+        void OnSessionClosed(CTPSessionBase session)
         {
             if (!sessionMap.Keys.Contains(session.SessionID))
             {
                 logger.Error(string.Format("Session:{0} not exist!", session.SessionID));
                 return;
             }
-            TLSessionBase target = null;
+            CTPSessionBase target = null;
             if (sessionMap.TryRemove(session.SessionID, out target))
             {
                 logger.Info(string.Format("Session:{0} >> Closed", session.SessionID));
@@ -65,7 +65,7 @@ namespace CTPService
                 logger.Error(string.Format("Session:{0} not exist!", sessionID));
                 return null;
             }
-            TLSessionBase target = null;
+            CTPSessionBase target = null;
             if (sessionMap.TryGetValue(sessionID, out target))
             {
                 CTPConnection connection = new CTPConnection(this, target);
