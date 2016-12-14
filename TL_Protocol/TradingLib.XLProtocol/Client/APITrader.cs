@@ -155,6 +155,12 @@ namespace TradingLib.XLProtocol.Client
                 if(_verb) logger.Debug(string.Format("PktData Recv Type:{0} Size:{1}", msgType,dataHeader.FieldLength + XLConstants.PROTO_HEADER_LEN + XLConstants.DATA_HEADER_LEN));
                 switch (msgType)
                 {
+                    case XLMessageType.T_RSP_ERROR:
+                        {
+                            ErrorField rsp = (ErrorField)pkt.FieldList[0];
+                            OnRspError(rsp);
+                            break;
+                        }
                     case XLMessageType.T_RSP_LOGIN:
                         {
                             ErrorField rsp = (ErrorField)pkt.FieldList[0];

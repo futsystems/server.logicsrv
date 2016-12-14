@@ -17,6 +17,11 @@ namespace TradingLib.XLProtocol
         T_HEARTBEEAT = 0,
         
         /// <summary>
+        /// 错误回报
+        /// </summary>
+        T_RSP_ERROR = 1,
+
+        /// <summary>
         /// 请求登入
         /// </summary>
         T_REQ_LOGIN = 1000,

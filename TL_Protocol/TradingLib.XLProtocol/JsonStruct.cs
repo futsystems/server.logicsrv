@@ -36,10 +36,33 @@ namespace TradingLib.XLProtocol
         public int RequestID { get; set; }
     }
 
-    public class JsonResponse<T>
-        where T : IXLField
+    /// <summary>
+    /// Json通知
+    /// </summary>
+    public class JsonNotify
     {
-        public JsonResponse(XLMessageType msgType,ErrorField error, T response, int requestID, bool isLast)
+        public JsonNotify(XLMessageType msgType,IXLField notify)
+        {
+            this.MessageType = msgType;
+            this.Notify = notify;
+        }
+        /// <summary>
+        /// 消息类别
+        /// </summary>
+        public XLMessageType MessageType { get; set; }
+
+        /// <summary>
+        /// 域
+        /// </summary>
+        public IXLField Notify { get; set; }
+    }
+
+    /// <summary>
+    /// Json响应
+    /// </summary>
+    public class JsonResponse
+    {
+        public JsonResponse(XLMessageType msgType, IXLField error, IXLField response, int requestID, bool isLast)
         {
             this.MessageType = msgType;
             this.Response = response;
@@ -60,7 +83,7 @@ namespace TradingLib.XLProtocol
         /// <summary>
         /// 错误回报
         /// </summary>
-        public ErrorField Error { get; set; }
+        public IXLField Error { get; set; }
 
         /// <summary>
         /// 请求编号

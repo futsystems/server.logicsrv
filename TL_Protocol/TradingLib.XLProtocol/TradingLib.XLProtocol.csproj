@@ -61,8 +61,6 @@
     <Compile Include="XLMessageType.cs" />
     <Compile Include="Struct\V1\Struct_Field.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Message.cs" />
-    <Compile Include="Packet.cs" />
     <Compile Include="Struct\Struct_Base.cs" />
     <Compile Include="XLFieldType.cs" />
   </ItemGroup>

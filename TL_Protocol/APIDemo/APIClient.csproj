@@ -98,6 +98,30 @@
     <Compile Include="frm\fmReqUserPasswordUpdate.Designer.cs">
       <DependentUpon>fmReqUserPasswordUpdate.cs</DependentUpon>
     </Compile>
+    <Compile Include="frm\fmJsonReqUserPasswordUpdate.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frm\fmJsonReqUserPasswordUpdate.Designer.cs">
+      <DependentUpon>fmJsonReqUserPasswordUpdate.cs</DependentUpon>
+    </Compile>
+    <Compile Include="frm\fmJsonQryMaxOrderVol.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frm\fmJsonQryMaxOrderVol.Designer.cs">
+      <DependentUpon>fmJsonQryMaxOrderVol.cs</DependentUpon>
+    </Compile>
+    <Compile Include="frm\fmJsonReqOrderInsert.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frm\fmJsonReqOrderInsert.Designer.cs">
+      <DependentUpon>fmJsonReqOrderInsert.cs</DependentUpon>
+    </Compile>
+    <Compile Include="frm\fmJsonOrderAction.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frm\fmJsonOrderAction.Designer.cs">
+      <DependentUpon>fmJsonOrderAction.cs</DependentUpon>
+    </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="DebugControl.resx">
@@ -117,6 +141,18 @@
     </EmbeddedResource>
     <EmbeddedResource Include="frm\fmReqUserPasswordUpdate.resx">
       <DependentUpon>fmReqUserPasswordUpdate.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="frm\fmJsonReqUserPasswordUpdate.resx">
+      <DependentUpon>fmJsonReqUserPasswordUpdate.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="frm\fmJsonQryMaxOrderVol.resx">
+      <DependentUpon>fmJsonQryMaxOrderVol.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="frm\fmJsonReqOrderInsert.resx">
+      <DependentUpon>fmJsonReqOrderInsert.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="frm\fmJsonOrderAction.resx">
+      <DependentUpon>fmJsonOrderAction.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

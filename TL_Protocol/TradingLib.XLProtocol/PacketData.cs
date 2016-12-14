@@ -169,6 +169,29 @@ namespace TradingLib.XLProtocol
 
 
 
+        public static string PackJsonNotify(XLPacketData pkt)
+        { 
+            object notify = null;
+            switch (pkt.MessageType)
+            {
+                case XLMessageType.T_RTN_ORDER:
+                    {
+                        notify = new JsonNotify(pkt.MessageType, (V1.XLOrderField)pkt.FieldList[0]);
+                        break;
+                    }
+                case XLMessageType.T_RTN_TRADE:
+                    {
+                        notify = new JsonNotify(pkt.MessageType, (V1.XLTradeField)pkt.FieldList[0]);
+                        break;
+                    }
+                case XLMessageType.T_RTN_POSITIONUPDATE:
+                    {
+                        notify = new JsonNotify(pkt.MessageType, (V1.XLPositionField)pkt.FieldList[0]);
+                        break;
+                    }
+            }
+            return Newtonsoft.Json.JsonConvert.SerializeObject(notify);
+        }
         /// <summary>
         /// 将回报消息打包成Json字符串
         /// </summary>
@@ -181,29 +204,59 @@ namespace TradingLib.XLProtocol
             object response = null;
             switch (pkt.MessageType)
             {
+                case XLMessageType.T_RSP_ERROR:
+                    {
+                        response = new JsonResponse(pkt.MessageType, (ErrorField)pkt.FieldList[0], null , requestID, isLast);
+                        break;
+                    }
                 case XLMessageType.T_RSP_LOGIN://登入回报
                     {
-                        response = new JsonResponse<V1.XLRspLoginField>(pkt.MessageType, (ErrorField)pkt.FieldList[0], (V1.XLRspLoginField)pkt.FieldList[1], requestID, isLast);
+                        response = new JsonResponse(pkt.MessageType, (ErrorField)pkt.FieldList[0], (V1.XLRspLoginField)pkt.FieldList[1], requestID, isLast);
                         break;
                     }
                 case XLMessageType.T_RSP_SYMBOL://查询合约回报
                     {
-                        response = new JsonResponse<V1.XLSymbolField>(pkt.MessageType,new ErrorField(), (V1.XLSymbolField)pkt.FieldList[0], requestID, isLast);
+                        response = new JsonResponse(pkt.MessageType,null, (V1.XLSymbolField)pkt.FieldList[0], requestID, isLast);
                         break;
                     }
                 case XLMessageType.T_RSP_ORDER://查询委托回报
                     {
-                        response = new JsonResponse<V1.XLOrderField>(pkt.MessageType, new ErrorField(), (V1.XLOrderField)pkt.FieldList[0], requestID, isLast);
+                        response = new JsonResponse(pkt.MessageType, null, (V1.XLOrderField)pkt.FieldList[0], requestID, isLast);
                         break;
                     }
                 case XLMessageType.T_RSP_TRADE://查询成交回报
                     {
-                        response = new JsonResponse<V1.XLTradeField>(pkt.MessageType, new ErrorField(), (V1.XLTradeField)pkt.FieldList[0], requestID, isLast);
+                        response = new JsonResponse(pkt.MessageType, null, (V1.XLTradeField)pkt.FieldList[0], requestID, isLast);
                         break;
                     }
                 case XLMessageType.T_RSP_POSITION://查询持仓回报
                     {
-                        response = new JsonResponse<V1.XLPositionField>(pkt.MessageType, new ErrorField(), (V1.XLPositionField)pkt.FieldList[0], requestID, isLast);
+                        response = new JsonResponse(pkt.MessageType, null, (V1.XLPositionField)pkt.FieldList[0], requestID, isLast);
+                        break;
+                    }
+                case XLMessageType.T_RSP_ACCOUNT://查询账户回报
+                    {
+                        response = new JsonResponse(pkt.MessageType, null, (V1.XLTradingAccountField)pkt.FieldList[0], requestID, isLast);
+                        break;
+                    }
+                case XLMessageType.T_RSP_UPDATEPASS://更新密码回报
+                    {
+                        response = new JsonResponse(pkt.MessageType, null, (V1.XLRspUserPasswordUpdateField)pkt.FieldList[1], requestID, isLast);
+                        break;
+                    }
+                case XLMessageType.T_RSP_MAXORDVOL://查询最大下单手数回报
+                    {
+                        response = new JsonResponse(pkt.MessageType, null, (V1.XLQryMaxOrderVolumeField)pkt.FieldList[0], requestID, isLast);
+                        break;
+                    }
+                case XLMessageType.T_RSP_INSERTORDER://提交委托异常回报
+                    {
+                        response = new JsonResponse(pkt.MessageType, (ErrorField)pkt.FieldList[0], (V1.XLInputOrderField)pkt.FieldList[1], requestID, isLast);
+                        break;
+                    }
+                case XLMessageType.T_RSP_ORDERACTION://提交委托操作异常回报
+                    {
+                        response = new JsonResponse(pkt.MessageType, (ErrorField)pkt.FieldList[0], (V1.XLInputOrderActionField)pkt.FieldList[1], requestID, isLast);
                         break;
                     }
                 default:
@@ -252,6 +305,36 @@ namespace TradingLib.XLProtocol
                 case XLMessageType.T_QRY_POSITION://查持仓
                     {
                         var data = Newtonsoft.Json.JsonConvert.DeserializeObject<JsonRequest<V1.XLQryPositionField>>(json);
+                        requestID = data.RequestID;
+                        return new XLPacketData(msgType, new List<IXLField>() { data.Request });
+                    }
+                case XLMessageType.T_QRY_ACCOUNT://查账户
+                    {
+                        var data = Newtonsoft.Json.JsonConvert.DeserializeObject<JsonRequest<V1.XLQryTradingAccountField>>(json);
+                        requestID = data.RequestID;
+                        return new XLPacketData(msgType, new List<IXLField>() { data.Request });
+                    }
+                case XLMessageType.T_REQ_UPDATEPASS://修改账户密码
+                    {
+                        var data = Newtonsoft.Json.JsonConvert.DeserializeObject<JsonRequest<V1.XLReqUserPasswordUpdateField>>(json);
+                        requestID = data.RequestID;
+                        return new XLPacketData(msgType, new List<IXLField>() { data.Request });
+                    }
+                case XLMessageType.T_QRY_MAXORDVOL://查询最大报单
+                    {
+                        var data = Newtonsoft.Json.JsonConvert.DeserializeObject<JsonRequest<V1.XLQryMaxOrderVolumeField>>(json);
+                        requestID = data.RequestID;
+                        return new XLPacketData(msgType, new List<IXLField>() { data.Request });
+                    }
+                case XLMessageType.T_REQ_INSERTORDER://提交委托
+                    {
+                        var data = Newtonsoft.Json.JsonConvert.DeserializeObject<JsonRequest<V1.XLInputOrderField>>(json);
+                        requestID = data.RequestID;
+                        return new XLPacketData(msgType, new List<IXLField>() { data.Request });
+                    }
+                case XLMessageType.T_REQ_ORDERACTION://提交委托操作
+                    {
+                        var data = Newtonsoft.Json.JsonConvert.DeserializeObject<JsonRequest<V1.XLInputOrderActionField>>(json);
                         requestID = data.RequestID;
                         return new XLPacketData(msgType, new List<IXLField>() { data.Request });
                     }

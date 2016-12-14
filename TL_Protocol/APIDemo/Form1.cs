@@ -19,6 +19,8 @@ namespace APIClient
     public partial class Form1 : Form
     {
         ILog logger = LogManager.GetLogger("APIClient");
+        WebSocket websocket = null;
+
         public Form1()
         {
             InitializeComponent();
@@ -63,11 +65,56 @@ namespace APIClient
             btnWSStart.Click += new EventHandler(btnWSStart_Click);
             btnWSStop.Click += new EventHandler(btnWSStop_Click);
             wsBtnLogin.Click += new EventHandler(wsBtnLogin_Click);
+            wsBtnUpdatePass.Click += new EventHandler(wsBtnUpdatePass_Click);
             wsBtnQrySymbol.Click += new EventHandler(wsBtnQrySymbol_Click);
             wsBtnQryOrder.Click += new EventHandler(wsBtnQryOrder_Click);
             wsBtnQryTrade.Click += new EventHandler(wsBtnQryTrade_Click);
             wsBtnQryPos.Click += new EventHandler(wsBtnQryPos_Click);
-            
+            wsBtnQryAccount.Click += new EventHandler(wsBtnQryAccount_Click);
+            wsBtnQryMaxOrderVol.Click += new EventHandler(wsBtnQryMaxOrderVol_Click);
+            wsBtnPlaceOrder.Click += new EventHandler(wsBtnPlaceOrder_Click);
+            wsBtnCancel.Click += new EventHandler(wsBtnCancel_Click);
+        }
+
+        #region WebSocket协议 操作
+        void wsBtnCancel_Click(object sender, EventArgs e)
+        {
+            if (websocket == null || websocket.State != WebSocketState.Open) return;
+            frm.fmJsonOrderAction fm = new frm.fmJsonOrderAction(websocket);
+            fm.ShowDialog();
+            fm.Close();
+        }
+
+        void wsBtnPlaceOrder_Click(object sender, EventArgs e)
+        {
+            if (websocket == null || websocket.State != WebSocketState.Open) return;
+            frm.fmJsonReqOrderInsert fm = new frm.fmJsonReqOrderInsert(websocket);
+            fm.ShowDialog();
+            fm.Close();
+        }
+
+        void wsBtnQryMaxOrderVol_Click(object sender, EventArgs e)
+        {
+            if (websocket == null || websocket.State != WebSocketState.Open) return;
+            frm.fmJsonQryMaxOrderVol fm = new frm.fmJsonQryMaxOrderVol(websocket);
+            fm.ShowDialog();
+            fm.Close();
+        }
+
+        void wsBtnUpdatePass_Click(object sender, EventArgs e)
+        {
+            if (websocket == null || websocket.State != WebSocketState.Open) return;
+            frm.fmJsonReqUserPasswordUpdate fm = new frm.fmJsonReqUserPasswordUpdate(websocket);
+            fm.ShowDialog();
+            fm.Close();
+        }
+
+        void wsBtnQryAccount_Click(object sender, EventArgs e)
+        {
+            if (websocket == null || websocket.State != WebSocketState.Open) return;
+            XLQryTradingAccountField field = new XLQryTradingAccountField();
+            JsonRequest<XLQryTradingAccountField> qrySymbol = new JsonRequest<XLQryTradingAccountField>(XLMessageType.T_QRY_ACCOUNT, field, (int)++_requestId);
+            websocket.Send(XLPacketData.PackJsonRequest(qrySymbol));
         }
 
         void wsBtnQryPos_Click(object sender, EventArgs e)
@@ -127,7 +174,7 @@ namespace APIClient
             }
         }
 
-        WebSocket websocket = null;
+        
         void btnWSStart_Click(object sender, EventArgs e)
         {
             if (websocket == null)
@@ -166,11 +213,13 @@ namespace APIClient
         {
             
             logger.Info("Opened:" + websocket.Version.ToString());
-            websocket.Send("Hello World!");
         }
 
+        #endregion
 
 
+
+        #region 二进制协议 操作
         void exapiverbose_CheckStateChanged(object sender, EventArgs e)
         {
             if (_apiTrader == null) return;
@@ -419,6 +468,8 @@ namespace APIClient
             _apiTrader.Release();
             _apiTrader = null;
         }
+
+        #endregion
 
     }
 }

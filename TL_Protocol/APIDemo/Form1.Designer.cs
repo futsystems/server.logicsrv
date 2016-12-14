@@ -61,15 +61,15 @@
             this.btnWSStart = new System.Windows.Forms.Button();
             this.wsAddress = new System.Windows.Forms.TextBox();
             this.label5 = new System.Windows.Forms.Label();
-            this.button1 = new System.Windows.Forms.Button();
-            this.button2 = new System.Windows.Forms.Button();
-            this.button3 = new System.Windows.Forms.Button();
-            this.button4 = new System.Windows.Forms.Button();
+            this.wsBtnCancel = new System.Windows.Forms.Button();
+            this.wsBtnPlaceOrder = new System.Windows.Forms.Button();
+            this.wsBtnQryMaxOrderVol = new System.Windows.Forms.Button();
+            this.wsBtnQryAccount = new System.Windows.Forms.Button();
             this.wsBtnQryPos = new System.Windows.Forms.Button();
             this.wsBtnQryTrade = new System.Windows.Forms.Button();
             this.wsBtnQryOrder = new System.Windows.Forms.Button();
             this.wsBtnQrySymbol = new System.Windows.Forms.Button();
-            this.button9 = new System.Windows.Forms.Button();
+            this.wsBtnUpdatePass = new System.Windows.Forms.Button();
             this.debugControl1 = new APIClient.DebugControl();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
@@ -307,15 +307,15 @@
             // 
             // tabPage2
             // 
-            this.tabPage2.Controls.Add(this.button1);
-            this.tabPage2.Controls.Add(this.button2);
-            this.tabPage2.Controls.Add(this.button3);
-            this.tabPage2.Controls.Add(this.button4);
+            this.tabPage2.Controls.Add(this.wsBtnCancel);
+            this.tabPage2.Controls.Add(this.wsBtnPlaceOrder);
+            this.tabPage2.Controls.Add(this.wsBtnQryMaxOrderVol);
+            this.tabPage2.Controls.Add(this.wsBtnQryAccount);
             this.tabPage2.Controls.Add(this.wsBtnQryPos);
             this.tabPage2.Controls.Add(this.wsBtnQryTrade);
             this.tabPage2.Controls.Add(this.wsBtnQryOrder);
             this.tabPage2.Controls.Add(this.wsBtnQrySymbol);
-            this.tabPage2.Controls.Add(this.button9);
+            this.tabPage2.Controls.Add(this.wsBtnUpdatePass);
             this.tabPage2.Controls.Add(this.wsPassword);
             this.tabPage2.Controls.Add(this.label6);
             this.tabPage2.Controls.Add(this.wsUser);
@@ -411,45 +411,45 @@
             this.label5.TabIndex = 2;
             this.label5.Text = "URL";
             // 
-            // button1
+            // wsBtnCancel
             // 
-            this.button1.Location = new System.Drawing.Point(144, 154);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(77, 23);
-            this.button1.TabIndex = 28;
-            this.button1.Text = "撤销委托";
-            this.button1.UseVisualStyleBackColor = true;
+            this.wsBtnCancel.Location = new System.Drawing.Point(146, 164);
+            this.wsBtnCancel.Name = "wsBtnCancel";
+            this.wsBtnCancel.Size = new System.Drawing.Size(77, 23);
+            this.wsBtnCancel.TabIndex = 28;
+            this.wsBtnCancel.Text = "撤销委托";
+            this.wsBtnCancel.UseVisualStyleBackColor = true;
             // 
-            // button2
+            // wsBtnPlaceOrder
             // 
-            this.button2.Location = new System.Drawing.Point(144, 125);
-            this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(77, 23);
-            this.button2.TabIndex = 27;
-            this.button2.Text = "提交委托";
-            this.button2.UseVisualStyleBackColor = true;
+            this.wsBtnPlaceOrder.Location = new System.Drawing.Point(146, 135);
+            this.wsBtnPlaceOrder.Name = "wsBtnPlaceOrder";
+            this.wsBtnPlaceOrder.Size = new System.Drawing.Size(77, 23);
+            this.wsBtnPlaceOrder.TabIndex = 27;
+            this.wsBtnPlaceOrder.Text = "提交委托";
+            this.wsBtnPlaceOrder.UseVisualStyleBackColor = true;
             // 
-            // button3
+            // wsBtnQryMaxOrderVol
             // 
-            this.button3.Location = new System.Drawing.Point(144, 96);
-            this.button3.Name = "button3";
-            this.button3.Size = new System.Drawing.Size(111, 23);
-            this.button3.TabIndex = 26;
-            this.button3.Text = "查询最大报单数量";
-            this.button3.UseVisualStyleBackColor = true;
+            this.wsBtnQryMaxOrderVol.Location = new System.Drawing.Point(146, 106);
+            this.wsBtnQryMaxOrderVol.Name = "wsBtnQryMaxOrderVol";
+            this.wsBtnQryMaxOrderVol.Size = new System.Drawing.Size(111, 23);
+            this.wsBtnQryMaxOrderVol.TabIndex = 26;
+            this.wsBtnQryMaxOrderVol.Text = "查询最大报单数量";
+            this.wsBtnQryMaxOrderVol.UseVisualStyleBackColor = true;
             // 
-            // button4
+            // wsBtnQryAccount
             // 
-            this.button4.Location = new System.Drawing.Point(146, 67);
-            this.button4.Name = "button4";
-            this.button4.Size = new System.Drawing.Size(75, 23);
-            this.button4.TabIndex = 25;
-            this.button4.Text = "查询交易账户";
-            this.button4.UseVisualStyleBackColor = true;
+            this.wsBtnQryAccount.Location = new System.Drawing.Point(148, 77);
+            this.wsBtnQryAccount.Name = "wsBtnQryAccount";
+            this.wsBtnQryAccount.Size = new System.Drawing.Size(75, 23);
+            this.wsBtnQryAccount.TabIndex = 25;
+            this.wsBtnQryAccount.Text = "查询交易账户";
+            this.wsBtnQryAccount.UseVisualStyleBackColor = true;
             // 
             // wsBtnQryPos
             // 
-            this.wsBtnQryPos.Location = new System.Drawing.Point(10, 183);
+            this.wsBtnQryPos.Location = new System.Drawing.Point(12, 193);
             this.wsBtnQryPos.Name = "wsBtnQryPos";
             this.wsBtnQryPos.Size = new System.Drawing.Size(75, 23);
             this.wsBtnQryPos.TabIndex = 24;
@@ -458,7 +458,7 @@
             // 
             // wsBtnQryTrade
             // 
-            this.wsBtnQryTrade.Location = new System.Drawing.Point(10, 154);
+            this.wsBtnQryTrade.Location = new System.Drawing.Point(12, 164);
             this.wsBtnQryTrade.Name = "wsBtnQryTrade";
             this.wsBtnQryTrade.Size = new System.Drawing.Size(75, 23);
             this.wsBtnQryTrade.TabIndex = 23;
@@ -467,7 +467,7 @@
             // 
             // wsBtnQryOrder
             // 
-            this.wsBtnQryOrder.Location = new System.Drawing.Point(10, 125);
+            this.wsBtnQryOrder.Location = new System.Drawing.Point(12, 135);
             this.wsBtnQryOrder.Name = "wsBtnQryOrder";
             this.wsBtnQryOrder.Size = new System.Drawing.Size(75, 23);
             this.wsBtnQryOrder.TabIndex = 22;
@@ -476,21 +476,21 @@
             // 
             // wsBtnQrySymbol
             // 
-            this.wsBtnQrySymbol.Location = new System.Drawing.Point(10, 96);
+            this.wsBtnQrySymbol.Location = new System.Drawing.Point(12, 106);
             this.wsBtnQrySymbol.Name = "wsBtnQrySymbol";
             this.wsBtnQrySymbol.Size = new System.Drawing.Size(75, 23);
             this.wsBtnQrySymbol.TabIndex = 21;
             this.wsBtnQrySymbol.Text = "查询合约";
             this.wsBtnQrySymbol.UseVisualStyleBackColor = true;
             // 
-            // button9
+            // wsBtnUpdatePass
             // 
-            this.button9.Location = new System.Drawing.Point(10, 67);
-            this.button9.Name = "button9";
-            this.button9.Size = new System.Drawing.Size(75, 23);
-            this.button9.TabIndex = 20;
-            this.button9.Text = "修改交易密码";
-            this.button9.UseVisualStyleBackColor = true;
+            this.wsBtnUpdatePass.Location = new System.Drawing.Point(12, 77);
+            this.wsBtnUpdatePass.Name = "wsBtnUpdatePass";
+            this.wsBtnUpdatePass.Size = new System.Drawing.Size(75, 23);
+            this.wsBtnUpdatePass.TabIndex = 20;
+            this.wsBtnUpdatePass.Text = "修改交易密码";
+            this.wsBtnUpdatePass.UseVisualStyleBackColor = true;
             // 
             // debugControl1
             // 
@@ -562,15 +562,15 @@
         private System.Windows.Forms.TextBox wsUser;
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.Button wsBtnLogin;
-        private System.Windows.Forms.Button button1;
-        private System.Windows.Forms.Button button2;
-        private System.Windows.Forms.Button button3;
-        private System.Windows.Forms.Button button4;
+        private System.Windows.Forms.Button wsBtnCancel;
+        private System.Windows.Forms.Button wsBtnPlaceOrder;
+        private System.Windows.Forms.Button wsBtnQryMaxOrderVol;
+        private System.Windows.Forms.Button wsBtnQryAccount;
         private System.Windows.Forms.Button wsBtnQryPos;
         private System.Windows.Forms.Button wsBtnQryTrade;
         private System.Windows.Forms.Button wsBtnQryOrder;
         private System.Windows.Forms.Button wsBtnQrySymbol;
-        private System.Windows.Forms.Button button9;
+        private System.Windows.Forms.Button wsBtnUpdatePass;
     }
 }
 

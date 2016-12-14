@@ -585,6 +585,18 @@ namespace FrontServer
 
         public void HandleXLPacketData(IConnection conn, XLPacketData pkt,int requestId)
         {
+            if (!conn.IState.Authorized && pkt.MessageType != XLMessageType.T_REQ_LOGIN)
+            {
+                logger.Warn(string.Format("Session:{0} not authroized,only support T_REQ_LOGIN",conn.SessionID));
+                XLPacketData response = new XLPacketData(XLMessageType.T_RSP_ERROR);
+                ErrorField rsp = new ErrorField();
+                rsp.ErrorID = 400;
+                rsp.ErrorMsg = string.Format("Session未登入,无法执行操作:{0}", pkt.MessageType);
+                response.AddField(rsp);
+
+                conn.ResponseXLPacket(response, 0, true);
+                return;
+            }
             switch (pkt.MessageType)
             {
                     //用户登入

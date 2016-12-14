@@ -229,6 +229,7 @@ namespace FrontServer.WSServiceHost
         /// <param name="data"></param>
         public void NotifyXLPacket(XLPacketData data)
         {
+            _session.Send(XLPacketData.PackJsonNotify(data));
             //byte[] ret = XLPacketData.PackToBytes(data, XLEnumSeqType.SeqRtn, this.NextSeqRtnId, 0, true);
             //this.Send(ret);
         }

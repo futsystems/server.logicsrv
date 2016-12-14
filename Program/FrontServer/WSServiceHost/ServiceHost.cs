@@ -79,13 +79,12 @@ namespace FrontServer.WSServiceHost
 
         void wsSocketServer_NewMessageReceived(WebSocketSession session, string value)
         {
+            WSConnection conn = null;
             try
             {
                 if (string.IsNullOrEmpty(value)) return;
-                logger.Info(string.Format("Json Received:{0}",value));
-                Newtonsoft.Json.Linq.JObject jobject = Newtonsoft.Json.Linq.JObject.Parse(value);
-                
-                WSConnection conn = null;
+                logger.Info(string.Format("Json Received:{0}", value));
+
                 //SessionID 检查连接对象
                 if (!_connectionMap.TryGetValue(session.SessionID, out conn))
                 {
@@ -99,13 +98,33 @@ namespace FrontServer.WSServiceHost
                 conn.UpdateHeartBeat();
 
                 //Json数据转换成XLPacketData并进行处理
+                Newtonsoft.Json.Linq.JObject jobject = Newtonsoft.Json.Linq.JObject.Parse(value);
                 XLMessageType type = jobject["MessageType"].ToObject<XLMessageType>();
                 int requestID = 0;
-                var pktData = XLPacketData.DeserializeJsonRequest(type, value,out requestID);
+                var pktData = XLPacketData.DeserializeJsonRequest(type, value, out requestID);
 
-                _mqServer.HandleXLPacketData(conn, pktData,requestID);
+                //if (conn.State.Authorized || (pktData.MessageType == XLMessageType.T_REQ_LOGIN))
+                {
+                    _mqServer.HandleXLPacketData(conn, pktData, requestID);
+                }
+                //else
+                { 
+                    //
+                    //logger.Warn(string.Format("Session:{0} not authroized,only support T_REQ_LOGIN"));
 
+                }
 
+            }
+            catch (Newtonsoft.Json.JsonReaderException ex)
+            {
+                logger.Error("Request JsoneRead Error:" + ex.ToString());
+                XLPacketData pkt = new XLPacketData(XLMessageType.T_RSP_ERROR);
+                ErrorField rsp = new ErrorField();
+                rsp.ErrorID = 400;
+                rsp.ErrorMsg = "Json解析异常";
+                pkt.AddField(rsp);
+
+                conn.ResponseXLPacket(pkt, 0, true);
             }
             catch (Exception ex)
             {
