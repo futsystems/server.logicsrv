@@ -11,14 +11,13 @@ using TradingLib.XLProtocol;
 using TradingLib.XLProtocol.V1;
 using TradingLib.XLProtocol.Client;
 
-using WebSocket4Net;
 
 namespace APIClient.frm
 {
     public partial class fmJsonOrderAction : Form
     {
-        WebSocket _api;
-        public fmJsonOrderAction(WebSocket api)
+        WebSocketWrapper _api;
+        public fmJsonOrderAction(WebSocketWrapper api)
         {
             InitializeComponent();
             _api = api;

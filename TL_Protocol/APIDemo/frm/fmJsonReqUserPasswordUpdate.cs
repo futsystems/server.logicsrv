@@ -9,14 +9,14 @@ using System.Windows.Forms;
 using TradingLib.XLProtocol;
 using TradingLib.XLProtocol.V1;
 using TradingLib.XLProtocol.Client;
-using WebSocket4Net;
+
 
 namespace APIClient.frm
 {
     public partial class fmJsonReqUserPasswordUpdate : Form
     {
-        WebSocket _api = null;
-        public fmJsonReqUserPasswordUpdate(WebSocket api)
+        WebSocketWrapper _api = null;
+        public fmJsonReqUserPasswordUpdate(WebSocketWrapper api)
         {
             InitializeComponent();
             _api = api;

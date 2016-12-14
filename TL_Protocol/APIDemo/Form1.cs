@@ -19,7 +19,7 @@ namespace APIClient
     public partial class Form1 : Form
     {
         ILog logger = LogManager.GetLogger("APIClient");
-        WebSocket websocket = null;
+        WebSocketWrapper websocket = null;
 
         public Form1()
         {
@@ -179,13 +179,14 @@ namespace APIClient
         {
             if (websocket == null)
             {
-                websocket = new WebSocket(wsAddress.Text);
+                websocket = new WebSocketWrapper(wsAddress.Text);
                 websocket.Opened += new EventHandler(websocket_Opened);
                 websocket.Error += new EventHandler<SuperSocket.ClientEngine.ErrorEventArgs>(websocket_Error);
                 websocket.MessageReceived += new EventHandler<MessageReceivedEventArgs>(websocket_MessageReceived);
                 websocket.Closed += new EventHandler(websocket_Closed);
                 websocket.EnableAutoSendPing = true;
                 websocket.AutoSendPingInterval = 3;
+                
             }
             if (websocket.State == WebSocketState.Closed || websocket.State == WebSocketState.None)
             {

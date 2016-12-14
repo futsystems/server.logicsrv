@@ -9,15 +9,14 @@ using System.Windows.Forms;
 using TradingLib.XLProtocol;
 using TradingLib.XLProtocol.V1;
 using TradingLib.XLProtocol.Client;
-using WebSocket4Net;
 
 namespace APIClient.frm
 {
     public partial class fmJsonQryMaxOrderVol : Form
     {
-        WebSocket _api = null;
+        WebSocketWrapper _api = null;
 
-        public fmJsonQryMaxOrderVol(WebSocket api)
+        public fmJsonQryMaxOrderVol(WebSocketWrapper api)
         {
             InitializeComponent();
             direction.Items.Add("买");

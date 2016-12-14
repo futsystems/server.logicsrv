@@ -9,14 +9,13 @@ using System.Windows.Forms;
 using TradingLib.XLProtocol;
 using TradingLib.XLProtocol.V1;
 using TradingLib.XLProtocol.Client;
-using WebSocket4Net;
 
 namespace APIClient.frm
 {
     public partial class fmJsonReqOrderInsert : Form
     {
-        WebSocket _api;
-        public fmJsonReqOrderInsert(WebSocket api)
+        WebSocketWrapper _api;
+        public fmJsonReqOrderInsert(WebSocketWrapper api)
         {
             InitializeComponent();
 

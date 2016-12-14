@@ -124,6 +124,7 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="WebSocketWrapper.cs" />
     <EmbeddedResource Include="DebugControl.resx">
       <DependentUpon>DebugControl.cs</DependentUpon>
     </EmbeddedResource>
