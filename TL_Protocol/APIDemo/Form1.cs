@@ -63,19 +63,59 @@ namespace APIClient
             btnWSStart.Click += new EventHandler(btnWSStart_Click);
             btnWSStop.Click += new EventHandler(btnWSStop_Click);
             wsBtnLogin.Click += new EventHandler(wsBtnLogin_Click);
+            wsBtnQrySymbol.Click += new EventHandler(wsBtnQrySymbol_Click);
+            wsBtnQryOrder.Click += new EventHandler(wsBtnQryOrder_Click);
+            wsBtnQryTrade.Click += new EventHandler(wsBtnQryTrade_Click);
+            wsBtnQryPos.Click += new EventHandler(wsBtnQryPos_Click);
+            
         }
+
+        void wsBtnQryPos_Click(object sender, EventArgs e)
+        {
+            if (websocket == null || websocket.State != WebSocketState.Open) return;
+            XLQryPositionField field = new XLQryPositionField();
+            JsonRequest<XLQryPositionField> qrySymbol = new JsonRequest<XLQryPositionField>(XLMessageType.T_QRY_POSITION, field, (int)++_requestId);
+            websocket.Send(XLPacketData.PackJsonRequest(qrySymbol));
+        }
+
+        void wsBtnQryTrade_Click(object sender, EventArgs e)
+        {
+            if (websocket == null || websocket.State != WebSocketState.Open) return;
+            XLQryTradeField field = new XLQryTradeField();
+            JsonRequest<XLQryTradeField> qrySymbol = new JsonRequest<XLQryTradeField>(XLMessageType.T_QRY_TRADE, field, (int)++_requestId);
+            websocket.Send(XLPacketData.PackJsonRequest(qrySymbol));
+        }
+
+        void wsBtnQryOrder_Click(object sender, EventArgs e)
+        {
+            if (websocket == null || websocket.State != WebSocketState.Open) return;
+            XLQryOrderField field = new XLQryOrderField();
+            JsonRequest<XLQryOrderField> qrySymbol = new JsonRequest<XLQryOrderField>(XLMessageType.T_QRY_ORDER, field, (int)++_requestId);
+            websocket.Send(XLPacketData.PackJsonRequest(qrySymbol));
+        }
+
+        void wsBtnQrySymbol_Click(object sender, EventArgs e)
+        {
+            if (websocket == null || websocket.State != WebSocketState.Open) return;
+            XLQrySymbolField field = new XLQrySymbolField();
+            JsonRequest<XLQrySymbolField> qrySymbol = new JsonRequest<XLQrySymbolField>(XLMessageType.T_QRY_SYMBOL, field, (int)++_requestId);
+            websocket.Send(XLPacketData.PackJsonRequest(qrySymbol));
+        }
+
+
 
         void wsBtnLogin_Click(object sender, EventArgs e)
         {
             if (websocket == null || websocket.State != WebSocketState.Open) return;
-            XLPacketData pkt = new XLPacketData(XLMessageType.T_REQ_LOGIN);
+
             XLReqLoginField field = new XLReqLoginField();
             field.UserID = wsUser.Text;
             field.Password = wsPassword.Text;
             field.UserProductInfo = "WebSocket";
             field.MacAddress = "XXXX";
-            pkt.AddField(field);
-            websocket.Send(XLPacketData.PackJsonRequest(pkt, (int)++_requestId));
+
+            JsonRequest<XLReqLoginField> loginRequest = new JsonRequest<XLReqLoginField>(XLMessageType.T_REQ_LOGIN, field, (int)++_requestId);
+            websocket.Send(XLPacketData.PackJsonRequest(loginRequest));
         }
 
         void btnWSStop_Click(object sender, EventArgs e)

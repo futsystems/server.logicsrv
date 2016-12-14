@@ -52,16 +52,25 @@
             this.exAddress = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
             this.tabPage2 = new System.Windows.Forms.TabPage();
-            this.btnWSStop = new System.Windows.Forms.Button();
-            this.btnWSStart = new System.Windows.Forms.Button();
-            this.wsAddress = new System.Windows.Forms.TextBox();
-            this.label5 = new System.Windows.Forms.Label();
-            this.debugControl1 = new APIClient.DebugControl();
             this.wsPassword = new System.Windows.Forms.TextBox();
             this.label6 = new System.Windows.Forms.Label();
             this.wsUser = new System.Windows.Forms.TextBox();
             this.label7 = new System.Windows.Forms.Label();
             this.wsBtnLogin = new System.Windows.Forms.Button();
+            this.btnWSStop = new System.Windows.Forms.Button();
+            this.btnWSStart = new System.Windows.Forms.Button();
+            this.wsAddress = new System.Windows.Forms.TextBox();
+            this.label5 = new System.Windows.Forms.Label();
+            this.button1 = new System.Windows.Forms.Button();
+            this.button2 = new System.Windows.Forms.Button();
+            this.button3 = new System.Windows.Forms.Button();
+            this.button4 = new System.Windows.Forms.Button();
+            this.wsBtnQryPos = new System.Windows.Forms.Button();
+            this.wsBtnQryTrade = new System.Windows.Forms.Button();
+            this.wsBtnQryOrder = new System.Windows.Forms.Button();
+            this.wsBtnQrySymbol = new System.Windows.Forms.Button();
+            this.button9 = new System.Windows.Forms.Button();
+            this.debugControl1 = new APIClient.DebugControl();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tabPage2.SuspendLayout();
@@ -298,6 +307,15 @@
             // 
             // tabPage2
             // 
+            this.tabPage2.Controls.Add(this.button1);
+            this.tabPage2.Controls.Add(this.button2);
+            this.tabPage2.Controls.Add(this.button3);
+            this.tabPage2.Controls.Add(this.button4);
+            this.tabPage2.Controls.Add(this.wsBtnQryPos);
+            this.tabPage2.Controls.Add(this.wsBtnQryTrade);
+            this.tabPage2.Controls.Add(this.wsBtnQryOrder);
+            this.tabPage2.Controls.Add(this.wsBtnQrySymbol);
+            this.tabPage2.Controls.Add(this.button9);
             this.tabPage2.Controls.Add(this.wsPassword);
             this.tabPage2.Controls.Add(this.label6);
             this.tabPage2.Controls.Add(this.wsUser);
@@ -314,56 +332,6 @@
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "WebSocket/Json";
             this.tabPage2.UseVisualStyleBackColor = true;
-            // 
-            // btnWSStop
-            // 
-            this.btnWSStop.Location = new System.Drawing.Point(310, 7);
-            this.btnWSStop.Name = "btnWSStop";
-            this.btnWSStop.Size = new System.Drawing.Size(92, 23);
-            this.btnWSStop.TabIndex = 6;
-            this.btnWSStop.Text = "停止交易接口";
-            this.btnWSStop.UseVisualStyleBackColor = true;
-            // 
-            // btnWSStart
-            // 
-            this.btnWSStart.Location = new System.Drawing.Point(212, 7);
-            this.btnWSStart.Name = "btnWSStart";
-            this.btnWSStart.Size = new System.Drawing.Size(92, 23);
-            this.btnWSStart.TabIndex = 5;
-            this.btnWSStart.Text = "启动交易接口";
-            this.btnWSStart.UseVisualStyleBackColor = true;
-            // 
-            // wsAddress
-            // 
-            this.wsAddress.Location = new System.Drawing.Point(37, 9);
-            this.wsAddress.Name = "wsAddress";
-            this.wsAddress.Size = new System.Drawing.Size(169, 21);
-            this.wsAddress.TabIndex = 3;
-            this.wsAddress.Text = "ws://127.0.0.1:41655/";
-            // 
-            // label5
-            // 
-            this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(8, 12);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(23, 12);
-            this.label5.TabIndex = 2;
-            this.label5.Text = "URL";
-            // 
-            // debugControl1
-            // 
-            this.debugControl1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.debugControl1.EnableSearching = true;
-            this.debugControl1.ExternalTimeStamp = 0;
-            this.debugControl1.Location = new System.Drawing.Point(0, 254);
-            this.debugControl1.Margin = new System.Windows.Forms.Padding(2);
-            this.debugControl1.Name = "debugControl1";
-            this.debugControl1.Size = new System.Drawing.Size(969, 291);
-            this.debugControl1.TabIndex = 0;
-            this.debugControl1.TimeStamps = true;
-            this.debugControl1.UseExternalTimeStamp = false;
             // 
             // wsPassword
             // 
@@ -407,6 +375,137 @@
             this.wsBtnLogin.TabIndex = 11;
             this.wsBtnLogin.Text = "登入";
             this.wsBtnLogin.UseVisualStyleBackColor = true;
+            // 
+            // btnWSStop
+            // 
+            this.btnWSStop.Location = new System.Drawing.Point(310, 7);
+            this.btnWSStop.Name = "btnWSStop";
+            this.btnWSStop.Size = new System.Drawing.Size(92, 23);
+            this.btnWSStop.TabIndex = 6;
+            this.btnWSStop.Text = "停止交易接口";
+            this.btnWSStop.UseVisualStyleBackColor = true;
+            // 
+            // btnWSStart
+            // 
+            this.btnWSStart.Location = new System.Drawing.Point(212, 7);
+            this.btnWSStart.Name = "btnWSStart";
+            this.btnWSStart.Size = new System.Drawing.Size(92, 23);
+            this.btnWSStart.TabIndex = 5;
+            this.btnWSStart.Text = "启动交易接口";
+            this.btnWSStart.UseVisualStyleBackColor = true;
+            // 
+            // wsAddress
+            // 
+            this.wsAddress.Location = new System.Drawing.Point(37, 9);
+            this.wsAddress.Name = "wsAddress";
+            this.wsAddress.Size = new System.Drawing.Size(169, 21);
+            this.wsAddress.TabIndex = 3;
+            this.wsAddress.Text = "ws://127.0.0.1:41655/";
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(8, 12);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(23, 12);
+            this.label5.TabIndex = 2;
+            this.label5.Text = "URL";
+            // 
+            // button1
+            // 
+            this.button1.Location = new System.Drawing.Point(144, 154);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(77, 23);
+            this.button1.TabIndex = 28;
+            this.button1.Text = "撤销委托";
+            this.button1.UseVisualStyleBackColor = true;
+            // 
+            // button2
+            // 
+            this.button2.Location = new System.Drawing.Point(144, 125);
+            this.button2.Name = "button2";
+            this.button2.Size = new System.Drawing.Size(77, 23);
+            this.button2.TabIndex = 27;
+            this.button2.Text = "提交委托";
+            this.button2.UseVisualStyleBackColor = true;
+            // 
+            // button3
+            // 
+            this.button3.Location = new System.Drawing.Point(144, 96);
+            this.button3.Name = "button3";
+            this.button3.Size = new System.Drawing.Size(111, 23);
+            this.button3.TabIndex = 26;
+            this.button3.Text = "查询最大报单数量";
+            this.button3.UseVisualStyleBackColor = true;
+            // 
+            // button4
+            // 
+            this.button4.Location = new System.Drawing.Point(146, 67);
+            this.button4.Name = "button4";
+            this.button4.Size = new System.Drawing.Size(75, 23);
+            this.button4.TabIndex = 25;
+            this.button4.Text = "查询交易账户";
+            this.button4.UseVisualStyleBackColor = true;
+            // 
+            // wsBtnQryPos
+            // 
+            this.wsBtnQryPos.Location = new System.Drawing.Point(10, 183);
+            this.wsBtnQryPos.Name = "wsBtnQryPos";
+            this.wsBtnQryPos.Size = new System.Drawing.Size(75, 23);
+            this.wsBtnQryPos.TabIndex = 24;
+            this.wsBtnQryPos.Text = "查询持仓";
+            this.wsBtnQryPos.UseVisualStyleBackColor = true;
+            // 
+            // wsBtnQryTrade
+            // 
+            this.wsBtnQryTrade.Location = new System.Drawing.Point(10, 154);
+            this.wsBtnQryTrade.Name = "wsBtnQryTrade";
+            this.wsBtnQryTrade.Size = new System.Drawing.Size(75, 23);
+            this.wsBtnQryTrade.TabIndex = 23;
+            this.wsBtnQryTrade.Text = "查询成交";
+            this.wsBtnQryTrade.UseVisualStyleBackColor = true;
+            // 
+            // wsBtnQryOrder
+            // 
+            this.wsBtnQryOrder.Location = new System.Drawing.Point(10, 125);
+            this.wsBtnQryOrder.Name = "wsBtnQryOrder";
+            this.wsBtnQryOrder.Size = new System.Drawing.Size(75, 23);
+            this.wsBtnQryOrder.TabIndex = 22;
+            this.wsBtnQryOrder.Text = "查询委托";
+            this.wsBtnQryOrder.UseVisualStyleBackColor = true;
+            // 
+            // wsBtnQrySymbol
+            // 
+            this.wsBtnQrySymbol.Location = new System.Drawing.Point(10, 96);
+            this.wsBtnQrySymbol.Name = "wsBtnQrySymbol";
+            this.wsBtnQrySymbol.Size = new System.Drawing.Size(75, 23);
+            this.wsBtnQrySymbol.TabIndex = 21;
+            this.wsBtnQrySymbol.Text = "查询合约";
+            this.wsBtnQrySymbol.UseVisualStyleBackColor = true;
+            // 
+            // button9
+            // 
+            this.button9.Location = new System.Drawing.Point(10, 67);
+            this.button9.Name = "button9";
+            this.button9.Size = new System.Drawing.Size(75, 23);
+            this.button9.TabIndex = 20;
+            this.button9.Text = "修改交易密码";
+            this.button9.UseVisualStyleBackColor = true;
+            // 
+            // debugControl1
+            // 
+            this.debugControl1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.debugControl1.EnableSearching = true;
+            this.debugControl1.ExternalTimeStamp = 0;
+            this.debugControl1.Location = new System.Drawing.Point(0, 254);
+            this.debugControl1.Margin = new System.Windows.Forms.Padding(2);
+            this.debugControl1.Name = "debugControl1";
+            this.debugControl1.Size = new System.Drawing.Size(969, 291);
+            this.debugControl1.TabIndex = 0;
+            this.debugControl1.TimeStamps = true;
+            this.debugControl1.UseExternalTimeStamp = false;
             // 
             // Form1
             // 
@@ -463,6 +562,15 @@
         private System.Windows.Forms.TextBox wsUser;
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.Button wsBtnLogin;
+        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Button button2;
+        private System.Windows.Forms.Button button3;
+        private System.Windows.Forms.Button button4;
+        private System.Windows.Forms.Button wsBtnQryPos;
+        private System.Windows.Forms.Button wsBtnQryTrade;
+        private System.Windows.Forms.Button wsBtnQryOrder;
+        private System.Windows.Forms.Button wsBtnQrySymbol;
+        private System.Windows.Forms.Button button9;
     }
 }
 

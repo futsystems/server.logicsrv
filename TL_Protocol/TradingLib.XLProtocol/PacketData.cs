@@ -162,9 +162,101 @@ namespace TradingLib.XLProtocol
         /// </summary>
         /// <param name="packet"></param>
         /// <returns></returns>
-        public static string PackJsonRequest(XLPacketData packet,int requestID)
+        public static string PackJsonRequest(object request)
         {
-            return Newtonsoft.Json.JsonConvert.SerializeObject(new { MessageType = packet.MessageType, Field = packet.FieldList[0], RequestID = requestID });
+            return Newtonsoft.Json.JsonConvert.SerializeObject(request);
+        }
+
+
+
+        /// <summary>
+        /// 将回报消息打包成Json字符串
+        /// </summary>
+        /// <param name="pkt"></param>
+        /// <param name="requestID"></param>
+        /// <param name="isLast"></param>
+        /// <returns></returns>
+        public static string PackJsonResponse(XLPacketData pkt,int requestID,bool isLast)
+        {
+            object response = null;
+            switch (pkt.MessageType)
+            {
+                case XLMessageType.T_RSP_LOGIN://登入回报
+                    {
+                        response = new JsonResponse<V1.XLRspLoginField>(pkt.MessageType, (ErrorField)pkt.FieldList[0], (V1.XLRspLoginField)pkt.FieldList[1], requestID, isLast);
+                        break;
+                    }
+                case XLMessageType.T_RSP_SYMBOL://查询合约回报
+                    {
+                        response = new JsonResponse<V1.XLSymbolField>(pkt.MessageType,new ErrorField(), (V1.XLSymbolField)pkt.FieldList[0], requestID, isLast);
+                        break;
+                    }
+                case XLMessageType.T_RSP_ORDER://查询委托回报
+                    {
+                        response = new JsonResponse<V1.XLOrderField>(pkt.MessageType, new ErrorField(), (V1.XLOrderField)pkt.FieldList[0], requestID, isLast);
+                        break;
+                    }
+                case XLMessageType.T_RSP_TRADE://查询成交回报
+                    {
+                        response = new JsonResponse<V1.XLTradeField>(pkt.MessageType, new ErrorField(), (V1.XLTradeField)pkt.FieldList[0], requestID, isLast);
+                        break;
+                    }
+                case XLMessageType.T_RSP_POSITION://查询持仓回报
+                    {
+                        response = new JsonResponse<V1.XLPositionField>(pkt.MessageType, new ErrorField(), (V1.XLPositionField)pkt.FieldList[0], requestID, isLast);
+                        break;
+                    }
+                default:
+                    break;
+
+            }
+            return Newtonsoft.Json.JsonConvert.SerializeObject(response);
+        
+        }
+         
+        /// <summary>
+        /// 从Json字符串 反序列化出来XLPacketData
+        /// </summary>
+        /// <param name="type"></param>
+        /// <param name="json"></param>
+        /// <returns></returns>
+        public static XLPacketData DeserializeJsonRequest(XLMessageType msgType, string json,out int requestID)
+        {
+            requestID = 0;
+            switch (msgType)
+            {
+                case XLMessageType.T_REQ_LOGIN:
+                    {
+                        var data = Newtonsoft.Json.JsonConvert.DeserializeObject<JsonRequest<V1.XLReqLoginField>>(json);
+                        requestID = data.RequestID;
+                        return new XLPacketData(msgType, new List<IXLField>() { data.Request });
+                    }
+                case XLMessageType.T_QRY_SYMBOL://查合约
+                    {
+                        var data = Newtonsoft.Json.JsonConvert.DeserializeObject<JsonRequest<V1.XLQrySymbolField>>(json);
+                        requestID = data.RequestID;
+                        return new XLPacketData(msgType, new List<IXLField>() { data.Request });
+                    }
+                case XLMessageType.T_QRY_ORDER://查委托
+                    {
+                        var data = Newtonsoft.Json.JsonConvert.DeserializeObject<JsonRequest<V1.XLQryOrderField>>(json);
+                        requestID = data.RequestID;
+                        return new XLPacketData(msgType, new List<IXLField>() { data.Request });
+                    }
+                case XLMessageType.T_QRY_TRADE://查成交
+                    {
+                        var data = Newtonsoft.Json.JsonConvert.DeserializeObject<JsonRequest<V1.XLQryTradeField>>(json);
+                        requestID = data.RequestID;
+                        return new XLPacketData(msgType, new List<IXLField>() { data.Request });
+                    }
+                case XLMessageType.T_QRY_POSITION://查持仓
+                    {
+                        var data = Newtonsoft.Json.JsonConvert.DeserializeObject<JsonRequest<V1.XLQryPositionField>>(json);
+                        requestID = data.RequestID;
+                        return new XLPacketData(msgType, new List<IXLField>() { data.Request });
+                    }
+            }
+            return null;
         }
 
 
@@ -218,16 +310,7 @@ namespace TradingLib.XLProtocol
 
     }
 
-    public struct PacketJ
-    {
-        /// <summary>
-        /// 消息类别
-        /// </summary>
-        public XLMessageType XLMessageType { get; set; }
+    
 
-        /// <summary>
-        /// 域
-        /// </summary>
-        public List<IXLField> FieldList { get; set; }
-    }
+
 }

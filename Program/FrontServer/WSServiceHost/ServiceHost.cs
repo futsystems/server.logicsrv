@@ -83,6 +83,8 @@ namespace FrontServer.WSServiceHost
             {
                 if (string.IsNullOrEmpty(value)) return;
                 logger.Info(string.Format("Json Received:{0}",value));
+                Newtonsoft.Json.Linq.JObject jobject = Newtonsoft.Json.Linq.JObject.Parse(value);
+                
                 WSConnection conn = null;
                 //SessionID 检查连接对象
                 if (!_connectionMap.TryGetValue(session.SessionID, out conn))
@@ -97,8 +99,11 @@ namespace FrontServer.WSServiceHost
                 conn.UpdateHeartBeat();
 
                 //Json数据转换成XLPacketData并进行处理
-                //JsonConvert.DeserializeObject<>
-                //_mqServer.HandleXLPacketData(conn, requestInfo.Body, (int)requestInfo.DataHeader.RequestID);
+                XLMessageType type = jobject["MessageType"].ToObject<XLMessageType>();
+                int requestID = 0;
+                var pktData = XLPacketData.DeserializeJsonRequest(type, value,out requestID);
+
+                _mqServer.HandleXLPacketData(conn, pktData,requestID);
 
 
             }

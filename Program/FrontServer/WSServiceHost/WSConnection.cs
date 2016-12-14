@@ -217,6 +217,8 @@ namespace FrontServer.WSServiceHost
         /// <param name="data"></param>
         public void ResponseXLPacket(XLPacketData data, uint requestID, bool isLast)
         {
+
+            _session.Send(XLPacketData.PackJsonResponse(data, (int)requestID, isLast));
             //byte[] ret = XLPacketData.PackToBytes(data, XLEnumSeqType.SeqReq, this.NextSeqReqId, requestID, isLast);
             //this.Send(ret);
         }
