@@ -76,7 +76,7 @@ namespace TradingLib.Common
             
             logger.Info(string.Format(". Version:{0}", Version.Version));
             logger.Info(string.Format(". VersionNo:{0}", Version.BuildNum));
-            logger.Info(string.Format(". Author:{0}", "QianBo"));
+            logger.Info(string.Format(". Author:{0}", "Root"));
         }
 
 
