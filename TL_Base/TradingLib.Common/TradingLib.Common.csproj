@@ -204,7 +204,6 @@
     <Compile Include="Message\QryCommissionMargin.cs" />
     <Compile Include="Message\QryMarketData.cs" />
     <Compile Include="Message\QryTransferSerial.cs" />
-    <Compile Include="Other\LogItem.cs" />
     <Compile Include="Manager\PermissionFieldAttr.cs" />
     <Compile Include="Trading\PositionAdjust.cs" />
     <Compile Include="Trading\PositionCloseDetailImpl.cs" />
