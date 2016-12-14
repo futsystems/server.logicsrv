@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections;
 using System.Text;
 using System.IO;
+using System.Linq;
 using TradingLib.API;
 using System.Net;
 using System.Collections.Concurrent;
@@ -320,8 +321,9 @@ namespace TradingLib.Common
             lock (_addlock)
             {
                 if (_txtidx.TryRemove(txtidx, out idx))//存在txtidx
-                { 
-                    
+                {
+                    _txt[idx] = string.Empty;//后期增加 如果不将删除位置的txt与对象重置 则在下次遍历时候任然会得到删除掉的数据
+                    _tracked[idx] = default(T);
                 }
                 
             }
@@ -363,7 +365,7 @@ namespace TradingLib.Common
             //    for (int i = 0; i < _tracked.Count; i++)
             //        yield return _tracked[i];
             //}
-            return (_tracked as IEnumerable<T>).GetEnumerator();
+            return (_tracked as IEnumerable<T>).Where(t => t != null).GetEnumerator();
         }
 
         IEnumerator IEnumerable.GetEnumerator()
@@ -386,7 +388,7 @@ namespace TradingLib.Common
         /// <returns></returns>
         public virtual T[] ToArray()
         {
-            return _tracked.ToArray();
+            return _tracked.Where(t=>t!=null).ToArray();
         }
 
     }
