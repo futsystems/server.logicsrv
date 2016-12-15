@@ -127,14 +127,22 @@ namespace FrontServer.TLServiceHost
                         }
                     default:
                         {
+                            //通过SessionID查找对应的TLConnection
                             TLConnection conn = null;
                             if (!_connectionMap.TryGetValue(sessionId, out conn))
                             {
                                 logger.Warn(string.Format("Client:{0} is not registed to server, ignore request", sessionId));
                                 return;
                             }
-
+                            conn.UpdateHeartBeat();
                             IPacket packet = PacketHelper.SrvRecvRequest(requestInfo.Message, "", sessionId);
+                            if (packet.Type == MessageTypes.HEARTBEATREQUEST)
+                            {
+                                //向客户端发送心跳回报，告知客户端,服务端收到客户端消息,连接有效
+                                HeartBeatResponse response = ResponseTemplate<HeartBeatResponse>.SrvSendRspResponse(packet as HeartBeatRequest);
+                                conn.Send(response.Data);
+                                return;
+                            }
                             _mqServer.TLSend(conn.SessionID, packet);
 
                         }

@@ -168,7 +168,7 @@ namespace TradingLib.Common.DataFarm
             //logger.Info(string.Format("ServiceHost:{0} Connection:{1} Request:{2}", host.Name, conn.SessionID, packet.ToString()));
 
             //更新客户端连接心跳
-
+            SrvUpdateHeartBeat(conn);
             switch (packet.Type)
             {
                 //响应客户端登入请求

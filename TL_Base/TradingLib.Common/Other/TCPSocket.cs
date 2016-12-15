@@ -19,49 +19,20 @@ namespace TradingLib.Common
     public class TCPSocket : TLSocketBase
     {
 
-        protected ILog logger = LogManager.GetLogger("TLSocket_TCP");
+        protected ILog logger = LogManager.GetLogger("TCPSocket");
 
         Socket _socket;
-
-        bool _recvgo = false;
         Thread _recvThread = null;
 
+        /// <summary>
+        /// Socket是否处于连接状态
+        /// </summary>
+        public override bool IsConnected { get { return _socket != null; } }
 
-
-
-        bool _connected = false;
-        public override bool IsConnected { get { return _connected; } }
-
-
-
-
-        public override RspQryServiceResponse QryService(QSEnumAPIType apiType, string version)
-        {
-            Socket s = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-            s.Connect(this.Server);
-            QryServiceRequest request = RequestTemplate<QryServiceRequest>.CliSendRequest(0);
-            request.APIType = apiType;
-            request.APIVersion = version;
-
-            byte[] nrequest = Message.sendmessage(request.Type, request.Content);
-            s.Send(nrequest);
-
-            byte[] tmp = new byte[s.ReceiveBufferSize];
-            int len = s.Receive(tmp);
-            byte[] data = new byte[len];
-            Array.Copy(tmp, 0, data, 0, len);
-            Message message = Message.gotmessage(data, 0);
-
-            RspQryServiceResponse response = null;
-            if (message.isValid && message.Type == MessageTypes.SERVICERESPONSE)
-            {
-                response = ResponseTemplate<RspQryServiceResponse>.CliRecvResponse(message);
-
-            }
-            return response;
-        }
-
-
+        /// <summary>
+        /// 发送数据
+        /// </summary>
+        /// <param name="msg"></param>
         public override void Send(byte[] msg)
         {
             try
@@ -79,25 +50,41 @@ namespace TradingLib.Common
             }
         }
 
-
+        /// <summary>
+        /// 打开连接
+        /// </summary>
         public override void Connect()
         {
             try
             {
-                _socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-                _socket.SendBufferSize = 65535;
-                _socket.ReceiveBufferSize = 65535; //注默认接受数据BufferSize 8192 如果服务端发送一个大的Bar数据包 会导致数据接受异常
-                _socket.Connect(this.Server);
-
-                if (_socket.Connected)
+                if (this.Server == null)
                 {
-                    buffer = new byte[_socket.ReceiveBufferSize];
-                    bufferoffset = 0;
-
-                    StartRecv();
-
-                    _connected = true;
+                    throw new NullReferenceException("Need Set Server First");
                 }
+                if (this.IsConnected)
+                {
+                    logger.Warn("Socket already connected");
+                    return;
+                }
+                logger.Info(string.Format("Connect to server:{0}", this.Server.ToString()));
+                Socket socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+                socket.SendBufferSize = BUFFERSIZE;
+                socket.ReceiveBufferSize = BUFFERSIZE; //注默认接受数据BufferSize 8192 如果服务端发送一个大的Bar数据包 会导致数据接受异常
+                socket.Connect(this.Server);
+
+                if (socket.Connected)
+                {
+                    _socket = socket;
+                }
+                else
+                {
+                    _socket = null;
+                    return;
+                }
+
+                _recvThread = new Thread(RecvProcess);
+                _recvThread.IsBackground = true;
+                _recvThread.Start();
             }
             catch (Exception ex)
             {
@@ -107,37 +94,25 @@ namespace TradingLib.Common
 
         }
 
+        /// <summary>
+        /// 关闭连接
+        /// </summary>
         public override void Disconnect()
         {
-            //if (_socket != null && _socket.Connected)
-            //{
-            //    _socket.Shutdown(SocketShutdown.Both);
-            //    _socket.Disconnect(true);
-            //    _connected = false;
-            //}
+            if (!this.IsConnected)
+            {
+                logger.Warn("Socket not connected");
+                return;
+            }
+            logger.Info(string.Format("Disconnect from server:{0}", this.Server != null ? this.Server.ToString() : "Null"));
             SafeCloseSocket();
-            _connected = false;
-            StopRecv();
         }
 
 
         void SafeCloseSocket()
         {
-            if (_socket == null)
+            if (!IsConnected)
                 return;
-
-            if (!_socket.Connected)
-                return;
-
-            try
-            {
-                _socket.Shutdown(SocketShutdown.Both);
-            }
-            catch (Exception ex)
-            {
-                logger.Error("Socket Shutdown error:" + ex.ToString());
-            }
-
             try
             {
                 _socket.Close();
@@ -146,41 +121,18 @@ namespace TradingLib.Common
             {
                 logger.Error("Socket Close Error:" + ex.ToString());
             }
-
-
+            _socket = null;
         }
 
-
-        void StartRecv()
-        {
-            if (_recvgo) return;
-            logger.Info("Start recv thread");
-            _recvgo = true;
-            _recvThread = new Thread(RecvProcess);
-            _recvThread.IsBackground = true;
-            _recvThread.Start();
-
-        }
-
-        void StopRecv()
-        {
-            if (!_recvgo) return;
-            logger.Info("stop recv thread");
-            _recvgo = false;
-            _recvThread.Join();
-            //Util.WaitThreadStop(_recvThread);
-            logger.Info("stopped ");
-        }
 
         const int BUFFERSIZE = 65535;
-        byte[] buffer;
-        int bufferoffset = 0;
-
         void RecvProcess()
         {
-            while (_recvgo)
+            byte[] buffer = new byte[BUFFERSIZE];
+            int bufferOffset = 0;
+            try
             {
-                try
+                while (this.IsConnected)
                 {
                     /* 此处buffer为接受数据缓存大小,数据包有可能只到达一部分
                      * 在没有比较gotmessage解析数据长度是否超过ret+bufferoffset长度时 可能出现对不完整的数据包解析 造成数据错误
@@ -193,18 +145,18 @@ namespace TradingLib.Common
                      * 
                      * */
 
-                    int ret = _socket.Receive(buffer, bufferoffset, buffer.Length - bufferoffset, SocketFlags.None);
+                    int ret = _socket.Receive(buffer, bufferOffset, buffer.Length - bufferOffset, SocketFlags.None);
                     if (ret > 0)
                     {
                         //logger.Info(string.Format("buffer size:{0}", buffer.Length));
-                        byte[] pdata = new byte[ret + bufferoffset];
-                        Array.Copy(buffer, 0, pdata, 0, ret + bufferoffset);
+                        byte[] pdata = new byte[ret + bufferOffset];
+                        Array.Copy(buffer, 0, pdata, 0, ret + bufferOffset);
 
                         //logger.Debug("socket recv bytes:" + ret + "raw data:" + HexToString(buffer, ret));
-                        Message[] messagelist = Message.gotmessages(ref pdata, ref bufferoffset);//消息不完整则会将数据copy到头部并且设定bufferoffset用于下一次读取数据时进行自动拼接
-                        if (bufferoffset != 0)
+                        Message[] messagelist = Message.gotmessages(ref pdata, ref bufferOffset);//消息不完整则会将数据copy到头部并且设定bufferoffset用于下一次读取数据时进行自动拼接
+                        if (bufferOffset != 0)
                         {
-                            Array.Copy(pdata, 0, buffer, 0, bufferoffset);
+                            Array.Copy(pdata, 0, buffer, 0, bufferOffset);
                         }
                         int gotlen = 0;
                         int j = 0;
@@ -222,45 +174,21 @@ namespace TradingLib.Common
                         //logger.Debug(string.Format("buffer len:{0} buffer offset:{1} ret len:{2} parse len:{3} cnt:{4}", buffer.Length, bufferoffset, ret, gotlen, j));
 
                     }
-                    else if (ret == 0) // socket was shutdown
+                    else if (ret <= 0) // socket was shutdown
                     {
-                        _connected = IsSocketConnected(_socket);
-                        if (!_connected)
-                        {
-                            _recvgo = false;
-                        }
+                        SafeCloseSocket();
                     }
                 }
-                catch (SocketException ex)
-                {
-                    logger.Error("socket exception: " + ex.SocketErrorCode + ex.Message + ex.StackTrace);
-                    SafeCloseSocket();
-                    _connected = false;// IsSocketConnected(_socket);
-                    if (!_connected)
-                    {
-                        _recvgo = false;
-                    }
-                }
-                catch (Exception ex)
-                {
-                    logger.Error(ex.Message + ex.StackTrace);
-                    //if (_socket != null)
-                    //{
-                    //    _socket.Shutdown(SocketShutdown.Both);
-                    //    _socket.Disconnect(true);
-                    //    _connected = false;
-                    //}
-                    SafeCloseSocket();
-                    _connected = false;// IsSocketConnected(_socket);
-                    if (!_connected)
-                    {
-                        _recvgo = false;
-                    }
-                }
-
             }
-            logger.Info("RecvThread stopped");
+            catch (Exception ex)
+            {
+                SafeCloseSocket();
+                logger.Error(string.Format("RecvProcess Error:{0}", ex.ToString()));
+            }
+            logger.Info("Recv Thread Stopped");
         }
+
+          
 
         bool IsSocketConnected(Socket client)
         {
@@ -303,27 +231,37 @@ namespace TradingLib.Common
             return client.Connected;
         }
 
-
-        public static string HexToString(byte[] buf, int len)
+        /// <summary>
+        /// 查询远端服务状态
+        /// </summary>
+        /// <param name="apiType"></param>
+        /// <param name="version"></param>
+        /// <returns></returns>
+        public override RspQryServiceResponse QryService(QSEnumAPIType apiType, string version)
         {
-            string Data1 = "";
-            string sData = "";
-            int i = 0;
-            while (i < len)
+            Socket s = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+            s.Connect(this.Server);
+            QryServiceRequest request = RequestTemplate<QryServiceRequest>.CliSendRequest(0);
+            request.APIType = apiType;
+            request.APIVersion = version;
+
+            byte[] nrequest = Message.sendmessage(request.Type, request.Content);
+            s.Send(nrequest);
+
+            byte[] tmp = new byte[s.ReceiveBufferSize];
+            int len = s.Receive(tmp);
+            byte[] data = new byte[len];
+            Array.Copy(tmp, 0, data, 0, len);
+            Message message = Message.gotmessage(data, 0);
+
+            RspQryServiceResponse response = null;
+            if (message.isValid && message.Type == MessageTypes.SERVICERESPONSE)
             {
-                Data1 = buf[i++].ToString("X").PadLeft(2, '0');
-                sData += Data1;
+                response = ResponseTemplate<RspQryServiceResponse>.CliRecvResponse(message);
+
             }
-            return sData;
+            return response;
         }
-
-
-
-
-
-
-
-
     }
 
 }

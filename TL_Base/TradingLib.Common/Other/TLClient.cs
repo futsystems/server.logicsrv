@@ -27,8 +27,11 @@ namespace TradingLib.Common
 
         TLSocketBase _tlsocket = null;
         int requestid = 0;
-        int _watchWait =  Const.DEFAULTWAIT;//心跳检测线程检测频率
+
         int _hbPeriod = 5;//Const.HEARTBEATPERIOD;//向服务端发送心跳信息间隔
+        DateTime _lastHeartbeatSent = DateTime.MinValue;
+
+        int _watchWait =  Const.DEFAULTWAIT;//心跳检测线程检测频率
         int _sendheartbeat = Const.SENDHEARTBEATMS;//发送心跳请求间隔
         int _hbDeadTimeSpan = Const.HEARTBEATDEADMS;//心跳死亡间隔
         long _lastheartbeat = 0;//最后心跳时间
@@ -144,7 +147,7 @@ namespace TradingLib.Common
         {
             if (_started) return;
 
-            _started = true;
+            
             _bwthread = new Thread(_bw_DoWork);
             _bwthread.IsBackground = true;
             _bwthread.Start();
@@ -154,22 +157,12 @@ namespace TradingLib.Common
         void StopWatchDog()
         {
             if (!_started) return;
-
             _started = false;
-            _bwthread.Abort();
-            int _wait=0;
-            while (_bwthread.IsAlive && _wait < 5)
-            {
-                logger.Info("Waiting Watchdog thread stop....");
-                _wait++;
-                Thread.Sleep(200);
-
-            }
+            _bwthread.Join();
             _bwthread = null;
             logger.Info("Watcher backend threade stopped");
         }
 
-        DateTime _lastHeartbeatSent = DateTime.MinValue;
         /// <summary>
         /// 心跳维护线程
         /// </summary>
@@ -177,6 +170,7 @@ namespace TradingLib.Common
         /// <param name="e"></param>
         void _bw_DoWork()
         {
+            _started = true;
             while (_started)
             {
                 // 获得当前时间
@@ -214,9 +208,8 @@ namespace TradingLib.Common
                 {
                     SendHeartBeat();
                 }
-                //注等待要放在最后,否则有些情况下停止了服务_started = false,但是刚才检查过了在等待，从而进入上面的检查过程，stop连接后 自动重连。
+
                 Thread.Sleep(_watchWait);//每隔多少秒检查心跳时间MS
-               
             }
         }
         #endregion 
@@ -250,7 +243,6 @@ namespace TradingLib.Common
         public void Start(bool retry=false)
         {
             logger.Info("Start TLClient:"+_name);
-
             bool _modesuccess = false;
             int _retry = 0;
             Stop();
@@ -280,16 +272,16 @@ namespace TradingLib.Common
             logger.Info("Stop TLCLient:"+_name);
             try
             {
-                //停止重连线程 
-                StopReconnect();
                 //停止watchdog线程
                 StopWatchDog();
+                //停止重连线程 
+                StopReconnect();
                 //断开底层Socket连接
                 Disconnect();
             }
             catch (Exception ex)
             {
-                logger.Error("stopping TLClient Error:" + ex.Message);
+                logger.Error("Stopping TLClient Error:" + ex.Message);
             }
             finally
             {
@@ -305,116 +297,11 @@ namespace TradingLib.Common
 
         #region 连接与断开连接
 
-        bool Connect() { return Connect(_curprovider != -1 ? _curprovider : 0); }//连接到当前服务端或者是第一服务端
-        
-        /// <summary>
-        /// 初始化mqclient并建立对应的连接通道
-        /// </summary>
-        /// <param name="providerindex"></param>
-        /// <param name="showwarn"></param>
-        /// <returns></returns>
-        bool Connect(int serverIdx)
-        {
-            logger.Info("[Connect] Connect to server idx:" + serverIdx.ToString());
-            if ((serverIdx >= _serverAvabile.Count) || (serverIdx < 0))
-            {
-                logger.Info(_skip + " Ensure server is running and Mode() is called with correct server index,invalid server index: " + serverIdx);
-                return false;
-            }
-
-            try
-            {
-                logger.Info(_skip + "Attempting connection to server: " + _serverAvabile[serverIdx]);
-                Disconnect();
-                //初始化底层Socket连接
-                _tlsocket = new T();
-                _tlsocket.Server = _serverAvabile[serverIdx];
-                _tlsocket.MessageEvent += new Action<Message>(handle);
-                //开始启动连接
-                _tlsocket.Connect();
-
-                if (_tlsocket.IsConnected)//如果客户端连接成功 则返回True
-                {
-                    //更新服务端消息回报时间戳避免watchdog提前请求服务端心跳
-                    UpdateServerHeartbeat();
-                    //注册客户端
-                    Register();
-                    return true;
-                }
-                else
-                {
-                    
-                    logger.Warn(_skip + "unable to connect to server at: " + _serverlist[serverIdx].ToString());
-                    return false;
-                }
-            }
-            catch (Exception ex)
-            {
-                logger.Error(_skip + "exception creating connection to: " + _serverlist[serverIdx].ToString() + " Error:"+ex.ToString());
-                return false;
-            }
-        }
-
-        /// <summary>
-        /// 标识连接已断开 对外触发连接断开事件
-        /// </summary>
-        void Disconnect()
-        {
-            if (_tlsocket != null && _tlsocket.IsConnected)
-            {
-                logger.Info("[Disconnect] diconnect from server");
-                //注销客户端
-                UnRegister();
-                //断开底层Sockt连接
-                _tlsocket.Disconnect();
-
-                //分步骤进行 isconntected 执行unregister并disconnect 如果已经关闭则直接接触事件绑定 并置空
-                ////解除事件绑定
-                //_tlsocket.MessageEvent -= new Action<Message>(handle);
-                //_tlsocket = null;
-
-                
-                //_connect = false;
-                //if (OnDisconnectEvent != null)
-                //    OnDisconnectEvent();
-            }
-
-            if (_tlsocket != null)
-            {
-                //解除事件绑定
-                _tlsocket.MessageEvent -= new Action<Message>(handle);
-                _tlsocket = null;
-            }
-            //标志连接标识并触发连接断开标志
-            _connect = false;
-            if (OnDisconnectEvent != null)
-                OnDisconnectEvent();
-        }
-
-
-        //简单的通过尝试重新恢复对当前服务端的连接
-        //本地客户端的小问题导致的连接暂时失效 可以通过再次尝试连接原来的服务端建立服务，然后恢复正常通讯
-        //若服务端无法建立 则在心跳机制下面 会有服务器尝试重连的机制，这个重连机制将调用TLFound查询IP列表中所有有效的服务端.
-        //bool retryconnect()
-        //{
-        //    logger.Info("     disconnected from server: " + _serverlist[_curprovider] + ", attempting reconnect...");
-        //    bool rok = false;
-        //    int count = 0;
-        //    while (count++ < _disconnectretry)
-        //    {
-        //        rok = Connect(_curprovider);
-        //        if (rok)
-        //            break;
-        //    }
-        //    logger.Info(rok ? "reconnect suceeded." : "reconnect failed.");
-        //    return rok;
-        //}
-
         Thread _reconnectThread = null;
         void StartReconnect()
         {
             if (_reconnectreq) return;
-            logger.Info("Start reconnect thread");
+            logger.Info("Connectioin is dead,Start reconnect thread");
             _reconnectreq = true;
 
             _reconnectThread = new Thread(Reconnect);
@@ -429,7 +316,7 @@ namespace TradingLib.Common
             _reconnectreq = false;
             if (wait)
             {
-                Util.WaitThreadStop(_reconnectThread, 5);
+                _reconnectThread.Join();
             }
             else
             {
@@ -459,9 +346,6 @@ namespace TradingLib.Common
             }
         }
         
-        #endregion
-
-        #region Mode 用于寻找可用服务 并进行连接
         /// <summary>
         /// 默认从序号0开始连接服务器
         /// 尝试查找可用服务器并进行连接
@@ -472,7 +356,7 @@ namespace TradingLib.Common
         {
             logger.Info("[Mode] to server");
             //1.查询可用服务端列表
-            TLFound();
+            Found();
             //不存在有效服务则直接返回
             if (_serverAvabile.Count == 0)
             {
@@ -488,17 +372,16 @@ namespace TradingLib.Common
             }
              
             //2.正式与服务器建立连接,这里会新建实例 并发出一个新的会话连接
-            return Connect(srvIdx);//_mqcli在connect里面创建,具体创建逻辑见connect函数
+            return Connect(srvIdx);
         }
         
         /// <summary>
         /// 在IP列表中查询对应服务器是否可提供服务,通过服务查询获得可用服务端列表
         /// </summary>
         /// <returns></returns>
-        private void TLFound()
+        private void Found()
         {
-            logger.Info("[TLFound] serarching servers with service avabile");
-            //清空可用列表
+            logger.Info("[Found] Serarching servers with service avabile");
             _serverAvabile.Clear();
             //遍历所有服务端列表 查询服务根据查询服务回报获得可用服务端列表
             foreach (var endpoint in _serverlist)
@@ -525,6 +408,95 @@ namespace TradingLib.Common
             }
             logger.Info(_skip + "Total Found " + _serverAvabile.Count + " servers avabile");
         }
+
+        /// <summary>
+        /// 连接到服务端
+        /// </summary>
+        /// <returns></returns>
+        bool Connect() { return Connect(_curprovider > -1 ? _curprovider : 0); }//连接到当前服务端或者是第一服务端
+
+        /// <summary>
+        /// 初始化mqclient并建立对应的连接通道
+        /// </summary>
+        /// <param name="providerindex"></param>
+        /// <param name="showwarn"></param>
+        /// <returns></returns>
+        bool Connect(int serverIdx)
+        {
+            logger.Info(string.Format("[Connect] Connect to server idx:{0} address:{1}", serverIdx, _serverAvabile[serverIdx]));
+            if ((serverIdx >= _serverAvabile.Count) || (serverIdx < 0))
+            {
+                logger.Info(_skip + " Ensure server is running and Mode() is called with correct server index,invalid server index: " + serverIdx);
+                return false;
+            }
+
+            try
+            {
+                //断开当前连接
+                Disconnect();
+                //初始化底层Socket连接
+                _tlsocket = new T();
+                _tlsocket.Server = _serverAvabile[serverIdx];
+                _tlsocket.MessageEvent += new Action<Message>(handle);
+                //开始启动连接
+                _tlsocket.Connect();
+
+                if (_tlsocket.IsConnected)//如果客户端连接成功 则返回True
+                {
+                    //更新服务端消息回报时间戳避免watchdog提前请求服务端心跳
+                    UpdateServerHeartbeat();
+                    //注册客户端
+                    Register();
+                    return true;
+                }
+                else
+                {
+                    Disconnect();
+                    logger.Warn(_skip + "unable to connect to server at: " + _serverlist[serverIdx].ToString());
+                    return false;
+                }
+            }
+            catch (Exception ex)
+            {
+                logger.Error(_skip + "exception creating connection to: " + _serverlist[serverIdx].ToString() + " Error:" + ex.ToString());
+                return false;
+            }
+        }
+
+
+        /// <summary>
+        /// 标识连接已断开 对外触发连接断开事件
+        /// </summary>
+        void Disconnect()
+        {
+            if (_tlsocket != null && _tlsocket.IsConnected)
+            {
+                logger.Info(string.Format("[Disconnect] Diconnect from server:{0}", this.CurrentServer != null ? this.CurrentServer.ToString() : "Null"));
+                //注销客户端
+                UnRegister();
+                //断开底层Sockt连接
+                _tlsocket.Disconnect();
+            }
+
+            if (_tlsocket != null)
+            {
+                //解除事件绑定
+                _tlsocket.MessageEvent -= new Action<Message>(handle);
+                _tlsocket = null;
+            }
+            
+            if (_connect)
+            {
+                logger.Info("Disconnected");
+                //标志连接标识并触发连接断开标志
+                _connect = false;
+                if (OnDisconnectEvent != null)
+                {
+                    OnDisconnectEvent();
+                }
+            }
+        }
+
         #endregion
 
         #region TLSend
@@ -546,7 +518,6 @@ namespace TradingLib.Common
                 if (_tlsocket != null && _tlsocket.IsConnected)
                 {
                     byte[] data = package.Data;
-                    //logger.Debug(string.Format("Send Type:{0} Content:{1}", package.Type, package.Content));
                     _tlsocket.Send(data);
                     return 0;
                 }
@@ -618,17 +589,17 @@ namespace TradingLib.Common
             //logger.Info("request heartbeat");
             TLSend(hbr);
         }
-
         /// <summary>
-        /// 发送心跳响应 告诉服务器 该客户端存活
+        /// 发送心跳包
         /// </summary>
-        /// <returns></returns>
-        public void SendHeartBeat()
+        void SendHeartBeat()
         {
             _lastHeartbeatSent = DateTime.Now;
             HeartBeat hb = RequestTemplate<HeartBeat>.CliSendRequest(requestid++);
             TLSend(hb);
         }
+
+
         #endregion
 
         #region 客户端消息回报处理函数
@@ -661,7 +632,6 @@ namespace TradingLib.Common
         /// <param name="response"></param>
         void CliOnFeatureResponse(FeatureResponse response)
         {
-            
             _rfl.Clear();
             foreach (MessageTypes mt in response.Features)
             {
@@ -675,15 +645,14 @@ namespace TradingLib.Common
             _requestheartbeat = true;
             _connect = true;//连接建立标识
 
-
             StartWatchDog();
 
             //对外触发连接成功事件
+            logger.Info("Connected");
             if (OnConnectEvent != null)
             {
                 OnConnectEvent();
             }
-            _lastHeartbeatSent = DateTime.Now;
         }
 
         /// <summary>
