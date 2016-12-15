@@ -47,5 +47,11 @@ namespace FrontServer
         /// </summary>
         /// <param name="data"></param>
         void NotifyXLPacket(XLPacketData data);
+
+        /// <summary>
+        /// 发送数据
+        /// </summary>
+        /// <param name="data"></param>
+        void Send(byte[] data);
     }
 }

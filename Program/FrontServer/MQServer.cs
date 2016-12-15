@@ -56,6 +56,8 @@ namespace FrontServer
         }
 
         int _logicPort=5570;
+        int _tickPort = 5572;
+
         string _logicServer = "127.0.0.1";
         bool _srvgo = false;
         TimeSpan pollerTimeOut = new TimeSpan(0, 0, 1);
@@ -170,69 +172,107 @@ namespace FrontServer
             {
                 _ctx = ctx;
                 using(ZSocket backend = new ZSocket(ctx, ZSocketType.DEALER))
+                using (ZSocket subscriber = new ZSocket(ctx, ZSocketType.SUB))
                 {
                     string address = string.Format("tcp://{0}:{1}", _logicServer, _logicPort);
                     _frontID = "front-" + rd.Next(1000, 9999).ToString();
                     backend.SetOption(ZSocketOption.IDENTITY, Encoding.UTF8.GetBytes(_frontID));
-                    backend.Connect(address);
-                    
                     backend.Linger = new TimeSpan(0);//需设置 否则底层socket无法释放 导致无法正常关闭服务
                     backend.ReceiveTimeout = new TimeSpan(0, 0, 1);
+                    backend.Connect(address);
+
                     logger.Info(string.Format("Connect to logic server:{0}", address));
                     _backend = backend;
 
+                    string subadd = string.Format("tcp://{0}:{1}", _logicServer, _tickPort);
+                    subscriber.Connect(subadd);
+                    subscriber.Subscribe(Encoding.UTF8.GetBytes(""));
+
+                    List<ZSocket> sockets = new List<ZSocket>();
+                    sockets.Add(backend);
+                    sockets.Add(subscriber);
+
+                    List<ZPollItem> pollitems = new List<ZPollItem>();
+                    pollitems.Add(ZPollItem.CreateReceiver());
+                    pollitems.Add(ZPollItem.CreateReceiver());
+
                     ZError error;
-                    ZMessage incoming;
-                    ZPollItem item = ZPollItem.CreateReceiver();
+                    ZMessage[] incoming;
+                    //ZPollItem item = ZPollItem.CreateReceiver();
                     logger.Info("MQServer MessageProcess Started");
                     while (_srvgo)
                     {
                         try
                         {
-                            _backend.PollIn(item, out incoming, out error, pollerTimeOut);
-                            if (incoming != null)
+                            if (sockets.PollIn(pollitems, out incoming, out error, pollerTimeOut))
                             {
-                                int cnt = incoming.Count;
-                                if (cnt == 2)
+                                //Backend
+                                if (incoming[0] != null)
                                 {
-                                    string clientId = incoming[0].ReadString(Encoding.UTF8);//读取地址
-                                    Message message = Message.gotmessage(incoming.Last().Read());//读取消息
-                                    //logger.Debug(string.Format("LogicResponse Frames:{2} Type:{0} Content:{1} ", message.Type, message.Content, cnt));
-                                    logger.Debug(string.Format("LogicResponse Type:{0} Session:{1}", message.Type, clientId));
-                                    if (!string.IsNullOrEmpty(clientId))
+                                    int cnt = incoming[0].Count;
+                                    if (cnt == 2)
                                     {
-                                        IPacket packet = PacketHelper.CliRecvResponse(message);
+                                        string clientId = incoming[0][0].ReadString(Encoding.UTF8);//读取地址
+                                        Message message = Message.gotmessage(incoming[0].Last().Read());//读取消息
+                                        //logger.Debug(string.Format("LogicResponse Frames:{2} Type:{0} Content:{1} ", message.Type, message.Content, cnt));
+                                        logger.Debug(string.Format("LogicResponse Type:{0} Session:{1}", message.Type, clientId));
+                                        if (!string.IsNullOrEmpty(clientId))
+                                        {
+                                            IPacket packet = PacketHelper.CliRecvResponse(message);
 
-                                        if (clientId == _frontID)//本地心跳
-                                        {
-                                            if (packet.Type == MessageTypes.LOGICLIVERESPONSE)
+                                            if (clientId == _frontID)//本地心跳
                                             {
-                                                _lastHeartBeatRecv = DateTime.Now;
-                                            }
-                                        }
-                                        else
-                                        {
-                                            IConnection conn = GetConnection(clientId);
-                                            if (conn != null)
-                                            {
-                                                if (conn.IsXLProtocol)
+                                                if (packet.Type == MessageTypes.LOGICLIVERESPONSE)
                                                 {
-                                                    this.HandleLogicMessage(conn, packet);
-                                                }
-                                                else
-                                                {
-                                                    //调用Connection对应的ServiceHost处理逻辑消息包
-                                                    conn.ServiceHost.HandleLogicMessage(conn, packet);
+                                                    _lastHeartBeatRecv = DateTime.Now;
                                                 }
                                             }
                                             else
                                             {
-                                                logger.Warn(string.Format("Client:{0} do not exist", clientId));
+                                                IConnection conn = GetConnection(clientId);
+                                                if (conn != null)
+                                                {
+                                                    if (conn.IsXLProtocol)
+                                                    {
+                                                        this.HandleLogicMessage(conn, packet);
+                                                    }
+                                                    else
+                                                    {
+                                                        //调用Connection对应的ServiceHost处理逻辑消息包
+                                                        conn.ServiceHost.HandleLogicMessage(conn, packet);
+                                                    }
+                                                }
+                                                else
+                                                {
+                                                    logger.Warn(string.Format("Client:{0} do not exist", clientId));
+                                                }
                                             }
                                         }
                                     }
+                                    incoming[0].Clear();
                                 }
-                                incoming.Clear();
+                                //TickSub
+                                if (incoming[1] != null)
+                                {
+                                    string tickstr = incoming[1].First().ReadString(Encoding.UTF8);
+                                    Tick k = TickImpl.Deserialize2(tickstr);
+                                    if (k != null && k.UpdateType != "H")
+                                    { 
+                                        //处理行情逻辑
+                                        tickTracker.UpdateTick(k);
+
+                                        if (k.UpdateType == "X" || k.UpdateType == "Q" || k.UpdateType == "F" || k.UpdateType == "S")
+                                        {
+                                            //转发实时行情
+                                            Tick snapshot = tickTracker[k.Exchange, k.Symbol];
+                                            //logger.Info("notifytick");
+                                            NotifyTick2Connections(snapshot);
+                                        }
+                                        
+                                    }
+                                    incoming[1].Clear();
+                                    //logger.Info(tickstr);
+                                }
                             }
                             else
                             {
@@ -257,6 +297,113 @@ namespace FrontServer
             logger.Info("MQServer MessageProcess Stoppd");
         }
 
+
+        /// <summary>
+        /// 实时行情注册map
+        /// 合约唯一键值 与 Connection的映射关系
+        /// </summary>
+        ConcurrentDictionary<string, ConcurrentDictionary<string, IConnection>> symKeyRegMap = new ConcurrentDictionary<string, ConcurrentDictionary<string, IConnection>>();
+
+        TickTracker tickTracker = new TickTracker();
+
+        /// <summary>
+        /// 向客户端通知行情回报
+        /// </summary>
+        /// <param name="k"></param>
+        void NotifyTick2Connections(Tick k)
+        {
+            ConcurrentDictionary<string, IConnection> target = null;
+            if (symKeyRegMap.TryGetValue(k.GetSymbolUniqueKey(), out target))
+            {
+                foreach (var conn in target.Values)
+                {
+                    TickNotify ticknotify = new TickNotify();
+                    ticknotify.Tick = k;
+                    //logger.Info("send tick");
+                    conn.Send(ticknotify.Data);
+                }
+            }
+        }
+
+        /// <summary>
+        /// 注销某个连接的所有行情注册
+        /// </summary>
+        /// <param name="conn"></param>
+        public void ClearSymbolRegisted(IConnection conn)
+        {
+            logger.Info(string.Format("Clear symbols registed for conn:{0}", conn.SessionID));
+            IConnection target = null;
+            foreach (var regpair in symKeyRegMap)
+            {
+                if (regpair.Value.Keys.Contains(conn.SessionID))
+                {
+                    regpair.Value.TryRemove(conn.SessionID, out target);
+                }
+            }
+        }
+
+        /// <summary>
+        /// 某个连接注册合约行情
+        /// </summary>
+        /// <param name="conn"></param>
+        /// <param name="request"></param>
+        public void OnRegisterSymbol(IConnection conn, RegisterSymbolTickRequest request)
+        {
+            if (string.IsNullOrEmpty(request.Exchange))
+            {
+                logger.Warn("Register Symbol Tick Need Exhcnange");
+                return;
+            }
+            foreach (var symbol in request.SymbolList)
+            {
+                if (string.IsNullOrEmpty(symbol)) continue;
+                string key = string.Format("{0}-{1}", request.Exchange, symbol);
+
+                if (!symKeyRegMap.Keys.Contains(key))
+                {
+                    symKeyRegMap.TryAdd(key, new ConcurrentDictionary<string, IConnection>());
+                }
+                ConcurrentDictionary<string, IConnection> regmap = symKeyRegMap[key];
+                if (!regmap.Keys.Contains(conn.SessionID))
+                {
+                    regmap.TryAdd(conn.SessionID, conn);
+                    //客户端订阅后发送当前市场快照
+                    Tick k = tickTracker[request.Exchange, symbol];
+                    if (k != null)
+                    {
+                        TickNotify ticknotify = new TickNotify();
+                        ticknotify.Tick = k;
+                        conn.Send(ticknotify.Data);
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// 某个连接注销合约行情
+        /// </summary>
+        /// <param name="conn"></param>
+        /// <param name="request"></param>
+        public void OnUngisterSymbol(IConnection conn, UnregisterSymbolTickRequest request)
+        {
+            foreach (var symbol in request.SymbolList)
+            {
+                if (string.IsNullOrEmpty(symbol)) continue;
+
+                //注销所有合约
+                if (symbol == "*")
+                {
+                    ClearSymbolRegisted(conn);
+                    break;
+                }
+                if (symKeyRegMap.Keys.Contains(symbol))
+                {
+                    ConcurrentDictionary<string, IConnection> regmap = symKeyRegMap[symbol];
+                    IConnection target = null;
+                    regmap.TryRemove(conn.SessionID, out target);
+                }
+            }
+        }
 
         void HandleLogicMessage(IConnection conn, IPacket lpkt)
         {

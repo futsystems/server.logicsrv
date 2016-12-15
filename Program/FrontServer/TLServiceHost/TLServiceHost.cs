@@ -143,6 +143,18 @@ namespace FrontServer.TLServiceHost
                                 conn.Send(response.Data);
                                 return;
                             }
+
+                            if (packet.Type == MessageTypes.REGISTERSYMTICK)
+                            {
+                                _mqServer.OnRegisterSymbol(conn, packet as RegisterSymbolTickRequest);
+                                return;
+                            }
+
+                            if (packet.Type == MessageTypes.UNREGISTERSYMTICK)
+                            {
+                                _mqServer.OnUngisterSymbol(conn, packet as UnregisterSymbolTickRequest);
+                                return;
+                            }
                             _mqServer.TLSend(conn.SessionID, packet);
 
                         }
