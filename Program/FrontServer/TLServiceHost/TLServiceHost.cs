@@ -143,13 +143,13 @@ namespace FrontServer.TLServiceHost
                                 conn.Send(response.Data);
                                 return;
                             }
-
+                            //订阅行情
                             if (packet.Type == MessageTypes.REGISTERSYMTICK)
                             {
                                 _mqServer.OnRegisterSymbol(conn, packet as RegisterSymbolTickRequest);
                                 return;
                             }
-
+                            //注销行情
                             if (packet.Type == MessageTypes.UNREGISTERSYMTICK)
                             {
                                 _mqServer.OnUngisterSymbol(conn, packet as UnregisterSymbolTickRequest);
@@ -174,6 +174,8 @@ namespace FrontServer.TLServiceHost
             OnSessionClosed(session);
             //逻辑服务器注销客户端
             _mqServer.LogicUnRegister(session.SessionID);
+            _mqServer.ClearSymbolRegisted(session.SessionID);
+            
         }
 
         void tlSocketServer_NewSessionConnected(TLSessionBase session)

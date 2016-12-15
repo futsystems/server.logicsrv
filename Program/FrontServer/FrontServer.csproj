@@ -110,6 +110,7 @@
     <Compile Include="CTPServiceHost\CTPServiceHost_.cs" />
     <Compile Include="CTPServiceHost\CTPServiceHost_IServiceHost.cs" />
     <Compile Include="MQServer.cs" />
+    <Compile Include="MQServer_Tick.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="CTPServiceHost\TLReceiveFilter.cs" />
@@ -136,6 +137,8 @@
     <Compile Include="XLServiceHost\XLSessionBase.cs" />
     <Compile Include="XLServiceHost\ServiceHost_.cs" />
     <Compile Include="XLServiceHost\ServiceHost_Connection.cs" />
+    <Compile Include="副本 MQServer_Tick.cs" />
+    <Compile Include="MQServer_XLPacket.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config">
