@@ -197,6 +197,8 @@ namespace FrontServer
 
             //创建MQServer
             MQServer mqServer = new MQServer();
+            //创建TL ServiceHost
+            TLServiceHost.TLServiceHost tlhost = new TLServiceHost.TLServiceHost(mqServer);
 
             //创建CTP ServiceHost
             CTPServiceHost ctphost = new CTPServiceHost(mqServer);
@@ -212,6 +214,7 @@ namespace FrontServer
 
             //依次启动服务
             mqServer.Start();
+            tlhost.Start();
             ctphost.Start();
             xlhost.Start();
             wshost.Start();

@@ -110,6 +110,7 @@
     <Compile Include="Message\XAPI\TradingInfo.cs" />
     <Compile Include="Domain\DomainImpl.cs" />
     <Compile Include="Other\CashReport.cs" />
+    <Compile Include="Other\TCPSocket.cs" />
     <Compile Include="Other\ExchangeRate.cs" />
     <Compile Include="Other\ManagerNotify.cs" />
     <Compile Include="Other\ProductInfo.cs" />
@@ -374,9 +375,7 @@
     <Compile Include="Zlib\ZStream.cs" />
     <Compile Include="Zlib\ZStreamException.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="ORM\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

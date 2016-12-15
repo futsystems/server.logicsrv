@@ -136,8 +136,6 @@ namespace TradingLib.Common
         public event Action<IPacket> OnPacketEvent;
         #endregion
 
-
-        
         #region 后台维护线程
 
 
@@ -223,8 +221,6 @@ namespace TradingLib.Common
         }
         #endregion 
 
-
-
         #region TLClient_IP 构造函数
         public TLClient(string server, int port, string clientName)
             : this(GetEndpoints(port, new string[] { server }), 0,clientName)
@@ -246,9 +242,6 @@ namespace TradingLib.Common
         }
 
         #endregion
-
-
-
 
         #region Start Stop Section
         /// <summary>
@@ -309,7 +302,6 @@ namespace TradingLib.Common
 
 
         #endregion
-
 
         #region 连接与断开连接
 
@@ -714,7 +706,6 @@ namespace TradingLib.Common
 
         #endregion
 
-
         #region 功能函数
         
         void v(string msg)
@@ -751,23 +742,12 @@ namespace TradingLib.Common
         }
         #endregion
 
-
-        //int i = 0;
         //消息处理逻辑
         void handle(Message message)
         {
             try
             {
-                
-                //if (message.Type == MessageTypes.XQRYTRADSPLITRESPONSE)
-                //{
-                //    int i = 0;
-                //}
                 IPacket packet = PacketHelper.CliRecvResponse(message);
-                //if (message.Type != MessageTypes.TICKNOTIFY)
-                //{
-                //    logger.Debug(string.Format("Recv Type:{0} Content:{1} Size:{2} ReqId:{3}", message.Type, message.Content, message.ByteLength,packet is RspResponsePacket? (packet as RspResponsePacket).RequestID:0));
-                //}
                 //更新服务端消息回报时间戳
                 UpdateServerHeartbeat();
                 switch (packet.Type)

@@ -117,6 +117,13 @@
     <Compile Include="CTPServiceHost\TLServerBase.cs" />
     <Compile Include="CTPServiceHost\TLSessionBase.cs" />
     <Compile Include="CTPServiceHost\CTPServiceHost_Connection.cs" />
+    <Compile Include="TLServiceHost\TLConnection.cs" />
+    <Compile Include="TLServiceHost\TLServiceHost_Connection.cs" />
+    <Compile Include="TLServiceHost\TLReceiveFilter.cs" />
+    <Compile Include="TLServiceHost\TLRequestInfo.cs" />
+    <Compile Include="TLServiceHost\TLServerBase.cs" />
+    <Compile Include="TLServiceHost\TLServiceHost.cs" />
+    <Compile Include="TLServiceHost\TLSessionBase.cs" />
     <Compile Include="WatchDog.cs" />
     <Compile Include="WSServiceHost\ServiceHost.cs" />
     <Compile Include="WSServiceHost\ServiceHost_Connection.cs" />
@@ -135,9 +142,7 @@
       <SubType>Designer</SubType>
     </None>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="TLServiceHost\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <WCFMetadata Include="Service References\" />
   </ItemGroup>
