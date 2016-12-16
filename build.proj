@@ -115,8 +115,8 @@
 	</Target>
 
 	<Target Name="ExServer" DependsOnTargets="Base">
-		<MSBuild Projects="Program\TradingSrv\TradingSrv.csproj" Properties="Configuration=$(Configuration);" />
-		<MSBuild Projects="Program\FrontServer\FrontServer.csproj" Properties="Configuration=$(Configuration);" />
+		<MSBuild Projects="Program\TradingSrv\LogicSrv.csproj" Properties="Configuration=$(Configuration);" />
+		<MSBuild Projects="Program\FrontServer\FrontSrv.csproj" Properties="Configuration=$(Configuration);" />
 	</Target>
 	
 
