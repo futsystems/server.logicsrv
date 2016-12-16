@@ -172,7 +172,7 @@ namespace FrontServer
             {
                 _ctx = ctx;
                 using(ZSocket backend = new ZSocket(ctx, ZSocketType.DEALER))
-                using (ZSocket subscriber = new ZSocket(ctx, ZSocketType.SUB))
+                //using (ZSocket subscriber = new ZSocket(ctx, ZSocketType.SUB))
                 {
                     string address = string.Format("tcp://{0}:{1}", _logicServer, _logicPort);
                     _frontID = "front-" + rd.Next(1000, 9999).ToString();
@@ -184,17 +184,17 @@ namespace FrontServer
                     logger.Info(string.Format("Connect to logic server:{0}", address));
                     _backend = backend;
 
-                    string subadd = string.Format("tcp://{0}:{1}", _logicServer, _tickPort);
-                    subscriber.Connect(subadd);
-                    subscriber.Subscribe(Encoding.UTF8.GetBytes(""));
+                    //string subadd = string.Format("tcp://{0}:{1}", _logicServer, _tickPort);
+                    //subscriber.Connect(subadd);
+                    //subscriber.Subscribe(Encoding.UTF8.GetBytes(""));
 
                     List<ZSocket> sockets = new List<ZSocket>();
                     sockets.Add(backend);
-                    sockets.Add(subscriber);
+                    //sockets.Add(subscriber);
 
                     List<ZPollItem> pollitems = new List<ZPollItem>();
                     pollitems.Add(ZPollItem.CreateReceiver());
-                    pollitems.Add(ZPollItem.CreateReceiver());
+                    //pollitems.Add(ZPollItem.CreateReceiver());
 
                     ZError error;
                     ZMessage[] incoming;
@@ -252,27 +252,27 @@ namespace FrontServer
                                     incoming[0].Clear();
                                 }
                                 //TickSub
-                                if (incoming[1] != null)
-                                {
-                                    string tickstr = incoming[1].First().ReadString(Encoding.UTF8);
-                                    Tick k = TickImpl.Deserialize2(tickstr);
-                                    if (k != null && k.UpdateType != "H")
-                                    { 
-                                        //处理行情逻辑
-                                        tickTracker.UpdateTick(k);
+                                //if (incoming[1] != null)
+                                //{
+                                //    string tickstr = incoming[1].First().ReadString(Encoding.UTF8);
+                                //    Tick k = TickImpl.Deserialize2(tickstr);
+                                //    if (k != null && k.UpdateType != "H")
+                                //    { 
+                                //        //处理行情逻辑
+                                //        tickTracker.UpdateTick(k);
 
-                                        if (k.UpdateType == "X" || k.UpdateType == "Q" || k.UpdateType == "F" || k.UpdateType == "S")
-                                        {
-                                            //转发实时行情
-                                            Tick snapshot = tickTracker[k.Exchange, k.Symbol];
-                                            //logger.Info("notifytick");
-                                            NotifyTick2Connections(snapshot);
-                                        }
+                                //        if (k.UpdateType == "X" || k.UpdateType == "Q" || k.UpdateType == "F" || k.UpdateType == "S")
+                                //        {
+                                //            //转发实时行情
+                                //            Tick snapshot = tickTracker[k.Exchange, k.Symbol];
+                                //            //logger.Info("notifytick");
+                                //            NotifyTick2Connections(snapshot);
+                                //        }
                                         
-                                    }
-                                    incoming[1].Clear();
-                                    //logger.Info(tickstr);
-                                }
+                                //    }
+                                //    incoming[1].Clear();
+                                //    //logger.Info(tickstr);
+                                //}
                             }
                             else
                             {

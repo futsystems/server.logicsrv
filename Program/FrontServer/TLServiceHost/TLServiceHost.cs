@@ -112,7 +112,6 @@ namespace FrontServer.TLServiceHost
                                 _connectionMap.TryAdd(session.SessionID, conn);
                                 //客户端发送初始化数据包后执行逻辑服务器客户端注册操作
                                 _mqServer.LogicRegister(conn);
-                                
 
                                 //发送回报
                                 RspRegisterClientResponse response = ResponseTemplate<RspRegisterClientResponse>.SrvSendRspResponse(request);
@@ -121,7 +120,6 @@ namespace FrontServer.TLServiceHost
 
                                 logger.Info(string.Format("Session:{0} Registed Remote EndPoint:{1}", conn.SessionID, conn.State.IPAddress));
                                 //logger.Info(string.Format("Client:{0} registed to server", sessionId));
-
                             }
                             return;
                         }
@@ -143,18 +141,6 @@ namespace FrontServer.TLServiceHost
                                 conn.Send(response.Data);
                                 return;
                             }
-                            //订阅行情
-                            if (packet.Type == MessageTypes.REGISTERSYMTICK)
-                            {
-                                _mqServer.OnRegisterSymbol(conn, packet as RegisterSymbolTickRequest);
-                                return;
-                            }
-                            //注销行情
-                            if (packet.Type == MessageTypes.UNREGISTERSYMTICK)
-                            {
-                                _mqServer.OnUngisterSymbol(conn, packet as UnregisterSymbolTickRequest);
-                                return;
-                            }
                             _mqServer.TLSend(conn.SessionID, packet);
 
                         }
@@ -174,7 +160,6 @@ namespace FrontServer.TLServiceHost
             OnSessionClosed(session);
             //逻辑服务器注销客户端
             _mqServer.LogicUnRegister(session.SessionID);
-            _mqServer.ClearSymbolRegisted(session.SessionID);
             
         }
 
