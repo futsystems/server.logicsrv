@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Concurrent;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
@@ -471,6 +472,30 @@ namespace APIClient
         }
 
         #endregion
+
+        ConcurrentDictionary<string, string> demoDict = new ConcurrentDictionary<string, string>();
+        private void button1_Click(object sender, EventArgs e)
+        {
+
+            bool ret = false;
+            string key = "xx";
+            ret = demoDict.TryAdd(key, "22");
+            logger.Info("first add:" + ret.ToString());
+            ret = demoDict.TryAdd(key, "232");
+            logger.Info("secend add:" + ret.ToString());
+
+            string target = null;
+            ret = demoDict.TryRemove(key, out target);
+            logger.Info("first remove:" + ret.ToString());
+            ret = demoDict.TryRemove(key, out target);
+            logger.Info("secend remove:" + ret.ToString());
+
+            HashSet<string> hashSet = new HashSet<string>();
+            hashSet.Add(key);
+            logger.Info("Count:" + hashSet.Count.ToString());
+            hashSet.Add(key);
+            logger.Info("Count:" + hashSet.Count.ToString());
+        }
 
     }
 }

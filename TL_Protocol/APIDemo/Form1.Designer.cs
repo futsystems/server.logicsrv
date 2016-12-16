@@ -52,15 +52,6 @@
             this.exAddress = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
             this.tabPage2 = new System.Windows.Forms.TabPage();
-            this.wsPassword = new System.Windows.Forms.TextBox();
-            this.label6 = new System.Windows.Forms.Label();
-            this.wsUser = new System.Windows.Forms.TextBox();
-            this.label7 = new System.Windows.Forms.Label();
-            this.wsBtnLogin = new System.Windows.Forms.Button();
-            this.btnWSStop = new System.Windows.Forms.Button();
-            this.btnWSStart = new System.Windows.Forms.Button();
-            this.wsAddress = new System.Windows.Forms.TextBox();
-            this.label5 = new System.Windows.Forms.Label();
             this.wsBtnCancel = new System.Windows.Forms.Button();
             this.wsBtnPlaceOrder = new System.Windows.Forms.Button();
             this.wsBtnQryMaxOrderVol = new System.Windows.Forms.Button();
@@ -70,10 +61,22 @@
             this.wsBtnQryOrder = new System.Windows.Forms.Button();
             this.wsBtnQrySymbol = new System.Windows.Forms.Button();
             this.wsBtnUpdatePass = new System.Windows.Forms.Button();
+            this.wsPassword = new System.Windows.Forms.TextBox();
+            this.label6 = new System.Windows.Forms.Label();
+            this.wsUser = new System.Windows.Forms.TextBox();
+            this.label7 = new System.Windows.Forms.Label();
+            this.wsBtnLogin = new System.Windows.Forms.Button();
+            this.btnWSStop = new System.Windows.Forms.Button();
+            this.btnWSStart = new System.Windows.Forms.Button();
+            this.wsAddress = new System.Windows.Forms.TextBox();
+            this.label5 = new System.Windows.Forms.Label();
             this.debugControl1 = new APIClient.DebugControl();
+            this.tabPage3 = new System.Windows.Forms.TabPage();
+            this.button1 = new System.Windows.Forms.Button();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tabPage2.SuspendLayout();
+            this.tabPage3.SuspendLayout();
             this.SuspendLayout();
             // 
             // tabControl1
@@ -82,6 +85,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.tabControl1.Controls.Add(this.tabPage1);
             this.tabControl1.Controls.Add(this.tabPage2);
+            this.tabControl1.Controls.Add(this.tabPage3);
             this.tabControl1.Location = new System.Drawing.Point(0, 0);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
@@ -333,84 +337,6 @@
             this.tabPage2.Text = "WebSocket/Json";
             this.tabPage2.UseVisualStyleBackColor = true;
             // 
-            // wsPassword
-            // 
-            this.wsPassword.Location = new System.Drawing.Point(200, 40);
-            this.wsPassword.Name = "wsPassword";
-            this.wsPassword.Size = new System.Drawing.Size(53, 21);
-            this.wsPassword.TabIndex = 15;
-            this.wsPassword.Text = "123456";
-            // 
-            // label6
-            // 
-            this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(138, 43);
-            this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(59, 12);
-            this.label6.TabIndex = 14;
-            this.label6.Text = "Password:";
-            // 
-            // wsUser
-            // 
-            this.wsUser.Location = new System.Drawing.Point(55, 40);
-            this.wsUser.Name = "wsUser";
-            this.wsUser.Size = new System.Drawing.Size(77, 21);
-            this.wsUser.TabIndex = 13;
-            this.wsUser.Text = "8500001";
-            // 
-            // label7
-            // 
-            this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(6, 43);
-            this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(47, 12);
-            this.label7.TabIndex = 12;
-            this.label7.Text = "UserID:";
-            // 
-            // wsBtnLogin
-            // 
-            this.wsBtnLogin.Location = new System.Drawing.Point(310, 38);
-            this.wsBtnLogin.Name = "wsBtnLogin";
-            this.wsBtnLogin.Size = new System.Drawing.Size(75, 23);
-            this.wsBtnLogin.TabIndex = 11;
-            this.wsBtnLogin.Text = "登入";
-            this.wsBtnLogin.UseVisualStyleBackColor = true;
-            // 
-            // btnWSStop
-            // 
-            this.btnWSStop.Location = new System.Drawing.Point(310, 7);
-            this.btnWSStop.Name = "btnWSStop";
-            this.btnWSStop.Size = new System.Drawing.Size(92, 23);
-            this.btnWSStop.TabIndex = 6;
-            this.btnWSStop.Text = "停止交易接口";
-            this.btnWSStop.UseVisualStyleBackColor = true;
-            // 
-            // btnWSStart
-            // 
-            this.btnWSStart.Location = new System.Drawing.Point(212, 7);
-            this.btnWSStart.Name = "btnWSStart";
-            this.btnWSStart.Size = new System.Drawing.Size(92, 23);
-            this.btnWSStart.TabIndex = 5;
-            this.btnWSStart.Text = "启动交易接口";
-            this.btnWSStart.UseVisualStyleBackColor = true;
-            // 
-            // wsAddress
-            // 
-            this.wsAddress.Location = new System.Drawing.Point(37, 9);
-            this.wsAddress.Name = "wsAddress";
-            this.wsAddress.Size = new System.Drawing.Size(169, 21);
-            this.wsAddress.TabIndex = 3;
-            this.wsAddress.Text = "ws://127.0.0.1:41655/";
-            // 
-            // label5
-            // 
-            this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(8, 12);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(23, 12);
-            this.label5.TabIndex = 2;
-            this.label5.Text = "URL";
-            // 
             // wsBtnCancel
             // 
             this.wsBtnCancel.Location = new System.Drawing.Point(146, 164);
@@ -492,6 +418,84 @@
             this.wsBtnUpdatePass.Text = "修改交易密码";
             this.wsBtnUpdatePass.UseVisualStyleBackColor = true;
             // 
+            // wsPassword
+            // 
+            this.wsPassword.Location = new System.Drawing.Point(200, 40);
+            this.wsPassword.Name = "wsPassword";
+            this.wsPassword.Size = new System.Drawing.Size(53, 21);
+            this.wsPassword.TabIndex = 15;
+            this.wsPassword.Text = "123456";
+            // 
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.Location = new System.Drawing.Point(138, 43);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(59, 12);
+            this.label6.TabIndex = 14;
+            this.label6.Text = "Password:";
+            // 
+            // wsUser
+            // 
+            this.wsUser.Location = new System.Drawing.Point(55, 40);
+            this.wsUser.Name = "wsUser";
+            this.wsUser.Size = new System.Drawing.Size(77, 21);
+            this.wsUser.TabIndex = 13;
+            this.wsUser.Text = "8500001";
+            // 
+            // label7
+            // 
+            this.label7.AutoSize = true;
+            this.label7.Location = new System.Drawing.Point(6, 43);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(47, 12);
+            this.label7.TabIndex = 12;
+            this.label7.Text = "UserID:";
+            // 
+            // wsBtnLogin
+            // 
+            this.wsBtnLogin.Location = new System.Drawing.Point(310, 38);
+            this.wsBtnLogin.Name = "wsBtnLogin";
+            this.wsBtnLogin.Size = new System.Drawing.Size(75, 23);
+            this.wsBtnLogin.TabIndex = 11;
+            this.wsBtnLogin.Text = "登入";
+            this.wsBtnLogin.UseVisualStyleBackColor = true;
+            // 
+            // btnWSStop
+            // 
+            this.btnWSStop.Location = new System.Drawing.Point(310, 7);
+            this.btnWSStop.Name = "btnWSStop";
+            this.btnWSStop.Size = new System.Drawing.Size(92, 23);
+            this.btnWSStop.TabIndex = 6;
+            this.btnWSStop.Text = "停止交易接口";
+            this.btnWSStop.UseVisualStyleBackColor = true;
+            // 
+            // btnWSStart
+            // 
+            this.btnWSStart.Location = new System.Drawing.Point(212, 7);
+            this.btnWSStart.Name = "btnWSStart";
+            this.btnWSStart.Size = new System.Drawing.Size(92, 23);
+            this.btnWSStart.TabIndex = 5;
+            this.btnWSStart.Text = "启动交易接口";
+            this.btnWSStart.UseVisualStyleBackColor = true;
+            // 
+            // wsAddress
+            // 
+            this.wsAddress.Location = new System.Drawing.Point(37, 9);
+            this.wsAddress.Name = "wsAddress";
+            this.wsAddress.Size = new System.Drawing.Size(169, 21);
+            this.wsAddress.TabIndex = 3;
+            this.wsAddress.Text = "ws://127.0.0.1:41655/";
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(8, 12);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(23, 12);
+            this.label5.TabIndex = 2;
+            this.label5.Text = "URL";
+            // 
             // debugControl1
             // 
             this.debugControl1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
@@ -506,6 +510,27 @@
             this.debugControl1.TabIndex = 0;
             this.debugControl1.TimeStamps = true;
             this.debugControl1.UseExternalTimeStamp = false;
+            // 
+            // tabPage3
+            // 
+            this.tabPage3.Controls.Add(this.button1);
+            this.tabPage3.Location = new System.Drawing.Point(4, 22);
+            this.tabPage3.Name = "tabPage3";
+            this.tabPage3.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage3.Size = new System.Drawing.Size(961, 227);
+            this.tabPage3.TabIndex = 2;
+            this.tabPage3.Text = "tabPage3";
+            this.tabPage3.UseVisualStyleBackColor = true;
+            // 
+            // button1
+            // 
+            this.button1.Location = new System.Drawing.Point(869, 6);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(75, 23);
+            this.button1.TabIndex = 0;
+            this.button1.Text = "button1";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
             // Form1
             // 
@@ -522,6 +547,7 @@
             this.tabPage1.PerformLayout();
             this.tabPage2.ResumeLayout(false);
             this.tabPage2.PerformLayout();
+            this.tabPage3.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -571,6 +597,8 @@
         private System.Windows.Forms.Button wsBtnQryOrder;
         private System.Windows.Forms.Button wsBtnQrySymbol;
         private System.Windows.Forms.Button wsBtnUpdatePass;
+        private System.Windows.Forms.TabPage tabPage3;
+        private System.Windows.Forms.Button button1;
     }
 }
 

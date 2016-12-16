@@ -17,6 +17,9 @@ namespace TradingLib.Common
         ///// <returns></returns>
         public static string GetKey(this Position pos,bool positionside)
         {
+
+            
+
             StringBuilder sb = new StringBuilder();
             char d = '-';
             sb.Append(pos.Account);
@@ -34,7 +37,7 @@ namespace TradingLib.Common
         /// <returns></returns>
         public static string GetPositionKey(this Position pos)
         {
-            return pos.Account + "-" + pos.Symbol + "-" + pos.DirectionType.ToString();
+            return string.Format("{0}-{1}-{2}", pos.Account, pos.Symbol, pos.DirectionType);
         }
 
         /// <summary>
