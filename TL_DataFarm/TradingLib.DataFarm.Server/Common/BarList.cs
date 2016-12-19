@@ -147,14 +147,7 @@ namespace TradingLib.Common.DataFarm
         /// <param name="barlist"></param>
         public void AppendEODList(BarList barlist)
         {
-            try
-            {
-                eodList.Add(barlist.Key, barlist);
-            }
-            catch (Exception ex)
-            {
-                logger.Error("append eod list error:" + ex.ToString());
-            }
+            eodList[barlist.Key]= barlist;
         }
 
 
