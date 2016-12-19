@@ -187,20 +187,17 @@ namespace TradingLib.Common.DataFarm
         {
             BarList target = GetBarList(symbol.GetBarListKey(intervalType, interval));
             TimeSpan span;
-            bool eodrestore = false;
             if (intervalType == BarInterval.CustomTime)
             {
                 span = TimeSpan.FromSeconds(interval);
-                eodrestore = false;
             }
             else
             {
                 span = TimeSpan.FromDays(interval);
-                eodrestore = true;
             }
 
             IEnumerable<BarImpl> list = BarMerger.Merge(source, span);
-            target.RestoreBars(list.Skip(Math.Max(0, list.Count() - ConstantData.MAXBARCACHED)),eodrestore);
+            target.RestoreBars(list.Skip(Math.Max(0, list.Count() - ConstantData.MAXBARCACHED)));
             return target;
         }
 

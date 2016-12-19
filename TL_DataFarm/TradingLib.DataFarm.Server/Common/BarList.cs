@@ -109,6 +109,16 @@ namespace TradingLib.Common.DataFarm
                 {
                     barlist[key].CopyData(bar);
                 }
+                //日数据
+                //if (bar.IntervalType == BarInterval.Day && bar.Interval == 1)
+                if(this.IsEOD)
+                {
+                    foreach (var tmp in eodList.Values)
+                    {
+                        //日线收盘后 需要将周线 月线等大级别Bar数据的Vol数据记录，下一个交易日对应Vol为VolToLastDay + 当前交易日的成交量
+                        tmp.UpdateVolToLastDay();
+                    }
+                }
             }
         }
 
@@ -134,19 +144,13 @@ namespace TradingLib.Common.DataFarm
         /// 启动时从数据库加载Bar数据并恢复到内存BarList中
         /// </summary>
         /// <param name="source"></param>
-        public void RestoreBars(IEnumerable<BarImpl> source,bool eodrestore=false)
+        public void RestoreBars(IEnumerable<BarImpl> source)
         {
             lock (_object)
             {
                 foreach (var b in source)
                 {
                     barlist[b.GetTimeKey()] = b;
-                }
-                
-                //以周线为例 记录恢复数据最后一个Bar的成交量,该成交量为合并到上一个交易日位置所累加的成家量,当前交易日的周线成交量 = 该成交量 + 当前EODBar数据中的成交量(日线成交量)
-                if (eodrestore && source.Count() > 0)
-                {
-                    _totalVolToLastDay = source.Last().Volume;
                 }
             }
         }
@@ -228,6 +232,13 @@ namespace TradingLib.Common.DataFarm
         int _totalVolToLastDay = 0;
         TimeSpan _span = TimeSpan.FromDays(1);
 
+        public void UpdateVolToLastDay()
+        {
+            if (this.RealPartialBar != null)
+            {
+                _totalVolToLastDay = this.RealPartialBar.Volume;
+            }
+        }
         /// <summary>
         /// 日级别以上数据 在某个交易日内始终为数据集中最后一个
         /// 系统每周重启,在系统恢复日周期数据后 当有EODBar更新时 需要判定当前EODBar是否在最后一个Bar周期内，否则新建
@@ -251,10 +262,12 @@ namespace TradingLib.Common.DataFarm
                     RealPartialBar.Low = partialBar.Low;
                     RealPartialBar.Close = partialBar.Close;
                     RealPartialBar.Volume = partialBar.Volume;
+                    _totalVolToLastDay = 0;
                 }
                 else
                 {
                     this.RealPartialBar = tmp;
+                    _totalVolToLastDay = this.RealPartialBar.Volume;
                 }
             }
 
