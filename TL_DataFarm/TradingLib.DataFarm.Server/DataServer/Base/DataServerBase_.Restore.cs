@@ -104,7 +104,7 @@ namespace TradingLib.Common.DataFarm
         void OnNewHistBarEvent(FreqNewBarEventArgs obj)
         {
             obj.Bar.Symbol = obj.Symbol.GetContinuousSymbol();
-            this.UpdateBar2(obj.Symbol, obj.Bar);
+            this.UpdateBar(obj.Symbol, obj.Bar);
         }
 
 
@@ -136,7 +136,7 @@ namespace TradingLib.Common.DataFarm
                 restoreProfile.EnterSection("RestoreBar");
                 //1.从数据库加载历史数据 获得数据库最后一条Bar更新时间
                 DateTime intradayHistBarEndTime = DateTime.MinValue;
-                store.RestoreIntradayBar(symbol, BarInterval.CustomTime, 60, out intradayHistBarEndTime);
+                store.RestoreIntradayBar(symbol, out intradayHistBarEndTime);
                 restoresrv.OnIntraday1MinHistBarLoaded(symbol, intradayHistBarEndTime);
 
                 //2.从数据库加载日线数据 获得最后一条日线更新时间

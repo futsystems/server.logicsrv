@@ -47,7 +47,7 @@ namespace TradingLib.Common.DataFarm
             {
                 foreach (var kv in cachemap)
                 {
-                    List<BarImpl> barlist = _store.QryBar(symbol, BarInterval.CustomTime, 60, kv.Value.MarketDay.MarketOpen, kv.Value.MarketDay.MarketClose, 0, 0, false, true);
+                    List<BarImpl> barlist = _store.QryBar(symbol, BarInterval.CustomTime, 60, kv.Value.MarketDay.MarketOpen, kv.Value.MarketDay.MarketClose, 0, 0, true);
                     kv.Value.RestoreMinuteData(barlist);
                 }
             }

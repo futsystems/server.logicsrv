@@ -11,6 +11,22 @@ namespace TradingLib.Common.DataFarm
     public class BarList
     {
         ILog logger = LogManager.GetLogger("BarList");
+
+        /// <summary>
+        /// 按Bar时间排列的Bar列表
+        /// </summary>
+        SortedList<long, BarImpl> barlist = new SortedList<long, BarImpl>();
+
+
+        /// <summary>
+        /// 构造函数
+        /// </summary>
+        /// <param name="key"></param>
+        public BarList(string key)
+        {
+            this._key = key;
+        }
+
         /// <summary>
         /// 返回最后一个Bar时间
         /// </summary>
@@ -35,11 +51,6 @@ namespace TradingLib.Common.DataFarm
             }
         }
 
-        public BarList(string key)
-        {
-            this._key = key;
-        }
-
         string _key = string.Empty;
         /// <summary>
         /// BarList的键
@@ -49,14 +60,13 @@ namespace TradingLib.Common.DataFarm
             get { return _key; }
         }
 
-        /// <summary>
-        /// 按Bar时间排列的Bar列表
-        /// </summary>
-        SortedList<long, BarImpl> barlist = new SortedList<long, BarImpl>();
+
+        
 
         object _object = new object();
         /// <summary>
         /// 更新Bar
+        /// BarList中不包含对应结束时间的Bar则执行插入,否则更新
         /// </summary>
         /// <param name="bar"></param>
         public void Update(BarImpl bar, out bool isInsert)
@@ -93,6 +103,28 @@ namespace TradingLib.Common.DataFarm
             }
         }
 
+        /// <summary>
+        /// 加载一组Bar数据
+        /// 启动时从数据库加载Bar数据并恢复到内存BarList中
+        /// </summary>
+        /// <param name="source"></param>
+        public void RestoreBars(IEnumerable<BarImpl> source)
+        {
+            lock (_object)
+            {
+                foreach (var b in source)
+                {
+                    barlist[b.GetTimeKey()] = b;
+                }
+            }
+        }
+
+
+        /// <summary>
+        /// 通过Bar结束时间来获取Bar对象
+        /// </summary>
+        /// <param name="key"></param>
+        /// <returns></returns>
         public BarImpl this[long key]
         {
             get
@@ -107,6 +139,7 @@ namespace TradingLib.Common.DataFarm
         }
 
 
+
         bool _hasPartial = false;
         public bool HasPartialBar
         {
@@ -118,7 +151,11 @@ namespace TradingLib.Common.DataFarm
             _hasPartial = false;
         }
 
+
         BarImpl _realPartialBar = null;
+        /// <summary>
+        /// 实时Bar系统生成的PartialBar
+        /// </summary>
         public BarImpl RealPartialBar
         {
             get
@@ -138,7 +175,8 @@ namespace TradingLib.Common.DataFarm
         BarImpl _histPartialBar = null;
         /// <summary>
         /// 启动时加载历史Tick恢复Bar数据完毕后获得的PartialBar
-        /// 
+        /// 历史Tick数据恢复只能确保从最近一个1小时Bar开始,数据结尾不能确保完整
+        /// 如果在收盘后执行数据恢复则恢复的Bar数据均完整,且没有PartialBar,如果从某个Bar中间时刻开始恢复则恢复完毕后会存在PartialBar
         /// </summary>
         public BarImpl HistPartialBar
         {
@@ -226,24 +264,11 @@ namespace TradingLib.Common.DataFarm
             }
         }
 
-        /// <summary>
-        /// 添加一组Bar数据
-        /// 从数据库加载一组Bar并添加到内存中
-        /// </summary>
-        /// <param name="source"></param>
-        public void RestoreBars(IEnumerable<BarImpl> source)
-        {
-            lock (_object)
-            {
-                foreach (var b in source)
-                {
-                    barlist[b.GetTimeKey()] = b;
-                }
-            }
-        }
+        
 
         /// <summary>
         /// 获得PartialBar
+        /// HistPartailBar---Bar---RealPartialBar
         /// </summary>
         /// <returns></returns>
         BarImpl GetPartialBar()
@@ -285,39 +310,10 @@ namespace TradingLib.Common.DataFarm
             }
         }
 
-        public List<MinuteData> QryMinuteData(int tradingday)
-        {
-            lock (_object)
-            {
-                IEnumerable<BarImpl> records = barlist.Values;
 
-                BarImpl partial = GetPartialBar();
-                if (partial != null)
-                {
-                    /*
-                        *  当从1分钟数据合并生成3，5，15，30等其他周期的数据时，由于1分钟数据的不完整可能导致合并后的其他周期的最后一个Bar数据不完整
-                        *  处理方法
-                        *  1.判断完整性 将不完整的Bar剔除
-                        *  2.保留该Bar,该Bar的Open数据是正确的，将实时系统生成的PartialBar数据与该Bar执行逻辑合并
-                        * 
-                        * */
-                    //合并PartialBar时需要检查 数据集中最后一个数据与PartialBar的时间 如果一致 则更新数据集中的数据即可
-                    if (records.Count() > 0 && partial.GetTimeKey() == records.Last().GetTimeKey())
-                    {
-                        records.Last().CopyData(partial);
-                    }
-                    else
-                    {
-                        records = records.Concat(new BarImpl[] { partial });
-                    }
-                }
-
-                return records.Where(bar => bar.TradingDay == tradingday).Select(bar=>new MinuteData(bar.EndTime.ToTLDate(),bar.EndTime.ToTLTime(),bar.Close,bar.Volume,0)).ToList();
-            }
-        }
-
+        #region 数据查询
         /// <summary>
-        /// 
+        /// 通过交易日查询Bar数据
         /// </summary>
         /// <param name="start"></param>
         /// <param name="end"></param>
@@ -349,6 +345,7 @@ namespace TradingLib.Common.DataFarm
                         }
                         else
                         {
+                            //当前recoreds数量为0 或 最后一个Bar数据时间不一致 则直接将PartialBar放到records中
                             records = records.Concat(new BarImpl[] { partial });
                         }
                     }
@@ -356,20 +353,16 @@ namespace TradingLib.Common.DataFarm
 
                 if (start != int.MinValue || end != int.MaxValue)
                 {
-                    //执行时间过滤
+                    //交易日过滤
                     records = records.Where(bar => bar.TradingDay >= start && bar.TradingDay <= end);
                 }
 
-                //限制有效返回数量 返回数量为最大返回Bar个数
-                //截取数据集
                 if (maxcount <= 0)
                 {
                     records = records.Take(Math.Max(0, records.Count() - startIndex));
                 }
-                else //设定最大数量 返回数据要求 按时间先后排列
+                else 
                 {
-                    //startIndex 首先从数据序列开头截取对应数量的数据
-                    //maxcount 然后从数据序列末尾截取最大数量的数据
                     records = records.Take(Math.Max(0, records.Count() - startIndex)).Skip(Math.Max(0, (records.Count() - startIndex) - maxcount));//返回序列后段元素
                 }
 
@@ -380,7 +373,7 @@ namespace TradingLib.Common.DataFarm
 
         }
         /// <summary>
-        /// 从数据集中查询结果
+        /// 通过BarTime查询Bar数据
         /// </summary>
         /// <param name="type"></param>
         /// <param name="interval"></param>
@@ -389,7 +382,7 @@ namespace TradingLib.Common.DataFarm
         /// <param name="maxcount"></param>
         /// <param name="fromEnd">是否先返回最新的数据</param>
         /// <returns></returns>
-        public List<BarImpl> QryBar(DateTime start, DateTime end, int startIndex, int maxcount, bool fromEnd, bool havePartail)
+        public List<BarImpl> QryBar(DateTime start, DateTime end, int startIndex, int maxcount, bool havePartail)
         {
             lock (_object)
             {
@@ -432,21 +425,9 @@ namespace TradingLib.Common.DataFarm
                     records = records.Where(bar => bar.EndTime >= start && bar.EndTime <= end);//barlist.Where(v => v.Key >= lstart && v.Key <= lend).Select(v => v.Value);
                 }
 
-
-                //合并PartialBar 如果查询不是从最新一个Bar开始 则不需要合并
-                //if (havePartail && startIndex ==0)
-                //{
-                //    BarImpl partial = this.PartialBar;
-                //    if (partial != null)
-                //    {
-                //        if (partial.EndTime != re)
-                //        records = records.Concat(new BarImpl[] { partial });
-                //    }
-                //}
-                //限制有效返回数量 返回数量为最大返回Bar个数
-                //截取数据集
                 if (maxcount <= 0)
                 {
+                    //不限制最大返回数量 
                     records = records.Take(Math.Max(0, records.Count() - startIndex));
                 }
                 else //设定最大数量 返回数据要求 按时间先后排列
@@ -455,19 +436,13 @@ namespace TradingLib.Common.DataFarm
                     //maxcount 然后从数据序列末尾截取最大数量的数据
                     records = records.Take(Math.Max(0, records.Count() - startIndex)).Skip(Math.Max(0, (records.Count() - startIndex) - maxcount));//返回序列后段元素
                 }
-
-                //数据翻转
-                if (fromEnd)
-                {
-                    return records.Reverse().ToList();
-                }
-                else
-                {
-                    return records.ToList();
-                }
+                return records.ToList();
 
             }
         }
+
+        #endregion
+
     }
 
 }

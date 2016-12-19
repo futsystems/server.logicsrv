@@ -117,7 +117,7 @@ namespace TradingLib.Common.DataFarm
         void eodservice_EodBarClose(EodBarEventArgs obj)
         {
             //throw new NotImplementedException();
-            this.UpdateBar2(obj.Symbol, obj.EodPartialBar);
+            this.UpdateBar(obj.Symbol, obj.EodPartialBar);
         }
 
         void eodservice_EodBarResotred(Symbol arg1, IEnumerable<BarImpl> arg2)
@@ -125,7 +125,7 @@ namespace TradingLib.Common.DataFarm
 
             foreach (var bar in arg2)
             {
-                this.UpdateBar2(arg1, bar);
+                this.UpdateBar(arg1, bar);
             }
             
         }

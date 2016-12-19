@@ -54,7 +54,7 @@ namespace TradingLib.Common.DataFarm
                 Symbol symbol = MDBasicTracker.SymbolTracker[bar.Exchange, bar.Symbol];
                 if (symbol != null)
                 {
-                    UpdateBar2(symbol, bar);
+                    UpdateBar(symbol, bar);
                 }
             }
         }

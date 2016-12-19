@@ -21,6 +21,9 @@ namespace TradingLib.Common.DataFarm
 
     }
 
+    /// <summary>
+    /// 分钟与日界别Bar数据库表操作
+    /// </summary>
     public class MBar : MBase
     {
         /// <summary>
@@ -74,37 +77,19 @@ namespace TradingLib.Common.DataFarm
         /// <param name="maxcount"></param>
         /// <param name="fromEnd"></param>
         /// <returns></returns>
-        public static IEnumerable<BarImpl> LoadIntradayBars(string symbol, BarInterval type, int interval, DateTime start)//;//, DateTime end, int maxcount)
+        public static IEnumerable<BarImpl> LoadIntradayBars(string symbol,DateTime start)
         {
             using (DBMySql db = new DBMySql())
             {
                 string qrystr = "SELECT ";
-                qrystr += "a.id,a.tradingday,a.symbol,a.open,a.high,a.low,a.close,a.volume,a.openinterest,a.tradecount,a.interval,a.intervaltype,STR_TO_DATE(endtime,'%Y%m%d%H%i%s') as endtime FROM data_intraday a WHERE `symbol` = '{0}'".Put(symbol);//, (int)type, interval);
-
+                qrystr += "a.id,a.tradingday,a.symbol,a.open,a.high,a.low,a.close,a.volume,a.openinterest,a.tradecount,a.interval,a.intervaltype,STR_TO_DATE(endtime,'%Y%m%d%H%i%s') as endtime FROM data_intraday a WHERE `symbol` = '{0}'".Put(symbol);
                 if (start != DateTime.MinValue)
                 {
                     qrystr += "AND `endtime`>={0} ".Put(start.ToTLDateTime());
                 }
-                //if (end != DateTime.MaxValue)
-                //{
-                //    qrystr += "AND `endtime`<={0} ".Put(end.ToTLDateTime());
-                //}
                 qrystr += "ORDER BY `endtime` ";
-                //if (fromEnd)
-                //{
-                //qrystr += "DESC ";//降序截取 否则获得的数据是最老的数据
-                //}
-                //else
-                //{
                 qrystr += "ASC ";
-                //}
-                //if (maxcount > 0)
-                //{
-                //    qrystr += "LIMIT {0}".Put(maxcount);
-                //}
-
-                IEnumerable<BarImpl> bars = db.Connection.Query<BarImpl>(qrystr);//, (bar, fields) => { bar.StartTime = Util.ToDateTime(fields.StarTtime); bar.IntervalType = (BarInterval)fields.Intervaltype; return bar; }, null, null, false, "starttime", null, null);
-                
+                IEnumerable<BarImpl> bars = db.Connection.Query<BarImpl>(qrystr);
                 return bars;
             }
         }
@@ -159,7 +144,7 @@ namespace TradingLib.Common.DataFarm
         /// <param name="type"></param>
         /// <param name="interval"></param>
         /// <returns></returns>
-        public static IEnumerable<BarImpl> LoadEodBars(string symbol, DateTime start, BarInterval type = BarInterval.Day, int interval = 1)
+        public static IEnumerable<BarImpl> LoadEodBars(string symbol, DateTime start)
         {
             using (DBMySql db = new DBMySql())
             {

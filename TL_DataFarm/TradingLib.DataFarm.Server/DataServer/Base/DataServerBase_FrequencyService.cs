@@ -78,7 +78,7 @@ namespace TradingLib.Common.DataFarm
                         //如果生成的Bar数据周期 在行情源第一个1分钟周期之后 则该数据完备,直接储存
                         if (obj.Bar.EndTime > dfTime.First1MinRoundEnd)
                         {
-                            this.UpdateBar2(obj.Symbol, obj.Bar);
+                            this.UpdateBar(obj.Symbol, obj.Bar);
                         }
                     }
                 }
@@ -86,7 +86,7 @@ namespace TradingLib.Common.DataFarm
             if (obj.Frequency.Bars.Count >= 2)
             {
                 //保存到数据集
-                this.UpdateBar2(obj.Symbol, obj.Bar);
+                this.UpdateBar(obj.Symbol, obj.Bar);
                 if (obj.Bar.GetBarFrequency() == BarFrequency.Minute)
                 {
                     //更新EOD数据

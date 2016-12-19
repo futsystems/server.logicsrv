@@ -60,5 +60,7 @@ namespace TradingLib.Common.DataFarm
             }
             return tmpticklist;
         }
+
+
     }
 }

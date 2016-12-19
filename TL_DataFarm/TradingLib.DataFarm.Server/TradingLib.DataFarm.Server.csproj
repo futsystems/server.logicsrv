@@ -73,10 +73,11 @@
     <Compile Include="Common\IHistDataStore.cs" />
     <Compile Include="Common\PluginHelper.cs" />
     <Compile Include="Common\Util.cs" />
+    <Compile Include="Common\Util_Symbol.cs" />
     <Compile Include="ConstantData.cs" />
-    <Compile Include="DataBase\BarList.cs" />
-    <Compile Include="DataBase\MBar.cs" />
-    <Compile Include="DataBase\MemoryBarDB.cs" />
+    <Compile Include="Common\BarList.cs" />
+    <Compile Include="Common\MBar.cs" />
+    <Compile Include="Common\MemoryBarDB.cs" />
     <Compile Include="DataServer\Base\DataServerBase_FrequencyService.cs" />
     <Compile Include="DataServer\Base\RequestHandler\DataServerBase_ContribRequest.cs" />
     <Compile Include="DataServer\Base\DataCommand\DataServerBase_Demo.cs" />

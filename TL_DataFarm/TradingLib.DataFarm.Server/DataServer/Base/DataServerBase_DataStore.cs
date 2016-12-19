@@ -98,6 +98,8 @@ namespace TradingLib.Common.DataFarm
                 _logwaiting.Set();
             }
         }
+
+        #region 数据库操作 插入 更新 删除
         /// <summary>
         /// 数据库插入Bar记录
         /// </summary>
@@ -165,6 +167,8 @@ namespace TradingLib.Common.DataFarm
                 logger.Error("DeleteBar error:" + ex.ToString());
             }
         }
+        #endregion
+
 
 
         DateTime _lastcommit = DateTime.Now;
@@ -227,12 +231,12 @@ namespace TradingLib.Common.DataFarm
         /// 更新Bar数据
         /// </summary>
         /// <param name="bar"></param>
-        public void UpdateBar2(Symbol symbol,BarImpl bar)
+        public void UpdateBar(Symbol symbol,BarImpl bar)
         {
             bool isInsert = false;
             BarImpl dest = null;
 
-            GetHistDataSotre().UpdateBar(symbol, bar, out dest, out isInsert);
+            GetHistDataSotre().UpdateBar(symbol.GetBarListKey(bar.IntervalType,bar.Interval), bar, out dest, out isInsert);
 
             //只处理1分钟与日级别Bar数据
             if (_syncdb)
@@ -259,14 +263,15 @@ namespace TradingLib.Common.DataFarm
         /// <param name="bars"></param>
         public void UploadBars(string key, IEnumerable<BarImpl> bars)
         {
-            foreach (var bar in bars)
+            if (_syncdb)
             {
-                bool isInsert = false;
-                BarImpl dest = null;
-
-                GetHistDataSotre().UpdateBar(key, bar, out dest, out isInsert);
-                if (_syncdb)
+                foreach (var bar in bars)
                 {
+                    bool isInsert = false;
+                    BarImpl dest = null;
+
+                    GetHistDataSotre().UpdateBar(key, bar, out dest, out isInsert);
+                    //更新1分钟Bar和EOD Bar
                     if ((dest.IntervalType == BarInterval.CustomTime && dest.Interval == 60) || (dest.IntervalType == BarInterval.Day && dest.Interval == 1))
                     {
                         if (isInsert)
@@ -283,14 +288,21 @@ namespace TradingLib.Common.DataFarm
             }
         }
 
+        /// <summary>
+        /// 删除一组Bar数据
+        /// </summary>
+        /// <param name="symbol"></param>
+        /// <param name="intervalType"></param>
+        /// <param name="interval"></param>
+        /// <param name="ids"></param>
         public void DeleteBar(Symbol symbol, BarInterval intervalType, int interval, int[] ids)
         {
-            GetHistDataSotre().DeleteBar(symbol, intervalType, interval, ids);
+            GetHistDataSotre().DeleteBar(symbol.GetBarListKey(intervalType, interval), ids);
             NewData();
         }
 
         /// <summary>
-        /// 更新PartialBar数据
+        /// 更新实时PartialBar数据
         /// </summary>
         /// <param name="symbol"></param>
         /// <param name="partialbar"></param>
@@ -299,14 +311,24 @@ namespace TradingLib.Common.DataFarm
             GetHistDataSotre().UpdateRealPartialBar(symbol, partialbar);
         }
 
+        /// <summary>
+        /// 更新历史Tick恢复完毕后的PartialBar
+        /// </summary>
+        /// <param name="symbol"></param>
+        /// <param name="partialbar"></param>
         void UpdateHistPartialBar(Symbol symbol, BarImpl partialbar)
         {
             GetHistDataSotre().UpdateHistPartialBar(symbol, partialbar);
         }
 
-        void UpdateFirstRealBar(Symbol symbol,BarImpl partialbar)
+        /// <summary>
+        /// 更新第一个实时Bar
+        /// </summary>
+        /// <param name="symbol"></param>
+        /// <param name="partialbar"></param>
+        void UpdateFirstRealBar(Symbol symbol, BarImpl partialbar)
         {
-            GetHistDataSotre().UpdateFirstRealBar(symbol,partialbar);
+            GetHistDataSotre().UpdateFirstRealBar(symbol, partialbar);
         }
        
         #endregion
