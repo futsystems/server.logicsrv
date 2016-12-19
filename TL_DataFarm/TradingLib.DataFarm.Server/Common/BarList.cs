@@ -33,6 +33,17 @@ namespace TradingLib.Common.DataFarm
         public BarList(string key)
         {
             this._key = key;
+            string[] rec = key.Split('-');
+            BarInterval type = rec[2].ParseEnum<BarInterval>();
+            int interval = int.Parse(rec[3]);
+            if (type == BarInterval.CustomTime)
+            {
+                _span = TimeSpan.FromSeconds(interval);
+            }
+            if (type == BarInterval.Day)
+            {
+                _span = TimeSpan.FromDays(1);
+            }
         }
 
         bool _iseod = false;
@@ -215,22 +226,43 @@ namespace TradingLib.Common.DataFarm
         /// 周期内上一个交易日成家量数据
         /// </summary>
         int _totalVolToLastDay = 0;
+        TimeSpan _span = TimeSpan.FromDays(1);
 
         /// <summary>
         /// 日级别以上数据 在某个交易日内始终为数据集中最后一个
+        /// 系统每周重启,在系统恢复日周期数据后 当有EODBar更新时 需要判定当前EODBar是否在最后一个Bar周期内，否则新建
         /// </summary>
         /// <param name="partialBar"></param>
         public void UpdateEODPartialBar(BarImpl partialBar)
         {
             if(partialBar == null) return;
-            BarImpl tmp = barlist.Values.LastOrDefault();
-            if (tmp != null)
+            if (RealPartialBar == null)
             {
-                tmp.High = Math.Max(partialBar.High, tmp.High);
-                tmp.Low = Math.Min(partialBar.Low, tmp.Low);
-                tmp.Close = partialBar.Close;
-                tmp.Volume = _totalVolToLastDay + partialBar.Volume;//当前周期成交量 = 上一个交易日成家量 + 当前交易日成交量
+                BarImpl tmp = barlist.Values.LastOrDefault();
+                DateTime targetEnd = TimeFrequency.BarEndTime(Util.ToDateTime(partialBar.TradingDay, 0), _span);
+                //当前对应周期结束时间大于恢复数据的最后时间 则新建一个PartialBar
+                if (tmp == null || targetEnd > tmp.EndTime)
+                {
+                    //创建一个新的周期数据
+                    RealPartialBar = new BarImpl();
+                    RealPartialBar.EndTime = targetEnd;
+                    RealPartialBar.Open = partialBar.Open;
+                    RealPartialBar.High = partialBar.Open;
+                    RealPartialBar.Low = partialBar.Low;
+                    RealPartialBar.Close = partialBar.Close;
+                    RealPartialBar.Volume = partialBar.Volume;
+                }
+                else
+                {
+                    this.RealPartialBar = tmp;
+                }
             }
+
+            RealPartialBar.High = Math.Max(partialBar.High, RealPartialBar.High);
+            RealPartialBar.Low = Math.Min(partialBar.Low, RealPartialBar.Low);
+            RealPartialBar.Close = partialBar.Close;
+            RealPartialBar.Volume = _totalVolToLastDay + partialBar.Volume;//当前周期成交量 = 上一个交易日成家量 + 当前交易日成交量
+            
         }
 
 
