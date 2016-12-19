@@ -29,7 +29,7 @@ namespace TradingLib.Common.DataFarm
         /// <param name="host"></param>
         /// <param name="conn"></param>
         /// <param name="request"></param>
-        protected virtual void SrvOnVersionRequest(IServiceHost host, IConnection conn, VersionRequest request)
+        protected void SrvOnVersionRequest(IServiceHost host, IConnection conn, VersionRequest request)
         {
 
             VersionResponse response = ResponseTemplate<VersionResponse>.SrvSendRspResponse(request);
@@ -51,7 +51,7 @@ namespace TradingLib.Common.DataFarm
         /// <param name="host"></param>
         /// <param name="conn"></param>
         /// <param name="request"></param>
-        protected virtual void SrvOnFeatureRequest(IServiceHost host, IConnection conn, FeatureRequest request)
+        protected void SrvOnFeatureRequest(IServiceHost host, IConnection conn, FeatureRequest request)
         {
             FeatureResponse response = ResponseTemplate<FeatureResponse>.SrvSendRspResponse(request);
             response.Add(MessageTypes.XQRYMARKETTIME);
@@ -99,7 +99,7 @@ namespace TradingLib.Common.DataFarm
         {
             try
             {
-                //logger.Info("Got Qry Bar Request:" + request.ToString());
+                if (_verbose) logger.Info("Got Qry Bar Request:" + request.ToString());
                 IHistDataStore store = this.GetHistDataSotre();
                 if (store == null)
                 {
@@ -183,7 +183,7 @@ namespace TradingLib.Common.DataFarm
         /// <param name="request"></param>
         protected void SrvOnQryTradeSplitRequest(IServiceHost host, IConnection conn, XQryTradeSplitRequest request)
         {
-            logger.Info("Got Qry Trads Request:" + request.ToString());
+            if (_verbose) logger.Info("Got Qry Trads Request:" + request.ToString());
             Symbol symbol = MDBasicTracker.SymbolTracker[request.Exchange, request.Symbol];
             if (symbol == null)
             {
@@ -231,7 +231,7 @@ namespace TradingLib.Common.DataFarm
         /// <param name="request"></param>
         protected void SrvOnQryPriceVolRequest(IServiceHost host, IConnection conn, XQryPriceVolRequest request)
         {
-            logger.Info("Got Qry PriceVol Request:" + request.ToString());
+            if (_verbose) logger.Info("Got Qry PriceVol Request:" + request.ToString());
             Symbol symbol = MDBasicTracker.SymbolTracker[request.Exchange, request.Symbol];
             if (symbol == null)
             {
@@ -335,7 +335,7 @@ namespace TradingLib.Common.DataFarm
         /// <param name="request"></param>
         protected virtual void SrvOnQryExchangeRequest(IServiceHost host, IConnection conn, XQryExchangeRequuest request)
         {
-            logger.Info(string.Format("Conn:{0} qry exchange:{1}", conn.SessionID, request.ToString()));
+            if (_verbose) logger.Info(string.Format("Conn:{0} qry exchange:{1}", conn.SessionID, request.ToString()));
             IExchange[] exchs =MDBasicTracker.ExchagneTracker.Exchanges;
 
             int totalnum = exchs.Length;
@@ -357,7 +357,7 @@ namespace TradingLib.Common.DataFarm
         /// <param name="request"></param>
         protected virtual void SrvOnQryMarketTimeRequest(IServiceHost host, IConnection conn, XQryMarketTimeRequest request)
         {
-            logger.Info(string.Format("Conn:{0} qry market time:{1}", conn.SessionID, request.ToString()));
+            if (_verbose) logger.Info(string.Format("Conn:{0} qry market time:{1}", conn.SessionID, request.ToString()));
             MarketTime[] mts = MDBasicTracker.MarketTimeTracker.MarketTimes.ToArray();
 
             int totalnum = mts.Length;
@@ -381,7 +381,7 @@ namespace TradingLib.Common.DataFarm
         /// <param name="request"></param>
         protected virtual void SrvOnQrySecurityRequest(IServiceHost host, IConnection conn, XQrySecurityRequest request)
         {
-            logger.Info(string.Format("Conn:{0} qry security:{1}", conn.SessionID, request.ToString()));
+            if (_verbose) logger.Info(string.Format("Conn:{0} qry security:{1}", conn.SessionID, request.ToString()));
             SecurityFamilyImpl[] seclist = MDBasicTracker.SecurityTracker.Securities.ToArray();
             int totalnum = seclist.Length;
             int n = 0;
@@ -412,7 +412,7 @@ namespace TradingLib.Common.DataFarm
         /// <param name="request"></param>
         protected virtual void SrvOnQrySymbolRequest(IServiceHost host, IConnection conn, XQrySymbolRequest request)
         {
-            logger.Info(string.Format("Conn:{0} qry symbols:{1}", conn.SessionID, request.ToString()));
+            if (_verbose) logger.Info(string.Format("Conn:{0} qry symbols:{1}", conn.SessionID, request.ToString()));
             SymbolImpl[] symlis = MDBasicTracker.SymbolTracker.Symbols.ToArray();
             int totalnum = symlis.Length;
             int n = 0;
@@ -442,7 +442,7 @@ namespace TradingLib.Common.DataFarm
         /// <param name="request"></param>
         protected virtual void SrvOnUnregisterSymbolTick(IServiceHost host, IConnection conn, UnregisterSymbolTickRequest request)
         {
-            logger.Info(string.Format("Conn:{0} Unregister {1},{2}", conn.SessionID,request.Exchange,string.Join(" ",request.SymbolList.ToArray())));
+            if (_verbose) logger.Info(string.Format("Conn:{0} Unregister {1},{2}", conn.SessionID, request.Exchange, string.Join(" ", request.SymbolList.ToArray())));
             OnUngisterSymbol(conn, request);
         }
 
@@ -454,14 +454,14 @@ namespace TradingLib.Common.DataFarm
         /// <param name="request"></param>
         protected virtual void SrvOnRegisterSymbolTick(IServiceHost host, IConnection conn, RegisterSymbolTickRequest request)
         {
-            
-            logger.Info(string.Format("Conn:{0} Register {1},{2}", conn.SessionID,request.Exchange, string.Join(" ", request.SymbolList.ToArray())));
+
+            if (_verbose) logger.Info(string.Format("Conn:{0} Register {1},{2}", conn.SessionID, request.Exchange, string.Join(" ", request.SymbolList.ToArray())));
             OnRegisterSymbol(conn, request);
         }
 
         protected virtual void SrvOnXQryTickSnapshot(IServiceHost host, IConnection conn, XQryTickSnapShotRequest request)
         {
-            logger.Info(string.Format("Conn:{0} Qry TickSnapshot {1} {2}", conn.SessionID, request.Exchange, request.Symbol));
+            if (_verbose) logger.Info(string.Format("Conn:{0} Qry TickSnapshot {1} {2}", conn.SessionID, request.Exchange, request.Symbol));
 
             //查询所有行情快照
             if (string.IsNullOrEmpty(request.Exchange) && string.IsNullOrEmpty(request.Symbol))

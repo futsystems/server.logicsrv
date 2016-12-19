@@ -129,9 +129,10 @@ namespace TradingLib.Common.DataFarm
             }
 
             pf.EnterSection("DB Load");
-            //遍历所有合约执行合约的数据恢复
+            //遍历所有合约执行合约的数据恢复 合理：采用品种 并遍历1-12进行数据恢复 恢复某个品种的1-12个月数据
             foreach (var symbol in MDBasicTracker.SymbolTracker.Symbols)
             {
+                if (store.IsRestored(symbol.Exchange, symbol.GetBarSymbol())) continue;
                 //if (symbol.Symbol != "CLX6") continue;
                 restoreProfile.EnterSection("RestoreBar");
                 //1.从数据库加载历史数据 获得数据库最后一条Bar更新时间

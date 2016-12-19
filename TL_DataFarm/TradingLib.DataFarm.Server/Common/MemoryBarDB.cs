@@ -50,6 +50,18 @@ namespace TradingLib.Common.DataFarm
             return target;
         }
         #endregion
+        
+        /// <summary>
+        /// 某个合约是否已经回复过数据
+        /// </summary>
+        /// <param name="exchange"></param>
+        /// <param name="barSymbol"></param>
+        /// <returns></returns>
+        public bool IsRestored(string exchange,string barSymbol)
+        { 
+            string prefix = string.Format("{0}-{1}",exchange,barSymbol);
+            return barlistmap.Keys.Any(key => key.StartsWith(prefix));
+        }
 
         #region 数据更新
         /// <summary>
@@ -171,11 +183,25 @@ namespace TradingLib.Common.DataFarm
         /// <param name="symbol"></param>
         /// <param name="intervalType"></param>
         /// <param name="interval"></param>
-        void MergeRestore(IEnumerable<BarImpl> source,Symbol symbol,BarInterval intervalType, int interval)
+        BarList MergeRestore(IEnumerable<BarImpl> source,Symbol symbol,BarInterval intervalType, int interval)
         {
             BarList target = GetBarList(symbol.GetBarListKey(intervalType, interval));
-            IEnumerable<BarImpl> list = BarMerger.Merge(source, TimeSpan.FromSeconds(interval));
-            target.RestoreBars(list.Skip(Math.Max(0, list.Count() - ConstantData.MAXBARCACHED)));
+            TimeSpan span;
+            bool eodrestore = false;
+            if (intervalType == BarInterval.CustomTime)
+            {
+                span = TimeSpan.FromSeconds(interval);
+                eodrestore = false;
+            }
+            else
+            {
+                span = TimeSpan.FromDays(interval);
+                eodrestore = true;
+            }
+
+            IEnumerable<BarImpl> list = BarMerger.Merge(source, span);
+            target.RestoreBars(list.Skip(Math.Max(0, list.Count() - ConstantData.MAXBARCACHED)),eodrestore);
+            return target;
         }
 
         /// <summary>
@@ -187,10 +213,21 @@ namespace TradingLib.Common.DataFarm
         {
             lastBarTradingDay = int.MinValue;
             BarList target = GetBarList(symbol, BarInterval.Day, 1);
+            target.IsEOD = true;
             //从数据库加载对应的Bar数据 从最近的数据加载 分钟级别数据加载6个月,日级别数据加载3年
             IEnumerable<BarImpl> bars = MBar.LoadEodBars(symbol.GetBarSymbol(), DateTime.Now.AddYears(-3));
             target.RestoreBars(bars.Skip(Math.Max(0, bars.Count() - ConstantData.MAXBARCACHED)));
             lastBarTradingDay = target.LastBarTradingDay;
+
+            BarList tmp = null;
+            tmp = this.MergeRestore(bars, symbol, BarInterval.Day, 7);//周
+            target.AppendEODList(tmp);
+            tmp = this.MergeRestore(bars, symbol, BarInterval.Day, 30);//月
+            target.AppendEODList(tmp);
+            tmp = this.MergeRestore(bars, symbol, BarInterval.Day, 90);//季
+            target.AppendEODList(tmp);
+            tmp = this.MergeRestore(bars, symbol, BarInterval.Day, 365);//年
+            target.AppendEODList(tmp);
         }
 
         #endregion
@@ -230,19 +267,6 @@ namespace TradingLib.Common.DataFarm
             BarList target = GetBarList(symbol, type, interval);
             return target.QryBar(start, end, startIndex, maxcount, havePartial);
         }
-
-        /// <summary>
-        /// 查询分时数据
-        /// </summary>
-        /// <param name="symbol"></param>
-        /// <param name="tradingday"></param>
-        /// <returns></returns>
-        //public List<MinuteData> QryMinuteData(Symbol symbol, int tradingday)
-        //{
-        //    BarList target = GetBarList(symbol, BarInterval.CustomTime, 60);
-        //    return target.QryMinuteData(tradingday);
-        //}
-
         #endregion
 
     }

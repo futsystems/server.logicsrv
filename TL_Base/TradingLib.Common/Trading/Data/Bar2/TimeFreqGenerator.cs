@@ -83,7 +83,7 @@ namespace TradingLib.Common
         }
 
         /// <summary>
-        /// 计算给定时刻的下一个周期开始时刻
+        /// 计算给定时刻的下一个周期结束时刻
         /// </summary>
         /// <param name="date"></param>
         /// <param name="period"></param>
@@ -104,8 +104,19 @@ namespace TradingLib.Common
         }
 
         /// <summary>
+        /// 获得季度结束
+        /// </summary>
+        /// <param name="month"></param>
+        /// <returns></returns>
+        static int GetQuarterMonth(int month)
+        {
+            if (month == 1 || month == 2 || month == 3) return 4;
+            if (month == 4 || month == 5 || month == 6) return 7;
+            if (month == 7 || month == 8 || month == 9) return 10;
+            return 1;
+        }
+        /// <summary>
         /// 计算给定时刻的当前周期开始时刻
-        /// 计算给定时刻的当前周期结束时间
         /// </summary>
         /// <param name="date"></param>
         /// <param name="period"></param>
@@ -125,10 +136,19 @@ namespace TradingLib.Common
                     time = time.AddDays(-1.0);
                 }
             }
-            else if (period.TotalDays < 365.0)//大于1个月小于1年 按月
+            else if (period.TotalDays < 90)//大于1个月小于1季 按月
             {
                 time = new DateTime(date.Year, date.Month, 1, 0, 0, 0);
                 if (period.TotalDays == 30.0) //按30天/月为周期 则为该月第一天
+                {
+                    return time;
+                }
+            }
+            else if (period.TotalDays < 365)//大于1个季度小于1年 按季
+            {
+                int month = GetQuarterMonth(date.Month);
+                time = new DateTime(date.Year, month, 1, 0, 0, 0).AddMonths(-3);//减去3个月再减去1天 则为该季度开始时间
+                if (period.TotalDays == 90.0) //按30天/月为周期 则为该月第一天
                 {
                     return time;
                 }
@@ -154,11 +174,12 @@ namespace TradingLib.Common
         /// <summary>
         /// 计算某个时间所处周期
         /// 该周期为Bar的结束值
+        /// 未使用 待修正
         /// </summary>
         /// <param name="date"></param>
         /// <param name="period"></param>
         /// <returns></returns>
-        public static DateTime RoundTime2(DateTime date, TimeSpan period)
+        public static DateTime RoundTime20(DateTime date, TimeSpan period)
         {
             DateTime time;
             if (period.TotalDays < 7.0)

@@ -19,6 +19,14 @@ namespace TradingLib.Common.DataFarm
 
 
         /// <summary>
+        /// 日级别以上关联BarList
+        /// 在恢复EOD日线数据时 将其余日级别以上周期的BarList数据关联到该日级别数据
+        /// 日级别以上的数据统一用EOD数据进行当前周期OHLC数据的更新
+        /// </summary>
+        Dictionary<string, BarList> eodList = new Dictionary<string, BarList>();
+
+
+        /// <summary>
         /// 构造函数
         /// </summary>
         /// <param name="key"></param>
@@ -26,6 +34,13 @@ namespace TradingLib.Common.DataFarm
         {
             this._key = key;
         }
+
+        bool _iseod = false;
+
+        /// <summary>
+        /// 该BarList是否是EODBar数据集
+        /// </summary>
+        public bool IsEOD { get { return _iseod; } set { _iseod = value; ; } }
 
         /// <summary>
         /// 返回最后一个Bar时间
@@ -108,7 +123,7 @@ namespace TradingLib.Common.DataFarm
         /// 启动时从数据库加载Bar数据并恢复到内存BarList中
         /// </summary>
         /// <param name="source"></param>
-        public void RestoreBars(IEnumerable<BarImpl> source)
+        public void RestoreBars(IEnumerable<BarImpl> source,bool eodrestore=false)
         {
             lock (_object)
             {
@@ -116,6 +131,29 @@ namespace TradingLib.Common.DataFarm
                 {
                     barlist[b.GetTimeKey()] = b;
                 }
+                
+                //以周线为例 记录恢复数据最后一个Bar的成交量,该成交量为合并到上一个交易日位置所累加的成家量,当前交易日的周线成交量 = 该成交量 + 当前EODBar数据中的成交量(日线成交量)
+                if (eodrestore && source.Count() > 0)
+                {
+                    _totalVolToLastDay = source.Last().Volume;
+                }
+            }
+        }
+
+
+        /// <summary>
+        /// 关联日级别以上数据
+        /// </summary>
+        /// <param name="barlist"></param>
+        public void AppendEODList(BarList barlist)
+        {
+            try
+            {
+                eodList.Add(barlist.Key, barlist);
+            }
+            catch (Exception ex)
+            {
+                logger.Error("append eod list error:" + ex.ToString());
             }
         }
 
@@ -168,6 +206,37 @@ namespace TradingLib.Common.DataFarm
             {
                 _hasPartial = true;
                 _realPartialBar = value;
+                if (this.IsEOD)
+                {
+                    //更新日级别以上数据
+                    foreach (var tmp in eodList.Values)
+                    {
+                        tmp.UpdateEODPartialBar(RealPartialBar);
+                    }
+                }
+
+            }
+        }
+
+        /// <summary>
+        /// 周期内上一个交易日成家量数据
+        /// </summary>
+        int _totalVolToLastDay = 0;
+
+        /// <summary>
+        /// 日级别以上数据 在某个交易日内始终为数据集中最后一个
+        /// </summary>
+        /// <param name="partialBar"></param>
+        public void UpdateEODPartialBar(BarImpl partialBar)
+        {
+            if(partialBar == null) return;
+            BarImpl tmp = barlist.Values.LastOrDefault();
+            if (tmp != null)
+            {
+                tmp.High = Math.Max(partialBar.High, tmp.High);
+                tmp.Low = Math.Min(partialBar.Low, tmp.Low);
+                tmp.Close = partialBar.Close;
+                tmp.Volume = _totalVolToLastDay + partialBar.Volume;//当前周期成交量 = 上一个交易日成家量 + 当前交易日成交量
             }
         }
 

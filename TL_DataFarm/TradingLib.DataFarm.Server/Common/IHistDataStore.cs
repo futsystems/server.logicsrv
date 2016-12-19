@@ -98,5 +98,11 @@ namespace TradingLib.API
         /// <param name="histPartial"></param>
         void UpdateHistPartialBar(Symbol symbol, BarImpl histPartial);
 
+        /// <summary>
+        /// 是否已经恢复过数据
+        /// </summary>
+        /// <param name="barSymbol"></param>
+        /// <returns></returns>
+        bool IsRestored(string exchange,string barSymbol);
     }
 }

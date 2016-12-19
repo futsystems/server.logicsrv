@@ -69,15 +69,7 @@ namespace TradingLib.Common.DataFarm
         /// <param name="span"></param>
         public static List<BarImpl> Merge(IEnumerable<BarImpl> source, TimeSpan span)
         {
-            //List<DateTime> targetEnd = new List<DateTime>();
-            //DateTime end = DateTime.MinValue;
-            //获得Bar时间对应周期的结束时间
-            //foreach (var bar in source)
-            //{
-            //    targetEnd.Add(TimeFrequency.BarEndTime(bar.EndTime.AddMinutes(-1), span));
-            //}
-
-
+            bool eodMerge = span >= TimeSpan.FromHours(24);
             int j = -1;
             List<BarImpl> target = new List<BarImpl>();
             BarImpl tmp = null;
@@ -87,7 +79,8 @@ namespace TradingLib.Common.DataFarm
             for (int i=0;i<source.Count();i++)
             {
                 sbar = source.ElementAt(i);
-                targetEnd = TimeFrequency.BarEndTime(sbar.EndTime.AddMinutes(-1), span);
+                //分钟级别数据合并使用BarEndTime 日级数据合并使用TradingDay作为时间来获得周期结束时间
+                targetEnd =eodMerge?TimeFrequency.BarEndTime(Util.ToDateTime(sbar.TradingDay,0),span):  TimeFrequency.BarEndTime(sbar.EndTime.AddMinutes(-1), span);
                 if (currentEnd != targetEnd)
                 {
                     j++;
@@ -110,14 +103,8 @@ namespace TradingLib.Common.DataFarm
                 tmp.Close = sbar.Close;
                 tmp.Volume += sbar.Volume;
 
-                //if (sbar.EndTime == targetEnd)//如果source bar对应的结束时间与目标周期的结束时间一致,则该Bar结束
-                //{
-                //    tmp.MergeComplete = true;
-                //}
-
                 currentEnd = targetEnd;
             }
-            //tmp = target.Last();
             return target;
         }
     }
