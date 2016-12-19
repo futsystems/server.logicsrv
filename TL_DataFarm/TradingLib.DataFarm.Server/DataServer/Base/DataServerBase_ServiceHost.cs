@@ -183,10 +183,10 @@ namespace TradingLib.Common.DataFarm
                 case MessageTypes.FEATUREREQUEST:
                     SrvOnFeatureRequest(host, conn, packet as FeatureRequest);
                     break;
-                //响应客户端心跳
-                case MessageTypes.HEARTBEAT:
-                    SrvUpdateHeartBeat(conn);
-                    break;
+                ////响应客户端心跳
+                //case MessageTypes.HEARTBEAT:
+                //    SrvUpdateHeartBeat(conn);
+                //    break;
                 //响应客户端心跳查询
                 case MessageTypes.HEARTBEATREQUEST:
                     SrvOnHeartbeatRequest(host, conn, packet as HeartBeatRequest);
