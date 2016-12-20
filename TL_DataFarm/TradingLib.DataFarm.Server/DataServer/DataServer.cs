@@ -111,7 +111,7 @@ namespace TradingLib.Common.DataFarm
             this.InitEodService();
 
             //启动Bar数据生成器
-            this.StartFrequencyService();
+            this.InitFrequencyService();
 
             //初始化数据恢复服务
             this.InitRestoreService();
@@ -119,14 +119,8 @@ namespace TradingLib.Common.DataFarm
             //启动TickFeed
             this.StartTickFeeds();
 
-            //恢复历史数据
-            this.LoadData();
-
             //启动数据恢复服务
             this.StartRestoreService();
-
-            //启动EOD服务
-            //this.StartEodService();
 
             //启动ServiceHost
             this.StartServiceHosts();

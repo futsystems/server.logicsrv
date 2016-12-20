@@ -11,57 +11,6 @@ using Common.Logging;
 
 namespace TradingLib.Common.DataFarm
 {
-    /// <summary>
-    /// 行情源时间
-    /// 用于记录本次启动后
-    /// 行情源时间信息
-    /// </summary>
-    public class DataFeedTime
-    {
-        public DataFeedTime(QSEnumDataFeedTypes type)
-        {
-            this.DataFeed = type;
-            this.StartTime = DateTime.MinValue;
-            this.StartTime = DateTime.MinValue;
-        }
-        /// <summary>
-        /// 行情源类别
-        /// </summary>
-        public QSEnumDataFeedTypes DataFeed { get; set; }
-
-        /// <summary>
-        /// 是否已经覆盖1分钟
-        /// 覆盖掉1分钟后 就可以取开始后的第一个一分钟时刻 进行数据恢复
-        /// </summary>
-        public bool Cover1Minute
-        {
-            get { return this.CurrentTime.Subtract(this.StartTime).TotalMinutes > 1; }
-        }
-
-        /// <summary>
-        /// 第一个一分钟Round
-        /// </summary>
-        public DateTime First1MinRoundEnd
-        {
-            get
-            {
-                DateTime next = this.StartTime.AddMinutes(1);
-                return new DateTime(next.Year, next.Month, next.Day, next.Hour, next.Minute, 0);
-            }
-        }
-        /// <summary>
-        /// 启动后收到的第一个行情源事件
-        /// </summary>
-        public DateTime StartTime { get; set; }
-
-        /// <summary>
-        /// 当前最新时间
-        /// </summary>
-        public DateTime CurrentTime { get; set; }
-
-    }
-
-
     public partial class DataServer
     {
 
@@ -76,7 +25,8 @@ namespace TradingLib.Common.DataFarm
             logger.Info("[Init Restore Service] TickPath:"+path);
 
             restoresrv = new RestoreService(path,dfTimeMap,eodservice);
-
+            restoresrv.NewHistBarEvent += new Action<FreqNewBarEventArgs>(OnNewHistBarEvent);
+            restoresrv.NewHistPartialBarEvent += new Action<Symbol, BarImpl>(OnNewHistPartialBarEvent);
         }
 
         /// <summary>
@@ -85,20 +35,25 @@ namespace TradingLib.Common.DataFarm
         protected void StartRestoreService()
         {
             logger.Info("[Start Restore Service]");
-            restoresrv.NewHistBarEvent += new Action<FreqNewBarEventArgs>(OnNewHistBarEvent);
-            restoresrv.NewHistPartialBarEvent += new Action<Symbol, BarImpl>(restoresrv_NewHistPartialBarEvent);
+            //加载历史数据
+            LoadData();
+            //启动后台线程执行数据恢复
             restoresrv.Start();
-
         }
 
-        void restoresrv_NewHistPartialBarEvent(Symbol arg1, BarImpl arg2)
+        /// <summary>
+        /// 历史Tick恢复完毕后 如果有PartialBar则记录PartialBar 用于与FirstRealBar进行数据合并
+        /// </summary>
+        /// <param name="arg1"></param>
+        /// <param name="arg2"></param>
+        void OnNewHistPartialBarEvent(Symbol arg1, BarImpl arg2)
         {
             UpdateHistPartialBar(arg1, arg2);
         }
 
 
         /// <summary>
-        /// 回放tick所生成的Bar数据事件
+        /// 历史Tick恢复过程中 生成Bar 直接更新数据集
         /// </summary>
         /// <param name="obj"></param>
         void OnNewHistBarEvent(FreqNewBarEventArgs obj)
@@ -108,34 +63,27 @@ namespace TradingLib.Common.DataFarm
         }
 
 
-        //void RestoreServiceProcessTickSnapshot(Symbol symbol, Tick k)
-        //{
-        //    restoresrv.OnTickSnapshot(symbol, k);
-        //}
-
-        Profiler restoreProfile = new Profiler();
 
         /// <summary>
         /// 恢复数据
         /// 恢复数据过程中
         /// </summary>
-        protected void LoadData()
+        void LoadData()
         {
-            logger.Info("[Load Bar Data]");
+            logger.Info("Load bar data from database");
             IHistDataStore store = this.GetHistDataSotre();
             if (store == null)
             {
                 logger.Warn("HistDataSotre is null, can not restore data");
             }
 
-            pf.EnterSection("DB Load");
+            Global.Profile.EnterSection("DB Load");
             //遍历所有合约执行合约的数据恢复 合理：采用品种 并遍历1-12进行数据恢复 恢复某个品种的1-12个月数据
             foreach (var symbol in MDBasicTracker.SymbolTracker.Symbols)
             {
                 //if (store.IsRestored(symbol.Exchange, symbol.GetBarSymbol())) continue; 
                 //if (symbol.Symbol != "CLX6") continue;
-                
-                restoreProfile.EnterSection("RestoreBar");
+
                 //1.从数据库加载历史数据 获得数据库最后一条Bar更新时间
                 DateTime intradayHistBarEndTime = DateTime.MinValue;
                 store.RestoreIntradayBar(symbol, out intradayHistBarEndTime);
@@ -145,11 +93,9 @@ namespace TradingLib.Common.DataFarm
                 int eodHistBarEndTradingDay = int.MinValue;
                 store.RestoreEodBar(symbol, out eodHistBarEndTradingDay);
                 restoresrv.OnEodHistBarLoaded(symbol, eodHistBarEndTradingDay);
-
-                restoreProfile.LeaveSection();
             }
-            pf.LeaveSection();
-            logger.Info(pf.GetStatsString());
+            Global.Profile.LeaveSection();
+            logger.Info(Global.Profile.GetStatsString());
         
         }
     }

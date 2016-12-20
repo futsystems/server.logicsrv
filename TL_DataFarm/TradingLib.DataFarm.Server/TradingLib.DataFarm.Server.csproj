@@ -66,10 +66,10 @@
   <ItemGroup>
     <Compile Include="Common\BarMerger.cs" />
     <Compile Include="Common\BasicInfoUtil.cs" />
-    <Compile Include="Common\ConnectionUtils.cs" />
     <Compile Include="Common\DataCommand.cs" />
     <Compile Include="Common\DataCommandAttr.cs" />
     <Compile Include="Common\DataCommandInfo.cs" />
+    <Compile Include="Common\DataFeedTime.cs" />
     <Compile Include="Common\IHistDataStore.cs" />
     <Compile Include="Common\PluginHelper.cs" />
     <Compile Include="Common\Util.cs" />
@@ -80,7 +80,7 @@
     <Compile Include="Common\MemoryBarDB.cs" />
     <Compile Include="DataServer\DataServer_FrequencyService.cs" />
     <Compile Include="DataServer\RequestHandler\DataServer_ContribRequest.cs" />
-    <Compile Include="DataServer\DataCommand\DataServer_Demo.cs" />
+    <Compile Include="DataServer\RequestHandler\DataServer_Demo.cs" />
     <Compile Include="DataServer\DataServer_.Restore.cs" />
     <Compile Include="DataServer\RequestHandler\DataServer_ManagerRequest.cs" />
     <Compile Include="DataServer\DataServer_Eod.cs" />
@@ -95,6 +95,7 @@
     <Compile Include="EodDataService\EodDataService_Restore.cs" />
     <Compile Include="EodDataService\EodDataService_Helper.cs" />
     <Compile Include="EodDataService\EodDataService_Task.cs" />
+    <Compile Include="EodDataService\EodDataService_RestoreBar.cs" />
     <Compile Include="Global.cs" />
     <Compile Include="TaskService\Listener.cs" />
     <Compile Include="FrequencyService\EventArgs.cs" />

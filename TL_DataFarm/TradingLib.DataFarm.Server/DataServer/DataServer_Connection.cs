@@ -25,9 +25,8 @@ namespace TradingLib.Common.DataFarm
         /// <summary>
         /// 注册定时任务
         /// </summary>
-        protected void RegisterTask()
+        void RegisterTask()
         {
-
             logger.Info("[Register Connection WatchTask]");
             DataTask task = new DataTask("ConnectionWathTask",TimeSpan.FromSeconds(2),delegate() { ClearDeadClient(); });
             Global.TaskService.RegisterTask(task);
@@ -94,7 +93,6 @@ namespace TradingLib.Common.DataFarm
             if (connectionMap.Keys.Contains(conn.SessionID))
             {
                 connectionMap.TryRemove(conn.SessionID, out target);
-                //logger.Info(string.Format("Connection:{0} closed", conn.SessionID));
             }
             else
             {
@@ -109,17 +107,15 @@ namespace TradingLib.Common.DataFarm
         /// 关闭某个连接
         /// </summary>
         /// <param name="conn"></param>
-        public virtual void CloseConnection(IConnection conn)
+        void CloseConnection(IConnection conn)
         {
             logger.Warn("Close Connection:" + conn.SessionID);
             //逻辑清理
             RemoveConnection(conn);
             //清理连接注册的行情合约
             ClearSymbolRegisted(conn);
-
             //关闭connection
             conn.Close();
-            
         }
 
         /// <summary>
@@ -127,7 +123,7 @@ namespace TradingLib.Common.DataFarm
         /// </summary>
         /// <param name="sessionID"></param>
         /// <returns></returns>
-        public virtual IConnection GetConnection(string sessionID)
+        IConnection GetConnection(string sessionID)
         {
             IConnection target = null;
             if (connectionMap.TryGetValue(sessionID, out target))

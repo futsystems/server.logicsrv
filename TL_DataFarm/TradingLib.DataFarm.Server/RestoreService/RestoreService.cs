@@ -74,13 +74,17 @@ namespace TradingLib.Common.DataFarm
         /// </summary>
         public event Action<Symbol, BarImpl> NewHistPartialBarEvent;
 
+        /// <summary>
+        /// 数据恢复任务列表
+        /// </summary>
         ConcurrentDictionary<string, RestoreTask> restoreTaskMap = new ConcurrentDictionary<string, RestoreTask>();
 
-        FrequencyManager restoreFrequencyMgr = null;
+        
         string _basedir = string.Empty;
         Dictionary<QSEnumDataFeedTypes, DataFeedTime> datafeedTimeMap = null;
-
         EodDataService _eodsrv = null;
+        FrequencyManager restoreFrequencyMgr = null;
+
         public RestoreService(string tickpath,Dictionary<QSEnumDataFeedTypes, DataFeedTime> dfmap,EodDataService eodsrv)
         {
             _basedir = tickpath;
@@ -91,9 +95,9 @@ namespace TradingLib.Common.DataFarm
             restoreFrequencyMgr.RegisterAllBasicFrequency();
             restoreFrequencyMgr.NewFreqKeyBarEvent += new Action<FrequencyManager.FreqKey, SingleBarEventArgs>(OnNewHistFreqKeyBarEvent);
 
+            //遍历所有合约添加数据恢复任务
             foreach (var symbol in MDBasicTracker.SymbolTracker.Symbols)
             {
-                //if (symbol.Symbol != "HSIX6") continue;
                 restoreTaskMap.TryAdd(symbol.UniqueKey, new RestoreTask(symbol));
                 restoreFrequencyMgr.RegisterSymbol(symbol);
             }
@@ -204,8 +208,11 @@ namespace TradingLib.Common.DataFarm
                         if (item.IsTickFilled && item.IsTickFillSuccess && !item.IsEODRestored)
                         {
                             item.IsEODRestored = true;
+                            //恢复EOD日线数据
                             _eodsrv.EODRestoreBar(item);
+                            //恢复分时数据
                             _eodsrv.EODRestoreMinuteData(item);
+                            //恢复成交数据
                             _eodsrv.EODRestoreTradeSplit(item);
                             item.IsEODRestoreSuccess = true;
                         }

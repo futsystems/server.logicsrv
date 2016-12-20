@@ -34,7 +34,7 @@ namespace TradingLib.Common.DataFarm
         /// <summary>
         /// 启动ServiceHost
         /// </summary>
-        protected void StartServiceHosts()
+        void StartServiceHosts()
         {
             logger.Info("[Start ServiceHost]");
             if (!_serviceHostLoaded)
@@ -78,8 +78,6 @@ namespace TradingLib.Common.DataFarm
                 {
                     try
                     {
-
-                        //connection service must support IDataServerServiceHost interface
                         if (type.GetInterface("TradingLib.DataFarm.API.IServiceHost") != null)
                         {
                             object o = Activator.CreateInstance(type);
@@ -97,8 +95,6 @@ namespace TradingLib.Common.DataFarm
             }
             _serviceHostLoaded = true; 
         }
-
-        
 
         /// <summary>
         /// 启动某个ServiceHost
@@ -123,21 +119,20 @@ namespace TradingLib.Common.DataFarm
             }
         }
 
-        protected virtual void OnConnectionClosedEvent(IServiceHost arg1, IConnection arg2)
+        void OnConnectionClosedEvent(IServiceHost arg1, IConnection arg2)
         {
             logger.Info(string.Format("ServiceHost:{0} Connection:{1} Closed",arg1.Name,arg2.SessionID));
-            //如果是实时行情链接则注销所有注册合约
             OnConnectionClosed(arg1, arg2);
         }
 
-        protected virtual void OnConnectionCreatedEvent(IServiceHost arg1, IConnection arg2)
+        void OnConnectionCreatedEvent(IServiceHost arg1, IConnection arg2)
         {
             logger.Info(string.Format("ServiceHost:{0} Connection:{1} Created", arg1.Name, arg2.SessionID));
             OnConnectionCreated(arg1, arg2);
         }
 
 
-        protected virtual IPacket OnServiceEvent(IServiceHost arg1, IPacket arg2)
+        IPacket OnServiceEvent(IServiceHost arg1, IPacket arg2)
         {
             if (arg2.Type == MessageTypes.SERVICEREQUEST)
             {
@@ -158,15 +153,8 @@ namespace TradingLib.Common.DataFarm
         /// <param name="host"></param>
         /// <param name="conn"></param>
         /// <param name="packet"></param>
-        protected void ProcessRequest(IServiceHost host, IConnection conn, IPacket packet)
-        {
-            OnRequestEvent(host, conn, packet);
-        }
-
         void OnRequestEvent(IServiceHost host, IConnection conn, IPacket packet)
         {
-            //logger.Info(string.Format("ServiceHost:{0} Connection:{1} Request:{2}", host.Name, conn.SessionID, packet.ToString()));
-
             //更新客户端连接心跳
             SrvUpdateHeartBeat(conn);
             switch (packet.Type)
@@ -184,9 +172,9 @@ namespace TradingLib.Common.DataFarm
                     SrvOnFeatureRequest(host, conn, packet as FeatureRequest);
                     break;
                 ////响应客户端心跳
-                //case MessageTypes.HEARTBEAT:
-                //    SrvUpdateHeartBeat(conn);
-                //    break;
+                case MessageTypes.HEARTBEAT:
+                    SrvUpdateHeartBeat(conn);
+                    break;
                 //响应客户端心跳查询
                 case MessageTypes.HEARTBEATREQUEST:
                     SrvOnHeartbeatRequest(host, conn, packet as HeartBeatRequest);
@@ -239,8 +227,8 @@ namespace TradingLib.Common.DataFarm
                     SrvOnMDDemoTick(host, conn, packet as MDDemoTickRequest);
                     break;
 
-                
-                
+
+
                 #region 管理操作
                 //更新合约
                 case MessageTypes.MGRUPDATESYMBOL:
@@ -262,7 +250,7 @@ namespace TradingLib.Common.DataFarm
                 case MessageTypes.MGRCONTRIBREQUEST:
                     SrvOnMGRContribRequest(host, conn, packet as MGRContribRequest);
                     break;
-
+                //上传历史数据
                 case MessageTypes.MGRUPLOADBARDATA:
                     SrvOnMGRUploadBarData(host, conn, packet as UploadBarDataRequest);
                     break;
@@ -272,9 +260,5 @@ namespace TradingLib.Common.DataFarm
                     break;
             }
         }
-
-        
-
-
     }
 }

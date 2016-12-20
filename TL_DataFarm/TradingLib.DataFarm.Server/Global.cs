@@ -67,6 +67,18 @@ namespace TradingLib.Common.DataFarm
             }
         }
 
+        Profiler profile = null;
+        public static Profiler Profile
+        {
+            get
+            {
+                if (defaulatinstance.profile == null)
+                {
+                    defaulatinstance.profile = new Profiler();
+                }
+                return defaulatinstance.profile;
+            }
+        }
 
     }
 }

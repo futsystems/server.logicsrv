@@ -87,7 +87,6 @@ namespace TradingLib.Common.DataFarm
             this.SendData(conn, response);
         }
 
-        Profiler pf = new Profiler();
         //为什么超过一定数量的Bar一起发送 客户端就无法收到数据 socket缓存?
         /// <summary>
         /// 查询Bar数据

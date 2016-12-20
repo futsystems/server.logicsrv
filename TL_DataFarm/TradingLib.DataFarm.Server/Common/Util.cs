@@ -11,6 +11,7 @@ namespace TradingLib.Common.DataFarm
 {
     public class MDUtil
     {
+        
         //static ILog logger = LogManager.GetLogger("Util");
         /// <summary>
         /// 从Tick目录加载某个时间段之间的所有Tick数据
@@ -62,5 +63,15 @@ namespace TradingLib.Common.DataFarm
         }
 
 
+    }
+
+
+    public static class Util_Bar
+    {
+        public static bool Is1MinBar(this Bar bar)
+        {
+            if (bar.IntervalType == BarInterval.CustomTime && bar.Interval == 60) return true;
+            return false;
+        }
     }
 }

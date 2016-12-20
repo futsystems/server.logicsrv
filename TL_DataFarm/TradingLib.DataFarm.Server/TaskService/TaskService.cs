@@ -90,9 +90,6 @@ namespace TradingLib.Common.DataFarm
         {
             logger.Info("Start Task Service");
             _scheduler.Start();
-
-            //DataTask task = new DataTaskBase("demo",TimeSpan.FromSeconds(1), null);
-            //this.RegisterTask(task);
         }
     }
 }

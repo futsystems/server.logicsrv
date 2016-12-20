@@ -19,15 +19,15 @@ namespace TradingLib.Common.DataFarm
             string path = this.ConfigFile["TickPath"].AsString();
             logger.Info("[Init EOD Service]");
             eodservice = new EodDataService(GetHistDataSotre(), path,_syncdb);
-            eodservice.EodBarResotred += new Action<Symbol, IEnumerable<BarImpl>>(eodservice_EodBarResotred);
-            eodservice.EodBarClose += new Action<EodBarEventArgs>(eodservice_EodBarClose);
-            eodservice.EodBarUpdate += new Action<EodBarEventArgs>(eodservice_EodBarUpdate);
+            eodservice.EodBarResotred += new Action<Symbol, IEnumerable<BarImpl>>(OnEodBarResotred);
+            eodservice.EodBarClose += new Action<EodBarEventArgs>(OnEodBarClose);
+            eodservice.EodBarUpdate += new Action<EodBarEventArgs>(OnEodBarUpdate);
 
-            eodservice.SecurityEntryMarketDay += new Action<SecurityFamily, MarketDay>(eodservice_SecurityEntryMarketDay);
-            eodservice.SymbolExpiredEvent += new Action<Symbol, Symbol>(eodservice_SymbolExpiredEvent);
+            eodservice.SecurityEntryMarketDay += new Action<SecurityFamily, MarketDay>(OnSecurityEntryMarketDay);
+            eodservice.SymbolExpiredEvent += new Action<Symbol, Symbol>(OnSymbolExpiredEvent);
         }
 
-        void eodservice_SymbolExpiredEvent(Symbol arg1, Symbol arg2)
+        void OnSymbolExpiredEvent(Symbol arg1, Symbol arg2)
         {
             logger.Info(string.Format("Symbol:{0} Expied, new symbol created:{1}", arg1.Symbol, arg2.Symbol));
             IExchange exch = MDBasicTracker.ExchagneTracker[arg1.Exchange];
@@ -39,7 +39,7 @@ namespace TradingLib.Common.DataFarm
         }
 
 
-        void eodservice_SecurityEntryMarketDay(SecurityFamily arg1, MarketDay arg2)
+        void OnSecurityEntryMarketDay(SecurityFamily arg1, MarketDay arg2)
         {
             //重置快照数据
             foreach (var snapshot in Global.TickTracker.TickSnapshots)
@@ -104,30 +104,36 @@ namespace TradingLib.Common.DataFarm
             }
         }
 
-        //public void StartEodService()
-        //{
-        //    eodservice.RestoreTickBakcground();
-        //}
-        void eodservice_EodBarUpdate(EodBarEventArgs obj)
+        /// <summary>
+        /// EOD PartialBar更新
+        /// </summary>
+        /// <param name="obj"></param>
+        void OnEodBarUpdate(EodBarEventArgs obj)
         {
-            //throw new NotImplementedException(); ?日线数据是否需要每次都去更新下该值，日线只要当天绑定一个PartialBar即可
+            //此处采用每次更新 日线数据更新时需要强制更新日级别以上数据 比如周线 月线等(EOD PartialBar在一个交易日内不会发生对象变化)
             this.UpdateRealPartialBar(obj.Symbol, obj.EodPartialBar);
         }
 
-        void eodservice_EodBarClose(EodBarEventArgs obj)
+        /// <summary>
+        /// EODBar关闭 更新数据集
+        /// </summary>
+        /// <param name="obj"></param>
+        void OnEodBarClose(EodBarEventArgs obj)
         {
-            //throw new NotImplementedException();
             this.UpdateBar(obj.Symbol, obj.EodPartialBar);
         }
 
-        void eodservice_EodBarResotred(Symbol arg1, IEnumerable<BarImpl> arg2)
+        /// <summary>
+        /// 1分钟Bar数据合并生成EODBar数据 例如Eod没有保存 多个交易日之后 则之间空缺的EOD Bar数据由1分钟Bar数据合并生成
+        /// </summary>
+        /// <param name="arg1"></param>
+        /// <param name="arg2"></param>
+        void OnEodBarResotred(Symbol arg1, IEnumerable<BarImpl> arg2)
         {
-
             foreach (var bar in arg2)
             {
                 this.UpdateBar(arg1, bar);
             }
-            
         }
 
         void EodServiceProcessTick(Tick k)

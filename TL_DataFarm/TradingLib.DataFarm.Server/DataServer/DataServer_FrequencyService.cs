@@ -16,31 +16,37 @@ namespace TradingLib.Common.DataFarm
 
         FrequencyService freqService;
 
-        protected void StartFrequencyService()
+        protected void InitFrequencyService()
         {
             logger.Info("[Init Frequency Service]");
             freqService = new FrequencyService();
             freqService.NewRealTimeBarEvent += new Action<FreqNewBarEventArgs>(OnNewRealTimeBarEvent);
-            freqService.UpdatePartialBarEvent += new Action<FreqUpdatePartialBarEventArgs>(freqService_UpdatePartialBarEvent);
+            freqService.UpdatePartialBarEvent += new Action<FreqUpdatePartialBarEventArgs>(OnUpdatePartialBarEvent);
 
         }
 
-        
 
-       
 
-        void freqService_UpdatePartialBarEvent(FreqUpdatePartialBarEventArgs obj)
+
+        /// <summary>
+        /// PartialBar数据
+        /// </summary>
+        /// <param name="obj"></param>
+        void OnUpdatePartialBarEvent(FreqUpdatePartialBarEventArgs obj)
         {
-            //更新Partial数据
+            //1.更新内存数据库中对应BarList中的PartialBar
             this.UpdateRealPartialBar(obj.Symbol, obj.PartialBar);
-            if (obj.PartialBar.GetBarFrequency()==BarFrequency.Minute)
+            //2.EOD服务通过1分钟PartialBar数据更新EODBar日线数据以及分时数据
+            if (obj.PartialBar.Is1MinBar())
             {
-                //更新EOD数据
                 this.eodservice.On1MinPartialBarUpdate(obj.Symbol, obj.PartialBar);
             }
         }
 
-
+        /// <summary>
+        /// 实时Bar数据生成某个Bar
+        /// </summary>
+        /// <param name="obj"></param>
         void OnNewRealTimeBarEvent(FreqNewBarEventArgs obj)
         {
             string key = string.Format("{0}-{1}", obj.Symbol.GetContinuousKey(), obj.BarFrequency.ToUniqueId());
@@ -49,20 +55,9 @@ namespace TradingLib.Common.DataFarm
             //logger.Info(string.Format("New Bar Freq:{0} Bar:{1}", key, obj.Bar));
 #endif
             
-            //放入储存队列 写入数据库
-            /* 如果在盘中启动 则FrequencyManger获得的行情数据可能是从某个Bar的中途开始的
-             * 因此第一个Bar数据是不一定完整的，因此需要过滤掉 从第二个Bar开始储存
-             * 
-             * 如果某个合约已经恢复了Tick数据 则表明后续的数据都是完整的 直接储存
-             * 包括定时任务每日清理Frequency后 开盘后获得实时数据生成的第一个Bar需要保存
-             * 
-             * */
-            //计算交易日
-            //obj.Bar.TradingDay = eodservice.GetTradingDay(obj.Symbol.SecurityFamily, obj.Bar.EndTime);
-
             if(obj.Frequency.Bars.Count == 1) 
             {
-                //将实时Bar生成的第一个不完整的Bar放到数据集中 
+                //将实时Bar生成的第一个不完整(可能)Bar放到数据集中 
                 this.UpdateFirstRealBar(obj.Symbol, obj.Bar);
 
                 //如果是1分钟Bar则根据时间进行判定 如果在恢复时间之后的周期 则直接保存
@@ -84,11 +79,14 @@ namespace TradingLib.Common.DataFarm
                     }
                 }
             }
+
+            //第二个数据可以确保Bar数据完备 直接更新到内存数据库
             if (obj.Frequency.Bars.Count >= 2)
             {
-                //保存到数据集
+                //更新到内存数据库
                 this.UpdateBar(obj.Symbol, obj.Bar);
-                if (obj.Bar.GetBarFrequency() == BarFrequency.Minute)
+                //更新EODBar数据
+                if (obj.Bar.Is1MinBar())
                 {
                     //更新EOD数据
                     this.eodservice.On1MinBarClose(obj.Symbol, obj.Bar);
@@ -98,7 +96,7 @@ namespace TradingLib.Common.DataFarm
         }
 
         /// <summary>
-        /// 处理TickFeed接受到的实时行情数据
+        /// 处理Tick数据 用于驱动Bar数据生成
         /// </summary>
         /// <param name="k"></param>
         void FrequencyServiceProcessTick(Tick k)

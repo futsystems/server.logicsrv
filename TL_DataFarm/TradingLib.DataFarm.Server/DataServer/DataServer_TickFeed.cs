@@ -25,10 +25,8 @@ namespace TradingLib.Common.DataFarm
         ConcurrentDictionary<string, ConcurrentDictionary<string, IConnection>> symKeyRegMap = new ConcurrentDictionary<string, ConcurrentDictionary<string, IConnection>>();
 
         /// <summary>
-        /// 记录了每个合约最近更新时间,当前tick时间要大于等于最近更新时间否则过滤掉
+        /// 行情插件列表
         /// </summary>
-        //Dictionary<string, DateTime> tickLastTimeMap = new Dictionary<string, DateTime>();
-
         readonly List<ITickFeed> _tickFeeds = new List<ITickFeed>();
 
         //异步处理行情组件,行情源组件获得行情更新后放入环形队列中进行处理
@@ -48,7 +46,6 @@ namespace TradingLib.Common.DataFarm
             //启动异步行情处理组件
             if (asyncTick == null)
             {
-                //logger.Info("Start async tick process");
                 asyncTick = new AsyncResponse("Tick");
                 asyncTick.GotTick +=new TickDelegate(asyncTick_GotTick);
             }
@@ -73,7 +70,6 @@ namespace TradingLib.Common.DataFarm
         /// </summary>
         void LoadTickFeeds()
         {
-
             if (_tickFeedLoad) return;
             logger.Info("Load TickFeeds plugin");
             string filter = this.ConfigFile["TickFeedFilter"].AsString();
@@ -107,15 +103,13 @@ namespace TradingLib.Common.DataFarm
 
             logger.Info(string.Format("TickFeed[{0}] connected, will register prefix:{1}",tickfeed.Name,_prefixStr));
             
-            //异步执行订阅操作
+            //订阅前缀
             foreach (var prefix in _prefixStr.Split(' '))
             {
                 _prefixList.Add(prefix);
                 tickfeed.Register(Encoding.UTF8.GetBytes(prefix));
             }
-            //IEnumerable<string> symbols = MDBasicTracker.SymbolTracker.Symbols.Where(sym=>sym.Exchange=="NYMEX").Select(sym=>sym.Symbol);
-            //tickfeed.RegisterSymbols(QSEnumDataFeedTypes.IQFEED, "NYMEX", symbols.ToList());
-
+            //向TickPubSrv发起合约实时行情注册请求
             foreach (var g in MDBasicTracker.SymbolTracker.Symbols.GroupBy(sym => sym.Exchange))
             { 
                 IExchange exch = MDBasicTracker.ExchagneTracker[g.Key];
@@ -139,10 +133,8 @@ namespace TradingLib.Common.DataFarm
         }
 
         /// <summary>
-        /// 合约快照维护期
+        /// 行情源时间维护Map
         /// </summary>
-        //TickTracker tickTracker = new TickTracker();
-
         Dictionary<QSEnumDataFeedTypes, DataFeedTime> dfTimeMap = new Dictionary<QSEnumDataFeedTypes, DataFeedTime>();
 
         DataFeedTime GetDataFeedTime(QSEnumDataFeedTypes df)
@@ -154,6 +146,7 @@ namespace TradingLib.Common.DataFarm
             }
             return null;
         }
+
         void asyncTick_GotTick(Tick k)
         {
             //更新行情源时间 
@@ -167,21 +160,12 @@ namespace TradingLib.Common.DataFarm
                     dfTimeMap.Add(k.DataFeed, dft);
                 }
                 dft.CurrentTime = k.DateTime();
+                return;
             }
-            //if (k.Exchange == "HKEX")
-            //{
-            //    //logger.Info("k exchange:" + k.Exchange + " symbol:" + k.Symbol + " Tick:" + k.ToString());
-            //}
+
+            //获得行情Tick对应合约
             Symbol symbol = MDBasicTracker.SymbolTracker[k.Exchange,k.Symbol];
             if(symbol == null) return;
-            //if (symbol.Exchange != "HKEX") return;
-
-            //更新行情最近更新时间
-            //if (!tickLastTimeMap.Keys.Contains(k.Symbol))
-            //{
-            //    tickLastTimeMap.Add(k.Symbol, k.DateTime());
-            //}
-            //执行行情事件检查
 
             //更新合约快照维护器 用于维护当前合约的一个最新状态
             Global.TickTracker.UpdateTick(k);
@@ -191,7 +175,6 @@ namespace TradingLib.Common.DataFarm
             {
                 //转发实时行情
                 Tick snapshot = Global.TickTracker[k.Exchange, k.Symbol];
-                //logger.Info("notifytick");
                 NotifyTick2Connections(snapshot);
             }
 

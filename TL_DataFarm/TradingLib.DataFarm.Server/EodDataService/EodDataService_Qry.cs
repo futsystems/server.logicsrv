@@ -73,16 +73,15 @@ namespace TradingLib.Common.DataFarm
             Dictionary<int, MinuteDataCache> cachemap = null;
             if (minuteDataMap.TryGetValue(symbol.UniqueKey, out cachemap))
             {
-                logger.Info(string.Format("QryMinuteDate symbol:{0} date:{1} start:{2}", symbol.UniqueKey, date, start));
+                //logger.Info(string.Format("QryMinuteDate symbol:{0} date:{1} start:{2}", symbol.UniqueKey, date, start));
                 //通过交易日找到对应的分时数据
                 MinuteDataCache cache = null;
                 if (cachemap.TryGetValue(date, out cache))
                 {
-                    logger.Info("got date:" + date.ToString());
+                    //logger.Info("got date:" + date.ToString());
                     list = cache.QryMinuteDate(start);
                 }
             }
-
             return list;
         }
     }
