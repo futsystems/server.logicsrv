@@ -10,7 +10,7 @@ using Common.Logging;
 
 namespace TradingLib.Common.DataFarm
 {
-    public partial class DataServerBase
+    public partial class DataServer
     {
         [DataCommandAttr("QryHistTable", "QryHistTable - Qry HistBar Table Info", "查询历史数据表信息")]
         public void Command_QryTableInfo(IServiceHost host, IConnection conn)

@@ -10,7 +10,7 @@ using Common.Logging;
 
 namespace TradingLib.Common.DataFarm
 {
-    public partial class DataServerBase
+    public partial class DataServer
     {
 
         EodDataService eodservice = null;

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.IO;
+using System.Threading;
 using TradingLib.API;
 using TradingLib.Common;
 using TradingLib.DataFarm.API;
@@ -12,14 +13,14 @@ using Common.Logging;
 
 namespace TradingLib.Common.DataFarm
 {
-    public  abstract partial class DataServerBase
+    public  partial class DataServer
     {
-        protected ILog logger;
+        protected ILog logger = LogManager.GetLogger("DataServer");
         protected ConfigFile _config;
 
         protected ConfigFile ConfigFile { get { return _config; } }
         protected ConfigDB _cfgdb;
-        string _name;
+        IHistDataStore _datastore = null;
 
         int _tradebatchsize = 500;
         int _barbatchsize = 500;
@@ -28,11 +29,10 @@ namespace TradingLib.Common.DataFarm
         int _connectionDeadPeriod = 15;
         bool _syncdb = false;//是否更新数据到数据库 行情服务器组只维护一个历史行情数据库 其余行情服务器只从该数据库加载数据
         bool _verbose = true;//是否输入请求日志
-        public DataServerBase(string name)
+        ManualResetEvent manualEvent = new ManualResetEvent(false);
+        public DataServer()
         {
-            _name = name;
-            logger = LogManager.GetLogger(name);
-            _config = ConfigFile.GetConfigFile(name+".cfg");
+            _config = ConfigFile.GetConfigFile("DataCore.cfg");
 
             //初始化MySQL数据库连接池
             logger.Info("Init MySQL connection pool");
@@ -44,6 +44,7 @@ namespace TradingLib.Common.DataFarm
             _verbose = ConfigFile["Verbose"].AsBool();
 
             _cfgdb = new ConfigDB("DataFarm");
+            _datastore = new MemoryBarDB();
 
             if (!_cfgdb.HaveConfig("TradeBatchSendSize"))
             {
@@ -88,26 +89,71 @@ namespace TradingLib.Common.DataFarm
         /// 行情前置获得内存储存服务 行情前置的数据通过从行情服务查询并缓存到内存 加速客户端查询响应
         /// </summary>
         /// <returns></returns>
-        public abstract IHistDataStore GetHistDataSotre();
-
-
-        /// <summary>
-        /// 调用后端执行Bar数据查询
-        /// </summary>
-        /// <param name="host"></param>
-        /// <param name="conn"></param>
-        /// <param name="request"></param>
-        public abstract void BackendQryBar(IServiceHost host, IConnection conn, QryBarRequest request);
+        public IHistDataStore GetHistDataSotre()
+        {
+            return _datastore;
+        }
 
         /// <summary>
         /// 启动服务
         /// </summary>
-        public abstract void Start();
+        public void Start(bool join=false)
+        {
+            logger.Info("Start....");
+
+            //初始化任务调度服务
+            Global.TaskService.Init();
+
+            //启动历史数据储存服务
+            this.StartDataStoreService();
+
+            //初始化EOD服务
+            this.InitEodService();
+
+            //启动Bar数据生成器
+            this.StartFrequencyService();
+
+            //初始化数据恢复服务
+            this.InitRestoreService();
+
+            //启动TickFeed
+            this.StartTickFeeds();
+
+            //恢复历史数据
+            this.LoadData();
+
+            //启动数据恢复服务
+            this.StartRestoreService();
+
+            //启动EOD服务
+            //this.StartEodService();
+
+            //启动ServiceHost
+            this.StartServiceHosts();
+
+            //启动发送服务
+            this.StartSendService();
+
+            //注册任务
+            this.RegisterTask();
+
+            //启动任务调度服务
+            Global.TaskService.Start();
+
+            if (join)
+            {
+                manualEvent.WaitOne();
+            }
+
+        }
 
         /// <summary>
         /// 停止服务
         /// </summary>
-        public abstract void Stop();
+        public void Stop()
+        { 
+            
+        }
         
     }
 }

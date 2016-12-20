@@ -78,13 +78,13 @@
     <Compile Include="Common\BarList.cs" />
     <Compile Include="Common\MBar.cs" />
     <Compile Include="Common\MemoryBarDB.cs" />
-    <Compile Include="DataServer\Base\DataServerBase_FrequencyService.cs" />
-    <Compile Include="DataServer\Base\RequestHandler\DataServerBase_ContribRequest.cs" />
-    <Compile Include="DataServer\Base\DataCommand\DataServerBase_Demo.cs" />
-    <Compile Include="DataServer\Base\DataServerBase_.Restore.cs" />
-    <Compile Include="DataServer\Base\RequestHandler\DataServerBase_ManagerRequest.cs" />
-    <Compile Include="DataServer\Base\DataServerBase_Eod.cs" />
-    <Compile Include="DataServer\Base\DataServerBase_SendWroker.cs" />
+    <Compile Include="DataServer\DataServer_FrequencyService.cs" />
+    <Compile Include="DataServer\RequestHandler\DataServer_ContribRequest.cs" />
+    <Compile Include="DataServer\DataCommand\DataServer_Demo.cs" />
+    <Compile Include="DataServer\DataServer_.Restore.cs" />
+    <Compile Include="DataServer\RequestHandler\DataServer_ManagerRequest.cs" />
+    <Compile Include="DataServer\DataServer_Eod.cs" />
+    <Compile Include="DataServer\DataServer_SendWroker.cs" />
     <Compile Include="EodDataService\EodDataService.cs" />
     <Compile Include="EodDataService\EodDataService_DataCache.cs" />
     <Compile Include="EodDataService\EventArgs.cs" />
@@ -99,20 +99,14 @@
     <Compile Include="TaskService\Listener.cs" />
     <Compile Include="FrequencyService\EventArgs.cs" />
     <Compile Include="MDBasicTracker.cs" />
-    <Compile Include="DataCoreBackend\DataCoreBackend.cs" />
-    <Compile Include="DataCoreBackend\TLSocket_ZMQ.cs" />
-    <Compile Include="DataServer\Base\DataServerBase.cs" />
-    <Compile Include="DataServer\Base\DataServerBase_.cs" />
-    <Compile Include="DataServer\Base\DataServerBase_ServiceHost.cs" />
-    <Compile Include="DataServer\Base\RequestHandler\DataServerBase_CommonRequest.cs" />
-    <Compile Include="DataServer\Base\DataServerBase_Connection.cs" />
-    <Compile Include="DataServer\Base\DataServerBase_DataStore.cs" />
-    <Compile Include="DataServer\Base\DataServerBase_TickFeed.cs" />
-    <Compile Include="DataServer\Base\DataServerBase_Common.cs" />
-    <Compile Include="DataServer\DataCore\DataCore.cs" />
-    <Compile Include="DataServer\DataFront\DataFront.cs" />
-    <Compile Include="DataServer\DataFront\DataFront_.cs" />
-    <Compile Include="DataServer\DataFront\DataFront_BackendQry.cs" />
+    <Compile Include="DataServer\DataServer.cs" />
+    <Compile Include="DataServer\DataServer_.cs" />
+    <Compile Include="DataServer\DataServer_ServiceHost.cs" />
+    <Compile Include="DataServer\RequestHandler\DataServer_CommonRequest.cs" />
+    <Compile Include="DataServer\DataServer_Connection.cs" />
+    <Compile Include="DataServer\DataServer_DataStore.cs" />
+    <Compile Include="DataServer\DataServer_TickFeed.cs" />
+    <Compile Include="DataServer\DataServer_Common.cs" />
     <Compile Include="FrequencyService\FrequencyService.cs" />
     <Compile Include="FrequencyService\FrequencyService_.cs" />
     <Compile Include="FrequencyService\FrequencyService_QryBar.cs" />
@@ -131,9 +125,7 @@
       <Name>TradingLib.DataFarm.API</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="DataServer\Manager\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

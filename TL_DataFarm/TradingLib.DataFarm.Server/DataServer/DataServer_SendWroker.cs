@@ -22,7 +22,7 @@ namespace TradingLib.Common.DataFarm
 
             public IPacket Packet { get; set; }
         }
-        public partial class DataServerBase
+        public partial class DataServer
         {
 
 

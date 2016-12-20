@@ -49,8 +49,8 @@ namespace TradingLib.Common.DataFarm
         public EnumDBOperationType OperationType { get; set; }
     }
 
-    
-    public partial class DataServerBase
+
+    public partial class DataServer
     {
 
         /// <summary>

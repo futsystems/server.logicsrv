@@ -18,7 +18,7 @@ namespace TradingLib.Common.DataFarm
     /// 3.发送数据异常清理异常连接
     /// 
     /// </summary>
-    public partial class DataServerBase
+    public partial class DataServer
     {
         ConcurrentDictionary<string, IConnection> connectionMap = new ConcurrentDictionary<string, IConnection>();
 

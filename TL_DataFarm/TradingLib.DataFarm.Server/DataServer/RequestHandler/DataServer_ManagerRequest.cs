@@ -10,7 +10,7 @@ using Common.Logging;
 
 namespace TradingLib.Common.DataFarm
 {
-    public partial class DataServerBase
+    public partial class DataServer
     {
         [DataCommandAttr("Demo", "Demo -  demo function", "测试操作", QSEnumArgParseType.Json)]
         public void CTE_Demo(IServiceHost host, IConnection conn, string args)

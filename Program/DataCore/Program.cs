@@ -23,11 +23,9 @@ namespace DataCoreSrv
             {
                 AppDomain.CurrentDomain.UnhandledException += new UnhandledExceptionEventHandler(CurrentDomain_UnhandledException);
 
-                DataCore df = new DataCore();
+                DataServer dataSrv = new DataServer();
+                dataSrv.Start(true);
 
-                df.Start();
-                System.Threading.Thread.Sleep(int.MaxValue);
-                logger.Info("******************** exit");
             }
             catch (Exception ex)
             {

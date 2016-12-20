@@ -10,7 +10,7 @@ using Common.Logging;
 
 namespace TradingLib.Common.DataFarm
 {
-    public partial class DataServerBase
+    public partial class DataServer
     {
         void SrvOnMGRContribRequest(IServiceHost host, IConnection conn, MGRContribRequest request)
         {

@@ -10,7 +10,7 @@ using Common.Logging;
 
 namespace TradingLib.Common.DataFarm
 {
-    public partial class DataServerBase
+    public partial class DataServer
     {
         /// <summary>
         /// 更新客户端心跳时间戳

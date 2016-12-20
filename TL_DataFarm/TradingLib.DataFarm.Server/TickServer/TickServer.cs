@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.Concurrent;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.IO;
 using TradingLib.API;
 using TradingLib.Common;
@@ -52,6 +53,9 @@ namespace TradingLib.Common.DataFarm
         string _prefixStr = string.Empty;
         List<string> _prefixList = new List<string>();
         const string NAME = "TickStore";
+
+        ManualResetEvent manualEvent = new ManualResetEvent(false);
+
         public TickServer()
         {
             _config = ConfigFile.GetConfigFile(NAME + ".cfg");
@@ -67,7 +71,7 @@ namespace TradingLib.Common.DataFarm
             tickRepository = new TickRepository(_basedir);
         }
 
-        public void Start()
+        public void Start(bool join=false)
         {
             logger.Info("Start TickStoreServer");
             //启动异步行情处理组件
@@ -87,6 +91,11 @@ namespace TradingLib.Common.DataFarm
             foreach (var feed in tickFeeds)
             {
                 StartTickFeed(feed);
+            }
+
+            if (join)
+            {
+                manualEvent.WaitOne();
             }
         }
 
