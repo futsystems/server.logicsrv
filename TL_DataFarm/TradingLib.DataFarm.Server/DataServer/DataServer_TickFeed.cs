@@ -44,11 +44,11 @@ namespace TradingLib.Common.DataFarm
         ITickFeed _defaultFeed = null;
         protected void StartTickFeeds()
         {
-            logger.Info("Start TickFeeds");
+            logger.Info("[Start Tick Feeds]");
             //启动异步行情处理组件
             if (asyncTick == null)
             {
-                logger.Info("Start async tick process");
+                //logger.Info("Start async tick process");
                 asyncTick = new AsyncResponse("Tick");
                 asyncTick.GotTick +=new TickDelegate(asyncTick_GotTick);
             }

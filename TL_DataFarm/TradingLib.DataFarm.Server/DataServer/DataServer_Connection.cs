@@ -27,7 +27,8 @@ namespace TradingLib.Common.DataFarm
         /// </summary>
         protected void RegisterTask()
         {
-            logger.Info("Register Connection WatchTask");
+
+            logger.Info("[Register Connection WatchTask]");
             DataTask task = new DataTask("ConnectionWathTask",TimeSpan.FromSeconds(2),delegate() { ClearDeadClient(); });
             Global.TaskService.RegisterTask(task);
         }

@@ -60,6 +60,7 @@ namespace TradingLib.Common.DataFarm
         {
             if (_syncdb)
             {
+                logger.Info("[Init DataStore Service]");
                 if (_saverunning) return;
                 _saverunning = true;
                 _datathread = new Thread(ProcessBuffer);

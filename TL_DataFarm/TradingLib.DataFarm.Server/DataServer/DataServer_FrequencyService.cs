@@ -18,6 +18,7 @@ namespace TradingLib.Common.DataFarm
 
         protected void StartFrequencyService()
         {
+            logger.Info("[Init Frequency Service]");
             freqService = new FrequencyService();
             freqService.NewRealTimeBarEvent += new Action<FreqNewBarEventArgs>(OnNewRealTimeBarEvent);
             freqService.UpdatePartialBarEvent += new Action<FreqUpdatePartialBarEventArgs>(freqService_UpdatePartialBarEvent);

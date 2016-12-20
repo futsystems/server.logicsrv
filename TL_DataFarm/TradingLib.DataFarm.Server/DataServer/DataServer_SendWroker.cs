@@ -31,6 +31,7 @@ namespace TradingLib.Common.DataFarm
             /// </summary>
             protected void StartSendService()
             {
+                logger.Info("[Start SendWorker Service]");
                 if (_sendgo) return;
                 _sendgo = true;
                 _sendthread = new Thread(ProcessSend);

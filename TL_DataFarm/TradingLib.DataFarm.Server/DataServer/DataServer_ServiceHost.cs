@@ -36,7 +36,7 @@ namespace TradingLib.Common.DataFarm
         /// </summary>
         protected void StartServiceHosts()
         {
-            logger.Info("Start ServiceHosts");
+            logger.Info("[Start ServiceHost]");
             if (!_serviceHostLoaded)
             {
                 LoadServiceHosts();

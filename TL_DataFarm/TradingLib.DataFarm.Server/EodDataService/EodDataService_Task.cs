@@ -51,7 +51,7 @@ namespace TradingLib.Common.DataFarm
                 RegisterCloseTask(p.Key, p.Value);
             }
 
-            logger.Info("MarketDayTask Registed");
+            //logger.Info("MarketDayTask Registed");
         }
 
         /// <summary>
@@ -62,7 +62,7 @@ namespace TradingLib.Common.DataFarm
         void RegisterOpenTask(int time, List<SecurityFamily> list)
         {
             DateTime dt = Util.ToDateTime(Util.ToTLDate(), time);
-            logger.Info(string.Format("Register Open Task,Time:{0} Sec:{1}", time, string.Join(",", list.Select(sec => sec.Code).ToArray())));
+            logger.Info(string.Format("[Register Open Task,Time:{0} Sec:{1}]", time, string.Join(",", list.Select(sec => sec.Code).ToArray())));
             DataTask task = new DataTask("OpenTask-" + dt.ToString("HH:mm:ss"), string.Format("{0} {1} {2} * * ?", dt.Second, dt.Minute, dt.Hour), delegate() { OpenMarket(list); });
             Global.TaskService.RegisterTask(task);
         }
@@ -70,7 +70,7 @@ namespace TradingLib.Common.DataFarm
         void RegisterCloseTask(int time, List<SecurityFamily> list)
         {
             DateTime dt = Util.ToDateTime(Util.ToTLDate(), time);
-            logger.Info(string.Format("Register Close Task,Time:{0} Sec:{1}", time, string.Join(",", list.Select(sec => sec.Code).ToArray())));
+            logger.Info(string.Format("[Register Close Task,Time:{0} Sec:{1}]", time, string.Join(",", list.Select(sec => sec.Code).ToArray())));
             DataTask task = new DataTask("CloseTask-" + dt.ToString("HH:mm:ss"), string.Format("{0} {1} {2} * * ?", dt.Second, dt.Minute, dt.Hour), delegate() { logger.Info("Task:" + time.ToString()); });
             Global.TaskService.RegisterTask(task);
 
