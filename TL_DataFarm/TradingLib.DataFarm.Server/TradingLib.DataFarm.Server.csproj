@@ -85,6 +85,7 @@
     <Compile Include="DataServer\RequestHandler\DataServer_ManagerRequest.cs" />
     <Compile Include="DataServer\DataServer_Eod.cs" />
     <Compile Include="DataServer\DataServer_SendWroker.cs" />
+    <Compile Include="DataServer\DataServer_Task.cs" />
     <Compile Include="EodDataService\EodDataService.cs" />
     <Compile Include="EodDataService\EodDataService_DataCache.cs" />
     <Compile Include="EodDataService\EventArgs.cs" />

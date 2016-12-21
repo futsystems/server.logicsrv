@@ -56,6 +56,11 @@ namespace TradingLib.DataFarm.API
         event Action<ITickFeed> DisconnectEvent;
 
         /// <summary>
+        /// 切换行情源服务器
+        /// </summary>
+        void SwitchTickSrv();
+
+        /// <summary>
         /// 启动
         /// </summary>
         void Start();

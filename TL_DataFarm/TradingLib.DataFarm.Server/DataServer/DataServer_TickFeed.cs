@@ -99,6 +99,8 @@ namespace TradingLib.Common.DataFarm
         
         void TickFeed_OnConnectEvent(ITickFeed tickfeed)
         {
+            
+
             _prefixStr = ConfigFile["Prefix"].AsString();
 
             logger.Info(string.Format("TickFeed[{0}] connected, will register prefix:{1}",tickfeed.Name,_prefixStr));
@@ -116,6 +118,9 @@ namespace TradingLib.Common.DataFarm
                 List<Symbol> list = g.ToList<Symbol>();
                 tickfeed.RegisterSymbols(exch, list);
             }
+
+            _connectedTime = DateTime.Now;
+            _switching = false;
         }
 
         /// <summary>
@@ -147,6 +152,41 @@ namespace TradingLib.Common.DataFarm
             return null;
         }
 
+        bool _switching = false;
+        DateTime _connectedTime = DateTime.Now;
+        void SwitchTickSrv(string msg)
+        {
+            if (_switching) return;
+            _switching = true;
+            logger.Info(msg);
+            if (_tickFeeds.Count > 0)
+            {
+                ITickFeed feed = _tickFeeds[0];
+                logger.Info(string.Format("Switch TickSrv of Feed:{0}", feed.Name));
+                feed.SwitchTickSrv();
+            }
+            else
+            {
+                logger.Warn("TickFeed not loaded");
+            }
+        }
+
+        void CheckIQFeedTimeTick()
+        { 
+            DataFeedTime dft = null;
+            if (dfTimeMap.TryGetValue(QSEnumDataFeedTypes.IQFEED, out dft))
+            {
+                //建立连接10秒之内不执行检查 需要等待连接建立且服务端发送数据
+                //TimeTick 5秒内未更新 则触发切换操作
+                if (DateTime.Now.Subtract(_connectedTime).TotalSeconds> 5 && DateTime.Now.Subtract(dft.LastHeartBeat).TotalSeconds > 5)
+                {
+
+                    string msg = string.Format("IQFeed DateTime Tick Stream Lost");
+                    SwitchTickSrv(msg);
+                }
+            }
+        }
+
         void asyncTick_GotTick(Tick k)
         {
             //更新行情源时间 
@@ -157,9 +197,11 @@ namespace TradingLib.Common.DataFarm
                 {
                     dft = new DataFeedTime(k.DataFeed);
                     dft.StartTime = k.DateTime();
+                    dft.LastHeartBeat = DateTime.Now;
                     dfTimeMap.Add(k.DataFeed, dft);
                 }
                 dft.CurrentTime = k.DateTime();
+                dft.LastHeartBeat = DateTime.Now;
                 return;
             }
 

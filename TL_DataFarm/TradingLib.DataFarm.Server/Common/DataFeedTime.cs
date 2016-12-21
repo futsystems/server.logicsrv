@@ -10,15 +10,15 @@ namespace TradingLib.Common.DataFarm
 {
     /// <summary>
     /// 行情源时间
-    /// 用于记录本次启动后
-    /// 行情源时间信息
+    /// 每个行情源都会发送时间流数据 用于校时或检测可用状态
+    /// 单个行情源按一个时区发送时间流,但是行情源可能会发布多个交易所行情 行情源发送的行情已经将时间转换到交易所时间
+    /// 
     /// </summary>
     public class DataFeedTime
     {
         public DataFeedTime(QSEnumDataFeedTypes type)
         {
             this.DataFeed = type;
-            this.StartTime = DateTime.MinValue;
             this.StartTime = DateTime.MinValue;
         }
         /// <summary>
@@ -53,8 +53,15 @@ namespace TradingLib.Common.DataFarm
 
         /// <summary>
         /// 当前最新时间
+        /// 
         /// </summary>
         public DateTime CurrentTime { get; set; }
+
+
+        /// <summary>
+        /// 记录本地心跳时间
+        /// </summary>
+        public DateTime LastHeartBeat { get; set; }
 
     }
 

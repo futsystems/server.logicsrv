@@ -22,15 +22,7 @@ namespace TradingLib.Common.DataFarm
     {
         ConcurrentDictionary<string, IConnection> connectionMap = new ConcurrentDictionary<string, IConnection>();
 
-        /// <summary>
-        /// 注册定时任务
-        /// </summary>
-        void RegisterTask()
-        {
-            logger.Info("[Register Connection WatchTask]");
-            DataTask task = new DataTask("ConnectionWathTask",TimeSpan.FromSeconds(2),delegate() { ClearDeadClient(); });
-            Global.TaskService.RegisterTask(task);
-        }
+        
 
         void ClearDeadClient()
         {

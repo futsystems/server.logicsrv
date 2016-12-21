@@ -158,15 +158,37 @@ namespace TradingLib.DataFarm
         bool _hb = false;
         Thread _hbthread = null;
 
+        bool _switched = false;
+        /// <summary>
+        /// 切换行情源服务器
+        /// </summary>
+        public void SwitchTickSrv()
+        {
+            _switched = true;
+        }
+
         private void HeartBeatWatch()
         {
             while (_hb)
             {
+                if (_switched)
+                {
+                    _usemaster = !_usemaster;
+                    //停止行情服务线程
+                    StopTickHandler();
+                    //启动行情服务
+                    StartTickHandler();
+                    //更新行情心跳时间
+                    _lastheartbeat = DateTime.Now;
+                    logger.Info("TickServer switched to :" + CurrentServer);
+                    _switched = false;
+                }
+
                 if (DateTime.Now.Subtract(_lastheartbeat).TotalSeconds > 5)
                 {
-                    logger.Error("TickHeartBeat lost, try to ReConnect to tick server");
                     if (_tickgo)
                     {
+                        logger.Error("TickHeartBeat lost, try to ReConnect to tick server");
                         _usemaster = !_usemaster;
                         //停止行情服务线程
                         StopTickHandler();
@@ -177,7 +199,8 @@ namespace TradingLib.DataFarm
                         logger.Info("Connect to TickServer success");
                     }
                 }
-                Util.sleep(100);
+                
+                Thread.Sleep(200);
             }
         }
 
@@ -188,6 +211,7 @@ namespace TradingLib.DataFarm
         void StartTickHandler()
         {
             if (_tickgo) return;
+            logger.Info("Start TickHandler");
             _tickgo = true;
             _tickthread = new Thread(TickHandler);
             _tickthread.IsBackground = true;
@@ -206,22 +230,26 @@ namespace TradingLib.DataFarm
         void StopTickHandler()
         {
             if (!_tickgo) return;
+            logger.Info("Stop TickHandler");
             _tickgo = false;
-            int _wait = 0;
-            while (_tickthread.IsAlive && (_wait++ < 5))
-            {
-                logger.Info("#:" + _wait.ToString() + "  FastTick is stoping...." + "MessageThread Status:" + _tickthread.IsAlive.ToString());
-                Thread.Sleep(500);
-            }
-            if (!_tickthread.IsAlive)
-            {
-                _tickthread = null;
-                logger.Info("FastTick Stopped successfull...");
-            }
-            else
-            {
-                logger.Error("Some Error Happend In Stoping FastTick");
-            }
+            //_ctx.Shutdown(); //安全关闭Socket不用调用Context的shutdown操作
+            //int _wait = 0;
+            _tickthread.Join();
+
+            //while (_tickthread.IsAlive && (_wait++ < 5))
+            //{
+            //    logger.Info("#:" + _wait.ToString() + "  FastTick is stoping...." + "MessageThread Status:" + _tickthread.IsAlive.ToString());
+            //    Thread.Sleep(500);
+            //}
+            //if (!_tickthread.IsAlive)
+            //{
+            //    _tickthread = null;
+            //    logger.Info("FastTick Stopped successfull...");
+            //}
+            //else
+            //{
+            //    logger.Error("Some Error Happend In Stoping FastTick");
+            //}
         }
 
 
@@ -315,14 +343,24 @@ namespace TradingLib.DataFarm
         bool _tickgo;
         Thread _tickthread;
         bool _tickreceiveruning = false;
-
+        /// <summary>
+        /// 系统默认Poller超时时间
+        /// </summary>
+        TimeSpan PollerTimeOut = new TimeSpan(0, 0, 1);
         private void TickHandler()
         {
-            using (var context = new ZContext())
+            using (var ctx = new ZContext())
             {
-                using (ZSocket subscriber = new ZSocket(context, ZSocketType.SUB), symbolreq = new ZSocket(context, ZSocketType.REQ))
+                using (ZSocket subscriber = new ZSocket(ctx, ZSocketType.SUB), symbolreq = new ZSocket(ctx, ZSocketType.REQ))
                 {
                     string reqadd = "tcp://" + CurrentServer + ":" + _reqport;
+                    subscriber.Linger = TimeSpan.FromSeconds(0);
+                    //subscriber.ReceiveTimeout = TimeSpan.FromSeconds(1);
+                    //subscriber.SendTimeout = TimeSpan.FromSeconds(1);
+                    symbolreq.Linger = TimeSpan.FromSeconds(0);
+                    //symbolreq.ReceiveTimeout = TimeSpan.FromSeconds(1);
+                    //symbolreq.SendTimeout = TimeSpan.FromSeconds(1);
+
                     symbolreq.Connect(reqadd);
                     string subadd = "tcp://" + CurrentServer + ":" + _port;
                     subscriber.Connect(subadd);
@@ -335,7 +373,14 @@ namespace TradingLib.DataFarm
                     _symbolreq = symbolreq;
                     _subscriber = subscriber;
 
-                    ZMessage tickdata;
+                    List<ZSocket> sockets = new List<ZSocket>();
+                    sockets.Add(_subscriber);
+
+                    List<ZPollItem> pollitems = new List<ZPollItem>();
+                    pollitems.Add(ZPollItem.CreateReceiver());
+
+
+                    ZMessage[] incoming;
                     ZError error;
 
                     _tickreceiveruning = true;
@@ -344,33 +389,37 @@ namespace TradingLib.DataFarm
                     {
                         try
                         {
-                            if (null == (tickdata = subscriber.ReceiveMessage(out error)))
+                            if (sockets.PollIn(pollitems, out incoming, out error, PollerTimeOut))
                             {
-                                if (error == ZError.ETERM)
-                                    return;	// Interrupted
-                                throw new ZException(error);
+                                if (incoming[0] != null)
+                                {
+                                    string tickstr = incoming[0].First().ReadString(Encoding.UTF8);
+                                    //清空数据否则会内存泄露
+                                    incoming[0].Clear();
+                                    //logger.Info("ticksr:" + tickstr);
+                                    Tick k = TickImpl.Deserialize2(tickstr);
+                                    if (k != null && k.UpdateType != "H")
+                                        OnTick(k);
+                                    //记录数据到达时间
+                                    _lastheartbeat = DateTime.Now;
+                                }
                             }
                             else
                             {
-                                string tickstr = tickdata.First().ReadString(Encoding.UTF8);
-                                //清空数据否则会内存泄露
-                                tickdata.Clear();
-                                
-                                //logger.Info("ticksr:" + tickstr);
-                                Tick k = TickImpl.Deserialize2(tickstr);
-                                if (k != null && k.UpdateType != "H")
-                                    OnTick(k);
-                                //记录数据到达时间
-                                _lastheartbeat = DateTime.Now;
-                                if(tickdata!= null)
+                                if (error == ZError.ETERM)
                                 {
-                                    tickdata.Dispose();
+                                    return;	// Interrupted
+                                }
+                                if (error != ZError.EAGAIN)
+                                {
+                                    throw new ZException(error);
                                 }
                             }
 
+
                             if (!_tickgo)
                             {
-                                logger.Info("Tick Thread Stopped,try to close socket");
+                                logger.Info("try to close socket");
                                 subscriber.Close();
                                 symbolreq.Close();
                             }
@@ -387,6 +436,7 @@ namespace TradingLib.DataFarm
 
                     }
                     _tickreceiveruning = false;
+                    logger.Info("TickHandler Stopped");
                     OnDisconnected();
                 }
             }

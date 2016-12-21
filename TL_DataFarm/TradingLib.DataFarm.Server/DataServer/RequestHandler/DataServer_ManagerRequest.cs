@@ -20,24 +20,6 @@ namespace TradingLib.Common.DataFarm
 
         }
 
-        //[DataCommandAttr("RectifyTradingday", "RectifyTradingday -  update bar data", "更新某个bar的相关数据", QSEnumArgParseType.Json)]
-        //public void CTE_UpdateBar(IServiceHost host, IConnection conn, string args)
-        //{
-        //    logger.Info("UpdateBar data:" + args);
-        //    BarImpl bar = TradingLib.Mixins.Json.JsonMapper.ToObject<BarImpl>(args);
-        //    if (bar != null)
-        //    {
-        //        Symbol symbol = MDBasicTracker.SymbolTracker[bar.Exchange, bar.Symbol];
-        //        if (symbol != null)
-        //        {
-                    
-        //            UpdateBar2(symbol, bar);
-        //        }
-        //    }
-
-        //}
-
-
         [DataCommandAttr("UpdateBar", "UpdateBar -  update bar data", "更新某个bar的相关数据",QSEnumArgParseType.Json)]
         public void CTE_UpdateBar(IServiceHost host, IConnection conn,string args)
         {
@@ -149,6 +131,15 @@ namespace TradingLib.Common.DataFarm
                 this.SendContribResponse(conn,null);
             }
             
+        }
+
+
+
+        //查询日历列表
+        [DataCommandAttr("SwitchTickSrv", "SwitchTickSrv - switch tickpubsrv of FastTickFeed", "切换实时行情服务器")]
+        public void CTE_SwitchTickSrv(IServiceHost host, IConnection conn)
+        {
+            SwitchTickSrv("Manager Swtich TickSrv Manualy");
         }
 
 
