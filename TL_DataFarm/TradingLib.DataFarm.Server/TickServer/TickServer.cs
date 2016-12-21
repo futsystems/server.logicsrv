@@ -91,6 +91,7 @@ namespace TradingLib.Common.DataFarm
                 _lastMinTiks = 0;
                 GC.Collect();
             }
+
         }
 
         public void Start(bool join=false)
