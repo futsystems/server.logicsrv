@@ -48,7 +48,6 @@ namespace TradingLib.Common.DataFarm
         ConfigFile _config;
 
         int _gcinterval = 1;
-        int _statusinterval = 1;
         string _basedir = string.Empty;
         string _prefixStr = string.Empty;
         List<string> _prefixList = new List<string>();
@@ -56,6 +55,7 @@ namespace TradingLib.Common.DataFarm
 
         ManualResetEvent manualEvent = new ManualResetEvent(false);
 
+        System.Timers.Timer timer = null;
         public TickServer()
         {
             _config = ConfigFile.GetConfigFile(NAME + ".cfg");
@@ -69,6 +69,28 @@ namespace TradingLib.Common.DataFarm
             }
 
             tickRepository = new TickRepository(_basedir);
+
+            timer = new System.Timers.Timer();
+            timer.Interval = 200;
+            timer.Elapsed += new System.Timers.ElapsedEventHandler(timer_Elapsed);
+            timer.Start();
+        }
+
+        void timer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
+        {
+            //logger.Info("定时检查");
+            CheckIQFeedTimeTick();
+
+            //定时进行强制垃圾回收
+            DateTime now = DateTime.Now;
+            if (now.Subtract(_lastGCTime).TotalMinutes > _gcinterval)
+            {
+                _lastGCTime = now;
+                LogStatus();
+
+                _lastMinTiks = 0;
+                GC.Collect();
+            }
         }
 
         public void Start(bool join=false)
@@ -145,7 +167,11 @@ namespace TradingLib.Common.DataFarm
                     tickfeed.Register(Encoding.UTF8.GetBytes(prefix));
                 }
             }
+
+            _connectedTime = DateTime.Now;
+            _switching = false;
         }
+
 
 
         /// <summary>
@@ -158,6 +184,49 @@ namespace TradingLib.Common.DataFarm
             asyncTick.newTick(k);
 
         }
+
+        bool _switching = false;
+        DateTime _connectedTime = DateTime.Now;
+        void SwitchTickSrv(string msg)
+        {
+            if (_switching) return;
+            _switching = true;
+            logger.Info(msg);
+            if (tickFeeds.Count > 0)
+            {
+                ITickFeed feed = tickFeeds[0];
+                logger.Info(string.Format("Switch TickSrv of Feed:{0}", feed.Name));
+                feed.SwitchTickSrv();
+            }
+            else
+            {
+                logger.Warn("TickFeed not loaded");
+            }
+        }
+
+        /// <summary>
+        /// 行情源时间维护Map
+        /// </summary>
+        Dictionary<QSEnumDataFeedTypes, DataFeedTime> dfTimeMap = new Dictionary<QSEnumDataFeedTypes, DataFeedTime>();
+
+        /// <summary>
+        /// 检查IQFeed时间心跳
+        /// </summary>
+        void CheckIQFeedTimeTick()
+        {
+            DataFeedTime dft = null;
+            if (dfTimeMap.TryGetValue(QSEnumDataFeedTypes.IQFEED, out dft))
+            {
+                //建立连接10秒之内不执行检查 需要等待连接建立且服务端发送数据
+                //TimeTick 5秒内未更新 则触发切换操作
+                if (DateTime.Now.Subtract(_connectedTime).TotalSeconds > 5 && DateTime.Now.Subtract(dft.LastHeartBeat).TotalSeconds > 5)
+                {
+                    string msg = string.Format("IQFeed DateTime Tick Stream Lost");
+                    SwitchTickSrv(msg);
+                }
+            }
+        }
+
 
 
         DateTime _lastreset = DateTime.Now;
@@ -185,8 +254,21 @@ namespace TradingLib.Common.DataFarm
         /// <param name="k"></param>
         void asyncTick_GotTick(Tick k)
         {
-            //时间Tick直接返回
-            if (k.UpdateType == "T") return;
+            //更新行情源时间 
+            if (k.UpdateType == "T")
+            {
+                DataFeedTime dft = null;
+                if (!dfTimeMap.TryGetValue(k.DataFeed, out dft))
+                {
+                    dft = new DataFeedTime(k.DataFeed);
+                    dft.StartTime = k.DateTime();
+                    dft.LastHeartBeat = DateTime.Now;
+                    dfTimeMap.Add(k.DataFeed, dft);
+                }
+                dft.CurrentTime = k.DateTime();
+                dft.LastHeartBeat = DateTime.Now;
+                return;
+            }
 
             if (string.IsNullOrEmpty(k.Exchange) || string.IsNullOrEmpty(k.Symbol))
             {
@@ -197,19 +279,6 @@ namespace TradingLib.Common.DataFarm
             _lastMinTiks++;
 
             tickRepository.NewTick(k);
-
-
-            //定时进行强制垃圾回收
-            DateTime now = DateTime.Now;
-            if (now.Subtract(_lastGCTime).TotalMinutes > _gcinterval)
-            {
-                _lastGCTime = now;
-                LogStatus();
-
-                _lastMinTiks = 0;
-                GC.Collect();
-            }
-            
         }
     }
 }
