@@ -14,6 +14,11 @@ namespace TradingLib.DataFarm.API
         string Name { get; }
 
         /// <summary>
+        /// 当前所连实时行情服务器
+        /// </summary>
+        string CurrentServer { get; }
+
+        /// <summary>
         /// 注册前缀订阅
         /// 定于成交
         /// X,

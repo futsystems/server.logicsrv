@@ -31,7 +31,7 @@ namespace TradingLib.DataFarm
 
         const string NAME = "FastTickFeed";
         public string Name { get { return NAME; } }
-        string CurrentServer
+        public string CurrentServer
         {
             get
             {

@@ -142,6 +142,21 @@ namespace TradingLib.Common.DataFarm
             SwitchTickSrv("Manager Swtich TickSrv Manualy");
         }
 
+        //查询日历列表
+        [DataCommandAttr("QryTickSrv", "QryTickSrv - qry tickpubsrv of FastTickFeed", "查询当前所用实时行情服务器")]
+        public void CTE_QryTickSrv(IServiceHost host, IConnection conn)
+        {
+            if (_tickFeeds.Count > 0)
+            {
+                ITickFeed feed = _tickFeeds[0];
+                this.SendContribResponse(conn, new { Server = feed.CurrentServer });
+            }
+            else
+            {
+                logger.Warn("TickFeed not loaded");
+            }
+        }
+
 
 
         /// <summary>
