@@ -183,13 +183,13 @@
 	</Target>
 	
 	<Target Name="ReleaseDataCore" DependsOnTargets="BuildDataCore">
-		<MakeDir Directories="$(PackageDirDataCore)\DataCore\TickFeed" />
-		<MakeDir Directories="$(PackageDirDataCore)\DataCore\ServiceHost" />
-		<MakeDir Directories="$(PackageDirDataCore)\DataCore\RequiredLibraries" />
-		<Copy SourceFiles="@(DataCoreExe)" DestinationFolder="$(PackageDirDataCore)\DataCore" ContinueOnError="false" />
-		<Copy SourceFiles="@(DataCoreLibs)" DestinationFolder="$(PackageDirDataCore)\DataCore\RequiredLibraries" ContinueOnError="false" />
-		<Copy SourceFiles="Platform\DataCore\TickFeed\FastTickFeed.dll" DestinationFolder="$(PackageDirDataCore)\DataCore\TickFeed" ContinueOnError="false" />
-		<Copy SourceFiles="Platform\DataCore\ServiceHost\TCPServiceHost.dll" DestinationFolder="$(PackageDirDataCore)\DataCore\ServiceHost" ContinueOnError="false" />
+		<MakeDir Directories="$(PackageDirDataCore)\TickFeed" />
+		<MakeDir Directories="$(PackageDirDataCore)\ServiceHost" />
+		<MakeDir Directories="$(PackageDirDataCore)\RequiredLibraries" />
+		<Copy SourceFiles="@(DataCoreExe)" DestinationFolder="$(PackageDirDataCore)" ContinueOnError="false" />
+		<Copy SourceFiles="@(DataCoreLibs)" DestinationFolder="$(PackageDirDataCore)\RequiredLibraries" ContinueOnError="false" />
+		<Copy SourceFiles="Platform\DataCore\TickFeed\FastTickFeed.dll" DestinationFolder="$(PackageDirDataCore)\TickFeed" ContinueOnError="false" />
+		<Copy SourceFiles="Platform\DataCore\ServiceHost\TCPServiceHost.dll" DestinationFolder="$(PackageDirDataCore)\ServiceHost" ContinueOnError="false" />
 	</Target>
 	
 
