@@ -86,34 +86,34 @@ namespace TradingLib.Common
                     _type = type;
                     break;
                 case BarInterval.Minute:
-                    timespan = TimeSpan.FromSeconds(60);//1
+                    timespan = TimeSpan.FromSeconds(60 * _interval);//1
                     _type = BarInterval.CustomTime;
-                    _interval = 60;
+                    _interval = 60 * _interval;
                     break;
                 case BarInterval.ThreeMin:
-                    timespan = TimeSpan.FromSeconds(180);//3
+                    timespan = TimeSpan.FromSeconds(180 * _interval);//3
                     _type = BarInterval.CustomTime;
                     _interval = 180;
                     break;
                 case BarInterval.FiveMin:
-                    timespan = TimeSpan.FromSeconds(300);//5
+                    timespan = TimeSpan.FromSeconds(300 * _interval);//5
                     _type = BarInterval.CustomTime;
-                    _interval = 300;
+                    _interval = 300 * _interval;
                     break;
                 case BarInterval.FifteenMin:
-                    timespan = TimeSpan.FromSeconds(900);//15
+                    timespan = TimeSpan.FromSeconds(900 * _interval);//15
                     _type = BarInterval.CustomTime;
-                    _interval = 900;
+                    _interval = 900 * _interval;
                     break;
                 case BarInterval.ThirtyMin:
-                    timespan = TimeSpan.FromSeconds(1800);//30
+                    timespan = TimeSpan.FromSeconds(1800 * _interval);//30
                     _type = BarInterval.CustomTime;
-                    _interval = 1800;
+                    _interval = 1800 * _interval;
                     break;
                 case BarInterval.Hour:
-                    timespan = TimeSpan.FromSeconds(3600);//60
+                    timespan = TimeSpan.FromSeconds(3600 * _interval);//60
                     _type = BarInterval.CustomTime;
-                    _interval = 3600;
+                    _interval = 3600 * _interval;
                     break;
                 case BarInterval.CustomTicks:
                 case BarInterval.CustomVol:

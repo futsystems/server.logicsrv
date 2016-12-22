@@ -169,9 +169,11 @@ namespace TradingLib.DataFarm.Common
             
             this.MergeRestore(bars, symbol,BarInterval.CustomTime, 180);//3
             this.MergeRestore(bars, symbol, BarInterval.CustomTime, 300);//5
+            this.MergeRestore(bars, symbol, BarInterval.CustomTime, 600);//10
             this.MergeRestore(bars, symbol, BarInterval.CustomTime, 900);//15
             this.MergeRestore(bars, symbol, BarInterval.CustomTime, 1800);//30
             this.MergeRestore(bars, symbol, BarInterval.CustomTime, 3600);//60
+            this.MergeRestore(bars, symbol, BarInterval.CustomTime, 7200);//60
         }
 
        

@@ -117,9 +117,11 @@ namespace TradingLib.Common
             frequencyPluginList.Add(new TimeFrequency(new BarFrequency(BarInterval.CustomTime, 60)));//1
             frequencyPluginList.Add(new TimeFrequency(new BarFrequency(BarInterval.CustomTime, 180)));//3
             frequencyPluginList.Add(new TimeFrequency(new BarFrequency(BarInterval.CustomTime, 300)));//5
+            frequencyPluginList.Add(new TimeFrequency(new BarFrequency(BarInterval.CustomTime, 600)));//10
             frequencyPluginList.Add(new TimeFrequency(new BarFrequency(BarInterval.CustomTime, 900)));//15
             frequencyPluginList.Add(new TimeFrequency(new BarFrequency(BarInterval.CustomTime, 1800)));//30
             frequencyPluginList.Add(new TimeFrequency(new BarFrequency(BarInterval.CustomTime, 3600)));//60
+            frequencyPluginList.Add(new TimeFrequency(new BarFrequency(BarInterval.CustomTime, 7200)));//2Hour
         }
 
 
