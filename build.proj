@@ -5,7 +5,7 @@
 <Configuration Condition="'$(Configuration)' == ''">Release</Configuration>
 <OperatingPlatform Condition="'$(OperatingPlatform)' == ''">Windows</OperatingPlatform>
 <clrzmqSuffix Condition="'$(OperatingPlatform)' == 'Unix'">-unix</clrzmqSuffix>
-<PackageDir>package\logicsrv</PackageDir>
+<PackageDir>build\logicsrv\bin</PackageDir>
 <PackageDirDataCore>build\datacore\bin</PackageDirDataCore>
 </PropertyGroup>
 
