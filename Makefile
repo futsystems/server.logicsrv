@@ -51,11 +51,13 @@ datacore:
 	$(XBUILD) /target:ReleaseDataCore $(FLAGS) $(PROJ)
 	$(shell ./build.sh datacore)
 	@echo "\033[32;49;1mDataCore Package Build Success Version:$(shell git describe) \033[39;49;0m"
+	$(shell ./build/datacore/bin/commit.sh)
 	
 publish:
 	$(XBUILD) /target:Publish $(FLAGS) $(PROJ)
 	$(shell ./build.sh logicsrv)
 	@echo "\033[32;49;1mLogicSrv Package Build Success Version:$(shell git describe) \033[39;49;0m"
+	$(shell ./build/logicsrv/bin/commit.sh)
 
 
 publishclean:
