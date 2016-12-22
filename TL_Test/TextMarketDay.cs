@@ -5,7 +5,7 @@ using System.Text;
 using NUnit.Framework;
 using TradingLib.API;
 using TradingLib.Common;
-using TradingLib.Common.DataFarm;
+using TradingLib.DataFarm.Common;
 using TradingLib.ORM;
 namespace TL_Test
 {

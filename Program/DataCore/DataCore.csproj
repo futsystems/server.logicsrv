@@ -63,9 +63,9 @@
       <Project>{FE184B78-DFA2-4E10-98CD-C6EAC59D84D9}</Project>
       <Name>TradingLib.DataFarm.API</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\TL_DataFarm\TradingLib.DataFarm.Server\TradingLib.DataFarm.Server.csproj">
+    <ProjectReference Include="..\..\TL_DataFarm\TradingLib.DataFarm.Common\TradingLib.DataFarm.Common.csproj">
       <Project>{70FF638B-E319-4437-A2E2-A5FDA17BD8D7}</Project>
-      <Name>TradingLib.DataFarm.Server</Name>
+      <Name>TradingLib.DataFarm.Common</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

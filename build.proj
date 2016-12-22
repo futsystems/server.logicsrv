@@ -156,7 +156,6 @@
 		
 		<DataCoreExe Include="Platform\DataCore\TradingLib.DataFarm.API.dll" />
 		<DataCoreExe Include="Platform\DataCore\TradingLib.DataFarm.Common.dll" />
-		<DataCoreExe Include="Platform\DataCore\TradingLib.DataFarm.Server.dll" />
 		<DataCoreExe Include="lib\TradingLib\TradingLib.API.dll" />
 		<DataCoreExe Include="lib\TradingLib\TradingLib.API.Ex.dll" />
 		<DataCoreExe Include="lib\TradingLib\TradingLib.Common.dll" />
