@@ -49,7 +49,8 @@ exsrv:
 
 datacore:
 	$(XBUILD) /target:ReleaseDataCore $(FLAGS) $(PROJ)
-
+	$(shell ./build.sh datacore)
+	@echo "\033[32;49;1mDataCore Package Build Success Version:$(shell git describe) \033[39;49;0m"
 	
 publish:
 	$(XBUILD) /target:Publish $(FLAGS) $(PROJ)
