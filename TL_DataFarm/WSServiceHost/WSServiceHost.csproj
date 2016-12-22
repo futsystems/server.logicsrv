@@ -92,8 +92,6 @@
     <ItemGroup>
       <OutFiles Include="$(OutputPath)\$(AssemblyName).dll" />
     </ItemGroup>
-    <Copy SourceFiles="@(OutFiles)" DestinationFolder="..\..\Platform\DataSrv\ServiceHost" SkipUnchangedFiles="true" />
     <Copy SourceFiles="@(OutFiles)" DestinationFolder="..\..\Platform\DataCore\ServiceHost" SkipUnchangedFiles="true" />
-    <Copy SourceFiles="@(OutFiles)" DestinationFolder="..\..\Platform\DataFront\ServiceHost" SkipUnchangedFiles="true" />
   </Target>
 </Project>
