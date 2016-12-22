@@ -6,7 +6,7 @@
 <OperatingPlatform Condition="'$(OperatingPlatform)' == ''">Windows</OperatingPlatform>
 <clrzmqSuffix Condition="'$(OperatingPlatform)' == 'Unix'">-unix</clrzmqSuffix>
 <PackageDir>package\logicsrv</PackageDir>
-<PackageDirDataCore>package\build_datacore</PackageDirDataCore>
+<PackageDirDataCore>build\datacore\bin</PackageDirDataCore>
 </PropertyGroup>
 
   <ItemGroup>
