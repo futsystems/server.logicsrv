@@ -137,7 +137,6 @@
     <Compile Include="XLServiceHost\XLSessionBase.cs" />
     <Compile Include="XLServiceHost\ServiceHost_.cs" />
     <Compile Include="XLServiceHost\ServiceHost_Connection.cs" />
-    <Compile Include="副本 MQServer_Tick.cs" />
     <Compile Include="MQServer_XLPacket.cs" />
   </ItemGroup>
   <ItemGroup>
