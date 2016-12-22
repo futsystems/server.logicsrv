@@ -54,7 +54,7 @@ datacore:
 	
 publish:
 	$(XBUILD) /target:Publish $(FLAGS) $(PROJ)
-	$(shell ./build.sh)
+	$(shell ./build.sh logicsrv)
 	@echo "\033[32;49;1mLogicSrv Package Build Success Version:$(shell git describe) \033[39;49;0m"
 
 
