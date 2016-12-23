@@ -213,13 +213,6 @@ namespace TradingLib.Core
                 #endregion
 
 
-                //获得当前日内起始委托流水号和成交流水号
-                //int maxorderseq = ORM.MTradingInfo.MaxOrderSeq();
-                //_maxOrderSeq = maxorderseq > _startOrderSeq ? maxorderseq : _startOrderSeq;
-                //int maxtradeid = ORM.MTradingInfo.MaxTradeID();
-                //_maxTradeID = maxtradeid > _startTradeID ? maxtradeid : _startTradeID;
-                
-
                 //初始化TLServer
                 InitTLServer();
 
