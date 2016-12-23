@@ -211,7 +211,7 @@ namespace TradingLib.Core
                     {
                         tmp.Status = QSEnumOrderStatus.Filled;tmp.Size = 0;tmp.FilledSize = fillsize;
                         tmp.Comment = "全部成交(维)";
-                        ReplyOrder(tmp);
+                        OnOrderEvent(tmp);
                         continue;
                     }
                     //如果可能存在委托留在成交侧的，需要发送一次撤单指令 这样如果有委托在成交侧，可以撤单维持分帐户侧和成交侧状态一致
@@ -220,7 +220,7 @@ namespace TradingLib.Core
                     {
                         tmp.Status = QSEnumOrderStatus.Canceled;tmp.Size = (sentsize - fillsize) * (tmp.Side ? 1 : -1);tmp.FilledSize = fillsize;
                         tmp.Comment = "部分成交(维)";
-                        ReplyOrder(tmp);
+                        OnOrderEvent(tmp);
                         //撤单
                         TLCtxHelper.ModuleBrokerRouter.CancelOrder(o.id);
                         continue;
@@ -230,7 +230,7 @@ namespace TradingLib.Core
                     {
                         tmp.Status = QSEnumOrderStatus.Canceled;
                         tmp.Comment = "拒绝(维)";
-                        ReplyOrder(tmp);
+                        OnOrderEvent(tmp);
                         //撤单
                         TLCtxHelper.ModuleBrokerRouter.CancelOrder(o.id);
                         continue;
@@ -241,7 +241,7 @@ namespace TradingLib.Core
                         //标注委托状态
                         tmp.Status = QSEnumOrderStatus.Reject;
                         tmp.Comment = "拒绝(维)";
-                        ReplyOrder(tmp);
+                        OnOrderEvent(tmp);
                         //撤单
                         TLCtxHelper.ModuleBrokerRouter.CancelOrder(o.id);
                         continue;

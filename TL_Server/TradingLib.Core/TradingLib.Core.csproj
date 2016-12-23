@@ -74,6 +74,7 @@
     <Compile Include="Base\ConstantErrorID.cs" />
     <Compile Include="Base\DataRepositoryLogger.cs" />
     <Compile Include="Base\DataRepositoryLog.cs" />
+    <Compile Include="Base\SeqGenerator.cs" />
     <Compile Include="Base\TIFTracker.cs" />
     <Compile Include="Base\TLServer_Generic.cs" />
     <Compile Include="CoreModule\AccountManager\AccountManager.cs" />
@@ -102,9 +103,12 @@
     <Compile Include="CoreModule\ExCore\ExCore-NoTrading\ExCoreNoTrading.cs" />
     <Compile Include="CoreModule\ExCore\ExCore-TradingLogic\BinaryOption\MsgExchServer_BOOrderRequestHandler.cs" />
     <Compile Include="CoreModule\ExCore\ExCore-TradingLogic\BinaryOption\MsgExchServer_BinaryOption.cs" />
-    <Compile Include="CoreModule\ExCore\ExCore-TradingLogic\MsgExchServer_Notify.cs" />
     <Compile Include="CoreModule\ExCore\ExCore-TradingLogic\XAPI\MsgExchServer_PacketHandler_TradingInfo.cs" />
     <Compile Include="CoreModule\ExCore\ExCore-TradingLogic\XAPI\MsgExchServer_PacketHandler_BasicInfo.cs" />
+    <Compile Include="CoreModule\ExCore\ExCore-TradingLogic\MsgExchServer_SendData.cs" />
+    <Compile Include="CoreModule\ExCore\ExCore-TradingLogic\MsgExchServer_IDAssign.cs" />
+    <Compile Include="CoreModule\ExCore\ExCore-TradingLogic\MsgExchServer_OnRouterEvent.cs" />
+    <Compile Include="CoreModule\ExCore\ExCore-TradingLogic\MsgExchServer_IExCore.cs" />
     <Compile Include="CoreModule\FollowCentre\AsyncFollowLoger.cs" />
     <Compile Include="CoreModule\FollowCentre\FollowCentre.cs" />
     <Compile Include="CoreModule\FollowCentre\FollowCentre_.cs" />

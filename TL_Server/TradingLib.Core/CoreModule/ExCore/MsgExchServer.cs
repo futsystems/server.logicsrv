@@ -35,10 +35,10 @@ namespace TradingLib.Core
     /// TradingServer是整体的中转站,他负责底层的tlserver处理将客户端请求进行逻辑处理后分发到对应其他的组件
     /// 并且接受其他组件回报过来的信息并转给客户端
     /// </summary>
-    public partial class MsgExchServer : ExCore, IMessageExchange, IModuleExCore
+    public partial class MsgExchServer :BaseSrvObject, IMessageExchange, IModuleExCore
     {
         const string CoreName = "MsgExch";
-        
+        public string CoreId { get { return this.PROGRAME; } }
 
         public int ClientNum { get { return tl.NumClients; } }//连接的客户端数目
         public int ClientLoggedInNum { get { return tl.NumClientsLoggedIn; } }//登入的客户端数目
@@ -47,12 +47,22 @@ namespace TradingLib.Core
         public bool isValid { get { return _valid; } }
 
         TLServer_Exch tl;
+        protected ConfigDB _cfgdb;
 
         bool needConfirmSettlement = true;
         int loginTerminalNum = 6;
-
         bool simpromptenable = false;
         string simprompt = string.Empty;
+        string commentFilled = string.Empty;
+        string commentPartFilled = string.Empty;
+        string commentCanceled = string.Empty;
+        string commentPlaced = string.Empty;
+        string commentSubmited = string.Empty;
+        string commentOpened = string.Empty;
+
+        IdTracker _orderIDTracker = new IdTracker();
+        SeqGenerator _orderSeqGen = null;
+        SeqGenerator _tradeSeqGen = null;
 
         //BinaryOptionQuoteEngine boEngine = null;
         public MsgExchServer()
@@ -60,10 +70,10 @@ namespace TradingLib.Core
         {
             try
             {
+                //1.加载配置文件
+                _cfgdb = new ConfigDB(this.PROGRAME);
 
-                logger.Info("初始化TradingServer");
-
-                
+                #region 服务端设置
                 if (!_cfgdb.HaveConfig("TLServerIP"))
                 {
                     _cfgdb.UpdateConfig("TLServerIP", QSEnumCfgType.String,"*", "TL_MQ监听IP地址");
@@ -90,50 +100,147 @@ namespace TradingLib.Core
 
                 loginTerminalNum = _cfgdb["LoginTerminalNum"].AsInt();
 
-
                 if (!_cfgdb.HaveConfig("SIMPromtEnable"))
                 {
                     _cfgdb.UpdateConfig("SIMPromtEnable", QSEnumCfgType.Bool, false, "模拟委托注明模拟二字");
                 }
                 simpromptenable = _cfgdb["SIMPromtEnable"].AsBool();
 
-
                 if (!_cfgdb.HaveConfig("SIMPromt"))
                 {
                     _cfgdb.UpdateConfig("SIMPromt", QSEnumCfgType.String, "模拟", "模拟委托标注内容");
                 }
                 simprompt = _cfgdb["SIMPromt"].AsString();
+                #endregion
+
+                #region 委托流水号
+                if (!_cfgdb.HaveConfig("StartOrderSeq"))
+                {
+                    _cfgdb.UpdateConfig("StartOrderSeq", QSEnumCfgType.Int, 20000, "默认起始委托流水号");
+                }
+                int startOrderSeq = _cfgdb["StartOrderSeq"].AsInt();
+
+                if (!_cfgdb.HaveConfig("RandomOrderSeqEnable"))
+                {
+                    _cfgdb.UpdateConfig("RandomOrderSeqEnable", QSEnumCfgType.Bool, true, "启用委托流水号随机");
+                }
+                bool enbaleRandomOrderSeq = _cfgdb["RandomOrderSeqEnable"].AsBool();
+
+                if (!_cfgdb.HaveConfig("OrderSeqStepLow"))
+                {
+                    _cfgdb.UpdateConfig("OrderSeqStepLow", QSEnumCfgType.Int, 50, "委托流水号随机步长低值");
+                }
+                int stepOrderSeqLow = _cfgdb["OrderSeqStepLow"].AsInt();
+
+                if (!_cfgdb.HaveConfig("OrderSeqStepHigh"))
+                {
+                    _cfgdb.UpdateConfig("OrderSeqStepHigh", QSEnumCfgType.Int, 100, "委托流水号随机步长高值");
+                }
+                int stepOrderSeqHigh = _cfgdb["OrderSeqStepHigh"].AsInt();
+                int maxorderseq = ORM.MTradingInfo.MaxOrderSeq();
+
+                _orderSeqGen = new SeqGenerator(startOrderSeq, stepOrderSeqLow, stepOrderSeqHigh, enbaleRandomOrderSeq, maxorderseq);
+                #endregion
+
+                #region 成交流水号
+                if (!_cfgdb.HaveConfig("StartTradeID"))
+                {
+                    _cfgdb.UpdateConfig("StartTradeID", QSEnumCfgType.Int, 20000, "默认起始成交编号");
+                }
+                int startTradeID = _cfgdb["StartTradeID"].AsInt();
+
+                if (!_cfgdb.HaveConfig("RandomTradeIDEnable"))
+                {
+                    _cfgdb.UpdateConfig("RandomTradeIDEnable", QSEnumCfgType.Bool, true, "启用成交编号随机");
+                }
+                bool enbaleRandomTradeID = _cfgdb["RandomTradeIDEnable"].AsBool();
+
+                if (!_cfgdb.HaveConfig("TradeIDStepLow"))
+                {
+                    _cfgdb.UpdateConfig("TradeIDStepLow", QSEnumCfgType.Int, 50, "成交编号号随机步长低值");
+                }
+                int stepTradeIDLow = _cfgdb["TradeIDStepLow"].AsInt();
+
+                if (!_cfgdb.HaveConfig("TradeIDStepHigh"))
+                {
+                    _cfgdb.UpdateConfig("TradeIDStepHigh", QSEnumCfgType.Int, 150, "成交编号随机步长高值");
+                }
+                int stepTradeIDHigh = _cfgdb["TradeIDStepHigh"].AsInt();
+                int maxtradeid = ORM.MTradingInfo.MaxTradeID();
+
+                _tradeSeqGen = new SeqGenerator(startTradeID, stepTradeIDLow, stepTradeIDHigh, enbaleRandomTradeID, maxtradeid);
+                #endregion
+
+                logger.Info(string.Format("Max OrderSeq:{0} TradeID:{1}", _orderSeqGen.CurrentSeq, _tradeSeqGen.CurrentSeq));
 
 
+                #region 委托状态注释
+                if (!_cfgdb.HaveConfig("CommentFilled"))
+                {
+                    _cfgdb.UpdateConfig("CommentFilled", QSEnumCfgType.String, "全部成交", "全部成交备注");
+                }
+                commentFilled = _cfgdb["CommentFilled"].AsString();
 
-                tl = new TLServer_Exch(CoreName, _cfgdb["TLServerIP"].AsString(), _cfgdb["TLPort"].AsInt(), _cfgdb["VerbDebug"].AsBool());
-                tl.ProviderName = Providers.QSPlatform;
-                tl.NumWorkers = 1;
-                tl.ClientLoginTerminalLimit = loginTerminalNum;
+                if (!_cfgdb.HaveConfig("CommentPartFilled"))
+                {
+                    _cfgdb.UpdateConfig("CommentPartFilled", QSEnumCfgType.String, "部分成交", "部分成交备注");
+                }
+                commentPartFilled = _cfgdb["CommentPartFilled"].AsString();
 
-                //绑定事件
-                //tlserver内部直接发送的消息通过回调将消息缓存到外部缓存中进行队列发送
-                tl.CachePacketEvent += new IPacketDelegate(CachePacket);
+                if (!_cfgdb.HaveConfig("CommentCanceled"))
+                {
+                    _cfgdb.UpdateConfig("CommentCanceled", QSEnumCfgType.String, "委托已取消", "取消委托备注");
+                }
+                commentCanceled = _cfgdb["CommentCanceled"].AsString();
 
-                //处理其他请求消息
-                tl.newPacketRequest += new Action<ISession, IPacket, IAccount>(OnPacketRequest);
+                if (!_cfgdb.HaveConfig("CommentPlaced"))
+                {
+                    _cfgdb.UpdateConfig("CommentPlaced", QSEnumCfgType.String, "已接受", "提交委托备注");
+                }
+                commentPlaced = _cfgdb["CommentPlaced"].AsString();
 
-                //处理Client会话事件
-                tl.ClientRegistedEvent += new Action<TrdClientInfo>(tl_ClientRegistedEvent);
-                tl.ClientUnregistedEvent += new Action<TrdClientInfo>(tl_ClientUnregistedEvent);
-                tl.ClientLoginEvent += new Action<TrdClientInfo>(tl_ClientLoginEvent);
-                tl.ClientLogoutEvent += new Action<TrdClientInfo>(tl_ClientLogoutEvent);
+                if (!_cfgdb.HaveConfig("CommentSubmited"))
+                {
+                    _cfgdb.UpdateConfig("CommentSubmited", QSEnumCfgType.String, "已提交", "发送委托备注");
+                }
+                commentSubmited = _cfgdb["CommentSubmited"].AsString();
 
-                //启动消息发送线程
-                StartSendWorker();
+                if (!_cfgdb.HaveConfig("CommentOpened"))
+                {
+                    _cfgdb.UpdateConfig("CommentOpened", QSEnumCfgType.String, "已经报入", "取消委托备注");
+                }
+                commentOpened = _cfgdb["CommentOpened"].AsString();
+                #endregion
+
+
+                //获得当前日内起始委托流水号和成交流水号
+                //int maxorderseq = ORM.MTradingInfo.MaxOrderSeq();
+                //_maxOrderSeq = maxorderseq > _startOrderSeq ? maxorderseq : _startOrderSeq;
+                //int maxtradeid = ORM.MTradingInfo.MaxTradeID();
+                //_maxTradeID = maxtradeid > _startTradeID ? maxtradeid : _startTradeID;
+                
+
+                //初始化TLServer
+                InitTLServer();
+
+                //订阅路由侧事件
+                TLCtxHelper.EventRouter.GotTickEvent += new TickDelegate(this.OnTickEvent);
+                TLCtxHelper.EventRouter.GotOrderEvent += new OrderDelegate(this.OnOrderEvent);
+                TLCtxHelper.EventRouter.GotFillEvent += new FillDelegate(this.OnFillEvent);
+                TLCtxHelper.EventRouter.GotCancelEvent += new LongDelegate(this.OnCancelEvent);
+                TLCtxHelper.EventRouter.GotOrderErrorEvent += new OrderErrorDelegate(this.OnOrderErrorEvent);
+                TLCtxHelper.EventRouter.GotOrderActionErrorEvent += new OrderActionErrorDelegate(this.OnOrderActionErrorEvent);
+
 
                 //订阅系统事件
                 TLCtxHelper.EventSystem.SettleResetEvent += new EventHandler<SystemEventArgs>(EventSystem_SettleResetEvent);
-
                 TLCtxHelper.EventAccount.AccountCashOperationEvent += new Action<string, QSEnumCashOperation, decimal>(EventAccount_AccountCashOperationEvent);
                 TLCtxHelper.EventAccount.AccountTradingNoticeEvent += new Action<string, string>(EventAccount_AccountTradingNoticeEvent);
 
                 //boEngine = new BinaryOptionQuoteEngine(); 
+
+                //启动消息发送线程
+                StartSendWorker();
             
             }
             catch (Exception ex)
@@ -143,6 +250,28 @@ namespace TradingLib.Core
             }
         }
 
+        void InitTLServer()
+        {
+            tl = new TLServer_Exch(CoreName, _cfgdb["TLServerIP"].AsString(), _cfgdb["TLPort"].AsInt(), _cfgdb["VerbDebug"].AsBool());
+            tl.ProviderName = Providers.QSPlatform;
+            tl.NumWorkers = 1;
+            tl.ClientLoginTerminalLimit = loginTerminalNum;
+
+            //绑定事件
+            //tlserver内部直接发送的消息通过回调将消息缓存到外部缓存中进行队列发送
+            tl.CachePacketEvent += new IPacketDelegate(CachePacket);
+
+            //处理其他请求消息
+            tl.newPacketRequest += new Action<ISession, IPacket, IAccount>(OnPacketRequest);
+
+            //处理Client会话事件
+            tl.ClientRegistedEvent += new Action<TrdClientInfo>(tl_ClientRegistedEvent);
+            tl.ClientUnregistedEvent += new Action<TrdClientInfo>(tl_ClientUnregistedEvent);
+            tl.ClientLoginEvent += new Action<TrdClientInfo>(tl_ClientLoginEvent);
+            tl.ClientLogoutEvent += new Action<TrdClientInfo>(tl_ClientLogoutEvent);
+        }
+
+        #region TLServer Client会话事件
         void tl_ClientUnregistedEvent(TrdClientInfo obj)
         {
             TLCtxHelper.EventSession.FireClientDisconnectedEvent(obj);
@@ -191,7 +320,10 @@ namespace TradingLib.Core
                 logger.Info("客户端:" + obj.Location.ClientID + " 登入状态:" + true.ToString());
             }
         }
+        #endregion
 
+
+        #region 系统事件处理
         /// <summary>
         /// 向交易端发送通知
         /// </summary>
@@ -216,22 +348,21 @@ namespace TradingLib.Core
         void EventSystem_SettleResetEvent(object sender, SystemEventArgs e)
         {
             this.Reset();
-
-            
         }
 
+        #endregion
 
 
-        protected override void AmendOrderComment(ref Order o)
+
+        public int NextOrderSeq
         {
-            base.AmendOrderComment(ref o);
-
-            if (simpromptenable && o.Broker == "SIMBROKER")
-            {
-                o.Comment = simprompt + ":" + o.Comment;
-            }
+            get { return _orderSeqGen.NextSeq; }
         }
 
+        public int NextTradeID
+        {
+            get { return _tradeSeqGen.NextSeq; }
+        }
         public override void Dispose()
         {
             Util.DestoryStatus(this.PROGRAME);
@@ -291,47 +422,6 @@ namespace TradingLib.Core
             }
         }
 
-        #region 其他函数部分
-        /// <summary>
-        /// 返回某个交易帐户所有终端
-        /// </summary>
-        /// <param name="account"></param>
-        /// <returns></returns>
-        public IEnumerable<ClientInfoBase> GetNotifyTargets(string account)
-        {
-            return tl.ClientsForAccount(account);
-        }
-
-        /// <summary>
-        /// 缓存应答数据包
-        /// 客户端提交查询或操作时 将应答数据缓存到发送队列
-        /// </summary>
-        /// <param name="packet"></param>
-        /// <param name="islat"></param>
-        void CacheRspResponse(RspResponsePacket packet, bool islat = true)
-        {
-            packet.IsLast = islat;
-            CachePacket(packet);
-        }
-        /// <summary>
-        /// 缓存数据包
-        /// </summary>
-        /// <param name="packet"></param>
-        void CachePacket(IPacket packet)
-        {
-            _packetcache.Write(packet);
-        }
-
-        /// <summary>
-        /// 通过缓存对外发送逻辑数据包
-        /// </summary>
-        /// <param name="packet"></param>
-        public void Send(IPacket packet)
-        {
-            _packetcache.Write(packet);
-        }
-
-        #endregion
 
         #region 开始 停止部分
         /// <summary>

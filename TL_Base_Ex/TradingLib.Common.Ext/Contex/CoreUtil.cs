@@ -73,9 +73,10 @@ namespace TradingLib.Common
         {
             TLCtxHelper.Ctx.MessageExchange.ManualInsertTrade(t);
         }
-        public void RegisterSymbol(Symbol sym)
-        {
-            TLCtxHelper.ModuleExCore.RegisterSymbol(sym);
-        }
+        //public void RegisterSymbol(Symbol sym)
+        //{
+        //    SymbolBasket b = new SymbolBasketImpl(sym);
+        //    TLCtxHelper.ModuleDataRouter.RegisterSymbols(b);
+        //}
     }
 }

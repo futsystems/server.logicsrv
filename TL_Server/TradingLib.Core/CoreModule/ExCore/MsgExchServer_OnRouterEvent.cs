@@ -5,18 +5,10 @@ using System.Text;
 using TradingLib.API;
 using TradingLib.Common;
 
-
 namespace TradingLib.Core
 {
-    /// <summary>
-    /// OnRouterEvent
-    /// 这部分是用于响应路由侧回报过来的事件
-    /// 1.调用清算中心进行记录
-    /// 2.对外部暴露这些交易事件
-    /// </summary>
-    public partial class ExCore
+    public partial class MsgExchServer
     {
-       
         public virtual void OnTickEvent(Tick k)
         {
             //2.清算中心响应Tick事件
@@ -51,7 +43,7 @@ namespace TradingLib.Core
                 TLCtxHelper.ModuleClearCentre.GotOrderError(order, info);
             }
             //对外触发委托错误事件
-            TLCtxHelper.EventIndicator.FireOrderErrorEvent(order,info);
+            TLCtxHelper.EventIndicator.FireOrderErrorEvent(order, info);
             //对外通知
             this.NotifyOrderError(order, info);
         }
@@ -84,13 +76,18 @@ namespace TradingLib.Core
                 default:
                     break;
             }
+            if (simpromptenable && o.Broker == "SIMBROKER")
+            {
+                o.Comment = simprompt + ":" + o.Comment;
+            }
+
         }
         public void OnOrderEvent(Order o)
         {
             IAccount account = TLCtxHelper.ModuleAccountManager[o.Account];
 
             AmendOrderComment(ref o);
-            
+
             //清算中心响应委托回报
             TLCtxHelper.ModuleClearCentre.GotOrder(o);
 
@@ -123,7 +120,7 @@ namespace TradingLib.Core
 
             bool accept = false;
             //清算中心响应成交回报
-            TLCtxHelper.ModuleClearCentre.GotFill(t,out accept);//注这里的成交没有结算手续费,成交部分我们需要在结算中心结算结算完手续费后再向客户端发送
+            TLCtxHelper.ModuleClearCentre.GotFill(t, out accept);//注这里的成交没有结算手续费,成交部分我们需要在结算中心结算结算完手续费后再向客户端发送
 
             //如果清算中心无法处理该成交 则直接返回 不用向系统触发成交事件或通知客户端
             if (!accept) return;
@@ -174,8 +171,6 @@ namespace TradingLib.Core
             this.NotifyBOOrder(o);
         }
         #endregion
-
-
 
     }
 }

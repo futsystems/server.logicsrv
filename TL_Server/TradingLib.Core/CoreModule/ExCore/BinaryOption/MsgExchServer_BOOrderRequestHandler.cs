@@ -21,7 +21,7 @@ namespace TradingLib.Core
                 if (acc == null)
                 {
                     o.Status = EnumBOOrderStatus.Reject;
-                    ReplyBOOrderError(o, RspInfoEx.Fill("TRADING_ACCOUNT_NOT_FOUND"), false);
+                    OnBOOrderErrorEvent(o, RspInfoEx.Fill("TRADING_ACCOUNT_NOT_FOUND"), false);
                     return;
                 }
 
@@ -35,7 +35,7 @@ namespace TradingLib.Core
                     RspInfo info = RspInfoEx.Fill(errortitle);
 
                     o.Comment = "风控拒绝:" + info.ErrorMessage;
-                    ReplyBOOrderError(o, info, needlog);
+                    OnBOOrderErrorEvent(o, info, needlog);
 
                     logger.Warn(string.Format("Order[{0}] Is Reject / RspInfo:{1} NeedLog:{2}", o.ID, info, needlog));
                     return;
@@ -48,7 +48,7 @@ namespace TradingLib.Core
                     //通过了风控检查的委托
                     o.Status = EnumBOOrderStatus.Placed;
                     //向客户端发送委托提交回报 这里已经将委托提交到清算中心做记录,没有通过委托检查的委托 通过ReplyErrorOrder进行回报
-                    ReplyOrder(o);
+                    OnBOOrderEvent(o);
 
                     //debug("####################### brokerrouter send order", QSEnumDebugLevel.INFO);
                     //委托通过风控检查,则通过brokerrouter路由到对应的下单接口

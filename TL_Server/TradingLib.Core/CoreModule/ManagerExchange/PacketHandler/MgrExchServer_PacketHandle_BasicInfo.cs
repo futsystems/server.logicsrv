@@ -342,7 +342,8 @@ namespace TradingLib.Core
 
                 if (localsymbol.Tradeable)
                 {
-                    TLCtxHelper.ModuleExCore.RegisterSymbol(localsymbol);
+                    SymbolBasket b = new SymbolBasketImpl(localsymbol);
+                    TLCtxHelper.ModuleDataRouter.RegisterSymbols(b);
                 }
                 session.OperationSuccess("合约数据更新成功");
             }
