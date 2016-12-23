@@ -126,10 +126,13 @@ namespace TradingLib.Core
             if (!accept) return;
 
             //对外通知成交 Indicator总线
-            TLCtxHelper.EventIndicator.FireFillEvent(t);
+            //TLCtxHelper.EventIndicator.FireFillEvent(t);
 
             //触发交易账户成交事件
             account.FireFillEvent(t);
+
+            //对外通知成交 Indicator总线
+            TLCtxHelper.EventIndicator.FireFillEvent(t);
 
             //对外通知
             this.NotifyFill(t);

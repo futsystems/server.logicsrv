@@ -40,19 +40,25 @@ namespace TradingLib.Core
         const string CoreName = "MsgExch";
         public string CoreId { get { return this.PROGRAME; } }
 
-        public int ClientNum { get { return tl.NumClients; } }//连接的客户端数目
-        public int ClientLoggedInNum { get { return tl.NumClientsLoggedIn; } }//登入的客户端数目
-        
-        bool _valid = false;
-        public bool isValid { get { return _valid; } }
+        /// <summary>
+        /// 连接客户端数目
+        /// </summary>
+        public int ClientNum { get { return tl.NumClients; } }
 
+        /// <summary>
+        /// 登入客户端数目
+        /// </summary>
+        public int ClientLoggedInNum { get { return tl.NumClientsLoggedIn; } }
+        
         TLServer_Exch tl;
         protected ConfigDB _cfgdb;
 
         bool needConfirmSettlement = true;
         int loginTerminalNum = 6;
+
         bool simpromptenable = false;
         string simprompt = string.Empty;
+
         string commentFilled = string.Empty;
         string commentPartFilled = string.Empty;
         string commentCanceled = string.Empty;
@@ -97,7 +103,6 @@ namespace TradingLib.Core
                 {
                     _cfgdb.UpdateConfig("LoginTerminalNum", QSEnumCfgType.Int, 6, "客户端允许登入终端个数");
                 }
-
                 loginTerminalNum = _cfgdb["LoginTerminalNum"].AsInt();
 
                 if (!_cfgdb.HaveConfig("SIMPromtEnable"))
@@ -173,7 +178,6 @@ namespace TradingLib.Core
 
                 logger.Info(string.Format("Max OrderSeq:{0} TradeID:{1}", _orderSeqGen.CurrentSeq, _tradeSeqGen.CurrentSeq));
 
-
                 #region 委托状态注释
                 if (!_cfgdb.HaveConfig("CommentFilled"))
                 {
@@ -212,7 +216,6 @@ namespace TradingLib.Core
                 commentOpened = _cfgdb["CommentOpened"].AsString();
                 #endregion
 
-
                 //初始化TLServer
                 InitTLServer();
 
@@ -239,7 +242,7 @@ namespace TradingLib.Core
             catch (Exception ex)
             {
                 logger.Error("初始化服务异常:" + ex.ToString());
-                throw (new QSTradingServerInitError(ex));
+                throw ex;
             }
         }
 
@@ -356,13 +359,14 @@ namespace TradingLib.Core
         {
             get { return _tradeSeqGen.NextSeq; }
         }
+
+
         public override void Dispose()
         {
             Util.DestoryStatus(this.PROGRAME);
             base.Dispose();
             tl.Dispose();
             tl = null;
-
             //是否将messagerouter放入stop start的地方
             StopSendWorker();
         }

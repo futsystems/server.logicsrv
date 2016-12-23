@@ -132,15 +132,15 @@ namespace TradingLib.Core
 
                     //debug("####################### brokerrouter send order", QSEnumDebugLevel.INFO);
                     //委托通过风控检查,则通过brokerrouter路由到对应的下单接口
-                    if (o.Status == QSEnumOrderStatus.Placed)
-                        TLCtxHelper.ModuleBrokerRouter.SendOrder(o);
+                    //if (o.Status == QSEnumOrderStatus.Placed)
+                    TLCtxHelper.ModuleBrokerRouter.SendOrder(o);
                 }
             }
             catch (Exception ex)
             {
                 //向外层抛出异常
                 logger.Error("OrderRequestHandler error:" + ex.ToString());
-                throw (new QSTradingServerSendOrderError(ex));
+                throw ex;
             }
 
         }
