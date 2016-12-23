@@ -73,8 +73,8 @@ namespace TradingLib.Core
                 AssignOrderID(ref o);
 
                 //检查交易帐户
-                IAccount acc = TLCtxHelper.ModuleAccountManager[o.Account];
-                if (acc == null)
+                IAccount account = TLCtxHelper.ModuleAccountManager[o.Account];
+                if (account == null)
                 {
                     o.Status = QSEnumOrderStatus.Reject;
                     OnOrderErrorEvent(o, RspInfoEx.Fill("TRADING_ACCOUNT_NOT_FOUND"), false);
@@ -88,7 +88,7 @@ namespace TradingLib.Core
                     string errortitle = string.Empty;
                     bool needlog = true;
 
-                    if (!TLCtxHelper.ModuleRiskCentre.CheckOrderStep1(ref o, acc, out needlog, out errortitle, inter))
+                    if (!TLCtxHelper.ModuleRiskCentre.CheckOrderStep1(ref o, account, out needlog, out errortitle, inter))
                     {
                         o.Status = QSEnumOrderStatus.Reject;
                         RspInfo info = RspInfoEx.Fill(errortitle);
@@ -103,14 +103,14 @@ namespace TradingLib.Core
 
 
                 //锁定该账户,表明同一时刻只有一个线程可以对某个特定account进行下列操作 对于单个account只能处理一个委托
-                lock (acc)
+                lock (account)
                 {
                     //委托风控检查
                     string msg = "";
                     if (riskcheck)
                     {
                         logger.Info("Got Order[Check2]:" + o.id.ToString());
-                        if (!TLCtxHelper.ModuleRiskCentre.CheckOrderStep2(ref o, acc, out msg, inter))
+                        if (!TLCtxHelper.ModuleRiskCentre.CheckOrderStep2(ref o, account, out msg, inter))
                         {
                             o.Status = QSEnumOrderStatus.Reject;
                             RspInfo info = RspInfoEx.Fill("RISKCENTRE_CHECK_ERROR");
@@ -138,7 +138,6 @@ namespace TradingLib.Core
             }
             catch (Exception ex)
             {
-                //向外层抛出异常
                 logger.Error("OrderRequestHandler error:" + ex.ToString());
                 throw ex;
             }

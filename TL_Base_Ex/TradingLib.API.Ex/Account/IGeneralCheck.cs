@@ -20,13 +20,6 @@ namespace TradingLib.API
         bool CheckEquityAdequacy(Order order, out string msg);
 
         /// <summary>
-        /// 检查账户某合约交易授权
-        /// </summary>
-        /// <param name="symbol"></param>
-        /// <returns></returns>
-        bool CheckSymbolAllowd(Symbol symbol, out string msg);
-
-        /// <summary>
         /// 查询账户可下单最大数量
         /// </summary>
         /// <param name="symbol"></param>

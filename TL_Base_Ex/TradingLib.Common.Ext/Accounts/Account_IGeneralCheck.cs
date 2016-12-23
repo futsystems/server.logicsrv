@@ -13,18 +13,6 @@ namespace TradingLib.Common
     /// </summary>
     public partial class AccountBase
     {
-        /// <summary>
-        /// 检查账户是否可以交易某个合约
-        /// </summary>
-        /// <param name="symbol"></param>
-        /// <param name="msg"></param>
-        /// <returns></returns>
-        public bool CheckSymbolAllowd(Symbol symbol, out string msg)
-        {
-            msg = string.Empty;
-            bool re = true;
-            return re;
-        }
 
         /// <summary>
         /// 账户下开仓委托 进行账户资金充足性检查

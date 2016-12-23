@@ -54,7 +54,7 @@ namespace TradingLib.Core
             errortitle = string.Empty;
             needlog = true;
 
-            //1 结算中心检查
+            #region 系统组件状态检查
             //1.1检查结算中心是否正常状态 如果历史结算状态则需要将结算记录补充完毕后才可以接受新的委托
             if (!TLCtxHelper.ModuleSettleCentre.IsNormal)
             {
@@ -87,9 +87,10 @@ namespace TradingLib.Core
                 needlog = false;
                 return false;
             }
+            #endregion
 
-            //3 合约检查
-            //3.1合约是否存在
+            #region 合约检查
+            //合约是否存在
             if (!account.TrckerOrderSymbol(ref o))
             {
                 errortitle = ConstErrorID.SYMBOL_NOT_EXISTED;//合约不存在
@@ -97,14 +98,14 @@ namespace TradingLib.Core
                 return false;
             }
 
-            //3.2合约是否可交易
+            //合约是否可交易
             if (!o.oSymbol.IsTradeable)//合约不可交易
             {
                 errortitle = ConstErrorID.SYMBOL_NOT_TRADEABLE;//合约不可交易
                 needlog = false;
                 return false;
             }
-
+            //合约过期
             int exday = o.oSymbol.SecurityFamily.Exchange.GetExchangeTime().ToTLDate();
             if (o.oSymbol.IsExpired(exday))
             {
@@ -113,16 +114,10 @@ namespace TradingLib.Core
                 return false;
             }
 
-            //if (o.oSymbol.SecurityFamily.Currency != account.Currency)
-            //{
-            //    errortitle = "SYMBOL_NOT_TRADEABLE";//合约不可交易
-            //    needlog = false;
-            //    return false;
-            //}
 
-            //交易时间检查
+            //交易时间段检查 此处设定委托交易日
             int settleday = 0;
-            QSEnumActionCheckResult result = o.oSymbol.SecurityFamily.CheckPlaceOrder(out settleday);
+            QSEnumActionCheckResult result = o.oSymbol.SecurityFamily.CheckPlaceOrder(out settleday);//判定当前是否处于品种交易时间段内
             if (result != QSEnumActionCheckResult.Allowed)
             {
                 errortitle = ConstErrorID.SYMBOL_NOT_MARKETTIME;
@@ -140,19 +135,15 @@ namespace TradingLib.Core
             //    return false;
             //}
 
-            #region demo
+            ////收盘强平期间不允许交易
+            //DateTime extime = o.oSymbol.SecurityFamily.Exchange.ConvertToExchangeTime(DateTime.Now);
+            //int span = o.oSymbol.SecurityFamily.Exchange.CloseTime - extime.ToTLTime();
+            //if (span > 0 && span < GlobalConfig.FlatTimeAheadOfMarketClose * 60)
+            //{
 
-            {
-                ////交易所时间
-                //DateTime extime = o.oSymbol.SecurityFamily.Exchange.ConvertToExchangeTime(DateTime.Now);
-                //int span = o.oSymbol.SecurityFamily.Exchange.CloseTime - extime.ToTLTime();
-                //if (span > 0 && span < GlobalConfig.FlatTimeAheadOfMarketClose * 60)
-                //{
-
-                //}
-            }
+            //}
+            
             #endregion
-
 
 
             //中金所限制 开仓数量不能超过10手
@@ -173,8 +164,9 @@ namespace TradingLib.Core
                 }
             }
 
+            #region 锁仓与卖空检查
             //开仓标识与锁仓权限检查
-            //4.1自动开平标识识别
+            //自动开平标识识别
             bool havelong = account.GetHaveLongPosition(o.Symbol);
             bool haveshort = account.GetHaveShortPosition(o.Symbol);
             //自动判定开平标识 这里不区分平今还是平昨
@@ -213,10 +205,6 @@ namespace TradingLib.Core
                 logger.Info("Order offsetFlag unknown,auto detected to:" + o.OffsetFlag.ToString());
             }
 
-
-            //4.2检查锁仓方向
-            //获得委托持仓操作方向
-
             //开仓操作
             if (o.IsEntryPosition)
             {
@@ -235,7 +223,7 @@ namespace TradingLib.Core
                     }
                 }
 
-                //卖空检查
+                //股票卖空检查
                 switch (o.oSymbol.SecurityType)
                 { 
                     case SecurityType.STK:
@@ -246,9 +234,11 @@ namespace TradingLib.Core
                         break;
                 }
             }
+            #endregion
 
 
-            //5.委托数量检查
+
+            #region 委托数量检查
             //5.1委托总数不为0
             if (o.TotalSize == 0)
             {
@@ -278,38 +268,23 @@ namespace TradingLib.Core
                 }
             }
 
+            #endregion
 
 
-            //6.委托价格检查
-            //6.1查看数据通道是否有对应的合约价格 行情是否正常
 
-            //6.委托价格检查
-            //6.1连续竞价阶段需要检查合约有效性是否有正常的价格 集合竞价阶段 该合约可能还没有行情
-            //if (periodContinuous)
+
+            //报单价格检查
+            Tick k = TLCtxHelper.ModuleDataRouter.GetTickSnapshot(o.Exchange,o.Symbol);
+            if (k == null || (!k.IsValid()))
             {
-                Tick tk = TLCtxHelper.ModuleDataRouter.GetTickSnapshot(o.Exchange,o.Symbol);
-                if (tk == null || (!tk.IsValid()))
-                {
-                    errortitle = "SYMBOL_TICK_ERROR";//市场行情异常
-                    return false;
-                }
-
-                //6.2检查价格是否在涨跌幅度内
-                if (o.isLimit || o.isStop)
-                {
-                    //decimal targetprice = o.isLimit ? o.LimitPrice : o.StopPrice;
-                    //if (targetprice > tk.UpperLimit || targetprice < tk.LowerLimit)
-                    //{
-                    //    errortitle = "ORDERPRICE_OVERT_LIMIT";//保单价格超过涨跌幅
-                    //    return false;
-                    //}
-                }
+                errortitle = "SYMBOL_TICK_ERROR";//市场行情异常
+                return false;
             }
-            //6.2检查价格是否在涨跌幅度内
+
+            
             if (o.isLimit || o.isStop)
             {
                 decimal targetprice = o.isLimit ? o.LimitPrice : o.StopPrice;
-                Tick k = TLCtxHelper.ModuleDataRouter.GetTickSnapshot(o.Exchange,o.Symbol);
                 //如果行情快照中包含有效的最高价和最低价限制 则判定价格是否在涨跌幅度内
                 if (k.UpperLimit.ValidPrice() && k.LowerLimit.ValidPrice())
                 {
@@ -376,65 +351,41 @@ namespace TradingLib.Core
         {
             try
             {
-                //debug("检查委托 " + o.id.ToString(), QSEnumDebugLevel.INFO);
                 msg = "";
                 //延迟加载规则,这样系统就没有必要加载不没有登入的账户规则
                 if (!account.RuleItemLoaded)
                     this.LoadRuleItem(account);
 
-                //1.账号是否被冻结 内部委托不检查帐号是否冻结
+                //内部委托(管理端) 不执行下列检查
                 if (!inter)
                 {
+                    //交易账户被冻结 禁止交易
                     if (!account.Execute)
                     {
                         msg = "账户被冻结";
                         logger.Warn("Order rejected by [Execute Check]" + o.GetOrderInfo());
                         return false;
                     }
-                }
 
-                //检查合约交易时间段
-                if (_marketopencheck)
-                {
-                    //日内交易检查
-                    if ((!inter) && account.IntraDay)//非内部委托并且帐户是日内交易帐户 则系统强迫前5秒 不允许交易
+                    //日内账户收盘强平前5分钟禁止开仓
+                    if (account.IntraDay && o.IsEntryPosition)
                     {
                         //交易所时间
                         DateTime extime = o.oSymbol.SecurityFamily.Exchange.ConvertToExchangeTime(DateTime.Now);
                         int span = o.oSymbol.SecurityFamily.Exchange.CloseTime - extime.ToTLTime();
-                        if (span>0 && span < (GlobalConfig.FlatTimeAheadOfMarketClose*60 + 5))
+                        if (span > 0 && span < (GlobalConfig.FlatTimeAheadOfMarketClose * 60 + 5))
                         {
                             msg = "系统执行强平,日内帐户禁止交易";
                             logger.Warn("Order reject by [IntraDay Check]" + o.GetOrderInfo());
                             return false;
                         }
-                        //如果是强平时间段则不可交易 
-                        //if (o.oSymbol.SecurityFamily.cl)
-                        //{
-                        //    msg = "日内交易帐户，系统正在强平，无法处理委托！";
-                        //    logger.Info("Order rejected by [FlatTime Check] not in [intraday] trading time" + o.GetOrderInfo());
-                        //    return false;
-                        //}
-                    }
-                }
-
-                
-
-                //3.合约交易权限检查(如果帐户存在特殊服务,可由特殊服务进行合约交易权限检查) 有关特殊服务的主力合约控制与检查放入到对应的特殊服务实现中
-                //if (!inter)
-                {
-                    if (!account.CheckSymbolAllowd(o.oSymbol, out msg))
-                    {
-                        logger.Info("Order rejected by[Account CanTakeSymbol Check]" + o.GetOrderInfo());
-                        return false;
                     }
                 }
 
 
-                //4 委托开仓 平仓项目检查
+                //委托开仓 平仓项目检查
                 Position pos = account.GetPosition(o.Symbol, o.PositionSide);//当前对应持仓
-                bool entryposition = o.IsEntryPosition;
-                if (entryposition)//开仓执行资金检查
+                if (o.IsEntryPosition)//开仓执行资金检查
                 {
                     if (!account.CheckEquityAdequacy(o, out msg))
                     {
@@ -577,10 +528,7 @@ namespace TradingLib.Core
                 }
 
 
-                
-
-                //debug("riskcentre run to here", QSEnumDebugLevel.INFO);
-                //5.账号所应用的风控规则检查 内部委托不执行帐户个性的自定义检查
+                //执行账号风控规则检查 内部委托不执行下列检查
                 if (!inter)
                 {
                     if (!account.CheckOrderRule(o, out msg))//如果通过风控检查 则置委托状态为Placed
