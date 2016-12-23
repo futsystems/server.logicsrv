@@ -49,11 +49,6 @@ namespace TradingLib.Core
         }
 
 
-        public override void TLSendOther(IPacket packet)
-        {
-            //base.TLSendOther(packet);
-        }
-
 
         /// <summary>
         /// 获得某个通知包的通知地址

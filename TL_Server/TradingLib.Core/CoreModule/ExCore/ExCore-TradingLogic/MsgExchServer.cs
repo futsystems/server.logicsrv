@@ -1,3 +1,6 @@
+//Copyright 2013 by FutSystems,Inc.
+//20161223 删除会话储存与恢复功能 整理日志输出
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -69,10 +72,10 @@ namespace TradingLib.Core
                 {
                     _cfgdb.UpdateConfig("TLPort", QSEnumCfgType.Int, 5570, "TL_MQ监听Base端口");
                 }
-                //if (!_cfgdb.HaveConfig("VerbDebug"))
-                //{
-                //    _cfgdb.UpdateConfig("VerbDebug", QSEnumCfgType.Bool,false.ToString(), "是否输出verb日志");
-                //}
+                if (!_cfgdb.HaveConfig("VerbDebug"))
+                {
+                    _cfgdb.UpdateConfig("VerbDebug", QSEnumCfgType.Bool, false.ToString(), "是否输出verb日志");
+                }
 
                 if (!_cfgdb.HaveConfig("NeedConfirmSettlement"))
                 {
@@ -103,85 +106,26 @@ namespace TradingLib.Core
 
 
 
-                tl = new TLServer_Exch(CoreName,_cfgdb["TLServerIP"].AsString(), _cfgdb["TLPort"].AsInt(), true);
-
-                //tl = new TLServer_Exch("TradingServer", _cfgdb["TLServerIP"].AsString(), _cfgdb["TLPort"].AsInt());
-                //VerboseDebugging = _cfgdb["VerbDebug"].AsBool();
+                tl = new TLServer_Exch(CoreName, _cfgdb["TLServerIP"].AsString(), _cfgdb["TLPort"].AsInt(), _cfgdb["VerbDebug"].AsBool());
                 tl.ProviderName = Providers.QSPlatform;
                 tl.NumWorkers = 1;
+                tl.ClientLoginTerminalLimit = loginTerminalNum;
 
-                //设定日志输出
-                //tl.VerboseDebugging = false;
+                //绑定事件
                 //tlserver内部直接发送的消息通过回调将消息缓存到外部缓存中进行队列发送
-                tl.CachePacketEvent +=new IPacketDelegate(CachePacket);
-                //查找对应交易账户
-                tl.newLoginRequest += new LoginRequestDel<TrdClientInfo>(tl_newLoginRequest);
-                //处理Symbol数据请求
-                tl.newRegisterSymbols += new SymbolRegisterDel(tl_newRegisterSymbols);
-                //处理Feature请求
-                tl.newFeatureRequest += new MessageArrayDelegate(tl_newFeatureRequest);
-                //处理Order提交
-                tl.newSendOrderRequest += new OrderDelegate(tl_newSendOrderRequest);
-                //处理OrderAction操作
-                //tl.newOrderActionRequest += new OrderActionRequestDel(tl_newOrderActionRequest);
+                tl.CachePacketEvent += new IPacketDelegate(CachePacket);
 
                 //处理其他请求消息
-                tl.newPacketRequest += new PacketRequestDel(tl_newPacketRequest);
+                tl.newPacketRequest += new Action<ISession, IPacket, IAccount>(OnPacketRequest);
 
-                tl.ClientRegistedEvent += (TrdClientInfo c) =>
-                    {
-                        TLCtxHelper.EventSession.FireClientConnectedEvent(c);
-                        logger.Info("客户端:" + c.Location.ClientID + " 注册到系统");
-                    };
-                tl.ClientUnregistedEvent += (TrdClientInfo c) =>
-                    {
-                        TLCtxHelper.EventSession.FireClientDisconnectedEvent(c);
-                        logger.Info("客户端:" + c.Location.ClientID + " 从系统注销");
-                    };
-                tl.ClientLoginInfoEvent += (TrdClientInfo c, bool login) =>
-                    {
-                        //检查对应的帐户是否还有交易客户端
-                        if (c.Account != null)
-                        {
-                            //注销操作
-                            if (!login)
-                            {
-                                //查询该交易帐户是否还有登入的回话 如果存在则不更新注销消息
-                                TrdClientInfo info = tl.ClientsForAccount(c.Account.ID).FirstOrDefault();
-                                if (info == null)
-                                {
-                                    //如果该交易帐户没有任何终端注册 则清空回话信息
-                                    c.Account.UnBindClient();
+                //处理Client会话事件
+                tl.ClientRegistedEvent += new Action<TrdClientInfo>(tl_ClientRegistedEvent);
+                tl.ClientUnregistedEvent += new Action<TrdClientInfo>(tl_ClientUnregistedEvent);
+                tl.ClientLoginEvent += new Action<TrdClientInfo>(tl_ClientLoginEvent);
+                tl.ClientLogoutEvent += new Action<TrdClientInfo>(tl_ClientLogoutEvent);
 
-                                    TLCtxHelper.EventSession.FireClientLoginInfoEvent(c, login);
-
-                                }
-                                else
-                                {
-                                    //还有其他客户端登入，则显示该客户端回话信息 同时回话信息绑定到该终端
-                                    c.Account.BindClient(info);
-                                    
-                                    TLCtxHelper.EventSession.FireClientLoginInfoEvent(info, true);
-                                    
-                                }
-                            }
-                            else//登入操作
-                            {
-                                c.Account.BindClient(c);
-
-                                TLCtxHelper.EventSession.FireClientLoginInfoEvent(c, login);
-                                logger.Info("客户端:" + c.Location.ClientID + " 登入状态:" + login.ToString());
-                            }
-                        }
-
-                        
-                    };
-
-                //初始化优先发送缓存对象
-                InitPriorityBuffer();
-
-                //启动消息服务
-                StartMessageRouter();
+                //启动消息发送线程
+                StartSendWorker();
 
                 //订阅系统事件
                 TLCtxHelper.EventSystem.SettleResetEvent += new EventHandler<SystemEventArgs>(EventSystem_SettleResetEvent);
@@ -196,6 +140,55 @@ namespace TradingLib.Core
             {
                 logger.Error("初始化服务异常:" + ex.ToString());
                 throw (new QSTradingServerInitError(ex));
+            }
+        }
+
+        void tl_ClientUnregistedEvent(TrdClientInfo obj)
+        {
+            TLCtxHelper.EventSession.FireClientDisconnectedEvent(obj);
+            logger.Info("客户端:" + obj.Location.ClientID + " 从系统注销");
+        }
+
+        void tl_ClientRegistedEvent(TrdClientInfo obj)
+        {
+            TLCtxHelper.EventSession.FireClientConnectedEvent(obj);
+            logger.Info("客户端:" + obj.Location.ClientID + " 注册到系统");
+        }
+
+        void tl_ClientLogoutEvent(TrdClientInfo obj)
+        {
+            if (obj.Account != null)
+            {
+                //TODO 增加账户下 多个会话数据结构用于记录账户下所有登入会话,并在管理端实现查看
+                //查询该交易帐户是否还有登入的回话 如果存在则不更新注销消息
+                TrdClientInfo info = tl.ClientsForAccount(obj.Account.ID).FirstOrDefault();
+                if (info == null)
+                {
+                    //如果该交易帐户没有任何终端注册 则清空回话信息
+                    obj.Account.UnBindClient();
+
+                    TLCtxHelper.EventSession.FireClientLoginInfoEvent(obj, false);
+
+                }
+                else
+                {
+                    //还有其他客户端登入，则显示该客户端回话信息 同时回话信息绑定到该终端
+                    obj.Account.BindClient(info);
+
+                    TLCtxHelper.EventSession.FireClientLoginInfoEvent(info, true);
+
+                }
+            }
+        }
+
+        void tl_ClientLoginEvent(TrdClientInfo obj)
+        {
+            if (obj.Account != null)
+            {
+                obj.Account.BindClient(obj);
+
+                TLCtxHelper.EventSession.FireClientLoginInfoEvent(obj, true);
+                logger.Info("客户端:" + obj.Location.ClientID + " 登入状态:" + true.ToString());
             }
         }
 
@@ -247,7 +240,7 @@ namespace TradingLib.Core
             tl = null;
 
             //是否将messagerouter放入stop start的地方
-            StopMessageRouter();
+            StopSendWorker();
         }
 
 
@@ -310,19 +303,33 @@ namespace TradingLib.Core
         }
 
         /// <summary>
-        /// 恢复交易连接数据
+        /// 缓存应答数据包
+        /// 客户端提交查询或操作时 将应答数据缓存到发送队列
         /// </summary>
-        public void RestoreSession()
+        /// <param name="packet"></param>
+        /// <param name="islat"></param>
+        void CacheRspResponse(RspResponsePacket packet, bool islat = true)
         {
-            tl.RestoreSession();
+            packet.IsLast = islat;
+            CachePacket(packet);
         }
-
+        /// <summary>
+        /// 缓存数据包
+        /// </summary>
+        /// <param name="packet"></param>
         void CachePacket(IPacket packet)
         {
             _packetcache.Write(packet);
         }
 
-
+        /// <summary>
+        /// 通过缓存对外发送逻辑数据包
+        /// </summary>
+        /// <param name="packet"></param>
+        public void Send(IPacket packet)
+        {
+            _packetcache.Write(packet);
+        }
 
         #endregion
 
@@ -333,24 +340,15 @@ namespace TradingLib.Core
         public void Start()
         {
             Util.StartStatus(this.PROGRAME);
-            //debug("##########启动交易服务###################",QSEnumDebugLevel.INFO);
-            try
-            {
-                tl.Start();
-                
-            }
-            catch (Exception ex)
-            {
-                _valid = false;
-                return;
-            }
-            _valid = true;
-            if (_valid)
+            bool ret = tl.Start();
+            if (ret)
             {
                 logger.Info("Trading Server Starting success");
             }
             else
-                logger.Info("Trading Server Starting failed.");
+            {
+                logger.Error("Trading Server Starting failed.");
+            }
 
             //加载昨日市场数据
             ReloadMarketData();

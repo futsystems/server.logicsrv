@@ -483,6 +483,7 @@ namespace APIClient
             logger.Info("first add:" + ret.ToString());
             ret = demoDict.TryAdd(key, "232");
             logger.Info("secend add:" + ret.ToString());
+            logger.Info("value:" + demoDict[key]);
 
             string target = null;
             ret = demoDict.TryRemove(key, out target);

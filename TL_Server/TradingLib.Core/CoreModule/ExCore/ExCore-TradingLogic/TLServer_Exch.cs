@@ -1,3 +1,7 @@
+//Copyright 2013 by FutSystems,Inc.
+//20161223  将功能特征请求与登入验证全部放入TLServer中处理,其他逻辑业务全部抛到外层处理
+//          
+
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -13,7 +17,7 @@ using System.IO;
 namespace TradingLib.Core
 {
     /// <summary>
-    /// 交易服务器内核,提供客户端注册,交易委托,回报,撤销等功能
+    /// 交易服务器核心
     /// </summary>
     public class TLServer_Exch :TLServer_Generic<TrdClientInfo>
     {
@@ -24,17 +28,29 @@ namespace TradingLib.Core
 
         }
 
+        ///// <summary>
+        ///// 业务逻辑请求事件
+        ///// </summary>
+        public event Action<ISession, IPacket, IAccount> newPacketRequest;
+
+        int _loginTerminalNum = 6;
+        /// <summary>
+        /// 交易账户同时可登入终端数量
+        /// </summary>
+        public int ClientLoginTerminalLimit { get { return _loginTerminalNum; } set { _loginTerminalNum = value; } }
+
         /// <summary>
         /// 注销某个交易帐户的所有登入终端
         /// </summary>
         /// <param name="account"></param>
         public void ClearTerminalsForAccount(string account)
         {
-            foreach (TrdClientInfo info in this.ClientsForAccount(account))
+            foreach (TrdClientInfo info in this.ClientsForAccount(account).ToArray())
             {
                 _clients.UnRegistClient(info.Location.ClientID);
             }
         }
+
         /// <summary>
         /// 查找所有以交易帐号account登入的客户端连接
         /// </summary>
@@ -59,10 +75,7 @@ namespace TradingLib.Core
 
         #region client-->TLServer消息所引发的各类操作
 
-        public override void TLSendOther(IPacket packet)
-        {
-            //base.TLSendOther(packet);
-        }
+
 
         /// <summary>
         /// 获得某个通知包的通知地址
@@ -80,6 +93,14 @@ namespace TradingLib.Core
             //logger.Info("交易帐户:" + notify.Account + " 链接端数量:" + locationlist.Length.ToString());
             return locationlist;
         }
+
+        string GetAuthTypeStr(int type)
+        {
+            if (type == 1) return "LocalDB-1";
+            if (type == 0) return "UCenter-0";
+            return "Unknown";
+        }
+
         /// <summary>
         /// 服务客户端请求登入认证函数
         /// </summary>
@@ -88,41 +109,97 @@ namespace TradingLib.Core
         /// <param name="pass"></param>
         public override void AuthLogin(LoginRequest request,TrdClientInfo client)
         {
-            //1.检查外部调用绑定
-            if (newLoginRequest == null)
-            {
-                logger.Error("外部认证事件没有绑定");
-                return;//回调外部loginRquest的实现函数
-            }
-
             LoginResponse response = ResponseTemplate<LoginResponse>.SrvSendRspResponse(request);
             response.FrontUUID = client.Location.FrontID;
             response.ClientUUID = client.Location.ClientID;
             response.FrontIDi = client.FrontIDi;
             response.SessionIDi = client.SessionIDi;
             response.TradingDay = TLCtxHelper.ModuleSettleCentre.Tradingday;
-            newLoginRequest(client, request, ref response);
 
-            //2.检查验证结果 并将对应的数据储存到对应的client informaiton中去
+            bool login = false;
+            IAccount account = null;
+            logger.Info(string.Format("RequestLogin ID:{0} Password:{1} IP:{3} MAC:{4} Product:{5} AuthType:{2}", request.LoginID, request.Passwd, GetAuthTypeStr(request.LoginType), request.IPAddress, request.MAC, request.ProductInfo));
+            if (request.LoginType == 1)
+            {
+                //获得当前登入终端数量
+                int loginnums = this.ClientsForAccount(request.LoginID).Count();
+                //如果当前登入数量大于等于 系统允许单个账户登入数量 则拒绝登入
+                if (loginnums >= this.ClientLoginTerminalLimit)
+                {
+                    logger.Warn(string.Format("MaxLoginNum:{0} account:{1} current logined num:{2}", this.ClientLoginTerminalLimit, request.LoginID, loginnums));
+                    response.Authorized = false;
+                    response.RspInfo.Fill("TERMINAL_NUM_LIMIT");
+                }
+                else
+                {
+                    account = TLCtxHelper.ModuleAccountManager[request.LoginID];
+                    if (account == null)
+                    {
+                        login = false;
+                    }
+                    else
+                    {
+                        login = account.Pass.Equals(request.Passwd);
+                    }
+                    response.Authorized = login;
+                    //登入成功后填充 登入回报信息
+                    if (login)
+                    {
+                        response.LoginID = request.LoginID;
+                        response.Account = request.LoginID;
+                        response.AccountType = account.Category;
+                    }
+                    else
+                    {
+                        response.RspInfo.Fill("INVALID_LOGIN");
+                    }
+                }
+            }
+            else
+            {
+                response.Authorized = false;
+                response.RspInfo.Fill("LOGINTYPE_NOT_SUPPORT");
+            }
+
+            //检查域和管理员对象 进行域过期和管理是否激活进行限制
+            if (account != null)
+            {
+                if (account.Domain.IsExpired())//域过期
+                {
+                    response.Authorized = false;
+                    response.RspInfo.Fill("PLATFORM_EXPIRED");
+                }
+                Manager mgr = BasicTracker.ManagerTracker[account.Mgr_fk];
+                if (mgr == null || (!mgr.Active))
+                {
+                    response.Authorized = false;
+                    response.RspInfo.Fill("PLATFORM_EXPIRED");
+                }
+            }
+
+            //2.检查验证结果 并将对应的数据储存到对应的Client对象
             if (response.Authorized)
             {
-                //################客户端验证成功后的一系列操作#############################################
-                //检查当个客户端的登入次数超过次数给出提示 不予登入
-
                 //将登入回报中的相关信息填充到ClientInfo对象中
                 client.IPAddress = request.IPAddress;
                 client.HardWareCode = request.MAC;
                 client.ProductInfo = request.ProductInfo;
-
-                IAccount account = TLCtxHelper.ModuleAccountManager[response.Account];
                 client.BindState(account);
 
-                //登入成功后我们更新账户的登入信息 如果是自动重连,则第一次登入是没有采集到ip地址,硬件地址.当客户端更新本地数据时，会再次调用updatelogininfo，来更新该信息
-                UpdateClientLoginInfo(client, true);
-                
+                UpdateClientLoginStatus(client, true);
 
             }
-            logger.Info(client.ToString());
+
+            //对外触发登入事件
+            if (response.Authorized)
+            {
+                TLCtxHelper.EventSession.FireAccountLoginSuccessEvent(response.Account);
+            }
+            else
+            {
+                TLCtxHelper.EventSession.FireAccountLoginFailedEvent(response.Account);
+            }
+
             SendOutPacket(response);
         }
 
@@ -135,8 +212,6 @@ namespace TradingLib.Core
         public override void SrvReqFuture(FeatureRequest req,TrdClientInfo client)
         {
             FeatureResponse response = ResponseTemplate<FeatureResponse>.SrvSendRspResponse(req);
-
-            string msf = "";
             List<MessageTypes> f = new List<MessageTypes>();
 
             f.Add(MessageTypes.REGISTERCLIENT);//注册客户端
@@ -147,118 +222,26 @@ namespace TradingLib.Core
             f.Add(MessageTypes.HEARTBEATREQUEST);//心跳请求
             f.Add(MessageTypes.HEARTBEATRESPONSE);
             f.Add(MessageTypes.VERSIONREQUEST);//服务器版本
-            //f.Add(MessageTypes.BROKERNAME);//服务端标识
             f.Add(MessageTypes.FEATUREREQUEST);//请求功能特征
             f.Add(MessageTypes.FEATURERESPONSE);//回报功能请求
 
             f.Add(MessageTypes.REGISTERSYMTICK);//请求行情数据
             f.Add(MessageTypes.UNREGISTERSYMTICK);//取消行情数据
 
+            f.Add(MessageTypes.TICKNOTIFY);
+            f.Add(MessageTypes.ORDERNOTIFY);
+            f.Add(MessageTypes.EXECUTENOTIFY);
+
+            //客户端主动发起请求的功能
+            f.Add(MessageTypes.SENDORDER);//发送委托
+            //f.Add(MessageTypes.ORDERCANCELREQUEST);//发送取消委托
+            f.Add(MessageTypes.QRYACCOUNTINFO);//查询账户信息
+            //f.Add(MessageTypes.QRYCANOPENPOSITION);//查询可开
+            f.Add(MessageTypes.REQCHANGEPASS);//请求修改密码
             
-            if (newFeatureRequest != null)
-            {
-                MessageTypes[] f2 = newFeatureRequest();
-                foreach (MessageTypes t in f2)
-                {
-                    if (f.Contains(t))
-                        continue;
-                    f.Add(t);
-                }
-            }
             response.Add(f.ToArray());
             SendOutPacket(response);
         }
-
-        //Profiler orderInsertProfile = new Profiler();
-        /// <summary>
-        /// 系统接受到客户端发送过来的委托
-        /// 1.检查客户端是否Register如果没有register则clientlist不存在该ClientID
-        /// 2.检查账户是否登入,如果登入 检查委托账号与登入账户是否一致
-        /// </summary>
-        /// <param name="msg"></param>
-        /// <param name="address"></param>
-        public  void SrvOnOrderInsert(ISession session,OrderInsertRequest request)
-        {
-            TLCtxHelper.Profiler.EnterSection("OrderInsert");
-            logger.Info("Got Order:" + request.Order.GetOrderInfo());
-
-            //检查插入委托请求是否有效
-            if (!request.IsValid)
-            {
-                logger.Warn("请求无效");
-                return;
-            }
-            IAccount account = session.GetAccount();
-            //如果请求没有指定交易帐号 则根据对应的Client信息自动绑定交易帐号
-            if (string.IsNullOrEmpty(request.Order.Account))
-            {
-                request.Order.Account = account.ID;
-            }
-            //如果指定交易帐号与登入交易帐号不符 则回报异常
-            if (account.ID!= request.Order.Account)//客户端没有登入或者登入ID与委托ID不符
-            {
-                logger.Warn("客户端对应的帐户:" + account.ID + " 与委托帐户:" + request.Order.Account + " 不符合");
-                return;
-            }
-
-            //标注来自客户端的原始委托
-            Order order = new OrderImpl(request.Order);//复制委托传入到逻辑层
-            order.id = 0;
-            order.OrderSource = QSEnumOrderSource.CLIENT;
-
-            //设定委托达到服务器时间
-            order.Date = Util.ToTLDate();
-            order.Time = Util.ToTLTime();
-
-            //设定TotalSize为 第一次接受到委托时候的Size
-            order.TotalSize = order.Size;
-
-            //设定分帐户端信息
-            order.FrontIDi = session.FrontIDi;
-            order.SessionIDi = session.SessionIDi;
-            order.RequestID = request.RequestID;
-
-            //order.Domain_ID = account.Domain.ID;
-            //对外层触发委托事件
-            if (newSendOrderRequest != null)
-                newSendOrderRequest(order);
-
-            TLCtxHelper.Profiler.LeaveSection();
-        }
-
-        /// <summary>
-        /// 取消委托,参数为全局委托编号
-        /// </summary>
-        /// <param name="msg"></param>
-        //public void SrvOnOrderAction(ISession session, OrderActionRequest request)
-        //{
-        //    if (newOrderActionRequest != null)
-        //        newOrderActionRequest(request);
-        //}
-
-        /// <summary>
-        /// 客户端请求注册symbol数据
-        /// </summary>
-        /// <param name="cname"></param>
-        /// <param name="stklist"></param>
-        void SrvRegStocks(ISession session, RegisterSymbolTickRequest request)
-        {
-            logger.Info("Client:" + request.ClientID + " Request Mktdata: " + request.Content);
-            if (newRegisterSymbols != null)
-            {
-                //newRegisterSymbols(request.ClientID, request.Symbols);
-            }
-        }
-
-        /// <summary>
-        /// 客户端请求清除已注册的symbol
-        /// </summary>
-        /// <param name="cname"></param>
-        void SrvClearStocks(ISession session, UnregisterSymbolTickRequest request)
-        {
-            //SrvBeatHeart(client);
-        }
-
 
         public override void OnSessionCreated(Client2Session session)
         {
@@ -279,43 +262,19 @@ namespace TradingLib.Core
         /// <returns></returns>
         public override long handle(ISession session,IPacket packet)
         {
+            IAccount account = session.GetAccount();
             long result = NORETURNRESULT;
-            switch (packet.Type)
-            {
-                case MessageTypes.SENDORDER:
-                    SrvOnOrderInsert(session,packet as OrderInsertRequest);
-                    break;
-                //case MessageTypes.SENDORDERACTION:
-                //    SrvOnOrderAction(session,packet as OrderActionRequest);
-                //    break;
-                case MessageTypes.REGISTERSYMTICK:
-                    SrvRegStocks(session,packet as RegisterSymbolTickRequest);
-                    break;
-                case MessageTypes.UNREGISTERSYMTICK:
-                    SrvClearStocks(session,packet as UnregisterSymbolTickRequest);
-                    break;
-                default:
-                    if (newPacketRequest != null)
-                        newPacketRequest(session,packet);
-                    else
-                        result = (long)MessageTypes.FEATURE_NOT_IMPLEMENTED;
-                    break;
-            }
+            if (newPacketRequest != null)
+                newPacketRequest(session, packet, account);
+            else
+                result = (long)MessageTypes.FEATURE_NOT_IMPLEMENTED;
             return result;
         }
+
         #endregion
 
 
         #region TLServer -->client发送相应回报
-        /* 服务端向客户端发送消息是通过MsgExch中的唯一线程进行操作的
-         * 将不同数据缓存队列中的消息包通过唯一的线程按一定顺序发送出去
-         * newXXXX这组函数是由msgexch在发送线程内进行调用
-         * 在tlserver_exch中如果需要对外发送消息都要调用SendOutPacket通过将数据包缓存到队列中统一发送
-         * 否则会造成多个线程操作底层tlsend,造成崩溃
-         * 
-         * 
-         * 
-         * */
         /// <summary>
         /// 服务端向客户端发送委托回报
         /// </summary>
@@ -355,6 +314,7 @@ namespace TradingLib.Core
             TLSend(notify);
             logger.Info(string.Format("Notify OrderAction Error To Client:{0} / RspInfo:{1}","",notify.RspInfo));
         }
+
         /// <summary>
         /// 向客户端发送成交回报
         /// </summary>
@@ -402,23 +362,13 @@ namespace TradingLib.Core
             notify.Position = pos;
 
             TLSend(notify);
-            logger.Info("send positionupdate to client|" + pos.ToString());
+            logger.Info(string.Format("Notify Postion To Client:{0}", pos.ToString()));
 
         }
         #endregion
 
-        #region 交易消息交换服务端事件列表
-        public event LoginRequestDel<TrdClientInfo> newLoginRequest;//登入服务器
-        public event OrderDelegate newSendOrderRequest;//发送委托
-        //public event Action<ISession> newOrderActionRequest;//发送委托操作
-        public event SymbolRegisterDel newRegisterSymbols;//订阅市场数据
-        public event MessageArrayDelegate newFeatureRequest;//请求功能列表
-        public event PacketRequestDel newPacketRequest;//其他逻辑宝请求
-        #endregion
 
 
-        
+
     }
-    public delegate void OrderActionRequestDel(OrderActionRequest request);
-    
 }

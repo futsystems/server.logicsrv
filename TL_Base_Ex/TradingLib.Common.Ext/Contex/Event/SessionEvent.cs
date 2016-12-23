@@ -13,12 +13,12 @@ namespace TradingLib.Common
         /// <summary>
         /// 客户端连接事件
         /// </summary>
-        public event ClientInfoDelegate<T> ClientRegisterEvent;
+        public event Action<T> ClientRegisterEvent;
 
         /// <summary>
         /// 客户端断开事件
         /// </summary>
-        public event ClientInfoDelegate<T> ClientUnregistedEvent;
+        public event Action<T> ClientUnregistedEvent;
 
         /// <summary>
         /// 交易帐号登入成功

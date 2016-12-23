@@ -1,4 +1,7 @@
-﻿using System;
+﻿//Copyright 2013 by FutSystems,Inc.
+//20161223 删除会话储存与恢复功能 整理日志输出
+
+using System;
 using System.Collections.Generic;
 using System.Collections.Concurrent;
 using System.Linq;
@@ -60,11 +63,15 @@ namespace TradingLib.Core
         /// </summary>
         int _port = 5570;
 
-        bool _started = false;
         /// <summary>
-        /// 服务是否可用
+        /// 输出底层传输日志
         /// </summary>
-        public bool IsLive { get { return _started; } }
+        bool _verb = false;
+
+        /// <summary>
+        /// 服务状态
+        /// </summary>
+        public bool IsLive { get { return _trans!= null && _trans.IsLive; } }
 
 
         /// <summary>
@@ -78,7 +85,6 @@ namespace TradingLib.Core
         public int NumClientsLoggedIn { get { return _clients.Clients.Where(c=>c.Authorized).Count(); } }
 
 
-        //设定服务端的provider name
         Providers _pn = Providers.Unknown;
         /// <summary>
         /// 服务端的ProviderName 标识
@@ -110,248 +116,64 @@ namespace TradingLib.Core
 
 
 
-        #region TLServer_IP 构造函数
-       
-        /// <summary>
-        /// create an ansyncServer TLServer
-        /// </summary>
-        /// <param name="ipaddr"></param>
-        /// <param name="port"></param>
         public TLServer_Generic(string programe,string ipaddr, int port, bool verb)
-            : base(programe)
+            : base(programe+"_TLServer")
         {
-            try
-            {
-                //VerboseDebugging = verb;
-                _serveraddress = ipaddr;
-                _port = port;
+            _verb = verb;
+            _serveraddress = ipaddr;
+            _port = port;
 
-                if (Util.IsValidAddress(ipaddr))
-                {
-                    ipaddr = "127.0.0.1";
-                }
-                
-                //绑定client manager 事件
-                _clients.ClientUnregistedEvent +=new ClientInfoDelegate<T1>(_clients_ClientUnRegistedEvent);
-                _clients.ClientRegistedEvent += new ClientInfoDelegate<T1>(_clients_ClientRegistedEvent);
-                //初始化缓存文件名
-                clientlistfn = Path.Combine(new string[] { "cache", programe });
-
-            }
-            catch (Exception ex)
+            if (Util.IsValidAddress(ipaddr))
             {
-                logger.Error(" Init Error:" + ex.ToString());
-                throw (new QSTLServerInitError(ex));
+                ipaddr = "*";
             }
+            //绑定客户端连接注册于注销事件
+            _clients.ClientUnregistedEvent +=new Action<T1>(_clients_ClientUnRegistedEvent);
+            _clients.ClientRegistedEvent += new Action<T1>(_clients_ClientRegistedEvent);
         }
 
         #region client注册与注销客户端事件 这里的注册与注销只是客户端与服务端的连接,并不是登入信息,登入信息由单独的UpdateLoginInfo处理
-        /// <summary>
-        /// 当clientlist 注册某个终端
-        /// </summary>
-        /// <param name="c"></param>
-        void _clients_ClientRegistedEvent(T1 c)
+        void _clients_ClientRegistedEvent(T1 client)
         {
-            logger.Info("客户端:" + c.Location.ClientID + " FrontID:" + c.Location.FrontID + "  FrontType:" + c.FrontType.ToString() + " Register to system..");
-            if (ClientRegistedEvent != null)
-                ClientRegistedEvent(c);
+            ClientRegistedEvent(client);
         }
 
-        /// <summary>
-        /// 当clientlist 注销某个终端
-        /// 如果原先是登入状态,则对业务层更新该状态由登入状态->登出状态
-        /// </summary>
-        /// <param name="c"></param>
-        void _clients_ClientUnRegistedEvent(T1 c)
+        void _clients_ClientUnRegistedEvent(T1 client)
         {
-            logger.Info("客户端:" + c.Location.ClientID + " FrontID:" + c.Location.FrontID + "  FrontType:" + c.FrontType.ToString() + " Unregisted from system..");
-            if (ClientUnregistedEvent != null)
-                ClientUnregistedEvent(c);
+            ClientUnregistedEvent(client);
 
-            //如果原先是登入状态 则需要触发注销事件
-            if (c.Authorized)
+            //如果原先是登入状态 则需要触发LogOut事件
+            if (client.Authorized)
             {
-                UpdateClientLoginInfo(c, false);
+                UpdateClientLoginStatus(client, false);
             }
         }
 
         #endregion
 
-
-        ~TLServer_Generic()
-        {
-            try
-            {
-                Stop();
-
-            }
-            catch { }
-        }
-
-
-
-        #endregion
-
-        #region 恢复连接信息
-
-        object sessionfileobj = new object();
-        bool sessionloaded = false;
-        string clientlistfn = @"cache\TrdClientList";
-
-        [TaskAttr("消息交换储存Session", 10, 0, "消息交换储存,用于启动时恢复交易客户端连接")]
-        public void SaveSessionCache()
-        {
-            if (!sessionloaded) return;//如果客户端回话没有加载 则不进行实时保存
-            lock (sessionfileobj)
-            {
-                try
-                {
-                    //实例化一个文件流--->与写入文件相关联  
-                    using (FileStream fs = new FileStream(clientlistfn, FileMode.Create))
-                    {
-                        //实例化一个StreamWriter-->与fs相关联  
-                        using (StreamWriter sw = new StreamWriter(fs))
-                        {
-
-                            foreach (T1 info in _clients.Clients)
-                            {
-                                string str = info.Serialize();
-                                sw.WriteLine(str);
-                            }
-                            sw.Flush();
-                            sw.Close();
-                        }
-                        fs.Close();
-                    }
-
-                }
-                catch (Exception ex)
-                {
-                    logger.Error("Cache clientlist error:" + ex.ToString());
-                }
-            }
-        }
-
-        private  List<T1> LoadSessions()
-        {
-            lock (sessionfileobj)
-            {
-                logger.Info("try to load sessions form file:" + clientlistfn);
-                if (!File.Exists(clientlistfn))
-                {
-                    return new List<T1>();
-                }
-                List<T1> cinfolist = new List<T1>();
-                try
-                {
-                    //实例化一个文件流--->与写入文件相关联  
-                    using (FileStream fs = new FileStream(clientlistfn, FileMode.Open))
-                    {
-                        //实例化一个StreamWriter-->与fs相关联  
-                        using (StreamReader sw = new StreamReader(fs))
-                        {
-                            while (sw.Peek() > 0)
-                            {
-                                T1 c = new T1();
-                                string str = sw.ReadLine();
-                                c.Deserialize(str);
-                                cinfolist.Add(c);
-                            }
-                            sw.Close();
-                        }
-                        fs.Close();
-                        sessionloaded = true;
-                        return cinfolist;
-                    }
-                    
-                }
-                catch (Exception ex)
-                {
-                    logger.Error("Error In Restoring (Session):" + ex.ToString());
-                    return cinfolist;
-                }
-            }
-
-        }
-
-        /// <summary>
-        /// 从数据库恢复客户端连接信息
-        /// </summary>
-        public void RestoreSession()
-        {
-            //从数据库加载客户端注册信息
-            List<T1> cinfolist = LoadSessions();
-            //恢复客户端注册信息1.将请求的stocks,account重新恢复到内存
-            _clients.Restore(cinfolist);
-
-            //向前端显示窗口更新连接信息 恢复数据时 将在线用户向系统触发登入事件 用于采集在线用户的相关信息
-            foreach (T1 c in cinfolist)
-            {
-                if (c.Authorized)
-                {
-                    UpdateClientLoginInfo(c, true);
-                }
-            }
-        }
-
-        #endregion
 
         #region 启动 停止部分
         /// <summary>
         /// 启动服务
         /// </summary>
-        public void Start()
+        public bool Start()
         {
-            Start(3, 1000);
-
-        }
-
-        /// <summary>
-        /// 启动服务
-        /// </summary>
-        /// <param name="retries">尝试启动次数</param>
-        /// <param name="delayms">每次启动失败后等待多少ms</param>
-        public void Start(int retries, int delayms)
-        {
+            if (this.IsLive) return false;
+            logger.Info(string.Format("Start server at {0}:{1}",_serveraddress,_port));
             try
             {
-                if (_started) return;
-                Stop();
-                logger.Info("Starting " + PROGRAME + " server...");
-
-                int attempts = 0;
-                while (!_started && (attempts++ < retries))
-                {
-                    logger.Info("Try to start server at: " + _serveraddress + ":" + _port.ToString());
-                    try
-                    {   //注意从外层传入服务器监听地址
-                        _trans = new AsyncServerZ4(PROGRAME, _serveraddress, _port, this.NumWorkers, this.EnableTPTracker, false);
-                        //_trans.SendDebugEvent += new DebugDelegate(msgdebug);
-                        _trans.GotTLMessageEvent += new Action<Message,string,string>(basehandle);
-                        _trans.ProviderName = ProviderName;//将TLServerProviderName传递给传输层,用于客户端的名称查询
-
-                        //我们在其他服务均启动成功后再启动传输服务。应为传输服务的某些请求以其他服务为基础
-                        _trans.Start();
-                        _started = _trans.IsLive;
-                    }
-                    catch (Exception ex)
-                    {
-                        Stop();
-                        //v("start attempt #" + attempts + " failed: " + ex.Message + ex.StackTrace);
-                        Thread.Sleep(delayms);
-                    }
-                }
-                //如果启动成功 则同时启动行情发送线程
-                //if (_started)
-                //{
-                //    starttickthread();
-                //}
-
+                _trans = new AsyncServerZ4(PROGRAME, _serveraddress, _port, this.NumWorkers, this.EnableTPTracker, _verb);
+                _trans.GotTLMessageEvent += new Action<Message,string,string>(basehandle);
+                _trans.ProviderName = ProviderName;//将TLServerProviderName传递给传输层,用于客户端的名称查询
+                _trans.Start();
+                return true;
             }
             catch (Exception ex)
             {
-                logger.Error(ex.Message + ex.StackTrace);
-                return;
+                logger.Error("Start Error:" + ex.ToString());
+                _trans.Stop();
+                _trans = null;
+                return false;
             }
         }
 
@@ -362,17 +184,14 @@ namespace TradingLib.Core
         /// </summary>
         public virtual void Stop()
         {
-            if (!_started) return;
+            if (!this.IsLive) return;
             try
             {
                 logger.Info("Soping " + PROGRAME + " server...");
-                //停止行情线程
-                //stoptickthread();
                 //停止底层传输
                 if (_trans != null && _trans.IsLive)
                     _trans.Stop();
                 _trans = null;
-                _started = false;
             }
             catch (Exception ex)
             {
@@ -382,101 +201,6 @@ namespace TradingLib.Core
         }
         #endregion
 
-
-        #region 服务端向客户端回报Tick
-
-        //RingBuffer<Tick> tickq = new RingBuffer<Tick>(Util.TICK_BUFFER_SIZE);
-        //bool _tickgo = false;
-        //Thread tickthread;
-
-        /// <summary>
-        /// 服务端向客户端发送Tick,发送Tick有2钟方式1.排入队列发送 2.直接发送
-        /// 注这里将所有的Tick数据缓存到mqSrv的tick发送队列进行发送,因此这里不需要再进行缓存的设置
-        /// </summary>
-        /// <param name="tick">The tick to include in the notification.</param>
-        public void newTick(Tick tick)
-        {
-            if (tick == null)
-                return;
-            if (_started)
-            {
-                _trans.SendTick(tick);
-            }
-            //tickq.Write(tick);
-        }
-
-        //void starttickthread()
-        //{
-        //    if (_tickgo)
-        //        return;
-        //    _tickgo = true;
-        //    tickthread = new Thread(tickprocess);
-        //    tickthread.IsBackground = true;
-        //    tickthread.Name = "TickPubThread@" + PROGRAME;
-        //    tickthread.Start();
-        //    ThreadTracker.Register(tickthread);
-        //}
-
-
-
-        //void stoptickthread()
-        //{
-        //    if (!_tickgo) return;
-        //    if (tickthread != null && tickthread.IsAlive)
-        //    {
-        //        _tickgo = false;
-        //        int mainwati = 0;
-        //        while (tickthread.IsAlive && mainwati < 10)
-        //        {
-        //            logger.Info(string.Format("#{0} wati tickthread stopping....", mainwati));
-        //            Thread.Sleep(1000);
-        //            mainwati++;
-        //        }
-        //        if (!tickthread.IsAlive)
-        //        {
-        //            logger.Info("Tickthread stopped successfull");
-        //        }
-        //        tickthread.Abort();
-        //        tickthread = null;
-        //    }
-        //}
-
-        //int _wait = 10;
-        //void tickprocess()
-        //{
-        //    DateTime last = DateTime.Now;
-        //    DateTime now = DateTime.Now;
-        //    while (_tickgo)
-        //    {
-        //        try
-        //        {
-        //            now = DateTime.Now;
-        //            while (tickq.hasItems)
-        //            {
-        //                Tick tick = tickq.Read();
-        //                _trans.SendTick(tick);
-        //            }
-
-        //            //发送心跳
-        //            if ((now - last).TotalSeconds >= 5)
-        //            {
-        //                _trans.SendTickHeartBeat();
-        //                last = now;
-        //            }
-        //            if (tickq.isEmpty)
-        //            {
-        //                Thread.Sleep(_wait);
-        //            }
-        //        }
-        //        catch (Exception ex)
-        //        { 
-                
-        //        }
-        //    }
-            
-            
-        //}
-        #endregion
 
 
         #region Client->server 公共操作部分
@@ -548,7 +272,7 @@ namespace TradingLib.Core
         { 
             if(request.LocationInfo!=null)
             {
-                logger.Info(string.Format("clientID:{0} IP:{1} Location:{2} MAC:{3}", client.Location.ClientID,request.LocationInfo.IP,request.LocationInfo.Location, request.LocationInfo.MAC));
+                logger.Info(string.Format("ClientID:{0} IP:{1} Location:{2} MAC:{3}", client.Location.ClientID,request.LocationInfo.IP,request.LocationInfo.Location, request.LocationInfo.MAC));
                 client.IPAddress = request.LocationInfo.IP;
                 client.HardWareCode = request.LocationInfo.MAC;
             }
@@ -589,7 +313,7 @@ namespace TradingLib.Core
             }
 
             SrvBeatHeart(client);
-            logger.Info("Client:" + request.ClientID + " Bind With Int32 Token, FrontIDi:" + _newcli.FrontIDi.ToString() + " SessionIDi:" + _newcli.SessionIDi.ToString());
+            logger.Debug(string.Format("Client:{0} Front:{1} Bind With FrontIDi:{2} SessionIDi:{3}", request.ClientID, request.FrontID,_newcli.FrontIDi, _newcli.SessionIDi));
         }
 
         /// <summary>
@@ -599,10 +323,9 @@ namespace TradingLib.Core
         /// <param name="request"></param>
         public void SrvVersonReq(VersionRequest request,T1 client)
         {
-            logger.Info("client:" + client.Location.ClientID + " try to qry version");
+            logger.Debug(string.Format("Client:{0} Try to qry version", client.Location.ClientID));
             VersionResponse verresp = ResponseTemplate<VersionResponse>.SrvSendRspResponse(request);
             verresp.Version = TLCtxHelper.Version;
-            logger.Info("response:" + verresp.ToString());
             SendOutPacket(verresp);
         }
 
@@ -612,10 +335,9 @@ namespace TradingLib.Core
         /// <param name="him"></param>
         protected void SrvClearClient(UnregisterClientRequest req,T1 client)
         {
-            logger.Debug("SrvClearClient called");
             if (client == null) return;
             _clients.UnRegistClient(client.Location.ClientID);//clientlist负责触发 updatelogininfo事件
-            logger.Info("Client :" + req.ClientID + " Unregisted from server ");
+            logger.Debug(string.Format("Client:{0} Front:{1} Unregisted from server", req.ClientID,req.FrontID));
         }
 
         /// <summary>
@@ -624,9 +346,8 @@ namespace TradingLib.Core
         /// <param name="msg"></param>
         void SrvLoginReq(LoginRequest request,T1 client)
         {
-           
             if (client == null) return;
-            logger.Info("Client:" + request.ClientID + " Try to login:" + request.Content);
+            logger.Debug(string.Format("Client:{0} Try to login", request.ClientID));
             //主体认证部分,不同的TLServer有不同的验证需求，这里将逻辑放置到子类当中去实现
             this.AuthLogin(request,client);
             SrvBeatHeart(client);
@@ -678,10 +399,11 @@ namespace TradingLib.Core
 
         /// <summary>
         /// 验证某个注册消息是否有效
-        /// 
+        /// 此处可以通过预设口令实现交易端登入控制
         /// </summary>
         /// <param name="request"></param>
         public virtual bool ValidRegister(RegisterClientRequest request) { return true; }
+
         /// <summary>
         /// 请求功能特征列表
         /// 由子类实现具体的功能列表推送
@@ -703,6 +425,7 @@ namespace TradingLib.Core
         /// </summary>
         /// <param name="session"></param>
         public virtual void OnSessionStated(Client2Session session, T1 client) { }
+
         /// <summary>
         /// 拓展的消息处理函数,当主体消息逻辑运行后最后运行用于服务扩展消息类型
         /// </summary>
@@ -714,18 +437,20 @@ namespace TradingLib.Core
 
         #endregion
 
-        
-
         #region TLSend 信息通过底层MQ发送
-
         /// <summary>
-        /// RspResponse,NotifyResponse之外的所有逻辑数据包的发送逻辑
+        /// 通过底层Pub推送Tick数据
         /// </summary>
-        /// <param name="packet"></param>
-        public virtual void TLSendOther(IPacket packet)
-        { 
-              
+        public void newTick(Tick tick)
+        {
+            if (tick == null)
+                return;
+            if (this.IsLive)
+            {
+                _trans.SendTick(tick);
+            }
         }
+
         /// <summary>
         /// 获得某个NOTIFYRESPONSE的通知对象,比如多个客户端登入同一个交易帐号,需要通过交易帐号反向查找到对应的客户端地址
         /// 某个交易帐号产生交易数据,需要通知到所有登入的有权查看该交易帐号的交易客户端等
@@ -739,7 +464,8 @@ namespace TradingLib.Core
         }
 
         /// <summary>
-        /// 发送逻辑数据包主逻辑按照逻辑数据包的类型进行发送
+        /// 发送业务数据包主逻辑
+        /// 按数据包类型进行目的客户端寻址 然后将业务数据发送到对应的客户端或客户端列表
         /// </summary>
         /// <param name="packet"></param>
         public void TLSend(IPacket packet)
@@ -773,33 +499,29 @@ namespace TradingLib.Core
                     }
 
                 default:
-                    {
-                        //调用其他类型的逻辑包数据发送逻辑进行发送
-                        TLSendOther(packet);
-                        return;
-                    }
+                    logger.Warn(string.Format("PacketType:{0} Content:{1} can not send out properly", packet.PacketType, packet.Content));
+                    break;
             }
         }
 
         /// <summary>
-        /// 将数据data通过底层传输对象发送到对应的客户端,通过frontid,client进行定位
+        /// 向客户端发送数据
         /// </summary>
         /// <param name="data"></param>
         /// <param name="clientid"></param>
         /// <param name="frontid"></param>
         void TLSend(byte[] data, string clientid, string frontid)
         {
-            if (_trans != null && _trans.IsLive)
+            if (this.IsLive)
             {
-                //debug(">>>>>> raw send size:" + data.Length.ToString(), QSEnumDebugLevel.INFO);
                 _trans.Send(data, clientid, frontid);
             }
         }
 
         /// <summary>
-        /// 利用外部缓存机制 向客户端发送消息，用于以线程安全的方式向客户端发送消息
-        /// Base_TLServer内部直接向客户端发送消息与交易接口回报可能会产生多个线程同时操作ZeroMQ,
-        /// 因此内部消息的发送需要放到tradingserver 与 mgrserver的缓存队列中通过一个线程统一对外发送
+        /// TLServer内部发送数据不直接调用TLSend,需要统一向外层组件抛出数据由外层建立的消息发送线程统一对外发送数据
+        /// 或者将消息发送队列放到TLServer内部
+        /// 否则TLServer内部与外部同时通过ZeroMQ发送消息会造成多个线程操作ZeroMQ导致崩溃
         /// </summary>
         /// <param name="packet"></param>
         protected void SendOutPacket(IPacket packet)
@@ -830,6 +552,7 @@ namespace TradingLib.Core
         {
             TLCtxHelper.EventSystem.FirePacketEvent(this, new PacketEventArgs(session, packet, frontid, clientid));
         }
+
         /// <summary>
         /// 将底层传输层上传上来的数据解析成逻辑数据包并处理
         /// Generic只处理服务端通用部分比如 注册,注销,心跳等连接维护类基础工作
@@ -912,72 +635,57 @@ namespace TradingLib.Core
         }
         #endregion
 
-        
-
 
         #region Event
         /// <summary>
         /// 对外发送IPacket
         /// 消息层不实现具体的消息发送逻辑,消息在发送的时候存在一定的优先级顺序
         /// </summary>
-        public event IPacketDelegate CachePacketEvent;
+        public event IPacketDelegate CachePacketEvent = delegate { };
 
         /// <summary>
         /// 客户端注册到系统事件
         /// </summary>
-        public event ClientInfoDelegate<T1> ClientRegistedEvent;
+        public event Action<T1> ClientRegistedEvent = delegate { };
 
 
         /// <summary>
         /// 客户端从服务端注销事件
         /// </summary>
-        public event ClientInfoDelegate<T1> ClientUnregistedEvent;
+        public event Action<T1> ClientUnregistedEvent = delegate { };
 
         /// <summary>
         /// 某个终端登入到系统
         /// </summary>
-        public event ClientInfoDelegate<T1> ClientLoginEvent;
+        public event Action<T1> ClientLoginEvent = delegate { };
 
         /// <summary>
         /// 某个终端退出系统
         /// </summary>
-        public event ClientInfoDelegate<T1> ClientLogoutEvent;
+        public event Action<T1> ClientLogoutEvent = delegate { };
 
-        /// <summary>
-        /// 客户端登入,退出事件
-        /// </summary>
-        public event ClientLoginInfoDelegate<T1> ClientLoginInfoEvent;
         /// <summary>
         /// 更新客户端登入信息
         /// </summary>
         /// <param name="c"></param>
         /// <param name="islogin"></param>
-        protected void UpdateClientLoginInfo(T1 c,bool islogin=true)
+        protected void UpdateClientLoginStatus(T1 c,bool islogin=true)
         {
             if (islogin)//登入
             {
-                if (ClientLoginEvent != null)
                     ClientLoginEvent(c);
             }
             else//登出
             {
-                if (ClientLogoutEvent != null)
                     ClientLogoutEvent(c);
             }
-            if (ClientLoginInfoEvent != null)
-            {
-                ClientLoginInfoEvent(c, islogin);
-            }
-            
         }
         #endregion
 
 
-        #region 心跳检查 并删除数据库中死掉的session
-        int deadcheckingperiod = Const.CLEARDEADSESSIONPERIOD;//1.5分钟检查一次死链接信息
+        #region 会话状态检查 用于注销掉无效会话
         int deaddiff = Const.CLIENTDEADTIME;//死链接时间为1分钟,1分钟内没有hearbeat更新的则视为死链接
-        //每分钟检查一次客户端回话session
-        [TaskAttr("定时清除无效客户端回话", 60, 0, "定时清除无效客户端回话")]
+        [TaskAttr("定时清除无效客户端会话", 60, 0, "定时清除无效客户端会话")]
         public void Task_CleanDeadSession()
         {
             //debug("删除无效客户端回话......", QSEnumDebugLevel.INFO);

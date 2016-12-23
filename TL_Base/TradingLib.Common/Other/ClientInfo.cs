@@ -1,4 +1,7 @@
-﻿using System;
+﻿//Copyright 2013 by FutSystems,Inc.
+//20161223 删除前置类别 确认服务端保持前置中立 将差异化的特性放到不同的前置服务中心去实现
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -7,22 +10,7 @@ using TradingLib.API;
 
 namespace TradingLib.Common
 {
-    public enum QSEnumFrontType
-    {
-        [Description("直连")]
-        Direct,//直接连接到逻辑服务器
-        [Description("FastAccess")]
-        FastAccess,//通过FastAccess连接到逻辑服务器
-        [Description("EVAccess")]
-        EVAccess,//libevent前置接入的客户端 libevent自维护心跳信息
-        [Description("WebAccess")]
-        WebAccess,//通过webaccess连接到逻辑服务器
 
-        [Description("位置类别")]
-        Unknown,//通过webaccess连接到逻辑服务器
-    }
-
-    public delegate void ClientInfoDelegate<T>(T client) where T : ClientInfoBase;
     public delegate void ClientLoginInfoDelegate<T>(T client,bool login) where T:ClientInfoBase;
 
 
@@ -47,7 +35,7 @@ namespace TradingLib.Common
         public string IPAddress { get; set; }
 
         /// <summary>
-        /// 客户名称比如Pobo记录客户端通过哪个客户端软件进行登入
+        /// 终端设备名称 记录客户端使用的软件名称
         /// </summary>
         public string ProductInfo { get; set; }
 
@@ -67,11 +55,6 @@ namespace TradingLib.Common
         /// 监察该客户端是否登入
         /// </summary>
         public bool Authorized { get; protected set; }
-
-        /// <summary>
-        /// 前置类别
-        /// </summary>
-        public QSEnumFrontType FrontType { get; set; }
 
         /// <summary>
         /// 前置整数编号
@@ -95,7 +78,6 @@ namespace TradingLib.Common
             HeartBeat = copythis.HeartBeat;
             LoginID = copythis.LoginID;
             Authorized = copythis.Authorized;
-            FrontType = copythis.FrontType;
 
             FrontIDi = copythis.FrontIDi;
             SessionIDi = copythis.SessionIDi;
@@ -111,7 +93,7 @@ namespace TradingLib.Common
             HeartBeat = DateTime.Now;
             LoginID = string.Empty;
             Authorized = false;
-            FrontType = QSEnumFrontType.Unknown;
+
             FrontIDi = 0;
             SessionIDi = 0;
         }
@@ -125,148 +107,17 @@ namespace TradingLib.Common
         {
             Location.FrontID = frontid;
             Location.ClientID = clientid;
-            FrontType = ClientInfoBase.GetFrontType(frontid);
         }
 
         /// <summary>
-        /// 绑定客户端状态对象
+        /// 将业务对象绑定到Client
+        /// 交易侧对象为 Account
+        /// 管理侧对象为 Manager
         /// </summary>
         /// <param name="obj"></param>
         public virtual void BindState(object obj)
         { 
             
         }
-        //public ClientInfoBase(string frontid, string clientid)
-        //{
-        //    Location = new Location(frontid, clientid);
-
-        //    HardWareCode = string.Empty;
-        //    IPAddress = string.Empty;
-        //    ProductInfo = string.Empty;
-
-        //    HeartBeat = DateTime.Now;
-        //    LoginID = string.Empty;
-        //    Authorized = false;
-        //}
-
-
-        
-        /// <summary>
-        /// 通过前置编号获得前置类型
-        /// </summary>
-        /// <param name="frontid"></param>
-        /// <returns></returns>
-        public static QSEnumFrontType GetFrontType(string frontid)
-        {
-            //如果前置ID为空或者null则为直连类型
-            if (string.IsNullOrEmpty(frontid))
-            {
-                return QSEnumFrontType.Direct;
-            }
-            else if (frontid.ToUpper().StartsWith("EV-"))
-            {
-                return QSEnumFrontType.EVAccess;
-            }
-            else if (frontid.ToUpper().StartsWith("WEB-"))
-            {
-                return QSEnumFrontType.WebAccess;
-            }
-            else if(frontid.ToUpper().StartsWith("FRONT-"))
-            {
-                return QSEnumFrontType.FastAccess;
-            }
-            else
-            {
-                return QSEnumFrontType.Unknown;
-            }
-        }
-
-        ///// <summary>
-        ///// 授权某个用户
-        ///// </summary>
-        //public virtual void AuthorizedSuccess()
-        //{
-        //    this.Authorized = true;
-        //}
-        ///// <summary>
-        ///// 不授权某个用户
-        ///// </summary>
-        //public virtual void AuthorizedFail()
-        //{
-        //    this.Authorized = false;
-        //}
-
-
-        public string Serialize()
-        {
-            StringBuilder sb = new StringBuilder();
-            char d = ',';
-            sb.Append(Location.ClientID);
-            sb.Append(d);
-            sb.Append(Location.FrontID);
-            sb.Append(d);
-            sb.Append(HardWareCode);
-            sb.Append(d);
-            sb.Append(IPAddress);
-            sb.Append(d);
-            sb.Append(ProductInfo);
-            sb.Append(d);
-            sb.Append(HeartBeat.ToString());
-            sb.Append(d);
-            sb.Append(LoginID.ToString());
-            sb.Append(d);
-            sb.Append(Authorized.ToString());
-            sb.Append(d);
-            sb.Append(FrontType.ToString());
-            sb.Append(d);
-            sb.Append(FrontIDi.ToString());
-            sb.Append(d);
-            sb.Append(SessionIDi.ToString());
-            sb.Append('|');
-            sb.Append(SubSerialize());
-            return sb.ToString();
-
-        }
-
-
-
-        public void Deserialize(string str)
-        {
-            string[] r = str.Split('|');
-            if (r.Length == 2)
-            {
-                string[] rec = r[0].Split(',');
-                if (rec.Length == 11)
-                {
-                    Location.ClientID = rec[0];
-                    Location.FrontID = rec[1];
-                    HardWareCode = rec[2];
-                    IPAddress = rec[3];
-                    ProductInfo = rec[4];
-                    HeartBeat = DateTime.Parse(rec[5]);
-                    LoginID = rec[6];
-                    Authorized = bool.Parse(rec[7]);
-                    FrontType = (QSEnumFrontType)Enum.Parse(typeof(QSEnumFrontType), rec[8]);
-                    FrontIDi = int.Parse(rec[9]);
-                    SessionIDi = int.Parse(rec[10]);
-                }
-                this.SubDeserialize(r[1]);
-                
-            }
-        }
-
-
-        public virtual string SubSerialize()
-        {
-            return string.Empty;
-        }
-
-        public virtual void SubDeserialize(string str)
-        {
-
-        }
-
-
-        
     }
 }

@@ -32,29 +32,14 @@ namespace TradingLib.Core
         /// 交易消息事件,当接收到客户端发送上来的消息时,触发该事件,从而调用消息层对消息进行解析与处理
         /// 传递参数消息类别(操作号),消息体,前置地址,客户端标识
         /// </summary>
-        public event Action<Message,string,string> GotTLMessageEvent;
+        public event Action<Message, string, string> GotTLMessageEvent = delegate { };
 
         bool _enableThroutPutTracker = true;
         /// <summary>
         /// 是否启用消息流控
         /// </summary>
         public bool EnableTPTracker { get { return _enableThroutPutTracker; } set { _enableThroutPutTracker = value; } }
-        /// <summary>
-        /// 触发消息事件,调用外层消息处理逻辑进行消息解析与处理
-        /// </summary>
-        /// <param name="type">消息类别</param>
-        /// <param name="msg">消息体</param>
-        /// <param name="front">前置地址</param>
-        /// <param name="address">客户端地址/标识</param>
-        /// <returns></returns>
-        private void handleMessage(Message message, string front, string address)
-        {
-            if (GotTLMessageEvent != null)
-            {
-                GotTLMessageEvent(message, front, address);
-            }
-            return;
-        }
+        
 
 
         /// <summary>
@@ -617,7 +602,7 @@ namespace TradingLib.Core
                 //timeout.MessageHandler = () =>
                 //{
                     //3.消息处理如果解析出来的消息是有效的则丢入处理流程进行处理，如果无效则不处理
-                handleMessage(msg, front, address);
+                GotTLMessageEvent(msg, front, address);
                 ////};
                 ////bool re = timeout.DoWithTimeout(WorkerTimeOut);
                 ////if (re)

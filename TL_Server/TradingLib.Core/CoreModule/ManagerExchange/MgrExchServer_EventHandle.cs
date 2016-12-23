@@ -13,14 +13,14 @@ namespace TradingLib.Core
 
         void tl_ClientUnregistedEvent(MgrClientInfo client)
         {
-            logger.Info(string.Format("Client:{0} unregist from tlserver", client.Location.ClientID));
+            //logger.Info(string.Format("Client:{0} unregist from tlserver", client.Location.ClientID));
             CustInfoEx o = null;
             customerExInfoMap.TryRemove(client.Location.ClientID, out o);
         }
 
         void tl_ClientRegistedEvent(MgrClientInfo client)
         {
-            logger.Info(string.Format("Client:{0} regist to tlserver", client.Location.ClientID));
+            //logger.Info(string.Format("Client:{0} regist to tlserver", client.Location.ClientID));
             customerExInfoMap[client.Location.ClientID] = new CustInfoEx(client);
         }
 

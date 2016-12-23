@@ -13,7 +13,10 @@ namespace TradingLib.Common
     /// </summary>
     public class TrdClientInfo : ClientInfoBase
     {
-        public IAccount Account { get; private set; }//记录客户端登入所对应的交易帐号
+        /// <summary>
+        /// 客户端绑定的业务对象
+        /// </summary>
+        public IAccount Account { get; private set; }
         
         public TrdClientInfo(TrdClientInfo copythis)
             : base(copythis)
@@ -41,22 +44,6 @@ namespace TradingLib.Common
         }
 
 
-        public override string SubSerialize()
-        {
-            StringBuilder sb = new StringBuilder();
-            char d = ',';
-            sb.Append(Account);
-            //sb.Append(d);
-            //sb.Append(UserID.ToString());
-            return sb.ToString();
-        }
-
-        public override void SubDeserialize(string str)
-        {
-            string[] rec = str.Split(',');
-            //Account = rec[0];
-            //UserID = int.Parse(rec[1]);
-        }
 
         public override string ToString()
         {

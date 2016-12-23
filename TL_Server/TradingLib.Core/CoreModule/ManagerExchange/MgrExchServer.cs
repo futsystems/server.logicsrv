@@ -49,8 +49,8 @@ namespace TradingLib.Core
             tl.newPacketRequest += new PacketRequestDel(tl_newPacketRequest);
             tl.GetLocationsViaAccountEvent += new LocationsViaAccountDel(tl_GetLocationsViaAccountEvent);
 
-            tl.ClientRegistedEvent += new ClientInfoDelegate<MgrClientInfo>(tl_ClientRegistedEvent);
-            tl.ClientUnregistedEvent += new ClientInfoDelegate<MgrClientInfo>(tl_ClientUnregistedEvent);
+            tl.ClientRegistedEvent += new Action<MgrClientInfo>(tl_ClientRegistedEvent);
+            tl.ClientUnregistedEvent += new Action<MgrClientInfo>(tl_ClientUnregistedEvent);
 
             customerExInfoMap = new ConcurrentDictionary<string, CustInfoEx>();
 
@@ -101,7 +101,7 @@ namespace TradingLib.Core
             try
             {
                 tl.Start();
-                tl.RestoreSession();
+                //tl.RestoreSession();
                 _pushserver.Start();
             }
             catch (Exception ex)

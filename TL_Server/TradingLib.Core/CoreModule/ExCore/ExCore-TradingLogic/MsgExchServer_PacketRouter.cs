@@ -1,4 +1,7 @@
-﻿using System;
+﻿//Copyright 2013 by FutSystems,Inc.
+//20161223 清理与消息路由无关函数
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -10,26 +13,23 @@ namespace TradingLib.Core
 {
     public partial class MsgExchServer
     {
-        void CacheRspResponse(RspResponsePacket packet, bool islat = true)
+        /// <summary>
+        /// 路由客户端提交的请求 执行逻辑业务
+        /// </summary>
+        /// <param name="session"></param>
+        /// <param name="packet"></param>
+        /// <param name="account"></param>
+        void OnPacketRequest(ISession session,IPacket packet,IAccount account)
         {
-            packet.IsLast = islat;
-            if (!prioritybuffer.Write(packet))//如果该回报不是由优先缓存发送，则写入常规缓存
-            {
-                CachePacket(packet);
-            }
-            else
-            {
-                //logger.Info("packet:" + packet.ToString() + "写入优先缓存");
-            }
-        }
-
-        void tl_newPacketRequest(ISession session,IPacket packet)
-        {
-            IAccount account = session.GetAccount();
             switch (packet.Type)
             {
-
-                case MessageTypes.SENDORDERACTION://提交委托
+                case MessageTypes.SENDORDER://提交委托
+                    {
+                        OrderInsertRequest request = packet as OrderInsertRequest;
+                        SrvOnOrderRequest(session,request, account);
+                    }
+                    break;
+                case MessageTypes.SENDORDERACTION://提交委托操作
                     {
                         OrderActionRequest request = packet as OrderActionRequest;
                         SrvOnOrderActionRequest(request, account);

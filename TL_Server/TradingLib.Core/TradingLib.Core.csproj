@@ -179,11 +179,10 @@
     <Compile Include="CoreModule\ExCore\ExCore-TradingLogic\SimCTP\MsgExchServer_PacketHandler_OrderAction.cs" />
     <Compile Include="CoreModule\ExCore\ExCore-TradingLogic\SimCTP\MsgExchServer_PacketHandler_Other.cs" />
     <Compile Include="CoreModule\ExCore\ExCore-TradingLogic\MsgExchServer_CTE.cs" />
-    <Compile Include="CoreModule\ExCore\ExCore-TradingLogic\MsgExchServer_EventHandle.cs" />
     <Compile Include="CoreModule\ExCore\ExCore-TradingLogic\MsgExchServer_PacketRouter.cs" />
     <Compile Include="CoreModule\ExCore\ExCore-TradingLogic\TLServer_Exch.cs" />
     <Compile Include="CoreModule\ExCore\ExCore-TradingLogic\MsgExchServer_Insert.cs" />
-    <Compile Include="CoreModule\ExCore\ExCore-TradingLogic\MsgExchServer_MessageOut.cs" />
+    <Compile Include="CoreModule\ExCore\ExCore-TradingLogic\MsgExchServer_SendWorker.cs" />
     <Compile Include="CoreModule\ExCore\ExCore-TradingLogic\SimCTP\MsgExchServer_PacketHandler_Order.cs" />
     <Compile Include="CoreModule\BrokerRouter\BrokerRouter-complex\BrokerRouter.cs" />
     <Compile Include="CoreModule\DataRouter\DataFeedRouter.cs" />
