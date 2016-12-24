@@ -142,7 +142,21 @@ namespace TradingLib.Core
             //{
 
             //}
-            
+
+            //日内账户收盘强平前5分钟禁止开仓
+            if (account.IntraDay && o.IsEntryPosition)
+            {
+                //交易所时间
+                DateTime extime = o.oSymbol.SecurityFamily.Exchange.ConvertToExchangeTime(DateTime.Now);
+                int span = o.oSymbol.SecurityFamily.Exchange.CloseTime - extime.ToTLTime();
+                if (span > 0 && span < (GlobalConfig.FlatTimeAheadOfMarketClose * 60 + 5))
+                {
+                    errortitle = ConstErrorID.SYMBOL_NOT_MARKETTIME;
+                    needlog = false;
+                    return false;
+                }
+            }
+
             #endregion
 
 
@@ -165,8 +179,6 @@ namespace TradingLib.Core
             }
 
             #region 锁仓与卖空检查
-            //开仓标识与锁仓权限检查
-            //自动开平标识识别
             bool havelong = account.GetHaveLongPosition(o.Symbol);
             bool haveshort = account.GetHaveShortPosition(o.Symbol);
             //自动判定开平标识 这里不区分平今还是平昨
@@ -205,7 +217,7 @@ namespace TradingLib.Core
                 logger.Info("Order offsetFlag unknown,auto detected to:" + o.OffsetFlag.ToString());
             }
 
-            //开仓操作
+            //开仓操作 检查锁仓与卖空
             if (o.IsEntryPosition)
             {
                 bool orderside = o.PositionSide;
@@ -356,33 +368,6 @@ namespace TradingLib.Core
                 if (!account.RuleItemLoaded)
                     this.LoadRuleItem(account);
 
-                //内部委托(管理端) 不执行下列检查
-                if (!inter)
-                {
-                    //交易账户被冻结 禁止交易
-                    if (!account.Execute)
-                    {
-                        msg = "账户被冻结";
-                        logger.Warn("Order rejected by [Execute Check]" + o.GetOrderInfo());
-                        return false;
-                    }
-
-                    //日内账户收盘强平前5分钟禁止开仓
-                    if (account.IntraDay && o.IsEntryPosition)
-                    {
-                        //交易所时间
-                        DateTime extime = o.oSymbol.SecurityFamily.Exchange.ConvertToExchangeTime(DateTime.Now);
-                        int span = o.oSymbol.SecurityFamily.Exchange.CloseTime - extime.ToTLTime();
-                        if (span > 0 && span < (GlobalConfig.FlatTimeAheadOfMarketClose * 60 + 5))
-                        {
-                            msg = "系统执行强平,日内帐户禁止交易";
-                            logger.Warn("Order reject by [IntraDay Check]" + o.GetOrderInfo());
-                            return false;
-                        }
-                    }
-                }
-
-
                 //委托开仓 平仓项目检查
                 Position pos = account.GetPosition(o.Symbol, o.PositionSide);//当前对应持仓
                 if (o.IsEntryPosition)//开仓执行资金检查
@@ -400,7 +385,7 @@ namespace TradingLib.Core
                     int osize = o.UnsignedSize;
                     switch (o.oSymbol.SecurityType)
                     {
-                       
+
                         case SecurityType.FUT:
                             #region 期货平仓检查
                             {
@@ -491,7 +476,7 @@ namespace TradingLib.Core
                                 break;
                             }
                             #endregion
-                        
+
                         case SecurityType.STK:
                             #region 股票平仓检查
                             {
@@ -527,10 +512,18 @@ namespace TradingLib.Core
                     }
                 }
 
-
-                //执行账号风控规则检查 内部委托不执行下列检查
+                //内部委托(管理端) 不执行下列检查
                 if (!inter)
                 {
+                    //交易账户被冻结 禁止交易
+                    if (!account.Execute)
+                    {
+                        msg = "账户被冻结";
+                        logger.Warn("Order rejected by [Execute Check]" + o.GetOrderInfo());
+                        return false;
+                    }
+
+                    //执行账号风控规则检查
                     if (!account.CheckOrderRule(o, out msg))//如果通过风控检查 则置委托状态为Placed
                     {
                         logger.Info("Order rejected by[Order Rule Check]" + o.GetOrderInfo());
