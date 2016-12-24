@@ -126,13 +126,10 @@ namespace TradingLib.Core
                     //通过了风控检查的委托
                     o.Status = QSEnumOrderStatus.Placed;
 
-                    //debug("####################### gotorderevent Placed", QSEnumDebugLevel.INFO);
                     //向客户端发送委托提交回报 这里已经将委托提交到清算中心做记录,没有通过委托检查的委托 通过ReplyErrorOrder进行回报
                     OnOrderEvent(o);
 
-                    //debug("####################### brokerrouter send order", QSEnumDebugLevel.INFO);
                     //委托通过风控检查,则通过brokerrouter路由到对应的下单接口
-                    //if (o.Status == QSEnumOrderStatus.Placed)
                     TLCtxHelper.ModuleBrokerRouter.SendOrder(o);
                 }
             }
