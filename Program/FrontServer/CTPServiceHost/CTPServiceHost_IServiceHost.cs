@@ -268,7 +268,7 @@ namespace CTPService
                             RspQryOrderResponse response = packet as RspQryOrderResponse;
                             int encPktLen = 0;
                             byte[] encData = null;
-                            if (response.OrderToSend == null)
+                            if (response.OrderToSend == null || !response.OrderToSend.isValid)
                             {
                                 byte[] data = Struct.V12.StructHelperV12.PackRsp(EnumSeqType.SeqQry, EnumTransactionID.T_RSP_QRYORD, response.RequestID, conn.NextSeqQryId, response.IsLast);
                                 encData = Struct.V12.StructHelperV12.EncPkt(data, out encPktLen);
@@ -298,7 +298,7 @@ namespace CTPService
                             RspQryTradeResponse response = packet as RspQryTradeResponse;
                             int encPktLen = 0;
                             byte[] encData = null;
-                            if (response.TradeToSend == null)
+                            if (response.TradeToSend == null || !response.TradeToSend.isValid)
                             {
                                 byte[] data = Struct.V12.StructHelperV12.PackRsp(EnumSeqType.SeqQry, EnumTransactionID.T_RSP_QRYTD, response.RequestID, conn.NextSeqQryId, response.IsLast);
                                 encData = Struct.V12.StructHelperV12.EncPkt(data, out encPktLen);
@@ -326,7 +326,7 @@ namespace CTPService
                             RspQryPositionResponse response = packet as RspQryPositionResponse;
                             int encPktLen = 0;
                             byte[] encData = null;
-                            if (response.PositionToSend == null)
+                            if (response.PositionToSend == null || !response.PositionToSend.IsValid)
                             {
                                 byte[] data = Struct.V12.StructHelperV12.PackRsp(EnumSeqType.SeqQry, EnumTransactionID.T_RSP_INVPOS, response.RequestID, conn.NextSeqQryId, response.IsLast);
                                 encData = Struct.V12.StructHelperV12.EncPkt(data, out encPktLen);

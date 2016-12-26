@@ -13,6 +13,14 @@ namespace TradingLib.Common
     /// </summary>
     public  class PositionEx
     {
+        public bool IsValid
+        {
+            get { 
+                if(string.IsNullOrEmpty(this.Account) || string.IsNullOrEmpty(this.Symbol))
+                    return false;
+                return true;
+            }
+        }
         /// <summary>
         /// 交易日
         /// </summary>

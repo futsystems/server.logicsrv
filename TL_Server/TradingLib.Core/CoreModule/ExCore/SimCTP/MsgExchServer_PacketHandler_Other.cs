@@ -40,6 +40,7 @@ namespace TradingLib.Core
             {
                 //返回空
                 RspQryOrderResponse response = ResponseTemplate<RspQryOrderResponse>.SrvSendRspResponse(request);
+                response.OrderToSend = new OrderImpl();//5.2.4需要空委托 用于适配
                 CacheRspResponse(response);
             }
 
@@ -74,6 +75,7 @@ namespace TradingLib.Core
             else
             {
                 RspQryTradeResponse response = ResponseTemplate<RspQryTradeResponse>.SrvSendRspResponse(request);
+                response.TradeToSend = new TradeImpl();
                 CacheRspResponse(response);
             }
         }
@@ -110,6 +112,7 @@ namespace TradingLib.Core
             else
             {
                 RspQryPositionResponse response = ResponseTemplate<RspQryPositionResponse>.SrvSendRspResponse(request);
+                response.PositionToSend = new PositionEx();
                 CacheRspResponse(response);
             }
         }
