@@ -5,11 +5,11 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{A809A94F-8E35-490E-A651-3F0384151419}</ProjectGuid>
+    <ProjectGuid>{C37C0294-7429-4AE6-90B8-84AEA4278D0C}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>RandomDataFeed</RootNamespace>
-    <AssemblyName>RandomDataFeed</AssemblyName>
+    <RootNamespace>TLBrokerESunny</RootNamespace>
+    <AssemblyName>TLBrokerESunny</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -31,37 +31,40 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Common.Logging">
+    <Reference Include="Common.Logging, Version=3.0.0.0, Culture=neutral, PublicKeyToken=af08829b84f0328e, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\Common.Logging.dll</HintPath>
     </Reference>
-    <Reference Include="Common.Logging.Core">
+    <Reference Include="Common.Logging.Core, Version=3.0.0.0, Culture=neutral, PublicKeyToken=af08829b84f0328e, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\Common.Logging.Core.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
-    <Reference Include="TLBrokerXAPI">
-      <HintPath>..\..\lib\TradingLib\TLBrokerXAPI.dll</HintPath>
+    <Reference Include="TLBrokerXAPI, Version=1.8.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\Lottoqq.RequiredLibraries\TradingLib\TLBrokerXAPI.dll</HintPath>
     </Reference>
-    <Reference Include="TradingLib.API">
-      <HintPath>..\..\lib\TradingLib\TradingLib.API.dll</HintPath>
+    <Reference Include="TradingLib.API, Version=1.8.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\Lottoqq.RequiredLibraries\TradingLib\TradingLib.API.dll</HintPath>
     </Reference>
     <Reference Include="TradingLib.API.Ex">
-      <HintPath>..\..\lib\TradingLib\TradingLib.API.Ex.dll</HintPath>
+      <HintPath>..\..\Lottoqq.RequiredLibraries\TradingLib\TradingLib.API.Ex.dll</HintPath>
     </Reference>
-    <Reference Include="TradingLib.Common">
-      <HintPath>..\..\lib\TradingLib\TradingLib.Common.dll</HintPath>
+    <Reference Include="TradingLib.Common, Version=1.8.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\Lottoqq.RequiredLibraries\TradingLib\TradingLib.Common.dll</HintPath>
     </Reference>
     <Reference Include="TradingLib.Common.Ex">
-      <HintPath>..\..\lib\TradingLib\TradingLib.Common.Ex.dll</HintPath>
-    </Reference>
-    <Reference Include="ZeroMQ">
-      <HintPath>..\..\lib\ZeroMQ.dll</HintPath>
+      <HintPath>..\..\Lottoqq.RequiredLibraries\TradingLib\TradingLib.Common.Ex.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="RandomTickFeed.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TLBrokerESunny.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
@@ -71,4 +74,11 @@
   <Target Name="AfterBuild">
   </Target>
   -->
+  <Target Name="AfterBuild">
+    <ItemGroup>
+      <OutFiles Include="$(OutputPath)\$(AssemblyName).dll" />
+    </ItemGroup>
+    <Copy SourceFiles="@(OutFiles)" DestinationFolder="..\..\lib\TradingLib\Connector" SkipUnchangedFiles="true" />
+    <Copy SourceFiles="@(OutFiles)" DestinationFolder="..\..\Platform\TradingSrv\Connector" SkipUnchangedFiles="true" />
+  </Target>
 </Project>

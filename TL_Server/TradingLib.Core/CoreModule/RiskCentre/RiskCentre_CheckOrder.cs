@@ -303,7 +303,7 @@ namespace TradingLib.Core
             #endregion
 
             #region 日内账户检查
-            //日内账户收盘强平前5分钟禁止开仓
+            //日内账户收盘强平前5分钟禁止开仓 需要先判定unkonwn offset 否则无法准确判断EntryPosition
             if (account.IntraDay && o.IsEntryPosition)
             {
                 //交易所时间

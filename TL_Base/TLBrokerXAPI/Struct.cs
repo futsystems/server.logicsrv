@@ -67,13 +67,13 @@ namespace TradingLib.BrokerXAPI
         /// </summary>
         public int ServerPort;
 
-        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 100)]
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 1000)]
         public string Field1;
 
-        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 100)]
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 1000)]
         public string Field2;
 
-        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 100)]
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 1000)]
         public string Field3;
 
     }
@@ -96,10 +96,10 @@ namespace TradingLib.BrokerXAPI
         [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 40)]
         public string Password;
 
-        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 100)]
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 1000)]
         public string Field1;
 
-        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 100)]
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 1000)]
         public string Field2;
 
     }
@@ -125,13 +125,13 @@ namespace TradingLib.BrokerXAPI
         /// <summary>
         /// 预留字段1
         /// </summary>
-        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 100)]
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 1000)]
         public string Field1;
 
         /// <summary>
         /// 预留字段2
         /// </summary>
-        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 100)]
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 1000)]
         public string Field2;
 
         /// <summary>
