@@ -58,10 +58,13 @@ namespace TradingLib.Core
         /// SendOrder->RouterSendOrder->[EngineSendOrder,BrokerSendOrder,XBrokerSendOrder]
         /// </summary>
         /// <param name="o"></param>
-        public void SendOrder(Order o)
+        public void SendOrder(Order order)
         {
             try
             {
+                //发送委托前执行复制 MsgExch处复制的委托由ClearCentre负责维护并更新状态,OrderRouter处复制的委托执行下单状态委托 并通过Broker下单并记录为FatherOrder 接口返回更新状态后 复制后丢入BrokerRouter队列 进行对外处理 
+                //这样可以确保ClearCentre委托状态与下单委托状态不干扰,同时接口处返回的状态直接复制后进行处理，避免接口状态更新对中间状态干扰
+                Order o = new OrderImpl(order);
                 //检查通过,则通过该broker发送委托 拒绝的委托通过 ordermessage对外发送
                 if (o.Status != QSEnumOrderStatus.Reject)
                 {

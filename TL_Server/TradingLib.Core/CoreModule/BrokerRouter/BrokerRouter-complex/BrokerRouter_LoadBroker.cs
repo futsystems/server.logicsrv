@@ -97,8 +97,9 @@ namespace TradingLib.Core
                     _splittracker.GotSonOrderError(order, error);
                     return;
                 }
-                logger.Info("Reply ErrorOrder To MessageExch:" + order.GetOrderInfo() + " ErrorTitle:" + error.ErrorMessage);
-                _errorordernotifycache.Write(new OrderErrorPack(order, error));
+                Order no = new OrderImpl(order);
+                logger.Info("Reply ErrorOrder To MessageExch:" + no.GetOrderInfo() + " ErrorTitle:" + error.ErrorMessage);
+                _errorordernotifycache.Write(new OrderErrorPack(no, error));
             }
             else
             {
@@ -234,6 +235,10 @@ namespace TradingLib.Core
                     _splittracker.GotSonOrder(o);
                     return;
                 }
+                /* 
+                 * 
+                 * 
+                 * **/
                 Order no = new OrderImpl(o);
                 logger.Info("Reply Order To MessageExch:" + no.GetOrderInfo());
                 _ordercache.Write(no);

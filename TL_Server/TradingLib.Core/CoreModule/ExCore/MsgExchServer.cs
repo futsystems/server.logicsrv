@@ -27,6 +27,19 @@ using TradingLib.Common;
  * 4.成交接口返回委托需要有一定的时间延迟,因此在计算冻结资金时需要将提交到接口的Order也计算在内,否则当连续发送委托会导致在成交接口返回的这个时间差内,其他委托检查到的资金占用偏小(漏掉了已经发送到成交接口的委托)
  * 发送到成交接口 则资金就必须被冻结。因此在原有的Open/(委托在成交接口处于等待成交状态) partfilled Submited必须计算在冻结资金的范围内
  * 
+ * 
+ * 关于委托Copy的过程
+ * 1.客户端Session提交下单操作 此处为第一次Copy1
+ * 2.Copy后的委托直接被ClearCentre记录并通过BrokerRouter发送
+ * 3.BrokerRouter发送委托过程中不执行委托Copy 委托直接通过Broker发送 Copy1
+ * 4.Broerk发送委托后直接修改了Copy1的状态,同时经过BrokerRouter复制后放入队列准备处理Copy2
+ * 5.Broker接口获得下单错误 此事获得Copy1进行更新状态并放入队列 这个过程原来没有复制委托
+ * 6.在队列中委托状态更新时 先更新下单返回状态Submit此事Copy1被修改了,在队列中的错误reject状态已经被破话 导致无法正常形成逻辑闭环
+ * 
+ * 总结
+ * 委托通知操作 进入队列前对委托进行复制 避免其他过程在发送过程中修改状态
+ * 
+ * 
  **/
 namespace TradingLib.Core
 {
