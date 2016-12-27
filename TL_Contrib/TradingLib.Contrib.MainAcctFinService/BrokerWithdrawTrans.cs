@@ -17,8 +17,8 @@ namespace TradingLib.Contrib.MainAcctFinService
         ManualResetEvent TimeoutObject = new ManualResetEvent(false);
         const int timeoutMSec = 2000;
 
-        TLBroker _broker = null;
-        public TxnBrokerWithdraw(TLBroker broker)
+        TLXBroker _broker = null;
+        public TxnBrokerWithdraw(TLXBroker broker)
         {
             _broker = broker;
         }
@@ -146,7 +146,7 @@ namespace TradingLib.Contrib.MainAcctFinService
         /// </summary>
         /// <param name="token"></param>
         /// <param name="f"></param>
-        public void GotFeePlaced(TLBroker broker, Fee f)
+        public void GotFeePlaced(TLXBroker broker, Fee f)
         {
             logger.Debug(string.Format("向Broker:{0}提交出金 {1}",broker.Token,f.Amount));
 

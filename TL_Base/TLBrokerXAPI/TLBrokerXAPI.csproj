@@ -67,7 +67,7 @@
     <Compile Include="Interop\UnmanagedLibrary.cs" />
     <Compile Include="Struct.cs" />
     <Compile Include="StructUtils.cs" />
-    <Compile Include="TLBroker.cs" />
+    <Compile Include="TLXBroker.cs" />
     <Compile Include="TLBrokerBase.cs" />
     <Compile Include="TLDataFeedBase.cs" />
     <Compile Include="XAPIHelper.cs" />

@@ -353,6 +353,10 @@ namespace Broker.Live
         #endregion
 
         object _sendorder = new object();
+        /// <summary>
+        /// 发送委托过程为同步发送
+        /// </summary>
+        /// <param name="o"></param>
         public override void SendOrder(Order o)
         {
             lock (_sendorder)

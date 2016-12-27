@@ -184,9 +184,9 @@ namespace TradingLib.Core
                 {
                     throw new FutsRspError("主帐户未连接");
                 }
-                if (broker is TLBroker)
+                if (broker is TLXBroker)
                 {
-                    TLBroker b = broker as TLBroker;
+                    TLXBroker b = broker as TLXBroker;
 
                     QryBrokerInfoTrans txn = new QryBrokerInfoTrans();
 

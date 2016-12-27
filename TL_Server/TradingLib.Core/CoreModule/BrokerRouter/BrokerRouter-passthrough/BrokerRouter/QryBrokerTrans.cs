@@ -47,7 +47,7 @@ namespace TradingLib.Core
                     _requested = true;
                 }
 
-                TLBroker broker = args.GetValue(0) as TLBroker;
+                TLXBroker broker = args.GetValue(0) as TLXBroker;
 
                 TimeoutObject.Reset();
 

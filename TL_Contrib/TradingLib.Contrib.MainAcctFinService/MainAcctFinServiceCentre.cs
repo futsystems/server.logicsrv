@@ -75,13 +75,13 @@ namespace TradingLib.Contrib.MainAcctFinService
         /// </summary>
         /// <param name="account"></param>
         /// <returns></returns>
-        TLBroker GetBroker(string account)
+        TLXBroker GetBroker(string account)
         {
             IBroker broker = BasicTracker.ConnectorMapTracker.GetBrokerForAccount(account);
             if (broker == null) return null;
-            if (broker is TLBroker)
+            if (broker is TLXBroker)
             {
-                return broker as TLBroker;
+                return broker as TLXBroker;
             }
             return null;
         }
@@ -111,7 +111,7 @@ namespace TradingLib.Contrib.MainAcctFinService
             foreach (var account in TLCtxHelper.ModuleAccountManager.Accounts)
             {
                 //帐户绑定了主帐户则对该帐户进行计费操作
-                TLBroker broker = GetBroker(account.ID);
+                TLXBroker broker = GetBroker(account.ID);
                 if (broker != null && broker.IsLive)
                 {
                     //查询
@@ -340,7 +340,7 @@ namespace TradingLib.Contrib.MainAcctFinService
                             //帐户客户权益出金
                             TLCtxHelper.ModuleAccountManager.CashOperation(new CashTransactionImpl() { Account = account, Amount = amount, EquityType = QSEnumEquityType.OwnEquity, TxnType = QSEnumCashOperation.WithDraw, Comment = comment });
 
-                            TLBroker broker = GetBroker(account);
+                            TLXBroker broker = GetBroker(account);
                             if (broker == null)
                             {
                                 FinGlobal.FinServiceTracker.UpdateFeeStatus(f, QSEnumFeeStatus.Fail, "未绑定主帐户");
@@ -355,7 +355,7 @@ namespace TradingLib.Contrib.MainAcctFinService
                         //手续费 盘中客户权益经收取，从底层帐户出金
                         if (f.FeeType == QSEnumFeeType.CommissionFee)
                         {
-                            TLBroker broker = GetBroker(account);
+                            TLXBroker broker = GetBroker(account);
                             if (broker == null)
                             {
                                 FinGlobal.FinServiceTracker.UpdateFeeStatus(f, QSEnumFeeStatus.Fail, "未绑定主帐户");

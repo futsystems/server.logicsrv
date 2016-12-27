@@ -20,7 +20,7 @@ namespace Broker.Live
     /// <summary>
     /// 
     /// </summary>
-    public class TLBrokerCTPDirect2 : TLBroker
+    public class TLBrokerCTPDirect2 : TLXBroker
     {
 
 
@@ -118,7 +118,7 @@ namespace Broker.Live
         /// </summary>
         public override void OnDisposed()
         {
-            logger.Info("Clear Broker DataStruct");
+            logger.Info("Reset Broker DataStruct");
             //清空接口交易状态维护器
             _BrokerTracker.Clear();
             _BrokerTracker = null;
