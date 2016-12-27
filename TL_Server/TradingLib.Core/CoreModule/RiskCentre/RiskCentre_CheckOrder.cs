@@ -135,30 +135,7 @@ namespace TradingLib.Core
             //    return false;
             //}
 
-            ////收盘强平期间不允许交易
-            //DateTime extime = o.oSymbol.SecurityFamily.Exchange.ConvertToExchangeTime(DateTime.Now);
-            //int span = o.oSymbol.SecurityFamily.Exchange.CloseTime - extime.ToTLTime();
-            //if (span > 0 && span < GlobalConfig.FlatTimeAheadOfMarketClose * 60)
-            //{
-
-            //}
-
-            //日内账户收盘强平前5分钟禁止开仓
-            if (account.IntraDay && o.IsEntryPosition)
-            {
-                //交易所时间
-                DateTime extime = o.oSymbol.SecurityFamily.Exchange.ConvertToExchangeTime(DateTime.Now);
-                int span = o.oSymbol.SecurityFamily.Exchange.CloseTime - extime.ToTLTime();
-                if (span > 0 && span < (GlobalConfig.FlatTimeAheadOfMarketClose * 60 + 5))
-                {
-                    errortitle = ConstErrorID.SYMBOL_NOT_MARKETTIME;
-                    needlog = false;
-                    return false;
-                }
-            }
-
             #endregion
-
 
             //中金所限制 开仓数量不能超过10手
             if (_cffexLimit)
@@ -248,8 +225,6 @@ namespace TradingLib.Core
             }
             #endregion
 
-
-
             #region 委托数量检查
             //5.1委托总数不为0
             if (o.TotalSize == 0)
@@ -282,10 +257,7 @@ namespace TradingLib.Core
 
             #endregion
 
-
-
-
-            //报单价格检查
+            #region 报单价格检查
             Tick k = TLCtxHelper.ModuleDataRouter.GetTickSnapshot(o.Exchange,o.Symbol);
             if (k == null || (!k.IsValid()))
             {
@@ -328,6 +300,23 @@ namespace TradingLib.Core
                 }
 
             }
+            #endregion
+
+            #region 日内账户检查
+            //日内账户收盘强平前5分钟禁止开仓
+            if (account.IntraDay && o.IsEntryPosition)
+            {
+                //交易所时间
+                DateTime extime = o.oSymbol.SecurityFamily.Exchange.ConvertToExchangeTime(DateTime.Now);
+                int span = o.oSymbol.SecurityFamily.Exchange.CloseTime - extime.ToTLTime();
+                if (span > 0 && span < (GlobalConfig.FlatTimeAheadOfMarketClose * 60 + 5))
+                {
+                    errortitle = ConstErrorID.SYMBOL_NOT_MARKETTIME;
+                    needlog = false;
+                    return false;
+                }
+            }
+            #endregion
 
 
             return true;
