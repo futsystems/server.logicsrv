@@ -455,7 +455,7 @@ namespace Broker.Live
         #region 处理接口侧数据回报
         public override void ProcessOrder(ref XOrderField order)
         {
-            logger.Info(order);
+            logger.Info(string.Format("ProcessOrder LocalID:{0} RemoteID:{1} ID:{2}", order.BrokerLocalOrderID, order.BrokerRemoteOrderID, order.ID));
             //1.获得本地委托数据 更新相关状态后对外触发
             Order lo = LocalID2Order(order.BrokerLocalOrderID);
             if (lo != null)//本地记录了该委托 更新数量 状态 并对外发送
@@ -522,6 +522,7 @@ namespace Broker.Live
 
         public override void ProcessTrade(ref XTradeField trade)
         {
+            logger.Info(string.Format("Process Trade {3} {0} X {1} {2} RemoteOrderID:{4} BrokerTradeID:{5}", trade.Size, trade.Price, trade.Symbol, trade.Side ? "Buy" : "Sell", trade.BrokerRemoteOrderID, trade.BrokerTradeID));
             //CTP接口的成交通过远端编号与委托进行关联
             Order lo = RemoteID2Order(trade.BrokerRemoteOrderID);
             if (lo != null)
@@ -539,7 +540,6 @@ namespace Broker.Live
                 fill.BrokerTradeID = trade.BrokerTradeID;
                 fill.TradeID = trade.BrokerTradeID;
 
-                logger.Info("获得成交:" + fill.GetTradeDetail());
                 _BrokerTracker.GotFill(fill);
                 this.LogBrokerTrade(fill);
 
@@ -559,16 +559,16 @@ namespace Broker.Live
             }
         }
 
-        public override void ProcessOrderError(ref XOrderError error)
+        public override void ProcessOrderError(ref XOrderField pOrder, ref XErrorField pError)
         {
-            logger.Info(string.Format("OrderError LocalID:{0} RemoteID:{1} ErrorID:{2} ErrorMsg:{3}", error.Order.BrokerLocalOrderID, error.Order.BrokerRemoteOrderID, error.Error.ErrorID, error.Error.ErrorMsg));
-            Order lo = LocalID2Order(error.Order.BrokerLocalOrderID);
+            logger.Info(string.Format("OrderError LocalID:{0} RemoteID:{1} ErrorID:{2} ErrorMsg:{3}", pOrder.BrokerLocalOrderID, pOrder.BrokerRemoteOrderID, pError.ErrorID, pError.ErrorMsg));
+            Order lo = LocalID2Order(pOrder.BrokerLocalOrderID);
             if (lo != null)
             {
                 if (lo.Status != QSEnumOrderStatus.Reject)//如果委托已经处于拒绝状态 则不用处理 接口可能会产生多次错误回报
                 {
                     lo.Status = QSEnumOrderStatus.Reject;
-                    lo.Comment = error.Error.ErrorMsg;
+                    lo.Comment = pError.ErrorMsg;
                     logger.Info("更新子委托:" + lo.GetOrderInfo(true));
                     _BrokerTracker.GotOrder(lo);
                     //更新接口侧委托
@@ -578,10 +578,10 @@ namespace Broker.Live
                     if (fatherOrder == null) return;
 
                     RspInfo info = new RspInfoImpl();
-                    info.ErrorID = error.Error.ErrorID;
-                    info.ErrorMessage = error.Error.ErrorMsg;
+                    info.ErrorID = pError.ErrorID;
+                    info.ErrorMessage = pError.ErrorMsg;
                     fatherOrder.Status = QSEnumOrderStatus.Reject;
-                    fatherOrder.Comment = error.Error.ErrorMsg;
+                    fatherOrder.Comment = pError.ErrorMsg;
                     NotifyOrderError(fatherOrder, info);
 
 
@@ -611,7 +611,7 @@ namespace Broker.Live
                     //    Log4NetHelper.Warn(string.Format("平仓量超过持仓量,主帐户侧持仓缺失,下单进行补仓 市价{0} {1} 手 {2} {3}", norder.Side ? "买入" : "卖出", norder.TotalSize, norder.Symbol, success ? "成功" : "失败"));
                     //}
                     //资金不足
-                    if (error.Error.ErrorID == 31)
+                    if (pError.ErrorID == 31)
                     {
 
                     }
@@ -620,14 +620,14 @@ namespace Broker.Live
             }
             else
             {
-                logger.Warn(string.Format("Son Order LocalID:{0} is not handled by Broker:{1}", error.Order.BrokerLocalOrderID, this.Token));
+                logger.Warn(string.Format("Son Order LocalID:{0} is not handled by Broker:{1}", pOrder.BrokerLocalOrderID, this.Token));
             }
         }
 
-        public override void ProcessOrderActionError(ref XOrderActionError error)
+        public override void ProcessOrderActionError(ref XOrderActionField pOrderAction, ref XErrorField pError)
         {
-            logger.Info(string.Format("OrderActionError LocalID:{0} RemoteID:{1} ErrorID:{2} ErrorMsg:{3}", error.OrderAction.BrokerLocalOrderID, error.OrderAction.BrokerRemoteOrderID, error.Error.ErrorID, error.Error.ErrorMsg));
-            Order lo = LocalID2Order(error.OrderAction.BrokerLocalOrderID);
+            logger.Info(string.Format("OrderActionError LocalID:{0} RemoteID:{1} ErrorID:{2} ErrorMsg:{3}", pOrderAction.BrokerLocalOrderID, pOrderAction.BrokerRemoteOrderID, pError.ErrorID, pError.ErrorMsg));
+            Order lo = LocalID2Order(pOrderAction.BrokerLocalOrderID);
             if (lo != null)
             {
                 Order fatherOrder = SonID2FatherOrder(lo.id);
@@ -639,17 +639,17 @@ namespace Broker.Live
                 }
                 //A 可处理错误
                 //委托已经被撤销 不能再撤 有些代码需要判断后同步本地委托状态
-                if (error.Error.ErrorID == 26)
+                if (pError.ErrorID == 26)
                 {
                     lo.Status = QSEnumOrderStatus.Canceled;
-                    lo.Comment = error.Error.ErrorMsg;
+                    lo.Comment = pError.ErrorMsg;
                     logger.Info("更新子委托:" + lo.GetOrderInfo(true));
 
                     _BrokerTracker.GotOrder(lo); //Broker交易信息管理器
                     this.LogBrokerOrderUpdate(lo);//委托跟新 更新到数据库
 
                     fatherOrder.Status = QSEnumOrderStatus.Reject;
-                    fatherOrder.Comment = error.Error.ErrorMsg;
+                    fatherOrder.Comment = pError.ErrorMsg;
                     NotifyOrder(fatherOrder);
                     return;
                 }
@@ -662,9 +662,9 @@ namespace Broker.Live
                 //生成父委托对应的OrderAction Error并Notify
                 OrderAction action = new OrderActionImpl();
                 action.Account = fatherOrder.Account;
-                action.ActionFlag = error.OrderAction.ActionFlag;
-                action.Exchagne = error.OrderAction.Exchange;
-                action.Symbol = error.OrderAction.Symbol;
+                action.ActionFlag = pOrderAction.ActionFlag;
+                action.Exchagne = pOrderAction.Exchange;
+                action.Symbol = pOrderAction.Symbol;
                 action.OrderID = fatherOrder.id;//*
                 action.FrontID = fatherOrder.FrontIDi;
                 action.SessionID = fatherOrder.SessionIDi;
@@ -673,12 +673,12 @@ namespace Broker.Live
 
                 //action.
 
-                RspInfo info = XErrorField2RspInfo(ref error.Error);
+                RspInfo info = XErrorField2RspInfo(ref pError);
                 NotifyOrderOrderActionError(action, info);
             }
             else
             {
-                logger.Warn(string.Format("Son Order LocalID:{0} is not handled by Broker:{1}", error.OrderAction.BrokerLocalOrderID, this.Token));
+                logger.Warn(string.Format("Son Order LocalID:{0} is not handled by Broker:{1}", pOrderAction.BrokerLocalOrderID, this.Token));
             }
         }
 

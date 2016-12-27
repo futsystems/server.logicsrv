@@ -73,9 +73,7 @@ namespace TradingLib.BrokerXAPI
         {
             if (!_disposed)
             {
-                //_broker.Dispose();
-                //_wrapper.Dispose();
-                if (_working)
+                if (this.IsLive)
                 {
                     Stop();
                 }
@@ -165,12 +163,6 @@ namespace TradingLib.BrokerXAPI
                 return false;
             }
 
-            //启动回报消息通知线程 在另外一个线程中将接口返回的回报进行处理
-            _working = true;
-            _notifythread = new Thread(ProcessCache);
-            _notifythread.IsBackground = true;
-            _notifythread.Start();
-
             msg = string.Format("接口:{0}初始化成功,可以接受交易请求",this.Token);
             logger.Info(msg);
             //恢复该接口日内交易数据
@@ -192,9 +184,6 @@ namespace TradingLib.BrokerXAPI
         public virtual void Stop()
         {
             if (!this.IsLive) return;
-            _working = false;
-            //停止消息发送线程
-            Util.WaitThreadStop(_notifythread);
             //重置接口对象
             ResetResource();
             //执行接口释放操作
@@ -227,7 +216,7 @@ namespace TradingLib.BrokerXAPI
         /// <summary>
         /// 接口是否处于工作状态
         /// </summary>
-        public bool IsLive { get { return _working; } }
+        public bool IsLive { get { return _wrapper != null; } }//_working; } }
 
 
 
@@ -351,7 +340,7 @@ namespace TradingLib.BrokerXAPI
         /// 处理接口返回的错误
         /// </summary>
         /// <param name="error"></param>
-        public virtual void ProcessOrderError(ref XOrderError error)
+        public virtual void ProcessOrderError(ref XOrderField pOrder, ref XErrorField pError)
         {
 
         }
@@ -360,15 +349,11 @@ namespace TradingLib.BrokerXAPI
         /// 处理接口返回的委托操作错误
         /// </summary>
         /// <param name="error"></param>
-        public virtual void ProcessOrderActionError(ref XOrderActionError error)
+        public virtual void ProcessOrderActionError(ref XOrderActionField pOrderAction, ref XErrorField pError)
         {
 
         }
         #endregion
-
-
-
-
 
 
         #region 底层wrapper向接口提交操作
@@ -394,82 +379,6 @@ namespace TradingLib.BrokerXAPI
 
         #endregion
 
-        #region 回报缓存
-        const int buffersize=1000;
-        int _sleep = 50;
-        //缓存
-        RingBuffer<XOrderField> _ordercache = new RingBuffer<XOrderField>(buffersize);
-        RingBuffer<XTradeField> _tradecache = new RingBuffer<XTradeField>(buffersize);
-        RingBuffer<XOrderError> _ordererrorcache = new RingBuffer<XOrderError>(buffersize);
-        RingBuffer<XOrderActionError> _orderactionerrorcache = new RingBuffer<XOrderActionError>(buffersize);
-        RingBuffer<XErrorField> _messagecache = new RingBuffer<XErrorField>(buffersize);
-
-        Thread _notifythread = null;
-        bool _working = false;
-
-        ManualResetEvent _notifywaiting = new ManualResetEvent(false);
-
-        /// <summary>
-        /// 通知处理线程 有新的交易回报
-        /// </summary>
-        void NewNotify()
-        {
-            if ((_notifythread != null) && (_notifythread.ThreadState == System.Threading.ThreadState.WaitSleepJoin))
-            {
-                _notifywaiting.Set();
-            }
-        }
-
-        void ProcessCache()
-        {
-            while (_working)
-            {
-                try
-                {
-                    //发送委托回报
-                    while (_ordercache.hasItems)
-                    {
-                        XOrderField order = _ordercache.Read();//获得委托数据
-                        ProcessOrder(ref order);
-                    }
-                    //发送委托错误回报
-                    while (!_ordercache.hasItems && _ordererrorcache.hasItems)
-                    {
-                        XOrderError error = _ordererrorcache.Read();
-                        ProcessOrderError(ref error);
-                    }
-                    //发送委托操作错误回报
-                    while (!_ordercache.hasItems && _orderactionerrorcache.hasItems)
-                    {
-                        XOrderActionError error = _orderactionerrorcache.Read();
-                        ProcessOrderActionError(ref error);
-                    }
-                    //发送成交回报
-                    while (!_ordererrorcache.hasItems && !_ordererrorcache.hasItems && _tradecache.hasItems)
-                    {
-                        XTradeField trade = _tradecache.Read();
-                        ProcessTrade(ref trade);
-
-                    }
-
-                    while (_messagecache.hasItems)
-                    {
-                        XErrorField message = _messagecache.Read();
-                        NotifyMessage(message);
-                    }
-                    // clear current flag signal
-                    _notifywaiting.Reset();
-                    // wait for a new signal to continue reading
-                    _notifywaiting.WaitOne(_sleep);
-                }
-                catch (Exception ex)
-                {
-                    logger.Error("process cache error:" + ex.ToString());
-                }
-            }
-        }
-
-        #endregion
 
         #region Proxy底层回报数据处理
         bool _connected = false;
@@ -503,43 +412,75 @@ namespace TradingLib.BrokerXAPI
         void _wrapper_OnDisconnectedEvent()
         {
             logger.Info("--OnDisconnectedEvent--");
+            _connected = false;
         }
 
 
 
         void _wrapper_OnRtnOrderEvent(ref XOrderField pOrder)
         {
-            logger.Info("--OnRtnOrderEvent--");
-            _ordercache.Write(pOrder);
-            NewNotify();
+            try
+            {
+                logger.Info("--OnRtnOrderEvent--");
+                ProcessOrder(ref pOrder);
+            }
+            catch (Exception ex)
+            {
+                logger.Error("OnRtnOrderEvent Error:" + ex.ToString());
+            }
         }
 
         void _wrapper_OnRtnOrderErrorEvent(ref XOrderField pOrder, ref XErrorField pError)
         {
-            logger.Info("--OnRtnOrderErrorEvent--");
-            _ordererrorcache.Write(new XOrderError(pOrder, pError));
-            NewNotify();
+            try
+            {
+                logger.Info("--OnRtnOrderErrorEvent--");
+                ProcessOrderError(ref pOrder, ref pError);
+            }
+            catch (Exception ex)
+            {
+                logger.Error("OnRtnOrderErrorEvent Error:" + ex.ToString());
+            }
         }
         void _wrapper_OnRtnOrderActionErrorEvent(ref XOrderActionField pOrderAction, ref XErrorField pError)
         {
-            logger.Info("--OrderActionErrorEvent--");
-            _orderactionerrorcache.Write(new XOrderActionError(pOrderAction, pError));
-            NewNotify();
+            try
+            {
+                logger.Info("--OrderActionErrorEvent--");
+                ProcessOrderActionError(ref pOrderAction, ref pError);
+            }
+            catch (Exception ex)
+            {
+                logger.Error("OnRtnOrderActionErrorEvent Error:" + ex.ToString());
+            }
         }
 
         void _wrapper_OnRtnTradeEvent(ref XTradeField pTrade)
         {
-            logger.Info("--OnRtnTradeEvent--");
-            _tradecache.Write(pTrade);
-            NewNotify();
+            try
+            {
+                logger.Info("--OnRtnTradeEvent--");
+                ProcessTrade(ref pTrade);
+            }
+            catch (Exception ex)
+            {
+                logger.Error("OnRtnTradeEvent Error:" + ex.ToString());
+            }
         }
 
         void _wrapper_OnLogEvent(IntPtr pData, int len)
         {
-            byte[] data = new byte[len];
-            Marshal.Copy(pData, data, 0, len);
-            string message = System.Text.Encoding.UTF8.GetString(data, 0, len);
-            logger.Info(message);
+            try
+            {
+                byte[] data = new byte[len];
+                Marshal.Copy(pData, data, 0, len);
+                string message = System.Text.Encoding.UTF8.GetString(data, 0, len);
+                logger.Info(message);
+            }
+            catch (Exception ex)
+            {
+                logger.Error("OnLogEvent Error:" + ex.ToString());
+            }
         }
 
         /// <summary>
@@ -549,9 +490,15 @@ namespace TradingLib.BrokerXAPI
         /// <param name="islast"></param>
         void _wrapper_OnMessageEvent(ref XErrorField pMessage, bool islast)
         {
-            logger.Info("--TLBroker OnMessageEvent--");
-            _messagecache.Write(pMessage);
-            NewNotify();
+            try
+            {
+                logger.Info("--TLBroker OnMessageEvent--");
+                NotifyMessage(pMessage);
+            }
+            catch (Exception ex)
+            {
+                logger.Error("OnMessageEvent Error:" + ex.ToString());
+            }
         }
         #endregion
 

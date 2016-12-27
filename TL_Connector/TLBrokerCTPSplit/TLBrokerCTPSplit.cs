@@ -854,28 +854,28 @@ namespace Broker.Live
             }
         }
 
-        public override void ProcessOrderError(ref XOrderError error)
+        public override void ProcessOrderError(ref XOrderField pOrder, ref XErrorField pError)
         {
-            logger.Info(string.Format("OrderError LocalID:{0} RemoteID:{1} ErrorID:{2} ErrorMsg:{3}", error.Order.BrokerLocalOrderID, error.Order.BrokerRemoteOrderID, error.Error.ErrorID, error.Error.ErrorMsg));
-            Order o = LocalID2Order(error.Order.BrokerLocalOrderID);
+            logger.Info(string.Format("OrderError LocalID:{0} RemoteID:{1} ErrorID:{2} ErrorMsg:{3}", pOrder.BrokerLocalOrderID, pOrder.BrokerRemoteOrderID, pError.ErrorID, pError.ErrorMsg));
+            Order o = LocalID2Order(pOrder.BrokerLocalOrderID);
             if (o != null)
             {
                 if (o.Status != QSEnumOrderStatus.Reject)//如果委托已经处于拒绝状态 则不用处理 接口可能会产生多次错误回报
                 {
                     o.Status = QSEnumOrderStatus.Reject;
-                    o.Comment = error.Error.ErrorMsg;
+                    o.Comment = pError.ErrorMsg;
                     Util.Info("更新子委托:" + o.GetOrderInfo(true));
                     tk.GotOrder(o);
                     //更新接口侧委托
                     this.LogBrokerOrderUpdate(o);//更新日志
 
                     RspInfo info = new RspInfoImpl();
-                    info.ErrorID = error.Error.ErrorID;
-                    info.ErrorMessage = error.Error.ErrorMsg;
+                    info.ErrorID = pError.ErrorID;
+                    info.ErrorMessage = pError.ErrorMsg;
 
                     _splittracker.GotSonOrderError(o, info);
                     //平仓量超过持仓量 只能修复 在主帐户对应方向执行买入操作 形成对应的持仓 这样就可以让分帐户侧成功平仓
-                    if (error.Error.ErrorID == 30)
+                    if (pError.ErrorID == 30)
                     {
                         //平仓缺失智能补单 这个功能可以在接口设置中进行参数化设置。同理 在撤单过程中，如果有委托已经撤除 也需要智能的进行本地同步
                         XOrderField norder = new XOrderField();
@@ -900,7 +900,7 @@ namespace Broker.Live
 
                     }
                     //资金不足
-                    if (error.Error.ErrorID == 31)
+                    if (pError.ErrorID == 31)
                     {
 
                     }
@@ -909,28 +909,28 @@ namespace Broker.Live
             }
         }
 
-        public override void ProcessOrderActionError(ref XOrderActionError error)
+        public override void ProcessOrderActionError(ref XOrderActionField pOrderAction, ref XErrorField pError)
         {
-            logger.Info(string.Format("OrderActionError LocalID:{0} RemoteID:{1} ErrorID:{2} ErrorMsg:{3}", error.OrderAction.BrokerLocalOrderID, error.OrderAction.BrokerRemoteOrderID, error.Error.ErrorID, error.Error.ErrorMsg));
-            Order o = LocalID2Order(error.OrderAction.BrokerLocalOrderID);
+            logger.Info(string.Format("OrderActionError LocalID:{0} RemoteID:{1} ErrorID:{2} ErrorMsg:{3}", pOrderAction.BrokerLocalOrderID, pOrderAction.BrokerRemoteOrderID, pError.ErrorID, pError.ErrorMsg));
+            Order o = LocalID2Order(pOrderAction.BrokerLocalOrderID);
             if (o != null)
             {
                 //生成对应的子委托OrderAction 关键是获得对应的子委托本地ID
                 OrderAction action = new OrderActionImpl();
                 action.Account = o.Account;
-                action.ActionFlag = error.OrderAction.ActionFlag;
-                action.Exchagne = error.OrderAction.Exchange;
-                action.Symbol = error.OrderAction.Symbol;
+                action.ActionFlag = pOrderAction.ActionFlag;
+                action.Exchagne = pOrderAction.Exchange;
+                action.Symbol = pOrderAction.Symbol;
                 action.OrderID = o.id;//*
 
                 //调用分解器处理子委托操作错误
-                _splittracker.GotSonOrderActionError(action, XErrorField2RspInfo(ref error.Error));
+                _splittracker.GotSonOrderActionError(action, XErrorField2RspInfo(ref pError));
 
                 //委托已经被撤销 不能再撤 有些代码需要判断后同步本地委托状态
-                if (error.Error.ErrorID == 26)
+                if (pError.ErrorID == 26)
                 {
                     o.Status = QSEnumOrderStatus.Canceled;
-                    o.Comment = error.Error.ErrorMsg;
+                    o.Comment = pError.ErrorMsg;
                     Util.Info("更新子委托:" + o.GetOrderInfo(true));
 
                     tk.GotOrder(o); //Broker交易信息管理器
