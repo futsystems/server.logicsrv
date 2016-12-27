@@ -21,20 +21,7 @@ namespace TradingLib.BrokerXAPI
         TLBrokerWrapperProxy _wrapper;
 
         #region 成交接口交易数据
-        /// <summary>
-        /// 获得成交接口所有委托
-        /// </summary>
-        public virtual IEnumerable<Order> Orders { get { return new List<Order>(); } }
-
-        /// <summary>
-        /// 获得成交接口所有成交
-        /// </summary>
-        public virtual IEnumerable<Trade> Trades { get { return new List<Trade>(); } }
-
-        /// <summary>
-        /// 获得成交接口所有持仓
-        /// </summary>
-        public virtual IEnumerable<Position> Positions { get { return new List<Position>(); } }
+       
 
         /// <summary>
         /// 返回所有处于有持仓或挂单状态的合约
@@ -94,6 +81,7 @@ namespace TradingLib.BrokerXAPI
         /// <param name="filename">c++DLL名称</param>
         public TLXBroker()
         {
+            
 
         }
 
@@ -186,6 +174,8 @@ namespace TradingLib.BrokerXAPI
             if (!this.IsLive) return;
             //重置接口对象
             ResetResource();
+            //清空交易记录维护器
+            this.BrokerTracker.Clear();
             //执行接口释放操作
             this.OnDisposed();
             //对外通知接口断开
@@ -355,7 +345,6 @@ namespace TradingLib.BrokerXAPI
         }
         #endregion
 
-
         #region 底层wrapper向接口提交操作
         /// <summary>
         /// 提交委托
@@ -378,7 +367,6 @@ namespace TradingLib.BrokerXAPI
         }
 
         #endregion
-
 
         #region Proxy底层回报数据处理
         bool _connected = false;

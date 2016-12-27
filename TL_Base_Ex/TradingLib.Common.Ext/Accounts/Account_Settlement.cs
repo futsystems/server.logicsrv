@@ -41,7 +41,7 @@ namespace TradingLib.Common
             settlement.CreditCashIn = this.CreditCashIn;
             settlement.CreditCashOut = this.CreditCashOut;
 
-            //对交易所结算进行汇总
+            //对交易所结算进行汇总 账户结算数据是汇总所有交易所结算数据 交易所结算数据异常会导致账户总结算异常
             settlement.CloseProfitByDate = this.PendingSettleCloseProfitByDate;
             settlement.PositionProfitByDate = this.PendingSettlePositionProfitByDate;
             settlement.AssetBuyAmount = this.PendingSettleAssetBuyAmount;

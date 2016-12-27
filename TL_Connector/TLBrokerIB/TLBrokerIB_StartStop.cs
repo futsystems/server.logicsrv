@@ -33,7 +33,6 @@ namespace Broker.Live
         /// </summary>
         void InitBroker()
         {
-            tk = new BrokerTracker(this);
             orderIdtk = new IdTracker(IdTracker.ConnectorOwnerIDStart + _cfg.ID);
 
             client = new IBClient();

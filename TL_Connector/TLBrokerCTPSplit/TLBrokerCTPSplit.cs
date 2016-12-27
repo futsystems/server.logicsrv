@@ -135,7 +135,7 @@ namespace Broker.Live
         public override void InitBroker()
         {
             base.InitBroker();
-            tk = new BrokerTracker(this);
+            tk = new BrokerTracker(this.Token);
             _sonidtk = new IdTracker(IdTracker.ConnectorOwnerIDStart + _cfg.ID);//用数据库ID作为委托编号生成器预留10个id用于系统其他地方使用
 
             #region 初始化委托拆分维护器 绑定事件

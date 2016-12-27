@@ -32,7 +32,7 @@ namespace TradingLib.Common
         /// </summary>
         TradeTracker _tradeTk = null;
 
-        IBroker _broker = null;
+        string _brokerToken = string.Empty;
 
         #region 持仓创建事件和平仓明细事件
         void NewPositionCloseDetail(Trade trade,PositionCloseDetail detail)
@@ -42,7 +42,7 @@ namespace TradingLib.Common
              * 字段标注后方便从数据库加载到对应的对象中
              * 
              * **/
-            detail.Broker = _broker.Token;
+            detail.Broker = _brokerToken;
             detail.Breed = QSEnumOrderBreedType.BROKER;
             if (NewPositionCloseDetailEvent != null)
                 NewPositionCloseDetailEvent(detail);
@@ -59,11 +59,11 @@ namespace TradingLib.Common
 
         #endregion
 
-        public BrokerTracker(IBroker broker)
+        public BrokerTracker(string token)
         {
-            _broker = broker;
+            _brokerToken = token;
             _orderTk = new OrderTracker();
-            _positionTk = new LSPositionTracker(broker.Token);
+            _positionTk = new LSPositionTracker(_brokerToken);
             //对外触发持仓生成和平仓明细事件
             _positionTk.NewPositionCloseDetailEvent += new Action<Trade,PositionCloseDetail>(NewPositionCloseDetail);
             _positionTk.NewPositionEvent += new Action<Position>(NewPosition);
@@ -73,7 +73,6 @@ namespace TradingLib.Common
 
         public void Clear()
         {
-            Util.Debug(string.Format("Clear BrokerTracker for:{0}", this._broker.Token));
             _orderTk.Clear();
             _positionTk.Clear();
             _tradeTk.Clear();

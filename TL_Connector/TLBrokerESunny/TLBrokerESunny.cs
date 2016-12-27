@@ -45,20 +45,7 @@ namespace Broker.Live
 
 
         #region 成交接口的交易数据
-        /// <summary>
-        /// 获得成交接口所有委托
-        /// </summary>
-        public override IEnumerable<Order> Orders { get { return _BrokerTracker.Orders; } }
-
-        /// <summary>
-        /// 获得成交接口所有成交
-        /// </summary>
-        public override IEnumerable<Trade> Trades { get { return _BrokerTracker.Trades; } }
-
-        /// <summary>
-        /// 获得成交接口所有持仓
-        /// </summary>
-        public override IEnumerable<Position> Positions { get { return _BrokerTracker.Positions; } }
+       
 
 
         public override int GetPositionAdjustment(Order o)
@@ -84,13 +71,13 @@ namespace Broker.Live
         {
             PositionMetricImpl mertic = new PositionMetricImpl(symbol);
 
-            mertic.LongHoldSize = _BrokerTracker.GetPosition(symbol, true).UnsignedSize;
-            mertic.ShortHoldSize = _BrokerTracker.GetPosition(symbol, false).UnsignedSize;
+            mertic.LongHoldSize = this.BrokerTracker.GetPosition(symbol, true).UnsignedSize;
+            mertic.ShortHoldSize = this.BrokerTracker.GetPosition(symbol, false).UnsignedSize;
 
-            IEnumerable<Order> longEntryOrders = _BrokerTracker.GetPendingEntryOrders(symbol, true);
-            IEnumerable<Order> shortEntryOrders = _BrokerTracker.GetPendingEntryOrders(symbol, false);
-            IEnumerable<Order> longExitOrders = _BrokerTracker.GetPendingExitOrders(symbol, true);
-            IEnumerable<Order> shortExitOrders = _BrokerTracker.GetPendingExitOrders(symbol, false);
+            IEnumerable<Order> longEntryOrders = this.BrokerTracker.GetPendingEntryOrders(symbol, true);
+            IEnumerable<Order> shortEntryOrders = this.BrokerTracker.GetPendingEntryOrders(symbol, false);
+            IEnumerable<Order> longExitOrders = this.BrokerTracker.GetPendingExitOrders(symbol, true);
+            IEnumerable<Order> shortExitOrders = this.BrokerTracker.GetPendingExitOrders(symbol, false);
             mertic.LongPendingEntrySize = longEntryOrders.Sum(po => po.UnsignedSize);
             mertic.LongPendingExitSize = longExitOrders.Sum(po => po.UnsignedSize);
             mertic.ShortPendingEntrySize = shortEntryOrders.Sum(po => po.UnsignedSize);
@@ -118,17 +105,11 @@ namespace Broker.Live
 
 
         /// <summary>
-        /// Borker交易信息维护器
-        /// </summary>
-        BrokerTracker _BrokerTracker = null;
-
-        /// <summary>
         /// 初始化接口 停止后再次启动不会调用该函数
         /// </summary>
         public override void InitBroker()
         {
             base.InitBroker();
-            _BrokerTracker = new BrokerTracker(this);
             orderIdtk = new IdTracker(IdTracker.ConnectorOwnerIDStart + _cfg.ID);//用数据库ID作为委托编号生成器预留10个id用于系统其他地方使用
 
             
@@ -155,9 +136,6 @@ namespace Broker.Live
         public override void OnDisposed()
         {
             logger.Info("Clear Broker Memory");
-            //清空接口交易状态维护器
-            _BrokerTracker.Clear();
-            _BrokerTracker = null;
 
             //清空委托map
             localOrderID_map.Clear();
@@ -181,7 +159,7 @@ namespace Broker.Live
                 //恢复隔夜持仓数据
                 foreach (PositionDetail pd in positiondetaillist)
                 {
-                    _BrokerTracker.GotPosition(pd);
+                    this.BrokerTracker.GotPosition(pd);
                 }
                 logger.Info(string.Format("Resumed {0} Positions", positiondetaillist.Count()));
                 //恢复日内委托
@@ -198,7 +176,7 @@ namespace Broker.Live
                             logger.Info("Duplicate BrokerLocalOrderID,Order:" + o.GetOrderInfo());
                         }
                     }
-                    _BrokerTracker.GotOrder(o);
+                    this.BrokerTracker.GotOrder(o);
 
                     if (!string.IsNullOrEmpty(o.BrokerRemoteOrderID))
                     {
@@ -212,7 +190,7 @@ namespace Broker.Live
                 //恢复日内成交
                 foreach (Trade t in tradelist)
                 {
-                    _BrokerTracker.GotFill(t);
+                    this.BrokerTracker.GotFill(t);
                 }
                 logger.Info(string.Format("Resumed {0} Trades", tradelist.Count()));
 
@@ -231,7 +209,7 @@ namespace Broker.Live
                 }
 
                 //数据恢复完毕后再绑定平仓明细事件
-                _BrokerTracker.NewPositionCloseDetailEvent += new Action<PositionCloseDetail>(tk_NewPositionCloseDetailEvent);
+                this.BrokerTracker.NewPositionCloseDetailEvent += new Action<PositionCloseDetail>(tk_NewPositionCloseDetailEvent);
 
             }
             catch (Exception ex)
@@ -433,7 +411,7 @@ namespace Broker.Live
                     fatherSonOrder_Map.TryAdd(o.id, lo);
 
                     //交易信息维护器获得委托 //？将委托复制后加入到接口维护的map中 在发送子委托过程中 本地记录的Order就是分拆过程中产生的委托，改变这个委托将同步改变委托分拆器中的委托
-                    _BrokerTracker.GotOrder(lo);//原来引用的是分拆器发送过来的子委托 现在修改成本地复制后的委托
+                    this.BrokerTracker.GotOrder(lo);//原来引用的是分拆器发送过来的子委托 现在修改成本地复制后的委托
                     //对外触发成交侧委托数据用于记录该成交接口的交易数据
                     logger.Info(string.Format("Send Order Success ID:{0} LocalID:{1}", order.ID, order.BrokerLocalOrderID));
 
@@ -473,7 +451,7 @@ namespace Broker.Live
             if (this.IsLive)
             {
                 //行情驱动brokertracker用于更新成交侧持仓
-                _BrokerTracker.GotTick(k);
+                this.BrokerTracker.GotTick(k);
             }
         }
 
@@ -501,7 +479,7 @@ namespace Broker.Live
                     remoteOrderID_map.TryAdd(lo.BrokerRemoteOrderID, lo);
                 }
                 //更新并记录该委托
-                _BrokerTracker.GotOrder(lo);
+                this.BrokerTracker.GotOrder(lo);
                 this.LogBrokerOrderUpdate(lo);
 
                 //更新对应的父委托
@@ -547,7 +525,7 @@ namespace Broker.Live
                 //fill.TradeID = trade.BrokerTradeID;
 
                 logger.Info("获得子成交:" + fill.GetTradeDetail());
-                _BrokerTracker.GotFill(fill);
+                this.BrokerTracker.GotFill(fill);
                 //记录接口侧成交数据
                 this.LogBrokerTrade(fill);
 
@@ -576,7 +554,7 @@ namespace Broker.Live
 
                     lo.Status = QSEnumOrderStatus.Reject;
                     lo.Comment = pError.ErrorMsg;
-                    _BrokerTracker.GotOrder(lo); //Broker交易信息管理器
+                    this.BrokerTracker.GotOrder(lo); //Broker交易信息管理器
                     this.LogBrokerOrderUpdate(lo);//委托跟新 更新到数据库
 
                     RspInfo info = new RspInfoImpl();
@@ -679,11 +657,11 @@ namespace Broker.Live
                 }
             }
             //将已经结算的持仓从内存数据对象中屏蔽 持仓数据是一个状态数据,因此我们这里将上个周期的持仓对象进行屏蔽
-            _BrokerTracker.DropSettled();
+            this.BrokerTracker.DropSettled();
             ///5.加载持仓明晰和交易所结算记录
             foreach (var pd in positiondetail_settle)
             {
-                _BrokerTracker.GotPosition(pd);
+                this.BrokerTracker.GotPosition(pd);
             }
         }
         /// <summary>

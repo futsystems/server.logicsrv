@@ -22,6 +22,27 @@ namespace TradingLib.BrokerXAPI
         public IBrokerClearCentre ClearCentre { get; set; }
 
         /// <summary>
+        /// 交易接口交易数据维护器
+        /// </summary>
+        protected BrokerTracker BrokerTracker { get { return _brokerTracker; } }
+        BrokerTracker _brokerTracker = null;
+        /// <summary>
+        /// 获得成交接口所有委托
+        /// </summary>
+        public virtual IEnumerable<Order> Orders { get { return _brokerTracker.Orders; } }
+
+        /// <summary>
+        /// 获得成交接口所有成交
+        /// </summary>
+        public virtual IEnumerable<Trade> Trades { get { return _brokerTracker.Trades; } }
+
+        /// <summary>
+        /// 获得成交接口所有持仓
+        /// </summary>
+        public virtual IEnumerable<Position> Positions { get { return _brokerTracker.Positions; } }
+
+
+        /// <summary>
         /// 执行交易所结算
         /// </summary>
         /// <param name="exchange"></param>
@@ -157,6 +178,7 @@ namespace TradingLib.BrokerXAPI
 
         protected ConnectorConfig _cfg;
 
+
         /// <summary>
         /// 设定接口参数
         /// </summary>
@@ -166,6 +188,8 @@ namespace TradingLib.BrokerXAPI
             _cfg = cfg;
             //设定cfg后 重新生成logger用于更新 logger的 name
             logger = LogManager.GetLogger(string.Format("Broker[{0}]", this.Token));
+            //初始化BrokerTracker 用于记录接口交易数据
+            _brokerTracker = new BrokerTracker(this.Token);
         }
 
         /// <summary>

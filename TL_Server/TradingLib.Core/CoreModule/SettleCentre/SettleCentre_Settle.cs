@@ -273,7 +273,7 @@ namespace TradingLib.Core
                         }
                     }
 
-                    //执行交易通道结算
+                    //执行交易通道结算 注:若此处Broker通道结算异常 会导致其余交易所不执行有效结算 从而导致账户整体结算异常 Broker改进成BrokerTracker在通道初始化设定参数时创建 避免通道未启动导致遍历通道交易数据异常
                     foreach (var broker in TLCtxHelper.ServiceRouterManager.Brokers)
                     {
                         broker.SettleExchange(exchange, settleday);
@@ -467,63 +467,5 @@ namespace TradingLib.Core
         }
 
 
-
-
-
-
-
-        ///////////////////////////
-        /// <summary>
-        /// 保存历史持仓记录
-        /// </summary>
-        //void SaveHistPositionDetail(IExchange exchange)
-        //{
-        //    int i = 0;
-        //    //遍历所有交易帐户
-        //    foreach (IAccount account in TLCtxHelper.ModuleAccountManager.Accounts)
-        //    {
-        //        //遍历交易帐户下所有未平仓持仓对象
-        //        foreach (Position pos in account.GetPositions(exchange).Where(p=>!p.isFlat))
-        //        {
-        //            //遍历该未平仓持仓对象下的所有持仓明细
-        //            foreach (PositionDetail pd in pos.PositionDetailTotal.Where(pd => !pd.IsClosed()))
-        //            {
-        //                //保存结算持仓明细时要将结算日更新为当前
-        //                pd.Settleday = TLCtxHelper.ModuleSettleCentre.NextTradingday;
-        //                //保存持仓明细到数据库
-        //                ORM.MSettlement.InsertPositionDetail(pd);
-        //                i++;
-        //            }
-        //        }
-        //    }
-        //    logger.Info(string.Format("Saved {0} Account PositionDetails Successfull", i));
-
-        //    i = 0;
-        //    //遍历所有成交接口
-        //    foreach (IBroker broker in TLCtxHelper.ServiceRouterManager.Brokers)
-        //    {
-        //        //接口没有启动 则没有交易数据
-        //        if (!broker.IsLive)
-        //            continue;
-
-        //        //遍历成交接口有持仓的 持仓，将该持仓的持仓明细保存到数据库
-        //        foreach (Position pos in broker.GetPositions(exchange).Where(p => !p.isFlat))
-        //        {
-        //            foreach (PositionDetail pd in pos.PositionDetailTotal.Where(pd => !pd.IsClosed()))
-        //            {
-        //                //保存结算持仓明细时要将结算日更新为当前
-        //                pd.Settleday = TLCtxHelper.ModuleSettleCentre.NextTradingday;
-        //                //设定标识
-        //                pd.Broker = broker.Token;
-        //                pd.Breed = QSEnumOrderBreedType.BROKER;
-
-        //                //保存持仓明细到数据库
-        //                ORM.MSettlement.InsertPositionDetail(pd);
-        //                i++;
-        //            }
-        //        }
-        //    }
-        //    logger.Info(string.Format("Saved {0} Broker PositionDetails Successfull", i));
-        //}
     }
 }
