@@ -75,7 +75,7 @@ namespace TradingLib.Core
                     //比如帐户A有多头，则卖出操作优先路由到A帐户进行平仓，帐户B有空头,则买入操作优先路由到B帐户进行平仓
                     //在帐户A中的买入委托 是否必须在A帐户中进行平仓？还是可以在B帐户中进行平仓(如果A帐户和B帐户都是启用净持仓)
                     string errorTitle = string.Empty;
-                    bool ret = RouterSendOrder(o, out errorTitle);
+                    bool ret = SendOrderOut(o, out errorTitle);
                     //如果委托正常提交 则对外回报委托
                     if (ret)
                     {
@@ -84,7 +84,10 @@ namespace TradingLib.Core
                     //如果提交委托异常,则回报委托错误
                     else
                     {
-                        GotOrderErrorNotify(o, errorTitle);
+                        RspInfo info = RspInfoEx.Fill(errorTitle);
+                        o.Comment = info.ErrorMessage;
+                        Broker_GotOrderError(o, info);
+                        //GotOrderErrorNotify(o, errorTitle);
                     }
                     //调用broker_sendorder对外发送委托 如果委托状态为拒绝 则表明委托被broker_send部分拒绝了，我们不用再标记委托状态为submited 因此不用再进入下一步
                     //if (o.Status != QSEnumOrderStatus.Reject)
@@ -98,7 +101,7 @@ namespace TradingLib.Core
             }
             catch (Exception ex)
             {
-                logger.Error("BrokerRouter Send Order Error:" + (o == null ? "Null" : o.ToString()));
+                logger.Error("BrokerRouter Send Order Error:" + (order == null ? "Null" : order.ToString()));
                 logger.Error(ex.ToString());
             }
         }
@@ -110,22 +113,22 @@ namespace TradingLib.Core
         /// <param name="o"></param>
         /// <param name="errorTitle"></param>
         /// <returns></returns>
-        bool RouterSendOrder(Order o, out string errorTitle)
-        {
+        //bool RouterSendOrder(Order o, out string errorTitle)
+        //{
 
-            //如果是内部模拟的委托类型则通过委托模拟器发送 其余则通过实际路由发送
-            return SendOrderOut(o, out errorTitle);
+        //    //如果是内部模拟的委托类型则通过委托模拟器发送 其余则通过实际路由发送
+        //    return SendOrderOut(o, out errorTitle);
 
-            //检查TIF设定，然后根据需要是否要通过TIFEngine来处理Order
-            //switch (o.TimeInForce)
-            //{
-            //    case QSEnumTimeInForce.DAY:
-            //        return route_SendOrder(o,out errorTitle);
-            //    default:
-            //        _tifengine.SendOrder(o);//问题1:相关交易通道没有开启但是我们已经将委托交由TIFEngine管理，会产生屡次取消或者取消错误
-            //        break;
-            //}
-        }
+        //    //检查TIF设定，然后根据需要是否要通过TIFEngine来处理Order
+        //    //switch (o.TimeInForce)
+        //    //{
+        //    //    case QSEnumTimeInForce.DAY:
+        //    //        return route_SendOrder(o,out errorTitle);
+        //    //    default:
+        //    //        _tifengine.SendOrder(o);//问题1:相关交易通道没有开启但是我们已经将委托交由TIFEngine管理，会产生屡次取消或者取消错误
+        //    //        break;
+        //    //}
+        //}
 
 
         /// <summary>
@@ -186,7 +189,10 @@ namespace TradingLib.Core
             {
                 //如果没有交易通道则拒绝该委托
                 o.Status = QSEnumOrderStatus.Reject;
-                GotOrderErrorNotify(o, "EXECUTION_BROKER_NOT_FOUND");
+                RspInfo info = RspInfoEx.Fill("EXECUTION_BROKER_NOT_FOUND");
+                o.Comment = info.ErrorMessage;
+                //GotOrderErrorNotify(o, "EXECUTION_BROKER_NOT_FOUND");
+                Broker_GotOrderError(o, info);
                 logger.Warn(PROGRAME + ":没有可以交易的通道 |" + o.ToString());
             }
         }

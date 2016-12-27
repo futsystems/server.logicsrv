@@ -16,6 +16,9 @@ namespace TradingLib.API
     /// </summary>
     public enum QSEnumOrderStatus : byte
     {
+        /// <summary>
+        /// 通过风控检查 被清算中心记录
+        /// </summary>
         [Description("提交至清算中心")]Placed=0,
 
         /// <summary>

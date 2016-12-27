@@ -48,28 +48,56 @@ namespace TradingLib.Core
                     return null;
 
                 RouterGroup rg = BasicTracker.RouterGroupTracker[account.RG_FK]; //这里需要做个鉴权 帐户设置的路由组的domain_id与帐户所属domain_id一致
-                //没有设定路由组则返回null
+                //没有设定路由组返回null
                 if (rg == null)
                 {
                     logger.Warn(string.Format("account:{0} have not set router gorup fk:{1}", account.ID, account.RG_FK));
                     return null;
                 }
-                if (isorderaction)//如果是委托操作则直接从Broker字段查找对应的通道
+                //路由组内没有路由项则返回null
+                if (rg.RouterItems.Count() == 0)
                 {
-                    return rg.GetBroker(o.Broker);
+                    logger.Warn(string.Format("RouterGroup:{0} have not add any routeritem", account.RG_FK));
+                    return null;
                 }
-                else
+
+                //路由组只有一条路由项
+                if (rg.RouterItems.Count() == 1)
                 {
-                    //开仓委托按委托 通过RouterGroup的路由策略返回委托
+                    RouterItem item = rg.RouterItems.FirstOrDefault();
                     if (o.IsEntryPosition)
                     {
-                        decimal price = TLCtxHelper.ModuleDataRouter.GetAvabilePrice(o.Exchange,o.Symbol);
+                        decimal price = TLCtxHelper.ModuleDataRouter.GetAvabilePrice(o.Exchange, o.Symbol);
                         decimal margin = o.CalFundRequired(price);
-                        return rg.GetBroker(o, margin);
+                        //item处于开仓激活状态 item对应的Broker不为空切Broker为工作状态 同时broker可以接受保证金margin的委托
+                        if (item.Active && item.Broker != null && item.Broker.IsLive && item.AcceptEntryOrder(o, margin))
+                            return item.Broker;
+                        return null;
                     }
-                    else//平仓委托按委托中的Broker字段返回
+                    else
+                    {
+                        return item.Broker;
+                    }
+                }
+                else //多路由项进行智能选择
+                {
+                    if (isorderaction)//如果是委托操作则直接从Broker字段查找对应的通道
                     {
                         return rg.GetBroker(o.Broker);
+                    }
+                    else
+                    {
+                        //开仓委托按委托 通过RouterGroup的路由策略返回委托
+                        if (o.IsEntryPosition)
+                        {
+                            decimal price = TLCtxHelper.ModuleDataRouter.GetAvabilePrice(o.Exchange, o.Symbol);
+                            decimal margin = o.CalFundRequired(price);
+                            return rg.GetBroker(o, margin);
+                        }
+                        else//平仓委托按委托中的Broker字段返回
+                        {
+                            return rg.GetBroker(o.Broker);
+                        }
                     }
                 }
             }
