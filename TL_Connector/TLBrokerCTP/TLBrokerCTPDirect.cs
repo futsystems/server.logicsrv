@@ -10,7 +10,7 @@ using TradingLib.Mixins;
 
 namespace Broker.Live
 {
-    /* CTPDirect2
+    /* CTPDirect
      * 1.直接将分账户侧的委托发送到CTP 同时处理CTP对应的返回
      * 2.接口只负责发单不负责检查持仓是否正确即BrokerTracker所维护的数据不用于委托检查
      * 
@@ -483,6 +483,7 @@ namespace Broker.Live
                         }
                     }
                 }
+                logger.Info("Update Local Order:" + lo.GetOrderInfo(true));
                 //更新接口侧委托
                 _BrokerTracker.GotOrder(lo);
                 this.LogBrokerOrderUpdate(lo);
@@ -503,16 +504,6 @@ namespace Broker.Live
                 }
 
                 this.NotifyOrder(fatherOrder);
-
-                //if (lo.Status == QSEnumOrderStatus.Reject)
-                //{
-                //    RspInfo info = new RspInfoImpl();
-                //    info.ErrorID = error.Error.ErrorID;
-                //    info.ErrorMessage = lo.
-                //    fatherOrder.Status = QSEnumOrderStatus.Reject;
-                //    fatherOrder.Comment = error.Error.ErrorMsg;
-                //    NotifyOrderError(fatherOrder, info);
-                //}
             }
             else
             {
@@ -569,7 +560,7 @@ namespace Broker.Live
                 {
                     lo.Status = QSEnumOrderStatus.Reject;
                     lo.Comment = pError.ErrorMsg;
-                    logger.Info("更新子委托:" + lo.GetOrderInfo(true));
+                    logger.Info("Update Local Order:" + lo.GetOrderInfo(true));
                     _BrokerTracker.GotOrder(lo);
                     //更新接口侧委托
                     this.LogBrokerOrderUpdate(lo);//更新日志
@@ -643,8 +634,7 @@ namespace Broker.Live
                 {
                     lo.Status = QSEnumOrderStatus.Canceled;
                     lo.Comment = pError.ErrorMsg;
-                    logger.Info("更新子委托:" + lo.GetOrderInfo(true));
-
+                    logger.Info("Update Local Order:" + lo.GetOrderInfo(true));
                     _BrokerTracker.GotOrder(lo); //Broker交易信息管理器
                     this.LogBrokerOrderUpdate(lo);//委托跟新 更新到数据库
 
