@@ -40,7 +40,7 @@ namespace Broker.Live
     /// 成交侧的委托也需要记录到数据库,在接口加载时从数据库加载成交侧的交易数据
     /// 
     /// </summary>
-    public class TLBrokerESunny : TLBroker
+    public class TLBrokerESunny : TLXBroker
     {
 
 
@@ -385,7 +385,7 @@ namespace Broker.Live
                     //市价单修正价格 市价单 在盘口基础上 让100个tick
                     if (o.LimitPrice == 0)
                     {
-                        Tick k = FindTickSnapshot(o.Symbol);
+                        Tick k = TLCtxHelper.ModuleDataRouter.GetTickSnapshot(o.Symbol);
                         if (k != null)
                         {
                             o.LimitPrice = o.Side ? (k.AskPrice + 5 * o.oSymbol.SecurityFamily.PriceTick) : (k.BidPrice - 100 * o.oSymbol.SecurityFamily.PriceTick);
@@ -566,10 +566,10 @@ namespace Broker.Live
             }
         }
 
-        public override void ProcessOrderError(ref XOrderError error)
+        public override void ProcessOrderError(ref XOrderField pOrder, ref XErrorField pError)
         {
-            logger.Info(string.Format("OrderError LocalID:{0} RemoteID:{1} ErrorID:{2} ErrorMsg:{3}", error.Order.BrokerLocalOrderID, error.Order.BrokerRemoteOrderID, error.Error.ErrorID, error.Error.ErrorMsg));
-            Order lo = LocalID2Order(error.Order.BrokerLocalOrderID);
+            logger.Info(string.Format("OrderError LocalID:{0} RemoteID:{1} ErrorID:{2} ErrorMsg:{3}", pOrder.BrokerLocalOrderID, pOrder.BrokerRemoteOrderID, pError.ErrorID, pError.ErrorMsg));
+            Order lo = LocalID2Order(pOrder.BrokerLocalOrderID);
             if (lo != null)
             {
                 if(lo.Status != QSEnumOrderStatus.Reject)//如果委托已经处于拒绝状态 则不用处理 接口可能会产生多次错误回报
@@ -578,15 +578,15 @@ namespace Broker.Live
                     if (fatherOrder == null) return;
 
                     lo.Status = QSEnumOrderStatus.Reject;
-                    lo.Comment = error.Error.ErrorMsg;
+                    lo.Comment = pError.ErrorMsg;
                     _BrokerTracker.GotOrder(lo); //Broker交易信息管理器
                     this.LogBrokerOrderUpdate(lo);//委托跟新 更新到数据库
 
                     RspInfo info = new RspInfoImpl();
-                    info.ErrorID = error.Error.ErrorID;
-                    info.ErrorMessage = error.Error.ErrorMsg;
+                    info.ErrorID = pError.ErrorID;
+                    info.ErrorMessage = pError.ErrorMsg;
                     fatherOrder.Status = QSEnumOrderStatus.Reject;
-                    fatherOrder.Comment =error.Error.ErrorMsg;
+                    fatherOrder.Comment = pError.ErrorMsg;
                     NotifyOrderError(fatherOrder, info);
 
                 }
@@ -594,10 +594,10 @@ namespace Broker.Live
             }
         }
 
-        public override void ProcessOrderActionError(ref XOrderActionError error)
+        public override void ProcessOrderActionError(ref XOrderActionField pOrderAction, ref XErrorField pError)
         {
-            logger.Info(string.Format("OrderActionError LocalID:{0} RemoteID:{1} ErrorID:{2} ErrorMsg:{3}", error.OrderAction.BrokerLocalOrderID, error.OrderAction.BrokerRemoteOrderID, error.Error.ErrorID, error.Error.ErrorMsg));
-            Order o = LocalID2Order(error.OrderAction.BrokerLocalOrderID);
+            logger.Info(string.Format("OrderActionError LocalID:{0} RemoteID:{1} ErrorID:{2} ErrorMsg:{3}", pOrderAction.BrokerLocalOrderID, pOrderAction.BrokerRemoteOrderID, pError, pError.ErrorMsg));
+            Order o = LocalID2Order(pOrderAction.BrokerLocalOrderID);
             //if (o != null)
             //{
             //    //生成对应的子委托OrderAction 关键是获得对应的子委托本地ID

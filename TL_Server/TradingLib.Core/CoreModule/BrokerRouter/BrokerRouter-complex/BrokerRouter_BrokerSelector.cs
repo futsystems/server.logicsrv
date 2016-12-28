@@ -13,16 +13,6 @@ namespace TradingLib.Core
     public partial class BrokerRouter
     {
         /// <summary>
-        /// 获得模拟成交Broker
-        /// </summary>
-        /// <returns></returns>
-        IBroker GetSimBroker()
-        {
-            return TLCtxHelper.ServiceRouterManager.DefaultSimBroker;
-        }
-
-
-        /// <summary>
         /// 查找委托对应的交易通道
         /// 如果委托对应的account实体不存在则返回null
         /// 如果帐户设置的是模拟路由则直接返回模拟成交接口
@@ -39,13 +29,16 @@ namespace TradingLib.Core
             if (account.OrderRouteType == QSEnumOrderTransferType.SIM)
             {
                 //如果没有模拟交易权限 则返回null;
-                return account.Domain.Router_Sim?GetSimBroker():null;
+                return account.Domain.Router_Sim ? TLCtxHelper.ServiceRouterManager.DefaultSimBroker : null;
             }//实盘路由通过RouterGroup返回
             else
             {
                 //没有实盘交易权限
                 if (!account.Domain.Router_Live)
+                {
+                    logger.Warn(string.Format("Domain:{0} not support live trading", account.RG_FK));
                     return null;
+                }
 
                 RouterGroup rg = BasicTracker.RouterGroupTracker[account.RG_FK]; //这里需要做个鉴权 帐户设置的路由组的domain_id与帐户所属domain_id一致
                 //没有设定路由组返回null

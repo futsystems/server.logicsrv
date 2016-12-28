@@ -116,7 +116,7 @@ namespace TradingLib.Core
         {
             if (_status == QSEnumClearCentreStatus.CCOPEN)
             {
-                logger.Info("平仓明细生成:" + obj.GetPositionCloseStr());
+                logger.Info("New PositionCloseDetail:" + obj.GetPositionCloseStr());
                 TLCtxHelper.ModuleDataRepository.NewPositionCloseDetail(obj);
 
                 IAccount account = TLCtxHelper.ModuleAccountManager[obj.Account];

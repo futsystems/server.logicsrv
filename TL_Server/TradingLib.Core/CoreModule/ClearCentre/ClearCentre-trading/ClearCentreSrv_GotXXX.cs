@@ -78,7 +78,7 @@ namespace TradingLib.Core
                 {
                     if (neworder)
                     {
-                        logger.Info("Got Order:" + o.GetOrderInfo());
+                        logger.Info("New Order:" + o.GetOrderInfo());
                         TLCtxHelper.ModuleDataRepository.NewOrder(o);
                     }
                     else
@@ -129,7 +129,7 @@ namespace TradingLib.Core
                 {
                     if (neworder)
                     {
-                        logger.Info("Got Order:" + o.GetOrderInfo()); 
+                        logger.Info("New Order:" + o.GetOrderInfo()); 
                         TLCtxHelper.ModuleDataRepository.NewOrder(o);
                     }
                     else
@@ -179,7 +179,7 @@ namespace TradingLib.Core
                 {
                     if (neworder)
                     {
-                        logger.Info("Got Order:" + o.ToString());
+                        logger.Info("New Order:" + o.ToString());
                         //TLCtxHelper.ModuleDataRepository.NewOrder(o);
                     }
                     else

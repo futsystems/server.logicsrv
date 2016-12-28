@@ -37,6 +37,7 @@ namespace TradingLib.API
         /// 当有成交时候回报客户端
         /// </summary>
         event FillDelegate GotFillEvent;
+
         /// <summary>
         /// 委托正确回报时回报客户端
         /// </summary>
@@ -56,13 +57,6 @@ namespace TradingLib.API
         /// 撤单正确回报时回报客户端
         /// </summary>
         event LongDelegate GotCancelEvent;
-
-        /// <summary>
-        /// 请求获得某个symbol的Tick快照数据
-        /// </summary>
-        //event GetSymbolTickDel GetSymbolTickEvent;
-
-
         #endregion
 
         //清算中心 用于交易通道查询当前的委托 仓位 以及其他相关数据

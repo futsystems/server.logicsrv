@@ -45,7 +45,7 @@
     <Reference Include="System.Xml" />
     <Reference Include="TLBrokerXAPI, Version=1.8.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\Lottoqq.RequiredLibraries\TradingLib\TLBrokerXAPI.dll</HintPath>
+      <HintPath>..\..\lib\TradingLib\TLBrokerXAPI.dll</HintPath>
     </Reference>
     <Reference Include="TradingLib.API, Version=1.8.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>

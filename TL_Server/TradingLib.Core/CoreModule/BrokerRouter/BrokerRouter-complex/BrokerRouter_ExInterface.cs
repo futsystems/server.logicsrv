@@ -51,7 +51,7 @@ namespace TradingLib.Core
             
             }
         }
-        #region 本地向Broker发情的交易请求
+
         /// <summary>
         /// 向Broker发送Order,TradingServer统一通过 BrokerRouter 发送委托,BrokerRouter 则在本地按一定的规则找到对应的
         /// 交易接口将委托发送出去
@@ -62,49 +62,60 @@ namespace TradingLib.Core
         {
             try
             {
-                //发送委托前执行复制 MsgExch处复制的委托由ClearCentre负责维护并更新状态,OrderRouter处复制的委托执行下单状态委托 并通过Broker下单并记录为FatherOrder 接口返回更新状态后 复制后丢入BrokerRouter队列 进行对外处理 
+                //发送委托前执行复制 MsgExch处复制的委托由ClearCentre负责维护并更新状态,OrderRouter处复制的委托通过Broker下单并记录为FatherOrder 接口返回更新状态后 复制后丢入BrokerRouter队列 进行对外处理 
                 //这样可以确保ClearCentre委托状态与下单委托状态不干扰,同时接口处返回的状态直接复制后进行处理，避免接口状态更新对中间状态干扰
                 Order o = new OrderImpl(order);
-                //检查通过,则通过该broker发送委托 拒绝的委托通过 ordermessage对外发送
                 if (o.Status != QSEnumOrderStatus.Reject)
                 {
-                    //按照委托方式发送委托直接发送或通过本地委托模拟器进行发送
-                    logger.Info("Send  Order To Broker Side:" + o.GetOrderInfo());
-                    //这里需要针对委托进行判断 如果需要拆分 则将委托拆分成多个委托然后统一对外提交
-                    //模拟成交不用拆分 实盘委托拆分，如何在多个成交帐户间进行路由，是否也需要像单帐户一样，做单边趋势
-                    //比如帐户A有多头，则卖出操作优先路由到A帐户进行平仓，帐户B有空头,则买入操作优先路由到B帐户进行平仓
-                    //在帐户A中的买入委托 是否必须在A帐户中进行平仓？还是可以在B帐户中进行平仓(如果A帐户和B帐户都是启用净持仓)
+                    logger.Info("Route Order To Broker Side:" + o.GetOrderInfo());
                     string errorTitle = string.Empty;
                     bool ret = SendOrderOut(o, out errorTitle);
-                    //如果委托正常提交 则对外回报委托
                     if (ret)
                     {
                         Broker_GotOrder(o);
                     }
-                    //如果提交委托异常,则回报委托错误
                     else
                     {
                         RspInfo info = RspInfoEx.Fill(errorTitle);
                         o.Comment = info.ErrorMessage;
                         Broker_GotOrderError(o, info);
-                        //GotOrderErrorNotify(o, errorTitle);
                     }
-                    //调用broker_sendorder对外发送委托 如果委托状态为拒绝 则表明委托被broker_send部分拒绝了，我们不用再标记委托状态为submited 因此不用再进入下一步
-                    //if (o.Status != QSEnumOrderStatus.Reject)
-                    //{
-                    //    //o.Status = QSEnumOrderStatus.Submited;//委托状态修正为 已经提交到Broker
-                    //    GotOrder(o);
-                    //}
-                    //
-                    //GotOrder(o);
                 }
             }
             catch (Exception ex)
             {
                 logger.Error("BrokerRouter Send Order Error:" + (order == null ? "Null" : order.ToString()));
-                logger.Error(ex.ToString());
+                logger.Error(ex);
             }
         }
+
+        /// <summary>
+        /// 向broker取消一个order
+        /// </summary>
+        /// <param name="oid"></param>
+        public void CancelOrder(long val)
+        {
+            try
+            {
+                logger.Info("Route Cancel to Broker Side:" + val.ToString());
+                Order o = TLCtxHelper.ModuleClearCentre.SentOrder(val);//通过orderID在清算中心找到对应的Order
+                bool splited = this.IsOrderSplited(o);//判断委托是否被分拆
+                if (!splited)
+                {
+                    BrokerCancelOrder(o);
+                }
+                else //如果委托分拆过则通过分拆器取消委托
+                {
+                    _splittracker.CancelFatherOrder(val);//
+                }
+            }
+            catch (Exception ex)
+            {
+                logger.Error("BrokerRouter CancelOrder Error:" + val.ToString());
+                logger.Error(ex);
+            }
+        }
+
 
         /// <summary>
         /// broker级发送委托 这里按照委托类型可能有委托处于presubmit状态
@@ -139,7 +150,7 @@ namespace TradingLib.Core
         /// <returns></returns>
         bool BrokerSendOrder(Order o, out string errorTitle)
         {
-            logger.Info("Select Broker Send Order Out");
+            //logger.Info("Select Broker Send Order Out");
             errorTitle = string.Empty;
             try
             {
@@ -168,7 +179,7 @@ namespace TradingLib.Core
             }
             catch (Exception ex)
             {
-                logger.Error(PROGRAME + ":向broker发送委托错误:" + ex.ToString() + ex.StackTrace.ToString());
+                logger.Error("BrokerSendOrder Error:" + ex.ToString());
                 o.Status = QSEnumOrderStatus.Reject;
                 errorTitle = "EXECUTION_BROKER_PLACEORDER_ERROR";
                 return false;
@@ -191,53 +202,9 @@ namespace TradingLib.Core
                 o.Status = QSEnumOrderStatus.Reject;
                 RspInfo info = RspInfoEx.Fill("EXECUTION_BROKER_NOT_FOUND");
                 o.Comment = info.ErrorMessage;
-                //GotOrderErrorNotify(o, "EXECUTION_BROKER_NOT_FOUND");
                 Broker_GotOrderError(o, info);
                 logger.Warn(PROGRAME + ":没有可以交易的通道 |" + o.ToString());
             }
         }
-        /// <summary>
-        /// 向broker取消一个order
-        /// </summary>
-        /// <param name="oid"></param>
-        public void CancelOrder(long val)
-        {
-            try
-            {
-                logger.Info(PROGRAME + ":Route Cancel to Broker Side:" + val.ToString());
-                RouterCancelOrder(val);
-            }
-            catch (Exception ex)
-            {
-                logger.Error("BrokerRouter CancelOrder Error:" + val.ToString());
-                logger.Error(ex);
-            }
-
-        }
-        //通过路由选择器将委托取消发送出去
-        void RouterCancelOrder(long val)
-        {
-            try
-            {
-                //debug("取消委托到这里...", QSEnumDebugLevel.MUST);
-                Order o = TLCtxHelper.ModuleClearCentre.SentOrder(val);//通过orderID在清算中心找到对应的Order
-                bool splited = this.IsOrderSplited(o);//判断委托是否被分拆
-                if (!splited)
-                {
-                    BrokerCancelOrder(o);
-                }
-                else //如果委托分拆过则通过分拆器取消委托
-                {
-                    _splittracker.CancelFatherOrder(val);//
-                }
-            
-            }
-            catch (Exception ex)
-            {
-                logger.Error(PROGRAME + ":向broker发送取消委托出错:" + ex.ToString() + ex.StackTrace.ToString());
-            }
-        }
-
-        #endregion
     }
 }

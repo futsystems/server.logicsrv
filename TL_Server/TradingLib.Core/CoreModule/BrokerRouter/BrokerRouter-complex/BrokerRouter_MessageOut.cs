@@ -14,21 +14,6 @@ namespace TradingLib.Core
     public partial class BrokerRouter
     {
         
-        //public event OrderErrorDelegate GotOrderErrorEvent;
-        //public event OrderActionErrorDelegate GotOrderActionErrorEvent;
-        //public event FillDelegate GotFillEvent;
-        //public event OrderDelegate GotOrderEvent;
-        //public event LongDelegate GotCancelEvent;
-  
-
-
-        /// <summary>
-        /// ansyaserver->tlserver_mq->tradingserver->Brokerrouter-X>Broker(order/cancel/trade/)
-        /// ansyaserver->tlserver_mq->tradingserver->Brokerrouter->ordermessage
-        /// ordermessage和simbroker原先的问题一样,ansycserver的消息一直通过处理brokerrouter,brokerrouter如果又直接返回消息
-        /// 进入tradingserver会形成消息闭路，我们有必要将消息进行缓存中断
-        /// </summary>
-        #region 对外转发交易信息
         const int buffersize = 1000;
         RingBuffer<Order> _ordercache = new RingBuffer<Order>(buffersize);
         RingBuffer<long> _cancelcache = new RingBuffer<long>(buffersize);
@@ -107,7 +92,5 @@ namespace TradingLib.Core
             msgoutthread.Abort();
             msgoutthread = null;
         }
-        #endregion
-
     }
 }

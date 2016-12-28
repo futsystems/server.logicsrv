@@ -53,7 +53,7 @@ namespace TradingLib.Core
         /// <param name="o"></param>
         bool XBrokerSendOrder(Order o,out string errorTitle)
         {
-            logger.Info("XBrokerSendOrder Check Split,Send Order Out");
+            logger.Info("XBrokerSendOrder Check Split,Send ExitPosition Order Out");
             IAccount account = TLCtxHelper.ModuleAccountManager[o.Account];
             Position pos = account.GetPosition(o.Symbol, o.PositionSide);//获得该委托对应预操作的持仓对象
 
