@@ -157,7 +157,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "APIClient", "TL_Protocol\AP
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TradingLib.DataFarm.Common", "TL_DataFarm\TradingLib.DataFarm.Common\TradingLib.DataFarm.Common.csproj", "{70FF638B-E319-4437-A2E2-A5FDA17BD8D7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TLBrokerESunny", "TL_Connector\TLBrokerESunny\TLBrokerESunny.csproj", "{C37C0294-7429-4AE6-90B8-84AEA4278D0C}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TLBrokerESunnyDirect", "TL_Connector\TLBrokerESunny\TLBrokerESunnyDirect.csproj", "{C37C0294-7429-4AE6-90B8-84AEA4278D0C}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TLBrokerCTPResverse", "TL_Connector\TLBrokerCTPResverse\TLBrokerCTPResverse.csproj", "{BF15695F-F479-47B2-BC6F-06F5F5C42426}"
 EndProject
