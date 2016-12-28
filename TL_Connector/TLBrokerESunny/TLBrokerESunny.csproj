@@ -49,17 +49,19 @@
     </Reference>
     <Reference Include="TradingLib.API, Version=1.8.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\Lottoqq.RequiredLibraries\TradingLib\TradingLib.API.dll</HintPath>
+      <HintPath>..\..\lib\TradingLib\TradingLib.API.dll</HintPath>
     </Reference>
-    <Reference Include="TradingLib.API.Ex">
-      <HintPath>..\..\Lottoqq.RequiredLibraries\TradingLib\TradingLib.API.Ex.dll</HintPath>
+    <Reference Include="TradingLib.API.Ex, Version=1.8.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\lib\TradingLib\TradingLib.API.Ex.dll</HintPath>
     </Reference>
     <Reference Include="TradingLib.Common, Version=1.8.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\Lottoqq.RequiredLibraries\TradingLib\TradingLib.Common.dll</HintPath>
+      <HintPath>..\..\lib\TradingLib\TradingLib.Common.dll</HintPath>
     </Reference>
-    <Reference Include="TradingLib.Common.Ex">
-      <HintPath>..\..\Lottoqq.RequiredLibraries\TradingLib\TradingLib.Common.Ex.dll</HintPath>
+    <Reference Include="TradingLib.Common.Ex, Version=1.8.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\lib\TradingLib\TradingLib.Common.Ex.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>

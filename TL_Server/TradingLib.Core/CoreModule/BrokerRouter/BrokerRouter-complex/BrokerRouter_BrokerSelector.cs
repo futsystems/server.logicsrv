@@ -21,7 +21,7 @@ namespace TradingLib.Core
         /// </summary>
         /// <param name="o"></param>
         /// <returns></returns>
-        public IBroker SelectBroker(Order o,bool isorderaction=false)
+        public IBroker SelectBroker(Order o,bool isOrderAction=false)
         {
             IAccount account = TLCtxHelper.ModuleAccountManager[o.Account];
             if (account == null) return null;
@@ -57,6 +57,10 @@ namespace TradingLib.Core
                 //路由组只有一条路由项
                 if (rg.RouterItems.Count() == 1)
                 {
+                    if (isOrderAction)
+                    {
+                        return rg.GetBroker(o.Broker);
+                    }
                     RouterItem item = rg.RouterItems.FirstOrDefault();
                     if (o.IsEntryPosition)
                     {
@@ -74,7 +78,7 @@ namespace TradingLib.Core
                 }
                 else //多路由项进行智能选择
                 {
-                    if (isorderaction)//如果是委托操作则直接从Broker字段查找对应的通道
+                    if (isOrderAction)//如果是委托操作则直接从Broker字段查找对应的通道
                     {
                         return rg.GetBroker(o.Broker);
                     }

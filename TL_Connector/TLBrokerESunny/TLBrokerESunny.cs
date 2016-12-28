@@ -385,7 +385,7 @@ namespace Broker.Live
                     //市价单修正价格 市价单 在盘口基础上 让100个tick
                     if (o.LimitPrice == 0)
                     {
-                        Tick k = TLCtxHelper.ModuleDataRouter.GetTickSnapshot(o.Symbol);
+                        Tick k = TLCtxHelper.ModuleDataRouter.GetTickSnapshot(o.Exchange,o.Symbol);
                         if (k != null)
                         {
                             o.LimitPrice = o.Side ? (k.AskPrice + 5 * o.oSymbol.SecurityFamily.PriceTick) : (k.BidPrice - 100 * o.oSymbol.SecurityFamily.PriceTick);
@@ -435,7 +435,7 @@ namespace Broker.Live
                     //交易信息维护器获得委托 //？将委托复制后加入到接口维护的map中 在发送子委托过程中 本地记录的Order就是分拆过程中产生的委托，改变这个委托将同步改变委托分拆器中的委托
                     _BrokerTracker.GotOrder(lo);//原来引用的是分拆器发送过来的子委托 现在修改成本地复制后的委托
                     //对外触发成交侧委托数据用于记录该成交接口的交易数据
-                    logger.Info("Send Order Success,LocalID:" + order.BrokerLocalOrderID + " Son OrderID:" + o.id.ToString());
+                    logger.Info(string.Format("Send Order Success ID:{0} LocalID:{1}", order.ID, order.BrokerLocalOrderID));
 
                 }
                 else
@@ -446,8 +446,6 @@ namespace Broker.Live
 
                 //发送子委托时 记录到数据库
                 this.LogBrokerOrder(lo);
-
-                logger.Info(string.Format("Send Order To XAPI[{0}] BrokerLocalOrderID:{1}", this.Token, lo.BrokerLocalOrderID));
             }
         }
 
@@ -531,9 +529,8 @@ namespace Broker.Live
         /// <param name="trade"></param>
         public override void ProcessTrade(ref XTradeField trade)
         {
-            //CTP接口的成交通过远端编号与委托进行关联
+            logger.Info(string.Format("Process Trade {3} {0} X {1} {2} RemoteOrderID:{4} BrokerTradeID:{5}", trade.Size, trade.Price, trade.Symbol, trade.Side ? "Buy" : "Sell", trade.BrokerRemoteOrderID, trade.BrokerTradeID));
             Order o = RemoteID2Order(trade.BrokerRemoteOrderID);
-            logger.Info("trade info,localid:" + trade.BrokerLocalOrderID + " remoteid:" + trade.BrokerRemoteOrderID);
             if (o != null)
             {
                 //Util.Debug("该成交是本地委托所属成交,进行回报处理", QSEnumDebugLevel.WARNING);

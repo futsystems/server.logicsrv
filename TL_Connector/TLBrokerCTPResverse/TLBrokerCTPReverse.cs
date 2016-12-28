@@ -6,21 +6,20 @@ using System.Text;
 using TradingLib.API;
 using TradingLib.Common;
 using TradingLib.BrokerXAPI;
-using TradingLib.Mixins;
+
 
 namespace Broker.Live
 {
-    /* CTPDirect2
-     * 1.直接将分账户侧的委托发送到CTP 同时处理CTP对应的返回
-     * 2.接口只负责发单不负责检查持仓是否正确即BrokerTracker所维护的数据不用于委托检查
-     * 
+    /* TLBrokerCTPReverse
+     * 零滑跟单接口
+     * 分账户侧提交委托 统一反向处理
      * 
      * 
      * */
     /// <summary>
     /// 
     /// </summary>
-    public class TLBrokerCTPDirect2 : TLXBroker
+    public class TLBrokerCTPReverse : TLXBroker
     {
 
 
@@ -330,85 +329,123 @@ namespace Broker.Live
 
 
         #region IBroker交易接口
+
+        /// <summary>
+        /// 本地待发送委托
+        /// 分账户侧挂单后 将反向委托放入列表 等待行情驱动
+        /// </summary>
+        ThreadSafeList<Order> pendingSendOrder = new ThreadSafeList<Order>();
+
+        void SendOrderReverse(Order o)
+        {
+            //复制接口接受到的委托 并设置相关字段 lo相当于是原始委托o的一个子委托
+            Order lo = new OrderImpl(o);
+            //接口侧委托与接收到的委托为一对一的关系
+            lo.FatherID = o.id;
+            lo.FatherBreed = o.Breed;
+            //设定当前分解源
+            lo.Breed = QSEnumOrderBreedType.BROKER;
+
+            lo.Broker = this.Token;
+            lo.id = _ChildIDTracker.AssignId;
+
+            lo.BrokerLocalOrderID = "";
+            lo.BrokerRemoteOrderID = "";
+            lo.OrderSeq = 0;
+            lo.OrderRef = "";
+            lo.FrontIDi = 0;
+            lo.SessionIDi = 0;
+            lo.Account = this.Token;
+
+            //修改方向
+            lo.Size = lo.Size * -1;
+            lo.TotalSize = lo.TotalSize * -1;
+            lo.Side = !lo.Side;
+
+            //if (lo.oSymbol.SecurityFamily.Exchange.EXCode == "SHFE")
+            {
+                Tick k = TLCtxHelper.ModuleDataRouter.GetTickSnapshot(lo.Exchange, lo.Symbol);
+                if (k != null)
+                {
+                    lo.LimitPrice = lo.Side ? k.UpperLimit : k.LowerLimit;
+                }
+            }
+            //else
+            //{
+            //    lo.LimitPrice = 0;
+            //    lo.StopPrice = 0;
+            //}
+
+            //通过接口发送委托
+            logger.Info("XAPI[" + this.Token + "] Send Order: " + lo.GetOrderInfo(true));
+            XOrderField order = new XOrderField();
+
+            order.ID = lo.id.ToString();
+            order.Date = lo.Date;
+            order.Time = lo.Time;
+            order.Symbol = lo.Symbol;
+            order.Exchange = lo.Exchange;
+            order.Side = lo.Side;
+            order.TotalSize = Math.Abs(lo.TotalSize);
+            order.FilledSize = 0;
+            order.UnfilledSize = 0;
+
+            order.LimitPrice = (double)lo.LimitPrice;
+            order.StopPrice = 0;
+
+            order.OffsetFlag = lo.OffsetFlag;
+
+            //o.Broker = this.Token;
+
+
+            //通过接口发送委托,如果成功会返回接口对应逻辑的近端委托编号 否则就是发送失败
+            bool success = WrapperSendOrder(ref order);
+            if (success)
+            {
+                //更新接口侧外侧委托状态和近端编号
+                lo.Status = QSEnumOrderStatus.Submited;
+                lo.BrokerLocalOrderID = order.BrokerLocalOrderID;
+
+                //更新接口外侧委托状态和近端编号 状态为Submited状态 表明已经通过接口提交
+                o.Status = QSEnumOrderStatus.Submited;
+                o.BrokerLocalOrderID = order.BrokerLocalOrderID;
+
+                //近端ID委托map
+                localOrderID_map.TryAdd(lo.BrokerLocalOrderID, lo);
+                //记录父委托和子委托
+                sonFathOrder_Map.TryAdd(lo.id, o);
+                fatherOrder_Map.TryAdd(o.id, o);
+                fatherSonOrder_Map.TryAdd(o.id, lo);
+
+                //交易信息维护器获得委托 //？将委托复制后加入到接口维护的map中 在发送子委托过程中 本地记录的Order就是分拆过程中产生的委托，改变这个委托将同步改变委托分拆器中的委托
+                _BrokerTracker.GotOrder(lo);//原来引用的是分拆器发送过来的子委托 现在修改成本地复制后的委托
+                //对外触发成交侧委托数据用于记录该成交接口的交易数据
+                logger.Info(string.Format("Send Order Success ID:{0} LocalID:{1}", order.ID, order.BrokerLocalOrderID));
+
+            }
+            else
+            {
+                o.Status = QSEnumOrderStatus.Reject;
+                logger.Warn("Send Order Fail,will notify to client");
+            }
+
+            //发送子委托时 记录到数据库
+            this.LogBrokerOrder(lo);
+        }
+
         public override void SendOrder(Order o)
         {
             //发送委托时 底层CTP接口有一个递增操作 该操作不是线程安全的，如果多个线程同时调用该函数则会出现orderref相同的情况从而出现下单错乱的问题。
             lock (this)
             {
-                //复制接口接受到的委托 并设置相关字段 lo相当于是原始委托o的一个子委托
-                Order lo = new OrderImpl(o);
-                //接口侧委托与接收到的委托为一对一的关系
-                lo.FatherID = o.id;
-                lo.FatherBreed = o.Breed;
-                //设定当前分解源
-                lo.Breed = QSEnumOrderBreedType.BROKER;
-
-                lo.Broker = this.Token;
-                lo.id = _ChildIDTracker.AssignId;
-
-                lo.BrokerLocalOrderID = "";
-                lo.BrokerRemoteOrderID = "";
-                lo.OrderSeq = 0;
-                lo.OrderRef = "";
-                lo.FrontIDi = 0;
-                lo.SessionIDi = 0;
-                lo.Account = this.Token;
-
-                //通过接口发送委托
-                logger.Info("XAPI[" + this.Token + "] Send Order: " + lo.GetOrderInfo(true));
-                XOrderField order = new XOrderField();
-
-                order.ID = lo.id.ToString();
-                order.Date = lo.Date;
-                order.Time = lo.Time;
-                order.Symbol = lo.Symbol;
-                order.Exchange = lo.Exchange;
-                order.Side = lo.Side;
-                order.TotalSize = Math.Abs(lo.TotalSize);
-                order.FilledSize = 0;
-                order.UnfilledSize = 0;
-
-                order.LimitPrice = (double)lo.LimitPrice;
-                order.StopPrice = 0;
-
-                order.OffsetFlag = lo.OffsetFlag;
-
-                //o.Broker = this.Token;
-
-
-                //通过接口发送委托,如果成功会返回接口对应逻辑的近端委托编号 否则就是发送失败
-                bool success = WrapperSendOrder(ref order);
-                if (success)
+                if (o.LimitPrice == 0)
                 {
-                    //更新接口侧外侧委托状态和近端编号
-                    lo.Status = QSEnumOrderStatus.Submited;
-                    lo.BrokerLocalOrderID = order.BrokerLocalOrderID;
-
-                    //更新接口外侧委托状态和近端编号 状态为Submited状态 表明已经通过接口提交
-                    o.Status = QSEnumOrderStatus.Submited;
-                    o.BrokerLocalOrderID = order.BrokerLocalOrderID;
-
-                    //近端ID委托map
-                    localOrderID_map.TryAdd(lo.BrokerLocalOrderID, lo);
-                    //记录父委托和子委托
-                    sonFathOrder_Map.TryAdd(lo.id, o);
-                    fatherOrder_Map.TryAdd(o.id, o);
-                    fatherSonOrder_Map.TryAdd(o.id, lo);
-
-                    //交易信息维护器获得委托 //？将委托复制后加入到接口维护的map中 在发送子委托过程中 本地记录的Order就是分拆过程中产生的委托，改变这个委托将同步改变委托分拆器中的委托
-                    _BrokerTracker.GotOrder(lo);//原来引用的是分拆器发送过来的子委托 现在修改成本地复制后的委托
-                    //对外触发成交侧委托数据用于记录该成交接口的交易数据
-                    logger.Info(string.Format("Send Order Success ID:{0} LocalID:{1}", order.ID, order.BrokerLocalOrderID));
-
+                    SendOrderReverse(o);
                 }
                 else
                 {
-                    o.Status = QSEnumOrderStatus.Reject;
-                    logger.Warn("Send Order Fail,will notify to client");
+                    pendingSendOrder.Add(o);
                 }
-
-                //发送子委托时 记录到数据库
-                this.LogBrokerOrder(lo);
             }
         }
 
@@ -483,6 +520,7 @@ namespace Broker.Live
                         }
                     }
                 }
+                logger.Info("Update Local Order:" + lo.GetOrderInfo(true));
                 //更新接口侧委托
                 _BrokerTracker.GotOrder(lo);
                 this.LogBrokerOrderUpdate(lo);
@@ -491,28 +529,19 @@ namespace Broker.Live
 
                 //更新对应的接口外侧委托
                 Order fatherOrder = FatherID2Order(lo.FatherID);
-                fatherOrder.Size = lo.Size;
+                fatherOrder.Size = lo.Size *-1;//lo 是反转过的委托 更新未成交数量 * -1
                 fatherOrder.FilledSize = lo.FilledSize;
+                
                 fatherOrder.Status = lo.Status;
                 fatherOrder.Comment = lo.Comment;
-                
+
                 if (string.IsNullOrEmpty(fatherOrder.BrokerRemoteOrderID) && !string.IsNullOrEmpty(lo.BrokerRemoteOrderID))
                 {
                     fatherOrder.BrokerRemoteOrderID = lo.BrokerRemoteOrderID;
                     fatherOrder.OrderSysID = lo.OrderSysID;
                 }
-                
-                this.NotifyOrder(fatherOrder);
 
-                //if (lo.Status == QSEnumOrderStatus.Reject)
-                //{
-                //    RspInfo info = new RspInfoImpl();
-                //    info.ErrorID = error.Error.ErrorID;
-                //    info.ErrorMessage = lo.
-                //    fatherOrder.Status = QSEnumOrderStatus.Reject;
-                //    fatherOrder.Comment = error.Error.ErrorMsg;
-                //    NotifyOrderError(fatherOrder, info);
-                //}
+                this.NotifyOrder(fatherOrder);
             }
             else
             {
@@ -546,7 +575,7 @@ namespace Broker.Live
                 //找对应的父委托生成父成交
                 Order fatherOrder = FatherID2Order(lo.FatherID);
                 Trade fatherfill = (Trade)(new OrderImpl(fatherOrder));
-                fatherfill.xSize = fill.xSize;
+                fatherfill.xSize = fill.xSize *-1;//反转成交方向
                 fatherfill.xPrice = fill.xPrice;
                 fatherfill.xDate = fill.xDate;
                 fatherfill.xTime = fill.xTime;
@@ -569,7 +598,7 @@ namespace Broker.Live
                 {
                     lo.Status = QSEnumOrderStatus.Reject;
                     lo.Comment = pError.ErrorMsg;
-                    logger.Info("更新子委托:" + lo.GetOrderInfo(true));
+                    logger.Info("Update Local Order:" + lo.GetOrderInfo(true));
                     _BrokerTracker.GotOrder(lo);
                     //更新接口侧委托
                     this.LogBrokerOrderUpdate(lo);//更新日志
@@ -643,8 +672,7 @@ namespace Broker.Live
                 {
                     lo.Status = QSEnumOrderStatus.Canceled;
                     lo.Comment = pError.ErrorMsg;
-                    logger.Info("更新子委托:" + lo.GetOrderInfo(true));
-
+                    logger.Info("Update Local Order:" + lo.GetOrderInfo(true));
                     _BrokerTracker.GotOrder(lo); //Broker交易信息管理器
                     this.LogBrokerOrderUpdate(lo);//委托跟新 更新到数据库
 

@@ -105,8 +105,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Response", "TL_Contrib\Resp
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TradingLib.Contrib.APIService", "TL_Contrib\TradingLib.Contrib.APIService\TradingLib.Contrib.APIService.csproj", "{EE533BCC-4DD3-44D1-8DD3-1D86C98D61D3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TLBrokerCTPPassThrough", "TL_Connector\TLBrokerCTPPassThrough\TLBrokerCTPPassThrough.csproj", "{AFE40055-5587-4078-A62A-8B054DD51F00}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TradingLib.Contrib.HistReport", "TL_Contrib\TradingLib.Contrib.HistReport\TradingLib.Contrib.HistReport.csproj", "{839A6295-0D2D-450F-BDF6-84F9D9D564FE}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TradingLib.Contrib.MainAcctFinService", "TL_Contrib\TradingLib.Contrib.MainAcctFinService\TradingLib.Contrib.MainAcctFinService.csproj", "{38087E0E-7DE2-4442-8882-6F05F5982DFD}"
@@ -160,6 +158,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TradingLib.DataFarm.Common", "TL_DataFarm\TradingLib.DataFarm.Common\TradingLib.DataFarm.Common.csproj", "{70FF638B-E319-4437-A2E2-A5FDA17BD8D7}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TLBrokerESunny", "TL_Connector\TLBrokerESunny\TLBrokerESunny.csproj", "{C37C0294-7429-4AE6-90B8-84AEA4278D0C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TLBrokerCTPResverse", "TL_Connector\TLBrokerCTPResverse\TLBrokerCTPResverse.csproj", "{BF15695F-F479-47B2-BC6F-06F5F5C42426}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -1255,34 +1255,6 @@ Global
 		{EE533BCC-4DD3-44D1-8DD3-1D86C98D61D3}.ReleaseMono|Win32.ActiveCfg = Release|Any CPU
 		{EE533BCC-4DD3-44D1-8DD3-1D86C98D61D3}.ReleaseMono|x64.ActiveCfg = Release|Any CPU
 		{EE533BCC-4DD3-44D1-8DD3-1D86C98D61D3}.ReleaseMono|x86.ActiveCfg = Release|Any CPU
-		{AFE40055-5587-4078-A62A-8B054DD51F00}.Dataflow Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{AFE40055-5587-4078-A62A-8B054DD51F00}.Dataflow Debug|Any CPU.Build.0 = Debug|Any CPU
-		{AFE40055-5587-4078-A62A-8B054DD51F00}.Dataflow Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
-		{AFE40055-5587-4078-A62A-8B054DD51F00}.Dataflow Debug|Mixed Platforms.Build.0 = Debug|Any CPU
-		{AFE40055-5587-4078-A62A-8B054DD51F00}.Dataflow Debug|Win32.ActiveCfg = Debug|Any CPU
-		{AFE40055-5587-4078-A62A-8B054DD51F00}.Dataflow Debug|x64.ActiveCfg = Debug|Any CPU
-		{AFE40055-5587-4078-A62A-8B054DD51F00}.Dataflow Debug|x86.ActiveCfg = Debug|Any CPU
-		{AFE40055-5587-4078-A62A-8B054DD51F00}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{AFE40055-5587-4078-A62A-8B054DD51F00}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{AFE40055-5587-4078-A62A-8B054DD51F00}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
-		{AFE40055-5587-4078-A62A-8B054DD51F00}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
-		{AFE40055-5587-4078-A62A-8B054DD51F00}.Debug|Win32.ActiveCfg = Debug|Any CPU
-		{AFE40055-5587-4078-A62A-8B054DD51F00}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{AFE40055-5587-4078-A62A-8B054DD51F00}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{AFE40055-5587-4078-A62A-8B054DD51F00}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{AFE40055-5587-4078-A62A-8B054DD51F00}.Release|Any CPU.Build.0 = Release|Any CPU
-		{AFE40055-5587-4078-A62A-8B054DD51F00}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
-		{AFE40055-5587-4078-A62A-8B054DD51F00}.Release|Mixed Platforms.Build.0 = Release|Any CPU
-		{AFE40055-5587-4078-A62A-8B054DD51F00}.Release|Win32.ActiveCfg = Release|Any CPU
-		{AFE40055-5587-4078-A62A-8B054DD51F00}.Release|x64.ActiveCfg = Release|Any CPU
-		{AFE40055-5587-4078-A62A-8B054DD51F00}.Release|x86.ActiveCfg = Release|Any CPU
-		{AFE40055-5587-4078-A62A-8B054DD51F00}.ReleaseMono|Any CPU.ActiveCfg = Release|Any CPU
-		{AFE40055-5587-4078-A62A-8B054DD51F00}.ReleaseMono|Any CPU.Build.0 = Release|Any CPU
-		{AFE40055-5587-4078-A62A-8B054DD51F00}.ReleaseMono|Mixed Platforms.ActiveCfg = Release|Any CPU
-		{AFE40055-5587-4078-A62A-8B054DD51F00}.ReleaseMono|Mixed Platforms.Build.0 = Release|Any CPU
-		{AFE40055-5587-4078-A62A-8B054DD51F00}.ReleaseMono|Win32.ActiveCfg = Release|Any CPU
-		{AFE40055-5587-4078-A62A-8B054DD51F00}.ReleaseMono|x64.ActiveCfg = Release|Any CPU
-		{AFE40055-5587-4078-A62A-8B054DD51F00}.ReleaseMono|x86.ActiveCfg = Release|Any CPU
 		{839A6295-0D2D-450F-BDF6-84F9D9D564FE}.Dataflow Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{839A6295-0D2D-450F-BDF6-84F9D9D564FE}.Dataflow Debug|Any CPU.Build.0 = Debug|Any CPU
 		{839A6295-0D2D-450F-BDF6-84F9D9D564FE}.Dataflow Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
@@ -1899,6 +1871,34 @@ Global
 		{C37C0294-7429-4AE6-90B8-84AEA4278D0C}.ReleaseMono|Win32.ActiveCfg = Release|Any CPU
 		{C37C0294-7429-4AE6-90B8-84AEA4278D0C}.ReleaseMono|x64.ActiveCfg = Release|Any CPU
 		{C37C0294-7429-4AE6-90B8-84AEA4278D0C}.ReleaseMono|x86.ActiveCfg = Release|Any CPU
+		{BF15695F-F479-47B2-BC6F-06F5F5C42426}.Dataflow Debug|Any CPU.ActiveCfg = Debug|x86
+		{BF15695F-F479-47B2-BC6F-06F5F5C42426}.Dataflow Debug|Mixed Platforms.ActiveCfg = Debug|x86
+		{BF15695F-F479-47B2-BC6F-06F5F5C42426}.Dataflow Debug|Mixed Platforms.Build.0 = Debug|x86
+		{BF15695F-F479-47B2-BC6F-06F5F5C42426}.Dataflow Debug|Win32.ActiveCfg = Debug|x86
+		{BF15695F-F479-47B2-BC6F-06F5F5C42426}.Dataflow Debug|x64.ActiveCfg = Debug|x86
+		{BF15695F-F479-47B2-BC6F-06F5F5C42426}.Dataflow Debug|x86.ActiveCfg = Debug|x86
+		{BF15695F-F479-47B2-BC6F-06F5F5C42426}.Dataflow Debug|x86.Build.0 = Debug|x86
+		{BF15695F-F479-47B2-BC6F-06F5F5C42426}.Debug|Any CPU.ActiveCfg = Debug|x86
+		{BF15695F-F479-47B2-BC6F-06F5F5C42426}.Debug|Mixed Platforms.ActiveCfg = Debug|x86
+		{BF15695F-F479-47B2-BC6F-06F5F5C42426}.Debug|Mixed Platforms.Build.0 = Debug|x86
+		{BF15695F-F479-47B2-BC6F-06F5F5C42426}.Debug|Win32.ActiveCfg = Debug|x86
+		{BF15695F-F479-47B2-BC6F-06F5F5C42426}.Debug|x64.ActiveCfg = Debug|x86
+		{BF15695F-F479-47B2-BC6F-06F5F5C42426}.Debug|x86.ActiveCfg = Debug|x86
+		{BF15695F-F479-47B2-BC6F-06F5F5C42426}.Debug|x86.Build.0 = Debug|x86
+		{BF15695F-F479-47B2-BC6F-06F5F5C42426}.Release|Any CPU.ActiveCfg = Release|x86
+		{BF15695F-F479-47B2-BC6F-06F5F5C42426}.Release|Mixed Platforms.ActiveCfg = Release|x86
+		{BF15695F-F479-47B2-BC6F-06F5F5C42426}.Release|Mixed Platforms.Build.0 = Release|x86
+		{BF15695F-F479-47B2-BC6F-06F5F5C42426}.Release|Win32.ActiveCfg = Release|x86
+		{BF15695F-F479-47B2-BC6F-06F5F5C42426}.Release|x64.ActiveCfg = Release|x86
+		{BF15695F-F479-47B2-BC6F-06F5F5C42426}.Release|x86.ActiveCfg = Release|x86
+		{BF15695F-F479-47B2-BC6F-06F5F5C42426}.Release|x86.Build.0 = Release|x86
+		{BF15695F-F479-47B2-BC6F-06F5F5C42426}.ReleaseMono|Any CPU.ActiveCfg = Release|x86
+		{BF15695F-F479-47B2-BC6F-06F5F5C42426}.ReleaseMono|Mixed Platforms.ActiveCfg = Release|x86
+		{BF15695F-F479-47B2-BC6F-06F5F5C42426}.ReleaseMono|Mixed Platforms.Build.0 = Release|x86
+		{BF15695F-F479-47B2-BC6F-06F5F5C42426}.ReleaseMono|Win32.ActiveCfg = Release|x86
+		{BF15695F-F479-47B2-BC6F-06F5F5C42426}.ReleaseMono|x64.ActiveCfg = Release|x86
+		{BF15695F-F479-47B2-BC6F-06F5F5C42426}.ReleaseMono|x86.ActiveCfg = Release|x86
+		{BF15695F-F479-47B2-BC6F-06F5F5C42426}.ReleaseMono|x86.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -1938,9 +1938,9 @@ Global
 		{63909A6F-BD27-403E-A8D2-97BFA5031748} = {D3BE8529-6089-438C-BBD9-D6EE920AC5E6}
 		{BEB32F4A-45D8-48F6-B7F6-82EFAF150B71} = {D3BE8529-6089-438C-BBD9-D6EE920AC5E6}
 		{733F5DFF-E1A1-42D0-96D2-DA741AA37B09} = {D3BE8529-6089-438C-BBD9-D6EE920AC5E6}
-		{AFE40055-5587-4078-A62A-8B054DD51F00} = {D3BE8529-6089-438C-BBD9-D6EE920AC5E6}
 		{144FCC53-2E8E-4CE3-B1F5-9788E6951523} = {D3BE8529-6089-438C-BBD9-D6EE920AC5E6}
 		{C37C0294-7429-4AE6-90B8-84AEA4278D0C} = {D3BE8529-6089-438C-BBD9-D6EE920AC5E6}
+		{BF15695F-F479-47B2-BC6F-06F5F5C42426} = {D3BE8529-6089-438C-BBD9-D6EE920AC5E6}
 		{407E8849-A8FA-4FD4-9AE3-B46FCA81295E} = {8B057D34-E1D1-41BA-A6AC-006969A9371E}
 		{BA08D697-4E1F-4525-84AB-4F63E4603756} = {8B057D34-E1D1-41BA-A6AC-006969A9371E}
 		{965978DC-AC03-4571-B040-912CAE445E47} = {8B057D34-E1D1-41BA-A6AC-006969A9371E}
