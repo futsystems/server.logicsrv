@@ -29,8 +29,6 @@ namespace Broker.Live
     public partial class TLBrokerIB : TLBrokerBase,IBroker
     {
 
-        ILog logger = LogManager.GetLogger("TLBrokerIB");
-
         IBClient client = null;
         IdTracker orderIdtk = null;
         int _orderId = 0;

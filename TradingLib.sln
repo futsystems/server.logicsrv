@@ -111,7 +111,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TradingLib.Contrib.MainAcct
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RuleSet2", "TL_Strategy\RuleSet\RuleSet2\RuleSet2.csproj", "{A9885951-5F0E-42A6-A425-30DC322B6748}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TLBrokerIB", "TL_Connector\TLBrokerIB\TLBrokerIB.csproj", "{144FCC53-2E8E-4CE3-B1F5-9788E6951523}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TLBrokerIBDirect", "TL_Connector\TLBrokerIB\TLBrokerIBDirect.csproj", "{144FCC53-2E8E-4CE3-B1F5-9788E6951523}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "y.test", "y.test", "{57E96A39-5151-4DEF-BA05-ABC06724EA56}"
 EndProject

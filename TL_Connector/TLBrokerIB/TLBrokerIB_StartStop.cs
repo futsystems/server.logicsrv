@@ -15,18 +15,10 @@ namespace Broker.Live
         public bool Start(out string msg)
         {
             msg = string.Empty;
-            msg = string.Empty;
-            Util.Info("Try to start broker:" + this.Token, this.GetType().Name);
-
             //初始化参数
             ParseConfigInfo();
             //初始化
             InitBroker();
-
-            client = new IBClient();
-            client.Connect("127.0.0.1", 7496, 2);
-
-            WireEvent();
 
             _working = true;
 
@@ -44,6 +36,14 @@ namespace Broker.Live
             tk = new BrokerTracker(this);
             orderIdtk = new IdTracker(IdTracker.ConnectorOwnerIDStart + _cfg.ID);
 
+            client = new IBClient();
+            client.OrderStatus += new EventHandler<OrderStatusEventArgs>(client_OrderStatus);
+            client.ExecDetails += new EventHandler<ExecDetailsEventArgs>(client_ExecDetails);
+            client.NextValidId += new EventHandler<NextValidIdEventArgs>(client_NextValidId);
+            client.Error += new EventHandler<ErrorEventArgs>(client_Error);
+            client.ConnectionClosed += new EventHandler<ConnectionClosedEventArgs>(client_ConnectionClosed);
+
+            client.Connect(_srvinfo.ServerAddress, _srvinfo.ServerPort, int.Parse(_usrinfo.Field1));
         }
 
         /// <summary>
@@ -157,18 +157,6 @@ namespace Broker.Live
         }
 
 
-        void WireEvent()
-        {
-            client.OrderStatus += new EventHandler<OrderStatusEventArgs>(client_OrderStatus);
-            client.ExecDetails += new EventHandler<ExecDetailsEventArgs>(client_ExecDetails);
-            client.NextValidId += new EventHandler<NextValidIdEventArgs>(client_NextValidId);
-            client.Error += new EventHandler<ErrorEventArgs>(client_Error);
-            client.ConnectionClosed += new EventHandler<ConnectionClosedEventArgs>(client_ConnectionClosed);
-            
-        }
-
-        
-
 
 
         public void Start()
@@ -180,13 +168,34 @@ namespace Broker.Live
         {
             get
             {
+                if (!_connlost)
+                {
+                    return _working;
+                }
                 return _working;
             }
         }
 
         public void Stop()
         {
+            if (!this.IsLive) return;
+            _working = false;
 
+            logger.Info("Stop IBClient and clear memory");
+            if (client != null && client.Connected)
+            {
+                client.Disconnect();
+                client.Stop();
+            }
+
+            tk.Clear();
+            tk = null;
+
+            //清空Map
+            localOrderID_map.Clear();
+            fatherOrder_Map.Clear();
+            sonFathOrder_Map.Clear();
+            fatherSonOrder_Map.Clear();
         }
     }
 }

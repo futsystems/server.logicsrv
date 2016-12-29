@@ -13,6 +13,7 @@ namespace Broker.Live
     public partial class TLBrokerIB
     {
 
+        bool _connlost = false;
         void client_ConnectionClosed(object sender, Krs.Ats.IBNet.ConnectionClosedEventArgs e)
         {
             logger.Info("conneced closed");
@@ -64,6 +65,15 @@ namespace Broker.Live
                 NotifyOrderError(fatherOrder, info);
             }
 
+            //标注TWS重连事件 当连接断开时不允许发单
+            if (code == 1100)
+            {
+                _connlost = true;
+            }
+            if (code == 1102 || code == 1101)
+            {
+                _connlost = false;
+            }
             //switch (code)
             //{
                     
