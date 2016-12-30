@@ -16,7 +16,7 @@ namespace TradingLib.API
         /// <summary>
         /// 清算中心状态
         /// </summary>
-        QSEnumClearCentreStatus Status{get;}
+        bool IsLive {get;}
 
         #region 响应交易回报 用于记录交易记录
         /// <summary>
@@ -91,12 +91,6 @@ namespace TradingLib.API
         /// 所有成交
         /// </summary>
         IEnumerable<Trade> TotalTrades { get; }
-
-        /// <summary>
-        /// 所有持仓回合
-        /// </summary>
-        IEnumerable<PositionRound> TotalRoundOpend { get; }
-        
         #endregion
 
         /// <summary>
@@ -114,6 +108,7 @@ namespace TradingLib.API
         /// 关闭清算中心
         /// </summary>
         void CloseClearCentre();
+
         /// <summary>
         /// 载入交易帐户
         /// 为该用户生成基本交易数据结构，并维护该帐户的实时交易信息，以形成交易状态

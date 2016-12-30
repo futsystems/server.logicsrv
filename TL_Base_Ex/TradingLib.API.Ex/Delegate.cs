@@ -13,8 +13,6 @@ namespace TradingLib.API
     public delegate long UnknownMessageDelegateSession(MessageTypes t, string msg, ISession session);
 
    
-    //当有持仓回合记录关闭时触发该事件
-    public delegate void PositionRoundClosedDel(PositionRound pr,Position pos);
 
     //通过帐户编号返回账户实例
     public delegate IAccount FindAccountDel(string account);
@@ -30,8 +28,7 @@ namespace TradingLib.API
 
     //配资中心使用的委托
     public delegate decimal AccountFinAmmountDel(string account);//查找某个账户的配资额度
-    //清算中心手续费调整委托 用于调整某个成交的手续费
-    public delegate decimal AdjustCommissionDel(Trade fill, PositionRound positionround);
+
     public delegate void ChargeFinFeeDel(string account, decimal fee);//配资中心的扣费出金委托 用于调用清算中心进行出金操作
     public delegate bool IsTradingDayDel();//查询当前是否是交易日
 
@@ -63,9 +60,6 @@ namespace TradingLib.API
     public delegate bool AccountParamDel(string account, out string msg);
     public delegate void TrimFinServiceDel(string account);
 
-    //清算中心
-    //清算中心状态发生变化
-    public delegate void ClearCentreStatusDel(QSEnumClearCentreStatus status);
     //当帐户状态发生变化
     public delegate void AccountSettingChangedDel(IAccount account);
 

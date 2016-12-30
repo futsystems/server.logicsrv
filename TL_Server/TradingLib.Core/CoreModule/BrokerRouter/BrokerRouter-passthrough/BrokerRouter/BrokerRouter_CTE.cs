@@ -219,46 +219,46 @@ namespace TradingLib.Core
 
        
 
-        /// <summary>
-        /// 重新同步交易数据
-        /// </summary>
-        /// <param name="session"></param>
-        /// <param name="account"></param>
-        [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "SyncExData", "SyncExData - sync trading data from broker", "同步交易通道交易数据")]
-        public void CTE_SyncExData(ISession session, string account)
-        {
-            var manager = session.GetManager();
-            if (manager.IsInRoot())
-            {
-                IAccount acct = TLCtxHelper.ModuleAccountManager[account];
-                if(acct == null)
-                {
-                    throw new FutsRspError(string.Format("交易帐户:{0}不存在",account));
-                }
-                int id = BasicTracker.ConnectorMapTracker.GetConnectorIDForAccount(account);
-                if (id == 0)
-                {
-                    throw new FutsRspError("未绑定主帐户,无法同步");
-                }
-                ConnectorConfig config = manager.Domain.GetConnectorConfigs().FirstOrDefault(cfg => cfg.ID == id);
-                if (config == null)
-                {
-                    throw new FutsRspError("无权操作该主帐户");
-                }
+        ///// <summary>
+        ///// 重新同步交易数据
+        ///// </summary>
+        ///// <param name="session"></param>
+        ///// <param name="account"></param>
+        //[ContribCommandAttr(QSEnumCommandSource.MessageMgr, "SyncExData", "SyncExData - sync trading data from broker", "同步交易通道交易数据")]
+        //public void CTE_SyncExData(ISession session, string account)
+        //{
+        //    var manager = session.GetManager();
+        //    if (manager.IsInRoot())
+        //    {
+        //        IAccount acct = TLCtxHelper.ModuleAccountManager[account];
+        //        if(acct == null)
+        //        {
+        //            throw new FutsRspError(string.Format("交易帐户:{0}不存在",account));
+        //        }
+        //        int id = BasicTracker.ConnectorMapTracker.GetConnectorIDForAccount(account);
+        //        if (id == 0)
+        //        {
+        //            throw new FutsRspError("未绑定主帐户,无法同步");
+        //        }
+        //        ConnectorConfig config = manager.Domain.GetConnectorConfigs().FirstOrDefault(cfg => cfg.ID == id);
+        //        if (config == null)
+        //        {
+        //            throw new FutsRspError("无权操作该主帐户");
+        //        }
                 
-                //取消交易帐户的实时监控
-                TLCtxHelper.ModuleRiskCentre.DetachAccountCheck(account);
+        //        //取消交易帐户的实时监控
+        //        //TLCtxHelper.ModuleRiskCentre.DetachAccountCheck(account);
 
-                //清空帐户交易数据
-                ClearAccountTradingInfo(acct);
+        //        //清空帐户交易数据
+        //        ClearAccountTradingInfo(acct);
 
-                //重启交易通道
-                AsyncBrokerOperationDel cb = new AsyncBrokerOperationDel(this.RestartBroker);
-                cb.BeginInvoke(config.Token, null, null);
+        //        //重启交易通道
+        //        AsyncBrokerOperationDel cb = new AsyncBrokerOperationDel(this.RestartBroker);
+        //        cb.BeginInvoke(config.Token, null, null);
 
-                session.OperationSuccess("开始同步交易数据");
-            }
-        }
+        //        session.OperationSuccess("开始同步交易数据");
+        //    }
+        //}
 
         [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "SyncEquity", "SyncEquity - 同步权益", "同步权益",QSEnumArgParseType.Json)]
         public void CTE_SyncEquity(ISession session, string request)
@@ -435,14 +435,14 @@ namespace TradingLib.Core
             return tmp;
         }
 
-        Symbol _activeSymbol = null;
-        [TaskAttr("获得当前银主力合约",21,00,05, "每天晚上21:00:05检查主力合约")]
-        public void Task_CheckActiveSymbol()
-        {
-            if (!TLCtxHelper.ModuleSettleCentre.IsTradingday) return;
+        //Symbol _activeSymbol = null;
+        //[TaskAttr("获得当前银主力合约",21,00,05, "每天晚上21:00:05检查主力合约")]
+        //public void Task_CheckActiveSymbol()
+        //{
+        //    if (!TLCtxHelper.ModuleSettleCentre.IsTradingday) return;
 
-            _activeSymbol = GetActiveSymbol();
-        }
+        //    _activeSymbol = GetActiveSymbol();
+        //}
 
         /// <summary>
         /// 检查所有帐户，如果帐户被强平并且有绑定的持仓并且有优先资金，则将优先资金出金

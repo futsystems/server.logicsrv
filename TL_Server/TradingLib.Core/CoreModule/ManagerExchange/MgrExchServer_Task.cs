@@ -69,8 +69,9 @@ namespace TradingLib.Core
                 ManagerNum = BasicTracker.ManagerTracker.Managers.Count(),//管理员数量
                 ManagerRegistedNum = customerExInfoMap.Values.Count,
                 AccountNum = TLCtxHelper.ModuleAccountManager.Accounts.Count(),//交易帐户数量
-                IsTradingday = TLCtxHelper.ModuleSettleCentre.IsTradingday,//当前是否是交易日
-                SettleNormal = TLCtxHelper.ModuleSettleCentre.IsNormal,//结算中心是否正常
+                IsTradingday = true,//TLCtxHelper.ModuleSettleCentre.IsTradingday,//当前是否是交易日
+                SettleNormal = true,//TLCtxHelper.ModuleSettleCentre.IsNormal,//结算中心是否正常
+                SettleMode = TLCtxHelper.ModuleSettleCentre.SettleMode,
                 StartUpTime = TLCtxHelper.StartUpTime,//启动时间
                 InterfaceList = GetInterfaceList(),//ip地址列表
             };

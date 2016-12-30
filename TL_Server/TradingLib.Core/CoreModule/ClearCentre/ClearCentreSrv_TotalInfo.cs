@@ -11,7 +11,7 @@ namespace TradingLib.Core
     {
 
         ///// <summary>
-        ///// 通过OrderId获得该Order
+        ///// 通过OrderId获得委托
         ///// </summary>
         ///// <param name="oid"></param>
         ///// <returns></returns>
@@ -21,7 +21,7 @@ namespace TradingLib.Core
         }
 
         /// <summary>
-        /// 通过TradeID获得对应的成交对象
+        /// 通过TradeID获得Trade
         /// </summary>
         /// <param name="tradeid"></param>
         /// <returns></returns>
@@ -31,7 +31,7 @@ namespace TradingLib.Core
         }
 
         /// <summary>
-        /// 某个委托是否被维护
+        /// 查看个委托是否被维护
         /// </summary>
         /// <param name="oid"></param>
         /// <returns></returns>
@@ -39,6 +39,7 @@ namespace TradingLib.Core
         {
             return totaltk.IsTracked(o);
         }
+
         /// <summary>
         /// 所有委托
         /// </summary>
@@ -53,8 +54,6 @@ namespace TradingLib.Core
         /// 所有成交
         /// </summary>
         public IEnumerable<Trade> TotalTrades { get { return totaltk.TotalTrades; } }
-
-        #region 重新加载某个交易账户的持仓
 
         //TODO:实时重新加载交易账户成交数据
         public void ReloadAccount(IAccount account)
@@ -73,7 +72,5 @@ namespace TradingLib.Core
                 totaltk.NewPosition(pos);
             }
         }
-
-        #endregion
     }
 }

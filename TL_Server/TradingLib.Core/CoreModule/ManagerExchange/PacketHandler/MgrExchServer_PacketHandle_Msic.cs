@@ -22,8 +22,9 @@ namespace TradingLib.Core
                 status.LastSettleday = TLCtxHelper.ModuleSettleCentre.LastSettleday;
                 status.Tradingday = TLCtxHelper.ModuleSettleCentre.Tradingday;
                 status.NextSettleTime = TLCtxHelper.ModuleSettleCentre.NextSettleTime;
-                status.IsSettleNormal = TLCtxHelper.ModuleSettleCentre.IsNormal;
-                status.ClearCentreStatus = TLCtxHelper.ModuleClearCentre.Status;
+                status.IsSettleNormal = true;// TLCtxHelper.ModuleSettleCentre.IsNormal;
+                status.IsClearCentreLive = TLCtxHelper.ModuleClearCentre.IsLive;// TLCtxHelper.ModuleClearCentre.Status;
+                status.SettleMode = TLCtxHelper.ModuleSettleCentre.SettleMode;
                 status.UnsettledAcctOrderNumOfPreSettleday = ORM.MTradingInfo.GetUnsettledAcctOrderNum(TLCtxHelper.ModuleSettleCentre.LastSettleday);
                 status.UnsettledBrokerOrderNumOfPreSettleday = ORM.MTradingInfo.GetUnsettledBrokerOrderNum(TLCtxHelper.ModuleSettleCentre.LastSettleday);
                 status.TotalOrderNum = ORM.MTradingInfo.GetInterdayOrderNum(TLCtxHelper.ModuleSettleCentre.Tradingday);

@@ -10,12 +10,21 @@ namespace TradingLib.API
     {
         /// <summary>
         /// 历史结算模式
+        /// 手工回滚到某个交易日 处于手工结算模式
         /// </summary>
-        HistMode,
+        HistSettleMode,
+
         /// <summary>
-        /// 运行结算模式
+        /// 结算状态
+        /// 系统按定时任务执行结算任务
         /// </summary>
-        LiveMode,
+        SettleMode,
+
+        /// <summary>
+        /// 待机状态
+        /// 结算中心未执行任何结算任务 此时系统处于正常工作状态 只要清算中心开启 即可接受客户委托
+        /// </summary>
+        StandbyMode,
     }
 
     /// <summary>
@@ -47,61 +56,6 @@ namespace TradingLib.API
         [Description("除外")]
         Out,
     }
-    
-
-    /// <summary>
-    /// 清算中心状态
-    /// </summary>
-    public enum QSEnumClearCentreStatus
-    {
-        [Description("状态未知")]
-        UNKNOWN,
-        /// <summary>
-        /// 清算中心初始化
-        /// </summary>
-        [Description("初始化模式")]
-        CCINIT,
-        [Description("初始化完毕")]
-        CCINITFINISH,
-        /// 清算中心从数据库恢复交易信息
-        /// </summary>
-        [Description("正在恢复")]
-        CCRESTORE,
-        [Description("恢复完毕")]
-        CCRESTOREFINISH,
-        /// <summary>
-        /// 清算中心开启,可以进行交易处理
-        /// </summary>
-        [Description("开启模式")]
-        CCOPEN,
-        /// <summary>
-        /// 清算中心关闭
-        /// </summary>
-        [Description("关闭模式")]
-        CCCLOSE,
-        /// <summary>
-        /// 清算中心结算
-        /// </summary>
-        [Description("结算模式")]
-        CCSETTLE,
-        [Description("结算完毕")]
-        CCSETTLEFINISH,
-        [Description("数据检验")]
-        CCDATACHECK,
-        [Description("数据检验完毕")]
-        CCDATACHECKFINISH,
-
-        [Description("数据保存")]
-        CCDATASAVE,
-        [Description("数据保存完毕")]
-        CCDATASAVEFINISH,
-
-        [Description("重置模式")]
-        CCRESET,
-        [Description("重置完毕")]
-        CCRESETFINISH,
-    }
-
 
 
     /// <summary>

@@ -28,32 +28,32 @@ namespace TradingLib.Core
             needlog = true;
 
             //1.1检查结算中心是否正常状态 如果历史结算状态则需要将结算记录补充完毕后才可以接受新的委托
-            if (!TLCtxHelper.ModuleSettleCentre.IsNormal)
-            {
-                errortitle = "SETTLECENTRE_NOT_RESET";//结算中心异常
-                needlog = false;
-                return false;
-            }
+            //if (!TLCtxHelper.ModuleSettleCentre.IsNormal)
+            //{
+            //    errortitle = "SETTLECENTRE_NOT_RESET";//结算中心异常
+            //    needlog = false;
+            //    return false;
+            //}
 
             //结算中心处于实时模式 才可以接受委托操作
-            if (TLCtxHelper.ModuleSettleCentre.SettleMode != QSEnumSettleMode.LiveMode)
+            if (TLCtxHelper.ModuleSettleCentre.SettleMode != QSEnumSettleMode.StandbyMode)
             {
                 errortitle = "SETTLECENTRE_NOT_RESET";//结算中心异常
                 needlog = false;
                 return false;
             }
 
-            //1.3检查结算中心是否处于结算状态 结算状态不接受任何委托
-            if (TLCtxHelper.ModuleSettleCentre.IsInSettle)
-            {
-                errortitle = "SETTLECENTRE_IN_SETTLE";//结算中心出入结算状态
-                needlog = false;
-                return false;
-            }
+            ////1.3检查结算中心是否处于结算状态 结算状态不接受任何委托
+            //if (TLCtxHelper.ModuleSettleCentre.IsInSettle)
+            //{
+            //    errortitle = "SETTLECENTRE_IN_SETTLE";//结算中心出入结算状态
+            //    needlog = false;
+            //    return false;
+            //}
 
             //2 清算中心检查
             //2.1检查清算中心是否出入接受委托状态(正常工作状态下系统会定时开启和关闭清算中心,如果是开发模式则可以通过手工来提前开启)
-            if (TLCtxHelper.ModuleClearCentre.Status != QSEnumClearCentreStatus.CCOPEN)
+            if (!TLCtxHelper.ModuleClearCentre.IsLive)// != QSEnumClearCentreStatus.CCOPEN)
             {
                 errortitle = "CLEARCENTRE_CLOSED";//清算中心已关闭
                 needlog = false;

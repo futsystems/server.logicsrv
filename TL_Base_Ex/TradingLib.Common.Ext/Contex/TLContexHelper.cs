@@ -94,7 +94,7 @@ namespace TradingLib.Common
             this.m_IndicatorEvent = new IndicatorEvent();
             this.m_SessionEvent = new SessionEvent<TrdClientInfo>();
             this.m_AccountEvent = new AccountEvent();
-            this.m_ExContribEvent = new ExContribEvent();
+            //this.m_ExContribEvent = new ExContribEvent();
         }
 
 
@@ -110,7 +110,7 @@ namespace TradingLib.Common
             {
                 defaultInstance.ctx = null;
                 defaultInstance.m_AccountEvent = null;
-                defaultInstance.m_ExContribEvent = null;
+                //defaultInstance.m_ExContribEvent = null;
                 defaultInstance.m_IndicatorEvent = null;
                 defaultInstance.m_SessionEvent = null;
             }
@@ -171,7 +171,7 @@ namespace TradingLib.Common
         /// <summary>
         /// 扩展事件
         /// </summary>
-        private ExContribEvent m_ExContribEvent;
+        //private ExContribEvent m_ExContribEvent;
 
         /// <summary>
         /// 系统类事件
@@ -235,18 +235,18 @@ namespace TradingLib.Common
             }
         }
 
-        /// <summary>
-        /// 扩展模块强关系事件
-        /// </summary>
-        public static ExContribEvent ExContribEvent
-        {
-            get
-            {
-                if (defaultInstance.m_ExContribEvent == null)
-                    defaultInstance.m_ExContribEvent = new ExContribEvent();
-                return defaultInstance.m_ExContribEvent;
-            }
-        }
+        ///// <summary>
+        ///// 扩展模块强关系事件
+        ///// </summary>
+        //public static ExContribEvent ExContribEvent
+        //{
+        //    get
+        //    {
+        //        if (defaultInstance.m_ExContribEvent == null)
+        //            defaultInstance.m_ExContribEvent = new ExContribEvent();
+        //        return defaultInstance.m_ExContribEvent;
+        //    }
+        //}
 
         /// <summary>
         /// 路右侧事件

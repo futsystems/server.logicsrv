@@ -15,7 +15,7 @@ namespace TradingLib.Common
             this.Tradingday = 0;
             this.NextSettleTime = 0;
             this.IsSettleNormal = true;
-            this.ClearCentreStatus = QSEnumClearCentreStatus.UNKNOWN;
+            this.IsClearCentreLive = false;
             this.TotalAccountNum = 0;
 
         }
@@ -58,9 +58,14 @@ namespace TradingLib.Common
         public bool IsSettleNormal { get; set; }
 
         /// <summary>
+        /// 结算中心状态
+        /// </summary>
+        public QSEnumSettleMode SettleMode { get; set; }
+
+        /// <summary>
         /// 清算中心是否开启
         /// </summary>
-        public QSEnumClearCentreStatus ClearCentreStatus { get; set; }
+        public bool IsClearCentreLive { get; set; }
 
         /// <summary>
         /// 账户总数
@@ -92,7 +97,7 @@ namespace TradingLib.Common
             sb.Append(d);
             sb.Append(this.IsSettleNormal);
             sb.Append(d);
-            sb.Append(this.ClearCentreStatus.ToString());
+            sb.Append(this.IsClearCentreLive);
             sb.Append(d);
             sb.Append(this.TotalAccountNum.ToString());
             sb.Append(d);
@@ -115,7 +120,7 @@ namespace TradingLib.Common
             this.Tradingday = int.Parse(rec[2]);
             this.NextSettleTime = long.Parse(rec[3]);
             this.IsSettleNormal = bool.Parse(rec[4]);
-            this.ClearCentreStatus = (QSEnumClearCentreStatus)Enum.Parse(typeof(QSEnumClearCentreStatus), rec[5]);
+            this.IsClearCentreLive = bool.Parse(rec[5]);
             this.TotalAccountNum = int.Parse(rec[6]);
             this.UnsettledAcctOrderNumOfPreSettleday = int.Parse(rec[7]);
             this.UnsettledBrokerOrderNumOfPreSettleday = int.Parse(rec[8]);

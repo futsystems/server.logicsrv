@@ -33,7 +33,9 @@ namespace TradingLib.Core
             }
             _deleteAccountCheckEquity = _cfgdb["DeleteAccountCheckEquity"].AsBool();
 
+            
             LoadAccount();
+            logger.Info(string.Format("Load Account form database,total num:{0}", _accMap.Count));
             
         }
         public void Start()

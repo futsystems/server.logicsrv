@@ -221,7 +221,7 @@ namespace TradingLib.Contrib.MainAcctFinService
                 throw new FutsRspError("无权进行此操作");
             }
 
-            if (!TLCtxHelper.ModuleSettleCentre.IsTradingday)    
+            //if (!TLCtxHelper.ModuleSettleCentre.IsTradingday)    
             {
                 throw new FutsRspError("非交易日，无法执行收费");
             }
@@ -290,8 +290,8 @@ namespace TradingLib.Contrib.MainAcctFinService
         [TaskAttr("开盘前执行计费操作",8,55,0, "开盘前执行计费操作")]
         public void CTE_ChargeServiceFeeBeforeTimeSpan()
         {
-            if (!TLCtxHelper.ModuleSettleCentre.IsTradingday)
-                return;
+            //if (!TLCtxHelper.ModuleSettleCentre.IsTradingday)
+            //    return;
             _status.ChargeServiceBeforeTimeSpan = true;
             //执行计费操作
             ChargeServiceFee(QSEnumChargeTime.BeforeTimeSpan);
@@ -308,8 +308,8 @@ namespace TradingLib.Contrib.MainAcctFinService
         public void CTE_QryBrokerAccountInfo()
         {
 
-            if (!TLCtxHelper.ModuleSettleCentre.IsTradingday)
-                return;
+            //if (!TLCtxHelper.ModuleSettleCentre.IsTradingday)
+            //    return;
             _status.QryAfterTimeSpane = true;
             QryBrokerAccountInfo();
         }
@@ -318,8 +318,8 @@ namespace TradingLib.Contrib.MainAcctFinService
         [TaskAttr("收盘后收取手续费", 15, 18, 0, "收盘后收取手续费")]
         public void CTE_ChargeCommissionFee()
         {
-            if (!TLCtxHelper.ModuleSettleCentre.IsTradingday)
-                return;
+            //if (!TLCtxHelper.ModuleSettleCentre.IsTradingday)
+            //    return;
             _status.ChargeCommissionAfterTimeSpan = true;
             ChargeCommissionFee();
 
@@ -335,8 +335,8 @@ namespace TradingLib.Contrib.MainAcctFinService
         [TaskAttr("收盘后收取服务费", 15, 20, 0, "收盘后收取服务费")]
         public void CTE_ChargeServiceFeeAfterTimeSpan()
         {
-            if (!TLCtxHelper.ModuleSettleCentre.IsTradingday)
-                return;
+            //if (!TLCtxHelper.ModuleSettleCentre.IsTradingday)
+            //    return;
             _status.ChargeServiceAfterTimeSpan = true;
             //执行计费操作
             ChargeServiceFee(QSEnumChargeTime.AfterTimeSpan);

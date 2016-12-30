@@ -24,18 +24,18 @@ namespace TradingLib.Core
         /// 加载某个交易日的交易记录
         /// a.未指定交易日 则加载所有未结算数据
         /// b.指定交易日 则加载指定交易日的未结算数据(用于历史手工结算)
+        /// 
+        /// 数据库加载记录时 tradingday为0时 表明加载所有未结算记录
+        /// 历史结算模式下 指定tradingday 则加载某个交易日的交易记录
         /// </summary>
-        protected virtual void Restore()
+        void LoadData()
         {
-            Status = QSEnumClearCentreStatus.CCRESTORE;
-            //从数据库恢复交易记录和出入金记录
             try
             {
-                logger.Info("从数据库加载未结算交易数据");
-
+                logger.Info("Load unsettled data from database");
                 int tradingday = 0;
                 //如果结算中心处于历史结算模式 则需要制定对应的交易日进行记录加载
-                if (TLCtxHelper.ModuleSettleCentre.SettleMode == QSEnumSettleMode.HistMode)
+                if (TLCtxHelper.ModuleSettleCentre.SettleMode == QSEnumSettleMode.HistSettleMode)
                 {
                     tradingday = TLCtxHelper.ModuleSettleCentre.Tradingday;
                 }
@@ -43,7 +43,7 @@ namespace TradingLib.Core
                 IEnumerable<EquityReport> equityreport = ORM.MAccount.SelectEquityReport(TLCtxHelper.ModuleSettleCentre.LastSettleday);
                 //未结算出入金记录
                 IEnumerable<CashTransaction> cashtxns = TLCtxHelper.ModuleDataRepository.SelectAcctCashTransactionUnSettled(tradingday);
-                //初始化交易帐户上个结算的结算权益和出入金记录
+                //初始化交易帐户上个结算日的结算权益和出入金记录
                 foreach (var acc in TLCtxHelper.ModuleAccountManager.Accounts)
                 {
                     EquityReport equity = equityreport.Where(r => r.Account == acc.ID).FirstOrDefault();
@@ -65,12 +65,9 @@ namespace TradingLib.Core
                 IEnumerable<Trade> flist = TLCtxHelper.ModuleDataRepository.SelectAcctTrades(tradingday);
                 IEnumerable<OrderAction> clist = TLCtxHelper.ModuleDataRepository.SelectAcctOrderActions(tradingday);
 
-                IEnumerable<ExchangeSettlement> exsettlelist = TLCtxHelper.ModuleDataRepository.SelectAcctExchangeSettlemts();
-                IEnumerable<PositionDetail> plist = TLCtxHelper.ModuleDataRepository.SelectAcctPositionDetails();//从数据得到结算持仓
                 //PositionDetails和ExchangeSettlement是结算类数据 在历史结算过程中这些数据会被清理到当时交易的状态 因此无需制定交易日
-                //logger.Info("从数据库加载上次结算日:" + TLCtxHelper.ModuleSettleCentre.LastSettleday.ToString() + " 持仓明细数据");
-                
-                //IEnumerable<PositionRoundImpl> prlist = LoadPositionRoundFromMysql();//恢复开启的positionround数据
+                IEnumerable<ExchangeSettlement> exsettlelist = TLCtxHelper.ModuleDataRepository.SelectAcctExchangeSettlemts();
+                IEnumerable<PositionDetail> plist = TLCtxHelper.ModuleDataRepository.SelectAcctPositionDetails();
 
                 foreach (ExchangeSettlement settle in exsettlelist)
                 {
@@ -81,17 +78,6 @@ namespace TradingLib.Core
                 {
                     this.GotPosition(p);
                 }
-
-               
-                //foreach (PositionRoundImpl pr in prlist)
-                //{
-                //    Util.Debug(pr.ToString(), QSEnumDebugLevel.VERB);
-                //}
-                //当将昨日持仓恢复到内存后需要恢复开启的持仓回合数据,当成交数据恢复时会同时更新持仓回合记录
-                //prt.RestorePositionRounds(prlist);
-
-                //PR数据与持仓数据进行同步1.从数据库加载同步一次  2.保存到数据库同步一次
-                prt.SyncPositionHold(this.TotalPositions.Where(pos=>!pos.isFlat));
                 foreach (Order o in olist)
                 {
                     this.GotOrder(o);
@@ -101,6 +87,7 @@ namespace TradingLib.Core
                 {
                     this.GotFill(f,out accept);
                 }
+
                 foreach (OrderAction action in clist)
                 {
                     if(action.ActionFlag == QSEnumOrderActionFlag.Delete && action.OrderID != 0)
@@ -110,12 +97,9 @@ namespace TradingLib.Core
             }
             catch (Exception ex)
             {
-                logger.Error("restore mysql error:" + ex.ToString());
-                throw (new QSClearCentreResotreError(ex, "清算中心从数据库恢复数据异常"));
+                logger.Error("Load Data Error:" + ex.ToString());
+                throw ex;
             }
-
-            //IAccount[] s = TLCtxHelper.ModuleAccountManager.Accounts.ToArray();
-            Status = QSEnumClearCentreStatus.CCRESTOREFINISH;
         }
     }
 }

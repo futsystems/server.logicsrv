@@ -480,46 +480,6 @@ namespace TradingLib.ORM
         }
 
 
-        //static Position posfields2position(positionfields fields)
-        //{
-        //    Position pos = new PositionImpl(fields.Symbol, fields.SettlePrice, fields.Size, 0, fields.Account,fields.Size>0?QSEnumPositionDirectionType.Long:QSEnumPositionDirectionType.Short);
-        //    return pos;
-        //}
-
-        static PositionRoundImpl PRInfo2PositionRound(positionroundinfo info)
-        {
-            IAccount account = TLCtxHelper.ModuleAccountManager[info.Account];
-            if (account == null)
-                return null;
-            PositionRoundImpl pr = new PositionRoundImpl(info.Account, account.Domain.GetSymbol("",info.Symbol), info.Side);
-
-            pr.EntryTime = info.EntryTime;
-            pr.EntrySize = info.EntrySize;
-            pr.EntryPrice = info.EntryPrice;
-
-            pr.ExitTime = info.ExitTime;
-            pr.ExitSize = info.ExitSize;
-            pr.ExitPrice = info.ExitPrice;
-            if (pr.HoldSize != 0)
-            {
-                pr.SetOpen();
-            }
-            return pr;
-
-        }
-
-        public static IEnumerable<PositionRoundImpl> SelectHoldPositionRounds(int lastsettleday)
-        {
-            using (DBMySql db = new DBMySql())
-            {
-                string query = string.Format("SELECT account,symbol,side,entrytime,entryprice,entrysize,exittime,exitprice,exitsize,highest,lowest FROM  hold_postransactions WHERE settleday = {0}", lastsettleday);
-                return db.Connection.Query<positionroundinfo>(query).Select(prinfo => { return PRInfo2PositionRound(prinfo); });//(from prinfo in db.Connection.Query<positionroundinfo>(query).ToArray()
-                                                      //select PRInfo2PositionRound(prinfo)).ToArray<PositionRoundImpl>();
-                //return prs;
-            }
-        }
-
-
 
         /// <summary> 
         /// 插入取消数据
@@ -537,19 +497,7 @@ namespace TradingLib.ORM
             }
 
         }
-        /// <summary>
-        /// 插入关闭的持仓回合数据
-        /// </summary>
-        /// <param name="pr"></param>
-        /// <returns></returns>
-        public static bool InsertPositionRound(PositionRound pr)
-        {
-            using (DBMySql db = new DBMySql())
-            {
-                string query = String.Format("Insert into tmp_postransactions (`account`,`symbol`,`security`,`multiple`,`entrytime`,`entrysize`,`entryprice`,`entrycommission`,`exittime`,`exitsize`,`exitprice`,`exitcommission`,`highest`,`lowest`,`size`,`holdsize`,`side`,`wl`,`totalpoints`,`profit`,`commission`,`netprofit`,`type`,`settleday`) values('{0}','{1}','{2}','{3}','{4}','{5}','{6}','{7}','{8}','{9}','{10}','{11}','{12}','{13}','{14}','{15}','{16}','{17}','{18}','{19}','{20}','{21}','{22}',{23})", pr.Account, pr.Symbol, pr.Security, pr.Multiple, pr.EntryTime, pr.EntrySize, pr.EntryPrice, pr.EntryCommission, pr.ExitTime, pr.ExitSize, pr.ExitPrice, pr.ExitCommission, pr.Highest, pr.Lowest, pr.Size, pr.HoldSize, pr.Side ? 1 : 0, pr.WL ? 1 : 0, pr.TotalPoints, pr.Profit, pr.Commissoin, pr.NetProfit, pr.Type, TLCtxHelper.ModuleSettleCentre.Tradingday);
-                return db.Connection.Execute(query) > 0;
-            }
-        }
+
 
         
 

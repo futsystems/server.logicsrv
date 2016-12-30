@@ -41,8 +41,9 @@ namespace TradingLib.Core
                 TradeNum = TLCtxHelper.ModuleClearCentre.TotalTrades.Count(),
 
 
-                IsTradingday = TLCtxHelper.ModuleSettleCentre.IsTradingday,//当前是否是交易日
-                SettleNormal = TLCtxHelper.ModuleSettleCentre.IsNormal,//结算中心是否正常
+                IsTradingday = true,//TLCtxHelper.ModuleSettleCentre.IsTradingday,//当前是否是交易日
+                SettleNormal = true,//TLCtxHelper.ModuleSettleCentre.IsNormal,//结算中心是否正常
+                SettleMode = TLCtxHelper.ModuleSettleCentre.SettleMode,//结算中心工作模式
                 StartUpTime = TLCtxHelper.StartUpTime,//启动时间
 
             };

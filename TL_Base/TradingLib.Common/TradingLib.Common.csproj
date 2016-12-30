@@ -319,8 +319,6 @@
     <Compile Include="Tracker\MessageTracker.cs" />
     <Compile Include="Message\TrdMessage.cs" />
     <Compile Include="Trading\OrderTransactionHelper.cs" />
-    <Compile Include="Trading\PositionRoundImpl.cs" />
-    <Compile Include="Trading\PositionTransaction.cs" />
     <Compile Include="Trading\SymbolHelper.cs" />
     <Compile Include="Trading\Data\Tick\TickWatcher.cs" />
     <Compile Include="Tracker\GenericTracker.cs" />

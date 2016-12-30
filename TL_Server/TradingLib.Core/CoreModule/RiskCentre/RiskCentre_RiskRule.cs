@@ -19,13 +19,13 @@ namespace TradingLib.Core
         /// <param name="account"></param>
         public void AttachAccountCheck(string account)
         {
-            logger.Info(string.Format("清算中心将帐户:{0} 放入实时监控列表", account));
+            //logger.Info(string.Format("清算中心将帐户:{0} 放入实时监控列表", account));
             if (!activeaccount.Keys.Contains(account))
             { 
                 IAccount target = TLCtxHelper.ModuleAccountManager[account];
                 if(target == null)
                 {
-                    logger.Warn(string.Format("交易帐户:{0}不存在",account));
+                    logger.Warn(string.Format("Account:{0} do not exist",account));
                     return;
                 }
                 activeaccount.TryAdd(account, target);
@@ -38,7 +38,7 @@ namespace TradingLib.Core
         /// <param name="account"></param>
         public void DetachAccountCheck(string account)
         {
-            logger.Info(string.Format("清算中心取消帐户:{0} 实时监控", account));
+            //logger.Info(string.Format("清算中心取消帐户:{0} 实时监控", account));
             IAccount target = null;
             if (activeaccount.Keys.Contains(account))
             {
@@ -68,7 +68,7 @@ namespace TradingLib.Core
                 {
                     RuleClassItem item = RuleClassItem.Type2RuleClassItem(t);
                     dicRule.Add(item.ClassName, item);
-                    logger.Info("[RuleSet Loaded] " + item.ClassName);
+                    logger.Debug("[RuleSet Loaded] " + item.ClassName);
                 }
                 catch (Exception ex)
                 {
@@ -82,11 +82,11 @@ namespace TradingLib.Core
                 {
                     RuleClassItem item = RuleClassItem.Type2RuleClassItem(t);
                     dicRule.Add(item.ClassName, item);
-                    logger.Info("[RuleSet Loaded] " + item.ClassName);
+                    logger.Debug("[RuleSet Loaded] " + item.ClassName);
                 }
                 catch (Exception ex)
                 {
-                    logger.Error("AccountRuleSet:" + t.FullName + " load error");
+                    logger.Error("AccountRuleSet:" + t.FullName + " load error:"+ex.ToString());
                 }
             }
         }
@@ -278,7 +278,7 @@ namespace TradingLib.Core
         /// </summary>
         void LoadRuleItemAll()
         {
-            logger.Info("加载所有交易账户 风控规则");
+            logger.Info("Load risk rule for account");
             IEnumerable<RuleItem> ruleitems = ORM.MRuleItem.SelectAllRuleItems();
             foreach (IAccount account in TLCtxHelper.ModuleAccountManager.Accounts)
             {
@@ -291,7 +291,6 @@ namespace TradingLib.Core
                     //加载完毕后 设定帐户的风控规则加载标识
                     account.RuleItemLoaded = true;
                     //将帐户插入激活的检查列表
-                    //InsertActiveAccount(account);
                     AttachAccountCheck(account.ID);
                 }
             }

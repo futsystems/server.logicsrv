@@ -133,7 +133,6 @@
     <Compile Include="Trading\EnumOrderSource.cs" />
     <Compile Include="Trading\EnumOrderStatus.cs" />
     <Compile Include="Trading\EnumPositionDirectionType.cs" />
-    <Compile Include="Trading\PositionRound.cs" />
     <Compile Include="Trading\BasicInfo\EnumOptionSide.cs" />
     <Compile Include="Trading\Order.cs" />
     <Compile Include="Trading\EnumOrderInstructionTypes.cs" />

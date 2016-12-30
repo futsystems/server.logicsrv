@@ -29,50 +29,41 @@ namespace TradingLib.Core
         const string CoreName = "ClearCentre";
         public string CoreId { get { return this.PROGRAME; } }
 
-        PositionRoundTracker prt;//记录交易回合信息
+        bool _live = false;
+        /// <summary>
+        /// 清算中心是否处于开启状态 清算中心开启可以接受客户端提交的委托
+        /// </summary>
+        public bool IsLive { get { return _live; } }
 
         ConfigDB _cfgdb;
 
         /// <summary>
         /// 分帐户交易数据维护器
         /// </summary>
-        protected AccountTracker acctk = new AccountTracker();
+        protected AccountTracker acctk = null;
 
         /// <summary>
         /// 总交易数据维护器
         /// </summary>
-        protected TotalTracker totaltk = new TotalTracker();
+        protected TotalTracker totaltk = null;
 
 
 
         public ClearCentre():
             base("ClearCentre")
         {
-            Status = QSEnumClearCentreStatus.CCINIT;
 
             //1.加载配置文件
             _cfgdb = new ConfigDB(ClearCentre.CoreName);
 
-            try
-            {
-                acctk.NewPositionEvent += new Action<Position>(acctk_NewPositionEvent);
-                acctk.NewPositionCloseDetailEvent += new Action<Trade, PositionCloseDetail>(acctk_NewPositionCloseDetailEvent);
-                acctk.NewPositionDetailEvent += new Action<Trade, PositionDetail>(acctk_NewPositionDetailEvent);
-     
-                //帐户交易数据维护器产生 平仓明细事件
-                //acctk.NewPositionCloseDetailEvent += new Action<Trade,PositionCloseDetail>(acctk_NewPositionCloseDetailEvent);
-                
-                //初始化PositionRound生成器
-                prt = new PositionRoundTracker();
+            
+            acctk = new AccountTracker();
+            totaltk = new TotalTracker();
+            acctk.NewPositionEvent += new Action<Position>(acctk_NewPositionEvent);
+            acctk.NewPositionCloseDetailEvent += new Action<Trade, PositionCloseDetail>(acctk_NewPositionCloseDetailEvent);
+            acctk.NewPositionDetailEvent += new Action<Trade, PositionDetail>(acctk_NewPositionDetailEvent);
 
-                Status = QSEnumClearCentreStatus.CCINITFINISH;
-            }
-            catch (Exception ex)
-            {
-                Util.Debug("ex:" + ex.ToString());
-                throw (new QSClearCentreInitError(ex, "ClearCentre初始化错误"));
-            }
-
+            logger.Info("Create data tracker");
             //TLCtxHelper.EventSystem.SettleResetEvent +=new EventHandler<SystemEventArgs>(EventSystem_SettleResetEvent);
         }
 
@@ -91,22 +82,15 @@ namespace TradingLib.Core
         }
 
         /// <summary>
-        /// 当有持仓关闭时出发持仓关闭时间
+        /// 账户维护器有新的持仓对象创建时 将持仓放入数据维护器 用于快速访问
         /// </summary>
         /// <param name="obj"></param>
-        //void acctk_NewPositionCloseDetailEvent(Trade obj1, PositionCloseDetail obj2)
-        //{
-            
-        //}
-
-        //当帐户交易对象维护器产生持仓时，我们将持仓加入total维护其列表用于快速访问
         void acctk_NewPositionEvent(Position obj)
         {
-            logger.Info("new postion created " + obj.GetPositionKey());
+            logger.Info("New Postion Created:" + obj.GetPositionKey());
             totaltk.NewPosition(obj);
 
         }
-
 
         /// <summary>
         /// 保存平仓明细记录
@@ -114,7 +98,7 @@ namespace TradingLib.Core
         /// <param name="obj"></param>
         void acctk_NewPositionCloseDetailEvent(Trade f,PositionCloseDetail obj)
         {
-            if (_status == QSEnumClearCentreStatus.CCOPEN)
+            if (this.IsLive)
             {
                 logger.Info("New PositionCloseDetail:" + obj.GetPositionCloseStr());
                 TLCtxHelper.ModuleDataRepository.NewPositionCloseDetail(obj);
@@ -127,6 +111,7 @@ namespace TradingLib.Core
             }
         }
 
+
         /// <summary>
         /// 清算中心重置,我们只需要清空交易记录,然后重新从数据库加载数据,即可
         /// 在每日结算完毕后,清算中心会重置,
@@ -134,8 +119,6 @@ namespace TradingLib.Core
         /// </summary>
         public void Reset()
         {
-            Status = QSEnumClearCentreStatus.CCRESET;
-            
             //清空分帐户维护器交易记录
             logger.Info("清算中心重置");
             foreach (IAccount a in TLCtxHelper.ModuleAccountManager.Accounts)
@@ -147,29 +130,24 @@ namespace TradingLib.Core
             //清空总维护器数据
             totaltk.Clear();
 
-            //清空positionround tracker 数据 准备初始化数据
-            prt.Clear();
-
             //从数据中恢复数据用于得到当前最新状态包含持仓,PR,出入金等数据
-            Restore();
-
-            Status = QSEnumClearCentreStatus.CCRESETFINISH;
+            LoadData();
         }
 
 
-        public IEnumerable<PositionRound> TotalRoundOpend
-        {
-            get
-            {
-                return prt.RoundClosed;
-            }
-        }
 
         #region 启动 停止 销毁
         public void Start()
         {
             Util.StartStatus(this.PROGRAME);
-            Restore();
+            LoadData();
+            //启动后根据当前时间判定清算中心状态 结算中心在结算前5分钟关闭系统 在重置系统后5分钟打开系统
+            DateTime close = Util.ToDateTime(Util.ToTLDate(DateTime.Now), TLCtxHelper.ModuleSettleCentre.SettleTime).AddMinutes(-5);
+            DateTime open = Util.ToDateTime(Util.ToTLDate(DateTime.Now), TLCtxHelper.ModuleSettleCentre.ResetTime).AddMinutes(5);
+
+            //如果在关闭时间区间内则系统关闭 否则系统开启
+            _live = !Util.IsInPeriod(close, open);
+
         }
 
         public void Stop()
@@ -249,60 +227,21 @@ namespace TradingLib.Core
         }
         #endregion
 
-
-        #region 清算中心 开启 关闭 以及状态更新
-        QSEnumClearCentreStatus oldstatus = QSEnumClearCentreStatus.UNKNOWN;
-        QSEnumClearCentreStatus _status = QSEnumClearCentreStatus.UNKNOWN;
-        /// <summary>
-        /// 清算中心状态
-        /// </summary>
-        public QSEnumClearCentreStatus Status
-        {
-            get { return _status; }
-            private set
-            {
-                oldstatus = Status;//先保存原先状态
-                _status = value;//再设定新的状态
-                //更新当前状态 
-                UpdateStatus();
-            }
-        }
-       
-        
-        void UpdateStatus()
-        {
-            //状态由 恢复->恢复完成改变 则我们检查当前的时间,如果是清算中心接收委托时间段 则设定对应状态
-            //交易日内 盘中 启动软件
-            if (oldstatus == QSEnumClearCentreStatus.CCRESTORE && Status == QSEnumClearCentreStatus.CCRESTOREFINISH)
-            {
-                //结算时间前5分钟 重置时候后5分钟
-                DateTime close = Util.ToDateTime(Util.ToTLDate(DateTime.Now),TLCtxHelper.ModuleSettleCentre.SettleTime).AddMinutes(-5);
-                DateTime open = Util.ToDateTime(Util.ToTLDate(DateTime.Now), TLCtxHelper.ModuleSettleCentre.ResetTime).AddMinutes(5);
-
-                //如果在关闭时间区间内则系统关闭 否则系统开启
-                bool islcose = Util.IsInPeriod(close, open);
-                if (!islcose)
-                    Status = QSEnumClearCentreStatus.CCOPEN;
-                else
-                    Status = QSEnumClearCentreStatus.CCCLOSE;
-            }
-        }
-
         /// <summary>
         /// 开启清算中心
         /// </summary>
         public void OpenClearCentre()
         {
-            Status = QSEnumClearCentreStatus.CCOPEN;
+            logger.Info("Open ClearCentre");
+            _live = true;
         }
         /// <summary>
         /// 关闭清算中心
         /// </summary>
         public void CloseClearCentre()
         {
-            Status = QSEnumClearCentreStatus.CCCLOSE;
+            logger.Info("Close ClearCentre");
+            _live = false;
         }
-        #endregion
-
     }
 }

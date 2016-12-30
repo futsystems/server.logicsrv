@@ -122,7 +122,7 @@ namespace TradingLib.ServiceManager
             if (_startDefaultConnector)
             {
                 //TODO:启动动作判定
-                if (TLCtxHelper.ModuleSettleCentre.IsTradingday)//如果是交易日则需要启动实盘通道
+                //if (TLCtxHelper.ModuleSettleCentre.IsTradingday)//如果是交易日则需要启动实盘通道
                 {
                     logger.Info("正常交易日,启动所有通道");
                     StartConnector();

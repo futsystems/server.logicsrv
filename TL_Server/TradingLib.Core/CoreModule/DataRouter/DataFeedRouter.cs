@@ -440,7 +440,7 @@ namespace TradingLib.Core
         void GotTick(Tick k)
         {
             //历史结算不响应外部行情数据
-            if (TLCtxHelper.ModuleSettleCentre.SettleMode == QSEnumSettleMode.LiveMode)
+            if (TLCtxHelper.ModuleSettleCentre.SettleMode == QSEnumSettleMode.StandbyMode)
             {
                 asynctick.newTick(k);
             }

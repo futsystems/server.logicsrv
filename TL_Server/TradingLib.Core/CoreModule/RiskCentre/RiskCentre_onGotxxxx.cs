@@ -75,36 +75,6 @@ namespace TradingLib.Core
             }
         }
 
-        /// <summary>
-        /// 当有持仓平调后 遍历当地平仓事务列表，如果在列表中 则直接删除该平仓事务,表明该平仓事务已经完成
-        /// 注意平仓事务列表为线程安全的list可以同时被多个线程操作
-        /// 如果统一在processpostionflat中检查持仓情况会出现以下问题：如果持仓平调 但是在平调后立马再次开仓，此时PostioinFlat并没有从队列中删除，当再次扫描到该持仓时 系统会认为该持仓没有被及时平调,从而尝试撤单并重新强平，最后单子又无法撤单成功
-        /// 
-        /// 只有在FlatPosition类型的任务中真正触发委托
-        /// 平仓任务出队在持仓回合中进行
-        /// 取消任务队列在处理程序中进行
-        /// 
-        /// </summary>
-        /// <param name="pr"></param>
-        /// <param name="pos"></param>
-        void GotPostionRoundClosed(PositionRound pr, Position pos)
-        {
-            //string key = pos.GetPositionKey();
-
-            //RiskTaskSet[] list = posflatlist.Where(task => task.TaskType == QSEnumRiskTaskType.FlatPosition && task.Position.GetPositionKey().Equals(key)).ToArray();
-
-            //foreach (RiskTaskSet tmp in list)
-            //{
-            //    logger.Info("Position:" + tmp.Position.GetPositionKey() + " 已经平掉,从队列中移除");
-            //    posflatlist.Remove(tmp);
-            //    //通过事件中继触发事件
-            //    TLCtxHelper.EventSystem.FirePositionFlatEvent(this, new PositionFlatEventArgs(tmp.Position));
-            //    //if (PositionFlatEvent != null)
-            //    //{
-            //    //    PositionFlatEvent(this, new PositionFlatEventArgs(tmp.Position));
-            //    //}
-            //}
-        }
 
         #endregion
 

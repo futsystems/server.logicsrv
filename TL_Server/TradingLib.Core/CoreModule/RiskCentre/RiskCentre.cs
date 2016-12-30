@@ -161,9 +161,6 @@ namespace TradingLib.Core
             }
             _enableStkT0 = _cfgdb["EnableStkT0"].AsBool();
 
-            //订阅持仓回合关闭事件
-            TLCtxHelper.EventIndicator.GotPositionClosedEvent += new PositionRoundClosedDel(GotPostionRoundClosed);
-
             //加载风空规则
             LoadRuleClass();
 

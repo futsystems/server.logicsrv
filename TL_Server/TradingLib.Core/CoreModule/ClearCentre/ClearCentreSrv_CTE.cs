@@ -14,31 +14,6 @@ namespace TradingLib.Core
     /// </summary>
     public partial class ClearCentre
     {
-
-        //[TaskAttr("夜盘开启交易中心", 20, 50, 0, "每天晚上20:50:5开启清算中心")]
-        //[TaskAttr("白盘开启交易中心", 8, 50, 0, "每天白天8:50:5开启清算中心")]
-        //public void Task_OpenClearCentre()
-        //{
-        //    if (!TLCtxHelper.ModuleSettleCentre.IsTradingday) return;
-        //    this.OpenClearCentre();
-        //    logger.Info("开启清算中心,准备接受客户委托");
-
-        //}
-
-        ///// <summary>
-        ///// 关闭清算中心
-        ///// </summary>
-        //[TaskAttr("夜盘关闭清算中心", 2, 35, 0, "夜盘关闭清算中心")]
-        //[TaskAttr("日盘关闭清算中心", 15, 20, 0, "日盘关闭清算中心")]
-        //public void Task_CloseClearCentre()
-        //{
-        //    this.CloseClearCentre();
-        //    if (!TLCtxHelper.ModuleSettleCentre.IsTradingday) return;
-        //    logger.Info("关闭清算中心,将拒绝所有客户委托");
-        //}
-
-
-
         [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "OpenClearCentre", "OpenClearCentre - open clearcentre", "开启清算中心")]
         public void CTE_OpenClearCentre(ISession session)
         {

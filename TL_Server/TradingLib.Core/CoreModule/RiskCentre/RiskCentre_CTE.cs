@@ -41,7 +41,7 @@ namespace TradingLib.Core
         [TaskAttr("检查冻结帐户",5,0, "每5秒检查一次冻结帐户")]
         public void Task_CheckAccountFrozen()
         {
-            if (!TLCtxHelper.ModuleSettleCentre.IsTradingday) return;//非交易日不执行
+            //if (!TLCtxHelper.ModuleSettleCentre.IsTradingday) return;//非交易日不执行
             foreach (IAccount account in activeaccount.Values.Where(a=>!a.Execute).Where(a => a.AnyPosition))
             {
                 int settleday = 0;

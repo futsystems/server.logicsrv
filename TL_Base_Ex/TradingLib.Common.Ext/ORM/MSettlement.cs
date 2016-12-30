@@ -239,39 +239,6 @@ namespace TradingLib.ORM
         #endregion
 
         /// <summary>
-        /// 插入结算持仓回合数据
-        /// </summary>
-        /// <param name="pr"></param>
-        /// <returns></returns>
-        public static void InsertHoldPositionRound(PositionRound pr, int settleday)
-        {
-            using (DBMySql db = new DBMySql())
-            {
-                if (!IsPositoinRoundExist(pr, settleday))//如果已经存在在不重复插入
-                {
-                    string query = String.Format("Insert into hold_postransactions (`account`,`symbol`,`security`,`multiple`,`entrytime`,`entrysize`,`entryprice`,`entrycommission`,`exitsize`,`exitprice`,`exitcommission`,`highest`,`lowest`,`size`,`holdsize`,`side`,`wl`,`totalpoints`,`profit`,`commission`,`netprofit`,`type`,`settleday`) values('{0}','{1}','{2}','{3}',{4},'{5}','{6}','{7}','{9}','{10}','{11}','{12}','{13}','{14}','{15}','{16}','{17}','{18}','{19}','{20}','{21}','{22}',{23})", pr.Account, pr.Symbol, pr.Security, pr.Multiple, pr.EntryTime, pr.EntrySize, pr.EntryPrice, pr.EntryCommission, pr.ExitTime, pr.ExitSize, pr.ExitPrice, pr.ExitCommission, pr.Highest, pr.Lowest, pr.Size, pr.HoldSize, pr.Side ? 1 : 0, pr.WL?1:0, pr.TotalPoints, pr.Profit, pr.Commissoin, pr.NetProfit, pr.Type, settleday);
-                    db.Connection.Execute(query);
-                }
-            }
-        }
-
-        /// <summary>
-        /// 判断某个持仓回合数据是否存在
-        /// 持仓回合是只开仓到平仓的一个整体过程，所以每个交易帐户不可能同一个合约有2条持仓回合记录
-        /// </summary>
-        /// <param name="pr"></param>
-        /// <param name="settleday"></param>
-        /// <returns></returns>
-        public static bool IsPositoinRoundExist(PositionRound pr, int settleday)
-        {
-            using (DBMySql db = new DBMySql())
-            {
-                string query = String.Format("SELECT *  FROM hold_postransactions  where `account` = '{0}' AND `settleday` = '{1}' AND  `symbol`='{2}' AND  `side`='{3}'", pr.Account, settleday, pr.Symbol,pr.Side?1:0);
-                return db.Connection.Query(query).Count() > 0;
-            }
-        }
-
-        /// <summary>
         /// 删除某个交易日的开启的持仓回合信息
         /// </summary>
         /// <param name="settleday"></param>

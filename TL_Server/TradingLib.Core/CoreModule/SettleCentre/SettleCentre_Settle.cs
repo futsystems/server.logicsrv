@@ -8,61 +8,11 @@ using TradingLib.Common;
 
 namespace TradingLib.Core
 {
-    internal class ExchangeSettleInfo:IComparable
-    {
-        /// <summary>
-        /// 默认 按时间升序排列，第一个元素是最近的一个时间
-        /// </summary>
-        /// <param name="obj"></param>
-        /// <returns></returns>
-        public int CompareTo(object obj)
-        {
-            ExchangeSettleInfo info = obj as ExchangeSettleInfo;
-            if (info.LocalSysSettleTime > this.LocalSysSettleTime)
-            {
-                return -1;
-            }
-            else if (info.LocalSysSettleTime == this.LocalSysSettleTime)
-            {
-                return 0;
-            }
-            else
-            {
-                return 1;
-            }
-        }
-        /// <summary>
-        /// 交易所
-        /// </summary>
-        public IExchange Exchange {get;set;}
-
-        /// <summary>
-        /// 该交易所下一个结算时间
-        /// </summary>
-        public DateTime NextExchangeSettleTime {get;set;}
-
-        /// <summary>
-        /// 结算时间对应的本地时间
-        /// </summary>
-        public DateTime LocalSysSettleTime {get;set;}
-
-        /// <summary>
-        /// 对应的交易所结算日
-        /// </summary>
-        public int Settleday {get;set;}
-
-
-        public override string ToString()
-        {
-            return string.Format("{0} Now:{1} NextSettleTime:{2} SysTime:{3} Settleday:{4} ", Exchange.EXCode,Exchange.GetExchangeTime().ToString("yyyyMMdd HH:mm:ss") ,NextExchangeSettleTime.ToString("yyyyMMdd HH:mm:ss"), LocalSysSettleTime.ToString("yyyyMMdd HH:mm:ss"), Settleday);
-        }
-
-    }
+    
 
     
     public partial class SettleCentre
     {
-
         /// <summary>
         /// 获得交易所下一个结算时间
         /// 这个结算时间 不排除周末和节假日，具体交易所是否结算 需要排除周末和节假日，
@@ -108,7 +58,7 @@ namespace TradingLib.Core
         /// </summary>
         void InitSettleTask()
         {
-            logger.Info("初始化结算任务");
+            logger.Info("Init Settle Task");
             Dictionary<DateTime, List<IExchange>> exchangesettlemap = new Dictionary<DateTime, List<IExchange>>();
 
             List<ExchangeSettleInfo> infolsit = new List<ExchangeSettleInfo>();
@@ -135,7 +85,8 @@ namespace TradingLib.Core
             infolsit.Sort();
             foreach (var info in infolsit)
             {
-                logger.Info(info);
+                //输出每个交易所结算信息
+                logger.Debug(info);
             }
 
             //最早结算交易所对应的日期就是 结算日
@@ -157,6 +108,10 @@ namespace TradingLib.Core
             _resetTime = _nextSettleResetTime.ToTLTime();
             RegisterSettleResetTask(_nextSettleResetTime);
 
+            //4.注册清算中心开启与关闭时间
+            RegisterCloseTask(_nextSettleTime.AddMinutes(-5));//交易账户结算前5分钟关闭系统
+            RegisterOpenTask(_nextSettleResetTime.AddMinutes(5));//结算重置后5分钟打开系统
+
             //当前时间是否大于最后交易所结算时间 且在柜台结算时间之前，如果在这个时间段内，则当前tradingday为 判定出来的交易日的上一个交易日
             int now = Util.ToTLTime();
             if (now > lastex.LocalSysSettleTime.ToTLTime() && now < _nextSettleTime.ToTLTime())
@@ -167,7 +122,7 @@ namespace TradingLib.Core
             //4.注册定时转储任务 交易帐户结算后随机的5-10分钟之内执行数据转储
             DateTime storetime = _nextSettleResetTime.AddMinutes(new Random().Next(5, 10));
             RegisterDataStoreTask(storetime);
-            logger.Info(string.Format("判定当前交易日:{0} 柜台结算时间:{1}", _tradingday, _nextSettleTime.ToString("yyyyMMdd HH:mm:ss")));
+            //logger.Info(string.Format("Current Tradyingday:{0} Counter Settle Time:{1}", _tradingday, _nextSettleTime.ToString("yyyyMMdd HH:mm:ss")));
         }
 
         /// <summary>
@@ -177,8 +132,7 @@ namespace TradingLib.Core
         /// <param name="list"></param>
         void RegisterExchangeSettleTask(DateTime settletime, List<IExchange> list)
         {
-            logger.Info("注册交易所结算任务,结算时间:" + settletime.ToString("HH:mm:ss"));
-            //DateTime flattime = settletime.AddMinutes(-5);//提前5分钟强平
+            logger.Info(string.Format("Register Exchange Settle Task,Time:{0} Ex:{1}", settletime.ToString("HH:mm:ss"), string.Join(" ", list.Select(e => e.EXCode).ToArray())));
             TaskProc task = new TaskProc(this.UUID, "交易所结算-" + settletime.ToString("HH:mm:ss"), settletime.Hour, settletime.Minute, settletime.Second, delegate() { SettleExchange(list); });
             TLCtxHelper.ModuleTaskCentre.RegisterTask(task);
         }
@@ -189,23 +143,67 @@ namespace TradingLib.Core
         /// <param name="settletime"></param>
         void RegisterAccountSettleTask(DateTime settletime)
         {
-            logger.Info("注册交易帐户结算任务,结算时间:" + settletime.ToString("HH:mm:ss"));
+            logger.Info(string.Format("Register Account Settle Task,Time:{0}", settletime.ToString("HH:mm:ss")));
             TaskProc task = new TaskProc(this.UUID, "交易帐户结算-" + settletime.ToString("HH:mm:ss"), settletime.Hour, settletime.Minute, settletime.Second, delegate() { SettleAccount(); });
             TLCtxHelper.ModuleTaskCentre.RegisterTask(task);
         }
 
+        /// <summary>
+        /// 注册结算重置任务
+        /// </summary>
+        /// <param name="resettime"></param>
         void RegisterSettleResetTask(DateTime resettime)
         {
-            logger.Info("注册系统重置任务,重置时间:" + resettime.ToString("HH:mm:ss"));
+            logger.Info(string.Format("Register Settle Reset Task,Time:{0}", resettime.ToString("HH:mm:ss")));
             TaskProc task = new TaskProc(this.UUID, "交易系统重置-" + resettime.ToString("HH:mm:ss"), resettime.Hour, resettime.Minute, resettime.Second, delegate() { SetteReset(); });
             TLCtxHelper.ModuleTaskCentre.RegisterTask(task);
         }
 
+        /// <summary>
+        /// 注册数据转储任务
+        /// </summary>
+        /// <param name="storetime"></param>
         void RegisterDataStoreTask(DateTime storetime)
         {
-            logger.Info("注册交易记录转储任务,转储时间:" + storetime.ToString("HH:mm:ss"));
-            TaskProc task = new TaskProc(this.UUID, "交易数据转储-" + storetime.ToString("HH:mm:ss"), storetime.Hour, storetime.Minute, storetime.Second, delegate() { Dump2Log(); });
+            logger.Info(string.Format("Register Data Dump Task,Time:{0}", storetime.ToString("HH:mm:ss")));
+            TaskProc task = new TaskProc(this.UUID, "交易数据转储-" + storetime.ToString("HH:mm:ss"), storetime.Hour, storetime.Minute, storetime.Second, delegate() { DumpDataToLogTable(); });
             TLCtxHelper.ModuleTaskCentre.RegisterTask(task);
+        }
+
+        /// <summary>
+        /// 注册系统关闭任务
+        /// </summary>
+        /// <param name="closecctime"></param>
+        void RegisterCloseTask(DateTime closecctime)
+        {
+            //注入关闭清算中心任务 结算前5分钟关闭清算中心
+            //DateTime closecctime = Util.ToDateTime(Util.ToTLDate(DateTime.Now), _settleTime).AddMinutes(-5);
+            logger.Info(string.Format("Register System Close Task,Time:{0}", closecctime.ToString("HH:mm:ss")));
+            TaskProc taskclosecc = new TaskProc(this.UUID, "关闭清算中心" + Util.ToTLTime(closecctime).ToString(), closecctime.Hour, closecctime.Minute, closecctime.Second, delegate() { Task_CloseClearCentre(); });
+            TLCtxHelper.ModuleTaskCentre.RegisterTask(taskclosecc);
+        }
+
+        /// <summary>
+        /// 注册系统开启任务
+        /// </summary>
+        /// <param name="opencctime"></param>
+        void RegisterOpenTask(DateTime opencctime)
+        {
+            //注入开启清算中心任务 重置后5分钟开启清算中心
+            //DateTime opencctime = Util.ToDateTime(Util.ToTLDate(DateTime.Now), _resetTime).AddMinutes(5);
+            logger.Info(string.Format("Register System Open Task,Time:{0}", opencctime.ToString("HH:mm:ss")));
+            TaskProc taskopencc = new TaskProc(this.UUID, "开启清算中心" + Util.ToTLTime(opencctime).ToString(), opencctime.Hour, opencctime.Minute, opencctime.Second, delegate() { Task_OpenClearCentre(); });
+            TLCtxHelper.ModuleTaskCentre.RegisterTask(taskopencc);
+        }
+
+        void Task_OpenClearCentre()
+        {
+            TLCtxHelper.ModuleClearCentre.OpenClearCentre();
+        }
+
+        void Task_CloseClearCentre()
+        {
+            TLCtxHelper.ModuleClearCentre.CloseClearCentre();
         }
 
 
@@ -225,7 +223,7 @@ namespace TradingLib.Core
         {
             try
             {
-                bool histmode = _settlemode == QSEnumSettleMode.HistMode;
+                bool histmode = _settlemode == QSEnumSettleMode.HistSettleMode;
                 //历史结算需要制定交易日
                 if (histmode && tradingday == 0)
                 {
@@ -288,13 +286,13 @@ namespace TradingLib.Core
 
         /// <summary>
         /// 交易帐户结算
+        /// 执行交易账户结算即结算中心处于结算状态
         /// 系统执行每天定时结算包含周末与节假日,多交易所情况下 交易所按交易所的结算规则进行结算，系统进行每日结算
         /// </summary>
         void SettleAccount()
         {
             logger.Info(string.Format("#####SettleAccount: Start Settele Account,Current Tradingday:{0}", Tradingday));
-            
-            this.IsInSettle = true;//标识结算中心处于结算状态
+            this.SettleMode = QSEnumSettleMode.SettleMode;//结算中心进入结算状态
 
             //触发结算前事件
             TLCtxHelper.EventSystem.FireBeforeSettleEvent(this, new SystemEventArgs());
@@ -320,7 +318,7 @@ namespace TradingLib.Core
         }
 
         /// <summary>
-        /// 单独触发结算事件
+        /// 结算后重置
         /// </summary>
         void SetteReset()
         {
@@ -329,15 +327,14 @@ namespace TradingLib.Core
             //触发 系统重置操作事件
             TLCtxHelper.EventSystem.FireSettleResetEvet(this, new SystemEventArgs());
 
-
-
-            this.IsInSettle = false;//标识系统结算完毕
+            this.SettleMode = QSEnumSettleMode.StandbyMode;
+            //this.IsInSettle = false;//标识系统结算完毕
         }
 
         /// <summary>
         /// 转储所有已结算交易记录
         /// </summary>
-        void StoreAll2Log()
+        void StoreAllData()
         {
             int onum, tnum, cnum;//, prnum;
             //转储结算完毕的委托 成交数据
@@ -346,15 +343,16 @@ namespace TradingLib.Core
             ORM.MTradingInfo.DumpSettledOrderActions(out cnum, int.MaxValue);
             logger.Info(string.Format("转储所有已结算交易记录结束 Order:{0} Trade:{1} Action:{2}", onum, tnum, cnum));
         }
+
         /// <summary>
         /// 将已结算的交易记录转储到历史交易记录表
         /// 保存交易记录发生在交易帐户结算之后
         /// </summary>
-        public void Dump2Log()
+        public void DumpDataToLogTable()
         {
             logger.Info("Dump TradingInfo(Order,Trade,OrderAction)");
             int tmp_onum, tmp_tnum;
-            int tradingday = this.LastSettleday;//保存上一个交易日的结算数据
+            int tradingday = this.LastSettleday;
 
             //查询某个交易日的日内委托与成交数量
             tmp_onum = ORM.MTradingInfo.GetInterdayOrderNum(tradingday);
@@ -409,6 +407,7 @@ namespace TradingLib.Core
             //    BasicTracker.PowerDataTracker.UpdatePowerData(pd);
             //}
         }
+
         /// <summary>
         /// 保存交易所的结算价格
         /// </summary>
@@ -460,7 +459,11 @@ namespace TradingLib.Core
             return _settlementPriceTracker[settleday, symbol];
         }
 
-
+        /// <summary>
+        /// 获得某个合约最近保存的行情数据
+        /// </summary>
+        /// <param name="symbol"></param>
+        /// <returns></returns>
         public Tick GetLastTickSnapshot(string symbol)
         {
             return _settlementPriceTracker.GetLastTickSnapshot(symbol);

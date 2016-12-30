@@ -16,7 +16,7 @@ namespace TradingLib.Core
         /// </summary>
         void InitFlatTask()
         {
-            logger.Info("初始化日内强平任务");
+            logger.Info("Init Flat Task ");
             Dictionary<DateTime, List<SecurityFamily>> closetimemap = new Dictionary<DateTime, List<SecurityFamily>>();
 
             //遍历所有品种
@@ -44,8 +44,9 @@ namespace TradingLib.Core
 
         void RegisterMarketCloseFlatTask(DateTime closetime, List<SecurityFamily> list)
         {
-            logger.Info("注册收盘强平任务,收盘时间:" + closetime.ToString("HH:mm:ss"));
+            
             DateTime flattime = closetime.AddMinutes(-1*GlobalConfig.FlatTimeAheadOfMarketClose);//提前5分钟强平
+            logger.Info(string.Format("Register Close Flat Task,CloseTime:{0} FlatTime:{1}", closetime.ToString("HH:mm:ss"), flattime.ToString("HH:mm:ss")));
             TaskProc task = new TaskProc(this.UUID, "收盘前强平-" + flattime.ToString("HH:mm:ss"), flattime.Hour, flattime.Minute, flattime.Second, delegate() { FlatPositoinBeforeClose(closetime, list); });
             TLCtxHelper.ModuleTaskCentre.RegisterTask(task);
 
