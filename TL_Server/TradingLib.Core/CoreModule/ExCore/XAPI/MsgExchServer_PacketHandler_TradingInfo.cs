@@ -216,13 +216,13 @@ namespace TradingLib.Core
             int settleday = request.Tradingday;
             if (settleday == 0)
             {
-                logger.Info("Request Tradingday:0 ,try to get the settlement of lastsettleday:" + TLCtxHelper.ModuleSettleCentre.LastSettleday);
+                //logger.Info("Request Tradingday:0 ,try to get the settlement of lastsettleday:" + TLCtxHelper.ModuleSettleCentre.LastSettleday);
                 settleday = TLCtxHelper.ModuleSettleCentre.LastSettleday;
             }
             settlement = ORM.MSettlement.SelectSettlement(account.ID, settleday);
             if (settlement != null)
             {
-                logger.Info("got settlement....");
+                //logger.Info("got settlement....");
                 List<string> settlelist = SettlementFactory.GenSettlementFile(settlement, account);
                 if (settlelist.Count > 0)
                 {
@@ -248,7 +248,7 @@ namespace TradingLib.Core
             else
             {
                 RspXQrySettleInfoResponse response = ResponseTemplate<RspXQrySettleInfoResponse>.SrvSendRspResponse(request);
-                logger.Warn("can not find settlement for account:" + account.ID + " for settleday:" + request.Tradingday.ToString());
+                //logger.Warn("can not find settlement for account:" + account.ID + " for settleday:" + request.Tradingday.ToString());
                 response.RspInfo.Fill("SELLTEINFO_NOT_FOUND");
                 CachePacket(response);
             }

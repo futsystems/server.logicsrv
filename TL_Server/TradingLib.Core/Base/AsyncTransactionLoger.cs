@@ -101,35 +101,7 @@ namespace TradingLib.Core
             if (!_loggo) return;
             _loggo = false;
             ThreadTracker.Unregister(_logthread);
-
-            /*
-            try
-            {
-                if ((_logthread != null) && ((_logthread.ThreadState != System.Threading.ThreadState.Stopped) && (_logthread.ThreadState != System.Threading.ThreadState.StopRequested)))
-                    _logthread.Interrupt();
-            }
-            catch { }
-            try
-            {
-                //_brcache = new RingBuffer<BarRequest>(MAXLOG);
-                _logwaiting.Reset();
-            }
-            catch { }**/
-            int mainwait = 0;
-            while (_logthread.IsAlive && mainwait < 10)
-            {
-                Thread.Sleep(1000);
-                mainwait++;
-            }
-            try
-            {
-                //_brcache = new RingBuffer<BarRequest>(MAXLOG);
-                _logwaiting.Reset();
-            }
-            catch { }
-
-
-            _logthread.Abort();
+            _logthread.Join();
             _logthread = null;
         }
 
@@ -154,10 +126,8 @@ namespace TradingLib.Core
 
             _logthread = new Thread(this.readedata);
             _logthread.Name = "AsyncTransaction logger";
-            _logthread.IsBackground = true;
+            //_logthread.IsBackground = true; //设置IsBackgrouond之后 manualreset会失效 导致newlog后 线程还是处于等待状态直至TimeOut才会写入数据
             ThreadTracker.Register(_logthread);
-
-
             _logthread.Start();
         }
 
@@ -184,21 +154,9 @@ namespace TradingLib.Core
         ///// </summary>
         
 
-        public const int SLEEPDEFAULTMS = 10;
-        int _sleep = SLEEPDEFAULTMS;
-        /// <summary>
-        /// sleep time in milliseconds between checking read buffer
-        /// </summary>
-        public int SLEEP { get { return _sleep; } set { _sleep = value; } }
-
-
+        public const int SLEEPDEFAULTMS = 10000;
         static ManualResetEvent _logwaiting = new ManualResetEvent(false);
         Thread _logthread = null;
-        public bool isValid { get { return _loggo; } }
-
-        //int _nwt;
-        //int _nrt;
-
         bool _loggo = false;
         int _delay = 0;
 
@@ -213,7 +171,7 @@ namespace TradingLib.Core
             {
                 try
                 {
-                    //#region 数据储存日志处理
+                    #region 数据储存日志处理
                     ////记录关键交易数据储存日志
                     //while (_datarepcache.hasItems)
                     //{
@@ -286,7 +244,7 @@ namespace TradingLib.Core
                     //    }
                     //}
 
-                    //#endregion
+                    #endregion
 
                     #region 交易记录插入与更新
                     //插入委托
@@ -388,10 +346,8 @@ namespace TradingLib.Core
                     //PASSDBOPERATION:
                     // clear current flag signal
                     _logwaiting.Reset();
-
                     // wait for a new signal to continue reading
-                    _logwaiting.WaitOne(SLEEP);
-                    //Thread.Sleep(1000);
+                    _logwaiting.WaitOne(SLEEPDEFAULTMS);
                 }
                 
                 //以下代码段通过捕捉交易日志插入部分的异常,将没有正常插入的数据重新返回到缓存队列
@@ -407,10 +363,6 @@ namespace TradingLib.Core
                 }
             }
         }
-
-
-
-
      
         #region 插入或更新交易数据
         /// <summary>
@@ -420,7 +372,6 @@ namespace TradingLib.Core
         /// <param name="k"></param>
         public void NewOrder(Order o)
         {
-            //debug("插入委托数据到数据库");
             Order oc = new OrderImpl(o);//复制委托 防止委托参数发生变化
             _datarepcache.Write(new DataRepositoryLog(EnumDataRepositoryType.InsertOrder, oc));
             _ocache.Write(oc);
@@ -429,7 +380,6 @@ namespace TradingLib.Core
         }
         public void UpdateOrder(Order o)
         {
-            //debug("插入委托数据到数据库");
             Order oc = new OrderImpl(o);
             _datarepcache.Write(new DataRepositoryLog(EnumDataRepositoryType.UpdateOrder, oc));
             _oupdatecache.Write(oc);
@@ -458,10 +408,17 @@ namespace TradingLib.Core
             _datarepcache.Write(new DataRepositoryLog(EnumDataRepositoryType.InsertPositionCloseDetail, pc));
             newlog();
         }
+
+        public void NewCashTransaction(CashTransaction txn)
+        {
+            _cashtxncache.Write(txn);
+            _datarepcache.Write(new DataRepositoryLog(EnumDataRepositoryType.InsertCashTransaction, txn));
+            newlog();
+        }
+
+
         /**
          *  持仓明细与交易所结算数据是在结算过程中产生的结算数据,不需要通过DataRep日志系统进行记录
-         * 
-         * 
          * */
         public void NewPositionDetail(PositionDetail pd)
         {
@@ -477,12 +434,7 @@ namespace TradingLib.Core
             newlog();
         }
 
-        public void NewCashTransaction(CashTransaction txn)
-        {
-            _cashtxncache.Write(txn);
-            _datarepcache.Write(new DataRepositoryLog(EnumDataRepositoryType.InsertCashTransaction,txn));
-            newlog();
-        }
+        
         #endregion
 
         #region 结算标识
@@ -720,47 +672,12 @@ namespace TradingLib.Core
 
         private void newlog()
         {
-            /*
-            if ((_logthread != null) && (_logthread.ThreadState == System.Threading.ThreadState.Unstarted))
-            {
-                _loggo = true;
-                _logthread.IsBackground = true;
-                
-                _logthread.Start();
-                
-            }
-            else if ((_logthread != null) && (_logthread.ThreadState == System.Threading.ThreadState.WaitSleepJoin))
-            {
-                _logwaiting.Set(); // signal ReadIt thread to read now
-            }**/
             if ((_logthread != null) && (_logthread.ThreadState == System.Threading.ThreadState.WaitSleepJoin))
             {
                 _logwaiting.Set();
             }
             
         }
-
-        ///// <summary>
-        ///// called if bad barrequest is written or read.
-        ///// check bad counters to see if written or read.
-        ///// </summary>
-        //public event VoidDelegate GotBadBR;
-        ///// <summary>
-        ///// called if buffer set is too small
-        ///// </summary>
-        //public event VoidDelegate GotBarRequestOverrun;
-        ///// <summary>
-        ///// # of null barrequest ignored at write
-        ///// </summary>
-        //public int BadBRWritten { get { return _nwt; } }
-        ///// <summary>
-        ///// # of null barrequest ignored at read
-        ///// </summary>
-        //public int BadBRRead { get { return _nrt; } }
-
-
-
-        
     }
 
 

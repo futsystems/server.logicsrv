@@ -68,7 +68,7 @@ namespace TradingLib.Core
                     RspQryTradeResponse response = ResponseTemplate<RspQryTradeResponse>.SrvSendRspResponse(request);
                     response.TradeToSend = trades[i];
 
-                    logger.Info("转发当日成交:" + trades[i].ToString() + " side:" + trades[i].Side.ToString());
+                    //logger.Info("转发当日成交:" + trades[i].ToString() + " side:" + trades[i].Side.ToString());
                     CacheRspResponse(response, i == totalnum - 1);
                 }
             }
@@ -97,7 +97,7 @@ namespace TradingLib.Core
                 positions = account.Positions.Where(pos => pos.Symbol.Equals(request.Symbol)).ToArray();
             }
 
-            logger.Info("total num:" + positions.Length.ToString());
+            //logger.Info("total num:" + positions.Length.ToString());
             int totalnum = positions.Length;
 
             if (totalnum > 0)
@@ -142,11 +142,9 @@ namespace TradingLib.Core
             }
             else
             {
-                
                 //
                 int size = account.CheckMaxOrderSize(symbol,request.Side,request.OffsetFlag);
-
-                logger.Info("got max opensize:" + size.ToString());
+                //logger.Info("got max opensize:" + size.ToString());
                 response.Symbol = request.Symbol;
                 response.MaxVol = size >= 0 ? size : 0;
                 response.OffsetFlag = request.OffsetFlag;
@@ -181,7 +179,7 @@ namespace TradingLib.Core
             RspQrySettleInfoConfirmResponse response = ResponseTemplate<RspQrySettleInfoConfirmResponse>.SrvSendRspResponse(request);
             
             //IAccount account = TLCtxHelper.ModuleAccountManager[request.Account];
-            logger.Info("confirm stamp:" + account.SettlementConfirmTimeStamp.ToString());
+            //logger.Info("confirm stamp:" + account.SettlementConfirmTimeStamp.ToString());
 
             response.TradingAccount = request.Account;
             //如果需要确认结算单 则将帐户的最新结算单确认时间回报
@@ -214,7 +212,7 @@ namespace TradingLib.Core
 
             //发送结算确认
             RspConfirmSettlementResponse response = ResponseTemplate<RspConfirmSettlementResponse>.SrvSendRspResponse(request);
-            logger.Info("confirm stamp:" + account.SettlementConfirmTimeStamp.ToString());
+            //logger.Info("confirm stamp:" + account.SettlementConfirmTimeStamp.ToString());
             DateTime confirmtime = Util.ToDateTime(account.SettlementConfirmTimeStamp);
             response.TradingAccount = request.Account;
             response.ConfirmDay = Util.ToTLDate(confirmtime);

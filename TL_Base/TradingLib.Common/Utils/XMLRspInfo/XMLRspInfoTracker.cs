@@ -97,7 +97,7 @@ namespace TradingLib.Common
             List<XMLRspInfo> rsplist  = new List<XMLRspInfo>();
             XmlNode xn = xmlDoc.SelectSingleNode(_nodes);
             XmlNodeList errors = xn.ChildNodes;
-            Util.Debug("total errors:" + errors.Count.ToString());
+            //Util.Debug("total errors:" + errors.Count.ToString());
             foreach (XmlNode node in errors)
             {
                 try
