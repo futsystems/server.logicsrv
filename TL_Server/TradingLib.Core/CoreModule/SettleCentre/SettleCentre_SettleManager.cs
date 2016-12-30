@@ -217,7 +217,10 @@ namespace TradingLib.Core
                 throw new FutsRspError("无权进行该操作");
             }
 
+            //手工结算 设定结算中心工作模式为历史结算模式 同时关闭清算中心
             this.SettleMode = QSEnumSettleMode.HistSettleMode;
+            TLCtxHelper.ModuleClearCentre.CloseClearCentre();
+
             var data = JsonMapper.ToObject(json);
 
             //获得对应的交易日

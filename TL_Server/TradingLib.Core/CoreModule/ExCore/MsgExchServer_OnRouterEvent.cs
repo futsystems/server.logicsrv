@@ -76,12 +76,13 @@ namespace TradingLib.Core
                 default:
                     break;
             }
+
             if (simpromptenable && o.Broker == "SIMBROKER")
             {
                 o.Comment = simprompt + ":" + o.Comment;
             }
-
         }
+
         public void OnOrderEvent(Order o)
         {
             IAccount account = TLCtxHelper.ModuleAccountManager[o.Account];
@@ -100,8 +101,10 @@ namespace TradingLib.Core
                 //清算中心响应取消回报
                 OnCancelEvent(o.id);
             }
+
             //对外触发委托事件
-            TLCtxHelper.EventIndicator.FireOrderEvent(o);
+            TLCtxHelper.EventIndicator.FireOrderEvent(o); //可以再某个组件 监听Indicator进行交易数据记录
+            
             //对外通知
             this.NotifyOrder(o);
         }

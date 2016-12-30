@@ -55,12 +55,6 @@ namespace TradingLib.API
         #endregion
 
 
-        /// <summary>
-        /// 恢复日内交易记录
-        /// </summary>
-        //void Restore();
-
-
         #region 整体交易信息
 
         /// <summary>

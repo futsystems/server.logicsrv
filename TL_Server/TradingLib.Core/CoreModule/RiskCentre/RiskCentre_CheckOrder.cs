@@ -62,6 +62,7 @@ namespace TradingLib.Core
                 needlog = false;
                 return false;
             }
+
             //2 清算中心检查
             //2.1检查清算中心是否出入接受委托状态(正常工作状态下系统会定时开启和关闭清算中心,如果是开发模式则可以通过手工来提前开启)
             if (!TLCtxHelper.ModuleClearCentre.IsLive)

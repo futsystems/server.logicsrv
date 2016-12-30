@@ -32,6 +32,11 @@ namespace TradingLib.Core
         bool _live = false;
         /// <summary>
         /// 清算中心是否处于开启状态 清算中心开启可以接受客户端提交的委托
+        /// 结算前5分钟关闭清算中心 重置后5分钟开启清算中心
+        /// 清算中心工作模式
+        /// 1.程序启动后 加载未结算数据 清算中心根据当前时间判定 是否处于工作状态
+        /// 2.程序常驻运行中 结算中心定时任务 自动关闭与开启清算中心
+        /// 2.手工结算模式 设定交易日后 清算中心重置加载对应交易日的交易数据 此时需要设定清算中心未关闭 否则会多次执行数据库操作
         /// </summary>
         public bool IsLive { get { return _live; } }
 
@@ -130,7 +135,7 @@ namespace TradingLib.Core
             //清空总维护器数据
             totaltk.Clear();
 
-            //从数据中恢复数据用于得到当前最新状态包含持仓,PR,出入金等数据
+            //加载交易记录
             LoadData();
         }
 
@@ -141,12 +146,14 @@ namespace TradingLib.Core
         {
             Util.StartStatus(this.PROGRAME);
             LoadData();
+
             //启动后根据当前时间判定清算中心状态 结算中心在结算前5分钟关闭系统 在重置系统后5分钟打开系统
             DateTime close = Util.ToDateTime(Util.ToTLDate(DateTime.Now), TLCtxHelper.ModuleSettleCentre.SettleTime).AddMinutes(-5);
             DateTime open = Util.ToDateTime(Util.ToTLDate(DateTime.Now), TLCtxHelper.ModuleSettleCentre.ResetTime).AddMinutes(5);
 
             //如果在关闭时间区间内则系统关闭 否则系统开启
             _live = !Util.IsInPeriod(close, open);
+
 
         }
 

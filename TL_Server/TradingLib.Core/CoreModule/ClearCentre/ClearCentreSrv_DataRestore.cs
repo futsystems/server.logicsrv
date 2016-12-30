@@ -93,7 +93,6 @@ namespace TradingLib.Core
                     if(action.ActionFlag == QSEnumOrderActionFlag.Delete && action.OrderID != 0)
                         this.GotCancel(action.OrderID) ;
                 }
-
             }
             catch (Exception ex)
             {

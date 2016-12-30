@@ -11,6 +11,8 @@ namespace TradingLib.Core
 {
     public partial class ClearCentre
     {
+        //交易所结算数据与隔夜持仓明细数据为结算时 根据交易数据生成 因此此处不做该类数据的数据库操作
+
         /// <summary>
         /// 获得交易所结算数据
         /// </summary>
@@ -73,7 +75,7 @@ namespace TradingLib.Core
                 }
                 
                 acctk.GotOrder(o);
-                //清算中心开启状态 或者 处于历史结算模式 清算中心需要处理交易数据
+                //清算中心开启状态 或者 处于历史结算模式 清算中心需要处理交易数据 历史结算有可能会执行手工平仓 需要记录交易数据 或者将交易记录储存放到BrokerRouter 统一处理？？
                 if (this.IsLive || TLCtxHelper.ModuleSettleCentre.SettleMode == QSEnumSettleMode.HistSettleMode)
                 {
                     if (!totaltk.IsTracked(o))
