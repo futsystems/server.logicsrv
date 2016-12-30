@@ -326,6 +326,11 @@ namespace TradingLib.Core
             //2.帐户结算
             SettleAccount();
 
+            //更新交易日
+            ORM.MSettlement.UpdateSettleday(this.Tradingday);
+            _lastsettleday = this.Tradingday;
+            _tradingday = Util.ToDateTime(this.Tradingday, DateTime.Now.ToTLTime()).AddDays(1).ToTLDate();
+
             //保存已结算交易记录
             DumpDataToLogTable();
 

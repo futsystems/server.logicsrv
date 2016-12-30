@@ -76,16 +76,11 @@ namespace TradingLib.Core
         {
             _cfgdb = new ConfigDB(SettleCentre.CoreName);
 
-            //初始化交易所结算任务
+            //初始化交易所结算任务 程序启动时 初始化任务过程会自动判定当前交易日 系统执行结算后 结算过程会回滚交易日 因此 初始化数据库过程只要从数据库加载记录的上个结算日并于当前交易日确认
             InitSettleTask();
 
             //初始化交易日信息
-            InitTradingDay();
-
-            //加载当日结算价数据
-            _settlementPriceTracker.LoadSettlementPrice(this.Tradingday);
-            //结算中心创建当前交易日汇率数据
-            BasicTracker.ExchangeRateTracker.CreateExchangeRates(this.Tradingday);
+            InitData();
 
             logger.Info(string.Format("LastSettleday:{0} Current Tradingday:{1} Next SettleTime:{2}", _lastsettleday, _tradingday, _nextSettleTime.ToString("yyyyMMdd HH:mm:ss")));
             
@@ -94,9 +89,11 @@ namespace TradingLib.Core
 
         
         /// <summary>
-        /// 初始化交易日信息
+        /// 初始化结算中心数据
+        /// 与结算相关的数据
+        /// 上个结算日 当前交易日 结算价 汇率 等数据
         /// </summary>
-        void InitTradingDay()
+        void InitData()
         {
             //从数据库获得上次结算日
             _lastsettleday = ORM.MSettlement.GetLastSettleday();
@@ -107,32 +104,13 @@ namespace TradingLib.Core
                 logger.Error("结算日设置不正确,lastsettleday 大于 最早结算交易所对应日期");
                 throw new ArgumentException("invlaid settleday");
             }
-        }
 
-        /// <summary>
-        /// 滚动交易日
-        /// </summary>
-        void RollTradingDay()
-        {
-            //更新结算日
-            logger.Info(string.Format("Update lastsettleday as:{0}", Tradingday));
-            ORM.MSettlement.UpdateSettleday(this.Tradingday);
-            //更新交易日
-            _lastsettleday = this.Tradingday;
-            _tradingday = Util.ToDateTime(this.Tradingday, DateTime.Now.ToTLTime()).AddDays(1).ToTLDate();
-            BasicTracker.ExchangeRateTracker.CreateExchangeRates(_tradingday);//创建下一个交易日的汇率数据
-        }
+            //加载当日结算价数据
+            _settlementPriceTracker.LoadSettlementPrice(this.Tradingday);
 
-        /// <summary>
-        /// 重置结算信息
-        /// 按照系统记录的上个结算日 当前日期 时间来获得对应的当前交易日和结算状态信息
-        /// </summary>
-        public void Reset()
-        {
-            InitTradingDay();
-            //logger.Info(string.Format("结算中心初始化,上次结算日:{0} 下一交易日:{1} 当前交易日:{2} 结算状态:{3}", _lastsettleday, _nexttradingday, _tradingday, SettleCentreStatus));
+            //结算中心创建当前交易日汇率数据
+            BasicTracker.ExchangeRateTracker.CreateExchangeRates(this.Tradingday);
         }
-
 
         public void Start()
         {

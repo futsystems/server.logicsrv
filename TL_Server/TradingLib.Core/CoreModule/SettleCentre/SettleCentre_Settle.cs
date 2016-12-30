@@ -307,10 +307,13 @@ namespace TradingLib.Core
                 }
             }
 
-            //TODO:滚动交易日是在结算时执行还是在重置时执行
-            RollTradingDay();
-
-            logger.Info(string.Format("Settle finished,entry tradingday:{0}", this.Tradingday));
+            //TODO:滚动交易日是在结算时执行还是在重置时执行 
+            //更新交易日
+            ORM.MSettlement.UpdateSettleday(this.Tradingday);
+            //更新交易日
+            _lastsettleday = this.Tradingday;
+            _tradingday = Util.ToDateTime(this.Tradingday, DateTime.Now.ToTLTime()).AddDays(1).ToTLDate();
+            logger.Info(string.Format("Settle Finished,Update Last Settleday:{0} Entry Tradingday:{1}",_lastsettleday, _tradingday));
 
             //触发结算后事件
             TLCtxHelper.EventSystem.FireAfterSettleEvent(this, new SystemEventArgs());
@@ -322,13 +325,14 @@ namespace TradingLib.Core
         /// </summary>
         void SetteReset()
         {
-            //TODO:结算后 如果立刻执行重置 加载交易账户交易记录时会导致重复加载
+            //TODO:结算后 如果立刻执行重置 加载交易账户交易记录时会导致重复加载(结算后需要等待数据库写队列中的数据全部写入数据库 操作结算标记 否则立刻加载会将为标记为结算的数据再次加载)
             logger.Info("结算后系统重置");
+
+            InitData();
+
             //触发 系统重置操作事件
             TLCtxHelper.EventSystem.FireSettleResetEvet(this, new SystemEventArgs());
-
             this.SettleMode = QSEnumSettleMode.StandbyMode;
-            //this.IsInSettle = false;//标识系统结算完毕
         }
 
         /// <summary>
