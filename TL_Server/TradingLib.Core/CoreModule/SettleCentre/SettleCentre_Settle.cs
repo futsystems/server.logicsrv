@@ -310,9 +310,9 @@ namespace TradingLib.Core
             //TODO:滚动交易日是在结算时执行还是在重置时执行 
             //更新交易日
             ORM.MSettlement.UpdateSettleday(this.Tradingday);
-            //更新交易日
             _lastsettleday = this.Tradingday;
             _tradingday = Util.ToDateTime(this.Tradingday, DateTime.Now.ToTLTime()).AddDays(1).ToTLDate();
+
             logger.Info(string.Format("Settle Finished,Update Last Settleday:{0} Entry Tradingday:{1}",_lastsettleday, _tradingday));
 
             //触发结算后事件
