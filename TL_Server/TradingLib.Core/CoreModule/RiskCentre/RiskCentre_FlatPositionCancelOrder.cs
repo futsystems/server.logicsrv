@@ -729,12 +729,12 @@ namespace TradingLib.Core
             return false;
         }
 
-        void PositionFlatFail(Position pos, string error)
-        {
-            TLCtxHelper.EventSystem.FirePositionFlatEvent(this, new PositionFlatEventArgs(pos, error));
-            //if (PositionFlatEvent != null)
-            //    PositionFlatEvent(this, new PositionFlatEventArgs(pos, error));
-        }
+        //void PositionFlatFail(Position pos, string error)
+        //{
+        //    TLCtxHelper.EventSystem.FirePositionFlatEvent(this, new PositionFlatEventArgs(pos, error));
+        //    //if (PositionFlatEvent != null)
+        //    //    PositionFlatEvent(this, new PositionFlatEventArgs(pos, error));
+        //}
         /// <summary>
         /// 维护风控任务列表
         /// 风控任务包含强平所有持仓，强平某个持仓，撤单等
@@ -837,7 +837,7 @@ namespace TradingLib.Core
                                         {
                                             string msg = ps.Title + ":Order Not Executed,Cancel Without Reply,TaskFail";
                                             logger.Warn(msg);
-                                            PositionFlatFail(ps.Position, "POSFLAT_FLATORDER_CANCEL_ERROR");
+                                            //PositionFlatFail(ps.Position, "POSFLAT_FLATORDER_CANCEL_ERROR");
                                             ////对外进行未正常平仓报警
                                             //if (GotFlatFailedEvent != null)
                                             //{

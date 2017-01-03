@@ -23,17 +23,6 @@ namespace TradingLib.Core
 
         #region
         /// <summary>
-        /// 行情驱动止盈止损监控器进行工作,满足条件对外触发平仓指令
-        /// </summary>
-        /// <param name="k"></param>
-        void GotTick(Tick k)
-        {
-            //_posoffsetracker.GotTick(k);
-            _haltstatetracker.GotTick(k);
-        }
-
-        
-        /// <summary>
         /// 获得取消
         /// 取消事务是在处理队列中进行异步处理
         /// 而强平事务的完成是在positionround回报中同步处理

@@ -13,7 +13,7 @@ namespace TradingLib.Core
         /// 执行账户的 账户规则检查
         /// </summary>
         /// <param name="a"></param>
-        public void CheckAccount(IAccount a)
+        void CheckAccountRule(IAccount a)
         {
             try
             {
@@ -24,11 +24,13 @@ namespace TradingLib.Core
                 {
                     logger.Warn(msg);
                 }
+                
             }
             catch (Exception ex)
             {
                 string s = PROGRAME + ":checkAccount error:" + ex.ToString();
                 logger.Error(s);
+                logger.Error(string.Format("Check Account Rule Error:{0}", ex.ToString()));
             }
         }
         

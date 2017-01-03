@@ -4,42 +4,53 @@
 		<Month>1</Month>
 		<Day>1</Day>
 	</Holiday>
+	<Holiday name="New Year's Day(元旦)">
+		<Month>1</Month>
+		<Day>2</Day>
+	</Holiday>
+	
 	<Holiday name="Chinese New Year(农历年初一)">
-		<Month>2</Month>
-		<Day>19</Day>
+		<Month>1</Month>
+		<Day>30</Day>
 	</Holiday>
-	<Holiday name="Chinese New Year(农历年初二)">
-		<Month>2</Month>
-		<Day>20</Day>
-	</Holiday>
+
+	
 	<Holiday name="Good Friday(耶稣受难日)">
 		<Month>4</Month>
-		<Day>3</Day>
+		<Day>14</Day>
 	</Holiday>
+	
 	<Holiday name=" Labour Day(劳动节)">
 		<Month>5</Month>
 		<Day>1</Day>
 	</Holiday>
+	
 	<Holiday name="Vesak Day(卫塞节)">
-		<Month>6</Month>
-		<Day>1</Day>
+		<Month>5</Month>
+		<Day>10</Day>
 	</Holiday>
+
+	
 	<Holiday name="Hari Raya Puasa(开斋节)">
-		<Month>7</Month>
-		<Day>17</Day>
+		<Month>6</Month>
+		<Day>26</Day>
 	</Holiday>
+	
 	<Holiday name="National Day (国庆日)">
 		<Month>8</Month>
-		<Day>10</Day>
+		<Day>9</Day>
 	</Holiday>
-	<Holiday name="Hari Raya Haji(哈芝节)">
+	
+	<Holiday name="回教古尔邦节">
 		<Month>9</Month>
-		<Day>24</Day>
+		<Day>1</Day>
 	</Holiday>
-	<Holiday name="Deepavali(屠妖节,万灯节)">
-		<Month>11</Month>
-		<Day>10</Day>
+	
+	<Holiday name="印度教排灯节">
+		<Month>10</Month>
+		<Day>18</Day>
 	</Holiday>
+	
 	<Holiday name="Christmas Day(圣诞节)">
 		<Month>12</Month>
 		<Day>25</Day>

@@ -71,27 +71,37 @@ namespace TradingLib.Core
 
                 foreach (ExchangeSettlement settle in exsettlelist)
                 {
-                    this.GotExchangeSettlement(settle);
+                    IAccount account = TLCtxHelper.ModuleAccountManager[settle.Account];
+                    if (account == null) continue;
+                    this.GotExchangeSettlement(account,settle);
                 }
                 //从数据库加载上日结算持仓信息 用于恢复当前持仓状态
                 foreach (PositionDetail p in plist)
                 {
-                    this.GotPosition(p);
+                    IAccount account = TLCtxHelper.ModuleAccountManager[p.Account];
+                    if (account == null) continue;
+                    this.GotPosition(account,p);
                 }
                 foreach (Order o in olist)
                 {
-                    this.GotOrder(o);
+                    IAccount account = TLCtxHelper.ModuleAccountManager[o.Account];
+                    if (account == null) continue;
+                    this.GotOrder(account,o);
                 }
                 bool accept = false;
                 foreach (Trade f in flist)
                 {
-                    this.GotFill(f,out accept);
+                    IAccount account = TLCtxHelper.ModuleAccountManager[f.Account];
+                    if (account == null) continue;
+                    this.GotFill(account,f,out accept);
                 }
 
                 foreach (OrderAction action in clist)
                 {
+                    IAccount account = TLCtxHelper.ModuleAccountManager[action.Account];
+                    if (account == null) continue;
                     if(action.ActionFlag == QSEnumOrderActionFlag.Delete && action.OrderID != 0)
-                        this.GotCancel(action.OrderID) ;
+                        this.GotCancel(account,action.OrderID) ;
                 }
             }
             catch (Exception ex)

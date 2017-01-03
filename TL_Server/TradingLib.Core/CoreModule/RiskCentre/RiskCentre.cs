@@ -19,10 +19,6 @@ namespace TradingLib.Core
     public partial class RiskCentre : BaseSrvObject, IModuleRiskCentre
     {
         const string CoreName = "RiskCentre";
-        /// <summary>
-        /// 清算中心
-        /// </summary>
-        //ClearCentre _clearcentre = null;
         public string CoreId { get { return CoreName; } }
 
         ConfigDB _cfgdb;
@@ -49,7 +45,6 @@ namespace TradingLib.Core
 
         bool _enableStkT0 = false;
 
-        HaltedStateTracker _haltstatetracker;
         public RiskCentre():base(CoreName)
         {
             //1.加载配置文件
@@ -168,19 +163,14 @@ namespace TradingLib.Core
             InitFlatTask();
 
             //订阅交易信息
-            TLCtxHelper.EventIndicator.GotTickEvent +=new TickDelegate(this.GotTick);
             TLCtxHelper.EventIndicator.GotOrderEvent += new OrderDelegate(this.GotOrder);
             TLCtxHelper.EventIndicator.GotOrderErrorEvent += new OrderErrorDelegate(this.GotOrderError);
-
 
             //交易帐户激活
             TLCtxHelper.EventAccount.AccountActiveEvent += new Action<IAccount>(this.ResetRuleSet);
 
             //结算重置
             TLCtxHelper.EventSystem.SettleResetEvent += new EventHandler<SystemEventArgs>(EventSystem_SettleResetEvent);
-
-
-            _haltstatetracker = new HaltedStateTracker();
         }
 
         void EventSystem_SettleResetEvent(object sender, SystemEventArgs e)
@@ -200,13 +190,8 @@ namespace TradingLib.Core
             //清空强平任务队列
             posflatlist.Clear();
 
-            //清空帐户风控检查帐户列表
-            ClearActiveAccount();
-            
+            //加载所有风控规则
             LoadRuleItemAll();
-            
-            //重置熔断状态
-            _haltstatetracker.Reset();
         }
 
         #endregion
@@ -214,14 +199,6 @@ namespace TradingLib.Core
         public void Start()
         {
             Util.StartStatus(this.PROGRAME);
-
-            //foreach (IAccount account in TLCtxHelper.ModuleAccountManager.Accounts)
-            //{
-            //    if (!account.RuleItemLoaded)
-            //    {
-            //        this.LoadRuleItem(account);
-            //    }
-            //}
             LoadRuleItemAll();
         }
 
@@ -234,8 +211,6 @@ namespace TradingLib.Core
         {
             Util.DestoryStatus(this.PROGRAME);
             base.Dispose();
-            //_posoffsetracker.Dispose();
-            
         }
     }
 

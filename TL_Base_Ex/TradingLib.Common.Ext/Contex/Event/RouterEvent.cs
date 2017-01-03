@@ -8,7 +8,7 @@ namespace TradingLib.Common
 {
     /// <summary>
     /// 路由事件
-    /// 
+    /// 汇聚从行情路由与交易路由返回的数据回报
     /// </summary>
     public class RouterEvent
     {

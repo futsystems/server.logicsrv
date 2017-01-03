@@ -182,29 +182,29 @@ namespace TradingLib.ServiceManager
         void OnBrokerConnected(string token)
         {
             logger.Info("Broker[" + token + "] Connected");
-            if (TLCtxHelper.Version.ProductType == QSEnumProductType.VendorMoniter)
-            {
-                IAccount account = BasicTracker.ConnectorMapTracker.GetAccountForBroker(token);
-                if (account != null)
-                {
-                    //触发帐户变动事件
-                    TLCtxHelper.EventAccount.FireAccountChangeEent(account);
-                }
-            }
+            //if (TLCtxHelper.Version.ProductType == QSEnumProductType.VendorMoniter)
+            //{
+            //    IAccount account = BasicTracker.ConnectorMapTracker.GetAccountForBroker(token);
+            //    if (account != null)
+            //    {
+            //        //触发帐户变动事件
+            //        TLCtxHelper.EventAccount.FireAccountChangeEent(account);
+            //    }
+            //}
         }
 
         void OnBrokerDisconnected(string token)
         {
             logger.Info("Broker[" + token + "] Disconnected");
-            if (TLCtxHelper.Version.ProductType == QSEnumProductType.VendorMoniter)
-            {
-                IAccount account = BasicTracker.ConnectorMapTracker.GetAccountForBroker(token);
-                if (account != null)
-                {
-                    //触发帐户变动事件
-                    TLCtxHelper.EventAccount.FireAccountChangeEent(account);
-                }
-            }
+            //if (TLCtxHelper.Version.ProductType == QSEnumProductType.VendorMoniter)
+            //{
+            //    IAccount account = BasicTracker.ConnectorMapTracker.GetAccountForBroker(token);
+            //    if (account != null)
+            //    {
+            //        //触发帐户变动事件
+            //        TLCtxHelper.EventAccount.FireAccountChangeEent(account);
+            //    }
+            //}
         }
         /// <summary>
         /// 加载BrokerXAPI底层成交接口

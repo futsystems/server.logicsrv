@@ -19,6 +19,13 @@ namespace TradingLib.Common
                 return QSEnumActionCheckResult.RangeNotExist;
             }
 
+            //当前为工作日 且当前处于假期 则直接返回 InHoliday 不用判定交易小节到底在哪个交易日
+            if (extime.IsWorkDay() && exchange.IsInHoliday(extime))
+            {
+                settleday = 0;
+                return QSEnumActionCheckResult.InHoliday;
+            }
+
             //获得当前交易小节所属交易日 如果该交易日放假
             DateTime tradingday = range.TradingDay(extime);
             if (exchange.IsInHoliday(tradingday))
@@ -26,9 +33,7 @@ namespace TradingLib.Common
                 settleday = 0;
                 return QSEnumActionCheckResult.InHoliday;
             }
-
-
-
+            
             //如果是属于T交易日 则只要在交易小节内且交易所不放假 则都是可以交易的,T+1则需要判断下一个交易日是否交易
             //if (range.SettleFlag == QSEnumRangeSettleFlag.T1)
             //{
@@ -36,7 +41,6 @@ namespace TradingLib.Common
             //    {
             //        return QSEnumActionCheckResult.InHoliday;
             //    }
-
             //}
             settleday = tradingday.ToTLDate();
             return QSEnumActionCheckResult.Allowed;

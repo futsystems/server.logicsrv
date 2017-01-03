@@ -10,6 +10,8 @@ namespace TradingLib.Core
 {
     public partial class RiskCentre
     {
+        //实时检查类风控 在系统处于结算模式时不执行 执行手工结算时 若不屏蔽风控检查会造成现象如下
+        //1.回滚交易日 重置清算中心后导致账户被重置 账户检查线程会集中加载所有账户的风控规则
 
         /// <summary>
         /// 帐户风控规则扫描
@@ -17,9 +19,11 @@ namespace TradingLib.Core
         [TaskAttr("帐户风控实时检查",0,500, "帐户风控实时检查")]
         public void Task_DataCheck()
         {
-            foreach (IAccount account in activeaccount.Values)
+            if (TLCtxHelper.ModuleSettleCentre.SettleMode != QSEnumSettleMode.StandbyMode) return;
+
+            foreach (IAccount account in TLCtxHelper.ModuleAccountManager.Accounts)
             {
-                this.CheckAccount(account);
+                this.CheckAccountRule(account);
             }
         }
 
@@ -29,6 +33,8 @@ namespace TradingLib.Core
         [TaskAttr("检查强平任务队列",0,250,"调度系统每秒检查强平任务队列")]
         public void Task_ProcessPositionFlatSet()
         {
+            if (TLCtxHelper.ModuleSettleCentre.SettleMode != QSEnumSettleMode.StandbyMode) return;
+
             this.ProcessRiskTask();
         }
 
@@ -41,8 +47,10 @@ namespace TradingLib.Core
         [TaskAttr("检查冻结帐户",5,0, "每5秒检查一次冻结帐户")]
         public void Task_CheckAccountFrozen()
         {
-            //if (!TLCtxHelper.ModuleSettleCentre.IsTradingday) return;//非交易日不执行
-            foreach (IAccount account in activeaccount.Values.Where(a=>!a.Execute).Where(a => a.AnyPosition))
+            if (TLCtxHelper.ModuleSettleCentre.SettleMode != QSEnumSettleMode.StandbyMode) return;
+
+            //检查所有有持仓的被冻结账户 账户冻结会自动强平所有持仓
+            foreach (IAccount account in TLCtxHelper.ModuleAccountManager.Accounts.Where(a=>!a.Execute).Where(a => a.AnyPosition))
             {
                 int settleday = 0;
                 if (account.GetPositionsHold().Any(pos => pos.oSymbol.SecurityFamily.CheckPlaceOrder(out settleday)== QSEnumActionCheckResult.Allowed))//如果有持仓 并且有任一个持仓对因合约处于交易时间段

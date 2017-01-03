@@ -24,23 +24,23 @@ namespace TradingLib.API
         /// 用于恢复隔夜持仓
         /// </summary>
         /// <param name="pos"></param>
-        void GotPosition(PositionDetail pos);
+        void GotPosition(IAccount account, PositionDetail pos);
         /// <summary>
         /// 记录委托
         /// </summary>
         /// <param name="o"></param>
-        void GotOrder(Order o);
+        void GotOrder(IAccount account,Order o);
         /// <summary>
         /// 记录委托错误
         /// </summary>
         /// <param name="o"></param>
         /// <param name="e"></param>
-        void GotOrderError(Order o, RspInfo e);
+        void GotOrderError(IAccount account, Order o, RspInfo e);
         /// <summary>
         /// 记录成交
         /// </summary>
         /// <param name="f"></param>
-        void GotFill(Trade f,out bool accept);
+        void GotFill(IAccount account, Trade f, out bool accept);
         /// <summary>
         /// 记录行情
         /// </summary>
@@ -50,12 +50,14 @@ namespace TradingLib.API
         /// 记录取消
         /// </summary>
         /// <param name="oid"></param>
-        void GotCancel(long oid);
+        void GotCancel(IAccount account, long oid);
 
         #endregion
 
 
         #region 整体交易信息
+
+        bool IsTracked(Order o);
 
         /// <summary>
         /// 通过order id找到对应的Order

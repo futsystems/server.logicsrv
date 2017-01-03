@@ -103,7 +103,7 @@ namespace TradingLib.Core
         /// <param name="obj"></param>
         void acctk_NewPositionCloseDetailEvent(Trade f,PositionCloseDetail obj)
         {
-            if (this.IsLive)
+            if (this.IsLive)//手工结算时 手工平仓 如何记录平仓明细数据
             {
                 logger.Info("New PositionCloseDetail:" + obj.GetPositionCloseStr());
                 TLCtxHelper.ModuleDataRepository.NewPositionCloseDetail(obj);

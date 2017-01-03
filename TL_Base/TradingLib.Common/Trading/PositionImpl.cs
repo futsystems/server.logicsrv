@@ -3,6 +3,7 @@ using System.Text;
 using System.Linq;
 using System.Collections.Generic;
 using TradingLib.API;
+using Common.Logging;
 
 namespace TradingLib.Common
 {
@@ -14,7 +15,7 @@ namespace TradingLib.Common
     [Serializable]
     public class PositionImpl : TradingLib.API.Position, IConvertible
     {
-
+        protected static ILog logger = LogManager.GetLogger("PositionImpl");
         #region 类型转换
         public decimal ToDecimal(IFormatProvider provider)
         {
@@ -544,6 +545,7 @@ namespace TradingLib.Common
                     if (closefail)
                     {
                         accept = false;
+                        logger.Error(string.Format("Close Position Fail, Pos:{0} Trade:{1}", this.ToString(), t.GetTradeDetail()));
                         return 0;
                     }
                     else
@@ -570,7 +572,7 @@ namespace TradingLib.Common
             {
                 this._price = _postotallist.Where(pos1 => !pos1.IsClosed()).Sum(pos2 => pos2.Volume * pos2.CostPrice()) / Math.Abs(this._size);
             }
-            Util.Debug("runing size:" + this._size.ToString() + " positiondetail size:" + _postotallist.Where(pos1 => !pos1.IsClosed()).Sum(pos2 => pos2.Volume));
+            //Util.Debug("runing size:" + this._size.ToString() + " positiondetail size:" + _postotallist.Where(pos1 => !pos1.IsClosed()).Sum(pos2 => pos2.Volume));
             _closedpl += cpl; // update running closed pl 更新平仓盈亏
             return cpl;//返回平仓盈亏
         }
@@ -758,7 +760,7 @@ namespace TradingLib.Common
             else
             {
                 closefail = true;//平仓成交出现异常
-                Util.Fatal("exit trade have not used up,some big error happend");
+                logger.Error("exit trade have not used up,some big error happend");
             }
             return 0;
 

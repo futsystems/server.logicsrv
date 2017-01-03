@@ -11,18 +11,15 @@ namespace TradingLib.Core
 {
     public partial class ClearCentre
     {
-        //交易所结算数据与隔夜持仓明细数据为结算时 根据交易数据生成 因此此处不做该类数据的数据库操作
 
         /// <summary>
         /// 获得交易所结算数据
         /// </summary>
         /// <param name="settle"></param>
-        public void GotExchangeSettlement(ExchangeSettlement settle)
+        public void GotExchangeSettlement(IAccount account, ExchangeSettlement settle)
         {
             try
             {
-                IAccount account = TLCtxHelper.ModuleAccountManager[settle.Account];
-                if (account == null) return;
                 acctk.GotExchangeSettlement(settle);
             }
             catch (Exception ex)
@@ -35,12 +32,10 @@ namespace TradingLib.Core
         /// 获得隔夜持仓明细数据
         /// </summary>
         /// <param name="p"></param>
-        public void GotPosition(PositionDetail p)
+        public void GotPosition(IAccount account, PositionDetail p)
         {
             try
             {
-                IAccount account = TLCtxHelper.ModuleAccountManager[p.Account];
-                if (account == null) return;
                 Symbol symbol = p.oSymbol;
                 if (symbol == null)
                 {
@@ -61,34 +56,17 @@ namespace TradingLib.Core
         /// 这里需要判断如果委托已经被记录过则继续响应委托事件 用于更新委托的状态
         /// </summary>
         /// <param name="error"></param>
-        public void GotOrderError(Order o, RspInfo e)
+        public void GotOrderError(IAccount account, Order o, RspInfo e)
         {
             try
             {
-                IAccount account = TLCtxHelper.ModuleAccountManager[o.Account];
-                if (account == null) return;
                 Symbol symbol = o.oSymbol;
                 if (symbol == null)
                 {
                     logger.Warn("symbol:" + o.Symbol + " not exist in basictracker, drop errororder");
                     return;
                 }
-                
                 acctk.GotOrder(o);
-                //清算中心开启状态 或者 处于历史结算模式 清算中心需要处理交易数据 历史结算有可能会执行手工平仓 需要记录交易数据 或者将交易记录储存放到BrokerRouter 统一处理？？
-                if (this.IsLive || TLCtxHelper.ModuleSettleCentre.SettleMode == QSEnumSettleMode.HistSettleMode)
-                {
-                    if (!totaltk.IsTracked(o))
-                    {
-                        logger.Info("New Order:" + o.GetOrderInfo());
-                        TLCtxHelper.ModuleDataRepository.NewOrder(o);
-                    }
-                    else
-                    {
-                        logger.Info("Update Order:" + o.GetOrderStatus());
-                        TLCtxHelper.ModuleDataRepository.UpdateOrder(o);
-                    }
-                }
             }
             catch (Exception ex)
             {
@@ -101,15 +79,10 @@ namespace TradingLib.Core
         /// 获得委托数据
         /// </summary>
         /// <param name="o"></param>
-        public void GotOrder(Order o)
+        public void GotOrder(IAccount account, Order o)
         {
             try
             {
-                if (o == null || (!o.isValid)) return;
-
-                //检查交易帐户与合约
-                IAccount account = TLCtxHelper.ModuleAccountManager[o.Account];
-                if (account == null) return;
                 Symbol symbol = o.oSymbol;
                 if (symbol == null)
                 {
@@ -117,25 +90,10 @@ namespace TradingLib.Core
                     return;
                 }
                 acctk.GotOrder(o);
-                bool neworder = !totaltk.IsTracked(o);
                 //整体交易数据维护器和每个帐户交易数据维护器 维护的数据是统一对象，避免内存占用 当有新委托时 才调用整体交易数据维护器维护该委托
-                if (neworder)
+                if (!totaltk.IsTracked(o))
                 {
                     totaltk.NewOrder(o);
-                }
-
-                if (this.IsLive || TLCtxHelper.ModuleSettleCentre.SettleMode == QSEnumSettleMode.HistSettleMode)
-                {
-                    if (neworder)
-                    {
-                        logger.Info("New Order:" + o.GetOrderInfo()); 
-                        TLCtxHelper.ModuleDataRepository.NewOrder(o);
-                    }
-                    else
-                    {
-                        logger.Info("Update Order:" + o.GetOrderStatus());
-                        TLCtxHelper.ModuleDataRepository.UpdateOrder(o);
-                    }
                 }
             }
             catch (Exception ex)
@@ -174,19 +132,19 @@ namespace TradingLib.Core
                     totaltk.NewOrder(o);
                 }
 
-                if (this.IsLive || TLCtxHelper.ModuleSettleCentre.SettleMode == QSEnumSettleMode.HistSettleMode)
-                {
-                    if (neworder)
-                    {
-                        logger.Info("New Order:" + o.ToString());
-                        //TLCtxHelper.ModuleDataRepository.NewOrder(o);
-                    }
-                    else
-                    {
-                        logger.Info("Update Order:" + o.ToString());
-                        //TLCtxHelper.ModuleDataRepository.UpdateOrder(o);
-                    }
-                }
+                //if (this.IsLive || TLCtxHelper.ModuleSettleCentre.SettleMode == QSEnumSettleMode.HistSettleMode)
+                //{
+                //    if (neworder)
+                //    {
+                //        logger.Info("New Order:" + o.ToString());
+                //        //TLCtxHelper.ModuleDataRepository.NewOrder(o);
+                //    }
+                //    else
+                //    {
+                //        logger.Info("Update Order:" + o.ToString());
+                //        //TLCtxHelper.ModuleDataRepository.UpdateOrder(o);
+                //    }
+                //}
 
 
 
@@ -202,29 +160,11 @@ namespace TradingLib.Core
         /// 清算中心获得取消
         /// </summary>
         /// <param name="oid"></param>
-        public void GotCancel(long oid)
+        public void GotCancel(IAccount account,long oid)
         {
             try
             {
-                string account = SentOrder(oid).Account;
-                IAccount acc = TLCtxHelper.ModuleAccountManager[account];
-                if (acc == null) return;
-
-                acctk.GotCancel(account, oid);
-
-                if (this.IsLive)
-                {
-                    OrderAction oc = new OrderActionImpl();
-                    Order o = this.SentOrder(oid);
-                    if (o != null)
-                    {
-                        oc.Account = o.Account;
-                        oc.ActionFlag = QSEnumOrderActionFlag.Delete;
-                        oc.OrderID = o.id;
-                        logger.Info("New Cancel:" + oid);
-                        TLCtxHelper.ModuleDataRepository.NewOrderAction(oc);
-                    }
-                }
+                acctk.GotCancel(account.ID, oid);
             }
             catch (Exception ex)
             {
@@ -255,16 +195,11 @@ namespace TradingLib.Core
         /// 1.比如 多次平仓成交 造成的多余平仓成交 则后续操作不进行成交记录以及回报 并且要更新对应委托状态为拒绝
         /// </summary>
         /// <param name="f"></param>
-        public void GotFill(Trade f,out bool accept)
+        public void GotFill(IAccount account,Trade f,out bool accept)
         {
             accept = false;
             try
             {
-                if (f == null || (!f.isValid)) return;
-
-                //检查交易帐户和合约对象
-                IAccount account = TLCtxHelper.ModuleAccountManager[f.Account];
-                if (account == null) return;
                 Symbol symbol = f.oSymbol;
                 if (symbol == null)
                 {
@@ -289,7 +224,7 @@ namespace TradingLib.Core
                         //如果成交没有接受 则获得对应的委托将委托状态更新未reject;
                         Order tmp = new OrderImpl(o);
                         tmp.Status = QSEnumOrderStatus.Reject;
-                        this.GotOrder(tmp);
+                        this.GotOrder(account,tmp);
                     }
                     return;
                 }
@@ -307,14 +242,6 @@ namespace TradingLib.Core
                     f.TransferFee = account.CalcTransferFee(f);
                 }
                 f.PositionOperation = GetPosOperatin(aftersize, beforesize);
-                //如果交易中心处于开启状态
-                if (this.IsLive || TLCtxHelper.ModuleSettleCentre.SettleMode == QSEnumSettleMode.HistSettleMode)
-                {
-                    logger.Info("New Fill:" + f.GetTradeInfo());
-                    //记录帐户成交记录
-                    TLCtxHelper.ModuleDataRepository.NewTrade(f);
-                }
-
             }
             catch (Exception ex)
             {

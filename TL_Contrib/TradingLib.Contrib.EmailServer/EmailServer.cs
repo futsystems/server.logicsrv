@@ -91,7 +91,7 @@ namespace TradingLib.Contrib.EmailSrv
         public void OnLoad()
         {
             TLCtxHelper.SendEmailEvent +=new EmailDel(SendEmail);
-            TLCtxHelper.EventSystem.PositionFlatEvent += new EventHandler<PositionFlatEventArgs>(EventSystem_PositionFlatEvent);
+            //TLCtxHelper.EventSystem.PositionFlatEvent += new EventHandler<PositionFlatEventArgs>(EventSystem_PositionFlatEvent);
             //TLCtxHelper.ExContribEvent.FlatSuccessEvent += new PositionDelegate(ExContribEvent_FlatSuccessEvent);
         }
 

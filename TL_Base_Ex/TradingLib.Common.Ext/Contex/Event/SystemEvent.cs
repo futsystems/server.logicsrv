@@ -32,34 +32,15 @@ namespace TradingLib.Common
         #region 结算与重置事件
         /// <summary>
         /// 结算前事件 在结算前触发
+        /// 比如结算前执行相关费用收取
         /// </summary>
         public event EventHandler<SystemEventArgs> BeforeSettleEvent;
 
         /// <summary>
-        /// 结算 数据转储事件
-        /// </summary>
-        //public event EventHandler<SystemEventArgs> SettleDataStoreEvent;
-
-        /// <summary>
-        /// 结算事件
-        /// </summary>
-        //public event EventHandler<SystemEventArgs> SettleEvent;
-
-        /// <summary>
         /// 结算后事件 在系统结算完毕后触发
+        /// 结算后执行相关数据统计或通知等
         /// </summary>
         public event EventHandler<SystemEventArgs> AfterSettleEvent;
-
-        /// <summary>
-        /// 结算重置前事件 在结算重置前触发
-        /// </summary>
-        //public event EventHandler<SystemEventArgs> BeforeSettleResetEvent;
-
-
-        /// <summary>
-        /// 结算重置后事件 在结算重置后触发
-        /// </summary>
-        //public event EventHandler<SystemEventArgs> AfterSettleResetEvent;
 
 
         /// <summary>
@@ -73,17 +54,6 @@ namespace TradingLib.Common
                 BeforeSettleEvent(sender, args);
         }
 
-        //internal void FireSettleDataStoreEvent(object sender, SystemEventArgs args)
-        //{
-        //    //if (SettleDataStoreEvent != null)
-        //    //    SettleDataStoreEvent(sender, args);
-        //}
-
-        //internal void FireSettleEvent(object sender, SystemEventArgs args)
-        //{
-        //    //if (SettleEvent != null)
-        //    //    SettleEvent(sender, args);
-        //}
 
         internal void FireAfterSettleEvent(object sender, SystemEventArgs args)
         {
@@ -91,17 +61,6 @@ namespace TradingLib.Common
                 AfterSettleEvent(sender, args);
         }
 
-        //internal void FireBeforeSettleResetEvent(object sender, SystemEventArgs args)
-        //{
-        //    //if (BeforeSettleResetEvent != null)
-        //    //    BeforeSettleResetEvent(sender, args);
-        //}
-
-        //internal void FireAfterSettleResetEvent(object sender, SystemEventArgs args)
-        //{
-        //    //if (AfterSettleResetEvent != null)
-        //    //    AfterSettleResetEvent(sender, args);
-        //}
 
         internal void FireSettleResetEvet(object sender, SystemEventArgs args)
         {
@@ -144,8 +103,6 @@ namespace TradingLib.Common
         #endregion
 
 
-        #region Packet 逻辑消息包事件
-
         public event EventHandler<PacketEventArgs> PacketEvent;
 
         internal void FirePacketEvent(object sender, PacketEventArgs args)
@@ -153,24 +110,24 @@ namespace TradingLib.Common
             if (PacketEvent != null)
                 PacketEvent(sender, args);
         }
-        #endregion
 
 
-        #region Position 强平事件
 
-        /// <summary>
-        /// 强平成功事件
-        /// </summary>
-        public event EventHandler<PositionFlatEventArgs> PositionFlatEvent;
+        //#region Position 强平事件
 
-        internal void FirePositionFlatEvent(object sender,PositionFlatEventArgs args)
-        {
-            if (PositionFlatEvent != null)
-            {
-                PositionFlatEvent(sender,args);
-            }
-        }
-        #endregion
+        ///// <summary>
+        ///// 强平成功事件
+        ///// </summary>
+        //public event EventHandler<PositionFlatEventArgs> PositionFlatEvent;
+
+        //internal void FirePositionFlatEvent(object sender,PositionFlatEventArgs args)
+        //{
+        //    if (PositionFlatEvent != null)
+        //    {
+        //        PositionFlatEvent(sender,args);
+        //    }
+        //}
+        //#endregion
 
 
         #region 出入金操作状态

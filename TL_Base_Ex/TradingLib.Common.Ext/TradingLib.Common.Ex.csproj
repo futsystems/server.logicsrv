@@ -182,7 +182,6 @@
     <Compile Include="Plugin\Attr\CoreAttr.cs" />
     <Compile Include="Client\Client2Session.cs" />
     <Compile Include="Contex\Event\AccountEvent.cs" />
-    <Compile Include="Contex\Event\ExContribEvent.cs" />
     <Compile Include="Contex\Event\IndicatorEvent.cs" />
     <Compile Include="Contex\Event\SessionEvent.cs" />
     <Compile Include="Contex\TLContexHelper.cs" />

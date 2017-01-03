@@ -55,7 +55,8 @@ namespace TradingLib.Core
         /// <param name="account"></param>
         void newAccountChanged(IAccount account)
         {
-            logger.Info(string.Format("Account:{0} Changed",account.ID));
+
+            logger.Debug(string.Format("Account[{0}] Changed",account.ID));
             NotifyMGRAccountChangeUpdateResponse notify = ResponseTemplate<NotifyMGRAccountChangeUpdateResponse>.SrvSendNotifyResponse(account.ID);
             notify.oAccount = account.GenAccountLite();
             CachePacket(notify);

@@ -75,7 +75,7 @@ namespace TradingLib.API
         /// 执行某个帐户的帐户风控规则检查,比如损失超过多少执行强平等
         /// </summary>
         /// <param name="a"></param>
-        void CheckAccount(IAccount a);
+        //void CheckAccount(IAccount a);
 
 
         /// <summary>

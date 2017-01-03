@@ -9,6 +9,15 @@ namespace TradingLib.Core
 {
     public partial class ClearCentre
     {
+        /// <summary>
+        /// 判定某个委托是否已经被清算中心维护
+        /// </summary>
+        /// <param name="o"></param>
+        /// <returns></returns>
+        public bool IsTracked(Order o)
+        {
+            return totaltk.IsTracked(o);
+        }
 
         ///// <summary>
         ///// 通过OrderId获得委托
