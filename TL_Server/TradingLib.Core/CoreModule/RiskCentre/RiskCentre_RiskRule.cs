@@ -10,15 +10,13 @@ namespace TradingLib.Core
 {
     public partial class RiskCentre
     {
-
-        #region 加载 交易帐户委托规则与帐户规则
         Dictionary<string, RuleClassItem> dicRule = new Dictionary<string, RuleClassItem>();
         /// <summary>
         /// 加载风控规则从风控规则dll中加载对应的类然后用于每个交易账户设定规则进行实例化
         /// </summary>
-        private void LoadRuleClass()
+        private void LoadRulePlugin()
         {
-            dicRule.Clear();//清空当前映射列表
+            dicRule.Clear();
             foreach (Type t in PluginHelper.LoadOrderRule())
             {
                 try
@@ -81,13 +79,9 @@ namespace TradingLib.Core
             {
                 if (item.RuleType == QSEnumRuleType.OrderRule)
                 {
-                    //创建风控实例
                     IOrderCheck oc = (IOrderCheck)klassitem.GenerateRuleInstance(item);
-                    //绑定帐户
                     oc.Account = new AccountAdapterToExp(account);
-                    //将ordercheck 加载到account
                     account.AddOrderCheck(oc);
-                    //将风控实例的规则描述传递给RuleItem ????????改进
                     item.RuleDescription = oc.RuleDescription;
                 }
                 else if(item.RuleType == QSEnumRuleType.AccountRule)
@@ -175,30 +169,8 @@ namespace TradingLib.Core
             account.ClearAccountCheck();
             account.ClearOrderCheck();
             LoadRuleItem(account);
-            
+
         }
-        #endregion
-
-
-        /// <summary>
-        /// 获得RuleClass列表
-        /// 用于管理获取当前可用风控规则列表
-        /// </summary>
-        /// <returns></returns>
-        IEnumerable<RuleClassItem> GetRuleClassItems(QSEnumRuleType type)
-        {
-            return dicRule.Values.Where(r => (r.Type == type));
-        }
-
-        /// <summary>
-        /// 获得所有风控规则
-        /// </summary>
-        /// <returns></returns>
-        IEnumerable<RuleClassItem> GetRuleClassItems()
-        {
-            return dicRule.Values;
-        }
-
 
         /// <summary>
         /// 加载所有交易账户的风控规则
@@ -210,15 +182,18 @@ namespace TradingLib.Core
             IEnumerable<RuleItem> ruleitems = ORM.MRuleItem.SelectAllRuleItems();
             foreach (IAccount account in TLCtxHelper.ModuleAccountManager.Accounts)
             {
-                if (!account.RuleItemLoaded)
+                if (account.RuleItemLoaded)
                 {
-                    foreach (RuleItem item in ruleitems.Where(r => account.ID == r.Account))
-                    {
-                        LoadRuleItem(account, item);
-                    }
-                    //加载完毕后 设定帐户的风控规则加载标识
-                    account.RuleItemLoaded = true;
+                    account.ClearAccountCheck();
+                    account.ClearOrderCheck();
                 }
+                foreach (RuleItem item in ruleitems.Where(r => account.ID == r.Account))
+                {
+                    LoadRuleItem(account, item);
+                }
+                //加载完毕后 设定帐户的风控规则加载标识
+                account.RuleItemLoaded = true;
+                
             }
         }
 

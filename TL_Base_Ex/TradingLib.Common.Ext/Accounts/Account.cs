@@ -4,6 +4,7 @@ using System.Collections.Concurrent;
 using System.Linq;
 using System.Text;
 using TradingLib.API;
+using Common.Logging;
 
 namespace TradingLib.Common
 {
@@ -12,6 +13,7 @@ namespace TradingLib.Common
     /// </summary>
     public partial class AccountBase : IAccount
     {
+        protected ILog logger = LogManager.GetLogger("Account");
 
         /// <summary>
         /// 创建交易账户对象

@@ -44,8 +44,10 @@ namespace TradingLib.Common
         //增加一条规则检查
         public void AddOrderCheck(IOrderCheck rc)
         {
-            if(!_ordchekMap.Keys.Contains(rc.ID))
-                _ordchekMap.TryAdd(rc.ID, rc);
+            if (!_ordchekMap.TryAdd(rc.ID, rc))
+            {
+                logger.Warn(string.Format("OrderCheck ID:{0} already added", rc.ID));
+            }
         }
 
         /// <summary>
@@ -55,9 +57,9 @@ namespace TradingLib.Common
         public void DelOrderCheck(int id)
         {
             IOrderCheck oc;
-            if (_ordchekMap.Keys.Contains(id))
+            if (!_ordchekMap.TryRemove(id,out oc))
             {
-                _ordchekMap.TryRemove(id, out oc);
+                logger.Warn(string.Format("OrderCheck ID:{0} not loaded",id));
             }
         }
 
@@ -98,8 +100,10 @@ namespace TradingLib.Common
         /// <param name="rc"></param>
         public void AddAccountCheck(IAccountCheck rc)
         {
-            if (!_accchekMap.Keys.Contains(rc.ID))
-                _accchekMap.TryAdd(rc.ID, rc);
+            if (!_accchekMap.TryAdd(rc.ID, rc))
+            {
+                logger.Warn(string.Format("AccountCheck ID:{0} already added", rc.ID));
+            }
         }
 
         /// <summary>
@@ -109,7 +113,10 @@ namespace TradingLib.Common
         public void DelAccountCheck(int id)
         {
             IAccountCheck ic;
-            _accchekMap.TryRemove(id, out ic);
+            if (!_accchekMap.TryRemove(id, out ic))
+            {
+                logger.Warn(string.Format("AccountCheck ID:{0} not loaded",id));
+            }
         }
 
         public IEnumerable<IAccountCheck> AccountChecks { get { return _accchekMap.Values; } }

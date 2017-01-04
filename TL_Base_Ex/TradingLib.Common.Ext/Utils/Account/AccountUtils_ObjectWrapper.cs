@@ -189,22 +189,22 @@ namespace TradingLib.Common
 
 
 
-            if(TLCtxHelper.Version.ProductType == QSEnumProductType.VendorMoniter)
-            {
-                IBroker broker = BasicTracker.ConnectorMapTracker.GetBrokerForAccount(acc.ID);
-                if(broker != null)
-                {
-                    int id = BasicTracker.ConnectorMapTracker.GetConnectorIDForAccount(acc.ID);
-                    ConnectorConfig cfg = BasicTracker.ConnectorConfigTracker.GetBrokerConfig(id);
-                    info.ConnectorToken = cfg!= null?(string.Format("{0}-{1}",cfg.Name,cfg.usrinfo_userid)):"";
-                    info.MAcctConnected = broker.IsLive;
-                    Util.Debug(string.Format("Broker:{0} Connected:{1}", broker.Token, broker.IsLive));
-                }
+            //if(TLCtxHelper.Version.ProductType == QSEnumProductType.VendorMoniter)
+            //{
+            //    IBroker broker = BasicTracker.ConnectorMapTracker.GetBrokerForAccount(acc.ID);
+            //    if(broker != null)
+            //    {
+            //        int id = BasicTracker.ConnectorMapTracker.GetConnectorIDForAccount(acc.ID);
+            //        ConnectorConfig cfg = BasicTracker.ConnectorConfigTracker.GetBrokerConfig(id);
+            //        info.ConnectorToken = cfg!= null?(string.Format("{0}-{1}",cfg.Name,cfg.usrinfo_userid)):"";
+            //        info.MAcctConnected = broker.IsLive;
+            //        Util.Debug(string.Format("Broker:{0} Connected:{1}", broker.Token, broker.IsLive));
+            //    }
 
-                IAccountCheck rs = acc.AccountChecks.Where(check => check.GetType().FullName.Equals("AccountRuleSet.RSVendorFlat")).FirstOrDefault();
-                info.MAcctRiskRule = rs != null ? rs.RuleDescription : "未设置";
+            //    IAccountCheck rs = acc.AccountChecks.Where(check => check.GetType().FullName.Equals("AccountRuleSet.RSVendorFlat")).FirstOrDefault();
+            //    info.MAcctRiskRule = rs != null ? rs.RuleDescription : "未设置";
             
-            }
+            //}
             if (TLCtxHelper.Version.ProductType == QSEnumProductType.CounterSystem)
             {
 

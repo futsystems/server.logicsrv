@@ -28,8 +28,6 @@ namespace TradingLib.Core
             }
             catch (Exception ex)
             {
-                string s = PROGRAME + ":checkAccount error:" + ex.ToString();
-                logger.Error(s);
                 logger.Error(string.Format("Check Account Rule Error:{0}", ex.ToString()));
             }
         }

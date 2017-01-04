@@ -16,7 +16,7 @@ namespace TradingLib.Core
 
             logger.Info(string.Format("管理员:{0} 请求查询风控规则", session.AuthorizedID));
 
-            RuleClassItem[] items = this.GetRuleClassItems().ToArray();
+            RuleClassItem[] items = this.dicRule.Values.ToArray();
             int totalnum = items.Length;
 
             

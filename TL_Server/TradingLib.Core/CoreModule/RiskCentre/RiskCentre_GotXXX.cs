@@ -19,9 +19,6 @@ namespace TradingLib.Core
     public partial class RiskCentre
     {
 
-
-
-        #region
         /// <summary>
         /// 获得取消
         /// 取消事务是在处理队列中进行异步处理
@@ -63,9 +60,6 @@ namespace TradingLib.Core
                     ps.FlatOrderIDList.Remove(order.id);
             }
         }
-
-
-        #endregion
 
     }
 }

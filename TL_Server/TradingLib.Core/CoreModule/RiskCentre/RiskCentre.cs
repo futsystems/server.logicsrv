@@ -157,7 +157,7 @@ namespace TradingLib.Core
             _enableStkT0 = _cfgdb["EnableStkT0"].AsBool();
 
             //加载风空规则
-            LoadRuleClass();
+            LoadRulePlugin();
 
             //初始化日内平仓任务
             InitFlatTask();
