@@ -89,7 +89,7 @@ namespace RuleSet2.Account
                     if (this.Account.AnyPosition)
                     {
                         msg = RuleDescription + ":全平所有仓位并冻结账户";
-                        this.Account.FlatPosition(QSEnumOrderSource.RISKCENTREACCOUNTRULE, msg);
+                        this.Account.FlatAllPositions(QSEnumOrderSource.RISKCENTREACCOUNTRULE, msg);
                     }
                     flatStart = true;//开始平仓
                     return false;

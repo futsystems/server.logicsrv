@@ -35,22 +35,9 @@ namespace TradingLib.Common
         /// </summary>
         /// <param name="source"></param>
         /// <param name="comment"></param>
-        public void FlatPosition(QSEnumOrderSource source, string comment)
+        public void FlatAllPositions(QSEnumOrderSource source, string comment)
         {
-            TLCtxHelper.ModuleRiskCentre.FlatPosition(this.ID, source, comment);
-        }
-
-
-        /// <summary>
-        /// 平掉某个持仓
-        /// </summary>
-        /// <param name="pos"></param>
-        /// <param name="source"></param>
-        /// <param name="comment"></param>
-        public void FlatPosition(Position pos,QSEnumOrderSource source, string comment)
-        {
-            TLCtxHelper.ModuleRiskCentre.FlatPosition(pos, source, comment);
-            
+            TLCtxHelper.ModuleRiskCentre.FlatAllPositions(this.ID, source, comment);
         }
 
         /// <summary>

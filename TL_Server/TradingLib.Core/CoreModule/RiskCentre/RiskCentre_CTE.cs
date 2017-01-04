@@ -53,10 +53,11 @@ namespace TradingLib.Core
             foreach (IAccount account in TLCtxHelper.ModuleAccountManager.Accounts.Where(a=>!a.Execute).Where(a => a.AnyPosition))
             {
                 int settleday = 0;
+
                 if (account.GetPositionsHold().Any(pos => pos.oSymbol.SecurityFamily.CheckPlaceOrder(out settleday)== QSEnumActionCheckResult.Allowed))//如果有持仓 并且有任一个持仓对因合约处于交易时间段
                 {
                     //检查是否是交易时间段
-                    account.FlatPosition(QSEnumOrderSource.RISKCENTREACCOUNTRULE, "强平冻结帐户持仓");
+                    account.FlatAllPositions(QSEnumOrderSource.RISKCENTREACCOUNTRULE, "强平冻结帐户持仓");
                 }
             }
         }
@@ -70,7 +71,7 @@ namespace TradingLib.Core
             IAccount acc = TLCtxHelper.ModuleAccountManager[account];
             if (acc != null)
             {
-                acc.FlatPosition(QSEnumOrderSource.RISKCENTRE, "DemoFlat");
+                acc.FlatAllPositions(QSEnumOrderSource.RISKCENTRE, "DemoFlat");
                 return "操作成功";
 
             }
@@ -86,17 +87,17 @@ namespace TradingLib.Core
         {
             Position pos = TLCtxHelper.ModuleAccountManager[account].GetPosition(symbol, true);
             if (pos != null && !pos.isFlat)
-                FlatPosition(pos, QSEnumOrderSource.RISKCENTRE, "风控强平");
+                FlatPosition(pos,pos.UnsignedSize, QSEnumOrderSource.RISKCENTRE, "风控强平");
             Position pos2 = TLCtxHelper.ModuleAccountManager[account].GetPosition(symbol, false);
             if (pos2 != null && !pos2.isFlat)
-                FlatPosition(pos2, QSEnumOrderSource.RISKCENTRE, "风控强平");
+                FlatPosition(pos2, pos.UnsignedSize, QSEnumOrderSource.RISKCENTRE, "风控强平");
         }
 
         [CoreCommandAttr(QSEnumCommandSource.CLI, "pflattask", "pflattask - 打印强平任务列表", "风控中心平仓测试输出列表")]
         public string CTE_PostionFlatSetList()
         {
             StringBuilder sb = new StringBuilder();
-            foreach (RiskTaskSet ps in posflatlist)
+            foreach (RiskTaskSet ps in riskTasklist)
             {
                 sb.Append(ps.ToString() + Environment.NewLine);
             }

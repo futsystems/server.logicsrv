@@ -60,10 +60,10 @@ namespace TradingLib.Common
         /// </summary>
         /// <param name="source"></param>
         /// <param name="comment"></param>
-        public void FlatPosition(QSEnumOrderSource source, string comment)
+        public void FlatAllPositions(QSEnumOrderSource source, string comment)
         { 
             //_acc.fla
-            _acc.FlatPosition(source, comment);
+            _acc.FlatAllPositions(source, comment);
         }
 
         public void FlatPosition(Position pos,int flatSize, QSEnumOrderSource source,string forceReason)
@@ -86,10 +86,10 @@ namespace TradingLib.Common
             _acc.ActiveAccount();
         }
 
-        public void FlatPosition(Position pos, QSEnumOrderSource source, string comment)
-        {
-            _acc.FlatPosition(pos, source, comment);
-        }
+        //public void FlatPosition(Position pos, QSEnumOrderSource source, string comment)
+        //{
+        //    _acc.FlatPosition(pos, source, comment);
+        //}
 
         /// <summary>
         /// 撤掉帐户下所有委托

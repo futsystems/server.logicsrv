@@ -188,7 +188,7 @@ namespace TradingLib.Core
         {
             logger.Info("风控中心重置");
             //清空强平任务队列
-            posflatlist.Clear();
+            riskTasklist.Clear();
 
             //加载所有风控规则
             LoadRuleItemAll();

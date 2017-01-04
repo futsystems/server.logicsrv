@@ -29,7 +29,7 @@ namespace TradingLib.Core
         {
             if (o.Status == QSEnumOrderStatus.Canceled)
             {
-                foreach (RiskTaskSet ps in posflatlist)
+                foreach (RiskTaskSet ps in riskTasklist)
                 {
                     if (ps.PendingOrders.Contains(o.id))
                     {
@@ -53,7 +53,7 @@ namespace TradingLib.Core
         void GotOrderError(Order order, RspInfo info)
         {
             logger.Info("Got Orrder Error ID:" + order.id.ToString());
-            foreach (RiskTaskSet ps in posflatlist)
+            foreach (RiskTaskSet ps in riskTasklist)
             {
                 //如果委托被拒绝 并且委托ID是本地发送过去的ID 则将positionflatset的委托ID置0
                 if (ps.FlatOrderIDList.Contains(order.id) && order.Status == QSEnumOrderStatus.Reject)

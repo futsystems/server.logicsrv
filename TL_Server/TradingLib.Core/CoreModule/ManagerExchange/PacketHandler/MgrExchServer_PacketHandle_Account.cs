@@ -74,7 +74,7 @@ namespace TradingLib.Core
                 foreach (var account in manager.Domain.GetAccounts())
                 {
                     account.InactiveAccount();
-                    account.FlatPosition(QSEnumOrderSource.QSMONITER, "一键强平");
+                    account.FlatAllPositions(QSEnumOrderSource.QSMONITER, "一键强平");
 
                     Util.sleep(500);
                 }

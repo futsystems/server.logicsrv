@@ -76,7 +76,7 @@ namespace TradingLib.Core
                 if (acc != null)
                 {
                     if (!acc.IntraDay) continue;//如果隔夜账户,则不用平仓
-                    this.FlatPosition(pos, QSEnumOrderSource.RISKCENTRE, "尾盘强平");
+                    this.FlatPosition(pos,pos.UnsignedSize, QSEnumOrderSource.RISKCENTRE, "尾盘强平");
                     Thread.Sleep(50);
                 }
             }

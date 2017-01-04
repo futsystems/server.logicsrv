@@ -78,7 +78,7 @@ namespace RuleSet2.Account
                                 if ((margin - targetMargin) > acc.CalPositionMargin(p))
                                 {
 
-                                    this.Account.FlatPosition(p, QSEnumOrderSource.RISKCENTREACCOUNTRULE, msg);
+                                    this.Account.FlatPosition(p,p.UnsignedSize, QSEnumOrderSource.RISKCENTREACCOUNTRULE, msg);
                                     margin -= p.CalcPositionMargin();
                                 }
                                 else

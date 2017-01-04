@@ -92,8 +92,8 @@ namespace RuleSet2.Account
                     {
                         //上涨幅度超过设定值 强平持仓
                         if (pect * 100 > up_pect)
-                        { 
-                            this.Account.FlatPosition(pos, QSEnumOrderSource.RISKCENTRE, "合约涨跌幅触发");
+                        {
+                            this.Account.FlatPosition(pos, pos.UnsignedSize, QSEnumOrderSource.RISKCENTRE, "合约涨跌幅触发");
                             posflatfired.Add(key);
                             return false;
                         }
@@ -103,7 +103,7 @@ namespace RuleSet2.Account
                         //下跌幅度超过设定值 强平持仓
                         if (Math.Abs(pect) * 100 > dn_pect)
                         {
-                            this.Account.FlatPosition(pos, QSEnumOrderSource.RISKCENTRE, "合约涨跌幅触发");
+                            this.Account.FlatPosition(pos, pos.UnsignedSize, QSEnumOrderSource.RISKCENTRE, "合约涨跌幅触发");
                             posflatfired.Add(key);
                             return false;
                         }

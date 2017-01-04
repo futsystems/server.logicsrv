@@ -82,7 +82,7 @@ namespace RuleSet2.Account
                     {
                         this.Account.InactiveAccount();//冻结账户
                         msg = RuleDescription + ":全平所有仓位并冻结账户";
-                        this.Account.FlatPosition(QSEnumOrderSource.RISKCENTREACCOUNTRULE, msg);
+                        this.Account.FlatAllPositions(QSEnumOrderSource.RISKCENTREACCOUNTRULE, msg);
                     }
                     else
                     {
@@ -91,7 +91,7 @@ namespace RuleSet2.Account
                         {
                             if (sec_list.Contains(pos.oSymbol.SecurityFamily.Code))
                             {
-                                this.Account.FlatPosition(pos, QSEnumOrderSource.RISKCENTRE, string.Format("定时:{0}强平", flat_time));
+                                this.Account.FlatPosition(pos,pos.UnsignedSize, QSEnumOrderSource.RISKCENTRE, string.Format("定时:{0}强平", flat_time));
                             }
                         }
                     }

@@ -26,15 +26,7 @@ namespace TradingLib.API
         /// </summary>
         /// <param name="source"></param>
         /// <param name="comment"></param>
-        void FlatPosition(QSEnumOrderSource source, string forcereason);//平掉所有持仓
-
-        /// <summary>
-        /// 平掉某个特定持仓
-        /// </summary>
-        /// <param name="source"></param>
-        /// <param name="comment"></param>
-        /// <param name="pos"></param>
-        void FlatPosition(Position pos, QSEnumOrderSource source, string forcereason);//平掉某个持仓
+        void FlatAllPositions(QSEnumOrderSource source, string forcereason);//平掉所有持仓
 
         /// <summary>
         /// 平掉部分或全部持仓

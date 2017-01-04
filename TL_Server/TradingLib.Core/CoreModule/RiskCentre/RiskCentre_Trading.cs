@@ -24,7 +24,7 @@ namespace TradingLib.Core
             }
             catch (Exception ex)
             {
-                logger.Error("发送委托异常:" + o.ToString() + ex.ToString());
+                logger.Error(string.Format("Send Order:{0} Error:{1}", o.GetOrderInfo(), ex.ToString()));
             }
         }
 
@@ -40,7 +40,7 @@ namespace TradingLib.Core
             }
             catch (Exception ex)
             {
-                logger.Error("取消委托异常:" + number.ToString() + ex.ToString());
+                logger.Error(string.Format("Cancel Order:{0} Error:{1}", number, ex.ToString()));
             }
         }
 

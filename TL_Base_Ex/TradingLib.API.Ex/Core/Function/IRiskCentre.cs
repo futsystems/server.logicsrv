@@ -12,34 +12,13 @@ namespace TradingLib.API
         /// </summary>
         bool MarketOpenTimeCheck { get; }
 
-
-        /// <summary>
-        /// 将某个交易帐户放入实时监控列表
-        /// </summary>
-        /// <param name="account"></param>
-        //void AttachAccountCheck(string account);
-
-        /// <summary>
-        /// 将某个交易帐户从实时监控列表脱离
-        /// </summary>
-        /// <param name="account"></param>
-        //void DetachAccountCheck(string account);
-
         /// <summary>
         /// 强平某个交易帐户的所有持仓
         /// </summary>
         /// <param name="accid"></param>
         /// <param name="source"></param>
         /// <param name="comment"></param>
-        void FlatPosition(string account, QSEnumOrderSource source, string comment = "系统强平");
-
-        /// <summary>
-        /// 强平某个持仓
-        /// </summary>
-        /// <param name="pos"></param>
-        /// <param name="ordersource"></param>
-        /// <param name="comment"></param>
-        void FlatPosition(Position pos, QSEnumOrderSource ordersource, string comment = "系统强平");
+        void FlatAllPositions(string account, QSEnumOrderSource source, string comment = "系统强平");
 
         /// <summary>
         /// 强平某个持仓
@@ -48,6 +27,7 @@ namespace TradingLib.API
         /// <param name="ordersource"></param>
         /// <param name="comment"></param>
         void FlatPosition(Position pos,int flatSize, QSEnumOrderSource ordersource, string comment = "系统强平");
+
 
         /// <summary>
         /// 撤掉帐户下所有委托
