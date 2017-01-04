@@ -16,18 +16,12 @@ namespace TradingLib.Common
     /// </summary>
     public class AccountTracker:BaseSrvObject
     {
-        protected ConcurrentDictionary<string, IAccount> AcctList = new ConcurrentDictionary<string, IAccount>();
-        //为每个账户映射一个OrderTracker用于跟踪该账户的Order
-        protected ConcurrentDictionary<string, OrderTracker> OrdBook = new ConcurrentDictionary<string, OrderTracker>();
-        //为每个账户映射一个PositionTracker用户维护该Account的Position
-        protected ConcurrentDictionary<string, LSPositionTracker> PosBook = new ConcurrentDictionary<string, LSPositionTracker>();
-        //为每个账户映射一个TradeList用于记录实时的成交记录
-        //protected ConcurrentDictionary<string, ThreadSafeList<Trade>> TradeBook = new ConcurrentDictionary<string, ThreadSafeList<Trade>>();
-        protected ConcurrentDictionary<string, TradeTracker> TradeBook = new ConcurrentDictionary<string, TradeTracker>();
+        private ConcurrentDictionary<string, OrderTracker> OrdBook = new ConcurrentDictionary<string, OrderTracker>();
+        private ConcurrentDictionary<string, LSPositionTracker> PosBook = new ConcurrentDictionary<string, LSPositionTracker>();
+        private ConcurrentDictionary<string, TradeTracker> TradeBook = new ConcurrentDictionary<string, TradeTracker>();
 
-        protected ConcurrentDictionary<string, BOOrderTracker> BOOrderBook = new ConcurrentDictionary<string, BOOrderTracker>();
+        private ConcurrentDictionary<string, BOOrderTracker> BOOrderBook = new ConcurrentDictionary<string, BOOrderTracker>();
 
-        #region 持仓创建事件和平仓明细事件
         void NewPositionCloseDetail(Trade close,PositionCloseDetail detail)
         {
             if (NewPositionCloseDetailEvent != null)
@@ -53,39 +47,26 @@ namespace TradingLib.Common
                 NewPositionEvent(pos);
         }
         public event Action<Position> NewPositionEvent;
-        #endregion
 
 
         /// <summary>
-        /// 查询某个userid下的某个类型的交易帐户
+        /// 删除某个账户
         /// </summary>
-        /// <param name="uid"></param>
-        /// <param name="category"></param>
-        /// <returns></returns>
-        public IAccount QryAccount(int uid, QSEnumAccountCategory category)
-        {
-            return AcctList.Values.FirstOrDefault(t => (t.UserID == uid && t.Category == category));
-        }
-
-
-
+        /// <param name="account"></param>
         internal void DropAccount(IAccount account)
         { 
-            IAccount accremove = null;
-            AcctList.TryRemove(account.ID, out accremove);//从帐户列表删除
-
             OrderTracker otremove = null;
-            OrdBook.TryRemove(account.ID, out otremove);//删除委托维护其
+            OrdBook.TryRemove(account.ID, out otremove);//删除委托维护器
             if (otremove != null)
                 otremove.Clear();
 
             LSPositionTracker ptremove = null;
-            PosBook.TryRemove(account.ID, out ptremove);//删除持仓维护其
+            PosBook.TryRemove(account.ID, out ptremove);//删除持仓维护器
             if (ptremove != null)
                 ptremove.Clear();
 
             TradeTracker ttremove = null;
-            TradeBook.TryRemove(account.ID, out ttremove);//删除成交列表
+            TradeBook.TryRemove(account.ID, out ttremove);//删除成交列器
             if (ttremove != null)
                 ttremove.Clear();
 
@@ -93,6 +74,7 @@ namespace TradingLib.Common
             BOOrderBook.TryRemove(account.ID, out bootremove);//删除BO委托维护器
 
         }
+
         /// <summary>
         /// 为accouont生成交易记录内存数据结构
         /// </summary>
@@ -104,8 +86,6 @@ namespace TradingLib.Common
             {
                 return;
             }
-            //1.添加到帐户列表
-            AcctList.TryAdd(account.ID, account);
 
             //2.添加账户对应的委托管理器
             OrderTracker ot = new OrderTracker();
@@ -117,14 +97,11 @@ namespace TradingLib.Common
             LSPositionTracker pt = new LSPositionTracker(account.ID);
             if (!PosBook.ContainsKey(account.ID))
             {
-                //pt.DefaultAccount = account.ID;
                 PosBook.TryAdd(account.ID, pt);
                 //绑定仓位管理器中的相关事件
                 pt.NewPositionCloseDetailEvent += new Action<Trade,PositionCloseDetail>(NewPositionCloseDetail);
                 pt.NewPositionDetailEvent += new Action<Trade, PositionDetail>(NewPositionDetail);
                 pt.NewPositionEvent += new Action<Position>(NewPosition);
-
-
             }
             baseacc.TKPosition = pt;
 
@@ -134,13 +111,11 @@ namespace TradingLib.Common
                 TradeBook.TryAdd(account.ID, tt);
             baseacc.TKTrade = tt;
 
-
             BOOrderTracker boot = new BOOrderTracker();
             if (!BOOrderBook.ContainsKey(account.ID))
                 BOOrderBook.TryAdd(account.ID, boot);
             baseacc.TKBOOrder = boot;
         }
-
 
         /// <summary>
         /// 清空数据
@@ -158,11 +133,8 @@ namespace TradingLib.Common
         /// 重置某个交易帐户
         /// 清空委托维护器 持仓维护器 成交维护器
         /// </summary>
-        public void ResetAccount(IAccount account)
+        public void Reset(IAccount account)
         {
-            //account.Reset();//结算后要对account进行reset 包括出入金数据 同时将相关标识复位
-            //昨日权益以及出入金数据从数据库重新加载
-
             //清空交易帐户的当日交易记录
             OrdBook[account.ID].Clear();
             PosBook[account.ID].Clear();
@@ -174,8 +146,8 @@ namespace TradingLib.Common
         /// 重新生成某个交易账户的持仓数据
         /// </summary>
         /// <param name="account"></param>
-        public void ReloadPosition(IAccount account)
-        { 
+        public void Reload(IAccount account)
+        {
             LSPositionTracker tk = PosBook[account.ID];
             PositionDetail[] pdlist = tk.YDPositionDetails.ToArray();
 
@@ -183,38 +155,26 @@ namespace TradingLib.Common
             tk.Clear();
             tk.InReCalculate = true;
 
-            foreach(var pd in pdlist)
+            foreach (var pd in pdlist)
             {
-                tk.GotPosition(pd);    
+                tk.GotPosition(pd);
             }
             bool accept = false;
-            foreach(var fill in TradeBook[account.ID])
+            foreach (var fill in TradeBook[account.ID])
             {
-                tk.GotFill(fill,out accept);
+                tk.GotFill(fill, out accept);
             }
-
-            foreach (var pos in tk.Positions)
-            { 
-                
-            }
-
             tk.InReCalculate = false;
         }
 
 
         #region 响应交易对象
-
-        internal void GotExchangeSettlement(ExchangeSettlement settle)
-        {
-            AcctList[settle.Account].LoadExchangeSettlement(settle);
-        }
         /// <summary>
         /// 从数据库加载昨日持仓明细数据 
         /// </summary>
         /// <param name="pos"></param>
         internal void GotPosition(PositionDetail pos)
         {
-            //将昨持仓填充到对应交易账户的仓位管理器中
             PosBook[pos.Account].GotPosition(pos);
         }
 
@@ -224,7 +184,7 @@ namespace TradingLib.Common
         /// <param name="order"></param>
         internal void GotOrder(Order order)
         {
-            OrdBook[order.Account].GotOrder(order);//分账户记录
+            OrdBook[order.Account].GotOrder(order);
         }
 
 
@@ -244,7 +204,6 @@ namespace TradingLib.Common
             if (accept)
             {
                 OrdBook[fill.Account].GotFill(fill);
-
                 TradeBook[fill.Account].GotFill(fill);
             }
         }

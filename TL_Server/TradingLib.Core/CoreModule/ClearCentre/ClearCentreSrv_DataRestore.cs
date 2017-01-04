@@ -73,7 +73,7 @@ namespace TradingLib.Core
                 {
                     IAccount account = TLCtxHelper.ModuleAccountManager[settle.Account];
                     if (account == null) continue;
-                    this.GotExchangeSettlement(account,settle);
+                    account.LoadExchangeSettlement(settle);
                 }
                 //从数据库加载上日结算持仓信息 用于恢复当前持仓状态
                 foreach (PositionDetail p in plist)

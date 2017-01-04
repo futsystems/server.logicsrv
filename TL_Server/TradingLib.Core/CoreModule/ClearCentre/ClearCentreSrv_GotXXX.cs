@@ -11,23 +11,6 @@ namespace TradingLib.Core
 {
     public partial class ClearCentre
     {
-
-        /// <summary>
-        /// 获得交易所结算数据
-        /// </summary>
-        /// <param name="settle"></param>
-        public void GotExchangeSettlement(IAccount account, ExchangeSettlement settle)
-        {
-            try
-            {
-                acctk.GotExchangeSettlement(settle);
-            }
-            catch (Exception ex)
-            {
-                logger.Error("Process Exchange Settlement Error:" + ex.ToString());
-            }
-        }
-
         /// <summary>
         /// 获得隔夜持仓明细数据
         /// </summary>

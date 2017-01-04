@@ -129,7 +129,7 @@ namespace TradingLib.Core
             foreach (IAccount a in TLCtxHelper.ModuleAccountManager.Accounts)
             {
                 a.Reset();
-                acctk.ResetAccount(a);
+                acctk.Reset(a);
             }
 
             //清空总维护器数据
@@ -208,9 +208,9 @@ namespace TradingLib.Core
             acctk.DropAccount(a);
         }
 
-        /// <summary>
-        /// 清空某个交易帐户的交易记录
-        /// </summary>
+        ///// <summary>
+        ///// 清空某个交易帐户的交易记录
+        ///// </summary>
         public void ResetAccount(IAccount a)
         {
             //将该交易帐户的委托 成交 持仓 从统计维护器中删除
@@ -230,7 +230,7 @@ namespace TradingLib.Core
             }
 
             //将交易帐户 交易记录维护器中该帐户的交易记录清空
-            acctk.ResetAccount(a);
+            acctk.Reset(a);
         }
         #endregion
 
