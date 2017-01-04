@@ -67,7 +67,7 @@ namespace TradingLib.Contirb.Protocol
     }
 
     /// <summary>
-    /// 
+    /// 消息包日志
     /// </summary>
     public class LogPacketEvent
     {
