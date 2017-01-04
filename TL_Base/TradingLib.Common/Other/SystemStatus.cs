@@ -36,6 +36,15 @@ namespace TradingLib.Common
         /// </summary>
         public int UnsettledAcctOrderNumOfPreSettleday{ get; set; }
 
+        /// <summary>
+        /// 上个结算日未结算成交记录
+        /// </summary>
+        public int UnsettledAcctTradeNumOfPreSettleday { get; set; }
+
+        /// <summary>
+        /// 上个结算日未结算交易所结算记录
+        /// </summary>
+        public int UnsettledExchangeSettlementNumOfPreSettleday { get; set; }
 
         /// <summary>
         /// 上个结算日未计算委托记录(Broker)
@@ -108,7 +117,10 @@ namespace TradingLib.Common
             sb.Append(this.TotalOrderNum);
             sb.Append(d);
             sb.Append(this.TotalTradeNum);
-
+            sb.Append(d);
+            sb.Append(this.UnsettledExchangeSettlementNumOfPreSettleday);
+            sb.Append(d);
+            sb.Append(this.UnsettledAcctTradeNumOfPreSettleday);
             return sb.ToString();
         }
 
@@ -126,6 +138,8 @@ namespace TradingLib.Common
             this.UnsettledBrokerOrderNumOfPreSettleday = int.Parse(rec[8]);
             this.TotalOrderNum = int.Parse(rec[9]);
             this.TotalTradeNum = int.Parse(rec[10]);
+            this.UnsettledExchangeSettlementNumOfPreSettleday = int.Parse(rec[11]);
+            this.UnsettledAcctTradeNumOfPreSettleday = int.Parse(rec[12]);
         }
     }
 }

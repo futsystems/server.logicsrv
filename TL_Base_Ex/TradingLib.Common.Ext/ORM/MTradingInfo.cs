@@ -683,6 +683,21 @@ namespace TradingLib.ORM
             }
         }
 
+        /// <summary>
+        /// 查询未结算交易所结算记录
+        /// </summary>
+        /// <param name="settleday"></param>
+        /// <returns></returns>
+        public static int GetUnsettledExchangeSettlementNum(int settleday)
+        {
+            using (DBMySql db = new DBMySql())
+            {
+                string query_count = string.Format("SELECT count(id) as count FROM log_settlement_exchange WHERE settleday<='{0}' AND settled=0", settleday);
+                EntityCount num = db.Connection.Query<EntityCount>(query_count).SingleOrDefault();
+                return num.Count;
+            }
+        }
+
 
         /// <summary>
         /// 查询Broker未结算委托数量
