@@ -176,63 +176,20 @@ namespace TradingLib.Core
         }
 
 
-        #region 取消委托
+    
         /// <summary>
         /// 取消委托
         /// </summary>
         /// <param name="order"></param>
         /// <param name="ordersource"></param>
         /// <param name="cancelreason"></param>
-        public void CancelOrder(Order order, QSEnumOrderSource ordersource, string cancelreason = "系统强平")
+        void CancelOrder(Order order, QSEnumOrderSource ordersource, string cancelreason = "系统强平")
         {
             List<long> olist = new List<long>() { order.id };
             RiskTaskSet ps = new RiskTaskSet(order.Account, olist, QSEnumOrderSource.RISKCENTRE, cancelreason);
 
             riskTasklist.Add(ps);
         }
-
-        /// <summary>
-        /// 撤掉某个帐户的所有待成交委托
-        /// </summary>
-        /// <param name="accid"></param>
-        /// <param name="ordersouce"></param>
-        /// <param name="cancelreason"></param>
-        public void CancelOrder(string accid, QSEnumOrderSource ordersouce, string cancelreason = "系统强平")
-        {
-            IAccount account = TLCtxHelper.ModuleAccountManager[accid];
-            if (account != null)
-            {
-                List<long> olist = account.GetPendingOrders().Select(o => o.id).ToList();
-                RiskTaskSet ps = new RiskTaskSet(accid, olist, QSEnumOrderSource.RISKCENTRE, cancelreason);
-
-                riskTasklist.Add(ps);
-            }
-        }
-
-        /// <summary>
-        /// 撤掉某个交易帐户下的某个合约的所有委托
-        /// </summary>
-        /// <param name="accid"></param>
-        /// <param name="symbol"></param>
-        /// <param name="ordersource"></param>
-        /// <param name="cancelreason"></param>
-        public void CancelOrder(string accid, string symbol, QSEnumOrderSource ordersource, string cancelreason = "系统强平")
-        {
-            IAccount account = TLCtxHelper.ModuleAccountManager[accid];
-            if (account != null)
-            {
-                List<long> olist = account.GetPendingOrders(symbol).Select(o => o.id).ToList();
-                RiskTaskSet ps = new RiskTaskSet(accid, olist, QSEnumOrderSource.RISKCENTRE, cancelreason);
-
-                riskTasklist.Add(ps);
-            }
-        }
-
-        #endregion
-
-
-
-
 
         /// <summary>
         /// 发送底层强平持仓委托

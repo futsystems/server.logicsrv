@@ -52,35 +52,6 @@ namespace TradingLib.Common
             TLCtxHelper.ModuleRiskCentre.FlatPosition(pos, flatSize, source, forceReason);
         }
 
-        /// <summary>
-        /// 撤掉帐户下所有委托
-        /// </summary>
-        public void CancelOrder(QSEnumOrderSource source, string cancelreason)
-        {
-            TLCtxHelper.ModuleRiskCentre.CancelOrder(this.ID, source, cancelreason);
-        }
-
-        /// <summary>
-        /// 撤掉帐户下某个合约的所有委托
-        /// </summary>
-        /// <param name="symbol"></param>
-        /// <param name="source"></param>
-        /// <param name="cancelreason"></param>
-        public void CancelOrder(string symbol, QSEnumOrderSource source, string cancelreason)
-        {
-            TLCtxHelper.ModuleRiskCentre.CancelOrder(this.ID, symbol, source, cancelreason);
-        }
-
-        /// <summary>
-        /// 撤掉帐户下的某个委托
-        /// </summary>
-        /// <param name="order"></param>
-        /// <param name="source"></param>
-        /// <param name="cancelreason"></param>
-        public void CancelOrder(Order order, QSEnumOrderSource source, string cancelreason)
-        {
-            TLCtxHelper.ModuleRiskCentre.CancelOrder(order, source, cancelreason);
-        }
 
         /// <summary>
         /// 设置/接触某个交易帐户的警告

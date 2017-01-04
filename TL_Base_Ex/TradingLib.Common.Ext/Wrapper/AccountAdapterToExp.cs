@@ -62,7 +62,6 @@ namespace TradingLib.Common
         /// <param name="comment"></param>
         public void FlatAllPositions(QSEnumOrderSource source, string comment)
         { 
-            //_acc.fla
             _acc.FlatAllPositions(source, comment);
         }
 
@@ -70,6 +69,7 @@ namespace TradingLib.Common
         {
             _acc.FlatPosition(pos,flatSize, source, forceReason);
         }
+
         /// <summary>
         /// 冻结帐户
         /// </summary>
@@ -84,41 +84,6 @@ namespace TradingLib.Common
         public void ActiveAccount()
         {
             _acc.ActiveAccount();
-        }
-
-        //public void FlatPosition(Position pos, QSEnumOrderSource source, string comment)
-        //{
-        //    _acc.FlatPosition(pos, source, comment);
-        //}
-
-        /// <summary>
-        /// 撤掉帐户下所有委托
-        /// </summary>
-        public void CancelOrder(QSEnumOrderSource source, string cancelreason)
-        {
-            _acc.CancelOrder(source, cancelreason);
-        }
-
-        /// <summary>
-        /// 撤掉帐户下某个合约的所有委托
-        /// </summary>
-        /// <param name="symbol"></param>
-        /// <param name="source"></param>
-        /// <param name="cancelreason"></param>
-        public void CancelOrder(string symbol, QSEnumOrderSource source, string cancelreason)
-        {
-            _acc.CancelOrder(symbol, source, cancelreason);
-        }
-
-        /// <summary>
-        /// 撤掉帐户下的某个为头
-        /// </summary>
-        /// <param name="order"></param>
-        /// <param name="source"></param>
-        /// <param name="cancelreason"></param>
-        public void CancelOrder(Order order, QSEnumOrderSource source, string cancelreason)
-        {
-            _acc.CancelOrder(order, source, cancelreason);
         }
 
 
@@ -136,7 +101,6 @@ namespace TradingLib.Common
         /// </summary>
         public IEnumerable<Position> Positions{get{return _acc.Positions; } }
 
-        //public IEnumerable<Position> PositionsNet { get { return _acc.PositionsNet; } }
 
         /// <summary>
         /// 多头持仓维护器
@@ -152,7 +116,6 @@ namespace TradingLib.Common
         public IEnumerable<Trade> Trades { get { return _acc.Trades; } }//获得当日所有成交
 
         public IEnumerable<BinaryOptionOrder> BinaryOptionOrders { get { return new List<BinaryOptionOrder>(); } }
-        //public long[] Cancels { get { return _acc.Cancels; } }//获得当日所有取消
         public IEnumerable<PositionDetail> YdPositions { get { return _acc.YdPositions; } }
 
         /// <summary>
@@ -166,21 +129,6 @@ namespace TradingLib.Common
         }
 
 
-        /// <summary>
-        /// 获得某个合约的净持仓对象
-        /// </summary>
-        /// <param name="symbol"></param>
-        /// <returns></returns>
-        //public Position GetPositionNet(string symbol)
-        //{
-        //    return _acc.GetPositionNet(symbol);
-        //}
-
-
-        //public int CanOpenSize(Symbol symbol,bool side,QSEnumOffsetFlag offset)
-        //{
-        //    return _acc.CanOpenSize(symbol,side,offset);
-        //}
         #endregion
 
         #region 【IFinanceTotal】
