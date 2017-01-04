@@ -240,11 +240,12 @@ namespace TradingLib.Core
                     {
                         continue;
                     }
-                    //节假日不结算
-                    if (exchange.IsInHoliday(extime))
-                    {
-                        continue;
-                    }
+                    //避免错误的假日文件导致有交易记录而交易所不执行结算
+                    ////节假日不结算
+                    //if (exchange.IsInHoliday(extime))
+                    //{
+                    //    continue;
+                    //}
                     //结算日为交易所当前日期
                     int settleday = extime.ToTLDate();
 

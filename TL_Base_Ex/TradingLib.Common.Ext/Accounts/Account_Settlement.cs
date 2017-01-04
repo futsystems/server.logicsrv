@@ -107,6 +107,10 @@ namespace TradingLib.Common
         {
             try
             {
+                if (this.ID == "8100007")
+                {
+                    int x = 1;
+                }
                 ///0.检查对应交易所是否有结算记录
                 if (settlementlist.Any(settle => settle.Settleday == settleday && settle.Exchange == exchange.EXCode))
                 {
