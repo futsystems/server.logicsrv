@@ -241,6 +241,7 @@ namespace TradingLib.Core
         void SrvOnXQryExchangeRate(XQryExchangeRateRequest request, IAccount account)
         {
             logger.Info("XQryExchangeRate:" + request.ToString());
+            //结算时没有重置 导致 交易日进入下一个交易日后无法获得汇率数据 自制客户端无法登入
             IEnumerable<ExchangeRate> ratelist = account.Domain.GetExchangeRates(TLCtxHelper.ModuleSettleCentre.Tradingday);
             for (int i = 0; i < ratelist.Count(); i++)
             {
