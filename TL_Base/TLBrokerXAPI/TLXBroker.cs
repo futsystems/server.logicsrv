@@ -15,7 +15,7 @@ namespace TradingLib.BrokerXAPI
     /// <summary>
     /// XAPI 适配底层c交易接口的 成交通道基类
     /// </summary>
-    public abstract class TLXBroker :TLBrokerBase,IBroker,IDisposable
+    public abstract class TLXBroker :TLBrokerBase,IDisposable
     {
         TLBrokerProxy _broker;
         TLBrokerWrapperProxy _wrapper;

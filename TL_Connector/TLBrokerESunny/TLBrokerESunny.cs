@@ -40,7 +40,7 @@ namespace Broker.Live
     /// 成交侧的委托也需要记录到数据库,在接口加载时从数据库加载成交侧的交易数据
     /// 
     /// </summary>
-    public class TLBrokerESunny : TLXBroker
+    public class TLBrokerESunny : TLXBroker, IBroker
     {
 
 

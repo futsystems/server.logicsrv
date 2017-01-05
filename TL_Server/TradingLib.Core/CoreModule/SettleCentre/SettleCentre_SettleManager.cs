@@ -316,7 +316,7 @@ namespace TradingLib.Core
             var data = JsonMapper.ToObject(json);
             //获得对应的交易日
             int settleday = int.Parse(data["settleday"].ToString());
-            logger.Info(string.Format("重新执行交易日:{0}的结算操作，当前交易日为:{1}", settleday, _tradingday));
+            logger.Info(string.Format("Settle Tradingday:{0} Manually，Current Tradingday:{1}", settleday, _tradingday));
 
             if (settleday != _tradingday)
             {

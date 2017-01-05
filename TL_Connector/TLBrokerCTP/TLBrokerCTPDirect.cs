@@ -20,7 +20,7 @@ namespace Broker.Live
     /// <summary>
     /// 
     /// </summary>
-    public class TLBrokerCTPDirect : TLXBroker
+    public class TLBrokerCTPDirect : TLXBroker,IBroker
     {
 
 

@@ -19,7 +19,7 @@ namespace Broker.Live
     /// <summary>
     /// 
     /// </summary>
-    public class TLBrokerCTPReverse : TLXBroker
+    public class TLBrokerCTPReverse : TLXBroker, IBroker
     {
 
 
