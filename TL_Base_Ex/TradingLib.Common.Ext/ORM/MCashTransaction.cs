@@ -65,11 +65,11 @@ namespace TradingLib.ORM
         /// <param name="begin"></param>
         /// <param name="end"></param>
         /// <returns></returns>
-        public static IEnumerable<CashTransactionImpl> SelectHistCashTransactions(string account, int begin, int end)
+        public static IEnumerable<CashTransactionImpl> SelectHistCashTransactions(string account, long begin, long end)
         {
             using (DBMySql db = new DBMySql())
             {
-                string query = string.Format("SELECT * FROM log_cashtrans WHERE account='{0}' AND settleday>='{1}' AND settleday<='{2}'", account, begin, end);
+                string query = string.Format("SELECT * FROM log_cashtrans WHERE account='{0}' AND datetime>='{1}' AND datetime<='{2}'", account, begin, end);
                 return db.Connection.Query<CashTransactionImpl>(query);
             }
         }

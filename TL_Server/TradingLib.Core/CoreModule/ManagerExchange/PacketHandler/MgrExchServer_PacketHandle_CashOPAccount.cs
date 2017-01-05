@@ -163,7 +163,7 @@ namespace TradingLib.Core
         /// <param name="start"></param>
         /// <param name="end"></param>
         [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "QueryAccountCashTrans", "QueryAccountCashTrans -query account cashtrans", "查询交易帐户出入金记录")]
-        public void CTE_QueryAccountCashTrans(ISession session, string account, int start, int end)
+        public void CTE_QueryAccountCashTrans(ISession session, string account, long start, long end)
         {
             logger.Info("查询出入金记录: start:" + start.ToString() + " end:" + end.ToString());
             Manager manger = session.GetManager();
