@@ -91,6 +91,15 @@ namespace TradingLib.Core
             //查找以交易帐户登入的地址列表
             ILocation[] locationlist = ClientsForAccount(notify.Account).Select(client =>client.Location).ToArray();
             //logger.Info("交易帐户:" + notify.Account + " 链接端数量:" + locationlist.Length.ToString());
+            logger.Warn(string.Format("Notify Account:{0} Client Num:{1} IDs:{2}", notify.Account, locationlist.Length, string.Join(" ", locationlist.Select(l => l.ClientID).ToArray())));
+            //通知地址为零 输出日志信息
+            if (locationlist.Length == 0)
+            { 
+                foreach(var client in this._clients.Clients)
+                {
+                    logger.Warn(string.Format("ClientID:{0} Account:{1}", client.Location.ClientID, client.Account.ID));
+                }
+            }
             return locationlist;
         }
 

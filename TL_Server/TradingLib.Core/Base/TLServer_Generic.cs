@@ -495,6 +495,7 @@ namespace TradingLib.Core
                         {
                             TLSend(data, location.ClientID, location.FrontID);
                         }
+                        
                         return;
                     }
 
