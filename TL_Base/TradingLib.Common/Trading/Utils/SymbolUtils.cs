@@ -146,7 +146,7 @@ namespace TradingLib.Common
         /// <returns></returns>
         public static CommissionConfig GetCommissionConfig(this Symbol sym)
         {
-            CommissionConfig cfg = new CommissionConfigImpl();
+            CommissionConfig cfg = new CommissionConfig();
             cfg.Symbol = sym.Symbol;
             cfg.OpenRatioByMoney = sym.EntryCommission < 1 ? sym.EntryCommission : 0;
             cfg.OpenRatioByVolume = sym.EntryCommission > 1 ? sym.EntryCommission : 0;

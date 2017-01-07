@@ -56,6 +56,7 @@
     <Compile Include="BinaryOption\EnumBinaryOptionType.cs" />
     <Compile Include="BinaryOption\EnumBinaryOptionOrderStatus.cs" />
     <Compile Include="BinaryOption\EnumBinaryOptionTimeSpan.cs" />
+    <Compile Include="Trading\Settlement\CashTransaction.cs" />
     <Compile Include="Trading\EnumEquityType.cs" />
     <Compile Include="Message\MessageCodecType.cs" />
     <Compile Include="Trading\EnumAlgorithm.cs" />
@@ -63,15 +64,13 @@
     <Compile Include="Trading\BasicInfo\ITradingRange.cs" />
     <Compile Include="Trading\BasicInfo\SettlementPrice.cs" />
     <Compile Include="BinaryOption\BinaryOptionOrder.cs" />
-    <Compile Include="Trading\CashTransaction.cs" />
     <Compile Include="Trading\Data\EnumBarElement.cs" />
     <Compile Include="Trading\Data\ISeries.cs" />
     <Compile Include="Trading\EnumChargeType.cs" />
     <Compile Include="Trading\EnumQuote2Side.cs" />
     <Compile Include="Trading\EnumSettleType.cs" />
-    <Compile Include="Trading\EnumStrategy.cs" />
     <Compile Include="Trading\EnumSymbolType.cs" />
-    <Compile Include="Trading\ExchangeSettlement.cs" />
+    <Compile Include="Trading\Settlement\ExchangeSettlement.cs" />
     <Compile Include="Trading\PowerTransaction.cs" />
     <Compile Include="Router\PositionMetric.cs" />
     <Compile Include="Router\RouterItem.cs" />
@@ -93,7 +92,6 @@
     <Compile Include="Router\EnumRouterStrategy.cs" />
     <Compile Include="Rule\IRuleItem.cs" />
     <Compile Include="Trading\BasicInfo\IMarketTime.cs" />
-    <Compile Include="Trading\CommissionConfig.cs" />
     <Compile Include="Trading\EnumAccountCategoy.cs" />
     <Compile Include="Trading\EnumHedgeFlag.cs" />
     <Compile Include="Trading\EnumOrderBreed.cs" />
