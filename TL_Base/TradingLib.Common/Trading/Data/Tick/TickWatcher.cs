@@ -12,7 +12,7 @@ namespace TradingLib.Common
     /// <summary>
     /// Used to watch a stream of ticks, and send alerts when the stream goes idle for a specified time.
     /// </summary>
-    public class TickWatcher : GotTickIndicator
+    public class TickWatcher
     {
         ILog logger = LogManager.GetLogger("TickWatcher");
 

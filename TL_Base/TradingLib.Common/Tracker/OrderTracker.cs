@@ -10,7 +10,7 @@ namespace TradingLib.Common
     /// 用于记录Order状态
     /// </summary>
     [Serializable]
-    public class OrderTracker : GotOrderIndicator, GotCancelIndicator, GotFillIndicator, GenericTrackerI, IEnumerable<Order>
+    public class OrderTracker : GenericTrackerI, IEnumerable<Order>
     {
         public void Clear()
         {

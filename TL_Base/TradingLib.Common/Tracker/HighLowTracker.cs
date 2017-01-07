@@ -9,7 +9,7 @@ namespace TradingLib.Common
     /// <summary>
     /// track highs
     /// </summary>
-    public class HighTracker : GenericTracker<decimal>, GotTickIndicator, GenericTrackerDecimal
+    public class HighTracker : GenericTracker<decimal>, GenericTrackerDecimal
     {
         public void GotTick(Tick k) { newTick(k); }
         public decimal getvalue(int idx) { return this[idx]; }
@@ -90,7 +90,7 @@ namespace TradingLib.Common
     /// <summary>
     /// track lows
     /// </summary>
-    public class LowTracker : GenericTracker<decimal>, GotTickIndicator, GenericTrackerDecimal
+    public class LowTracker : GenericTracker<decimal>, GenericTrackerDecimal
     {
         public void GotTick(Tick k) { newTick(k); }
         public decimal getvalue(int idx) { return this[idx]; }

@@ -13,7 +13,7 @@ namespace TradingLib.Common
     /// 管理交易仓位
     /// </summary>
     [Serializable]
-    public class PositionTracker : GenericTracker<Position>,GotFillIndicator,GotTickIndicator,IEnumerable<Position>
+    public class PositionTracker : GenericTracker<Position>,IEnumerable<Position>
     {
         string _defaultacct = string.Empty;
         public string DefaultAccount { get { return _defaultacct; } set { _defaultacct=value; } }

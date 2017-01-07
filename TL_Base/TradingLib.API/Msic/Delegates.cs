@@ -61,12 +61,9 @@ namespace TradingLib.API
     public delegate void VoidDelegate();
     public delegate void MessageDelegate(MessageTypes type, long source, long dest, long msgid, string request,ref string response);
     public delegate void MessageFullDelegate(GenericMessage m);
-    public delegate void BasketDelegate(SymbolBasket b, int id);
+    //public delegate void BasketDelegate(SymbolBasket b, int id);
     public delegate void BarListDelegate(BarList b);
-    //public delegate void ChartLabelDelegate(decimal price, int time, string label, System.Drawing.Color c);
-    public delegate void ProviderDelegate(Providers p);
-    //public delegate void TicketDelegate(string space, string user, string password, string summary, string description, Priority pri, TicketStatus stat);
-    
+
     
     public delegate void Str1Del(string arg1);
     public delegate void Str2Del(string arg1,string arg2);

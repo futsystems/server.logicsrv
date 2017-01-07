@@ -7,7 +7,7 @@ using TradingLib.API;
 
 namespace TradingLib.Common
 {
-    public class TradeTracker : GotFillIndicator, IEnumerable<Trade>
+    public class TradeTracker: IEnumerable<Trade>
     {
         GenericTracker<Trade> trades = new GenericTracker<Trade>();//记录委托
 

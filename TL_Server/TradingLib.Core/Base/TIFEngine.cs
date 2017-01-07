@@ -14,7 +14,7 @@ namespace TradingLib.Core
     /// 关于TIF引擎的拓展
     /// 我们可以定义一些简单行为 比如取消,
     /// </summary>
-    public class TIFEngine : SendOrderIndicator, SendCancelIndicator, GotCancelIndicator, GotFillIndicator
+    public class TIFEngine
     {
         public TIFEngine() : this(new IdTracker()) { }
         public TIFEngine(IdTracker id)

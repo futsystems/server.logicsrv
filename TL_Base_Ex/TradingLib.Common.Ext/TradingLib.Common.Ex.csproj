@@ -221,7 +221,6 @@
     <Compile Include="Tracker\PositionRoundTracker.cs" />
     <Compile Include="Tracker\BasicTracker\BasicInfo\SecurityTracker.cs" />
     <Compile Include="Tracker\BasicTracker\BasicInfo\MarketTimeTracker.cs" />
-    <Compile Include="Tracker\SymbolBasketImpl.cs" />
     <Compile Include="Tracker\BasicTracker\BasicInfo\SymbolTracker.cs" />
     <Compile Include="Tracker\TotalTracker.cs" />
     <Compile Include="Tracker\BasicTracker\RouterGroup\VendorTracker.cs" />

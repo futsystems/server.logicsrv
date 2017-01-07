@@ -10,7 +10,7 @@ namespace TradingLib.Core
     /// <summary>
     /// enforce time limits for orders (in seconds)
     /// </summary>
-    public class TIFTracker : GenericTracker<long>, GotTickIndicator, GenericTrackerLong, SendOrderIndicator, SendCancelIndicator, GotCancelIndicator, GotFillIndicator
+    public class TIFTracker : GenericTracker<long>, GenericTrackerLong
     {
 
         public void GotTick(Tick k) { newTick(k); }

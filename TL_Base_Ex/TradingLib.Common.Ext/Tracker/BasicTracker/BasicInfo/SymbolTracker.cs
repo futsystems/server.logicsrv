@@ -107,7 +107,7 @@ namespace TradingLib.Common
             }
         }
 
-        internal SymbolBasket BasketAvabile
+        internal List<SymbolImpl> BasketAvabile
         {
             get
             {
@@ -115,9 +115,9 @@ namespace TradingLib.Common
                 DBSymbolTracker tracker = null;
                 if (domainsymboltracker.TryGetValue(domain_id, out tracker))
                 {
-                    return tracker.GetBasketAvabile();
+                    return tracker.AvabileSymbols;
                 }
-                return new SymbolBasketImpl(); ;
+                return new List<SymbolImpl>();
             }
 
         }
@@ -323,37 +323,42 @@ namespace TradingLib.Common
         }
 
 
-        
+
         /// <summary>
         /// 所有合约
         /// 过期合约直接不加载
         /// </summary>
         /// <returns></returns>
-        public SymbolBasket GetBasketAvabile()
+        //public SymbolBasket GetBasketAvabile()
+        //{
+        //    SymbolBasket basket = new SymbolBasketImpl();
+        //    foreach (Symbol s in symcodemap.Values./*Where(s => s.IsTradeable).**/ToArray())
+        //    {
+        //        basket.Add(s);
+        //    }
+        //    return basket;
+
+        //}
+
+        public List<SymbolImpl> AvabileSymbols
         {
-            SymbolBasket basket = new SymbolBasketImpl();
-            foreach (Symbol s in symcodemap.Values./*Where(s => s.IsTradeable).**/ToArray())
-            {
-                basket.Add(s);
-            }
-            return basket;
-            
+            get { return symcodemap.Values.ToList(); }
         }
 
-        /// <summary>
-        /// 获得某个品种的所有合约
-        /// </summary>
-        /// <param name="sec"></param>
-        /// <returns></returns>
-        public SymbolBasket GetBasketAvabileViaSecurity(SecurityFamily sec)
-        {
-            SymbolBasket basket = new SymbolBasketImpl();
-            foreach (Symbol s in symcodemap.Values.Where(s => s.IsTradeable && IsSymbolWithSecurity(s,sec)).ToArray())
-            {
-                basket.Add(s);
-            }
-            return basket;
-        }
+        ///// <summary>
+        ///// 获得某个品种的所有合约
+        ///// </summary>
+        ///// <param name="sec"></param>
+        ///// <returns></returns>
+        //public SymbolBasket GetBasketAvabileViaSecurity(SecurityFamily sec)
+        //{
+        //    SymbolBasket basket = new SymbolBasketImpl();
+        //    foreach (Symbol s in symcodemap.Values.Where(s => s.IsTradeable && IsSymbolWithSecurity(s,sec)).ToArray())
+        //    {
+        //        basket.Add(s);
+        //    }
+        //    return basket;
+        //}
 
         /// <summary>
         /// 某个合约是否属于某个品种

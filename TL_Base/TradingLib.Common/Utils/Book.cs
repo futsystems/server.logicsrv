@@ -3,7 +3,7 @@ using TradingLib.API;
 
 namespace TradingLib.Common
 {
-    public struct Book : GotTickIndicator
+    public struct Book
     {
         public const int MAXBOOK = 40;
         public Book(Book b)

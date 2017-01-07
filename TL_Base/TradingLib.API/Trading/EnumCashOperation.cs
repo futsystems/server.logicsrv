@@ -22,6 +22,7 @@ namespace TradingLib.API
     {
         [Description("充值")]
         Deposit,
+
         [Description("提现")]
         WithDraw,
     }

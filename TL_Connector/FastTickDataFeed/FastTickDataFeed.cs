@@ -334,7 +334,7 @@ namespace DataFeed.FastTick
         /// 注册市场数据
         /// </summary>
         /// <param name="symbols"></param>
-        public void RegisterSymbols(SymbolBasket symbols)
+        public void RegisterSymbols(List<Symbol> symbols)
         {
             try
             {
@@ -416,7 +416,7 @@ namespace DataFeed.FastTick
         /// </summary>
         /// <param name="basket"></param>
         /// <returns></returns>
-        Dictionary<QSEnumDataFeedTypes,List<Symbol>> SplitSymbolViaDataFeedType(SymbolBasket basket)
+        Dictionary<QSEnumDataFeedTypes,List<Symbol>> SplitSymbolViaDataFeedType(List<Symbol> basket)
         {
             Dictionary<QSEnumDataFeedTypes, List<Symbol>> map = new Dictionary<QSEnumDataFeedTypes, List<Symbol>>();
             foreach (Symbol sym in basket)

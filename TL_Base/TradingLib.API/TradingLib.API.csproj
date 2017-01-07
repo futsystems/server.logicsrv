@@ -67,7 +67,6 @@
     <Compile Include="Trading\Data\EnumBarElement.cs" />
     <Compile Include="Trading\Data\ISeries.cs" />
     <Compile Include="Trading\EnumChargeType.cs" />
-    <Compile Include="Trading\EnumQuote2Side.cs" />
     <Compile Include="Trading\EnumSettleType.cs" />
     <Compile Include="Trading\EnumSymbolType.cs" />
     <Compile Include="Trading\Settlement\ExchangeSettlement.cs" />
@@ -108,12 +107,10 @@
     <Compile Include="Msic\Enums.cs" />
     <Compile Include="Trading\BasicInfo\IExchange.cs" />
     <Compile Include="Msic\LibDelegates.cs" />
-    <Compile Include="Trading\Basket.cs" />
     <Compile Include="Constants.cs" />
     <Compile Include="Trading\BasicInfo\EnumCurrency.cs" />
     <Compile Include="Msic\GenericTrackerI.cs" />
     <Compile Include="Msic\Imbalance.cs" />
-    <Compile Include="Trading\Indicators.cs" />
     <Compile Include="Message\Message.cs" />
     <Compile Include="Message\MessageBarRequest.cs" />
     <Compile Include="Message\MessageImbalance.cs" />

@@ -14,7 +14,7 @@ namespace TradingLib.API
         /// </summary>
         /// <param name="symbols"></param>
         /// <param name="type"></param>
-        void RegisterSymbols(SymbolBasket basket);
+        void RegisterSymbols(List<Symbol> symbols);
 
         /// <summary>
         /// 获得行情回报

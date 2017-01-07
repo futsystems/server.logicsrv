@@ -9,7 +9,7 @@ namespace TradingLib.API
         Unknown = -1,
         Error = 0,
         TradeLink = 1,
-        QSPlatform=2,
+        QSPlatform = 2,
         InteractiveBrokers,
         Genesis,
         Bright,
@@ -45,12 +45,5 @@ namespace TradingLib.API
         CTP,
         QuantShop,
         QSManager
-    }
-    public enum QSEnumProviderType
-    {
-        unknow,
-        DataFeed,
-        Execution,
-        Both,
     }
 }

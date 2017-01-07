@@ -36,7 +36,7 @@ namespace TradingLib.Core
             asynctick = new AsyncResponse("DataFeedRouter");
             asynctick.GotTick += new TickDelegate(asynctick_GotTick);
             //建立合约列表用于记录所维护的行情数据
-            mb = new SymbolBasketImpl();
+            mb = new List<Symbol>();
             
             _snapshotcahefile = Path.Combine(new string[] { "cache", "ticksnapshot" });
             //订阅重置事件
@@ -132,13 +132,13 @@ namespace TradingLib.Core
             IDataFeed df = GetDataFeedViaToken(token);//connecter as IDataFeed;
             if (df == null || (!df.IsLive)) return;//如果通道为空 或 通道不处于工作状态则直接返回
             //通过查找本地需要注册的合约 当通道链接成功时进行注册
-            SymbolBasket basket = GetDataFeedSymbols(df);
+            List<Symbol> basket = GetDataFeedSymbols(df);
 
             //该通道没有注册过任何合约 则注册所有可交易合约
             if (basket.Count == 0)
             {
                 logger.Info(string.Format("DataFeed[{0}] have not registed any symbol,register all symbols tradable", df.Token));
-                SymbolBasket nb = new SymbolBasketImpl();
+                List<Symbol> nb = new List<Symbol>();
 
                 foreach (Symbol sym in BasicTracker.SymbolTracker.BasketAvabile)
                 {
@@ -148,7 +148,7 @@ namespace TradingLib.Core
                         nb.Add(sym);
                     }
                 }
-                Action<SymbolBasket> del = new Action<SymbolBasket>(this.RegisterSymbols);
+                Action<List<Symbol>> del = new Action<List<Symbol>>(this.RegisterSymbols);
                 del.BeginInvoke(nb, (re) => { logger.Info("RegisterSymbol Complate"); }, null);
 
                 //this.RegisterSymbols(nb);
@@ -156,7 +156,7 @@ namespace TradingLib.Core
             }
             else//如果有对应的合约 则重新注册
             {
-                logger.Info("DataFeed:" + df.Token + "connected,register symbols: " + string.Join(",", basket.ToSymArray()).Truncat(50,"...."));
+                logger.Info("DataFeed:" + df.Token + "connected,register symbols: " + string.Join(",", basket.Select(s=>s.Symbol).ToArray()).Truncat(50,"...."));
                 df.RegisterSymbols(basket);
             }
         }
@@ -166,34 +166,34 @@ namespace TradingLib.Core
         /// </summary>
         /// <param name="df"></param>
         /// <returns></returns>
-        SymbolBasket GetDataFeedSymbols(IDataFeed df)
+        List<Symbol> GetDataFeedSymbols(IDataFeed df)
         {
             if (datafeedbasktmap.Keys.Contains(df))
                 return datafeedbasktmap[df];
             else
-                return new SymbolBasketImpl();
+                return new List<Symbol>();
         }
 
         #region 本地向DataFeed发送数据请求
         //建立本地缓存basket如果包含了该security则不重复进行发送
-        SymbolBasket mb;
+        List<Symbol> mb;
         /// <summary>
         /// 用于维护通道与Basket 映射关系
         /// </summary>
-        ConcurrentDictionary<IDataFeed, SymbolBasket> datafeedbasktmap = new ConcurrentDictionary<IDataFeed, SymbolBasket>();
-        public void RegisterSymbols(SymbolBasket b)
+        ConcurrentDictionary<IDataFeed, List<Symbol>> datafeedbasktmap = new ConcurrentDictionary<IDataFeed, List<Symbol>>();
+        public void RegisterSymbols(List<Symbol> b)
         {
             if (b.Count <= 0) return;
             try
             {
                 //遍历所有的security,然后选择对应的数据通道请求行情数据
-                logger.Info("request market data to datafeed:" + string.Join(",", b.ToSymArray()).Truncat(50, "...."));
+                logger.Info("request market data to datafeed:" + string.Join(",", b.Select(sym=>sym.Symbol).ToArray()).Truncat(50, "...."));
                 //将请求的合约按行情通道进行分组,然后统一调用行情通道的订阅合约函数
-                Dictionary<IDataFeed, SymbolBasket> registermap = new Dictionary<IDataFeed, SymbolBasket>();
+                Dictionary<IDataFeed, List<Symbol>> registermap = new Dictionary<IDataFeed, List<Symbol>>();
                 //遍历合约列表然后按照对应的接口进行分类,最后统一进行注册防止过度调用接口的注册函数[假设是多个接口 多个行情字头可能每个合约对应的数据接口都不一致]
-                foreach (Symbol sym in b.ToArray())
+                foreach (Symbol sym in b)
                 {
-                    if (mb.HaveSymbol(sym.Symbol)) continue;//注册过的行情字头不再进行注册
+                    if (mb.Contains(sym)) continue;//注册过的行情字头不再进行注册
                     if (sym.SymbolType != QSEnumSymbolType.Standard) continue;//非标准合约不注册行情，非标准合约行情本地逻辑生成
                     IDataFeed d = GetDataFeed(sym);//通过合约查找对应的数据接口
                     if (d != null)
@@ -204,7 +204,7 @@ namespace TradingLib.Core
                         }
                         else//第一次生成该接口对应的合约列表
                         {
-                            registermap[d] = new SymbolBasketImpl();
+                            registermap[d] = new List<Symbol>();
                             registermap[d].Add(sym);
                         }
                     }
@@ -221,11 +221,15 @@ namespace TradingLib.Core
                     //如果没有该通道键值 增加记录
                     if(!datafeedbasktmap.Keys.Contains(df))
                     {
-                        datafeedbasktmap.TryAdd(df,new SymbolBasketImpl());
+                        datafeedbasktmap.TryAdd(df, new List<Symbol>());
                     }
-                    datafeedbasktmap[df].Add(registermap[df]);
+                    datafeedbasktmap[df] = datafeedbasktmap[df].Concat(registermap[df]).ToList();
                     //记录曾经注册过的合约
-                    mb.Add(registermap[df]);
+                    foreach(var t in registermap[df])
+                    {
+                        if(!mb.Contains(t))
+                            mb.Add(t);
+                    }
                 }
             }
             catch (Exception ex)

@@ -7,13 +7,11 @@ namespace TradingLib.API
 {
     public interface IDataRouter
     {
-        //event TickDelegate GotTickEvent;
-
         /// <summary>
         /// 订阅行情
         /// </summary>
         /// <param name="b"></param>
-        void RegisterSymbols(SymbolBasket b);
+        void RegisterSymbols(List<Symbol> symbols);
 
         //TODO SymbolKey
         /// <summary>
