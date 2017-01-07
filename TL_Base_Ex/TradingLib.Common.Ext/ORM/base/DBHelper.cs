@@ -5,12 +5,15 @@ using System.Text;
 using TradingLib.Mixins.DataBase;
 using TradingLib.API;
 using TradingLib.Common;
+using Common.Logging;
 
 
 namespace TradingLib.ORM
 {
     public class DBHelper
     {
+        static ILog logger = LogManager.GetLogger("DBHelper");
+
         /// <summary>
         /// 初始化数据库全局连接信息
         /// </summary>
@@ -22,7 +25,7 @@ namespace TradingLib.ORM
         public static void InitDBConfig(string address, int port, string name, string user, string pass)
         {
 
-            Util.Info(string.Format("{0}Address:{1} Port:{2} DBName:{3} UserName:{4} Password:{5}", Util.GlobalPrefix, address, port, name, user, pass));
+            logger.Info(string.Format("{0}Address:{1} Port:{2} DBName:{3} UserName:{4} Password:{5}", Util.GlobalPrefix, address, port, name, user, pass));
             DBAddress = address;
             DBPort= port;
             DBName = name;

@@ -8,6 +8,8 @@ using System.Reflection;
 using TradingLib.API;
 using TradingLib.Common;
 using TradingLib.Mixins.Json;
+using Common.Logging;
+
 
 
 namespace TradingLib.Common
@@ -43,7 +45,8 @@ namespace TradingLib.Common
     /// </summary>
     public partial class TLContext
     {
-
+        ILog logger = LogManager.GetLogger("TLCTX");
+        
         #region 命令列表结构
         //核心交易消息中处理的命令列表 每个模块对应一个命令列表，命令列表中通过操作编码与对应的执行对象进行映射
         //命令我们考虑使用contrib-cmdstr来进行储存与映射
@@ -136,7 +139,7 @@ namespace TradingLib.Common
             {
                 if (_messageExchange == null)
                 {
-                    debug("Error-MessageRouter not valid");
+                    logger.Error("Error-MessageRouter not valid");
                 }
                 return _messageExchange;
             }
@@ -162,15 +165,6 @@ namespace TradingLib.Common
 
         }
 
-        public void debug(string msg)
-        {
-            Util.Debug(">>>>Context:" + msg);
-        }
-
-        public void debug(string msg, QSEnumDebugLevel level)
-        {
-            Util.Debug(">>>>Context:" + msg);
-        }
 
         #region 命令解析与调用
 
@@ -195,7 +189,7 @@ namespace TradingLib.Common
         }
         public void MessageExchangeHandler(ISession session, ContribRequest request)
         {
-            Util.Debug("****handle contribrequest:" + request.ToString());
+            logger.Debug("****handle contribrequest:" + request.ToString());
             CmdHandler(session, request.ModuleID, request.CMDStr, request.Parameters, messageRouterCmdMap);
         }
 
@@ -209,7 +203,7 @@ namespace TradingLib.Common
         {
             try
             {
-                Util.Debug("****handle mgr contribrequest:" + request.ToString());
+                logger.Debug("****handle mgr contribrequest:" + request.ToString());
                 CmdHandler(session, request.ModuleID, request.CMDStr, request.Parameters, messageMgrCmdMap);
             }
             catch (FutsRspError ex)
@@ -218,7 +212,7 @@ namespace TradingLib.Common
             }
             catch (QSCommandError ex)
             {
-                TLCtxHelper.Ctx.debug(ex.Label + "\r\n reason@" + ex.Reason + "\r\n RawException:" + ex.RawException.Message.ToString(), QSEnumDebugLevel.ERROR);
+                logger.Error(ex.Label + "\r\n reason@" + ex.Reason + "\r\n RawException:" + ex.RawException.Message.ToString());
                 session.OperationError(new FutsRspError(ex));
             }
             catch (TLException ex)
@@ -227,7 +221,7 @@ namespace TradingLib.Common
             }
             catch (Exception ex)
             {
-                debug("MGR Message Handler error:" + ex.ToString(), QSEnumDebugLevel.ERROR);
+                logger.Error("MGR Message Handler error:" + ex.ToString());
                 session.OperationError(new FutsRspError(ex));
             }
         }
@@ -243,7 +237,7 @@ namespace TradingLib.Common
         {
             //string module, string cmdstr, string parameters
             string key = ContribCommandKey(request.Module, request.Method);
-            Util.Debug("Handler webmessage, cmdkey:" + key);
+            logger.Debug("Handler webmessage, cmdkey:" + key);
             ContribCommand cmd=null;
             if(messageWebCmdMap.TryGetValue(key,out cmd))
             {
@@ -268,12 +262,12 @@ namespace TradingLib.Common
                 }
                 catch (QSCommandError ex)
                 {
-                    TLCtxHelper.Ctx.debug(ex.Label + "\r\n reason@" + ex.Reason + "\r\n RawException:" + ex.RawException.Message.ToString(), QSEnumDebugLevel.ERROR);
+                    logger.Error(ex.Label + "\r\n reason@" + ex.Reason + "\r\n RawException:" + ex.RawException.Message.ToString());
                     return WebAPIHelper.ReplyError("COMMAND_EXECUTE_ERROR");
                 }
                 catch (Exception ex)
                 {
-                    TLCtxHelper.Ctx.debug("ExectueCmd Error:\r\n" + ex.ToString(), QSEnumDebugLevel.ERROR);
+                    logger.Error("ExectueCmd Error:\r\n" + ex.ToString());
                     return WebAPIHelper.ReplyError("SERVER_SIDE_ERROR");
                 }
 
@@ -306,12 +300,12 @@ namespace TradingLib.Common
                 }
                 catch (QSCommandError ex)
                 {
-                    TLCtxHelper.Ctx.debug(ex.Label + "\r\n reason@" + ex.Reason + "\r\n RawException:" + ex.RawException.Message.ToString(), QSEnumDebugLevel.ERROR);
+                    logger.Error(ex.Label + "\r\n reason@" + ex.Reason + "\r\n RawException:" + ex.RawException.Message.ToString());
                     return "";// ExCommand.DEFAULT_REP_WRONG;
                 }
                 catch (Exception ex)
                 {
-                    TLCtxHelper.Ctx.debug("ExectueCmd Error:\r\n" + ex.ToString(), QSEnumDebugLevel.ERROR);
+                    logger.Error("ExectueCmd Error:\r\n" + ex.ToString());
                     return "";// ExCommand.DEFAULT_REP_WRONG;
                 }
             }
@@ -331,7 +325,7 @@ namespace TradingLib.Common
             string[] p = message.Split('|');
             if (p.Length < 3)
             {
-                debug("Error:ContribCommand message type: contribid|cmdstr|parameters");
+                logger.Error("Error:ContribCommand message type: contribid|cmdstr|parameters");
                 return;
             }
             session.ContirbID = p[0];
@@ -354,12 +348,12 @@ namespace TradingLib.Common
 
             if (!IsContribRegisted(contribid) && !IsCoreRegisted(contribid) &&!IsServiceManagerRegisted(contribid))
             {
-                debug("Error:Module[" + contribid + "] do not registed");
+                logger.Error("Error:Module[" + contribid + "] do not registed");
                 return;
             }
             if (!cmdmap.Keys.Contains(cmdkey))
             {
-                debug("Error:Contrib[" + contribid + "] do not support Command[" + cmd + "]");
+                logger.Error("Error:Contrib[" + contribid + "] do not support Command[" + cmd + "]");
                 return;
             }
             cmdmap[cmdkey].ExecuteCmd(session, parameters);
@@ -369,7 +363,7 @@ namespace TradingLib.Common
         internal void BindContribEvent()
         {
             Util.StatusSection("CTX", "CONTRIBEVENT", QSEnumInfoColor.INFOGREEN, true);
-            debug("Binding ContribEvent with ContribCommand(Handler)");
+            logger.Debug("Binding ContribEvent with ContribCommand(Handler)");
             foreach (string key in contribEventMap.Keys)
             {
                 if (contribEventHandlerMap.Keys.Contains(key))
@@ -392,10 +386,10 @@ namespace TradingLib.Common
             }
             catch (Exception ex)
             {
-                debug("ContribCommand can not math EventHander:"+ex.ToString()+System.Environment.NewLine);
-                debug("Event:" + ev.EventInfo.Name);
-                debug("EventHandlerType:" + ev.EventInfo.EventHandlerType.FullName);
-                debug("Handler:" + h.MethodInfo.Name);
+                logger.Error("ContribCommand can not math EventHander:"+ex.ToString()+System.Environment.NewLine);
+                logger.Error("Event:" + ev.EventInfo.Name);
+                logger.Error("EventHandlerType:" + ev.EventInfo.EventHandlerType.FullName);
+                logger.Error("Handler:" + h.MethodInfo.Name);
             }
         }
         #endregion
@@ -430,7 +424,7 @@ namespace TradingLib.Common
 
                 if (obj is IMessageExchange)
                 {
-                    debug("MessageRouter(TradingServer) unregisted from ctx");
+                    logger.Error("MessageRouter(TradingServer) unregisted from ctx");
                     _messageExchange = null;
                 }
                 //if (obj is IMessageMgr)
@@ -666,7 +660,7 @@ namespace TradingLib.Common
                                 break;
                             }
                         default:
-                            debug("Error:can not recognize CommandSource");
+                            logger.Error("Error:can not recognize CommandSource");
                             break;
                     }
 
@@ -692,7 +686,7 @@ namespace TradingLib.Common
 
                     if (contribEventHandlerMap[eventky].Keys.Contains(cmdky))
                     {
-                        debug("EventHandler: " + eventky + "  " + cmdky + " existed!!");
+                        logger.Error("EventHandler: " + eventky + "  " + cmdky + " existed!!");
                     }
                     else
                     {
@@ -743,7 +737,7 @@ namespace TradingLib.Common
                                 break;
                             }
                         default:
-                            debug("Error:can not recognize CommandSource");
+                            logger.Error("Error:can not recognize CommandSource");
                             break;
                     }
 
@@ -900,7 +894,7 @@ namespace TradingLib.Common
         /// <returns></returns>
         public string PrintContrib(string contrib)
         {
-            Util.Debug("try to print contrib:" + contrib + " information");
+            logger.Debug("try to print contrib:" + contrib + " information");
             StringBuilder sb = new StringBuilder();
             IContrib c = ContribFinderName(contrib.ToUpper());
             if (c == null)
@@ -926,7 +920,7 @@ namespace TradingLib.Common
                 sb.Append(PrintCommandAPI(contrib, info.Attr.CmdStr));
             }
             sb.Append("TaskCommand:" + System.Environment.NewLine);
-            Util.Debug("it is run to here for print contrib");
+            //Util.Debug("it is run to here for print contrib");
             return sb.ToString();
         }
         /// <summary>
@@ -985,7 +979,7 @@ namespace TradingLib.Common
             }
             catch (Exception ex)
             {
-                Util.Debug("服务端查询访问键值异常:" + ex.ToString());
+                logger.Error("服务端查询访问键值异常:" + ex.ToString());
             }
             return "服务端访问异常";
         }

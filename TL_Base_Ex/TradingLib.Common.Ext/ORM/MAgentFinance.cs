@@ -148,7 +148,6 @@ namespace TradingLib.ORM
             using (DBMySql db = new DBMySql())
             {
                 string query = String.Format("SELECT * FROM manager_cashopreq  WHERE mgr_fk = '{0}' AND (status='{1}' || datetime>= '{2}')", agentfk, QSEnumCashInOutStatus.PENDING, Util.ToTLDateTime(DateTime.Now.AddMonths(-1)));
-                Util.Debug(query);
                 return   db.Connection.Query<JsonWrapperCashOperation>(query);
             }
         }
@@ -162,7 +161,6 @@ namespace TradingLib.ORM
             using (DBMySql db = new DBMySql())
             {
                 string query = String.Format("SELECT * FROM manager_cashopreq  WHERE status='{0}' || datetime>= {1}",QSEnumCashInOutStatus.PENDING, Util.ToTLDateTime(DateTime.Now.AddMonths(-1)));
-                Util.Debug(query);
                 return db.Connection.Query<JsonWrapperCashOperation>(query);
             }
         }

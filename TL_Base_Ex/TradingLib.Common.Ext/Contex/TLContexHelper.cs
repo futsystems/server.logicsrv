@@ -452,26 +452,7 @@ namespace TradingLib.Common
         }
 
 
-        #region 【全局日志 通知】
         public static Profiler Profiler = new Profiler();
-
-
-        /// <summary>
-        /// 全局发送邮件事件
-        /// 绑定该事件可以获得系统所有对象的Email发送事件
-        /// </summary>
-        public static event EmailDel SendEmailEvent = null;
-
-        /// <summary>
-        /// 全局发送邮件入口
-        /// </summary>
-        /// <param name="email"></param>
-        public static void Email(IEmail email)
-        {
-            if (SendEmailEvent != null)
-                SendEmailEvent(email);
-        }
-        #endregion
 
 
         /// <summary>

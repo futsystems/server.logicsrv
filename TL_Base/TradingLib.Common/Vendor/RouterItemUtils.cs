@@ -50,8 +50,8 @@ namespace TradingLib.Common
             decimal marginwilluse = margintouse / o.UnsignedSize * increment;//按比例计算实际使用的保证金
             //这里需要考虑到净持仓,如果可以进行净持仓操作,则需要按规则下到净持仓里面,而不受保证金占用
             decimal marginused = item.CalMargin() + item.CalMarginFrozen();//计算当前使用保证金
-
-            Util.Info(string.Format("Broker:{0} MarginUsedNow:{1} OrderMargin:{2} PositionIncrement:{3} MarginWillUse:{4}",item.Broker.Token,marginused, margintouse, increment, marginwilluse), "VendorUtils");
+            
+            //Console.WriteLine(string.Format("Broker:{0} MarginUsedNow:{1} OrderMargin:{2} PositionIncrement:{3} MarginWillUse:{4}", item.Broker.Token, marginused, margintouse, increment, marginwilluse), "VendorUtils");
             if (increment <= 0) return true;
 
             //当前已经使用的保证金 + 即将使用的保证金 需要小于我们设定的保证金限额

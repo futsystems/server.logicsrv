@@ -8,11 +8,13 @@ using TradingLib.API;
 using TradingLib.Common;
 using TradingLib.Mixins.JsonObject;
 using TradingLib.ORM;
+using Common.Logging;
 
 namespace TradingLib.Common
 {
     public class UIAccessTracker
     {
+        ILog logger = LogManager.GetLogger("AccessTracker");
         /// <summary>
         /// 数据库ID与对应的权限设置影射
         /// </summary>
@@ -117,7 +119,7 @@ namespace TradingLib.Common
                 }
                 agent = agent.ParentManager;//递归到父域
             }
-            Util.Warn(manager.ToString() + " have no permission set,use default");
+            logger.Warn(manager.ToString() + " have no permission set,use default");
 
             if (manager.IsInRoot())//如果是Root权限 则返回默认管理员权限 所有权限打开
             {

@@ -32,10 +32,5 @@ namespace TradingLib.API
     public delegate void DataPubConnectDel();//Tick数据连接成功
     public delegate void DataPubDisconnectDel();//Tick数据连接成功
     
-    //邮件委托
-    public delegate void EmailDel(IEmail email);
-
-    //日志委托
-    public delegate void ILogItemDel(ILogItem log);
 
 }

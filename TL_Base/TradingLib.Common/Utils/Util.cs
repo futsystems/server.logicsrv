@@ -91,133 +91,15 @@ namespace TradingLib.Common
 
 
 
-        //public static void ConsoleColorStatus(string msg,string rightmsg,QSEnumInfoColor colorl= QSEnumInfoColor.INFOWHITE,QSEnumInfoColor colorr=QSEnumInfoColor.INFOWHITE, int lefpad=0)
-        //{
-        //    if (colorl == colorr)
-        //    {
-        //        int len = GetAvabileConsoleWidth()/ 2;
-        //        int len2 = (len - msg.Length - lefpad);
-        //        string s = msg.PadLeft(msg.Length + lefpad) + rightmsg.PadLeft(len2 - 1);
 
-        //        Console.ForegroundColor = GetColor(colorl);
-        //        Console.WriteLine(s);
-        //        Console.ForegroundColor = ConsoleColor.Gray;
-        //    }
-        //    else
-        //    {
-        //        int len = GetAvabileConsoleWidth() / 2;
-        //        int len2 = (len - msg.Length - lefpad);
-        //        Console.ForegroundColor = GetColor(colorl);
-        //        Console.Write(msg.PadLeft(msg.Length + lefpad));
-        //        Console.ForegroundColor = GetColor(colorr);
-        //        Console.Write(rightmsg.PadLeft(len2 - 1));
-        //        Console.Write(Environment.NewLine);
-        //        Console.ForegroundColor = ConsoleColor.Gray;
-        //    }
-        //}
-
-        //public static ConsoleColor GetColor(QSEnumInfoColor color)
-        //{
-        //    switch(color)
-        //    {
-        //        case QSEnumInfoColor.INFOBLUE:
-        //            return ConsoleColor.Blue;
-        //        case QSEnumInfoColor.INFODARKRED:
-        //            return ConsoleColor.DarkRed;
-        //        case QSEnumInfoColor.INFOGREEN:
-        //            return ConsoleColor.Green;
-        //        case QSEnumInfoColor.INFOGRAY:
-        //            return ConsoleColor.Gray;
-        //        case QSEnumInfoColor.INFOREAD:
-        //            return ConsoleColor.Red;
-        //        case QSEnumInfoColor.INFOWHITE:
-        //            return ConsoleColor.White;
-        //        case QSEnumInfoColor.INFOYELLOW:
-        //            return ConsoleColor.Yellow;
-        //        default:
-        //            return ConsoleColor.White;
-        //    }
-        //}
-
-
-        #region 全局日志输出函数 避免多个类中去获得单独的日志对象
-        /* 大量创建的对象，或者临时性日志输出，则可以通过调用全局日志输出函数进行
-         * 信息输出，避免创建过多logger对象 
-         * 
-         * 
-         * 
-         * **/
+        //#region 全局日志输出函数 避免多个类中去获得单独的日志对象
+        ///* 大量创建的对象，或者临时性日志输出，则可以通过调用全局日志输出函数进行
+        // * 信息输出，避免创建过多logger对象 
+        // * 
+        // * 
+        // * 
+        // * **/
         static ILog _logger = LogManager.GetLogger("Utils");
-
-        /// <summary>
-        /// 处理日志
-        /// </summary>
-        /// <param name="item"></param>
-        public static void Log(ILogItem item)
-        {
-            Log(item.Message, item.Level, item.Programe);
-        }
-
-
-        /// <summary>
-        /// 全局日志系统
-        /// 该日志函数用于在相关模块中快速输出日志，而不用进行进行LogManager.GetLogger操作，简化了日志输出和调试
-        /// </summary>
-        public static void Log(string msg, QSEnumDebugLevel level = QSEnumDebugLevel.INFO,string programe=null)
-        {
-            //如果给util绑定了sendlogevent事件处理器 则通过sendlogevent处理日志
-            //ILogItem item = new LogItem(msg, level, programe==null?PROGRAME:programe);
-            //Log(item);
-            msg = string.Format("{0}:{1}", !string.IsNullOrEmpty(programe)? "Utils-"+programe : "Utils", msg);
-            switch (level)
-            { 
-                case QSEnumDebugLevel.DEBUG:
-                    _logger.Debug(msg);
-                    break;
-                case QSEnumDebugLevel.ERROR:
-                    _logger.Error(msg);
-                    break;
-                case QSEnumDebugLevel.INFO:
-                    _logger.Info(msg);
-                    break;
-                case QSEnumDebugLevel.FATAL:
-                    _logger.Fatal(msg);
-                    break;
-                case QSEnumDebugLevel.WARN:
-                    _logger.Warn(msg);
-                    break;
-                default:
-                    _logger.Debug(msg);
-                    break;
-            }
-        }
-
-
-        public static void Debug(string msg, string programe=null)
-        {
-            Log(msg, QSEnumDebugLevel.DEBUG, programe);
-        }
-
-        public static void Info(string msg, string progame = null)
-        {
-            Log(msg, QSEnumDebugLevel.INFO, progame);
-        }
-
-        public static void Error(string msg, string programe = null)
-        {
-            Log(msg, QSEnumDebugLevel.ERROR, programe);
-        }
-
-        public static void Fatal(string msg, string programe = null)
-        {
-            Log(msg, QSEnumDebugLevel.FATAL, programe);
-        }
-
-        public static void Warn(string msg, string programe = null)
-        {
-            Log(msg, QSEnumDebugLevel.WARN, programe);
-        }
-        #endregion
 
 
 

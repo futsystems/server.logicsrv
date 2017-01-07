@@ -8,13 +8,6 @@ namespace TradingLib.API
     /// </summary>
     public enum QSEnumAccountCategory
     {
-        //[Description("模拟交易帐号")]
-        //SIMULATION,
-        //[Description("实盘交易帐号")]
-        //REAL,
-        //[Description("配资客户")]
-        //LOANNEE,
-
         /// <summary>
         /// 子帐户可以用于交易客户端登入
         /// 同时接受交易客户端提交的交易指令

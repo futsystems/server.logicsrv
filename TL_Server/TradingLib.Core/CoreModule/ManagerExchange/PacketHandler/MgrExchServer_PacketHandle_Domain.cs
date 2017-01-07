@@ -167,7 +167,7 @@ namespace TradingLib.Core
                     Manager mgr = domain.GetRootManager();
                     if (mgr == null)
                     {
-                        Util.Warn("Domain:" + domain.Name + " 没有对应的Root Manager");
+                        logger.Warn("Domain:" + domain.Name + " 没有对应的Root Manager");
                         
                         Manager toadd = new Manager();
                         toadd.Login = string.Format("admin-{0}", domain.ID);

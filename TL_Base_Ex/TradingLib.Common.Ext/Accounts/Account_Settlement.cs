@@ -114,7 +114,7 @@ namespace TradingLib.Common
                 ///0.检查对应交易所是否有结算记录
                 if (settlementlist.Any(settle => settle.Settleday == settleday && settle.Exchange == exchange.EXCode))
                 {
-                    Util.Warn(string.Format("Account:{0} have setteld in Exchange:{1} for date:{2}", this.ID, exchange.EXCode, settleday));
+                    logger.Warn(string.Format("Account:{0} have setteld in Exchange:{1} for date:{2}", this.ID, exchange.EXCode, settleday));
                     return;
                 }
 
@@ -298,7 +298,7 @@ namespace TradingLib.Common
             }
             catch (Exception ex) //增加单个帐户交易所结算报错
             {
-                Util.Error(string.Format("Account:{0} 交易所结算失败:{1}", this.ID, ex.ToString()));
+                logger.Error(string.Format("Account:{0} 交易所结算失败:{1}", this.ID, ex.ToString()));
             }
 
         }

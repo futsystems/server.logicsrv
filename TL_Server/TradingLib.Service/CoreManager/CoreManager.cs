@@ -31,7 +31,7 @@ namespace TradingLib.ServiceManager
 
         private IModuleExCore _messageExchagne;//交易消息交换
         private IModuleMgrExchange _managerExchange;//管理消息交换
-        private IModuleAPIExchange _webmsgExchange;//Web端消息响应
+        //private IModuleAPIExchange _webmsgExchange;//Web端消息响应
 
         private IModuleClearCentre _clearCentre;//清算服务
         private IModuleAccountManager _acctmanger;//交易帐户管理服务
@@ -94,8 +94,8 @@ namespace TradingLib.ServiceManager
             logger.Info("[INIT CORE] MgrExchServer");//服务端管理界面,提供管理客户端接入,查看并设置相关数据
             _managerExchange = TLCtxHelper.Scope.Resolve<IModuleMgrExchange>();//初始化管理服务
 
-            logger.Info("[INIT CORE] WebMsgExchServer");
-            _webmsgExchange = TLCtxHelper.Scope.Resolve<IModuleAPIExchange>();
+            //logger.Info("[INIT CORE] WebMsgExchServer");
+            //_webmsgExchange = TLCtxHelper.Scope.Resolve<IModuleAPIExchange>();
 
             logger.Info("[INIT CORE] TaskCentre");
             _taskcentre = TLCtxHelper.Scope.Resolve<IModuleTaskCentre>();//初始化任务执行中心 在所有组件加载完毕后 在统一加载定时任务设置
@@ -131,7 +131,7 @@ namespace TradingLib.ServiceManager
 
             _managerExchange.Start();
 
-            _webmsgExchange.Start();
+            //_webmsgExchange.Start();
          
             _messageExchagne.Start();//交易服务启动
 
@@ -149,7 +149,7 @@ namespace TradingLib.ServiceManager
 
             _messageExchagne.Stop();//正常停止
 
-            _webmsgExchange.Stop();//web消息接口
+            //_webmsgExchange.Stop();//web消息接口
 
             _managerExchange.Stop();//与message类似
 

@@ -5,12 +5,14 @@ using System.Linq;
 using System.Xml;
 using System.IO;
 using System.Text;
-
+using Common.Logging;
 
 namespace TradingLib.Common
 {
     public class XMLRspInfoTracker
     {
+        ILog logger = LogManager.GetLogger("XMLRspInfoTracker");
+
         ConcurrentDictionary<string, XMLRspInfo> xmlkeymap = new ConcurrentDictionary<string, XMLRspInfo>();
         ConcurrentDictionary<int, XMLRspInfo> xmlcodemap = new ConcurrentDictionary<int, XMLRspInfo>();
 
@@ -110,7 +112,7 @@ namespace TradingLib.Common
                 }
                 catch (Exception ex)
                 {
-                    Util.Debug("error:" + ex.ToString());
+                    logger.Error("error:" + ex.ToString());
                 }
 
             }

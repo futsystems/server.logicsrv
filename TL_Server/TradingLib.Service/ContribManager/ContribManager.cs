@@ -48,19 +48,19 @@ namespace TradingLib.ServiceManager
             IContribPlugin plugin = PluginHelper.LoadContribPlugin(className);
             if (plugin == null)
             {
-                TLCtxHelper.Ctx.debug("扩展模块:" + className + "不存在,请提供正确的扩展模块名称");
+                logger.Error("扩展模块:" + className + "不存在,请提供正确的扩展模块名称");
                 return;
             }
             if (contribmap.Keys.Contains(className))
             {
-                Util.Debug("扩展模块:" + className + "已经加载,请勿重复加载");
+                logger.Error("扩展模块:" + className + "已经加载,请勿重复加载");
                 return;
             }
 
             IContrib contrib = PluginHelper.ConstructContrib(plugin.ContribClassName);
             if (contrib == null)
             {
-                TLCtxHelper.Ctx.debug("扩展模块:" + className + "加载失败,请查询相关日志");
+                logger.Error("扩展模块:" + className + "加载失败,请查询相关日志");
                 return;
             }
             contribmap.TryAdd(className, contrib);
@@ -120,7 +120,7 @@ namespace TradingLib.ServiceManager
                 }
                 catch (Exception ex)
                 {
-                    Util.Debug("start:" + key + "error:" + ex.ToString());
+                    logger.Error("start:" + key + "error:" + ex.ToString());
                 }
             
             }
@@ -141,7 +141,7 @@ namespace TradingLib.ServiceManager
                 }
                 catch (Exception ex)
                 {
-                    Util.Debug("stop:" + key + "error:" + ex.ToString());
+                    logger.Error("stop:" + key + "error:" + ex.ToString());
                 }
             }
         }

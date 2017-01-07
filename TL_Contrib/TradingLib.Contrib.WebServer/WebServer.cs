@@ -8,7 +8,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using TradingLib.API;
 using TradingLib.Common;
-
+using Common.Logging;
 
 namespace TradingLib.Contrib.WebPortal
 {
@@ -18,6 +18,9 @@ namespace TradingLib.Contrib.WebPortal
         private int m_iPort = 0;
         HttpListener m_HttpListener = new HttpListener();
         Dictionary<string, WebPage> m_Pages = new Dictionary<string, WebPage>();
+
+        ILog logger = LogManager.GetLogger("WebServer");
+
         public WebServer(int iPort, List<WebPage> WebPages)
         {
             m_iPort = iPort;
@@ -70,7 +73,7 @@ namespace TradingLib.Contrib.WebPortal
                     if (m_Pages.Count > 0)
                     {
                         string rawurl = Context.Request.RawUrl.ToLower();
-                        Util.Debug("rawurl:" + rawurl);
+                        logger.Debug("rawurl:" + rawurl);
                         //以api开头的进入api查询系统
                         if (rawurl.StartsWith("/api"))
                         {
@@ -97,7 +100,7 @@ namespace TradingLib.Contrib.WebPortal
                                 }
                                 else
                                 {
-                                    Util.Debug("访问键值:" + cmdkey.ToString());
+                                    logger.Debug("访问键值:" + cmdkey.ToString());
                                     WebPage tmp = new WebPage("/", htmlwrapper(TLCtxHelper.Ctx.PrintHttpAPI(cmdkey)));
                                     Param = new KeyValuePair<HttpListenerContext, WebPage>(Context, tmp);
                                     /*

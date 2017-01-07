@@ -65,7 +65,7 @@ namespace RuleSet2.Account
                     {
                         iswarnning = true;
                         this.Account.Warn(true, "达到警告线");
-                        Util.Debug("帐户警告开启~~~~~~~~~~~~~~~~~~~");
+                        //Util.Debug("帐户警告开启~~~~~~~~~~~~~~~~~~~");
                     }
                 }
                 else
@@ -74,7 +74,7 @@ namespace RuleSet2.Account
                     {
                         iswarnning = false;
                         this.Account.Warn(false, "");
-                        Util.Debug("帐户警告关闭~~~~~~~~~~~~~~~~~~~");
+                        //Util.Debug("帐户警告关闭~~~~~~~~~~~~~~~~~~~");
                     }
                 }
             }

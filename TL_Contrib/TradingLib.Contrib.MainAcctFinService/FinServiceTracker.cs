@@ -27,7 +27,7 @@ namespace TradingLib.Contrib.MainAcctFinService
                 }
                 else
                 {
-                    Util.Warn(string.Format("Account:{0} already have finservice registed", fs.Account));
+                    //Util.Warn(string.Format("Account:{0} already have finservice registed", fs.Account));
                 }
             }
         }
@@ -104,7 +104,7 @@ namespace TradingLib.Contrib.MainAcctFinService
                     }
                     else
                     {
-                        Util.Warn(string.Format("Account:{0} already have finservice registed", target.Account));
+                        //Util.Warn(string.Format("Account:{0} already have finservice registed", target.Account));
                     }
                 }
                 

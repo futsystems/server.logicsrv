@@ -45,6 +45,7 @@
     </Reference>
     <Reference Include="Newtonsoft.Json">
       <HintPath>..\..\lib\Newtonsoft.Json.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="SuperSocket.Common">
       <HintPath>..\..\lib\supersocket\1.6.6\SuperSocket.Common.dll</HintPath>

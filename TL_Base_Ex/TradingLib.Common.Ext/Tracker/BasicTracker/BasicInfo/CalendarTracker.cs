@@ -6,7 +6,6 @@ using System.IO;
 using TradingLib.API;
 using Common.Logging;
 
-
 namespace TradingLib.Common
 {
     /// <summary>
@@ -38,7 +37,7 @@ namespace TradingLib.Common
                 }
                 catch (Exception ex)
                 {
-                    Util.Error(string.Format("load calendar:{0} error:{1}", fn, ex.ToString()));
+                    logger.Error(string.Format("load calendar:{0} error:{1}", fn, ex.ToString()));
                 }
             }
             _default = new Calendar();

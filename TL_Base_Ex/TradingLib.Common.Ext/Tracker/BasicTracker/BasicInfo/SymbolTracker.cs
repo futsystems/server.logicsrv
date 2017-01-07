@@ -606,7 +606,7 @@ namespace TradingLib.Common
 
                 if (target.security_fk == 0 || target.SecurityFamily == null)
                 {
-                    Util.Debug("合约对象没有品种数据,不插入该合约信息");
+                    Console.WriteLine("合约对象没有品种数据,不插入该合约信息");
                 }
                 ORM.MBasicInfo.InsertSymbol(target);
                 //TOD SymbolKey

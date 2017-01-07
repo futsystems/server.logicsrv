@@ -83,7 +83,7 @@ namespace TradingLib.Common
                             else
                             {
 
-                                Util.Error(string.Format("QryCanOpenSize[MarginSizde] symbol:{0} side:{1} bigside:{2} bighold:{3} smalhold:{4} netfronzen:{5}  bigpending:{6} smallpending:{7} | fund:{8} prelot:{9}", symbol.Symbol, side, ms.MarginSide, ms.BigHoldSize, ms.SmallHoldSize, ms.NetFronzenSize, ms.BigPendingOpenSize, ms.SmallPendingOpenSize, avabilefund, fundperlot));
+                                logger.Error(string.Format("QryCanOpenSize[MarginSizde] symbol:{0} side:{1} bigside:{2} bighold:{3} smalhold:{4} netfronzen:{5}  bigpending:{6} smallpending:{7} | fund:{8} prelot:{9}", symbol.Symbol, side, ms.MarginSide, ms.BigHoldSize, ms.SmallHoldSize, ms.NetFronzenSize, ms.BigPendingOpenSize, ms.SmallPendingOpenSize, avabilefund, fundperlot));
                                 //如果查询大边可开数量
                                 if (side == ms.MarginSide)
                                 {

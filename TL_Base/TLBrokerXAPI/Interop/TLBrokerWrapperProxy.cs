@@ -281,7 +281,7 @@ namespace TradingLib.BrokerXAPI.Interop
             }
             catch (Exception ex)
             {
-                Util.Error("QryInstrument Error:" + ex.ToString());
+                logger.Error("QryInstrument Error:" + ex.ToString());
                 return false;
             }
         }

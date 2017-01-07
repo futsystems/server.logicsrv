@@ -6,6 +6,7 @@ using TradingLib.API;
 using TradingLib.Common;
 using System.Threading;
 using System.Runtime.Remoting.Messaging;
+using Common.Logging;
 
 namespace TradingLib.Common
 {
@@ -43,14 +44,16 @@ namespace TradingLib.Common
     /// <summary>
     /// 延迟调用对象
     /// </summary>
-    public class Deferred:IDeferredResult
+    public class Deferred : IDeferredResult
     {
+        static ILog logger = LogManager.GetLogger("Deferred");
+
         DeferredCall _call = null;
         object[] _args = null;
 
-        public Deferred(DeferredCall call,object[] args=null)
+        public Deferred(DeferredCall call, object[] args = null)
         {
-            _call= call;
+            _call = call;
             _args = args;
         }
 
@@ -62,7 +65,7 @@ namespace TradingLib.Common
             //从操作结果async中还原委托
             DeferredCall proc = ((AsyncResult)async).AsyncDelegate as DeferredCall;
             _result = proc.EndInvoke(async);
-            Util.Debug("Deferred Done");
+            logger.Debug("Deferred Done");
             if (_anyerror)
             {
                 try
@@ -71,7 +74,7 @@ namespace TradingLib.Common
                 }
                 catch (Exception ex)
                 {
-                    Util.Debug("Deferred Handle Error error:" + ex.ToString());
+                    logger.Error("Deferred Handle Error error:" + ex.ToString());
                 }
             }
             else
@@ -82,7 +85,7 @@ namespace TradingLib.Common
                 }
                 catch (Exception ex)
                 {
-                    Util.Debug("Deferred Handle Success error:" + ex.ToString());
+                    logger.Error("Deferred Handle Success error:" + ex.ToString());
                 }
             }
         }
@@ -104,8 +107,8 @@ namespace TradingLib.Common
         {
             DeferredCall deleg = new DeferredCall(WrapperCall);
             deleg.BeginInvoke(_args, DeferredDone, null);
-            Util.Debug("Deferred Return");
-            
+            //Util.Debug("Deferred Return");
+
         }
 
         public bool AnyError { get { return _anyerror; } }
@@ -122,11 +125,11 @@ namespace TradingLib.Common
             }
             catch (Exception ex)
             {
-                Util.Error("Deferred run error:" + ex.ToString());
+                logger.Error("Deferred run error:" + ex.ToString());
                 _anyerror = true;
                 return null;
             }
-            
+
         }
 
         event DeferredCallBack SuccessEvent = delegate { };
@@ -142,7 +145,7 @@ namespace TradingLib.Common
         public Deferred OnSuccess(DeferredCallBack cb)
         {
             //绑定正常回调
-            SuccessEvent+=new DeferredCallBack(cb);
+            SuccessEvent += new DeferredCallBack(cb);
             return this;
         }
 
@@ -161,7 +164,7 @@ namespace TradingLib.Common
         public Deferred OnError(DeferredCallBack cb)
         {
             //绑定错误回调
-            ErrorEvent +=new DeferredCallBack(cb);
+            ErrorEvent += new DeferredCallBack(cb);
             return this;
         }
 
@@ -175,5 +178,5 @@ namespace TradingLib.Common
 
     //将某个查询封装成带延迟的同步调用，这样就可以将该调用封装如延迟调用对象进行异步调用，并触发成功或失败对应的回调
 
-    
+
 }

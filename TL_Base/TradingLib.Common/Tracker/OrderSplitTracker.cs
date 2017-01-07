@@ -6,7 +6,7 @@ using System.Text;
 
 using TradingLib.API;
 using TradingLib.Common;
-
+using Common.Logging;
 
 namespace TradingLib.Common
 {
@@ -36,6 +36,7 @@ namespace TradingLib.Common
     /// </summary>
     public class OrderSplitTracker
     {
+        static ILog logger = LogManager.GetLogger("OrderSplitTracker");
         string _token = string.Empty;
         public OrderSplitTracker(string name)
         {
@@ -212,7 +213,7 @@ namespace TradingLib.Common
         /// <param name="fathOrder"></param>
         public void SendFatherOrder(Order fathOrder,List<Order> sons=null)
         {
-            Util.Info("OrderSplitTracker[" + this.Token + "] Send FatherOrder:" + fathOrder.GetOrderInfo());
+            logger.Info("OrderSplitTracker[" + this.Token + "] Send FatherOrder:" + fathOrder.GetOrderInfo());
             //1.分拆委托
 
             List<Order> sonOrders = (sons==null?SplitOrder(fathOrder):sons);//分拆该委托 如果发送委托时候已经指定了子委托
@@ -243,7 +244,7 @@ namespace TradingLib.Common
             //同步本地状态 接口发送委托 依靠orderstatus 来判断委托是否发送成功
             fathOrder.Status = fo.Status;
 
-            Util.Info("父子委托关系链条 " + fathOrder.id + "->[" + string.Join(",", sonOrders.Select(so => so.id)) + "] CopyID:" + fo.CopyID.ToString());
+            logger.Info("父子委托关系链条 " + fathOrder.id + "->[" + string.Join(",", sonOrders.Select(so => so.id)) + "] CopyID:" + fo.CopyID.ToString());
         }
 
         /// <summary>
@@ -255,14 +256,14 @@ namespace TradingLib.Common
             Order fatherOrder = FatherID2Order(oid);
             if (fatherOrder != null)
             {
-                Util.Info("OrderSplitTracker[" + this.Token + "] 取消父委托:" + fatherOrder.GetOrderInfo());
+                logger.Info("OrderSplitTracker[" + this.Token + "] 取消父委托:" + fatherOrder.GetOrderInfo());
                 List<Order> sonOrders = FatherID2SonOrders(fatherOrder.id);//获得子委托
 
                 //如果所有委托均不可撤销 正常委托Opened PartFilled是可以撤销的
                 //如果委托处于提交状态但是没有获得CTP回报,此时委托处于Submited,但是如果这个时候撤单就会发生处于submit 不进行撤单，但是后来委托回报又回来了，则状态会发生混乱
                 if (sonOrders.All(o => !o.IsPending())) //处于Submit的委托 可能CTP回报回报慢导致状态没有进入Opened
                 {
-                    Util.Info(string.Format("All SonOrder Can not be canceled,father status:{0} notify father cancel internal", fatherOrder.Status));
+                    logger.Info(string.Format("All SonOrder Can not be canceled,father status:{0} notify father cancel internal", fatherOrder.Status));
                     //如果子委托全部为拒绝 则父委托为拒绝
                     if (sonOrders.All(o => o.Status == QSEnumOrderStatus.Reject))
                     {
@@ -297,7 +298,7 @@ namespace TradingLib.Common
             }
             else
             {
-                Util.Warn("Order:" + oid.ToString() + " is not in platform_order_map in broker");
+                logger.Warn("Order:" + oid.ToString() + " is not in platform_order_map in broker");
             }
         }
         #endregion
@@ -375,7 +376,7 @@ namespace TradingLib.Common
             fatherOrder.Comment = o.Comment;
             if (fatherOrder.Status != QSEnumOrderStatus.Canceled && fatherOrder.Status != QSEnumOrderStatus.Reject)
             {
-                Util.Info("fater order in pending stage,filledsize:" + fatherOrder.FilledSize.ToString() + " totalsize:" + fatherOrder.TotalSize.ToString());
+                logger.Info("fater order in pending stage,filledsize:" + fatherOrder.FilledSize.ToString() + " totalsize:" + fatherOrder.TotalSize.ToString());
                 if (fatherOrder.FilledSize == 0)//成交数量为0 则为open状态
                 {
                     fatherOrder.Status = QSEnumOrderStatus.Opened;
@@ -390,11 +391,11 @@ namespace TradingLib.Common
                 }
             }
 
-            Util.Info("更新父委托:" + fatherOrder.GetOrderInfo());
+            logger.Info("更新父委托:" + fatherOrder.GetOrderInfo());
             //委托状态没有变化 并且 成交数量也没有变化
             if (oldstatus == fatherOrder.Status && !fillsizechanged)
             {
-                Util.Debug("FatherOrder do not chagen,will not notify client");
+                logger.Debug("FatherOrder do not chagen,will not notify client");
             }
             else
             {
@@ -427,7 +428,7 @@ namespace TradingLib.Common
             //远端成交编号
             //fill.BrokerTradeID = trade.BrokerTradeID;
             //其余委托类的相关字段在Order处理中获得
-            Util.Info("获得父成交:" + fill.GetTradeDetail());
+            logger.Info("获得父成交:" + fill.GetTradeDetail());
             GotFatherFill(fill);
         }
 
@@ -460,7 +461,7 @@ namespace TradingLib.Common
             //如果部分拒绝如何？另一部分处于成交状态，或者等待成就状态
             //fatherOrder.Status = QSEnumOrderStatus.Reject;
             fatherOrder.Comment = info.ErrorMessage;
-            Util.Info("更新父委托:" + fatherOrder.GetOrderInfo());
+            logger.Info("更新父委托:" + fatherOrder.GetOrderInfo());
             //父委托已经对外回报过拒绝则不再对外回报
             if (!isrejected)
                 GotFatherOrderError(fatherOrder, info);

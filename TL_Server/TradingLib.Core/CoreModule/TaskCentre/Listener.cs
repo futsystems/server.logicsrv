@@ -5,7 +5,7 @@ using System.Text;
 using TradingLib.API;
 using TradingLib.Common;
 using Quartz;
-
+using Common.Logging;
 
 namespace TradingLib.Core
 {
@@ -14,6 +14,7 @@ namespace TradingLib.Core
         string _name = "JobListener";
         public string Name { get { return _name; } }
 
+        static ILog logger = LogManager.GetLogger("JobListener");
         /// <summary>
         /// 任务即将运行
         /// </summary>
@@ -69,7 +70,7 @@ namespace TradingLib.Core
             }
             catch (Exception ex)
             {
-                Util.Error("JobExecuted Handle  Error:" + ex.ToString(),"JobListener");
+                logger.Error("JobExecuted Handle  Error:" + ex.ToString());
             }
         }
     }
@@ -79,7 +80,7 @@ namespace TradingLib.Core
         {
 
         }
-
+        static ILog logger = LogManager.GetLogger("TriggerListener");
         string _name = "TriggerListener";
         public string Name { get { return _name; } }
 
@@ -119,7 +120,7 @@ namespace TradingLib.Core
             }
             catch (Exception ex)
             {
-                Util.Error("TriggerMisfired Handle Error:" + ex.ToString());
+                logger.Error("TriggerMisfired Handle Error:" + ex.ToString());
             }
         }
 

@@ -7,7 +7,7 @@ using System.Reflection;
 using TradingLib.API;
 using TradingLib.Common;
 using TradingLib.Mixins.Json;
-
+using Common.Logging;
 
 namespace TradingLib.Common
 {
@@ -25,6 +25,8 @@ namespace TradingLib.Common
          * IOrderCheck      委托检查插件
          * 
          * **/
+
+        ILog logger = LogManager.GetLogger("PluginFinder");
 
         public List<Type> DesiredInterfaces;//需要加载的插件Interface
         public Dictionary<Type, List<Type>> AvailableTypes;//不同Interface所对应的有效插件类别
@@ -348,7 +350,7 @@ namespace TradingLib.Common
                         }
                         catch (Exception ex)
                         {
-                            Util.Debug("LoadImplementors error" + ex.ToString());
+                            logger.Error("LoadImplementors error" + ex.ToString());
                         }
                     }
 
@@ -393,8 +395,8 @@ namespace TradingLib.Common
                                     continue;
                                 }
                                 catch (Exception ex)
-                                { 
-									Util.Error("plugin parse error:"+ex.ToString());
+                                {
+                                    logger.Error("plugin parse error:" + ex.ToString());
                                 }
                             
                             }
@@ -402,8 +404,8 @@ namespace TradingLib.Common
                     }
                 }
                 catch (Exception ex)
-                { 
-					Util.Error("pluginhelper LoadImplementors error:" + ex.ToString ());
+                {
+                    logger.Error("pluginhelper LoadImplementors error:" + ex.ToString());
                 }
                 
             }
@@ -637,7 +639,7 @@ namespace TradingLib.Common
             ParameterInfo[] parameters = method.GetParameters();
             if (args.Count != parameters.Length)
             {
-                Util.Debug("args count do not math method's parameters count");
+                logger.Debug("args count do not math method's parameters count");
 
             }
             object[] objArray = null;
@@ -878,7 +880,7 @@ namespace TradingLib.Common
                 }
                 catch (Exception ex)
                 {
-                    Util.Debug("GetImplementors error" + ex.ToString());
+                    logger.Error("GetImplementors error" + ex.ToString());
                 }
             }
             return types;

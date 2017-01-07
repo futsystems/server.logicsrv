@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using TradingLib.API;
 using TradingLib.Mixins.Json;
+using Common.Logging;
 
 namespace TradingLib.Common
 {
@@ -48,6 +49,8 @@ namespace TradingLib.Common
     /// </summary>
     public class RouterGroupImpl : RouterGroupSetting, RouterGroup
     {
+        static ILog logger = LogManager.GetLogger("RouterGroup");
+
         ConcurrentDictionary<int, RouterItem> routeritemmap = new ConcurrentDictionary<int, RouterItem>();
 
         /// <summary>
@@ -137,7 +140,7 @@ namespace TradingLib.Common
             }
             int idx = rd.Next(0, brokers.Length);
             IBroker broker = brokers[idx];
-            Util.Info(string.Format("Stochastic Strategy Select Broker[{0}]", broker.Token));
+            logger.Info(string.Format("Stochastic Strategy Select Broker[{0}]", broker.Token));
             return broker;
         }
 
@@ -150,7 +153,7 @@ namespace TradingLib.Common
                 return null;
             }
             IBroker broker = brokers[0];
-            Util.Info(string.Format("Priority Strategy Select Broker[{0}]", broker.Token));
+            logger.Info(string.Format("Priority Strategy Select Broker[{0}]", broker.Token));
             return broker;
         }
 
@@ -199,7 +202,7 @@ namespace TradingLib.Common
         {
             if (routeritemmap.Keys.Contains(item.ID))
             {
-                Util.Debug(string.Format("RouteItem[{0}] existed,can not append again",item.ID));
+                logger.Debug(string.Format("RouteItem[{0}] existed,can not append again", item.ID));
                 return;
             }
             //将路由条目添加到路由组
@@ -222,7 +225,7 @@ namespace TradingLib.Common
         {
             if (!routeritemmap.Keys.Contains(item.ID))
             {
-                Util.Debug(string.Format("RouteItem[{0}] do not exist,can not remove", item.ID));
+                logger.Debug(string.Format("RouteItem[{0}] do not exist,can not remove", item.ID));
                 return;
             }
             RouterItem rmitem = null;

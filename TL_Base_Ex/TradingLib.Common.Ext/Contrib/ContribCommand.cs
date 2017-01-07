@@ -54,7 +54,7 @@ namespace TradingLib.Common
 
         public object Execute(ISession session, string parameters, bool istnetstring = false)
         {
-            Util.Debug("Execute got parameters:" + parameters + " argsnum:" + _argslist.Count.ToString());
+            //logger.Debug("Execute got parameters:" + parameters + " argsnum:" + _argslist.Count.ToString());
             string[] p = new string[] { };
             switch (_cmdinfo.Attr.ArgParseType)
             {

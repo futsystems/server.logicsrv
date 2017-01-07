@@ -5,6 +5,7 @@ using System.Threading;
 using System.Text;
 using TradingLib.API;
 using TradingLib.Common;
+using Common.Logging;
 
 
 namespace TradingLib.Contrib.CLI
@@ -21,6 +22,8 @@ namespace TradingLib.Contrib.CLI
         private Dictionary<string, ContribCommand> m_Cmds = new Dictionary<string, ContribCommand>();
         private Socket m_ListeningSocket = null;
         private List<Socket> m_Connections = new List<Socket>();
+        ILog logger = LogManager.GetLogger("TelnetServer");
+
         public TelnetServer(int iPort, List<ContribCommand> Cmds)
         {
             m_iPort = iPort;
@@ -81,7 +84,7 @@ namespace TradingLib.Contrib.CLI
             try
             {
                 //Open a listener socket and accept a connections
-                Util.Debug("Telnet server start listening at:" + m_iPort.ToString());
+                logger.Debug("Telnet server start listening at:" + m_iPort.ToString());
                 m_ListeningSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
                 m_ListeningSocket.Bind(new System.Net.IPEndPoint(0, m_iPort));
                 m_ListeningSocket.Listen(1);
@@ -193,7 +196,7 @@ namespace TradingLib.Contrib.CLI
                     sCmd = sCmd.Replace("\n", "");
                     sCmd = sCmd.Replace("\r", "");
 
-                    Util.Debug("Cli Command str:" + sCmd);
+                    logger.Debug("Cli Command str:" + sCmd);
 
                     string[] cmdstrlsit = sCmd.Split(' ');
                     string cmd = "";

@@ -361,7 +361,7 @@ namespace TradingLib.Common
                 //从行情更新昨结算价
                 if (_lastsettlementprice == null && k.PreSettlement > 0 && (double)k.PreSettlement < double.MaxValue)
                 {
-                    Util.Debug("tick:" + k.ToString() + " presettlement:" + k.PreSettlement.ToString());
+                    logger.Debug("tick:" + k.ToString() + " presettlement:" + k.PreSettlement.ToString());
                     _lastsettlementprice = k.PreSettlement;
                     //更新所有持仓明细的昨日结算价格
                     //昨日持仓明细在YdRef保存的不用更新 该数据用于获得隔夜仓的成本即昨天的结算价为成本
@@ -712,7 +712,7 @@ namespace TradingLib.Common
                 }
                 catch (Exception ex)
                 {
-                    Util.Fatal("close position error:" + ex.ToString());
+                    logger.Fatal("close position error:" + ex.ToString());
                 }
                 if (closedetail != null)
                 {
@@ -740,7 +740,7 @@ namespace TradingLib.Common
                 }
                 catch (Exception ex)
                 {
-                    Util.Fatal("close position error:" + ex.ToString());
+                    logger.Fatal("close position error:" + ex.ToString());
                 }
                 if (closedetail != null)
                 {

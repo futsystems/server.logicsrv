@@ -127,7 +127,7 @@ namespace TradingLib.ORM
             using (DBMySql db = new DBMySql())
             {
                 string query = GetInsertString(access);
-                Util.Debug("insert string:" + query);
+                //Util.Debug("insert string:" + query);
                 int row = db.Connection.Execute(query);
                 SetIdentity(db.Connection, id => access.id = id, "id", "cfg_permission_template");
                 return row > 0;
@@ -138,7 +138,7 @@ namespace TradingLib.ORM
             using (DBMySql db = new DBMySql())
             {
                 string query = GetUpdateString(access);
-                Util.Debug("update string:" + query);
+                //Util.Debug("update string:" + query);
                 return db.Connection.Execute(query)>= 0;
             }
         }

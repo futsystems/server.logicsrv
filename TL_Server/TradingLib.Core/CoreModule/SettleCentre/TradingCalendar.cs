@@ -5,12 +5,14 @@ using System.Text;
 using System.IO;
 using TradingLib.API;
 using TradingLib.Common;
+using Common.Logging;
 
 
 namespace TradingLib.Core
 {
     public class TradingCalendar
     {
+        static ILog logger = LogManager.GetLogger("TradingCalendar");
         static List<string> festivallist = new List<string>();
 
         static TradingCalendar()
@@ -27,7 +29,7 @@ namespace TradingLib.Core
             festivallist.Clear();
             if (!File.Exists(filename))
             {
-                Util.Debug("There is no festival setted");
+                logger.Error("There is no festival setted");
                 return;
             }
 

@@ -60,7 +60,6 @@
     <Compile Include="EnumActionCheckResult.cs" />
     <Compile Include="Enums.cs" />
     <Compile Include="Module\IModuleAccountManager.cs" />
-    <Compile Include="Module\IModuleAPIExchange.cs" />
     <Compile Include="Module\IModuleClearCentre.cs" />
     <Compile Include="Module\IModuleDataRepository.cs" />
     <Compile Include="Module\IModuleDataRouter.cs" />

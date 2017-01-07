@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Text;
 using TradingLib.API;
+using Common.Logging;
 
 namespace TradingLib.Common
 {
@@ -11,6 +12,8 @@ namespace TradingLib.Common
     /// </summary>
     public class AsyncResponse
     {
+        ILog logger = LogManager.GetLogger("AsyncResponse");
+
         const int MAXTICK = 10000;
         const int MAXIMB = 100000;
         RingBuffer<Tick> _tickcache;
@@ -84,8 +87,8 @@ namespace TradingLib.Common
                 }
                 catch (Exception ex)
                 {
-                    
-                    Util.Debug("process tick error:" + ex.ToString());
+
+                    logger.Debug("process tick error:" + ex.ToString());
                 }
             }
         }

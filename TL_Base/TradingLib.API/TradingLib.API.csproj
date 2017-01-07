@@ -58,10 +58,8 @@
     <Compile Include="BinaryOption\EnumBinaryOptionTimeSpan.cs" />
     <Compile Include="EnumEquityType.cs" />
     <Compile Include="Message\MessageCodecType.cs" />
-    <Compile Include="Msic\EnumAlgorithm.cs" />
+    <Compile Include="Trading\EnumAlgorithm.cs" />
     <Compile Include="Msic\EnumMarginPrice.cs" />
-    <Compile Include="Msic\EnumTransType.cs" />
-    <Compile Include="Msic\IMGRClient.cs" />
     <Compile Include="Trading\BasicInfo\ITradingRange.cs" />
     <Compile Include="Trading\BasicInfo\SettlementPrice.cs" />
     <Compile Include="BinaryOption\BinaryOptionOrder.cs" />
@@ -75,27 +73,24 @@
     <Compile Include="Trading\EnumSymbolType.cs" />
     <Compile Include="Trading\ExchangeSettlement.cs" />
     <Compile Include="Trading\PowerTransaction.cs" />
-    <Compile Include="Vendor\PositionMetric.cs" />
-    <Compile Include="Vendor\RouterItem.cs" />
-    <Compile Include="Domain\Domain.cs" />
+    <Compile Include="Router\PositionMetric.cs" />
+    <Compile Include="Router\RouterItem.cs" />
+    <Compile Include="Msic\Domain.cs" />
     <Compile Include="Msic\EnumArgParseType.cs" />
     <Compile Include="Msic\EnumConnectorStatus.cs" />
     <Compile Include="Msic\EnumOrderTransferType.cs" />
     <Compile Include="Msic\EnumTaskType.cs" />
-    <Compile Include="Vendor\IVendor.cs" />
-    <Compile Include="Vendor\EnumDataFeedTypes.cs" />
-    <Compile Include="Vendor\RouterGroup.cs" />
+    <Compile Include="Router\EnumDataFeedTypes.cs" />
+    <Compile Include="Router\RouterGroup.cs" />
     <Compile Include="Message\ILocation.cs" />
     <Compile Include="Message\IPacket.cs" />
     <Compile Include="Message\ISession.cs" />
     <Compile Include="Message\RspInfo.cs" />
     <Compile Include="Msic\EnumCashOPSource.cs" />
     <Compile Include="Msic\EnumDebugLevel.cs" />
-    <Compile Include="Msic\EnumLogicStatus.cs" />
-    <Compile Include="Manager\EnumManagerType.cs" />
+    <Compile Include="Msic\EnumManagerType.cs" />
     <Compile Include="Msic\EnumCashOperation.cs" />
-    <Compile Include="Msic\ILogItem.cs" />
-    <Compile Include="Vendor\EnumRouterStrategy.cs" />
+    <Compile Include="Router\EnumRouterStrategy.cs" />
     <Compile Include="Rule\IRuleItem.cs" />
     <Compile Include="Trading\BasicInfo\IMarketTime.cs" />
     <Compile Include="Trading\CommissionConfig.cs" />
@@ -107,13 +102,12 @@
     <Compile Include="Wrapper\IBrokerClearCentre.cs" />
     <Compile Include="Trading\Data\Bar.cs" />
     <Compile Include="Trading\Data\BarList.cs" />
-    <Compile Include="Vendor\IBroker.cs" />
-    <Compile Include="Vendor\IConnecter.cs" />
-    <Compile Include="Vendor\IDataFeed.cs" />
+    <Compile Include="Router\IBroker.cs" />
+    <Compile Include="Router\IConnecter.cs" />
+    <Compile Include="Router\IDataFeed.cs" />
     <Compile Include="Trading\BasicInfo\EnumCountry.cs" />
     <Compile Include="Msic\Delegates.cs" />
     <Compile Include="Msic\Enums.cs" />
-    <Compile Include="Msic\IEmail.cs" />
     <Compile Include="Trading\BasicInfo\IExchange.cs" />
     <Compile Include="Msic\LibDelegates.cs" />
     <Compile Include="Trading\Basket.cs" />
@@ -154,7 +148,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="app.config" />
     <None Include="packages.config">
       <SubType>Designer</SubType>
     </None>

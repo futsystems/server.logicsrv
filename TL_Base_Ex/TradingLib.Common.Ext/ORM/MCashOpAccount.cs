@@ -81,7 +81,7 @@ namespace TradingLib.ORM
             using (DBMySql db = new DBMySql())
             {
                 string query = String.Format("SELECT * FROM log_cashopreq  WHERE status='{0}' || datetime>= '{1}'", QSEnumCashInOutStatus.PENDING, Util.ToTLDateTime(DateTime.Now.AddMonths(-1)));
-                Util.Debug(query);
+                //Util.Debug(query);
                 return db.Connection.Query<JsonWrapperCashOperation>(query);
             }
         }

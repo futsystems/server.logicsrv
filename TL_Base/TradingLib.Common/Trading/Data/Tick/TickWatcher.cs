@@ -5,6 +5,7 @@ using System.Collections.Concurrent;
 using System.Collections;
 using TradingLib.API;
 using System.Threading;
+using Common.Logging;
 
 namespace TradingLib.Common
 {
@@ -13,6 +14,8 @@ namespace TradingLib.Common
     /// </summary>
     public class TickWatcher : GotTickIndicator
     {
+        ILog logger = LogManager.GetLogger("TickWatcher");
+
         public void GotTick(Tick k) { newTick(k); }
         public bool isValid { get { return _continue; } }
         
@@ -176,7 +179,7 @@ namespace TradingLib.Common
                 bool tmatch = Util.FTDIFF(_lasttime, Util.ToTLTime()) < CheckLiveMaxDelaySec;//行情时间在我们设定的延迟范围内
                 //日期和时间均吻合,则表明当前行情系统在线
                 _islive = dmatch && tmatch;
-                Util.Info("TickStream live check status:"+_islive.ToString() +" tickdata:"+k.Date.ToString() +" tick time:"+k.Time.ToString());
+                logger.Info("TickStream live check status:" + _islive.ToString() + " tickdata:" + k.Date.ToString() + " tick time:" + k.Time.ToString());
                 _livecheck = false;
             }
 
@@ -270,7 +273,7 @@ namespace TradingLib.Common
                     int ticktime = _last[sym];
                     if (Util.FTDIFF(ticktime, time) > AlertSecondsWithoutTick)
                     {
-                        Util.Info("time:" + time.ToString() + " sym lasttime:" + _last[sym].ToString());
+                        logger.Info("time:" + time.ToString() + " sym lasttime:" + _last[sym].ToString());
                         c++;
                         GotAlert(sym);
                     }

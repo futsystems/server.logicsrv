@@ -100,8 +100,6 @@
 		<service type="TradingLib.API.ITaskCentre,TradingLib.API.Ex"/>
       </services>
       </component>
-      
-      <component type="TradingLib.Core.WebMsgExchServer,TradingLib.Core" service="TradingLib.API.IModuleAPIExchange,TradingLib.API.Ex" instance-scope="per-lifetime-scope"/>
 
 	  <component type="TradingLib.Core.FollowCentre,TradingLib.Core" instance-scope="per-lifetime-scope">
 	  <services>

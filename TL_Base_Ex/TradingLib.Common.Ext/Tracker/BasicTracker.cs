@@ -65,7 +65,7 @@ namespace TradingLib.Common
         public void Dispose()
         {
             // Do something here
-            Util.Debug("xxxxxxxxx basictracker disposed.....");
+            //Util.Debug("xxxxxxxxx basictracker disposed.....");
         }
 
         public static void DisposeInstance()

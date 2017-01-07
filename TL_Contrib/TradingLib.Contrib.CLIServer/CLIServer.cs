@@ -132,7 +132,7 @@ namespace TradingLib.Contrib.CLI
         [ContribCommandAttr(QSEnumCommandSource.CLI, "pcontrib", "pcontrib [contribId] - print contrib information", "")]
         public string PrintContrib(string contrib)
         {
-            Util.Debug(" run cli command:pcontrib");
+            logger.Debug(" run cli command:pcontrib");
             return TLCtxHelper.Ctx.PrintContrib(contrib);
         }
 
