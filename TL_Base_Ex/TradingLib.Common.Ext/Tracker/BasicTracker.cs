@@ -52,6 +52,9 @@ namespace TradingLib.Common
 
         PowerDataTracker powerdatatracker;
 
+        //结算价维护期
+        SettlementPriceTracker settlementpricetracker;
+
         static BasicTracker()
         {
             defaultinstance = new BasicTracker();
@@ -335,6 +338,19 @@ namespace TradingLib.Common
                 if (defaultinstance.powerdatatracker == null)
                     defaultinstance.powerdatatracker = new PowerDataTracker();
                 return defaultinstance.powerdatatracker;
+            }
+        }
+
+        /// <summary>
+        /// 结算价维护器
+        /// </summary>
+        public static SettlementPriceTracker SettlementPriceTracker
+        {
+            get
+            {
+                if (defaultinstance.settlementpricetracker == null)
+                    defaultinstance.settlementpricetracker = new SettlementPriceTracker();
+                return defaultinstance.settlementpricetracker;
             }
         }
 

@@ -10,7 +10,7 @@ namespace TradingLib.Common
         /// 结算价
         /// 记录了交易所合约的结算价格
         /// </summary>
-    public class MarketData : SettlementPrice
+    public class MarketData
     {
 
         /// <summary>

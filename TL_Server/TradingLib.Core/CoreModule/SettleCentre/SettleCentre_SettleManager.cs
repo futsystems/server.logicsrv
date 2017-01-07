@@ -176,7 +176,7 @@ namespace TradingLib.Core
             int currentday = int.Parse(data["settleday"].ToString());
 
             //发送结算价信息
-            session.ReplyMgr(_settlementPriceTracker[currentday].ToArray());
+            session.ReplyMgr(BasicTracker.SettlementPriceTracker[currentday].ToArray());
         }
 
         /// <summary>
@@ -196,8 +196,8 @@ namespace TradingLib.Core
             var settlementPrice = JsonMapper.ToObject<MarketData>(json);
             if (settlementPrice != null)
             {
-                _settlementPriceTracker.UpdateSettlementPrice(settlementPrice);
-                session.ReplyMgr(_settlementPriceTracker[this.Tradingday, settlementPrice.Symbol]);
+                BasicTracker.SettlementPriceTracker.UpdateSettlementPrice(settlementPrice);
+                session.ReplyMgr(BasicTracker.SettlementPriceTracker[this.Tradingday, settlementPrice.Symbol]);
             }
 
             session.OperationSuccess("结算价更新成功");
@@ -236,10 +236,10 @@ namespace TradingLib.Core
             BasicTracker.SymbolTracker.Reload(this.Tradingday);
 
             //重置结算价格维护器
-            _settlementPriceTracker.Clear(this.Tradingday);
+            BasicTracker.SettlementPriceTracker.Clear(this.Tradingday);
 
             //加载当前交易日的结算价信息
-            _settlementPriceTracker.LoadSettlementPrice(this.Tradingday);
+            BasicTracker.SettlementPriceTracker.LoadSettlementPrice(this.Tradingday);
 
             //重置清算中心 用于加载对应的交易数据
             TLCtxHelper.ModuleClearCentre.Reset();
@@ -251,14 +251,14 @@ namespace TradingLib.Core
             foreach (Position pos in TLCtxHelper.ModuleClearCentre.TotalPositions.Where(pos => !pos.isFlat))
             {
                 //如果该未平持仓没有对应的结算价信息 则我们在list中加入该合约 用于推送到手工结算窗口让管理员进行填写
-                if (_settlementPriceTracker[this.Tradingday, pos.Symbol] == null)
+                if (BasicTracker.SettlementPriceTracker[this.Tradingday, pos.Symbol] == null)
                 {
                     //插入该结算价信息记录 价格为-1
-                    _settlementPriceTracker.UpdateSettlementPrice(new MarketData() { Settlement = -1, SettleDay = this.Tradingday, Symbol = pos.Symbol });
+                    BasicTracker.SettlementPriceTracker.UpdateSettlementPrice(new MarketData() { Settlement = -1, SettleDay = this.Tradingday, Symbol = pos.Symbol });
                 }
                 else
                 {
-                    MarketData d = _settlementPriceTracker[this.Tradingday, pos.Symbol];
+                    MarketData d = BasicTracker.SettlementPriceTracker[this.Tradingday, pos.Symbol];
                     pos.SettlementPrice = d.Settlement;
                     pos.LastSettlementPrice = d.PreSettlement;
                 }

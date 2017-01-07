@@ -515,7 +515,7 @@ namespace TradingLib.Core
                     Tick k = TLCtxHelper.ModuleDataRouter.GetTickSnapshot(symlist[i].Exchange,symlist[i].Symbol);// CmdUtils.GetTickSnapshot(symlist[i].Symbol);
                     if (k == null || !k.IsValid())
                     {
-                        k = TLCtxHelper.ModuleSettleCentre.GetLastTickSnapshot(symlist[i].Symbol);
+                        k = BasicTracker.SettlementPriceTracker.GetLastTickSnapshot(symlist[i].Symbol);
                     }
 
                     //如果没有找到对应的合约则进入下一个合约进行行情数据处理

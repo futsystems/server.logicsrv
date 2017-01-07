@@ -56,10 +56,10 @@
     <Compile Include="BinaryOption\EnumBinaryOptionType.cs" />
     <Compile Include="BinaryOption\EnumBinaryOptionOrderStatus.cs" />
     <Compile Include="BinaryOption\EnumBinaryOptionTimeSpan.cs" />
-    <Compile Include="EnumEquityType.cs" />
+    <Compile Include="Trading\EnumEquityType.cs" />
     <Compile Include="Message\MessageCodecType.cs" />
     <Compile Include="Trading\EnumAlgorithm.cs" />
-    <Compile Include="Msic\EnumMarginPrice.cs" />
+    <Compile Include="Trading\EnumMarginPrice.cs" />
     <Compile Include="Trading\BasicInfo\ITradingRange.cs" />
     <Compile Include="Trading\BasicInfo\SettlementPrice.cs" />
     <Compile Include="BinaryOption\BinaryOptionOrder.cs" />
@@ -76,9 +76,9 @@
     <Compile Include="Router\PositionMetric.cs" />
     <Compile Include="Router\RouterItem.cs" />
     <Compile Include="Msic\Domain.cs" />
-    <Compile Include="Msic\EnumArgParseType.cs" />
-    <Compile Include="Msic\EnumConnectorStatus.cs" />
-    <Compile Include="Msic\EnumOrderTransferType.cs" />
+    <Compile Include="Message\EnumArgParseType.cs" />
+    <Compile Include="Router\EnumConnectorStatus.cs" />
+    <Compile Include="Account\EnumOrderTransferType.cs" />
     <Compile Include="Msic\EnumTaskType.cs" />
     <Compile Include="Router\EnumDataFeedTypes.cs" />
     <Compile Include="Router\RouterGroup.cs" />
@@ -89,7 +89,7 @@
     <Compile Include="Msic\EnumCashOPSource.cs" />
     <Compile Include="Msic\EnumDebugLevel.cs" />
     <Compile Include="Msic\EnumManagerType.cs" />
-    <Compile Include="Msic\EnumCashOperation.cs" />
+    <Compile Include="Trading\EnumCashOperation.cs" />
     <Compile Include="Router\EnumRouterStrategy.cs" />
     <Compile Include="Rule\IRuleItem.cs" />
     <Compile Include="Trading\BasicInfo\IMarketTime.cs" />
@@ -111,7 +111,7 @@
     <Compile Include="Trading\BasicInfo\IExchange.cs" />
     <Compile Include="Msic\LibDelegates.cs" />
     <Compile Include="Trading\Basket.cs" />
-    <Compile Include="Msic\Constants.cs" />
+    <Compile Include="Constants.cs" />
     <Compile Include="Trading\BasicInfo\EnumCurrency.cs" />
     <Compile Include="Msic\GenericTrackerI.cs" />
     <Compile Include="Msic\Imbalance.cs" />

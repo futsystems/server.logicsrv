@@ -613,7 +613,7 @@ namespace Broker.Live
             foreach (var pos in this.GetPositions(exchange).Where(p => !p.isFlat))
             {
                 //设定持仓结算价格
-                SettlementPrice target = TLCtxHelper.ModuleSettleCentre.GetSettlementPrice(settleday, pos.Symbol);
+                MarketData target = BasicTracker.SettlementPriceTracker[settleday, pos.Symbol];
                 if (target != null && target.Settlement > 0)
                 {
                     pos.SettlementPrice = target.Settlement;

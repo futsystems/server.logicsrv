@@ -226,7 +226,6 @@
     <Compile Include="CoreModule\RiskCentre\RiskCentre.cs" />
     <Compile Include="CoreModule\TaskCentre\TaskCentre_CTE.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SettlementPriceTracker.cs" />
     <Compile Include="Base\AsyncTransactionLoger.cs" />
     <Compile Include="Base\TIFEngine.cs" />
     <Compile Include="Base\AsyncServerZ4.cs" />

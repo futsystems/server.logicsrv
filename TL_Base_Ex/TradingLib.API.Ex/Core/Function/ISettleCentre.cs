@@ -37,20 +37,5 @@ namespace TradingLib.API
         /// 下一个结算时间
         /// </summary>
         long NextSettleTime { get; }
-
-        /// <summary>
-        /// 获得某个交易日 某个合约的计算价格
-        /// </summary>
-        /// <param name="settleday"></param>
-        /// <param name="symbol"></param>
-        /// <returns></returns>
-        SettlementPrice GetSettlementPrice(int settleday, string symbol);
-
-        /// <summary>
-        /// 获得某个合约的最后一个行情快照
-        /// </summary>
-        /// <param name="symbol"></param>
-        /// <returns></returns>
-        Tick GetLastTickSnapshot(string symbol);
     }
 }

@@ -58,9 +58,6 @@ namespace TradingLib.Core
         /// </summary>
         public int ResetTime { get { return _resetTime; } }
 
-
-        SettlementPriceTracker _settlementPriceTracker = new SettlementPriceTracker();
-
         ConfigDB _cfgdb;
         
 
@@ -106,7 +103,7 @@ namespace TradingLib.Core
             }
 
             //加载当日结算价数据
-            _settlementPriceTracker.LoadSettlementPrice(this.Tradingday);
+            BasicTracker.SettlementPriceTracker.LoadSettlementPrice(this.Tradingday);
 
             //结算中心创建当前交易日汇率数据
             BasicTracker.ExchangeRateTracker.CreateExchangeRates(this.Tradingday);

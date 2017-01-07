@@ -446,7 +446,7 @@ namespace TradingLib.Core
                     data.UpperLimit = k.UpperLimit;
                     data.Vol = k.Vol;
                 }
-                _settlementPriceTracker.UpdateSettlementPrice(data);
+                BasicTracker.SettlementPriceTracker.UpdateSettlementPrice(data);
             }
         }
 
@@ -459,20 +459,20 @@ namespace TradingLib.Core
         /// <param name="settleday"></param>
         /// <param name="symbol"></param>
         /// <returns></returns>
-        public SettlementPrice GetSettlementPrice(int settleday, string symbol)
-        {
-            return _settlementPriceTracker[settleday, symbol];
-        }
+        //public SettlementPrice GetSettlementPrice(int settleday, string symbol)
+        //{
+        //    return _settlementPriceTracker[settleday, symbol];
+        //}
 
         /// <summary>
         /// 获得某个合约最近保存的行情数据
         /// </summary>
         /// <param name="symbol"></param>
         /// <returns></returns>
-        public Tick GetLastTickSnapshot(string symbol)
-        {
-            return _settlementPriceTracker.GetLastTickSnapshot(symbol);
-        }
+        //public Tick GetLastTickSnapshot(string symbol)
+        //{
+        //    return _settlementPriceTracker.GetLastTickSnapshot(symbol);
+        //}
 
 
     }

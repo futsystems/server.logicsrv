@@ -7,7 +7,7 @@ using TradingLib.Common;
 using TradingLib.ORM;
 
 
-namespace TradingLib.Core
+namespace TradingLib.Common
 {
     /// <summary>
     /// 以结算日为一组

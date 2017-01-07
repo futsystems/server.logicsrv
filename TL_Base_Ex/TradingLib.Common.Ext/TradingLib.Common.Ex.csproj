@@ -113,6 +113,7 @@
     <Compile Include="Tracker\BasicTracker\ConnectorMap\AccountConnectorTracker.cs" />
     <Compile Include="Tracker\BasicTracker\ExchangeRateTracker.cs" />
     <Compile Include="Tracker\BasicTracker\PowrDataTracker.cs" />
+    <Compile Include="Tracker\BasicTracker\SettlementPriceTracker.cs" />
     <Compile Include="Tracker\BasicTracker\Template\CommissionTemplateTracker.cs" />
     <Compile Include="Tracker\BasicTracker\Template\ExStrategyTemplateTracker.cs" />
     <Compile Include="Tracker\BasicTracker\Template\MarginTemplateTracker.cs" />
