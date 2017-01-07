@@ -225,16 +225,11 @@
     <Compile Include="CoreModule\ExCore\MsgExchServer.cs" />
     <Compile Include="CoreModule\RiskCentre\RiskCentre.cs" />
     <Compile Include="CoreModule\TaskCentre\TaskCentre_CTE.cs" />
-    <Compile Include="CoreModule\APIExchange\WebMsgExchServer.cs" />
-    <Compile Include="CoreModule\APIExchange\WebMsgRepServer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SettlementPriceTracker.cs" />
-    <Compile Include="Transport\PushServer.cs" />
-    <Compile Include="Transport\ThroughtPutTracker.cs" />
-    <Compile Include="Transport\ZeromqThroughPut.cs" />
     <Compile Include="Base\AsyncTransactionLoger.cs" />
     <Compile Include="Base\TIFEngine.cs" />
-    <Compile Include="Transport\AsyncServerZ4.cs" />
+    <Compile Include="Base\AsyncServerZ4.cs" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

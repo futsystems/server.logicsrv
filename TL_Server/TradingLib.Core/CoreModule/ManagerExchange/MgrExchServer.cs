@@ -21,9 +21,6 @@ namespace TradingLib.Core
 
         ConcurrentDictionary<string, CustInfoEx> customerExInfoMap = null;
 
-        PushServer _pushserver = new PushServer("121.40.32.76", 8870);
-        //PushServer _pushserver = new PushServer("127.0.0.1", 8870);
-
         public MgrExchServer()
             : base(MgrExchServer.CoreName)
         {
@@ -101,8 +98,6 @@ namespace TradingLib.Core
             try
             {
                 tl.Start();
-                //tl.RestoreSession();
-                _pushserver.Start();
             }
             catch (Exception ex)
             {

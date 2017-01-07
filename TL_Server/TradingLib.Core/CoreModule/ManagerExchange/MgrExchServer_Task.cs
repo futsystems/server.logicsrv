@@ -55,31 +55,6 @@ namespace TradingLib.Core
             return _deployname;
         }
 
-
-
-        [TaskAttr("采集系统状态信息", 10, 0, "定时采集系统状态信息向日志服务器推送")]
-        public void Task_StatusCollect()
-        {
-            object status = new
-            {
-                Deploy = GetDeployName(),
-                Organization = GlobalConfig.Organization,//组织机构
-                UpdateTime = Util.ToTLDateTime(),//最近更新时间
-                DomainNum = BasicTracker.DomainTracker.Domains.Count(),//分区数量
-                ManagerNum = BasicTracker.ManagerTracker.Managers.Count(),//管理员数量
-                ManagerRegistedNum = customerExInfoMap.Values.Count,
-                AccountNum = TLCtxHelper.ModuleAccountManager.Accounts.Count(),//交易帐户数量
-                IsTradingday = true,//TLCtxHelper.ModuleSettleCentre.IsTradingday,//当前是否是交易日
-                SettleNormal = true,//TLCtxHelper.ModuleSettleCentre.IsNormal,//结算中心是否正常
-                SettleMode = TLCtxHelper.ModuleSettleCentre.SettleMode,
-                StartUpTime = TLCtxHelper.StartUpTime,//启动时间
-                InterfaceList = GetInterfaceList(),//ip地址列表
-            };
-
-            _pushserver.Push(status);
-        }
-
-
         DateTime _lastPushAllTime = DateTime.Now;
         int _pushAllDiff = 30;
 
