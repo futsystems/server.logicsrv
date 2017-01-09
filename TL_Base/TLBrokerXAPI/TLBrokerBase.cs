@@ -209,31 +209,25 @@ namespace TradingLib.BrokerXAPI
 
 
         #region 成交侧 交易记录通过事件向外暴露 然后异步更新到数据库
-        public event OrderDelegate NewBrokerOrderEvent;
         protected void LogBrokerOrder(Order o)
         {
-            if (NewBrokerOrderEvent != null)
-                NewBrokerOrderEvent(o);
-        }
-        public event OrderDelegate NewBrokerOrderUpdateEvent;
-        protected void LogBrokerOrderUpdate(Order o)
-        {
-            if (NewBrokerOrderUpdateEvent != null)
-                NewBrokerOrderUpdateEvent(o);
-            
-        }
-        public event FillDelegate NewBrokerFillEvent;
-        protected void LogBrokerTrade(Trade fill)
-        {
-            if (NewBrokerFillEvent != null)
-                NewBrokerFillEvent(fill);
+            TLCtxHelper.ModuleDataRepository.NewOrder(o);
         }
 
-        public event Action<PositionCloseDetail> NewBrokerPositionCloseDetailEvent;
+        protected void LogBrokerOrderUpdate(Order o)
+        {
+            TLCtxHelper.ModuleDataRepository.UpdateOrder(o);
+            
+        }
+
+        protected void LogBrokerTrade(Trade fill)
+        {
+            TLCtxHelper.ModuleDataRepository.NewTrade(fill);
+        }
+
         protected void LogBrokerPositionClose(PositionCloseDetail detail)
         {
-            if (NewBrokerPositionCloseDetailEvent != null)
-                NewBrokerPositionCloseDetailEvent(detail);
+            TLCtxHelper.ModuleDataRepository.NewPositionCloseDetail(detail);
         }
 
 

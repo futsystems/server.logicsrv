@@ -26,14 +26,6 @@ namespace TradingLib.Core
             broker.GotOrderErrorEvent += new OrderErrorDelegate(Broker_GotOrderError);
             broker.GotOrderActionErrorEvent += new OrderActionErrorDelegate(Broker_GotOrderActionError);
             
-            if (broker is TLBrokerBase)
-            {
-                TLBrokerBase brokerbase = broker as TLBrokerBase;
-                brokerbase.NewBrokerOrderEvent += new OrderDelegate(LogBrokerOrderEvent);
-                brokerbase.NewBrokerOrderUpdateEvent += new OrderDelegate(LogBrokerOrderUpdateEvent);
-                brokerbase.NewBrokerFillEvent += new FillDelegate(LogBrokerFillEvent);
-                brokerbase.NewBrokerPositionCloseDetailEvent += new Action<PositionCloseDetail>(LogBrokerPositionCloseDetailEvent);
-            }
         }
 
         void Broker_GotOrderError(Order order, RspInfo error)

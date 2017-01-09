@@ -22,25 +22,5 @@ namespace TradingLib.Core
         {
             TLCtxHelper.ModuleDataRepository.UpdateOrder(o);
         }
-
-        void LogBrokerPositionCloseDetailEvent(PositionCloseDetail obj)
-        {
-            TLCtxHelper.ModuleDataRepository.NewPositionCloseDetail(obj);
-        }
-
-        void LogBrokerFillEvent(Trade t)
-        {
-            TLCtxHelper.ModuleDataRepository.NewTrade(t);
-        }
-
-        void LogBrokerOrderUpdateEvent(Order o)
-        {
-            TLCtxHelper.ModuleDataRepository.UpdateOrder(o);
-        }
-
-        void LogBrokerOrderEvent(Order o)
-        {
-            TLCtxHelper.ModuleDataRepository.NewOrder(o);
-        }
     }
 }
