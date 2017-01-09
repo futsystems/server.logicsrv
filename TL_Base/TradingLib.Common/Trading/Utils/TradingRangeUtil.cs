@@ -6,7 +6,7 @@ using TradingLib.API;
 
 namespace TradingLib.Common
 {
-    public static class UtilTradingRange
+    public static class TradingRangeUtil
     {
 
        

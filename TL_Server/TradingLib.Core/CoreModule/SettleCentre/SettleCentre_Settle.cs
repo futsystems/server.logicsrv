@@ -422,7 +422,7 @@ namespace TradingLib.Core
             //获得交易所所有合约结算价格
             foreach (var sym in BasicTracker.DomainTracker.SuperDomain.GetSymbols().Where(s=>s.SecurityFamily.Exchange.EXCode == exchange.EXCode))
             {
-                MarketData data = new MarketData();
+                SettlementPrice data = new SettlementPrice();
                 data.Symbol = sym.Symbol;
                 data.Exchange = exchange.EXCode;
                 data.SettleDay = settleday;

@@ -6,7 +6,7 @@ using TradingLib.API;
 
 namespace TradingLib.Common
 {
-    public static class TradeUtils
+    public static class TradeUtil
     {
 
         public static long GetDateTime(this Trade f)

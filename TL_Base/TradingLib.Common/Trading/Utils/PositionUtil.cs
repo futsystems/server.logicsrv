@@ -7,7 +7,7 @@ using TradingLib.API;
 
 namespace TradingLib.Common
 {
-    public static class PostionUtils
+    public static class PostionUtil
     {
 
         ///// <summary>

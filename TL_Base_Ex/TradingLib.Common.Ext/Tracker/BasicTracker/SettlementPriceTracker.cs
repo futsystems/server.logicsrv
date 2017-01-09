@@ -17,7 +17,7 @@ namespace TradingLib.Common
         /// <summary>
         /// 按交易日 建立结算价map
         /// </summary>
-        Dictionary<int, Dictionary<string, MarketData>> settlementPriceMap = new Dictionary<int, Dictionary<string, MarketData>>();
+        Dictionary<int, Dictionary<string, SettlementPrice>> settlementPriceMap = new Dictionary<int, Dictionary<string, SettlementPrice>>();
 
         Dictionary<string, Tick> lastticksnapshot = new Dictionary<string, Tick>();
         /// <summary>
@@ -28,9 +28,9 @@ namespace TradingLib.Common
         {
             if (!settlementPriceMap.Keys.Contains(settleday))
             {
-                settlementPriceMap.Add(settleday, new Dictionary<string, MarketData>());
+                settlementPriceMap.Add(settleday, new Dictionary<string, SettlementPrice>());
             }
-            foreach (var price in ORM.MSettlement.SelectMarketData(settleday))
+            foreach (var price in ORM.MSettlement.SelectSettlementPrice(settleday))
             {
 
                 if (!settlementPriceMap[settleday].Keys.Contains(price.Symbol))
@@ -62,13 +62,13 @@ namespace TradingLib.Common
             }
         }
 
-        public IEnumerable<MarketData> this[int settleday]
+        public IEnumerable<SettlementPrice> this[int settleday]
         {
             get
             {
                 if (!settlementPriceMap.Keys.Contains(settleday))
                 {
-                    settlementPriceMap.Add(settleday, new Dictionary<string, MarketData>());
+                    settlementPriceMap.Add(settleday, new Dictionary<string, SettlementPrice>());
                 }
                 return settlementPriceMap[settleday].Values;
             }
@@ -96,14 +96,14 @@ namespace TradingLib.Common
         /// </summary>
         /// <param name="symbol"></param>
         /// <returns></returns>
-        public MarketData this[int settleday,string symbol]
+        public SettlementPrice this[int settleday, string symbol]
         {
             get
             {
-                MarketData target = null;
+                SettlementPrice target = null;
                 if (!settlementPriceMap.Keys.Contains(settleday))
                 {
-                    settlementPriceMap.Add(settleday, new Dictionary<string, MarketData>());
+                    settlementPriceMap.Add(settleday, new Dictionary<string, SettlementPrice>());
                 }
                 if (settlementPriceMap[settleday].TryGetValue(symbol, out target))
                 {
@@ -113,7 +113,7 @@ namespace TradingLib.Common
             }
         }
 
-        void UpdateLastTickSnapshot(MarketData price)
+        void UpdateLastTickSnapshot(SettlementPrice price)
         {
             //更新最新行情快照
             if (lastticksnapshot.Keys.Contains(price.Symbol))
@@ -132,27 +132,27 @@ namespace TradingLib.Common
         /// 更新结算价信息
         /// </summary>
         /// <param name="price"></param>
-        public void UpdateSettlementPrice(MarketData price)
+        public void UpdateSettlementPrice(SettlementPrice price)
         {
-            MarketData target = null;
+            SettlementPrice target = null;
 
             
             //结算价信息已经存在 更新结算价
             if (!settlementPriceMap.Keys.Contains(price.SettleDay))
             {
-                settlementPriceMap.Add(price.SettleDay, new Dictionary<string, MarketData>());
+                settlementPriceMap.Add(price.SettleDay, new Dictionary<string, SettlementPrice>());
             }
             if (settlementPriceMap[price.SettleDay].TryGetValue(price.Symbol, out target))
             {
                 target.Settlement = price.Settlement;
-                ORM.MSettlement.UpdateMarketData(target);//更新到数据库
+                ORM.MSettlement.UpdateSettlementPrice(target);//更新到数据库
 
             }
             else
             {
                 target = price;
                 //插入数据库记录
-                ORM.MSettlement.InsertMarketData(target);
+                ORM.MSettlement.InsertSettlementPrice(target);
                 //放到缓存
                 settlementPriceMap[price.SettleDay].Add(target.Symbol, target);
             }

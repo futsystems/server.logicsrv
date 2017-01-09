@@ -6,7 +6,7 @@ using TradingLib.API;
 
 namespace TradingLib.Common
 {
-    public static class Util_Security
+    public static class SecurityUtil
     {
 
        

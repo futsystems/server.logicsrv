@@ -387,7 +387,7 @@ namespace TradingLib.Core
 
 
 
-        Dictionary<string, MarketData> mdmap = new Dictionary<string, MarketData>();
+        Dictionary<string, SettlementPrice> mdmap = new Dictionary<string, SettlementPrice>();
         Dictionary<string, Tick> mdtickmap = new Dictionary<string, Tick>();
         /// <summary>
         /// 从数据库加载上个交易日的市场数据
@@ -397,7 +397,7 @@ namespace TradingLib.Core
         {
             mdtickmap.Clear();
             mdmap.Clear();
-            foreach (var d in ORM.MSettlement.SelectMarketData(TLCtxHelper.ModuleSettleCentre.LastSettleday))
+            foreach (var d in ORM.MSettlement.SelectSettlementPrice(TLCtxHelper.ModuleSettleCentre.LastSettleday))
             {
                 try
                 {

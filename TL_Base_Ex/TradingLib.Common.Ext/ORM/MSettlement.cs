@@ -466,12 +466,12 @@ namespace TradingLib.ORM
         /// </summary>
         /// <param name="settleday"></param>
         /// <returns></returns>
-        public static IEnumerable<MarketData> SelectMarketData(int settleday)
+        public static IEnumerable<SettlementPrice> SelectSettlementPrice(int settleday)
         {
             using (DBMySql db = new DBMySql())
             {
                 string query = String.Format("SELECT * FROM log_settlement_price WHERE  settleday = '{0}'", settleday);
-                return db.Connection.Query<MarketData>(query);
+                return db.Connection.Query<SettlementPrice>(query);
             }
         }
 
@@ -479,7 +479,7 @@ namespace TradingLib.ORM
         /// 向数据库插入一条结算价格记录
         /// </summary>
         /// <param name="price"></param>
-        public static void InsertMarketData(MarketData data)
+        public static void InsertSettlementPrice(SettlementPrice data)
         {
             using (DBMySql db = new DBMySql())
             {
@@ -492,7 +492,7 @@ namespace TradingLib.ORM
         /// 更新结算价信息
         /// </summary>
         /// <param name="price"></param>
-        public static void UpdateMarketData(MarketData price)
+        public static void UpdateSettlementPrice(SettlementPrice price)
         {
             using (DBMySql db = new DBMySql())
             {

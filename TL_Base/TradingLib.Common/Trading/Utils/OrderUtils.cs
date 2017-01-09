@@ -13,6 +13,7 @@ namespace TradingLib.Common
         {
             return Util.ToTLDateTime(o.Date, o.Time);
         }
+
         /// <summary>
         /// 判断委托是否处于pending状态
         /// </summary>

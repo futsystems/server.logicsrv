@@ -6,7 +6,7 @@ using TradingLib.API;
 
 namespace TradingLib.Common
 {
-    public static class Util_MarketTime
+    public static class MarketTimeUtil
     {
         /// <summary>
         /// 获得WeekDay与TradingRange列表映射
