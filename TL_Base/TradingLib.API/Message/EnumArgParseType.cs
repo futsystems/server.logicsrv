@@ -19,7 +19,7 @@ namespace TradingLib.API
         /// TNetString 用标签字符串传递参数,通过TnetString来进行参数打包
         /// 参数可以带有任何字符串,如果提供的参数本身没有对象进行描述,且含有,等特殊符号则
         /// </summary>
-        TNetString,
+        //TNetString,
 
         /// <summary>
         /// 逗号分隔的方式传递参数

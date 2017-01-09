@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using TradingLib.Mixins.TNetStrings;
 
 namespace TradingLib.Mixins.Json
 {
@@ -115,21 +114,21 @@ namespace TradingLib.Mixins.Json
             return this;
         }
 
-        /// <summary>
-        /// 将参数字符串传入 并通过Tnetstring打包
-        /// </summary>
-        /// <param name="args"></param>
-        /// <returns></returns>
-        public JsonRequest SetArgs(string[] args)
-        { 
-            string argstr=string.Empty;
-            foreach(string arg in args)
-            {
-                argstr += Tnetstring.TDump(new TnetString(arg));
-            }
-            this.Args = argstr;
-            return this;
-        }
+        ///// <summary>
+        ///// 将参数字符串传入 并通过Tnetstring打包
+        ///// </summary>
+        ///// <param name="args"></param>
+        ///// <returns></returns>
+        //public JsonRequest SetArgs(string[] args)
+        //{ 
+        //    string argstr=string.Empty;
+        //    foreach(string arg in args)
+        //    {
+        //        argstr += Tnetstring.TDump(new TnetString(arg));
+        //    }
+        //    this.Args = argstr;
+        //    return this;
+        //}
 
     }
 }

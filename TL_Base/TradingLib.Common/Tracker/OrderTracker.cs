@@ -397,5 +397,28 @@ namespace TradingLib.Common
             return GetEnumerator();
         }
 
+
+        ///<summary>
+        /// 获得某个持仓方向的开仓委托数量
+        /// </summary>
+        /// <param name="positionside"></param>
+        /// <returns></returns>
+        public int GetPendingEntrySize(string symbol,bool positionside)
+        {
+            //查找 持仓方向为设定方向 并且为开仓操作的委托 累加 将所有委托的数量进行累加
+            return this.Where(o => (o.Symbol.Equals(symbol)) && o.IsPending() && (o.PositionSide == positionside) && (o.IsEntryPosition)).Sum(o => o.UnsignedSize);
+        }
+
+        /// <summary>
+        /// 获得某个持仓方向的平仓委托数量
+        /// </summary>
+        /// <param name="tracker"></param>
+        /// <param name="positionside"></param>
+        /// <returns></returns>
+        public int GetPendingExitSize(string symbol, bool positionside)
+        {
+            return this.Where(o => (o.Symbol.Equals(symbol)) && o.IsPending() && (o.PositionSide == positionside) && (!o.IsEntryPosition)).Sum(o => o.UnsignedSize);
+        }
+
     }
 }

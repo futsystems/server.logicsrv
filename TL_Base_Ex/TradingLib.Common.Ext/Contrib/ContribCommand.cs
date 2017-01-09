@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using TradingLib.API;
-using TradingLib.Mixins.TNetStrings;
 
 /*
  * 扩展模块Command调用
@@ -69,26 +68,6 @@ namespace TradingLib.Common
                         p = parameters.Split(',');
                         break;
                     }
-                case QSEnumArgParseType.TNetString:
-                    {
-                        byte[] bytemsg = Encoding.UTF8.GetBytes(parameters);
-                        ArraySegment<byte> codemsg = new ArraySegment<byte>(bytemsg);
-
-                        List<string> arglist = new List<string>();
-                        var res = codemsg.TParse();
-                        //Utils.Debug("Type:" + res.Data.Type.ToString() + " Value:" + res.Data.ToString());
-                        arglist.Add(res.Data.ToString());
-                        while (res.Remain.Count > 0)
-                        {
-                            res = res.Remain.TParse();
-                            //Utils.Debug("Type:" + res.Data.Type.ToString() + " Value:" + res.Data.ToString());
-                            arglist.Add(res.Data.ToString());
-                        }
-                        //传递解析后的参数列表
-                        p = arglist.ToArray();
-                        break;
-                    }
-
             }
 
             //如果分隔后只有1个参数,并且该参数为空或者null,则为无附加参数的函数调用,我们将p至空

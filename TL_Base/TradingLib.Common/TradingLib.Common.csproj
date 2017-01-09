@@ -124,8 +124,6 @@
     <Compile Include="Protocol\LoginInfo.cs" />
     <Compile Include="Protocol\DataFarm\RestoreTask.cs" />
     <Compile Include="Stock\PowerTransactionImpl.cs" />
-    <Compile Include="TNetString\ByteArrayExtensions.cs" />
-    <Compile Include="TNetString\TNetStrings.cs" />
     <Compile Include="Tracker\BOOrderTracker.cs" />
     <Compile Include="Tracker\TradeTracker.cs" />
     <Compile Include="Trading\Trade\TradeCompare.cs" />
@@ -162,7 +160,7 @@
     <Compile Include="Trading\Basic\MarketTime\TradingRangeImpl.cs" />
     <Compile Include="Stock\PowerData.cs" />
     <Compile Include="Trading\Order\OrderCompare.cs" />
-    <Compile Include="Trading\SymbolInfo.cs" />
+    <Compile Include="Other\SymbolInfo.cs" />
     <Compile Include="Trading\Utils\MarketTimeUtil.cs" />
     <Compile Include="Trading\Utils\TradingRangeUtil.cs" />
     <Compile Include="Trading\Settlement\AccountSettlement.cs" />
@@ -296,10 +294,9 @@
     <Compile Include="Rule\RuleItem.cs" />
     <Compile Include="Rule\RuleClassItem.cs" />
     <Compile Include="Tracker\LSPositionTracker.cs" />
-    <Compile Include="Tracker\OrderTrackerUtils.cs" />
-    <Compile Include="Utils\SafeStruct\SafeEnumerable.cs" />
-    <Compile Include="Utils\SafeStruct\SafeEnumerator.cs" />
-    <Compile Include="Utils\SafeStruct\SafeList.cs" />
+    <Compile Include="Collections\SafeEnumerable.cs" />
+    <Compile Include="Collections\SafeEnumerator.cs" />
+    <Compile Include="Collections\SafeList.cs" />
     <Compile Include="Trading\Utils\OrderUtils.cs" />
     <Compile Include="Trading\Position\PositionEx.cs" />
     <Compile Include="Trading\Basic\ExchangeImpl.cs" />
@@ -312,14 +309,10 @@
     <Compile Include="Trading\CTP\Instrument.cs" />
     <Compile Include="Trading\Order\OrderActionImpl.cs" />
     <Compile Include="Trading\Utils\PositionUtil.cs" />
-    <Compile Include="Trading\Product.cs" />
     <Compile Include="Trading\Basic\SecurityFamilyImpl.cs" />
     <Compile Include="Trading\Basic\SymbolImpl.cs" />
     <Compile Include="Other\ThreadTracker.cs" />
-    <Compile Include="Tracker\MessageTracker.cs" />
     <Compile Include="Message\TrdMessage.cs" />
-    <Compile Include="1delete\OrderTransactionHelper.cs" />
-    <Compile Include="1delete\SymbolHelper.cs" />
     <Compile Include="Trading\Data\Tick\TickWatcher.cs" />
     <Compile Include="Tracker\GenericTracker.cs" />
     <Compile Include="Utils\GZip.cs" />
@@ -337,7 +330,7 @@
     <Compile Include="Trading\Position\PositionImpl.cs" />
     <Compile Include="Tracker\PositionTracker.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Utils\RingBuffer.cs" />
+    <Compile Include="Collections\RingBuffer.cs" />
     <Compile Include="Trading\Data\Tick\eSigTick.cs" />
     <Compile Include="Trading\Data\Tick\TickArchiver.cs" />
     <Compile Include="Trading\Data\Tick\TickFileFilter.cs" />
@@ -348,8 +341,6 @@
     <Compile Include="Trading\Data\Tick\TikUtil.cs" />
     <Compile Include="Trading\Data\Tick\TikWriter.cs" />
     <Compile Include="Trading\Trade\TradeImpl.cs" />
-    <Compile Include="Utils\SafeStruct\ThreadSafeList.cs" />
-    <Compile Include="Tracker\TLTracker.cs" />
     <Compile Include="Offset\TrailTracker.cs" />
     <Compile Include="Utils\Util.cs" />
     <Compile Include="Trading\Utils\TradeUtils.cs" />
@@ -373,7 +364,9 @@
     <Compile Include="Zlib\ZStream.cs" />
     <Compile Include="Zlib\ZStreamException.cs" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="1delete\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
