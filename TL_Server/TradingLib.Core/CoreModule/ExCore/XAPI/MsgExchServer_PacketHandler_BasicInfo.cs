@@ -98,7 +98,7 @@ namespace TradingLib.Core
             {
                 TrdClientInfo client = tl.GetClient(request.ClientID);
                 //股票交易终端只返回必要的合约数据 其余合约数据延迟加载
-                if (client != null && client.ProductInfo.Equals(ProductInfo.T_XTRADER_STOCK))
+                if (client != null && client.ProductInfo.Equals("XTrader.Stock"))
                 {
                     List<Symbol> list = new List<Symbol>();
                     foreach (var pos in account.Positions)

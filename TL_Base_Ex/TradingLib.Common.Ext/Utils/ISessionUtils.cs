@@ -82,7 +82,7 @@ namespace TradingLib.Common
             response.ModuleID = session.ContirbID;
             response.CMDStr = session.CMDStr;
             response.IsLast = islast;
-            response.Result =JsonReply.SuccessReply(obj).ToJson();
+            response.Result = obj.SerializeObject();// JsonReply.SuccessReply(obj).ToJson();
 
             session.SendPacketMgr(response);
         }
@@ -129,7 +129,7 @@ namespace TradingLib.Common
             NotifyMGRContribNotify response = ResponseTemplate<NotifyMGRContribNotify>.SrvSendNotifyResponse(targets == null ? new ILocation[] { session.Location } : targets);
             response.ModuleID = session.ContirbID;
             response.CMDStr = cmdstr;
-            response.Result = JsonReply.SuccessReply(obj).ToJson();
+            response.Result = obj.SerializeObject();// JsonReply.SuccessReply(obj).ToJson();
             session.SendPacketMgr(response);
         }
 

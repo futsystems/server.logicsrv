@@ -54,25 +54,25 @@ namespace TradingLib.Core
         /// 获得路由状态
         /// </summary>
         /// <returns></returns>
-        public DataFeedRouterStatus GetRouterStatus()
-        {
-            DataFeedRouterStatus status = new DataFeedRouterStatus();
+        //public DataFeedRouterStatus GetRouterStatus()
+        //{
+        //    DataFeedRouterStatus status = new DataFeedRouterStatus();
 
-            if (TLCtxHelper.ServiceRouterManager.DefaultDataFeed == null)//如果行情通道不存在 则为false
-            {
-                status.IsDefaultDataFeedLive = false;
-            }
-            else
-            {
-                status.IsDefaultDataFeedLive = TLCtxHelper.ServiceRouterManager.DefaultDataFeed.IsLive;//如果行情通道存在 则设定DefaultDataFeed的当前工作状态
-            }
+        //    if (TLCtxHelper.ServiceRouterManager.DefaultDataFeed == null)//如果行情通道不存在 则为false
+        //    {
+        //        status.IsDefaultDataFeedLive = false;
+        //    }
+        //    else
+        //    {
+        //        status.IsDefaultDataFeedLive = TLCtxHelper.ServiceRouterManager.DefaultDataFeed.IsLive;//如果行情通道存在 则设定DefaultDataFeed的当前工作状态
+        //    }
 
-            status.MassAlert = false; //_tickwatcher.isMassAlerting;//是否处于报警状态
-            status.IsTickSpan = false;// _tickwatcher.TimeSpanSetted;//是否设定了行情有效时间段
+        //    status.MassAlert = false; //_tickwatcher.isMassAlerting;//是否处于报警状态
+        //    status.IsTickSpan = false;// _tickwatcher.TimeSpanSetted;//是否设定了行情有效时间段
 
-            return status;
+        //    return status;
 
-        }
+        //}
         
 
         /// <summary>

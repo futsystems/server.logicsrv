@@ -77,7 +77,7 @@ namespace TradingLib.Core
             NotifyMGRContribNotify response = ResponseTemplate<NotifyMGRContribNotify>.SrvSendNotifyResponse(GetNotifyTargets(predictate));
             response.ModuleID = module;
             response.CMDStr = cmdstr;
-            response.Result = JsonReply.SuccessReply(obj).ToJson();
+            response.Result = obj.SerializeObject();// JsonReply.SuccessReply(obj).ToJson();
             CachePacket(response);
         }
 
@@ -102,7 +102,7 @@ namespace TradingLib.Core
             NotifyMGRContribNotify response = ResponseTemplate<NotifyMGRContribNotify>.SrvSendNotifyResponse(GetNotifyTargets(managers));
             response.ModuleID = module;
             response.CMDStr = cmdstr;
-            response.Result = JsonReply.SuccessReply(obj).ToJson();
+            response.Result = obj.SerializeObject();// JsonReply.SuccessReply(obj).ToJson();
             CachePacket(response);
         }
 
@@ -150,7 +150,7 @@ namespace TradingLib.Core
             NotifyMGRContribNotify response = ResponseTemplate<NotifyMGRContribNotify>.SrvSendNotifyResponse(GetNotifyTargets(op.GetNotifyPredicate()));
             response.ModuleID = CoreName;
             response.CMDStr = "NotifyCashOperation";
-            response.Result = JsonReply.SuccessReply(op).ToJson();
+            response.Result = op.SerializeObject();// JsonReply.SuccessReply(op).ToJson();
             CachePacket(response);
         }
 
@@ -165,7 +165,7 @@ namespace TradingLib.Core
             NotifyMGRContribNotify response = ResponseTemplate<NotifyMGRContribNotify>.SrvSendNotifyResponse(GetNotifyTargets(mgr.GetNotifyPredicate()));
             response.ModuleID = CoreName;
             response.CMDStr = "NotifyManagerUpdate";
-            response.Result = JsonReply.SuccessReply(mgr).ToJson();
+            response.Result = mgr.SerializeObject();// JsonReply.SuccessReply(mgr).ToJson();
             CachePacket(response);
         }
 
@@ -179,7 +179,7 @@ namespace TradingLib.Core
             NotifyMGRContribNotify response = ResponseTemplate<NotifyMGRContribNotify>.SrvSendNotifyResponse(GetNotifyTargets(mgr.GetNotifyPredicate()));
             response.ModuleID = CoreName;
             response.CMDStr = "NotifyManagerDelete";
-            response.Result = JsonReply.SuccessReply(mgr).ToJson();
+            response.Result = mgr.SerializeObject();// JsonReply.SuccessReply(mgr).ToJson();
             CachePacket(response);
         }
 

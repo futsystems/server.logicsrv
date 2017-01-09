@@ -92,6 +92,7 @@
     <Compile Include="CoreModule\BrokerRouter\BrokerRouter-passthrough\BrokerRouter\BrokerRouter_CTE.cs" />
     <Compile Include="CoreModule\BrokerRouter\BrokerRouter-passthrough\BrokerRouter\BrokerRouter_Helper.cs" />
     <Compile Include="CoreModule\BrokerRouter\BrokerRouter-passthrough\BrokerRouter\QryBrokerTrans.cs" />
+    <Compile Include="CoreModule\BrokerRouter\ErrorPack.cs" />
     <Compile Include="CoreModule\ClearCentre\ClearCentreSrv_TotalInfo.cs" />
     <Compile Include="CoreModule\ClearCentre\ClearCentreSrv.cs" />
     <Compile Include="CoreModule\ClearCentre\ClearCentreSrv_GotXXX.cs" />
