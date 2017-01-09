@@ -30,7 +30,7 @@ namespace TradingLib.DataFarm.Common
             }
 
             logger.Info("UpdateBar data:" + args);
-            BarImpl bar = TradingLib.Mixins.Json.JsonMapper.ToObject<BarImpl>(args);
+            BarImpl bar = args.DeserializeObject<BarImpl>();
             if (bar != null)
             {
                 Symbol symbol = MDBasicTracker.SymbolTracker[bar.Exchange, bar.Symbol];
@@ -53,12 +53,12 @@ namespace TradingLib.DataFarm.Common
 
             logger.Info("Delete data:" + args);
 
-            var data = TradingLib.Mixins.Json.JsonMapper.ToObject(args);
+            var data = args.DeserializeObject();
             string exchange = data["Exchange"].ToString();
             string symbol = data["Symbol"].ToString();
             int interval = int.Parse(data["Interval"].ToString());
             BarInterval intervalType = (BarInterval)int.Parse(data["IntervalType"].ToString());
-            int[] ids = TradingLib.Mixins.Json.JsonMapper.ToObject<int[]>(data["ID"].ToJson());
+            int[] ids = data["ID"].ToObject<int[]>();////TradingLib.Mixins.Json.JsonMapper.ToObject<int[]>(data["ID"].ToJson());
             Symbol sym = MDBasicTracker.SymbolTracker[exchange,symbol];
             if (sym != null)
             {
@@ -105,7 +105,7 @@ namespace TradingLib.DataFarm.Common
         public void CTE_ResetRestoreTask(IServiceHost host, IConnection conn,string args)
         {
             logger.Info("ResetRestoreTask:"+args);
-            var data = TradingLib.Mixins.Json.JsonMapper.ToObject(args);
+            var data = args.DeserializeObject();
             string exchange = data["exchange"].ToString();
             string symbol = data["symbol"].ToString();
             restoresrv.ResetTask(exchange,symbol);

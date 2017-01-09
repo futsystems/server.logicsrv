@@ -43,7 +43,7 @@ namespace TradingLib.DataFarm.Common
             response.ModuleID = conn.Command.ModuleID;
             response.CMDStr = conn.Command.CMDStr;
             response.IsLast = islast;
-            response.Result = Mixins.Json.JsonReply.SuccessReply(obj).ToJson();
+            response.Result = obj.SerializeObject();
 
             this.SendData(conn, response);
         }

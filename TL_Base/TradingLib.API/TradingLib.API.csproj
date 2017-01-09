@@ -94,7 +94,7 @@
     <Compile Include="Router\EnumRouterStrategy.cs" />
     <Compile Include="Rule\IRuleItem.cs" />
     <Compile Include="Trading\BasicInfo\MarketTime.cs" />
-    <Compile Include="Trading\EnumAccountCategoy.cs" />
+    <Compile Include="Account\EnumAccountCategoy.cs" />
     <Compile Include="Trading\EnumHedgeFlag.cs" />
     <Compile Include="Trading\EnumOrderBreed.cs" />
     <Compile Include="Trading\EnumOrderType.cs" />

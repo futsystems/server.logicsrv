@@ -37,6 +37,9 @@
     <Reference Include="Common.Logging.Core">
       <HintPath>..\..\lib\Common.Logging.Core.dll</HintPath>
     </Reference>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>..\..\lib\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="NodaTime">
       <HintPath>..\..\lib\NodaTime.dll</HintPath>
     </Reference>
