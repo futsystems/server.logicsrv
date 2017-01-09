@@ -131,18 +131,18 @@ namespace TradingLib.Common
         #endregion
 
         #region internal 暴露对象
-        IMessageExchange _messageExchange = null;
-        internal IMessageExchange MessageExchange
-        {
-            get
-            {
-                if (_messageExchange == null)
-                {
-                    logger.Error("Error-MessageRouter not valid");
-                }
-                return _messageExchange;
-            }
-        }
+        //IMessageExchange _messageExchange = null;
+        //internal IMessageExchange MessageExchange
+        //{
+        //    get
+        //    {
+        //        if (_messageExchange == null)
+        //        {
+        //            logger.Error("Error-MessageRouter not valid");
+        //        }
+        //        return _messageExchange;
+        //    }
+        //}
 
         //IMessageMgr _messagemgr = null;
         //internal IMessageMgr MessageMgr
@@ -421,11 +421,11 @@ namespace TradingLib.Common
                     baseSrvObjectMap.TryRemove(srvobj.UUID, out objremoved);
                 }
 
-                if (obj is IMessageExchange)
-                {
-                    logger.Error("MessageRouter(TradingServer) unregisted from ctx");
-                    _messageExchange = null;
-                }
+                //if (obj is IMessageExchange)
+                //{
+                //    logger.Error("MessageRouter(TradingServer) unregisted from ctx");
+                //    _messageExchange = null;
+                //}
                 //if (obj is IMessageMgr)
                 //{
                 //    debug("MessageMgr(ManagerSrv) unregisted from ctx");
@@ -491,11 +491,11 @@ namespace TradingLib.Common
                 ParseTaskInfo(srvobj);
 
 
-                if (obj is IMessageExchange)
-                {
-                    //debug("MessageRouter(TradingServer) registed to ctx");
-                    _messageExchange = obj as IMessageExchange;
-                }
+                //if (obj is IMessageExchange)
+                //{
+                //    //debug("MessageRouter(TradingServer) registed to ctx");
+                //    _messageExchange = obj as IMessageExchange;
+                //}
                 //if (obj is IMessageMgr)
                 //{
                 //    //debug("MessageMgr(ManagerSrv) regsited to ctx");

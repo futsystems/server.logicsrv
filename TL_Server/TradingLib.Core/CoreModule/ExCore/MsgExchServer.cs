@@ -48,7 +48,7 @@ namespace TradingLib.Core
     /// TradingServer是整体的中转站,他负责底层的tlserver处理将客户端请求进行逻辑处理后分发到对应其他的组件
     /// 并且接受其他组件回报过来的信息并转给客户端
     /// </summary>
-    public partial class MsgExchServer :BaseSrvObject, IMessageExchange, IModuleExCore
+    public partial class MsgExchServer :BaseSrvObject, IModuleExCore
     {
         const string CoreName = "MsgExch";
         public string CoreId { get { return this.PROGRAME; } }

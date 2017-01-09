@@ -11,7 +11,7 @@ namespace TradingLib.Common
         /// <summary>
         /// 对应交易帐号
         /// </summary>
-        public IAccountExp Account { get; set; }
+        public IAccount Account { get; set; }
 
         /// <summary>
         /// 数据库全局ID

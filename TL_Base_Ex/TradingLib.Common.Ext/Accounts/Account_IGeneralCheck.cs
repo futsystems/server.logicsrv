@@ -25,13 +25,10 @@ namespace TradingLib.Common
             //如果是平仓委托 则直接返回
             if (!o.IsEntryPosition) return true;
 
-            //获得某个帐户交易某个合约的可用资金
-            decimal avabilefund = GetFundAvabile(o.oSymbol);
-
             //可用资金大于需求资金则可以接受该委托
-            decimal requiredfund = CalOrderFundRequired(o);
+            decimal requiredfund = this.CalOrderFundRequired(o);
             //Util.Debug("[CanFundTakeOrder Check] Fundavabile:" + avabile.ToString() + " Required:" + required);
-            if (requiredfund > avabilefund)
+            if (requiredfund > this.AvabileFunds)
             {
                 msg = "资金不足";
                 return false;
@@ -60,8 +57,8 @@ namespace TradingLib.Common
 
                                 decimal fundperlot = this.CalOrderMarginFrozen(symbol, 1) * this.GetExchangeRate(symbol.SecurityFamily);
 
-                                decimal avabilefund = GetFundAvabile(symbol);
-                                return (int)(avabilefund / fundperlot);
+                                //decimal avabilefund = GetFundAvabile(symbol);
+                                return (int)(this.AvabileFunds / fundperlot);
                             }
 
                             return 0;
@@ -70,7 +67,7 @@ namespace TradingLib.Common
                         {
                             decimal fundperlot = this.CalOrderMarginFrozen(symbol, 1) * this.GetExchangeRate(symbol.SecurityFamily);
 
-                            decimal avabilefund = GetFundAvabile(symbol);
+                            decimal avabilefund = this.AvabileFunds;
 
                             int canfronzensize = (int)(avabilefund / fundperlot);//通过当前可用资金 和 每手 占用资金来估算可开数量
                             //Util.Debug(string.Format("QryCanOpenSize[MarginSizde] fund:{0} perlot:{1}",avabilefund,fundperlot), QSEnumDebugLevel.INFO);
@@ -105,9 +102,9 @@ namespace TradingLib.Common
                         //买入
                         if (side)
                         {
-                            decimal avabilefund = GetFundAvabile(symbol);
+                            //decimal avabilefund = GetFundAvabile(symbol);
                             decimal fundperlot = this.CalOrderMarginFrozen(symbol, 1) * this.GetExchangeRate(symbol.SecurityFamily);
-                            return (int)(avabilefund / fundperlot);
+                            return (int)(this.AvabileFunds / fundperlot);
                         }
                         else//卖出
                         {

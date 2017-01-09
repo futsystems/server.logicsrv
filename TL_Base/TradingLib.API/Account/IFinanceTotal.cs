@@ -26,6 +26,11 @@ namespace TradingLib.API
         decimal NowEquity { get; }
 
         /// <summary>
+        /// 信用金额
+        /// </summary>
+        decimal Credit { get; }
+
+        /// <summary>
         /// 平仓利润
         /// </summary>
         decimal RealizedPL { get; }
@@ -34,11 +39,6 @@ namespace TradingLib.API
         /// 未平仓利润
         /// </summary>
         decimal UnRealizedPL { get; }
-
-        /// <summary>
-        /// 帐户当日结算盯市盈亏 以结算价来计算收盘后的浮动盈亏
-        /// </summary>
-        //decimal SettleUnRealizedPL { get; }
 
         /// <summary>
         /// 手续费
@@ -69,6 +69,7 @@ namespace TradingLib.API
         /// 优先资金出金
         /// </summary>
         decimal CreditCashOut { get; }
+
         /// <summary>
         /// 保证金占用
         /// </summary>
@@ -85,7 +86,6 @@ namespace TradingLib.API
         /// </summary>
         decimal MoneyUsed { get; }
 
-
         /// <summary>
         /// 证券市值
         /// </summary>
@@ -101,14 +101,5 @@ namespace TradingLib.API
         /// </summary>
         decimal AvabileFunds { get; }
 
-        /// <summary>
-        /// 信用金额
-        /// </summary>
-        decimal Credit { get; }
-
-        /// <summary>
-        /// 交易帐户货币类别
-        /// </summary>
-        //CurrencyType Currency { get; }
     }
 }

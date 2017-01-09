@@ -308,6 +308,42 @@ namespace TradingLib.Common
             }
         }
 
+        /// <summary>
+        /// 计算某个委托所要占用的资金
+        /// 这里的计算与单纯计算某个委托需要占用的保证金有所不同，这里需要按照
+        /// 保证金计算算法 试算该委托下达后所增加的保证金占用 包含单向大边的处理
+        /// </summary>
+        /// <param name="o"></param>
+        /// <returns></returns>
+        public static decimal CalOrderFundRequired(this IAccount account, Order o, decimal defaultvalue = 0)
+        {
+            switch (o.oSymbol.SecurityType)
+            {
+                case SecurityType.FUT:
+                    {
+                        //需要判断是否启用单向大边
+                        if (!account.GetParamSideMargin())
+                        {
+                            return account.CalOrderMarginFrozen(o) * account.GetExchangeRate(o.oSymbol.SecurityFamily);
+                        }
+                        else
+                        {
+                            decimal marginfrozennow = account.CalFutMarginSet().Sum(ms => ms.MarginFrozen * account.GetExchangeRate(ms.Security));
+                            //将当前委托纳入待成交委托集，然后按单向大边规则计算冻结保证金
+                            decimal marginfrozenwill = account.CalFutMarginSet(o).Sum(ms => ms.MarginFrozen * account.GetExchangeRate(ms.Security));
+                            return marginfrozenwill - marginfrozennow;//纳入开仓委托的单向大边冻结保证金 - 当前冻结保证金 为该委托所需冻结保证金
+                        }
+                    }
+                //股票占用资金为报单价格*数量
+                case SecurityType.STK:
+                    {
+                        return o.LimitPrice * o.UnsignedSize;
+                    }
+                default:
+                    return decimal.MaxValue;
+            }
+        }
+
         #endregion
 
 

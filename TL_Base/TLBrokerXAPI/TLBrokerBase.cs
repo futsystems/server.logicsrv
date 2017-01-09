@@ -19,8 +19,6 @@ namespace TradingLib.BrokerXAPI
             logger = LogManager.GetLogger("TLBrokerBase");
         }
 
-        public IBrokerClearCentre ClearCentre { get; set; }
-
         /// <summary>
         /// 交易接口交易数据维护器
         /// </summary>
@@ -242,9 +240,49 @@ namespace TradingLib.BrokerXAPI
         #endregion
 
 
+        /// <summary>
+        /// 获得日内成交接口的所有委托
+        /// </summary>
+        /// <param name="token"></param>
+        /// <returns></returns>
+        protected IEnumerable<Order> SelectBrokerOrders()
+        {
+            return TLCtxHelper.ModuleDataRepository.SelectBrokerOrders(this.Token);
+        }
 
 
+        /// <summary>
+        /// 获得日内成交接口的所有成交
+        /// </summary>
+        /// <param name="token"></param>
+        /// <returns></returns>
+        protected IEnumerable<Trade> SelectBrokerTrades()
+        {
+            return TLCtxHelper.ModuleDataRepository.SelectBrokerTrades(this.Token);
+        }
 
+        /// <summary>
+        /// 获得成交接口上个结算日所有持仓数据
+        /// </summary>
+        /// <param name="token"></param>
+        /// <returns></returns>
+        protected IEnumerable<PositionDetail> SelectBrokerPositionDetails()
+        {
+            return TLCtxHelper.ModuleDataRepository.SelectBrokerPositionDetails(this.Token);
+        }
+
+        protected Order SentOrder(long id, QSEnumOrderBreedType type = QSEnumOrderBreedType.ACCT)
+        {
+            if (type == QSEnumOrderBreedType.ACCT)
+            {
+                return TLCtxHelper.ModuleClearCentre.SentOrder(id);
+            }
+            if (type == QSEnumOrderBreedType.ROUTER)
+            {
+                return TLCtxHelper.ModuleBrokerRouter.SentRouterOrder(id);
+            }
+            return null;
+        }
     }
 
 

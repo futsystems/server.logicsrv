@@ -675,7 +675,7 @@ namespace Broker.SIM
             {
                 logger.Info("从清算中心加载模拟交易记录");
                 //模拟委托直接加载分帐户侧委托
-                IEnumerable<Order> olist = this.ClearCentre.GetOrdersViaBroker(this.Token);//加载
+                IEnumerable<Order> olist = TLCtxHelper.ModuleClearCentre.TotalOrders.Where(o => o.Broker.Equals(this.Token));// this.ClearCentre.GetOrdersViaBroker(this.Token);//加载
                 lock (aq)
                 {
                     foreach (Order o in olist)
@@ -690,7 +690,7 @@ namespace Broker.SIM
                     }
                 }
 
-                IEnumerable<Trade> trades = this.ClearCentre.GetTradesViaBroker(this.Token);
+                IEnumerable<Trade> trades = TLCtxHelper.ModuleClearCentre.TotalTrades.Where(f => f.Broker.Equals(this.Token)); //this.ClearCentre.GetTradesViaBroker(this.Token);
                 //tryparse用于避免非数字brokerkey造成的异常
                 _fillseq = trades.Count() > 0 ? trades.Max(f => { int seq = 0; int.TryParse(f.BrokerTradeID, out seq); return seq; }) : _fillseq;
                 logger.Info("Order Cnt:"+olist.Count().ToString() +" Trade Cnt:"+trades.Count().ToString()+" Max Fill Seq:" + _fillseq.ToString());

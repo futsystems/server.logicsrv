@@ -80,14 +80,14 @@ namespace TradingLib.Core
                 if (item.RuleType == QSEnumRuleType.OrderRule)
                 {
                     IOrderCheck oc = (IOrderCheck)klassitem.GenerateRuleInstance(item);
-                    oc.Account = new AccountAdapterToExp(account);
+                    oc.Account = account;
                     account.AddOrderCheck(oc);
                     item.RuleDescription = oc.RuleDescription;
                 }
                 else if(item.RuleType == QSEnumRuleType.AccountRule)
                 {
                     IAccountCheck ac = (IAccountCheck)klassitem.GenerateRuleInstance(item);
-                    ac.Account = new AccountAdapterToExp(account);
+                    ac.Account = account;
                     account.AddAccountCheck(ac);
                     item.RuleDescription = ac.RuleDescription;
                     

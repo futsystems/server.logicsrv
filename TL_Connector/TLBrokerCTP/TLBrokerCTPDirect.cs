@@ -119,9 +119,9 @@ namespace Broker.Live
             {
                 logger.Info("Load Trading Info From ClearCentre");
                 this.BrokerTracker.Clear();//清空交易数据维护器
-                IEnumerable<Order> orderlist = ClearCentre.SelectBrokerOrders(this.Token);
-                IEnumerable<Trade> tradelist = ClearCentre.SelectBrokerTrades(this.Token);
-                IEnumerable<PositionDetail> positiondetaillist = ClearCentre.SelectBrokerPositionDetails(this.Token);
+                IEnumerable<Order> orderlist = this.SelectBrokerOrders();
+                IEnumerable<Trade> tradelist = this.SelectBrokerTrades();
+                IEnumerable<PositionDetail> positiondetaillist = this.SelectBrokerPositionDetails();
 
                 //恢复隔夜持仓数据
                 foreach (PositionDetail pd in positiondetaillist)
@@ -207,11 +207,11 @@ namespace Broker.Live
                     QSEnumOrderBreedType bt = (QSEnumOrderBreedType)o.FatherBreed;
                     if (bt == QSEnumOrderBreedType.ACCT)//如果直接分帐户侧分解 从清算中查找该委托
                     {
-                        father = ClearCentre.SentOrder(o.FatherID, QSEnumOrderBreedType.ACCT);
+                        father = this.SentOrder(o.FatherID, QSEnumOrderBreedType.ACCT);
                     }
                     if (bt == QSEnumOrderBreedType.ROUTER)
                     {
-                        father = ClearCentre.SentOrder(o.FatherID, QSEnumOrderBreedType.ROUTER);
+                        father = this.SentOrder(o.FatherID, QSEnumOrderBreedType.ROUTER);
                     }
                 }
                 //如果存在父委托

@@ -22,7 +22,7 @@ namespace TradingLib.Common
 
         
 
-        private IUtil m_util;
+        //private IUtil m_util;
 
 
         /// <summary>
@@ -296,18 +296,18 @@ namespace TradingLib.Common
             }
         }
 
-        /// <summary>
-        /// 辅助类操作函数
-        /// </summary>
-        public static IUtil CmdUtils
-        {
-            get
-            {
-                if (defaultInstance.m_util == null)
-                    defaultInstance.m_util = new CoreUtil();
-                return defaultInstance.m_util;
-            }
-        }
+        ///// <summary>
+        ///// 辅助类操作函数
+        ///// </summary>
+        //public static IUtil CmdUtils
+        //{
+        //    get
+        //    {
+        //        if (defaultInstance.m_util == null)
+        //            defaultInstance.m_util = new CoreUtil();
+        //        return defaultInstance.m_util;
+        //    }
+        //}
 
         static IBrokerRouter _brokerrouter = null;
         /// <summary>

@@ -133,8 +133,6 @@
     <Compile Include="Utils\Deferred.cs" />
     <Compile Include="Utils\Domain\DomainUtils_CommissionMargin.cs" />
     <Compile Include="Utils\Domain\DomainUtils_ExStrategy.cs" />
-    <Compile Include="Wrapper\AccountAdapterToExp.cs" />
-    <Compile Include="Accounts\Account_IAccCal.cs" />
     <Compile Include="Contex\Event\EventArgs\CashOperationEventArgs.cs" />
     <Compile Include="Utils\Account\AccountUtils_ObjectWrapper.cs" />
     <Compile Include="Utils\Account\AccountUtils_CommissionMargin.cs" />
@@ -145,7 +143,6 @@
     <Compile Include="Utils\Account\AccountUtils_FinCal.cs" />
     <Compile Include="Utils\Account\AccountUtils_TradingInfoEx.cs" />
     <Compile Include="Accounts\Account_IAccTradingInfo.cs" />
-    <Compile Include="Accounts\Account_IAccConfig.cs" />
     <Compile Include="Utils\Account\AccountUtils_BasicInfo.cs" />
     <Compile Include="Client\MgrClientInfo.cs" />
     <Compile Include="Client\TrdClientInfo.cs" />
@@ -213,8 +210,6 @@
     <Compile Include="Plugin\PluginHelper.cs" />
     <Compile Include="SrvObject\ContribSrvObject.cs" />
     <Compile Include="SrvObject\BaseObject.cs" />
-    <Compile Include="Wrapper\ClearCentreAdapterToBroker.cs" />
-    <Compile Include="ClearCentre\CommissionHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ThroughtPutTracker.cs" />
     <Compile Include="Contex\TLContex.cs" />

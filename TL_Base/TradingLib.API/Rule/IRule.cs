@@ -26,7 +26,7 @@ namespace TradingLib.API
         int ID { get; set; }
 
         //该规则附着的账户
-        IAccountExp Account { get; set; }
+        IAccount Account { get; set; }
 
         /// <summary>
         /// 标记规则是否有效

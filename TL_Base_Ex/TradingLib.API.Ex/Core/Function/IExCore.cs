@@ -32,5 +32,11 @@ namespace TradingLib.API
         /// </summary>
         /// <param name="oid"></param>
         void CancelOrder(long oid);
+
+
+        void ManualInsertOrder(Order o);
+
+        void ManualInsertTrade(Trade t);
+
     }
 }

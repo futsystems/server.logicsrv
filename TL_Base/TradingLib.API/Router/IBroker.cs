@@ -59,9 +59,6 @@ namespace TradingLib.API
         event LongDelegate GotCancelEvent;
         #endregion
 
-        //清算中心 用于交易通道查询当前的委托 仓位 以及其他相关数据
-        IBrokerClearCentre ClearCentre { get; set; }
-
         /// <summary>
         /// 获得成交接口所有委托
         /// </summary>

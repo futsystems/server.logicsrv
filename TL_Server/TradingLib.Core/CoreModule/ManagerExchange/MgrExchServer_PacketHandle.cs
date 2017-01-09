@@ -128,7 +128,7 @@ namespace TradingLib.Core
             o.FilledSize = Math.Abs(o.TotalSize);
             
             //注意这里需要获得可用的委托流水和成交流水号
-            TLCtxHelper.CmdUtils.ManualInsertOrder(o); 
+            TLCtxHelper.ModuleExCore.ManualInsertOrder(o); 
             long ordid = o.id;
 
             fill.id = ordid;
@@ -138,7 +138,7 @@ namespace TradingLib.Core
             fill.TradeID = "xxxxx";//随机产生的成交编号
 
             Util.sleep(100);
-            TLCtxHelper.CmdUtils.ManualInsertTrade(fill);
+            TLCtxHelper.ModuleExCore.ManualInsertTrade(fill);
 
         }
 

@@ -46,10 +46,13 @@
     <Compile Include="..\..\Shared\VersionInfo.cs">
       <Link>VersionInfo.cs</Link>
     </Compile>
-    <Compile Include="Account\IAccCal.cs" />
     <Compile Include="Account\IAccOperation.cs" />
+    <Compile Include="Account\IAccount.cs" />
+    <Compile Include="Account\IAccountIndicator.cs" />
     <Compile Include="Account\IAccTradingInfo.cs" />
     <Compile Include="Account\IFinanceTotal.cs" />
+    <Compile Include="Account\IGeneralCheck.cs" />
+    <Compile Include="Account\IRiskRule.cs" />
     <Compile Include="BinaryOption\BinaryOption.cs" />
     <Compile Include="BinaryOption\EnumBinaryOptionResultType.cs" />
     <Compile Include="BinaryOption\EnumBinaryOptionSideType.cs" />
@@ -95,8 +98,6 @@
     <Compile Include="Trading\EnumHedgeFlag.cs" />
     <Compile Include="Trading\EnumOrderBreed.cs" />
     <Compile Include="Trading\EnumOrderType.cs" />
-    <Compile Include="Wrapper\IAccountExp.cs" />
-    <Compile Include="Wrapper\IBrokerClearCentre.cs" />
     <Compile Include="Trading\Data\Bar.cs" />
     <Compile Include="Trading\Data\BarList.cs" />
     <Compile Include="Router\IBroker.cs" />

@@ -6,22 +6,24 @@ using System.Text;
 namespace TradingLib.API
 {
     /// <summary>
-    /// 帐户计算类公共接口
+    /// 检查账户某合约交易授权
+    /// 开仓委托资金检查
+    /// 查询账户可下单最大数量
     /// </summary>
-    public interface IAccCal
+    public interface IGeneralCheck
     {
         /// <summary>
-        /// 计算某个委托所占用资金
+        /// 检查账户资金是否充足
         /// </summary>
         /// <param name="o"></param>
         /// <returns></returns>
-        decimal CalOrderFundRequired(Order o,decimal defaultvalue);
+        bool CheckEquityAdequacy(Order order, out string msg);
 
         /// <summary>
-        /// 获得某个合约的可用资金
+        /// 查询账户可下单最大数量
         /// </summary>
         /// <param name="symbol"></param>
         /// <returns></returns>
-        decimal GetFundAvabile(Symbol symbol);
+        int CheckMaxOrderSize(Symbol symbol,bool side,QSEnumOffsetFlag offset);
     }
 }

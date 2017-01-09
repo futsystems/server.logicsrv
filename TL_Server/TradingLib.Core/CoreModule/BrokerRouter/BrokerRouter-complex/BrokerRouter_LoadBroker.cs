@@ -26,9 +26,6 @@ namespace TradingLib.Core
             broker.GotOrderErrorEvent += new OrderErrorDelegate(Broker_GotOrderError);
             broker.GotOrderActionErrorEvent += new OrderActionErrorDelegate(Broker_GotOrderActionError);
             
-            //将清算中心绑定到交易通道
-            broker.ClearCentre = new ClearCentreAdapterToBroker();
-
             if (broker is TLBrokerBase)
             {
                 TLBrokerBase brokerbase = broker as TLBrokerBase;
