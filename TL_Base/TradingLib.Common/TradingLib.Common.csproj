@@ -147,7 +147,7 @@
     <Compile Include="BusinessEntities\Basic\MarketTime\TradingRangeImpl.cs" />
     <Compile Include="BusinessEntities\Stock\PowerData.cs" />
     <Compile Include="BusinessEntities\Order\OrderCompare.cs" />
-    <Compile Include="Msic\SymbolInfo.cs" />
+    <Compile Include="BusinessEntities\Basic\SymbolInfo.cs" />
     <Compile Include="BusinessEntities\Utils\MarketTimeUtil.cs" />
     <Compile Include="BusinessEntities\Utils\TradingRangeUtil.cs" />
     <Compile Include="BusinessEntities\Settlement\AccountSettlement.cs" />
@@ -176,7 +176,6 @@
     <Compile Include="BusinessEntities\Vendor\PositionMetricImpl.cs" />
     <Compile Include="BusinessEntities\Vendor\PositionMetricHelper.cs" />
     <Compile Include="BusinessEntities\Vendor\RouterGroupImpl.cs" />
-    <Compile Include="Msic\Status.cs" />
     <Compile Include="Tracker\BrokerTracker.cs" />
     <Compile Include="Tracker\OrderSplitTracker.cs" />
     <Compile Include="BusinessEntities\CTP\CommissionConfig.cs" />
@@ -342,9 +341,7 @@
     <Compile Include="Zlib\ZStream.cs" />
     <Compile Include="Zlib\ZStreamException.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="1\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
