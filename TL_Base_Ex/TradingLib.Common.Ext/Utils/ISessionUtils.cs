@@ -59,15 +59,6 @@ namespace TradingLib.Common
             return null;
         }
 
-        /// <summary>
-        /// 发送客户端逻辑数据包
-        /// </summary>
-        /// <param name="session"></param>
-        /// <param name="packet"></param>
-        private static void SendPacket(this ISession session,IPacket packet)
-        {
-            //TLCtxHelper.Ctx.MessageExchange.Send(packet);
-        }
 
         /// <summary>
         /// 发送管理端逻辑数据包
@@ -97,7 +88,6 @@ namespace TradingLib.Common
         }
 
 
-
         /// <summary>
         /// 操作错误回报
         /// 通过FutsRspErro携带具体的错误消息生成RspMGROperationResponse 发送给对应的客户端
@@ -108,7 +98,6 @@ namespace TradingLib.Common
         {
             RspMGROperationResponse response = ResponseTemplate<RspMGROperationResponse>.SrvSendRspResponse(session);
             response.RspInfo.Fill(error);
-
             session.SendPacketMgr(response);
         }
 
@@ -122,7 +111,6 @@ namespace TradingLib.Common
         {
             RspMGROperationResponse response = ResponseTemplate<RspMGROperationResponse>.SrvSendRspResponse(session);
             response.RspInfo.ErrorMessage = successmessage;
-
             session.SendPacketMgr(response);
         }
 

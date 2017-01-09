@@ -9,19 +9,7 @@ namespace TradingLib.Common
     public static class Util_String
     {
 
-        public static string SerializeObject(this object obj)
-        {
-            return Newtonsoft.Json.JsonConvert.SerializeObject(obj);
-        }
-        public static T DeserializeObject<T>(this string json)
-        {
-            return Newtonsoft.Json.JsonConvert.DeserializeObject<T>(json);
-        }
-
-        public static Newtonsoft.Json.Linq.JObject DeserializeObject(this string json)
-        {
-            return (Newtonsoft.Json.Linq.JObject)Newtonsoft.Json.JsonConvert.DeserializeObject(json);
-        }
+        
 
         /// <summary>
         /// 解析生成对应的Enum
