@@ -14,13 +14,13 @@ namespace TradingLib.Common
     /// </summary>
     public  class DBExchangeTracker
     {
-        Dictionary<string, Exchange> exchagneCodeMap = new Dictionary<string, Exchange>();
-        Dictionary<int, Exchange> exchangeIdMap = new Dictionary<int, Exchange>();
+        Dictionary<string, ExchangeImpl> exchagneCodeMap = new Dictionary<string, ExchangeImpl>();
+        Dictionary<int, ExchangeImpl> exchangeIdMap = new Dictionary<int, ExchangeImpl>();
 
         public DBExchangeTracker()
         { 
             //从数据库加载交易所信息 将其缓存到内存
-            foreach (Exchange ex in ORM.MBasicInfo.SelectExchange())
+            foreach (ExchangeImpl ex in ORM.MBasicInfo.SelectExchange())
             {
                 exchangeIdMap.Add(ex.ID, ex);
                 exchagneCodeMap.Add(ex.EXCode, ex);
@@ -34,7 +34,7 @@ namespace TradingLib.Common
         /// <returns></returns>
         public string GetExchangeTitle(string excode)
         {
-            Exchange ex = this[excode];
+            ExchangeImpl ex = this[excode];
             return ex != null ? ex.Title : excode;
         }
 
@@ -43,10 +43,10 @@ namespace TradingLib.Common
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public Exchange this[int id]
+        public ExchangeImpl this[int id]
         {
             get {
-                Exchange ex = null;
+                ExchangeImpl ex = null;
                 if (exchangeIdMap.TryGetValue(id, out ex))
                 {
                     return ex;
@@ -63,11 +63,11 @@ namespace TradingLib.Common
         /// </summary>
         /// <param name="index"></param>
         /// <returns></returns>
-        public Exchange this[string excode]
+        public ExchangeImpl this[string excode]
         {
             get
             {
-                Exchange ex = null;
+                ExchangeImpl ex = null;
                 if (exchagneCodeMap.TryGetValue(excode, out ex))
                 {
                     return ex;
@@ -82,7 +82,7 @@ namespace TradingLib.Common
         /// <summary>
         /// 返回所有交易所列表
         /// </summary>
-        public Exchange[] Exchanges
+        public ExchangeImpl[] Exchanges
         {
             get
             {
@@ -91,9 +91,9 @@ namespace TradingLib.Common
         }
 
 
-        public void UpdateExchange(Exchange ex)
+        public void UpdateExchange(ExchangeImpl ex)
         {
-            Exchange target = null;
+            ExchangeImpl target = null;
             if (exchangeIdMap.TryGetValue(ex.ID, out target))
             {
                 target.Name = ex.Name;
@@ -108,7 +108,7 @@ namespace TradingLib.Common
             }
             else
             {
-                target = new Exchange();
+                target = new ExchangeImpl();
                 target.EXCode = ex.EXCode;
                 target.Name = ex.Name;
                 target.Title = ex.Title;

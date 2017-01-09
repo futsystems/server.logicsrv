@@ -35,21 +35,21 @@ namespace TradingLib.Common
     /// </summary>
     public class DBMarketTimeTracker
     {
-        Dictionary<int, MarketTime> idxsessionmap = new Dictionary<int, MarketTime>();
+        Dictionary<int, MarketTimeImpl> idxsessionmap = new Dictionary<int, MarketTimeImpl>();
 
         public DBMarketTimeTracker()
         {
-            foreach (MarketTime mt in ORM.MBasicInfo.SelectSession())
+            foreach (MarketTimeImpl mt in ORM.MBasicInfo.SelectSession())
             {
                 idxsessionmap.Add(mt.ID, mt);
             }
         }
 
-        public MarketTime this[int idx]
+        public MarketTimeImpl this[int idx]
         {
             get
             {
-                MarketTime session = null;
+                MarketTimeImpl session = null;
                 if (idxsessionmap.TryGetValue(idx, out session))
                 {
                     return session;
@@ -58,7 +58,7 @@ namespace TradingLib.Common
             }
         }
 
-        public MarketTime[] MarketTimes
+        public MarketTimeImpl[] MarketTimes
         {
             get
             {
@@ -66,9 +66,9 @@ namespace TradingLib.Common
             }
         }
 
-        public void UpdateMarketTime(MarketTime mt)
+        public void UpdateMarketTime(MarketTimeImpl mt)
         {
-            MarketTime target = null;
+            MarketTimeImpl target = null;
             if (idxsessionmap.TryGetValue(mt.ID, out target))
             {
                 target.Name = mt.Name;
@@ -81,7 +81,7 @@ namespace TradingLib.Common
             }
             else
             {
-                target = new MarketTime();
+                target = new MarketTimeImpl();
                 target.Name = mt.Name;
                 target.Description = mt.Description;
                 target.CloseTime = mt.CloseTime;

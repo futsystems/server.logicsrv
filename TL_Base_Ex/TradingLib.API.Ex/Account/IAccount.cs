@@ -137,7 +137,7 @@ namespace TradingLib.API
         /// </summary>
         /// <param name="exchange"></param>
         /// <param name="settleday"></param>
-        void SettleExchange(IExchange exchange, int settleday);
+        void SettleExchange(Exchange exchange, int settleday);
 
         /// <summary>
         /// 交易账户执行账户结算

@@ -38,11 +38,11 @@ namespace TradingLib.Common
             Exchange = null;
         }
 
-        public Exchange Exchange { get; set; }
+        public ExchangeImpl Exchange { get; set; }
         public override string ResponseSerialize()
         {
             if (this.Exchange == null) return string.Empty;
-            return TradingLib.Common.Exchange.Serialize(this.Exchange);
+            return TradingLib.Common.ExchangeImpl.Serialize(this.Exchange);
         }
 
         public override void ResponseDeserialize(string content)
@@ -52,7 +52,7 @@ namespace TradingLib.Common
                 this.Exchange = null;
                 return;
             }
-            this.Exchange = TradingLib.Common.Exchange.Deserialize(content);
+            this.Exchange = TradingLib.Common.ExchangeImpl.Deserialize(content);
         }
     }
 
@@ -83,13 +83,13 @@ namespace TradingLib.Common
             this.MarketTime = null;
         }
 
-        public MarketTime MarketTime { get; set; }
+        public MarketTimeImpl MarketTime { get; set; }
 
         public override string ResponseSerialize()
         {
             if (this.MarketTime == null)
                 return string.Empty;
-            return TradingLib.Common.MarketTime.Serialize(this.MarketTime);
+            return TradingLib.Common.MarketTimeImpl.Serialize(this.MarketTime);
         }
 
         public override void ResponseDeserialize(string content)
@@ -99,7 +99,7 @@ namespace TradingLib.Common
                 this.MarketTime = null;
                 return;
             }
-            this.MarketTime = TradingLib.Common.MarketTime.Deserialize(content);
+            this.MarketTime = TradingLib.Common.MarketTimeImpl.Deserialize(content);
         }
     }
 

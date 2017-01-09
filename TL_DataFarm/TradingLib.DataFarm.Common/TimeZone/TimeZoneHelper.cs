@@ -52,7 +52,7 @@ namespace TradingLib.DataFarm.Common
         /// <param name="feedTime"></param>
         /// <param name="timezone"></param>
         /// <returns></returns>
-        public DateTime ConvertToTimeZone(QSEnumDataFeedTypes datafeedtype,DateTime feedTime,IExchange exchange)
+        public DateTime ConvertToTimeZone(QSEnumDataFeedTypes datafeedtype,DateTime feedTime,Exchange exchange)
         {
             DateTimeZone exchangeTimeZone = GetTimeZoneByZoneID(exchange.TimeZoneID);
             DateTimeZone feedTimeZone = GetTimeZoneByZoneID(GetDataFeedTimeZoneID(datafeedtype));

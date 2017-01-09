@@ -92,7 +92,7 @@ namespace TradingLib.Common
         /// <param name="broker"></param>
         /// <param name="exchange"></param>
         /// <returns></returns>
-        public static IEnumerable<Position> GetPositions(this IBroker broker, IExchange exchange)
+        public static IEnumerable<Position> GetPositions(this IBroker broker, Exchange exchange)
         {
             return broker.Positions.Where(pos => pos.oSymbol.SecurityFamily.Exchange.EXCode == exchange.EXCode);
         }
@@ -103,7 +103,7 @@ namespace TradingLib.Common
         /// <param name="account"></param>
         /// <param name="exchange"></param>
         /// <returns></returns>
-        public static IEnumerable<Order> GetOrders(this IBroker broker, IExchange exchange, int settleday)
+        public static IEnumerable<Order> GetOrders(this IBroker broker, Exchange exchange, int settleday)
         {
             return broker.Orders.Where(o => o.oSymbol.SecurityFamily.Exchange.EXCode == exchange.EXCode && o.SettleDay == settleday);
         }
@@ -114,7 +114,7 @@ namespace TradingLib.Common
         /// <param name="account"></param>
         /// <param name="exchange"></param>
         /// <returns></returns>
-        public static IEnumerable<Trade> GetTrades(this IBroker broker, IExchange exchange, int settleday)
+        public static IEnumerable<Trade> GetTrades(this IBroker broker, Exchange exchange, int settleday)
         {
             return broker.Trades.Where(f => f.oSymbol.SecurityFamily.Exchange.EXCode == exchange.EXCode && f.SettleDay == settleday);
         }

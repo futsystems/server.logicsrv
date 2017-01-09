@@ -10,7 +10,7 @@ namespace TradingLib.Common
     {
 
 
-        static QSEnumActionCheckResult MarketTimeCheck(IExchange exchange,DateTime extime,TradingRange range,out int settleday)
+        static QSEnumActionCheckResult MarketTimeCheck(Exchange exchange,DateTime extime,TradingRange range,out int settleday)
         {
             settleday = 0;
             if (range == null)
@@ -54,7 +54,7 @@ namespace TradingLib.Common
         /// <returns></returns>
         public static bool IsMarketOpenAfterTime(this SecurityFamily sec,TimeSpan span)
         {
-            IExchange exchange = sec.Exchange;
+            Exchange exchange = sec.Exchange;
             DateTime extime = exchange.GetExchangeTime() + span;//获得交易所时间
             TradingRange range = sec.MarketTime.JudgeRange(extime);//根据交易所时间判定当前品种所属交易小节
 
@@ -78,7 +78,7 @@ namespace TradingLib.Common
         /// <returns></returns>
         public static QSEnumActionCheckResult CheckPlaceOrder(this SecurityFamily sec,out int settleday)
         {
-            IExchange exchange = sec.Exchange;
+            Exchange exchange = sec.Exchange;
             DateTime extime = exchange.GetExchangeTime();//获得交易所时间
             TradingRange range = sec.MarketTime.JudgeRange(extime);//根据交易所时间判定当前品种所属交易小节
 
@@ -89,7 +89,7 @@ namespace TradingLib.Common
 
         public static QSEnumActionCheckResult CheckCancelOrder(this SecurityFamily sec,out int settleday)
         {
-            IExchange exchange = sec.Exchange;
+            Exchange exchange = sec.Exchange;
             DateTime extime = exchange.GetExchangeTime();//获得交易所时间
             TradingRange range = sec.MarketTime.JudgeRange(extime);//根据交易所时间判定当前品种所属交易小节
 
@@ -108,7 +108,7 @@ namespace TradingLib.Common
         {
             if (sec.Exchange.Country == Country.CN && sec.Currency == CurrencyType.RMB) return true;//国内交易所没有特殊假日
 
-            IExchange exchange = sec.Exchange;
+            Exchange exchange = sec.Exchange;
             DateTime extime = exchange.GetExchangeTime();//获得交易所时间
             DateTime nextday = extime.AddDays(1);
 
@@ -148,7 +148,7 @@ namespace TradingLib.Common
         /// <returns></returns>
         public static bool CloseAfterTimeSpan(this SecurityFamily sec,int minute)
         {
-            IExchange exchange = sec.Exchange;
+            Exchange exchange = sec.Exchange;
             DateTime extime = exchange.GetExchangeTime();//获得交易所时间
             TradingRange range = sec.MarketTime.JudgeRange(extime);//根据交易所时间判定当前品种所属交易小节
 

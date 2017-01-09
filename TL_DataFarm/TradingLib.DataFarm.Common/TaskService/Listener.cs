@@ -5,11 +5,13 @@ using System.Text;
 using TradingLib.API;
 using TradingLib.Common;
 using Quartz;
+using Common.Logging;
 
 namespace TradingLib.DataFarm.Common
 {
     public class JobListener : IJobListener
     {
+        ILog logger = LogManager.GetLogger("JobListener");
         string _name = "JobListener";
         public string Name { get { return _name; } }
 
@@ -49,7 +51,8 @@ namespace TradingLib.DataFarm.Common
             }
             catch (Exception ex)
             {
-                Util.Error("JobExecuted Handle  Error:" + ex.ToString(), "JobListener");
+
+                logger.Error("JobExecuted Handle  Error:" + ex.ToString());
             }
         }
     }

@@ -29,7 +29,7 @@ namespace TradingLib.API
         /// <summary>
         /// 结算标识
         /// </summary>
-        QSEnumRangeSettleFlag SettleFlag { get;}
+        QSEnumRangeSettleFlag SettleFlag { get; }
         /// <summary>
         /// 开始日
         /// </summary>
@@ -41,16 +41,16 @@ namespace TradingLib.API
         /// <summary>
         /// 开始时间
         /// </summary>
-        int StartTime { get;}
+        int StartTime { get; }
         /// <summary>
         /// 结束时间
         /// </summary>
-        int EndTime { get;}
+        int EndTime { get; }
 
         /// <summary>
         /// 收盘时间段标识
         /// 用于标注在该交易小节 收盘
         /// </summary>
-        bool MarketClose { get;}
+        bool MarketClose { get; }
     }
 }

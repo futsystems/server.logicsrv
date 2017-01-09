@@ -31,7 +31,7 @@ namespace TradingLib.ServiceManager
 
         private IModuleExCore _messageExchagne;//交易消息交换
         private IModuleMgrExchange _managerExchange;//管理消息交换
-        //private IModuleAPIExchange _webmsgExchange;//Web端消息响应
+        //private IModuleAPExchange _webmsgExchange;//Web端消息响应
 
         private IModuleClearCentre _clearCentre;//清算服务
         private IModuleAccountManager _acctmanger;//交易帐户管理服务

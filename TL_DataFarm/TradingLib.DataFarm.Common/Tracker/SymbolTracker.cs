@@ -99,31 +99,31 @@ namespace TradingLib.DataFarm.Common
         /// 这里的可用 应该按照合约到期日进行判断,合约过期后就不需要在订阅
         /// </summary>
         /// <returns></returns>
-        public SymbolBasket GetBasketAvabile()
-        {
-            SymbolBasket basket = new SymbolBasketImpl();
-            foreach (Symbol s in symcodemap.Values.Where(s => s.IsTradeable).ToArray())
-            {
-                basket.Add(s);
-            }
-            return basket;
+        //public SymbolBasket GetBasketAvabile()
+        //{
+        //    SymbolBasket basket = new SymbolBasketImpl();
+        //    foreach (Symbol s in symcodemap.Values.Where(s => s.IsTradeable).ToArray())
+        //    {
+        //        basket.Add(s);
+        //    }
+        //    return basket;
 
-        }
+        //}
 
-        /// <summary>
-        /// 获得某个品种的所有合约
-        /// </summary>
-        /// <param name="sec"></param>
-        /// <returns></returns>
-        public SymbolBasket GetBasketAvabileViaSecurity(SecurityFamily sec)
-        {
-            SymbolBasket basket = new SymbolBasketImpl();
-            foreach (Symbol s in symcodemap.Values.Where(s => s.IsTradeable && IsSymbolWithSecurity(s, sec)).ToArray())
-            {
-                basket.Add(s);
-            }
-            return basket;
-        }
+        ///// <summary>
+        ///// 获得某个品种的所有合约
+        ///// </summary>
+        ///// <param name="sec"></param>
+        ///// <returns></returns>
+        //public SymbolBasket GetBasketAvabileViaSecurity(SecurityFamily sec)
+        //{
+        //    SymbolBasket basket = new SymbolBasketImpl();
+        //    foreach (Symbol s in symcodemap.Values.Where(s => s.IsTradeable && IsSymbolWithSecurity(s, sec)).ToArray())
+        //    {
+        //        basket.Add(s);
+        //    }
+        //    return basket;
+        //}
 
         /// <summary>
         /// 某个合约是否属于某个品种
@@ -305,7 +305,7 @@ namespace TradingLib.DataFarm.Common
 
                 if (target.security_fk == 0 || target.SecurityFamily == null)
                 {
-                    Util.Debug("合约对象没有品种数据,不插入该合约信息");
+                    Console.WriteLine("合约对象没有品种数据,不插入该合约信息");
                 }
                 if (syncdb)
                 {

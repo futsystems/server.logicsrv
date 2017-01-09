@@ -30,7 +30,7 @@ namespace TradingLib.DataFarm.Common
         void OnSymbolExpiredEvent(Symbol arg1, Symbol arg2)
         {
             logger.Info(string.Format("Symbol:{0} Expied, new symbol created:{1}", arg1.Symbol, arg2.Symbol));
-            IExchange exch = MDBasicTracker.ExchagneTracker[arg1.Exchange];
+            Exchange exch = MDBasicTracker.ExchagneTracker[arg1.Exchange];
             List<Symbol> list = new List<Symbol>() { arg2};
             if (_defaultFeed != null)
             {

@@ -10,7 +10,7 @@ namespace TradingLib.Common
     /// 交易时间段
     /// 交易时间段指定一个特定的时区,同时包含一组交易小节列表
     /// </summary>
-    public class MarketTime : IMarketTime
+    public class MarketTimeImpl : MarketTime
     {
         /// <summary>
         /// 交易小节列表
@@ -62,7 +62,7 @@ namespace TradingLib.Common
         /// 序列化
         /// </summary>
         /// <returns></returns>
-        public static string Serialize(MarketTime mt)
+        public static string Serialize(MarketTimeImpl mt)
         {
             StringBuilder sb = new StringBuilder();
             char d = ',';
@@ -83,10 +83,10 @@ namespace TradingLib.Common
         /// 反序列化
         /// </summary>
         /// <param name="content"></param>
-        public static MarketTime Deserialize(string content)
+        public static MarketTimeImpl Deserialize(string content)
         {
             string[] rec = content.Split(new char[] { ',' }, 5);
-            MarketTime mt = new MarketTime();
+            MarketTimeImpl mt = new MarketTimeImpl();
             mt.ID = int.Parse(rec[0]);
             mt.Name = rec[1];
             mt.Description = rec[2];

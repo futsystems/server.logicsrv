@@ -46,7 +46,7 @@ namespace TradingLib.Common
         /// <param name="account"></param>
         /// <param name="exchange"></param>
         /// <returns></returns>
-        public static IEnumerable<Position> GetPositions(this IAccount account, IExchange exchange)
+        public static IEnumerable<Position> GetPositions(this IAccount account, Exchange exchange)
         {
             return account.Positions.Where(pos => pos.oSymbol.SecurityFamily.Exchange.EXCode == exchange.EXCode);        
         }
@@ -58,7 +58,7 @@ namespace TradingLib.Common
         /// <param name="account"></param>
         /// <param name="exchange"></param>
         /// <returns></returns>
-        public static IEnumerable<Order> GetOrders(this IAccount account, IExchange exchange,int settleday)
+        public static IEnumerable<Order> GetOrders(this IAccount account, Exchange exchange, int settleday)
         {
             return account.Orders.Where(o => o.oSymbol.SecurityFamily.Exchange.EXCode == exchange.EXCode && o.SettleDay == settleday);
         }
@@ -69,7 +69,7 @@ namespace TradingLib.Common
         /// <param name="account"></param>
         /// <param name="exchange"></param>
         /// <returns></returns>
-        public static IEnumerable<Trade> GetTrades(this IAccount account, IExchange exchange,int settleday)
+        public static IEnumerable<Trade> GetTrades(this IAccount account, Exchange exchange, int settleday)
         {
             return account.Trades.Where(f => f.oSymbol.SecurityFamily.Exchange.EXCode == exchange.EXCode && f.SettleDay == settleday);
         }

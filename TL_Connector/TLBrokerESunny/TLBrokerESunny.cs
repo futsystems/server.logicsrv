@@ -607,7 +607,7 @@ namespace Broker.Live
         }
 
 
-        public override void SettleExchange(IExchange exchange, int settleday)
+        public override void SettleExchange(Exchange exchange, int settleday)
         {
             List<PositionDetail> positiondetail_settle = new List<PositionDetail>();
             foreach (var pos in this.GetPositions(exchange).Where(p => !p.isFlat))

@@ -47,7 +47,7 @@ namespace TradingLib.BrokerXAPI
         /// </summary>
         /// <param name="exchange"></param>
         /// <param name="settleday"></param>
-        public virtual void SettleExchange(IExchange exchange, int settleday)
+        public virtual void SettleExchange(Exchange exchange, int settleday)
         {
             logger.Warn(string.Format("SettleExchange Exch:{0} Settleday:{1}", exchange.EXCode, settleday));
         }

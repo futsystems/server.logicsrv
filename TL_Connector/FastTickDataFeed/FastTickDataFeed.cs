@@ -355,7 +355,7 @@ namespace DataFeed.FastTick
                 foreach (var pair in exSymMap)
                 {
                     MDRegisterSymbolsRequest request = RequestTemplate<MDRegisterSymbolsRequest>.CliSendRequest(0);
-                    Exchange exch = BasicTracker.ExchagneTracker[pair.Key];
+                    ExchangeImpl exch = BasicTracker.ExchagneTracker[pair.Key];
                     if (exch == null)
                     {
                         logger.Warn("Exchange:{0} do not exist".Put(pair.Key));

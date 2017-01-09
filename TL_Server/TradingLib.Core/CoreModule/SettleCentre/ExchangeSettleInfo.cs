@@ -33,7 +33,7 @@ namespace TradingLib.Core
         /// <summary>
         /// 交易所
         /// </summary>
-        public IExchange Exchange { get; set; }
+        public Exchange Exchange { get; set; }
 
         /// <summary>
         /// 该交易所下一个结算时间

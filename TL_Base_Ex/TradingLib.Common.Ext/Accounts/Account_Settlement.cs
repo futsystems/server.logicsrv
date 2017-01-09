@@ -103,7 +103,7 @@ namespace TradingLib.Common
         /// </summary>
         /// <param name="exchange"></param>
         /// <param name="settleday"></param>
-        public void SettleExchange(IExchange exchange,int settleday)
+        public void SettleExchange(Exchange exchange, int settleday)
         {
             try
             {

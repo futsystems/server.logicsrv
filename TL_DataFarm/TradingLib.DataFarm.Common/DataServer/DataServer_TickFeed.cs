@@ -114,7 +114,7 @@ namespace TradingLib.DataFarm.Common
             //向TickPubSrv发起合约实时行情注册请求
             foreach (var g in MDBasicTracker.SymbolTracker.Symbols.GroupBy(sym => sym.Exchange))
             { 
-                IExchange exch = MDBasicTracker.ExchagneTracker[g.Key];
+                Exchange exch = MDBasicTracker.ExchagneTracker[g.Key];
                 List<Symbol> list = g.ToList<Symbol>();
                 tickfeed.RegisterSymbols(exch, list);
             }

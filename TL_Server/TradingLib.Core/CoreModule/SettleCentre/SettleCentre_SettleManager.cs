@@ -287,12 +287,12 @@ namespace TradingLib.Core
             var data = JsonMapper.ToObject(json);
             //获得对应的交易日
             string excode  = data["exchange"].ToString();
-            IExchange exchagne = BasicTracker.ExchagneTracker[excode];
+            Exchange exchagne = BasicTracker.ExchagneTracker[excode];
             if (exchagne == null)
             {
                 throw new FutsRspError("交易所:" + excode + "不存在");
             }
-            List<IExchange> exlist = new List<IExchange>();
+            List<Exchange> exlist = new List<Exchange>();
             exlist.Add(exchagne);
             //结算交易所
             SettleExchange(exlist,this.Tradingday);
@@ -325,7 +325,7 @@ namespace TradingLib.Core
 
             //执行结算过程
             //1.交易所结算
-            SettleExchange(BasicTracker.ExchagneTracker.Exchanges.ToList<IExchange>(), _tradingday);
+            SettleExchange(BasicTracker.ExchagneTracker.Exchanges.ToList<Exchange>(), _tradingday);
 
             //2.帐户结算
             SettleAccount();

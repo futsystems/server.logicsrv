@@ -335,14 +335,14 @@ namespace TradingLib.DataFarm.Common
         protected virtual void SrvOnQryExchangeRequest(IServiceHost host, IConnection conn, XQryExchangeRequuest request)
         {
             if (_verbose) logger.Info(string.Format("Conn:{0} qry exchange:{1}", conn.SessionID, request.ToString()));
-            IExchange[] exchs =MDBasicTracker.ExchagneTracker.Exchanges;
+            ExchangeImpl[] exchs =MDBasicTracker.ExchagneTracker.Exchanges;
 
             int totalnum = exchs.Length;
 
             for (int i = 0; i < totalnum; i++)
             {
                 RspXQryExchangeResponse response = ResponseTemplate<RspXQryExchangeResponse>.SrvSendRspResponse(request);
-                response.Exchange = exchs[i] as Exchange;
+                response.Exchange = exchs[i];
                 response.IsLast = i==totalnum - 1;
                 this.SendData(conn, response);
             }
@@ -357,7 +357,7 @@ namespace TradingLib.DataFarm.Common
         protected virtual void SrvOnQryMarketTimeRequest(IServiceHost host, IConnection conn, XQryMarketTimeRequest request)
         {
             if (_verbose) logger.Info(string.Format("Conn:{0} qry market time:{1}", conn.SessionID, request.ToString()));
-            MarketTime[] mts = MDBasicTracker.MarketTimeTracker.MarketTimes.ToArray();
+            MarketTimeImpl[] mts = MDBasicTracker.MarketTimeTracker.MarketTimes.ToArray();
 
             int totalnum = mts.Length;
             for (int i = 0; i < totalnum; i++)

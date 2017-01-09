@@ -21,7 +21,7 @@ namespace TradingLib.Core
         /// <param name="exchange"></param>
         /// <param name="systime"></param>
         /// <returns></returns>
-        DateTime GetNextSettleTime(IExchange exchange)
+        DateTime GetNextSettleTime(Exchange exchange)
         {
             //获得交易所当前时间
             DateTime exchangetime = exchange.GetExchangeTime();
@@ -41,7 +41,7 @@ namespace TradingLib.Core
         /// </summary>
         /// <param name="exchange"></param>
         /// <returns></returns>
-        ExchangeSettleInfo GetExchangeSettleInfo(IExchange exchange)
+        ExchangeSettleInfo GetExchangeSettleInfo(Exchange exchange)
         {
             ExchangeSettleInfo info = new ExchangeSettleInfo();
             info.Exchange = exchange;
@@ -59,7 +59,7 @@ namespace TradingLib.Core
         void InitSettleTask()
         {
             logger.Info("Init Settle Task");
-            Dictionary<DateTime, List<IExchange>> exchangesettlemap = new Dictionary<DateTime, List<IExchange>>();
+            Dictionary<DateTime, List<Exchange>> exchangesettlemap = new Dictionary<DateTime, List<Exchange>>();
 
             List<ExchangeSettleInfo> infolsit = new List<ExchangeSettleInfo>();
 
@@ -70,7 +70,7 @@ namespace TradingLib.Core
 
                 if (!exchangesettlemap.Keys.Contains(exinfo.LocalSysSettleTime))
                 {
-                    exchangesettlemap.Add(exinfo.LocalSysSettleTime, new List<IExchange>());
+                    exchangesettlemap.Add(exinfo.LocalSysSettleTime, new List<Exchange>());
                 }
 
                 exchangesettlemap[exinfo.LocalSysSettleTime].Add(ex);
@@ -130,7 +130,7 @@ namespace TradingLib.Core
         /// </summary>
         /// <param name="settletime"></param>
         /// <param name="list"></param>
-        void RegisterExchangeSettleTask(DateTime settletime, List<IExchange> list)
+        void RegisterExchangeSettleTask(DateTime settletime, List<Exchange> list)
         {
             logger.Info(string.Format("Register Exchange Settle Task,Time:{0} Ex:{1}", settletime.ToString("HH:mm:ss"), string.Join(" ", list.Select(e => e.EXCode).ToArray())));
             TaskProc task = new TaskProc(this.UUID, "交易所结算-" + settletime.ToString("HH:mm:ss"), settletime.Hour, settletime.Minute, settletime.Second, delegate() { SettleExchange(list); });
@@ -219,7 +219,7 @@ namespace TradingLib.Core
         /// 2.Broker结算
         /// </summary>
         /// <param name="list"></param>
-        void SettleExchange(List<IExchange> list, int tradingday = 0)
+        void SettleExchange(List<Exchange> list, int tradingday = 0)
         {
             try
             {
@@ -404,7 +404,7 @@ namespace TradingLib.Core
         /// </summary>
         /// <param name="exchange"></param>
         /// <param name="settleday"></param>
-        void SavePowerData(IExchange exchange, int settleday)
+        void SavePowerData(Exchange exchange, int settleday)
         { 
             //IEnumerable<PowerData> pds = null;
             //foreach(var pd in pds)
@@ -417,7 +417,7 @@ namespace TradingLib.Core
         /// 保存交易所的结算价格
         /// </summary>
         /// <param name="exchange"></param>
-        void SaveSettlementPrice(IExchange exchange,int settleday)
+        void SaveSettlementPrice(Exchange exchange,int settleday)
         {
             //获得交易所所有合约结算价格
             foreach (var sym in BasicTracker.DomainTracker.SuperDomain.GetSymbols().Where(s=>s.SecurityFamily.Exchange.EXCode == exchange.EXCode))

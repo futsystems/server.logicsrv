@@ -16,7 +16,7 @@ namespace TradingLib.Common
         /// </summary>
         /// <param name="exchagne"></param>
         /// <returns></returns>
-        private static Calendar GetCalendar(this IExchange exchagne)
+        private static Calendar GetCalendar(this Exchange exchagne)
         {
             return BasicTracker.CalendarTracker[exchagne.Calendar];
         }
@@ -27,7 +27,7 @@ namespace TradingLib.Common
         /// <param name="exchange"></param>
         /// <param name="extime"></param>
         /// <returns></returns>
-        public static bool IsInHoliday(this IExchange exchange, DateTime extime)
+        public static bool IsInHoliday(this Exchange exchange, DateTime extime)
         {
             //获得日历对象
             Calendar calendar = exchange.GetCalendar();
@@ -40,7 +40,7 @@ namespace TradingLib.Common
         /// <param name="exchange"></param>
         /// <param name="extime"></param>
         /// <returns></returns>
-        public static bool IsInSpecialHoliday(this IExchange exchange, DateTime extime)
+        public static bool IsInSpecialHoliday(this Exchange exchange, DateTime extime)
         {
             Calendar calendar = exchange.GetCalendar();
             return calendar.IsSpecialHoliday(extime);
@@ -53,7 +53,7 @@ namespace TradingLib.Common
         /// <param name="exchange"></param>
         /// <param name="extime"></param>
         /// <returns></returns>
-        public static DateTime NextWorkDayWithoutHoliday(this IExchange exchange, DateTime extime)
+        public static DateTime NextWorkDayWithoutHoliday(this Exchange exchange, DateTime extime)
         {
             //获取给定时间的下一个工作日
             DateTime workday = extime.NextWorkDay(); 
@@ -76,7 +76,7 @@ namespace TradingLib.Common
         /// <param name="exchange"></param>
         /// <param name="extime"></param>
         /// <returns></returns>
-        public static int CurrentTradingDay(this IExchange exchange, DateTime extime)
+        public static int CurrentTradingDay(this Exchange exchange, DateTime extime)
         { 
             //
             if (!extime.IsWorkDay()) return 0; //如果是非工作日 则返回0

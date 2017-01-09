@@ -14,7 +14,7 @@ namespace TradingLib.Common
         /// </summary>
         /// <param name="mt"></param>
         /// <returns></returns>
-        public static Dictionary<DayOfWeek, List<TradingRange>> GetRangeOfWeekDay(this IMarketTime mt)
+        public static Dictionary<DayOfWeek, List<TradingRange>> GetRangeOfWeekDay(this MarketTime mt)
         {
             Dictionary<DayOfWeek, List<TradingRange>> dayRangeMap = new Dictionary<DayOfWeek, List<TradingRange>>();
             //遍历所有收盘小节 有收盘的weekday就是有交易日的

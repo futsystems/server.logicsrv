@@ -22,7 +22,7 @@ namespace TradingLib.Core
         void SrvOnXQryMarketTime(XQryMarketTimeRequest request, IAccount account)
         {
             logger.Info("XMarketTime:" + request.ToString());
-            MarketTime[] mts = BasicTracker.MarketTimeTracker.MarketTimes;
+            MarketTimeImpl[] mts = BasicTracker.MarketTimeTracker.MarketTimes;
             int totalnum = mts.Length;
             for (int i = 0; i < totalnum; i++)
             {
@@ -41,14 +41,14 @@ namespace TradingLib.Core
         void SrvOnXQryExchange(XQryExchangeRequuest request,IAccount account)
         {
             logger.Info("XQryExchange:"+request.ToString());
-            IExchange[] exchs = BasicTracker.ExchagneTracker.Exchanges;
+            ExchangeImpl[] exchs = BasicTracker.ExchagneTracker.Exchanges;
 
             int totalnum = exchs.Length;
 
             for (int i = 0; i < totalnum; i++)
             {
                 RspXQryExchangeResponse response = ResponseTemplate<RspXQryExchangeResponse>.SrvSendRspResponse(request);
-                response.Exchange = exchs[i] as Exchange;
+                response.Exchange = exchs[i];
 
                 CacheRspResponse(response, i == totalnum - 1);
             }

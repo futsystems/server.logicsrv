@@ -61,7 +61,7 @@
     <Compile Include="Message\MessageCodecType.cs" />
     <Compile Include="Trading\EnumAlgorithm.cs" />
     <Compile Include="Trading\EnumMarginPrice.cs" />
-    <Compile Include="Trading\BasicInfo\ITradingRange.cs" />
+    <Compile Include="Trading\BasicInfo\TradingRange.cs" />
     <Compile Include="Trading\BasicInfo\SettlementPrice.cs" />
     <Compile Include="BinaryOption\BinaryOptionOrder.cs" />
     <Compile Include="Trading\Data\EnumBarElement.cs" />
@@ -90,7 +90,7 @@
     <Compile Include="Trading\EnumCashOperation.cs" />
     <Compile Include="Router\EnumRouterStrategy.cs" />
     <Compile Include="Rule\IRuleItem.cs" />
-    <Compile Include="Trading\BasicInfo\IMarketTime.cs" />
+    <Compile Include="Trading\BasicInfo\MarketTime.cs" />
     <Compile Include="Trading\EnumAccountCategoy.cs" />
     <Compile Include="Trading\EnumHedgeFlag.cs" />
     <Compile Include="Trading\EnumOrderBreed.cs" />
@@ -105,7 +105,7 @@
     <Compile Include="Trading\BasicInfo\EnumCountry.cs" />
     <Compile Include="Msic\Delegates.cs" />
     <Compile Include="Msic\Enums.cs" />
-    <Compile Include="Trading\BasicInfo\IExchange.cs" />
+    <Compile Include="Trading\BasicInfo\Exchange.cs" />
     <Compile Include="Msic\LibDelegates.cs" />
     <Compile Include="Constants.cs" />
     <Compile Include="Trading\BasicInfo\EnumCurrency.cs" />

@@ -32,12 +32,12 @@ namespace TradingLib.ORM
         /// 返回帐户类别列表
         /// </summary>
         /// <returns></returns>
-        public static IEnumerable<Exchange> SelectExchange()
+        public static IEnumerable<ExchangeImpl> SelectExchange()
         {
             using (DBMySql db = new DBMySql())
             {
                 const string query = "SELECT * FROM info_exchange WHERE avabile=1";//选择可用的交易所列表
-                IEnumerable<Exchange> result = db.Connection.Query<Exchange>(query, null);
+                IEnumerable<ExchangeImpl> result = db.Connection.Query<ExchangeImpl>(query, null);
                 return result;
             }
         }
@@ -46,7 +46,7 @@ namespace TradingLib.ORM
         /// 更新交易所
         /// </summary>
         /// <param name="ex"></param>
-        public static void UpdateExchange(Exchange ex)
+        public static void UpdateExchange(ExchangeImpl ex)
         {
             using (DBMySql db = new DBMySql())
             {
@@ -59,7 +59,7 @@ namespace TradingLib.ORM
         /// 插入交易所
         /// </summary>
         /// <param name="ex"></param>
-        public static void InsertExchange(Exchange ex)
+        public static void InsertExchange(ExchangeImpl ex)
         {
             using (DBMySql db = new DBMySql())
             {
@@ -73,12 +73,12 @@ namespace TradingLib.ORM
         /// 返回帐户类别列表
         /// </summary>
         /// <returns></returns>
-        public static IEnumerable<MarketTime> SelectSession()
+        public static IEnumerable<MarketTimeImpl> SelectSession()
         {
             using (DBMySql db = new DBMySql())
             {
                 const string query = "SELECT a.id,a.name,a.description,a.closetime,a.ranges FROM info_markettime a";
-                IEnumerable<MarketTime> result = db.Connection.Query<MarketTime, MarketTimeDBRanges, MarketTime>(query, (mkttime, dbranges) => { mkttime.DeserializeTradingRange(dbranges.Ranges); return mkttime; }, null, null, false, "ranges", null, null).ToList<MarketTime>();
+                IEnumerable<MarketTimeImpl> result = db.Connection.Query<MarketTimeImpl, MarketTimeDBRanges, MarketTimeImpl>(query, (mkttime, dbranges) => { mkttime.DeserializeTradingRange(dbranges.Ranges); return mkttime; }, null, null, false, "ranges", null, null).ToList<MarketTimeImpl>();
                 return result;
             }
 
@@ -88,7 +88,7 @@ namespace TradingLib.ORM
         /// 更新交易时间段
         /// </summary>
         /// <param name="mt"></param>
-        public static void UpdateMarketTime(MarketTime mt)
+        public static void UpdateMarketTime(MarketTimeImpl mt)
         {
             using (DBMySql db = new DBMySql())
             {
@@ -101,7 +101,7 @@ namespace TradingLib.ORM
         /// 插入交易时间段
         /// </summary>
         /// <param name="mt"></param>
-        public static void InsertMarketTime(MarketTime mt)
+        public static void InsertMarketTime(MarketTimeImpl mt)
         {
             using (DBMySql db = new DBMySql())
             {

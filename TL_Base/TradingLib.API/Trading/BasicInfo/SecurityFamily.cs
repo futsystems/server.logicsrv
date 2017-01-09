@@ -34,7 +34,7 @@ namespace TradingLib.API
         /// <summary>
         /// 所属交易所
         /// </summary>
-        IExchange Exchange { get; set; }
+        Exchange Exchange { get; set; }
 
 
         /// <summary>
@@ -95,7 +95,7 @@ namespace TradingLib.API
         /// <summary>
         /// 交易品种的交易时间段
         /// </summary>
-        IMarketTime MarketTime { get; set; }
+        MarketTime MarketTime { get; set; }
 
         /// <summary>
         /// 行情源

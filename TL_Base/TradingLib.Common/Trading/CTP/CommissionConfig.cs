@@ -6,6 +6,9 @@ using TradingLib.API;
 
 namespace TradingLib.Common
 {
+    /// <summary>
+    /// 手续费设置
+    /// </summary>
     public class CommissionConfig
     {
         public CommissionConfig()
