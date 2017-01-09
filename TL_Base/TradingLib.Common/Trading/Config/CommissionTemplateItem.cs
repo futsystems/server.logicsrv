@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using TradingLib.API;
-using TradingLib.Mixins.Json;
 
 namespace TradingLib.Common
 {
@@ -75,7 +74,8 @@ namespace TradingLib.Common
         /// </summary>
         public SecurityType SecurityType { get; set; }
 
-        [NoJsonExportAttr()]
+        //[NoJsonExportAttr()]
+        [Newtonsoft.Json.JsonIgnore]
         public string CommissionItemKey
         {
             get

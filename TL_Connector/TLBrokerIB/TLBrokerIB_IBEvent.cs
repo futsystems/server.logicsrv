@@ -146,7 +146,7 @@ namespace Broker.Live
         void client_ExecDetails(object sender, Krs.Ats.IBNet.ExecDetailsEventArgs e)
         {
             //logger.Info(string.Format("RequestID:{0} OrderID:{1} symbol:{2} acct:{3} avg price:{4} cumQty:{5} execid:{6} orderid:{7} permid:{8} price:{9} shares:{10}", e.RequestId, e.OrderId, e.Contract.Symbol, e.Execution.AccountNumber, e.Execution.AvgPrice, e.Execution.CumQuantity, e.Execution.ExecutionId, e.Execution.OrderId, e.Execution.OrderRef, e.Execution.PermId, e.Execution.Price, e.Execution.Shares));
-            logger.Info("ExecDetails:" + TradingLib.Mixins.Json.JsonMapper.ToJson(e));
+            logger.Info("ExecDetails:" + e.SerializeObject());
 
             Order o = LocalID2Order(e.OrderId.ToString());
             if (o != null)
@@ -186,7 +186,7 @@ namespace Broker.Live
 
         void client_OrderStatus(object sender, Krs.Ats.IBNet.OrderStatusEventArgs e)
         {
-            logger.Info("OrderStatus:" + TradingLib.Mixins.Json.JsonMapper.ToJson(e));
+            logger.Info("OrderStatus:" + e.SerializeObject());
 
             Order o = LocalID2Order(e.OrderId.ToString());//查找该委托编号对应的本地委托对象
             if (o != null)

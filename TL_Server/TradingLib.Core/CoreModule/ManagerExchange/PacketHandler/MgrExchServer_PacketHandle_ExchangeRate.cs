@@ -30,7 +30,7 @@ namespace TradingLib.Core
                 throw new FutsRspError("无权更新手续费模板");
             }
 
-            ExchangeRate rate = Mixins.Json.JsonMapper.ToObject<ExchangeRate>(json);
+            ExchangeRate rate = json.DeserializeObject<ExchangeRate>();// Mixins.Json.JsonMapper.ToObject<ExchangeRate>(json);
             //更新汇率信息
             manager.Domain.UpdateExchangeRate(rate);
 

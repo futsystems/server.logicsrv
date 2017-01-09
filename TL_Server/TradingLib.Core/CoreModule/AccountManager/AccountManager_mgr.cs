@@ -30,7 +30,8 @@ namespace TradingLib.Core
             logger.Info(string.Format("管理员:{0} 请求添加交易帐号:{1}", session.AuthorizedID, json));
             
             Manager manager = session.GetManager();
-            var req = Mixins.Json.JsonMapper.ToObject(json);
+            //var req = Mixins.Json.JsonMapper.ToObject(json);
+            var req = json.DeserializeObject();
             var account = req["account"].ToString();
             var category = Util.ParseEnum<QSEnumAccountCategory>(req["category"].ToString());
             var password = req["password"].ToString();
@@ -105,7 +106,7 @@ namespace TradingLib.Core
             logger.Info(string.Format("管理员:{0} 请求添加配资客户帐号:{1}", session.AuthorizedID, json));
 
             Manager manager = session.GetManager();
-            var profile = Mixins.Json.JsonMapper.ToObject<AccountProfile>(json);
+            var profile = json.DeserializeObject<AccountProfile>();// Mixins.Json.JsonMapper.ToObject<AccountProfile>(json);
             var account = profile.Account;
             QSEnumAccountCategory category = QSEnumAccountCategory.MONITERACCOUNT;
             var password = string.Empty;
@@ -176,7 +177,7 @@ namespace TradingLib.Core
             logger.Info(string.Format("管理员:{0} 请求添加帐号:{1}", session.AuthorizedID, json));
 
             Manager manager = session.GetManager();
-            var creation = Mixins.Json.JsonMapper.ToObject<AccountCreation>(json);
+            var creation = json.DeserializeObject<AccountCreation>();// Mixins.Json.JsonMapper.ToObject<AccountCreation>(json);
             var account = creation.Account;
 
             //域帐户数目检查
@@ -261,7 +262,7 @@ namespace TradingLib.Core
             Manager mgr = session.GetManager();
             if (mgr == null) throw new FutsRspError("管理员不存在");
 
-            var profile = Mixins.Json.JsonMapper.ToObject<AccountProfile>(json);
+            var profile = json.DeserializeObject<AccountProfile>();// Mixins.Json.JsonMapper.ToObject<AccountProfile>(json);
             IAccount account = TLCtxHelper.ModuleAccountManager[profile.Account];
 
             if (account != null)
@@ -286,7 +287,7 @@ namespace TradingLib.Core
         {
             logger.Info(string.Format("管理员:{0} 请求删除帐户:{1}", session.AuthorizedID, json));
 
-            var req = Mixins.Json.JsonMapper.ToObject(json);
+            var req = json.DeserializeObject();// Mixins.Json.JsonMapper.ToObject(json);
             var account = req["account"].ToString();
             IAccount acc = this[account];
             if (acc == null)
@@ -315,7 +316,7 @@ namespace TradingLib.Core
         public void CTE_UpdateAccountCategory(ISession session, string json)
         {
             logger.Info(string.Format("管理员:{0} 请求更新帐户类别:{1}", session.AuthorizedID, json));
-            var req = Mixins.Json.JsonMapper.ToObject(json);
+            var req = json.DeserializeObject();// Mixins.Json.JsonMapper.ToObject(json);
             var account = req["account"].ToString();
             var category = Util.ParseEnum<QSEnumAccountCategory>(req["category"].ToString());
             IAccount acct = TLCtxHelper.ModuleAccountManager[account];
@@ -329,7 +330,7 @@ namespace TradingLib.Core
         public void CTE_UpdateAccountExecute(ISession session, string json)
         {
             logger.Info(string.Format("管理员:{0} 请求交易权限类别:{1}", session.AuthorizedID, json));
-            var req = Mixins.Json.JsonMapper.ToObject(json);
+            var req = json.DeserializeObject();// Mixins.Json.JsonMapper.ToObject(json);
             var account = req["account"].ToString();
             var execute = bool.Parse(req["execute"].ToString());
             IAccount acct = TLCtxHelper.ModuleAccountManager[account];
@@ -351,7 +352,7 @@ namespace TradingLib.Core
         public void CTE_UpdateAccountIntraday(ISession session, string json)
         {
             logger.Info(string.Format("管理员:{0} 请求更新日内交易:{1}", session.AuthorizedID, json));
-            var req = Mixins.Json.JsonMapper.ToObject(json);
+            var req = json.DeserializeObject();// Mixins.Json.JsonMapper.ToObject(json);
             var account = req["account"].ToString();
             var intraday = bool.Parse(req["intraday"].ToString());
 
@@ -367,7 +368,7 @@ namespace TradingLib.Core
         public void CTE_UpdateRouteType(ISession session, string json)
         {
             logger.Info(string.Format("管理员:{0} 请求更新路由类被:{1}", session.AuthorizedID, json));
-            var req = Mixins.Json.JsonMapper.ToObject(json);
+            var req = json.DeserializeObject();// Mixins.Json.JsonMapper.ToObject(json);
             var account = req["account"].ToString();
             var routetype = Util.ParseEnum<QSEnumOrderTransferType>(req["routertrype"].ToString());
 
@@ -400,7 +401,7 @@ namespace TradingLib.Core
         public void CTE_UpdateAccountCurrency(ISession session, string json)
         {
             logger.Info(string.Format("管理员:{0} 请求修改投资者信息:{1}", session.AuthorizedID, json));
-            var req = Mixins.Json.JsonMapper.ToObject(json);
+            var req = json.DeserializeObject();// Mixins.Json.JsonMapper.ToObject(json);
             var account = req["account"].ToString();
             var currency = (CurrencyType)Enum.Parse(typeof(CurrencyType),req["currency"].ToString());
 
@@ -435,7 +436,7 @@ namespace TradingLib.Core
             logger.Info(string.Format("管理员:{0} 请求出入金操作:{1}", session.AuthorizedID, json));
             Manager manager = session.GetManager();
 
-            var req = Mixins.Json.JsonMapper.ToObject(json);
+            var req = json.DeserializeObject();// Mixins.Json.JsonMapper.ToObject(json);
             var account = req["account"].ToString();
             var amount = decimal.Parse(req["amount"].ToString());
             var txnref = req["txnref"].ToString();
@@ -519,7 +520,7 @@ namespace TradingLib.Core
         public void CTE_ChangePassword(ISession session, string json)
         {
             logger.Info(string.Format("管理员:{0} 请求修改交易密码:{1}", session.AuthorizedID, json));
-            var req = Mixins.Json.JsonMapper.ToObject(json);
+            var req = json.DeserializeObject();// Mixins.Json.JsonMapper.ToObject(json);
             var account = req["account"].ToString();
             var newpass = req["newpass"].ToString();
 

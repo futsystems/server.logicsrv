@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using TradingLib.API;
 using TradingLib.Common;
-using TradingLib.Mixins.Json;
+
 
 namespace TradingLib.Contrib.APIService
 {
@@ -21,7 +21,7 @@ namespace TradingLib.Contrib.APIService
         public object CreateCounter(string request)
         {
             logger.Info("got create counter request:" + request);
-            JsonData args = JsonMapper.ToObject(request);
+            var args = request.DeserializeObject();// JsonMapper.ToObject(request);
 
             DomainImpl domain = new DomainImpl();
             domain.Name = args["Company"].ToString();
@@ -58,7 +58,7 @@ namespace TradingLib.Contrib.APIService
         public object RenewCounter(string request)
         {
             logger.Info("got renew counter request:" + request);
-            JsonData args = JsonMapper.ToObject(request);
+            var args = request.DeserializeObject();// JsonMapper.ToObject(request);
             int domain_id = int.Parse(args["DomainID"].ToString());
             int expiredate = int.Parse(args["ExpireDate"].ToString());
 
@@ -85,48 +85,49 @@ namespace TradingLib.Contrib.APIService
         public object UpdateCounter(string request)
         {
             logger.Info("got update counter request:" + request);
-            JsonData args = JsonMapper.ToObject(request);
+            var args = request.DeserializeObject();// JsonMapper.ToObject(request);
             //如果传入的参数不包含DomainID则无法更新柜台实例的参数
-            if (!args.Keys.Contains("DomainID"))
-            { 
+            //if (!args.Keys.Contains("DomainID"))
+            //{ 
                 
-            }
+            //}
             int domain_id = int.Parse(args["DomainID"].ToString());
 
-            DomainImpl tmp = BasicTracker.DomainTracker[domain_id];
+            //DomainImpl tmp = BasicTracker.DomainTracker[domain_id];
 
-            int mainacct_num = args.Keys.Contains("MainAccountNum")?int.Parse(args["MainAccountNum"].ToString()):tmp.VendorLimit;
-            int subacct_num = args.Keys.Contains("SubAccountNum")?int.Parse(args["SubAccountNum"].ToString()):tmp.AccLimit;
+            //int mainacct_num = args.Keys.Contains("MainAccountNum")?int.Parse(args["MainAccountNum"].ToString()):tmp.VendorLimit;
+            //int subacct_num = args.Keys.Contains("SubAccountNum")?int.Parse(args["SubAccountNum"].ToString()):tmp.AccLimit;
 
-            int rg_num = args.Keys.Contains("RouterGroupNum") ? int.Parse(args["RouterGroupNum"].ToString()) : tmp.RouterGroupLimit;
-            int expiredate = args.Keys.Contains("ExpireDate")?int.Parse(args["ExpireDate"].ToString()):tmp.DateExpired;
+            //int rg_num = args.Keys.Contains("RouterGroupNum") ? int.Parse(args["RouterGroupNum"].ToString()) : tmp.RouterGroupLimit;
+            //int expiredate = args.Keys.Contains("ExpireDate")?int.Parse(args["ExpireDate"].ToString()):tmp.DateExpired;
 
-            bool exlive = args.Keys.Contains("ExLive") ? bool.Parse(args["ExLive"].ToString()):tmp.Router_Live;
-            bool exsim = args.Keys.Contains("ExSIM") ? bool.Parse(args["ExSIM"].ToString()):tmp.Router_Sim;
-            if (tmp != null)
-            {
-                tmp.AccLimit = subacct_num;
-                tmp.VendorLimit = mainacct_num;
-                tmp.DateExpired = expiredate;
-                tmp.Router_Live = exlive;
-                tmp.Router_Sim = exsim;
-                tmp.RouterGroupLimit = rg_num;
-                tmp.RouterItemLimit = 1;
-                tmp.ID = domain_id;
+            //bool exlive = args.Keys.Contains("ExLive") ? bool.Parse(args["ExLive"].ToString()):tmp.Router_Live;
+            //bool exsim = args.Keys.Contains("ExSIM") ? bool.Parse(args["ExSIM"].ToString()):tmp.Router_Sim;
+            //if (tmp != null)
+            //{
+            //    tmp.AccLimit = subacct_num;
+            //    tmp.VendorLimit = mainacct_num;
+            //    tmp.DateExpired = expiredate;
+            //    tmp.Router_Live = exlive;
+            //    tmp.Router_Sim = exsim;
+            //    tmp.RouterGroupLimit = rg_num;
+            //    tmp.RouterItemLimit = 1;
+            //    tmp.ID = domain_id;
 
-                BasicTracker.DomainTracker.UpdateDomain(tmp);
-            }
+            //    BasicTracker.DomainTracker.UpdateDomain(tmp);
+            //}
 
-            return new 
-            { 
-                DomainID = domain_id,
-                SubAccountNum =tmp.AccLimit,
-                MainAccountNum = tmp.VendorLimit,
-                RouterGroupNum = tmp.RouterGroupLimit,
-                ExpireDate =tmp.DateExpired,
-                ExLive = tmp.Router_Live,
-                ExSIM = tmp.Router_Sim,
-            };
+            //return new 
+            //{ 
+            //    DomainID = domain_id,
+            //    SubAccountNum =tmp.AccLimit,
+            //    MainAccountNum = tmp.VendorLimit,
+            //    RouterGroupNum = tmp.RouterGroupLimit,
+            //    ExpireDate =tmp.DateExpired,
+            //    ExLive = tmp.Router_Live,
+            //    ExSIM = tmp.Router_Sim,
+            //};
+            return null;
         }
     }
 }

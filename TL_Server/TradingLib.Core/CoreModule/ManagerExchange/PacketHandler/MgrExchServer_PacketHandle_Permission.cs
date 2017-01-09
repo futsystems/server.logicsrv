@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using TradingLib.API;
 using TradingLib.Common;
-using TradingLib.Mixins.JsonObject;
+
 namespace TradingLib.Core
 {
     public partial class MgrExchServer
@@ -44,7 +44,7 @@ namespace TradingLib.Core
             Manager manger = session.GetManager();
             if (manger.IsInRoot())
             {
-                UIAccess access = Mixins.Json.JsonMapper.ToObject<UIAccess>(playload);
+                UIAccess access = playload.DeserializeObject<UIAccess>();// Mixins.Json.JsonMapper.ToObject<UIAccess>(playload);
                 //更新域信息
                 access.domain_id = manger.domain_id;
 

@@ -4,7 +4,6 @@ using System.Linq;
 using System.Text;
 using TradingLib.API;
 using TradingLib.Common;
-using TradingLib.Mixins.JsonObject;
 
 namespace TradingLib.Core
 {
@@ -36,7 +35,7 @@ namespace TradingLib.Core
         {
             Manager manger = session.GetManager();
 
-            JsonWrapperCashOperation request = Mixins.Json.JsonMapper.ToObject<JsonWrapperCashOperation>(playload);
+            JsonWrapperCashOperation request = playload.DeserializeObject<JsonWrapperCashOperation>();// Mixins.Json.JsonMapper.ToObject<JsonWrapperCashOperation>(playload);
             if (request != null)
             {
                 request.mgr_fk = manger.mgr_fk;
@@ -78,7 +77,7 @@ namespace TradingLib.Core
             {
                 logger.Info("确认出入金操作请求");
                 Manager manger = session.GetManager();
-                JsonWrapperCashOperation request = Mixins.Json.JsonMapper.ToObject<JsonWrapperCashOperation>(playload);
+                JsonWrapperCashOperation request = playload.DeserializeObject<JsonWrapperCashOperation>();// Mixins.Json.JsonMapper.ToObject<JsonWrapperCashOperation>(playload);
                 
                 HandlerMixins.Valid_ObjectNotNull(request);
 
@@ -121,7 +120,7 @@ namespace TradingLib.Core
             Manager manger = session.GetManager();
             if (manger != null)
             {
-                JsonWrapperCashOperation request = Mixins.Json.JsonMapper.ToObject<JsonWrapperCashOperation>(playload);
+                JsonWrapperCashOperation request = playload.DeserializeObject<JsonWrapperCashOperation>();// Mixins.Json.JsonMapper.ToObject<JsonWrapperCashOperation>(playload);
                 if (request != null)
                 {
                     ORM.MAgentFinance.CancelAgentCashOperation(request);
@@ -139,7 +138,7 @@ namespace TradingLib.Core
             Manager manger = session.GetManager();
             if (manger != null)
             {
-                JsonWrapperCashOperation request = Mixins.Json.JsonMapper.ToObject<JsonWrapperCashOperation>(playload);
+                JsonWrapperCashOperation request = playload.DeserializeObject<JsonWrapperCashOperation>();// Mixins.Json.JsonMapper.ToObject<JsonWrapperCashOperation>(playload);
                 if (request != null)
                 {
                     ORM.MAgentFinance.RejectAgentCashOperation(request);

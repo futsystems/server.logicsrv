@@ -7,7 +7,6 @@ using System.Runtime.CompilerServices;
 using System.Reflection;
 using TradingLib.API;
 using TradingLib.Common;
-using TradingLib.Mixins.Json;
 using Common.Logging;
 
 
@@ -233,50 +232,50 @@ namespace TradingLib.Common
         /// <param name="cmdstr"></param>
         /// <param name="parameters"></param>
         /// <returns></returns>
-        public JsonReply MessageWebHandler(JsonRequest request,bool istnetstring = false)
-        {
-            //string module, string cmdstr, string parameters
-            string key = ContribCommandKey(request.Module, request.Method);
-            logger.Debug("Handler webmessage, cmdkey:" + key);
-            ContribCommand cmd=null;
-            if(messageWebCmdMap.TryGetValue(key,out cmd))
-            {
-                try
-                {
-                    object obj = cmd.ExecuteCmd(null,request.Args,istnetstring);
-                    //根据ContribCommand执行结果进行返回
-                    //1.执行没有任何返回 比如进行一个无返回信息的操作请求
-                    if (obj == null)
-                    {
-                        return WebAPIHelper.ReplySuccess(string.Format("CMD:{0} Execute Successful", key));
-                    }
-                    //2.返回JsonReply对象
-                    else if (obj is JsonReply)
-                    {
-                        return obj as JsonReply;
-                    }
-                    else
-                    {
-                        return WebAPIHelper.ReplyObject(obj);
-                    }
-                }
-                catch (QSCommandError ex)
-                {
-                    logger.Error(ex.Label + "\r\n reason@" + ex.Reason + "\r\n RawException:" + ex.RawException.Message.ToString());
-                    return WebAPIHelper.ReplyError("COMMAND_EXECUTE_ERROR");
-                }
-                catch (Exception ex)
-                {
-                    logger.Error("ExectueCmd Error:\r\n" + ex.ToString());
-                    return WebAPIHelper.ReplyError("SERVER_SIDE_ERROR");
-                }
+        //public JsonReply MessageWebHandler(JsonRequest request,bool istnetstring = false)
+        //{
+        //    //string module, string cmdstr, string parameters
+        //    string key = ContribCommandKey(request.Module, request.Method);
+        //    logger.Debug("Handler webmessage, cmdkey:" + key);
+        //    ContribCommand cmd=null;
+        //    if(messageWebCmdMap.TryGetValue(key,out cmd))
+        //    {
+        //        try
+        //        {
+        //            object obj = cmd.ExecuteCmd(null,request.Args,istnetstring);
+        //            //根据ContribCommand执行结果进行返回
+        //            //1.执行没有任何返回 比如进行一个无返回信息的操作请求
+        //            if (obj == null)
+        //            {
+        //                return WebAPIHelper.ReplySuccess(string.Format("CMD:{0} Execute Successful", key));
+        //            }
+        //            //2.返回JsonReply对象
+        //            else if (obj is JsonReply)
+        //            {
+        //                return obj as JsonReply;
+        //            }
+        //            else
+        //            {
+        //                return WebAPIHelper.ReplyObject(obj);
+        //            }
+        //        }
+        //        catch (QSCommandError ex)
+        //        {
+        //            logger.Error(ex.Label + "\r\n reason@" + ex.Reason + "\r\n RawException:" + ex.RawException.Message.ToString());
+        //            return WebAPIHelper.ReplyError("COMMAND_EXECUTE_ERROR");
+        //        }
+        //        catch (Exception ex)
+        //        {
+        //            logger.Error("ExectueCmd Error:\r\n" + ex.ToString());
+        //            return WebAPIHelper.ReplyError("SERVER_SIDE_ERROR");
+        //        }
 
-            }
-            else
-            {
-                return WebAPIHelper.ReplyError("METHOD_NOT_FOUND");
-            }
-        }
+        //    }
+        //    else
+        //    {
+        //        return WebAPIHelper.ReplyError("METHOD_NOT_FOUND");
+        //    }
+        //}
 
         /// <summary>
         /// 命令行处理命令调用

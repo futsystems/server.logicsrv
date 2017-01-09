@@ -56,7 +56,7 @@ namespace TradingLib.Core
                 throw new FutsRspError("无权更新保证金模板");
             }
 
-            MarginTemplateSetting t = Mixins.Json.JsonMapper.ToObject<MarginTemplateSetting>(json);
+            MarginTemplateSetting t = json.DeserializeObject<MarginTemplateSetting>();// Mixins.Json.JsonMapper.ToObject<MarginTemplateSetting>(json);
             t.Domain_ID = manager.domain_id;
             bool isaddd = t.ID == 0;
             if (isaddd)
@@ -182,7 +182,7 @@ namespace TradingLib.Core
                 throw new FutsRspError("无权查询保证金模板项目");
             }
 
-            MGRMarginTemplateItemSetting item = Mixins.Json.JsonMapper.ToObject<MGRMarginTemplateItemSetting>(json);
+            MGRMarginTemplateItemSetting item = json.DeserializeObject<MGRMarginTemplateItemSetting>();// Mixins.Json.JsonMapper.ToObject<MGRMarginTemplateItemSetting>(json);
             MarginTemplate template = BasicTracker.MarginTemplateTracker[item.Template_ID];
             if (template == null)
             {

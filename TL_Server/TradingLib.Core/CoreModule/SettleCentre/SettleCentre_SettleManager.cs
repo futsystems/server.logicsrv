@@ -4,7 +4,6 @@ using System.Linq;
 using System.Text;
 using TradingLib.API;
 using TradingLib.Common;
-using TradingLib.Mixins.Json;
 
 
 namespace TradingLib.Core
@@ -59,7 +58,7 @@ namespace TradingLib.Core
             }
 
 
-            var data = JsonMapper.ToObject(json);
+            var data = json.DeserializeObject();// JsonMapper.ToObject(json);
 
             //交易帐户
             var acct = data["account"].ToString();
@@ -171,7 +170,7 @@ namespace TradingLib.Core
             }
 
 
-            var data = JsonMapper.ToObject(json);
+            var data = json.DeserializeObject();// JsonMapper.ToObject(json);
             //获得对应的交易日
             int currentday = int.Parse(data["settleday"].ToString());
 
@@ -193,7 +192,7 @@ namespace TradingLib.Core
                 throw new FutsRspError("无权进行该操作");
             }
 
-            var settlementPrice = JsonMapper.ToObject<SettlementPrice>(json);
+            var settlementPrice = json.DeserializeObject<SettlementPrice>();// JsonMapper.ToObject<SettlementPrice>(json);
             if (settlementPrice != null)
             {
                 BasicTracker.SettlementPriceTracker.UpdateSettlementPrice(settlementPrice);
@@ -221,7 +220,7 @@ namespace TradingLib.Core
             this.SettleMode = QSEnumSettleMode.HistSettleMode;
             TLCtxHelper.ModuleClearCentre.CloseClearCentre();
 
-            var data = JsonMapper.ToObject(json);
+            var data = json.DeserializeObject();// JsonMapper.ToObject(json);
 
             //获得对应的交易日
             int histday = int.Parse(data["currentday"].ToString());
@@ -284,7 +283,7 @@ namespace TradingLib.Core
                 throw new FutsRspError("无权进行该操作");
             }
 
-            var data = JsonMapper.ToObject(json);
+            var data = json.DeserializeObject();// JsonMapper.ToObject(json);
             //获得对应的交易日
             string excode  = data["exchange"].ToString();
             Exchange exchagne = BasicTracker.ExchagneTracker[excode];
@@ -313,7 +312,7 @@ namespace TradingLib.Core
                 throw new FutsRspError("无权进行该操作");
             }
 
-            var data = JsonMapper.ToObject(json);
+            var data = json.DeserializeObject();// JsonMapper.ToObject(json);
             //获得对应的交易日
             int settleday = int.Parse(data["settleday"].ToString());
             logger.Info(string.Format("Settle Tradingday:{0} Manually，Current Tradingday:{1}", settleday, _tradingday));

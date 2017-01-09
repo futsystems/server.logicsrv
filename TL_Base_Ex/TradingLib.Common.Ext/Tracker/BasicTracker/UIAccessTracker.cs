@@ -6,7 +6,6 @@ using System.Text;
 using System.Reflection;
 using TradingLib.API;
 using TradingLib.Common;
-using TradingLib.Mixins.JsonObject;
 using TradingLib.ORM;
 using Common.Logging;
 

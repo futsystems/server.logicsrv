@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using TradingLib.API;
-using TradingLib.Mixins.Json;
+
 
 namespace TradingLib.Common
 {
@@ -95,7 +95,8 @@ namespace TradingLib.Common
         /// <summary>
         /// 多方可以平掉的数量
         /// </summary>
-        [NoJsonExportAttr()]
+        //[NoJsonExportAttr()]
+        [Newtonsoft.Json.JsonIgnore]
         public int LongCanExitSize { get { return LongHoldSize - LongPendingExitSize; } }
 
         /// <summary>
@@ -116,7 +117,8 @@ namespace TradingLib.Common
         /// <summary>
         /// 空头可以平掉的数量
         /// </summary>
-        [NoJsonExportAttr()]
+        //[NoJsonExportAttr()]
+        [Newtonsoft.Json.JsonIgnore]
         public int ShortCanExitSaize { get { return ShortHoldSize - ShortPendingExitSize; } }
        
     }

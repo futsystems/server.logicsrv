@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using TradingLib.API;
-using TradingLib.Mixins.Json;
 
 namespace TradingLib.Common
 {
@@ -113,26 +112,30 @@ namespace TradingLib.Common
         /// 管理域ID
         /// Root或者代理下面的柜员的MgrID一致
         /// </summary>
-        [NoJsonExportAttr()]
+        //[NoJsonExportAttr()]
+        [Newtonsoft.Json.JsonIgnore]
         public int BaseMgrID { get { return mgr_fk; } }
 
         /// <summary>
         /// BaseManager用于标注该管理帐号隶属于哪个Agent,如果是系统级的管理帐户的话直接隶属于ROOT
         /// </summary>
-        [NoJsonExportAttr()]
+        //[NoJsonExportAttr()]
+        [Newtonsoft.Json.JsonIgnore]
         public Manager BaseManager { get; set; }
 
         /// <summary>
         /// 上级代理对象
         /// </summary>
-        [NoJsonExportAttr()]
+        //[NoJsonExportAttr()]
+        [Newtonsoft.Json.JsonIgnore]
         public Manager ParentManager { get; set; }
 
 
         /// <summary>
         /// 分区域对象
         /// </summary>
-        [NoJsonExportAttr()]
+        //[NoJsonExportAttr()]
+        [Newtonsoft.Json.JsonIgnore]
         public Domain Domain { get; internal set; }
 
 

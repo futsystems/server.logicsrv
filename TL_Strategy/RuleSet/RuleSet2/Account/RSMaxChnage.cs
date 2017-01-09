@@ -42,7 +42,7 @@ namespace RuleSet2.Account
                 {
                     _args = value;
                     //解析json参数
-                    var args = TradingLib.Mixins.Json.JsonMapper.ToObject(_args);
+                    var args = _args.DeserializeObject();
                     up_pect = decimal.Parse(args["up_pect"].ToString());//上涨触发值
                     dn_pect = decimal.Parse(args["dn_pect"].ToString());//跌幅触发值
 

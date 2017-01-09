@@ -59,7 +59,7 @@ namespace TradingLib.Core
         {
             Manager manager = session.GetManager();
 
-            ManagerSetting m = Mixins.Json.JsonMapper.ToObject<ManagerSetting>(json);
+            ManagerSetting m = json.DeserializeObject<ManagerSetting>();// Mixins.Json.JsonMapper.ToObject<ManagerSetting>(json);
             bool isadd = m.ID == 0;
             if (isadd)
             {

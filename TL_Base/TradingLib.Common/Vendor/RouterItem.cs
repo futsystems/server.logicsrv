@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using TradingLib.API;
-using TradingLib.Mixins.Json;
 using Common.Logging;
 
 namespace TradingLib.Common
@@ -60,7 +59,8 @@ namespace TradingLib.Common
         /// <summary>
         /// 路由组ID 所属路由组
         /// </summary>
-        [NoJsonExportAttr()]
+        //[NoJsonExportAttr()]
+        [Newtonsoft.Json.JsonIgnore]
         public RouterGroup RouteGroup { get { return _routegroup; } set { _routegroup = value; } }
         //Vendor _vendor = null;
         ///// <summary>
@@ -79,7 +79,8 @@ namespace TradingLib.Common
         }
 
         IBroker _broker = null;
-        [NoJsonExportAttr()]
+        //[NoJsonExportAttr()]
+        [Newtonsoft.Json.JsonIgnore]
         public IBroker Broker { get { return _broker; } set { _broker = value; } }
     }
 

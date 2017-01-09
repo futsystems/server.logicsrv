@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using TradingLib.API;
 using TradingLib.Common;
-using TradingLib.Mixins.JsonObject;
+
 
 namespace TradingLib.Core
 {
@@ -36,7 +36,7 @@ namespace TradingLib.Core
                     throw new FutsRspError("无权添加收款银行信息");
                 }
 
-                JsonWrapperReceivableAccount bank = TradingLib.Mixins.Json.JsonMapper.ToObject<JsonWrapperReceivableAccount>(json);
+                JsonWrapperReceivableAccount bank = json.DeserializeObject<JsonWrapperReceivableAccount>();
                 manager.Domain.UpdateRecvBanks(bank);
 
                 session.OperationSuccess("更新收款银行信息成功");

@@ -49,7 +49,7 @@ namespace TradingLib.Core
                 throw new FutsRspError("无权更新交易参数模板");
             }
 
-            ExStrategyTemplateSetting t = Mixins.Json.JsonMapper.ToObject<ExStrategyTemplateSetting>(json);
+            ExStrategyTemplateSetting t = json.DeserializeObject<ExStrategyTemplateSetting>();// Mixins.Json.JsonMapper.ToObject<ExStrategyTemplateSetting>(json);
             t.Domain_ID = manager.domain_id;
             bool isaddd = t.ID == 0;
 
@@ -165,7 +165,7 @@ namespace TradingLib.Core
                 throw new FutsRspError("无权更新交易参数模板");
             }
 
-            ExStrategy item = Mixins.Json.JsonMapper.ToObject<ExStrategy>(json);
+            ExStrategy item = json.DeserializeObject<ExStrategy>();// Mixins.Json.JsonMapper.ToObject<ExStrategy>(json);
             ExStrategyTemplate template = BasicTracker.ExStrategyTemplateTracker[item.Template_ID];
             if (template == null)
             {

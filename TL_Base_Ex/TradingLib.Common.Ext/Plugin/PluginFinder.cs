@@ -6,7 +6,6 @@ using System.IO;
 using System.Reflection;
 using TradingLib.API;
 using TradingLib.Common;
-using TradingLib.Mixins.Json;
 using Common.Logging;
 
 namespace TradingLib.Common
@@ -621,12 +620,6 @@ namespace TradingLib.Common
                                     objArray[argument.Order - 1] = argument.Value;
                                     continue;
                                 }
-                            //case QSEnumMethodArgumentType.JsonRequest:
-                            //    {
-                            //        JsonRequest = TradingLib.Mixins.Json.
-                            //        objArray[argument.Order - 1] = argument.Value as JsonRequest;
-                            //        continue;
-                            //    }
                         }
                     }
                 }

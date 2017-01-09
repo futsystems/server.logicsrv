@@ -2,15 +2,24 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Newtonsoft;
 
 
-namespace TradingLib.Mixins.Json
+namespace TradingLib.Common
 {
+    
     public class JsonReply
     {
         public int Code;
         public string Message;
         public object Payload;
+
+        public JsonReply(int code, string message, object obj = null)
+        {
+            this.Code = code;
+            this.Message = message;
+            this.Payload = obj;
+        }
 
         public static JsonReply ErrorReply(int code = 1, string message = "")
         {
@@ -21,7 +30,7 @@ namespace TradingLib.Mixins.Json
             return new JsonReply(code, message, null);
         }
 
-        public static JsonReply SuccessReply(object payload = null,int code = 0, string message = "")
+        public static JsonReply SuccessReply(object payload = null, int code = 0, string message = "")
         {
             if (string.IsNullOrEmpty(message))
             {
@@ -39,19 +48,14 @@ namespace TradingLib.Mixins.Json
         /// <returns></returns>
         public static JsonReply<T> ParseReply<T>(string json)
         {
-            return TradingLib.Mixins.Json.JsonMapper.ToObject<JsonReply<T>>(json);
+            return Newtonsoft.Json.JsonConvert.DeserializeObject<JsonReply<T>>(json);
         }
 
-        public JsonReply(int code, string message, object obj=null)
-        {
-            this.Code = code;
-            this.Message = message;
-            this.Payload = obj;
-        }
+        
 
         public string ToJson()
         {
-            return JsonMapper.ToJson(this);
+            return Newtonsoft.Json.JsonConvert.SerializeObject(this);// JsonMapper.ToJson(this);
         }
     }
     /// <summary>
@@ -85,7 +89,7 @@ namespace TradingLib.Mixins.Json
         /// <returns></returns>
         public string ToJson()
         {
-            return JsonMapper.ToJson(this);
+            return Newtonsoft.Json.JsonConvert.SerializeObject(this);
         }
     }
 

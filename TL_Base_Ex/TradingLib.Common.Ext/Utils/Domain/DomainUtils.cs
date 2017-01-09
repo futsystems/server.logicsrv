@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using TradingLib.API;
-using TradingLib.Mixins.JsonObject;
 
 
 namespace TradingLib.Common
@@ -56,7 +55,7 @@ namespace TradingLib.Common
         /// </summary>
         /// <param name="domain"></param>
         /// <returns></returns>
-        public static IEnumerable<TradingLib.Mixins.JsonObject.JsonWrapperCashOperation> GetAccountCashOperation(this Domain domain)
+        public static IEnumerable<JsonWrapperCashOperation> GetAccountCashOperation(this Domain domain)
         {
             return ORM.MCashOpAccount.GetAccountLatestCashOperationTotal().Where(op => domain.IsInDomain(TLCtxHelper.ModuleAccountManager[op.Account]));
         }
@@ -66,7 +65,7 @@ namespace TradingLib.Common
         /// </summary>
         /// <param name="domain"></param>
         /// <returns></returns>
-        public static IEnumerable<TradingLib.Mixins.JsonObject.JsonWrapperCashOperation> GetAgentCashOperation(this Domain domain)
+        public static IEnumerable<JsonWrapperCashOperation> GetAgentCashOperation(this Domain domain)
         {
             return ORM.MAgentFinance.GetAgentLatestCashOperationTotal().Where(op => domain.IsInDomain(BasicTracker.ManagerTracker[op.mgr_fk]));
         }

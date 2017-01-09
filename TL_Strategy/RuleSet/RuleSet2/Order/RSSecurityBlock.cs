@@ -41,7 +41,7 @@ namespace RuleSet2.Order
                 {
                     _args = value;
                     //解析json参数
-                    var args = TradingLib.Mixins.Json.JsonMapper.ToObject(_args);
+                    var args = _args.DeserializeObject();
 
                     is_white = bool.Parse(args["is_white"].ToString());
 

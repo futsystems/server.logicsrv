@@ -37,7 +37,7 @@ namespace RuleSet2.Account
                 {
                     _args = value;
                     //解析json参数
-                    var args = TradingLib.Mixins.Json.JsonMapper.ToObject(_args);
+                    var args = _args.DeserializeObject();
                     flat_time = int.Parse(args["flat_time"].ToString());//强平线
                     string secs= args["sec_list"].ToString();
                     if (!string.IsNullOrEmpty(secs))

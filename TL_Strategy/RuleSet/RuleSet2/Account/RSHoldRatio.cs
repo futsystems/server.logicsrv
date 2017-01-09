@@ -31,7 +31,7 @@ namespace RuleSet2.Account
                 {
                     _args = value;
                     //解析json参数
-                    var args = TradingLib.Mixins.Json.JsonMapper.ToObject(_args);
+                    var args = _args.DeserializeObject();
                     _checkTime = int.Parse(args["check_time"].ToString());//检查时间
                     _holdRatio = decimal.Parse(args["hold_ratio"].ToString());//持仓比例
 

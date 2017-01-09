@@ -4,7 +4,6 @@ using System.Linq;
 using System.Text;
 using TradingLib.API;
 using TradingLib.Common;
-using TradingLib.Mixins.Json;
 
 
 namespace TradingLib.Common
@@ -228,7 +227,8 @@ namespace TradingLib.Common
         /// <summary>
         /// 合约信息
         /// </summary>
-        [NoJsonExportAttr()]
+        //[NoJsonExportAttr()]
+        [Newtonsoft.Json.JsonIgnore]
         public Symbol oSymbol { get; set; }
         string _exchange = string.Empty;
         /// <summary>
@@ -407,7 +407,7 @@ namespace TradingLib.Common
 
         public override string ToString()
         {
-            return JsonMapper.ToJson(this);
+            return Util.PrintObj(this);
         }
 
         //public override string ToString()

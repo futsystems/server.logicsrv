@@ -37,7 +37,7 @@ namespace TradingLib.ServiceManager
                 Manager manger = session.GetManager();
                 if (manger.IsInRoot())
                 {
-                    ConnectorInterface itface = TradingLib.Mixins.Json.JsonMapper.ToObject<ConnectorInterface>(json);
+                    ConnectorInterface itface = json.DeserializeObject<ConnectorInterface>();
                     ORM.MConnector.UpdateConnectorInterface(itface);
                 }
             }

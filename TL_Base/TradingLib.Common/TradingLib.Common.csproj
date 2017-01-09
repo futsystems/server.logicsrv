@@ -38,8 +38,8 @@
     <Reference Include="Common.Logging.Core">
       <HintPath>..\..\lib\Common.Logging.Core.dll</HintPath>
     </Reference>
-    <Reference Include="MySql.Data">
-      <HintPath>..\..\lib\MySql.Data.dll</HintPath>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>..\..\lib\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="NodaTime">
       <HintPath>..\..\lib\NodaTime.dll</HintPath>
@@ -78,20 +78,11 @@
     <Compile Include="Follow\FollowStrategyLite.cs" />
     <Compile Include="Follow\FollowStrategyStatus.cs" />
     <Compile Include="Follow\SignalConfig.cs" />
+    <Compile Include="Message\Json\JsonHelper.cs" />
     <Compile Include="Trading\Basic\Holiday\Calendar.cs" />
     <Compile Include="Trading\Basic\Holiday\HolidayCalculator.cs" />
-    <Compile Include="Json\Attributes.cs" />
-    <Compile Include="Json\IJsonWrapper.cs" />
-    <Compile Include="Json\JsonData.cs" />
-    <Compile Include="Json\JsonException.cs" />
-    <Compile Include="Json\JsonMapper.cs" />
-    <Compile Include="Json\JsonMockWrapper.cs" />
-    <Compile Include="Json\JsonProtocol\JsonReply.cs" />
-    <Compile Include="Json\JsonProtocol\JsonRequest.cs" />
-    <Compile Include="Json\JsonReader.cs" />
-    <Compile Include="Json\JsonWriter.cs" />
-    <Compile Include="Json\Lexer.cs" />
-    <Compile Include="Json\ParserToken.cs" />
+    <Compile Include="Message\Json\JsonReply.cs" />
+    <Compile Include="Message\Json\JsonRequest.cs" />
     <Compile Include="Manager\UIAccess.cs" />
     <Compile Include="Message\BinaryOption\Order.cs" />
     <Compile Include="Message\Common\UtilStruct.cs" />
@@ -176,7 +167,6 @@
     <Compile Include="Utils\Util_Decimal.cs" />
     <Compile Include="Utils\Util_long.cs" />
     <Compile Include="Utils\Util_string.cs" />
-    <Compile Include="Utils\Version.cs" />
     <Compile Include="Tracker\HighLowTracker.cs" />
     <Compile Include="Trading\Utils\SecurityUtil.cs" />
     <Compile Include="Utils\Util_string0.cs" />
@@ -303,7 +293,6 @@
     <Compile Include="Message\PopMessage.cs" />
     <Compile Include="Message\QSMessageHelper.cs" />
     <Compile Include="Utils\ConfigHelper.cs" />
-    <Compile Include="Utils\Log.cs" />
     <Compile Include="Message\Message.cs" />
     <Compile Include="Offset\PositionOffsetArgs.cs" />
     <Compile Include="Trading\CTP\Instrument.cs" />

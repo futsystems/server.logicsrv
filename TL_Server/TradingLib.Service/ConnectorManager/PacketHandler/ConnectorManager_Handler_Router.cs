@@ -148,7 +148,7 @@ namespace TradingLib.ServiceManager
                 Manager manger = session.GetManager();
                 if (manger.IsInRoot())
                 {
-                    ConnectorConfig cfg = TradingLib.Mixins.Json.JsonMapper.ToObject<ConnectorConfig>(json);
+                    ConnectorConfig cfg = json.DeserializeObject<ConnectorConfig>();
                     bool isadd = cfg.ID == 0;
 
                     if (string.IsNullOrEmpty(cfg.Name))
@@ -246,7 +246,7 @@ namespace TradingLib.ServiceManager
                 if (manger.IsInRoot())
                 {
 
-                    RouterGroupSetting group = TradingLib.Mixins.Json.JsonMapper.ToObject<RouterGroupSetting>(jsonstr);
+                    RouterGroupSetting group = jsonstr.DeserializeObject<RouterGroupSetting>();
                     bool isadd = group.ID == 0;
                     if (isadd && manger.Domain.GetRouterGroups().Count() >= manger.Domain.RouterGroupLimit)
                     {
@@ -305,7 +305,7 @@ namespace TradingLib.ServiceManager
                 Manager manger = session.GetManager();
                 if (manger.IsInRoot())
                 {
-                    RouterItemSetting item = TradingLib.Mixins.Json.JsonMapper.ToObject<RouterItemSetting>(json);
+                    RouterItemSetting item = json.DeserializeObject<RouterItemSetting>();
                     bool isadd = item.ID == 0;
 
                     //Vendor vendor = BasicTracker.VendorTracker[item.vendor_id];

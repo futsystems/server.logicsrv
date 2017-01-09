@@ -98,8 +98,8 @@ namespace TradingLib.Core
             //只有超级域的管理员
             if (manager.Domain.Super && manager.IsRoot())
             {
-               
-                DomainImpl domain = TradingLib.Mixins.Json.JsonMapper.ToObject<DomainImpl>(json);
+
+                DomainImpl domain = json.DeserializeObject<DomainImpl>();
                 bool isadd = domain.ID == 0;
 
                 if (isadd && BasicTracker.DomainTracker.Domains.Any(d => d.Dedicated))

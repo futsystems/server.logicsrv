@@ -4,8 +4,6 @@ using System.Linq;
 using System.Text;
 using System.Reflection;
 using TradingLib.API;
-using TradingLib.Mixins.Json;
-
 
 namespace TradingLib.Common
 {
@@ -73,7 +71,8 @@ namespace TradingLib.Common
         /// <summary>
         /// 风控规则type
         /// </summary>
-        [NoJsonExportAttr()]
+        [Newtonsoft.Json.JsonIgnore]
+        //[NoJsonExportAttr()]
         public Type RuleClassType { get; set; }
 
 

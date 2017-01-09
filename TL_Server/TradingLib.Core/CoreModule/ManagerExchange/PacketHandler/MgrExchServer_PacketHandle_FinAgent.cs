@@ -4,7 +4,6 @@ using System.Linq;
 using System.Text;
 using TradingLib.API;
 using TradingLib.Common;
-using TradingLib.Mixins.JsonObject;
 
 namespace TradingLib.Core
 {
@@ -37,7 +36,7 @@ namespace TradingLib.Core
             Manager manger = session.GetManager();
             if (manger != null)
             {
-                JsonWrapperBankAccount bankaccount = Mixins.Json.JsonMapper.ToObject<JsonWrapperBankAccount>(playload);
+                JsonWrapperBankAccount bankaccount = playload.DeserializeObject<JsonWrapperBankAccount>();// Mixins.Json.JsonMapper.ToObject<JsonWrapperBankAccount>(playload);
                 //强制设定银行帐号的主域id为当前manger主域id
                 bankaccount.mgr_fk = manger.mgr_fk;
                 if (bankaccount != null && bankaccount.mgr_fk == manger.mgr_fk)

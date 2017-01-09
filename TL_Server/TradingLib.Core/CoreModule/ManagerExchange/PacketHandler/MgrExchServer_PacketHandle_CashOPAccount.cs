@@ -4,7 +4,6 @@ using System.Linq;
 using System.Text;
 using TradingLib.API;
 using TradingLib.Common;
-using TradingLib.Mixins.JsonObject;
 
 namespace TradingLib.Core
 {
@@ -64,7 +63,7 @@ namespace TradingLib.Core
                     throw new FutsRspError("无权确认出入金请求");
                 }
 
-                JsonWrapperCashOperation request = Mixins.Json.JsonMapper.ToObject<JsonWrapperCashOperation>(playload);
+                JsonWrapperCashOperation request = playload.DeserializeObject<JsonWrapperCashOperation>();// Mixins.Json.JsonMapper.ToObject<JsonWrapperCashOperation>(playload);
                 
                 if (request != null)
                 {
@@ -108,7 +107,7 @@ namespace TradingLib.Core
             Manager manger = session.GetManager();
             if (manger != null)
             {
-                JsonWrapperCashOperation request = Mixins.Json.JsonMapper.ToObject<JsonWrapperCashOperation>(playload);
+                JsonWrapperCashOperation request = playload.DeserializeObject<JsonWrapperCashOperation>();// Mixins.Json.JsonMapper.ToObject<JsonWrapperCashOperation>(playload);
                 if (request != null)
                 {
                     request = ORM.MCashOpAccount.GetAccountCashOperation(request.Ref);
@@ -138,7 +137,7 @@ namespace TradingLib.Core
             Manager manger = session.GetManager();
             if (manger != null)
             {
-                JsonWrapperCashOperation request = Mixins.Json.JsonMapper.ToObject<JsonWrapperCashOperation>(playload);
+                JsonWrapperCashOperation request = playload.DeserializeObject<JsonWrapperCashOperation>();// Mixins.Json.JsonMapper.ToObject<JsonWrapperCashOperation>(playload);
                 if (request != null)
                 {
                     request = ORM.MCashOpAccount.GetAccountCashOperation(request.Ref);
@@ -184,7 +183,7 @@ namespace TradingLib.Core
                 Manager manger = session.GetManager();
                 if (manger != null)
                 {
-                    JsonWrapperCashOperation request = Mixins.Json.JsonMapper.ToObject<JsonWrapperCashOperation>(playload);
+                    JsonWrapperCashOperation request = playload.DeserializeObject<JsonWrapperCashOperation>();// Mixins.Json.JsonMapper.ToObject<JsonWrapperCashOperation>(playload);
                     if (request != null)
                     {
                         //request.mgr_fk = manger.mgr_fk;

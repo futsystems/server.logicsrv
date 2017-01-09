@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using TradingLib.API;
-using TradingLib.Mixins.Json;
 
 
 namespace TradingLib.Common
@@ -274,7 +273,8 @@ namespace TradingLib.Common
         /// <summary>
         /// 合约信息
         /// </summary>
-        [NoJsonExportAttr()]
+        //[NoJsonExportAttr()]
+        [Newtonsoft.Json.JsonIgnore]
         public Symbol oSymbol { get; set; }
         string _exchange = string.Empty;
         /// <summary>
@@ -437,7 +437,7 @@ namespace TradingLib.Common
 
         public override string ToString()
         {
-            return JsonMapper.ToJson(this);
+            return Util.PrintObj(this);
             //return string.Format("{0} {1} {2} Open:{3} {4} {5} {6} Close:{7} {8} {9} {10} Symbol:{11} ",Account,Settleday,Side,OpenDate,OpenTime,OpenTradeID,OpenPrice,CloseDate,CloseTime,CloseTradeID,ClosePrice)
         }
     }

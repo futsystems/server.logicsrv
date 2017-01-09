@@ -43,16 +43,6 @@ namespace TradingLib.Common
             ErrorMessage = error;
         }
 
-        /// <summary>
-        /// 将JsonReply生成对应的FutsRspError
-        /// </summary>
-        /// <param name="reply"></param>
-        public FutsRspError(TradingLib.Mixins.Json.JsonReply reply)
-            :base(reply.Message)
-        {
-            ErrorID = reply.Code;
-            ErrorMessage = reply.Message;
-        }
         
 
         /// <summary>

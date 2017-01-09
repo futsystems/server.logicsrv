@@ -72,7 +72,7 @@ namespace TradingLib.Core
                 throw new FutsRspError("无权进行此操作");
             }
 
-            FollowStrategyConfig cfg = TradingLib.Mixins.Json.JsonMapper.ToObject<FollowStrategyConfig>(payload);
+            FollowStrategyConfig cfg = payload.DeserializeObject<FollowStrategyConfig>();
             if (cfg != null)
             {
 

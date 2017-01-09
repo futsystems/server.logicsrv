@@ -35,7 +35,7 @@ namespace RuleSet2.Account
                 {
                     _args = value;
                     //解析json参数
-                    var args = TradingLib.Mixins.Json.JsonMapper.ToObject(_args);
+                    var args = _args.DeserializeObject();
                     loss_flat = decimal.Parse(args["loss_flat"].ToString());//强平线
                     loss_warn = decimal.Parse(args["loss_warn"].ToString());//报警线
                 }

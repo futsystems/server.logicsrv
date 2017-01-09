@@ -8,7 +8,7 @@ using TradingLib.Common;
 using TradingLib.BrokerXAPI;
 using System.Runtime.InteropServices;
 using System.Reflection;
-using TradingLib.Mixins.Json;
+
 
 namespace TradingLib.Core
 {
@@ -266,7 +266,7 @@ namespace TradingLib.Core
             var manager = session.GetManager();
             if (!manager.IsInRoot()) throw new FutsRspError("无权进行入金操作");
 
-            JsonData args = JsonMapper.ToObject(request);
+            var args = request.DeserializeObject();// JsonMapper.ToObject(request);
             var account = args["account"].ToString();
             var targetStaticEquity = decimal.Parse(args["target_static_equity"].ToString());
             var targetStaticCredit = decimal.Parse(args["target_static_credit"].ToString());

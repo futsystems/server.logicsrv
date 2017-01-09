@@ -21,7 +21,7 @@ namespace TradingLib.Contrib
         public void CTE_AgentReport(ISession session, string reqeust)
         {
             Manager manager = session.GetManager();
-            var data = TradingLib.Mixins.Json.JsonMapper.ToObject(reqeust);
+            var data = reqeust.DeserializeObject();
 
             var startDate = int.Parse(data["start_date"].ToString());
             var endDate = int.Parse(data["end_date"].ToString());
@@ -31,7 +31,6 @@ namespace TradingLib.Contrib
 
             if (reports != null && reports.Count()>=1)
             {
-                //debug("report:" + Mixins.Json.JsonMapper.ToJson(report),QSEnumDebugLevel.INFO);
                 session.ReplyMgr(reports.ToArray());
             }
             else

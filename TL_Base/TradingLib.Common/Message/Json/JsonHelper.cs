@@ -5,5 +5,8 @@ using System.Text;
 
 namespace TradingLib.Common
 {
+    public class JsonHelper
+    {
 
+    }
 }

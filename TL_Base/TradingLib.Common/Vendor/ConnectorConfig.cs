@@ -4,8 +4,6 @@ using System.Linq;
 using System.Text;
 using TradingLib.API;
 using TradingLib.Common;
-using TradingLib.Mixins.Json;
-
 
 namespace TradingLib.Common
 {
@@ -84,7 +82,8 @@ namespace TradingLib.Common
         /// <summary>
         /// 接口
         /// </summary>
-        [NoJsonExportAttr()]
+        //[NoJsonExportAttr()]
+        [Newtonsoft.Json.JsonIgnore]
         public ConnectorInterface Interface { get; set; }
 
 
@@ -101,7 +100,8 @@ namespace TradingLib.Common
         /// <summary>
         /// 域
         /// </summary>
-        [NoJsonExportAttr()]
+        //[NoJsonExportAttr()]
+        [Newtonsoft.Json.JsonIgnore]
         public Domain Domain { get; internal set; }
 
 

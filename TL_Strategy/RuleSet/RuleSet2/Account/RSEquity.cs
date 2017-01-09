@@ -35,7 +35,7 @@ namespace RuleSet2.Account
                 {
                     _args = value;
                     //解析json参数
-                    var args = TradingLib.Mixins.Json.JsonMapper.ToObject(_args);
+                    var args = _args.DeserializeObject();
                     equity_flat = decimal.Parse(args["equity_flat"].ToString());//强平线
                     equity_warn = decimal.Parse(args["equity_warn"].ToString());//报警线
 

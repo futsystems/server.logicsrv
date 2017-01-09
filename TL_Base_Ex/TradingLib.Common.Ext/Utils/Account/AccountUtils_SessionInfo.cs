@@ -25,7 +25,7 @@ namespace TradingLib.Common
 
             //客户登入成功后 设定交易帐户登入标识和回话信息字段
             account.IsLogin = true;
-            account.SessionInfo = TradingLib.Mixins.Json.JsonMapper.ToJson(info);
+            account.SessionInfo = Newtonsoft.Json.JsonConvert.SerializeObject(info);
 
         }
 

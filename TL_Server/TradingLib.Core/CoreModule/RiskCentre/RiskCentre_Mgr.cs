@@ -41,7 +41,7 @@ namespace TradingLib.Core
             try
             {
                 logger.Info(string.Format("管理员:{0} 请求更新风控规则:{1}", session.AuthorizedID, json));
-                RuleItem item = Mixins.Json.JsonMapper.ToObject<RuleItem>(json);
+                RuleItem item = json.DeserializeObject<RuleItem>();// Mixins.Json.JsonMapper.ToObject<RuleItem>(json);
                 this.UpdateRiskRule(item);
                 session.ReplyMgr(item);
                 session.OperationSuccess("更新风控项目成功");
@@ -60,7 +60,7 @@ namespace TradingLib.Core
                 logger.Info(string.Format("管理员:{0} 请求查询帐户分控规则列表:{1}", session.AuthorizedID, json.ToString()));
 
                 List<RuleItem> items = new List<RuleItem>();
-                var req = Mixins.Json.JsonMapper.ToObject(json);
+                var req = json.DeserializeObject();// Mixins.Json.JsonMapper.ToObject(json);
                 string acct  = req["account"].ToString();
                 QSEnumRuleType ruletype = Util.ParseEnum<QSEnumRuleType>(req["ruletype"].ToString());
                 //QSEnumRuleType ruletype = (QSEnumRuleType)Enum.Parse(typeof(QSEnumRuleType), req["ruletype"].ToString());
@@ -126,7 +126,7 @@ namespace TradingLib.Core
             try
             {
                 logger.Info(string.Format("管理员:{0} 请求删除风控项:{1}", session.AuthorizedID, json));
-                RuleItem item = Mixins.Json.JsonMapper.ToObject<RuleItem>(json);
+                RuleItem item = json.DeserializeObject<RuleItem>();// Mixins.Json.JsonMapper.ToObject<RuleItem>(json);
                 IAccount account = TLCtxHelper.ModuleAccountManager[item.Account];
 
                 this.DeleteRiskRule(item);
@@ -144,148 +144,6 @@ namespace TradingLib.Core
                 session.OperationError(ex);
             }
         }
-
-
-        //#region 强平风控 json传递强平参数
-        //readonly string vendorFlatRuleName = "AccountRuleSet.RSVendorFlat";
-
-        //[ContribCommandAttr(QSEnumCommandSource.MessageMgr, "DelVendorFlatRule", "DelVendorFlatRule - del flat rule for vendor moniter account", "删除主帐户监控风控规则")]
-        //public void CTE_DelVendorFlatRule(ISession session, string account)
-        //{
-        //    logger.Info(string.Format("管理员:{0} 查询主帐户{1}强平规则", session.AuthorizedID, account));
-
-        //    Manager manager = session.GetManager();
-        //    IAccount acct = TLCtxHelper.ModuleAccountManager[account];
-
-        //    if (acct == null) throw new FutsRspError("交易帐户不存在");
-
-        //    //如果交易帐户没有加载风控规则 则先加载风控规则
-        //    if (!acct.RuleItemLoaded)
-        //    {
-        //        this.LoadRuleItem(acct);//风控规则延迟加载,如果帐户没有加载则先加载帐户风控规则
-        //    }
-
-        //    //查询帐户风控规则
-        //    IAccountCheck accountcheck = acct.AccountChecks.Where(check => check.GetType().FullName.Equals(vendorFlatRuleName)).FirstOrDefault();
-            
-        //    //存在对应风控规则 删除风控规则 并重置帐户警告
-        //    if (accountcheck != null)
-        //    {
-        //        RuleItem item = RuleItem.IRule2RuleItem(accountcheck);
-        //        this.DeleteRiskRule(item);
-
-        //        acct.Warn(false);//解除帐户警告
-
-        //        TLCtxHelper.EventAccount.FireAccountChangeEent(acct);
-        //    }
-
-
-        //}
-
-        //[ContribCommandAttr(QSEnumCommandSource.MessageMgr, "QryVendorFlatRule", "QryVendorFlatRule - query flat rule for vendor moniter account", "查询主帐户监控风控规则")]
-        //public void CTE_QryVendorFlatRule(ISession session, string account)
-        //{
-        //    logger.Info(string.Format("管理员:{0} 查询主帐户{1}强平规则", session.AuthorizedID, account));
-
-        //    Manager manager = session.GetManager();
-        //    IAccount acct = TLCtxHelper.ModuleAccountManager[account];
-
-        //    if (acct == null) throw new FutsRspError("交易帐户不存在");
-
-        //    if (!acct.RuleItemLoaded)
-        //    {
-        //        this.LoadRuleItem(acct);//风控规则延迟加载,如果帐户没有加载则先加载帐户风控规则
-        //    }
-
-        //    //查询帐户风控规则
-        //    IAccountCheck accountcheck = acct.AccountChecks.Where(check => check.GetType().FullName.Equals(vendorFlatRuleName)).FirstOrDefault();
-        //    //如果该帐户风控规则不存在 则添加
-        //    if (accountcheck == null)
-        //    {
-        //        session.ReplyMgr(null);
-        //        return;
-        //    }
-
-        //    //解析风控规则json参数
-        //    var args = TradingLib.Mixins.Json.JsonMapper.ToObject(accountcheck.Value);
-        //    var response = new 
-        //    {
-        //        account=account,
-        //        equity = decimal.Parse(args["equity"].ToString()),//初始权益
-        //        warn_level = int.Parse(args["warn_level"].ToString()),//报警线
-        //        flat_level = int.Parse(args["flat_level"].ToString()),//强平线
-        //        night_hold = decimal.Parse(args["night_hold"].ToString()),//过夜倍数
-        //    };
-        //    session.ReplyMgr(response);
-        //}
-
-        ///// <summary>
-        ///// 更新主帐户监控风控规则
-        ///// </summary>
-        ///// <param name="session"></param>
-        ///// <param name="json"></param>
-        //[ContribCommandAttr(QSEnumCommandSource.MessageMgr, "UpdateVendorFlatRule", "UpdateVendorFlatRule - update flat rule for vendor moniter account", "更新主帐户监控强平规则", QSEnumArgParseType.Json)]
-        //public void CTE_UpdateVendorFlatRule(ISession session, string json)
-        //{
-        //    logger.Info(string.Format("管理员:{0} 更新主帐户强平规则:{1}", session.AuthorizedID, json.ToString()));
-
-        //    Manager manager = session.GetManager();
-
-        //    var req = TradingLib.Mixins.Json.JsonMapper.ToObject(json);
-
-        //    var account = req["account"].ToString();
-        //    var equity = decimal.Parse(req["equity"].ToString());//初始权益
-        //    var warnLevel = int.Parse(req["warn_level"].ToString());//报警线
-        //    var flatLevel = int.Parse(req["flat_level"].ToString());//强平线
-        //    var overNight = decimal.Parse(req["night_hold"].ToString());//过夜倍数
-
-
-        //    IAccount acct = TLCtxHelper.ModuleAccountManager[account];
-
-        //    if(acct == null) throw new FutsRspError("交易帐户不存在");
-
-        //    if (!acct.RuleItemLoaded)
-        //    {
-        //        this.LoadRuleItem(acct);//风控规则延迟加载,如果帐户没有加载则先加载帐户风控规则
-        //    }
-
-        //    //查询帐户风控规则
-        //    IAccountCheck accountcheck = acct.AccountChecks.Where(check => check.GetType().FullName.Equals(vendorFlatRuleName)).FirstOrDefault();
-            
-        //    //生成风控规则参数
-        //    string args = TradingLib.Mixins.Json.JsonMapper.ToJson(new {equity =equity,warn_level=warnLevel,flat_level=flatLevel,night_hold=overNight});
-            
-        //    RuleItem target = null;
-        //    //如果该帐户风控规则不存在 则添加
-        //    if(accountcheck == null)
-        //    {
-        //        //生成ruleItem
-        //        target = new RuleItem();
-        //        target.Account = acct.ID;
-        //        target.Compare = QSEnumCompareType.Equals;
-        //        target.Enable = true;
-        //        target.RuleName = vendorFlatRuleName;
-        //        target.RuleType = QSEnumRuleType.AccountRule;
-        //        target.SymbolSet = "";
-        //        target.Value = args;
-
-        //        this.UpdateRule(target);
-        //    }
-        //    else//更新
-        //    {
-        //        target = RuleItem.IRule2RuleItem(accountcheck);
-                
-        //        //将传递过来的参数重新生成json格式
-        //        target.Value = args;
-        //        this.UpdateRule(target);
-
-        //        session.OperationSuccess("更新风控项目成功");
-        //    }
-        //    TLCtxHelper.EventAccount.FireAccountChangeEent(acct);
-        //}
-
-        //#endregion
-
 
     }
 }

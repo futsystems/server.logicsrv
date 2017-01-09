@@ -33,8 +33,6 @@ using System.Linq;
 using System.Text;
 using TradingLib.API;
 using TradingLib.Common;
-using TradingLib.Mixins.JsonObject;
-
 
 namespace TradingLib.Core
 {
@@ -62,7 +60,7 @@ namespace TradingLib.Core
             NotifyMGRContribNotify response = ResponseTemplate<NotifyMGRContribNotify>.SrvSendNotifyResponse(GetNotifyTargets(e.NotifyPredicate));
             response.ModuleID = CoreName;
             response.CMDStr = "ManagerNotify";
-            response.Result = Mixins.Json.JsonMapper.ToJson(e.Notify);
+            response.Result = e.Notify.SerializeObject();// Mixins.Json.JsonMapper.ToJson(e.Notify);
 
             CachePacket(response);
         }
@@ -79,7 +77,7 @@ namespace TradingLib.Core
             NotifyMGRContribNotify response = ResponseTemplate<NotifyMGRContribNotify>.SrvSendNotifyResponse(GetNotifyTargets(predictate));
             response.ModuleID = module;
             response.CMDStr = cmdstr;
-            response.Result = Mixins.Json.JsonReply.SuccessReply(obj).ToJson();
+            response.Result = JsonReply.SuccessReply(obj).ToJson();
             CachePacket(response);
         }
 
@@ -104,7 +102,7 @@ namespace TradingLib.Core
             NotifyMGRContribNotify response = ResponseTemplate<NotifyMGRContribNotify>.SrvSendNotifyResponse(GetNotifyTargets(managers));
             response.ModuleID = module;
             response.CMDStr = cmdstr;
-            response.Result = Mixins.Json.JsonReply.SuccessReply(obj).ToJson();
+            response.Result = JsonReply.SuccessReply(obj).ToJson();
             CachePacket(response);
         }
 
@@ -152,7 +150,7 @@ namespace TradingLib.Core
             NotifyMGRContribNotify response = ResponseTemplate<NotifyMGRContribNotify>.SrvSendNotifyResponse(GetNotifyTargets(op.GetNotifyPredicate()));
             response.ModuleID = CoreName;
             response.CMDStr = "NotifyCashOperation";
-            response.Result = Mixins.Json.JsonReply.SuccessReply(op).ToJson();
+            response.Result = JsonReply.SuccessReply(op).ToJson();
             CachePacket(response);
         }
 
@@ -167,7 +165,7 @@ namespace TradingLib.Core
             NotifyMGRContribNotify response = ResponseTemplate<NotifyMGRContribNotify>.SrvSendNotifyResponse(GetNotifyTargets(mgr.GetNotifyPredicate()));
             response.ModuleID = CoreName;
             response.CMDStr = "NotifyManagerUpdate";
-            response.Result = Mixins.Json.JsonReply.SuccessReply(mgr).ToJson();
+            response.Result = JsonReply.SuccessReply(mgr).ToJson();
             CachePacket(response);
         }
 
@@ -181,7 +179,7 @@ namespace TradingLib.Core
             NotifyMGRContribNotify response = ResponseTemplate<NotifyMGRContribNotify>.SrvSendNotifyResponse(GetNotifyTargets(mgr.GetNotifyPredicate()));
             response.ModuleID = CoreName;
             response.CMDStr = "NotifyManagerDelete";
-            response.Result = Mixins.Json.JsonReply.SuccessReply(mgr).ToJson();
+            response.Result = JsonReply.SuccessReply(mgr).ToJson();
             CachePacket(response);
         }
 

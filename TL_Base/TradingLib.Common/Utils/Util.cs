@@ -180,7 +180,7 @@ namespace TradingLib.Common
         /// <returns></returns>
         public static string PrintObj(object obj)
         {
-            return TradingLib.Mixins.Json.JsonMapper.ToJson(obj);
+            return Newtonsoft.Json.JsonConvert.SerializeObject(obj);
         }
         ///// <summary>
         ///// 格式化输出数字
@@ -271,10 +271,9 @@ namespace TradingLib.Common
                 using (StreamReader stream = new StreamReader(response.GetResponseStream(), Encoding.UTF8))
                 {
                     direction = stream.ReadToEnd();
-
-                    TradingLib.Mixins.Json.JsonData data = TradingLib.Mixins.Json.JsonMapper.ToObject(direction);
-                    string ip = data["ip"].ToString().Trim();
-                    string location = data["location"].ToString().Trim();
+                    var tmp = direction.DeserializeObject();
+                    string ip = tmp["ip"].ToString().Trim();
+                    string location = tmp["location"].ToString().Trim();
                     return new LocationInfo() { IP = ip, Location = location, MAC = "" };
 
                 }
