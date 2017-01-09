@@ -26,12 +26,6 @@ namespace TradingLib.API
         /// </summary>
         string TimeZoneID { get; set; }
 
-
-        /// <summary>
-        /// 品种对象绑定交易所对象，判断品种是否可以交易 需要获得交易所时间，交易所时间需要用交易所时区对象将时间进行转换
-        /// </summary>
-        //TimeZoneInfo TimeZoneInfo { get; }
-
         /// <summary>
         /// 获取交易所当前时间
         /// </summary>

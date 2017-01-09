@@ -16,7 +16,6 @@ namespace TradingLib.API
         /// </summary>
         string Symbol { get; set; }
 
-
         /// <summary>
         /// 底层合约用于异化合约的生成
         /// </summary>

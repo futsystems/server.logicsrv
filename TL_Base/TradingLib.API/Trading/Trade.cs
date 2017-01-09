@@ -194,9 +194,6 @@ namespace TradingLib.API
         string BrokerTradeID { get; set; }
         #endregion
 
-       
-
-
         #region 分帐户端属性
         /// <summary>
         /// 成交编号 由系统内TradeID生成器 统一赋值 保证日内唯一
