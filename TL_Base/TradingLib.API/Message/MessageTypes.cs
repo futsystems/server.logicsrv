@@ -210,13 +210,13 @@ namespace TradingLib.API
         MGRWATCHACCOUNTS,//管理端发送观察账户列表,管理服务器根据观察列表推送实时的权益以及盈亏数据
         MGRLOGINREQUEST,//管理登入请求
         MGRRESUMEACCOUNT,//管理客户端收到某个账户时 我们请求该账户的交易信息
-        MGRADDACCOUNT,//增加交易账户
+        //MGRADDACCOUNT,//增加交易账户
         MGRQRYACCOUNTINFO,//查询交易帐号信息
         MGRCASHOPERATION,//请求资金操作
-        MGRUPDATEACCOUNTINTRADAY,//请求修改账户日内交易还是隔夜交易
-        MGRUPDATEACCOUNTCATEGORY,//更新账户类别
-        MGRUPDATEACCOUNTROUTETRANSFERTYPE,//更新账户路由转发列别
-        MGRUPDATEACCOUNTEXECUTE,//更新帐户交易权限
+        //MGRUPDATEACCOUNTINTRADAY,//请求修改账户日内交易还是隔夜交易
+        //MGRUPDATEACCOUNTCATEGORY,//更新账户类别
+        //MGRUPDATEACCOUNTROUTETRANSFERTYPE,//更新账户路由转发列别
+        //MGRUPDATEACCOUNTEXECUTE,//更新帐户交易权限
         
         MGROPENCLEARCENTRE,//开启清算中心
         MGRCLOSECLEARCENTRE,//关闭清算中心
@@ -264,7 +264,7 @@ namespace TradingLib.API
 
         MGRCONTRIBREQUEST,//管理扩展请求
         MGRINSERTTRADE,//插入成交
-        MGRDELACCOUNT,//删除交易帐户
+        //MGRDELACCOUNT,//删除交易帐户
 
 
 

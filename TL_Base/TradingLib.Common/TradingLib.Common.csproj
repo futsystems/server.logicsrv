@@ -203,7 +203,7 @@
     <Compile Include="Message\Login.cs" />
     <Compile Include="Message\Manager\MGRAccountChangeUpdateNotify.cs" />
     <Compile Include="Message\Manager\MGRAcctService.cs" />
-    <Compile Include="Message\Manager\MGRAccount.cs" />
+    <Compile Include="Message\1old\MGRAccount.cs" />
     <Compile Include="Message\Manager\MGRBasicInfo.cs" />
     <Compile Include="Message\Manager\MGRCashOperation.cs" />
     <Compile Include="Message\Manager\MGRChangePass.cs" />
@@ -223,11 +223,11 @@
     <Compile Include="Message\Manager\MGRRuleSet.cs" />
     <Compile Include="Message\Manager\MGRSessionUpdateNotify.cs" />
     <Compile Include="Message\Manager\MGRSystemStatus.cs" />
-    <Compile Include="Message\Manager\MGRUpdateCategory.cs" />
-    <Compile Include="Message\Manager\MGRUpdateExecute.cs" />
-    <Compile Include="Message\Manager\MGRUpdateIntraday.cs" />
+    <Compile Include="Message\1old\MGRUpdateCategory.cs" />
+    <Compile Include="Message\1old\MGRUpdateExecute.cs" />
+    <Compile Include="Message\1old\MGRUpdateIntraday.cs" />
     <Compile Include="Message\Manager\MGRUpdatePass.cs" />
-    <Compile Include="Message\Manager\MGRUpdateRouteType.cs" />
+    <Compile Include="Message\1old\MGRUpdateRouteType.cs" />
     <Compile Include="Message\Manager\MGRWatchAccount.cs" />
     <Compile Include="Message\OrderAction.cs" />
     <Compile Include="Message\PacketBase.cs" />

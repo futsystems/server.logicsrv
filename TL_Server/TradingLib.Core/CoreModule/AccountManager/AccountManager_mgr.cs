@@ -13,157 +13,157 @@ namespace TradingLib.Core
     public partial class AccountManager
     {
 
-        /// <summary>
-        /// @请求添加交易帐户
-        /// 服务端操作采用如下方式进行
-        /// 1.权限常规检查
-        /// 2.执行操作时内部通过FutsRspErro抛出异常的方式 外层通过捕获异常来将异常信息回报给客户端
-        /// 
-        /// 添加帐户的操作最终会触发新增帐号操作，新增帐号事件会将帐户通知给所有有权限查看的管理端
-        /// </summary>
-        /// <param name="request"></param>
-        /// <param name="session"></param>
-        /// <param name="manager"></param>
-        [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "AddAccount", "AddAccount - add account", "添加交易帐户", QSEnumArgParseType.Json)]
-        public void CTE_AddAccount(ISession session, string json)
-        {
-            logger.Info(string.Format("管理员:{0} 请求添加交易帐号:{1}", session.AuthorizedID, json));
+        ///// <summary>
+        ///// @请求添加交易帐户
+        ///// 服务端操作采用如下方式进行
+        ///// 1.权限常规检查
+        ///// 2.执行操作时内部通过FutsRspErro抛出异常的方式 外层通过捕获异常来将异常信息回报给客户端
+        ///// 
+        ///// 添加帐户的操作最终会触发新增帐号操作，新增帐号事件会将帐户通知给所有有权限查看的管理端
+        ///// </summary>
+        ///// <param name="request"></param>
+        ///// <param name="session"></param>
+        ///// <param name="manager"></param>
+        //[ContribCommandAttr(QSEnumCommandSource.MessageMgr, "AddAccount", "AddAccount - add account", "添加交易帐户", QSEnumArgParseType.Json)]
+        //public void CTE_AddAccount(ISession session, string json)
+        //{
+        //    logger.Info(string.Format("管理员:{0} 请求添加交易帐号:{1}", session.AuthorizedID, json));
             
-            Manager manager = session.GetManager();
-            //var req = Mixins.Json.JsonMapper.ToObject(json);
-            var req = json.DeserializeObject();
-            var account = req["account"].ToString();
-            var category = Util.ParseEnum<QSEnumAccountCategory>(req["category"].ToString());
-            var password = req["password"].ToString();
-            var routergroup_id = int.Parse(req["routergroup_id"].ToString());
-            var user_id = int.Parse(req["user_id"].ToString());
-            var manager_id = int.Parse(req["manager_id"].ToString());
+        //    Manager manager = session.GetManager();
+        //    //var req = Mixins.Json.JsonMapper.ToObject(json);
+        //    var req = json.DeserializeObject();
+        //    var account = req["account"].ToString();
+        //    var category = Util.ParseEnum<QSEnumAccountCategory>(req["category"].ToString());
+        //    var password = req["password"].ToString();
+        //    var routergroup_id = int.Parse(req["routergroup_id"].ToString());
+        //    var user_id = int.Parse(req["user_id"].ToString());
+        //    var manager_id = int.Parse(req["manager_id"].ToString());
 
-            //域帐户数目检查
-            if (manager.Domain.GetAccounts().Count() >= manager.Domain.AccLimit)
-            {
-                throw new FutsRspError("帐户数目达到上限:" + manager.Domain.AccLimit.ToString());
-            }
+        //    //域帐户数目检查
+        //    if (manager.Domain.GetAccounts().Count() >= manager.Domain.AccLimit)
+        //    {
+        //        throw new FutsRspError("帐户数目达到上限:" + manager.Domain.AccLimit.ToString());
+        //    }
 
-            //如果不是Root权限的Manager需要进行执行权限检查
-            if (!manager.IsInRoot())
-            {
-                //如果不是为该主域添加帐户,则我们需要判断当前Manager的主域是否拥有请求主域的权限
-                if (manager.BaseMgrID != manager_id)
-                {
-                    if (!manager.IsParentOf(manager_id))
-                    {
-                        throw new FutsRspError("无权在该管理域开设帐户");
-                    }
-                }
-            }
+        //    //如果不是Root权限的Manager需要进行执行权限检查
+        //    if (!manager.IsInRoot())
+        //    {
+        //        //如果不是为该主域添加帐户,则我们需要判断当前Manager的主域是否拥有请求主域的权限
+        //        if (manager.BaseMgrID != manager_id)
+        //        {
+        //            if (!manager.IsParentOf(manager_id))
+        //            {
+        //                throw new FutsRspError("无权在该管理域开设帐户");
+        //            }
+        //        }
+        //    }
 
-            //Manager帐户数量限制 如果是在自己的主域中添加交易帐户 则需要检查帐户数量
-            int limit = manager.BaseManager.AccLimit;
+        //    //Manager帐户数量限制 如果是在自己的主域中添加交易帐户 则需要检查帐户数量
+        //    int limit = manager.BaseManager.AccLimit;
 
-            int cnt = manager.GetVisibleAccount().Count();//获得该manger下属的所有帐户数目
-            if (cnt >= limit)
-            {
-                throw new FutsRspError("可开帐户数量超过限制:" + limit.ToString());
-            }
+        //    int cnt = manager.GetVisibleAccount().Count();//获得该manger下属的所有帐户数目
+        //    if (cnt >= limit)
+        //    {
+        //        throw new FutsRspError("可开帐户数量超过限制:" + limit.ToString());
+        //    }
 
-            Manager targetmgr = BasicTracker.ManagerTracker[manager_id];
-            if (targetmgr == null)
-            {
-                //如果指定的管理域不存在，则默认为当前操作的manager的域
-                targetmgr = manager.BaseManager;
-            }
+        //    Manager targetmgr = BasicTracker.ManagerTracker[manager_id];
+        //    if (targetmgr == null)
+        //    {
+        //        //如果指定的管理域不存在，则默认为当前操作的manager的域
+        //        targetmgr = manager.BaseManager;
+        //    }
 
-            //指定的manager域和当前管理域不一致 则判断当前管理域是否有权在指定的域内开户
-            if (targetmgr.BaseMgrID != manager.BaseMgrID)
-            {
-                if (!manager.RightAccessManager(targetmgr))
-                {
-                    throw new FutsRspError("无权为该管理员添加帐户");
-                }
-            }
+        //    //指定的manager域和当前管理域不一致 则判断当前管理域是否有权在指定的域内开户
+        //    if (targetmgr.BaseMgrID != manager.BaseMgrID)
+        //    {
+        //        if (!manager.RightAccessManager(targetmgr))
+        //        {
+        //            throw new FutsRspError("无权为该管理员添加帐户");
+        //        }
+        //    }
 
-            AccountCreation create = new AccountCreation();
-            create.Account = account;
-            create.Category = category;
-            create.Password = password;
-            //create.RouteGroup = BasicTracker.RouterGroupTracker[routergroup_id];
-            create.RouterType = QSEnumOrderTransferType.LIVE;
-            create.UserID = user_id;
-            //create.Domain = manager.Domain;
-            create.BaseManagerID = targetmgr.BaseMgrID;
-
-
-            //执行操作 并捕获异常 产生异常则给出错误回报
-            this.AddAccount(ref create);//将交易帐户加入到主域
-            session.OperationSuccess("新增帐户:" + create.Account + "成功");
-        }
+        //    AccountCreation create = new AccountCreation();
+        //    create.Account = account;
+        //    create.Category = category;
+        //    create.Password = password;
+        //    //create.RouteGroup = BasicTracker.RouterGroupTracker[routergroup_id];
+        //    create.RouterType = QSEnumOrderTransferType.LIVE;
+        //    create.UserID = user_id;
+        //    //create.Domain = manager.Domain;
+        //    create.BaseManagerID = targetmgr.BaseMgrID;
 
 
-        [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "AddFinServiceAccount", "AddFinServiceAccount - add finservice account", "添加配资客户", QSEnumArgParseType.Json)]
-        public void CTE_AddFinServiceAccount(ISession session, string json)
-        {
-            logger.Info(string.Format("管理员:{0} 请求添加配资客户帐号:{1}", session.AuthorizedID, json));
-
-            Manager manager = session.GetManager();
-            var profile = json.DeserializeObject<AccountProfile>();// Mixins.Json.JsonMapper.ToObject<AccountProfile>(json);
-            var account = profile.Account;
-            QSEnumAccountCategory category = QSEnumAccountCategory.MONITERACCOUNT;
-            var password = string.Empty;
-            var routergroup_id = 0;
-            var user_id = 0;
-            var manager_id = manager.BaseManager.ID;
-
-            //域帐户数目检查
-            if (manager.Domain.GetAccounts().Count() >= manager.Domain.AccLimit)
-            {
-                throw new FutsRspError("帐户数目达到上限:" + manager.Domain.AccLimit.ToString());
-            }
-
-            //如果不是Root权限的Manager需要进行执行权限检查
-            if (!manager.IsInRoot())
-            {
-                //如果不是为该主域添加帐户,则我们需要判断当前Manager的主域是否拥有请求主域的权限
-                if (manager.BaseMgrID != manager_id)
-                {
-                    if (!manager.IsParentOf(manager_id))
-                    {
-                        throw new FutsRspError("无权在该管理域开设帐户");
-                    }
-                }
-            }
-
-            //Manager帐户数量限制 如果是在自己的主域中添加交易帐户 则需要检查帐户数量
-            int limit = manager.BaseManager.AccLimit;
-
-            int cnt = manager.GetVisibleAccount().Count();//获得该manger下属的所有帐户数目
-            if (cnt >= limit)
-            {
-                throw new FutsRspError("可开帐户数量超过限制:" + limit.ToString());
-            }
+        //    //执行操作 并捕获异常 产生异常则给出错误回报
+        //    this.AddAccount(ref create);//将交易帐户加入到主域
+        //    session.OperationSuccess("新增帐户:" + create.Account + "成功");
+        //}
 
 
-            AccountCreation create = new AccountCreation();
-            create.Account = account;
-            create.Category = category;
-            create.Password = password;
-            //create.RouteGroup = BasicTracker.RouterGroupTracker[routergroup_id];
-            create.RouterType = QSEnumOrderTransferType.SIM;
-            create.UserID = user_id;
-            //create.Domain = manager.Domain;
-            //create.BaseManager = manager.BaseManager;
+        //[ContribCommandAttr(QSEnumCommandSource.MessageMgr, "AddFinServiceAccount", "AddFinServiceAccount - add finservice account", "添加配资客户", QSEnumArgParseType.Json)]
+        //public void CTE_AddFinServiceAccount(ISession session, string json)
+        //{
+        //    logger.Info(string.Format("管理员:{0} 请求添加配资客户帐号:{1}", session.AuthorizedID, json));
+
+        //    Manager manager = session.GetManager();
+        //    var profile = json.DeserializeObject<AccountProfile>();// Mixins.Json.JsonMapper.ToObject<AccountProfile>(json);
+        //    var account = profile.Account;
+        //    QSEnumAccountCategory category = QSEnumAccountCategory.MONITERACCOUNT;
+        //    var password = string.Empty;
+        //    var routergroup_id = 0;
+        //    var user_id = 0;
+        //    var manager_id = manager.BaseManager.ID;
+
+        //    //域帐户数目检查
+        //    if (manager.Domain.GetAccounts().Count() >= manager.Domain.AccLimit)
+        //    {
+        //        throw new FutsRspError("帐户数目达到上限:" + manager.Domain.AccLimit.ToString());
+        //    }
+
+        //    //如果不是Root权限的Manager需要进行执行权限检查
+        //    if (!manager.IsInRoot())
+        //    {
+        //        //如果不是为该主域添加帐户,则我们需要判断当前Manager的主域是否拥有请求主域的权限
+        //        if (manager.BaseMgrID != manager_id)
+        //        {
+        //            if (!manager.IsParentOf(manager_id))
+        //            {
+        //                throw new FutsRspError("无权在该管理域开设帐户");
+        //            }
+        //        }
+        //    }
+
+        //    //Manager帐户数量限制 如果是在自己的主域中添加交易帐户 则需要检查帐户数量
+        //    int limit = manager.BaseManager.AccLimit;
+
+        //    int cnt = manager.GetVisibleAccount().Count();//获得该manger下属的所有帐户数目
+        //    if (cnt >= limit)
+        //    {
+        //        throw new FutsRspError("可开帐户数量超过限制:" + limit.ToString());
+        //    }
 
 
-            //执行操作 并捕获异常 产生异常则给出错误回报
-            this.AddAccount(ref create);//将交易帐户加入到主域
+        //    AccountCreation create = new AccountCreation();
+        //    create.Account = account;
+        //    create.Category = category;
+        //    create.Password = password;
+        //    //create.RouteGroup = BasicTracker.RouterGroupTracker[routergroup_id];
+        //    create.RouterType = QSEnumOrderTransferType.SIM;
+        //    create.UserID = user_id;
+        //    //create.Domain = manager.Domain;
+        //    //create.BaseManager = manager.BaseManager;
 
-            profile.Account = create.Account;//获得添加的交易帐户
-            //插入新的profile
-            BasicTracker.AccountProfileTracker.UpdateAccountProfile(profile);
 
-            session.OperationSuccess("新增配资客户:" + create.Account + "成功");
+        //    //执行操作 并捕获异常 产生异常则给出错误回报
+        //    this.AddAccount(ref create);//将交易帐户加入到主域
 
-        }
+        //    profile.Account = create.Account;//获得添加的交易帐户
+        //    //插入新的profile
+        //    BasicTracker.AccountProfileTracker.UpdateAccountProfile(profile);
+
+        //    session.OperationSuccess("新增配资客户:" + create.Account + "成功");
+
+        //}
 
 
         /// <summary>
@@ -282,13 +282,11 @@ namespace TradingLib.Core
         /// <param name="request"></param>
         /// <param name="session"></param>
         /// <param name="manager"></param>
-        [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "DelAccount", "DelAccount - del account", "删除交易帐户", QSEnumArgParseType.Json)]
-        public void CTE_DelAccount(ISession session, string json)
+        [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "DelAccount", "DelAccount - del account", "删除交易帐户", QSEnumArgParseType.CommaSeparated)]
+        public void CTE_DelAccount(ISession session, string account)
         {
-            logger.Info(string.Format("管理员:{0} 请求删除帐户:{1}", session.AuthorizedID, json));
+            logger.Info(string.Format("管理员:{0} 请求删除帐户:{1}", session.AuthorizedID, account));
 
-            var req = json.DeserializeObject();// Mixins.Json.JsonMapper.ToObject(json);
-            var account = req["account"].ToString();
             IAccount acc = this[account];
             if (acc == null)
             {
@@ -379,23 +377,6 @@ namespace TradingLib.Core
             }
         }
 
-        //[ContribCommandAttr(QSEnumCommandSource.MessageMgr, "UpdateAccountInvestor", "UpdateAccountInvestor - update account investor info", "修改交易帐号投资者信息", QSEnumArgParseType.Json)]
-        //public void CTE_UpdateAccountInvestor(ISession session, string json)
-        //{
-        //    logger.Info(string.Format("管理员:{0} 请求修改投资者信息:{1}", session.AuthorizedID, json));
-        //    var req = Mixins.Json.JsonMapper.ToObject(json);
-        //    var account = req["account"].ToString();
-        //    var name = req["name"].ToString();
-        //    var broker = req["broker"].ToString();
-        //    var bank_id = int.Parse(req["bank_id"].ToString());
-        //    var bank_ac = req["bank_ac"].ToString();
-
-        //    IAccount acct = TLCtxHelper.ModuleAccountManager[account];
-        //    if (acct != null)
-        //    {
-        //        this.UpdateInvestorInfo(account, name, broker, bank_id, bank_ac);
-        //    }
-        //}
 
         [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "UpdateAccountCurrency", "UpdateAccountCurrency - update account currency", "更新交易帐户货币类别", QSEnumArgParseType.Json)]
         public void CTE_UpdateAccountCurrency(ISession session, string json)

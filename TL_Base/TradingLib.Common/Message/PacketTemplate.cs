@@ -231,14 +231,14 @@ namespace TradingLib.Common
                         return RequestTemplate<MGRQryAccountInfoRequest>.SrvRecvRequest(frontid, clientid, message.Content);
                     case MessageTypes.MGRCASHOPERATION://请求出入金操作
                         return RequestTemplate<MGRCashOperationRequest>.SrvRecvRequest(frontid, clientid, message.Content);
-                    case MessageTypes.MGRUPDATEACCOUNTCATEGORY://请求修改帐户类别
-                        return RequestTemplate<MGRUpdateCategoryRequest>.SrvRecvRequest(frontid, clientid, message.Content);
-                    case MessageTypes.MGRUPDATEACCOUNTINTRADAY://请求修改日内参数
-                        return RequestTemplate<MGRUpdateIntradayRequest>.SrvRecvRequest(frontid, clientid, message.Content);
-                    case MessageTypes.MGRUPDATEACCOUNTROUTETRANSFERTYPE://请求修改路由类别
-                        return RequestTemplate<MGRUpdateRouteTypeRequest>.SrvRecvRequest(frontid, clientid, message.Content);
-                    case MessageTypes.MGRUPDATEACCOUNTEXECUTE://请求修改帐户交易权限
-                        return RequestTemplate<MGRUpdateExecuteRequest>.SrvRecvRequest(frontid, clientid, message.Content);
+                    //case MessageTypes.MGRUPDATEACCOUNTCATEGORY://请求修改帐户类别
+                    //    return RequestTemplate<MGRUpdateCategoryRequest>.SrvRecvRequest(frontid, clientid, message.Content);
+                    //case MessageTypes.MGRUPDATEACCOUNTINTRADAY://请求修改日内参数
+                    //    return RequestTemplate<MGRUpdateIntradayRequest>.SrvRecvRequest(frontid, clientid, message.Content);
+                    //case MessageTypes.MGRUPDATEACCOUNTROUTETRANSFERTYPE://请求修改路由类别
+                    //    return RequestTemplate<MGRUpdateRouteTypeRequest>.SrvRecvRequest(frontid, clientid, message.Content);
+                    //case MessageTypes.MGRUPDATEACCOUNTEXECUTE://请求修改帐户交易权限
+                    //    return RequestTemplate<MGRUpdateExecuteRequest>.SrvRecvRequest(frontid, clientid, message.Content);
                     case MessageTypes.MGROPENCLEARCENTRE://请求开启清算中心
                         return RequestTemplate<MGRReqOpenClearCentreRequest>.SrvRecvRequest(frontid, clientid, message.Content);
                     case MessageTypes.MGRCLOSECLEARCENTRE://请求关闭清算中心
@@ -254,8 +254,8 @@ namespace TradingLib.Common
                     //    return RequestTemplate<MGRReqStartDataFeedRequest>.SrvRecvRequest(frontid,clientid,message.Content);
                     //case MessageTypes.MGRSTOPDATAFEED://请求停止行情通道
                     //    return RequestTemplate<MGRReqStopDataFeedRequest>.SrvRecvRequest(frontid, clientid, message.Content);
-                    case MessageTypes.MGRADDACCOUNT://请求添加交易帐号
-                        return RequestTemplate<MGRAddAccountRequest>.SrvRecvRequest(frontid, clientid, message.Content);
+                    //case MessageTypes.MGRADDACCOUNT://请求添加交易帐号
+                    //    return RequestTemplate<MGRAddAccountRequest>.SrvRecvRequest(frontid, clientid, message.Content);
                     case MessageTypes.MGRQRYEXCHANGE://请求查询交易所
                         return RequestTemplate<MGRQryExchangeRequuest>.SrvRecvRequest(frontid, clientid, message.Content);
                     case MessageTypes.MGRUPDATEEXCHANGE://请求更新交易所
@@ -319,8 +319,8 @@ namespace TradingLib.Common
                         return RequestTemplate<MGRUpdatePassRequest>.SrvRecvRequest(frontid, clientid, message.Content);
                     case MessageTypes.MGRINSERTTRADE://请求插入成交
                         return RequestTemplate<MGRReqInsertTradeRequest>.SrvRecvRequest(frontid, clientid, message.Content);
-                    case MessageTypes.MGRDELACCOUNT://请求删除帐户
-                        return RequestTemplate<MGRReqDelAccountRequest>.SrvRecvRequest(frontid, clientid, message.Content);
+                    //case MessageTypes.MGRDELACCOUNT://请求删除帐户
+                    //    return RequestTemplate<MGRReqDelAccountRequest>.SrvRecvRequest(frontid, clientid, message.Content);
 
                     case MessageTypes.MGRQRYTICKSNAPSHOT://请求查询行情快照
                         return RequestTemplate<MGRQryTickSnapShotRequest>.SrvRecvRequest(frontid, clientid, message.Content);

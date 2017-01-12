@@ -24,6 +24,7 @@ namespace TradingLib.Core
         public AccountManager():
             base(AccountManager.CoreName)
         {
+            
             //1.加载配置文件
             _cfgdb = new ConfigDB(AccountManager.CoreName);
 
