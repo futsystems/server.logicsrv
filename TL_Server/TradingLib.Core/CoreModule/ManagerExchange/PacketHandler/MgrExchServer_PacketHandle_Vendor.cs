@@ -55,14 +55,7 @@ namespace TradingLib.Core
         //}
 
 
-        CustInfoEx GetCustInfoEx(ISession session)
-        {
-            if (customerExInfoMap.Keys.Contains(session.Location.ClientID))
-            {
-                return customerExInfoMap[session.Location.ClientID];
-            }
-            return null;
-        }
+        
 
 
         //[ContribCommandAttr(QSEnumCommandSource.MessageMgr, "RegBrokerPM", "RegBrokerPM - unbind vendor", "查询持仓矩阵数据")]
@@ -139,7 +132,7 @@ namespace TradingLib.Core
             Manager manger = session.GetManager();
             if (manger.IsRoot())
             {
-                CustInfoEx infoex = GetCustInfoEx(session);
+                var infoex = GetCustInfoEx(session);
                 if (infoex == null)
                 {
                     throw new FutsRspError("管理员数据异常,无权查看通道状态");

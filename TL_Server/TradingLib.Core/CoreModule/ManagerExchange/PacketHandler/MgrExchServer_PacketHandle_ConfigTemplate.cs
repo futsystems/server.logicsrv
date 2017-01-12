@@ -12,6 +12,9 @@ using TradingLib.Protocol;
 
 namespace TradingLib.Core
 {
+    /// <summary>
+    /// 交易账户参数模板
+    /// </summary>
     public partial class MgrExchServer
     {
         #region 手续费模板

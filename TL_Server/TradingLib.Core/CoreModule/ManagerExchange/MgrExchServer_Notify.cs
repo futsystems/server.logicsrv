@@ -113,32 +113,8 @@ namespace TradingLib.Core
             NotifyCashOperation(e.CashOperation);
         }
 
-        /// <summary>
-        /// 通过谓词过滤出当前通知地址
-        /// 需要提供的参数就是Manager对应的谓词，用于判断是否需要通知该Manager
-        /// </summary>
-        /// <param name="predictate"></param>
-        /// <returns></returns>
-        public IEnumerable<ILocation> GetNotifyTargets(Predicate<Manager> predictate)
-        {
-            if (predictate == null)
-            {
-                return this.NotifyTargets.Where(c => c.Manager != null).Select(info => info.Location).ToArray();
-            }
-            //1.过滤没有绑定Manager的custinfoex                2.通过谓词过滤Manager              3.投影成地址
-            return this.NotifyTargets.Where(c => c.Manager != null).Where(e => predictate(e.Manager)).Select(info => info.Location).ToArray();
-        }
+        
 
-        /// <summary>
-        /// 获得某个Manager列表对应的在线管理员地址
-        /// </summary>
-        /// <param name="managers"></param>
-        /// <returns></returns>
-        public IEnumerable<ILocation> GetNotifyTargets(IEnumerable<Manager> managers)
-        {
-
-            return this.NotifyTargets.Where(c => managers.Any(m => m.ID == c.Manager.ID)).Select(info => info.Location);
-        }
 
         /// <summary>
         /// 出入金状态通知
@@ -183,6 +159,39 @@ namespace TradingLib.Core
             CachePacket(response);
         }
 
-        
+
+        #region 通知对象过滤
+        /// <summary>
+        /// 通过谓词过滤出当前通知地址
+        /// 需要提供的参数就是Manager对应的谓词，用于判断是否需要通知该Manager
+        /// </summary>
+        /// <param name="predictate"></param>
+        /// <returns></returns>
+        public IEnumerable<ILocation> GetNotifyTargets(Predicate<Manager> predictate)
+        {
+            if (predictate == null)
+            {
+                return this.NotifyTargets.Where(c => c.Manager != null).Select(info => info.Location).ToArray();
+            }
+            //1.过滤没有绑定Manager的custinfoex                2.通过谓词过滤Manager              3.投影成地址
+            return this.NotifyTargets.Where(c => c.Manager != null).Where(e => predictate(e.Manager)).Select(info => info.Location).ToArray();
+        }
+
+        /// <summary>
+        /// 获得某个Manager列表对应的在线管理员地址
+        /// </summary>
+        /// <param name="managers"></param>
+        /// <returns></returns>
+        public IEnumerable<ILocation> GetNotifyTargets(IEnumerable<Manager> managers)
+        {
+            return this.NotifyTargets.Where(c => managers.Any(m => m.ID == c.Manager.ID)).Select(info => info.Location);
+        }
+
+        /// <summary>
+        /// 通知对象列表
+        /// 管理端登入后会在内存中创建一个管理端Agent
+        /// </summary>
+        IEnumerable<MgrClientInfoEx> NotifyTargets { get { return customerExInfoMap.Values; } }
+        #endregion
     }
 }

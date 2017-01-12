@@ -78,9 +78,9 @@ namespace TradingLib.Core
             //2.通知类型的以Accout为目标的搜索 逻辑 某个管理端有权限查看该帐户则向该帐户进行发送
             if (packet.PacketType == QSEnumPacketType.NOTIFYRESPONSE)
             {
-                if (GetLocationsViaAccountEvent != null)
+                if (QryNotifyLocationsViaAccount != null)
                 {
-                    return GetLocationsViaAccountEvent(notify.Account);
+                    return QryNotifyLocationsViaAccount(notify.Account);
                 }
             
             }
@@ -113,7 +113,6 @@ namespace TradingLib.Core
                 if (!request.LoginID.Equals("sroot"))
                 {
                     re = mgr.Pass.Equals(request.Passwd);
-                    //re = ORM.MManager.ValidManager(request.LoginID, request.Passwd);
                 }
                 else
                 {
@@ -184,8 +183,6 @@ namespace TradingLib.Core
         public override void SrvReqFuture(FeatureRequest req,MgrClientInfo client)
         {
             FeatureResponse response = ResponseTemplate<FeatureResponse>.SrvSendRspResponse(req);
-
-            string msf = "";
             List<MessageTypes> f = new List<MessageTypes>();
 
             f.Add(MessageTypes.REGISTERCLIENT);//注册客户端
@@ -203,88 +200,10 @@ namespace TradingLib.Core
             f.Add(MessageTypes.REGISTERSYMTICK);//请求行情数据
             f.Add(MessageTypes.UNREGISTERSYMTICK);//取消行情数据
 
-            if (newFeatureRequest != null)
-            {
-                MessageTypes[] f2 = newFeatureRequest();
-                foreach (MessageTypes t in f2)
-                {
-                    if (f.Contains(t))
-                        continue;
-                    f.Add(t);
-                }
-            }
             response.Add(f.ToArray());
             TLSend(response);
         }
 
-
-        /// <summary>
-        /// 系统接受到客户端发送过来的委托
-        /// 1.检查客户端是否Register如果没有register则clientlist不存在该ClientID
-        /// 2.检查账户是否登入,如果登入 检查委托账号与登入账户是否一致
-        /// </summary>
-        /// <param name="msg"></param>
-        /// <param name="address"></param>
-        public void SrvOnOrderInsert(ISession session,OrderInsertRequest request)
-        {
-            logger.Info("Got Order:" + request.Order.GetOrderInfo());
-            //MgrClientInfo cinfo = _clients[request.ClientID];
-            //1.如果不存在,表明该ID没有通过注册连接到我们的服务端
-            //if (cinfo == null)
-            //{
-            //    debug("系统拒绝委托:" + request.Order.ToString() + "系统没有该注册端:" + request.ClientID + "|" + request.Order.Account, QSEnumDebugLevel.WARNING);
-            //    return;
-            //}
-
-
-            ////2.检查插入委托请求是否有效
-            //if (!request.IsValid)
-            //{
-            //    debug("请求无效", QSEnumDebugLevel.ERROR);
-            //    return;
-            //}
-
-            //3.如果本地客户端列表中存在该ID,则我们需要比较该ID所请求的交易账号与其所发送的委托账号是否一致,这里防止客户端发送他人的account的委托
-            //只有当客户端通过请求账户 提供正确的账户 与密码 系统才会将address(ClientID与Account进行绑定)
-            //if (!cinfo.Authorized)
-            //{
-            //    debug("客户端:" + cinfo.Location.ClientID + "未登入,无法请求委托", QSEnumDebugLevel.ERROR);
-            //    return;
-            //}
-
-            //IAccount account = TLCtxHelper.CmdAccount[request.Order.Account];
-
-            /* 管理端持仓不区分昨仓和今仓，在管理端进行平仓时，需要检测是否同时在一个委托中平昨仓和今仓，如果混合需要拆分委托
-             * 
-             * 
-             * 
-             * */
-
-            //标注来自客户端的原始委托 管理端平仓由管理端维护平今 平昨的问题
-            Order order = new OrderImpl(request.Order);//复制委托传入到逻辑层
-            order.OrderSource = QSEnumOrderSource.QSMONITER;
-            order.TotalSize = order.Size;
-            order.Date = Util.ToTLDate();
-            order.Time = Util.ToTLTime();
-
-            //对外层触发委托事件
-            if (newSendOrderRequest != null)
-                newSendOrderRequest(order);
-        }
-        /// <summary>
-        /// 取消委托,参数为全局委托编号
-        /// </summary>
-        /// <param name="msg"></param>
-        public void SrvOnOrderAction(OrderActionRequest request)
-        {
-            //通过address(ClientID)查询本地客户端列表是否存在该ID
-            logger.Info("got order action:" + request.ToString());
-            MgrClientInfo cinfo = _clients[request.ClientID];
-            if (cinfo == null) return;
-
-            if (newOrderActionRequest != null)
-                newOrderActionRequest(request.OrderAction);
-        }
 
 
         public override void OnSessionCreated(Client2Session session)
@@ -305,48 +224,47 @@ namespace TradingLib.Core
         /// <returns></returns>
         public override long handle(ISession session,IPacket packet)
         {
+            Manager manager = session.GetManager();
             long result = NORETURNRESULT;
-            switch (packet.Type)
-            {
-                case MessageTypes.SENDORDER:
-                    SrvOnOrderInsert(session,packet as OrderInsertRequest);
-                    break;
-                case MessageTypes.SENDORDERACTION:
-                    SrvOnOrderAction(packet as OrderActionRequest);
-                    break;
-
-                default:
-                    if (newPacketRequest != null)
-                        newPacketRequest(session,packet);
-                    else
-                        result = (long)MessageTypes.FEATURE_NOT_IMPLEMENTED;
-                    break;
-            }
+            if (NewPacketRequest != null)
+                NewPacketRequest(session, packet, manager);
+            else
+                result = (long)MessageTypes.FEATURE_NOT_IMPLEMENTED;
             return result;
+
+
+            //long result = NORETURNRESULT;
+            //switch (packet.Type)
+            //{
+            //    case MessageTypes.SENDORDER:
+            //        SrvOnOrderInsert(session,packet as OrderInsertRequest);
+            //        break;
+            //    case MessageTypes.SENDORDERACTION:
+            //        SrvOnOrderAction(packet as OrderActionRequest);
+            //        break;
+
+            //    default:
+            //        if (newPacketRequest != null)
+            //            newPacketRequest(session,packet);
+            //        else
+            //            result = (long)MessageTypes.FEATURE_NOT_IMPLEMENTED;
+            //        break;
+            //}
+            //return result;
         }
 
         #region 底层基础事件
-        public event LoginRequestDel<MgrClientInfo> newLoginRequest;//登入服务器
-        public event OrderDelegate newSendOrderRequest;//发送委托
-        public event OrderActionDelegate newOrderActionRequest;//发送委托操作
-        public event MessageArrayDelegate newFeatureRequest;//请求功能列表
-        public event PacketRequestDel newPacketRequest;
-        public event LocationsViaAccountDel GetLocationsViaAccountEvent;//
+        /// <summary>
+        /// 业务数据包
+        /// </summary>
+        public event Action<ISession,IPacket,Manager> NewPacketRequest;
+
+        /// <summary>
+        /// 通过交易账户查找需要推送的管理员地址列表
+        /// </summary>
+        public event Func<string,ILocation[]> QryNotifyLocationsViaAccount;
         #endregion
 
     }
 
-    /// <summary>
-    /// 管理服务器的逻辑包委托
-    /// </summary>
-    /// <param name="packet"></param>
-    /// <param name="session"></param>
-    /// <param name="manager"></param>
-    //public delegate void MgrPacketRequestDel(ISession session,IPacket packet,Manager manager);
-    /// <summary>
-    /// 通过某个交易帐号获得对应的管理端通知列表
-    /// </summary>
-    /// <param name="account"></param>
-    /// <returns></returns>
-    public delegate ILocation[] LocationsViaAccountDel(string account);
 }

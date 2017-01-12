@@ -64,7 +64,7 @@ namespace TradingLib.Core
             {
                 int pushAllDiff = (int)DateTime.Now.Subtract(_lastPushAllTime).TotalSeconds;
 
-                foreach (CustInfoEx cst in customerExInfoMap.Values)
+                foreach (var cst in customerExInfoMap.Values)
                 {
                     //便利所有订阅账户列表
                     foreach (IAccount acc in cst.WathAccountList)

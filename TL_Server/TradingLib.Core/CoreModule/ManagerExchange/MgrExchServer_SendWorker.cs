@@ -53,35 +53,19 @@ namespace TradingLib.Core
             if (!_readgo) return;
             ThreadTracker.Unregister(messageoutthread);
             _readgo = false;
-            int mainwait = 0;
-            while (messageoutthread.IsAlive && mainwait < 10)
-            {
-                Thread.Sleep(1000);
-                mainwait++;
-            }
-            messageoutthread.Abort();
+            messageoutthread.Join();
             messageoutthread = null;
         }
 
         const int buffize = 5000;//
 
-        //实时交易信息缓存
-        
+        //数据缓存
         RingBuffer<Order> _ocache = new RingBuffer<Order>(buffize);//委托缓存
         RingBuffer<OrderErrorPack> _errorordercache = new RingBuffer<OrderErrorPack>(buffize);//委托错误缓存
-        RingBuffer<OrderAction> _occache = new RingBuffer<OrderAction>(buffize);//取消缓存
         RingBuffer<Trade> _fcache = new RingBuffer<Trade>(buffize);//成交缓存
-
-        //恢复交易帐号交易信息数据
         RingBuffer<MGRResumeAccountRequest> _resumecache = new RingBuffer<MGRResumeAccountRequest>(buffize);//请求恢复交易帐户数据队列
         RingBuffer<IPacket> _packetcache = new RingBuffer<IPacket>(buffize);//其余消息的缓存队列
-        //RingBuffer<SessionInfo> _sessioncache = new RingBuffer<SessionInfo>(buffize);//客户端登入 登出缓存
-        RingBuffer<IAccount> _accountchangecache = new RingBuffer<IAccount>(buffize);//帐户变动缓存
-        RingBuffer<RspMGRQryAccountResponse> _accqrycache = new RingBuffer<RspMGRQryAccountResponse>(buffize);//交易帐户列表查询缓存需要比其他数据提高发送优先级，其他数据依赖与该数据
 
-
-        //关于交易信息转发,交易信息转发时,我们需要区分是实时发生的交易信息转发还是请求回补的信息转发。
-        //实时交易信息通过客户端权限检查自动将交易信息发送到所有有权,而回补信息则是针对不同的管理端进行的回补请求,若统一由tl.neworder转发会造成不同的管理端之间信息重复接收
         bool _readgo = false;
         Thread messageoutthread;
 
@@ -89,16 +73,10 @@ namespace TradingLib.Core
         /// 当没有任何回补信息的时候 我们才可以发送实时信息
         /// </summary>
         /// <returns></returns>
-        bool noresumeinfo()
+        bool NoResumeRequest()
         {
-            return !_resumecache.hasItems && !_accqrycache.hasItems;
+            return !_resumecache.hasItems;
         }
-
-        bool noaccountqry()
-        {
-            return !_accqrycache.hasItems;
-        }
-
 
         /// <summary>
         /// 所有需要转发到客户端的消息均通过缓存进行，这样避免了多个线程同时操作一个ZeroMQ socket
@@ -110,15 +88,8 @@ namespace TradingLib.Core
                 try
                 {
                     #region 发送交易账户列表 以及 回补某个交易账户的交易信息
-                    //发送账户列表信息
-                    while (_accqrycache.hasItems)
-                    {
-                        IPacket packet = _packetcache.Read();
-                        tl.TLSend(packet);
-                    }
-
                     //恢复交易帐户日内数据
-                    while (_resumecache.hasItems && noaccountqry())
+                    while (_resumecache.hasItems)
                     {
                         MGRResumeAccountRequest request = _resumecache.Read();
                         ResumeAccountTradingInfo(request);
@@ -127,26 +98,24 @@ namespace TradingLib.Core
 
                     #region 转发管理端选中账户的交易信息
                     //转发委托
-                    while (_ocache.hasItems && noresumeinfo())
+                    while (_ocache.hasItems && NoResumeRequest())
                     {
-                        //debug("send realime order message~~~~~~~~~~~~~~~~", QSEnumDebugLevel.INFO);
                         Order o = _ocache.Read();
-                        //遍历所有管理端的infoex,查看哪些管理端订阅了该交易帐户
-                        foreach (CustInfoEx cst in customerExInfoMap.Values)
+                        foreach (var cst in customerExInfoMap.Values)
                         {
                             if (cst.NeedPushTradingInfo(o.Account))
                             {
-                                //debug("send realime order notify to manager client~~~~~~~~~~~~~~~~", QSEnumDebugLevel.INFO);
                                 OrderNotify notify = ResponseTemplate<OrderNotify>.SrvSendNotifyResponse(cst.Location);
                                 notify.Order = o;
                                 tl.TLSend(notify);
                             }
                         }
                     }
-                    while (_errorordercache.hasItems && !_ocache.hasItems && noresumeinfo())
+                    //转发委托错误
+                    while (_errorordercache.hasItems && !_ocache.hasItems && NoResumeRequest())
                     {
                         OrderErrorPack pack = _errorordercache.Read();
-                        foreach (CustInfoEx cst in customerExInfoMap.Values)
+                        foreach (var cst in customerExInfoMap.Values)
                         {
                             if (cst.NeedPushTradingInfo(pack.Order.Account))
                             {
@@ -158,10 +127,10 @@ namespace TradingLib.Core
                         }
                     }
                     //转发成交
-                    while (_fcache.hasItems && !_ocache.hasItems && noresumeinfo())
+                    while (_fcache.hasItems && !_ocache.hasItems && NoResumeRequest())
                     {
                         Trade f = _fcache.Read();
-                        foreach (CustInfoEx cst in customerExInfoMap.Values)
+                        foreach (var cst in customerExInfoMap.Values)
                         {
                             if (cst.NeedPushTradingInfo(f.Account))
                             {
@@ -175,9 +144,8 @@ namespace TradingLib.Core
                     #endregion
                    
                     //发送其他类型的信息
-                    while (_packetcache.hasItems && noresumeinfo())
+                    while (_packetcache.hasItems && NoResumeRequest())
                     {
-                        
                         IPacket packet = _packetcache.Read();
                         tl.TLSend(packet);
                     }
@@ -191,17 +159,14 @@ namespace TradingLib.Core
         }
 
         void ResumeAccountTradingInfo(MGRResumeAccountRequest request)
-        { 
-       
-            string acc = request.ResumeAccount;
-            logger.Info("resuem account:" + acc);
+        {
             try
             {
-
-                IAccount account = TLCtxHelper.ModuleAccountManager[acc];
+                logger.Info(string.Format("Resume Trading Info Of Account:{0}", request.ResumeAccount));
+                IAccount account = TLCtxHelper.ModuleAccountManager[request.ResumeAccount];
                 if (account == null)
                 {
-                    logger.Error("Resume Account:" + acc + " do not exist");
+                    logger.Error("Resume Account:" + request.ResumeAccount + " do not exist");
                     return;
                 }
 
@@ -235,8 +200,6 @@ namespace TradingLib.Core
                 {
                     TradeNotify notify = ResponseTemplate<TradeNotify>.SrvSendNotifyResponse(location);
                     notify.Trade = f;
-                    
-                    //debug("转发当日成交:" + f.ToString() +" side:"+f.side.ToString(), QSEnumDebugLevel.INFO);
                     tl.TLSend(notify);
                 }
                 //3.发送恢复数据结束标识
@@ -245,7 +208,7 @@ namespace TradingLib.Core
             }
             catch (Exception ex)
             {
-                logger.Error("恢复交易帐户:" + acc + "出错" + ex.ToString());
+                logger.Error(string.Format("Resume Account:{0} Error", request.ResumeAccount));
             }
         }
 

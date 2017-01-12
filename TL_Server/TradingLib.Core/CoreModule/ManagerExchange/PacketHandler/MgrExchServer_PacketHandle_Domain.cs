@@ -11,6 +11,9 @@ using TradingLib.Common;
 
 namespace TradingLib.Core
 {
+    /// <summary>
+    /// 分区
+    /// </summary>
     public partial class MgrExchServer
     {
         /// <summary>

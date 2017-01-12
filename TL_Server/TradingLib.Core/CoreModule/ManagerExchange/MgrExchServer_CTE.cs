@@ -18,7 +18,7 @@ namespace TradingLib.Core
         {
 
             StringBuilder sb = new StringBuilder();
-            foreach (CustInfoEx cst in customerExInfoMap.Values)
+            foreach (var cst in customerExInfoMap.Values)
             {
                 sb.Append(cst.ToString(true) + System.Environment.NewLine);
             }

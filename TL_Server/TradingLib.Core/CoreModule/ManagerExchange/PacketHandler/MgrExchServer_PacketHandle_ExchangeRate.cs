@@ -10,6 +10,9 @@ using TradingLib.Common;
 
 namespace TradingLib.Core
 {
+    /// <summary>
+    /// 汇率
+    /// </summary>
     public partial class MgrExchServer
     {
         /// <summary>

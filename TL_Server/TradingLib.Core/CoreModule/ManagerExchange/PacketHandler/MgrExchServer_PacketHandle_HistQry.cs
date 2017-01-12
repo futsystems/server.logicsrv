@@ -1,4 +1,7 @@
-﻿using System;
+﻿//Copyright 2013 by FutSystems,Inc.
+//20170112 整理无用操作
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -7,6 +10,9 @@ using TradingLib.Common;
 
 namespace TradingLib.Core
 {
+    /// <summary>
+    /// 历史记录查询
+    /// </summary>
     public partial class MgrExchServer
     {
         void SrvOnMGRQryOrder(MGRQryOrderRequest request, ISession session, Manager manager)

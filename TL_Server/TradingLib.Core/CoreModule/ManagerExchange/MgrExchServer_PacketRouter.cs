@@ -47,6 +47,27 @@ namespace TradingLib.Core
         }
 
 
+        void SrvOnOrderInsert(OrderInsertRequest request,ISession session, Manager manager)
+        {
+            Order order = new OrderImpl(request.Order);//复制委托传入到逻辑层
+            order.OrderSource = QSEnumOrderSource.QSMONITER;
+            order.TotalSize = order.Size;
+            order.Date = Util.ToTLDate();
+            order.Time = Util.ToTLTime();
+            TLCtxHelper.ModuleExCore.SendOrderInternal(order);
+        }
+
+        void SrvOnOrderActionInsert(OrderActionRequest request, ISession session, Manager manager)
+        {
+            if (request.OrderAction.ActionFlag == QSEnumOrderActionFlag.Delete)
+            {
+                if (request.OrderAction.OrderID != 0)
+                {
+                    TLCtxHelper.ModuleExCore.CancelOrder(request.OrderAction.OrderID);
+                }
+            }
+        }
+
         /// <summary>
         /// 请求插入测试成交数据
         /// </summary>
@@ -143,11 +164,10 @@ namespace TradingLib.Core
         }
 
 
-        void tl_newPacketRequest(ISession session,IPacket packet)
+        void OnPacketRequest(ISession session, IPacket packet,Manager manager)
         {
             try
             {
-                Manager manager = session.GetManager();
                 session.ContirbID = CoreName;//在使用session.notify 或 session.sendreply会用到module cmd
 
                 switch (packet.Type)
@@ -166,6 +186,16 @@ namespace TradingLib.Core
                     case MessageTypes.MGRRESUMEACCOUNT://恢复某个交易帐号日内交易数据
                         {
                             SrvOnMGRResumeAccount(packet as MGRResumeAccountRequest, session, manager);
+                            break;
+                        }
+                    case MessageTypes.SENDORDER:
+                        {
+                            SrvOnOrderInsert(packet as OrderInsertRequest, session, manager);
+                            break;
+                        }
+                    case MessageTypes.SENDORDERACTION:
+                        {
+                            SrvOnOrderActionInsert(packet as OrderActionRequest, session, manager);
                             break;
                         }
                 
@@ -220,27 +250,6 @@ namespace TradingLib.Core
                             break;
                         }
 
-                    //case MessageTypes.MGRQRYRULECLASS://请求查询风控规则列表
-                    //    {
-                    //        SrvOnMGRQryRuleSet(packet as MGRQryRuleSetRequest, session, manager);
-                    //        break;
-                    //    }
-                    //case MessageTypes.MGRUPDATERULEITEM://请求更新风控规则
-                    //    {
-                    //        SrvOnMGRUpdateRule(packet as MGRUpdateRuleRequest, session, manager);
-                    //        break;
-                    //    }
-                    //case MessageTypes.MGRQRYRULEITEM://请求查询帐户风控项目列表
-                    //    {
-                    //        SrvOnMGRQryRuleItem(packet as MGRQryRuleItemRequest, session, manager);
-                    //        break;
-                    //    }
-                    //case MessageTypes.MGRDELRULEITEM://请求删除风控规则
-                    //    {
-                    //        SrvOnMGRDelRuleItem(packet as MGRDelRuleItemRequest, session, manager);
-                    //        break;
-                    //    }
-
                     case MessageTypes.MGRQRYORDER://请求查询历史委托
                         {
                             SrvOnMGRQryOrder(packet as MGRQryOrderRequest, session, manager);
@@ -266,32 +275,7 @@ namespace TradingLib.Core
                             SrvOnMGRQrySettlement(packet as MGRQrySettleRequest, session, manager);
                             break;
                         }
-                    //case MessageTypes.MGRCHANGEACCOUNTPASS://请求修改密码
-                    //    {
-                    //        SrvOnMGRChangeAccountPassword(packet as MGRChangeAccountPassRequest, session, manager);
-                    //        break;
-                    //    }
-                    //case MessageTypes.MGRADDSECURITY://请求添加品种
-                    //    {
-                    //        SrvOnMGRReqAddSecurity(packet as MGRReqAddSecurityRequest, session, manager);
-                    //        break;
-                    //    }
-                    
-                    //case MessageTypes.MGRADDSYMBOL://请求添加合约
-                    //    {
-                    //        SrvOnMGRReqAddSymbol(packet as MGRReqAddSymbolRequest, session, manager);
-                    //        break;
-                    //    }
-                    //case MessageTypes.MGRCHANGEINVESTOR://请求修改投资者信息
-                    //    {
-                    //        SrvOnMGRReqChangeInvestor(packet as MGRReqChangeInvestorRequest, session, manager);
-                    //        break;
-                    //    }
-                    //case MessageTypes.MGRUPDATEPOSLOCK://请求修改帐户锁仓权限
-                    //    {
-                    //        SrvOnMGRReqUpdateAccountPosLock(packet as MGRReqUpdatePosLockRequest, session, manager);
-                    //        break;
-                    //    }
+                   
                     case MessageTypes.MGRQRYMANAGER://请求查询管理员列表
                         {
                             //SrvOnMGRQryManager(packet as MGRQryManagerRequest, session, manager);
@@ -303,11 +287,6 @@ namespace TradingLib.Core
                             SrvOnInsertTrade(packet as MGRReqInsertTradeRequest, session, manager);
                             break;
                         }
-                    //case MessageTypes.MGRDELACCOUNT://请求删除交易帐户
-                    //    {
-                    //        SrvOnDelAccount(packet as MGRReqDelAccountRequest, session, manager);
-                    //        break;
-                    //    }
 
                     case MessageTypes.MGRCONTRIBREQUEST://扩展请求
                         {

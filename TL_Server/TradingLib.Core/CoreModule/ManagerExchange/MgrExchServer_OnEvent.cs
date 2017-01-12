@@ -12,16 +12,6 @@ namespace TradingLib.Core
     /// </summary>
     public partial class MgrExchServer
     {
-
-
-        /// <summary>
-        /// 向管理端发送一个通知
-        /// </summary>
-        /// <param name="info"></param>
-        void NewMessage(RspInfo info)
-        { 
-            
-        }
         /// <summary>
         /// 向管理客户端转发客户端的登入退出事件
         /// </summary>
@@ -53,7 +43,7 @@ namespace TradingLib.Core
         /// 向管理客户端转发帐户变动
         /// </summary>
         /// <param name="account"></param>
-        void newAccountChanged(IAccount account)
+        void OnAccountChanged(IAccount account)
         {
 
             logger.Debug(string.Format("Account[{0}] Changed",account.ID));
@@ -66,7 +56,7 @@ namespace TradingLib.Core
         /// 有新帐号增加时 向服务端通知
         /// </summary>
         /// <param name="account"></param>
-        void newAccountAdded(IAccount account)
+        void OnAccountAdded(IAccount account)
         {
             logger.Info(string.Format("Account:{0} Created", account.ID));
             NotifyMGRAccountChangeUpdateResponse notify = ResponseTemplate<NotifyMGRAccountChangeUpdateResponse>.SrvSendNotifyResponse(account.ID);
@@ -75,7 +65,7 @@ namespace TradingLib.Core
             
         }
 
-        void newAccountDeleted(IAccount account)
+        void OnAccountDeleted(IAccount account)
         {
             logger.Info(string.Format("Account:{0} Deleted", account.ID));
             IEnumerable<ILocation> locations = GetNotifyTargets(account.GetNotifyPredicate());
@@ -85,43 +75,25 @@ namespace TradingLib.Core
         }
 
 
-        void newOrder(Order o)
+        void OnTick(Tick k)
+        {
+            tl.newTick(k);
+        }
+
+
+        void OnOrder(Order o)
         {
             _ocache.Write(o);
         }
 
-        void newOrderError(Order  order,RspInfo error)
+        void OnOrderError(Order  order,RspInfo error)
         {
             _errorordercache.Write(new OrderErrorPack(order,error));
         }
 
-        void newTrade(Trade f)
+        void OnTrade(Trade f)
         {
             _fcache.Write(f);
-        }
-
-        void newCancel(long id)
-        {
-            Order o = TLCtxHelper.ModuleClearCentre.SentOrder(id);
-            
-            if (o != null && o.isValid)
-            {
-                OrderAction action = new OrderActionImpl();
-                action.Account = o.Account;
-                action.ActionFlag = QSEnumOrderActionFlag.Delete;
-                action.OrderID = o.id;
-                newOrderAction(action);
-            }
-        }
-
-        void newOrderAction(OrderAction action)
-        {
-            _occache.Write(action);
-        }
-
-        void newTick(Tick k)
-        {
-            tl.newTick(k);
         }
     }
 }

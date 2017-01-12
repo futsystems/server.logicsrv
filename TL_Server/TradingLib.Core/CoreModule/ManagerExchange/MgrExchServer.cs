@@ -19,7 +19,7 @@ namespace TradingLib.Core
         TLServer_MgrExch tl;
         ConfigDB _cfgdb;
 
-        ConcurrentDictionary<string, CustInfoEx> customerExInfoMap = null;
+        ConcurrentDictionary<string, MgrClientInfoEx> customerExInfoMap = new ConcurrentDictionary<string, MgrClientInfoEx>();
 
         public MgrExchServer()
             : base(MgrExchServer.CoreName)
@@ -39,17 +39,12 @@ namespace TradingLib.Core
             tl.NumWorkers = 5;
 
             tl.CachePacketEvent += new IPacketDelegate(CachePacket);
-            tl.newFeatureRequest += new MessageArrayDelegate(tl_newFeatureRequest);
-            tl.newLoginRequest += new LoginRequestDel<MgrClientInfo>(tl_newLoginRequest);
-            tl.newSendOrderRequest += new OrderDelegate(tl_newSendOrderRequest);
-            tl.newOrderActionRequest += new OrderActionDelegate(tl_newOrderActionRequest);
-            tl.newPacketRequest += new PacketRequestDel(tl_newPacketRequest);
-            tl.GetLocationsViaAccountEvent += new LocationsViaAccountDel(tl_GetLocationsViaAccountEvent);
+            tl.NewPacketRequest += new Action<ISession, IPacket, Manager>(OnPacketRequest);
+            tl.QryNotifyLocationsViaAccount += new Func<string, ILocation[]>(QryLocationsViaAccountEvent);
 
             tl.ClientRegistedEvent += new Action<MgrClientInfo>(tl_ClientRegistedEvent);
             tl.ClientUnregistedEvent += new Action<MgrClientInfo>(tl_ClientUnregistedEvent);
 
-            customerExInfoMap = new ConcurrentDictionary<string, CustInfoEx>();
 
             //初始化通知
             InitNotifySection();
@@ -57,21 +52,58 @@ namespace TradingLib.Core
             StartMessageRouter();
 
             //订阅交易信息
-            TLCtxHelper.EventIndicator.GotTickEvent += new TickDelegate(this.newTick);
-            TLCtxHelper.EventIndicator.GotFillEvent += new FillDelegate(this.newTrade);
-            TLCtxHelper.EventIndicator.GotOrderEvent += new OrderDelegate(this.newOrder);
-            TLCtxHelper.EventIndicator.GotOrderErrorEvent += new OrderErrorDelegate(this.newOrderError);
+            TLCtxHelper.EventIndicator.GotTickEvent += new TickDelegate(this.OnTick);
+            TLCtxHelper.EventIndicator.GotFillEvent += new FillDelegate(this.OnTrade);
+            TLCtxHelper.EventIndicator.GotOrderEvent += new OrderDelegate(this.OnOrder);
+            TLCtxHelper.EventIndicator.GotOrderErrorEvent += new OrderErrorDelegate(this.OnOrderError);
 
             //订阅帐户变动信息
-            TLCtxHelper.EventAccount.AccountChangeEvent += new Action<IAccount>(this.newAccountChanged);
-            TLCtxHelper.EventAccount.AccountAddEvent += new Action<IAccount>(this.newAccountAdded);
-            TLCtxHelper.EventAccount.AccountDelEvent += new Action<IAccount>(this.newAccountDeleted);
+            TLCtxHelper.EventAccount.AccountChangeEvent += new Action<IAccount>(this.OnAccountChanged);
+            TLCtxHelper.EventAccount.AccountAddEvent += new Action<IAccount>(this.OnAccountAdded);
+            TLCtxHelper.EventAccount.AccountDelEvent += new Action<IAccount>(this.OnAccountDeleted);
+
             TLCtxHelper.EventSession.ClientLoginInfoEvent += new ClientLoginInfoDelegate<TrdClientInfo>(this.newSessionUpdate);
 
 
         }
 
-        
+
+        MgrClientInfoEx GetCustInfoEx(ISession session)
+        {
+            MgrClientInfoEx target = null;
+            if (customerExInfoMap.TryGetValue(session.Location.ClientID,out target))
+            {
+                return target;
+            }
+            return null;
+        }
+
+
+        void tl_ClientUnregistedEvent(MgrClientInfo client)
+        {
+            MgrClientInfoEx o = null;
+            customerExInfoMap.TryRemove(client.Location.ClientID, out o);
+        }
+
+        void tl_ClientRegistedEvent(MgrClientInfo client)
+        {
+            customerExInfoMap[client.Location.ClientID] = new MgrClientInfoEx(client);
+        }
+
+        /// <summary>
+        /// 查询具有查看某个帐户account权限的Manager地址
+        /// </summary>
+        /// <param name="account"></param>
+        /// <returns></returns>
+        ILocation[] QryLocationsViaAccountEvent(string account)
+        {
+            return customerExInfoMap.Values.Where(ex => ex.RightAccessAccount(account)).Select(ex2 => ex2.Location).ToArray();
+        }
+
+
+
+
+
 
 
         public override void Dispose()
@@ -129,31 +161,12 @@ namespace TradingLib.Core
     }
 
 
-
-
-    /*关于管理端改进的构思
-     * 原来的设计是统一获取账户信息,然后将这些账户所有的交易信息传输到管理端
-     * 账户数目少时,运行没有问题。当账户数目上升后，这个方式就有弊端，每次连接需要传输当日所有交易数据，造成数据容易由于各种原因
-     * 缺失。
-     * 
-     * 1.只传输账户信息，不集中传输交易信息
-     * 2.账户监控列表 按监控的账户集合 统一向服务端订阅 账户实时信息，那么服务端记录该列表(20个)，服务端不间断的计算该列表内的账户
-     * 最新信息然后发送到管理端。
-     * 3.当管理端需要查看某个具体账户的交易记录时,双击该账户 则向服务端请求恢复该交易账户的当日交易记录
-     * 
-     * 
-     * 服务端与客户端之间的账户类消息
-     * 1.账户主体消息AccountBase，用从服务端获得账户基本信息,然后生成对应的Account实体
-     * 2.RaceInfo 比赛信息，传递了账户比赛相关的信息,用于查看账户当前比赛状态,晋级 淘汰 差额等
-     * 3.sessionInof 账户登入 注销 信息,用于动态的更新当前账户的连接信息
-     * 4.AccountInfo 在进行账户查询时候 传递的账户消息,用于提供账户全面的财务信息
-     * 5.
-     * 
-     * 
-     * 
-     * */
-    //定义了管理端请求数据集合
-    public class CustInfoEx
+    /// <summary>
+    /// 维护管理端对象相关数据
+    /// 1.记录管理端观察账户列表
+    /// 2.记录管理端选中账户
+    /// </summary>
+    public class MgrClientInfoEx
     {
 
         /// <summary>
@@ -162,10 +175,17 @@ namespace TradingLib.Core
         public ILocation Location { get { return _clientInfo.Location; } }
 
         /// <summary>
+        /// 对应的Manager对象 如果管理端没有登入 则Manager为空
+        /// </summary>
+        public Manager Manager { get { return _clientInfo.Manager; } }
+
+
+        /// <summary>
         /// 管理端的当前观察账户列表,保存了需要向管理端推送当前动态信息的账户列表
         /// </summary>
         ThreadSafeList<IAccount> WatchAccounts = new ThreadSafeList<IAccount>();
-        public ThreadSafeList<IAccount> WathAccountList { get { return this.WatchAccounts; } }
+
+        public IEnumerable<IAccount> WathAccountList { get { return this.WatchAccounts; } }
 
         /// <summary>
         /// 保存了管理端当前需要推送实时交易信息的帐号,任何时刻管理端只接受若干个账户财务信息更新，以及某个账户的交易记录
@@ -174,7 +194,7 @@ namespace TradingLib.Core
         public string SelectedAccount { get { return _selectacc; } set { _selectacc = value; } }
 
         MgrClientInfo _clientInfo;
-        public CustInfoEx(MgrClientInfo clientInfo)
+        public MgrClientInfoEx(MgrClientInfo clientInfo)
         {
             _clientInfo = clientInfo;
         }
@@ -191,15 +211,8 @@ namespace TradingLib.Core
             if (acc == null) return false;
             return this.Manager.RightAccessAccount(acc);
         }
-        /// <summary>
-        /// 对应的Manager对象 如果管理端没有登入 则Manager为空
-        /// </summary>
-        public Manager Manager { get { return _clientInfo.Manager; } }
 
-        /// <summary>
-        /// 是否已经认证通过
-        /// </summary>
-        public bool Authorized { get { return _clientInfo.Authorized; } }
+        
 
 
         /// <summary>

@@ -9,9 +9,6 @@ namespace TradingLib.Core
 {
     public partial class MgrExchServer
     {
-        
-
-
 
         /// <summary>
         /// 查询交易帐号列表
@@ -50,20 +47,19 @@ namespace TradingLib.Core
         void SrvOnMGRWatchAccount(MGRWatchAccountRequest request, ISession session, Manager manager)
         {
             logger.Info(string.Format("管理员:{0} 请求设定观察列表:{1}", session.AuthorizedID, request.ToString()));
-            CustInfoEx c = customerExInfoMap[request.ClientID];
+            var c = customerExInfoMap[request.ClientID];
             c.Watch(request.AccountList);
         }
 
         void SrvOnMGRResumeAccount(MGRResumeAccountRequest request, ISession session, Manager manager)
         {
             logger.Info(string.Format("管理员:{0} 请求恢复交易数据,帐号:{1}", session.AuthorizedID, request.ResumeAccount));
-            //判断权限
-
             //将请求放入队列等待处理
-            CustInfoEx c = customerExInfoMap[request.ClientID];
+            var c = customerExInfoMap[request.ClientID];
             c.Selected(request.ResumeAccount);//保存管理客户端选中的交易帐号
             _resumecache.Write(request);
         }
+
 
         [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "FlatAllPosition", "FlatAllPosition - falt all position", "平调所有子账户持仓")]
         public void CTE_UpdateAccountExStrategyTemplate(ISession session)
