@@ -40,7 +40,7 @@ namespace TradingLib.Core
 
             tl.CachePacketEvent += new IPacketDelegate(CachePacket);
             tl.NewPacketRequest += new Action<ISession, IPacket, Manager>(OnPacketRequest);
-            tl.QryNotifyLocationsViaAccount += new Func<string, ILocation[]>(QryLocationsViaAccountEvent);
+            tl.QryNotifyLocationsViaAccount += new Func<string, ILocation[]>(QryNotifyLocationsViaAccount);
 
             tl.ClientRegistedEvent += new Action<MgrClientInfo>(OnClientRegistedEvent);
             tl.ClientUnregistedEvent += new Action<MgrClientInfo>(OnClientUnregistedEvent);
@@ -63,7 +63,7 @@ namespace TradingLib.Core
             TLCtxHelper.EventAccount.AccountAddEvent += new Action<IAccount>(this.OnAccountAdded);
             TLCtxHelper.EventAccount.AccountDelEvent += new Action<IAccount>(this.OnAccountDeleted);
 
-            TLCtxHelper.EventSession.ClientLoginInfoEvent += new ClientLoginInfoDelegate<TrdClientInfo>(this.newSessionUpdate);
+            TLCtxHelper.EventSession.ClientSessionEvent += new Action<TrdClientInfo, bool>(OnSessionEvent);  
 
 
         }
@@ -96,7 +96,7 @@ namespace TradingLib.Core
         /// </summary>
         /// <param name="account"></param>
         /// <returns></returns>
-        ILocation[] QryLocationsViaAccountEvent(string account)
+        ILocation[] QryNotifyLocationsViaAccount(string account)
         {
             return customerExInfoMap.Values.Where(ex => ex.RightAccessAccount(account)).Select(ex2 => ex2.Location).ToArray();
         }

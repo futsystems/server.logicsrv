@@ -275,7 +275,7 @@ namespace TradingLib.API
         MGRLOGINRESPONSE,//管理登入回报
         MGRRESUMEACCOUNTRESPONE,//恢复交易帐号数据回报 开始恢复前会给出开始标识,恢复结束后会给出结束标识
         MGRACCOUNTINFOLITENOTIFY,//某个账户简短账户信息,用于反映账户当日的交易状态
-        MGRSESSIONSTATUSUPDATE,//客户端回话状态更新,比如登入 退出 以及IP地址 硬件码改变等
+        //MGRSESSIONSTATUSUPDATE,//客户端回话状态更新,比如登入 退出 以及IP地址 硬件码改变等
         MGRACCOUNTINFORESPONSE,//查询交易帐号信息回报
         MGRACCOUNTCHANGEUPDATE,//交易帐户变动回报
         MGRCONNECTORRESPONSE,//

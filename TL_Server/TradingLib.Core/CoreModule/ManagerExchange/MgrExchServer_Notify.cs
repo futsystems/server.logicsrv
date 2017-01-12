@@ -50,6 +50,18 @@ namespace TradingLib.Core
         }
 
         /// <summary>
+        /// 将交易客户端会话信息通知到所有客户端
+        /// </summary>
+        /// <param name="session"></param>
+        void NotifySessionUpdate(SessionInfo session)
+        {
+            NotifyMGRContribNotify response = ResponseTemplate<NotifyMGRContribNotify>.SrvSendNotifyResponse(QryNotifyLocationsViaAccount(session.Account));
+            response.ModuleID = CoreName;
+            response.CMDStr = "SessionNotify";
+            response.Result = session.SerializeObject();
+            CachePacket(response);
+        }
+        /// <summary>
         /// 向某个Manager过滤谓词对应的Manager发送通知
         /// </summary>
         /// <param name="cmdstr"></param>
@@ -89,6 +101,7 @@ namespace TradingLib.Core
             response.Result = obj.SerializeObject();
             CachePacket(response);
         }
+
 
 
 

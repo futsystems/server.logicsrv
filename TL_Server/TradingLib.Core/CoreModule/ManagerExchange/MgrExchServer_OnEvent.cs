@@ -17,25 +17,25 @@ namespace TradingLib.Core
         /// </summary>
         /// <param name="c"></param>
         /// <param name="login"></param>
-        void newSessionUpdate(TrdClientInfo c, bool login)
+        void OnSessionEvent(TrdClientInfo c, bool login)
         {
-            logger.Debug("sessionupdate,will send to magr moniter");
-            if (string.IsNullOrEmpty(c.Account.ID))
+            try
             {
-                logger.Warn("Client:" + c.Location.ClientID + " do not have account,can not have session update event");
+                SessionInfo info = new SessionInfo()
+                {
+                    Account = c.Account.ID,
+                    ProductInfo = c.ProductInfo,
+                    IPAddress = c.IPAddress,
+                    FrontID = c.Location.FrontID,
+                    ClientID = c.Location.ClientID,
+                    CreatedTime = c.CreatedTime,
+                    Login = login,
+                };
+                NotifySessionUpdate(info);
             }
-            else
+            catch (Exception ex)
             {
-                NotifyMGRSessionUpdateNotify notify = ResponseTemplate<NotifyMGRSessionUpdateNotify>.SrvSendNotifyResponse(c.Account.ID);
-                notify.TradingAccount = c.Account.ID;
-                notify.IsLogin = login;
-                notify.IPAddress = c.IPAddress;
-                notify.HardwarCode = c.HardWareCode;
-                notify.ProductInfo = c.ProductInfo;
-                notify.FrontID = c.Location.FrontID;
-                notify.ClientID = c.Location.ClientID;
-
-                CachePacket(notify);
+                logger.Error("SessionEvent Process Error:" + ex.ToString());
             }
         }
 

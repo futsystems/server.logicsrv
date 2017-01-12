@@ -33,7 +33,7 @@ namespace TradingLib.Common
         /// <summary>
         /// 客户端登入 退出事件
         /// </summary>
-        public event ClientLoginInfoDelegate<T> ClientLoginInfoEvent;
+        public event Action<T, bool> ClientSessionEvent;
 
 
         /// <summary>
@@ -56,10 +56,10 @@ namespace TradingLib.Common
                 ClientUnregistedEvent(c);
         }
 
-        internal void FireClientLoginInfoEvent(T c, bool islogin)
+        internal void FireClientSessionEvent(T c, bool islogin)
         {
-            if (ClientLoginInfoEvent != null)
-                ClientLoginInfoEvent(c, islogin);
+            if (ClientSessionEvent != null)
+                ClientSessionEvent(c, islogin);
         }
 
         internal void FireAccountLoginSuccessEvent(string account)

@@ -44,6 +44,12 @@ namespace TradingLib.Common
         /// </summary>
         public DateTime HeartBeat { get; set; }
 
+
+        /// <summary>
+        /// 创建时间
+        /// </summary>
+        public DateTime CreatedTime { get; private set; }
+
         /// <summary>
         /// 客户端登入ID
         /// 登入ID与回话ISession中AuthorizedID区别
@@ -71,6 +77,7 @@ namespace TradingLib.Common
         {
             Location = new Location(copythis.Location.FrontID, copythis.Location.ClientID);
 
+            CreatedTime = copythis.CreatedTime;
             HardWareCode = copythis.HardWareCode;
             IPAddress = copythis.IPAddress;
             ProductInfo = copythis.ProductInfo;
@@ -86,7 +93,7 @@ namespace TradingLib.Common
         public ClientInfoBase()
         {
             Location = new Location();
-
+            CreatedTime = DateTime.Now;
             HardWareCode = string.Empty;
             IPAddress = string.Empty;
             ProductInfo = string.Empty;

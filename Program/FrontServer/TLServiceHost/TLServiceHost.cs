@@ -141,6 +141,12 @@ namespace FrontServer.TLServiceHost
                                 conn.Send(response.Data);
                                 return;
                             }
+                            if (packet.Type == MessageTypes.LOGINREQUEST)
+                            {
+                                LoginRequest request = packet as LoginRequest;
+                                request.IPAddress = conn.IState.IPAddress;
+                            }
+
                             _mqServer.TLSend(conn.SessionID, packet);
 
                         }
@@ -180,6 +186,7 @@ namespace FrontServer.TLServiceHost
                     logger.Warn(string.Format("Session:{0} TLConnection do not exist", connection.SessionID));
                     return;
                 }
+                
                 //将逻辑服务器发送过来的数据转发到对应的连接上去
                 conn.Send(packet.Data);
 

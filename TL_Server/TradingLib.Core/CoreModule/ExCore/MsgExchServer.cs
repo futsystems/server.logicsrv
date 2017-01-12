@@ -293,29 +293,31 @@ namespace TradingLib.Core
             logger.Info("客户端:" + obj.Location.ClientID + " 注册到系统");
         }
 
+        /* 交易账户登入 登出 过程通过交易账户当前连接终端数量进行该账户是否处于登入状态判断 同时通过账户变化这个事件来触发 向管理端发送通知
+         * 
+         * 每次登入与登出 均触发FireClientSessionEvent事件
+         * 
+         * 
+         * */
         void tl_ClientLogoutEvent(TrdClientInfo obj)
         {
             if (obj.Account != null)
             {
-                //TODO 增加账户下 多个会话数据结构用于记录账户下所有登入会话,并在管理端实现查看
-                //查询该交易帐户是否还有登入的回话 如果存在则不更新注销消息
-                TrdClientInfo info = tl.ClientsForAccount(obj.Account.ID).FirstOrDefault();
-                if (info == null)
+                //查询交易账户对应会话数量 会话数量大于0则表明该账户处于登入状态
+                int num = tl.ClientsForAccount(obj.Account.ID).Count();
+                if (num ==0)
                 {
-                    //如果该交易帐户没有任何终端注册 则清空回话信息
-                    obj.Account.UnBindClient();
-
-                    TLCtxHelper.EventSession.FireClientLoginInfoEvent(obj, false);
-
+                    obj.Account.IsLogin = false;
+                    TLCtxHelper.EventAccount.FireAccountChangeEent(obj.Account);
                 }
                 else
                 {
-                    //还有其他客户端登入，则显示该客户端回话信息 同时回话信息绑定到该终端
-                    obj.Account.BindClient(info);
-
-                    TLCtxHelper.EventSession.FireClientLoginInfoEvent(info, true);
-
+                    obj.Account.IsLogin = true;
+                    TLCtxHelper.EventAccount.FireAccountChangeEent(obj.Account);
                 }
+
+                TLCtxHelper.EventSession.FireClientSessionEvent(obj, false);
+                logger.Info("客户端:" + obj.Location.ClientID + " 登入状态:" + false.ToString());
             }
         }
 
@@ -323,9 +325,10 @@ namespace TradingLib.Core
         {
             if (obj.Account != null)
             {
-                obj.Account.BindClient(obj);
+                obj.Account.IsLogin = true;
+                TLCtxHelper.EventAccount.FireAccountChangeEent(obj.Account);
 
-                TLCtxHelper.EventSession.FireClientLoginInfoEvent(obj, true);
+                TLCtxHelper.EventSession.FireClientSessionEvent(obj, true);
                 logger.Info("客户端:" + obj.Location.ClientID + " 登入状态:" + true.ToString());
             }
         }

@@ -516,8 +516,8 @@ namespace TradingLib.Common
                     return ResponseTemplate<NotifyMGRAccountInfoLiteResponse>.CliRecvResponse(message);
                 case MessageTypes.MGRRESUMEACCOUNTRESPONE://恢复交易帐户日内交易信息回报
                     return ResponseTemplate<RspMGRResumeAccountResponse>.CliRecvResponse(message);
-                case MessageTypes.MGRSESSIONSTATUSUPDATE://交易帐号登入 退出 事件回报
-                    return ResponseTemplate<NotifyMGRSessionUpdateNotify>.CliRecvResponse(message);
+                //case MessageTypes.MGRSESSIONSTATUSUPDATE://交易帐号登入 退出 事件回报
+                //    return ResponseTemplate<NotifyMGRSessionUpdateNotify>.CliRecvResponse(message);
                 case MessageTypes.MGRACCOUNTINFORESPONSE://查询交易帐户信息回报
                     return ResponseTemplate<RspMGRQryAccountInfoResponse>.CliRecvResponse(message);
                 case MessageTypes.MGRACCOUNTCHANGEUPDATE://帐户变动回报

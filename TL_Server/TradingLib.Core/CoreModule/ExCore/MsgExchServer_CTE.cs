@@ -49,43 +49,25 @@ namespace TradingLib.Core
             {
                 throw new FutsRspError("无权查询该交易帐户");
             }
-
-            
-
-            TrdClientInfo client = tl.ClientsForAccount(account).FirstOrDefault();
-
-            SessionInfo info = new SessionInfo();
-            info.Account = account;
-            if (client != null)
+            SessionInfo[] infos = tl.ClientsForAccount(account).Select(c => new SessionInfo()
+                { 
+                    Account = account, 
+                    ClientID = c.Location.ClientID, 
+                    FrontID = c.Location.FrontID, 
+                    IPAddress = c.IPAddress, 
+                    ProductInfo = c.ProductInfo,
+                    CreatedTime = c.CreatedTime,
+                    Login = true,
+                    
+                }).ToArray();
+            for(int i=0;i<infos.Length;i++)
             {
-                info = new SessionInfo();
-                info.ClientID = client.Location.ClientID;
-                info.FrontID = client.Location.FrontID;
-                info.IPAddress = client.IPAddress;
-                info.ProductInfo = client.ProductInfo;
+                session.ReplyMgr(infos[i], i == infos.Length - 1);
             }
-
-            session.ReplyMgr(info);
 
         }
 
 
-
-        #region 状态类查询
-        //[CoreCommandAttr(QSEnumCommandSource.MessageWeb,
-        //                    "qrydatafeedrouterstatus",
-        //                    "qrydatafeedrouterstatus - query datafeed router status",
-        //                    "查询行情路由状态")]
-        //public string Status_DataFeedRouter()
-        //{
-        //    DataFeedRouterStatus status = _datafeedRouter.GetRouterStatus();
-        //    ReplyWriter writer = new ReplyWriter();
-        //    string json = writer.Start().FillReply(Mixins.JsonReply.GenericSuccess()).FillPlayload(status).End().ToString();
-        //    debug("got json router status:" + json, QSEnumDebugLevel.INFO);
-        //    return json;
-        //}
-
-        #endregion
 
         [CoreCommandAttr(QSEnumCommandSource.CLI,
                             "pconnlist",

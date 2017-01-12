@@ -33,9 +33,16 @@ namespace TradingLib.Common
         public string IPAddress { get; set; }
 
         /// <summary>
-        /// 物理位置
+        /// 创建时间
         /// </summary>
-        public string Geography { get; set; }
+        public DateTime CreatedTime { get; set; }
+
+        /// <summary>
+        /// 登入/登出
+        /// </summary>
+        public bool Login { get; set; }
 
     }
+
+
 }

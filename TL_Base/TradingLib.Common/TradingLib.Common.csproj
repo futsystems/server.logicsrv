@@ -221,7 +221,7 @@
     <Compile Include="Message\Manager\MGRResponse.cs" />
     <Compile Include="Message\Manager\MGRResumeAccount.cs" />
     <Compile Include="Message\Manager\MGRRuleSet.cs" />
-    <Compile Include="Message\Manager\MGRSessionUpdateNotify.cs" />
+    <Compile Include="Message\1old\MGRSessionUpdateNotify.cs" />
     <Compile Include="Message\Manager\MGRSystemStatus.cs" />
     <Compile Include="Message\1old\MGRUpdateCategory.cs" />
     <Compile Include="Message\1old\MGRUpdateExecute.cs" />
