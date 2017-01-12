@@ -1,4 +1,7 @@
-﻿using System;
+﻿//Copyright 2013 by FutSystems,Inc.
+//20170112 整理无用操作
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -45,46 +48,6 @@ namespace TradingLib.Core
                 session.ReplyMgr(logininfo);
             }
         }
-
-        /// <summary>
-        /// 更新或添加分区
-        /// </summary>
-        /// <param name="session"></param>
-        /// <param name="json"></param>
-        //[ContribCommandAttr(QSEnumCommandSource.MessageMgr, "UpdateDomainCFGSyncSymbolVendor", "UpdateDomainCFGSyncSymbolVendor - update domain", "更新域默认同步合约实盘帐户")]
-        //public void CTE_UpdateDomain(ISession session,int id)
-        //{
-        //    Manager manager = session.GetManager();
-        //    //管理员才有权对系统的合约同步进行设置
-        //    if(manager.IsRoot())
-        //    {
-        //        if (id != 0)
-        //        {
-        //            Vendor vendor = BasicTracker.VendorTracker[id];
-        //            if (vendor == null)
-        //            {
-        //                throw new FutsRspError("实盘帐户不存在");
-        //            }
-
-        //            if (!vendor.Domain.IsInDomain(manager))
-        //            {
-        //                throw new FutsRspError("实盘帐户与管理员不同域");
-        //            }
-        //        }
-
-        //        //如果vendorid为0 表明不从实盘帐户同步，从主域同步
-        //        manager.Domain.UpdateSyncVendor(id);
-
-        //        //将域信息通知
-        //        session.NotifyMgr("NotifyDomain", manager.Domain);
-        //        session.OperationSuccess("设置同步合约实盘帐户成功");
-        //    }
-        //    else
-        //    {
-        //        throw new FutsRspError("无权更新同步实盘帐户");
-        //    }
-
-        //}
 
         /// <summary>
         /// 更新或添加分区

@@ -1,4 +1,7 @@
-﻿using System;
+﻿//Copyright 2013 by FutSystems,Inc.
+//20170112 整理无用操作
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -19,7 +22,7 @@ namespace TradingLib.Core
         {
             Manager manager = session.GetManager();
             //获得当前管理员可以查看的柜员列表
-            Manager[] mgrs = manager.GetVisibleManager().ToArray();// BasicTracker.ManagerTracker.GetManagers(manager).ToArray();
+            Manager[] mgrs = manager.GetVisibleManager().ToArray();
             session.ReplyMgr(mgrs);
         }
 

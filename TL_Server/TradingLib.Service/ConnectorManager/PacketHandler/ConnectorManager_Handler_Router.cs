@@ -21,7 +21,7 @@ namespace TradingLib.ServiceManager
             if (manger.IsInRoot())
             {
                 //获得域内所有通道设置
-                ConnectorConfig[] ops = manger.Domain.GetConnectorConfigs().ToArray();// BasicTracker.ConnectorConfigTracker.ConnecotrConfigs.ToArray();
+                ConnectorConfig[] ops = manger.Domain.GetConnectorConfigs().ToArray();
                 session.ReplyMgr(ops);
             }
         }
@@ -64,7 +64,7 @@ namespace TradingLib.ServiceManager
                 if (manger.Domain.Super || manger.Domain.Dedicated)
                 {
                     //获得域内所有通道设置
-                    ConnectorConfig[] ops = manger.Domain.GetDefaultConnectorConfigs().ToArray();// BasicTracker.ConnectorConfigTracker.ConnecotrConfigs.ToArray();
+                    ConnectorConfig[] ops = manger.Domain.GetDefaultConnectorConfigs().ToArray();
                     session.ReplyMgr(ops);
                 }
             }
@@ -119,7 +119,7 @@ namespace TradingLib.ServiceManager
             if (manger.IsInRoot())
             {
                 //获得域内所有通道设置
-                ConnectorStatus[] ops = manger.Domain.GetConnectorConfigs().Select(cfg => GetConnectorStatus(cfg)).ToArray();// BasicTracker.ConnectorConfigTracker.ConnecotrConfigs.ToArray();
+                ConnectorStatus[] ops = manger.Domain.GetConnectorConfigs().Select(cfg => GetConnectorStatus(cfg)).ToArray();
                 session.ReplyMgr(ops);
             }
         }
@@ -132,7 +132,7 @@ namespace TradingLib.ServiceManager
             if (manger.IsInRoot())
             {
                 //获得域内所有通道设置
-                ConnectorStatus[] ops = manger.Domain.GetDefaultConnectorConfigs().Select(cfg => GetConnectorStatus(cfg)).ToArray();// BasicTracker.ConnectorConfigTracker.ConnecotrConfigs.ToArray();
+                ConnectorStatus[] ops = manger.Domain.GetDefaultConnectorConfigs().Select(cfg => GetConnectorStatus(cfg)).ToArray();
                 session.ReplyMgr(ops);
             }
         }
@@ -228,7 +228,7 @@ namespace TradingLib.ServiceManager
             try
             {
                 Manager manger = session.GetManager();
-                RouterGroupSetting[] ops = manger.Domain.GetRouterGroups().ToArray();// BasicTracker.RouterGroupTracker.RouterGroups.ToArray();
+                RouterGroupSetting[] ops = manger.Domain.GetRouterGroups().ToArray();
                 session.ReplyMgr(ops);
             }
             catch (FutsRspError ex)

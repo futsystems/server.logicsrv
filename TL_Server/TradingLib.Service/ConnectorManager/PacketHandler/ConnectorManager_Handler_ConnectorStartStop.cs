@@ -20,19 +20,11 @@ namespace TradingLib.ServiceManager
         /// 停止交易接口
         /// </summary>
         Stop,//停止
-
-        /// <summary>
-        /// 重启交易接口
-        /// </summary>
-        Restart,//重启
     }
-    internal delegate void AsyncConnectorOperationDel(ISession session, ConnectorConfig cfg, QSEnumConnectorOperation op);
 
 
     public partial class ConnectorManager
     {
-
-        #region start stop connector
 
         void ConnectorOperation(ISession session, ConnectorConfig cfg, QSEnumConnectorOperation op)
         {
@@ -40,26 +32,26 @@ namespace TradingLib.ServiceManager
             {
                 if (cfg.Interface != null && cfg.Interface.IsValid)
                 {
-                    Action<string> ophandler = null;
+                    Action<string> handler = null;
                     switch (op)
                     {
                         case QSEnumConnectorOperation.Start:
                             {
-                                ophandler = (cfg.Interface.Type == QSEnumConnectorType.Broker ? new Action<string>(StartBroker) : new Action<string>(StartDataFeed));
+                                handler = (cfg.Interface.Type == QSEnumConnectorType.Broker ? new Action<string>(StartBroker) : new Action<string>(StartDataFeed));
                                 break;
                             }
                         case QSEnumConnectorOperation.Stop:
                             {
-                                ophandler = (cfg.Interface.Type == QSEnumConnectorType.Broker ? new Action<string>(StopBroker) : new Action<string>(StopDataFeed));
+                                handler = (cfg.Interface.Type == QSEnumConnectorType.Broker ? new Action<string>(StopBroker) : new Action<string>(StopDataFeed));
                                 break;
                             }
                         default:
-                            ophandler = null;
+                            handler = null;
                             break;
                     }
-                    if (ophandler != null)
+                    if (handler != null)
                     {
-                        ophandler(cfg.Token);
+                        handler(cfg.Token);
                         session.OperationSuccess(string.Format("通道[{0}]操作成功", cfg.Token));
                         NotifyConnectorStatus(session, cfg);
                     }
@@ -82,8 +74,6 @@ namespace TradingLib.ServiceManager
         {
             ConnectorStatus status = GetConnectorStatus(cfg);//获得通道状态
             IEnumerable<ILocation> locations = cfg.Domain.GetRootLocations();//获得该域的所有管理员地址
-
-            //通知列表
             if (locations.Count() > 0)
             {
                 session.NotifyMgr("NotifyConnectorStatus", status, locations);
@@ -124,28 +114,28 @@ namespace TradingLib.ServiceManager
             b.Stop();
         }
 
-        /// <summary>
-        /// 重启成交接口
-        /// </summary>
-        /// <param name="token"></param>
-        void RestartBroker(string token)
-        {
-            IBroker b = FindBroker(token);
-            if (b == null)//未找到
-            {
-                throw new FutsRspError("通道不存在");
-            }
-            if (b.IsLive)//已经启动则停止
-            {
-                b.Stop();
-            }
-            string msg = string.Empty;
-            bool s = b.Start(out msg);
-            if (!s)
-            {
-                throw new FutsRspError(msg);
-            }
-        }
+        ///// <summary>
+        ///// 重启成交接口
+        ///// </summary>
+        ///// <param name="token"></param>
+        //void RestartBroker(string token)
+        //{
+        //    IBroker b = FindBroker(token);
+        //    if (b == null)//未找到
+        //    {
+        //        throw new FutsRspError("通道不存在");
+        //    }
+        //    if (b.IsLive)//已经启动则停止
+        //    {
+        //        b.Stop();
+        //    }
+        //    string msg = string.Empty;
+        //    bool s = b.Start(out msg);
+        //    if (!s)
+        //    {
+        //        throw new FutsRspError(msg);
+        //    }
+        //}
 
         void StartDataFeed(string token)
         {
@@ -188,11 +178,8 @@ namespace TradingLib.ServiceManager
                     ConnectorConfig cfg = BasicTracker.ConnectorConfigTracker.GetBrokerConfig(id);
                     if (cfg.domain_id == manger.domain_id)//有权利
                     {
-                        AsyncConnectorOperationDel del = new AsyncConnectorOperationDel(ConnectorOperation);
-
-                        //
-                        logger.Info("start connector async.....");
-                        del.BeginInvoke(session, cfg, QSEnumConnectorOperation.Start, null, null);
+                        Action<ISession, ConnectorConfig, QSEnumConnectorOperation> action = new Action<ISession, ConnectorConfig, QSEnumConnectorOperation>(ConnectorOperation);
+                        action.BeginInvoke(session, cfg, QSEnumConnectorOperation.Start, null, null);
                     }
                     else
                     {
@@ -218,11 +205,8 @@ namespace TradingLib.ServiceManager
                     ConnectorConfig cfg = BasicTracker.ConnectorConfigTracker.GetBrokerConfig(id);
                     if (cfg.domain_id == manger.domain_id)//有权利
                     {
-                        AsyncConnectorOperationDel del = new AsyncConnectorOperationDel(ConnectorOperation);
-
-                        //
-                        logger.Info("stop connector async.....");
-                        del.BeginInvoke(session, cfg, QSEnumConnectorOperation.Stop, null, null);
+                        Action<ISession, ConnectorConfig, QSEnumConnectorOperation> action = new Action<ISession, ConnectorConfig, QSEnumConnectorOperation>(ConnectorOperation);
+                        action.BeginInvoke(session, cfg, QSEnumConnectorOperation.Stop, null, null);
                     }
                     else
                     {
@@ -235,9 +219,6 @@ namespace TradingLib.ServiceManager
                 session.OperationError(ex);
             }
         }
-
-
-        #endregion
 
 
     }
