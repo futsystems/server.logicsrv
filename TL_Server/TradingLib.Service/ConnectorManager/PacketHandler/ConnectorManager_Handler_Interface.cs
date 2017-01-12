@@ -19,7 +19,6 @@ namespace TradingLib.ServiceManager
         [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "QryInterface", "QryInterface - query interface setted in system", "查询所有接口设置")]
         public void CTE_QueryInterface(ISession session)
         {
-            logger.Info("查询所有接口设置");
             Manager manger = session.GetManager();
             if (manger.IsInRoot())
             {
@@ -31,20 +30,13 @@ namespace TradingLib.ServiceManager
         [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "UpdateInterface", "UpdateInterface - Update interface setted in system", "更新接口设置", QSEnumArgParseType.Json)]
         public void CTE_UpdateInterface(ISession session, string json)
         {
-            try
+            Manager manger = session.GetManager();
+            if (manger.IsInRoot())
             {
-                logger.Info("更新接口设置:" + json);
-                Manager manger = session.GetManager();
-                if (manger.IsInRoot())
-                {
-                    ConnectorInterface itface = json.DeserializeObject<ConnectorInterface>();
-                    ORM.MConnector.UpdateConnectorInterface(itface);
-                }
+                ConnectorInterface itface = json.DeserializeObject<ConnectorInterface>();
+                ORM.MConnector.UpdateConnectorInterface(itface);
             }
-            catch (Exception ex)
-            {
-                session.OperationSuccess("更新接口设置成功");
-            }
+
         }
         #endregion
     }

@@ -58,7 +58,6 @@ namespace TradingLib.Core
         /// <param name="account"></param>
         void OnAccountAdded(IAccount account)
         {
-            logger.Info(string.Format("Account:{0} Created", account.ID));
             NotifyMGRAccountChangeUpdateResponse notify = ResponseTemplate<NotifyMGRAccountChangeUpdateResponse>.SrvSendNotifyResponse(account.ID);
             notify.AccountItem = account.ToAccountItem();
             CachePacket(notify);
@@ -67,7 +66,6 @@ namespace TradingLib.Core
 
         void OnAccountDeleted(IAccount account)
         {
-            logger.Info(string.Format("Account:{0} Deleted", account.ID));
             IEnumerable<ILocation> locations = GetNotifyTargets(account.GetNotifyPredicate());
             NotifyMGRAccountChangeUpdateResponse notify = ResponseTemplate<NotifyMGRAccountChangeUpdateResponse>.SrvSendNotifyResponse(locations);
             notify.AccountItem = account.ToAccountItem();

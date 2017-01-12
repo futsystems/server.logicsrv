@@ -13,16 +13,10 @@ namespace TradingLib.Core
         [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "QryRuleSet", "QryRuleSet - query rule set", "查询风控规则集")]
         public void CTE_QryRuleSet(ISession session)
         {
-
-            logger.Info(string.Format("管理员:{0} 请求查询风控规则", session.AuthorizedID));
-
             RuleClassItem[] items = this.dicRule.Values.ToArray();
             int totalnum = items.Length;
-
-            
             if (totalnum > 0)
             {
-                logger.Info("rule set num:" + totalnum.ToString());
                 for (int i = 0; i < totalnum; i++)
                 {
                     session.ReplyMgr(items[i], i == totalnum - 1);
@@ -30,7 +24,6 @@ namespace TradingLib.Core
             }
             else
             {
-                logger.Info("send null rule item");
                 session.ReplyMgr(null);
             }
         }

@@ -100,8 +100,6 @@ namespace TradingLib.Core
         /// <returns></returns>
         public void AddAccount(ref AccountCreation create)
         {
-            logger.Info("帐户中心为user:" + create.UserID.ToString() + " 添加交易帐号到主柜员ID:" + create.BaseManagerID.ToString());
-
             Manager mgr = BasicTracker.ManagerTracker[create.BaseManagerID];
 
             if (mgr == null)
@@ -130,12 +128,14 @@ namespace TradingLib.Core
 
             //对外触发交易帐号添加事件
             TLCtxHelper.EventAccount.FireAccountAddEvent(this[create.Account]);
+
+            logger.Info(string.Format("Account:{0} UserID:{1} Added Under Manager:{2}", create.Account, create.UserID, create.BaseManagerID));
         }
 
 
         public void DelAccount(string id)
         {
-            logger.Info("帐户中心删除交易帐户:" + id);
+            
             IAccount account = this[id];
             if (account == null)
             {
@@ -156,7 +156,8 @@ namespace TradingLib.Core
                 account.Deleted = true;
 
                 TLCtxHelper.EventAccount.FireAccountDelEvent(account);
-                
+
+                logger.Info(string.Format("Account:{0} Deleted", id));
             }
             catch (Exception ex)
             {

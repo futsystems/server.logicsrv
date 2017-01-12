@@ -114,28 +114,6 @@ namespace TradingLib.ServiceManager
             b.Stop();
         }
 
-        ///// <summary>
-        ///// 重启成交接口
-        ///// </summary>
-        ///// <param name="token"></param>
-        //void RestartBroker(string token)
-        //{
-        //    IBroker b = FindBroker(token);
-        //    if (b == null)//未找到
-        //    {
-        //        throw new FutsRspError("通道不存在");
-        //    }
-        //    if (b.IsLive)//已经启动则停止
-        //    {
-        //        b.Stop();
-        //    }
-        //    string msg = string.Empty;
-        //    bool s = b.Start(out msg);
-        //    if (!s)
-        //    {
-        //        throw new FutsRspError(msg);
-        //    }
-        //}
 
         void StartDataFeed(string token)
         {
@@ -169,55 +147,43 @@ namespace TradingLib.ServiceManager
         [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "StartConnector", "StartConnector - StartConnector", "启动通道")]
         public void CTE_StartConnector(ISession session, int id)
         {
-            try
+
+            Manager manger = session.GetManager();
+            if (manger.IsInRoot())
             {
-                logger.Info("启动通道");
-                Manager manger = session.GetManager();
-                if (manger.IsInRoot())
+                ConnectorConfig cfg = BasicTracker.ConnectorConfigTracker.GetBrokerConfig(id);
+                if (cfg.domain_id == manger.domain_id)//有权利
                 {
-                    ConnectorConfig cfg = BasicTracker.ConnectorConfigTracker.GetBrokerConfig(id);
-                    if (cfg.domain_id == manger.domain_id)//有权利
-                    {
-                        Action<ISession, ConnectorConfig, QSEnumConnectorOperation> action = new Action<ISession, ConnectorConfig, QSEnumConnectorOperation>(ConnectorOperation);
-                        action.BeginInvoke(session, cfg, QSEnumConnectorOperation.Start, null, null);
-                    }
-                    else
-                    {
-                        throw new FutsRspError("无权操作该通道");
-                    }
+                    Action<ISession, ConnectorConfig, QSEnumConnectorOperation> action = new Action<ISession, ConnectorConfig, QSEnumConnectorOperation>(ConnectorOperation);
+                    action.BeginInvoke(session, cfg, QSEnumConnectorOperation.Start, null, null);
+                }
+                else
+                {
+                    throw new FutsRspError("无权操作该通道");
                 }
             }
-            catch (FutsRspError ex)
-            {
-                session.OperationError(ex);
-            }
+
         }
 
         [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "StopConnector", "StartConnector - StartConnector", "启动通道")]
         public void CTE_StopConnector(ISession session, int id)
         {
-            try
+
+            Manager manger = session.GetManager();
+            if (manger.IsInRoot())
             {
-                logger.Info("停止通道");
-                Manager manger = session.GetManager();
-                if (manger.IsInRoot())
+                ConnectorConfig cfg = BasicTracker.ConnectorConfigTracker.GetBrokerConfig(id);
+                if (cfg.domain_id == manger.domain_id)//有权利
                 {
-                    ConnectorConfig cfg = BasicTracker.ConnectorConfigTracker.GetBrokerConfig(id);
-                    if (cfg.domain_id == manger.domain_id)//有权利
-                    {
-                        Action<ISession, ConnectorConfig, QSEnumConnectorOperation> action = new Action<ISession, ConnectorConfig, QSEnumConnectorOperation>(ConnectorOperation);
-                        action.BeginInvoke(session, cfg, QSEnumConnectorOperation.Stop, null, null);
-                    }
-                    else
-                    {
-                        throw new FutsRspError("无权操作该通道");
-                    }
+                    Action<ISession, ConnectorConfig, QSEnumConnectorOperation> action = new Action<ISession, ConnectorConfig, QSEnumConnectorOperation>(ConnectorOperation);
+                    action.BeginInvoke(session, cfg, QSEnumConnectorOperation.Stop, null, null);
+                }
+                else
+                {
+                    throw new FutsRspError("无权操作该通道");
                 }
             }
-            catch (FutsRspError ex)
-            {
-                session.OperationError(ex);
-            }
+           
         }
 
 

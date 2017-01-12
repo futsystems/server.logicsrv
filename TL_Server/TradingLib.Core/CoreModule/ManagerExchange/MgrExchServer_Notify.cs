@@ -10,22 +10,7 @@
  * 同时被操作的这个对象有一个通知列表用笔表明该对象发生变化了需要通知哪些对端。
  * 
  * 在完成所有功能后需要对这些模式进行一个抽象和重构使得代码更加精简和可维护
- * 
- * 
- * 
- * 
- * 
- * 
- * 
- * 
- * 
- * 
- * 
- * 
- * 
- * 
- * 
- * 
+
  * **/
 using System;
 using System.Collections.Generic;
@@ -50,7 +35,7 @@ namespace TradingLib.Core
         /// </summary>
         void InitNotifySection()
         {
-            TLCtxHelper.EventSystem.CashOperationRequest += new EventHandler<CashOperationEventArgs>(CashOperationEvent_CashOperationRequest);
+            TLCtxHelper.EventSystem.CashOperationRequest += new EventHandler<CashOperationEventArgs>(OnCashOperationRequest);
             TLCtxHelper.EventSystem.ManagerNotifyEvent +=new EventHandler<ManagerNotifyEventArgs>(EventSystem_ManagerNotifyEvent);
 
         }
@@ -60,8 +45,7 @@ namespace TradingLib.Core
             NotifyMGRContribNotify response = ResponseTemplate<NotifyMGRContribNotify>.SrvSendNotifyResponse(GetNotifyTargets(e.NotifyPredicate));
             response.ModuleID = CoreName;
             response.CMDStr = "ManagerNotify";
-            response.Result = e.Notify.SerializeObject();// Mixins.Json.JsonMapper.ToJson(e.Notify);
-
+            response.Result = e.Notify.SerializeObject();
             CachePacket(response);
         }
 
@@ -77,7 +61,7 @@ namespace TradingLib.Core
             NotifyMGRContribNotify response = ResponseTemplate<NotifyMGRContribNotify>.SrvSendNotifyResponse(GetNotifyTargets(predictate));
             response.ModuleID = module;
             response.CMDStr = cmdstr;
-            response.Result = obj.SerializeObject();// JsonReply.SuccessReply(obj).ToJson();
+            response.Result = obj.SerializeObject();
             CachePacket(response);
         }
 
@@ -102,13 +86,13 @@ namespace TradingLib.Core
             NotifyMGRContribNotify response = ResponseTemplate<NotifyMGRContribNotify>.SrvSendNotifyResponse(GetNotifyTargets(managers));
             response.ModuleID = module;
             response.CMDStr = cmdstr;
-            response.Result = obj.SerializeObject();// JsonReply.SuccessReply(obj).ToJson();
+            response.Result = obj.SerializeObject();
             CachePacket(response);
         }
 
 
 
-        void CashOperationEvent_CashOperationRequest(object sender, CashOperationEventArgs e)
+        void OnCashOperationRequest(object sender, CashOperationEventArgs e)
         {
             NotifyCashOperation(e.CashOperation);
         }
@@ -126,7 +110,7 @@ namespace TradingLib.Core
             NotifyMGRContribNotify response = ResponseTemplate<NotifyMGRContribNotify>.SrvSendNotifyResponse(GetNotifyTargets(op.GetNotifyPredicate()));
             response.ModuleID = CoreName;
             response.CMDStr = "NotifyCashOperation";
-            response.Result = op.SerializeObject();// JsonReply.SuccessReply(op).ToJson();
+            response.Result = op.SerializeObject();
             CachePacket(response);
         }
 
@@ -141,7 +125,7 @@ namespace TradingLib.Core
             NotifyMGRContribNotify response = ResponseTemplate<NotifyMGRContribNotify>.SrvSendNotifyResponse(GetNotifyTargets(mgr.GetNotifyPredicate()));
             response.ModuleID = CoreName;
             response.CMDStr = "NotifyManagerUpdate";
-            response.Result = mgr.SerializeObject();// JsonReply.SuccessReply(mgr).ToJson();
+            response.Result = mgr.SerializeObject();
             CachePacket(response);
         }
 
@@ -155,7 +139,7 @@ namespace TradingLib.Core
             NotifyMGRContribNotify response = ResponseTemplate<NotifyMGRContribNotify>.SrvSendNotifyResponse(GetNotifyTargets(mgr.GetNotifyPredicate()));
             response.ModuleID = CoreName;
             response.CMDStr = "NotifyManagerDelete";
-            response.Result = mgr.SerializeObject();// JsonReply.SuccessReply(mgr).ToJson();
+            response.Result = mgr.SerializeObject();
             CachePacket(response);
         }
 

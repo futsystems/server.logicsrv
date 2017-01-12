@@ -19,7 +19,7 @@ namespace TradingLib.Core
         {
             try
             {
-                logger.Info(string.Format("管理员:{0} 请求查询历史委托:{1}", session.AuthorizedID, request.ToString()));
+                logger.Info(string.Format("Manager[{0}] QryHistOrder Args:{1}", session.AuthorizedID,string.Format("{0} {1} {2}",request.Account,request.Start,request.End)));
 
                 //权限验证
                 manager.ValidRightReadAccount(request.Account);

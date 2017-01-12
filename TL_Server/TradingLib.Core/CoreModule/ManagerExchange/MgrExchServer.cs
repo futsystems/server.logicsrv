@@ -42,12 +42,13 @@ namespace TradingLib.Core
             tl.NewPacketRequest += new Action<ISession, IPacket, Manager>(OnPacketRequest);
             tl.QryNotifyLocationsViaAccount += new Func<string, ILocation[]>(QryLocationsViaAccountEvent);
 
-            tl.ClientRegistedEvent += new Action<MgrClientInfo>(tl_ClientRegistedEvent);
-            tl.ClientUnregistedEvent += new Action<MgrClientInfo>(tl_ClientUnregistedEvent);
+            tl.ClientRegistedEvent += new Action<MgrClientInfo>(OnClientRegistedEvent);
+            tl.ClientUnregistedEvent += new Action<MgrClientInfo>(OnClientUnregistedEvent);
 
 
             //初始化通知
             InitNotifySection();
+
             //启动消息服务
             StartMessageRouter();
 
@@ -79,13 +80,13 @@ namespace TradingLib.Core
         }
 
 
-        void tl_ClientUnregistedEvent(MgrClientInfo client)
+        void OnClientUnregistedEvent(MgrClientInfo client)
         {
             MgrClientInfoEx o = null;
             customerExInfoMap.TryRemove(client.Location.ClientID, out o);
         }
 
-        void tl_ClientRegistedEvent(MgrClientInfo client)
+        void OnClientRegistedEvent(MgrClientInfo client)
         {
             customerExInfoMap[client.Location.ClientID] = new MgrClientInfoEx(client);
         }

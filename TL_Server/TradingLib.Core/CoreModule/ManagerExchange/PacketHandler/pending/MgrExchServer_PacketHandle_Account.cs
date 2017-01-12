@@ -18,7 +18,7 @@ namespace TradingLib.Core
         /// <param name="manager"></param>
         void SrvOnMGRQryAccount(MGRQryAccountRequest request, ISession session, Manager manager)
         {
-            logger.Info(string.Format("管理员:{0} 请求下载交易帐户列表:{1}", session.AuthorizedID, request.ToString()));
+            logger.Info(string.Format("Manager[{0}] QryAccountList", session.AuthorizedID));
             IAccount[] list = manager.GetVisibleAccount().ToArray();
             if (list.Length > 0)
             {
@@ -46,17 +46,22 @@ namespace TradingLib.Core
         /// <param name="manager"></param>
         void SrvOnMGRWatchAccount(MGRWatchAccountRequest request, ISession session, Manager manager)
         {
-            logger.Info(string.Format("管理员:{0} 请求设定观察列表:{1}", session.AuthorizedID, request.ToString()));
+            logger.Info(string.Format("Manager[{0}] Set WatchList:{1}", session.AuthorizedID, string.Join(",",request.AccountList.ToArray())));
             var c = customerExInfoMap[request.ClientID];
             c.Watch(request.AccountList);
         }
 
+        /// <summary>
+        /// 设定当前选中交易账户
+        /// </summary>
+        /// <param name="request"></param>
+        /// <param name="session"></param>
+        /// <param name="manager"></param>
         void SrvOnMGRResumeAccount(MGRResumeAccountRequest request, ISession session, Manager manager)
         {
-            logger.Info(string.Format("管理员:{0} 请求恢复交易数据,帐号:{1}", session.AuthorizedID, request.ResumeAccount));
-            //将请求放入队列等待处理
+            logger.Info(string.Format("Manager[{0}] Resume Account:{1}", session.AuthorizedID, request.ResumeAccount));
             var c = customerExInfoMap[request.ClientID];
-            c.Selected(request.ResumeAccount);//保存管理客户端选中的交易帐号
+            c.Selected(request.ResumeAccount);
             _resumecache.Write(request);
         }
 

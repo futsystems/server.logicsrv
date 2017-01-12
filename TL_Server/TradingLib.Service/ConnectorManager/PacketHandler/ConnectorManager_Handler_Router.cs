@@ -16,7 +16,6 @@ namespace TradingLib.ServiceManager
         [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "QryConnectorConfig", "QryConnectorConfig - query broker config", "查询所有通道设置")]
         public void CTE_QueryConnectorConfig(ISession session)
         {
-            logger.Info("查询所有通道设置");
             Manager manger = session.GetManager();
             if (manger.IsInRoot())
             {
@@ -29,7 +28,6 @@ namespace TradingLib.ServiceManager
         [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "QryConnectorNotInGroup", "QryConnectorNotInGroup - query broker config not in routergroup", "查询未在路由组的通道列表")]
         public void CTE_QryConnectorNotInGroup(ISession session)
         {
-            logger.Info("查询所有未在组通道");
             Manager manger = session.GetManager();
             if (manger.IsInRoot())
             {
@@ -57,20 +55,13 @@ namespace TradingLib.ServiceManager
         [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "QryDefaultConnectorConfig", "QryDefaultConnectorConfig - query broker config", "查询默认通道设置 行情通道与模拟成交")]
         public void CTE_QueryDefaultConnectorConfig(ISession session)
         {
-            try
+
+            Manager manger = session.GetManager();
+            if (manger.Domain.Super || manger.Domain.Dedicated)
             {
-                logger.Info("查询默认通道设置");
-                Manager manger = session.GetManager();
-                if (manger.Domain.Super || manger.Domain.Dedicated)
-                {
-                    //获得域内所有通道设置
-                    ConnectorConfig[] ops = manger.Domain.GetDefaultConnectorConfigs().ToArray();
-                    session.ReplyMgr(ops);
-                }
-            }
-            catch (FutsRspError ex)
-            {
-                session.OperationError(ex);
+                //获得域内所有通道设置
+                ConnectorConfig[] ops = manger.Domain.GetDefaultConnectorConfigs().ToArray();
+                session.ReplyMgr(ops);
             }
         }
 
@@ -114,7 +105,6 @@ namespace TradingLib.ServiceManager
         [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "QryConnectorStatus", "QryConnectorStatus - query connector status", "查询所有通道状态")]
         public void CTE_QueryConnectorStatus(ISession session)
         {
-            logger.Info("查询所有通道状态");
             Manager manger = session.GetManager();
             if (manger.IsInRoot())
             {
@@ -127,7 +117,6 @@ namespace TradingLib.ServiceManager
         [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "QryDefaultConnectorStatus", "QryDefaultConnectorStatus - query connector status", "查询所有通道状态")]
         public void CTE_QryDefaultConnectorStatus(ISession session)
         {
-            logger.Info("查询所有通道状态");
             Manager manger = session.GetManager();
             if (manger.IsInRoot())
             {
@@ -143,75 +132,70 @@ namespace TradingLib.ServiceManager
         [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "UpdateConnectorConfig", "UpdateConnectorConfig - update connector config", "更新通道设置", QSEnumArgParseType.Json)]
         public void CTE_UpdateConnectorConfig(ISession session, string json)
         {
-            try
+
+            Manager manger = session.GetManager();
+            if (manger.IsInRoot())
             {
-                Manager manger = session.GetManager();
-                if (manger.IsInRoot())
+                ConnectorConfig cfg = json.DeserializeObject<ConnectorConfig>();
+                bool isadd = cfg.ID == 0;
+
+                if (string.IsNullOrEmpty(cfg.Name))
                 {
-                    ConnectorConfig cfg = json.DeserializeObject<ConnectorConfig>();
-                    bool isadd = cfg.ID == 0;
+                    throw new FutsRspError("名称不能为空");
+                }
+                if (string.IsNullOrEmpty(cfg.Token))
+                {
+                    throw new FutsRspError("Token不能为空");
+                }
+                ConnectorInterface itface = BasicTracker.ConnectorConfigTracker.GetBrokerInterface(cfg.interface_fk);
+                if ( itface== null)
+                {
+                    throw new FutsRspError("请选择有效接口");
+                }
+                //添加ConnectorConfig 需要Token保持唯一
+                if (cfg.ID == 0 && BasicTracker.ConnectorConfigTracker.GetBrokerConfig(cfg.Token) != null)
+                {
+                    throw new FutsRspError("同名Token已经存在");
+                }
 
-                    if (string.IsNullOrEmpty(cfg.Name))
-                    {
-                        throw new FutsRspError("名称不能为空");
-                    }
-                    if (string.IsNullOrEmpty(cfg.Token))
-                    {
-                        throw new FutsRspError("Token不能为空");
-                    }
-                    ConnectorInterface itface = BasicTracker.ConnectorConfigTracker.GetBrokerInterface(cfg.interface_fk);
-                    if ( itface== null)
-                    {
-                        throw new FutsRspError("请选择有效接口");
-                    }
-                    //添加ConnectorConfig 需要Token保持唯一
-                    if (cfg.ID == 0 && BasicTracker.ConnectorConfigTracker.GetBrokerConfig(cfg.Token) != null)
-                    {
-                        throw new FutsRspError("同名Token已经存在");
-                    }
-
-                    //设定Domain
-                    cfg.domain_id = manger.Domain.ID;
-                    //添加的通道为交易通道则都需要Vendor
-                    if (itface.Type == QSEnumConnectorType.Broker)
-                    {
-                        cfg.NeedVendor = true;
-                    }
+                //设定Domain
+                cfg.domain_id = manger.Domain.ID;
+                //添加的通道为交易通道则都需要Vendor
+                if (itface.Type == QSEnumConnectorType.Broker)
+                {
+                    cfg.NeedVendor = true;
+                }
                     
-                    //2.更新参数
-                    BasicTracker.ConnectorConfigTracker.UpdateConnectorConfig(cfg);
-                    //
-                    ConnectorConfig config = BasicTracker.ConnectorConfigTracker.GetBrokerConfig(cfg.ID);
-                    //3.更新或加载Broker
-                    if (isadd)//如果是新增通道接口 则加载
+                //2.更新参数
+                BasicTracker.ConnectorConfigTracker.UpdateConnectorConfig(cfg);
+                //
+                ConnectorConfig config = BasicTracker.ConnectorConfigTracker.GetBrokerConfig(cfg.ID);
+                //3.更新或加载Broker
+                if (isadd)//如果是新增通道接口 则加载
+                {
+                    if (!config.Interface.IsValid)
                     {
-                        if (!config.Interface.IsValid)
-                        {
-                            throw new FutsRspError("接口状态异常");
-                        }
+                        throw new FutsRspError("接口状态异常");
+                    }
 
-                        LoadBrokerConnector(config);
+                    LoadBrokerConnector(config);
 
 
                         
 
-                    }
-                    else
-                    {
-                        //重新设定参数并停止接口然后再启动接口
-                    }
-
-                    //通知通道设置
-                    session.NotifyMgr("NotifyConnectorCfg", config);
-                    //通知通道状态
-                    session.NotifyMgr("NotifyConnectorStatus", GetConnectorStatus(config));
-                    session.OperationSuccess("更新通道设置成功");
                 }
+                else
+                {
+                    //重新设定参数并停止接口然后再启动接口
+                }
+
+                //通知通道设置
+                session.NotifyMgr("NotifyConnectorCfg", config);
+                //通知通道状态
+                session.NotifyMgr("NotifyConnectorStatus", GetConnectorStatus(config));
+                session.OperationSuccess("更新通道设置成功");
             }
-            catch (FutsRspError ex)
-            {
-                session.OperationError(ex);
-            }
+          
         }
         #endregion
 

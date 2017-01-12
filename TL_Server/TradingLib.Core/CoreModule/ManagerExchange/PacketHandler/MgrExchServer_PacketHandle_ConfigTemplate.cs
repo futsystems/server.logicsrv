@@ -640,7 +640,6 @@ namespace TradingLib.Core
         public void CTE_DelExStrategyTemplate(ISession session, int template_id)
         {
             Manager manager = session.GetManager();
-            logger.Info(string.Format("管理员:{0} 删除交易参数模板 request:{1}", manager.Login, template_id));
             UIAccess access = manager.GetAccess();
             if (!access.r_exstrategy)
             {

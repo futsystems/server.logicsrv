@@ -202,7 +202,8 @@ namespace TradingLib.Common
         {
             try
             {
-                logger.Debug("****handle mgr contribrequest:" + request.ToString());
+                //logger.Debug("****handle mgr contribrequest:" + request.ToString());
+                //logger.Info(string.Format("Manager[{0}] Request Module:{1} Cmd:{2} Args:{3}", session.AuthorizedID, request.ModuleID, request.CMDStr, request.Parameters));
                 CmdHandler(session, request.ModuleID, request.CMDStr, request.Parameters, messageMgrCmdMap);
             }
             catch (FutsRspError ex)

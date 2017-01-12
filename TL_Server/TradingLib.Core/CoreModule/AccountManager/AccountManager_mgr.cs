@@ -24,8 +24,6 @@ namespace TradingLib.Core
         [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "AddAccountFacde", "AddAccountFacde - add  account", "添加交易帐号", QSEnumArgParseType.Json)]
         public void CTE_AddAccountFacde(ISession session, string json)
         {
-            logger.Info(string.Format("管理员:{0} 请求添加帐号:{1}", session.AuthorizedID, json));
-
             Manager manager = session.GetManager();
             var creation = json.DeserializeObject<AccountCreation>();// Mixins.Json.JsonMapper.ToObject<AccountCreation>(json);
             var account = creation.Account;
@@ -135,8 +133,6 @@ namespace TradingLib.Core
         [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "DelAccount", "DelAccount - del account", "删除交易帐户", QSEnumArgParseType.CommaSeparated)]
         public void CTE_DelAccount(ISession session, string account)
         {
-            logger.Info(string.Format("管理员:{0} 请求删除帐户:{1}", session.AuthorizedID, account));
-
             IAccount acc = this[account];
             if (acc == null)
             {
@@ -163,7 +159,6 @@ namespace TradingLib.Core
         [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "UpdateAccountCategory", "UpdateAccountCategory - change account category", "修改帐户类别", QSEnumArgParseType.Json)]
         public void CTE_UpdateAccountCategory(ISession session, string json)
         {
-            logger.Info(string.Format("管理员:{0} 请求更新帐户类别:{1}", session.AuthorizedID, json));
             var req = json.DeserializeObject();// Mixins.Json.JsonMapper.ToObject(json);
             var account = req["account"].ToString();
             var category = Util.ParseEnum<QSEnumAccountCategory>(req["category"].ToString());
@@ -177,7 +172,6 @@ namespace TradingLib.Core
         [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "UpdateAccountExecute", "UpdateAccountExecute - change account execute", "修改帐户交易权限状态", QSEnumArgParseType.Json)]
         public void CTE_UpdateAccountExecute(ISession session, string json)
         {
-            logger.Info(string.Format("管理员:{0} 请求交易权限类别:{1}", session.AuthorizedID, json));
             var req = json.DeserializeObject();// Mixins.Json.JsonMapper.ToObject(json);
             var account = req["account"].ToString();
             var execute = bool.Parse(req["execute"].ToString());
@@ -199,8 +193,7 @@ namespace TradingLib.Core
         [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "UpdateAccountIntraday", "UpdateAccountIntraday - change account intraday setting", "修改帐户日内交易属性", QSEnumArgParseType.Json)]
         public void CTE_UpdateAccountIntraday(ISession session, string json)
         {
-            logger.Info(string.Format("管理员:{0} 请求更新日内交易:{1}", session.AuthorizedID, json));
-            var req = json.DeserializeObject();// Mixins.Json.JsonMapper.ToObject(json);
+            var req = json.DeserializeObject();
             var account = req["account"].ToString();
             var intraday = bool.Parse(req["intraday"].ToString());
 
@@ -215,8 +208,7 @@ namespace TradingLib.Core
         [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "UpdateRouteType", "UpdateRouteType - change account route type", "修改帐户日路由属性", QSEnumArgParseType.Json)]
         public void CTE_UpdateRouteType(ISession session, string json)
         {
-            logger.Info(string.Format("管理员:{0} 请求更新路由类被:{1}", session.AuthorizedID, json));
-            var req = json.DeserializeObject();// Mixins.Json.JsonMapper.ToObject(json);
+            var req = json.DeserializeObject();
             var account = req["account"].ToString();
             var routetype = Util.ParseEnum<QSEnumOrderTransferType>(req["routertrype"].ToString());
 
@@ -231,8 +223,7 @@ namespace TradingLib.Core
         [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "UpdateAccountCurrency", "UpdateAccountCurrency - update account currency", "更新交易帐户货币类别", QSEnumArgParseType.Json)]
         public void CTE_UpdateAccountCurrency(ISession session, string json)
         {
-            logger.Info(string.Format("管理员:{0} 请求修改投资者信息:{1}", session.AuthorizedID, json));
-            var req = json.DeserializeObject();// Mixins.Json.JsonMapper.ToObject(json);
+            var req = json.DeserializeObject();
             var account = req["account"].ToString();
             var currency = (CurrencyType)Enum.Parse(typeof(CurrencyType),req["currency"].ToString());
 
@@ -264,10 +255,8 @@ namespace TradingLib.Core
         [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "AccountCashOperation", "AccountCashOperation - account cash operation", "给交易帐户出入去金", QSEnumArgParseType.Json)]
         public void CTE_CashOperation(ISession session, string json)
         {
-            logger.Info(string.Format("管理员:{0} 请求出入金操作:{1}", session.AuthorizedID, json));
             Manager manager = session.GetManager();
-
-            var req = json.DeserializeObject();// Mixins.Json.JsonMapper.ToObject(json);
+            var req = json.DeserializeObject();
             var account = req["account"].ToString();
             var amount = decimal.Parse(req["amount"].ToString());
             var txnref = req["txnref"].ToString();
@@ -350,8 +339,7 @@ namespace TradingLib.Core
         [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "UpdateAccountPass", "UpdateAccountPass - update account password", "更新交易帐户交易密码", QSEnumArgParseType.Json)]
         public void CTE_ChangePassword(ISession session, string json)
         {
-            logger.Info(string.Format("管理员:{0} 请求修改交易密码:{1}", session.AuthorizedID, json));
-            var req = json.DeserializeObject();// Mixins.Json.JsonMapper.ToObject(json);
+            var req = json.DeserializeObject();
             var account = req["account"].ToString();
             var newpass = req["newpass"].ToString();
 

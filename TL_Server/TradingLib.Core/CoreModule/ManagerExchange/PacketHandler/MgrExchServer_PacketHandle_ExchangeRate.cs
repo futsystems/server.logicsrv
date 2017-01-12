@@ -55,7 +55,7 @@ namespace TradingLib.Core
         /// <param name="manager"></param>
         void SrvOnQryExchagneRate(MGRQryExchangeRateRequuest request, ISession session, Manager manager)
         {
-            logger.Info(string.Format("管理员:{0} 请求查询汇率信息:{1}", session.AuthorizedID, request.ToString()));
+            logger.Info(string.Format("Manager[{0}] QryExchangeRate", session.AuthorizedID));
             IEnumerable<ExchangeRate> ratelist = manager.Domain.GetExchangeRates(TLCtxHelper.ModuleSettleCentre.Tradingday);
 
             for (int i = 0; i < ratelist.Count(); i++)
