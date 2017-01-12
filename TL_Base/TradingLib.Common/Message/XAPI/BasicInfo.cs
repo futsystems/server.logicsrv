@@ -322,21 +322,23 @@ namespace TradingLib.Common
             this.Account = null;
         }
 
-        public AccountLite Account { get; set; }
+        public AccountItem Account { get; set; }
 
         public override string ResponseSerialize()
         {
             if (this.Account == null)
                 return string.Empty;
-            return AccountLite.Serialize(this.Account);
+            return AccountItem.Serialize(this.Account);
         }
 
         public override void ResponseDeserialize(string content)
         {
             if (string.IsNullOrEmpty(content))
+            {
                 this.Account = null;
-            else
-                this.Account = AccountLite.Deserialize(content);
+                return;
+            }
+            this.Account = AccountItem.Deserialize(content);
         }
     }
 

@@ -47,8 +47,8 @@ namespace TradingLib.Core
         public FollowAccount(IAccount acct)
         {
             _account = acct;
-            _account.GotFillEvent += new FillDelegate(_account_GotFillEvent);
-            _account.GotOrderEvent += new OrderDelegate(_account_GotOrderEvent);
+            //_account.GotFillEvent += new FillDelegate(_account_GotFillEvent);
+            //_account.GotOrderEvent += new OrderDelegate(_account_GotOrderEvent);
         }
 
         void _account_GotOrderEvent(Order order)

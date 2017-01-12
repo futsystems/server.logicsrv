@@ -149,9 +149,9 @@ namespace TradingLib.Common
         /// </summary>
         /// <param name="acc"></param>
         /// <returns></returns>
-        public static AccountLite GenAccountLite(this IAccount acc)
+        public static AccountItem ToAccountItem(this IAccount acc)
         {
-            AccountLite info = new AccountLite();
+            AccountItem info = new AccountItem();
             info.Account = acc.ID;
             info.CashIn = acc.CashIn;
             info.CashOut = acc.CashOut;
@@ -176,7 +176,7 @@ namespace TradingLib.Common
 
             info.MGRID = acc.Mgr_fk;
             info.Deleted = acc.Deleted;
-            info.RG_ID = acc.RG_FK;
+            info.RG_ID = acc.RouteGroup == null ? -1 : acc.RouteGroup.ID;
 
             
 

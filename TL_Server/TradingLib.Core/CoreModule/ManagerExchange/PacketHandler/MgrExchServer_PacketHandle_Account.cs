@@ -28,7 +28,7 @@ namespace TradingLib.Core
                 for (int i = 0; i < list.Length; i++)
                 {
                     RspMGRQryAccountResponse response = ResponseTemplate<RspMGRQryAccountResponse>.SrvSendRspResponse(request);
-                    response.oAccount = list[i].GenAccountLite();
+                    response.AccountItem = list[i].ToAccountItem();
                     CacheRspResponse(response, i == list.Length - 1);
                 }
             }
@@ -73,9 +73,8 @@ namespace TradingLib.Core
             {
                 foreach (var account in manager.Domain.GetAccounts())
                 {
-                    account.InactiveAccount();
-                    account.FlatAllPositions(QSEnumOrderSource.QSMONITER, "一键强平");
-
+                    TLCtxHelper.ModuleAccountManager.InactiveAccount(account.ID);
+                    TLCtxHelper.ModuleRiskCentre.FlatAllPositions(account.ID, QSEnumOrderSource.QSMONITER, "一键强平");
                     Util.sleep(500);
                 }
                 session.OperationSuccess("强平成功");

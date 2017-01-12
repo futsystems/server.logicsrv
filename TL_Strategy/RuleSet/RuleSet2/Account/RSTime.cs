@@ -80,9 +80,9 @@ namespace RuleSet2.Account
                     //没有限定品种 全平所有
                     if (sec_list.Count == 0)
                     {
-                        this.Account.InactiveAccount();//冻结账户
+                        TLCtxHelper.ModuleAccountManager.InactiveAccount(this.Account.ID);
                         msg = RuleDescription + ":全平所有仓位并冻结账户";
-                        this.Account.FlatAllPositions(QSEnumOrderSource.RISKCENTREACCOUNTRULE, msg);
+                        TLCtxHelper.ModuleRiskCentre.FlatAllPositions(this.Account.ID, QSEnumOrderSource.RISKCENTREACCOUNTRULE,msg);
                     }
                     else
                     {
@@ -91,7 +91,7 @@ namespace RuleSet2.Account
                         {
                             if (sec_list.Contains(pos.oSymbol.SecurityFamily.Code))
                             {
-                                this.Account.FlatPosition(pos,pos.UnsignedSize, QSEnumOrderSource.RISKCENTRE, string.Format("定时:{0}强平", flat_time));
+                                TLCtxHelper.ModuleRiskCentre.FlatPosition(pos, pos.UnsignedSize, QSEnumOrderSource.RISKCENTRE, string.Format("定时:{0}强平", flat_time));
                             }
                         }
                     }

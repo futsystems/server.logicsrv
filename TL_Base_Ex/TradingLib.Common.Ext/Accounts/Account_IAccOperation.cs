@@ -16,18 +16,18 @@ namespace TradingLib.Common
         /// <summary>
         /// 冻结帐户
         /// </summary>
-        public void InactiveAccount()
-        {
-            TLCtxHelper.ModuleAccountManager.InactiveAccount(this.ID);
-        }
+        //public void InactiveAccount()
+        //{
+        //    TLCtxHelper.ModuleAccountManager.InactiveAccount(this.ID);
+        //}
 
-        /// <summary>
-        /// 激活帐户
-        /// </summary>
-        public void ActiveAccount()
-        {
-            TLCtxHelper.ModuleAccountManager.ActiveAccount(this.ID);
-        }
+        ///// <summary>
+        ///// 激活帐户
+        ///// </summary>
+        //public void ActiveAccount()
+        //{
+        //    TLCtxHelper.ModuleAccountManager.ActiveAccount(this.ID);
+        //}
 
 
         /// <summary>
@@ -35,10 +35,10 @@ namespace TradingLib.Common
         /// </summary>
         /// <param name="source"></param>
         /// <param name="comment"></param>
-        public void FlatAllPositions(QSEnumOrderSource source, string comment)
-        {
-            TLCtxHelper.ModuleRiskCentre.FlatAllPositions(this.ID, source, comment);
-        }
+        //public void FlatAllPositions(QSEnumOrderSource source, string comment)
+        //{
+        //    TLCtxHelper.ModuleRiskCentre.FlatAllPositions(this.ID, source, comment);
+        //}
 
         /// <summary>
         /// 平掉部分仓位
@@ -47,10 +47,10 @@ namespace TradingLib.Common
         /// <param name="source"></param>
         /// <param name="num"></param>
         /// <param name="forceReason"></param>
-        public void FlatPosition(Position pos,int flatSize,QSEnumOrderSource source, string forceReason)
-        {
-            TLCtxHelper.ModuleRiskCentre.FlatPosition(pos, flatSize, source, forceReason);
-        }
+        //public void FlatPosition(Position pos,int flatSize,QSEnumOrderSource source, string forceReason)
+        //{
+        //    TLCtxHelper.ModuleRiskCentre.FlatPosition(pos, flatSize, source, forceReason);
+        //}
 
 
         /// <summary>
@@ -58,9 +58,9 @@ namespace TradingLib.Common
         /// </summary>
         /// <param name="warnning"></param>
         /// <param name="message"></param>
-        public void Warn(bool warnning,string message="")
-        {
-            TLCtxHelper.ModuleRiskCentre.Warn(this.ID, warnning, message);
-        }
+        //public void Warn(bool warnning,string message="")
+        //{
+        //    TLCtxHelper.ModuleRiskCentre.Warn(this.ID, warnning, message);
+        //}
     }
 }

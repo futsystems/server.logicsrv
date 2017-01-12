@@ -119,16 +119,7 @@ namespace TradingLib.Common
         #region 出入金金额
 
 
-        /// <summary>
-        /// 帐户资金操作
-        /// </summary>
-        /// <param name="txn"></param>
-        public void CashTrans(CashTransaction txn)
-        {
-            cashtranslsit.Add(txn);
-        }
-
-        ThreadSafeList<CashTransaction> cashtranslsit = new ThreadSafeList<CashTransaction>();
+        
         /// <summary>
         /// 未结算入金
         /// </summary>

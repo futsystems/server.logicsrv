@@ -6,7 +6,7 @@ using System.Text;
 namespace TradingLib.API
 {
     /// <summary>
-    /// 帐户财务信息总计接口
+    /// 帐户财务信息接口
     /// </summary>
     public interface IFinanceTotal
     {

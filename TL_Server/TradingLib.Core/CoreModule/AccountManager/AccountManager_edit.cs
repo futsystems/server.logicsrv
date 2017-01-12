@@ -142,8 +142,9 @@ namespace TradingLib.Core
         {
             IAccount account = this[id];
             if (account == null) return;
-            account.RG_FK = gid;
+            (account as AccountBase).RouteGroup = BasicTracker.RouterGroupTracker[gid];
             ORM.MAccount.UpdateRouterGroup(id, gid);
+            
             AccountChanged(account);
         }
 
@@ -156,7 +157,7 @@ namespace TradingLib.Core
         {
             IAccount account = this[id];
             if (account == null) return;
-            account.RG_FK = rg.ID;
+            (account as AccountBase).RouteGroup = BasicTracker.RouterGroupTracker[rg.ID];
             ORM.MAccount.UpdateRouterGroup(id, rg.ID);
             AccountChanged(account);
         }
@@ -250,7 +251,7 @@ namespace TradingLib.Core
             cashtxn.Comment = isdeposit?("持仓{0}[{1}] 分红:{2}".Put(txn.Size, txn.Symbol, txn.Dividend)):("持仓{0}[{1}] 应付:{2}".Put(txn.Size,txn.Symbol,txn.Amount));
 
             cashtxn.TxnID = GenTxnID();
-            acc.CashTrans(cashtxn);
+            acc.LoadCashTrans(cashtxn);
             TLCtxHelper.ModuleDataRepository.NewCashTransaction(cashtxn);
 
         
@@ -293,7 +294,7 @@ namespace TradingLib.Core
             //生成唯一序列号
             txn.TxnID = GenTxnID();
 
-            acc.CashTrans(txn);
+            acc.LoadCashTrans(txn);
             TLCtxHelper.ModuleDataRepository.NewCashTransaction(txn);
             //ORM.MCashTransaction.InsertCashTransaction(txn);
             //TLCtxHelper.EventAccount.FireAccountCashOperationEvent(txn.Account,txn., Math.Abs(amount));

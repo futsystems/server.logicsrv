@@ -9,22 +9,29 @@ namespace TradingLib.Common
     public class NotifyMGRAccountChangeUpdateResponse:NotifyResponsePacket
     {
 
-        public AccountLite oAccount { get; set; }
+        public AccountItem AccountItem { get; set; }
 
         public NotifyMGRAccountChangeUpdateResponse()
         {
             _type = MessageTypes.MGRACCOUNTCHANGEUPDATE;
-            oAccount = new AccountLite();
+            AccountItem = null;
         }
 
         public override string ContentSerialize()
         {
-            return AccountLite.Serialize(this.oAccount);
+            if (this.AccountItem == null) 
+                return string.Empty;
+            return AccountItem.Serialize(this.AccountItem);
         }
 
         public override void ContentDeserialize(string contentstr)
         {
-            this.oAccount = AccountLite.Deserialize(contentstr);
+            if (string.IsNullOrEmpty(contentstr))
+            {
+                this.AccountItem = null;
+                return;
+            }
+            this.AccountItem = AccountItem.Deserialize(contentstr);
         }
 
 

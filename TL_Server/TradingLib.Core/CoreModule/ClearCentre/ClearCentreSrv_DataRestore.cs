@@ -56,7 +56,7 @@ namespace TradingLib.Core
                     //恢复交易帐户的出入金记录
                     foreach (var txn in cashtxns.Where(x => x.Account == acc.ID))
                     {
-                        acc.CashTrans(txn);
+                        acc.LoadCashTrans(txn);
                     }
                 }
 

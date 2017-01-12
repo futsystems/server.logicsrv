@@ -29,28 +29,28 @@ namespace TradingLib.Common
 
     public class RspMGRQryAccountResponse : RspResponsePacket
     {
-        public AccountLite oAccount { get; set; }
+        public AccountItem AccountItem { get; set; }
         public RspMGRQryAccountResponse()
         {
             _type = MessageTypes.MGRQRYACCOUNTSRESPONSE;
-            oAccount = null;
+            AccountItem = null;
         }
 
         public override string ResponseSerialize()
         {
-            if (this.oAccount == null)
+            if (this.AccountItem == null)
                 return string.Empty;
-            return AccountLite.Serialize(this.oAccount);
+            return AccountItem.Serialize(this.AccountItem);
         }
 
         public override void ResponseDeserialize(string content)
         {
             if (string.IsNullOrEmpty(content))
             {
-                this.oAccount = null;
+                this.AccountItem = null;
                 return;
             }
-            this.oAccount = AccountLite.Deserialize(content);
+            this.AccountItem = AccountItem.Deserialize(content);
         }
 
     }

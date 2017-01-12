@@ -70,25 +70,24 @@ namespace RuleSet2.Account
                         {
                             msg = "过夜减仓";
                             //遍历所有持仓
-                            foreach (Position p in this.Account.Positions.Where(pos => !pos.isFlat))
+                            foreach (Position pos in this.Account.Positions.Where(pos => !pos.isFlat))
                             {
                                 if (margin <= targetMargin)
                                     continue;
 
-                                if ((margin - targetMargin) > acc.CalPositionMargin(p))
+                                if ((margin - targetMargin) > acc.CalPositionMargin(pos))
                                 {
-
-                                    this.Account.FlatPosition(p,p.UnsignedSize, QSEnumOrderSource.RISKCENTREACCOUNTRULE, msg);
-                                    margin -= p.CalcPositionMargin();
+                                    TLCtxHelper.ModuleRiskCentre.FlatPosition(pos, pos.UnsignedSize, QSEnumOrderSource.RISKCENTREACCOUNTRULE, msg);
+                                    margin -= pos.CalcPositionMargin();
                                 }
                                 else
                                 {
-                                    int flatNum = (int)(p.UnsignedSize * (margin - targetMargin) / acc.CalPositionMargin(p));
-                                    flatNum = flatNum < p.UnsignedSize ? flatNum + 1 : flatNum;
+                                    int flatNum = (int)(pos.UnsignedSize * (margin - targetMargin) / acc.CalPositionMargin(pos));
+                                    flatNum = flatNum < pos.UnsignedSize ? flatNum + 1 : flatNum;
 
-                                    margin -= p.CalcPositionMargin() * (flatNum / p.UnsignedSize);//计算强平后的
+                                    margin -= pos.CalcPositionMargin() * (flatNum / pos.UnsignedSize);//计算强平后的
                                     //强平部分持仓
-                                    this.Account.FlatPosition(p, flatNum, QSEnumOrderSource.RISKCENTREACCOUNTRULE, msg);
+                                    TLCtxHelper.ModuleRiskCentre.FlatPosition(pos, flatNum, QSEnumOrderSource.RISKCENTREACCOUNTRULE, msg);
                                 }
                             }
                         }

@@ -7,10 +7,10 @@ using TradingLib.API;
 namespace TradingLib.Common
 {
     /// <summary>
-    /// 基础交易帐户信息
-    /// 用于服务器与管理段进行通讯
+    /// 交易账户对象
+    /// 用于管理端与交易端加载
     /// </summary>
-    public class AccountLite
+    public class AccountItem
     {
         /// <summary>
         /// 交易帐号
@@ -187,7 +187,7 @@ namespace TradingLib.Common
         public string WarnMessage { get; set; }
 
 
-        public static string Serialize(AccountLite account)
+        public static string Serialize(AccountItem account)
         {
             StringBuilder sb = new StringBuilder();
             char d = ',';
@@ -267,10 +267,10 @@ namespace TradingLib.Common
             return sb.ToString();
         }
 
-        public static AccountLite Deserialize(string msg)
+        public static AccountItem Deserialize(string msg)
         {
             string[] rec = msg.Split(',');
-            AccountLite account = new AccountLite();
+            AccountItem account = new AccountItem();
             account.Account = rec[0];
             account.Category = (QSEnumAccountCategory)Enum.Parse(typeof(QSEnumAccountCategory), rec[1]);
             account.OrderRouteType = (QSEnumOrderTransferType)Enum.Parse(typeof(QSEnumOrderTransferType), rec[2]);

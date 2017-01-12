@@ -257,7 +257,7 @@
     <Compile Include="Msic\SystemStatus.cs" />
     <Compile Include="BusinessEntities\Account\AccountInfo.cs" />
     <Compile Include="BusinessEntities\Account\AccountInfoLite.cs" />
-    <Compile Include="BusinessEntities\Account\AccountLite.cs" />
+    <Compile Include="BusinessEntities\Account\AccountItem.cs" />
     <Compile Include="BusinessEntities\Data\Tick\AsyncResponse.cs" />
     <Compile Include="BusinessEntities\Data\Bar\BarImpl.cs" />
     <Compile Include="BusinessEntities\Data\Bar\BarIntervalData.cs" />

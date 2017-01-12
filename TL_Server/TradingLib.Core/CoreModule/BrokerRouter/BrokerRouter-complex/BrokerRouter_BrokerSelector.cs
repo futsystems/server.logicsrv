@@ -36,21 +36,22 @@ namespace TradingLib.Core
                 //没有实盘交易权限
                 if (!account.Domain.Router_Live)
                 {
-                    logger.Warn(string.Format("Domain:{0} not support live trading", account.RG_FK));
+                    logger.Warn(string.Format("Domain:{0} not support live trading", account.Domain.ID));
                     return null;
                 }
 
-                RouterGroup rg = BasicTracker.RouterGroupTracker[account.RG_FK]; //这里需要做个鉴权 帐户设置的路由组的domain_id与帐户所属domain_id一致
+                //RouterGroup rg = BasicTracker.RouterGroupTracker[account.RG_FK]; //这里需要做个鉴权 帐户设置的路由组的domain_id与帐户所属domain_id一致
+                RouterGroup rg = account.RouteGroup;
                 //没有设定路由组返回null
                 if (rg == null)
                 {
-                    logger.Warn(string.Format("account:{0} have not set router gorup fk:{1}", account.ID, account.RG_FK));
+                    logger.Warn(string.Format("account:{0} have not set router gorup", account.ID));
                     return null;
                 }
                 //路由组内没有路由项则返回null
                 if (rg.RouterItems.Count() == 0)
                 {
-                    logger.Warn(string.Format("RouterGroup:{0} have not add any routeritem", account.RG_FK));
+                    logger.Warn(string.Format("RouterGroup:{0} have not add any routeritem", account.RouteGroup.ID));
                     return null;
                 }
 

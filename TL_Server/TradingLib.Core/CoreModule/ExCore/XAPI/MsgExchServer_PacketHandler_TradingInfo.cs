@@ -155,7 +155,7 @@ namespace TradingLib.Core
         {
             logger.Info("XQryAccountRequest:" + request.ToString());
             RspXQryAccountResponse respone = ResponseTemplate<RspXQryAccountResponse>.SrvSendRspResponse(request);
-            respone.Account = account.GenAccountLite();
+            respone.Account = account.ToAccountItem();
             CacheRspResponse(respone);
         }
 

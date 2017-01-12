@@ -58,7 +58,7 @@ namespace TradingLib.Core
 
             logger.Debug(string.Format("Account[{0}] Changed",account.ID));
             NotifyMGRAccountChangeUpdateResponse notify = ResponseTemplate<NotifyMGRAccountChangeUpdateResponse>.SrvSendNotifyResponse(account.ID);
-            notify.oAccount = account.GenAccountLite();
+            notify.AccountItem = account.ToAccountItem();
             CachePacket(notify);
         }
 
@@ -70,7 +70,7 @@ namespace TradingLib.Core
         {
             logger.Info(string.Format("Account:{0} Created", account.ID));
             NotifyMGRAccountChangeUpdateResponse notify = ResponseTemplate<NotifyMGRAccountChangeUpdateResponse>.SrvSendNotifyResponse(account.ID);
-            notify.oAccount = account.GenAccountLite();
+            notify.AccountItem = account.ToAccountItem();
             CachePacket(notify);
             
         }
@@ -80,7 +80,7 @@ namespace TradingLib.Core
             logger.Info(string.Format("Account:{0} Deleted", account.ID));
             IEnumerable<ILocation> locations = GetNotifyTargets(account.GetNotifyPredicate());
             NotifyMGRAccountChangeUpdateResponse notify = ResponseTemplate<NotifyMGRAccountChangeUpdateResponse>.SrvSendNotifyResponse(locations);
-            notify.oAccount = account.GenAccountLite();
+            notify.AccountItem = account.ToAccountItem();
             CachePacket(notify);
         }
 

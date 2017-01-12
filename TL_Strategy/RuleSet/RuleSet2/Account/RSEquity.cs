@@ -64,7 +64,7 @@ namespace RuleSet2.Account
                     if (!iswarnning)
                     {
                         iswarnning = true;
-                        this.Account.Warn(true, "达到警告线");
+                        TLCtxHelper.ModuleRiskCentre.Warn(this.Account.ID, true, "达到警告线");
                         //Util.Debug("帐户警告开启~~~~~~~~~~~~~~~~~~~");
                     }
                 }
@@ -73,7 +73,7 @@ namespace RuleSet2.Account
                     if (iswarnning)
                     {
                         iswarnning = false;
-                        this.Account.Warn(false, "");
+                        TLCtxHelper.ModuleRiskCentre.Warn(this.Account.ID, false, "");
                         //Util.Debug("帐户警告关闭~~~~~~~~~~~~~~~~~~~");
                     }
                 }
@@ -85,11 +85,11 @@ namespace RuleSet2.Account
                 if (!flatStart)
                 {
                     if (this.Account.Execute)
-                        this.Account.InactiveAccount();//冻结账户
+                        TLCtxHelper.ModuleAccountManager.InactiveAccount(this.Account.ID);
                     if (this.Account.AnyPosition)
                     {
                         msg = RuleDescription + ":全平所有仓位并冻结账户";
-                        this.Account.FlatAllPositions(QSEnumOrderSource.RISKCENTREACCOUNTRULE, msg);
+                        TLCtxHelper.ModuleRiskCentre.FlatAllPositions(this.Account.ID, QSEnumOrderSource.RISKCENTREACCOUNTRULE, msg);
                     }
                     flatStart = true;//开始平仓
                     return false;

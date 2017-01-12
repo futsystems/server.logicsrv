@@ -14,17 +14,6 @@ namespace TradingLib.Common
     public partial class AccountBase : IAccount
     {
         protected ILog logger = LogManager.GetLogger("Account");
-
-        /// <summary>
-        /// 创建交易账户对象
-        /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
-        public static IAccount CreateAccount(string id)
-        {
-            return new AccountBase(id);
-        }
-
         public AccountBase(string AccountID)
         {
             _id = AccountID;
@@ -32,16 +21,9 @@ namespace TradingLib.Common
             this.IntraDay = true;
             this.Category = QSEnumAccountCategory.SUBACCOUNT;
             this.OrderRouteType = QSEnumOrderTransferType.SIM;
-            this.MAC = string.Empty;
-            this.Name = string.Empty;
-            this.Broker = string.Empty;
-            this.BankID = 0;
-            this.BankAC = string.Empty;
             this.CreatedTime = DateTime.Now;
             this.SettleDateTime = DateTime.Now;
             this.SettlementConfirmTimeStamp = Util.ToTLDateTime();
-            //this.PosLock = false;
-            //this.SideMargin = true;
             this.Mgr_fk = 0;
             this.UserID = 0;
             this.Deleted = false;
@@ -59,6 +41,7 @@ namespace TradingLib.Common
         /// 密码
         /// </summary>
         public string Pass { get; set; }
+
         /// <summary>
         /// 是否允许交易
         /// </summary>
@@ -85,67 +68,19 @@ namespace TradingLib.Common
         /// </summary>
         public QSEnumAccountCategory Category { get; set; }
 
-
         /// <summary>
         /// 交易账户货币
         /// </summary>
         public CurrencyType Currency { get; set; }
 
         /// <summary>
-        /// 硬件地址
-        /// </summary>
-        public string MAC { get; set; }
-
-        /// <summary>
-        /// 交易帐户名称
-        /// </summary>
-        public string Name { get; set; }
-
-        /// <summary>
-        /// 期货公司名称
-        /// </summary>
-        public string Broker { get; set; }
-
-        /// <summary>
-        /// 银行
-        /// </summary>
-        public int BankID { get; set; }
-
-        /// <summary>
-        /// 银行帐号
-        /// </summary>
-        public string BankAC { get; set; }
-
-        /// <summary>
         /// 记录账户的建立时间
         /// </summary>
         public DateTime CreatedTime { get; set; }
 
-        /// <summary>
-        /// 上次结算日
-        /// </summary>
-        public DateTime SettleDateTime { get; set; }
 
-        /// <summary>
-        /// 最近结算确认日期
-        /// </summary>
-        public long SettlementConfirmTimeStamp { get; set; }
 
-        /// <summary>
-        /// 上一个结算日
-        /// </summary>
-        public int LastSettleday { get; set; }
-
-        /// <summary>
-        /// 代理商ID
-        /// </summary>
-        public int Mgr_fk { get; set; }
-
-        /// <summary>
-        /// 路由组ID 用于将某个帐户绑定到某个路由组上面,然后这组用户下单就会下单路由组内的成交接口上
-        /// </summary>
-        public int RG_FK { get; set; }
-
+        #region 模板编号
         /// <summary>
         /// 手续费模板ID
         /// </summary>
@@ -161,54 +96,50 @@ namespace TradingLib.Common
         /// 交易参数模板ID
         /// </summary>
         public int ExStrategy_ID { get; set; }
+        #endregion
+
+        #region 对象绑定
+        /// <summary>
+        /// 账户绑定路由组
+        /// </summary>
+        public RouterGroup RouteGroup { get; internal set; }
 
         /// <summary>
-        /// 域ID
+        /// 账户所在域
         /// </summary>
         public Domain Domain { get; internal set; }
 
+
         /// <summary>
-        /// 与交易帐号所绑定的全局UserID
+        /// 账户User绑定 用于与其他系统用户进行关联
         /// </summary>
         public int UserID { get; set; }
 
-
         /// <summary>
-        /// Gets a value indicating whether this instance is valid.
+        /// 账户所属管理员
         /// </summary>
-        /// <value><c>true</c> if this instance is valid; otherwise, <c>false</c>.</value>
-        public bool isValid { get { return (ID != null) && (ID != ""); } }
-        
+        public int Mgr_fk { get; set; }
+        #endregion
+
 
         public override string ToString()
         {
-            return "帐号:"+ID+" 类型:"+Category.ToString();
+            return string.Format("AC:{0} Type:{1}", this.ID, this.Category);
         }
+
 
         public override int GetHashCode()
         {
             return _id.GetHashCode();
         }
 
-
-        /// <summary>
-        /// 判断2个帐户是否相同
-        /// </summary>
-        /// <param name="obj"></param>
-        /// <returns></returns>
         public override bool Equals(object obj)
         {
-            if (obj == null) return false;
-            AccountBase o = (AccountBase)obj;
-            return base.Equals(o);
+            AccountBase target = obj as AccountBase;
+            if (target == null) return false;
+            if (this.ID == target.ID) return true;
+            return false;
         }
-        public bool Equals(AccountBase a)
-        {
-            return this._id.Equals(a.ID);
-        }
-
-
-
 
         /// <summary>
         /// 重置账户状态,用于每日造成开盘时,重置数据 
@@ -227,17 +158,6 @@ namespace TradingLib.Common
         }
 
         public bool Deleted { get; set; }
-
-
-        public string DisplayString
-        {
-            get
-            {
-                string re = "ID:" + this.ID + " 昨日权益:" + this.LastEquity.ToString() + " 当前权益:" + this.NowEquity.ToString() + " 总委托:" + this.Orders.Count().ToString() + " 总成交:" + this.Trades.Count().ToString();
-                return re;
-
-            }
-        }
     }
 
     

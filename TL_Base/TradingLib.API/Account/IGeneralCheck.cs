@@ -6,7 +6,6 @@ using System.Text;
 namespace TradingLib.API
 {
     /// <summary>
-    /// 检查账户某合约交易授权
     /// 开仓委托资金检查
     /// 查询账户可下单最大数量
     /// </summary>

@@ -15,16 +15,8 @@ namespace TradingLib.Common
     /// </summary>
     public partial class AccountBase
     {
-        ThreadSafeList<ExchangeSettlement> settlementlist = new ThreadSafeList<ExchangeSettlement>();
-
-        /// <summary>
-        /// 加载交易所结算数据
-        /// </summary>
-        /// <param name="settle"></param>
-        public void LoadExchangeSettlement(ExchangeSettlement settle)
-        {
-            settlementlist.Add(settle);
-        }
+        ThreadSafeList<ExchangeSettlement> settlementlist = new ThreadSafeList<ExchangeSettlement>();//交易所结算记录
+        ThreadSafeList<CashTransaction> cashtranslsit = new ThreadSafeList<CashTransaction>();//当日出入金记录
 
 
         public void SettleAccount(int settleday)
@@ -72,7 +64,7 @@ namespace TradingLib.Common
             //设置昨日权益等信息
             this.LastEquity = settlement.EquitySettled;
             this.LastCredit = settlement.CreditSettled;
-            this.LastSettleday = settlement.Settleday;
+            //this.LastSettleday = settlement.Settleday;
 
 
         
@@ -370,5 +362,37 @@ namespace TradingLib.Common
                 return PendingSettlement.Sum(settle => settle.AssetSellAmount);
             }
         }
+
+        /// <summary>
+        /// 加载交易所结算数据
+        /// </summary>
+        /// <param name="settle"></param>
+        public void LoadExchangeSettlement(ExchangeSettlement settle)
+        {
+            settlementlist.Add(settle);
+        }
+
+        /// <summary>
+        /// 上次结算日
+        /// </summary>
+        public DateTime SettleDateTime { get; set; }
+
+        /// <summary>
+        /// 最近结算确认日期
+        /// </summary>
+        public long SettlementConfirmTimeStamp { get; set; }
+
+
+        /// <summary>
+        /// 帐户资金操作
+        /// </summary>
+        /// <param name="txn"></param>
+        public void LoadCashTrans(CashTransaction txn)
+        {
+            cashtranslsit.Add(txn);
+        }
+
+        
+
     }
 }

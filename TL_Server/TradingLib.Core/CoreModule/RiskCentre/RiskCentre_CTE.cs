@@ -57,7 +57,7 @@ namespace TradingLib.Core
                 if (account.GetPositionsHold().Any(pos => pos.oSymbol.SecurityFamily.CheckPlaceOrder(out settleday)== QSEnumActionCheckResult.Allowed))//如果有持仓 并且有任一个持仓对因合约处于交易时间段
                 {
                     //检查是否是交易时间段
-                    account.FlatAllPositions(QSEnumOrderSource.RISKCENTREACCOUNTRULE, "强平冻结帐户持仓");
+                    TLCtxHelper.ModuleRiskCentre.FlatAllPositions(account.ID, QSEnumOrderSource.RISKCENTREACCOUNTRULE, "强平冻结帐户持仓");
                 }
             }
         }
@@ -71,7 +71,7 @@ namespace TradingLib.Core
             IAccount acc = TLCtxHelper.ModuleAccountManager[account];
             if (acc != null)
             {
-                acc.FlatAllPositions(QSEnumOrderSource.RISKCENTRE, "DemoFlat");
+                TLCtxHelper.ModuleRiskCentre.FlatAllPositions(acc.ID, QSEnumOrderSource.RISKCENTRE, "DemoFlat");
                 return "操作成功";
 
             }

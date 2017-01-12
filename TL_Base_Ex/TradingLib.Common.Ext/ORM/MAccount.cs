@@ -691,7 +691,7 @@ namespace TradingLib.ORM
 
         static IAccount AccountFields2IAccount(AccountFields fields)
         {
-            IAccount account = AccountBase.CreateAccount(fields.Account);
+            AccountBase account = new AccountBase(fields.Account);
             account.Pass = fields.Pass;
             //account.LastEquity = fields.LastEquity;
             //account.LastCredit = fields.LastCredit;
@@ -702,16 +702,17 @@ namespace TradingLib.ORM
             account.IntraDay = fields.IntraDay;
             account.Category = fields.Account_Category;
             account.SettlementConfirmTimeStamp = fields.Confrim_TimeStamp;
-            account.MAC = fields.MAC;
             account.Mgr_fk = fields.Mgr_fk;
-            account.RG_FK = fields.rg_fk;
             account.Commission_ID = fields.Commission_ID;
             account.Margin_ID = fields.Margin_ID;
             //account.CreditSeparate = fields.CreditSeparate;
             account.ExStrategy_ID = fields.exstrategy_id;
             account.Currency = fields.Currency;
-            //绑定对应的域
-            (account as AccountBase).Domain = BasicTracker.DomainTracker[fields.domain_id];
+
+            //绑定对象
+            account.Domain = BasicTracker.DomainTracker[fields.domain_id];
+            account.RouteGroup = BasicTracker.RouterGroupTracker[fields.rg_fk];
+
             //Util.Debug("fileds route:" + fields.Order_Router_Type.ToString() +" category:"+fields.Account_Category.ToString()) ;
             return account;
         }
