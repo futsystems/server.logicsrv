@@ -6,23 +6,29 @@ using TradingLib.API;
 
 namespace TradingLib.Common
 {
-    public class NotifyMGRAccountInfoLiteResponse:NotifyResponsePacket
+    public class NotifyMGRAccountStatistic:NotifyResponsePacket
     {
-        public AccountInfoLite InfoLite { get; set; }
-        public NotifyMGRAccountInfoLiteResponse()
+        public AccountStatistic Statistic { get; set; }
+        public NotifyMGRAccountStatistic()
         {
             _type = MessageTypes.MGRACCOUNTINFOLITENOTIFY;
-            InfoLite = new AccountInfoLite();
+            Statistic = null;
         }
 
         public override string ContentSerialize()
         {
-            return AccountInfoLite.Serialize(InfoLite);
+            if (this.Statistic == null) return string.Empty;
+            return AccountStatistic.Serialize(this.Statistic);
         }
 
         public override void ContentDeserialize(string contentstr)
         {
-            InfoLite = AccountInfoLite.Deserialize(contentstr);
+            if (string.IsNullOrEmpty(contentstr))
+            {
+                this.Statistic = null;
+                return;
+            }
+            this.Statistic = AccountStatistic.Deserialize(contentstr);
         }
     }
 }

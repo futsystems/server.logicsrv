@@ -256,7 +256,7 @@
     <Compile Include="BusinessEntities\Manager\Manager.cs" />
     <Compile Include="Msic\SystemStatus.cs" />
     <Compile Include="BusinessEntities\Account\AccountInfo.cs" />
-    <Compile Include="BusinessEntities\Account\AccountInfoLite.cs" />
+    <Compile Include="BusinessEntities\Account\AccountStatistic.cs" />
     <Compile Include="BusinessEntities\Account\AccountItem.cs" />
     <Compile Include="BusinessEntities\Data\Tick\AsyncResponse.cs" />
     <Compile Include="BusinessEntities\Data\Bar\BarImpl.cs" />

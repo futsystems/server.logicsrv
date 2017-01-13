@@ -118,14 +118,13 @@ namespace TradingLib.Common
         /// </summary>
         /// <param name="acc"></param>
         /// <returns></returns>
-        public static AccountInfoLite GenAccountInfoLite(this IAccount acc)
+        public static AccountStatistic ToAccountStatistic(this IAccount acc)
         {
-            AccountInfoLite info = new AccountInfoLite();
+            AccountStatistic info = new AccountStatistic();
             info.Account = acc.ID;
             info.NowEquity = acc.NowEquity;
             info.Margin = acc.Margin;
             info.ForzenMargin = acc.MarginFrozen;
-            info.BuyPower = acc.AvabileFunds;
             info.RealizedPL = acc.RealizedPL;
             info.UnRealizedPL = acc.UnRealizedPL;
             info.Commission = acc.Commission;

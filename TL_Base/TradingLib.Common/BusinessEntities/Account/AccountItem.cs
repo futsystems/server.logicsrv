@@ -98,26 +98,6 @@ namespace TradingLib.Common
         /// </summary>
         public string Name { get; set; }
 
-        /// <summary>
-        /// 交易帐号
-        /// </summary>
-        public string Broker { get; set; }
-
-        /// <summary>
-        /// 银行
-        /// </summary>
-        public int BankID { get; set; }
-
-        /// <summary>
-        /// 银行帐号
-        /// </summary>
-        public string BankAC { get; set; }
-
-        /// <summary>
-        /// 锁仓权限
-        /// </summary>
-        public bool PosLock { get; set; }
-
 
         /// <summary>
         /// 帐户所属管理员全局ID
@@ -157,23 +137,23 @@ namespace TradingLib.Common
         /// <summary>
         /// 登入地址
         /// </summary>
-        public string SessionInfo { get; set; }
+        //public string SessionInfo { get; set; }
 
 
         /// <summary>
         /// 绑定的主帐户信息
         /// </summary>
-        public string ConnectorToken { get; set; }
+        //public string ConnectorToken { get; set; }
 
         /// <summary>
         /// 绑定主帐户连接状态
         /// </summary>
-        public bool MAcctConnected { get; set; }
+        //public bool MAcctConnected { get; set; }
 
         /// <summary>
         /// 主帐户风控规则
         /// </summary>
-        public string MAcctRiskRule { get; set; }
+        //public string MAcctRiskRule { get; set; }
 
 
         /// <summary>
@@ -221,13 +201,13 @@ namespace TradingLib.Common
             sb.Append(d);
             sb.Append(account.Name);
             sb.Append(d);
-            sb.Append(account.Broker);
+            //sb.Append(account.Broker);
             sb.Append(d);
-            sb.Append(account.BankID);
+            //sb.Append(account.BankID);
             sb.Append(d);
-            sb.Append(account.BankAC);
+            //sb.Append(account.BankAC);
             sb.Append(d);
-            sb.Append(account.PosLock.ToString());
+            //sb.Append(account.PosLock.ToString());
             sb.Append(d);
             sb.Append(account.MGRID.ToString());
             sb.Append(d);
@@ -237,7 +217,7 @@ namespace TradingLib.Common
             sb.Append(d);
             sb.Append(account.IsLogin);
             sb.Append(d);
-            sb.Append(account.SessionInfo);
+            //sb.Append();
             sb.Append(d);
             //sb.Append("");
             sb.Append(d);
@@ -251,11 +231,11 @@ namespace TradingLib.Common
             sb.Append(d);
             sb.Append(account.ExStrategy_ID);
             sb.Append(d);
-            sb.Append(account.ConnectorToken);
+            //sb.Append(account.ConnectorToken);
             sb.Append(d);
-            sb.Append(account.MAcctConnected);
+            //sb.Append(account.MAcctConnected);
             sb.Append(d);
-            sb.Append(account.MAcctRiskRule);
+            //sb.Append(account.MAcctRiskRule);
             sb.Append(d);
             sb.Append(account.Currency);
             sb.Append(d);
@@ -286,24 +266,24 @@ namespace TradingLib.Common
             account.CashOut = decimal.Parse(rec[12]);
             account.MoneyUsed = decimal.Parse(rec[13]);
             account.Name = rec[14];
-            account.Broker = rec[15];
-            account.BankID = int.Parse(rec[16]);
-            account.BankAC = rec[17];
-            account.PosLock = bool.Parse(rec[18]);
+            //account.Broker = rec[15];
+            //account.BankID = int.Parse(rec[16]);
+            //account.BankAC = rec[17];
+            //account.PosLock = bool.Parse(rec[18]);
             account.MGRID = int.Parse(rec[19]);
             account.Deleted = bool.Parse(rec[20]);
             account.RG_ID = int.Parse(rec[21]);
             account.IsLogin = bool.Parse(rec[22]);
-            account.SessionInfo = rec[23];
+            //account.SessionInfo = rec[23];
             //account.SideMargin = bool.Parse(rec[24]);
             account.Commissin_ID = int.Parse(rec[25]);
             account.Credit = decimal.Parse(rec[26]);
             //account.CreditSeparate = bool.Parse(rec[27]);
             account.Margin_ID = int.Parse(rec[28]);
             account.ExStrategy_ID = int.Parse(rec[29]);
-            account.ConnectorToken = rec[30];
-            account.MAcctConnected = bool.Parse(rec[31]);
-            account.MAcctRiskRule = rec[32];
+            //account.ConnectorToken = rec[30];
+            //account.MAcctConnected = bool.Parse(rec[31]);
+            //account.MAcctRiskRule = rec[32];
             account.Currency = (CurrencyType)Enum.Parse(typeof(CurrencyType), rec[33]);
             account.IsWarn = bool.Parse(rec[34]);
             account.WarnMessage = rec[35];
