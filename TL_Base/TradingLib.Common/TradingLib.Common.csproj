@@ -202,32 +202,14 @@
     <Compile Include="Message\Location.cs" />
     <Compile Include="Message\Login.cs" />
     <Compile Include="Message\Manager\MGRAccountChangeUpdateNotify.cs" />
-    <Compile Include="Message\Manager\MGRAcctService.cs" />
-    <Compile Include="Message\1old\MGRAccount.cs" />
     <Compile Include="Message\Manager\MGRBasicInfo.cs" />
-    <Compile Include="Message\Manager\MGRCashOperation.cs" />
-    <Compile Include="Message\Manager\MGRChangePass.cs" />
-    <Compile Include="Message\Manager\MGRChangeInvestor.cs" />
-    <Compile Include="Message\Manager\MGRClearCentre.cs" />
     <Compile Include="Message\Manager\MGRContrib.cs" />
     <Compile Include="Message\Manager\MGRHistQry.cs" />
-    <Compile Include="Message\Manager\MGRManager.cs" />
     <Compile Include="Message\Manager\MGROperationResponse.cs" />
-    <Compile Include="Message\Manager\MGRPosLock.cs" />
-    <Compile Include="Message\Manager\MGRQryAccountInfo.cs" />
-    <Compile Include="Message\Manager\MGRAccountInfoLiteNotify.cs" />
+    <Compile Include="Message\Manager\MGRAccountStatisticNotify.cs" />
     <Compile Include="Message\Manager\MGRLogin.cs" />
     <Compile Include="Message\Manager\MGRQryAccounts.cs" />
-    <Compile Include="Message\Manager\MGRResponse.cs" />
     <Compile Include="Message\Manager\MGRResumeAccount.cs" />
-    <Compile Include="Message\Manager\MGRRuleSet.cs" />
-    <Compile Include="Message\1old\MGRSessionUpdateNotify.cs" />
-    <Compile Include="Message\Manager\MGRSystemStatus.cs" />
-    <Compile Include="Message\1old\MGRUpdateCategory.cs" />
-    <Compile Include="Message\1old\MGRUpdateExecute.cs" />
-    <Compile Include="Message\1old\MGRUpdateIntraday.cs" />
-    <Compile Include="Message\Manager\MGRUpdatePass.cs" />
-    <Compile Include="Message\1old\MGRUpdateRouteType.cs" />
     <Compile Include="Message\Manager\MGRWatchAccount.cs" />
     <Compile Include="Message\OrderAction.cs" />
     <Compile Include="Message\PacketBase.cs" />
@@ -341,7 +323,9 @@
     <Compile Include="Zlib\ZStream.cs" />
     <Compile Include="Zlib\ZStreamException.cs" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Message\1old\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

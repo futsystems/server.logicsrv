@@ -36,18 +36,18 @@ namespace TradingLib.Core
         void InitNotifySection()
         {
             TLCtxHelper.EventSystem.CashOperationRequest += new EventHandler<CashOperationEventArgs>(OnCashOperationRequest);
-            TLCtxHelper.EventSystem.ManagerNotifyEvent +=new EventHandler<ManagerNotifyEventArgs>(EventSystem_ManagerNotifyEvent);
+            //TLCtxHelper.EventSystem.ManagerNotifyEvent +=new EventHandler<ManagerNotifyEventArgs>(EventSystem_ManagerNotifyEvent);
 
         }
 
-        void EventSystem_ManagerNotifyEvent(object sender, ManagerNotifyEventArgs e)
-        {
-            NotifyMGRContribNotify response = ResponseTemplate<NotifyMGRContribNotify>.SrvSendNotifyResponse(GetNotifyTargets(e.NotifyPredicate));
-            response.ModuleID = CoreName;
-            response.CMDStr = "ManagerNotify";
-            response.Result = e.Notify.SerializeObject();
-            CachePacket(response);
-        }
+        //void EventSystem_ManagerNotifyEvent(object sender, ManagerNotifyEventArgs e)
+        //{
+        //    NotifyMGRContribNotify response = ResponseTemplate<NotifyMGRContribNotify>.SrvSendNotifyResponse(GetNotifyTargets(e.NotifyPredicate));
+        //    response.ModuleID = CoreName;
+        //    response.CMDStr = "ManagerNotify";
+        //    response.Result = e.Notify.SerializeObject();
+        //    CachePacket(response);
+        //}
 
         /// <summary>
         /// 将交易客户端会话信息通知到所有客户端

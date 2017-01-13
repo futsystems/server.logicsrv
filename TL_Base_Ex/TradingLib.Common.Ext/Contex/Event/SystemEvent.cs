@@ -149,15 +149,15 @@ namespace TradingLib.Common
         #endregion
 
 
-        #region 其他事件
+        //#region 其他事件
 
-        public event EventHandler<ManagerNotifyEventArgs> ManagerNotifyEvent = delegate { };
+        //public event EventHandler<ManagerNotifyEventArgs> ManagerNotifyEvent = delegate { };
 
-        public void FireManagerNotifyEvent(object sender, ManagerNotifyEventArgs arg)
-        {
-            ManagerNotifyEvent(sender, arg);
-        }
-        #endregion
+        //public void FireManagerNotifyEvent(object sender, ManagerNotifyEventArgs arg)
+        //{
+        //    ManagerNotifyEvent(sender, arg);
+        //}
+        //#endregion
 
 
         #region 底层交易接口出入金回报事件
