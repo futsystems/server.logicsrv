@@ -45,11 +45,13 @@ namespace TradingLib.Core
         /// <param name="account"></param>
         void OnAccountChanged(IAccount account)
         {
+            //logger.Debug(string.Format("Account[{0}] Changed", account.ID));
+            NotifyAccountChanged(account);
 
-            logger.Debug(string.Format("Account[{0}] Changed",account.ID));
-            NotifyMGRAccountChangeUpdateResponse notify = ResponseTemplate<NotifyMGRAccountChangeUpdateResponse>.SrvSendNotifyResponse(account.ID);
-            notify.AccountItem = account.ToAccountItem();
-            CachePacket(notify);
+            
+            //NotifyMGRAccountChangeUpdateResponse notify = ResponseTemplate<NotifyMGRAccountChangeUpdateResponse>.SrvSendNotifyResponse(account.ID);
+            //notify.AccountItem = account.ToAccountItem();
+            //CachePacket(notify);
         }
 
         /// <summary>
@@ -58,18 +60,21 @@ namespace TradingLib.Core
         /// <param name="account"></param>
         void OnAccountAdded(IAccount account)
         {
-            NotifyMGRAccountChangeUpdateResponse notify = ResponseTemplate<NotifyMGRAccountChangeUpdateResponse>.SrvSendNotifyResponse(account.ID);
-            notify.AccountItem = account.ToAccountItem();
-            CachePacket(notify);
+            NotifyAccountChanged(account);
+            //NotifyMGRAccountChangeUpdateResponse notify = ResponseTemplate<NotifyMGRAccountChangeUpdateResponse>.SrvSendNotifyResponse(account.ID);
+            //notify.AccountItem = account.ToAccountItem();
+            //CachePacket(notify);
             
         }
 
         void OnAccountDeleted(IAccount account)
         {
-            IEnumerable<ILocation> locations = GetNotifyTargets(account.GetNotifyPredicate());
-            NotifyMGRAccountChangeUpdateResponse notify = ResponseTemplate<NotifyMGRAccountChangeUpdateResponse>.SrvSendNotifyResponse(locations);
-            notify.AccountItem = account.ToAccountItem();
-            CachePacket(notify);
+            NotifyAccountChanged(account, GetNotifyTargets(account.GetNotifyPredicate()).ToArray());
+
+            //IEnumerable<ILocation> locations = GetNotifyTargets(account.GetNotifyPredicate());
+            //NotifyMGRAccountChangeUpdateResponse notify = ResponseTemplate<NotifyMGRAccountChangeUpdateResponse>.SrvSendNotifyResponse(locations);
+            //notify.AccountItem = account.ToAccountItem();
+            //CachePacket(notify);
         }
 
 

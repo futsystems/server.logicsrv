@@ -221,10 +221,10 @@ namespace TradingLib.Common
                     #region manager
                     case MessageTypes.MGRLOGINREQUEST://请求登入
                         return RequestTemplate<MGRLoginRequest>.SrvRecvRequest(frontid, clientid, message.Content);
-                    case MessageTypes.MGRQRYACCOUNTS://请求帐户列表
-                        return RequestTemplate<MGRQryAccountRequest>.SrvRecvRequest(frontid, clientid, message.Content);
-                    case MessageTypes.MGRWATCHACCOUNTS://请求设定观察帐户列表
-                        return RequestTemplate<MGRWatchAccountRequest>.SrvRecvRequest(frontid, clientid, message.Content);
+                    //case MessageTypes.MGRQRYACCOUNTS://请求帐户列表
+                    //    return RequestTemplate<MGRQryAccountRequest>.SrvRecvRequest(frontid, clientid, message.Content);
+                    //case MessageTypes.MGRWATCHACCOUNTS://请求设定观察帐户列表
+                    //    return RequestTemplate<MGRWatchAccountRequest>.SrvRecvRequest(frontid, clientid, message.Content);
                     case MessageTypes.MGRRESUMEACCOUNT://请求恢复交易帐号日内交易信息
                         return RequestTemplate<MGRResumeAccountRequest>.SrvRecvRequest(frontid, clientid, message.Content);
                     //case MessageTypes.MGRQRYACCOUNTINFO://请求查询交易帐号信息
@@ -510,18 +510,18 @@ namespace TradingLib.Common
                     return ResponseTemplate<RspMGROperationResponse>.CliRecvResponse(message);
                 case MessageTypes.MGRLOGINRESPONSE://登入回报
                     return ResponseTemplate<RspMGRLoginResponse>.CliRecvResponse(message);
-                case MessageTypes.MGRQRYACCOUNTSRESPONSE://查询帐户列表回报
-                    return ResponseTemplate<RspMGRQryAccountResponse>.CliRecvResponse(message);
-                case MessageTypes.MGRACCOUNTINFOLITENOTIFY://帐户InfoLite通知回报
-                    return ResponseTemplate<NotifyMGRAccountStatistic>.CliRecvResponse(message);
+                //case MessageTypes.MGRQRYACCOUNTSRESPONSE://查询帐户列表回报
+                //    return ResponseTemplate<RspMGRQryAccountResponse>.CliRecvResponse(message);
+                //case MessageTypes.MGRACCOUNTINFOLITENOTIFY://帐户InfoLite通知回报
+                //    return ResponseTemplate<NotifyMGRAccountStatistic>.CliRecvResponse(message);
                 case MessageTypes.MGRRESUMEACCOUNTRESPONE://恢复交易帐户日内交易信息回报
                     return ResponseTemplate<RspMGRResumeAccountResponse>.CliRecvResponse(message);
                 //case MessageTypes.MGRSESSIONSTATUSUPDATE://交易帐号登入 退出 事件回报
                 //    return ResponseTemplate<NotifyMGRSessionUpdateNotify>.CliRecvResponse(message);
                 //case MessageTypes.MGRACCOUNTINFORESPONSE://查询交易帐户信息回报
                 //    return ResponseTemplate<RspMGRQryAccountInfoResponse>.CliRecvResponse(message);
-                case MessageTypes.MGRACCOUNTCHANGEUPDATE://帐户变动回报
-                    return ResponseTemplate<NotifyMGRAccountChangeUpdateResponse>.CliRecvResponse(message);
+                //case MessageTypes.MGRACCOUNTCHANGEUPDATE://帐户变动回报
+                //    return ResponseTemplate<NotifyMGRAccountChangeUpdateResponse>.CliRecvResponse(message);
                 //case MessageTypes.MGRCONNECTORRESPONSE://查询通道回报
                 //    return ResponseTemplate<RspMGRQryConnectorResponse>.CliRecvResponse(message);
                 case MessageTypes.MGREXCHANGERESPONSE://查询交易所回报

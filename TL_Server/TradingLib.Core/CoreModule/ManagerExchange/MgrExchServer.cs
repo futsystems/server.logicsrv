@@ -68,6 +68,13 @@ namespace TradingLib.Core
 
         }
 
+        //ILocation[] tl_QryNotifyLocationsViaAccount(string arg)
+        //{
+        //    IAccount account = TLCtxHelper.ModuleAccountManager[arg];
+        //    if (account == null) return new ILocation[]{};
+        //    return QryNotifyLocationsViaAccount(account);
+        //}
+
 
         MgrClientInfoEx GetCustInfoEx(ISession session)
         {
@@ -202,6 +209,8 @@ namespace TradingLib.Core
 
         /// <summary>
         /// 该client cutinfoex是否有权限访问帐户
+        /// 判定管理员是否有权操作某账户时 如果以账户ID作为参数
+        /// 当账户删除事件中 通过TLCtxHelper.ModuleAccountManager 则查询不到被删账户了
         /// </summary>
         /// <param name="account"></param>
         /// <returns></returns>
@@ -235,7 +244,7 @@ namespace TradingLib.Core
         /// 观察一个账户列表,用于推送实时的权益数据
         /// </summary>
         /// <param name="msg"></param>
-        public void Watch(List<string> accountlist)
+        public void Watch(IEnumerable<string> accountlist)
         {
             WatchAccounts.Clear();
             foreach (string account in accountlist)

@@ -18,16 +18,16 @@ namespace TradingLib.Core
                 switch (packet.Type)
                 {
 
-                    case MessageTypes.MGRQRYACCOUNTS://查询交易帐号列表
-                        {
-                            SrvOnMGRQryAccount(packet as MGRQryAccountRequest, session, manager);
-                            break;
-                        }
-                    case MessageTypes.MGRWATCHACCOUNTS://设定观察交易帐号列表
-                        {
-                            SrvOnMGRWatchAccount(packet as MGRWatchAccountRequest, session, manager);
-                            break;
-                        }
+                    //case MessageTypes.MGRQRYACCOUNTS://查询交易帐号列表
+                    //    {
+                    //        SrvOnMGRQryAccount(packet as MGRQryAccountRequest, session, manager);
+                    //        break;
+                    //    }
+                    //case MessageTypes.MGRWATCHACCOUNTS://设定观察交易帐号列表
+                    //    {
+                    //        SrvOnMGRWatchAccount(packet as MGRWatchAccountRequest, session, manager);
+                    //        break;
+                    //    }
                     case MessageTypes.MGRRESUMEACCOUNT://恢复某个交易帐号日内交易数据
                         {
                             SrvOnMGRResumeAccount(packet as MGRResumeAccountRequest, session, manager);

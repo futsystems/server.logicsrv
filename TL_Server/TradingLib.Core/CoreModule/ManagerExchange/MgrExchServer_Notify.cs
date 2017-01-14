@@ -57,8 +57,40 @@ namespace TradingLib.Core
         {
             NotifyMGRContribNotify response = ResponseTemplate<NotifyMGRContribNotify>.SrvSendNotifyResponse(QryNotifyLocationsViaAccount(session.Account));
             response.ModuleID = CoreName;
-            response.CMDStr = "SessionNotify";
+            response.CMDStr = "NotifySession";
             response.Result = session.SerializeObject();
+            CachePacket(response);
+        }
+
+        /// <summary>
+        /// 交易账户变动通知
+        /// 通知所有有权观察该账户的管理端
+        /// </summary>
+        /// <param name="account"></param>
+        void NotifyAccountChanged(IAccount account,ILocation[] locations = null)
+        {
+            if (locations == null)
+            {
+                locations = QryNotifyLocationsViaAccount(account.ID);
+            }
+            NotifyMGRContribNotify response = ResponseTemplate<NotifyMGRContribNotify>.SrvSendNotifyResponse(locations);
+            response.ModuleID = CoreName;
+            response.CMDStr = "NotifyAccountChanged";
+            response.Result = account.ToAccountItem().SerializeObject();
+            CachePacket(response);
+        }
+
+        /// <summary>
+        /// 账户财务数据通知
+        /// </summary>
+        /// <param name="account"></param>
+        /// <param name="location"></param>
+        void NotifyAccountStatistic(IAccount account, ILocation location)
+        {
+            NotifyMGRContribNotify response = ResponseTemplate<NotifyMGRContribNotify>.SrvSendNotifyResponse(location);
+            response.ModuleID = CoreName;
+            response.CMDStr = "NotifyAccountStatistic";
+            response.Result = account.ToAccountStatistic().SerializeObject();
             CachePacket(response);
         }
         /// <summary>

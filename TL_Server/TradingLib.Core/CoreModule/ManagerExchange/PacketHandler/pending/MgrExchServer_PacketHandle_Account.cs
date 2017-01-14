@@ -16,39 +16,77 @@ namespace TradingLib.Core
         /// <param name="request"></param>
         /// <param name="session"></param>
         /// <param name="manager"></param>
-        void SrvOnMGRQryAccount(MGRQryAccountRequest request, ISession session, Manager manager)
+        //void SrvOnMGRQryAccount(MGRQryAccountRequest request, ISession session, Manager manager)
+        //{
+        //    logger.Info(string.Format("Manager[{0}] QryAccountList", session.AuthorizedID));
+        //    IAccount[] list = manager.GetVisibleAccount().ToArray();
+        //    if (list.Length > 0)
+        //    {
+        //        for (int i = 0; i < list.Length; i++)
+        //        {
+        //            RspMGRQryAccountResponse response = ResponseTemplate<RspMGRQryAccountResponse>.SrvSendRspResponse(request);
+        //            response.AccountItem = list[i].ToAccountItem();
+        //            CacheRspResponse(response, i == list.Length - 1);
+        //        }
+        //    }
+        //    else
+        //    {
+        //        RspMGRQryAccountResponse response = ResponseTemplate<RspMGRQryAccountResponse>.SrvSendRspResponse(request);
+        //        CacheRspResponse(response);
+
+        //    }
+        //}
+
+
+        /// <summary>
+        /// 统一使用AccountCreation对象创建交易帐户
+        /// </summary>
+        /// <param name="session"></param>
+        /// <param name="json"></param>
+        [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "QryAccountList", "QryAccountList - qry  account list", "查询交易账户")]
+        public void CTE_QryAccountList(ISession session)
         {
-            logger.Info(string.Format("Manager[{0}] QryAccountList", session.AuthorizedID));
+            var manager = session.GetManager();
+
             IAccount[] list = manager.GetVisibleAccount().ToArray();
             if (list.Length > 0)
             {
                 for (int i = 0; i < list.Length; i++)
                 {
-                    RspMGRQryAccountResponse response = ResponseTemplate<RspMGRQryAccountResponse>.SrvSendRspResponse(request);
-                    response.AccountItem = list[i].ToAccountItem();
-                    CacheRspResponse(response, i == list.Length - 1);
+                    session.ReplyMgr(list[i].ToAccountItem(), i == list.Length - 1);
                 }
             }
             else
             {
-                RspMGRQryAccountResponse response = ResponseTemplate<RspMGRQryAccountResponse>.SrvSendRspResponse(request);
-                CacheRspResponse(response);
-
+                session.ReplyMgr("");
             }
         }
 
 
+        ///// <summary>
+        ///// 设定观察交易帐号列表
+        ///// </summary>
+        ///// <param name="request"></param>
+        ///// <param name="session"></param>
+        ///// <param name="manager"></param>
+        //void SrvOnMGRWatchAccount(MGRWatchAccountRequest request, ISession session, Manager manager)
+        //{
+        //    logger.Info(string.Format("Manager[{0}] Set WatchList:{1}", session.AuthorizedID, string.Join(",",request.AccountList.ToArray())));
+        //    var c = customerExInfoMap[request.ClientID];
+        //    c.Watch(request.AccountList);
+        //}
+
         /// <summary>
-        /// 设定观察交易帐号列表
+        /// 设定观察交易账户列表
         /// </summary>
-        /// <param name="request"></param>
         /// <param name="session"></param>
-        /// <param name="manager"></param>
-        void SrvOnMGRWatchAccount(MGRWatchAccountRequest request, ISession session, Manager manager)
+        /// <param name="json"></param>
+        [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "WatchAccountList", "WatchAccountList - watch  account list", "设定观察账户列表",QSEnumArgParseType.Json)]
+        public void CTE_WatchAccountList(ISession session,string json)
         {
-            logger.Info(string.Format("Manager[{0}] Set WatchList:{1}", session.AuthorizedID, string.Join(",",request.AccountList.ToArray())));
-            var c = customerExInfoMap[request.ClientID];
-            c.Watch(request.AccountList);
+            string[] accounts = json.DeserializeObject<string[]>();
+            var c = customerExInfoMap[session.Location.ClientID];
+            c.Watch(accounts);
         }
 
         /// <summary>

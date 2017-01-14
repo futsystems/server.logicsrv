@@ -16,6 +16,7 @@ namespace TradingLib.Core
     public partial class AccountManager
     {
 
+        
         /// <summary>
         /// 统一使用AccountCreation对象创建交易帐户
         /// </summary>

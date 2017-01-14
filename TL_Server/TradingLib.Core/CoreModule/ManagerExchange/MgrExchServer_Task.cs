@@ -70,9 +70,10 @@ namespace TradingLib.Core
                     foreach (IAccount acc in cst.WathAccountList)
                     {
                         //logger.Debug("帐户信息采集推送");
-                        NotifyMGRAccountStatistic notify = ResponseTemplate<NotifyMGRAccountStatistic>.SrvSendNotifyResponse(cst.Location);
-                        notify.Statistic = acc.ToAccountStatistic();
-                        CachePacket(notify);
+                        //NotifyMGRAccountStatistic notify = ResponseTemplate<NotifyMGRAccountStatistic>.SrvSendNotifyResponse(cst.Location);
+                        //notify.Statistic = acc.ToAccountStatistic();
+                        //CachePacket(notify);
+                        NotifyAccountStatistic(acc, cst.Location);
                     }
 
                     //每隔30秒全推一次信息，用于解决管理端只看到部分交易帐户，筛选帐户时造成列表帐户缺失
@@ -81,9 +82,10 @@ namespace TradingLib.Core
                         
                         foreach (var acc in cst.Manager.GetAccounts())
                         {
-                            NotifyMGRAccountStatistic notify = ResponseTemplate<NotifyMGRAccountStatistic>.SrvSendNotifyResponse(cst.Location);
-                            notify.Statistic = acc.ToAccountStatistic();
-                            CachePacket(notify);
+                            //NotifyMGRAccountStatistic notify = ResponseTemplate<NotifyMGRAccountStatistic>.SrvSendNotifyResponse(cst.Location);
+                            //notify.Statistic = acc.ToAccountStatistic();
+                            //CachePacket(notify);
+                            NotifyAccountStatistic(acc, cst.Location);
                         }
                         _lastPushAllTime = DateTime.Now;
 
