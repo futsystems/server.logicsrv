@@ -147,7 +147,6 @@
     <Compile Include="CoreModule\ManagerExchange\PacketHandler\pending\MgrExchServer_PacketHandle_Permission.cs" />
     <Compile Include="CoreModule\ManagerExchange\PacketHandler\MgrExchServer_PacketHandle_Domain.cs" />
     <Compile Include="CoreModule\ManagerExchange\PacketHandler\MgrExchServer_PacketHandle_Manager.cs" />
-    <Compile Include="CoreModule\ManagerExchange\PacketHandler\MgrExchServer_PacketHandle_HistQry.cs" />
     <Compile Include="CoreModule\ManagerExchange\PacketHandler\MgrExchServer_PacketHandle_BasicInfo.cs" />
     <Compile Include="CoreModule\ManagerExchange\PacketHandler\pending\MgrExchServer_PacketHandle_Account.cs" />
     <Compile Include="CoreModule\ManagerExchange\MgrExchServer.cs" />

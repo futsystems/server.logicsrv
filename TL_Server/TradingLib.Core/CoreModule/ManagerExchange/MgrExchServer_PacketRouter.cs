@@ -95,37 +95,36 @@ namespace TradingLib.Core
                             break;
                         }
 
-                    case MessageTypes.MGRQRYORDER://请求查询历史委托
-                        {
-                            SrvOnMGRQryOrder(packet as MGRQryOrderRequest, session, manager);
-                            break;
-                        }
-                    case MessageTypes.MGRQRYTRADE://请求查询历史成交
-                        {
-                            SrvnMGRQryTrade(packet as MGRQryTradeRequest, session, manager);
-                            break;
-                        }
-                    case MessageTypes.MGRQRYPOSITION://请求查询历史持仓
-                        {
-                            SrvOnMGRQryPosition(packet as MGRQryPositionRequest, session, manager);
-                            break;
-                        }
-                    case MessageTypes.MGRQRYCASH://请求查询出入金记录
-                        {
-                            SrvOnMGRQryCash(packet as MGRQryCashRequest, session, manager);
-                            break;
-                        }
-                    case MessageTypes.MGRQRYSETTLEMENT://请求查询结算单
-                        {
-                            SrvOnMGRQrySettlement(packet as MGRQrySettleRequest, session, manager);
-                            break;
-                        }
-                   
-                    case MessageTypes.MGRQRYMANAGER://请求查询管理员列表
-                        {
-                            //SrvOnMGRQryManager(packet as MGRQryManagerRequest, session, manager);
-                            break;
-                        }
+                    //case MessageTypes.MGRQRYORDER://请求查询历史委托
+                    //    {
+                    //        SrvOnMGRQryOrder(packet as MGRQryOrderRequest, session, manager);
+                    //        break;
+                    //    }
+                    //case MessageTypes.MGRQRYTRADE://请求查询历史成交
+                    //    {
+                    //        SrvnMGRQryTrade(packet as MGRQryTradeRequest, session, manager);
+                    //        break;
+                    //    }
+                    //case MessageTypes.MGRQRYPOSITION://请求查询历史持仓
+                    //    {
+                    //        SrvOnMGRQryPosition(packet as MGRQryPositionRequest, session, manager);
+                    //        break;
+                    //    }
+                    //case MessageTypes.MGRQRYCASH://请求查询出入金记录
+                    //    {
+                    //        SrvOnMGRQryCash(packet as MGRQryCashRequest, session, manager);
+                    //        break;
+                    //    }
+                    //case MessageTypes.MGRQRYSETTLEMENT://请求查询结算单
+                    //    {
+                    //        SrvOnMGRQrySettlement(packet as MGRQrySettleRequest, session, manager);
+                    //        break;
+                    //    }
+                    //case MessageTypes.MGRQRYMANAGER://请求查询管理员列表
+                    //    {
+                    //        //SrvOnMGRQryManager(packet as MGRQryManagerRequest, session, manager);
+                    //        break;
+                    //    }
                     
                     case MessageTypes.MGRINSERTTRADE://请求插入成交
                         {

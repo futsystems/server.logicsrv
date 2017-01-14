@@ -284,16 +284,16 @@ namespace TradingLib.Common
                     //    return RequestTemplate<MGRDelRuleItemRequest>.SrvRecvRequest(frontid, clientid, message.Content);
                     //case MessageTypes.MGRQRYSYSTEMSTATUS://请求查询系统状态
                     //    return RequestTemplate<MGRQrySystemStatusRequest>.SrvRecvRequest(frontid,clientid,message.Content);
-                    case MessageTypes.MGRQRYORDER://请求查询历史委托
-                        return RequestTemplate<MGRQryOrderRequest>.SrvRecvRequest(frontid, clientid, message.Content);
-                    case MessageTypes.MGRQRYTRADE://请求查询历史成交
-                        return RequestTemplate<MGRQryTradeRequest>.SrvRecvRequest(frontid, clientid, message.Content);
-                    case MessageTypes.MGRQRYPOSITION://请求查询结算持仓
-                        return RequestTemplate<MGRQryPositionRequest>.SrvRecvRequest(frontid, clientid, message.Content);
-                    case MessageTypes.MGRQRYCASH://请求查询出入金记录
-                        return RequestTemplate<MGRQryCashRequest>.SrvRecvRequest(frontid, clientid, message.Content);
-                    case MessageTypes.MGRQRYSETTLEMENT://请求查询结算单
-                        return RequestTemplate<MGRQrySettleRequest>.SrvRecvRequest(frontid, clientid, message.Content);
+                    //case MessageTypes.MGRQRYORDER://请求查询历史委托
+                    //    return RequestTemplate<MGRQryOrderRequest>.SrvRecvRequest(frontid, clientid, message.Content);
+                    //case MessageTypes.MGRQRYTRADE://请求查询历史成交
+                    //    return RequestTemplate<MGRQryTradeRequest>.SrvRecvRequest(frontid, clientid, message.Content);
+                    //case MessageTypes.MGRQRYPOSITION://请求查询结算持仓
+                    //    return RequestTemplate<MGRQryPositionRequest>.SrvRecvRequest(frontid, clientid, message.Content);
+                    //case MessageTypes.MGRQRYCASH://请求查询出入金记录
+                    //    return RequestTemplate<MGRQryCashRequest>.SrvRecvRequest(frontid, clientid, message.Content);
+                    //case MessageTypes.MGRQRYSETTLEMENT://请求查询结算单
+                    //    return RequestTemplate<MGRQrySettleRequest>.SrvRecvRequest(frontid, clientid, message.Content);
                     //case MessageTypes.MGRCHANGEACCOUNTPASS://请求修改帐户密码
                     //    return RequestTemplate<MGRChangeAccountPassRequest>.SrvRecvRequest(frontid, clientid, message.Content);
                     //case MessageTypes.MGRADDSECURITY://请求添加品种
@@ -548,16 +548,16 @@ namespace TradingLib.Common
                 //    return ResponseTemplate<RspMGRDelRuleItemResponse>.CliRecvResponse(message);
                 //case MessageTypes.MGRSYSTEMSTATUSRESPONSE://请求系统状态回报
                 //    return ResponseTemplate<RspMGRQrySystemStatusResponse>.CliRecvResponse(message);
-                case MessageTypes.MGRORDERRESPONSE://请求查询历史委托回报
-                    return ResponseTemplate<RspMGRQryOrderResponse>.CliRecvResponse(message);
-                case MessageTypes.MGRTRADERESPONSE://请求查询历史成交回报
-                    return ResponseTemplate<RspMGRQryTradeResponse>.CliRecvResponse(message);
-                case MessageTypes.MGRPOSITIONRESPONSE://请求查询历史持仓回报
-                    return ResponseTemplate<RspMGRQryPositionResponse>.CliRecvResponse(message);
-                case MessageTypes.MGRCASHRESPONSE://请求出入金查询回报
-                    return ResponseTemplate<RspMGRQryCashResponse>.CliRecvResponse(message);
-                case MessageTypes.MGRSETTLEMENTRESPONSE://请求查询结算单回报
-                    return ResponseTemplate<RspMGRQrySettleResponse>.CliRecvResponse(message);
+                //case MessageTypes.MGRORDERRESPONSE://请求查询历史委托回报
+                //    return ResponseTemplate<RspMGRQryOrderResponse>.CliRecvResponse(message);
+                //case MessageTypes.MGRTRADERESPONSE://请求查询历史成交回报
+                //    return ResponseTemplate<RspMGRQryTradeResponse>.CliRecvResponse(message);
+                //case MessageTypes.MGRPOSITIONRESPONSE://请求查询历史持仓回报
+                //    return ResponseTemplate<RspMGRQryPositionResponse>.CliRecvResponse(message);
+                //case MessageTypes.MGRCASHRESPONSE://请求出入金查询回报
+                //    return ResponseTemplate<RspMGRQryCashResponse>.CliRecvResponse(message);
+                //case MessageTypes.MGRSETTLEMENTRESPONSE://请求查询结算单回报
+                //    return ResponseTemplate<RspMGRQrySettleResponse>.CliRecvResponse(message);
                 //case MessageTypes.MGRCHANGEACCOUNTPASSRESPONSE://请求修改帐户密码回报
                 //    return ResponseTemplate<RspMGRChangeAccountPassResponse>.CliRecvResponse(message);
                 //case MessageTypes.MGRADDSECURITYRESPONSE://请求添加品种回报

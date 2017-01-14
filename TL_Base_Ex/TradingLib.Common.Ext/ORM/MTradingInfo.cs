@@ -292,7 +292,7 @@ namespace TradingLib.ORM
         /// <param name="begin"></param>
         /// <param name="end"></param>
         /// <returns></returns>
-        public static IList<Order> SelectOrders(string account,int begin,int end,QSEnumOrderBreedType breed = QSEnumOrderBreedType.ACCT)
+        public static List<Order> SelectOrders(string account,int begin,int end,QSEnumOrderBreedType breed = QSEnumOrderBreedType.ACCT)
         {
             using (DBMySql db = new DBMySql())
             {
@@ -304,7 +304,6 @@ namespace TradingLib.ORM
 
                 //合并委托记录
                 return orders.Union(orders2, new OrderCompare()).ToList() ;
-                //return orders;
             }
         }
 

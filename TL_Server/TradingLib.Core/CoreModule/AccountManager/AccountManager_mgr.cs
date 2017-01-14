@@ -503,8 +503,157 @@ namespace TradingLib.Core
             {
                 throw new FutsRspError("无权查看帐户");
             }
-            
+
         }
 
+
+        #region 历史记录查询
+        /// <summary>
+        /// 查询交易帐户的出入金记录
+        /// </summary>
+        /// <param name="session"></param>
+        /// <param name="account"></param>
+        /// <param name="start"></param>
+        /// <param name="end"></param>
+        [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "QueryAccountCashTxn", "QueryAccountCashTxn -query account cashtrans", "查询交易帐户出入金记录", QSEnumArgParseType.Json)]
+        public void CTE_QueryAccountCashTrans(ISession session, string json)
+        {
+            Manager manger = session.GetManager();
+            if (manger != null)
+            {
+                var data = json.DeserializeObject();
+                string account = data["account"].ToString();
+                long start = long.Parse(data["start"].ToString());
+                long end = long.Parse(data["end"].ToString());
+
+                CashTransactionImpl[] trans = ORM.MCashTransaction.SelectHistCashTransactions(account, start, end).ToArray();
+                session.ReplyMgr(trans);
+            }
+        }
+
+        /// <summary>
+        /// 查询交易账户结算单
+        /// </summary>
+        /// <param name="session"></param>
+        /// <param name="json"></param>
+        [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "QueryAccountSettlement", "QueryAccountSettlement -query account settlement", "查询交易帐户结算单", QSEnumArgParseType.Json)]
+        public void CTE_QueryAccountSettlement(ISession session, string json)
+        {
+            Manager manger = session.GetManager();
+            if (manger != null)
+            {
+                var data = json.DeserializeObject();
+                string account = data["account"].ToString();
+                int tradingday = int.Parse(data["tradingday"].ToString());
+
+                IAccount acc = TLCtxHelper.ModuleAccountManager[account];
+                AccountSettlement settlement = ORM.MSettlement.SelectSettlement(account, tradingday);
+                if (settlement != null)
+                {
+                    List<string> settlelist = SettlementFactory.GenSettlementFile(settlement, acc);
+                    for (int i = 0; i < settlelist.Count; i++)
+                    {
+                        session.ReplyMgr(settlelist[i].Replace('|', '*'), i == settlelist.Count - 1);
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// 查询交易账户委托记录
+        /// </summary>
+        /// <param name="session"></param>
+        /// <param name="json"></param>
+        [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "QueryAccountOrder", "QueryAccountOrder -query account order", "查询交易帐户委托", QSEnumArgParseType.Json)]
+        public void CTE_QueryAccountOrder(ISession session, string json)
+        {
+            Manager manger = session.GetManager();
+            if (manger != null)
+            {
+                var data = json.DeserializeObject();
+                string account = data["account"].ToString();
+                int start = int.Parse(data["start"].ToString());
+                int end = int.Parse(data["end"].ToString());
+
+                IList<Order> orders = ORM.MTradingInfo.SelectOrders(account, start, end);
+
+                int totalnum = orders.Count;
+                if (totalnum > 0)
+                {
+                    for (int i = 0; i < totalnum; i++)
+                    {
+                        session.ReplyMgr(OrderImpl.Serialize(orders[i]), i == totalnum - 1);
+                    }
+                }
+                else
+                {
+                    session.ReplyMgr("");
+                }
+            }
+        }
+        /// <summary>
+        /// 查询交易账户成交记录
+        /// </summary>
+        /// <param name="session"></param>
+        /// <param name="json"></param>
+        [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "QueryAccountTrade", "QueryAccountTrade -query account trade", "查询交易帐户成交", QSEnumArgParseType.Json)]
+        public void CTE_QueryAccountTrade(ISession session, string json)
+        {
+            Manager manger = session.GetManager();
+            if (manger != null)
+            {
+                var data = json.DeserializeObject();
+                string account = data["account"].ToString();
+                int start = int.Parse(data["start"].ToString());
+                int end = int.Parse(data["end"].ToString());
+
+                IList<Trade> trades = ORM.MTradingInfo.SelectTrades(account, start, end);
+
+                int totalnum = trades.Count;
+                if (totalnum > 0)
+                {
+                    for (int i = 0; i < totalnum; i++)
+                    {
+                        session.ReplyMgr(TradeImpl.Serialize(trades[i]), i == totalnum - 1);
+                    }
+                }
+                else
+                {
+                    session.ReplyMgr("");
+                }
+            }
+        }
+
+        /// <summary>
+        /// 查询交易账户结算持仓
+        /// </summary>
+        /// <param name="session"></param>
+        /// <param name="json"></param>
+        [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "QueryAccountPosition", "QueryAccountPosition -query account position", "查询交易帐户结算持仓", QSEnumArgParseType.Json)]
+        public void CTE_QueryAccountPosition(ISession session, string json)
+        {
+            Manager manger = session.GetManager();
+            if (manger != null)
+            {
+                var data = json.DeserializeObject();
+                string account = data["account"].ToString();
+                int tradingday = int.Parse(data["tradingday"].ToString());
+
+                List<PositionDetail> positions = ORM.MSettlement.SelectAccountPositionDetails(account, tradingday).ToList();
+                int totalnum = positions.Count();
+                if (totalnum > 0)
+                {
+                    for (int i = 0; i < totalnum; i++)
+                    {
+                        session.ReplyMgr(PositionDetailImpl.Serialize(positions[i]), i == totalnum - 1);
+                    }
+                }
+                else
+                {
+                    session.ReplyMgr("");
+                }
+            }
+        }
+        #endregion
     }
 }

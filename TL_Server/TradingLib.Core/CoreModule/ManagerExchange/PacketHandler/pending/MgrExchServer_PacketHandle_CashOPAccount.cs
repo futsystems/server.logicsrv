@@ -154,24 +154,7 @@ namespace TradingLib.Core
             }
         }
 
-        /// <summary>
-        /// 查询交易帐户的出入金记录
-        /// </summary>
-        /// <param name="session"></param>
-        /// <param name="account"></param>
-        /// <param name="start"></param>
-        /// <param name="end"></param>
-        [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "QueryAccountCashTrans", "QueryAccountCashTrans -query account cashtrans", "查询交易帐户出入金记录")]
-        public void CTE_QueryAccountCashTrans(ISession session, string account, long start, long end)
-        {
-            logger.Info("查询出入金记录: start:" + start.ToString() + " end:" + end.ToString());
-            Manager manger = session.GetManager();
-            if (manger != null)
-            {
-                CashTransactionImpl[] trans = ORM.MCashTransaction.SelectHistCashTransactions(account, start, end).ToArray();
-                session.ReplyMgr(trans);
-            }
-        }
+        
 
 
         [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "RequestAccountCashOperation", "RequestAccountCashOperation -rquest deposit or withdraw", "请求交易帐户出入金操作", QSEnumArgParseType.Json)]

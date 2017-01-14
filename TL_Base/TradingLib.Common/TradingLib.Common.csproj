@@ -204,7 +204,6 @@
     <Compile Include="Message\Manager\MGRAccountChangeUpdateNotify.cs" />
     <Compile Include="Message\Manager\MGRBasicInfo.cs" />
     <Compile Include="Message\Manager\MGRContrib.cs" />
-    <Compile Include="Message\Manager\MGRHistQry.cs" />
     <Compile Include="Message\Manager\MGROperationResponse.cs" />
     <Compile Include="Message\Manager\MGRAccountStatisticNotify.cs" />
     <Compile Include="Message\Manager\MGRLogin.cs" />
