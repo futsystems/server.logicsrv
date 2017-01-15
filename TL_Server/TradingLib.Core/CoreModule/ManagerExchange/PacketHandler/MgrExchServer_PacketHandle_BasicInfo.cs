@@ -82,20 +82,7 @@ namespace TradingLib.Core
             }
         }
 
-        //void SrvOnMGRQryExchange(MGRQryExchangeRequuest request, ISession session, Manager manager)
-        //{
-        //    logger.Info(string.Format("Manager[{0}] QryExchange", session.AuthorizedID));
-        //    Exchange[] exchs = BasicTracker.ExchagneTracker.Exchanges;
-        //    int totalnum = exchs.Length;
 
-        //    for (int i = 0; i < totalnum; i++)
-        //    {
-        //        RspMGRQryExchangeResponse response = ResponseTemplate<RspMGRQryExchangeResponse>.SrvSendRspResponse(request);
-        //        response.Exchange = exchs[i] as ExchangeImpl;
-
-        //        CacheRspResponse(response, i == totalnum - 1);
-        //    }
-        //}
         [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "QryInfoExchange", "QryInfoExchange - qry  exchange info", "查询交易所")]
         public void CTE_QryInfoExchange(ISession session)
         {
@@ -116,22 +103,6 @@ namespace TradingLib.Core
         }
 
 
-        //void SrvOnMGRUpdateExchange(MGRUpdateExchangeRequest request, ISession session, Manager manager)
-        //{
-        //    logger.Info(string.Format("Manager[{0}] UpdateExchange:{1}", session.AuthorizedID, request.ToString()));
-        //    if (manager.IsRoot())
-        //    {
-        //        if (request.Exchange != null)
-        //        {
-        //            BasicTracker.ExchagneTracker.UpdateExchange(request.Exchange);
-
-        //            RspMGRUpdateExchangeResponse response = ResponseTemplate<RspMGRUpdateExchangeResponse>.SrvSendRspResponse(request);
-        //            response.Exchange = BasicTracker.ExchagneTracker[request.Exchange.ID];
-        //            CacheRspResponse(response);
-        //        }
-        //    }
-        //}
-
         [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "UpdateInfoExchange", "UpdateInfoExchange - update  exchange", "更新交易所", QSEnumArgParseType.Json)]
         public void CTE_UpdateInfoExchange(ISession session, string json)
         {
@@ -149,63 +120,39 @@ namespace TradingLib.Core
             }
         }
 
-
-        void SrvOnMGRQrySecurity(MGRQrySecurityRequest request, ISession session, Manager manager)
+        [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "QryInfoSecurity", "QryInfoSecurity - qry  security info", "查询品种")]
+        public void CTE_QryInfoSecurity(ISession session)
         {
-            logger.Info(string.Format("Manager[{0}] QrySecurity", session.AuthorizedID));
-            SecurityFamilyImpl[] seclist = manager.Domain.GetSecurityFamilies().ToArray();
-            int totalnum = seclist.Length;
-            if (totalnum > 0)
+            var manager = session.GetManager();
+
+            SecurityFamilyImpl[] list = manager.Domain.GetSecurityFamilies().ToArray();
+            if (list.Length > 0)
             {
-                for (int i = 0; i < totalnum; i++)
+                for (int i = 0; i < list.Length; i++)
                 {
-                    RspMGRQrySecurityResponse response = ResponseTemplate<RspMGRQrySecurityResponse>.SrvSendRspResponse(request);
-                    response.SecurityFaimly = seclist[i];
-                    CacheRspResponse(response, i == totalnum - 1);
+                    session.ReplyMgr(SecurityFamilyImpl.Serialize(list[i]), i == list.Length - 1);
                 }
             }
             else
             {
-                RspMGRQrySecurityResponse response = ResponseTemplate<RspMGRQrySecurityResponse>.SrvSendRspResponse(request);
-                CacheRspResponse(response);
+                session.ReplyMgr("");
             }
         }
 
-        
-        void SrvOnMGRQrySymbol(MGRQrySymbolRequest request, ISession session, Manager manager)
+        [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "UpdateInfoSecurity", "UpdateInfoExchange - update  exchange", "更新交易所", QSEnumArgParseType.Json)]
+        public void CTE_UpdateInfoSecurity(ISession session, string json)
         {
-            logger.Info(string.Format("Manager[{0}] QrySymbol", session.AuthorizedID));
-            Symbol[] symlis = manager.Domain.GetSymbols().ToArray();
-            int totalnum = symlis.Length;
-            if (totalnum > 0)
-            {
-                for (int i = 0; i < totalnum; i++)
-                {
-                    RspMGRQrySymbolResponse response = ResponseTemplate<RspMGRQrySymbolResponse>.SrvSendRspResponse(request);
-                    response.Symbol = symlis[i] as SymbolImpl;
-
-                    CacheRspResponse(response, i == totalnum - 1);
-                }
-            }
-            else
-            {
-                RspMGRQrySymbolResponse response = ResponseTemplate<RspMGRQrySymbolResponse>.SrvSendRspResponse(request);
-                CacheRspResponse(response);
-            }
-        }
-
-        void SrvOnMGRUpdateSecurity(MGRUpdateSecurityRequest request, ISession session, Manager manager)
-        {
-            logger.Info(string.Format("Manager[{0}] UpdateSecurity:{1}", session.AuthorizedID, request.ToString()));
-
+            var manager = session.GetManager();
             if (!manager.IsInRoot())
             {
                 throw new FutsRspError("无权更新品种数据");
             }
 
-            SecurityFamilyImpl sec = request.SecurityFaimly;
+            string content = json.DeserializeObject<string>();
+            SecurityFamilyImpl sec = SecurityFamilyImpl.Deserialize(content);
+
             //如果已经存在该品种则不执行添加操作
-            if (sec.ID==0 && manager.Domain.GetSecurityFamily(sec.Code) != null)
+            if (sec.ID == 0 && manager.Domain.GetSecurityFamily(sec.Code) != null)
             {
                 throw new FutsRspError("已经存在品种:" + sec.Code);
             }
@@ -236,10 +183,11 @@ namespace TradingLib.Core
             }
 
             //需要通过第一次更新获得sec_id来获得对象进行回报 否则在更新其他域的品种对象时id会发生同步变化
-            RspMGRUpdateSecurityResponse response = ResponseTemplate<RspMGRUpdateSecurityResponse>.SrvSendRspResponse(request);
-            response.SecurityFaimly = manager.Domain.GetSecurityFamily(secidupdate);
-            CacheRspResponse(response);
-
+            //RspMGRUpdateSecurityResponse response = ResponseTemplate<RspMGRUpdateSecurityResponse>.SrvSendRspResponse(request);
+            //response.SecurityFaimly = manager.Domain.GetSecurityFamily(secidupdate);
+            //CacheRspResponse(response);
+            var tmp = manager.Domain.GetSecurityFamily(secidupdate);
+            session.NotifyMgr("NotifySecurity", SecurityFamilyImpl.Serialize(tmp));
 
             if (sec.Tradeable)
             {
@@ -250,17 +198,39 @@ namespace TradingLib.Core
 
 
 
-        void SrvOnMGRUpdateSymbol(MGRUpdateSymbolRequest request, ISession session, Manager manager)
+        [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "QryInfoSymbol", "QryInfoSymbol - qry  symbol info", "查询合约")]
+        public void CTE_QryInfoSymbol(ISession session)
         {
-          
-            logger.Info(string.Format("Manager[{0}] UpdaetSymbol:{1}", session.AuthorizedID, request.ToString()));
+            var manager = session.GetManager();
 
+            SymbolImpl[] list = manager.Domain.GetSymbols().ToArray();
+            if (list.Length > 0)
+            {
+                for (int i = 0; i < list.Length; i++)
+                {
+                    session.ReplyMgr(SymbolImpl.Serialize(list[i]), i == list.Length - 1);
+                }
+            }
+            else
+            {
+                session.ReplyMgr("");
+            }
+        }
+
+
+
+        [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "UpdateInfoSymbol", "UpdateInfoSymbol - update  symbol", "更新合约", QSEnumArgParseType.Json)]
+        public void CTE_UpdateInfoSymbol(ISession session, string json)
+        {
+            var manager = session.GetManager();
             if (!manager.IsInRoot())
             {
                 throw new FutsRspError("无权更新合约数据");
             }
 
-            SymbolImpl symbol = request.Symbol;
+            string content = json.DeserializeObject<string>();
+            SymbolImpl symbol = SymbolImpl.Deserialize(content);
+
             //设定合约symbol为当前管理员域ID 避免管理端没有正常传输分区ID
             symbol.Domain_ID = manager.Domain.ID;
 
@@ -294,10 +264,14 @@ namespace TradingLib.Core
             }
 
 
-            RspMGRUpdateSymbolResponse response = ResponseTemplate<RspMGRUpdateSymbolResponse>.SrvSendRspResponse(request);
-            SymbolImpl localsymbol = manager.Domain.GetSymbol(symbol.ID);
-            response.Symbol = localsymbol;
-            CacheRspResponse(response);
+            //RspMGRUpdateSymbolResponse response = ResponseTemplate<RspMGRUpdateSymbolResponse>.SrvSendRspResponse(request);
+            //SymbolImpl localsymbol = manager.Domain.GetSymbol(symbol.ID);
+            //response.Symbol = localsymbol;
+            //CacheRspResponse(response);
+
+
+            var localsymbol = manager.Domain.GetSymbol(symbol.ID);
+            session.NotifyMgr("NotifySymbol", SymbolImpl.Serialize(localsymbol));
 
             if (localsymbol.Tradeable)
             {
@@ -346,15 +320,15 @@ namespace TradingLib.Core
             {
                 for (int i = 0; i < totalnum; i++)
                 {
-                    RspMGRQrySecurityResponse response = ResponseTemplate<RspMGRQrySecurityResponse>.SrvSendRspResponse(session);
-                    response.SecurityFaimly = seclist[i];
-                    CacheRspResponse(response, i == totalnum - 1);
+                    //RspMGRQrySecurityResponse response = ResponseTemplate<RspMGRQrySecurityResponse>.SrvSendRspResponse(session);
+                    //response.SecurityFaimly = seclist[i];
+                    //CacheRspResponse(response, i == totalnum - 1);
                 }
             }
             else
             {
-                RspMGRQrySecurityResponse response = ResponseTemplate<RspMGRQrySecurityResponse>.SrvSendRspResponse(session);
-                CacheRspResponse(response);
+                //RspMGRQrySecurityResponse response = ResponseTemplate<RspMGRQrySecurityResponse>.SrvSendRspResponse(session);
+                //CacheRspResponse(response);
             }
         }
 
@@ -381,18 +355,18 @@ namespace TradingLib.Core
             int totalnum = symlis.Length;
             if (totalnum > 0)
             {
-                for (int i = 0; i < totalnum; i++)
-                {
-                    RspMGRQrySymbolResponse response = ResponseTemplate<RspMGRQrySymbolResponse>.SrvSendRspResponse(session);
-                    response.Symbol = symlis[i] as SymbolImpl;
+                //for (int i = 0; i < totalnum; i++)
+                //{
+                //    RspMGRQrySymbolResponse response = ResponseTemplate<RspMGRQrySymbolResponse>.SrvSendRspResponse(session);
+                //    response.Symbol = symlis[i] as SymbolImpl;
 
-                    CacheRspResponse(response, i == totalnum - 1);
-                }
+                //    CacheRspResponse(response, i == totalnum - 1);
+                //}
             }
             else
             {
-                RspMGRQrySymbolResponse response = ResponseTemplate<RspMGRQrySymbolResponse>.SrvSendRspResponse(session);
-                CacheRspResponse(response);
+                //RspMGRQrySymbolResponse response = ResponseTemplate<RspMGRQrySymbolResponse>.SrvSendRspResponse(session);
+                //CacheRspResponse(response);
             }
         }
 
@@ -503,20 +477,20 @@ namespace TradingLib.Core
             //将所有合约回报给客户端
             Symbol[] symlis = manager.Domain.GetSymbols().ToArray();
             int totalnum = symlis.Length;
-            if (totalnum > 0)
-            {
-                for (int i = 0; i < totalnum; i++)
-                {
-                    RspMGRQrySymbolResponse response = ResponseTemplate<RspMGRQrySymbolResponse>.SrvSendRspResponse(session);
-                    response.Symbol = symlis[i] as SymbolImpl;
-                    CacheRspResponse(response, i == totalnum - 1);
-                }
-            }
-            else
-            {
-                RspMGRQrySymbolResponse response = ResponseTemplate<RspMGRQrySymbolResponse>.SrvSendRspResponse(session);
-                CacheRspResponse(response);
-            }
+            //if (totalnum > 0)
+            //{
+            //    for (int i = 0; i < totalnum; i++)
+            //    {
+            //        RspMGRQrySymbolResponse response = ResponseTemplate<RspMGRQrySymbolResponse>.SrvSendRspResponse(session);
+            //        response.Symbol = symlis[i] as SymbolImpl;
+            //        CacheRspResponse(response, i == totalnum - 1);
+            //    }
+            //}
+            //else
+            //{
+            //    RspMGRQrySymbolResponse response = ResponseTemplate<RspMGRQrySymbolResponse>.SrvSendRspResponse(session);
+            //    CacheRspResponse(response);
+            //}
         }
 
         /// <summary>
@@ -560,6 +534,47 @@ namespace TradingLib.Core
             CacheRspResponse(response);
         }
 
+                /// <summary>
+        /// 查询汇率信息
+        /// </summary>
+        /// <param name="session"></param>
+        [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "QryExchangeRates", "QryExchangeRates - qry exchange rate", "查询汇率信息")]
+        public void CTE_QryExchangeRates(ISession session)
+        {
+            Manager manager = session.GetManager();
+            //ExchangeRate[] rates = manager.Domain.GetExchangeRates(TLCtxHelper.ModuleSettleCentre.Tradingday).ToArray();
+            //session.ReplyMgr(rates);
 
+            ExchangeRate[] list = manager.Domain.GetExchangeRates(TLCtxHelper.ModuleSettleCentre.Tradingday).ToArray();
+            if (list.Length > 0)
+            {
+                for (int i = 0; i < list.Length; i++)
+                {
+                    session.ReplyMgr(list[i], i == list.Length - 1);
+                }
+            }
+            else
+            {
+                session.ReplyMgr("");
+            }
+        }
+
+        [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "UpdateExchangeRate", "UpdateExchangeRate - update exchange rate", "更新汇率信息", QSEnumArgParseType.Json)]
+        public void CTE_UpdateExchangeRate(ISession session, string json)
+        {
+            Manager manager = session.GetManager();
+            if (!manager.BaseManager.IsRoot())//
+            {
+                throw new FutsRspError("无权更新手续费模板");
+            }
+
+            ExchangeRate rate = json.DeserializeObject<ExchangeRate>();// Mixins.Json.JsonMapper.ToObject<ExchangeRate>(json);
+            //更新汇率信息
+            manager.Domain.UpdateExchangeRate(rate);
+
+            //通知汇率更新
+            session.NotifyMgr("NotifyExchangeRateUpdate",manager.Domain.GetExchangeRate(rate.ID));
+            session.OperationSuccess("更新汇率成功");
+        }
     }
 }

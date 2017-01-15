@@ -122,46 +122,47 @@ namespace TradingLib.Common
         /// </summary>
         public QSEnumDataFeedTypes DataFeed { get; set; }
 
-        public string Serialize()
+        public static string Serialize(SecurityFamilyImpl sec)
         {
+            if (sec == null) return string.Empty;
             StringBuilder sb = new StringBuilder();
             char d = ',';
 
-            sb.Append(this.ID.ToString());
+            sb.Append(sec.ID.ToString());
             sb.Append(d);
-            sb.Append(this.Code);
+            sb.Append(sec.Code);
             sb.Append(d);
-            sb.Append(this.Name);
+            sb.Append(sec.Name);
             sb.Append(d);
-            sb.Append(this.Currency.ToString());
+            sb.Append(sec.Currency.ToString());
             sb.Append(d);
-            sb.Append(this.Type.ToString());
+            sb.Append(sec.Type.ToString());
             sb.Append(d);
-            sb.Append(this.Multiple.ToString());//5
+            sb.Append(sec.Multiple.ToString());//5
             sb.Append(d);
-            sb.Append(this.PriceTick.ToString());
+            sb.Append(sec.PriceTick.ToString());
             sb.Append(d);
-            sb.Append(this.Tradeable.ToString());
+            sb.Append(sec.Tradeable.ToString());
             sb.Append(d);
-            sb.Append(this.EntryCommission.ToString());
+            sb.Append(sec.EntryCommission.ToString());
             sb.Append(d);
-            sb.Append(this.ExitCommission.ToString());
+            sb.Append(sec.ExitCommission.ToString());
             sb.Append(d);
-            sb.Append(this.Margin.ToString());//10
+            sb.Append(sec.Margin.ToString());//10
             sb.Append(d);
-            sb.Append(this.ExtraMargin.ToString());
+            sb.Append(sec.ExtraMargin.ToString());
             sb.Append(d);
-            sb.Append(this.MaintanceMargin.ToString());
+            sb.Append(sec.MaintanceMargin.ToString());
             sb.Append(d);
-            sb.Append(this.exchange_fk.ToString());//exchange
+            sb.Append(sec.exchange_fk.ToString());//exchange
             sb.Append(d);
-            sb.Append(this.underlaying_fk.ToString());//securityfamily
+            sb.Append(sec.underlaying_fk.ToString());//securityfamily
             sb.Append(d);
-            sb.Append(this.mkttime_fk.ToString());//markettime
+            sb.Append(sec.mkttime_fk.ToString());//markettime
             sb.Append(d);
-            sb.Append(this.ExitCommissionToday);
+            sb.Append(sec.ExitCommissionToday);
             sb.Append(d);
-            sb.Append(this.DataFeed);
+            sb.Append(sec.DataFeed);
             
             return sb.ToString();
         }
@@ -173,28 +174,32 @@ namespace TradingLib.Common
         public int UnderLayingFK { get { return this.UnderLaying != null ? (this.UnderLaying as SecurityFamilyImpl).ID : 0; } }
         public int mkttime_fk{get;set;}
         public int MarketTimeFK { get { return this.MarketTime != null ? (this.MarketTime as MarketTimeImpl).ID : 0; } }
-        
-        public void Deserialize(string content)
+
+        public static SecurityFamilyImpl Deserialize(string content)
         {
+            if (string.IsNullOrEmpty(content)) return null;
+            SecurityFamilyImpl sec = new SecurityFamilyImpl();
             string[] rec = content.Split(',');
-            this.ID = int.Parse(rec[0]);
-            this.Code = rec[1];
-            this.Name = rec[2];
-            this.Currency = (CurrencyType)Enum.Parse(typeof(CurrencyType), rec[3]);
-            this.Type = (SecurityType)Enum.Parse(typeof(SecurityType), rec[4]);
-            this.Multiple = int.Parse(rec[5]);
-            this.PriceTick = decimal.Parse(rec[6]);
-            this.Tradeable = bool.Parse(rec[7]);
-            this.EntryCommission = decimal.Parse(rec[8]);
-            this.ExitCommission = decimal.Parse(rec[9]);
-            this.Margin = decimal.Parse(rec[10]);
-            this.ExtraMargin = decimal.Parse(rec[11]);
-            this.MaintanceMargin = decimal.Parse(rec[12]);
-            this.exchange_fk = int.Parse(rec[13]);
-            this.underlaying_fk = int.Parse(rec[14]);
-            this.mkttime_fk = int.Parse(rec[15]);
-            this.ExitCommissionToday = decimal.Parse(rec[16]);
-            this.DataFeed = (QSEnumDataFeedTypes)Enum.Parse(typeof(QSEnumDataFeedTypes), rec[17]);
+            sec.ID = int.Parse(rec[0]);
+            sec.Code = rec[1];
+            sec.Name = rec[2];
+            sec.Currency = (CurrencyType)Enum.Parse(typeof(CurrencyType), rec[3]);
+            sec.Type = (SecurityType)Enum.Parse(typeof(SecurityType), rec[4]);
+            sec.Multiple = int.Parse(rec[5]);
+            sec.PriceTick = decimal.Parse(rec[6]);
+            sec.Tradeable = bool.Parse(rec[7]);
+            sec.EntryCommission = decimal.Parse(rec[8]);
+            sec.ExitCommission = decimal.Parse(rec[9]);
+            sec.Margin = decimal.Parse(rec[10]);
+            sec.ExtraMargin = decimal.Parse(rec[11]);
+            sec.MaintanceMargin = decimal.Parse(rec[12]);
+            sec.exchange_fk = int.Parse(rec[13]);
+            sec.underlaying_fk = int.Parse(rec[14]);
+            sec.mkttime_fk = int.Parse(rec[15]);
+            sec.ExitCommissionToday = decimal.Parse(rec[16]);
+            sec.DataFeed = (QSEnumDataFeedTypes)Enum.Parse(typeof(QSEnumDataFeedTypes), rec[17]);
+
+            return sec;
         }
     }
 }

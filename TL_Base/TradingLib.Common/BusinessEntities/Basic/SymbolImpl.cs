@@ -540,73 +540,78 @@ namespace TradingLib.Common
         #endregion
 
 
-        public string Serialize()
+        public static string Serialize(SymbolImpl symbol)
         {
+            if (symbol == null) return string.Empty;
             StringBuilder sb = new StringBuilder();
             char d = ',';
-            sb.Append(this.ID.ToString());
+            sb.Append(symbol.ID.ToString());
             sb.Append(d);
-            sb.Append(this.Symbol);
+            sb.Append(symbol.Symbol);
             sb.Append(d);
-            sb.Append(this._entrycommission.ToString());
+            sb.Append(symbol._entrycommission.ToString());
             sb.Append(d);
-            sb.Append(this._exitcommission.ToString());
+            sb.Append(symbol._exitcommission.ToString());
             sb.Append(d);
-            sb.Append(this._margin.ToString());
+            sb.Append(symbol._margin.ToString());
             sb.Append(d);
-            sb.Append(this._extramargin.ToString());
+            sb.Append(symbol._extramargin.ToString());
             sb.Append(d);
-            sb.Append(this._maintancemargin.ToString());
+            sb.Append(symbol._maintancemargin.ToString());
             sb.Append(d);
-            sb.Append(this.Strike.ToString());//执行价
+            sb.Append(symbol.Strike.ToString());//执行价
             sb.Append(d);
-            sb.Append(this.OptionSide.ToString());//期权方向
+            sb.Append(symbol.OptionSide.ToString());//期权方向
             sb.Append(d);
-            sb.Append(this.ExpireDate.ToString());//到期日期
+            sb.Append(symbol.ExpireDate.ToString());//到期日期
             sb.Append(d);
-            sb.Append(this.security_fk.ToString());//品种外键
+            sb.Append(symbol.security_fk.ToString());//品种外键
             sb.Append(d);
-            sb.Append(this.underlaying_fk.ToString());//异化合约底层合约外键
+            sb.Append(symbol.underlaying_fk.ToString());//异化合约底层合约外键
             sb.Append(d);
-            sb.Append(this.underlayingsymbol_fk.ToString());//底层合约外键
+            sb.Append(symbol.underlayingsymbol_fk.ToString());//底层合约外键
             sb.Append(d);
-            sb.Append(this.Month);//过期月份
+            sb.Append(symbol.Month);//过期月份
             sb.Append(d);
-            sb.Append(this.Tradeable.ToString());//该合约是否允许交易
+            sb.Append(symbol.Tradeable.ToString());//该合约是否允许交易
             sb.Append(d);
-            sb.Append(this.SymbolType);
+            sb.Append(symbol.SymbolType);
             sb.Append(d);
-            sb.Append(this.Name);
+            sb.Append(symbol.Name);
             sb.Append(d);
-            sb.Append(this._exitcommissiontoday);
+            sb.Append(symbol._exitcommissiontoday);
             sb.Append(d);
-            sb.Append(this._session);
+            sb.Append(symbol._session);
 
             return sb.ToString();
         }
 
-        public void Deserialize(string content)
+        public static SymbolImpl Deserialize(string content)
         {
+            if(string.IsNullOrEmpty(content)) return null;
+            SymbolImpl symbol = new SymbolImpl();
             string[] rec = content.Split(',');
-            this.ID = int.Parse(rec[0]);
-            this.Symbol = rec[1];
-            this._entrycommission = decimal.Parse(rec[2]);
-            this._exitcommission = decimal.Parse(rec[3]);
-            this._margin = decimal.Parse(rec[4]);
-            this._extramargin = decimal.Parse(rec[5]);
-            this._maintancemargin = decimal.Parse(rec[6]);
-            this.Strike = decimal.Parse(rec[7]);
-            this.OptionSide = (QSEnumOptionSide)Enum.Parse(typeof(QSEnumOptionSide),rec[8]);
-            this.ExpireDate = int.Parse(rec[9]);
-            this.security_fk = int.Parse(rec[10]);
-            this.underlaying_fk = int.Parse(rec[11]);
-            this.underlayingsymbol_fk = int.Parse(rec[12]);
-            this.Month = rec[13];
-            this.Tradeable = bool.Parse(rec[14]);
-            this.SymbolType = (QSEnumSymbolType)Enum.Parse(typeof(QSEnumSymbolType), rec[15]);
-            this.Name = rec[16];
-            this._exitcommissiontoday = decimal.Parse(rec[17]);
-            this._session = rec[18];
+            symbol.ID = int.Parse(rec[0]);
+            symbol.Symbol = rec[1];
+            symbol._entrycommission = decimal.Parse(rec[2]);
+            symbol._exitcommission = decimal.Parse(rec[3]);
+            symbol._margin = decimal.Parse(rec[4]);
+            symbol._extramargin = decimal.Parse(rec[5]);
+            symbol._maintancemargin = decimal.Parse(rec[6]);
+            symbol.Strike = decimal.Parse(rec[7]);
+            symbol.OptionSide = (QSEnumOptionSide)Enum.Parse(typeof(QSEnumOptionSide), rec[8]);
+            symbol.ExpireDate = int.Parse(rec[9]);
+            symbol.security_fk = int.Parse(rec[10]);
+            symbol.underlaying_fk = int.Parse(rec[11]);
+            symbol.underlayingsymbol_fk = int.Parse(rec[12]);
+            symbol.Month = rec[13];
+            symbol.Tradeable = bool.Parse(rec[14]);
+            symbol.SymbolType = (QSEnumSymbolType)Enum.Parse(typeof(QSEnumSymbolType), rec[15]);
+            symbol.Name = rec[16];
+            symbol._exitcommissiontoday = decimal.Parse(rec[17]);
+            symbol._session = rec[18];
+
+            return symbol;
         }
 
         /// <summary>

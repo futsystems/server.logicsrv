@@ -264,16 +264,16 @@ namespace TradingLib.Common
                     //    return RequestTemplate<MGRQryMarketTimeRequest>.SrvRecvRequest(frontid, clientid, message.Content);
                     //case MessageTypes.MGRUPDATEMARKETTIME://请求更新交易时间段
                     //    return RequestTemplate<MGRUpdateMarketTimeRequest>.SrvRecvRequest(frontid, clientid, message.Content);
-                    case MessageTypes.MGRQRYSECURITY://请求查询品种列表
-                        return RequestTemplate<MGRQrySecurityRequest>.SrvRecvRequest(frontid, clientid, message.Content);
-                    case MessageTypes.MGRUPDATESECURITY://更新品种信息
-                        return RequestTemplate<MGRUpdateSecurityRequest>.SrvRecvRequest(frontid, clientid, message.Content);
-                    case MessageTypes.MGRQRYSYMBOL://请求查询合约列表
-                        return RequestTemplate<MGRQrySymbolRequest>.SrvRecvRequest(frontid, clientid, message.Content);
-                    case MessageTypes.MGRUPDATESYMBOL://请求更新合约
-                        return RequestTemplate<MGRUpdateSymbolRequest>.SrvRecvRequest(frontid, clientid, message.Content);
-                    case MessageTypes.MGRQRYEXCHANGERATE://请求查询汇率
-                        return RequestTemplate<MGRQryExchangeRateRequuest>.SrvRecvRequest(frontid, clientid, message.Content);
+                    //case MessageTypes.MGRQRYSECURITY://请求查询品种列表
+                    //    return RequestTemplate<MGRQrySecurityRequest>.SrvRecvRequest(frontid, clientid, message.Content);
+                    //case MessageTypes.MGRUPDATESECURITY://更新品种信息
+                    //    return RequestTemplate<MGRUpdateSecurityRequest>.SrvRecvRequest(frontid, clientid, message.Content);
+                    //case MessageTypes.MGRQRYSYMBOL://请求查询合约列表
+                    //    return RequestTemplate<MGRQrySymbolRequest>.SrvRecvRequest(frontid, clientid, message.Content);
+                    //case MessageTypes.MGRUPDATESYMBOL://请求更新合约
+                    //    return RequestTemplate<MGRUpdateSymbolRequest>.SrvRecvRequest(frontid, clientid, message.Content);
+                    //case MessageTypes.MGRQRYEXCHANGERATE://请求查询汇率
+                    //    return RequestTemplate<MGRQryExchangeRateRequuest>.SrvRecvRequest(frontid, clientid, message.Content);
                     //case MessageTypes.MGRQRYRULECLASS://请求风控规则列表
                     //    return RequestTemplate<MGRQryRuleSetRequest>.SrvRecvRequest(frontid, clientid, message.Content);
                     //case MessageTypes.MGRUPDATERULEITEM://请求更新风控规则
@@ -532,12 +532,12 @@ namespace TradingLib.Common
                 //    return ResponseTemplate<RspMGRQryMarketTimeResponse>.CliRecvResponse(message);
                 //case MessageTypes.MGRUPDATEMARKETTIMERESPONSE://更新交易时间段回报
                 //    return ResponseTemplate<RspMGRUpdateMarketTimeResponse>.CliRecvResponse(message);
-                case MessageTypes.MGRSECURITYRESPONSE://查询品种回报
-                    return ResponseTemplate<RspMGRQrySecurityResponse>.CliRecvResponse(message);
-                case MessageTypes.MGRSYMBOLRESPONSE://查询合约回报
-                    return ResponseTemplate<RspMGRQrySymbolResponse>.CliRecvResponse(message);
-                case MessageTypes.MGRQRYEXCHANGERATERESPONSE://查询汇率回报
-                    return ResponseTemplate<RspMGRQryExchangeRateResponse>.CliRecvResponse(message);
+                //case MessageTypes.MGRSECURITYRESPONSE://查询品种回报
+                //    return ResponseTemplate<RspMGRQrySecurityResponse>.CliRecvResponse(message);
+                //case MessageTypes.MGRSYMBOLRESPONSE://查询合约回报
+                //    return ResponseTemplate<RspMGRQrySymbolResponse>.CliRecvResponse(message);
+                //case MessageTypes.MGRQRYEXCHANGERATERESPONSE://查询汇率回报
+                //    return ResponseTemplate<RspMGRQryExchangeRateResponse>.CliRecvResponse(message);
                 //case MessageTypes.MGRRULECLASSRESPONSE://风控规则回报
                 //    return ResponseTemplate<RspMGRQryRuleSetResponse>.CliRecvResponse(message);
                 //case MessageTypes.MGRRULEITEMRESPONSE://查询风控项目回报
@@ -562,13 +562,13 @@ namespace TradingLib.Common
                 //    return ResponseTemplate<RspMGRChangeAccountPassResponse>.CliRecvResponse(message);
                 //case MessageTypes.MGRADDSECURITYRESPONSE://请求添加品种回报
                 //    return ResponseTemplate<RspMGRReqAddSecurityResponse>.CliRecvResponse(message);
-                case MessageTypes.MGRUPDATESECURITYRESPONSE://请求更新品种
-                    return ResponseTemplate<RspMGRUpdateSecurityResponse>.CliRecvResponse(message);
+                //case MessageTypes.MGRUPDATESECURITYRESPONSE://请求更新品种
+                //    return ResponseTemplate<RspMGRUpdateSecurityResponse>.CliRecvResponse(message);
 
                 //case MessageTypes.MGRADDSYMBOLRESPONSE://请求添加合约回报
                 //    return ResponseTemplate<RspMGRReqAddSymbolResponse>.CliRecvResponse(message);
-                case MessageTypes.MGRUPDATESYMBOLRESPONSE://请求更新合约回报
-                    return ResponseTemplate<RspMGRUpdateSymbolResponse>.CliRecvResponse(message);
+                //case MessageTypes.MGRUPDATESYMBOLRESPONSE://请求更新合约回报
+                //    return ResponseTemplate<RspMGRUpdateSymbolResponse>.CliRecvResponse(message);
                 //case MessageTypes.MGRCHANGEINVESTOR://请求修改投资者信息
                 //    return ResponseTemplate<RspMGRReqChangeInvestorResponse>.CliRecvResponse(message);
                 //case MessageTypes.MGRUPDATEPOSLOCKRESPONSE://请求修改帐户锁仓权限回报

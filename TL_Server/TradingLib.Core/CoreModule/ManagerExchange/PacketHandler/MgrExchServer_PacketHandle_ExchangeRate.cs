@@ -15,57 +15,29 @@ namespace TradingLib.Core
     /// </summary>
     public partial class MgrExchServer
     {
-        /// <summary>
-        /// 查询汇率信息
-        /// </summary>
-        /// <param name="session"></param>
-        [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "QryExchangeRates", "QryExchangeRates - qry exchange rate", "查询汇率信息")]
-        public void CTE_QryExchangeRates(ISession session)
-        {
-            Manager manager = session.GetManager();
-            ExchangeRate[] rates = manager.Domain.GetExchangeRates(TLCtxHelper.ModuleSettleCentre.Tradingday).ToArray();
-            session.ReplyMgr(rates);
-        }
-
-        [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "UpdateExchangeRate", "UpdateExchangeRate - update exchange rate", "更新汇率信息", QSEnumArgParseType.Json)]
-        public void CTE_UpdateExchangeRate(ISession session, string json)
-        {
-            Manager manager = session.GetManager();
-            if (!manager.BaseManager.IsRoot())//
-            {
-                throw new FutsRspError("无权更新手续费模板");
-            }
-
-            ExchangeRate rate = json.DeserializeObject<ExchangeRate>();// Mixins.Json.JsonMapper.ToObject<ExchangeRate>(json);
-            //更新汇率信息
-            manager.Domain.UpdateExchangeRate(rate);
-
-            //通知汇率更新
-            session.NotifyMgr("NotifyExchangeRateUpdate",manager.Domain.GetExchangeRate(rate.ID));
-            session.OperationSuccess("更新汇率成功");
-        }
 
 
 
-        /// <summary>
-        /// 查询汇率信息
-        /// </summary>
-        /// <param name="request"></param>
-        /// <param name="session"></param>
-        /// <param name="manager"></param>
-        void SrvOnQryExchagneRate(MGRQryExchangeRateRequuest request, ISession session, Manager manager)
-        {
-            logger.Info(string.Format("Manager[{0}] QryExchangeRate", session.AuthorizedID));
-            IEnumerable<ExchangeRate> ratelist = manager.Domain.GetExchangeRates(TLCtxHelper.ModuleSettleCentre.Tradingday);
 
-            for (int i = 0; i < ratelist.Count(); i++)
-            {
-                RspMGRQryExchangeRateResponse response = ResponseTemplate<RspMGRQryExchangeRateResponse>.SrvSendRspResponse(request);
-                response.ExchangeRate = ratelist.ElementAt(i);
+        ///// <summary>
+        ///// 查询汇率信息
+        ///// </summary>
+        ///// <param name="request"></param>
+        ///// <param name="session"></param>
+        ///// <param name="manager"></param>
+        //void SrvOnQryExchagneRate(MGRQryExchangeRateRequuest request, ISession session, Manager manager)
+        //{
+        //    logger.Info(string.Format("Manager[{0}] QryExchangeRate", session.AuthorizedID));
+        //    IEnumerable<ExchangeRate> ratelist = manager.Domain.GetExchangeRates(TLCtxHelper.ModuleSettleCentre.Tradingday);
 
-                CacheRspResponse(response, i == ratelist.Count() - 1);
-            }
-        }
+        //    for (int i = 0; i < ratelist.Count(); i++)
+        //    {
+        //        RspMGRQryExchangeRateResponse response = ResponseTemplate<RspMGRQryExchangeRateResponse>.SrvSendRspResponse(request);
+        //        response.ExchangeRate = ratelist.ElementAt(i);
+
+        //        CacheRspResponse(response, i == ratelist.Count() - 1);
+        //    }
+        //}
 
     }
 }

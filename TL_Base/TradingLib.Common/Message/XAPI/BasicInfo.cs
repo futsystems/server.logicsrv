@@ -138,20 +138,12 @@ namespace TradingLib.Common
 
         public override string ResponseSerialize()
         {
-            if (this.SecurityFaimly == null)
-                return string.Empty;
-            return this.SecurityFaimly.Serialize();
+            return SecurityFamilyImpl.Serialize(this.SecurityFaimly);
         }
 
         public override void ResponseDeserialize(string content)
         {
-            if (string.IsNullOrEmpty(content))
-            {
-                this.SecurityFaimly = null;
-                return;
-            }
-            this.SecurityFaimly = new SecurityFamilyImpl();
-            this.SecurityFaimly.Deserialize(content);
+            this.SecurityFaimly = SecurityFamilyImpl.Deserialize(content);
         }
     }
 
@@ -206,20 +198,12 @@ namespace TradingLib.Common
 
         public override string ResponseSerialize()
         {
-            if (this.Symbol == null)
-                return string.Empty;
-            return this.Symbol.Serialize();
+            return SymbolImpl.Serialize(this.Symbol);
         }
 
         public override void ResponseDeserialize(string content)
         {
-            if (string.IsNullOrEmpty(content))
-            {
-                this.Symbol = null;
-                return;
-            }
-            this.Symbol = new SymbolImpl();
-            this.Symbol.Deserialize(content);
+            this.Symbol = SymbolImpl.Deserialize(content);
         }
     }
 

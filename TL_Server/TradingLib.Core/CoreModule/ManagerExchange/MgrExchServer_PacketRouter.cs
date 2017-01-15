@@ -64,31 +64,31 @@ namespace TradingLib.Core
                     //        SrvOnMGRUpdateMarketTime(packet as MGRUpdateMarketTimeRequest, session, manager);
                     //        break;
                     //    }
-                    case MessageTypes.MGRQRYSECURITY://请求查询品种
-                        {
-                            SrvOnMGRQrySecurity(packet as MGRQrySecurityRequest, session, manager);
-                            break;
-                        }
-                    case MessageTypes.MGRUPDATESECURITY://请求更新品种
-                        {
-                            SrvOnMGRUpdateSecurity(packet as MGRUpdateSecurityRequest, session, manager);
-                            break;
-                        }
-                    case MessageTypes.MGRQRYSYMBOL://请求查询合约
-                        {
-                            SrvOnMGRQrySymbol(packet as MGRQrySymbolRequest, session, manager);
-                            break;
-                        }
-                    case MessageTypes.MGRUPDATESYMBOL://请求更新合约
-                        {
-                            SrvOnMGRUpdateSymbol(packet as MGRUpdateSymbolRequest, session, manager);
-                            break;
-                        }
-                    case MessageTypes.MGRQRYEXCHANGERATE://请求查询汇率
-                        {
-                            SrvOnQryExchagneRate(packet as MGRQryExchangeRateRequuest, session, manager);
-                            break;
-                        }
+                    //case MessageTypes.MGRQRYSECURITY://请求查询品种
+                    //    {
+                    //        SrvOnMGRQrySecurity(packet as MGRQrySecurityRequest, session, manager);
+                    //        break;
+                    //    }
+                    //case MessageTypes.MGRUPDATESECURITY://请求更新品种
+                    //    {
+                    //        SrvOnMGRUpdateSecurity(packet as MGRUpdateSecurityRequest, session, manager);
+                    //        break;
+                    //    }
+                    //case MessageTypes.MGRQRYSYMBOL://请求查询合约
+                    //    {
+                    //        SrvOnMGRQrySymbol(packet as MGRQrySymbolRequest, session, manager);
+                    //        break;
+                    //    }
+                    //case MessageTypes.MGRUPDATESYMBOL://请求更新合约
+                    //    {
+                    //        SrvOnMGRUpdateSymbol(packet as MGRUpdateSymbolRequest, session, manager);
+                    //        break;
+                    //    }
+                    //case MessageTypes.MGRQRYEXCHANGERATE://请求查询汇率
+                    //    {
+                    //        SrvOnQryExchagneRate(packet as MGRQryExchangeRateRequuest, session, manager);
+                    //        break;
+                    //    }
                     case MessageTypes.MGRQRYTICKSNAPSHOT://请求查询行情快照
                         {
                             SrvOnMGRQryTickSnapShot(packet as MGRQryTickSnapShotRequest, session, manager);
