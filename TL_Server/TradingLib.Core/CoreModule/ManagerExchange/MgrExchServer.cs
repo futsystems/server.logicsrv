@@ -169,6 +169,7 @@ namespace TradingLib.Core
     }
 
 
+
     /// <summary>
     /// 维护管理端对象相关数据
     /// 1.记录管理端观察账户列表
@@ -198,13 +199,13 @@ namespace TradingLib.Core
         /// <summary>
         /// 保存了管理端当前需要推送实时交易信息的帐号,任何时刻管理端只接受若干个账户财务信息更新，以及某个账户的交易记录
         /// </summary>
-        string _selectacc = string.Empty;
-        public string SelectedAccount { get { return _selectacc; } set { _selectacc = value; } }
+        public IAccount AccountSelected { get; private set; }
 
         MgrClientInfo _clientInfo;
         public MgrClientInfoEx(MgrClientInfo clientInfo)
         {
             _clientInfo = clientInfo;
+            this.AccountSelected = null;
         }
 
         /// <summary>
@@ -233,9 +234,9 @@ namespace TradingLib.Core
         public bool NeedPushTradingInfo(string account)
         {
             //如果提供的帐号 或者 设定当前选择的帐号为空或null 则不推送该交易信息
-            if (string.IsNullOrEmpty(account) || string.IsNullOrEmpty(this.SelectedAccount)) return false;
+            if (string.IsNullOrEmpty(account) || this.AccountSelected == null) return false;
             //选中的帐号与我们当前比较的帐号 相同,则我们推送该信息
-            if (account.Equals(this.SelectedAccount)) return true;
+            if (this.AccountSelected.ID == account) return true;
             return false;
         }
 
@@ -284,12 +285,10 @@ namespace TradingLib.Core
         /// 选中某个账户 用于回补该账户的交易记录
         /// </summary>
         /// <param name="account"></param>
-        public void Selected(string account)
+        public void Selected(IAccount account)
         {
-            IAccount acc = TLCtxHelper.ModuleAccountManager[account];
-            if (acc == null) return;//交易帐户不存在 
-            if (!this.Manager.RightAccessAccount(acc)) return;//无权查看交易帐户
-            _selectacc = account;
+            if (!this.Manager.RightAccessAccount(account)) return;//无权查看交易帐户
+            this.AccountSelected = account;
         }
 
 

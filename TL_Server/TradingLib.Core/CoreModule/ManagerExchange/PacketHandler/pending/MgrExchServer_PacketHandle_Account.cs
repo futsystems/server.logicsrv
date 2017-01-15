@@ -7,37 +7,9 @@ using TradingLib.Common;
 
 namespace TradingLib.Core
 {
+    
     public partial class MgrExchServer
     {
-
-        /// <summary>
-        /// 查询交易帐号列表
-        /// </summary>
-        /// <param name="request"></param>
-        /// <param name="session"></param>
-        /// <param name="manager"></param>
-        //void SrvOnMGRQryAccount(MGRQryAccountRequest request, ISession session, Manager manager)
-        //{
-        //    logger.Info(string.Format("Manager[{0}] QryAccountList", session.AuthorizedID));
-        //    IAccount[] list = manager.GetVisibleAccount().ToArray();
-        //    if (list.Length > 0)
-        //    {
-        //        for (int i = 0; i < list.Length; i++)
-        //        {
-        //            RspMGRQryAccountResponse response = ResponseTemplate<RspMGRQryAccountResponse>.SrvSendRspResponse(request);
-        //            response.AccountItem = list[i].ToAccountItem();
-        //            CacheRspResponse(response, i == list.Length - 1);
-        //        }
-        //    }
-        //    else
-        //    {
-        //        RspMGRQryAccountResponse response = ResponseTemplate<RspMGRQryAccountResponse>.SrvSendRspResponse(request);
-        //        CacheRspResponse(response);
-
-        //    }
-        //}
-
-
         /// <summary>
         /// 统一使用AccountCreation对象创建交易帐户
         /// </summary>
@@ -63,19 +35,6 @@ namespace TradingLib.Core
         }
 
 
-        ///// <summary>
-        ///// 设定观察交易帐号列表
-        ///// </summary>
-        ///// <param name="request"></param>
-        ///// <param name="session"></param>
-        ///// <param name="manager"></param>
-        //void SrvOnMGRWatchAccount(MGRWatchAccountRequest request, ISession session, Manager manager)
-        //{
-        //    logger.Info(string.Format("Manager[{0}] Set WatchList:{1}", session.AuthorizedID, string.Join(",",request.AccountList.ToArray())));
-        //    var c = customerExInfoMap[request.ClientID];
-        //    c.Watch(request.AccountList);
-        //}
-
         /// <summary>
         /// 设定观察交易账户列表
         /// </summary>
@@ -89,18 +48,41 @@ namespace TradingLib.Core
             c.Watch(accounts);
         }
 
+
         /// <summary>
         /// 设定当前选中交易账户
         /// </summary>
         /// <param name="request"></param>
         /// <param name="session"></param>
         /// <param name="manager"></param>
-        void SrvOnMGRResumeAccount(MGRResumeAccountRequest request, ISession session, Manager manager)
+        //void SrvOnMGRResumeAccount(MGRResumeAccountRequest request, ISession session, Manager manager)
+        //{
+        //    logger.Info(string.Format("Manager[{0}] Resume Account:{1}", session.AuthorizedID, request.ResumeAccount));
+        //    var c = customerExInfoMap[request.ClientID];
+        //    c.Selected(request.ResumeAccount);
+        //    _resumecache.Write(request);
+        //}
+
+        /// <summary>
+        /// 恢复交易账户交易记录
+        /// </summary>
+        /// <param name="session"></param>
+        /// <param name="json"></param>
+        [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "ResumeAccount", "ResumeAccount - resume  account trading info", "恢复某个交易账户交易记录", QSEnumArgParseType.Json)]
+        public void CTE_ResumeAccount(ISession session, string json)
         {
-            logger.Info(string.Format("Manager[{0}] Resume Account:{1}", session.AuthorizedID, request.ResumeAccount));
-            var c = customerExInfoMap[request.ClientID];
-            c.Selected(request.ResumeAccount);
-            _resumecache.Write(request);
+            var data = json.DeserializeObject();
+            string account = data["account"].ToString();
+            IAccount acc = TLCtxHelper.ModuleAccountManager[account];
+            if (session.GetManager().RightAccessAccount(acc))
+            {
+                var c = customerExInfoMap[session.Location.ClientID];
+                c.Selected(acc);
+                _resumecache.Write(c);
+                //string[] accounts = json.DeserializeObject<string[]>();
+                //var c = customerExInfoMap[session.Location.ClientID];
+                //c.Watch(accounts);
+            }
         }
 
 

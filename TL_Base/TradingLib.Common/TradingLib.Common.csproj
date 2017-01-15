@@ -201,15 +201,11 @@
     <Compile Include="Message\HeartBeat.cs" />
     <Compile Include="Message\Location.cs" />
     <Compile Include="Message\Login.cs" />
-    <Compile Include="Message\1old\MGRAccountChangeUpdateNotify.cs" />
     <Compile Include="Message\Manager\MGRBasicInfo.cs" />
     <Compile Include="Message\Manager\MGRContrib.cs" />
     <Compile Include="Message\Manager\MGROperationResponse.cs" />
-    <Compile Include="Message\Manager\MGRAccountStatisticNotify.cs" />
     <Compile Include="Message\Manager\MGRLogin.cs" />
-    <Compile Include="Message\1old\MGRQryAccounts.cs" />
-    <Compile Include="Message\Manager\MGRResumeAccount.cs" />
-    <Compile Include="Message\1old\MGRWatchAccount.cs" />
+    <Compile Include="Message\1old\MGRResumeAccount.cs" />
     <Compile Include="Message\OrderAction.cs" />
     <Compile Include="Message\PacketBase.cs" />
     <Compile Include="Message\PacketTemplate.cs" />

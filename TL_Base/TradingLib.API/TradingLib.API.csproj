@@ -57,6 +57,7 @@
     <Compile Include="BinaryOption\EnumBinaryOptionType.cs" />
     <Compile Include="BinaryOption\EnumBinaryOptionOrderStatus.cs" />
     <Compile Include="BinaryOption\EnumBinaryOptionTimeSpan.cs" />
+    <Compile Include="Msic\ITLSerialize.cs" />
     <Compile Include="Trading\Settlement\CashTransaction.cs" />
     <Compile Include="Trading\EnumEquityType.cs" />
     <Compile Include="Message\MessageCodecType.cs" />

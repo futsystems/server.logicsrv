@@ -71,39 +71,79 @@ namespace TradingLib.Core
             }
         }
 
-        void SrvOnMGRQryMarketTime(MGRQryMarketTimeRequest request, ISession session, Manager manager)
-        {
-            logger.Info(string.Format("Manager[{0}] QryMarketTime", session.AuthorizedID));
-            MarketTimeImpl[] mts = BasicTracker.MarketTimeTracker.MarketTimes;
-            int totalnum = mts.Length;
-            for (int i = 0; i < totalnum; i++)
-            {
-                RspMGRQryMarketTimeResponse response = ResponseTemplate<RspMGRQryMarketTimeResponse>.SrvSendRspResponse(request);
-                response.MarketTime = mts[i];
+        //void SrvOnMGRQryMarketTime(MGRQryMarketTimeRequest request, ISession session, Manager manager)
+        //{
+        //    logger.Info(string.Format("Manager[{0}] QryMarketTime", session.AuthorizedID));
+        //    MarketTimeImpl[] mts = BasicTracker.MarketTimeTracker.MarketTimes;
+        //    int totalnum = mts.Length;
+        //    for (int i = 0; i < totalnum; i++)
+        //    {
+        //        RspMGRQryMarketTimeResponse response = ResponseTemplate<RspMGRQryMarketTimeResponse>.SrvSendRspResponse(request);
+        //        response.MarketTime = mts[i];
 
-                CacheRspResponse(response, i == totalnum - 1);
+        //        CacheRspResponse(response, i == totalnum - 1);
+        //    }
+        //}
+
+        [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "QryInfoMarketTime", "QryInfoMarketTime - qry  market info", "查询交易时间段")]
+        public void CTE_QryInfoMarketTime(ISession session)
+        {
+            var manager = session.GetManager();
+
+            MarketTimeImpl[] list = BasicTracker.MarketTimeTracker.MarketTimes;
+            if (list.Length > 0)
+            {
+                for (int i = 0; i < list.Length; i++)
+                {
+                    session.ReplyMgr(MarketTimeImpl.Serialize(list[i]), i == list.Length - 1);
+                }
+            }
+            else
+            {
+                session.ReplyMgr("");
             }
         }
 
-        void SrvOnMGRUpdateMarketTime(MGRUpdateMarketTimeRequest request, ISession session, Manager manager)
+        [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "UpdateInfoMarketTime", "UpdateInfoMarketTime - update  market info", "更新交易时间段",QSEnumArgParseType.Json)]
+        public void CTE_UpdateInfoMarketTime(ISession session,string json)
         {
-            logger.Info(string.Format("Manager[{0}] UpdateMarketTime:{1}", session.AuthorizedID, request.ToString()));
             Manager manger = session.GetManager();
-            if (manager.IsRoot())
-            { 
-                if(request.MarketTime != null)
+            if (manger.IsRoot())
+            {
+                string mtmessage = json.DeserializeObject<string>();
+                MarketTimeImpl mt = null;
+                if (!string.IsNullOrEmpty(mtmessage))
                 {
-                    BasicTracker.MarketTimeTracker.UpdateMarketTime(request.MarketTime);
-                    RspMGRUpdateMarketTimeResponse response = ResponseTemplate<RspMGRUpdateMarketTimeResponse>.SrvSendRspResponse(request);
-                    response.MarketTime = BasicTracker.MarketTimeTracker[request.MarketTime.ID];
-
-                    CacheRspResponse(response);
+                    mt = MarketTimeImpl.Deserialize(mtmessage);
+                }
+                if (mt != null)
+                {
+                    BasicTracker.MarketTimeTracker.UpdateMarketTime(mt);
+                    //session.ReplyMgr(MarketTimeImpl.Serialize(BasicTracker.MarketTimeTracker[mt.ID]));
+                    session.NotifyMgr("NotifyMarketTime", MarketTimeImpl.Serialize(BasicTracker.MarketTimeTracker[mt.ID]));
                 }
 
-                
             }
-        
         }
+        //void SrvOnMGRUpdateMarketTime(MGRUpdateMarketTimeRequest request, ISession session, Manager manager)
+        //{
+        //    logger.Info(string.Format("Manager[{0}] UpdateMarketTime:{1}", session.AuthorizedID, request.ToString()));
+        //    Manager manger = session.GetManager();
+        //    if (manager.IsRoot())
+        //    { 
+        //        if(request.MarketTime != null)
+        //        {
+        //            BasicTracker.MarketTimeTracker.UpdateMarketTime(request.MarketTime);
+        //            RspMGRUpdateMarketTimeResponse response = ResponseTemplate<RspMGRUpdateMarketTimeResponse>.SrvSendRspResponse(request);
+        //            response.MarketTime = BasicTracker.MarketTimeTracker[request.MarketTime.ID];
+
+        //            CacheRspResponse(response);
+        //        }
+
+                
+        //    }
+        
+        //}
         void SrvOnMGRQrySecurity(MGRQrySecurityRequest request, ISession session, Manager manager)
         {
             logger.Info(string.Format("Manager[{0}] QrySecurity", session.AuthorizedID));

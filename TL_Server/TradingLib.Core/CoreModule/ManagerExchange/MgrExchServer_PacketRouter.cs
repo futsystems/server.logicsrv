@@ -28,11 +28,11 @@ namespace TradingLib.Core
                     //        SrvOnMGRWatchAccount(packet as MGRWatchAccountRequest, session, manager);
                     //        break;
                     //    }
-                    case MessageTypes.MGRRESUMEACCOUNT://恢复某个交易帐号日内交易数据
-                        {
-                            SrvOnMGRResumeAccount(packet as MGRResumeAccountRequest, session, manager);
-                            break;
-                        }
+                    //case MessageTypes.MGRRESUMEACCOUNT://恢复某个交易帐号日内交易数据
+                    //    {
+                    //        SrvOnMGRResumeAccount(packet as MGRResumeAccountRequest, session, manager);
+                    //        break;
+                    //    }
                     case MessageTypes.SENDORDER:
                         {
                             SrvOnOrderInsert(packet as OrderInsertRequest, session, manager);
@@ -54,16 +54,16 @@ namespace TradingLib.Core
                             SrvOnMGRUpdateExchange(packet as MGRUpdateExchangeRequest, session, manager);
                             break;
                         }
-                    case MessageTypes.MGRQRYMARKETTIME://请求查询市场时间段
-                        {
-                            SrvOnMGRQryMarketTime(packet as MGRQryMarketTimeRequest, session, manager);
-                            break;
-                        }
-                    case MessageTypes.MGRUPDATEMARKETTIME://请求更新交易时间段
-                        {
-                            SrvOnMGRUpdateMarketTime(packet as MGRUpdateMarketTimeRequest, session, manager);
-                            break;
-                        }
+                    //case MessageTypes.MGRQRYMARKETTIME://请求查询市场时间段
+                    //    {
+                    //        SrvOnMGRQryMarketTime(packet as MGRQryMarketTimeRequest, session, manager);
+                    //        break;
+                    //    }
+                    //case MessageTypes.MGRUPDATEMARKETTIME://请求更新交易时间段
+                    //    {
+                    //        SrvOnMGRUpdateMarketTime(packet as MGRUpdateMarketTimeRequest, session, manager);
+                    //        break;
+                    //    }
                     case MessageTypes.MGRQRYSECURITY://请求查询品种
                         {
                             SrvOnMGRQrySecurity(packet as MGRQrySecurityRequest, session, manager);

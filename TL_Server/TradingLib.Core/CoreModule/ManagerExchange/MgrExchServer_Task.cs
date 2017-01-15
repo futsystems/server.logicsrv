@@ -88,14 +88,6 @@ namespace TradingLib.Core
                             NotifyAccountStatistic(acc, cst.Location);
                         }
                         _lastPushAllTime = DateTime.Now;
-
-                        object livemgr = new 
-                        {
-                            Manager=cst.Manager.Login,
-                            AccountSelected = cst.SelectedAccount,
-                        };
-                        Notify(this.CoreId, "NotifyLiveManager", livemgr, BasicTracker.ManagerTracker["sroot"]);
-
                     }
 
                     

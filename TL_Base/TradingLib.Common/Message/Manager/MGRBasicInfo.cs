@@ -120,111 +120,111 @@ namespace TradingLib.Common
     }
 
 
-    public class MGRQryMarketTimeRequest : RequestPacket
-    {
-        public MGRQryMarketTimeRequest()
-        {
-            _type = MessageTypes.MGRQRYMARKETTIME;
-        }
-        public override string ContentSerialize()
-        {
-            return string.Empty;
-        }
+    //public class MGRQryMarketTimeRequest : RequestPacket
+    //{
+    //    public MGRQryMarketTimeRequest()
+    //    {
+    //        _type = MessageTypes.MGRQRYMARKETTIME;
+    //    }
+    //    public override string ContentSerialize()
+    //    {
+    //        return string.Empty;
+    //    }
 
-        public override void ContentDeserialize(string contentstr)
-        {
+    //    public override void ContentDeserialize(string contentstr)
+    //    {
 
-        }
+    //    }
 
-    }
+    //}
 
-    public class RspMGRQryMarketTimeResponse : RspResponsePacket
-    {
-        public RspMGRQryMarketTimeResponse()
-        {
-            _type = MessageTypes.MGRMARKETTIMERESPONSE;
-            this.MarketTime = null;
-        }
+    //public class RspMGRQryMarketTimeResponse : RspResponsePacket
+    //{
+    //    public RspMGRQryMarketTimeResponse()
+    //    {
+    //        _type = MessageTypes.MGRMARKETTIMERESPONSE;
+    //        this.MarketTime = null;
+    //    }
 
-        public MarketTimeImpl MarketTime { get; set; }
+    //    public MarketTimeImpl MarketTime { get; set; }
 
-        public override string ResponseSerialize()
-        {
-            if (this.MarketTime == null)
-                return string.Empty;
-            return TradingLib.Common.MarketTimeImpl.Serialize(this.MarketTime);
-        }
+    //    public override string ResponseSerialize()
+    //    {
+    //        if (this.MarketTime == null)
+    //            return string.Empty;
+    //        return TradingLib.Common.MarketTimeImpl.Serialize(this.MarketTime);
+    //    }
 
-        public override void ResponseDeserialize(string content)
-        {
-            if (string.IsNullOrEmpty(content))
-            {
-                this.MarketTime = null;
-                return;
-            }
-            this.MarketTime = TradingLib.Common.MarketTimeImpl.Deserialize(content);
-        }
-    }
-
-
-    public class MGRUpdateMarketTimeRequest : RequestPacket
-    {
-        public MGRUpdateMarketTimeRequest()
-        {
-            _type = MessageTypes.MGRUPDATEMARKETTIME;
-            this.MarketTime = null;
-        }
-
-        public MarketTimeImpl MarketTime { get; set; }
-
-        public override string ContentSerialize()
-        {
-            if (this.MarketTime == null)
-                return string.Empty;
-            return TradingLib.Common.MarketTimeImpl.Serialize(this.MarketTime);
-        }
+    //    public override void ResponseDeserialize(string content)
+    //    {
+    //        if (string.IsNullOrEmpty(content))
+    //        {
+    //            this.MarketTime = null;
+    //            return;
+    //        }
+    //        this.MarketTime = TradingLib.Common.MarketTimeImpl.Deserialize(content);
+    //    }
+    //}
 
 
-        public override void ContentDeserialize(string contentstr)
-        {
-            if (string.IsNullOrEmpty(contentstr))
-            {
-                this.MarketTime = null;
-                return;
-            }
-            this.MarketTime = TradingLib.Common.MarketTimeImpl.Deserialize(contentstr);
-        }
+    //public class MGRUpdateMarketTimeRequest : RequestPacket
+    //{
+    //    public MGRUpdateMarketTimeRequest()
+    //    {
+    //        _type = MessageTypes.MGRUPDATEMARKETTIME;
+    //        this.MarketTime = null;
+    //    }
 
-    }
+    //    public MarketTimeImpl MarketTime { get; set; }
 
-    public class RspMGRUpdateMarketTimeResponse : RspResponsePacket
-    {
-        public RspMGRUpdateMarketTimeResponse()
-        {
-            _type = MessageTypes.MGRUPDATEMARKETTIMERESPONSE;
-            this.MarketTime = null;
-        }
-
-        public MarketTimeImpl MarketTime { get; set; }
-
-        public override string ResponseSerialize()
-        {
-            if (this.MarketTime == null)
-                return string.Empty;
-            return TradingLib.Common.MarketTimeImpl.Serialize(this.MarketTime);
-        }
+    //    public override string ContentSerialize()
+    //    {
+    //        if (this.MarketTime == null)
+    //            return string.Empty;
+    //        return TradingLib.Common.MarketTimeImpl.Serialize(this.MarketTime);
+    //    }
 
 
-        public override void ResponseDeserialize(string contentstr)
-        {
-            if (string.IsNullOrEmpty(contentstr))
-            {
-                this.MarketTime = null;
-                return;
-            }
-            this.MarketTime = TradingLib.Common.MarketTimeImpl.Deserialize(contentstr);
-        }
-    }
+    //    public override void ContentDeserialize(string contentstr)
+    //    {
+    //        if (string.IsNullOrEmpty(contentstr))
+    //        {
+    //            this.MarketTime = null;
+    //            return;
+    //        }
+    //        this.MarketTime = TradingLib.Common.MarketTimeImpl.Deserialize(contentstr);
+    //    }
+
+    //}
+
+    //public class RspMGRUpdateMarketTimeResponse : RspResponsePacket
+    //{
+    //    public RspMGRUpdateMarketTimeResponse()
+    //    {
+    //        _type = MessageTypes.MGRUPDATEMARKETTIMERESPONSE;
+    //        this.MarketTime = null;
+    //    }
+
+    //    public MarketTimeImpl MarketTime { get; set; }
+
+    //    public override string ResponseSerialize()
+    //    {
+    //        if (this.MarketTime == null)
+    //            return string.Empty;
+    //        return TradingLib.Common.MarketTimeImpl.Serialize(this.MarketTime);
+    //    }
+
+
+    //    public override void ResponseDeserialize(string contentstr)
+    //    {
+    //        if (string.IsNullOrEmpty(contentstr))
+    //        {
+    //            this.MarketTime = null;
+    //            return;
+    //        }
+    //        this.MarketTime = TradingLib.Common.MarketTimeImpl.Deserialize(contentstr);
+    //    }
+    //}
     /// <summary>
     /// 查询品种
     /// </summary>

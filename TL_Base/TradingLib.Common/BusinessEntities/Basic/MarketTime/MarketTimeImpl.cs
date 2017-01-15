@@ -16,9 +16,6 @@ namespace TradingLib.Common
         /// 交易小节列表
         /// </summary>
         public SortedDictionary<string, TradingRange> RangeList { get { return _sortRangeList; } }
-
-        //List<TradingRange> _rangelist = new List<TradingRange>();
-
         SortedDictionary<string, TradingRange> _sortRangeList = new SortedDictionary<string, TradingRange>();
 
         /// <summary>
@@ -64,6 +61,7 @@ namespace TradingLib.Common
         /// <returns></returns>
         public static string Serialize(MarketTimeImpl mt)
         {
+            if (mt == null) return string.Empty;
             StringBuilder sb = new StringBuilder();
             char d = ',';
 
@@ -85,6 +83,7 @@ namespace TradingLib.Common
         /// <param name="content"></param>
         public static MarketTimeImpl Deserialize(string content)
         {
+            if (string.IsNullOrEmpty(content)) return null;
             string[] rec = content.Split(new char[] { ',' }, 5);
             MarketTimeImpl mt = new MarketTimeImpl();
             mt.ID = int.Parse(rec[0]);

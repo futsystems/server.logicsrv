@@ -63,7 +63,7 @@ namespace TradingLib.Core
         RingBuffer<Order> _ocache = new RingBuffer<Order>(buffize);//委托缓存
         RingBuffer<OrderErrorPack> _errorordercache = new RingBuffer<OrderErrorPack>(buffize);//委托错误缓存
         RingBuffer<Trade> _fcache = new RingBuffer<Trade>(buffize);//成交缓存
-        RingBuffer<MGRResumeAccountRequest> _resumecache = new RingBuffer<MGRResumeAccountRequest>(buffize);//请求恢复交易帐户数据队列
+        RingBuffer<MgrClientInfoEx> _resumecache = new RingBuffer<MgrClientInfoEx>(buffize);//请求恢复交易帐户数据
         RingBuffer<IPacket> _packetcache = new RingBuffer<IPacket>(buffize);//其余消息的缓存队列
 
         bool _readgo = false;
@@ -91,8 +91,8 @@ namespace TradingLib.Core
                     //恢复交易帐户日内数据
                     while (_resumecache.hasItems)
                     {
-                        MGRResumeAccountRequest request = _resumecache.Read();
-                        ResumeAccountTradingInfo(request);
+                        var info = _resumecache.Read();
+                        ResumeAccountTradingInfo(info);
                     }
                     #endregion
 
@@ -158,25 +158,27 @@ namespace TradingLib.Core
             }
         }
 
-        void ResumeAccountTradingInfo(MGRResumeAccountRequest request)
+        void ResumeAccountTradingInfo(MgrClientInfoEx info)
         {
             try
             {
-                logger.Info(string.Format("Resume Trading Info Of Account:{0}", request.ResumeAccount));
-                IAccount account = TLCtxHelper.ModuleAccountManager[request.ResumeAccount];
+                
+                IAccount account = info.AccountSelected;
                 if (account == null)
                 {
-                    logger.Error("Resume Account:" + request.ResumeAccount + " do not exist");
+                    logger.Error(string.Format("Manager:{0} do not have account selected",info.Manager.Login));
                     return;
                 }
+                logger.Info(string.Format("Resume Trading Info Of Account:{0}", info.AccountSelected.ID));
 
                 //1.发送恢复数据开始标识
-                RspMGRResumeAccountResponse response = ResponseTemplate<RspMGRResumeAccountResponse>.SrvSendRspResponse(request);
-                response.ResumeAccount = request.ResumeAccount;
-                response.ResumeStatus = QSEnumResumeStatus.BEGIN;
-                tl.TLSend(response);
-                
-                ILocation location = new Location(request.FrontID,request.ClientID);
+                NotifyMGRContribNotify resumeNotify = ResponseTemplate<NotifyMGRContribNotify>.SrvSendNotifyResponse(info.Location);
+                resumeNotify.ModuleID = this.CoreId;
+                resumeNotify.CMDStr = "NotifyResume";
+                resumeNotify.Result = 0.SerializeObject();
+                tl.TLSend(resumeNotify);
+
+                ILocation location = info.Location;
                 //转发昨日持仓信息
                 foreach (Position p in account.Positions)
                 {
@@ -203,12 +205,14 @@ namespace TradingLib.Core
                     tl.TLSend(notify);
                 }
                 //3.发送恢复数据结束标识
-                response.ResumeStatus = QSEnumResumeStatus.END;
-                tl.TLSend(response);
+                //response.ResumeStatus = QSEnumResumeStatus.END;
+                //tl.TLSend(response);
+                resumeNotify.Result = 1.SerializeObject();
+                tl.TLSend(resumeNotify);
             }
             catch (Exception ex)
             {
-                logger.Error(string.Format("Resume Account:{0} Error", request.ResumeAccount));
+                logger.Error(string.Format("Resume Account:{0} Error", info.AccountSelected.ID));
             }
         }
 

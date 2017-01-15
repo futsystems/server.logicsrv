@@ -65,7 +65,7 @@ namespace TradingLib.Core
 
         #region 命令行操作
 
-        [CoreCommandAttr(QSEnumCommandSource.CLI, "flat", "flat - 强平某帐户所有持仓", "强平某个帐户的持仓，先撤单，然后再强平")]
+        [ContribCommandAttr(QSEnumCommandSource.CLI, "flat", "flat - 强平某帐户所有持仓", "强平某个帐户的持仓，先撤单，然后再强平")]
         public string CTE_DemoFalt1(string account)
         {
             IAccount acc = TLCtxHelper.ModuleAccountManager[account];
@@ -82,7 +82,7 @@ namespace TradingLib.Core
         }
 
 
-        [CoreCommandAttr(QSEnumCommandSource.CLI, "flatpos", "flatpos - 强平某帐户某合约所有持仓", "风控中心平掉某个帐户的某个合约的所有持仓")]
+        [ContribCommandAttr(QSEnumCommandSource.CLI, "flatpos", "flatpos - 强平某帐户某合约所有持仓", "风控中心平掉某个帐户的某个合约的所有持仓")]
         public void CTE_FlatPosition(string account, string symbol)
         {
             Position pos = TLCtxHelper.ModuleAccountManager[account].GetPosition(symbol, true);
@@ -93,7 +93,7 @@ namespace TradingLib.Core
                 FlatPosition(pos2, pos.UnsignedSize, QSEnumOrderSource.RISKCENTRE, "风控强平");
         }
 
-        [CoreCommandAttr(QSEnumCommandSource.CLI, "pflattask", "pflattask - 打印强平任务列表", "风控中心平仓测试输出列表")]
+        [ContribCommandAttr(QSEnumCommandSource.CLI, "pflattask", "pflattask - 打印强平任务列表", "风控中心平仓测试输出列表")]
         public string CTE_PostionFlatSetList()
         {
             StringBuilder sb = new StringBuilder();
