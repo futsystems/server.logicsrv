@@ -121,8 +121,8 @@ namespace TradingLib.Core
                     BasicTracker.MarketTimeTracker.UpdateMarketTime(mt);
                     //session.ReplyMgr(MarketTimeImpl.Serialize(BasicTracker.MarketTimeTracker[mt.ID]));
                     session.NotifyMgr("NotifyMarketTime", MarketTimeImpl.Serialize(BasicTracker.MarketTimeTracker[mt.ID]));
+                    session.OperationSuccess("更新交易时间段成功");
                 }
-
             }
         }
         //void SrvOnMGRUpdateMarketTime(MGRUpdateMarketTimeRequest request, ISession session, Manager manager)
