@@ -44,16 +44,16 @@ namespace TradingLib.Core
                             break;
                         }
                 
-                    case MessageTypes.MGRQRYEXCHANGE://请求查询交易所
-                        {
-                            SrvOnMGRQryExchange(packet as MGRQryExchangeRequuest, session, manager);
-                            break;
-                        }
-                    case MessageTypes.MGRUPDATEEXCHANGE://请求更新交易所
-                        {
-                            SrvOnMGRUpdateExchange(packet as MGRUpdateExchangeRequest, session, manager);
-                            break;
-                        }
+                    //case MessageTypes.MGRQRYEXCHANGE://请求查询交易所
+                    //    {
+                    //        SrvOnMGRQryExchange(packet as MGRQryExchangeRequuest, session, manager);
+                    //        break;
+                    //    }
+                    //case MessageTypes.MGRUPDATEEXCHANGE://请求更新交易所
+                    //    {
+                    //        SrvOnMGRUpdateExchange(packet as MGRUpdateExchangeRequest, session, manager);
+                    //        break;
+                    //    }
                     //case MessageTypes.MGRQRYMARKETTIME://请求查询市场时间段
                     //    {
                     //        SrvOnMGRQryMarketTime(packet as MGRQryMarketTimeRequest, session, manager);

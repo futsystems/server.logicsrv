@@ -7,117 +7,117 @@ using TradingLib.API;
 
 namespace TradingLib.Common
 {
-    /// <summary>
-    /// 查询交易所信息
-    /// </summary>
-    public class MGRQryExchangeRequuest : RequestPacket
-    {
-        public MGRQryExchangeRequuest()
-        {
-            _type = MessageTypes.MGRQRYEXCHANGE;
-        }
+    ///// <summary>
+    ///// 查询交易所信息
+    ///// </summary>
+    //public class MGRQryExchangeRequuest : RequestPacket
+    //{
+    //    public MGRQryExchangeRequuest()
+    //    {
+    //        _type = MessageTypes.MGRQRYEXCHANGE;
+    //    }
 
-        public override string ContentSerialize()
-        {
-            return string.Empty;
-        }
+    //    public override string ContentSerialize()
+    //    {
+    //        return string.Empty;
+    //    }
 
-        public override void ContentDeserialize(string contentstr)
-        {
+    //    public override void ContentDeserialize(string contentstr)
+    //    {
             
-        }
-    }
+    //    }
+    //}
 
-    /// <summary>
-    /// 更新交易所信息
-    /// </summary>
-    public class MGRUpdateExchangeRequest : RequestPacket
-    {
-        public MGRUpdateExchangeRequest()
-        {
-            _type = MessageTypes.MGRUPDATEEXCHANGE;
-            this.Exchange = null;
-        }
+    ///// <summary>
+    ///// 更新交易所信息
+    ///// </summary>
+    //public class MGRUpdateExchangeRequest : RequestPacket
+    //{
+    //    public MGRUpdateExchangeRequest()
+    //    {
+    //        _type = MessageTypes.MGRUPDATEEXCHANGE;
+    //        this.Exchange = null;
+    //    }
 
-        public ExchangeImpl Exchange { get; set; }
+    //    public ExchangeImpl Exchange { get; set; }
 
-        public override string ContentSerialize()
-        {
-            if (this.Exchange == null)
-                return string.Empty;
-            return TradingLib.Common.ExchangeImpl.Serialize(this.Exchange);
-        }
+    //    public override string ContentSerialize()
+    //    {
+    //        if (this.Exchange == null)
+    //            return string.Empty;
+    //        return TradingLib.Common.ExchangeImpl.Serialize(this.Exchange);
+    //    }
 
-        public override void ContentDeserialize(string content)
-        {
-            if (string.IsNullOrEmpty(content))
-            {
-                this.Exchange = null;
-                return;
-            }
-            this.Exchange = TradingLib.Common.ExchangeImpl.Deserialize(content);
-        }
-    }
+    //    public override void ContentDeserialize(string content)
+    //    {
+    //        if (string.IsNullOrEmpty(content))
+    //        {
+    //            this.Exchange = null;
+    //            return;
+    //        }
+    //        this.Exchange = TradingLib.Common.ExchangeImpl.Deserialize(content);
+    //    }
+    //}
 
-    public class RspMGRUpdateExchangeResponse : RspResponsePacket
-    {
+    //public class RspMGRUpdateExchangeResponse : RspResponsePacket
+    //{
 
-        public RspMGRUpdateExchangeResponse()
-        {
-            _type = MessageTypes.MGRUPDATEEXCHANGERESPONSE;
-            this.Exchange = null;
-        }
+    //    public RspMGRUpdateExchangeResponse()
+    //    {
+    //        _type = MessageTypes.MGRUPDATEEXCHANGERESPONSE;
+    //        this.Exchange = null;
+    //    }
 
-        public ExchangeImpl Exchange { get; set; }
+    //    public ExchangeImpl Exchange { get; set; }
 
-        public override string ResponseSerialize()
-        {
-            if (this.Exchange == null)
-                return string.Empty;
-            return TradingLib.Common.ExchangeImpl.Serialize(this.Exchange);
-        }
+    //    public override string ResponseSerialize()
+    //    {
+    //        if (this.Exchange == null)
+    //            return string.Empty;
+    //        return TradingLib.Common.ExchangeImpl.Serialize(this.Exchange);
+    //    }
 
-        public override void ResponseDeserialize(string content)
-        {
-            if (string.IsNullOrEmpty(content))
-            {
-                this.Exchange = null;
-                return;
-            }
-            this.Exchange = TradingLib.Common.ExchangeImpl.Deserialize(content);
-        }
-    }
+    //    public override void ResponseDeserialize(string content)
+    //    {
+    //        if (string.IsNullOrEmpty(content))
+    //        {
+    //            this.Exchange = null;
+    //            return;
+    //        }
+    //        this.Exchange = TradingLib.Common.ExchangeImpl.Deserialize(content);
+    //    }
+    //}
 
 
 
-    /// <summary>
-    /// 查询交易所回报
-    /// </summary>
-    public class RspMGRQryExchangeResponse : RspResponsePacket
-    {
-        public RspMGRQryExchangeResponse()
-        {
-            _type = MessageTypes.MGREXCHANGERESPONSE;
-            Exchange = null;
-        }
+    ///// <summary>
+    ///// 查询交易所回报
+    ///// </summary>
+    //public class RspMGRQryExchangeResponse : RspResponsePacket
+    //{
+    //    public RspMGRQryExchangeResponse()
+    //    {
+    //        _type = MessageTypes.MGREXCHANGERESPONSE;
+    //        Exchange = null;
+    //    }
 
-        public ExchangeImpl Exchange { get; set; }
-        public override string ResponseSerialize()
-        {
-            if (this.Exchange == null) return string.Empty;
-            return TradingLib.Common.ExchangeImpl.Serialize(this.Exchange);
-        }
+    //    public ExchangeImpl Exchange { get; set; }
+    //    public override string ResponseSerialize()
+    //    {
+    //        if (this.Exchange == null) return string.Empty;
+    //        return TradingLib.Common.ExchangeImpl.Serialize(this.Exchange);
+    //    }
 
-        public override void ResponseDeserialize(string content)
-        {
-            if (string.IsNullOrEmpty(content))
-            {
-                this.Exchange = null;
-                return;
-            }
-            this.Exchange = TradingLib.Common.ExchangeImpl.Deserialize(content);
-        }
-    }
+    //    public override void ResponseDeserialize(string content)
+    //    {
+    //        if (string.IsNullOrEmpty(content))
+    //        {
+    //            this.Exchange = null;
+    //            return;
+    //        }
+    //        this.Exchange = TradingLib.Common.ExchangeImpl.Deserialize(content);
+    //    }
+    //}
 
 
     //public class MGRQryMarketTimeRequest : RequestPacket

@@ -189,6 +189,7 @@ namespace TradingLib.Common
 
         public static string Serialize(ExchangeImpl ex)
         {
+            if (ex == null) return string.Empty;
             StringBuilder sb = new StringBuilder();
             char d = ',';
 
@@ -216,6 +217,7 @@ namespace TradingLib.Common
 
         public static ExchangeImpl Deserialize(string content)
         {
+            if (string.IsNullOrEmpty(content)) return null;
             ExchangeImpl ex = new ExchangeImpl();
 
             string[] rec = content.Split(',');

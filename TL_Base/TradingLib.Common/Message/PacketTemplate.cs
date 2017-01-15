@@ -256,10 +256,10 @@ namespace TradingLib.Common
                     //    return RequestTemplate<MGRReqStopDataFeedRequest>.SrvRecvRequest(frontid, clientid, message.Content);
                     //case MessageTypes.MGRADDACCOUNT://请求添加交易帐号
                     //    return RequestTemplate<MGRAddAccountRequest>.SrvRecvRequest(frontid, clientid, message.Content);
-                    case MessageTypes.MGRQRYEXCHANGE://请求查询交易所
-                        return RequestTemplate<MGRQryExchangeRequuest>.SrvRecvRequest(frontid, clientid, message.Content);
-                    case MessageTypes.MGRUPDATEEXCHANGE://请求更新交易所
-                        return RequestTemplate<MGRUpdateExchangeRequest>.SrvRecvRequest(frontid, clientid, message.Content);
+                    //case MessageTypes.MGRQRYEXCHANGE://请求查询交易所
+                    //    return RequestTemplate<MGRQryExchangeRequuest>.SrvRecvRequest(frontid, clientid, message.Content);
+                    //case MessageTypes.MGRUPDATEEXCHANGE://请求更新交易所
+                    //    return RequestTemplate<MGRUpdateExchangeRequest>.SrvRecvRequest(frontid, clientid, message.Content);
                     //case MessageTypes.MGRQRYMARKETTIME://请求查询交易时间段
                     //    return RequestTemplate<MGRQryMarketTimeRequest>.SrvRecvRequest(frontid, clientid, message.Content);
                     //case MessageTypes.MGRUPDATEMARKETTIME://请求更新交易时间段
@@ -524,10 +524,10 @@ namespace TradingLib.Common
                 //    return ResponseTemplate<NotifyMGRAccountChangeUpdateResponse>.CliRecvResponse(message);
                 //case MessageTypes.MGRCONNECTORRESPONSE://查询通道回报
                 //    return ResponseTemplate<RspMGRQryConnectorResponse>.CliRecvResponse(message);
-                case MessageTypes.MGREXCHANGERESPONSE://查询交易所回报
-                    return ResponseTemplate<RspMGRQryExchangeResponse>.CliRecvResponse(message);
-                case MessageTypes.MGRUPDATEEXCHANGERESPONSE://更新交易所回报
-                    return ResponseTemplate<RspMGRUpdateExchangeResponse>.CliRecvResponse(message);
+                //case MessageTypes.MGREXCHANGERESPONSE://查询交易所回报
+                //    return ResponseTemplate<RspMGRQryExchangeResponse>.CliRecvResponse(message);
+                //case MessageTypes.MGRUPDATEEXCHANGERESPONSE://更新交易所回报
+                //    return ResponseTemplate<RspMGRUpdateExchangeResponse>.CliRecvResponse(message);
                 //case MessageTypes.MGRMARKETTIMERESPONSE://查询交易时间段回报
                 //    return ResponseTemplate<RspMGRQryMarketTimeResponse>.CliRecvResponse(message);
                 //case MessageTypes.MGRUPDATEMARKETTIMERESPONSE://更新交易时间段回报

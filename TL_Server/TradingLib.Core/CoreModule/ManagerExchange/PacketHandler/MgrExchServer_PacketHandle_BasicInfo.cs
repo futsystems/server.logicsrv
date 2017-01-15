@@ -40,50 +40,6 @@ namespace TradingLib.Core
             }
         }
 
-        void SrvOnMGRQryExchange(MGRQryExchangeRequuest request, ISession session, Manager manager)
-        {
-            logger.Info(string.Format("Manager[{0}] QryExchange", session.AuthorizedID));
-            Exchange[] exchs = BasicTracker.ExchagneTracker.Exchanges;
-            int totalnum = exchs.Length;
-
-            for (int i = 0; i < totalnum; i++)
-            {
-                RspMGRQryExchangeResponse response = ResponseTemplate<RspMGRQryExchangeResponse>.SrvSendRspResponse(request);
-                response.Exchange = exchs[i] as ExchangeImpl;
-
-                CacheRspResponse(response, i == totalnum - 1);
-            }
-        }
-
-        void SrvOnMGRUpdateExchange(MGRUpdateExchangeRequest request, ISession session, Manager manager)
-        {
-            logger.Info(string.Format("Manager[{0}] UpdateExchange:{1}", session.AuthorizedID, request.ToString()));
-            if (manager.IsRoot())
-            {
-                if (request.Exchange != null)
-                {
-                    BasicTracker.ExchagneTracker.UpdateExchange(request.Exchange);
-
-                    RspMGRUpdateExchangeResponse response = ResponseTemplate<RspMGRUpdateExchangeResponse>.SrvSendRspResponse(request);
-                    response.Exchange = BasicTracker.ExchagneTracker[request.Exchange.ID];
-                    CacheRspResponse(response);
-                }
-            }
-        }
-
-        //void SrvOnMGRQryMarketTime(MGRQryMarketTimeRequest request, ISession session, Manager manager)
-        //{
-        //    logger.Info(string.Format("Manager[{0}] QryMarketTime", session.AuthorizedID));
-        //    MarketTimeImpl[] mts = BasicTracker.MarketTimeTracker.MarketTimes;
-        //    int totalnum = mts.Length;
-        //    for (int i = 0; i < totalnum; i++)
-        //    {
-        //        RspMGRQryMarketTimeResponse response = ResponseTemplate<RspMGRQryMarketTimeResponse>.SrvSendRspResponse(request);
-        //        response.MarketTime = mts[i];
-
-        //        CacheRspResponse(response, i == totalnum - 1);
-        //    }
-        //}
 
         [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "QryInfoMarketTime", "QryInfoMarketTime - qry  market info", "查询交易时间段")]
         public void CTE_QryInfoMarketTime(ISession session)
@@ -125,25 +81,75 @@ namespace TradingLib.Core
                 }
             }
         }
-        //void SrvOnMGRUpdateMarketTime(MGRUpdateMarketTimeRequest request, ISession session, Manager manager)
-        //{
-        //    logger.Info(string.Format("Manager[{0}] UpdateMarketTime:{1}", session.AuthorizedID, request.ToString()));
-        //    Manager manger = session.GetManager();
-        //    if (manager.IsRoot())
-        //    { 
-        //        if(request.MarketTime != null)
-        //        {
-        //            BasicTracker.MarketTimeTracker.UpdateMarketTime(request.MarketTime);
-        //            RspMGRUpdateMarketTimeResponse response = ResponseTemplate<RspMGRUpdateMarketTimeResponse>.SrvSendRspResponse(request);
-        //            response.MarketTime = BasicTracker.MarketTimeTracker[request.MarketTime.ID];
 
+        //void SrvOnMGRQryExchange(MGRQryExchangeRequuest request, ISession session, Manager manager)
+        //{
+        //    logger.Info(string.Format("Manager[{0}] QryExchange", session.AuthorizedID));
+        //    Exchange[] exchs = BasicTracker.ExchagneTracker.Exchanges;
+        //    int totalnum = exchs.Length;
+
+        //    for (int i = 0; i < totalnum; i++)
+        //    {
+        //        RspMGRQryExchangeResponse response = ResponseTemplate<RspMGRQryExchangeResponse>.SrvSendRspResponse(request);
+        //        response.Exchange = exchs[i] as ExchangeImpl;
+
+        //        CacheRspResponse(response, i == totalnum - 1);
+        //    }
+        //}
+        [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "QryInfoExchange", "QryInfoExchange - qry  exchange info", "查询交易所")]
+        public void CTE_QryInfoExchange(ISession session)
+        {
+            var manager = session.GetManager();
+
+            ExchangeImpl[] list = BasicTracker.ExchagneTracker.Exchanges;
+            if (list.Length > 0)
+            {
+                for (int i = 0; i < list.Length; i++)
+                {
+                    session.ReplyMgr(ExchangeImpl.Serialize(list[i]), i == list.Length - 1);
+                }
+            }
+            else
+            {
+                session.ReplyMgr("");
+            }
+        }
+
+
+        //void SrvOnMGRUpdateExchange(MGRUpdateExchangeRequest request, ISession session, Manager manager)
+        //{
+        //    logger.Info(string.Format("Manager[{0}] UpdateExchange:{1}", session.AuthorizedID, request.ToString()));
+        //    if (manager.IsRoot())
+        //    {
+        //        if (request.Exchange != null)
+        //        {
+        //            BasicTracker.ExchagneTracker.UpdateExchange(request.Exchange);
+
+        //            RspMGRUpdateExchangeResponse response = ResponseTemplate<RspMGRUpdateExchangeResponse>.SrvSendRspResponse(request);
+        //            response.Exchange = BasicTracker.ExchagneTracker[request.Exchange.ID];
         //            CacheRspResponse(response);
         //        }
-
-                
         //    }
-        
         //}
+
+        [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "UpdateInfoExchange", "UpdateInfoExchange - update  exchange", "更新交易所", QSEnumArgParseType.Json)]
+        public void CTE_UpdateInfoExchange(ISession session, string json)
+        {
+            Manager manger = session.GetManager();
+            if (manger.IsRoot())
+            {
+                string content = json.DeserializeObject<string>();
+                ExchangeImpl ex = ExchangeImpl.Deserialize(content);
+                if (ex != null)
+                {
+                    BasicTracker.ExchagneTracker.UpdateExchange(ex);
+                    session.NotifyMgr("NotifyExchange", ExchangeImpl.Serialize(BasicTracker.ExchagneTracker[ex.ID]));
+                    session.OperationSuccess("更新交易所成功");
+                }
+            }
+        }
+
+
         void SrvOnMGRQrySecurity(MGRQrySecurityRequest request, ISession session, Manager manager)
         {
             logger.Info(string.Format("Manager[{0}] QrySecurity", session.AuthorizedID));
