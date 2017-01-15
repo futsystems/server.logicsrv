@@ -84,7 +84,6 @@
     <Compile Include="BusinessEntities\Manager\UIAccess.cs" />
     <Compile Include="Message\BinaryOption\Order.cs" />
     <Compile Include="Message\Common\UtilStruct.cs" />
-    <Compile Include="Message\Manager\MGRExchangeRate.cs" />
     <Compile Include="Message\Manager\MGRMarketData.cs" />
     <Compile Include="Message\MarketData\QryMinuteData.cs" />
     <Compile Include="Message\MarketData\QryPriceVol.cs" />
@@ -201,11 +200,9 @@
     <Compile Include="Message\HeartBeat.cs" />
     <Compile Include="Message\Location.cs" />
     <Compile Include="Message\Login.cs" />
-    <Compile Include="Message\Manager\MGRBasicInfo.cs" />
     <Compile Include="Message\Manager\MGRContrib.cs" />
     <Compile Include="Message\Manager\MGROperationResponse.cs" />
     <Compile Include="Message\Manager\MGRLogin.cs" />
-    <Compile Include="Message\1old\MGRResumeAccount.cs" />
     <Compile Include="Message\OrderAction.cs" />
     <Compile Include="Message\PacketBase.cs" />
     <Compile Include="Message\PacketTemplate.cs" />
@@ -318,7 +315,9 @@
     <Compile Include="Zlib\ZStream.cs" />
     <Compile Include="Zlib\ZStreamException.cs" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Message\1old\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

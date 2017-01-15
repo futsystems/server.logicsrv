@@ -499,39 +499,63 @@ namespace TradingLib.Core
         /// </summary>
         /// <param name="request"></param>
         /// <param name="account"></param>
-        void SrvOnMGRQryTickSnapShot(MGRQryTickSnapShotRequest request, ISession session, Manager manager)
+        //void SrvOnMGRQryTickSnapShot(MGRQryTickSnapShotRequest request, ISession session, Manager manager)
+        //{
+        //    logger.Info(string.Format("Manager[{0}] QryTickSnapshot", session.AuthorizedID));
+        //    RspMGRQryTickSnapShotResponse response = null;
+        //    if (string.IsNullOrEmpty(request.Exchange) && string.IsNullOrEmpty(request.Symbol))
+        //    {
+        //        IEnumerable<Tick> ticks = TLCtxHelper.ModuleDataRouter.GetTickSnapshot();
+        //        for (int i = 0; i < ticks.Count(); i++)
+        //        { 
+        //            response  =ResponseTemplate<RspMGRQryTickSnapShotResponse>.SrvSendRspResponse(request);
+        //            response.Tick = TickImpl.NewTick(ticks.ElementAt(i), "S");
+        //            CacheRspResponse(response, i == ticks.Count() - 1);
+        //        }
+        //        return;
+        //    }
+        //    else
+        //    {
+        //        Symbol sym = manager.Domain.GetSymbol(request.Exchange, request.Symbol);
+        //        if (sym != null)
+        //        {
+        //            Tick k = TLCtxHelper.ModuleDataRouter.GetTickSnapshot(sym.Exchange, sym.Symbol);
+        //            if (k != null)
+        //            {
+        //                response = ResponseTemplate<RspMGRQryTickSnapShotResponse>.SrvSendRspResponse(request);
+        //                response.Tick = TickImpl.NewTick(k, "S");
+        //                CacheRspResponse(response);
+        //                return;
+        //            }
+        //        }
+        //    }
+
+        //    response = ResponseTemplate<RspMGRQryTickSnapShotResponse>.SrvSendRspResponse(request);
+        //    CacheRspResponse(response);
+        //}
+
+        [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "QryTickSnapshot", "QryTickSnapshot - qry tick snapshot", "查询行情快照",QSEnumArgParseType.Json)]
+        public void CTE_QryExchangeRates(ISession session,string json)
         {
-            logger.Info(string.Format("Manager[{0}] QryTickSnapshot", session.AuthorizedID));
-            RspMGRQryTickSnapShotResponse response = null;
-            if (string.IsNullOrEmpty(request.Exchange) && string.IsNullOrEmpty(request.Symbol))
+            var data = json.DeserializeObject();
+            string exchange = data["exchange"].ToString();
+            string symbol = data["symbol"].ToString();
+            if (string.IsNullOrEmpty(exchange) && string.IsNullOrEmpty(symbol))
             {
-                IEnumerable<Tick> ticks = TLCtxHelper.ModuleDataRouter.GetTickSnapshot();
-                for (int i = 0; i < ticks.Count(); i++)
-                { 
-                    response  =ResponseTemplate<RspMGRQryTickSnapShotResponse>.SrvSendRspResponse(request);
-                    response.Tick = TickImpl.NewTick(ticks.ElementAt(i), "S");
-                    CacheRspResponse(response, i == ticks.Count() - 1);
-                }
-                return;
-            }
-            else
-            {
-                Symbol sym = manager.Domain.GetSymbol(request.Exchange, request.Symbol);
-                if (sym != null)
+                Tick[] list = TLCtxHelper.ModuleDataRouter.GetTickSnapshot().ToArray();
+                if (list.Length > 0)
                 {
-                    Tick k = TLCtxHelper.ModuleDataRouter.GetTickSnapshot(sym.Exchange, sym.Symbol);
-                    if (k != null)
+                    for (int i = 0; i < list.Length; i++)
                     {
-                        response = ResponseTemplate<RspMGRQryTickSnapShotResponse>.SrvSendRspResponse(request);
-                        response.Tick = TickImpl.NewTick(k, "S");
-                        CacheRspResponse(response);
-                        return;
+                        var s = TickImpl.NewTick(list[i], "S");
+                        session.ReplyMgr(TickImpl.Serialize2(list[i]), i == list.Length - 1);
                     }
                 }
+                else
+                {
+                    session.ReplyMgr("");
+                }
             }
-
-            response = ResponseTemplate<RspMGRQryTickSnapShotResponse>.SrvSendRspResponse(request);
-            CacheRspResponse(response);
         }
 
                 /// <summary>
@@ -542,9 +566,6 @@ namespace TradingLib.Core
         public void CTE_QryExchangeRates(ISession session)
         {
             Manager manager = session.GetManager();
-            //ExchangeRate[] rates = manager.Domain.GetExchangeRates(TLCtxHelper.ModuleSettleCentre.Tradingday).ToArray();
-            //session.ReplyMgr(rates);
-
             ExchangeRate[] list = manager.Domain.GetExchangeRates(TLCtxHelper.ModuleSettleCentre.Tradingday).ToArray();
             if (list.Length > 0)
             {
@@ -568,7 +589,7 @@ namespace TradingLib.Core
                 throw new FutsRspError("无权更新手续费模板");
             }
 
-            ExchangeRate rate = json.DeserializeObject<ExchangeRate>();// Mixins.Json.JsonMapper.ToObject<ExchangeRate>(json);
+            ExchangeRate rate = json.DeserializeObject<ExchangeRate>();
             //更新汇率信息
             manager.Domain.UpdateExchangeRate(rate);
 
