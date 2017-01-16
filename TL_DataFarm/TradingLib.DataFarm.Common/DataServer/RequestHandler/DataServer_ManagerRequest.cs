@@ -158,6 +158,110 @@ namespace TradingLib.DataFarm.Common
         }
 
 
+        
+
+
+        /// <summary>
+        /// 更新交易小节
+        /// </summary>
+        /// <param name="request"></param>
+        /// <param name="session"></param>
+        /// <param name="manager"></param>
+        [DataCommandAttr("UpdateMarketTime", "UpdateMarketTime -  update marketTime", "更新交易所", QSEnumArgParseType.Json)]
+        public void CTE_UpdateMarketTime(IServiceHost host, IConnection conn, string json)
+        {
+            if (!_syncdb)
+            {
+                logger.Warn("Update MarketTime Not Supported");
+                return;
+            }
+
+            logger.Info(string.Format("Conn:{0} 请求更新交易时间段:{1}", conn.SessionID, json));
+            string message = json.DeserializeObject<string>();
+            MarketTimeImpl mt = MarketTimeImpl.Deserialize(message);
+            MDBasicTracker.MarketTimeTracker.UpdateMarketTime(mt);
+            MarketTimeImpl localamt = MDBasicTracker.MarketTimeTracker[mt.ID];
+            SendContribResponse(conn, "UpdateMarketTime", MarketTimeImpl.Serialize(localamt));
+            //RspMGRUpdateMarketTimeResponse response = ResponseTemplate<RspMGRUpdateMarketTimeResponse>.SrvSendRspResponse(request);
+            //response.MarketTime = MDBasicTracker.MarketTimeTracker[request.MarketTime.ID];
+
+            //this.SendData(conn, response);
+
+        }
+
+
+        /// <summary>
+        /// 更新交易所
+        /// </summary>
+        /// <param name="host"></param>
+        /// <param name="conn"></param>
+        /// <param name="request"></param>
+        [DataCommandAttr("UpdateExchange", "UpdateExchange -  update exchange", "更新交易所", QSEnumArgParseType.Json)]
+        public void CTE_UpdateExchange(IServiceHost host, IConnection conn, string json)
+        {
+            if (!_syncdb)
+            {
+                logger.Warn("Update Exchange Not Supported");
+                return;
+            }
+
+
+            logger.Info(string.Format("Conn:{0} 请求更新交易所信息:{1}", conn.SessionID, json));
+
+            string message = json.DeserializeObject<string>();
+            ExchangeImpl ex = ExchangeImpl.Deserialize(message);
+            MDBasicTracker.ExchagneTracker.UpdateExchange(ex);
+            
+            ExchangeImpl localex = MDBasicTracker.ExchagneTracker[ex.ID];
+            SendContribResponse(conn, "UpdateExchange", ExchangeImpl.Serialize(localex));
+                //RspMGRUpdateExchangeResponse response = ResponseTemplate<RspMGRUpdateExchangeResponse>.SrvSendRspResponse(request);
+                //response.Exchange = MDBasicTracker.ExchagneTracker[request.Exchange.ID];
+                //this.SendData(conn, response);
+            
+            
+        }
+
+
+
+        /// <summary>
+        /// 更新品种
+        /// </summary>
+        /// <param name="host"></param>
+        /// <param name="conn"></param>
+        /// <param name="request"></param>
+        [DataCommandAttr("UpdateSecurity", "UpdateSecurity -  update security", "更新品种", QSEnumArgParseType.Json)]
+        public void CTE_UpdateSecurity(IServiceHost host, IConnection conn, string json)
+        {
+            if (!_syncdb)
+            {
+                logger.Warn("UpdateSecurity Not Supported");
+                return;
+            }
+
+
+            logger.Info(string.Format("Conn:{0} 请求更新品种:{1}", conn.SessionID, json));
+
+            string message = json.DeserializeObject<string>();
+            SecurityFamilyImpl sec = SecurityFamilyImpl.Deserialize(message);
+            //如果已经存在该品种则不执行添加操作
+            if (sec.ID == 0 && MDBasicTracker.SecurityTracker[sec.Code] != null)
+            {
+                throw new FutsRspError("已经存在品种:" + sec.Code);
+            }
+            //通过对应的域更新品种对象
+            MDBasicTracker.SecurityTracker.UpdateSecurity(sec);
+            int secidupdate = sec.ID;
+
+            SecurityFamilyImpl localsec = MDBasicTracker.SecurityTracker[sec.ID];
+            SendContribResponse(conn, "UpdateSecurity", SecurityFamilyImpl.Serialize(localsec));
+            //需要通过第一次更新获得sec_id来获得对象进行回报 否则在更新其他域的品种对象时id会发生同步变化
+            //RspMGRUpdateSecurityResponse response = ResponseTemplate<RspMGRUpdateSecurityResponse>.SrvSendRspResponse(request);
+            //response.SecurityFaimly = MDBasicTracker.SecurityTracker[sec.ID];
+
+            //this.SendData(conn, response);
+
+        }
+
         /// <summary>
         /// 更新合约
         /// </summary>
@@ -194,7 +298,7 @@ namespace TradingLib.DataFarm.Common
                 {
                     throw new FutsRspError("已经存在合约:" + symbol.Symbol);
                 }
-                string code;int year, month;
+                string code; int year, month;
                 symbol.ParseFututureContract(out code, out year, out month);
                 if (string.Format("{0:D2}", month) != symbol.Month)
                 {
@@ -204,7 +308,7 @@ namespace TradingLib.DataFarm.Common
 
 
             //调用该域更新该合约
-            MDBasicTracker.SymbolTracker.UpdateSymbol(symbol,true);
+            MDBasicTracker.SymbolTracker.UpdateSymbol(symbol, true);
 
             //RspMGRUpdateSymbolResponse response = ResponseTemplate<RspMGRUpdateSymbolResponse>.SrvSendRspResponse(request);
             SymbolImpl localsymbol = MDBasicTracker.SymbolTracker[symbol.ID];
@@ -214,105 +318,6 @@ namespace TradingLib.DataFarm.Common
 
             //this.SendData(conn, response);
         }
-
-        /// <summary>
-        /// 更新品种
-        /// </summary>
-        /// <param name="host"></param>
-        /// <param name="conn"></param>
-        /// <param name="request"></param>
-        [DataCommandAttr("UpdateSecurity", "UpdateSecurity -  update security", "更新品种", QSEnumArgParseType.Json)]
-        public void CTE_UpdateSecurity(IServiceHost host, IConnection conn, string json)
-        {
-            if (!_syncdb)
-            {
-                logger.Warn("UpdateSecurity Not Supported");
-                return;
-            }
-
-
-            logger.Info(string.Format("Conn:{0} 请求更新品种:{1}",conn.SessionID, json));
-
-            string message = json.DeserializeObject<string>();
-            SecurityFamilyImpl sec = SecurityFamilyImpl.Deserialize(message);
-            //如果已经存在该品种则不执行添加操作
-            if (sec.ID == 0 && MDBasicTracker.SecurityTracker[sec.Code] != null)
-            {
-                throw new FutsRspError("已经存在品种:" + sec.Code);
-            }
-            //通过对应的域更新品种对象
-            MDBasicTracker.SecurityTracker.UpdateSecurity(sec);
-            int secidupdate = sec.ID;
-
-            SecurityFamilyImpl localsec = MDBasicTracker.SecurityTracker[sec.ID];
-            SendContribResponse(conn, "UpdateSecurity", SecurityFamilyImpl.Serialize(localsec));
-            //需要通过第一次更新获得sec_id来获得对象进行回报 否则在更新其他域的品种对象时id会发生同步变化
-            //RspMGRUpdateSecurityResponse response = ResponseTemplate<RspMGRUpdateSecurityResponse>.SrvSendRspResponse(request);
-            //response.SecurityFaimly = MDBasicTracker.SecurityTracker[sec.ID];
-
-            //this.SendData(conn, response);
-
-        }
-
-        /// <summary>
-        /// 更新交易所
-        /// </summary>
-        /// <param name="host"></param>
-        /// <param name="conn"></param>
-        /// <param name="request"></param>
-        [DataCommandAttr("UpdateExchange", "UpdateExchange -  update exchange", "更新交易所", QSEnumArgParseType.Json)]
-        public void CTE_UpdateExchange(IServiceHost host, IConnection conn, string json)
-        {
-            if (!_syncdb)
-            {
-                logger.Warn("Update Exchange Not Supported");
-                return;
-            }
-
-
-            logger.Info(string.Format("Conn:{0} 请求更新交易所信息:{1}", conn.SessionID, json));
-
-            string message = json.DeserializeObject<string>();
-            ExchangeImpl ex = ExchangeImpl.Deserialize(message);
-            MDBasicTracker.ExchagneTracker.UpdateExchange(ex);
-            
-            ExchangeImpl localex = MDBasicTracker.ExchagneTracker[ex.ID];
-            SendContribResponse(conn, "UpdateExchange", ExchangeImpl.Serialize(localex));
-                //RspMGRUpdateExchangeResponse response = ResponseTemplate<RspMGRUpdateExchangeResponse>.SrvSendRspResponse(request);
-                //response.Exchange = MDBasicTracker.ExchagneTracker[request.Exchange.ID];
-                //this.SendData(conn, response);
-            
-            
-        }
-
-        /// <summary>
-        /// 更新交易小节
-        /// </summary>
-        /// <param name="request"></param>
-        /// <param name="session"></param>
-        /// <param name="manager"></param>
-        [DataCommandAttr("UpdateMarketTime", "UpdateMarketTime -  update marketTime", "更新交易所", QSEnumArgParseType.Json)]
-        public void CTE_UpdateMarketTime(IServiceHost host, IConnection conn, string json)
-        {
-            if (!_syncdb)
-            {
-                logger.Warn("Update MarketTime Not Supported");
-                return;
-            }
-
-            logger.Info(string.Format("Conn:{0} 请求更新交易时间段:{1}", conn.SessionID, json));
-            string message = json.DeserializeObject<string>();
-            MarketTimeImpl mt = MarketTimeImpl.Deserialize(message);
-            MDBasicTracker.MarketTimeTracker.UpdateMarketTime(mt);
-            MarketTimeImpl localamt = MDBasicTracker.MarketTimeTracker[mt.ID];
-            SendContribResponse(conn, "UpdateMarketTime", MarketTimeImpl.Serialize(localamt));
-                //RspMGRUpdateMarketTimeResponse response = ResponseTemplate<RspMGRUpdateMarketTimeResponse>.SrvSendRspResponse(request);
-                //response.MarketTime = MDBasicTracker.MarketTimeTracker[request.MarketTime.ID];
-
-                //this.SendData(conn, response);
-            
-        }
-
         /// <summary>
         /// 上传Bar数据
         /// Header指定交易所,Bar合约 CL11 表示CL 11月份合约

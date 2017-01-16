@@ -105,7 +105,7 @@ namespace TradingLib.DataFarm.Common
         {
             host.ConnectionCreatedEvent += new Action<IServiceHost, IConnection>(OnConnectionCreatedEvent);
             host.ConnectionClosedEvent += new Action<IServiceHost, IConnection>(OnConnectionClosedEvent);
-            host.RequestEvent += new Action<IServiceHost, IConnection, IPacket>(OnRequestEvent);    //(OnRequestEvent);
+            host.RequestEvent += new Action<IServiceHost, IConnection, IPacket>(OnRequestEvent);
             host.ServiceEvent += new Func<IServiceHost, IPacket, IPacket>(OnServiceEvent);
             host.Start();
         }
@@ -114,7 +114,7 @@ namespace TradingLib.DataFarm.Common
         {
             foreach (var info in this.FindCommand())
             {
-                string key = "{0}-{1}".Put("DataFarm".ToUpper(), info.Attr.CmdStr.ToUpper());
+                string key = "{0}-{1}".Put(ConstantData.MODULE_NAME.ToUpper(), info.Attr.CmdStr.ToUpper());
                 cmdmap.Add(key, new DataCommand(this, info));
             }
         }
@@ -246,10 +246,10 @@ namespace TradingLib.DataFarm.Common
                 //case MessageTypes.MGRUPDATEMARKETTIME:
                 //    SrvOnMGRUpdateMarketTime(host, conn, packet as MGRUpdateMarketTimeRequest);
                 //    break;
-                ////扩展命令
-                //case MessageTypes.MGRCONTRIBREQUEST:
-                //    SrvOnMGRContribRequest(host, conn, packet as MGRContribRequest);
-                //    break;
+                //扩展命令
+                case MessageTypes.MGR_REQ_CONTRIB:
+                    SrvOnMGRContribRequest(host, conn, packet as MGRContribRequest);
+                    break;
                 //上传历史数据
                 case MessageTypes.MGR_MD_UPLOADBARDATA:
                     SrvOnMGRUploadBarData(host, conn, packet as UploadBarDataRequest);

@@ -9,6 +9,8 @@ namespace TradingLib.DataFarm.Common
 {
     public class ConstantData
     {
+        public const string MODULE_NAME = "DataCore";
+
         public static int MAXBARCNT = 100000;
 
         /// <summary>

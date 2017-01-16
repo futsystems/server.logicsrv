@@ -14,26 +14,42 @@ namespace TradingLib.DataFarm.Common
     {
         void SrvOnMGRContribRequest(IServiceHost host, IConnection conn, MGRContribRequest request)
         {
-            logger.Info("Conn:{0} MGRContrib Request ModuleID:{1} CMDStr:{2} Args:{3}".Put(conn.SessionID, request.ModuleID, request.CMDStr, request.Parameters));
+            try
+            {
+                logger.Info("Conn:{0} MGRContrib Request ModuleID:{1} CMDStr:{2} Args:{3}".Put(conn.SessionID, request.ModuleID, request.CMDStr, request.Parameters));
 
-            request.ModuleID = "DataFarm";
-            string key = string.Format("{0}-{1}", request.ModuleID.ToUpper(), request.CMDStr.ToUpper());
-            DataCommand command = null;
-            if (cmdmap.TryGetValue(key, out command))
-            {
-                conn.Command = new Command(request.RequestID,request.ModuleID, request.CMDStr, request.Parameters);
-                command.ExecuteCmd(host, conn, request.Parameters);
-                conn.Command = null;
+                //request.ModuleID = "DataFarm";
+                string key = string.Format("{0}-{1}", request.ModuleID.ToUpper(), request.CMDStr.ToUpper());
+                DataCommand command = null;
+                if (cmdmap.TryGetValue(key, out command))
+                {
+                    conn.Command = new Command(request.RequestID, request.ModuleID, request.CMDStr, request.Parameters);
+                    command.ExecuteCmd(host, conn, request.Parameters);
+                    conn.Command = null;
+                }
+                else
+                {
+                    RspMGRContribResponse response = ResponseTemplate<RspMGRContribResponse>.SrvSendRspResponse(request);
+                    response.ModuleID = request.ModuleID;
+                    response.CMDStr = request.CMDStr;
+                    response.RspInfo.Fill(new FutsRspError("命令不支持"));
+
+                    this.SendData(conn, response);
+
+                }
             }
-            else
+            catch (FutsRspError ex)
             {
-                RspMGRContribResponse response = ResponseTemplate<RspMGRContribResponse>.SrvSendRspResponse(request);
-                response.ModuleID = "DataCore";
-                response.CMDStr = "Qry";
-                response.RspInfo.Fill(new FutsRspError("命令不支持"));
+                RspMGRResponse response = ResponseTemplate<RspMGRResponse>.SrvSendRspResponse(request);
+                response.RspInfo.Fill(ex);
 
                 this.SendData(conn, response);
-
+            }
+            catch (Exception ex)
+            {
+                RspMGRResponse response = ResponseTemplate<RspMGRResponse>.SrvSendRspResponse(request);
+                response.RspInfo.Fill(string.Format("服务端异常:{0}", ex.ToString()));
+                this.SendData(conn, response);
             }
         }
 

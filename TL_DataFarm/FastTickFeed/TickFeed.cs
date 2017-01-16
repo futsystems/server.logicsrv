@@ -274,7 +274,7 @@ namespace TradingLib.DataFarm
         /// 注册市场数据
         /// </summary>
         /// <param name="symbols"></param>
-        public void RegisterSymbols(IExchange exch,List<Symbol> symbols)
+        public void RegisterSymbols(Exchange exch,List<Symbol> symbols)
         {
             try
             {
