@@ -31,7 +31,7 @@ namespace TradingLib.Core
             }
 
             tl.ClearTerminalsForAccount(account);
-            session.OperationSuccess("注销交易终端成功");
+            session.RspMessage("注销交易终端成功");
         }
 
         [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "QrySessionInfo", "QrySessionInfo - 查询回话信息", "查询某个交易帐户的登入信息")]

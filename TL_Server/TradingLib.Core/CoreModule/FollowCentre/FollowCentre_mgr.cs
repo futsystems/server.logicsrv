@@ -93,7 +93,7 @@ namespace TradingLib.Core
                     strategy.Start();
 
                     NotifyFollowStrategyConfig(FollowTracker.StrategyCfgTracker[cfg.ID]);
-                    session.OperationSuccess("添加跟单策略成功");
+                    session.RspMessage("添加跟单策略成功");
                     
                 }
                 else
@@ -102,7 +102,7 @@ namespace TradingLib.Core
                     FollowTracker.StrategyCfgTracker.UpdateFollowStrategyConfig(cfg);
 
                     NotifyFollowStrategyConfig(FollowTracker.StrategyCfgTracker[cfg.ID]);
-                    session.OperationSuccess("更新跟单策略参数成功");
+                    session.RspMessage("更新跟单策略参数成功");
                 }
             }
         }
@@ -129,7 +129,7 @@ namespace TradingLib.Core
             }
 
             strategy.WorkState = state;
-            session.OperationSuccess(string.Format("策略:{0}-{1}工作状态:{2}", strategy.Config.ID, strategy.Config.Token, Util.GetEnumDescription(strategy.WorkState)));
+            session.RspMessage(string.Format("策略:{0}-{1}工作状态:{2}", strategy.Config.ID, strategy.Config.Token, Util.GetEnumDescription(strategy.WorkState)));
         }
 
 

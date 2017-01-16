@@ -73,44 +73,37 @@ namespace TradingLib.Core
         [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "ConfirmCashOperation", "ConfirmCashOperation -confirm deposit or withdraw", "确认出入金操作请求", QSEnumArgParseType.Json)]
         public void CTE_ConfirmCashOperation(ISession session, string playload)
         {
-            try
-            {
-                logger.Info("确认出入金操作请求");
-                Manager manger = session.GetManager();
-                JsonWrapperCashOperation request = playload.DeserializeObject<JsonWrapperCashOperation>();// Mixins.Json.JsonMapper.ToObject<JsonWrapperCashOperation>(playload);
+            logger.Info("确认出入金操作请求");
+            Manager manger = session.GetManager();
+            JsonWrapperCashOperation request = playload.DeserializeObject<JsonWrapperCashOperation>();// Mixins.Json.JsonMapper.ToObject<JsonWrapperCashOperation>(playload);
                 
-                HandlerMixins.Valid_ObjectNotNull(request);
+            HandlerMixins.Valid_ObjectNotNull(request);
 
-                //if (request.Status != QSEnumCashInOutStatus.PENDING)
-                //{
-                //    throw new FutsRspError("出入金请求状态异常");
-                //}
+            //if (request.Status != QSEnumCashInOutStatus.PENDING)
+            //{
+            //    throw new FutsRspError("出入金请求状态异常");
+            //}
 
-                ////出金执行金额检查
-                //if (op.Operation == QSEnumCashOperation.WithDraw)
-                //{
-                //    if (account.NowEquity < op.Amount)
-                //    {
-                //        throw new FutsRspError("出入金额度大于帐户权益");
-                //    }
-                //}
+            ////出金执行金额检查
+            //if (op.Operation == QSEnumCashOperation.WithDraw)
+            //{
+            //    if (account.NowEquity < op.Amount)
+            //    {
+            //        throw new FutsRspError("出入金额度大于帐户权益");
+            //    }
+            //}
 
-                //执行时间检查 
-                if (TLCtxHelper.ModuleSettleCentre.SettleMode != QSEnumSettleMode.StandbyMode)
-                {
-                    throw new FutsRspError("系统正在结算,禁止出入金操作");
-                }
-
-                ORM.MAgentFinance.ConfirmAgentCashOperation(request);
-                session.ReplyMgr(request);
-                //通过事件中继触发事件
-                TLCtxHelper.EventSystem.FireCashOperation(this, QSEnumCashOpEventType.Confirm, request);
-                
-            }
-            catch (FutsRspError ex)
+            //执行时间检查 
+            if (TLCtxHelper.ModuleSettleCentre.SettleMode != QSEnumSettleMode.StandbyMode)
             {
-                session.OperationError(ex);
+                throw new FutsRspError("系统正在结算,禁止出入金操作");
             }
+
+            ORM.MAgentFinance.ConfirmAgentCashOperation(request);
+            session.ReplyMgr(request);
+            //通过事件中继触发事件
+            TLCtxHelper.EventSystem.FireCashOperation(this, QSEnumCashOpEventType.Confirm, request);
+                
         }
 
         [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "CancelCashOperation", "CancelCashOperation -cancel deposit or withdraw", "取消出入金操作请求", QSEnumArgParseType.Json)]

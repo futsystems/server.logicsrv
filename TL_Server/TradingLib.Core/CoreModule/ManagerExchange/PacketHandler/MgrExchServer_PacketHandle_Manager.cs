@@ -106,7 +106,7 @@ namespace TradingLib.Core
 
                 BasicTracker.ManagerTracker.UpdateManager(m);
 
-                session.OperationSuccess("添加管理员成功");
+                session.RspMessage("添加管理员成功");
                 //通知管理员信息变更
                 NotifyManagerUpdate(BasicTracker.ManagerTracker[m.ID]);
 
@@ -121,7 +121,7 @@ namespace TradingLib.Core
 
                 BasicTracker.ManagerTracker.UpdateManager(m);
 
-                session.OperationSuccess("更新管理员成功");
+                session.RspMessage("更新管理员成功");
                 //通知管理员信息变更
                 NotifyManagerUpdate(target);
             }
@@ -172,7 +172,7 @@ namespace TradingLib.Core
                 tl.ClearTerminalsForManager(mgr.Login);
             }
             
-            session.OperationSuccess("删除管理员成功");
+            session.RspMessage("删除管理员成功");
 
         }
 
@@ -184,7 +184,7 @@ namespace TradingLib.Core
             {
                 ORM.MManager.UpdateManagerPass(manager.ID, newpass);
                 manager.Pass = newpass;
-                session.OperationSuccess("密码修改成功");
+                session.RspMessage("密码修改成功");
             }
             else
             {

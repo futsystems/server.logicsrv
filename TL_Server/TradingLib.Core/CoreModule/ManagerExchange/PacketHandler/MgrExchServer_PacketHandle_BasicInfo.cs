@@ -77,7 +77,7 @@ namespace TradingLib.Core
                     BasicTracker.MarketTimeTracker.UpdateMarketTime(mt);
                     //session.ReplyMgr(MarketTimeImpl.Serialize(BasicTracker.MarketTimeTracker[mt.ID]));
                     session.NotifyMgr("NotifyMarketTime", MarketTimeImpl.Serialize(BasicTracker.MarketTimeTracker[mt.ID]));
-                    session.OperationSuccess("更新交易时间段成功");
+                    session.RspMessage("更新交易时间段成功");
                 }
             }
         }
@@ -115,7 +115,7 @@ namespace TradingLib.Core
                 {
                     BasicTracker.ExchagneTracker.UpdateExchange(ex);
                     session.NotifyMgr("NotifyExchange", ExchangeImpl.Serialize(BasicTracker.ExchagneTracker[ex.ID]));
-                    session.OperationSuccess("更新交易所成功");
+                    session.RspMessage("更新交易所成功");
                 }
             }
         }
@@ -193,7 +193,7 @@ namespace TradingLib.Core
             {
                 //exchsrv.RegisterSymbol(BasicTracker.SymbolTracker[manager.domain_id,sec.Code]);
             }
-            session.OperationSuccess("品种数据更新成功");
+            session.RspMessage("品种数据更新成功");
         }
 
 
@@ -278,7 +278,7 @@ namespace TradingLib.Core
                 //SymbolBasket b = new SymbolBasketImpl(localsymbol);
                 TLCtxHelper.ModuleDataRouter.RegisterSymbols(new List<Symbol>() { localsymbol});
             }
-            session.OperationSuccess("合约数据更新成功");
+            session.RspMessage("合约数据更新成功");
         }
 
 
@@ -312,7 +312,7 @@ namespace TradingLib.Core
                 throw new FutsRspError("没有可以同步的主域");
             }
 
-            session.OperationSuccess("同步品种数据完成");
+            session.RspMessage("同步品种数据完成");
 
             SecurityFamilyImpl[] seclist = manager.Domain.GetSecurityFamilies().ToArray();
             int totalnum = seclist.Length;
@@ -448,7 +448,7 @@ namespace TradingLib.Core
                 //    throw new FutsRspError("通道合约数据查询失败");
                 //}
                 //broker.GotSymbolEvent -= new Action<XSymbol, bool>(Handler);
-                //session.OperationSuccess("同步合约数据完成");
+                //session.RspMessage("同步合约数据完成");
 
             }//通过主域同步合约数据
             else
@@ -471,7 +471,7 @@ namespace TradingLib.Core
                 {
                     throw new FutsRspError("没有可以同步的主域");
                 }
-                session.OperationSuccess("主域同步合约数据完成");
+                session.RspMessage("主域同步合约数据完成");
             }
 
             //将所有合约回报给客户端
@@ -595,7 +595,7 @@ namespace TradingLib.Core
 
             //通知汇率更新
             session.NotifyMgr("NotifyExchangeRateUpdate",manager.Domain.GetExchangeRate(rate.ID));
-            session.OperationSuccess("更新汇率成功");
+            session.RspMessage("更新汇率成功");
         }
     }
 }

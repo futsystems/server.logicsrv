@@ -381,6 +381,7 @@ namespace TradingLib.Common
         /// <returns></returns>
         public static string Serialize(Trade t)
         {
+            if (t == null) return string.Empty;
             const char d = ',';
             StringBuilder sb = new StringBuilder();
             sb.Append(t.xDate.ToString()); sb.Append(d);
@@ -431,6 +432,7 @@ namespace TradingLib.Common
         /// <returns></returns>
         public static Trade Deserialize(string message)
         {
+            if (string.IsNullOrEmpty(message)) return null;
             Trade t = null;
             string[] rec = message.Split(',');
             if (rec.Length < 18) throw new InvalidTrade();

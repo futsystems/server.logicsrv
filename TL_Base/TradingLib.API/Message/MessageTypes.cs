@@ -194,130 +194,25 @@ namespace TradingLib.API
 
         //////////////////////////////////////////////////////管理消息码///////////////////////////////////////////////////////////////////////////////////////////
         //MGR 服务端控制 行情服务,行情通道等
-        MGRSTARTTICKPUB=7000,//启动tickpub服务
-        MGRSTOPTICKPUB,//停止tickpub服务
-        MGRSTARTDATAFEED,//启动数据通道
-        MGRSTOPDATAFEED,//停止数据通道
-        MGRREGISTERSYMBOLS,//订阅行情
-        MGRUNREGISTERSYMBOLS,//注销行情订阅
-        MGRQRYSYMBOLSREGISTED,//查询已注册合约
-        MGRQRYSYMBOLSREGISTEDRESPONSE,//查询已注册合约回报
-        MGRSETSYMBOLFILTER,//设置合约过滤条件
-        MGRUPLOADBARDATA,//上传Bar历史数据
+        MGR_MD_STARTTICKPUB=7000,//启动tickpub服务
+        MGR_MD_STOPTICKPUB,//停止tickpub服务
+        MGR_MD_STARTDATAFEED,//启动数据通道
+        MGR_MD_STOPDATAFEED,//停止数据通道
+        MGR_MD_REGISTERSYMBOLS,//订阅行情
+        MGR_MD_UNREGISTERSYMBOLS,//注销行情订阅
+        MGR_MD_QRYSYMBOLSREGISTED,//查询已注册合约
+        MGR_MD_QRYSYMBOLSREGISTEDRESPONSE,//查询已注册合约回报
+        MGR_MD_SETSYMBOLFILTER,//设置合约过滤条件
+        MGR_MD_UPLOADBARDATA,//上传Bar历史数据
 
         // START MANAGER MESSAGES
-        MGRQRYACCOUNTS=8000,//查询帐户列表
-        MGRWATCHACCOUNTS,//管理端发送观察账户列表,管理服务器根据观察列表推送实时的权益以及盈亏数据
-        MGRLOGINREQUEST,//管理登入请求
-        MGRRESUMEACCOUNT,//管理客户端收到某个账户时 我们请求该账户的交易信息
-        //MGRADDACCOUNT,//增加交易账户
-        MGRQRYACCOUNTINFO,//查询交易帐号信息
-        MGRCASHOPERATION,//请求资金操作
-        //MGRUPDATEACCOUNTINTRADAY,//请求修改账户日内交易还是隔夜交易
-        //MGRUPDATEACCOUNTCATEGORY,//更新账户类别
-        //MGRUPDATEACCOUNTROUTETRANSFERTYPE,//更新账户路由转发列别
-        //MGRUPDATEACCOUNTEXECUTE,//更新帐户交易权限
-        
-        MGROPENCLEARCENTRE,//开启清算中心
-        MGRCLOSECLEARCENTRE,//关闭清算中心
+        MGR_REQ_LOGIN=8000,//管理员登入请求
+        MGR_REQ_CONTRIB,//管理扩展请求
 
-        MGRQRYCONNECTOR,//查询通道
-        MGRSTARTBROKER,//关闭交易通道
-        MGRSTOPBROKER,//停止交易通道
-        
-        
-        MGRQRYEXCHANGE,//查询交易所信息
-        MGRUPDATEEXCHANGE,//更新交易所信息
-        MGRQRYMARKETTIME,//查询市场时间段
-        MGRUPDATEMARKETTIME,//更新市场时间段
-        MGRQRYSECURITY,//查询品种
-        MGRUPDATESECURITY,//更新品种信息
-        MGRQRYSYMBOL,//查询合约信息
-        MGRUPDATESYMBOL,//更新合约信息
-        MGRQRYEXCHANGERATE,//查询汇率信息
-        MGRQRYTICKSNAPSHOT,//查询行情快照
-
-        
-
-        
-
-        MGRQRYRULECLASS,//查询风控规则列表
-        MGRQRYRULEITEM,//查询某个交易帐号的风控规则
-        MGRUPDATERULEITEM,//更新风控规则
-        MGRDELRULEITEM,//删除风控规则
-        MGRQRYSYSTEMSTATUS,//查询系统状态
-        MGRQRYORDER,//查询历史委托
-        MGRQRYTRADE,//查询历史成交
-        MGRQRYPOSITION,//查询结算持仓
-        MGRQRYCASH,//查询出入金
-        MGRQRYSETTLEMENT,//查询结算单
-        MGRCHANGEACCOUNTPASS,//修改交易密码
-        MGRCHANGEINVESTOR,//
-        MGRUPDATEPOSLOCK,//修改帐户锁仓权限
-        MGRQRYMANAGER,//查询管理员列表
-        MGRADDMANAGER,//添加管理员
-        MGRUPDATEMANAGER,//更新管理员
-        MGRQRYACCTSERVICE,//查询交易帐户服务
-        MGRUPDATEPASS,//更改管理员密码
-
-
-
-        MGRCONTRIBREQUEST,//管理扩展请求
-        MGRINSERTTRADE,//插入成交
-        //MGRDELACCOUNT,//删除交易帐户
-
-
-
-
-
-        MGRRESPONSE = 9000,//管理服务端通用回报
-        MGRQRYACCOUNTSRESPONSE,
-        MGRLOGINRESPONSE,//管理登入回报
-        MGRRESUMEACCOUNTRESPONE,//恢复交易帐号数据回报 开始恢复前会给出开始标识,恢复结束后会给出结束标识
-        MGRACCOUNTINFOLITENOTIFY,//某个账户简短账户信息,用于反映账户当日的交易状态
-        //MGRSESSIONSTATUSUPDATE,//客户端回话状态更新,比如登入 退出 以及IP地址 硬件码改变等
-        MGRACCOUNTINFORESPONSE,//查询交易帐号信息回报
-        MGRACCOUNTCHANGEUPDATE,//交易帐户变动回报
-        MGRCONNECTORRESPONSE,//
-        MGREXCHANGERESPONSE,//查询交易所回报
-        MGRUPDATEEXCHANGERESPONSE,//更新交易所回报
-        MGRMARKETTIMERESPONSE,//查询市场时间段回报
-        MGRUPDATEMARKETTIMERESPONSE,//更新市场时间段回报
-        MGRSECURITYRESPONSE,//查询品种回报
-        //MGRADDSECURITYRESPONSE,//添加品种回报
-        MGRUPDATESECURITYRESPONSE,//更新品种回报
-        MGRSYMBOLRESPONSE,//合约信息回报
-        //MGRADDSYMBOLRESPONSE,//添加合约回报
-        MGRUPDATESYMBOLRESPONSE,//更新合约回报
-        MGRQRYEXCHANGERATERESPONSE,//查询汇率信息回报
-        MGRQRYTICKSNAPSHOTRESPONSE,//查询行情快照回报
-
-
-        MGRRULECLASSRESPONSE,//风控规则回报
-        MGRRULEITEMRESPONSE,//帐户风控规则回报
-        MGRUPDATERULEITEMRESPONSE,//更新风控项目回报
-        MGRDELRULEITEMRESPONSE,//删除风控规则回报
-        MGRSYSTEMSTATUSRESPONSE,//系统状态回报
-
-        MGRORDERRESPONSE,//查询委托回报
-        MGRTRADERESPONSE,//查询成交回报
-        MGRPOSITIONRESPONSE,//查询结算持仓回报
-        MGRCASHRESPONSE,//查询出入金回报
-        MGRSETTLEMENTRESPONSE,//查询结算单回报
-        MGROPERATIONRESPONSE,//服务端操作回报 修改密码 添加帐户 出入金等 统一使用同一个Operation回报 用于通知管理端是否成功或失败
-        MGRCHANGEACCOUNTPASSRESPONSE,//修改密码回报
-        MGRCHANGEINVESTORRESPONSE,//修改token回报
-        MGRUPDATEPOSLOCKRESPONSE,//修改帐户锁仓权限回报
-        MGRMANAGERRESPONSE,//查询管理员列表回报
-        MGRQRYACCTSERVICERESPONSE,//查询交易帐户服务回报
-
-        MGRCONTRIBRESPONSE,//管理扩展回报
-        MGRCONTRIBRNOTIFY,//管理扩展通知
-
-        //FLATALL,//清仓
-        UPDATEPOSOFFSET,
-        UPDATEAGENTTOKEN,
-        //REQFLATFROZEN,//账户请求全平并锁定账户
+        MGR_RSP_LOGIN = 9000,//管理登入回报
+        MGR_RSP_CONTRIB,//管理扩展回报 携带返回数据
+        MGR_RTN_CONTRIB,//管理扩展通知 携带通知消息
+        MGR_RSP,//管理端应答 携带操作执行正确或异常信息
 
     }
 

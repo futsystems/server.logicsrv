@@ -49,7 +49,7 @@ namespace TradingLib.Core
         //        BasicTracker.VendorTracker.UpdateVendor(vendor);
 
         //        session.NotifyMgr("NotifyVendor",BasicTracker.VendorTracker[vendor.ID] as VendorSetting);
-        //        session.OperationSuccess("更新帐户成功");
+        //        session.RspMessage("更新帐户成功");
 
         //    }
         //}
@@ -83,7 +83,7 @@ namespace TradingLib.Core
         //            throw new FutsRspError("管理员数据异常,无权查看通道状态");
         //        }
         //        infoex.RegVendor(vendor.Broker);
-        //        session.OperationSuccess("注册Broker统计数据成功");
+        //        session.RspMessage("注册Broker统计数据成功");
         //    }
         //    else
         //    {
@@ -116,7 +116,7 @@ namespace TradingLib.Core
         //            throw new FutsRspError("管理员数据异常,无权查看通道状态");
         //        }
         //        infoex.UnregVendor(vendor.Broker);
-        //        session.OperationSuccess("注销Broker统计数据成功");
+        //        session.RspMessage("注销Broker统计数据成功");
         //        //session.SendJsonReplyMgr(vendor.Broker.PositionMetrics.ToArray());
         //    }
         //    else
@@ -138,7 +138,7 @@ namespace TradingLib.Core
                     throw new FutsRspError("管理员数据异常,无权查看通道状态");
                 }
                 infoex.ClearVendor();
-                session.OperationSuccess("清空Broker统计注册列表成功");
+                session.RspMessage("清空Broker统计注册列表成功");
             }
             else
             {

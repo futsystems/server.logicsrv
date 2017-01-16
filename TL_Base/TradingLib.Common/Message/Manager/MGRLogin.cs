@@ -16,7 +16,7 @@ namespace TradingLib.Common
 
         public MGRLoginRequest()
         {
-            _type = MessageTypes.MGRLOGINREQUEST;
+            _type = MessageTypes.MGR_REQ_LOGIN;
         }
 
 
@@ -100,12 +100,9 @@ namespace TradingLib.Common
 
     public class RspMGRLoginResponse : RspResponsePacket
     {
-        
-
-
         public RspMGRLoginResponse()
         {
-            _type = MessageTypes.MGRLOGINRESPONSE;
+            _type = MessageTypes.MGR_RSP_LOGIN;
             LoginResponse = new MgrLoginResponse();
         }
 

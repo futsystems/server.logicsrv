@@ -193,7 +193,7 @@ namespace TradingLib.ServiceManager
                 session.NotifyMgr("NotifyConnectorCfg", config);
                 //通知通道状态
                 session.NotifyMgr("NotifyConnectorStatus", GetConnectorStatus(config));
-                session.OperationSuccess("更新通道设置成功");
+                session.RspMessage("更新通道设置成功");
             }
           
         }
@@ -209,45 +209,31 @@ namespace TradingLib.ServiceManager
         [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "QryRouterGroup", "QryRouterGroup - query routegroup", "查询路由组")]
         public void CTE_QryRouterGroup(ISession session)
         {
-            try
-            {
-                Manager manger = session.GetManager();
-                RouterGroupSetting[] ops = manger.Domain.GetRouterGroups().ToArray();
-                session.ReplyMgr(ops);
-            }
-            catch (FutsRspError ex)
-            {
-                session.OperationError(ex);
-            }
+            Manager manger = session.GetManager();
+            RouterGroupSetting[] ops = manger.Domain.GetRouterGroups().ToArray();
+            session.ReplyMgr(ops);
         }
 
         [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "UpdateRouterGroup", "UpdateRouterGroup - update routegroup", "更新路由组", QSEnumArgParseType.Json)]
         public void CTE_QryRouterGroup(ISession session, string jsonstr)
         {
-            try
+            Manager manger = session.GetManager();
+            if (manger.IsInRoot())
             {
-                Manager manger = session.GetManager();
-                if (manger.IsInRoot())
+
+                RouterGroupSetting group = jsonstr.DeserializeObject<RouterGroupSetting>();
+                bool isadd = group.ID == 0;
+                if (isadd && manger.Domain.GetRouterGroups().Count() >= manger.Domain.RouterGroupLimit)
                 {
-
-                    RouterGroupSetting group = jsonstr.DeserializeObject<RouterGroupSetting>();
-                    bool isadd = group.ID == 0;
-                    if (isadd && manger.Domain.GetRouterGroups().Count() >= manger.Domain.RouterGroupLimit)
-                    {
-                        throw new FutsRspError("路由组数目达到上限:" + manger.Domain.RouterGroupLimit.ToString());
-                    }
-                    
-                    group.domain_id = manger.Domain.ID;
-
-                    BasicTracker.RouterGroupTracker.UpdateRouterGroup(group);
-
-                    session.NotifyMgr("NotifyRouterGroup",group);
-                    session.OperationSuccess("更新通道设置成功");
+                    throw new FutsRspError("路由组数目达到上限:" + manger.Domain.RouterGroupLimit.ToString());
                 }
-            }
-            catch (FutsRspError ex)
-            {
-                session.OperationError(ex);
+                    
+                group.domain_id = manger.Domain.ID;
+
+                BasicTracker.RouterGroupTracker.UpdateRouterGroup(group);
+
+                session.NotifyMgr("NotifyRouterGroup",group);
+                session.RspMessage("更新通道设置成功");
             }
         }
 
@@ -259,24 +245,17 @@ namespace TradingLib.ServiceManager
         [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "QryRouterItem", "QryRouterItem - query routeitem", "查询路由")]
         public void CTE_QryRouteItem(ISession session, int rgid)
         {
-            try
-            {
-                Manager manger = session.GetManager();
+            Manager manger = session.GetManager();
 
-                if (manger.IsInRoot())
-                {
-                    RouterGroup rg = BasicTracker.RouterGroupTracker[rgid];
-                    if (rg == null)
-                    {
-                        throw new FutsRspError("查询路由组不存在");
-                    }
-                    RouterItem[] items = rg.RouterItems.ToArray();
-                    session.ReplyMgr(items);
-                }
-            }
-            catch (FutsRspError ex)
+            if (manger.IsInRoot())
             {
-                session.OperationError(ex);
+                RouterGroup rg = BasicTracker.RouterGroupTracker[rgid];
+                if (rg == null)
+                {
+                    throw new FutsRspError("查询路由组不存在");
+                }
+                RouterItem[] items = rg.RouterItems.ToArray();
+                session.ReplyMgr(items);
             }
         }
 
@@ -284,61 +263,54 @@ namespace TradingLib.ServiceManager
         [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "UpdateRouterItem", "UpdateRouterItem - update routeitem", "更新路由项目", QSEnumArgParseType.Json)]
         public void CTE_UpdateRouterItem(ISession session, string json)
         {
-            try
+            Manager manger = session.GetManager();
+            if (manger.IsInRoot())
             {
-                Manager manger = session.GetManager();
-                if (manger.IsInRoot())
+                RouterItemSetting item = json.DeserializeObject<RouterItemSetting>();
+                bool isadd = item.ID == 0;
+
+                //Vendor vendor = BasicTracker.VendorTracker[item.vendor_id];
+                IBroker broker = ID2Broker(item.Connector_ID);
+                if (broker == null)
                 {
-                    RouterItemSetting item = json.DeserializeObject<RouterItemSetting>();
-                    bool isadd = item.ID == 0;
-
-                    //Vendor vendor = BasicTracker.VendorTracker[item.vendor_id];
-                    IBroker broker = ID2Broker(item.Connector_ID);
-                    if (broker == null)
-                    {
-                        throw new FutsRspError("指定的成交接口不存在");
-                    }
-
-                    RouterGroup group = BasicTracker.RouterGroupTracker[item.routegroup_id];
-                    if (group == null)
-                    {
-                        throw new FutsRspError("指定的路由组不存在");
-                    }
-
-                    if (isadd && group.RouterItems.Count() >= manger.Domain.RouterItemLimit)
-                    {
-                        throw new FutsRspError("路由组内路由项目达到上限:" + manger.Domain.RouterItemLimit.ToString());
-                    }
-
-                    //如果是增加路由项目,则组内不能添加相同的帐户
-                    if (isadd)
-                    {
-                        //检查路由组内是否有对应的路由项目与当前Broker相同
-                        if (group.RouterItems.Any(r => r.Broker != null && r.Broker.Token == broker.Token))
-                        {
-                            throw new FutsRspError("组内已经存在该路由");
-                        }
-
-                    }
-
-                    //2.更新参数
-                    BasicTracker.RouterGroupTracker.UpdateRouterItem(item);
-
-                    if(isadd)
-                    {
-                        //获得数据结构中的路由项目
-                        RouterItemImpl routerItem = BasicTracker.RouterGroupTracker.GetRouterItem(item.ID);
-                        //如果是添加路由项 则将broker绑定到该RouterItem
-                        routerItem.Broker = broker;
-                    }
-
-                    session.NotifyMgr("NotifyRouterItem",item);
-                    session.OperationSuccess("更新路由项目成功");
+                    throw new FutsRspError("指定的成交接口不存在");
                 }
-            }
-            catch (FutsRspError ex)
-            {
-                session.OperationError(ex);
+
+                RouterGroup group = BasicTracker.RouterGroupTracker[item.routegroup_id];
+                if (group == null)
+                {
+                    throw new FutsRspError("指定的路由组不存在");
+                }
+
+                if (isadd && group.RouterItems.Count() >= manger.Domain.RouterItemLimit)
+                {
+                    throw new FutsRspError("路由组内路由项目达到上限:" + manger.Domain.RouterItemLimit.ToString());
+                }
+
+                //如果是增加路由项目,则组内不能添加相同的帐户
+                if (isadd)
+                {
+                    //检查路由组内是否有对应的路由项目与当前Broker相同
+                    if (group.RouterItems.Any(r => r.Broker != null && r.Broker.Token == broker.Token))
+                    {
+                        throw new FutsRspError("组内已经存在该路由");
+                    }
+
+                }
+
+                //2.更新参数
+                BasicTracker.RouterGroupTracker.UpdateRouterItem(item);
+
+                if(isadd)
+                {
+                    //获得数据结构中的路由项目
+                    RouterItemImpl routerItem = BasicTracker.RouterGroupTracker.GetRouterItem(item.ID);
+                    //如果是添加路由项 则将broker绑定到该RouterItem
+                    routerItem.Broker = broker;
+                }
+
+                session.NotifyMgr("NotifyRouterItem",item);
+                session.RspMessage("更新路由项目成功");
             }
         }
         #endregion

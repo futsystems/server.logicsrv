@@ -84,7 +84,7 @@
     <Compile Include="BusinessEntities\Manager\UIAccess.cs" />
     <Compile Include="Message\BinaryOption\Order.cs" />
     <Compile Include="Message\Common\UtilStruct.cs" />
-    <Compile Include="Message\Manager\MGRMarketData.cs" />
+    <Compile Include="Message\MarketData\MGRMarketData.cs" />
     <Compile Include="Message\MarketData\QryMinuteData.cs" />
     <Compile Include="Message\MarketData\QryPriceVol.cs" />
     <Compile Include="Message\MarketData\QryTrade.cs" />
@@ -180,7 +180,6 @@
     <Compile Include="BusinessEntities\CTP\CommissionConfig.cs" />
     <Compile Include="Protocol\JsonObjectBase.cs" />
     <Compile Include="Protocol\JsonProtocolManager.cs" />
-    <Compile Include="Message\Manager\MGRInsertTrade.cs" />
     <Compile Include="Message\QryCommissionMargin.cs" />
     <Compile Include="Message\QryMarketData.cs" />
     <Compile Include="Message\QryTransferSerial.cs" />

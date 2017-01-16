@@ -15,7 +15,7 @@ namespace TradingLib.Common
     {
         public MDReqStartDataFeedRequest()
         {
-            _type = MessageTypes.MGRSTARTDATAFEED;
+            _type = MessageTypes.MGR_MD_STARTDATAFEED;
             this.DataFeed = QSEnumDataFeedTypes.CTP;
         }
 
@@ -39,7 +39,7 @@ namespace TradingLib.Common
     {
         public MDReqStopDataFeedRequest()
         {
-            _type = MessageTypes.MGRSTOPDATAFEED;
+            _type = MessageTypes.MGR_MD_STOPDATAFEED;
         }
 
         public QSEnumDataFeedTypes DataFeed { get; set; }
@@ -64,7 +64,7 @@ namespace TradingLib.Common
     {
         public MDRegisterSymbolsRequest()
         {
-            _type = MessageTypes.MGRREGISTERSYMBOLS;
+            _type = MessageTypes.MGR_MD_REGISTERSYMBOLS;
             this.DataFeed = QSEnumDataFeedTypes.DEFAULT;
             this.SymbolList = new List<string>();
             this.Exchange = string.Empty;
@@ -126,7 +126,7 @@ namespace TradingLib.Common
     {
         public MDSetSymbolFilter()
         {
-            _type = MessageTypes.MGRSETSYMBOLFILTER;
+            _type = MessageTypes.MGR_MD_SETSYMBOLFILTER;
             this.DataFeed = QSEnumDataFeedTypes.DEFAULT;
             this.SymbolList = new List<string>();
         }
@@ -176,7 +176,7 @@ namespace TradingLib.Common
     {
         public MDQrySymbolsRegistedRequest()
         {
-            _type = MessageTypes.MGRQRYSYMBOLSREGISTED;
+            _type = MessageTypes.MGR_MD_QRYSYMBOLSREGISTED;
             this.DataFeed = QSEnumDataFeedTypes.DEFAULT;
         }
 
@@ -200,7 +200,7 @@ namespace TradingLib.Common
     {
         public RspMDQrySymbolsRegistedResponse()
         {
-            _type = MessageTypes.MGRQRYSYMBOLSREGISTEDRESPONSE;
+            _type = MessageTypes.MGR_MD_QRYSYMBOLSREGISTEDRESPONSE;
             this.DataFeed = QSEnumDataFeedTypes.DEFAULT;
             this.SymbolList = new List<string>();
             this.Exchange = string.Empty;
@@ -300,7 +300,7 @@ namespace TradingLib.Common
     {
         public UploadBarDataRequest()
         {
-            _type = MessageTypes.MGRUPLOADBARDATA;
+            _type = MessageTypes.MGR_MD_UPLOADBARDATA;
             this.Header = new UploadBarDataRequestHeader();
             this.Bars = new List<BarImpl>();
         }

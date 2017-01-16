@@ -149,7 +149,7 @@ namespace TradingLib.Core
              * 
              * 
              * **/
-            session.OperationSuccess("手工平仓成功");
+            session.RspMessage("手工平仓成功");
         }
 
 
@@ -199,7 +199,7 @@ namespace TradingLib.Core
                 session.ReplyMgr(BasicTracker.SettlementPriceTracker[this.Tradingday, settlementPrice.Symbol]);
             }
 
-            session.OperationSuccess("结算价更新成功");
+            session.RspMessage("结算价更新成功");
         }
 
         /// <summary>
@@ -270,7 +270,7 @@ namespace TradingLib.Core
             }
 
             session.ReplyMgr("rollback");//管理段通过Rollback回报来触发 查询持仓，查询结算价等相关操作
-            session.OperationSuccess(string.Format("系统回滚到交易日:{0}成功", histday));
+            session.RspMessage(string.Format("系统回滚到交易日:{0}成功", histday));
         }
 
 
@@ -296,7 +296,7 @@ namespace TradingLib.Core
             //结算交易所
             SettleExchange(exlist,this.Tradingday);
 
-            session.OperationSuccess("交易所结算完毕");
+            session.RspMessage("交易所结算完毕");
         }
         /// <summary>
         /// 对某个交易日执行结算操作
@@ -332,7 +332,7 @@ namespace TradingLib.Core
             //保存已结算交易记录
             DumpDataToLogTable();
 
-            session.OperationSuccess(string.Format("交易日:{0}结算完成", settleday));
+            session.RspMessage(string.Format("交易日:{0}结算完成", settleday));
         }
 
 
@@ -363,7 +363,7 @@ namespace TradingLib.Core
             }
             //转储所有记录
             StoreAllData();
-            session.OperationSuccess("转储交易记录成功");
+            session.RspMessage("转储交易记录成功");
         }
 
         /// <summary>
@@ -391,7 +391,7 @@ namespace TradingLib.Core
 
             //删除上个交易日以前的所有已结算数据
             ORM.MTradingInfo.DeleteSettledTradingInfo();
-            session.OperationSuccess("删除已结算临时数据成功");
+            session.RspMessage("删除已结算临时数据成功");
         }
 
 

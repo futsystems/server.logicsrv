@@ -6,12 +6,11 @@ using TradingLib.API;
 
 namespace TradingLib.Common
 {
-    public class RspMGROperationResponse:RspResponsePacket
+    public class RspMGRResponse:RspResponsePacket
     {
-
-        public RspMGROperationResponse()
+        public RspMGRResponse()
         {
-            _type = MessageTypes.MGROPERATIONRESPONSE;
+            _type = MessageTypes.MGR_RSP;
         }
 
         public override void ResponseDeserialize(string content)

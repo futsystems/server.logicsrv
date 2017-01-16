@@ -84,7 +84,7 @@ namespace TradingLib.Core
 
             BasicTracker.CommissionTemplateTracker.UpdateCommissionTemplate(t);
             session.NotifyMgr("NotifyCommissionTemplate",BasicTracker.CommissionTemplateTracker[t.ID]);
-            session.OperationSuccess("更新手续费模板成功");
+            session.RspMessage("更新手续费模板成功");
 
         }
 
@@ -132,7 +132,7 @@ namespace TradingLib.Core
                 }
             }
             session.NotifyMgr("NotifyDeleteCommissionTemplate", template);
-            session.OperationSuccess("删除续费模板成功");
+            session.RspMessage("删除续费模板成功");
 
         }
 
@@ -290,7 +290,7 @@ namespace TradingLib.Core
                     session.NotifyMgr("NotifyCommissionTemplateItem", template[item.CommissionItemKey]);
                 }
             }
-            session.OperationSuccess("更新手续费项目功");
+            session.RspMessage("更新手续费项目功");
         }
         #endregion
 
@@ -363,7 +363,7 @@ namespace TradingLib.Core
             }
             BasicTracker.MarginTemplateTracker.UpdateMarginTemplate(t);
             session.NotifyMgr("NotifyMarginTemplate", BasicTracker.MarginTemplateTracker[t.ID]);
-            session.OperationSuccess("更新保证金模板成功");
+            session.RspMessage("更新保证金模板成功");
 
         }
 
@@ -412,7 +412,7 @@ namespace TradingLib.Core
             }
 
             session.NotifyMgr("NotifyDeleteMarginTemplate", template);
-            session.OperationSuccess("删除保证金模板成功");
+            session.RspMessage("删除保证金模板成功");
 
         }
 
@@ -560,7 +560,7 @@ namespace TradingLib.Core
 
                 }
             }
-            session.OperationSuccess("更新手续费项目功");
+            session.RspMessage("更新手续费项目功");
         }
 
         #endregion
@@ -632,7 +632,7 @@ namespace TradingLib.Core
 
             BasicTracker.ExStrategyTemplateTracker.UpdateExStrategyTemplate(t);
             session.NotifyMgr("NotifyExStrategyTemplate", BasicTracker.ExStrategyTemplateTracker[t.ID]);
-            session.OperationSuccess("更新计算策略模板成功");
+            session.RspMessage("更新计算策略模板成功");
 
         }
 
@@ -678,7 +678,7 @@ namespace TradingLib.Core
                 }
             }
             session.NotifyMgr("NotifyDeleteExStrategyTemplate", template);
-            session.OperationSuccess("删除交易参数模板成功");
+            session.RspMessage("删除交易参数模板成功");
         }
 
         [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "QryExStrategyTemplateItem", "QryExStrategyTemplateItem - qry commission template item", "查询手续费模板项目")]
@@ -741,7 +741,7 @@ namespace TradingLib.Core
 
             BasicTracker.ExStrategyTemplateTracker.UpdateExStrategy(item);
             session.NotifyMgr("NotifyExStrategyTemplateItem", BasicTracker.ExStrategyTemplateTracker[item.Template_ID].ExStrategy);
-            session.OperationSuccess("更新交易参数模板成功");
+            session.RspMessage("更新交易参数模板成功");
 
         }
         #endregion

@@ -54,44 +54,37 @@ namespace TradingLib.Core
         [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "ConfirmAccountCashOperation", "ConfirmCashOperation -confirm deposit or withdraw", "确认出入金操作请求", QSEnumArgParseType.Json)]
         public void CTE_ConfirmAccountCashOperation(ISession session, string playload)
         {
-            try
+            logger.Info("确认出入金操作请求");
+            Manager manger = session.GetManager();
+            if (!manger.IsRoot())
             {
-                logger.Info("确认出入金操作请求");
-                Manager manger = session.GetManager();
-                if (!manger.IsRoot())
-                {
-                    throw new FutsRspError("无权确认出入金请求");
-                }
-
-                JsonWrapperCashOperation request = playload.DeserializeObject<JsonWrapperCashOperation>();// Mixins.Json.JsonMapper.ToObject<JsonWrapperCashOperation>(playload);
-                
-                if (request != null)
-                {
-                    IAccount account = TLCtxHelper.ModuleAccountManager[request.Account];
-                    if (!manger.RightAccessAccount(account))
-                    {
-                        throw new FutsRspError("无权访问帐户:" + account.ID);
-                    }
-
-                    request = ORM.MCashOpAccount.GetAccountCashOperation(request.Ref);
-                    if (request.Status != QSEnumCashInOutStatus.PENDING)
-                    {
-                        throw new FutsRspError("出入金请求已经关闭");
-                    }
-
-                    //调用清算中心出入金确认操作
-                    //TLCtxHelper.CmdAuthCashOperation.ConfirmCashOperation(request.Ref);
-
-                    //重新从数据库加载数据 返回当前记录的数据
-                    request = ORM.MCashOpAccount.GetAccountCashOperation(request.Ref);
-                    session.ReplyMgr(request);
-                    //通过事件中继触发事件
-                    TLCtxHelper.EventSystem.FireCashOperation(this, QSEnumCashOpEventType.Confirm, request);
-                }
+                throw new FutsRspError("无权确认出入金请求");
             }
-            catch (FutsRspError ex)
+
+            JsonWrapperCashOperation request = playload.DeserializeObject<JsonWrapperCashOperation>();// Mixins.Json.JsonMapper.ToObject<JsonWrapperCashOperation>(playload);
+                
+            if (request != null)
             {
-                session.OperationError(ex);
+                IAccount account = TLCtxHelper.ModuleAccountManager[request.Account];
+                if (!manger.RightAccessAccount(account))
+                {
+                    throw new FutsRspError("无权访问帐户:" + account.ID);
+                }
+
+                request = ORM.MCashOpAccount.GetAccountCashOperation(request.Ref);
+                if (request.Status != QSEnumCashInOutStatus.PENDING)
+                {
+                    throw new FutsRspError("出入金请求已经关闭");
+                }
+
+                //调用清算中心出入金确认操作
+                //TLCtxHelper.CmdAuthCashOperation.ConfirmCashOperation(request.Ref);
+
+                //重新从数据库加载数据 返回当前记录的数据
+                request = ORM.MCashOpAccount.GetAccountCashOperation(request.Ref);
+                session.ReplyMgr(request);
+                //通过事件中继触发事件
+                TLCtxHelper.EventSystem.FireCashOperation(this, QSEnumCashOpEventType.Confirm, request);
             }
         }
 
@@ -160,80 +153,73 @@ namespace TradingLib.Core
         [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "RequestAccountCashOperation", "RequestAccountCashOperation -rquest deposit or withdraw", "请求交易帐户出入金操作", QSEnumArgParseType.Json)]
         public void CTE_RequestAccountCashOperation(ISession session, string playload)
         {
-            try
+            logger.Info("管理员请求交易帐户出入金:" + playload);
+            Manager manger = session.GetManager();
+            if (manger != null)
             {
-                logger.Info("管理员请求交易帐户出入金:" + playload);
-                Manager manger = session.GetManager();
-                if (manger != null)
+                JsonWrapperCashOperation request = playload.DeserializeObject<JsonWrapperCashOperation>();// Mixins.Json.JsonMapper.ToObject<JsonWrapperCashOperation>(playload);
+                if (request != null)
                 {
-                    JsonWrapperCashOperation request = playload.DeserializeObject<JsonWrapperCashOperation>();// Mixins.Json.JsonMapper.ToObject<JsonWrapperCashOperation>(playload);
-                    if (request != null)
+                    //request.mgr_fk = manger.mgr_fk;
+                    //检查请求的交易帐号
+                    if (string.IsNullOrEmpty(request.Account))
                     {
-                        //request.mgr_fk = manger.mgr_fk;
-                        //检查请求的交易帐号
-                        if (string.IsNullOrEmpty(request.Account))
-                        {
-                            throw new FutsRspError("请设定交易帐号");
-                        }
-                        IAccount account = TLCtxHelper.ModuleAccountManager[request.Account];
-                        if (account == null)
-                        {
-                            throw new FutsRspError(string.Format("交易帐号[{0}]不存在", request.Account));
-                        }
-                        if (!manger.RightAccessAccount(account))
-                        {
-                            throw new FutsRspError(string.Format("无权操作交易帐户[{0}]", request.Account));
-                        }
+                        throw new FutsRspError("请设定交易帐号");
+                    }
+                    IAccount account = TLCtxHelper.ModuleAccountManager[request.Account];
+                    if (account == null)
+                    {
+                        throw new FutsRspError(string.Format("交易帐号[{0}]不存在", request.Account));
+                    }
+                    if (!manger.RightAccessAccount(account))
+                    {
+                        throw new FutsRspError(string.Format("无权操作交易帐户[{0}]", request.Account));
+                    }
 
-                        UIAccess fatheraccess, access = null;
-                        //如果是代理则需要检查父代理权限设置中的 子代理提交出入金权限和代理本身的提交出入金权限
-                        if (manger.IsAgent())
-                        {
-                            //fatheraccess = BasicTracker.UIAccessTracker.GetUIAccess(manger.ParentManager);
-                            //if (!fatheraccess.r_cashop_subagent)
-                            //{
-                            //    throw new FutsRspError("无权提交出入金");
-                            //}
+                    UIAccess fatheraccess, access = null;
+                    //如果是代理则需要检查父代理权限设置中的 子代理提交出入金权限和代理本身的提交出入金权限
+                    if (manger.IsAgent())
+                    {
+                        //fatheraccess = BasicTracker.UIAccessTracker.GetUIAccess(manger.ParentManager);
+                        //if (!fatheraccess.r_cashop_subagent)
+                        //{
+                        //    throw new FutsRspError("无权提交出入金");
+                        //}
 
-                            access = BasicTracker.UIAccessTracker.GetUIAccess(manger);
+                        access = BasicTracker.UIAccessTracker.GetUIAccess(manger);
 
-                            if (!access.r_cashop)
-                                throw new FutsRspError("无权提交出入金");
-                        }
+                        if (!access.r_cashop)
+                            throw new FutsRspError("无权提交出入金");
+                    }
                         
 
-                        request.DateTime = Util.ToTLDateTime();
-                        request.Ref = cashopref.AssignId.ToString();
-                        request.Source = QSEnumCashOPSource.Manual;
-                        request.Status = QSEnumCashInOutStatus.PENDING;
+                    request.DateTime = Util.ToTLDateTime();
+                    request.Ref = cashopref.AssignId.ToString();
+                    request.Source = QSEnumCashOPSource.Manual;
+                    request.Status = QSEnumCashInOutStatus.PENDING;
 
-                        ORM.MCashOpAccount.InsertAccountCashOperation(request);
+                    ORM.MCashOpAccount.InsertAccountCashOperation(request);
 
-                        //通过事件中继触发事件
-                        TLCtxHelper.EventSystem.FireCashOperation(this, QSEnumCashOpEventType.Request, request);
+                    //通过事件中继触发事件
+                    TLCtxHelper.EventSystem.FireCashOperation(this, QSEnumCashOpEventType.Request, request);
 
-                        session.OperationSuccess("提交交易帐户出入金成功");
+                    session.RspMessage("提交交易帐户出入金成功");
 
-                        //如果自动确认该代理的出入金 则执行确认操作
-                        //if (access.r_cashop_auto_confirm)
-                        //{
-                        //    //调用清算中心出入金确认操作
-                        //    //TLCtxHelper..ConfirmCashOperation(request.Ref);
+                    //如果自动确认该代理的出入金 则执行确认操作
+                    //if (access.r_cashop_auto_confirm)
+                    //{
+                    //    //调用清算中心出入金确认操作
+                    //    //TLCtxHelper..ConfirmCashOperation(request.Ref);
 
-                        //    //重新从数据库加载数据 返回当前记录的数据
-                        //    request = ORM.MCashOpAccount.GetAccountCashOperation(request.Ref);
-                        //    session.ReplyMgr(request);
-                        //    //通过事件中继触发事件
-                        //    TLCtxHelper.EventSystem.FireCashOperation(this, QSEnumCashOpEventType.Confirm, request);
+                    //    //重新从数据库加载数据 返回当前记录的数据
+                    //    request = ORM.MCashOpAccount.GetAccountCashOperation(request.Ref);
+                    //    session.ReplyMgr(request);
+                    //    //通过事件中继触发事件
+                    //    TLCtxHelper.EventSystem.FireCashOperation(this, QSEnumCashOpEventType.Confirm, request);
 
-                        //}
-                    }
-                    //debug("update agent bank account: id:" + bankaccount.Bank.ID + " name:" + bankaccount.Bank.Name, QSEnumDebugLevel.INFO);
+                    //}
                 }
-            }
-            catch (FutsRspError ex)//捕获到FutsRspError则向管理端发送对应回报
-            {
-                session.OperationError(ex);
+                //debug("update agent bank account: id:" + bankaccount.Bank.ID + " name:" + bankaccount.Bank.Name, QSEnumDebugLevel.INFO);
             }
         }
 

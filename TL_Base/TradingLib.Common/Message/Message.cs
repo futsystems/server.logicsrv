@@ -232,7 +232,7 @@ namespace TradingLib.Common
                     case MessageTypes.XQRYTRADSPLITRESPONSE:
                     case MessageTypes.XQRYPRICEVOLRESPONSE:
                     case MessageTypes.XQRYMINUTEDATARESPONSE:
-                    case MessageTypes.MGRUPLOADBARDATA:
+                    case MessageTypes.MGR_MD_UPLOADBARDATA:
                         {
                             msg = string.Empty;
                             msgdata = new byte[msglen - HEADERSIZE];

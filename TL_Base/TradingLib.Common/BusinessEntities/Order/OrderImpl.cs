@@ -459,8 +459,7 @@ namespace TradingLib.Common
         /// <returns></returns>
         public static string Serialize(Order o)
         {
-            
-            //if (o.isFilled) return TradeImpl.Serialize((Trade)o);//?在某些情况下 委托会被序列化成成交 导致通讯异常
+            if (o == null) return string.Empty;
             StringBuilder sb = new StringBuilder();
             char d = ',';
             sb.Append(o.Symbol);
@@ -536,6 +535,7 @@ namespace TradingLib.Common
         /// <returns></returns>
         public new static Order Deserialize(string message)
         {
+            if (string.IsNullOrEmpty(message)) return null;
             Order o = null;
             string[] rec = message.Split(','); // get the record
             if (rec.Length < 17) throw new InvalidOrder();

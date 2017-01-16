@@ -49,7 +49,7 @@ namespace TradingLib.Core
             JsonWrapperReceivableAccount bank = json.DeserializeObject<JsonWrapperReceivableAccount>();
             manager.Domain.UpdateRecvBanks(bank);
 
-            session.OperationSuccess("更新收款银行信息成功");
+            session.RspMessage("更新收款银行信息成功");
             //通知银行信息变更
             session.NotifyMgr("NotifyRecvBank", manager.Domain.GetRecvBank(bank.ID), manager.Domain.GetRootLocations());
         }

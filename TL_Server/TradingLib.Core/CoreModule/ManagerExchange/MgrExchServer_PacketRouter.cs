@@ -27,13 +27,7 @@ namespace TradingLib.Core
                             SrvOnOrderActionInsert(packet as OrderActionRequest, session, manager);
                             break;
                         }
-                    case MessageTypes.MGRINSERTTRADE://请求插入成交
-                        {
-                            SrvOnInsertTrade(packet as MGRReqInsertTradeRequest, session, manager);
-                            break;
-                        }
-
-                    case MessageTypes.MGRCONTRIBREQUEST://扩展请求
+                    case MessageTypes.MGR_REQ_CONTRIB://扩展请求
                         {
                             SrvOnMGRContribRequest(packet as MGRContribRequest, session, manager);
                             break;
@@ -45,7 +39,7 @@ namespace TradingLib.Core
             }
             catch (FutsRspError ex)
             {
-                session.OperationError(ex);
+                session.RspError(ex);
             }
             catch (Exception ex)
             {

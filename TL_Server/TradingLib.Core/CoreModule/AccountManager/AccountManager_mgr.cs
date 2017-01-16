@@ -75,7 +75,7 @@ namespace TradingLib.Core
             //对外触发交易帐号添加事件
             TLCtxHelper.EventAccount.FireAccountAddEvent(this[creation.Account]);
 
-            session.OperationSuccess("新增交易帐号:" + creation.Account + "成功");
+            session.RspMessage("新增交易帐号:" + creation.Account + "成功");
 
         }
 
@@ -121,7 +121,7 @@ namespace TradingLib.Core
             //触发交易帐户变动事件
             TLCtxHelper.EventAccount.FireAccountChangeEent(account);
 
-            session.OperationSuccess("更新个人信息成功");
+            session.RspMessage("更新个人信息成功");
 
         }
 
@@ -148,7 +148,7 @@ namespace TradingLib.Core
 
             this.DelAccount(account);
 
-            session.OperationSuccess("交易帐户:" + account + " 删除成功");
+            session.RspMessage("交易帐户:" + account + " 删除成功");
         }
 
         /// <summary>
@@ -243,7 +243,7 @@ namespace TradingLib.Core
 
             this.UpdateAccountCurrency(account, currency);
 
-            session.OperationSuccess("交易帐户更新货币类型成功");
+            session.RspMessage("交易帐户更新货币类型成功");
         }
 
 
@@ -317,13 +317,13 @@ namespace TradingLib.Core
             //                //出金
             //                b.Withdraw((double)Math.Abs(amount), "");
             //            }
-            //            //session.OperationSuccess("出金操作已提交,请查询主帐户信息");
+            //            //session.RspMessage("出金操作已提交,请查询主帐户信息");
             //        }
             //    }
             //}
             //出入金操作后返回帐户信息更新
             session.NotifyMgr("NotifyAccountFinInfo", acct.GenAccountInfo());
-            session.OperationSuccess("出入金操作成功");
+            session.RspMessage("出入金操作成功");
         }
 
 
@@ -348,7 +348,7 @@ namespace TradingLib.Core
             if (acct != null)
             {
                 this.UpdateAccountPass(account, newpass);
-                session.OperationSuccess("修改密码成功");
+                session.RspMessage("修改密码成功");
             }
             else
             {
@@ -384,7 +384,7 @@ namespace TradingLib.Core
 
             //更新路由组
             this.UpdateAccountCommissionTemplate(account, templateid);
-            session.OperationSuccess("更新帐户手续费模板成功");
+            session.RspMessage("更新帐户手续费模板成功");
         }
 
 
@@ -405,7 +405,7 @@ namespace TradingLib.Core
 
             //更新路由组
             this.UpdateAccountMarginTemplate(account, templateid);
-            session.OperationSuccess("更新帐户保证金模板成功");
+            session.RspMessage("更新帐户保证金模板成功");
         }
 
         [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "UpdateAccountExStrategyTemplate", "UpdateAccountExStrategyTemplate - update account exstrategy template set", "更新帐户交易参数模板")]
@@ -425,7 +425,7 @@ namespace TradingLib.Core
 
             //更新路由组
             this.UpdateAccountExStrategyTemplate(account, templateid);
-            session.OperationSuccess("更新帐户交易参数模板成功");
+            session.RspMessage("更新帐户交易参数模板成功");
         }
 
 
@@ -458,7 +458,7 @@ namespace TradingLib.Core
 
             //更新路由组
             this.UpdateRouterGroup(account, rg);
-            session.OperationSuccess("更新帐户路由组成功");
+            session.RspMessage("更新帐户路由组成功");
         }
 
 

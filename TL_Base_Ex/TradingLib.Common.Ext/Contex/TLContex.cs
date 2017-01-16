@@ -208,21 +208,21 @@ namespace TradingLib.Common
             }
             catch (FutsRspError ex)
             {
-                session.OperationError(ex);
+                session.RspError(ex);
             }
             catch (QSCommandError ex)
             {
                 logger.Error(ex.Label + "\r\n reason@" + ex.Reason + "\r\n RawException:" + ex.RawException.Message.ToString());
-                session.OperationError(new FutsRspError(ex));
+                session.RspError(new FutsRspError(ex));
             }
             catch (TLException ex)
             {
-                session.OperationError(new FutsRspError(ex));
+                session.RspError(new FutsRspError(ex));
             }
             catch (Exception ex)
             {
                 logger.Error("MGR Message Handler error:" + ex.ToString());
-                session.OperationError(new FutsRspError(ex));
+                session.RspError(new FutsRspError(ex));
             }
         }
         /// <summary>

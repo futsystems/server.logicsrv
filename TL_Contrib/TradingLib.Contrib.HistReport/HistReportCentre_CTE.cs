@@ -35,7 +35,7 @@ namespace TradingLib.Contrib
             }
             else
             {
-                session.OperationError(new FutsRspError("未查到任何统计结果"));
+                session.RspError(new FutsRspError("未查到任何统计结果"));
             }
             
 

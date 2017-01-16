@@ -111,7 +111,7 @@ namespace TradingLib.Core
                 //启动交易通道
                 this.AsyncStartBroker(config.Token);
 
-                session.OperationSuccess(string.Format("绑定主帐户[{0}]到帐户:{1}成功", config.Token, account));
+                session.RspMessage(string.Format("绑定主帐户[{0}]到帐户:{1}成功", config.Token, account));
             }
         }
 
@@ -148,7 +148,7 @@ namespace TradingLib.Core
                 this.AsyncStopBroker(config.Token);
 
 
-                session.OperationSuccess(string.Format("主帐户[{0}]从帐户:{1}解绑成功", config.Token, account));
+                session.RspMessage(string.Format("主帐户[{0}]从帐户:{1}解绑成功", config.Token, account));
             
             }
         }
@@ -202,7 +202,7 @@ namespace TradingLib.Core
                     DeferredCallBack errorHandler =(args)=>
                     {
                         logger.Debug("errorHandler");
-                        session.OperationError(new FutsRspError("查询主帐户出错"));
+                        session.RspError(new FutsRspError("查询主帐户出错"));
                     };
 
                     //绑定回调函数
@@ -256,7 +256,7 @@ namespace TradingLib.Core
         //        AsyncBrokerOperationDel cb = new AsyncBrokerOperationDel(this.RestartBroker);
         //        cb.BeginInvoke(config.Token, null, null);
 
-        //        session.OperationSuccess("开始同步交易数据");
+        //        session.RspMessage("开始同步交易数据");
         //    }
         //}
 
@@ -299,7 +299,7 @@ namespace TradingLib.Core
                 //TLCtxHelper.ModuleAccountManager.CashOperation(account, diff_credit, QSEnumEquityType.CreditEquity, "", string.Format("Sync-Target:{0}", targetStaticCredit));
             }
             
-            session.OperationSuccess("同步资金完成");
+            session.RspMessage("同步资金完成");
 
         }
 
@@ -333,7 +333,7 @@ namespace TradingLib.Core
         //    {
         //        TLBroker b = broker as TLBroker;
         //        b.Deposit(amount,pass);
-        //        session.OperationSuccess("入金操作已提交,请查询主帐户信息");
+        //        session.RspMessage("入金操作已提交,请查询主帐户信息");
         //    }
         //}
 
@@ -369,7 +369,7 @@ namespace TradingLib.Core
         //    {
         //        TLBroker b = broker as TLBroker;
         //        b.Withdraw(amount,pass);
-        //        session.OperationSuccess("出金操作已提交,请查询主帐户信息");
+        //        session.RspMessage("出金操作已提交,请查询主帐户信息");
         //    }
 
         //}

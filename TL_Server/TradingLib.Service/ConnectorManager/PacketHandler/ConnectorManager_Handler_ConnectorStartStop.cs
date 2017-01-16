@@ -52,7 +52,7 @@ namespace TradingLib.ServiceManager
                     if (handler != null)
                     {
                         handler(cfg.Token);
-                        session.OperationSuccess(string.Format("通道[{0}]操作成功", cfg.Token));
+                        session.RspMessage(string.Format("通道[{0}]操作成功", cfg.Token));
                         NotifyConnectorStatus(session, cfg);
                     }
 
@@ -66,7 +66,7 @@ namespace TradingLib.ServiceManager
             catch (FutsRspError ex)
             {
                 //通知该通道对应的管理员
-                session.OperationError(ex);
+                session.RspError(ex);
             }
         }
 

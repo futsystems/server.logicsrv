@@ -10,13 +10,12 @@ namespace TradingLib.Common
 
     /// <summary>
     /// 管理端扩展请求
-    /// 
     /// </summary>
     public class MGRContribRequest:RequestPacket
     {
         public MGRContribRequest()
         {
-            _type = MessageTypes.MGRCONTRIBREQUEST;
+            _type = MessageTypes.MGR_REQ_CONTRIB;
             this.ModuleID = string.Empty;
             this.CMDStr = string.Empty;
             this.Parameters = string.Empty;
@@ -59,14 +58,13 @@ namespace TradingLib.Common
     }
 
     /// <summary>
-    /// 管理端扩展回报 一个请求 多个回复 用于通知其他管理客户端
-    /// 比如管理端确认出入金请求 会同步通知登入的代理客户端
+    /// 管理端扩展通知回报
     /// </summary>
     public class NotifyMGRContribNotify : NotifyResponsePacket
     {
         public NotifyMGRContribNotify()
         {
-            _type = MessageTypes.MGRCONTRIBRNOTIFY;
+            _type = MessageTypes.MGR_RTN_CONTRIB;
         }
 
         /// <summary>
@@ -105,14 +103,15 @@ namespace TradingLib.Common
             this.Result = rec[2];
         }
     }
+
     /// <summary>
-    /// 管理端扩展回报 一个请求 一个回复
+    /// 管理端扩展应答回报
     /// </summary>
     public class RspMGRContribResponse : RspResponsePacket
     {
         public RspMGRContribResponse()
         {
-            _type = MessageTypes.MGRCONTRIBRESPONSE;
+            _type = MessageTypes.MGR_RSP_CONTRIB;
         }
 
         /// <summary>
@@ -151,6 +150,5 @@ namespace TradingLib.Common
             this.CMDStr = rec[1];
             this.Result = rec[2];
         }
-
     }
 }

@@ -16,22 +16,17 @@ namespace TradingLib.Core
         [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "QueryPermmissionTemplate", "QueryPermmissionTemplate - Query Permmission lsit", "查询权限模板列表")]
         public void CTE_QueryPermissionTemplateList(ISession session)
         {
-            try
+
+            Manager manger = session.GetManager();
+            if (manger.IsInRoot())
             {
-                Manager manger = session.GetManager();
-                if (manger.IsInRoot())
-                {
-                    session.ReplyMgr(manger.Domain.GetUIAccesses().ToArray());
-                }
-                else
-                {
-                    throw new FutsRspError("无权查询权限模板列表");
-                }
+                session.ReplyMgr(manger.Domain.GetUIAccesses().ToArray());
             }
-            catch (FutsRspError ex)
+            else
             {
-                session.OperationError(ex);
+                throw new FutsRspError("无权查询权限模板列表");
             }
+
         }
 
         /// <summary>
@@ -50,7 +45,7 @@ namespace TradingLib.Core
 
                 BasicTracker.UIAccessTracker.UpdateUIAccess(access);//更新
                 session.NotifyMgr("NotifyPermissionTemplate", BasicTracker.UIAccessTracker[access.id]);
-                session.OperationSuccess("权限模板更新成功");
+                session.RspMessage("权限模板更新成功");
             }
             else
             {
@@ -84,7 +79,7 @@ namespace TradingLib.Core
                 BasicTracker.UIAccessTracker.DeletePermissionTemplate(template_id);
 
                 session.NotifyMgr("NotifyDeletePermissionTemplate", access);
-                session.OperationSuccess("删除续费模板成功");
+                session.RspMessage("删除续费模板成功");
             }
             else
             {
@@ -96,22 +91,15 @@ namespace TradingLib.Core
         [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "QueryAgentPermission", "QueryAgentPermission - query agent permission", "查询某个代理的权限设置")]
         public void CTE_QueryAgentPermission(ISession session, int managerid)
         {
-            try
+            Manager manger = session.GetManager();
+            if (manger.IsInRoot())
             {
-                Manager manger = session.GetManager();
-                if (manger.IsInRoot())
-                {
-                    UIAccess access = BasicTracker.UIAccessTracker.GetAgentUIAccess(managerid);
-                    session.ReplyMgr(access);
-                }
-                else
-                {
-                    throw new FutsRspError("无权查询代理权限设置");
-                }
+                UIAccess access = BasicTracker.UIAccessTracker.GetAgentUIAccess(managerid);
+                session.ReplyMgr(access);
             }
-            catch (FutsRspError ex)
+            else
             {
-                session.OperationError(ex);
+                throw new FutsRspError("无权查询代理权限设置");
             }
         }
 
@@ -129,7 +117,7 @@ namespace TradingLib.Core
                 BasicTracker.UIAccessTracker.UpdateAgentPermission(managerid, accessid);
                 UIAccess access = BasicTracker.UIAccessTracker.GetAgentUIAccess(managerid);
                 session.NotifyMgr("NotifyAgentPermission",access);
-                session.OperationSuccess("更新柜员权限设置成功");
+                session.RspMessage("更新柜员权限设置成功");
             }
             else
             {

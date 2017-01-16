@@ -164,7 +164,7 @@ namespace TradingLib.Core
                 }
 
                 session.NotifyMgr("NotifyDomain", BasicTracker.DomainTracker[domain.ID]);
-                session.OperationSuccess("更新域信息成功");
+                session.RspMessage("更新域信息成功");
             }
         }
     }

@@ -98,7 +98,7 @@ namespace TradingLib.Core
                     TLCtxHelper.ModuleRiskCentre.FlatAllPositions(account.ID, QSEnumOrderSource.QSMONITER, "一键强平");
                     Util.sleep(500);
                 }
-                session.OperationSuccess("强平成功");
+                session.RspMessage("强平成功");
             }
             else
             {

@@ -82,7 +82,7 @@ namespace TradingLib.Common
             response.ModuleID = session.ContirbID;
             response.CMDStr = session.CMDStr;
             response.IsLast = islast;
-            response.Result = obj.SerializeObject();// JsonReply.SuccessReply(obj).ToJson();
+            response.Result = obj.SerializeObject();
 
             session.SendPacketMgr(response);
         }
@@ -94,10 +94,17 @@ namespace TradingLib.Common
         /// </summary>
         /// <param name="session"></param>
         /// <param name="error"></param>
-        public static void OperationError(this ISession session,FutsRspError error)
+        public static void RspError(this ISession session,FutsRspError error)
         {
-            RspMGROperationResponse response = ResponseTemplate<RspMGROperationResponse>.SrvSendRspResponse(session);
+            RspMGRResponse response = ResponseTemplate<RspMGRResponse>.SrvSendRspResponse(session);
             response.RspInfo.Fill(error);
+            session.SendPacketMgr(response);
+        }
+
+        public static void RspError(this ISession session, string error_id)
+        {
+            RspMGRResponse response = ResponseTemplate<RspMGRResponse>.SrvSendRspResponse(session);
+            response.RspInfo.Fill(error_id);
             session.SendPacketMgr(response);
         }
 
@@ -107,10 +114,10 @@ namespace TradingLib.Common
         /// </summary>
         /// <param name="session"></param>
         /// <param name="successmessage"></param>
-        public static void OperationSuccess(this ISession session, string successmessage)
+        public static void RspMessage(this ISession session, string message)
         {
-            RspMGROperationResponse response = ResponseTemplate<RspMGROperationResponse>.SrvSendRspResponse(session);
-            response.RspInfo.ErrorMessage = successmessage;
+            RspMGRResponse response = ResponseTemplate<RspMGRResponse>.SrvSendRspResponse(session);
+            response.RspInfo.ErrorMessage = message;
             session.SendPacketMgr(response);
         }
 
@@ -129,7 +136,7 @@ namespace TradingLib.Common
             NotifyMGRContribNotify response = ResponseTemplate<NotifyMGRContribNotify>.SrvSendNotifyResponse(targets == null ? new ILocation[] { session.Location } : targets);
             response.ModuleID = session.ContirbID;
             response.CMDStr = cmdstr;
-            response.Result = obj.SerializeObject();// JsonReply.SuccessReply(obj).ToJson();
+            response.Result = obj.SerializeObject();
             session.SendPacketMgr(response);
         }
 

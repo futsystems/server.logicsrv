@@ -36,12 +36,15 @@ namespace TradingLib.Core
         /// <param name="request"></param>
         /// <param name="session"></param>
         /// <param name="manager"></param>
-        void SrvOnInsertTrade(MGRReqInsertTradeRequest request, ISession session, Manager manager)
+        [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "InsertTrade", "InsertTrade - insert trade", "插入遗漏数据",QSEnumArgParseType.Json)]
+        public void CTE_InsertTrade(ISession session,string json)
         {
-            //logger.Info(string.Format("管理员:{0} 请求插入委托:{1}", session.AuthorizedID, request.ToString()));
-            RspMGROperationResponse response = ResponseTemplate<RspMGROperationResponse>.SrvSendRspResponse(request);
-
-            Trade fill = request.TradeToSend;
+            string content = json.DeserializeObject<string>();
+            Trade fill = TradeImpl.Deserialize(content);
+            if (fill == null)
+            {
+                return;
+            }
             IAccount account = TLCtxHelper.ModuleAccountManager[fill.Account];
             if (account == null) return;
 
@@ -49,22 +52,13 @@ namespace TradingLib.Core
 
             if (fill.oSymbol == null)
             {
-                response.RspInfo.Fill("SYMBOL_NOT_EXISTED");
-                CacheRspResponse(response);
-                return;
-            }
-
-            if (fill.oSymbol.SecurityFamily.Currency != account.Currency)
-            {
-                response.RspInfo.Fill("帐户无法交易合约:" + fill.Symbol);
-                CacheRspResponse(response);
+                session.RspError("SYMBOL_NOT_EXISTED");
                 return;
             }
 
             if (account == null)
             {
-                response.RspInfo.Fill("交易帐号不存在");
-                CacheRspResponse(response);
+                session.RspError("交易帐号不存在");
                 return;
             }
 
@@ -75,8 +69,7 @@ namespace TradingLib.Core
             {
                 if (targetprice > k.UpperLimit || targetprice < k.LowerLimit)
                 {
-                    response.RspInfo.Fill("ORDERPRICE_OVERT_LIMIT");
-                    CacheRspResponse(response);
+                    session.RspError("ORDERPRICE_OVERT_LIMIT");
                     return;
                 }
             }

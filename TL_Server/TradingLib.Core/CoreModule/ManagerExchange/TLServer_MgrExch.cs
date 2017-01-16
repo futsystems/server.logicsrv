@@ -68,7 +68,7 @@ namespace TradingLib.Core
             //1.向某个特定的地址发送的通知
             if (packet.PacketType == QSEnumPacketType.LOCATIONNOTIFYRESPONSE)
             {
-                if (packet.Type == MessageTypes.MGRCONTRIBRESPONSE)
+                if (packet.Type == MessageTypes.MGR_RSP_CONTRIB)
                 {
                     string x = "";
                 }
