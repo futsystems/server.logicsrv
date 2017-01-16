@@ -158,14 +158,14 @@ namespace TradingLib.DataFarm.Common
         }
 
 
-
         /// <summary>
         /// 更新合约
         /// </summary>
         /// <param name="host"></param>
         /// <param name="conn"></param>
         /// <param name="request"></param>
-        void SrvOnMGRUpdateSymbol(IServiceHost host, IConnection conn, MGRUpdateSymbolRequest request)
+        [DataCommandAttr("UpdateSymbol", "UpdateSymbol -  update symbol", "更新合约", QSEnumArgParseType.Json)]
+        public void CTE_UpdateSymbol(IServiceHost host, IConnection conn, string json)
         {
             if (!_syncdb)
             {
@@ -174,9 +174,9 @@ namespace TradingLib.DataFarm.Common
             }
 
 
-            logger.Info(string.Format("Conn:{0} 请求更新合约:{1}", conn.SessionID, request.ToString()));
-
-            SymbolImpl symbol = request.Symbol;
+            logger.Info(string.Format("Conn:{0} 请求更新合约:{1}", conn.SessionID, json));
+            string message = json.DeserializeObject<string>();
+            SymbolImpl symbol = SymbolImpl.Deserialize(message);
             symbol.Domain_ID = 1;
 
             //检查品种
@@ -206,11 +206,13 @@ namespace TradingLib.DataFarm.Common
             //调用该域更新该合约
             MDBasicTracker.SymbolTracker.UpdateSymbol(symbol,true);
 
-            RspMGRUpdateSymbolResponse response = ResponseTemplate<RspMGRUpdateSymbolResponse>.SrvSendRspResponse(request);
+            //RspMGRUpdateSymbolResponse response = ResponseTemplate<RspMGRUpdateSymbolResponse>.SrvSendRspResponse(request);
             SymbolImpl localsymbol = MDBasicTracker.SymbolTracker[symbol.ID];
-            response.Symbol = localsymbol;
 
-            this.SendData(conn, response);
+            SendContribResponse(conn, "UpdateSymbol", SymbolImpl.Serialize(localsymbol));
+            //response.Symbol = localsymbol;
+
+            //this.SendData(conn, response);
         }
 
         /// <summary>
@@ -219,7 +221,8 @@ namespace TradingLib.DataFarm.Common
         /// <param name="host"></param>
         /// <param name="conn"></param>
         /// <param name="request"></param>
-        void SrvOnMGRUpdateSecurity(IServiceHost host, IConnection conn, MGRUpdateSecurityRequest request)
+        [DataCommandAttr("UpdateSecurity", "UpdateSecurity -  update security", "更新品种", QSEnumArgParseType.Json)]
+        public void CTE_UpdateSecurity(IServiceHost host, IConnection conn, string json)
         {
             if (!_syncdb)
             {
@@ -228,9 +231,10 @@ namespace TradingLib.DataFarm.Common
             }
 
 
-            logger.Info(string.Format("Conn:{0} 请求更新品种:{1}",conn.SessionID, request.ToString()));
+            logger.Info(string.Format("Conn:{0} 请求更新品种:{1}",conn.SessionID, json));
 
-            SecurityFamilyImpl sec = request.SecurityFaimly;
+            string message = json.DeserializeObject<string>();
+            SecurityFamilyImpl sec = SecurityFamilyImpl.Deserialize(message);
             //如果已经存在该品种则不执行添加操作
             if (sec.ID == 0 && MDBasicTracker.SecurityTracker[sec.Code] != null)
             {
@@ -240,12 +244,13 @@ namespace TradingLib.DataFarm.Common
             MDBasicTracker.SecurityTracker.UpdateSecurity(sec);
             int secidupdate = sec.ID;
 
-               
+            SecurityFamilyImpl localsec = MDBasicTracker.SecurityTracker[sec.ID];
+            SendContribResponse(conn, "UpdateSecurity", SecurityFamilyImpl.Serialize(localsec));
             //需要通过第一次更新获得sec_id来获得对象进行回报 否则在更新其他域的品种对象时id会发生同步变化
-            RspMGRUpdateSecurityResponse response = ResponseTemplate<RspMGRUpdateSecurityResponse>.SrvSendRspResponse(request);
-            response.SecurityFaimly = MDBasicTracker.SecurityTracker[sec.ID];
+            //RspMGRUpdateSecurityResponse response = ResponseTemplate<RspMGRUpdateSecurityResponse>.SrvSendRspResponse(request);
+            //response.SecurityFaimly = MDBasicTracker.SecurityTracker[sec.ID];
 
-            this.SendData(conn, response);
+            //this.SendData(conn, response);
 
         }
 
@@ -255,7 +260,8 @@ namespace TradingLib.DataFarm.Common
         /// <param name="host"></param>
         /// <param name="conn"></param>
         /// <param name="request"></param>
-        void SrvOnMGRUpdateExchange(IServiceHost host, IConnection conn, MGRUpdateExchangeRequest request)
+        [DataCommandAttr("UpdateExchange", "UpdateExchange -  update exchange", "更新交易所", QSEnumArgParseType.Json)]
+        public void CTE_UpdateExchange(IServiceHost host, IConnection conn, string json)
         {
             if (!_syncdb)
             {
@@ -264,16 +270,18 @@ namespace TradingLib.DataFarm.Common
             }
 
 
-            logger.Info(string.Format("Conn:{0} 请求更新交易所信息:{1}", conn.SessionID, request.ToString()));
+            logger.Info(string.Format("Conn:{0} 请求更新交易所信息:{1}", conn.SessionID, json));
 
-            if (request.Exchange != null)
-            {
-                MDBasicTracker.ExchagneTracker.UpdateExchange(request.Exchange);
-               
-                RspMGRUpdateExchangeResponse response = ResponseTemplate<RspMGRUpdateExchangeResponse>.SrvSendRspResponse(request);
-                response.Exchange = MDBasicTracker.ExchagneTracker[request.Exchange.ID];
-                this.SendData(conn, response);
-            }
+            string message = json.DeserializeObject<string>();
+            ExchangeImpl ex = ExchangeImpl.Deserialize(message);
+            MDBasicTracker.ExchagneTracker.UpdateExchange(ex);
+            
+            ExchangeImpl localex = MDBasicTracker.ExchagneTracker[ex.ID];
+            SendContribResponse(conn, "UpdateExchange", ExchangeImpl.Serialize(localex));
+                //RspMGRUpdateExchangeResponse response = ResponseTemplate<RspMGRUpdateExchangeResponse>.SrvSendRspResponse(request);
+                //response.Exchange = MDBasicTracker.ExchagneTracker[request.Exchange.ID];
+                //this.SendData(conn, response);
+            
             
         }
 
@@ -283,7 +291,8 @@ namespace TradingLib.DataFarm.Common
         /// <param name="request"></param>
         /// <param name="session"></param>
         /// <param name="manager"></param>
-        void SrvOnMGRUpdateMarketTime(IServiceHost host, IConnection conn, MGRUpdateMarketTimeRequest request)
+        [DataCommandAttr("UpdateMarketTime", "UpdateMarketTime -  update marketTime", "更新交易所", QSEnumArgParseType.Json)]
+        public void CTE_UpdateMarketTime(IServiceHost host, IConnection conn, string json)
         {
             if (!_syncdb)
             {
@@ -291,15 +300,17 @@ namespace TradingLib.DataFarm.Common
                 return;
             }
 
-            logger.Info(string.Format("Conn:{0} 请求更新交易时间段:{1}", conn.SessionID, request.ToString()));
-            if (request.MarketTime != null)
-            {
-                MDBasicTracker.MarketTimeTracker.UpdateMarketTime(request.MarketTime);
-                RspMGRUpdateMarketTimeResponse response = ResponseTemplate<RspMGRUpdateMarketTimeResponse>.SrvSendRspResponse(request);
-                response.MarketTime = MDBasicTracker.MarketTimeTracker[request.MarketTime.ID];
+            logger.Info(string.Format("Conn:{0} 请求更新交易时间段:{1}", conn.SessionID, json));
+            string message = json.DeserializeObject<string>();
+            MarketTimeImpl mt = MarketTimeImpl.Deserialize(message);
+            MDBasicTracker.MarketTimeTracker.UpdateMarketTime(mt);
+            MarketTimeImpl localamt = MDBasicTracker.MarketTimeTracker[mt.ID];
+            SendContribResponse(conn, "UpdateMarketTime", MarketTimeImpl.Serialize(localamt));
+                //RspMGRUpdateMarketTimeResponse response = ResponseTemplate<RspMGRUpdateMarketTimeResponse>.SrvSendRspResponse(request);
+                //response.MarketTime = MDBasicTracker.MarketTimeTracker[request.MarketTime.ID];
 
-                this.SendData(conn, response);
-            }
+                //this.SendData(conn, response);
+            
         }
 
         /// <summary>

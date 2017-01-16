@@ -47,5 +47,23 @@ namespace TradingLib.DataFarm.Common
 
             this.SendData(conn, response);
         }
+
+        /// <summary>
+        /// 发送扩展回报
+        /// </summary>
+        /// <param name="conn"></param>
+        /// <param name="cmd"></param>
+        /// <param name="obj"></param>
+        /// <param name="isLast"></param>
+        void SendContribResponse(IConnection conn, string cmd, object obj, bool isLast = true)
+        {
+            RspMGRContribResponse response = ResponseTemplate<RspMGRContribResponse>.SrvSendRspResponse(null, conn.SessionID, conn.Command.RequestId);
+            response.ModuleID = "DataCore";
+            response.CMDStr = cmd;
+            response.IsLast = isLast;
+            response.Result = obj.SerializeObject();
+
+            this.SendData(conn, response);
+        }
     }
 }
