@@ -81,6 +81,33 @@ namespace TradingLib.Core
 
 
         /// <summary>
+        /// 请求删除交易帐户
+        /// </summary>
+        /// <param name="request"></param>
+        /// <param name="session"></param>
+        /// <param name="manager"></param>
+        [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "DelAccount", "DelAccount - del account", "删除交易帐户", QSEnumArgParseType.CommaSeparated)]
+        public void CTE_DelAccount(ISession session, string account)
+        {
+            IAccount acc = this[account];
+            if (acc == null)
+            {
+                throw new FutsRspError("交易帐户不存在");
+            }
+
+            //检查交易帐户资金
+            if (_deleteAccountCheckEquity && (acc.NowEquity > 1 || acc.Credit > 1))
+            {
+                throw new FutsRspError(string.Format(string.Format("交易帐户:{0} 权益:{1} 信用额度:{2}未出金 无法删除", account, acc.NowEquity, acc.Credit)));
+            }
+
+            this.DelAccount(account);
+
+            session.RspMessage("交易帐户:" + account + " 删除成功");
+        }
+
+
+        /// <summary>
         /// 查询交易帐户的Profile
         /// </summary>
         /// <param name="session"></param>
@@ -125,31 +152,7 @@ namespace TradingLib.Core
 
         }
 
-        /// <summary>
-        /// 请求删除交易帐户
-        /// </summary>
-        /// <param name="request"></param>
-        /// <param name="session"></param>
-        /// <param name="manager"></param>
-        [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "DelAccount", "DelAccount - del account", "删除交易帐户", QSEnumArgParseType.CommaSeparated)]
-        public void CTE_DelAccount(ISession session, string account)
-        {
-            IAccount acc = this[account];
-            if (acc == null)
-            {
-                throw new FutsRspError("交易帐户不存在");
-            }
 
-            //检查交易帐户资金
-            if (_deleteAccountCheckEquity && (acc.NowEquity > 1 || acc.Credit > 1))
-            {
-                throw new FutsRspError(string.Format(string.Format("交易帐户:{0} 权益:{1} 信用额度:{2}未出金 无法删除", account, acc.NowEquity, acc.Credit)));
-            }
-
-            this.DelAccount(account);
-
-            session.RspMessage("交易帐户:" + account + " 删除成功");
-        }
 
         /// <summary>
         /// 
@@ -160,7 +163,7 @@ namespace TradingLib.Core
         [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "UpdateAccountCategory", "UpdateAccountCategory - change account category", "修改帐户类别", QSEnumArgParseType.Json)]
         public void CTE_UpdateAccountCategory(ISession session, string json)
         {
-            var req = json.DeserializeObject();// Mixins.Json.JsonMapper.ToObject(json);
+            var req = json.DeserializeObject();
             var account = req["account"].ToString();
             var category = Util.ParseEnum<QSEnumAccountCategory>(req["category"].ToString());
             IAccount acct = TLCtxHelper.ModuleAccountManager[account];
@@ -173,7 +176,7 @@ namespace TradingLib.Core
         [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "UpdateAccountExecute", "UpdateAccountExecute - change account execute", "修改帐户交易权限状态", QSEnumArgParseType.Json)]
         public void CTE_UpdateAccountExecute(ISession session, string json)
         {
-            var req = json.DeserializeObject();// Mixins.Json.JsonMapper.ToObject(json);
+            var req = json.DeserializeObject();
             var account = req["account"].ToString();
             var execute = bool.Parse(req["execute"].ToString());
             IAccount acct = TLCtxHelper.ModuleAccountManager[account];

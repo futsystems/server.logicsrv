@@ -31,8 +31,7 @@ namespace TradingLib.Core
         [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "UpdateRuleItem", "UpdateRuleItem - update rule item", "查询风控规则集",QSEnumArgParseType.Json)]
         public void CTE_UpdateRule(ISession session,string json)
         {
-            logger.Info(string.Format("管理员:{0} 请求更新风控规则:{1}", session.AuthorizedID, json));
-            RuleItem item = json.DeserializeObject<RuleItem>();// Mixins.Json.JsonMapper.ToObject<RuleItem>(json);
+            RuleItem item = json.DeserializeObject<RuleItem>();
             this.UpdateRiskRule(item);
             session.ReplyMgr(item);
             session.RspMessage("更新风控项目成功");
@@ -41,70 +40,56 @@ namespace TradingLib.Core
         [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "QryRuleItem", "QryRuleItem - qry rule item of account via type", "查询交易帐户风控项目",QSEnumArgParseType.Json)]
         public void CTE_QryRuleItem(ISession session,string json)
         {
-
-            logger.Info(string.Format("管理员:{0} 请求查询帐户分控规则列表:{1}", session.AuthorizedID, json.ToString()));
-
             List<RuleItem> items = new List<RuleItem>();
-            var req = json.DeserializeObject();// Mixins.Json.JsonMapper.ToObject(json);
+            var req = json.DeserializeObject();
             string acct  = req["account"].ToString();
-            QSEnumRuleType ruletype = Util.ParseEnum<QSEnumRuleType>(req["ruletype"].ToString());
-            //QSEnumRuleType ruletype = (QSEnumRuleType)Enum.Parse(typeof(QSEnumRuleType), req["ruletype"].ToString());
+            QSEnumRuleType ruletype = req["ruletype"].ToString().ParseEnum<QSEnumRuleType>();
             IAccount account = TLCtxHelper.ModuleAccountManager[acct];
 
-                
-            if (account != null)
+            if (account == null)
             {
-                if (!account.RuleItemLoaded)
-                {
-                    this.LoadRuleItem(account);//风控规则延迟加载,如果帐户没有加载则先加载帐户风控规则
-                }
+                throw new FutsRspError("交易帐户不存在");
+            }
+            
+            if (!account.RuleItemLoaded)
+            {
+                this.LoadRuleItem(account);//风控规则延迟加载,如果帐户没有加载则先加载帐户风控规则
+            }
 
-                //从内存风控实例 生成ruleitem
-                if (ruletype == QSEnumRuleType.OrderRule)
+            //从内存风控实例 生成ruleitem
+            if (ruletype == QSEnumRuleType.OrderRule)
+            {
+                foreach (IOrderCheck oc in account.OrderChecks)
                 {
-                    foreach (IOrderCheck oc in account.OrderChecks)
-                    {
-                        items.Add(RuleItem.IRule2RuleItem(oc));
-                    }
+                    items.Add(RuleItem.IRule2RuleItem(oc));
                 }
-                else if (ruletype == QSEnumRuleType.AccountRule)
+            }
+            else if (ruletype == QSEnumRuleType.AccountRule)
+            {
+                foreach (IAccountCheck ac in account.AccountChecks)
                 {
-                    foreach (IAccountCheck ac in account.AccountChecks)
-                    {
-                        items.Add(RuleItem.IRule2RuleItem(ac));
-                    }
+                    items.Add(RuleItem.IRule2RuleItem(ac));
                 }
+            }
 
-                int totalnum = items.Count;
-                if (totalnum > 0)
+            int totalnum = items.Count;
+            if (totalnum > 0)
+            {
+                for (int i = 0; i < totalnum; i++)
                 {
-                    for (int i = 0; i < totalnum; i++)
-                    {
-                        //RspMGRQryRuleItemResponse response = ResponseTemplate<RspMGRQryRuleItemResponse>.SrvSendRspResponse(request);
-                        //response.RuleItem = items[i];
-
-                        //CacheRspResponse(response, i == totalnum - 1);
-                        session.ReplyMgr(items[i], i == totalnum - 1);
-                    }
-                }
-                else
-                {
-                    //RspMGRQryRuleItemResponse response = ResponseTemplate<RspMGRQryRuleItemResponse>.SrvSendRspResponse(request);
-                    //CacheRspResponse(response);
-                    session.ReplyMgr(null);
+                    session.ReplyMgr(items[i], i == totalnum - 1);
                 }
             }
             else
             {
-                throw new FutsRspError("交易帐户不存在");
+                session.ReplyMgr(null);
             }
         }
 
         [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "DelRuleItem", "DelRuleItem - del rule item of account", "删除某条风控项目", QSEnumArgParseType.Json)]
         public void SrvOnMGRDelRuleItem(ISession session,string json)
         {
-            logger.Info(string.Format("管理员:{0} 请求删除风控项:{1}", session.AuthorizedID, json));
-            RuleItem item = json.DeserializeObject<RuleItem>();// Mixins.Json.JsonMapper.ToObject<RuleItem>(json);
+            RuleItem item = json.DeserializeObject<RuleItem>();
             IAccount account = TLCtxHelper.ModuleAccountManager[item.Account];
 
             this.DeleteRiskRule(item);
@@ -116,6 +101,26 @@ namespace TradingLib.Core
             }
             session.ReplyMgr(item);
             session.RspMessage("风控规则删除成功");
+        }
+
+        [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "FlatAllPosition", "FlatAllPosition - falt all position", "平调所有子账户持仓")]
+        public void CTE_FlatAllPosition(ISession session)
+        {
+            Manager manager = session.GetManager();
+            if (manager.IsRoot())
+            {
+                foreach (var account in manager.Domain.GetAccounts())
+                {
+                    TLCtxHelper.ModuleAccountManager.InactiveAccount(account.ID);
+                    TLCtxHelper.ModuleRiskCentre.FlatAllPositions(account.ID, QSEnumOrderSource.QSMONITER, "一键强平");
+                    Util.sleep(500);
+                }
+                session.RspMessage("强平成功");
+            }
+            else
+            {
+                throw new FutsRspError("无权执行强平操作");
+            }
         }
 
     }
