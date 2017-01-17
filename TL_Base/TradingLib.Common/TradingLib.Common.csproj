@@ -200,7 +200,6 @@
     <Compile Include="Message\Location.cs" />
     <Compile Include="Message\Login.cs" />
     <Compile Include="Message\Manager\MGRContrib.cs" />
-    <Compile Include="Message\Manager\MGROperationResponse.cs" />
     <Compile Include="Message\Manager\MGRLogin.cs" />
     <Compile Include="Message\OrderAction.cs" />
     <Compile Include="Message\PacketBase.cs" />

@@ -151,4 +151,26 @@ namespace TradingLib.Common
             this.Result = rec[2];
         }
     }
+
+    /// <summary>
+    /// 信息回报
+    /// 操作完成或异常回报
+    /// </summary>
+    public class RspMGRResponse : RspResponsePacket
+    {
+        public RspMGRResponse()
+        {
+            _type = MessageTypes.MGR_RSP;
+        }
+
+        public override void ResponseDeserialize(string content)
+        {
+            base.ResponseDeserialize(content);
+        }
+
+        public override string ResponseSerialize()
+        {
+            return base.ResponseSerialize();
+        }
+    }
 }
