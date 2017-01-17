@@ -75,7 +75,66 @@ namespace APIClient
             wsBtnQryMaxOrderVol.Click += new EventHandler(wsBtnQryMaxOrderVol_Click);
             wsBtnPlaceOrder.Click += new EventHandler(wsBtnPlaceOrder_Click);
             wsBtnCancel.Click += new EventHandler(wsBtnCancel_Click);
+
+            btnStartMd.Click += new EventHandler(btnStartMd_Click);
+            btnStopMd.Click += new EventHandler(btnStopMd_Click);
+            btnMdLogin.Click += new EventHandler(btnMdLogin_Click);
         }
+
+        APIMarket _mdApi = null;
+        void btnMdLogin_Click(object sender, EventArgs e)
+        {
+            if (_mdApi == null) return;
+            XLReqLoginField req = new XLReqLoginField();
+            req.UserID = mdUser.Text;
+            req.Password = mdPass.Text;
+            req.UserProductInfo = "APIClient";
+            req.MacAddress = "xxx";
+            bool ret = _mdApi.ReqUserLogin(req, ++_requestId);
+            logger.Info(string.Format("ReqUserLogin Send Success:{0}", ret));
+        }
+
+        void btnStopMd_Click(object sender, EventArgs e)
+        {
+
+            if (_mdApi == null) return;
+            _mdApi.Release();
+            _mdApi = null;
+        }
+
+        void btnStartMd_Click(object sender, EventArgs e)
+        {
+            _mdApi = new APIMarket(mdAddress.Text, int.Parse(mdPort.Text));
+            _mdApi.OnServerDisconnected += new Action<int>(_mdApi_OnServerDisconnected);
+            _mdApi.OnServerConnected += new Action(_mdApi_OnServerConnected);
+            _mdApi.OnRspError += new Action<ErrorField>(_mdApi_OnRspError);
+
+
+            new Thread(() =>
+            {
+                _mdApi.Verbose = exapiverbose.Checked;
+                _mdApi.Init();
+                _mdApi.Join();
+                logger.Info("MDAPI Thread Stopped");
+            }).Start();
+        }
+
+        void _mdApi_OnRspError(ErrorField obj)
+        {
+            logger.Info(string.Format("OnRspError ID:{0} Msg:{1}", obj.ErrorID, obj.ErrorMsg));
+        }
+
+        void _mdApi_OnServerConnected()
+        {
+            logger.Info("Server Connected");
+        }
+
+        void _mdApi_OnServerDisconnected(int obj)
+        {
+            logger.Info("Server Disconnected:" + obj.ToString());
+        }
+
+
 
         #region WebSocket协议 操作
         void wsBtnCancel_Click(object sender, EventArgs e)

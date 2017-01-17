@@ -50,5 +50,10 @@ namespace TradingLib.DataFarm.API
         /// 客户端请求均通过异步方式进行处理
         /// </summary>
         event Action<IServiceHost, IConnection,IPacket> RequestEvent;
+
+        /// <summary>
+        /// XLRequestEvet事件
+        /// </summary>
+        event Action<IServiceHost, IConnection, object, int> XLRequestEvent;
     }
 }

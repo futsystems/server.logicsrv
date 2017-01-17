@@ -30,5 +30,11 @@ namespace WSServiceHost
         /// 客户端服务查询事件
         /// </summary>
         public event Func<IServiceHost, IPacket, IPacket> ServiceEvent;
+
+
+        /// <summary>
+        /// XLRequestEvet事件
+        /// </summary>
+        public event Action<IServiceHost, IConnection, object, int> XLRequestEvent;
     }
 }

@@ -556,5 +556,10 @@ namespace ZMQServiceHost
         /// 客户端连接关闭
         /// </summary>
         public event Action<IServiceHost, IConnection> ConnectionClosedEvent;
+
+        /// <summary>
+        /// XLRequestEvet事件
+        /// </summary>
+        public event Action<IServiceHost, IConnection, object, int> XLRequestEvent;
     }
 }

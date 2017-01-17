@@ -6,12 +6,12 @@ using TradingLib.API;
 using TradingLib.DataFarm.API;
 using Common.Logging;
 
-namespace TCPServiceHost
+namespace XLServiceHost
 {
     /// <summary>
-    /// 封装了一个TCPSocketServiceHost 中的Connection对象
+    /// 
     /// </summary>
-    public class TCPSocketConnection:IConnection
+    public class XLConnection:IConnection
     {
         ILog logger = LogManager.GetLogger("conn");
 
@@ -53,8 +53,8 @@ namespace TCPServiceHost
 
 
         IServiceHost _serviceHost = null;
-        TLSessionBase _session = null;
-        public TCPSocketConnection(IServiceHost host,TLSessionBase session)
+        XLSessionBase _session = null;
+        public XLConnection(IServiceHost host, XLSessionBase session)
         {
             _session = session;
             _serviceHost = host;
@@ -79,10 +79,9 @@ namespace TCPServiceHost
             
             
         }
-
         public void Send(byte[] data)
-        { 
-        
+        {
+            _session.Send(data, 0, data.Length);
         }
         /// <summary>
         /// 关闭Socket

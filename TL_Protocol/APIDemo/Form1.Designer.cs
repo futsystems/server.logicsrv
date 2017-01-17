@@ -70,9 +70,21 @@
             this.btnWSStart = new System.Windows.Forms.Button();
             this.wsAddress = new System.Windows.Forms.TextBox();
             this.label5 = new System.Windows.Forms.Label();
-            this.debugControl1 = new APIClient.DebugControl();
             this.tabPage3 = new System.Windows.Forms.TabPage();
             this.button1 = new System.Windows.Forms.Button();
+            this.mdPass = new System.Windows.Forms.TextBox();
+            this.label8 = new System.Windows.Forms.Label();
+            this.mdUser = new System.Windows.Forms.TextBox();
+            this.label9 = new System.Windows.Forms.Label();
+            this.btnMdLogin = new System.Windows.Forms.Button();
+            this.btnStopMd = new System.Windows.Forms.Button();
+            this.btnStartMd = new System.Windows.Forms.Button();
+            this.mdPort = new System.Windows.Forms.TextBox();
+            this.label10 = new System.Windows.Forms.Label();
+            this.mdAddress = new System.Windows.Forms.TextBox();
+            this.label11 = new System.Windows.Forms.Label();
+            this.tabPage4 = new System.Windows.Forms.TabPage();
+            this.debugControl1 = new APIClient.DebugControl();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tabPage2.SuspendLayout();
@@ -86,6 +98,7 @@
             this.tabControl1.Controls.Add(this.tabPage1);
             this.tabControl1.Controls.Add(this.tabPage2);
             this.tabControl1.Controls.Add(this.tabPage3);
+            this.tabControl1.Controls.Add(this.tabPage4);
             this.tabControl1.Location = new System.Drawing.Point(0, 0);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
@@ -496,6 +509,143 @@
             this.label5.TabIndex = 2;
             this.label5.Text = "URL";
             // 
+            // tabPage3
+            // 
+            this.tabPage3.Controls.Add(this.mdPass);
+            this.tabPage3.Controls.Add(this.label8);
+            this.tabPage3.Controls.Add(this.mdUser);
+            this.tabPage3.Controls.Add(this.label9);
+            this.tabPage3.Controls.Add(this.btnMdLogin);
+            this.tabPage3.Controls.Add(this.btnStopMd);
+            this.tabPage3.Controls.Add(this.btnStartMd);
+            this.tabPage3.Controls.Add(this.mdPort);
+            this.tabPage3.Controls.Add(this.label10);
+            this.tabPage3.Controls.Add(this.mdAddress);
+            this.tabPage3.Controls.Add(this.label11);
+            this.tabPage3.Controls.Add(this.button1);
+            this.tabPage3.Location = new System.Drawing.Point(4, 22);
+            this.tabPage3.Name = "tabPage3";
+            this.tabPage3.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage3.Size = new System.Drawing.Size(961, 227);
+            this.tabPage3.TabIndex = 2;
+            this.tabPage3.Text = "行情Socket";
+            this.tabPage3.UseVisualStyleBackColor = true;
+            // 
+            // button1
+            // 
+            this.button1.Location = new System.Drawing.Point(869, 6);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(75, 23);
+            this.button1.TabIndex = 0;
+            this.button1.Text = "button1";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click);
+            // 
+            // mdPass
+            // 
+            this.mdPass.Location = new System.Drawing.Point(204, 34);
+            this.mdPass.Name = "mdPass";
+            this.mdPass.Size = new System.Drawing.Size(53, 21);
+            this.mdPass.TabIndex = 21;
+            this.mdPass.Text = "123456";
+            // 
+            // label8
+            // 
+            this.label8.AutoSize = true;
+            this.label8.Location = new System.Drawing.Point(142, 37);
+            this.label8.Name = "label8";
+            this.label8.Size = new System.Drawing.Size(59, 12);
+            this.label8.TabIndex = 20;
+            this.label8.Text = "Password:";
+            // 
+            // mdUser
+            // 
+            this.mdUser.Location = new System.Drawing.Point(59, 34);
+            this.mdUser.Name = "mdUser";
+            this.mdUser.Size = new System.Drawing.Size(77, 21);
+            this.mdUser.TabIndex = 19;
+            this.mdUser.Text = "8500001";
+            // 
+            // label9
+            // 
+            this.label9.AutoSize = true;
+            this.label9.Location = new System.Drawing.Point(10, 37);
+            this.label9.Name = "label9";
+            this.label9.Size = new System.Drawing.Size(47, 12);
+            this.label9.TabIndex = 18;
+            this.label9.Text = "UserID:";
+            // 
+            // btnMdLogin
+            // 
+            this.btnMdLogin.Location = new System.Drawing.Point(308, 37);
+            this.btnMdLogin.Name = "btnMdLogin";
+            this.btnMdLogin.Size = new System.Drawing.Size(75, 23);
+            this.btnMdLogin.TabIndex = 17;
+            this.btnMdLogin.Text = "登入";
+            this.btnMdLogin.UseVisualStyleBackColor = true;
+            // 
+            // btnStopMd
+            // 
+            this.btnStopMd.Location = new System.Drawing.Point(406, 5);
+            this.btnStopMd.Name = "btnStopMd";
+            this.btnStopMd.Size = new System.Drawing.Size(92, 23);
+            this.btnStopMd.TabIndex = 16;
+            this.btnStopMd.Text = "停止交易接口";
+            this.btnStopMd.UseVisualStyleBackColor = true;
+            // 
+            // btnStartMd
+            // 
+            this.btnStartMd.Location = new System.Drawing.Point(308, 5);
+            this.btnStartMd.Name = "btnStartMd";
+            this.btnStartMd.Size = new System.Drawing.Size(92, 23);
+            this.btnStartMd.TabIndex = 15;
+            this.btnStartMd.Text = "启动交易接口";
+            this.btnStartMd.UseVisualStyleBackColor = true;
+            // 
+            // mdPort
+            // 
+            this.mdPort.Location = new System.Drawing.Point(249, 7);
+            this.mdPort.Name = "mdPort";
+            this.mdPort.Size = new System.Drawing.Size(53, 21);
+            this.mdPort.TabIndex = 14;
+            this.mdPort.Text = "55633";
+            // 
+            // label10
+            // 
+            this.label10.AutoSize = true;
+            this.label10.Location = new System.Drawing.Point(202, 10);
+            this.label10.Name = "label10";
+            this.label10.Size = new System.Drawing.Size(35, 12);
+            this.label10.TabIndex = 13;
+            this.label10.Text = "端口:";
+            // 
+            // mdAddress
+            // 
+            this.mdAddress.Location = new System.Drawing.Point(59, 7);
+            this.mdAddress.Name = "mdAddress";
+            this.mdAddress.Size = new System.Drawing.Size(133, 21);
+            this.mdAddress.TabIndex = 12;
+            this.mdAddress.Text = "127.0.0.1";
+            // 
+            // label11
+            // 
+            this.label11.AutoSize = true;
+            this.label11.Location = new System.Drawing.Point(10, 10);
+            this.label11.Name = "label11";
+            this.label11.Size = new System.Drawing.Size(35, 12);
+            this.label11.TabIndex = 11;
+            this.label11.Text = "地址:";
+            // 
+            // tabPage4
+            // 
+            this.tabPage4.Location = new System.Drawing.Point(4, 22);
+            this.tabPage4.Name = "tabPage4";
+            this.tabPage4.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage4.Size = new System.Drawing.Size(961, 227);
+            this.tabPage4.TabIndex = 3;
+            this.tabPage4.Text = "tabPage4";
+            this.tabPage4.UseVisualStyleBackColor = true;
+            // 
             // debugControl1
             // 
             this.debugControl1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
@@ -510,27 +660,6 @@
             this.debugControl1.TabIndex = 0;
             this.debugControl1.TimeStamps = true;
             this.debugControl1.UseExternalTimeStamp = false;
-            // 
-            // tabPage3
-            // 
-            this.tabPage3.Controls.Add(this.button1);
-            this.tabPage3.Location = new System.Drawing.Point(4, 22);
-            this.tabPage3.Name = "tabPage3";
-            this.tabPage3.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage3.Size = new System.Drawing.Size(961, 227);
-            this.tabPage3.TabIndex = 2;
-            this.tabPage3.Text = "tabPage3";
-            this.tabPage3.UseVisualStyleBackColor = true;
-            // 
-            // button1
-            // 
-            this.button1.Location = new System.Drawing.Point(869, 6);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(75, 23);
-            this.button1.TabIndex = 0;
-            this.button1.Text = "button1";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
             // Form1
             // 
@@ -548,6 +677,7 @@
             this.tabPage2.ResumeLayout(false);
             this.tabPage2.PerformLayout();
             this.tabPage3.ResumeLayout(false);
+            this.tabPage3.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -599,6 +729,18 @@
         private System.Windows.Forms.Button wsBtnUpdatePass;
         private System.Windows.Forms.TabPage tabPage3;
         private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.TextBox mdPass;
+        private System.Windows.Forms.Label label8;
+        private System.Windows.Forms.TextBox mdUser;
+        private System.Windows.Forms.Label label9;
+        private System.Windows.Forms.Button btnMdLogin;
+        private System.Windows.Forms.Button btnStopMd;
+        private System.Windows.Forms.Button btnStartMd;
+        private System.Windows.Forms.TextBox mdPort;
+        private System.Windows.Forms.Label label10;
+        private System.Windows.Forms.TextBox mdAddress;
+        private System.Windows.Forms.Label label11;
+        private System.Windows.Forms.TabPage tabPage4;
     }
 }
 

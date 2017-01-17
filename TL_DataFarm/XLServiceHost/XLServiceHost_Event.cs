@@ -7,9 +7,9 @@ using TradingLib.Common;
 using TradingLib.DataFarm.API;
 using Common.Logging;
 
-namespace TCPServiceHost
+namespace XLServiceHost
 {
-    public partial class TCPServiceHost:IServiceHost
+    public partial class XLServiceHost
     {
         /// <summary>
         /// 客户端连接建立
@@ -31,10 +31,12 @@ namespace TCPServiceHost
         /// </summary>
         public event Func<IServiceHost, IPacket, IPacket> ServiceEvent;
 
+
         /// <summary>
         /// XLRequestEvet事件
         /// </summary>
         public event Action<IServiceHost, IConnection, object, int> XLRequestEvent;
+
 
         void OnConnectionCreated(IConnection conn)
         {
@@ -52,6 +54,19 @@ namespace TCPServiceHost
             }
         }
 
+        /// <summary>
+        /// 调用服务逻辑处理XL数据包
+        /// </summary>
+        /// <param name="conn"></param>
+        /// <param name="data"></param>
+        /// <param name="requestId"></param>
+        void OnXLRequestEvent(IConnection conn, TradingLib.XLProtocol.XLPacketData data, int requestId)
+        {
+            if (XLRequestEvent != null && data != null)
+            {
+                XLRequestEvent(this, conn, data, requestId);
+            }
+        }
 
         void OnRequestEvent(IConnection conn,IPacket packet)
         {
@@ -90,10 +105,10 @@ namespace TCPServiceHost
         }
 
 
-        void Send(TLSessionBase session, byte[] data)
-        {
+        //void Send(TLSessionBase session, byte[] data)
+        //{
             
-            session.Send("A");
-        }
+        //    session.Send("A");
+        //}
     }
 }

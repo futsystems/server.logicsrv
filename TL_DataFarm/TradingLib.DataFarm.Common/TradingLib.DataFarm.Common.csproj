@@ -64,6 +64,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\TradingLib\TradingLib.Common.Ex.dll</HintPath>
     </Reference>
+    <Reference Include="TradingLib.XLProtocol">
+      <HintPath>..\..\lib\TradingLib\TradingLib.XLProtocol.dll</HintPath>
+    </Reference>
     <Reference Include="ZeroMQ">
       <HintPath>..\..\lib\ZeroMQ.dll</HintPath>
     </Reference>

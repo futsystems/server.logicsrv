@@ -7,6 +7,9 @@ using System.Reflection;
 using TradingLib.API;
 using TradingLib.Common;
 using TradingLib.DataFarm.API;
+using TradingLib.XLProtocol;
+using TradingLib.XLProtocol.V1;
+
 using Common.Logging;
 
 namespace TradingLib.DataFarm.Common
@@ -107,8 +110,11 @@ namespace TradingLib.DataFarm.Common
             host.ConnectionClosedEvent += new Action<IServiceHost, IConnection>(OnConnectionClosedEvent);
             host.RequestEvent += new Action<IServiceHost, IConnection, IPacket>(OnRequestEvent);
             host.ServiceEvent += new Func<IServiceHost, IPacket, IPacket>(OnServiceEvent);
+            host.XLRequestEvent += new Action<IServiceHost, IConnection, object, int>(OnXLRequestEvent);
             host.Start();
         }
+
+        
 
         void ParseCommand()
         {
@@ -146,6 +152,62 @@ namespace TradingLib.DataFarm.Common
             return null;
         }
 
+        void OnXLRequestEvent(IServiceHost host, IConnection conn, object xldata, int requestId)
+        {
+            var reqPkt = xldata as XLProtocol.XLPacketData;
+            if (reqPkt == null)
+            {
+                logger.Error("XLRequest Data null");
+                return;
+            }
+            //更新客户端连接心跳
+            SrvUpdateHeartBeat(conn);
+            switch (reqPkt.MessageType)
+            {
+                case XLProtocol.XLMessageType.T_REQ_LOGIN:
+                    {
+                        var data = reqPkt.FieldList[0];
+                        if (data is XLReqLoginField)
+                        {
+                            XLReqLoginField request = (XLReqLoginField)data;
+
+                            XLRspLoginField field = new XLRspLoginField();
+                            field.TradingDay = 1;
+                            field.UserID = request.UserID;
+                            field.Name = "";
+
+                            ErrorField rsp = new ErrorField();
+
+                            XLPacketData pkt = new XLPacketData(XLMessageType.T_RSP_LOGIN);
+                            pkt.AddField(rsp);
+                            pkt.AddField(field);
+
+                            byte[] ret = XLPacketData.PackToBytes(pkt, XLEnumSeqType.SeqReq, (uint)0, (uint)requestId, true);
+
+                            conn.Send(ret);
+                        }
+                        else
+                        {
+                            logger.Warn(string.Format("Request:{0} Data Field do not macth", reqPkt.MessageType));
+                        }
+                        break;
+                    }
+                    break;
+                case XLProtocol.XLMessageType.T_REQ_UPDATEPASS:
+                    { 
+                    
+                    }
+                    break;
+                case XLProtocol.XLMessageType.T_QRY_SYMBOL:
+                    { 
+                    
+                    }
+                    break;
+                default:
+                    logger.Warn(string.Format("XLMessage Type:{0} not handled", reqPkt.MessageType));
+                    break;
+            }
+        }
 
         /// <summary>
         /// 处理请求

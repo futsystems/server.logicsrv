@@ -51,6 +51,7 @@
   <ItemGroup>
     <Compile Include="Client\APITrader.cs" />
     <Compile Include="Client\SocketClient.cs" />
+    <Compile Include="Client\APIMarket.cs" />
     <Compile Include="JsonStruct.cs" />
     <Compile Include="Struct\Enums.cs" />
     <Compile Include="Struct\V1\StructHelp.cs" />

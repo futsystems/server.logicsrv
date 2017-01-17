@@ -7,6 +7,26 @@ using TradingLib.API;
 namespace TradingLib.DataFarm.API
 {
 
+    public enum EnumConnProtocolType
+    { 
+        /// <summary>
+        /// Json
+        /// </summary>
+        Json,
+        /// <summary>
+        /// 第三方XL协议
+        /// </summary>
+        XL,
+        /// <summary>
+        /// 内部TL协议
+        /// </summary>
+        TL,
+        /// <summary>
+        /// CTP标准协议
+        /// </summary>
+        CTP,
+    }
+
     public class Command
     {
         public Command(int reqId,string module, string cmd, string parameters)
@@ -60,6 +80,9 @@ namespace TradingLib.DataFarm.API
         /// </summary>
         /// <param name="packet"></param>
         void Send(IPacket packet);
+
+
+        void Send(byte[] data);
 
         /// <summary>
         /// 关闭会话
