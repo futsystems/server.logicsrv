@@ -84,10 +84,10 @@
             this.label11 = new System.Windows.Forms.Label();
             this.button1 = new System.Windows.Forms.Button();
             this.tabPage4 = new System.Windows.Forms.TabPage();
-            this.debugControl1 = new APIClient.DebugControl();
             this.btnMdSubMarket = new System.Windows.Forms.Button();
             this.mdSymbols = new System.Windows.Forms.TextBox();
             this.label12 = new System.Windows.Forms.Label();
+            this.debugControl1 = new APIClient.DebugControl();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tabPage2.SuspendLayout();
@@ -586,7 +586,7 @@
             this.btnStopMd.Name = "btnStopMd";
             this.btnStopMd.Size = new System.Drawing.Size(92, 23);
             this.btnStopMd.TabIndex = 16;
-            this.btnStopMd.Text = "停止交易接口";
+            this.btnStopMd.Text = "停止行情接口";
             this.btnStopMd.UseVisualStyleBackColor = true;
             // 
             // btnStartMd
@@ -595,7 +595,7 @@
             this.btnStartMd.Name = "btnStartMd";
             this.btnStartMd.Size = new System.Drawing.Size(92, 23);
             this.btnStartMd.TabIndex = 15;
-            this.btnStartMd.Text = "启动交易接口";
+            this.btnStartMd.Text = "启动行情接口";
             this.btnStartMd.UseVisualStyleBackColor = true;
             // 
             // mdPort
@@ -652,28 +652,13 @@
             this.tabPage4.Text = "tabPage4";
             this.tabPage4.UseVisualStyleBackColor = true;
             // 
-            // debugControl1
-            // 
-            this.debugControl1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.debugControl1.EnableSearching = true;
-            this.debugControl1.ExternalTimeStamp = 0;
-            this.debugControl1.Location = new System.Drawing.Point(0, 254);
-            this.debugControl1.Margin = new System.Windows.Forms.Padding(2);
-            this.debugControl1.Name = "debugControl1";
-            this.debugControl1.Size = new System.Drawing.Size(969, 291);
-            this.debugControl1.TabIndex = 0;
-            this.debugControl1.TimeStamps = true;
-            this.debugControl1.UseExternalTimeStamp = false;
-            // 
             // btnMdSubMarket
             // 
             this.btnMdSubMarket.Location = new System.Drawing.Point(308, 66);
             this.btnMdSubMarket.Name = "btnMdSubMarket";
             this.btnMdSubMarket.Size = new System.Drawing.Size(75, 23);
             this.btnMdSubMarket.TabIndex = 22;
-            this.btnMdSubMarket.Text = "登入";
+            this.btnMdSubMarket.Text = "注册行情";
             this.btnMdSubMarket.UseVisualStyleBackColor = true;
             // 
             // mdSymbols
@@ -692,6 +677,21 @@
             this.label12.Size = new System.Drawing.Size(35, 12);
             this.label12.TabIndex = 23;
             this.label12.Text = "合约:";
+            // 
+            // debugControl1
+            // 
+            this.debugControl1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.debugControl1.EnableSearching = true;
+            this.debugControl1.ExternalTimeStamp = 0;
+            this.debugControl1.Location = new System.Drawing.Point(0, 254);
+            this.debugControl1.Margin = new System.Windows.Forms.Padding(2);
+            this.debugControl1.Name = "debugControl1";
+            this.debugControl1.Size = new System.Drawing.Size(969, 291);
+            this.debugControl1.TabIndex = 0;
+            this.debugControl1.TimeStamps = true;
+            this.debugControl1.UseExternalTimeStamp = false;
             // 
             // Form1
             // 
