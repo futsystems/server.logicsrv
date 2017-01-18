@@ -303,7 +303,6 @@ namespace TradingLib.DataFarm.Common
                         case EnumConnProtocolType.XL:
                             {
                                 this.SendData(conn, xldata);
-                                //logger.Info("send xl tick");
                                 break;
                             }
                         default:
