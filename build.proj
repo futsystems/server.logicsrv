@@ -180,6 +180,7 @@
 		<MSBuild Projects="Program\TickServer\TickStore.csproj" Properties="Configuration=$(Configuration);" />
 		<MSBuild Projects="TL_DataFarm\FastTickFeed\FastTickFeed.csproj" Properties="Configuration=$(Configuration);" />
 		<MSBuild Projects="TL_DataFarm\TCPServiceHost\TCPServiceHost.csproj" Properties="Configuration=$(Configuration);" />
+		<MSBuild Projects="TL_DataFarm\XLServiceHost\XLServiceHost.csproj" Properties="Configuration=$(Configuration);" />
 	</Target>
 	
 	<Target Name="ReleaseDataCore" DependsOnTargets="BuildDataCore">
@@ -190,6 +191,7 @@
 		<Copy SourceFiles="@(DataCoreLibs)" DestinationFolder="$(PackageDirDataCore)\RequiredLibraries" ContinueOnError="false" />
 		<Copy SourceFiles="Platform\DataCore\TickFeed\FastTickFeed.dll" DestinationFolder="$(PackageDirDataCore)\TickFeed" ContinueOnError="false" />
 		<Copy SourceFiles="Platform\DataCore\ServiceHost\TCPServiceHost.dll" DestinationFolder="$(PackageDirDataCore)\ServiceHost" ContinueOnError="false" />
+		<Copy SourceFiles="Platform\DataCore\ServiceHost\XLServiceHost.dll" DestinationFolder="$(PackageDirDataCore)\ServiceHost" ContinueOnError="false" />
 	</Target>
 	
 
