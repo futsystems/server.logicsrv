@@ -2,7 +2,3 @@
 TradingLib.XLProtocol 协议与接口
 APIDemo 接口演示程序，调用接口操作向服务端发送请求，获得请求并进行输出
 WebSocket 网页端通过WebSocket与服务端通讯交互的演示程序
-
-端口
-41455 二进制交易协议通讯端口
-41655 WebSocket交易协议通讯端口

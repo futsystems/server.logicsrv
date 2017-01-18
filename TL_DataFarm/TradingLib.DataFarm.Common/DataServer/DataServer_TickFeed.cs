@@ -217,9 +217,18 @@ namespace TradingLib.DataFarm.Common
             //如果是成交数据,盘口双边报价,统计数据 则我们生成行情快照对外发送 这里可以使用定时发送或者根据行情源事件类型来触发发送,为了提高效率与可考虑采用500ms快照方式发送，这样即保证时效性，又节约资源
             if (k.UpdateType == "X" || k.UpdateType == "Q" || k.UpdateType == "F" || k.UpdateType == "S")
             {
-                //转发实时行情
                 Tick snapshot = Global.TickTracker[k.Exchange, k.Symbol];
-                NotifyTick2Connections(snapshot);
+                //每次成交推送行情快照
+                if (k.UpdateType == "X")
+                {
+                    NotifyTick2Connections(snapshot);
+                    snapshot.QuoteUpdate = false;
+                }
+                else
+                {
+                    //每500ms推送其余数据
+                    snapshot.QuoteUpdate = true;
+                }
             }
 
             //通过成交数据以及合约市场事件 驱动Bar数据生成器生成Bar数据
@@ -238,6 +247,19 @@ namespace TradingLib.DataFarm.Common
             //{
             //    RestoreServiceProcessTickSnapshot(symbol, k);
             //}
+        }
+
+        void SendTickSnapshot()
+        {
+            logger.Info("send tick snapshot");
+            foreach (var tick in Global.TickTracker.TickSnapshots)
+            {
+                if (tick.QuoteUpdate)
+                {
+                    NotifyTick2Connections(tick);
+                    tick.QuoteUpdate = false;
+                }
+            }
         }
 
         byte[] CreateTLTickData(Tick k)
@@ -278,6 +300,8 @@ namespace TradingLib.DataFarm.Common
 
             return XLPacketData.PackToBytes(pkt, XLEnumSeqType.SeqRtn, (uint)0, (uint)0, true);
         }
+
+
         /// <summary>
         /// 向客户端通知行情回报
         /// </summary>

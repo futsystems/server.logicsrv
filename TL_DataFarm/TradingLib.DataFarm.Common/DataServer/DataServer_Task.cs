@@ -22,9 +22,17 @@ namespace TradingLib.DataFarm.Common
             //DataTask task1 = new DataTask("ConnectionWathTask", TimeSpan.FromSeconds(2), delegate() { ClearDeadClient(); });
             //Global.TaskService.RegisterTask(task1);
 
+            
+
             logger.Info("[Register IQFeed TimeTick Watch]");
             DataTask task2 = new DataTask("IQFeedTimeTickWatchTask", TimeSpan.FromSeconds(1), delegate() { CheckIQFeedTimeTick(); });
             Global.TaskService.RegisterTask(task2);
+
+            logger.Info("[Register TickSnapshot Sender]");
+            DataTask task3 = new DataTask("TickSnapshotSenderTask", TimeSpan.FromSeconds(0.5), delegate() { SendTickSnapshot(); });
+            Global.TaskService.RegisterTask(task3);
         }
+
+        
     }
 }
