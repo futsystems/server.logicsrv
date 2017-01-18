@@ -251,14 +251,12 @@ namespace TradingLib.DataFarm.Common
 
         void SendTickSnapshot()
         {
-            logger.Info("send tick snapshot");
             foreach (var tick in Global.TickTracker.TickSnapshots)
             {
-                if (tick.QuoteUpdate)
-                {
-                    NotifyTick2Connections(tick);
-                    tick.QuoteUpdate = false;
-                }
+                if (!tick.QuoteUpdate) continue;
+                NotifyTick2Connections(tick);
+                tick.QuoteUpdate = false;
+                
             }
         }
 
