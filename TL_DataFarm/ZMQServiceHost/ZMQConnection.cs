@@ -11,7 +11,7 @@ namespace ZMQServiceHost
 {
     public class ZMQConnection:IConnection
     {
-
+        public EnumConnProtocolType ProtocolType { get { return EnumConnProtocolType.TL; } }
         ZMQServiceHost _host;
         /// <summary>
         /// 

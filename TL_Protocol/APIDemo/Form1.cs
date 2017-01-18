@@ -79,6 +79,15 @@ namespace APIClient
             btnStartMd.Click += new EventHandler(btnStartMd_Click);
             btnStopMd.Click += new EventHandler(btnStopMd_Click);
             btnMdLogin.Click += new EventHandler(btnMdLogin_Click);
+            btnMdSubMarket.Click += new EventHandler(btnMdSubMarket_Click);
+        }
+
+        void btnMdSubMarket_Click(object sender, EventArgs e)
+        {
+            if (_mdApi == null) return;
+            string[] symbols = mdSymbols.Text.Split(',');
+            _mdApi.SubscribeMarketData(symbols, ++_requestId);
+
         }
 
         APIMarket _mdApi = null;
@@ -108,6 +117,7 @@ namespace APIClient
             _mdApi.OnServerDisconnected += new Action<int>(_mdApi_OnServerDisconnected);
             _mdApi.OnServerConnected += new Action(_mdApi_OnServerConnected);
             _mdApi.OnRspError += new Action<ErrorField>(_mdApi_OnRspError);
+            _mdApi.OnDepthMarketDataField += new Action<XLDepthMarketDataField>(_mdApi_OnDepthMarketDataField);
 
 
             new Thread(() =>
@@ -117,6 +127,11 @@ namespace APIClient
                 _mdApi.Join();
                 logger.Info("MDAPI Thread Stopped");
             }).Start();
+        }
+
+        void _mdApi_OnDepthMarketDataField(XLDepthMarketDataField obj)
+        {
+            logger.Info("MarketData:" + JsonConvert.SerializeObject(obj));
         }
 
         void _mdApi_OnRspError(ErrorField obj)

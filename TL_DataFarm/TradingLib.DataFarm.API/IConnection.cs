@@ -51,6 +51,11 @@ namespace TradingLib.DataFarm.API
     public interface IConnection
     {
         /// <summary>
+        /// 协议类别
+        /// </summary>
+        EnumConnProtocolType ProtocolType { get; }
+
+        /// <summary>
         /// Connection所处ServiceHost
         /// </summary>
         IServiceHost ServiceHost { get; set; }
@@ -79,7 +84,7 @@ namespace TradingLib.DataFarm.API
         /// 向Connection发送消息
         /// </summary>
         /// <param name="packet"></param>
-        void Send(IPacket packet);
+        //void Send(IPacket packet);
 
 
         void Send(byte[] data);

@@ -905,6 +905,192 @@ namespace TradingLib.XLProtocol.V1
 
     #region 订阅行情
 
+    /// <summary>
+    /// 订阅合约
+    /// </summary>
+    [StructLayout(LayoutKind.Sequential, Pack = 1)]
+    public struct XLSpecificSymbolField : IXLField
+    {
+        /// <summary>
+        /// 合约代码
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 31)]
+        public string SymbolID;
+
+        /// <summary>
+        /// 域类别
+        /// </summary>
+        public ushort FieldID { get { return (ushort)XLFieldType.F_SYMBOL; } }
+    }
+
+
+     /// <summary>
+    /// 深度行情
+    /// </summary>
+    [StructLayout(LayoutKind.Sequential, Pack = 1)]
+    public struct XLDepthMarketDataField : IXLField
+    {
+        /// <summary>
+        /// 业务日期
+        /// </summary>
+        public int Date;
+        /// <summary>
+        /// 最后修改时间
+        /// </summary>
+        public int Time;
+        /// <summary>
+        /// 交易日
+        /// </summary>
+        public int TradingDay;
+        /// <summary>
+        /// 合约代码
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 31)]
+        public string SymbolID;
+        /// <summary>
+        /// 交易所代码
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 9)]
+        public string ExchangeID;
+        /// <summary>
+        /// 最新价
+        /// </summary>
+        public double LastPrice;
+        /// <summary>
+        /// 上次结算价
+        /// </summary>
+        public double PreSettlementPrice;
+        /// <summary>
+        /// 昨收盘
+        /// </summary>
+        public double PreClosePrice;
+        /// <summary>
+        /// 昨持仓量
+        /// </summary>
+        public double PreOpenInterest;
+        /// <summary>
+        /// 今开盘
+        /// </summary>
+        public double OpenPrice;
+        /// <summary>
+        /// 最高价
+        /// </summary>
+        public double HighestPrice;
+        /// <summary>
+        /// 最低价
+        /// </summary>
+        public double LowestPrice;
+        /// <summary>
+        /// 数量
+        /// </summary>
+        public int Volume;
+        /// <summary>
+        /// 持仓量
+        /// </summary>
+        public double OpenInterest;
+        /// <summary>
+        /// 今收盘
+        /// </summary>
+        public double ClosePrice;
+        /// <summary>
+        /// 本次结算价
+        /// </summary>
+        public double SettlementPrice;
+        /// <summary>
+        /// 涨停板价
+        /// </summary>
+        public double UpperLimitPrice;
+        /// <summary>
+        /// 跌停板价
+        /// </summary>
+        public double LowerLimitPrice;
+
+        /// <summary>
+        /// 申买价一
+        /// </summary>
+        public double BidPrice1;
+        /// <summary>
+        /// 申买量一
+        /// </summary>
+        public int BidVolume1;
+        /// <summary>
+        /// 申卖价一
+        /// </summary>
+        public double AskPrice1;
+        /// <summary>
+        /// 申卖量一
+        /// </summary>
+        public int AskVolume1;
+        /// <summary>
+        /// 申买价二
+        /// </summary>
+        public double BidPrice2;
+        /// <summary>
+        /// 申买量二
+        /// </summary>
+        public int BidVolume2;
+        /// <summary>
+        /// 申卖价二
+        /// </summary>
+        public double AskPrice2;
+        /// <summary>
+        /// 申卖量二
+        /// </summary>
+        public int AskVolume2;
+        /// <summary>
+        /// 申买价三
+        /// </summary>
+        public double BidPrice3;
+        /// <summary>
+        /// 申买量三
+        /// </summary>
+        public int BidVolume3;
+        /// <summary>
+        /// 申卖价三
+        /// </summary>
+        public double AskPrice3;
+        /// <summary>
+        /// 申卖量三
+        /// </summary>
+        public int AskVolume3;
+        /// <summary>
+        /// 申买价四
+        /// </summary>
+        public double BidPrice4;
+        /// <summary>
+        /// 申买量四
+        /// </summary>
+        public int BidVolume4;
+        /// <summary>
+        /// 申卖价四
+        /// </summary>
+        public double AskPrice4;
+        /// <summary>
+        /// 申卖量四
+        /// </summary>
+        public int AskVolume4;
+        /// <summary>
+        /// 申买价五
+        /// </summary>
+        public double BidPrice5;
+        /// <summary>
+        /// 申买量五
+        /// </summary>
+        public int BidVolume5;
+        /// <summary>
+        /// 申卖价五
+        /// </summary>
+        public double AskPrice5;
+        /// <summary>
+        /// 申卖量五
+        /// </summary>
+        public int AskVolume5;
+
+        /// <summary>
+        /// 域类别
+        /// </summary>
+        public ushort FieldID { get { return (ushort)XLFieldType.F_MarketData; } }
+    }
     #endregion
 
     #region 查询分时

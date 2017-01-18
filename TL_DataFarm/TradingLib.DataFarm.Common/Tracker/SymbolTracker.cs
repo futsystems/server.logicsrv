@@ -58,18 +58,26 @@ namespace TradingLib.DataFarm.Common
         {
             get
             {
-                string key = exchange + "-" + symbol;
-                SymbolImpl sym = null;
-                if (symcodemap.TryGetValue(key, out sym))
+                if (string.IsNullOrEmpty(exchange))
                 {
-                    return sym;
+                    return symcodemap.Values.Where(sym => sym.Symbol == symbol).FirstOrDefault();
                 }
                 else
                 {
-                    return null;
+                    string key = exchange + "-" + symbol;
+                    SymbolImpl sym = null;
+                    if (symcodemap.TryGetValue(key, out sym))
+                    {
+                        return sym;
+                    }
+                    else
+                    {
+                        return null;
+                    }
                 }
             }
         }
+
 
         /// <summary>
         /// 通过数据库全局ID获得合约对象

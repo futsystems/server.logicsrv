@@ -13,14 +13,14 @@ namespace TradingLib.DataFarm.Common
 {
         internal class SendStruct
         {
-            public SendStruct(IConnection conn, IPacket packet)
+            public SendStruct(IConnection conn, byte[] packet)
             {
                 this.Connection = conn;
                 this.Packet = packet;
             }
             public IConnection Connection { get; set; }
 
-            public IPacket Packet { get; set; }
+            public byte[] Packet { get; set; }
         }
         public partial class DataServer
         {
@@ -56,10 +56,14 @@ namespace TradingLib.DataFarm.Common
 
             void SendData(IConnection connection, IPacket packet)
             {
-                sendbuffer.Write(new SendStruct(connection, packet));
-                NewSend();
+                this.SendData(connection, packet.Data);
             }
 
+            void SendData(IConnection connection, byte[] data)
+            {
+                sendbuffer.Write(new SendStruct(connection, data));
+                NewSend();
+            }
 
             int getRequestId(IPacket packet)
             {
@@ -97,7 +101,7 @@ namespace TradingLib.DataFarm.Common
 
                                 logger.Error(string.Format("Conn:{0} Send Data:{1} Error:{2}", st.Connection.SessionID, st.Packet.ToString(), ex.ToString()));
 
-                                logger.Error(string.Format("RequestID:{0} BufferSize:{1}", getRequestId(st.Packet), sendbuffer.Count));
+                                logger.Error(string.Format("RequestID:{0} BufferSize:{1}", 0, sendbuffer.Count));
 
                                 //数据发送异常后 关闭该Socket
                                 if (st != null && st.Connection != null)

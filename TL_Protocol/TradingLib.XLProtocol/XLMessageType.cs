@@ -138,5 +138,21 @@ namespace TradingLib.XLProtocol
         /// 持仓更新回报
         /// </summary>
         T_RTN_POSITIONUPDATE = 3022,
+
+
+        /// <summary>
+        /// 请求注册市场行情
+        /// </summary>
+        T_REQ_MARJETDATA = 4000,
+
+        /// <summary>
+        /// 请求注册市场行情回报
+        /// </summary>
+        T_RSP_MARJETDATA = 4001,
+
+        /// <summary>
+        /// 市场行情数据
+        /// </summary>
+        T_RTN_MARKETDATA = 4002
     }
 }

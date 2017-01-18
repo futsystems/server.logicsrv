@@ -39,6 +39,12 @@ namespace TradingLib.XLProtocol.Client
         /// 查询合约回报
         /// </summary>
         public event Action<XLSymbolField, ErrorField, uint, bool> OnRspQrySymbol = delegate { };
+
+        /// <summary>
+        /// 市场行情回报
+        /// </summary>
+        public event Action<XLDepthMarketDataField> OnDepthMarketDataField = delegate { };
+
         #endregion
         string _serverIP = string.Empty;
         int _port = 0;
@@ -137,6 +143,16 @@ namespace TradingLib.XLProtocol.Client
                             OnRspQrySymbol(response, new ErrorField(), dataHeader.RequestID, (int)dataHeader.IsLast == 1 ? true : false);
                             break;
                         }
+                    case XLMessageType.T_RTN_MARKETDATA:
+                        {
+                            XLDepthMarketDataField marketData;
+                            if (pkt.FieldList.Count > 0)
+                            {
+                                marketData = (XLDepthMarketDataField)pkt.FieldList[0];
+                                OnDepthMarketDataField(marketData);
+                            }
+                            break;
+                        }
                     default:
                         logger.Info(string.Format("Unhandled Pkt:{0}", msgType));
                         break;
@@ -197,6 +213,23 @@ namespace TradingLib.XLProtocol.Client
             XLPacketData pktData = new XLPacketData(XLMessageType.T_QRY_SYMBOL);
             pktData.AddField(req);
             return SendPktData(pktData, XLEnumSeqType.SeqQry, requestID);
+        }
+
+        /// <summary>
+        /// 请求注册行情数据
+        /// </summary>
+        /// <param name="symbols"></param>
+        /// <param name="requestID"></param>
+        /// <returns></returns>
+        public bool SubscribeMarketData(string[] symbols, uint requestID)
+        {
+            XLPacketData pktData = new XLPacketData(XLMessageType.T_REQ_MARJETDATA);
+            foreach (var symbol in symbols)
+            {
+                var tmp = new XLSpecificSymbolField() { SymbolID = symbol };
+                pktData.AddField(tmp);
+            }
+            return SendPktData(pktData, XLEnumSeqType.SeqReq, requestID);
         }
         #endregion
 

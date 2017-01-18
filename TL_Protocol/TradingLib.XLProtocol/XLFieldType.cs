@@ -120,5 +120,15 @@ namespace TradingLib.XLProtocol
         /// 持仓更新回报
         /// </summary>
         F_RTN_POSITIONUPDATE = 220,
+
+        /// <summary>
+        /// 订阅合约回报
+        /// </summary>
+        F_SYMBOL = 240,
+
+        /// <summary>
+        /// 实时行情数据
+        /// </summary>
+        F_MarketData = 241,
     }
 }

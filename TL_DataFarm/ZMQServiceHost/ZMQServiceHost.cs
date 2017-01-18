@@ -452,7 +452,7 @@ namespace ZMQServiceHost
                                 //发送回报
                                 RspRegisterClientResponse response = ResponseTemplate<RspRegisterClientResponse>.SrvSendRspResponse(request);
                                 response.SessionID = address;
-                                conn.Send(response);
+                                conn.Send(response.Data);
 
                                 logger.Info(string.Format("Client:{0} registed to server", address));
                                 //向逻辑成抛出连接建立事件

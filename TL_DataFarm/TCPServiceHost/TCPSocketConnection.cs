@@ -15,6 +15,7 @@ namespace TCPServiceHost
     {
         ILog logger = LogManager.GetLogger("conn");
 
+        public EnumConnProtocolType ProtocolType { get { return EnumConnProtocolType.TL; } }
         public string IPAddress 
         { 
             get 
@@ -69,20 +70,21 @@ namespace TCPServiceHost
         /// 发送数据包
         /// </summary>
         /// <param name="packet"></param>
-        public void Send(IPacket packet)
-        {
+        //public void Send(IPacket packet)
+        //{
 
-            byte[] data = packet.Data;
-            _session.Send(data, 0, data.Length);
-            //bool re = _session.TrySend(data, 0, data.Length);
-            //logger.Info(string.Format("send data lenght:{0} ret:{1}", data.Length, re));
+        //    byte[] data = packet.Data;
+        //    _session.Send(data, 0, data.Length);
+        //    //bool re = _session.TrySend(data, 0, data.Length);
+        //    //logger.Info(string.Format("send data lenght:{0} ret:{1}", data.Length, re));
             
             
-        }
+        //}
 
         public void Send(byte[] data)
-        { 
-        
+        {
+            if (data == null || data.Length < 1) return;
+            _session.Send(data, 0, data.Length);
         }
         /// <summary>
         /// 关闭Socket

@@ -14,7 +14,7 @@ namespace XLServiceHost
     public class XLConnection:IConnection
     {
         ILog logger = LogManager.GetLogger("conn");
-
+        public EnumConnProtocolType ProtocolType { get { return EnumConnProtocolType.XL; } }
         public string IPAddress 
         { 
             get 
@@ -69,18 +69,19 @@ namespace XLServiceHost
         /// 发送数据包
         /// </summary>
         /// <param name="packet"></param>
-        public void Send(IPacket packet)
-        {
+        //public void Send(IPacket packet)
+        //{
 
-            byte[] data = packet.Data;
-            _session.Send(data, 0, data.Length);
-            //bool re = _session.TrySend(data, 0, data.Length);
-            //logger.Info(string.Format("send data lenght:{0} ret:{1}", data.Length, re));
+        //    byte[] data = packet.Data;
+        //    _session.Send(data, 0, data.Length);
+        //    //bool re = _session.TrySend(data, 0, data.Length);
+        //    //logger.Info(string.Format("send data lenght:{0} ret:{1}", data.Length, re));
             
             
-        }
+        //}
         public void Send(byte[] data)
         {
+            if (data == null || data.Length < 1) return;
             _session.Send(data, 0, data.Length);
         }
         /// <summary>

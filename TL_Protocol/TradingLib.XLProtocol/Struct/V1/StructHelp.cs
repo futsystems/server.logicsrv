@@ -53,6 +53,10 @@ namespace TradingLib.XLProtocol.V1
                     return XLStructHelp.StructToBytes<XLInputOrderField>((XLInputOrderField)field);
                 case XLFieldType.F_REQ_ORDERACTION:
                     return XLStructHelp.StructToBytes<XLInputOrderActionField>((XLInputOrderActionField)field);
+                case XLFieldType.F_SYMBOL:
+                    return XLStructHelp.StructToBytes<XLSpecificSymbolField>((XLSpecificSymbolField)field);
+                case XLFieldType.F_MarketData:
+                    return  XLStructHelp.StructToBytes<XLDepthMarketDataField>((XLDepthMarketDataField)field);
                 default:
                     throw new Exception(string.Format("FieldType:{0} not supported", fieldType));
             }
@@ -98,6 +102,10 @@ namespace TradingLib.XLProtocol.V1
                     return XLStructHelp.BytesToStruct<XLInputOrderField>(data, offset);
                 case XLFieldType.F_REQ_ORDERACTION:
                     return XLStructHelp.BytesToStruct<XLInputOrderActionField>(data, offset);
+                case XLFieldType.F_SYMBOL:
+                    return XLStructHelp.BytesToStruct<XLSpecificSymbolField>(data, offset);
+                case XLFieldType.F_MarketData:
+                    return XLStructHelp.BytesToStruct<XLDepthMarketDataField>(data, offset);
                 default:
                     throw new Exception(string.Format("FieldType:{0} not supported", type));
             }

@@ -71,7 +71,6 @@
             this.wsAddress = new System.Windows.Forms.TextBox();
             this.label5 = new System.Windows.Forms.Label();
             this.tabPage3 = new System.Windows.Forms.TabPage();
-            this.button1 = new System.Windows.Forms.Button();
             this.mdPass = new System.Windows.Forms.TextBox();
             this.label8 = new System.Windows.Forms.Label();
             this.mdUser = new System.Windows.Forms.TextBox();
@@ -83,8 +82,12 @@
             this.label10 = new System.Windows.Forms.Label();
             this.mdAddress = new System.Windows.Forms.TextBox();
             this.label11 = new System.Windows.Forms.Label();
+            this.button1 = new System.Windows.Forms.Button();
             this.tabPage4 = new System.Windows.Forms.TabPage();
             this.debugControl1 = new APIClient.DebugControl();
+            this.btnMdSubMarket = new System.Windows.Forms.Button();
+            this.mdSymbols = new System.Windows.Forms.TextBox();
+            this.label12 = new System.Windows.Forms.Label();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tabPage2.SuspendLayout();
@@ -511,6 +514,9 @@
             // 
             // tabPage3
             // 
+            this.tabPage3.Controls.Add(this.mdSymbols);
+            this.tabPage3.Controls.Add(this.label12);
+            this.tabPage3.Controls.Add(this.btnMdSubMarket);
             this.tabPage3.Controls.Add(this.mdPass);
             this.tabPage3.Controls.Add(this.label8);
             this.tabPage3.Controls.Add(this.mdUser);
@@ -530,16 +536,6 @@
             this.tabPage3.TabIndex = 2;
             this.tabPage3.Text = "行情Socket";
             this.tabPage3.UseVisualStyleBackColor = true;
-            // 
-            // button1
-            // 
-            this.button1.Location = new System.Drawing.Point(869, 6);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(75, 23);
-            this.button1.TabIndex = 0;
-            this.button1.Text = "button1";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
             // mdPass
             // 
@@ -636,6 +632,16 @@
             this.label11.TabIndex = 11;
             this.label11.Text = "地址:";
             // 
+            // button1
+            // 
+            this.button1.Location = new System.Drawing.Point(869, 6);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(75, 23);
+            this.button1.TabIndex = 0;
+            this.button1.Text = "button1";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click);
+            // 
             // tabPage4
             // 
             this.tabPage4.Location = new System.Drawing.Point(4, 22);
@@ -660,6 +666,32 @@
             this.debugControl1.TabIndex = 0;
             this.debugControl1.TimeStamps = true;
             this.debugControl1.UseExternalTimeStamp = false;
+            // 
+            // btnMdSubMarket
+            // 
+            this.btnMdSubMarket.Location = new System.Drawing.Point(308, 66);
+            this.btnMdSubMarket.Name = "btnMdSubMarket";
+            this.btnMdSubMarket.Size = new System.Drawing.Size(75, 23);
+            this.btnMdSubMarket.TabIndex = 22;
+            this.btnMdSubMarket.Text = "登入";
+            this.btnMdSubMarket.UseVisualStyleBackColor = true;
+            // 
+            // mdSymbols
+            // 
+            this.mdSymbols.Location = new System.Drawing.Point(59, 63);
+            this.mdSymbols.Name = "mdSymbols";
+            this.mdSymbols.Size = new System.Drawing.Size(198, 21);
+            this.mdSymbols.TabIndex = 24;
+            this.mdSymbols.Text = "HSIF7,CLG7";
+            // 
+            // label12
+            // 
+            this.label12.AutoSize = true;
+            this.label12.Location = new System.Drawing.Point(10, 66);
+            this.label12.Name = "label12";
+            this.label12.Size = new System.Drawing.Size(35, 12);
+            this.label12.TabIndex = 23;
+            this.label12.Text = "合约:";
             // 
             // Form1
             // 
@@ -741,6 +773,9 @@
         private System.Windows.Forms.TextBox mdAddress;
         private System.Windows.Forms.Label label11;
         private System.Windows.Forms.TabPage tabPage4;
+        private System.Windows.Forms.TextBox mdSymbols;
+        private System.Windows.Forms.Label label12;
+        private System.Windows.Forms.Button btnMdSubMarket;
     }
 }
 

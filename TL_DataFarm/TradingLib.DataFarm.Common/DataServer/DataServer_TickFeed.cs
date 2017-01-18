@@ -8,6 +8,8 @@ using TradingLib.API;
 using TradingLib.Common;
 using TradingLib.DataFarm.API;
 using Common.Logging;
+using TradingLib.XLProtocol;
+using TradingLib.XLProtocol.V1;
 
 namespace TradingLib.DataFarm.Common
 {
@@ -248,12 +250,59 @@ namespace TradingLib.DataFarm.Common
             ConcurrentDictionary<string, IConnection> target = null;
             if (symKeyRegMap.TryGetValue(k.GetSymbolUniqueKey(), out target))
             {
+                TickNotify ticknotify = new TickNotify();
+                ticknotify.Tick = k;
+                var tldata = ticknotify.Data;
+
+                XLPacketData pkt = new XLPacketData(XLMessageType.T_RTN_MARKETDATA);
+                XLDepthMarketDataField data = new XLDepthMarketDataField();
+
+                data.Date = k.Date;
+                data.Time = k.Time;
+                data.TradingDay = 0;
+
+                data.SymbolID = k.Symbol;
+                data.ExchangeID = k.Exchange;
+                data.LastPrice = (double)k.Trade;
+                data.PreSettlementPrice = (double)k.PreSettlement;
+                data.PreClosePrice = (double)k.PreClose;
+                data.PreOpenInterest = k.PreOpenInterest;
+                data.OpenPrice = (double)k.Open;
+                data.HighestPrice = (double)k.High;
+                data.LowestPrice = (double)k.Low;
+                data.Volume = k.Vol;
+                data.OpenInterest = k.OpenInterest;
+                data.ClosePrice = (double)k.Trade;
+                data.SettlementPrice = (double)k.Settlement;
+                data.UpperLimitPrice = (double)k.UpperLimit;
+                data.LowerLimitPrice = (double)k.LowerLimit;
+                data.BidPrice1 = (double)k.BidPrice;
+                data.BidVolume1 = k.BidSize;
+                data.AskPrice1 = (double)k.AskPrice;
+                data.AskVolume1 = k.AskSize;
+                pkt.AddField(data);
+
+                byte[] xldata = XLPacketData.PackToBytes(pkt, XLEnumSeqType.SeqRtn, (uint)0, (uint)0, true);
+
                 foreach (var conn in target.Values)
                 {
-                    TickNotify ticknotify = new TickNotify();
-                    ticknotify.Tick = k;
-                    //logger.Info("send tick");
-                    this.SendData(conn, ticknotify);
+                    switch (conn.ProtocolType)
+                    {
+                        case EnumConnProtocolType.TL:
+                            {
+                                this.SendData(conn, tldata);
+                                break;
+                            }
+                        case EnumConnProtocolType.XL:
+                            {
+                                this.SendData(conn, xldata);
+                                logger.Info("send xl tick");
+                                break;
+                            }
+                        default:
+                            logger.Warn(string.Format("Conn ProtocolType:{0} not handled", conn.ProtocolType));
+                            break;
+                    }
                 }
             }
         }
@@ -313,6 +362,39 @@ namespace TradingLib.DataFarm.Common
                     }
                 }
             }
+        }
+
+        void OnXLRegisterSymbol(IConnection conn, XLSpecificSymbolField request)
+        {
+            if (string.IsNullOrEmpty(request.SymbolID))
+            {
+                logger.Warn("Symbol Filed Empty");
+            }
+            Symbol sym = MDBasicTracker.SymbolTracker[string.Empty,request.SymbolID];
+            if (sym == null)
+            {
+                logger.Warn(string.Format("Symbol:{0} do not exist", request.SymbolID));
+            }
+            string key = sym.UniqueKey;
+            if (!symKeyRegMap.Keys.Contains(key))
+            {
+                symKeyRegMap.TryAdd(key, new ConcurrentDictionary<string, IConnection>());
+            }
+            ConcurrentDictionary<string, IConnection> regmap = symKeyRegMap[key];
+            if(!regmap.Keys.Contains(conn.SessionID))
+            {
+                regmap.TryAdd(conn.SessionID,conn);
+                logger.Info(string.Format("Symbol:{0} Registed", request.SymbolID));
+                //客户端订阅后发送当前市场快照
+                Tick k = Global.TickTracker[sym.Exchange,sym.Symbol];
+                if (k != null)
+                {
+                    //TickNotify ticknotify = new TickNotify();
+                    //ticknotify.Tick = k;
+                    //this.SendData(conn, ticknotify);
+                }
+            }
+        
         }
 
         /// <summary>

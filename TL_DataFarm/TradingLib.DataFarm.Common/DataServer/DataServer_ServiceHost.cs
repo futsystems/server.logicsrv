@@ -164,7 +164,7 @@ namespace TradingLib.DataFarm.Common
             SrvUpdateHeartBeat(conn);
             switch (reqPkt.MessageType)
             {
-                case XLProtocol.XLMessageType.T_REQ_LOGIN:
+                case XLMessageType.T_REQ_LOGIN:
                     {
                         var data = reqPkt.FieldList[0];
                         if (data is XLReqLoginField)
@@ -192,7 +192,18 @@ namespace TradingLib.DataFarm.Common
                         }
                         break;
                     }
-                    break;
+                case XLMessageType.T_REQ_MARJETDATA:
+                    {
+                        foreach (var data in reqPkt.FieldList)
+                        {
+                            if (data is XLSpecificSymbolField)
+                            {
+                                XLSpecificSymbolField req = (XLSpecificSymbolField)data;
+                                OnXLRegisterSymbol(conn, req);
+                            }
+                        }
+                        break;
+                    }
                 case XLProtocol.XLMessageType.T_REQ_UPDATEPASS:
                     { 
                     

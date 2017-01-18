@@ -60,11 +60,7 @@ namespace TradingLib.XLProtocol
         /// <param name="field"></param>
         public void AddField(IXLField field)
         {
-            //XLFieldHeader header = new XLFieldHeader();
-            //int fieldLen = Marshal.SizeOf(field);
-            //FillFieldHeader(ref header, field.FieldID, (ushort)fieldLen);
-
-            _fieldList.Add(field);// (new XLFieldData<IXLField>() { FieldHeader = header, FieldData = field });
+            _fieldList.Add(field);
         }
 
        
