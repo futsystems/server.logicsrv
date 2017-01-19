@@ -1,4 +1,6 @@
-﻿using System;
+﻿//Copyright 2013 by FutSystems,Inc.
+//20170112 整理无用操作
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -49,19 +51,6 @@ namespace TradingLib.Core
         }
 
 
-        /// <summary>
-        /// 设定当前选中交易账户
-        /// </summary>
-        /// <param name="request"></param>
-        /// <param name="session"></param>
-        /// <param name="manager"></param>
-        //void SrvOnMGRResumeAccount(MGRResumeAccountRequest request, ISession session, Manager manager)
-        //{
-        //    logger.Info(string.Format("Manager[{0}] Resume Account:{1}", session.AuthorizedID, request.ResumeAccount));
-        //    var c = customerExInfoMap[request.ClientID];
-        //    c.Selected(request.ResumeAccount);
-        //    _resumecache.Write(request);
-        //}
 
         /// <summary>
         /// 恢复交易账户交易记录
@@ -79,9 +68,6 @@ namespace TradingLib.Core
                 var c = customerExInfoMap[session.Location.ClientID];
                 c.Selected(acc);
                 _resumecache.Write(c);
-                //string[] accounts = json.DeserializeObject<string[]>();
-                //var c = customerExInfoMap[session.Location.ClientID];
-                //c.Watch(accounts);
             }
         }
 

@@ -102,6 +102,7 @@
     <Compile Include="CoreModule\DataRepository\DataRepository.cs" />
     <Compile Include="CoreModule\ExCore\BinaryOption\MsgExchServer_BOOrderRequestHandler.cs" />
     <Compile Include="CoreModule\ExCore\BinaryOption\MsgExchServer_BinaryOption.cs" />
+    <Compile Include="CoreModule\ExCore\MsgExchServer_mgr.cs" />
     <Compile Include="CoreModule\ExCore\XAPI\MsgExchServer_PacketHandler_TradingInfo.cs" />
     <Compile Include="CoreModule\ExCore\XAPI\MsgExchServer_PacketHandler_BasicInfo.cs" />
     <Compile Include="CoreModule\ExCore\MsgExchServer_SendData.cs" />
@@ -140,7 +141,6 @@
     <Compile Include="CoreModule\FollowCentre\FollowCentre_Notify.cs" />
     <Compile Include="CoreModule\FollowCentre\Utils\Utils_TradingInfo.cs" />
     <Compile Include="CoreModule\ManagerExchange\PacketHandler\MgrExchServer_PacketHandle_.cs" />
-    <Compile Include="CoreModule\ManagerExchange\PacketHandler\MgrExchServer_PacketHandle_ExchangeRate.cs" />
     <Compile Include="CoreModule\ManagerExchange\PacketHandler\MgrExchServer_PacketHandle_ConfigTemplate.cs" />
     <Compile Include="CoreModule\ManagerExchange\PacketHandler\pending\MgrExchServer_PacketHandle_FinAgent.cs" />
     <Compile Include="CoreModule\ManagerExchange\PacketHandler\pending\MgrExchServer_PacketHandle_Msic.cs" />
@@ -148,7 +148,7 @@
     <Compile Include="CoreModule\ManagerExchange\PacketHandler\MgrExchServer_PacketHandle_Domain.cs" />
     <Compile Include="CoreModule\ManagerExchange\PacketHandler\MgrExchServer_PacketHandle_Manager.cs" />
     <Compile Include="CoreModule\ManagerExchange\PacketHandler\MgrExchServer_PacketHandle_BasicInfo.cs" />
-    <Compile Include="CoreModule\ManagerExchange\PacketHandler\pending\MgrExchServer_PacketHandle_Account.cs" />
+    <Compile Include="CoreModule\ManagerExchange\PacketHandler\MgrExchServer_PacketHandle_Account.cs" />
     <Compile Include="CoreModule\ManagerExchange\MgrExchServer.cs" />
     <Compile Include="Base\Settlement.cs" />
     <Compile Include="CoreModule\ManagerExchange\PacketHandler\MgrExchServer_PacketHandle_Other.cs" />
@@ -162,7 +162,7 @@
     <Compile Include="CoreModule\ManagerExchange\PacketHandler\pending\MgrExchServer_PacketHandle_CashOPAccount.cs" />
     <Compile Include="CoreModule\ManagerExchange\PacketHandler\pending\MgrExchServer_PacketHandle_CashOPAgent.cs" />
     <Compile Include="CoreModule\ManagerExchange\MgrExchServer_Notify.cs" />
-    <Compile Include="CoreModule\ManagerExchange\PacketHandler\MgrExchServer_PacketHandle_Vendor.cs" />
+    <Compile Include="CoreModule\ManagerExchange\PacketHandler\pending\MgrExchServer_PacketHandle_Vendor.cs" />
     <Compile Include="CoreModule\BrokerRouter\BrokerRouter-complex\BrokerRouter_.cs" />
     <Compile Include="CoreModule\BrokerRouter\BrokerRouter-complex\BrokerRouter_SendOrderOut.cs" />
     <Compile Include="CoreModule\BrokerRouter\BrokerRouter-complex\BrokerRouter_LoadBroker.cs" />
