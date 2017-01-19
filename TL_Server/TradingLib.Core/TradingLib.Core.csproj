@@ -197,7 +197,7 @@
     <Compile Include="CoreModule\SettleCentre\SettleCentre.cs" />
     <Compile Include="CoreModule\SettleCentre\SettleCentre_.cs" />
     <Compile Include="CoreModule\SettleCentre\SettleCentre_CTE.cs" />
-    <Compile Include="CoreModule\SettleCentre\SettleCentre_SettleManager.cs" />
+    <Compile Include="CoreModule\SettleCentre\SettleCentre_mgr.cs" />
     <Compile Include="CoreModule\SettleCentre\TradingCalendar.cs" />
     <Compile Include="CoreModule\FollowCentre\FollowAccount.cs" />
     <Compile Include="CoreModule\FollowCentre\FollowItem\FollowAction.cs" />
