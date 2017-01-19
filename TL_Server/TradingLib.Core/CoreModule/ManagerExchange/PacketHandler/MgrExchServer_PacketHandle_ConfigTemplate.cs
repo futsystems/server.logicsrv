@@ -58,7 +58,7 @@ namespace TradingLib.Core
                 throw new FutsRspError("无权更新手续费模板");
             }
 
-            CommissionTemplateSetting t = json.DeserializeObject<CommissionTemplateSetting>();// Mixins.Json.JsonMapper.ToObject<CommissionTemplateSetting>(json);
+            CommissionTemplateSetting t = json.DeserializeObject<CommissionTemplateSetting>();
             t.Domain_ID = manager.domain_id;
             bool isaddd = t.ID == 0;
 
@@ -184,7 +184,7 @@ namespace TradingLib.Core
                 throw new FutsRspError("无权更新手续费模板项目");
             }
 
-            MGRCommissionTemplateItemSetting item = json.DeserializeObject<MGRCommissionTemplateItemSetting>();// Mixins.Json.JsonMapper.ToObject<MGRCommissionTemplateItemSetting>(json);
+            MGRCommissionTemplateItemSetting item = json.DeserializeObject<MGRCommissionTemplateItemSetting>();
             CommissionTemplate template = BasicTracker.CommissionTemplateTracker[item.Template_ID];
             if (template == null)
             {
