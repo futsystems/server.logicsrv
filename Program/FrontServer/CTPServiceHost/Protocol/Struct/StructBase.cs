@@ -55,50 +55,40 @@ namespace CTPService.Struct
     public struct ftd_hdr : IByteSwap
     {
         public byte bHead;
-
         /// <summary>
         /// 压缩类别 0为无,3为LZ
         /// </summary>
         public byte bEnctype;
-
         /// <summary>
         /// 版本号
         /// </summary>
         public byte bVersion;
-
         /// <summary>
         /// 报文链 
         /// 76 L
         /// 67 C
-        /// 
         /// </summary>
         public byte bChain;
-
         /// <summary>
         /// 类别0-req,2-rtn,4-qry
         /// </summary>
         public ushort wSeqSn;
-
         /// <summary>
         /// tid
         /// </summary>
         public uint dTransId;
-
         /// <summary>
         /// 序列号
         /// </summary>
         public uint dSeqNo;
-
         /// <summary>
         /// 数据域数量
         /// </summary>
         public ushort wFiCount;
-
         /// <summary>
         /// FTDC信息正文长度 未压缩长度 ,包含(tid+len)
         /// </summary>
         public ushort wFtdcLen;
-
         /// <summary>
         /// 请求编号
         /// </summary>

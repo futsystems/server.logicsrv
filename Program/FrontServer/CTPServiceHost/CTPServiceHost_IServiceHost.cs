@@ -80,12 +80,14 @@ namespace CTPService
                             conn.Send(encData, encPktLen);
                             if (response.IsLast) logger.Info(string.Format("LogicSrv Reply Session:{0} -> LoginResponse", conn.SessionID));
 
-                            //topicData回报
-                            //hex = "0200008501030c4ce43001e502e1f5e301e355e4d5fdc8b7efefefefefe21003e1983230313631323031e131323a32303a3337e13838383838e638353632303030383032e654726164696e67486f7374696e67efef04a515665831ec31323a32303a3337e131323a32303a3338e131323a32303a3338e131323a32303a3337e12d2d3a2d2d3a2d2de1";
-                            //encData = ByteUtil.HexToByte(hex);
-                            //encPktLen = encData.Length;
+                            //topicData回报 如果不回报topic则交易段无法正常获得委托与成交通知
+                            hex = "0200008501030c4ce43001e502e1f5e301e355e4d5fdc8b7efefefefefe21003e1983230313631323031e131323a32303a3337e13838383838e638353632303030383032e654726164696e67486f7374696e67efef04a515665831ec31323a32303a3337e131323a32303a3338e131323a32303a3338e131323a32303a3337e12d2d3a2d2d3a2d2de1";
+                                 //0200008501030c4ce43001e502e1f5e301e355e4d5fdc8b7efefefefefe21003e1983230313631323031e131323a32303a3337e13838383838e638353632303030383032e654726164696e67486f7374696e67efef04a515665831ec31323a32303a3337e131323a32303a3338e131323a32303a3338e131323a32303a3337e12d2d3a2d2d3a2d2de1
+                            hex = "0200002a01030c4ce4f102e504e128e41001e106e101e41001e106e102e41001e106e103e202121001e106e104e4";
+                            encData = ByteUtil.HexToByte(hex);
+                            encPktLen = encData.Length;
 
-                            //conn.Send(encData, encPktLen);
+                            conn.Send(encData, encPktLen);
 
 
                             break;
