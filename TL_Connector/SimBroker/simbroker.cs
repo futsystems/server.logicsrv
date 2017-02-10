@@ -54,7 +54,7 @@ namespace Broker.SIM
             }
         }
 
-        bool _shfeTradeExuction = false;
+        bool _cffexTradeExuction = false;
 
         /// <summary>
         /// 模拟交易服务,这里基本实现了委托,取消以及通过行情来成交委托的功能，但是单个tick能否成交多个委托的问题这里没有考虑
@@ -78,11 +78,11 @@ namespace Broker.SIM
             }
             _stickprice = _cfgdb["STICKLIMITPRICE"].AsBool();
 
-            if (!_cfgdb.HaveConfig("SHFETradeExecution"))
+            if (!_cfgdb.HaveConfig("CFFEXTradeExecution"))
             {
-                _cfgdb.UpdateConfig("SHFETradeExecution", QSEnumCfgType.Bool,false, "中金所最新价撮合");
+                _cfgdb.UpdateConfig("CFFEXTradeExecution", QSEnumCfgType.Bool, false, "*中金所最新价撮合");
             }
- 	        _shfeTradeExuction = _cfgdb["SHFETradeExecution"].AsBool();
+            _cffexTradeExuction = _cfgdb["CFFEXTradeExecution"].AsBool();
 
 
         }
@@ -482,7 +482,7 @@ namespace Broker.SIM
                         }
                         else
                         {
-                            if (_shfeTradeExuction && o.oSymbol.SecurityFamily.Exchange.EXCode == "SHFE")
+                            if (_cffexTradeExuction && o.oSymbol.SecurityFamily.Exchange.EXCode == "CFFEX" && tick.Time>= o.Time)
                             {
                                 //已经记录了该委托表明 在接受委托时 已经执行过一次成交扫描 且没有成交 表明 买单 挂单价 小于 卖一
                                 if (firstPendingOrder.Keys.Contains(o.id))
