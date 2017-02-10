@@ -579,8 +579,10 @@ namespace CTPService.Struct.V12
         /// <summary>
         /// 投资者名称
         /// </summary>
-        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 81)]
-        public string InvestorName;
+        //[MarshalAs(UnmanagedType.ByValTStr, SizeConst = 81)]
+        //public string InvestorName;
+        [MarshalAs(UnmanagedType.ByValArray, SizeConst = 81)]
+        public byte[] InvestorName;
         /// <summary>
         /// 证件类型
         /// </summary>
@@ -674,8 +676,10 @@ namespace CTPService.Struct.V12
         /// <summary>
         /// 投资者名称
         /// </summary>
-        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 81)]
-        public string InvestorName;
+        //[MarshalAs(UnmanagedType.ByValTStr, SizeConst = 81)]
+        //public string InvestorName;
+        [MarshalAs(UnmanagedType.ByValArray, SizeConst = 81)]
+        public byte[] InvestorName;
         /// <summary>
         /// 证件类型
         /// </summary>

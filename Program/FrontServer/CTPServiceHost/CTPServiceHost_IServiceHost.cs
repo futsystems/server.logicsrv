@@ -81,11 +81,11 @@ namespace CTPService
                             if (response.IsLast) logger.Info(string.Format("LogicSrv Reply Session:{0} -> LoginResponse", conn.SessionID));
 
                             //topicData回报
-                            hex = "0200008501030c4ce43001e502e1f5e301e355e4d5fdc8b7efefefefefe21003e1983230313631323031e131323a32303a3337e13838383838e638353632303030383032e654726164696e67486f7374696e67efef04a515665831ec31323a32303a3337e131323a32303a3338e131323a32303a3338e131323a32303a3337e12d2d3a2d2d3a2d2de1";
-                            encData = ByteUtil.HexToByte(hex);
-                            encPktLen = encData.Length;
+                            //hex = "0200008501030c4ce43001e502e1f5e301e355e4d5fdc8b7efefefefefe21003e1983230313631323031e131323a32303a3337e13838383838e638353632303030383032e654726164696e67486f7374696e67efef04a515665831ec31323a32303a3337e131323a32303a3338e131323a32303a3338e131323a32303a3337e12d2d3a2d2d3a2d2de1";
+                            //encData = ByteUtil.HexToByte(hex);
+                            //encPktLen = encData.Length;
 
-                            conn.Send(encData, encPktLen);
+                            //conn.Send(encData, encPktLen);
 
 
                             break;
@@ -98,7 +98,7 @@ namespace CTPService
                             Struct.V12.LCThostFtdcInvestorField field = new Struct.V12.LCThostFtdcInvestorField();
                             field.BrokerID = conn.State.BrokerID;
                             field.InvestorID = response.TradingAccount;
-                            field.InvestorName = response.NickName;
+                            field.InvestorName = response.NickName.ToByteArray(81, CTPConvert.CTPEncoding); ;
                             field.IdentifiedCardType = TThostFtdcIdCardTypeType.IDCard;
                             field.IdentifiedCardNo = "88888888";
                             field.Telephone = response.Mobile;
