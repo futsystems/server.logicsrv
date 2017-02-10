@@ -187,7 +187,7 @@
     <Compile Include="CoreModule\RiskCentre\RiskCentre_FlatPositionCancelOrder.cs" />
     <Compile Include="CoreModule\RiskCentre\RiskCentre_CheckOrder.cs" />
     <Compile Include="CoreModule\RiskCentre\RiskCentre_FlatTask.cs" />
-    <Compile Include="CoreModule\RiskCentre\RiskCentre_mgr.cs" />
+    <Compile Include="CoreModule\RiskCentre\RiskCentre_Mgr.cs" />
     <Compile Include="CoreModule\RiskCentre\RiskCentre_GotXXX.cs" />
     <Compile Include="CoreModule\RiskCentre\RiskCentre_RiskRule.cs" />
     <Compile Include="CoreModule\RiskCentre\RiskCentre_Trading.cs" />
