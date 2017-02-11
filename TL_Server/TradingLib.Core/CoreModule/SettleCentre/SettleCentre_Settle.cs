@@ -450,30 +450,5 @@ namespace TradingLib.Core
             }
         }
 
-
-
-
-        /// <summary>
-        /// 获得某个交易日某个合约的结算价格
-        /// </summary>
-        /// <param name="settleday"></param>
-        /// <param name="symbol"></param>
-        /// <returns></returns>
-        //public SettlementPrice GetSettlementPrice(int settleday, string symbol)
-        //{
-        //    return _settlementPriceTracker[settleday, symbol];
-        //}
-
-        /// <summary>
-        /// 获得某个合约最近保存的行情数据
-        /// </summary>
-        /// <param name="symbol"></param>
-        /// <returns></returns>
-        //public Tick GetLastTickSnapshot(string symbol)
-        //{
-        //    return _settlementPriceTracker.GetLastTickSnapshot(symbol);
-        //}
-
-
     }
 }
