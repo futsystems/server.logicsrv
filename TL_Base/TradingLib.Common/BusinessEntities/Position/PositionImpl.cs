@@ -357,7 +357,7 @@ namespace TradingLib.Common
             }
 
             //if (k.ex == "demo")//用于测试
-            {
+            //{
                 //从行情更新昨结算价
                 if (_lastsettlementprice == null && k.PreSettlement > 0 && (double)k.PreSettlement < double.MaxValue)
                 {
@@ -386,17 +386,17 @@ namespace TradingLib.Common
 
 
                 //从行情更新结算价格 更新所有持仓明细的行情
-                if (_settlementprice == null && k.Settlement > 0 && (double)k.Settlement < double.MaxValue)
-                {
-                    _settlementprice = k.Settlement;
-                    //更新所有持仓明细的当日结算价格
-                    foreach (PositionDetail p in this.PositionDetailTotal)
-                    {
-                        p.SettlementPrice = k.Settlement;
-                    }
-                    //Util.Info("update settlementprice for position[" + this.Account + "-" + this.Symbol + "] price:" + _settlementprice.ToString());
-                }
-            }
+                //if (_settlementprice == null && k.Settlement > 0 && (double)k.Settlement < double.MaxValue)
+                //{
+                //    _settlementprice = k.Settlement;
+                //    //更新所有持仓明细的当日结算价格
+                //    foreach (PositionDetail p in this.PositionDetailTotal)
+                //    {
+                //        p.SettlementPrice = k.Settlement;
+                //    }
+                //    //Util.Info("update settlementprice for position[" + this.Account + "-" + this.Symbol + "] price:" + _settlementprice.ToString());
+                //}
+            //}
         }
         #endregion
 

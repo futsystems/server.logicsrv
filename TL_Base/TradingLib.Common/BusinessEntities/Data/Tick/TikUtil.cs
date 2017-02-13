@@ -246,34 +246,35 @@ namespace TradingLib.Common
         /// </summary>
         /// <param name="k"></param>
         /// <returns></returns>
-        public static bool IsSummary(this Tick k)
-        {
-            return k.Type == EnumTickType.SUMMARY;
-        }
+        //public static bool IsSummary(this Tick k)
+        //{
+        //    return k.Type == EnumTickType.SUMMARY;
+        //}
 
         /// <summary>
         /// 是否是快照数据
         /// </summary>
         /// <param name="k"></param>
         /// <returns></returns>
-        public static bool IsSnapshot(this Tick k)
-        {
-            return k.Type == EnumTickType.SNAPSHOT;
-        }
+        //public static bool IsSnapshot(this Tick k)
+        //{
+        //    return k.Type == EnumTickType.SNAPSHOT;
+        //}
 
         /// <summary>
         /// Tick数据是否有效
-        /// 1.Snapshot 快照数据
-        /// 2.Trade Quote 数据 HasTick()
-        /// 3.Summary 统计数据
-        /// 4.Index 指数数据 没有Trade 没有盘口 只有Trade数据
+        /// 1.symbol exchange不为空
         /// </summary>
         /// <param name="k"></param>
         /// <returns></returns>
         public static bool IsValid(this Tick k)
         {
             //合约不为空 有Trade或Quote数据
-            return (!string.IsNullOrEmpty(k.Symbol)) && (k.IsSnapshot() || k.HasTick() || k.IsSummary() || k.IsIndex());
+            if (string.IsNullOrEmpty(k.Symbol) || string.IsNullOrEmpty(k.Exchange)) return false;
+            //if (k.UpdateType == "X") return k.Trade * k.Size != 0;
+
+            return true;
+            //return (!string.IsNullOrEmpty(k.Symbol)) && (k.IsSnapshot() || k.HasTick() || k.IsSummary() || k.IsIndex());
         }
 
         /// <summary>
