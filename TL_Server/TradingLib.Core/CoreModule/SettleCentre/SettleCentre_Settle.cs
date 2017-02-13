@@ -232,7 +232,7 @@ namespace TradingLib.Core
 
                 foreach (var exchange in list)
                 {
-                    //历史结算使用制定交易日否则使用当前交易所时间
+                    //历史结算使用指定交易日否则使用当前交易所时间
                     DateTime extime = histmode ? Util.ToDateTime(tradingday, 0) : exchange.GetExchangeTime(); //获得交易所当前时间
 
                     //非工作日不结算
@@ -241,11 +241,12 @@ namespace TradingLib.Core
                         continue;
                     }
                     //避免错误的假日文件导致有交易记录而交易所不执行结算
+                    //逐日盯市结算 节假日不执行结算 节假日 结算价如何获取？ 逐笔结算方式 每日结算没有盯市盈亏 且与结算价无关 只与开仓价有关
                     ////节假日不结算
-                    //if (exchange.IsInHoliday(extime))
-                    //{
-                    //    continue;
-                    //}
+                    if (exchange.SettleType == QSEnumSettleType.ByDate && exchange.IsInHoliday(extime))//盯市结算的交易所 非交易日不执行结算
+                    {
+                        continue;
+                    }
                     //结算日为交易所当前日期
                     int settleday = extime.ToTLDate();
 
