@@ -158,7 +158,18 @@ namespace TradingLib.Common
             pd.Breed = oldPd.Breed;
             return pd;
         }
-        
+
+
+        /// <summary>
+        /// 计算持仓开仓均价
+        /// </summary>
+        /// <param name="pos"></param>
+        /// <returns></returns>
+        public static decimal CalcAvgOpenPrice(this Position pos)
+        {
+            if (pos.isFlat) return 0;
+            return pos.PositionDetailTotal.Where(pd => !pd.IsClosed()).Sum(pd => pd.OpenPrice * pd.Volume) / pos.UnsignedSize;
+        }
 
 
         #region 计算平仓盈亏与浮动盈亏
