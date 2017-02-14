@@ -54,8 +54,12 @@ namespace Broker.SIM
         }
 
         ConfigDB _cfgdb;
-        bool _fillall = false;
-        int _minFillSize = 0;
+        //bool _fillall = false;
+        //int _minFillSize = 0;
+        /// <summary>
+        /// 模拟成交用盘口数据成交还是用最新价成交
+        /// </summary>
+        //bool _useBikAsk = true;
         /// <summary>
         /// 模拟交易服务,这里基本实现了委托,取消以及通过行情来成交委托的功能，但是单个tick能否成交多个委托的问题这里没有考虑
         /// 同时这里加入了委托 平仓检查,对于超买 超卖 会给出平今仓位不足的提示。
@@ -68,23 +72,23 @@ namespace Broker.SIM
         public SIMTrader()
         {
             _cfgdb = new ConfigDB("SIMBroker");
-            if (!_cfgdb.HaveConfig("FillAll"))
-            {
-                _cfgdb.UpdateConfig("FillAll", QSEnumCfgType.Bool,false, "是否成交所有");
-            }
-            _fillall = _cfgdb["FillAll"].AsBool();
+            //if (!_cfgdb.HaveConfig("FillAll"))
+            //{
+            //    _cfgdb.UpdateConfig("FillAll", QSEnumCfgType.Bool,false, "是否成交所有");
+            //}
+            //_fillall = _cfgdb["FillAll"].AsBool();
 
-            if (!_cfgdb.HaveConfig("UseBikAsk"))
-            {
-                _cfgdb.UpdateConfig("UseBikAsk", QSEnumCfgType.Bool, true, "是否按盘口成交");
-            }
-            _useBikAsk = _cfgdb["UseBikAsk"].AsBool();
+            //if (!_cfgdb.HaveConfig("UseBikAsk"))
+            //{
+            //    _cfgdb.UpdateConfig("UseBikAsk", QSEnumCfgType.Bool, true, "是否按盘口成交");
+            //}
+            //_useBikAsk = _cfgdb["UseBikAsk"].AsBool();
 
-            if (!_cfgdb.HaveConfig("MinFillSize"))
-            {
-                _cfgdb.UpdateConfig("MinFillSize", QSEnumCfgType.Int, 0, "最小成交数量");
-            }
-            _minFillSize = _cfgdb["MinFillSize"].AsInt();
+            //if (!_cfgdb.HaveConfig("MinFillSize"))
+            //{
+            //    _cfgdb.UpdateConfig("MinFillSize", QSEnumCfgType.Int, 0, "最小成交数量");
+            //}
+            //_minFillSize = _cfgdb["MinFillSize"].AsInt();
 
             _fillseq = random.Next(1000, 4000);
         }
@@ -99,10 +103,7 @@ namespace Broker.SIM
         /// </summary>
         //bool _fillOrderTickByTick = false;
 
-        /// <summary>
-        /// 模拟成交用盘口数据成交还是用最新价成交
-        /// </summary>
-        bool _useBikAsk = true;
+        
 
         /// <summary>
         /// 是否模拟真实挂单
@@ -207,34 +208,7 @@ namespace Broker.SIM
         }
 
         #endregion
-        /// <summary>
-        /// 获得对应的开平标识
-        /// </summary>
-        /// <param name="f"></param>
-        /// <returns></returns>
-        //QSEnumOffsetFlag GetOffsetFlag(Order o)
-        //{
-        //    switch (o.OffsetFlag)
-        //    { 
-        //        case QSEnumOffsetFlag.OPEN:
-        //            return QSEnumOffsetFlag.OPEN;
-
-        //        case QSEnumOffsetFlag.CLOSETODAY:
-        //            return QSEnumOffsetFlag.CLOSETODAY;
-        //        case QSEnumOffsetFlag.CLOSEYESTERDAY:
-        //            return QSEnumOffsetFlag.CLOSEYESTERDAY;
-
-        //        case QSEnumOffsetFlag.CLOSE:
-        //            {
-        //                //如果是上期所 则需要区分平今 平昨
-        //                if (o.oSymbol.SecurityFamily.Exchange.EXCode == "SHFE")
-        //                { 
-                            
-        //                }
-        //                return QSEnumOffsetFlag.CLOSE;
-        //            }
-        //    }
-        //}
+        
         #region 市场快照扫描成交
         //市场端面扫描模拟成交
         /*
@@ -244,6 +218,7 @@ namespace Broker.SIM
          * 
          * 
          * **/
+        Dictionary<long, Order> firstPendingOrder = new Dictionary<long, TradingLib.API.Order>();//第一次扫描没有成交的委托 则用最新价进行成交
         void processPaperTrading()
         { 
              try
@@ -267,8 +242,13 @@ namespace Broker.SIM
                 {
                     //获得对应的委托
                     Order o = orders[i];
-
-                    //1.取消检查 查询是否有该委托的取消,若有取消 则直接返回,不对委托进行成交检查
+                    IAccount account = TLCtxHelper.ModuleAccountManager[o.Account];
+                    if (account == null)
+                    {
+                        logger.Warn(string.Format("Order:{0} 's account:{1} do not exist", o.id, o.Account));
+                        continue;
+                    }
+                    //1.扯单检查 查询是否有该委托的取消,若有取消 则直接返回,不对委托进行成交检查
                     //遍历所有的委托 会将所有的有效取消消耗,若还有取消没有消耗,则是因为其他原因造成的死取消
                     int cidx = gotcancel(o.id, cancels);
                     if (cidx >= 0)
@@ -283,26 +263,55 @@ namespace Broker.SIM
                     }
 
 
-                    //2.成交检查 用Tick数据成交该委托 注意我们是遍历所有的委托 然后取对应的tick数据 去进行成交
+                    //2.成交检查 用Tick快照数据成交该委托
                     bool filled = false;
 
-                    Tick tick = TLCtxHelper.ModuleDataRouter.GetTickSnapshot(o.Exchange, o.Symbol);//FindTickSnapshot(o.oSymbol.TickSymbol);
+                    Tick tick = TLCtxHelper.ModuleDataRouter.GetTickSnapshot(o.Exchange, o.Symbol);
+
+                    bool timeRet = true;
+                    if (account.GetSimExecuteTimeCheck())
+                    {
+                        if (tick.DateTime().ToTLDateTime() < o.GetDateTime())
+                        {
+                            timeRet = false;
+                        }
+                    }
+                   
 
                     //如果是挂单 并且需要模拟实盘进行成交
-                    if (tick != null && tick.IsValid())
+                    if (tick != null && timeRet)
                     {
-
-                        //1.以对方盘口价格进行成交
-                        filled = o.Fill(tick, _useBikAsk, false, _fillall,_minFillSize);
-
-                        //2.限价单如果没有成交我们按累计的盘口检查是否可以用最新价进行成交
-                        LimitOrderQuoteStatus qs = null;
-
-                        _quotestatus.TryGetValue(o.id, out qs);
-                        if (this._simLimitReal && o.isLimit && qs != null && qs.IsTradeFill)
+                        if (account.GetSimExecuteCFFEXStrategy() && o.Exchange == "CFFEX")
                         {
-                            filled = o.Fill(tick, false, false, _fillall,_minFillSize);
+                            //已经记录了该委托表明 在接受委托时 已经执行过一次成交扫描 且没有成交 表明 买单 挂单价 小于 卖一
+                            if (firstPendingOrder.Keys.Contains(o.id))
+                            {
+                                filled = o.Fill(tick,false, false, account.GetSimExecuteFillAll(), account.GetSimExecuteMinSize());//使用最新价成交
+                            }
+                            else
+                            {
+                                //以对方盘口价格进行成交 如未成交则进入队列 后续成交方式以最新价成交
+                                filled = o.Fill(tick, account.GetSimExecuteUseBidAsk(), false, account.GetSimExecuteFillAll(), account.GetSimExecuteMinSize());
+                                if (!filled)
+                                {
+                                    firstPendingOrder.Add(o.id, o);
+                                }
+                            }
                         }
+                        else
+                        {
+                            //1.以对方盘口价格进行成交
+                            filled = o.Fill(tick, account.GetSimExecuteUseBidAsk(), false, account.GetSimExecuteFillAll(), account.GetSimExecuteMinSize());
+                        }
+                        ////2.限价单如果没有成交我们按累计的盘口检查是否可以用最新价进行成交
+                        //LimitOrderQuoteStatus qs = null;
+
+                        //_quotestatus.TryGetValue(o.id, out qs);
+                        //if (this._simLimitReal && o.isLimit && qs != null && qs.IsTradeFill)
+                        //{
+                        //    filled = o.Fill(tick, false, false, account.GetSimExecuteFillAll(), account.GetSimExecuteMinSize());
+                        //}
+
 
                     }
 
@@ -319,6 +328,9 @@ namespace Broker.SIM
                         //模拟成交需要按照交易所设定对应的开平标识
                         //生成成交编号
                         fill.BrokerTradeID = NextFillSeq.ToString();//交易所成交编号 Broker端的成交编号
+
+
+                        //非系统本地时区 将时间转换成本地时间
                         string timeZoneID = fill.oSymbol.SecurityFamily.Exchange.TimeZoneID;
                         if (timeZoneID != "Asia/Singapore" && timeZoneID != "Asia/Hong_Kong" && timeZoneID != "Asia/Shanghai")
                         {
@@ -328,6 +340,12 @@ namespace Broker.SIM
                         }
                         //Util.Debug("@@@@@@@@@@@@@@@@@@trade date:" + fill.xDate.ToString() + " tradetime:" + fill.xTime.ToString(),QSEnumDebugLevel.ERROR);
                         logger.Info("PTT Server Filled: " + fill.GetTradeDetail());
+
+                        //**限价单始终按挂单价格成交
+                        if (o.isLimit && account.GetSimExecuteStickLimitPrice())
+                        {
+                            fill.xPrice = o.LimitPrice;
+                        }
 
                         bool partial = fill.UnsignedSize != o.UnsignedSize;//如果是部分成交 则需要将剩余未成交的委托 返还到委托队列
                         if (partial)
@@ -729,7 +747,7 @@ namespace Broker.SIM
             _simLimitReal = false;
 
 
-            logger.Info("模拟引擎启动,成交方式:市场断面扫描 取价方式:"+(_useBikAsk?"盘口价":"最新价") +" 模拟实盘取价:"+ _simLimitReal.ToString());
+            logger.Info("SimBroker started");
             StartPTEngine();//启动模拟成交引擎
             StartProcOut();//启动对外消息发送线程
 

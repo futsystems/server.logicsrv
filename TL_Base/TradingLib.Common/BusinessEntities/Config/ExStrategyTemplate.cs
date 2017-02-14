@@ -71,6 +71,13 @@ namespace TradingLib.Common
             this.LimitCheck = false;
             this.Probability = 100;
 
+            this.SimExecuteCFFEXStrategy = false;
+            this.SimExecuteFillAll = false;
+            this.SimExecuteMinSize = 0;
+            this.SimExecuteStickLimitPrice = false;
+            this.SimExecuteTimeCheck = false;
+            this.SimExecuteUseAskBid = true;
+
 
         }
         /// <summary>
@@ -141,5 +148,38 @@ namespace TradingLib.Common
         /// 执行概率
         /// </summary>
         public int Probability { get; set; }
+
+
+        /// <summary>
+        /// 始终按挂单价成交
+        /// </summary>
+        public bool SimExecuteStickLimitPrice { get; set; }
+
+        /// <summary>
+        /// 成交所有
+        /// </summary>
+        public bool SimExecuteFillAll { get; set; }
+
+        /// <summary>
+        /// 最小成交数量
+        /// </summary>
+        public int SimExecuteMinSize { get; set; }
+
+        /// <summary>
+        /// 成交Tick时间检查
+        /// 委托时间11:23:25 则Tick时间需在11:23:25秒之后 
+        /// </summary>
+        public bool SimExecuteTimeCheck { get; set; }
+
+        /// <summary>
+        /// 使用盘口成交
+        /// 如果设置为false则按最新价成交
+        /// </summary>
+        public bool SimExecuteUseAskBid { get; set; }
+
+        /// <summary>
+        /// 中金所挂单未成以最新价成交策略
+        /// </summary>
+        public bool SimExecuteCFFEXStrategy { get; set; }
     }
 }

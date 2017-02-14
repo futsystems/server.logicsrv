@@ -76,7 +76,7 @@ namespace TradingLib.ORM
         {
             using (DBMySql db = new DBMySql())
             {
-                string query = string.Format("INSERT INTO cfg_strategy (`marginprice`,`includecloseprofit`,`includepositionprofit`,`algorithm`,`sidemargin`,`creditseparate`,`positionlock`,`entryslip`,`exitslip` ,`limitcheck` ,`probability`,`template_id`) VALUES ( '{0}','{1}','{2}','{3}','{4}','{5}','{6}','{7}','{8}','{9}','{10}','{11}')", item.MarginPrice, item.IncludeCloseProfit ? 1 : 0, item.IncludePositionProfit ? 1 : 0, item.Algorithm, item.SideMargin ? 1 : 0, item.CreditSeparate ? 1 : 0, item.PositionLock ? 1 : 0, item.EntrySlip, item.ExitSlip, item.LimitCheck ? 1 : 0, item.Probability, item.Template_ID);
+                string query = string.Format("INSERT INTO cfg_strategy (`marginprice`,`includecloseprofit`,`includepositionprofit`,`algorithm`,`sidemargin`,`creditseparate`,`positionlock`,`entryslip`,`exitslip` ,`limitcheck` ,`probability`,`simexecutecffexstrategy`,`simexecutefillall`,`simexecuteminsize`,`simexecutesticklimiteprice`,`simexecutetimecheck`,`simexecuteuseaskbid`,`template_id`) VALUES ( '{0}','{1}','{2}','{3}','{4}','{5}','{6}','{7}','{8}','{9}','{10}','{11}','{12}','{13}','{14}','{15}','{16}','{17}')", item.MarginPrice, item.IncludeCloseProfit ? 1 : 0, item.IncludePositionProfit ? 1 : 0, item.Algorithm, item.SideMargin ? 1 : 0, item.CreditSeparate ? 1 : 0, item.PositionLock ? 1 : 0, item.EntrySlip, item.ExitSlip, item.LimitCheck ? 1 : 0, item.Probability,item.SimExecuteCFFEXStrategy?1:0,item.SimExecuteFillAll?1:0,item.SimExecuteMinSize,item.SimExecuteStickLimitPrice?1:0,item.SimExecuteTimeCheck?1:0,item.SimExecuteUseAskBid?1:0, item.Template_ID);
                 int row = db.Connection.Execute(query);
                 SetIdentity(db.Connection, id => item.ID = id, "id", "cfg_strategy");
             }
@@ -103,7 +103,7 @@ namespace TradingLib.ORM
         {
             using (DBMySql db = new DBMySql())
             {
-                string query = string.Format("UPDATE cfg_strategy SET marginprice='{0}',includecloseprofit='{1}' ,includepositionprofit='{2}' ,algorithm='{3}' ,sidemargin='{4}' ,creditseparate='{5}' ,positionlock='{6}',entryslip='{7}' ,exitslip='{8}',limitcheck='{9}' ,probability='{10}' WHERE id='{11}'", item.MarginPrice, item.IncludeCloseProfit ? 1 : 0, item.IncludePositionProfit ? 1 : 0, item.Algorithm, item.SideMargin ? 1 : 0, item.CreditSeparate ? 1 : 0, item.PositionLock ? 1 : 0, item.EntrySlip, item.ExitSlip, item.LimitCheck?1:0,item.Probability,item.ID);
+                string query = string.Format("UPDATE cfg_strategy SET marginprice='{0}',includecloseprofit='{1}' ,includepositionprofit='{2}' ,algorithm='{3}' ,sidemargin='{4}' ,creditseparate='{5}' ,positionlock='{6}',entryslip='{7}' ,exitslip='{8}',limitcheck='{9}' ,probability='{10}' ,simexecutecffexstrategy='{11}',simexecutefillall='{12}',simexecuteminsize='{13}',simexecutesticklimiteprice='{14}',simexecutetimecheck='{15}',simexecuteuseaskbid='{16}' WHERE id='{17}'", item.MarginPrice, item.IncludeCloseProfit ? 1 : 0, item.IncludePositionProfit ? 1 : 0, item.Algorithm, item.SideMargin ? 1 : 0, item.CreditSeparate ? 1 : 0, item.PositionLock ? 1 : 0, item.EntrySlip, item.ExitSlip, item.LimitCheck ? 1 : 0, item.Probability, item.SimExecuteCFFEXStrategy ? 1 : 0, item.SimExecuteFillAll ? 1 : 0, item.SimExecuteMinSize, item.SimExecuteStickLimitPrice ? 1 : 0, item.SimExecuteTimeCheck ? 1 : 0, item.SimExecuteUseAskBid ? 1 : 0, item.Template_ID);
                 db.Connection.Execute(query);
             }
         }

@@ -106,5 +106,84 @@ namespace TradingLib.Common
             return QSEnumAlgorithm.AG_All;
         }
 
+        #region 模拟成交参数
+        /// <summary>
+        /// 限价单是否按挂单价格成交
+        /// </summary>
+        /// <param name="account"></param>
+        /// <returns></returns>
+        public static bool GetSimExecuteStickLimitPrice(this IAccount account)
+        {
+            ExStrategy s = account.GetExStrategy();
+            if (s != null)
+                return s.SimExecuteStickLimitPrice;
+            return AccountBase.SimExecuteStickLimitPrice;
+        }
+
+        /// <summary>
+        /// 是否一次成交所有
+        /// </summary>
+        /// <param name="account"></param>
+        /// <returns></returns>
+        public static bool GetSimExecuteFillAll(this IAccount account)
+        {
+            ExStrategy s = account.GetExStrategy();
+            if (s != null)
+                return s.SimExecuteFillAll;
+            return AccountBase.SimExecuteFillAll;
+        }
+
+        /// <summary>
+        /// 最小成交数量
+        /// </summary>
+        /// <param name="account"></param>
+        /// <returns></returns>
+        public static int GetSimExecuteMinSize(this IAccount account)
+        {
+            ExStrategy s = account.GetExStrategy();
+            if (s != null)
+                return s.SimExecuteMinSize;
+            return AccountBase.SimExecuteMinSize;
+        }
+
+        /// <summary>
+        /// 检查Tick时间
+        /// </summary>
+        /// <param name="account"></param>
+        /// <returns></returns>
+        public static bool GetSimExecuteTimeCheck(this IAccount account)
+        {
+            ExStrategy s = account.GetExStrategy();
+            if (s != null)
+                return s.SimExecuteTimeCheck;
+            return AccountBase.SimExecuteTimeCheck;
+        }
+
+        /// <summary>
+        /// 使用盘口成交
+        /// </summary>
+        /// <param name="account"></param>
+        /// <returns></returns>
+        public static bool GetSimExecuteUseBidAsk(this IAccount account)
+        {
+            ExStrategy s = account.GetExStrategy();
+            if (s != null)
+                return s.SimExecuteUseAskBid;
+            return AccountBase.SimExecuteUseAskBid;
+        }
+
+        /// <summary>
+        /// 是否启用中金所交易策略
+        /// </summary>
+        /// <param name="account"></param>
+        /// <returns></returns>
+        public static bool GetSimExecuteCFFEXStrategy(this IAccount account)
+        {
+            ExStrategy s = account.GetExStrategy();
+            if (s != null)
+                return s.SimExecuteCFFEXStrategy;
+            return AccountBase.SimExecuteCFFEXStrategy;
+        }
+        #endregion
     }
 }

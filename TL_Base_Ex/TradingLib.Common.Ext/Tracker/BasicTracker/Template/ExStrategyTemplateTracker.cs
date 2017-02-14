@@ -152,6 +152,14 @@ namespace TradingLib.Common
                 target.LimitCheck = item.LimitCheck;
                 target.Probability = item.Probability;
 
+                target.SimExecuteCFFEXStrategy = item.SimExecuteCFFEXStrategy;
+                target.SimExecuteFillAll = item.SimExecuteFillAll;
+                target.SimExecuteMinSize = item.SimExecuteMinSize;
+                target.SimExecuteStickLimitPrice = item.SimExecuteStickLimitPrice;
+                target.SimExecuteTimeCheck = item.SimExecuteTimeCheck;
+                target.SimExecuteUseAskBid = item.SimExecuteUseAskBid;
+
+
                 ORM.MExStrategy.UpdateExStrategyTemplateItem(target);
             }
             else
@@ -168,6 +176,14 @@ namespace TradingLib.Common
                 target.ExitSlip = item.ExitSlip;
                 target.LimitCheck = item.LimitCheck;
                 target.Probability = item.Probability;
+
+                target.SimExecuteCFFEXStrategy = item.SimExecuteCFFEXStrategy;
+                target.SimExecuteFillAll = item.SimExecuteFillAll;
+                target.SimExecuteMinSize = item.SimExecuteMinSize;
+                target.SimExecuteStickLimitPrice = item.SimExecuteStickLimitPrice;
+                target.SimExecuteTimeCheck = item.SimExecuteTimeCheck;
+                target.SimExecuteUseAskBid = item.SimExecuteUseAskBid;
+
 
                 target.Template_ID = item.Template_ID;
                 ORM.MExStrategy.InsertExStrategyTemplateItem(target);
