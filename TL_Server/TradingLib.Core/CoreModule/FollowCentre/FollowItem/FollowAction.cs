@@ -19,6 +19,7 @@ namespace TradingLib.Core
             this.ActionType = QSEnumFollowActionType.PlaceOrder;
             this.TargetOrders = new List<Order>();
         }
+
         /// <summary>
         /// 跟单项
         /// </summary>

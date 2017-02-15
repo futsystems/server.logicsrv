@@ -186,7 +186,7 @@ namespace TradingLib.API
         /// <summary>
         /// 停止处理开仓信号 当前持仓等待平仓信号处理
         /// </summary>
-        [Description("展停")]
+        [Description("暂停")]
         Suspend,
 
         /// <summary>

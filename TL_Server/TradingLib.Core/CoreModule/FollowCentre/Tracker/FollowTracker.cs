@@ -37,6 +37,7 @@ namespace TradingLib.Core
         }
 
         SignalTracker signalTracker = null;
+
         /// <summary>
         /// 信号维护器
         /// </summary>

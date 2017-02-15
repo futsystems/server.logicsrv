@@ -6,7 +6,11 @@ using System.Text;
 namespace TradingLib.API
 {
 
-
+    /// <summary>
+    /// 持仓事件统一通过PositionEvent进行封装
+    /// 开仓 则有对应的持仓明细对象
+    /// 平仓 则有对应的平仓明细对象
+    /// </summary>
     public interface IPositionEvent
     {
         /// <summary>

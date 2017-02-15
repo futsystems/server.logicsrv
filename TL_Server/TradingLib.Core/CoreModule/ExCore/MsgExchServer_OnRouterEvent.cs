@@ -111,7 +111,7 @@ namespace TradingLib.Core
             TLCtxHelper.ModuleClearCentre.GotOrder(account,o);
 
             //触发交易账户委托事件
-            //account.FireOrderEvent(o);
+            account.FireOrderEvent(o);
 
             //?如何完善cancel机制
             if (o.Status == QSEnumOrderStatus.Canceled)
@@ -152,7 +152,7 @@ namespace TradingLib.Core
             if (!accept) return;
 
             //触发交易账户成交事件
-            //account.FireFillEvent(t);
+            account.FireFillEvent(t);
 
             //对外通知成交 Indicator总线
             TLCtxHelper.EventIndicator.FireFillEvent(t);

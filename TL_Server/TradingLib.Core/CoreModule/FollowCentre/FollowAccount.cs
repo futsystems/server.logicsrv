@@ -47,8 +47,8 @@ namespace TradingLib.Core
         public FollowAccount(IAccount acct)
         {
             _account = acct;
-            //_account.GotFillEvent += new FillDelegate(_account_GotFillEvent);
-            //_account.GotOrderEvent += new OrderDelegate(_account_GotOrderEvent);
+            _account.GotFillEvent += new FillDelegate(_account_GotFillEvent);
+            _account.GotOrderEvent += new OrderDelegate(_account_GotOrderEvent);
         }
 
         void _account_GotOrderEvent(Order order)
@@ -85,7 +85,6 @@ namespace TradingLib.Core
         public void SendOrder(Order o)
         {
             o.Account = this._account.ID;
-
             TLCtxHelper.ModuleExCore.SendOrderInternal(o);
         }
 
@@ -102,6 +101,7 @@ namespace TradingLib.Core
         /// 底层账户
         /// </summary>
         public IAccount Account { get { return _account; } }
+
         /// <summary>
         /// 所有发送的委托
         /// </summary>

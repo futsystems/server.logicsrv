@@ -29,10 +29,10 @@ namespace TradingLib.Core
             {
                 throw new ArgumentNullException("Signal Account can not be null");
             }
-            //_account.GotFillEvent += new FillDelegate(_account_GotFillEvent);
-            //_account.GotOrderEvent += new OrderDelegate(_account_GotOrderEvent);
-            //_account.GotPositionCloseDetailEvent += new Action<Trade, PositionCloseDetail>(_account_GotPositionCloseDetailEvent);
-            //_account.GotPositionDetailEvent += new Action<Trade, PositionDetail>(_account_GotPositionDetailEvent);
+            _account.GotFillEvent += new FillDelegate(_account_GotFillEvent);
+            _account.GotOrderEvent += new OrderDelegate(_account_GotOrderEvent);
+            _account.GotPositionCloseDetailEvent += new Action<Trade, PositionCloseDetail>(_account_GotPositionCloseDetailEvent);
+            _account.GotPositionDetailEvent += new Action<Trade, PositionDetail>(_account_GotPositionDetailEvent);
         }
 
         void _account_GotPositionDetailEvent(Trade arg1, PositionDetail arg2)

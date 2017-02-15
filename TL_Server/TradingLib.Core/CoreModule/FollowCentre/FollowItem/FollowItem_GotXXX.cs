@@ -8,8 +8,7 @@ using TradingLib.Common;
 namespace TradingLib.Core
 {
     /// <summary>
-    /// 响应委托回报和成交回报
-    /// 
+    /// 响应跟单账户侧委托回报和成交回报
     /// </summary>
     public partial class TradeFollowItem
     {

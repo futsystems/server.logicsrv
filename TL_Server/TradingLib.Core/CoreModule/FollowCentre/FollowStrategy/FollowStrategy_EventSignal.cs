@@ -51,7 +51,7 @@ namespace TradingLib.Core
                         return;
                     }
 
-                    //如果开仓跟单项目需要平仓跟单项目 则直接生成跟单项目
+                    //如果开仓跟单项目需要平仓跟单项目 则直接生成跟单项目(创建平仓跟单项目时 开仓项获得平仓项 平仓项获得开仓项 此时才建立对应关系)
                     if (entryitem.NeedExitFollow)
                     {
                         followitem = new TradeFollowItem(this, signal, trade, pe);
@@ -66,7 +66,7 @@ namespace TradingLib.Core
                 //3.将该新建跟单项写入待处理缓存
                 if (followitem != null)
                 {
-                    //信号跟单项目维护器记录该跟单项目
+                    //信号跟单项目维护器记录该跟单项目 跟单项触发事件统一由TradeFollowItemTracker维护
                     tk.GotTradeFollowItem(followitem);
                     //放入缓存
                     followbuffer.Write(followitem);

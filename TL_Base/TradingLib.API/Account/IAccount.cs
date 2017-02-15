@@ -11,7 +11,7 @@ namespace TradingLib.API
     /// 底层帐户接口
     /// 集成了财务数据,交易信息,风控检查等几大功能接口
     /// </summary>
-    public interface IAccount : IFinanceTotal, ITradingInfo, IGeneralCheck, IRiskRule
+    public interface IAccount : IFinanceTotal, ITradingInfo, IGeneralCheck, IRiskRule,IAccountIndicator
     {
 
         /// <summary>

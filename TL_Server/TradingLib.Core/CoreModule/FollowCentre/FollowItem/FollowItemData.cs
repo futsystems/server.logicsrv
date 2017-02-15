@@ -28,7 +28,7 @@ namespace TradingLib.Common
         public int StrategyID { get; set; }
 
         /// <summary>
-        /// 该跟党项目所属信号ID
+        /// 该跟单项目所属信号ID
         /// </summary>
         public int SignalID { get; set; }
 

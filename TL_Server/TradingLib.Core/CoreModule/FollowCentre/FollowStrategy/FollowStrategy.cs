@@ -29,6 +29,7 @@ namespace TradingLib.Core
 
             return strategy;
         }
+
         /// <summary>
         /// 数据库统一编号
         /// </summary>
@@ -49,23 +50,36 @@ namespace TradingLib.Core
         /// 跟单策略工作状态
         /// </summary>
         public QSEnumFollowWorkState WorkState { get; set; }
+
         /// <summary>
         /// 跟单策略配置
         /// </summary>
         public FollowStrategyConfig Config { get; set; }
+
+        ILog logger = null;
 
         /// <summary>
         /// 跟单账户对象
         /// 封装了底层下单账户IAccount已经相关操作接口
         /// </summary>
         FollowAccount followAccount=null;
-        //SignalTracker signalTracker = null;
+        
+
         OrderSourceTracker sourceTracker = null;
 
-        ILog logger = null;
+        /// <summary>
+        /// 跟单策略信号源
+        /// </summary>
         ConcurrentDictionary<int, ISignal> signalMap = null;
+
+        /// <summary>
+        /// 信号跟单项维护器
+        /// </summary>
         SignalFollowItemTracker followitemtracker = null;
 
+        /// <summary>
+        /// 跟单项事件
+        /// </summary>
         public event Action<TradeFollowItem> NewTradeFollowItemEvent;
 
         void NewTradeFollowItem(TradeFollowItem item)
@@ -80,8 +94,10 @@ namespace TradingLib.Core
             logger = LogManager.GetLogger("FollowStrategy:"+cfg.Token);
             this.Config = cfg;
 
+            //初始化SignalFollowItemTracker
             followitemtracker = new SignalFollowItemTracker();
             followitemtracker.NewTradeFollowItemEvent += new Action<TradeFollowItem>(NewTradeFollowItem);
+
             sourceTracker = new OrderSourceTracker();
 
             this.WorkState = QSEnumFollowWorkState.Shutdown;//初始状态处于停止状态
@@ -91,6 +107,10 @@ namespace TradingLib.Core
         {
             return string.Format("{0}[{1}]", this.Token, this.ID);
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
         public void Init()
         {
 

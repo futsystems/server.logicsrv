@@ -13,7 +13,6 @@ namespace TradingLib.Core
     /// <summary>
     /// 信号维护器
     /// 维护了所有信号源和跟单策略的信号组设定
-    /// 
     /// </summary>
     public class SignalTracker
     {
@@ -53,14 +52,12 @@ namespace TradingLib.Core
             }
             //遍历信号 将没有对应交易账户的信号删除
 
-            //从数据库加载信号配置
+            //从数据库加载信号配置并创建信号对象
             foreach (var cfg in ORM.MSignal.SelectSignalConfigs())
             {
                 configmap.TryAdd(cfg.ID, cfg);
-
                 try
                 {
-                    //创建信号实例对象加载到map
                     ISignal signal = SignalFactory.CreateSignal(cfg);
                     if (signal != null)
                     {
@@ -69,7 +66,7 @@ namespace TradingLib.Core
                 }
                 catch (Exception ex)
                 {
-
+                    logger.Error("Create Signal Error:" + ex.ToString());
                 }
             }
 

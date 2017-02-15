@@ -77,13 +77,18 @@ namespace TradingLib.Core
         //    this.Reset();
         //}
 
+        /// <summary>
+        /// 开仓后 持仓明细生成 触发对应账户的持仓明细事件
+        /// </summary>
+        /// <param name="arg1"></param>
+        /// <param name="arg2"></param>
         void acctk_NewPositionDetailEvent(Trade arg1, PositionDetail arg2)
         {
-            //IAccount account = TLCtxHelper.ModuleAccountManager[arg1.Account];
-            //if (account != null)
-            //{
-            //    account.FirePositoinDetailEvent(arg1, arg2);
-            //}
+            IAccount account = TLCtxHelper.ModuleAccountManager[arg1.Account];
+            if (account != null)
+            {
+                account.FirePositoinDetailEvent(arg1, arg2);
+            }
         }
 
         /// <summary>
@@ -108,11 +113,11 @@ namespace TradingLib.Core
                 logger.Info("New PositionCloseDetail:" + obj.GetPositionCloseStr());
                 TLCtxHelper.ModuleDataRepository.NewPositionCloseDetail(obj);
 
-                //IAccount account = TLCtxHelper.ModuleAccountManager[obj.Account];
-                //if (account != null)
-                //{
-                //    account.FirePositionCloseDetailEvent(f, obj);
-                //}
+                IAccount account = TLCtxHelper.ModuleAccountManager[obj.Account];
+                if (account != null)
+                {
+                    account.FirePositionCloseDetailEvent(f, obj);
+                }
             }
         }
 
