@@ -10,6 +10,8 @@ using TradingLib.Mixins.DataBase;
 
 namespace TradingLib.ORM
 {
+    
+
     public class MSignal : MBase
     {
         /// <summary>

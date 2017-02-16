@@ -82,7 +82,6 @@ namespace TradingLib.Core
                 {
                     //action引擎生成对应的action
                     FollowAction action = GenAction(item);
-
                     if (action != null)
                     {
                         //记录该action

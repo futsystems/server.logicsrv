@@ -6,9 +6,11 @@ using TradingLib.API;
 using TradingLib.Common;
 using TradingLib.Mixins.DataBase;
 
-
 namespace TradingLib.ORM
 {
+    
+
+
     public class MFollowItem:MBase
     {
         /// <summary>

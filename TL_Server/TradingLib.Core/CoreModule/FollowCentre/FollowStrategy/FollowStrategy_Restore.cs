@@ -42,8 +42,6 @@ namespace TradingLib.Core
             {
                 sourceTracker.NewOrder(item, o);
             }
-            //将跟单项目放入内存中的操作可以提炼成单独的CacheItem函数进行操作
-            //item.InRestore = false;
         }
        
     }
