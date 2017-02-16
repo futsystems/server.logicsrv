@@ -21,7 +21,6 @@ namespace TradingLib.Core
         {
             FollowStrategy strategy = FollowStrategy.CreateStrategy(cfg);
             strategyMap.TryAdd(strategy.ID, strategy);
-
         }
 
 

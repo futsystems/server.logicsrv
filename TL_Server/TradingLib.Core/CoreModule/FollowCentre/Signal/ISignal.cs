@@ -44,7 +44,7 @@ namespace TradingLib.API
         /// <summary>
         /// 持仓变动事件
         /// </summary>
-        event Action<ISignal, Trade, IPositionEvent> GotPositionEvent;
+        event Action<ISignal, Trade, PositionEvent> GotPositionEvent;
 
         /// <summary>
         /// 数据库统一编号

@@ -202,7 +202,7 @@ namespace TradingLib.Core
             //2.绑定Signal事件
             signal.GotFillEvent += new FillDelegate(OnSignalFillEvent);
             signal.GotOrderEvent += new OrderDelegate(OnSignalOrderEvent);
-            signal.GotPositionEvent += new Action<ISignal, Trade, IPositionEvent>(OnSignalPositionEvent);
+            signal.GotPositionEvent += new Action<ISignal, Trade, PositionEvent>(OnSignalPositionEvent);
         }
 
 
@@ -221,7 +221,7 @@ namespace TradingLib.Core
             //2.解绑Signal事件
             signal.GotFillEvent -= new FillDelegate(OnSignalFillEvent);
             signal.GotOrderEvent -= new OrderDelegate(OnSignalOrderEvent);
-            signal.GotPositionEvent -= new Action<ISignal, Trade, IPositionEvent>(OnSignalPositionEvent);
+            signal.GotPositionEvent -= new Action<ISignal, Trade, PositionEvent>(OnSignalPositionEvent);
         }
 
 

@@ -22,7 +22,7 @@ namespace TradingLib.Core
         /// <param name="arg1"></param>
         /// <param name="arg2"></param>
         /// <param name="arg3"></param>
-        void OnSignalPositionEvent(ISignal signal, Trade trade, IPositionEvent pe)
+        void OnSignalPositionEvent(ISignal signal, Trade trade, PositionEvent pe)
         {
             try
             {

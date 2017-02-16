@@ -18,7 +18,7 @@ namespace TradingLib.Common
 
     public static class Utils_IPositionEvent
     {
-        public static string GetInfo(this IPositionEvent pe)
+        public static string GetInfo(this PositionEvent pe)
         { 
             if(pe.EventType == QSEnumPositionEventType.EntryPosition)
             {

@@ -8,7 +8,7 @@ using TradingLib.Common;
 
 namespace TradingLib.Core
 {
-    public class PositionEvent : IPositionEvent
+    public class PositionEventImpl : PositionEvent
     {
         /// <summary>
         /// 持仓事件类型

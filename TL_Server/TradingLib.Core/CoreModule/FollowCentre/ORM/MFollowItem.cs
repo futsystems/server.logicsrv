@@ -133,13 +133,13 @@ namespace TradingLib.ORM
         {
             using (DBMySql db = new DBMySql())
             {
-                string query = "delete from follow_items_log";
+                string query = "delete from follow_items";
                 db.Connection.Execute(query);
 
-                query = "delete from follow_item_trade_map_log";
+                query = "delete from follow_item_trade_map";
                 db.Connection.Execute(query);
 
-                query = "delete from follow_item_order_map_log";
+                query = "delete from follow_item_order_map";
                 db.Connection.Execute(query);
             }
         }

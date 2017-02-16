@@ -11,7 +11,7 @@ namespace TradingLib.API
     /// 开仓 则有对应的持仓明细对象
     /// 平仓 则有对应的平仓明细对象
     /// </summary>
-    public interface IPositionEvent
+    public interface PositionEvent
     {
         /// <summary>
         /// 持仓事件类型

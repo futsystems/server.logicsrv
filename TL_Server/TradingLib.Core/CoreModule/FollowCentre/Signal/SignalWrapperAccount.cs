@@ -37,7 +37,7 @@ namespace TradingLib.Core
 
         void _account_GotPositionDetailEvent(Trade arg1, PositionDetail arg2)
         {
-            PositionEvent e = new PositionEvent();
+            PositionEvent e = new PositionEventImpl();
             e.EventType = QSEnumPositionEventType.EntryPosition;
             e.PositionEntry = arg2;
             if (GotPositionEvent != null)
@@ -48,7 +48,7 @@ namespace TradingLib.Core
 
         void _account_GotPositionCloseDetailEvent(Trade arg1, PositionCloseDetail arg2)
         {
-            PositionEvent e = new PositionEvent();
+            PositionEvent e = new PositionEventImpl();
             e.EventType = QSEnumPositionEventType.ExitPosition;
             e.PositionExit = arg2;
             if (GotPositionEvent != null)
@@ -99,7 +99,7 @@ namespace TradingLib.Core
         /// <summary>
         /// 持仓变动事件
         /// </summary>
-        public event Action<ISignal, Trade, IPositionEvent> GotPositionEvent;
+        public event Action<ISignal, Trade, PositionEvent> GotPositionEvent;
         
     }
 }

@@ -33,7 +33,7 @@ namespace TradingLib.Core
         /// <param name="signal"></param>
         /// <param name="trade"></param>
         /// <param name="posevent"></param>
-        public FollowItem(FollowStrategy strategy, ISignal signal, Trade trade, IPositionEvent posevent, bool restore = false)
+        public FollowItem(FollowStrategy strategy, ISignal signal, Trade trade, PositionEvent posevent, bool restore = false)
         {
             
             this.Strategy = strategy;
@@ -184,7 +184,7 @@ namespace TradingLib.Core
         /// <summary>
         /// 持仓事件对象
         /// </summary>
-        public IPositionEvent PositionEvent { get; set; }
+        public PositionEvent PositionEvent { get; set; }
 
         /// <summary>
         /// 跟单项持持仓操作类别
