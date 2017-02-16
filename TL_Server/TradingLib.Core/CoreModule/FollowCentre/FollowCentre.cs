@@ -21,7 +21,7 @@ namespace TradingLib.Core
         public FollowCentre()
             : base(FollowCentre.CoreName)
         {
-            FollowTracker.NotifyTradeFollowItemEvent += new Action<TradeFollowItem>(NotifyFollowItem);
+            FollowTracker.NotifyFollowItemEvent += new Action<FollowItem>(NotifyFollowItem);
 
             //TLCtxHelper.EventSystem.SettleDataStoreEvent += new EventHandler<SystemEventArgs>(EventSystem_SettleDataStoreEvent);
             //TLCtxHelper.EventSystem.SettleEvent += new EventHandler<SystemEventArgs>(EventSystem_SettleEvent);

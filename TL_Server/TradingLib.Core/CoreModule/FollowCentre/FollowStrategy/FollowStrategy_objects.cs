@@ -18,7 +18,7 @@ namespace TradingLib.Core
         /// <summary>
         /// 所有跟单项
         /// </summary>
-        public IEnumerable<TradeFollowItem> FollowItems { get { return followKeyItemMap.Values; } }
+        public IEnumerable<FollowItem> FollowItems { get { return followKeyItemMap.Values; } }
 
         /// <summary>
         /// 获得该跟单策略的所有开仓跟单项数据

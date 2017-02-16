@@ -46,8 +46,8 @@ namespace TradingLib.Core
         }
 
         const int BufferSize = 1000;
-        RingBuffer<TradeFollowItem> followbuffer = new RingBuffer<TradeFollowItem>(BufferSize);
-        Queue<TradeFollowItem> followQueue = new Queue<TradeFollowItem>(BufferSize);
+        RingBuffer<FollowItem> followbuffer = new RingBuffer<FollowItem>(BufferSize);
+        Queue<FollowItem> followQueue = new Queue<FollowItem>(BufferSize);
 
 
         /// <summary>
@@ -73,12 +73,12 @@ namespace TradingLib.Core
                 if (followQueue.Count == 0) return;
 
                 //遍历跟单队列
-                TradeFollowItem[] items = followQueue.ToArray();
+                FollowItem[] items = followQueue.ToArray();
                 followQueue.Clear();
 
-                List<TradeFollowItem> unclosed = new List<TradeFollowItem>();
+                List<FollowItem> unclosed = new List<FollowItem>();
 
-                foreach (TradeFollowItem item in items)
+                foreach (FollowItem item in items)
                 {
                     //action引擎生成对应的action
                     FollowAction action = GenAction(item);

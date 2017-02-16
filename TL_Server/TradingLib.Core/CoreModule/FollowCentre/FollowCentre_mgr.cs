@@ -324,7 +324,7 @@ namespace TradingLib.Core
                 throw new FutsRspError(string.Format("跟单策略:{0} 不存在", strategyId));
             }
 
-            TradeFollowItem item = strategy.GetFollowItem(followkey);
+            FollowItem item = strategy.GetFollowItem(followkey);
             if (item == null)
             {
                 throw new FutsRspError(string.Format("跟单项:{0} 不存在", followkey));
@@ -354,7 +354,7 @@ namespace TradingLib.Core
                 throw new FutsRspError(string.Format("跟单策略:{0} 不存在", strategyId));
             }
 
-            TradeFollowItem item = strategy.GetFollowItem(followkey);
+            FollowItem item = strategy.GetFollowItem(followkey);
             if (item == null)
             {
                 throw new FutsRspError(string.Format("跟单项:{0} 不存在", followkey));
@@ -371,7 +371,7 @@ namespace TradingLib.Core
             }
 
             //执行手工平仓操作
-            TradeFollowItem exit = TradeFollowItem.CreateFlatFollowItem(item);
+            FollowItem exit = FollowItem.CreateFlatFollowItem(item);
             item.Link(exit);
 
             item.Strategy.NewFollowItem(exit);

@@ -21,7 +21,7 @@
 //        /// <summary>
 //        /// 信号Token与跟单项目的映射
 //        /// </summary>
-//        ConcurrentDictionary<string, TradeFollowItemTracker> signalFollowItemMap = new ConcurrentDictionary<string, TradeFollowItemTracker>();
+//        ConcurrentDictionary<string, FollowItemTracker> signalFollowItemMap = new ConcurrentDictionary<string, FollowItemTracker>();
 
 //        /// <summary>
 //        /// 获得某个信号
@@ -48,9 +48,9 @@
 //        /// </summary>
 //        /// <param name="token"></param>
 //        /// <returns></returns>
-//        public TradeFollowItemTracker GetFollowItemTracker(string token)
+//        public FollowItemTracker GetFollowItemTracker(string token)
 //        {
-//            TradeFollowItemTracker target = null;
+//            FollowItemTracker target = null;
 //            if (signalFollowItemMap.TryGetValue(token, out target))
 //            {
 //                return target;
@@ -83,7 +83,7 @@
 //            }
 //            signalMap.TryAdd(signal.Token, signal);
 
-//            signalFollowItemMap.TryAdd(signal.Token, new TradeFollowItemTracker());
+//            signalFollowItemMap.TryAdd(signal.Token, new FollowItemTracker());
 //        }
 
 //        /// <summary>

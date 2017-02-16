@@ -10,7 +10,7 @@ namespace TradingLib.Core
     /// <summary>
     /// 关联对应的对象
     /// </summary>
-    public partial class TradeFollowItem
+    public partial class FollowItem
     {
         /// <summary>
         /// 绑定操作对象
@@ -25,7 +25,7 @@ namespace TradingLib.Core
         /// 绑定平仓跟单项目
         /// </summary>
         /// <param name="item"></param>
-        public void NewExitFollowItem(TradeFollowItem item)
+        public void NewExitFollowItem(FollowItem item)
         {
             if (this.EventType == QSEnumPositionEventType.ExitPosition)
             {
@@ -42,7 +42,7 @@ namespace TradingLib.Core
         /// 绑定开仓跟单项目
         /// </summary>
         /// <param name="item"></param>
-        public void NewEntryFollowItem(TradeFollowItem item)
+        public void NewEntryFollowItem(FollowItem item)
         {
             if (this.EventType == QSEnumPositionEventType.EntryPosition)
             {

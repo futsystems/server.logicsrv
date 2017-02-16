@@ -17,7 +17,7 @@ namespace TradingLib.Core
         /// </summary>
         /// <param name="item"></param>
         /// <returns></returns>
-        FollowAction GenAction(TradeFollowItem item)
+        FollowAction GenAction(FollowItem item)
         {
             
             switch (item.Stage)
@@ -142,7 +142,7 @@ namespace TradingLib.Core
             }
         }
 
-        Order GenOrder(TradeFollowItem item)
+        Order GenOrder(FollowItem item)
         {
             Symbol symbol = BasicTracker.DomainTracker.SuperDomain.GetSymbol(item.Exchange,item.Symbol);
             //开仓

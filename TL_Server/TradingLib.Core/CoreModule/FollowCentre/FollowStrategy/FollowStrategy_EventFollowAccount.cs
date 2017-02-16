@@ -20,8 +20,8 @@ namespace TradingLib.Core
             try
             {
                 logger.Info(string.Format("FollowAccount:{0} Got Order:{1}",this.Account,o.GetOrderInfo()));
-                //通过委托编号查找对应的TradeFollowItem
-                TradeFollowItem item = sourceTracker[o.id];
+                //通过委托编号查找对应的FollowItem
+                FollowItem item = sourceTracker[o.id];
                 if (item != null)
                 {
                     item.GotOrder(o);
@@ -38,7 +38,7 @@ namespace TradingLib.Core
             try
             {
                 logger.Info(string.Format("FollowAccount:{0} Got Trade:{1}", this.Account, t.GetTradeInfo()));
-                TradeFollowItem item = sourceTracker[t.id];
+                FollowItem item = sourceTracker[t.id];
                 if (item != null)
                 {
                     item.GotTrade(t);

@@ -14,9 +14,9 @@ namespace TradingLib.Core
     /// 开仓/平仓
     /// 
     /// </summary>
-    public partial class TradeFollowItem
+    public partial class FollowItem
     {
-        public TradeFollowItem(FollowStrategy strategy)
+        public FollowItem(FollowStrategy strategy)
         {
             this.Strategy = strategy;
             this.Signal = null;
@@ -33,7 +33,7 @@ namespace TradingLib.Core
         /// <param name="signal"></param>
         /// <param name="trade"></param>
         /// <param name="posevent"></param>
-        public TradeFollowItem(FollowStrategy strategy,ISignal signal, Trade trade, IPositionEvent posevent,bool restore=false)
+        public FollowItem(FollowStrategy strategy, ISignal signal, Trade trade, IPositionEvent posevent, bool restore = false)
         {
             
             this.Strategy = strategy;
@@ -66,9 +66,9 @@ namespace TradingLib.Core
         /// </summary>
         /// <param name="entry"></param>
         /// <returns></returns>
-        public static TradeFollowItem CreateFlatFollowItem(TradeFollowItem entry)
+        public static FollowItem CreateFlatFollowItem(FollowItem entry)
         {
-            TradeFollowItem exit = new TradeFollowItem(entry.Strategy);
+            FollowItem exit = new FollowItem(entry.Strategy);
 
             exit.TriggerType = QSEnumFollowItemTriggerType.ManualExitTrigger;
             exit.Signal = null;
@@ -136,7 +136,7 @@ namespace TradingLib.Core
                 if (!FollowTracker.Inited) return;
                 if (_stage != QSEnumFollowStage.ItemCreated)
                 {
-                    FollowTracker.NotifyTradeFollowItem(this);
+                    FollowTracker.NotifyFollowItem(this);
                 }
                 if (oldstage != _stage)
                 {
@@ -195,14 +195,14 @@ namespace TradingLib.Core
         /// <summary>
         /// 平仓跟单项对应的开仓项
         /// </summary>
-        public TradeFollowItem EntryFollowItem { get; private set; }
+        public FollowItem EntryFollowItem { get; private set; }
 
 
-        List<TradeFollowItem> _exitFollowItems = new List<TradeFollowItem>();
+        List<FollowItem> _exitFollowItems = new List<FollowItem>();
         /// <summary>
         /// 开仓跟单项对应的平仓项
         /// </summary>
-        public List<TradeFollowItem> ExitFollowItems { get { return _exitFollowItems; } }
+        public List<FollowItem> ExitFollowItems { get { return _exitFollowItems; } }
 
 
         /// <summary>

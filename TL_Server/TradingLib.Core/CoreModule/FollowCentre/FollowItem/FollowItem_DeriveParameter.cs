@@ -10,7 +10,7 @@ namespace TradingLib.Core
     /// <summary>
     /// 记录跟单项的衍生参数
     /// </summary>
-    public partial class TradeFollowItem
+    public partial class FollowItem
     {
         int _firedcount = 0;
         /// <summary>

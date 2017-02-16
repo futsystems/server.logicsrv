@@ -77,16 +77,16 @@ namespace TradingLib.Core
         /// <summary>
         /// 跟单项map
         /// </summary>
-        ConcurrentDictionary<string,TradeFollowItem> followKeyItemMap = new ConcurrentDictionary<string,TradeFollowItem>();
+        ConcurrentDictionary<string,FollowItem> followKeyItemMap = new ConcurrentDictionary<string,FollowItem>();
         /// <summary>
         /// 跟单项与本地键 对应关系 比如开仓成交 在平仓成交信号触发时需要通过对应的开仓成交编号获得对应的跟单项
         /// </summary>
-        ConcurrentDictionary<string, TradeFollowItem> localKeyItemMap = new ConcurrentDictionary<string, TradeFollowItem>();
+        ConcurrentDictionary<string, FollowItem> localKeyItemMap = new ConcurrentDictionary<string, FollowItem>();
 
-        public TradeFollowItem GetFollowItem(string followkey)
+        public FollowItem GetFollowItem(string followkey)
         {
             if (string.IsNullOrEmpty(followkey)) return null;
-            TradeFollowItem target = null;
+            FollowItem target = null;
             if (followKeyItemMap.TryGetValue(followkey, out target))
             {
                 return target;
@@ -94,10 +94,10 @@ namespace TradingLib.Core
             return null;
         }
 
-        TradeFollowItem GetEntryFollowItemViaLocalKey(string localKey)
+        FollowItem GetEntryFollowItemViaLocalKey(string localKey)
         {
             if (string.IsNullOrEmpty(localKey)) return null;
-            TradeFollowItem target = null;
+            FollowItem target = null;
             if (localKeyItemMap.TryGetValue(localKey, out target))
             {
                 return target;

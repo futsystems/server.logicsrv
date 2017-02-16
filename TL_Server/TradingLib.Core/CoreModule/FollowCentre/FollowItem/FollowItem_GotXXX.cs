@@ -10,7 +10,7 @@ namespace TradingLib.Core
     /// <summary>
     /// 响应跟单账户侧委托回报和成交回报
     /// </summary>
-    public partial class TradeFollowItem
+    public partial class FollowItem
     {
         /// <summary>
         /// 获得委托记录
@@ -87,11 +87,11 @@ namespace TradingLib.Core
            
             if(!FollowTracker.Inited) return;
             
-            FollowTracker.NotifyTradeFollowItem(this);
+            FollowTracker.NotifyFollowItem(this);
             //如果是平仓成交则需要同步更新开仓跟单项状态
             if (this.EventType == QSEnumPositionEventType.ExitPosition)
             {
-                FollowTracker.NotifyTradeFollowItem(this.EntryFollowItem);
+                FollowTracker.NotifyFollowItem(this.EntryFollowItem);
             }
             
         }

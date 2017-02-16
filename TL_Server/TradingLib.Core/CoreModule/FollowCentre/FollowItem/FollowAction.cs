@@ -13,7 +13,7 @@ namespace TradingLib.Core
     /// </summary>
     public class FollowAction
     {
-        public FollowAction(TradeFollowItem item)
+        public FollowAction(FollowItem item)
         {
             this.FollowItem = item;
             this.ActionType = QSEnumFollowActionType.PlaceOrder;
@@ -23,7 +23,7 @@ namespace TradingLib.Core
         /// <summary>
         /// 跟单项
         /// </summary>
-        public TradeFollowItem FollowItem { get; set; }
+        public FollowItem FollowItem { get; set; }
 
         /// <summary>
         /// 跟单操作类别

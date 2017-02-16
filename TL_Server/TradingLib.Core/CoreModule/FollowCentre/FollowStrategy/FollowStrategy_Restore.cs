@@ -19,13 +19,13 @@ namespace TradingLib.Core
         /// 恢复跟单项
         /// </summary>
         /// <param name="item"></param>
-        public void RestoreTradeFollowItem(TradeFollowItem item)
+        public void RestoreFollowItem(FollowItem item)
         {
             if (item.EventType == QSEnumPositionEventType.ExitPosition)
             {
                 //从数据库加载跟单项恢复到跟单策略中时 此时followkey已经可用
                 string[] keys = item.FollowKey.Split('-');
-                TradeFollowItem entryitem = GetFollowItem(keys[0]);// tk.GetEntryFollowItemVialFollowKey(keys[0]);// tk[QSEnumPositionEventType.EntryPosition, item.PositionEvent.PositionExit.OpenTradeID];
+                FollowItem entryitem = GetFollowItem(keys[0]);// tk.GetEntryFollowItemVialFollowKey(keys[0]);// tk[QSEnumPositionEventType.EntryPosition, item.PositionEvent.PositionExit.OpenTradeID];
                 if (entryitem == null)
                 {
                     logger.Info("ExitPoitionEvent has no EntryFollowItem,ignored");

@@ -74,18 +74,18 @@ namespace TradingLib.Core
             }
         }
 
-        public static event Action<TradeFollowItem> NotifyTradeFollowItemEvent;
+        public static event Action<FollowItem> NotifyFollowItemEvent;
 
 
         /// <summary>
         /// 对外通知跟单项目的状态变化
         /// </summary>
         /// <param name="item"></param>
-        public static void NotifyTradeFollowItem(TradeFollowItem item)
+        public static void NotifyFollowItem(FollowItem item)
         {
-            if (NotifyTradeFollowItemEvent != null)
+            if (NotifyFollowItemEvent != null)
             {
-                NotifyTradeFollowItemEvent(item);
+                NotifyFollowItemEvent(item);
             }
             
         }

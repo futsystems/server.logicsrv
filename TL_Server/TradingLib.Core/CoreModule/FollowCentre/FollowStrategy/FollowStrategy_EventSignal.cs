@@ -34,18 +34,18 @@ namespace TradingLib.Core
                 //1.过滤器过滤
 
                 //2.生成跟单项目
-                TradeFollowItem followitem = null;
+                FollowItem followitem = null;
                 //如果是开仓事件直接生成跟单项
                 if (pe.EventType == QSEnumPositionEventType.EntryPosition)
                 {
                     //策略暂停状态 不接受任何开仓信号
                     if (this.WorkState == QSEnumFollowWorkState.Suspend)
                         return;
-                    followitem = new TradeFollowItem(this, signal,trade, pe);
+                    followitem = new FollowItem(this, signal,trade, pe);
                 }
                 else//平仓事件需要查找对应的开仓跟单项目 做持仓判定以及数据绑定
                 {
-                    TradeFollowItem entryitem = GetEntryFollowItemViaLocalKey(pe.PositionExit.OpenTradeID);
+                    FollowItem entryitem = GetEntryFollowItemViaLocalKey(pe.PositionExit.OpenTradeID);
                     if (entryitem == null)
                     {
                         logger.Info("ExitPoitionEvent has no EntryFollowItem,ignored");
@@ -54,7 +54,7 @@ namespace TradingLib.Core
                     //开仓与平仓对象绑定时 平仓跟单项获得初始FollowKey
                     if (entryitem.NeedExitFollow)
                     {
-                        followitem = new TradeFollowItem(this, signal, trade, pe);
+                        followitem = new FollowItem(this, signal, trade, pe);
                         entryitem.Link(followitem);
                     }
                 }
@@ -75,7 +75,7 @@ namespace TradingLib.Core
         /// 将跟单项放入缓存并执行数据储存与对外通知
         /// </summary>
         /// <param name="item"></param>
-        public void NewFollowItem(TradeFollowItem item)
+        public void NewFollowItem(FollowItem item)
         {
             CacheFollowItem(item);
             //数据库记录新生成的跟单项目
@@ -83,7 +83,7 @@ namespace TradingLib.Core
             data.Settleday = TLCtxHelper.ModuleSettleCentre.Tradingday;
             FollowTracker.FollowItemLogger.NewFollowItem(data);
             //对外通知跟单项
-            FollowTracker.NotifyTradeFollowItem(item);
+            FollowTracker.NotifyFollowItem(item);
 
         }
 
@@ -91,7 +91,7 @@ namespace TradingLib.Core
         /// 将跟单项目放入缓存
         /// </summary>
         /// <param name="item"></param>
-        void CacheFollowItem(TradeFollowItem item)
+        void CacheFollowItem(FollowItem item)
         {
             followKeyItemMap.TryAdd(item.FollowKey, item);
             if (item.EventType == QSEnumPositionEventType.EntryPosition)

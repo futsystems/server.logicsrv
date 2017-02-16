@@ -16,7 +16,7 @@ namespace TradingLib.Core
         /// </summary>
         /// <param name="item"></param>
         /// <returns></returns>
-        public static FollowItemOrderInfo[] GenFollowItemOrderInfos(this TradeFollowItem item)
+        public static FollowItemOrderInfo[] GenFollowItemOrderInfos(this FollowItem item)
         {
             FollowItemOrderInfo[] orders = item.Orders.Select(o => o.ToFollowItemOrder()).ToArray();
             foreach (var o in orders)
@@ -27,7 +27,7 @@ namespace TradingLib.Core
             return orders;
         }
 
-        public static FollowItemDetail GenFollowItemDetail(this TradeFollowItem item)
+        public static FollowItemDetail GenFollowItemDetail(this FollowItem item)
         {
             //开仓跟单项目
             if (item.EventType == QSEnumPositionEventType.EntryPosition)
@@ -59,11 +59,11 @@ namespace TradingLib.Core
         /// </summary>
         /// <param name="item"></param>
         /// <returns></returns>
-        public static EntryFollowItemStruct GenEntryFollowItemStruct(this TradeFollowItem item)
+        public static EntryFollowItemStruct GenEntryFollowItemStruct(this FollowItem item)
         {
             if (item.EventType == QSEnumPositionEventType.ExitPosition)
             {
-                throw new ArgumentException("item need EntryTradeFollowItem");
+                throw new ArgumentException("item need EntryFollowItem");
             }
 
             EntryFollowItemStruct entryitem = new EntryFollowItemStruct();
@@ -108,12 +108,12 @@ namespace TradingLib.Core
         /// </summary>
         /// <param name="item"></param>
         /// <returns></returns>
-        public static ExitFollowItemStruct GenExitFollowItemStruct(this TradeFollowItem item)
+        public static ExitFollowItemStruct GenExitFollowItemStruct(this FollowItem item)
         {
 
             if (item.EventType == QSEnumPositionEventType.EntryPosition)
             {
-                throw new ArgumentException("item need ExitTradeFollowItem");
+                throw new ArgumentException("item need ExitFollowItem");
             }
 
 
@@ -159,13 +159,13 @@ namespace TradingLib.Core
         /// </summary>
         /// <param name="entry"></param>
         /// <param name="exit"></param>
-        public static void Link(this TradeFollowItem entry, TradeFollowItem exit)
+        public static void Link(this FollowItem entry, FollowItem exit)
         {
             entry.NewExitFollowItem(exit);
             exit.NewEntryFollowItem(entry);
         }
 
-        public static FollowItemData ToFollowItemData(this TradeFollowItem item)
+        public static FollowItemData ToFollowItemData(this FollowItem item)
         {
             FollowItemData data = new FollowItemData();
 
@@ -204,7 +204,7 @@ namespace TradingLib.Core
 
             return data;
         }
-        public static string GetLocalKey(this TradeFollowItem entry)
+        public static string GetLocalKey(this FollowItem entry)
         {
             switch (entry.TriggerType)
             { 

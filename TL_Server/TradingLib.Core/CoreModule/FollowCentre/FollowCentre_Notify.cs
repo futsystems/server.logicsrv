@@ -17,7 +17,7 @@ namespace TradingLib.Core
         /// 对外通知跟单项目
         /// </summary>
         /// <param name="item"></param>
-        public void NotifyFollowItem(TradeFollowItem item)
+        public void NotifyFollowItem(FollowItem item)
         {
             if (item.EventType == QSEnumPositionEventType.EntryPosition)
             {

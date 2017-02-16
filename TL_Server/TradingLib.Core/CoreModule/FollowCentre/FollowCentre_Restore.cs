@@ -26,7 +26,7 @@ namespace TradingLib.Core
             foreach (var data in followitems)
             {
                 //生成对应的跟单项目对象
-                TradeFollowItem followitem = ItemData2TradeFollowItem(data);
+                FollowItem followitem = ItemData2FollowItem(data);
                 QSEnumFollowStage oldstage = followitem.Stage;
 
                 //获得跟单项目对应的委托和成交 填充委托与成交
@@ -64,13 +64,13 @@ namespace TradingLib.Core
                 followitem.Stage = oldstage;
 
                 //调用对应跟单策略恢复该跟单项目
-                followitem.Strategy.RestoreTradeFollowItem(followitem);
+                followitem.Strategy.RestoreFollowItem(followitem);
 
                 //FollowItemTracker tk = followitemtracker[followitem.Signal.ID];
 
                 //if (followitem.EventType == QSEnumPositionEventType.ExitPosition)
                 //{
-                //    TradeFollowItem entryitem = tk[QSEnumPositionEventType.EntryPosition, pe.PositionExit.OpenTradeID];
+                //    FollowItem entryitem = tk[QSEnumPositionEventType.EntryPosition, pe.PositionExit.OpenTradeID];
                    
                 //}
             }
@@ -81,12 +81,12 @@ namespace TradingLib.Core
         /// </summary>
         /// <param name="data"></param>
         /// <returns></returns>
-        TradeFollowItem ItemData2TradeFollowItem(FollowItemData data)
+        FollowItem ItemData2FollowItem(FollowItemData data)
         {
             FollowStrategy strategy = ID2FollowStrategy(data.StrategyID);
             ISignal signal = FollowTracker.SignalTracker[data.SignalID];
 
-            TradeFollowItem item = null;
+            FollowItem item = null;
             switch (data.TriggerType)
             {
                     //按成交触发的跟单项
@@ -118,12 +118,12 @@ namespace TradingLib.Core
                             posevent.EventType = QSEnumPositionEventType.ExitPosition;
                             posevent.PositionExit = signal.Account.GetPosition(trade.Symbol, trade.PositionSide).PositionCloseDetail.Where(pc => pc.OpenTradeID == openTrade.TradeID && pc.CloseTradeID == closeTrade.TradeID).FirstOrDefault();
                         }
-                        item = new TradeFollowItem(strategy, signal, trade, posevent,true);
+                        item = new FollowItem(strategy, signal, trade, posevent,true);
                         break;
                     }
                 case QSEnumFollowItemTriggerType.ManualExitTrigger:
                     {
-                        item = new TradeFollowItem(strategy);
+                        item = new FollowItem(strategy);
                         break;
                     }
                 default:

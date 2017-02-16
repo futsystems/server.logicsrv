@@ -17,7 +17,7 @@ namespace TradingLib.Core
     public class OrderSourceTracker
     {
 
-        ConcurrentDictionary<long, TradeFollowItem> orderSourceMap = new ConcurrentDictionary<long, TradeFollowItem>();
+        ConcurrentDictionary<long, FollowItem> orderSourceMap = new ConcurrentDictionary<long, FollowItem>();
 
         /// <summary>
         /// 获得某个委托的触发源
@@ -25,11 +25,11 @@ namespace TradingLib.Core
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public TradeFollowItem this[long id]
+        public FollowItem this[long id]
         {
             get
             {
-                TradeFollowItem followitem = null;
+                FollowItem followitem = null;
                 if (orderSourceMap.TryGetValue(id, out followitem))
                 {
                     return followitem;
@@ -43,7 +43,7 @@ namespace TradingLib.Core
         /// </summary>
         /// <param name="item"></param>
         /// <param name="o"></param>
-        public void NewOrder(TradeFollowItem item, Order o)
+        public void NewOrder(FollowItem item, Order o)
         {
             orderSourceMap.TryAdd(o.id, item);
             //委托编号和跟单项的对应关系 需要记录到数据库
