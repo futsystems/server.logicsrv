@@ -76,37 +76,74 @@ namespace TradingLib.Core
             }
         }
 
+        /// <summary>
+        /// 将数据库记录的FollowItemData创建成FollowItem对象
+        /// </summary>
+        /// <param name="data"></param>
+        /// <returns></returns>
         TradeFollowItem ItemData2TradeFollowItem(FollowItemData data)
         {
             FollowStrategy strategy = ID2FollowStrategy(data.StrategyID);
             ISignal signal = FollowTracker.SignalTracker[data.SignalID];
-            Trade trade = TLCtxHelper.ModuleClearCentre.FilledTrade(data.SignalTradeID);
 
-            Trade openTrade = TLCtxHelper.ModuleClearCentre.FilledTrade(data.OpenTradeID);
-            Trade closeTrade = string.IsNullOrEmpty(data.CloseTradeID)?null:TLCtxHelper.ModuleClearCentre.FilledTrade(data.CloseTradeID);
+            TradeFollowItem item = null;
+            switch (data.TriggerType)
+            {
+                    //按成交触发的跟单项
+                case QSEnumFollowItemTriggerType.SigTradeTrigger:
+                    {
+                        Trade trade = TLCtxHelper.ModuleClearCentre.FilledTrade(data.SignalTradeID);
+                        Trade openTrade = TLCtxHelper.ModuleClearCentre.FilledTrade(data.OpenTradeID);
+                        Trade closeTrade = string.IsNullOrEmpty(data.CloseTradeID) ? null : TLCtxHelper.ModuleClearCentre.FilledTrade(data.CloseTradeID);
+                        if (trade == null || openTrade == null)
+                        {
+                            logger.Warn(string.Format("{0}-{1} need trade and open trade", data.FollowKey, data.TriggerType));
+                            return null;
+                        }
+                        if (!string.IsNullOrEmpty(data.CloseTradeID) && closeTrade == null)
+                        {
+                            logger.Warn(string.Format("{0}-{1} need close trade", data.FollowKey, data.TriggerType));
+                            return null;
+                        }
+                        PositionEvent posevent = new PositionEvent();
+                        //如何获得某个交易信号的持仓明细和平仓明细对象
+                        if (string.IsNullOrEmpty(data.CloseTradeID))
+                        {
+                            posevent.EventType = QSEnumPositionEventType.EntryPosition;
+                            posevent.PositionEntry = signal.Account.GetPosition(trade.Symbol, trade.PositionSide).PositionDetailTotal.Where(pd => pd.TradeID == openTrade.TradeID).FirstOrDefault();
+
+                        }
+                        else
+                        {
+                            posevent.EventType = QSEnumPositionEventType.ExitPosition;
+                            posevent.PositionExit = signal.Account.GetPosition(trade.Symbol, trade.PositionSide).PositionCloseDetail.Where(pc => pc.OpenTradeID == openTrade.TradeID && pc.CloseTradeID == closeTrade.TradeID).FirstOrDefault();
+                        }
+                        item = new TradeFollowItem(strategy, signal, trade, posevent,true);
+                        break;
+                    }
+                case QSEnumFollowItemTriggerType.ManualExitTrigger:
+                    {
+                        item = new TradeFollowItem(strategy);
+                        break;
+                    }
+                default:
+                    logger.Warn(string.Format("FollowItem Type:{0} Deserialize not support", data.TriggerType));
+                    break;
+            }
+
+            //设置跟单项的Exchange Symbol Side Size Power等数据
+            if (item != null)
+            {
+                item.SetFollowResult(data);
+            }
+
+            return item;
 
             
-            if (trade == null || openTrade == null) return null;
-
-            if (!string.IsNullOrEmpty(data.CloseTradeID) && closeTrade == null) return null;
-
-            PositionEvent posevent = new PositionEvent();
-            //如何获得某个交易信号的持仓明细和平仓明细对象
-            if (string.IsNullOrEmpty(data.CloseTradeID))
-            {
-                posevent.EventType = QSEnumPositionEventType.EntryPosition;
-                posevent.PositionEntry = signal.Account.GetPosition(trade.Symbol,trade.PositionSide).PositionDetailTotal.Where(pd=>pd.TradeID == openTrade.TradeID).FirstOrDefault();
-
-            }
-            else
-            {
-                posevent.EventType = QSEnumPositionEventType.ExitPosition;
-                posevent.PositionExit = signal.Account.GetPosition(trade.Symbol, trade.PositionSide).PositionCloseDetail.Where(pc => pc.OpenTradeID == openTrade.TradeID && pc.CloseTradeID == closeTrade.TradeID).FirstOrDefault();
-            }
 
 
 
-            return new TradeFollowItem(data.FollowKey, strategy, signal, trade, posevent, data.FollowSide, data.FollowPower, data.Stage);
+            
         }
     }
 }

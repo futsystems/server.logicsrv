@@ -26,166 +26,132 @@ namespace TradingLib.Core
         {
             TradeFollowItem item = this;
             FollowItemData data = new FollowItemData();
-            data.StrategyID = item.Strategy.ID;
-            data.SignalID = item.Signal.ID;
-            data.SignalTradeID = item.SignalTrade.TradeID;
-            if(item.EventType == QSEnumPositionEventType.EntryPosition)
-            {
-                data.OpenTradeID = item.PositionEvent.PositionEntry.TradeID;
-            }
-            if (item.EventType == QSEnumPositionEventType.ExitPosition)
-            {
-                data.OpenTradeID = item.PositionEvent.PositionExit.OpenTradeID;
-                data.CloseTradeID = item.PositionEvent.PositionExit.CloseTradeID;
-            }
-            data.Stage = item.Stage;
+
             data.FollowKey = item.FollowKey;
-            data.FollowPower = item.FollowPower;
+            data.StrategyID = item.Strategy.ID;
+            data.TriggerType = item.TriggerType;
+            data.Stage = item.Stage;
+
+            data.Exchange = item.Exchange;
+            data.Symbol = item.Symbol;
             data.FollowSide = item.FollowSide;
-
-
+            data.FollowSize = item.FollowSize;
+            data.FollowPower = item.FollowPower;
+            data.EventType = item.EventType;
+            data.Comment = item.Comment;
+            switch (item.TriggerType)
+            {
+                case QSEnumFollowItemTriggerType.SigTradeTrigger:
+                    {
+                        data.SignalID = item.Signal.ID;
+                        data.SignalTradeID = item.SignalTrade.TradeID;
+                        if (item.EventType == QSEnumPositionEventType.EntryPosition)
+                        {
+                            data.OpenTradeID = item.PositionEvent.PositionEntry.TradeID;
+                        }
+                        if (item.EventType == QSEnumPositionEventType.ExitPosition)
+                        {
+                            data.OpenTradeID = item.PositionEvent.PositionExit.OpenTradeID ;
+                            data.CloseTradeID = item.PositionEvent.PositionExit.CloseTradeID;
+                        }
+                        break;
+                    }
+                default:
+                    break;
+            }
+            
             return data;
         }
 
-        //public TradeFollowItem ConvertFromData(FollowItemData data)
-        //{ 
+        
+
+
+        public TradeFollowItem(FollowStrategy strategy)
+        {
+            this.Strategy = strategy;
+            this.Signal = null;
+            this.SignalTrade = null;
+            this.PositionEvent = null;
             
-        //}
+        }
 
         /// <summary>
-        /// 哪个策略，哪个信号，哪个成交，哪个持仓事件
-        /// 4个对象决定了跟单项的内容
+        /// 通过信号的成交数据创建跟单项
+        /// 1.某个策略 某个信号 某个成交 对应的持仓变动事件 生成一个跟单项
         /// </summary>
         /// <param name="strategy"></param>
         /// <param name="signal"></param>
         /// <param name="trade"></param>
         /// <param name="posevent"></param>
-        public TradeFollowItem(FollowStrategy strategy,ISignal signal, Trade trade, IPositionEvent posevent)
+        public TradeFollowItem(FollowStrategy strategy,ISignal signal, Trade trade, IPositionEvent posevent,bool restore=false)
         {
-            this.Strategy = strategy;
-            this.Signal = signal;
-            this.SignalTrade = trade;
-            this.PositionEvent = posevent;
             
-            if (this.PositionEvent.EventType == QSEnumPositionEventType.EntryPosition)
-            {
-                //开仓跟单项目的编号就是开仓成交的编号OpenTradeID
-                _key = this.PositionEvent.PositionEntry.TradeID;
-                //_followkey = string.Format("{0}-{1}", this.Signal.ID, this.PositionEvent.PositionEntry.TradeID);
-                //开仓跟单项目followkey由全局进行设定
-                _followkey = FollowTracker.NextFollowKey;
-            }
-            if (this.PositionEvent.EventType == QSEnumPositionEventType.ExitPosition)
-            {
-                //平仓跟单项目的编号就是开仓成交编号与平仓成交编号的组合 OpenTradeID-CloseTradeID
-                _key = string.Format("{0}-{1}", this.PositionEvent.PositionExit.OpenTradeID, this.PositionEvent.PositionExit.CloseTradeID);
-                //_followkey = string.Format("{0}-{1}", this.Signal.ID, _key);
-            }
-            
-            _side = strategy.Config.FollowDirection == QSEnumFollowDirection.Positive ? trade.Side : !trade.Side;
-            _power = strategy.Config.FollowPower;
-
-            this.Stage = QSEnumFollowStage.ItemCreated;
-        }
-
-
-        bool _inrestore = false;
-        public bool InRestore
-        {
-            get
-            {
-                return _inrestore;
-            }
-            internal set
-            {
-                _inrestore = value;
-            }
-        }
-        /// <summary>
-        /// 从数据库获得FollowItemData然后获得对应的对象生成跟单对象
-        /// </summary>
-        /// <param name="followkey"></param>
-        /// <param name="strategy"></param>
-        /// <param name="signal"></param>
-        /// <param name="trade"></param>
-        /// <param name="posevent"></param>
-        /// <param name="followside"></param>
-        /// <param name="followpower"></param>
-        /// <param name="stage"></param>
-        public TradeFollowItem(string followkey,FollowStrategy strategy, ISignal signal, Trade trade, IPositionEvent posevent,bool followside,int followpower,QSEnumFollowStage stage)
-        {
-            _inrestore = true;
-            _followkey = followkey;
-
             this.Strategy = strategy;
             this.Signal = signal;
             this.SignalTrade = trade;
             this.PositionEvent = posevent;
 
-            if (this.PositionEvent.EventType == QSEnumPositionEventType.EntryPosition)
+            //运行过程中创建的FollowItem从构造函数参数中获取对应的值,从数据库恢复数据时则直接通过数据库中的值进行赋值
+            if (!restore)
             {
-                //开仓跟单项目的编号就是开仓成交的编号OpenTradeID
-                _key = this.PositionEvent.PositionEntry.TradeID;
-            }
-            if (this.PositionEvent.EventType == QSEnumPositionEventType.ExitPosition)
-            {
-                //平仓跟单项目的编号就是开仓成交编号与平仓成交编号的组合 OpenTradeID-CloseTradeID
-                _key = string.Format("{0}-{1}", this.PositionEvent.PositionExit.OpenTradeID, this.PositionEvent.PositionExit.CloseTradeID);
-            }
+                this.TriggerType = QSEnumFollowItemTriggerType.SigTradeTrigger;
+                this.Exchange = trade.oSymbol.Exchange;
+                this.Symbol = trade.Symbol;
+                this.FollowSide = strategy.Config.FollowDirection == QSEnumFollowDirection.Positive ? trade.Side : !trade.Side;
+                this.FollowSize = Math.Abs(trade.xSize) * strategy.Config.FollowPower;
+                this.FollowPower = strategy.Config.FollowPower;
+                this.EventType = posevent.EventType;
 
-            _side = followside;
-            _power = followpower;
-            _stage = stage;
-
+                //开仓FollowKey再初始化时候直接通过递增long获得 平仓FollowKey为了满足现实需要需要结合开仓followkey 添加平仓后缀
+                if (this.PositionEvent.EventType == QSEnumPositionEventType.EntryPosition)
+                {
+                    this.FollowKey = FollowTracker.NextFollowKey;
+                }
+                this.Stage = QSEnumFollowStage.ItemCreated;
+            }
         }
 
-
         /// <summary>
-        /// 跟单项目描述
+        /// 创建某个跟单项对应持仓的平仓跟单项
         /// </summary>
+        /// <param name="entry"></param>
         /// <returns></returns>
-        public override string ToString()
+        public static TradeFollowItem CreateFlatFollowItem(TradeFollowItem entry)
         {
-            return string.Format("Strategy:{0} Sig:{1} PE:{2} Status:{3}",this.Strategy.ToString(), this.Signal.GetInfo(), this.PositionEvent.GetInfo(), this.Stage);
-        }
+            TradeFollowItem exit = new TradeFollowItem(entry.Strategy);
 
-        bool _side = false;
-        /// <summary>
-        /// 买入/卖出
-        /// </summary>
-        public bool FollowSide
-        {
-            get
-            {
-                return _side;
-            }
-        }
+            exit.TriggerType = QSEnumFollowItemTriggerType.ManualExitTrigger;
+            exit.Signal = null;
+            exit.SignalTrade = null;
+            exit.PositionEvent = null;
+            exit.EventType = QSEnumPositionEventType.ExitPosition;
 
-        int _power = 1;
-        /// <summary>
-        /// 跟单乘数
-        /// </summary>
-        public int FollowPower
-        {
-            get
-            {
-                return _power;
-            }
-        }
-
-        string _key = string.Empty;
-        /// <summary>
-        /// 键值
-        /// 开仓跟单项键值为成交编号
-        /// 平仓跟单项键值为开仓成交编号-平仓成交编号
-        /// </summary>
-        public string Key
-        {
-            get { return _key; }
+            exit.Symbol = entry.SignalTrade.Symbol;
+            exit.Exchange = entry.SignalTrade.oSymbol.Exchange;
+            exit.FollowSize = Math.Abs(entry.PositionHoldSize);
+            exit.FollowSide = entry.FollowSide ? false : true;
+            exit.FollowPower = 0;
+            exit.Stage = QSEnumFollowStage.ItemCreated;
+            return exit;
         }
 
 
-        string _followkey = string.Empty;
+
+        public void SetFollowResult(FollowItemData data)
+        {
+            this.TriggerType = data.TriggerType;
+            this.FollowKey = data.FollowKey;
+            this.Exchange = data.Exchange;
+            this.Symbol = data.Symbol;
+            this.FollowSide = data.FollowSide;
+            this.FollowSize = data.FollowSize;
+            this.FollowPower = data.FollowPower;
+            this.EventType = data.EventType;
+            this.Comment = data.Comment;
+            _stage = data.Stage;
+        }
+
+ 
         /// <summary>
         /// 跟单项键值
         /// 开仓跟单项目键值为全局设定的编号
@@ -194,29 +160,71 @@ namespace TradingLib.Core
         /// 
         /// 从数据库恢复时直接设定FollowKey
         /// </summary>
-        public string FollowKey
-        {
-            get
-            {
-                return _followkey;
-
-                //if (this.EventType == QSEnumPositionEventType.EntryPosition)
-                //{
-                //    return _followkey;
-                //}
-                //else
-                //{
-                //    return string.Format("{0}-{1}", this.EntryFollowItem.FollowKey, this.PositionEvent.PositionExit.CloseTradeID);
-                //}
-            }
-        }
+        public string FollowKey{get;private set;}
         
+
 
         /// <summary>
         /// 跟单策略
         /// </summary>
         public FollowStrategy Strategy { get; set; }
 
+        /// <summary>
+        /// 跟单项触发类别
+        /// </summary>
+        public QSEnumFollowItemTriggerType TriggerType { get; set; }
+
+
+        QSEnumFollowStage _stage = QSEnumFollowStage.ItemCreated;
+        /// <summary>
+        /// 跟单处理阶段
+        /// </summary>
+        public QSEnumFollowStage Stage
+        {
+            get { return _stage; }
+            set
+            {
+                QSEnumFollowStage oldstage = _stage;
+                _stage = value;
+                //if (InRestore) return;//如果处于数据恢复状态 则直接返回 状态改变不向外发送通知或数据库记录
+                if (!FollowTracker.Inited) return;
+                if (_stage != QSEnumFollowStage.ItemCreated)
+                {
+                    FollowTracker.NotifyTradeFollowItem(this);
+                }
+                if (oldstage != _stage)
+                {
+                    FollowTracker.FollowItemLogger.NewFollowItemUpdate(this.ToFollowItemData());
+                }
+            }
+        }
+
+        /// <summary>
+        /// 交易所
+        /// </summary>
+        public string Exchange { get; private set; }
+
+        /// <summary>
+        /// 跟单合约
+        /// </summary>
+        public string Symbol { get; private set; }
+
+        /// <summary>
+        /// 买入/卖出
+        /// </summary>
+        public bool FollowSide { get; private set; }
+
+        /// <summary>
+        /// 跟单数
+        /// </summary>
+        public int FollowSize { get; private set; }
+
+        /// <summary>
+        /// 跟单乘数
+        /// </summary>
+        public int FollowPower { get; private set; }
+
+        
         /// <summary>
         /// 信号源
         /// </summary>
@@ -232,34 +240,11 @@ namespace TradingLib.Core
         /// </summary>
         public IPositionEvent PositionEvent { get; set; }
 
-
         /// <summary>
-        /// 持仓事件类型
+        /// 跟单项持持仓操作类别
         /// </summary>
-        public QSEnumPositionEventType EventType { get { return this.PositionEvent.EventType; } }
+        public QSEnumPositionEventType EventType { get; private set; }
 
-
-        QSEnumFollowStage _stage = QSEnumFollowStage.ItemCreated;
-        /// <summary>
-        /// 跟单处理阶段
-        /// </summary>
-        public QSEnumFollowStage Stage { get { return _stage; } 
-            set 
-            {
-                QSEnumFollowStage oldstage = _stage;
-                _stage = value;
-                if (InRestore) return;//如果处于数据恢复状态 则直接返回 状态改变不向外发送通知或数据库记录
-
-                if (_stage != QSEnumFollowStage.ItemCreated)
-                {
-                    FollowTracker.NotifyTradeFollowItem(this);
-                }
-                if (oldstage != _stage)
-                {
-                    FollowTracker.FollowItemLogger.NewFollowItemUpdate(this.ToFollowItemData());
-                }
-            } 
-        }
 
         /// <summary>
         /// 平仓跟单项对应的开仓项
@@ -289,5 +274,30 @@ namespace TradingLib.Core
         /// </summary>
         List<FollowAction> _actions = new List<FollowAction>();
 
+        /// <summary>
+        /// 描述
+        /// </summary>
+        public string Comment { get; set; }
+        /// <summary>
+        /// 跟单项目描述
+        /// </summary>
+        /// <returns></returns>
+        public override string ToString()
+        {
+            switch (this.TriggerType)
+            {
+                case QSEnumFollowItemTriggerType.SigTradeTrigger:
+                    {
+                        return string.Format("FollowItem Key:{0} @{1} T:{2} Sig:{3} PE:{4} Status:{5}",this.FollowKey, this.Strategy.ToString(), this.EventType, this.Signal.GetInfo(), this.PositionEvent.GetInfo(), this.Stage);
+                    }
+                case QSEnumFollowItemTriggerType.ManualExitTrigger:
+                    {
+                        return string.Format("FollowItem Key:{0} @{1} T:{2} Manual Status:", this.FollowKey, this.Strategy.ToString(), this.EventType, this.Stage);
+                    }
+                default:
+                    return "Not Supported";
+
+            }
+        }
     }
 }

@@ -107,8 +107,8 @@ namespace TradingLib.Core
                 }
             }
             catch (Exception ex)
-            { 
-                
+            {
+                logger.Error("Process FollowItem Error:" + ex.ToString());
             }
         }
 

@@ -20,7 +20,7 @@ namespace TradingLib.ORM
         {
             using (DBMySql db = new DBMySql())
             {
-                string query = String.Format("INSERT INTO follow_items (`followkey`,`strategyid`,`signalid`,`signaltradeid`,`opentradeid`,`closetradeid`,`stage`,`followside`,`followpower`,`settleday`) values('{0}','{1}','{2}','{3}','{4}','{5}','{6}','{7}','{8}','{9}')", item.FollowKey, item.StrategyID, item.SignalID, item.SignalTradeID, item.OpenTradeID, item.CloseTradeID, item.Stage, item.FollowSide ? 1 : 0, item.FollowPower,item.Settleday);
+                string query = String.Format("INSERT INTO follow_items (`followkey`,`strategyid`,`signalid`,`signaltradeid`,`opentradeid`,`closetradeid`,`stage`,`followside`,`followpower`,`settleday`,`triggertype`,`exchange`,`symbol`,`followsize`,`eventtype`,`comment`) values('{0}','{1}','{2}','{3}','{4}','{5}','{6}','{7}','{8}','{9}','{10}','{11}','{12}','{13}','{14}','{15}')", item.FollowKey, item.StrategyID, item.SignalID, item.SignalTradeID, item.OpenTradeID, item.CloseTradeID, item.Stage, item.FollowSide ? 1 : 0, item.FollowPower, item.Settleday, item.TriggerType, item.Exchange, item.Symbol, item.FollowSize, item.EventType,item.Comment);
                 db.Connection.Execute(query);
             }
         }
@@ -33,10 +33,11 @@ namespace TradingLib.ORM
         {
             using (DBMySql db = new DBMySql())
             {
-                string query = string.Format("UPDATE follow_items SET stage='{0}'  WHERE followkey='{1}'", item.Stage, item.FollowKey);
+                string query = string.Format("UPDATE follow_items SET stage='{0}',comment='{2}'  WHERE followkey='{1}'", item.Stage, item.FollowKey,item.Comment);
                 db.Connection.Execute(query);
             }
         }
+
         /// <summary>
         /// 插入跟单项委托关系
         /// </summary>

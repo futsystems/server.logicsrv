@@ -52,6 +52,15 @@ namespace TradingLib.Common
         /// </summary>
         public decimal TotalSlip { get; set; }
 
+        /// <summary>
+        /// 累计开仓滑点
+        /// </summary>
+        public decimal TotalEntrySlip { get; set; }
+
+        /// <summary>
+        /// 累计平仓滑点
+        /// </summary>
+        public decimal TotalExitSlip { get; set; }
 
         /// <summary>
         /// 信号源个数

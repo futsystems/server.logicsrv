@@ -78,6 +78,12 @@ namespace TradingLib.Core
         ConcurrentDictionary<string, TradeFollowItem> entryMap = new ConcurrentDictionary<string, TradeFollowItem>();
 
         /// <summary>
+        /// 成交触发开仓 OpenTradeID
+        /// 
+        /// </summary>
+        ConcurrentDictionary<string, TradeFollowItem> localFollowItemMap = new ConcurrentDictionary<string, TradeFollowItem>();
+
+        /// <summary>
         /// 平仓跟单项map
         /// 记录了OpenTradeID-CloseTradeID 联合键 与 TradeFollowItem映射
         /// </summary>
@@ -104,11 +110,13 @@ namespace TradingLib.Core
         {
             if (item.EventType == QSEnumPositionEventType.EntryPosition)
             {
-                if (entryMap.Keys.Contains(item.Key))
+                if (entryMap.Keys.Contains(item.FollowKey))
                 {
                     logger.Warn("TradeFollowItem already exist");
                 }
-                entryMap.TryAdd(item.Key, item);
+                entryMap.TryAdd(item.FollowKey, item);
+
+                localFollowItemMap.TryAdd(item.SignalTrade.TradeID,item);
                 //对外触发事件
                 NewTradeFollowItem(item);
                 return;
@@ -116,11 +124,11 @@ namespace TradingLib.Core
 
             if (item.EventType == QSEnumPositionEventType.ExitPosition)
             {
-                if (exitMap.Keys.Contains(item.Key))
+                if (exitMap.Keys.Contains(item.FollowKey))
                 {
                     logger.Warn("TradeFollowItem already exit");
                 }
-                exitMap.TryAdd(item.Key, item);
+                exitMap.TryAdd(item.FollowKey, item);
                 //对外触发事件
                 NewTradeFollowItem(item);
                 //if (!entry2exitMap.Keys.Contains(item.PositionEvent.PositionExit.OpenTradeID))
@@ -132,37 +140,63 @@ namespace TradingLib.Core
            
         }
 
-        /// <summary>
-        /// 索引获得跟单项目
-        /// </summary>
-        /// <param name="type"></param>
-        /// <param name="key"></param>
-        /// <returns></returns>
-        public TradeFollowItem this[QSEnumPositionEventType type, string key]
+
+        public TradeFollowItem GetEntryFollowItemVialFollowKey(string followkey)
         {
-            get
+            if (string.IsNullOrEmpty(followkey)) return null;
+            TradeFollowItem target = null;
+            if (entryMap.TryGetValue(followkey, out target))
             {
-                if (string.IsNullOrEmpty(key)) return null;
-                TradeFollowItem target = null;
-                if (type == QSEnumPositionEventType.EntryPosition)
-                {
-                    if (entryMap.TryGetValue(key, out target))
-                    {
-                        return target;
-                    }
-                    return null;
-                }
-                if (type == QSEnumPositionEventType.ExitPosition)
-                {
-                    if (exitMap.TryGetValue(key, out target))
-                    {
-                        return target;
-                    }
-                    return null;
-                }
-                return null;
+                return target;
             }
+            return null;
         }
+        /// <summary>
+        /// 获得开仓跟单项
+        /// </summary>
+        /// <param name="localKey"></param>
+        /// <returns></returns>
+        public TradeFollowItem GetEntryFollowItem(string localKey)
+        {
+            if (string.IsNullOrEmpty(localKey)) return null;
+            TradeFollowItem target = null;
+            if (localFollowItemMap.TryGetValue(localKey, out target))
+            {
+                return target;
+            }
+            return null;
+        }
+        ///// <summary>
+        ///// 索引获得跟单项目
+        ///// </summary>
+        ///// <param name="type"></param>
+        ///// <param name="key"></param>
+        ///// <returns></returns>
+        //public TradeFollowItem this[QSEnumPositionEventType type, string key]
+        //{
+        //    get
+        //    {
+        //        if (string.IsNullOrEmpty(key)) return null;
+        //        TradeFollowItem target = null;
+        //        if (type == QSEnumPositionEventType.EntryPosition)
+        //        {
+        //            if (entryMap.TryGetValue(key, out target))
+        //            {
+        //                return target;
+        //            }
+        //            return null;
+        //        }
+        //        if (type == QSEnumPositionEventType.ExitPosition)
+        //        {
+        //            if (exitMap.TryGetValue(key, out target))
+        //            {
+        //                return target;
+        //            }
+        //            return null;
+        //        }
+        //        return null;
+        //    }
+        //}
 
     }
 }

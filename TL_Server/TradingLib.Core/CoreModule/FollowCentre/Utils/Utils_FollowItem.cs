@@ -38,10 +38,13 @@ namespace TradingLib.Core
                 detail.TotalSlip = item.TotalSlip + item.ExitFollowItems.Sum(f => f.TotalSlip);
                 detail.TotalRealizedPL = item.ExitFollowItems.Sum(f => f.FollowProfit);
 
+                //绑定明细 开仓成交数据
                 detail.EntrySignalTrade = item.SignalTrade.ToFollowItemSignalTrade();
                 detail.EntrySignalTrade.Orders = item.GenFollowItemOrderInfos();
 
-                detail.ExitSignalTrades = item.ExitFollowItems.Select(exit => {FollowItemSignalTradeInfo trade = exit.SignalTrade.ToFollowItemSignalTrade();trade.Orders = exit.GenFollowItemOrderInfos();return trade;}).ToArray();
+                //绑定 成交触发的平仓跟单项
+                detail.ExitSignalTrades = item.ExitFollowItems.Where(exit=>exit.TriggerType == QSEnumFollowItemTriggerType.SigTradeTrigger).Select(exit => {FollowItemSignalTradeInfo trade = exit.SignalTrade.ToFollowItemSignalTrade();trade.Orders = exit.GenFollowItemOrderInfos();return trade;}).ToArray();
+                detail.ExitManualTrigger = item.ExitFollowItems.Where(exit => exit.TriggerType == QSEnumFollowItemTriggerType.ManualExitTrigger).Select(exit => new FollowItemManualTriggerInfo { Side = exit.FollowSide, Size = exit.FollowSize, Symbol = exit.Symbol, Price = 0, Orders = exit.GenFollowItemOrderInfos() }).ToArray();
                 return detail;
             }
             else
@@ -49,6 +52,13 @@ namespace TradingLib.Core
                 return item.EntryFollowItem.GenFollowItemDetail();
             }
         }
+
+        /// <summary>
+        /// 生成开仓跟单项信息
+        /// 用于管理端显示
+        /// </summary>
+        /// <param name="item"></param>
+        /// <returns></returns>
         public static EntryFollowItemStruct GenEntryFollowItemStruct(this TradeFollowItem item)
         {
             if (item.EventType == QSEnumPositionEventType.ExitPosition)
@@ -58,31 +68,46 @@ namespace TradingLib.Core
 
             EntryFollowItemStruct entryitem = new EntryFollowItemStruct();
             entryitem.StrategyID = item.Strategy.ID;
+            entryitem.TriggerType = item.TriggerType;
+            entryitem.Symbol = item.Symbol;
 
-            entryitem.SignalID = item.Signal.ID;
-            entryitem.SignalToken = item.Signal.Token;
             entryitem.FollowKey = item.FollowKey;
             entryitem.Side = item.FollowSide;
-
-            entryitem.OpenTradeID = item.PositionEvent.PositionEntry.TradeID;
-            entryitem.SigPrice = item.SignalTrade.xPrice;
-            entryitem.SigSize = item.SignalTrade.UnsignedSize;
+            entryitem.PriceFormat = item.SignalTrade.oSymbol.SecurityFamily.GetPriceFormat();
 
             entryitem.FollowSentSize = item.FollowSentSize;
             entryitem.FollowFillSize = item.FollowFillSize;
             entryitem.FollowAvgPrice = item.FollowPrice;
             entryitem.Stage = item.Stage;
-
             entryitem.FollowSlip = item.TotalSlip;
 
             //累计滑点
             entryitem.TotalSlip = item.TotalSlip + item.ExitFollowItems.Sum(f => f.TotalSlip);
             entryitem.TotalRealizedPL = item.ExitFollowItems.Sum(f => f.FollowProfit);
             entryitem.PositionHoldSize = item.PositionHoldSize;
-
+            entryitem.Comment = item.Comment;
+            switch (item.TriggerType)
+            {
+                case QSEnumFollowItemTriggerType.SigTradeTrigger:
+                    {
+                        entryitem.SignalID = item.Signal.ID;
+                        entryitem.SignalToken = item.Signal.Token;
+                        entryitem.OpenTradeID = item.PositionEvent.PositionEntry.TradeID;
+                        entryitem.SigPrice = item.SignalTrade.xPrice;
+                        entryitem.SigSize = item.SignalTrade.UnsignedSize;
+                        break;
+                    }
+                default:
+                    break;
+            }
             return entryitem;
         }
 
+        /// <summary>
+        /// 生成平仓跟单项信息 用于管理端显示
+        /// </summary>
+        /// <param name="item"></param>
+        /// <returns></returns>
         public static ExitFollowItemStruct GenExitFollowItemStruct(this TradeFollowItem item)
         {
 
@@ -94,24 +119,46 @@ namespace TradingLib.Core
 
             ExitFollowItemStruct exit = new ExitFollowItemStruct();
             exit.StrategyID = item.Strategy.ID;
+            exit.TriggerType = item.TriggerType;
+            exit.Symbol = item.Symbol;
+
+            exit.PriceFormat = item.EntryFollowItem.SignalTrade.oSymbol.SecurityFamily.GetPriceFormat();
 
             exit.FollowKey = item.FollowKey;
             exit.Side = item.FollowSide;
             exit.EntryFollowKey = item.EntryFollowItem.FollowKey;
 
-            exit.CloseTradeID = item.PositionEvent.PositionExit.CloseTradeID;
-            exit.SigPrice = item.SignalTrade.xPrice;
-            exit.SigSize = item.SignalTrade.UnsignedSize;
+            
 
             exit.FollowSentSize = item.FollowSentSize;
             exit.FollowFillSize = item.FollowFillSize;
             exit.FollowAvgPrice = item.FollowPrice;
             exit.FollowSlip = item.TotalSlip;
-            exit.FollowProfit = item.FollowProfit;
+            exit.FollowProfit = item.FollowProfit;//跟单平仓盈亏
             exit.Stage = item.Stage;
+            exit.Comment = item.Comment;
+            switch (item.TriggerType)
+            {
+                case QSEnumFollowItemTriggerType.SigTradeTrigger:
+                    {
+                        exit.CloseTradeID = item.PositionEvent.PositionExit.CloseTradeID;
+                        exit.SigPrice = item.SignalTrade.xPrice;
+                        exit.SigSize = item.SignalTrade.UnsignedSize;
+                        break;
+                    }
+                default:
+                    break;
+            }
+            
 
             return exit;
+        }
 
+
+        public static void LinkExitFollowItem(this TradeFollowItem entry, TradeFollowItem exit)
+        {
+            entry.NewExitFollowItem(exit);
+            exit.NewEntryFollowItem(entry);
         }
     }
 }

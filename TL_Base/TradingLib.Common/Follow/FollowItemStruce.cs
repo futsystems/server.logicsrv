@@ -21,6 +21,15 @@ namespace TradingLib.Common
         public int StrategyID { get; set; }
 
         /// <summary>
+        /// 最小价格变动 用于格式化价格与滑点小数位数显示
+        /// </summary>
+        public string PriceFormat { get; set; }
+
+        /// <summary>
+        /// 合约
+        /// </summary>
+        public string Symbol { get; set; }
+        /// <summary>
         /// 跟单方向
         /// </summary>
         public bool Side { get; set; }
@@ -56,11 +65,25 @@ namespace TradingLib.Common
         /// </summary>
         public decimal FollowSlip { get; set; }
 
+        /// <summary>
+        /// 触发类别
+        /// </summary>
+        public QSEnumFollowItemTriggerType TriggerType { get; set; }
+
+        /// <summary>
+        /// 持仓事件类别
+        /// </summary>
+        //public QSEnumPositionEventType EventType { get; set; }
 
         /// <summary>
         /// 状态
         /// </summary>
         public QSEnumFollowStage Stage { get; set; }
+
+        /// <summary>
+        /// 备注
+        /// </summary>
+        public string Comment { get; set; }
     }
 
 

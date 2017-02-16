@@ -23,9 +23,55 @@ namespace TradingLib.Common
         public string FollowKey { get; set; }
 
         /// <summary>
+        /// 结算日
+        /// </summary>
+        public int Settleday { get; set; }
+
+        /// <summary>
         /// 该跟单项所属策略ID
         /// </summary>
         public int StrategyID { get; set; }
+
+        /// <summary>
+        /// 触发类别
+        /// </summary>
+        public QSEnumFollowItemTriggerType TriggerType { get; set; }
+
+        /// <summary>
+        /// 跟单项状态
+        /// </summary>
+        public QSEnumFollowStage Stage { get; set; }
+
+
+        /// <summary>
+        /// 对应交易所
+        /// </summary>
+        public string Exchange { get; set; }
+
+        /// <summary>
+        /// 合约
+        /// </summary>
+        public string Symbol { get; set; }
+
+        /// <summary>
+        /// 跟单方向
+        /// </summary>
+        public bool FollowSide { get; set; }
+
+        /// <summary>
+        /// 跟单数量
+        /// </summary>
+        public int FollowSize { get; set; }
+
+        /// <summary>
+        /// 跟单乘数
+        /// </summary>
+        public int FollowPower { get; set; }
+
+        /// <summary>
+        /// 持仓事件类别 开仓/平仓
+        /// </summary>
+        public QSEnumPositionEventType EventType { get; set; }
 
         /// <summary>
         /// 该跟单项目所属信号ID
@@ -47,25 +93,8 @@ namespace TradingLib.Common
         /// </summary>
         public string CloseTradeID { get; set; }
 
-        /// <summary>
-        /// 跟单项状态
-        /// </summary>
-        public QSEnumFollowStage Stage { get; set; }
 
+        public string Comment { get; set; }
 
-        /// <summary>
-        /// 跟单方向
-        /// </summary>
-        public bool FollowSide { get; set; }
-
-        /// <summary>
-        /// 跟单乘数
-        /// </summary>
-        public int FollowPower { get; set; }
-
-        /// <summary>
-        /// 结算日
-        /// </summary>
-        public int Settleday { get; set; }
     }
 }

@@ -18,7 +18,8 @@ namespace TradingLib.Core
         /// <param name="o"></param>
         public void GotOrder(Order o)
         {
-            if (!orderMap.Keys.Contains(o.id))
+            Order target = null;
+            if (!orderMap.TryGetValue(o.id,out target))
             {
                 orderMap.TryAdd(o.id, o);
                 _followsentsize += Math.Abs(o.TotalSize);
@@ -26,6 +27,10 @@ namespace TradingLib.Core
             else
             {
                 //是否需要跟新委托对象
+                target.Status = o.Status;
+                target.FilledSize = o.FilledSize;
+                target.Size = o.Size;
+                target.Comment = o.Comment;
 
                 //根据委托状态更新跟单项状态
                 switch (o.Status)
@@ -42,6 +47,10 @@ namespace TradingLib.Core
                         break;
                     case QSEnumOrderStatus.Canceled:
                         this.Stage = QSEnumFollowStage.FollowOrderCanceled;
+                        break;
+                    //记录委托拒绝 备注
+                    case QSEnumOrderStatus.Reject:
+                        this.Comment = o.Comment;
                         break;
                 }
             }
@@ -65,9 +74,18 @@ namespace TradingLib.Core
             _followfillsize += f.UnsignedSize;
 
             //计算累计滑动点 成交方向 * (跟单价格 - 信号价格)*手数
-            _totalslip += (f.Side ? -1 : 1) * (f.xPrice - this.SignalTrade.xPrice) * f.UnsignedSize;
+            switch (this.TriggerType)
+            {
+                case QSEnumFollowItemTriggerType.SigTradeTrigger:
+                    {
+                        _totalslip += (f.Side ? -1 : 1) * (f.xPrice - this.SignalTrade.xPrice) * f.UnsignedSize;
+                        break;
+                    }
+                default:
+                    break;
+            }
            
-            if(InRestore) return;
+            if(!FollowTracker.Inited) return;
             
             FollowTracker.NotifyTradeFollowItem(this);
             //如果是平仓成交则需要同步更新开仓跟单项状态

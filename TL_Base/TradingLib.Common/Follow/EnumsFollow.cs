@@ -109,7 +109,37 @@ namespace TradingLib.API
     }
 
     /// <summary>
-    /// 
+    /// 跟单项类别
+    /// </summary>
+    public enum QSEnumFollowItemTriggerType
+    { 
+        /// <summary>
+        /// 信号源成交触发
+        /// </summary>
+        [Description("成交")]
+        SigTradeTrigger,
+
+        /// <summary>
+        /// 信号源委托触发
+        /// </summary>
+        [Description("委托")]
+        SigOrderTrigger,
+
+        /// <summary>
+        /// 手工平仓触发
+        /// </summary>
+        [Description("人工")]
+        ManualExitTrigger,
+
+        /// <summary>
+        /// 策略平仓触发
+        /// </summary>
+        [Description("策略")]
+        StrategyExitTrigger,
+    }
+
+    /// <summary>
+    /// 跟单项状态
     /// </summary>
     public enum QSEnumFollowStage
     {

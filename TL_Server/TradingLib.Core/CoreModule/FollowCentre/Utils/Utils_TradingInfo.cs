@@ -15,8 +15,8 @@ namespace TradingLib.Core
         public static FollowItemSignalTradeInfo ToFollowItemSignalTrade(this Trade f)
         {
             FollowItemSignalTradeInfo trade = new FollowItemSignalTradeInfo();
-            trade.LocalTradeID = f.OrderSeq.ToString();
-            trade.RemoteTradeID = f.OrderSysID;
+            trade.LocalTradeID = f.TradeID;
+            trade.RemoteTradeID = f.BrokerTradeID;
             trade.Price = f.xPrice;
             trade.Side = f.Side;
             trade.Size = f.xSize;
@@ -27,8 +27,8 @@ namespace TradingLib.Core
         public static FollowItemTradeInfo ToFollowItemTrade(this Trade f)
         {
             FollowItemTradeInfo trade = new FollowItemTradeInfo();
-            trade.LocalTradeID = f.OrderSeq.ToString();
-            trade.RemoteTradeID = f.OrderSysID;
+            trade.LocalTradeID = f.TradeID;
+            trade.RemoteTradeID = f.BrokerTradeID;
             trade.Price = f.xPrice;
             trade.Side = f.Side;
             trade.Size = f.xSize;

@@ -153,7 +153,13 @@ namespace TradingLib.Core
                 }
                 if (this.EventType == QSEnumPositionEventType.ExitPosition)
                 {
-                    return this.PositionEvent.PositionExit.ClosePointByDate;
+                    switch (this.TriggerType)
+                    {
+                        case QSEnumFollowItemTriggerType.SigTradeTrigger:
+                            return this.PositionEvent.PositionExit.ClosePointByDate;
+                        default:
+                            return 0;
+                    }
                 }
                 return 0;
             }
@@ -180,7 +186,7 @@ namespace TradingLib.Core
                     }
 
                     //(平仓跟单均价 - 开仓跟单均价)*跟单术量
-                    return (_side ? -1 : 1) * (this.FollowPrice - this.EntryFollowItem.FollowPrice) * this.FollowFillSize;
+                    return (this.FollowSide ? -1 : 1) * (this.FollowPrice - this.EntryFollowItem.FollowPrice) * this.FollowFillSize;
                 }
                 return 0;
             }

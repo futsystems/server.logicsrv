@@ -114,7 +114,6 @@
     <Compile Include="CoreModule\FollowCentre\FollowItem\FollowItemData.cs" />
     <Compile Include="CoreModule\FollowCentre\FollowItem\FollowItemOrder.cs" />
     <Compile Include="CoreModule\FollowCentre\FollowItem\FollowItemTrade.cs" />
-    <Compile Include="CoreModule\FollowCentre\FollowItem\FollowItem_.cs" />
     <Compile Include="CoreModule\FollowCentre\FollowItem\PositionEvent.cs" />
     <Compile Include="CoreModule\FollowCentre\FollowItem\FollowItem_GotXXX.cs" />
     <Compile Include="CoreModule\FollowCentre\FollowItem\FollowItem_NewXXX.cs" />

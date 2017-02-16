@@ -41,12 +41,12 @@ namespace TradingLib.Core
         /// <summary>
         /// 开仓委托映射
         /// </summary>
-        ConcurrentDictionary<string, ConcurrentDictionary<long, Order>> entryOrderMap = new ConcurrentDictionary<string, ConcurrentDictionary<long, Order>>();
+        //ConcurrentDictionary<string, ConcurrentDictionary<long, Order>> entryOrderMap = new ConcurrentDictionary<string, ConcurrentDictionary<long, Order>>();
 
         /// <summary>
         /// 平仓委托映射
         /// </summary>
-        ConcurrentDictionary<string, ConcurrentDictionary<long, Order>> exitOrderMap = new ConcurrentDictionary<string, ConcurrentDictionary<long, Order>>();
+        //ConcurrentDictionary<string, ConcurrentDictionary<long, Order>> exitOrderMap = new ConcurrentDictionary<string, ConcurrentDictionary<long, Order>>();
 
 
 
@@ -55,41 +55,41 @@ namespace TradingLib.Core
         /// </summary>
         /// <param name="item"></param>
         /// <param name="o"></param>
-        public void GotOrder(TradeFollowItem item, Order o)
-        {
-            if (item.EventType == QSEnumPositionEventType.EntryPosition)
-            {
-                if (!entryOrderMap.Keys.Contains(item.Key))
-                {
-                    entryOrderMap.TryAdd(item.Key,new ConcurrentDictionary<long,Order>());
-                }
-                ConcurrentDictionary<long, Order> omap = entryOrderMap[item.Key];
-                if (!omap.Keys.Contains(o.id))
-                {
-                    omap.TryAdd(o.id, o);
-                }
-                else
-                {
-                    omap[o.id] = o;
-                }
-            }
-            if (item.EventType == QSEnumPositionEventType.ExitPosition)
-            {
-                if (!exitOrderMap.Keys.Contains(item.Key))
-                {
-                    exitOrderMap.TryAdd(item.Key, new ConcurrentDictionary<long, Order>());
-                }
-                ConcurrentDictionary<long, Order> omap = exitOrderMap[item.Key];
-                if (!omap.Keys.Contains(o.id))
-                {
-                    omap.TryAdd(o.id, o);
-                }
-                else
-                {
-                    omap[o.id] = o;
-                }
-            }
-        }
+        //public void GotOrder0(TradeFollowItem item, Order o)
+        //{
+        //    if (item.EventType == QSEnumPositionEventType.EntryPosition)
+        //    {
+        //        if (!entryOrderMap.Keys.Contains(item.Key))
+        //        {
+        //            entryOrderMap.TryAdd(item.Key,new ConcurrentDictionary<long,Order>());
+        //        }
+        //        ConcurrentDictionary<long, Order> omap = entryOrderMap[item.Key];
+        //        if (!omap.Keys.Contains(o.id))
+        //        {
+        //            omap.TryAdd(o.id, o);
+        //        }
+        //        else
+        //        {
+        //            omap[o.id] = o;
+        //        }
+        //    }
+        //    if (item.EventType == QSEnumPositionEventType.ExitPosition)
+        //    {
+        //        if (!exitOrderMap.Keys.Contains(item.Key))
+        //        {
+        //            exitOrderMap.TryAdd(item.Key, new ConcurrentDictionary<long, Order>());
+        //        }
+        //        ConcurrentDictionary<long, Order> omap = exitOrderMap[item.Key];
+        //        if (!omap.Keys.Contains(o.id))
+        //        {
+        //            omap.TryAdd(o.id, o);
+        //        }
+        //        else
+        //        {
+        //            omap[o.id] = o;
+        //        }
+        //    }
+        //}
     
 
         /// <summary>
@@ -100,21 +100,21 @@ namespace TradingLib.Core
         {
             if (item.EventType == QSEnumPositionEventType.EntryPosition)
             {
-                if (entryMap.Keys.Contains(item.Key))
+                if (entryMap.Keys.Contains(item.FollowKey))
                 {
                     //logger.Warn("TradeFollowItem already exist");
                 }
-                entryMap.TryAdd(item.Key, item);
+                entryMap.TryAdd(item.FollowKey, item);
                 return;
             }
 
             if (item.EventType == QSEnumPositionEventType.ExitPosition)
             {
-                if (exitMap.Keys.Contains(item.Key))
+                if (exitMap.Keys.Contains(item.FollowKey))
                 {
                     //logger.Warn("TradeFollowItem already exit");
                 }
-                exitMap.TryAdd(item.Key, item);
+                exitMap.TryAdd(item.FollowKey, item);
 
                 if (!entry2exitMap.Keys.Contains(item.PositionEvent.PositionExit.OpenTradeID))
                 {

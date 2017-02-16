@@ -53,10 +53,11 @@ namespace TradingLib.Core
                 throw new ArgumentException("NewEntryFollowItem must use EntryFollowItem");
             }
             this.EntryFollowItem = item;
+
             //当平仓跟单项目绑定开仓跟单项时 生成对应的followkey
-            if (string.IsNullOrEmpty(_followkey))
+            if (string.IsNullOrEmpty(this.FollowKey))
             {
-                _followkey = string.Format("{0}-{1}", this.EntryFollowItem.FollowKey, this.PositionEvent.PositionExit.CloseTradeID);
+                this.FollowKey = string.Format("{0}-{1}", this.EntryFollowItem.FollowKey,FollowTracker.NextFollowKey);// this.PositionEvent.PositionExit.CloseTradeID);
             }
         }
     }

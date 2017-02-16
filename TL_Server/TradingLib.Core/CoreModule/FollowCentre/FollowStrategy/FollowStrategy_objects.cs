@@ -103,7 +103,7 @@ namespace TradingLib.Core
         {
             get
             {
-                return itemlist.Where(item => item.EventType == QSEnumPositionEventType.EntryPosition).Count();
+                return itemlist.Where(item => item.EventType == QSEnumPositionEventType.EntryPosition && item.FollowFillSize>0).Count();
             }
         }
 
@@ -114,7 +114,29 @@ namespace TradingLib.Core
         {
             get
             {
+                return itemlist.Sum(item => item.TotalSlip);
+            }
+        }
+
+        /// <summary>
+        /// 累计开仓滑点
+        /// </summary>
+        public decimal TotalEntrySlip
+        {
+            get
+            {
                 return itemlist.Where(item => item.EventType == QSEnumPositionEventType.EntryPosition).Sum(item => item.TotalSlip);
+            }
+        }
+
+        /// <summary>
+        /// 累计平仓滑点
+        /// </summary>
+        public decimal TotalExitSlip
+        {
+            get
+            {
+                return itemlist.Where(item => item.EventType == QSEnumPositionEventType.ExitPosition).Sum(item => item.TotalSlip);
             }
         }
 

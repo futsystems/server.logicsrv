@@ -33,7 +33,7 @@ namespace TradingLib.Core
             defaultinstance.strategyTracker = new FollowStrategyCfgTracker();
             defaultinstance._followItemLogger = new AsyncFollowLoger();
             defaultinstance._followItemLogger.Start();
-
+            Inited = false;
         }
 
         SignalTracker signalTracker = null;
@@ -100,7 +100,11 @@ namespace TradingLib.Core
                 return _followIDTracker.AssignId.ToString();
             }
         }
-    
+
+        /// <summary>
+        /// 是否初始化完毕
+        /// </summary>
+        public static bool Inited { get; set; }
 
     }
 }

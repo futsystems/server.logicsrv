@@ -31,6 +31,8 @@ namespace TradingLib.Core
             status.TotalEntrySuccessCount = strategy.TotalEntrySuccessCount;
 
             status.TotalSlip = strategy.TotalSlip;
+            status.TotalEntrySlip = strategy.TotalEntrySlip;
+            status.TotalExitSlip = strategy.TotalExitSlip;
             status.SignalCount = strategy.SignalCount;
 
             return status;

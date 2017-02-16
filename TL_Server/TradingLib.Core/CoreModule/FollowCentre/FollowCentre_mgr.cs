@@ -344,13 +344,19 @@ namespace TradingLib.Core
                     item = item.EntryFollowItem;
                 }
 
-                if (item.PositionHoldSize == 0)
+                if (!item.NeedExitFollow)
                 {
-                    throw new FutsRspError("跟单项目持仓已被平");
+                    throw new FutsRspError("跟单项目无需平仓");
                 }
 
                 //执行手工平仓操作
+                TradeFollowItem exit = TradeFollowItem.CreateFlatFollowItem(item);
+                //将平仓跟单项目绑定到开仓跟单项目
+                item.NewExitFollowItem(exit);
+                //将开仓跟单项目绑定到平仓跟单项目
+                exit.NewEntryFollowItem(item);
 
+                item.Strategy.CacheFollowItem(exit);
 
             }
             else

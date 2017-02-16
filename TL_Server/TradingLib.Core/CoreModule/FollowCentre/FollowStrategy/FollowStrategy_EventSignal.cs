@@ -26,6 +26,10 @@ namespace TradingLib.Core
         {
             try
             {
+                //策略关闭状态不接受任何信号
+                if (this.WorkState == QSEnumFollowWorkState.Shutdown)
+                    return;
+
                 logger.Info(string.Format("Signal:{0} PositionEvent:{1}", signal.GetInfo(), pe.GetInfo()));
                 //1.过滤器过滤
 
@@ -40,11 +44,15 @@ namespace TradingLib.Core
                 //如果是开仓事件 则直接生成
                 if (pe.EventType == QSEnumPositionEventType.EntryPosition)
                 {
+                    //策略暂停状态 不接受任何开仓信号
+                    if (this.WorkState == QSEnumFollowWorkState.Suspend)
+                        return;
                     followitem = new TradeFollowItem(this, signal,trade, pe);
                 }
                 else//平仓事件需要查找对应的开仓跟单项目
                 {
-                    TradeFollowItem entryitem = tk[QSEnumPositionEventType.EntryPosition, pe.PositionExit.OpenTradeID];
+                    //平仓事件需要通过维护器获得对应的开仓跟单项
+                    TradeFollowItem entryitem = tk.GetEntryFollowItem(pe.PositionExit.OpenTradeID);// tk[QSEnumPositionEventType.EntryPosition, pe.PositionExit.OpenTradeID];
                     if (entryitem == null)
                     {
                         logger.Info("ExitPoitionEvent has no EntryFollowItem,ignored");
@@ -66,20 +74,22 @@ namespace TradingLib.Core
                 //3.将该新建跟单项写入待处理缓存
                 if (followitem != null)
                 {
-                    //信号跟单项目维护器记录该跟单项目 跟单项触发事件统一由TradeFollowItemTracker维护
-                    tk.GotTradeFollowItem(followitem);
-                    //放入缓存
-                    followbuffer.Write(followitem);
-                    //将开仓跟单项目加入列表
-                    itemlist.Add(followitem);
+                    ////信号跟单项目维护器记录该跟单项目 跟单项触发事件统一由TradeFollowItemTracker维护
+                    //tk.GotTradeFollowItem(followitem);
+                    ////放入缓存
+                    //followbuffer.Write(followitem);
+                    ////将开仓跟单项目加入列表
+                    //itemlist.Add(followitem);
 
-                    //数据库记录新生成的跟单项目
-                    FollowItemData data = followitem.ToFollowItemData();
-                    data.Settleday = TLCtxHelper.ModuleSettleCentre.Tradingday;
-                    FollowTracker.FollowItemLogger.NewFollowItem(data);
+                    ////数据库记录新生成的跟单项目
+                    //FollowItemData data = followitem.ToFollowItemData();
+                    //data.Settleday = TLCtxHelper.ModuleSettleCentre.Tradingday;
+                    //FollowTracker.FollowItemLogger.NewFollowItem(data);
 
-                    //对外通知跟单项
-                    FollowTracker.NotifyTradeFollowItem(followitem);
+                    ////对外通知跟单项
+                    //FollowTracker.NotifyTradeFollowItem(followitem);
+
+                    CacheFollowItem(followitem);
                 }
             }
             catch (Exception ex)
@@ -88,6 +98,37 @@ namespace TradingLib.Core
             }
         }
 
+        public void CacheFollowItem(TradeFollowItem item)
+        {
+            int sourceSignalId = 0;
+
+            //开仓跟单项 直接取信号对象ID 平仓跟单项 通过对应的开仓跟单项获得信号对象ID
+            if (item.EventType == QSEnumPositionEventType.EntryPosition)
+            {
+                sourceSignalId = item.Signal.ID;
+            }
+            else
+            {
+                sourceSignalId = item.EntryFollowItem.Signal.ID;
+            }
+
+            FollowItemTracker tk = followitemtracker[sourceSignalId];
+            //信号跟单项目维护器记录该跟单项目 跟单项触发事件统一由TradeFollowItemTracker维护
+            tk.GotTradeFollowItem(item);
+            //放入缓存
+            followbuffer.Write(item);
+            //将开仓跟单项目加入列表
+            itemlist.Add(item);
+
+            //数据库记录新生成的跟单项目
+            FollowItemData data = item.ToFollowItemData();
+            data.Settleday = TLCtxHelper.ModuleSettleCentre.Tradingday;
+            FollowTracker.FollowItemLogger.NewFollowItem(data);
+
+            //对外通知跟单项
+            FollowTracker.NotifyTradeFollowItem(item);
+
+        }
 
         void OnSignalOrderEvent(Order order)
         {

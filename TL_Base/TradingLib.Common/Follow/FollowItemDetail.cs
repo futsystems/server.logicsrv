@@ -99,6 +99,34 @@ namespace TradingLib.Common
         public decimal Price { get; set; }
     }
 
+
+    public class FollowItemManualTriggerInfo
+    {
+        /// <summary>
+        /// 方向
+        /// </summary>
+        public bool Side { get; set; }
+
+        /// <summary>
+        /// 合约
+        /// </summary>
+        public string Symbol { get; set; }
+
+        /// <summary>
+        /// 成交数量
+        /// </summary>
+        public int Size { get; set; }
+
+        /// <summary>
+        /// 价格
+        /// </summary>
+        public decimal Price { get; set; }
+
+        /// <summary>
+        /// 该手工触发下的对应的委托以及委托下面对应的成交
+        /// </summary>
+        public FollowItemOrderInfo[] Orders { get; set; }
+    }
     /// <summary>
     /// 跟单项信号成交
     /// </summary>
@@ -144,12 +172,16 @@ namespace TradingLib.Common
         /// </summary>
         public FollowItemSignalTradeInfo EntrySignalTrade { get; set; }
 
+
         /// <summary>
         /// 平仓信号成交
         /// </summary>
         public FollowItemSignalTradeInfo[] ExitSignalTrades { get; set; }
 
-        
+        /// <summary>
+        /// 手工触发平仓
+        /// </summary>
+        public FollowItemManualTriggerInfo[] ExitManualTrigger { get; set; }
 
     }
 }

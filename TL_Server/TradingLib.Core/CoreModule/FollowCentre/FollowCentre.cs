@@ -105,6 +105,7 @@ namespace TradingLib.Core
             { 
                 
             }
+            FollowTracker.Inited = true;
             _followstart = true;
 
         }
