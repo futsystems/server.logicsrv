@@ -148,26 +148,7 @@ namespace TradingLib.Core
             //开仓
             if (item.EventType == QSEnumPositionEventType.EntryPosition)
             {
-                //判定下单方向
-                //bool side = true;
-                //if (this.Config.FollowDirection == QSEnumFollowDirection.Positive)
-                //{
-                //    side = item.SignalTrade.Side;
-                //}
-                //else
-                //{
-                //    side = !item.SignalTrade.Side;
-                //}
-
-                ////判定下单数量
-                //int size = Math.Abs(item.SignalTrade.xSize) * this.Config.FollowPower;
-
-                ////合约
-                //Symbol symbol = BasicTracker.SymbolTracker[]
-
-
                 Order o = new OrderImpl(item.Symbol, item.FollowSide, item.FollowSize);
-
                 //开平标识
                 o.OffsetFlag = QSEnumOffsetFlag.OPEN;
 
@@ -183,11 +164,11 @@ namespace TradingLib.Core
                     case QSEnumFollowPriceType.OpponentPrice://对手价
                         price = item.FollowSide ? k.AskPrice : k.BidPrice;
                         break;
-                    case QSEnumFollowPriceType.HangingPrice:
-                        price = item.FollowSide ? (item.SignalTrade.xPrice - this.Config.EntryOffsetTicks * symbol.SecurityFamily.PriceTick) : (item.SignalTrade.xPrice + this.Config.EntryOffsetTicks * symbol.SecurityFamily.PriceTick);
+                    case QSEnumFollowPriceType.HangingPrice://挂单价
+                        price = item.FollowSide?k.BidPrice:k.AskPrice;//item.FollowSide ? (item.SignalTrade.xPrice - this.Config.EntryOffsetTicks * symbol.SecurityFamily.PriceTick) : (item.SignalTrade.xPrice + this.Config.EntryOffsetTicks * symbol.SecurityFamily.PriceTick);
                         break;
-                    case QSEnumFollowPriceType.SignalPrice:
-                        price = item.SignalTrade.xPrice;
+                    case QSEnumFollowPriceType.SignalPrice://买 当前价格减去偏移量
+                        price = item.FollowSide ? (item.SignalTrade.xPrice - this.Config.EntryOffsetTicks * symbol.SecurityFamily.PriceTick) : (item.SignalTrade.xPrice + this.Config.EntryOffsetTicks * symbol.SecurityFamily.PriceTick);
                         break;
                     default:
                         price = 0;
