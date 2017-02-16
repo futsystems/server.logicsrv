@@ -216,15 +216,14 @@ namespace TradingLib.Core
                             int possize = item.EntryFollowItem.PositionHoldSize;
 
                             size = size < possize ? size : possize;//平仓数量不能超过对应持仓数量
-
-                            //合约
-                            //Symbol symbol = item.SignalTrade.oSymbol;
-
-
                             Order o = new OrderImpl(symbol.Symbol, side, size);
 
                             //开平标识
                             o.OffsetFlag = QSEnumOffsetFlag.CLOSE;
+                            if (symbol.Exchange == "SHFE")
+                            {
+                                o.OffsetFlag = QSEnumOffsetFlag.CLOSETODAY;
+                            }
 
                             Tick k = TLCtxHelper.ModuleDataRouter.GetTickSnapshot(item.SignalTrade.Exchange, item.SignalTrade.Symbol);
                             //价格
@@ -257,7 +256,10 @@ namespace TradingLib.Core
                             o.LimitPrice = 0;
                             //开平标识
                             o.OffsetFlag = QSEnumOffsetFlag.CLOSE;
-
+                            if (symbol.Exchange == "SHFE")
+                            {
+                                o.OffsetFlag = QSEnumOffsetFlag.CLOSETODAY;
+                            }
                             return o;
                         }
                     default:
