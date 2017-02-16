@@ -80,7 +80,7 @@ namespace TradingLib.Core
                 if (isadd)
                 {
                     //新增判断token重复
-                    if (FollowTracker.StrategyCfgTracker[cfg.Token] != null)
+                    if (FollowTracker.StrategyCfgTracker[cfg.ID] != null)
                     {
                         throw new FutsRspError("跟单策略标识:" + cfg.Token + "已存在");
                     }
@@ -306,63 +306,77 @@ namespace TradingLib.Core
         /// </summary>
         /// <param name="session"></param>
         /// <param name="followkey"></param>
-        [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "QryFollowItemDetail", "QryFollowItemDetail - qry follow item detail", "查询跟单项目明细信息")]
-        public void CTE_QryFollowItemDetail(ISession session, string followkey)
+        [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "QryFollowItemDetail", "QryFollowItemDetail - qry follow item detail", "查询跟单项目明细信息",QSEnumArgParseType.Json)]
+        public void CTE_QryFollowItemDetail(ISession session, string json)
         {
             Manager manager = session.GetManager();
             if (!manager.IsRoot())
             {
                 throw new FutsRspError("无权进行此操作");
             }
-            TradeFollowItem item = null;
-            if (followitemmap.TryGetValue(followkey, out item))
-            {
-                FollowItemDetail detail = item.GenFollowItemDetail();
-                session.ReplyMgr(detail);
+            var data = json.DeserializeObject();
+            int strategyId = int.Parse(data["StrategyID"].ToString());
+            string followkey = data["FollowKey"].ToString();
 
+            FollowStrategy strategy = null;
+            if (!strategyMap.TryGetValue(strategyId, out strategy))
+            {
+                throw new FutsRspError(string.Format("跟单策略:{0} 不存在", strategyId));
             }
-            else
-            { 
+
+            TradeFollowItem item = strategy.GetFollowItem(followkey);
+            if (item == null)
+            {
+                throw new FutsRspError(string.Format("跟单项:{0} 不存在", followkey));
+            }
+
+            FollowItemDetail detail = item.GenFollowItemDetail();
+            session.ReplyMgr(detail);
+
             
-            }
         }
 
-        [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "FlatFollowItem", "FlatFollowItem - flat follow item", "强平某个跟单项目")]
-        public void CTE_FlatFollowItem(ISession session, string followkey)
+        [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "FlatFollowItem", "FlatFollowItem - flat follow item", "强平某个跟单项目", QSEnumArgParseType.Json)]
+        public void CTE_FlatFollowItem(ISession session, string json)
         {
             Manager manager = session.GetManager();
             if (!manager.IsRoot())
             {
                 throw new FutsRspError("无权进行此操作");
             }
-            TradeFollowItem item = null;
-            if (followitemmap.TryGetValue(followkey, out item))
+            var data = json.DeserializeObject();
+            int strategyId = int.Parse(data["StrategyID"].ToString());
+            string followkey = data["FollowKey"].ToString();
+
+            FollowStrategy strategy = null;
+            if (!strategyMap.TryGetValue(strategyId, out strategy))
             {
-                //如果提供的是平仓跟单项followkey则找到对应的开仓跟单项目
-                if (item.EventType == QSEnumPositionEventType.ExitPosition)
-                {
-                    item = item.EntryFollowItem;
-                }
-
-                if (!item.NeedExitFollow)
-                {
-                    throw new FutsRspError("跟单项目无需平仓");
-                }
-
-                //执行手工平仓操作
-                TradeFollowItem exit = TradeFollowItem.CreateFlatFollowItem(item);
-                //将平仓跟单项目绑定到开仓跟单项目
-                item.NewExitFollowItem(exit);
-                //将开仓跟单项目绑定到平仓跟单项目
-                exit.NewEntryFollowItem(item);
-
-                item.Strategy.CacheFollowItem(exit);
-
+                throw new FutsRspError(string.Format("跟单策略:{0} 不存在", strategyId));
             }
-            else
+
+            TradeFollowItem item = strategy.GetFollowItem(followkey);
+            if (item == null)
             {
-
+                throw new FutsRspError(string.Format("跟单项:{0} 不存在", followkey));
             }
+            //如果提供的是平仓跟单项followkey则找到对应的开仓跟单项目
+            if (item.EventType == QSEnumPositionEventType.ExitPosition)
+            {
+                item = item.EntryFollowItem;
+            }
+
+            if (!item.NeedExitFollow)
+            {
+                throw new FutsRspError("跟单项目无需平仓");
+            }
+
+            //执行手工平仓操作
+            TradeFollowItem exit = TradeFollowItem.CreateFlatFollowItem(item);
+            item.Link(exit);
+
+            item.Strategy.NewFollowItem(exit);
+
+           
         }
     }
 }

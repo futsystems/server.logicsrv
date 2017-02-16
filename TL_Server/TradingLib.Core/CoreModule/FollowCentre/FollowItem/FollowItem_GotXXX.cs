@@ -22,11 +22,11 @@ namespace TradingLib.Core
             if (!orderMap.TryGetValue(o.id,out target))
             {
                 orderMap.TryAdd(o.id, o);
-                _followsentsize += Math.Abs(o.TotalSize);
+                _followsentsize += Math.Abs(o.TotalSize);//记录委托发送数量
             }
             else
             {
-                //是否需要跟新委托对象
+                //更新委托对象相关字段
                 target.Status = o.Status;
                 target.FilledSize = o.FilledSize;
                 target.Size = o.Size;

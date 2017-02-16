@@ -154,11 +154,65 @@ namespace TradingLib.Core
             return exit;
         }
 
-
-        public static void LinkExitFollowItem(this TradeFollowItem entry, TradeFollowItem exit)
+        /// <summary>
+        /// 开仓跟单项与平仓跟单项目执行双向绑定
+        /// </summary>
+        /// <param name="entry"></param>
+        /// <param name="exit"></param>
+        public static void Link(this TradeFollowItem entry, TradeFollowItem exit)
         {
             entry.NewExitFollowItem(exit);
             exit.NewEntryFollowItem(entry);
+        }
+
+        public static FollowItemData ToFollowItemData(this TradeFollowItem item)
+        {
+            FollowItemData data = new FollowItemData();
+
+            data.FollowKey = item.FollowKey;
+            data.StrategyID = item.Strategy.ID;
+            data.TriggerType = item.TriggerType;
+            data.Stage = item.Stage;
+
+            data.Exchange = item.Exchange;
+            data.Symbol = item.Symbol;
+            data.FollowSide = item.FollowSide;
+            data.FollowSize = item.FollowSize;
+            data.FollowPower = item.FollowPower;
+            data.EventType = item.EventType;
+            data.Comment = item.Comment;
+            switch (item.TriggerType)
+            {
+                case QSEnumFollowItemTriggerType.SigTradeTrigger:
+                    {
+                        data.SignalID = item.Signal.ID;
+                        data.SignalTradeID = item.SignalTrade.TradeID;
+                        if (item.EventType == QSEnumPositionEventType.EntryPosition)
+                        {
+                            data.OpenTradeID = item.PositionEvent.PositionEntry.TradeID;
+                        }
+                        if (item.EventType == QSEnumPositionEventType.ExitPosition)
+                        {
+                            data.OpenTradeID = item.PositionEvent.PositionExit.OpenTradeID;
+                            data.CloseTradeID = item.PositionEvent.PositionExit.CloseTradeID;
+                        }
+                        break;
+                    }
+                default:
+                    break;
+            }
+
+            return data;
+        }
+        public static string GetLocalKey(this TradeFollowItem entry)
+        {
+            switch (entry.TriggerType)
+            { 
+                case QSEnumFollowItemTriggerType.SigTradeTrigger:
+                    return entry.PositionEvent.PositionEntry.TradeID;
+                default:
+                    return null;
+            }
         }
     }
 }

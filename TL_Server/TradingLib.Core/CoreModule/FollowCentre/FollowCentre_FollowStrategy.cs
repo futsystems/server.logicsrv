@@ -22,13 +22,8 @@ namespace TradingLib.Core
             FollowStrategy strategy = FollowStrategy.CreateStrategy(cfg);
             strategyMap.TryAdd(strategy.ID, strategy);
 
-            strategy.NewTradeFollowItemEvent += new Action<TradeFollowItem>(strategy_NewTradeFollowItemEvent);
         }
 
-        void strategy_NewTradeFollowItemEvent(TradeFollowItem obj)
-        {
-            followitemmap.TryAdd(obj.FollowKey, obj);
-        }
 
         /// <summary>
         /// 通过策略ID编号获得策略对象

@@ -16,12 +16,17 @@ namespace TradingLib.Core
     {
 
         /// <summary>
+        /// 所有跟单项
+        /// </summary>
+        public IEnumerable<TradeFollowItem> FollowItems { get { return followKeyItemMap.Values; } }
+
+        /// <summary>
         /// 获得该跟单策略的所有开仓跟单项数据
         /// </summary>
         /// <returns></returns>
         public IEnumerable<EntryFollowItemStruct> GetEntryFollowItemStructs()
         {
-            return itemlist.Where(item=>item.EventType == QSEnumPositionEventType.EntryPosition).Select(item => item.GenEntryFollowItemStruct());
+            return FollowItems.Where(item => item.EventType == QSEnumPositionEventType.EntryPosition).Select(item => item.GenEntryFollowItemStruct());
         }
 
         /// <summary>
@@ -30,7 +35,7 @@ namespace TradingLib.Core
         /// <returns></returns>
         public IEnumerable<ExitFollowItemStruct> GetExitFollowItemStructs()
         {
-            return itemlist.Where(item => item.EventType == QSEnumPositionEventType.ExitPosition).Select(item => item.GenExitFollowItemStruct());
+            return FollowItems.Where(item => item.EventType == QSEnumPositionEventType.ExitPosition).Select(item => item.GenExitFollowItemStruct());
         }
 
 
@@ -92,7 +97,7 @@ namespace TradingLib.Core
         {
             get
             {
-                return itemlist.Where(item => item.EventType == QSEnumPositionEventType.EntryPosition).Count();
+                return FollowItems.Where(item => item.EventType == QSEnumPositionEventType.EntryPosition).Count();
             }
         }
 
@@ -103,7 +108,7 @@ namespace TradingLib.Core
         {
             get
             {
-                return itemlist.Where(item => item.EventType == QSEnumPositionEventType.EntryPosition && item.FollowFillSize>0).Count();
+                return FollowItems.Where(item => item.EventType == QSEnumPositionEventType.EntryPosition && item.FollowFillSize > 0).Count();
             }
         }
 
@@ -114,7 +119,7 @@ namespace TradingLib.Core
         {
             get
             {
-                return itemlist.Sum(item => item.TotalSlip);
+                return FollowItems.Sum(item => item.TotalSlip);
             }
         }
 
@@ -125,7 +130,7 @@ namespace TradingLib.Core
         {
             get
             {
-                return itemlist.Where(item => item.EventType == QSEnumPositionEventType.EntryPosition).Sum(item => item.TotalSlip);
+                return FollowItems.Where(item => item.EventType == QSEnumPositionEventType.EntryPosition).Sum(item => item.TotalSlip);
             }
         }
 
@@ -136,17 +141,10 @@ namespace TradingLib.Core
         {
             get
             {
-                return itemlist.Where(item => item.EventType == QSEnumPositionEventType.ExitPosition).Sum(item => item.TotalSlip);
+                return FollowItems.Where(item => item.EventType == QSEnumPositionEventType.ExitPosition).Sum(item => item.TotalSlip);
             }
         }
 
-        public IEnumerable<TradeFollowItem> FollowItems
-        {
-            get
-            {
-                return itemlist;
-            }
-        }
 
         /// <summary>
         /// 信号源个数

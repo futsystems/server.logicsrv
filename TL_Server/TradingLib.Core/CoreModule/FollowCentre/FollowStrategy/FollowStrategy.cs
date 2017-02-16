@@ -64,40 +64,52 @@ namespace TradingLib.Core
         /// </summary>
         FollowAccount followAccount=null;
         
-
+        /// <summary>
+        /// 委托与跟单项映射关系
+        /// </summary>
         OrderSourceTracker sourceTracker = null;
-
         /// <summary>
         /// 跟单策略信号源
         /// </summary>
         ConcurrentDictionary<int, ISignal> signalMap = null;
 
-        /// <summary>
-        /// 信号跟单项维护器
-        /// </summary>
-        SignalFollowItemTracker followitemtracker = null;
 
         /// <summary>
-        /// 跟单项事件
+        /// 跟单项map
         /// </summary>
-        public event Action<TradeFollowItem> NewTradeFollowItemEvent;
+        ConcurrentDictionary<string,TradeFollowItem> followKeyItemMap = new ConcurrentDictionary<string,TradeFollowItem>();
+        /// <summary>
+        /// 跟单项与本地键 对应关系 比如开仓成交 在平仓成交信号触发时需要通过对应的开仓成交编号获得对应的跟单项
+        /// </summary>
+        ConcurrentDictionary<string, TradeFollowItem> localKeyItemMap = new ConcurrentDictionary<string, TradeFollowItem>();
 
-        void NewTradeFollowItem(TradeFollowItem item)
+        public TradeFollowItem GetFollowItem(string followkey)
         {
-            if (NewTradeFollowItemEvent != null)
-                NewTradeFollowItemEvent(item);
+            if (string.IsNullOrEmpty(followkey)) return null;
+            TradeFollowItem target = null;
+            if (followKeyItemMap.TryGetValue(followkey, out target))
+            {
+                return target;
+            }
+            return null;
         }
 
+        TradeFollowItem GetEntryFollowItemViaLocalKey(string localKey)
+        {
+            if (string.IsNullOrEmpty(localKey)) return null;
+            TradeFollowItem target = null;
+            if (localKeyItemMap.TryGetValue(localKey, out target))
+            {
+                return target;
+            }
+            return null;
+        }
+      
 
         public FollowStrategy(FollowStrategyConfig cfg)
         {
             logger = LogManager.GetLogger("FollowStrategy:"+cfg.Token);
             this.Config = cfg;
-
-            //初始化SignalFollowItemTracker
-            followitemtracker = new SignalFollowItemTracker();
-            followitemtracker.NewTradeFollowItemEvent += new Action<TradeFollowItem>(NewTradeFollowItem);
-
             sourceTracker = new OrderSourceTracker();
 
             this.WorkState = QSEnumFollowWorkState.Shutdown;//初始状态处于停止状态
@@ -142,7 +154,7 @@ namespace TradingLib.Core
             {
                 BindSignal(signal);
                 //为每个信号初始化跟单项目维护器
-                followitemtracker.InitFollowItemTracker(signal);
+                //followitemtracker.InitFollowItemTracker(signal);
             }
         }
 
@@ -166,7 +178,7 @@ namespace TradingLib.Core
             //1.绑定信号事件
             BindSignal(signal);
             //2.初始化信号所对应的数据维护器
-            followitemtracker.InitFollowItemTracker(signal);
+            //followitemtracker.InitFollowItemTracker(signal);
         
         }
 

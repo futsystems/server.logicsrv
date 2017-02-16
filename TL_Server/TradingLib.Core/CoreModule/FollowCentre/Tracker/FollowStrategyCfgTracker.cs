@@ -15,21 +15,13 @@ namespace TradingLib.Core
     public class FollowStrategyCfgTracker
     {
         ConcurrentDictionary<int, FollowStrategyConfig> id2configMap = new ConcurrentDictionary<int, FollowStrategyConfig>();
-        ConcurrentDictionary<string, FollowStrategyConfig> token2configMap = new ConcurrentDictionary<string, FollowStrategyConfig>();
-
-
-
         public FollowStrategyCfgTracker()
         {
             foreach (var cfg in ORM.MStrategy.SelectFollowStrategyConfigs())
             {
                 id2configMap.TryAdd(cfg.ID, cfg);
-                token2configMap.TryAdd(cfg.Token, cfg);
             }
         }
-
-
-
 
         /// <summary>
         /// 通过数据库ID获得测量配置
@@ -42,24 +34,6 @@ namespace TradingLib.Core
             {
                 FollowStrategyConfig cfg = null;
                 if (id2configMap.TryGetValue(id, out cfg))
-                {
-                    return cfg;
-                }
-                return null;
-            }
-        }
-
-        /// <summary>
-        /// 通过跟单Token获得跟单配置
-        /// </summary>
-        /// <param name="token"></param>
-        /// <returns></returns>
-        public FollowStrategyConfig this[string token]
-        {
-            get
-            {
-                FollowStrategyConfig cfg = null;
-                if (token2configMap.TryGetValue(token, out cfg))
                 {
                     return cfg;
                 }
@@ -135,8 +109,6 @@ namespace TradingLib.Core
 
                 //放入内存数据结构
                 id2configMap.TryAdd(target.ID, target);
-                token2configMap.TryAdd(target.Token, target);
-
                 cfg.ID = target.ID;
             }
         }

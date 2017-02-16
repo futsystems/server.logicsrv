@@ -16,56 +16,6 @@ namespace TradingLib.Core
     /// </summary>
     public partial class TradeFollowItem
     {
-
-        /// <summary>
-        /// 将跟单项目生成ItemData用于数据库储存
-        /// </summary>
-        /// <param name="item"></param>
-        /// <returns></returns>
-        public FollowItemData ToFollowItemData()
-        {
-            TradeFollowItem item = this;
-            FollowItemData data = new FollowItemData();
-
-            data.FollowKey = item.FollowKey;
-            data.StrategyID = item.Strategy.ID;
-            data.TriggerType = item.TriggerType;
-            data.Stage = item.Stage;
-
-            data.Exchange = item.Exchange;
-            data.Symbol = item.Symbol;
-            data.FollowSide = item.FollowSide;
-            data.FollowSize = item.FollowSize;
-            data.FollowPower = item.FollowPower;
-            data.EventType = item.EventType;
-            data.Comment = item.Comment;
-            switch (item.TriggerType)
-            {
-                case QSEnumFollowItemTriggerType.SigTradeTrigger:
-                    {
-                        data.SignalID = item.Signal.ID;
-                        data.SignalTradeID = item.SignalTrade.TradeID;
-                        if (item.EventType == QSEnumPositionEventType.EntryPosition)
-                        {
-                            data.OpenTradeID = item.PositionEvent.PositionEntry.TradeID;
-                        }
-                        if (item.EventType == QSEnumPositionEventType.ExitPosition)
-                        {
-                            data.OpenTradeID = item.PositionEvent.PositionExit.OpenTradeID ;
-                            data.CloseTradeID = item.PositionEvent.PositionExit.CloseTradeID;
-                        }
-                        break;
-                    }
-                default:
-                    break;
-            }
-            
-            return data;
-        }
-
-        
-
-
         public TradeFollowItem(FollowStrategy strategy)
         {
             this.Strategy = strategy;
@@ -155,15 +105,12 @@ namespace TradingLib.Core
         /// <summary>
         /// 跟单项键值
         /// 开仓跟单项目键值为全局设定的编号
-        /// 平仓跟单项目键值为对应开仓跟单键值-平仓成交编号
+        /// 平仓跟单项目键值为对应开仓跟单键值-全局递增编号
         /// 跟单项目键值用于进行全局排列
-        /// 
         /// 从数据库恢复时直接设定FollowKey
         /// </summary>
         public string FollowKey{get;private set;}
         
-
-
         /// <summary>
         /// 跟单策略
         /// </summary>
@@ -186,7 +133,6 @@ namespace TradingLib.Core
             {
                 QSEnumFollowStage oldstage = _stage;
                 _stage = value;
-                //if (InRestore) return;//如果处于数据恢复状态 则直接返回 状态改变不向外发送通知或数据库记录
                 if (!FollowTracker.Inited) return;
                 if (_stage != QSEnumFollowStage.ItemCreated)
                 {
