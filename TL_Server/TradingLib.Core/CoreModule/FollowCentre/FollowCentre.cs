@@ -22,9 +22,29 @@ namespace TradingLib.Core
             : base(FollowCentre.CoreName)
         {
             FollowTracker.NotifyFollowItemEvent += new Action<FollowItem>(NotifyFollowItem);
-
+            TLCtxHelper.EventAccount.AccountAddEvent += new Action<IAccount>(EventAccount_AccountAddEvent);
+            TLCtxHelper.EventAccount.AccountDelEvent += new Action<IAccount>(EventAccount_AccountDelEvent);
             TLCtxHelper.EventSystem.SettleResetEvent +=new EventHandler<SystemEventArgs>(EventSystem_SettleResetEvent);
             TLCtxHelper.EventSystem.AfterSettleEvent += new EventHandler<SystemEventArgs>(EventSystem_AfterSettleEvent);
+        }
+
+        void EventAccount_AccountDelEvent(IAccount obj)
+        {
+            ISignal signal = FollowTracker.SignalTracker[obj.ID];
+
+            //从跟单策略中删除信号 删除信号过程中会自动判定信号是否为null 同时判定信号是否在跟单信号列表中
+            foreach (var strategy in FollowTracker.FollowStrategyTracker.FollowStrategies)
+            {
+                strategy.RemoveSignal(signal);
+            }
+            //从信号维护器中删除信号
+            FollowTracker.SignalTracker.DelAccount(obj);
+            
+        }
+
+        void EventAccount_AccountAddEvent(IAccount obj)
+        {
+            FollowTracker.SignalTracker.AddAccount(obj);
         }
 
         void EventSystem_AfterSettleEvent(object sender, SystemEventArgs e)

@@ -41,6 +41,29 @@ namespace TradingLib.ORM
                 db.Connection.Execute(query);
             }
         }
+
+        public static void InsertSignalConfig(SignalConfig cfg)
+        {
+            using (DBMySql db = new DBMySql())
+            {
+                string query = String.Format("INSERT INTO follow_signals (`signaltype`,`signaltoken`,`domain_id`) values('{0}','{1}','{2}')", cfg.SignalType, cfg.SignalToken, cfg.Domain_ID);
+                db.Connection.Execute(query);
+                SetIdentity(db.Connection, id => cfg.ID = id, "id", "follow_signals");
+            }
+        }
+
+        /// <summary>
+        /// 删除某个信号配置
+        /// </summary>
+        /// <param name="cfg"></param>
+        public static void DelSignalConfig(SignalConfig cfg)
+        {
+            using (DBMySql db = new DBMySql())
+            {
+                string delquery = string.Format("DELETE FROM follow_signals WHERE id = '{0}'", cfg.ID);
+                db.Connection.Execute(delquery);
+            }
+        }
         /// <summary>
         /// 从数据库加载所有策略信号项
         /// </summary>

@@ -153,8 +153,6 @@ namespace TradingLib.Core
             foreach (var signal in signalMap.Values)
             {
                 BindSignal(signal);
-                //为每个信号初始化跟单项目维护器
-                //followitemtracker.InitFollowItemTracker(signal);
             }
         }
 
@@ -218,10 +216,13 @@ namespace TradingLib.Core
                 return;
             }
 
-            //2.解绑Signal事件
-            signal.GotFillEvent -= new FillDelegate(OnSignalFillEvent);
-            signal.GotOrderEvent -= new OrderDelegate(OnSignalOrderEvent);
-            signal.GotPositionEvent -= new Action<ISignal, Trade, PositionEvent>(OnSignalPositionEvent);
+            if (signalMap.Keys.Contains(signal.ID))
+            {
+                //2.解绑Signal事件
+                signal.GotFillEvent -= new FillDelegate(OnSignalFillEvent);
+                signal.GotOrderEvent -= new OrderDelegate(OnSignalOrderEvent);
+                signal.GotPositionEvent -= new Action<ISignal, Trade, PositionEvent>(OnSignalPositionEvent);
+            }
         }
 
 

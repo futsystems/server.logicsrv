@@ -127,7 +127,7 @@ namespace TradingLib.Core
             LoadAccount(create.Account);
 
             //对外触发交易帐号添加事件
-            TLCtxHelper.EventAccount.FireAccountAddEvent(this[create.Account]);
+            //TLCtxHelper.EventAccount.FireAccountAddEvent(this[create.Account]);
 
             logger.Info(string.Format("Account:{0} UserID:{1} Added Under Manager:{2}", create.Account, create.UserID, create.BaseManagerID));
         }

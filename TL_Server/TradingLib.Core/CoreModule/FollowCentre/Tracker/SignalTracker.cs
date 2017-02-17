@@ -87,7 +87,61 @@ namespace TradingLib.Core
                 }
 
             }
-            //
+        }
+
+        public void AddAccount(IAccount account)
+        {
+            //子账户
+            if (account.Category == QSEnumAccountCategory.SUBACCOUNT)
+            {
+                try
+                {
+                    if (configmap.Values.Any(item => item.SignalToken == account.ID))
+                    {
+                        logger.Warn(string.Format("Account:{0} already have signalcofig in cache", account.ID));
+                        return;
+                    }
+
+                    //生成对应信号配置数据并添加到数据库与缓存
+                    SignalConfig cfg = new SignalConfig() { SignalToken = account.ID, SignalType = QSEnumSignalType.Account, Domain_ID = account.Domain.ID };
+                    ORM.MSignal.InsertSignalConfig(cfg);
+                    configmap.TryAdd(cfg.ID, cfg);
+                    ISignal signal = SignalFactory.CreateSignal(cfg);
+                    if (signal != null)
+                    {
+                        signalmap.TryAdd(cfg.ID, signal);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    logger.Error("Create Signal Error:" + ex.ToString());
+                }
+            }
+        }
+
+        public void DelAccount(IAccount account)
+        {
+            if (account.Category == QSEnumAccountCategory.SUBACCOUNT)
+            {
+                SignalConfig config = configmap.Values.Where(item => item.SignalToken == account.ID).FirstOrDefault();//查找子账户对应的信号配置
+                if (config == null)
+                {
+                    logger.Warn(string.Format("Account:{0} do not in signalcofig in cache", account.ID));
+                    return;
+                }
+                //遍历所有信号映射关系从跟单策略中删除信号(此处不用判断是否该信号在对应策略中)
+                foreach (var item in strategysignalmap)
+                {
+                    this.RemoveSignalFromStrategy(config.ID, item.Key);
+                }
+
+                SignalConfig tmp=null;
+                ISignal signal = null;
+                //从数据库删除信号配置 从缓存中删除信号配置与信号对象
+                configmap.TryRemove(config.ID, out tmp);
+                ORM.MSignal.DelSignalConfig(config);
+                signalmap.TryRemove(config.ID, out signal);
+            }
         }
 
         /// <summary>
@@ -106,6 +160,20 @@ namespace TradingLib.Core
                     return target;
                 }
                 return null;
+            }
+        }
+
+        /// <summary>
+        /// 通过Token获得信号对象
+        /// </summary>
+        /// <param name="token"></param>
+        /// <returns></returns>
+        public ISignal this[string token]
+        {
+            get
+            {
+                ISignal target = signalmap.Values.Where(sig => sig.Token == token).FirstOrDefault();
+                return target;
             }
         }
 
@@ -175,9 +243,14 @@ namespace TradingLib.Core
             if (signal != null)
             {
                 //跟新内存映射
-                strategysignalmap[strategyID].TryRemove(signalID,out signal);
+                bool ret = strategysignalmap[strategyID].TryRemove(signalID,out signal);
                 //跟新数据库记录
                 ORM.MSignal.RemoveSignalFromStrategy(signalID, strategyID);
+
+                //FollowStrategy strategy = FollowTracker.FollowStrategyTracker[strategyID];
+                //ISignal singal = signalmap[signalID];
+                ////跟单策略删除信号
+                //strategy.RemoveSignal(signal);
             }
         }
         /// <summary>
