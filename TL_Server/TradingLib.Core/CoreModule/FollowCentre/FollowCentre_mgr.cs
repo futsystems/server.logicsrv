@@ -226,7 +226,6 @@ namespace TradingLib.Core
 
             //更新信号维护器
             FollowTracker.SignalTracker.AppendSignalToStrategy(signalID, strategyID);
-
             //跟单策略添加信号
             strategy.AppendSignal(signal);
         }
@@ -260,7 +259,6 @@ namespace TradingLib.Core
 
             //更新信号维护器
             FollowTracker.SignalTracker.RemoveSignalFromStrategy(signalID, strategyID);
-
             //跟单策略删除信号
             strategy.RemoveSignal(signal);
         }
