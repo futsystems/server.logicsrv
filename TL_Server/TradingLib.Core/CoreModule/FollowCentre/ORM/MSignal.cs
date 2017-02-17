@@ -33,11 +33,11 @@ namespace TradingLib.ORM
         /// </summary>
         /// <param name="account"></param>
         /// <param name="type"></param>
-        public static void InsertSignalConfig(string account, QSEnumSignalType type = QSEnumSignalType.Account)
+        public static void InsertSignalConfig(IAccount account)
         {
             using (DBMySql db = new DBMySql())
             {
-                string query = String.Format("INSERT INTO follow_signals (`signaltype`,`signaltoken`) values('{0}','{1}')", type, account);
+                string query = String.Format("INSERT INTO follow_signals (`signaltype`,`signaltoken`,`domain_id`) values('{0}','{1}','{2}')", QSEnumSignalType.Account, account.ID, account.Domain.ID);
                 db.Connection.Execute(query);
             }
         }

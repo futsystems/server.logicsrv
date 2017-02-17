@@ -27,14 +27,12 @@ namespace TradingLib.Core
                 throw new FutsRspError("无权进行此操作");
             }
 
-            IEnumerable<IAccount> acclist = TLCtxHelper.ModuleAccountManager.Accounts.Where(acc => acc.Category == QSEnumAccountCategory.STRATEGYACCOUNT);
+            IEnumerable<IAccount> acclist = manager.Domain.GetAccounts().Where(acc => acc.Category == QSEnumAccountCategory.STRATEGYACCOUNT);
 
-            IEnumerable<IAccount> avabile = acclist.Where(acc => !FollowTracker.StrategyCfgTracker.StrategyConfigs.Any(cfg => cfg.Account == acc.ID));
+            IEnumerable<IAccount> avabile = acclist.Where(acc => !manager.Domain.GetFollowStrategyConfigs().Any(cfg => cfg.Account == acc.ID));
             string[] accounts = avabile.Select(acc=>acc.ID).ToArray();
-            //for (int i = 0; i < accounts.Length; i++)
-            {
-                session.ReplyMgr(accounts);
-            }
+            session.ReplyMgr(accounts);
+            
         }
 
 
@@ -51,7 +49,7 @@ namespace TradingLib.Core
                 throw new FutsRspError("无权进行此操作");
             }
 
-            FollowStrategyConfig[] cfgs = FollowTracker.StrategyCfgTracker.StrategyConfigs.ToArray();
+            FollowStrategyConfig[] cfgs = manager.Domain.GetFollowStrategyConfigs().ToArray();
             for (int i = 0; i < cfgs.Length; i++)
             {
                 session.ReplyMgr(cfgs[i], i == cfgs.Length - 1);
@@ -64,21 +62,31 @@ namespace TradingLib.Core
         /// <param name="session"></param>
         /// <param name="payload"></param>
         [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "UpdateFollowStrategyCfg", "UpdateFollowStrategyCfg - update config of follow strategy", "更新跟单策略参数",QSEnumArgParseType.Json)]
-        public void CTE_QryFollowStrategyList(ISession session,string payload)
+        public void CTE_UpdateFollowStrategyCfg(ISession session, string payload)
         {
             Manager manager = session.GetManager();
             if (!manager.IsRoot())
             {
                 throw new FutsRspError("无权进行此操作");
             }
+            if (!manager.Domain.Module_Follow)
+            {
+                throw new FutsRspError("无权进行此操作");
+            }
+            if (manager.Domain.GetFollowStrategies().Count() >= manager.Domain.Cfg_FollowStrategyNum)
+            {
+                throw new FutsRspError(string.Format("跟单策略数量限制:{0}", manager.Domain.Cfg_FollowStrategyNum));
+            }
 
             FollowStrategyConfig cfg = payload.DeserializeObject<FollowStrategyConfig>();
+            //管理端添加的跟单策略在对应分区
+            
             if (cfg != null)
             {
-
                 bool isadd = cfg.ID == 0;
                 if (isadd)
                 {
+                    cfg.Domain_ID = manager.domain_id;
                     //新增判断token重复
                     if (FollowTracker.StrategyCfgTracker[cfg.ID] != null)
                     {
@@ -87,9 +95,9 @@ namespace TradingLib.Core
                     //添加跟单策略
                     FollowTracker.StrategyCfgTracker.UpdateFollowStrategyConfig(cfg);
                     //初始化跟单策略
-                    InitStrategy(FollowTracker.StrategyCfgTracker[cfg.ID]);
+                    FollowTracker.FollowStrategyTracker.InitStrategy(FollowTracker.StrategyCfgTracker[cfg.ID]);
                     //启动跟单策略
-                    FollowStrategy strategy = ID2FollowStrategy(cfg.ID);
+                    FollowStrategy strategy = FollowTracker.FollowStrategyTracker[cfg.ID];
                     strategy.Start();
 
                     NotifyFollowStrategyConfig(FollowTracker.StrategyCfgTracker[cfg.ID]);
@@ -98,6 +106,10 @@ namespace TradingLib.Core
                 }
                 else
                 {
+                    if (manager.domain_id != cfg.Domain_ID)
+                    {
+                        throw new FutsRspError("无权进行此操作");
+                    }
 
                     FollowTracker.StrategyCfgTracker.UpdateFollowStrategyConfig(cfg);
 
@@ -122,11 +134,17 @@ namespace TradingLib.Core
                 throw new FutsRspError("无权进行此操作");
             }
 
-            FollowStrategy strategy = ID2FollowStrategy(strategyid);
+            FollowStrategy strategy = FollowTracker.FollowStrategyTracker[strategyid];
             if (strategy == null)
             {
                 throw new FutsRspError(string.Format("策略:{0}不存在", strategyid));
             }
+
+            if (manager.domain_id != strategy.Config.Domain_ID)
+            {
+                throw new FutsRspError("无权进行此操作");
+            }
+
 
             strategy.WorkState = state;
             session.RspMessage(string.Format("策略:{0}-{1}工作状态:{2}", strategy.Config.ID, strategy.Config.Token, Util.GetEnumDescription(strategy.WorkState)));
@@ -146,7 +164,7 @@ namespace TradingLib.Core
                 throw new FutsRspError("无权进行此操作");
             }
 
-            SignalConfig[] cfgs = FollowTracker.SignalTracker.SignalConfigs.ToArray();
+            SignalConfig[] cfgs = manager.Domain.GetSignalConfigs().ToArray();
             for (int i = 0; i < cfgs.Length; i++)
             {
                 session.ReplyMgr(cfgs[i], i == cfgs.Length - 1);
@@ -200,7 +218,7 @@ namespace TradingLib.Core
                 throw new FutsRspError(string.Format("信号源:{0}不存在", signalID));
             }
 
-            FollowStrategy strategy = ID2FollowStrategy(strategyID);
+            FollowStrategy strategy = FollowTracker.FollowStrategyTracker[strategyID];
             if (strategy == null)
             {
                 throw new FutsRspError(string.Format("跟单策略:{0}不存在", strategyID));
@@ -234,7 +252,7 @@ namespace TradingLib.Core
                 throw new FutsRspError(string.Format("信号源:{0}不存在", signalID));
             }
 
-            FollowStrategy strategy = ID2FollowStrategy(strategyID);
+            FollowStrategy strategy = FollowTracker.FollowStrategyTracker[strategyID];
             if (strategy == null)
             {
                 throw new FutsRspError(string.Format("跟单策略:{0}不存在", strategyID));
@@ -262,16 +280,21 @@ namespace TradingLib.Core
             {
                 throw new FutsRspError("无权进行此操作");
             }
-            FollowStrategy strategy = null;
-            //查找对应的策略对象
-            if (strategyMap.TryGetValue(strategy_id, out strategy))
+            FollowStrategy strategy = FollowTracker.FollowStrategyTracker[strategy_id];
+            if (strategy == null)
             {
+                throw new FutsRspError(string.Format("跟单策略:{0}不存在", strategy_id));
+            }
 
-                EntryFollowItemStruct[] items = strategy.GetEntryFollowItemStructs().ToArray();
-                for (int i = 0; i < items.Length; i++)
-                {
-                    session.ReplyMgr(items[i], i == items.Length - 1);
-                }
+            if (strategy.Config.Domain_ID != manager.domain_id)
+            {
+                throw new FutsRspError("无权进行此操作");
+            }
+
+            EntryFollowItemStruct[] items = strategy.GetEntryFollowItemStructs().ToArray();
+            for (int i = 0; i < items.Length; i++)
+            {
+                session.ReplyMgr(items[i], i == items.Length - 1);
             }
         }
 
@@ -288,17 +311,23 @@ namespace TradingLib.Core
             {
                 throw new FutsRspError("无权进行此操作");
             }
-            FollowStrategy strategy = null;
-            //查找对应的策略对象
-            if (strategyMap.TryGetValue(strategy_id, out strategy))
+            FollowStrategy strategy = FollowTracker.FollowStrategyTracker[strategy_id];
+            if (strategy == null)
             {
-
-                ExitFollowItemStruct[] items = strategy.GetExitFollowItemStructs().ToArray();
-                for (int i = 0; i < items.Length; i++)
-                {
-                    session.ReplyMgr(items[i], i == items.Length - 1);
-                }
+                throw new FutsRspError(string.Format("跟单策略:{0}不存在", strategy_id));
             }
+
+            if (strategy.Config.Domain_ID != manager.domain_id)
+            {
+                throw new FutsRspError("无权进行此操作");
+            }
+
+            ExitFollowItemStruct[] items = strategy.GetExitFollowItemStructs().ToArray();
+            for (int i = 0; i < items.Length; i++)
+            {
+                session.ReplyMgr(items[i], i == items.Length - 1);
+            }
+            
         }
 
         /// <summary>
@@ -318,10 +347,16 @@ namespace TradingLib.Core
             int strategyId = int.Parse(data["StrategyID"].ToString());
             string followkey = data["FollowKey"].ToString();
 
-            FollowStrategy strategy = null;
-            if (!strategyMap.TryGetValue(strategyId, out strategy))
+
+            FollowStrategy strategy = FollowTracker.FollowStrategyTracker[strategyId];
+            if (strategy == null)
             {
-                throw new FutsRspError(string.Format("跟单策略:{0} 不存在", strategyId));
+                throw new FutsRspError(string.Format("跟单策略:{0}不存在", strategyId));
+            }
+
+            if (strategy.Config.Domain_ID != manager.domain_id)
+            {
+                throw new FutsRspError("无权进行此操作");
             }
 
             FollowItem item = strategy.GetFollowItem(followkey);
@@ -348,10 +383,15 @@ namespace TradingLib.Core
             int strategyId = int.Parse(data["StrategyID"].ToString());
             string followkey = data["FollowKey"].ToString();
 
-            FollowStrategy strategy = null;
-            if (!strategyMap.TryGetValue(strategyId, out strategy))
+            FollowStrategy strategy = FollowTracker.FollowStrategyTracker[strategyId];
+            if (strategy == null)
             {
-                throw new FutsRspError(string.Format("跟单策略:{0} 不存在", strategyId));
+                throw new FutsRspError(string.Format("跟单策略:{0}不存在", strategyId));
+            }
+
+            if (strategy.Config.Domain_ID != manager.domain_id)
+            {
+                throw new FutsRspError("无权进行此操作");
             }
 
             FollowItem item = strategy.GetFollowItem(followkey);

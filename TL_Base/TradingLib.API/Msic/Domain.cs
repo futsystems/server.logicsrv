@@ -190,6 +190,11 @@ namespace TradingLib.API
         /// </summary>
         bool Cfg_GrossPosition { get; set; }
 
+        /// <summary>
+        /// 跟单策略数
+        /// </summary>
+        int Cfg_FollowStrategyNum { get; set; }
+
         #endregion
     }
 }

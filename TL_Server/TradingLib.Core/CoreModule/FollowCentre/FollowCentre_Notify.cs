@@ -12,7 +12,6 @@ namespace TradingLib.Core
 
     public partial class FollowCentre
     {
-
         /// <summary>
         /// 对外通知跟单项目
         /// </summary>

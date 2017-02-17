@@ -101,6 +101,7 @@ namespace TradingLib.Common
                 target.Module_FinService = domain.Module_FinService;
                 target.Module_PayOnline = domain.Module_PayOnline;
                 target.Module_Slip = domain.Module_Slip;
+                target.Module_Follow = domain.Module_Follow;
                 target.Router_Live = domain.Router_Live;
                 target.Router_Sim = domain.Router_Sim;
                 target.VendorLimit = domain.VendorLimit;
@@ -114,6 +115,7 @@ namespace TradingLib.Common
 
                 target.Cfg_GrossPosition = domain.Cfg_GrossPosition;
                 target.Cfg_MaxMarginSide = domain.Cfg_MaxMarginSide;
+                target.Cfg_FollowStrategyNum = domain.Cfg_FollowStrategyNum;
                 ORM.MDomain.UpdateDomain(target);
                 
             }
@@ -139,6 +141,7 @@ namespace TradingLib.Common
                 target.Module_FinService = domain.Module_FinService;
                 target.Module_PayOnline = domain.Module_PayOnline;
                 target.Module_Slip = domain.Module_Slip;
+                target.Module_Follow = domain.Module_Follow;
 
                 target.Router_Live = domain.Router_Live;
                 target.Router_Sim = domain.Router_Sim;
@@ -152,6 +155,7 @@ namespace TradingLib.Common
 
                 target.Cfg_GrossPosition = domain.Cfg_GrossPosition;
                 target.Cfg_MaxMarginSide = domain.Cfg_MaxMarginSide;
+                target.Cfg_FollowStrategyNum = domain.Cfg_FollowStrategyNum;
 
                 ORM.MDomain.InsertDomain(target);
                 domain.ID = target.ID;

@@ -52,7 +52,9 @@ namespace TradingLib.Core
         }
 
         FollowStrategyCfgTracker strategyTracker = null;
-
+        /// <summary>
+        /// 策略配置维护其
+        /// </summary>
         public static FollowStrategyCfgTracker StrategyCfgTracker
         {
             get
@@ -64,6 +66,9 @@ namespace TradingLib.Core
         }
 
         AsyncFollowLoger _followItemLogger = null;
+        /// <summary>
+        /// 跟单项记录器
+        /// </summary>
         public static AsyncFollowLoger FollowItemLogger
         {
             get
@@ -71,6 +76,23 @@ namespace TradingLib.Core
                 if (defaultinstance._followItemLogger == null)
                     defaultinstance._followItemLogger = new AsyncFollowLoger();
                 return defaultinstance._followItemLogger;
+            }
+        }
+
+
+        FollowStrategyTracker _followStrategyTracker = null;
+        /// <summary>
+        /// 跟单实例维护其 
+        /// </summary>
+        public static FollowStrategyTracker FollowStrategyTracker
+        {
+            get
+            {
+                if (defaultinstance._followStrategyTracker == null)
+                {
+                    defaultinstance._followStrategyTracker = new FollowStrategyTracker();
+                }
+                return defaultinstance._followStrategyTracker;
             }
         }
 
@@ -90,9 +112,10 @@ namespace TradingLib.Core
             
         }
 
-        //委托编号生成器
         static IdTracker _followIDTracker = new IdTracker();
-
+        /// <summary>
+        /// 跟单编号生成器
+        /// </summary>
         public static string NextFollowKey
         {
             get

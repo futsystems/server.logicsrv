@@ -60,7 +60,7 @@ namespace TradingLib.Core
         /// <returns></returns>
         FollowItem ItemData2FollowItem(FollowItemData data)
         {
-            FollowStrategy strategy = ID2FollowStrategy(data.StrategyID);
+            FollowStrategy strategy =FollowTracker.FollowStrategyTracker[data.StrategyID];
             ISignal signal = FollowTracker.SignalTracker[data.SignalID];
 
             FollowItem item = null;

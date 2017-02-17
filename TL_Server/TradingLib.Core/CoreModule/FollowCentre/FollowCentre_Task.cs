@@ -17,7 +17,7 @@ namespace TradingLib.Core
         public void Task_CollectStrategyStatus()
         {
             if (!_followstart) return;
-            foreach (var strategy in strategyMap.Values)
+            foreach (var strategy in FollowTracker.FollowStrategyTracker.FollowStrategies)
             {
                 NotifyFollowStrategyStatus(strategy);
             }

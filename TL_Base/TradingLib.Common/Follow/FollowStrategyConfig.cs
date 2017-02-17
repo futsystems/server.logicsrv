@@ -18,6 +18,11 @@ namespace TradingLib.Common
         public int ID { get; set; }
 
         /// <summary>
+        /// 分区编号
+        /// </summary>
+        public int Domain_ID { get; set; }
+
+        /// <summary>
         /// 策略名称/编号
         /// </summary>
         public string Token { get; set; }

@@ -39,6 +39,7 @@ namespace TradingLib.Common
 
             this.Cfg_GrossPosition = true;
             this.Cfg_MaxMarginSide = true;
+            this.Cfg_FollowStrategyNum = 0;
 
 
         }
@@ -196,10 +197,18 @@ namespace TradingLib.Common
         /// Gross可以同时持有多头与空头持仓
         /// </summary>
         public bool Cfg_GrossPosition { get; set; }
+
+        /// <summary>
+        /// 跟单策略数
+        /// </summary>
+        public int Cfg_FollowStrategyNum { get; set; }
+        
         /// <summary>
         /// 
         /// </summary>
         public int CFG_SyncVendor_ID { get; set; }
+
+
 
         /// <summary>
         /// 是否处于运营状态

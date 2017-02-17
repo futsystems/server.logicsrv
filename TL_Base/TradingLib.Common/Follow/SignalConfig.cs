@@ -29,6 +29,9 @@ namespace  TradingLib.Common
         /// </summary>
         public string SignalToken { get; set; }
 
-
+        /// <summary>
+        /// 分区编号
+        /// </summary>
+        public int Domain_ID { get; set; }
     }
 }

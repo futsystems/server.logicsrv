@@ -121,6 +121,7 @@
     <Compile Include="CoreModule\FollowCentre\ORM\MFollowItem.cs" />
     <Compile Include="CoreModule\FollowCentre\ORM\MStrategy.cs" />
     <Compile Include="CoreModule\FollowCentre\Tracker\FollowStrategyCfgTracker.cs" />
+    <Compile Include="CoreModule\FollowCentre\Tracker\FollowStrategyTracker.cs" />
     <Compile Include="CoreModule\FollowCentre\Tracker\FollowTracker.cs" />
     <Compile Include="CoreModule\FollowCentre\ORM\MSignal.cs" />
     <Compile Include="CoreModule\FollowCentre\Signal\SignalFactory.cs" />
@@ -132,9 +133,9 @@
     <Compile Include="CoreModule\FollowCentre\FollowCentre_mgr.cs" />
     <Compile Include="CoreModule\FollowCentre\FollowCentre_Task.cs" />
     <Compile Include="CoreModule\FollowCentre\FollowCentre_Restore.cs" />
-    <Compile Include="CoreModule\FollowCentre\FollowCentre_FollowStrategy.cs" />
     <Compile Include="CoreModule\FollowCentre\FollowCentre_Notify.cs" />
     <Compile Include="CoreModule\FollowCentre\Utils\Utils_TradingInfo.cs" />
+    <Compile Include="CoreModule\FollowCentre\Utils\Utils_Domain.cs" />
     <Compile Include="CoreModule\ManagerExchange\PacketHandler\MgrExchServer_PacketHandle_.cs" />
     <Compile Include="CoreModule\ManagerExchange\PacketHandler\MgrExchServer_PacketHandle_ConfigTemplate.cs" />
     <Compile Include="CoreModule\ManagerExchange\PacketHandler\pending\MgrExchServer_PacketHandle_FinAgent.cs" />

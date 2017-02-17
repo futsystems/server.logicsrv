@@ -62,7 +62,7 @@ namespace TradingLib.Core
             if (id2configMap.TryGetValue(cfg.ID, out target))
             {
                 //跟单乘数/方向/token不可修改
-
+                
                 target.EntryPriceType = cfg.EntryPriceType;
                 target.EntryOffsetTicks = cfg.EntryOffsetTicks;
                 target.EntryPendingThresholdType = cfg.EntryPendingThresholdType;
@@ -85,7 +85,7 @@ namespace TradingLib.Core
                 target = new FollowStrategyConfig();
 
                 target.Account = cfg.Account;
-
+                target.Domain_ID = cfg.Domain_ID;
                 target.FollowDirection = cfg.FollowDirection;
                 target.FollowPower = cfg.FollowPower;
                 target.Token = cfg.Token;

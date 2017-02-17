@@ -47,7 +47,7 @@ namespace TradingLib.Core
                 //如果信号列表中不包含该帐户 则添加
                 if (!tmp.Any(sig => sig.SignalToken == account.ID))
                 {
-                    ORM.MSignal.InsertSignalConfig(account.ID);
+                    ORM.MSignal.InsertSignalConfig(account);
                 }
             }
             //遍历信号 将没有对应交易账户的信号删除
