@@ -12,6 +12,26 @@ namespace TradingLib.Core
     /// </summary>
     public partial class FollowItem
     {
+        public string SourceSignal
+        {
+            get
+            {
+                if (this.EventType == QSEnumPositionEventType.EntryPosition)
+                {
+                    switch (this.TriggerType)
+                    {
+                        case QSEnumFollowItemTriggerType.SigTradeTrigger:
+                            return this.Signal.Token;
+                        default:
+                            return "未知";
+                    }
+                }
+                else
+                {
+                    return this.EntryFollowItem.SourceSignal;
+                }
+            }
+        }
         int _firedcount = 0;
         /// <summary>
         /// 触发次数

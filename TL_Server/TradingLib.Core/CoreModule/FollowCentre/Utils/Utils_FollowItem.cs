@@ -70,6 +70,9 @@ namespace TradingLib.Core
             entryitem.StrategyID = item.Strategy.ID;
             entryitem.TriggerType = item.TriggerType;
             entryitem.Symbol = item.Symbol;
+            entryitem.Filter_SourceSignal = item.SourceSignal;
+            entryitem.Filter_PositonHold = item.PositionHoldSize;
+            entryitem.Filter_Profit = item.ExitFollowItems.Sum(f => f.FollowProfit);
 
             entryitem.FollowKey = item.FollowKey;
             entryitem.Side = item.FollowSide;
@@ -121,13 +124,16 @@ namespace TradingLib.Core
             exit.StrategyID = item.Strategy.ID;
             exit.TriggerType = item.TriggerType;
             exit.Symbol = item.Symbol;
+            exit.Filter_SourceSignal = item.SourceSignal;
+            exit.Filter_PositonHold = item.EntryFollowItem.PositionHoldSize;
+            exit.Filter_Profit = item.EntryFollowItem.ExitFollowItems.Sum(f => f.FollowProfit);
 
             exit.PriceFormat = item.EntryFollowItem.SignalTrade.oSymbol.SecurityFamily.GetPriceFormat();
 
             exit.FollowKey = item.FollowKey;
             exit.Side = item.FollowSide;
             exit.EntryFollowKey = item.EntryFollowItem.FollowKey;
-
+            
             
 
             exit.FollowSentSize = item.FollowSentSize;

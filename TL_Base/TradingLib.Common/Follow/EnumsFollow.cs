@@ -82,11 +82,13 @@ namespace TradingLib.API
         /// <summary>
         /// 开仓
         /// </summary>
+        [Description("开仓")]
         EntryPosition,
 
         /// <summary>
         /// 平仓
         /// </summary>
+        [Description("平仓")]
         ExitPosition,
     }
 

@@ -25,6 +25,8 @@ namespace TradingLib.Common
         /// </summary>
         public string PriceFormat { get; set; }
 
+
+
         /// <summary>
         /// 合约
         /// </summary>
@@ -84,6 +86,22 @@ namespace TradingLib.Common
         /// 备注
         /// </summary>
         public string Comment { get; set; }
+
+
+        /// <summary>
+        /// 初始信号 用于过滤
+        /// </summary>
+        public string Filter_SourceSignal { get; set; }
+
+        /// <summary>
+        /// 持仓数量 用于过滤
+        /// </summary>
+        public int Filter_PositonHold { get; set; }
+
+        /// <summary>
+        /// 盈利 用于过滤
+        /// </summary>
+        public decimal Filter_Profit { get; set; }
     }
 
 
