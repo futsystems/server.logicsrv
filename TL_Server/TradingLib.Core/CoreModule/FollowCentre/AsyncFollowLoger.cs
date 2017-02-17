@@ -36,7 +36,7 @@ namespace TradingLib.Core
 
         RingBuffer<FollowItemOrder> _followitemordercache;
         RingBuffer<FollowItemTrade> _followitemtradecache;
-
+        RingBuffer<FollowExecution> _followexecutioncache;
         /// <summary>
         /// fired when barrequest is read asychronously from buffer
         /// </summary>
@@ -117,6 +117,12 @@ namespace TradingLib.Core
                             Thread.Sleep(_delay);
                         }
 
+                        while (_followexecutioncache.hasItems)
+                        {
+                            FollowExecution ex = _followexecutioncache.Read();
+                            ORM.MFollowExecution.InsertFollowExecution(ex);
+                            Thread.Sleep(_delay);
+                        }
 
                         // clear current flag signal
                         _logwaiting.Reset();
@@ -166,6 +172,12 @@ namespace TradingLib.Core
         public void NewFollowItemTrade(FollowItemTrade ft)
         {
             _followitemtradecache.Write(ft);
+            newlog();
+        }
+
+        public void NewFollowExecution(FollowExecution ex)
+        {
+            _followexecutioncache.Write(ex);
             newlog();
         }
 
@@ -233,6 +245,7 @@ namespace TradingLib.Core
 
             _followitemordercache = new RingBuffer<FollowItemOrder>(maxbr);
             _followitemtradecache = new RingBuffer<FollowItemTrade>(maxbr);
+            _followexecutioncache = new RingBuffer<FollowExecution>(maxbr);
         }
 
         void _brcache_BufferOverrunEvent()

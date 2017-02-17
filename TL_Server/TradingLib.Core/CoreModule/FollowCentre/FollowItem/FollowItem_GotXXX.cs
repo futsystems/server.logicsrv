@@ -92,6 +92,19 @@ namespace TradingLib.Core
             if (this.EventType == QSEnumPositionEventType.ExitPosition)
             {
                 FollowTracker.NotifyFollowItem(this.EntryFollowItem);
+
+                try
+                {
+                    if (this.EntryFollowItem.PositionHoldSize == 0)
+                    {
+                        var data = this.EntryFollowItem.ToFollowExecution();
+                        FollowTracker.FollowItemLogger.NewFollowExecution(data);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine("process followexecution error:" + ex.ToString());
+                }
             }
             
         }

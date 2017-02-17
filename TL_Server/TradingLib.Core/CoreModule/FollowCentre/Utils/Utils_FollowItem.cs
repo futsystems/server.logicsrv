@@ -210,6 +210,7 @@ namespace TradingLib.Core
 
             return data;
         }
+
         public static string GetLocalKey(this FollowItem entry)
         {
             switch (entry.TriggerType)
@@ -219,6 +220,30 @@ namespace TradingLib.Core
                 default:
                     return null;
             }
+        }
+
+        public static FollowExecution ToFollowExecution(this FollowItem entry)
+        {
+            FollowExecution ex = new FollowExecution();
+            ex.Settleday = TLCtxHelper.ModuleSettleCentre.Tradingday;
+            ex.StrategyID = entry.Strategy.ID;
+            ex.FollowKey = entry.FollowKey;
+            ex.SourceSignal = entry.SourceSignal;
+            ex.SignalInfo = entry.SignalInfo;
+            ex.Exchange = entry.Exchange;
+            ex.Symbol = entry.Symbol;
+            ex.Side = entry.FollowSide;
+            ex.Size = entry.FollowSize;
+            ex.OpenTime = entry.Trades.First().xTime;
+            ex.OpenAvgPrice = entry.FollowPrice;
+            ex.OpenSlip = entry.TotalSlip;
+            ex.CloseTime = entry.ExitFollowItems.Last().Trades.Last().xTime;
+            ex.CloseAvgPrice = entry.ExitFollowItems.Sum(exit => exit.FollowPrice * exit.FollowSize) / entry.ExitFollowItems.Sum(exit => exit.FollowSize);//计算统一平仓均价
+            ex.CloseSlip = entry.ExitFollowItems.Sum(exit => exit.TotalSlip);
+            ex.RealizedPL = entry.ExitFollowItems.Sum(f => f.FollowProfit) * entry.Trades.First().oSymbol.SecurityFamily.Multiple;
+            ex.Commission = entry.Trades.Sum(t => t.GetCommission()) + entry.ExitFollowItems.Sum(exit => exit.Trades.Sum(t => t.GetCommission()));
+            ex.Profit = ex.RealizedPL - ex.Commission;
+            return ex;
         }
     }
 }

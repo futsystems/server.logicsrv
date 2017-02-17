@@ -118,6 +118,7 @@
     <Compile Include="CoreModule\FollowCentre\FollowItem\FollowItem_DeriveParameter.cs" />
     <Compile Include="CoreModule\FollowCentre\FollowStrategy\FollowStrategy_objects.cs" />
     <Compile Include="CoreModule\FollowCentre\FollowStrategy\FollowStrategy_Restore.cs" />
+    <Compile Include="CoreModule\FollowCentre\ORM\MFollowExecution.cs" />
     <Compile Include="CoreModule\FollowCentre\ORM\MFollowItem.cs" />
     <Compile Include="CoreModule\FollowCentre\ORM\MStrategy.cs" />
     <Compile Include="CoreModule\FollowCentre\Tracker\FollowStrategyCfgTracker.cs" />

@@ -72,6 +72,7 @@
     <Compile Include="Exception\DataRepositoryException.cs" />
     <Compile Include="Exception\TradingLibError.cs" />
     <Compile Include="Follow\EnumsFollow.cs" />
+    <Compile Include="Follow\FollowExecution.cs" />
     <Compile Include="Follow\FollowItemDetail.cs" />
     <Compile Include="Follow\FollowItemStruce.cs" />
     <Compile Include="Follow\FollowStrategyConfig.cs" />

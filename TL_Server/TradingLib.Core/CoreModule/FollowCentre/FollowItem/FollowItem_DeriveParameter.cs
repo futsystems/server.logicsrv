@@ -32,6 +32,20 @@ namespace TradingLib.Core
                 }
             }
         }
+
+        public string SignalInfo
+        {
+            get
+            {
+                switch (this.TriggerType)
+                {
+                    case QSEnumFollowItemTriggerType.SigTradeTrigger:
+                        return string.Format("{0}/{1} {2}", this.SignalTrade.xPrice.ToFormatStr(this.SignalTrade.oSymbol.SecurityFamily.GetPriceFormat()), Math.Abs(this.SignalTrade.xSize), this.SignalTrade.TradeID);
+                    default:
+                        return "未知";
+                }
+            }
+        }
         int _firedcount = 0;
         /// <summary>
         /// 触发次数
