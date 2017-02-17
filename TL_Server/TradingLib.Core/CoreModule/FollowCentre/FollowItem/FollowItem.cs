@@ -48,7 +48,14 @@ namespace TradingLib.Core
                 this.Exchange = trade.oSymbol.Exchange;
                 this.Symbol = trade.Symbol;
                 this.FollowSide = strategy.Config.FollowDirection == QSEnumFollowDirection.Positive ? trade.Side : !trade.Side;
-                this.FollowSize = Math.Abs(trade.xSize) * strategy.Config.FollowPower;
+                if (posevent.EventType == QSEnumPositionEventType.EntryPosition)
+                {
+                    this.FollowSize = Math.Abs(trade.xSize) * strategy.Config.FollowPower;
+                }
+                else
+                {
+                    this.FollowSize =  Math.Abs(posevent.PositionExit.CloseVolume) * strategy.Config.FollowPower;//如果用对应成交触发 会有问题 比如 开5 开5 平7 则获得数量有可能是7 导致超平
+                }
                 this.FollowPower = strategy.Config.FollowPower;
                 this.EventType = posevent.EventType;
 
