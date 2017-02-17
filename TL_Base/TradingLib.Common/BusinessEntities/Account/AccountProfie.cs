@@ -66,5 +66,10 @@ namespace TradingLib.Common
         /// </summary>
         public string Broker { get; set; }
 
+        /// <summary>
+        /// 备注信息
+        /// </summary>
+        public string Memo { get; set; }
+
     }
 }

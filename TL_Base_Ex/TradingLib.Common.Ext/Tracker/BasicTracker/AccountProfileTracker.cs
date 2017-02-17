@@ -86,6 +86,7 @@ namespace TradingLib.Common
                 target.Name = profile.Name;
                 target.QQ = profile.QQ;
                 target.Broker = profile.Broker;
+                target.Memo = profile.Memo;
 
             }
             else

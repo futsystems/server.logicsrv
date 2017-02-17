@@ -166,6 +166,10 @@ namespace TradingLib.Common
         /// </summary>
         public string WarnMessage { get; set; }
 
+        /// <summary>
+        /// 备注信息
+        /// </summary>
+        public string Memo { get; set; }
 
         public static string Serialize(AccountItem account)
         {
@@ -242,6 +246,8 @@ namespace TradingLib.Common
             sb.Append(account.IsWarn);
             sb.Append(d);
             sb.Append(account.WarnMessage);
+            sb.Append(d);
+            sb.Append(account.Memo);
 
 
             return sb.ToString();
@@ -287,6 +293,7 @@ namespace TradingLib.Common
             account.Currency = (CurrencyType)Enum.Parse(typeof(CurrencyType), rec[33]);
             account.IsWarn = bool.Parse(rec[34]);
             account.WarnMessage = rec[35];
+            account.Memo = rec[36];
 
             return account;
         }

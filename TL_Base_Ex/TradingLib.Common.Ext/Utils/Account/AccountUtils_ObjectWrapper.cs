@@ -26,19 +26,6 @@ namespace TradingLib.Common
             }
             return "未设置";
         }
-        //public static JsonWrapperAccountBankAC GetBankAC(this IAccount acc)
-        //{
-        //    JsonWrapperAccountBankAC bkacc = new JsonWrapperAccountBankAC();
-        //    bkacc.Name = string.IsNullOrEmpty(acc.Name) ? null : acc.Name;
-        //    bkacc.BankAC = acc.BankAC;
-        //    bkacc.Branch = "";
-        //    ContractBank bk = BasicTracker.ContractBankTracker[acc.BankID];
-        //    bkacc.Bank = bk != null ? bk.Name : null;
-        //    bkacc.Account = acc.ID;
-        //    bkacc.AgentInfo = GetAgentInfo(acc);
-        //    return bkacc;
-        //}
-
 
 
 
@@ -210,6 +197,7 @@ namespace TradingLib.Common
             }
 
             info.IsWarn = acc.IsWarn;
+            info.Memo = BasicTracker.AccountProfileTracker[acc.ID].Memo;
             return info;
         }
     }
