@@ -52,6 +52,15 @@ namespace TradingLib.Core
         }
 
         /// <summary>
+        /// 关闭某个会话连接
+        /// </summary>
+        /// <param name="clientID"></param>
+        public void KillSessioin(string clientID)
+        {
+            _clients.UnRegistClient(clientID);
+        }
+
+        /// <summary>
         /// 查找所有以交易帐号account登入的客户端连接
         /// </summary>
         /// <param name="account"></param>

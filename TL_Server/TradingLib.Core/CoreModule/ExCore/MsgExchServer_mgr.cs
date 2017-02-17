@@ -33,6 +33,32 @@ namespace TradingLib.Core
             session.RspMessage("注销交易终端成功");
         }
 
+        [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "KillSession", "KillSession - kill session", "关闭某个会话连接")]
+        public void CTE_KillSession(ISession session, string sessionID)
+        {
+            Manager manager = session.GetManager();
+            if (!manager.IsRoot())
+            {
+                throw new FutsRspError("无权进行此操作");
+            }
+
+            var client = tl.GetClient(sessionID);
+            if (client != null)
+            {
+                if (client.Account != null)
+                {
+                    if (!manager.RightAccessAccount(client.Account))
+                    {
+                        throw new FutsRspError("无权修改该交易帐户");
+                    }
+
+                    tl.KillSessioin(sessionID);
+                    session.RspMessage("注销连接成功");
+                }
+            }
+
+        }
+
         [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "QrySessionInfo", "QrySessionInfo - 查询回话信息", "查询某个交易帐户的登入信息")]
         public void CTE_QrySessionInfo(ISession session, string account)
         {
