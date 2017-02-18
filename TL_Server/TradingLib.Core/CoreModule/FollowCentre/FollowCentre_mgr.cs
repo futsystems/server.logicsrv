@@ -54,6 +54,10 @@ namespace TradingLib.Core
             {
                 session.ReplyMgr(cfgs[i], i == cfgs.Length - 1);
             }
+            if (cfgs.Length == 0)
+            {
+                session.ReplyMgr(null, true);
+            }
         }
 
         /// <summary>
@@ -413,8 +417,41 @@ namespace TradingLib.Core
             item.Link(exit);
 
             item.Strategy.NewFollowItem(exit);
-
-           
         }
+
+        [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "QryFollowExecution", "QryFollowExecution - qry execution", "查询跟单执行统计", QSEnumArgParseType.Json)]
+        public void CTE_QryFollowExecution(ISession session, string json)
+        {
+            Manager manager = session.GetManager();
+            if (!manager.IsRoot())
+            {
+                throw new FutsRspError("无权进行此操作");
+            }
+            var data = json.DeserializeObject();
+            int strategyId = int.Parse(data["StrategyID"].ToString());
+            int settleday = int.Parse(data["Settleday"].ToString());
+
+            FollowStrategy strategy = FollowTracker.FollowStrategyTracker[strategyId];
+            if (strategy == null)
+            {
+                throw new FutsRspError(string.Format("跟单策略:{0}不存在", strategyId));
+            }
+
+            if (strategy.Config.Domain_ID != manager.domain_id)
+            {
+                throw new FutsRspError("无权进行此操作");
+            }
+
+            FollowExecution[] items = TradingLib.ORM.MFollowExecution.SelectFollowExecutions(strategyId, settleday).ToArray();
+            for (int i = 0; i < items.Length; i++)
+            {
+                session.ReplyMgr(items[i], i == items.Length - 1);
+            }
+            if (items.Length == 0)
+            {
+                session.ReplyMgr(null, true);
+            }
+        }
+
     }
 }

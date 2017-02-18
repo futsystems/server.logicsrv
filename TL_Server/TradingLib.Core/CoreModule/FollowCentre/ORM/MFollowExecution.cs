@@ -24,5 +24,22 @@ namespace TradingLib.ORM
                 db.Connection.Execute(query);
             }
         }
+
+        /// <summary>
+        /// 查询某个跟单策略 某个交易日的执行统计
+        /// </summary>
+        /// <param name="begin"></param>
+        /// <param name="end"></param>
+        /// <returns></returns>
+        public static IEnumerable<FollowExecution> SelectFollowExecutions(int strategyId,int settleday)
+        {
+            using (DBMySql db = new DBMySql())
+            {
+                string query = string.Format("SELECT * FROM follow_executions  WHERE strategyid ='{0}' AND settleday ='{1}'",strategyId,settleday);
+                return db.Connection.Query<FollowExecution>(query);
+
+            }
+        }
+
     }
 }
