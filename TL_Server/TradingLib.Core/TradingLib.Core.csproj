@@ -111,6 +111,7 @@
     <Compile Include="CoreModule\ExCore\MsgExchServer_IExCore.cs" />
     <Compile Include="CoreModule\FollowCentre\AsyncFollowLoger.cs" />
     <Compile Include="CoreModule\FollowCentre\FollowCentre.cs" />
+    <Compile Include="CoreModule\FollowCentre\FollowItem\FollowItemProtect.cs" />
     <Compile Include="CoreModule\FollowCentre\FollowItem\FollowItemData.cs" />
     <Compile Include="CoreModule\FollowCentre\FollowItem\PositionEventImpl.cs" />
     <Compile Include="CoreModule\FollowCentre\FollowItem\FollowItem_GotXXX.cs" />

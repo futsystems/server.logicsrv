@@ -6,6 +6,18 @@ using System.ComponentModel;
 
 namespace TradingLib.API
 {
+
+    public enum QSEnumFollowProtectValueType
+    { 
+        /// <summary>
+        /// 按点数
+        /// </summary>
+        Point,
+        /// <summary>
+        /// 按百分比
+        /// </summary>
+        Percent,
+    }
     /// <summary>
     /// 跟单方向
     /// </summary>
