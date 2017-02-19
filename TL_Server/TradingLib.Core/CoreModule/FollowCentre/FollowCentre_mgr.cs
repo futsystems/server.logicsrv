@@ -168,7 +168,15 @@ namespace TradingLib.Core
                 throw new FutsRspError("无权进行此操作");
             }
 
-            SignalConfig[] cfgs = manager.Domain.GetSignalConfigs().ToArray();
+            SignalConfig[] cfgs = null;
+            if (manager.Domain.Super)//超级域可以查看所有分区信号
+            {
+                cfgs = FollowTracker.SignalTracker.SignalConfigs.ToArray();//
+            }
+            else
+            {
+                cfgs = manager.Domain.GetSignalConfigs().ToArray();
+            }
             for (int i = 0; i < cfgs.Length; i++)
             {
                 session.ReplyMgr(cfgs[i], i == cfgs.Length - 1);

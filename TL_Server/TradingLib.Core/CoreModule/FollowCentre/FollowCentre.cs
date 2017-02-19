@@ -30,26 +30,39 @@ namespace TradingLib.Core
 
         void EventAccount_AccountDelEvent(IAccount obj)
         {
-            ISignal signal = FollowTracker.SignalTracker[obj.ID];
-
-            //从跟单策略中删除信号 删除信号过程中会自动判定信号是否为null 同时判定信号是否在跟单信号列表中
-            foreach (var strategy in FollowTracker.FollowStrategyTracker.FollowStrategies)
+            try
             {
-                strategy.RemoveSignal(signal);
+                ISignal signal = FollowTracker.SignalTracker[obj.ID];
+
+                //从跟单策略中删除信号 删除信号过程中会自动判定信号是否为null 同时判定信号是否在跟单信号列表中
+                foreach (var strategy in FollowTracker.FollowStrategyTracker.FollowStrategies)
+                {
+                    strategy.RemoveSignal(signal);
+                }
+                //从信号维护器中删除信号
+                FollowTracker.SignalTracker.DelAccount(obj);
             }
-            //从信号维护器中删除信号
-            FollowTracker.SignalTracker.DelAccount(obj);
-            
+            catch (Exception ex)
+            {
+                logger.Error("Process Del Account Error:" + ex.ToString());
+            }
         }
 
         void EventAccount_AccountAddEvent(IAccount obj)
         {
-            FollowTracker.SignalTracker.AddAccount(obj);
+            try
+            {
+                FollowTracker.SignalTracker.AddAccount(obj);
+            }
+            catch (Exception ex)
+            {
+                logger.Error("Process Add Account Error:" + ex.ToString());
+            }
         }
 
         void EventSystem_AfterSettleEvent(object sender, SystemEventArgs e)
         {
-            //执行数据转储操作
+            //执行数据转储操作 数据转储需要通过交易来进行
             try
             {
                 //转储日内跟单记录
@@ -76,7 +89,6 @@ namespace TradingLib.Core
             
         }
 
-        bool _followstart = false;
         public void Start()
         {
 
@@ -99,7 +111,6 @@ namespace TradingLib.Core
             }
 
             FollowTracker.Inited = true;
-            _followstart = true;
 
         }
 

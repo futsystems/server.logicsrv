@@ -15,41 +15,64 @@ namespace TradingLib.Core
 
         /// <summary>
         /// 恢复跟单项目数据
+        /// 结算时需要根据结算日进行
+        /// 某个跟单项的结算日应该以对应交易所或成交数据的结算日为准
         /// </summary>
         void RestoreFollowItemData()
         {
             IEnumerable<FollowItemData> followitems = ORM.MFollowItem.SelectFollowItemData();
             IEnumerable<FollowItemOrder> itemorders = ORM.MFollowItem.SelectFollowItemOrder();
             IEnumerable<FollowItemTrade> itemtrades = ORM.MFollowItem.SelectFollowItemTrade();
-
+            
             foreach (var data in followitems)
             {
-                //生成对应的跟单项目对象
-                FollowItem followitem = ItemData2FollowItem(data);
-                QSEnumFollowStage oldstage = followitem.Stage;
-
-                IEnumerable<Order> orders = itemorders.Where(item=>item.FollowKey == followitem.FollowKey).Select(item=>TLCtxHelper.ModuleClearCentre.SentOrder(item.OrderID));
-                foreach(Order o in orders)
+                try
                 {
-                    if(o!= null)
-                    {
-                        followitem.GotOrder(o);
-                    }
-                }
+                    bool dataMissing = false;
+                    //生成对应的跟单项目对象
+                    FollowItem followitem = ItemData2FollowItem(data);
+                    QSEnumFollowStage oldstage = followitem.Stage;
 
-                IEnumerable<Trade> trades = itemtrades.Where(item => item.FollowKey == followitem.FollowKey).Select(item => TLCtxHelper.ModuleClearCentre.FilledTrade(item.TradeID));
-                foreach (Trade f in trades)
+                    IEnumerable<Order> orders = itemorders.Where(item => item.FollowKey == followitem.FollowKey).Select(item => TLCtxHelper.ModuleClearCentre.SentOrder(item.OrderID));
+                    foreach (Order o in orders)
+                    {
+                        if (o != null)
+                        {
+                            followitem.GotOrder(o);
+                        }
+                        else
+                        {
+                            dataMissing = true;
+                        }
+                    }
+
+                    IEnumerable<Trade> trades = itemtrades.Where(item => item.FollowKey == followitem.FollowKey).Select(item => TLCtxHelper.ModuleClearCentre.FilledTrade(item.TradeID));
+                    foreach (Trade f in trades)
+                    {
+                        if (f != null)
+                        {
+                            followitem.GotTrade(f);
+                        }
+                        else
+                        {
+                            dataMissing = true;
+                        }
+                    }
+                    //跟单项数据缺失 则忽略该条数据
+                    if (dataMissing)
+                    {
+                        logger.Warn(string.Format("FollowItem:{0} data missing,ignore it", data.FollowKey));
+                        continue;
+                    }
+                    //矫正跟单项目状态 在恢复过程中可能会修改跟单项目状态 将状态设置成数据库中更新的状态
+                    followitem.Stage = oldstage;
+                    //调用对应跟单策略恢复该跟单项目
+                    followitem.Strategy.RestoreFollowItem(followitem);
+                }
+                catch (Exception ex)
                 {
-                    if (f != null)
-                    {
-                        followitem.GotTrade(f);
-                    }
+                    logger.Error(string.Format("Restore FollowItem:{0} Error:{1}", data.FollowKey, ex.ToString()));
                 }
-
-                //矫正跟单项目状态 在恢复过程中可能会修改跟单项目状态 将状态设置成数据库中更新的状态
-                followitem.Stage = oldstage;
-                //调用对应跟单策略恢复该跟单项目
-                followitem.Strategy.RestoreFollowItem(followitem);
             }
         }
 
