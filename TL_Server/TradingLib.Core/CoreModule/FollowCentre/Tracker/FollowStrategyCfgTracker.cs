@@ -75,6 +75,23 @@ namespace TradingLib.Core
                 target.ExitPendingThresholdValue = cfg.ExitPendingThresholdValue;
                 target.ExitPendingOperationType = cfg.ExitPendingOperationType;
 
+                target.SecFilter = cfg.SecFilter;
+                target.TimeFilter = cfg.TimeFilter;
+                target.SizeFilter = cfg.SizeFilter;
+                target.StopEnable = cfg.StopEnable;
+                target.StopValue = cfg.StopValue;
+                target.StopValueType = cfg.StopValueType;
+                target.Profit1Enable = cfg.Profit1Enable;
+                target.Profit1Value = cfg.Profit1Value;
+                target.Profit1ValueType = cfg.Profit1ValueType;
+                target.Profit2Enable = cfg.Profit2Enable;
+                target.Profit2Value1 = cfg.Profit2Value1;
+                target.Profit2Trailing1 = cfg.Profit2Trailing1;
+                target.Profit2Value1Type = cfg.Profit2Value1Type;
+                target.Profit2Value2 = cfg.Profit2Value2;
+                target.Profit2Trailing2 = cfg.Profit2Trailing2;
+                target.Profit2Value2Type = cfg.Profit2Value2Type;
+
                 target.Desp = cfg.Desp;
 
                 ORM.MStrategy.UpdateFollowStrategyConfig(target);
@@ -102,6 +119,23 @@ namespace TradingLib.Core
                 target.ExitPendingThreadsholdType = cfg.ExitPendingThreadsholdType;
                 target.ExitPendingThresholdValue = cfg.ExitPendingThresholdValue;
                 target.ExitPendingOperationType = cfg.ExitPendingOperationType;
+
+                target.SecFilter = cfg.SecFilter;
+                target.TimeFilter = cfg.TimeFilter;
+                target.SizeFilter = cfg.SizeFilter;
+                target.StopEnable = cfg.StopEnable;
+                target.StopValue = cfg.StopValue;
+                target.StopValueType = cfg.StopValueType;
+                target.Profit1Enable = cfg.Profit1Enable;
+                target.Profit1Value = cfg.Profit1Value;
+                target.Profit1ValueType = cfg.Profit1ValueType;
+                target.Profit2Enable = cfg.Profit2Enable;
+                target.Profit2Value1 = cfg.Profit2Value1;
+                target.Profit2Trailing1 = cfg.Profit2Trailing1;
+                target.Profit2Value1Type = cfg.Profit2Value1Type;
+                target.Profit2Value2 = cfg.Profit2Value2;
+                target.Profit2Trailing2 = cfg.Profit2Trailing2;
+                target.Profit2Value2Type = cfg.Profit2Value2Type;
 
                 target.Desp = cfg.Desp;
 

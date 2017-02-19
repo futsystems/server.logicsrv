@@ -77,10 +77,7 @@ namespace TradingLib.Core
             {
                 throw new FutsRspError("无权进行此操作");
             }
-            if (manager.Domain.GetFollowStrategies().Count() >= manager.Domain.Cfg_FollowStrategyNum)
-            {
-                throw new FutsRspError(string.Format("跟单策略数量限制:{0}", manager.Domain.Cfg_FollowStrategyNum));
-            }
+            
 
             FollowStrategyConfig cfg = payload.DeserializeObject<FollowStrategyConfig>();
             //管理端添加的跟单策略在对应分区
@@ -90,6 +87,11 @@ namespace TradingLib.Core
                 bool isadd = cfg.ID == 0;
                 if (isadd)
                 {
+                    if (manager.Domain.GetFollowStrategies().Count() >= manager.Domain.Cfg_FollowStrategyNum)
+                    {
+                        throw new FutsRspError(string.Format("跟单策略数量限制:{0}", manager.Domain.Cfg_FollowStrategyNum));
+                    }
+
                     cfg.Domain_ID = manager.domain_id;
                     //新增判断token重复
                     if (FollowTracker.StrategyCfgTracker[cfg.ID] != null)
