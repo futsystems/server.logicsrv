@@ -31,7 +31,6 @@ namespace TradingLib.Core
                     return;
 
                 logger.Info(string.Format("Signal:{0} PositionEvent:{1}", signal.GetInfo(), pe.GetInfo()));
-                //1.过滤器过滤
 
                 //2.生成跟单项目
                 FollowItem followitem = null;
@@ -40,6 +39,13 @@ namespace TradingLib.Core
                 {
                     //策略暂停状态 不接受任何开仓信号
                     if (this.WorkState == QSEnumFollowWorkState.Suspend)
+                        return;
+                    //开仓过滤
+                    //1.品种过滤
+                    if (!this.Config.ValidSecFilter(trade.oSymbol.SecurityFamily.Code))
+                        return;
+                    //2.时间过滤
+                    if (!this.Config.ValidTimeFilter(Util.ToTLTime()))
                         return;
                     followitem = new FollowItem(this, signal,trade, pe);
                 }

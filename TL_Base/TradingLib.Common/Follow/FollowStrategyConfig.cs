@@ -7,6 +7,35 @@ using TradingLib.API;
 
 namespace TradingLib.Common
 {
+    public class FollowTimeSpan
+    {
+        public int Start { get; set; }
+
+        public int End { get; set; }
+
+
+        public bool InSpan(int time)
+        {
+            if (time < Start) return false;
+            if (time > End) return false;
+            return true;
+        }
+        public static FollowTimeSpan Deserialize(string val)
+        {
+            try
+            {
+                string[] tmp = val.Split('-');
+                FollowTimeSpan ts = new FollowTimeSpan();
+                ts.Start = int.Parse(tmp[0]);
+                ts.End = int.Parse(tmp[1]);
+                return ts;
+            }
+            catch (Exception)
+            {
+                return null;
+            }
+        }
+    }
     /// <summary>
     /// 跟单策略参数
     /// </summary>
@@ -98,15 +127,74 @@ namespace TradingLib.Common
         /// </summary>
         public QSEnumPendingOperationType ExitPendingOperationType { get; set; }
 
+        string _secFilterStr = string.Empty;
+        List<string> _secList = new List<string>();
         /// <summary>
         /// 品种过滤列表
         /// </summary>
-        public string SecFilter { get; set; }
-        
+        public string SecFilter { 
+            get
+            {
+                return _secFilterStr;
+            }
+            set{
+                _secList.Clear();
+                _secFilterStr = value;
+                if (string.IsNullOrEmpty(_secFilterStr)) return;
+                _secList.AddRange(_secFilterStr.Split(','));
+            }
+        }
+
+        /// <summary>
+        /// 是否接受某个品种
+        /// </summary>
+        /// <param name="sec"></param>
+        /// <returns></returns>
+        public bool ValidSecFilter(string sec)
+        {
+            if (_secList.Count == 0) return true;
+            return _secList.Contains(sec);
+        }
+
+
+        string _timeFilterStr = string.Empty;
+        List<FollowTimeSpan> _tslist = new List<FollowTimeSpan>();
         /// <summary>
         /// 时间段过滤列表
         /// </summary>
-        public string TimeFilter { get; set; }
+        public string TimeFilter {
+            get { return _timeFilterStr; }
+            set
+            {
+                _tslist.Clear();
+                _timeFilterStr = value;
+                if (string.IsNullOrEmpty(_timeFilterStr)) return;
+                foreach (var str in _timeFilterStr.Split(','))
+                {
+                    FollowTimeSpan ts = FollowTimeSpan.Deserialize(str);
+                    if (ts != null)
+                    {
+                        _tslist.Add(ts);
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// 检查是否在设定的时间区间内
+        /// </summary>
+        /// <param name="time"></param>
+        /// <returns></returns>
+        public bool ValidTimeFilter(int time)
+        {
+            if (_tslist.Count == 0) return true;
+            foreach (var tmp in _tslist)
+            {
+                if (tmp.InSpan(time))
+                    return true;
+            }
+            return false;
+        }
 
         /// <summary>
         /// 信号最大手数过滤
