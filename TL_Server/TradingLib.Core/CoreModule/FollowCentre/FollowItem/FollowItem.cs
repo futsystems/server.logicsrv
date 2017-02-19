@@ -50,7 +50,6 @@ namespace TradingLib.Core
                 this.FollowSide = strategy.Config.FollowDirection == QSEnumFollowDirection.Positive ? trade.Side : !trade.Side;
                 if (posevent.EventType == QSEnumPositionEventType.EntryPosition)
                 {
-                    //存在问题 信号端1个委托分成多比成交 是否每个成交都要去判定一次,还是某个委托只跟第一个成交即可
                     int size = Math.Abs(trade.xSize);
                     if (strategy.Config.SizeFilter > 0)
                     {

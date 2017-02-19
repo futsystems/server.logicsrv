@@ -94,6 +94,16 @@ namespace TradingLib.Core
             return null;
         }
 
+        /// <summary>
+        /// 判定某个委托ID是否已经触发过开仓跟单项了
+        /// </summary>
+        /// <param name="f"></param>
+        /// <returns></returns>
+        public bool IsOrderFollowed(long orderid)
+        {
+            return followKeyItemMap.Values.Any(item => item.SignalTrade != null && item.SignalTrade.id == orderid);
+        }
+
         FollowItem GetEntryFollowItemViaLocalKey(string localKey)
         {
             if (string.IsNullOrEmpty(localKey)) return null;

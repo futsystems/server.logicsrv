@@ -47,6 +47,8 @@ namespace TradingLib.Core
                     //2.时间过滤
                     if (!this.Config.ValidTimeFilter(Util.ToTLTime()))
                         return;
+                    //3.如果一个委托只跟一个,则检查对应委托是否已经触发过跟单项（存在问题 信号端1个委托分成多比成交 是否每个成交都要去判定一次,还是某个委托只跟第一个成交即可）
+
                     followitem = new FollowItem(this, signal,trade, pe);
                 }
                 else//平仓事件需要查找对应的开仓跟单项目 做持仓判定以及数据绑定
