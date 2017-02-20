@@ -37,6 +37,11 @@ namespace TradingLib.Core
                     FollowItemOrder fo = new FollowItemOrder { FollowKey = action.FollowItem.FollowKey, OrderID = o.id, Settleday = TLCtxHelper.ModuleSettleCentre.Tradingday };
                     FollowTracker.FollowItemLogger.NewFollowItemOrder(fo);
 
+                    //如果发单直接拒绝 则不会收到回报
+                    if (o.Status == QSEnumOrderStatus.Reject)
+                    {
+                        followAccount_GotOrderEvent(o);
+                    }
                 }
 
                 action.FollowItem.OnSendOrderEvent();

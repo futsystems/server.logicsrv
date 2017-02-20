@@ -199,6 +199,11 @@ namespace TradingLib.API
         [Description("确认撤单")]
         FollowOrderCanceled,
 
+        /// <summary>
+        /// 委托被拒绝
+        /// </summary>
+        [Description("拒绝")]
+        FollowOrderReject,
 
         [Description("关闭")]
         ItemClosed

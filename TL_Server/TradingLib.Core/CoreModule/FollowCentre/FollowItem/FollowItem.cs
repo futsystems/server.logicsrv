@@ -59,7 +59,10 @@ namespace TradingLib.Core
                 }
                 else
                 {
+                    //此处通过平仓明细中的数值进行第一次计算，开平跟单项链接完毕后 需要进行一次矫正，例如开仓有数量限制则需要根据实际开仓数量进行修改平仓跟单项数量
                     this.FollowSize =  Math.Abs(posevent.PositionExit.CloseVolume) * strategy.Config.FollowPower;//如果用对应成交触发 会有问题 比如 开5 开5 平7 则获得数量有可能是7 导致超平
+                    //1.开仓5 平仓2 平仓3
+
                 }
                 this.FollowPower = strategy.Config.FollowPower;
                 this.EventType = posevent.EventType;
@@ -72,6 +75,42 @@ namespace TradingLib.Core
                 this.Stage = QSEnumFollowStage.ItemCreated;
             }
         }
+
+        /// <summary>
+        /// 当进行开平链接时候 执行数量修正
+        /// </summary>
+        public void RectifyExistSize()
+        {
+            if (!FollowTracker.Inited) return;
+
+            if (this.EventType == QSEnumPositionEventType.ExitPosition)
+            {
+                int initSize = this.FollowSize;
+
+                int size = this.FollowSize;
+                if (this.Strategy.Config.SizeFilter > 0)
+                {
+
+                }
+
+                //开仓跟单项持仓数量
+                int entryPosHodSize = this.EntryFollowItem.PositionHoldSize;
+                //开仓跟单项对应平仓项的待成交数量
+                int exitPendingSize = this.EntryFollowItem.ExitFollowPendingSize;
+
+                if (size > entryPosHodSize - exitPendingSize)
+                {
+                    size = entryPosHodSize = exitPendingSize;
+                }
+
+                //更新数量
+                if (size != initSize)
+                {
+                    FollowTracker.FollowItemLogger.NewFollowItemUpdate(this.ToFollowItemData());
+                }
+            }
+        }
+
 
         /// <summary>
         /// 创建某个跟单项对应持仓的平仓跟单项

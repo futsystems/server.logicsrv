@@ -51,6 +51,7 @@ namespace TradingLib.Core
                     //记录委托拒绝 备注
                     case QSEnumOrderStatus.Reject:
                         this.Comment = o.Comment;
+                        this.Stage = QSEnumFollowStage.FollowOrderReject;
                         break;
                 }
             }

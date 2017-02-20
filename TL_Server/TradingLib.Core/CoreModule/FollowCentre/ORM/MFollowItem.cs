@@ -35,10 +35,23 @@ namespace TradingLib.ORM
         {
             using (DBMySql db = new DBMySql())
             {
-                string query = string.Format("UPDATE follow_items SET stage='{0}',comment='{2}'  WHERE followkey='{1}'", item.Stage, item.FollowKey,item.Comment);
+                string query = string.Format("UPDATE follow_items SET stage='{0}',comment='{2}' ,followsize='{3}'  WHERE followkey='{1}'", item.Stage, item.FollowKey, item.Comment,item.FollowSize);
                 db.Connection.Execute(query);
             }
         }
+        ///// <summary>
+        ///// 跟新跟单数量
+        ///// </summary>
+        ///// <param name="item"></param>
+        //public static void UpdateFollowItemSize(FollowItemData item)
+        //{
+        //    using (DBMySql db = new DBMySql())
+        //    {
+        //        string query = string.Format("UPDATE follow_items SET followsize='{0}'  WHERE followkey='{1}'", item.FollowSize, item.FollowKey);
+        //        db.Connection.Execute(query);
+        //    }
+        //}
+
 
         /// <summary>
         /// 插入跟单项委托关系

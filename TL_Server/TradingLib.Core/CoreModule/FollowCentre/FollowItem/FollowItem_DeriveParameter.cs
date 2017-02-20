@@ -118,6 +118,18 @@ namespace TradingLib.Core
         }
 
         /// <summary>
+        /// 当前处于待成交状态数量
+        /// 发送数量 - 成交数量
+        /// </summary>
+        public int FollowPendingSize
+        {
+            get
+            {
+                return _followsentsize - _followfillsize;
+            }
+        }
+
+        /// <summary>
         /// 开仓跟单项目对应的平仓跟单项成交数量
         /// </summary>
         public int ExitFollowFillSize
@@ -132,6 +144,25 @@ namespace TradingLib.Core
                 else
                 {
                     return this.ExitFollowItems.Sum(item => item.FollowFillSize);
+                }
+            }
+        }
+
+        /// <summary>
+        /// 开仓跟单项目对应的平仓跟单项待成交数量
+        /// </summary>
+        public int ExitFollowPendingSize
+        {
+            get
+            {
+                if (this.EventType == QSEnumPositionEventType.ExitPosition)
+                {
+
+                    throw new ArgumentException("ExitFollowItem have no ExitFollowFillSize");
+                }
+                else
+                {
+                    return this.ExitFollowItems.Sum(item => item.FollowPendingSize);
                 }
             }
         }

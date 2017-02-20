@@ -65,6 +65,7 @@ namespace TradingLib.Common
     /// </summary>
     public class CommissionTemplate : CommissionTemplateSetting
     {
+        [Newtonsoft.Json.JsonIgnore]
         public IEnumerable<CommissionTemplateItem> CommissionItems { get { return _itemamp.Values; } }
 
         Dictionary<string, CommissionTemplateItem> _itemamp = new Dictionary<string, CommissionTemplateItem>();

@@ -42,7 +42,7 @@ namespace TradingLib.Common
 
     public class MarginTemplate : MarginTemplateSetting
     {
-
+        [Newtonsoft.Json.JsonIgnore]
         public IEnumerable<MarginTemplateItem> MarginTemplateItems { get { return _itemmap.Values; } }
 
         Dictionary<string, MarginTemplateItem> _itemmap = new Dictionary<string, MarginTemplateItem>();
