@@ -11,7 +11,7 @@ namespace RuleSet2.Order
     /// <summary>
     /// 最大交易手数限制
     /// </summary>
-    public class RSTimeFilter : RuleBase, IOrderCheck
+    public class RSTimeFilter2 : RuleBase, IOrderCheck
     {
         /// <summary>
         /// 参数【json格式】
@@ -105,7 +105,7 @@ namespace RuleSet2.Order
             //判断是开仓还是平仓如果是开仓则进行判断拒绝,平仓则直接允许
             if (!o.IsEntryPosition) return true;
 
-            bool ret = ValidTimeFilter(Util.ToTLTime());
+            bool ret = !ValidTimeFilter(Util.ToTLTime());//不在设定时间范围内 允许开仓
             if (!ret)
             {
                 msg = RuleDescription + " 委托被拒绝";
@@ -121,7 +121,7 @@ namespace RuleSet2.Order
         {
             get
             {
-                return "开仓条件:交易时间段允许" + _timeFilterStr + " [" + string.Join(",", sec_list.ToArray()) + "]"; ;
+                return "开仓条件:交易时间段禁止" + _timeFilterStr + " [" + string.Join(",", sec_list.ToArray()) + "]"; ;
             }
         }
 
@@ -132,7 +132,7 @@ namespace RuleSet2.Order
         /// </summary>
         public static new string Title
         {
-            get { return "交易时间段检查(允许开仓)"; }
+            get { return "交易时间段检查(禁止开仓)"; }
         }
 
         /// <summary>
@@ -140,7 +140,7 @@ namespace RuleSet2.Order
         /// </summary>
         public static new string Description
         {
-            get { return "在交易时间段内,允许开仓"; }
+            get { return "在交易时间段内,禁止开仓"; }
         }
 
         public static new bool CanSetCompare { get { return false; } }

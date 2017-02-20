@@ -55,6 +55,7 @@
     <Compile Include="Order\RSSecurityBlock.cs" />
     <Compile Include="Order\RSMaxTradeSize.cs" />
     <Compile Include="Order\RSTimeFilter.cs" />
+    <Compile Include="Order\RSTimeFilter2.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Account\RSEquity.cs" />
     <Compile Include="Account\RSMaxLoss.cs" />
