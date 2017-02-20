@@ -15,11 +15,7 @@
 		<WeekOfMonth>3</WeekOfMonth>
 	</Holiday>
 
-	<Holiday name="President's Day">
-		<Month>2</Month>
-		<DayOfWeek>1</DayOfWeek>
-		<WeekOfMonth>3</WeekOfMonth>
-	</Holiday>
+
 	
 	<!--Holiday name="Easter">
 		<Easter />

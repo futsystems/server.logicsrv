@@ -24,37 +24,38 @@ namespace TradingLib.Core
                 orderMap.TryAdd(o.id, o);
                 _followsentsize += Math.Abs(o.TotalSize);//记录委托发送数量
             }
-            else
+            else //已经添加过的委托 则执行委托数据更新
             {
                 //更新委托对象相关字段
                 target.Status = o.Status;
                 target.FilledSize = o.FilledSize;
                 target.Size = o.Size;
                 target.Comment = o.Comment;
-
-                //根据委托状态更新跟单项状态
-                switch (o.Status)
-                {
-                    case QSEnumOrderStatus.Opened:
-                        this.Stage = QSEnumFollowStage.FollowOrderOpened;
-                        _orderOpenTime = Util.ToTLTime();
-                        break;
-                    case QSEnumOrderStatus.PartFilled:
-                        this.Stage = QSEnumFollowStage.FollowOrderPartFilled;
-                        break;
-                    case QSEnumOrderStatus.Filled:
-                        this.Stage = QSEnumFollowStage.FollowOrderFilled;
-                        break;
-                    case QSEnumOrderStatus.Canceled:
-                        this.Stage = QSEnumFollowStage.FollowOrderCanceled;
-                        break;
-                    //记录委托拒绝 备注
-                    case QSEnumOrderStatus.Reject:
-                        this.Comment = o.Comment;
-                        this.Stage = QSEnumFollowStage.FollowOrderReject;
-                        break;
-                }
             }
+
+            //根据委托状态更新跟单项状态
+            switch (o.Status)
+            {
+                case QSEnumOrderStatus.Opened:
+                    this.Stage = QSEnumFollowStage.FollowOrderOpened;
+                    _orderOpenTime = Util.ToTLTime();
+                    break;
+                case QSEnumOrderStatus.PartFilled:
+                    this.Stage = QSEnumFollowStage.FollowOrderPartFilled;
+                    break;
+                case QSEnumOrderStatus.Filled:
+                    this.Stage = QSEnumFollowStage.FollowOrderFilled;
+                    break;
+                case QSEnumOrderStatus.Canceled:
+                    this.Stage = QSEnumFollowStage.FollowOrderCanceled;
+                    break;
+                //记录委托拒绝 备注
+                case QSEnumOrderStatus.Reject:
+                    this.Comment = o.Comment;
+                    this.Stage = QSEnumFollowStage.FollowOrderReject;
+                    break;
+            }
+
         }
 
         /// <summary>

@@ -169,6 +169,8 @@ namespace TradingLib.Core
         {
             entry.NewExitFollowItem(exit);
             exit.NewEntryFollowItem(entry);
+            //根据开仓跟单项重新校正平仓发单量
+            exit.RectifyExistSize();
         }
 
         public static FollowItemData ToFollowItemData(this FollowItem item)

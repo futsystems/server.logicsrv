@@ -86,7 +86,6 @@ namespace TradingLib.Core
             if (this.EventType == QSEnumPositionEventType.ExitPosition)
             {
                 int initSize = this.FollowSize;
-
                 int size = this.FollowSize;
                 if (this.Strategy.Config.SizeFilter > 0)
                 {
@@ -100,11 +99,11 @@ namespace TradingLib.Core
 
                 if (size > entryPosHodSize - exitPendingSize)
                 {
-                    size = entryPosHodSize = exitPendingSize;
+                    size = entryPosHodSize - exitPendingSize;
                 }
-
+                this.FollowSize = size;
                 //更新数量
-                if (size != initSize)
+                if (this.FollowSize != initSize)
                 {
                     FollowTracker.FollowItemLogger.NewFollowItemUpdate(this.ToFollowItemData());
                 }
