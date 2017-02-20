@@ -7,35 +7,7 @@ using TradingLib.API;
 
 namespace TradingLib.Common
 {
-    public class FollowTimeSpan
-    {
-        public int Start { get; set; }
-
-        public int End { get; set; }
-
-
-        public bool InSpan(int time)
-        {
-            if (time < Start) return false;
-            if (time > End) return false;
-            return true;
-        }
-        public static FollowTimeSpan Deserialize(string val)
-        {
-            try
-            {
-                string[] tmp = val.Split('-');
-                FollowTimeSpan ts = new FollowTimeSpan();
-                ts.Start = int.Parse(tmp[0]);
-                ts.End = int.Parse(tmp[1]);
-                return ts;
-            }
-            catch (Exception)
-            {
-                return null;
-            }
-        }
-    }
+    
     /// <summary>
     /// 跟单策略参数
     /// </summary>
@@ -158,7 +130,7 @@ namespace TradingLib.Common
 
 
         string _timeFilterStr = string.Empty;
-        List<FollowTimeSpan> _tslist = new List<FollowTimeSpan>();
+        List<RuleTimeSpan> _tslist = new List<RuleTimeSpan>();
         /// <summary>
         /// 时间段过滤列表
         /// </summary>
@@ -171,7 +143,7 @@ namespace TradingLib.Common
                 if (string.IsNullOrEmpty(_timeFilterStr)) return;
                 foreach (var str in _timeFilterStr.Split(','))
                 {
-                    FollowTimeSpan ts = FollowTimeSpan.Deserialize(str);
+                    RuleTimeSpan ts = RuleTimeSpan.Deserialize(str);
                     if (ts != null)
                     {
                         _tslist.Add(ts);
