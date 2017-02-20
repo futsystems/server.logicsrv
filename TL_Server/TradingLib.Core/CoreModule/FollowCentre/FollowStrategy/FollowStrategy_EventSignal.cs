@@ -95,6 +95,7 @@ namespace TradingLib.Core
 
         }
 
+        public event Action<FollowItem> FollowItemCached;
         /// <summary>
         /// 将跟单项目放入缓存
         /// </summary>
@@ -107,7 +108,11 @@ namespace TradingLib.Core
                 localKeyItemMap.TryAdd(item.GetLocalKey(), item);//记录开仓跟单项本地键映射关系 用于平仓信号时候查找对应的开仓跟单项
             }
             //放入处理队列
-            followbuffer.Write(item);
+            //followbuffer.Write(item);
+            if (FollowItemCached != null)
+            {
+                FollowItemCached(item);
+            }
         }
 
         void OnSignalOrderEvent(Order order)

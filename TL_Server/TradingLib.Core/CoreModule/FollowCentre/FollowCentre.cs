@@ -55,6 +55,7 @@ namespace TradingLib.Core
                             item.Link(exit);
                             item.FlatTrigger = true;
                             item.Strategy.NewFollowItem(exit);
+                            
                         }
                     }
                     //执行止盈检查
@@ -176,12 +177,14 @@ namespace TradingLib.Core
             //启动跟单策略
             foreach (var strategy in FollowTracker.FollowStrategyTracker.FollowStrategies)
             {
-                strategy.Start();
+                strategy.FollowItemCached += new Action<FollowItem>(OnFollowItemCached);
             }
-
+            StartFollowItemWorker();
             FollowTracker.Inited = true;
 
         }
+
+
 
 
         
@@ -192,5 +195,8 @@ namespace TradingLib.Core
         { 
         
         }
+
+
+
     }
 }

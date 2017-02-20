@@ -104,7 +104,8 @@ namespace TradingLib.Core
                     FollowTracker.FollowStrategyTracker.InitStrategy(FollowTracker.StrategyCfgTracker[cfg.ID]);
                     //启动跟单策略
                     FollowStrategy strategy = FollowTracker.FollowStrategyTracker[cfg.ID];
-                    strategy.Start();
+                    strategy.FollowItemCached +=new Action<FollowItem>(OnFollowItemCached);
+                    //strategy.Start();
 
                     NotifyFollowStrategyConfig(FollowTracker.StrategyCfgTracker[cfg.ID]);
                     session.RspMessage("添加跟单策略成功");

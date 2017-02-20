@@ -138,6 +138,7 @@
     <Compile Include="CoreModule\FollowCentre\FollowCentre_Notify.cs" />
     <Compile Include="CoreModule\FollowCentre\Utils\Utils_TradingInfo.cs" />
     <Compile Include="CoreModule\FollowCentre\Utils\Utils_Domain.cs" />
+    <Compile Include="CoreModule\FollowCentre\FollowCentre_Process.cs" />
     <Compile Include="CoreModule\ManagerExchange\PacketHandler\MgrExchServer_PacketHandle_.cs" />
     <Compile Include="CoreModule\ManagerExchange\PacketHandler\MgrExchServer_PacketHandle_ConfigTemplate.cs" />
     <Compile Include="CoreModule\ManagerExchange\PacketHandler\pending\MgrExchServer_PacketHandle_FinAgent.cs" />
