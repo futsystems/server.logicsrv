@@ -87,9 +87,13 @@ namespace TradingLib.Core
             {
                 int initSize = this.FollowSize;
                 int size = this.FollowSize;
+                //如果设置了最大开仓数量 则需要根据原始成交数量进行比例换算
                 if (this.Strategy.Config.SizeFilter > 0)
                 {
-
+                    int entrytradesize = Math.Abs(this.EntryFollowItem.SignalTrade.xSize); //初始跟单成交数量
+                    int exittradesize = Math.Abs(this.PositionEvent.PositionExit.CloseVolume);//当前平仓成交数量
+                    double pect = (double)exittradesize / (double)entrytradesize;//计算平仓比例
+                    size = (int)Math.Ceiling(pect * this.EntryFollowItem.FollowFillSize);//根据比例计算需要平仓数量 
                 }
 
                 //开仓跟单项持仓数量
