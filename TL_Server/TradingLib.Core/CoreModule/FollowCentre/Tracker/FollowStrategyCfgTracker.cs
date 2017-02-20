@@ -61,8 +61,9 @@ namespace TradingLib.Core
             FollowStrategyConfig target = null;
             if (id2configMap.TryGetValue(cfg.ID, out target))
             {
-                //跟单乘数/方向/token不可修改
-                
+                //方向/token不可修改
+
+                target.FollowPower = cfg.FollowPower;
                 target.EntryPriceType = cfg.EntryPriceType;
                 target.EntryOffsetTicks = cfg.EntryOffsetTicks;
                 target.EntryPendingThresholdType = cfg.EntryPendingThresholdType;
