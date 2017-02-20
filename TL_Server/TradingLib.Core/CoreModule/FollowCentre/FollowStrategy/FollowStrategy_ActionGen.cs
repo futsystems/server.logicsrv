@@ -192,31 +192,32 @@ namespace TradingLib.Core
                             //平仓需要通过对应的平仓持仓明细来查找开仓成交，并检查对应的开仓成交是否有对应的持仓
                             //避免错误平仓
                             //比如开仓成交A 没有触发操作，触发后没有成交被撤销，出发后部分成交等
-                            PositionCloseDetail close = item.PositionEvent.PositionExit;
-                            if (close == null)
-                            {
-                                logger.Warn("ExitPoitionEvent CloseDetail is null");
-                                return null;
-                            }
+                            //PositionCloseDetail close = item.PositionEvent.PositionExit;
+                            //if (close == null)
+                            //{
+                            //    logger.Warn("ExitPoitionEvent CloseDetail is null");
+                            //    return null;
+                            //}
 
-                            //判定下单方向 跟单策略不能修改跟单方向 否则后续平仓跟单无法正确处理方向问题
-                            bool side = true;
-                            if (this.Config.FollowDirection == QSEnumFollowDirection.Positive)
-                            {
-                                side = item.SignalTrade.Side;
-                            }
-                            else
-                            {
-                                side = !item.SignalTrade.Side;
-                            }
+                            ////判定下单方向 跟单策略不能修改跟单方向 否则后续平仓跟单无法正确处理方向问题
+                            //bool side = true;
+                            //if (this.Config.FollowDirection == QSEnumFollowDirection.Positive)
+                            //{
+                            //    side = item.SignalTrade.Side;
+                            //}
+                            //else
+                            //{
+                            //    side = !item.SignalTrade.Side;
+                            //}
 
-                            //判定下单数量 数量需要结合开仓跟单项的敞口持仓来判定
-                            //理论数量
-                            int size = Math.Abs(item.SignalTrade.xSize) * this.Config.FollowPower;
-                            int possize = item.EntryFollowItem.PositionHoldSize;
+                            ////判定下单数量 数量需要结合开仓跟单项的敞口持仓来判定
+                            ////理论数量
+                            //int size = Math.Abs(item.SignalTrade.xSize) * this.Config.FollowPower;
+                            //int possize = item.EntryFollowItem.PositionHoldSize;
 
-                            size = size < possize ? size : possize;//平仓数量不能超过对应持仓数量
-                            Order o = new OrderImpl(symbol.Symbol, side, size);
+                            //size = size < possize ? size : possize;//平仓数量不能超过对应持仓数量
+
+                            Order o = new OrderImpl(item.Symbol, item.FollowSide, item.FollowSize);
 
                             //开平标识
                             o.OffsetFlag = QSEnumOffsetFlag.CLOSE;
@@ -234,13 +235,13 @@ namespace TradingLib.Core
                                     price = 0;
                                     break;
                                 case QSEnumFollowPriceType.OpponentPrice:
-                                    price = side ? k.AskPrice : k.BidPrice;
+                                    price = item.FollowSide ? k.AskPrice : k.BidPrice;
                                     break;
                                 case QSEnumFollowPriceType.HangingPrice:
-                                    price = side ? (item.SignalTrade.xPrice - this.Config.EntryOffsetTicks * symbol.SecurityFamily.PriceTick) : (item.SignalTrade.xPrice + this.Config.EntryOffsetTicks * symbol.SecurityFamily.PriceTick);
+                                    price =item.FollowSide?k.BidPrice:k.AskPrice;// side ? (item.SignalTrade.xPrice - this.Config.EntryOffsetTicks * symbol.SecurityFamily.PriceTick) : (item.SignalTrade.xPrice + this.Config.EntryOffsetTicks * symbol.SecurityFamily.PriceTick);
                                     break;
                                 case QSEnumFollowPriceType.SignalPrice:
-                                    price = item.SignalTrade.xPrice;
+                                    price = item.FollowSide ? (item.SignalTrade.xPrice - this.Config.EntryOffsetTicks * symbol.SecurityFamily.PriceTick) : (item.SignalTrade.xPrice + this.Config.EntryOffsetTicks * symbol.SecurityFamily.PriceTick);
                                     break;
                                 default:
                                     price = 0;
