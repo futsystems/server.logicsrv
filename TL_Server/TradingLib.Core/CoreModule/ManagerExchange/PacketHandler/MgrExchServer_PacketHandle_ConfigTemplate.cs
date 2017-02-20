@@ -34,13 +34,27 @@ namespace TradingLib.Core
 
             if (manager.IsRoot())
             {
-                CommissionTemplateSetting[] templates = manager.Domain.GetCommissionTemplate().ToArray();
-                session.ReplyMgr(templates);
+                CommissionTemplateSetting[] items = manager.Domain.GetCommissionTemplate().ToArray();
+                if (items.Length == 0)
+                {
+                    session.ReplyMgr(null, true);
+                }
+                for (int i = 0; i < items.Length;i++ )
+                {
+                    session.ReplyMgr(items[i], i == items.Length - 1);
+                }
             }
             else if (manager.IsAgent())//如果是代理
             {
-                CommissionTemplateSetting[] templates = manager.Domain.GetCommissionTemplate().Where(item => item.Manager_ID == manager.BaseMgrID).ToArray();
-                session.ReplyMgr(templates);
+                CommissionTemplateSetting[] items = manager.Domain.GetCommissionTemplate().Where(item => item.Manager_ID == manager.BaseMgrID).ToArray();
+                if (items.Length == 0)
+                {
+                    session.ReplyMgr(null, true);
+                }
+                for (int i = 0; i < items.Length; i++)
+                {
+                    session.ReplyMgr(items[i], i == items.Length - 1);
+                }
             }
             else
             {
@@ -310,13 +324,27 @@ namespace TradingLib.Core
             }
             if (manager.IsRoot())
             {
-                MarginTemplateSetting[] templates = manager.Domain.GetMarginTemplate().ToArray();
-                session.ReplyMgr(templates);
+                MarginTemplateSetting[] items = manager.Domain.GetMarginTemplate().ToArray();
+                if (items.Length == 0)
+                {
+                    session.ReplyMgr(null, true);
+                }
+                for (int i = 0; i < items.Length; i++)
+                {
+                    session.ReplyMgr(items[i], i == items.Length - 1);
+                }
             }
             else if (manager.IsAgent())
             {
-                MarginTemplateSetting[] templates = manager.Domain.GetMarginTemplate().Where(item => item.Manager_ID == manager.BaseMgrID).ToArray();
-                session.ReplyMgr(templates);
+                MarginTemplateSetting[] items = manager.Domain.GetMarginTemplate().Where(item => item.Manager_ID == manager.BaseMgrID).ToArray();
+                if (items.Length == 0)
+                {
+                    session.ReplyMgr(null, true);
+                }
+                for (int i = 0; i < items.Length; i++)
+                {
+                    session.ReplyMgr(items[i], i == items.Length - 1);
+                }
             }
             else
             {
@@ -582,13 +610,27 @@ namespace TradingLib.Core
 
             if (manager.IsRoot())
             {
-                ExStrategyTemplate[] templates = manager.Domain.GetExStrategyTemplate().ToArray();
-                session.ReplyMgr(templates);
+                ExStrategyTemplate[] items = manager.Domain.GetExStrategyTemplate().ToArray();
+                if (items.Length == 0)
+                {
+                    session.ReplyMgr(null, true);
+                }
+                for (int i = 0; i < items.Length; i++)
+                {
+                    session.ReplyMgr(items[i], i == items.Length - 1);
+                }
             }
             else if (manager.BaseManager.IsAgent())
             {
-                ExStrategyTemplate[] templates = manager.Domain.GetExStrategyTemplate().Where(item => item.Manager_ID == manager.BaseMgrID).ToArray();
-                session.ReplyMgr(templates);
+                ExStrategyTemplate[] items = manager.Domain.GetExStrategyTemplate().Where(item => item.Manager_ID == manager.BaseMgrID).ToArray();
+                if (items.Length == 0)
+                {
+                    session.ReplyMgr(null, true);
+                }
+                for (int i = 0; i < items.Length; i++)
+                {
+                    session.ReplyMgr(items[i], i == items.Length - 1);
+                }
             }
             else
             {
