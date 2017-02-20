@@ -60,7 +60,7 @@ namespace TradingLib.Core
                         return;
                     }
                     //开仓与平仓对象绑定时 平仓跟单项获得初始FollowKey
-                    if (entryitem.NeedExitFollow)
+                    if (entryitem.NeedExitFollow && entryitem.FlatTrigger == false)
                     {
                         followitem = new FollowItem(this, signal, trade, pe);
                         entryitem.Link(followitem);

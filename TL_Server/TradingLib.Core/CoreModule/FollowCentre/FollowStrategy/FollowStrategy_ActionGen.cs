@@ -251,6 +251,7 @@ namespace TradingLib.Core
                             return o;
                         }
                     case QSEnumFollowItemTriggerType.ManualExitTrigger:
+                    case QSEnumFollowItemTriggerType.StrategyExitTrigger:
                         {
                             Order o = new OrderImpl(item.Symbol, item.FollowSide, item.FollowSize);
                             //手工平仓用市价单

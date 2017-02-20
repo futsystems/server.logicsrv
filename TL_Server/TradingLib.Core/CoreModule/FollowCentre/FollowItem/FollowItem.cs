@@ -22,7 +22,7 @@ namespace TradingLib.Core
             this.Signal = null;
             this.SignalTrade = null;
             this.PositionEvent = null;
-            
+            this.FlatTrigger = false;
         }
 
         /// <summary>
@@ -56,6 +56,9 @@ namespace TradingLib.Core
                         size = size <= strategy.Config.SizeFilter ? size : strategy.Config.SizeFilter;
                     }
                     this.FollowSize = size * strategy.Config.FollowPower;
+
+                    //设置止盈止损
+                    this.Protect = strategy.GenFollowItemProtect();
                 }
                 else
                 {
@@ -74,6 +77,7 @@ namespace TradingLib.Core
                 }
                 this.Stage = QSEnumFollowStage.ItemCreated;
             }
+            this.FlatTrigger = false;
         }
 
         /// <summary>
@@ -87,15 +91,26 @@ namespace TradingLib.Core
             {
                 int initSize = this.FollowSize;
                 int size = this.FollowSize;
-                //如果设置了最大开仓数量 则需要根据原始成交数量进行比例换算
-                if (this.Strategy.Config.SizeFilter > 0)
-                {
-                    int entrytradesize = Math.Abs(this.EntryFollowItem.SignalTrade.xSize); //初始跟单成交数量
-                    int exittradesize = Math.Abs(this.PositionEvent.PositionExit.CloseVolume);//当前平仓成交数量
-                    double pect = (double)exittradesize / (double)entrytradesize;//计算平仓比例
-                    size = (int)Math.Ceiling(pect * this.EntryFollowItem.FollowFillSize);//根据比例计算需要平仓数量 
-                }
 
+                switch (this.TriggerType)
+                {
+                    case QSEnumFollowItemTriggerType.SigTradeTrigger:
+                        {
+                            //如果设置了最大开仓数量 则需要根据原始成交数量进行比例换算
+                            if (this.Strategy.Config.SizeFilter > 0)
+                            {
+                                int entrytradesize = Math.Abs(this.EntryFollowItem.SignalTrade.xSize); //初始跟单成交数量
+                                int exittradesize = Math.Abs(this.PositionEvent.PositionExit.CloseVolume);//当前平仓成交数量
+                                double pect = (double)exittradesize / (double)entrytradesize;//计算平仓比例
+                                size = (int)Math.Ceiling(pect * this.EntryFollowItem.FollowFillSize);//根据比例计算需要平仓数量 
+                            }
+                            break;
+                        }
+                        //手工触发的平仓跟单项不用检查平仓明细数据
+                    default:
+                        break;
+                }
+                
                 //开仓跟单项持仓数量
                 int entryPosHodSize = this.EntryFollowItem.PositionHoldSize;
                 //开仓跟单项对应平仓项的待成交数量
@@ -120,11 +135,11 @@ namespace TradingLib.Core
         /// </summary>
         /// <param name="entry"></param>
         /// <returns></returns>
-        public static FollowItem CreateFlatFollowItem(FollowItem entry)
+        public static FollowItem CreateFlatFollowItem(FollowItem entry,QSEnumFollowItemTriggerType tigger)
         {
             FollowItem exit = new FollowItem(entry.Strategy);
 
-            exit.TriggerType = QSEnumFollowItemTriggerType.ManualExitTrigger;
+            exit.TriggerType = tigger;
             exit.Signal = null;
             exit.SignalTrade = null;
             exit.PositionEvent = null;
@@ -274,6 +289,19 @@ namespace TradingLib.Core
         /// </summary>
         List<FollowAction> _actions = new List<FollowAction>();
 
+
+        /// <summary>
+        /// 开仓跟单持仓项止盈止损设置 
+        /// </summary>
+        public FollowItemProtect Protect = null;
+
+        /// <summary>
+        /// 是否已经触发强平
+        /// 1.手工强平
+        /// 2.行情驱动止盈止损强平
+        /// 避免多个线程或操作间重复强平某个开仓跟单项
+        /// </summary>
+        public bool FlatTrigger { get; set; }
         /// <summary>
         /// 描述
         /// </summary>

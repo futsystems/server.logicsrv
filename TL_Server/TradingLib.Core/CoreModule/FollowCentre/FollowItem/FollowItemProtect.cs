@@ -63,6 +63,8 @@ namespace TradingLib.Common
         /// </summary>
         public bool Profit2Step1Touch { get; set; }
 
+        public QSEnumFollowProtectValueType Profit2Value1Type { get; set; }
+
         /// <summary>
         /// 止盈2 第二段值
         /// </summary>
@@ -77,5 +79,31 @@ namespace TradingLib.Common
         /// 止盈2逻辑第二段中间值
         /// </summary>
         public bool Profit2Step2Touch { get; set; }
+
+        public QSEnumFollowProtectValueType Profit2Value2Type { get; set; }
+
+        public decimal CalcStopTarget(bool side, decimal cost)
+        {
+            if (StopValueType == QSEnumFollowProtectValueType.Point)
+            {
+                return side ? cost - StopValue : cost + StopValue;
+            }
+            else
+            {
+                return side ? cost * (100 - StopValue) / 100 : cost * (100 + StopValue) / 100;
+            }
+        }
+
+        public decimal CalcProfit1Target(bool side, decimal cost)
+        {
+            if (Profit1ValueType == QSEnumFollowProtectValueType.Point)
+            {
+                return side ? cost + Profit1Value : cost - Profit1Value;
+            }
+            else
+            {
+                return side ? cost * (100 + Profit1Value) / 100 : cost * (100 - Profit1Value) / 100;
+            }
+        }
     }
 }

@@ -112,6 +112,32 @@ namespace TradingLib.Core
             
         }
 
+        /// <summary>
+        /// 开仓跟单项开启
+        /// </summary>
+        public static event Action<FollowItem> EntryFollowItemOpen;
+
+        public static void FireEntryFollowItemOpen(FollowItem item)
+        {
+            if (EntryFollowItemOpen != null)
+            {
+                EntryFollowItemOpen(item);
+            }
+        }
+        /// <summary>
+        /// 开仓跟单项关闭
+        /// </summary>
+        public static event Action<FollowItem> EntryFollowItemClose;
+
+        public static void FireEntryFollowItemClose(FollowItem item)
+        {
+            if (EntryFollowItemClose != null)
+            {
+                EntryFollowItemClose(item);
+            }
+        }
+
+
         static IdTracker _followIDTracker = new IdTracker();
         /// <summary>
         /// 跟单编号生成器

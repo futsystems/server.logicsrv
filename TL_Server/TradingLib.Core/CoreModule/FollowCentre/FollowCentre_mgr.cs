@@ -423,9 +423,9 @@ namespace TradingLib.Core
             }
 
             //执行手工平仓操作
-            FollowItem exit = FollowItem.CreateFlatFollowItem(item);
+            FollowItem exit = FollowItem.CreateFlatFollowItem(item,QSEnumFollowItemTriggerType.ManualExitTrigger);
             item.Link(exit);
-
+            item.FlatTrigger = true;
             item.Strategy.NewFollowItem(exit);
         }
 

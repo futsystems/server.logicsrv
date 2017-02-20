@@ -64,6 +64,9 @@ namespace TradingLib.Core
         /// <param name="f"></param>
         public void GotTrade(Trade f)
         {
+            //第一条成交 触发跟单项开启事件
+            bool firstTrade = tradeMap.Count == 0;//
+
             if (!tradeMap.Keys.Contains(f.TradeID))
             {
                 tradeMap.TryAdd(f.TradeID, f);
@@ -101,12 +104,19 @@ namespace TradingLib.Core
                     {
                         var data = this.EntryFollowItem.ToFollowExecution();
                         FollowTracker.FollowItemLogger.NewFollowExecution(data);
+                        //触发开仓跟单项关闭事件
+                        FollowTracker.FireEntryFollowItemClose(this.EntryFollowItem);
                     }
                 }
                 catch (Exception ex)
                 {
                     Console.WriteLine("process followexecution error:" + ex.ToString());
                 }
+            }
+            if (this.EventType == QSEnumPositionEventType.EntryPosition && firstTrade)
+            {
+                //触发开仓跟单项关闭事件
+                FollowTracker.FireEntryFollowItemOpen(this);
             }
             
         }

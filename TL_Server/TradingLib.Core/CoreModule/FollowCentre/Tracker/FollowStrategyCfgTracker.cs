@@ -62,7 +62,6 @@ namespace TradingLib.Core
             if (id2configMap.TryGetValue(cfg.ID, out target))
             {
                 //方向/token不可修改
-
                 target.FollowPower = cfg.FollowPower;
                 target.EntryPriceType = cfg.EntryPriceType;
                 target.EntryOffsetTicks = cfg.EntryOffsetTicks;
