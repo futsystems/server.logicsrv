@@ -33,6 +33,12 @@ namespace TradingLib.Contrib.APIService
                 _cfgdb.UpdateConfig("MD5Key", QSEnumCfgType.String, "123456", "MD5Key");
             }
             _md5key = _cfgdb["MD5Key"].AsString();
+
+            if (!_cfgdb.HaveConfig("LocalUrl"))
+            {
+                _cfgdb.UpdateConfig("LocalUrl", QSEnumCfgType.String, "http://127.0.0.1:8080", "本地API服务访问地址");
+            }
+            APIGlobal.BaseUrl = _cfgdb["LocalUrl"].AsString();
         }
 
 
