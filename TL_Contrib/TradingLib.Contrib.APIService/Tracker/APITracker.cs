@@ -32,5 +32,20 @@ namespace TradingLib.Contrib.APIService
                 return defaultinstance._followIDTracker.AssignId.ToString();
             }
         }
+
+        GateWayTracker _gwtracker = null;
+
+        /// <summary>
+        /// 支付网关维护器
+        /// </summary>
+        public static GateWayTracker GateWayTracker
+        {
+            get
+            {
+                if (defaultinstance._gwtracker == null)
+                    defaultinstance._gwtracker = new GateWayTracker();
+                return defaultinstance._gwtracker;
+            }
+        }
     }
 }

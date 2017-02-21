@@ -7,6 +7,7 @@ using TradingLib.Common;
 using System.Security;
 using System.Security.Cryptography;
 using Common.Logging;
+using DotLiquid;
 
 namespace TradingLib.Contrib.APIService
 {
@@ -14,7 +15,8 @@ namespace TradingLib.Contrib.APIService
     {
         static ILog logger = LogManager.GetLogger("BaoFuGateway");
 
-        public BaoFuGateway(string json)
+        public BaoFuGateway(GateWayConfig config)
+            :base(config)
         {
             this.GateWayType = QSEnumGateWayType.BaoFu;
 
@@ -52,7 +54,7 @@ namespace TradingLib.Contrib.APIService
         /// </summary>
         /// <param name="operatioin"></param>
         /// <returns></returns>
-        public DropBaoFuPayment CreatePaymentView(CashOperation operatioin)
+        public override Drop CreatePaymentDrop(CashOperation operatioin)
         {
             DropBaoFuPayment data = new DropBaoFuPayment();
 

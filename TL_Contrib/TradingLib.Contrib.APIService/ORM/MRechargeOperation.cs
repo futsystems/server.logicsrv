@@ -12,19 +12,6 @@ namespace TradingLib.ORM
 {
     public class MCashOperation : MBase
     {
-        ///// <summary>
-        ///// 获得所有服务计划
-        ///// </summary>
-        ///// <returns></returns>
-        //public static IEnumerable<AccountContact> SelectAccountContacts()
-        //{
-        //    using (DBMySql db = new DBMySql())
-        //    {
-        //        const string query = "SELECT *  FROM contrib_ng_contact";
-        //        return db.Connection.Query<AccountContact>(query, null);
-        //    }
-        //}
-
         /// <summary>
         /// 插入出如今操作
         /// </summary>

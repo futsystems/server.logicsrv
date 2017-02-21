@@ -35,8 +35,6 @@ namespace TradingLib.Contrib.APIService
 
         const string ERROR_TPL_ID = "ERROR";
 
-        BaoFuGateway baofugw = new BaoFuGateway("");
-
         public override object Process(HttpRequest request)
         {
             try
@@ -92,6 +90,16 @@ namespace TradingLib.Contrib.APIService
                             }
 
                             //通过账户分区查找支付网关设置 如果有支付网关则通过支付网关来获得对应的数据
+                            var gateway = APITracker.GateWayTracker.GetDomainGateway(account.Domain.ID);
+                            if (gateway == null)
+                            {
+                                return tplTracker.Render(ERROR_TPL_ID, new DropError(102, "未设置支付通道"));
+                            }
+                            if (!gateway.Avabile)
+                            {
+                                return tplTracker.Render(ERROR_TPL_ID, new DropError(102, "支付通道未开启"));
+                            }
+
                             //输入参数验证完毕
                             CashOperation operation = new CashOperation();
                             operation.Account = acct;
@@ -103,7 +111,7 @@ namespace TradingLib.Contrib.APIService
 
                             ORM.MCashOperation.InsertCashOperation(operation);
 
-                            var data = baofugw.CreatePaymentView(operation);
+                            var data = gateway.CreatePaymentDrop(operation);
 
                             return tplTracker.Render("DEPOSITCONFIRM_BAOFU", data);
                         }
@@ -129,8 +137,22 @@ namespace TradingLib.Contrib.APIService
                                 logger.Error(string.Format("CashOperatin not exit,Info:{0}", request.RawUrl));
                                 return "CashOperation Not Exist";
                             }
+                            IAccount account = TLCtxHelper.ModuleAccountManager[operation.Account];
+                            if(account == null)
+                            {
+                                logger.Error(string.Format("Account not exit,Info:{0}", request.RawUrl));
+                                return "Account Not Exist";
+                            }
 
-                            var gateway = baofugw;
+                            var gateway = APITracker.GateWayTracker.GetDomainGateway(account.Domain.ID);
+                            if (gateway == null)
+                            {
+                                return "GateWay Not Setted";
+                            }
+                            if (!gateway.Avabile)
+                            {
+                                return "GateWay Not Avabile";
+                            }
 
                             //1.检查支付网关回调参数是否合法
                             bool paramsResult = gateway.CheckParameters(request.Params);
@@ -194,7 +216,22 @@ namespace TradingLib.Contrib.APIService
                                 logger.Error(string.Format("CashOperatin not exit,Info:{0}", request.RawUrl));
                                 return tplTracker.Render(ERROR_TPL_ID, new DropError(202, "未找到相应订单"));
                             }
-                            var gateway = baofugw;
+                            IAccount account = TLCtxHelper.ModuleAccountManager[operation.Account];
+                            if (account == null)
+                            {
+                                logger.Error(string.Format("Account not exit,Info:{0}", request.RawUrl));
+                                return tplTracker.Render(ERROR_TPL_ID, new DropError(102, "订单账户不存在"));
+                            }
+
+                            var gateway = APITracker.GateWayTracker.GetDomainGateway(account.Domain.ID);
+                            if (gateway == null)
+                            {
+                                return tplTracker.Render(ERROR_TPL_ID, new DropError(102, "未设置支付通道"));
+                            }
+                            if (!gateway.Avabile)
+                            {
+                                return tplTracker.Render(ERROR_TPL_ID, new DropError(102, "支付通道未开启"));
+                            }
 
                             //1.检查支付网关回调参数是否合法
                             bool paramsResult = gateway.CheckParameters(request.Params);

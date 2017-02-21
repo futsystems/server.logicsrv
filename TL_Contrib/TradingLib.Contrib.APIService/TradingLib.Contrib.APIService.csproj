@@ -69,11 +69,13 @@
     <Compile Include="APIService_Counter.cs" />
     <Compile Include="CashHandler.cs" />
     <Compile Include="Common\CashOperation.cs" />
+    <Compile Include="Common\GateWayConfig.cs" />
     <Compile Include="Drop\DropBaoFuPayment.cs" />
     <Compile Include="Drop\DropError.cs" />
     <Compile Include="Drop\DropOperation.cs" />
     <Compile Include="HttpServer.cs" />
     <Compile Include="JsonReply.cs" />
+    <Compile Include="ORM\MGateWayConfig.cs" />
     <Compile Include="ORM\MRechargeOperation.cs" />
     <Compile Include="PaymentGateway\BaoFuGateway.cs" />
     <Compile Include="PaymentGateway\GateWayBase.cs" />
@@ -85,6 +87,8 @@
     <Compile Include="RequestHandler.cs" />
     <Compile Include="TemplateTracker.cs" />
     <Compile Include="Tracker\APITracker.cs" />
+    <Compile Include="Tracker\GateWayTracker.cs" />
+    <Compile Include="APIService_Cash.cs" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
