@@ -166,7 +166,19 @@ namespace TradingLib.Core
             }
         }
 
+        /// <summary>
+        /// 判定某个用户ID是否已经绑定了交易账户
+        /// </summary>
+        /// <param name="userId"></param>
+        public bool UserHaveAccount(int userID)
+        {
+            return _accMap.Values.Any(acc => acc.UserID == userID);
+        }
 
+        public IAccount GetUserAccount(int userID)
+        {
+            return _accMap.Values.Where(acc => acc.UserID == userID).FirstOrDefault();
+        }
         /// <summary>
         /// 从数据库加载某accID的交易账户
         /// </summary>

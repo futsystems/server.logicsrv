@@ -57,6 +57,29 @@ namespace TradingLib.API
         /// <returns></returns>
         bool VaildAccount(string account, string pass);
 
+
+        /// <summary>
+        /// 判定某个用户是否已经绑定了交易账户
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <returns></returns>
+        bool UserHaveAccount(int userID);
+
+        /// <summary>
+        /// 通过UserID查找对应账户
+        /// </summary>
+        /// <param name="userID"></param>
+        /// <returns></returns>
+        IAccount GetUserAccount(int userID);
+
+        /// <summary>
+        /// 为某个User添加交易账户
+        /// </summary>
+        /// <param name="userID"></param>
+        /// <param name="agentID"></param>
+        /// <param name="account"></param>
+        /// <returns></returns>
+        bool CreateAccountForUser(int userID, int agentID, out string account);
         /// <summary>
         /// 直接进行出入金操作
         /// </summary>

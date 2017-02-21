@@ -19,10 +19,20 @@ namespace TradingLib.Contrib.APIService
     {
         const string ContribName = "APIService";
 
+        HttpAPIServer _apiServer = null;
+        ConfigDB _cfgdb;
+        string _md5key = "123456";
+
         public APIServiceBundle()
             : base(APIServiceBundle.ContribName)
-        { 
-            
+        {
+            //从数据库加载参数
+            _cfgdb = new ConfigDB(APIServiceBundle.ContribName);
+            if (!_cfgdb.HaveConfig("MD5Key"))
+            {
+                _cfgdb.UpdateConfig("MD5Key", QSEnumCfgType.String, "123456", "MD5Key");
+            }
+            _md5key = _cfgdb["MD5Key"].AsString();
         }
 
 
@@ -40,7 +50,12 @@ namespace TradingLib.Contrib.APIService
         /// <summary>
         /// 启动
         /// </summary>
-        public void Start() { }
+        public void Start() 
+        {
+            _apiServer = new HttpAPIServer(_md5key);
+            _apiServer.Start();
+        
+        }
 
         /// <summary>
         /// 停止

@@ -31,11 +31,20 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Common.Logging">
+      <HintPath>..\..\lib\Common.Logging.dll</HintPath>
+    </Reference>
     <Reference Include="Common.Logging.Core">
       <HintPath>..\..\lib\Common.Logging.Core.dll</HintPath>
     </Reference>
+    <Reference Include="DotLiquid">
+      <HintPath>..\..\lib\DotLiquid.dll</HintPath>
+    </Reference>
     <Reference Include="Newtonsoft.Json">
       <HintPath>..\..\lib\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="NHttp">
+      <HintPath>..\..\lib\NHttp.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Xml.Linq" />
@@ -55,11 +64,29 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="APIGlobal.cs" />
     <Compile Include="APIService.cs" />
     <Compile Include="APIService_Counter.cs" />
+    <Compile Include="CashHandler.cs" />
+    <Compile Include="Common\CashOperation.cs" />
+    <Compile Include="Drop\DropBaoFuPayment.cs" />
+    <Compile Include="Drop\DropError.cs" />
+    <Compile Include="Drop\DropOperation.cs" />
+    <Compile Include="HttpServer.cs" />
+    <Compile Include="JsonReply.cs" />
+    <Compile Include="ORM\MRechargeOperation.cs" />
+    <Compile Include="PaymentGateway\BaoFuGateway.cs" />
+    <Compile Include="PaymentGateway\GateWayBase.cs" />
+    <Compile Include="PaymentGateway\GateWayType.cs" />
+    <Compile Include="PaymentGateway\PaymentGateWaySetting.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="APIService_.cs" />
+    <Compile Include="RequestCheck.cs" />
+    <Compile Include="RequestHandler.cs" />
+    <Compile Include="TemplateTracker.cs" />
+    <Compile Include="Tracker\APITracker.cs" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

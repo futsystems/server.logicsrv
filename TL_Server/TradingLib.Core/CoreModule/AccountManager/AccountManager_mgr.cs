@@ -79,6 +79,41 @@ namespace TradingLib.Core
 
         }
 
+        /// <summary>
+        /// 为某个User创建交易账户
+        /// </summary>
+        /// <param name="userID"></param>
+        /// <param name="agentID"></param>
+        /// <returns></returns>
+        public bool CreateAccountForUser(int userID, int agentID,out string account)
+        {
+            account = string.Empty;
+            try
+            {
+                AccountCreation creation = new AccountCreation();
+                creation.BaseManagerID = agentID;
+                creation.Category = QSEnumAccountCategory.SUBACCOUNT;
+                creation.RouterType = QSEnumOrderTransferType.SIM;
+                creation.UserID = userID;
+                this.AddAccount(ref creation);
+                //帐户添加完毕后同步添加profile信息
+                creation.Profile.Account = creation.Account;
+
+                //插入新的profile
+                BasicTracker.AccountProfileTracker.UpdateAccountProfile(creation.Profile);
+
+                //对外触发交易帐号添加事件
+                TLCtxHelper.EventAccount.FireAccountAddEvent(this[creation.Account]);
+
+                account = creation.Account;
+                return true;
+            }
+            catch (Exception ex)
+            {
+                logger.Error("Create Account Error:" + ex.ToString());
+                return false;
+            }
+        }
 
         /// <summary>
         /// 请求删除交易帐户
