@@ -30,7 +30,7 @@ namespace TradingLib.Contrib.APIService
         {
             this.Module = "CASH";
             //初始化模板维护器
-            tplTracker = TemplateTracker.CreateTemplateTracker(Util.GetResourceDirectory(this.Module.ToLower()));
+            tplTracker = TemplateTracker.CreateTemplateTracker(Util.GetResourceDirectory("Cash"));
         }
 
         const string ERROR_TPL_ID = "ERROR";
