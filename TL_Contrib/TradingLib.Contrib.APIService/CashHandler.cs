@@ -113,7 +113,6 @@ namespace TradingLib.Contrib.APIService
                             CashOperation operation = null;
                             switch (gwtype)
                             {
-
                                 case "BAOFU":
                                     {
                                         operation = BaoFuGateway.GetCashOperation(request.Params);
@@ -122,7 +121,6 @@ namespace TradingLib.Contrib.APIService
                                 default:
                                     {
                                         return "Not Support Gateway";
-                                        //return tplTracker.Render(ERROR_TPL_ID, new DropError(201, "支付网关回调异常"));
                                     }
                             }
 
@@ -177,37 +175,47 @@ namespace TradingLib.Contrib.APIService
                         {
 
                             string gwtype = path[3].ToUpper();
+                            CashOperation operation = null;
                             switch (gwtype)
                             {
                                 case "BAOFU":
                                     {
-                                        string trasnid = request.Params["TransID"];
-                                        logger.Info(string.Format("TransID:{0}", trasnid));
-                                        bool ret = baofugw.CheckParameters(request.Params);
-                                        logger.Info("CustNotify Url check:" + ret.ToString());
-                                        //URL回调检查
-                                        if (ret)
-                                        {
-                                            int result = int.Parse(request.Params["Result"]);
-                                            if (result == 1)
-                                            {
-                                                return tplTracker.Render(ERROR_TPL_ID, new DropError(0, "支付成功"));
-                                            }
-                                            else
-                                            {
-                                                return tplTracker.Render(ERROR_TPL_ID, new DropError(202, "支付失败"));
-                                            }
-                                        }
-                                        else
-                                        {
-                                            return tplTracker.Render(ERROR_TPL_ID, new DropError(201, "支付网关回调异常:参数检查错误"));
-                                        }
+                                        operation = BaoFuGateway.GetCashOperation(request.Params);
+                                        break;
                                     }
                                 default:
                                     {
-                                        return tplTracker.Render(ERROR_TPL_ID, new DropError(201, "支付网关回调异常"));
+                                        return tplTracker.Render(ERROR_TPL_ID, new DropError(201, "网关类型不支持"));
                                     }
                             }
+
+                            if (operation == null)
+                            {
+                                logger.Error(string.Format("CashOperatin not exit,Info:{0}", request.RawUrl));
+                                return tplTracker.Render(ERROR_TPL_ID, new DropError(202, "未找到相应订单"));
+                            }
+                            var gateway = baofugw;
+
+                            //1.检查支付网关回调参数是否合法
+                            bool paramsResult = gateway.CheckParameters(request.Params);
+                            if (paramsResult)
+                            {
+                                bool payResult = gateway.CheckPayResult(request.Params, operation);
+                                if (payResult)
+                                {
+                                    return tplTracker.Render(ERROR_TPL_ID, new DropError(0, "支付成功"));
+                                }
+                                else
+                                {
+                                    return tplTracker.Render(ERROR_TPL_ID, new DropError(202, "支付失败"));
+                                }
+                            }
+                            else
+                            {
+                                return tplTracker.Render(ERROR_TPL_ID, new DropError(201, "支付网关回调异常:参数检查错误"));
+                            }
+
+
                         }
                     default:
                         break;
