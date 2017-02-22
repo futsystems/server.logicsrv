@@ -42,6 +42,22 @@ namespace TradingLib.ORM
         }
 
         /// <summary>
+        /// 查询某个交易账户待处理出入金请求
+        /// </summary>
+        /// <param name="account"></param>
+        /// <param name="status"></param>
+        /// <returns></returns>
+        public static IEnumerable<CashOperation> SelectPendingCashOperation(string account)
+        {
+            using (DBMySql db = new DBMySql())
+            {
+                string query = string.Format("SELECT * FROM contrib_cash_payment_operation  WHERE account ='{0}' AND status = '{1}'", account,QSEnumCashInOutStatus.PENDING);
+                return db.Connection.Query<CashOperation>(query);
+
+            }
+        }
+
+        /// <summary>
         /// 更新出入操作状态
         /// </summary>
         /// <param name="item"></param>

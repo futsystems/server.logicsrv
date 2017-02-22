@@ -53,6 +53,63 @@ namespace TradingLib.Contrib.APIService
 
                             return tplTracker.Render(action, null);
                         }
+                    case "WITHDRAWCONFIRM":
+                        {
+                            var acct = request.Params["account"];
+                            var pass = request.Params["pass"];
+                            decimal amount = 0;
+                            IAccount account = TLCtxHelper.ModuleAccountManager[acct];
+                            if (account == null)
+                            {
+                                return tplTracker.Render(ERROR_TPL_ID, new DropError(101, "交易账户不存在"));
+                            }
+                            if (!TLCtxHelper.ModuleAccountManager.VaildAccount(acct, pass))
+                            {
+                                return tplTracker.Render(ERROR_TPL_ID, new DropError(102, "密码错误"));
+                            }
+                            try
+                            {
+                                amount = decimal.Parse(request.Params["amount"]);
+                                if (amount <= 0)
+                                {
+                                    return tplTracker.Render(ERROR_TPL_ID, new DropError(103, "金额需大于零"));
+                                }
+                            }
+                            catch (Exception ex)
+                            {
+                                return tplTracker.Render(ERROR_TPL_ID, new DropError(102, "输入金额格式错误"));
+                            }
+
+                            IEnumerable<CashOperation> pendingWithdraws = ORM.MCashOperation.SelectPendingCashOperation(account.ID).Where(c => c.OperationType == QSEnumCashOperation.WithDraw);
+                            if (pendingWithdraws.Count() > 0)
+                            {
+                                return tplTracker.Render(ERROR_TPL_ID, new DropError(102, "有出金请求未处理"));
+                            }
+
+                            if (account.GetPositionsHold().Count()>0 || account.GetPendingOrders().Count()>0)
+                            {
+                                return tplTracker.Render(ERROR_TPL_ID, new DropError(102, "交易账户有持仓或挂单,无法执行出金"));
+                            }
+
+                            if (amount > account.NowEquity)
+                            {
+                                return tplTracker.Render(ERROR_TPL_ID, new DropError(102, string.Format("出金金额大于账户权益:{0}", account.NowEquity.ToFormatStr())));
+                            }
+                            //输入参数验证完毕
+                            CashOperation operation = new CashOperation();
+                            operation.Account = acct;
+                            operation.Amount = amount;
+                            operation.DateTime = Util.ToTLDateTime();
+                            operation.GateWayType = (QSEnumGateWayType)(-1);
+                            operation.OperationType = QSEnumCashOperation.WithDraw;
+                            operation.Ref = APITracker.NextRef;
+
+                            ORM.MCashOperation.InsertCashOperation(operation);
+
+                            return tplTracker.Render("WITHDRAWCONFIRM", new DropCashOperation(operation));
+
+
+                        }
                     case "DEPOSITCONFIRM":
                         {
                             var acct = request.Params["account"];
