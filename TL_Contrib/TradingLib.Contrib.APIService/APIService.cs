@@ -19,9 +19,11 @@ namespace TradingLib.Contrib.APIService
     {
         const string ContribName = "APIService";
 
-        HttpAPIServer _apiServer = null;
+        HttpServer _httpServer = null;
         ConfigDB _cfgdb;
         string _md5key = "123456";
+        int _port = 8080;
+        string _address = "127.0.0.1";
 
         public APIServiceBundle()
             : base(APIServiceBundle.ContribName)
@@ -34,11 +36,25 @@ namespace TradingLib.Contrib.APIService
             }
             _md5key = _cfgdb["MD5Key"].AsString();
 
+            if (!_cfgdb.HaveConfig("HttpPort"))
+            {
+                _cfgdb.UpdateConfig("HttpPort", QSEnumCfgType.Int, "8080", "HttpPort");
+            }
+            _port = _cfgdb["HttpPort"].AsInt();
+
+
+            if (!_cfgdb.HaveConfig("HttpAddress"))
+            {
+                _cfgdb.UpdateConfig("HttpAddress", QSEnumCfgType.String, "127.0.0.1", "HttpAddress");
+            }
+            _address = _cfgdb["HttpAddress"].AsString(); ;
+
+
             if (!_cfgdb.HaveConfig("LocalUrl"))
             {
                 _cfgdb.UpdateConfig("LocalUrl", QSEnumCfgType.String, "http://127.0.0.1:8080", "本地API服务访问地址");
             }
-            APIGlobal.BaseUrl = _cfgdb["LocalUrl"].AsString();
+            APIGlobal.BaseUrl = string.Format("http://{0}:{1}", _address, _port);
         }
 
 
@@ -49,18 +65,19 @@ namespace TradingLib.Contrib.APIService
         {
             logger.Info("APIServiceBundle is loading ......");
         }
+
         /// <summary>
         /// 销毁
         /// </summary>
         public void OnDestory() { }
+
         /// <summary>
         /// 启动
         /// </summary>
         public void Start() 
         {
-            _apiServer = new HttpAPIServer(_md5key);
-            _apiServer.Start();
-        
+            _httpServer = new HttpServer(_port);
+            _httpServer.Start();
         }
 
         /// <summary>

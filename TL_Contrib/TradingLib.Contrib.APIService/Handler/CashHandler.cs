@@ -10,17 +10,6 @@ using Common.Logging;
 
 namespace TradingLib.Contrib.APIService
 {
-    /// <summary>
-    /// 数据对象
-    /// 用于填充Template
-    /// </summary>
-    public class User : Drop
-    {
-        public string Name { get; set; }
-    }
-
-   
-
     public class CashHandler:RequestHandler
     {
         ILog logger = LogManager.GetLogger("CashHandler");
@@ -45,6 +34,10 @@ namespace TradingLib.Contrib.APIService
                     return "Need Action Type";
                 }
                 string action = path[2].ToUpper();
+                if (string.IsNullOrEmpty(action))
+                {
+                    return "Need Action Type";
+                }
 
                 switch (action)
                 {
@@ -52,13 +45,13 @@ namespace TradingLib.Contrib.APIService
                         {
                             var tpl = tplTracker[action];
 
-                            return tplTracker.Render(action, new User { Name = "XXXX" });
+                            return tplTracker.Render(action,null);
                         }
                     case "WITHDRAW":
                         {
                             var tpl = tplTracker[action];
 
-                            return tplTracker.Render(action, new User { Name = "XXXX" });
+                            return tplTracker.Render(action, null);
                         }
                     case "DEPOSITCONFIRM":
                         {
