@@ -35,19 +35,17 @@
 						<tr><td>金额:</td><td>{{data.Amount}}</td></tr>
 					</table>
 
-					<form id='alipaysubmit' name='alipaysubmit' method="post" action="https://mapi.alipay.com/gateway.do?_input_charset=utf-8" class="uk-panel uk-panel-box uk-form">
+					<form id='alipaysubmit' name='alipaysubmit' method="post" action="{{data.Pay_Url}}" class="uk-panel uk-panel-box uk-form">
 						<input name='partner' type='hidden' value= "{{data.Partner}}"/>
 						<input name='_input_charset' type='hidden' value= "{{data.Input_Charset}}"/>
 						<input name='service' type='hidden' value= "{{data.Service}}"/>
 						<input name='payment_type' type='hidden' value= "{{data.Payment_Type}}"/>
 						<input name='notify_url' type='hidden' value= "{{data.Notify_Url}}"/>		
 						<input name='return_url' type='hidden' value= "{{data.Return_Url}}" />
-						<input name='seller_email' type='hidden' value= "{{data.Seller_Email}}" />
 						<input name='out_trade_no' type='hidden' value= "{{data.Out_Trade_No}}"/>
 						<input name='subject' type='hidden' value= "{{data.Subject}}"/>
 						<input name='total_fee' type='hidden' value= "{{data.Total_Fee}}"/>
-						<input name='body' type='hidden' value= "{{data.Body}}"/>	
-						<input name='show_url' type='hidden' value="{{data.Show_Url}}"/>
+						<input name='seller_id' type='hidden' value= "{{data.Seller_ID}}"/>	
 						<input name='sign' type='hidden' value="{{data.Sign}}"/>
 						<input name='sign_type' type='hidden' value="{{data.Sign_Type}}"/>
 						<div class="uk-form-row">

@@ -82,6 +82,7 @@ namespace TradingLib.Contrib.APIService
             return data;
         }
 
+        
         //md5签名
         /// <summary>
         /// 根据宝付协议规则计算签名
@@ -142,8 +143,9 @@ namespace TradingLib.Contrib.APIService
         /// </summary>
         /// <param name="queryString"></param>
         /// <param name="md5key"></param>
-        public override bool CheckParameters(System.Collections.Specialized.NameValueCollection queryString)
+        public override bool CheckParameters(NHttp.HttpRequest request)
         {
+            var queryString = request.Params;
             string MemberID = queryString["MemberID"];//商户号
             string TerminalID = queryString["TerminalID"];//商户终端号
             string TransID = queryString["TransID"];//商户流水号
@@ -170,14 +172,16 @@ namespace TradingLib.Contrib.APIService
             }
         }
 
-        public override bool CheckPayResult(System.Collections.Specialized.NameValueCollection queryString, CashOperation operation)
+        public override bool CheckPayResult(NHttp.HttpRequest request,CashOperation operation)
         {
+            var queryString = request.Params;
             int result = int.Parse(queryString["Result"]);
             return result == 1;
         }
 
-        public override string GetResultComment(System.Collections.Specialized.NameValueCollection queryString)
+        public override string GetResultComment(NHttp.HttpRequest request)
         {
+            var queryString = request.Params;
             string ResultDesc = queryString["ResultDesc"];
 
             return ResultDesc;

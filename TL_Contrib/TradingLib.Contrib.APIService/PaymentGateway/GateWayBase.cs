@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using DotLiquid;
+using NHttp;
+
 namespace TradingLib.Contrib.APIService
 {
     public class GateWayBase
@@ -15,6 +17,7 @@ namespace TradingLib.Contrib.APIService
         public GateWayBase(GateWayConfig config)
         {
             _config = config;
+            this.SuccessReponse = "success";
         }
 
         public bool Avabile { get { return _config.Avabile; } }
@@ -28,22 +31,24 @@ namespace TradingLib.Contrib.APIService
         {
             return null;
         }
+
+        public string SuccessReponse { get; set; }
         /// <summary>
         /// 检查远端回调访问是否合法
         /// </summary>
         /// <param name="queryString"></param>
         /// <returns></returns>
-        public virtual bool CheckParameters(System.Collections.Specialized.NameValueCollection queryString)
+        public virtual bool CheckParameters(NHttp.HttpRequest request)
         {
             return false;
         }
 
-        public virtual bool CheckPayResult(System.Collections.Specialized.NameValueCollection queryString, CashOperation operation)
+        public virtual bool CheckPayResult(NHttp.HttpRequest request,CashOperation operation)
         {
             return false;
         }
 
-        public virtual string GetResultComment(System.Collections.Specialized.NameValueCollection queryString)
+        public virtual string GetResultComment(NHttp.HttpRequest request)
         {
             return string.Empty;
         }

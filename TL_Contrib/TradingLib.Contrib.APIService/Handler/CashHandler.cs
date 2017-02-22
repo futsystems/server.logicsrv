@@ -156,7 +156,7 @@ namespace TradingLib.Contrib.APIService
                             operation.Account = acct;
                             operation.Amount = amount;
                             operation.DateTime = Util.ToTLDateTime();
-                            operation.GateWayType = QSEnumGateWayType.BaoFu;
+                            operation.GateWayType = gateway.GateWayType;
                             operation.OperationType = QSEnumCashOperation.Deposit;
                             operation.Ref = APITracker.NextRef;
                             operation.Domain_ID = account.Domain.ID;
@@ -175,6 +175,11 @@ namespace TradingLib.Contrib.APIService
                                 case "BAOFU":
                                     {
                                         operation = BaoFuGateway.GetCashOperation(request.Params);
+                                        break;
+                                    }
+                                case "ALIPAY":
+                                    {
+                                        operation = AliPayGateWay.GetCashOperation(request.Params);
                                         break;
                                     }
                                 default:
@@ -205,8 +210,9 @@ namespace TradingLib.Contrib.APIService
                                 return "GateWay Not Avabile";
                             }
 
+                            
                             //1.检查支付网关回调参数是否合法
-                            bool paramsResult = gateway.CheckParameters(request.Params);
+                            bool paramsResult = gateway.CheckParameters(request);
                             if (paramsResult)
                             {
                                 //2.检查operation状态
@@ -216,7 +222,7 @@ namespace TradingLib.Contrib.APIService
                                     return "CashOperation Already Confirmed";
                                 }
                                 //3.检查支付状态
-                                bool payResult = gateway.CheckPayResult(request.Params, operation);
+                                bool payResult = gateway.CheckPayResult(request, operation);
                                 if (payResult)
                                 {
                                     //1.执行账户出入金
@@ -226,15 +232,16 @@ namespace TradingLib.Contrib.APIService
 
                                     //2.更新出入金操作状态更新
                                     operation.Status = QSEnumCashInOutStatus.CONFIRMED;
-                                    operation.Comment = gateway.GetResultComment(request.Params);
+                                    operation.Comment = gateway.GetResultComment(request);
                                     ORM.MCashOperation.UpdateCashOperationStatus(operation);
                                     TLCtxHelper.ModuleMgrExchange.Notify("APIService", "NotifyCashOperation", operation, account.GetNotifyPredicate());//通知
-                                    return "CashOperation Success";
+                                    //return "CashOperation Success";
+                                    return gateway.SuccessReponse;
                                 }
                                 else
                                 {
                                     operation.Status = QSEnumCashInOutStatus.CANCELED;
-                                    operation.Comment = gateway.GetResultComment(request.Params);
+                                    operation.Comment = gateway.GetResultComment(request);
                                     ORM.MCashOperation.UpdateCashOperationStatus(operation);
                                     TLCtxHelper.ModuleMgrExchange.Notify("APIService", "NotifyCashOperation", operation, account.GetNotifyPredicate());//通知
                                     return "CashOperatioin Failed";
@@ -256,6 +263,11 @@ namespace TradingLib.Contrib.APIService
                                 case "BAOFU":
                                     {
                                         operation = BaoFuGateway.GetCashOperation(request.Params);
+                                        break;
+                                    }
+                                case "ALIPAY":
+                                    {
+                                        operation = AliPayGateWay.GetCashOperation(request.Params);
                                         break;
                                     }
                                 default:
@@ -287,10 +299,10 @@ namespace TradingLib.Contrib.APIService
                             }
 
                             //1.检查支付网关回调参数是否合法
-                            bool paramsResult = gateway.CheckParameters(request.Params);
+                            bool paramsResult = gateway.CheckParameters(request);
                             if (paramsResult)
                             {
-                                bool payResult = gateway.CheckPayResult(request.Params, operation);
+                                bool payResult = gateway.CheckPayResult(request, operation);
                                 if (payResult)
                                 {
                                     return tplTracker.Render(ERROR_TPL_ID, new DropError(0, "支付成功"));

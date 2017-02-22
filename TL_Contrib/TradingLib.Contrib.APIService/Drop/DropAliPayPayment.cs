@@ -40,10 +40,6 @@ namespace TradingLib.Contrib
         /// </summary>
         public string ReturnUrl { get; set; }
 
-        /// <summary>
-        /// 卖家邮件地址
-        /// </summary>
-        public string SellerEmail { get; set; }
 
         /// <summary>
         /// 商户订单编号
@@ -59,16 +55,11 @@ namespace TradingLib.Contrib
         /// 金额
         /// </summary>
         public string TotalFee { get; set; }
-        /// <summary>
-        /// 订单描述
-        /// </summary>
-        public string Body { get; set; }
 
         /// <summary>
-        /// 商品暂时地址
+        /// 商户号
         /// </summary>
-        public string ShowUrl { get; set; }
-
+        public string SellerID { get; set; }
 
         public string Sign { get; set; }
 
