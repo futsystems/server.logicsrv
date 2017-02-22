@@ -63,5 +63,30 @@ namespace TradingLib.Contrib.APIService
 
             session.ReplyMgr(config, true);
         }
+
+
+        [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "QryCashOperation", "QryCashOperation - qry cash operation", "查询出入金操作记录", QSEnumArgParseType.Json)]
+        public void CTE_QryCashOperation(ISession session, string json)
+        {
+            Manager manager = session.GetManager();
+            if (!manager.IsRoot())
+            {
+                throw new FutsRspError("无权进行此操作");
+            }
+            if (!manager.Domain.Module_PayOnline)
+            {
+                throw new FutsRspError("无权进行此操作");
+            }
+
+            var data = json.DeserializeObject();
+            int start = int.Parse(data["start"].ToString());
+            int end = int.Parse(data["end"].ToString());
+
+
+
+            CashOperation[] items = ORM.MCashOperation.SelectCashOperations(manager.domain_id, start, end).ToArray();
+            session.ReplyMgrArray(items);
+
+        }
     }
 }

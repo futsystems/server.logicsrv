@@ -21,7 +21,7 @@ namespace TradingLib.ORM
         {
             using (DBMySql db = new DBMySql())
             {
-                string query = string.Format("INSERT INTO contrib_cash_payment_operation (`account`,`amount`,`datetime`,`operationtype`,`gatewaytype`,`status`,`ref`,`comment`) VALUES ( '{0}','{1}','{2}','{3}','{4}','{5}','{6}','{7}')", op.Account, op.Amount, op.DateTime, op.OperationType, op.GateWayType, op.Status, op.Ref,op.Comment);
+                string query = string.Format("INSERT INTO contrib_cash_payment_operation (`account`,`amount`,`datetime`,`operationtype`,`gatewaytype`,`status`,`ref`,`comment`,`domain_id`) VALUES ( '{0}','{1}','{2}','{3}','{4}','{5}','{6}','{7}','{8}')", op.Account, op.Amount, op.DateTime, op.OperationType, op.GateWayType, op.Status, op.Ref, op.Comment,op.Domain_ID);
                 return db.Connection.Execute(query) > 0;
             }
         }
@@ -37,6 +37,23 @@ namespace TradingLib.ORM
             {
                 string query = string.Format("SELECT * FROM contrib_cash_payment_operation  WHERE ref ='{0}'", transid);
                 return db.Connection.Query<CashOperation>(query).FirstOrDefault();
+
+            }
+        }
+
+        /// <summary>
+        /// 查询一个时间段内某个分区内所有出入金请求记录
+        /// </summary>
+        /// <param name="domain_id"></param>
+        /// <param name="start"></param>
+        /// <param name="end"></param>
+        /// <returns></returns>
+        public static IEnumerable<CashOperation> SelectCashOperations(int domain_id,int start,int end)
+        {
+            using (DBMySql db = new DBMySql())
+            {
+                string query = string.Format("SELECT * FROM contrib_cash_payment_operation  WHERE domain_id ='{0}' AND datetime >='{1}'  AND datetime <='{2}'", domain_id, (((long)start) * 1000000), (((long)end) * 1000000 + 235959));
+                return db.Connection.Query<CashOperation>(query);
 
             }
         }

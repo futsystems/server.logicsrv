@@ -53,6 +53,12 @@ namespace TradingLib.Contrib.APIService
         /// 备注
         /// </summary>
         public string Comment { get; set; }
+
+        /// <summary>
+        /// 分区编号
+        /// </summary>
+        public int Domain_ID { get; set; }
+
         /// <summary>
         /// 出入金操作生成对应的出入金记录
         /// </summary>

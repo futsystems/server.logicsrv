@@ -103,6 +103,7 @@ namespace TradingLib.Contrib.APIService
                             operation.GateWayType = (QSEnumGateWayType)(-1);
                             operation.OperationType = QSEnumCashOperation.WithDraw;
                             operation.Ref = APITracker.NextRef;
+                            operation.Domain_ID = account.Domain.ID;
 
                             ORM.MCashOperation.InsertCashOperation(operation);
 
@@ -158,6 +159,7 @@ namespace TradingLib.Contrib.APIService
                             operation.GateWayType = QSEnumGateWayType.BaoFu;
                             operation.OperationType = QSEnumCashOperation.Deposit;
                             operation.Ref = APITracker.NextRef;
+                            operation.Domain_ID = account.Domain.ID;
 
                             ORM.MCashOperation.InsertCashOperation(operation);
 

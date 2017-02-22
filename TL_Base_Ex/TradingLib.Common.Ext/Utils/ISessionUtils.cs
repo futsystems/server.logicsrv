@@ -87,7 +87,22 @@ namespace TradingLib.Common
             session.SendPacketMgr(response);
         }
 
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="session"></param>
+        /// <param name="items"></param>
+        public static void ReplyMgrArray(this ISession session, object[] items)
+        {
+            if (items.Length == 0)
+            {
+                session.ReplyMgr(null, true);
+            }
+            for (int i = 0; i < items.Length; i++)
+            {
+                session.ReplyMgr(items[i], i == items.Length - 1);
+            }
+        }
         /// <summary>
         /// 操作错误回报
         /// 通过FutsRspErro携带具体的错误消息生成RspMGROperationResponse 发送给对应的客户端
