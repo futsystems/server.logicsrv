@@ -106,7 +106,7 @@ namespace TradingLib.Contrib.APIService
                             operation.Domain_ID = account.Domain.ID;
 
                             ORM.MCashOperation.InsertCashOperation(operation);
-
+                            TLCtxHelper.ModuleMgrExchange.Notify("APIService","NotifyCashOperation",operation,account.GetNotifyPredicate());
                             return tplTracker.Render("WITHDRAWCONFIRM", new DropCashOperation(operation));
 
 
@@ -162,7 +162,7 @@ namespace TradingLib.Contrib.APIService
                             operation.Domain_ID = account.Domain.ID;
 
                             ORM.MCashOperation.InsertCashOperation(operation);
-
+                            TLCtxHelper.ModuleMgrExchange.Notify("APIService", "NotifyCashOperation", operation, account.GetNotifyPredicate());
                             var data = gateway.CreatePaymentDrop(operation);
 
                             return tplTracker.Render("DEPOSITCONFIRM_BAOFU", data);
@@ -229,6 +229,7 @@ namespace TradingLib.Contrib.APIService
                                     operation.Status = QSEnumCashInOutStatus.CONFIRMED;
                                     operation.Comment = gateway.GetResultComment(request.Params);
                                     ORM.MCashOperation.UpdateCashOperationStatus(operation);
+                                    TLCtxHelper.ModuleMgrExchange.Notify("APIService", "NotifyCashOperation", operation, account.GetNotifyPredicate());//通知
                                     return "CashOperation Success";
                                 }
                                 else
@@ -236,6 +237,7 @@ namespace TradingLib.Contrib.APIService
                                     operation.Status = QSEnumCashInOutStatus.CANCELED;
                                     operation.Comment = gateway.GetResultComment(request.Params);
                                     ORM.MCashOperation.UpdateCashOperationStatus(operation);
+                                    TLCtxHelper.ModuleMgrExchange.Notify("APIService", "NotifyCashOperation", operation, account.GetNotifyPredicate());//通知
                                     return "CashOperatioin Failed";
                                 }
                             }
