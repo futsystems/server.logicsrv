@@ -67,6 +67,7 @@
     <Compile Include="APIGlobal.cs" />
     <Compile Include="APIService.cs" />
     <Compile Include="APIService_Counter.cs" />
+    <Compile Include="Drop\DropAliPayPayment.cs" />
     <Compile Include="Handler\APIHandler.cs" />
     <Compile Include="Handler\CashHandler.cs" />
     <Compile Include="Common\CashOperation.cs" />
@@ -78,7 +79,10 @@
     <Compile Include="Common\JsonReply.cs" />
     <Compile Include="ORM\MGateWayConfig.cs" />
     <Compile Include="ORM\MRechargeOperation.cs" />
-    <Compile Include="PaymentGateway\BaoFuGateway.cs" />
+    <Compile Include="PaymentGateway\AliyPay\AliPayCore.cs" />
+    <Compile Include="PaymentGateway\AliyPay\AliPayGateWay.cs" />
+    <Compile Include="PaymentGateway\AliyPay\AliPayMD5.cs" />
+    <Compile Include="PaymentGateway\BaoFu\BaoFuGateway.cs" />
     <Compile Include="PaymentGateway\GateWayBase.cs" />
     <Compile Include="PaymentGateway\GateWayType.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

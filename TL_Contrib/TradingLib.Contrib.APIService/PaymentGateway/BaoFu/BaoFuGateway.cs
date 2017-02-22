@@ -78,7 +78,7 @@ namespace TradingLib.Contrib.APIService
             data.Amount = string.Format("{0}[{1}]", operatioin.Amount.ToFormatStr(), operatioin.Amount.ToChineseStr());
             data.Ref = operatioin.Ref;
             data.Operation = Util.GetEnumDescription(operatioin.OperationType);
-            
+            data.PayUrl = this.PayUrl;
             return data;
         }
 

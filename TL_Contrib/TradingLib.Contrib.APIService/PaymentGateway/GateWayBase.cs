@@ -54,9 +54,16 @@ namespace TradingLib.Contrib.APIService
             { 
                 case QSEnumGateWayType.BaoFu:
                     return new BaoFuGateway(config);
+                case QSEnumGateWayType.AliPay:
+                    return new AliPayGateWay(config);
                 default:
                     return null;
             }
+        }
+
+        public virtual string DemoResponse(CashOperation op)
+        {
+            return string.Empty;
         }
     }
 }

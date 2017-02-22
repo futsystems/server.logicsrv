@@ -164,8 +164,7 @@ namespace TradingLib.Contrib.APIService
                             ORM.MCashOperation.InsertCashOperation(operation);
                             TLCtxHelper.ModuleMgrExchange.Notify("APIService", "NotifyCashOperation", operation, account.GetNotifyPredicate());
                             var data = gateway.CreatePaymentDrop(operation);
-
-                            return tplTracker.Render("DEPOSITCONFIRM_BAOFU", data);
+                            return tplTracker.Render(string.Format("DEPOSITCONFIRM_{0}",gateway.GateWayType.ToString().ToUpper()), data);
                         }
                     case "SRVNOTIFY":
                         {
