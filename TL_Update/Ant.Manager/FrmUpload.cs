@@ -34,8 +34,8 @@ namespace Ant.Manager
             Utils.TotalProgress.Draw(string.Format("总进度 {0}/{1}", 0, mCount), 0, mCount);
             imgFile.Image = Utils.FileProgress.Image;
             imtTotal.Image = Utils.TotalProgress.Image ;
-            cbAppName.Items.Add("Moniter");
-            cbAppName.Items.Add("XTrader");
+            cbAppName.Items.Add("XManager");
+            cbAppName.Items.Add("XTraderLite");
             cbAppName.SelectedIndex = 0;
             if (!string.IsNullOrEmpty(Utils.IPAddress))
             {

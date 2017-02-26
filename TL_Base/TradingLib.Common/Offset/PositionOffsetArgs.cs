@@ -279,7 +279,7 @@ namespace TradingLib.Common
 
         public override string ToString()
         {
-            return Util.GetEnumDescription(Direction) + " " + (Enable ? "有效" : "无效") + " 类型:" + OffsetType.ToString() +" V:"+Value.ToString() +" S:"+Size.ToString() +" St:"+Start.ToString();
+            return Util.GetEnumDescription(Direction) + " " + (Enable ? "有效" : "无效") + " 类型:" + OffsetType.ToString() +" V:"+Value.ToString() +" S:"+Size.ToString() +" St:"+Start.ToString() + " Fire:"+Fired.ToString();
         }
 
         public static string Serialize(PositionOffsetArg po)
