@@ -80,6 +80,11 @@ namespace TradingLib.Common
         /// </summary>
         public bool Fired { get; set; }
 
+        /// <summary>
+        /// 强平触发时间
+        /// 用于强平异常后 重新执行强平操作
+        /// </summary>
+        public DateTime SentTime { get; set; }
 
         /// <summary>
         /// 止盈止损触发委托ID
