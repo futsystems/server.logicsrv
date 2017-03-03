@@ -36,6 +36,7 @@ namespace Ant.Manager
             imtTotal.Image = Utils.TotalProgress.Image ;
             cbAppName.Items.Add("XManager");
             cbAppName.Items.Add("XTraderLite");
+            cbAppName.Items.Add("Pobo");
             cbAppName.SelectedIndex = 0;
             if (!string.IsNullOrEmpty(Utils.IPAddress))
             {
