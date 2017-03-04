@@ -61,7 +61,7 @@ namespace TradingLib.Contrib.APIService
             data.PayUrl = this.PayUrl;
 
             
-            string body = string.Format("<body><MerBillNo>{0}</MerBillNo><Amount>{1}</Amount><Date>{2}</Date><CurrencyType>156</CurrencyType><GatewayType>01</GatewayType><Lang>GB</Lang><Merchanturl><![CDATA[{3}]]></Merchanturl><FailUrl><![CDATA[]]></FailUrl><Attach><![CDATA[]]></Attach><OrderEncodeType>5</OrderEncodeType><RetEncodeType>17</RetEncodeType><RetType>1</RetType><ServerUrl><![CDATA[{4}]]></ServerUrl><BillEXP></BillEXP><GoodsName>账户充值</GoodsName><IsCredit> </IsCredit><BankCode>1104</BankCode><ProductType> </ProductType></body>",
+            string body = string.Format("<body><MerBillNo>{0}</MerBillNo><Amount>{1}</Amount><Date>{2}</Date><CurrencyType>156</CurrencyType><GatewayType>01</GatewayType><Lang>GB</Lang><Merchanturl><![CDATA[{3}]]></Merchanturl><FailUrl><![CDATA[]]></FailUrl><Attach><![CDATA[]]></Attach><OrderEncodeType>5</OrderEncodeType><RetEncodeType>17</RetEncodeType><RetType>1</RetType><ServerUrl><![CDATA[{4}]]></ServerUrl><BillEXP></BillEXP><GoodsName>账户充值</GoodsName><IsCredit> </IsCredit><BankCode></BankCode><ProductType> </ProductType></body>",
                 operation.Ref,
                 operation.Amount,
                 Util.ToTLDate(),
