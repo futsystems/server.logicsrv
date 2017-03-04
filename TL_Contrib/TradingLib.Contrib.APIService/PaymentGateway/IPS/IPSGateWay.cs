@@ -23,7 +23,7 @@ namespace TradingLib.Contrib.APIService
             this.GateWayType = QSEnumGateWayType.IPS;
 
             this.MerCode = "193499";
-            this.Account = "193499";
+            this.Account = "1934990019";
             this.MD5Key = "VOeuPDR5lplJvT0qoXxTHSlgr5xS4nAgo4hEAy35yhrCcmDPwamThz2zYQ0ULPjSRjvJ72BRJEjsaBV6Kj3eTBA9KdW462N9uogM0kngOqdhAjt2Yqflbo4npkJ6yqCw";
             this.PayUrl = "https://newpay.ips.com.cn/psfp-entry/gateway/payment.do";
 
