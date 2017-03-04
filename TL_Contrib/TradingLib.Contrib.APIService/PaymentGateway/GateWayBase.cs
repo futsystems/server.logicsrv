@@ -61,6 +61,8 @@ namespace TradingLib.Contrib.APIService
                     return new BaoFuGateway(config);
                 case QSEnumGateWayType.AliPay:
                     return new AliPayGateWay(config);
+                case QSEnumGateWayType.IPS:
+                    return new IPSGateWay(config);
                 default:
                     return null;
             }

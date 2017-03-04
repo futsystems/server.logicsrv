@@ -16,5 +16,10 @@ namespace TradingLib.Contrib.APIService
         /// 支付宝
         /// </summary>
         AliPay,
+
+        /// <summary>
+        /// 环迅
+        /// </summary>
+        IPS,
     }
 }

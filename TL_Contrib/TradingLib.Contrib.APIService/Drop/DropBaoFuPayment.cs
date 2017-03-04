@@ -44,7 +44,9 @@ namespace TradingLib.Contrib.APIService
 
         public string Signature { get; set; }
 
+
         public string PayUrl { get; set; }
+
         /// <summary>
         /// 交易账户
         /// </summary>
