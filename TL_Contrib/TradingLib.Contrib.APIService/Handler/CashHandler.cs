@@ -237,6 +237,9 @@ namespace TradingLib.Contrib.APIService
                                     //1.执行账户出入金
                                     var txn = CashOperation.GenCashTransaction(operation);
                                     txn.Operator = gateway.GateWayType.ToString();
+                                    //汇率换算
+                                    var rate = account.GetExchangeRate(CurrencyType.RMB);
+                                    txn.Amount = txn.Amount * rate;
                                     TLCtxHelper.ModuleAccountManager.CashOperation(txn);
 
                                     //2.更新出入金操作状态更新

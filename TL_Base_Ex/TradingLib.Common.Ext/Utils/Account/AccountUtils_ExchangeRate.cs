@@ -24,6 +24,38 @@ namespace TradingLib.Common
             return account.GetExchangeRate(TLCtxHelper.ModuleSettleCentre.Tradingday,sec);
         }
 
+        public static decimal GetExchangeRate(this IAccount account, CurrencyType currency)
+        {
+            return account.GetExchangeRate(TLCtxHelper.ModuleSettleCentre.Tradingday, currency);
+        }
+
+        /// <summary>
+        /// 获得某个币种转换成账户币种的汇率系数
+        /// </summary>
+        /// <param name="account"></param>
+        /// <param name="settleday"></param>
+        /// <param name="currency"></param>
+        /// <returns></returns>
+        public static decimal GetExchangeRate(this IAccount account, int settleday, CurrencyType currency)
+        {
+            if (currency == account.Currency) return 1;
+            //帐户货币为主货币
+            if (account.Currency == GlobalConfig.BaseCurrency)
+            {
+                //获得品种货币对应的汇率 返回中间汇率
+                ExchangeRate secRate = account.Domain.GetExchangeRate(settleday, currency);
+                if (secRate == null) return 1;//没有找到品种汇率 则默认返回1
+                return secRate.IntermediateRate;
+            }
+            else
+            {
+                ExchangeRate secRate = account.Domain.GetExchangeRate(settleday, currency);
+                ExchangeRate accRate = account.Domain.GetExchangeRate(settleday, account.Currency);
+                if (secRate == null || accRate == null) return 1;
+                //将品种货币换算成系统基础货币然后再换算成帐户货币
+                return secRate.IntermediateRate / accRate.IntermediateRate;
+            }
+        }
         /// <summary>
         /// 获得某个交易日某个品种的本币汇率系数
         /// </summary>
