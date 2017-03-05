@@ -179,7 +179,7 @@ namespace TradingLib.Contrib.APIService
             {
                 throw new FutsRspError("交易账户不存在");
             }
-
+            var rate = account.GetExchangeRate(CurrencyType.RMB);
             if (op.OperationType == QSEnumCashOperation.WithDraw)
             {
                 if (account.GetPendingOrders().Count() > 0 || account.GetPositionsHold().Count() > 0)
@@ -187,7 +187,7 @@ namespace TradingLib.Contrib.APIService
                     throw new FutsRspError("交易账户有持仓或挂单");
                 }
 
-                if (account.NowEquity < op.Amount)
+                if (account.NowEquity < op.Amount * rate)
                 {
                     throw new FutsRspError(string.Format("交易账户[{0}]资金小于出金额", account.ID));
                 }
@@ -198,7 +198,7 @@ namespace TradingLib.Contrib.APIService
             var txn = CashOperation.GenCashTransaction(op);
             txn.Operator = manager.Login;
             //汇率换算
-            var rate = account.GetExchangeRate(CurrencyType.RMB);
+            
             txn.Amount = txn.Amount * rate;
 
             TLCtxHelper.ModuleAccountManager.CashOperation(txn);
