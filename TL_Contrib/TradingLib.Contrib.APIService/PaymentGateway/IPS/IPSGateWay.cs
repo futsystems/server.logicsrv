@@ -30,9 +30,9 @@ namespace TradingLib.Contrib.APIService
             this.ReturnUrl = APIGlobal.CustNotifyUrl + "/ips";
             this.NotifyUrl = APIGlobal.SrvNotifyUrl + "/ips";
 
-            this.Domain = "dlsmaa.pw";
-            this.ReturnUrl = this.ReturnUrl.Replace("127.0.0.1", this.Domain);
-            this.NotifyUrl = this.NotifyUrl.Replace("127.0.0.1", this.Domain);
+            this.Domain = data["Domain"].ToString();
+            this.ReturnUrl = this.ReturnUrl.Replace(APIGlobal.LocalIPAddress, this.Domain);
+            this.NotifyUrl = this.NotifyUrl.Replace(APIGlobal.LocalIPAddress, this.Domain);
         }
 
         string MerCode { get; set; }

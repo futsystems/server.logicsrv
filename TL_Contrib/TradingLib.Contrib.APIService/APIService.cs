@@ -49,12 +49,8 @@ namespace TradingLib.Contrib.APIService
             }
             _address = _cfgdb["HttpAddress"].AsString(); ;
 
-
-            if (!_cfgdb.HaveConfig("LocalUrl"))
-            {
-                _cfgdb.UpdateConfig("LocalUrl", QSEnumCfgType.String, "http://127.0.0.1:8080", "本地API服务访问地址");
-            }
             APIGlobal.BaseUrl = string.Format("http://{0}:{1}", _address, _port);
+            APIGlobal.LocalIPAddress = _address;
         }
 
 
