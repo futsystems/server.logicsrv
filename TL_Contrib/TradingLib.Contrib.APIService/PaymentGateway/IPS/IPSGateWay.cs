@@ -31,8 +31,8 @@ namespace TradingLib.Contrib.APIService
             this.NotifyUrl = APIGlobal.SrvNotifyUrl + "/ips";
 
             this.Domain = data["Domain"].ToString();
-            this.ReturnUrl = this.ReturnUrl.Replace(APIGlobal.LocalIPAddress, this.Domain);
-            this.NotifyUrl = this.NotifyUrl.Replace(APIGlobal.LocalIPAddress, this.Domain);
+            //this.ReturnUrl = this.ReturnUrl.Replace(APIGlobal.LocalIPAddress, this.Domain);
+            //this.NotifyUrl = this.NotifyUrl.Replace(APIGlobal.LocalIPAddress, this.Domain);
         }
 
         string MerCode { get; set; }
