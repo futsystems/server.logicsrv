@@ -197,6 +197,10 @@ namespace TradingLib.Contrib.APIService
 
             var txn = CashOperation.GenCashTransaction(op);
             txn.Operator = manager.Login;
+            //汇率换算
+            var rate = account.GetExchangeRate(CurrencyType.RMB);
+            txn.Amount = txn.Amount * rate;
+
             TLCtxHelper.ModuleAccountManager.CashOperation(txn);
 
             ORM.MCashOperation.UpdateCashOperationStatus(op);
