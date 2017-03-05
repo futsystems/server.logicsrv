@@ -21,11 +21,11 @@ namespace TradingLib.Contrib.APIService
             : base(config)
         {
             this.GateWayType = QSEnumGateWayType.IPS;
-
-            this.MerCode = "193499";
-            this.Account = "1934990019";
-            this.MD5Key = "VOeuPDR5lplJvT0qoXxTHSlgr5xS4nAgo4hEAy35yhrCcmDPwamThz2zYQ0ULPjSRjvJ72BRJEjsaBV6Kj3eTBA9KdW462N9uogM0kngOqdhAjt2Yqflbo4npkJ6yqCw";
-            this.PayUrl = "https://newpay.ips.com.cn/psfp-entry/gateway/payment.do";
+            var data = config.Config.DeserializeObject();
+            this.MerCode = data["MerCode"].ToString();// "193499";
+            this.Account = data["Account"].ToString();//"1934990019";
+            this.MD5Key = data["Key"].ToString();//"VOeuPDR5lplJvT0qoXxTHSlgr5xS4nAgo4hEAy35yhrCcmDPwamThz2zYQ0ULPjSRjvJ72BRJEjsaBV6Kj3eTBA9KdW462N9uogM0kngOqdhAjt2Yqflbo4npkJ6yqCw";
+            this.PayUrl = data["PayUrl"].ToString();//"https://newpay.ips.com.cn/psfp-entry/gateway/payment.do";
 
             this.ReturnUrl = APIGlobal.CustNotifyUrl + "/ips";
             this.NotifyUrl = APIGlobal.SrvNotifyUrl + "/ips";
