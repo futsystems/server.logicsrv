@@ -13,7 +13,8 @@ using TradingLib.Core;
 using TradingLib.ORM;
 using Autofac;
 using Autofac.Configuration;
-
+using System.Security;
+using System.Security.Cryptography;
 
 namespace TraddingSrvCLI
 {
@@ -23,12 +24,42 @@ namespace TraddingSrvCLI
         const string PROGRAME = "LogicSrv";
         static ILog logger = LogManager.GetLogger(PROGRAME);
 
+        //将字符串经过md5加密，返回加密后的字符串的小写表示
+        public static string Md5Encrypt(string strToBeEncrypt)
+        {
+            MD5 md5 = new MD5CryptoServiceProvider();
+            Byte[] FromData = System.Text.Encoding.GetEncoding("utf-8").GetBytes(strToBeEncrypt);
+            Byte[] TargetData = md5.ComputeHash(FromData);
+            string Byte2String = "";
+            for (int i = 0; i < TargetData.Length; i++)
+            {
+                Byte2String += TargetData[i].ToString("x2");
+            }
+            return Byte2String.ToLower();
+        }
+
         static void Main(string[] args)
         {
             AppDomain.CurrentDomain.UnhandledException += new UnhandledExceptionEventHandler(CurrentDomain_UnhandledException);
             try
             {
-                string tmp = double.MaxValue.ToString();
+
+                string tmp = "<Ips><GateWayRsp><head><ReferenceID></ReferenceID><RspCode>000000</RspCode><RspMsg><![CDATA[交易成功！]]></RspMsg><ReqDate>20170305091219</ReqDate><RspDate>20170305091340</RspDate><Signature>f04f976b94172bc47bffa8c27491c347</Signature></head><body><MerBillNo>636243016596374014</MerBillNo><CurrencyType>156</CurrencyType><Amount>0.01</Amount><Date>20170305</Date><Status>Y</Status><Msg><![CDATA[支付成功！]]></Msg><IpsBillNo>BO20170305091102004402</IpsBillNo><IpsTradeNo>2017030509121984702</IpsTradeNo><RetEncodeType>17</RetEncodeType><BankBillNo>7109877764</BankBillNo><ResultType>0</ResultType><IpsBillTime>20170305091340</IpsBillTime></body></GateWayRsp></Ips>";
+                System.Xml.XmlDocument doc = new XmlDocument();
+                doc.LoadXml(tmp);
+                var ipsnode = doc.SelectSingleNode("Ips");
+                var rspnode = ipsnode.SelectSingleNode("GateWayRsp");
+                var headnode = rspnode.SelectSingleNode("head");
+                var rspcode = headnode.SelectSingleNode("RspCode").InnerText;
+
+                rspcode = doc["Ips"]["GateWayRsp"]["head"]["RspCode"].InnerText;
+
+                var body = doc["Ips"]["GateWayRsp"]["body"].InnerXml;
+
+                var sign = doc["Ips"]["GateWayRsp"]["head"]["Signature"].InnerText;
+
+                string strtosign = "<body>" + body + "</body>" + "193499" + "VOeuPDR5lplJvT0qoXxTHSlgr5xS4nAgo4hEAy35yhrCcmDPwamThz2zYQ0ULPjSRjvJ72BRJEjsaBV6Kj3eTBA9KdW462N9uogM0kngOqdhAjt2Yqflbo4npkJ6yqCw";
+                bool v = (Md5Encrypt(strtosign) == sign);
 
                 //DateTime now = DateTime.Now;
                 //DateTime dt = TimeFrequency.NextRoundedTime(now, TimeSpan.FromMinutes(1));

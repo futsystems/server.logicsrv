@@ -54,7 +54,10 @@ namespace TradingLib.Contrib.APIService
         public static CashOperation GetCashOperation(System.Collections.Specialized.NameValueCollection queryString)
         {
             //宝付远端回调提供TransID参数 为本地提供的递增的订单编号
-            string transid = queryString["TransID"];
+            var ret = queryString["paymentResult"];
+            System.Xml.XmlDocument doc = new System.Xml.XmlDocument();
+            doc.LoadXml(ret);
+            string transid = doc["Ips"]["GateWayRsp"]["body"]["MerBillNo"].InnerText;
             return ORM.MCashOperation.SelectCashOperation(transid);
         }
 
@@ -91,17 +94,31 @@ namespace TradingLib.Contrib.APIService
 
         public override bool CheckParameters(NHttp.HttpRequest request)
         {
-            return base.CheckParameters(request);
+            var ret = request.Params["paymentResult"];
+            System.Xml.XmlDocument doc = new System.Xml.XmlDocument();
+            doc.LoadXml(ret);
+            var sign = doc["Ips"]["GateWayRsp"]["head"]["Signature"].InnerText;
+            var body = doc["Ips"]["GateWayRsp"]["body"].InnerXml;
+
+            string strtosign = "<body>" + body + "</body>" + this.MerCode + this.MD5Key;
+            return (Md5Encrypt(strtosign) == sign);
         }
 
         public override bool CheckPayResult(NHttp.HttpRequest request, CashOperation operation)
         {
-            return base.CheckPayResult(request, operation);
+            var ret = request.Params["paymentResult"];
+            System.Xml.XmlDocument doc = new System.Xml.XmlDocument();
+            doc.LoadXml(ret);
+            var rspcode = doc["Ips"]["GateWayRsp"]["head"]["RspCode"].InnerText;
+            return rspcode == "000000";
         }
 
         public override string GetResultComment(NHttp.HttpRequest request)
         {
-            return base.GetResultComment(request);
+            var ret = request.Params["paymentResult"];
+            System.Xml.XmlDocument doc = new System.Xml.XmlDocument();
+            doc.LoadXml(ret);
+            return doc["Ips"]["GateWayRsp"]["head"]["RspMsg"].InnerText;
         }
         //将字符串经过md5加密，返回加密后的字符串的小写表示
         public static string Md5Encrypt(string strToBeEncrypt)
