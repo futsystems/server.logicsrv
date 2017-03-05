@@ -182,6 +182,12 @@ namespace TradingLib.Contrib.APIService
                                         operation = AliPayGateWay.GetCashOperation(request.Params);
                                         break;
                                     }
+                                case "IPS":
+                                    {
+                                        var ret = request.Params["paymentResult"];
+                                        logger.Info("ret:" + ret);
+                                        break;
+                                    }
                                 default:
                                     {
                                         return "Not Support Gateway";

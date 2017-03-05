@@ -50,6 +50,15 @@ namespace TradingLib.Contrib.APIService
 
         string Domain { get; set; }
 
+
+        public static CashOperation GetCashOperation(System.Collections.Specialized.NameValueCollection queryString)
+        {
+            //宝付远端回调提供TransID参数 为本地提供的递增的订单编号
+            string transid = queryString["TransID"];
+            return ORM.MCashOperation.SelectCashOperation(transid);
+        }
+
+
         public override Drop CreatePaymentDrop(CashOperation operation)
         {
             DropIPSPayment data = new DropIPSPayment();
@@ -80,6 +89,20 @@ namespace TradingLib.Contrib.APIService
             return data;
         }
 
+        public override bool CheckParameters(NHttp.HttpRequest request)
+        {
+            return base.CheckParameters(request);
+        }
+
+        public override bool CheckPayResult(NHttp.HttpRequest request, CashOperation operation)
+        {
+            return base.CheckPayResult(request, operation);
+        }
+
+        public override string GetResultComment(NHttp.HttpRequest request)
+        {
+            return base.GetResultComment(request);
+        }
         //将字符串经过md5加密，返回加密后的字符串的小写表示
         public static string Md5Encrypt(string strToBeEncrypt)
         {
