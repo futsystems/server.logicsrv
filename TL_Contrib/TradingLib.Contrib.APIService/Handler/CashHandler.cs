@@ -282,6 +282,11 @@ namespace TradingLib.Contrib.APIService
                                         operation = AliPayGateWay.GetCashOperation(request.Params);
                                         break;
                                     }
+                                case "IPS":
+                                    {
+                                        operation = IPSGateWay.GetCashOperation(request.Params);
+                                        break;
+                                    }
                                 default:
                                     {
                                         return tplTracker.Render(ERROR_TPL_ID, new DropError(201, "网关类型不支持"));
