@@ -91,5 +91,19 @@ namespace TradingLib.Core
             }
 
         }
+
+        [ContribCommandAttr(QSEnumCommandSource.MessageExchange, "QryContractBank", "QryContractBank - 查询签约银行列表", "查询签约银行列表")]
+        public void CTE_QryContractBank(ISession session)
+        {
+            ContractBank[] splist = BasicTracker.ContractBankTracker.Banks.ToArray();
+            RspContribResponse response = ResponseTemplate<RspContribResponse>.SrvSendRspResponse(session);
+            response.ModuleID = session.ContirbID;
+            response.CMDStr = session.CMDStr;
+            response.IsLast = true;
+            response.Result = splist.SerializeObject();
+
+            TLCtxHelper.ModuleExCore.Send(response);
+
+        }
     }
 }

@@ -187,6 +187,51 @@ namespace TradingLib.Core
 
         }
 
+        [ContribCommandAttr(QSEnumCommandSource.MessageExchange, "UpdateAccountProfile", "UpdateAccountProfile - update account profile", "更新交易帐户个人信息", QSEnumArgParseType.Json)]
+        public void CTE_UpdateAccountProfileEx(ISession session, string json)
+        {
+            var profile = json.DeserializeObject<AccountProfile>();
+            IAccount account = TLCtxHelper.ModuleAccountManager[profile.Account];
+
+            if (account != null)
+            {
+                BasicTracker.AccountProfileTracker.UpdateAccountProfile(profile);
+            }
+            //触发交易帐户变动事件
+            TLCtxHelper.EventAccount.FireAccountChangeEent(account);
+        }
+
+        /// <summary>
+        /// 查询交易帐户的Profile
+        /// </summary>
+        /// <param name="session"></param>
+        /// <param name="account"></param>
+        [ContribCommandAttr(QSEnumCommandSource.MessageExchange, "QryAccountProfile", "QryAccountProfile - qry profile account", "查询交易帐户个人信息")]
+        public void CTE_QryAccountProfileEx(ISession session, string account)
+        {
+            AccountProfile profile = BasicTracker.AccountProfileTracker[account];
+
+            //如果个人信息不存在 则添加个人信息
+            if (profile == null)
+            {
+                profile = new AccountProfile();
+                profile.Account = account;
+
+                BasicTracker.AccountProfileTracker.UpdateAccountProfile(profile);
+            }
+
+            RspContribResponse response = ResponseTemplate<RspContribResponse>.SrvSendRspResponse(session);
+            response.ModuleID = session.ContirbID;
+            response.CMDStr = session.CMDStr;
+            response.IsLast = true;
+            response.Result = profile.SerializeObject();
+
+            TLCtxHelper.ModuleExCore.Send(response);
+
+            //session(profile);
+
+        }
+
 
 
         /// <summary>

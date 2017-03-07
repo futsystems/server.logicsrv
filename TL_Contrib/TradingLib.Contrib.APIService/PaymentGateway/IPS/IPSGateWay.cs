@@ -33,6 +33,7 @@ namespace TradingLib.Contrib.APIService
             this.Domain = data["Domain"].ToString();
             //this.ReturnUrl = this.ReturnUrl.Replace(APIGlobal.LocalIPAddress, this.Domain);
             //this.NotifyUrl = this.NotifyUrl.Replace(APIGlobal.LocalIPAddress, this.Domain);
+            this.PayDirectUrl = this.PayDirectUrl.Replace(APIGlobal.LocalIPAddress, this.Domain);
         }
 
         string MerCode { get; set; }

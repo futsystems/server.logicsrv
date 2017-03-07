@@ -111,6 +111,27 @@ namespace TradingLib.Contrib.APIService
 
 
                         }
+                    case "DEPOSITDIRECT"://直接支付确认 用于交易端提交入金请求后 返回支付链接,自动跳转到第三方支付网关
+                        { 
+                            var transref = request.Params["Ref"];
+                            var operation = ORM.MCashOperation.SelectCashOperation(transref);
+                            if (operation == null)
+                            {
+                                return tplTracker.Render(ERROR_TPL_ID, new DropError(101, "入金请求不存在"));
+                            }
+                            if (operation.Status != QSEnumCashInOutStatus.PENDING)
+                            {
+                                return tplTracker.Render(ERROR_TPL_ID, new DropError(101, "入金请求已关闭"));
+                            }
+
+                            IAccount account = TLCtxHelper.ModuleAccountManager[operation.Account];
+                            //通过账户分区查找支付网关设置 如果有支付网关则通过支付网关来获得对应的数据
+                            var gateway = APITracker.GateWayTracker.GetDomainGateway(account.Domain.ID);
+
+                            var data = gateway.CreatePaymentDrop(operation);
+                            return tplTracker.Render(string.Format("DEPOSITDIRECT_{0}", gateway.GateWayType.ToString().ToUpper()), data);
+
+                        }
                     case "DEPOSITCONFIRM":
                         {
                             var acct = request.Params["account"];

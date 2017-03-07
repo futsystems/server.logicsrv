@@ -38,5 +38,7 @@ namespace TradingLib.API
 
         void ManualInsertTrade(Trade t);
 
+        void Send(IPacket packet);
+
     }
 }

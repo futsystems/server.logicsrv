@@ -12,6 +12,10 @@ namespace TradingLib.Core
 {
     public partial class MsgExchServer
     {
+        public void Send(IPacket packet)
+        {
+            _packetcache.Write(packet);
+        }
         /// <summary>
         /// 缓存应答数据包
         /// 客户端提交查询或操作时 将应答数据缓存到发送队列

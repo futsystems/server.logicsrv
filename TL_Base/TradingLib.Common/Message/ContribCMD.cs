@@ -33,7 +33,7 @@ namespace TradingLib.Common
         public override string ContentSerialize()
         {
             StringBuilder sb = new StringBuilder();
-            char d = '*';
+            char d = ',';
             sb.Append(this.ModuleID);
             sb.Append(d);
             sb.Append(this.CMDStr);
@@ -44,7 +44,7 @@ namespace TradingLib.Common
 
         public override void ContentDeserialize(string contentstr)
         {
-            string[] rec = contentstr.Split('*');
+            string[] rec = contentstr.Split(new char[] { ',' }, 3);
             this.ModuleID = rec[0];
             this.CMDStr = rec[1];
             this.Parameters = rec[2];
@@ -76,7 +76,7 @@ namespace TradingLib.Common
         public override string ResponseSerialize()
         {
             StringBuilder sb = new StringBuilder();
-            char d = '*';
+            char d = ',';
             sb.Append(this.ModuleID);
             sb.Append(d);
             sb.Append(this.CMDStr);
@@ -87,7 +87,7 @@ namespace TradingLib.Common
 
         public override void ResponseDeserialize(string content)
         {
-            string[] rec = content.Split('*');
+            string[] rec = content.Split(new char[] { ',' }, 3);
             this.ModuleID = rec[0];
             this.CMDStr = rec[1];
             this.Result = rec[2];

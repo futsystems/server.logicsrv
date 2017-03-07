@@ -18,7 +18,10 @@ namespace TradingLib.Contrib.APIService
         {
             _config = config;
             this.SuccessReponse = "success";
+            this.PayDirectUrl = string.Format("{0}/cash/depositdirect?ref=", APIGlobal.BaseUrl);
         }
+
+        public string PayDirectUrl { get; set; }
 
         public bool Avabile { get { return _config.Avabile; } }
 

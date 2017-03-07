@@ -210,6 +210,136 @@ namespace TradingLib.Contrib.APIService
         }
 
 
+        [ContribCommandAttr(QSEnumCommandSource.MessageExchange, "Deposit", "Deposit - deposit", "入金请求")]
+        public void CTE_Deposit(ISession session, decimal val)
+        {
+            RspContribResponse response = ResponseTemplate<RspContribResponse>.SrvSendRspResponse(session);
+            response.ModuleID = session.ContirbID;
+            response.CMDStr = session.CMDStr;
+            response.IsLast = true;
+
+            var account = session.GetAccount();
+            if(account == null)
+            {
+                response.RspInfo.ErrorID = 1;
+                response.RspInfo.ErrorMessage = "交易账户不存在";
+            }
+            if (!account.Domain.Module_PayOnline)
+            {
+                response.RspInfo.ErrorID = 1;
+                response.RspInfo.ErrorMessage = "不支持在线出入金";
+            }
+
+            //通过账户分区查找支付网关设置 如果有支付网关则通过支付网关来获得对应的数据
+            var gateway = APITracker.GateWayTracker.GetDomainGateway(account.Domain.ID);
+            if (gateway == null)
+            {
+                response.RspInfo.ErrorID = 1;
+                response.RspInfo.ErrorMessage = "未设置支付网关";
+            }
+            if (!gateway.Avabile)
+            {
+                response.RspInfo.ErrorID = 1;
+                response.RspInfo.ErrorMessage = "支付网关未启用";
+            }
+
+            if (response.RspInfo.ErrorID == 0)
+            {
+                //输入参数验证完毕
+                CashOperation operation = new CashOperation();
+                operation.Account = account.ID;
+                operation.Amount = val;
+                operation.DateTime = Util.ToTLDateTime();
+                operation.GateWayType = gateway.GateWayType;
+                operation.OperationType = QSEnumCashOperation.Deposit;
+                operation.Ref = APITracker.NextRef;
+                operation.Domain_ID = account.Domain.ID;
+
+                ORM.MCashOperation.InsertCashOperation(operation);
+                TLCtxHelper.ModuleMgrExchange.Notify("APIService", "NotifyCashOperation", operation, account.GetNotifyPredicate());
+
+
+                response.Result = (gateway.PayDirectUrl + operation.Ref).SerializeObject();
+            }
+
+            TLCtxHelper.ModuleExCore.Send(response);
+
+        }
+
+        [ContribCommandAttr(QSEnumCommandSource.MessageExchange, "Withdraw", "Withdraw - withdraw", "出金请求")]
+        public void CTE_With(ISession session, decimal val)
+        {
+            RspContribResponse response = ResponseTemplate<RspContribResponse>.SrvSendRspResponse(session);
+            response.ModuleID = session.ContirbID;
+            response.CMDStr = session.CMDStr;
+            response.IsLast = true;
+
+            var account = session.GetAccount();
+            if (account == null)
+            {
+                response.RspInfo.ErrorID = 1;
+                response.RspInfo.ErrorMessage = "交易账户不存在";
+            }
+            if (!account.Domain.Module_PayOnline)
+            {
+                response.RspInfo.ErrorID = 1;
+                response.RspInfo.ErrorMessage = "不支持在线出入金";
+            }
+
+            //通过账户分区查找支付网关设置 如果有支付网关则通过支付网关来获得对应的数据
+            var gateway = APITracker.GateWayTracker.GetDomainGateway(account.Domain.ID);
+            if (gateway == null)
+            {
+                response.RspInfo.ErrorID = 1;
+                response.RspInfo.ErrorMessage = "未设置支付网关";
+            }
+            if (!gateway.Avabile)
+            {
+                response.RspInfo.ErrorID = 1;
+                response.RspInfo.ErrorMessage = "支付网关未启用";
+            }
+
+            IEnumerable<CashOperation> pendingWithdraws = ORM.MCashOperation.SelectPendingCashOperation(account.ID).Where(c => c.OperationType == QSEnumCashOperation.WithDraw);
+            if (pendingWithdraws.Count() > 0)
+            {
+                response.RspInfo.ErrorID = 1;
+                response.RspInfo.ErrorMessage = "有出金请求未处理";
+
+            }
+
+            if (account.GetPositionsHold().Count() > 0 || account.GetPendingOrders().Count() > 0)
+            {
+                response.RspInfo.ErrorID = 1;
+                response.RspInfo.ErrorMessage = "交易账户有持仓或挂单,无法执行出金";
+            }
+            var rate = account.GetExchangeRate(CurrencyType.RMB);//计算RMB汇率系数
+            var amount = account.NowEquity * rate;
+            if (amount > account.NowEquity)
+            {
+                response.RspInfo.ErrorID = 1;
+                response.RspInfo.ErrorMessage = "出金金额大于账户权益";
+            }
+
+            if (response.RspInfo.ErrorID == 0)
+            {
+                //输入参数验证完毕
+                CashOperation operation = new CashOperation();
+                operation.Account = account.ID;
+                operation.Amount = val;
+                operation.DateTime = Util.ToTLDateTime();
+                operation.GateWayType = gateway.GateWayType;
+                operation.OperationType = QSEnumCashOperation.WithDraw;
+                operation.Ref = APITracker.NextRef;
+                operation.Domain_ID = account.Domain.ID;
+
+                ORM.MCashOperation.InsertCashOperation(operation);
+                TLCtxHelper.ModuleMgrExchange.Notify("APIService", "NotifyCashOperation", operation, account.GetNotifyPredicate());
+            }
+
+            TLCtxHelper.ModuleExCore.Send(response);
+
+        }
+
 
     }
 }
