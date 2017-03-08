@@ -199,6 +199,14 @@ namespace TradingLib.Core
             }
             //触发交易帐户变动事件
             TLCtxHelper.EventAccount.FireAccountChangeEent(account);
+
+            RspContribResponse response = ResponseTemplate<RspContribResponse>.SrvSendRspResponse(session);
+            response.ModuleID = session.ContirbID;
+            response.CMDStr = session.CMDStr;
+            response.IsLast = true;
+            response.Result = profile.SerializeObject();
+
+            TLCtxHelper.ModuleExCore.Send(response);
         }
 
         /// <summary>
