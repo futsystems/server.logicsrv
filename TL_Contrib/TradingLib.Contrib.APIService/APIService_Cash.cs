@@ -293,6 +293,7 @@ namespace TradingLib.Contrib.APIService
                 response.RspInfo.ErrorID = 1;
                 response.RspInfo.ErrorMessage = "未设置支付网关";
             }
+
             if (!gateway.Avabile)
             {
                 response.RspInfo.ErrorID = 1;
@@ -303,8 +304,7 @@ namespace TradingLib.Contrib.APIService
             if (pendingWithdraws.Count() > 0)
             {
                 response.RspInfo.ErrorID = 1;
-                response.RspInfo.ErrorMessage = "有出金请求未处理";
-
+                response.RspInfo.ErrorMessage = "上次出金请求仍在处理中";
             }
 
             if (account.GetPositionsHold().Count() > 0 || account.GetPendingOrders().Count() > 0)
@@ -312,8 +312,9 @@ namespace TradingLib.Contrib.APIService
                 response.RspInfo.ErrorID = 1;
                 response.RspInfo.ErrorMessage = "交易账户有持仓或挂单,无法执行出金";
             }
+
             var rate = account.GetExchangeRate(CurrencyType.RMB);//计算RMB汇率系数
-            var amount = account.NowEquity * rate;
+            var amount = val * rate;
             if (amount > account.NowEquity)
             {
                 response.RspInfo.ErrorID = 1;
