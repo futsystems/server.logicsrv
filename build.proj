@@ -50,10 +50,10 @@
 		<LibFiles Include="lib\Common.Logging.dll" />
 		<LibFiles Include="lib\Common.Logging.NLog31.dll" />
 		<LibFiles Include="lib\NLog.dll" />
-		<LibFiles Include="lib\NHttp.dll" />
-		<LibFiles Include="lib\NodaTime.dll" />					
+		<LibFiles Include="lib\NHttp.dll" />			
 		<LibFiles Condition=" '$(OperatingPlatform)' == 'Windows' " Include="lib\libzmq\clrzmq-4.x\win\ZeroMQ.dll" />
 		<LibFiles Condition=" '$(OperatingPlatform)' == 'Unix' " Include="lib\libzmq\clrzmq-4.x\mono\ZeroMQ.dll" />
+		<LibFiles Condition=" '$(OperatingPlatform)' == 'Unix' " Include="lib\mono\NodaTime.dll" />
   </ItemGroup>
   <ItemGroup>
     <BuildFilesExecute Include="Platform\TradingSrv\LogicSrv.exe" />
