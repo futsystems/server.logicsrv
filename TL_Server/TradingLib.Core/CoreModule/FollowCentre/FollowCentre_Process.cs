@@ -51,7 +51,7 @@ namespace TradingLib.Core
         const int BufferSize = 1000;
         RingBuffer<FollowItem> followbuffer = new RingBuffer<FollowItem>(BufferSize);
         Queue<FollowItem> followQueue = new Queue<FollowItem>(BufferSize);
-        const int SLEEPDEFAULTMS = 10000;
+        const int SLEEPDEFAULTMS = 100;
         static ManualResetEvent _sendwaiting = new ManualResetEvent(false);
 
 
