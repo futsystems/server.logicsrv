@@ -83,6 +83,10 @@ namespace RuleSet2.Account
                     Tick k = TLCtxHelper.ModuleDataRouter.GetTickSnapshot(pos.oSymbol.Exchange,pos.oSymbol.Symbol);
                     if (k == null) continue;
 
+                    bool flag = k.Trade - k.PreSettlement > 0;//价格上涨
+                    if (flag && pos.isLong) continue;//价格上涨且为买入 
+                    if ((!flag) && (!pos.isLong)) continue;//价格下跌 且为卖出
+
                     //判定是否可以有效计算涨跌幅
                     if (k.PreSettlement <= 0) continue;
                     if (k.UpperLimit <= 0) continue;

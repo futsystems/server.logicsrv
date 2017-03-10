@@ -82,10 +82,9 @@ namespace RuleSet2.Order
             if (k.PreSettlement <= 0) return true;
             if (k.UpperLimit <= 0) return true;
 
-            //bool flag = k.Trade - k.PreSettlement > 0;//价格上涨
-            //反向开仓
-            //if (flag && o.PositionSide) return true;//价格上涨且为买入 
-            //if ((!flag) && (!o.PositionSide)) return true;//价格下跌 且为卖出
+            bool flag = k.Trade - k.PreSettlement > 0;//价格上涨
+            if (flag && o.PositionSide) return true;//价格上涨且为买入 
+            if ((!flag) && (!o.PositionSide)) return true;//价格下跌 且为卖出
 
             //开仓条件 涨跌幅小鱼设定的百分比
             decimal d = k.UpperLimit - k.PreSettlement;
