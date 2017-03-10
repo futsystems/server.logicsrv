@@ -9,9 +9,9 @@ using TradingLib.Common;
 namespace RuleSet2.Order
 {
     /// <summary>
-    /// 最大交易手数限制
+    /// 涨跌停风控
     /// </summary>
-    public class RSTimeFilter2 : RuleBase, IOrderCheck
+    public class RSPriceLimit : RuleBase, IOrderCheck
     {
         /// <summary>
         /// 参数【json格式】
@@ -47,44 +47,17 @@ namespace RuleSet2.Order
                             sec_list.Add(sec);
                         }
                     }
-
-
-                    _timeFilterStr = args["timespan"].ToString();
-                    _tslist.Clear();
-                    if (string.IsNullOrEmpty(_timeFilterStr)) return;
-                    foreach (var str in _timeFilterStr.Split(','))
-                    {
-                        RuleTimeSpan ts = RuleTimeSpan.Deserialize(str);
-                        if (ts != null)
-                        {
-                            _tslist.Add(ts);
-                        }
-                    }
+                    //解析设定值
+                    _ratio = decimal.Parse(args["ratio"].ToString());
+                   
                 }
                 catch (Exception ex)
                 { }
             } 
-
         }
 
-        string _timeFilterStr = string.Empty;
-        List<RuleTimeSpan> _tslist = new List<RuleTimeSpan>();
+        decimal _ratio = 0;
 
-        /// <summary>
-        /// 检查是否在设定的时间区间内
-        /// </summary>
-        /// <param name="time"></param>
-        /// <returns></returns>
-        bool ValidTimeFilter(int time)
-        {
-            if (_tslist.Count == 0) return true;
-            foreach (var tmp in _tslist)
-            {
-                if (tmp.InSpan(time))
-                    return true;
-            }
-            return false;
-        }
 
         /// <summary>
         /// 委托检查逻辑过程,如果接受委托返回true,拒绝委托返回false
@@ -95,7 +68,6 @@ namespace RuleSet2.Order
         public bool checkOrder(TradingLib.API.Order o, out string msg)
         {
             msg = string.Empty;
-
             Symbol symbol = o.oSymbol;
 
             //设置了品种 且当前委托不在品种内 则不执行风控检查 (如果未设置品种 则所有委托进行检查)
@@ -105,13 +77,27 @@ namespace RuleSet2.Order
             //判断是开仓还是平仓如果是开仓则进行判断拒绝,平仓则直接允许
             if (!o.IsEntryPosition) return true;
 
-            bool ret = !ValidTimeFilter(Util.ToTLTime());//不在设定时间范围内 允许开仓
-            if (!ret)
+            Tick k = TLCtxHelper.ModuleDataRouter.GetTickSnapshot(o.Exchange, o.Symbol);
+            //价格超过涨跌幅度 则拒绝
+            if (k.PreSettlement <= 0) return true;
+            if (k.UpperLimit <= 0) return true;
+
+            //bool flag = k.Trade - k.PreSettlement > 0;//价格上涨
+            //反向开仓
+            //if (flag && o.PositionSide) return true;//价格上涨且为买入 
+            //if ((!flag) && (!o.PositionSide)) return true;//价格下跌 且为卖出
+
+            //开仓条件 涨跌幅小鱼设定的百分比
+            decimal d = k.UpperLimit - k.PreSettlement;
+            decimal d2 = (d - Math.Abs(k.Trade - k.PreSettlement)) / k.PreSettlement * 100m;
+            bool flag2 = d2 <= this._ratio;
+
+            if (flag2)
             {
                 msg = RuleDescription + " 委托被拒绝";
                 o.Comment = msg;
             }
-            return ret;
+            return !flag2;
         }
 
         /// <summary>
@@ -121,7 +107,7 @@ namespace RuleSet2.Order
         {
             get
             {
-                return "开仓条件:交易时间段禁止" + _timeFilterStr + " [" + string.Join(",", sec_list.ToArray()) + "]";
+                return "开仓条件:距离涨跌停小于" + _ratio.ToFormatStr() + "% [" + string.Join(",", sec_list.ToArray()) + "]";
             }
         }
 
@@ -132,7 +118,7 @@ namespace RuleSet2.Order
         /// </summary>
         public static new string Title
         {
-            get { return "交易时间段检查(禁止开仓)"; }
+            get { return "涨跌停禁止开仓"; }
         }
 
         /// <summary>
@@ -140,7 +126,7 @@ namespace RuleSet2.Order
         /// </summary>
         public static new string Description
         {
-            get { return "在交易时间段内,禁止开仓"; }
+            get { return "距离涨跌停附近禁止开仓"; }
         }
 
         public static new bool CanSetCompare { get { return false; } }
