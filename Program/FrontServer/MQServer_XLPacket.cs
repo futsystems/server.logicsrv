@@ -113,16 +113,18 @@ namespace FrontServer
                         RspQryOrderResponse response = lpkt as RspQryOrderResponse;
                         XLPacketData pkt = new XLPacketData(XLMessageType.T_RSP_ORDER);
 
-                        if (response.OrderToSend != null)
+                        if (response.OrderToSend == null || !response.OrderToSend.isValid)
+                        {
+                            conn.ResponseXLPacket(pkt, (uint)response.RequestID, response.IsLast);
+                        }
+                        else
                         {
                             XLOrderField field = ConvOrder(response.OrderToSend);
                             pkt.AddField(field);
 
                             conn.ResponseXLPacket(pkt, (uint)response.RequestID, response.IsLast);
-                        }
-                        else
-                        {
-                            conn.ResponseXLPacket(pkt, (uint)response.RequestID, response.IsLast);
+
+                            
                         }
                         if (response.IsLast) logger.Info(string.Format("LogicSrv Reply Session:{0} -> RspQryOrderResponse", conn.SessionID));
                         break;
@@ -152,15 +154,17 @@ namespace FrontServer
                         RspQryTradeResponse response = lpkt as RspQryTradeResponse;
                         XLPacketData pkt = new XLPacketData(XLMessageType.T_RSP_TRADE);
 
-                        if (response.TradeToSend != null)
+                        if (response.TradeToSend == null || !response.TradeToSend.isValid)
+                        {
+                            conn.ResponseXLPacket(pkt, (uint)response.RequestID, response.IsLast);
+
+                            
+                        }
+                        else
                         {
                             XLTradeField field = ConvTrade(response.TradeToSend);
                             pkt.AddField(field);
 
-                            conn.ResponseXLPacket(pkt, (uint)response.RequestID, response.IsLast);
-                        }
-                        else
-                        {
                             conn.ResponseXLPacket(pkt, (uint)response.RequestID, response.IsLast);
                         }
                         if (response.IsLast) logger.Info(string.Format("LogicSrv Reply Session:{0} -> RspQryTradeResponse", conn.SessionID));
@@ -192,15 +196,16 @@ namespace FrontServer
                         RspQryPositionResponse response = lpkt as RspQryPositionResponse;
                         XLPacketData pkt = new XLPacketData(XLMessageType.T_RSP_POSITION);
 
-                        if (response.PositionToSend != null)
+                        if (response.PositionToSend == null || !response.PositionToSend.IsValid)
+                        {
+                            conn.ResponseXLPacket(pkt, (uint)response.RequestID, response.IsLast);
+                            
+                        }
+                        else
                         {
                             XLPositionField field = ConvPosition(response.PositionToSend);
                             pkt.AddField(field);
 
-                            conn.ResponseXLPacket(pkt, (uint)response.RequestID, response.IsLast);
-                        }
-                        else
-                        {
                             conn.ResponseXLPacket(pkt, (uint)response.RequestID, response.IsLast);
                         }
                         if (response.IsLast) logger.Info(string.Format("LogicSrv Reply Session:{0} -> RspQryPositionResponse", conn.SessionID));

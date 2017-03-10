@@ -198,6 +198,7 @@ namespace TradingLib.XLProtocol
         public static string PackJsonResponse(XLPacketData pkt,int requestID,bool isLast)
         {
             object response = null;
+            
             switch (pkt.MessageType)
             {
                 case XLMessageType.T_RSP_ERROR:
@@ -217,17 +218,17 @@ namespace TradingLib.XLProtocol
                     }
                 case XLMessageType.T_RSP_ORDER://查询委托回报
                     {
-                        response = new JsonResponse(pkt.MessageType, null, (V1.XLOrderField)pkt.FieldList[0], requestID, isLast);
+                        response = new JsonResponse(pkt.MessageType, null, pkt.FieldList.Count > 0 ? (object)pkt.FieldList[0] : null, requestID, isLast);
                         break;
                     }
                 case XLMessageType.T_RSP_TRADE://查询成交回报
                     {
-                        response = new JsonResponse(pkt.MessageType, null, (V1.XLTradeField)pkt.FieldList[0], requestID, isLast);
+                        response = new JsonResponse(pkt.MessageType, null, pkt.FieldList.Count > 0 ? (object)pkt.FieldList[0] : null, requestID, isLast);
                         break;
                     }
                 case XLMessageType.T_RSP_POSITION://查询持仓回报
                     {
-                        response = new JsonResponse(pkt.MessageType, null, (V1.XLPositionField)pkt.FieldList[0], requestID, isLast);
+                        response = new JsonResponse(pkt.MessageType, null,  pkt.FieldList.Count > 0 ? (object)pkt.FieldList[0] : null, requestID, isLast);
                         break;
                     }
                 case XLMessageType.T_RSP_ACCOUNT://查询账户回报

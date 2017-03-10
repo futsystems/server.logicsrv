@@ -62,6 +62,15 @@ namespace TradingLib.XLProtocol
     /// </summary>
     public class JsonResponse
     {
+        public JsonResponse(XLMessageType msgType, IXLField error, object response, int requestID, bool isLast)
+        {
+            this.MessageType = msgType;
+            this.Response = response;
+            this.Error = error;
+            this.RequestID = requestID;
+            this.IsLast = isLast;
+        }
+
         public JsonResponse(XLMessageType msgType, IXLField error, IXLField response, int requestID, bool isLast)
         {
             this.MessageType = msgType;
@@ -78,7 +87,7 @@ namespace TradingLib.XLProtocol
         /// <summary>
         /// 域
         /// </summary>
-        public IXLField Response { get; set; }
+        public object Response { get; set; }
 
         /// <summary>
         /// 错误回报
