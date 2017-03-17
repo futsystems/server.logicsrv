@@ -80,6 +80,14 @@ namespace APIClient
             btnStopMd.Click += new EventHandler(btnStopMd_Click);
             btnMdLogin.Click += new EventHandler(btnMdLogin_Click);
             btnMdSubMarket.Click += new EventHandler(btnMdSubMarket_Click);
+            btnMdQrySymbol.Click += new EventHandler(btnMdQrySymbol_Click);
+        }
+
+        void btnMdQrySymbol_Click(object sender, EventArgs e)
+        {
+            if (_mdApi == null) return;
+            XLQrySymbolField field = new XLQrySymbolField();
+            _mdApi.QrySymbol(field,++_requestId);
         }
 
         void btnMdSubMarket_Click(object sender, EventArgs e)
@@ -118,7 +126,7 @@ namespace APIClient
             _mdApi.OnServerConnected += new Action(_mdApi_OnServerConnected);
             _mdApi.OnRspError += new Action<ErrorField>(_mdApi_OnRspError);
             _mdApi.OnDepthMarketDataField += new Action<XLDepthMarketDataField>(_mdApi_OnDepthMarketDataField);
-
+            _mdApi.OnRspQrySymbol += new Action<XLSymbolField, ErrorField, uint, bool>(_mdApi_OnRspQrySymbol);
 
             new Thread(() =>
             {
@@ -127,6 +135,11 @@ namespace APIClient
                 _mdApi.Join();
                 logger.Info("MDAPI Thread Stopped");
             }).Start();
+        }
+
+        void _mdApi_OnRspQrySymbol(XLSymbolField arg1, ErrorField arg2, uint arg3, bool arg4)
+        {
+            logger.Info("Symbol:" + JsonConvert.SerializeObject(arg1));
         }
 
         void _mdApi_OnDepthMarketDataField(XLDepthMarketDataField obj)

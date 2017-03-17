@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using TradingLib.XLProtocol;
-using Common.Logging;
+//using Common.Logging;
 using TradingLib.XLProtocol.V1;
 using Newtonsoft.Json;
 
@@ -95,7 +95,7 @@ namespace TradingLib.XLProtocol.Client
         string _serverIP = string.Empty;
         int _port = 0;
         SocketClient _socketClient = null;
-        ILog logger = LogManager.GetLogger("APITtrader");
+        //ILog logger = LogManager.GetLogger("APITtrader");
 
         public APITrader(string serverIP, int port)
         {
@@ -152,7 +152,7 @@ namespace TradingLib.XLProtocol.Client
                 XLMessageType msgType = (XLMessageType)header.XLMessageType;
                 XLDataHeader dataHeader;
                 XLPacketData pkt = XLPacketData.Deserialize(msgType, data, offset, out dataHeader);
-                if(_verb) logger.Debug(string.Format("PktData Recv Type:{0} Size:{1}", msgType,dataHeader.FieldLength + XLConstants.PROTO_HEADER_LEN + XLConstants.DATA_HEADER_LEN));
+                //if(_verb) logger.Debug(string.Format("PktData Recv Type:{0} Size:{1}", msgType,dataHeader.FieldLength + XLConstants.PROTO_HEADER_LEN + XLConstants.DATA_HEADER_LEN));
                 switch (msgType)
                 {
                     case XLMessageType.T_RSP_ERROR:
@@ -278,13 +278,13 @@ namespace TradingLib.XLProtocol.Client
                             break;
                         }
                     default:
-                        logger.Info(string.Format("Unhandled Pkt:{0}", msgType));
+                        //logger.Info(string.Format("Unhandled Pkt:{0}", msgType));
                         break;
                 }
             }
             catch (Exception ex)
             {
-                logger.Error(string.Format("Data Process Error:{0}", ex.ToString()));
+                //logger.Error(string.Format("Data Process Error:{0}", ex.ToString()));
             }
         }
 
@@ -437,7 +437,7 @@ namespace TradingLib.XLProtocol.Client
         bool SendPktData(XLPacketData pktData, XLEnumSeqType seqType,uint requestID)
         {
             byte[] data = XLPacketData.PackToBytes(pktData, XLEnumSeqType.SeqReq, 0, requestID, true);
-            if (_verb) logger.Debug(string.Format("PktData Send Type:{0} Size:{1}", pktData.MessageType, data.Length));
+            //if (_verb) logger.Debug(string.Format("PktData Send Type:{0} Size:{1}", pktData.MessageType, data.Length));
             //logger.Info(string.Format("PktData Send Type:{0} Data:{1} RequestID:{2}", pktData.MessageType, JsonConvert.SerializeObject(pktData), requestID));
             return SendData(data, data.Length);
         }

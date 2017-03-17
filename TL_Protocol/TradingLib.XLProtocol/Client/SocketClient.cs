@@ -6,7 +6,7 @@ using System.Net;
 using System.IO;
 using System.Net.Sockets;
 using System.Threading;
-using Common.Logging;
+//using Common.Logging;
 
 namespace TradingLib.XLProtocol.Client
 {
@@ -15,7 +15,7 @@ namespace TradingLib.XLProtocol.Client
     public class SocketClient
     {
 
-        ILog logger = LogManager.GetLogger("SocketClient");
+        //ILog logger = LogManager.GetLogger("SocketClient");
 
         Socket _socket = null;
         Thread _thread = null;
@@ -89,7 +89,7 @@ namespace TradingLib.XLProtocol.Client
             catch (Exception ex)
             {
                 SafeCloseSocket();
-                logger.Error(string.Format("Start Client Error:{0}", ex.ToString()));
+                //logger.Error(string.Format("Start Client Error:{0}", ex.ToString()));
                 return false;
             }
         }
@@ -166,7 +166,7 @@ namespace TradingLib.XLProtocol.Client
             catch (Exception ex)
             {
                 SafeCloseSocket();
-                logger.Error(string.Format("SocketClientProc Error:{0}", ex.ToString()));
+                //logger.Error(string.Format("SocketClientProc Error:{0}", ex.ToString()));
             }
 
             manualReset.Set();
@@ -190,7 +190,7 @@ namespace TradingLib.XLProtocol.Client
             }
             catch (Exception ex)
             {
-                logger.Error("Socket Close Error:" + ex.ToString());
+                //logger.Error("Socket Close Error:" + ex.ToString());
             }
             _socket = null;
         }  

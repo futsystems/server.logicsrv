@@ -204,7 +204,7 @@ namespace XLServiceHost
                     logger.Warn(string.Format("Client:{0} empty request,ingore", session.SessionID));
                     return;
                 }
-
+                //通过XL协议请求处理
                 this.OnXLRequestEvent(conn, requestInfo.Body, (int)requestInfo.DataHeader.RequestID);
             //    logger.Debug(string.Format("Message type:{0} content:{1} sessoin:{2}", requestInfo.Message.Type, requestInfo.Message.Content, session.SessionID));
 
