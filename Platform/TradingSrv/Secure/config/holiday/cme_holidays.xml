@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Holidays code="CME" name="CME交易所">
+	<Holiday name="New Year's Day">
+		<Month>1</Month>
+		<Day>1</Day>
+	</Holiday>
+	<Holiday name="New Year's Day">
+		<Month>1</Month>
+		<Day>2</Day>
+	</Holiday>
+	
+	<Holiday name="Martin Luther King's Birthday">
+		<Month>1</Month>
+		<DayOfWeek>1</DayOfWeek>
+		<WeekOfMonth>3</WeekOfMonth>
+	</Holiday>
+
+
+	
+	<!--Holiday name="Easter">
+		<Easter />
+	</Holiday>
+	
+	<Holiday name="Good Friday">
+		<DaysAfterHoliday Holiday="Easter">
+			<Days>-2</Days>
+		</DaysAfterHoliday>
+	</Holiday-->
+	
+	<Holiday name="Good Friday(耶稣受难日)">
+		<Month>4</Month>
+		<Day>14</Day>
+	</Holiday>
+	
+	<Holiday name="Memorial Day(阵亡将士追悼日)">
+		<Month>5</Month>
+		<DayOfWeek>1</DayOfWeek>
+		<WeekOfMonth>5</WeekOfMonth>
+	</Holiday>
+
+	
+	<Holiday name="Independence Day(独立纪念日)">
+		<Month>7</Month>
+		<Day>4</Day>
+	</Holiday>
+	
+	<Holiday name="Labor Day(劳动节)">
+		<Month>9</Month>
+		<DayOfWeek>1</DayOfWeek>
+		<WeekOfMonth>1</WeekOfMonth>
+	</Holiday>
+
+	<Holiday name="Thanksgiving Day(感恩节)">
+		<Month>11</Month>
+		<DayOfWeek>4</DayOfWeek>
+		<WeekOfMonth>4</WeekOfMonth>
+	</Holiday>
+	
+	
+	<Holiday name="Christmas Day(圣诞节)">
+		<Month>12</Month>
+		<Day>25</Day>
+	</Holiday>
+
+
+
+</Holidays>
+
+

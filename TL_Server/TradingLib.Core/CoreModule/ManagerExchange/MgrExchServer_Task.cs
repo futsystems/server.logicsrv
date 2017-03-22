@@ -70,9 +70,6 @@ namespace TradingLib.Core
                     foreach (IAccount acc in cst.WathAccountList)
                     {
                         //logger.Debug("帐户信息采集推送");
-                        //NotifyMGRAccountStatistic notify = ResponseTemplate<NotifyMGRAccountStatistic>.SrvSendNotifyResponse(cst.Location);
-                        //notify.Statistic = acc.ToAccountStatistic();
-                        //CachePacket(notify);
                         NotifyAccountStatistic(acc, cst.Location);
                     }
 
@@ -82,9 +79,6 @@ namespace TradingLib.Core
                         
                         foreach (var acc in cst.Manager.GetAccounts())
                         {
-                            //NotifyMGRAccountStatistic notify = ResponseTemplate<NotifyMGRAccountStatistic>.SrvSendNotifyResponse(cst.Location);
-                            //notify.Statistic = acc.ToAccountStatistic();
-                            //CachePacket(notify);
                             NotifyAccountStatistic(acc, cst.Location);
                         }
                         _lastPushAllTime = DateTime.Now;

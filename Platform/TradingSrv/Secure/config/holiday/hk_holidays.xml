@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Holidays code="HK-Ex" name="香港交易所">
+	
+	<Holiday name="Chinese Spring Festival(新年)">
+		<Month>1</Month>
+		<Day>30</Day>
+	</Holiday>
+	<Holiday name="Chinese Spring Festival(新年)">
+		<Month>1</Month>
+		<Day>31</Day>
+	</Holiday>
+	
+	<Holiday name="Tomb-sweeping Day(清明)">
+		<Month>4</Month>
+		<Day>4</Day>
+	</Holiday>
+	
+	<Holiday name="(耶穌受難節)">
+		<Month>4</Month>
+		<Day>14</Day>
+	</Holiday>
+	<Holiday name="(復活節星期一翌日)">
+		<Month>4</Month>
+		<Day>17</Day>
+	</Holiday>
+	
+
+
+	<Holiday name="Labor Day(劳动节)">
+		<Month>5</Month>
+		<Day>1</Day>
+	</Holiday>
+	
+	<Holiday name="佛诞">
+		<Month>5</Month>
+		<Day>3</Day>
+	</Holiday>
+	
+	<Holiday name="(端午節)">
+		<Month>5</Month>
+		<Day>30</Day>
+	</Holiday>
+	
+	<Holiday name="国庆节">
+		<Month>10</Month>
+		<Day>2</Day>
+	</Holiday>
+	
+	<Holiday name="Mid-autumn Festival(中秋节)">
+		<Month>10</Month>
+		<Day>5</Day>
+	</Holiday>
+
+	<Holiday name="(聖誕節)">
+		<Month>12</Month>
+		<Day>25</Day>
+	</Holiday>
+	<Holiday name="(聖誕節)">
+		<Month>12</Month>
+		<Day>26</Day>
+	</Holiday>
+	
+</Holidays>
+
+

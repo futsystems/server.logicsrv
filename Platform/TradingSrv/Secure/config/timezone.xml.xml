@@ -1,0 +1,7 @@
+<timezones>
+<timezone id="100" windowsid="China Standard Time" unixid="Asia/Shanghai" timezone="中国标准时间"/>
+<timezone id="101" windowsid="China Standard Time" unixid="Asia/Hong_Kong" timezone="香港标准时间"/>
+<timezone id="102" windowsid="Singapore Standard Time" unixid="Asia/Singapore" timezone="新加坡标准时间"/>
+<timezone id="103" windowsid="Central Standard Time" unixid="US/Central" timezone="美国中部时间(CT)"/>
+<timezone id="104" windowsid="Eastern Standard Time" unixid="US/Eastern" timezone="美国东部时间(CT)"/>
+</timezones>

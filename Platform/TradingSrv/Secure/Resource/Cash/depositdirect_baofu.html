@@ -1,0 +1,22 @@
+﻿<html>
+<head>
+	<title>确认入金信息</title>
+</head>
+
+<body onload="document.depositconfirm.submit()">
+	<form name='depositconfirm' method="post" action="{{data.Pay_Url}}" class="uk-panel uk-panel-box uk-form">
+		<input name='MemberID' type='hidden' value= "{{data.Member_ID}}"/>
+		<input name='TerminalID' type='hidden' value= "{{data.Terminal_ID}}"/>
+		<input name='InterfaceVersion' type='hidden' value= "{{data.Interface_Version}}"/>
+		<input name='KeyType' type='hidden' value= "{{data.Key_Type}}"/>
+		<input name='PayID' type='hidden' value= "{{data.Pay_ID}}"/>		
+		<input name='TradeDate' type='hidden' value= "{{data.Trade_Date}}" />
+		<input name='TransID' type='hidden' value= "{{data.Trans_ID}}" />
+		<input name='OrderMoney' type='hidden' value= "{{data.Order_Money}}"/>
+		<input name='NoticeType' type='hidden' value= "{{data.Notice_Type}}"/>
+		<input name='PageUrl' type='hidden' value= "{{data.Page_Url}}"/>
+		<input name='ReturnUrl' type='hidden' value= "{{data.Return_Url}}"/>	
+		<input name='Signature' type='hidden' value="{{data.Signature}}"/>
+	</form>
+</body>
+</html>

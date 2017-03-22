@@ -67,13 +67,30 @@ namespace TradingLib.Common
         /// <param name="price"></param>
         /// <param name="price"></param>
         /// <returns></returns>
-        public static string GetName(this Symbol symbol)
+        public static string GetName(this Symbol symbol,bool islong)
         {
             if (!string.IsNullOrEmpty(symbol.Name)) return symbol.Name;
             switch (symbol.SecurityFamily.Type)
             { 
                 case SecurityType.FUT:
-                    return string.Format("{0}{1}", symbol.SecurityFamily.Name, symbol.GetFutureNumSuffix());
+                    return string.Format("{0}{1}", symbol.SecurityFamily.Name, symbol.GetFutureNumSuffix(islong));
+                default:
+                    return symbol.SecurityFamily.Code;
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="symbol"></param>
+        /// <param name="islong"></param>
+        /// <returns></returns>
+        public static string GetCodeNumSuffix(this Symbol symbol, bool islong)
+        {
+            switch (symbol.SecurityFamily.Type)
+            {
+                case SecurityType.FUT:
+                    return string.Format("{0}{1}", symbol.SecurityFamily.Code, symbol.GetFutureNumSuffix(islong));
                 default:
                     return symbol.SecurityFamily.Code;
             }
@@ -130,14 +147,20 @@ namespace TradingLib.Common
         //    }
         //}
 
-        public static string GetFutureNumSuffix(this Symbol sym)
+        public static string GetFutureNumSuffix(this Symbol sym,bool isLong)
         {
             int year, month;
             string sec;
             sym.ParseFututureContract(out sec, out year, out month);
+            if(isLong)
+            {
             return string.Format("{0}{1:D2}", year, month).Substring(2);
+            }
+            else
+            {
+                return string.Format("{0}{1:D2}", year, month).Substring(4);
+            }
         }
-
 
         /// <summary>
         /// 获得某个合约的手续费设置

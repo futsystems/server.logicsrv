@@ -1,0 +1,22 @@
+﻿<html>
+<head>
+<title>支付结果</title>
+	<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+	<link type="text/css" href="/css/uikit.min.css"  rel="Stylesheet" />
+	<link rel="icon" href="/images/favicon.ico"/>
+	<script src="/js/uikit.min.js"></script>
+</head>
+<body>
+<body class="uk-height-1-1">
+	<div class="uk-text-center uk-height-1-1">
+	<div class="uk-vertical-align-middle" style="width: 400px;">
+	<table class="uk-table uk-table-striped">
+		<tr><td>交易帐号:</td><td>{{data.Account}}</td></tr>
+		<tr><td>出入金编号:</td><td>{{data.Operation_Ref}}</td></tr>
+		<tr><td>金额:</td><td>{{data.Amount}}</td></tr>
+		<tr><td>结果:</td><td>{{data.Result}}</td></tr>
+	</table>
+	</div>
+	</div>
+</body>
+</html>
