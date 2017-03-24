@@ -100,6 +100,15 @@ namespace FrontServer.XLServiceHost
                 }
                 conn.UpdateHeartBeat();
 
+                //心跳
+                //客户端发送心跳到服务端 服务端回应一个心跳包
+                if (requestInfo.Body.MessageType == XLMessageType.T_HEARTBEEAT)
+                {
+                    conn.UpdateHeartBeat();
+                    XLPacketData pktData = new XLPacketData(XLMessageType.T_HEARTBEEAT);
+                    conn.ResponseXLPacket(pktData, 0, true);
+                    return;
+                }
                 //检查请求域
                 if (requestInfo.Body.FieldList.Count == 0)
                 {

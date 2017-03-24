@@ -25,8 +25,18 @@ namespace TradingLib.DataFarm.Common
             }
             //更新客户端连接心跳
             SrvUpdateHeartBeat(conn);
+
+            
             switch (reqPkt.MessageType)
             {
+                case XLMessageType.T_HEARTBEEAT:
+                    {
+
+                        XLPacketData pkt = new XLPacketData(XLMessageType.T_HEARTBEEAT);
+                        byte[] ret = XLPacketData.PackToBytes(pkt, XLEnumSeqType.SeqReq, (uint)0, (uint)requestId, true);
+                        conn.Send(ret);
+                        break;
+                    }
                 case XLMessageType.T_REQ_LOGIN:
                     {
                         var data = reqPkt.FieldList[0];
@@ -86,7 +96,7 @@ namespace TradingLib.DataFarm.Common
                                 XLSymbolField field = new XLSymbolField();
                                 field.SymbolID = sym.Symbol;
                                 field.ExchangeID = sym.Exchange;
-                                field.SymbolName = sym.GetName();
+                                field.SymbolName = sym.GetName(true);
                                 field.SecurityID = sym.SecurityFamily.Code;
                                 field.SecurityType = XLSecurityType.Future;
                                 field.Multiple = sym.SecurityFamily.Multiple;

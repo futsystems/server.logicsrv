@@ -92,19 +92,42 @@ namespace TradingLib.XLProtocol.Client
         /// </summary>
         public event Action<XLPositionField> OnRtnPosition = delegate { };
         #endregion
-        string _serverIP = string.Empty;
-        int _port = 0;
+        //string _serverIP = string.Empty;
+        //int _port = 0;
         SocketClient _socketClient = null;
         //ILog logger = LogManager.GetLogger("APITtrader");
 
-        public APITrader(string serverIP, int port)
+        public bool IsConnected
         {
-            _serverIP = serverIP;
-            _port = port;
+            get
+            {
+                if (_socketClient == null) return false;
+                return _socketClient.IsOpen;
+            }
+        }
+
+        public APITrader()
+        {
             _socketClient = new SocketClient();
-            _socketClient.ThreadBegin += new Action(_socketClient_ThreadBegin);
-            _socketClient.ThreadExit += new Action(_socketClient_ThreadExit);
             _socketClient.DataReceived += new Action<XLProtocolHeader, byte[], int>(_socketClient_DataReceived);
+            _socketClient.Connected += new Action(_socketClient_Connected);
+            _socketClient.Disconnected += new Action(_socketClient_Disconnected);
+        }
+
+        void _socketClient_Disconnected()
+        {
+            OnServerDisconnected(0);
+            
+        }
+
+        void _socketClient_Connected()
+        {
+            OnServerConnected();
+        }
+
+        public void RegisterServer(string serverip, int port)
+        {
+            _socketClient.RegisterServer(serverip, port);
         }
 
         /// <summary>
@@ -112,9 +135,9 @@ namespace TradingLib.XLProtocol.Client
         /// </summary>
         public void Init()
         { 
-            if(_socketClient.StartClient(_serverIP,_port))
+            if(_socketClient.Connect())
             {
-                OnServerConnected();
+                //OnServerConnected();
             }
             else
             {
@@ -128,10 +151,10 @@ namespace TradingLib.XLProtocol.Client
         /// <summary>
         /// 等待接口线程结束运行
         /// </summary>
-        public void Join()
-        {
-            _socketClient.Wait();
-        }
+        //public void Join()
+        //{
+        //    _socketClient.Wait();
+        //}
 
         /// <summary>
         /// 停止接口线程
@@ -433,6 +456,10 @@ namespace TradingLib.XLProtocol.Client
         #endregion
 
 
+        public void HeartBeat()
+        {
+            _socketClient.RequestHeartBeat();
+        }
 
         bool SendPktData(XLPacketData pktData, XLEnumSeqType seqType,uint requestID)
         {

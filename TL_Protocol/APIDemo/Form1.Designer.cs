@@ -71,6 +71,7 @@
             this.wsAddress = new System.Windows.Forms.TextBox();
             this.label5 = new System.Windows.Forms.Label();
             this.tabPage3 = new System.Windows.Forms.TabPage();
+            this.btnMdQrySymbol = new System.Windows.Forms.Button();
             this.mdSymbols = new System.Windows.Forms.TextBox();
             this.label12 = new System.Windows.Forms.Label();
             this.btnMdSubMarket = new System.Windows.Forms.Button();
@@ -88,7 +89,7 @@
             this.button1 = new System.Windows.Forms.Button();
             this.tabPage4 = new System.Windows.Forms.TabPage();
             this.debugControl1 = new APIClient.DebugControl();
-            this.btnMdQrySymbol = new System.Windows.Forms.Button();
+            this.btnHeartBeat = new System.Windows.Forms.Button();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tabPage2.SuspendLayout();
@@ -111,6 +112,7 @@
             // 
             // tabPage1
             // 
+            this.tabPage1.Controls.Add(this.btnHeartBeat);
             this.tabPage1.Controls.Add(this.exapiverbose);
             this.tabPage1.Controls.Add(this.btnExCancelOrder);
             this.tabPage1.Controls.Add(this.btnExPlaceOrder);
@@ -539,6 +541,15 @@
             this.tabPage3.Text = "行情Socket";
             this.tabPage3.UseVisualStyleBackColor = true;
             // 
+            // btnMdQrySymbol
+            // 
+            this.btnMdQrySymbol.Location = new System.Drawing.Point(406, 37);
+            this.btnMdQrySymbol.Name = "btnMdQrySymbol";
+            this.btnMdQrySymbol.Size = new System.Drawing.Size(75, 23);
+            this.btnMdQrySymbol.TabIndex = 25;
+            this.btnMdQrySymbol.Text = "查询合约";
+            this.btnMdQrySymbol.UseVisualStyleBackColor = true;
+            // 
             // mdSymbols
             // 
             this.mdSymbols.Location = new System.Drawing.Point(59, 63);
@@ -695,14 +706,14 @@
             this.debugControl1.TimeStamps = true;
             this.debugControl1.UseExternalTimeStamp = false;
             // 
-            // btnMdQrySymbol
+            // btnHeartBeat
             // 
-            this.btnMdQrySymbol.Location = new System.Drawing.Point(406, 37);
-            this.btnMdQrySymbol.Name = "btnMdQrySymbol";
-            this.btnMdQrySymbol.Size = new System.Drawing.Size(75, 23);
-            this.btnMdQrySymbol.TabIndex = 25;
-            this.btnMdQrySymbol.Text = "查询合约";
-            this.btnMdQrySymbol.UseVisualStyleBackColor = true;
+            this.btnHeartBeat.Location = new System.Drawing.Point(504, 5);
+            this.btnHeartBeat.Name = "btnHeartBeat";
+            this.btnHeartBeat.Size = new System.Drawing.Size(75, 23);
+            this.btnHeartBeat.TabIndex = 21;
+            this.btnHeartBeat.Text = "心跳";
+            this.btnHeartBeat.UseVisualStyleBackColor = true;
             // 
             // Form1
             // 
@@ -788,6 +799,7 @@
         private System.Windows.Forms.Label label12;
         private System.Windows.Forms.Button btnMdSubMarket;
         private System.Windows.Forms.Button btnMdQrySymbol;
+        private System.Windows.Forms.Button btnHeartBeat;
     }
 }
 

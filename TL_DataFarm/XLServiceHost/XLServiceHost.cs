@@ -8,6 +8,9 @@ using TradingLib.API;
 using TradingLib.Common;
 using TradingLib.DataFarm.API;
 using Common.Logging;
+using TradingLib.XLProtocol;
+using TradingLib.XLProtocol.V1;
+
 
 namespace XLServiceHost
 {
@@ -198,12 +201,19 @@ namespace XLServiceHost
                 }
                 //conn.UpdateHeartBeat();
 
+                //if (requestInfo.Body.MessageType == TradingLib.XLProtocol.XLMessageType.T_HEARTBEEAT)
+                //{
+                //    XLPacketData pkt = new XLPacketData(XLMessageType.T_HEARTBEEAT);
+                //    byte[] ret = XLPacketData.PackToBytes(pkt, XLEnumSeqType.SeqReq, (uint)0, (uint)requestId, true);
+                //    conn.Send(ret);
+                //    return;
+                //}
                 //检查请求域
-                if (requestInfo.Body.FieldList.Count == 0)
-                {
-                    logger.Warn(string.Format("Client:{0} empty request,ingore", session.SessionID));
-                    return;
-                }
+                //if (requestInfo.Body.FieldList.Count == 0)
+                //{
+                //    logger.Warn(string.Format("Client:{0} empty request,ingore", session.SessionID));
+                //    return;
+                //}
                 //通过XL协议请求处理
                 this.OnXLRequestEvent(conn, requestInfo.Body, (int)requestInfo.DataHeader.RequestID);
             //    logger.Debug(string.Format("Message type:{0} content:{1} sessoin:{2}", requestInfo.Message.Type, requestInfo.Message.Content, session.SessionID));

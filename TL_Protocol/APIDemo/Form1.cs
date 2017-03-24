@@ -30,6 +30,7 @@ namespace APIClient
             debugControl1.TimeStamps = false;
             exAddress.Text = "121.40.201.40";
             exAddress.Text = "127.0.0.1";
+            
         }
 
         void ControlLogFactoryAdapter_SendDebugEvent(string obj)
@@ -81,6 +82,14 @@ namespace APIClient
             btnMdLogin.Click += new EventHandler(btnMdLogin_Click);
             btnMdSubMarket.Click += new EventHandler(btnMdSubMarket_Click);
             btnMdQrySymbol.Click += new EventHandler(btnMdQrySymbol_Click);
+
+            btnHeartBeat.Click += new EventHandler(btnHeartBeat_Click);
+        }
+
+        void btnHeartBeat_Click(object sender, EventArgs e)
+        {
+            if (_apiTrader == null) return;
+            _apiTrader.HeartBeat();
         }
 
         void btnMdQrySymbol_Click(object sender, EventArgs e)
@@ -121,7 +130,8 @@ namespace APIClient
 
         void btnStartMd_Click(object sender, EventArgs e)
         {
-            _mdApi = new APIMarket(mdAddress.Text, int.Parse(mdPort.Text));
+            _mdApi = new APIMarket();
+            _mdApi.RegisterServer(mdAddress.Text, int.Parse(mdPort.Text));
             _mdApi.OnServerDisconnected += new Action<int>(_mdApi_OnServerDisconnected);
             _mdApi.OnServerConnected += new Action(_mdApi_OnServerConnected);
             _mdApi.OnRspError += new Action<ErrorField>(_mdApi_OnRspError);
@@ -132,8 +142,8 @@ namespace APIClient
             {
                 _mdApi.Verbose = exapiverbose.Checked;
                 _mdApi.Init();
-                _mdApi.Join();
-                logger.Info("MDAPI Thread Stopped");
+                //_mdApi.Join();
+                //logger.Info("MDAPI Thread Stopped");
             }).Start();
         }
 
@@ -394,6 +404,7 @@ namespace APIClient
             {
                 _apiTrader.Release();
             }
+            System.Environment.Exit(0);
         }
 
         uint _requestId = 0;
@@ -418,7 +429,8 @@ namespace APIClient
         APITrader _apiTrader = null;
         void btnStartEx_Click(object sender, EventArgs e)
         {
-            _apiTrader = new APITrader(exAddress.Text, int.Parse(exPort.Text));
+            _apiTrader = new APITrader();
+            _apiTrader.RegisterServer(exAddress.Text, int.Parse(exPort.Text));
             _apiTrader.OnServerConnected += new Action(_apiTrader_OnServerConnected);
             _apiTrader.OnServerDisconnected += new Action<int>(_apiTrader_OnServerDisconnected);
             _apiTrader.OnRspError += new Action<ErrorField>(_apiTrader_OnRspError);
@@ -444,8 +456,8 @@ namespace APIClient
             {
                 _apiTrader.Verbose = exapiverbose.Checked;
                 _apiTrader.Init();
-                _apiTrader.Join();
-                logger.Info("API Thread Stopped");
+                //_apiTrader.Join();
+                //logger.Info("API Thread Stopped");
             }).Start();
         }
 
@@ -554,8 +566,12 @@ namespace APIClient
         void btnStopEx_Click(object sender, EventArgs e)
         {
             if (_apiTrader == null) return;
-            _apiTrader.Release();
-            _apiTrader = null;
+            System.Threading.ThreadPool.QueueUserWorkItem((o) =>
+                {
+                    _apiTrader.Release();
+                    _apiTrader = null;
+                }
+            );
         }
 
         #endregion

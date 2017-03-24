@@ -18,7 +18,7 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DefineConstants>TRACE;DEBUG</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
@@ -41,6 +41,7 @@
     <Compile Include="Client\APITrader.cs" />
     <Compile Include="Client\SocketClient.cs" />
     <Compile Include="Client\APIMarket.cs" />
+    <Compile Include="Client\SocketWrapper.cs" />
     <Compile Include="JsonStruct.cs" />
     <Compile Include="Struct\Enums.cs" />
     <Compile Include="Struct\V1\StructHelp.cs" />
