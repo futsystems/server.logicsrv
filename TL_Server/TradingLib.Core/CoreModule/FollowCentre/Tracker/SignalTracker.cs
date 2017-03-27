@@ -59,7 +59,8 @@ namespace TradingLib.Core
                 try
                 {
                     ISignal signal = SignalFactory.CreateSignal(cfg);
-                    if (signal != null)
+                    //判定信号交易账户存在
+                    if (signal != null && signal.Account != null)
                     {
                         signalmap.TryAdd(cfg.ID, signal);
                     }

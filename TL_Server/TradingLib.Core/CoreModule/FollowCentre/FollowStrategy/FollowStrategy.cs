@@ -130,12 +130,24 @@ namespace TradingLib.Core
             return string.Format("{0}[{1}]", this.Token, this.ID);
         }
 
+        public bool IsValid
+        {
+            get
+            {
+                if (followAccount == null) return false;
+
+                return true;
+            }
+        }
         /// <summary>
         /// 
         /// </summary>
         public void Init()
         {
-
+            if (this.ID == 3)
+            {
+                int i = 0;
+            }
             logger.Info(string.Format("FollowStrategy:{0}-{0} init",this.Config.ID,this.Config.Token));
             //1.初始化下单账户
             followAccount = FollowAccount.CreateFollowAccount(this.Account);

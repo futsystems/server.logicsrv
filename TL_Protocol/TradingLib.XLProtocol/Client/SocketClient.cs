@@ -150,6 +150,9 @@ namespace TradingLib.XLProtocol.Client
             Console.WriteLine("Socket Close");
             //停止WatchDog
             StopWatchDog();
+
+            //防止后台重连线程一直执行重连操作
+            _reconnectreq = false;
             //关闭Socket
             SafeCloseSocket();
         }

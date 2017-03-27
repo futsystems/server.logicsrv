@@ -21,7 +21,10 @@ namespace TradingLib.Core
         public void InitStrategy(FollowStrategyConfig cfg)
         {
             FollowStrategy strategy = FollowStrategy.CreateStrategy(cfg);
-            strategyMap.TryAdd(strategy.ID, strategy);
+            if (strategy.IsValid)
+            {
+                strategyMap.TryAdd(strategy.ID, strategy);
+            }
         }
 
 
