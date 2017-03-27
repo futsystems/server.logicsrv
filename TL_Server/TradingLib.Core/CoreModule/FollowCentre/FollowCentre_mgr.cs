@@ -239,10 +239,14 @@ namespace TradingLib.Core
                 throw new FutsRspError(string.Format("跟单策略:{0}不存在", strategyID));
             }
 
-            //更新信号维护器
-            FollowTracker.SignalTracker.AppendSignalToStrategy(signalID, strategyID);
-            //跟单策略添加信号
-            strategy.AppendSignal(signal);
+            //跟单策略没有该信号则添加
+            if (!strategy.HaveSignal(signal))
+            {
+                //更新信号维护器
+                FollowTracker.SignalTracker.AppendSignalToStrategy(signalID, strategyID);
+                //跟单策略添加信号
+                strategy.AppendSignal(signal);
+            }
         }
 
         /// <summary>
@@ -272,10 +276,14 @@ namespace TradingLib.Core
                 throw new FutsRspError(string.Format("跟单策略:{0}不存在", strategyID));
             }
 
-            //更新信号维护器
-            FollowTracker.SignalTracker.RemoveSignalFromStrategy(signalID, strategyID);
-            //跟单策略删除信号
-            strategy.RemoveSignal(signal);
+            //跟单策略有该信号 则执行删除
+            if (strategy.HaveSignal(signal))
+            {
+                //更新信号维护器
+                FollowTracker.SignalTracker.RemoveSignalFromStrategy(signalID, strategyID);
+                //跟单策略删除信号
+                strategy.RemoveSignal(signal);
+            }
         }
 
 

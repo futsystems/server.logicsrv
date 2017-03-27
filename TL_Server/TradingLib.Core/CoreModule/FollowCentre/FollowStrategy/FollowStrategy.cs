@@ -178,7 +178,17 @@ namespace TradingLib.Core
             }
         }
 
-        
+        /// <summary>
+        /// 跟单策略是否包含该信号
+        /// </summary>
+        /// <param name="signal"></param>
+        /// <returns></returns>
+        public bool HaveSignal(ISignal signal)
+        {
+            if (signalMap.Keys.Contains(signal.ID))
+                return true;
+            return false;
+        }
 
 
 
