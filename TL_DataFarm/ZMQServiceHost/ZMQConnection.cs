@@ -64,6 +64,12 @@ namespace ZMQServiceHost
         {
             _host.Send(packet);
         }
+
+        public void Send(string json)
+        {
+            //logger.Warn("Send string NotSupportedException");
+        }
+
         public void Send(byte[] data)
         {
 

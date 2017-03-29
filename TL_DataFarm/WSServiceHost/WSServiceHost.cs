@@ -9,6 +9,9 @@ using Common.Logging;
 using SuperWebSocket;
 using SuperSocket.SocketBase;
 using SuperSocket.SocketBase.Protocol;
+using TradingLib.XLProtocol;
+using TradingLib.XLProtocol.V1;
+
 
 namespace WSServiceHost
 {
@@ -44,46 +47,52 @@ namespace WSServiceHost
             socketServer.NewMessageReceived += new SessionHandler<WebSocketSession, string>(socketServer_NewMessageReceived);
             socketServer.NewSessionConnected += new SessionHandler<WebSocketSession>(socketServer_NewSessionConnected);
             socketServer.SessionClosed += new SessionHandler<WebSocketSession, CloseReason>(socketServer_SessionClosed);
-            //socketServer.NewDataReceived += new SessionHandler<TLWebSocketSessionBase, byte[]>(socketServer_NewDataReceived);
-            //socketServer.NewMessageReceived += new SessionHandler<TLWebSocketSessionBase, string>(socketServer_NewMessageReceived);
-            //socketServer.NewSessionConnected += new SessionHandler<TLWebSocketSessionBase>(socketServer_NewSessionConnected);
-            //socketServer.SessionClosed += new SessionHandler<TLWebSocketSessionBase, CloseReason>(socketServer_SessionClosed);
+     
         }
 
         void socketServer_SessionClosed(WebSocketSession session, CloseReason value)
         {
             logger.Info(string.Format("Session:{0} closed", session.SessionID));
+            OnSessionClosed(session);
         }
 
         void socketServer_NewSessionConnected(WebSocketSession session)
         {
             logger.Info(string.Format("Session:{0} connected", session.SessionID));
+            OnSessionCreated(session);
         }
 
         void socketServer_NewMessageReceived(WebSocketSession session, string value)
         {
-            logger.Info(string.Format("Session:{0} Message:{1}", session.SessionID, value));
+            WSConnection conn = null;
+            try
+            {
+                logger.Info(string.Format("Session:{0} Message:{1}", session.SessionID, value));
+                //SessionID 检查连接对象
+                if (!connectionMap.TryGetValue(session.SessionID, out conn))
+                {
+                    logger.Warn(string.Format("Client:{0} is not registed to server, ignore request", session.SessionID));
+                    //关闭连接
+                    session.Close();
+                    return;
+                }
+
+                //Json数据转换成XLPacketData 通过OnXLRequestEvent进行处理
+                Newtonsoft.Json.Linq.JObject jobject = Newtonsoft.Json.Linq.JObject.Parse(value);
+                XLMessageType type = jobject["MessageType"].ToObject<XLMessageType>();
+                int requestID = 0;
+                var pktData = XLPacketData.DeserializeJsonRequest(type, value, out requestID);
+                //通过XL协议请求处理
+                this.OnXLRequestEvent(conn, pktData, requestID);
+
+            }
+            catch (Exception ex)
+            {
+                logger.Error("Request Handler Error:" + ex.ToString());
+            }
         }
 
-        //void socketServer_SessionClosed(TLWebSocketSessionBase session, CloseReason value)
-        //{
-        //    logger.Info(string.Format("Session:{0} closed", session.SessionID));
-        //}
-
-        //void socketServer_NewSessionConnected(TLWebSocketSessionBase session)
-        //{
-        //    logger.Info(string.Format("Session:{0} connected", session.SessionID));
-        //}
-
-        //void socketServer_NewMessageReceived(TLWebSocketSessionBase session, string value)
-        //{
-        //    logger.Info(string.Format("Session:{0} Message:{1}", session.SessionID, value));
-        //}
-
-        //void socketServer_NewDataReceived(TLWebSocketSessionBase session, byte[] value)
-        //{
-        //    //throw new NotImplementedException();
-        //}
+     
 
         public void Start()
         {

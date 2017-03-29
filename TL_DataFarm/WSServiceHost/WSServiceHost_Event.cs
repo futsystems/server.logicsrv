@@ -36,5 +36,73 @@ namespace WSServiceHost
         /// XLRequestEvet事件
         /// </summary>
         public event Action<IServiceHost, IConnection, object, int> XLRequestEvent;
+
+
+        void OnConnectionCreated(IConnection conn)
+        {
+            if (ConnectionCreatedEvent != null)
+            {
+                ConnectionCreatedEvent(this, conn);
+            }
+        }
+
+        void OnConnectionClosed(IConnection conn)
+        {
+            if (ConnectionClosedEvent != null)
+            {
+                ConnectionClosedEvent(this, conn);
+            }
+        }
+
+        /// <summary>
+        /// 调用服务逻辑处理XL数据包
+        /// </summary>
+        /// <param name="conn"></param>
+        /// <param name="data"></param>
+        /// <param name="requestId"></param>
+        void OnXLRequestEvent(IConnection conn, TradingLib.XLProtocol.XLPacketData data, int requestId)
+        {
+            if (XLRequestEvent != null && data != null)
+            {
+                XLRequestEvent(this, conn, data, requestId);
+            }
+        }
+
+        void OnRequestEvent(IConnection conn, IPacket packet)
+        {
+            if (RequestEvent != null && packet != null)
+            {
+                RequestEvent(this, conn, packet);
+            }
+        }
+
+        /// <summary>
+        /// 查询服务是否可用
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        private RspQryServiceResponse QryService(QryServiceRequest request)
+        {
+            RspQryServiceResponse response = null;
+            if (ServiceEvent != null)
+            {
+                IPacket packet = ServiceEvent(this, request);
+
+                if (packet != null && packet.Type == MessageTypes.SERVICERESPONSE)
+                {
+                    response = packet as RspQryServiceResponse;
+                    response.APIType = QSEnumAPIType.MD_ZMQ;
+                    response.APIVersion = "1.0.0";
+                }
+            }
+            if (response == null)
+            {
+                response = ResponseTemplate<RspQryServiceResponse>.SrvSendRspResponse(request);
+                response.APIType = QSEnumAPIType.ERROR;
+                response.APIVersion = "";
+            }
+            return response;
+        }
+
     }
 }

@@ -84,6 +84,13 @@ namespace XLServiceHost
             if (data == null || data.Length < 1) return;
             _session.Send(data, 0, data.Length);
         }
+
+        public void Send(string json)
+        {
+            logger.Warn("Send string NotSupportedException");
+        }
+
+
         /// <summary>
         /// 关闭Socket
         /// </summary>

@@ -17,10 +17,23 @@ namespace TradingLib.DataFarm.Common
             {
                 this.Connection = conn;
                 this.Packet = packet;
+                this.JsonPacket = null;
             }
+
+            public SendStruct(IConnection conn,string jsonPacket)
+            {
+                this.Connection = conn;
+                this.Packet = null;
+                this.JsonPacket = jsonPacket;
+            }
+
+
+
             public IConnection Connection { get; set; }
 
             public byte[] Packet { get; set; }
+
+            public string JsonPacket { get; set; }
         }
         public partial class DataServer
         {
@@ -65,6 +78,12 @@ namespace TradingLib.DataFarm.Common
                 NewSend();
             }
 
+            void SendData(IConnection connection, string json)
+            {
+                sendbuffer.Write(new SendStruct(connection, json));
+                NewSend();
+            }
+
             int getRequestId(IPacket packet)
             {
                 if (packet is RspResponsePacket)
@@ -93,7 +112,10 @@ namespace TradingLib.DataFarm.Common
                                 }
                                 if (IsConnectionRegisted(st.Connection.SessionID))
                                 {
-                                    st.Connection.Send(st.Packet);
+                                    if(st.Packet != null)
+                                        st.Connection.Send(st.Packet);
+                                    if (st.JsonPacket != null)
+                                        st.Connection.Send(st.JsonPacket);
                                 }
                             }
                             catch (Exception ex)

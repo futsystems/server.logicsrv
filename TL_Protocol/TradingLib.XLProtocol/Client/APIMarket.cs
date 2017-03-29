@@ -243,7 +243,7 @@ namespace TradingLib.XLProtocol.Client
         /// <returns></returns>
         public bool SubscribeMarketData(string[] symbols, uint requestID)
         {
-            XLPacketData pktData = new XLPacketData(XLMessageType.T_REQ_MARJETDATA);
+            XLPacketData pktData = new XLPacketData(XLMessageType.T_REQ_MARKETDATA);
             foreach (var symbol in symbols)
             {
                 var tmp = new XLSpecificSymbolField() { SymbolID = symbol };

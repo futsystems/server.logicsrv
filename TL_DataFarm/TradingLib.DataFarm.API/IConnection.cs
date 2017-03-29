@@ -89,6 +89,8 @@ namespace TradingLib.DataFarm.API
 
         void Send(byte[] data);
 
+        void Send(string json);
+
         /// <summary>
         /// 关闭会话
         /// </summary>

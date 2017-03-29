@@ -299,6 +299,40 @@ namespace TradingLib.DataFarm.Common
             return XLPacketData.PackToBytes(pkt, XLEnumSeqType.SeqRtn, (uint)0, (uint)0, true);
         }
 
+        string CreateJsonTickData(Tick k)
+        {
+            XLPacketData pkt = new XLPacketData(XLMessageType.T_RTN_MARKETDATA);
+            XLDepthMarketDataField data = new XLDepthMarketDataField();
+
+            data.Date = k.Date;
+            data.Time = k.Time;
+            data.TradingDay = 0;
+
+            data.SymbolID = k.Symbol;
+            data.ExchangeID = k.Exchange;
+            data.LastPrice = (double)k.Trade;
+            data.PreSettlementPrice = (double)k.PreSettlement;
+            data.PreClosePrice = (double)k.PreClose;
+            data.PreOpenInterest = k.PreOpenInterest;
+            data.OpenPrice = (double)k.Open;
+            data.HighestPrice = (double)k.High;
+            data.LowestPrice = (double)k.Low;
+            data.Volume = k.Vol;
+            data.OpenInterest = k.OpenInterest;
+            data.ClosePrice = (double)k.Trade;
+            data.SettlementPrice = (double)k.Settlement;
+            data.UpperLimitPrice = (double)k.UpperLimit;
+            data.LowerLimitPrice = (double)k.LowerLimit;
+            data.BidPrice1 = (double)k.BidPrice;
+            data.BidVolume1 = k.BidSize;
+            data.AskPrice1 = (double)k.AskPrice;
+            data.AskVolume1 = k.AskSize;
+            pkt.AddField(data);
+
+            return XLPacketData.PackJsonNotify(pkt);
+        }
+
+
 
         /// <summary>
         /// 向客户端通知行情回报
@@ -312,6 +346,7 @@ namespace TradingLib.DataFarm.Common
                 //创建不同协议的行情数据
                 var tldata = CreateTLTickData(k);
                 var xldata = CreateXLTickData(k);
+                var jsondata = CreateJsonTickData(k);
                 //遍历所有连接 按连接类型将数据发送到客户端
                 foreach (var conn in target.Values)
                 {
@@ -325,6 +360,11 @@ namespace TradingLib.DataFarm.Common
                         case EnumConnProtocolType.XL:
                             {
                                 this.SendData(conn, xldata);
+                                break;
+                            }
+                        case EnumConnProtocolType.Json:
+                            {
+                                this.SendData(conn, jsondata);
                                 break;
                             }
                         default:

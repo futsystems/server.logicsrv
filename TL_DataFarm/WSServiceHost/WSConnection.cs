@@ -6,16 +6,15 @@ using TradingLib.API;
 using TradingLib.DataFarm.API;
 using Common.Logging;
 
-namespace TCPServiceHost
+namespace WSServiceHost
 {
     /// <summary>
-    /// 封装了一个TCPSocketServiceHost 中的Connection对象
+    /// 
     /// </summary>
-    public class TCPSocketConnection:IConnection
+    public class WSConnection:IConnection
     {
-        ILog logger = LogManager.GetLogger("conn");
-
-        public EnumConnProtocolType ProtocolType { get { return EnumConnProtocolType.TL; } }
+        ILog logger = LogManager.GetLogger("WSConnection");
+        public EnumConnProtocolType ProtocolType { get { return EnumConnProtocolType.Json; } }
         public string IPAddress 
         { 
             get 
@@ -54,8 +53,8 @@ namespace TCPServiceHost
 
 
         IServiceHost _serviceHost = null;
-        TLSessionBase _session = null;
-        public TCPSocketConnection(IServiceHost host,TLSessionBase session)
+        SuperWebSocket.WebSocketSession _session = null;
+        public WSConnection(IServiceHost host, SuperWebSocket.WebSocketSession session)
         {
             _session = session;
             _serviceHost = host;
@@ -80,19 +79,16 @@ namespace TCPServiceHost
             
             
         //}
-
         public void Send(byte[] data)
         {
-            if (data == null || data.Length < 1) return;
-            _session.Send(data, 0, data.Length);
+            logger.Warn("Send byte[] NotSupportedException");
         }
 
+        
         public void Send(string json)
         {
-            logger.Warn("Send string NotSupportedException");
+            _session.Send(json);
         }
-
-
         /// <summary>
         /// 关闭Socket
         /// </summary>

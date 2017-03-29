@@ -34,7 +34,7 @@ namespace TradingLib.DataFarm.Common
 
                         XLPacketData pkt = new XLPacketData(XLMessageType.T_HEARTBEEAT);
                         byte[] ret = XLPacketData.PackToBytes(pkt, XLEnumSeqType.SeqReq, (uint)0, (uint)requestId, true);
-                        conn.Send(ret);
+                        SendData(conn, ret);
                         break;
                     }
                 case XLMessageType.T_REQ_LOGIN:
@@ -55,9 +55,16 @@ namespace TradingLib.DataFarm.Common
                             pkt.AddField(rsp);
                             pkt.AddField(field);
 
-                            byte[] ret = XLPacketData.PackToBytes(pkt, XLEnumSeqType.SeqReq, (uint)0, (uint)requestId, true);
-
-                            conn.Send(ret);
+                            if (conn.ProtocolType == EnumConnProtocolType.XL)
+                            {
+                                byte[] ret = XLPacketData.PackToBytes(pkt, XLEnumSeqType.SeqReq, (uint)0, (uint)requestId, true);
+                                SendData(conn, ret);
+                            }
+                            else
+                            {
+                                string json = XLPacketData.PackJsonResponse(pkt, (int)requestId, true);
+                                SendData(conn, json);
+                            }
                         }
                         else
                         {
@@ -65,7 +72,7 @@ namespace TradingLib.DataFarm.Common
                         }
                         break;
                     }
-                case XLMessageType.T_REQ_MARJETDATA:
+                case XLMessageType.T_REQ_MARKETDATA:
                     {
                         foreach (var data in reqPkt.FieldList)
                         {
@@ -108,8 +115,16 @@ namespace TradingLib.DataFarm.Common
                                 XLPacketData pkt = new XLPacketData(XLMessageType.T_RSP_SYMBOL);
                                 pkt.AddField(field);
 
-                                byte[] ret = XLPacketData.PackToBytes(pkt, XLEnumSeqType.SeqReq, (uint)0, (uint)requestId, i == length);
-                                conn.Send(ret);
+                                if (conn.ProtocolType == EnumConnProtocolType.XL)
+                                {
+                                    byte[] ret = XLPacketData.PackToBytes(pkt, XLEnumSeqType.SeqReq, (uint)0, (uint)requestId, i == length);
+                                    SendData(conn, ret);
+                                }
+                                if (conn.ProtocolType == EnumConnProtocolType.Json)
+                                {
+                                    string json = XLPacketData.PackJsonResponse(pkt, (int)requestId, i == length);
+                                    SendData(conn, json);
+                                }
                             }
 
                         }

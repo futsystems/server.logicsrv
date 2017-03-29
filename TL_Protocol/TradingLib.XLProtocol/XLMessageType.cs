@@ -143,12 +143,12 @@ namespace TradingLib.XLProtocol
         /// <summary>
         /// 请求注册市场行情
         /// </summary>
-        T_REQ_MARJETDATA = 4000,
+        T_REQ_MARKETDATA = 4000,
 
         /// <summary>
         /// 请求注册市场行情回报
         /// </summary>
-        T_RSP_MARJETDATA = 4001,
+        T_RSP_MARKETDATA = 4001,
 
         /// <summary>
         /// 市场行情数据

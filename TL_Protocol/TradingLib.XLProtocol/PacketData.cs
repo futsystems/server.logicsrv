@@ -185,6 +185,11 @@ namespace TradingLib.XLProtocol
                         notify = new JsonNotify(pkt.MessageType, (V1.XLPositionField)pkt.FieldList[0]);
                         break;
                     }
+                case XLMessageType.T_RTN_MARKETDATA:
+                    {
+                        notify = new JsonNotify(pkt.MessageType, (V1.XLDepthMarketDataField)pkt.FieldList[0]);
+                        break;
+                    }
             }
             return Newtonsoft.Json.JsonConvert.SerializeObject(notify);
         }
@@ -332,6 +337,12 @@ namespace TradingLib.XLProtocol
                 case XLMessageType.T_REQ_ORDERACTION://提交委托操作
                     {
                         var data = Newtonsoft.Json.JsonConvert.DeserializeObject<JsonRequest<V1.XLInputOrderActionField>>(json);
+                        requestID = data.RequestID;
+                        return new XLPacketData(msgType, new List<IXLField>() { data.Request });
+                    }
+                case XLMessageType.T_REQ_MARKETDATA://提交市场数据注册
+                    {
+                        var data = Newtonsoft.Json.JsonConvert.DeserializeObject<JsonRequest<V1.XLSpecificSymbolField>>(json);
                         requestID = data.RequestID;
                         return new XLPacketData(msgType, new List<IXLField>() { data.Request });
                     }
