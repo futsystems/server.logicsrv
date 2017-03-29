@@ -93,6 +93,8 @@ namespace TradingLib.DataFarm.Common
                 int eodHistBarEndTradingDay = int.MinValue;
                 store.RestoreEodBar(symbol, out eodHistBarEndTradingDay);
                 restoresrv.OnEodHistBarLoaded(symbol, eodHistBarEndTradingDay);
+
+                //logger.Info("load dsymbol:" + symbol.Symbol);
             }
             Global.Profile.LeaveSection();
             logger.Info(Global.Profile.GetStatsString());

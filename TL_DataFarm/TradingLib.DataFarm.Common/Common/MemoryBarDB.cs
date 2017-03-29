@@ -179,7 +179,7 @@ namespace TradingLib.DataFarm.Common
             //从数据库加载对应的Bar数据 从最近的数据加载 分钟级别数据加载6个月,日级别数据加载3年
             //IEnumerable<BarImpl> bars = MBar.LoadIntradayBars(symbol.GetBarSymbol(), DateTime.Now.AddMonths(-6));
             string sym = symbol.GetBarSymbol();
-            IEnumerable<BarImpl> bars = intradayBars.Where(bar => bar.Symbol == sym);
+            IEnumerable<BarImpl> bars = intradayBars.Where(bar => bar.Symbol == sym).ToList();
             target.RestoreBars(bars.Skip(Math.Max(0, bars.Count()-ConstantData.MAXBARCACHED)));
             lastBarTime = target.LastBarTime;
             
