@@ -94,6 +94,28 @@ namespace TradingLib.DataFarm.Common
             }
         }
 
+        /// <summary>
+        /// 加载某个时间之后的所有分钟Bar 避免多次查询造成加载缓慢
+        /// </summary>
+        /// <param name="start"></param>
+        /// <returns></returns>
+        public static IEnumerable<BarImpl> LoadIntradayBars(DateTime start)
+        {
+            using (DBMySql db = new DBMySql())
+            {
+                string qrystr = "SELECT ";
+                qrystr += "a.id,a.tradingday,a.symbol,a.open,a.high,a.low,a.close,a.volume,a.openinterest,a.tradecount,a.interval,a.intervaltype,STR_TO_DATE(endtime,'%Y%m%d%H%i%s') as endtime FROM data_intraday a ";
+                if (start != DateTime.MinValue)
+                {
+                    qrystr += " WHERE  `endtime`>={0} ".Put(start.ToTLDateTime());
+                }
+                qrystr += "ORDER BY `endtime` ";
+                qrystr += "ASC ";
+                IEnumerable<BarImpl> bars = db.Connection.Query<BarImpl>(qrystr);
+                return bars;
+            }
+        }
+
 
 
         /// <summary>
@@ -154,6 +176,24 @@ namespace TradingLib.DataFarm.Common
                 if (start != DateTime.MinValue)
                 {
                     qrystr += "AND `endtime`>={0} ".Put(start.ToTLDateTime());
+                }
+                qrystr += "ORDER BY `endtime` ";
+                qrystr += "ASC ";
+                IEnumerable<BarImpl> bars = db.Connection.Query<BarImpl>(qrystr);
+                return bars;
+            }
+        }
+
+        public static IEnumerable<BarImpl> LoadEodBars(DateTime start)
+        {
+            using (DBMySql db = new DBMySql())
+            {
+                string qrystr = "SELECT ";
+                qrystr += "a.id,a.tradingday,a.symbol,a.open,a.high,a.low,a.close,a.volume,a.openinterest,a.tradecount,a.interval,a.intervaltype,STR_TO_DATE(endtime,'%Y%m%d%H%i%s') as endtime FROM data_eod a ";//, (int)type, interval);
+
+                if (start != DateTime.MinValue)
+                {
+                    qrystr += " WHERE `endtime`>={0} ".Put(start.ToTLDateTime());
                 }
                 qrystr += "ORDER BY `endtime` ";
                 qrystr += "ASC ";

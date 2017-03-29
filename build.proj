@@ -181,6 +181,7 @@
 		<MSBuild Projects="Program\TickServer\TickStore.csproj" Properties="Configuration=$(Configuration);" />
 		<MSBuild Projects="TL_DataFarm\FastTickFeed\FastTickFeed.csproj" Properties="Configuration=$(Configuration);" />
 		<MSBuild Projects="TL_DataFarm\TCPServiceHost\TCPServiceHost.csproj" Properties="Configuration=$(Configuration);" />
+		<MSBuild Projects="TL_DataFarm\WSServiceHost\WSServiceHost.csproj" Properties="Configuration=$(Configuration);" />
 		<MSBuild Projects="TL_DataFarm\XLServiceHost\XLServiceHost.csproj" Properties="Configuration=$(Configuration);" />
 	</Target>
 	
@@ -193,6 +194,7 @@
 		<Copy SourceFiles="Platform\DataCore\TickFeed\FastTickFeed.dll" DestinationFolder="$(PackageDirDataCore)\TickFeed" ContinueOnError="false" />
 		<Copy SourceFiles="Platform\DataCore\ServiceHost\TCPServiceHost.dll" DestinationFolder="$(PackageDirDataCore)\ServiceHost" ContinueOnError="false" />
 		<Copy SourceFiles="Platform\DataCore\ServiceHost\XLServiceHost.dll" DestinationFolder="$(PackageDirDataCore)\ServiceHost" ContinueOnError="false" />
+		<Copy SourceFiles="Platform\DataCore\ServiceHost\WSServiceHost.dll" DestinationFolder="$(PackageDirDataCore)\ServiceHost" ContinueOnError="false" />
 	</Target>
 	
 

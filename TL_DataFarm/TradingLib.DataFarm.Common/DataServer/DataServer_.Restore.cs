@@ -70,14 +70,14 @@ namespace TradingLib.DataFarm.Common
         /// </summary>
         void LoadData()
         {
-            logger.Info("Load bar data from database");
+            logger.Info("Load bar data from cache");
             IHistDataStore store = this.GetHistDataSotre();
             if (store == null)
             {
                 logger.Warn("HistDataSotre is null, can not restore data");
             }
 
-            Global.Profile.EnterSection("DB Load");
+            Global.Profile.EnterSection("Bar Restore");
             //遍历所有合约执行合约的数据恢复 合理：采用品种 并遍历1-12进行数据恢复 恢复某个品种的1-12个月数据
             foreach (var symbol in MDBasicTracker.SymbolTracker.Symbols)
             {

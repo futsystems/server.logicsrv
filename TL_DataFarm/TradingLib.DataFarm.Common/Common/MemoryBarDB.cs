@@ -14,6 +14,20 @@ namespace TradingLib.DataFarm.Common
     {
 
         ILog logger = LogManager.GetLogger("MemoryBarDB");
+
+        IEnumerable<BarImpl> intradayBars;
+        IEnumerable<BarImpl> eodBars;
+        public MemoryBarDB()
+        {
+            Global.Profile.EnterSection("Bar Load From DB");
+            logger.Info("Load Intraday Bars");
+            intradayBars = MBar.LoadIntradayBars(DateTime.Now.AddMonths(-6));
+            logger.Info("Load Eod Bars");
+            eodBars = MBar.LoadEodBars(DateTime.Now.AddYears(-3));
+            Global.Profile.LeaveSection();
+            logger.Info(Global.Profile.GetStatsString());
+
+        }
         /// <summary>
         /// BarList
         /// </summary>
@@ -163,7 +177,9 @@ namespace TradingLib.DataFarm.Common
             lastBarTime = DateTime.MinValue;
             BarList target = GetBarList(symbol, BarInterval.CustomTime, 60);
             //从数据库加载对应的Bar数据 从最近的数据加载 分钟级别数据加载6个月,日级别数据加载3年
-            IEnumerable<BarImpl> bars = MBar.LoadIntradayBars(symbol.GetBarSymbol(), DateTime.Now.AddMonths(-6));
+            //IEnumerable<BarImpl> bars = MBar.LoadIntradayBars(symbol.GetBarSymbol(), DateTime.Now.AddMonths(-6));
+            string sym = symbol.GetBarSymbol();
+            IEnumerable<BarImpl> bars = intradayBars.Where(bar => bar.Symbol == sym);
             target.RestoreBars(bars.Skip(Math.Max(0, bars.Count()-ConstantData.MAXBARCACHED)));
             lastBarTime = target.LastBarTime;
             
@@ -214,7 +230,9 @@ namespace TradingLib.DataFarm.Common
             BarList target = GetBarList(symbol, BarInterval.Day, 1);
             target.IsEOD = true;
             //从数据库加载对应的Bar数据 从最近的数据加载 分钟级别数据加载6个月,日级别数据加载3年
-            IEnumerable<BarImpl> bars = MBar.LoadEodBars(symbol.GetBarSymbol(), DateTime.Now.AddYears(-3));
+            //IEnumerable<BarImpl> bars = MBar.LoadEodBars(symbol.GetBarSymbol(), DateTime.Now.AddYears(-3));
+            string sym = symbol.GetBarSymbol();
+            IEnumerable<BarImpl> bars = eodBars.Where(bar => bar.Symbol == sym);
             target.RestoreBars(bars.Skip(Math.Max(0, bars.Count() - ConstantData.MAXBARCACHED)));
             lastBarTradingDay = target.LastBarTradingDay;
 
