@@ -91,8 +91,9 @@ namespace TradingLib.DataFarm.Common
                             }
                         }
                     }
-                    catch
+                    catch(Exception ex)
                     {
+                        Console.WriteLine("load servicehost error:" + ex.ToString());
                     }
                 }
             }
