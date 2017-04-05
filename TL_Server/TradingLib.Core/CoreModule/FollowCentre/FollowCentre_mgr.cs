@@ -279,10 +279,11 @@ namespace TradingLib.Core
             //跟单策略有该信号 则执行删除
             if (strategy.HaveSignal(signal))
             {
-                //更新信号维护器
-                FollowTracker.SignalTracker.RemoveSignalFromStrategy(signalID, strategyID);
                 //跟单策略删除信号
                 strategy.RemoveSignal(signal);
+
+                //更新信号维护器
+                FollowTracker.SignalTracker.RemoveSignalFromStrategy(signalID, strategyID);
             }
         }
 

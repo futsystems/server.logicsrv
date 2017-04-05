@@ -106,5 +106,6 @@ namespace TradingLib.Quant.Chart
 
         ChartStyle _chartstyle = ChartStyle.CandleStick;
         public ChartStyle ChartStyle { get { return _chartstyle; } set { _chartstyle = value; } }
+
     }
 }

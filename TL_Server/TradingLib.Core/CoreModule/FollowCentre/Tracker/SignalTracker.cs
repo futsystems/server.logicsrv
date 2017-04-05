@@ -38,9 +38,8 @@ namespace TradingLib.Core
 
             logger.Info("加载信号设置,初始化信号对象");
             //遍历所有交易账户 恢复信号设置
-
             IEnumerable<SignalConfig> tmp = ORM.MSignal.SelectSignalConfigs();
-            
+
             //遍历所有子账户和信号账户
             foreach (IAccount account in TLCtxHelper.ModuleAccountManager.Accounts.Where(acc => (acc.Category == QSEnumAccountCategory.SUBACCOUNT || acc.Category == QSEnumAccountCategory.SIGACCOUNT)))
             {
@@ -51,6 +50,18 @@ namespace TradingLib.Core
                 }
             }
             //遍历信号 将没有对应交易账户的信号删除
+            foreach (var s in tmp)
+            {
+                if (s.SignalType == QSEnumSignalType.Account)
+                { 
+                    //没有与信号设置对应的子账户 则删除该信号设置
+                    if(TLCtxHelper.ModuleAccountManager.Accounts.Where(acc=>acc.ID == s.SignalToken).Count()==0)
+                    {
+                        ORM.MSignal.DelSignalConfigWithOutAccount(s);
+                    }
+                }
+            }
+            
 
             //从数据库加载信号配置并创建信号对象
             foreach (var cfg in ORM.MSignal.SelectSignalConfigs())

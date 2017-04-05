@@ -42,6 +42,24 @@ namespace TradingLib.ORM
             }
         }
 
+        /// <summary>
+        /// 删除信号
+        /// </summary>
+        /// <param name="cfg"></param>
+        public static void DelSignalConfigWithOutAccount(SignalConfig cfg)
+        {
+            using (DBMySql db = new DBMySql())
+            {
+                string query = String.Format("DELETE FROM follow_signals WHERE id = '{0}'", cfg.ID);//删除信号配置
+                db.Connection.Execute(query);
+
+                query = String.Format("DELETE FROM follow_strategy_signals WHERE signalid = '{0}'", cfg.ID);//删除添加了该信号的策略信号映射
+                db.Connection.Execute(query);
+            }
+        }
+
+
+
         public static void InsertSignalConfig(SignalConfig cfg)
         {
             using (DBMySql db = new DBMySql())
