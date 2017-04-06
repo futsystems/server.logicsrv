@@ -288,7 +288,6 @@ namespace TradingLib.Contrib.APIService
 
         void HandleDeposit(ISession session, decimal val, EnumBusinessType type)
         {
-            logger.Info("handle entry");
             RspContribResponse response = ResponseTemplate<RspContribResponse>.SrvSendRspResponse(session);
             response.ModuleID = session.ContirbID;
             response.CMDStr = session.CMDStr;
@@ -305,21 +304,18 @@ namespace TradingLib.Contrib.APIService
                 response.RspInfo.ErrorID = 1;
                 response.RspInfo.ErrorMessage = "不支持在线出入金";
             }
-            logger.Info("handle entry2");
             //通过账户分区查找支付网关设置 如果有支付网关则通过支付网关来获得对应的数据
             var gateway = APITracker.GateWayTracker.GetDomainGateway(account.Domain.ID);
             if (gateway == null)
             {
-                logger.Info("gateway null");
                 response.RspInfo.ErrorID = 1;
                 response.RspInfo.ErrorMessage = "未设置支付网关";
             }
-            if (!gateway.Avabile)
+            if (gateway!= null && !gateway.Avabile)
             {
                 response.RspInfo.ErrorID = 1;
                 response.RspInfo.ErrorMessage = "支付网关未启用";
             }
-            logger.Info("handle entry3");
             if (response.RspInfo.ErrorID == 0)
             {
                 //输入参数验证完毕
