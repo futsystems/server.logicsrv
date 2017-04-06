@@ -310,6 +310,7 @@ namespace TradingLib.Contrib.APIService
             var gateway = APITracker.GateWayTracker.GetDomainGateway(account.Domain.ID);
             if (gateway == null)
             {
+                logger.Info("gateway null");
                 response.RspInfo.ErrorID = 1;
                 response.RspInfo.ErrorMessage = "未设置支付网关";
             }
