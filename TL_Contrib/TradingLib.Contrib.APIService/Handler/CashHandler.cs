@@ -263,6 +263,49 @@ namespace TradingLib.Contrib.APIService
                                     txn.Amount = txn.Amount * rate;
                                     TLCtxHelper.ModuleAccountManager.CashOperation(txn);
 
+                                    //执行手续费收取
+                                    if (txn.TxnType == QSEnumCashOperation.Deposit)
+                                    {
+                                        decimal depositcommission = account.GetDepositCommission();
+                                        if (depositcommission > 0)
+                                        {
+                                            decimal commission = 0;
+                                            if (depositcommission >= 1)
+                                            { 
+                                                commission = depositcommission;
+                                            }
+                                            else
+                                            {
+                                                commission = txn.Amount*depositcommission;
+                                            }
+
+                                            var commissionTxn = CashOperation.GenCommissionTransaction(operation);
+                                            commissionTxn.Operator = "System";
+                                            commissionTxn.Amount = commission;
+                                            TLCtxHelper.ModuleAccountManager.CashOperation(commissionTxn);
+                                        }
+                                    }
+                                    else
+                                    {
+                                        decimal withdrawcommission = account.GetWithdrawCommission();
+                                        if (withdrawcommission > 0)
+                                        {
+                                            decimal commission = 0;
+                                            if (withdrawcommission >= 1)
+                                            {
+                                                commission = withdrawcommission;
+                                            }
+                                            else
+                                            {
+                                                commission = txn.Amount * withdrawcommission;
+                                            }
+                                            var commissionTxn = CashOperation.GenCommissionTransaction(operation);
+                                            commissionTxn.Operator = "System";
+                                            commissionTxn.Amount = commission;
+                                            TLCtxHelper.ModuleAccountManager.CashOperation(commissionTxn);
+                                        }
+                                    }
+
                                     //2.更新出入金操作状态更新
                                     operation.Status = QSEnumCashInOutStatus.CONFIRMED;
                                     operation.Comment = gateway.GetResultComment(request);

@@ -198,10 +198,30 @@ namespace TradingLib.Contrib.APIService
             var txn = CashOperation.GenCashTransaction(op);
             txn.Operator = manager.Login;
             //汇率换算
-            
-            txn.Amount = txn.Amount * rate;
 
+            decimal depositcommission = account.GetWithdrawCommission();
+            decimal commission = 0;
+            if (depositcommission > 0)
+            {
+                if (depositcommission >= 1)
+                {
+                    commission = depositcommission;
+                }
+                else
+                {
+                    commission = txn.Amount * rate * depositcommission;
+                }
+
+                var commissionTxn = CashOperation.GenCommissionTransaction(op);
+                commissionTxn.Operator = "System";
+                commissionTxn.Amount = commission;
+                TLCtxHelper.ModuleAccountManager.CashOperation(commissionTxn);
+            }
+
+            txn.Amount = txn.Amount * rate - commission;
             TLCtxHelper.ModuleAccountManager.CashOperation(txn);
+
+
 
             ORM.MCashOperation.UpdateCashOperationStatus(op);
 

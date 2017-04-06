@@ -77,5 +77,19 @@ namespace TradingLib.Contrib.APIService
             txn.Settleday = TLCtxHelper.ModuleSettleCentre.Tradingday;
             return txn;
         }
+
+        public static CashTransaction GenCommissionTransaction(CashOperation operation)
+        {
+            CashTransactionImpl txn = new CashTransactionImpl();
+            txn.Account = operation.Account;
+            txn.Amount = 0;
+            txn.EquityType = QSEnumEquityType.OwnEquity;
+            txn.TxnType =  QSEnumCashOperation.WithDraw;
+            txn.TxnRef = operation.Ref+"-Commission";
+            txn.DateTime = Util.ToTLDateTime();
+            txn.Comment = "手续费";
+            txn.Settleday = TLCtxHelper.ModuleSettleCentre.Tradingday;
+            return txn;
+        }
     }
 }

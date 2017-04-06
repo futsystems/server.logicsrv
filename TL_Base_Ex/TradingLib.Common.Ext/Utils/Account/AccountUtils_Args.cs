@@ -185,5 +185,33 @@ namespace TradingLib.Common
             return AccountBase.SimExecuteCFFEXStrategy;
         }
         #endregion
+
+        #region 出入金部分
+
+        public static decimal GetDepositCommission(this IAccount account)
+        {
+            ExStrategy s = account.GetExStrategy();
+            if (s != null)
+                return s.DepositCommission;
+            return AccountBase.DepositCommission;
+        }
+
+        public static decimal GetWithdrawCommission(this IAccount account)
+        {
+            ExStrategy s = account.GetExStrategy();
+            if (s != null)
+                return s.WithdrawCommission;
+            return AccountBase.WithdrawCommission;
+        }
+
+        public static decimal GetLeverageRatio(this IAccount account)
+        {
+            ExStrategy s = account.GetExStrategy();
+            if (s != null)
+                return s.LeverageRatio;
+            return AccountBase.LeverageRatio;
+        }
+
+        #endregion
     }
 }

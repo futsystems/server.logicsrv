@@ -159,6 +159,10 @@ namespace TradingLib.Common
                 target.SimExecuteTimeCheck = item.SimExecuteTimeCheck;
                 target.SimExecuteUseAskBid = item.SimExecuteUseAskBid;
 
+                target.WithdrawCommission = item.WithdrawCommission;
+                target.DepositCommission = item.DepositCommission;
+                target.LeverageRatio = item.LeverageRatio;
+
 
                 ORM.MExStrategy.UpdateExStrategyTemplateItem(target);
             }
@@ -183,6 +187,10 @@ namespace TradingLib.Common
                 target.SimExecuteStickLimitPrice = item.SimExecuteStickLimitPrice;
                 target.SimExecuteTimeCheck = item.SimExecuteTimeCheck;
                 target.SimExecuteUseAskBid = item.SimExecuteUseAskBid;
+
+                target.WithdrawCommission = item.WithdrawCommission;
+                target.DepositCommission = item.DepositCommission;
+                target.LeverageRatio = item.LeverageRatio;
 
 
                 target.Template_ID = item.Template_ID;

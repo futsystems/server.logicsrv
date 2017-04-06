@@ -181,5 +181,21 @@ namespace TradingLib.Common
         /// 中金所挂单未成以最新价成交策略
         /// </summary>
         public bool SimExecuteCFFEXStrategy { get; set; }
+
+
+        /// <summary>
+        /// 入金手续费比例
+        /// </summary>
+        public decimal DepositCommission { get; set; }
+
+        /// <summary>
+        /// 出金手续费比例
+        /// </summary>
+        public decimal WithdrawCommission { get; set; }
+
+        /// <summary>
+        /// 杠杆比例
+        /// </summary>
+        public decimal LeverageRatio { get; set; }
     }
 }

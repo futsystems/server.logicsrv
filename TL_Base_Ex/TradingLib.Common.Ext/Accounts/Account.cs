@@ -46,6 +46,28 @@ namespace TradingLib.Common
         /// </summary>
         public static bool SimExecuteCFFEXStrategy { get; set; }
 
+        /// <summary>
+        /// 自动调整优先资金
+        /// 比如客户入金1万，优先资金按比例入金10万
+        /// </summary>
+        //public static bool AutoCredit { get; set; }
+
+        /// <summary>
+        /// 入金手续费
+        /// </summary>
+        public static decimal DepositCommission { get; set; }
+
+        /// <summary>
+        /// 出金手续费
+        /// </summary>
+        public static decimal WithdrawCommission { get; set; }
+
+        /// <summary>
+        /// 杠杆比例
+        /// </summary>
+        public static decimal LeverageRatio { get; set; }
+
+
         static AccountBase()
         {
             _cfgdb = new ConfigDB("Account");
@@ -85,6 +107,27 @@ namespace TradingLib.Common
                 _cfgdb.UpdateConfig("CFFEXStrategy", QSEnumCfgType.Bool, false, "是否启用中金所交易策略");
             }
             SimExecuteCFFEXStrategy = _cfgdb["CFFEXStrategy"].AsBool();
+
+
+            if (!_cfgdb.HaveConfig("DepositCommission"))
+            {
+                _cfgdb.UpdateConfig("DepositCommission", QSEnumCfgType.Decimal, 0, "入金手续费");
+            }
+            DepositCommission = _cfgdb["DepositCommission"].AsDecimal();
+
+            if (!_cfgdb.HaveConfig("WithdrawCommission"))
+            {
+                _cfgdb.UpdateConfig("WithdrawCommission", QSEnumCfgType.Decimal, 0, "出金手续费");
+            }
+            WithdrawCommission = _cfgdb["WithdrawCommission"].AsDecimal();
+
+            if (!_cfgdb.HaveConfig("LeverageRatio"))
+            {
+                _cfgdb.UpdateConfig("LeverageRatio", QSEnumCfgType.Decimal, 0, "杠杆比例");
+            }
+            LeverageRatio = _cfgdb["LeverageRatio"].AsDecimal();
+
+
 
         }
         public AccountBase(string AccountID)
