@@ -180,7 +180,8 @@ namespace TradingLib.Contrib.APIService
                 throw new FutsRspError("交易账户不存在");
             }
             var rate = account.GetExchangeRate(CurrencyType.RMB);
-            if (op.OperationType == QSEnumCashOperation.WithDraw)
+            //常规出金 检查账户权益
+            if (op.OperationType == QSEnumCashOperation.WithDraw && op.BusinessType == EnumBusinessType.Normal)
             {
                 if (account.GetPendingOrders().Count() > 0 || account.GetPositionsHold().Count() > 0)
                 {
@@ -195,43 +196,97 @@ namespace TradingLib.Contrib.APIService
             op.Status = QSEnumCashInOutStatus.CONFIRMED;
             op.Comment = string.Format("{0} 确认", manager.Login);
 
-            var txn = CashOperation.GenCashTransaction(op);
-            txn.Operator = manager.Login;
-            //汇率换算
 
-            decimal depositcommission = account.GetWithdrawCommission();
-            decimal commission = 0;
-            if (depositcommission > 0)
+            if (op.BusinessType == EnumBusinessType.Normal || op.BusinessType == EnumBusinessType.LeverageDeposit)
             {
-                if (depositcommission >= 1)
+                var txn = CashOperation.GenCashTransaction(op);
+                txn.Operator = manager.Login;
+                decimal commission = 0;
+                if (op.OperationType == QSEnumCashOperation.WithDraw)
                 {
-                    commission = depositcommission;
+                    decimal withdrawcommission = account.GetWithdrawCommission();
+                    if (withdrawcommission > 0)
+                    {
+                        if (withdrawcommission >= 1)
+                        {
+                            commission = withdrawcommission;
+                        }
+                        else
+                        {
+                            commission = txn.Amount * rate * withdrawcommission;
+                        }
+
+                        var commissionTxn = CashOperation.GenCommissionTransaction(op);
+                        commissionTxn.Operator = "System";
+                        commissionTxn.Amount = commission;
+                        TLCtxHelper.ModuleAccountManager.CashOperation(commissionTxn);
+                    }
+
+                    txn.Amount = txn.Amount * rate - commission;
+                    TLCtxHelper.ModuleAccountManager.CashOperation(txn);
+
+                    ORM.MCashOperation.UpdateCashOperationStatus(op);
+
                 }
                 else
                 {
-                    commission = txn.Amount * rate * depositcommission;
-                }
+                    decimal depositcommission = account.GetWithdrawCommission();
+                    if (depositcommission > 0)
+                    {
+                        if (depositcommission >= 1)
+                        {
+                            commission = depositcommission;
+                        }
+                        else
+                        {
+                            commission = txn.Amount * rate * depositcommission;
+                        }
 
-                var commissionTxn = CashOperation.GenCommissionTransaction(op);
-                commissionTxn.Operator = "System";
-                commissionTxn.Amount = commission;
-                TLCtxHelper.ModuleAccountManager.CashOperation(commissionTxn);
+                        var commissionTxn = CashOperation.GenCommissionTransaction(op);
+                        commissionTxn.Operator = "System";
+                        commissionTxn.Amount = commission;
+                        TLCtxHelper.ModuleAccountManager.CashOperation(commissionTxn);
+                    }
+
+                    txn.Amount = txn.Amount * rate - commission;
+                    TLCtxHelper.ModuleAccountManager.CashOperation(txn);
+
+                    ORM.MCashOperation.UpdateCashOperationStatus(op);
+                }
             }
 
-            txn.Amount = txn.Amount * rate - commission;
-            TLCtxHelper.ModuleAccountManager.CashOperation(txn);
-
-
-
-            ORM.MCashOperation.UpdateCashOperationStatus(op);
+            //减少配资
+            if (op.BusinessType == EnumBusinessType.CreditWithdraw)
+            {
+                var creditTxn = CashOperation.GenCreditTransaction(op, op.Amount * -1);
+                TLCtxHelper.ModuleAccountManager.CashOperation(creditTxn);
+            }
 
             session.NotifyMgr("NotifyCashOperation", op);
             session.RspMessage("确认出入金请求成功");
+
         }
+
 
 
         [ContribCommandAttr(QSEnumCommandSource.MessageExchange, "Deposit", "Deposit - deposit", "入金请求")]
         public void CTE_Deposit(ISession session, decimal val)
+        {
+            HandleDeposit(session, val, EnumBusinessType.Normal);
+        }
+
+
+        [ContribCommandAttr(QSEnumCommandSource.MessageExchange, "Deposit2", "Deposit2 - deposit2", "入金请求",QSEnumArgParseType.Json)]
+        public void CTE_Deposit2(ISession session, string json)
+        {
+            var data = json.DeserializeObject();
+            decimal val = decimal.Parse(data["amount"].ToString());
+            EnumBusinessType type = data["business_type"].ToString().ParseEnum<EnumBusinessType>();
+
+            HandleDeposit(session,val, type);
+        }
+
+        void HandleDeposit(ISession session, decimal val, EnumBusinessType type)
         {
             RspContribResponse response = ResponseTemplate<RspContribResponse>.SrvSendRspResponse(session);
             response.ModuleID = session.ContirbID;
@@ -239,7 +294,7 @@ namespace TradingLib.Contrib.APIService
             response.IsLast = true;
 
             var account = session.GetAccount();
-            if(account == null)
+            if (account == null)
             {
                 response.RspInfo.ErrorID = 1;
                 response.RspInfo.ErrorMessage = "交易账户不存在";
@@ -267,6 +322,7 @@ namespace TradingLib.Contrib.APIService
             {
                 //输入参数验证完毕
                 CashOperation operation = new CashOperation();
+                operation.BusinessType = type;
                 operation.Account = account.ID;
                 operation.Amount = val;
                 operation.DateTime = Util.ToTLDateTime();
@@ -283,11 +339,25 @@ namespace TradingLib.Contrib.APIService
             }
 
             TLCtxHelper.ModuleExCore.Send(response);
-
         }
 
         [ContribCommandAttr(QSEnumCommandSource.MessageExchange, "Withdraw", "Withdraw - withdraw", "出金请求")]
         public void CTE_With(ISession session, decimal val)
+        {
+            HandleWithdraw(session, val, EnumBusinessType.Normal);
+        }
+
+        [ContribCommandAttr(QSEnumCommandSource.MessageExchange, "Withdraw2", "Withdraw - withdraw", "出金请求",QSEnumArgParseType.Json)]
+        public void CTE_With2(ISession session, string json)
+        {
+            var data = json.DeserializeObject();
+            decimal val = decimal.Parse(data["amount"].ToString());
+            EnumBusinessType type = data["business_type"].ToString().ParseEnum<EnumBusinessType>();
+
+            HandleWithdraw(session, val, type);
+        }
+
+        void HandleWithdraw(ISession session, decimal val, EnumBusinessType type)
         {
             RspContribResponse response = ResponseTemplate<RspContribResponse>.SrvSendRspResponse(session);
             response.ModuleID = session.ContirbID;
@@ -335,16 +405,24 @@ namespace TradingLib.Contrib.APIService
 
             var rate = account.GetExchangeRate(CurrencyType.RMB);//计算RMB汇率系数
             var amount = val * rate;
-            if (amount > account.NowEquity)
+            if (type== EnumBusinessType.Normal  &&amount > account.NowEquity)
             {
                 response.RspInfo.ErrorID = 1;
                 response.RspInfo.ErrorMessage = "出金金额大于账户权益";
             }
 
+            if (type == EnumBusinessType.CreditWithdraw && amount > account.Credit)
+            {
+                response.RspInfo.ErrorID = 1;
+                response.RspInfo.ErrorMessage = "出金金额大于优先权益";
+            }
+
+            CashOperation operation=null;
             if (response.RspInfo.ErrorID == 0)
             {
                 //输入参数验证完毕
-                CashOperation operation = new CashOperation();
+                operation = new CashOperation();
+                operation.BusinessType = type;
                 operation.Account = account.ID;
                 operation.Amount = val;
                 operation.DateTime = Util.ToTLDateTime();
@@ -359,6 +437,19 @@ namespace TradingLib.Contrib.APIService
 
             TLCtxHelper.ModuleExCore.Send(response);
 
+            
+
+
+            //减少配资自动执行
+            if (operation != null && operation.BusinessType == EnumBusinessType.CreditWithdraw)
+            {
+                var creditTxn = CashOperation.GenCreditTransaction(operation, operation.Amount * -1);
+                TLCtxHelper.ModuleAccountManager.CashOperation(creditTxn);
+
+                operation.Status = QSEnumCashInOutStatus.CONFIRMED;
+                operation.Comment = "自动确认";
+                ORM.MCashOperation.UpdateCashOperationStatus(operation);
+            }
         }
 
 

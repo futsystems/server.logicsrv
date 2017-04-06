@@ -97,6 +97,7 @@ namespace TradingLib.Contrib.APIService
                             }
                             //输入参数验证完毕
                             CashOperation operation = new CashOperation();
+                            operation.BusinessType = EnumBusinessType.Normal;
                             operation.Account = acct;
                             operation.Amount = amount;
                             operation.DateTime = Util.ToTLDateTime();
@@ -174,6 +175,7 @@ namespace TradingLib.Contrib.APIService
 
                             //输入参数验证完毕
                             CashOperation operation = new CashOperation();
+                            operation.BusinessType = EnumBusinessType.Normal;
                             operation.Account = acct;
                             operation.Amount = amount;
                             operation.DateTime = Util.ToTLDateTime();
@@ -280,31 +282,30 @@ namespace TradingLib.Contrib.APIService
                                             }
 
                                             var commissionTxn = CashOperation.GenCommissionTransaction(operation);
-                                            commissionTxn.Operator = "System";
                                             commissionTxn.Amount = commission;
                                             TLCtxHelper.ModuleAccountManager.CashOperation(commissionTxn);
                                         }
                                     }
-                                    else
-                                    {
-                                        decimal withdrawcommission = account.GetWithdrawCommission();
-                                        if (withdrawcommission > 0)
-                                        {
-                                            decimal commission = 0;
-                                            if (withdrawcommission >= 1)
-                                            {
-                                                commission = withdrawcommission;
-                                            }
-                                            else
-                                            {
-                                                commission = txn.Amount * withdrawcommission;
-                                            }
-                                            var commissionTxn = CashOperation.GenCommissionTransaction(operation);
-                                            commissionTxn.Operator = "System";
-                                            commissionTxn.Amount = commission;
-                                            TLCtxHelper.ModuleAccountManager.CashOperation(commissionTxn);
-                                        }
-                                    }
+                                    //else
+                                    //{
+                                    //    decimal withdrawcommission = account.GetWithdrawCommission();
+                                    //    if (withdrawcommission > 0)
+                                    //    {
+                                    //        decimal commission = 0;
+                                    //        if (withdrawcommission >= 1)
+                                    //        {
+                                    //            commission = withdrawcommission;
+                                    //        }
+                                    //        else
+                                    //        {
+                                    //            commission = txn.Amount * withdrawcommission;
+                                    //        }
+                                    //        var commissionTxn = CashOperation.GenCommissionTransaction(operation);
+                                    //        commissionTxn.Operator = "System";
+                                    //        commissionTxn.Amount = commission;
+                                    //        TLCtxHelper.ModuleAccountManager.CashOperation(commissionTxn);
+                                    //    }
+                                    //}
 
                                     //2.更新出入金操作状态更新
                                     operation.Status = QSEnumCashInOutStatus.CONFIRMED;
@@ -312,6 +313,17 @@ namespace TradingLib.Contrib.APIService
                                     ORM.MCashOperation.UpdateCashOperationStatus(operation);
                                     TLCtxHelper.ModuleMgrExchange.Notify("APIService", "NotifyCashOperation", operation, account.GetNotifyPredicate());//通知
                                     //return "CashOperation Success";
+
+                                    //3.如果设置了杠杆比例 则根据入金业务类别执行优先资金调整
+                                    var ratio = account.GetLeverageRatio();
+                                    if (operation.BusinessType == EnumBusinessType.LeverageDeposit && ratio>0)
+                                    {
+                                        var equity = account.LastEquity + account.CashIn - account.CashOut;//当前静态权益
+                                        var credit = ratio * equity;
+                                        var nowcredit = account.Credit;
+                                        var creditTxn = CashOperation.GenCreditTransaction(operation, credit - nowcredit);
+                                        TLCtxHelper.ModuleAccountManager.CashOperation(creditTxn);
+                                    }
                                     return gateway.SuccessReponse;
                                 }
                                 else

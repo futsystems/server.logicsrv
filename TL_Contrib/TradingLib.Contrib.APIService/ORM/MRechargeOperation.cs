@@ -21,7 +21,7 @@ namespace TradingLib.ORM
         {
             using (DBMySql db = new DBMySql())
             {
-                string query = string.Format("INSERT INTO contrib_cash_payment_operation (`account`,`amount`,`datetime`,`operationtype`,`gatewaytype`,`status`,`ref`,`comment`,`domain_id`) VALUES ( '{0}','{1}','{2}','{3}','{4}','{5}','{6}','{7}','{8}')", op.Account, op.Amount, op.DateTime, op.OperationType, op.GateWayType, op.Status, op.Ref, op.Comment,op.Domain_ID);
+                string query = string.Format("INSERT INTO contrib_cash_payment_operation (`account`,`amount`,`datetime`,`operationtype`,`gatewaytype`,`status`,`ref`,`comment`,`businesstype`,`domain_id`) VALUES ( '{0}','{1}','{2}','{3}','{4}','{5}','{6}','{7}','{8}','{9}')", op.Account, op.Amount, op.DateTime, op.OperationType, op.GateWayType, op.Status, op.Ref, op.Comment,op.BusinessType, op.Domain_ID);
                 return db.Connection.Execute(query) > 0;
             }
         }
