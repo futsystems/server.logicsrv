@@ -288,6 +288,7 @@ namespace TradingLib.Contrib.APIService
 
         void HandleDeposit(ISession session, decimal val, EnumBusinessType type)
         {
+            logger.Info("handle entry");
             RspContribResponse response = ResponseTemplate<RspContribResponse>.SrvSendRspResponse(session);
             response.ModuleID = session.ContirbID;
             response.CMDStr = session.CMDStr;
