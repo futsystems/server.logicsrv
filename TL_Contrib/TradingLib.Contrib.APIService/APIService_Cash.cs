@@ -215,7 +215,7 @@ namespace TradingLib.Contrib.APIService
                     {
                         if (withdrawcommission >= 1)
                         {
-                            commission = withdrawcommission;
+                            commission = withdrawcommission *rate;
                         }
                         else
                         {
@@ -241,7 +241,7 @@ namespace TradingLib.Contrib.APIService
                     {
                         if (depositcommission >= 1)
                         {
-                            commission = depositcommission;
+                            commission = depositcommission * rate;
                         }
                         else
                         {
