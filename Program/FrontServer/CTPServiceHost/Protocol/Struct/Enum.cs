@@ -35,6 +35,101 @@ namespace CTPService
 
 
     //}
+
+    public enum TThostFtdcExecResultType : byte
+    {
+        /// <summary>
+        /// 没有执行
+        /// </summary>
+        NoExec = (byte)'n',
+        /// <summary>
+        /// 已经取消
+        /// </summary>
+        Canceled = (byte)'c',
+        /// <summary>
+        /// 执行成功
+        /// </summary>
+        OK = (byte)'0',
+        /// <summary>
+        /// 期权持仓不够
+        /// </summary>
+        NoPosition = (byte)'1',
+        /// <summary>
+        /// 资金不够
+        /// </summary>
+        NoDeposit = (byte)'2',
+        /// <summary>
+        /// 会员不存在
+        /// </summary>
+        NoParticipant = (byte)'3',
+        /// <summary>
+        /// 客户不存在
+        /// </summary>
+        NoClient = (byte)'4',
+        /// <summary>
+        /// 合约不存在
+        /// </summary>
+        NoInstrument = (byte)'6',
+        /// <summary>
+        /// 没有执行权限
+        /// </summary>
+        NoRight = (byte)'7',
+        /// <summary>
+        /// 不合理的数量
+        /// </summary>
+        InvalidVolume = (byte)'8',
+        /// <summary>
+        /// 没有足够的历史成交
+        /// </summary>
+        NoEnoughHistoryTrade = (byte)'9',
+        /// <summary>
+        /// 未知
+        /// </summary>
+        Unknown = (byte)'a',
+    }
+
+    public enum TThostFtdcExecOrderCloseFlagType : byte
+    {
+        /// <summary>
+        /// 自动平仓
+        /// </summary>
+        AutoClose = (byte)'0',
+
+        /// <summary>
+        /// 免于自动平仓
+        /// </summary>
+        NotToClose = (Byte)'1',
+    }
+
+    public enum TThostFtdcExecOrderPositionFlagType : byte
+    {
+        /// <summary>
+        /// 保留
+        /// </summary>
+        Reserve = (byte)'0',
+
+        /// <summary>
+        /// 不保留
+        /// </summary>
+        UnReserve = (Byte)'1',
+    }
+    /// <summary>
+    /// TFtdcActionFlagType是一个操作标志类型
+    /// </summary>
+    public enum TThostFtdcActionTypeType : byte
+    {
+        /// <summary>
+        /// 删除
+        /// </summary>
+        Exec = (byte)'1',
+
+        /// <summary>
+        /// 修改
+        /// </summary>
+        Abandon = (byte)'2'
+    }
+
+
     public enum TThostFtdcCombinationTypeType : byte
     {
         Future = (byte)'0',

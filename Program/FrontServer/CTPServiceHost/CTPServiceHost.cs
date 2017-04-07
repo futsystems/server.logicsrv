@@ -844,6 +844,34 @@ namespace CTPService
                         //        }
                         //        break;
                         //    }
+                        //请求查询执行宣告
+                        case EnumTransactionID.T_QRY_EXECORD:
+                            {
+                                var data = requestInfo.FTDFields[0].FTDCData;
+                                if (data is Struct.V12.LCThostFtdcQryExecOrderField)
+                                {
+                                    Struct.V12.LCThostFtdcQryExecOrderField field = (Struct.V12.LCThostFtdcQryExecOrderField)data;
+
+                                    //XQryPositionDetailRequest request = RequestTemplate<XQryPositionDetailRequest>.CliSendRequest((int)requestInfo.FTDHeader.dReqId);
+
+                                    //_mqServer.TLSend(session.SessionID, request);
+                                    //logger.Info(string.Format("Session:{0} >> ReqQryInvestorPositionDetail", session.SessionID));
+
+                                    logger.Info(string.Format("Session:{0} >> ReqQryExecOrder Send Empty Back", session.SessionID));
+                                    //Struct.V12.LCThostFtdcExecOrderField response = new Struct.V12.LCThostFtdcExecOrderField();
+
+                                    byte[] rdata = Struct.V12.StructHelperV12.PackRsp(EnumSeqType.SeqQry, EnumTransactionID.T_RSP_EXECORD, (int)requestInfo.FTDHeader.dReqId, conn.NextSeqQryId);//Struct.V12.StructHelperV12.PackRsp<Struct.V12.LCThostFtdcExecOrderField>(ref response, EnumSeqType.SeqQry, EnumTransactionID.T_RSP_CFMMCKEY, (int)requestInfo.FTDHeader.dReqId, conn.NextSeqQryId);
+                                    int encPktLen = 0;
+                                    byte[] encData = Struct.V12.StructHelperV12.EncPkt(rdata, out encPktLen);
+
+                                    conn.Send(encData, encPktLen);
+                                }
+                                else
+                                {
+                                    logger.Warn(string.Format("Request:{0} Data Field do not macth", transId));
+                                }
+                                break;
+                            }
                         default:
                             logger.Warn(string.Format("Transaction:{0} logic not handled", transId));
                             break;

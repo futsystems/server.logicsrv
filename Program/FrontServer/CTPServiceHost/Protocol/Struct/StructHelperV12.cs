@@ -139,6 +139,11 @@ namespace CTPService.Struct.V12
                     {
                         return ByteSwapHelp.BytesToStruct<LCThostFtdcAuthenticationInfoField>(data, offset);
                     }
+                //请求查询执行宣告
+                case EnumFiledID.F_QRY_EXECORD:
+                    {
+                        return ByteSwapHelp.BytesToStruct<LCThostFtdcQryExecOrderField>(data, offset);
+                    }
                 default:
                     throw new Exception(string.Format("FieldID:{0} pkt not handled", fieldID));
             }

@@ -7113,4 +7113,703 @@ namespace CTPService.Struct.V12
 
         //}
     #endregion
-}
+
+    #region 查询行权宣告
+        /// <summary>
+        /// 查询投资者持仓明细
+        /// </summary>
+        [StructLayout(LayoutKind.Sequential)]
+        public struct CThostFtdcQryExecOrderField : ITFieldId
+        {
+            /// <summary>
+            /// 经纪公司代码
+            /// </summary>
+            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 11)]
+            public string BrokerID;
+            /// <summary>
+            /// 投资者代码
+            /// </summary>
+            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 13)]
+            public string InvestorID;
+            /// <summary>
+            /// 合约代码
+            /// </summary>
+            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 31)]
+            public string InstrumentID;
+
+            /// <summary>
+            /// 交易所代码
+            /// </summary>
+            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 9)]
+            public string ExchangeID;
+
+            /// <summary>
+            /// 执行宣告编号
+            /// </summary>
+            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 21)]
+            public string ExecOrderSysID;
+
+            /// <summary>
+            /// 开始时间
+            /// </summary>
+            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 9)]
+            public string InsertTimeStart;
+
+            /// <summary>
+            /// 结束时间
+            /// </summary>
+            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 9)]
+            public string InsertTimeEnd;
+
+
+            public ushort FieldId
+            {
+                get { return 0x80e; }
+            }
+
+            public void Swap()
+            { }
+
+            public static implicit operator CThostFtdcQryExecOrderField(LCThostFtdcQryExecOrderField input)
+            {
+                CThostFtdcQryExecOrderField ret = new CThostFtdcQryExecOrderField();
+                ret.BrokerID = input.BrokerID;
+                ret.InvestorID = input.InvestorID;
+                ret.InstrumentID = input.InstrumentID;
+                ret.ExchangeID = input.ExchangeID;
+                ret.ExecOrderSysID = input.ExecOrderSysID;
+                ret.InsertTimeStart = input.InsertTimeStart;
+                ret.InsertTimeEnd = input.InsertTimeEnd;
+
+                return ret;
+            }
+        }
+
+        /// <summary>
+        /// 查询投资者持仓明细
+        /// </summary>
+        [StructLayout(LayoutKind.Sequential, Pack = 1)]
+        public struct LCThostFtdcQryExecOrderField : IFieldId
+        {
+            /// <summary>
+            /// 经纪公司代码
+            /// </summary>
+            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 11)]
+            public string BrokerID;
+            /// <summary>
+            /// 投资者代码
+            /// </summary>
+            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 13)]
+            public string InvestorID;
+            /// <summary>
+            /// 合约代码
+            /// </summary>
+            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 31)]
+            public string InstrumentID;
+
+            /// <summary>
+            /// 交易所代码
+            /// </summary>
+            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 9)]
+            public string ExchangeID;
+
+            /// <summary>
+            /// 执行宣告编号
+            /// </summary>
+            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 21)]
+            public string ExecOrderSysID;
+
+            /// <summary>
+            /// 开始时间
+            /// </summary>
+            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 9)]
+            public string InsertTimeStart;
+
+            /// <summary>
+            /// 结束时间
+            /// </summary>
+            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 9)]
+            public string InsertTimeEnd;
+
+            public ushort FieldId
+            {
+                get { return 0x80e; }
+            }
+
+            public void Swap()
+            { }
+
+            public static implicit operator LCThostFtdcQryExecOrderField(CThostFtdcQryExecOrderField input)
+            {
+                LCThostFtdcQryExecOrderField ret = new LCThostFtdcQryExecOrderField();
+                ret.BrokerID = input.BrokerID;
+                ret.InvestorID = input.InvestorID;
+                ret.InstrumentID = input.InstrumentID;
+                ret.ExchangeID = input.ExchangeID;
+                ret.ExecOrderSysID = input.ExecOrderSysID;
+                ret.InsertTimeStart = input.InsertTimeStart;
+                ret.InsertTimeEnd = input.InsertTimeEnd;
+
+                return ret;
+            }
+        }
+
+
+        [StructLayout(LayoutKind.Sequential)]
+        public struct CThostFtdcExecOrderField : ITFieldId
+        {
+            /// <summary>
+            /// 经纪公司代码
+            /// </summary>
+            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 11)]
+            public string BrokerID;
+            /// <summary>
+            /// 投资者代码
+            /// </summary>
+            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 13)]
+            public string InvestorID;
+            /// <summary>
+            /// 合约代码
+            /// </summary>
+            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 31)]
+            public string InstrumentID;
+
+
+            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 13)]
+            public string ExecOrderRef;
+
+            /// <summary>
+            /// 用户代码
+            /// </summary>
+            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 16)]
+            public string UserID;
+            /// <summary>
+            /// 数量
+            /// </summary>
+            public int Volume;
+            /// <summary>
+            /// 请求编号
+            /// </summary>
+            public int RequestID;
+            /// <summary>
+            /// 业务单元
+            /// </summary>
+            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 21)]
+            public string BusinessUnit;
+            /// <summary>
+            /// 开平标志
+            /// </summary>
+            public TThostFtdcOffsetFlagType OffsetFlag;
+            /// <summary>
+            /// 投机套保标志
+            /// </summary>
+            public TThostFtdcHedgeFlagType HedgeFlag;
+            /// <summary>
+            /// 执行类型
+            /// </summary>
+            public TThostFtdcActionTypeType ActionType;
+            /// <summary>
+            /// 保留头寸申请的持仓方向
+            /// </summary>
+            public TThostFtdcPosiDirectionType PosiDirection;
+            /// <summary>
+            /// 期权行权后是否保留期货头寸的标记
+            /// </summary>
+            public TThostFtdcExecOrderPositionFlagType ReservePositionFlag;
+            /// <summary>
+            /// 期权行权后生成的头寸是否自动平仓
+            /// </summary>
+            public TThostFtdcExecOrderCloseFlagType CloseFlag;
+            /// <summary>
+            /// 本地执行宣告编号
+            /// </summary>
+            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 13)]
+            public string ExecOrderLocalID;
+            /// <summary>
+            /// 交易所代码
+            /// </summary>
+            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 9)]
+            public string ExchangeID;
+            /// <summary>
+            /// 会员代码
+            /// </summary>
+            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 11)]
+            public string ParticipantID;
+            /// <summary>
+            /// 客户代码
+            /// </summary>
+            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 11)]
+            public string ClientID;
+            /// <summary>
+            /// 合约在交易所的代码
+            /// </summary>
+            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 31)]
+            public string ExchangeInstID;
+            /// <summary>
+            /// 交易所交易员代码
+            /// </summary>
+            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 21)]
+            public string TraderID;
+            /// <summary>
+            /// 安装编号
+            /// </summary>
+            public int InstallID;
+
+            /// <summary>
+            /// 执行宣告提交状态
+            /// </summary>
+            public TThostFtdcOrderSubmitStatusType OrderSubmitStatus;
+            /// <summary>
+            /// 报单提示序号
+            /// </summary>
+            public int NotifySequence;
+            /// <summary>
+            /// 交易日
+            /// </summary>
+            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 9)]
+            public string TradingDay;
+            /// <summary>
+            /// 结算编号
+            /// </summary>
+            public int SettlementID;
+            /// <summary>
+            /// 执行宣告编号
+            /// </summary>
+            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 21)]
+            public string ExecOrderSysID;
+            /// <summary>
+            /// 报单日期
+            /// </summary>
+            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 9)]
+            public string InsertDate;
+            /// <summary>
+            /// 插入时间
+            /// </summary>
+            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 9)]
+            public string InsertTime;
+            /// <summary>
+            /// 撤销时间
+            /// </summary>
+            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 9)]
+            public string CancelTime;
+            /// <summary>
+            /// 执行结果
+            /// </summary>
+            public TThostFtdcExecResultType ExecResult;
+
+            /// <summary>
+            /// 结算会员编号
+            /// </summary>
+            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 11)]
+            public string ClearingPartID;
+            /// <summary>
+            /// 序号
+            /// </summary>
+            public int SequenceNo;
+            /// <summary>
+            /// 前置编号
+            /// </summary>
+            public int FrontID;
+            /// <summary>
+            /// 会话编号
+            /// </summary>
+            public int SessionID;
+
+            /// <summary>
+            /// 用户端产品信息
+            /// </summary>
+            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 11)]
+            public string UserProductInfo;
+
+            /// <summary>
+            /// 状态信息
+            /// </summary>
+            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 81)]
+            public string StatusMsg;
+            /// <summary>
+            /// 
+            /// </summary>
+            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 16)]
+            public string ActiveUserID;
+            /// <summary>
+            /// 经纪公司报单编号
+            /// </summary>
+            public int BrokerExecOrderSeq;
+
+            /// <summary>
+            /// 营业部编号
+            /// </summary>
+            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 9)]
+            public string BranchID;
+            /// <summary>
+            /// 投资单元代码
+            /// </summary>
+            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 17)]
+            public string InvestUnitID;
+            /// <summary>
+            /// 资金账号
+            /// </summary>
+            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 13)]
+            public string AccountID;
+            /// <summary>
+            /// 币种代码
+            /// </summary>
+            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 4)]
+            public string CurrencyID;
+            ///IP地址
+            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 16)]
+            public string IPAddress;
+            ///Mac地址
+            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 21)]
+            public string MacAddress;
+
+
+            public ushort FieldId
+            {
+                get { return 0x80e; }
+            }
+
+            public void Swap()
+            { }
+
+            public static implicit operator CThostFtdcExecOrderField(LCThostFtdcExecOrderField input)
+            {
+                CThostFtdcExecOrderField ret = new CThostFtdcExecOrderField();
+                ret.BrokerID = input.BrokerID;
+                ret.InvestorID = input.InvestorID;
+                ret.InstrumentID = input.InstrumentID;
+                ret.ExecOrderRef = input.ExecOrderRef;
+                ret.UserID = input.UserID;
+                ret.Volume = input.Volume;
+                ret.RequestID = input.RequestID;
+                ret.BusinessUnit = input.BusinessUnit;
+                ret.OffsetFlag = input.OffsetFlag;
+                ret.HedgeFlag = input.HedgeFlag;
+                ret.ActionType = input.ActionType;
+                ret.PosiDirection = input.PosiDirection;
+                ret.ReservePositionFlag = input.ReservePositionFlag;
+                ret.CloseFlag = input.CloseFlag;
+                ret.ExecOrderLocalID = input.ExecOrderLocalID;
+                ret.ExchangeID = input.ExchangeID;
+                ret.ParticipantID = input.ParticipantID;
+                ret.ClientID = input.ClientID;
+                ret.ExchangeInstID = input.ExchangeInstID;
+                ret.TraderID = input.TraderID;
+                ret.InstallID = input.InstallID;
+                ret.OrderSubmitStatus = input.OrderSubmitStatus;
+                ret.NotifySequence = input.NotifySequence;
+                ret.TradingDay = input.TradingDay;
+                ret.SettlementID = input.SettlementID;
+                ret.ExecOrderSysID = input.ExecOrderSysID;
+                ret.InsertDate = input.InsertDate;
+                ret.InsertTime = input.InsertTime;
+                ret.CancelTime = input.CancelTime;
+                ret.ExecResult = input.ExecResult;
+                ret.ClearingPartID = input.ClearingPartID;
+                ret.SequenceNo = input.SequenceNo;
+                ret.FrontID = input.FrontID;
+                ret.SessionID = input.SessionID;
+                ret.UserProductInfo = input.UserProductInfo;
+                ret.StatusMsg = input.StatusMsg;
+                ret.ActiveUserID = input.ActiveUserID;
+                ret.BrokerExecOrderSeq = input.BrokerExecOrderSeq;
+                ret.BranchID = input.BranchID;
+                ret.InvestUnitID = input.InvestUnitID;
+                ret.AccountID = input.AccountID;
+                ret.CurrencyID = input.CurrencyID;
+                ret.IPAddress = input.IPAddress;
+                ret.MacAddress = input.MacAddress;
+
+
+                return ret;
+            }
+
+
+        }
+
+        [StructLayout(LayoutKind.Sequential)]
+        public struct LCThostFtdcExecOrderField : ITFieldId
+        {
+            /// <summary>
+            /// 经纪公司代码
+            /// </summary>
+            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 11)]
+            public string BrokerID;
+            /// <summary>
+            /// 投资者代码
+            /// </summary>
+            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 13)]
+            public string InvestorID;
+            /// <summary>
+            /// 合约代码
+            /// </summary>
+            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 31)]
+            public string InstrumentID;
+
+
+            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 13)]
+            public string ExecOrderRef;
+
+            /// <summary>
+            /// 用户代码
+            /// </summary>
+            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 16)]
+            public string UserID;
+            /// <summary>
+            /// 数量
+            /// </summary>
+            public int Volume;
+            /// <summary>
+            /// 请求编号
+            /// </summary>
+            public int RequestID;
+            /// <summary>
+            /// 业务单元
+            /// </summary>
+            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 21)]
+            public string BusinessUnit;
+            /// <summary>
+            /// 开平标志
+            /// </summary>
+            public TThostFtdcOffsetFlagType OffsetFlag;
+            /// <summary>
+            /// 投机套保标志
+            /// </summary>
+            public TThostFtdcHedgeFlagType HedgeFlag;
+            /// <summary>
+            /// 执行类型
+            /// </summary>
+            public TThostFtdcActionTypeType ActionType;
+            /// <summary>
+            /// 保留头寸申请的持仓方向
+            /// </summary>
+            public TThostFtdcPosiDirectionType PosiDirection;
+            /// <summary>
+            /// 期权行权后是否保留期货头寸的标记
+            /// </summary>
+            public TThostFtdcExecOrderPositionFlagType ReservePositionFlag;
+            /// <summary>
+            /// 期权行权后生成的头寸是否自动平仓
+            /// </summary>
+            public TThostFtdcExecOrderCloseFlagType CloseFlag;
+            /// <summary>
+            /// 本地执行宣告编号
+            /// </summary>
+            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 13)]
+            public string ExecOrderLocalID;
+            /// <summary>
+            /// 交易所代码
+            /// </summary>
+            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 9)]
+            public string ExchangeID;
+            /// <summary>
+            /// 会员代码
+            /// </summary>
+            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 11)]
+            public string ParticipantID;
+            /// <summary>
+            /// 客户代码
+            /// </summary>
+            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 11)]
+            public string ClientID;
+            /// <summary>
+            /// 合约在交易所的代码
+            /// </summary>
+            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 31)]
+            public string ExchangeInstID;
+            /// <summary>
+            /// 交易所交易员代码
+            /// </summary>
+            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 21)]
+            public string TraderID;
+            /// <summary>
+            /// 安装编号
+            /// </summary>
+            public int InstallID;
+
+            /// <summary>
+            /// 执行宣告提交状态
+            /// </summary>
+            public TThostFtdcOrderSubmitStatusType OrderSubmitStatus;
+            /// <summary>
+            /// 报单提示序号
+            /// </summary>
+            public int NotifySequence;
+            /// <summary>
+            /// 交易日
+            /// </summary>
+            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 9)]
+            public string TradingDay;
+            /// <summary>
+            /// 结算编号
+            /// </summary>
+            public int SettlementID;
+            /// <summary>
+            /// 执行宣告编号
+            /// </summary>
+            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 21)]
+            public string ExecOrderSysID;
+            /// <summary>
+            /// 报单日期
+            /// </summary>
+            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 9)]
+            public string InsertDate;
+            /// <summary>
+            /// 插入时间
+            /// </summary>
+            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 9)]
+            public string InsertTime;
+            /// <summary>
+            /// 撤销时间
+            /// </summary>
+            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 9)]
+            public string CancelTime;
+            /// <summary>
+            /// 执行结果
+            /// </summary>
+            public TThostFtdcExecResultType ExecResult;
+
+            /// <summary>
+            /// 结算会员编号
+            /// </summary>
+            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 11)]
+            public string ClearingPartID;
+            /// <summary>
+            /// 序号
+            /// </summary>
+            public int SequenceNo;
+            /// <summary>
+            /// 前置编号
+            /// </summary>
+            public int FrontID;
+            /// <summary>
+            /// 会话编号
+            /// </summary>
+            public int SessionID;
+
+            /// <summary>
+            /// 用户端产品信息
+            /// </summary>
+            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 11)]
+            public string UserProductInfo;
+
+            /// <summary>
+            /// 状态信息
+            /// </summary>
+            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 81)]
+            public string StatusMsg;
+            /// <summary>
+            /// 
+            /// </summary>
+            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 16)]
+            public string ActiveUserID;
+            /// <summary>
+            /// 经纪公司报单编号
+            /// </summary>
+            public int BrokerExecOrderSeq;
+
+            /// <summary>
+            /// 营业部编号
+            /// </summary>
+            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 9)]
+            public string BranchID;
+            /// <summary>
+            /// 投资单元代码
+            /// </summary>
+            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 17)]
+            public string InvestUnitID;
+            /// <summary>
+            /// 资金账号
+            /// </summary>
+            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 13)]
+            public string AccountID;
+            /// <summary>
+            /// 币种代码
+            /// </summary>
+            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 4)]
+            public string CurrencyID;
+            ///IP地址
+            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 16)]
+            public string IPAddress;
+            ///Mac地址
+            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 21)]
+            public string MacAddress;
+
+
+            public ushort FieldId
+            {
+                get { return 0x80e; }
+            }
+
+            public void Swap()
+            {
+                Volume = ByteSwapHelp.ReverseBytes(Volume);
+                RequestID = ByteSwapHelp.ReverseBytes(RequestID);
+                InstallID = ByteSwapHelp.ReverseBytes(InstallID);
+                NotifySequence = ByteSwapHelp.ReverseBytes(NotifySequence);
+                SettlementID = ByteSwapHelp.ReverseBytes(SettlementID);
+                SequenceNo = ByteSwapHelp.ReverseBytes(SequenceNo);
+                FrontID = ByteSwapHelp.ReverseBytes(FrontID);
+                SessionID = ByteSwapHelp.ReverseBytes(SessionID);
+                BrokerExecOrderSeq = ByteSwapHelp.ReverseBytes(BrokerExecOrderSeq);
+
+
+            }
+
+            public static implicit operator LCThostFtdcExecOrderField(CThostFtdcExecOrderField input)
+            {
+                LCThostFtdcExecOrderField ret = new LCThostFtdcExecOrderField();
+                ret.BrokerID = input.BrokerID;
+                ret.InvestorID = input.InvestorID;
+                ret.InstrumentID = input.InstrumentID;
+                ret.ExecOrderRef = input.ExecOrderRef;
+                ret.UserID = input.UserID;
+                ret.Volume = input.Volume;
+                ret.RequestID = input.RequestID;
+                ret.BusinessUnit = input.BusinessUnit;
+                ret.OffsetFlag = input.OffsetFlag;
+                ret.HedgeFlag = input.HedgeFlag;
+                ret.ActionType = input.ActionType;
+                ret.PosiDirection = input.PosiDirection;
+                ret.ReservePositionFlag = input.ReservePositionFlag;
+                ret.CloseFlag = input.CloseFlag;
+                ret.ExecOrderLocalID = input.ExecOrderLocalID;
+                ret.ExchangeID = input.ExchangeID;
+                ret.ParticipantID = input.ParticipantID;
+                ret.ClientID = input.ClientID;
+                ret.ExchangeInstID = input.ExchangeInstID;
+                ret.TraderID = input.TraderID;
+                ret.InstallID = input.InstallID;
+                ret.OrderSubmitStatus = input.OrderSubmitStatus;
+                ret.NotifySequence = input.NotifySequence;
+                ret.TradingDay = input.TradingDay;
+                ret.SettlementID = input.SettlementID;
+                ret.ExecOrderSysID = input.ExecOrderSysID;
+                ret.InsertDate = input.InsertDate;
+                ret.InsertTime = input.InsertTime;
+                ret.CancelTime = input.CancelTime;
+                ret.ExecResult = input.ExecResult;
+                ret.ClearingPartID = input.ClearingPartID;
+                ret.SequenceNo = input.SequenceNo;
+                ret.FrontID = input.FrontID;
+                ret.SessionID = input.SessionID;
+                ret.UserProductInfo = input.UserProductInfo;
+                ret.StatusMsg = input.StatusMsg;
+                ret.ActiveUserID = input.ActiveUserID;
+                ret.BrokerExecOrderSeq = input.BrokerExecOrderSeq;
+                ret.BranchID = input.BranchID;
+                ret.InvestUnitID = input.InvestUnitID;
+                ret.AccountID = input.AccountID;
+                ret.CurrencyID = input.CurrencyID;
+                ret.IPAddress = input.IPAddress;
+                ret.MacAddress = input.MacAddress;
+
+
+                return ret;
+            }
+
+        }
+
+    #endregion
+
+    }

@@ -131,6 +131,7 @@ namespace CTPService
         T_QRY_ORDCOMMRATE = 0x8097,
         T_QRY_OPFEERATE = 0x8302,
         T_QRY_EXECORD = 0x8306,
+        T_RSP_EXECORD = 0x8307,
         T_QRY_FORQT = 0x8314,
         T_QRY_QT = 0x8318,
         T_QRY_COMBGUARD = 0x8360,
