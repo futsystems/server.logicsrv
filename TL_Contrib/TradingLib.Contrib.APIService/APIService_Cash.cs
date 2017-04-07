@@ -225,7 +225,7 @@ namespace TradingLib.Contrib.APIService
                     txn.Amount = txn.Amount * rate - commission;
                     TLCtxHelper.ModuleAccountManager.CashOperation(txn);
 
-                    ORM.MCashOperation.UpdateCashOperationStatus(op);
+                    
 
                 }
                 else
@@ -250,8 +250,6 @@ namespace TradingLib.Contrib.APIService
 
                     txn.Amount = txn.Amount * rate - commission;
                     TLCtxHelper.ModuleAccountManager.CashOperation(txn);
-
-                    ORM.MCashOperation.UpdateCashOperationStatus(op);
                 }
             }
 
@@ -261,6 +259,8 @@ namespace TradingLib.Contrib.APIService
                 var creditTxn = CashOperation.GenCreditTransaction(op, op.Amount * -1);
                 TLCtxHelper.ModuleAccountManager.CashOperation(creditTxn);
             }
+
+            ORM.MCashOperation.UpdateCashOperationStatus(op);
 
             session.NotifyMgr("NotifyCashOperation", op);
             session.RspMessage("确认出入金请求成功");
@@ -412,7 +412,7 @@ namespace TradingLib.Contrib.APIService
             if (type == EnumBusinessType.CreditWithdraw && amount > account.Credit)
             {
                 response.RspInfo.ErrorID = 1;
-                response.RspInfo.ErrorMessage = "出金金额大于优先权益";
+                response.RspInfo.ErrorMessage = "减少配资金额大于优先权益:"+account.Credit.ToFormatStr();
             }
 
             CashOperation operation=null;
@@ -424,7 +424,7 @@ namespace TradingLib.Contrib.APIService
                 operation.Account = account.ID;
                 operation.Amount = val;
                 operation.DateTime = Util.ToTLDateTime();
-                operation.GateWayType = gateway.GateWayType;
+                operation.GateWayType = (QSEnumGateWayType)(-1);
                 operation.OperationType = QSEnumCashOperation.WithDraw;
                 operation.Ref = APITracker.NextRef;
                 operation.Domain_ID = account.Domain.ID;
@@ -439,15 +439,15 @@ namespace TradingLib.Contrib.APIService
 
 
             //减少配资自动执行
-            if (operation != null && operation.BusinessType == EnumBusinessType.CreditWithdraw)
-            {
-                var creditTxn = CashOperation.GenCreditTransaction(operation, operation.Amount * -1);
-                TLCtxHelper.ModuleAccountManager.CashOperation(creditTxn);
+            //if (operation != null && operation.BusinessType == EnumBusinessType.CreditWithdraw)
+            //{
+            //    var creditTxn = CashOperation.GenCreditTransaction(operation, operation.Amount * -1);
+            //    TLCtxHelper.ModuleAccountManager.CashOperation(creditTxn);
 
-                operation.Status = QSEnumCashInOutStatus.CONFIRMED;
-                operation.Comment = "自动确认";
-                ORM.MCashOperation.UpdateCashOperationStatus(operation);
-            }
+            //    operation.Status = QSEnumCashInOutStatus.CONFIRMED;
+            //    operation.Comment = "自动确认";
+            //    ORM.MCashOperation.UpdateCashOperationStatus(operation);
+            //}
         }
 
 
