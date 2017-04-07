@@ -1094,9 +1094,76 @@ namespace TradingLib.XLProtocol.V1
     #endregion
 
     #region 查询分时
+    /// <summary>
+    /// 查询分时数据请求
+    /// </summary>
+    [StructLayout(LayoutKind.Sequential, Pack = 1)]
+    public struct XLQryMinuteDataField : IXLField
+    {
+        /// <summary>
+        /// 交易所代码
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 9)]
+        public string ExchangeID;
+
+        /// <summary>
+        /// 合约代码
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 31)]
+        public string SymbolID;
+
+        /// <summary>
+        /// 交易日
+        /// 查询某个交易日的分时数据
+        /// </summary>
+        public int TradingDay;
+
+        /// <summary>
+        /// 起始查询时间
+        /// 查询某个时间点之后的所有分时数据
+        /// </summary>
+        public long Start;
+
+        /// <summary>
+        /// 域类别
+        /// </summary>
+        public ushort FieldID { get { return (ushort)XLFieldType.F_QRY_MINUTEDATA; } }
+    }
+
+
+    [StructLayout(LayoutKind.Sequential, Pack = 1)]
+    public struct XLMinuteDataField : IXLField
+    {
+        /// <summary>
+        /// 日期
+        /// </summary>
+        public int Date;
+
+        /// <summary>
+        /// 时间
+        /// </summary>
+        public int Time;
+
+        /// <summary>
+        /// 成交量
+        /// </summary>
+        public int Vol;
+
+        /// <summary>
+        /// 收盘价
+        /// </summary>
+        public double Close;
+
+        /// <summary>
+        /// 域类别
+        /// </summary>
+        public ushort FieldID { get { return (ushort)XLFieldType.F_RSP_MINUTEDATA; } }
+    }
+
     #endregion
 
     #region 查询K线
+
     #endregion
 
 

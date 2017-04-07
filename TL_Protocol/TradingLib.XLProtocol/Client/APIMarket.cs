@@ -40,6 +40,11 @@ namespace TradingLib.XLProtocol.Client
         /// </summary>
         public event Action<XLSymbolField, ErrorField, uint, bool> OnRspQrySymbol = delegate { };
 
+
+        /// <summary>
+        /// 查询分时数据回报
+        /// </summary>
+        public event Action<XLMinuteDataField, ErrorField, uint, bool> OnRspQryMinuteData = delegate { };
         /// <summary>
         /// 市场行情回报
         /// </summary>
@@ -119,6 +124,8 @@ namespace TradingLib.XLProtocol.Client
 
         public bool Verbose { get { return _verb; } set { _verb = value; } }
 
+        static ErrorField NoError = new ErrorField();
+
         void _socketClient_DataReceived(XLProtocolHeader header, byte[] data, int offset)
         {
             try
@@ -160,7 +167,7 @@ namespace TradingLib.XLProtocol.Client
                             {
                                 response = new XLSymbolField();
                             }
-                            OnRspQrySymbol(response, new ErrorField(), dataHeader.RequestID, (int)dataHeader.IsLast == 1 ? true : false);
+                            OnRspQrySymbol(response, NoError, dataHeader.RequestID, (int)dataHeader.IsLast == 1 ? true : false);
                             break;
                         }
                     case XLMessageType.T_RTN_MARKETDATA:
@@ -170,6 +177,19 @@ namespace TradingLib.XLProtocol.Client
                             {
                                 marketData = (XLDepthMarketDataField)pkt.FieldList[0];
                                 OnDepthMarketDataField(marketData);
+                            }
+                            break;
+                        }
+                    case XLMessageType.T_RSP_MINUTEDATA:
+                        {
+                            XLMinuteDataField minuteData;
+                            if (pkt.FieldList.Count > 0)
+                            {
+                                for (int i = 0; i < pkt.FieldList.Count; i++)
+                                {
+                                    minuteData = (XLMinuteDataField)pkt.FieldList[i];
+                                    OnRspQryMinuteData(minuteData, NoError, dataHeader.RequestID, (int)dataHeader.IsLast == 1 && i==pkt.FieldList.Count-1);
+                                }
                             }
                             break;
                         }
@@ -251,6 +271,49 @@ namespace TradingLib.XLProtocol.Client
             }
             return SendPktData(pktData, XLEnumSeqType.SeqReq, requestID);
         }
+
+        /// <summary>
+        /// 按交易日查询合约分时数据
+        /// 交易日为0 则查询当前交易日分时数据
+        /// </summary>
+        /// <param name="exchange"></param>
+        /// <param name="symbol"></param>
+        /// <param name="tradingday"></param>
+        /// <returns></returns>
+        public bool QryMinuteData(string exchange, string symbol, int tradingday, uint requestID)
+        {
+            XLPacketData pktData = new XLPacketData(XLMessageType.T_QRY_MINUTEDATA);
+            XLQryMinuteDataField field = new XLQryMinuteDataField();
+            field.ExchangeID = exchange;
+            field.SymbolID = symbol;
+            field.TradingDay = tradingday;
+
+            pktData.AddField(field);
+            return SendPktData(pktData, XLEnumSeqType.SeqReq, requestID);
+        }
+
+        /// <summary>
+        /// 查询当前交易日某个时间之后的所有分时数据
+        /// 用于更新分时图新增数据
+        /// </summary>
+        /// <param name="exchange"></param>
+        /// <param name="symbol"></param>
+        /// <param name="start"></param>
+        /// <param name="requestID"></param>
+        /// <returns></returns>
+        public bool QryMinuteData(string exchange, string symbol, long start, uint requestID)
+        {
+            XLPacketData pktData = new XLPacketData(XLMessageType.T_QRY_MINUTEDATA);
+            XLQryMinuteDataField field = new XLQryMinuteDataField();
+            field.ExchangeID = exchange;
+            field.SymbolID = symbol;
+            field.Start = start;
+
+            pktData.AddField(field);
+            return SendPktData(pktData, XLEnumSeqType.SeqReq, requestID);
+        }
+
+
         #endregion
 
 

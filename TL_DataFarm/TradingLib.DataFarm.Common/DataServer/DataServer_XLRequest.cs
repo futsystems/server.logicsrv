@@ -130,6 +130,92 @@ namespace TradingLib.DataFarm.Common
                         }
                     }
                     break;
+                case XLProtocol.XLMessageType.T_QRY_MINUTEDATA:
+                    {
+                        var data = reqPkt.FieldList[0];
+                        if (data is XLQryMinuteDataField)
+                        {
+                            logger.Info("Qry minute data");
+                            var request =(XLQryMinuteDataField)data;
+
+                            Symbol symbol = MDBasicTracker.SymbolTracker[request.ExchangeID, request.SymbolID];
+                            if (symbol == null)
+                            {
+                                logger.Warn(string.Format("Symbol:{0} do not exist", request.SymbolID));
+                                return;
+                            }
+                            MarketDay md = eodservice.GetCurrentMarketDay(symbol.SecurityFamily);
+                            if (md == null)
+                            {
+                                logger.Warn(string.Format("Sec:{0} have no marketday", symbol.SecurityFamily.Code));
+                                return;
+                            }
+                            logger.Info(string.Format("Sec:{0} marketday:{1}", symbol.SecurityFamily.Code, md.ToSessionString()));
+
+                            int tradingday = request.TradingDay;
+                            if (tradingday == 0)
+                            {
+                                tradingday = md.TradingDay;
+                            }
+
+                            List<MinuteData> mdlist = eodservice.QryMinuteData(symbol, tradingday, request.Start.ToDateTimeEx(DateTime.MinValue));////GetHistDataSotre().QryMinuteData(symbol, tradingday);
+
+
+                            int j = 0;
+                            XLPacketData pkt = new XLPacketData(XLMessageType.T_RSP_MINUTEDATA);
+                            bool islast = false;
+                            for (int i = 0; i < mdlist.Count; i++)
+                            {
+                                var item = mdlist[i];
+                                XLMinuteDataField t = new XLMinuteDataField();
+                                t.Close = item.Close;
+                                t.Vol = item.Vol;
+                                t.Date = item.Date;
+                                t.Time = item.Time;
+
+                                pkt.AddField(t);
+
+                                j++;
+                                if (j == _minutedatabatchsize)
+                                {
+                                    islast = (i == mdlist.Count - 1);
+
+                                    if (conn.ProtocolType == EnumConnProtocolType.XL)
+                                    {
+                                        byte[] ret = XLPacketData.PackToBytes(pkt, XLEnumSeqType.SeqReq, (uint)0, (uint)requestId, islast);
+                                        SendData(conn, ret);
+                                    }
+                                    if (conn.ProtocolType == EnumConnProtocolType.Json)
+                                    {
+                                        string json = XLPacketData.PackJsonResponse(pkt, (int)requestId, islast);
+                                        SendData(conn, json);
+                                    }
+
+                                    if (!islast)
+                                    {
+                                        pkt = new XLPacketData(XLMessageType.T_RSP_MINUTEDATA);
+                                    }
+                                    j = 0;
+                                }
+                            }
+
+                            if (!islast)
+                            {
+                                islast = true;
+                                if (conn.ProtocolType == EnumConnProtocolType.XL)
+                                {
+                                    byte[] ret = XLPacketData.PackToBytes(pkt, XLEnumSeqType.SeqReq, (uint)0, (uint)requestId, islast);
+                                    SendData(conn, ret);
+                                }
+                                if (conn.ProtocolType == EnumConnProtocolType.Json)
+                                {
+                                    string json = XLPacketData.PackJsonResponse(pkt, (int)requestId, islast);
+                                    SendData(conn, json);
+                                }
+                            }
+                        }
+                    }
+                    break;
                 default:
                     logger.Warn(string.Format("XLMessage Type:{0} not handled", reqPkt.MessageType));
                     break;

@@ -130,5 +130,15 @@ namespace TradingLib.XLProtocol
         /// 实时行情数据
         /// </summary>
         F_MarketData = 241,
+
+        /// <summary>
+        /// 查询分时请求结构体
+        /// </summary>
+        F_QRY_MINUTEDATA = 242,
+
+        /// <summary>
+        /// 分时数据响应结构体
+        /// </summary>
+        F_RSP_MINUTEDATA = 243,
     }
 }

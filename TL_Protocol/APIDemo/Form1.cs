@@ -82,8 +82,22 @@ namespace APIClient
             btnMdLogin.Click += new EventHandler(btnMdLogin_Click);
             btnMdSubMarket.Click += new EventHandler(btnMdSubMarket_Click);
             btnMdQrySymbol.Click += new EventHandler(btnMdQrySymbol_Click);
+            btnMdQryMinuteData.Click += new EventHandler(btnMdQryMinuteData_Click);
 
             btnHeartBeat.Click += new EventHandler(btnHeartBeat_Click);
+        }
+
+        void btnMdQryMinuteData_Click(object sender, EventArgs e)
+        {
+            if (_mdApi == null) return;
+            if (string.IsNullOrEmpty(mdMinuteDataStart.Text))
+            {
+                _mdApi.QryMinuteData(mdExchange.Text, mdSymbol.Text, 0, ++_requestId);
+            }
+            else
+            {
+                _mdApi.QryMinuteData(mdExchange.Text, mdSymbol.Text,long.Parse(mdMinuteDataStart.Text), ++_requestId);
+            }
         }
 
         void btnHeartBeat_Click(object sender, EventArgs e)
@@ -137,6 +151,7 @@ namespace APIClient
             _mdApi.OnRspError += new Action<ErrorField>(_mdApi_OnRspError);
             _mdApi.OnDepthMarketDataField += new Action<XLDepthMarketDataField>(_mdApi_OnDepthMarketDataField);
             _mdApi.OnRspQrySymbol += new Action<XLSymbolField, ErrorField, uint, bool>(_mdApi_OnRspQrySymbol);
+            _mdApi.OnRspQryMinuteData += new Action<XLMinuteDataField, ErrorField, uint, bool>(_mdApi_OnRspQryMinuteData);
 
             new Thread(() =>
             {
@@ -145,6 +160,11 @@ namespace APIClient
                 //_mdApi.Join();
                 //logger.Info("MDAPI Thread Stopped");
             }).Start();
+        }
+
+        void _mdApi_OnRspQryMinuteData(XLMinuteDataField arg1, ErrorField arg2, uint arg3, bool arg4)
+        {
+            logger.Info("minutedata:" + JsonConvert.SerializeObject(arg1) + arg4.ToString());
         }
 
         void _mdApi_OnRspQrySymbol(XLSymbolField arg1, ErrorField arg2, uint arg3, bool arg4)
@@ -600,6 +620,7 @@ namespace APIClient
             hashSet.Add(key);
             logger.Info("Count:" + hashSet.Count.ToString());
         }
+
 
     }
 }

@@ -30,6 +30,7 @@
         {
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.btnHeartBeat = new System.Windows.Forms.Button();
             this.exapiverbose = new System.Windows.Forms.CheckBox();
             this.btnExCancelOrder = new System.Windows.Forms.Button();
             this.btnExPlaceOrder = new System.Windows.Forms.Button();
@@ -71,6 +72,13 @@
             this.wsAddress = new System.Windows.Forms.TextBox();
             this.label5 = new System.Windows.Forms.Label();
             this.tabPage3 = new System.Windows.Forms.TabPage();
+            this.mdMinuteDataStart = new System.Windows.Forms.TextBox();
+            this.label15 = new System.Windows.Forms.Label();
+            this.btnMdQryMinuteData = new System.Windows.Forms.Button();
+            this.mdSymbol = new System.Windows.Forms.TextBox();
+            this.label13 = new System.Windows.Forms.Label();
+            this.mdExchange = new System.Windows.Forms.TextBox();
+            this.label14 = new System.Windows.Forms.Label();
             this.btnMdQrySymbol = new System.Windows.Forms.Button();
             this.mdSymbols = new System.Windows.Forms.TextBox();
             this.label12 = new System.Windows.Forms.Label();
@@ -89,7 +97,6 @@
             this.button1 = new System.Windows.Forms.Button();
             this.tabPage4 = new System.Windows.Forms.TabPage();
             this.debugControl1 = new APIClient.DebugControl();
-            this.btnHeartBeat = new System.Windows.Forms.Button();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tabPage2.SuspendLayout();
@@ -141,6 +148,15 @@
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "Socket/二进制";
             this.tabPage1.UseVisualStyleBackColor = true;
+            // 
+            // btnHeartBeat
+            // 
+            this.btnHeartBeat.Location = new System.Drawing.Point(504, 5);
+            this.btnHeartBeat.Name = "btnHeartBeat";
+            this.btnHeartBeat.Size = new System.Drawing.Size(75, 23);
+            this.btnHeartBeat.TabIndex = 21;
+            this.btnHeartBeat.Text = "心跳";
+            this.btnHeartBeat.UseVisualStyleBackColor = true;
             // 
             // exapiverbose
             // 
@@ -517,6 +533,13 @@
             // 
             // tabPage3
             // 
+            this.tabPage3.Controls.Add(this.mdMinuteDataStart);
+            this.tabPage3.Controls.Add(this.label15);
+            this.tabPage3.Controls.Add(this.btnMdQryMinuteData);
+            this.tabPage3.Controls.Add(this.mdSymbol);
+            this.tabPage3.Controls.Add(this.label13);
+            this.tabPage3.Controls.Add(this.mdExchange);
+            this.tabPage3.Controls.Add(this.label14);
             this.tabPage3.Controls.Add(this.btnMdQrySymbol);
             this.tabPage3.Controls.Add(this.mdSymbols);
             this.tabPage3.Controls.Add(this.label12);
@@ -540,6 +563,65 @@
             this.tabPage3.TabIndex = 2;
             this.tabPage3.Text = "行情Socket";
             this.tabPage3.UseVisualStyleBackColor = true;
+            // 
+            // mdMinuteDataStart
+            // 
+            this.mdMinuteDataStart.Location = new System.Drawing.Point(313, 93);
+            this.mdMinuteDataStart.Name = "mdMinuteDataStart";
+            this.mdMinuteDataStart.Size = new System.Drawing.Size(118, 21);
+            this.mdMinuteDataStart.TabIndex = 32;
+            // 
+            // label15
+            // 
+            this.label15.AutoSize = true;
+            this.label15.Location = new System.Drawing.Point(272, 96);
+            this.label15.Name = "label15";
+            this.label15.Size = new System.Drawing.Size(35, 12);
+            this.label15.TabIndex = 31;
+            this.label15.Text = "Time:";
+            // 
+            // btnMdQryMinuteData
+            // 
+            this.btnMdQryMinuteData.Location = new System.Drawing.Point(499, 91);
+            this.btnMdQryMinuteData.Name = "btnMdQryMinuteData";
+            this.btnMdQryMinuteData.Size = new System.Drawing.Size(75, 23);
+            this.btnMdQryMinuteData.TabIndex = 30;
+            this.btnMdQryMinuteData.Text = "查询分时";
+            this.btnMdQryMinuteData.UseVisualStyleBackColor = true;
+            // 
+            // mdSymbol
+            // 
+            this.mdSymbol.Location = new System.Drawing.Point(204, 93);
+            this.mdSymbol.Name = "mdSymbol";
+            this.mdSymbol.Size = new System.Drawing.Size(53, 21);
+            this.mdSymbol.TabIndex = 29;
+            this.mdSymbol.Text = "HSIJ7";
+            // 
+            // label13
+            // 
+            this.label13.AutoSize = true;
+            this.label13.Location = new System.Drawing.Point(142, 96);
+            this.label13.Name = "label13";
+            this.label13.Size = new System.Drawing.Size(47, 12);
+            this.label13.TabIndex = 28;
+            this.label13.Text = "Symbol:";
+            // 
+            // mdExchange
+            // 
+            this.mdExchange.Location = new System.Drawing.Point(59, 93);
+            this.mdExchange.Name = "mdExchange";
+            this.mdExchange.Size = new System.Drawing.Size(77, 21);
+            this.mdExchange.TabIndex = 27;
+            this.mdExchange.Text = "HKEX";
+            // 
+            // label14
+            // 
+            this.label14.AutoSize = true;
+            this.label14.Location = new System.Drawing.Point(10, 96);
+            this.label14.Name = "label14";
+            this.label14.Size = new System.Drawing.Size(35, 12);
+            this.label14.TabIndex = 26;
+            this.label14.Text = "Exch:";
             // 
             // btnMdQrySymbol
             // 
@@ -706,15 +788,6 @@
             this.debugControl1.TimeStamps = true;
             this.debugControl1.UseExternalTimeStamp = false;
             // 
-            // btnHeartBeat
-            // 
-            this.btnHeartBeat.Location = new System.Drawing.Point(504, 5);
-            this.btnHeartBeat.Name = "btnHeartBeat";
-            this.btnHeartBeat.Size = new System.Drawing.Size(75, 23);
-            this.btnHeartBeat.TabIndex = 21;
-            this.btnHeartBeat.Text = "心跳";
-            this.btnHeartBeat.UseVisualStyleBackColor = true;
-            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -800,6 +873,13 @@
         private System.Windows.Forms.Button btnMdSubMarket;
         private System.Windows.Forms.Button btnMdQrySymbol;
         private System.Windows.Forms.Button btnHeartBeat;
+        private System.Windows.Forms.Button btnMdQryMinuteData;
+        private System.Windows.Forms.TextBox mdSymbol;
+        private System.Windows.Forms.Label label13;
+        private System.Windows.Forms.TextBox mdExchange;
+        private System.Windows.Forms.Label label14;
+        private System.Windows.Forms.TextBox mdMinuteDataStart;
+        private System.Windows.Forms.Label label15;
     }
 }
 

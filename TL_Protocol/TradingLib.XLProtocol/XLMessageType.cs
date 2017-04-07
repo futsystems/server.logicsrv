@@ -153,6 +153,27 @@ namespace TradingLib.XLProtocol
         /// <summary>
         /// 市场行情数据
         /// </summary>
-        T_RTN_MARKETDATA = 4002
+        T_RTN_MARKETDATA = 4002,
+
+
+        /// <summary>
+        /// 查询分时数据
+        /// </summary>
+        T_QRY_MINUTEDATA = 4003,
+
+        /// <summary>
+        /// 分时数据响应
+        /// </summary>
+        T_RSP_MINUTEDATA=4004,
+
+        /// <summary>
+        /// 查询K线数据
+        /// </summary>
+        T_QRY_BARDATA = 4005,
+
+        /// <summary>
+        /// K线数据响应
+        /// </summary>
+        T_RSP_BARDATA = 4006,
     }
 }
