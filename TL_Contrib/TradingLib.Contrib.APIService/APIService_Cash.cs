@@ -32,6 +32,10 @@ namespace TradingLib.Contrib.APIService
             if (config.ID == 0)
             {
                 config.Domain_ID = manager.domain_id;
+                if (APITracker.GateWayTracker.GetDomainGateway(config.Domain_ID) != null)
+                {
+                    throw new FutsRspError("分区已经设置过支付通道");
+                }
             }
             else
             {
@@ -40,6 +44,8 @@ namespace TradingLib.Contrib.APIService
                     throw new FutsRspError("无权进行此操作");
                 }
             }
+
+            
 
             APITracker.GateWayTracker.UpdateGateWayConfig(config);
 
