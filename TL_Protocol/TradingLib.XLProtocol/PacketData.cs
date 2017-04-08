@@ -261,6 +261,16 @@ namespace TradingLib.XLProtocol
                         response = new JsonResponse(pkt.MessageType, (ErrorField)pkt.FieldList[0], (V1.XLInputOrderActionField)pkt.FieldList[1], requestID, isLast);
                         break;
                     }
+                case XLMessageType.T_RSP_MINUTEDATA:
+                    {
+                        response = new JsonResponse(pkt.MessageType, null, (V1.XLMinuteDataField)pkt.FieldList[0], requestID, isLast);
+                        break;
+                    }
+                case XLMessageType.T_RSP_BARDATA:
+                    {
+                        response = new JsonResponse(pkt.MessageType, null,pkt.FieldList.ToArray(), requestID, isLast);
+                        break;
+                    }
                 default:
                     break;
 
@@ -343,6 +353,12 @@ namespace TradingLib.XLProtocol
                 case XLMessageType.T_REQ_MARKETDATA://提交市场数据注册
                     {
                         var data = Newtonsoft.Json.JsonConvert.DeserializeObject<JsonRequest<V1.XLSpecificSymbolField>>(json);
+                        requestID = data.RequestID;
+                        return new XLPacketData(msgType, new List<IXLField>() { data.Request });
+                    }
+                case XLMessageType.T_QRY_BARDATA://提交Bar数据
+                    {
+                        var data = Newtonsoft.Json.JsonConvert.DeserializeObject<JsonRequest<V1.XLQryBarDataField>>(json);
                         requestID = data.RequestID;
                         return new XLPacketData(msgType, new List<IXLField>() { data.Request });
                     }

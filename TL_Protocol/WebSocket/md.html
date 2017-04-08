@@ -22,7 +22,7 @@
 		<div>
 				<div class="control-group">
 					<div class="controls">
-						<input id='sockjs_address' type="text"class="input" value='ws://121.41.35.2:8080/'></input> <button class="btn btn-success" onclick='onCreateSocket()'>CreateSocket</button>
+						<input id='sockjs_address' type="text"class="input" value='ws://127.0.0.1:8080/'></input> <button class="btn btn-success" onclick='onCreateSocket()'>CreateSocket</button>
 					</div>
 				</div>
 				<div class="control-group">
@@ -41,6 +41,12 @@
 				<div class="control-group">
 					<div class="controls">
 						<input id='register_symbol' type="text"class="input" value='HSIJ7'></input> <button class="btn btn-success" onclick='onRegisterSymbols()'>RegisterSymbols</button>
+					</div>
+				</div>
+				
+				<div class="control-group">
+					<div class="controls">
+						<input id='bar_interval' type="text" class="input-small" value='60'><input id='bar_exchange' type="text" class="input-small" value='HKEX'> <input id='bar_symbol' type="text" class="input-small" value='HSIJ7'> <input id='bar_startindex' type="text" class="input-small" value='0'> <input id='bar_maxcount' type="text" class="input-small" value='100'> <button class="btn btn-success" onclick='onQryBar()'>QryBar</button>
 					</div>
 				</div>
 				
@@ -110,6 +116,24 @@ function onLogin()
 	var dic = {"MessageType":1000,"Request":{"UserID":$("#username").val(),"Password":$("#password").val(),"UserProductInfo":"WebSocket HTML","MacAddress":"XXXX","ClientIPAddress":null,"FieldID":100},"RequestID":++requestID};
 	send(dic);
 }
+
+/*
+查询Bar数据
+ExchangeID：交易所代码
+SymbolID：合约代码
+Interval：周期数，1分钟 60 ，2分钟 120秒，折算成秒
+StartIndex：开始序号，0表示最近的一个Bar
+MaxCount：最多返回数据个数
+Start：开始时间 20170407113154 表示时间 2017-04-07 11:31:54
+End：结束时间
+*/
+function onQryBar()
+{
+	var dic = {"MessageType":4005,"Request":{"ExchangeID":$("#bar_exchange").val(),"SymbolID":$("#bar_symbol").val(),"Interval":$("#bar_interval").val(),"StartIndex":$("#bar_startindex").val(),"MaxCount":$("#bar_maxcount").val(),"Start":190001010000,"End":201801010000,"HavePartial":true,"FieldID":244},"RequestID":++requestID};
+	send(dic);
+}
+
+
 /*
 查询合约
 */
