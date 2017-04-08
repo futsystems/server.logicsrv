@@ -73,5 +73,19 @@ namespace TradingLib.DataFarm.Common
             if (bar.IntervalType == BarInterval.CustomTime && bar.Interval == 60) return true;
             return false;
         }
+
+        public static XLProtocol.V1.XLBarDataField ToXLBarDataField(this Bar bar)
+        {
+            XLProtocol.V1.XLBarDataField field = new XLProtocol.V1.XLBarDataField();
+            field.Date = bar.EndTime.ToTLDate();
+            field.Time = bar.EndTime.ToTLTime();
+            field.Open = bar.Open;
+            field.High = bar.High;
+            field.Low = bar.Low;
+            field.Close = bar.Close;
+            field.Vol = bar.Volume;
+            field.OI = bar.OpenInterest;
+            return field;
+        }
     }
 }

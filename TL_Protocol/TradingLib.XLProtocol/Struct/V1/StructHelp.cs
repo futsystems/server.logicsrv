@@ -63,7 +63,10 @@ namespace TradingLib.XLProtocol.V1
                 case XLFieldType.F_RSP_MINUTEDATA:
                     return XLStructHelp.StructToBytes<XLMinuteDataField>((XLMinuteDataField)field);
 
-
+                case XLFieldType.F_Qry_BARDATA:
+                    return XLStructHelp.StructToBytes<XLQryBarDataField>((XLQryBarDataField)field);
+                case XLFieldType.F_RSP_BARDATA:
+                    return XLStructHelp.StructToBytes<XLBarDataField>((XLBarDataField)field);
                 default:
                     throw new Exception(string.Format("FieldType:{0} not supported", fieldType));
             }
@@ -118,6 +121,10 @@ namespace TradingLib.XLProtocol.V1
                     return XLStructHelp.BytesToStruct<XLQryMinuteDataField>(data, offset);
                 case XLFieldType.F_RSP_MINUTEDATA:
                     return XLStructHelp.BytesToStruct<XLMinuteDataField>(data, offset);
+                case XLFieldType.F_Qry_BARDATA:
+                    return XLStructHelp.BytesToStruct<XLQryBarDataField>(data, offset);
+                case XLFieldType.F_RSP_BARDATA:
+                    return XLStructHelp.BytesToStruct<XLBarDataField>(data, offset);
                 default:
                     throw new Exception(string.Format("FieldType:{0} not supported", type));
             }

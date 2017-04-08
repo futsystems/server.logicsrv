@@ -130,12 +130,13 @@ namespace TradingLib.DataFarm.Common
                         }
                     }
                     break;
+                #region 查询分时数据
                 case XLProtocol.XLMessageType.T_QRY_MINUTEDATA:
                     {
                         var data = reqPkt.FieldList[0];
                         if (data is XLQryMinuteDataField)
                         {
-                            logger.Info("Qry minute data");
+                            //logger.Info("Qry minute data");
                             var request =(XLQryMinuteDataField)data;
 
                             Symbol symbol = MDBasicTracker.SymbolTracker[request.ExchangeID, request.SymbolID];
@@ -213,6 +214,81 @@ namespace TradingLib.DataFarm.Common
                                     SendData(conn, json);
                                 }
                             }
+                        }
+                    }
+                    break;
+                #endregion
+                case XLMessageType.T_QRY_BARDATA:
+                    { 
+                        var data = reqPkt.FieldList[0];
+                        if (data is XLQryBarDataField)
+                        {
+                            //logger.Info("Qry minute data");
+                            var request = (XLQryBarDataField)data;
+                            IHistDataStore store = this.GetHistDataSotre();
+                            if (store == null)
+                            {
+                                logger.Warn("HistDataSotre is null, can not provider QryBar service");
+                                throw new Exception("DataStore not inited");
+                            }
+                            Symbol symbol = MDBasicTracker.SymbolTracker[request.ExchangeID, request.SymbolID];
+                            if (symbol == null)
+                            {
+                                logger.Warn(string.Format("Symbol:{0} do not exist", request.SymbolID));
+                                return;
+                            }
+
+                            List<BarImpl> bars = store.QryBar(symbol,BarInterval.CustomTime, request.Interval, request.Start.ToDateTimeEx(DateTime.MinValue), request.End.ToDateTimeEx(DateTime.MaxValue), request.StartIndex, request.MaxCount, request.HavePartial);
+
+                            int j = 0;
+                            XLPacketData pkt = new XLPacketData(XLMessageType.T_RSP_BARDATA);
+                            bool islast = false;
+                            for (int i = 0; i < bars.Count; i++)
+                            {
+                                pkt.AddField(bars[i].ToXLBarDataField());
+                                j++;
+                                if (j == _barbatchsize)
+                                {
+                                    //一定数目的Bar之后 发送数据 同时判断是否是最后一条
+                                    islast = (i == bars.Count - 1);
+                                    if (conn.ProtocolType == EnumConnProtocolType.XL)
+                                    {
+                                        byte[] ret = XLPacketData.PackToBytes(pkt, XLEnumSeqType.SeqReq, (uint)0, (uint)requestId, islast);
+                                        SendData(conn, ret);
+                                    }
+                                    if (conn.ProtocolType == EnumConnProtocolType.Json)
+                                    {
+                                        string json = XLPacketData.PackJsonResponse(pkt, (int)requestId, islast);
+                                        SendData(conn, json);
+                                    }
+
+                                    if (!islast)
+                                    {
+                                        pkt = new XLPacketData(XLMessageType.T_RSP_MINUTEDATA);
+                                    }
+                                    j = 0;
+                                }
+                            }
+                            //如果不为最后一条 则标记为最后一条并发送
+                            if (!islast)
+                            {
+                                islast = true;
+                                if (conn.ProtocolType == EnumConnProtocolType.XL)
+                                {
+                                    byte[] ret = XLPacketData.PackToBytes(pkt, XLEnumSeqType.SeqReq, (uint)0, (uint)requestId, islast);
+                                    SendData(conn, ret);
+                                }
+                                if (conn.ProtocolType == EnumConnProtocolType.Json)
+                                {
+                                    string json = XLPacketData.PackJsonResponse(pkt, (int)requestId, islast);
+                                    SendData(conn, json);
+                                }
+                            }
+
+                        }
+                        else
+                        {
+                            logger.Error("Erro request filed for QryBar");
                         }
                     }
                     break;

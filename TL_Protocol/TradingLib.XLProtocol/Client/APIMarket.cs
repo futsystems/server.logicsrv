@@ -45,6 +45,11 @@ namespace TradingLib.XLProtocol.Client
         /// 查询分时数据回报
         /// </summary>
         public event Action<XLMinuteDataField, ErrorField, uint, bool> OnRspQryMinuteData = delegate { };
+
+        /// <summary>
+        /// 查询Bar数据回报
+        /// </summary>
+        public event Action<XLBarDataField, ErrorField, uint, bool> OnRspQryBarData = delegate { };
         /// <summary>
         /// 市场行情回报
         /// </summary>
@@ -193,6 +198,19 @@ namespace TradingLib.XLProtocol.Client
                             }
                             break;
                         }
+                    case XLMessageType.T_RSP_BARDATA:
+                        {
+                            XLBarDataField barData;
+                            if (pkt.FieldList.Count > 0)
+                            {
+                                for (int i = 0; i < pkt.FieldList.Count; i++)
+                                {
+                                    barData = (XLBarDataField)pkt.FieldList[i];
+                                    OnRspQryBarData(barData, NoError, dataHeader.RequestID, (int)dataHeader.IsLast == 1 && i == pkt.FieldList.Count - 1);
+                                }
+                            }
+                            break;
+                        }
                     default:
                         //logger.Info(string.Format("Unhandled Pkt:{0}", msgType));
                         break;
@@ -313,6 +331,69 @@ namespace TradingLib.XLProtocol.Client
             return SendPktData(pktData, XLEnumSeqType.SeqReq, requestID);
         }
 
+
+        public bool QryBarData(string exchange, string symbol, int interval, int startIndex, int maxCount,uint requestID)
+        {
+            XLPacketData pktData = new XLPacketData(XLMessageType.T_QRY_BARDATA);
+            XLQryBarDataField field = new XLQryBarDataField();
+            field.ExchangeID = exchange;
+            field.SymbolID = symbol;
+            field.Interval = interval;
+            field.StartIndex = startIndex;
+            field.MaxCount = maxCount;
+            field.Start = long.MinValue;
+            field.End = long.MaxValue;
+            field.HavePartial = true;
+
+            pktData.AddField(field);
+            return SendPktData(pktData, XLEnumSeqType.SeqReq, requestID);
+        }
+
+        public bool QryBarData(string exchange, string symbol, int interval, long start, long end, uint requestID)
+        {
+            XLPacketData pktData = new XLPacketData(XLMessageType.T_QRY_BARDATA);
+            XLQryBarDataField field = new XLQryBarDataField();
+            field.ExchangeID = exchange;
+            field.SymbolID = symbol;
+            field.Interval = interval;
+            field.StartIndex = 0;
+            field.MaxCount = 0;
+            field.Start = start;
+            field.End = end;
+            field.HavePartial = true;
+
+            pktData.AddField(field);
+            return SendPktData(pktData, XLEnumSeqType.SeqReq, requestID);
+        }
+
+        /// <summary>
+        /// Converts a DateTime to TradeLink Date (eg July 11, 2006 = 20060711)
+        /// </summary>
+        /// <param name="dt"></param>
+        /// <returns></returns>
+        public static int ToTLDate(DateTime dt)
+        {
+
+            return (dt.Year * 10000) + (dt.Month * 100) + dt.Day;
+        }
+        /// <summary>
+        /// gets tradelink time from date
+        /// </summary>
+        /// <param name="date"></param>
+        /// <returns></returns>
+        static int ToTLTime(DateTime date)
+        {
+            return DT2FT(date);
+        }
+        static int DT2FT(DateTime d) { return TL2FT(d.Hour, d.Minute, d.Second); }
+        static int TL2FT(int hour, int min, int sec) { return hour * 10000 + min * 100 + sec; }
+        static long ToTLDateTime(DateTime dt)
+        {
+            if (dt == DateTime.MinValue) return long.MinValue;
+            if (dt == DateTime.MaxValue) return long.MaxValue;
+
+            return ((long)ToTLDate(dt) * 1000000) + (long)ToTLTime(dt);
+        }
 
         #endregion
 

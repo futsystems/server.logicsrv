@@ -1163,7 +1163,106 @@ namespace TradingLib.XLProtocol.V1
     #endregion
 
     #region 查询K线
+    [StructLayout(LayoutKind.Sequential, Pack = 1)]
+    public struct XLQryBarDataField : IXLField
+    {
+        /// <summary>
+        /// 交易所代码
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 9)]
+        public string ExchangeID;
 
+        /// <summary>
+        /// 合约代码
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 31)]
+        public string SymbolID;
+
+        /// <summary>
+        /// 间隔数
+        /// </summary>
+        public int Interval;
+
+        /// <summary>
+        /// 开始时间
+        /// </summary>
+        public long Start;
+
+        /// <summary>
+        /// 结束时间
+        /// </summary>
+        public long End;
+
+        /// <summary>
+        /// 最大返回数量
+        /// </summary>
+        public int MaxCount;
+
+        /// <summary>
+        /// 返回数据开始位置
+        /// </summary>
+        public int StartIndex;
+
+        /// <summary>
+        /// 是否包含Partial
+        /// </summary>
+        public bool HavePartial;
+
+        /// <summary>
+        /// 域类别
+        /// </summary>
+        public ushort FieldID { get { return (ushort)XLFieldType.F_Qry_BARDATA; } }
+    }
+
+    [StructLayout(LayoutKind.Sequential, Pack = 1)]
+    public struct XLBarDataField : IXLField
+    {
+        /// <summary>
+        /// 日期
+        /// </summary>
+        public int Date { get; set; }
+
+        /// <summary>
+        /// 时间
+        /// </summary>
+        public int Time { get; set; }
+
+        /// <summary>
+        /// 开盘价
+        /// </summary>
+        public double Open { get; set; }
+
+        /// <summary>
+        /// 最高价
+        /// </summary>
+        public double High { get; set; }
+
+        /// <summary>
+        /// 最低价
+        /// </summary>
+        public double Low { get; set; }
+
+        /// <summary>
+        /// 收盘价
+        /// </summary>
+        public double Close { get; set; }
+
+        /// <summary>
+        /// 成交量
+        /// </summary>
+        public double Vol { get; set; }
+
+        /// <summary>
+        /// 持仓量
+        /// </summary>
+        public double OI { get; set; }
+
+        /// <summary>
+        /// 域类别
+        /// </summary>
+        public ushort FieldID { get { return (ushort)XLFieldType.F_RSP_BARDATA; } }
+
+    }
     #endregion
 
 

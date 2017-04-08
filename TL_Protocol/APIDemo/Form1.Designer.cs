@@ -72,6 +72,14 @@
             this.wsAddress = new System.Windows.Forms.TextBox();
             this.label5 = new System.Windows.Forms.Label();
             this.tabPage3 = new System.Windows.Forms.TabPage();
+            this.mdEnd = new System.Windows.Forms.TextBox();
+            this.label18 = new System.Windows.Forms.Label();
+            this.mdStart = new System.Windows.Forms.TextBox();
+            this.label19 = new System.Windows.Forms.Label();
+            this.mdMaxCount = new System.Windows.Forms.TextBox();
+            this.label16 = new System.Windows.Forms.Label();
+            this.mdStartIndex = new System.Windows.Forms.TextBox();
+            this.label17 = new System.Windows.Forms.Label();
             this.mdMinuteDataStart = new System.Windows.Forms.TextBox();
             this.label15 = new System.Windows.Forms.Label();
             this.btnMdQryMinuteData = new System.Windows.Forms.Button();
@@ -97,6 +105,10 @@
             this.button1 = new System.Windows.Forms.Button();
             this.tabPage4 = new System.Windows.Forms.TabPage();
             this.debugControl1 = new APIClient.DebugControl();
+            this.btnQryBar1 = new System.Windows.Forms.Button();
+            this.btnQryBar2 = new System.Windows.Forms.Button();
+            this.mdInterval = new System.Windows.Forms.TextBox();
+            this.label20 = new System.Windows.Forms.Label();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tabPage2.SuspendLayout();
@@ -533,6 +545,18 @@
             // 
             // tabPage3
             // 
+            this.tabPage3.Controls.Add(this.mdInterval);
+            this.tabPage3.Controls.Add(this.label20);
+            this.tabPage3.Controls.Add(this.btnQryBar2);
+            this.tabPage3.Controls.Add(this.btnQryBar1);
+            this.tabPage3.Controls.Add(this.mdEnd);
+            this.tabPage3.Controls.Add(this.label18);
+            this.tabPage3.Controls.Add(this.mdStart);
+            this.tabPage3.Controls.Add(this.label19);
+            this.tabPage3.Controls.Add(this.mdMaxCount);
+            this.tabPage3.Controls.Add(this.label16);
+            this.tabPage3.Controls.Add(this.mdStartIndex);
+            this.tabPage3.Controls.Add(this.label17);
             this.tabPage3.Controls.Add(this.mdMinuteDataStart);
             this.tabPage3.Controls.Add(this.label15);
             this.tabPage3.Controls.Add(this.btnMdQryMinuteData);
@@ -563,6 +587,73 @@
             this.tabPage3.TabIndex = 2;
             this.tabPage3.Text = "行情Socket";
             this.tabPage3.UseVisualStyleBackColor = true;
+            // 
+            // mdEnd
+            // 
+            this.mdEnd.Location = new System.Drawing.Point(237, 170);
+            this.mdEnd.Name = "mdEnd";
+            this.mdEnd.Size = new System.Drawing.Size(110, 21);
+            this.mdEnd.TabIndex = 40;
+            // 
+            // label18
+            // 
+            this.label18.AutoSize = true;
+            this.label18.Location = new System.Drawing.Point(202, 173);
+            this.label18.Name = "label18";
+            this.label18.Size = new System.Drawing.Size(29, 12);
+            this.label18.TabIndex = 39;
+            this.label18.Text = "End:";
+            // 
+            // mdStart
+            // 
+            this.mdStart.Location = new System.Drawing.Point(57, 170);
+            this.mdStart.Name = "mdStart";
+            this.mdStart.Size = new System.Drawing.Size(107, 21);
+            this.mdStart.TabIndex = 38;
+            this.mdStart.Text = "0";
+            // 
+            // label19
+            // 
+            this.label19.AutoSize = true;
+            this.label19.Location = new System.Drawing.Point(10, 173);
+            this.label19.Name = "label19";
+            this.label19.Size = new System.Drawing.Size(41, 12);
+            this.label19.TabIndex = 37;
+            this.label19.Text = "Start:";
+            // 
+            // mdMaxCount
+            // 
+            this.mdMaxCount.Location = new System.Drawing.Point(204, 131);
+            this.mdMaxCount.Name = "mdMaxCount";
+            this.mdMaxCount.Size = new System.Drawing.Size(53, 21);
+            this.mdMaxCount.TabIndex = 36;
+            this.mdMaxCount.Text = "500";
+            // 
+            // label16
+            // 
+            this.label16.AutoSize = true;
+            this.label16.Location = new System.Drawing.Point(142, 134);
+            this.label16.Name = "label16";
+            this.label16.Size = new System.Drawing.Size(59, 12);
+            this.label16.TabIndex = 35;
+            this.label16.Text = "MaxCount:";
+            // 
+            // mdStartIndex
+            // 
+            this.mdStartIndex.Location = new System.Drawing.Point(85, 131);
+            this.mdStartIndex.Name = "mdStartIndex";
+            this.mdStartIndex.Size = new System.Drawing.Size(51, 21);
+            this.mdStartIndex.TabIndex = 34;
+            this.mdStartIndex.Text = "0";
+            // 
+            // label17
+            // 
+            this.label17.AutoSize = true;
+            this.label17.Location = new System.Drawing.Point(10, 134);
+            this.label17.Name = "label17";
+            this.label17.Size = new System.Drawing.Size(71, 12);
+            this.label17.TabIndex = 33;
+            this.label17.Text = "StartIndex:";
             // 
             // mdMinuteDataStart
             // 
@@ -788,6 +879,41 @@
             this.debugControl1.TimeStamps = true;
             this.debugControl1.UseExternalTimeStamp = false;
             // 
+            // btnQryBar1
+            // 
+            this.btnQryBar1.Location = new System.Drawing.Point(499, 134);
+            this.btnQryBar1.Name = "btnQryBar1";
+            this.btnQryBar1.Size = new System.Drawing.Size(75, 23);
+            this.btnQryBar1.TabIndex = 41;
+            this.btnQryBar1.Text = "查询Bar1";
+            this.btnQryBar1.UseVisualStyleBackColor = true;
+            // 
+            // btnQryBar2
+            // 
+            this.btnQryBar2.Location = new System.Drawing.Point(499, 168);
+            this.btnQryBar2.Name = "btnQryBar2";
+            this.btnQryBar2.Size = new System.Drawing.Size(75, 23);
+            this.btnQryBar2.TabIndex = 42;
+            this.btnQryBar2.Text = "查询Bar2";
+            this.btnQryBar2.UseVisualStyleBackColor = true;
+            // 
+            // mdInterval
+            // 
+            this.mdInterval.Location = new System.Drawing.Point(334, 128);
+            this.mdInterval.Name = "mdInterval";
+            this.mdInterval.Size = new System.Drawing.Size(53, 21);
+            this.mdInterval.TabIndex = 44;
+            this.mdInterval.Text = "60";
+            // 
+            // label20
+            // 
+            this.label20.AutoSize = true;
+            this.label20.Location = new System.Drawing.Point(272, 131);
+            this.label20.Name = "label20";
+            this.label20.Size = new System.Drawing.Size(59, 12);
+            this.label20.TabIndex = 43;
+            this.label20.Text = "Interval:";
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -880,6 +1006,18 @@
         private System.Windows.Forms.Label label14;
         private System.Windows.Forms.TextBox mdMinuteDataStart;
         private System.Windows.Forms.Label label15;
+        private System.Windows.Forms.TextBox mdMaxCount;
+        private System.Windows.Forms.Label label16;
+        private System.Windows.Forms.TextBox mdStartIndex;
+        private System.Windows.Forms.Label label17;
+        private System.Windows.Forms.TextBox mdEnd;
+        private System.Windows.Forms.Label label18;
+        private System.Windows.Forms.TextBox mdStart;
+        private System.Windows.Forms.Label label19;
+        private System.Windows.Forms.Button btnQryBar2;
+        private System.Windows.Forms.Button btnQryBar1;
+        private System.Windows.Forms.TextBox mdInterval;
+        private System.Windows.Forms.Label label20;
     }
 }
 

@@ -175,5 +175,8 @@ namespace TradingLib.XLProtocol
         /// K线数据响应
         /// </summary>
         T_RSP_BARDATA = 4006,
+
+
+        
     }
 }

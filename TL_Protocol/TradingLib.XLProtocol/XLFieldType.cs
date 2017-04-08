@@ -140,5 +140,15 @@ namespace TradingLib.XLProtocol
         /// 分时数据响应结构体
         /// </summary>
         F_RSP_MINUTEDATA = 243,
+
+        /// <summary>
+        /// 查询Bar数据请求结构体
+        /// </summary>
+        F_Qry_BARDATA = 244,
+
+        /// <summary>
+        /// Bar数据响应结构体
+        /// </summary>
+        F_RSP_BARDATA = 245,
     }
 }
