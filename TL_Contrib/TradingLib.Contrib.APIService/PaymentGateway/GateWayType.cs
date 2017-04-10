@@ -21,5 +21,10 @@ namespace TradingLib.Contrib.APIService
         /// 环迅
         /// </summary>
         IPS,
+
+        /// <summary>
+        /// 银生宝
+        /// </summary>
+        UnsPay,
     }
 }

@@ -69,6 +69,7 @@
     <Compile Include="APIService_Counter.cs" />
     <Compile Include="Drop\DropAliPayPayment.cs" />
     <Compile Include="Drop\DropIPSPayment.cs" />
+    <Compile Include="Drop\DropUnspayPayment.cs" />
     <Compile Include="Handler\APIHandler.cs" />
     <Compile Include="Handler\CashHandler.cs" />
     <Compile Include="Common\CashOperation.cs" />
@@ -87,6 +88,7 @@
     <Compile Include="PaymentGateway\GateWayBase.cs" />
     <Compile Include="PaymentGateway\GateWayType.cs" />
     <Compile Include="PaymentGateway\IPS\IPSGateWay.cs" />
+    <Compile Include="PaymentGateway\Unspay\UnspayGateWay.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="APIService_.cs" />
     <Compile Include="Common\RequestCheck.cs" />

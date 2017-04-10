@@ -66,6 +66,8 @@ namespace TradingLib.Contrib.APIService
                     return new AliPayGateWay(config);
                 case QSEnumGateWayType.IPS:
                     return new IPSGateWay(config);
+                case QSEnumGateWayType.UnsPay:
+                    return new UnspayGateWay(config);
                 default:
                     return null;
             }
