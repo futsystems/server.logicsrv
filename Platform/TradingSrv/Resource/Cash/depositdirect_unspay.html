@@ -1,0 +1,22 @@
+﻿<html>
+<head>
+	<title>确认入金信息</title>
+</head>
+
+<body onload="document.frm.submit()">
+	<form name="frm" method="post" action="{{data.Pay_Url}}">
+		<input name='version' type='hidden' value= "3.0.0"/>
+		<input name='merchantId' type='hidden' value= "{{data.Merchant_ID}}"/>
+		<input name='merchantUrl' type='hidden' value= "{{data.Merchant_Url}}"/>
+		<input name='responseMode' type='hidden' value= "{{data.Response_Mode}}"/>
+		<input name='orderId' type='hidden' value= "{{data.Order_ID}}"/>
+		<input name='currencyType' type='hidden' value= "{{data.Currency_Type}}"/>		
+		<input name='amount' type='hidden' value= "{{data.Order_Amount}}" />
+		<input name='assuredPay' type='hidden' value= "{{data.Assured_Pay}}" />
+		<input name='time' type='hidden' value= "{{data.Time}}"/>
+		<input name='remark' type='hidden' value= "{{data.Remark}}"/>
+		<input name='mac' type='hidden' value= "{{data.MAC}}"/>
+		<input name='merchantKey' type='hidden' value= "{{data.Merchant_Key}}"/>	
+	</form>			
+</body>
+</html>
