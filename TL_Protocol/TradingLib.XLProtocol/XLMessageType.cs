@@ -143,12 +143,12 @@ namespace TradingLib.XLProtocol
         /// <summary>
         /// 请求注册市场行情
         /// </summary>
-        T_REQ_MARKETDATA = 4000,
+        T_REQ_SUB_MARKETDATA = 4000,
 
         /// <summary>
         /// 请求注册市场行情回报
         /// </summary>
-        T_RSP_MARKETDATA = 4001,
+        T_RSP_SUB_MARKETDATA = 4001,
 
         /// <summary>
         /// 市场行情数据
@@ -175,6 +175,16 @@ namespace TradingLib.XLProtocol
         /// K线数据响应
         /// </summary>
         T_RSP_BARDATA = 4006,
+
+        /// <summary>
+        /// 请求注销市场行情
+        /// </summary>
+        T_REQ_UNSUB_MARKETDATA = 4007,
+
+        /// <summary>
+        /// 请求注销市场行情回报
+        /// </summary>
+        T_RSP_UNSUB_MARKETDATA = 4008,
 
 
         

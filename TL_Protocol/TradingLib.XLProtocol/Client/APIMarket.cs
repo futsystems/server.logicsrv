@@ -281,7 +281,24 @@ namespace TradingLib.XLProtocol.Client
         /// <returns></returns>
         public bool SubscribeMarketData(string[] symbols, uint requestID)
         {
-            XLPacketData pktData = new XLPacketData(XLMessageType.T_REQ_MARKETDATA);
+            XLPacketData pktData = new XLPacketData(XLMessageType.T_REQ_SUB_MARKETDATA);
+            foreach (var symbol in symbols)
+            {
+                var tmp = new XLSpecificSymbolField() { SymbolID = symbol };
+                pktData.AddField(tmp);
+            }
+            return SendPktData(pktData, XLEnumSeqType.SeqReq, requestID);
+        }
+
+        /// <summary>
+        /// 请求注销行情数据
+        /// </summary>
+        /// <param name="symbols"></param>
+        /// <param name="requestID"></param>
+        /// <returns></returns>
+        public bool UnSubscribeMarketData(string[] symbols, uint requestID)
+        {
+            XLPacketData pktData = new XLPacketData(XLMessageType.T_REQ_UNSUB_MARKETDATA);
             foreach (var symbol in symbols)
             {
                 var tmp = new XLSpecificSymbolField() { SymbolID = symbol };

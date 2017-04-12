@@ -350,13 +350,19 @@ namespace TradingLib.XLProtocol
                         requestID = data.RequestID;
                         return new XLPacketData(msgType, new List<IXLField>() { data.Request });
                     }
-                case XLMessageType.T_REQ_MARKETDATA://提交市场数据注册
+                case XLMessageType.T_REQ_SUB_MARKETDATA://提交市场数据注册
                     {
                         var data = Newtonsoft.Json.JsonConvert.DeserializeObject<JsonRequest<V1.XLSpecificSymbolField>>(json);
                         requestID = data.RequestID;
                         return new XLPacketData(msgType, new List<IXLField>() { data.Request });
                     }
-                case XLMessageType.T_QRY_BARDATA://提交Bar数据
+                case XLMessageType.T_REQ_UNSUB_MARKETDATA://提交注销市场数据
+                    {
+                        var data = Newtonsoft.Json.JsonConvert.DeserializeObject<JsonRequest<V1.XLSpecificSymbolField>>(json);
+                        requestID = data.RequestID;
+                        return new XLPacketData(msgType, new List<IXLField>() { data.Request });
+                    }
+                case XLMessageType.T_QRY_BARDATA://查询Bar数据
                     {
                         var data = Newtonsoft.Json.JsonConvert.DeserializeObject<JsonRequest<V1.XLQryBarDataField>>(json);
                         requestID = data.RequestID;

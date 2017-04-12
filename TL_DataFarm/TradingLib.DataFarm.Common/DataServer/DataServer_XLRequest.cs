@@ -72,7 +72,7 @@ namespace TradingLib.DataFarm.Common
                         }
                         break;
                     }
-                case XLMessageType.T_REQ_MARKETDATA:
+                case XLMessageType.T_REQ_SUB_MARKETDATA:
                     {
                         foreach (var data in reqPkt.FieldList)
                         {
@@ -80,6 +80,18 @@ namespace TradingLib.DataFarm.Common
                             {
                                 XLSpecificSymbolField req = (XLSpecificSymbolField)data;
                                 OnXLRegisterSymbol(conn, req);
+                            }
+                        }
+                        break;
+                    }
+                case XLMessageType.T_REQ_UNSUB_MARKETDATA:
+                    {
+                        foreach (var data in reqPkt.FieldList)
+                        {
+                            if (data is XLSpecificSymbolField)
+                            {
+                                XLSpecificSymbolField req = (XLSpecificSymbolField)data;
+                                OnXLUnRegisterSymbol(conn, req);
                             }
                         }
                         break;

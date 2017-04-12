@@ -462,7 +462,30 @@ namespace TradingLib.DataFarm.Common
                     //this.SendData(conn, ticknotify);
                 }
             }
-        
+        }
+
+        void OnXLUnRegisterSymbol(IConnection conn, XLSpecificSymbolField request)
+        {
+            if (request.SymbolID == "*")
+            {
+                ClearSymbolRegisted(conn);
+            }
+            else
+            {
+                Symbol sym = MDBasicTracker.SymbolTracker[string.Empty, request.SymbolID];
+                if (sym == null)
+                {
+                    logger.Warn(string.Format("Symbol:{0} do not exist", request.SymbolID));
+                    return;
+                }
+                string key = sym.UniqueKey;
+                if (symKeyRegMap.Keys.Contains(key))
+                {
+                    ConcurrentDictionary<string, IConnection> regmap = symKeyRegMap[key];
+                    IConnection target = null;
+                    regmap.TryRemove(conn.SessionID, out target);
+                }
+            }
         }
 
         /// <summary>
