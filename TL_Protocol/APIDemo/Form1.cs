@@ -92,13 +92,13 @@ namespace APIClient
         void btnQryBar2_Click(object sender, EventArgs e)
         {
             if (_mdApi == null) return;
-            _mdApi.QryBarData(mdExchange.Text, mdSymbol.Text,int.Parse(mdInterval.Text),long.Parse(mdStart.Text),long.Parse(mdEnd.Text), ++_requestId);
+            _mdApi.QryBarData(mdExchange.Text, mdSymbol.Text,false,int.Parse(mdInterval.Text),long.Parse(mdStart.Text),long.Parse(mdEnd.Text), ++_requestId);
         }
 
         void btnQryBar1_Click(object sender, EventArgs e)
         {
             if (_mdApi == null) return;
-            _mdApi.QryBarData(mdExchange.Text, mdSymbol.Text, int.Parse(mdInterval.Text), int.Parse(mdStartIndex.Text), int.Parse(mdMaxCount.Text), ++_requestId);
+            _mdApi.QryBarData(mdExchange.Text, mdSymbol.Text,false, int.Parse(mdInterval.Text), int.Parse(mdStartIndex.Text), int.Parse(mdMaxCount.Text), ++_requestId);
         }
 
         void btnMdQryMinuteData_Click(object sender, EventArgs e)

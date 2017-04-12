@@ -332,7 +332,7 @@ namespace TradingLib.XLProtocol.Client
         }
 
 
-        public bool QryBarData(string exchange, string symbol, int interval, int startIndex, int maxCount,uint requestID)
+        public bool QryBarData(string exchange, string symbol,bool isEod, int interval, int startIndex, int maxCount,uint requestID)
         {
             XLPacketData pktData = new XLPacketData(XLMessageType.T_QRY_BARDATA);
             XLQryBarDataField field = new XLQryBarDataField();
@@ -344,12 +344,13 @@ namespace TradingLib.XLProtocol.Client
             field.Start = long.MinValue;
             field.End = long.MaxValue;
             field.HavePartial = true;
+            field.IsEOD = isEod;
 
             pktData.AddField(field);
             return SendPktData(pktData, XLEnumSeqType.SeqReq, requestID);
         }
 
-        public bool QryBarData(string exchange, string symbol, int interval, long start, long end, uint requestID)
+        public bool QryBarData(string exchange, string symbol,bool isEod, int interval, long start, long end, uint requestID)
         {
             XLPacketData pktData = new XLPacketData(XLMessageType.T_QRY_BARDATA);
             XLQryBarDataField field = new XLQryBarDataField();
@@ -361,6 +362,7 @@ namespace TradingLib.XLProtocol.Client
             field.Start = start;
             field.End = end;
             field.HavePartial = true;
+            field.IsEOD = isEod;
 
             pktData.AddField(field);
             return SendPktData(pktData, XLEnumSeqType.SeqReq, requestID);

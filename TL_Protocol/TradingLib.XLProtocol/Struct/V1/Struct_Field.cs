@@ -1204,6 +1204,11 @@ namespace TradingLib.XLProtocol.V1
         public int StartIndex;
 
         /// <summary>
+        /// 是否查询EOD日线数据
+        /// </summary>
+        public bool IsEOD;
+
+        /// <summary>
         /// 是否包含Partial
         /// </summary>
         public bool HavePartial;

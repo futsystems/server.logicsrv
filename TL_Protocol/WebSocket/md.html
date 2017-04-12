@@ -121,15 +121,16 @@ function onLogin()
 查询Bar数据
 ExchangeID：交易所代码
 SymbolID：合约代码
-Interval：周期数，1分钟 60 ，2分钟 120秒，折算成秒
+Interval：周期数，1分钟 60 ，2分钟 120秒，折算成秒  日线级别以日为单位 1 7 30 90 365 日 周 月 季 年
 StartIndex：开始序号，0表示最近的一个Bar
 MaxCount：最多返回数据个数
 Start：开始时间 20170407113154 表示时间 2017-04-07 11:31:54
 End：结束时间
+IsEOD: true 为日线级别数据 false 为日内分钟级别数据
 */
 function onQryBar()
 {
-	var dic = {"MessageType":4005,"Request":{"ExchangeID":$("#bar_exchange").val(),"SymbolID":$("#bar_symbol").val(),"Interval":$("#bar_interval").val(),"StartIndex":$("#bar_startindex").val(),"MaxCount":$("#bar_maxcount").val(),"Start":190001010000,"End":201801010000,"HavePartial":true,"FieldID":244},"RequestID":++requestID};
+	var dic = {"MessageType":4005,"Request":{"ExchangeID":$("#bar_exchange").val(),"SymbolID":$("#bar_symbol").val(),"IsEOD":true,"Interval":$("#bar_interval").val(),"StartIndex":$("#bar_startindex").val(),"MaxCount":$("#bar_maxcount").val(),"Start":190001010000,"End":201801010000,"HavePartial":true,"FieldID":244},"RequestID":++requestID};
 	send(dic);
 }
 

@@ -238,7 +238,7 @@ namespace TradingLib.DataFarm.Common
                                 return;
                             }
 
-                            List<BarImpl> bars = store.QryBar(symbol,BarInterval.CustomTime, request.Interval, request.Start.ToDateTimeEx(DateTime.MinValue), request.End.ToDateTimeEx(DateTime.MaxValue), request.StartIndex, request.MaxCount, request.HavePartial);
+                            List<BarImpl> bars = store.QryBar(symbol, request.IsEOD ? BarInterval.Day : BarInterval.CustomTime, request.Interval, request.Start.ToDateTimeEx(DateTime.MinValue), request.End.ToDateTimeEx(DateTime.MaxValue), request.StartIndex, request.MaxCount, request.HavePartial);
 
                             int j = 0;
                             XLPacketData pkt = new XLPacketData(XLMessageType.T_RSP_BARDATA);
