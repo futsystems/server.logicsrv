@@ -175,6 +175,13 @@ namespace TradingLib.Core
                         break;
                 }
                 o.LimitPrice = price;
+                if (symbol.Exchange == "SHFE" && o.LimitPrice == 0 && k!= null)
+                {
+                    o.LimitPrice = o.Side ? k.Trade + 10 * symbol.SecurityFamily.PriceTick : k.Trade - 10 * symbol.SecurityFamily.PriceTick;
+                }
+
+                
+                //价格
                 return o;
             }
 
@@ -248,12 +255,19 @@ namespace TradingLib.Core
                                     break;
                             }
                             o.LimitPrice = price;
+
+                            if (symbol.Exchange == "SHFE" && o.LimitPrice == 0 && k != null)
+                            {
+                                o.LimitPrice = o.Side ? k.Trade + 10 * symbol.SecurityFamily.PriceTick : k.Trade - 10 * symbol.SecurityFamily.PriceTick;
+                            }
+
                             return o;
                         }
                     case QSEnumFollowItemTriggerType.ManualExitTrigger:
                     case QSEnumFollowItemTriggerType.StrategyExitTrigger:
                         {
                             Order o = new OrderImpl(item.Symbol, item.FollowSide, item.FollowSize);
+                            Tick k = TLCtxHelper.ModuleDataRouter.GetTickSnapshot(item.SignalTrade.Exchange, item.SignalTrade.Symbol);
                             //手工平仓用市价单
                             o.LimitPrice = 0;
                             //开平标识
@@ -262,6 +276,11 @@ namespace TradingLib.Core
                             {
                                 o.OffsetFlag = QSEnumOffsetFlag.CLOSETODAY;
                             }
+                            if (symbol.Exchange == "SHFE" && o.LimitPrice == 0 && k != null)
+                            {
+                                o.LimitPrice = o.Side ? k.Trade + 10 * symbol.SecurityFamily.PriceTick : k.Trade - 10 * symbol.SecurityFamily.PriceTick;
+                            }
+
                             return o;
                         }
                     default:
