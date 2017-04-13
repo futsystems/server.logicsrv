@@ -166,9 +166,9 @@ namespace TradingLib.XLProtocol.Client
 
         Random random = new Random();
 
-        public void RegisterServer(string serverip, int port)
+        public void RegisterServer(string server, int port)
         {
-            remoteServer.Add(new IPEndPoint(IPAddress.Parse(serverip), port));
+            remoteServer.Add(new IPEndPoint(IPAddress.Parse(server), port));
         }
 
         /// <summary>

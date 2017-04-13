@@ -375,6 +375,34 @@ namespace TradingLib.DataFarm.Common
             }
         }
 
+        void NotifyTick2Connection(Tick k, IConnection conn)
+        {
+            switch (conn.ProtocolType)
+            {
+                case EnumConnProtocolType.TL:
+                    {
+                        var tldata = CreateTLTickData(k);
+                        this.SendData(conn, tldata);
+                        break;
+                    }
+                case EnumConnProtocolType.XL:
+                    {
+                        var xldata = CreateXLTickData(k);
+                        this.SendData(conn, xldata);
+                        break;
+                    }
+                case EnumConnProtocolType.Json:
+                    {
+                        var jsondata = CreateJsonTickData(k);
+                        this.SendData(conn, jsondata);
+                        break;
+                    }
+                default:
+                    logger.Warn(string.Format("Conn ProtocolType:{0} not handled", conn.ProtocolType));
+                    break;
+            }
+        }
+
         /// <summary>
         /// 注销某个连接的所有行情注册
         /// </summary>
@@ -460,6 +488,7 @@ namespace TradingLib.DataFarm.Common
                     //TickNotify ticknotify = new TickNotify();
                     //ticknotify.Tick = k;
                     //this.SendData(conn, ticknotify);
+                    NotifyTick2Connection(k, conn);
                 }
             }
         }

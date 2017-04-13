@@ -87,9 +87,9 @@ namespace TradingLib.XLProtocol.Client
         }
         
 
-        public void RegisterServer(string serverip, int port)
+        public void RegisterServer(string server, int port)
         {
-            _socketClient.RegisterServer(serverip, port);
+            _socketClient.RegisterServer(server, port);
         }
         /// <summary>
         /// 初始化
@@ -137,7 +137,7 @@ namespace TradingLib.XLProtocol.Client
             {
                 XLMessageType msgType = (XLMessageType)header.XLMessageType;
                 XLDataHeader dataHeader;
-                XLPacketData pkt = XLPacketData.Deserialize(msgType, data, offset, out dataHeader);
+                 XLPacketData pkt = XLPacketData.Deserialize(msgType, data, offset, out dataHeader);
                 //if(_verb) logger.Debug(string.Format("PktData Recv Type:{0} Size:{1}", msgType,dataHeader.FieldLength + XLConstants.PROTO_HEADER_LEN + XLConstants.DATA_HEADER_LEN));
                 switch (msgType)
                 {

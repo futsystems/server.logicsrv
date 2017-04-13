@@ -64,9 +64,6 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\TradingLib\TradingLib.Common.Ex.dll</HintPath>
     </Reference>
-    <Reference Include="TradingLib.XLProtocol">
-      <HintPath>..\..\lib\TradingLib\TradingLib.XLProtocol.dll</HintPath>
-    </Reference>
     <Reference Include="ZeroMQ">
       <HintPath>..\..\lib\ZeroMQ.dll</HintPath>
     </Reference>
@@ -131,6 +128,10 @@
     <Compile Include="Tracker\SymbolTracker.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\TL_Protocol\TradingLib.XLProtocol\TradingLib.XLProtocol.csproj">
+      <Project>{6A5109BF-DBEA-4B24-9B87-F2651EFEFCAF}</Project>
+      <Name>TradingLib.XLProtocol</Name>
+    </ProjectReference>
     <ProjectReference Include="..\TradingLib.DataFarm.API\TradingLib.DataFarm.API.csproj">
       <Project>{FE184B78-DFA2-4E10-98CD-C6EAC59D84D9}</Project>
       <Name>TradingLib.DataFarm.API</Name>
