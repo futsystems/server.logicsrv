@@ -14,15 +14,19 @@ namespace TradingLib.XLProtocol
         /// <typeparam name="T"></typeparam>
         /// <param name="obj"></param>
         /// <returns></returns>
-        public static byte[] StructToBytes<T>(T obj) //where T : IXLField
+        public static byte[] StructToBytes<T>(T structure) //where T : IXLField
         {
-            T structure = (T)obj;
+            //T structure = (T)obj;
             //structure.Swap();
             Int32 size = Marshal.SizeOf(structure);
             IntPtr buffer = Marshal.AllocHGlobal(size);
             try
             {
+//#if MOBILE
+                //Marshal.StructureToPtr(structure, buffer, false);
+//#else
                 Marshal.StructureToPtr(structure, buffer, false);
+//#endif
                 Byte[] bytes = new Byte[size];
                 Marshal.Copy(buffer, bytes, 0, size);
                 return bytes;
@@ -46,8 +50,12 @@ namespace TradingLib.XLProtocol
             IntPtr buffer = Marshal.AllocHGlobal(size);
             try
             {
+//#if MOBILE
+//                T obj = (T)System.Runtime.InteropServices.Marshal.PtrToStructure(buffer, typeof(T));
+//#else
                 Marshal.Copy(bytes, offset, buffer, size);
                 T obj = (T)Marshal.PtrToStructure(buffer, typeof(T));
+//#endif
                 //obj.Swap();
                 return obj;
             }

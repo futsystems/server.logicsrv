@@ -5,14 +5,16 @@ using System.Text;
 using TradingLib.XLProtocol;
 //using Common.Logging;
 using TradingLib.XLProtocol.V1;
+#if JSON
 using Newtonsoft.Json;
+#endif
 
 namespace TradingLib.XLProtocol.Client
 {
     public class APITrader
     {
 
-        #region 对外暴露的事件
+#region 对外暴露的事件
         public event Action<ErrorField> OnRspError = delegate { };
         /// <summary>
         /// 服务端连接建立
@@ -91,7 +93,7 @@ namespace TradingLib.XLProtocol.Client
         /// 持仓实时通知
         /// </summary>
         public event Action<XLPositionField> OnRtnPosition = delegate { };
-        #endregion
+#endregion
         //string _serverIP = string.Empty;
         //int _port = 0;
         SocketClient _socketClient = null;
@@ -322,7 +324,7 @@ namespace TradingLib.XLProtocol.Client
         }
 
 
-        #region 接口操作
+#region 接口操作
         /// <summary>
         /// 请求登入
         /// </summary>
@@ -453,7 +455,7 @@ namespace TradingLib.XLProtocol.Client
             return SendPktData(pktData, XLEnumSeqType.SeqReq, requestID);
         }
 
-        #endregion
+#endregion
 
 
         public void HeartBeat()

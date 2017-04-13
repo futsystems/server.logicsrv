@@ -17,6 +17,7 @@ namespace TradingLib.XLProtocol.V1
     /// <summary>
     /// 登入请求
     /// </summary>
+    [StructLayout(LayoutKind.Sequential, Pack = 4)]
     public struct XLReqLoginField : IXLField
     {
         /// <summary>
@@ -58,7 +59,7 @@ namespace TradingLib.XLProtocol.V1
     /// <summary>
     /// 登入响应
     /// </summary>
-    [StructLayout(LayoutKind.Sequential, Pack = 1)]
+    [StructLayout(LayoutKind.Sequential, Pack = 4)]
     public struct XLRspLoginField : IXLField
     {
         /// <summary>
@@ -89,7 +90,7 @@ namespace TradingLib.XLProtocol.V1
     /// <summary>
     /// 用户口令变更
     /// </summary>
-    [StructLayout(LayoutKind.Sequential, Pack = 1)]
+    [StructLayout(LayoutKind.Sequential, Pack = 4)]
     public struct XLReqUserPasswordUpdateField : IXLField
     {
         /// <summary>
@@ -112,7 +113,7 @@ namespace TradingLib.XLProtocol.V1
     /// <summary>
     /// 用户口令变更
     /// </summary>
-    [StructLayout(LayoutKind.Sequential, Pack = 1)]
+    [StructLayout(LayoutKind.Sequential, Pack = 4)]
     public struct XLRspUserPasswordUpdateField : IXLField
     {
         /// <summary>
@@ -126,7 +127,7 @@ namespace TradingLib.XLProtocol.V1
     /// <summary>
     /// 查询合约
     /// </summary>
-    [StructLayout(LayoutKind.Sequential, Pack = 1)]
+    [StructLayout(LayoutKind.Sequential, Pack = 4)]
     public struct XLQrySymbolField : IXLField
     {
         /// <summary>
@@ -151,7 +152,7 @@ namespace TradingLib.XLProtocol.V1
         public ushort FieldID { get { return (ushort)XLFieldType.F_QRY_SYMBOL; } }
     }
 
-    [StructLayout(LayoutKind.Sequential, Pack = 1)]
+    [StructLayout(LayoutKind.Sequential, Pack = 4)]
     public struct XLSymbolField : IXLField
     {
         /// <summary>
@@ -212,7 +213,7 @@ namespace TradingLib.XLProtocol.V1
     #endregion
 
     #region 查询委托
-    [StructLayout(LayoutKind.Sequential, Pack = 1)]
+    [StructLayout(LayoutKind.Sequential, Pack = 4)]
     public struct XLQryOrderField : IXLField
     {
         /// <summary>
@@ -240,7 +241,7 @@ namespace TradingLib.XLProtocol.V1
     /// <summary>
     /// 报单
     /// </summary>
-    [StructLayout(LayoutKind.Sequential, Pack = 1)]
+    [StructLayout(LayoutKind.Sequential, Pack = 4)]
     public struct XLOrderField : IXLField
     {
         /// <summary>
@@ -383,7 +384,7 @@ namespace TradingLib.XLProtocol.V1
     #endregion
 
     #region 查询成交
-    [StructLayout(LayoutKind.Sequential, Pack = 1)]
+    [StructLayout(LayoutKind.Sequential, Pack = 4)]
     public struct XLQryTradeField : IXLField
     {
         /// <summary>
@@ -411,7 +412,7 @@ namespace TradingLib.XLProtocol.V1
     /// <summary>
     /// 成交
     /// </summary>
-    [StructLayout(LayoutKind.Sequential, Pack = 1)]
+    [StructLayout(LayoutKind.Sequential, Pack = 4)]
     public struct XLTradeField : IXLField
     {
         /// <summary>
@@ -505,7 +506,7 @@ namespace TradingLib.XLProtocol.V1
     /// <summary>
     /// 查询投资者持仓
     /// </summary>
-    [StructLayout(LayoutKind.Sequential, Pack = 1)]
+    [StructLayout(LayoutKind.Sequential, Pack = 4)]
     public struct XLQryPositionField : IXLField
     {
         /// <summary>
@@ -528,7 +529,7 @@ namespace TradingLib.XLProtocol.V1
     /// <summary>
     /// 投资者持仓
     /// </summary>
-    [StructLayout(LayoutKind.Sequential, Pack = 1)]
+    [StructLayout(LayoutKind.Sequential, Pack = 4)]
     public struct XLPositionField : IXLField
     {
         /// <summary>
@@ -631,7 +632,7 @@ namespace TradingLib.XLProtocol.V1
     #endregion
 
     #region 查询账户资金
-    [StructLayout(LayoutKind.Sequential, Pack = 1)]
+    [StructLayout(LayoutKind.Sequential, Pack = 4)]
     public struct XLQryTradingAccountField : IXLField
     {
         /// <summary>
@@ -649,7 +650,7 @@ namespace TradingLib.XLProtocol.V1
     /// <summary>
     /// 资金账户
     /// </summary>
-    [StructLayout(LayoutKind.Sequential, Pack = 1)]
+    [StructLayout(LayoutKind.Sequential, Pack = 4)]
     public struct XLTradingAccountField : IXLField
     {
         /// <summary>
@@ -724,7 +725,7 @@ namespace TradingLib.XLProtocol.V1
     /// <summary>
     /// 查询最大报单数量
     /// </summary>
-    [StructLayout(LayoutKind.Sequential, Pack = 1)]
+    [StructLayout(LayoutKind.Sequential, Pack = 4)]
     public struct XLQryMaxOrderVolumeField : IXLField
     {
 
@@ -773,7 +774,7 @@ namespace TradingLib.XLProtocol.V1
     /// <summary>
     /// 输入报单
     /// </summary>
-    [StructLayout(LayoutKind.Sequential, Pack = 1)]
+    [StructLayout(LayoutKind.Sequential, Pack = 4)]
     public struct XLInputOrderField : IXLField
     {
        
@@ -857,7 +858,7 @@ namespace TradingLib.XLProtocol.V1
     /// 1.提交报单后系统会分配给该委托一个唯一ID作为编号 通过该编号可以进行撤单
     /// 2.通过委托ExchangeID + OrderSysID 组合键形成委托编号
     /// </summary>
-    [StructLayout(LayoutKind.Sequential, Pack = 1)]
+    [StructLayout(LayoutKind.Sequential, Pack = 4)]
     public struct XLInputOrderActionField : IXLField
     {
         /// <summary>
@@ -908,7 +909,7 @@ namespace TradingLib.XLProtocol.V1
     /// <summary>
     /// 订阅合约
     /// </summary>
-    [StructLayout(LayoutKind.Sequential, Pack = 1)]
+    [StructLayout(LayoutKind.Sequential, Pack = 4)]
     public struct XLSpecificSymbolField : IXLField
     {
         /// <summary>
@@ -927,7 +928,7 @@ namespace TradingLib.XLProtocol.V1
      /// <summary>
     /// 深度行情
     /// </summary>
-    [StructLayout(LayoutKind.Sequential, Pack = 1)]
+    [StructLayout(LayoutKind.Sequential, Pack = 4)]
     public struct XLDepthMarketDataField : IXLField
     {
         /// <summary>
@@ -1097,7 +1098,7 @@ namespace TradingLib.XLProtocol.V1
     /// <summary>
     /// 查询分时数据请求
     /// </summary>
-    [StructLayout(LayoutKind.Sequential, Pack = 1)]
+    [StructLayout(LayoutKind.Sequential, Pack = 4)]
     public struct XLQryMinuteDataField : IXLField
     {
         /// <summary>
@@ -1131,7 +1132,7 @@ namespace TradingLib.XLProtocol.V1
     }
 
 
-    [StructLayout(LayoutKind.Sequential, Pack = 1)]
+    [StructLayout(LayoutKind.Sequential, Pack = 4)]
     public struct XLMinuteDataField : IXLField
     {
         /// <summary>
@@ -1163,7 +1164,7 @@ namespace TradingLib.XLProtocol.V1
     #endregion
 
     #region 查询K线
-    [StructLayout(LayoutKind.Sequential, Pack = 1)]
+    [StructLayout(LayoutKind.Sequential, Pack = 4)]
     public struct XLQryBarDataField : IXLField
     {
         /// <summary>
@@ -1219,7 +1220,7 @@ namespace TradingLib.XLProtocol.V1
         public ushort FieldID { get { return (ushort)XLFieldType.F_Qry_BARDATA; } }
     }
 
-    [StructLayout(LayoutKind.Sequential, Pack = 1)]
+    [StructLayout(LayoutKind.Sequential, Pack = 4)]
     public struct XLBarDataField : IXLField
     {
         /// <summary>

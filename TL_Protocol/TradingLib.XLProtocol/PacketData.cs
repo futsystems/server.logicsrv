@@ -152,7 +152,7 @@ namespace TradingLib.XLProtocol
 
 
 
-
+#if JSON
         /// <summary>
         /// 将业务数据包打包成Json字符串
         /// </summary>
@@ -371,7 +371,7 @@ namespace TradingLib.XLProtocol
             }
             return null;
         }
-
+#endif
 
         #region 填充 头字段
         /// <summary>
@@ -419,7 +419,7 @@ namespace TradingLib.XLProtocol
             header.FieldID = fieldID;
             header.FieldLength = fieldLen;
         }
-        #endregion
+#endregion
 
     }
 
