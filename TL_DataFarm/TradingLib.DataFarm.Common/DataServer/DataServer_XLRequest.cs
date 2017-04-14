@@ -276,7 +276,7 @@ namespace TradingLib.DataFarm.Common
 
                                     if (!islast)
                                     {
-                                        pkt = new XLPacketData(XLMessageType.T_RSP_MINUTEDATA);
+                                        pkt = new XLPacketData(XLMessageType.T_RSP_BARDATA);
                                     }
                                     j = 0;
                                 }
