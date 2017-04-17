@@ -203,6 +203,9 @@ namespace TradingLib.XLProtocol.V1
         /// </summary>
         public XLCurrencyType Currency;
 
+
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 512)]
+        public string TradingSession;
         /// <summary>
         /// 域类别
         /// </summary>

@@ -47,7 +47,7 @@ namespace TradingLib.XLProtocol.Client
         /// <summary>
         /// 查询分时数据回报
         /// </summary>
-        public event Action<List<XLMinuteDataField>, ErrorField, uint, bool> OnRspQryMinuteData = delegate { };
+        public event Action<IEnumerable<XLMinuteDataField>, ErrorField, uint, bool> OnRspQryMinuteData = delegate { };
 
         /// <summary>
         /// 查询Bar数据回报
@@ -190,30 +190,16 @@ namespace TradingLib.XLProtocol.Client
                         }
                     case XLMessageType.T_RSP_MINUTEDATA:
                         {
-                            XLMinuteDataField minuteData;
                             if (pkt.FieldList.Count > 0)
                             {
-                                //for (int i = 0; i < pkt.FieldList.Count; i++)
-                                //{
-                                //    minuteData = (XLMinuteDataField)pkt.FieldList[i];
-                                //    OnRspQryMinuteData(minuteData, NoError, dataHeader.RequestID, (int)dataHeader.IsLast == 1 && i==pkt.FieldList.Count-1);
-                                //}
-                                
+                                OnRspQryMinuteData(pkt.FieldList.Select(field=>(XLMinuteDataField)field),NoError, dataHeader.RequestID, (int)dataHeader.IsLast == 1);
                             }
                             break;
                         }
                     case XLMessageType.T_RSP_BARDATA:
                         {
-                            //XLBarDataField barData;
                             if (pkt.FieldList.Count > 0)
                             {
-                                //Console.WriteLine(string.Format("got bar response,cnt:{0} islast:{1}", pkt.FieldList.Count, dataHeader.IsLast));
-                                //for (int i = 0; i < pkt.FieldList.Count; i++)
-                                //{
-                                //    barData = (XLBarDataField)pkt.FieldList[i];
-                                //    OnRspQryBarData(barData, NoError, dataHeader.RequestID, (int)dataHeader.IsLast == 1 && i == pkt.FieldList.Count - 1);
-                                //}
-                                
                                 OnRspQryBarData(pkt.FieldList.Select(field => (XLBarDataField)field), NoError, dataHeader.RequestID, (int)dataHeader.IsLast == 1);
                             }
                             break;

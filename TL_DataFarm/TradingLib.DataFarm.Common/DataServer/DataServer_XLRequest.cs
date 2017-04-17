@@ -122,6 +122,7 @@ namespace TradingLib.DataFarm.Common
                                 field.PriceTick = (double)sym.SecurityFamily.PriceTick;
                                 field.ExpireDate = sym.ExpireDate.ToString();
                                 field.Currency = ConvCurrencyType(sym.Currency);
+                                field.TradingSession = sym.TradingSession;
 
 
                                 XLPacketData pkt = new XLPacketData(XLMessageType.T_RSP_SYMBOL);
