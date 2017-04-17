@@ -30,6 +30,8 @@ namespace TradingLib.DataFarm.Common
         bool _syncdb = false;//是否更新数据到数据库 行情服务器组只维护一个历史行情数据库 其余行情服务器只从该数据库加载数据
         bool _verbose = true;//是否输入请求日志
         ManualResetEvent manualEvent = new ManualResetEvent(false);
+        int _httpPort = 80;
+        bool _httpEnable = false;
         public DataServer()
         {
             _config = ConfigFile.GetConfigFile("DataCore.cfg");
@@ -42,6 +44,9 @@ namespace TradingLib.DataFarm.Common
 
             _syncdb = ConfigFile["SyncDB"].AsBool();
             _verbose = ConfigFile["Verbose"].AsBool();
+
+            _httpPort = ConfigFile["HttpPort"].AsInt();
+            _httpEnable = ConfigFile["HttpEnable"].AsBool();
 
             _cfgdb = new ConfigDB("DataFarm");
             _datastore = new MemoryBarDB();
@@ -127,6 +132,9 @@ namespace TradingLib.DataFarm.Common
 
             //启动发送服务
             this.StartSendService();
+
+            //启动Http服务
+            this.StartHttpServer();
 
             //注册任务
             this.RegisterTask();

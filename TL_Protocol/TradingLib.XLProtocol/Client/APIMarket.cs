@@ -207,7 +207,7 @@ namespace TradingLib.XLProtocol.Client
                             //XLBarDataField barData;
                             if (pkt.FieldList.Count > 0)
                             {
-                                Console.WriteLine(string.Format("got bar response,cnt:{0} islast:{1}", pkt.FieldList.Count, dataHeader.IsLast));
+                                //Console.WriteLine(string.Format("got bar response,cnt:{0} islast:{1}", pkt.FieldList.Count, dataHeader.IsLast));
                                 //for (int i = 0; i < pkt.FieldList.Count; i++)
                                 //{
                                 //    barData = (XLBarDataField)pkt.FieldList[i];

@@ -40,6 +40,9 @@
     <Reference Include="Newtonsoft.Json">
       <HintPath>..\..\lib\Newtonsoft.Json.dll</HintPath>
     </Reference>
+    <Reference Include="NHttp">
+      <HintPath>..\..\lib\NHttp.dll</HintPath>
+    </Reference>
     <Reference Include="NodaTime">
       <HintPath>..\..\lib\NodaTime.dll</HintPath>
     </Reference>
@@ -92,6 +95,7 @@
     <Compile Include="DataServer\DataServer_SendWroker.cs" />
     <Compile Include="DataServer\DataServer_Task.cs" />
     <Compile Include="DataServer\DataServer_XLRequest.cs" />
+    <Compile Include="DataServer\DataServer_Http.cs" />
     <Compile Include="EodDataService\EodDataService.cs" />
     <Compile Include="EodDataService\EodDataService_DataCache.cs" />
     <Compile Include="EodDataService\EventArgs.cs" />
@@ -104,6 +108,9 @@
     <Compile Include="EodDataService\EodDataService_Task.cs" />
     <Compile Include="EodDataService\EodDataService_RestoreBar.cs" />
     <Compile Include="Global.cs" />
+    <Compile Include="Http\HttpServer.cs" />
+    <Compile Include="Http\RequestHandler.cs" />
+    <Compile Include="Http\TickSnapshotHandler.cs" />
     <Compile Include="TaskService\Listener.cs" />
     <Compile Include="FrequencyService\EventArgs.cs" />
     <Compile Include="MDBasicTracker.cs" />
@@ -126,6 +133,7 @@
     <Compile Include="TimeZone\TimeZoneHelper.cs" />
     <Compile Include="Tracker\SercurityTracker.cs" />
     <Compile Include="Tracker\SymbolTracker.cs" />
+    <Compile Include="Utils_object.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\TL_Protocol\TradingLib.XLProtocol\TradingLib.XLProtocol.csproj">
