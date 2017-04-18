@@ -56,7 +56,7 @@ namespace TradingLib.Common
         public static DateTime NextWorkDayWithoutHoliday(this Exchange exchange, DateTime extime)
         {
             //获取给定时间的下一个工作日
-            DateTime workday = extime.NextWorkDay(); 
+            DateTime workday = extime.NextWorkDay();
             //循环判断workday是否是节假日 如果是节假日则去下一个工作日
             while (true)
             {
@@ -76,21 +76,21 @@ namespace TradingLib.Common
         /// <param name="exchange"></param>
         /// <param name="extime"></param>
         /// <returns></returns>
-        public static int CurrentTradingDay(this Exchange exchange, DateTime extime)
-        { 
-            //
-            if (!extime.IsWorkDay()) return 0; //如果是非工作日 则返回0
-            if (exchange.IsInHoliday(extime)) return 0;//如果是节假日 则返回0
-            DateTime tradingday = extime;
-            //如果当前时间在交易所收盘之后 则进入下一个交易日
-            if (Util.ToTLTime(extime) > exchange.CloseTime)
-            {
-                tradingday = exchange.NextWorkDayWithoutHoliday(tradingday);
-            }
+        //public static int CurrentTradingDay(this Exchange exchange, DateTime extime)
+        //{ 
+        //    //
+        //    if (!extime.IsWorkDay()) return 0; //如果是非工作日 则返回0
+        //    if (exchange.IsInHoliday(extime)) return 0;//如果是节假日 则返回0
+        //    DateTime tradingday = extime;
+        //    //如果当前时间在交易所收盘之后 则进入下一个交易日
+        //    if (Util.ToTLTime(extime) > exchange.CloseTime)
+        //    {
+        //        tradingday = exchange.NextWorkDayWithoutHoliday(tradingday);
+        //    }
 
 
-            return 0;
-        }
+        //    return 0;
+        //}
 
 
 
