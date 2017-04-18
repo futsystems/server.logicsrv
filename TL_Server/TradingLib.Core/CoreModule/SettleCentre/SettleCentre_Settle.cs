@@ -243,7 +243,7 @@ namespace TradingLib.Core
                     //避免错误的假日文件导致有交易记录而交易所不执行结算
                     //逐日盯市结算 节假日不执行结算 节假日 结算价如何获取？ 逐笔结算方式 每日结算没有盯市盈亏 且与结算价无关 只与开仓价有关
                     ////节假日不结算
-                    if (exchange.SettleType == QSEnumSettleType.ByDate && exchange.IsInHoliday(extime))//盯市结算的交易所 非交易日不执行结算
+                    if (exchange.IsInHoliday(extime))//非交易日不执行结算
                     {
                         continue;
                     }
