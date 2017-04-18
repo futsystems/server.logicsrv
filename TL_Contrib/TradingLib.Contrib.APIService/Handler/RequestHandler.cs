@@ -11,7 +11,7 @@ namespace TradingLib.Contrib.APIService
         /// <summary>
         /// 模块名称
         /// </summary>
-        public string Module { get; private set; }
+        public string Module { get; protected set; }
 
         /// <summary>
         /// 处理HttpRequest

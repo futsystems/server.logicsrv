@@ -169,7 +169,7 @@ namespace TradingLib.XLProtocol.Client
         bool _verb = true;
 
         public bool Verbose { get { return _verb; } set { _verb = value; } }
-
+        static ErrorField NoError = new ErrorField();
         void _socketClient_DataReceived(XLProtocolHeader header, byte[] data, int offset)
         {
             try
@@ -211,7 +211,7 @@ namespace TradingLib.XLProtocol.Client
                             {
                                 response = new XLSymbolField();
                             }
-                            OnRspQrySymbol(response, new ErrorField(), dataHeader.RequestID, (int)dataHeader.IsLast == 1 ? true : false);
+                            OnRspQrySymbol(response, NoError, dataHeader.RequestID, (int)dataHeader.IsLast == 1 ? true : false);
                             break;
                         }
                     case XLMessageType.T_RSP_ORDER:
@@ -225,7 +225,7 @@ namespace TradingLib.XLProtocol.Client
                             {
                                 response = new XLOrderField();
                             }
-                            OnRspQryOrder(response, new ErrorField(), dataHeader.RequestID, (int)dataHeader.IsLast == 1 ? true : false);
+                            OnRspQryOrder(response, NoError, dataHeader.RequestID, (int)dataHeader.IsLast == 1 ? true : false);
                             break;
                             
                         }
@@ -247,7 +247,7 @@ namespace TradingLib.XLProtocol.Client
                             {
                                 response = new XLTradeField();
                             }
-                            OnRspQryTrade(response, new ErrorField(), dataHeader.RequestID, (int)dataHeader.IsLast == 1 ? true : false);
+                            OnRspQryTrade(response, NoError, dataHeader.RequestID, (int)dataHeader.IsLast == 1 ? true : false);
                             break;
                         }
                     case XLMessageType.T_RTN_TRADE:
@@ -267,7 +267,7 @@ namespace TradingLib.XLProtocol.Client
                             {
                                 response = new XLPositionField();
                             }
-                            OnRspQryPosition(response, new ErrorField(), dataHeader.RequestID, (int)dataHeader.IsLast == 1 ? true : false);
+                            OnRspQryPosition(response, NoError, dataHeader.RequestID, (int)dataHeader.IsLast == 1 ? true : false);
                             break;
                         }
                     case XLMessageType.T_RTN_POSITIONUPDATE:
@@ -279,13 +279,13 @@ namespace TradingLib.XLProtocol.Client
                     case XLMessageType.T_RSP_ACCOUNT:
                         {
                             XLTradingAccountField response = (XLTradingAccountField)pkt.FieldList[0];
-                            OnRspQryTradingAccount(response, new ErrorField(), dataHeader.RequestID, (int)dataHeader.IsLast == 1 ? true : false);
+                            OnRspQryTradingAccount(response, NoError, dataHeader.RequestID, (int)dataHeader.IsLast == 1 ? true : false);
                             break;
                         }
                     case XLMessageType.T_RSP_MAXORDVOL:
                         {
                             XLQryMaxOrderVolumeField response = (XLQryMaxOrderVolumeField)pkt.FieldList[0];
-                            OnRspQryMaxOrderVol(response, new ErrorField(), dataHeader.RequestID, (int)dataHeader.IsLast == 1 ? true : false);
+                            OnRspQryMaxOrderVol(response, NoError, dataHeader.RequestID, (int)dataHeader.IsLast == 1 ? true : false);
                             break;
                         }
                     case XLMessageType.T_RSP_INSERTORDER:

@@ -165,8 +165,8 @@ namespace APIClient
             _mdApi.OnRspError += new Action<ErrorField>(_mdApi_OnRspError);
             _mdApi.OnDepthMarketDataField += new Action<XLDepthMarketDataField>(_mdApi_OnDepthMarketDataField);
             _mdApi.OnRspQrySymbol += new Action<XLSymbolField, ErrorField, uint, bool>(_mdApi_OnRspQrySymbol);
-            _mdApi.OnRspQryMinuteData += new Action<XLMinuteDataField, ErrorField, uint, bool>(_mdApi_OnRspQryMinuteData);
-            _mdApi.OnRspQryBarData += new Action<XLBarDataField, ErrorField, uint, bool>(_mdApi_OnRspQryBarData);
+            //_mdApi.OnRspQryMinuteData += new Action<XLMinuteDataField, ErrorField, uint, bool>(_mdApi_OnRspQryMinuteData);
+           // _mdApi.OnRspQryBarData += new Action<XLBarDataField, ErrorField, uint, bool>(_mdApi_OnRspQryBarData);
 
             new Thread(() =>
             {
