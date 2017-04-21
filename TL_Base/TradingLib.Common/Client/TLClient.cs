@@ -203,6 +203,12 @@ namespace TradingLib.Common
                     }
                 }
 
+                //非重连状态 检查tlsocket如果为空或者断开连接 则直接重连
+                if ((!_reconnectreq) && (_tlsocket == null || (!_tlsocket.IsConnected)))
+                { 
+                    StartReconnect();
+                }
+
                 DateTime tnow = DateTime.Now;
                 if (DateTime.Now.Subtract(_lastHeartbeatSent).TotalSeconds > _hbPeriod)
                 {
@@ -332,6 +338,9 @@ namespace TradingLib.Common
         {
             bool _modesuccess = false;
             int _retry = 0;
+            //先断开连接 再执行重连
+            this.Disconnect();
+
             while (_modesuccess == false && _retry < _modeRetries && _reconnectreq)
             {
                 _retry++;
@@ -349,6 +358,7 @@ namespace TradingLib.Common
         /// <summary>
         /// 默认从序号0开始连接服务器
         /// 尝试查找可用服务器并进行连接
+        /// 先查询可用服务器然后再登入服务器
         /// </summary>
         /// <param name="mode">The mode.</param>
         /// <returns></returns>
@@ -433,7 +443,7 @@ namespace TradingLib.Common
             try
             {
                 //断开当前连接
-                Disconnect();
+                //Disconnect();
                 //初始化底层Socket连接
                 _tlsocket = new T();
                 _tlsocket.Server = _serverAvabile[serverIdx];
@@ -451,7 +461,7 @@ namespace TradingLib.Common
                 }
                 else
                 {
-                    Disconnect();
+                    Disconnect();//连接失败执行断开连接操作
                     logger.Warn(_skip + "unable to connect to server at: " + _serverlist[serverIdx].ToString());
                     return false;
                 }
@@ -620,7 +630,7 @@ namespace TradingLib.Common
         {
             _serverversion = response.Version;
             //_uuid = response.ClientUUID;
-            logger.Info("Client got version response, version:"+_serverversion.ToString());
+            logger.Info("Client got version response:"+_serverversion.ToString());
             //获得服务端版本后请求功能列表
             RequestFeatures();
 

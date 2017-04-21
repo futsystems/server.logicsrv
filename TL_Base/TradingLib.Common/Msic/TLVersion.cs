@@ -57,6 +57,10 @@ namespace TradingLib.Common
 
         public PlatformID Platfrom { get; set; }
 
+        public override string ToString()
+        {
+            return string.Format("{0}-{1}", this.DeployID, this.Version);
+        }
         /// <summary>
         /// 部署编号 用于区分不同柜台的部署编号
         /// </summary>
