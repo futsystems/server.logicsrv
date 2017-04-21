@@ -226,8 +226,22 @@ namespace FrontServer
                                                 {
                                                     _lastHeartBeatRecv = DateTime.Now;
                                                 }
+                                                if (packet.Type == MessageTypes.NOTIFYCLEARCLIENT)
+                                                {
+                                                    NotifyClearClient notify = packet as NotifyClearClient;
+                                                    if(!string.IsNullOrEmpty(notify.SessionID))
+                                                    {
+                                                        IConnection conn = GetConnection(notify.SessionID);
+                                                        if (conn != null)
+                                                        {
+                                                            conn.Close();
+                                                            this.LogicUnRegister(notify.SessionID);
+                                                        }
+                                                    }
+
+                                                }
                                             }
-                                            else
+                                            else //其余客户端地址为 UUID表示
                                             {
                                                 IConnection conn = GetConnection(clientId);
                                                 if (conn != null)

@@ -53,6 +53,12 @@ namespace TradingLib.Core
                     }
 
                     tl.KillSessioin(sessionID);
+
+                    //通知前置断开客户端
+                    NotifyClearClient notify = ResponseTemplate<NotifyClearClient>.SrvSendNotifyResponse();
+                    notify.SessionID = sessionID;
+                    this.NotifyFront(notify);
+
                     session.RspMessage("注销连接成功");
                 }
             }

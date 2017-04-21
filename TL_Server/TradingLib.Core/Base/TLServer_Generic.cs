@@ -506,6 +506,16 @@ namespace TradingLib.Core
         }
 
         /// <summary>
+        /// 发送业务数据包到前置服务器
+        /// </summary>
+        /// <param name="packet"></param>
+        public void TLNotifyFront(IPacket packet)
+        {
+            this.TLNotifyFront(packet.Data);
+        }
+
+
+        /// <summary>
         /// 向客户端发送数据
         /// </summary>
         /// <param name="data"></param>
@@ -516,6 +526,14 @@ namespace TradingLib.Core
             if (this.IsLive)
             {
                 _trans.Send(data, clientid, frontid);
+            }
+        }
+
+        void TLNotifyFront(byte[] data)
+        {
+            if (this.IsLive)
+            {
+                _trans.NotifyFront(data);
             }
         }
 

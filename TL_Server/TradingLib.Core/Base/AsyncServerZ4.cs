@@ -65,6 +65,10 @@ namespace TradingLib.Core
         Providers _pn = Providers.Unknown;
         public Providers ProviderName { get { return _pn; } set { _pn = value; } }
 
+        /// <summary>
+        /// 前置列表
+        /// </summary>
+        List<string> frontList = new List<string>();
 
         ConfigDB _cfgdb;
         bool _verbose = false;
@@ -229,6 +233,18 @@ namespace TradingLib.Core
         }
 
 
+        /// <summary>
+        /// 通知所有前置
+        /// 1.注销某个客户端 等业务操作
+        /// </summary>
+        /// <param name="body"></param>
+        public void NotifyFront(byte[] body)
+        {
+            foreach (var front in frontList)
+            {
+                this.Send(body, front, front);
+            }
+        }
         /// <summary>
         /// 向某个客户端发送消息
         /// </summary>
@@ -546,6 +562,8 @@ namespace TradingLib.Core
             }
         }
 
+        
+
         void WorkTaskProc(ZSocket worker, ZMessage request, int id)
         {
             int cnt = request.Count;
@@ -565,6 +583,9 @@ namespace TradingLib.Core
                 //处理前置的逻辑连接心跳
                 if (cnt == 3 && msg.Type == MessageTypes.LOGICLIVEREQUEST)
                 {
+                    //将新的前置地址加入到列表
+                    if (!frontList.Contains(front)) frontList.Add(front);
+
                     LogicLiveRequest req = (LogicLiveRequest)PacketHelper.SrvRecvRequest(msg, front, address);
                     LogicLiveResponse rep = ResponseTemplate<LogicLiveResponse>.SrvSendRspResponse(req);
 

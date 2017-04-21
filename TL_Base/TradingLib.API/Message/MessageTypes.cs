@@ -37,7 +37,7 @@ namespace TradingLib.API
         FRONTSTATUSRESPONSE=6,//前置机工作状态回报
         SERVICEREQUEST=7,//服务查询请求
         SERVICERESPONSE=8,//服务查询回报
-        CUSTOM9,
+        NOTIFYCLEARCLIENT=9,//断开某个Client
         CUSTOM10,
        
         // END CUSTOM MESSAGES

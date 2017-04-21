@@ -44,6 +44,12 @@ namespace TradingLib.API
 
 
         /// <summary>
+        /// 通知所有前置某个消息
+        /// </summary>
+        /// <param name="body"></param>
+        void NotifyFront(byte[] body);
+
+        /// <summary>
         /// 向某个客户端发送消息
         /// </summary>
         /// <param name="body">消息内容</param>

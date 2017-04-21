@@ -296,6 +296,8 @@ namespace TradingLib.Common
                     return ResponseTemplate<RspRegisterClientResponse>.CliRecvResponse(message);
                 case MessageTypes.LOGICLIVERESPONSE:
                     return ResponseTemplate<LogicLiveResponse>.CliRecvResponse(message);
+                case MessageTypes.NOTIFYCLEARCLIENT:
+                    return ResponseTemplate<NotifyClearClient>.CliRecvResponse(message);
                 case MessageTypes.FEATURERESPONSE:
                     return ResponseTemplate<FeatureResponse>.CliRecvResponse(message);
                 case MessageTypes.VERSIONRESPONSE:
@@ -488,7 +490,12 @@ namespace TradingLib.Common
             return packet;
         }
 
-
+        public static T SrvSendNotifyResponse()
+        {
+            T packet = new T();
+            packet.BindAccount(string.Empty);
+            return packet;
+        }
         public static T SrvSendNotifyResponse(string account)
         {
             T packet = new T();

@@ -129,6 +129,14 @@ namespace TradingLib.Core
 
         }
 
+        /// <summary>
+        /// 将数据通知前置
+        /// </summary>
+        /// <param name="packet"></param>
+        protected void NotifyFront(IPacket packet)
+        {
+            _frontNotifyCache.Write(packet);
+        }
 
         /// <summary>
         /// 出入金通知

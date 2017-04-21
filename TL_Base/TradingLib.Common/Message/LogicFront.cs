@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using TradingLib.API;
 
+//定义前置与逻辑服务器之间业务消息
 namespace TradingLib.Common
 {
 
@@ -41,6 +42,30 @@ namespace TradingLib.Common
         public override void ResponseDeserialize(string content)
         {
             
+        }
+    }
+
+    /// <summary>
+    /// 注销客户端通知
+    /// </summary>
+    public class NotifyClearClient : NotifyResponsePacket
+    {
+        public NotifyClearClient()
+        {
+            _type = MessageTypes.NOTIFYCLEARCLIENT;
+            this.SessionID = string.Empty;
+        }
+
+        public string SessionID { get; set; }
+
+        public override string Serialize()
+        {
+            return string.IsNullOrEmpty(this.SessionID) ? string.Empty : this.SessionID;
+        }
+
+        public override void Deserialize(string content)
+        {
+            this.SessionID = content;
         }
     }
 }
