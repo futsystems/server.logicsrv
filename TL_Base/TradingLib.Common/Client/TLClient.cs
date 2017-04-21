@@ -330,6 +330,7 @@ namespace TradingLib.Common
                 _reconnectThread = null;
             }
         }
+        Random rd = new Random();
         /// <summary>
         /// 重连
         /// 重新建立客户端连接 不用执行Stop操作，在Mode中会检查底层Sockt状态如果底层Socket处于连接状态,则会自动断开底层Socket
@@ -340,6 +341,8 @@ namespace TradingLib.Common
             int _retry = 0;
             //先断开连接 再执行重连
             this.Disconnect();
+
+            System.Threading.Thread.Sleep(rd.Next(100, 1500));//随机等待100-1500ms 避免服务端重启后客户端在同一时刻进行连接
 
             while (_modesuccess == false && _retry < _modeRetries && _reconnectreq)
             {
