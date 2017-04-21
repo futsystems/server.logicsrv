@@ -167,6 +167,9 @@ namespace TradingLib.Core
                         response.Account = request.LoginID;
                         response.AccountType = account.Category;
                         response.Currency = account.Currency;
+
+                        AccountProfile profile = BasicTracker.AccountProfileTracker[account.ID];
+                        response.NickName = string.IsNullOrEmpty(profile.Name) ? "": profile.Name;
                     }
                     else
                     {

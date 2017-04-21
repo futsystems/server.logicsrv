@@ -584,7 +584,7 @@ namespace TradingLib.XLProtocol.V1
         public int Position;
 
         /// <summary>
-        /// 今日持仓
+        /// 今日总持仓
         /// </summary>
         public int TodayPosition;
 
