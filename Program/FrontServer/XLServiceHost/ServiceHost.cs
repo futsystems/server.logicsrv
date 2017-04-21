@@ -128,6 +128,8 @@ namespace FrontServer.XLServiceHost
 
         void xlSocketServer_NewSessionConnected(XLSessionBase session)
         {
+            if (_mqServer == null || !_mqServer.IsLive) session.Close();
+
             OnSessionCreated(session);
             logger.Info(string.Format("Session:{0} >> Register", session.SessionID));
             XLConnection conn = null;

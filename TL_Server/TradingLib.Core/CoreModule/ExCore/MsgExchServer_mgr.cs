@@ -111,5 +111,15 @@ namespace TradingLib.Core
             TLCtxHelper.ModuleExCore.Send(response);
 
         }
+
+        [ContribCommandAttr(QSEnumCommandSource.CLI, "rebootmq", "rebootmq - reboot front mq server", "")]
+        public string RebootMQ()
+        {
+            NotifyRebooMQSrv notify = ResponseTemplate<NotifyRebooMQSrv>.SrvSendNotifyResponse();
+            this.NotifyFront(notify);
+            return "Send NotifyRebooMQSrv to front server ";
+        }
+
+
     }
 }

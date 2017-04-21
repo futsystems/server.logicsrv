@@ -68,4 +68,25 @@ namespace TradingLib.Common
             this.SessionID = content;
         }
     }
+
+    public class NotifyRebooMQSrv : NotifyResponsePacket
+    {
+        public NotifyRebooMQSrv()
+        {
+            _type = MessageTypes.NOTIFYREBOOTMQSRV;
+            this.CloseClient = false;
+        }
+
+        public bool CloseClient { get; set; }
+        public override string Serialize()
+        {
+            return this.CloseClient.ToString();
+        }
+
+        public override void Deserialize(string content)
+        {
+            this.CloseClient = bool.Parse(content);
+        }
+    }
+
 }

@@ -112,6 +112,15 @@ namespace FrontServer
             return null;
         }
 
+        void CloseAllConnection()
+        {
+            logger.Info("Close all client's connectioni");
+            foreach (var conn in connectionMap.Values.ToArray())
+            {
+                conn.Close();
+            }
+        }
+
         /// <summary>
         /// 发送逻辑服务端心跳
         /// 用于确认逻辑服务器连接可用
@@ -175,7 +184,7 @@ namespace FrontServer
                 //using (ZSocket subscriber = new ZSocket(ctx, ZSocketType.SUB))
                 {
                     string address = string.Format("tcp://{0}:{1}", _logicServer, _logicPort);
-                    _frontID = "front-" + rd.Next(1000, 9999).ToString();
+                    _frontID = "front-" + rd.Next(1000, 9999).ToString();//前置随机变化
                     backend.SetOption(ZSocketOption.IDENTITY, Encoding.UTF8.GetBytes(_frontID));
                     backend.Linger = new TimeSpan(0);//需设置 否则底层socket无法释放 导致无法正常关闭服务
                     backend.ReceiveTimeout = new TimeSpan(0, 0, 1);
@@ -236,12 +245,17 @@ namespace FrontServer
                                                         {
                                                             conn.Close();
                                                             this.LogicUnRegister(notify.SessionID);
+
                                                         }
                                                     }
-
+                                                }
+                                                if (packet.Type == MessageTypes.NOTIFYREBOOTMQSRV)
+                                                {
+                                                    _srvgo = false;
+                                                    logger.Info("Reboot MQServer.....");
                                                 }
                                             }
-                                            else //其余客户端地址为 UUID表示
+                                            else //其余客户端地址为 UUID表示 转发数据到客户端
                                             {
                                                 IConnection conn = GetConnection(clientId);
                                                 if (conn != null)
@@ -307,6 +321,11 @@ namespace FrontServer
                     }
                 }
             }
+
+            //关闭所有客户端
+            CloseAllConnection();
+
+            //输出日志与标识
             _stopped = true;
             logger.Info("MQServer MessageProcess Stoppd");
         }

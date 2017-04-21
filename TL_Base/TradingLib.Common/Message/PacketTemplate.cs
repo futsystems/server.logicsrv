@@ -298,6 +298,8 @@ namespace TradingLib.Common
                     return ResponseTemplate<LogicLiveResponse>.CliRecvResponse(message);
                 case MessageTypes.NOTIFYCLEARCLIENT:
                     return ResponseTemplate<NotifyClearClient>.CliRecvResponse(message);
+                case MessageTypes.NOTIFYREBOOTMQSRV:
+                    return ResponseTemplate<NotifyRebooMQSrv>.CliRecvResponse(message);
                 case MessageTypes.FEATURERESPONSE:
                     return ResponseTemplate<FeatureResponse>.CliRecvResponse(message);
                 case MessageTypes.VERSIONRESPONSE:

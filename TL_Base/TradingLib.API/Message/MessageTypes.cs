@@ -38,7 +38,7 @@ namespace TradingLib.API
         SERVICEREQUEST=7,//服务查询请求
         SERVICERESPONSE=8,//服务查询回报
         NOTIFYCLEARCLIENT=9,//断开某个Client
-        CUSTOM10,
+        NOTIFYREBOOTMQSRV=10,//通知前置重启MQServer重新建立Router Dealar连接
        
         // END CUSTOM MESSAGES
         

@@ -86,7 +86,7 @@ namespace FrontServer.TLServiceHost
                         {
                             QryServiceRequest request = RequestTemplate<QryServiceRequest>.SrvRecvRequest("", sessionId, requestInfo.Message.Content);
                             RspQryServiceResponse response = ResponseTemplate<RspQryServiceResponse>.SrvSendRspResponse(request);
-                            response.OnService = true;
+                            response.OnService = (_mqServer == null || !_mqServer.IsLive) ? false : true;
                             byte[] data = response.Data;
                             session.Send(data, 0, data.Length);
                             logger.Info(string.Format("Got QryServiceRequest from:{0} request:{1} reponse:{2}", sessionId, request, response));
@@ -171,6 +171,7 @@ namespace FrontServer.TLServiceHost
 
         void tlSocketServer_NewSessionConnected(TLSessionBase session)
         {
+            if (_mqServer == null || !_mqServer.IsLive) session.Close();
             OnSessionCreated(session);
         }
 
