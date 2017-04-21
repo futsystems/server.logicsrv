@@ -53,6 +53,10 @@ namespace TradingLib.XLProtocol.V1
                     return XLStructHelp.StructToBytes<XLInputOrderField>((XLInputOrderField)field);
                 case XLFieldType.F_REQ_ORDERACTION:
                     return XLStructHelp.StructToBytes<XLInputOrderActionField>((XLInputOrderActionField)field);
+                case XLFieldType.F_QRY_EXCHANGERATE:
+                    return XLStructHelp.StructToBytes<XLQryExchangeRateField>((XLQryExchangeRateField)field);
+                case XLFieldType.F_RSP_EXCHANGERATE:
+                    return XLStructHelp.StructToBytes<XLExchangeRateField>((XLExchangeRateField)field);
                 case XLFieldType.F_SYMBOL:
                     return XLStructHelp.StructToBytes<XLSpecificSymbolField>((XLSpecificSymbolField)field);
                 case XLFieldType.F_MarketData:
@@ -112,6 +116,11 @@ namespace TradingLib.XLProtocol.V1
                     return XLStructHelp.BytesToStruct<XLInputOrderField>(data, offset);
                 case XLFieldType.F_REQ_ORDERACTION:
                     return XLStructHelp.BytesToStruct<XLInputOrderActionField>(data, offset);
+                case XLFieldType.F_QRY_EXCHANGERATE:
+                    return XLStructHelp.BytesToStruct<XLQryExchangeRateField>(data, offset);
+                case XLFieldType.F_RSP_EXCHANGERATE:
+                    return XLStructHelp.BytesToStruct<XLExchangeRateField>(data, offset);
+
                 case XLFieldType.F_SYMBOL:
                     return XLStructHelp.BytesToStruct<XLSpecificSymbolField>(data, offset);
                 case XLFieldType.F_MarketData:

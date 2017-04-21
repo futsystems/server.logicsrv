@@ -166,6 +166,7 @@ namespace TradingLib.Core
                         response.LoginID = request.LoginID;
                         response.Account = request.LoginID;
                         response.AccountType = account.Category;
+                        response.Currency = account.Currency;
                     }
                     else
                     {

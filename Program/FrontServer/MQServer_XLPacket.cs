@@ -36,6 +36,8 @@ namespace FrontServer
                         field.TradingDay = response.TradingDay;
                         field.UserID = response.LoginID;
                         field.Name = response.NickName;
+                        field.Currency = ConvCurrencyType(response.Currency);
+                        
 
                         ErrorField rsp = ConvertRspInfo(response.RspInfo);
 
@@ -106,6 +108,25 @@ namespace FrontServer
 
                         break;
 
+                    }
+                //查询汇率回报
+                case MessageTypes.XQRYEXCHANGERATERESPONSE:
+                    {
+                        RspXQryExchangeRateResponse response = lpkt as RspXQryExchangeRateResponse;
+
+                        XLExchangeRateField field = new XLExchangeRateField();
+                        field.TradingDay = response.ExchangeRate.Settleday;
+                        field.IntermediateRate = (double)response.ExchangeRate.IntermediateRate;
+                        field.Currency = ConvCurrencyType(response.ExchangeRate.Currency);
+
+                        XLPacketData pkt = new XLPacketData(XLMessageType.T_RSP_EXCHANGE_RATE);
+                        pkt.AddField(field);
+
+                        conn.ResponseXLPacket(pkt, (uint)response.RequestID, response.IsLast);
+                        logger.Info(string.Format("LogicSrv Reply Session:{0} -> RspXQryExchangeRateResponse", conn.SessionID));
+
+
+                        break;
                     }
                 //查询委托回报
                 case MessageTypes.ORDERRESPONSE:
@@ -255,6 +276,7 @@ namespace FrontServer
 
                         field.NowEquity = (double)info.NowEquity;
                         field.Available = (double)info.AvabileFunds;//当前可用
+                        
 
                         pkt.AddField(field);
                         conn.ResponseXLPacket(pkt, (uint)response.RequestID, response.IsLast);
@@ -432,6 +454,26 @@ namespace FrontServer
 
                             this.TLSend(conn.SessionID, request);
                             logger.Info(string.Format("Session:{0} >> QrySymbolRequest", conn.SessionID));
+
+                        }
+                        else
+                        {
+                            logger.Warn(string.Format("Request:{0} Data Field do not macth", pkt.MessageType));
+                        }
+                        break;
+                    }
+                //查询汇率
+                case XLMessageType.T_QRY_EXCHANGE_RATE:
+                    {
+                        var data = pkt.FieldList[0];
+                        if (data is XLQryExchangeRateField)
+                        {
+                            XLQryExchangeRateField field = (XLQryExchangeRateField)data;
+
+                            XQryExchangeRateRequest request = RequestTemplate<XQryExchangeRateRequest>.CliSendRequest(requestId);
+
+                            this.TLSend(conn.SessionID, request);
+                            logger.Info(string.Format("Session:{0} >> XQryExchangeRateRequest", conn.SessionID));
 
                         }
                         else
@@ -809,6 +851,8 @@ namespace FrontServer
                     return XLCurrencyType.RMB;
             }
         }
+
+
 
         ErrorField ConvertRspInfo(RspInfo info)
         {

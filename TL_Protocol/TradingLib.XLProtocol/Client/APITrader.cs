@@ -43,6 +43,12 @@ namespace TradingLib.XLProtocol.Client
         public event Action<XLSymbolField, ErrorField, uint, bool> OnRspQrySymbol = delegate { };
 
         /// <summary>
+        /// 查询汇率回报
+        /// </summary>
+        public event Action<XLExchangeRateField, ErrorField, uint, bool> OnRspQryExchangeRate= delegate { };
+
+
+        /// <summary>
         /// 查询委托回报
         /// </summary>
         public event Action<XLOrderField, ErrorField, uint, bool> OnRspQryOrder = delegate { };
@@ -214,6 +220,20 @@ namespace TradingLib.XLProtocol.Client
                             OnRspQrySymbol(response, NoError, dataHeader.RequestID, (int)dataHeader.IsLast == 1 ? true : false);
                             break;
                         }
+                    case XLMessageType.T_RSP_EXCHANGE_RATE:
+                        {
+                            XLExchangeRateField response;
+                            if (pkt.FieldList.Count > 0)
+                            {
+                                response = (XLExchangeRateField)pkt.FieldList[0];
+                            }
+                            else
+                            {
+                                response = new XLExchangeRateField();
+                            }
+                            OnRspQryExchangeRate(response, NoError, dataHeader.RequestID, (int)dataHeader.IsLast == 1 ? true : false);
+                            break;
+                        }
                     case XLMessageType.T_RSP_ORDER:
                         {
                             XLOrderField response;
@@ -363,6 +383,20 @@ namespace TradingLib.XLProtocol.Client
             pktData.AddField(req);
             return SendPktData(pktData, XLEnumSeqType.SeqQry, requestID);
         }
+
+        /// <summary>
+        /// 查询汇率
+        /// </summary>
+        /// <param name="req"></param>
+        /// <param name="requestID"></param>
+        /// <returns></returns>
+        public bool QryExchangeRate(XLQryExchangeRateField req, uint requestID)
+        {
+            XLPacketData pktData = new XLPacketData(XLMessageType.T_QRY_EXCHANGE_RATE);
+            pktData.AddField(req);
+            return SendPktData(pktData, XLEnumSeqType.SeqQry, requestID);
+        }
+
 
         /// <summary>
         /// 请求查询委托

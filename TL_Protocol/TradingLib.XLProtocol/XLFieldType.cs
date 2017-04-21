@@ -150,5 +150,15 @@ namespace TradingLib.XLProtocol
         /// Bar数据响应结构体
         /// </summary>
         F_RSP_BARDATA = 245,
+
+        /// <summary>
+        /// 查询汇率结构体
+        /// </summary>
+        F_QRY_EXCHANGERATE = 246,
+
+        /// <summary>
+        /// 汇率回报结构体
+        /// </summary>
+        F_RSP_EXCHANGERATE = 247,
     }
 }

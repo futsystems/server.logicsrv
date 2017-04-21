@@ -77,6 +77,10 @@ namespace TradingLib.XLProtocol.V1
         [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 16)]
         public string Name;
 
+        /// <summary>
+        /// 账户货币
+        /// </summary>
+        public XLCurrencyType Currency;
 
         /// <summary>
         /// 域类别
@@ -723,6 +727,51 @@ namespace TradingLib.XLProtocol.V1
 
     }
     #endregion
+
+    #region 查询汇率
+    [StructLayout(LayoutKind.Sequential, Pack = 4)]
+    public struct XLQryExchangeRateField : IXLField
+    {
+        /// <summary>
+        /// 交易日
+        /// </summary>
+        public int TradingDay;
+
+        /// <summary>
+        /// 域类别
+        /// </summary>
+        public ushort FieldID { get { return (ushort)XLFieldType.F_QRY_EXCHANGERATE; } }
+    }
+
+    /// <summary>
+    /// 汇率数据
+    /// </summary>
+    [StructLayout(LayoutKind.Sequential, Pack = 4)]
+    public struct XLExchangeRateField : IXLField
+    {
+        /// <summary>
+        /// 交易日
+        /// </summary>
+        public int TradingDay;
+        /// <summary>
+        /// 上日信用额度
+        /// </summary>
+        public double IntermediateRate;
+
+        /// <summary>
+        /// 当前信用额度
+        /// </summary>
+        public XLCurrencyType Currency;
+
+        /// <summary>
+        /// 域类别
+        /// </summary>
+        public ushort FieldID { get { return (ushort)XLFieldType.F_RSP_EXCHANGERATE; } }
+
+    }
+    #endregion
+
+
 
     #region 查询最大报单数量
     /// <summary>

@@ -139,6 +139,16 @@ namespace TradingLib.XLProtocol
         /// </summary>
         T_RTN_POSITIONUPDATE = 3022,
 
+        /// <summary>
+        /// 汇率查询
+        /// </summary>
+        T_QRY_EXCHANGE_RATE = 3024,
+
+        /// <summary>
+        /// 汇率回报
+        /// </summary>
+        T_RSP_EXCHANGE_RATE = 3025,
+
 
         /// <summary>
         /// 请求注册市场行情

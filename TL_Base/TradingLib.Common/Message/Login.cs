@@ -150,6 +150,11 @@ namespace TradingLib.Common
         /// </summary>
         public string Mobile { get; set; }
 
+        /// <summary>
+        /// 账户货币类别
+        /// </summary>
+        public CurrencyType Currency { get; set; }
+
         public LoginResponse()
             : this("")
         {
@@ -204,6 +209,8 @@ namespace TradingLib.Common
             sb.Append(this.Email);
             sb.Append(d);
             sb.Append(this.Mobile);
+            sb.Append(d);
+            sb.Append(this.Currency);
             return sb.ToString();
         }
 
@@ -227,6 +234,7 @@ namespace TradingLib.Common
             this.NickName = r[9];
             this.Email = r[10];
             this.Mobile = r[11];
+            this.Currency = r[12].ParseEnum<CurrencyType>();
         }
     }
 }
