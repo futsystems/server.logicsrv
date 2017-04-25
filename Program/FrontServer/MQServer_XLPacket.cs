@@ -128,6 +128,7 @@ namespace FrontServer
 
                         break;
                     }
+                    //查询结算单回报
                 case MessageTypes.XSETTLEINFORESPONSE:
                     {
 
@@ -135,7 +136,7 @@ namespace FrontServer
                         XLSettlementInfoField field = new XLSettlementInfoField();
                         field.TradingDay = response.Tradingday;
                         field.UserID = response.TradingAccount;
-                        field.Content = response.Content;
+                        field.Content = response.SettlementContent;
 
                         XLPacketData pkt = new XLPacketData(XLMessageType.T_RSP_SETTLEINFO);
                         pkt.AddField(field);
