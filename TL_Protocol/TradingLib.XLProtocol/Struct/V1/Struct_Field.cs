@@ -728,6 +728,57 @@ namespace TradingLib.XLProtocol.V1
     }
     #endregion
 
+    #region 查询结算单
+    [StructLayout(LayoutKind.Sequential, Pack = 4)]
+    public struct XLQrySettlementInfoField : IXLField
+    {
+        /// <summary>
+        /// 投资者代码
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 13)]
+        public string UserID;
+
+        /// <summary>
+        /// 交易日
+        /// </summary>
+        public int TradingDay;
+
+        /// <summary>
+        /// 域类别
+        /// </summary>
+        public ushort FieldID { get { return (ushort)XLFieldType.F_QRY_SETTLEINFO; } }
+    }
+
+    [StructLayout(LayoutKind.Sequential, Pack = 4)]
+    public struct XLSettlementInfoField : IXLField
+    {
+        /// <summary>
+        /// 投资者代码
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 13)]
+        public string UserID;
+
+        /// <summary>
+        /// 交易日
+        /// </summary>
+        public int TradingDay;
+
+
+        /// <summary>
+        /// 消息正文
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 501)]
+        public string Content;
+
+        /// <summary>
+        /// 域类别
+        /// </summary>
+        public ushort FieldID { get { return (ushort)XLFieldType.F_RSP_SETTLEINFO; } }
+    }
+
+
+    #endregion
+
     #region 查询汇率
     [StructLayout(LayoutKind.Sequential, Pack = 4)]
     public struct XLQryExchangeRateField : IXLField
@@ -770,8 +821,6 @@ namespace TradingLib.XLProtocol.V1
 
     }
     #endregion
-
-
 
     #region 查询最大报单数量
     /// <summary>

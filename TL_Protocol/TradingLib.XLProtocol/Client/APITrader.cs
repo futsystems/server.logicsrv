@@ -85,6 +85,12 @@ namespace TradingLib.XLProtocol.Client
         /// 委托操作异常 服务端通给出对应回报
         /// </summary>
         public event Action<XLInputOrderActionField, ErrorField, uint, bool> OnRspOrderAction = delegate { };
+
+        /// <summary>
+        /// 结算单查询
+        /// </summary>
+        public event Action<XLSettlementInfoField, ErrorField, uint, bool> OnRspQrySettlementInfo = delegate { };
+
         /// <summary>
         /// 委托实时通知
         /// </summary>
@@ -290,6 +296,21 @@ namespace TradingLib.XLProtocol.Client
                             OnRspQryPosition(response, NoError, dataHeader.RequestID, (int)dataHeader.IsLast == 1 ? true : false);
                             break;
                         }
+                    case XLMessageType.T_RSP_SETTLEINFO:
+                        {
+                            XLSettlementInfoField response;
+
+                            if (pkt.FieldList.Count > 0)
+                            {
+                                response = (XLSettlementInfoField)pkt.FieldList[0];
+                            }
+                            else
+                            {
+                                response = new XLSettlementInfoField();
+                            }
+                            OnRspQrySettlementInfo(response, NoError, dataHeader.RequestID, (int)dataHeader.IsLast == 1 ? true : false);
+                            break;
+                        }
                     case XLMessageType.T_RTN_POSITIONUPDATE:
                         {
                             XLPositionField notify = (XLPositionField)pkt.FieldList[0];
@@ -459,6 +480,13 @@ namespace TradingLib.XLProtocol.Client
         public bool QryMaxOrderVol(XLQryMaxOrderVolumeField req, uint requestID)
         {
             XLPacketData pktData = new XLPacketData(XLMessageType.T_QRY_MAXORDVOL);
+            pktData.AddField(req);
+            return SendPktData(pktData, XLEnumSeqType.SeqQry, requestID);
+        }
+
+        public bool QrySettlementInfo(XLQrySettlementInfoField req, uint requestID)
+        {
+            XLPacketData pktData = new XLPacketData(XLMessageType.T_QRY_SETTLEINFO);
             pktData.AddField(req);
             return SendPktData(pktData, XLEnumSeqType.SeqQry, requestID);
         }

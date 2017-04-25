@@ -128,6 +128,26 @@ namespace FrontServer
 
                         break;
                     }
+                case MessageTypes.XSETTLEINFORESPONSE:
+                    {
+
+                        RspXQrySettleInfoResponse response = lpkt as RspXQrySettleInfoResponse;
+                        XLSettlementInfoField field = new XLSettlementInfoField();
+                        field.TradingDay = response.Tradingday;
+                        field.UserID = response.TradingAccount;
+                        field.Content = response.Content;
+
+                        XLPacketData pkt = new XLPacketData(XLMessageType.T_RSP_SETTLEINFO);
+                        pkt.AddField(field);
+
+                        conn.ResponseXLPacket(pkt, (uint)response.RequestID, response.IsLast);
+                        if (response.IsLast)
+                        {
+                            logger.Info(string.Format("LogicSrv Reply Session:{0} -> RspXQryExchangeRateResponse", conn.SessionID));
+                        }
+                        break;
+
+                    }
                 //查询委托回报
                 case MessageTypes.ORDERRESPONSE:
                     {
@@ -474,6 +494,27 @@ namespace FrontServer
 
                             this.TLSend(conn.SessionID, request);
                             logger.Info(string.Format("Session:{0} >> XQryExchangeRateRequest", conn.SessionID));
+
+                        }
+                        else
+                        {
+                            logger.Warn(string.Format("Request:{0} Data Field do not macth", pkt.MessageType));
+                        }
+                        break;
+                    }
+                //查询结算单
+                case XLMessageType.T_QRY_SETTLEINFO:
+                    {
+                        var data = pkt.FieldList[0];
+                        if (data is XLQrySettlementInfoField)
+                        {
+                            XLQrySettlementInfoField field = (XLQrySettlementInfoField)data;
+
+                            XQrySettleInfoRequest request = RequestTemplate<XQrySettleInfoRequest>.CliSendRequest(requestId);
+                            request.Tradingday = field.TradingDay;
+
+                            this.TLSend(conn.SessionID, request);
+                            logger.Info(string.Format("Session:{0} >> XQrySettleInfoRequest", conn.SessionID));
 
                         }
                         else

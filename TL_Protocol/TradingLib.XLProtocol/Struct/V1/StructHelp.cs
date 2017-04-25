@@ -62,6 +62,11 @@ namespace TradingLib.XLProtocol.V1
                 case XLFieldType.F_MarketData:
                     return  XLStructHelp.StructToBytes<XLDepthMarketDataField>((XLDepthMarketDataField)field);
 
+                case XLFieldType.F_QRY_SETTLEINFO:
+                    return XLStructHelp.StructToBytes<XLQrySettlementInfoField>((XLQrySettlementInfoField)field);
+                case XLFieldType.F_RSP_SETTLEINFO:
+                    return XLStructHelp.StructToBytes<XLSettlementInfoField>((XLSettlementInfoField)field);
+
                 case XLFieldType.F_QRY_MINUTEDATA:
                     return XLStructHelp.StructToBytes<XLQryMinuteDataField>((XLQryMinuteDataField)field);
                 case XLFieldType.F_RSP_MINUTEDATA:
@@ -126,6 +131,11 @@ namespace TradingLib.XLProtocol.V1
                 case XLFieldType.F_MarketData:
                     return XLStructHelp.BytesToStruct<XLDepthMarketDataField>(data, offset);
 
+                case XLFieldType.F_QRY_SETTLEINFO:
+                    return XLStructHelp.BytesToStruct<XLQrySettlementInfoField>(data, offset);
+                case XLFieldType.F_RSP_SETTLEINFO:
+                    return XLStructHelp.BytesToStruct<XLSettlementInfoField>(data, offset);
+
                 case XLFieldType.F_QRY_MINUTEDATA:
                     return XLStructHelp.BytesToStruct<XLQryMinuteDataField>(data, offset);
                 case XLFieldType.F_RSP_MINUTEDATA:
@@ -134,6 +144,8 @@ namespace TradingLib.XLProtocol.V1
                     return XLStructHelp.BytesToStruct<XLQryBarDataField>(data, offset);
                 case XLFieldType.F_RSP_BARDATA:
                     return XLStructHelp.BytesToStruct<XLBarDataField>(data, offset);
+
+
                 default:
                     throw new Exception(string.Format("FieldType:{0} not supported", type));
             }

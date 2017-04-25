@@ -117,6 +117,16 @@ namespace TradingLib.XLProtocol
         F_RTN_TRADE = 119,
 
         /// <summary>
+        /// 查询结算单
+        /// </summary>
+        F_QRY_SETTLEINFO=120,
+
+        /// <summary>
+        /// 回报结算单
+        /// </summary>
+        F_RSP_SETTLEINFO=121,
+
+        /// <summary>
         /// 持仓更新回报
         /// </summary>
         F_RTN_POSITIONUPDATE = 220,

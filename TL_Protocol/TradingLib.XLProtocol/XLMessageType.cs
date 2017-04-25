@@ -149,6 +149,15 @@ namespace TradingLib.XLProtocol
         /// </summary>
         T_RSP_EXCHANGE_RATE = 3025,
 
+        /// <summary>
+        /// 查询结算单
+        /// </summary>
+        T_QRY_SETTLEINFO = 3026,
+
+        /// <summary>
+        /// 回报结算单
+        /// </summary>
+        T_RSP_SETTLEINFO = 3027,
 
         /// <summary>
         /// 请求注册市场行情

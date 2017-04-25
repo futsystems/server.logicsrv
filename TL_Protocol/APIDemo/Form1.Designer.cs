@@ -72,6 +72,10 @@
             this.wsAddress = new System.Windows.Forms.TextBox();
             this.label5 = new System.Windows.Forms.Label();
             this.tabPage3 = new System.Windows.Forms.TabPage();
+            this.mdInterval = new System.Windows.Forms.TextBox();
+            this.label20 = new System.Windows.Forms.Label();
+            this.btnQryBar2 = new System.Windows.Forms.Button();
+            this.btnQryBar1 = new System.Windows.Forms.Button();
             this.mdEnd = new System.Windows.Forms.TextBox();
             this.label18 = new System.Windows.Forms.Label();
             this.mdStart = new System.Windows.Forms.TextBox();
@@ -105,10 +109,7 @@
             this.button1 = new System.Windows.Forms.Button();
             this.tabPage4 = new System.Windows.Forms.TabPage();
             this.debugControl1 = new APIClient.DebugControl();
-            this.btnQryBar1 = new System.Windows.Forms.Button();
-            this.btnQryBar2 = new System.Windows.Forms.Button();
-            this.mdInterval = new System.Windows.Forms.TextBox();
-            this.label20 = new System.Windows.Forms.Label();
+            this.btnExQrySettle = new System.Windows.Forms.Button();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tabPage2.SuspendLayout();
@@ -131,6 +132,7 @@
             // 
             // tabPage1
             // 
+            this.tabPage1.Controls.Add(this.btnExQrySettle);
             this.tabPage1.Controls.Add(this.btnHeartBeat);
             this.tabPage1.Controls.Add(this.exapiverbose);
             this.tabPage1.Controls.Add(this.btnExCancelOrder);
@@ -588,6 +590,41 @@
             this.tabPage3.Text = "行情Socket";
             this.tabPage3.UseVisualStyleBackColor = true;
             // 
+            // mdInterval
+            // 
+            this.mdInterval.Location = new System.Drawing.Point(334, 128);
+            this.mdInterval.Name = "mdInterval";
+            this.mdInterval.Size = new System.Drawing.Size(53, 21);
+            this.mdInterval.TabIndex = 44;
+            this.mdInterval.Text = "60";
+            // 
+            // label20
+            // 
+            this.label20.AutoSize = true;
+            this.label20.Location = new System.Drawing.Point(272, 131);
+            this.label20.Name = "label20";
+            this.label20.Size = new System.Drawing.Size(59, 12);
+            this.label20.TabIndex = 43;
+            this.label20.Text = "Interval:";
+            // 
+            // btnQryBar2
+            // 
+            this.btnQryBar2.Location = new System.Drawing.Point(499, 168);
+            this.btnQryBar2.Name = "btnQryBar2";
+            this.btnQryBar2.Size = new System.Drawing.Size(75, 23);
+            this.btnQryBar2.TabIndex = 42;
+            this.btnQryBar2.Text = "查询Bar2";
+            this.btnQryBar2.UseVisualStyleBackColor = true;
+            // 
+            // btnQryBar1
+            // 
+            this.btnQryBar1.Location = new System.Drawing.Point(499, 134);
+            this.btnQryBar1.Name = "btnQryBar1";
+            this.btnQryBar1.Size = new System.Drawing.Size(75, 23);
+            this.btnQryBar1.TabIndex = 41;
+            this.btnQryBar1.Text = "查询Bar1";
+            this.btnQryBar1.UseVisualStyleBackColor = true;
+            // 
             // mdEnd
             // 
             this.mdEnd.Location = new System.Drawing.Point(237, 170);
@@ -879,40 +916,14 @@
             this.debugControl1.TimeStamps = true;
             this.debugControl1.UseExternalTimeStamp = false;
             // 
-            // btnQryBar1
+            // btnExQrySettle
             // 
-            this.btnQryBar1.Location = new System.Drawing.Point(499, 134);
-            this.btnQryBar1.Name = "btnQryBar1";
-            this.btnQryBar1.Size = new System.Drawing.Size(75, 23);
-            this.btnQryBar1.TabIndex = 41;
-            this.btnQryBar1.Text = "查询Bar1";
-            this.btnQryBar1.UseVisualStyleBackColor = true;
-            // 
-            // btnQryBar2
-            // 
-            this.btnQryBar2.Location = new System.Drawing.Point(499, 168);
-            this.btnQryBar2.Name = "btnQryBar2";
-            this.btnQryBar2.Size = new System.Drawing.Size(75, 23);
-            this.btnQryBar2.TabIndex = 42;
-            this.btnQryBar2.Text = "查询Bar2";
-            this.btnQryBar2.UseVisualStyleBackColor = true;
-            // 
-            // mdInterval
-            // 
-            this.mdInterval.Location = new System.Drawing.Point(334, 128);
-            this.mdInterval.Name = "mdInterval";
-            this.mdInterval.Size = new System.Drawing.Size(53, 21);
-            this.mdInterval.TabIndex = 44;
-            this.mdInterval.Text = "60";
-            // 
-            // label20
-            // 
-            this.label20.AutoSize = true;
-            this.label20.Location = new System.Drawing.Point(272, 131);
-            this.label20.Name = "label20";
-            this.label20.Size = new System.Drawing.Size(59, 12);
-            this.label20.TabIndex = 43;
-            this.label20.Text = "Interval:";
+            this.btnExQrySettle.Location = new System.Drawing.Point(146, 193);
+            this.btnExQrySettle.Name = "btnExQrySettle";
+            this.btnExQrySettle.Size = new System.Drawing.Size(75, 23);
+            this.btnExQrySettle.TabIndex = 22;
+            this.btnExQrySettle.Text = "QrySettle";
+            this.btnExQrySettle.UseVisualStyleBackColor = true;
             // 
             // Form1
             // 
@@ -1018,6 +1029,7 @@
         private System.Windows.Forms.Button btnQryBar1;
         private System.Windows.Forms.TextBox mdInterval;
         private System.Windows.Forms.Label label20;
+        private System.Windows.Forms.Button btnExQrySettle;
     }
 }
 

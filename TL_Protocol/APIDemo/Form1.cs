@@ -62,6 +62,7 @@ namespace APIClient
             btnExQryMaxOrderVol.Click += new EventHandler(btnExQryMaxOrderVol_Click);
             btnExPlaceOrder.Click += new EventHandler(btnExPlaceOrder_Click);
             btnExCancelOrder.Click += new EventHandler(btnExCancelOrder_Click);
+            btnExQrySettle.Click += new EventHandler(btnExQrySettle_Click);
 
 
             btnWSStart.Click += new EventHandler(btnWSStart_Click);
@@ -88,6 +89,8 @@ namespace APIClient
 
             btnHeartBeat.Click += new EventHandler(btnHeartBeat_Click);
         }
+
+
 
         void btnQryBar2_Click(object sender, EventArgs e)
         {
@@ -381,6 +384,16 @@ namespace APIClient
             frm.Close();
         }
 
+        void btnExQrySettle_Click(object sender, EventArgs e)
+        {
+            if (_apiTrader == null) return;
+            XLQrySettlementInfoField req = new XLQrySettlementInfoField();
+            bool ret = _apiTrader.QrySettlementInfo(req, ++_requestId);
+            logger.Info(string.Format("QrySettleInfo Send Success:{0}", ret));
+        }
+
+
+
         void btnExQryMaxOrderVol_Click(object sender, EventArgs e)
         {
             if (_apiTrader == null) return;
@@ -484,7 +497,7 @@ namespace APIClient
             _apiTrader.OnRspQryMaxOrderVol += new Action<XLQryMaxOrderVolumeField, ErrorField, uint, bool>(_apiTrader_OnRspQryMaxOrderVol);
             _apiTrader.OnRspOrderInsert += new Action<XLInputOrderField, ErrorField, uint, bool>(_apiTrader_OnRspOrderInsert);
             _apiTrader.OnRspOrderAction += new Action<XLInputOrderActionField, ErrorField, uint, bool>(_apiTrader_OnRspOrderAction);
-
+            _apiTrader.OnRspQrySettlementInfo += new Action<XLSettlementInfoField, ErrorField, uint, bool>(_apiTrader_OnRspQrySettlementInfo);
             _apiTrader.OnRtnOrder += new Action<XLOrderField>(_apiTrader_OnRtnOrder);
             _apiTrader.OnRtnTrade += new Action<XLTradeField>(_apiTrader_OnRtnTrade);
             _apiTrader.OnRtnPosition += new Action<XLPositionField>(_apiTrader_OnRtnPosition);
@@ -499,6 +512,11 @@ namespace APIClient
                 //_apiTrader.Join();
                 //logger.Info("API Thread Stopped");
             }).Start();
+        }
+
+        void _apiTrader_OnRspQrySettlementInfo(XLSettlementInfoField arg1, ErrorField arg2, uint arg3, bool arg4)
+        {
+            logger.Info(string.Format("Field:{0} Rsp:{1} RequestID:{2} IsLast:{3}", JsonConvert.SerializeObject(arg1), JsonConvert.SerializeObject(arg2), arg3, arg4));
         }
 
         void _apiTrader_OnRspOrderAction(XLInputOrderActionField arg1, ErrorField arg2, uint arg3, bool arg4)
