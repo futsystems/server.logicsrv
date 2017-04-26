@@ -17,11 +17,15 @@ namespace TradingLib.DataFarm.Common
 
         IEnumerable<BarImpl> intradayBars;
         IEnumerable<BarImpl> eodBars;
-        public MemoryBarDB()
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="month">加载几个月以内的日内数据</param>
+        public MemoryBarDB(int intradayMonth)
         {
             Global.Profile.EnterSection("Bar Load From DB");
             logger.Info("Load Intraday Bars");
-            intradayBars = MBar.LoadIntradayBars(DateTime.Now.AddMonths(-6));
+            intradayBars = MBar.LoadIntradayBars(DateTime.Now.AddMonths(-intradayMonth));
             logger.Info("Load Eod Bars");
             eodBars = MBar.LoadEodBars(DateTime.Now.AddYears(-3));
             Global.Profile.LeaveSection();

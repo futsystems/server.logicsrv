@@ -32,6 +32,7 @@ namespace TradingLib.DataFarm.Common
         ManualResetEvent manualEvent = new ManualResetEvent(false);
         int _httpPort = 80;
         bool _httpEnable = false;
+        int _intradayMonth = 6;
         public DataServer()
         {
             _config = ConfigFile.GetConfigFile("DataCore.cfg");
@@ -47,9 +48,10 @@ namespace TradingLib.DataFarm.Common
 
             _httpPort = ConfigFile["HttpPort"].AsInt();
             _httpEnable = ConfigFile["HttpEnable"].AsBool();
+            _intradayMonth = ConfigFile["IntradayMonth"].AsInt();
 
             _cfgdb = new ConfigDB("DataFarm");
-            _datastore = new MemoryBarDB();
+            _datastore = new MemoryBarDB(_intradayMonth);
 
             if (!_cfgdb.HaveConfig("TradeBatchSendSize"))
             {
