@@ -38,6 +38,7 @@ namespace FrontServer
                         field.Name = response.NickName;
                         field.Currency = ConvCurrencyType(response.Currency);
                         
+                        
 
                         ErrorField rsp = ConvertRspInfo(response.RspInfo);
 
@@ -424,7 +425,7 @@ namespace FrontServer
                             request.LoginID = field.UserID;
                             request.Passwd = field.Password;
                             request.MAC = field.MacAddress;
-                            request.IPAddress = field.ClientIPAddress;
+                            request.IPAddress = conn.IState.IPAddress;//field.ClientIPAddress;
                             request.LoginType = 1;
                             request.ProductInfo = field.UserProductInfo;
                             this.TLSend(conn.SessionID, request);

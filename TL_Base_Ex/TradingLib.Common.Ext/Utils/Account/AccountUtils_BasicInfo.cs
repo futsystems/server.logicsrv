@@ -104,7 +104,6 @@ namespace TradingLib.Common
             instrument.SecurityType = symbol.SecurityType;
             instrument.Multiple = symbol.Multiple;
             instrument.PriceTick = symbol.SecurityFamily.PriceTick;
-            //instrument.ExpireMonth = symbol.ExpireMonth;
             instrument.ExpireDate = symbol.ExpireDate;
             instrument.Tradeable = symbol.IsTradeable;
             instrument.Currency = symbol.Currency;
