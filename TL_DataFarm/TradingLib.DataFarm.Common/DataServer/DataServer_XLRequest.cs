@@ -115,7 +115,7 @@ namespace TradingLib.DataFarm.Common
                                 XLSymbolField field = new XLSymbolField();
                                 field.SymbolID = sym.Symbol;
                                 field.ExchangeID = sym.Exchange;
-                                field.SymbolName = sym.GetName(true);
+                                field.SymbolName = sym.GetTitleName(true);
                                 field.SecurityID = sym.SecurityFamily.Code;
                                 field.SecurityType = XLSecurityType.Future;
                                 field.Multiple = sym.SecurityFamily.Multiple;

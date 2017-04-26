@@ -512,7 +512,7 @@ namespace TradingLib.Common
                 target.MaintanceMargin = sym._maintancemargin;
                 target.Strike = sym.Strike;
                 target.OptionSide = sym.OptionSide;
-                //target.ExpireMonth = sym.ExpireMonth;
+                target.Month = sym.Month;
                 target.ExpireDate = sym.ExpireDate;
 
 

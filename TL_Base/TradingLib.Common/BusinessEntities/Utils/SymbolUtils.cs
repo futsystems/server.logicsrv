@@ -62,12 +62,15 @@ namespace TradingLib.Common
 
         /// <summary>
         /// symbol name
+        /// 获得文字名称
+        /// 股指1701
+        /// 恒指1701
         /// </summary>
         /// <param name="symbol"></param>
         /// <param name="price"></param>
         /// <param name="price"></param>
         /// <returns></returns>
-        public static string GetName(this Symbol symbol,bool islong)
+        public static string GetTitleName(this Symbol symbol,bool islong)
         {
             if (!string.IsNullOrEmpty(symbol.Name)) return symbol.Name;
             switch (symbol.SecurityFamily.Type)
@@ -80,12 +83,14 @@ namespace TradingLib.Common
         }
 
         /// <summary>
-        /// 
+        /// IF1701 IF01
+        /// HSI1701 HSI01
+        /// 获得合约的字母名
         /// </summary>
         /// <param name="symbol"></param>
         /// <param name="islong"></param>
         /// <returns></returns>
-        public static string GetCodeNumSuffix(this Symbol symbol, bool islong)
+        public static string GetAlphabetName(this Symbol symbol, bool islong)
         {
             switch (symbol.SecurityFamily.Type)
             {
@@ -126,35 +131,20 @@ namespace TradingLib.Common
             }
         }
 
-
         /// <summary>
-        /// 获得期货合约后缀
-        /// 201501 
+        /// 可以通过ExpireDate进行快速处理
         /// </summary>
         /// <param name="sym"></param>
+        /// <param name="isLong"></param>
         /// <returns></returns>
-        //static string GetFutNumSuffix(this Symbol sym)
-        //{
-
-        //    string expire = sym.ExpireDate.ToString();
-        //    if (expire.Length == 8)
-        //    {
-        //        return sym.ExpireDate.ToString().Substring(2, 4);
-        //    }
-        //    else
-        //    {
-        //        return "0000";
-        //    }
-        //}
-
-        public static string GetFutureNumSuffix(this Symbol sym,bool isLong)
+        static string GetFutureNumSuffix(this Symbol sym,bool isLong)
         {
             int year, month;
             string sec;
             sym.ParseFututureContract(out sec, out year, out month);
             if(isLong)
             {
-            return string.Format("{0}{1:D2}", year, month).Substring(2);
+                return string.Format("{0}{1:D2}", year, month).Substring(2);
             }
             else
             {

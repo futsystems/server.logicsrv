@@ -340,7 +340,7 @@ namespace Broker.Live
                 order.ID = lo.id.ToString();
                 order.Date = lo.Date;
                 order.Time = lo.Time;
-                order.Symbol = lo.oSymbol.GetCodeNumSuffix(true);// lo.Symbol;//转换成接口可以识别的合约
+                order.Symbol = lo.oSymbol.GetAlphabetName(true);// lo.Symbol;//转换成接口可以识别的合约
                 order.Exchange = lo.Exchange;
                 order.Side = lo.Side;
                 order.TotalSize = Math.Abs(lo.TotalSize);
