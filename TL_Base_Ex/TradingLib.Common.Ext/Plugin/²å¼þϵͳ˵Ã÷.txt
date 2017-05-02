@@ -1,7 +1,0 @@
-﻿系统采用插件化设计,用于将底层内核系统与外围系统进行有效隔离。
-底层系统尽可能简单,稳定高效
-
-系统模块
-1.Connector[IBroker/IDataFeed]	数据源或成交接口,用于实现从数据源获得行情数据,或者向某个成交商交易落地
-2.RuleSet[IAccountRule/IOrderRule] 委托或者帐户的风控规则
-3.Contrib 第三方业务模块
