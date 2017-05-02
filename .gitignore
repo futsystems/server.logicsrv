@@ -1,52 +1,43 @@
+packages
+publish
+build
+
+#build out lib such as api,common
+lib/Win
+lib/TradingLib
+lib/Contrib
 
 
+Platform/**/*.dll
+Platform/**/*.exe
+Platform/**/log/
+Platform/**/cache/
+Platform/TLDataBase
+Platform/TLData
+Platform/TradingSrv/TLDataBase/LogServer/*
+Platform/**/logs
+Platform/**/TickData
+Platform/Logs
+Platform/DataSrv/database/*
+Platform/DataCore/database/*
+Platform/DataCore-T/*
+Platform/DataFront/database/*
+
+Platform/DataCore/*.dll
+Platform/DataCore/**/*.dll
+
+Platform/TradingSrv/*.dll
+Platform/TradingSrv/**/*.dll
+Platform/TradingSrv/**/*.dll
 
 
-*.pdb
-*.cache
-*.tlog
-*.su
-*.stsdb4
-*.data
-#排除.sdf
-*.sdf
-
-
-#排除目录
-/output
-/patch
-/packages
-/lib/Win
-/lib/TradingLib
-
-/Platform/**/*.dll
-/Platform/**/*.exe
-/Platform/**/log/
-/Platform/**/cache/
-/Platform/TLDataBase
-/Platform/TLData
-/Platform/TradingSrv/TLDataBase/LogServer/*
-/Platform/**/logs
-/Platform/**/TickData
-/Platform/Logs
-/Platform/DataSrv/database/*
-/Platform/DataCore/database/*
-/Platform/DataCore-T/*
-/Platform/DataFront/database/*
-/publish
-/package
-/packages
-/cache
-
-#排除子目录中的bin obj debug release
+#bin obj debug release
 **/bin/
-**/Bin/
 **/obj/
-**/Obj/
-**/Debug/
-**/debug/
-**/Release/
-**/release/
+**/**/bin/
+**/**/obj/
+**/**/**/bin/
+**/**/**/obj/
 
 
 # Packages #
@@ -61,7 +52,21 @@
 *.rar
 *.tar
 *.zip
-*.stsdb4
 
-TradingLibGUI.suo
+# files #
+#########
+*.pdb
+*.cache
+*.tlog
+*.su
+*.stsdb4
+*.data
+*.sdf
+*.bak
+*.project
+*.mdb
+*.userprefs
+
 TradingLib.suo
+.Makefile.swp
+
