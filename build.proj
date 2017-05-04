@@ -7,6 +7,7 @@
 <clrzmqSuffix Condition="'$(OperatingPlatform)' == 'Unix'">-unix</clrzmqSuffix>
 <PackageDir>build\logicsrv\bin</PackageDir>
 <PackageDirDataCore>build\datacore\bin</PackageDirDataCore>
+<PackageDirFrontSrv>build\frontsrv\bin</PackageDirFrontSrv>
 </PropertyGroup>
 
   <ItemGroup>
@@ -59,6 +60,13 @@
     <BuildFilesExecute Include="Platform\TradingSrv\LogicSrv.exe" />
 	<BuildFilesExecute Include="Platform\TradingSrv\FrontSrv.exe" />
   </ItemGroup>
+  <ItemGroup>
+    <BuildFilesFrontSrv Include="lib\TradingLib\TradingLib.API.dll" />
+	<BuildFilesFrontSrv Include="lib\TradingLib\TradingLib.Common.dll" />
+	<BuildFilesFrontSrv Include="lib\TradingLib\TradingLib.XLProtocol.dll" />
+	<BuildFilesFrontSrv Include="Platform\TradingSrv\FrontSrv.exe"" />
+  </ItemGroup>
+  
   <ItemGroup>
     <ConfigFiles Include="Platform\TradingSrv\config\*" />
   </ItemGroup>
@@ -143,8 +151,10 @@
 		<Copy SourceFiles="@(BuildFilesRuleSet)" DestinationFolder="$(PackageDir)\RuleSet" ContinueOnError="false" />
 
 		<Copy SourceFiles="@(LibFiles)" DestinationFolder="$(PackageDir)\RequiredLibraries" ContinueOnError="false" />
-		
 		<Copy SourceFiles="@(BuildFilesExecute)" DestinationFolder="$(PackageDir)" ContinueOnError="false" />
+		
+		<Copy SourceFiles="@(LibFiles)" DestinationFolder="$(PackageDirFrontSrv)\RequiredLibraries" ContinueOnError="false" />
+		<Copy SourceFiles="@(BuildFilesFrontSrv)" DestinationFolder="$(PackageDirFrontSrv)" ContinueOnError="false" />
 	</Target>
 	
 	
