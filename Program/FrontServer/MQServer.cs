@@ -233,7 +233,11 @@ namespace FrontServer
                                             {
                                                 if (packet.Type == MessageTypes.LOGICLIVERESPONSE)
                                                 {
-                                                    _lastHeartBeatRecv = DateTime.Now;
+                                                    LogicLiveResponse response = packet as LogicLiveResponse;
+                                                    if (response.Status == "Live")
+                                                    {
+                                                        _lastHeartBeatRecv = DateTime.Now;
+                                                    }
                                                 }
                                                 if (packet.Type == MessageTypes.NOTIFYCLEARCLIENT)
                                                 {

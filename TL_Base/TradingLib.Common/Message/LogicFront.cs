@@ -32,8 +32,10 @@ namespace TradingLib.Common
         public LogicLiveResponse()
         {
             _type = MessageTypes.LOGICLIVERESPONSE;
+            this.Status = string.Empty;
         }
 
+        public string Status { get; set; }
         public override string ResponseSerialize()
         {
             return "Live";
@@ -41,10 +43,7 @@ namespace TradingLib.Common
 
         public override void ResponseDeserialize(string content)
         {
-            if (string.IsNullOrEmpty(content))
-            {
-                throw new Exception();
-            }
+            this.Status = content;
         }
     }
 
