@@ -36,12 +36,15 @@ namespace TradingLib.Common
 
         public override string ResponseSerialize()
         {
-            return "";
+            return "Live";
         }
 
         public override void ResponseDeserialize(string content)
         {
-            
+            if (string.IsNullOrEmpty(content))
+            {
+                throw new Exception();
+            }
         }
     }
 
