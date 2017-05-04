@@ -60,11 +60,12 @@
     <BuildFilesExecute Include="Platform\TradingSrv\LogicSrv.exe" />
 	<BuildFilesExecute Include="Platform\TradingSrv\FrontSrv.exe" />
   </ItemGroup>
+  
   <ItemGroup>
     <BuildFilesFrontSrv Include="lib\TradingLib\TradingLib.API.dll" />
 	<BuildFilesFrontSrv Include="lib\TradingLib\TradingLib.Common.dll" />
 	<BuildFilesFrontSrv Include="lib\TradingLib\TradingLib.XLProtocol.dll" />
-	<BuildFilesFrontSrv Include="Platform\TradingSrv\FrontSrv.exe"" />
+	<BuildFilesFrontSrv Include="Platform\TradingSrv\FrontSrv.exe" />
   </ItemGroup>
   
   <ItemGroup>
