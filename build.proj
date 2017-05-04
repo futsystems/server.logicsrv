@@ -51,7 +51,14 @@
 		<LibFiles Include="lib\Common.Logging.dll" />
 		<LibFiles Include="lib\Common.Logging.NLog31.dll" />
 		<LibFiles Include="lib\NLog.dll" />
-		<LibFiles Include="lib\NHttp.dll" />			
+		<LibFiles Include="lib\NHttp.dll" />
+		<LibFiles Include="lib\Newtonsoft.Json.dll" />	
+		<LibFiles Include="lib\log4net.dll" />	
+		<LibFiles Include="lib\supersocket\SuperSocket.Common.dll" />	
+		<LibFiles Include="lib\supersocket\SuperSocket.Facility.dll" />	
+		<LibFiles Include="lib\supersocket\SuperSocket.SocketBase.dll" />	
+		<LibFiles Include="lib\supersocket\SuperSocket.SocketEngine.dll" />	
+		<LibFiles Include="lib\supersocket\SuperWebSocket.dll" />
 		<LibFiles Condition=" '$(OperatingPlatform)' == 'Windows' " Include="lib\libzmq\clrzmq-4.x\win\ZeroMQ.dll" />
 		<LibFiles Condition=" '$(OperatingPlatform)' == 'Unix' " Include="lib\libzmq\clrzmq-4.x\mono\ZeroMQ.dll" />
 		<LibFiles Condition=" '$(OperatingPlatform)' == 'Unix' " Include="lib\mono\NodaTime.dll" />
