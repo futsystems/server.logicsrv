@@ -28,6 +28,7 @@ namespace TradingLib.Contrib.APIService
         {
             try
             {
+                
                 string[] path = request.Path.Split('/');
                 if (path.Length < 3)
                 {
@@ -268,7 +269,10 @@ namespace TradingLib.Contrib.APIService
                                     //汇率换算
                                     var rate = account.GetExchangeRate(CurrencyType.RMB);
                                     txn.Amount = txn.Amount * rate;
+                                    decimal nowequity = account.LastEquity + account.CashIn - account.CashOut;
                                     TLCtxHelper.ModuleAccountManager.CashOperation(txn);
+
+                                    logger.Info(string.Format("Deposit-Equity TXN:{0}/{1} AC:{2} RMB:{3} {4} B:{5}", operation.Ref, operation.GateWayType, operation.Account, operation.Amount, txn.Amount, nowequity));
 
                                     //执行手续费收取
                                     if (txn.TxnType == QSEnumCashOperation.Deposit)
@@ -291,33 +295,12 @@ namespace TradingLib.Contrib.APIService
                                             TLCtxHelper.ModuleAccountManager.CashOperation(commissionTxn);
                                         }
                                     }
-                                    //else
-                                    //{
-                                    //    decimal withdrawcommission = account.GetWithdrawCommission();
-                                    //    if (withdrawcommission > 0)
-                                    //    {
-                                    //        decimal commission = 0;
-                                    //        if (withdrawcommission >= 1)
-                                    //        {
-                                    //            commission = withdrawcommission;
-                                    //        }
-                                    //        else
-                                    //        {
-                                    //            commission = txn.Amount * withdrawcommission;
-                                    //        }
-                                    //        var commissionTxn = CashOperation.GenCommissionTransaction(operation);
-                                    //        commissionTxn.Operator = "System";
-                                    //        commissionTxn.Amount = commission;
-                                    //        TLCtxHelper.ModuleAccountManager.CashOperation(commissionTxn);
-                                    //    }
-                                    //}
 
                                     //2.更新出入金操作状态更新
                                     operation.Status = QSEnumCashInOutStatus.CONFIRMED;
                                     operation.Comment = gateway.GetResultComment(request);
                                     ORM.MCashOperation.UpdateCashOperationStatus(operation);
                                     TLCtxHelper.ModuleMgrExchange.Notify("APIService", "NotifyCashOperation", operation, account.GetNotifyPredicate());//通知
-                                    //return "CashOperation Success";
 
                                     //3.如果设置了杠杆比例 则根据入金业务类别执行优先资金调整
                                     var ratio = account.GetLeverageRatio();
@@ -328,6 +311,8 @@ namespace TradingLib.Contrib.APIService
                                         var nowcredit = account.Credit;
                                         var creditTxn = CashOperation.GenCreditTransaction(operation, credit - nowcredit);
                                         TLCtxHelper.ModuleAccountManager.CashOperation(creditTxn);
+                                        logger.Info(string.Format("Deposit-Credit TXN:{0}/{1} AC:{2} SEquity:{3} Credit1:{4} Credit2:{5} Amount:{6}", operation.Ref, operation.GateWayType, operation.Account, equity, nowcredit, account.Credit, creditTxn.Amount));
+
                                     }
                                     return gateway.SuccessReponse;
                                 }
