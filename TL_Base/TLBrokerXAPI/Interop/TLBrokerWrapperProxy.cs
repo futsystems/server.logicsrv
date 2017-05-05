@@ -101,14 +101,14 @@ namespace TradingLib.BrokerXAPI.Interop
             _Login = NativeLib.GetUnmanagedFunction<LoginProc>("Login");
             _SendOrder = NativeLib.GetUnmanagedFunction<SendOrderProc>("SendOrder");
             _SendOrderAction = NativeLib.GetUnmanagedFunction<SendOrderActionProc>("SendOrderAction");
-            _QryInstrument = NativeLib.GetUnmanagedFunction<QryInstrumentProc>("QryInstrument");
+            //_QryInstrument = NativeLib.GetUnmanagedFunction<QryInstrumentProc>("QryInstrument");
             //_Restore = NativeLib.GetUnmanagedFunction<RestoreProc>("Restore");
-            _QryAccountInfo = NativeLib.GetUnmanagedFunction<QryAccountInfoProc>("QryAccountInfo");
-            _QryOrder = NativeLib.GetUnmanagedFunction<QryOrderProc>("QryOrder");
-            _QryTrade = NativeLib.GetUnmanagedFunction<QryTradeProc>("QryTrade");
-            _QryPositionDetail = NativeLib.GetUnmanagedFunction<QryPositionDetailProc>("QryPositionDetail");
-            _Withdraw = NativeLib.GetUnmanagedFunction<WithdrawProc>("Withdraw");
-            _Deposit = NativeLib.GetUnmanagedFunction<DepositProc>("Deposit");
+            //_QryAccountInfo = NativeLib.GetUnmanagedFunction<QryAccountInfoProc>("QryAccountInfo");
+            //_QryOrder = NativeLib.GetUnmanagedFunction<QryOrderProc>("QryOrder");
+            //_QryTrade = NativeLib.GetUnmanagedFunction<QryTradeProc>("QryTrade");
+            //_QryPositionDetail = NativeLib.GetUnmanagedFunction<QryPositionDetailProc>("QryPositionDetail");
+            //_Withdraw = NativeLib.GetUnmanagedFunction<WithdrawProc>("Withdraw");
+            //_Deposit = NativeLib.GetUnmanagedFunction<DepositProc>("Deposit");
 
             _RegOnConnected = NativeLib.GetUnmanagedFunction<RegOnConnectedProc>("RegOnConnected");
             _RegOnDisconnected = NativeLib.GetUnmanagedFunction<RegOnDisconnectedProc>("RegOnDisconnected");
@@ -117,14 +117,14 @@ namespace TradingLib.BrokerXAPI.Interop
             _RegRtnOrder = NativeLib.GetUnmanagedFunction<RegRtnOrderProc>("RegRtnOrder");
             _RegRtnOrderError = NativeLib.GetUnmanagedFunction<RegRtnOrderErrorProc>("RegRtnOrderError");
             _RegRtnOrderActionError = NativeLib.GetUnmanagedFunction<RegRtnOrderActionErrorProc>("RegRtnOrderActionError");
-            _RegOnSymbol = NativeLib.GetUnmanagedFunction<RegOnSymbolProc>("RegOnSymbol");
-            _RegOnAccountInfo = NativeLib.GetUnmanagedFunction<RegOnAccountInfoProc>("RegOnAccountInfo");
-            _RegOnQryOrder = NativeLib.GetUnmanagedFunction<RegOnQryOrderProc>("RegOnQryOrder");
-            _RegOnQryTrade = NativeLib.GetUnmanagedFunction<RegOnQryTradeProc>("RegOnQryTrade");
-            _RegOnQryPositionDetail = NativeLib.GetUnmanagedFunction<RegOnQryPositionDetailProc>("RegOnPositionDetail");
-            _RegOnLog = NativeLib.GetUnmanagedFunction<RegOnLogProc>("RegOnLog");
-            _RegOnMessage = NativeLib.GetUnmanagedFunction<RegOnMessageProc>("RegOnMessage");
-            _RegOnTransfer = NativeLib.GetUnmanagedFunction<RegOnTransferProc>("RegOnTransfer");
+            //_RegOnSymbol = NativeLib.GetUnmanagedFunction<RegOnSymbolProc>("RegOnSymbol");
+            //_RegOnAccountInfo = NativeLib.GetUnmanagedFunction<RegOnAccountInfoProc>("RegOnAccountInfo");
+            //_RegOnQryOrder = NativeLib.GetUnmanagedFunction<RegOnQryOrderProc>("RegOnQryOrder");
+            //_RegOnQryTrade = NativeLib.GetUnmanagedFunction<RegOnQryTradeProc>("RegOnQryTrade");
+            //_RegOnQryPositionDetail = NativeLib.GetUnmanagedFunction<RegOnQryPositionDetailProc>("RegOnPositionDetail");
+            //_RegOnLog = NativeLib.GetUnmanagedFunction<RegOnLogProc>("RegOnLog");
+            //_RegOnMessage = NativeLib.GetUnmanagedFunction<RegOnMessageProc>("RegOnMessage");
+            //_RegOnTransfer = NativeLib.GetUnmanagedFunction<RegOnTransferProc>("RegOnTransfer");
         }
 
 
@@ -262,7 +262,7 @@ namespace TradingLib.BrokerXAPI.Interop
                 return false;
             }
         }
-
+        /*
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
         public delegate bool QryInstrumentProc(IntPtr pWrapper);
         QryInstrumentProc _QryInstrument;
@@ -400,6 +400,7 @@ namespace TradingLib.BrokerXAPI.Interop
                 return false;
             }
         }
+         * **/
 
         #region 注册回调函数接口
         /// <summary>
@@ -468,6 +469,7 @@ namespace TradingLib.BrokerXAPI.Interop
         public delegate void RegRtnOrderActionErrorProc(IntPtr pWrapper, CBRtnOrderActionError cb);
         RegRtnOrderActionErrorProc _RegRtnOrderActionError;
 
+        /*
         /// <summary>
         /// 注册合约回调
         /// </summary>
@@ -506,33 +508,13 @@ namespace TradingLib.BrokerXAPI.Interop
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
         public delegate void RegOnTransferProc(IntPtr pWrapper, CBOnTransfer cb);
         RegOnTransferProc _RegOnTransfer;
-
+        **/
         #endregion
 
 
         #region 回调事件
 
-        CBOnTransfer cbOnTransfer;
-        public event CBOnTransfer OnTransferEvent
-        {
-            add { cbOnTransfer += value; _RegOnTransfer(this.Wrapper, cbOnTransfer); }
-            remove { cbOnTransfer -= value; _RegOnTransfer(this.Wrapper, cbOnTransfer); }
-        }
-
-
-        CBOnMessage cbOnMessage;
-        public event CBOnMessage OnMessageEvent
-        {
-            add { cbOnMessage += value; _RegOnMessage(this.Wrapper, cbOnMessage); }
-            remove { cbOnMessage -= value; _RegOnMessage(this.Wrapper, cbOnMessage); }
-        }
-
-        CBOnLog cbOnLog;
-        public event CBOnLog OnLogEvent
-        {
-            add { cbOnLog += value; _RegOnLog(this.Wrapper, cbOnLog); }
-            remove { cbOnLog -= value; _RegOnLog(this.Wrapper, cbOnLog); }
-        }
+       
 
         CBOnConnected cbBOnConnected;
         public event CBOnConnected OnConnectedEvent
@@ -583,6 +565,29 @@ namespace TradingLib.BrokerXAPI.Interop
             remove { cbRtnOrderActionError -= value; _RegRtnOrderActionError(this.Wrapper, cbRtnOrderActionError); }
         }
 
+        /*
+         *  
+        CBOnTransfer cbOnTransfer;
+        public event CBOnTransfer OnTransferEvent
+        {
+            add { cbOnTransfer += value; _RegOnTransfer(this.Wrapper, cbOnTransfer); }
+            remove { cbOnTransfer -= value; _RegOnTransfer(this.Wrapper, cbOnTransfer); }
+        }
+
+
+        CBOnMessage cbOnMessage;
+        public event CBOnMessage OnMessageEvent
+        {
+            add { cbOnMessage += value; _RegOnMessage(this.Wrapper, cbOnMessage); }
+            remove { cbOnMessage -= value; _RegOnMessage(this.Wrapper, cbOnMessage); }
+        }
+
+        CBOnLog cbOnLog;
+        public event CBOnLog OnLogEvent
+        {
+            add { cbOnLog += value; _RegOnLog(this.Wrapper, cbOnLog); }
+            remove { cbOnLog -= value; _RegOnLog(this.Wrapper, cbOnLog); }
+        }
         CBOnSymbol cbOnSymbol;
         public event CBOnSymbol OnSymbolEvent
         {
@@ -590,6 +595,7 @@ namespace TradingLib.BrokerXAPI.Interop
             remove { cbOnSymbol -= value; _RegOnSymbol(this.Wrapper, cbOnSymbol); }
         }
 
+        
         /// <summary>
         /// 帐户信息回报事件
         /// </summary>
@@ -619,7 +625,7 @@ namespace TradingLib.BrokerXAPI.Interop
         {
             add { cbOnQryPositionDetail += value; _RegOnQryPositionDetail(this.Wrapper, cbOnQryPositionDetail); }
             remove { cbOnQryPositionDetail -= value; _RegOnQryPositionDetail(this.Wrapper, cbOnQryPositionDetail); }
-        }
+        }**/
         #endregion
     }
 }

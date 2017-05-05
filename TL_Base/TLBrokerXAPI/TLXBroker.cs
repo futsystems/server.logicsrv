@@ -456,38 +456,38 @@ namespace TradingLib.BrokerXAPI
             }
         }
 
-        void _wrapper_OnLogEvent(IntPtr pData, int len)
-        {
-            try
-            {
-                byte[] data = new byte[len];
-                Marshal.Copy(pData, data, 0, len);
-                string message = System.Text.Encoding.UTF8.GetString(data, 0, len);
-                logger.Info(message);
-            }
-            catch (Exception ex)
-            {
-                logger.Error("OnLogEvent Error:" + ex.ToString());
-            }
-        }
+        //void _wrapper_OnLogEvent(IntPtr pData, int len)
+        //{
+        //    try
+        //    {
+        //        byte[] data = new byte[len];
+        //        Marshal.Copy(pData, data, 0, len);
+        //        string message = System.Text.Encoding.UTF8.GetString(data, 0, len);
+        //        logger.Info(message);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        logger.Error("OnLogEvent Error:" + ex.ToString());
+        //    }
+        //}
 
-        /// <summary>
-        /// 接口侧返回消息处理
-        /// </summary>
-        /// <param name="pMessage"></param>
-        /// <param name="islast"></param>
-        void _wrapper_OnMessageEvent(ref XErrorField pMessage, bool islast)
-        {
-            try
-            {
-                logger.Info("--TLBroker OnMessageEvent--");
-                NotifyMessage(pMessage);
-            }
-            catch (Exception ex)
-            {
-                logger.Error("OnMessageEvent Error:" + ex.ToString());
-            }
-        }
+        ///// <summary>
+        ///// 接口侧返回消息处理
+        ///// </summary>
+        ///// <param name="pMessage"></param>
+        ///// <param name="islast"></param>
+        //void _wrapper_OnMessageEvent(ref XErrorField pMessage, bool islast)
+        //{
+        //    try
+        //    {
+        //        logger.Info("--TLBroker OnMessageEvent--");
+        //        NotifyMessage(pMessage);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        logger.Error("OnMessageEvent Error:" + ex.ToString());
+        //    }
+        //}
         #endregion
 
 
