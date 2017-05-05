@@ -241,8 +241,8 @@ namespace TradingLib.BrokerXAPI
             //_wrapper.OnQryTradeEvent += new CBOnQryTrade(_wrapper_OnQryTradeEvent);
             //_wrapper.OnQryPositionDetailEvent += new CBOnQryPositionDetail(_wrapper_OnQryPositionDetailEvent);
 
-            _wrapper.OnLogEvent += new CBOnLog(_wrapper_OnLogEvent);
-            _wrapper.OnMessageEvent += new CBOnMessage(_wrapper_OnMessageEvent);
+            //_wrapper.OnLogEvent += new CBOnLog(_wrapper_OnLogEvent);
+            //_wrapper.OnMessageEvent += new CBOnMessage(_wrapper_OnMessageEvent);
             //_wrapper.OnTransferEvent += new CBOnTransfer(_wrapper_OnTransferEvent);
         }
 
