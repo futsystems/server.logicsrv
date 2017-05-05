@@ -50,6 +50,9 @@ namespace TradingLib.Common
         /// 合约样式(期货)
         /// </summary>
         public QSEnumSymbolStyleTypes StyleType { get; set; }
+
+
+        
     }
 
         

@@ -124,11 +124,39 @@ namespace TradingLib.Core
         const int len_COMMISSION = 12;
         const int len_SEQID = 8;
 
+        static Dictionary<string, string> symFormatMap = new Dictionary<string, string>();
+
+        static string GetPriceFormat(string symbol)
+        {
+            string format = string.Empty;
+            if (symFormatMap.TryGetValue(symbol, out format))
+            {
+                return format;
+            }
+            else
+            {
+                string sec = SymbolImpl.ParseSecCode(symbol);
+                SecurityFamily s = BasicTracker.SecurityTracker[1, sec];
+                if (s == null)
+                {
+                    format = "{0:F2}";
+                }
+                else
+                {
+                    format = s.GetPriceFormat();
+                }
+                symFormatMap.Add(symbol, format);
+                return format;
+            }
+        }
+
         static ILog logger = LogManager.GetLogger("SettlementFactory");
         public static List<string> GenSettlementFile(AccountSettlement s, IAccount account)
         {
             try
             {
+                
+
                 List<string> settlelist = new List<string>();
 
                 //查询历史持仓 计算保证金占用
@@ -204,6 +232,7 @@ namespace TradingLib.Core
 
                     foreach (Trade t in trades)
                     {
+                        string fmt = GetPriceFormat(t.Symbol);
                         SecurityFamily sym = account.GetSecurity(t.SecurityCode);
                         decimal rate = account.GetExchangeRate(s.Settleday, sym);
                         i++;
@@ -221,10 +250,10 @@ namespace TradingLib.Core
                             padLeftEx("投", len_TBMM),
                             padCenterEx(t.xPrice.ToFormatStr(), len_PRICE),
                             padRightEx(t.UnsignedSize.ToString(), len_SIZE),
-                            padRightEx((sym.GetMultiple() * t.xPrice * Math.Abs(t.xSize)).ToFormatStr(), len_TURNOVER),
+                            padRightEx((sym.GetMultiple() * t.xPrice * Math.Abs(t.xSize)).ToFormatStr(fmt), len_TURNOVER),
                             padLeftEx(GetCombFlag(t.OffsetFlag), len_TBMM),
-                            padRightEx((t.Commission * rate).ToFormatStr(), len_PRICE),
-                            padRightEx((t.Profit * rate).ToFormatStr(), len_COMMISSION),
+                            padRightEx((t.Commission * rate).ToFormatStr(fmt), len_PRICE),
+                            padRightEx((t.Profit * rate).ToFormatStr(fmt), len_COMMISSION),
                             padRightEx(t.TradeID, len_SEQID)
 
                             ));
@@ -261,7 +290,7 @@ namespace TradingLib.Core
                     int i = 0;
                     int size = 0;
                     decimal profit = 0;
-
+                    
                     settlelist.Add(SectionName("平仓明细"));
                     settlelist.Add(sline);
                     settlelist.Add(string.Format("|{0}|{1}|{2}|{3}|{4}|{5}|{6}|{7}|{8}|{9}|{10}|",
@@ -283,7 +312,7 @@ namespace TradingLib.Core
                     {
                         SecurityFamily sym = account.GetSecurity(t.SecCode);
                         decimal rate = account.GetExchangeRate(s.Settleday, sym);
-
+                        string fmt = GetPriceFormat(t.Symbol);
                         i++;
                         size += t.CloseVolume;
                         profit += t.CloseProfitByDate * rate;
@@ -295,10 +324,10 @@ namespace TradingLib.Core
                             padCenterEx(t.OpenDate.ToString(), len_DATE),
                             padLeftEx((t.Side ? "买" : " 卖"), len_TBMM),
                             padRightEx(t.CloseVolume.ToString(), len_SIZE),
-                            padCenterEx(t.OpenPrice.ToFormatStr(), len_PRICE),
+                            padCenterEx(t.OpenPrice.ToFormatStr(fmt), len_PRICE),
                             padCenterEx(t.LastSettlementPrice.ToFormatStr(), len_PRICE),
-                            padCenterEx(t.ClosePrice.ToFormatStr(), len_PRICE),
-                            padRightEx((t.CloseProfitByDate*rate).ToFormatStr(), len_PROFIT)
+                            padCenterEx(t.ClosePrice.ToFormatStr(fmt), len_PRICE),
+                            padRightEx((t.CloseProfitByDate * rate).ToFormatStr(fmt), len_PROFIT)
                             ));
                     }
                     settlelist.Add(sline);
@@ -360,7 +389,7 @@ namespace TradingLib.Core
                         unpl += 0;
                         unplbydate += pd.PositionProfitByDate;
                         hmargin += pd.Margin;
-
+                        string fmt = GetPriceFormat(pd.Symbol);
                         settlelist.Add(string.Format("|{0}|{1}|{2}|{3}|{4}|{5}|{6}|{7}|{8}|{9}|{10}|{11}|{12}|",
                             padCenterEx(BasicTracker.ExchagneTracker.GetExchangeTitle(pd.Exchange), len_EXCH),
                             padCenterEx(sym.GetSecurityName(), len_SECURITY),
@@ -369,9 +398,9 @@ namespace TradingLib.Core
                             padLeftEx("投", len_TBMM),
                             padLeftEx((pd.Side ? "买" : " 卖"), len_TBMM),
                             padRightEx(pd.Volume.ToString(), len_SIZE),
-                            padCenterEx(pd.OpenPrice.ToFormatStr(), len_PRICE),
-                            padCenterEx(pd.LastSettlementPrice.ToFormatStr(), len_PRICE),
-                            padCenterEx(pd.SettlementPrice.ToFormatStr(), len_PRICE),
+                            padCenterEx(pd.OpenPrice.ToFormatStr(fmt), len_PRICE),
+                            padCenterEx(pd.LastSettlementPrice.ToFormatStr(fmt), len_PRICE),
+                            padCenterEx(pd.SettlementPrice.ToFormatStr(fmt), len_PRICE),
                             padRightEx("0", len_PROFIT),
                             padRightEx(pd.PositionProfitByDate.ToFormatStr(), len_PROFIT),
                             padRightEx(pd.Margin.ToFormatStr(), len_MARGIN),
@@ -418,6 +447,7 @@ namespace TradingLib.Core
 
                     settlelist.Add(SectionName("持仓汇总"));
                     settlelist.Add(sline);
+                   
                     settlelist.Add(string.Format("|{0}|{1}|{2}|{3}|{4}|{5}|{6}|{7}|{8}|{9}|{10}|",
                         padCenterEx("合约", len_SYMBOL),
                         padCenterEx("买持", len_SIZE),
@@ -441,6 +471,7 @@ namespace TradingLib.Core
                         {
 
                             PositionDetail pd = list[0];
+                            string fmt = GetPriceFormat(pd.Symbol);
                             SecurityFamily sym = account.GetSecurity(pd.SecCode);
                             decimal rate = account.GetExchangeRate(s.Settleday, sym);
 
@@ -461,11 +492,11 @@ namespace TradingLib.Core
                             settlelist.Add(string.Format("|{0}|{1}|{2}|{3}|{4}|{5}|{6}|{7}|{8}|{9}|",
                             padCenterEx(pd.Symbol, len_SYMBOL),
                             padRightEx(longsize.ToString(), len_SIZE),
-                            padRightEx(longprice.ToFormatStr(), len_PRICE),
+                            padRightEx(longprice.ToFormatStr(fmt), len_PRICE),
                             padRightEx(shortsize.ToString(), len_SIZE),
-                            padRightEx(shortprice.ToFormatStr(), len_PRICE),
-                            padCenterEx(pd.LastSettlementPrice.ToFormatStr(), len_PRICE),
-                            padCenterEx(pd.SettlementPrice.ToFormatStr(), len_PRICE),
+                            padRightEx(shortprice.ToFormatStr(fmt), len_PRICE),
+                            padCenterEx(pd.LastSettlementPrice.ToFormatStr(fmt), len_PRICE),
+                            padCenterEx(pd.SettlementPrice.ToFormatStr(fmt), len_PRICE),
                             padRightEx(settleunpl.ToFormatStr(), len_PROFIT),
                             padRightEx(lmargin.ToFormatStr(), len_MARGIN),
                             padRightEx((lmargin * rate).ToFormatStr(), len_MARGIN),

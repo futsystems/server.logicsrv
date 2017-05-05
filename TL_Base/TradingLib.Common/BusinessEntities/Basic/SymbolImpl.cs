@@ -422,6 +422,35 @@ namespace TradingLib.Common
         }
 
         #region 辅助函数 转换国外合约月份字母
+
+        //解析推断出合约对应的品种
+        public static string ParseSecCode(string symbol)
+        {
+            string expire = symbol.Substring(symbol.Length - 4, 4);
+            int t = 0;
+            string code = string.Empty;
+            //后四位是数字IF1704 则截取后四位
+            if (int.TryParse(expire, out t))
+            {
+                code = symbol.Substring(0, symbol.Length - 4);
+            }
+            else
+            {
+                //后三位是数字 郑商所SM709
+                expire = symbol.Substring(symbol.Length - 3, 3);
+                if (int.TryParse(expire, out t))
+                {
+                    code = symbol.Substring(0, symbol.Length - 3);
+                }
+                else
+                {
+                    //CLZ7 外盘合约格式
+                    code = symbol.Substring(0, symbol.Length - 2);
+                }
+                
+            }
+            return code;
+        }
         public static string MonthLetter2Num(string month)
         {
             if (month == "F")
