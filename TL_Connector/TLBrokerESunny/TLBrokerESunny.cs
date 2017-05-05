@@ -440,6 +440,17 @@ namespace Broker.Live
                 action.BrokerLocalOrderID = sonorder.BrokerLocalOrderID;
                 action.BrokerRemoteOrderID = sonorder.BrokerRemoteOrderID;
                 action.ID = sonorder.id.ToString();
+                /*
+                 * C接口撤单操作 通过BrokerRemoteOrderID进行撤单 此处需要判定BrokerRemoteOrderID是否为空 需要置零否则未收到委托回报 发送撤单会导致C接口异常
+                    TEsOrderDeleteReqField req;
+                    memset(&req,0,sizeof(req));
+                    req.OrderId = str2int(pAction->BrokerRemoteOrderID);
+                    int ret = Tap_Api->OrderDelete(req,++m_lRequestID);
+                 */
+                if (string.IsNullOrEmpty(action.BrokerRemoteOrderID))
+                {
+                    action.BrokerRemoteOrderID = "0";
+                }
                 bool ret = WrapperSendOrderAction(ref action);
                 logger.Info(string.Format("Send OrderAction:{0}", ret ? "Success" : "Fail"));
             }

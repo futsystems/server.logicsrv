@@ -139,7 +139,16 @@ namespace TradingLib.Common
         /// <returns></returns>
         public static IEnumerable<Order> GetPendingExitOrders(this IAccount account, string symbol, bool positionside)
         {
-            return account.Orders.Where(o => (o.Symbol.Equals(symbol)) && o.IsPending() && (o.PositionSide == positionside) && (!o.IsEntryPosition));
+            List<Order> tmp = new List<Order>();
+            foreach (var o in account.Orders)
+            {
+                if ((o.Symbol.Equals(symbol)) && o.IsPending() && (o.PositionSide == positionside) && (!o.IsEntryPosition))
+                {
+                    tmp.Add(o);
+                }
+            }
+            return tmp;
+            //return account.Orders.Where(o => (o.Symbol.Equals(symbol)) && o.IsPending() && (o.PositionSide == positionside) && (!o.IsEntryPosition));
         }
 
         /// <summary>
