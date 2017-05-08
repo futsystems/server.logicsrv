@@ -366,7 +366,7 @@ namespace Broker.Live
                         Tick k = TLCtxHelper.ModuleDataRouter.GetTickSnapshot(o.Exchange,o.Symbol);
                         if (k != null)
                         {
-                            o.LimitPrice = o.Side ? (k.AskPrice + 5 * o.oSymbol.SecurityFamily.PriceTick) : (k.BidPrice - 100 * o.oSymbol.SecurityFamily.PriceTick);
+                            o.LimitPrice = o.Side ? (k.AskPrice + 5 * o.oSymbol.SecurityFamily.PriceTick) : (k.BidPrice - 5 * o.oSymbol.SecurityFamily.PriceTick);
                         }
                     }
                 }
