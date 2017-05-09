@@ -31,6 +31,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="BouncyCastle.Crypto">
+      <HintPath>..\..\lib\BouncyCastle.Crypto.dll</HintPath>
+    </Reference>
     <Reference Include="Common.Logging">
       <HintPath>..\..\lib\Common.Logging.dll</HintPath>
     </Reference>
@@ -68,6 +71,7 @@
     <Compile Include="APIService.cs" />
     <Compile Include="APIService_Counter.cs" />
     <Compile Include="Drop\DropAliPayPayment.cs" />
+    <Compile Include="Drop\DropDinpayment.cs" />
     <Compile Include="Drop\DropIPSPayment.cs" />
     <Compile Include="Drop\DropUnspayPayment.cs" />
     <Compile Include="Handler\APIHandler.cs" />
@@ -85,6 +89,8 @@
     <Compile Include="PaymentGateway\AliyPay\AliPayGateWay.cs" />
     <Compile Include="PaymentGateway\AliyPay\AliPayMD5.cs" />
     <Compile Include="PaymentGateway\BaoFu\BaoFuGateway.cs" />
+    <Compile Include="PaymentGateway\dinpay\DinpayGateWay.cs" />
+    <Compile Include="PaymentGateway\dinpay\DinpayHelp.cs" />
     <Compile Include="PaymentGateway\GateWayBase.cs" />
     <Compile Include="PaymentGateway\GateWayType.cs" />
     <Compile Include="PaymentGateway\IPS\IPSGateWay.cs" />

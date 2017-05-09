@@ -26,5 +26,10 @@ namespace TradingLib.Contrib.APIService
         /// 银生宝
         /// </summary>
         UnsPay,
+
+        /// <summary>
+        /// 智付
+        /// </summary>
+        DinPay,
     }
 }

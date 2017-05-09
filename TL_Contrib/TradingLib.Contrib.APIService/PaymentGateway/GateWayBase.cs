@@ -68,6 +68,8 @@ namespace TradingLib.Contrib.APIService
                     return new IPSGateWay(config);
                 case QSEnumGateWayType.UnsPay:
                     return new UnspayGateWay(config);
+                case QSEnumGateWayType.DinPay:
+                    return new DinpayGateWay(config);
                 default:
                     return null;
             }

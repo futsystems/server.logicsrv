@@ -1,0 +1,24 @@
+﻿<html>
+<head>
+	<title>确认入金信息</title>
+</head>
+
+<body onload="document.dinpaysubmit.submit()">
+<form name='dinpaysubmit' method="post" action="{{data.Pay_Url}}" class="uk-panel uk-panel-box uk-form">
+	<input name='input_charset' type='hidden' value= "{{data.Input_Chartset}}"/>
+	<input name='interface_version' type='hidden' value= "{{data.Interface_Version}}"/>
+	<input name='merchant_code' type='hidden' value= "{{data.Marchant_Code}}"/>
+	<input name='notify_url' type='hidden' value= "{{data.Notify_Url}}"/>
+	<input name='order_amount' type='hidden' value= "{{data.Order_Amount}}"/>		
+	<input name='order_no' type='hidden' value= "{{data.Order_No}}" />
+	<input name='order_time' type='hidden' value= "{{data.Order_Time}}" />
+	<input name='pay_type' type='hidden' value= "{{data.Pay_Type}}"/>
+	<input name='product_name' type='hidden' value= "{{data.Product_Name}}"/>
+	<input name='return_url' type='hidden' value= "{{data.Return_Url}}"/>
+	<input name='service_type' type='hidden' value= "{{data.Service_Type}}"/>	
+	<input name='sign' type='hidden' value="{{data.Sign}}"/>
+	<input name='sign_type' type='hidden' value="{{data.Sign_Type}}"/>
+</form>
+				
+</body>
+</html>

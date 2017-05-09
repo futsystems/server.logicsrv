@@ -220,6 +220,11 @@ namespace TradingLib.Contrib.APIService
                                         operation = UnspayGateWay.GetCashOperation(request.Params);
                                         break;
                                     }
+                                case "DINPAY":
+                                    {
+                                        operation = DinpayGateWay.GetCashOperation(request.Params);
+                                        break;
+                                    }
                                 default:
                                     {
                                         return "Not Support Gateway";
@@ -356,6 +361,11 @@ namespace TradingLib.Contrib.APIService
                                 case "UNSPAY":
                                     {
                                         operation = UnspayGateWay.GetCashOperation(request.Params);
+                                        break;
+                                    }
+                                case "DINPAY":
+                                    {
+                                        operation = DinpayGateWay.GetCashOperation(request.Params);
                                         break;
                                     }
                                 default:
