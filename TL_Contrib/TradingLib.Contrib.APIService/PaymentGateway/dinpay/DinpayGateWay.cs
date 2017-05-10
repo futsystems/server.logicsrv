@@ -33,7 +33,6 @@ namespace TradingLib.Contrib.APIService
                 
                 var val = data["Domain"];
                 this.Domain = val == null ? string.Empty : val.ToString();
-
                 this.PayDirectUrl = this.PayDirectUrl.Replace(APIGlobal.LocalIPAddress, this.Domain);
 
             }
