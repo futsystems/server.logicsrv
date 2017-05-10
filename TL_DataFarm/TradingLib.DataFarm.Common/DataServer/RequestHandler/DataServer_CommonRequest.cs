@@ -33,14 +33,26 @@ namespace TradingLib.DataFarm.Common
         {
 
             VersionResponse response = ResponseTemplate<VersionResponse>.SrvSendRspResponse(request);
-            TLVersion v = new TLVersion();
-            v.ProductType = QSEnumProductType.CounterSystem;
-            v.Platfrom = PlatformID.Unix;
-            v.Major = 1;
-            v.Minor = 0;
-            v.Fix = 0;
-            v.DeployID = "demo";
-            response.Version = v;
+            //TLVersion v = new TLVersion();
+            //v.ProductType = QSEnumProductType.CounterSystem;
+            //v.Platfrom = PlatformID.Unix;
+            //v.Major = 1;
+            //v.Minor = 0;
+            //v.Fix = 0;
+            //v.DeployID = "demo";
+            string key = request.NegotiationKey;
+            string strval = request.NegotiationString;
+            key = string.IsNullOrEmpty(key) ? "1123123" : key;
+            strval = string.IsNullOrEmpty(strval) ? "2123131222" : strval;
+
+            TLNegotiation neo = new TLNegotiation();
+            neo.DeployID = string.Empty;
+            neo.NegoResponse = StringCipher.Encrypt(strval,key);
+            neo.PlatformID = System.Environment.OSVersion.Platform;
+            neo.Product = "DataSite";
+            neo.TLProtoclType = EnumTLProtoclType.TL_Encrypted;
+            response.Negotiation = neo;
+
             this.SendData(conn, response);
 
         }

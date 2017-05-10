@@ -81,7 +81,6 @@
     <Compile Include="Follow\FollowStrategyLite.cs" />
     <Compile Include="Follow\FollowStrategyStatus.cs" />
     <Compile Include="Follow\SignalConfig.cs" />
-    <Compile Include="Utils\StringCipher.cs" />
     <Compile Include="Utils\Util_Json.cs" />
     <Compile Include="BusinessEntities\Basic\Holiday\Calendar.cs" />
     <Compile Include="BusinessEntities\Basic\Holiday\HolidayCalculator.cs" />

@@ -49,11 +49,9 @@ namespace TradingLib.Common
             string [] rec = reqstr.Split(',');
             this.ClientVersion = rec[0];
             this.DeviceType = rec[1];
-            if (rec.Length > 2)
-            {
-                this.NegotiationKey = rec[2];
-                this.NegotiationString = rec[3];
-            }
+            this.NegotiationKey = rec[2];
+            this.NegotiationString = rec[3];
+            
         }
     }
 

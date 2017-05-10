@@ -21,15 +21,23 @@ namespace TradingLib.DataFarm.Common
         /// 
         /// </summary>
         /// <param name="month">加载几个月以内的日内数据</param>
-        public MemoryBarDB(int intradayMonth)
+        public MemoryBarDB(bool loadhist,int intradayMonth)
         {
-            Global.Profile.EnterSection("Bar Load From DB");
-            logger.Info("Load Intraday Bars");
-            intradayBars = MBar.LoadIntradayBars(DateTime.Now.AddMonths(-intradayMonth));
-            logger.Info("Load Eod Bars");
-            eodBars = MBar.LoadEodBars(DateTime.Now.AddYears(-3));
-            Global.Profile.LeaveSection();
-            logger.Info(Global.Profile.GetStatsString());
+            if (loadhist)
+            {
+                Global.Profile.EnterSection("Bar Load From DB");
+                logger.Info("Load Intraday Bars");
+                intradayBars = MBar.LoadIntradayBars(DateTime.Now.AddMonths(-intradayMonth));
+                logger.Info("Load Eod Bars");
+                eodBars = MBar.LoadEodBars(DateTime.Now.AddYears(-3));
+                Global.Profile.LeaveSection();
+                logger.Info(Global.Profile.GetStatsString());
+            }
+            else
+            {
+                intradayBars = new List<BarImpl>();
+                eodBars = new List<BarImpl>();
+            }
 
         }
         /// <summary>

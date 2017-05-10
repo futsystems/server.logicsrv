@@ -80,6 +80,7 @@
     <Compile Include="Common\DataFeedTime.cs" />
     <Compile Include="Common\IHistDataStore.cs" />
     <Compile Include="Common\PluginHelper.cs" />
+    <Compile Include="Common\StringCipher.cs" />
     <Compile Include="Common\Util.cs" />
     <Compile Include="Common\Util_Symbol.cs" />
     <Compile Include="ConstantData.cs" />
