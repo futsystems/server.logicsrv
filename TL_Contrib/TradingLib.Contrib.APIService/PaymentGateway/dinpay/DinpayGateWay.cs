@@ -30,6 +30,12 @@ namespace TradingLib.Contrib.APIService
                 this.MerchantCode = data["MerCode"].ToString();
                 this.PrivateKey = data["MerPrivateKey"].ToString();
                 this.DinPayKey = data["DinPublickKey"].ToString();
+                
+                var val = data["Domain"];
+                this.Domain = val == null ? string.Empty : val.ToString();
+
+                this.PayDirectUrl = this.PayDirectUrl.Replace(APIGlobal.LocalIPAddress, this.Domain);
+
             }
             catch (Exception ex)
             {
@@ -42,6 +48,7 @@ namespace TradingLib.Contrib.APIService
         public string DinPayKey = "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCWOq5aHSTvdxGPDKZWSl6wrPpnMHW+8lOgVU71jB2vFGuA6dwa/RpJKnz9zmoGryZlgUmfHANnN0uztkgwb+5mpgmegBbNLuGqqHBpQHo2EsiAhgvgO3VRmWC8DARpzNxknsJTBhkUvZdy4GyrjnUrvsARg4VrFzKDWL0Yu3gunQIDAQAB";
         public string PayUrl { get; set; }
 
+        public string Domain { get; set; }
 
         public override Drop CreatePaymentDrop(CashOperation operatioin)
         {
