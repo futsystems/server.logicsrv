@@ -56,6 +56,12 @@
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
+    <Reference Include="TradingLib.API">
+      <HintPath>..\..\lib\TradingLib\TradingLib.API.dll</HintPath>
+    </Reference>
+    <Reference Include="TradingLib.Common">
+      <HintPath>..\..\lib\TradingLib\TradingLib.Common.dll</HintPath>
+    </Reference>
     <Reference Include="WebSocket4Net">
       <HintPath>lib\WebSocket4Net.dll</HintPath>
     </Reference>

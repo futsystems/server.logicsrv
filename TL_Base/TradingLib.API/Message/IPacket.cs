@@ -37,6 +37,19 @@ namespace TradingLib.API
         LOCATIONNOTIFYRESPONSE=4,
     }
 
+    public enum EnumTLProtoclType
+    {
+        /// <summary>
+        /// TL字符串文本协议
+        /// </summary>
+        TL_Character,
+
+        /// <summary>
+        /// TL字符串文本协议加密
+        /// </summary>
+        TL_Encrypted,
+    }
+
     /// <summary>
     /// 通讯消息Message用于系统底层通讯
     /// Package基于Message构成了具体消息的逻辑结构
@@ -67,6 +80,16 @@ namespace TradingLib.API
         /// 对应的消息类型
         /// </summary>
         MessageTypes Type { get;}
+
+        /// <summary>
+        /// TL协议类型 加密/明文
+        /// </summary>
+        EnumTLProtoclType TLProtoclType { get; set; }
+
+        /// <summary>
+        /// 加密密钥
+        /// </summary>
+        string EncryptKey { get; set; }
 
         /// <summary>
         /// 对应的消息内容

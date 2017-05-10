@@ -25,6 +25,10 @@ namespace TradingLib.Common
 
         public string DeviceType {get;set;}
 
+        public string NegotiationKey { get; set; }
+
+        public string NegotiationString { get; set; }
+
         public override string ContentSerialize()
         {
             StringBuilder sb = new StringBuilder();
@@ -32,6 +36,11 @@ namespace TradingLib.Common
             sb.Append(this.ClientVersion);
             sb.Append(d);
             sb.Append(this.DeviceType);
+            sb.Append(d);
+            sb.Append(this.NegotiationKey);
+            sb.Append(d);
+            sb.Append(this.NegotiationString);
+
             return sb.ToString();
         }
 
@@ -40,6 +49,11 @@ namespace TradingLib.Common
             string [] rec = reqstr.Split(',');
             this.ClientVersion = rec[0];
             this.DeviceType = rec[1];
+            if (rec.Length > 2)
+            {
+                this.NegotiationKey = rec[2];
+                this.NegotiationString = rec[3];
+            }
         }
     }
 
@@ -49,23 +63,28 @@ namespace TradingLib.Common
         public VersionResponse()
         {
             _type = API.MessageTypes.VERSIONRESPONSE;
+            this.Negotiation = null;
         }
 
-        public TLVersion Version { get; set; }
+        //public TLVersion Version { get; set; }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        public TLNegotiation Negotiation { get; set; }
         public override string ResponseSerialize()
         {
-            if (this.Version == null)
+            if (this.Negotiation == null)
                 return string.Empty;
-            return TLVersion.Serialize(this.Version);
+            return TLNegotiation.Serialize(this.Negotiation);
         }
 
 
         public override void ResponseDeserialize(string repstr)
         {
             if (string.IsNullOrEmpty(repstr))
-                this.Version = null;
-            this.Version = TLVersion.Deserialize(repstr);
+                this.Negotiation = null;
+            this.Negotiation = TLNegotiation.Deserialize(repstr);
         }
         
     }

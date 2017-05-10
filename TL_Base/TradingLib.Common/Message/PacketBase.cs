@@ -334,6 +334,9 @@ namespace TradingLib.Common
             RequestID = 0;
             PacketType = QSEnumPacketType.UNKNOWN;
             _type = MessageTypes.UNKNOWN_MESSAGE;
+            TLProtoclType = EnumTLProtoclType.TL_Character;
+            EncryptKey = "123456";
+
         }
 
         public QSEnumPacketType PacketType { get; protected set; }
@@ -363,10 +366,46 @@ namespace TradingLib.Common
         public MessageTypes Type { get { return _type; } }
 
 
+        public EnumTLProtoclType TLProtoclType { get; set; }
+
+        public string EncryptKey { get; set; }
+
         /// <summary>
         /// Packet对应的底层传输的二进制数据 用于提供给底层传输传进行传输
         /// </summary>
-        public virtual byte[] Data { get { return Message.sendmessage(Type, Content); } }
+        public virtual byte[] Data
+        {
+            get
+            {
+                //if (this.TLProtoclType == EnumTLProtoclType.TL_Encrypted)
+                //{
+                //    switch (this.Type)
+                //    {
+                //        case MessageTypes.XQRYMARKETTIME:
+                //        //case MessageTypes.XMARKETTIMERESPONSE:
+                //            {
+                //                string encContent = StringCipher.Encrypt(Content, this.EncryptKey);
+                //                return Message.sendmessage(Type, encContent);
+                //            }
+                //        default:
+                //            break;
+                //    }
+                    
+                //}
+                //switch (this.Type)
+                //{ 
+                //    case MessageTypes.XQRYMARKETTIME:
+                //        string encContent = StringCipher.Encrypt(Content, this.EncryptKey);
+                //        return Message.sendmessage(Type, encContent);
+                //    default:
+                //        break;
+
+                //}
+                return Message.sendmessage(Type, Content);
+
+            }
+        
+        }
 
 
         /// <summary>

@@ -325,7 +325,15 @@ namespace TradingLib.Core
         {
             logger.Debug(string.Format("Client:{0} Try to qry version", client.Location.ClientID));
             VersionResponse verresp = ResponseTemplate<VersionResponse>.SrvSendRspResponse(request);
-            verresp.Version = TLCtxHelper.Version;
+            //交易客户端认证 然后回报version response
+            TLNegotiation nego = new TLNegotiation();
+            nego.DeployID = TLCtxHelper.Version.DeployID;
+            nego.PlatformID = TLCtxHelper.Version.Platfrom;
+            nego.TLProtoclType = EnumTLProtoclType.TL_Encrypted;
+            nego.Version = TLCtxHelper.Version.Version;
+            nego.Product = "BrokerSite";
+            nego.NegoResponse = StringCipher.Encrypt(request.NegotiationString, request.NegotiationKey);
+            verresp.Negotiation = nego;
             SendOutPacket(verresp);
         }
 

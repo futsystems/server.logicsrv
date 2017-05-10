@@ -30,6 +30,7 @@
         {
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.btnExQrySettle = new System.Windows.Forms.Button();
             this.btnHeartBeat = new System.Windows.Forms.Button();
             this.exapiverbose = new System.Windows.Forms.CheckBox();
             this.btnExCancelOrder = new System.Windows.Forms.Button();
@@ -109,11 +110,19 @@
             this.button1 = new System.Windows.Forms.Button();
             this.tabPage4 = new System.Windows.Forms.TabPage();
             this.debugControl1 = new APIClient.DebugControl();
-            this.btnExQrySettle = new System.Windows.Forms.Button();
+            this.label21 = new System.Windows.Forms.Label();
+            this.btnEncode = new System.Windows.Forms.Button();
+            this.ekey = new System.Windows.Forms.TextBox();
+            this.label22 = new System.Windows.Forms.Label();
+            this.rawstr = new System.Windows.Forms.TextBox();
+            this.label23 = new System.Windows.Forms.Label();
+            this.encstr = new System.Windows.Forms.TextBox();
+            this.btnDecode = new System.Windows.Forms.Button();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tabPage2.SuspendLayout();
             this.tabPage3.SuspendLayout();
+            this.tabPage4.SuspendLayout();
             this.SuspendLayout();
             // 
             // tabControl1
@@ -162,6 +171,15 @@
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "Socket/二进制";
             this.tabPage1.UseVisualStyleBackColor = true;
+            // 
+            // btnExQrySettle
+            // 
+            this.btnExQrySettle.Location = new System.Drawing.Point(146, 193);
+            this.btnExQrySettle.Name = "btnExQrySettle";
+            this.btnExQrySettle.Size = new System.Drawing.Size(75, 23);
+            this.btnExQrySettle.TabIndex = 22;
+            this.btnExQrySettle.Text = "QrySettle";
+            this.btnExQrySettle.UseVisualStyleBackColor = true;
             // 
             // btnHeartBeat
             // 
@@ -893,6 +911,14 @@
             // 
             // tabPage4
             // 
+            this.tabPage4.Controls.Add(this.btnDecode);
+            this.tabPage4.Controls.Add(this.encstr);
+            this.tabPage4.Controls.Add(this.label23);
+            this.tabPage4.Controls.Add(this.rawstr);
+            this.tabPage4.Controls.Add(this.label22);
+            this.tabPage4.Controls.Add(this.ekey);
+            this.tabPage4.Controls.Add(this.btnEncode);
+            this.tabPage4.Controls.Add(this.label21);
             this.tabPage4.Location = new System.Drawing.Point(4, 22);
             this.tabPage4.Name = "tabPage4";
             this.tabPage4.Padding = new System.Windows.Forms.Padding(3);
@@ -916,14 +942,71 @@
             this.debugControl1.TimeStamps = true;
             this.debugControl1.UseExternalTimeStamp = false;
             // 
-            // btnExQrySettle
+            // label21
             // 
-            this.btnExQrySettle.Location = new System.Drawing.Point(146, 193);
-            this.btnExQrySettle.Name = "btnExQrySettle";
-            this.btnExQrySettle.Size = new System.Drawing.Size(75, 23);
-            this.btnExQrySettle.TabIndex = 22;
-            this.btnExQrySettle.Text = "QrySettle";
-            this.btnExQrySettle.UseVisualStyleBackColor = true;
+            this.label21.AutoSize = true;
+            this.label21.Location = new System.Drawing.Point(30, 20);
+            this.label21.Name = "label21";
+            this.label21.Size = new System.Drawing.Size(29, 12);
+            this.label21.TabIndex = 0;
+            this.label21.Text = "密钥";
+            // 
+            // btnEncode
+            // 
+            this.btnEncode.Location = new System.Drawing.Point(337, 44);
+            this.btnEncode.Name = "btnEncode";
+            this.btnEncode.Size = new System.Drawing.Size(75, 23);
+            this.btnEncode.TabIndex = 1;
+            this.btnEncode.Text = "加密";
+            this.btnEncode.UseVisualStyleBackColor = true;
+            // 
+            // ekey
+            // 
+            this.ekey.Location = new System.Drawing.Point(65, 11);
+            this.ekey.Name = "ekey";
+            this.ekey.Size = new System.Drawing.Size(147, 21);
+            this.ekey.TabIndex = 2;
+            // 
+            // label22
+            // 
+            this.label22.AutoSize = true;
+            this.label22.Location = new System.Drawing.Point(30, 55);
+            this.label22.Name = "label22";
+            this.label22.Size = new System.Drawing.Size(29, 12);
+            this.label22.TabIndex = 3;
+            this.label22.Text = "原文";
+            // 
+            // rawstr
+            // 
+            this.rawstr.Location = new System.Drawing.Point(77, 52);
+            this.rawstr.Name = "rawstr";
+            this.rawstr.Size = new System.Drawing.Size(203, 21);
+            this.rawstr.TabIndex = 4;
+            // 
+            // label23
+            // 
+            this.label23.AutoSize = true;
+            this.label23.Location = new System.Drawing.Point(30, 91);
+            this.label23.Name = "label23";
+            this.label23.Size = new System.Drawing.Size(29, 12);
+            this.label23.TabIndex = 5;
+            this.label23.Text = "密文";
+            // 
+            // encstr
+            // 
+            this.encstr.Location = new System.Drawing.Point(77, 88);
+            this.encstr.Name = "encstr";
+            this.encstr.Size = new System.Drawing.Size(203, 21);
+            this.encstr.TabIndex = 6;
+            // 
+            // btnDecode
+            // 
+            this.btnDecode.Location = new System.Drawing.Point(337, 91);
+            this.btnDecode.Name = "btnDecode";
+            this.btnDecode.Size = new System.Drawing.Size(75, 23);
+            this.btnDecode.TabIndex = 7;
+            this.btnDecode.Text = "解密";
+            this.btnDecode.UseVisualStyleBackColor = true;
             // 
             // Form1
             // 
@@ -942,6 +1025,8 @@
             this.tabPage2.PerformLayout();
             this.tabPage3.ResumeLayout(false);
             this.tabPage3.PerformLayout();
+            this.tabPage4.ResumeLayout(false);
+            this.tabPage4.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -1030,6 +1115,14 @@
         private System.Windows.Forms.TextBox mdInterval;
         private System.Windows.Forms.Label label20;
         private System.Windows.Forms.Button btnExQrySettle;
+        private System.Windows.Forms.TextBox ekey;
+        private System.Windows.Forms.Button btnEncode;
+        private System.Windows.Forms.Label label21;
+        private System.Windows.Forms.Label label22;
+        private System.Windows.Forms.TextBox rawstr;
+        private System.Windows.Forms.TextBox encstr;
+        private System.Windows.Forms.Label label23;
+        private System.Windows.Forms.Button btnDecode;
     }
 }
 

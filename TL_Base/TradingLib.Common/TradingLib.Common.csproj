@@ -69,6 +69,7 @@
     <Compile Include="BusinessEntities\BinaryOption\Utils\BinaryOptionUtisl.cs" />
     <Compile Include="BusinessEntities\BinaryOption\Util_TimeSpan.cs" />
     <Compile Include="BusinessEntities\Rule\RuleTimeSpan.cs" />
+    <Compile Include="Client\TLNegotiation.cs" />
     <Compile Include="Exception\BaseException.cs" />
     <Compile Include="Exception\DataRepositoryException.cs" />
     <Compile Include="Exception\TradingLibError.cs" />
@@ -80,6 +81,7 @@
     <Compile Include="Follow\FollowStrategyLite.cs" />
     <Compile Include="Follow\FollowStrategyStatus.cs" />
     <Compile Include="Follow\SignalConfig.cs" />
+    <Compile Include="Utils\StringCipher.cs" />
     <Compile Include="Utils\Util_Json.cs" />
     <Compile Include="BusinessEntities\Basic\Holiday\Calendar.cs" />
     <Compile Include="BusinessEntities\Basic\Holiday\HolidayCalculator.cs" />

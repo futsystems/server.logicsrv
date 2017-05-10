@@ -88,6 +88,21 @@ namespace APIClient
             btnQryBar2.Click += new EventHandler(btnQryBar2_Click);
 
             btnHeartBeat.Click += new EventHandler(btnHeartBeat_Click);
+
+            btnEncode.Click += new EventHandler(btnEncode_Click);
+            btnDecode.Click += new EventHandler(btnDecode_Click);
+        }
+
+        void btnDecode_Click(object sender, EventArgs e)
+        {
+            //string ret = TradingLib.Common.StringCipher.Decrypt(encstr.Text, ekey.Text);
+            //logger.Info("ret:" + ret);
+        }
+
+        void btnEncode_Click(object sender, EventArgs e)
+        {
+            //string ret = TradingLib.Common.StringCipher.Encrypt(rawstr.Text, ekey.Text);
+            //logger.Info("ret:" + ret);
         }
 
 

@@ -103,11 +103,11 @@ namespace TradingLib.Common
             }
         }
        
-        private TLVersion _serverversion;
+        private TLNegotiation _negotiation;
         /// <summary>
         /// 当前连接服务端版本信息
         /// </summary>
-        public TLVersion ServerVersion { get { return _serverversion; } }
+        public TLNegotiation Negotiatioin { get { return _negotiation; } }
 
         
         /// <summary>
@@ -133,6 +133,10 @@ namespace TradingLib.Common
         /// </summary>
         public event DisconnectDel OnDisconnectEvent;
 
+        /// <summary>
+        /// 服务端与客户端配对检查
+        /// </summary>
+        public event Action<TLNegotiation, string, string> OnNegotiationEvent;
         /// <summary>
         /// 数据包事件
         /// </summary>
@@ -578,6 +582,9 @@ namespace TradingLib.Common
             TLSend(request);
         }
 
+        string neoKey = string.Empty;
+        string neoString = string.Empty;
+
         /// <summary>
         /// 请求服务器版本
         /// </summary>
@@ -587,6 +594,11 @@ namespace TradingLib.Common
             VersionRequest request = RequestTemplate<VersionRequest>.CliSendRequest(requestid++);
             request.ClientVersion = "2.0";
             request.DeviceType = "PC";
+            neoKey = Util.GetRandomString(8);
+            neoString = Util.GetRandomString(12);
+            request.NegotiationKey = neoKey;
+            request.NegotiationString = neoString;
+
             TLSend(request);
         }
 
@@ -625,18 +637,35 @@ namespace TradingLib.Common
             //注册成功后查询服务端版本信息
             RequestServerVersion();
         }
+
+        
         /// <summary>
         /// 客户端响应版本查询请求回报
         /// </summary>
         /// <param name="response"></param>
         void CliOnVersionResponse(VersionResponse response)
         {
-            _serverversion = response.Version;
-            //_uuid = response.ClientUUID;
-            logger.Info("Client got version response:"+_serverversion.ToString());
-            //获得服务端版本后请求功能列表
-            RequestFeatures();
+            _negotiation = response.Negotiation;
+            if (response.Negotiation == null)
+            {
+                //logger.Info("no negotiation provided");
+            }
+            else
+            {
+                logger.Info(string.Format("Client got version response,DeoloyID:{0} Platform:{1} Version:{2}", response.Negotiation.DeployID, response.Negotiation.PlatformID, response.Negotiation.Version));
+            }
 
+            CallNegotiation();
+
+            RequestFeatures();
+        }
+
+        void CallNegotiation()
+        {
+            if (OnNegotiationEvent != null)
+            {
+                OnNegotiationEvent(_negotiation, neoKey, neoString);
+            }
         }
 
         /// <summary>
