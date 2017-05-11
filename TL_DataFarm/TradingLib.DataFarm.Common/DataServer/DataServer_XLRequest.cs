@@ -55,7 +55,7 @@ namespace TradingLib.DataFarm.Common
                             pkt.AddField(rsp);
                             pkt.AddField(field);
 
-                            if (conn.ProtocolType == EnumConnProtocolType.XL)
+                            if (conn.FrontType == EnumFrontType.XLTinny)
                             {
                                 byte[] ret = XLPacketData.PackToBytes(pkt, XLEnumSeqType.SeqReq, (uint)0, (uint)requestId, true);
                                 SendData(conn, ret);
@@ -128,12 +128,12 @@ namespace TradingLib.DataFarm.Common
                                 XLPacketData pkt = new XLPacketData(XLMessageType.T_RSP_SYMBOL);
                                 pkt.AddField(field);
 
-                                if (conn.ProtocolType == EnumConnProtocolType.XL)
+                                if (conn.FrontType == EnumFrontType.XLTinny)
                                 {
                                     byte[] ret = XLPacketData.PackToBytes(pkt, XLEnumSeqType.SeqReq, (uint)0, (uint)requestId, i == length);
                                     SendData(conn, ret);
                                 }
-                                if (conn.ProtocolType == EnumConnProtocolType.Json)
+                                if (conn.FrontType == EnumFrontType.WebSocket)
                                 {
                                     string json = XLPacketData.PackJsonResponse(pkt, (int)requestId, i == length);
                                     SendData(conn, json);
@@ -194,12 +194,12 @@ namespace TradingLib.DataFarm.Common
                                 {
                                     islast = (i == mdlist.Count - 1);
 
-                                    if (conn.ProtocolType == EnumConnProtocolType.XL)
+                                    if (conn.FrontType == EnumFrontType.XLTinny)
                                     {
                                         byte[] ret = XLPacketData.PackToBytes(pkt, XLEnumSeqType.SeqReq, (uint)0, (uint)requestId, islast);
                                         SendData(conn, ret);
                                     }
-                                    if (conn.ProtocolType == EnumConnProtocolType.Json)
+                                    if (conn.FrontType == EnumFrontType.WebSocket)
                                     {
                                         string json = XLPacketData.PackJsonResponse(pkt, (int)requestId, islast);
                                         SendData(conn, json);
@@ -216,12 +216,12 @@ namespace TradingLib.DataFarm.Common
                             if (!islast)
                             {
                                 islast = true;
-                                if (conn.ProtocolType == EnumConnProtocolType.XL)
+                                if (conn.FrontType == EnumFrontType.XLTinny)
                                 {
                                     byte[] ret = XLPacketData.PackToBytes(pkt, XLEnumSeqType.SeqReq, (uint)0, (uint)requestId, islast);
                                     SendData(conn, ret);
                                 }
-                                if (conn.ProtocolType == EnumConnProtocolType.Json)
+                                if (conn.FrontType == EnumFrontType.WebSocket)
                                 {
                                     string json = XLPacketData.PackJsonResponse(pkt, (int)requestId, islast);
                                     SendData(conn, json);
@@ -264,12 +264,12 @@ namespace TradingLib.DataFarm.Common
                                 {
                                     //一定数目的Bar之后 发送数据 同时判断是否是最后一条
                                     islast = (i == bars.Count - 1);
-                                    if (conn.ProtocolType == EnumConnProtocolType.XL)
+                                    if (conn.FrontType == EnumFrontType.XLTinny)
                                     {
                                         byte[] ret = XLPacketData.PackToBytes(pkt, XLEnumSeqType.SeqReq, (uint)0, (uint)requestId, islast);
                                         SendData(conn, ret);
                                     }
-                                    if (conn.ProtocolType == EnumConnProtocolType.Json)
+                                    if (conn.FrontType == EnumFrontType.WebSocket)
                                     {
                                         string json = XLPacketData.PackJsonResponse(pkt, (int)requestId, islast);
                                         SendData(conn, json);
@@ -286,12 +286,12 @@ namespace TradingLib.DataFarm.Common
                             if (!islast)
                             {
                                 islast = true;
-                                if (conn.ProtocolType == EnumConnProtocolType.XL)
+                                if (conn.FrontType == EnumFrontType.XLTinny)
                                 {
                                     byte[] ret = XLPacketData.PackToBytes(pkt, XLEnumSeqType.SeqReq, (uint)0, (uint)requestId, islast);
                                     SendData(conn, ret);
                                 }
-                                if (conn.ProtocolType == EnumConnProtocolType.Json)
+                                if (conn.FrontType == EnumFrontType.WebSocket)
                                 {
                                     string json = XLPacketData.PackJsonResponse(pkt, (int)requestId, islast);
                                     SendData(conn, json);

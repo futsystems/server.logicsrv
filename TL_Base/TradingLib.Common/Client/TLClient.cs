@@ -431,7 +431,7 @@ namespace TradingLib.Common
                     TLSocketBase socket = new T();
                     socket.Server = endpoint;
 
-                    RspQryServiceResponse response = socket.QryService(QSEnumAPIType.MD_ZMQ, "1.0.0");
+                    RspQryServiceResponse response = socket.QryService(QSEnumAPIType.MD_ZMQ, Const.APIVersion);
                     if (response != null && response.RspInfo.ErrorID == 0)
                     {
                         logger.Info(_skip+string.Format("Found server at:{0} API:{1} Version:{2} can provider service", endpoint, response.APIType, response.APIVersion));
@@ -613,7 +613,7 @@ namespace TradingLib.Common
         {
             logger.Info("Request Server Version");
             VersionRequest request = RequestTemplate<VersionRequest>.CliSendRequest(requestid++);
-            request.ClientVersion = "2.0";
+            request.ClientVersion = Const.APIVersion;//
             request.DeviceType = "PC";
             neoKey = Util.GetRandomString(8);
             neoString = Util.GetRandomString(12);

@@ -319,25 +319,25 @@ namespace TradingLib.DataFarm.Common
                 //遍历所有连接 按连接类型将数据发送到客户端
                 foreach (var conn in target.Values)
                 {
-                    switch (conn.ProtocolType)
+                    switch (conn.FrontType)
                     {
-                        case EnumConnProtocolType.TL:
+                        case EnumFrontType.TLSocket:
                             {
                                 this.SendData(conn, tldata);
                                 break;
                             }
-                        case EnumConnProtocolType.XL:
+                        case EnumFrontType.XLTinny:
                             {
                                 this.SendData(conn, xldata);
                                 break;
                             }
-                        case EnumConnProtocolType.Json:
+                        case EnumFrontType.WebSocket:
                             {
                                 this.SendData(conn, jsondata);
                                 break;
                             }
                         default:
-                            logger.Warn(string.Format("Conn ProtocolType:{0} not handled", conn.ProtocolType));
+                            logger.Warn(string.Format("Conn FrontType:{0} not handled", conn.FrontType));
                             break;
                     }
                 }
@@ -346,28 +346,28 @@ namespace TradingLib.DataFarm.Common
 
         void NotifyTick2Connection(Tick k, IConnection conn)
         {
-            switch (conn.ProtocolType)
+            switch (conn.FrontType)
             {
-                case EnumConnProtocolType.TL:
+                case EnumFrontType.TLSocket:
                     {
                         var tldata = CreateTLTickData(k);
                         this.SendData(conn, tldata);
                         break;
                     }
-                case EnumConnProtocolType.XL:
+                case EnumFrontType.XLTinny:
                     {
                         var xldata = CreateXLTickData(k);
                         this.SendData(conn, xldata);
                         break;
                     }
-                case EnumConnProtocolType.Json:
+                case EnumFrontType.WebSocket:
                     {
                         var jsondata = k.ToJsonNotify();
                         this.SendData(conn, jsondata);
                         break;
                     }
                 default:
-                    logger.Warn(string.Format("Conn ProtocolType:{0} not handled", conn.ProtocolType));
+                    logger.Warn(string.Format("Conn FrontType:{0} not handled", conn.FrontType));
                     break;
             }
         }

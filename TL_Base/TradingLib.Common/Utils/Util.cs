@@ -1165,6 +1165,30 @@ namespace TradingLib.Common
             return count;
         }
 
+        /// <summary>
+        /// 2.0.1 = 20001
+        /// 2.1.1 = 20101
+        /// </summary>
+        /// <param name="version"></param>
+        /// <returns></returns>
+        public static int GetBuildNum(string version)
+        {
+            string[] rec = version.Split('.');
+            int major;
+            int minor;
+            int fix;
+            int.TryParse(rec[0], out major);
+            int.TryParse(rec[1], out minor);
+            int.TryParse(rec[2], out fix);
+
+            return GetBuildNum(major, minor, fix);
+        }
+
+        public static int GetBuildNum(int major, int minor, int fix)
+        {
+            return major * 10000 + minor * 100 + fix;
+        }
+
         #region Serialize Deserialize
         /// <summary>
         /// convert any structure/type to a string (can be converted back using Deserialize)

@@ -139,6 +139,12 @@ namespace TradingLib.DataFarm.Common
         }
 
 
+        /// <summary>
+        /// TLClient会进行QryService操作 用于判定当前指定IP地址服务是否可用 在Found操作过程中进行
+        /// </summary>
+        /// <param name="arg1"></param>
+        /// <param name="arg2"></param>
+        /// <returns></returns>
         IPacket OnServiceEvent(IServiceHost arg1, IPacket arg2)
         {
             if (arg2.Type == MessageTypes.SERVICEREQUEST)
@@ -147,6 +153,30 @@ namespace TradingLib.DataFarm.Common
                 RspQryServiceResponse response = ResponseTemplate<RspQryServiceResponse>.SrvSendRspResponse(request);
 
                 //执行逻辑判断 是否提供服务 比如连接数大于多少/cpu资源大于多少 就拒绝服务
+                int buildNum = Util.GetBuildNum(request.APIVersion);
+                if (connectionMap.Count >= _maxCnt)
+                {
+                    logger.Warn(string.Format("Hit Max Connection Cnt:{0},will not provider service", _maxCnt));
+                    response.OnService = false;
+                    response.RspInfo.ErrorID = 1;
+                    response.RspInfo.ErrorMessage = "超过最大负载";
+                    return response;
+                }
+
+                //TLClient连接到行情端 需要进行配对检查
+                if (arg1.FrontType == EnumFrontType.TLSocket)
+                {
+                    if (buildNum < _apibuildNum)
+                    {
+                        logger.Warn(string.Format("Version:{0} is not supported", request.APIVersion));
+                        response.OnService = false;
+                        response.RspInfo.ErrorID = 1;
+                        response.RspInfo.ErrorMessage = "版本不支持";
+                        return response;
+                    }
+
+                }
+
                 response.OnService = true;
                 return response;
             }

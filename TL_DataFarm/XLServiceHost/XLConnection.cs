@@ -14,7 +14,7 @@ namespace XLServiceHost
     public class XLConnection:IConnection
     {
         ILog logger = LogManager.GetLogger("conn");
-        public EnumConnProtocolType ProtocolType { get { return EnumConnProtocolType.XL; } }
+        public EnumFrontType FrontType { get { return EnumFrontType.XLTinny; } }
         public string IPAddress 
         { 
             get 

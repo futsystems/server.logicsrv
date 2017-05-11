@@ -15,6 +15,10 @@ namespace TradingLib.DataFarm.API
         string Name { get;}
 
         /// <summary>
+        /// 前置类别
+        /// </summary>
+        EnumFrontType FrontType { get; }
+        /// <summary>
         /// 启动
         /// </summary>
         void Start();

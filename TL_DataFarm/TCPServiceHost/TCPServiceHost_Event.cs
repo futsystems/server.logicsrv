@@ -11,6 +11,7 @@ namespace TCPServiceHost
 {
     public partial class TCPServiceHost:IServiceHost
     {
+        public EnumFrontType FrontType { get { return EnumFrontType.TLSocket; } }
         /// <summary>
         /// 客户端连接建立
         /// </summary>

@@ -15,7 +15,7 @@ namespace TCPServiceHost
     {
         ILog logger = LogManager.GetLogger("conn");
 
-        public EnumConnProtocolType ProtocolType { get { return EnumConnProtocolType.TL; } }
+        public EnumFrontType FrontType { get { return EnumFrontType.TLSocket; } }
         public string IPAddress 
         { 
             get 

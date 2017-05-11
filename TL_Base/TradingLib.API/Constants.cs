@@ -11,6 +11,7 @@ namespace TradingLib.API
     /// </summary>
     public static class Const
     {
+        public const string APIVersion = "2.0.2";
         /// <summary>
         /// 任务调度扫描频率
         /// 每隔多少毫秒扫描一次任务列表

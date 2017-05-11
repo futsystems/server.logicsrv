@@ -11,6 +11,7 @@ namespace WSServiceHost
 {
     public partial class WSServiceHost
     {
+        public EnumFrontType FrontType { get { return EnumFrontType.WebSocket; } }
         /// <summary>
         /// 客户端连接建立
         /// </summary>

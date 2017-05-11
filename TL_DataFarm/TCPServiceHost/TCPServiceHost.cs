@@ -198,6 +198,7 @@ namespace TCPServiceHost
                         {
                             QryServiceRequest request = RequestTemplate<QryServiceRequest>.SrvRecvRequest("", sessionId, requestInfo.Message.Content);
                             RspQryServiceResponse response = QryService(request);
+                            
                             byte[] data = response.Data;
                             session.Send(data, 0, data.Length);
                             logger.Info(string.Format("Got QryServiceRequest from:{0} request:{1} reponse:{2}", sessionId, request, response));

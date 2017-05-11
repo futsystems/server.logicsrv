@@ -11,7 +11,7 @@ namespace XLServiceHost
 {
     public partial class XLServiceHost
     {
-
+        public EnumFrontType FrontType { get { return EnumFrontType.XLTinny; } }
         ConcurrentDictionary<string, XLSessionBase> sessionMap = new ConcurrentDictionary<string, XLSessionBase>();
         ConcurrentDictionary<string, XLConnection> connectionMap = new ConcurrentDictionary<string, XLConnection>();
 

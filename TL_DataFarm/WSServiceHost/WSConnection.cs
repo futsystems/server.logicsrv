@@ -14,7 +14,7 @@ namespace WSServiceHost
     public class WSConnection:IConnection
     {
         ILog logger = LogManager.GetLogger("WSConnection");
-        public EnumConnProtocolType ProtocolType { get { return EnumConnProtocolType.Json; } }
+        public EnumFrontType FrontType { get { return EnumFrontType.WebSocket; } }
         public string IPAddress 
         { 
             get 

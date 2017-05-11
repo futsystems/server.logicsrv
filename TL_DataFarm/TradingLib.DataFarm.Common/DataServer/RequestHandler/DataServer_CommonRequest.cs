@@ -31,19 +31,24 @@ namespace TradingLib.DataFarm.Common
         /// <param name="request"></param>
         protected void SrvOnVersionRequest(IServiceHost host, IConnection conn, VersionRequest request)
         {
+            logger.Info(string.Format("Conn:{0} Qry Version:{1}", conn.SessionID, request.Content));
 
             VersionResponse response = ResponseTemplate<VersionResponse>.SrvSendRspResponse(request);
-            //TLVersion v = new TLVersion();
-            //v.ProductType = QSEnumProductType.CounterSystem;
-            //v.Platfrom = PlatformID.Unix;
-            //v.Major = 1;
-            //v.Minor = 0;
-            //v.Fix = 0;
-            //v.DeployID = "demo";
-            string key = request.NegotiationKey;
-            string strval = request.NegotiationString;
-            //key = string.IsNullOrEmpty(key) ? "1123123" : key;
-            //strval = string.IsNullOrEmpty(strval) ? "2123131222" : strval;
+
+            string key=string.Empty;
+            string strval = string.Empty;
+            //TLSocket类别的前置连接 执行客户端与服务端配对检查
+            if (conn.FrontType == EnumFrontType.TLSocket)
+            {
+                key = request.NegotiationKey;
+                strval = request.NegotiationString;
+                string uuid = StringCipher.Decrypt(request.EncryptUUID, key);
+                if (uuid != conn.SessionID)
+                {
+                    CloseConnection(conn);
+                    return;
+                }
+            }
 
             TLNegotiation neo = new TLNegotiation();
             neo.DeployID = string.Empty;

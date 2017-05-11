@@ -17,6 +17,7 @@ namespace ZMQServiceHost
 {
     public class ZMQServiceHost : IServiceHost
     {
+        public EnumFrontType FrontType { get { return EnumFrontType.TLSocket; } }
         /// <summary>
         /// 系统默认Poller超时时间
         /// </summary>
