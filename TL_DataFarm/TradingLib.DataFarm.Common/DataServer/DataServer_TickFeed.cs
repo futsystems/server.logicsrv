@@ -312,10 +312,10 @@ namespace TradingLib.DataFarm.Common
             ConcurrentDictionary<string, IConnection> target = null;
             if (symKeyRegMap.TryGetValue(k.GetSymbolUniqueKey(), out target))
             {
-                //创建不同协议的行情数据
-                var tldata = CreateTLTickData(k);
-                var xldata = CreateXLTickData(k);
-                var jsondata = k.ToJsonNotify();
+                //创建不同协议的行情数据 延迟创建 避免不必要的创建
+                byte[] tldata = null;
+                byte[] xldata = null;
+                string jsondata = null;
                 //遍历所有连接 按连接类型将数据发送到客户端
                 foreach (var conn in target.Values)
                 {
@@ -323,16 +323,19 @@ namespace TradingLib.DataFarm.Common
                     {
                         case EnumFrontType.TLSocket:
                             {
+                                if (tldata == null) tldata = CreateTLTickData(k);
                                 this.SendData(conn, tldata);
                                 break;
                             }
                         case EnumFrontType.XLTinny:
                             {
+                                if (xldata == null) xldata = CreateXLTickData(k);
                                 this.SendData(conn, xldata);
                                 break;
                             }
                         case EnumFrontType.WebSocket:
                             {
+                                if (jsondata == null) jsondata = k.ToJsonNotify();
                                 this.SendData(conn, jsondata);
                                 break;
                             }
