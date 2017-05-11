@@ -19,7 +19,7 @@ namespace TradingLib.Core
         /// </summary>
         /// <param name="request"></param>
         /// <param name="account"></param>
-        void SrvOnXQryMarketTime(XQryMarketTimeRequest request, IAccount account)
+        void SrvOnXQryMarketTime(ISession session, XQryMarketTimeRequest request, IAccount account)
         {
             logger.Info("XMarketTime:" + request.ToString());
             MarketTimeImpl[] mts = BasicTracker.MarketTimeTracker.MarketTimes;
@@ -38,7 +38,7 @@ namespace TradingLib.Core
         /// </summary>
         /// <param name="request"></param>
         /// <param name="account"></param>
-        void SrvOnXQryExchange(XQryExchangeRequuest request,IAccount account)
+        void SrvOnXQryExchange(ISession session, XQryExchangeRequuest request, IAccount account)
         {
             logger.Info("XQryExchange:"+request.ToString());
             ExchangeImpl[] exchs = BasicTracker.ExchagneTracker.Exchanges;
@@ -61,7 +61,7 @@ namespace TradingLib.Core
         /// </summary>
         /// <param name="request"></param>
         /// <param name="account"></param>
-        void SrvOnXQrySecurity(XQrySecurityRequest request,IAccount account)
+        void SrvOnXQrySecurity(ISession session, XQrySecurityRequest request, IAccount account)
         {
             logger.Info("XQrySecurity:" + request.ToString());
 
@@ -89,7 +89,7 @@ namespace TradingLib.Core
         /// <param name="request"></param>
         /// <param name="session"></param>
         /// <param name="manager"></param>
-        void SrvOnXQrySymbol(XQrySymbolRequest request, IAccount account)
+        void SrvOnXQrySymbol(ISession session, XQrySymbolRequest request, IAccount account)
         {
             logger.Info("XQrySymbol:" + request.ToString());
 
@@ -160,7 +160,7 @@ namespace TradingLib.Core
         /// </summary>
         /// <param name="request"></param>
         /// <param name="account"></param>
-        void SrvOnXQryTickSnapShot(XQryTickSnapShotRequest request, IAccount account)
+        void SrvOnXQryTickSnapShot(ISession session, XQryTickSnapShotRequest request, IAccount account)
         {
             logger.Info("XQryTickSnapShot:" + request.ToString());
             Symbol sym = account.Domain.GetSymbol(request.Exchange, request.Symbol);
@@ -238,7 +238,7 @@ namespace TradingLib.Core
         /// </summary>
         /// <param name="request"></param>
         /// <param name="account"></param>
-        void SrvOnXQryExchangeRate(XQryExchangeRateRequest request, IAccount account)
+        void SrvOnXQryExchangeRate(ISession session, XQryExchangeRateRequest request, IAccount account)
         {
             logger.Info("XQryExchangeRate:" + request.ToString());
             //结算时没有重置 导致 交易日进入下一个交易日后无法获得汇率数据 自制客户端无法登入

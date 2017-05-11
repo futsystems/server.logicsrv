@@ -32,123 +32,123 @@ namespace TradingLib.Core
                 case MessageTypes.SENDORDERACTION://提交委托操作
                     {
                         OrderActionRequest request = packet as OrderActionRequest;
-                        SrvOnOrderActionRequest(request, account);
+                        SrvOnOrderActionRequest(session, request, account);
                     }
                     break;
                 case MessageTypes.QRYORDER://查询委托
                     {
                         QryOrderRequest request = packet as QryOrderRequest;
-                        SrvOnQryOrder(request, account);
+                        SrvOnQryOrder(session, request, account);
                     }
                     break;
                 case MessageTypes.QRYTRADE://查询成交
                     {
                         QryTradeRequest request = packet as QryTradeRequest;
-                        SrvOnQryTrade(request, account);
+                        SrvOnQryTrade(session, request, account);
                     }
                     break;
                 case MessageTypes.QRYPOSITION://查询持仓
                     {
                         QryPositionRequest request = packet as QryPositionRequest;
-                        SrvOnQryPosition(request, account);
+                        SrvOnQryPosition(session, request, account);
                     }
                     break;
                 case MessageTypes.XQRYPOSITIONDETAIL://查询持仓明细
                     {
                         XQryPositionDetailRequest request = packet as XQryPositionDetailRequest;
-                        SrvOnXQryPositionDetail(request, account);
+                        SrvOnXQryPositionDetail(session, request, account);
                     }
                     break;
                 case MessageTypes.QRYACCOUNTINFO://查询帐户信息
                     {
                         QryAccountInfoRequest request = packet as QryAccountInfoRequest;
-                        SrvOnQryAccountInfo(request, account);
+                        SrvOnQryAccountInfo(session, request, account);
                     }
                     break;
                 case MessageTypes.QRYMAXORDERVOL://查询委托可开手数
                     {
                         QryMaxOrderVolRequest request = packet as QryMaxOrderVolRequest;
-                        SrvOnQryMaxOrderVol(request, account);
+                        SrvOnQryMaxOrderVol(session, request, account);
                     }
                     break;
 
                 case MessageTypes.QRYSETTLEINFOCONFIRM://查询结算确认
                     {
                         QrySettleInfoConfirmRequest request = packet as QrySettleInfoConfirmRequest;
-                        SrvOnQrySettleInfoConfirm(request,account);
+                        SrvOnQrySettleInfoConfirm(session, request, account);
                     }
                     break;
                 case MessageTypes.CONFIRMSETTLEMENT://确认结算信息
                     {
                         ConfirmSettlementRequest request = packet as ConfirmSettlementRequest;
-                        SrvOnConfirmSettlement(request,account);
+                        SrvOnConfirmSettlement(session, request, account);
                     }
                     break;
                 case MessageTypes.QRYINVESTOR://查询投资者信息
                     {
                         QryInvestorRequest request = packet as QryInvestorRequest;
-                        SrvOnQryInvestor(request, account);
+                        SrvOnQryInvestor(session, request, account);
                     }
                     break;
                 case MessageTypes.REQCHANGEPASS://请求修改交易帐户密码
                     {
                         ReqChangePasswordRequest request = packet as ReqChangePasswordRequest;
-                        SrvOnReqChangePassword(request,account);
+                        SrvOnReqChangePassword(session, request, account);
                     }
                     break;
                 case MessageTypes.QRYNOTICE://请求查询交易系统通知
                     {
                         QryNoticeRequest request = packet as QryNoticeRequest;
-                        SrvOnQryNotice(request,account);
+                        SrvOnQryNotice(session, request, account);
                     }
                     break;
                 case MessageTypes.QRYSYMBOL://查询合约列表
                     {
                         QrySymbolRequest request = packet as QrySymbolRequest;
-                        SrvOnQrySymbol(request, account);
+                        SrvOnQrySymbol(session, request, account);
                     }
                     break;
                 case MessageTypes.QRYCONTRACTBANK://查询签约银行
                     {
                         QryContractBankRequest request = packet as QryContractBankRequest;
-                        SrvOnQryContractBank(request);
+                        SrvOnQryContractBank(session, request);
                     }
                     break;
                 case MessageTypes.QRYREGISTERBANKACCOUNT://查询银行帐户
                     {
                         //debug("查询银行帐户.............", QSEnumDebugLevel.INFO);
                         QryRegisterBankAccountRequest request = packet as QryRegisterBankAccountRequest;
-                        SrvOnRegisterBankAccount(request,account);
+                        SrvOnRegisterBankAccount(session, request, account);
                     }
                     break;
                 case MessageTypes.QRYTRANSFERSERIAL://查询出入金记录
                     {
                         QryTransferSerialRequest request = packet as QryTransferSerialRequest;
-                        SrvOnQryTransferSerial(request,account);
+                        SrvOnQryTransferSerial(session, request, account);
                     }
                     break;
                 case MessageTypes.QRYINSTRUMENTCOMMISSIONRATE://查询合约手续费率
                     {
                         QryInstrumentCommissionRateRequest request = packet as QryInstrumentCommissionRateRequest;
-                        SrvOnQryInstrumentCommissionRate(request, account);
+                        SrvOnQryInstrumentCommissionRate(session, request, account);
                     }
                     break;
                 case MessageTypes.QRYINSTRUMENTMARGINRATE://查询合约保证金率
                     {
                         QryInstrumentMarginRateRequest request = packet as QryInstrumentMarginRateRequest;
-                        SrvOnQryInstrumentMarginRate(request, account);
+                        SrvOnQryInstrumentMarginRate(session, request, account);
                     }
                     break;
                 case MessageTypes.QRYMARKETDATA://查询市场行情
                     {
                         QryMarketDataRequest request = packet as QryMarketDataRequest;
-                        SrvOnQryMarketData(request, account);
+                        SrvOnQryMarketData(session, request, account);
                     }
                     break;
                 case MessageTypes.QRYTRADINGPARAMS://查询交易参数
                     {
                         QryTradingParamsRequest request = packet as QryTradingParamsRequest;
-                        SrvOnQryTradingParams(request, account);
+                        SrvOnQryTradingParams(session, request, account);
                     }
                     break;
 
@@ -157,80 +157,80 @@ namespace TradingLib.Core
                 case MessageTypes.XQRYMARKETTIME://查询交易时间段
                     {
                         XQryMarketTimeRequest request = packet as XQryMarketTimeRequest;
-                        SrvOnXQryMarketTime(request, account);
+                        SrvOnXQryMarketTime(session, request, account);
                     }
                     break;
                 case MessageTypes.XQRYEXCHANGE://查询交易所
                     {
                         XQryExchangeRequuest request = packet as XQryExchangeRequuest;
-                        SrvOnXQryExchange(request, account);
+                        SrvOnXQryExchange(session, request, account);
                     }
                     break;
                 case MessageTypes.XQRYSECURITY://查询品种
                     {
                         XQrySecurityRequest request = packet as XQrySecurityRequest;
-                        SrvOnXQrySecurity(request, account);
+                        SrvOnXQrySecurity(session, request, account);
                     }
                     break;
                 case MessageTypes.XQRYSYMBOL://查询合约
                     {
                         XQrySymbolRequest request = packet as XQrySymbolRequest;
-                        SrvOnXQrySymbol(request, account);
+                        SrvOnXQrySymbol(session, request, account);
                     }
                     break;
                 case MessageTypes.XQRYYDPOSITION://查询隔夜持仓
                     {
                         XQryYDPositionRequest request = packet as XQryYDPositionRequest;
-                        SrvOnXQryYDPosition(request, account);
+                        SrvOnXQryYDPosition(session, request, account);
                     }
                     break;
                 case MessageTypes.XQRYORDER://查询委托
                     {
                         XQryOrderRequest request = packet as XQryOrderRequest;
-                        SrvOnXQryOrder(request, account);
+                        SrvOnXQryOrder(session, request, account);
                     }
                     break;
                 case MessageTypes.XQRYTRADE://查询成交
                     {
                         XQryTradeRequest request = packet as XQryTradeRequest;
-                        SrvOnXQryTrade(request, account);
+                        SrvOnXQryTrade(session, request, account);
                     }
                     break;
                 case MessageTypes.XQRYTICKSNAPSHOT://查询行情快照
                     {
                         XQryTickSnapShotRequest request = packet as XQryTickSnapShotRequest;
-                        SrvOnXQryTickSnapShot(request, account);
+                        SrvOnXQryTickSnapShot(session, request, account);
                     }
                     break;
                 case MessageTypes.XQRYACCOUNT://查询交易账户
                     {
                         XQryAccountRequest request = packet as XQryAccountRequest;
-                        SrvOnXQryAccount(request, account);
+                        SrvOnXQryAccount(session, request, account);
                     }
                     break;
                 case MessageTypes.XQRYMAXORDERVOL://查询最大下单量
                     {
                         XQryMaxOrderVolRequest request = packet as XQryMaxOrderVolRequest;
-                        SrvOnXQryMaxVol(request, account);
+                        SrvOnXQryMaxVol(session, request, account);
                     }
                     break;
                 case MessageTypes.XQRYACCOUNTFINANCE://查询财务数据
                     {
                         XQryAccountFinanceRequest request = packet as XQryAccountFinanceRequest;
-                        SrvOnQryAccountFinance(request, account);
+                        SrvOnQryAccountFinance(session, request, account);
                     }
                     break;
 
                 case MessageTypes.XQRYSETTLEINFO://查询结算信息
                     {
                         XQrySettleInfoRequest request = packet as XQrySettleInfoRequest;
-                        SrvOnXQrySettleInfo(request,account);
+                        SrvOnXQrySettleInfo(session, request, account);
                     }
                     break;
                 case MessageTypes.XQRYEXCHANGERATE://查询汇率信息
                     {
                         XQryExchangeRateRequest request = packet as XQryExchangeRateRequest;
-                        SrvOnXQryExchangeRate(request,account);
+                        SrvOnXQryExchangeRate(session, request, account);
                     }
                     break;
 

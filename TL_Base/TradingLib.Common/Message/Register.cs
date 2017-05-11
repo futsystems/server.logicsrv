@@ -25,8 +25,10 @@ namespace TradingLib.Common
         {
             _type = MessageTypes.REGISTERCLIENT;
             this.VersionToken = string.Empty;
+            this.FrontType = EnumFrontType.Direct;
         }
 
+        public EnumFrontType FrontType { get; set; }
         /// <summary>
         /// 版本标识
         /// 不同的版本标识之间不能相互登入
@@ -35,15 +37,16 @@ namespace TradingLib.Common
 
         public override string ContentSerialize()
         {
-            return string.Format("{0}", this.VersionToken);
+            return string.Format("{0},{1}", this.FrontType, this.VersionToken);
         }
 
         public override void ContentDeserialize(string contentstr)
         {
             string[] rec = contentstr.Split(',');
-            if (rec.Length >= 1)
+            if (rec.Length >= 2)
             {
-                this.VersionToken = rec[0];
+                this.FrontType = rec[0].ParseEnum<EnumFrontType>();
+                this.VersionToken = rec[1];
             }
         }
     }

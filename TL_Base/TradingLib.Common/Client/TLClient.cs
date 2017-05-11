@@ -137,6 +137,10 @@ namespace TradingLib.Common
         /// 服务端与客户端配对检查
         /// </summary>
         public event Action<TLNegotiation, string, string> OnNegotiationEvent;
+
+        public event Func<string, string, string> OnEncodeEvent;
+
+        public event Func<string, string, string> OnDecodeEvent;
         /// <summary>
         /// 数据包事件
         /// </summary>
@@ -167,6 +171,23 @@ namespace TradingLib.Common
             logger.Info("Watcher backend threade stopped");
         }
 
+        string Encode(string str,string phase)
+        {
+            if (OnEncodeEvent != null)
+            {
+                return OnEncodeEvent(str, phase);
+            }
+            return string.Empty;
+        }
+
+        string Decode(string str, string phase)
+        {
+            if (OnDecodeEvent != null)
+            {
+                return OnDecodeEvent(str, phase);
+            }
+            return string.Empty;
+        }
         /// <summary>
         /// 心跳维护线程
         /// </summary>
@@ -598,6 +619,7 @@ namespace TradingLib.Common
             neoString = Util.GetRandomString(12);
             request.NegotiationKey = neoKey;
             request.NegotiationString = neoString;
+            request.EncryptUUID = Encode(_sessionid,neoKey);
 
             TLSend(request);
         }

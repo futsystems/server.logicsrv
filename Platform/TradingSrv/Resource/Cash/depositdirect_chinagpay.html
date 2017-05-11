@@ -1,0 +1,26 @@
+﻿<html>
+<head>
+	<title>确认入金信息</title>
+</head>
+
+<body onload="document.chinagpaysubmit.submit()">
+<form name='chinagpaysubmit' method="post" action="{{data.Pay_Url}}">
+	<input name='signMethod' type='hidden' value= "{{data.Sign_Method}}"/>
+	<input name='signature' type='hidden' value= "{{data.Signature}}"/>
+	<input name='version' type='hidden' value= "{{data.Version}}"/>
+	<input name='txnType' type='hidden' value= "{{data.Txn_Type}}"/>
+	<input name='txnSubType' type='hidden' value= "{{data.Txn_Sub_Type}}"/>		
+	<input name='bizType' type='hidden' value= "{{data.Biz_Type}}" />
+	<input name='accessType' type='hidden' value= "{{data.Access_Type}}" />
+	<input name='accessMode' type='hidden' value= "{{data.Access_Mode}}"/>
+	<input name='merId' type='hidden' value= "{{data.Mer_Id}}"/>
+	<input name='merOrderId' type='hidden' value= "{{data.Mer_Order_Id}}"/>
+	<input name='txnTime' type='hidden' value= "{{data.Txn_Time}}"/>	
+	<input name='txnAmt' type='hidden' value="{{data.Txn_Amt}}"/>
+	<input name='currency' type='hidden' value="{{data.Currency}}"/>
+	<input name='frontUrl' type='hidden' value="{{data.Front_Url}}"/>
+	<input name='backUrl' type='hidden' value="{{data.Back_Url}}"/>
+	<input name='payType' type='hidden' value="{{data.Pay_Type}}"/>
+</form>
+</body>
+</html>

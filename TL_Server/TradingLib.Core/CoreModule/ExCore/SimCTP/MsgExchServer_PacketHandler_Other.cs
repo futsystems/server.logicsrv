@@ -16,7 +16,7 @@ namespace TradingLib.Core
         /// 查询委托
         /// </summary>
         /// <param name="request"></param>
-        void SrvOnQryOrder(QryOrderRequest request,IAccount account)
+        void SrvOnQryOrder(ISession session, QryOrderRequest request,IAccount account)
         {
             logger.Info("QryOrder :" + request.ToString());
             Order[] orders = new Order[]{};
@@ -51,7 +51,7 @@ namespace TradingLib.Core
         /// 
         /// </summary>
         /// <param name="request"></param>
-        void SrvOnQryTrade(QryTradeRequest request, IAccount account)
+        void SrvOnQryTrade(ISession session, QryTradeRequest request, IAccount account)
         {
             logger.Info("QryTrade :" + request.ToString());
             Trade[] trades = new Trade[] { };
@@ -84,7 +84,7 @@ namespace TradingLib.Core
         /// 查询持仓
         /// </summary>
         /// <param name="request"></param>
-        void SrvOnQryPosition(QryPositionRequest request, IAccount account)
+        void SrvOnQryPosition(ISession session, QryPositionRequest request, IAccount account)
         {
             logger.Info("QryPosition :" + request.ToString());
             Position[] positions = new Position[] { };
@@ -125,7 +125,7 @@ namespace TradingLib.Core
         /// 开平/方向/合约
         /// </summary>
         /// <param name="request"></param>
-        void SrvOnQryMaxOrderVol(QryMaxOrderVolRequest request, IAccount account)
+        void SrvOnQryMaxOrderVol(ISession session, QryMaxOrderVolRequest request, IAccount account)
         {
             logger.Info("QryMaxOrderVol :" + request.ToString());
             Symbol symbol = account.Domain.GetSymbol(request.Symbol);
@@ -155,7 +155,7 @@ namespace TradingLib.Core
         }
 
 
-        void SrvOnQryAccountInfo(QryAccountInfoRequest request, IAccount account)
+        void SrvOnQryAccountInfo(ISession session, QryAccountInfoRequest request, IAccount account)
         {
             logger.Info("QryAccountInfo :" + request.ToString());
             AccountInfo info = account.GenAccountInfo();
@@ -170,9 +170,9 @@ namespace TradingLib.Core
             CachePacket(response);
         }
 
-        
 
-        void SrvOnQrySettleInfoConfirm(QrySettleInfoConfirmRequest request,IAccount account)
+
+        void SrvOnQrySettleInfoConfirm(ISession session, QrySettleInfoConfirmRequest request, IAccount account)
         {
             logger.Info("QrySettleInfoConfirm :" + request.ToString());
 
@@ -201,7 +201,7 @@ namespace TradingLib.Core
             CachePacket(response);
         }
 
-        void SrvOnConfirmSettlement(ConfirmSettlementRequest request,IAccount account)
+        void SrvOnConfirmSettlement(ISession session, ConfirmSettlementRequest request, IAccount account)
         {
             logger.Info("ConfirmSettlement :" + request.ToString());
             
@@ -226,7 +226,7 @@ namespace TradingLib.Core
         /// 查询投资者信息
         /// </summary>
         /// <param name="request"></param>
-        void SrvOnQryInvestor(QryInvestorRequest request, IAccount account)
+        void SrvOnQryInvestor(ISession session, QryInvestorRequest request, IAccount account)
         {
             logger.Info("QryInvestor :" + request.ToString());
             RspQryInvestorResponse response = ResponseTemplate<RspQryInvestorResponse>.SrvSendRspResponse(request);
@@ -242,7 +242,7 @@ namespace TradingLib.Core
             CacheRspResponse(response);
         }
 
-        void SrvOnContribRequest(ContribRequest request,ISession session)
+        void SrvOnContribRequest(ContribRequest request, ISession session)
         {
             logger.Info("Contrib Request:" + request.ToString());
             TLCtxHelper.Ctx.MessageExchangeHandler(session, request);
@@ -252,7 +252,7 @@ namespace TradingLib.Core
         /// 请求修改密码
         /// </summary>
         /// <param name="request"></param>
-        void SrvOnReqChangePassword(ReqChangePasswordRequest request,IAccount account)
+        void SrvOnReqChangePassword(ISession session,ReqChangePasswordRequest request,IAccount account)
         {
             logger.Info("ReqChangePassword:" + request.ToString());
 
@@ -274,7 +274,7 @@ namespace TradingLib.Core
         /// 查询通知
         /// </summary>
         /// <param name="request"></param>
-        void SrvOnQryNotice(QryNoticeRequest request,IAccount account)
+        void SrvOnQryNotice(ISession session, QryNoticeRequest request, IAccount account)
         {
             logger.Info("QryNoticeRequest:" + request.ToString());
             RspQryNoticeResponse response = ResponseTemplate<RspQryNoticeResponse>.SrvSendRspResponse(request);
@@ -310,7 +310,7 @@ namespace TradingLib.Core
         /// 查询合约
         /// </summary>
         /// <param name="request"></param>
-        void SrvOnQrySymbol(QrySymbolRequest request,IAccount account)
+        void SrvOnQrySymbol(ISession session, QrySymbolRequest request, IAccount account)
         {
             logger.Info("QrySymbol:" + request.ToString());
             Instrument[] instruments = new Instrument[]{};
@@ -347,7 +347,7 @@ namespace TradingLib.Core
         /// 查询签约银行
         /// </summary>
         /// <param name="request"></param>
-        void SrvOnQryContractBank(QryContractBankRequest request)
+        void SrvOnQryContractBank(ISession session, QryContractBankRequest request)
         {
             logger.Info("QryContractBank:" + request.ToString());
             ContractBank[] banks = BasicTracker.ContractBankTracker.Banks;
@@ -379,7 +379,7 @@ namespace TradingLib.Core
         /// 这里所有查询均返回同样的帐户
         /// </summary>
         /// <param name="request"></param>
-        void SrvOnRegisterBankAccount(QryRegisterBankAccountRequest request,IAccount account)
+        void SrvOnRegisterBankAccount(ISession session, QryRegisterBankAccountRequest request, IAccount account)
         {
             logger.Info("QryRegisterBankAccount:" + request.ToString());
             if (account != null)
@@ -409,7 +409,7 @@ namespace TradingLib.Core
         /// 查询出入金记录
         /// </summary>
         /// <param name="request"></param>
-        void SrvOnQryTransferSerial(QryTransferSerialRequest request,IAccount account)
+        void SrvOnQryTransferSerial(ISession session, QryTransferSerialRequest request, IAccount account)
         {
             //TODO:交易CTP接口查询出入金记录
             logger.Info("QryTransferSerialRequest:" + request.ToString());
@@ -442,7 +442,7 @@ namespace TradingLib.Core
         /// </summary>
         /// <param name="request"></param>
         /// <param name="account"></param>
-        void SrvOnQryInstrumentCommissionRate(QryInstrumentCommissionRateRequest request, IAccount account)
+        void SrvOnQryInstrumentCommissionRate(ISession session, QryInstrumentCommissionRateRequest request, IAccount account)
         {
             logger.Info("QryInstrumentCommissionRate:" + request.ToString());
             
@@ -468,7 +468,7 @@ namespace TradingLib.Core
             }
         }
 
-        void SrvOnQryInstrumentMarginRate(QryInstrumentMarginRateRequest request, IAccount account)
+        void SrvOnQryInstrumentMarginRate(ISession session, QryInstrumentMarginRateRequest request, IAccount account)
         {
             logger.Info("QryInstrumentMarginRate:" + request.ToString());
             
@@ -502,7 +502,7 @@ namespace TradingLib.Core
         /// </summary>
         /// <param name="request"></param>
         /// <param name="account"></param>
-        void SrvOnQryMarketData(QryMarketDataRequest request, IAccount account)
+        void SrvOnQryMarketData(ISession session, QryMarketDataRequest request, IAccount account)
         {
             logger.Info("QryMarketData:" + request.ToString());
 
@@ -557,7 +557,7 @@ namespace TradingLib.Core
         /// </summary>
         /// <param name="request"></param>
         /// <param name="account"></param>
-        void SrvOnQryTradingParams(QryTradingParamsRequest request, IAccount account)
+        void SrvOnQryTradingParams(ISession session, QryTradingParamsRequest request, IAccount account)
         {
             logger.Info("QryTradingParams:" + request.ToString());
             ExStrategy setting = account.GetExStrategy();

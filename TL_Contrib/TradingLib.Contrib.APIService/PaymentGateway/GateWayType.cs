@@ -31,5 +31,10 @@ namespace TradingLib.Contrib.APIService
         /// 智付
         /// </summary>
         DinPay,
+
+        /// <summary>
+        /// 爱农
+        /// </summary>
+        ChinagPay
     }
 }

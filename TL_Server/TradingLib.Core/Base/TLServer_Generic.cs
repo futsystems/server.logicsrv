@@ -312,6 +312,18 @@ namespace TradingLib.Core
                 _clients.RegistClient(_newcli);
             }
 
+            //直连客户端 需要发送注册回报
+            if (request.FrontType == EnumFrontType.Direct)
+            {
+                //发送回报
+                RspRegisterClientResponse response = ResponseTemplate<RspRegisterClientResponse>.SrvSendRspResponse(request);
+                response.SessionID = _newcli.Location.ClientID;
+                SendOutPacket(response);
+            }
+
+           
+
+
             SrvBeatHeart(client);
             logger.Debug(string.Format("Client:{0} Front:{1} Bind With FrontIDi:{2} SessionIDi:{3}", request.ClientID, request.FrontID,_newcli.FrontIDi, _newcli.SessionIDi));
         }
@@ -325,6 +337,23 @@ namespace TradingLib.Core
         {
             logger.Debug(string.Format("Client:{0} Try to qry version", client.Location.ClientID));
             VersionResponse verresp = ResponseTemplate<VersionResponse>.SrvSendRspResponse(request);
+            string uuid = string.Empty;
+            try
+            {
+                uuid = StringCipher.Decrypt(request.EncryptUUID, request.NegotiationKey);
+            }
+            catch (Exception ex)
+            {
+                logger.Error("Error Encrypt UUID format:" + ex.ToString());
+            }
+
+            if (client.Location.ClientID != uuid)
+            {
+                logger.Warn("Client's procotol error,clsoe client");
+                _clients.UnRegistClient(client.Location.ClientID);
+                return;
+            }
+
             //交易客户端认证 然后回报version response
             TLNegotiation nego = new TLNegotiation();
             nego.DeployID = TLCtxHelper.Version.DeployID;

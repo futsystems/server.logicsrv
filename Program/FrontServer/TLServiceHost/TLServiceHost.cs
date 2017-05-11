@@ -111,7 +111,7 @@ namespace FrontServer.TLServiceHost
 
                                 _connectionMap.TryAdd(session.SessionID, conn);
                                 //客户端发送初始化数据包后执行逻辑服务器客户端注册操作
-                                _mqServer.LogicRegister(conn);
+                                _mqServer.LogicRegister(conn,EnumFrontType.TLSocket,request.VersionToken);
 
                                 //发送回报
                                 RspRegisterClientResponse response = ResponseTemplate<RspRegisterClientResponse>.SrvSendRspResponse(request);

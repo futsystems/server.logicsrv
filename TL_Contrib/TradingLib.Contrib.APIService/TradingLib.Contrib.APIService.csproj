@@ -71,6 +71,7 @@
     <Compile Include="APIService.cs" />
     <Compile Include="APIService_Counter.cs" />
     <Compile Include="Drop\DropAliPayPayment.cs" />
+    <Compile Include="Drop\DropChinagPayment.cs" />
     <Compile Include="Drop\DropDinpayment.cs" />
     <Compile Include="Drop\DropIPSPayment.cs" />
     <Compile Include="Drop\DropUnspayPayment.cs" />
@@ -89,6 +90,7 @@
     <Compile Include="PaymentGateway\AliyPay\AliPayGateWay.cs" />
     <Compile Include="PaymentGateway\AliyPay\AliPayMD5.cs" />
     <Compile Include="PaymentGateway\BaoFu\BaoFuGateway.cs" />
+    <Compile Include="PaymentGateway\Chinagpay\ChinagpayGateWay.cs" />
     <Compile Include="PaymentGateway\dinpay\DinpayGateWay.cs" />
     <Compile Include="PaymentGateway\dinpay\DinpayHelp.cs" />
     <Compile Include="PaymentGateway\GateWayBase.cs" />

@@ -15,7 +15,7 @@ namespace TradingLib.Core
         /// 响应客户端委托操作
         /// </summary>
         /// <param name="request"></param>
-        void SrvOnOrderActionRequest(OrderActionRequest request,IAccount account)
+        void SrvOnOrderActionRequest(ISession session, OrderActionRequest request, IAccount account)
         {
             OrderAction action = request.OrderAction;
             action.RequestID = request.RequestID;

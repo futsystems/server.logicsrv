@@ -70,6 +70,8 @@ namespace TradingLib.Contrib.APIService
                     return new UnspayGateWay(config);
                 case QSEnumGateWayType.DinPay:
                     return new DinpayGateWay(config);
+                case QSEnumGateWayType.ChinagPay:
+                    return new ChinagpayGateWay(config);
                 default:
                     return null;
             }

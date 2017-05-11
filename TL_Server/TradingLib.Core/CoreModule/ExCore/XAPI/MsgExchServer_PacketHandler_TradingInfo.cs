@@ -18,7 +18,7 @@ namespace TradingLib.Core
         /// 查询委托
         /// </summary>
         /// <param name="request"></param>
-        void SrvOnXQryOrder(XQryOrderRequest request, IAccount account)
+        void SrvOnXQryOrder(ISession session, XQryOrderRequest request, IAccount account)
         {
             logger.Info("XQryOrder :" + request.ToString());
 
@@ -65,7 +65,7 @@ namespace TradingLib.Core
         /// 
         /// </summary>
         /// <param name="request"></param>
-        void SrvOnXQryTrade(XQryTradeRequest request, IAccount account)
+        void SrvOnXQryTrade(ISession session, XQryTradeRequest request, IAccount account)
         {
             logger.Info("XQryTrade :" + request.ToString());
 
@@ -111,7 +111,7 @@ namespace TradingLib.Core
         /// </summary>
         /// <param name="request"></param>
         /// <param name="account"></param>
-        void SrvOnXQryYDPosition(XQryYDPositionRequest request, IAccount account)
+        void SrvOnXQryYDPosition(ISession session, XQryYDPositionRequest request, IAccount account)
         {
             logger.Info("XQryYDPosition :" + request.ToString());
             //转发昨日持仓信息
@@ -151,7 +151,7 @@ namespace TradingLib.Core
         /// </summary>
         /// <param name="request"></param>
         /// <param name="account"></param>
-        void SrvOnXQryAccount(XQryAccountRequest request, IAccount account)
+        void SrvOnXQryAccount(ISession session, XQryAccountRequest request, IAccount account)
         {
             logger.Info("XQryAccountRequest:" + request.ToString());
             RspXQryAccountResponse respone = ResponseTemplate<RspXQryAccountResponse>.SrvSendRspResponse(request);
@@ -164,7 +164,7 @@ namespace TradingLib.Core
         /// </summary>
         /// <param name="request"></param>
         /// <param name="account"></param>
-        void SrvOnQryAccountFinance(XQryAccountFinanceRequest request, IAccount account)
+        void SrvOnQryAccountFinance(ISession session, XQryAccountFinanceRequest request, IAccount account)
         {
             logger.Info("QryAccountFinance :" + request.ToString());
             AccountInfo info = account.GenAccountInfo();
@@ -179,7 +179,7 @@ namespace TradingLib.Core
         /// </summary>
         /// <param name="request"></param>
         /// <param name="account"></param>
-        void SrvOnXQryMaxVol(XQryMaxOrderVolRequest request, IAccount account)
+        void SrvOnXQryMaxVol(ISession session, XQryMaxOrderVolRequest request, IAccount account)
         {
             logger.Info("QryMaxOrderVol :" + request.ToString());
             Symbol symbol = account.Domain.GetSymbol(request.Exchange, request.Symbol);
@@ -208,7 +208,7 @@ namespace TradingLib.Core
 
         }
 
-        void SrvOnXQrySettleInfo(XQrySettleInfoRequest request,IAccount account)
+        void SrvOnXQrySettleInfo(ISession session, XQrySettleInfoRequest request, IAccount account)
         {
             logger.Info("QrySettleInfo :" + request.ToString());
             AccountSettlement settlement = null;
@@ -261,7 +261,7 @@ namespace TradingLib.Core
         /// </summary>
         /// <param name="request"></param>
         /// <param name="account"></param>
-        void SrvOnXQryPositionDetail(XQryPositionDetailRequest request, IAccount account)
+        void SrvOnXQryPositionDetail(ISession session, XQryPositionDetailRequest request, IAccount account)
         {
             logger.Info("XQryPositionDetail" + request.ToString());
             List<PositionDetail> list = new List<PositionDetail>();

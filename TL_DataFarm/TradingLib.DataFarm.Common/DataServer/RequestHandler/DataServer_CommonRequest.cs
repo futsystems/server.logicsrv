@@ -42,8 +42,8 @@ namespace TradingLib.DataFarm.Common
             //v.DeployID = "demo";
             string key = request.NegotiationKey;
             string strval = request.NegotiationString;
-            key = string.IsNullOrEmpty(key) ? "1123123" : key;
-            strval = string.IsNullOrEmpty(strval) ? "2123131222" : strval;
+            //key = string.IsNullOrEmpty(key) ? "1123123" : key;
+            //strval = string.IsNullOrEmpty(strval) ? "2123131222" : strval;
 
             TLNegotiation neo = new TLNegotiation();
             neo.DeployID = string.Empty;

@@ -87,11 +87,13 @@ namespace FrontServer
         /// 注册交易客户端
         /// </summary>
         /// <param name="sessionId"></param>
-        public void LogicRegister(FrontServer.IConnection connection)
+        public void LogicRegister(FrontServer.IConnection connection,EnumFrontType type,string versionToken)
         {
             if (!connectionMap.Keys.Contains(connection.SessionID))
             {
                 RegisterClientRequest request = RequestTemplate<RegisterClientRequest>.CliSendRequest(0);
+                request.FrontType = type;
+                request.VersionToken = versionToken;
                 this.TLSend(connection.SessionID, request);
                 connectionMap.TryAdd(connection.SessionID, connection);
             }

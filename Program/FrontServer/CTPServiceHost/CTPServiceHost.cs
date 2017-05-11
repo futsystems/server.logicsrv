@@ -128,7 +128,7 @@ namespace CTPService
                                 conn = CreateConnection(session.SessionID);
                                 _connectionMap.TryAdd(session.SessionID, conn);
                                 //客户端发送初始化数据包后执行逻辑服务器客户端注册操作
-                                _mqServer.LogicRegister(conn);
+                                _mqServer.LogicRegister(conn,EnumFrontType.SimCTP,"");
                                 logger.Info(string.Format("Session:{0} Registed Remote EndPoint:{1}", conn.SessionID, conn.State.IPAddress));
                                 break;
                             }

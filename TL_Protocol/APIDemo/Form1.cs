@@ -13,7 +13,8 @@ using TradingLib.XLProtocol.Client;
 using TradingLib.XLProtocol.V1;
 using Common.Logging;
 using Newtonsoft.Json;
-
+using System.Security;
+using System.Security.Cryptography;
 using WebSocket4Net;
 namespace APIClient
 {
@@ -95,8 +96,16 @@ namespace APIClient
 
         void btnDecode_Click(object sender, EventArgs e)
         {
-            //string ret = TradingLib.Common.StringCipher.Decrypt(encstr.Text, ekey.Text);
-            //logger.Info("ret:" + ret);
+            string tmp = "accNo=4312&accessMode=01&accessType=0&backUrl=http://&bizType=000000&currency=CNY&customerInfo={\"certifTp\":\"01\",\"certify_id\":\"\",\"customerNm\":\"\",\"phoneNo\":\"13682102678\"}&frontUrl=http://localhost&merId=2000000000003&merOrderId=P16010716485332N275JG&payType=0002&txnAmt=1&txnSubType=01&txnTime=20160107164853&txnType=01&version=1.0.088888888";
+            MD5 md5 = new MD5CryptoServiceProvider();
+            byte[] t = md5.ComputeHash(Encoding.UTF8.GetBytes(tmp));
+
+            string val = Convert.ToBase64String(t);
+            logger.Info(val);
+
+            tmp = "{\"certifTp\":\"01\",\"certify_id\":\"\",\"customerNm\":\"\",\"phoneNo\":\"13682102678\"}";
+            logger.Info(Convert.ToBase64String(Encoding.UTF8.GetBytes(tmp)));
+            //Convert.FromBase64String()
         }
 
         void btnEncode_Click(object sender, EventArgs e)
