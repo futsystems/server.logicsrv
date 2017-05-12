@@ -4,6 +4,8 @@ using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Text;
+using System.IO;
+
 using System.Windows.Forms;
 using Ant.Component;
 using Beetle;
@@ -34,9 +36,20 @@ namespace Ant.Manager
             Utils.TotalProgress.Draw(string.Format("总进度 {0}/{1}", 0, mCount), 0, mCount);
             imgFile.Image = Utils.FileProgress.Image;
             imtTotal.Image = Utils.TotalProgress.Image ;
-            cbAppName.Items.Add("XManager");
-            cbAppName.Items.Add("XTraderLite");
-            cbAppName.Items.Add("Pobo");
+            if (File.Exists("programe.cfg"))
+            {
+                using (StreamReader reader = new StreamReader("programe.cfg", Encoding.UTF8))
+                {
+                    string programe = reader.ReadLine();
+                    cbAppName.Items.Add(programe);
+                }
+            }
+            else
+            {
+                cbAppName.Items.Add("XManager");
+                
+            }
+            cbAppName.SelectedIndexChanged += new EventHandler(cbAppName_SelectedIndexChanged);
             cbAppName.SelectedIndex = 0;
             if (!string.IsNullOrEmpty(Utils.IPAddress))
             {
@@ -48,8 +61,29 @@ namespace Ant.Manager
             }
             if (!string.IsNullOrEmpty(Utils.Port))
                 txtPort.Text = Utils.Port;
-           
 
+
+            txtUnit.TextChanged += new EventHandler(UpdateName);
+            cbAutoSuffix.CheckedChanged += new EventHandler(UpdateName);
+            vXGJ.CheckedChanged += new EventHandler(UpdateName);
+            vStd.CheckedChanged += new EventHandler(UpdateName);
+            vDZ.CheckedChanged += new EventHandler(UpdateName);
+
+
+        }
+
+        void cbAppName_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            bool needSuffix = cbAppName.SelectedItem.ToString() == "Pobo";
+            this.SuffixEnable = needSuffix;
+        }
+        void UpdateName(object sender, EventArgs e)
+        {
+            vXGJ.Enabled = cbAutoSuffix.Checked;
+            vStd.Enabled = cbAutoSuffix.Checked;
+            vDZ.Enabled = cbAutoSuffix.Checked;
+
+            lbUnit.Text = GetUnitName();
         }
         protected override void OnClosed(EventArgs e)
         {
@@ -60,6 +94,19 @@ namespace Ant.Manager
         private void cmdClose_Click(object sender, EventArgs e)
         {
             Close();
+        }
+
+        bool _suffixEnable;
+        public bool SuffixEnable
+        {
+            get { return _suffixEnable; }
+            set
+            {
+                _suffixEnable = value;
+                panel1.Visible = _suffixEnable;
+                cbAutoSuffix.Checked = _suffixEnable;
+
+            }
         }
         private void cmdConnection_Click(object sender, EventArgs e)
         {
@@ -99,9 +146,20 @@ namespace Ant.Manager
                 MessageBox.Show("请输入更新程序域");
                 return;
             }
-            
+
             System.Threading.ThreadPool.QueueUserWorkItem(OnPostFile);
             cmdUpload.Enabled = false;
+        }
+
+        string GetUnitName()
+        {
+            if (cbAutoSuffix.Checked)
+            {
+                if (vXGJ.Checked) return string.Format("{0}-{1}", txtUnit.Text, "xgj");
+                if (vStd.Checked) return string.Format("{0}-{1}", txtUnit.Text, "std");
+                if (vDZ.Checked) return string.Format("{0}-{1}", txtUnit.Text, "dz");
+            }
+            return txtUnit.Text;
         }
         private void OnPostFile(object state)
         {
@@ -123,7 +181,7 @@ namespace Ant.Manager
                         post.Packages = item.Packages;
                         post.PackageSize = item.PackageSize;
                         post.Size = item.Size;
-                        post.Unit = txtUnit.Text;
+                        post.Unit = GetUnitName();
                         post.AppName = cbAppName.SelectedItem.ToString();
                         
                         Component.Protocols.PostResponse result = (Component.Protocols.PostResponse)Client.Send(post);

@@ -42,6 +42,7 @@
             this.treeFiles = new System.Windows.Forms.TreeView();
             this.imageList1 = new System.Windows.Forms.ImageList(this.components);
             this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
+            this.lbDictonary = new System.Windows.Forms.ToolStripLabel();
             this.toolStrip1.SuspendLayout();
             this.statusStrip1.SuspendLayout();
             this.SuspendLayout();
@@ -55,7 +56,8 @@
             this.toolStripSeparator2,
             this.toolStripButton2,
             this.toolStripSeparator1,
-            this.toolStripButton4});
+            this.toolStripButton4,
+            this.lbDictonary});
             this.toolStrip1.Location = new System.Drawing.Point(0, 0);
             this.toolStrip1.Name = "toolStrip1";
             this.toolStrip1.Size = new System.Drawing.Size(592, 31);
@@ -146,6 +148,12 @@
             this.imageList1.ImageSize = new System.Drawing.Size(24, 24);
             this.imageList1.TransparentColor = System.Drawing.Color.Transparent;
             // 
+            // lbDictonary
+            // 
+            this.lbDictonary.Name = "lbDictonary";
+            this.lbDictonary.Size = new System.Drawing.Size(25, 28);
+            this.lbDictonary.Text = "dic";
+            // 
             // FrmMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -183,6 +191,7 @@
         private System.Windows.Forms.ImageList imageList1;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
         private System.Windows.Forms.ToolStripButton cmdRefresh;
+        private System.Windows.Forms.ToolStripLabel lbDictonary;
     }
 }
 

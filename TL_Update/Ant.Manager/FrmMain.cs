@@ -4,6 +4,8 @@ using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Text;
+using System.IO;
+using System.Text;
 using System.Windows.Forms;
 using Ant.Component;
 namespace Ant.Manager
@@ -14,13 +16,29 @@ namespace Ant.Manager
         {
             InitializeComponent();
         }
-       
+
+        List<string> defaultFiles = new List<string>();
         private void FrmMain_Load(object sender, EventArgs e)
         {
           
             Beetle.TcpUtils.Setup("beetle");
             try
-            {    
+            {
+                //加载默认更新文件
+                if (File.Exists("defaultfiles.cfg"))
+                {
+                    using (StreamReader reader = new StreamReader("defaultfiles.cfg", Encoding.UTF8))
+                    {
+                        string line =string.Empty;
+                        while ((line = reader.ReadLine()) != null)
+                        {
+                            if (string.IsNullOrEmpty(line)) continue;
+                            defaultFiles.Add(line);
+                        }
+                    }
+                }
+
+
                 imageList1.Images.Add(Properties.Resources.folder);
                 imageList1.Images.Add(Properties.Resources.files);
                 Utils.LoadINI();
@@ -47,6 +65,10 @@ namespace Ant.Manager
                 {
                     node.ImageIndex = 0;
                     node.SelectedImageIndex = 0;
+                    if (defaultFiles.Contains(item.Name))
+                    {
+                        node.Checked = true;
+                    }
                     LoadChilds(node, item.Childs);
                 }
                 else
@@ -64,6 +86,10 @@ namespace Ant.Manager
         {
             treeFiles.Nodes.Clear();
             IList<ResourceItem> items = Utils.GetFiles(Utils.Path);
+            
+            string[] dirName = Utils.Path.Split('\\');
+            lbDictonary.Text = string.Format("当前目录:{0}",dirName[dirName.Length - 2]);
+
             TreeNode root = new TreeNode("更新项目");
             treeFiles.Nodes.Add(root);
             foreach (ResourceItem item in items)
@@ -80,6 +106,10 @@ namespace Ant.Manager
                 {
                     node.ImageIndex = 1;
                     node.SelectedImageIndex = 1;
+                    if (defaultFiles.Contains(item.Name))
+                    {
+                        node.Checked = true;
+                    }
                 }
                 node.Tag = item;
 
