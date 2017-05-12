@@ -34,7 +34,7 @@ namespace TradingLib.DataFarm.Common
                     response.CMDStr = request.CMDStr;
                     response.RspInfo.Fill(new FutsRspError("命令不支持"));
 
-                    this.SendData(conn, response);
+                    this.SendTLData(conn, response);
 
                 }
             }
@@ -43,13 +43,13 @@ namespace TradingLib.DataFarm.Common
                 RspMGRResponse response = ResponseTemplate<RspMGRResponse>.SrvSendRspResponse(request);
                 response.RspInfo.Fill(ex);
 
-                this.SendData(conn, response);
+                this.SendTLData(conn, response);
             }
             catch (Exception ex)
             {
                 RspMGRResponse response = ResponseTemplate<RspMGRResponse>.SrvSendRspResponse(request);
                 response.RspInfo.Fill(string.Format("服务端异常:{0}", ex.ToString()));
-                this.SendData(conn, response);
+                this.SendTLData(conn, response);
             }
         }
 
@@ -61,7 +61,7 @@ namespace TradingLib.DataFarm.Common
             response.IsLast = islast;
             response.Result = obj.SerializeObject();
 
-            this.SendData(conn, response);
+            this.SendTLData(conn, response);
         }
 
         /// <summary>
@@ -79,7 +79,7 @@ namespace TradingLib.DataFarm.Common
             response.IsLast = isLast;
             response.Result = obj.SerializeObject();
 
-            this.SendData(conn, response);
+            this.SendTLData(conn, response);
         }
     }
 }

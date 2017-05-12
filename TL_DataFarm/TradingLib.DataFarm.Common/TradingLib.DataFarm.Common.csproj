@@ -88,6 +88,7 @@
     <Compile Include="Common\MBar.cs" />
     <Compile Include="Common\MemoryBarDB.cs" />
     <Compile Include="DataServer\DataServer_FrequencyService.cs" />
+    <Compile Include="DataServer\DFStatistic.cs" />
     <Compile Include="DataServer\RequestHandler\DataServer_ContribRequest.cs" />
     <Compile Include="DataServer\RequestHandler\DataServer_Demo.cs" />
     <Compile Include="DataServer\DataServer_.Restore.cs" />
@@ -95,7 +96,7 @@
     <Compile Include="DataServer\DataServer_Eod.cs" />
     <Compile Include="DataServer\DataServer_SendWroker.cs" />
     <Compile Include="DataServer\DataServer_Task.cs" />
-    <Compile Include="DataServer\DataServer_XLRequest.cs" />
+    <Compile Include="DataServer\RequestHandler\DataServer_XLRequest.cs" />
     <Compile Include="DataServer\DataServer_Http.cs" />
     <Compile Include="EodDataService\EodDataService.cs" />
     <Compile Include="EodDataService\EodDataService_DataCache.cs" />
@@ -118,7 +119,7 @@
     <Compile Include="DataServer\DataServer.cs" />
     <Compile Include="DataServer\DataServer_.cs" />
     <Compile Include="DataServer\DataServer_ServiceHost.cs" />
-    <Compile Include="DataServer\RequestHandler\DataServer_CommonRequest.cs" />
+    <Compile Include="DataServer\RequestHandler\DataServer_TLRequest.cs" />
     <Compile Include="DataServer\DataServer_Connection.cs" />
     <Compile Include="DataServer\DataServer_DataStore.cs" />
     <Compile Include="DataServer\DataServer_TickFeed.cs" />

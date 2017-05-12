@@ -256,7 +256,6 @@ namespace TradingLib.DataFarm.Common
                 if (!tick.QuoteUpdate) continue;
                 NotifyTick2Connections(tick);
                 tick.QuoteUpdate = false;
-                
             }
         }
 
@@ -319,30 +318,35 @@ namespace TradingLib.DataFarm.Common
                 //遍历所有连接 按连接类型将数据发送到客户端
                 foreach (var conn in target.Values)
                 {
+
                     switch (conn.FrontType)
                     {
                         case EnumFrontType.TLSocket:
                             {
                                 if (tldata == null) tldata = CreateTLTickData(k);
-                                this.SendData(conn, tldata);
+                                this._SendData(conn, tldata);
+                                dfStatistic.TickSendCnt++;
+                                dfStatistic.TickSendSize += tldata.Length;
                                 break;
                             }
                         case EnumFrontType.XLTinny:
                             {
                                 if (xldata == null) xldata = CreateXLTickData(k);
-                                this.SendData(conn, xldata);
+                                this._SendData(conn, xldata);
                                 break;
                             }
                         case EnumFrontType.WebSocket:
                             {
                                 if (jsondata == null) jsondata = k.ToJsonNotify();
-                                this.SendData(conn, jsondata);
+                                this._SendData(conn, jsondata);
                                 break;
                             }
                         default:
                             logger.Warn(string.Format("Conn FrontType:{0} not handled", conn.FrontType));
                             break;
                     }
+
+                    
                 }
             }
         }
@@ -354,19 +358,19 @@ namespace TradingLib.DataFarm.Common
                 case EnumFrontType.TLSocket:
                     {
                         var tldata = CreateTLTickData(k);
-                        this.SendData(conn, tldata);
+                        this._SendData(conn, tldata);
                         break;
                     }
                 case EnumFrontType.XLTinny:
                     {
                         var xldata = CreateXLTickData(k);
-                        this.SendData(conn, xldata);
+                        this._SendData(conn, xldata);
                         break;
                     }
                 case EnumFrontType.WebSocket:
                     {
                         var jsondata = k.ToJsonNotify();
-                        this.SendData(conn, jsondata);
+                        this._SendData(conn, jsondata);
                         break;
                     }
                 default:
@@ -424,9 +428,10 @@ namespace TradingLib.DataFarm.Common
                     Tick k = Global.TickTracker[request.Exchange, symbol];
                     if (k != null)
                     {
-                        TickNotify ticknotify = new TickNotify();
-                        ticknotify.Tick = k;
-                        this.SendData(conn, ticknotify);
+                        //TickNotify ticknotify = new TickNotify();
+                        //ticknotify.Tick = k;
+                        //this.SendData(conn, ticknotify);
+                        NotifyTick2Connection(k, conn);
                     }
                 }
             }

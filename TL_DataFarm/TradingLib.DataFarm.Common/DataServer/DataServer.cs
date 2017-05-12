@@ -21,6 +21,7 @@ namespace TradingLib.DataFarm.Common
         protected ConfigFile ConfigFile { get { return _config; } }
         protected ConfigDB _cfgdb;
         IHistDataStore _datastore = null;
+        DFStatistic dfStatistic = new DFStatistic();
 
         int _tradebatchsize = 500;
         int _barbatchsize = 500;
@@ -94,6 +95,7 @@ namespace TradingLib.DataFarm.Common
 
             _connectionDeadPeriod = _cfgdb["ConnectionDeadPeriod"].AsInt();
 
+            
 
         }
         /// <summary>

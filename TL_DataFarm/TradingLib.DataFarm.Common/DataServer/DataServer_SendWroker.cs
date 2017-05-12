@@ -6,6 +6,8 @@ using System.Text;
 using System.IO;
 using TradingLib.API;
 using TradingLib.Common;
+using TradingLib.XLProtocol;
+using TradingLib.XLProtocol.V1;
 using TradingLib.DataFarm.API;
 using Common.Logging;
 
@@ -37,7 +39,27 @@ namespace TradingLib.DataFarm.Common
         }
         public partial class DataServer
         {
-
+            /* 数据发送服务 
+             * 历史数据部分通过SendTLData SendXLData对外发送，内部数据处理后 最后通过_SendData(IConnection connection, byte[] data)发送
+             * 实时行情部分优化后直接通过_SendData(IConnection connection, byte[] data)进行发送
+             * 
+             * 
+             * 
+             * 
+             * 
+             * 
+             * 
+             * 
+             * 
+             * 
+             * 
+             * 
+             * 
+             * 
+             * 
+             * 
+             * 
+             * */
 
             /// <summary>
             /// 启动数据储存服务
@@ -67,18 +89,87 @@ namespace TradingLib.DataFarm.Common
                 }
             }
 
-            void SendData(IConnection connection, IPacket packet)
+            /// <summary>
+            /// 发送IPacket类型的数据包
+            /// </summary>
+            /// <param name="connection"></param>
+            /// <param name="packet"></param>
+            void SendTLData(IConnection connection, IPacket packet)
             {
-                this.SendData(connection, packet.Data);
+                
+                byte[] data = packet.Data;
+                this._SendData(connection, data);
+
+                //统计业务数据包发送次数与大小
+                switch (packet.Type)
+                {
+                        //Bar
+                    case MessageTypes.BIN_BARRESPONSE:
+                        {
+                            dfStatistic.BarDataSendCnt++;
+                            dfStatistic.BarDataSendSize += data.Length;
+                            break;
+                        }
+                        //分笔
+                    case MessageTypes.XQRYTRADSPLITRESPONSE:
+                        {
+                            dfStatistic.TradeSplitSendCnt++;
+                            dfStatistic.TradeSplitSendSize += data.Length;
+                            break;
+                        }
+                        //PriceVol
+                    case MessageTypes.XQRYPRICEVOLRESPONSE:
+                        {
+                            dfStatistic.PriceVolSendCnt++;
+                            dfStatistic.PriceVolSendSize += data.Length;
+                            break;
+                        }
+                    case MessageTypes.XQRYMINUTEDATARESPONSE:
+                        {
+                            dfStatistic.MinuteDataSendCnt++;
+                            dfStatistic.MinuteDataSendSize += data.Length;
+                            break;
+                        }
+                    default:
+                        {
+                            dfStatistic.OtherPktSendCnt++;
+                            dfStatistic.OtherPktSendSize += data.Length;
+                            break;
+                        }
+                }
             }
 
-            void SendData(IConnection connection, byte[] data)
+            /// <summary>
+            /// 发送XL数据包
+            /// </summary>
+            /// <param name="conn"></param>
+            /// <param name="pkt"></param>
+            /// <param name="seqType"></param>
+            /// <param name="seqNo"></param>
+            /// <param name="requestId"></param>
+            /// <param name="islast"></param>
+            void SendXLData(IConnection conn, XLPacketData pkt,XLEnumSeqType seqType,uint seqNo,uint requestId, bool islast)
+            {
+                if (conn.FrontType == EnumFrontType.XLTinny)
+                {
+                    byte[] ret = XLPacketData.PackToBytes(pkt, seqType, seqNo, requestId, islast);
+                    _SendData(conn, ret);
+                }
+                if (conn.FrontType == EnumFrontType.WebSocket)
+                {
+                    string json = XLPacketData.PackJsonResponse(pkt, (int)requestId, islast);
+                    _SendData(conn, json);
+                }
+                //增加数据统计
+            }
+
+            void _SendData(IConnection connection, byte[] data)
             {
                 sendbuffer.Write(new SendStruct(connection, data));
                 NewSend();
             }
 
-            void SendData(IConnection connection, string json)
+            void _SendData(IConnection connection, string json)
             {
                 sendbuffer.Write(new SendStruct(connection, json));
                 NewSend();

@@ -58,7 +58,7 @@ namespace TradingLib.DataFarm.Common
             neo.TLProtoclType = EnumTLProtoclType.TL_Encrypted;
             response.Negotiation = neo;
 
-            this.SendData(conn, response);
+            this.SendTLData(conn, response);
 
         }
 
@@ -76,7 +76,7 @@ namespace TradingLib.DataFarm.Common
             response.Add(MessageTypes.XQRYSECURITY);
             response.Add(MessageTypes.XQRYSYMBOL);
 
-            this.SendData(conn, response);
+            this.SendTLData(conn, response);
         }
 
         /// <summary>
@@ -89,7 +89,7 @@ namespace TradingLib.DataFarm.Common
         {
             HeartBeatResponse response = ResponseTemplate<HeartBeatResponse>.SrvSendRspResponse(request);
 
-            this.SendData(conn, response);
+            this.SendTLData(conn, response);
         }
 
         void SrvOnLoginRequest(IServiceHost host, IConnection conn, LoginRequest request)
@@ -101,7 +101,7 @@ namespace TradingLib.DataFarm.Common
             response.TradingDay = 20161006;
             response.RspInfo = new RspInfoImpl();
 
-            this.SendData(conn, response);
+            this.SendTLData(conn, response);
         }
 
         //为什么超过一定数量的Bar一起发送 客户端就无法收到数据 socket缓存?
@@ -143,7 +143,7 @@ namespace TradingLib.DataFarm.Common
                                 RspQryBarResponse response = ResponseTemplate<RspQryBarResponse>.SrvSendRspResponse(request);
                                 response.Bar = bars[i];
                                 response.IsLast = i == bars.Count - 1;
-                                this.SendData(conn, response);
+                                this.SendTLData(conn, response);
                             }
                             break;
                         }
@@ -160,7 +160,7 @@ namespace TradingLib.DataFarm.Common
                                 {
                                     //一定数目的Bar之后 发送数据 同时判断是否是最后一条
                                     response.IsLast = (i == bars.Count-1);
-                                    this.SendData(conn, response);
+                                    this.SendTLData(conn, response);
                                     //不是最后一条数据则生成新的Response
                                     if (!response.IsLast)
                                     {
@@ -174,7 +174,7 @@ namespace TradingLib.DataFarm.Common
                             if (!response.IsLast)
                             {
                                 response.IsLast = true;
-                                this.SendData(conn, response);
+                                this.SendTLData(conn, response);
                             }
                             break;
                         }
@@ -220,7 +220,7 @@ namespace TradingLib.DataFarm.Common
                 {
                     //一定数目的Bar之后 发送数据 同时判断是否是最后一条
                     response.IsLast = (i == trades.Count - 1);
-                    this.SendData(conn, response);
+                    this.SendTLData(conn, response);
                     //不是最后一条数据则生成新的Response
                     if (!response.IsLast)
                     {
@@ -234,7 +234,7 @@ namespace TradingLib.DataFarm.Common
             if (!response.IsLast)
             {
                 response.IsLast = true;
-                this.SendData(conn, response);
+                this.SendTLData(conn, response);
             }
 
         }
@@ -268,7 +268,7 @@ namespace TradingLib.DataFarm.Common
                 {
                     //一定数目的Bar之后 发送数据 同时判断是否是最后一条
                     response.IsLast = (i == pvlist.Count - 1);
-                    this.SendData(conn, response);
+                    this.SendTLData(conn, response);
                     //不是最后一条数据则生成新的Response
                     if (!response.IsLast)
                     {
@@ -282,7 +282,7 @@ namespace TradingLib.DataFarm.Common
             if (!response.IsLast)
             {
                 response.IsLast = true;
-                this.SendData(conn, response);
+                this.SendTLData(conn, response);
             }
         }
 
@@ -322,7 +322,7 @@ namespace TradingLib.DataFarm.Common
                 {
                     //一定数目的Bar之后 发送数据 同时判断是否是最后一条
                     response.IsLast = (i == mdlist.Count - 1);
-                    this.SendData(conn, response);
+                    this.SendTLData(conn, response);
                     //不是最后一条数据则生成新的Response
                     if (!response.IsLast)
                     {
@@ -336,7 +336,7 @@ namespace TradingLib.DataFarm.Common
             if (!response.IsLast)
             {
                 response.IsLast = true;
-                this.SendData(conn, response);
+                this.SendTLData(conn, response);
                 logger.Info("Got Qry MinuteData Request:" + request.ToString() + " res cnt:" + response.MinuteDataList.Count);
             }
         }
@@ -361,7 +361,7 @@ namespace TradingLib.DataFarm.Common
                 RspXQryExchangeResponse response = ResponseTemplate<RspXQryExchangeResponse>.SrvSendRspResponse(request);
                 response.Exchange = exchs[i];
                 response.IsLast = i==totalnum - 1;
-                this.SendData(conn, response);
+                this.SendTLData(conn, response);
             }
         }
 
@@ -382,7 +382,7 @@ namespace TradingLib.DataFarm.Common
                 RspXQryMarketTimeResponse response = ResponseTemplate<RspXQryMarketTimeResponse>.SrvSendRspResponse(request);
                 response.MarketTime = mts[i];
                 response.IsLast = i == totalnum - 1;
-                this.SendData(conn, response);
+                this.SendTLData(conn, response);
             }
             
         }
@@ -408,13 +408,13 @@ namespace TradingLib.DataFarm.Common
                     RspXQrySecurityResponse response = ResponseTemplate<RspXQrySecurityResponse>.SrvSendRspResponse(request);
                     response.SecurityFaimly = seclist[i];
                     response.IsLast = i == totalnum - 1;
-                    this.SendData(conn, response);
+                    this.SendTLData(conn, response);
                 }
             }
             else
             {
                 RspXQrySecurityResponse response = ResponseTemplate<RspXQrySecurityResponse>.SrvSendRspResponse(request);
-                this.SendData(conn, response);
+                this.SendTLData(conn, response);
             }
         }
 
@@ -439,13 +439,13 @@ namespace TradingLib.DataFarm.Common
                     RspXQrySymbolResponse response = ResponseTemplate<RspXQrySymbolResponse>.SrvSendRspResponse(request);
                     response.Symbol = symlis[i];
                     response.IsLast = i == totalnum - 1;
-                    this.SendData(conn, response);
+                    this.SendTLData(conn, response);
                 }
             }
             else
             {
                 RspXQrySymbolResponse response = ResponseTemplate<RspXQrySymbolResponse>.SrvSendRspResponse(request);
-                this.SendData(conn, response);
+                this.SendTLData(conn, response);
             }
         }
 
@@ -489,7 +489,7 @@ namespace TradingLib.DataFarm.Common
                     RspXQryTickSnapShotResponse response = ResponseTemplate<RspXQryTickSnapShotResponse>.SrvSendRspResponse(request);
                     response.Tick = list[i];
                     response.IsLast = i == list.Length - 1;
-                    this.SendData(conn, response);
+                    this.SendTLData(conn, response);
                     
                 }
             }
@@ -501,7 +501,7 @@ namespace TradingLib.DataFarm.Common
                 {
                     RspXQryTickSnapShotResponse response = ResponseTemplate<RspXQryTickSnapShotResponse>.SrvSendRspResponse(request);
                     response.Tick = k;
-                    this.SendData(conn, response);
+                    this.SendTLData(conn, response);
                 }
             }
 

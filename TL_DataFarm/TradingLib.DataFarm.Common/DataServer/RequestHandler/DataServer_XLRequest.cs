@@ -33,8 +33,7 @@ namespace TradingLib.DataFarm.Common
                     {
 
                         XLPacketData pkt = new XLPacketData(XLMessageType.T_HEARTBEEAT);
-                        byte[] ret = XLPacketData.PackToBytes(pkt, XLEnumSeqType.SeqReq, (uint)0, (uint)requestId, true);
-                        SendData(conn, ret);
+                        SendXLData(conn, pkt, XLEnumSeqType.SeqReq, (uint)0, (uint)requestId, true);
                         break;
                     }
                 case XLMessageType.T_REQ_LOGIN:
@@ -55,16 +54,7 @@ namespace TradingLib.DataFarm.Common
                             pkt.AddField(rsp);
                             pkt.AddField(field);
 
-                            if (conn.FrontType == EnumFrontType.XLTinny)
-                            {
-                                byte[] ret = XLPacketData.PackToBytes(pkt, XLEnumSeqType.SeqReq, (uint)0, (uint)requestId, true);
-                                SendData(conn, ret);
-                            }
-                            else
-                            {
-                                string json = XLPacketData.PackJsonResponse(pkt, (int)requestId, true);
-                                SendData(conn, json);
-                            }
+                            SendXLData(conn, pkt, XLEnumSeqType.SeqQry, (uint)0, (uint)requestId, true);
                         }
                         else
                         {
@@ -124,20 +114,10 @@ namespace TradingLib.DataFarm.Common
                                 field.Currency = ConvCurrencyType(sym.Currency);
                                 field.TradingSession = sym.TradingSession;
 
-
                                 XLPacketData pkt = new XLPacketData(XLMessageType.T_RSP_SYMBOL);
                                 pkt.AddField(field);
 
-                                if (conn.FrontType == EnumFrontType.XLTinny)
-                                {
-                                    byte[] ret = XLPacketData.PackToBytes(pkt, XLEnumSeqType.SeqReq, (uint)0, (uint)requestId, i == length);
-                                    SendData(conn, ret);
-                                }
-                                if (conn.FrontType == EnumFrontType.WebSocket)
-                                {
-                                    string json = XLPacketData.PackJsonResponse(pkt, (int)requestId, i == length);
-                                    SendData(conn, json);
-                                }
+                                SendXLData(conn, pkt, XLEnumSeqType.SeqQry, (uint)0, (uint)requestId, i == length);
                             }
 
                         }
@@ -194,17 +174,7 @@ namespace TradingLib.DataFarm.Common
                                 {
                                     islast = (i == mdlist.Count - 1);
 
-                                    if (conn.FrontType == EnumFrontType.XLTinny)
-                                    {
-                                        byte[] ret = XLPacketData.PackToBytes(pkt, XLEnumSeqType.SeqReq, (uint)0, (uint)requestId, islast);
-                                        SendData(conn, ret);
-                                    }
-                                    if (conn.FrontType == EnumFrontType.WebSocket)
-                                    {
-                                        string json = XLPacketData.PackJsonResponse(pkt, (int)requestId, islast);
-                                        SendData(conn, json);
-                                    }
-
+                                    SendXLData(conn, pkt, XLEnumSeqType.SeqQry, (uint)0, (uint)requestId, islast);
                                     if (!islast)
                                     {
                                         pkt = new XLPacketData(XLMessageType.T_RSP_MINUTEDATA);
@@ -216,16 +186,7 @@ namespace TradingLib.DataFarm.Common
                             if (!islast)
                             {
                                 islast = true;
-                                if (conn.FrontType == EnumFrontType.XLTinny)
-                                {
-                                    byte[] ret = XLPacketData.PackToBytes(pkt, XLEnumSeqType.SeqReq, (uint)0, (uint)requestId, islast);
-                                    SendData(conn, ret);
-                                }
-                                if (conn.FrontType == EnumFrontType.WebSocket)
-                                {
-                                    string json = XLPacketData.PackJsonResponse(pkt, (int)requestId, islast);
-                                    SendData(conn, json);
-                                }
+                                SendXLData(conn, pkt, XLEnumSeqType.SeqQry, (uint)0, (uint)requestId, islast);
                             }
                         }
                     }
@@ -264,17 +225,7 @@ namespace TradingLib.DataFarm.Common
                                 {
                                     //一定数目的Bar之后 发送数据 同时判断是否是最后一条
                                     islast = (i == bars.Count - 1);
-                                    if (conn.FrontType == EnumFrontType.XLTinny)
-                                    {
-                                        byte[] ret = XLPacketData.PackToBytes(pkt, XLEnumSeqType.SeqReq, (uint)0, (uint)requestId, islast);
-                                        SendData(conn, ret);
-                                    }
-                                    if (conn.FrontType == EnumFrontType.WebSocket)
-                                    {
-                                        string json = XLPacketData.PackJsonResponse(pkt, (int)requestId, islast);
-                                        SendData(conn, json);
-                                    }
-
+                                    SendXLData(conn, pkt, XLEnumSeqType.SeqQry, (uint)0, (uint)requestId, islast);
                                     if (!islast)
                                     {
                                         pkt = new XLPacketData(XLMessageType.T_RSP_BARDATA);
@@ -286,16 +237,7 @@ namespace TradingLib.DataFarm.Common
                             if (!islast)
                             {
                                 islast = true;
-                                if (conn.FrontType == EnumFrontType.XLTinny)
-                                {
-                                    byte[] ret = XLPacketData.PackToBytes(pkt, XLEnumSeqType.SeqReq, (uint)0, (uint)requestId, islast);
-                                    SendData(conn, ret);
-                                }
-                                if (conn.FrontType == EnumFrontType.WebSocket)
-                                {
-                                    string json = XLPacketData.PackJsonResponse(pkt, (int)requestId, islast);
-                                    SendData(conn, json);
-                                }
+                                SendXLData(conn, pkt, XLEnumSeqType.SeqQry, (uint)0, (uint)requestId, islast);
                             }
 
                         }
