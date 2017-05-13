@@ -63,6 +63,19 @@ namespace Ant.Manager
                 INI.IniWriteValue(SELECTION_CONFIG, KEY_IPADDRESS,value);
             }
         }
+
+        public static List<string> GetSubDirectories(string path)
+        {
+            List<string> list = new List<string>();
+
+            string[] folder = System.IO.Directory.GetDirectories(path);
+            foreach (string f in folder)
+            {
+                string[] tmp = f.Split('\\');
+                list.Add(tmp[tmp.Length-1]);
+            }
+            return list;
+        }
         public static string Path
         {
             get

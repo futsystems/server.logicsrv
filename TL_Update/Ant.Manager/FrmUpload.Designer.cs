@@ -41,6 +41,8 @@
             this.cmdClose = new System.Windows.Forms.ToolStripButton();
             this.toolStripLabel3 = new System.Windows.Forms.ToolStripLabel();
             this.cbAppName = new System.Windows.Forms.ToolStripComboBox();
+            this.toolStripLabel2 = new System.Windows.Forms.ToolStripLabel();
+            this.lbUnit = new System.Windows.Forms.ToolStripLabel();
             this.imgFile = new System.Windows.Forms.PictureBox();
             this.imtTotal = new System.Windows.Forms.PictureBox();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
@@ -51,9 +53,9 @@
             this.vStd = new System.Windows.Forms.RadioButton();
             this.vDZ = new System.Windows.Forms.RadioButton();
             this.cbAutoSuffix = new System.Windows.Forms.CheckBox();
-            this.toolStripLabel2 = new System.Windows.Forms.ToolStripLabel();
-            this.lbUnit = new System.Windows.Forms.ToolStripLabel();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.vPublish = new System.Windows.Forms.RadioButton();
+            this.vDirName = new System.Windows.Forms.RadioButton();
             this.toolStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.imgFile)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.imtTotal)).BeginInit();
@@ -155,6 +157,19 @@
             this.cbAppName.Name = "cbAppName";
             this.cbAppName.Size = new System.Drawing.Size(80, 31);
             // 
+            // toolStripLabel2
+            // 
+            this.toolStripLabel2.Name = "toolStripLabel2";
+            this.toolStripLabel2.Size = new System.Drawing.Size(38, 28);
+            this.toolStripLabel2.Text = "UNIT:";
+            // 
+            // lbUnit
+            // 
+            this.lbUnit.ForeColor = System.Drawing.Color.Red;
+            this.lbUnit.Name = "lbUnit";
+            this.lbUnit.Size = new System.Drawing.Size(15, 28);
+            this.lbUnit.Text = "--";
+            // 
             // imgFile
             // 
             this.imgFile.Location = new System.Drawing.Point(21, 90);
@@ -198,7 +213,7 @@
             // 
             this.txtUnit.Location = new System.Drawing.Point(63, 45);
             this.txtUnit.Name = "txtUnit";
-            this.txtUnit.Size = new System.Drawing.Size(100, 21);
+            this.txtUnit.Size = new System.Drawing.Size(68, 21);
             this.txtUnit.TabIndex = 5;
             // 
             // vXGJ
@@ -226,7 +241,7 @@
             // vDZ
             // 
             this.vDZ.AutoSize = true;
-            this.vDZ.Location = new System.Drawing.Point(197, 2);
+            this.vDZ.Location = new System.Drawing.Point(85, 26);
             this.vDZ.Name = "vDZ";
             this.vDZ.Size = new System.Drawing.Size(59, 16);
             this.vDZ.TabIndex = 11;
@@ -244,29 +259,40 @@
             this.cbAutoSuffix.Text = "自动后缀";
             this.cbAutoSuffix.UseVisualStyleBackColor = true;
             // 
-            // toolStripLabel2
-            // 
-            this.toolStripLabel2.Name = "toolStripLabel2";
-            this.toolStripLabel2.Size = new System.Drawing.Size(38, 28);
-            this.toolStripLabel2.Text = "UNIT:";
-            // 
-            // lbUnit
-            // 
-            this.lbUnit.ForeColor = System.Drawing.Color.Red;
-            this.lbUnit.Name = "lbUnit";
-            this.lbUnit.Size = new System.Drawing.Size(15, 28);
-            this.lbUnit.Text = "--";
-            // 
             // panel1
             // 
+            this.panel1.Controls.Add(this.vDirName);
+            this.panel1.Controls.Add(this.vPublish);
             this.panel1.Controls.Add(this.cbAutoSuffix);
             this.panel1.Controls.Add(this.vXGJ);
             this.panel1.Controls.Add(this.vDZ);
             this.panel1.Controls.Add(this.vStd);
-            this.panel1.Location = new System.Drawing.Point(184, 45);
+            this.panel1.Location = new System.Drawing.Point(137, 39);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(264, 27);
+            this.panel1.Size = new System.Drawing.Size(339, 45);
             this.panel1.TabIndex = 13;
+            // 
+            // vPublish
+            // 
+            this.vPublish.AutoSize = true;
+            this.vPublish.Location = new System.Drawing.Point(197, 3);
+            this.vPublish.Name = "vPublish";
+            this.vPublish.Size = new System.Drawing.Size(71, 16);
+            this.vPublish.TabIndex = 13;
+            this.vPublish.TabStop = true;
+            this.vPublish.Text = "标准发布";
+            this.vPublish.UseVisualStyleBackColor = true;
+            // 
+            // vDirName
+            // 
+            this.vDirName.AutoSize = true;
+            this.vDirName.Location = new System.Drawing.Point(197, 24);
+            this.vDirName.Name = "vDirName";
+            this.vDirName.Size = new System.Drawing.Size(83, 16);
+            this.vDirName.TabIndex = 14;
+            this.vDirName.TabStop = true;
+            this.vDirName.Text = "文件夹同名";
+            this.vDirName.UseVisualStyleBackColor = true;
             // 
             // FrmUpload
             // 
@@ -327,5 +353,7 @@
         private System.Windows.Forms.ToolStripLabel toolStripLabel2;
         private System.Windows.Forms.ToolStripLabel lbUnit;
         private System.Windows.Forms.Panel panel1;
+        private System.Windows.Forms.RadioButton vPublish;
+        private System.Windows.Forms.RadioButton vDirName;
     }
 }

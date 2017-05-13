@@ -37,12 +37,29 @@ namespace Ant.Manager
                         }
                     }
                 }
+                FILEPATH = "backup";
+
+                if (File.Exists("deploydir.cfg"))
+                {
+                    using (StreamReader reader = new StreamReader("deploydir.cfg", Encoding.UTF8))
+                    {
+                        string line = reader.ReadLine();
+                        if (!string.IsNullOrEmpty(line))
+                        {
+                            FILEPATH = line;
+                        }
+                    }
+                }
+                //FILEPATH = Path.Combine(new string[] { AppDomain.CurrentDomain.BaseDirectory, FILEPATH });
 
 
                 imageList1.Images.Add(Properties.Resources.folder);
                 imageList1.Images.Add(Properties.Resources.files);
                 Utils.LoadINI();
                 Utils.LoadPrivateKey();
+                //加载子目录
+                LoadSubDic();
+                comboxSubDict.SelectedIndexChanged += new EventHandler(comboxSubDict_SelectedIndexChanged);
                 if(!string.IsNullOrEmpty(Utils.Path))
                      Utils.UpdateInfo.Load(Utils.Path+Utils.UPDATE_FILE);
                 txtSelectPath.Text = Utils.Path;
@@ -55,6 +72,56 @@ namespace Ant.Manager
             {
                 MessageBox.Show(this, e_.Message, "程序处理错误", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
+        }
+
+        string FILEPATH = string.Empty;
+        /// <summary>
+        /// 子目录选择事件
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        void comboxSubDict_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            Utils.Path = Path.Combine(new string[] {FILEPATH, comboxSubDict.SelectedItem.ToString() });
+            if (Utils.Path.LastIndexOf("\\") != Utils.Path.Length - 1)
+            {
+                Utils.Path += "\\";
+            }
+            txtSelectPath.Text = Utils.Path;
+            Utils.UpdateInfo.Load(Utils.Path + Utils.UPDATE_FILE);
+            LoadResource();
+        }
+
+        /// <summary>
+        /// 从本地backup目录中加载所有子目录
+        /// </summary>
+        void LoadSubDic()
+        { 
+            comboxSubDict.Items.Clear();
+            List<string> list = Utils.GetSubDirectories(FILEPATH);
+            string[] tmp = Utils.Path.Split('\\');
+            string dirname = string.Empty;
+            if (tmp.Length >= 2)
+            {
+                dirname = tmp[tmp.Length - 2];
+            }
+            int idx = 0;
+            int i=0;
+            foreach (var item in list)
+            {
+                comboxSubDict.Items.Add(item);
+                if (dirname == item)
+                { 
+                    idx = i;
+
+                }
+                i ++;
+            }
+            if (list.Count > 0)
+            {
+                comboxSubDict.SelectedIndex = idx;
+            }
+
         }
         private void LoadChilds(TreeNode parent, IList<ResourceItem> childs)
         {
@@ -88,8 +155,6 @@ namespace Ant.Manager
             IList<ResourceItem> items = Utils.GetFiles(Utils.Path);
             
             string[] dirName = Utils.Path.Split('\\');
-            lbDictonary.Text = string.Format("当前目录:{0}",dirName[dirName.Length - 2]);
-
             TreeNode root = new TreeNode("更新项目");
             treeFiles.Nodes.Add(root);
             foreach (ResourceItem item in items)
@@ -164,6 +229,7 @@ namespace Ant.Manager
             Utils.UpdateInfo.Save(Utils.Path + Utils.UPDATE_FILE);
             //MessageBox.Show("it is pl");
             FrmUpload upload = new FrmUpload();
+            upload.DirName = comboxSubDict.SelectedItem.ToString();
             upload.UpdateItems = items;
 
             FileItem ui = new FileItem();

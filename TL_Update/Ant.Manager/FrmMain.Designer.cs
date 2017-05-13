@@ -42,7 +42,9 @@
             this.treeFiles = new System.Windows.Forms.TreeView();
             this.imageList1 = new System.Windows.Forms.ImageList(this.components);
             this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
-            this.lbDictonary = new System.Windows.Forms.ToolStripLabel();
+            this.comboxSubDict = new System.Windows.Forms.ToolStripComboBox();
+            this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
+            this.toolStripLabel1 = new System.Windows.Forms.ToolStripLabel();
             this.toolStrip1.SuspendLayout();
             this.statusStrip1.SuspendLayout();
             this.SuspendLayout();
@@ -57,7 +59,9 @@
             this.toolStripButton2,
             this.toolStripSeparator1,
             this.toolStripButton4,
-            this.lbDictonary});
+            this.toolStripSeparator3,
+            this.toolStripLabel1,
+            this.comboxSubDict});
             this.toolStrip1.Location = new System.Drawing.Point(0, 0);
             this.toolStrip1.Name = "toolStrip1";
             this.toolStrip1.Size = new System.Drawing.Size(592, 31);
@@ -148,11 +152,21 @@
             this.imageList1.ImageSize = new System.Drawing.Size(24, 24);
             this.imageList1.TransparentColor = System.Drawing.Color.Transparent;
             // 
-            // lbDictonary
+            // comboxSubDict
             // 
-            this.lbDictonary.Name = "lbDictonary";
-            this.lbDictonary.Size = new System.Drawing.Size(25, 28);
-            this.lbDictonary.Text = "dic";
+            this.comboxSubDict.Name = "comboxSubDict";
+            this.comboxSubDict.Size = new System.Drawing.Size(220, 31);
+            // 
+            // toolStripSeparator3
+            // 
+            this.toolStripSeparator3.Name = "toolStripSeparator3";
+            this.toolStripSeparator3.Size = new System.Drawing.Size(6, 31);
+            // 
+            // toolStripLabel1
+            // 
+            this.toolStripLabel1.Name = "toolStripLabel1";
+            this.toolStripLabel1.Size = new System.Drawing.Size(56, 28);
+            this.toolStripLabel1.Text = "更新目录";
             // 
             // FrmMain
             // 
@@ -166,7 +180,7 @@
             this.MinimumSize = new System.Drawing.Size(600, 500);
             this.Name = "FrmMain";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "QSTrading更新管理端";
+            this.Text = "软件更新管理终端";
             this.Load += new System.EventHandler(this.FrmMain_Load);
             this.toolStrip1.ResumeLayout(false);
             this.toolStrip1.PerformLayout();
@@ -191,7 +205,9 @@
         private System.Windows.Forms.ImageList imageList1;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
         private System.Windows.Forms.ToolStripButton cmdRefresh;
-        private System.Windows.Forms.ToolStripLabel lbDictonary;
+        private System.Windows.Forms.ToolStripComboBox comboxSubDict;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator3;
+        private System.Windows.Forms.ToolStripLabel toolStripLabel1;
     }
 }
 

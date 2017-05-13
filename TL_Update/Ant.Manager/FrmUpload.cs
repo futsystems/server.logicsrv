@@ -68,6 +68,8 @@ namespace Ant.Manager
             vXGJ.CheckedChanged += new EventHandler(UpdateName);
             vStd.CheckedChanged += new EventHandler(UpdateName);
             vDZ.CheckedChanged += new EventHandler(UpdateName);
+            vPublish.CheckedChanged += new EventHandler(UpdateName);
+            vDirName.CheckedChanged += new EventHandler(UpdateName);
 
 
         }
@@ -82,6 +84,8 @@ namespace Ant.Manager
             vXGJ.Enabled = cbAutoSuffix.Checked;
             vStd.Enabled = cbAutoSuffix.Checked;
             vDZ.Enabled = cbAutoSuffix.Checked;
+            vPublish.Enabled = cbAutoSuffix.Checked;
+            vDirName.Enabled = cbAutoSuffix.Checked; 
 
             lbUnit.Text = GetUnitName();
         }
@@ -141,7 +145,8 @@ namespace Ant.Manager
         }
         private void cmdUpload_Click(object sender, EventArgs e)
         {
-            if (string.IsNullOrEmpty(txtUnit.Text))
+            bool needCheckManulSet = !(cbAutoSuffix.Checked && vDirName.Checked);
+            if (needCheckManulSet && string.IsNullOrEmpty(txtUnit.Text))
             {
                 MessageBox.Show("请输入更新程序域");
                 return;
@@ -151,6 +156,7 @@ namespace Ant.Manager
             cmdUpload.Enabled = false;
         }
 
+        public string DirName { get; set; }
         string GetUnitName()
         {
             if (cbAutoSuffix.Checked)
@@ -158,6 +164,8 @@ namespace Ant.Manager
                 if (vXGJ.Checked) return string.Format("{0}-{1}", txtUnit.Text, "xgj");
                 if (vStd.Checked) return string.Format("{0}-{1}", txtUnit.Text, "std");
                 if (vDZ.Checked) return string.Format("{0}-{1}", txtUnit.Text, "dz");
+                if (vPublish.Checked) return string.Format("{0}-{1}", txtUnit.Text, "0");
+                if (vDirName.Checked) return DirName;
             }
             return txtUnit.Text;
         }
@@ -181,7 +189,7 @@ namespace Ant.Manager
                         post.Packages = item.Packages;
                         post.PackageSize = item.PackageSize;
                         post.Size = item.Size;
-                        post.Unit = GetUnitName();
+                        post.Unit = lbUnit.Text;
                         post.AppName = cbAppName.SelectedItem.ToString();
                         
                         Component.Protocols.PostResponse result = (Component.Protocols.PostResponse)Client.Send(post);
