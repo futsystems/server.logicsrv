@@ -35,6 +35,11 @@ namespace TradingLib.Contrib.APIService
         /// <summary>
         /// 爱农
         /// </summary>
-        ChinagPay
+        ChinagPay,
+
+        /// <summary>
+        /// 财易支付
+        /// </summary>
+        Cai1Pay
     }
 }

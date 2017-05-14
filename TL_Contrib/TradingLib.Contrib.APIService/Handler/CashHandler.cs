@@ -23,6 +23,7 @@ namespace TradingLib.Contrib.APIService
         }
 
         const string ERROR_TPL_ID = "ERROR";
+        List<string> confirmedOperationRefList = new List<string>();//数据库更新后再查询 这里无法确保获取最新的Operation状态
 
         public override object Process(HttpRequest request)
         {
@@ -193,48 +194,13 @@ namespace TradingLib.Contrib.APIService
                     case "SRVNOTIFY":
                         {
                             string gwtype = path[3].ToUpper();
-                            CashOperation operation = null;
-                            switch (gwtype)
+                            bool gatewayexit = false;
+                            CashOperation operation = GateWayBase.GetOperation(gwtype, request, out gatewayexit);
+                            if (!gatewayexit)
                             {
-                                case "BAOFU":
-                                    {
-                                        operation = BaoFuGateway.GetCashOperation(request.Params);
-                                        break;
-                                    }
-                                case "ALIPAY":
-                                    {
-                                        operation = AliPayGateWay.GetCashOperation(request.Params);
-                                        break;
-                                    }
-                                case "IPS":
-                                    {
-                                        operation = IPSGateWay.GetCashOperation(request.Params);
-                                        break;
-                                        //var ret = request.Params["paymentResult"];
-                                        //logger.Info("ret:" + ret);
-                                        //<Ips><GateWayRsp><head><ReferenceID></ReferenceID><RspCode>000000</RspCode><RspMsg><![CDATA[交易成功！]]></RspMsg><ReqDate>20170305091219</ReqDate><RspDate>20170305091340</RspDate><Signature>f04f976b94172bc47bffa8c27491c347</Signature></head><body><MerBillNo>636243016596374014</MerBillNo><CurrencyType>156</CurrencyType><Amount>0.01</Amount><Date>20170305</Date><Status>Y</Status><Msg><![CDATA[支付成功！]]></Msg><IpsBillNo>BO20170305091102004402</IpsBillNo><IpsTradeNo>2017030509121984702</IpsTradeNo><RetEncodeType>17</RetEncodeType><BankBillNo>7109877764</BankBillNo><ResultType>0</ResultType><IpsBillTime>20170305091340</IpsBillTime></body></GateWayRsp></Ips>
-                                        //break;
-                                    }
-                                case "UNSPAY":
-                                    {
-                                        operation = UnspayGateWay.GetCashOperation(request.Params);
-                                        break;
-                                    }
-                                case "DINPAY":
-                                    {
-                                        operation = DinpayGateWay.GetCashOperation(request.Params);
-                                        break;
-                                    }
-                                case "CHINAGPAY":
-                                    {
-                                        operation = ChinagpayGateWay.GetCashOperation(request.Params);
-                                        break;
-                                    }
-                                default:
-                                    {
-                                        return "Not Support Gateway";
-                                    }
+                                return  "Not Support Gateway";
                             }
+                           
 
                             if (operation == null)
                             {
@@ -242,102 +208,115 @@ namespace TradingLib.Contrib.APIService
                                 return "CashOperation Not Exist";
                             }
                             IAccount account = TLCtxHelper.ModuleAccountManager[operation.Account];
-                            if(account == null)
+                            if (account == null)
                             {
                                 logger.Error(string.Format("Account not exit,Info:{0}", request.RawUrl));
                                 return "Account Not Exist";
                             }
 
-                            var gateway = APITracker.GateWayTracker.GetDomainGateway(account.Domain.ID);
-                            if (gateway == null)
+                            //给Operation加锁 避免瞬间2次通知造成重复入金 Operation动态生成 无法加锁 加锁账户
+                            lock (account)
                             {
-                                return "GateWay Not Setted";
-                            }
-                            if (!gateway.Avabile)
-                            {
-                                return "GateWay Not Avabile";
-                            }
-
-                            
-                            //1.检查支付网关回调参数是否合法
-                            bool paramsResult = gateway.CheckParameters(request);
-                            if (paramsResult)
-                            {
-                                //2.检查operation状态
-                                if (operation.Status == QSEnumCashInOutStatus.CONFIRMED)
+                                var gateway = APITracker.GateWayTracker.GetDomainGateway(account.Domain.ID);
+                                if (gateway == null)
                                 {
-                                    logger.Warn(string.Format("TransID:{0} already confirmed", operation.Ref));
-                                    return "CashOperation Already Confirmed";
+                                    return "GateWay Not Setted";
                                 }
-                                //3.检查支付状态
-                                bool payResult = gateway.CheckPayResult(request, operation);
-                                if (payResult)
+                                if (!gateway.Avabile)
                                 {
-                                    //1.执行账户出入金
-                                    var txn = CashOperation.GenCashTransaction(operation);
-                                    txn.Operator = gateway.GateWayType.ToString();
-                                    //汇率换算
-                                    var rate = account.GetExchangeRate(CurrencyType.RMB);
-                                    txn.Amount = txn.Amount * rate;
-                                    decimal nowequity = account.LastEquity + account.CashIn - account.CashOut;
-                                    TLCtxHelper.ModuleAccountManager.CashOperation(txn);
+                                    return "GateWay Not Avabile";
+                                }
 
-                                    logger.Info(string.Format("Deposit-Equity TXN:{0}/{1} AC:{2} RMB:{3} {4} B:{5}", operation.Ref, operation.GateWayType, operation.Account, operation.Amount, txn.Amount, nowequity));
 
-                                    //执行手续费收取
-                                    if (txn.TxnType == QSEnumCashOperation.Deposit)
+                                //1.检查支付网关回调参数是否合法
+                                bool paramsResult = gateway.CheckParameters(request);
+                                if (paramsResult)
+                                {
+                                    //2.检查operation状态
+                                    if (operation.Status == QSEnumCashInOutStatus.CONFIRMED)
                                     {
-                                        decimal depositcommission = account.GetDepositCommission();
-                                        if (depositcommission > 0)
+                                        logger.Warn(string.Format("TransID:{0} already confirmed", operation.Ref));
+                                        return "CashOperation Already Confirmed";
+                                    }
+                                    if(confirmedOperationRefList.Contains(operation.Ref))
+                                    {
+                                        logger.Warn(string.Format("TransID:{0} already confirmed", operation.Ref));
+                                        return "CashOperation Already Confirmed";
+                                    }
+                                    //3.检查支付状态
+                                    bool payResult = gateway.CheckPayResult(request, operation);
+                                    if (payResult)
+                                    {
+                                        //2.更新出入金操作状态更新
+                                        operation.Status = QSEnumCashInOutStatus.CONFIRMED;
+                                        operation.Comment = gateway.GetResultComment(request);
+                                        ORM.MCashOperation.UpdateCashOperationStatus(operation);
+                                        confirmedOperationRefList.Add(operation.Ref);
+                                        TLCtxHelper.ModuleMgrExchange.Notify("APIService", "NotifyCashOperation", operation, account.GetNotifyPredicate());//通知
+
+
+                                        //1.执行账户出入金
+                                        var txn = CashOperation.GenCashTransaction(operation);
+                                        txn.Operator = gateway.GateWayType.ToString();
+                                        //汇率换算
+                                        var rate = account.GetExchangeRate(CurrencyType.RMB);
+                                        txn.Amount = txn.Amount * rate;
+                                        decimal nowequity = account.LastEquity + account.CashIn - account.CashOut;
+                                        TLCtxHelper.ModuleAccountManager.CashOperation(txn);
+
+                                        logger.Info(string.Format("T:{6} Deposit-Equity TXN:{0}/{1} AC:{2} RMB:{3} {4} B:{5}", operation.Ref, operation.GateWayType, operation.Account, operation.Amount, txn.Amount, nowequity, System.Threading.Thread.CurrentThread.ManagedThreadId));
+
+                                        //执行手续费收取
+                                        if (txn.TxnType == QSEnumCashOperation.Deposit)
                                         {
-                                            decimal commission = 0;
-                                            if (depositcommission >= 1)
-                                            { 
-                                                commission = depositcommission;
-                                            }
-                                            else
+                                            decimal depositcommission = account.GetDepositCommission();
+                                            if (depositcommission > 0)
                                             {
-                                                commission = txn.Amount*depositcommission;
+                                                decimal commission = 0;
+                                                if (depositcommission >= 1)
+                                                {
+                                                    commission = depositcommission;
+                                                }
+                                                else
+                                                {
+                                                    commission = txn.Amount * depositcommission;
+                                                }
+
+                                                var commissionTxn = CashOperation.GenCommissionTransaction(operation);
+                                                commissionTxn.Amount = commission;
+                                                TLCtxHelper.ModuleAccountManager.CashOperation(commissionTxn);
                                             }
-
-                                            var commissionTxn = CashOperation.GenCommissionTransaction(operation);
-                                            commissionTxn.Amount = commission;
-                                            TLCtxHelper.ModuleAccountManager.CashOperation(commissionTxn);
                                         }
+
+                                        
+
+                                        //3.如果设置了杠杆比例 则根据入金业务类别执行优先资金调整
+                                        var ratio = account.GetLeverageRatio();
+                                        if (operation.BusinessType == EnumBusinessType.LeverageDeposit && ratio > 0)
+                                        {
+                                            var equity = account.LastEquity + account.CashIn - account.CashOut;//当前静态权益
+                                            var credit = ratio * equity;
+                                            var nowcredit = account.Credit;
+                                            var creditTxn = CashOperation.GenCreditTransaction(operation, credit - nowcredit);
+                                            TLCtxHelper.ModuleAccountManager.CashOperation(creditTxn);
+                                            logger.Info(string.Format("Deposit-Credit TXN:{0}/{1} AC:{2} SEquity:{3} Credit1:{4} Credit2:{5} Amount:{6}", operation.Ref, operation.GateWayType, operation.Account, equity, nowcredit, account.Credit, creditTxn.Amount));
+
+                                        }
+                                        return gateway.SuccessReponse;
                                     }
-
-                                    //2.更新出入金操作状态更新
-                                    operation.Status = QSEnumCashInOutStatus.CONFIRMED;
-                                    operation.Comment = gateway.GetResultComment(request);
-                                    ORM.MCashOperation.UpdateCashOperationStatus(operation);
-                                    TLCtxHelper.ModuleMgrExchange.Notify("APIService", "NotifyCashOperation", operation, account.GetNotifyPredicate());//通知
-
-                                    //3.如果设置了杠杆比例 则根据入金业务类别执行优先资金调整
-                                    var ratio = account.GetLeverageRatio();
-                                    if (operation.BusinessType == EnumBusinessType.LeverageDeposit && ratio>0)
+                                    else
                                     {
-                                        var equity = account.LastEquity + account.CashIn - account.CashOut;//当前静态权益
-                                        var credit = ratio * equity;
-                                        var nowcredit = account.Credit;
-                                        var creditTxn = CashOperation.GenCreditTransaction(operation, credit - nowcredit);
-                                        TLCtxHelper.ModuleAccountManager.CashOperation(creditTxn);
-                                        logger.Info(string.Format("Deposit-Credit TXN:{0}/{1} AC:{2} SEquity:{3} Credit1:{4} Credit2:{5} Amount:{6}", operation.Ref, operation.GateWayType, operation.Account, equity, nowcredit, account.Credit, creditTxn.Amount));
-
+                                        operation.Status = QSEnumCashInOutStatus.CANCELED;
+                                        operation.Comment = gateway.GetResultComment(request);
+                                        ORM.MCashOperation.UpdateCashOperationStatus(operation);
+                                        TLCtxHelper.ModuleMgrExchange.Notify("APIService", "NotifyCashOperation", operation, account.GetNotifyPredicate());//通知
+                                        return "CashOperatioin Failed";
                                     }
-                                    return gateway.SuccessReponse;
                                 }
                                 else
                                 {
-                                    operation.Status = QSEnumCashInOutStatus.CANCELED;
-                                    operation.Comment = gateway.GetResultComment(request);
-                                    ORM.MCashOperation.UpdateCashOperationStatus(operation);
-                                    TLCtxHelper.ModuleMgrExchange.Notify("APIService", "NotifyCashOperation", operation, account.GetNotifyPredicate());//通知
-                                    return "CashOperatioin Failed";
+                                    return "CheckParameters Error";
                                 }
-                            }
-                            else
-                            {
-                                return "CheckParameters Error";
                             }
 
                         }
@@ -345,44 +324,12 @@ namespace TradingLib.Contrib.APIService
                         {
 
                             string gwtype = path[3].ToUpper();
-                            CashOperation operation = null;
-                            switch (gwtype)
+                            bool gatewayexit = false;
+                            CashOperation operation = GateWayBase.GetOperation(gwtype, request, out gatewayexit);
+                            if (!gatewayexit)
                             {
-                                case "BAOFU":
-                                    {
-                                        operation = BaoFuGateway.GetCashOperation(request.Params);
-                                        break;
-                                    }
-                                case "ALIPAY":
-                                    {
-                                        operation = AliPayGateWay.GetCashOperation(request.Params);
-                                        break;
-                                    }
-                                case "IPS":
-                                    {
-                                        operation = IPSGateWay.GetCashOperation(request.Params);
-                                        break;
-                                    }
-                                case "UNSPAY":
-                                    {
-                                        operation = UnspayGateWay.GetCashOperation(request.Params);
-                                        break;
-                                    }
-                                case "DINPAY":
-                                    {
-                                        operation = DinpayGateWay.GetCashOperation(request.Params);
-                                        break;
-                                    }
-                                case "CHINAGPAY":
-                                    {
-                                        operation = ChinagpayGateWay.GetCashOperation(request.Params);
-                                        break;
-                                    }
-                                default:
-                                    {
-                                        return tplTracker.Render(ERROR_TPL_ID, new DropError(201, "网关类型不支持"));
-                                    }
-                            }
+                                return tplTracker.Render(ERROR_TPL_ID, new DropError(201, "网关类型不支持"));
+                            }  
 
                             if (operation == null)
                             {
@@ -439,4 +386,6 @@ namespace TradingLib.Contrib.APIService
             }
         }
     }
+
+   
 }

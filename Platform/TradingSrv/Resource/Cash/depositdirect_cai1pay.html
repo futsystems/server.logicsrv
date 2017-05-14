@@ -1,0 +1,24 @@
+﻿<html>
+<head>
+	<title>确认入金信息</title>
+</head>
+
+<body onload="document.cai1paysubmit.submit()">
+<form id='cai1paysubmit' name='cai1paysubmit' method="post" action="{{data.Pay_Url}}" class="uk-panel uk-panel-box uk-form">
+	<input name='MerCode' type='hidden' value= "{{data.Mer_Code}}"/>
+	<input name='MerOrderNo' type='hidden' value= "{{data.Mer_Order_No}}"/>
+	<input name='Amount' type='hidden' value= "{{data.Order_Amount}}"/>
+	<input name='OrderDate' type='hidden' value= "{{data.Order_Date}}"/>
+	<input name='Currency' type='hidden' value= "{{data.Currency}}"/>		
+	<input name='GatewayType' type='hidden' value= "{{data.Gateway_Type}}" />
+	<input name='Language' type='hidden' value= "{{data.Language}}"/>
+	<input name='ReturnUrl' type='hidden' value= "{{data.Return_Url}}"/>
+	<input name='GoodsInfo' type='hidden' value= "{{data.Attach}}"/>
+	<input name='OrderEncodeType' type='hidden' value= "{{data.Order_Encode_Type}}"/>
+	<input name='RetEncodeType' type='hidden' value= "{{data.Ret_Encode_Type}}"/>	
+	<input name='Rettype' type='hidden' value= "{{data.Ret_Type}}"/>	
+	<input name='ServerUrl' type='hidden' value= "{{data.Server_Url}}"/>	
+	<input name='SignMD5' type='hidden' value= "{{data.Sign}}"/>							
+</form>
+</body>
+</html>
