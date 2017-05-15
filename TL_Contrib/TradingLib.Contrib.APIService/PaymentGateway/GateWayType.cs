@@ -40,6 +40,12 @@ namespace TradingLib.Contrib.APIService
         /// <summary>
         /// 财易支付
         /// </summary>
-        Cai1Pay
+        Cai1Pay,
+
+
+        /// <summary>
+        /// 国付宝
+        /// </summary>
+        GoPay,
     }
 }

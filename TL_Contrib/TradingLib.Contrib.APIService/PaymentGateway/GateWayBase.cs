@@ -74,6 +74,8 @@ namespace TradingLib.Contrib.APIService
                     return new ChinagpayGateWay(config);
                 case QSEnumGateWayType.Cai1Pay:
                     return new Cai1payGateWay(config);
+                case QSEnumGateWayType.GoPay:
+                    return new GoPayGateWay(config);
                 default:
                     return null;
             }
@@ -117,6 +119,10 @@ namespace TradingLib.Contrib.APIService
                 case "CAI1PAY":
                     {
                         return Cai1payGateWay.GetCashOperation(request.Params);
+                    }
+                case "GOPAY":
+                    {
+                        return GoPayGateWay.GetCashOperation(request.Params);
                     }
                 default:
                     {

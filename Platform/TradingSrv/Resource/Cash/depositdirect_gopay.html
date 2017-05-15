@@ -1,0 +1,26 @@
+﻿<html>
+<head>
+	<title>确认入金信息</title>
+</head>
+
+<body onload="document.gopaysubmit.submit()">
+<form name='gopaysubmit' method="post" action="{{data.Pay_Url}}">
+	<input name='version' type='hidden' value= "{{data.Version}}"/>
+	<input name='charset' type='hidden' value= "{{data.Charset}}"/>
+	<input name='language' type='hidden' value= "{{data.Language}}"/>
+	<input name='signType' type='hidden' value= "{{data.Sign_Type}}"/>
+	<input name='tranCode' type='hidden' value= "{{data.Tran_Code}}"/>
+	<input name='merchantID' type='hidden' value= "{{data.Merchant_ID}}"/>		
+	<input name='merOrderNum' type='hidden' value= "{{data.Mer_Order_Num}}" />
+	<input name='tranAmt' type='hidden' value= "{{data.Tran_Amt}}" />
+	<input name='feeAmt' type='hidden' value= ""/>
+	<input name='currencyType' type='hidden' value= "{{data.Currency_Type}}"/>
+	<input name='frontMerUrl' type='hidden' value= "{{data.Front_Mer_Url}}"/>
+	<input name='backgroundMerUrl' type='hidden' value= "{{data.Background_Mer_Url}}"/>	
+	<input name='tranDateTime' type='hidden' value="{{data.Tran_Date_Time}}"/>
+	<input name='virCardNoIn' type='hidden' value="{{data.Vir_Card_No_In}}"/>
+	<input name='tranIP' type='hidden' value="{{data.Tran_IP}}"/>
+	<input name='signValue' type='hidden' value="{{data.Sign_Value}}"/>
+</form>
+</body>
+</html>
