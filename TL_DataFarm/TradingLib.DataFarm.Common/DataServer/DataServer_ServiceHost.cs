@@ -151,7 +151,8 @@ namespace TradingLib.DataFarm.Common
             {
                 QryServiceRequest request = arg2 as QryServiceRequest;
                 RspQryServiceResponse response = ResponseTemplate<RspQryServiceResponse>.SrvSendRspResponse(request);
-
+                response.APIVersion = TradingLib.API.Const.APIVersion;
+                response.APIType = QSEnumAPIType.MD_Socket;
                 //执行逻辑判断 是否提供服务 比如连接数大于多少/cpu资源大于多少 就拒绝服务
                 int buildNum = Util.GetBuildNum(request.APIVersion);
                 if (connectionMap.Count >= _maxCnt)

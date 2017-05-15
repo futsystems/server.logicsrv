@@ -72,17 +72,17 @@ namespace TradingLib.DataFarm.Common
         /// </summary>
         /// <param name="host"></param>
         /// <param name="conn"></param>
-        [DataCommandAttr("StartFeedTick", "StartFeedTick -  start feed tick", "系统开始接受实时Tick数据")]
+        [DataCommandAttr("AcceptFeedTick", "AcceptFeedTick -  start feed tick", "系统开始接受实时Tick数据")]
         public void CTE_StartFeedTick(IServiceHost host, IConnection conn)
         {
-            logger.Info("StartFeedTick");
+            logger.Info("AcceptFeedTick");
             _acceptTick = true;
         }
 
-        [DataCommandAttr("StopFeedTick", "StopFeedTick -  stop feed tick", "系统停止接受实时Tick数据")]
+        [DataCommandAttr("RejectFeedTick", "RejectFeedTick -  stop feed tick", "系统停止接受实时Tick数据")]
         public void CTE_StopFeedTick(IServiceHost host, IConnection conn)
         {
-            logger.Info("StopFeedTick");
+            logger.Info("RejectFeedTick");
             _acceptTick = false;
         }
 
@@ -170,11 +170,11 @@ namespace TradingLib.DataFarm.Common
         [DataCommandAttr("UpdateMarketTime", "UpdateMarketTime -  update marketTime", "更新交易所", QSEnumArgParseType.Json)]
         public void CTE_UpdateMarketTime(IServiceHost host, IConnection conn, string json)
         {
-            if (!_syncdb)
-            {
-                logger.Warn("Update MarketTime Not Supported");
-                return;
-            }
+            //if (!_syncdb)
+            //{
+            //    logger.Warn("Update MarketTime Not Supported");
+            //    return;
+            //}
 
             logger.Info(string.Format("Conn:{0} 请求更新交易时间段:{1}", conn.SessionID, json));
             string message = json.DeserializeObject<string>();
@@ -199,11 +199,11 @@ namespace TradingLib.DataFarm.Common
         [DataCommandAttr("UpdateExchange", "UpdateExchange -  update exchange", "更新交易所", QSEnumArgParseType.Json)]
         public void CTE_UpdateExchange(IServiceHost host, IConnection conn, string json)
         {
-            if (!_syncdb)
-            {
-                logger.Warn("Update Exchange Not Supported");
-                return;
-            }
+            //if (!_syncdb)
+            //{
+            //    logger.Warn("Update Exchange Not Supported");
+            //    return;
+            //}
 
 
             logger.Info(string.Format("Conn:{0} 请求更新交易所信息:{1}", conn.SessionID, json));
@@ -232,11 +232,11 @@ namespace TradingLib.DataFarm.Common
         [DataCommandAttr("UpdateSecurity", "UpdateSecurity -  update security", "更新品种", QSEnumArgParseType.Json)]
         public void CTE_UpdateSecurity(IServiceHost host, IConnection conn, string json)
         {
-            if (!_syncdb)
-            {
-                logger.Warn("UpdateSecurity Not Supported");
-                return;
-            }
+            //if (!_syncdb)
+            //{
+            //    logger.Warn("UpdateSecurity Not Supported");
+            //    return;
+            //}
 
 
             logger.Info(string.Format("Conn:{0} 请求更新品种:{1}", conn.SessionID, json));
@@ -271,11 +271,11 @@ namespace TradingLib.DataFarm.Common
         [DataCommandAttr("UpdateSymbol", "UpdateSymbol -  update symbol", "更新合约", QSEnumArgParseType.Json)]
         public void CTE_UpdateSymbol(IServiceHost host, IConnection conn, string json)
         {
-            if (!_syncdb)
-            {
-                logger.Warn("UpdateSymbol Not Supported");
-                return;
-            }
+            //if (!_syncdb)
+            //{
+            //    logger.Warn("UpdateSymbol Not Supported");
+            //    return;
+            //}
 
 
             logger.Info(string.Format("Conn:{0} 请求更新合约:{1}", conn.SessionID, json));

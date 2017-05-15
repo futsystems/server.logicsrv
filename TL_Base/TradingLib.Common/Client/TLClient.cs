@@ -780,6 +780,7 @@ namespace TradingLib.Common
         {
             try
             {
+                //logger.Info("Message:" + message.Content);
                 IPacket packet = PacketHelper.CliRecvResponse(message);
                 //更新服务端消息回报时间戳
                 UpdateServerHeartbeat();

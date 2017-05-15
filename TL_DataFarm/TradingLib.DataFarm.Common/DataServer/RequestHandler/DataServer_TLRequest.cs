@@ -301,7 +301,7 @@ namespace TradingLib.DataFarm.Common
                 logger.Warn(string.Format("Sec:{0} have no marketday", symbol.SecurityFamily.Code));
                 return;
             }
-            logger.Info(string.Format("Sec:{0} marketday:{1}", symbol.SecurityFamily.Code, md.ToSessionString()));
+            if (_verbose) logger.Info(string.Format("Sec:{0} marketday:{1}", symbol.SecurityFamily.Code, md.ToSessionString()));
 
             int tradingday = request.Tradingday;
             if (tradingday == 0)
@@ -337,7 +337,7 @@ namespace TradingLib.DataFarm.Common
             {
                 response.IsLast = true;
                 this.SendTLData(conn, response);
-                logger.Info("Got Qry MinuteData Request:" + request.ToString() + " res cnt:" + response.MinuteDataList.Count);
+                if (_verbose) logger.Info("Got Qry MinuteData Request:" + request.ToString() + " res cnt:" + response.MinuteDataList.Count);
             }
         }
 
