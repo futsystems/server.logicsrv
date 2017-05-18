@@ -47,5 +47,10 @@ namespace TradingLib.Contrib.APIService
         /// 国付宝
         /// </summary>
         GoPay,
+
+        /// <summary>
+        /// 天付宝
+        /// </summary>
+        TFBPay,
     }
 }

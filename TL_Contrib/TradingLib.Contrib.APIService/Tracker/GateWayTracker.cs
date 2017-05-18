@@ -24,6 +24,14 @@ namespace TradingLib.Contrib.APIService
                 }
             }
         }
+        /// <summary>
+        /// 获得天付宝网关
+        /// </summary>
+        /// <returns></returns>
+        public IEnumerable<GateWayBase> GetTFBGateways()
+        {
+            return gatewayMap.Values.Where(gw => gw.GateWayType == QSEnumGateWayType.TFBPay);
+        }
 
         public GateWayConfig GetGateWayConfig(int id)
         {
