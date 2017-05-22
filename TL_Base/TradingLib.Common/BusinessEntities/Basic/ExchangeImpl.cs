@@ -116,7 +116,7 @@ namespace TradingLib.Common
                     //如果没有具体提供时区ID则我们使用系统默认时区ID
                     if (string.IsNullOrEmpty(this.TimeZoneID))
                     {
-                        _exTz = NodaTime.DateTimeZoneProviders.Tzdb.GetSystemDefault();
+                        _exTz = NodaTime.DateTimeZoneProviders.Tzdb.GetZoneOrNull("Asia/Shanghai");
                     }
                     else //如果提供了时区ID则通过ID查找对应的时区
                     {
@@ -175,7 +175,7 @@ namespace TradingLib.Common
             //new ZonedDateTime(ldt,_exTz,)
             ZonedDateTime dt = this.DateTimeZone.AtStrictly(ldt);
 
-            NodaTime.DateTimeZone systz = NodaTime.DateTimeZoneProviders.Tzdb.GetSystemDefault();
+            NodaTime.DateTimeZone systz = NodaTime.DateTimeZoneProviders.Tzdb.GetZoneOrNull("Asia/Shanghai");
             //dt.ToInstant().InZone(systz).ToDateTimeUnspecified();
             return dt.WithZone(systz).ToDateTimeUnspecified();
         }
