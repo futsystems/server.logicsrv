@@ -52,5 +52,10 @@ namespace TradingLib.Contrib.APIService
         /// 天付宝
         /// </summary>
         TFBPay,
+
+        /// <summary>
+        /// 墨宝
+        /// </summary>
+        MoBoPay,
     }
 }

@@ -78,6 +78,8 @@ namespace TradingLib.Contrib.APIService
                     return new GoPayGateWay(config);
                 case QSEnumGateWayType.TFBPay:
                     return new TFBPayGateWay(config);
+                case QSEnumGateWayType.MoBoPay:
+                    return new MoBoGateWay(config);
                 default:
                     return null;
             }
@@ -151,6 +153,10 @@ namespace TradingLib.Contrib.APIService
 
                         //string privateKey = TFBRSAHelper.RSAPrivateKeyJava2DotNet(prikey);
                         //string rawData = Encoding.GetEncoding(charset).GetString(TFBRSAHelper.RSADecryptByPrivateKey(Convert.FromBase64String(data), privateKey));
+                    }
+                case "MOBOPAY":
+                    {
+                        return MoBoGateWay.GetCashOperation(request.Params);
                     }
                 default:
                     {

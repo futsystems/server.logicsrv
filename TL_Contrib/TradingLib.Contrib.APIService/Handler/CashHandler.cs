@@ -232,6 +232,22 @@ namespace TradingLib.Contrib.APIService
                                 bool paramsResult = gateway.CheckParameters(request);
                                 if (paramsResult)
                                 {
+                                    //墨宝只有一个通知入口 这里需要进行通知判断
+                                    if (gateway.GateWayType == QSEnumGateWayType.MoBoPay)
+                                    {
+                                        if (request.Params["notifyType"] == "0")
+                                        {
+                                            bool ret = gateway.CheckPayResult(request, operation);
+                                            if (ret)
+                                            {
+                                                return tplTracker.Render(ERROR_TPL_ID, new DropError(0, "支付成功"));
+                                            }
+                                            else
+                                            {
+                                                return tplTracker.Render(ERROR_TPL_ID, new DropError(202, "支付失败"));
+                                            }
+                                        }
+                                    }
                                     //2.检查operation状态
                                     if (operation.Status == QSEnumCashInOutStatus.CONFIRMED)
                                     {
@@ -322,7 +338,7 @@ namespace TradingLib.Contrib.APIService
                         }
                     case "CUSTNOTIFY":
                         {
-
+                        
                             string gwtype = path[3].ToUpper();
                             bool gatewayexit = false;
                             CashOperation operation = GateWayBase.GetOperation(gwtype, request, out gatewayexit);

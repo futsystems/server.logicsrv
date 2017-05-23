@@ -76,6 +76,7 @@
     <Compile Include="Drop\DropDinpayment.cs" />
     <Compile Include="Drop\DropGoPayPayment.cs" />
     <Compile Include="Drop\DropIPSPayment.cs" />
+    <Compile Include="Drop\DropMoBoPayment.cs" />
     <Compile Include="Drop\DropTFBPayment.cs" />
     <Compile Include="Drop\DropUnspayPayment.cs" />
     <Compile Include="Handler\APIHandler.cs" />
@@ -101,6 +102,9 @@
     <Compile Include="PaymentGateway\GateWayType.cs" />
     <Compile Include="PaymentGateway\Gopay\GoPayGateway.cs" />
     <Compile Include="PaymentGateway\IPS\IPSGateWay.cs" />
+    <Compile Include="PaymentGateway\MoBo\MoBoGateWay.cs" />
+    <Compile Include="PaymentGateway\MoBo\MoboHelper.cs" />
+    <Compile Include="PaymentGateway\MoBo\MoboSignHelper.cs" />
     <Compile Include="PaymentGateway\TFBPay\TFBPayGateWay.cs" />
     <Compile Include="PaymentGateway\TFBPay\TFBRSAHelper.cs" />
     <Compile Include="PaymentGateway\Unspay\UnspayGateWay.cs" />
