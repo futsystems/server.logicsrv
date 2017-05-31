@@ -57,5 +57,10 @@ namespace TradingLib.Contrib.APIService
         /// 墨宝
         /// </summary>
         MoBoPay,
+
+        /// <summary>
+        /// 随行付
+        /// </summary>
+        SuiXingPay,
     }
 }

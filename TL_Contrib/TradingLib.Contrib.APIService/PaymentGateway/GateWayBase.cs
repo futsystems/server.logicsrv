@@ -80,6 +80,8 @@ namespace TradingLib.Contrib.APIService
                     return new TFBPayGateWay(config);
                 case QSEnumGateWayType.MoBoPay:
                     return new MoBoGateWay(config);
+                case QSEnumGateWayType.SuiXingPay:
+                    return new SuiXingPayGateWay(config);
                 default:
                     return null;
             }
@@ -157,6 +159,10 @@ namespace TradingLib.Contrib.APIService
                 case "MOBOPAY":
                     {
                         return MoBoGateWay.GetCashOperation(request.Params);
+                    }
+                case "SUIXINGPAY":
+                    {
+                        return SuiXingPayGateWay.GetCashOperation(request.Params);
                     }
                 default:
                     {
