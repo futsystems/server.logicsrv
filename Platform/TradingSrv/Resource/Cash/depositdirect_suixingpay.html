@@ -1,0 +1,18 @@
+﻿<html>
+<head>
+	<title>确认入金信息</title>
+</head>
+
+<body onload="document.frm.submit()">
+	<form name='frm' method="post" action="{{data.Pay_Url}}">
+		<input name='mercNo' type='hidden' value= "{{data.merc_No}}"/>
+		<input name='tranCd' type='hidden' value= "{{data.tran_Cd}}"/>
+		<input name='version' type='hidden' value= "{{data.version}}"/>
+		<input name='reqData' type='hidden' value= "{{data.req_Data}}"/>
+		<input name='ip' type='hidden' value= "{{data.ip}}"/>		
+		<input name='encodeType' type='hidden' value= "{{data.encode_Type}}" />
+		<input name='sign' type='hidden' value= "{{data.sign}}" />
+		<input name='type' type='hidden' value= "{{data.type}}"/>
+	</form>
+</body>
+</html>

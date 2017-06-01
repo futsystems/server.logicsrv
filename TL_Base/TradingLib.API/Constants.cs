@@ -93,7 +93,7 @@ namespace TradingLib.API
         /// 客户端死亡时间,如果在多少秒内,没有收到客户端消息,则认为客户已经死亡,需要主动清理客户端列别以及SessionLoger中的数据库信息
         /// 2个heartbeatperiod内 如果没有收到客户端的心跳信息,则认为连接失效
         /// </summary>
-        public const int CLIENTDEADTIME = HEARTBEATPERIOD * 3;
+        public const int CLIENTDEADTIME = HEARTBEATPERIOD * 6;
 
         /// <summary>
         /// 多少时间进行一次dead client清理,4个心跳间隔周期进行一次dead client 清除

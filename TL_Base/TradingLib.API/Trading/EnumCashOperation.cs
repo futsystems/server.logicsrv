@@ -20,10 +20,10 @@ namespace TradingLib.API
 
     public enum QSEnumCashOperation//:byte
     {
-        [Description("充值")]
+        [Description("入金")]
         Deposit,
 
-        [Description("提现")]
+        [Description("出金")]
         WithDraw,
     }
 }
