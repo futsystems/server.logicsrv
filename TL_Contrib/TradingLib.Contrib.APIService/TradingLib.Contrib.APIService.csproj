@@ -70,11 +70,13 @@
     <Compile Include="APIGlobal.cs" />
     <Compile Include="APIService.cs" />
     <Compile Include="APIService_Counter.cs" />
+    <Compile Include="Common\HttpUtils.cs" />
     <Compile Include="Drop\DropAliPayPayment.cs" />
     <Compile Include="Drop\DropCai1Payment.cs" />
     <Compile Include="Drop\DropChinagPayment.cs" />
     <Compile Include="Drop\DropDinpayment.cs" />
     <Compile Include="Drop\DropGoPayPayment.cs" />
+    <Compile Include="Drop\DropIelpmPayment.cs" />
     <Compile Include="Drop\DropIPSPayment.cs" />
     <Compile Include="Drop\DropMoBoPayment.cs" />
     <Compile Include="Drop\DropSuiXingPayment.cs" />
@@ -102,6 +104,13 @@
     <Compile Include="PaymentGateway\GateWayBase.cs" />
     <Compile Include="PaymentGateway\GateWayType.cs" />
     <Compile Include="PaymentGateway\Gopay\GoPayGateway.cs" />
+    <Compile Include="PaymentGateway\Ielpm\IELPMPay.cs" />
+    <Compile Include="PaymentGateway\Ielpm\sdk\CertUtil.cs" />
+    <Compile Include="PaymentGateway\Ielpm\sdk\HttpClient.cs" />
+    <Compile Include="PaymentGateway\Ielpm\sdk\IELPMComparer .cs" />
+    <Compile Include="PaymentGateway\Ielpm\sdk\IELPMConfig.cs" />
+    <Compile Include="PaymentGateway\Ielpm\sdk\IELPMUtil.cs" />
+    <Compile Include="PaymentGateway\Ielpm\sdk\SecurityUtil.cs" />
     <Compile Include="PaymentGateway\IPS\IPSGateWay.cs" />
     <Compile Include="PaymentGateway\MoBo\MoBoGateWay.cs" />
     <Compile Include="PaymentGateway\MoBo\MoboHelper.cs" />

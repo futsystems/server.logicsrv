@@ -44,26 +44,9 @@ namespace TraddingSrvCLI
             try
             {
 
-                string tmp = "<Ips><GateWayRsp><head><ReferenceID></ReferenceID><RspCode>000000</RspCode><RspMsg><![CDATA[交易成功！]]></RspMsg><ReqDate>20170305091219</ReqDate><RspDate>20170305091340</RspDate><Signature>f04f976b94172bc47bffa8c27491c347</Signature></head><body><MerBillNo>636243016596374014</MerBillNo><CurrencyType>156</CurrencyType><Amount>0.01</Amount><Date>20170305</Date><Status>Y</Status><Msg><![CDATA[支付成功！]]></Msg><IpsBillNo>BO20170305091102004402</IpsBillNo><IpsTradeNo>2017030509121984702</IpsTradeNo><RetEncodeType>17</RetEncodeType><BankBillNo>7109877764</BankBillNo><ResultType>0</ResultType><IpsBillTime>20170305091340</IpsBillTime></body></GateWayRsp></Ips>";
-                System.Xml.XmlDocument doc = new XmlDocument();
-                doc.LoadXml(tmp);
-                var ipsnode = doc.SelectSingleNode("Ips");
-                var rspnode = ipsnode.SelectSingleNode("GateWayRsp");
-                var headnode = rspnode.SelectSingleNode("head");
-                var rspcode = headnode.SelectSingleNode("RspCode").InnerText;
-
-                rspcode = doc["Ips"]["GateWayRsp"]["head"]["RspCode"].InnerText;
-
-                var body = doc["Ips"]["GateWayRsp"]["body"].InnerXml;
-
-                var sign = doc["Ips"]["GateWayRsp"]["head"]["Signature"].InnerText;
-
-                string strtosign = "<body>" + body + "</body>" + "193499" + "VOeuPDR5lplJvT0qoXxTHSlgr5xS4nAgo4hEAy35yhrCcmDPwamThz2zYQ0ULPjSRjvJ72BRJEjsaBV6Kj3eTBA9KdW462N9uogM0kngOqdhAjt2Yqflbo4npkJ6yqCw";
-                bool v = (Md5Encrypt(strtosign) == sign);
-
-                //DateTime now = DateTime.Now;
-                //DateTime dt = TimeFrequency.NextRoundedTime(now, TimeSpan.FromMinutes(1));
-                //logger.Info(string.Format("now:{0} next round:{1}", now, dt));
+                //string path = Path.Combine(new string[] { AppDomain.CurrentDomain.BaseDirectory, "config", 5.ToString() });
+                //Console.WriteLine(path);
+                //return;
 
 
                 logger.Info("********* start core daemon *********");

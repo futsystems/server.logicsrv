@@ -62,5 +62,10 @@ namespace TradingLib.Contrib.APIService
         /// 随行付
         /// </summary>
         SuiXingPay,
+
+        /// <summary>
+        /// 易势付
+        /// </summary>
+        IELPMPay,
     }
 }

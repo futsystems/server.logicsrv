@@ -1,0 +1,73 @@
+﻿<html>
+<head>
+	<title>确认入金信息</title>
+	<meta name="renderer" content="webkit">
+	<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+	<link rel="stylesheet" href="//cdn.bootcss.com/uikit/2.25.0/css/uikit.css" />
+	<script src="//cdn.bootcss.com/uikit/2.25.0/js/uikit.js"></script>
+</head>
+
+<body class="uk-height-1-1">
+<div class="uk-container uk-container-center uk-margin-top uk-margin-large-bottom">
+
+            <nav class="uk-navbar uk-margin-large-bottom">
+                <a class="uk-navbar-brand uk-hidden-small" href="/">在线出入金系统</a>
+                <ul class="uk-navbar-nav uk-hidden-small">
+                    <li class="uk-active">
+                        <a href="/cash/deposit">入金</a>
+                    </li>
+                    <li >
+                        <a href="/cash/withdraw">出金</a>
+                    </li>
+                </ul>
+                <a href="#offcanvas" class="uk-navbar-toggle uk-visible-small" data-uk-offcanvas></a>
+                <div class="uk-navbar-brand uk-navbar-center uk-visible-small">TCB</div>
+            </nav>
+
+            <div class="uk-grid" data-uk-grid-margin>
+                <div class="uk-width-medium-1-1">
+				
+					<div class="uk-text-center uk-height-1-1">
+					<div class="uk-vertical-align-middle" style="width: 400px;">
+					<table class="uk-table uk-table-striped">
+						<tr><td>交易帐号:</td><td>{{data.Account}}</td></tr>
+						<tr><td>出入金编号:</td><td>{{data.Ref}}</td></tr>
+						<tr><td>操作:</td><td>{{data.Operation}}</td></tr>
+						<tr><td>金额:</td><td>{{data.Amount}}</td></tr>
+					</table>
+
+					<form name='depositconfirm' method="post" action="{{data.Pay_Url}}" class="uk-panel uk-panel-box uk-form">
+						<input name='merchantNo' type='hidden' value= "{{data.merchant_No}}"/>
+						<input name='version' type='hidden' value= "{{data.version}}"/>
+						<input name='channelNo' type='hidden' value= "{{data.channel_No}}"/>
+						<input name='tranSerialNum' type='hidden' value= "{{data.tran_Serial_Num}}"/>
+						<input name='tranTime' type='hidden' value= "{{data.tran_Time}}"/>		
+						<input name='currency' type='hidden' value= "{{data.currency}}" />
+						<input name='amount' type='hidden' value= "{{data.amt}}" />
+						<input name='bizType' type='hidden' value= "{{data.biz_Type}}"/>
+						<input name='goodsName' type='hidden' value= "{{data.goods_Name}}"/>
+						<input name='goodsInfo' type='hidden' value= "{{data.goods_Info}}"/>
+						<input name='valid' type='hidden' value= "{{data.valid}}"/>
+						<input name='remark' type='hidden' value= "{{data.remark}}"/>
+						<input name='contact' type='hidden' value= "{{data.contact}}"/>
+						<input name='goodsNum' type='hidden' value= "{{data.goods_Num}}"/>
+						<input name='notifyUrl' type='hidden' value= "{{data.notify_Url}}"/>
+						<input name='returnUrl' type='hidden' value= "{{data.return_Url}}"/>
+						<input name='buyerName' type='hidden' value= "{{data.buyer_Name}}"/>
+						<input name='buyerId' type='hidden' value= "{{data.buyer_Id}}"/>
+						<input name='ip' type='hidden' value= "{{data.ip}}"/>
+						<input name='YUL1' type='hidden' value= "{{data.YUL1}}"/>
+						<input name='referer' type='hidden' value= "{{data.referer}}"/>
+						<input name='sign' type='hidden' value= "{{data.sign}}"/>
+						<div class="uk-form-row">
+							<button class="uk-button uk-button-primary" type="submit">确认提交</button>
+						</div>
+					</form>
+					</div>
+										</div>
+				</div>
+			</div>
+
+</div>
+</body>
+</html>

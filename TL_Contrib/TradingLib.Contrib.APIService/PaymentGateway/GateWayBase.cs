@@ -82,6 +82,8 @@ namespace TradingLib.Contrib.APIService
                     return new MoBoGateWay(config);
                 case QSEnumGateWayType.SuiXingPay:
                     return new SuiXingPayGateWay(config);
+                case QSEnumGateWayType.IELPMPay:
+                    return new IELPMPayGateWay(config);
                 default:
                     return null;
             }
@@ -147,14 +149,7 @@ namespace TradingLib.Contrib.APIService
                                 transid = map["spbillno"];
                             }
                         }
-
                         return ORM.MCashOperation.SelectCashOperation(transid);
-
-                        
-                        //string prikey = "MIICdgIBADANBgkqhkiG9w0BAQEFAASCAmAwggJcAgEAAoGBAK+LzCZnUWIsRSxKyGZrZI+BU+Y+wnTXPpVbKcm5LT1fg/+o7aQR6B7pheWSEH5xLiFmtUkWSgZ7tYJhjovJkwgIJ91BQBg3rVT3xPCjeVu88mrdvzQOe6sS5WNPu3Wxbht9uACO16zupdDrruhjRUaCX5tkLukccU3bqp9FpkkNAgMBAAECgYBx8mB1nSLqgqnz8ibatGL185CuJ5a5mO36rM4XLqf66oEX9mMq2KS/S/2p4oHqUTUMYUrTQjCSvMI4+3I3soRI4k4J5VsyP9zHyHzafvNUTUyp2ybaVgmh3oxU4sx015fd+3Qc219l+Jdod+rIi68NJqhhMUU+q7yxmesCUCkZAQJBAOWH5bu9FmFIiSjWHVj6XE0904KOWSoHsenymzMZfM0s1kck1hUvwntUcmUhkiuz4BBmiKOy65MtNyJ6ChE3UP0CQQDDyi/gX/xOhCOpWoDMnYyKGyQH7GMJBIwK/X80Yha3Qtl/WrdqrpNV/ZHyQJgcIQFoMNLbNotoUOMAjthkrR1RAkAU5RAmzQnShVXnH8bAKNpqNayhf+/iAZ1SnMFAH5va2bAP/ex3NUfRDljzl+DElbVaCNt7e3gyh7UzMETmWFDJAkAwFtw1jz3ohxo/QYR7PYNEdLAf5hbZIy3GkUcKNcGAl8HWPxDn+iMkLtkHGIiD+DNhRQS1ZStOnvdyrqNF7yNRAkEAxm2MZmPHl+7jbDjHG6c+3SE6e0s7iZyatgh2gosKXdpqUWe3zVXPN04kLarZ7tasl1IBqHr1LpzdHEUReiNRBQ==";
-
-                        //string privateKey = TFBRSAHelper.RSAPrivateKeyJava2DotNet(prikey);
-                        //string rawData = Encoding.GetEncoding(charset).GetString(TFBRSAHelper.RSADecryptByPrivateKey(Convert.FromBase64String(data), privateKey));
                     }
                 case "MOBOPAY":
                     {
@@ -163,6 +158,10 @@ namespace TradingLib.Contrib.APIService
                 case "SUIXINGPAY":
                     {
                         return SuiXingPayGateWay.GetCashOperation(request.Params);
+                    }
+                case "IELPMPAY":
+                    {
+                        return IELPMPayGateWay.GetCashOperation(request.Params);
                     }
                 default:
                     {
