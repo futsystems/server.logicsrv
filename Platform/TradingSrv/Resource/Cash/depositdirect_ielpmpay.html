@@ -1,0 +1,32 @@
+﻿<html>
+<head>
+	<title>确认入金信息</title>
+</head>
+
+<body onload="document.depositconfirm.submit()">
+	<form name='depositconfirm' method="post" action="{{data.Pay_Url}}" class="uk-panel uk-panel-box uk-form">
+		<input name='merchantNo' type='hidden' value= "{{data.merchant_No}}"/>
+		<input name='version' type='hidden' value= "{{data.version}}"/>
+		<input name='channelNo' type='hidden' value= "{{data.channel_No}}"/>
+		<input name='tranSerialNum' type='hidden' value= "{{data.tran_Serial_Num}}"/>
+		<input name='tranTime' type='hidden' value= "{{data.tran_Time}}"/>		
+		<input name='currency' type='hidden' value= "{{data.currency}}" />
+		<input name='amount' type='hidden' value= "{{data.amt}}" />
+		<input name='bizType' type='hidden' value= "{{data.biz_Type}}"/>
+		<input name='goodsName' type='hidden' value= "{{data.goods_Name}}"/>
+		<input name='goodsInfo' type='hidden' value= "{{data.goods_Info}}"/>
+		<input name='valid' type='hidden' value= "{{data.valid}}"/>
+		<input name='remark' type='hidden' value= "{{data.remark}}"/>
+		<input name='contact' type='hidden' value= "{{data.contact}}"/>
+		<input name='goodsNum' type='hidden' value= "{{data.goods_Num}}"/>
+		<input name='notifyUrl' type='hidden' value= "{{data.notify_Url}}"/>
+		<input name='returnUrl' type='hidden' value= "{{data.return_Url}}"/>
+		<input name='buyerName' type='hidden' value= "{{data.buyer_Name}}"/>
+		<input name='buyerId' type='hidden' value= "{{data.buyer_Id}}"/>
+		<input name='ip' type='hidden' value= "{{data.ip}}"/>
+		<input name='YUL1' type='hidden' value= "{{data.YUL1}}"/>
+		<input name='referer' type='hidden' value= "{{data.referer}}"/>
+		<input name='sign' type='hidden' value= "{{data.sign}}"/>
+	</form>
+</body>
+</html>
