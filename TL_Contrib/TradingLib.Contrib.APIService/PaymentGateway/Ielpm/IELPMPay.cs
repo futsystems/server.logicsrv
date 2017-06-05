@@ -35,6 +35,8 @@ namespace TradingLib.Contrib.APIService
             CertUtil.PublicCertPath = this.PublicKeyName;
             CertUtil.SignCertPath = this.PrivateKeyName;
 
+            this.SuccessReponse = "YYYYYY";
+
         }
 
         public string PayUrl { get; set; }
