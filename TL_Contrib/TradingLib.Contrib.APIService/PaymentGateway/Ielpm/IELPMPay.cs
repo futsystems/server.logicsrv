@@ -34,7 +34,7 @@ namespace TradingLib.Contrib.APIService
             CertUtil.CertPassword = this.CertPassword;
             CertUtil.PublicCertPath = this.PublicKeyName;
             CertUtil.SignCertPath = this.PrivateKeyName;
-
+            logger.Info(string.Format("MerNo:{0} CertPass:{1} key1:{2} key2:{3}",this.MerNo,this.CertPassword,this.PublicKeyName,this.PrivateKeyName));
             this.SuccessReponse = "YYYYYY";
 
         }
