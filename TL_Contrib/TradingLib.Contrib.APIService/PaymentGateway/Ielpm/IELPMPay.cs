@@ -22,12 +22,14 @@ namespace TradingLib.Contrib.APIService
             : base(config)
         {
             this.GateWayType = QSEnumGateWayType.IELPMPay;
+            var data = config.Config.DeserializeObject();
 
             this.PublicKeyName = Path.Combine(new string[] { AppDomain.CurrentDomain.BaseDirectory, "config", "cust", config.Domain_ID.ToString(), "SS.cer" });
             this.PrivateKeyName = Path.Combine(new string[] { AppDomain.CurrentDomain.BaseDirectory, "config", "cust", config.Domain_ID.ToString(), "CS.pfx" });
-            this.MerNo = "S20170526002962";
-            this.CertPassword = "1546362";
-            this.PayUrl = "https://cashier.ielpm.com/paygate/v1/web/cashier";
+            this.MerNo = data["MerNo"].ToString(); //"S20170526002962";
+            this.CertPassword = data["PayUrl"].ToString(); //"1546362";
+            //this.PayUrl = "https://cashier.ielpm.com/paygate/v1/web/cashier";
+            this.PayUrl = data["CerPass"].ToString();
 
             CertUtil.CertPassword = this.CertPassword;
             CertUtil.PublicCertPath = this.PublicKeyName;
