@@ -196,6 +196,10 @@ namespace TradingLib.Core
 
         public IEnumerable<IAccount> WathAccountList { get { return this.WatchAccounts; } }
 
+        ThreadSafeList<Agent> watchAgents = new ThreadSafeList<Agent>();
+        public IEnumerable<Agent> WatchAgentList { get { return watchAgents; } }
+
+
         /// <summary>
         /// 保存了管理端当前需要推送实时交易信息的帐号,任何时刻管理端只接受若干个账户财务信息更新，以及某个账户的交易记录
         /// </summary>
@@ -254,6 +258,20 @@ namespace TradingLib.Core
                 if (acc == null) continue;//交易帐户不存在 
                 if (!this.Manager.RightAccessAccount(acc)) continue;//无权查看交易帐户 不添加
                 WatchAccounts.Add(acc);
+            }
+        }
+
+        public void WatchAgents(IEnumerable<string> agentlist)
+        {
+            watchAgents.Clear();
+            foreach (string account in agentlist)
+            {
+                var agent = BasicTracker.AgentTracker[account];
+                if (agent == null) continue;
+                Manager mgr = BasicTracker.ManagerTracker[agent.Account];
+                if(mgr == null) continue;
+                if (!this.Manager.RightAccessManager(mgr)) continue;
+                watchAgents.Add(agent);
             }
         }
 

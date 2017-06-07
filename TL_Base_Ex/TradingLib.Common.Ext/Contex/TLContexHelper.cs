@@ -440,6 +440,19 @@ namespace TradingLib.Common
                 return _mgrexchange;
             }
         }
+
+        static IAgentManager _agentManager = null;
+        public static IAgentManager ModuleAgentManager
+        {
+            get
+            {
+                if (_agentManager == null)
+                    _agentManager = _scope.Resolve<IAgentManager>();
+                return _agentManager;
+            }
+        }
+
+        
         #endregion
 
 

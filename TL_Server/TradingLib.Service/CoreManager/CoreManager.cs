@@ -40,6 +40,7 @@ namespace TradingLib.ServiceManager
         private IModuleRiskCentre _riskCentre;//风控服务
         private IModuleTaskCentre _taskcentre;//调度服务
         private IModuleFollowCentre _followcentre;//跟单服务
+        private IModuleAgentManager _agentmanager;//代理账户管理模块
 
         /*
          *  数据库连接缓存 数据库连接 9
@@ -76,6 +77,9 @@ namespace TradingLib.ServiceManager
 
             logger.Info("[INIT CORE] AccountManager");
             _acctmanger = TLCtxHelper.Scope.Resolve<IModuleAccountManager>();//初始化交易帐户管理服务
+
+            logger.Info("[INIT CORE] AgentManager");
+            _agentmanager = TLCtxHelper.Scope.Resolve<IModuleAgentManager>();//初始化代理账户管理服务
 
             logger.Info("[INIT CORE] ClearCentre");
             _clearCentre = TLCtxHelper.Scope.Resolve<IModuleClearCentre>();//初始化结算中心 初始化账户信息
@@ -124,6 +128,8 @@ namespace TradingLib.ServiceManager
 
             _acctmanger.Start();
 
+            _agentmanager.Start();
+
             _datafeedRouter.Start();
             _datafeedRouter.LoadTickSnapshot();
 
@@ -156,6 +162,8 @@ namespace TradingLib.ServiceManager
             _brokerRouter.Stop();//成交路由
 
             _datafeedRouter.Stop();//行情路由
+
+            _agentmanager.Stop();
 
             _acctmanger.Stop();
 

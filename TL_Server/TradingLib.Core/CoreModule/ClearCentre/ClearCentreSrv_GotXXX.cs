@@ -225,10 +225,6 @@ namespace TradingLib.Core
                     f.TransferFee = account.CalcTransferFee(f);
                 }
                 f.PositionOperation = GetPosOperatin(aftersize, beforesize);
-
-                Manager mgr = BasicTracker.ManagerTracker[account.Mgr_fk];
-
-                SplitCommission(mgr, f);
             }
             catch (Exception ex)
             {
@@ -236,35 +232,7 @@ namespace TradingLib.Core
             }
         }
 
-        /// <summary>
-        /// 分拆某个成交的手续费
-        /// </summary>
-        /// <param name="f"></param>
-        void SplitCommission(Manager mgr, Trade f)
-        {
-            if (mgr == null || mgr.AgentAccount==null) return;
-            decimal cost;
-            decimal income;
-
-            income = f.Commission;
-            cost = mgr.AgentAccount.CalCommission(f);//计算代理手续费成本
-
-            AgentCommissionSplit split = new AgentCommissionSplitImpl(mgr.AgentAccount, f, cost, income);
-            TLCtxHelper.ModuleDataRepository.NewAgentCommissionSplit(split);
-
-            //父子 编号不同
-            while (mgr.ParentManager.mgr_fk != mgr.mgr_fk)
-            {
-                mgr = mgr.ParentManager;
-                if (mgr == null || mgr.AgentAccount == null) return;
-
-                income = cost;
-                cost = mgr.AgentAccount.CalCommission(f);//计算代理手续费成本
-
-                split = new AgentCommissionSplitImpl(mgr.AgentAccount, f, cost, income);
-                TLCtxHelper.ModuleDataRepository.NewAgentCommissionSplit(split);
-            }
-        }
+        
             
         
 

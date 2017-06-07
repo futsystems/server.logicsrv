@@ -48,6 +48,7 @@
     <Compile Include="Contrib\EnumContribCommandHandleType.cs" />
     <Compile Include="Contrib\IPlugin.cs" />
     <Compile Include="Core\Function\IAccountManager.cs" />
+    <Compile Include="Core\Function\IAgentManager.cs" />
     <Compile Include="Core\Function\IClearCentre.cs" />
     <Compile Include="Core\Function\IDataRepository.cs" />
     <Compile Include="Core\Function\IBrokerRouter.cs" />
@@ -59,6 +60,7 @@
     <Compile Include="EnumActionCheckResult.cs" />
     <Compile Include="Enums.cs" />
     <Compile Include="Module\IModuleAccountManager.cs" />
+    <Compile Include="Module\IModuleAgentManager.cs" />
     <Compile Include="Module\IModuleClearCentre.cs" />
     <Compile Include="Module\IModuleDataRepository.cs" />
     <Compile Include="Module\IModuleDataRouter.cs" />

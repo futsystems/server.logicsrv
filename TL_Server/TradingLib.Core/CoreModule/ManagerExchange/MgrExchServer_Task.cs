@@ -84,7 +84,6 @@ namespace TradingLib.Core
                         _lastPushAllTime = DateTime.Now;
                     }
 
-                    
                     foreach (IBroker broker in cst.WatchBrokers)
                     {
                         NotifyMGRContribNotify notify = ResponseTemplate<NotifyMGRContribNotify>.SrvSendNotifyResponse(cst.Location);
@@ -100,5 +99,29 @@ namespace TradingLib.Core
                 logger.Error("帐户信息采集出错:" + ex.ToString());
             }
         }
+
+        [TaskAttr("采集代理帐户信息", 2, 0, "定时采集代理帐户信息用于向管理端进行推送")]
+        public void Task_CollectAgentInfo()
+        {
+            try
+            {
+
+                foreach (var cst in customerExInfoMap.Values)
+                {
+                    //便利所有订阅账户列表
+                    foreach (Agent agent in cst.WatchAgentList)
+                    {
+                        //logger.Debug("帐户信息采集推送");
+                        NotifyAgentStatistic(agent, cst.Location);
+                    }
+
+                }
+            }
+            catch (Exception ex)
+            {
+                logger.Error("代理信息采集出错:" + ex.ToString());
+            }
+        }
+
     }
 }

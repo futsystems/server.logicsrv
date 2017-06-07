@@ -13,6 +13,20 @@ namespace TradingLib.Core
     public partial class MgrExchServer
     {
         /// <summary>
+        /// 设定观察交易账户列表
+        /// </summary>
+        /// <param name="session"></param>
+        /// <param name="json"></param>
+        [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "WatchAgents", "WatchAgents - watch  agent", "设置当前观察代理", QSEnumArgParseType.Json)]
+        public void CTE_WatchAgents(ISession session, string json)
+        {
+            string[] accounts = json.DeserializeObject<string[]>();
+            var c = customerExInfoMap[session.Location.ClientID];
+            c.WatchAgents(accounts);
+        }
+
+
+        /// <summary>
         /// 查询代理财务账户
         /// </summary>
         /// <param name="session"></param>

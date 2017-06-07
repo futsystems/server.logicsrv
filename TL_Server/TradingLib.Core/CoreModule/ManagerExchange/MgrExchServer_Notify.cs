@@ -93,6 +93,15 @@ namespace TradingLib.Core
             response.Result = account.ToAccountStatistic().SerializeObject();
             CachePacket(response);
         }
+
+        void NotifyAgentStatistic(Agent agent, ILocation location)
+        {
+            NotifyMGRContribNotify response = ResponseTemplate<NotifyMGRContribNotify>.SrvSendNotifyResponse(location);
+            response.ModuleID = CoreName;
+            response.CMDStr = "NotifyAgentStatistic";
+            response.Result = agent.GetAgentStatistic().SerializeObject();
+            CachePacket(response);
+        }
         /// <summary>
         /// 向某个Manager过滤谓词对应的Manager发送通知
         /// </summary>
