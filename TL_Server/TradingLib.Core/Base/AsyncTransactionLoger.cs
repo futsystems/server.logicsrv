@@ -56,6 +56,7 @@ namespace TradingLib.Core
         RingBuffer<ExchangeSettlement> _exsettlecache;//交易所结算结算缓存
         RingBuffer<CashTransaction> _cashtxnsettlecash;//出入金操作结算缓存
 
+        RingBuffer<AgentCommissionSplit> _agentcommissionsplit;//代理手续费拆分缓存
 
 
         /// <summary>
@@ -90,6 +91,8 @@ namespace TradingLib.Core
             _cashtxnsettlecash = new RingBuffer<CashTransaction>(maxbr);
 
             _datareperrorcache = new RingBuffer<DataRepositoryLog>(maxbr);
+            _agentcommissionsplit = new RingBuffer<AgentCommissionSplit>(maxbr);
+;
         }
 
        
@@ -341,6 +344,11 @@ namespace TradingLib.Core
                         DBSettleCashTransaction(txn);
                     }
 
+                    while (_agentcommissionsplit.hasItems)
+                    {
+                        AgentCommissionSplit split = _agentcommissionsplit.Read();
+                        DBInsertAgentCommissioinSplit(split);
+                    }
                     #endregion
 
                     //PASSDBOPERATION:
@@ -417,6 +425,8 @@ namespace TradingLib.Core
         }
 
 
+
+
         /**
          *  持仓明细与交易所结算数据是在结算过程中产生的结算数据,不需要通过DataRep日志系统进行记录
          * */
@@ -431,6 +441,12 @@ namespace TradingLib.Core
         {
             _exsettlementcache.Write(settle);
             //_datarepcache.Write(new DataRepositoryLog(EnumDataRepositoryType.InsertExchangeSettlement,settle));
+            newlog();
+        }
+
+        public void NewAgentCommissionSplit(AgentCommissionSplit split)
+        {
+            _agentcommissionsplit.Write(split);
             newlog();
         }
 
@@ -666,6 +682,18 @@ namespace TradingLib.Core
             catch (Exception ex)
             {
                 throw new DataRepositoryException(EnumDataRepositoryType.SettleCashTransaction, txn, ex);
+            }
+        }
+
+        void DBInsertAgentCommissioinSplit(AgentCommissionSplit split)
+        {
+            try
+            {
+                ORM.MAgentCommissionSplit.AddAgentCommissionSplit(split);
+            }
+            catch (Exception ex)
+            {
+                throw new DataRepositoryException(EnumDataRepositoryType.AgentCommissionSplit, split, ex);
             }
         }
         #endregion

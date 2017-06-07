@@ -72,6 +72,11 @@ namespace TradingLib.Common
         /// </summary>
         SettleCashTransaction,
 
+        /// <summary>
+        /// 代理手续费分拆记录
+        /// </summary>
+        AgentCommissionSplit,
+
     }
     public class DataRepositoryException:TLException
     {

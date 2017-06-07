@@ -56,7 +56,7 @@ namespace TradingLib.Common
             //绑定代理财务账户
             foreach (var mgr in mlist)
             {
-                if (mgr.Type != QSEnumManagerType.AGENT) continue;
+                //if (mgr.Type != QSEnumManagerType.AGENT) continue;
                 mgr.AgentAccount = BasicTracker.AgentTracker[mgr.Login];
             }
         }

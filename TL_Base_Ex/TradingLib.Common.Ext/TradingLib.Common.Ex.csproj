@@ -91,6 +91,7 @@
     <Compile Include="Contex\Event\RouterEvent.cs" />
     <Compile Include="Contrib\Task.cs" />
     <Compile Include="ORM\Agent\MAgent.cs" />
+    <Compile Include="ORM\Agent\MAgentCommissionSplit.cs" />
     <Compile Include="ORM\base\Config\ConfigDB.cs" />
     <Compile Include="ORM\base\Config\ConfigItem.cs" />
     <Compile Include="ORM\base\Config\GlobalConfig.cs" />
@@ -130,6 +131,7 @@
     <Compile Include="Utils\Account\AccountUtils_Args.cs" />
     <Compile Include="Utils\Account\AccountUtils_SessionInfo.cs" />
     <Compile Include="Utils\Account\AccountUtils_MaxOrderVol.cs" />
+    <Compile Include="Utils\Agent\AgentUtil.cs" />
     <Compile Include="Utils\BasicInfo\ExchangeUtils_Ex.cs" />
     <Compile Include="Utils\BasicInfo\SecurityUtils_Ex.cs" />
     <Compile Include="Utils\BasicInfo\SymbolUtils_Ex.cs" />
