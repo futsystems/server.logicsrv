@@ -52,6 +52,13 @@ namespace TradingLib.Common
             sroot.Domain = BasicTracker.DomainTracker[sroot.domain_id];
             sroot.BaseManager = this[sroot.mgr_fk];
             sroot.ParentManager = this[sroot.parent_fk];
+
+            //绑定代理财务账户
+            foreach (var mgr in mlist)
+            {
+                if (mgr.Type != QSEnumManagerType.AGENT) continue;
+                mgr.AgentAccount = BasicTracker.AgentTracker[mgr.Login];
+            }
         }
 
 

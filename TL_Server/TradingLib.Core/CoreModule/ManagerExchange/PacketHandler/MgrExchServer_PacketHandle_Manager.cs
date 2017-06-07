@@ -65,9 +65,34 @@ namespace TradingLib.Core
         {
             Manager manager = session.GetManager();
 
-            ManagerSetting m = json.DeserializeObject<ManagerSetting>();// Mixins.Json.JsonMapper.ToObject<ManagerSetting>(json);
-            bool isadd = m.ID == 0;
-            if (isadd)
+            var data = json.DeserializeObject();
+
+            var id=int.Parse(data["id"].ToString());
+            var login = data["login"].ToString();
+            var mgr_type = data["mgr_type"].ToString().ParseEnum<QSEnumManagerType>();
+            var name = data["name"].ToString();
+            var mobile = data["mobile"].ToString();
+            var qq = data["qq"].ToString();
+         
+
+            ManagerSetting m = new ManagerSetting();
+            m.ID = id;
+            m.Login = login;
+            m.Type = mgr_type;
+            m.Name = name;
+            m.Mobile = mobile;
+            m.QQ = qq;
+
+            if (mgr_type == QSEnumManagerType.AGENT)
+            {
+                var acc_limit = int.Parse(data["acc_limit"].ToString());
+                var agent_limit = int.Parse(data["agent_limit"].ToString());
+                
+                m.AccLimit = acc_limit;
+                m.AgentLimit = agent_limit;
+            }
+
+            if (id == 0)
             {
                 //开启代理模块 并且 是管理员 或者 是代理同时可以开设下级代理
                 if (!(manager.Domain.Module_Agent && (manager.IsRoot() || (manager.IsAgent() && manager.Domain.Module_SubAgent))))
@@ -105,15 +130,29 @@ namespace TradingLib.Core
                 }
 
                 BasicTracker.ManagerTracker.UpdateManager(m);
+                var newManager = BasicTracker.ManagerTracker[m.ID];
 
+                if (m.Type == QSEnumManagerType.AGENT)
+                {
+                    var agent_type = data["agent_type"].ToString().ParseEnum<EnumAgentType>();
+
+                    AgentSetting agent = new AgentSetting();
+                    agent.Account = m.Login;
+                    agent.Currency = CurrencyType.RMB;
+                    agent.AgentType = agent_type;
+
+                    BasicTracker.AgentTracker.UpdateAgent(agent);
+                    newManager.AgentAccount = BasicTracker.AgentTracker[agent.ID];
+
+                }
                 session.RspMessage("添加管理员成功");
                 //通知管理员信息变更
-                NotifyManagerUpdate(BasicTracker.ManagerTracker[m.ID]);
+                NotifyManagerUpdate(newManager);
 
             }
             else
             {
-                Manager target = BasicTracker.ManagerTracker[m.ID];
+                Manager target = BasicTracker.ManagerTracker[id];
                 if (target == null)
                 {
                     throw new FutsRspError("管理员不存在");

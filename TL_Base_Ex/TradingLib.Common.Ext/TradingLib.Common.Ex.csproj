@@ -84,11 +84,13 @@
     <Compile Include="Accounts\Account_IAccountIndicator.cs" />
     <Compile Include="Accounts\Account_Session.cs" />
     <Compile Include="Accounts\Account_Settlement.cs" />
+    <Compile Include="Agent\Agent.cs" />
     <Compile Include="Contex\Event\EventArgs\BrokerAccountInfoEventArgs.cs" />
     <Compile Include="Contex\Event\EventArgs\BrokerTransferEventArgs.cs" />
     <Compile Include="Contex\Event\EventArgs\ManagerNotifyEventArgs.cs" />
     <Compile Include="Contex\Event\RouterEvent.cs" />
     <Compile Include="Contrib\Task.cs" />
+    <Compile Include="ORM\Agent\MAgent.cs" />
     <Compile Include="ORM\base\Config\ConfigDB.cs" />
     <Compile Include="ORM\base\Config\ConfigItem.cs" />
     <Compile Include="ORM\base\Config\GlobalConfig.cs" />
@@ -112,6 +114,7 @@
     <Compile Include="ORM\MStrategy.cs" />
     <Compile Include="ORM\MSystem.cs" />
     <Compile Include="Tracker\BasicTracker\AccountProfileTracker.cs" />
+    <Compile Include="Tracker\AgentTracker.cs" />
     <Compile Include="Tracker\BasicTracker\BasicInfo\CalendarTracker.cs" />
     <Compile Include="Tracker\BasicTracker\ConnectorMap\AccountConnectorPair.cs" />
     <Compile Include="Tracker\BasicTracker\ConnectorMap\AccountConnectorTracker.cs" />

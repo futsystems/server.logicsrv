@@ -112,21 +112,18 @@ namespace TradingLib.Common
         /// 管理域ID
         /// Root或者代理下面的柜员的MgrID一致
         /// </summary>
-        //[NoJsonExportAttr()]
         [Newtonsoft.Json.JsonIgnore]
         public int BaseMgrID { get { return mgr_fk; } }
 
         /// <summary>
         /// BaseManager用于标注该管理帐号隶属于哪个Agent,如果是系统级的管理帐户的话直接隶属于ROOT
         /// </summary>
-        //[NoJsonExportAttr()]
         [Newtonsoft.Json.JsonIgnore]
         public Manager BaseManager { get; set; }
 
         /// <summary>
         /// 上级代理对象
         /// </summary>
-        //[NoJsonExportAttr()]
         [Newtonsoft.Json.JsonIgnore]
         public Manager ParentManager { get; set; }
 
@@ -134,56 +131,18 @@ namespace TradingLib.Common
         /// <summary>
         /// 分区域对象
         /// </summary>
-        //[NoJsonExportAttr()]
         [Newtonsoft.Json.JsonIgnore]
         public Domain Domain { get; internal set; }
 
 
+        /// <summary>
+        /// 代理AgentAccount
+        /// </summary>
+        public Agent AgentAccount { get; set; }
 
         public override string ToString()
         {
             return string.Format("Manager[{0}]:{1} Type:{2} BaseFK:{3} ParentFK:{4}", this.ID, this.Login, this.Type, this.mgr_fk, this.parent_fk);
         }
-        //public string Serialize()
-        //{
-        //    StringBuilder sb = new StringBuilder();
-        //    char d = ',';
-        //    Manager p = this;
-        //    sb.Append(p.ID.ToString());
-        //    sb.Append(d);
-        //    sb.Append(p.Login);
-        //    sb.Append(d);
-        //    sb.Append(p.User_Id.ToString());
-        //    sb.Append(d);
-        //    sb.Append(p.Type.ToString());
-        //    sb.Append(d);
-        //    sb.Append(p.Name);
-        //    sb.Append(d);
-        //    sb.Append(p.Mobile);
-        //    sb.Append(d);
-        //    sb.Append(p.QQ);
-        //    sb.Append(d);
-        //    sb.Append(p.AccLimit.ToString());
-        //    sb.Append(d);
-        //    sb.Append(p.mgr_fk.ToString());
-        //    sb.Append(d);
-        //    sb.Append(p.Active.ToString());
-        //    return sb.ToString();
-        //}
-
-        //public void Deserialize(string message)
-        //{
-        //    string[] rec = message.Split(',');
-        //    this.ID = int.Parse(rec[0]);
-        //    this.Login = rec[1];
-        //    this.User_Id = int.Parse(rec[2]);
-        //    this.Type = (QSEnumManagerType)Enum.Parse(typeof(QSEnumManagerType), rec[3]);
-        //    this.Name = rec[4];
-        //    this.Mobile = rec[5];
-        //    this.QQ=rec[6];
-        //    this.AccLimit = int.Parse(rec[7]);
-        //    this.mgr_fk= int.Parse(rec[8]);
-        //    this.Active = bool.Parse(rec[9]);
-        //}
     }
 }

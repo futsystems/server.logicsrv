@@ -99,13 +99,6 @@ namespace TradingLib.Common
 
 
 
-
-
-
-
-
-
-
         /// <summary>
         /// 判断mgr是否有权操作mgr2
         /// 

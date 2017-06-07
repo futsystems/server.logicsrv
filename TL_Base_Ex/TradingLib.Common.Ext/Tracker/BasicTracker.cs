@@ -26,6 +26,7 @@ namespace TradingLib.Common
         //
         DomainTracker domaintracker;
         DBManagerTracker mgrtracker;
+        AgentTracker agentTracker;
         UIAccessTracker uiaccesstracker;
         DBContractBankTracker banktracker;
 
@@ -351,6 +352,19 @@ namespace TradingLib.Common
                 if (defaultinstance.settlementpricetracker == null)
                     defaultinstance.settlementpricetracker = new SettlementPriceTracker();
                 return defaultinstance.settlementpricetracker;
+            }
+        }
+
+        /// <summary>
+        /// 代理财务账户维护器
+        /// </summary>
+        public static AgentTracker AgentTracker
+        {
+            get 
+            {
+                if (defaultinstance.agentTracker == null)
+                    defaultinstance.agentTracker = new AgentTracker();
+                return defaultinstance.agentTracker;
             }
         }
 
