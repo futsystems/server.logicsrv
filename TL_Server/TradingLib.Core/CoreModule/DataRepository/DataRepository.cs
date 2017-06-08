@@ -327,6 +327,26 @@ namespace TradingLib.Core
         {
             return ORM.MTradingInfo.SelectRouterOrders().Select(ro => { Order fo = TLCtxHelper.ModuleClearCentre.SentOrder(ro.FatherID); ro.oSymbol = fo != null ? fo.oSymbol : null; return ro; });
         }
+
+
+        /// <summary>
+        /// 获得代理未结算出入金记录
+        /// </summary>
+        /// <param name="tradingday"></param>
+        /// <returns></returns>
+        public IEnumerable<CashTransaction> SelectAgentCashTransactionUnSettled(int tradingday)
+        {
+            IEnumerable<CashTransaction> cashntxns = ORM.MAgentCashTransaction.SelectAgentCashTransactionsUnSettled(tradingday);
+            logger.Info("数据库恢复未结算 代理出入金记录数据:" + cashntxns.Count().ToString() + "条");
+            return cashntxns;
+        }
+
+        public IEnumerable<AgentCommissionSplit> SelectAgentCommissionSplitUnSettled(int tradingday)
+        {
+            IEnumerable<AgentCommissionSplit> commissionsplit = ORM.MAgentCommissionSplit.SelectAgentCommissionSplitUnSettled(tradingday);
+            logger.Info("数据库恢复未结算 代理手续费记录数据:" + commissionsplit.Count().ToString() + "条");
+            return commissionsplit;
+        }
         //TODO SymbolKey
         /// <summary>
         /// 接口侧交易信息 Account字段为对应的BrokerToken信息

@@ -18,6 +18,11 @@ namespace TradingLib.Common
             this.CommissionIncome = income;
             this.Settled = false;
         }
+
+        public AgentCommissionSplitImpl()
+        { 
+        
+        }
         /// <summary>
         /// 代理结算账户
         /// </summary>

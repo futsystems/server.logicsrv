@@ -103,6 +103,27 @@ namespace TradingLib.Core
                     if(action.ActionFlag == QSEnumOrderActionFlag.Delete && action.OrderID != 0)
                         this.GotCancel(account,action.OrderID) ;
                 }
+
+                //初始化代理
+                //上个结算日交易帐户结算权益 通过结算单获取
+                IEnumerable<AgentCommissionSplit> agentcommissionsplit = TLCtxHelper.ModuleDataRepository.SelectAgentCommissionSplitUnSettled(tradingday);
+                //未结算出入金记录
+                IEnumerable<CashTransaction> agentcashtrans = TLCtxHelper.ModuleDataRepository.SelectAgentCashTransactionUnSettled(tradingday);
+
+                foreach (var mgr in BasicTracker.ManagerTracker.Managers)
+                {
+                    if (mgr.AgentAccount == null) continue;
+
+                    foreach (var cash in agentcashtrans.Where(txn => txn.Account == mgr.Login))
+                    {
+                        mgr.AgentAccount.LoadCashTrans(cash);
+                    }
+
+                    foreach (var commission in agentcommissionsplit.Where(co => co.Account == mgr.Login))
+                    {
+                        mgr.AgentAccount.LoadCommissionSplit(commission);
+                    }
+                }
             }
             catch (Exception ex)
             {

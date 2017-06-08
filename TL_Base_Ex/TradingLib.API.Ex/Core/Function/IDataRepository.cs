@@ -183,6 +183,20 @@ namespace TradingLib.API
         /// <returns></returns>
         IEnumerable<Order> SelectRouterOrders();
 
+
+        /// <summary>
+        /// 获得所有代理账户未结算出入金记录
+        /// </summary>
+        /// <returns></returns>
+        IEnumerable<CashTransaction> SelectAgentCashTransactionUnSettled(int tradingday);
+
+
+        /// <summary>
+        /// 获得所有代理账户未结算手续费分拆记录
+        /// </summary>
+        /// <param name="tradingday"></param>
+        /// <returns></returns>
+        IEnumerable<AgentCommissionSplit> SelectAgentCommissionSplitUnSettled(int tradingday);
         #endregion
 
 

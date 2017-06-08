@@ -36,6 +36,7 @@ namespace TradingLib.ORM
                 db.Connection.Execute(query);
             }
         }
+
         /// <summary>
         /// 获得所有未结算出入金记录
         /// </summary>

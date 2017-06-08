@@ -25,5 +25,27 @@ namespace TradingLib.ORM
             }
         }
 
+        /// <summary>
+        /// 获得所有未结算手续费记录
+        /// </summary>
+        /// <returns></returns>
+        public static IEnumerable<AgentCommissionSplit> SelectAgentCommissionSplitUnSettled(int tradingday)
+        {
+
+            using (DBMySql db = new DBMySql())
+            {
+                if (tradingday == 0)
+                {
+                    string query = string.Format("SELECT * FROM log_agent_commission_split WHERE settled=0");
+                    return db.Connection.Query<AgentCommissionSplitImpl>(query);
+                }
+                else
+                {
+                    string query = string.Format("SELECT * FROM log_agent_commission_split WHERE settled=0 AND settleday='{0}'", tradingday);
+                    return db.Connection.Query<AgentCommissionSplitImpl>(query);
+                }
+            }
+        }
+
     }
 }
