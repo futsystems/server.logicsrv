@@ -41,6 +41,24 @@ namespace TradingLib.Core
             session.ReplyMgr(agent);
         }
 
+        [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "QryAllAgent", "QryAllAgent - query all agent", "查询所有代理账户")]
+        public void CTE_QryAgent(ISession session)
+        {
+            Manager manager = session.GetManager();
+
+            List<AgentSetting> agentlist = new List<AgentSetting>();
+            foreach (var mgr in manager.GetVisibleManager())
+            {
+                if (mgr.AgentAccount == null) continue;
+                var agent = mgr.AgentAccount as AgentSetting;
+                if (agent == null) continue;
+                agentlist.Add(agent);
+            }
+            session.ReplyMgr(agentlist.ToArray());
+        }
+
+
+
         [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "UpdateAgentTemplate", "UpdateAgentTemplate - update agent template", "更新代理账户手续费模板", QSEnumArgParseType.Json)]
         public void CTE_UpdateAgentTemplate(ISession session, string json)
         {
@@ -148,7 +166,7 @@ namespace TradingLib.Core
             this.CashOperation(txn);
 
             //出入金操作后返回帐户信息更新
-            //session.NotifyMgr("NotifyAccountFinInfo", acct.GenAccountInfo());
+            session.NotifyMgr("NotifyAgentFinInfo",agent.GetAgentFinanceInfo());
             session.RspMessage("代理出入金操作成功");
         }
 

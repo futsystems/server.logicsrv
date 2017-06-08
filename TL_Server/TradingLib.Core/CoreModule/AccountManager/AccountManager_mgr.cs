@@ -366,6 +366,27 @@ namespace TradingLib.Core
                 throw new FutsRspError("无权操作该帐户");
             }
 
+            //不是超级管理员需要进行出入金权限检查
+            if (!manager.IsRoot())
+            {
+                if (manager.AgentAccount == null)
+                {
+                    throw new FutsRspError("代理账户不存在 无法执行出入金操作");
+                }
+                if (manager.AgentAccount.AgentType == EnumAgentType.Normal)
+                {
+                    throw new FutsRspError("普通代理无权执行出入金操作");
+                }
+                if (manager.AgentAccount.AgentType == EnumAgentType.SelfOperated)
+                {
+                    decimal canuse = manager.AgentAccount.StaticEquity - manager.AgentAccount.SubStaticEquity;
+                    if (( canuse < Math.Abs(amount)) && amount > 0)//入金且可分配小于入金额 则拒绝
+                    {
+                        throw new FutsRspError("自盈代理可分配权益不足");
+                    }
+                }
+            }
+
             CashTransaction txn = new CashTransactionImpl();
             txn.Account = account;
             txn.Amount = Math.Abs(amount);

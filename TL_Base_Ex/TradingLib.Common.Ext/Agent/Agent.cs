@@ -29,11 +29,13 @@ namespace TradingLib.Common
         /// <summary>
         /// 手续费成本
         /// </summary>
+        [Newtonsoft.Json.JsonIgnore]
         public decimal CommissionCost { get { return splitlist.Where(split => !split.Settled).Sum(split => split.CommissionCost); } }
 
         /// <summary>
         /// 手续费收入
         /// </summary>
+        [Newtonsoft.Json.JsonIgnore]
         public decimal CommissionIncome { get { return splitlist.Where(split => !split.Settled).Sum(split => split.CommissionIncome); } }
 
         /// <summary>
@@ -55,11 +57,13 @@ namespace TradingLib.Common
         /// <summary>
         /// 未结算入金
         /// </summary>
+        [Newtonsoft.Json.JsonIgnore]
         public decimal CashIn { get { return cashtranslsit.Where(tx => !tx.Settled && tx.TxnType == QSEnumCashOperation.Deposit && tx.EquityType == QSEnumEquityType.OwnEquity).Sum(tx => tx.Amount); } }
 
         /// <summary>
         /// 未结算出金
         /// </summary>
+        [Newtonsoft.Json.JsonIgnore]
         public decimal CashOut { get { return cashtranslsit.Where(tx => !tx.Settled && tx.TxnType == QSEnumCashOperation.WithDraw && tx.EquityType == QSEnumEquityType.OwnEquity).Sum(tx => tx.Amount); } }
 
 
@@ -67,15 +71,18 @@ namespace TradingLib.Common
         /// <summary>
         /// 优先资金 入金
         /// </summary>
+        /// 
+        [Newtonsoft.Json.JsonIgnore]
         public decimal CreditCashIn { get { return cashtranslsit.Where(tx => !tx.Settled && tx.TxnType == QSEnumCashOperation.Deposit && tx.EquityType == QSEnumEquityType.CreditEquity).Sum(tx => tx.Amount); } }
 
         /// <summary>
         /// 优先资金出金
         /// </summary>
+        [Newtonsoft.Json.JsonIgnore]
         public decimal CreditCashOut { get { return cashtranslsit.Where(tx => !tx.Settled && tx.TxnType == QSEnumCashOperation.WithDraw && tx.EquityType == QSEnumEquityType.CreditEquity).Sum(tx => tx.Amount); } }
 
         #endregion
-
+        [Newtonsoft.Json.JsonIgnore]
         public decimal SubStaticEquity
         {
             get
@@ -107,6 +114,7 @@ namespace TradingLib.Common
             }
         }
 
+        [Newtonsoft.Json.JsonIgnore]
         public decimal StaticEquity
         {
             get
@@ -115,6 +123,7 @@ namespace TradingLib.Common
             }
         }
 
+        [Newtonsoft.Json.JsonIgnore]
         public decimal NowEquity
         {
             get
@@ -126,6 +135,7 @@ namespace TradingLib.Common
         /// <summary>
         /// 当前信用额度
         /// </summary>
+        [Newtonsoft.Json.JsonIgnore]
         public decimal NowCredit
         {
             get
@@ -134,6 +144,7 @@ namespace TradingLib.Common
             }
         }
 
+        [Newtonsoft.Json.JsonIgnore]
         public decimal RealizedPL
         {
             get
@@ -144,6 +155,7 @@ namespace TradingLib.Common
             }
         }
 
+        [Newtonsoft.Json.JsonIgnore]
         public decimal UnRealizedPL
         {
             get

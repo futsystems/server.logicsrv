@@ -142,8 +142,11 @@ namespace TradingLib.Core
                     agent.AgentType = agent_type;
 
                     BasicTracker.AgentTracker.UpdateAgent(agent);
-                    newManager.AgentAccount = BasicTracker.AgentTracker[agent.ID];
-
+                    var a = BasicTracker.AgentTracker[agent.ID];
+                    if (a != null)
+                    {
+                        a.BindManager(newManager);
+                    }
                 }
                 session.RspMessage("添加管理员成功");
                 //通知管理员信息变更

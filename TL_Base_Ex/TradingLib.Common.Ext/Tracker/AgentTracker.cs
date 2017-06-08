@@ -67,6 +67,8 @@ namespace TradingLib.Common
                 target.ExStrategy_ID = agent.ExStrategy_ID;
 
                 ORM.MAgent.AddAgent(target);
+                agent.ID = target.ID;
+
                 agentIDMap.TryAdd(target.ID, target);
                 agentAccountMap.TryAdd(target.Account, target);
             }
