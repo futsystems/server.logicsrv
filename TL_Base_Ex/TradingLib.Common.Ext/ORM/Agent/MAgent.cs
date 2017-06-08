@@ -15,12 +15,12 @@ namespace TradingLib.ORM
         /// 加载所有代理财务账户
         /// </summary>
         /// <returns></returns>
-        public static IEnumerable<Agent> SelectAgent()
+        public static IEnumerable<AgentImpl> SelectAgent()
         {
             using (DBMySql db = new DBMySql())
             {
                 string query = "SELECT * FROM agents";
-                return db.Connection.Query<Agent>(query);
+                return db.Connection.Query<AgentImpl>(query);
             }
         }
 
@@ -43,7 +43,7 @@ namespace TradingLib.ORM
         /// 更新代理模板参数
         /// </summary>
         /// <param name="agent"></param>
-        public static void UpdateAgentTemplate(AgentSetting agent)
+        public static void UpdateAgentTemplate(AgentImpl agent)
         {
             using (DBMySql db = new DBMySql())
             {

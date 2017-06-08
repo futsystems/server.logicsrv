@@ -14,7 +14,7 @@ namespace TradingLib.Common
         /// </summary>
         /// <param name="account"></param>
         /// <returns></returns>
-        static CommissionTemplate GetCommissionTemplate(this Agent agent)
+        static CommissionTemplate GetCommissionTemplate(this IAgent agent)
         {
             return BasicTracker.CommissionTemplateTracker[agent.Commission_ID];
         }
@@ -24,7 +24,7 @@ namespace TradingLib.Common
         /// </summary>
         /// <param name="account"></param>
         /// <returns></returns>
-        static MarginTemplate GetMarginTemplate(this Agent agent)
+        static MarginTemplate GetMarginTemplate(this IAgent agent)
         {
             return BasicTracker.MarginTemplateTracker[agent.Margin_ID];
         }
@@ -36,7 +36,7 @@ namespace TradingLib.Common
         /// <param name="account"></param>
         /// <param name="symbol"></param>
         /// <returns></returns>
-        static CommissionTemplateItem GetCommissionTemplateItem(this Agent agent, Symbol symbol)
+        static CommissionTemplateItem GetCommissionTemplateItem(this IAgent agent, Symbol symbol)
         {
             CommissionTemplate tmp = agent.GetCommissionTemplate();
             if (tmp == null)
@@ -46,7 +46,7 @@ namespace TradingLib.Common
 
 
 
-        static MarginTemplateItem GetMarginTemplateItem(this Agent agent, Symbol symbol)
+        static MarginTemplateItem GetMarginTemplateItem(this IAgent agent, Symbol symbol)
         {
             MarginTemplate tmp = agent.GetMarginTemplate();
             if (tmp == null)
@@ -63,7 +63,7 @@ namespace TradingLib.Common
         /// <param name="account"></param>
         /// <param name="f"></param>
         /// <returns></returns>
-        public static decimal CalCommission(this Agent agent, Trade f)
+        public static decimal CalCommission(this IAgent agent, Trade f)
         {
             //股票通过交易手续费计算
             if (f.oSymbol.SecurityFamily.Type == SecurityType.STK)
@@ -107,7 +107,7 @@ namespace TradingLib.Common
         /// <param name="account"></param>
         /// <param name="f"></param>
         /// <returns></returns>
-        public static decimal CalcStampTax(this Agent agent, Trade f)
+        public static decimal CalcStampTax(this IAgent agent, Trade f)
         {
             //股票计算印花税
             if (f.oSymbol.SecurityFamily.Type == SecurityType.STK)
@@ -128,7 +128,7 @@ namespace TradingLib.Common
         /// <param name="account"></param>
         /// <param name="f"></param>
         /// <returns></returns>
-        public static decimal CalcTransferFee(this Agent agent, Trade f)
+        public static decimal CalcTransferFee(this IAgent agent, Trade f)
         {
             if (f.oSymbol.SecurityFamily.Type == SecurityType.STK)
             {

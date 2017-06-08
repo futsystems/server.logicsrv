@@ -21,6 +21,35 @@ namespace TradingLib.Common
         }
 
         /// <summary>
+        /// 获得某个代理的直客
+        /// </summary>
+        /// <param name="mgr"></param>
+        /// <returns></returns>
+        public static IEnumerable<IAccount> GetDirectAccounts(this Manager mgr)
+        {
+            return mgr.Domain.GetAccounts().Where(ac => ac.Mgr_fk == mgr.BaseMgrID);
+        }
+
+        /// <summary>
+        /// 返回某个管理员的直接下级代理
+        /// </summary>
+        /// <param name="mgr"></param>
+        /// <returns></returns>
+        public static IEnumerable<Manager> GetDirectAgents(this Manager mgr)
+        {
+            List<Manager> mgrlist = new List<Manager>();
+            foreach (var item in mgr.Domain.GetManagers())
+            {
+                if (item.parent_fk == mgr.mgr_fk && item.Type == QSEnumManagerType.AGENT)
+                {
+                    mgrlist.Add(item);
+                }
+            }
+            return mgrlist;
+            //return mgr.Domain.GetManagers().Where(mgr2 => mgr.parent_fk == mgr.mgr_fk && mgr2.Type == QSEnumManagerType.AGENT);
+        }
+
+        /// <summary>
         /// 查看某个代理的可见帐户
         /// ROOT权限的用户可以查看所有帐户
         /// 如果是代理则只能看到代理商的直接客户

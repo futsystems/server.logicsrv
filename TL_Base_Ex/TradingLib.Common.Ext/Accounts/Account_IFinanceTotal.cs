@@ -19,6 +19,10 @@ namespace TradingLib.Common
         public decimal LastCredit { get; set; }
 
         /// <summary>
+        /// 客户静态权益
+        /// </summary>
+        public decimal StaticEquity { get { return this.LastCredit + this.CashIn - this.CashOut; } }
+        /// <summary>
         /// 当前权益 经过排查 commission并非线程安全
         /// </summary>
         public decimal NowEquity { get { return TotalLiquidation; } }

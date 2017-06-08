@@ -67,6 +67,12 @@ namespace TradingLib.API
         void NewAgentCommissionSplit(AgentCommissionSplit split);
 
         /// <summary>
+        /// 插入代理出入金记录
+        /// </summary>
+        /// <param name="txn"></param>
+        void NewAgentCashTransactioin(CashTransaction txn);
+
+        /// <summary>
         /// 标注委托已结算
         /// </summary>
         /// <param name="o"></param>

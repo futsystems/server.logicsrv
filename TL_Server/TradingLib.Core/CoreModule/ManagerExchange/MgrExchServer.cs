@@ -196,8 +196,8 @@ namespace TradingLib.Core
 
         public IEnumerable<IAccount> WathAccountList { get { return this.WatchAccounts; } }
 
-        ThreadSafeList<Agent> watchAgents = new ThreadSafeList<Agent>();
-        public IEnumerable<Agent> WatchAgentList { get { return watchAgents; } }
+        ThreadSafeList<IAgent> watchAgents = new ThreadSafeList<IAgent>();
+        public IEnumerable<IAgent> WatchAgentList { get { return watchAgents; } }
 
 
         /// <summary>

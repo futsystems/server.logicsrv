@@ -158,6 +158,10 @@ namespace TradingLib.Core
             _asynLoger.NewAgentCommissionSplit(split);
         }
 
+        public void NewAgentCashTransactioin(CashTransaction txn)
+        {
+            _asynLoger.NewAgentCashTransaction(txn);
+        }
         #endregion
 
 

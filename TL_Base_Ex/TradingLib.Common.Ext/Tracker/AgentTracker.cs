@@ -9,8 +9,8 @@ namespace TradingLib.Common
 {
     public class AgentTracker
     {
-        ConcurrentDictionary<int, Agent> agentIDMap = new ConcurrentDictionary<int, Agent>();
-        ConcurrentDictionary<string, Agent> agentAccountMap = new ConcurrentDictionary<string, Agent>();
+        ConcurrentDictionary<int, AgentImpl> agentIDMap = new ConcurrentDictionary<int, AgentImpl>();
+        ConcurrentDictionary<string, AgentImpl> agentAccountMap = new ConcurrentDictionary<string, AgentImpl>();
 
         public AgentTracker()
         {
@@ -21,21 +21,21 @@ namespace TradingLib.Common
             }
         }
 
-        public Agent this[int id]
+        public AgentImpl this[int id]
         {
             get
             {
-                Agent target = null;
+                AgentImpl target = null;
                 if (agentIDMap.TryGetValue(id, out target)) return target;
                 return null;
             }
         }
 
-        public Agent this[string account]
+        public AgentImpl this[string account]
         {
             get
             {
-                Agent target = null;
+                AgentImpl target = null;
                 if (agentAccountMap.TryGetValue(account, out target)) return target;
                 return null;
             }
@@ -47,7 +47,7 @@ namespace TradingLib.Common
         /// <param name="agent"></param>
         public void UpdateAgent(AgentSetting agent)
         {
-            Agent target = null;
+            AgentImpl target = null;
             if (agentIDMap.TryGetValue(agent.ID, out target))
             {
                 target.Commission_ID = agent.Commission_ID;
@@ -58,7 +58,7 @@ namespace TradingLib.Common
             }
             else
             {
-                target = new Agent();
+                target = new AgentImpl();
                 target.Account = agent.Account;
                 target.Currency = agent.Currency;
                 target.AgentType = agent.AgentType;

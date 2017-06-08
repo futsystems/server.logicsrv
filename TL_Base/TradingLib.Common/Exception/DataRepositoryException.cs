@@ -75,7 +75,12 @@ namespace TradingLib.Common
         /// <summary>
         /// 代理手续费分拆记录
         /// </summary>
-        AgentCommissionSplit,
+        InsertAgentCommissionSplit,
+
+        /// <summary>
+        /// 代理出入金操作
+        /// </summary>
+        InsertAgetCashTransaction,
 
     }
     public class DataRepositoryException:TLException

@@ -99,6 +99,11 @@ namespace TradingLib.Common
 
 
 
+        public static bool RightAccessManager(this Manager mgr, string agent)
+        {
+            Manager mgr2 = BasicTracker.ManagerTracker[agent];
+            return mgr.RightAccessManager(mgr2);
+        }
         /// <summary>
         /// 判断mgr是否有权操作mgr2
         /// 

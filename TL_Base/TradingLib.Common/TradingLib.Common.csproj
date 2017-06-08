@@ -70,6 +70,7 @@
     <Compile Include="BusinessEntities\BinaryOption\Util_TimeSpan.cs" />
     <Compile Include="BusinessEntities\Manager\Agent.cs" />
     <Compile Include="BusinessEntities\Manager\AgentCommissionSplit.cs" />
+    <Compile Include="BusinessEntities\Manager\AgentFinanceInfo.cs" />
     <Compile Include="BusinessEntities\Manager\AgentStatistic.cs" />
     <Compile Include="BusinessEntities\Rule\RuleTimeSpan.cs" />
     <Compile Include="Client\TLNegotiation.cs" />

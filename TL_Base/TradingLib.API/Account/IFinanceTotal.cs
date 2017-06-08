@@ -101,5 +101,9 @@ namespace TradingLib.API
         /// </summary>
         decimal AvabileFunds { get; }
 
+        /// <summary>
+        /// 客户静态权益
+        /// </summary>
+        decimal StaticEquity { get; }
     }
 }

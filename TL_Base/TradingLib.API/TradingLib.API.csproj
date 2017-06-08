@@ -48,6 +48,7 @@
     </Compile>
     <Compile Include="Account\IAccount.cs" />
     <Compile Include="Account\IAccountIndicator.cs" />
+    <Compile Include="Account\IAgent.cs" />
     <Compile Include="Account\ITradingInfo.cs" />
     <Compile Include="Account\IFinanceTotal.cs" />
     <Compile Include="Account\IGeneralCheck.cs" />

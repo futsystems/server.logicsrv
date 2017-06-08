@@ -85,6 +85,7 @@
     <Compile Include="CoreModule\AccountManager\AccountManager_edit.cs" />
     <Compile Include="CoreModule\AccountManager\AccountManager_mgr.cs" />
     <Compile Include="CoreModule\AgentManager\AgentManager.cs" />
+    <Compile Include="CoreModule\AgentManager\AgentManager_mgr.cs" />
     <Compile Include="CoreModule\BinaryOption\BinaryOptionQuoteEngine.cs" />
     <Compile Include="CoreModule\BrokerRouter\BrokerRouter-passthrough\BrokerRouter\BrokerRouter.cs" />
     <Compile Include="CoreModule\BrokerRouter\BrokerRouter-passthrough\BrokerRouter\BrokerRouter_.cs" />

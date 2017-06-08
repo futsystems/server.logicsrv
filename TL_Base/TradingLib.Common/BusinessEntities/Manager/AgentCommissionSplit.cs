@@ -9,7 +9,7 @@ namespace TradingLib.Common
     public class AgentCommissionSplitImpl : AgentCommissionSplit
     {
 
-        public AgentCommissionSplitImpl(Agent agent,Trade f, decimal cost, decimal income)
+        public AgentCommissionSplitImpl(IAgent agent,Trade f, decimal cost, decimal income)
         {
             this.Account = agent.Account;
             this.Settleday = f.SettleDay;

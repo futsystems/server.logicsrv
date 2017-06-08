@@ -109,7 +109,7 @@ namespace TradingLib.Core
                 foreach (var cst in customerExInfoMap.Values)
                 {
                     //便利所有订阅账户列表
-                    foreach (Agent agent in cst.WatchAgentList)
+                    foreach (IAgent agent in cst.WatchAgentList)
                     {
                         //logger.Debug("帐户信息采集推送");
                         NotifyAgentStatistic(agent, cst.Location);

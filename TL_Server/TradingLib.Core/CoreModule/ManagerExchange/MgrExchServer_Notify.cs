@@ -94,7 +94,7 @@ namespace TradingLib.Core
             CachePacket(response);
         }
 
-        void NotifyAgentStatistic(Agent agent, ILocation location)
+        void NotifyAgentStatistic(IAgent agent, ILocation location)
         {
             NotifyMGRContribNotify response = ResponseTemplate<NotifyMGRContribNotify>.SrvSendNotifyResponse(location);
             response.ModuleID = CoreName;

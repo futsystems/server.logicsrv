@@ -35,7 +35,42 @@ namespace TradingLib.Core
         }
 
 
-        
+        IdTracker txnIDTracker = new IdTracker();
+
+        public void CashOperation(CashTransaction txn)
+        {
+
+            logger.Info("AgentCashOperation ID:" + txn.Account + " Amount:" + txn.Amount.ToString() + " Txntype:" + txn.TxnType.ToString() + " EquityType:" + txn.EquityType.ToString());
+            IAgent agent = BasicTracker.AgentTracker[txn.Account];
+            if (agent == null)
+            {
+                throw new FutsRspError("代理帐户不存在");
+            }
+
+            //执行时间检查 
+            if (TLCtxHelper.ModuleSettleCentre.SettleMode != QSEnumSettleMode.StandbyMode)
+            {
+                throw new FutsRspError("系统正在结算,禁止出入金操作");
+            }
+
+            if (txn.TxnType == QSEnumCashOperation.WithDraw)
+            {
+                if (txn.EquityType == QSEnumEquityType.OwnEquity && txn.Amount > agent.NowEquity)
+                {
+                    throw new FutsRspError("出金额度大于帐户权益");
+                }
+                if (txn.EquityType == QSEnumEquityType.CreditEquity && txn.Amount > agent.NowCredit)
+                {
+                    throw new FutsRspError("出金额度大于帐户信用额度");
+                }
+            }
+
+            //生成唯一序列号
+            txn.TxnID = string.Format("AG{0}", txnIDTracker.AssignId);
+            agent.LoadCashTrans(txn);
+            TLCtxHelper.ModuleDataRepository.NewAgentCashTransactioin(txn);
+            //TLCtxHelper.EventAccount.FireAccountCashOperationEvent(txn.Account,txn., Math.Abs(amount));
+        }
 
 
 

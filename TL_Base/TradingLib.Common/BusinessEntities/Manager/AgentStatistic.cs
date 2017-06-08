@@ -21,6 +21,13 @@ namespace TradingLib.Common
 
         public decimal UnRealizedPL { get; set; }//浮动盈亏
 
+        public decimal CashIn { get; set; }
+
+        public decimal CashOut { get; set; }
+
+        public decimal CreditCashIn { get; set; }
+
+        public decimal CreditCashOut { get; set; }
 
         public decimal CommissionCost { get; set; }
 

@@ -57,7 +57,7 @@ namespace TradingLib.Core
         RingBuffer<CashTransaction> _cashtxnsettlecash;//出入金操作结算缓存
 
         RingBuffer<AgentCommissionSplit> _agentcommissionsplit;//代理手续费拆分缓存
-
+        RingBuffer<CashTransaction> _agentcashtxncache;//出入金记录缓存
 
         /// <summary>
         /// create an asynchronous responder
@@ -91,8 +91,10 @@ namespace TradingLib.Core
             _cashtxnsettlecash = new RingBuffer<CashTransaction>(maxbr);
 
             _datareperrorcache = new RingBuffer<DataRepositoryLog>(maxbr);
+
+
             _agentcommissionsplit = new RingBuffer<AgentCommissionSplit>(maxbr);
-;
+            _agentcashtxncache = new RingBuffer<CashTransaction>(maxbr);
         }
 
        
@@ -349,6 +351,11 @@ namespace TradingLib.Core
                         AgentCommissionSplit split = _agentcommissionsplit.Read();
                         DBInsertAgentCommissioinSplit(split);
                     }
+                    while (_agentcashtxncache.hasItems)
+                    {
+                        CashTransaction txn = _agentcashtxncache.Read();
+                        DBInsertAgentCashTransaction(txn);
+                    }
                     #endregion
 
                     //PASSDBOPERATION:
@@ -447,6 +454,11 @@ namespace TradingLib.Core
         public void NewAgentCommissionSplit(AgentCommissionSplit split)
         {
             _agentcommissionsplit.Write(split);
+            newlog();
+        }
+        public void NewAgentCashTransaction(CashTransaction txn)
+        {
+            _agentcashtxncache.Write(txn);
             newlog();
         }
 
@@ -693,9 +705,22 @@ namespace TradingLib.Core
             }
             catch (Exception ex)
             {
-                throw new DataRepositoryException(EnumDataRepositoryType.AgentCommissionSplit, split, ex);
+                throw new DataRepositoryException(EnumDataRepositoryType.InsertAgentCommissionSplit, split, ex);
             }
         }
+        void DBInsertAgentCashTransaction(CashTransaction txn)
+        {
+            try
+            {
+                ORM.MAgentCashTransaction.InsertCashTransaction(txn);
+                logger.Debug(string.Format("Insert AgentCashTransaction Success:{0}", txn.ToString()));
+            }
+            catch (Exception ex)
+            {
+                throw new DataRepositoryException(EnumDataRepositoryType.InsertAgetCashTransaction, txn, ex);
+            }
+        }
+
         #endregion
 
         private void newlog()

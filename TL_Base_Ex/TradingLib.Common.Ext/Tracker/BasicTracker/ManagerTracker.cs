@@ -57,7 +57,9 @@ namespace TradingLib.Common
             foreach (var mgr in mlist)
             {
                 //if (mgr.Type != QSEnumManagerType.AGENT) continue;
-                mgr.AgentAccount = BasicTracker.AgentTracker[mgr.Login];
+                AgentImpl agent = BasicTracker.AgentTracker[mgr.Login];
+                if (agent == null) continue;
+                agent.BindManager(mgr);
             }
         }
 

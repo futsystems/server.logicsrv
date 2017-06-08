@@ -138,7 +138,7 @@ namespace TradingLib.Common
         /// <summary>
         /// 代理AgentAccount
         /// </summary>
-        public Agent AgentAccount { get; set; }
+        public IAgent AgentAccount { get; set; }
 
         public override string ToString()
         {
