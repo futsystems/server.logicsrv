@@ -206,6 +206,36 @@ namespace TradingLib.Core
             TLCtxHelper.ModuleClearCentre.CloseClearCentre();
         }
 
+        #region 投资者账户结算缓存
+        Dictionary<string, AccountSettlement> accountSettlementMap = new Dictionary<string, AccountSettlement>();
+
+
+        public void InvestAccountSettled(AccountSettlement settlement)
+        {
+            if (settlement == null || string.IsNullOrEmpty(settlement.Account)) return;
+            accountSettlementMap[settlement.Account] = settlement;
+        }
+
+        /// <summary>
+        /// 获得某个交易账户结算记录
+        /// </summary>
+        /// <param name="account"></param>
+        /// <returns></returns>
+        public AccountSettlement GetInvestSettlement(string account)
+        {
+            AccountSettlement target = null;
+            if (accountSettlementMap.TryGetValue(account, out target))
+            {
+                return target;
+            }
+            return null;
+        }
+
+
+
+        #endregion
+
+
 
         #region 结算过程
         /// <summary>
@@ -278,6 +308,9 @@ namespace TradingLib.Core
                     {
                         broker.SettleExchange(exchange, settleday);
                     }
+
+                   
+
                 }
             }
             catch (Exception ex)
@@ -295,6 +328,7 @@ namespace TradingLib.Core
         {
             logger.Info(string.Format("#####SettleAccount: Start Settele Account,Current Tradingday:{0}", Tradingday));
             this.SettleMode = QSEnumSettleMode.SettleMode;//结算中心进入结算状态
+            accountSettlementMap.Clear();
 
             //触发结算前事件
             TLCtxHelper.EventSystem.FireBeforeSettleEvent(this, new SystemEventArgs());
@@ -308,6 +342,19 @@ namespace TradingLib.Core
                     acc.SettleAccount(this.Tradingday);
                 }
             }
+
+            //执行代理账户结算
+            foreach (IAgent agent in TLCtxHelper.ModuleAgentManager.Agents)
+            {
+                if (agent.CreatedTime < Util.ToTLDateTime())
+                {
+                    agent.Settle(this.Tradingday);
+                }
+            }
+
+            //数据库中标记结算日的手续费拆分与出入金记录
+            ORM.MAgentCashTransaction.MarkeCashTransactionSettled(this.Tradingday);
+            ORM.MAgentCommissionSplit.MarkeAgentCommissionSplitSettled(this.Tradingday);
 
             //TODO:滚动交易日是在结算时执行还是在重置时执行 
             //更新交易日

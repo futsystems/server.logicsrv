@@ -47,5 +47,18 @@ namespace TradingLib.ORM
             }
         }
 
+        /// <summary>
+        /// 标注手续费拆分
+        /// </summary>
+        /// <param name="txn"></param>
+        public static void MarkeAgentCommissionSplitSettled(int settleday)
+        {
+            using (DBMySql db = new DBMySql())
+            {
+                string query = string.Format("UPDATE log_agent_commission_split SET settled=1 WHERE settleday = '{0}'", settleday);
+                db.Connection.Execute(query);
+            }
+        }
+
     }
 }

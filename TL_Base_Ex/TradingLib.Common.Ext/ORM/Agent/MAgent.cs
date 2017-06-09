@@ -93,5 +93,20 @@ namespace TradingLib.ORM
                 db.Connection.Execute(query);
             }
         }
+
+        /// <summary>
+        /// 获得某个交易日结束 权益统计数据
+        /// </summary>
+        /// <param name="tradingday"></param>
+        /// <returns></returns>
+        public static IEnumerable<EquityReport> SelectEquityReport(int settleday)
+        {
+            using (DBMySql db = new DBMySql())
+            {
+                string query = string.Format("SELECT account,equitysettled as equity,creditsettled as credit FROM log_agent_settlement WHERE settleday = '{0}'", settleday);
+                return db.Connection.Query<EquityReport>(query);//包含多个元素则异常
+            }
+        }
+
     }
 }

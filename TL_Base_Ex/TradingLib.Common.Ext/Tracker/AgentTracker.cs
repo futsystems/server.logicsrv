@@ -41,6 +41,8 @@ namespace TradingLib.Common
             }
         }
 
+        public IEnumerable<AgentImpl> Agents { get { return agentIDMap.Values; } }
+
         /// <summary>
         /// 更新代理账户
         /// </summary>

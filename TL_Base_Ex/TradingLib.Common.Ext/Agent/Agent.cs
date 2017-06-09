@@ -33,13 +33,13 @@ namespace TradingLib.Common
         /// 手续费成本
         /// </summary>
         [Newtonsoft.Json.JsonIgnore]
-        public decimal CommissionCost { get { return splitlist.Where(split => !split.Settled).Sum(split => split.CommissionCost); } }
+        public decimal CommissionCost { get { return splitlist.Where(o => !o.Settled).Where(split => !split.Settled).Sum(split => split.CommissionCost); } }
 
         /// <summary>
         /// 手续费收入
         /// </summary>
         [Newtonsoft.Json.JsonIgnore]
-        public decimal CommissionIncome { get { return splitlist.Where(split => !split.Settled).Sum(split => split.CommissionIncome); } }
+        public decimal CommissionIncome { get { return splitlist.Where(o => !o.Settled).Where(split => !split.Settled).Sum(split => split.CommissionIncome); } }
 
         /// <summary>
         /// 出入金数据通过CashTransaction进行统计获得
@@ -61,13 +61,13 @@ namespace TradingLib.Common
         /// 未结算入金
         /// </summary>
         [Newtonsoft.Json.JsonIgnore]
-        public decimal CashIn { get { return cashtranslsit.Where(tx => !tx.Settled && tx.TxnType == QSEnumCashOperation.Deposit && tx.EquityType == QSEnumEquityType.OwnEquity).Sum(tx => tx.Amount); } }
+        public decimal CashIn { get { return cashtranslsit.Where(o=>!o.Settled).Where(tx => !tx.Settled && tx.TxnType == QSEnumCashOperation.Deposit && tx.EquityType == QSEnumEquityType.OwnEquity).Sum(tx => tx.Amount); } }
 
         /// <summary>
         /// 未结算出金
         /// </summary>
         [Newtonsoft.Json.JsonIgnore]
-        public decimal CashOut { get { return cashtranslsit.Where(tx => !tx.Settled && tx.TxnType == QSEnumCashOperation.WithDraw && tx.EquityType == QSEnumEquityType.OwnEquity).Sum(tx => tx.Amount); } }
+        public decimal CashOut { get { return cashtranslsit.Where(o => !o.Settled).Where(tx => !tx.Settled && tx.TxnType == QSEnumCashOperation.WithDraw && tx.EquityType == QSEnumEquityType.OwnEquity).Sum(tx => tx.Amount); } }
 
 
 
@@ -76,13 +76,117 @@ namespace TradingLib.Common
         /// </summary>
         /// 
         [Newtonsoft.Json.JsonIgnore]
-        public decimal CreditCashIn { get { return cashtranslsit.Where(tx => !tx.Settled && tx.TxnType == QSEnumCashOperation.Deposit && tx.EquityType == QSEnumEquityType.CreditEquity).Sum(tx => tx.Amount); } }
+        public decimal CreditCashIn { get { return cashtranslsit.Where(o => !o.Settled).Where(tx => !tx.Settled && tx.TxnType == QSEnumCashOperation.Deposit && tx.EquityType == QSEnumEquityType.CreditEquity).Sum(tx => tx.Amount); } }
 
         /// <summary>
         /// 优先资金出金
         /// </summary>
         [Newtonsoft.Json.JsonIgnore]
-        public decimal CreditCashOut { get { return cashtranslsit.Where(tx => !tx.Settled && tx.TxnType == QSEnumCashOperation.WithDraw && tx.EquityType == QSEnumEquityType.CreditEquity).Sum(tx => tx.Amount); } }
+        public decimal CreditCashOut { get { return cashtranslsit.Where(o => !o.Settled).Where(tx => !tx.Settled && tx.TxnType == QSEnumCashOperation.WithDraw && tx.EquityType == QSEnumEquityType.CreditEquity).Sum(tx => tx.Amount); } }
+
+
+
+        /// <summary>
+        /// 结算
+        /// </summary>
+        public void Settle(int settleday)
+        { 
+            //管理结算账户普通代理与自营代理统一进行结算 结算格式与投资者账户结算相同，具体代理相关统计信息 存入统计表避免对原有数据结构进行修改
+            AccountSettlement settlement = new AccountSettlementImpl();
+            settlement.Account = this.Account;
+            settlement.Settleday = settleday;
+            settlement.LastEquity = this.LastEquity;
+            settlement.LastCredit = this.LastCredit;
+
+            
+
+
+
+            //自盈代理
+            if (this.AgentType == EnumAgentType.SelfOperated && _manger != null)
+            {
+                IEnumerable<IAccount> acclist = _manger.GetVisibleAccount();
+                AccountSettlement accsettle = null;
+                foreach (var acc in acclist)
+                {
+                    accsettle = TLCtxHelper.ModuleSettleCentre.GetInvestSettlement(acc.ID);
+                    if (accsettle == null)
+                    {
+                        continue;
+                    }
+                    //累加代理下面所有交易账户的平仓盈亏与盯市浮动盈亏
+                    settlement.PositionProfitByDate += accsettle.PositionProfitByDate;
+                    settlement.CloseProfitByDate += accsettle.CloseProfitByDate;
+                }
+
+                //自营代理手续费 为分拆的手续费成本
+                settlement.Commission = this.CommissionCost;
+            }
+            else
+            { 
+                //普通代理手续费差 以入金的方式入账
+                if(this.CommissionCost !=0 || this.CommissionIncome !=0)
+                {
+                    decimal commissionProfit = this.CommissionIncome - this.CommissionCost;
+                    if (commissionProfit != 0)
+                    {
+                        CashTransaction txn = new CashTransactionImpl();
+                        txn.Account = this.Account;
+                        txn.EquityType = QSEnumEquityType.OwnEquity;
+                        txn.Amount = Math.Abs(commissionProfit);
+                        txn.TxnType = commissionProfit > 0 ? QSEnumCashOperation.Deposit : QSEnumCashOperation.WithDraw;
+                        txn.Operator = "SETTLE";
+                        txn.TxnRef = string.Format("{0}-{1}-{2}-{3}", "SETTLE", this.Account, settleday, "COMISSION");
+                        txn.Comment = string.Format("手续费差[{0}]", settleday);
+
+                        //生成唯一序列号
+                        TLCtxHelper.ModuleAgentManager.AssignTxnID(txn);
+                        this.LoadCashTrans(txn);
+                        TLCtxHelper.ModuleDataRepository.NewAgentCashTransactioin(txn);
+                    }
+                }
+            }
+
+            settlement.CashIn = this.CashIn;
+            settlement.CashOut = this.CashOut;
+            settlement.CreditCashIn = this.CreditCashIn;
+            settlement.CreditCashOut = this.CreditCashOut;
+
+
+
+            //结算权益 = 昨日权益 + 入金 - 出金 + 平仓盈亏 - 浮动盈亏 - 资产买入额 + 资产卖出额 - 手续费
+            settlement.EquitySettled = settlement.LastEquity + settlement.CashIn - settlement.CashOut + settlement.CloseProfitByDate + settlement.PositionProfitByDate - settlement.AssetBuyAmount + settlement.AssetSellAmount - settlement.Commission;
+            settlement.CreditSettled = settlement.LastCredit + settlement.CreditCashIn - settlement.CreditCashOut;
+
+            ORM.MAgentSettlement.InsertAgentSettlement(settlement);
+
+
+            //标注交易所结算记录
+            foreach (var split in splitlist)
+            {
+                split.Settled = true;
+                //TLCtxHelper.ModuleDataRepository.MarkExchangeSettlementSettled(settle);
+            }
+
+            //标注出入金记录 已结算
+            foreach (var txn in cashtranslsit)
+            {
+                txn.Settled = true;//标注已结算
+                //TLCtxHelper.ModuleDataRepository.MarkCashTransactionSettled(txn);统一在结算完毕后执行Mark
+            }
+
+            //设置昨日权益等信息
+            this.LastEquity = settlement.EquitySettled;
+            this.LastCredit = settlement.CreditSettled;
+        }
+
+
+        public void Reset()
+        {
+            this.cashtranslsit.Clear();
+            this.splitlist.Clear();
+        }
+
 
         #endregion
         [Newtonsoft.Json.JsonIgnore]

@@ -57,5 +57,19 @@ namespace TradingLib.ORM
                 }
             }
         }
+
+        /// <summary>
+        /// 标注出入金记录已结算
+        /// </summary>
+        /// <param name="txn"></param>
+        public static void MarkeCashTransactionSettled(int settleday)
+        {
+            using (DBMySql db = new DBMySql())
+            {
+                string query = string.Format("UPDATE log_agent_cashtrans SET settled=1 WHERE settleday = '{0}'", settleday);
+                db.Connection.Execute(query);
+            }
+        }
+
     }
 }

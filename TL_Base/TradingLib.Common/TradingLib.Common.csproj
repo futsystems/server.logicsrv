@@ -156,7 +156,7 @@
     <Compile Include="BusinessEntities\Basic\SymbolInfo.cs" />
     <Compile Include="BusinessEntities\Utils\MarketTimeUtil.cs" />
     <Compile Include="BusinessEntities\Utils\TradingRangeUtil.cs" />
-    <Compile Include="BusinessEntities\Settlement\AccountSettlement.cs" />
+    <Compile Include="BusinessEntities\Settlement\AccountSettlementImpl.cs" />
     <Compile Include="BusinessEntities\Settlement\CashTransactionImpl.cs" />
     <Compile Include="BusinessEntities\Settlement\ExchangeSettlement.cs" />
     <Compile Include="Utils\Util_DateTime.cs" />

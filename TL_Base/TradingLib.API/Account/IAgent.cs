@@ -101,6 +101,18 @@ namespace TradingLib.API
         /// <param name="split"></param>
         void LoadCommissionSplit(AgentCommissionSplit split);
 
+
+        /// <summary>
+        /// 重置
+        /// 清空出入金与手续费拆分记录 用于重新加载历史记录或结算后进入下一个交易日状态
+        /// </summary>
+        void Reset();
+
+        /// <summary>
+        /// 结算
+        /// </summary>
+        void Settle(int settleday);
+
         #region 下级客户信息汇总
 
         decimal CustMargin { get;  }//占用保证金

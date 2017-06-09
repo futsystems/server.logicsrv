@@ -62,6 +62,7 @@
     <Compile Include="Message\EnumTLProtocolType.cs" />
     <Compile Include="Msic\EnumAgentType.cs" />
     <Compile Include="Msic\ITLSerialize.cs" />
+    <Compile Include="Trading\Settlement\AccountSettlement.cs" />
     <Compile Include="Trading\Settlement\AgentCommissionSplit.cs" />
     <Compile Include="Trading\Settlement\CashTransaction.cs" />
     <Compile Include="Trading\EnumEquityType.cs" />

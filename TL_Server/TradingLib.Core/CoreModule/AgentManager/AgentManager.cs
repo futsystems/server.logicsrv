@@ -35,8 +35,17 @@ namespace TradingLib.Core
         }
 
 
+        /// <summary>
+        /// 获得所有管理结算账户
+        /// </summary>
+        public IEnumerable<IAgent> Agents { get { return BasicTracker.AgentTracker.Agents; } }
+
         IdTracker txnIDTracker = new IdTracker();
 
+        public void AssignTxnID(CashTransaction txn)
+        {
+            txn.TxnID = string.Format("AG{0}", txnIDTracker.AssignId);
+        }
         public void CashOperation(CashTransaction txn)
         {
 
@@ -66,7 +75,7 @@ namespace TradingLib.Core
             }
 
             //生成唯一序列号
-            txn.TxnID = string.Format("AG{0}", txnIDTracker.AssignId);
+            this.AssignTxnID(txn);
             agent.LoadCashTrans(txn);
             TLCtxHelper.ModuleDataRepository.NewAgentCashTransactioin(txn);
             //TLCtxHelper.EventAccount.FireAccountCashOperationEvent(txn.Account,txn., Math.Abs(amount));

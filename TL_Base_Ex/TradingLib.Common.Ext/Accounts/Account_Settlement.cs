@@ -22,7 +22,7 @@ namespace TradingLib.Common
         public void SettleAccount(int settleday)
         { 
             //所有交易所对应的settleday交易日结算完毕后，我们执行汇总结算
-            AccountSettlement settlement = new AccountSettlement();
+            AccountSettlement settlement = new AccountSettlementImpl();
             settlement.Account = this.ID;
             settlement.Settleday = settleday;
 
@@ -47,6 +47,7 @@ namespace TradingLib.Common
 
             //保存结算记录
             ORM.MSettlement.InsertAccountSettlement(settlement);
+            TLCtxHelper.ModuleSettleCentre.InvestAccountSettled(settlement);
 
             //标注交易所结算记录
             foreach (var settle in settlementlist)

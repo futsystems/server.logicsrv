@@ -131,10 +131,15 @@ namespace TradingLib.Core
         {
             //清空分帐户维护器交易记录
             logger.Info("清算中心重置");
-            foreach (IAccount a in TLCtxHelper.ModuleAccountManager.Accounts)
+            foreach (IAccount account in TLCtxHelper.ModuleAccountManager.Accounts)
             {
-                a.Reset();
-                acctk.Reset(a);
+                account.Reset();
+                acctk.Reset(account);
+            }
+
+            foreach (IAgent agent in TLCtxHelper.ModuleAgentManager.Agents)
+            {
+                agent.Reset();
             }
 
             //清空总维护器数据

@@ -39,7 +39,7 @@ namespace TradingLib.Core
                 {
                     tradingday = TLCtxHelper.ModuleSettleCentre.Tradingday;
                 }
-                //上个结算日交易帐户结算权益 通过结算单获取
+                //上个结算日交易帐户结算权益 通过结算单获取 因此需要每次都进行结算
                 IEnumerable<EquityReport> equityreport = ORM.MAccount.SelectEquityReport(TLCtxHelper.ModuleSettleCentre.LastSettleday);
                 //未结算出入金记录
                 IEnumerable<CashTransaction> cashtxns = TLCtxHelper.ModuleDataRepository.SelectAcctCashTransactionUnSettled(tradingday);
@@ -104,6 +104,10 @@ namespace TradingLib.Core
                         this.GotCancel(account,action.OrderID) ;
                 }
 
+                //上个结算日交易帐户结算权益 通过结算单获取 因此需要每次都进行结算
+                IEnumerable<EquityReport> agentequityreport = ORM.MAgent.SelectEquityReport(TLCtxHelper.ModuleSettleCentre.LastSettleday);
+
+
                 //初始化代理
                 //上个结算日交易帐户结算权益 通过结算单获取
                 IEnumerable<AgentCommissionSplit> agentcommissionsplit = TLCtxHelper.ModuleDataRepository.SelectAgentCommissionSplitUnSettled(tradingday);
@@ -113,6 +117,19 @@ namespace TradingLib.Core
                 foreach (var mgr in BasicTracker.ManagerTracker.Managers)
                 {
                     if (mgr.AgentAccount == null) continue;
+
+                    //如果没有结算记录形成的权益最新权益数据则表明账户新增 没有权益数据 则权益为0
+                    EquityReport equity = equityreport.Where(r => r.Account == mgr.AgentAccount.Account).FirstOrDefault();
+                    if (equity != null)
+                    {
+                        mgr.AgentAccount.LastEquity = equity.Equity;
+                        mgr.AgentAccount.LastCredit = equity.Credit;
+                    }
+                    else
+                    {
+                        mgr.AgentAccount.LastEquity = 0;
+                        mgr.AgentAccount.LastCredit = 0;
+                    }
 
                     foreach (var cash in agentcashtrans.Where(txn => txn.Account == mgr.Login))
                     {

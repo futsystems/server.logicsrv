@@ -310,49 +310,6 @@ namespace TradingLib.ORM
 
             
         }
-        /// <summary>
-        /// 结算某个交易账户
-        /// </summary>
-        /// <param name="acc"></param>
-        /// <returns></returns>
-        //public static bool SettleAccount(IAccount acc)
-        //{
-        //    if (IsAccountSettled(acc.ID)) return true;//如果该账户已经结算过，则直接返回
-        //    using (DBMySql db = new DBMySql())
-        //    {
-        //        using (var transaction = db.Connection.BeginTransaction())
-        //        {
-        //            bool istransok = true;
-
-        //            Settlement settle = acc.ToSettlement();
-        //            settle.SettleDay = TLCtxHelper.ModuleSettleCentre.Tradingday;//结算日为当前交易日
-        //            settle.SettleTime = TLCtxHelper.ModuleSettleCentre.SettleTime;//获得结算时间
-
-        //            //1.插入某账户的结算信息(当前财务信息)平仓盈亏,持仓盈亏,手续费,入金,出金,昨日权益,当前权益
-        //            if (acc.LastEquity != acc.NowEquity)
-        //            {
-        //                Util.Debug(string.Format("account:{0} lastequity:{1} nowequity:{2}", settle.Account, settle.LastEquity, settle.NowEquity));
-        //            }
-        //            string query = String.Format("Insert into log_settlement (`account`,`settleday`,`realizedpl`,`unrealizedpl`,`commission`,`cashin`,`cashout`,`lastequity`,`nowequity`,`lastcredit`,`nowcredit`,`creditcashin`,`creditcashout`) values('{0}','{1}','{2}','{3}','{4}','{5}','{6}','{7}','{8}','{9}','{10}','{11}','{12}')", settle.Account, settle.SettleDay, settle.RealizedPL, settle.UnRealizedPL, settle.Commission, settle.CashIn, settle.CashOut, settle.LastEquity, settle.NowEquity,settle.LastCredit,settle.NowCredit,settle.CreditCashIn,settle.CreditCashOut);
-        //            istransok =  istransok &&  (db.Connection.Execute(query) > 0);
-
-        //            //2.更新账户表中的上期权益数据 将结算数据的当前权益更新为帐户的昨日权益
-        //            query = String.Format("UPDATE accounts SET lastequity = '{0}' WHERE account = '{1}'", settle.NowEquity, settle.Account);
-        //            istransok = istransok && (db.Connection.Execute(query) >= 0);
-
-        //            //3.更新账户结算时间,以后计算就只需要读取该账户这个时间段之后的交易信息并在当前权益基础上进行权益计算。
-        //            query = String.Format("UPDATE accounts SET settledatetime= '{0}' WHERE account = '{1}'",Util.ToTLDateTime(settle.SettleDay,settle.SettleTime),settle.Account);
-        //            istransok = istransok && (db.Connection.Execute(query) >= 0);
-
-        //            //如果所有操作均正确,则提交数据库transactoin
-        //            if (istransok)
-        //                transaction.Commit();
-
-        //            return istransok;
-        //        }
-        //    }
-        //}
-
 
         /// <summary>
         /// 删除某个交易日的结算记录
@@ -567,6 +524,22 @@ namespace TradingLib.ORM
 
                 //删除结算日及以后的计算记录
                 query = string.Format("DELETE from log_settlement WHERE settleday >= '{0}'", settleday);
+                db.Connection.Execute(query);
+
+                //代理手续费拆分
+                query = string.Format("UPDATE log_agent_commission_split SET settled=0 WHERE settleday >= '{0}' ", settleday);
+                db.Connection.Execute(query);
+
+                //删除结算自动产生的出入金记录 普通代理结算日当天的手续费差以入金的方式计入代理结算账户
+                query = string.Format("DELETE from log_agent_cashtrans WHERE settleday >= '{0}' AND operator = 'SETTLE'", settleday);
+                db.Connection.Execute(query);
+                
+                //标注代理出入金未结算
+                query = string.Format("UPDATE log_agent_cashtrans SET settled=0 WHERE settleday >= '{0}' ", settleday);
+                db.Connection.Execute(query);
+
+                //删除结算日及以后的计算记录
+                query = string.Format("DELETE from log_agent_settlement WHERE settleday >= '{0}'", settleday);
                 db.Connection.Execute(query);
             }
         }

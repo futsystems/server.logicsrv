@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using TradingLib.API;
 
 namespace TradingLib.Common
 {
@@ -13,7 +14,7 @@ namespace TradingLib.Common
     /// 股票 买入 卖出以证券的实际价格进行，买入资产后 账户资金减少，资产增加，卖出资产后 账户资金增加，资产减少。不用单独计算平仓盈亏与浮动盈亏
     /// 将买入，卖出资产的交易额单独计算差额即为账户资金的变化
     /// </summary>
-    public class AccountSettlement
+    public class AccountSettlementImpl:AccountSettlement
     {
         /// <summary>
         /// 结算日

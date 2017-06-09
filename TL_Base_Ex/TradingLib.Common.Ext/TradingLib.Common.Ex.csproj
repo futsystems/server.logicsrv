@@ -93,6 +93,7 @@
     <Compile Include="ORM\Agent\MAgent.cs" />
     <Compile Include="ORM\Agent\MAgentCashTransaction.cs" />
     <Compile Include="ORM\Agent\MAgentCommissionSplit.cs" />
+    <Compile Include="ORM\Agent\MAgentSettlement.cs" />
     <Compile Include="ORM\base\Config\ConfigDB.cs" />
     <Compile Include="ORM\base\Config\ConfigItem.cs" />
     <Compile Include="ORM\base\Config\GlobalConfig.cs" />
