@@ -26,6 +26,9 @@ namespace TradingLib.Common
             splitlist.Add(split);
         }
 
+        [Newtonsoft.Json.JsonIgnore]
+        public Manager Manager { get { return _manger; } }
+
         /// <summary>
         /// 手续费成本
         /// </summary>
@@ -150,8 +153,17 @@ namespace TradingLib.Common
             get
             {
                 if (_manger == null) return 0;
-                List<IAccount> list = _manger.GetVisibleAccount().ToList();
-                return list.Sum(acc => acc.RealizedPL);
+                //普通代理平仓盈亏为0
+                if (this.AgentType == EnumAgentType.Normal)
+                {
+                    return 0;
+                }
+                if (this.AgentType == EnumAgentType.SelfOperated)
+                {
+                    List<IAccount> list = _manger.GetVisibleAccount().ToList();
+                    return list.Sum(acc => acc.RealizedPL);
+                }
+                return 0;
             }
         }
 
@@ -161,11 +173,129 @@ namespace TradingLib.Common
             get
             {
                 if (_manger == null) return 0;
-                List<IAccount> list = _manger.GetVisibleAccount().ToList();
-                return list.Sum(acc => acc.UnRealizedPL);
+                if (this.AgentType == EnumAgentType.Normal)
+                {
+                    return 0;
+                }
+                if (this.AgentType == EnumAgentType.SelfOperated)
+                {
+                    List<IAccount> list = _manger.GetVisibleAccount().ToList();
+                    return list.Sum(acc => acc.UnRealizedPL);
+                }
+                return 0;
             }
         }
 
+
+        #region 下级客户信息汇总
+
+        public decimal CustMargin 
+        {
+
+            get
+            {
+                if (_manger == null) return 0;
+                return _manger.GetVisibleAccount().Sum(ac => ac.Margin);
+            }
+        
+        }//占用保证金
+
+        public decimal CustForzenMargin
+        {
+            get
+            {
+                if (_manger == null) return 0;
+                return _manger.GetVisibleAccount().Sum(ac => ac.MarginFrozen);
+            }
+        }//冻结保证金
+
+        public decimal CustRealizedPL 
+        {
+            get
+            {
+                if (_manger == null) return 0;
+                return _manger.GetVisibleAccount().Sum(ac => ac.RealizedPL);
+            }
+        }
+
+
+        public decimal CustUnRealizedPL 
+        {
+            get
+            {
+                if (_manger == null) return 0;
+                return _manger.GetVisibleAccount().Sum(ac => ac.UnRealizedPL);
+            }
+        
+        }//浮动盈亏
+
+        public decimal CustCashIn 
+        {
+            get
+            {
+                if (_manger == null) return 0;
+
+                //直客手续费
+                decimal custCashIn = _manger.GetDirectAccounts().Sum(ac => ac.CashIn);
+
+                IEnumerable<Manager> directAgents = _manger.GetDirectAgents();
+
+                decimal agentCashIn = 0;
+                //如果是自盈代理 则直接累加该代理的静态权益
+                //如果是普通代理 则直接累加该代理的下级静态权益
+                foreach (var mgr in directAgents)
+                {
+                    if (mgr.AgentAccount == null) continue;
+                    if (mgr.AgentAccount.AgentType == EnumAgentType.Normal)
+                    {
+                        agentCashIn += mgr.AgentAccount.CustCashIn;
+                    }
+                    else
+                    {
+                        agentCashIn += mgr.AgentAccount.CashIn;
+                    }
+                }
+
+                return custCashIn + agentCashIn;
+            }
+        }
+
+        public decimal CustCashOut 
+        {
+            get
+            {
+                if (_manger == null) return 0;
+
+                //直客手续费
+                decimal custCashOut = _manger.GetDirectAccounts().Sum(ac => ac.CashOut);
+
+                IEnumerable<Manager> directAgents = _manger.GetDirectAgents();
+
+                decimal agentCashOut = 0;
+                //如果是自盈代理 则直接累加该代理的静态权益
+                //如果是普通代理 则直接累加该代理的下级静态权益
+                foreach (var mgr in directAgents)
+                {
+                    if (mgr.AgentAccount == null) continue;
+                    if (mgr.AgentAccount.AgentType == EnumAgentType.Normal)
+                    {
+                        agentCashOut += mgr.AgentAccount.CustCashOut;
+                    }
+                    else
+                    {
+                        agentCashOut += mgr.AgentAccount.CustCashOut;
+                    }
+                }
+
+                return custCashOut + agentCashOut;
+            }
+        }
+
+        public decimal CustCreditCashIn { get { return 0; } }
+
+        public decimal CustCreditCashOut { get { return 0; } }
+
+        #endregion
 
 
     }

@@ -382,7 +382,7 @@ namespace TradingLib.Core
                     decimal canuse = manager.AgentAccount.StaticEquity - manager.AgentAccount.SubStaticEquity;
                     if (( canuse < Math.Abs(amount)) && amount > 0)//入金且可分配小于入金额 则拒绝
                     {
-                        throw new FutsRspError("自盈代理可分配权益不足");
+                        throw new FutsRspError("自营代理可分配权益不足");
                     }
                 }
             }

@@ -16,7 +16,17 @@ namespace TradingLib.Common
         /// <returns></returns>
         static CommissionTemplate GetCommissionTemplate(this IAgent agent)
         {
-            return BasicTracker.CommissionTemplateTracker[agent.Commission_ID];
+            CommissionTemplate template = null;
+            Manager m = (agent as AgentImpl).Manager;
+            while (template == null && m.Type !=  QSEnumManagerType.ROOT)//如果没有找到template则递归到最上层
+            {
+                if (m.AgentAccount != null)
+                {
+                    template = BasicTracker.CommissionTemplateTracker[m.AgentAccount.Commission_ID];
+                }
+                m = m.ParentManager;
+            }
+            return template;
         }
 
         /// <summary>
@@ -38,6 +48,7 @@ namespace TradingLib.Common
         /// <returns></returns>
         static CommissionTemplateItem GetCommissionTemplateItem(this IAgent agent, Symbol symbol)
         {
+
             CommissionTemplate tmp = agent.GetCommissionTemplate();
             if (tmp == null)
                 return null;

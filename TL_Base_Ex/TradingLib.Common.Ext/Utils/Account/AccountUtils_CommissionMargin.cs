@@ -19,7 +19,23 @@ namespace TradingLib.Common
         /// <returns></returns>
         static CommissionTemplate GetCommissionTemplate(this IAccount account)
         {
-            return BasicTracker.CommissionTemplateTracker[account.Commission_ID];
+            CommissionTemplate template = null;
+            
+            template  = BasicTracker.CommissionTemplateTracker[account.Commission_ID];
+            if (template == null)
+            {
+                Manager m = BasicTracker.ManagerTracker[account.Mgr_fk];
+                while (template == null && m.Type != QSEnumManagerType.ROOT)//如果没有找到template则递归到最上层
+                {
+                    if (m.AgentAccount != null)
+                    {
+                        template = BasicTracker.CommissionTemplateTracker[m.AgentAccount.Commission_ID];
+                    }
+                    m = m.ParentManager;
+                }
+            }
+
+            return template;
         }
 
         /// <summary>

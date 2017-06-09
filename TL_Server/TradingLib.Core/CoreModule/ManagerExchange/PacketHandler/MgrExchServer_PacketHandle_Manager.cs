@@ -138,7 +138,7 @@ namespace TradingLib.Core
 
                     AgentSetting agent = new AgentSetting();
                     agent.Account = m.Login;
-                    agent.Currency = CurrencyType.RMB;
+                    agent.Currency = GlobalConfig.BaseCurrency;
                     agent.AgentType = agent_type;
 
                     BasicTracker.AgentTracker.UpdateAgent(agent);

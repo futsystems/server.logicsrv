@@ -13,17 +13,26 @@ namespace TradingLib.Common
         {
             AgentStatistic st = new AgentStatistic();
             st.Account = agent.Account;
+            st.LastEquity = agent.LastEquity;
+            st.LastCredit = agent.LastCredit;
+            st.NowEquity = agent.NowEquity;
+            st.NowCredit = agent.NowCredit;
             st.CommissioinIncome = agent.CommissionIncome;
             st.CommissionCost = agent.CommissionCost;
-            st.CashIn = agent.CashIn;
-            st.CashOut = agent.CashOut;
-            st.CreditCashIn = agent.CreditCashIn;
-            st.CreditCashOut = agent.CreditCashOut;
 
-            st.RealizedPL = agent.RealizedPL;
-            st.UnRealizedPL = agent.UnRealizedPL;
-            st.NowEquity = agent.NowEquity;
-            
+            st.StaticEquity = agent.StaticEquity;
+            st.SubStaticEquity = agent.SubStaticEquity;
+            st.FlatEquity = 0;
+
+
+
+            st.CustMargin = agent.CustMargin;
+            st.CustForzenMargin = agent.CustForzenMargin;
+            st.CustRealizedPL = agent.CustRealizedPL;
+            st.CustUnRealizedPL = agent.CustUnRealizedPL;
+
+            st.CustCashIn = agent.CustCashIn;
+            st.CustCashOut = agent.CustCashOut;    
 
             return st;
         }

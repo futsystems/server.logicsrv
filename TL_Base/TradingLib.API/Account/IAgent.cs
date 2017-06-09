@@ -89,8 +89,37 @@ namespace TradingLib.API
         /// </summary>
         decimal SubStaticEquity { get; }
 
+        /// <summary>
+        /// 加载出入金
+        /// </summary>
+        /// <param name="txn"></param>
         void LoadCashTrans(CashTransaction txn);
 
+        /// <summary>
+        /// 加载手续费拆分
+        /// </summary>
+        /// <param name="split"></param>
         void LoadCommissionSplit(AgentCommissionSplit split);
+
+        #region 下级客户信息汇总
+
+        decimal CustMargin { get;  }//占用保证金
+
+        decimal CustForzenMargin { get; }//冻结保证金
+
+        decimal CustRealizedPL { get; }//平仓盈亏
+
+        decimal CustUnRealizedPL { get;  }//浮动盈亏
+
+        decimal CustCashIn { get;  }
+
+        decimal CustCashOut { get; }
+
+        decimal CustCreditCashIn { get;  }
+
+        decimal CustCreditCashOut { get; }
+
+        #endregion
+
     }
 }

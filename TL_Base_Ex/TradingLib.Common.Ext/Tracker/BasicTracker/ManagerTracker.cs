@@ -53,12 +53,26 @@ namespace TradingLib.Common
             sroot.BaseManager = this[sroot.mgr_fk];
             sroot.ParentManager = this[sroot.parent_fk];
 
+
+
             //绑定代理财务账户
             foreach (var mgr in mlist)
             {
-                //if (mgr.Type != QSEnumManagerType.AGENT) continue;
+                //管理员与代理账户需要绑定代理账户？？
+                if (mgr.Type != QSEnumManagerType.AGENT && mgr.Type != QSEnumManagerType.ROOT) continue;
                 AgentImpl agent = BasicTracker.AgentTracker[mgr.Login];
-                if (agent == null) continue;
+                if (agent == null)
+                {
+                    //如果没有结算账户则为该管理域创建结算账户
+                    AgentSetting setting = new AgentSetting();
+                    setting.Account = mgr.Login;
+                    setting.AgentType = EnumAgentType.SelfOperated;
+                    setting.Currency = GlobalConfig.BaseCurrency;
+                    BasicTracker.AgentTracker.UpdateAgent(setting);
+
+                    agent = BasicTracker.AgentTracker[setting.ID];
+                
+                }
                 agent.BindManager(mgr);
             }
         }
