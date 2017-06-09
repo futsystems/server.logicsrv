@@ -110,7 +110,7 @@ namespace TradingLib.Core
                 manager.ValidRightAddManager(m);
 
                 int maxcnt = Math.Min(manager.Domain.AgentLimit, manager.AgentLimit);
-                int cnt = manager.GetVisibleManager().Count();
+                int cnt = manager.GetVisibleManager().Count()-1;//1为自己
                 if (cnt >= maxcnt)
                 {
                     throw new FutsRspError("可开柜员数量超过限制:" + maxcnt.ToString());
@@ -131,7 +131,7 @@ namespace TradingLib.Core
 
                 BasicTracker.ManagerTracker.UpdateManager(m);
                 var newManager = BasicTracker.ManagerTracker[m.ID];
-
+                AgentImpl newAgent = null;
                 if (m.Type == QSEnumManagerType.AGENT)
                 {
                     var agent_type = data["agent_type"].ToString().ParseEnum<EnumAgentType>();
@@ -142,15 +142,19 @@ namespace TradingLib.Core
                     agent.AgentType = agent_type;
 
                     BasicTracker.AgentTracker.UpdateAgent(agent);
-                    var a = BasicTracker.AgentTracker[agent.ID];
-                    if (a != null)
-                    {
-                        a.BindManager(newManager);
-                    }
+                    newAgent = BasicTracker.AgentTracker[agent.ID];
+                    
+                    
                 }
                 session.RspMessage("添加管理员成功");
                 //通知管理员信息变更
                 NotifyManagerUpdate(newManager);
+
+                if (newAgent != null)
+                {
+                    newAgent.BindManager(newManager);
+                    NotifyAgentCreate(newAgent);
+                }
 
             }
             else

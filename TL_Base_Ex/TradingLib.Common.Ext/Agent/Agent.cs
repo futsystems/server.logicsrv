@@ -188,7 +188,7 @@ namespace TradingLib.Common
 
 
         #region 下级客户信息汇总
-
+        [Newtonsoft.Json.JsonIgnore]
         public decimal CustMargin 
         {
 
@@ -199,7 +199,7 @@ namespace TradingLib.Common
             }
         
         }//占用保证金
-
+        [Newtonsoft.Json.JsonIgnore]
         public decimal CustForzenMargin
         {
             get
@@ -208,7 +208,7 @@ namespace TradingLib.Common
                 return _manger.GetVisibleAccount().Sum(ac => ac.MarginFrozen);
             }
         }//冻结保证金
-
+        [Newtonsoft.Json.JsonIgnore]
         public decimal CustRealizedPL 
         {
             get
@@ -218,7 +218,7 @@ namespace TradingLib.Common
             }
         }
 
-
+        [Newtonsoft.Json.JsonIgnore]
         public decimal CustUnRealizedPL 
         {
             get
@@ -228,7 +228,7 @@ namespace TradingLib.Common
             }
         
         }//浮动盈亏
-
+        [Newtonsoft.Json.JsonIgnore]
         public decimal CustCashIn 
         {
             get
@@ -259,7 +259,7 @@ namespace TradingLib.Common
                 return custCashIn + agentCashIn;
             }
         }
-
+        [Newtonsoft.Json.JsonIgnore]
         public decimal CustCashOut 
         {
             get
@@ -290,9 +290,9 @@ namespace TradingLib.Common
                 return custCashOut + agentCashOut;
             }
         }
-
+        [Newtonsoft.Json.JsonIgnore]
         public decimal CustCreditCashIn { get { return 0; } }
-
+        [Newtonsoft.Json.JsonIgnore]
         public decimal CustCreditCashOut { get { return 0; } }
 
         #endregion

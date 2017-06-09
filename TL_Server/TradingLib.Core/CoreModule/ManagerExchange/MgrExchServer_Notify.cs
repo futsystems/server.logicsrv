@@ -184,6 +184,19 @@ namespace TradingLib.Core
         }
 
         /// <summary>
+        /// 通知管理结算账户创建成功
+        /// </summary>
+        /// <param name="agent"></param>
+        void NotifyAgentCreate(AgentImpl agent)
+        {
+            NotifyMGRContribNotify response = ResponseTemplate<NotifyMGRContribNotify>.SrvSendNotifyResponse(GetNotifyTargets(agent.Manager.GetNotifyPredicate()));
+            response.ModuleID = CoreName;
+            response.CMDStr = "NotifyAgentCreate";
+            response.Result = agent.SerializeObject();
+            CachePacket(response);
+        }
+
+        /// <summary>
         /// 管理员删除通知
         /// 向所有有权访问mgr信息的管理员发送mgr删除通知
         /// </summary>
