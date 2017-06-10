@@ -71,5 +71,22 @@ namespace TradingLib.ORM
             }
         }
 
+        /// <summary>
+        /// 查询账户时间段内的出入金记录
+        /// </summary>
+        /// <param name="account"></param>
+        /// <param name="begin"></param>
+        /// <param name="end"></param>
+        /// <returns></returns>
+        public static IEnumerable<CashTransactionImpl> SelectHistCashTransactions(string account, long begin, long end)
+        {
+            using (DBMySql db = new DBMySql())
+            {
+                string query = string.Format("SELECT * FROM log_agent_cashtrans WHERE account='{0}' AND datetime>='{1}' AND datetime<='{2}'", account, begin, end);
+                return db.Connection.Query<CashTransactionImpl>(query);
+            }
+        }
+
+
     }
 }

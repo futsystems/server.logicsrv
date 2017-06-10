@@ -640,7 +640,7 @@ namespace TradingLib.Core
                 long end = long.Parse(data["end"].ToString());
 
                 CashTransactionImpl[] trans = ORM.MCashTransaction.SelectHistCashTransactions(account, start, end).ToArray();
-                session.ReplyMgr(trans);
+                session.ReplyMgrArray(trans);
             }
         }
 

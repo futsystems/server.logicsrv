@@ -171,5 +171,34 @@ namespace TradingLib.Core
         }
 
 
+
+
+
+        #region 历史记录查询
+        /// <summary>
+        /// 查询交易帐户的出入金记录
+        /// </summary>
+        /// <param name="session"></param>
+        /// <param name="account"></param>
+        /// <param name="start"></param>
+        /// <param name="end"></param>
+        [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "QueryAgentCashTxn", "QueryAgentCashTxn -query agent cashtrans", "查询代理帐户出入金记录", QSEnumArgParseType.Json)]
+        public void CTE_QueryAgentCashTrans(ISession session, string json)
+        {
+            Manager manger = session.GetManager();
+            if (manger != null)
+            {
+                var data = json.DeserializeObject();
+                string account = data["account"].ToString();
+                long start = long.Parse(data["start"].ToString());
+                long end = long.Parse(data["end"].ToString());
+
+                CashTransactionImpl[] trans = ORM.MAgentCashTransaction.SelectHistCashTransactions(account, start, end).ToArray();
+                session.ReplyMgrArray(trans);
+            }
+        }
+
+        #endregion
+
     }
 }

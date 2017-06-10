@@ -88,6 +88,27 @@ namespace TradingLib.Common
         }
 
         /// <summary>
+        /// 讲对象数组一个一个发给管理段
+        /// 避免数据大时 讲所有数据放在一个jason arrary中导致数据传输问题
+        /// </summary>
+        /// <param name="session"></param>
+        /// <param name="list"></param>
+        //public static void ReplyMgrArray(this ISession session, object[] list)
+        //{
+        //    if (list.Length > 0)
+        //    {
+        //        for (int i = 0; i < list.Length; i++)
+        //        {
+        //            session.ReplyMgr(list[i], i == list.Length - 1);
+        //        }
+        //    }
+        //    else
+        //    {
+        //        session.ReplyMgr(null);
+        //    }
+        //}
+
+        /// <summary>
         /// 
         /// </summary>
         /// <param name="session"></param>
