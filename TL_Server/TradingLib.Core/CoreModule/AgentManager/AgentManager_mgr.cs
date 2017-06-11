@@ -198,6 +198,22 @@ namespace TradingLib.Core
             }
         }
 
+        [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "QueryAgentSettlements", "QueryAgentSettlements -query agent settlement ", "查询代理帐户结算段记录", QSEnumArgParseType.Json)]
+        public void CTE_QueryAgentSettlements(ISession session, string json)
+        {
+            Manager manger = session.GetManager();
+            if (manger != null)
+            {
+                var data = json.DeserializeObject();
+                string account = data["account"].ToString();
+                int start = int.Parse(data["start"].ToString());
+                int end = int.Parse(data["end"].ToString());
+
+                AccountSettlementImpl[] trans = ORM.MAgentSettlement.SelectHistSettlements(account, start, end).ToArray();
+                session.ReplyMgrArray(trans);
+            }
+        }
+
         #endregion
 
     }

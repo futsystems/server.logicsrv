@@ -119,7 +119,7 @@ namespace TradingLib.Core
                     if (mgr.AgentAccount == null) continue;
 
                     //如果没有结算记录形成的权益最新权益数据则表明账户新增 没有权益数据 则权益为0
-                    EquityReport equity = equityreport.Where(r => r.Account == mgr.AgentAccount.Account).FirstOrDefault();
+                    EquityReport equity = agentequityreport.Where(r => r.Account == mgr.AgentAccount.Account).FirstOrDefault();
                     if (equity != null)
                     {
                         mgr.AgentAccount.LastEquity = equity.Equity;

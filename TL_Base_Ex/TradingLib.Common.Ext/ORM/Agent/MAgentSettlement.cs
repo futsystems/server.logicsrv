@@ -34,8 +34,16 @@ namespace TradingLib.ORM
 
                 }
             }
+        }
 
 
+        public static IEnumerable<AccountSettlementImpl> SelectHistSettlements(string account, int begin, int end)
+        {
+            using (DBMySql db = new DBMySql())
+            {
+                string query = string.Format("SELECT * FROM log_agent_settlement WHERE account='{0}' AND settleday>='{1}' AND settleday<='{2}'", account, begin, end);
+                return db.Connection.Query<AccountSettlementImpl>(query);
+            }
         }
 
     }
