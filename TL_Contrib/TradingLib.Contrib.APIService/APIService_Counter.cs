@@ -33,9 +33,6 @@ namespace TradingLib.Contrib.APIService
 
             Manager toadd = new Manager();
             toadd.Login = string.Format("root-{0}", domain.ID);
-            toadd.Mobile = domain.Mobile;
-            toadd.Name = domain.LinkMan;
-            toadd.QQ = domain.QQ;
             toadd.Type = QSEnumManagerType.ROOT;
             toadd.AccLimit = domain.AccLimit;
             toadd.Active = true;//新增domain时添加的Manger为激活状态 否则无法登入

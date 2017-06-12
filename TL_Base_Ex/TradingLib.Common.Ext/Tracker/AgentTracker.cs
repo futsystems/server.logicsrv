@@ -11,7 +11,6 @@ namespace TradingLib.Common
     {
         ConcurrentDictionary<int, AgentImpl> agentIDMap = new ConcurrentDictionary<int, AgentImpl>();
         ConcurrentDictionary<string, AgentImpl> agentAccountMap = new ConcurrentDictionary<string, AgentImpl>();
-
         public AgentTracker()
         {
             foreach (var agent in ORM.MAgent.SelectAgent())

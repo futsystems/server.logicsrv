@@ -114,9 +114,6 @@ namespace TradingLib.Core
                     {
                         toadd.Login = string.Format("admin");
                     }
-                    toadd.Mobile = domain.Mobile;
-                    toadd.Name = domain.LinkMan;
-                    toadd.QQ = domain.QQ;
                     toadd.Type = QSEnumManagerType.ROOT;
                     toadd.AccLimit = domain.AccLimit;
                     toadd.AgentLimit = domain.AgentLimit;
@@ -137,9 +134,6 @@ namespace TradingLib.Core
                         
                         Manager toadd = new Manager();
                         toadd.Login = string.Format("admin-{0}", domain.ID);
-                        toadd.Mobile = domain.Mobile;
-                        toadd.Name = domain.LinkMan;
-                        toadd.QQ = domain.QQ;
                         toadd.Type = QSEnumManagerType.ROOT;
                         toadd.AccLimit = domain.AccLimit;
                         toadd.Active = true;//新增domain时添加的Manger为激活状态 否则无法登入
@@ -152,9 +146,6 @@ namespace TradingLib.Core
                     else
                     {
                         //将域的信息更新到对应的Root Manager上
-                        mgr.Mobile = domain.Mobile;
-                        mgr.Name = domain.LinkMan;
-                        mgr.QQ = domain.QQ;
                         mgr.AccLimit = domain.AccLimit;
                         mgr.AgentLimit = domain.AgentLimit;
 

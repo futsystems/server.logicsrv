@@ -14,13 +14,13 @@ namespace TradingLib.API
         /// <summary>
         /// 普通代理
         /// </summary>
-        [Description("普通代理")]
+        [Description("普通会员")]
         Normal,
 
         /// <summary>
         /// 自营代理
         /// </summary>
-        [Description("自营代理")]
+        [Description("自营会员")]
         SelfOperated
     }
 }

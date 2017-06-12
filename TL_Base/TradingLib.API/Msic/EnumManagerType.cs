@@ -17,7 +17,7 @@ namespace TradingLib.API
         /// <summary>
         /// 代理商
         /// </summary>
-        [Description("代理商")]
+        [Description("下级会员")]
         AGENT = 1,//代理人员,代理人员对其开设的帐户有绝对权限,
 
         /// <summary>

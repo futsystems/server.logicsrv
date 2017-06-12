@@ -93,6 +93,7 @@
     <Compile Include="ORM\Agent\MAgent.cs" />
     <Compile Include="ORM\Agent\MAgentCashTransaction.cs" />
     <Compile Include="ORM\Agent\MAgentCommissionSplit.cs" />
+    <Compile Include="ORM\Agent\MManagerProfile.cs" />
     <Compile Include="ORM\Agent\MAgentSettlement.cs" />
     <Compile Include="ORM\base\Config\ConfigDB.cs" />
     <Compile Include="ORM\base\Config\ConfigItem.cs" />
@@ -127,6 +128,7 @@
     <Compile Include="Tracker\BasicTracker\Template\CommissionTemplateTracker.cs" />
     <Compile Include="Tracker\BasicTracker\Template\ExStrategyTemplateTracker.cs" />
     <Compile Include="Tracker\BasicTracker\Template\MarginTemplateTracker.cs" />
+    <Compile Include="Tracker\BasicTracker\ManagerProfileTracker.cs" />
     <Compile Include="Utils\Account\AccountUtils_ExchangeRate.cs" />
     <Compile Include="Utils\Account\AccountUtils_xx.cs" />
     <Compile Include="Utils\Account\AccountUtils_ExStrategy.cs" />

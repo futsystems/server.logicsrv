@@ -194,7 +194,7 @@ namespace TradingLib.Core
                         
 
                     request.DateTime = Util.ToTLDateTime();
-                    request.Ref = cashopref.AssignId.ToString();
+                    //request.Ref = cashopref.AssignId.ToString();
                     request.Source = QSEnumCashOPSource.Manual;
                     request.Status = QSEnumCashInOutStatus.PENDING;
 

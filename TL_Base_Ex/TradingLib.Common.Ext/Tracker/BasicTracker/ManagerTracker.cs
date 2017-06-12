@@ -34,15 +34,12 @@ namespace TradingLib.Common
             sroot.AccLimit = 1000;
             sroot.Active = true;
             sroot.AgentLimit = 100;
-            sroot.CreditLimit = 0;
             sroot.domain_id = 1;
             sroot.ID = -1;
             sroot.Login = "sroot";
             sroot.mgr_fk = 1;
             sroot.parent_fk = 1;
             sroot.domain_id = 1;
-            sroot.Mobile = "";
-            sroot.QQ = "";
             sroot.Type = QSEnumManagerType.ROOT;
 
 
@@ -119,15 +116,10 @@ namespace TradingLib.Common
                 target = new Manager();
                 target.AccLimit = mgr.AccLimit;
                 target.Login = mgr.Login;
-                target.Mobile = mgr.Mobile;
-                target.Name = mgr.Name;
-                target.QQ = mgr.QQ;
                 target.Type = mgr.Type;
                 target.User_Id = mgr.User_Id;
                 target.Active = mgr.Active;
                 target.AgentLimit = mgr.AgentLimit;
-                target.CreditLimit = mgr.CreditLimit;
-
 
                 target.mgr_fk = mgr.mgr_fk;
                 target.domain_id = mgr.domain_id;
@@ -148,15 +140,8 @@ namespace TradingLib.Common
             }
             else//更新
             {
-                //只能修改Name QQ Mobile AccLimit
-                target.Name = mgr.Name;
-                target.Mobile = mgr.Mobile;
-                target.QQ = mgr.QQ;
                 target.AccLimit = mgr.AccLimit;
                 target.AgentLimit = mgr.AgentLimit;
-                target.CreditLimit = mgr.CreditLimit;
-
-
                 ORM.MManager.UpdateManager(target);
             }
         }

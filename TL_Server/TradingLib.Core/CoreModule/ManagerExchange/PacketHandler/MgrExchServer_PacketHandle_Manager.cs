@@ -56,6 +56,31 @@ namespace TradingLib.Core
         }
 
         /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="session"></param>
+        [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "QryManagerProfile", "QryManagerProfile - query manager profile", "查看管理员Profile")]
+        public void CTE_QryManagerProfile(ISession session, int mgrid)
+        {
+            Manager manager = session.GetManager();
+
+            Manager target = BasicTracker.ManagerTracker[mgrid];
+
+            if (target == null)
+            {
+                throw new FutsRspError(string.Format("管理员:{0} 不存在", mgrid));
+            }
+            if (!manager.RightAccessManager(target))
+            {
+                throw new FutsRspError(string.Format("无权查看代理:{0}", target.Login));
+            }
+
+            ManagerProfile mgrProfile = BasicTracker.ManagerProfileTracker[target.Login];
+
+            session.ReplyMgr(mgrProfile);
+        }
+
+        /// <summary>
         /// 更新柜员
         /// </summary>
         /// <param name="session"></param>
@@ -73,15 +98,29 @@ namespace TradingLib.Core
             var name = data["name"].ToString();
             var mobile = data["mobile"].ToString();
             var qq = data["qq"].ToString();
-         
+            var email = data["email"].ToString();
+            var idcard = data["idcard"].ToString();
+            var bank = int.Parse(data["bank"].ToString());
+            var branch = data["branch"].ToString();
+            var bankac = data["bankac"].ToString();
+            var memo = data["memo"].ToString();
 
             ManagerSetting m = new ManagerSetting();
             m.ID = id;
             m.Login = login;
             m.Type = mgr_type;
-            m.Name = name;
-            m.Mobile = mobile;
-            m.QQ = qq;
+
+            ManagerProfile mgrProfile = new ManagerProfile();
+            mgrProfile.Account = login;
+            mgrProfile.Name = name;
+            mgrProfile.Mobile = mobile;
+            mgrProfile.QQ = qq;
+            mgrProfile.Email = email;
+            mgrProfile.IDCard = idcard;
+            mgrProfile.Bank_ID = bank;
+            mgrProfile.Branch = branch;
+            mgrProfile.BankAC = bankac;
+            mgrProfile.Memo = memo;
 
             if (mgr_type == QSEnumManagerType.AGENT)
             {
@@ -130,6 +169,9 @@ namespace TradingLib.Core
                 }
 
                 BasicTracker.ManagerTracker.UpdateManager(m);
+
+                BasicTracker.ManagerProfileTracker.UpdateManagerProfile(mgrProfile);
+
                 var newManager = BasicTracker.ManagerTracker[m.ID];
                 AgentImpl newAgent = null;
                 if (m.Type == QSEnumManagerType.AGENT)
@@ -143,9 +185,8 @@ namespace TradingLib.Core
 
                     BasicTracker.AgentTracker.UpdateAgent(agent);
                     newAgent = BasicTracker.AgentTracker[agent.ID];
-                    
-                    
                 }
+
                 session.RspMessage("添加管理员成功");
                 //通知管理员信息变更
                 NotifyManagerUpdate(newManager);
@@ -166,6 +207,8 @@ namespace TradingLib.Core
                 }
 
                 BasicTracker.ManagerTracker.UpdateManager(m);
+
+                BasicTracker.ManagerProfileTracker.UpdateManagerProfile(mgrProfile);
 
                 session.RspMessage("更新管理员成功");
                 //通知管理员信息变更

@@ -33,20 +33,6 @@ namespace TradingLib.Common
         /// </summary>
         public QSEnumManagerType Type { get; set; }
 
-        /// <summary>
-        /// 姓名
-        /// </summary>
-        public string Name { get; set; }
-
-        /// <summary>
-        /// 手机号码
-        /// </summary>
-        public string Mobile { get; set; }
-
-        /// <summary>
-        /// QQ号码
-        /// </summary>
-        public string QQ { get; set; }
 
         /// <summary>
         /// 交易帐号数目限制
@@ -57,11 +43,6 @@ namespace TradingLib.Common
         /// 下级代理数量
         /// </summary>
         public int AgentLimit { get; set; }
-
-        /// <summary>
-        /// 代理有限额度
-        /// </summary>
-        public decimal CreditLimit { get; set; }
 
         /// <summary>
         /// 上级代理
@@ -96,9 +77,6 @@ namespace TradingLib.Common
             Login = string.Empty;
             User_Id = 0;
             Type = QSEnumManagerType.ROOT;
-            Name = string.Empty;
-            Mobile = string.Empty;
-            QQ = string.Empty;
             AccLimit = 0;
             mgr_fk = 0;
             BaseManager = null;

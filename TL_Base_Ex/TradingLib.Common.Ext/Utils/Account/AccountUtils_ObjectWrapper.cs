@@ -17,11 +17,11 @@ namespace TradingLib.Common
             {
                 if (basemgr.Type == QSEnumManagerType.ROOT)
                 {
-                    return "主域(" + acc.Mgr_fk + ")-" + basemgr.Name;
+                    return "主域(" + acc.Mgr_fk + ")-" + basemgr.Login;
                 }
                 else
                 {
-                    return "代理域(" + acc.Mgr_fk + ")-" + basemgr.Name;
+                    return "代理域(" + acc.Mgr_fk + ")-" + basemgr.Login;
                 }
             }
             return "未设置";

@@ -26,6 +26,8 @@ namespace TradingLib.Common
         //
         DomainTracker domaintracker;
         DBManagerTracker mgrtracker;
+        ManagerProfileTracker mgrprofiletracker;
+
         AgentTracker agentTracker;
         UIAccessTracker uiaccesstracker;
         DBContractBankTracker banktracker;
@@ -101,6 +103,16 @@ namespace TradingLib.Common
                 if (defaultinstance.mgrtracker == null)
                     defaultinstance.mgrtracker = new DBManagerTracker();
                 return defaultinstance.mgrtracker;
+            }
+        }
+
+        public static ManagerProfileTracker ManagerProfileTracker
+        {
+            get
+            {
+                if (defaultinstance.mgrprofiletracker == null)
+                    defaultinstance.mgrprofiletracker = new ManagerProfileTracker();
+                return defaultinstance.mgrprofiletracker;
             }
         }
 
