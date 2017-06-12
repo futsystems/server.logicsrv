@@ -20,7 +20,7 @@ namespace TradingLib.ORM
         {
             using (DBMySql db = new DBMySql())
             {
-                string query = String.Format("INSERT INTO log_agent_commission_split (`account`,`settleday`,`traderid`,`commissionincome`,`commissioncost`,`settled`) values('{0}','{1}','{2}','{3}','{4}','{5}')", split.Account, split.Settleday, split.TradeID, split.CommissionIncome, split.CommissionCost, split.Settled ? 1 : 0);
+                string query = String.Format("INSERT INTO log_agent_commission_split (`account`,`settleday`,`traderid`,`commissionincome`,`commissioncost`,`settled`,`currency`) values('{0}','{1}','{2}','{3}','{4}','{5}','{6}')", split.Account, split.Settleday, split.TradeID, split.CommissionIncome, split.CommissionCost, split.Settled ? 1 : 0,split.Currency);
                 db.Connection.Execute(query);
             }
         }

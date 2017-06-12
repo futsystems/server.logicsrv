@@ -33,13 +33,13 @@ namespace TradingLib.Common
         /// 手续费成本
         /// </summary>
         [Newtonsoft.Json.JsonIgnore]
-        public decimal CommissionCost { get { return splitlist.Where(o => !o.Settled).Where(split => !split.Settled).Sum(split => split.CommissionCost); } }
+        public decimal CommissionCost { get { return splitlist.Where(o => !o.Settled).Where(split => !split.Settled).Sum(split => split.CommissionCost * this.GetExchangeRate(split.Settleday,split.Currency)); } }
 
         /// <summary>
         /// 手续费收入
         /// </summary>
         [Newtonsoft.Json.JsonIgnore]
-        public decimal CommissionIncome { get { return splitlist.Where(o => !o.Settled).Where(split => !split.Settled).Sum(split => split.CommissionIncome); } }
+        public decimal CommissionIncome { get { return splitlist.Where(o => !o.Settled).Where(split => !split.Settled).Sum(split => split.CommissionIncome * this.GetExchangeRate(split.Settleday, split.Currency)); } }
 
         /// <summary>
         /// 出入金数据通过CashTransaction进行统计获得
@@ -98,9 +98,6 @@ namespace TradingLib.Common
             settlement.LastEquity = this.LastEquity;
             settlement.LastCredit = this.LastCredit;
 
-            
-
-
 
             //自盈代理
             if (this.AgentType == EnumAgentType.SelfOperated && _manger != null)
@@ -115,8 +112,8 @@ namespace TradingLib.Common
                         continue;
                     }
                     //累加代理下面所有交易账户的平仓盈亏与盯市浮动盈亏
-                    settlement.PositionProfitByDate += accsettle.PositionProfitByDate;
-                    settlement.CloseProfitByDate += accsettle.CloseProfitByDate;
+                    settlement.PositionProfitByDate += accsettle.PositionProfitByDate * this.GetExchangeRate(settleday,acc.Currency);
+                    settlement.CloseProfitByDate += accsettle.CloseProfitByDate * this.GetExchangeRate(settleday, acc.Currency);
                 }
 
                 //自营代理手续费 为分拆的手续费成本
@@ -197,7 +194,7 @@ namespace TradingLib.Common
                 if (_manger == null) return 0;
 
                 //直客静态权益
-                decimal custStaticEquity = _manger.GetDirectAccounts().Sum(ac => ac.StaticEquity);
+                decimal custStaticEquity = _manger.GetDirectAccounts().Sum(ac => ac.StaticEquity * this.GetExchangeRate(TLCtxHelper.ModuleSettleCentre.Tradingday,ac.Currency));
 
                 IEnumerable<Manager> directAgents = _manger.GetDirectAgents();
 
@@ -209,11 +206,11 @@ namespace TradingLib.Common
                     if (mgr.AgentAccount == null) continue;
                     if (mgr.AgentAccount.AgentType == EnumAgentType.Normal)
                     {
-                        agentStaticEquity += mgr.AgentAccount.SubStaticEquity;
+                        agentStaticEquity += mgr.AgentAccount.SubStaticEquity * this.GetExchangeRate(TLCtxHelper.ModuleSettleCentre.Tradingday, mgr.AgentAccount.Currency);
                     }
                     else
                     {
-                        agentStaticEquity += mgr.AgentAccount.StaticEquity;
+                        agentStaticEquity += mgr.AgentAccount.StaticEquity * this.GetExchangeRate(TLCtxHelper.ModuleSettleCentre.Tradingday, mgr.AgentAccount.Currency);
                     }
                 }
 
@@ -265,7 +262,7 @@ namespace TradingLib.Common
                 if (this.AgentType == EnumAgentType.SelfOperated)
                 {
                     List<IAccount> list = _manger.GetVisibleAccount().ToList();
-                    return list.Sum(acc => acc.RealizedPL);
+                    return list.Sum(acc => acc.RealizedPL* this.GetExchangeRate(TLCtxHelper.ModuleSettleCentre.Tradingday,acc.Currency));
                 }
                 return 0;
             }
@@ -284,7 +281,7 @@ namespace TradingLib.Common
                 if (this.AgentType == EnumAgentType.SelfOperated)
                 {
                     List<IAccount> list = _manger.GetVisibleAccount().ToList();
-                    return list.Sum(acc => acc.UnRealizedPL);
+                    return list.Sum(acc => acc.UnRealizedPL * this.GetExchangeRate(TLCtxHelper.ModuleSettleCentre.Tradingday, acc.Currency));
                 }
                 return 0;
             }
@@ -299,7 +296,7 @@ namespace TradingLib.Common
             get
             {
                 if (_manger == null) return 0;
-                return _manger.GetVisibleAccount().Sum(ac => ac.Margin);
+                return _manger.GetVisibleAccount().Sum(acc => acc.Margin * this.GetExchangeRate(TLCtxHelper.ModuleSettleCentre.Tradingday, acc.Currency));
             }
         
         }//占用保证金
@@ -309,7 +306,7 @@ namespace TradingLib.Common
             get
             {
                 if (_manger == null) return 0;
-                return _manger.GetVisibleAccount().Sum(ac => ac.MarginFrozen);
+                return _manger.GetVisibleAccount().Sum(acc => acc.MarginFrozen  *this.GetExchangeRate(TLCtxHelper.ModuleSettleCentre.Tradingday, acc.Currency));
             }
         }//冻结保证金
         [Newtonsoft.Json.JsonIgnore]
@@ -318,7 +315,7 @@ namespace TradingLib.Common
             get
             {
                 if (_manger == null) return 0;
-                return _manger.GetVisibleAccount().Sum(ac => ac.RealizedPL);
+                return _manger.GetVisibleAccount().Sum(acc => acc.RealizedPL * this.GetExchangeRate(TLCtxHelper.ModuleSettleCentre.Tradingday, acc.Currency));
             }
         }
 
@@ -328,7 +325,7 @@ namespace TradingLib.Common
             get
             {
                 if (_manger == null) return 0;
-                return _manger.GetVisibleAccount().Sum(ac => ac.UnRealizedPL);
+                return _manger.GetVisibleAccount().Sum(acc => acc.UnRealizedPL * this.GetExchangeRate(TLCtxHelper.ModuleSettleCentre.Tradingday, acc.Currency));
             }
         
         }//浮动盈亏
@@ -340,7 +337,7 @@ namespace TradingLib.Common
                 if (_manger == null) return 0;
 
                 //直客手续费
-                decimal custCashIn = _manger.GetDirectAccounts().Sum(ac => ac.CashIn);
+                decimal custCashIn = _manger.GetDirectAccounts().Sum(acc => acc.CashIn * this.GetExchangeRate(TLCtxHelper.ModuleSettleCentre.Tradingday, acc.Currency));
 
                 IEnumerable<Manager> directAgents = _manger.GetDirectAgents();
 
@@ -352,11 +349,11 @@ namespace TradingLib.Common
                     if (mgr.AgentAccount == null) continue;
                     if (mgr.AgentAccount.AgentType == EnumAgentType.Normal)
                     {
-                        agentCashIn += mgr.AgentAccount.CustCashIn;
+                        agentCashIn += mgr.AgentAccount.CustCashIn * this.GetExchangeRate(TLCtxHelper.ModuleSettleCentre.Tradingday, mgr.AgentAccount.Currency);
                     }
                     else
                     {
-                        agentCashIn += mgr.AgentAccount.CashIn;
+                        agentCashIn += mgr.AgentAccount.CashIn * this.GetExchangeRate(TLCtxHelper.ModuleSettleCentre.Tradingday, mgr.AgentAccount.Currency);
                     }
                 }
 
@@ -371,7 +368,7 @@ namespace TradingLib.Common
                 if (_manger == null) return 0;
 
                 //直客手续费
-                decimal custCashOut = _manger.GetDirectAccounts().Sum(ac => ac.CashOut);
+                decimal custCashOut = _manger.GetDirectAccounts().Sum(acc => acc.CashOut * this.GetExchangeRate(TLCtxHelper.ModuleSettleCentre.Tradingday, acc.Currency));
 
                 IEnumerable<Manager> directAgents = _manger.GetDirectAgents();
 
@@ -383,11 +380,11 @@ namespace TradingLib.Common
                     if (mgr.AgentAccount == null) continue;
                     if (mgr.AgentAccount.AgentType == EnumAgentType.Normal)
                     {
-                        agentCashOut += mgr.AgentAccount.CustCashOut;
+                        agentCashOut += mgr.AgentAccount.CustCashOut * this.GetExchangeRate(TLCtxHelper.ModuleSettleCentre.Tradingday, mgr.AgentAccount.Currency);
                     }
                     else
                     {
-                        agentCashOut += mgr.AgentAccount.CustCashOut;
+                        agentCashOut += mgr.AgentAccount.CustCashOut * this.GetExchangeRate(TLCtxHelper.ModuleSettleCentre.Tradingday, mgr.AgentAccount.Currency);
                     }
                 }
 

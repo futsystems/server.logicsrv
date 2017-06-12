@@ -17,12 +17,15 @@ namespace TradingLib.Common
             this.CommissionCost = cost;
             this.CommissionIncome = income;
             this.Settled = false;
+            this.Currency = f.Currency;
         }
+
 
         public AgentCommissionSplitImpl()
         { 
         
         }
+
         /// <summary>
         /// 代理结算账户
         /// </summary>
@@ -52,5 +55,10 @@ namespace TradingLib.Common
         /// 是否已结算
         /// </summary>
         public bool Settled { get; set; }
+
+        /// <summary>
+        /// 成交对应货币
+        /// </summary>
+        public CurrencyType Currency { get; set; }
     }
 }

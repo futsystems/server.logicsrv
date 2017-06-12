@@ -36,5 +36,10 @@ namespace TradingLib.API
         /// 是否已结算
         /// </summary>
         bool Settled { get; set; }
+
+        /// <summary>
+        /// 货币
+        /// </summary>
+        CurrencyType Currency { get; set; }
     }
 }
