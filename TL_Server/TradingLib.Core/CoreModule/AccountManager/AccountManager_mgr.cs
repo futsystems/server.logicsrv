@@ -1,5 +1,5 @@
 //Copyright 2013 by FutSystems,Inc.
-//20170112 ÕûÀíÎŞÓÃ²Ù×÷
+//20170112 æ•´ç†æ— ç”¨æ“ä½œ
 
 using System;
 using System.Collections.Generic;
@@ -18,21 +18,21 @@ namespace TradingLib.Core
 
         
         /// <summary>
-        /// Í³Ò»Ê¹ÓÃAccountCreation¶ÔÏó´´½¨½»Ò×ÕÊ»§
+        /// ç»Ÿä¸€ä½¿ç”¨AccountCreationå¯¹è±¡åˆ›å»ºäº¤æ˜“å¸æˆ·
         /// </summary>
         /// <param name="session"></param>
         /// <param name="json"></param>
-        [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "AddAccountFacde", "AddAccountFacde - add  account", "Ìí¼Ó½»Ò×ÕÊºÅ", QSEnumArgParseType.Json)]
+        [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "AddAccountFacde", "AddAccountFacde - add  account", "æ·»åŠ äº¤æ˜“å¸å·", QSEnumArgParseType.Json)]
         public void CTE_AddAccountFacde(ISession session, string json)
         {
             Manager manager = session.GetManager();
             var creation = json.DeserializeObject<AccountCreation>();// Mixins.Json.JsonMapper.ToObject<AccountCreation>(json);
             var account = creation.Account;
 
-            //ÓòÕÊ»§ÊıÄ¿¼ì²é ÅÅ³ıÒÑ¾­É¾³ıÕË»§
+            //åŸŸå¸æˆ·æ•°ç›®æ£€æŸ¥ æ’é™¤å·²ç»åˆ é™¤è´¦æˆ·
             if (manager.Domain.GetAccounts().Where(acc=>!acc.Deleted).Count() >= manager.Domain.AccLimit)
             {
-                throw new FutsRspError("ÕÊ»§ÊıÄ¿´ïµ½ÉÏÏŞ:" + manager.Domain.AccLimit.ToString());
+                throw new FutsRspError("å¸æˆ·æ•°ç›®è¾¾åˆ°ä¸Šé™:" + manager.Domain.AccLimit.ToString());
             }
 
             if (creation.BaseManagerID == 0)
@@ -40,47 +40,47 @@ namespace TradingLib.Core
                 creation.BaseManagerID = manager.BaseMgrID;
             }
 
-            //Èç¹û²»ÊÇRootÈ¨ÏŞµÄManagerĞèÒª½øĞĞÖ´ĞĞÈ¨ÏŞ¼ì²é
+            //å¦‚æœä¸æ˜¯Rootæƒé™çš„Manageréœ€è¦è¿›è¡Œæ‰§è¡Œæƒé™æ£€æŸ¥
             if (!manager.IsInRoot())
             {
-                //Èç¹û²»ÊÇÎª¸ÃÖ÷ÓòÌí¼ÓÕÊ»§,ÔòÎÒÃÇĞèÒªÅĞ¶Ïµ±Ç°ManagerµÄÖ÷ÓòÊÇ·ñÓµÓĞÇëÇóÖ÷ÓòµÄÈ¨ÏŞ
+                //å¦‚æœä¸æ˜¯ä¸ºè¯¥ä¸»åŸŸæ·»åŠ å¸æˆ·,åˆ™æˆ‘ä»¬éœ€è¦åˆ¤æ–­å½“å‰Managerçš„ä¸»åŸŸæ˜¯å¦æ‹¥æœ‰è¯·æ±‚ä¸»åŸŸçš„æƒé™
                 if (manager.BaseMgrID != creation.BaseManagerID)
                 {
                     if (!manager.IsParentOf(creation.BaseManagerID))
                     {
-                        throw new FutsRspError("ÎŞÈ¨ÔÚ¸Ã¹ÜÀíÓò¿ªÉèÕÊ»§");
+                        throw new FutsRspError("æ— æƒåœ¨è¯¥ç®¡ç†åŸŸå¼€è®¾å¸æˆ·");
                     }
                 }
             }
 
-            //ManagerÕÊ»§ÊıÁ¿ÏŞÖÆ Èç¹ûÊÇÔÚ×Ô¼ºµÄÖ÷ÓòÖĞÌí¼Ó½»Ò×ÕÊ»§ ÔòĞèÒª¼ì²éÕÊ»§ÊıÁ¿
+            //Managerå¸æˆ·æ•°é‡é™åˆ¶ å¦‚æœæ˜¯åœ¨è‡ªå·±çš„ä¸»åŸŸä¸­æ·»åŠ äº¤æ˜“å¸æˆ· åˆ™éœ€è¦æ£€æŸ¥å¸æˆ·æ•°é‡
             int limit = manager.BaseManager.AccLimit;
 
-            int cnt = manager.GetVisibleAccount().Count();//»ñµÃ¸ÃmangerÏÂÊôµÄËùÓĞÕÊ»§ÊıÄ¿
+            int cnt = manager.GetVisibleAccount().Count();//è·å¾—è¯¥mangerä¸‹å±çš„æ‰€æœ‰å¸æˆ·æ•°ç›®
             if (cnt >= limit)
             {
-                throw new FutsRspError("¿É¿ªÕÊ»§ÊıÁ¿³¬¹ıÏŞÖÆ:" + limit.ToString());
+                throw new FutsRspError("å¯å¼€å¸æˆ·æ•°é‡è¶…è¿‡é™åˆ¶:" + limit.ToString());
             }
 
 
-            //Ö´ĞĞ²Ù×÷ ²¢²¶»ñÒì³£ ²úÉúÒì³£Ôò¸ø³ö´íÎó»Ø±¨
-            this.AddAccount(ref creation);//½«½»Ò×ÕÊ»§¼ÓÈëµ½Ö÷Óò
+            //æ‰§è¡Œæ“ä½œ å¹¶æ•è·å¼‚å¸¸ äº§ç”Ÿå¼‚å¸¸åˆ™ç»™å‡ºé”™è¯¯å›æŠ¥
+            this.AddAccount(ref creation);//å°†äº¤æ˜“å¸æˆ·åŠ å…¥åˆ°ä¸»åŸŸ
 
-            //ÕÊ»§Ìí¼ÓÍê±ÏºóÍ¬²½Ìí¼ÓprofileĞÅÏ¢
+            //å¸æˆ·æ·»åŠ å®Œæ¯•ååŒæ­¥æ·»åŠ profileä¿¡æ¯
             creation.Profile.Account = creation.Account;
 
-            //²åÈëĞÂµÄprofile
+            //æ’å…¥æ–°çš„profile
             BasicTracker.AccountProfileTracker.UpdateAccountProfile(creation.Profile);
 
-            //¶ÔÍâ´¥·¢½»Ò×ÕÊºÅÌí¼ÓÊÂ¼ş
+            //å¯¹å¤–è§¦å‘äº¤æ˜“å¸å·æ·»åŠ äº‹ä»¶
             TLCtxHelper.EventAccount.FireAccountAddEvent(this[creation.Account]);
 
-            session.RspMessage("ĞÂÔö½»Ò×ÕÊºÅ:" + creation.Account + "³É¹¦");
+            session.RspMessage("æ–°å¢äº¤æ˜“å¸å·:" + creation.Account + "æˆåŠŸ");
 
         }
 
         /// <summary>
-        /// ÎªÄ³¸öUser´´½¨½»Ò×ÕË»§
+        /// ä¸ºæŸä¸ªUseråˆ›å»ºäº¤æ˜“è´¦æˆ·
         /// </summary>
         /// <param name="userID"></param>
         /// <param name="agentID"></param>
@@ -96,13 +96,13 @@ namespace TradingLib.Core
                 creation.RouterType = QSEnumOrderTransferType.SIM;
                 creation.UserID = userID;
                 this.AddAccount(ref creation);
-                //ÕÊ»§Ìí¼ÓÍê±ÏºóÍ¬²½Ìí¼ÓprofileĞÅÏ¢
+                //å¸æˆ·æ·»åŠ å®Œæ¯•ååŒæ­¥æ·»åŠ profileä¿¡æ¯
                 creation.Profile.Account = creation.Account;
 
-                //²åÈëĞÂµÄprofile
+                //æ’å…¥æ–°çš„profile
                 BasicTracker.AccountProfileTracker.UpdateAccountProfile(creation.Profile);
 
-                //¶ÔÍâ´¥·¢½»Ò×ÕÊºÅÌí¼ÓÊÂ¼ş
+                //å¯¹å¤–è§¦å‘äº¤æ˜“å¸å·æ·»åŠ äº‹ä»¶
                 TLCtxHelper.EventAccount.FireAccountAddEvent(this[creation.Account]);
 
                 account = creation.Account;
@@ -116,51 +116,51 @@ namespace TradingLib.Core
         }
 
         /// <summary>
-        /// ÇëÇóÉ¾³ı½»Ò×ÕÊ»§
+        /// è¯·æ±‚åˆ é™¤äº¤æ˜“å¸æˆ·
         /// </summary>
         /// <param name="request"></param>
         /// <param name="session"></param>
         /// <param name="manager"></param>
-        [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "DelAccount", "DelAccount - del account", "É¾³ı½»Ò×ÕÊ»§", QSEnumArgParseType.CommaSeparated)]
+        [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "DelAccount", "DelAccount - del account", "åˆ é™¤äº¤æ˜“å¸æˆ·", QSEnumArgParseType.CommaSeparated)]
         public void CTE_DelAccount(ISession session, string account)
         {
             IAccount acc = this[account];
             if (acc == null)
             {
-                throw new FutsRspError("½»Ò×ÕÊ»§²»´æÔÚ");
+                throw new FutsRspError("äº¤æ˜“å¸æˆ·ä¸å­˜åœ¨");
             }
 
             if (acc.GetPositionsHold().Count() > 0)
             {
-                throw new FutsRspError(string.Format("½»Ò×ÕÊ»§:{0} ÓĞ³Ö²Ö ÎŞ·¨É¾³ı", acc.ID));
+                throw new FutsRspError(string.Format("äº¤æ˜“å¸æˆ·:{0} æœ‰æŒä»“ æ— æ³•åˆ é™¤", acc.ID));
             }
 
-            //¼ì²é½»Ò×ÕÊ»§×Ê½ğ
+            //æ£€æŸ¥äº¤æ˜“å¸æˆ·èµ„é‡‘
             if (_deleteAccountCheckEquity && (acc.NowEquity > 1 || acc.Credit > 1))
             {
-                throw new FutsRspError(string.Format(string.Format("½»Ò×ÕÊ»§:{0} È¨Òæ:{1} ĞÅÓÃ¶î¶È:{2}Î´³ö½ğ ÎŞ·¨É¾³ı", account, acc.NowEquity, acc.Credit)));
+                throw new FutsRspError(string.Format(string.Format("äº¤æ˜“å¸æˆ·:{0} æƒç›Š:{1} ä¿¡ç”¨é¢åº¦:{2}æœªå‡ºé‡‘ æ— æ³•åˆ é™¤", account, acc.NowEquity, acc.Credit)));
             }
 
             this.DelAccount(account);
 
-            session.RspMessage("½»Ò×ÕÊ»§:" + account + " É¾³ı³É¹¦");
+            session.RspMessage("äº¤æ˜“å¸æˆ·:" + account + " åˆ é™¤æˆåŠŸ");
         }
 
 
         /// <summary>
-        /// ²éÑ¯½»Ò×ÕÊ»§µÄProfile
+        /// æŸ¥è¯¢äº¤æ˜“å¸æˆ·çš„Profile
         /// </summary>
         /// <param name="session"></param>
         /// <param name="account"></param>
-        [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "QryAccountProfile", "QryAccountProfile - qry profile account", "²éÑ¯½»Ò×ÕÊ»§¸öÈËĞÅÏ¢")]
+        [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "QryAccountProfile", "QryAccountProfile - qry profile account", "æŸ¥è¯¢äº¤æ˜“å¸æˆ·ä¸ªäººä¿¡æ¯")]
         public void CTE_QryAccountProfile(ISession session, string account)
         {
             Manager mgr = session.GetManager();
-            if (mgr == null) throw new FutsRspError("¹ÜÀíÔ±²»´æÔÚ");
+            if (mgr == null) throw new FutsRspError("ç®¡ç†å‘˜ä¸å­˜åœ¨");
 
             AccountProfile profile = BasicTracker.AccountProfileTracker[account];
             
-            //Èç¹û¸öÈËĞÅÏ¢²»´æÔÚ ÔòÌí¼Ó¸öÈËĞÅÏ¢
+            //å¦‚æœä¸ªäººä¿¡æ¯ä¸å­˜åœ¨ åˆ™æ·»åŠ ä¸ªäººä¿¡æ¯
             if (profile == null)
             {
                 profile = new AccountProfile();
@@ -172,11 +172,11 @@ namespace TradingLib.Core
 
         }
 
-        [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "UpdateAccountProfile", "UpdateAccountProfile - update account profile", "¸üĞÂ½»Ò×ÕÊ»§¸öÈËĞÅÏ¢",QSEnumArgParseType.Json)]
+        [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "UpdateAccountProfile", "UpdateAccountProfile - update account profile", "æ›´æ–°äº¤æ˜“å¸æˆ·ä¸ªäººä¿¡æ¯",QSEnumArgParseType.Json)]
         public void CTE_UpdateAccountProfile(ISession session, string json)
         {
             Manager mgr = session.GetManager();
-            if (mgr == null) throw new FutsRspError("¹ÜÀíÔ±²»´æÔÚ");
+            if (mgr == null) throw new FutsRspError("ç®¡ç†å‘˜ä¸å­˜åœ¨");
 
             var profile = json.DeserializeObject<AccountProfile>();// Mixins.Json.JsonMapper.ToObject<AccountProfile>(json);
             IAccount account = TLCtxHelper.ModuleAccountManager[profile.Account];
@@ -185,14 +185,14 @@ namespace TradingLib.Core
             {
                 BasicTracker.AccountProfileTracker.UpdateAccountProfile(profile);
             }
-            //´¥·¢½»Ò×ÕÊ»§±ä¶¯ÊÂ¼ş
+            //è§¦å‘äº¤æ˜“å¸æˆ·å˜åŠ¨äº‹ä»¶
             TLCtxHelper.EventAccount.FireAccountChangeEent(account);
 
-            session.RspMessage("¸üĞÂ¸öÈËĞÅÏ¢³É¹¦");
+            session.RspMessage("æ›´æ–°ä¸ªäººä¿¡æ¯æˆåŠŸ");
 
         }
 
-        [ContribCommandAttr(QSEnumCommandSource.MessageExchange, "UpdateAccountProfile", "UpdateAccountProfile - update account profile", "¸üĞÂ½»Ò×ÕÊ»§¸öÈËĞÅÏ¢", QSEnumArgParseType.Json)]
+        [ContribCommandAttr(QSEnumCommandSource.MessageExchange, "UpdateAccountProfile", "UpdateAccountProfile - update account profile", "æ›´æ–°äº¤æ˜“å¸æˆ·ä¸ªäººä¿¡æ¯", QSEnumArgParseType.Json)]
         public void CTE_UpdateAccountProfileEx(ISession session, string json)
         {
             var profile = json.DeserializeObject<AccountProfile>();
@@ -202,7 +202,7 @@ namespace TradingLib.Core
             {
                 BasicTracker.AccountProfileTracker.UpdateAccountProfile(profile);
             }
-            //´¥·¢½»Ò×ÕÊ»§±ä¶¯ÊÂ¼ş
+            //è§¦å‘äº¤æ˜“å¸æˆ·å˜åŠ¨äº‹ä»¶
             TLCtxHelper.EventAccount.FireAccountChangeEent(account);
 
             RspContribResponse response = ResponseTemplate<RspContribResponse>.SrvSendRspResponse(session);
@@ -215,16 +215,16 @@ namespace TradingLib.Core
         }
 
         /// <summary>
-        /// ²éÑ¯½»Ò×ÕÊ»§µÄProfile
+        /// æŸ¥è¯¢äº¤æ˜“å¸æˆ·çš„Profile
         /// </summary>
         /// <param name="session"></param>
         /// <param name="account"></param>
-        [ContribCommandAttr(QSEnumCommandSource.MessageExchange, "QryAccountProfile", "QryAccountProfile - qry profile account", "²éÑ¯½»Ò×ÕÊ»§¸öÈËĞÅÏ¢")]
+        [ContribCommandAttr(QSEnumCommandSource.MessageExchange, "QryAccountProfile", "QryAccountProfile - qry profile account", "æŸ¥è¯¢äº¤æ˜“å¸æˆ·ä¸ªäººä¿¡æ¯")]
         public void CTE_QryAccountProfileEx(ISession session, string account)
         {
             AccountProfile profile = BasicTracker.AccountProfileTracker[account];
 
-            //Èç¹û¸öÈËĞÅÏ¢²»´æÔÚ ÔòÌí¼Ó¸öÈËĞÅÏ¢
+            //å¦‚æœä¸ªäººä¿¡æ¯ä¸å­˜åœ¨ åˆ™æ·»åŠ ä¸ªäººä¿¡æ¯
             if (profile == null)
             {
                 profile = new AccountProfile();
@@ -253,7 +253,7 @@ namespace TradingLib.Core
         /// <param name="request"></param>
         /// <param name="session"></param>
         /// <param name="manager"></param>
-        [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "UpdateAccountCategory", "UpdateAccountCategory - change account category", "ĞŞ¸ÄÕÊ»§Àà±ğ", QSEnumArgParseType.Json)]
+        [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "UpdateAccountCategory", "UpdateAccountCategory - change account category", "ä¿®æ”¹å¸æˆ·ç±»åˆ«", QSEnumArgParseType.Json)]
         public void CTE_UpdateAccountCategory(ISession session, string json)
         {
             var req = json.DeserializeObject();
@@ -266,7 +266,7 @@ namespace TradingLib.Core
             }
         }
 
-        [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "UpdateAccountExecute", "UpdateAccountExecute - change account execute", "ĞŞ¸ÄÕÊ»§½»Ò×È¨ÏŞ×´Ì¬", QSEnumArgParseType.Json)]
+        [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "UpdateAccountExecute", "UpdateAccountExecute - change account execute", "ä¿®æ”¹å¸æˆ·äº¤æ˜“æƒé™çŠ¶æ€", QSEnumArgParseType.Json)]
         public void CTE_UpdateAccountExecute(ISession session, string json)
         {
             var req = json.DeserializeObject();
@@ -287,7 +287,7 @@ namespace TradingLib.Core
             }
         }
 
-        [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "UpdateAccountIntraday", "UpdateAccountIntraday - change account intraday setting", "ĞŞ¸ÄÕÊ»§ÈÕÄÚ½»Ò×ÊôĞÔ", QSEnumArgParseType.Json)]
+        [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "UpdateAccountIntraday", "UpdateAccountIntraday - change account intraday setting", "ä¿®æ”¹å¸æˆ·æ—¥å†…äº¤æ˜“å±æ€§", QSEnumArgParseType.Json)]
         public void CTE_UpdateAccountIntraday(ISession session, string json)
         {
             var req = json.DeserializeObject();
@@ -302,7 +302,7 @@ namespace TradingLib.Core
         }
 
 
-        [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "UpdateRouteType", "UpdateRouteType - change account route type", "ĞŞ¸ÄÕÊ»§ÈÕÂ·ÓÉÊôĞÔ", QSEnumArgParseType.Json)]
+        [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "UpdateRouteType", "UpdateRouteType - change account route type", "ä¿®æ”¹å¸æˆ·æ—¥è·¯ç”±å±æ€§", QSEnumArgParseType.Json)]
         public void CTE_UpdateRouteType(ISession session, string json)
         {
             var req = json.DeserializeObject();
@@ -317,7 +317,7 @@ namespace TradingLib.Core
         }
 
 
-        [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "UpdateAccountCurrency", "UpdateAccountCurrency - update account currency", "¸üĞÂ½»Ò×ÕÊ»§»õ±ÒÀà±ğ", QSEnumArgParseType.Json)]
+        [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "UpdateAccountCurrency", "UpdateAccountCurrency - update account currency", "æ›´æ–°äº¤æ˜“å¸æˆ·è´§å¸ç±»åˆ«", QSEnumArgParseType.Json)]
         public void CTE_UpdateAccountCurrency(ISession session, string json)
         {
             var req = json.DeserializeObject();
@@ -329,27 +329,27 @@ namespace TradingLib.Core
             IAccount acct = TLCtxHelper.ModuleAccountManager[account];
             if (acct == null)
             {
-                throw new FutsRspError("½»Ò×ÕÊ»§²»´æÔÚ");
+                throw new FutsRspError("äº¤æ˜“å¸æˆ·ä¸å­˜åœ¨");
             }
 
             if (mgr == null || (!mgr.RightAccessAccount(acct)))
             {
-                throw new FutsRspError("ÎŞÈ¨²Ù×÷½»Ò×ÕÊ»§");
+                throw new FutsRspError("æ— æƒæ“ä½œäº¤æ˜“å¸æˆ·");
             }
 
             this.UpdateAccountCurrency(account, currency);
 
-            session.RspMessage("½»Ò×ÕÊ»§¸üĞÂ»õ±ÒÀàĞÍ³É¹¦");
+            session.RspMessage("äº¤æ˜“å¸æˆ·æ›´æ–°è´§å¸ç±»å‹æˆåŠŸ");
         }
 
 
 
         /// <summary>
-        /// ½»Ò×ÕË»§ ³öÈë½ğ
+        /// äº¤æ˜“è´¦æˆ· å‡ºå…¥é‡‘
         /// </summary>
         /// <param name="session"></param>
         /// <param name="json"></param>
-        [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "AccountCashOperation", "AccountCashOperation - account cash operation", "¸ø½»Ò×ÕÊ»§³öÈëÈ¥½ğ", QSEnumArgParseType.Json)]
+        [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "AccountCashOperation", "AccountCashOperation - account cash operation", "ç»™äº¤æ˜“å¸æˆ·å‡ºå…¥å»é‡‘", QSEnumArgParseType.Json)]
         public void CTE_CashOperation(ISession session, string json)
         {
             Manager manager = session.GetManager();
@@ -368,26 +368,26 @@ namespace TradingLib.Core
 
             if (!manager.RightAccessAccount(acct))
             {
-                throw new FutsRspError("ÎŞÈ¨²Ù×÷¸ÃÕÊ»§");
+                throw new FutsRspError("æ— æƒæ“ä½œè¯¥å¸æˆ·");
             }
 
-            //²»ÊÇ³¬¼¶¹ÜÀíÔ±ĞèÒª½øĞĞ³öÈë½ğÈ¨ÏŞ¼ì²é
+            //ä¸æ˜¯è¶…çº§ç®¡ç†å‘˜éœ€è¦è¿›è¡Œå‡ºå…¥é‡‘æƒé™æ£€æŸ¥
             if (!manager.IsRoot())
             {
                 if (manager.AgentAccount == null)
                 {
-                    throw new FutsRspError("´úÀíÕË»§²»´æÔÚ ÎŞ·¨Ö´ĞĞ³öÈë½ğ²Ù×÷");
+                    throw new FutsRspError("ä»£ç†è´¦æˆ·ä¸å­˜åœ¨ æ— æ³•æ‰§è¡Œå‡ºå…¥é‡‘æ“ä½œ");
                 }
                 if (manager.AgentAccount.AgentType == EnumAgentType.Normal)
                 {
-                    throw new FutsRspError("ÆÕÍ¨´úÀíÎŞÈ¨Ö´ĞĞ³öÈë½ğ²Ù×÷");
+                    throw new FutsRspError("æ™®é€šä»£ç†æ— æƒæ‰§è¡Œå‡ºå…¥é‡‘æ“ä½œ");
                 }
                 if (manager.AgentAccount.AgentType == EnumAgentType.SelfOperated)
                 {
                     decimal canuse = manager.AgentAccount.StaticEquity - manager.AgentAccount.SubStaticEquity;
-                    if (( canuse < Math.Abs(amount)) && amount > 0)//Èë½ğÇÒ¿É·ÖÅäĞ¡ÓÚÈë½ğ¶î Ôò¾Ü¾ø
+                    if (( canuse < Math.Abs(amount)) && amount > 0)//å…¥é‡‘ä¸”å¯åˆ†é…å°äºå…¥é‡‘é¢ åˆ™æ‹’ç»
                     {
-                        throw new FutsRspError("×ÔÓª´úÀí¿É·ÖÅäÈ¨Òæ²»×ã");
+                        throw new FutsRspError("è‡ªè¥ä»£ç†å¯åˆ†é…æƒç›Šä¸è¶³");
                     }
                 }
             }
@@ -405,20 +405,20 @@ namespace TradingLib.Core
             txn.TxnType = amount > 0 ? QSEnumCashOperation.Deposit : QSEnumCashOperation.WithDraw;
 
 
-            //Ö´ĞĞ³öÈë½ğ²Ù×÷
+            //æ‰§è¡Œå‡ºå…¥é‡‘æ“ä½œ
             this.CashOperation(txn);
 
-            ////Ö÷ÕÊ»§¼à¿Ø
+            ////ä¸»å¸æˆ·ç›‘æ§
             //if (TLCtxHelper.Version.ProductType == QSEnumProductType.VendorMoniter)
             //{
-            //    //Í¬²½³öÈë½ğ²Ù×÷µ½Ö÷ÕÊ»§
+            //    //åŒæ­¥å‡ºå…¥é‡‘æ“ä½œåˆ°ä¸»å¸æˆ·
             //    if (sync_mainacct)
             //    {
             //        IBroker broker = BasicTracker.ConnectorMapTracker.GetBrokerForAccount(account);
 
             //        if (broker == null)
             //        {
-            //            throw new FutsRspError("Î´°ó¶¨Ö÷ÕÊ»§,ÎŞ·¨Í¬²½³öÈë½ğ²Ù×÷µ½µ×²ãÕÊ»§");
+            //            throw new FutsRspError("æœªç»‘å®šä¸»å¸æˆ·,æ— æ³•åŒæ­¥å‡ºå…¥é‡‘æ“ä½œåˆ°åº•å±‚å¸æˆ·");
             //        }
 
             //        if (broker is TLBroker)
@@ -426,21 +426,21 @@ namespace TradingLib.Core
             //            TLBroker b = broker as TLBroker;
             //            if (amount > 0)
             //            {
-            //                //Èë½ğ
+            //                //å…¥é‡‘
             //                b.Deposit((double)Math.Abs(amount), "");
             //            }
             //            else
             //            {
-            //                //³ö½ğ
+            //                //å‡ºé‡‘
             //                b.Withdraw((double)Math.Abs(amount), "");
             //            }
-            //            //session.RspMessage("³ö½ğ²Ù×÷ÒÑÌá½»,Çë²éÑ¯Ö÷ÕÊ»§ĞÅÏ¢");
+            //            //session.RspMessage("å‡ºé‡‘æ“ä½œå·²æäº¤,è¯·æŸ¥è¯¢ä¸»å¸æˆ·ä¿¡æ¯");
             //        }
             //    }
             //}
-            //³öÈë½ğ²Ù×÷ºó·µ»ØÕÊ»§ĞÅÏ¢¸üĞÂ
+            //å‡ºå…¥é‡‘æ“ä½œåè¿”å›å¸æˆ·ä¿¡æ¯æ›´æ–°
             session.NotifyMgr("NotifyAccountFinInfo", acct.GenAccountInfo());
-            session.RspMessage("³öÈë½ğ²Ù×÷³É¹¦");
+            session.RspMessage("å‡ºå…¥é‡‘æ“ä½œæˆåŠŸ");
         }
 
 
@@ -449,12 +449,12 @@ namespace TradingLib.Core
 
 
         /// <summary>
-        /// @ĞŞ¸Ä½»Ò×ÕÊ»§ÃÜÂë
+        /// @ä¿®æ”¹äº¤æ˜“å¸æˆ·å¯†ç 
         /// </summary>
         /// <param name="request"></param>
         /// <param name="session"></param>
         /// <param name="manger"></param>
-        [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "UpdateAccountPass", "UpdateAccountPass - update account password", "¸üĞÂ½»Ò×ÕÊ»§½»Ò×ÃÜÂë", QSEnumArgParseType.Json)]
+        [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "UpdateAccountPass", "UpdateAccountPass - update account password", "æ›´æ–°äº¤æ˜“å¸æˆ·äº¤æ˜“å¯†ç ", QSEnumArgParseType.Json)]
         public void CTE_ChangePassword(ISession session, string json)
         {
             var req = json.DeserializeObject();
@@ -465,11 +465,11 @@ namespace TradingLib.Core
             if (acct != null)
             {
                 this.UpdateAccountPass(account, newpass);
-                session.RspMessage("ĞŞ¸ÄÃÜÂë³É¹¦");
+                session.RspMessage("ä¿®æ”¹å¯†ç æˆåŠŸ");
             }
             else
             {
-                throw new FutsRspError("½»Ò×ÕÊ»§²»´æÔÚ");
+                throw new FutsRspError("äº¤æ˜“å¸æˆ·ä¸å­˜åœ¨");
             }
         }
 
@@ -484,103 +484,103 @@ namespace TradingLib.Core
 
 
 
-        [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "UpdateAccountCommissionTemplate", "UpdateAccountCommissionTemplate - update account commission template set", "¸üĞÂÕÊ»§ÊÖĞø·ÑÄ£°å")]
+        [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "UpdateAccountCommissionTemplate", "UpdateAccountCommissionTemplate - update account commission template set", "æ›´æ–°å¸æˆ·æ‰‹ç»­è´¹æ¨¡æ¿")]
         public void CTE_UpdateAccountCommissionTemplate(ISession session, string account, int templateid)
         {
             Manager manager = session.GetManager();
             IAccount acc = TLCtxHelper.ModuleAccountManager[account];
             if (acc == null)
             {
-                throw new FutsRspError("½»Ò×ÕÊ»§²»´æÔÚ");
+                throw new FutsRspError("äº¤æ˜“å¸æˆ·ä¸å­˜åœ¨");
             }
 
             if (!manager.RightAccessAccount(acc))
             {
-                throw new FutsRspError("ÎŞÈ¨ĞŞ¸Ä¸Ã½»Ò×ÕÊ»§");
+                throw new FutsRspError("æ— æƒä¿®æ”¹è¯¥äº¤æ˜“å¸æˆ·");
             }
 
-            //¸üĞÂÂ·ÓÉ×é
+            //æ›´æ–°è·¯ç”±ç»„
             this.UpdateAccountCommissionTemplate(account, templateid);
-            session.RspMessage("¸üĞÂÕÊ»§ÊÖĞø·ÑÄ£°å³É¹¦");
+            session.RspMessage("æ›´æ–°å¸æˆ·æ‰‹ç»­è´¹æ¨¡æ¿æˆåŠŸ");
         }
 
 
-        [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "UpdateAccountMarginTemplate", "UpdateAccountMarginTemplate - update account margin template set", "¸üĞÂÕÊ»§±£Ö¤½ğÄ£°å")]
+        [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "UpdateAccountMarginTemplate", "UpdateAccountMarginTemplate - update account margin template set", "æ›´æ–°å¸æˆ·ä¿è¯é‡‘æ¨¡æ¿")]
         public void CTE_UpdateAccountMarginTemplate(ISession session, string account, int templateid)
         {
             Manager manager = session.GetManager();
             IAccount acc = TLCtxHelper.ModuleAccountManager[account];
             if (acc == null)
             {
-                throw new FutsRspError("½»Ò×ÕÊ»§²»´æÔÚ");
+                throw new FutsRspError("äº¤æ˜“å¸æˆ·ä¸å­˜åœ¨");
             }
 
             if (!manager.RightAccessAccount(acc))
             {
-                throw new FutsRspError("ÎŞÈ¨ĞŞ¸Ä¸Ã½»Ò×ÕÊ»§");
+                throw new FutsRspError("æ— æƒä¿®æ”¹è¯¥äº¤æ˜“å¸æˆ·");
             }
 
-            //¸üĞÂÂ·ÓÉ×é
+            //æ›´æ–°è·¯ç”±ç»„
             this.UpdateAccountMarginTemplate(account, templateid);
-            session.RspMessage("¸üĞÂÕÊ»§±£Ö¤½ğÄ£°å³É¹¦");
+            session.RspMessage("æ›´æ–°å¸æˆ·ä¿è¯é‡‘æ¨¡æ¿æˆåŠŸ");
         }
 
-        [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "UpdateAccountExStrategyTemplate", "UpdateAccountExStrategyTemplate - update account exstrategy template set", "¸üĞÂÕÊ»§½»Ò×²ÎÊıÄ£°å")]
+        [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "UpdateAccountExStrategyTemplate", "UpdateAccountExStrategyTemplate - update account exstrategy template set", "æ›´æ–°å¸æˆ·äº¤æ˜“å‚æ•°æ¨¡æ¿")]
         public void CTE_UpdateAccountExStrategyTemplate(ISession session, string account, int templateid)
         {
             Manager manager = session.GetManager();
             IAccount acc = TLCtxHelper.ModuleAccountManager[account];
             if (acc == null)
             {
-                throw new FutsRspError("½»Ò×ÕÊ»§²»´æÔÚ");
+                throw new FutsRspError("äº¤æ˜“å¸æˆ·ä¸å­˜åœ¨");
             }
 
             if (!manager.RightAccessAccount(acc))
             {
-                throw new FutsRspError("ÎŞÈ¨ĞŞ¸Ä¸Ã½»Ò×ÕÊ»§");
+                throw new FutsRspError("æ— æƒä¿®æ”¹è¯¥äº¤æ˜“å¸æˆ·");
             }
 
-            //¸üĞÂÂ·ÓÉ×é
+            //æ›´æ–°è·¯ç”±ç»„
             this.UpdateAccountExStrategyTemplate(account, templateid);
-            session.RspMessage("¸üĞÂÕÊ»§½»Ò×²ÎÊıÄ£°å³É¹¦");
+            session.RspMessage("æ›´æ–°å¸æˆ·äº¤æ˜“å‚æ•°æ¨¡æ¿æˆåŠŸ");
         }
 
 
 
-        [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "UpdateAccountRouterGroup", "UpdateAccountRouterGroup - update account router group", "¸üĞÂÕÊ»§Â·ÓÉ×éĞÅÏ¢")]
+        [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "UpdateAccountRouterGroup", "UpdateAccountRouterGroup - update account router group", "æ›´æ–°å¸æˆ·è·¯ç”±ç»„ä¿¡æ¯")]
         public void CTE_UpdateAccountRouterGroup(ISession session, string account, int gid)
         {
             Manager manager = session.GetManager();
             if (!manager.IsInRoot())
             {
-                throw new FutsRspError("ÎŞÈ¨ĞŞ¸ÄÕÊ»§Â·ÓÉ×éÉèÖÃ");
+                throw new FutsRspError("æ— æƒä¿®æ”¹å¸æˆ·è·¯ç”±ç»„è®¾ç½®");
             }
 
             IAccount acc = TLCtxHelper.ModuleAccountManager[account];
             if (acc == null)
             {
-                throw new FutsRspError("½»Ò×ÕÊ»§²»´æÔÚ");
+                throw new FutsRspError("äº¤æ˜“å¸æˆ·ä¸å­˜åœ¨");
             }
 
             if (!manager.RightAccessAccount(acc))
             {
-                throw new FutsRspError("ÎŞÈ¨ĞŞ¸Ä¸Ã½»Ò×ÕÊ»§");
+                throw new FutsRspError("æ— æƒä¿®æ”¹è¯¥äº¤æ˜“å¸æˆ·");
             }
 
             RouterGroup rg = manager.Domain.GetRouterGroup(gid);
             if (rg == null)
             {
-                throw new FutsRspError("Ö¸¶¨Â·ÓÉ×é²»´æÔÚ");
+                throw new FutsRspError("æŒ‡å®šè·¯ç”±ç»„ä¸å­˜åœ¨");
             }
 
-            //¸üĞÂÂ·ÓÉ×é
+            //æ›´æ–°è·¯ç”±ç»„
             this.UpdateRouterGroup(account, rg);
-            session.RspMessage("¸üĞÂÕÊ»§Â·ÓÉ×é³É¹¦");
+            session.RspMessage("æ›´æ–°å¸æˆ·è·¯ç”±ç»„æˆåŠŸ");
         }
 
 
 
-        [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "QryAccountFinInfo", "QryAccountFinInfo - query account", "²éÑ¯ÕÊ»§ĞÅÏ¢")]
+        [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "QryAccountFinInfo", "QryAccountFinInfo - query account", "æŸ¥è¯¢å¸æˆ·ä¿¡æ¯")]
         public void CTE_QryAccountFinInfo(ISession session, string account)
         {
             Manager manager = session.GetManager();
@@ -591,15 +591,15 @@ namespace TradingLib.Core
             }
             else
             {
-                throw new FutsRspError("ÎŞÈ¨²é¿´¸ÃÕÊ»§ĞÅÏ¢");
+                throw new FutsRspError("æ— æƒæŸ¥çœ‹è¯¥å¸æˆ·ä¿¡æ¯");
             }
         }
 
         /// <summary>
-        /// ²éÑ¯·ÖÇø¹ÜÀíÔ±ĞÅÏ¢
+        /// æŸ¥è¯¢åˆ†åŒºç®¡ç†å‘˜ä¿¡æ¯
         /// </summary>
         /// <param name="session"></param>
-        [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "QryAccountLoginInfo", "QryAccountLoginInfo - query account logininfo", "²é¿´½»Ò×ÕÊ»§ÃÜÂë")]
+        [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "QryAccountLoginInfo", "QryAccountLoginInfo - query account logininfo", "æŸ¥çœ‹äº¤æ˜“å¸æˆ·å¯†ç ")]
         public void CTE_QryAccountLoginInfo(ISession session, string account)
         {
             Manager manager = session.GetManager();
@@ -608,7 +608,7 @@ namespace TradingLib.Core
             IAccount acc = TLCtxHelper.ModuleAccountManager[account];
             if (acc == null)
             {
-                throw new FutsRspError("½»Ò×ÕÊ»§²»´æÔÚ");
+                throw new FutsRspError("äº¤æ˜“å¸æˆ·ä¸å­˜åœ¨");
             }
             if (manager.RightAccessAccount(acc))
             {
@@ -619,21 +619,21 @@ namespace TradingLib.Core
             }
             else
             {
-                throw new FutsRspError("ÎŞÈ¨²é¿´ÕÊ»§");
+                throw new FutsRspError("æ— æƒæŸ¥çœ‹å¸æˆ·");
             }
 
         }
 
 
-        #region ÀúÊ·¼ÇÂ¼²éÑ¯
+        #region å†å²è®°å½•æŸ¥è¯¢
         /// <summary>
-        /// ²éÑ¯½»Ò×ÕÊ»§µÄ³öÈë½ğ¼ÇÂ¼
+        /// æŸ¥è¯¢äº¤æ˜“å¸æˆ·çš„å‡ºå…¥é‡‘è®°å½•
         /// </summary>
         /// <param name="session"></param>
         /// <param name="account"></param>
         /// <param name="start"></param>
         /// <param name="end"></param>
-        [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "QueryAccountCashTxn", "QueryAccountCashTxn -query account cashtrans", "²éÑ¯½»Ò×ÕÊ»§³öÈë½ğ¼ÇÂ¼", QSEnumArgParseType.Json)]
+        [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "QueryAccountCashTxn", "QueryAccountCashTxn -query account cashtrans", "æŸ¥è¯¢äº¤æ˜“å¸æˆ·å‡ºå…¥é‡‘è®°å½•", QSEnumArgParseType.Json)]
         public void CTE_QueryAccountCashTrans(ISession session, string json)
         {
             Manager manger = session.GetManager();
@@ -650,11 +650,11 @@ namespace TradingLib.Core
         }
 
         /// <summary>
-        /// ²éÑ¯½»Ò×ÕË»§½áËãµ¥
+        /// æŸ¥è¯¢äº¤æ˜“è´¦æˆ·ç»“ç®—å•
         /// </summary>
         /// <param name="session"></param>
         /// <param name="json"></param>
-        [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "QueryAccountSettlement", "QueryAccountSettlement -query account settlement", "²éÑ¯½»Ò×ÕÊ»§½áËãµ¥", QSEnumArgParseType.Json)]
+        [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "QueryAccountSettlement", "QueryAccountSettlement -query account settlement", "æŸ¥è¯¢äº¤æ˜“å¸æˆ·ç»“ç®—å•", QSEnumArgParseType.Json)]
         public void CTE_QueryAccountSettlement(ISession session, string json)
         {
             Manager manger = session.GetManager();
@@ -678,11 +678,11 @@ namespace TradingLib.Core
         }
 
         /// <summary>
-        /// ²éÑ¯½»Ò×ÕË»§Î¯ÍĞ¼ÇÂ¼
+        /// æŸ¥è¯¢äº¤æ˜“è´¦æˆ·å§”æ‰˜è®°å½•
         /// </summary>
         /// <param name="session"></param>
         /// <param name="json"></param>
-        [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "QueryAccountOrder", "QueryAccountOrder -query account order", "²éÑ¯½»Ò×ÕÊ»§Î¯ÍĞ", QSEnumArgParseType.Json)]
+        [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "QueryAccountOrder", "QueryAccountOrder -query account order", "æŸ¥è¯¢äº¤æ˜“å¸æˆ·å§”æ‰˜", QSEnumArgParseType.Json)]
         public void CTE_QueryAccountOrder(ISession session, string json)
         {
             Manager manger = session.GetManager();
@@ -710,11 +710,11 @@ namespace TradingLib.Core
             }
         }
         /// <summary>
-        /// ²éÑ¯½»Ò×ÕË»§³É½»¼ÇÂ¼
+        /// æŸ¥è¯¢äº¤æ˜“è´¦æˆ·æˆäº¤è®°å½•
         /// </summary>
         /// <param name="session"></param>
         /// <param name="json"></param>
-        [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "QueryAccountTrade", "QueryAccountTrade -query account trade", "²éÑ¯½»Ò×ÕÊ»§³É½»", QSEnumArgParseType.Json)]
+        [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "QueryAccountTrade", "QueryAccountTrade -query account trade", "æŸ¥è¯¢äº¤æ˜“å¸æˆ·æˆäº¤", QSEnumArgParseType.Json)]
         public void CTE_QueryAccountTrade(ISession session, string json)
         {
             Manager manger = session.GetManager();
@@ -743,11 +743,11 @@ namespace TradingLib.Core
         }
 
         /// <summary>
-        /// ²éÑ¯½»Ò×ÕË»§½áËã³Ö²Ö
+        /// æŸ¥è¯¢äº¤æ˜“è´¦æˆ·ç»“ç®—æŒä»“
         /// </summary>
         /// <param name="session"></param>
         /// <param name="json"></param>
-        [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "QueryAccountPosition", "QueryAccountPosition -query account position", "²éÑ¯½»Ò×ÕÊ»§½áËã³Ö²Ö", QSEnumArgParseType.Json)]
+        [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "QueryAccountPosition", "QueryAccountPosition -query account position", "æŸ¥è¯¢äº¤æ˜“å¸æˆ·ç»“ç®—æŒä»“", QSEnumArgParseType.Json)]
         public void CTE_QueryAccountPosition(ISession session, string json)
         {
             Manager manger = session.GetManager();
