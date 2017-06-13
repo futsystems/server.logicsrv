@@ -123,7 +123,21 @@ namespace TradingLib.Core
                     toadd.domain_id = domain.ID;
                     //更新管理员信息
                     BasicTracker.ManagerTracker.UpdateManager(toadd);
+                    Manager newManager = BasicTracker.ManagerTracker[toadd.ID];
 
+                    //添加管理员对应的结算账户
+                    AgentSetting agent = new AgentSetting();
+                    agent.Account = toadd.Login;
+                    agent.Currency = GlobalConfig.BaseCurrency;
+                    agent.AgentType = EnumAgentType.SelfOperated;
+
+                    BasicTracker.AgentTracker.UpdateAgent(agent);
+                    AgentImpl newAgent = BasicTracker.AgentTracker[agent.ID];
+                    if (newAgent != null)
+                    {
+                        newAgent.BindManager(newManager);
+                        NotifyAgentCreate(newAgent);
+                    }
                 }
                 else
                 {
