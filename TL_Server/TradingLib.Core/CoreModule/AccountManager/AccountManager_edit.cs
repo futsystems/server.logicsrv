@@ -142,7 +142,7 @@ namespace TradingLib.Core
         {
             IAccount account = this[id];
             if (account == null) return;
-            (account as AccountBase).RouteGroup = BasicTracker.RouterGroupTracker[gid];
+            (account as AccountImpl).RouteGroup = BasicTracker.RouterGroupTracker[gid];
             ORM.MAccount.UpdateRouterGroup(id, gid);
             
             AccountChanged(account);
@@ -157,7 +157,7 @@ namespace TradingLib.Core
         {
             IAccount account = this[id];
             if (account == null) return;
-            (account as AccountBase).RouteGroup = BasicTracker.RouterGroupTracker[rg.ID];
+            (account as AccountImpl).RouteGroup = BasicTracker.RouterGroupTracker[rg.ID];
             ORM.MAccount.UpdateRouterGroup(id, rg.ID);
             AccountChanged(account);
         }

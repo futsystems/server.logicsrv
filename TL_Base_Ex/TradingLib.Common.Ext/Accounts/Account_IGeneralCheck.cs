@@ -11,7 +11,7 @@ namespace TradingLib.Common
     /// <summary>
     /// 帐户常规检查
     /// </summary>
-    public partial class AccountBase
+    public partial class AccountImpl
     {
 
         /// <summary>

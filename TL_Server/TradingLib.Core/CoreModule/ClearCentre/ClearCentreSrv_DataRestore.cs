@@ -40,7 +40,7 @@ namespace TradingLib.Core
                     tradingday = TLCtxHelper.ModuleSettleCentre.Tradingday;
                 }
                 //上个结算日交易帐户结算权益 通过结算单获取 因此需要每次都进行结算
-                IEnumerable<EquityReport> equityreport = ORM.MAccount.SelectEquityReport(TLCtxHelper.ModuleSettleCentre.LastSettleday);
+                IEnumerable<EquityReport> equityreport = ORM.MSettlement.SelectEquityReport(TLCtxHelper.ModuleSettleCentre.LastSettleday);
                 //未结算出入金记录
                 IEnumerable<CashTransaction> cashtxns = TLCtxHelper.ModuleDataRepository.SelectAcctCashTransactionUnSettled(tradingday);
                 //初始化交易帐户上个结算日的结算权益和出入金记录

@@ -67,7 +67,10 @@ namespace TradingLib.ORM
         public int domain_id { get; set; }
         
         public long Confrim_TimeStamp { get; set; }
-        public string MAC { get; set; }
+
+        public bool Deleted { get; set; }
+
+        public int DeletedSettleday { get; set; }
 
     }
 
@@ -102,6 +105,75 @@ namespace TradingLib.ORM
     }
     public class MAccount:MBase
     {
+
+        #region 加载投资者账户
+        static IAccount AccountFields2IAccount(AccountFields fields)
+        {
+            AccountImpl account = new AccountImpl(fields.Account);
+            account.Pass = fields.Pass;
+            account.UserID = fields.User_ID;
+            account.CreatedTime = Util.ToDateTime(fields.CreatedTime);
+            account.SettleDateTime = Util.ToDateTime(fields.SettleDateTime);
+            account.OrderRouteType = fields.Order_Route_Type;
+            account.IntraDay = fields.IntraDay;
+            account.Category = fields.Account_Category;
+            account.SettlementConfirmTimeStamp = fields.Confrim_TimeStamp;
+            account.Mgr_fk = fields.Mgr_fk;
+            account.Commission_ID = fields.Commission_ID;
+            account.Margin_ID = fields.Margin_ID;
+            //account.CreditSeparate = fields.CreditSeparate;
+            account.ExStrategy_ID = fields.exstrategy_id;
+            account.Currency = fields.Currency;
+            account.Deleted = fields.Deleted;
+            account.DeletedSettleday = fields.DeletedSettleday;
+
+
+            //绑定对象
+            account.Domain = BasicTracker.DomainTracker[fields.domain_id];
+            account.RouteGroup = BasicTracker.RouterGroupTracker[fields.rg_fk];
+            
+            return account;
+        }
+
+
+        /// <summary>
+        /// 获得所有交易帐户
+        /// </summary>
+        /// <returns></returns>
+        public static IList<IAccount> SelectAccounts()
+        {
+            using (DBMySql db = new DBMySql())
+            {
+                string query = string.Format("SELECT * FROM accounts");
+                IList<IAccount> acclist = (from fileds in (db.Connection.Query<AccountFields>(query, null).ToList<AccountFields>())
+                                           select AccountFields2IAccount(fileds)).ToList();
+
+                return acclist;
+            }
+        }
+
+        /// <summary>
+        /// 获得某个交易帐户
+        /// </summary>
+        /// <param name="account"></param>
+        /// <returns></returns>
+        public static IAccount SelectAccount(string account)
+        {
+            using (DBMySql db = new DBMySql())
+            {
+                string query = query = string.Format("SELECT * FROM accounts WHERE account ='{0}'", account);
+
+                AccountFields fields = db.Connection.Query<AccountFields>(query, null).Single<AccountFields>();
+                if (fields != null)
+                {
+                    return AccountFields2IAccount(fields);
+                }
+                return null;
+            }
+        }
+
+        #endregion
+
         #region 交易帐号相关操作
         /// <summary>
         /// 验证交易帐户和密码
@@ -299,6 +371,8 @@ namespace TradingLib.ORM
             }
         }
 
+       
+
         /// <summary>
         /// 更新交易账户货币
         /// </summary>
@@ -314,7 +388,7 @@ namespace TradingLib.ORM
         }
         #endregion
 
-        #region 添加帐户操作 
+        #region 添加/删除 帐户操作 
 
         /// <summary>
         /// 检查某个类型的帐户是否申请了交易帐号
@@ -470,6 +544,21 @@ namespace TradingLib.ORM
         }
 
         /// <summary>
+        /// 投资者账户 标注账户删除
+        /// 账户删除为虚拟删除,记录账户删除时间，启动时候进行交易日判定，当投资者账户当前交易日已结算则不加载该账户
+        /// 同时记录删除时的交易日，该交易结算之后就不用加载该账户交易记录
+        /// </summary>
+        /// <param name="account"></param>
+        public static void MarkAccountDeleted(string account)
+        {
+            using (DBMySql db = new DBMySql())
+            {
+                string query = String.Format("UPDATE accounts SET deleted = '1' , deletedtime='{0}', deletedsettleday='{1}' WHERE account = '{2}'", Util.ToTLDateTime(),TLCtxHelper.ModuleSettleCentre.Tradingday, account);
+                db.Connection.Execute(query);
+            }
+        }
+
+        /// <summary>
         /// 数据库删除交易帐户 以及信息
         /// 删除帐户数据要彻底否则如果出现同名帐户，会出现错乱
         /// </summary>
@@ -487,8 +576,6 @@ namespace TradingLib.ORM
                 delquery = string.Format("DELETE FROM cfg_rule WHERE account='{0}'", account);//删除帐户风控规则设置
                 db.Connection.Execute(delquery);
 
-                //delquery = string.Format("DELETE FROM hold_positions WHERE account='{0}'", account);//删除隔夜持仓
-                //db.Connection.Execute(delquery);
                 delquery = string.Format("DELETE FROM hold_postransactions WHERE account='{0}'", account);//删除隔夜持仓
                 db.Connection.Execute(delquery);
                 delquery = string.Format("DELETE FROM log_cashopreq WHERE account='{0}'", account);//删除出入金请求
@@ -513,10 +600,6 @@ namespace TradingLib.ORM
                 delquery = string.Format("DELETE FROM log_trades WHERE account='{0}'", account);//删除交易回合
                 db.Connection.Execute(delquery);
 
-
-
-
-
                 delquery = string.Format("DELETE FROM tmp_orderactions WHERE account='{0}'", account);//删除日内交易记录
                 db.Connection.Execute(delquery);
                 delquery = string.Format("DELETE FROM tmp_orders WHERE account='{0}'", account);//
@@ -528,179 +611,12 @@ namespace TradingLib.ORM
             }
         }
 
-        public static int GetAccountUserID(string account)
-        {
-            using (DBMySql db = new DBMySql())
-            {
-                try
-                {
-                    string query = String.Format("select user_id as id from accounts where `account` = '{0}'", account);
-                    UserID userid = db.Connection.Query<UserID>(query, null).SingleOrDefault<UserID>();
-                    return userid.ID;
-                }
-                catch (Exception ex)
-                {
-                    return 0;
-                }
-            }
-        }
-
-
-
-        static IAccount AccountFields2IAccount(AccountFields fields)
-        {
-            AccountBase account = new AccountBase(fields.Account);
-            account.Pass = fields.Pass;
-            //account.LastEquity = fields.LastEquity;
-            //account.LastCredit = fields.LastCredit;
-            account.UserID = fields.User_ID;
-            account.CreatedTime = Util.ToDateTime(fields.CreatedTime);
-            account.SettleDateTime = Util.ToDateTime(fields.SettleDateTime);//Util.ToDateTime(fields.SettleDateTime);
-            account.OrderRouteType = fields.Order_Route_Type;
-            account.IntraDay = fields.IntraDay;
-            account.Category = fields.Account_Category;
-            account.SettlementConfirmTimeStamp = fields.Confrim_TimeStamp;
-            account.Mgr_fk = fields.Mgr_fk;
-            account.Commission_ID = fields.Commission_ID;
-            account.Margin_ID = fields.Margin_ID;
-            //account.CreditSeparate = fields.CreditSeparate;
-            account.ExStrategy_ID = fields.exstrategy_id;
-            account.Currency = fields.Currency;
-
-            //绑定对象
-            account.Domain = BasicTracker.DomainTracker[fields.domain_id];
-            account.RouteGroup = BasicTracker.RouterGroupTracker[fields.rg_fk];
-
-            //Util.Debug("fileds route:" + fields.Order_Router_Type.ToString() +" category:"+fields.Account_Category.ToString()) ;
-            return account;
-        }
-
-        /// <summary>
-        /// 获得所有交易帐户
-        /// </summary>
-        /// <returns></returns>
-        public static IList<IAccount> SelectAccounts()
-        {
-            using (DBMySql db = new DBMySql())
-            { 
-                string query = string.Format("SELECT * FROM accounts");
-                IList<IAccount> acclist = (from fileds in (db.Connection.Query<AccountFields>(query, null).ToList<AccountFields>())
-                                           select AccountFields2IAccount(fileds)).ToList();
-
-                return acclist;
-            }
-        }
-
-        /// <summary>
-        /// 查询某个交易帐户某个交易日的结算权益
-        /// 
-        /// </summary>
-        /// <param name="account"></param>
-        /// <returns></returns>
-        //public static decimal GetSettleEquity(string account,int settleday)
-        //{
-        //    using (DBMySql db = new DBMySql())
-        //    {
-        //        string query = string.Format("SELECT account,nowequity FROM log_settlement WHERE account = '{0}' AND settleday = '{1}'", account,settleday);
-        //        AccountLastEquity settleEquity = db.Connection.Query<AccountLastEquity>(query).SingleOrDefault();//包含多个元素则异常
-        //        //Util.Debug("settleEquity == null :" + (settleEquity == null).ToString());
-        //        return settleEquity==null?0:settleEquity.NowEquity;
-        //    }
-        //}
-
-        ///// <summary>
-        ///// 查询某个交易帐户某个交易日的结算优先资金(信用额度)
-        ///// </summary>
-        ///// <param name="account"></param>
-        ///// <param name="settleday"></param>
-        ///// <returns></returns>
-        //public static decimal GetSettleCredit(string account, int settleday)
-        //{
-        //    using (DBMySql db = new DBMySql())
-        //    {
-        //        string query = string.Format("SELECT account,nowcredit FROM log_settlement WHERE account = '{0}' AND settleday = '{1}'", account, settleday);
-        //        AccountLastCredit settleCredit = db.Connection.Query<AccountLastCredit>(query).SingleOrDefault();//包含多个元素则异常
-        //        return settleCredit == null ? 0 : settleCredit.NowCredit;
-        //    }
-        //}
-
-        /// <summary>
-        /// 获得某个交易帐户
-        /// </summary>
-        /// <param name="account"></param>
-        /// <returns></returns>
-        public static IAccount SelectAccount(string account)
-        {
-            using (DBMySql db = new DBMySql())
-            {
-                string query = query = string.Format("SELECT * FROM accounts WHERE account ='{0}'", account);
-
-                AccountFields fields = db.Connection.Query<AccountFields>(query, null).Single<AccountFields>();
-                if (fields != null)
-                {
-                    return AccountFields2IAccount(fields);
-                }
-                return null;
-            }
-        }
-
+       
 
         #endregion
 
+        
 
-        #region 帐户出入金与权益统计操作
-
-        /// <summary>
-        /// 查询某个交易日的出入金统计
-        /// </summary>
-        /// <param name="type"></param>
-        /// <param name="tradingday"></param>
-        /// <returns></returns>
-//        public static IEnumerable<CashReport> SelectCashReport(QSEnumEquityType type, int tradingday)
-//        {
-//            using (DBMySql db = new DBMySql())
-//            {
-//                string query = string.Empty;
-//                if (type == QSEnumEquityType.OwnEquity)
-//                {
-//                    query = String.Format(@"select IFNULL(account1,account2) as account,IFNULL(own_in,0) as cashin,IFNULL(own_out,0) as cashout  FROM
-//(
-//select * from (SELECT account as account1,Sum(amount) as own_in FROM log_cashtrans where settleday ={0}  and equity_type='OwnEquity' and amount>0 GROUP BY account )tb1   left  join  (SELECT account as account2,Sum(amount) as own_out FROM log_cashtrans where settleday ={0}  and equity_type='OwnEquity' and amount<0 GROUP BY account) tb2 on tb1.account1=tb2.account2
-//union
-//select * from (SELECT account as account1,Sum(amount) as own_in FROM log_cashtrans where settleday ={0}  and equity_type='OwnEquity' and amount>0 GROUP BY account )tb1   right  join  (SELECT account as account2,Sum(amount) as own_out FROM log_cashtrans where settleday ={0}  and equity_type='OwnEquity' and amount<0 GROUP BY account) tb2 on tb1.account1=tb2.account2
-//) as cash_report", tradingday);
-//                }
-//                else
-//                {
-//                    query = String.Format(@"select IFNULL(account1,account2) as account,IFNULL(own_in,0) as cashin,IFNULL(own_out,0) as cashout  FROM
-//(
-//select * from (SELECT account as account1,Sum(amount) as own_in FROM log_cashtrans where settleday ={0}  and equity_type='CreditEquity' and amount>0 GROUP BY account )tb1   left  join  (SELECT account as account2,Sum(amount) as own_out FROM log_cashtrans where settleday ={0}  and equity_type='CreditEquity' and amount<0 GROUP BY account) tb2 on tb1.account1=tb2.account2
-//union
-//select * from (SELECT account as account1,Sum(amount) as own_in FROM log_cashtrans where settleday ={0}  and equity_type='CreditEquity' and amount>0 GROUP BY account )tb1   right  join  (SELECT account as account2,Sum(amount) as own_out FROM log_cashtrans where settleday ={0}  and equity_type='CreditEquity' and amount<0 GROUP BY account) tb2 on tb1.account1=tb2.account2
-//) as cash_report", tradingday);
-//                }
-
-
-//                return db.Connection.Query<CashReport>(query, null);
-
-//            }
-//        }
-
-
-        /// <summary>
-        /// 获得某个交易日结束 权益统计数据
-        /// </summary>
-        /// <param name="tradingday"></param>
-        /// <returns></returns>
-        public static IEnumerable<EquityReport> SelectEquityReport(int settleday)
-        {
-            using (DBMySql db = new DBMySql())
-            {
-                string query = string.Format("SELECT account,equitysettled as equity,creditsettled as credit FROM log_settlement WHERE settleday = '{0}'", settleday);
-                return db.Connection.Query<EquityReport>(query);//包含多个元素则异常
-            }
-        }
-        #endregion
 
     }
 }

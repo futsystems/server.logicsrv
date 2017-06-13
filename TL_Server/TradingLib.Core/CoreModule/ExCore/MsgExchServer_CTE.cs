@@ -124,7 +124,7 @@ namespace TradingLib.Core
                 IAccount acc = TLCtxHelper.ModuleAccountManager[o.Account];
                 if (acc != null)
                 {
-                    AccountBase account = acc as AccountBase;
+                    AccountImpl account = acc as AccountImpl;
                     int sentsize = account.SentSize(o.id);
                     int fillsize = account.FilledSize(o.id);
                     bool iscancel = account.IsCanceled(o.id);

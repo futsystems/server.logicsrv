@@ -415,6 +415,20 @@ namespace TradingLib.ORM
             }
         }
 
+        /// <summary>
+        /// 获得某个结算日权益统计数据
+        /// </summary>
+        /// <param name="tradingday"></param>
+        /// <returns></returns>
+        public static IEnumerable<EquityReport> SelectEquityReport(int settleday)
+        {
+            using (DBMySql db = new DBMySql())
+            {
+                string query = string.Format("SELECT account,equitysettled as equity,creditsettled as credit FROM log_settlement WHERE settleday = '{0}'", settleday);
+                return db.Connection.Query<EquityReport>(query);//包含多个元素则异常
+            }
+        }
+
 
         #region 结算价信息管理
 

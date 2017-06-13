@@ -135,7 +135,21 @@ namespace TradingLib.Core
 
         public void DelAccount(string id)
         {
-            
+            IAccount account = this[id];
+            if (account == null)
+            {
+                logger.Warn(string.Format("Account:{0} do not exist", id));
+                return;
+            }
+
+            account.Deleted = true;
+            //数据库更新标识账户逻辑删除
+            ORM.MAccount.MarkAccountDeleted(id);
+
+            TLCtxHelper.EventAccount.FireAccountDelEvent(account);
+            logger.Info(string.Format("Account:{0} Deleted", id));
+
+            /*
             IAccount account = this[id];
             if (account == null)
             {
@@ -163,7 +177,7 @@ namespace TradingLib.Core
             {
                 logger.Error("删除交易帐户错误:" + ex.ToString());
                 throw new FutsRspError("删除交易帐户异常，请手工删除相关信息");
-            }
+            }**/
         }
 
         /// <summary>
@@ -204,6 +218,11 @@ namespace TradingLib.Core
 
                 foreach (IAccount acc in accountlist)
                 {
+                    //账户删除 且删除时结算日已结算
+                    if (acc.Deleted && TLCtxHelper.ModuleSettleCentre.Tradingday > acc.DeletedSettleday)
+                    {
+                        continue;
+                    }
                     //1.将account添加在数据结构中
                     _accMap.TryAdd(acc.ID, acc);
                     //2.调用清算中心加载帐户

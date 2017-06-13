@@ -497,6 +497,13 @@ namespace TradingLib.Core
                         return false;
                     }
 
+                    if (account.Deleted)
+                    {
+                        msg = "交易帐户销户中";
+                        logger.Warn("Order rejected by [Execute Check]" + o.GetOrderInfo());
+                        return false;
+                    }
+
                     //执行账号风控规则检查
                     if (!account.CheckOrderRule(o, out msg))//如果通过风控检查 则置委托状态为Placed
                     {

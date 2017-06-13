@@ -6,7 +6,7 @@ using TradingLib.API;
 
 namespace TradingLib.Common
 {
-    public partial class AccountBase
+    public partial class AccountImpl
     {
         /// <summary>
         /// 昨日权益

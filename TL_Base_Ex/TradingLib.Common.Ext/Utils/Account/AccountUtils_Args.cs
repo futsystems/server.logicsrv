@@ -117,7 +117,7 @@ namespace TradingLib.Common
             ExStrategy s = account.GetExStrategy();
             if (s != null)
                 return s.SimExecuteStickLimitPrice;
-            return AccountBase.SimExecuteStickLimitPrice;
+            return AccountImpl.SimExecuteStickLimitPrice;
         }
 
         /// <summary>
@@ -130,7 +130,7 @@ namespace TradingLib.Common
             ExStrategy s = account.GetExStrategy();
             if (s != null)
                 return s.SimExecuteFillAll;
-            return AccountBase.SimExecuteFillAll;
+            return AccountImpl.SimExecuteFillAll;
         }
 
         /// <summary>
@@ -143,7 +143,7 @@ namespace TradingLib.Common
             ExStrategy s = account.GetExStrategy();
             if (s != null)
                 return s.SimExecuteMinSize;
-            return AccountBase.SimExecuteMinSize;
+            return AccountImpl.SimExecuteMinSize;
         }
 
         /// <summary>
@@ -156,7 +156,7 @@ namespace TradingLib.Common
             ExStrategy s = account.GetExStrategy();
             if (s != null)
                 return s.SimExecuteTimeCheck;
-            return AccountBase.SimExecuteTimeCheck;
+            return AccountImpl.SimExecuteTimeCheck;
         }
 
         /// <summary>
@@ -169,7 +169,7 @@ namespace TradingLib.Common
             ExStrategy s = account.GetExStrategy();
             if (s != null)
                 return s.SimExecuteUseAskBid;
-            return AccountBase.SimExecuteUseAskBid;
+            return AccountImpl.SimExecuteUseAskBid;
         }
 
         /// <summary>
@@ -182,7 +182,7 @@ namespace TradingLib.Common
             ExStrategy s = account.GetExStrategy();
             if (s != null)
                 return s.SimExecuteCFFEXStrategy;
-            return AccountBase.SimExecuteCFFEXStrategy;
+            return AccountImpl.SimExecuteCFFEXStrategy;
         }
         #endregion
 
@@ -193,7 +193,7 @@ namespace TradingLib.Common
             ExStrategy s = account.GetExStrategy();
             if (s != null)
                 return s.DepositCommission;
-            return AccountBase.DepositCommission;
+            return AccountImpl.DepositCommission;
         }
 
         public static decimal GetWithdrawCommission(this IAccount account)
@@ -201,7 +201,7 @@ namespace TradingLib.Common
             ExStrategy s = account.GetExStrategy();
             if (s != null)
                 return s.WithdrawCommission;
-            return AccountBase.WithdrawCommission;
+            return AccountImpl.WithdrawCommission;
         }
 
         public static decimal GetLeverageRatio(this IAccount account)
@@ -209,7 +209,7 @@ namespace TradingLib.Common
             ExStrategy s = account.GetExStrategy();
             if (s != null)
                 return s.LeverageRatio;
-            return AccountBase.LeverageRatio;
+            return AccountImpl.LeverageRatio;
         }
 
         #endregion

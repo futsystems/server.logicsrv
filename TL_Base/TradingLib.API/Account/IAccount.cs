@@ -165,6 +165,11 @@ namespace TradingLib.API
         /// </summary>
         bool Deleted { get; set; }
 
+        /// <summary>
+        /// 删除时所在交易日
+        /// </summary>
+        int DeletedSettleday { get; }
+
 
         /// <summary>
         /// 获得帐户交易通知

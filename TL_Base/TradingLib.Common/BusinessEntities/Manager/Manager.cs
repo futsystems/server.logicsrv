@@ -68,6 +68,16 @@ namespace TradingLib.Common
         /// 权限ID
         /// </summary>
         //public int Permission_ID { get; set; }
+
+        /// <summary>
+        /// 管理员删除标识
+        /// </summary>
+        public bool Deleted { get; set; }
+
+        /// <summary>
+        /// 管理员删除当时对应结算日
+        /// </summary>
+        public int DeletedSettleday { get; set; }
     }
 
     public class Manager:ManagerSetting
@@ -82,6 +92,7 @@ namespace TradingLib.Common
             BaseManager = null;
             domain_id = 0;
             Pass = "123456";
+            Deleted = false;
         }
 
 

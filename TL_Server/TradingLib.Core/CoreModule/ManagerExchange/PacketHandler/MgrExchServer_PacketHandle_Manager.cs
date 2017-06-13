@@ -149,7 +149,7 @@ namespace TradingLib.Core
                 manager.ValidRightAddManager(m);
 
                 int maxcnt = Math.Min(manager.Domain.AgentLimit, manager.AgentLimit);
-                int cnt = manager.GetVisibleManager().Count()-1;//1为自己
+                int cnt = manager.GetVisibleManager().Where(mgr => !mgr.Deleted).Count() - 1;//1为自己
                 if (cnt >= maxcnt)
                 {
                     throw new FutsRspError("可开柜员数量超过限制:" + maxcnt.ToString());

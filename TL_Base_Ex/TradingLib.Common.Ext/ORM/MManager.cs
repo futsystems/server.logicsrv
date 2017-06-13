@@ -141,6 +141,17 @@ namespace TradingLib.ORM
             }
         }
 
+       
+        public static void MarkManagerDeleted(int mgr_id)
+        {
+            using (DBMySql db = new DBMySql())
+            {
+                string query = String.Format("UPDATE manager SET deleted = '1' , deletedtime='{0}', deletedsettleday='{1}' WHERE mgr_fk = '{2}'", Util.ToTLDateTime(), TLCtxHelper.ModuleSettleCentre.Tradingday, mgr_id);
+                db.Connection.Execute(query);
+            }
+        }
+
+
         /// <summary>
         /// 删除管理员
         /// </summary>

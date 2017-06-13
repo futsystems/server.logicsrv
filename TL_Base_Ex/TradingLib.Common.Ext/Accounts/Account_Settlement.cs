@@ -13,7 +13,7 @@ namespace TradingLib.Common
     /// 让交易账户的统计和计算可以反应出当前最新变化
     /// 交易所结算完毕后，账户等待所有交易所交易日结转后 生成帐户的结算记录 账户进入下一个交易日
     /// </summary>
-    public partial class AccountBase
+    public partial class AccountImpl
     {
         ThreadSafeList<ExchangeSettlement> settlementlist = new ThreadSafeList<ExchangeSettlement>();//交易所结算记录
         ThreadSafeList<CashTransaction> cashtranslsit = new ThreadSafeList<CashTransaction>();//当日出入金记录

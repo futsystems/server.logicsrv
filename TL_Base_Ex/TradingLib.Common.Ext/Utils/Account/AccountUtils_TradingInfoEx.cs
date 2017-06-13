@@ -12,9 +12,9 @@ namespace TradingLib.Common
     /// </summary>
     public static class AccountUtils_TradingInfoEx
     {
-        public static AccountBase GetBase(this IAccount account)
+        public static AccountImpl GetBase(this IAccount account)
         {
-            return account as AccountBase;
+            return account as AccountImpl;
         }
 
         

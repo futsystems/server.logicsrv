@@ -9,7 +9,7 @@ namespace TradingLib.Common
     /// <summary>
     /// 账户 交易信息
     /// </summary>
-    public partial class AccountBase 
+    public partial class AccountImpl 
     {
         /// <summary>
         /// 是否有持仓

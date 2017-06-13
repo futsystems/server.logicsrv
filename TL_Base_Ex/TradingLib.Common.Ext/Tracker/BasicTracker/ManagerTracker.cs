@@ -95,8 +95,8 @@ namespace TradingLib.Common
         /// <param name="mgr"></param>
         public void DeleteManager(ManagerSetting mgr)
         { 
+            /*
             Manager target = null;
-            //添加
             if (mgridmap.TryGetValue(mgr.ID, out target))
             {
                 ORM.MManager.DeleteManager(mgr.ID);
@@ -105,6 +105,13 @@ namespace TradingLib.Common
                 {
                     managermap.TryRemove(mgr.Login, out target);
                 }
+            }**/
+            Manager target = null;
+            if (mgridmap.TryGetValue(mgr.ID, out target))
+            {
+                mgr.Deleted = true;
+                mgr.DeletedSettleday = TLCtxHelper.ModuleSettleCentre.Tradingday;
+                ORM.MManager.MarkManagerDeleted(mgr.ID);
             }
         }
         public void UpdateManager(ManagerSetting mgr)

@@ -81,7 +81,7 @@ namespace TradingLib.Common
         /// <param name="account"></param>
         internal void CacheAccount(IAccount account)
         {
-            AccountBase baseacc = account as AccountBase;
+            AccountImpl baseacc = account as AccountImpl;
             if (baseacc == null)
             {
                 return;

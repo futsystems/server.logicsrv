@@ -11,7 +11,7 @@ namespace TradingLib.Common
     /// <summary>
     /// 交易帐户对象
     /// </summary>
-    public partial class AccountBase : IAccount
+    public partial class AccountImpl : IAccount
     {
         protected ILog logger = LogManager.GetLogger("Account");
 
@@ -68,7 +68,7 @@ namespace TradingLib.Common
         public static decimal LeverageRatio { get; set; }
 
 
-        static AccountBase()
+        static AccountImpl()
         {
             _cfgdb = new ConfigDB("Account");
             //挂单100买入， 当目前盘口出现99卖出时 正常情况会按99的最优价格成交 此处设定始终按挂单价成交后则按100成交
@@ -130,7 +130,7 @@ namespace TradingLib.Common
 
 
         }
-        public AccountBase(string AccountID)
+        public AccountImpl(string AccountID)
         {
             _id = AccountID;
             this.Execute = true;
@@ -251,7 +251,7 @@ namespace TradingLib.Common
 
         public override bool Equals(object obj)
         {
-            AccountBase target = obj as AccountBase;
+            AccountImpl target = obj as AccountImpl;
             if (target == null) return false;
             if (this.ID == target.ID) return true;
             return false;
@@ -273,7 +273,13 @@ namespace TradingLib.Common
             _ruleitemloaded = false;
         }
 
+
         public bool Deleted { get; set; }
+
+        /// <summary>
+        /// 删除时所在交易日
+        /// </summary>
+        public int DeletedSettleday { get; set; }
     }
 
     

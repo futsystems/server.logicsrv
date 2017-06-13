@@ -29,8 +29,8 @@ namespace TradingLib.Core
             var creation = json.DeserializeObject<AccountCreation>();// Mixins.Json.JsonMapper.ToObject<AccountCreation>(json);
             var account = creation.Account;
 
-            //域帐户数目检查
-            if (manager.Domain.GetAccounts().Count() >= manager.Domain.AccLimit)
+            //域帐户数目检查 排除已经删除账户
+            if (manager.Domain.GetAccounts().Where(acc=>!acc.Deleted).Count() >= manager.Domain.AccLimit)
             {
                 throw new FutsRspError("帐户数目达到上限:" + manager.Domain.AccLimit.ToString());
             }
@@ -128,6 +128,11 @@ namespace TradingLib.Core
             if (acc == null)
             {
                 throw new FutsRspError("交易帐户不存在");
+            }
+
+            if (acc.GetPositionsHold().Count() > 0)
+            {
+                throw new FutsRspError(string.Format("交易帐户:{0} 有持仓 无法删除", acc.ID));
             }
 
             //检查交易帐户资金

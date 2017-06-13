@@ -7,7 +7,7 @@ using TradingLib.API;
 
 namespace TradingLib.Common
 {
-    public partial class AccountBase
+    public partial class AccountImpl
     {
         bool _ruleitemloaded = false;
         public bool RuleItemLoaded { get { return _ruleitemloaded; } set { _ruleitemloaded = value; } }//账户规则加载
