@@ -1,6 +1,6 @@
-﻿using System.Reflection;
+using System.Reflection;
 
-[assembly: AssemblyVersion("1.8.0.0")]
-[assembly: AssemblyFileVersion("1.8.0.0")]
-[assembly: AssemblyInformationalVersion("1.8.0.0 Development")] 
-[assembly: AssemblyConfiguration("Development")]
+[assembly: AssemblyVersion("2.0.2.30")]
+[assembly: AssemblyFileVersion("2.0.2.30")]
+[assembly: AssemblyInformationalVersion("2.0.2.30 335eda3")]
+[assembly: AssemblyConfiguration("")]
