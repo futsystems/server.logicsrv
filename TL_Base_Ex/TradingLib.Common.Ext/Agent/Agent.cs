@@ -112,7 +112,7 @@ namespace TradingLib.Common
                         continue;
                     }
                     //累加代理下面所有交易账户的平仓盈亏与盯市浮动盈亏
-                    settlement.PositionProfitByDate += accsettle.PositionProfitByDate * this.GetExchangeRate(settleday,acc.Currency);
+                    settlement.PositionProfitByDate += accsettle.PositionProfitByDate * this.GetExchangeRate(settleday, acc.Currency);
                     settlement.CloseProfitByDate += accsettle.CloseProfitByDate * this.GetExchangeRate(settleday, acc.Currency);
                 }
 
