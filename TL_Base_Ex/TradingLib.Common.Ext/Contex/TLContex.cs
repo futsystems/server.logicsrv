@@ -130,35 +130,6 @@ namespace TradingLib.Common
         }
         #endregion
 
-        #region internal 暴露对象
-        //IMessageExchange _messageExchange = null;
-        //internal IMessageExchange MessageExchange
-        //{
-        //    get
-        //    {
-        //        if (_messageExchange == null)
-        //        {
-        //            logger.Error("Error-MessageRouter not valid");
-        //        }
-        //        return _messageExchange;
-        //    }
-        //}
-
-        //IMessageMgr _messagemgr = null;
-        //internal IMessageMgr MessageMgr
-        //{
-        //    get
-        //    {
-        //        if (_messagemgr == null)
-        //        {
-        //            debug("Error-MessageMgr not valid");
-        //        }
-        //        return _messagemgr;
-        //    }
-        //}
-        #endregion
-
-
         public TLContext()
         {
 

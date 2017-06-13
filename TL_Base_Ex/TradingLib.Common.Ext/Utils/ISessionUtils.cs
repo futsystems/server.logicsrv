@@ -134,6 +134,7 @@ namespace TradingLib.Common
         {
             RspMGRResponse response = ResponseTemplate<RspMGRResponse>.SrvSendRspResponse(session);
             response.RspInfo.Fill(error);
+            Console.WriteLine("RspError:" + response.ToString());
             session.SendPacketMgr(response);
         }
 
@@ -154,6 +155,7 @@ namespace TradingLib.Common
         {
             RspMGRResponse response = ResponseTemplate<RspMGRResponse>.SrvSendRspResponse(session);
             response.RspInfo.ErrorMessage = message;
+            Console.WriteLine("RspMessage:" + response.ToString());
             session.SendPacketMgr(response);
         }
 
