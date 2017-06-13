@@ -1,6 +1,6 @@
 #!/bin/bash
 
-version=$(git describe)
+version=$(git describe --tag)
 
 build_prog=$1
 build_file="build/${build_prog}/bin/build.md"
