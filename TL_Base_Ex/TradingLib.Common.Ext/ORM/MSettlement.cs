@@ -380,7 +380,7 @@ namespace TradingLib.ORM
             using (DBMySql db = new DBMySql())
             {
                 string query = String.Format("SELECT * FROM log_settlement WHERE account = '{0}' AND settleday = '{1}'", account,settleday);
-                AccountSettlement settlement = db.Connection.Query<AccountSettlement>(query, null).SingleOrDefault();
+                AccountSettlement settlement = db.Connection.Query<AccountSettlementImpl>(query, null).SingleOrDefault();
                 return settlement;
             }
         }

@@ -16,6 +16,7 @@ namespace TradingLib.Common
     /// </summary>
     public class AccountSettlementImpl:AccountSettlement
     {
+
         /// <summary>
         /// 结算日
         /// </summary>
