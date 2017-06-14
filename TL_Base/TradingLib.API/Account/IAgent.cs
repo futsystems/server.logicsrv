@@ -59,6 +59,19 @@ namespace TradingLib.API
         long Settledtime { get; set; }
 
 
+        /// <summary>
+        /// 强平权益
+        /// </summary>
+        decimal FlatEquity { get; set; }
+
+
+        /// <summary>
+        /// 冻结
+        /// </summary>
+        bool Freezed { get; set; }
+
+
+
         decimal CommissionCost { get; }
 
         decimal CommissionIncome { get;  }

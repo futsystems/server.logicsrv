@@ -22,7 +22,7 @@ namespace TradingLib.Common
 
             st.StaticEquity = agent.StaticEquity;
             st.SubStaticEquity = agent.SubStaticEquity;
-            st.FlatEquity = 0;
+            st.FlatEquity = agent.FlatEquity;
 
 
 

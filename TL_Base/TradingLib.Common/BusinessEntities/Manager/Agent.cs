@@ -70,6 +70,16 @@ namespace TradingLib.Common
         /// </summary>
         public long Settledtime { get; set; }
 
+        /// <summary>
+        /// 强平权益
+        /// </summary>
+        public decimal FlatEquity { get; set; }
+
+        /// <summary>
+        /// 代理账户冻结
+        /// </summary>
+        public bool Freezed { get; set; }
+
     }
 
 

@@ -214,6 +214,38 @@ namespace TradingLib.Core
             }
         }
 
+        [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "UpdateAgentFlatEquity", "UpdateAgentFlatEquity -update agent flatequity ", "更新代理强平权益", QSEnumArgParseType.Json)]
+        public void CTE_UpdateAgentFlatEquity(ISession session, string json)
+        {
+            Manager manager = session.GetManager();
+
+            var data = json.DeserializeObject();
+            string account = data["account"].ToString();
+            decimal flatequity = decimal.Parse(data["flat_equity"].ToString());
+
+            AgentImpl agent = BasicTracker.AgentTracker[account];
+            if (agent == null)
+            {
+                throw new FutsRspError(string.Format("代理账户:{0}不存在", account));
+            }
+
+            if (!manager.RightAccessManager(account))
+            {
+                throw new FutsRspError("无权操作该代理");
+            }
+
+            agent.FlatEquity = flatequity;
+            ORM.MAgent.UpdateAgentFlatEquity(agent);
+
+            //通知代理账户变更
+            session.NotifyMgr("NotifyAgent", agent);
+
+            session.RspMessage("更新会员强平权益成功");
+
+
+        }
+
+
         #endregion
 
     }

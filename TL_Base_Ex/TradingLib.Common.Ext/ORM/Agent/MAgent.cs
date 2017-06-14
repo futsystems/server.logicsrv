@@ -43,6 +43,21 @@ namespace TradingLib.ORM
         /// 更新代理模板参数
         /// </summary>
         /// <param name="agent"></param>
+        public static void UpdateAgentFlatEquity(AgentImpl agent)
+        {
+            using (DBMySql db = new DBMySql())
+            {
+
+                string query = String.Format("UPDATE agents SET  flatequity = '{0}'  WHERE id = '{1}'", agent.FlatEquity,agent.ID);
+                db.Connection.Execute(query);
+            }
+        }
+
+
+        /// <summary>
+        /// 更新代理模板参数
+        /// </summary>
+        /// <param name="agent"></param>
         public static void UpdateAgentTemplate(AgentImpl agent)
         {
             using (DBMySql db = new DBMySql())
