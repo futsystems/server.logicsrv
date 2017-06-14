@@ -248,5 +248,38 @@ namespace TradingLib.Core
 
         #endregion
 
+
+        #region 风控实时监控
+        /// <summary>
+        /// 帐户风控规则扫描
+        /// </summary>
+        [TaskAttr("会员结算帐户风控实时检查", 0, 2, "结算帐户实时检查")]
+        public void Task_DataCheck()
+        {
+            if (TLCtxHelper.ModuleSettleCentre.SettleMode != QSEnumSettleMode.StandbyMode) return;
+
+            foreach (var agent in BasicTracker.AgentTracker.Agents.Where(agent => agent.AgentType == EnumAgentType.SelfOperated && !agent.Freezed && agent.Manager!= null))
+            {
+                if (agent.NowEquity < agent.FlatEquity)
+                {
+                    logger.Info(string.Format("结算账户:{0} 执行强平", agent.Account));
+                    agent.Freezed = true;
+                    foreach (var account in agent.Manager.GetVisibleAccount().Where(acc=>acc.AnyPosition))
+                    {
+                        TLCtxHelper.ModuleRiskCentre.FlatAllPositions(account.ID, QSEnumOrderSource.RISKCENTRE, "会员账户强平");
+                    }
+                }
+            }
+
+            //被冻结自营会员账户 权益满足条件后 执行解冻
+            foreach (var agent in BasicTracker.AgentTracker.Agents.Where(agent => agent.AgentType == EnumAgentType.SelfOperated && agent.Freezed))
+            {
+                if (agent.NowEquity > agent.FlatEquity)
+                {
+                    agent.Freezed = false;
+                }
+            }
+        }
+        #endregion
     }
 }

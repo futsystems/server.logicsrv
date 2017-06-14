@@ -28,6 +28,7 @@ namespace TradingLib.Common
 
         public decimal FlatEquity { get; set; }
 
+        public bool Freezed { get; set; }
 
         public decimal CustMargin { get; set; }//占用保证金
 

@@ -497,11 +497,25 @@ namespace TradingLib.Core
                         return false;
                     }
 
+                    //投资者账户销户
                     if (account.Deleted)
                     {
                         msg = "交易帐户销户中";
-                        logger.Warn("Order rejected by [Execute Check]" + o.GetOrderInfo());
+                        logger.Warn("Order rejected by [Deleted Check]" + o.GetOrderInfo());
                         return false;
+                    }
+
+                    //代理账户
+                    Manager mgr = BasicTracker.ManagerTracker[account.Mgr_fk];
+                    while (mgr != null && mgr.Type != QSEnumManagerType.ROOT)
+                    {
+                        if (mgr.AgentAccount.Freezed)
+                        {
+                            msg = "会员结算账户冻结";
+                            logger.Warn("Order rejected by [AgentFreezed Check]" + o.GetOrderInfo());
+                            return false;
+                        }
+                        mgr = mgr.ParentManager;
                     }
 
                     //执行账号风控规则检查
