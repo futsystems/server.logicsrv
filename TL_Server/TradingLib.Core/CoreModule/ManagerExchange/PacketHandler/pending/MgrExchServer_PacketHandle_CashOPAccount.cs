@@ -188,8 +188,7 @@ namespace TradingLib.Core
 
                         access = BasicTracker.UIAccessTracker.GetUIAccess(manger);
 
-                        if (!access.r_cashop)
-                            throw new FutsRspError("无权提交出入金");
+                    
                     }
                         
 
