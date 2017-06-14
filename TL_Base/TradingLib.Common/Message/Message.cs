@@ -1,4 +1,4 @@
-using System;
+ï»¿using System;
 using System.Collections.Generic;
 using TradingLib.API;
 using System.Runtime.Serialization.Json;
@@ -9,14 +9,14 @@ using System.Runtime.Serialization;
 namespace TradingLib.Common
 {
     /// <summary>
-    /// ÏûÏ¢
-    /// ¹Ì¶¨Í·¸ñÊ½µÄÏûÏ¢
+    /// æ¶ˆæ¯
+    /// å›ºå®šå¤´æ ¼å¼çš„æ¶ˆæ¯
     /// |--4 Length--|--4 Type--|--content--|
-    /// Í·²¿Îª8×Ö½Ú³¤¶È
-    /// 4×Ö½ÚÎªÏûÏ¢Ìå³¤¶È ÏûÏ¢³¤¶È°üº¬Í·²¿³¤¶È
-    /// 4×Ö½ÚÎªÏûÏ¢ÀàĞÍ
-    /// ËùÓĞÏûÏ¢ĞòÁĞ»¯³É×Ö·û´®½øĞĞ´«Êä Éæ¼°µ½Ç°ÖÃC++ÏûÏ¢×ª»»²¿·Ö
-    /// Èç¹û¼æÈİ¶ş½øÖÆÔ­ÉúĞ­Òé?
+    /// å¤´éƒ¨ä¸º8å­—èŠ‚é•¿åº¦
+    /// 4å­—èŠ‚ä¸ºæ¶ˆæ¯ä½“é•¿åº¦ æ¶ˆæ¯é•¿åº¦åŒ…å«å¤´éƒ¨é•¿åº¦
+    /// 4å­—èŠ‚ä¸ºæ¶ˆæ¯ç±»å‹
+    /// æ‰€æœ‰æ¶ˆæ¯åºåˆ—åŒ–æˆå­—ç¬¦ä¸²è¿›è¡Œä¼ è¾“ æ¶‰åŠåˆ°å‰ç½®C++æ¶ˆæ¯è½¬æ¢éƒ¨åˆ†
+    /// å¦‚æœå…¼å®¹äºŒè¿›åˆ¶åŸç”Ÿåè®®?
     /// </summary>
     public struct Message
     {
@@ -119,7 +119,7 @@ namespace TradingLib.Common
         }
 
         /// <summary>
-        /// ÕâÀïµÄdataÎª½ÓÊÜµ½µÄÊı¾İ´óĞ¡ ÍêÕûÊı¾İ
+        /// è¿™é‡Œçš„dataä¸ºæ¥å—åˆ°çš„æ•°æ®å¤§å° å®Œæ•´æ•°æ®
         /// </summary>
         /// <param name="data"></param>
         /// <param name="offset"></param>

@@ -1,4 +1,4 @@
-namespace TradingLib.API
+﻿namespace TradingLib.API
 {
     public struct GenericMessage
     {

@@ -1,4 +1,4 @@
-using System;
+ï»¿using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Text;
@@ -8,7 +8,7 @@ using Common.Logging;
 namespace TradingLib.Common
 {
     /// <summary>
-    /// ÓÃÓÚÒì²½Ö´ĞĞtick´¦Àí,Ö÷Ïß³ÌÖ±½Ó½«Tick·ÅÈëringbufferÖĞ,È»ºóÔÚµ¥¶ÀµÄÏß³ÌÖĞÈ¥´¦ÀíTick
+    /// ç”¨äºå¼‚æ­¥æ‰§è¡Œtickå¤„ç†,ä¸»çº¿ç¨‹ç›´æ¥å°†Tickæ”¾å…¥ringbufferä¸­,ç„¶ååœ¨å•ç‹¬çš„çº¿ç¨‹ä¸­å»å¤„ç†Tick
     /// </summary>
     public class AsyncResponse
     {
@@ -19,19 +19,19 @@ namespace TradingLib.Common
         RingBuffer<Tick> _tickcache;
 
         /// <summary>
-        /// µ±´Ó»º´æÖĞÒì²½¶ÁÈ¡Ò»¸ötickÊ±´¥·¢
+        /// å½“ä»ç¼“å­˜ä¸­å¼‚æ­¥è¯»å–ä¸€ä¸ªtickæ—¶è§¦å‘
         /// </summary>
         public event TickDelegate GotTick;
         /// <summary>
-        ///  µ±»º´æÄÚÃ»ÓĞÊı¾İÊ±´¥·¢
+        ///  å½“ç¼“å­˜å†…æ²¡æœ‰æ•°æ®æ—¶è§¦å‘
         /// </summary>
         public event VoidDelegate GotTickQueueEmpty;
         /// <summary>
-        /// µ±ÓĞĞÂµÄTickÊı¾İĞ´Èë»º´æÊ±´¥·¢
+        /// å½“æœ‰æ–°çš„Tickæ•°æ®å†™å…¥ç¼“å­˜æ—¶è§¦å‘
         /// </summary>
         public event VoidDelegate GotTickQueued;
         /// <summary>
-        /// µ±»º´æÌ«Ğ¡,TickÊı¾İÒç³öÊ±´¥·¢
+        /// å½“ç¼“å­˜å¤ªå°,Tickæ•°æ®æº¢å‡ºæ—¶è§¦å‘
         /// </summary>
         public int TickOverrun { get { return _tickcache.BufferOverrun; } }
 
@@ -43,11 +43,11 @@ namespace TradingLib.Common
         int _nwt = 0;
 
         /// <summary>
-        /// ÊÇ·ñ´¦ÓÚÓĞĞ§¹¤×÷×´Ì¬
+        /// æ˜¯å¦å¤„äºæœ‰æ•ˆå·¥ä½œçŠ¶æ€
         /// </summary>
         public bool isValid { get { return _readtick; } }
         /// <summary>
-        /// ÊÇ·ñ´¦ÓÚ¹¤×÷×´Ì¬
+        /// æ˜¯å¦å¤„äºå·¥ä½œçŠ¶æ€
         /// </summary>
         public bool IsRunning { get { return _readtick; } }
         void ReadTick()
@@ -96,12 +96,12 @@ namespace TradingLib.Common
         public const int SLEEPDEFAULTMS = 10;
         int _sleep = SLEEPDEFAULTMS;
         /// <summary>
-        /// Ã¿¸ô¶àÉÙÊ±¼ä¼ì²étick bufferÖĞÊÇ·ñÓĞĞÂµÄĞĞÇéÊı¾İ
+        /// æ¯éš”å¤šå°‘æ—¶é—´æ£€æŸ¥tick bufferä¸­æ˜¯å¦æœ‰æ–°çš„è¡Œæƒ…æ•°æ®
         /// </summary>
         public int SLEEP { get { return _sleep; } set { _sleep = value; } }
 
         /// <summary>
-        /// µ±ÓĞĞĞÇéµ½´ïÊ±µ÷ÓÃ¸Ãº¯Êı,½«ĞĞÇétick·ÅÈëRingbufferÖĞ,ÓÃÓÚºóÌ¨Ïß³ÌÒì²½´¦Àí
+        /// å½“æœ‰è¡Œæƒ…åˆ°è¾¾æ—¶è°ƒç”¨è¯¥å‡½æ•°,å°†è¡Œæƒ…tickæ”¾å…¥Ringbufferä¸­,ç”¨äºåå°çº¿ç¨‹å¼‚æ­¥å¤„ç†
         /// </summary>
         /// <param name="k"></param>
         public void newTick(Tick k)
@@ -129,11 +129,11 @@ namespace TradingLib.Common
         }
 
         /// <summary>
-        /// µ±ÓĞÒì³£tick¶ÁÈ¡Ê± ´¥·¢
+        /// å½“æœ‰å¼‚å¸¸tickè¯»å–æ—¶ è§¦å‘
         /// </summary>
         public event VoidDelegate GotBadTick;
         /// <summary>
-        /// µ±»º´æ´óĞ¡Ì«Ğ¡Ê±ºò´¥·¢
+        /// å½“ç¼“å­˜å¤§å°å¤ªå°æ—¶å€™è§¦å‘
         /// </summary>
         public event VoidDelegate GotTickOverrun;
         /// <summary>

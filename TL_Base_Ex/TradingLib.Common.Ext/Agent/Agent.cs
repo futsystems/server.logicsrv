@@ -223,7 +223,7 @@ namespace TradingLib.Common
         {
             get
             {
-                return this.LastCredit + this.CashIn - this.CashOut;
+                return this.LastEquity + this.CashIn - this.CashOut;
             }
         }
 
@@ -244,7 +244,7 @@ namespace TradingLib.Common
         {
             get
             {
-                return this.LastEquity + this.CreditCashIn - this.CreditCashOut;
+                return this.LastCredit + this.CreditCashIn - this.CreditCashOut;
             }
         }
 

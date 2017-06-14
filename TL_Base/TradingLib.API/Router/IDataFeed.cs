@@ -1,4 +1,4 @@
-using System;
+ï»¿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,16 +8,16 @@ namespace TradingLib.API
     public interface IDataFeed:IConnecter
     {
         /// <summary>
-        /// ¶©ÔÄÒ»×éºÏÔ¼µÄĞĞÇé,Ö¸¶¨¸Ã×éºÏÔ¼Í¨¹ıÄÄ¸öÊı¾İÍ¨µÀ½øĞĞ·¢ËÍ
-        /// ÓÃÓÚ¼æÈİFastTickSrv ÔÚFastTickÄ£Ê½ÏÂ
-        /// ĞĞÇé·şÎñÆ÷¶Ô½ÓËùÓĞĞĞÇéÍ¨µÀ½Ó¿Ú,ÔÚ½ÓÊÜ¿Í»§¶ËµÄĞĞÇé¶©ÔÄÊ±ĞèÒªÃ÷È·Ö¸¶¨Ä³×éºÏÔ¼Í¨¹ıÄÄ¸öÍ¨µÀ½øĞĞ¶©ÔÄ
+        /// è®¢é˜…ä¸€ç»„åˆçº¦çš„è¡Œæƒ…,æŒ‡å®šè¯¥ç»„åˆçº¦é€šè¿‡å“ªä¸ªæ•°æ®é€šé“è¿›è¡Œå‘é€
+        /// ç”¨äºå…¼å®¹FastTickSrv åœ¨FastTickæ¨¡å¼ä¸‹
+        /// è¡Œæƒ…æœåŠ¡å™¨å¯¹æ¥æ‰€æœ‰è¡Œæƒ…é€šé“æ¥å£,åœ¨æ¥å—å®¢æˆ·ç«¯çš„è¡Œæƒ…è®¢é˜…æ—¶éœ€è¦æ˜ç¡®æŒ‡å®šæŸç»„åˆçº¦é€šè¿‡å“ªä¸ªé€šé“è¿›è¡Œè®¢é˜…
         /// </summary>
         /// <param name="symbols"></param>
         /// <param name="type"></param>
         void RegisterSymbols(List<Symbol> symbols);
 
         /// <summary>
-        /// »ñµÃĞĞÇé»Ø±¨
+        /// è·å¾—è¡Œæƒ…å›æŠ¥
         /// </summary>
         event TickDelegate GotTickEvent;
     }

@@ -1,4 +1,4 @@
-namespace TradingLib.Quant.GUI
+﻿namespace TradingLib.Quant.GUI
 {
     partial class OptimizationReport
     {

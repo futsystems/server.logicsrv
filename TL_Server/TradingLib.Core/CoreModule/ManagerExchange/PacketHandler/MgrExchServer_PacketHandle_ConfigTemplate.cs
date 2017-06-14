@@ -156,11 +156,11 @@ namespace TradingLib.Core
         public void CTE_QryCommissionTemplateItem(ISession session, int templateid)
         {
             Manager manager = session.GetManager();
-            UIAccess access = manager.GetAccess();
-            if (!access.r_commission)
-            {
-                throw new FutsRspError("无权查询保证金模板项目");
-            }
+            //UIAccess access = manager.GetAccess();
+            //if (!access.r_commission)
+            //{
+            //    throw new FutsRspError("无权查询保证金模板项目");
+            //}
 
             CommissionTemplate template = BasicTracker.CommissionTemplateTracker[templateid];
             if (template == null)
@@ -174,8 +174,16 @@ namespace TradingLib.Core
             }
             if (!manager.IsInRoot())
             {
-                if (template.Manager_ID != manager.BaseMgrID)
+
+                bool access = false;
+                //由代理创建或者代理自己当前模板则有权查询
+                if (template.Manager_ID == manager.BaseMgrID || (manager.AgentAccount != null && manager.AgentAccount.Commission_ID == templateid))
                 {
+                    access = true;
+                }
+                else
+                {
+                    access = false;
                     throw new FutsRspError(string.Format("无权查询手续费模板[{0}]", template.Name));
                 }
             }

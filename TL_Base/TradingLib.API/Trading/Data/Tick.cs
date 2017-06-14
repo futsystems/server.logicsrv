@@ -1,4 +1,4 @@
-using System;
+ï»¿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,8 +8,8 @@ namespace TradingLib.API
     public interface Tick
     {
         /// <summary>
-        /// ĞĞÇé¸ñÊ½Àà±ğ
-        /// ²»Í¬µÄĞĞÇé¸ñÊ½Àà±ğÓĞ²»Í¬µÄĞòÁĞ»¯ºÍ·´ĞòÁĞ»¯·½Ê½
+        /// è¡Œæƒ…æ ¼å¼ç±»åˆ«
+        /// ä¸åŒçš„è¡Œæƒ…æ ¼å¼ç±»åˆ«æœ‰ä¸åŒçš„åºåˆ—åŒ–å’Œååºåˆ—åŒ–æ–¹å¼
         /// </summary>
         EnumTickType Type { get; set; }
 
@@ -45,7 +45,7 @@ namespace TradingLib.API
         string Exchange { get; set; }
 
         /// <summary>
-        /// ½»Ò×±êÊ¶
+        /// äº¤æ˜“æ ‡è¯†
         /// </summary>
         int TradeFlag { get; set;}
         #endregion
@@ -136,8 +136,8 @@ namespace TradingLib.API
         int BidSize10 { get; set; }
 
         /// <summary>
-        /// ÉÏ´Î±¨¼ÛÉî¶È
-        /// »ñµÃLevel2Êı¾İºó¸ù¾İÉî¶È ¸üĞÂ¶ÔÓ¦Éî¶ÈÅÌ¿ÚÉÏµÄÊı¾İ
+        /// ä¸Šæ¬¡æŠ¥ä»·æ·±åº¦
+        /// è·å¾—Level2æ•°æ®åæ ¹æ®æ·±åº¦ æ›´æ–°å¯¹åº”æ·±åº¦ç›˜å£ä¸Šçš„æ•°æ®
         /// </summary>
         int Depth { get; set; }
 
@@ -160,78 +160,78 @@ namespace TradingLib.API
         int symidx { get; set; }
 
         /// <summary>
-        /// ³É½»Á¿
+        /// æˆäº¤é‡
         /// </summary>
         int Vol { get; set; }
 
         /// <summary>
-        /// ¿ªÅÌ¼Û
+        /// å¼€ç›˜ä»·
         /// </summary>
         decimal Open { get; set; }
 
         /// <summary>
-        /// ×î¸ß¼Û
+        /// æœ€é«˜ä»·
         /// </summary>
         decimal High { get; set; }
 
         /// <summary>
-        /// ×îµÍ¼Û
+        /// æœ€ä½ä»·
         /// </summary>
         decimal Low { get; set; }
 
         /// <summary>
-        /// ×òÈÕ³Ö²ÖÁ¿
+        /// æ˜¨æ—¥æŒä»“é‡
         /// </summary>
         int PreOpenInterest { get; set; }
 
         /// <summary>
-        /// ³Ö²ÖÁ¿
+        /// æŒä»“é‡
         /// </summary>
         int OpenInterest { get; set; }
 
         /// <summary>
-        /// ×òÈÕ½áËã¼Û
+        /// æ˜¨æ—¥ç»“ç®—ä»·
         /// </summary>
         decimal PreSettlement { get; set; }
 
         /// <summary>
-        /// ½áËã¼Û
+        /// ç»“ç®—ä»·
         /// </summary>
         decimal Settlement { get; set; }
 
         /// <summary>
-        /// ÕÇÍ£¼Û
+        /// æ¶¨åœä»·
         /// </summary>
         decimal UpperLimit { get; set; }
 
         /// <summary>
-        /// µøÍ£¼Û
+        /// è·Œåœä»·
         /// </summary>
         decimal LowerLimit { get; set; }
 
         /// <summary>
-        /// ×òÈÕ½áËã
+        /// æ˜¨æ—¥ç»“ç®—
         /// </summary>
         decimal PreClose { get; set; }
 
         /// <summary>
-        /// ĞĞÇéÔ´
+        /// è¡Œæƒ…æº
         /// </summary>
         QSEnumDataFeedTypes DataFeed { get; set; }
 
 
         /// <summary>
-        /// ¸üĞÂÀà±ğ
+        /// æ›´æ–°ç±»åˆ«
         /// </summary>
         string UpdateType { get; set; }
 
         /// <summary>
-        /// ½»Ò×Ëù¿ªÆô»ò¹Ø±Õ
+        /// äº¤æ˜“æ‰€å¼€å¯æˆ–å…³é—­
         /// </summary>
         bool MarketOpen { get; set; }
 
         /// <summary>
-        /// ÓÃÓÚ¶¨Ê±¸üĞÂ±¨¼Û ÓÃÓÚÊµÊ±ĞĞÇéÏµÍ³¹ıÂË¹ı¶àÅÌ¿ÚÊı¾İ
+        /// ç”¨äºå®šæ—¶æ›´æ–°æŠ¥ä»· ç”¨äºå®æ—¶è¡Œæƒ…ç³»ç»Ÿè¿‡æ»¤è¿‡å¤šç›˜å£æ•°æ®
         /// </summary>
         bool QuoteUpdate { get; set; }
 
@@ -240,48 +240,48 @@ namespace TradingLib.API
         bool BidUpdate { get; set; }
 
         /// <summary>
-        /// ¶¨Ê±·¢ËÍTickÊ± ËùÊ¹ÓÃµÄ³É½»Á¿ÀÛ¼ÓÆ÷
+        /// å®šæ—¶å‘é€Tickæ—¶ æ‰€ä½¿ç”¨çš„æˆäº¤é‡ç´¯åŠ å™¨
         /// </summary>
         int IntervalSize { get; set; }
     }
 
     /// <summary>
-    /// ¶¨ÒåÁËĞĞÇé´«Êä¹ı³ÌÖĞµÄÄÚÈİÀà±ğ
-    /// ¸ù¾İ²»Í¬µÄÄÚÈİ¿ÉÒÔ½âÎö³ö²»Í¬µÄĞĞÇéÄÚÈİ
-    /// ±ÜÃâÁËÃ¿´Î¶¼·¢ËÍÏàÍ¬µÄÄÚÈİ ±ÈÈç¸ß¿ªµÍÊÕµÈ²»¾­³£±ä»¯µÄ±äÁ¿
-    /// TickĞĞÇéÎªÁË¼æÈİºÍÌåÏÖ²»Í¬½»Ò×ËùµÄĞĞÇé±¨¼Û ĞèÒª½øĞĞ×ÛºÏ´¦Àí
+    /// å®šä¹‰äº†è¡Œæƒ…ä¼ è¾“è¿‡ç¨‹ä¸­çš„å†…å®¹ç±»åˆ«
+    /// æ ¹æ®ä¸åŒçš„å†…å®¹å¯ä»¥è§£æå‡ºä¸åŒçš„è¡Œæƒ…å†…å®¹
+    /// é¿å…äº†æ¯æ¬¡éƒ½å‘é€ç›¸åŒçš„å†…å®¹ æ¯”å¦‚é«˜å¼€ä½æ”¶ç­‰ä¸ç»å¸¸å˜åŒ–çš„å˜é‡
+    /// Tickè¡Œæƒ…ä¸ºäº†å…¼å®¹å’Œä½“ç°ä¸åŒäº¤æ˜“æ‰€çš„è¡Œæƒ…æŠ¥ä»· éœ€è¦è¿›è¡Œç»¼åˆå¤„ç†
     /// 
     /// </summary>
     public enum EnumTickType
     { 
         /// <summary>
-        /// ³É½»ĞÅÏ¢
+        /// æˆäº¤ä¿¡æ¯
         /// </summary>
         TRADE=0,
         /// <summary>
-        /// ±¨¼ÛĞÅÏ¢
+        /// æŠ¥ä»·ä¿¡æ¯
         /// </summary>
         QUOTE=1,
         /// <summary>
-        /// Éî¶ÈĞĞÇéĞÅÏ¢
+        /// æ·±åº¦è¡Œæƒ…ä¿¡æ¯
         /// </summary>
         LEVEL2=2,
         /// <summary>
-        /// Í³¼ÆĞÅÏ¢ Open 
+        /// ç»Ÿè®¡ä¿¡æ¯ Open 
         /// </summary>
         SUMMARY=3,
         /// <summary>
-        /// ¿ìÕÕÊı¾İ
+        /// å¿«ç…§æ•°æ®
         /// </summary>
         SNAPSHOT=4,
 
         /// <summary>
-        /// Ê±¼ä ÓÃÓÚ¸üĞÂµ±Ç°ĞòÁĞÊ±¼ä
+        /// æ—¶é—´ ç”¨äºæ›´æ–°å½“å‰åºåˆ—æ—¶é—´
         /// </summary>
         TIME = 5,
 
         /// <summary>
-        /// ¹ÉÆ±ĞĞÇéÊı¾İ
+        /// è‚¡ç¥¨è¡Œæƒ…æ•°æ®
         /// </summary>
         STKSNAPSHOT = 6,
 

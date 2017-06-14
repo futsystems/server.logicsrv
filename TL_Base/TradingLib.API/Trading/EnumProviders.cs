@@ -1,4 +1,4 @@
-
+﻿
 namespace TradingLib.API
 {
     /// <summary>

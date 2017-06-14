@@ -1,4 +1,4 @@
-using System;
+锘縰sing System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -10,7 +10,7 @@ namespace TradingLib.Common
     [Serializable]
     public class IdTracker : GenericTracker<long>, IConvertible
     {
-        public  const int ConnectorOwnerIDStart = 50;//通道内委托分拆器使用的id virtual owner起始
+        public  const int ConnectorOwnerIDStart = 50;//閫氶亾鍐呭鎵樺垎鎷嗗櫒浣跨敤鐨刬d virtual owner璧峰
         public static implicit operator long(IdTracker idt)
         {
             return idt.AssignId;

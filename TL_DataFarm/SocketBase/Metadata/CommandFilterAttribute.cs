@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using SuperSocket.SocketBase;
 using SuperSocket.SocketBase.Command;
 

@@ -1,4 +1,4 @@
-using System;
+ï»¿using System;
 using System.Collections.Generic;
 using System.Text;
 using System.IO.Compression;
@@ -11,7 +11,7 @@ namespace TradingLib.Common
     {
         public static byte[] Compress(byte[] inData)
         {
-            //Ñ¹Ëõ
+            //å‹ç¼©
             //bytes = new Byte[fs.Length];
             //fs.Read(bytes, 0, bytes.Length);
 
@@ -36,10 +36,10 @@ namespace TradingLib.Common
                 outZStream.finish();
                 outZStream.Flush();
                 //CopyStream(inStream, outZStream);
-                outStream.Seek(0, SeekOrigin.Begin);        // ½«outStreamÉèÖÃµ½Í·£¬ÒÔ±ã´ÓÍ·¶ÁÈ¡Êı¾İ
+                outStream.Seek(0, SeekOrigin.Begin);        // å°†outStreamè®¾ç½®åˆ°å¤´ï¼Œä»¥ä¾¿ä»å¤´è¯»å–æ•°æ®
                 int outLength = (int)outStream.Length;
                 outData = new byte[outLength];
-                int k = outStream.Read(outData, 0, outLength);        // outStream´ËÊ±°üÀ¨ÁË½âÑ¹ËõºóµÄÊı¾İ£¬½«Æä·ÅÈëµ½×Ö½ÚÊı×édesBufferÖĞ
+                int k = outStream.Read(outData, 0, outLength);        // outStreamæ­¤æ—¶åŒ…æ‹¬äº†è§£å‹ç¼©åçš„æ•°æ®ï¼Œå°†å…¶æ”¾å…¥åˆ°å­—èŠ‚æ•°ç»„desBufferä¸­
             }
             finally
             {
@@ -60,10 +60,10 @@ namespace TradingLib.Common
             try
             {
                 CopyStream(inStream, outZStream);
-                outStream.Seek(0, SeekOrigin.Begin);        // ½«outStreamÉèÖÃµ½Í·£¬ÒÔ±ã´ÓÍ·¶ÁÈ¡Êı¾İ
+                outStream.Seek(0, SeekOrigin.Begin);        // å°†outStreamè®¾ç½®åˆ°å¤´ï¼Œä»¥ä¾¿ä»å¤´è¯»å–æ•°æ®
                 int outLength = (int)outStream.Length;
                 outData = new byte[outLength];
-                int k = outStream.Read(outData, 0, outLength);        // outStream´ËÊ±°üÀ¨ÁË½âÑ¹ËõºóµÄÊı¾İ£¬½«Æä·ÅÈëµ½×Ö½ÚÊı×édesBufferÖĞ
+                int k = outStream.Read(outData, 0, outLength);        // outStreamæ­¤æ—¶åŒ…æ‹¬äº†è§£å‹ç¼©åçš„æ•°æ®ï¼Œå°†å…¶æ”¾å…¥åˆ°å­—èŠ‚æ•°ç»„desBufferä¸­
             }
             finally
             {
@@ -83,7 +83,7 @@ namespace TradingLib.Common
             {
                 while ((len = input.Read(buffer, 0, i)) > 0)
                 {
-                    output.Write(buffer, 0, len);           // outputÈç¹ûÎªZOutputStream£¬Ôò´Ë´¦½øĞĞÊµ¼ÊµÄÑ¹Ëõ »ò ½âÑ¹Ëõ
+                    output.Write(buffer, 0, len);           // outputå¦‚æœä¸ºZOutputStreamï¼Œåˆ™æ­¤å¤„è¿›è¡Œå®é™…çš„å‹ç¼© æˆ– è§£å‹ç¼©
                 }
                 output.Flush();
             }

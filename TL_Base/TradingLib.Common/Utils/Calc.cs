@@ -1,4 +1,4 @@
-using System;
+ï»¿using System;
 using TradingLib.API;
 using System.Linq;
 using System.Collections.Generic;
@@ -2206,7 +2206,7 @@ namespace TradingLib.Common
         /// <summary>
         /// computes money used to purchase a portfolio of positions.
         /// uses average price for position.
-        /// Õ¼ÓÃ×Ê½ğ,ÕâÀïµÄ¼Û¸ñ¼ÙÉèÎª¾ø¶Ô¼Û¸ñÃ»ÓĞÒıÈë³ËÊı¸ÅÄîºÍ±£Ö¤½ğ±ÈÀı¸ÅÄî
+        /// å ç”¨èµ„é‡‘,è¿™é‡Œçš„ä»·æ ¼å‡è®¾ä¸ºç»å¯¹ä»·æ ¼æ²¡æœ‰å¼•å…¥ä¹˜æ•°æ¦‚å¿µå’Œä¿è¯é‡‘æ¯”ä¾‹æ¦‚å¿µ
         /// </summary>
         /// <param name="pt"></param>
         /// <returns></returns>
@@ -2506,7 +2506,7 @@ namespace TradingLib.Common
         #region sort
 
         /// <summary>
-        /// ½µĞòÅÅÁĞ
+        /// é™åºæ’åˆ—
         /// </summary>
         /// <param name="list"></param>
         public static void SortDes(ref List<decimal> list)
@@ -2515,7 +2515,7 @@ namespace TradingLib.Common
         }
 
         /// <summary>
-        /// ÉıĞòÅÅÁĞ
+        /// å‡åºæ’åˆ—
         /// </summary>
         /// <param name="list"></param>
         public static void SortAsc(ref List<decimal> list)
@@ -2524,14 +2524,14 @@ namespace TradingLib.Common
         
         }
 
-        static int CompareListBigDecimal(decimal _a, decimal _b)//ÓÉ´óµ½Ğ¡
+        static int CompareListBigDecimal(decimal _a, decimal _b)//ç”±å¤§åˆ°å°
         {
             decimal _temp = _a - _b;
             if (_temp < 0) return 1;
             if (_temp > 0) return -1;
             return 0;
         }
-        static int CompareListSmallDecimal(decimal _a, decimal _b)//ÓÉĞ¡µ½´ó
+        static int CompareListSmallDecimal(decimal _a, decimal _b)//ç”±å°åˆ°å¤§
         {
             decimal _temp = _a - _b;
             if (_temp > 0) return 1;
@@ -2541,7 +2541,7 @@ namespace TradingLib.Common
 
 
         /// <summary>
-        /// ÕÛËãÀûÈó ½«ÀûÈóÕÛËã³ÉÔ­À´µÄpercent
+        /// æŠ˜ç®—åˆ©æ¶¦ å°†åˆ©æ¶¦æŠ˜ç®—æˆåŸæ¥çš„percent
         /// </summary>
         /// <param name="profit"></param>
         /// <param name="percent"></param>
@@ -2557,10 +2557,10 @@ namespace TradingLib.Common
         #endregion
 
 
-        #region¡¾²ÆÎñ¼ÆËã¡¿
+        #regionã€è´¢åŠ¡è®¡ç®—ã€‘
 
         ///// <summary>
-        ///// ¼ÆËãÒ»×é³É½»µÄÀÛ»ıÊÖĞø·Ñ
+        ///// è®¡ç®—ä¸€ç»„æˆäº¤çš„ç´¯ç§¯æ‰‹ç»­è´¹
         ///// </summary>
         ///// <param name="fills"></param>
         ///// <returns></returns>
@@ -2574,7 +2574,7 @@ namespace TradingLib.Common
         //}
 
         ///// <summary>
-        ///// ¼ÆËãÒ»×é³Ö²ÖµÄÆ½²ÖÓ¯¿÷
+        ///// è®¡ç®—ä¸€ç»„æŒä»“çš„å¹³ä»“ç›ˆäº
         ///// </summary>
         ///// <param name="positions"></param>
         ///// <returns></returns>
@@ -2582,13 +2582,13 @@ namespace TradingLib.Common
         //{
         //    if (positions != null)
         //    {
-        //        return positions.Sum(e => e.ClosedPL * e.oSymbol.Multiple);//³Ö²ÖµÄÆ½²ÖÓ¯¿÷ = Æ½²ÖÓ¯¿÷µãÊı*³ËÊı
+        //        return positions.Sum(e => e.ClosedPL * e.oSymbol.Multiple);//æŒä»“çš„å¹³ä»“ç›ˆäº = å¹³ä»“ç›ˆäºç‚¹æ•°*ä¹˜æ•°
         //    }
         //    return 0;
         //}
 
         ///// <summary>
-        ///// ¼ÆËãÒ»×é³Ö²ÖµÄ¸¡¶¯Ó¯¿÷µãÊı
+        ///// è®¡ç®—ä¸€ç»„æŒä»“çš„æµ®åŠ¨ç›ˆäºç‚¹æ•°
         ///// </summary>
         ///// <param name="positions"></param>
         ///// <returns></returns>
@@ -2596,13 +2596,13 @@ namespace TradingLib.Common
         //{
         //    if (positions != null)
         //    {
-        //        return positions.Sum(e => e.UnRealizedPL * e.oSymbol.Multiple);//³Ö²ÖµÄ¸¡¶¯Ó¯¿÷ = ¸¡¶¯Ó¯¿÷µãÊı*³ËÊı
+        //        return positions.Sum(e => e.UnRealizedPL * e.oSymbol.Multiple);//æŒä»“çš„æµ®åŠ¨ç›ˆäº = æµ®åŠ¨ç›ˆäºç‚¹æ•°*ä¹˜æ•°
         //    }
         //    return 0;
         //}
 
         /// <summary>
-        /// ¼ÆËãÒ»×é³Ö²ÖµÄ½áËã¶¢ÊĞÓ¯¿÷
+        /// è®¡ç®—ä¸€ç»„æŒä»“çš„ç»“ç®—ç›¯å¸‚ç›ˆäº
         /// </summary>
         /// <param name="positions"></param>
         /// <returns></returns>
@@ -2614,14 +2614,14 @@ namespace TradingLib.Common
         //        {
         //            int i = 0;
         //        }
-        //        return positions.Sum(e => e.SettleUnrealizedPL * e.oSymbol.Multiple);//³Ö²ÖµÄ¸¡¶¯Ó¯¿÷ = ¸¡¶¯Ó¯¿÷µãÊı*³ËÊı
+        //        return positions.Sum(e => e.SettleUnrealizedPL * e.oSymbol.Multiple);//æŒä»“çš„æµ®åŠ¨ç›ˆäº = æµ®åŠ¨ç›ˆäºç‚¹æ•°*ä¹˜æ•°
         //    }
         //    return 0;
         //}
 
         /// <summary>
-        /// ¼ÆËãÒ»×é³Ö²ÖµÄ±£Ö¤½ğ
-        /// ¸Ü¸ËÀà½»Ò×±ÈÈçÆÚ»õ ÔòĞèÒª¼ÆËã±£Ö¤½ğ
+        /// è®¡ç®—ä¸€ç»„æŒä»“çš„ä¿è¯é‡‘
+        /// æ æ†ç±»äº¤æ˜“æ¯”å¦‚æœŸè´§ åˆ™éœ€è¦è®¡ç®—ä¿è¯é‡‘
         /// </summary>
         /// <param name="positions"></param>
         /// <returns></returns>
@@ -2635,8 +2635,8 @@ namespace TradingLib.Common
         //}
 
         /// <summary>
-        /// ¼ÆËãÒ»×é³Ö²ÖµÄ³Ö²Ö³É±¾
-        /// ±ÈÈç¼ÆËãÒ»×é¹ÉÆ±³Ö²ÖµÄ³É±¾£¬ÆÚÈ¨³Ö²ÖµÄ³É±¾[ÆÚÈ¨±¨¼ÛÎªµãÊı,¼ÆËã³Ö²ÖÊ±ÈÔÈ»ĞèÒª³ËÒÔ³ËÊı,¹ÉÆ±±¨¼ÛÎªÊµ¼Ê±¨¼Û,³ËÊı¾ÍÊÇ1]
+        /// è®¡ç®—ä¸€ç»„æŒä»“çš„æŒä»“æˆæœ¬
+        /// æ¯”å¦‚è®¡ç®—ä¸€ç»„è‚¡ç¥¨æŒä»“çš„æˆæœ¬ï¼ŒæœŸæƒæŒä»“çš„æˆæœ¬[æœŸæƒæŠ¥ä»·ä¸ºç‚¹æ•°,è®¡ç®—æŒä»“æ—¶ä»ç„¶éœ€è¦ä¹˜ä»¥ä¹˜æ•°,è‚¡ç¥¨æŠ¥ä»·ä¸ºå®é™…æŠ¥ä»·,ä¹˜æ•°å°±æ˜¯1]
         /// </summary>
         /// <param name="positions"></param>
         /// <returns></returns>
@@ -2652,8 +2652,8 @@ namespace TradingLib.Common
        
 
         ///// <summary>
-        ///// ¼ÆËãÒ»×é³Ö²ÖµÄÊĞÖµ
-        ///// ±ÈÈç¹ÉÆ±,ÆÚÈ¨µÈ ĞèÒªÊµ¼Ê¼ÆËãÖ¤È¯µÄÊĞÖµÀ´·´Ó³³Ö²ÖµÄÈ¨Òæ±ä»¯
+        ///// è®¡ç®—ä¸€ç»„æŒä»“çš„å¸‚å€¼
+        ///// æ¯”å¦‚è‚¡ç¥¨,æœŸæƒç­‰ éœ€è¦å®é™…è®¡ç®—è¯åˆ¸çš„å¸‚å€¼æ¥åæ˜ æŒä»“çš„æƒç›Šå˜åŒ–
         ///// </summary>
         ///// <param name="positions"></param>
         ///// <returns></returns>
@@ -2667,7 +2667,7 @@ namespace TradingLib.Common
         //}
 
         /// <summary>
-        /// ¼ÆËãÒ»×é³Ö²ÖµÄ½áËãÊĞÖµ
+        /// è®¡ç®—ä¸€ç»„æŒä»“çš„ç»“ç®—å¸‚å€¼
         /// </summary>
         /// <param name="positions"></param>
         /// <returns></returns>
@@ -2685,16 +2685,16 @@ namespace TradingLib.Common
         //}
 
         ///// <summary>
-        ///// ¼ÆËãµ¥¸ö³Ö²ÖµÄ±£Ö¤½ğ
+        ///// è®¡ç®—å•ä¸ªæŒä»“çš„ä¿è¯é‡‘
         ///// </summary>
         ///// <param name="p"></param>
         ///// <returns></returns>
         //public static decimal CalPositionMargin(Position p)
         //{
-        //    //Òì»¯ºÏÔ¼°´ÕÕ¹Ì¶¨½ğ¶îÀ´¼ÆËã
+        //    //å¼‚åŒ–åˆçº¦æŒ‰ç…§å›ºå®šé‡‘é¢æ¥è®¡ç®—
         //    if (p.oSymbol.SecurityType == SecurityType.INNOV)
         //    {
-        //        return p.UnsignedSize * (p.oSymbol.Margin + (p.oSymbol.ExtraMargin > 0 ? p.oSymbol.ExtraMargin : 0));//Í¨¹ı¹Ì¶¨±£Ö¤½ğÀ´¼ÆËã³Ö²Ö±£Ö¤½ğÕ¼ÓÃ
+        //        return p.UnsignedSize * (p.oSymbol.Margin + (p.oSymbol.ExtraMargin > 0 ? p.oSymbol.ExtraMargin : 0));//é€šè¿‡å›ºå®šä¿è¯é‡‘æ¥è®¡ç®—æŒä»“ä¿è¯é‡‘å ç”¨
         //    }
         //    if (p.oSymbol.Margin <= 1)
         //        return p.UnsignedSize * p.AvgPrice * p.oSymbol.Multiple * p.oSymbol.Margin;
@@ -2704,20 +2704,20 @@ namespace TradingLib.Common
 
 
         /// <summary>
-        /// ¼ÆËãÄ³¸ö³Ö²ÖµÄ³É±¾½ğ¶î
-        /// ³Ö²ÖÊÖÊı ³Ö²Ö¾ù¼Û ºÏÔ¼³ËÊı
+        /// è®¡ç®—æŸä¸ªæŒä»“çš„æˆæœ¬é‡‘é¢
+        /// æŒä»“æ‰‹æ•° æŒä»“å‡ä»· åˆçº¦ä¹˜æ•°
         /// 
         /// </summary>
         /// <param name="pos"></param>
         /// <returns></returns>
         //public static decimal PositionCostMultiple(Position pos)
         //{
-        //    //Èç¹ûÊÇÒì»¯Ö¤È¯,Ôò°´µ×²ãµÄÖ¤È¯½øĞĞ¼ÆËã
+        //    //å¦‚æœæ˜¯å¼‚åŒ–è¯åˆ¸,åˆ™æŒ‰åº•å±‚çš„è¯åˆ¸è¿›è¡Œè®¡ç®—
         //    //if (pos.oSymbol.SecurityType == SecurityType.INNOV)
         //    //{
-        //    //    return pos.UnsignedSize * pos.AvgPrice * pos.oSymbol.ULSymbol.Multiple;//Òì»¯ºÏÔ¼ÓÃµ×²ãÖ¤È¯µÄ³ËÊı
+        //    //    return pos.UnsignedSize * pos.AvgPrice * pos.oSymbol.ULSymbol.Multiple;//å¼‚åŒ–åˆçº¦ç”¨åº•å±‚è¯åˆ¸çš„ä¹˜æ•°
         //    //}
-        //    //else//Èç¹ûÊÇÕı³£Ö¤È¯,Ôò°´Õı³£µÄºÏÔ¼Êı¾İ½øĞĞ¼ÆËã
+        //    //else//å¦‚æœæ˜¯æ­£å¸¸è¯åˆ¸,åˆ™æŒ‰æ­£å¸¸çš„åˆçº¦æ•°æ®è¿›è¡Œè®¡ç®—
         //    //{
         //        return pos.UnsignedSize * pos.AvgPrice * pos.oSymbol.Multiple;
         //    //}
@@ -2726,38 +2726,38 @@ namespace TradingLib.Common
 
 
         /// <summary>
-        /// ³Ö²Öµ±Ç°ÊĞÖµ
-        /// ³Ö²ÖÊıÁ¿ ³Ö²Ö×îĞÂ¼Û¸ñ ºÏÔ¼³ËÊı
+        /// æŒä»“å½“å‰å¸‚å€¼
+        /// æŒä»“æ•°é‡ æŒä»“æœ€æ–°ä»·æ ¼ åˆçº¦ä¹˜æ•°
         /// </summary>
         /// <param name="pos"></param>
         /// <returns></returns>
         //public static decimal PositionValueMultiple(Position pos)
         //{
-        //    //Èç¹ûÊÇÒì»¯Ö¤È¯,Ôò°´µ×²ãµÄÖ¤È¯½øĞĞ¼ÆËã
+        //    //å¦‚æœæ˜¯å¼‚åŒ–è¯åˆ¸,åˆ™æŒ‰åº•å±‚çš„è¯åˆ¸è¿›è¡Œè®¡ç®—
         //    //if (pos.oSymbol.SecurityType == SecurityType.INNOV)
         //    //{
         //    //    return pos.UnsignedSize * pos.LastPrice * pos.oSymbol.ULSymbol.Multiple;
         //    //}
-        //    //else//Èç¹ûÊÇÕı³£Ö¤È¯,Ôò°´Õı³£µÄºÏÔ¼Êı¾İ½øĞĞ¼ÆËã
+        //    //else//å¦‚æœæ˜¯æ­£å¸¸è¯åˆ¸,åˆ™æŒ‰æ­£å¸¸çš„åˆçº¦æ•°æ®è¿›è¡Œè®¡ç®—
         //    //{
         //        return pos.UnsignedSize * pos.LastPrice * pos.oSymbol.Multiple;
         //    //}
         //}
         /// <summary>
-        /// ¼ÆËãÄ³¸öºÏÔ¼µÄ×Ê½ğÕ¼ÓÃ
-        /// ºÏÔ¼¼Û¸ñ/ºÏÔ¼ÊıÁ¿/ºÏÔ¼³ËÊı/ºÏÔ¼±£Ö¤½ğ±ÈÀı[·Ç¸Ü¸ËÀàºÏÔ¼ ±£Ö¤½ğ±ÈÀı1 ±ÈÈçSTK,OPT]
-        /// ×¢ÒâÕâÀïÊÇ¼ÆËãÄ³¸öÎ¯ÍĞĞèÒªÕ¼ÓÃ¶àÉÙ×Ê½ğµÄ¼ÆËã
+        /// è®¡ç®—æŸä¸ªåˆçº¦çš„èµ„é‡‘å ç”¨
+        /// åˆçº¦ä»·æ ¼/åˆçº¦æ•°é‡/åˆçº¦ä¹˜æ•°/åˆçº¦ä¿è¯é‡‘æ¯”ä¾‹[éæ æ†ç±»åˆçº¦ ä¿è¯é‡‘æ¯”ä¾‹1 æ¯”å¦‚STK,OPT]
+        /// æ³¨æ„è¿™é‡Œæ˜¯è®¡ç®—æŸä¸ªå§”æ‰˜éœ€è¦å ç”¨å¤šå°‘èµ„é‡‘çš„è®¡ç®—
         /// </summary>
         /// <param name="o"></param>
         /// <param name="price"></param>
         /// <returns></returns>
         public static decimal CalFundRequired(Symbol symbol, decimal price=0,int size=1)
         {
-            if (symbol.SecurityType == SecurityType.FUT)//ÆÚ»õ×Ê½ğĞèÇó¼ÆËã
+            if (symbol.SecurityType == SecurityType.FUT)//æœŸè´§èµ„é‡‘éœ€æ±‚è®¡ç®—
             {
                 if (symbol.Margin <= 1)
                 {
-                    //Èç¹ûÊÇ°´ÊĞÖµ±ÈÀıÀ´È·ÈÏ±£Ö¤½ğ,¶ø¸ø³öµÄµ±Ç°ÊĞ³¡¼Û¸ñ<=0 Ôò·µ»Ø¿É¿ªÊÖÊıÁ¿Îª0
+                    //å¦‚æœæ˜¯æŒ‰å¸‚å€¼æ¯”ä¾‹æ¥ç¡®è®¤ä¿è¯é‡‘,è€Œç»™å‡ºçš„å½“å‰å¸‚åœºä»·æ ¼<=0 åˆ™è¿”å›å¯å¼€æ‰‹æ•°é‡ä¸º0
                     if (price <= 0)
                         return decimal.MaxValue;
                     return symbol.Margin * symbol.Multiple * price * size;
@@ -2767,11 +2767,11 @@ namespace TradingLib.Common
                     return symbol.Margin * size;
                 }
             }
-            else if (symbol.SecurityType == SecurityType.OPT)//ÆÚÈ¨×Ê½ğĞèÇó¼ÆËã
+            else if (symbol.SecurityType == SecurityType.OPT)//æœŸæƒèµ„é‡‘éœ€æ±‚è®¡ç®—
             {
                 return price * symbol.Multiple * size;
             }
-            //else if (symbol.SecurityType == SecurityType.INNOV)//Òì»¯×Ê½ğĞèÇó¼ÆËã
+            //else if (symbol.SecurityType == SecurityType.INNOV)//å¼‚åŒ–èµ„é‡‘éœ€æ±‚è®¡ç®—
             //{
             //    if (symbol.Margin > 0)
             //    {
@@ -2788,7 +2788,7 @@ namespace TradingLib.Common
         }
 
         /// <summary>
-        /// ¼ÆËãµ¥±Ê½»Ò×ÊÖĞø·Ñ
+        /// è®¡ç®—å•ç¬”äº¤æ˜“æ‰‹ç»­è´¹
         /// </summary>
         /// <param name="commissionrate"></param>
         /// <param name="fill"></param>
@@ -2796,7 +2796,7 @@ namespace TradingLib.Common
         public static decimal CalCommission(decimal commissionrate, Trade fill)
         {
             decimal c = 0;
-            if (commissionrate < 1)//°Ù·Ö±È¼ÆËã·ÑÂÊ
+            if (commissionrate < 1)//ç™¾åˆ†æ¯”è®¡ç®—è´¹ç‡
                 c = commissionrate * fill.xPrice * fill.UnsignedSize * fill.oSymbol.Multiple;
             else
                 c = commissionrate * fill.UnsignedSize;

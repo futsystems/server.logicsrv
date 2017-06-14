@@ -1,4 +1,4 @@
-using System;
+ï»¿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -10,7 +10,7 @@ namespace TradingLib.Common
     {
 
         /// <summary>
-        /// Í¨¹ıBaseSrvObjectºÍTaskAttr·â×°³öÀ´µÄinfo´´½¨ITask
+        /// é€šè¿‡BaseSrvObjectå’ŒTaskAttrå°è£…å‡ºæ¥çš„infoåˆ›å»ºITask
         /// </summary>
         /// <param name="obj"></param>
         /// <param name="info"></param>
@@ -30,46 +30,46 @@ namespace TradingLib.Common
         }
         string _uuid = string.Empty;
         /// <summary>
-        /// ¶ÔÏóUUID
+        /// å¯¹è±¡UUID
         /// </summary>
         public string UUID { get { return _uuid; } }
 
 
         string _taskUUID = string.Empty;
         /// <summary>
-        /// Ã¿¸öÈÎÎñÓĞÒ»¸öÈ«¾ÖÎ¨Ò»µÄTaskUUID ÓÃÓÚÍ¨¹ıTaskUUIDÀ´½øĞĞÈÎÎñµÄ²éÕÒ
+        /// æ¯ä¸ªä»»åŠ¡æœ‰ä¸€ä¸ªå…¨å±€å”¯ä¸€çš„TaskUUID ç”¨äºé€šè¿‡TaskUUIDæ¥è¿›è¡Œä»»åŠ¡çš„æŸ¥æ‰¾
         /// </summary>
         public string TaskUUID { get { return _taskUUID; } }
 
         string _taskName = "Task";
         /// <summary>
-        /// ÈÎÎñÃû³Æ
+        /// ä»»åŠ¡åç§°
         /// </summary>
         public string TaskName { get { return _taskName; } set { _taskName = value; } }
 
 
         QSEnumTaskType _taskType = QSEnumTaskType.SPECIALTIME;
         /// <summary>
-        /// ÈÎÎñÀà±ğ
+        /// ä»»åŠ¡ç±»åˆ«
         /// </summary>
         public QSEnumTaskType TaskType { get { return _taskType; } set { _taskType = value; } }
 
 
         TimeSpan _taskInterval = new TimeSpan(0, 0, 0, 0);
         /// <summary>
-        /// ÈÎÎñÖ´ĞĞ¼ä¸ô
+        /// ä»»åŠ¡æ‰§è¡Œé—´éš”
         /// </summary>
         public TimeSpan TaskInterval { get { return _taskInterval; } set { _taskInterval = value; } }
 
 
         ///DateTime _lastTime = new DateTime(1970, 01, 01);
         /// <summary>
-        /// ÉÏ´ÎÖ´ĞĞÈÎÎñÊ±¼ä
+        /// ä¸Šæ¬¡æ‰§è¡Œä»»åŠ¡æ—¶é—´
         /// </summary>
         //public DateTime LastTime { get { return _lastTime; } set { _lastTime = value; } }
 
         /// <summary>
-        /// »Øµ÷ÈÎÎñ
+        /// å›è°ƒä»»åŠ¡
         /// </summary>
         VoidDelegate taskfunc;
 
@@ -79,7 +79,7 @@ namespace TradingLib.Common
 
 
         /// <summary>
-        /// Ö´ĞĞÌØ¶¨Ê±¼äµÄÈÎÎñ
+        /// æ‰§è¡Œç‰¹å®šæ—¶é—´çš„ä»»åŠ¡
         /// </summary>
         public void DoTask()
         {
@@ -115,8 +115,8 @@ namespace TradingLib.Common
 
 
         /// <summary>
-        /// ÌØ¶¨Ê±¼äÖ´ĞĞµÄÈÎÎñ
-        /// ¼¸µã,¼¸·Ö,¼¸Ãë¶¨Ê±ÔËĞĞÄ³¸öÈÎÎñ
+        /// ç‰¹å®šæ—¶é—´æ‰§è¡Œçš„ä»»åŠ¡
+        /// å‡ ç‚¹,å‡ åˆ†,å‡ ç§’å®šæ—¶è¿è¡ŒæŸä¸ªä»»åŠ¡
         /// </summary>
         /// <param name="hour"></param>
         /// <param name="minute"></param>
@@ -127,7 +127,7 @@ namespace TradingLib.Common
             _taskUUID = System.Guid.NewGuid().ToString();
             _uuid = uuid;
             _taskName = taskName;
-            _taskType = QSEnumTaskType.SPECIALTIME;//ÌØ¶¨Ê±¼äÖ´ĞĞµÄÈÎÎñ
+            _taskType = QSEnumTaskType.SPECIALTIME;//ç‰¹å®šæ—¶é—´æ‰§è¡Œçš„ä»»åŠ¡
             _cronstr = string.Format("{0} {1} {2} * * ?", secend, minute, hour);
             taskfunc = func;
         }
@@ -143,7 +143,7 @@ namespace TradingLib.Common
         }
 
         /// <summary>
-        /// Ñ­»·Ö´ĞĞÈÎÎñ
+        /// å¾ªç¯æ‰§è¡Œä»»åŠ¡
         /// </summary>
         /// <param name="uuid"></param>
         /// <param name="taskName"></param>
@@ -154,7 +154,7 @@ namespace TradingLib.Common
             _taskUUID = System.Guid.NewGuid().ToString();
             _uuid = uuid;
             _taskName = taskName;
-            _taskType = QSEnumTaskType.CIRCULATE;//Ñ­»·Ö´ĞĞÈÎÎñ
+            _taskType = QSEnumTaskType.CIRCULATE;//å¾ªç¯æ‰§è¡Œä»»åŠ¡
             _taskInterval = interval;
             taskfunc = func;
 

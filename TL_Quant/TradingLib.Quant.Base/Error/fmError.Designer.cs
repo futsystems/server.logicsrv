@@ -1,4 +1,4 @@
-namespace TradingLib.Quant.Error
+﻿namespace TradingLib.Quant.Error
 {
     partial class fmError
     {

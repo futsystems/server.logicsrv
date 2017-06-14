@@ -1,4 +1,4 @@
-using System;
+ï»¿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -13,7 +13,7 @@ namespace TradingLib.Core
     {
         IdTracker accchashopid = new IdTracker();
         /// <summary>
-        /// Ìá½»Èë½ğ »ò ³ö½ğ²Ù×÷
+        /// æäº¤å…¥é‡‘ æˆ– å‡ºé‡‘æ“ä½œ
         /// </summary>
         /// <param name="account"></param>
         /// <param name="amount"></param>
@@ -35,20 +35,20 @@ namespace TradingLib.Core
             request.Source = source;
             if (request.Source == QSEnumCashOPSource.Online)
             {
-                request.RecvInfo = "µÚÈı·½Ö§¸¶";
+                request.RecvInfo = "ç¬¬ä¸‰æ–¹æ”¯ä»˜";
             }
             else
             {
                 request.RecvInfo = recvinfo;
             }
             ORM.MCashOpAccount.InsertAccountCashOperation(request);
-            //ÏòÍâ²¿±©Â¶³öÈë½ğÇëÇóµÄRef
+            //å‘å¤–éƒ¨æš´éœ²å‡ºå…¥é‡‘è¯·æ±‚çš„Ref
             opref = request.Ref;
             return true;
         }
 
         /// <summary>
-        /// È·ÈÏÄ³¸öÈë½ğ¼ÇÂ¼ ÔÚÏß
+        /// ç¡®è®¤æŸä¸ªå…¥é‡‘è®°å½• åœ¨çº¿
         /// </summary>
         /// <param name="opref"></param>
         /// <returns></returns>
@@ -59,41 +59,41 @@ namespace TradingLib.Core
             IAccount account = TLCtxHelper.ModuleAccountManager[op.Account];
             if (account == null)
             {
-                throw new FutsRspError("½»Ò×ÕÊ»§²»´æÔÚ");
+                throw new FutsRspError("äº¤æ˜“å¸æˆ·ä¸å­˜åœ¨");
             }
 
             if(op ==null)
             {
-                throw new FutsRspError("³öÈë½ğÇëÇó²»´æÔÚ");
+                throw new FutsRspError("å‡ºå…¥é‡‘è¯·æ±‚ä¸å­˜åœ¨");
             }
 
             if(op.Status != QSEnumCashInOutStatus.PENDING)
             {
-                throw new FutsRspError("³öÈë½ğÇëÇó×´Ì¬Òì³£");
+                throw new FutsRspError("å‡ºå…¥é‡‘è¯·æ±‚çŠ¶æ€å¼‚å¸¸");
             }
 
-            //³ö½ğÖ´ĞĞ½ğ¶î¼ì²é
+            //å‡ºé‡‘æ‰§è¡Œé‡‘é¢æ£€æŸ¥
             if (op.Operation == QSEnumCashOperation.WithDraw)
             {
                 if (account.NowEquity < op.Amount)
                 {
-                    throw new FutsRspError("³ö½ğ¶î¶È´óÓÚÕÊ»§È¨Òæ");
+                    throw new FutsRspError("å‡ºé‡‘é¢åº¦å¤§äºå¸æˆ·æƒç›Š");
                 }
             }
 
-            //Ö´ĞĞÊ±¼ä¼ì²é 
+            //æ‰§è¡Œæ—¶é—´æ£€æŸ¥ 
             if (TLCtxHelper.ModuleSettleCentre.SettleMode != QSEnumSettleMode.StandbyMode)
             {
-                throw new FutsRspError("ÏµÍ³ÕıÔÚ½áËã,½ûÖ¹³öÈë½ğ²Ù×÷");
+                throw new FutsRspError("ç³»ç»Ÿæ­£åœ¨ç»“ç®—,ç¦æ­¢å‡ºå…¥é‡‘æ“ä½œ");
             }
 
-            //TODO:³öÈë½ğÈ·ÈÏ²Ù×÷
+            //TODO:å‡ºå…¥é‡‘ç¡®è®¤æ“ä½œ
 
-            //Ö´ĞĞÊı¾İ¿â²Ù×÷
+            //æ‰§è¡Œæ•°æ®åº“æ“ä½œ
             //bool ret = ORM.MCashOpAccount.ConfirmAccountCashOperation(op);
             
 
-            //Èç¹ûÊı¾İ¿â²Ù×÷Õı³£ ÔòÍ¬²½ÄÚ´æÊı¾İ
+            //å¦‚æœæ•°æ®åº“æ“ä½œæ­£å¸¸ åˆ™åŒæ­¥å†…å­˜æ•°æ®
             //if (ret)
             //{
             //    if (op.Operation == QSEnumCashOperation.Deposit)
@@ -105,7 +105,7 @@ namespace TradingLib.Core
             //        account.Withdraw(op.Amount);
             //    }
             //}
-            logger.Info("Account:" + op.Account + " È·ÈÏÈë½ğ:" + op.Amount.ToString() + " ³É¹¦!");
+            logger.Info("Account:" + op.Account + " ç¡®è®¤å…¥é‡‘:" + op.Amount.ToString() + " æˆåŠŸ!");
             return true;
         }
 

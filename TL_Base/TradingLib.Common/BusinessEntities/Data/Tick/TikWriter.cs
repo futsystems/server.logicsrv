@@ -1,4 +1,4 @@
-using System;
+ï»¿using System;
 using System.Collections.Generic;
 using System.Text;
 using System.IO;
@@ -70,7 +70,7 @@ namespace TradingLib.Common
             if (File.Exists(_file))
             {
                 OutStream = new FileStream(_file, FileMode.Open, FileAccess.Write, FileShare.Read);
-                //ÒÑ¾­´æÔÚµÄÎÄ¼ş ÉèÖÃµ±Ç°positionÎªÄ©Î² ÓÃÓÚÏòÎÄ¼ş×·¼ÓÊı¾İ
+                //å·²ç»å­˜åœ¨çš„æ–‡ä»¶ è®¾ç½®å½“å‰positionä¸ºæœ«å°¾ ç”¨äºå‘æ–‡ä»¶è¿½åŠ æ•°æ®
                 OutStream.Position = OutStream.Length;
             }
             else
@@ -80,7 +80,7 @@ namespace TradingLib.Common
         }
 
         /// <summary>
-        /// »ñµÃÄ³¸öºÏÔ¼µÄTickÎÄ¼ş´¢´æÄ¿Â¼
+        /// è·å¾—æŸä¸ªåˆçº¦çš„Tickæ–‡ä»¶å‚¨å­˜ç›®å½•
         /// </summary>
         /// <param name="symbol"></param>
         /// <returns></returns>
@@ -110,7 +110,7 @@ namespace TradingLib.Common
         }
 
         /// <summary>
-        /// »ñµÃÄ³¸öºÏÔ¼µÄËùÓĞtickÎÄ¼şÃû
+        /// è·å¾—æŸä¸ªåˆçº¦çš„æ‰€æœ‰tickæ–‡ä»¶å
         /// </summary>
         /// <param name="path"></param>
         /// <param name="realysymbol"></param>
@@ -123,7 +123,7 @@ namespace TradingLib.Common
 
 
         /// <summary>
-        /// ÅĞ¶ÏÄ³¸öÎÄ¼ş¼ĞÏÂÃæÊÇ·ñÓĞTickÎÄ¼ş
+        /// åˆ¤æ–­æŸä¸ªæ–‡ä»¶å¤¹ä¸‹é¢æ˜¯å¦æœ‰Tickæ–‡ä»¶
         /// </summary>
         /// <param name="path"></param>
         /// <param name="symbol"></param>
@@ -134,7 +134,7 @@ namespace TradingLib.Common
         }
 
         /// <summary>
-        /// »ñµÃÄ³¸öºÏÔ¼×îĞÂµÄTickÎÄ¼şÈÕÆÚ
+        /// è·å¾—æŸä¸ªåˆçº¦æœ€æ–°çš„Tickæ–‡ä»¶æ—¥æœŸ
         /// </summary>
         /// <param name="path"></param>
         /// <param name="symbol"></param>

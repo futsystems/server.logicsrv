@@ -1,4 +1,4 @@
-namespace TradingLib.Quant.ChartObjects
+﻿namespace TradingLib.Quant.ChartObjects
 {
     using System;
     using TradingLib.Quant.Base;

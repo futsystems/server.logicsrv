@@ -1,4 +1,4 @@
-using TradingLib.Quant.Chart;
+﻿using TradingLib.Quant.Chart;
 
 namespace TradingLib.Quant.ChartObjects
 {

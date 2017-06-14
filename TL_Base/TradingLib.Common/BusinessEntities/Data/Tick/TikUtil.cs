@@ -1,4 +1,4 @@
-using System;
+ï»¿using System;
 using System.Collections.Generic;
 using System.Text;
 using System.IO;
@@ -188,7 +188,7 @@ namespace TradingLib.Common
         }
 
         /// <summary>
-        /// ÊÇ·ñ
+        /// æ˜¯å¦
         /// </summary>
         /// <param name="k"></param>
         /// <returns></returns>
@@ -198,7 +198,7 @@ namespace TradingLib.Common
         }
 
         /// <summary>
-        /// ÊÇ·ñÓĞBidÊı¾İ
+        /// æ˜¯å¦æœ‰Bidæ•°æ®
         /// </summary>
         /// <param name="k"></param>
         /// <returns></returns>
@@ -208,7 +208,7 @@ namespace TradingLib.Common
         }
 
         /// <summary>
-        /// ÊÇ·ñÓĞAskÊı¾İ
+        /// æ˜¯å¦æœ‰Askæ•°æ®
         /// </summary>
         public static bool HasAsk(this Tick k)
         {
@@ -222,7 +222,7 @@ namespace TradingLib.Common
 
 
         /// <summary>
-        /// ÊÇ·ñÊÇÖ¸Êı
+        /// æ˜¯å¦æ˜¯æŒ‡æ•°
         /// </summary>
         /// <param name="k"></param>
         /// <returns></returns>
@@ -232,7 +232,7 @@ namespace TradingLib.Common
         }
 
         /// <summary>
-        /// ÊÇ·ñÓĞTickÊı¾İ Trade/Quote
+        /// æ˜¯å¦æœ‰Tickæ•°æ® Trade/Quote
         /// </summary>
         /// <param name="k"></param>
         /// <returns></returns>
@@ -242,7 +242,7 @@ namespace TradingLib.Common
         }
 
         /// <summary>
-        /// ÊÇ·ñÊÇÍ³¼ÆĞÅÏ¢
+        /// æ˜¯å¦æ˜¯ç»Ÿè®¡ä¿¡æ¯
         /// </summary>
         /// <param name="k"></param>
         /// <returns></returns>
@@ -252,7 +252,7 @@ namespace TradingLib.Common
         //}
 
         /// <summary>
-        /// ÊÇ·ñÊÇ¿ìÕÕÊı¾İ
+        /// æ˜¯å¦æ˜¯å¿«ç…§æ•°æ®
         /// </summary>
         /// <param name="k"></param>
         /// <returns></returns>
@@ -262,14 +262,14 @@ namespace TradingLib.Common
         //}
 
         /// <summary>
-        /// TickÊı¾İÊÇ·ñÓĞĞ§
-        /// 1.symbol exchange²»Îª¿Õ
+        /// Tickæ•°æ®æ˜¯å¦æœ‰æ•ˆ
+        /// 1.symbol exchangeä¸ä¸ºç©º
         /// </summary>
         /// <param name="k"></param>
         /// <returns></returns>
         public static bool IsValid(this Tick k)
         {
-            //ºÏÔ¼²»Îª¿Õ ÓĞTrade»òQuoteÊı¾İ
+            //åˆçº¦ä¸ä¸ºç©º æœ‰Tradeæˆ–Quoteæ•°æ®
             if (string.IsNullOrEmpty(k.Symbol) || string.IsNullOrEmpty(k.Exchange)) return false;
             //if (k.UpdateType == "X") return k.Trade * k.Size != 0;
 
@@ -278,7 +278,7 @@ namespace TradingLib.Common
         }
 
         /// <summary>
-        /// ÓÃTickÊı¾İk ¸üĞÂ¿ìÕÕsnapshot
+        /// ç”¨Tickæ•°æ®k æ›´æ–°å¿«ç…§snapshot
         /// </summary>
         /// <param name="snapshot"></param>
         /// <param name="k"></param>
@@ -395,9 +395,9 @@ namespace TradingLib.Common
         }
 
         /// <summary>
-        /// »ñµÃTick¶ÔÓ¦ºÏÔ¼µÄÎ¨Ò»¼üÖµ
-        /// ±ÈÈçÔÚÎ¬»¤ºÏÔ¼¿ìÕÕÊ± Èç¹ûÉîÛÚºÍÉÏº£2¸öÏàÍ¬´úÂëµÄºÏÔ¼ĞĞÇéµ½´ï£¬¾ÍĞèÒªÇø·Ö½»Ò×Ëù
-        /// Òò´ËĞèÒª¼ÓÈë½»Ò×ËùÀ´ĞÎ³ÉÎ¨Ò»¼ü
+        /// è·å¾—Tickå¯¹åº”åˆçº¦çš„å”¯ä¸€é”®å€¼
+        /// æ¯”å¦‚åœ¨ç»´æŠ¤åˆçº¦å¿«ç…§æ—¶ å¦‚æœæ·±åœ³å’Œä¸Šæµ·2ä¸ªç›¸åŒä»£ç çš„åˆçº¦è¡Œæƒ…åˆ°è¾¾ï¼Œå°±éœ€è¦åŒºåˆ†äº¤æ˜“æ‰€
+        /// å› æ­¤éœ€è¦åŠ å…¥äº¤æ˜“æ‰€æ¥å½¢æˆå”¯ä¸€é”®
         /// </summary>
         /// <param name="k"></param>
         /// <returns></returns>

@@ -1,4 +1,4 @@
-namespace DataFeed.IB
+﻿namespace DataFeed.IB
 {
     partial class Form1
     {

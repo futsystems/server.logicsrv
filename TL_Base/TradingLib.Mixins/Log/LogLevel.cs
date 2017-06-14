@@ -1,4 +1,4 @@
-namespace TradingLib.Logging
+﻿namespace TradingLib.Logging
 {
     /// <summary>
     /// Priority for log entries
