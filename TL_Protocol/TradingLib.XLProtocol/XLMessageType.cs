@@ -160,6 +160,16 @@ namespace TradingLib.XLProtocol
         T_RSP_SETTLEINFO = 3027,
 
         /// <summary>
+        /// 查询结算汇总
+        /// </summary>
+        T_QRY_SETTLE_SUMMARY = 3028,
+
+        /// <summary>
+        /// 回报结算汇总
+        /// </summary>
+        T_RSP_SETTLE_SUMMARY = 3029,
+
+        /// <summary>
         /// 请求注册市场行情
         /// </summary>
         T_REQ_SUB_MARKETDATA = 4000,

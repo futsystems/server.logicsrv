@@ -89,5 +89,54 @@ namespace TradingLib.Common
 
     }
 
-    
+    /// <summary>
+    /// 结算汇总查询
+    /// 查询每日结算记录 对应数据单日结算记录
+    /// </summary>
+    public class XQrySettleSummaryRequest : RequestPacket
+    {
+
+        public int StartSettleday { get; set; }
+
+        public int EndSettleday { get; set; }
+
+        public XQrySettleSummaryRequest()
+        {
+            _type = MessageTypes.XQRYSETTLESUMMAY;
+        }
+
+        public override string ContentSerialize()
+        {
+            return string.Format("{0},{1}", this.StartSettleday, this.EndSettleday);
+        }
+
+        public override void ContentDeserialize(string contentstr)
+        {
+            string[] rec = contentstr.Split(',');
+            this.StartSettleday = int.Parse(rec[0]);
+            this.EndSettleday = int.Parse(rec[1]);
+        }
+    }
+
+    public class RspXqrySettleSummaryResponse : RspResponsePacket
+    {
+        public RspXqrySettleSummaryResponse()
+        {
+            _type = MessageTypes.XQRYSETTLESUMMAYRESPONSE;
+            this.Settlement = null;
+        }
+
+        public AccountSettlement Settlement { get; set; }
+
+        public override string ResponseSerialize()
+        {
+            return AccountSettlementImpl.Serialize(this.Settlement);
+        }
+
+        public override void ResponseDeserialize(string content)
+        {
+
+            this.Settlement = AccountSettlementImpl.Deserialize(content);
+        }
+    }
 }

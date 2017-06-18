@@ -94,5 +94,68 @@ namespace TradingLib.Common
         /// 结算信用额度
         /// </summary>
         public decimal CreditSettled { get; set; }
+
+        public static string Serialize(AccountSettlement settle)
+        {
+            if (settle == null) return string.Empty;
+            StringBuilder sb = new StringBuilder();
+            char d = ',';
+            sb.Append(settle.Settleday);
+            sb.Append(d);
+            sb.Append(settle.Account);
+            sb.Append(d);
+            sb.Append(settle.LastEquity);
+            sb.Append(d);
+            sb.Append(settle.LastCredit);
+            sb.Append(d);
+            sb.Append(settle.CloseProfitByDate);
+            sb.Append(d);
+            sb.Append(settle.PositionProfitByDate);
+            sb.Append(d);
+            sb.Append(settle.AssetBuyAmount);
+            sb.Append(d);
+            sb.Append(settle.AssetSellAmount);
+            sb.Append(d);
+            sb.Append(settle.Commission);
+            sb.Append(d);
+            sb.Append(settle.CashIn);
+            sb.Append(d);
+            sb.Append(settle.CashOut);
+            sb.Append(d);
+            sb.Append(settle.CreditCashIn);
+            sb.Append(d);
+            sb.Append(settle.CreditCashOut);
+            sb.Append(d);
+            sb.Append(settle.EquitySettled);
+            sb.Append(d);
+            sb.Append(settle.CreditSettled);
+            return sb.ToString();
+        }
+
+        public static AccountSettlement Deserialize(string content)
+        {
+            if (string.IsNullOrEmpty(content)) return null;
+            string[] rec = content.Split(',');
+            AccountSettlement settle = new AccountSettlementImpl();
+            settle.Settleday = int.Parse(rec[0]);
+            settle.Account = rec[1];
+            settle.LastEquity = decimal.Parse(rec[2]);
+            settle.LastCredit = decimal.Parse(rec[3]);
+            settle.CloseProfitByDate = decimal.Parse(rec[4]);
+            settle.PositionProfitByDate = decimal.Parse(rec[5]);
+            settle.AssetBuyAmount = decimal.Parse(rec[6]);
+            settle.AssetSellAmount = decimal.Parse(rec[7]);
+            settle.Commission = decimal.Parse(rec[8]);
+            settle.CashIn = decimal.Parse(rec[9]);
+            settle.CashOut = decimal.Parse(rec[10]);
+            settle.CreditCashIn = decimal.Parse(rec[11]);
+            settle.CreditCashOut = decimal.Parse(rec[12]);
+            settle.EquitySettled = decimal.Parse(rec[13]);
+            settle.CreditSettled = decimal.Parse(rec[14]);
+
+            return settle;
+
+        }
+        
     }
 }

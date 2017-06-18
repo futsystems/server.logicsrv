@@ -822,6 +822,126 @@ namespace TradingLib.XLProtocol.V1
     }
     #endregion
 
+    #region 查询结算汇总
+    [StructLayout(LayoutKind.Sequential, Pack = 4)]
+    public struct XLQrySettleSummaryField : IXLField
+    {
+        /// <summary>
+        /// 投资者代码
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 13)]
+        public string UserID;
+
+        /// <summary>
+        /// 开始交易日
+        /// </summary>
+        public int StartSettleday;
+
+        /// <summary>
+        /// 结束交易日
+        /// </summary>
+        public int EndSettleday;
+
+        /// <summary>
+        /// 域类别
+        /// </summary>
+        public ushort FieldID { get { return (ushort)XLFieldType.F_QRY_SETTLE_SUMMARY; } }
+    }
+
+    /// <summary>
+    /// 结算汇总数据
+    /// </summary>
+    [StructLayout(LayoutKind.Sequential, Pack = 4)]
+    public struct XLSettleSummaryField : IXLField
+    {
+        /// <summary>
+        /// 投资者代码
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 13)]
+        public string UserID;
+
+        /// <summary>
+        /// 交易日
+        /// </summary>
+        public int Settleday;
+
+        /// <summary>
+        /// 昨日权益
+        /// </summary>
+        public decimal LastEquity;
+
+        /// <summary>
+        /// 昨日信用额度
+        /// </summary>
+        public decimal LastCredit;
+
+
+        /// <summary>
+        /// 平仓盈亏
+        /// </summary>
+        public decimal CloseProfitByDate;
+
+        /// <summary>
+        /// 持仓盈亏
+        /// </summary>
+        public decimal PositionProfitByDate;
+
+        /// <summary>
+        /// 资产买入金额
+        /// </summary>
+        public decimal AssetBuyAmount;
+
+        /// <summary>
+        /// 资产卖出金额
+        /// </summary>
+        public decimal AssetSellAmount;
+
+
+        /// <summary>
+        /// 手续费
+        /// </summary>
+        public decimal Commission;
+
+        /// <summary>
+        /// 入金
+        /// </summary>
+        public decimal CashIn;
+
+        /// <summary>
+        /// 出金
+        /// </summary>
+        public decimal CashOut;
+
+        /// <summary>
+        /// 信用入金
+        /// </summary>
+        public decimal CreditCashIn;
+
+        /// <summary>
+        /// 信用出金
+        /// </summary>
+        public decimal CreditCashOut;
+
+
+        /// <summary>
+        /// 结算权益
+        /// </summary>
+        public decimal EquitySettled;
+
+        /// <summary>
+        /// 结算信用额度
+        /// </summary>
+        public decimal CreditSettled;
+
+        /// <summary>
+        /// 域类别
+        /// </summary>
+        public ushort FieldID { get { return (ushort)XLFieldType.F_RSP_SETTLE_SUMMARY; } }
+    }
+
+
+    #endregion
+
     #region 查询最大报单数量
     /// <summary>
     /// 查询最大报单数量

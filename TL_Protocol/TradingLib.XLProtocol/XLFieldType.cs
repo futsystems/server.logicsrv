@@ -127,9 +127,23 @@ namespace TradingLib.XLProtocol
         F_RSP_SETTLEINFO=121,
 
         /// <summary>
+        /// 查询结算汇总
+        /// </summary>
+        F_QRY_SETTLE_SUMMARY = 122,
+
+        /// <summary>
+        /// 回报结算汇总
+        /// </summary>
+        F_RSP_SETTLE_SUMMARY = 123,
+
+        /// <summary>
         /// 持仓更新回报
         /// </summary>
         F_RTN_POSITIONUPDATE = 220,
+
+
+        
+
 
         /// <summary>
         /// 订阅合约回报

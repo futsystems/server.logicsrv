@@ -233,6 +233,12 @@ namespace TradingLib.Core
                         SrvOnXQryExchangeRate(session, request, account);
                     }
                     break;
+                case MessageTypes.XQRYSETTLESUMMAY://查询结算汇总信息
+                    {
+                        XQrySettleSummaryRequest request = packet as XQrySettleSummaryRequest;
+                        SrvOnXQrySettleSummary(session, request, account);
+                    }
+                    break;
 
                 case MessageTypes.CONTRIBREQUEST://扩展请求
                     {

@@ -287,5 +287,27 @@ namespace TradingLib.Core
                 CacheRspResponse(response);
             }
         }
+
+        void SrvOnXQrySettleSummary(ISession session, XQrySettleSummaryRequest request, IAccount account)
+        {
+            logger.Info("XQrySettleSummary" + request.ToString());
+            List<AccountSettlement> list = ORM.MSettlement.SelectSettlements(account.ID, request.StartSettleday, request.EndSettleday).ToList();
+
+            if (list.Count > 0)
+            {
+                for (int i = 0; i < list.Count; i++)
+                {
+                    RspXqrySettleSummaryResponse response = ResponseTemplate<RspXqrySettleSummaryResponse>.SrvSendRspResponse(request);
+                    response.Settlement = list[i];
+                    CacheRspResponse(response, i == list.Count - 1);
+                }
+            }
+            else
+            {   //发送空的持仓回报
+                RspXqrySettleSummaryResponse response = ResponseTemplate<RspXqrySettleSummaryResponse>.SrvSendRspResponse(request);
+                CacheRspResponse(response);
+            }
+
+        }
     }
 }

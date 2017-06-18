@@ -151,7 +151,7 @@ namespace TradingLib.XLProtocol
         #endregion
 
 
-
+        #region JSonSection
 #if JSON
         /// <summary>
         /// 将业务数据包打包成Json字符串
@@ -372,6 +372,8 @@ namespace TradingLib.XLProtocol
             return null;
         }
 #endif
+        #endregion
+
 
         #region 填充 头字段
         /// <summary>

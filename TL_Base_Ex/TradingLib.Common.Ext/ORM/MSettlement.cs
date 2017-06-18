@@ -386,6 +386,22 @@ namespace TradingLib.ORM
         }
 
         /// <summary>
+        /// 查询一个时间段内投资者账户结算记录
+        /// </summary>
+        /// <param name="account"></param>
+        /// <param name="startSettleday"></param>
+        /// <param name="endSettleday"></param>
+        /// <returns></returns>
+        public static IEnumerable<AccountSettlement> SelectSettlements(string account, int startSettleday, int endSettleday)
+        {
+            using (DBMySql db = new DBMySql())
+            {
+                string query = String.Format("SELECT * FROM log_settlement WHERE account = '{0}' AND settleday >= '{1}' AND settleday <= '{2}'", account, startSettleday,endSettleday);
+                return db.Connection.Query<AccountSettlementImpl>(query, null);
+            }
+        }
+
+        /// <summary>
         /// 确认交易帐户某日结算单
         /// </summary>
         /// <param name="account"></param>

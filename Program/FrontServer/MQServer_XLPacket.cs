@@ -148,7 +148,25 @@ namespace FrontServer
                             logger.Info(string.Format("LogicSrv Reply Session:{0} -> RspXQryExchangeRateResponse", conn.SessionID));
                         }
                         break;
+                    }
+                    //查询结算汇总回报
+                case MessageTypes.XQRYSETTLESUMMAYRESPONSE:
+                    {
+                        RspXqrySettleSummaryResponse response = lpkt as RspXqrySettleSummaryResponse;
+                        XLPacketData pkt = new XLPacketData(XLMessageType.T_RSP_SETTLE_SUMMARY);
 
+                        if (response.Settlement == null)
+                        {
+                            conn.ResponseXLPacket(pkt, (uint)response.RequestID, response.IsLast);
+                        }
+                        else
+                        {
+                            XLSettleSummaryField field = ConvSettleSummary(response.Settlement);
+                            pkt.AddField(field);
+                            conn.ResponseXLPacket(pkt, (uint)response.RequestID, response.IsLast);
+                        }
+                        if (response.IsLast) logger.Info(string.Format("LogicSrv Reply Session:{0} -> RspXqrySettleSummaryResponse", conn.SessionID));
+                        break;
                     }
                 //查询委托回报
                 case MessageTypes.ORDERRESPONSE:
@@ -164,10 +182,7 @@ namespace FrontServer
                         {
                             XLOrderField field = ConvOrder(response.OrderToSend);
                             pkt.AddField(field);
-
                             conn.ResponseXLPacket(pkt, (uint)response.RequestID, response.IsLast);
-
-                            
                         }
                         if (response.IsLast) logger.Info(string.Format("LogicSrv Reply Session:{0} -> RspQryOrderResponse", conn.SessionID));
                         break;
@@ -517,6 +532,28 @@ namespace FrontServer
 
                             this.TLSend(conn.SessionID, request);
                             logger.Info(string.Format("Session:{0} >> XQrySettleInfoRequest", conn.SessionID));
+
+                        }
+                        else
+                        {
+                            logger.Warn(string.Format("Request:{0} Data Field do not macth", pkt.MessageType));
+                        }
+                        break;
+                    }
+                //查询结算汇总
+                case XLMessageType.T_QRY_SETTLE_SUMMARY:
+                    {
+                        var data = pkt.FieldList[0];
+                        if (data is XLQrySettleSummaryField)
+                        {
+                            XLQrySettleSummaryField field = (XLQrySettleSummaryField)data;
+
+                            XQrySettleSummaryRequest request = RequestTemplate<XQrySettleSummaryRequest>.CliSendRequest(requestId);
+                            request.StartSettleday = field.StartSettleday;
+                            request.EndSettleday = field.EndSettleday;
+
+                            this.TLSend(conn.SessionID, request);
+                            logger.Info(string.Format("Session:{0} >> XLQrySettleSummaryField", conn.SessionID));
 
                         }
                         else
@@ -893,6 +930,29 @@ namespace FrontServer
                 default:
                     return XLCurrencyType.RMB;
             }
+        }
+
+        XLSettleSummaryField ConvSettleSummary(AccountSettlement settle)
+        {
+            XLSettleSummaryField field = new XLSettleSummaryField();
+            field.AssetBuyAmount = settle.AssetBuyAmount;
+            field.AssetSellAmount = settle.AssetSellAmount;
+            field.CashIn = settle.CashIn;
+            field.CashOut = settle.CashOut;
+            field.CloseProfitByDate = settle.CloseProfitByDate;
+            field.Commission = settle.Commission;
+            field.CreditCashIn = settle.CreditCashIn;
+            field.CreditCashOut = settle.CreditCashOut;
+            field.CreditSettled = settle.CreditSettled;
+            field.EquitySettled = settle.EquitySettled;
+            field.LastCredit = settle.LastCredit;
+            field.LastEquity = settle.LastEquity;
+            field.PositionProfitByDate = settle.PositionProfitByDate;
+            field.Settleday = settle.Settleday;
+            field.UserID = settle.Account;
+
+            return field;
+
         }
 
 

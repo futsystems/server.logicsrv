@@ -91,6 +91,12 @@ namespace TradingLib.XLProtocol.Client
         /// </summary>
         public event Action<XLSettlementInfoField, ErrorField, uint, bool> OnRspQrySettlementInfo = delegate { };
 
+
+        /// <summary>
+        /// 结算汇总查询
+        /// </summary>
+        public event Action<XLSettleSummaryField?, ErrorField, uint, bool> OnRspQrySettleSummary = delegate { };
+
         /// <summary>
         /// 委托实时通知
         /// </summary>
@@ -343,6 +349,21 @@ namespace TradingLib.XLProtocol.Client
                             OnRspOrderAction(response, rsp, dataHeader.RequestID, (int)dataHeader.IsLast == 1 ? true : false);
                             break;
                         }
+                    case XLMessageType.T_RSP_SETTLE_SUMMARY:
+                        {
+                            XLSettleSummaryField? response;
+
+                            if (pkt.FieldList.Count > 0)
+                            {
+                                response = (XLSettleSummaryField)pkt.FieldList[0];
+                            }
+                            else
+                            {
+                                response = null;
+                            }
+                            OnRspQrySettleSummary(response, NoError, dataHeader.RequestID, (int)dataHeader.IsLast == 1 ? true : false);
+                            break;
+                        }
                     default:
                         //logger.Info(string.Format("Unhandled Pkt:{0}", msgType));
                         break;
@@ -484,12 +505,33 @@ namespace TradingLib.XLProtocol.Client
             return SendPktData(pktData, XLEnumSeqType.SeqQry, requestID);
         }
 
+        /// <summary>
+        /// 查询结算信息
+        /// </summary>
+        /// <param name="req"></param>
+        /// <param name="requestID"></param>
+        /// <returns></returns>
         public bool QrySettlementInfo(XLQrySettlementInfoField req, uint requestID)
         {
             XLPacketData pktData = new XLPacketData(XLMessageType.T_QRY_SETTLEINFO);
             pktData.AddField(req);
             return SendPktData(pktData, XLEnumSeqType.SeqQry, requestID);
         }
+
+        /// <summary>
+        /// 查询结算汇总信息
+        /// </summary>
+        /// <param name="req"></param>
+        /// <param name="requestID"></param>
+        /// <returns></returns>
+        public bool QrySettleSummary(XLQrySettleSummaryField req, uint requestID)
+        {
+            XLPacketData pktData = new XLPacketData(XLMessageType.T_QRY_SETTLE_SUMMARY);
+            pktData.AddField(req);
+            return SendPktData(pktData, XLEnumSeqType.SeqQry, requestID);
+        }
+
+
 
         /// <summary>
         /// 请求提交委托
@@ -516,6 +558,8 @@ namespace TradingLib.XLProtocol.Client
             pktData.AddField(req);
             return SendPktData(pktData, XLEnumSeqType.SeqReq, requestID);
         }
+
+
 
 #endregion
 

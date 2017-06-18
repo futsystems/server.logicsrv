@@ -64,6 +64,7 @@ namespace APIClient
             btnExPlaceOrder.Click += new EventHandler(btnExPlaceOrder_Click);
             btnExCancelOrder.Click += new EventHandler(btnExCancelOrder_Click);
             btnExQrySettle.Click += new EventHandler(btnExQrySettle_Click);
+            btnExQrySettleSummary.Click += new EventHandler(btnExQrySettleSummary_Click);
 
 
             btnWSStart.Click += new EventHandler(btnWSStart_Click);
@@ -93,6 +94,8 @@ namespace APIClient
             btnEncode.Click += new EventHandler(btnEncode_Click);
             btnDecode.Click += new EventHandler(btnDecode_Click);
         }
+
+
 
         void btnDecode_Click(object sender, EventArgs e)
         {
@@ -416,6 +419,15 @@ namespace APIClient
             logger.Info(string.Format("QrySettleInfo Send Success:{0}", ret));
         }
 
+        void btnExQrySettleSummary_Click(object sender, EventArgs e)
+        {
+            if (_apiTrader == null) return;
+            XLQrySettleSummaryField req = new XLQrySettleSummaryField();
+            req.StartSettleday = 20160101;
+            req.EndSettleday = 20200101;
+            bool ret = _apiTrader.QrySettleSummary(req, ++_requestId);
+            logger.Info(string.Format("QrySettleSummary Send Success:{0}", ret));
+        }
 
 
         void btnExQryMaxOrderVol_Click(object sender, EventArgs e)
@@ -525,6 +537,8 @@ namespace APIClient
             _apiTrader.OnRtnOrder += new Action<XLOrderField>(_apiTrader_OnRtnOrder);
             _apiTrader.OnRtnTrade += new Action<XLTradeField>(_apiTrader_OnRtnTrade);
             _apiTrader.OnRtnPosition += new Action<XLPositionField>(_apiTrader_OnRtnPosition);
+            _apiTrader.OnRspQrySettleSummary += new Action<XLSettleSummaryField, ErrorField, uint, bool>(_apiTrader_OnRspQrySettleSummary);
+
             //System.Globalization.CultureInfo info = new System.Globalization.CultureInfo("en");
             
             //System.Threading.Thread.CurrentThread.CurrentCulture = info;
@@ -536,6 +550,11 @@ namespace APIClient
                 //_apiTrader.Join();
                 //logger.Info("API Thread Stopped");
             }).Start();
+        }
+
+        void _apiTrader_OnRspQrySettleSummary(XLSettleSummaryField arg1, ErrorField arg2, uint arg3, bool arg4)
+        {
+            logger.Info(string.Format("Field:{0} Rsp:{1} RequestID:{2} IsLast:{3}", JsonConvert.SerializeObject(arg1), JsonConvert.SerializeObject(arg2), arg3, arg4));
         }
 
         void _apiTrader_OnRspQrySettlementInfo(XLSettlementInfoField arg1, ErrorField arg2, uint arg3, bool arg4)

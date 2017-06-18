@@ -66,6 +66,11 @@ namespace TradingLib.XLProtocol.V1
                     return XLStructHelp.StructToBytes<XLQrySettlementInfoField>((XLQrySettlementInfoField)field);
                 case XLFieldType.F_RSP_SETTLEINFO:
                     return XLStructHelp.StructToBytes<XLSettlementInfoField>((XLSettlementInfoField)field);
+                case XLFieldType.F_QRY_SETTLE_SUMMARY:
+                    return XLStructHelp.StructToBytes<XLQrySettleSummaryField>((XLQrySettleSummaryField)field);
+                case XLFieldType.F_RSP_SETTLE_SUMMARY:
+                    return XLStructHelp.StructToBytes<XLSettleSummaryField>((XLSettleSummaryField)field);
+
 
                 case XLFieldType.F_QRY_MINUTEDATA:
                     return XLStructHelp.StructToBytes<XLQryMinuteDataField>((XLQryMinuteDataField)field);
@@ -125,6 +130,10 @@ namespace TradingLib.XLProtocol.V1
                     return XLStructHelp.BytesToStruct<XLQryExchangeRateField>(data, offset);
                 case XLFieldType.F_RSP_EXCHANGERATE:
                     return XLStructHelp.BytesToStruct<XLExchangeRateField>(data, offset);
+                case XLFieldType.F_QRY_SETTLE_SUMMARY:
+                    return XLStructHelp.BytesToStruct<XLQrySettleSummaryField>(data, offset);
+                case XLFieldType.F_RSP_SETTLE_SUMMARY:
+                    return XLStructHelp.BytesToStruct<XLSettleSummaryField>(data, offset);
 
                 case XLFieldType.F_SYMBOL:
                     return XLStructHelp.BytesToStruct<XLSpecificSymbolField>(data, offset);
