@@ -240,6 +240,16 @@ namespace TradingLib.XLProtocol.V1
         public string OrderSysID;
 
         /// <summary>
+        /// 开始交易日
+        /// </summary>
+        public int StartSettleday;
+
+        /// <summary>
+        /// 结束交易日
+        /// </summary>
+        public int EndSettleday;
+
+        /// <summary>
         /// 域类别
         /// </summary>
         public ushort FieldID { get { return (ushort)XLFieldType.F_QRY_ORDER; } }
@@ -409,6 +419,16 @@ namespace TradingLib.XLProtocol.V1
         /// </summary>
         [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 21)]
         public string TradeID;
+
+        /// <summary>
+        /// 开始交易日
+        /// </summary>
+        public int StartSettleday;
+
+        /// <summary>
+        /// 结束交易日
+        /// </summary>
+        public int EndSettleday;
 
         /// <summary>
         /// 域类别

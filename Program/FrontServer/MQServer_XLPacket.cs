@@ -571,6 +571,9 @@ namespace FrontServer
                             XLQryOrderField field = (XLQryOrderField)data;
 
                             QryOrderRequest request = RequestTemplate<QryOrderRequest>.CliSendRequest(requestId);
+                            request.StartTime = field.StartSettleday;
+                            request.EndTime = field.EndSettleday;
+
                             this.TLSend(conn.SessionID, request);
                             logger.Info(string.Format("Session:{0} >> QryOrderRequest", conn.SessionID));
 
@@ -590,6 +593,9 @@ namespace FrontServer
                             XLQryTradeField field = (XLQryTradeField)data;
 
                             QryTradeRequest request = RequestTemplate<QryTradeRequest>.CliSendRequest(requestId);
+                            request.StartTime = field.StartSettleday;
+                            request.EndTime = field.EndSettleday;
+
                             this.TLSend(conn.SessionID, request);
                             logger.Info(string.Format("Session:{0} >> QryTradeRequest", conn.SessionID));
 

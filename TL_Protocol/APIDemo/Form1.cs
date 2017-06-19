@@ -537,7 +537,7 @@ namespace APIClient
             _apiTrader.OnRtnOrder += new Action<XLOrderField>(_apiTrader_OnRtnOrder);
             _apiTrader.OnRtnTrade += new Action<XLTradeField>(_apiTrader_OnRtnTrade);
             _apiTrader.OnRtnPosition += new Action<XLPositionField>(_apiTrader_OnRtnPosition);
-            _apiTrader.OnRspQrySettleSummary += new Action<XLSettleSummaryField, ErrorField, uint, bool>(_apiTrader_OnRspQrySettleSummary);
+            _apiTrader.OnRspQrySettleSummary += new Action<XLSettleSummaryField?, ErrorField, uint, bool>(_apiTrader_OnRspQrySettleSummary);
 
             //System.Globalization.CultureInfo info = new System.Globalization.CultureInfo("en");
             
@@ -552,7 +552,7 @@ namespace APIClient
             }).Start();
         }
 
-        void _apiTrader_OnRspQrySettleSummary(XLSettleSummaryField arg1, ErrorField arg2, uint arg3, bool arg4)
+        void _apiTrader_OnRspQrySettleSummary(XLSettleSummaryField? arg1, ErrorField arg2, uint arg3, bool arg4)
         {
             logger.Info(string.Format("Field:{0} Rsp:{1} RequestID:{2} IsLast:{3}", JsonConvert.SerializeObject(arg1), JsonConvert.SerializeObject(arg2), arg3, arg4));
         }
