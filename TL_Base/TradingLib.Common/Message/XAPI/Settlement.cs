@@ -139,4 +139,52 @@ namespace TradingLib.Common
             this.Settlement = AccountSettlementImpl.Deserialize(content);
         }
     }
+
+
+    public class XQryCashTransRequest : RequestPacket
+    {
+
+        public int Start { get; set; }
+
+        public int End { get; set; }
+
+        public XQryCashTransRequest()
+        {
+            _type = MessageTypes.XQRYCASHTXN;
+        }
+
+        public override string ContentSerialize()
+        {
+            return string.Format("{0},{1}", this.Start, this.End);
+        }
+
+        public override void ContentDeserialize(string contentstr)
+        {
+            string[] rec = contentstr.Split(',');
+            this.Start = int.Parse(rec[0]);
+            this.End = int.Parse(rec[1]);
+        }
+    }
+
+    public class RspXQryCashTransResponse : RspResponsePacket
+    {
+        public RspXQryCashTransResponse()
+        {
+            _type = MessageTypes.XQRYCASHTXNRESPONSE;
+            this.CashTransaction = null;
+        }
+
+        public CashTransaction CashTransaction { get; set; }
+
+        public override string ResponseSerialize()
+        {
+            return CashTransactionImpl.Serialize(this.CashTransaction);
+        }
+
+        public override void ResponseDeserialize(string content)
+        {
+
+            this.CashTransaction = CashTransactionImpl.Deserialize(content);
+        }
+    }
 }

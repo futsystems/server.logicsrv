@@ -75,6 +75,22 @@ namespace TradingLib.ORM
             }
         }
 
+        /// <summary>
+        /// 查询某个账户的某个交易日段内的出入金记录
+        /// </summary>
+        /// <param name="account"></param>
+        /// <param name="startSettleday"></param>
+        /// <param name="endSettleday"></param>
+        /// <returns></returns>
+        public static IEnumerable<CashTransactionImpl> SelectEquityCashTxns(string account, int startSettleday, long endSettleday)
+        {
+            using (DBMySql db = new DBMySql())
+            {
+                string query = string.Format("SELECT * FROM log_cashtrans WHERE account='{0}' AND settleday>='{1}' AND settleday<='{2}' AND equitytype='OwnEquity'", account, startSettleday, endSettleday);
+                return db.Connection.Query<CashTransactionImpl>(query);
+            }
+        }
+
         public static bool IsTransRefExist(string account, string transref)
         {
             using (DBMySql db = new DBMySql())

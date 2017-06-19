@@ -406,6 +406,25 @@ namespace FrontServer
                         logger.Info(string.Format("LogicSrv Reply Session:{0} -> ErrorOrderActionNotify", conn.SessionID));
                         break;
                     }
+                //查询出入金回报
+                case MessageTypes.XQRYCASHTXNRESPONSE:
+                    {
+                        RspXQryCashTransResponse response = lpkt as RspXQryCashTransResponse;
+                        XLPacketData pkt = new XLPacketData(XLMessageType.T_RSP_CASH_TXN);
+
+                        if (response.CashTransaction == null)
+                        {
+                            conn.ResponseXLPacket(pkt, (uint)response.RequestID, response.IsLast);
+                        }
+                        else
+                        {
+                            XLCashTxnField field = ConvCashTxn(response.CashTransaction);
+                            pkt.AddField(field);
+                            conn.ResponseXLPacket(pkt, (uint)response.RequestID, response.IsLast);
+                        }
+                        if (response.IsLast) logger.Info(string.Format("LogicSrv Reply Session:{0} -> RspXQryCashTransResponse", conn.SessionID));
+                        break;
+                    }
                 default:
                     logger.Warn(string.Format("Logic Packet:{0} not handled", lpkt.Type));
                     break;
@@ -749,6 +768,28 @@ namespace FrontServer
                         }
                         break;
                     }
+                    //查询出入金记录
+                case XLMessageType.T_QRY_CASH_TXN:
+                    {
+                        var data = pkt.FieldList[0];
+                        if (data is XLQryCashTxnField)
+                        {
+                            XLQryCashTxnField field = (XLQryCashTxnField)data;
+
+                            XQryCashTransRequest request = RequestTemplate<XQryCashTransRequest>.CliSendRequest(requestId);
+                            request.Start = field.StartSettleday;
+                            request.End = field.EndSettleday;
+
+                            this.TLSend(conn.SessionID, request);
+                            logger.Info(string.Format("Session:{0} >> XQryCashTransRequest", conn.SessionID));
+
+                        }
+                        else
+                        {
+                            logger.Warn(string.Format("Request:{0} Data Field do not macth", pkt.MessageType));
+                        }
+                        break;
+                    }
                 default:
                     logger.Warn(string.Format("Packet:{0} logic not handled", pkt.MessageType));
                     break;
@@ -957,6 +998,20 @@ namespace FrontServer
             field.PositionProfitByDate = settle.PositionProfitByDate;
             field.Settleday = settle.Settleday;
             field.UserID = settle.Account;
+
+            return field;
+
+        }
+
+        XLCashTxnField ConvCashTxn(CashTransaction txn)
+        {
+            XLCashTxnField field = new XLCashTxnField();
+            field.Amount = (double)(txn.TxnType == QSEnumCashOperation.Deposit ? txn.Amount : txn.Amount * -1);
+            field.Comment = txn.Comment;
+            field.DateTime = txn.DateTime;
+            field.Settleday = txn.Settleday;
+            field.TxnID = txn.TxnID;
+            field.UserID = txn.Account;
 
             return field;
 

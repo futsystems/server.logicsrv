@@ -136,6 +136,19 @@ namespace TradingLib.XLProtocol
         /// </summary>
         F_RSP_SETTLE_SUMMARY = 123,
 
+
+        /// <summary>
+        /// 出入金查询
+        /// </summary>
+        F_QRY_CASH_TXN = 124,
+
+        /// <summary>
+        /// 出入金回报
+        /// </summary>
+        F_RSP_CASH_TXN = 125,
+
+
+
         /// <summary>
         /// 持仓更新回报
         /// </summary>

@@ -287,7 +287,12 @@ namespace TradingLib.Core
                 CacheRspResponse(response);
             }
         }
-
+        /// <summary>
+        /// 查询结算汇总数据
+        /// </summary>
+        /// <param name="session"></param>
+        /// <param name="request"></param>
+        /// <param name="account"></param>
         void SrvOnXQrySettleSummary(ISession session, XQrySettleSummaryRequest request, IAccount account)
         {
             logger.Info("XQrySettleSummary" + request.ToString());
@@ -307,7 +312,27 @@ namespace TradingLib.Core
                 RspXqrySettleSummaryResponse response = ResponseTemplate<RspXqrySettleSummaryResponse>.SrvSendRspResponse(request);
                 CacheRspResponse(response);
             }
+        }
 
+        void SrvOnXQryCashTxn(ISession session, XQryCashTransRequest request, IAccount account)
+        {
+            logger.Info("SrvOnXQryCashTxn" + request.ToString());
+            List<CashTransactionImpl> list = ORM.MCashTransaction.SelectEquityCashTxns(account.ID, request.Start, request.End).ToList();
+
+            if (list.Count > 0)
+            {
+                for (int i = 0; i < list.Count; i++)
+                {
+                    RspXQryCashTransResponse response = ResponseTemplate<RspXQryCashTransResponse>.SrvSendRspResponse(request);
+                    response.CashTransaction = list[i];
+                    CacheRspResponse(response, i == list.Count - 1);
+                }
+            }
+            else
+            {   //发送空的持仓回报
+                RspXQryCashTransResponse response = ResponseTemplate<RspXQryCashTransResponse>.SrvSendRspResponse(request);
+                CacheRspResponse(response);
+            }
         }
     }
 }

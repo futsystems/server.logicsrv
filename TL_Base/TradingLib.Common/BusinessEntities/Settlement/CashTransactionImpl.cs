@@ -66,6 +66,7 @@ namespace TradingLib.Common
 
         public static string Serialize(CashTransaction c)
         {
+            if (c == null) return string.Empty;
             StringBuilder sb = new StringBuilder();
             char d =',';
             sb.Append(c.Account);
@@ -96,6 +97,7 @@ namespace TradingLib.Common
 
         public static CashTransaction Deserialize(string msg)
         {
+            if (string.IsNullOrEmpty(msg)) return null;
             string[] rec = msg.Split(',');
             CashTransactionImpl s = new CashTransactionImpl();
             s.Account = rec[0];

@@ -522,7 +522,6 @@ namespace TradingLib.XLProtocol.V1
         /// </summary>
         public int Volume;
 
-
         /// <summary>
         /// 盈亏
         /// </summary>
@@ -970,6 +969,78 @@ namespace TradingLib.XLProtocol.V1
         public ushort FieldID { get { return (ushort)XLFieldType.F_RSP_SETTLE_SUMMARY; } }
     }
 
+    
+    #endregion
+    [StructLayout(LayoutKind.Sequential, Pack = 4)]
+    public struct XLQryCashTxnField : IXLField
+    {
+        /// <summary>
+        /// 投资者代码
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 13)]
+        public string UserID;
+
+        /// <summary>
+        /// 开始交易日
+        /// </summary>
+        public int StartSettleday;
+
+        /// <summary>
+        /// 结束交易日
+        /// </summary>
+        public int EndSettleday;
+
+        /// <summary>
+        /// 域类别
+        /// </summary>
+        public ushort FieldID { get { return (ushort)XLFieldType.F_QRY_CASH_TXN; } }
+    }
+
+    [StructLayout(LayoutKind.Sequential, Pack = 4)]
+    public struct XLCashTxnField : IXLField
+    {
+        /// <summary>
+        /// 投资者代码
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 13)]
+        public string UserID;
+
+        /// <summary>
+        /// 金额
+        /// </summary>
+        public double Amount;
+        
+        /// <summary>
+        /// 出入金编号
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 21)]
+        public string TxnID;
+
+        /// <summary>
+        /// 备注
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 256)]
+        public string Comment;
+
+        /// <summary>
+        /// 结算日
+        /// </summary>
+        public int Settleday;
+
+        /// <summary>
+        /// 时间
+        /// </summary>
+        public long DateTime;
+
+        /// <summary>
+        /// 域类别
+        /// </summary>
+        public ushort FieldID { get { return (ushort)XLFieldType.F_RSP_CASH_TXN; } }
+    }
+
+
+
+    #region 查询出入金记录
 
     #endregion
 

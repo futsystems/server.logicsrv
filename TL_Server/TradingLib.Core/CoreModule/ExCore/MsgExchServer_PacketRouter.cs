@@ -239,6 +239,12 @@ namespace TradingLib.Core
                         SrvOnXQrySettleSummary(session, request, account);
                     }
                     break;
+                case MessageTypes.XQRYCASHTXN://查询出入金记录
+                    {
+                        XQryCashTransRequest request = packet as XQryCashTransRequest;
+                        SrvOnXQryCashTxn(session,request,account);
+                    }   
+                    break;
 
                 case MessageTypes.CONTRIBREQUEST://扩展请求
                     {

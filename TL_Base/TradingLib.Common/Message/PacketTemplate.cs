@@ -220,7 +220,10 @@ namespace TradingLib.Common
                     //查询结算汇总
                     case MessageTypes.XQRYSETTLESUMMAY:
                         return RequestTemplate<XQrySettleSummaryRequest>.SrvRecvRequest(frontid, clientid, message.Content);
-
+                    //查询出入金数据
+                    case MessageTypes.XQRYCASHTXN:
+                        return RequestTemplate<XQryCashTransRequest>.SrvRecvRequest(frontid, clientid, message.Content);
+                    
                     #region manager
                     case MessageTypes.MGR_REQ_LOGIN://请求登入
                         return RequestTemplate<MGRLoginRequest>.SrvRecvRequest(frontid, clientid, message.Content);
@@ -405,6 +408,8 @@ namespace TradingLib.Common
                     return ResponseTemplate<RspXQryExchangeRateResponse>.CliRecvResponse(message);
                 case MessageTypes.XQRYSETTLESUMMAYRESPONSE://结算汇总数据回报
                     return ResponseTemplate<RspXqrySettleSummaryResponse>.CliRecvResponse(message);
+                case MessageTypes.XQRYCASHTXNRESPONSE://出入金数据回报
+                    return ResponseTemplate<RspXQryCashTransResponse>.CliRecvResponse(message);
 
                 case MessageTypes.TICKNOTIFY:
                     return ResponseTemplate<TickNotify>.CliRecvResponse(message);

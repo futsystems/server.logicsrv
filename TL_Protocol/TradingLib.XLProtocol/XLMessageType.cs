@@ -169,6 +169,17 @@ namespace TradingLib.XLProtocol
         /// </summary>
         T_RSP_SETTLE_SUMMARY = 3029,
 
+
+        /// <summary>
+        /// 查询出入金
+        /// </summary>
+        T_QRY_CASH_TXN = 3030,
+
+        /// <summary>
+        /// 回报出入金
+        /// </summary>
+        T_RSP_CASH_TXN = 3031,
+
         /// <summary>
         /// 请求注册市场行情
         /// </summary>

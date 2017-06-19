@@ -98,6 +98,11 @@ namespace TradingLib.XLProtocol.Client
         public event Action<XLSettleSummaryField?, ErrorField, uint, bool> OnRspQrySettleSummary = delegate { };
 
         /// <summary>
+        /// 出入金查询
+        /// </summary>
+        public event Action<XLCashTxnField?, ErrorField, uint, bool> OnRspQryCashTxn = delegate { };
+
+        /// <summary>
         /// 委托实时通知
         /// </summary>
         public event Action<XLOrderField> OnRtnOrder = delegate { };
@@ -367,6 +372,22 @@ namespace TradingLib.XLProtocol.Client
                             OnRspQrySettleSummary(response, NoError, dataHeader.RequestID, (int)dataHeader.IsLast == 1 ? true : false);
                             break;
                         }
+                    case XLMessageType.T_RSP_CASH_TXN:
+                        {
+                            if (pkt.FieldList.Count > 0)
+                            {
+                                for (int i = 0; i < pkt.FieldList.Count; i++)
+                                {
+                                    OnRspQryCashTxn((XLCashTxnField)pkt.FieldList[i], NoError, dataHeader.RequestID, (int)dataHeader.IsLast == 1 && (i == pkt.FieldList.Count - 1) ? true : false);
+                                }
+                            }
+                            else
+                            {
+                                OnRspQryCashTxn(null, NoError, dataHeader.RequestID, (int)dataHeader.IsLast == 1 ? true : false);
+
+                            }
+                            break;
+                        }
                     default:
                         //logger.Info(string.Format("Unhandled Pkt:{0}", msgType));
                         break;
@@ -562,6 +583,18 @@ namespace TradingLib.XLProtocol.Client
             return SendPktData(pktData, XLEnumSeqType.SeqReq, requestID);
         }
 
+        /// <summary>
+        /// 查询出入金
+        /// </summary>
+        /// <param name="req"></param>
+        /// <param name="requestID"></param>
+        /// <returns></returns>
+        public bool QryCashTxn(XLQryCashTxnField req, uint requestID)
+        {
+            XLPacketData pktData = new XLPacketData(XLMessageType.T_QRY_CASH_TXN);
+            pktData.AddField(req);
+            return SendPktData(pktData, XLEnumSeqType.SeqReq, requestID);
+        }
 
 
 #endregion
