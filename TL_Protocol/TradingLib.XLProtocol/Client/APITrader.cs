@@ -51,12 +51,12 @@ namespace TradingLib.XLProtocol.Client
         /// <summary>
         /// 查询委托回报
         /// </summary>
-        public event Action<XLOrderField, ErrorField, uint, bool> OnRspQryOrder = delegate { };
+        public event Action<XLOrderField?, ErrorField, uint, bool> OnRspQryOrder = delegate { };
 
         /// <summary>
         /// 查询成交回报
         /// </summary>
-        public event Action<XLTradeField, ErrorField, uint, bool> OnRspQryTrade = delegate { };
+        public event Action<XLTradeField?, ErrorField, uint, bool> OnRspQryTrade = delegate { };
 
         /// <summary>
         /// 查询持仓回报
@@ -248,16 +248,17 @@ namespace TradingLib.XLProtocol.Client
                         }
                     case XLMessageType.T_RSP_ORDER:
                         {
-                            XLOrderField response;
                             if (pkt.FieldList.Count > 0)
                             {
-                                response = (XLOrderField)pkt.FieldList[0];
+								for (int i = 0; i < pkt.FieldList.Count; i++)
+								{ 
+									OnRspQryOrder((XLOrderField)pkt.FieldList[i], NoError, dataHeader.RequestID, (int)dataHeader.IsLast == 1 && (i==pkt.FieldList.Count-1) ? true : false);
+								}
                             }
                             else
                             {
-                                response = new XLOrderField();
+								OnRspQryOrder(null, NoError, dataHeader.RequestID, (int)dataHeader.IsLast == 1 ? true : false);
                             }
-                            OnRspQryOrder(response, NoError, dataHeader.RequestID, (int)dataHeader.IsLast == 1 ? true : false);
                             break;
                             
                         }
@@ -270,16 +271,18 @@ namespace TradingLib.XLProtocol.Client
 
                     case XLMessageType.T_RSP_TRADE:
                         {
-                            XLTradeField response;
                             if (pkt.FieldList.Count > 0)
                             {
-                                response = (XLTradeField)pkt.FieldList[0];
+								for (int i = 0; i < pkt.FieldList.Count; i++)
+								{ 
+                                    OnRspQryTrade((XLTradeField)pkt.FieldList[i], NoError, dataHeader.RequestID, (int)dataHeader.IsLast == 1 && (i==pkt.FieldList.Count-1) ? true : false);
+								}
                             }
                             else
                             {
-                                response = new XLTradeField();
+								OnRspQryTrade(null, NoError, dataHeader.RequestID, (int)dataHeader.IsLast == 1 ? true : false);
+                            
                             }
-                            OnRspQryTrade(response, NoError, dataHeader.RequestID, (int)dataHeader.IsLast == 1 ? true : false);
                             break;
                         }
                     case XLMessageType.T_RTN_TRADE:
