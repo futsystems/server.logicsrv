@@ -813,7 +813,8 @@ namespace FrontServer
             f.HedgeFlag = XLHedgeFlagType.Speculation;
             f.Price = (double)trade.xPrice;
             f.Volume = Math.Abs(trade.xSize);
-
+            f.Profit = (double)trade.Profit;
+            f.Commission = (double)trade.Commission;
             return f;
 
         }

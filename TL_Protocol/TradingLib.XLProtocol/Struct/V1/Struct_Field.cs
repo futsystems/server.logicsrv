@@ -522,6 +522,17 @@ namespace TradingLib.XLProtocol.V1
         /// </summary>
         public int Volume;
 
+
+        /// <summary>
+        /// 盈亏
+        /// </summary>
+        public double Profit;
+
+        /// <summary>
+        /// 手续费
+        /// </summary>
+        public double Commission;
+
         /// <summary>
         /// 域类别
         /// </summary>

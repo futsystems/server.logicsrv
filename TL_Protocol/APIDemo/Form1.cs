@@ -526,8 +526,8 @@ namespace APIClient
             _apiTrader.OnRspUserLogin += new Action<XLRspLoginField, ErrorField, uint, bool>(_apiTrader_OnRspUserLogin);
             _apiTrader.OnRspUserPasswordUpdate += new Action<XLRspUserPasswordUpdateField, ErrorField, uint, bool>(_apiTrader_OnRspUserPasswordUpdate);
             _apiTrader.OnRspQrySymbol += new Action<XLSymbolField, ErrorField, uint, bool>(_apiTrader_OnRspQrySymbol);
-            _apiTrader.OnRspQryOrder += new Action<XLOrderField, ErrorField, uint, bool>(_apiTrader_OnRspQryOrder);
-            _apiTrader.OnRspQryTrade += new Action<XLTradeField, ErrorField, uint, bool>(_apiTrader_OnRspQryTrade);
+            _apiTrader.OnRspQryOrder += new Action<XLOrderField?, ErrorField, uint, bool>(_apiTrader_OnRspQryOrder);
+            _apiTrader.OnRspQryTrade += new Action<XLTradeField?, ErrorField, uint, bool>(_apiTrader_OnRspQryTrade);
             _apiTrader.OnRspQryPosition += new Action<XLPositionField, ErrorField, uint, bool>(_apiTrader_OnRspQryPosition);
             _apiTrader.OnRspQryTradingAccount += new Action<XLTradingAccountField, ErrorField, uint, bool>(_apiTrader_OnRspQryTradingAccount);
             _apiTrader.OnRspQryMaxOrderVol += new Action<XLQryMaxOrderVolumeField, ErrorField, uint, bool>(_apiTrader_OnRspQryMaxOrderVol);
@@ -603,12 +603,12 @@ namespace APIClient
         }
 
 
-        void _apiTrader_OnRspQryTrade(XLTradeField arg1, ErrorField arg2, uint arg3, bool arg4)
+        void _apiTrader_OnRspQryTrade(XLTradeField? arg1, ErrorField arg2, uint arg3, bool arg4)
         {
             logger.Info(string.Format("Field:{0} Rsp:{1} RequestID:{2} IsLast:{3}", JsonConvert.SerializeObject(arg1), JsonConvert.SerializeObject(arg2), arg3, arg4));
         }
 
-        void _apiTrader_OnRspQryOrder(XLOrderField arg1, ErrorField arg2, uint arg3, bool arg4)
+        void _apiTrader_OnRspQryOrder(XLOrderField? arg1, ErrorField arg2, uint arg3, bool arg4)
         {
             logger.Info(string.Format("Field:{0} Rsp:{1} RequestID:{2} IsLast:{3}", JsonConvert.SerializeObject(arg1), JsonConvert.SerializeObject(arg2), arg3, arg4));
         }
