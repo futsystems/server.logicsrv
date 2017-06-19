@@ -26,7 +26,7 @@ namespace TradingLib.Core
             //同时指定开始和结束时间 则通过数据库查询该时间段的记录
             if (request.Start != 0 && request.End != 0)
             {
-                tmplist = ORM.MTradingInfo.SelectOrders(request.Start, request.End, QSEnumOrderBreedType.ACCT);
+                tmplist = ORM.MTradingInfo.SelectOrders(account.ID,request.Start, request.End, QSEnumOrderBreedType.ACCT);
             }
             else
             {
@@ -73,7 +73,7 @@ namespace TradingLib.Core
             //同时指定开始和结束时间 则通过数据库查询该时间段的记录
             if (request.Start != 0 && request.End != 0)
             {
-                tmplist = ORM.MTradingInfo.SelectTrades(request.Start, request.End, QSEnumOrderBreedType.ACCT);
+                tmplist = ORM.MTradingInfo.SelectTrades(account.ID,request.Start, request.End, QSEnumOrderBreedType.ACCT);
             }
             else
             {

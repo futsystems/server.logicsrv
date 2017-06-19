@@ -169,22 +169,22 @@ namespace FrontServer
                         break;
                     }
                 //查询委托回报
-                case MessageTypes.ORDERRESPONSE:
+                case MessageTypes.XORDERRESPONSE:
                     {
-                        RspQryOrderResponse response = lpkt as RspQryOrderResponse;
+                        RspXQryOrderResponse response = lpkt as RspXQryOrderResponse;
                         XLPacketData pkt = new XLPacketData(XLMessageType.T_RSP_ORDER);
 
-                        if (response.OrderToSend == null || !response.OrderToSend.isValid)
+                        if (response.Order == null || !response.Order.isValid)
                         {
                             conn.ResponseXLPacket(pkt, (uint)response.RequestID, response.IsLast);
                         }
                         else
                         {
-                            XLOrderField field = ConvOrder(response.OrderToSend);
+                            XLOrderField field = ConvOrder(response.Order);
                             pkt.AddField(field);
                             conn.ResponseXLPacket(pkt, (uint)response.RequestID, response.IsLast);
                         }
-                        if (response.IsLast) logger.Info(string.Format("LogicSrv Reply Session:{0} -> RspQryOrderResponse", conn.SessionID));
+                        if (response.IsLast) logger.Info(string.Format("LogicSrv Reply Session:{0} -> RspXQryOrderResponse", conn.SessionID));
                         break;
                     }
                 //委托实时通知
@@ -207,12 +207,12 @@ namespace FrontServer
                         break;
                     }
                 //查询成交回报
-                case MessageTypes.TRADERESPONSE:
+                case MessageTypes.XTRADERESPONSE:
                     {
-                        RspQryTradeResponse response = lpkt as RspQryTradeResponse;
+                        RspXQryTradeResponse response = lpkt as RspXQryTradeResponse;
                         XLPacketData pkt = new XLPacketData(XLMessageType.T_RSP_TRADE);
 
-                        if (response.TradeToSend == null || !response.TradeToSend.isValid)
+                        if (response.Trade == null || !response.Trade.isValid)
                         {
                             conn.ResponseXLPacket(pkt, (uint)response.RequestID, response.IsLast);
 
@@ -220,12 +220,12 @@ namespace FrontServer
                         }
                         else
                         {
-                            XLTradeField field = ConvTrade(response.TradeToSend);
+                            XLTradeField field = ConvTrade(response.Trade);
                             pkt.AddField(field);
 
                             conn.ResponseXLPacket(pkt, (uint)response.RequestID, response.IsLast);
                         }
-                        if (response.IsLast) logger.Info(string.Format("LogicSrv Reply Session:{0} -> RspQryTradeResponse", conn.SessionID));
+                        if (response.IsLast) logger.Info(string.Format("LogicSrv Reply Session:{0} -> RspXQryTradeResponse", conn.SessionID));
                         break;
                     }
                 //成交实时通知
@@ -570,12 +570,12 @@ namespace FrontServer
                         {
                             XLQryOrderField field = (XLQryOrderField)data;
 
-                            QryOrderRequest request = RequestTemplate<QryOrderRequest>.CliSendRequest(requestId);
-                            request.StartTime = field.StartSettleday;
-                            request.EndTime = field.EndSettleday;
+                            XQryOrderRequest request = RequestTemplate<XQryOrderRequest>.CliSendRequest(requestId);
+                            request.Start = field.StartSettleday;
+                            request.End = field.EndSettleday;
 
                             this.TLSend(conn.SessionID, request);
-                            logger.Info(string.Format("Session:{0} >> QryOrderRequest", conn.SessionID));
+                            logger.Info(string.Format("Session:{0} >> XQryOrderRequest", conn.SessionID));
 
                         }
                         else
@@ -592,12 +592,12 @@ namespace FrontServer
                         {
                             XLQryTradeField field = (XLQryTradeField)data;
 
-                            QryTradeRequest request = RequestTemplate<QryTradeRequest>.CliSendRequest(requestId);
-                            request.StartTime = field.StartSettleday;
-                            request.EndTime = field.EndSettleday;
+                            XQryTradeRequest request = RequestTemplate<XQryTradeRequest>.CliSendRequest(requestId);
+                            request.Start = field.StartSettleday;
+                            request.End = field.EndSettleday;
 
                             this.TLSend(conn.SessionID, request);
-                            logger.Info(string.Format("Session:{0} >> QryTradeRequest", conn.SessionID));
+                            logger.Info(string.Format("Session:{0} >> XQryTradeRequest", conn.SessionID));
 
                         }
                         else
@@ -812,7 +812,7 @@ namespace FrontServer
             f.OffsetFlag = ConvOffSet(trade.OffsetFlag);
             f.HedgeFlag = XLHedgeFlagType.Speculation;
             f.Price = (double)trade.xPrice;
-            f.Volume = trade.xSize;
+            f.Volume = Math.Abs(trade.xSize);
 
             return f;
 
