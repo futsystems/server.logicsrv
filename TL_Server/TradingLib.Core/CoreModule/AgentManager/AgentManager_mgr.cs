@@ -260,6 +260,7 @@ namespace TradingLib.Core
 
             foreach (var agent in BasicTracker.AgentTracker.Agents.Where(agent => agent.AgentType == EnumAgentType.SelfOperated && !agent.Freezed && agent.Manager!= null))
             {
+                if (agent.Manager.Type != QSEnumManagerType.AGENT) continue;
                 if (agent.NowEquity < agent.FlatEquity)
                 {
                     logger.Info(string.Format("结算账户:{0} 执行强平", agent.Account));
