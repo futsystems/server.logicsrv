@@ -162,13 +162,13 @@ namespace TradingLib.XLProtocol.Client
         ManualResetEvent TimeoutObject = new ManualResetEvent(false);
 
 
-        List<IPEndPoint> remoteServer = new List<IPEndPoint>();
+		List<RemoteServer> remoteServer = new List<RemoteServer>();
 
         Random random = new Random();
 
-        public void RegisterServer(string server, int port)
+        public void RegisterServer(string fqdn, int port)
         {
-            remoteServer.Add(new IPEndPoint(IPAddress.Parse(server), port));
+			remoteServer.Add(new RemoteServer(fqdn, port));
         }
 
         /// <summary>
@@ -179,11 +179,9 @@ namespace TradingLib.XLProtocol.Client
         /// <returns></returns>
         public bool Connect()
         {
-
-
             //从服务端列表中随机选择一个服务器进行连接
-            IPEndPoint server = remoteServer[random.Next(0, remoteServer.Count - 1)];
-            Socket socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+			var server = remoteServer[random.Next(0, remoteServer.Count - 1)];
+			Socket socket = new Socket(AddressFamily.InterNetworkV6, SocketType.Stream, ProtocolType.Tcp);
             socket.Blocking = false;
             //socket.SendTimeout = 1000;
             //byte[] inValue = new byte[] { 1, 0, 0, 0, 0x88, 0x13, 0, 0, 0xd0, 0x07, 0, 0 };// 首次探测时间5 秒, 间隔侦测时间2 秒  
@@ -198,7 +196,7 @@ namespace TradingLib.XLProtocol.Client
                 TimeoutObject.Reset();
                 try
                 {
-                    socket.BeginConnect(server, ConnectCallback, socket);
+				socket.BeginConnect(server.Host, server.Port,ConnectCallback, socket);
                 }
                 catch (Exception err)
                 {
@@ -493,5 +491,15 @@ namespace TradingLib.XLProtocol.Client
 
 
 
+	internal struct RemoteServer
+	{
+		public RemoteServer(string host, int port)
+		{
+			this.Host = host;
+			this.Port = port;
+		}
+		public string Host;
 
+		public int Port;
+	}
 }
