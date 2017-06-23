@@ -971,6 +971,9 @@ namespace TradingLib.XLProtocol.V1
 
     
     #endregion
+
+    #region 查询出入金记录
+
     [StructLayout(LayoutKind.Sequential, Pack = 4)]
     public struct XLQryCashTxnField : IXLField
     {
@@ -1037,10 +1040,6 @@ namespace TradingLib.XLProtocol.V1
         /// </summary>
         public ushort FieldID { get { return (ushort)XLFieldType.F_RSP_CASH_TXN; } }
     }
-
-
-
-    #region 查询出入金记录
 
     #endregion
 
