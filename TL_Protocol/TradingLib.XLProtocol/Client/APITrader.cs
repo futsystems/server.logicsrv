@@ -131,6 +131,15 @@ namespace TradingLib.XLProtocol.Client
             }
         }
 
+		public string RemoteEndPoint
+		{ 
+			get
+			{
+				if (!this.IsConnected) return string.Empty;
+				return _socketClient.RemoteEndPoint;
+			}
+		
+		}
         public APITrader()
         {
             _socketClient = new SocketClient();
@@ -159,8 +168,9 @@ namespace TradingLib.XLProtocol.Client
         /// 初始化
         /// </summary>
         public void Init()
-        { 
-            if(_socketClient.Connect())
+        {
+			int retCode = 0;
+			if(_socketClient.Connect(out retCode))
             {
                 //OnServerConnected();
             }

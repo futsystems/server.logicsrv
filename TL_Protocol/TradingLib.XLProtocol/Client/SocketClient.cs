@@ -17,6 +17,19 @@ namespace TradingLib.XLProtocol.Client
 
     public class SocketClient
     {
+
+		public static string ErrorStr(int errCode)
+		{
+			switch (errCode)
+			{ 
+				case 0:return "正常";
+				case 9001:return "网络连接超时";
+				case 9002:return "BeginConnect异常";
+				case 9003:return "EndConnect异常";
+					default:
+					return "异常";
+			}
+		}
         #if DEV
         ILog logger = LogManager.GetLogger("SocketClient");
         #endif
@@ -147,12 +160,15 @@ namespace TradingLib.XLProtocol.Client
 #if DEV
             logger.Info("Socket Close");
 #endif
-            Console.WriteLine("Socket Close");
+            Console.WriteLine("Close SocketClient");
             //停止WatchDog
             StopWatchDog();
 
             //防止后台重连线程一直执行重连操作
             _reconnectreq = false;
+
+			reconnectEvent.WaitOne();
+
             //关闭Socket
             SafeCloseSocket();
         }
@@ -171,66 +187,83 @@ namespace TradingLib.XLProtocol.Client
 			remoteServer.Add(new RemoteServer(fqdn, port));
         }
 
-        /// <summary>
-        /// 连接到服务端并启动数据接受线程
-        /// </summary>
-        /// <param name="serverIP"></param>
-        /// <param name="port"></param>
-        /// <returns></returns>
-        public bool Connect()
-        {
-            //从服务端列表中随机选择一个服务器进行连接
+		RemoteServer? _currentSrv = null;
+
+		public string RemoteEndPoint
+		{ 
+			get
+			{
+				if (_currentSrv == null) return string.Empty;
+				return string.Format("{0}:{1}", ((RemoteServer)_currentSrv).Host, ((RemoteServer)_currentSrv).Port);
+			}
+		}
+		/// <summary>
+		/// 连接到服务端并启动数据接受线程
+		/// 链接异常路径
+		/// 1.[90001]远端服务器不存在直接 超时
+		/// </summary>
+		/// <param name="serverIP"></param>
+		/// <param name="port"></param>
+		/// <returns></returns>
+		public bool Connect(out int retCode)
+		{
+			retCode = 0;
+			//从服务端列表中随机选择一个服务器进行连接
 			var server = remoteServer[random.Next(0, remoteServer.Count - 1)];
 			Socket socket = new Socket(AddressFamily.InterNetworkV6, SocketType.Stream, ProtocolType.Tcp);
-            socket.Blocking = false;
-            //socket.SendTimeout = 1000;
-            //byte[] inValue = new byte[] { 1, 0, 0, 0, 0x88, 0x13, 0, 0, 0xd0, 0x07, 0, 0 };// 首次探测时间5 秒, 间隔侦测时间2 秒  
-            //socket.IOControl(IOControlCode.KeepAliveValues, inValue, null);
+			socket.Blocking = false;
+			//socket.SendTimeout = 1000;
+			//byte[] inValue = new byte[] { 1, 0, 0, 0, 0x88, 0x13, 0, 0, 0xd0, 0x07, 0, 0 };// 首次探测时间5 秒, 间隔侦测时间2 秒  
+			//socket.IOControl(IOControlCode.KeepAliveValues, inValue, null);
 
 #if DEV
             logger.Info("Socket Created Remote EndPoint:"+server.ToString());
 #endif
 
-                Console.WriteLine(string.Format("Socket Created Remote EndPoint:{0}", server.ToString()));
+			Console.WriteLine(string.Format("Socket Created Remote EndPoint:{0}", server.ToString()));
 
-                TimeoutObject.Reset();
-                try
-                {
-				socket.BeginConnect(server.Host, server.Port,ConnectCallback, socket);
-                }
-                catch (Exception err)
-                {
-                    SockErrorStr = err.ToString();
-                    return false;
-                }
-                if (TimeoutObject.WaitOne(5000, false))//直到timeout，或者TimeoutObject.set()  
-                {
-                    return _connect;
-                }
-                else
-                {
+			TimeoutObject.Reset();
+			try
+			{
+				socket.BeginConnect(server.Host, server.Port, ConnectCallback, socket);
+				_currentSrv = server;
+			}
+			catch (Exception err)
+			{
+				SockErrorStr = err.ToString();
+				retCode = 9002;
+				return false;
+			}
+			if (TimeoutObject.WaitOne(5000, false))//直到timeout，或者TimeoutObject.set()  
+			{
+				retCode = _connectCallbackRetCode;
+				return _connect;
+			}
+			else
+			{
 #if DEV
                 logger.Info("Socket Connect Time Out");
 #endif
-                    Console.WriteLine("Socket Connect Time Out");
-                    //socket.Close();
-                    /* mono环境
-                     * BeginConnect会一直挂起 不会像windows中返回异常，
-                     * 1.此时如果socket.close()就会触发BeginConnect完毕事件，且 ConnectCallback中 EndConnect异常 socket已释放
-                     * 2.不执行操作 则等待服务端可连后，就会出现多个Socket连接到服务端的情况
-                     * 后来发现 需要设置Socket.Blocking为false就可以解决上面的问题
-                     * **/
-                    _socket = null;
-                    SockErrorStr = "Time Out";
-                    return false;
-                }
-           
-          
-        }
+				Console.WriteLine("Socket Connect Time Out");
+				//socket.Close();
+				/* mono环境
+				 * BeginConnect会一直挂起 不会像windows中返回异常，
+				 * 1.此时如果socket.close()就会触发BeginConnect完毕事件，且 ConnectCallback中 EndConnect异常 socket已释放
+				 * 2.不执行操作 则等待服务端可连后，就会出现多个Socket连接到服务端的情况
+				 * 后来发现 需要设置Socket.Blocking为false就可以解决上面的问题
+				 * **/
+				_socket = null;
+				retCode = 9001;//链接超时
+				SockErrorStr = "Time Out";
+				return false;
+			}
+
+
+		}
 
 
         object lockObj_IsConnectSuccess = new object();
-
+		int _connectCallbackRetCode = 0;
         void ConnectCallback(IAsyncResult iar)
         {
             lock (lockObj_IsConnectSuccess)
@@ -238,6 +271,7 @@ namespace TradingLib.XLProtocol.Client
                 Socket client = (Socket)iar.AsyncState;
                 try
                 {
+					_connectCallbackRetCode = 0;
                     //mono环境下 Timeout 之后还会执行该调用
                     client.EndConnect(iar);
                    
@@ -254,12 +288,27 @@ namespace TradingLib.XLProtocol.Client
                     _connect = true;//连接建立标识
 
                     //对外触发连接建立事件
-                    Connected();
+                    //Connected();
 
                     //启动后台WatchDog
                     StartWatchDog();
 
                     BeginReceive(); //开始接收数据
+					//Console.WriteLine("ConnectCallBack here success");
+					/*
+					 * 存在问题 当断线重连后 第一次连接会卡在Connected这里,导致连接TimeOut触发，再次连接可用正常通过
+					 * API.init出调用connect函数 而connect函数包含以上连接建立以及相关状态标识复位
+					 * connected事件中 外层API调用可能会在连接建立事件中执行 登入 查询等操作
+					 * api.init->connect->connected->SendRequest是同步进行的
+					 * 后来调试发现问题 IOS网络状态变化后 通过逻辑判断执行停止或启动后台服务的操作，在操作过程中回调函数会更新界面元素
+					 * 状态线程与更新ui线程可能是有冲突，导致竞争卡死，只需要将网络状态变化后的逻辑操作放入后台线程即可
+
+
+					**/
+					//System.Threading.ThreadPool.QueueUserWorkItem((o) =>
+					//{
+						Connected();
+					//});
                 }
                 catch (Exception e)
                 {
@@ -270,9 +319,11 @@ namespace TradingLib.XLProtocol.Client
                     _socket = null; 
                     SockErrorStr = e.ToString();
                     _connect = false;
+					_connectCallbackRetCode = 9003;//EndConnect异常
                 }
                 finally
                 {
+					//Console.WriteLine("******* connectCallback set timeout event");
                     TimeoutObject.Set();
                 }
             }
@@ -290,104 +341,102 @@ namespace TradingLib.XLProtocol.Client
 
 
 
-        void OnReceiveCallback(IAsyncResult ar)
-        {
-            try
-            {
-                Socket peerSock = (Socket)ar.AsyncState;
-                int ret = peerSock.EndReceive(ar);
-                //Console.WriteLine("************* Receive data cnt:" + ret.ToString());
-                if (ret > 0)
-                {
-                    int dataLen = ret + bufferOffset;
-                    int offset = 0;
-                    bool parseFlag = true;
-                    int pktLen = 0;
-                    while (parseFlag)
-                    {
-                        if (dataLen - offset >= XLConstants.PROTO_HEADER_LEN)
-                        {
-                            XLProtocolHeader header = XLStructHelp.BytesToStruct<XLProtocolHeader>(buffer, offset);
-                            //buffer包含了一个完整的协议数据包 
-                            pktLen = XLConstants.PROTO_HEADER_LEN + header.XLMessageLength;
-                            if (dataLen - offset >= pktLen)
-                            {
-                                //心跳包
-                                if (header.XLMessageType == (int)XLMessageType.T_HEARTBEEAT)
-                                {
-                                    UpdateServerHeartBeat(); //只用心跳包 来更新Heartbeat时间
-                                    _recvheartbeat = !_recvheartbeat;
+		void OnReceiveCallback(IAsyncResult ar)
+		{
+			try
+			{
+				Socket peerSock = (Socket)ar.AsyncState;
+				int ret = peerSock.EndReceive(ar);
+				//Console.WriteLine("************* Receive data cnt:" + ret.ToString());
+				if (ret > 0)
+				{
+					int dataLen = ret + bufferOffset;
+					int offset = 0;
+					bool parseFlag = true;
+					int pktLen = 0;
+					while (parseFlag)
+					{
+						if (dataLen - offset >= XLConstants.PROTO_HEADER_LEN)
+						{
+							XLProtocolHeader header = XLStructHelp.BytesToStruct<XLProtocolHeader>(buffer, offset);
+							//buffer包含了一个完整的协议数据包 
+							pktLen = XLConstants.PROTO_HEADER_LEN + header.XLMessageLength;
+							if (dataLen - offset >= pktLen)
+							{
+								//心跳包
+								if (header.XLMessageType == (int)XLMessageType.T_HEARTBEEAT)
+								{
+									UpdateServerHeartBeat(); //只用心跳包 来更新Heartbeat时间
+									_recvheartbeat = !_recvheartbeat;
 #if DEV
                                     logger.Info("HeartBeat from server:" + DateTime.Now.ToString("HH:mm:ss"));
 #endif
-                                    Console.WriteLine("HeartBeat from server:" + DateTime.Now.ToString("HH:mm:ss"));
-                                }
-                                else
-                                {
-                                    //UpdateServerHeartBeat();
-                                    DataReceived(header, buffer, offset + XLConstants.PROTO_HEADER_LEN);
+									//Console.WriteLine("HeartBeat from server:" + DateTime.Now.ToString("HH:mm:ss"));
+								}
+								else
+								{
+									//UpdateServerHeartBeat();
+									DataReceived(header, buffer, offset + XLConstants.PROTO_HEADER_LEN);
+								}
+								offset += pktLen;
+							}
+							else //当前数据没有完整的包含一个协议数据包 则不进行解析
+							{
+								parseFlag = false;
+							}
+						}
+						else
+						{
+							//如果当前可用数据小于协议头长度 则不进行解析
+							parseFlag = false;
+						}
 
-                                }
-                                offset += pktLen;
-                            }
-                            else //当前数据没有完整的包含一个协议数据包 则不进行解析
-                            {
-                                parseFlag = false;
-                            }
-                        }
-                        else
-                        {
-                            //如果当前可用数据小于协议头长度 则不进行解析
-                            parseFlag = false;
-                        }
+						//将剩余数据复制到缓存中
+						if (!parseFlag)
+						{
+							byte[] pdata = new byte[dataLen - offset];
+							Array.Copy(buffer, offset, pdata, 0, dataLen - offset);
+							Array.Copy(pdata, 0, buffer, 0, dataLen - offset);
+							bufferOffset = dataLen - offset;
+						}
+					}
+				}
+				else//对端gracefully关闭一个连接  
+				{
+					if (_socket.Connected)//上次socket的状态  
+					{
+						//if (socketDisconnected != null)
+						//{
+						//    //1-重连  
+						//    socketDisconnected();
+						//    //2-退出，不再执行BeginReceive  
+						//    return;
+						//}
+						//if (working)
+						//{
+						//    Reconnect();
+						//}
+						Console.WriteLine("Read Data Num Error");
+						return;
+					}
+				}
 
-                        //将剩余数据复制到缓存中
-                        if (!parseFlag)
-                        {
-                            byte[] pdata = new byte[dataLen - offset];
-                            Array.Copy(buffer, offset, pdata, 0, dataLen - offset);
-                            Array.Copy(pdata, 0, buffer, 0, dataLen - offset);
-                            bufferOffset = dataLen - offset;
-                        }
-                    }
+				_socket.BeginReceive(buffer, bufferOffset, buffer.Length - bufferOffset, SocketFlags.None, new AsyncCallback(OnReceiveCallback), _socket);
+			}
+			catch (Exception ex)
+			{
 
-                    
-                }
-                else//对端gracefully关闭一个连接  
-                {
-                    if (_socket.Connected)//上次socket的状态  
-                    {
-                        //if (socketDisconnected != null)
-                        //{
-                        //    //1-重连  
-                        //    socketDisconnected();
-                        //    //2-退出，不再执行BeginReceive  
-                        //    return;
-                        //}
-                        //if (working)
-                        //{
-                        //    Reconnect();
-                        //}
-                        return;
-                    }
-                }
-
-                _socket.BeginReceive(buffer, bufferOffset, buffer.Length - bufferOffset, SocketFlags.None, new AsyncCallback(OnReceiveCallback), _socket);
-            }
-            catch (Exception ex)
-            {
-                
 #if DEV
                 logger.Error("Receive Callback Error:" + ex.ToString());
 #endif
-                Console.WriteLine("Receive Callback Error:" + ex.ToString());
-                //WatchDog处于运行状态 则直接启动重连操作
-                if (_started)
-                {
-                    StartReconnect();
-                }
-            }
-        }
+				Console.WriteLine("Receive Callback Error:" + ex.ToString());
+				//WatchDog处于运行状态 则直接启动重连操作
+				if (_started)
+				{
+					StartReconnect();
+				}
+			}
+		}
 
 
         void UpdateServerHeartBeat()
@@ -409,7 +458,7 @@ namespace TradingLib.XLProtocol.Client
             Send(data, data.Length);
         }
 
-
+		ManualResetEvent reconnectEvent = new ManualResetEvent(true);//fals 导致等待线程一直处于阻塞状态
         int retrynum = 10;
         /// <summary>
         /// 在后台线程中执行重连操作
@@ -426,6 +475,7 @@ namespace TradingLib.XLProtocol.Client
 
             System.Threading.ThreadPool.QueueUserWorkItem((o) =>
             {
+				reconnectEvent.Reset();
                 bool ret = false;
                 int cnt = 0;
                 while (cnt < retrynum && !ret && _reconnectreq)
@@ -441,10 +491,12 @@ namespace TradingLib.XLProtocol.Client
                     
                     //关闭Socket
                     SafeCloseSocket();
-                    //连接Socket
-                    ret = Connect();
-                    Console.WriteLine(string.Format("Connect to server #:{0} ret:{1}", cnt,ret));
+					//连接Socket
+					int retCode = 0;
+					ret = Connect(out retCode);
+					Console.WriteLine(string.Format("Reconnect to server #:{0} ret:{1} msg:{2}", cnt,ret,ErrorStr(retCode)));
                 }
+				reconnectEvent.Set();
             }
             );
         }
@@ -482,6 +534,7 @@ namespace TradingLib.XLProtocol.Client
             if (!IsOpen) return -1;
             if (_connect)
             {
+				//Console.WriteLine("send data out");
                 int ret = _socket.Send(data, 0, count, SocketFlags.None);
                 return ret == count ? ret : -1;
             }
@@ -501,5 +554,10 @@ namespace TradingLib.XLProtocol.Client
 		public string Host;
 
 		public int Port;
+
+		public override string ToString()
+		{
+			return string.Format("{0}:{1}", this.Host, this.Port);
+		}
 	}
 }

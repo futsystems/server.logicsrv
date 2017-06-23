@@ -70,6 +70,16 @@ namespace TradingLib.XLProtocol.Client
                 return _socketClient.IsOpen;
             }
         }
+		public string RemoteEndPoint
+		{
+			get
+			{
+				if (!this.IsConnected) return string.Empty;
+				return _socketClient.RemoteEndPoint;
+
+			}
+		}
+
         public APIMarket()
         {
             _socketClient = new SocketClient();
@@ -98,19 +108,22 @@ namespace TradingLib.XLProtocol.Client
         /// 初始化
         /// </summary>
         public void Init()
-        { 
-            if(_socketClient.Connect())
+        {
+			int retCode = 0;
+			if(_socketClient.Connect(out retCode))
             {
                 //OnServerConnected();
             }
             else
             {
                 ErrorField rsp = new ErrorField();
-                rsp.ErrorID = 2;
-                rsp.ErrorMsg = "连接建立失败";
+                rsp.ErrorID = retCode;
+				rsp.ErrorMsg = SocketClient.ErrorStr(retCode);
                 OnRspError(rsp);
             }
         }
+
+
 
         /// <summary>
         /// 等待接口线程结束运行
