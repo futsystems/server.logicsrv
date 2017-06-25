@@ -1092,6 +1092,122 @@ namespace TradingLib.XLProtocol.V1
         
     #endregion
 
+    #region 银行卡绑定与查询
+    [StructLayout(LayoutKind.Sequential, Pack = 4)]
+    public struct XLQryBankCardField : IXLField
+    {
+        /// <summary>
+        /// 投资者代码
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 13)]
+        public string UserID;
+
+        /// <summary>
+        /// 域类别
+        /// </summary>
+        public ushort FieldID { get { return (ushort)XLFieldType.F_QRY_BANK; } }
+    }
+
+    [StructLayout(LayoutKind.Sequential, Pack = 4)]
+    public struct XLReqUpdateBankCardField : IXLField
+    {
+        /// <summary>
+        /// 投资者代码
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 13)]
+        public string UserID;
+
+        /// <summary>
+        /// 客户姓名
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 51)]
+        public string Name;
+
+        /// <summary>
+        /// 银行代码
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 4)]
+        public string BankID;
+
+        /// <summary>
+        /// 开户支行
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 81)]
+        public string BankBrch;
+
+        /// <summary>
+        /// 银行账号
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 41)]
+        public string BankAccount;
+
+        /// <summary>
+        /// 证件号码
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 21)]
+        public string CertCode;
+
+        /// <summary>
+        /// 手机
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 21)]
+        public string MobilePhone;
+
+        /// <summary>
+        /// 域类别
+        /// </summary>
+        public ushort FieldID { get { return (ushort)XLFieldType.F_REQ_UPDATE_BANK; } }
+    }
+
+    [StructLayout(LayoutKind.Sequential, Pack = 4)]
+    public struct XLBankCardField : IXLField
+    {
+        /// <summary>
+        /// 客户姓名
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 51)]
+        public string Name;
+
+        /// <summary>
+        /// 银行代码
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 4)]
+        public string BankID;
+
+        /// <summary>
+        /// 开户支行
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 81)]
+        public string BankBrch;
+
+        /// <summary>
+        /// 银行账号
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 41)]
+        public string BankAccount;
+
+        /// <summary>
+        /// 证件号码
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 21)]
+        public string CertCode;
+
+        /// <summary>
+        /// 手机
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 21)]
+        public string MobilePhone;
+
+        /// <summary>
+        /// 域类别
+        /// </summary>
+        public ushort FieldID { get { return (ushort)XLFieldType.F_RSP_BANK; } }
+    }
+    #endregion
+
+
+
+
     #region 提交委托
     /// <summary>
     /// 输入报单

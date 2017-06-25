@@ -224,6 +224,13 @@ namespace TradingLib.Common
                     case MessageTypes.XQRYCASHTXN:
                         return RequestTemplate<XQryCashTransRequest>.SrvRecvRequest(frontid, clientid, message.Content);
                     
+                    //查询银行卡
+                    case MessageTypes.XQRYBANK:
+                        return RequestTemplate<XQryBankCardRequest>.SrvRecvRequest(frontid, clientid, message.Content);
+                    //更新银行卡
+                    case MessageTypes.XUPDATEBANK:
+                        return RequestTemplate<XReqUpdateBankCardRequest>.SrvRecvRequest(frontid, clientid, message.Content);
+                    
                     #region manager
                     case MessageTypes.MGR_REQ_LOGIN://请求登入
                         return RequestTemplate<MGRLoginRequest>.SrvRecvRequest(frontid, clientid, message.Content);
@@ -410,6 +417,12 @@ namespace TradingLib.Common
                     return ResponseTemplate<RspXqrySettleSummaryResponse>.CliRecvResponse(message);
                 case MessageTypes.XQRYCASHTXNRESPONSE://出入金数据回报
                     return ResponseTemplate<RspXQryCashTransResponse>.CliRecvResponse(message);
+
+                case MessageTypes.XQRYBANKRESPONSE://查询银行卡回报
+                    return ResponseTemplate<RspXQryBankCardResponse>.CliRecvResponse(message);
+                case MessageTypes.XUPDATEBANKRESPONSE://更新银行卡回报
+                    return ResponseTemplate<RspXReqUpdateBankCardResponse>.CliRecvResponse(message);
+
 
                 case MessageTypes.TICKNOTIFY:
                     return ResponseTemplate<TickNotify>.CliRecvResponse(message);

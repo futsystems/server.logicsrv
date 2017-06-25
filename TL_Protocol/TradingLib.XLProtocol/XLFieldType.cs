@@ -147,6 +147,21 @@ namespace TradingLib.XLProtocol
         /// </summary>
         F_RSP_CASH_TXN = 125,
 
+        /// <summary>
+        /// 银行卡更新
+        /// </summary>
+        F_REQ_UPDATE_BANK=126,
+
+        /// <summary>
+        /// 银行卡擦和讯
+        /// </summary>
+        F_QRY_BANK=128,
+
+        /// <summary>
+        /// 银行卡回报
+        /// </summary>
+        F_RSP_BANK = 129,
+
 
 
         /// <summary>

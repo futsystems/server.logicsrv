@@ -29,9 +29,9 @@ namespace APIClient
             ControlLogFactoryAdapter.SendDebugEvent += new Action<string>(ControlLogFactoryAdapter_SendDebugEvent);
             WireEvent();
             debugControl1.TimeStamps = false;
-            exAddress.Text = "121.40.201.40";
-            exAddress.Text = "127.0.0.1";
-            
+            //exAddress.Text = "121.40.201.40";
+            //exAddress.Text = "127.0.0.1";
+            exAddress.Text = "local.cloud-deploy.com";
         }
 
         void ControlLogFactoryAdapter_SendDebugEvent(string obj)
@@ -65,7 +65,8 @@ namespace APIClient
             btnExCancelOrder.Click += new EventHandler(btnExCancelOrder_Click);
             btnExQrySettle.Click += new EventHandler(btnExQrySettle_Click);
             btnExQrySettleSummary.Click += new EventHandler(btnExQrySettleSummary_Click);
-
+            btnExQryBank.Click += new EventHandler(btnExQryBank_Click);
+            btnExUpdateBankCard.Click += new EventHandler(btnExUpdateBankCard_Click);
 
             btnWSStart.Click += new EventHandler(btnWSStart_Click);
             btnWSStop.Click += new EventHandler(btnWSStop_Click);
@@ -94,6 +95,10 @@ namespace APIClient
             btnEncode.Click += new EventHandler(btnEncode_Click);
             btnDecode.Click += new EventHandler(btnDecode_Click);
         }
+
+
+
+       
 
 
 
@@ -429,6 +434,29 @@ namespace APIClient
             logger.Info(string.Format("QrySettleSummary Send Success:{0}", ret));
         }
 
+        void btnExQryBank_Click(object sender, EventArgs e)
+        {
+            if (_apiTrader == null) return;
+            XLQryBankCardField req = new XLQryBankCardField();
+            bool ret = _apiTrader.QryBankCard(req, ++_requestId);
+            logger.Info(string.Format("QryBankCard Send Success:{0}", ret));
+        }
+
+        void btnExUpdateBankCard_Click(object sender, EventArgs e)
+        {
+            if (_apiTrader == null) return;
+            XLReqUpdateBankCardField req = new XLReqUpdateBankCardField();
+            req.BankAccount = "4444";
+            req.BankBrch = "中山路支行";
+            req.BankID = "1";
+            req.CertCode = "320582000000";
+            req.MobilePhone = "13888888";
+            req.Name = "张三";
+            
+            bool ret = _apiTrader.ReqUpdateBankCard(req, ++_requestId);
+            logger.Info(string.Format("ReqUpdateBankCard Send Success:{0}", ret));
+        }
+
 
         void btnExQryMaxOrderVol_Click(object sender, EventArgs e)
         {
@@ -539,6 +567,8 @@ namespace APIClient
             _apiTrader.OnRtnPosition += new Action<XLPositionField>(_apiTrader_OnRtnPosition);
             _apiTrader.OnRspQrySettleSummary += new Action<XLSettleSummaryField?, ErrorField, uint, bool>(_apiTrader_OnRspQrySettleSummary);
 
+            _apiTrader.OnRspQryBankCard += new Action<XLBankCardField?, ErrorField, uint, bool>(_apiTrader_OnRspQryBankCard);
+
             //System.Globalization.CultureInfo info = new System.Globalization.CultureInfo("en");
             
             //System.Threading.Thread.CurrentThread.CurrentCulture = info;
@@ -550,6 +580,11 @@ namespace APIClient
                 //_apiTrader.Join();
                 //logger.Info("API Thread Stopped");
             }).Start();
+        }
+
+        void _apiTrader_OnRspQryBankCard(XLBankCardField? arg1, ErrorField arg2, uint arg3, bool arg4)
+        {
+            logger.Info(string.Format("Field:{0} Rsp:{1} RequestID:{2} IsLast:{3}", JsonConvert.SerializeObject(arg1), JsonConvert.SerializeObject(arg2), arg3, arg4));
         }
 
         void _apiTrader_OnRspQrySettleSummary(XLSettleSummaryField? arg1, ErrorField arg2, uint arg3, bool arg4)

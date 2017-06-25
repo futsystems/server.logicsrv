@@ -252,5 +252,63 @@ namespace TradingLib.Core
         
         }
 
+        void SrvOnXQryBankCard(ISession session, XQryBankCardRequest request, IAccount account)
+        {
+            logger.Info("XQryBankCard:" + request.ToString());
+
+            AccountProfile profile = BasicTracker.AccountProfileTracker[account.ID];
+            BankCardInfo info = null;
+            ContractBank bank= BasicTracker.ContractBankTracker[profile.Bank_ID];
+            if (bank != null)
+            {
+                info = new BankCardInfo();
+                info.Name = profile.Name;
+                info.CertCode = profile.IDCard;
+                info.MobilePhone = profile.Mobile;
+                info.BankAccount = profile.BankAC;
+                info.BankBrch = profile.Branch;
+                info.BankID = bank.BrankID;
+            }
+            
+            RspXQryBankCardResponse response = ResponseTemplate<RspXQryBankCardResponse>.SrvSendRspResponse(request);
+            response.BankCardInfo = info;
+            CacheRspResponse(response);
+        }
+
+        void SrvOnXReqUpdateBankCard(ISession session, XReqUpdateBankCardRequest request, IAccount account)
+        {
+            logger.Info("XUpdateBankCard:" + request.ToString());
+            AccountProfile profile = BasicTracker.AccountProfileTracker[account.ID];
+            ContractBank bank= BasicTracker.ContractBankTracker[request.BankCardInfo.BankID];
+            if (bank != null)
+            {
+                profile.Name = request.BankCardInfo.Name;
+                profile.IDCard = request.BankCardInfo.CertCode;
+                profile.Mobile = request.BankCardInfo.MobilePhone;
+                profile.BankAC = request.BankCardInfo.BankAccount;
+                profile.Branch = request.BankCardInfo.BankBrch;
+                profile.Bank_ID = bank.ID;
+                BasicTracker.AccountProfileTracker.UpdateAccountProfile(profile);
+            }
+
+            BankCardInfo info = null;
+            bank = BasicTracker.ContractBankTracker[profile.Bank_ID];
+            if (bank != null)
+            {
+                info = new BankCardInfo();
+                info.Name = profile.Name;
+                info.CertCode = profile.IDCard;
+                info.MobilePhone = profile.Mobile;
+                info.BankAccount = profile.BankAC;
+                info.BankBrch = profile.Branch;
+                info.BankID = bank.BrankID;
+            }
+            
+            RspXReqUpdateBankCardResponse response = ResponseTemplate<RspXReqUpdateBankCardResponse>.SrvSendRspResponse(request);
+            response.BankCardInfo = info;
+            CacheRspResponse(response);
+
+
+        }
     }
 }

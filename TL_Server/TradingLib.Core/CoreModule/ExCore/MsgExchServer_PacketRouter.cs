@@ -245,6 +245,18 @@ namespace TradingLib.Core
                         SrvOnXQryCashTxn(session,request,account);
                     }   
                     break;
+                case MessageTypes.XQRYBANK://查询银行卡
+                    {
+                        XQryBankCardRequest request = packet as XQryBankCardRequest;
+                        SrvOnXQryBankCard(session, request, account);
+                    }
+                    break;
+                case MessageTypes.XUPDATEBANK:
+                    {
+                        XReqUpdateBankCardRequest request = packet as XReqUpdateBankCardRequest;
+                        SrvOnXReqUpdateBankCard(session, request, account);
+                    }
+                    break;
 
                 case MessageTypes.CONTRIBREQUEST://扩展请求
                     {

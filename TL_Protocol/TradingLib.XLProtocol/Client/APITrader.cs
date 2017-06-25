@@ -103,6 +103,16 @@ namespace TradingLib.XLProtocol.Client
         public event Action<XLCashTxnField?, ErrorField, uint, bool> OnRspQryCashTxn = delegate { };
 
         /// <summary>
+        /// 查询银行卡回报
+        /// </summary>
+        public event Action<XLBankCardField?, ErrorField, uint, bool> OnRspQryBankCard = delegate { };
+
+        /// <summary>
+        /// 更新银行卡回报
+        /// </summary>
+        public event Action<XLBankCardField?, ErrorField, uint, bool> OnRspUpdateBankCard = delegate { };
+
+        /// <summary>
         /// 委托实时通知
         /// </summary>
         public event Action<XLOrderField> OnRtnOrder = delegate { };
@@ -398,6 +408,39 @@ namespace TradingLib.XLProtocol.Client
                             }
                             break;
                         }
+                    case XLMessageType.T_RSP_BANK:
+                        {
+                            if (pkt.FieldList.Count > 0)
+                            {
+                                for (int i = 0; i < pkt.FieldList.Count; i++)
+                                {
+                                    OnRspQryBankCard((XLBankCardField)pkt.FieldList[i], NoError, dataHeader.RequestID, (int)dataHeader.IsLast == 1 && (i == pkt.FieldList.Count - 1) ? true : false);
+                                }
+                            }
+                            else
+                            {
+                                OnRspQryBankCard(null, NoError, dataHeader.RequestID, (int)dataHeader.IsLast == 1 ? true : false);
+
+                            }
+                            break;
+                        }
+                    case XLMessageType.T_RSP_UPDATE_BANK:
+                        {
+                            if (pkt.FieldList.Count > 0)
+                            {
+                                for (int i = 0; i < pkt.FieldList.Count; i++)
+                                {
+                                    OnRspUpdateBankCard((XLBankCardField)pkt.FieldList[i], NoError, dataHeader.RequestID, (int)dataHeader.IsLast == 1 && (i == pkt.FieldList.Count - 1) ? true : false);
+                                }
+                            }
+                            else
+                            {
+                                OnRspUpdateBankCard(null, NoError, dataHeader.RequestID, (int)dataHeader.IsLast == 1 ? true : false);
+
+                            }
+                            break;
+                        }
+
                     default:
                         //logger.Info(string.Format("Unhandled Pkt:{0}", msgType));
                         break;
@@ -565,7 +608,31 @@ namespace TradingLib.XLProtocol.Client
             return SendPktData(pktData, XLEnumSeqType.SeqQry, requestID);
         }
 
+        /// <summary>
+        /// 查询银行
+        /// </summary>
+        /// <param name="req"></param>
+        /// <param name="requestID"></param>
+        /// <returns></returns>
+        public bool QryBankCard(XLQryBankCardField req, uint requestID)
+        {
+            XLPacketData pktData = new XLPacketData(XLMessageType.T_QRY_BANK);
+            pktData.AddField(req);
+            return SendPktData(pktData, XLEnumSeqType.SeqQry, requestID);
+        }
 
+        /// <summary>
+        /// 更新银行
+        /// </summary>
+        /// <param name="req"></param>
+        /// <param name="requestID"></param>
+        /// <returns></returns>
+        public bool ReqUpdateBankCard(XLReqUpdateBankCardField req, uint requestID)
+        {
+            XLPacketData pktData = new XLPacketData(XLMessageType.T_REQ_UPDATE_BANK);
+            pktData.AddField(req);
+            return SendPktData(pktData, XLEnumSeqType.SeqQry, requestID);
+        }
 
         /// <summary>
         /// 请求提交委托

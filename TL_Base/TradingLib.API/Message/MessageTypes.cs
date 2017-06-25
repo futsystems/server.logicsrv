@@ -109,6 +109,8 @@ namespace TradingLib.API
         XQRYEXCHANGERATE,//查询汇率数据
         XQRYSETTLESUMMAY,//查询结算汇总数据 每日一条结算记录
         XQRYCASHTXN,//查询出入金记录
+        XQRYBANK,//查询银行信息
+        XUPDATEBANK,//更新银行信息
 
         DOMREQUEST,//请求DOM市场Level2数据
         IMBALANCEREQUEST,//imbalance..查询这个是什么意思
@@ -185,7 +187,8 @@ namespace TradingLib.API
         XQRYEXCHANGERATERESPONSE,//汇率数据回报
         XQRYSETTLESUMMAYRESPONSE,//结算汇总数据
         XQRYCASHTXNRESPONSE,//出入金数据回报
-     
+        XQRYBANKRESPONSE,//查询银行回报
+        XUPDATEBANKRESPONSE,//更新银行回报
 
 
         MD_DEMOTICK,//行情服务器测试Tick

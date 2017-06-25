@@ -30,6 +30,7 @@
         {
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.btnExQrySettleSummary = new System.Windows.Forms.Button();
             this.btnExQrySettle = new System.Windows.Forms.Button();
             this.btnHeartBeat = new System.Windows.Forms.Button();
             this.exapiverbose = new System.Windows.Forms.CheckBox();
@@ -117,8 +118,9 @@
             this.ekey = new System.Windows.Forms.TextBox();
             this.btnEncode = new System.Windows.Forms.Button();
             this.label21 = new System.Windows.Forms.Label();
+            this.btnExQryBank = new System.Windows.Forms.Button();
             this.debugControl1 = new APIClient.DebugControl();
-            this.btnExQrySettleSummary = new System.Windows.Forms.Button();
+            this.btnExUpdateBankCard = new System.Windows.Forms.Button();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tabPage2.SuspendLayout();
@@ -142,6 +144,8 @@
             // 
             // tabPage1
             // 
+            this.tabPage1.Controls.Add(this.btnExUpdateBankCard);
+            this.tabPage1.Controls.Add(this.btnExQryBank);
             this.tabPage1.Controls.Add(this.btnExQrySettleSummary);
             this.tabPage1.Controls.Add(this.btnExQrySettle);
             this.tabPage1.Controls.Add(this.btnHeartBeat);
@@ -173,6 +177,15 @@
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "Socket/二进制";
             this.tabPage1.UseVisualStyleBackColor = true;
+            // 
+            // btnExQrySettleSummary
+            // 
+            this.btnExQrySettleSummary.Location = new System.Drawing.Point(308, 77);
+            this.btnExQrySettleSummary.Name = "btnExQrySettleSummary";
+            this.btnExQrySettleSummary.Size = new System.Drawing.Size(109, 23);
+            this.btnExQrySettleSummary.TabIndex = 23;
+            this.btnExQrySettleSummary.Text = "QrySettleSummary";
+            this.btnExQrySettleSummary.UseVisualStyleBackColor = true;
             // 
             // btnExQrySettle
             // 
@@ -367,7 +380,7 @@
             this.exAddress.Name = "exAddress";
             this.exAddress.Size = new System.Drawing.Size(133, 21);
             this.exAddress.TabIndex = 1;
-            this.exAddress.Text = "121.40.201.40";
+            this.exAddress.Text = "local.cloud-deploy.com";
             // 
             // label1
             // 
@@ -995,6 +1008,15 @@
             this.label21.TabIndex = 0;
             this.label21.Text = "密钥";
             // 
+            // btnExQryBank
+            // 
+            this.btnExQryBank.Location = new System.Drawing.Point(308, 106);
+            this.btnExQryBank.Name = "btnExQryBank";
+            this.btnExQryBank.Size = new System.Drawing.Size(109, 23);
+            this.btnExQryBank.TabIndex = 24;
+            this.btnExQryBank.Text = "QryBankCard";
+            this.btnExQryBank.UseVisualStyleBackColor = true;
+            // 
             // debugControl1
             // 
             this.debugControl1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
@@ -1010,14 +1032,14 @@
             this.debugControl1.TimeStamps = true;
             this.debugControl1.UseExternalTimeStamp = false;
             // 
-            // btnExQrySettleSummary
+            // btnExUpdateBankCard
             // 
-            this.btnExQrySettleSummary.Location = new System.Drawing.Point(308, 77);
-            this.btnExQrySettleSummary.Name = "btnExQrySettleSummary";
-            this.btnExQrySettleSummary.Size = new System.Drawing.Size(109, 23);
-            this.btnExQrySettleSummary.TabIndex = 23;
-            this.btnExQrySettleSummary.Text = "QrySettleSummary";
-            this.btnExQrySettleSummary.UseVisualStyleBackColor = true;
+            this.btnExUpdateBankCard.Location = new System.Drawing.Point(308, 135);
+            this.btnExUpdateBankCard.Name = "btnExUpdateBankCard";
+            this.btnExUpdateBankCard.Size = new System.Drawing.Size(109, 23);
+            this.btnExUpdateBankCard.TabIndex = 25;
+            this.btnExUpdateBankCard.Text = "UpdateBankCard";
+            this.btnExUpdateBankCard.UseVisualStyleBackColor = true;
             // 
             // Form1
             // 
@@ -1135,6 +1157,8 @@
         private System.Windows.Forms.Label label23;
         private System.Windows.Forms.Button btnDecode;
         private System.Windows.Forms.Button btnExQrySettleSummary;
+        private System.Windows.Forms.Button btnExQryBank;
+        private System.Windows.Forms.Button btnExUpdateBankCard;
     }
 }
 

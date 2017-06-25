@@ -181,6 +181,26 @@ namespace TradingLib.XLProtocol
         T_RSP_CASH_TXN = 3031,
 
         /// <summary>
+        /// 请求更新银行卡
+        /// </summary>
+        T_REQ_UPDATE_BANK=3032,
+
+        /// <summary>
+        /// 回报更新银行卡
+        /// </summary>
+        T_RSP_UPDATE_BANK=3033,
+
+        /// <summary>
+        /// 查询银行卡
+        /// </summary>
+        T_QRY_BANK =3034,
+
+        /// <summary>
+        /// 回报银行卡
+        /// </summary>
+        T_RSP_BANK=3035,
+
+        /// <summary>
         /// 请求注册市场行情
         /// </summary>
         T_REQ_SUB_MARKETDATA = 4000,

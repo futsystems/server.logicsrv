@@ -61,6 +61,7 @@
     <Compile Include="BusinessEntities\Account\AccountCreation.cs" />
     <Compile Include="BusinessEntities\Account\AccountProfie.cs" />
     <Compile Include="BusinessEntities\Account\SessionInfo.cs" />
+    <Compile Include="BusinessEntities\Bank\BankCardInfo.cs" />
     <Compile Include="BusinessEntities\BinaryOption\BinaryOptionImpl.cs" />
     <Compile Include="BusinessEntities\BinaryOption\BinaryOptionOrderImpl.cs" />
     <Compile Include="BusinessEntities\BinaryOption\BinaryOptions.cs" />
@@ -232,7 +233,7 @@
     <Compile Include="Message\Trading.cs" />
     <Compile Include="Message\Version.cs" />
     <Compile Include="Client\ClientInfo.cs" />
-    <Compile Include="BusinessEntities\ContractBank.cs" />
+    <Compile Include="BusinessEntities\Bank\ContractBank.cs" />
     <Compile Include="BusinessEntities\Manager\Manager.cs" />
     <Compile Include="Msic\SystemStatus.cs" />
     <Compile Include="BusinessEntities\Account\AccountInfo.cs" />

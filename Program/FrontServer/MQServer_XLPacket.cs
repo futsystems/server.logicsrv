@@ -168,6 +168,44 @@ namespace FrontServer
                         if (response.IsLast) logger.Info(string.Format("LogicSrv Reply Session:{0} -> RspXqrySettleSummaryResponse", conn.SessionID));
                         break;
                     }
+                    //查询银行回报
+                case MessageTypes.XQRYBANKRESPONSE:
+                    {
+                        RspXQryBankCardResponse response = lpkt as RspXQryBankCardResponse;
+                        XLPacketData pkt = new XLPacketData(XLMessageType.T_RSP_BANK);
+
+                        if (response.BankCardInfo == null)
+                        {
+                            conn.ResponseXLPacket(pkt, (uint)response.RequestID, response.IsLast);
+                        }
+                        else
+                        {
+                            XLBankCardField field = ConvBankCard(response.BankCardInfo);
+                            pkt.AddField(field);
+                            conn.ResponseXLPacket(pkt, (uint)response.RequestID, response.IsLast);
+                        }
+                        if (response.IsLast) logger.Info(string.Format("LogicSrv Reply Session:{0} -> RspXQryBankCardResponse", conn.SessionID));
+                        break;
+                    }
+                    //更新银行回报
+                case MessageTypes.XUPDATEBANKRESPONSE:
+                    {
+                        RspXReqUpdateBankCardResponse response = lpkt as RspXReqUpdateBankCardResponse;
+                        XLPacketData pkt = new XLPacketData(XLMessageType.T_RSP_UPDATE_BANK);
+
+                        if (response.BankCardInfo == null)
+                        {
+                            conn.ResponseXLPacket(pkt, (uint)response.RequestID, response.IsLast);
+                        }
+                        else
+                        {
+                            XLBankCardField field = ConvBankCard(response.BankCardInfo);
+                            pkt.AddField(field);
+                            conn.ResponseXLPacket(pkt, (uint)response.RequestID, response.IsLast);
+                        }
+                        if (response.IsLast) logger.Info(string.Format("LogicSrv Reply Session:{0} -> RspXReqUpdateBankCardResponse", conn.SessionID));
+                        break;
+                    }
                 //查询委托回报
                 case MessageTypes.XORDERRESPONSE:
                     {
@@ -790,6 +828,41 @@ namespace FrontServer
                         }
                         break;
                     }
+                case XLMessageType.T_QRY_BANK:
+                    {
+                        var data = pkt.FieldList[0];
+                        if (data is XLQryBankCardField)
+                        {
+                            XLQryBankCardField field = (XLQryBankCardField)data;
+
+                            XQryBankCardRequest request = RequestTemplate<XQryBankCardRequest>.CliSendRequest(requestId);
+                            this.TLSend(conn.SessionID, request);
+                            logger.Info(string.Format("Session:{0} >> XQryBankCardRequest", conn.SessionID));
+                        }
+                        else
+                        {
+                            logger.Warn(string.Format("Request:{0} Data Field do not macth", pkt.MessageType));
+                        }
+                        break;
+                    }
+                case XLMessageType.T_REQ_UPDATE_BANK:
+                    {
+                        var data = pkt.FieldList[0];
+                        if (data is XLReqUpdateBankCardField)
+                        {
+                            XLReqUpdateBankCardField field = (XLReqUpdateBankCardField)data;
+
+                            XReqUpdateBankCardRequest request = RequestTemplate<XReqUpdateBankCardRequest>.CliSendRequest(requestId);
+                            request.BankCardInfo = ConvBankCard(field);
+                            this.TLSend(conn.SessionID, request);
+                            logger.Info(string.Format("Session:{0} >> XReqUpdateBankCardRequest", conn.SessionID));
+                        }
+                        else
+                        {
+                            logger.Warn(string.Format("Request:{0} Data Field do not macth", pkt.MessageType));
+                        }
+                        break;
+                    }
                 default:
                     logger.Warn(string.Format("Packet:{0} logic not handled", pkt.MessageType));
                     break;
@@ -1017,6 +1090,31 @@ namespace FrontServer
 
         }
 
+        XLBankCardField ConvBankCard(BankCardInfo info)
+        {
+            XLBankCardField field = new XLBankCardField();
+            field.BankAccount = info.BankAccount;
+            field.BankBrch = info.BankBrch;
+            field.BankID = info.BankID;
+            field.CertCode = info.CertCode;
+            field.MobilePhone = info.MobilePhone;
+            field.Name = info.Name;
+
+            return field;
+        }
+
+        BankCardInfo ConvBankCard(XLReqUpdateBankCardField field)
+        {
+            BankCardInfo info = new BankCardInfo();
+            info.BankAccount = field.BankAccount;
+            info.BankBrch = field.BankBrch;
+            info.BankID = field.BankID;
+            info.CertCode = field.CertCode;
+            info.MobilePhone = field.MobilePhone;
+            info.Name = field.Name;
+
+            return info;
+        }
 
 
         ErrorField ConvertRspInfo(RspInfo info)

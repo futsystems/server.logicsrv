@@ -431,4 +431,106 @@ namespace TradingLib.Common
         }
     }
 
+
+    #region 
+    /// <summary>
+    /// 查询银行卡
+    /// </summary>
+    public class XQryBankCardRequest : RequestPacket
+    {
+        public XQryBankCardRequest()
+        {
+            _type = MessageTypes.XQRYBANK;
+        }
+
+        public override string ContentSerialize()
+        {
+            return string.Empty;
+        }
+
+        public override void ContentDeserialize(string contentstr)
+        {
+
+        }
+    }
+
+    /// <summary>
+    /// 查询银行卡回报
+    /// </summary>
+    public class RspXQryBankCardResponse : RspResponsePacket
+    {
+        public RspXQryBankCardResponse()
+        {
+            _type = MessageTypes.XQRYBANKRESPONSE;
+            BankCardInfo = null;
+        }
+
+        public BankCardInfo BankCardInfo { get; set; }
+        public override string ResponseSerialize()
+        {
+            if (this.BankCardInfo == null) return string.Empty;
+            return BankCardInfo.Serialize(this.BankCardInfo);
+        }
+
+        public override void ResponseDeserialize(string content)
+        {
+            if (string.IsNullOrEmpty(content))
+            {
+                this.BankCardInfo = null;
+                return;
+            }
+            this.BankCardInfo = BankCardInfo.Deserialize(content);
+        }
+    }
+    #endregion
+
+
+    #region 更新银行卡
+    /// <summary>
+    /// 更新银行卡
+    /// </summary>
+    public class XReqUpdateBankCardRequest : RequestPacket
+    {
+        public XReqUpdateBankCardRequest()
+        {
+            _type = MessageTypes.XUPDATEBANK;
+            this.BankCardInfo = null;
+        }
+
+        public BankCardInfo BankCardInfo { get; set; }
+
+        public override string ContentSerialize()
+        {
+            return BankCardInfo.Serialize(this.BankCardInfo);
+        }
+
+        public override void ContentDeserialize(string contentstr)
+        {
+            this.BankCardInfo = BankCardInfo.Deserialize(contentstr);
+        }
+    }
+
+    /// <summary>
+    /// 更新银行卡回报
+    /// </summary>
+    public class RspXReqUpdateBankCardResponse : RspResponsePacket
+    {
+        public RspXReqUpdateBankCardResponse()
+        {
+            _type = MessageTypes.XQRYBANKRESPONSE;
+            BankCardInfo = null;
+        }
+
+        public BankCardInfo BankCardInfo { get; set; }
+        public override string ResponseSerialize()
+        {
+            return BankCardInfo.Serialize(this.BankCardInfo);
+        }
+
+        public override void ResponseDeserialize(string content)
+        {
+            this.BankCardInfo = BankCardInfo.Deserialize(content);
+        }
+    }
+    #endregion
 }
