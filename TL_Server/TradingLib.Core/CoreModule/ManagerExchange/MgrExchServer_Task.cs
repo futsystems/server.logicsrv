@@ -100,7 +100,7 @@ namespace TradingLib.Core
             }
         }
 
-        //[TaskAttr("采集代理帐户信息", 2, 0, "定时采集代理帐户信息用于向管理端进行推送")]
+        [TaskAttr("采集代理帐户信息", 2, 0, "定时采集代理帐户信息用于向管理端进行推送")]
         public void Task_CollectAgentInfo()
         {
             try
