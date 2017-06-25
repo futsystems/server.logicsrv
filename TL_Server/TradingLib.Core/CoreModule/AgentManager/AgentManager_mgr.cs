@@ -253,7 +253,7 @@ namespace TradingLib.Core
         /// <summary>
         /// 帐户风控规则扫描
         /// </summary>
-        [TaskAttr("会员结算帐户风控实时检查",2, 0, "结算帐户实时检查")]
+       //[TaskAttr("会员结算帐户风控实时检查",2, 0, "结算帐户实时检查")]
         public void Task_DataCheck()
         {
             if (TLCtxHelper.ModuleSettleCentre.SettleMode != QSEnumSettleMode.StandbyMode) return;
