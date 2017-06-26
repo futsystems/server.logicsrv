@@ -74,12 +74,14 @@ namespace RuleSet2.Order
 
             Symbol symbol = o.oSymbol;
 
-            //需要检查合约 且 不在合约集 则返回true
-            //if (NeedCheckSymbol(o.oSymbol) && !_symbolset.Contains(o.oSymbol.SecurityFamily.Code))
-            //    return true;
-            //如果没有指定品种列表 则直接返回True 不检查该委托的最大交易手数
-            if (!sec_list.Contains(o.oSymbol.SecurityFamily.Code))
+            //设置品种列表 且当前交易品种不在列表内 则不检查手数限制
+            if (sec_list.Count > 0 && (!sec_list.Contains(o.oSymbol.SecurityFamily.Code)))
+            {
                 return true;
+            }
+            //如果没有指定品种列表 则直接返回True 不检查该委托的最大交易手数
+            //if (!sec_list.Contains(o.oSymbol.SecurityFamily.Code))
+            //    return true;
             //判断是开仓还是平仓如果是开仓则进行判断拒绝,平仓则直接允许
             if (!o.IsEntryPosition) return true;
             //查询当前品种的所有开仓成交 并计算累加开仓手数
