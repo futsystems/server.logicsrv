@@ -83,6 +83,8 @@ namespace TradingLib.Core
         SeqGenerator _orderSeqGen = null;
         SeqGenerator _tradeSeqGen = null;
 
+        decimal _depositLimit = 50000;
+
         //BinaryOptionQuoteEngine boEngine = null;
         public MsgExchServer()
             : base(MsgExchServer.CoreName)
@@ -228,6 +230,13 @@ namespace TradingLib.Core
                 }
                 commentOpened = _cfgdb["CommentOpened"].AsString();
                 #endregion
+
+
+                if (!_cfgdb.HaveConfig("DepositLimit"))
+                {
+                    _cfgdb.UpdateConfig("DepositLimit", QSEnumCfgType.Decimal,50000, "单笔入金限额");
+                }
+                _depositLimit = _cfgdb["DepositLimit"].AsDecimal();
 
                 //初始化TLServer
                 InitTLServer();

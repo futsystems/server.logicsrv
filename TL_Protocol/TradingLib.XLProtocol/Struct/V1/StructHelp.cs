@@ -83,6 +83,11 @@ namespace TradingLib.XLProtocol.V1
                     return XLStructHelp.StructToBytes<XLBankCardField>((XLBankCardField)field);
 
 
+                case XLFieldType.F_REQ_CASHOP:
+                    return XLStructHelp.StructToBytes<XLReqCashOperationField>((XLReqCashOperationField)field);
+                case XLFieldType.F_RSP_CASHOP:
+                    return XLStructHelp.StructToBytes<XLCashOperationField>((XLCashOperationField)field);
+
                 case XLFieldType.F_QRY_MINUTEDATA:
                     return XLStructHelp.StructToBytes<XLQryMinuteDataField>((XLQryMinuteDataField)field);
                 case XLFieldType.F_RSP_MINUTEDATA:
@@ -166,6 +171,11 @@ namespace TradingLib.XLProtocol.V1
                     return XLStructHelp.BytesToStruct<XLReqUpdateBankCardField>(data, offset);
                 case XLFieldType.F_RSP_BANK:
                     return XLStructHelp.BytesToStruct<XLBankCardField>(data, offset);
+
+                case XLFieldType.F_REQ_CASHOP:
+                    return XLStructHelp.BytesToStruct<XLReqCashOperationField>(data, offset);
+                case XLFieldType.F_RSP_CASHOP:
+                    return XLStructHelp.BytesToStruct<XLCashOperationField>(data, offset);
 
                 case XLFieldType.F_QRY_MINUTEDATA:
                     return XLStructHelp.BytesToStruct<XLQryMinuteDataField>(data, offset);

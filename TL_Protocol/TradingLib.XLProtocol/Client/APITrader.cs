@@ -113,6 +113,11 @@ namespace TradingLib.XLProtocol.Client
         public event Action<XLBankCardField?, ErrorField, uint, bool> OnRspUpdateBankCard = delegate { };
 
         /// <summary>
+        /// 请求出入金操作回报
+        /// </summary>
+        public event Action<XLCashOperationField?, ErrorField, uint, bool> OnRspCashOperation = delegate { };
+
+        /// <summary>
         /// 委托实时通知
         /// </summary>
         public event Action<XLOrderField> OnRtnOrder = delegate { };
@@ -440,6 +445,21 @@ namespace TradingLib.XLProtocol.Client
                             }
                             break;
                         }
+                    //请求出入金回报
+                    case XLMessageType.T_RSP_CASHOP:
+                        {
+                            ErrorField rsp = (ErrorField)pkt.FieldList[0];
+                            if (rsp.ErrorID == 0)
+                            {
+                                XLCashOperationField field = (XLCashOperationField)pkt.FieldList[1];
+                                OnRspCashOperation(field, rsp, dataHeader.RequestID, (int)dataHeader.IsLast == 1 ? true : false);
+                            }
+                            else
+                            {
+                                OnRspCashOperation(null, rsp, dataHeader.RequestID, (int)dataHeader.IsLast == 1 ? true : false);
+                            }
+                            break;
+                        }
 
                     default:
                         //logger.Info(string.Format("Unhandled Pkt:{0}", msgType));
@@ -656,6 +676,19 @@ namespace TradingLib.XLProtocol.Client
         public bool ReqOrderAction(XLInputOrderActionField req, uint requestID)
         {
             XLPacketData pktData = new XLPacketData(XLMessageType.T_REQ_ORDERACTION);
+            pktData.AddField(req);
+            return SendPktData(pktData, XLEnumSeqType.SeqReq, requestID);
+        }
+
+        /// <summary>
+        /// 请求出入金
+        /// </summary>
+        /// <param name="req"></param>
+        /// <param name="requestID"></param>
+        /// <returns></returns>
+        public bool ReqCashOperation(XLReqCashOperationField req, uint requestID)
+        {
+            XLPacketData pktData = new XLPacketData(XLMessageType.T_REQ_CASHOP);
             pktData.AddField(req);
             return SendPktData(pktData, XLEnumSeqType.SeqReq, requestID);
         }

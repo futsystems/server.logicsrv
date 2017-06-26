@@ -234,9 +234,13 @@ namespace TradingLib.Contrib.APIService
                     
 
                 }
-                else
+                else//deposit
                 {
                     decimal depositcommission = account.GetWithdrawCommission();
+
+                    txn.Amount = txn.Amount * rate;
+                    TLCtxHelper.ModuleAccountManager.CashOperation(txn);
+
                     if (depositcommission > 0)
                     {
                         if (depositcommission >= 1)
@@ -253,9 +257,6 @@ namespace TradingLib.Contrib.APIService
                         commissionTxn.Amount = commission;
                         TLCtxHelper.ModuleAccountManager.CashOperation(commissionTxn);
                     }
-
-                    txn.Amount = txn.Amount * rate - commission;
-                    TLCtxHelper.ModuleAccountManager.CashOperation(txn);
                 }
             }
 

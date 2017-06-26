@@ -62,6 +62,7 @@
     <Compile Include="BusinessEntities\Account\AccountProfie.cs" />
     <Compile Include="BusinessEntities\Account\SessionInfo.cs" />
     <Compile Include="BusinessEntities\Bank\BankCardInfo.cs" />
+    <Compile Include="BusinessEntities\Bank\CashOperationRequest.cs" />
     <Compile Include="BusinessEntities\BinaryOption\BinaryOptionImpl.cs" />
     <Compile Include="BusinessEntities\BinaryOption\BinaryOptionOrderImpl.cs" />
     <Compile Include="BusinessEntities\BinaryOption\BinaryOptions.cs" />

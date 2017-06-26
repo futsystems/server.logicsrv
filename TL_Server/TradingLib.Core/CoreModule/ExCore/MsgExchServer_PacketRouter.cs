@@ -257,6 +257,12 @@ namespace TradingLib.Core
                         SrvOnXReqUpdateBankCard(session, request, account);
                     }
                     break;
+                case MessageTypes.XREQCASHOP:
+                    {
+                        XReqCashOperationRequest request = packet as XReqCashOperationRequest;
+                        SrvOnXReqCashOperation(session, request, account);
+                    }
+                    break;
 
                 case MessageTypes.CONTRIBREQUEST://扩展请求
                     {

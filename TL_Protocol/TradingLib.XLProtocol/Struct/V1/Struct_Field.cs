@@ -1206,6 +1206,96 @@ namespace TradingLib.XLProtocol.V1
     #endregion
 
 
+    #region 出入金操作
+
+    /// <summary>
+    /// 出入金操作请求
+    /// </summary>
+    [StructLayout(LayoutKind.Sequential, Pack = 4)]
+    public struct XLReqCashOperationField : IXLField
+    {
+        /// <summary>
+        /// 投资者代码
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 13)]
+        public string UserID;
+
+
+        /// <summary>
+        /// 金额
+        /// </summary>
+        public double Amount;
+
+
+        /// <summary>
+        /// 通道类型
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 11)]
+        public string Gateway;
+
+
+        /// <summary>
+        /// 备用参数
+        /// 用于存放不同通道的备用参数用于服务端处理响应业务
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 256)]
+        public string Args;
+
+
+        /// <summary>
+        /// 域类别
+        /// </summary>
+        public ushort FieldID { get { return (ushort)XLFieldType.F_REQ_CASHOP; } }
+    }
+
+    /// <summary>
+    /// 出入金操作回报
+    /// </summary>
+    [StructLayout(LayoutKind.Sequential, Pack = 4)]
+    public struct XLCashOperationField : IXLField
+    {
+        /// <summary>
+        /// 投资者代码
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 13)]
+        public string UserID;
+
+        /// <summary>
+        /// 金额
+        /// </summary>
+        public double Amount;
+
+        /// <summary>
+        /// 通道类型
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 11)]
+        public string Gateway;
+
+        /// <summary>
+        /// 服务端订单编号
+        /// 支付后 第三方支付公司返回异步通知 系统通过该编号获得对应订单并进行处理
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 21)]
+        public string RefID;
+
+        /// <summary>
+        /// 备用参数
+        /// 用于存放不同通道的备用参数用于服务端处理响应业务
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 256)]
+        public string Args;
+
+        /// <summary>
+        /// 域类别
+        /// </summary>
+        public ushort FieldID { get { return (ushort)XLFieldType.F_RSP_CASHOP; } }
+    }
+
+
+
+
+
+    #endregion
 
 
     #region 提交委托

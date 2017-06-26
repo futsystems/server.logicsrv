@@ -146,6 +146,14 @@ namespace TradingLib.Common
             CashOperationEventArgs arg = new CashOperationEventArgs(eventType, cashOperation);
             CashOperationRequest(sender, arg);
         }
+
+
+        public event Func<CashOperationRequest, bool> CashOperationProcess = delegate { return false; };
+
+        public bool FireCashOperationProcess(CashOperationRequest request)
+        {
+            return CashOperationProcess(request);
+        }
         #endregion
 
 

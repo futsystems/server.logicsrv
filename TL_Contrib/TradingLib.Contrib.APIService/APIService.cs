@@ -51,6 +51,77 @@ namespace TradingLib.Contrib.APIService
 
             APIGlobal.BaseUrl = string.Format("http://{0}:{1}", _address, _port);
             APIGlobal.LocalIPAddress = _address;
+
+            TLCtxHelper.EventSystem.CashOperationProcess += new Func<CashOperationRequest, bool>(EventSystem_CashOperationProcess);
+        }
+
+        bool EventSystem_CashOperationProcess(CashOperationRequest arg)
+        {
+
+            var account = TLCtxHelper.ModuleAccountManager[arg.Account];
+            if (account == null)
+            {
+                
+                arg.ProcessComment = "交易账户不存在";
+                return false;
+            }
+
+            var gateway = APITracker.GateWayTracker.GetDomainGateway(account.Domain.ID);
+            if (gateway == null)
+            {
+                arg.ProcessComment = "未设置支付网关";
+                return false;
+            }
+
+            if (!gateway.Avabile)
+            {
+                arg.ProcessComment  = "支付网关未启用";
+                return false;
+            }
+
+            //出金
+            if (arg.Amount < 0)
+            {
+                IEnumerable<CashOperation> pendingWithdraws = ORM.MCashOperation.SelectPendingCashOperation(account.ID).Where(c => c.OperationType == QSEnumCashOperation.WithDraw);
+                if (pendingWithdraws.Count() > 0)
+                {
+                    arg.ProcessComment = "上次出金请求仍在处理中";
+                    return false;
+                }
+
+                if (account.GetPositionsHold().Count() > 0 || account.GetPendingOrders().Count() > 0)
+                {
+                    arg.ProcessComment = "交易账户有持仓或挂单,无法执行出金";
+                    return false;
+                }
+
+                var rate = account.GetExchangeRate(CurrencyType.RMB);//计算RMB汇率系数
+                var amount = Math.Abs(arg.Amount) * rate;
+                if (amount > account.NowEquity)
+                {
+                    arg.ProcessComment = "出金金额大于账户权益";
+                    return false;
+                }
+            }
+
+            CashOperation operation = null;
+            //输入参数验证完毕
+            operation = new CashOperation();
+            operation.BusinessType = EnumBusinessType.Normal;
+            operation.Account = account.ID;
+            operation.Amount = Math.Abs(arg.Amount);
+            operation.DateTime = Util.ToTLDateTime();
+            operation.GateWayType = (QSEnumGateWayType)(-1);
+            operation.OperationType = arg.Amount < 0 ? QSEnumCashOperation.WithDraw : QSEnumCashOperation.Deposit;
+            operation.Ref = APITracker.NextRef;
+            operation.Domain_ID = account.Domain.ID;
+
+            ORM.MCashOperation.InsertCashOperation(operation);
+            TLCtxHelper.ModuleMgrExchange.Notify("APIService", "NotifyCashOperation", operation, account.GetNotifyPredicate());
+
+            arg.RefID = operation.Ref;
+            return true;
+
         }
 
 

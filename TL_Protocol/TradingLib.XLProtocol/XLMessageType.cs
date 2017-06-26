@@ -200,6 +200,19 @@ namespace TradingLib.XLProtocol
         /// </summary>
         T_RSP_BANK=3035,
 
+
+
+        /// <summary>
+        /// 请求出入金
+        /// </summary>
+        T_REQ_CASHOP=3036,
+
+        /// <summary>
+        /// 回报出入金
+        /// </summary>
+        T_RSP_CASHOP=3037,
+
+
         /// <summary>
         /// 请求注册市场行情
         /// </summary>

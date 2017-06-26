@@ -111,6 +111,7 @@ namespace TradingLib.API
         XQRYCASHTXN,//查询出入金记录
         XQRYBANK,//查询银行信息
         XUPDATEBANK,//更新银行信息
+        XREQCASHOP,//请求出入金操作
 
         DOMREQUEST,//请求DOM市场Level2数据
         IMBALANCEREQUEST,//imbalance..查询这个是什么意思
@@ -189,6 +190,7 @@ namespace TradingLib.API
         XQRYCASHTXNRESPONSE,//出入金数据回报
         XQRYBANKRESPONSE,//查询银行回报
         XUPDATEBANKRESPONSE,//更新银行回报
+        XREQCASHOPRESPONSE,//请求出入金操作回报
 
 
         MD_DEMOTICK,//行情服务器测试Tick

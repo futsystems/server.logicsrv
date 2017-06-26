@@ -533,4 +533,69 @@ namespace TradingLib.Common
         }
     }
     #endregion
+
+    #region 出入金操作
+    public class XReqCashOperationRequest : RequestPacket
+    {
+        public XReqCashOperationRequest()
+        {
+            _type = MessageTypes.XREQCASHOP;
+           
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public decimal Amount { get; set; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public string Gateway { get; set; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public string Args { get; set; }
+
+    
+        public override string ContentSerialize()
+        {
+            return string.Format("{0},{1},{2}", this.Amount, this.Gateway, this.Args);
+        }
+
+        public override void ContentDeserialize(string contentstr)
+        {
+            string[] rec = contentstr.Split(',');
+            this.Amount = decimal.Parse(rec[0]);
+            this.Gateway = rec[1];
+            this.Args = rec[2];
+
+        }
+    }
+
+    /// <summary>
+    /// 更新银行卡回报
+    /// </summary>
+    public class RspXReqCashOperationResponse : RspResponsePacket
+    {
+        public RspXReqCashOperationResponse()
+        {
+            _type = MessageTypes.XREQCASHOPRESPONSE;
+            CashOperationRequest = null;
+        }
+
+        public CashOperationRequest CashOperationRequest { get; set; }
+        public override string ResponseSerialize()
+        {
+            return CashOperationRequest.Serialize(this.CashOperationRequest);
+        }
+
+        public override void ResponseDeserialize(string content)
+        {
+            this.CashOperationRequest = CashOperationRequest.Deserialize(content);
+        }
+    }
+    #endregion
+
 }

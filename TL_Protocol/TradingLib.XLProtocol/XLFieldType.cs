@@ -162,7 +162,15 @@ namespace TradingLib.XLProtocol
         /// </summary>
         F_RSP_BANK = 129,
 
+        /// <summary>
+        /// 请求出入金
+        /// </summary>
+        F_REQ_CASHOP = 130,
 
+        /// <summary>
+        /// 回报出入金
+        /// </summary>
+        F_RSP_CASHOP = 131,
 
         /// <summary>
         /// 持仓更新回报

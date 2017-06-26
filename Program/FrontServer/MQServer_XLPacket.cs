@@ -206,6 +206,29 @@ namespace FrontServer
                         if (response.IsLast) logger.Info(string.Format("LogicSrv Reply Session:{0} -> RspXReqUpdateBankCardResponse", conn.SessionID));
                         break;
                     }
+                    //出入金操作回报
+                case MessageTypes.XREQCASHOPRESPONSE:
+                    {
+                        RspXReqCashOperationResponse response = lpkt as RspXReqCashOperationResponse;
+                        XLPacketData pkt = new XLPacketData(XLMessageType.T_RSP_CASHOP);
+
+                        ErrorField rsp = ConvertRspInfo(response.RspInfo);
+                        pkt.AddField(rsp);
+                        if (rsp.ErrorID == 0)
+                        {
+                            XLCashOperationField field = new XLCashOperationField();
+                            field.Amount = (double)response.CashOperationRequest.Amount;
+                            field.Args = response.CashOperationRequest.Args;
+                            field.Gateway = response.CashOperationRequest.GateWay;
+                            field.RefID = response.CashOperationRequest.RefID;
+                            pkt.AddField(field);
+                        }
+             
+                        conn.ResponseXLPacket(pkt, (uint)response.RequestID, response.IsLast);
+                        if (response.IsLast) logger.Info(string.Format("LogicSrv Reply Session:{0} -> RspXReqCashOperationResponse", conn.SessionID));
+                        break;
+                    }
+
                 //查询委托回报
                 case MessageTypes.XORDERRESPONSE:
                     {
@@ -611,6 +634,29 @@ namespace FrontServer
 
                             this.TLSend(conn.SessionID, request);
                             logger.Info(string.Format("Session:{0} >> XLQrySettleSummaryField", conn.SessionID));
+
+                        }
+                        else
+                        {
+                            logger.Warn(string.Format("Request:{0} Data Field do not macth", pkt.MessageType));
+                        }
+                        break;
+                    }
+                    //请求出入金操作
+                case XLMessageType.T_REQ_CASHOP:
+                    {
+                        var data = pkt.FieldList[0];
+                        if (data is XLReqCashOperationField)
+                        {
+                            XLReqCashOperationField field = (XLReqCashOperationField)data;
+
+                            XReqCashOperationRequest request = RequestTemplate<XReqCashOperationRequest>.CliSendRequest(requestId);
+                            request.Amount = (decimal)field.Amount;
+                            request.Args = field.Args;
+                            request.Gateway = field.Gateway;
+                    
+                            this.TLSend(conn.SessionID, request);
+                            logger.Info(string.Format("Session:{0} >> XLReqCashOperationField", conn.SessionID));
 
                         }
                         else

@@ -67,6 +67,7 @@ namespace APIClient
             btnExQrySettleSummary.Click += new EventHandler(btnExQrySettleSummary_Click);
             btnExQryBank.Click += new EventHandler(btnExQryBank_Click);
             btnExUpdateBankCard.Click += new EventHandler(btnExUpdateBankCard_Click);
+            btnExCashOp.Click += new EventHandler(btnExCashOp_Click);
 
             btnWSStart.Click += new EventHandler(btnWSStart_Click);
             btnWSStop.Click += new EventHandler(btnWSStop_Click);
@@ -96,6 +97,7 @@ namespace APIClient
             btnDecode.Click += new EventHandler(btnDecode_Click);
         }
 
+        
 
 
        
@@ -394,6 +396,21 @@ namespace APIClient
 
 
         #region 二进制协议 操作
+
+        void btnExCashOp_Click(object sender, EventArgs e)
+        {
+            if (_apiTrader == null) return;
+            XLReqCashOperationField req = new XLReqCashOperationField();
+            req.Amount = (double)cashopVal.Value;
+            req.Args = "";
+            req.Gateway = "";
+
+            bool ret = _apiTrader.ReqCashOperation(req, ++_requestId);
+            logger.Info(string.Format("ReqCashOperation Send Success:{0}", ret));
+        }
+
+
+
         void exapiverbose_CheckStateChanged(object sender, EventArgs e)
         {
             if (_apiTrader == null) return;
@@ -568,7 +585,7 @@ namespace APIClient
             _apiTrader.OnRspQrySettleSummary += new Action<XLSettleSummaryField?, ErrorField, uint, bool>(_apiTrader_OnRspQrySettleSummary);
 
             _apiTrader.OnRspQryBankCard += new Action<XLBankCardField?, ErrorField, uint, bool>(_apiTrader_OnRspQryBankCard);
-
+            _apiTrader.OnRspCashOperation += new Action<XLCashOperationField?, ErrorField, uint, bool>(_apiTrader_OnRspCashOperation);
             //System.Globalization.CultureInfo info = new System.Globalization.CultureInfo("en");
             
             //System.Threading.Thread.CurrentThread.CurrentCulture = info;
@@ -580,6 +597,11 @@ namespace APIClient
                 //_apiTrader.Join();
                 //logger.Info("API Thread Stopped");
             }).Start();
+        }
+
+        void _apiTrader_OnRspCashOperation(XLCashOperationField? arg1, ErrorField arg2, uint arg3, bool arg4)
+        {
+            logger.Info(string.Format("Field:{0} Rsp:{1} RequestID:{2} IsLast:{3}", JsonConvert.SerializeObject(arg1), JsonConvert.SerializeObject(arg2), arg3, arg4));
         }
 
         void _apiTrader_OnRspQryBankCard(XLBankCardField? arg1, ErrorField arg2, uint arg3, bool arg4)

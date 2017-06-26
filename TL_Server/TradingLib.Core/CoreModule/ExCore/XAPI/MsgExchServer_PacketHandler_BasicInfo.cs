@@ -310,5 +310,76 @@ namespace TradingLib.Core
 
 
         }
+
+        void SrvOnXReqCashOperation(ISession session, XReqCashOperationRequest request, IAccount account)
+        {
+            logger.Info("XReqCashOperationRequest:" + request.ToString());
+
+            RspXReqCashOperationResponse response = ResponseTemplate<RspXReqCashOperationResponse>.SrvSendRspResponse(request);
+
+            if (!account.Domain.Module_PayOnline)
+            {
+                response.RspInfo.ErrorID = 1;
+                response.RspInfo.ErrorMessage = "柜台支付模块未激活";
+
+                CacheRspResponse(response);
+                return;
+            }
+            
+            if (TLCtxHelper.ModuleSettleCentre.SettleMode != QSEnumSettleMode.StandbyMode)
+            {
+                response.RspInfo.ErrorID = 1;
+                response.RspInfo.ErrorMessage = "柜台结算中,出入金业务暂停";
+
+                CacheRspResponse(response);
+                return;
+            }
+
+            /*
+            if (request.Amount > 0 && request.Amount > _depositLimit)
+            {
+                response.RspInfo.ErrorID = 1;
+                response.RspInfo.ErrorMessage = "单笔入金超过限额:" + _depositLimit.ToFormatStr();
+
+                CacheRspResponse(response);
+                return;
+            }
+            
+
+            if (request.Amount < 0 && Math.Abs(request.Amount) > account.NowEquity-(account.Margin + account.MarginFrozen))
+            {
+                response.RspInfo.ErrorID = 1;
+                response.RspInfo.ErrorMessage = "出金超过可提资金:" + (account.NowEquity - (account.Margin + account.MarginFrozen)).ToFormatStr();
+
+                CacheRspResponse(response);
+                return;
+            }
+            **/
+
+            CashOperationRequest tmp = new CashOperationRequest();
+            tmp.Account = account.ID;
+            tmp.Amount = request.Amount;
+            tmp.Args = request.Args;
+            tmp.GateWay = request.Gateway;
+
+            bool ret = TLCtxHelper.EventSystem.FireCashOperationProcess(tmp);
+
+            if (!ret)
+            {
+                response.RspInfo.ErrorID = 1;
+                response.RspInfo.ErrorMessage = "操作失败:" + tmp.ProcessComment;
+
+                CacheRspResponse(response);
+                return;
+            }
+
+            response.CashOperationRequest = tmp;
+            CacheRspResponse(response);
+
+
+
+
+
+        }
     }
 }
