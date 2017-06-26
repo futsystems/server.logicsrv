@@ -517,7 +517,7 @@ namespace TradingLib.Common
     {
         public RspXReqUpdateBankCardResponse()
         {
-            _type = MessageTypes.XQRYBANKRESPONSE;
+            _type = MessageTypes.XUPDATEBANKRESPONSE;
             BankCardInfo = null;
         }
 
