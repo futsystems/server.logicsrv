@@ -129,9 +129,7 @@ namespace TradingLib.DataFarm.Common
                         var data = reqPkt.FieldList[0];
                         if (data is XLQryMinuteDataField)
                         {
-                            //logger.Info("Qry minute data");
                             var request =(XLQryMinuteDataField)data;
-
                             Symbol symbol = MDBasicTracker.SymbolTracker[request.ExchangeID, request.SymbolID];
                             if (symbol == null)
                             {
@@ -144,16 +142,26 @@ namespace TradingLib.DataFarm.Common
                                 logger.Warn(string.Format("Sec:{0} have no marketday", symbol.SecurityFamily.Code));
                                 return;
                             }
-                            logger.Info(string.Format("Sec:{0} marketday:{1}", symbol.SecurityFamily.Code, md.ToSessionString()));
-
+                            
                             int tradingday = request.TradingDay;
                             if (tradingday == 0)
                             {
                                 tradingday = md.TradingDay;
                             }
 
-                            List<MinuteData> mdlist = eodservice.QryMinuteData(symbol, tradingday, request.Start.ToDateTimeEx(DateTime.MinValue));////GetHistDataSotre().QryMinuteData(symbol, tradingday);
+                            if (_verbose)
+                            {
+                                logger.Info(string.Format("Symbol:{0} Tradingday:{1} Sec:{2} marketday:{3} Start:{4} StartTime:{5}",
+                                    symbol.Symbol, 
+                                    tradingday,
+                                    symbol.SecurityFamily.Code,
+                                    md.ToSessionString(),
+                                    request.Start,
+                                    request.Start.ToDateTimeEx(DateTime.MinValue)
+                                    ));
+                            }
 
+                            List<MinuteData> mdlist = eodservice.QryMinuteData(symbol, tradingday, request.Start.ToDateTimeEx(DateTime.MinValue));
 
                             int j = 0;
                             XLPacketData pkt = new XLPacketData(XLMessageType.T_RSP_MINUTEDATA);
@@ -192,6 +200,8 @@ namespace TradingLib.DataFarm.Common
                     }
                     break;
                 #endregion
+
+                #region 查询Bar数据
                 case XLMessageType.T_QRY_BARDATA:
                     { 
                         var data = reqPkt.FieldList[0];
@@ -247,6 +257,8 @@ namespace TradingLib.DataFarm.Common
                         }
                     }
                     break;
+                #endregion
+
                 default:
                     logger.Warn(string.Format("XLMessage Type:{0} not handled", reqPkt.MessageType));
                     break;
