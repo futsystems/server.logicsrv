@@ -151,6 +151,17 @@ namespace TradingLib.DataFarm.Common
                         {
                             int j = 0;
                             RspQryBarResponseBin response = RspQryBarResponseBin.CreateResponse(request);
+                            if (_verbose)
+                            {
+                                logger.Info(string.Format("Qry Bar Symbol:{0} IntervalType:{1} Interval:{2} Start:{3} RequestID:{4} ResponseID:{5}",
+                                    symbol.Symbol,
+                                    request.IntervalType,
+                                    request.Interval,
+                                    request.Start.ToDateTimeEx(DateTime.MinValue),
+                                    request.RequestID,
+                                    response.RequestID));
+
+                            }
                             response.IsLast = false;
                             for (int i = 0; i < bars.Count; i++)
                             {

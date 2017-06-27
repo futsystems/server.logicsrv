@@ -181,7 +181,6 @@ namespace TradingLib.DataFarm.Common
                                 if (j == _minutedatabatchsize)
                                 {
                                     islast = (i == mdlist.Count - 1);
-
                                     SendXLData(conn, pkt, XLEnumSeqType.SeqQry, (uint)0, (uint)requestId, islast);
                                     if (!islast)
                                     {
