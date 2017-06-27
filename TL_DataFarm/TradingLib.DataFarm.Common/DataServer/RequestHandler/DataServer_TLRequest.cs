@@ -153,7 +153,7 @@ namespace TradingLib.DataFarm.Common
                             RspQryBarResponseBin response = RspQryBarResponseBin.CreateResponse(request);
                             if (_verbose)
                             {
-                                logger.Info(string.Format("Qry Bar Symbol:{0} IntervalType:{1} Interval:{2} Start:{3} RequestID:{4} ResponseID:{5}",
+                                logger.Info(string.Format("Qry BarData Symbol:{0} IntervalType:{1} Interval:{2} Start:{3} RequestID:{4} ResponseID:{5}",
                                     symbol.Symbol,
                                     request.IntervalType,
                                     request.Interval,
@@ -312,12 +312,23 @@ namespace TradingLib.DataFarm.Common
                 logger.Warn(string.Format("Sec:{0} have no marketday", symbol.SecurityFamily.Code));
                 return;
             }
-            if (_verbose) logger.Info(string.Format("Sec:{0} marketday:{1}", symbol.SecurityFamily.Code, md.ToSessionString()));
+            
 
             int tradingday = request.Tradingday;
             if (tradingday == 0)
             {
                 tradingday = md.TradingDay;
+            }
+            if (_verbose)
+            {
+                logger.Info(string.Format("Qry MinuteData Symbol:{0} Tradingday:{1} Sec:{2} marketday:{3} Start:{4} StartTime:{5}",
+                    symbol.Symbol,
+                    tradingday,
+                    symbol.SecurityFamily.Code,
+                    md.ToSessionString(),
+                    request.Start,
+                    request.Start.ToDateTimeEx(DateTime.MinValue)
+                    ));
             }
 
             List<MinuteData> mdlist = eodservice.QryMinuteData(symbol, tradingday,request.Start.ToDateTimeEx(DateTime.MinValue));////GetHistDataSotre().QryMinuteData(symbol, tradingday);
