@@ -30,7 +30,21 @@ namespace TradingLib.Contrib.APIService
 
             this.MD5Key = data["MD5Key"].ToString(); //"5feb16286fa46e3af84863d9722af75e";
             this.SuccessReponse = "SUCCESS";
+
+            try
+            {
+                this.Domain = data["Domain"].ToString();
+            }
+            catch (Exception ex)
+            { 
+            
+            }
+
+            this.merchUrl = APIGlobal.SrvNotifyUrl + "/mobopay";
+            this.merchUrl = this.merchUrl.Replace(APIGlobal.LocalIPAddress, this.Domain);
         }
+
+        string Domain { get; set; }
 
         public string PlatformID { get; set; }
 
@@ -40,6 +54,9 @@ namespace TradingLib.Contrib.APIService
 
 
         public string PayUrl { get; set; }
+
+        string merchUrl { get; set; }
+
         public override Drop CreatePaymentDrop(CashOperation operatioin)
         {
             DropMoBoPayment data = new DropMoBoPayment();
@@ -51,7 +68,7 @@ namespace TradingLib.Contrib.APIService
             data.orderNo = operatioin.Ref;
             data.tradeDate = Util.ToTLDate().ToString();
             data.amt = operatioin.Amount.ToFormatStr();
-            data.merchUrl = APIGlobal.SrvNotifyUrl + "/mobopay";
+            data.merchUrl = this.merchUrl;//APIGlobal.SrvNotifyUrl + "/mobopay";
             data.tradeSummary = "充值";
 
             data.Account = operatioin.Account;
