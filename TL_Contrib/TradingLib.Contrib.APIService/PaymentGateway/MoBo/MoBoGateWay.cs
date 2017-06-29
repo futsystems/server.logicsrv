@@ -42,6 +42,7 @@ namespace TradingLib.Contrib.APIService
 
             this.merchUrl = APIGlobal.SrvNotifyUrl + "/mobopay";
             this.merchUrl = this.merchUrl.Replace(APIGlobal.LocalIPAddress, this.Domain);
+            this.PayDirectUrl = this.PayDirectUrl.Replace(APIGlobal.LocalIPAddress, this.Domain);
         }
 
         string Domain { get; set; }
