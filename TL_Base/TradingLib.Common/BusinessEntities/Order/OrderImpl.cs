@@ -116,9 +116,16 @@ namespace TradingLib.Common
 
             set
             {
-                //替换comment中出现的协议保留字段, | ^(|分割请求编号 ^ 分割内容 islast rspinfo ,分割具体的内容)
-                string tmp = value.Replace(",", " ").Replace("|", " ").Replace("^", " ");//替换特殊符号 , ^ |
-                _comment = tmp;
+                if (string.IsNullOrEmpty(value))
+                {
+                    _comment = string.Empty;
+                }
+                else
+                {
+                    //替换comment中出现的协议保留字段, | ^(|分割请求编号 ^ 分割内容 islast rspinfo ,分割具体的内容)
+                    string tmp = value.Replace(",", " ").Replace("|", " ").Replace("^", " ");//替换特殊符号 , ^ |
+                    _comment = tmp;
+                }
 
             }
         }

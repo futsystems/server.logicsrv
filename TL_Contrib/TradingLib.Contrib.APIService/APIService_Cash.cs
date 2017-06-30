@@ -323,6 +323,13 @@ namespace TradingLib.Contrib.APIService
                 response.RspInfo.ErrorID = 1;
                 response.RspInfo.ErrorMessage = "支付网关未启用";
             }
+            //单笔入金金额限制
+            if (val > _depositLimit)
+            {
+                response.RspInfo.ErrorID = 1;
+                response.RspInfo.ErrorMessage = "单笔入金超过:" + _depositLimit.ToFormatStr();
+            }
+
             if (response.RspInfo.ErrorID == 0)
             {
                 //输入参数验证完毕

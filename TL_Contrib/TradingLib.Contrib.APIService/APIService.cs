@@ -24,6 +24,7 @@ namespace TradingLib.Contrib.APIService
         string _md5key = "123456";
         int _port = 8080;
         string _address = "127.0.0.1";
+        decimal _depositLimit = 50000;
 
         public APIServiceBundle()
             : base(APIServiceBundle.ContribName)
@@ -47,7 +48,13 @@ namespace TradingLib.Contrib.APIService
             {
                 _cfgdb.UpdateConfig("HttpAddress", QSEnumCfgType.String, "127.0.0.1", "HttpAddress");
             }
-            _address = _cfgdb["HttpAddress"].AsString(); ;
+            _address = _cfgdb["HttpAddress"].AsString();
+
+            if (!_cfgdb.HaveConfig("DepositLimit"))
+            {
+                _cfgdb.UpdateConfig("DepositLimit", QSEnumCfgType.Decimal, 50000, "单笔入金限额");
+            }
+            _depositLimit = _cfgdb["DepositLimit"].AsDecimal();
 
             APIGlobal.BaseUrl = string.Format("http://{0}:{1}", _address, _port);
             APIGlobal.LocalIPAddress = _address;

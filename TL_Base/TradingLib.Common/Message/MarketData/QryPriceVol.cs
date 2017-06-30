@@ -98,7 +98,7 @@ namespace TradingLib.Common
         /// <param name="data"></param>
         public override void DeserializeBin(byte[] data)
         {
-            this.RequestID = BitConverter.ToInt16(data, 0);
+            this.RequestID = BitConverter.ToInt32(data, 0);
             this.IsLast = BitConverter.ToBoolean(data, 4);
             byte[] zipData = new byte[data.Length - 5];
             Array.Copy(data, 5, zipData, 0, data.Length - 5);
