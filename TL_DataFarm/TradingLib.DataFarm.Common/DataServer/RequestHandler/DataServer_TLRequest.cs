@@ -319,19 +319,22 @@ namespace TradingLib.DataFarm.Common
             {
                 tradingday = md.TradingDay;
             }
+            
+
+            List<MinuteData> mdlist = eodservice.QryMinuteData(symbol, tradingday,request.Start.ToDateTimeEx(DateTime.MinValue));////GetHistDataSotre().QryMinuteData(symbol, tradingday);
+
             if (_verbose)
             {
-                logger.Info(string.Format("Qry MinuteData Symbol:{0} Tradingday:{1} Sec:{2} marketday:{3} Start:{4} StartTime:{5}",
+                logger.Info(string.Format("Qry MinuteData Symbol:{0} Tradingday:{1} Sec:{2} marketday:{3} Start:{4} StartTime:{5} Cnt:{6}",
                     symbol.Symbol,
                     tradingday,
                     symbol.SecurityFamily.Code,
                     md.ToSessionString(),
                     request.Start,
-                    request.Start.ToDateTimeEx(DateTime.MinValue)
+                    request.Start.ToDateTimeEx(DateTime.MinValue),
+                    mdlist.Count
                     ));
             }
-
-            List<MinuteData> mdlist = eodservice.QryMinuteData(symbol, tradingday,request.Start.ToDateTimeEx(DateTime.MinValue));////GetHistDataSotre().QryMinuteData(symbol, tradingday);
 
             int j = 0;
             RspXQryMinuteDataResponse response = RspXQryMinuteDataResponse.CreateResponse(request);

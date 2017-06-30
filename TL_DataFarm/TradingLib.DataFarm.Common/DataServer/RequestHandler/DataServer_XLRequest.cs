@@ -149,19 +149,20 @@ namespace TradingLib.DataFarm.Common
                                 tradingday = md.TradingDay;
                             }
 
+                            List<MinuteData> mdlist = eodservice.QryMinuteData(symbol, tradingday, request.Start.ToDateTimeEx(DateTime.MinValue));
+
                             if (_verbose)
                             {
-                                logger.Info(string.Format("Symbol:{0} Tradingday:{1} Sec:{2} marketday:{3} Start:{4} StartTime:{5}",
-                                    symbol.Symbol, 
+                                logger.Info(string.Format("Qry MinuteData Symbol:{0} Tradingday:{1} Sec:{2} marketday:{3} Start:{4} StartTime:{5} Cnt:{6}",
+                                    symbol.Symbol,
                                     tradingday,
                                     symbol.SecurityFamily.Code,
                                     md.ToSessionString(),
                                     request.Start,
-                                    request.Start.ToDateTimeEx(DateTime.MinValue)
+                                    request.Start.ToDateTimeEx(DateTime.MinValue),
+                                    mdlist.Count
                                     ));
                             }
-
-                            List<MinuteData> mdlist = eodservice.QryMinuteData(symbol, tradingday, request.Start.ToDateTimeEx(DateTime.MinValue));
 
                             int j = 0;
                             XLPacketData pkt = new XLPacketData(XLMessageType.T_RSP_MINUTEDATA);
