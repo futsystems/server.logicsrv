@@ -5,6 +5,8 @@ using System.Text;
 using DotLiquid;
 using NHttp;
 
+using TradingLib.Contrib.Payment;
+
 namespace TradingLib.Contrib.APIService
 {
     public class GateWayBase
@@ -84,6 +86,8 @@ namespace TradingLib.Contrib.APIService
                     return new SuiXingPayGateWay(config);
                 case QSEnumGateWayType.IELPMPay:
                     return new IELPMPayGateWay(config);
+                case QSEnumGateWayType.ETonePay:
+                    return new TradingLib.Contrib.Payment.ETone.ETonePayGateWay(config);
                 default:
                     return null;
             }
@@ -162,6 +166,10 @@ namespace TradingLib.Contrib.APIService
                 case "IELPMPAY":
                     {
                         return IELPMPayGateWay.GetCashOperation(request.Params);
+                    }
+                case "ETONEPAY":
+                    {
+                        return TradingLib.Contrib.Payment.ETone.ETonePayGateWay.GetCashOperation(request.Params);
                     }
                 default:
                     {

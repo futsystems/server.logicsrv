@@ -75,6 +75,7 @@
     <Compile Include="Drop\DropCai1Payment.cs" />
     <Compile Include="Drop\DropChinagPayment.cs" />
     <Compile Include="Drop\DropDinpayment.cs" />
+    <Compile Include="Drop\DropETonePayment.cs" />
     <Compile Include="Drop\DropGoPayPayment.cs" />
     <Compile Include="Drop\DropIelpmPayment.cs" />
     <Compile Include="Drop\DropIPSPayment.cs" />
@@ -101,6 +102,8 @@
     <Compile Include="PaymentGateway\Chinagpay\ChinagpayGateWay.cs" />
     <Compile Include="PaymentGateway\dinpay\DinpayGateWay.cs" />
     <Compile Include="PaymentGateway\dinpay\DinpayHelp.cs" />
+    <Compile Include="PaymentGateway\ETonePay\ETonePayGateWay.cs" />
+    <Compile Include="PaymentGateway\ETonePay\EtonePayUtils.cs" />
     <Compile Include="PaymentGateway\GateWayBase.cs" />
     <Compile Include="PaymentGateway\GateWayType.cs" />
     <Compile Include="PaymentGateway\Gopay\GoPayGateway.cs" />
