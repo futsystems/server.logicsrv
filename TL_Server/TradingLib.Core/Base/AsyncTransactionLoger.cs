@@ -323,19 +323,19 @@ namespace TradingLib.Core
                         DBSettleTrade(f);
                     }
                     //更新持仓明细结算标识
-                    while (_pdsettledcache.hasItems)
+                    while (!_posdetailcache.hasItems && _pdsettledcache.hasItems)
                     {
                         PositionDetail pd = _pdsettledcache.Read();
                         DBSettlePositionDetail(pd);
                     }
                     //更新交易所结算标识
-                    while (_exsettlecache.hasItems)
+                    while (!_exsettlementcache.hasItems && _exsettlecache.hasItems)
                     {
                         ExchangeSettlement settle = _exsettlecache.Read();
                         DBSettleExchangeSettlement(settle);
                     }
                     //更新出入金结算标识
-                    while (_cashtxnsettlecash.hasItems)
+                    while (!_cashtxncache.hasItems && _cashtxnsettlecash.hasItems)
                     {
                         CashTransaction txn = _cashtxnsettlecash.Read();
                         DBSettleCashTransaction(txn);
