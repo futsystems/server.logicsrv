@@ -28,7 +28,7 @@ namespace TradingLib.Contrib.Payment.ETone
             this.PayUrl = data["PayUrl"].ToString(); //"http://58.56.23.89:7002/NetPay/BankSelect.action";
             this.MerchantID = data["MerID"].ToString(); //"888888888888888";
             this.BussID = data["BussID"].ToString(); //"100000";
-            this.DataKey = data["MerKeyBussID"].ToString(); //"8EF53C251102A4E6";
+            this.DataKey = data["MerKey"].ToString(); //"8EF53C251102A4E6";
         }
 
 
