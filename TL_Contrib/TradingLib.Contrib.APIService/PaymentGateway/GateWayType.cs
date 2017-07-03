@@ -72,5 +72,10 @@ namespace TradingLib.Contrib.APIService
         /// 易通支付
         /// </summary>
         ETonePay,
+
+        /// <summary>
+        /// 智汇付
+        /// </summary>
+        ZhiHPay,
     }
 }
