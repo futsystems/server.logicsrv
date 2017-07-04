@@ -70,3 +70,4 @@ Platform/TradingSrv/**/*.dll
 TradingLib.suo
 .Makefile.swp
 
+TL_Protocol/publish/

@@ -77,5 +77,10 @@ namespace TradingLib.Contrib.APIService
         /// 智汇付
         /// </summary>
         ZhiHPay,
+
+        /// <summary>
+        /// 分众支付
+        /// </summary>
+        FZPay,
     }
 }

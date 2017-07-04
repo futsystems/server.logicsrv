@@ -90,6 +90,8 @@ namespace TradingLib.Contrib.APIService
                     return new TradingLib.Contrib.Payment.ETone.ETonePayGateWay(config);
                 case QSEnumGateWayType.ZhiHPay:
                     return new TradingLib.Contrib.Payment.ZhiHPay.ZhiHPayGateWay(config);
+                case QSEnumGateWayType.FZPay:
+                    return new TradingLib.Contrib.Payment.FZPay.FZPayGateWay(config);
                 default:
                     return null;
             }
@@ -176,6 +178,10 @@ namespace TradingLib.Contrib.APIService
                 case "ZHIHPAY":
                     {
                         return TradingLib.Contrib.Payment.ZhiHPay.ZhiHPayGateWay.GetCashOperation(request.Params);
+                    }
+                case "FZPAY":
+                    {
+                        return TradingLib.Contrib.Payment.FZPay.FZPayGateWay.GetCashOperation(request.Params);
                     }
                 default:
                     {

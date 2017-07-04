@@ -49,6 +49,12 @@ namespace TradingLib.Contrib.APIService
 
                             return tplTracker.Render(action,null);
                         }
+                    case "DEPOSITFZ":
+                        {
+                            var tpl = tplTracker[action];
+
+                            return tplTracker.Render(action, null);
+                        }
                     case "WITHDRAW":
                         {
                             var tpl = tplTracker[action];
@@ -107,6 +113,7 @@ namespace TradingLib.Contrib.APIService
                             operation.OperationType = QSEnumCashOperation.WithDraw;
                             operation.Ref = APITracker.NextRef;
                             operation.Domain_ID = account.Domain.ID;
+                            
 
                             ORM.MCashOperation.InsertCashOperation(operation);
                             TLCtxHelper.ModuleMgrExchange.Notify("APIService","NotifyCashOperation",operation,account.GetNotifyPredicate());
@@ -139,6 +146,13 @@ namespace TradingLib.Contrib.APIService
                         {
                             var acct = request.Params["account"];
                             var pass = request.Params["pass"];
+                            var bank = string.Empty;
+
+                            if (request.Params.AllKeys.Contains("bank"))
+                            {
+                                bank = request.Params["bank"];
+                            }
+                            
                             decimal amount = 0;
 
 
@@ -185,6 +199,7 @@ namespace TradingLib.Contrib.APIService
                             operation.OperationType = QSEnumCashOperation.Deposit;
                             operation.Ref = APITracker.NextRef;
                             operation.Domain_ID = account.Domain.ID;
+                            operation.Bank = bank;
 
                             ORM.MCashOperation.InsertCashOperation(operation);
                             TLCtxHelper.ModuleMgrExchange.Notify("APIService", "NotifyCashOperation", operation, account.GetNotifyPredicate());
@@ -252,12 +267,12 @@ namespace TradingLib.Contrib.APIService
                                     if (operation.Status == QSEnumCashInOutStatus.CONFIRMED)
                                     {
                                         logger.Warn(string.Format("TransID:{0} already confirmed", operation.Ref));
-                                        return "CashOperation Already Confirmed";
+                                        return gateway.SuccessReponse;
                                     }
                                     if(confirmedOperationRefList.Contains(operation.Ref))
                                     {
                                         logger.Warn(string.Format("TransID:{0} already confirmed", operation.Ref));
-                                        return "CashOperation Already Confirmed";
+                                        return gateway.SuccessReponse;
                                     }
                                     //3.检查支付状态
                                     bool payResult = gateway.CheckPayResult(request, operation);
