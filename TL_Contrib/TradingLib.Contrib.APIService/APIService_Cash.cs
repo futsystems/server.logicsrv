@@ -281,6 +281,15 @@ namespace TradingLib.Contrib.APIService
             HandleDeposit(session, val, EnumBusinessType.Normal);
         }
 
+        [ContribCommandAttr(QSEnumCommandSource.MessageExchange, "DepositFZ", "DepositFZ - deposit", "入金请求携带渠道信息",QSEnumArgParseType.Json)]
+        public void CTE_Deposit(ISession session, string json)
+        {
+            var data = json.DeserializeObject();
+            decimal val = decimal.Parse(data["amount"].ToString());
+            string bank = data["bank"].ToString();
+            HandleDeposit(session, val, EnumBusinessType.Normal,bank);
+        }
+
 
         [ContribCommandAttr(QSEnumCommandSource.MessageExchange, "Deposit2", "Deposit2 - deposit2", "入金请求",QSEnumArgParseType.Json)]
         public void CTE_Deposit2(ISession session, string json)
@@ -292,7 +301,7 @@ namespace TradingLib.Contrib.APIService
             HandleDeposit(session,val, type);
         }
 
-        void HandleDeposit(ISession session, decimal val, EnumBusinessType type)
+        void HandleDeposit(ISession session, decimal val, EnumBusinessType type,string bank="")
         {
             RspContribResponse response = ResponseTemplate<RspContribResponse>.SrvSendRspResponse(session);
             response.ModuleID = session.ContirbID;
@@ -341,6 +350,7 @@ namespace TradingLib.Contrib.APIService
                 operation.OperationType = QSEnumCashOperation.Deposit;
                 operation.Ref = APITracker.NextRef;
                 operation.Domain_ID = account.Domain.ID;
+                operation.Bank = bank;
 
                 ORM.MCashOperation.InsertCashOperation(operation);
                 TLCtxHelper.ModuleMgrExchange.Notify("APIService", "NotifyCashOperation", operation, account.GetNotifyPredicate());
