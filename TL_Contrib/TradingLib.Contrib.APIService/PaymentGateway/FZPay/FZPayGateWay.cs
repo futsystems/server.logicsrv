@@ -20,9 +20,11 @@ namespace TradingLib.Contrib.Payment.FZPay
         {
             this.GateWayType = QSEnumGateWayType.FZPay;
 
-            this.PartnerID = "16985";
-            this.MD5Key = "de096cd227a594b4ab79af72a60ec035";
-            this.PayUrl = "http://api.yunshi44.top/PayBank.aspx";
+            var data = config.Config.DeserializeObject();
+
+            this.PartnerID = data["MerID"].ToString();// "16985";
+            this.MD5Key = data["MerKey"].ToString();// "de096cd227a594b4ab79af72a60ec035";
+            this.PayUrl = data["PayUrl"].ToString();// "http://api.yunshi44.top/PayBank.aspx";
 
 
             this.SuccessReponse = "ok";
