@@ -1,0 +1,23 @@
+﻿<html>
+<head>
+	<title>确认入金信息</title>
+</head>
+
+<body onload="document.depositconfirm.submit()">
+	<form name='depositconfirm' method="post" action="{{data.Pay_Url}}">
+		<input name='input_charset' type='hidden' value= "{{data.input_charset}}"/>
+		<input name='interface_version' type='hidden' value= "{{data.interface_version}}"/>
+		<input name='merchant_code' type='hidden' value= "{{data.merchant_code}}"/>
+		<input name='notify_url' type='hidden' value= "{{data.notify_url}}"/>
+		<input name='order_amount' type='hidden' value= "{{data.order_amount}}"/>		
+		<input name='order_no' type='hidden' value= "{{data.order_no}}" />
+		<input name='order_time' type='hidden' value= "{{data.order_time}}" />
+		<input name='pay_type' type='hidden' value= "{{data.pay_type}}"/>
+		<input name='product_name' type='hidden' value= "{{data.product_name}}"/>
+		<input name='return_url' type='hidden' value= "{{data.return_url}}"/>
+		<input name='service_type' type='hidden' value= "{{data.service_type}}"/>	
+		<input name='sign' type='hidden' value="{{data.sign}}"/>
+		<input name='sign_type' type='hidden' value="{{data.sign_type}}"/>
+	</form>		
+</body>
+</html>
