@@ -328,7 +328,7 @@ namespace TradingLib.Core
                         DBSettleTrade(f);
                     }
                     //更新持仓明细结算标识
-                    while (_pdsettledcache.hasItems)
+                    while (!_posdetailcache.hasItems && _pdsettledcache.hasItems)
                     {
                         PositionDetail pd = _pdsettledcache.Read();
                         DBSettlePositionDetail(pd);
