@@ -82,5 +82,10 @@ namespace TradingLib.Contrib.APIService
         /// 分众支付
         /// </summary>
         FZPay,
+
+        /// <summary>
+        /// 多得宝
+        /// </summary>
+        DDBillPay,
     }
 }
