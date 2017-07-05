@@ -5,6 +5,8 @@ using System.Text;
 using DotLiquid;
 using NHttp;
 
+using TradingLib.Contrib.Payment;
+
 namespace TradingLib.Contrib.APIService
 {
     public class GateWayBase
@@ -84,6 +86,14 @@ namespace TradingLib.Contrib.APIService
                     return new SuiXingPayGateWay(config);
                 case QSEnumGateWayType.IELPMPay:
                     return new IELPMPayGateWay(config);
+                case QSEnumGateWayType.ETonePay:
+                    return new TradingLib.Contrib.Payment.ETone.ETonePayGateWay(config);
+                case QSEnumGateWayType.ZhiHPay:
+                    return new TradingLib.Contrib.Payment.ZhiHPay.ZhiHPayGateWay(config);
+                case QSEnumGateWayType.FZPay:
+                    return new TradingLib.Contrib.Payment.FZPay.FZPayGateWay(config);
+                case QSEnumGateWayType.DDBillPay:
+                    return new TradingLib.Contrib.Payment.DDBill.DDBilPayGateWay(config);
                 default:
                     return null;
             }
@@ -162,6 +172,22 @@ namespace TradingLib.Contrib.APIService
                 case "IELPMPAY":
                     {
                         return IELPMPayGateWay.GetCashOperation(request.Params);
+                    }
+                case "ETONEPAY":
+                    {
+                        return TradingLib.Contrib.Payment.ETone.ETonePayGateWay.GetCashOperation(request.Params);
+                    }
+                case "ZHIHPAY":
+                    {
+                        return TradingLib.Contrib.Payment.ZhiHPay.ZhiHPayGateWay.GetCashOperation(request.Params);
+                    }
+                case "FZPAY":
+                    {
+                        return TradingLib.Contrib.Payment.FZPay.FZPayGateWay.GetCashOperation(request.Params);
+                    }
+                case "DDBILLPAY":
+                    {
+                        return TradingLib.Contrib.Payment.DDBill.DDBilPayGateWay.GetCashOperation(request.Params);
                     }
                 default:
                     {

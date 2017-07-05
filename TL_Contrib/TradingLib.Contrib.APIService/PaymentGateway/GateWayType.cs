@@ -67,5 +67,25 @@ namespace TradingLib.Contrib.APIService
         /// 易势付
         /// </summary>
         IELPMPay,
+
+        /// <summary>
+        /// 易通支付
+        /// </summary>
+        ETonePay,
+
+        /// <summary>
+        /// 智汇付
+        /// </summary>
+        ZhiHPay,
+
+        /// <summary>
+        /// 分众支付
+        /// </summary>
+        FZPay,
+
+        /// <summary>
+        /// 多得宝
+        /// </summary>
+        DDBillPay,
     }
 }

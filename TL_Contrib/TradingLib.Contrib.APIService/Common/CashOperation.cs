@@ -83,6 +83,11 @@ namespace TradingLib.Contrib.APIService
         public EnumBusinessType  BusinessType { get; set; }
 
         /// <summary>
+        /// 选择的银行
+        /// </summary>
+        public string Bank { get; set; }
+
+        /// <summary>
         /// 分区编号
         /// </summary>
         public int Domain_ID { get; set; }
