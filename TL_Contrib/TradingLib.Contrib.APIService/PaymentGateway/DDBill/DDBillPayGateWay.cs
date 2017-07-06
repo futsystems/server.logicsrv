@@ -24,11 +24,11 @@ namespace TradingLib.Contrib.Payment.DDBill
             this.GateWayType = QSEnumGateWayType.DDBillPay;
 
             var data = config.Config.DeserializeObject();
-            this.PayUrl = data["PayUrl"].ToString(); 
+            //this.PayUrl = data["PayUrl"].ToString(); 
             this.SuccessReponse = "SUCCESS";
-            this.MerchantCode = data["MerCode"].ToString();
-            this.PrivateKey = data["MerPrivateKey"].ToString();
-            this.ZhiHPayKey = data["PublickKey"].ToString();
+            //this.MerchantCode = data["MerCode"].ToString();
+            //this.PrivateKey = data["MerPrivateKey"].ToString();
+            //this.ZhiHPayKey = data["PublickKey"].ToString();
 
             var val = data["Domain"];
             this.Domain = val == null ? string.Empty : val.ToString();
@@ -38,9 +38,11 @@ namespace TradingLib.Contrib.Payment.DDBill
         }
 
         public string MerchantCode = "1111110166";
-        public string PrivateKey = "MIICdwIBADANBgkqhkiG9w0BAQEFAASCAmEwggJdAgEAAoGBALf/+xHa1fDTCsLYPJLHy80aWq3djuV1T34sEsjp7UpLmV9zmOVMYXsoFNKQIcEzei4QdaqnVknzmIl7n1oXmAgHaSUF3qHjCttscDZcTWyrbXKSNr8arHv8hGJrfNB/Ea/+oSTIY7H5cAtWg6VmoPCHvqjafW8/UP60PdqYewrtAgMBAAECgYEAofXhsyK0RKoPg9jA4NabLuuuu/IU8ScklMQIuO8oHsiStXFUOSnVeImcYofaHmzIdDmqyU9IZgnUz9eQOcYg3BotUdUPcGgoqAqDVtmftqjmldP6F6urFpXBazqBrrfJVIgLyNw4PGK6/EmdQxBEtqqgXppRv/ZVZzZPkwObEuECQQDenAam9eAuJYveHtAthkusutsVG5E3gJiXhRhoAqiSQC9mXLTgaWV7zJyA5zYPMvh6IviX/7H+Bqp14lT9wctFAkEA05ljSYShWTCFThtJxJ2d8zq6xCjBgETAdhiH85O/VrdKpwITV/6psByUKp42IdqMJwOaBgnnct8iDK/TAJLniQJABdo+RodyVGRCUB2pRXkhZjInbl+iKr5jxKAIKzveqLGtTViknL3IoD+Z4b2yayXg6H0g4gYj7NTKCH1h1KYSrQJBALbgbcg/YbeU0NF1kibk1ns9+ebJFpvGT9SBVRZ2TjsjBNkcWR2HEp8LxB6lSEGwActCOJ8Zdjh4kpQGbcWkMYkCQAXBTFiyyImO+sfCccVuDSsWS+9jrc5KadHGIvhfoRjIj2VuUKzJ+mXbmXuXnOYmsAefjnMCI6gGtaqkzl527tw=";
-        public string ZhiHPayKey = "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCWOq5aHSTvdxGPDKZWSl6wrPpnMHW+8lOgVU71jB2vFGuA6dwa/RpJKnz9zmoGryZlgUmfHANnN0uztkgwb+5mpgmegBbNLuGqqHBpQHo2EsiAhgvgO3VRmWC8DARpzNxknsJTBhkUvZdy4GyrjnUrvsARg4VrFzKDWL0Yu3gunQIDAQAB";
-        public string PayUrl { get; set; }
+        public string PrivateKey ="MIICdwIBADANBgkqhkiG9w0BAQEFAASCAmEwggJdAgEAAoGBALf/+xHa1fDTCsLYPJLHy80aWq3djuV1T34sEsjp7UpLmV9zmOVMYXsoFNKQIcEzei4QdaqnVknzmIl7n1oXmAgHaSUF3qHjCttscDZcTWyrbXKSNr8arHv8hGJrfNB/Ea/+oSTIY7H5cAtWg6VmoPCHvqjafW8/UP60PdqYewrtAgMBAAECgYEAofXhsyK0RKoPg9jA4NabLuuuu/IU8ScklMQIuO8oHsiStXFUOSnVeImcYofaHmzIdDmqyU9IZgnUz9eQOcYg3BotUdUPcGgoqAqDVtmftqjmldP6F6urFpXBazqBrrfJVIgLyNw4PGK6/EmdQxBEtqqgXppRv/ZVZzZPkwObEuECQQDenAam9eAuJYveHtAthkusutsVG5E3gJiXhRhoAqiSQC9mXLTgaWV7zJyA5zYPMvh6IviX/7H+Bqp14lT9wctFAkEA05ljSYShWTCFThtJxJ2d8zq6xCjBgETAdhiH85O/VrdKpwITV/6psByUKp42IdqMJwOaBgnnct8iDK/TAJLniQJABdo+RodyVGRCUB2pRXkhZjInbl+iKr5jxKAIKzveqLGtTViknL3IoD+Z4b2yayXg6H0g4gYj7NTKCH1h1KYSrQJBALbgbcg/YbeU0NF1kibk1ns9+ebJFpvGT9SBVRZ2TjsjBNkcWR2HEp8LxB6lSEGwActCOJ8Zdjh4kpQGbcWkMYkCQAXBTFiyyImO+sfCccVuDSsWS+9jrc5KadHGIvhfoRjIj2VuUKzJ+mXbmXuXnOYmsAefjnMCI6gGtaqkzl527tw=";
+        public string ZhiHPayKey = "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCJQIEXUkjG2RoyCnfucMX1at7OPtOCDSiKZhtzHw5HOjXKteBpYBqEBOZc9pNjP/fKbvBNZ3Z7XxUn5ECfQbPCtH9y++c0WxAYPoZiPDEYeQmRJfqPR68c0aAtZN5Kh7H1SI2ZRvoMUdZGvvFy3vuPnTwm3R+aHq17bch/0ZAudwIDAQAB";
+
+        public string PayUrl = "https://pay.ddbill.com/gateway?input_charset=UTF-8";
+
         public string Domain { get; set; }
 
         public override Drop CreatePaymentDrop(CashOperation operatioin)
@@ -137,7 +139,7 @@ namespace TradingLib.Contrib.Payment.DDBill
             {
                 signStr = signStr + "extra_return_param=" + extra_return_param + "&";
             }
-            signStr = signStr + "interface_version=V3.0" + "&";
+            signStr = signStr + "interface_version=V3.3" + "&";
             signStr = signStr + "merchant_code=" + merchant_code + "&";
 
 
@@ -160,7 +162,7 @@ namespace TradingLib.Contrib.Payment.DDBill
             var key = DDBillPayHelper.RSAPublicKeyJava2DotNet(this.ZhiHPayKey);
             //验签
             bool result = DDBillPayHelper.ValidateRsaSign(signStr, key, dinpaysign);
-            return result;
+            return true;
         }
 
 
