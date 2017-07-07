@@ -94,6 +94,8 @@ namespace TradingLib.Contrib.APIService
                     return new TradingLib.Contrib.Payment.FZPay.FZPayGateWay(config);
                 case QSEnumGateWayType.DDBillPay:
                     return new TradingLib.Contrib.Payment.DDBill.DDBilPayGateWay(config);
+                case QSEnumGateWayType.GaoHuiTong:
+                    return new TradingLib.Contrib.Payment.GaoHuiTong.GaoHuiTongGateWay(config);
                 default:
                     return null;
             }
@@ -188,6 +190,10 @@ namespace TradingLib.Contrib.APIService
                 case "DDBILLPAY":
                     {
                         return TradingLib.Contrib.Payment.DDBill.DDBilPayGateWay.GetCashOperation(request.Params);
+                    }
+                case "GAOHUITONG":
+                    {
+                        return TradingLib.Contrib.Payment.GaoHuiTong.GaoHuiTongGateWay.GetCashOperation(request.Params);
                     }
                 default:
                     {

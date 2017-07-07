@@ -87,5 +87,10 @@ namespace TradingLib.Contrib.APIService
         /// 多得宝
         /// </summary>
         DDBillPay,
+
+        /// <summary>
+        /// 高汇通
+        /// </summary>
+        GaoHuiTong,
     }
 }
