@@ -110,6 +110,7 @@
     <Compile Include="PaymentGateway\FZPay\DropFZPayment.cs" />
     <Compile Include="PaymentGateway\FZPay\FZPayGateWay.cs" />
     <Compile Include="PaymentGateway\FZPay\FZPayHelper.cs" />
+    <Compile Include="PaymentGateway\GaoHuiTong\AESUtil.cs" />
     <Compile Include="PaymentGateway\GaoHuiTong\DropGaoHuiTongPayment.cs" />
     <Compile Include="PaymentGateway\GaoHuiTong\GaoHuiTongGateWay.cs" />
     <Compile Include="PaymentGateway\GaoHuiTong\GaoHuiTongHelper.cs" />
