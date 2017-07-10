@@ -35,9 +35,22 @@ namespace TradingLib.Contrib.APIService
             this.VerficationCode = data["VerficationCode"].ToString();// "hZdATerAjnT5HV25zBunvFdaUKdPTsvd";
             this.VirCardNo = data["AccNo"].ToString();
 
+            try
+            {
+                var val = data["Domain"];
+                this.Domain = val == null ? string.Empty : val.ToString();
+                this.PayDirectUrl = this.PayDirectUrl.Replace(APIGlobal.LocalIPAddress, this.Domain);
+
+            }
+            catch (Exception ex)
+            { 
+            
+            }
+
             this.SuccessReponse = "RespCode=0000|JumpURL=";
         }
 
+        public string Domain { get; set; }
         public string MerID { get; set; }
         public string VirCardNo { get; set; }
         public string VerficationCode { get; set; }
