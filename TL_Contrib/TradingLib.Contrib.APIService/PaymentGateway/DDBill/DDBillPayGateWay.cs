@@ -24,11 +24,11 @@ namespace TradingLib.Contrib.Payment.DDBill
             this.GateWayType = QSEnumGateWayType.DDBillPay;
 
             var data = config.Config.DeserializeObject();
-            //this.PayUrl = data["PayUrl"].ToString(); 
+            this.PayUrl = data["PayUrl"].ToString(); 
             this.SuccessReponse = "SUCCESS";
-            //this.MerchantCode = data["MerCode"].ToString();
-            //this.PrivateKey = data["MerPrivateKey"].ToString();
-            //this.ZhiHPayKey = data["PublickKey"].ToString();
+            this.MerchantCode = data["MerCode"].ToString();
+            this.PrivateKey = data["MerPrivateKey"].ToString();
+            this.ZhiHPayKey = data["PublickKey"].ToString();
 
             var val = data["Domain"];
             this.Domain = val == null ? string.Empty : val.ToString();
