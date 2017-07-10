@@ -52,15 +52,11 @@ namespace TradingLib.Core
             }
         }
 
+        [PermissionRequiredAttr("r_template_edit")]
         [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "UpdateCommissionTemplate", "UpdateCommissionTemplate - update commission template", "更新手续费模板",QSEnumArgParseType.Json)]
         public void CTE_UpdateCommissionTemplate(ISession session, string json)
         {
             Manager manager = session.GetManager();
-            UIAccess access = manager.GetAccess();
-            if (!access.r_template_edit)
-            {
-                throw new FutsRspError("无权更新手续费模板");
-            }
 
             CommissionTemplateSetting t = json.DeserializeObject<CommissionTemplateSetting>();
             t.Domain_ID = manager.domain_id;
@@ -92,18 +88,12 @@ namespace TradingLib.Core
 
         }
 
-
+        [PermissionRequiredAttr("r_template_edit")]
         [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "DeleteCommissionTemplate", "DeleteCommissionTemplate - delete commission template", "删除手续费模板")]
         public void CTE_DeleteCommissionTemplate(ISession session, int template_id)
         {
             Manager manager = session.GetManager();
             logger.Info(string.Format("管理员:{0} 删除手续费模板 request:{1}", manager.Login, template_id));
-
-            UIAccess access = manager.GetAccess();
-            if (!access.r_template_edit)
-            {
-                throw new FutsRspError("无权删除手续费模板项目");
-            }
 
             CommissionTemplate template = BasicTracker.CommissionTemplateTracker[template_id];
             if (template == null)
@@ -177,15 +167,11 @@ namespace TradingLib.Core
 
         }
 
+        [PermissionRequiredAttr("r_template_edit")]
         [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "UpdateCommissionTemplateItem", "UpdateCommissionTemplateItem - update commission template item", "更新手续费模板项目", QSEnumArgParseType.Json)]
         public void CTE_UpdateCommissionTemplateItem(ISession session, string json)
         {
             Manager manager = session.GetManager();
-            UIAccess access = manager.GetAccess();
-            if (!access.r_template_edit)
-            {
-                throw new FutsRspError("无权更新手续费模板项目");
-            }
 
             MGRCommissionTemplateItemSetting item = json.DeserializeObject<MGRCommissionTemplateItemSetting>();
             CommissionTemplate template = BasicTracker.CommissionTemplateTracker[item.Template_ID];
@@ -302,11 +288,12 @@ namespace TradingLib.Core
         /// 查询保证金模板
         /// </summary>
         /// <param name="session"></param>
+        [PermissionRequiredAttr("r_template_edit")]
         [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "QryMarginTemplate", "QryMarginTemplate - qry margin template", "查询保证金模板")]
         public void CTE_QryMarginTemplate(ISession session)
         {
             Manager manager = session.GetManager();
-            UIAccess access = manager.GetAccess();
+           
 
             if (manager.IsInRoot())
             {
@@ -343,16 +330,13 @@ namespace TradingLib.Core
         /// </summary>
         /// <param name="session"></param>
         /// <param name="json"></param>
+        [PermissionRequiredAttr("r_template_edit")]
         [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "UpdateMarginTemplate", "UpdateMarginTemplate - update margin template", "更新保证金模板", QSEnumArgParseType.Json)]
         public void CTE_UpdateMarginTemplate(ISession session, string json)
         {
 
             Manager manager = session.GetManager();
-            UIAccess access = manager.GetAccess();
-            if (!access.r_template_edit)
-            {
-                throw new FutsRspError("无权更新保证金模板");
-            }
+           
 
             MarginTemplateSetting t = json.DeserializeObject<MarginTemplateSetting>();// Mixins.Json.JsonMapper.ToObject<MarginTemplateSetting>(json);
             t.Domain_ID = manager.domain_id;
@@ -381,17 +365,14 @@ namespace TradingLib.Core
 
         }
 
+        [PermissionRequiredAttr("r_template_edit")]
         [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "DeleteMarginTemplate", "DeleteMarginTemplate - delete margin template", "删除保证金模板")]
         public void CTE_DeleteMarginTemplate(ISession session, int template_id)
         {
             Manager manager = session.GetManager();
             logger.Info(string.Format("管理员:{0} 删除保证金模板 request:{1}", manager.Login, template_id));
 
-            UIAccess access = manager.GetAccess();
-            if (!access.r_template_edit)
-            {
-                throw new FutsRspError("无权删除保证金模板项目");
-            }
+          
 
             MarginTemplate template = BasicTracker.MarginTemplateTracker[template_id];
             if (template == null)
@@ -465,15 +446,12 @@ namespace TradingLib.Core
             }
         }
 
+        [PermissionRequiredAttr("r_template_edit")]
         [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "UpdateMarginTemplateItem", "UpdateMarginTemplateItem - update margin template item", "更新保证金模板项目", QSEnumArgParseType.Json)]
         public void CTE_UpdateMarginTemplateItem(ISession session, string json)
         {
             Manager manager = session.GetManager();
-            UIAccess access = manager.GetAccess();
-            if (!access.r_template_edit)
-            {
-                throw new FutsRspError("无权查询保证金模板项目");
-            }
+            
 
             MGRMarginTemplateItemSetting item = json.DeserializeObject<MGRMarginTemplateItemSetting>();// Mixins.Json.JsonMapper.ToObject<MGRMarginTemplateItemSetting>(json);
             MarginTemplate template = BasicTracker.MarginTemplateTracker[item.Template_ID];
@@ -613,16 +591,11 @@ namespace TradingLib.Core
             }
         }
 
+        [PermissionRequiredAttr("r_template_edit")]
         [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "UpdateExStrategyTemplate", "UpdateExStrategyTemplate - update exstrategy template", "更新计算策略模板", QSEnumArgParseType.Json)]
         public void CTE_UpdateExStrategyTemplate(ISession session, string json)
         {
             Manager manager = session.GetManager();
-            UIAccess access = manager.GetAccess();
-            if (!access.r_template_edit)
-            {
-                throw new FutsRspError("无权更新交易参数模板");
-            }
-
             ExStrategyTemplateSetting t = json.DeserializeObject<ExStrategyTemplateSetting>();// Mixins.Json.JsonMapper.ToObject<ExStrategyTemplateSetting>(json);
             t.Domain_ID = manager.domain_id;
             bool isaddd = t.ID == 0;
@@ -653,16 +626,11 @@ namespace TradingLib.Core
 
         }
 
+        [PermissionRequiredAttr("r_template_edit")]
         [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "DeleteExStrategyTemplate", "DeleteExStrategyTemplate - delete ex strategy template", "删除交易参数模板")]
         public void CTE_DelExStrategyTemplate(ISession session, int template_id)
         {
             Manager manager = session.GetManager();
-            UIAccess access = manager.GetAccess();
-            if (!access.r_template_edit)
-            {
-                throw new FutsRspError("无权更新交易参数模板");
-            }
-
             ExStrategyTemplate template = BasicTracker.ExStrategyTemplateTracker[template_id];
             if (template == null)
             {
@@ -702,12 +670,6 @@ namespace TradingLib.Core
         public void CTE_QryExStrategyTemplateItem(ISession session, int templateid)
         {
             Manager manager = session.GetManager();
-            UIAccess access = manager.GetAccess();
-            if (!access.r_template_edit)
-            {
-                throw new FutsRspError("无权更新交易参数模板");
-            }
-
             ExStrategyTemplate template = BasicTracker.ExStrategyTemplateTracker[templateid];
             if (template == null)
             {
@@ -728,16 +690,14 @@ namespace TradingLib.Core
 
         }
 
+
+
+        [PermissionRequiredAttr("r_template_edit")]
         [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "UpdateExStrategyTemplateItem", "UpdateExStrategyTemplateItem - update exstrategy template item", "更新交易参数模板项目", QSEnumArgParseType.Json)]
         public void CTE_UpdateExStrategyTemplateItem(ISession session, string json)
         {
             Manager manager = session.GetManager();
-            UIAccess access = manager.GetAccess();
-            if (!access.r_template_edit)
-            {
-                throw new FutsRspError("无权更新交易参数模板");
-            }
-
+            
             ExStrategy item = json.DeserializeObject<ExStrategy>();// Mixins.Json.JsonMapper.ToObject<ExStrategy>(json);
             ExStrategyTemplate template = BasicTracker.ExStrategyTemplateTracker[item.Template_ID];
             if (template == null)

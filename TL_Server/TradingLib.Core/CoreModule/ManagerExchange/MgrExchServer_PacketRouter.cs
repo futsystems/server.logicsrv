@@ -61,7 +61,7 @@ namespace TradingLib.Core
             session.CMDStr = request.CMDStr;
             session.RequestID = request.RequestID;
 
-            TLCtxHelper.Ctx.MessageMgrHandler(session, request);
+            TLCtxHelper.Ctx.MessageMgrHandler(session, manager,request);
         }
 
     }

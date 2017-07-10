@@ -33,7 +33,7 @@ namespace TradingLib.Core
         /// 开启清算中心
         /// </summary>
         [ContribCommandAttr(QSEnumCommandSource.CLI, "opencc", "opencc - Open ClearCentre", "开启交易中心,接收客户端提交的委托")]
-        [ContribCommandAttr(QSEnumCommandSource.MessageWeb, "opencc", "opencc - Open ClearCentre", "开启交易中心,接受客户端提交的委托")]
+        //[ContribCommandAttr(QSEnumCommandSource.MessageWeb, "opencc", "opencc - Open ClearCentre", "开启交易中心,接受客户端提交的委托")]
         public void EXCH_OpenClearCentre()
         {
             OpenClearCentre();
@@ -41,7 +41,7 @@ namespace TradingLib.Core
 
 
         [ContribCommandAttr(QSEnumCommandSource.CLI, "closecc", "closecc - Close ClearCentre", "关闭交易中心,拒绝收客户端提交的委托")]
-        [ContribCommandAttr(QSEnumCommandSource.MessageWeb, "closecc", "closecc - Close ClearCentre", "关闭交易中心,拒绝客户端提交的委托")]
+        //[ContribCommandAttr(QSEnumCommandSource.MessageWeb, "closecc", "closecc - Close ClearCentre", "关闭交易中心,拒绝客户端提交的委托")]
         public void EXCH_CloseClearCentre()
         {
             CloseClearCentre();

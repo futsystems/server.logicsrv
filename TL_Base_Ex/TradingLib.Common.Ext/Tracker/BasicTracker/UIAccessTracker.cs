@@ -17,11 +17,9 @@ namespace TradingLib.Common
         /// <summary>
         /// 数据库ID与对应的权限设置影射
         /// </summary>
-        ConcurrentDictionary<int, UIAccess> uiaccessmap = new ConcurrentDictionary<int, UIAccess>();
-        /// <summary>
-        /// ManagerID与对应的权限ID的影射
-        /// </summary>
-        ConcurrentDictionary<int, int> manageruiidxmap = new ConcurrentDictionary<int, int>();
+        ConcurrentDictionary<int, Permission> permissionMap = new ConcurrentDictionary<int, Permission>();
+
+        ConcurrentDictionary<string, string> permissionTitleMap = new ConcurrentDictionary<string, string>();
 
         ConfigDB _cfgdb = null;
         List<string> _excludePermissionForAgent = new List<string>();
@@ -37,45 +35,56 @@ namespace TradingLib.Common
             {
                 _excludePermissionForAgent.Add(s);
             }
+
             //加载访问权限对象到内存
-            foreach (UIAccess a in ORM.MUIAccess.SelectUIAccess())
+            foreach (Permission a in ORM.MPermission.SelectUIAccess())
             {
-                uiaccessmap.TryAdd(a.id, a);
+                permissionMap.TryAdd(a.id, a);
             }
 
-            foreach (Manager2UIAccess access in ORM.MUIAccess.SelectManager2UIAccess())
+
+            List<PropertyInfo> list = new List<PropertyInfo>();
+            PropertyInfo[] propertyInfos = typeof(Permission).GetProperties();
+            foreach (PropertyInfo pi in propertyInfos)
             {
-                manageruiidxmap.TryAdd(access.manager_id, access.template_id);
+                PermissionFieldAttr attr = (PermissionFieldAttr)Attribute.GetCustomAttribute(pi, typeof(PermissionFieldAttr));
+                if (attr != null)
+                {
+                    permissionTitleMap.TryAdd(pi.Name, attr.Title);
+                }
             }
         }
 
         /// <summary>
-        /// 获得某个代理的UIAccess
+        /// 获取权限Title
+        /// 权限对象通过PermissionFieldAttr进行标注
         /// </summary>
-        /// <param name="managerid"></param>
+        /// <param name="filed"></param>
         /// <returns></returns>
-        public  UIAccess GetAgentUIAccess(int managerid)
+        public string GetPermissionTitle(string filed)
         {
-            if (manageruiidxmap.Keys.Contains(managerid))
+            string target = string.Empty;
+            if (permissionTitleMap.TryGetValue(filed, out target))
             {
-                return uiaccessmap[manageruiidxmap[managerid]];
+                return target;
             }
-            return null;
+            return "权限不存在";
         }
 
 
-        public UIAccess this[int id]
+        public Permission this[int id]
         {
             get
             {
-                UIAccess access = null;
-                if (uiaccessmap.TryGetValue(id, out access))
+                Permission access = null;
+                if (permissionMap.TryGetValue(id, out access))
                 {
                     return access;
                 }
                 return null;
             }
         }
+
         /// <summary>
         /// 获得某个管理员的UIAccess的优先顺序
         /// 1.如果有指定的权限则使用该权限
@@ -85,28 +94,26 @@ namespace TradingLib.Common
         /// </summary>
         /// <param name="manager"></param>
         /// <returns></returns>
-        public  UIAccess GetUIAccess(Manager manager)
+        internal Permission GetPermission(Manager manager)
         {
             //1.Root返回全部权限
             if (manager.IsRoot())
             {
-                return GetDefaultRootRight();
+                return GetDefaultRootPermission();
             }
 
-            UIAccess access=null;
+            Permission target = null;
             //2.如果直接指定了权限则使用该权限
-            if (manageruiidxmap.Keys.Contains(manager.ID))
+            if (permissionMap.TryGetValue(manager.Permission_ID,out target))
             {
-                access= uiaccessmap[manageruiidxmap[manager.ID]];
-                if (access != null)
-                    return access;
+                return target;
             }
 
             
             //3.员工返回默认员工权限(无任何权限只能观察)
             if (manager.IsStaff())
             {
-                return GetDefaultStaffRight();
+                return GetDefaultStaffPermission();
             }
 
             /*
@@ -126,27 +133,27 @@ namespace TradingLib.Common
             Manager agent = manager.ParentManager;
             while (!agent.IsInRoot())//如果父代理不是Root域 则进行递归
             {
-                if (manageruiidxmap.Keys.Contains(agent.ID))
+                if (permissionMap.TryGetValue(manager.Permission_ID, out target))
                 {
-                    access = uiaccessmap[manageruiidxmap[agent.ID]];
-                    if (access != null)
-                        return access;
+                    return target;
                 }
                 agent = agent.ParentManager;//递归到父域
             }
             logger.Warn(manager.ToString() + " have no permission set,use default");
-            return GetDefaultAgentRight();//其余代理 返回默认代理商的权限
+            return GetDefaultAgentPermission();//其余代理 返回默认代理商的权限
         }
 
+
+        #region 默认权限
         /// <summary>
         /// 获得默认Root权限
         /// 所有权限都打开
         /// </summary>
         /// <returns></returns>
-        UIAccess GetDefaultRootRight()
+        Permission GetDefaultRootPermission()
         {
-            PropertyInfo[] propertyInfos = typeof(UIAccess).GetProperties();
-            UIAccess access = new UIAccess();
+            PropertyInfo[] propertyInfos = typeof(Permission).GetProperties();
+            Permission access = new Permission();
             for (int i = 0; i < propertyInfos.Length; i++)
             {
                 PropertyInfo pi = propertyInfos[i];
@@ -168,10 +175,10 @@ namespace TradingLib.Common
         /// Staff默认没有任何权限
         /// </summary>
         /// <returns></returns>
-        UIAccess GetDefaultStaffRight()
+        Permission GetDefaultStaffPermission()
         {
-            PropertyInfo[] propertyInfos = typeof(UIAccess).GetProperties();
-            UIAccess access = new UIAccess();
+            PropertyInfo[] propertyInfos = typeof(Permission).GetProperties();
+            Permission access = new Permission();
             for (int i = 0; i < propertyInfos.Length; i++)
             {
                 PropertyInfo pi = propertyInfos[i];
@@ -195,10 +202,10 @@ namespace TradingLib.Common
         /// 获得默认权限列表
         /// </summary>
         /// <returns></returns>
-        UIAccess GetDefaultAgentRight()
+        Permission GetDefaultAgentPermission()
         {
-            PropertyInfo[] propertyInfos = typeof(UIAccess).GetProperties();
-            UIAccess access = new UIAccess();
+            PropertyInfo[] propertyInfos = typeof(Permission).GetProperties();
+            Permission access = new Permission();
             for (int i = 0; i < propertyInfos.Length; i++)
             {
                 PropertyInfo pi = propertyInfos[i];
@@ -221,6 +228,8 @@ namespace TradingLib.Common
             }
             return access;
         }
+        #endregion
+
 
 
         /// <summary>
@@ -228,35 +237,23 @@ namespace TradingLib.Common
         /// </summary>
         /// <param name="managerid"></param>
         /// <param name="accessid"></param>
-        public  void UpdateAgentPermission(int managerid, int accessid)
+        public  void UpdateManagerPermission(Manager mgr, int permission_id)
         {
-            if (!uiaccessmap.Keys.Contains(accessid))
-            {
-                throw new FutsRspError("指定权限模板不存在");
-            }
-            if (manageruiidxmap.Keys.Contains(managerid))
-            {
-                //更新
-                manageruiidxmap[managerid] = accessid;
-                ORM.MUIAccess.UpdateManagerPermissionSet(managerid, accessid);
-            }
-            else
-            {
-                //新增
-                manageruiidxmap[managerid] = accessid;
-                ORM.MUIAccess.InsertManagerPermissionSet(managerid, accessid);
-            }
+            mgr.Permission_ID = permission_id;
+            mgr.Permission = GetPermission(mgr);
+
+            ORM.MManager.UpdateManagerPermission(mgr.ID, permission_id);
         }
 
         /// <summary>
         /// 获得所有界面访问权限
         /// </summary>
         /// <returns></returns>
-        public  IEnumerable<UIAccess> UIAccesses
+        public IEnumerable<Permission> Permissions
         {
             get
             {
-                return uiaccessmap.Values;
+                return permissionMap.Values;
             }
         }
 
@@ -266,38 +263,52 @@ namespace TradingLib.Common
         /// <param name="access"></param>
         public void DeletePermissionTemplate(int template_id)
         {
-            UIAccess target = null;
-            if (uiaccessmap.TryGetValue(template_id, out target))
+            Permission target = null;
+            if (permissionMap.TryGetValue(template_id, out target))
             {
-                uiaccessmap.TryRemove(template_id, out target);
-                ORM.MUIAccess.DeletePermissionTemplate(template_id);
+                permissionMap.TryRemove(template_id, out target);
+                ORM.MPermission.DeletePermissionTemplate(template_id);
+
                 if (target != null)
                 {
-                    int to_remove = 0;
-                    List<int> remove = manageruiidxmap.Where(pair => pair.Value == target.id).Select(pair => pair.Key).ToList();
-                    foreach(var mgr_id in remove)
+                    var items = BasicTracker.ManagerTracker.Managers.Where(mgr => mgr.Permission_ID == template_id).ToArray();
+                    foreach (var item in items)
                     {
-                        manageruiidxmap.TryRemove(mgr_id,out to_remove);
+                        this.UpdateManagerPermission(item, 0);
                     }
                 }
             }
         
         }
+
+
         /// <summary>
-        /// 更新某个权限或者新增某个权限
+        /// 更新权限对象
         /// </summary>
         /// <param name="access"></param>
-        public  void UpdateUIAccess(UIAccess access)
+        public void UpdatePermission(Permission access)
         {
-            if (uiaccessmap.Keys.Contains(access.id))
+            Permission target = null;
+            if (permissionMap.TryGetValue(access.id, out target))
             {
-                uiaccessmap[access.id] = access;
-                ORM.MUIAccess.UpdateUIAccess(access);
+                //遍历所遇属性并传递值
+                PropertyInfo[] propertyInfos = typeof(Permission).GetProperties();
+                for (int i = 0; i < propertyInfos.Length; i++)
+                {
+                    PropertyInfo pi = propertyInfos[i];
+                    if (pi.Name.Equals("id"))
+                        continue;
+                    object val = pi.GetValue(access,null);
+                    pi.SetValue(target, val, null);
+
+                }
+                ORM.MPermission.UpdatePermissionTemplate(target);
             }
             else
             {
-                ORM.MUIAccess.InsertUIAccess(access);
-                uiaccessmap[access.id] = access;
+                target = access;
+                ORM.MPermission.InsertPermissionTemplate(target);
+                permissionMap[target.id] = target;
             }
         }
 

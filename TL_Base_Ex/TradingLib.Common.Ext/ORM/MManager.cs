@@ -86,6 +86,20 @@ namespace TradingLib.ORM
         }
 
         /// <summary>
+        /// 更新管理员权限模板
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="permission_id"></param>
+        public static void UpdateManagerPermission(int id, int permission_id)
+        {
+            using (DBMySql db = new DBMySql())
+            {
+                string query = String.Format("UPDATE manager SET permission_id = '{0}' WHERE id = '{1}'", permission_id, id);
+                db.Connection.Execute(query);
+            }
+        }
+
+        /// <summary>
         /// 更新管理员激活或冻结
         /// </summary>
         /// <param name="id"></param>

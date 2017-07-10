@@ -762,13 +762,23 @@ namespace TradingLib.Common
             foreach (MethodInfo mi in methodInfos)
             {
                 ContribCommandAttr[] attrs = (ContribCommandAttr[])Attribute.GetCustomAttributes(mi, typeof(ContribCommandAttr));
-                if (attrs !=null && attrs.Length>=1)
-                {
-                    foreach (ContribCommandAttr attr in attrs)
-                    {
-                        list.Add(new ContribCommandInfo(mi, attr, obj));
-                    }
-                }
+                PermissionRequiredAttr[] permissionAttrs = (PermissionRequiredAttr[])Attribute.GetCustomAttributes(mi, typeof(PermissionRequiredAttr));
+
+                //扩展方法属性 只能对函数标记一次
+                if (attrs == null) continue;
+                if (attrs.Length != 1) continue;
+                var cmd = new ContribCommandInfo(mi, attrs[0], obj);
+                cmd.PermissionAttr = permissionAttrs;
+                list.Add(cmd);
+
+
+                //if (attrs != null && attrs.Length >= 1)
+                //{
+                //    foreach (ContribCommandAttr attr in attrs)
+                //    {
+                //        list.Add(new ContribCommandInfo(mi, attr, obj));
+                //    }
+                //}
             }
             return list;
         }

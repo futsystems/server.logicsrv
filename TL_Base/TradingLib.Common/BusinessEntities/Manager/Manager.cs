@@ -67,7 +67,7 @@ namespace TradingLib.Common
         /// <summary>
         /// 权限ID
         /// </summary>
-        //public int Permission_ID { get; set; }
+        public int Permission_ID { get; set; }
 
         /// <summary>
         /// 管理员删除标识
@@ -122,6 +122,12 @@ namespace TradingLib.Common
         /// </summary>
         [Newtonsoft.Json.JsonIgnore]
         public Domain Domain { get; internal set; }
+
+        /// <summary>
+        /// 管理员权限
+        /// </summary>
+        [Newtonsoft.Json.JsonIgnore]
+        public Permission Permission { get; internal set; }
 
 
         /// <summary>

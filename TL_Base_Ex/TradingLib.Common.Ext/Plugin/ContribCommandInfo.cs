@@ -15,11 +15,13 @@ namespace TradingLib.Common
         public MethodInfo MethodInfo;
         public ContribCommandAttr Attr;
         public object Target;
+        public PermissionRequiredAttr[] PermissionAttr;
         public ContribCommandInfo(MethodInfo info, ContribCommandAttr attr,object target)
         {
             MethodInfo = info;
             Attr = attr;
             Target = target;
+            PermissionAttr = null;
         }
     }
 }

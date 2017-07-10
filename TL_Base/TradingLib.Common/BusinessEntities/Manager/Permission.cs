@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using TradingLib.API;
+using System.Reflection;
 
 namespace TradingLib.Common
 {
@@ -10,7 +11,7 @@ namespace TradingLib.Common
     /// 管理端界面权限
     /// 用于控制管理端的界面元素的现实
     /// </summary>
-    public class UIAccess : JsonObjectBase
+    public class Permission : JsonObjectBase
     {
         /// <summary>
         /// 数据库ID
@@ -37,60 +38,60 @@ namespace TradingLib.Common
         /// <summary>
         /// 添加交易帐户
         /// </summary>
-        [PermissionFieldAttr("添加帐户", "是否有权添加分帐户")]
+        [PermissionFieldAttr("添加帐户", "添加子帐户权限")]
         public bool r_account_add { get; set; }
 
         /// <summary>
         /// 删除交易帐户权限
         /// </summary>
-        [PermissionFieldAttr("删除帐户", "是否有权删除分帐户")]
+        [PermissionFieldAttr("删除帐户", "删除子账户权限")]
         public bool r_account_del { get; set; }
-
-        /// <summary>
-        /// 是否有权进行交易操作
-        /// </summary>
-        [PermissionFieldAttr("交易操作","是否有权向分帐户下单或平仓")]
-        public bool r_execution { get; set; }
-
-        /// <summary>
-        /// 是否有权冻结交易账户
-        /// </summary>
-        [PermissionFieldAttr("冻结帐户", "是否有权冻结或激活交易帐户")]
-        public bool r_block { get; set; }
-
-        /// <summary>
-        /// 执行出入金操作
-        /// </summary>
-        [PermissionFieldAttr("出入金", "是否有权执行出入金操作")]
-        public bool r_cashop { get; set; }
-
-        /// <summary>
-        /// 是否有权设定风控规则
-        /// </summary>
-        [PermissionFieldAttr("风控规则", "是否有权设定帐户风控规则")]
-        public bool r_riskrule { get; set; }
-
 
         /// <summary>
         /// 设置手续费权限
         /// </summary>
-        [PermissionFieldAttr("帐户参数模板", "是否有权设定帐户手续费保证金模板")]
+        [PermissionFieldAttr("修改帐户模板", "设定帐户手续费/保证金/交易参数权限")]
         public bool r_account_template { get; set; }
-
-
-        [PermissionFieldAttr("修改模板", "是否有权修改模板")]
-        public bool r_template_edit { get; set; }
 
         /// <summary>
         /// 修改帐户基本信息
         /// </summary>
-        [PermissionFieldAttr("帐户信息", "是否有权修改帐户信息")]
+        [PermissionFieldAttr("帐户信息", "修改帐户信息权限")]
         public bool r_account_info { get; set; }
 
         /// <summary>
         /// 是否有权修改帐户隔夜设置
         /// </summary>
-        [PermissionFieldAttr("隔夜设置", "是否有权修改帐户隔夜设置")]
+        [PermissionFieldAttr("隔夜设置", "修改帐户隔夜设置权限")]
         public bool r_account_interday { get; set; }
+
+        /// <summary>
+        /// 是否有权进行交易操作
+        /// </summary>
+        [PermissionFieldAttr("交易操作","向子帐户下单或平仓权限")]
+        public bool r_execution { get; set; }
+
+        /// <summary>
+        /// 是否有权冻结交易账户
+        /// </summary>
+        [PermissionFieldAttr("冻结帐户", "冻结或激活交易帐户权限")]
+        public bool r_block { get; set; }
+
+        /// <summary>
+        /// 执行出入金操作
+        /// </summary>
+        [PermissionFieldAttr("出入金", "出入金操作权限")]
+        public bool r_cashop { get; set; }
+
+        /// <summary>
+        /// 是否有权设定风控规则
+        /// </summary>
+        [PermissionFieldAttr("风控规则", "设定帐户风控规则权限")]
+        public bool r_riskrule { get; set; }
+
+
+        [PermissionFieldAttr("修改模板", "添加/修改模板权限")]
+        public bool r_template_edit { get; set; }
+
     }
 }

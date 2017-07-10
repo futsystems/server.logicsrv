@@ -163,19 +163,44 @@ namespace TradingLib.Common
             CmdHandler(session, request.ModuleID, request.CMDStr, request.Parameters, messageRouterCmdMap);
         }
 
-        public void MessageMgrHandler(ISession session, string message)
-        {
+        //public void MessageMgrHandler(ISession session, string message)
+        //{
             
-            CmdHandler(session, message, messageMgrCmdMap);
-        }
+        //    CmdHandler(session, message, messageMgrCmdMap);
+        //}
 
-        public void MessageMgrHandler(ISession session,MGRContribRequest request)
+        /// <summary>
+        /// 管理端扩展命令处理
+        /// </summary>
+        /// <param name="session"></param>
+        /// <param name="request"></param>
+        public void MessageMgrHandler(ISession session,Manager manager,MGRContribRequest request)
         {
             try
             {
                 //logger.Debug("****handle mgr contribrequest:" + request.ToString());
                 //logger.Info(string.Format("Manager[{0}] Request Module:{1} Cmd:{2} Args:{3}", session.AuthorizedID, request.ModuleID, request.CMDStr, request.Parameters));
-                CmdHandler(session, request.ModuleID, request.CMDStr, request.Parameters, messageMgrCmdMap);
+                //CmdHandler(session, request.ModuleID, request.CMDStr, request.Parameters, messageMgrCmdMap);
+                string cmdkey = ContribCommandKey(request.ModuleID, request.CMDStr);
+
+                if (!IsContribRegisted(request.ModuleID) && !IsCoreRegisted(request.ModuleID) && !IsServiceManagerRegisted(request.ModuleID))
+                {
+                    logger.Error("Error:Module[" + request.ModuleID + "] do not registed");
+                    return;
+                }
+                ContribCommand command = null;
+                if (!messageMgrCmdMap.TryGetValue(cmdkey,out command))
+                {
+                    logger.Error("Error:Contrib[" + request.ModuleID + "] do not support Command[" + request.CMDStr + "]");
+                    return;
+                }
+                string msg;
+                if (!command.CheckManagerPermission(manager, out msg))
+                {
+                    throw new FutsRspError(msg);
+                }
+                command.ExecuteCmd(session, request.Parameters);
+
             }
             catch (FutsRspError ex)
             {
@@ -327,7 +352,10 @@ namespace TradingLib.Common
                 logger.Error("Error:Contrib[" + contribid + "] do not support Command[" + cmd + "]");
                 return;
             }
-            cmdmap[cmdkey].ExecuteCmd(session, parameters);
+            var command = cmdmap[cmdkey];
+           
+
+            command.ExecuteCmd(session, parameters);
             
         }
 

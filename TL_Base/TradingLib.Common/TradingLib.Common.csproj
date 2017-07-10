@@ -91,7 +91,7 @@
     <Compile Include="Utils\Util_Json.cs" />
     <Compile Include="BusinessEntities\Basic\Holiday\Calendar.cs" />
     <Compile Include="BusinessEntities\Basic\Holiday\HolidayCalculator.cs" />
-    <Compile Include="BusinessEntities\Manager\UIAccess.cs" />
+    <Compile Include="BusinessEntities\Manager\Permission.cs" />
     <Compile Include="Message\BinaryOption\Order.cs" />
     <Compile Include="Message\Common\UtilStruct.cs" />
     <Compile Include="Message\MarketData\MGRMarketData.cs" />

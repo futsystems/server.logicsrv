@@ -49,7 +49,7 @@ namespace TradingLib.Common
             QQ = string.Empty;
             MGRID = 0;
             BaseMGRFK = 0;
-            UIAccess = new UIAccess();
+            Permission = new Permission();
             Domain = new DomainImpl();
         }
         /// <summary>
@@ -90,7 +90,7 @@ namespace TradingLib.Common
         /// <summary>
         /// 界面授权权限
         /// </summary>
-        public UIAccess UIAccess { get; set; }
+        public Permission Permission { get; set; }
 
         /// <summary>
         /// 域对象

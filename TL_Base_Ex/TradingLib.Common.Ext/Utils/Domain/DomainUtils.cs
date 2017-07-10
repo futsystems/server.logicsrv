@@ -75,9 +75,9 @@ namespace TradingLib.Common
         /// </summary>
         /// <param name="domain"></param>
         /// <returns></returns>
-        public static IEnumerable<UIAccess> GetUIAccesses(this Domain domain)
+        public static IEnumerable<Permission> GetPermissions(this Domain domain)
         {
-            return BasicTracker.UIAccessTracker.UIAccesses.Where(ui => ui.domain_id == domain.ID);
+            return BasicTracker.UIAccessTracker.Permissions.Where(ui => ui.domain_id == domain.ID);
         }
 
 

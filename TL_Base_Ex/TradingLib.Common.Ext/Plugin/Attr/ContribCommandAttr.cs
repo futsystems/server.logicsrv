@@ -9,7 +9,7 @@ namespace TradingLib.Common
     /// <summary>
     /// 用于标注扩展模块的命令,指明该函数响应什么消息形成Message->Command调用的模式
     /// </summary>
-    [AttributeUsage(AttributeTargets.Method,AllowMultiple = true)]
+    [AttributeUsage(AttributeTargets.Method,AllowMultiple = false)]
     public class ContribCommandAttr:TLAttribute
     {
         /// <summary>
@@ -80,8 +80,6 @@ namespace TradingLib.Common
             _help = help;
             _description = description;
             _parsetype = parsetype;
-            //_needauth = needauth;
-
         }
 
         /// <summary>

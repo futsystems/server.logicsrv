@@ -149,7 +149,7 @@ namespace TradingLib.Core
 
 
                         //获得界面访问权限列表
-                        response.LoginResponse.UIAccess = BasicTracker.UIAccessTracker.GetUIAccess(m);
+                        response.LoginResponse.Permission = m.Permission;
                         response.LoginResponse.Domain = m.Domain as DomainImpl;
 
                         //绑定客户端状态对象 该过程同时进行授权标识

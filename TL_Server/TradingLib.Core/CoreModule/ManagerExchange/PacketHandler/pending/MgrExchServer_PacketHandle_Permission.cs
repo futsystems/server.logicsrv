@@ -20,7 +20,7 @@ namespace TradingLib.Core
             Manager manger = session.GetManager();
             if (manger.IsInRoot())
             {
-                session.ReplyMgr(manger.Domain.GetUIAccesses().ToArray());
+                session.ReplyMgr(manger.Domain.GetPermissions().ToArray());
             }
             else
             {
@@ -39,11 +39,11 @@ namespace TradingLib.Core
             Manager manger = session.GetManager();
             if (manger.IsInRoot())
             {
-                UIAccess access = playload.DeserializeObject<UIAccess>();// Mixins.Json.JsonMapper.ToObject<UIAccess>(playload);
+                Permission access = playload.DeserializeObject<Permission>();// Mixins.Json.JsonMapper.ToObject<UIAccess>(playload);
                 //更新域信息
                 access.domain_id = manger.domain_id;
 
-                BasicTracker.UIAccessTracker.UpdateUIAccess(access);//更新
+                BasicTracker.UIAccessTracker.UpdatePermission(access);//更新
                 session.NotifyMgr("NotifyPermissionTemplate", BasicTracker.UIAccessTracker[access.id]);
                 session.RspMessage("权限模板更新成功");
             }
@@ -65,7 +65,7 @@ namespace TradingLib.Core
             logger.Info(string.Format("管理员:{0} 删除权限模板 request:{1}", manager.Login, template_id));
             if (manager.IsRoot())
             {
-                UIAccess access = BasicTracker.UIAccessTracker[template_id];
+                Permission access = BasicTracker.UIAccessTracker[template_id];
                 if (access == null)
                 {
                     throw new FutsRspError("指定权限模板不存在");
@@ -94,8 +94,13 @@ namespace TradingLib.Core
             Manager manger = session.GetManager();
             if (manger.IsInRoot())
             {
-                UIAccess access = BasicTracker.UIAccessTracker.GetAgentUIAccess(managerid);
-                session.ReplyMgr(access);
+                Manager target = BasicTracker.ManagerTracker[managerid];
+                if (target == null)
+                {
+                    throw new FutsRspError("指定的管理员不存在");
+                }
+
+                session.ReplyMgr(target.Permission);
             }
             else
             {
@@ -104,7 +109,7 @@ namespace TradingLib.Core
         }
 
         [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "UpdateAgentPermission", "UpdateAgentPermission - updaet agent permission", "更新管理员的权限设置")]
-        public void CTE_UpdateAgentPermission(ISession session, int managerid, int accessid)
+        public void CTE_UpdateAgentPermission(ISession session, int managerid, int permission_id)
         {
             Manager manger = session.GetManager();
             if (manger.IsInRoot())
@@ -114,9 +119,8 @@ namespace TradingLib.Core
                 {
                     throw new FutsRspError("指定的管理员不存在");
                 }
-                BasicTracker.UIAccessTracker.UpdateAgentPermission(managerid, accessid);
-                UIAccess access = BasicTracker.UIAccessTracker.GetAgentUIAccess(managerid);
-                session.NotifyMgr("NotifyAgentPermission",access);
+                BasicTracker.UIAccessTracker.UpdateManagerPermission(m, permission_id);
+                session.NotifyMgr("NotifyAgentPermission",m.Permission);
                 session.RspMessage("更新柜员权限设置成功");
             }
             else

@@ -349,10 +349,12 @@ namespace TradingLib.Core
         /// </summary>
         /// <param name="session"></param>
         /// <param name="json"></param>
+        [PermissionRequiredAttr("r_cashop")]
         [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "AccountCashOperation", "AccountCashOperation - account cash operation", "给交易帐户出入去金", QSEnumArgParseType.Json)]
         public void CTE_CashOperation(ISession session, string json)
         {
             Manager manager = session.GetManager();
+
             var req = json.DeserializeObject();
             var account = req["account"].ToString();
             var amount = decimal.Parse(req["amount"].ToString());
@@ -364,33 +366,36 @@ namespace TradingLib.Core
             IAccount acct = TLCtxHelper.ModuleAccountManager[account];
             HandlerMixins.Valid_ObjectNotNull(acct);
 
-            Manager manger = session.GetManager();
+            
 
             if (!manager.RightAccessAccount(acct))
             {
                 throw new FutsRspError("无权操作该帐户");
             }
 
-            //不是超级管理员需要进行出入金权限检查
-            if (!manager.IsRoot())
+
+
+            var baseMgr = manager.BaseManager;//获得对应的管理域主管理员
+            if (baseMgr.IsAgent())
             {
-                if (manager.AgentAccount == null)
+                if (baseMgr.AgentAccount == null)
                 {
                     throw new FutsRspError("代理账户不存在 无法执行出入金操作");
                 }
-                if (manager.AgentAccount.AgentType == EnumAgentType.Normal)
+                if (baseMgr.AgentAccount.AgentType == EnumAgentType.Normal)
                 {
                     throw new FutsRspError("普通代理无权执行出入金操作");
                 }
-                if (manager.AgentAccount.AgentType == EnumAgentType.SelfOperated)
+                if (baseMgr.AgentAccount.AgentType == EnumAgentType.SelfOperated)
                 {
-                    decimal canuse = manager.AgentAccount.StaticEquity - manager.AgentAccount.SubStaticEquity;
+                    decimal canuse = baseMgr.AgentAccount.StaticEquity - baseMgr.AgentAccount.SubStaticEquity;
                     if (( canuse < Math.Abs(amount)) && amount > 0)//入金且可分配小于入金额 则拒绝
                     {
                         throw new FutsRspError("自营代理可分配权益不足");
                     }
                 }
             }
+
 
             CashTransaction txn = new CashTransactionImpl();
             txn.Account = account;

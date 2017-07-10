@@ -176,7 +176,7 @@ namespace TradingLib.Core
                         throw new FutsRspError(string.Format("无权操作交易帐户[{0}]", request.Account));
                     }
 
-                    UIAccess fatheraccess, access = null;
+                    Permission fatheraccess, access = null;
                     //如果是代理则需要检查父代理权限设置中的 子代理提交出入金权限和代理本身的提交出入金权限
                     if (manger.IsAgent())
                     {
@@ -186,7 +186,7 @@ namespace TradingLib.Core
                         //    throw new FutsRspError("无权提交出入金");
                         //}
 
-                        access = BasicTracker.UIAccessTracker.GetUIAccess(manger);
+                        //access = BasicTracker.UIAccessTracker.GetUIAccess(manger);
 
                     
                     }

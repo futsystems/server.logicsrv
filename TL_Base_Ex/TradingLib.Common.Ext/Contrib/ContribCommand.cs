@@ -153,6 +153,25 @@ namespace TradingLib.Common
             m_info = info;
         }
 
+        public bool CheckManagerPermission(Manager mgr, out string msg)
+        {
+            msg = string.Empty;
+
+            //没有权限检查
+            if (m_info.PermissionAttr == null || m_info.PermissionAttr.Length == 0)
+            {
+                return true;
+            }
+
+            foreach (var perm in m_info.PermissionAttr)
+            {
+                if (!perm.CheckManagerPermission(mgr, out msg))
+                    return false;
+            }
+
+            return true;
+
+        }
         /// <summary>
         /// 执行命令
         /// </summary>
