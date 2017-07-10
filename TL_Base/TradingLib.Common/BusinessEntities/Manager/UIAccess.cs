@@ -74,20 +74,12 @@ namespace TradingLib.Common
         /// <summary>
         /// 设置手续费权限
         /// </summary>
-        [PermissionFieldAttr("手续费模板", "是否有权设定帐户手续费")]
-        public bool r_commission { get; set; }
+        [PermissionFieldAttr("帐户参数模板", "是否有权设定帐户手续费保证金模板")]
+        public bool r_account_template { get; set; }
 
-        /// <summary>
-        /// 设置保证金权限
-        /// </summary>
-        [PermissionFieldAttr("保证金模板", "是否有权设定帐户保证金")]
-        public bool r_margin { get; set; }
 
-        /// <summary>
-        /// 设置交易参数权限
-        /// </summary>
-        [PermissionFieldAttr("交易参数", "是否有权设定帐户交易参数")]
-        public bool r_exstrategy { get; set; }
+        [PermissionFieldAttr("修改模板", "是否有权修改模板")]
+        public bool r_template_edit { get; set; }
 
         /// <summary>
         /// 修改帐户基本信息

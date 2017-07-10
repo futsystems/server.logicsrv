@@ -87,8 +87,14 @@ namespace TradingLib.Common
         /// <returns></returns>
         public  UIAccess GetUIAccess(Manager manager)
         {
+            //1.Root返回全部权限
+            if (manager.IsRoot())
+            {
+                return GetDefaultRootRight();
+            }
+
             UIAccess access=null;
-            //1.如果直接指定了权限则使用该权限
+            //2.如果直接指定了权限则使用该权限
             if (manageruiidxmap.Keys.Contains(manager.ID))
             {
                 access= uiaccessmap[manageruiidxmap[manager.ID]];
@@ -96,18 +102,28 @@ namespace TradingLib.Common
                     return access;
             }
 
-            //2.如果没有指定使用主域界面权限
-            Manager basemanager = manager.BaseManager;
-            if (manageruiidxmap.Keys.Contains(basemanager.ID))
+            
+            //3.员工返回默认员工权限(无任何权限只能观察)
+            if (manager.IsStaff())
             {
-                access = uiaccessmap[manageruiidxmap[basemanager.ID]];
-                if (access != null)
-                    return access;
+                return GetDefaultStaffRight();
             }
 
+            /*
+            //2.如果没有指定使用主域界面权限
+            //Manager basemanager = manager.BaseManager;
+            //if (manageruiidxmap.Keys.Contains(basemanager.ID))
+            //{
+            //    access = uiaccessmap[manageruiidxmap[basemanager.ID]];
+            //    if (access != null)
+            //        return access;
+            //}
 
-            //3.如果主域没有对应的权限则查找其父代理 继承父代理的权限
-            Manager agent = basemanager.ParentManager;//获得主域代理
+            **/
+
+            
+            //4.如果代理没有指定权限则查找其父代理 继承父代理的权限
+            Manager agent = manager.ParentManager;
             while (!agent.IsInRoot())//如果父代理不是Root域 则进行递归
             {
                 if (manageruiidxmap.Keys.Contains(agent.ID))
@@ -119,23 +135,15 @@ namespace TradingLib.Common
                 agent = agent.ParentManager;//递归到父域
             }
             logger.Warn(manager.ToString() + " have no permission set,use default");
-
-            if (manager.IsInRoot())//如果是Root权限 则返回默认管理员权限 所有权限打开
-            {
-                return GetDefaultRootAccess();
-            }
-            else
-            {
-                return GetDefaultAgentAccess();//其余代理 返回默认代理商的权限
-            }
-
+            return GetDefaultAgentRight();//其余代理 返回默认代理商的权限
         }
 
         /// <summary>
         /// 获得默认Root权限
+        /// 所有权限都打开
         /// </summary>
         /// <returns></returns>
-        UIAccess GetDefaultRootAccess()
+        UIAccess GetDefaultRootRight()
         {
             PropertyInfo[] propertyInfos = typeof(UIAccess).GetProperties();
             UIAccess access = new UIAccess();
@@ -157,10 +165,37 @@ namespace TradingLib.Common
         }
 
         /// <summary>
+        /// Staff默认没有任何权限
+        /// </summary>
+        /// <returns></returns>
+        UIAccess GetDefaultStaffRight()
+        {
+            PropertyInfo[] propertyInfos = typeof(UIAccess).GetProperties();
+            UIAccess access = new UIAccess();
+            for (int i = 0; i < propertyInfos.Length; i++)
+            {
+                PropertyInfo pi = propertyInfos[i];
+                if (pi.Name.Equals("id"))
+                    continue;
+                if (pi.Name.Equals("name"))
+                    continue;
+                if (pi.Name.Equals("domain_id"))
+                    continue;
+                if (pi.Name.Equals("desp"))
+                    continue;
+                pi.SetValue(access, false, null);
+
+            }
+            return access;
+        }
+
+
+
+        /// <summary>
         /// 获得默认权限列表
         /// </summary>
         /// <returns></returns>
-        UIAccess GetDefaultAgentAccess()
+        UIAccess GetDefaultAgentRight()
         {
             PropertyInfo[] propertyInfos = typeof(UIAccess).GetProperties();
             UIAccess access = new UIAccess();

@@ -57,6 +57,16 @@ namespace TradingLib.Common
             return false;
         }
 
+        /// <summary>
+        /// 判断管理员是否是员工账户
+        /// </summary>
+        /// <param name="mgr"></param>
+        /// <returns></returns>
+        public static bool IsStaff(this Manager mgr)
+        {
+            return mgr.Type == QSEnumManagerType.STAFF;
+        }
+
 
         
         /// <summary>
@@ -118,7 +128,7 @@ namespace TradingLib.Common
 
             if (mgr.IsInRoot()) return true; //如果mgr是管理员则有权操作 域内所有管理员
 
-            //如果当前柜员是代理域成员
+            //如果当前柜员是代理域成员（代理员Agent或代理域Staff）
             if (mgr.IsInAgent())
             {
                 //当前管理域ID与目标管理员管理域ID一致
@@ -131,6 +141,7 @@ namespace TradingLib.Common
                     return true;
                 }
             }
+            
             return false;
         }
 

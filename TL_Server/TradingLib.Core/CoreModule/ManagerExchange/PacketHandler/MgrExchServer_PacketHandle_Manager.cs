@@ -122,6 +122,7 @@ namespace TradingLib.Core
             mgrProfile.BankAC = bankac;
             mgrProfile.Memo = memo;
 
+            //代理账户 需要限定账户数量与下级代理数量
             if (mgr_type == QSEnumManagerType.AGENT)
             {
                 var acc_limit = int.Parse(data["acc_limit"].ToString());
@@ -130,14 +131,28 @@ namespace TradingLib.Core
                 m.AccLimit = acc_limit;
                 m.AgentLimit = agent_limit;
             }
+            bool addNew = (id == 0);
 
-            if (id == 0)
+            if (addNew)
             {
-                //开启代理模块 并且 是管理员 或者 是代理同时可以开设下级代理
-                if (!(manager.Domain.Module_Agent && (manager.IsRoot() || (manager.IsAgent() && manager.Domain.Module_SubAgent))))
+
+                if (m.Type == QSEnumManagerType.AGENT)
                 {
-                    throw new FutsRspError("无权开设下级代理");
+                    //开启代理模块 并且 是管理员 或者 是代理同时可以开设下级代理
+                    if (!(manager.Domain.Module_Agent && (manager.IsRoot() || (manager.IsAgent() && manager.Domain.Module_SubAgent))))
+                    {
+                        throw new FutsRspError("无权开设下级代理");
+                    }
+
+                    int maxcnt = Math.Min(manager.Domain.AgentLimit, manager.AgentLimit);
+                    int cnt = manager.GetVisibleManager().Where(mgr => !mgr.Deleted).Count() - 1;//1为自己
+                    if (cnt >= maxcnt)
+                    {
+                        throw new FutsRspError("可开柜员数量超过限制:" + maxcnt.ToString());
+                    }
                 }
+
+
                 //父MangerID 柜员的父管理域是当前柜员管理域 Root除外,Root的父柜员为自己
                 m.parent_fk = manager.BaseMgrID;
                 //管理域ID 默认添加的管理员的管理域ID与当前管理员管理域ID一致(风控员,财务人员等) 代理与Root除外 他们有独立的管理域 
@@ -148,12 +163,7 @@ namespace TradingLib.Core
                 //验证添加柜员帐户权限
                 manager.ValidRightAddManager(m);
 
-                int maxcnt = Math.Min(manager.Domain.AgentLimit, manager.AgentLimit);
-                int cnt = manager.GetVisibleManager().Where(mgr => !mgr.Deleted).Count() - 1;//1为自己
-                if (cnt >= maxcnt)
-                {
-                    throw new FutsRspError("可开柜员数量超过限制:" + maxcnt.ToString());
-                }
+                
 
                 if (BasicTracker.ManagerTracker[m.Login] != null)
                 {
@@ -168,16 +178,16 @@ namespace TradingLib.Core
                     throw new FutsRspError("系统保留字段admin,不能用柜员登入名");
                 }
 
+                //执行数据操作
                 BasicTracker.ManagerTracker.UpdateManager(m);
-
                 BasicTracker.ManagerProfileTracker.UpdateManagerProfile(mgrProfile);
 
                 var newManager = BasicTracker.ManagerTracker[m.ID];
                 AgentImpl newAgent = null;
+                //若为代理 为代理添加结算账户
                 if (m.Type == QSEnumManagerType.AGENT)
                 {
                     var agent_type = data["agent_type"].ToString().ParseEnum<EnumAgentType>();
-
                     AgentSetting agent = new AgentSetting();
                     agent.Account = m.Login;
                     agent.Currency = GlobalConfig.BaseCurrency;
@@ -185,18 +195,23 @@ namespace TradingLib.Core
 
                     BasicTracker.AgentTracker.UpdateAgent(agent);
                     newAgent = BasicTracker.AgentTracker[agent.ID];
+
+                    if (newAgent == null)
+                    {
+                        throw new FutsRspError("代理结算账户添加异常");
+                    }
                 }
+
+                
 
                 session.RspMessage("添加管理员成功");
                 //通知管理员信息变更
                 NotifyManagerUpdate(newManager);
 
-                if (newAgent != null)
+                if (m.Type == QSEnumManagerType.AGENT)
                 {
-                    newAgent.BindManager(newManager);
                     NotifyAgentCreate(newAgent);
                 }
-
             }
             else
             {
@@ -283,7 +298,7 @@ namespace TradingLib.Core
         }
 
 
-        [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "ActiveManager", "ActiveManager - query bank", "查询银行列表")]
+        [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "ActiveManager", "ActiveManager - query bank", "激活管理员")]
         public void CTE_ActiveManger(ISession session,int mgrid)
         {
             Manager mgr = session.GetManager();
@@ -296,7 +311,7 @@ namespace TradingLib.Core
                 }
 
                 //
-                if (!mgr.IsParentOf(tomanger))
+                if (!mgr.RightAccessManager(tomanger))
                 {
                     throw new FutsRspError("无权操作管理员");
                 }
@@ -314,7 +329,7 @@ namespace TradingLib.Core
             }
         }
 
-        [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "InactiveManager", "InactiveManager - query bank", "查询银行列表")]
+        [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "InactiveManager", "InactiveManager - query bank", "冻结管理员")]
         public void CTE_InactiveManger(ISession session, int mgrid)
         {
             Manager mgr = session.GetManager();
@@ -327,7 +342,7 @@ namespace TradingLib.Core
                 }
 
                 //
-                if (!mgr.IsParentOf(tomanger))
+                if (!mgr.RightAccessManager(tomanger))
                 {
                     throw new FutsRspError("无权操作管理员");
                 }

@@ -21,23 +21,22 @@ namespace TradingLib.Core
         public void CTE_QryCalendarList(ISession session)
         {
             Manager manager = session.GetManager();
-            if (manager.IsRoot())
-            {
-                CalendarItem[] items = BasicTracker.CalendarTracker.Calendars.Select(c => new CalendarItem() { Code = c.Code, Name = c.Name }).ToArray();
-                int totalnum = items.Length;
 
-                if (totalnum > 0)
+            CalendarItem[] items = BasicTracker.CalendarTracker.Calendars.Select(c => new CalendarItem() { Code = c.Code, Name = c.Name }).ToArray();
+            int totalnum = items.Length;
+
+            if (totalnum > 0)
+            {
+                for (int i = 0; i < totalnum; i++)
                 {
-                    for (int i = 0; i < totalnum; i++)
-                    {
-                        session.ReplyMgr(items[i], i == totalnum - 1);
-                    }
-                }
-                else
-                {
-                    session.ReplyMgr(null);
+                    session.ReplyMgr(items[i], i == totalnum - 1);
                 }
             }
+            else
+            {
+                session.ReplyMgr(null);
+            }
+            
         }
 
 
@@ -75,7 +74,6 @@ namespace TradingLib.Core
                 if (mt != null)
                 {
                     BasicTracker.MarketTimeTracker.UpdateMarketTime(mt);
-                    //session.ReplyMgr(MarketTimeImpl.Serialize(BasicTracker.MarketTimeTracker[mt.ID]));
                     session.NotifyMgr("NotifyMarketTime", MarketTimeImpl.Serialize(BasicTracker.MarketTimeTracker[mt.ID]));
                     session.RspMessage("更新交易时间段成功");
                 }

@@ -26,13 +26,7 @@ namespace TradingLib.Core
         public void CTE_QryCommissionTemplate(ISession session)
         {
             Manager manager = session.GetManager();
-            UIAccess access = manager.GetAccess();
-            if (!access.r_commission)
-            {
-                throw new FutsRspError("无权查询手续费模板");
-            }
-
-            if (manager.IsRoot())
+            if (manager.IsInRoot())
             {
                 CommissionTemplateSetting[] items = manager.Domain.GetCommissionTemplate().ToArray();
                 if (items.Length == 0)
@@ -44,7 +38,7 @@ namespace TradingLib.Core
                     session.ReplyMgr(items[i], i == items.Length - 1);
                 }
             }
-            else if (manager.IsAgent())//如果是代理
+            else if (manager.IsInAgent())
             {
                 CommissionTemplateSetting[] items = manager.Domain.GetCommissionTemplate().Where(item => item.Manager_ID == manager.BaseMgrID).ToArray();
                 if (items.Length == 0)
@@ -56,10 +50,6 @@ namespace TradingLib.Core
                     session.ReplyMgr(items[i], i == items.Length - 1);
                 }
             }
-            else
-            {
-                throw new FutsRspError("无权查询手续费模板");
-            }
         }
 
         [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "UpdateCommissionTemplate", "UpdateCommissionTemplate - update commission template", "更新手续费模板",QSEnumArgParseType.Json)]
@@ -67,7 +57,7 @@ namespace TradingLib.Core
         {
             Manager manager = session.GetManager();
             UIAccess access = manager.GetAccess();
-            if (!access.r_commission)
+            if (!access.r_template_edit)
             {
                 throw new FutsRspError("无权更新手续费模板");
             }
@@ -110,7 +100,7 @@ namespace TradingLib.Core
             logger.Info(string.Format("管理员:{0} 删除手续费模板 request:{1}", manager.Login, template_id));
 
             UIAccess access = manager.GetAccess();
-            if (!access.r_commission)
+            if (!access.r_template_edit)
             {
                 throw new FutsRspError("无权删除手续费模板项目");
             }
@@ -156,12 +146,6 @@ namespace TradingLib.Core
         public void CTE_QryCommissionTemplateItem(ISession session, int templateid)
         {
             Manager manager = session.GetManager();
-            //UIAccess access = manager.GetAccess();
-            //if (!access.r_commission)
-            //{
-            //    throw new FutsRspError("无权查询保证金模板项目");
-            //}
-
             CommissionTemplate template = BasicTracker.CommissionTemplateTracker[templateid];
             if (template == null)
             {
@@ -174,16 +158,13 @@ namespace TradingLib.Core
             }
             if (!manager.IsInRoot())
             {
-
-                bool access = false;
                 //由代理创建或者代理自己当前模板则有权查询
                 if (template.Manager_ID == manager.BaseMgrID || (manager.AgentAccount != null && manager.AgentAccount.Commission_ID == templateid))
                 {
-                    access = true;
+
                 }
                 else
                 {
-                    access = false;
                     throw new FutsRspError(string.Format("无权查询手续费模板[{0}]", template.Name));
                 }
             }
@@ -201,7 +182,7 @@ namespace TradingLib.Core
         {
             Manager manager = session.GetManager();
             UIAccess access = manager.GetAccess();
-            if (!access.r_commission)
+            if (!access.r_template_edit)
             {
                 throw new FutsRspError("无权更新手续费模板项目");
             }
@@ -326,11 +307,8 @@ namespace TradingLib.Core
         {
             Manager manager = session.GetManager();
             UIAccess access = manager.GetAccess();
-            if (!access.r_margin)
-            {
-                throw new FutsRspError("无权查询保证金模板");
-            }
-            if (manager.IsRoot())
+
+            if (manager.IsInRoot())
             {
                 MarginTemplateSetting[] items = manager.Domain.GetMarginTemplate().ToArray();
                 if (items.Length == 0)
@@ -342,7 +320,7 @@ namespace TradingLib.Core
                     session.ReplyMgr(items[i], i == items.Length - 1);
                 }
             }
-            else if (manager.IsAgent())
+            else if (manager.IsInAgent())
             {
                 MarginTemplateSetting[] items = manager.Domain.GetMarginTemplate().Where(item => item.Manager_ID == manager.BaseMgrID).ToArray();
                 if (items.Length == 0)
@@ -371,7 +349,7 @@ namespace TradingLib.Core
 
             Manager manager = session.GetManager();
             UIAccess access = manager.GetAccess();
-            if (!access.r_margin)
+            if (!access.r_template_edit)
             {
                 throw new FutsRspError("无权更新保证金模板");
             }
@@ -410,7 +388,7 @@ namespace TradingLib.Core
             logger.Info(string.Format("管理员:{0} 删除保证金模板 request:{1}", manager.Login, template_id));
 
             UIAccess access = manager.GetAccess();
-            if (!access.r_margin)
+            if (!access.r_template_edit)
             {
                 throw new FutsRspError("无权删除保证金模板项目");
             }
@@ -462,11 +440,6 @@ namespace TradingLib.Core
         public void CTE_QryMarginTemplateItem(ISession session, int templateid)
         {
             Manager manager = session.GetManager();
-            UIAccess access = manager.GetAccess();
-            if (!access.r_margin)
-            {
-                throw new FutsRspError("无权查询保证金模板项目");
-            }
 
             MarginTemplate template = BasicTracker.MarginTemplateTracker[templateid];
             if (template == null)
@@ -497,7 +470,7 @@ namespace TradingLib.Core
         {
             Manager manager = session.GetManager();
             UIAccess access = manager.GetAccess();
-            if (!access.r_margin)
+            if (!access.r_template_edit)
             {
                 throw new FutsRspError("无权查询保证金模板项目");
             }
@@ -610,13 +583,7 @@ namespace TradingLib.Core
         public void CTE_QryExStrategyTemplate(ISession session)
         {
             Manager manager = session.GetManager();
-            UIAccess access = manager.GetAccess();
-            if (!access.r_exstrategy)
-            {
-                throw new FutsRspError("无权查询交易参数模板");
-            }
-
-            if (manager.IsRoot())
+            if (manager.IsInRoot())
             {
                 ExStrategyTemplate[] items = manager.Domain.GetExStrategyTemplate().ToArray();
                 if (items.Length == 0)
@@ -628,7 +595,7 @@ namespace TradingLib.Core
                     session.ReplyMgr(items[i], i == items.Length - 1);
                 }
             }
-            else if (manager.BaseManager.IsAgent())
+            else if (manager.IsInAgent())
             {
                 ExStrategyTemplate[] items = manager.Domain.GetExStrategyTemplate().Where(item => item.Manager_ID == manager.BaseMgrID).ToArray();
                 if (items.Length == 0)
@@ -651,7 +618,7 @@ namespace TradingLib.Core
         {
             Manager manager = session.GetManager();
             UIAccess access = manager.GetAccess();
-            if (!access.r_exstrategy)
+            if (!access.r_template_edit)
             {
                 throw new FutsRspError("无权更新交易参数模板");
             }
@@ -691,7 +658,7 @@ namespace TradingLib.Core
         {
             Manager manager = session.GetManager();
             UIAccess access = manager.GetAccess();
-            if (!access.r_exstrategy)
+            if (!access.r_template_edit)
             {
                 throw new FutsRspError("无权更新交易参数模板");
             }
@@ -736,7 +703,7 @@ namespace TradingLib.Core
         {
             Manager manager = session.GetManager();
             UIAccess access = manager.GetAccess();
-            if (!access.r_exstrategy)
+            if (!access.r_template_edit)
             {
                 throw new FutsRspError("无权更新交易参数模板");
             }
@@ -766,7 +733,7 @@ namespace TradingLib.Core
         {
             Manager manager = session.GetManager();
             UIAccess access = manager.GetAccess();
-            if (!access.r_exstrategy)
+            if (!access.r_template_edit)
             {
                 throw new FutsRspError("无权更新交易参数模板");
             }

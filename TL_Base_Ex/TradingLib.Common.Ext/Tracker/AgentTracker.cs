@@ -72,6 +72,10 @@ namespace TradingLib.Common
 
                 agentIDMap.TryAdd(target.ID, target);
                 agentAccountMap.TryAdd(target.Account, target);
+                
+                //将代理结算账户绑定到Manager对象
+                Manager mgr = BasicTracker.ManagerTracker[target.Account];
+                target.BindManager(mgr);
             }
         }
     }

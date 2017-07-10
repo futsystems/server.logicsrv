@@ -44,7 +44,7 @@ namespace TradingLib.Common
         {
             LoginID = string.Empty;
             Name = string.Empty;
-            ManagerType = QSEnumManagerType.MONITER;
+            ManagerType = QSEnumManagerType.STAFF;
             Mobile = string.Empty;
             QQ = string.Empty;
             MGRID = 0;
