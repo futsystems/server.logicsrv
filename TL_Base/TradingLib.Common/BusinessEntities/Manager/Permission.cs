@@ -101,10 +101,6 @@ namespace TradingLib.Common
         [PermissionFieldAttr("交易操作","向子帐户下单或平仓权限")]
         public bool r_execution { get; set; }
 
-        
-
-        
-
         /// <summary>
         /// 是否有权设定风控规则
         /// </summary>

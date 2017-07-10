@@ -212,6 +212,9 @@ namespace TradingLib.Core
                 {
                     NotifyAgentCreate(newAgent);
                 }
+
+                //绑定权限
+                newManager.Permission = BasicTracker.UIAccessTracker.GetPermission(newManager);
             }
             else
             {

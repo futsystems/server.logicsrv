@@ -138,6 +138,8 @@ namespace TradingLib.Core
                         newAgent.BindManager(newManager);
                         NotifyAgentCreate(newAgent);
                     }
+
+                    newManager.Permission = BasicTracker.UIAccessTracker.GetPermission(newManager);
                 }
                 else
                 {
