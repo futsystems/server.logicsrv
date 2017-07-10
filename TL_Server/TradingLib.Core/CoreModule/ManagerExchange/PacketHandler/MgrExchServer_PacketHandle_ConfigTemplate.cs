@@ -57,7 +57,6 @@ namespace TradingLib.Core
         public void CTE_UpdateCommissionTemplate(ISession session, string json)
         {
             Manager manager = session.GetManager();
-
             CommissionTemplateSetting t = json.DeserializeObject<CommissionTemplateSetting>();
             t.Domain_ID = manager.domain_id;
             bool isaddd = t.ID == 0;
@@ -115,11 +114,9 @@ namespace TradingLib.Core
 
             //调用维护器 删除该模板
             BasicTracker.CommissionTemplateTracker.DeleteCommissionTemplate(template_id);
-            IAccount[] accounts = manager.Domain.GetAccounts().ToArray();
-
-            for (int i = 0; i < accounts.Length; i++)
+            //如果交易账户试用的该模板则将账户模板重置
+            foreach (var acc in manager.Domain.GetAccounts())
             {
-                IAccount acc = accounts[i];
                 if (acc.Commission_ID == template_id)
                 {
                     TLCtxHelper.ModuleAccountManager.UpdateAccountCommissionTemplate(acc.ID, 0);

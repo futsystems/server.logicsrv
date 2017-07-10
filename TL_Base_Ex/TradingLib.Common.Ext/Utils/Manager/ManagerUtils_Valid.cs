@@ -46,5 +46,23 @@ namespace TradingLib.Common
             }
             throw new FutsRspError("无权添加柜员帐户");
         }
+
+        /// <summary>
+        /// 检查管理员是否有权操作账户
+        /// </summary>
+        /// <param name="mgr"></param>
+        /// <param name="account"></param>
+        public static void PermissionCheckAccount(this Manager mgr, string account)
+        {
+            IAccount acc = TLCtxHelper.ModuleAccountManager[account];
+            if (acc == null)
+            {
+                throw new FutsRspError(string.Format("交易账户:{0}不存在", account));
+            }
+            if(!mgr.RightAccessAccount(acc))
+            {
+                throw new FutsRspError(string.Format("无权操作交易账户:{0}",account));
+            }
+        }
     }
 }
