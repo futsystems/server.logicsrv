@@ -50,6 +50,7 @@ namespace TradingLib.Common
             sroot.BaseManager = this[sroot.mgr_fk];
             sroot.ParentManager = this[sroot.parent_fk];
 
+            sroot.Permission = BasicTracker.UIAccessTracker.GetPermission(sroot);
 
 
             //绑定代理财务账户
