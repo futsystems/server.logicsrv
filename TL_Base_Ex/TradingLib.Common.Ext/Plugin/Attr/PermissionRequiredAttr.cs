@@ -38,10 +38,25 @@ namespace TradingLib.Common
             this.checkPermissionField = true;
         }
 
+        public PermissionRequiredAttr(QSEnumManagerType type)
+        {
+            this.RequiredManagerType = type;
+            this.checkManagerType = true;
+        }
+
 
         public bool CheckManagerPermission(Manager mgr, out string msg)
         {
             msg = string.Empty;
+
+            if (this.checkManagerType)
+            {
+                if (this.RequiredManagerType != mgr.Type)
+                {
+                    msg = string.Format("管理员:{0}无权");
+                    return false;
+                }
+            }
             //检查权限字段
             if (this.checkPermissionField)
             {

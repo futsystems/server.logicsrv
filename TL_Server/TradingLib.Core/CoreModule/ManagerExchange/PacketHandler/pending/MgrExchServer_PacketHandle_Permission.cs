@@ -17,16 +17,8 @@ namespace TradingLib.Core
         public void CTE_QueryPermissionTemplateList(ISession session)
         {
 
-            Manager manger = session.GetManager();
-            if (manger.IsInRoot())
-            {
-                session.ReplyMgr(manger.Domain.GetPermissions().ToArray());
-            }
-            else
-            {
-                throw new FutsRspError("无权查询权限模板列表");
-            }
-
+            Manager manager = session.GetManager();
+            session.ReplyMgr(manager.Domain.GetPermissions().Where(p => p.manager_id == manager.BaseMgrID).ToArray());
         }
 
         /// <summary>
@@ -34,17 +26,19 @@ namespace TradingLib.Core
         /// </summary>
         /// <param name="session"></param>
         [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "UpdatePermission", "UpdatePermission - update permission config", "更新权限模板",QSEnumArgParseType.Json)]
-        public void CTE_UpdatePermissionTemplateList(ISession session, string playload)
+        public void CTE_UpdatePermissionTemplateList(ISession session, string json)
         {
             Manager manger = session.GetManager();
-            if (manger.IsInRoot())
+            if (manger.IsRoot() || manger.IsAgent())
             {
-                Permission access = playload.DeserializeObject<Permission>();// Mixins.Json.JsonMapper.ToObject<UIAccess>(playload);
+                Permission permission = json.DeserializeObject<Permission>();// Mixins.Json.JsonMapper.ToObject<UIAccess>(playload);
                 //更新域信息
-                access.domain_id = manger.domain_id;
+                permission.domain_id = manger.domain_id;
+                permission.manager_id = manger.BaseMgrID;
 
-                BasicTracker.UIAccessTracker.UpdatePermission(access);//更新
-                session.NotifyMgr("NotifyPermissionTemplate", BasicTracker.UIAccessTracker[access.id]);
+
+                BasicTracker.UIAccessTracker.UpdatePermission(permission);
+                session.NotifyMgr("NotifyPermissionTemplate", BasicTracker.UIAccessTracker[permission.id]);
                 session.RspMessage("权限模板更新成功");
             }
             else
@@ -63,7 +57,7 @@ namespace TradingLib.Core
         { 
              Manager manager = session.GetManager();
             logger.Info(string.Format("管理员:{0} 删除权限模板 request:{1}", manager.Login, template_id));
-            if (manager.IsRoot())
+            if (manager.IsRoot() || manager.IsAgent())
             {
                 Permission access = BasicTracker.UIAccessTracker[template_id];
                 if (access == null)
@@ -91,8 +85,8 @@ namespace TradingLib.Core
         [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "QueryAgentPermission", "QueryAgentPermission - query agent permission", "查询某个代理的权限设置")]
         public void CTE_QueryAgentPermission(ISession session, int managerid)
         {
-            Manager manger = session.GetManager();
-            if (manger.IsInRoot())
+            Manager manager = session.GetManager();
+            if (manager.IsRoot() || manager.IsAgent())
             {
                 Manager target = BasicTracker.ManagerTracker[managerid];
                 if (target == null)
@@ -111,8 +105,8 @@ namespace TradingLib.Core
         [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "UpdateAgentPermission", "UpdateAgentPermission - updaet agent permission", "更新管理员的权限设置")]
         public void CTE_UpdateAgentPermission(ISession session, int managerid, int permission_id)
         {
-            Manager manger = session.GetManager();
-            if (manger.IsInRoot())
+            Manager manager = session.GetManager();
+            if (manager.IsRoot() || manager.IsAgent())
             {
                 Manager m = BasicTracker.ManagerTracker[managerid];
                 if (m == null)

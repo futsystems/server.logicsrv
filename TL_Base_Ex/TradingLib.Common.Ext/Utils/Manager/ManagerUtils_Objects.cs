@@ -46,7 +46,6 @@ namespace TradingLib.Common
                 }
             }
             return mgrlist;
-            //return mgr.Domain.GetManagers().Where(mgr2 => mgr.parent_fk == mgr.mgr_fk && mgr2.Type == QSEnumManagerType.AGENT);
         }
 
         /// <summary>
@@ -60,7 +59,7 @@ namespace TradingLib.Common
         {
             if (mgr.IsInRoot())
             {
-                //获得系统所有交易帐号
+                //获得分区所有交易帐号
                 return mgr.Domain.GetAccounts();
             }
             else

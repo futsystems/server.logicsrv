@@ -165,6 +165,8 @@ namespace TradingLib.Common
                     continue;
                 if (pi.Name.Equals("desp"))
                     continue;
+                if (pi.Name.Equals("manager_id"))
+                    continue;
                 pi.SetValue(access, true, null);
 
             }
@@ -189,6 +191,8 @@ namespace TradingLib.Common
                 if (pi.Name.Equals("domain_id"))
                     continue;
                 if (pi.Name.Equals("desp"))
+                    continue;
+                if (pi.Name.Equals("manager_id"))
                     continue;
                 pi.SetValue(access, false, null);
 
@@ -216,6 +220,8 @@ namespace TradingLib.Common
                 if (pi.Name.Equals("domain_id"))
                     continue;
                 if (pi.Name.Equals("desp"))
+                    continue;
+                if (pi.Name.Equals("manager_id"))
                     continue;
                 if (_excludePermissionForAgent.Contains(pi.Name))
                 {

@@ -115,7 +115,7 @@ namespace TradingLib.Common
         /// <param name="items"></param>
         public static void ReplyMgrArray(this ISession session, object[] items)
         {
-            if (items.Length == 0)
+            if (items==null || items.Length == 0)
             {
                 session.ReplyMgr(null, true);
             }

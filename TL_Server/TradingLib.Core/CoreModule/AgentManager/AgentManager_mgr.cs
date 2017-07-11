@@ -1,4 +1,7 @@
-﻿using System;
+﻿//Copyright 2013 by FutSystems,Inc.
+//20170711 整理操作权限
+
+using System;
 using System.Collections.Generic;
 using System.Collections.Concurrent;
 using System.Linq;
@@ -20,25 +23,8 @@ namespace TradingLib.Core
         [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "QryAgent", "QryAgent - query agent", "查询代理账户")]
         public void CTE_QryAgent(ISession session, string account)
         {
-            Manager manager = session.GetManager();
-
-            Manager target = BasicTracker.ManagerTracker[account];
-            if (target == null)
-            {
-                throw new FutsRspError(string.Format("代理:{0} 不存在", account));
-            }
-
-            IAgent agent = BasicTracker.AgentTracker[account];
-            if (agent == null)
-            {
-                throw new FutsRspError(string.Format("代理财务账户:{0} 不存在", account));
-            }
-            if (!manager.RightAccessManager(target))
-            {
-                throw new FutsRspError(string.Format("无权查看代理:{0} 不存在", account));
-            }
-
-            session.ReplyMgr(agent);
+            session.GetManager().PermissionCheckManagerAccount(account);
+            session.ReplyMgr(BasicTracker.AgentTracker[account]);
         }
 
         [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "QryAllAgent", "QryAllAgent - query all agent", "查询所有代理账户")]
@@ -62,26 +48,12 @@ namespace TradingLib.Core
         [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "UpdateAgentTemplate", "UpdateAgentTemplate - update agent template", "更新代理账户手续费模板", QSEnumArgParseType.Json)]
         public void CTE_UpdateAgentTemplate(ISession session, string json)
         {
-            Manager manager = session.GetManager();
             var data = json.DeserializeObject();
             var account = data["account"].ToString();
 
-            Manager target = BasicTracker.ManagerTracker[account];
-            if (target == null)
-            {
-                throw new FutsRspError(string.Format("代理:{0} 不存在", account));
-            }
+            session.GetManager().PermissionCheckManagerAccount(account);
 
             AgentImpl agent = BasicTracker.AgentTracker[account];
-            if (agent == null)
-            {
-                throw new FutsRspError(string.Format("代理财务账户:{0} 不存在", account));
-            }
-            if (!manager.RightAccessManager(target))
-            {
-                throw new FutsRspError(string.Format("无权查看代理:{0} 不存在", account));
-            }
-
             agent.Commission_ID = int.Parse(data["commission_id"].ToString());
             agent.Margin_ID = int.Parse(data["margin_id"].ToString());
             agent.ExStrategy_ID = int.Parse(data["exstrategy_id"].ToString());
@@ -98,25 +70,8 @@ namespace TradingLib.Core
         [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "QryAgentFinanceInfo", "QryAgentFinanceInfo - qry agent finance info", "查询代理财务信息")]
         public void CTE_QryAgentFinanceInfo(ISession session, string account)
         {
-            Manager manager = session.GetManager();
-
-            Manager target = BasicTracker.ManagerTracker[account];
-            if (target == null)
-            {
-                throw new FutsRspError(string.Format("代理:{0} 不存在", account));
-            }
-
-            AgentImpl agent = BasicTracker.AgentTracker[account];
-            if (agent == null)
-            {
-                throw new FutsRspError(string.Format("代理财务账户:{0} 不存在", account));
-            }
-            if (!manager.RightAccessManager(target))
-            {
-                throw new FutsRspError(string.Format("无权查看代理:{0} 不存在", account));
-            }
-
-            session.ReplyMgr(agent.GetAgentFinanceInfo());
+            session.GetManager().PermissionCheckManagerAccount(account);
+            session.ReplyMgr(BasicTracker.AgentTracker[account].GetAgentFinanceInfo());
 
         }
 
@@ -136,18 +91,7 @@ namespace TradingLib.Core
             var comment = req["comment"].ToString();
             var equity_type = Util.ParseEnum<QSEnumEquityType>(req["equity_type"].ToString());
 
-            IAgent agent = BasicTracker.AgentTracker[account];
-            if (agent == null)
-            {
-                throw new FutsRspError(string.Format("代理账户:{0}不存在", account));
-            }
-
-            Manager manger = session.GetManager();
-
-            if (!manager.RightAccessManager(account))
-            {
-                throw new FutsRspError("无权操作该代理");
-            }
+            session.GetManager().PermissionCheckManagerAccount(account);
 
             CashTransaction txn = new CashTransactionImpl();
             txn.Account = account;
@@ -166,7 +110,7 @@ namespace TradingLib.Core
             this.CashOperation(txn);
 
             //出入金操作后返回帐户信息更新
-            session.NotifyMgr("NotifyAgentFinInfo",agent.GetAgentFinanceInfo());
+            session.NotifyMgr("NotifyAgentFinInfo", BasicTracker.AgentTracker[account].GetAgentFinanceInfo());
             session.RspMessage("代理出入金操作成功");
         }
 
@@ -185,33 +129,33 @@ namespace TradingLib.Core
         [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "QueryAgentCashTxn", "QueryAgentCashTxn -query agent cashtrans", "查询代理帐户出入金记录", QSEnumArgParseType.Json)]
         public void CTE_QueryAgentCashTrans(ISession session, string json)
         {
-            Manager manger = session.GetManager();
-            if (manger != null)
-            {
-                var data = json.DeserializeObject();
-                string account = data["account"].ToString();
-                long start = long.Parse(data["start"].ToString());
-                long end = long.Parse(data["end"].ToString());
 
-                CashTransactionImpl[] trans = ORM.MAgentCashTransaction.SelectHistCashTransactions(account, start, end).ToArray();
-                session.ReplyMgrArray(trans);
-            }
+            var data = json.DeserializeObject();
+            string account = data["account"].ToString();
+            long start = long.Parse(data["start"].ToString());
+            long end = long.Parse(data["end"].ToString());
+
+            session.GetManager().PermissionCheckManagerAccount(account);
+
+            CashTransactionImpl[] trans = ORM.MAgentCashTransaction.SelectHistCashTransactions(account, start, end).ToArray();
+            session.ReplyMgrArray(trans);
+            
         }
 
         [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "QueryAgentSettlements", "QueryAgentSettlements -query agent settlement ", "查询代理帐户结算段记录", QSEnumArgParseType.Json)]
         public void CTE_QueryAgentSettlements(ISession session, string json)
         {
-            Manager manger = session.GetManager();
-            if (manger != null)
-            {
-                var data = json.DeserializeObject();
-                string account = data["account"].ToString();
-                int start = int.Parse(data["start"].ToString());
-                int end = int.Parse(data["end"].ToString());
 
-                AccountSettlementImpl[] trans = ORM.MAgentSettlement.SelectHistSettlements(account, start, end).ToArray();
-                session.ReplyMgrArray(trans);
-            }
+            var data = json.DeserializeObject();
+            string account = data["account"].ToString();
+            int start = int.Parse(data["start"].ToString());
+            int end = int.Parse(data["end"].ToString());
+
+            session.GetManager().PermissionCheckManagerAccount(account);
+
+            AccountSettlementImpl[] trans = ORM.MAgentSettlement.SelectHistSettlements(account, start, end).ToArray();
+            session.ReplyMgrArray(trans);
+            
         }
 
         [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "UpdateAgentFlatEquity", "UpdateAgentFlatEquity -update agent flatequity ", "更新代理强平权益", QSEnumArgParseType.Json)]
@@ -223,17 +167,9 @@ namespace TradingLib.Core
             string account = data["account"].ToString();
             decimal flatequity = decimal.Parse(data["flat_equity"].ToString());
 
+            session.GetManager().PermissionCheckManagerAccount(account);
+
             AgentImpl agent = BasicTracker.AgentTracker[account];
-            if (agent == null)
-            {
-                throw new FutsRspError(string.Format("代理账户:{0}不存在", account));
-            }
-
-            if (!manager.RightAccessManager(account))
-            {
-                throw new FutsRspError("无权操作该代理");
-            }
-
             agent.FlatEquity = flatequity;
             ORM.MAgent.UpdateAgentFlatEquity(agent);
 

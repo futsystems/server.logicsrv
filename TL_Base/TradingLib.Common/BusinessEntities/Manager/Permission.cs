@@ -26,6 +26,12 @@ namespace TradingLib.Common
 
 
         /// <summary>
+        /// 管理员主域ID
+        /// </summary>
+        public int manager_id { get; set; }
+
+
+        /// <summary>
         /// 界面权限名称
         /// </summary>
         public string name { get; set; }

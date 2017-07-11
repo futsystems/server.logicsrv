@@ -1,5 +1,6 @@
 //Copyright 2013 by FutSystems,Inc.
 //20170112 整理无用操作
+//20170711 整理操作权限
 
 using System;
 using System.Collections.Generic;

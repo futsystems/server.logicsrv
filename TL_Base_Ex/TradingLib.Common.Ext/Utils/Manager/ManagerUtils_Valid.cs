@@ -64,5 +64,55 @@ namespace TradingLib.Common
                 throw new FutsRspError(string.Format("无权操作交易账户:{0}",account));
             }
         }
+
+        /// <summary>
+        /// 检查管理员是否有权操作某管理员
+        /// </summary>
+        /// <param name="mgr"></param>
+        /// <param name="mgrid"></param>
+        public static void PermissionCheckManager(this Manager mgr, int id)
+        {
+            Manager target = BasicTracker.ManagerTracker[id];
+            if (target == null)
+            {
+                throw new FutsRspError(string.Format("管理员:{0}不存在", id));
+            }
+            if (!mgr.RightAccessManager(target))
+            {
+                throw new FutsRspError(string.Format("无权操作管理员:{0}", target.Login));
+            }
+        }
+
+        public static void PermissionCheckManager(this Manager mgr, string mgrid)
+        {
+            Manager target = BasicTracker.ManagerTracker[mgrid];
+            if (target == null)
+            {
+                throw new FutsRspError(string.Format("管理员:{0}不存在", mgrid));
+            }
+            if (!mgr.RightAccessManager(target))
+            {
+                throw new FutsRspError(string.Format("无权操作管理员:{0}", target.Login));
+            }
+        }
+
+
+        public static void PermissionCheckManagerAccount(this Manager mgr, string account)
+        {
+            Manager target = BasicTracker.ManagerTracker[account];
+            if (target == null)
+            {
+                throw new FutsRspError(string.Format("管理员:{0}不存在", account));
+            }
+            AgentImpl agent = BasicTracker.AgentTracker[account];
+            if (agent == null)
+            {
+                throw new FutsRspError(string.Format("管理原结算账户:{0} 不存在", account));
+            }
+            if (!mgr.RightAccessManager(target))
+            {
+                throw new FutsRspError(string.Format("无权操作管理员:{0}", target.Login));
+            }
+        }
     }
 }

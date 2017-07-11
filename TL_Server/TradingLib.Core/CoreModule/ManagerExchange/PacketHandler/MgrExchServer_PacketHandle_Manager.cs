@@ -1,5 +1,6 @@
 ﻿//Copyright 2013 by FutSystems,Inc.
 //20170112 整理无用操作
+//20170711 权限整理
 
 using System;
 using System.Collections.Generic;
@@ -23,11 +24,11 @@ namespace TradingLib.Core
         [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "QryManager", "QryManager - query manger", "查询柜员列表")]
         public void CTE_QryManager(ISession session)
         {
-            Manager manager = session.GetManager();
             //获得当前管理员可以查看的柜员列表
-            Manager[] mgrs = manager.GetVisibleManager().ToArray();
-            session.ReplyMgr(mgrs);
+            Manager[] mgrs = session.GetManager().GetVisibleManager().ToArray();
+            session.ReplyMgrArray(mgrs);
         }
+
 
         /// <summary>
         /// 查询分区管理员信息
@@ -39,19 +40,14 @@ namespace TradingLib.Core
             Manager manager = session.GetManager();
             if (manager.IsRoot())
             {
+                session.GetManager().PermissionCheckManager(mgrid);
 
-                Manager mgr = BasicTracker.ManagerTracker[mgrid];
-                if (manager.RightAccessManager(mgr))
-                {
-                    Protocol.LoginInfo logininfo = new Protocol.LoginInfo();
-                    logininfo.LoginID = mgr.Login;
-                    logininfo.Pass = ORM.MManager.GetManagerPass(mgr.Login);
-                    session.ReplyMgr(logininfo);
-                }
-                else
-                {
-                    throw new FutsRspError("无权查看柜员信息");
-                }
+                var target = BasicTracker.ManagerTracker[mgrid];
+                Protocol.LoginInfo logininfo = new Protocol.LoginInfo();
+                logininfo.LoginID = target.Login;
+                logininfo.Pass = ORM.MManager.GetManagerPass(target.Login);
+                session.ReplyMgr(logininfo);
+                
             }
         }
 
@@ -62,21 +58,8 @@ namespace TradingLib.Core
         [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "QryManagerProfile", "QryManagerProfile - query manager profile", "查看管理员Profile")]
         public void CTE_QryManagerProfile(ISession session, int mgrid)
         {
-            Manager manager = session.GetManager();
-
-            Manager target = BasicTracker.ManagerTracker[mgrid];
-
-            if (target == null)
-            {
-                throw new FutsRspError(string.Format("管理员:{0} 不存在", mgrid));
-            }
-            if (!manager.RightAccessManager(target))
-            {
-                throw new FutsRspError(string.Format("无权查看代理:{0}", target.Login));
-            }
-
-            ManagerProfile mgrProfile = BasicTracker.ManagerProfileTracker[target.Login];
-
+            session.GetManager().PermissionCheckManager(mgrid);
+            ManagerProfile mgrProfile = BasicTracker.ManagerProfileTracker[BasicTracker.ManagerTracker[mgrid].Login];
             session.ReplyMgr(mgrProfile);
         }
 
@@ -218,19 +201,14 @@ namespace TradingLib.Core
             }
             else
             {
-                Manager target = BasicTracker.ManagerTracker[id];
-                if (target == null)
-                {
-                    throw new FutsRspError("管理员不存在");
-                }
+                session.GetManager().PermissionCheckManager(id);
 
                 BasicTracker.ManagerTracker.UpdateManager(m);
-
                 BasicTracker.ManagerProfileTracker.UpdateManagerProfile(mgrProfile);
 
                 session.RspMessage("更新管理员成功");
                 //通知管理员信息变更
-                NotifyManagerUpdate(target);
+                NotifyManagerUpdate(BasicTracker.ManagerTracker[id]);
             }
         }
 
@@ -247,17 +225,9 @@ namespace TradingLib.Core
             Manager manager = session.GetManager();
             logger.Info(string.Format("管理员:{0} 删除管理员 id:{1}", manager.Login, mgr_id));
 
+            session.GetManager().PermissionCheckManager(mgr_id);
+
             Manager remove = BasicTracker.ManagerTracker[mgr_id];
-            if (remove == null)
-            {
-                throw new FutsRspError(string.Format("管理员:{0}不存在", mgr_id));
-            }
-
-            if (!manager.RightAccessManager(remove))
-            {
-                throw new FutsRspError(string.Format("无权删除管理员:{0}", mgr_id));
-            }
-
             //查看该manger下的所有代理
             List<Manager> mgrlist = remove.GetVisibleManager().ToList();
 
@@ -307,18 +277,9 @@ namespace TradingLib.Core
             Manager mgr = session.GetManager();
             if (mgr.IsRoot() || mgr.IsAgent())
             {
+                session.GetManager().PermissionCheckManager(mgrid);
+
                 Manager tomanger = BasicTracker.ManagerTracker[mgrid];
-                if (tomanger == null)
-                {
-                    throw new FutsRspError("指定管理员不存在");
-                }
-
-                //
-                if (!mgr.RightAccessManager(tomanger))
-                {
-                    throw new FutsRspError("无权操作管理员");
-                }
-
                 tomanger.Active = true;
                 ORM.MManager.UpdateManagerActive(mgrid, true);
 
@@ -338,18 +299,9 @@ namespace TradingLib.Core
             Manager mgr = session.GetManager();
             if (mgr.IsRoot() || mgr.IsAgent())
             {
+                session.GetManager().PermissionCheckManager(mgrid);
+
                 Manager tomanger = BasicTracker.ManagerTracker[mgrid];
-                if (tomanger == null)
-                {
-                    throw new FutsRspError("指定管理员不存在");
-                }
-
-                //
-                if (!mgr.RightAccessManager(tomanger))
-                {
-                    throw new FutsRspError("无权操作管理员");
-                }
-
                 tomanger.Active = false;
                 ORM.MManager.UpdateManagerActive(mgrid, false);
 

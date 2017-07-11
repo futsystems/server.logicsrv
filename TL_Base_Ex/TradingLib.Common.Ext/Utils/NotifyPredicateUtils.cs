@@ -31,6 +31,8 @@ namespace TradingLib.Common
                 //如果有Root域的管理端登入 则需要通知
                 if (mgr.IsInRoot())
                     return true;
+                if (mgr.BaseMgrID == manager.BaseMgrID)
+                    return true;
                 //如果是该管理端的子代理 则需要通知
                 if (mgr.IsParentOf(manager))
                     return true;
