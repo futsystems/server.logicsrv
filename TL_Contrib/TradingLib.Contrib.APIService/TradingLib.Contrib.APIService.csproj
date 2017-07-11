@@ -114,6 +114,7 @@
     <Compile Include="PaymentGateway\GaoHuiTong\DropGaoHuiTongPayment.cs" />
     <Compile Include="PaymentGateway\GaoHuiTong\GaoHuiTongGateWay.cs" />
     <Compile Include="PaymentGateway\GaoHuiTong\GaoHuiTongHelper.cs" />
+    <Compile Include="PaymentGateway\GaoHuiTong\RASHelper.cs" />
     <Compile Include="PaymentGateway\GaoHuiTong\RASUtil.cs" />
     <Compile Include="PaymentGateway\GateWayBase.cs" />
     <Compile Include="PaymentGateway\GateWayType.cs" />

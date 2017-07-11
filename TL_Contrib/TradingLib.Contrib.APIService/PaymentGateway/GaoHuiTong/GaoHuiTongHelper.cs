@@ -23,17 +23,17 @@ namespace TradingLib.Contrib.Payment.GaoHuiTong
             Dictionary<string, string> dicArray = new Dictionary<string, string>();
             foreach (KeyValuePair<string, string> temp in dicArrayPre)
             {
-                //if (temp.Key.ToLower() != "sign" && temp.Key.ToLower() != "signtype" && temp.Value != "" && temp.Value != null)
-                //{
-                //    dicArray.Add(temp.Key, temp.Value);
-                //}
-                string key = temp.Key;
-                string value = temp.Value;
-                if (value == null && value == "")
+                if (temp.Key.ToLower() != "sign" && temp.Key.ToLower() != "signtype" && !string.IsNullOrEmpty(temp.Value))
                 {
-                    continue;
+                    dicArray.Add(temp.Key, temp.Value);
                 }
-                dicArray.Add(key, value);
+                //string key = temp.Key;
+                //string value = temp.Value;
+                //if (value == null && value == "")
+                //{
+                //    continue;
+                //}
+                //dicArray.Add(key, value);
             }
 
             return dicArray;

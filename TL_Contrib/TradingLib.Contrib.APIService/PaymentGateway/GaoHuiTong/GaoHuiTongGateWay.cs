@@ -30,12 +30,12 @@ namespace TradingLib.Contrib.Payment.GaoHuiTong
             
         }
         //"http://106.120.193.133/gateway/ebankPayApi/pay";
-        public string PayUrl = "http://gateway.gaohuitong.com/gateway/ebankPayApi/pay"; //"http://gateway.gaohuitong.com/gateway/ebankPayApi/pay";
+        public string PayUrl = "http://106.120.193.133/gateway/ebankPayApi/pay"; //"http://gateway.gaohuitong.com/gateway/ebankPayApi/pay";
 
-        public string MerchantID = "000440048160482";
+        public string MerchantID = "000110048160186";
 
-        public string PrivateKey = "MIICeAIBADANBgkqhkiG9w0BAQEFAASCAmIwggJeAgEAAoGBAMSSi3AI3UsBVXaIr3AxhrWRmv6DPE6x/7XPMOTTSIylwqRuVncGsB81iFlOI5p8avUbhJ0EbiFHx+hb9T3SK7/mPHvj7IKg9TMDlz9AFBeErvveHQ63PMsYmex5AeOo4ZCEpEGLr3YdOMMBkMYafL4jjfELV8b4+SiYh6bh7N/ZAgMBAAECgYBzPAFX/SpVNQP3x+so1y/EMwZsm1x4OarQ1xQvoJiQMwAmyrQPdLE8qnIzADao8rT02VvlfFpfUigj0/yxcArKnleMUTTD3+rj2B5DhRQ4FVim31+8rGS4q/MoUsBbTupLQC11kdW46Sk7K4tt0QtgWPC3Rmco2cctD7Tyr/rQXQJBAOBfnKoAa49aMeNoAYzI25ArbCNKTC1OoRNPL1I5wkXTZkw4uVl8AKCwYvsWUDh1MNcuZJSnlh4T98pxnpc19b8CQQDgR79/NsydSNwmj4d0dcWmX9S8R0uXEV959kdiOlH3vpHizelkiL6+i7fIi4Xg5vBVeZgoNEU9HPiFM7p4iQBnAkEAomcSMkqTj/Ms4PjLBmfr5HJJl1GTycd790n9anq8D2ZwSQNVxVtn6OdC/ZKtBfBtJZNC4gZbNfImDLYooDJCaQJBAIIIdzmdnwJuFN3yh3l5MvAkTaYfu+7Jbs66gGauI4n9Hn4eHnxgYB7/yL1oT2W2347fId3leGNXYatw82MhI28CQQC4uRHySQq1+p3zyTRxo/nyMi6dze45MhXNJaxG2NfSwOTkVpT296irgJtzPGRLk1ZvD7VwCFEhC/nDZUKvANfD";
-        
+        public string PrivateKey = "MIICdwIBADANBgkqhkiG9w0BAQEFAASCAmEwggJdAgEAAoGBAOsjrXtJEWsNM1kwcJvszNTXuDxYmxTI891PIsHLP6eVpIRE+Cad7kkf4ctBjsnQNXh6KxMqh8uWddPjzLAZ+v3eOksEqVwGXWOOPiX47LkAL3YWOQdI8lKg82N4fKyazCyu5ohPRA8KN1x8NIZ96vrBYBg0NFITHNULesU064Q3AgMBAAECgYB83ZtYZrrbME1eRXznMF6tgEiTszHXXccydL2uT7Jj2fFdVAq65w8MweNzvkKHJQvgCHArY2BtWl8DwGqH8aP4e3Xak7ri4Xryizekmy1okRUMQjI81fSI9ft89kZRvZUSCbKO8iPyHVv7gezWgYQMnOdiGKgH6KNWbKKFm9o2gQJBAP5HSDwMc84d1E/9IiYG2tQPSJqFh1HZO+uoXMpKlgC+9cPx7PRNRRxtZTRoIhTxhEO9FcDZ+S2j9G33mx6RO+ECQQDsuzk0pUYMguj0WvA8g4k8z8wYvveseDzlbUDlk363xzf06TcW20ad0Jv6zxxZXHUlHatP9JTi2+jPWVZDm4MXAkEA/jxbNt7kcrNUcl2P5SF5bgmR+B2F/QoMZUTC8ee9LyW/KJkc5+7SKOggBlQPr40DR48ozteh0kZZwBGPYPKpQQJBAM0eGB4Oilhy4YhAd2HnkvT3E9/pL87ny9P6yz1ghG6WllyF6m7KhjBdvZke9XBUVUhYocRApvS+GMX4oW8pAvcCQFNU2kJOzxAId+1Yj+s+NrAG0P5VHmqxN0xeCjAJ36f0jctMIaHjG3s8uK8PeSOT33vgWIJqNvdxsfh0X7hN0Ys=";
+
         public string PublicKey = "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCWY9ClHmqFbsTCr1N/uKjX5GWJgLqZG0Uod8KiAeQAtdlThI2BUNLwv5JwR6mqfOww+RagpXipWfhbyemkSwlxlRgW1zAlxEnKF7WciM65OTxVReG+FnSTetHBgxETgDN4hRDa5eXYcLYyLEAjBOmkEqaPxG/THGwqh8lXkphpIwIDAQAB";
 
         public string MD55Key = "HnahbpRDDzFGr8213GC3uA==";
@@ -87,7 +87,7 @@ namespace TradingLib.Contrib.Payment.GaoHuiTong
             param.Add("payType", data.payType);
             param.Add("charset", data.charset);
 
-            param.Add("merOrderId", data.merOrderId);
+            param.Add("meraOrderId", data.merOrderId);
             param.Add("currency", data.currency);
             param.Add("notifyUrl", data.notifyUrl);
             param.Add("returnUrl", data.returnUrl);
@@ -107,12 +107,20 @@ namespace TradingLib.Contrib.Payment.GaoHuiTong
             //过滤签名参数数组
             sPara = GaoHuiTongHelper.FilterPara(param);
 
-            //string signSrc = GaoHuiTongHelper.CreateLinkString(sPara);
+            string signSrc = GaoHuiTongHelper.CreateLinkString(sPara);
 
+            signSrc = signSrc.Replace("meraOrderId", "merOrderId");
+
+            signSrc = "charset=UTF-8&clientIp=127.0.0.1&currency=CNY&merOrderId=636353865776837580&merchantId=000110048160186&notifyUrl=http://117.90.54.37:9999/cash/srvnotify/gaohuitong&payType=01&productDesc=会员购物卡&productName=充值卡&returnUrl=http://117.90.54.37:9999/cash/custnotify/gaohuitong&serviceName=ebankPayApi&tranAmt=1.00&tranTime=20170711162147&version=V1";
             //string key = DinpayHelper.RSAPrivateKeyJava2DotNet(this.PrivateKey);
             //string signdata = DinpayHelper.RSASign(signSrc, key);
 
-            data.sign = GaoHuiTongHelper.BuildMysignRSA(sPara, "UTF-8");
+            data.sign = RSAHelper.sign(signSrc, this.PrivateKey);
+
+            var sign2 = GaoHuiTongHelper.BuildMysignRSA(sPara, "UTF-8");
+            bool same = data.sign == GaoHuiTongHelper.BuildMysignRSA(sPara, "UTF-8");
+            string pubkey = "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDrI617SRFrDTNZMHCb7MzU17g8WJsUyPPdTyLByz+nlaSERPgmne5JH+HLQY7J0DV4eisTKofLlnXT48ywGfr93jpLBKlcBl1jjj4l+Oy5AC92FjkHSPJSoPNjeHysmswsruaIT0QPCjdcfDSGfer6wWAYNDRSExzVC3rFNOuENwIDAQAB";
+            bool valid = RSAHelper.verify(signSrc, data.sign, pubkey);
             // data.sign = GaoHuiTongHelper.BuildMysignMD5(sPara, "UTF-8");
 
             return data;
