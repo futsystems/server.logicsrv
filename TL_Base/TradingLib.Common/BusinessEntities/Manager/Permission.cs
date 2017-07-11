@@ -114,7 +114,7 @@ namespace TradingLib.Common
         public bool r_riskrule { get; set; }
 
 
-        [PermissionFieldAttr("修改模板", "添加/修改模板权限")]
+        [PermissionFieldAttr("添加/编辑模板", "添加/编辑手续费、保证金、交易参数模板")]
         public bool r_template_edit { get; set; }
 
 
