@@ -199,7 +199,7 @@ namespace TradingLib.Common
                         item.MarginByMoney = 0;
                         item.MarginByVolume = 0;
                         item.Percent = 0;
-                        item.ChargeType = QSEnumChargeType.Absolute;
+                        item.ChargeType = QSEnumChargeType.Relative;
                         item.Template_ID = tmp.ID;
                         item.Percent = 0;
                         ORM.MMargin.InsertMarginTemplateItem(item);

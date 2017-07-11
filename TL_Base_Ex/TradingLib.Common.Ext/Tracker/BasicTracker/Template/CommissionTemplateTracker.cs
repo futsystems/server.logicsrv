@@ -158,7 +158,7 @@ namespace TradingLib.Common
                             item.CloseByVolume = 0;
                             item.CloseTodayByMoney = 0;
                             item.CloseTodayByVolume = 0;
-                            item.ChargeType = QSEnumChargeType.Absolute;
+                            item.ChargeType = QSEnumChargeType.Relative;
                             item.Template_ID = target.ID;
                             item.Percent = 0;
                             item.SecurityType = SecurityType.FUT;
