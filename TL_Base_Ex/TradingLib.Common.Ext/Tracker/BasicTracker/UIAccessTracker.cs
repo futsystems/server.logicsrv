@@ -21,20 +21,20 @@ namespace TradingLib.Common
 
         ConcurrentDictionary<string, string> permissionTitleMap = new ConcurrentDictionary<string, string>();
 
-        ConfigDB _cfgdb = null;
-        List<string> _excludePermissionForAgent = new List<string>();
+        //ConfigDB _cfgdb = null;
+        //List<string> _excludePermissionForAgent = new List<string>();
 
         public UIAccessTracker()
         {
-            _cfgdb = new ConfigDB("UIAccessTracker");
-            if (!_cfgdb.HaveConfig("ExcludePermissionForAgent"))
-            {
-                _cfgdb.UpdateConfig("ExcludePermissionForAgent", QSEnumCfgType.String, "r_account_del,r_cashop,r_commission,r_margin,r_exstrategy", "代理默认排除的权限列表");
-            }
-            foreach (string s in _cfgdb["ExcludePermissionForAgent"].AsString().Split(','))
-            {
-                _excludePermissionForAgent.Add(s);
-            }
+            //_cfgdb = new ConfigDB("UIAccessTracker");
+            //if (!_cfgdb.HaveConfig("ExcludePermissionForAgent"))
+            //{
+            //    _cfgdb.UpdateConfig("ExcludePermissionForAgent", QSEnumCfgType.String, "r_account_del,r_cashop,r_commission,r_margin,r_exstrategy", "代理默认排除的权限列表");
+            //}
+            //foreach (string s in _cfgdb["ExcludePermissionForAgent"].AsString().Split(','))
+            //{
+            //    _excludePermissionForAgent.Add(s);
+            //}
 
             //加载访问权限对象到内存
             foreach (Permission a in ORM.MPermission.SelectUIAccess())
@@ -223,14 +223,14 @@ namespace TradingLib.Common
                     continue;
                 if (pi.Name.Equals("manager_id"))
                     continue;
-                if (_excludePermissionForAgent.Contains(pi.Name))
-                {
-                    pi.SetValue(access, false, null);
-                }
-                else
-                {
-                    pi.SetValue(access, true, null);
-                }
+                //if (_excludePermissionForAgent.Contains(pi.Name))
+                //{
+                pi.SetValue(access, false, null);
+                //}
+                //else
+                //{
+                //    pi.SetValue(access, true, null);
+                //}
             }
             return access;
         }
