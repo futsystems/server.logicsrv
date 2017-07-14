@@ -148,7 +148,8 @@ namespace TradingLib.Core
 
                 
 
-                if (BasicTracker.ManagerTracker[m.Login] != null)
+                //if (BasicTracker.ManagerTracker[m.Login] != null)
+                if(ORM.MManager.ExitManagerLogin(m.Login))
                 {
                     throw new FutsRspError("柜员登入ID不能重复:" + m.Login);
                 }
@@ -228,16 +229,46 @@ namespace TradingLib.Core
             session.GetManager().PermissionCheckManager(mgr_id);
 
             Manager remove = BasicTracker.ManagerTracker[mgr_id];
-            //查看该manger下的所有代理
-            List<Manager> mgrlist = remove.GetVisibleManager().ToList();
 
+            if (remove.Type == QSEnumManagerType.ROOT)
+            {
+                throw new FutsRspError("分区管理员无法删除");
+            }
+
+            
+            if (remove.Type == QSEnumManagerType.AGENT)
+            {
+                if (remove.AgentAccount != null && remove.AgentAccount.NowEquity > 0.5M)
+                {
+                    throw new FutsRspError("代理结算账户权益未清零,无法删除");
+                }
+
+                if (remove.GetVisibleAccount().Any(acc => acc.NowEquity > 0.5M) || remove.GetVisibleAccount().Any(acc => acc.GetPositionsHold().Count() > 0))
+                {
+                    throw new FutsRspError("代理下级子账户权益未清零或有持仓,无法删除");
+                }
+            }
+
+
+            //查看该manger下的所有代理
+            List<Manager> mgrlist = new List<Manager>() { remove };
+
+            //如果是代理账户则删除该代理下所有的代理及员工账户
+            if (remove.Type == QSEnumManagerType.AGENT)
+            {
+                mgrlist = remove.GetVisibleManager().ToList();
+
+            }
             foreach (var mgr in mgrlist)
             {
-                //删除管理员下的帐户
-                List<IAccount> acclist = TLCtxHelper.ModuleAccountManager.Accounts.Where(acc => acc.Mgr_fk == mgr.ID).ToList();
-                foreach (var acc in acclist)
+                //如果是代理账户则连同代理账户下的所有子账户一同删除
+                if (mgr.Type == QSEnumManagerType.AGENT)
                 {
-                    TLCtxHelper.ModuleAccountManager.DelAccount(acc.ID);
+                    List<IAccount> acclist = TLCtxHelper.ModuleAccountManager.Accounts.Where(acc => acc.Mgr_fk == mgr.ID).ToList();
+                    foreach (var acc in acclist)
+                    {
+                        TLCtxHelper.ModuleAccountManager.DelAccount(acc.ID);
+                    }
                 }
 
                 Util.sleep(500);

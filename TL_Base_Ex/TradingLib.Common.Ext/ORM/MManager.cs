@@ -56,6 +56,19 @@ namespace TradingLib.ORM
         }
 
         /// <summary>
+        /// 数据库中是否已存在管理员登入名
+        /// </summary>
+        /// <param name="login"></param>
+        /// <returns></returns>
+        public static bool ExitManagerLogin(string login)
+        {
+            using (DBMySql db = new DBMySql())
+            {
+                string query = String.Format("SELECT a.login,a.pass FROM manager a WHERE login = '{0}'", login);
+                return db.Connection.Query<ManagerAuth>(query, null).Count() > 0;
+            }
+        }
+        /// <summary>
         /// 更新管理员密码
         /// </summary>
         /// <param name="login"></param>
@@ -170,30 +183,57 @@ namespace TradingLib.ORM
         /// 删除管理员
         /// </summary>
         /// <param name="mgr_id"></param>
-        public static void DeleteManager(int mgr_id)
+        public static void DeleteManager(ManagerSetting mgr)
         {
             using (DBMySql db = new DBMySql())
             {
                 string delquery = string.Empty;
-                delquery = string.Format("DELETE FROM manager WHERE id = '{0}'", mgr_id);//删除帐户列表
+                delquery = string.Format("DELETE FROM manager WHERE id = '{0}'", mgr.ID);
                 db.Connection.Execute(delquery);
 
-                delquery = string.Format("DELETE FROM manager_balance WHERE mgr_fk = '{0}'", mgr_id);//删除帐户列表
+                delquery = string.Format("DELETE FROM manager_profile WHERE account = '{0}'", mgr.Login);
                 db.Connection.Execute(delquery);
 
-                delquery = string.Format("DELETE FROM manager_bankac WHERE mgr_fk = '{0}'", mgr_id);//删除帐户列表
+                delquery = string.Format("DELETE FROM agents WHERE account = '{0}'", mgr.Login);
                 db.Connection.Execute(delquery);
 
-                delquery = string.Format("DELETE FROM manager_cashopreq WHERE mgr_fk = '{0}'", mgr_id);//删除帐户列表
+                delquery = string.Format("DELETE FROM log_agent_cashtrans WHERE account = '{0}'", mgr.Login);
                 db.Connection.Execute(delquery);
 
-                delquery = string.Format("DELETE FROM manager_cashtrans WHERE mgr_fk = '{0}'", mgr_id);//删除帐户列表
+                delquery = string.Format("DELETE FROM log_agent_commission_split WHERE account = '{0}'", mgr.Login);
                 db.Connection.Execute(delquery);
 
-                delquery = string.Format("DELETE FROM manager_settlement WHERE mgr_fk = '{0}'", mgr_id);//删除帐户列表
+                delquery = string.Format("DELETE FROM log_agent_settlement WHERE account = '{0}'", mgr.Login);
                 db.Connection.Execute(delquery);
 
-                delquery = string.Format("DELETE FROM cfg_manager_permission WHERE manager_id = '{0}'", mgr_id);//删除帐户列表
+                delquery = string.Format("DELETE FROM cfg_permission_template WHERE manager_id = '{0}'", mgr.ID);
+                db.Connection.Execute(delquery);
+
+                foreach (var v in ORM.MCommission.SelectCommissionTemplates())
+                {
+                    delquery = string.Format("DELETE FROM cfg_commission WHERE template_id = '{0}'", v.ID);
+                    db.Connection.Execute(delquery);
+                }
+
+                delquery = string.Format("DELETE FROM cfg_commission_template WHERE manager_id = '{0}'", mgr.ID);
+                db.Connection.Execute(delquery);
+
+                foreach (var v in ORM.MMargin.SelectMarginTemplates())
+                {
+                    delquery = string.Format("DELETE FROM cfg_margin WHERE template_id = '{0}'", v.ID);
+                    db.Connection.Execute(delquery);
+                }
+
+                delquery = string.Format("DELETE FROM cfg_margin_template WHERE manager_id = '{0}'", mgr.ID);
+                db.Connection.Execute(delquery);
+
+                foreach (var v in ORM.MExStrategy.SelectExStrategyTemplates())
+                {
+                    delquery = string.Format("DELETE FROM cfg_strategy WHERE template_id = '{0}'", v.ID);
+                    db.Connection.Execute(delquery);
+                }
+
+                delquery = string.Format("DELETE FROM cfg_strategy_template WHERE manager_id = '{0}'", mgr.ID);
                 db.Connection.Execute(delquery);
 
                 

@@ -19,19 +19,36 @@ namespace TradingLib.Common
 
             foreach (Manager m in mlist)
             {
+                if (m.Deleted && TLCtxHelper.ModuleSettleCentre.Tradingday > m.DeletedSettleday)
+                {
+                    //物理删除 不处理删除账户数据
+                    if (GlobalConfig.LogicDelete)
+                    {
+
+                    }
+                    else //逻辑删除
+                    {
+                        //删除数据库
+                        ORM.MManager.DeleteManager(m);
+                    }
+                    continue;
+                }
+
+                m.Domain = BasicTracker.DomainTracker[m.domain_id];
+
                 managermap[m.Login] = m;
                 mgridmap[m.ID] = m;
 
-                m.Domain = BasicTracker.DomainTracker[m.domain_id];
+                
             }
-            foreach (Manager m in mlist)
+            foreach (Manager m in managermap.Values)
             {
                 m.BaseManager = this[m.mgr_fk];
                 m.ParentManager = this[m.parent_fk];
             }
 
             //绑定代理财务账户
-            foreach (var mgr in mlist)
+            foreach (var mgr in managermap.Values)
             {
                 //管理员与代理账户需要绑定代理账户？？
                 //if (mgr.Type != QSEnumManagerType.AGENT && mgr.Type != QSEnumManagerType.ROOT) continue;

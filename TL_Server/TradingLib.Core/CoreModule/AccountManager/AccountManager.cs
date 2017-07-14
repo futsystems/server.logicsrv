@@ -20,6 +20,7 @@ namespace TradingLib.Core
         ConfigDB _cfgdb;
 
         bool _deleteAccountCheckEquity = false;
+        
 
         public AccountManager():
             base(AccountManager.CoreName)
@@ -33,7 +34,7 @@ namespace TradingLib.Core
                 _cfgdb.UpdateConfig("DeleteAccountCheckEquity", QSEnumCfgType.Bool, false, "删除交易帐户是否检查帐户权益");
             }
             _deleteAccountCheckEquity = _cfgdb["DeleteAccountCheckEquity"].AsBool();
-
+            
             
             LoadAccount();
             logger.Info(string.Format("Load Account form database,total num:{0}", _accMap.Count));
@@ -132,7 +133,10 @@ namespace TradingLib.Core
             logger.Info(string.Format("Account:{0} UserID:{1} Added Under Manager:{2}", create.Account, create.UserID, create.BaseManagerID));
         }
 
-
+        /// <summary>
+        /// 由于引入代理结算后 删除账户无法立即生效，需要等待账户结算完毕之后才可以正常删除账户
+        /// </summary>
+        /// <param name="id"></param>
         public void DelAccount(string id)
         {
             IAccount account = this[id];
@@ -218,8 +222,23 @@ namespace TradingLib.Core
 
                 foreach (IAccount acc in accountlist)
                 {
-                    //账户删除 且删除时结算日已结算
+                    //账户删除 且删除时结算日已结算 则将账户从数据库中删除
                     if (acc.Deleted && TLCtxHelper.ModuleSettleCentre.Tradingday > acc.DeletedSettleday)
+                    {
+                        //物理删除 不处理删除账户数据
+                        if (GlobalConfig.LogicDelete)
+                        {
+                            
+                        }
+                        else //逻辑删除
+                        {
+                            //删除数据库
+                            ORM.MAccount.DelAccount(acc.ID);//删除数据库记录
+                        }
+                        continue;
+                    }
+                    //交易账户无对应管理员 不加载到内存
+                    if (BasicTracker.ManagerTracker[acc.Mgr_fk] == null)
                     {
                         continue;
                     }

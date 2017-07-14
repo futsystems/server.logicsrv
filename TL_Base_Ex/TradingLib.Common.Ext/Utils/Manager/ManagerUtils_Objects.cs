@@ -79,14 +79,7 @@ namespace TradingLib.Common
         {
             if (mgr.IsInRoot())
             {
-                if (mgr.Login.Equals("sroot"))
-                {
-                    return mgr.Domain.GetManagers();
-                }
-                else
-                {
-                    return mgr.Domain.GetManagers().Where(m => !m.Login.Equals("sroot"));
-                }
+                return mgr.Domain.GetManagers();
             }
             else
             {

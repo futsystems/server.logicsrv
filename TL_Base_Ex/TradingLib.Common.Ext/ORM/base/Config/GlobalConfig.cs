@@ -150,8 +150,24 @@ namespace TradingLib.Common
                 config.UpdateConfig("STKTransferFee", QSEnumCfgType.Decimal,1, "股票过户费");
             }
 
+            if (!config.HaveConfig("LogicDelete"))
+            {
+                config.UpdateConfig("LogicDelete", QSEnumCfgType.Bool,false, "逻辑删除");
+            }
         }
 
+        /// <summary>
+        /// 逻辑删除
+        /// 逻辑删除的数据仍然在数据库，可以进行恢复
+        /// 物理删除在每个结算日重启时 会检查删除所在结算日若已经结算则进行物理数据清除
+        /// </summary>
+        public static bool LogicDelete
+        {
+            get
+            {
+                return defaultinstance.config["LogicDelete"].AsBool();
+            }
+        }
         /// <summary>
         /// 股票印花税率
         /// </summary>
