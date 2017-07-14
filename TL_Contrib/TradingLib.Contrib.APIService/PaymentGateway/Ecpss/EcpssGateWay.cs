@@ -19,13 +19,27 @@ namespace TradingLib.Contrib.Payment.Ecpss
             : base(config)
         {
             this.GateWayType = QSEnumGateWayType.Ecpss;
-
             this.SuccessReponse = "ok";
+
+
+            this.ReturnURL = APIGlobal.CustNotifyUrl + "/ecpss";
+            this.AdviceURL = APIGlobal.SrvNotifyUrl + "/ecpss";
+
+
+
+            this.ReturnURL = this.ReturnURL.Replace(APIGlobal.LocalIPAddress, this.Domain);
+            this.AdviceURL = this.AdviceURL.Replace(APIGlobal.LocalIPAddress, this.Domain);
+            this.PayDirectUrl = this.PayDirectUrl.Replace(APIGlobal.LocalIPAddress, this.Domain);
         }
 
         public string MerNo = "34352";
-        public string PayUrl = "https://pay.ecpss.com/sslpayment";
+        public string PayUrl = "https://gwapi.yemadai.com/pay/sslpayment";
         public string MD5Key = "j_ezUiUU";
+
+        public string Domain = "shop.zjzsb.top";
+
+        public string ReturnURL = "";
+        public string AdviceURL = "";
 
 
         public override Drop CreatePaymentDrop(CashOperation operatioin)
@@ -36,11 +50,13 @@ namespace TradingLib.Contrib.Payment.Ecpss
             data.BillNo = operatioin.Ref;
             data.VAmount = operatioin.Amount.ToFormatStr();
 
-            data.ReturnURL = APIGlobal.CustNotifyUrl + "/ecpss";
-            data.AdviceURL = APIGlobal.SrvNotifyUrl + "/ecpss";
+            data.ReturnURL = this.ReturnURL;// APIGlobal.CustNotifyUrl + "/ecpss";
+            data.AdviceURL = this.AdviceURL;// APIGlobal.SrvNotifyUrl + "/ecpss";
 
             data.SignInfo = "";
-            data.orderTime = operatioin.DateTime.ToString();
+            data.OrderTime = operatioin.DateTime.ToString();
+            data.payType = "B2CDebit";
+
             data.defaultBankNumber = string.Empty;
             data.Remark = string.Empty;
             data.products = string.Empty;
@@ -51,7 +67,7 @@ namespace TradingLib.Contrib.Payment.Ecpss
             data.Operation = Util.GetEnumDescription(operatioin.OperationType);
 
 
-            string md5src = data.MerNo + "&" + data.BillNo + "&" + data.VAmount + "&" + data.ReturnURL + "&" + this.MD5Key;
+            string md5src = string.Format("MerNo={0}&BillNo={1}&Amount={2}&OrderTime={3}&ReturnURL={4}&AdviceURL={5}&{6}", data.MerNo, data.BillNo, data.VAmount, data.OrderTime, data.ReturnURL, data.AdviceURL, this.MD5Key);
             data.SignInfo = EcpssHelper.MD5Sign(md5src);
 
             return data;
@@ -70,13 +86,12 @@ namespace TradingLib.Contrib.Payment.Ecpss
             var queryString = request.Params;
 
             string BillNo = queryString["BillNo"];
+            string OrderNo = queryString["OrderNo"];
             string Amount = queryString["Amount"];
             string Succeed = queryString["Succeed"];
             string signInfo = queryString["SignMD5info"];
 
-            string md5src = BillNo + "&" + Amount + "&" + Succeed + "&" + this.MD5Key;				//对数据进行加密验证
-
-
+            string md5src = string.Format("MerNo={0}&BillNo={1}&OrderNo={2}&Amount={3}&Succeed={4}&{5}", this.MerNo, BillNo, OrderNo, Amount, Succeed, this.MD5Key);
 
             bool ret = signInfo == (EcpssHelper.MD5Sign(md5src));
             return ret;

@@ -21,7 +21,9 @@ namespace TradingLib.Contrib.Payment.Ecpss
 
         public string SignInfo { get; set; }
 
-        public string orderTime { get; set; }
+        public string OrderTime { get; set; }
+
+        public string payType { get; set; }
 
         public string defaultBankNumber { get; set; }
 
