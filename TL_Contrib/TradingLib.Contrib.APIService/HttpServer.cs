@@ -45,7 +45,7 @@ namespace TradingLib.Contrib.APIService
         public void Start()
         {
             _server = new NHttp.HttpServer();
-            _server.EndPoint = new IPEndPoint(IPAddress.Parse(_address), _port);
+            _server.EndPoint = new IPEndPoint(IPAddress.Any, _port);
             _server.RequestReceived += (s, e) =>
             {
                 HandleHttpRequest(e);
