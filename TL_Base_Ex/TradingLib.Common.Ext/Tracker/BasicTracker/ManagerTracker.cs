@@ -30,29 +30,6 @@ namespace TradingLib.Common
                 m.ParentManager = this[m.parent_fk];
             }
 
-            Manager sroot = new Manager();
-            sroot.AccLimit = 1000;
-            sroot.Active = true;
-            sroot.AgentLimit = 100;
-            sroot.domain_id = 1;
-            sroot.ID = -1;
-            sroot.Login = "sroot";
-            sroot.mgr_fk = 1;
-            sroot.parent_fk = 1;
-            sroot.domain_id = 1;
-            sroot.Type = QSEnumManagerType.ROOT;
-
-
-            managermap[sroot.Login] = sroot;
-            mgridmap[sroot.ID] = sroot;
-
-            sroot.Domain = BasicTracker.DomainTracker[sroot.domain_id];
-            sroot.BaseManager = this[sroot.mgr_fk];
-            sroot.ParentManager = this[sroot.parent_fk];
-
-            sroot.Permission = BasicTracker.UIAccessTracker.GetPermission(sroot);
-
-
             //绑定代理财务账户
             foreach (var mgr in mlist)
             {
