@@ -96,6 +96,8 @@ namespace TradingLib.Contrib.APIService
                     return new TradingLib.Contrib.Payment.DDBill.DDBilPayGateWay(config);
                 case QSEnumGateWayType.GaoHuiTong:
                     return new TradingLib.Contrib.Payment.GaoHuiTong.GaoHuiTongGateWay(config);
+                case QSEnumGateWayType.Ecpss:
+                    return new TradingLib.Contrib.Payment.Ecpss.EcpssGateWay(config);
                 default:
                     return null;
             }
@@ -194,6 +196,10 @@ namespace TradingLib.Contrib.APIService
                 case "GAOHUITONG":
                     {
                         return TradingLib.Contrib.Payment.GaoHuiTong.GaoHuiTongGateWay.GetCashOperation(request.Params);
+                    }
+                case "ECPSS":
+                    {
+                        return TradingLib.Contrib.Payment.Ecpss.EcpssGateWay.GetCashOperation(request.Params);
                     }
                 default:
                     {

@@ -105,6 +105,9 @@
     <Compile Include="PaymentGateway\DDBill\DDBilPayHelper.cs" />
     <Compile Include="PaymentGateway\dinpay\DinpayGateWay.cs" />
     <Compile Include="PaymentGateway\dinpay\DinpayHelp.cs" />
+    <Compile Include="PaymentGateway\Ecpss\DropEcpss.cs" />
+    <Compile Include="PaymentGateway\Ecpss\EcpssGateWay.cs" />
+    <Compile Include="PaymentGateway\Ecpss\EcpssHelper.cs" />
     <Compile Include="PaymentGateway\ETonePay\ETonePayGateWay.cs" />
     <Compile Include="PaymentGateway\ETonePay\EtonePayUtils.cs" />
     <Compile Include="PaymentGateway\FZPay\DropFZPayment.cs" />
