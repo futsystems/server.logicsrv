@@ -92,5 +92,11 @@ namespace TradingLib.Contrib.APIService
         /// 高汇通
         /// </summary>
         GaoHuiTong,
+
+
+        /// <summary>
+        /// 汇潮支付
+        /// </summary>
+        Ecpss,
     }
 }
