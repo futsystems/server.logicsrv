@@ -150,7 +150,7 @@ namespace TradingLib.Contrib.APIService
         /// </summary>
         public void Start() 
         {
-            _httpServer = new HttpServer(_port);
+            _httpServer = new HttpServer(_address,_port);
             _httpServer.Start();
         }
 
