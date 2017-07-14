@@ -152,7 +152,7 @@ namespace TradingLib.Common
 
             if (!config.HaveConfig("LogicDelete"))
             {
-                config.UpdateConfig("LogicDelete", QSEnumCfgType.Bool,false, "逻辑删除");
+                config.UpdateConfig("LogicDelete", QSEnumCfgType.Bool,true, "逻辑删除");
             }
         }
 
