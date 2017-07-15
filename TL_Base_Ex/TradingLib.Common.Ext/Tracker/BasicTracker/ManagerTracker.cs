@@ -61,7 +61,7 @@ namespace TradingLib.Common
                         //如果没有结算账户则为该管理域创建结算账户
                         AgentSetting setting = new AgentSetting();
                         setting.Account = mgr.Login;
-                        setting.AgentType = EnumAgentType.SelfOperated;
+                        setting.AgentType = mgr.Type == QSEnumManagerType.ROOT ? EnumAgentType.SelfOperated : EnumAgentType.Normal;
                         setting.Currency = GlobalConfig.BaseCurrency;
                         BasicTracker.AgentTracker.UpdateAgent(setting);
 
