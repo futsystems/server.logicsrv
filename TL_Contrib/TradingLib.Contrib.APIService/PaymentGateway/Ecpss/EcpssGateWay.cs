@@ -34,7 +34,7 @@ namespace TradingLib.Contrib.Payment.Ecpss
 
         public string MerNo = "34352";
         public string PayUrl = "https://gwapi.yemadai.com/pay/sslpayment";
-        public string MD5Key = "j_ezUiUU";
+        public string MD5Key = "j_ezUE*Pc";
 
         public string Domain = "shop.zjzsb.top";
 
