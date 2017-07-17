@@ -23,10 +23,17 @@ namespace TradingLib.Contrib.Payment.Ecpss
 
             this.SuccessReponse = "ok";
 
-            this.PayUrl = data["PayUrl"].ToString(); 
-            this.MerNo = data["MerNo"].ToString();
-            this.MD5Key = data["MD5Key"].ToString();
-            this.Domain = data["Domain"].ToString();
+            try
+            {
+                this.PayUrl = data["PayUrl"].ToString();
+                this.MerNo = data["MerNo"].ToString();
+                this.MD5Key = data["MD5Key"].ToString();
+                this.Domain = data["Domain"].ToString();
+            }
+            catch (Exception ex)
+            { 
+                
+            }
             
             this.ReturnURL = APIGlobal.CustNotifyUrl + "/ecpss";
             this.AdviceURL = APIGlobal.SrvNotifyUrl + "/ecpss";
