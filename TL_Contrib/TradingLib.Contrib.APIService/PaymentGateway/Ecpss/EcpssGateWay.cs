@@ -40,7 +40,8 @@ namespace TradingLib.Contrib.Payment.Ecpss
 
             this.ReturnURL = this.ReturnURL.Replace(APIGlobal.LocalIPAddress, this.Domain);
             this.AdviceURL = this.AdviceURL.Replace(APIGlobal.LocalIPAddress, this.Domain);
-            this.PayDirectUrl = this.PayDirectUrl.Replace(APIGlobal.LocalIPAddress, this.Domain);
+            //this.PayDirectUrl = this.PayDirectUrl.Replace(APIGlobal.LocalIPAddress, this.Domain);
+            this.PayDirectUrl = string.Format("http://{0}/cash/depositdirect?ref=", this.Domain);
         }
 
         public string MerNo = "34352";
