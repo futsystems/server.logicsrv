@@ -50,6 +50,8 @@
       <HintPath>..\..\lib\NHttp.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Web.Extensions" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
@@ -111,6 +113,8 @@
     <Compile Include="PaymentGateway\ETonePay\ETonePayGateWay.cs" />
     <Compile Include="PaymentGateway\ETonePay\EtonePayUtils.cs" />
     <Compile Include="PaymentGateway\Fjelt\DropFjeltPayment.cs" />
+    <Compile Include="PaymentGateway\Fjelt\FjeltGateWay.cs" />
+    <Compile Include="PaymentGateway\Fjelt\FjeltHelper.cs" />
     <Compile Include="PaymentGateway\FZPay\DropFZPayment.cs" />
     <Compile Include="PaymentGateway\FZPay\FZPayGateWay.cs" />
     <Compile Include="PaymentGateway\FZPay\FZPayHelper.cs" />
