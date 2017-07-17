@@ -1,6 +1,8 @@
 ﻿using Common.Logging;
 using DotLiquid;
 using System;
+using System.Collections.Generic;
+using System.Text;
 using System.Net;
 using System.IO;
 using System.Security;
@@ -47,27 +49,78 @@ namespace TradingLib.Contrib.Payment.Fjelt
                 backurl = APIGlobal.SrvNotifyUrl + "/fjelt",
                 Body="充值",
                 ExtraParams="",
-                PayType="",
+                PayType="0",
             };
             
             data.data = AES.Encrypt(new System.Web.Script.Serialization.JavaScriptSerializer().Serialize(info), this.SECRETKEY, this.SECRETKEY);
             data.timestamp = Util.ToDateTime(operatioin.DateTime).ToString("yyyy-MM-dd HH:mm:ss");
             data.session = this.SESSION;
+            data.v = "2.0";
+
             data.sign = AES.MakeMd5(this.SECRETKEY + data.appid + data.data + data.format + data.method + data.session + data.timestamp + data.v + this.SECRETKEY).ToLower();
             
-            data.v = "2.0";
+            
 
             data.PayUrl = this.PayUrl;
             data.Amount = string.Format("{0}[{1}]", operatioin.Amount.ToFormatStr(), operatioin.Amount.ToChineseStr());
             data.Ref = operatioin.Ref;
             data.Operation = Util.GetEnumDescription(operatioin.OperationType);
 
+            Dictionary<string, string> dic = new Dictionary<string, string>();
+            dic.Add("appid", data.appid);
+            dic.Add("method", data.method);
+            dic.Add("format", data.format);
+            dic.Add("data", data.data);
+            dic.Add("timestamp", data.timestamp);
+            dic.Add("session", data.session);
+            dic.Add("sign", data.sign);
+            dic.Add("v", data.v);
 
+            //var resp = SendPostHttpRequest("http://bank.fjelt.com/pay/rest", dic);
+
+            //logger.Info("response:" + resp);
 
             return data;
 
 
         }
+
+        public static string SendPostHttpRequest(string url, Dictionary<string, string> requestData)
+        {
+            StringBuilder sb = new StringBuilder();
+            foreach (var i in requestData.Keys)
+            {
+                if (sb.Length != 0)
+                    sb.Append("&");
+                sb.AppendFormat("{0}={1}", i, requestData[i]);
+            }
+            WebRequest request = (WebRequest)HttpWebRequest.Create(url);
+            request.Method = "POST";
+            byte[] postBytes = null;
+            postBytes = Encoding.UTF8.GetBytes(sb.ToString());
+            request.ContentType = "application/x-www-form-urlencoded; encoding=utf-8";
+            request.ContentLength = postBytes.Length;
+            using (Stream outstream = request.GetRequestStream())
+            {
+                outstream.Write(postBytes, 0, postBytes.Length);
+            }
+            string result = string.Empty;
+            using (WebResponse response = request.GetResponse())
+            {
+                if (response != null)
+                {
+                    using (Stream stream = response.GetResponseStream())
+                    {
+                        StreamReader reader = new StreamReader(stream, Encoding.UTF8);
+                        result = reader.ReadToEnd();
+                    }
+
+                }
+            }
+            Console.WriteLine(result);
+            return result;
+        }
+
 
         public static CashOperation GetCashOperation(System.Collections.Specialized.NameValueCollection queryString)
         {
