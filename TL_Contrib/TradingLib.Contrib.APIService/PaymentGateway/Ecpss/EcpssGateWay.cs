@@ -19,13 +19,17 @@ namespace TradingLib.Contrib.Payment.Ecpss
             : base(config)
         {
             this.GateWayType = QSEnumGateWayType.Ecpss;
+            var data = config.Config.DeserializeObject();
+
             this.SuccessReponse = "ok";
 
-
+            this.PayUrl = data["PayUrl"].ToString(); 
+            this.MerNo = data["MerNo"].ToString();
+            this.MD5Key = data["MD5Key"].ToString();
+            this.Domain = data["Domain"].ToString();
+            
             this.ReturnURL = APIGlobal.CustNotifyUrl + "/ecpss";
             this.AdviceURL = APIGlobal.SrvNotifyUrl + "/ecpss";
-
-
 
             this.ReturnURL = this.ReturnURL.Replace(APIGlobal.LocalIPAddress, this.Domain);
             this.AdviceURL = this.AdviceURL.Replace(APIGlobal.LocalIPAddress, this.Domain);
