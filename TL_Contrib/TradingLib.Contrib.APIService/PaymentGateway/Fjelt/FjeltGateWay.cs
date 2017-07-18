@@ -23,16 +23,27 @@ namespace TradingLib.Contrib.Payment.Fjelt
 
             this.GateWayType = QSEnumGateWayType.Fjelt;
 
+
+            var data = config.Config.DeserializeObject();
+
+            this.PayUrl = data["PayUrl"].ToString(); 
+            
+            this.APPID = data["APPID"].ToString();
+            this.SESSION = data["Session"].ToString();
+            SECRETKEY = data["Key"].ToString();
+
+            this.SuccessReponse = "SUCCESS";
+
         }
 
 
         public string PayUrl = "http://bank.fjelt.com/pay/rest";
 
-        public string APPID = "0H7E0MP64T0005QN";
+        public string APPID = "0H7E0YQ7BC0005UR";
 
-        public string SESSION = "1e890efd01684016a3295098f9b4ba65";
+        public string SESSION = "19330568ab9848cbb6cb4c4a1ee58f62";
 
-        public string SECRETKEY = "VCPKGGC2ZwfHCoTk";
+        public static string SECRETKEY = "895FKFmQ1VQIxbHh";
 
         public override Drop CreatePaymentDrop(CashOperation operatioin)
         {
@@ -52,12 +63,12 @@ namespace TradingLib.Contrib.Payment.Fjelt
                 PayType="0",
             };
             
-            data.data = AES.Encrypt(new System.Web.Script.Serialization.JavaScriptSerializer().Serialize(info), this.SECRETKEY, this.SECRETKEY);
+            data.data = AES.Encrypt(new System.Web.Script.Serialization.JavaScriptSerializer().Serialize(info), SECRETKEY, SECRETKEY);
             data.timestamp = Util.ToDateTime(operatioin.DateTime).ToString("yyyy-MM-dd HH:mm:ss");
             data.session = this.SESSION;
             data.v = "2.0";
 
-            data.sign = AES.MakeMd5(this.SECRETKEY + data.appid + data.data + data.format + data.method + data.session + data.timestamp + data.v + this.SECRETKEY).ToLower();
+            data.sign = AES.MakeMd5(SECRETKEY + data.appid + data.data + data.format + data.method + data.session + data.timestamp + data.v + SECRETKEY).ToLower();
             
             
 
@@ -79,7 +90,14 @@ namespace TradingLib.Contrib.Payment.Fjelt
             var resp = SendPostHttpRequest("http://bank.fjelt.com/pay/rest", dic);
             var respdata = resp.DeserializeObject();
             logger.Info("response:" + resp);
-            data.url = respdata["data"].ToString();
+            try
+            {
+                data.url = respdata["data"].ToString();
+            }
+            catch (Exception ex)
+            { 
+                
+            }
 
             return data;
         }
@@ -123,28 +141,64 @@ namespace TradingLib.Contrib.Payment.Fjelt
 
         public static CashOperation GetCashOperation(System.Collections.Specialized.NameValueCollection queryString)
         {
+            string signinfo = queryString["Sign"];
+            string data = queryString["Data"];
+            string method = queryString["Method"];
+            string appid = queryString["Appid"];
+
+            string vdata = AES.Decrypt(data, SECRETKEY, SECRETKEY);
+            var jsdata = vdata.DeserializeObject();
+
             //宝付远端回调提供TransID参数 为本地提供的递增的订单编号
-            string transid = queryString["merOrderNum"];
+            string transid = jsdata["ordernumber"].ToString();
+
             return ORM.MCashOperation.SelectCashOperation(transid);
         }
 
         public override bool CheckParameters(NHttp.HttpRequest request)
         {
             var queryString = request.Params;
+            string signinfo = queryString["Sign"];
+            string data = queryString["Data"];
+            string method = queryString["Method"];
+            string appid = queryString["Appid"];
 
-            return true;
+            if (appid == this.APPID)
+                return true;
+            return false;
+            //string vdata = AES.Decrypt(data, SECRETKEY, SECRETKEY);
+            //var jsdata = vdata.DeserializeObject();
+
+
+            //return true;
         }
 
         public override bool CheckPayResult(NHttp.HttpRequest request, CashOperation operation)
         {
             var queryString = request.Params;
-            return queryString["respCode"] == "0000";
+            string signinfo = queryString["Sign"];
+            string data = queryString["Data"];
+            string method = queryString["Method"];
+            string appid = queryString["Appid"];
+
+            string vdata = AES.Decrypt(data, SECRETKEY, SECRETKEY);
+            var jsdata = vdata.DeserializeObject();
+
+            return jsdata["respcode"].ToString() == "2";
         }
 
         public override string GetResultComment(NHttp.HttpRequest request)
         {
             var queryString = request.Params;
-            return queryString["respCode"] == "000" ? "成功" : "失败";
+            string signinfo = queryString["Sign"];
+            string data = queryString["Data"];
+            string method = queryString["Method"];
+            string appid = queryString["Appid"];
+
+            string vdata = AES.Decrypt(data, SECRETKEY, SECRETKEY);
+            var jsdata = vdata.DeserializeObject();
+
+            return jsdata["respmsg"].ToString();
         }
     }
 }
