@@ -25,6 +25,7 @@ namespace TradingLib.Contrib.Payment.Fjelt
 
         public string v { get; set; }
 
+        public string url { get; set; }
 
         /// <summary>
         /// 支付网关地址

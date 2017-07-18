@@ -76,13 +76,12 @@ namespace TradingLib.Contrib.Payment.Fjelt
             dic.Add("sign", data.sign);
             dic.Add("v", data.v);
 
-            //var resp = SendPostHttpRequest("http://bank.fjelt.com/pay/rest", dic);
-
-            //logger.Info("response:" + resp);
+            var resp = SendPostHttpRequest("http://bank.fjelt.com/pay/rest", dic);
+            var respdata = resp.DeserializeObject();
+            logger.Info("response:" + resp);
+            data.url = respdata["data"].ToString();
 
             return data;
-
-
         }
 
         public static string SendPostHttpRequest(string url, Dictionary<string, string> requestData)
