@@ -104,7 +104,9 @@ namespace TradingLib.Contrib.Payment.Ecpss
             string signInfo = queryString["SignMD5info"];
 
             string md5src = string.Format("MerNo={0}&BillNo={1}&OrderNo={2}&Amount={3}&Succeed={4}&{5}", this.MerNo, BillNo, OrderNo, Amount, Succeed, this.MD5Key);
-
+            logger.Info("RawStr:" + md5src);
+            logger.Info("L-SignInfo:" + EcpssHelper.MD5Sign(md5src));
+            logger.Info("M-SignIfno:" + signInfo);
             bool ret = signInfo == (EcpssHelper.MD5Sign(md5src));
             return ret;
         }
