@@ -101,7 +101,7 @@ namespace TradingLib.Contrib.Payment.Ecpss
             string OrderNo = queryString["OrderNo"];
             string Amount = queryString["Amount"];
             string Succeed = queryString["Succeed"];
-            string signInfo = queryString["SignMD5info"];
+            string signInfo = queryString["SignInfo"];
 
             string md5src = string.Format("MerNo={0}&BillNo={1}&OrderNo={2}&Amount={3}&Succeed={4}&{5}", this.MerNo, BillNo, OrderNo, Amount, Succeed, this.MD5Key);
             logger.Info("RawStr:" + md5src);
