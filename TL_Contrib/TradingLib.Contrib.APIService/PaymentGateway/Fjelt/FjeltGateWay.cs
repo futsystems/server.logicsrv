@@ -146,6 +146,13 @@ namespace TradingLib.Contrib.Payment.Fjelt
             string method = queryString["Method"];
             string appid = queryString["Appid"];
 
+            logger.Info(string.Format("data:{0}", data));
+            logger.Info(string.Format("method:{0}", method));
+            logger.Info(string.Format("appid:{0}", method));
+            logger.Info(string.Format("Sign:{0}", signinfo));
+
+
+
             string vdata = AES.Decrypt(data, SECRETKEY, SECRETKEY);
             var jsdata = vdata.DeserializeObject();
 
