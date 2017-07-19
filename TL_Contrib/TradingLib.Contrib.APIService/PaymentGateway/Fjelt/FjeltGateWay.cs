@@ -93,6 +93,7 @@ namespace TradingLib.Contrib.Payment.Fjelt
             dic.Add("v", data.v);
 
             var resp = SendPostHttpRequest("http://bank.fjelt.com/pay/rest", dic);
+            
             var respdata = resp.DeserializeObject();
             logger.Info("response:" + resp);
             try
@@ -107,7 +108,7 @@ namespace TradingLib.Contrib.Payment.Fjelt
             return data;
         }
 
-        public static string SendPostHttpRequest(string url, Dictionary<string, string> requestData)
+        public  string SendPostHttpRequest(string url, Dictionary<string, string> requestData)
         {
             StringBuilder sb = new StringBuilder();
             foreach (var i in requestData.Keys)
@@ -119,6 +120,8 @@ namespace TradingLib.Contrib.Payment.Fjelt
             WebRequest request = (WebRequest)HttpWebRequest.Create(url);
             request.Method = "POST";
             byte[] postBytes = null;
+            logger.Info("Request:" + sb.ToString());
+
             postBytes = Encoding.UTF8.GetBytes(sb.ToString());
             request.ContentType = "application/x-www-form-urlencoded; encoding=utf-8";
             request.ContentLength = postBytes.Length;
