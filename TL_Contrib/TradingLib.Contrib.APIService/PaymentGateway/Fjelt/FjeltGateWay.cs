@@ -59,7 +59,7 @@ namespace TradingLib.Contrib.Payment.Fjelt
             data.format = "json";
             object info = new
             {
-                amount=operatioin.Amount*100,
+                amount=(int)(operatioin.Amount*100),
                 payordernumber = operatioin.Ref,
                 fronturl = APIGlobal.CustNotifyUrl + "/fjelt",
                 backurl = APIGlobal.SrvNotifyUrl + "/fjelt",
