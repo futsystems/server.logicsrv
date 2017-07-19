@@ -32,8 +32,13 @@ namespace TradingLib.Contrib.Payment.Fjelt
             this.SESSION = data["Session"].ToString();
             SECRETKEY = data["Key"].ToString();
 
-            this.SuccessReponse = "SUCCESS";
+            object response =  new {
+                response="00",
+                message="成功",
+            };
 
+
+            this.SuccessReponse = response.SerializeObject();
         }
 
 
@@ -148,7 +153,7 @@ namespace TradingLib.Contrib.Payment.Fjelt
 
             logger.Info(string.Format("data:{0}", data));
             logger.Info(string.Format("method:{0}", method));
-            logger.Info(string.Format("appid:{0}", method));
+            logger.Info(string.Format("appid:{0}", appid));
             logger.Info(string.Format("Sign:{0}", signinfo));
 
 
