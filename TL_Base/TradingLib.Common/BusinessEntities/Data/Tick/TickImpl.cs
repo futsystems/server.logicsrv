@@ -108,6 +108,8 @@ namespace TradingLib.Common
         string _updateType;
         int _tradeflag;
 
+        int _priceMultiplier;
+
 
 
         public decimal AskPrice2 { get { return _askprice2; } set { _askprice2 = value; } }
@@ -203,34 +205,16 @@ namespace TradingLib.Common
         /// <summary>
         /// 交易标识
         /// </summary>
-        public int TradeFlag {
-            get
-            {
-                return _tradeflag;
-                //if(_tradeflag>=0) return _tradeflag;
-                //if (this.AskPrice * this.BidPrice * this.Trade != 0)
-                //{
-                //    //成交价格离 卖价更近 则为主动买入
-                //    if (Math.Abs(this.Trade - this.AskPrice) < Math.Abs(this.Trade - this.BidPrice))
-                //    {
-                //        _tradeflag = 0;
-                //    }
-                //    else
-                //    {
-                //        _tradeflag = 1;
-                //    }
-                //}
-                //else
-                //{
-                //    _tradeflag = -1;
-                //}
-                //return _tradeflag;
-            }
-            set
-            {
-                _tradeflag = value;
-            }
-        }
+        public int TradeFlag { get { return _tradeflag; } set { _tradeflag = value; } }
+
+        /// <summary>
+        /// 价格修正乘数
+        /// 外汇期货 价格修正成保留最后4位小数
+        /// </summary>
+        public int PriceMultiplier { get { return _priceMultiplier; } set { _priceMultiplier = value; } }
+           
+
+
 
         public TickImpl(string symbol)
         {
@@ -320,6 +304,7 @@ namespace TradingLib.Common
 
             _updateType = "H";
             _tradeflag = -1;
+            _priceMultiplier = 1;
         }
 
         public TickImpl(DateTime time)
