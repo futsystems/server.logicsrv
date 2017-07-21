@@ -243,6 +243,11 @@ namespace TradingLib.API
         /// 定时发送Tick时 所使用的成交量累加器
         /// </summary>
         int IntervalSize { get; set; }
+
+        /// <summary>
+        /// 价格乘数
+        /// </summary>
+        int PriceMultiplier { get; set; }
     }
 
     /// <summary>
