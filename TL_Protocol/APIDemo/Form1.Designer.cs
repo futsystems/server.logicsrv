@@ -30,6 +30,8 @@
         {
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.cashopVal = new System.Windows.Forms.NumericUpDown();
+            this.btnExCashOp = new System.Windows.Forms.Button();
             this.btnExUpdateBankCard = new System.Windows.Forms.Button();
             this.btnExQryBank = new System.Windows.Forms.Button();
             this.btnExQrySettleSummary = new System.Windows.Forms.Button();
@@ -120,25 +122,37 @@
             this.ekey = new System.Windows.Forms.TextBox();
             this.btnEncode = new System.Windows.Forms.Button();
             this.label21 = new System.Windows.Forms.Label();
+            this.tabPage5 = new System.Windows.Forms.TabPage();
+            this.web_currency = new System.Windows.Forms.TextBox();
+            this.label27 = new System.Windows.Forms.Label();
+            this.web_agentID = new System.Windows.Forms.TextBox();
+            this.label26 = new System.Windows.Forms.Label();
+            this.web_userID = new System.Windows.Forms.TextBox();
+            this.label25 = new System.Windows.Forms.Label();
+            this.webAddAccount = new System.Windows.Forms.Button();
+            this.md5key = new System.Windows.Forms.TextBox();
+            this.label24 = new System.Windows.Forms.Label();
             this.debugControl1 = new APIClient.DebugControl();
-            this.btnExCashOp = new System.Windows.Forms.Button();
-            this.cashopVal = new System.Windows.Forms.NumericUpDown();
+            this.web_domainId = new System.Windows.Forms.TextBox();
+            this.label28 = new System.Windows.Forms.Label();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.cashopVal)).BeginInit();
             this.tabPage2.SuspendLayout();
             this.tabPage3.SuspendLayout();
             this.tabPage4.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.cashopVal)).BeginInit();
+            this.tabPage5.SuspendLayout();
             this.SuspendLayout();
             // 
             // tabControl1
             // 
-            this.tabControl1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.tabControl1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.tabControl1.Controls.Add(this.tabPage1);
             this.tabControl1.Controls.Add(this.tabPage2);
             this.tabControl1.Controls.Add(this.tabPage3);
             this.tabControl1.Controls.Add(this.tabPage4);
+            this.tabControl1.Controls.Add(this.tabPage5);
             this.tabControl1.Location = new System.Drawing.Point(0, 0);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
@@ -175,13 +189,39 @@
             this.tabPage1.Controls.Add(this.label2);
             this.tabPage1.Controls.Add(this.exAddress);
             this.tabPage1.Controls.Add(this.label1);
-            this.tabPage1.Location = new System.Drawing.Point(4, 21);
+            this.tabPage1.Location = new System.Drawing.Point(4, 22);
             this.tabPage1.Name = "tabPage1";
             this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage1.Size = new System.Drawing.Size(961, 228);
+            this.tabPage1.Size = new System.Drawing.Size(961, 227);
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "Socket/二进制";
             this.tabPage1.UseVisualStyleBackColor = true;
+            // 
+            // cashopVal
+            // 
+            this.cashopVal.Location = new System.Drawing.Point(264, 166);
+            this.cashopVal.Maximum = new decimal(new int[] {
+            1000000,
+            0,
+            0,
+            0});
+            this.cashopVal.Minimum = new decimal(new int[] {
+            1000000,
+            0,
+            0,
+            -2147483648});
+            this.cashopVal.Name = "cashopVal";
+            this.cashopVal.Size = new System.Drawing.Size(76, 21);
+            this.cashopVal.TabIndex = 27;
+            // 
+            // btnExCashOp
+            // 
+            this.btnExCashOp.Location = new System.Drawing.Point(346, 164);
+            this.btnExCashOp.Name = "btnExCashOp";
+            this.btnExCashOp.Size = new System.Drawing.Size(71, 23);
+            this.btnExCashOp.TabIndex = 26;
+            this.btnExCashOp.Text = "CashOP";
+            this.btnExCashOp.UseVisualStyleBackColor = true;
             // 
             // btnExUpdateBankCard
             // 
@@ -434,10 +474,10 @@
             this.tabPage2.Controls.Add(this.btnWSStart);
             this.tabPage2.Controls.Add(this.wsAddress);
             this.tabPage2.Controls.Add(this.label5);
-            this.tabPage2.Location = new System.Drawing.Point(4, 21);
+            this.tabPage2.Location = new System.Drawing.Point(4, 22);
             this.tabPage2.Name = "tabPage2";
             this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage2.Size = new System.Drawing.Size(961, 228);
+            this.tabPage2.Size = new System.Drawing.Size(961, 227);
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "WebSocket/Json";
             this.tabPage2.UseVisualStyleBackColor = true;
@@ -638,10 +678,10 @@
             this.tabPage3.Controls.Add(this.mdAddress);
             this.tabPage3.Controls.Add(this.label11);
             this.tabPage3.Controls.Add(this.button1);
-            this.tabPage3.Location = new System.Drawing.Point(4, 21);
+            this.tabPage3.Location = new System.Drawing.Point(4, 22);
             this.tabPage3.Name = "tabPage3";
             this.tabPage3.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage3.Size = new System.Drawing.Size(961, 228);
+            this.tabPage3.Size = new System.Drawing.Size(961, 227);
             this.tabPage3.TabIndex = 2;
             this.tabPage3.Text = "行情Socket";
             this.tabPage3.UseVisualStyleBackColor = true;
@@ -957,10 +997,10 @@
             this.tabPage4.Controls.Add(this.ekey);
             this.tabPage4.Controls.Add(this.btnEncode);
             this.tabPage4.Controls.Add(this.label21);
-            this.tabPage4.Location = new System.Drawing.Point(4, 21);
+            this.tabPage4.Location = new System.Drawing.Point(4, 22);
             this.tabPage4.Name = "tabPage4";
             this.tabPage4.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage4.Size = new System.Drawing.Size(961, 228);
+            this.tabPage4.Size = new System.Drawing.Size(961, 227);
             this.tabPage4.TabIndex = 3;
             this.tabPage4.Text = "tabPage4";
             this.tabPage4.UseVisualStyleBackColor = true;
@@ -1031,11 +1071,109 @@
             this.label21.TabIndex = 0;
             this.label21.Text = "密钥";
             // 
+            // tabPage5
+            // 
+            this.tabPage5.Controls.Add(this.web_domainId);
+            this.tabPage5.Controls.Add(this.label28);
+            this.tabPage5.Controls.Add(this.web_currency);
+            this.tabPage5.Controls.Add(this.label27);
+            this.tabPage5.Controls.Add(this.web_agentID);
+            this.tabPage5.Controls.Add(this.label26);
+            this.tabPage5.Controls.Add(this.web_userID);
+            this.tabPage5.Controls.Add(this.label25);
+            this.tabPage5.Controls.Add(this.webAddAccount);
+            this.tabPage5.Controls.Add(this.md5key);
+            this.tabPage5.Controls.Add(this.label24);
+            this.tabPage5.Location = new System.Drawing.Point(4, 22);
+            this.tabPage5.Name = "tabPage5";
+            this.tabPage5.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage5.Size = new System.Drawing.Size(961, 227);
+            this.tabPage5.TabIndex = 4;
+            this.tabPage5.Text = "tabPage5";
+            this.tabPage5.UseVisualStyleBackColor = true;
+            // 
+            // web_currency
+            // 
+            this.web_currency.Location = new System.Drawing.Point(55, 125);
+            this.web_currency.Name = "web_currency";
+            this.web_currency.Size = new System.Drawing.Size(100, 21);
+            this.web_currency.TabIndex = 8;
+            this.web_currency.Text = "RMB";
+            // 
+            // label27
+            // 
+            this.label27.AutoSize = true;
+            this.label27.Location = new System.Drawing.Point(8, 128);
+            this.label27.Name = "label27";
+            this.label27.Size = new System.Drawing.Size(29, 12);
+            this.label27.TabIndex = 7;
+            this.label27.Text = "货币";
+            // 
+            // web_agentID
+            // 
+            this.web_agentID.Location = new System.Drawing.Point(55, 93);
+            this.web_agentID.Name = "web_agentID";
+            this.web_agentID.Size = new System.Drawing.Size(100, 21);
+            this.web_agentID.TabIndex = 6;
+            this.web_agentID.Text = "0";
+            // 
+            // label26
+            // 
+            this.label26.AutoSize = true;
+            this.label26.Location = new System.Drawing.Point(8, 96);
+            this.label26.Name = "label26";
+            this.label26.Size = new System.Drawing.Size(47, 12);
+            this.label26.TabIndex = 5;
+            this.label26.Text = "AgentID";
+            // 
+            // web_userID
+            // 
+            this.web_userID.Location = new System.Drawing.Point(55, 66);
+            this.web_userID.Name = "web_userID";
+            this.web_userID.Size = new System.Drawing.Size(100, 21);
+            this.web_userID.TabIndex = 4;
+            this.web_userID.Text = "0";
+            // 
+            // label25
+            // 
+            this.label25.AutoSize = true;
+            this.label25.Location = new System.Drawing.Point(8, 69);
+            this.label25.Name = "label25";
+            this.label25.Size = new System.Drawing.Size(41, 12);
+            this.label25.TabIndex = 3;
+            this.label25.Text = "UserID";
+            // 
+            // webAddAccount
+            // 
+            this.webAddAccount.Location = new System.Drawing.Point(37, 160);
+            this.webAddAccount.Name = "webAddAccount";
+            this.webAddAccount.Size = new System.Drawing.Size(75, 23);
+            this.webAddAccount.TabIndex = 2;
+            this.webAddAccount.Text = "创建交易账户";
+            this.webAddAccount.UseVisualStyleBackColor = true;
+            // 
+            // md5key
+            // 
+            this.md5key.Location = new System.Drawing.Point(55, 8);
+            this.md5key.Name = "md5key";
+            this.md5key.Size = new System.Drawing.Size(100, 21);
+            this.md5key.TabIndex = 1;
+            this.md5key.Text = "123456";
+            // 
+            // label24
+            // 
+            this.label24.AutoSize = true;
+            this.label24.Location = new System.Drawing.Point(8, 17);
+            this.label24.Name = "label24";
+            this.label24.Size = new System.Drawing.Size(41, 12);
+            this.label24.TabIndex = 0;
+            this.label24.Text = "MD5Key";
+            // 
             // debugControl1
             // 
-            this.debugControl1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.debugControl1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.debugControl1.EnableSearching = true;
             this.debugControl1.ExternalTimeStamp = 0;
             this.debugControl1.Location = new System.Drawing.Point(0, 254);
@@ -1046,31 +1184,22 @@
             this.debugControl1.TimeStamps = true;
             this.debugControl1.UseExternalTimeStamp = false;
             // 
-            // btnExCashOp
+            // web_domainId
             // 
-            this.btnExCashOp.Location = new System.Drawing.Point(346, 164);
-            this.btnExCashOp.Name = "btnExCashOp";
-            this.btnExCashOp.Size = new System.Drawing.Size(71, 23);
-            this.btnExCashOp.TabIndex = 26;
-            this.btnExCashOp.Text = "CashOP";
-            this.btnExCashOp.UseVisualStyleBackColor = true;
+            this.web_domainId.Location = new System.Drawing.Point(55, 35);
+            this.web_domainId.Name = "web_domainId";
+            this.web_domainId.Size = new System.Drawing.Size(100, 21);
+            this.web_domainId.TabIndex = 10;
+            this.web_domainId.Text = "0";
             // 
-            // cashopVal
+            // label28
             // 
-            this.cashopVal.Location = new System.Drawing.Point(264, 166);
-            this.cashopVal.Maximum = new decimal(new int[] {
-            1000000,
-            0,
-            0,
-            0});
-            this.cashopVal.Minimum = new decimal(new int[] {
-            1000000,
-            0,
-            0,
-            -2147483648});
-            this.cashopVal.Name = "cashopVal";
-            this.cashopVal.Size = new System.Drawing.Size(76, 21);
-            this.cashopVal.TabIndex = 27;
+            this.label28.AutoSize = true;
+            this.label28.Location = new System.Drawing.Point(8, 38);
+            this.label28.Name = "label28";
+            this.label28.Size = new System.Drawing.Size(41, 12);
+            this.label28.TabIndex = 9;
+            this.label28.Text = "分区ID";
             // 
             // Form1
             // 
@@ -1085,13 +1214,15 @@
             this.tabControl1.ResumeLayout(false);
             this.tabPage1.ResumeLayout(false);
             this.tabPage1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.cashopVal)).EndInit();
             this.tabPage2.ResumeLayout(false);
             this.tabPage2.PerformLayout();
             this.tabPage3.ResumeLayout(false);
             this.tabPage3.PerformLayout();
             this.tabPage4.ResumeLayout(false);
             this.tabPage4.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.cashopVal)).EndInit();
+            this.tabPage5.ResumeLayout(false);
+            this.tabPage5.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -1193,6 +1324,18 @@
         private System.Windows.Forms.Button btnExUpdateBankCard;
         private System.Windows.Forms.Button btnExCashOp;
         private System.Windows.Forms.NumericUpDown cashopVal;
+        private System.Windows.Forms.TabPage tabPage5;
+        private System.Windows.Forms.Label label24;
+        private System.Windows.Forms.TextBox md5key;
+        private System.Windows.Forms.Button webAddAccount;
+        private System.Windows.Forms.TextBox web_userID;
+        private System.Windows.Forms.Label label25;
+        private System.Windows.Forms.TextBox web_agentID;
+        private System.Windows.Forms.Label label26;
+        private System.Windows.Forms.Label label27;
+        private System.Windows.Forms.TextBox web_currency;
+        private System.Windows.Forms.TextBox web_domainId;
+        private System.Windows.Forms.Label label28;
     }
 }
 

@@ -92,6 +92,7 @@
     <Compile Include="Drop\DropOperation.cs" />
     <Compile Include="HttpServer.cs" />
     <Compile Include="Common\JsonReply.cs" />
+    <Compile Include="MD5Helper.cs" />
     <Compile Include="ORM\MGateWayConfig.cs" />
     <Compile Include="ORM\MRechargeOperation.cs" />
     <Compile Include="PaymentGateway\AliyPay\AliPayCore.cs" />

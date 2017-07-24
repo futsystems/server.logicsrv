@@ -26,9 +26,9 @@ namespace TradingLib.Contrib.APIService
         {
             try
             {
-                RequestCheck reqcheck = new RequestCheck();
+                Dictionary<string, string> reqDict = new Dictionary<string, string>();
                 string method = request.Params["method"];
-                reqcheck.AddParams("method", method);
+                reqDict.Add("method", method);
                 if (!string.IsNullOrEmpty(method))
                 {
                     method = method.ToUpper();
@@ -37,48 +37,82 @@ namespace TradingLib.Contrib.APIService
                         #region ADD_USER
                         case "ADD_USER":
                             {
-                                reqcheck.AddParams("user_id", request.Params["user_id"]);
-                                reqcheck.AddParams("agent_id", request.Params["agent_id"]);
-                                string md5sign = reqcheck.GetMd5Sign(_md5key);
+                                reqDict.Add("domain_id", request.Params["domain_id"]);
+                                reqDict.Add("user_id", request.Params["user_id"]);
+                                reqDict.Add("agent_id", request.Params["agent_id"]);
+                                reqDict.Add("currency", request.Params["currency"]);
+
+                                //Domain
+                                int domain_id = -1;
+                                int.TryParse(request.Params["domain_id"], out domain_id);
+                                Domain domain = BasicTracker.DomainTracker[domain_id];
+                                if (domain == null)
+                                {
+                                    return new JsonReply(105, string.Format("Domain not exist"));
+                                }
+
+
+                                //MD5
+                                string waitSign = MD5Helper.CreateLinkString(reqDict);
+                                string md5sign = MD5Helper.MD5Sign(waitSign, _md5key);
                                 if (request.Params["md5sign"] != md5sign)
                                 {
                                     return new JsonReply(100, string.Format("Md5Sign not valid"));
                                 }
+                               
 
-
-                                int user_id = 0;
+                                //UserID
+                                int user_id = -1;
                                 int.TryParse(request.Params["user_id"], out user_id);
-                                if (user_id <= 0)
+                                if (user_id < 0)
                                 {
                                     return new JsonReply(101, string.Format("UserID:{0} is not valid", user_id));
                                 }
-                                bool exist = TLCtxHelper.ModuleAccountManager.UserHaveAccount(user_id);
-                                if (exist)
+
+                                if (user_id > 0)//UserID大于零时才检查是否已经创建了账户
                                 {
-                                    return new JsonReply(102, string.Format("UserID:{0}'s account already created", user_id));
+                                    if (TLCtxHelper.ModuleAccountManager.UserHaveAccount(user_id))
+                                    {
+                                        return new JsonReply(102, string.Format("UserID:{0}'s account already created", user_id));
+                                    }
                                 }
+
 
                                 int agent_id = 0;
                                 int.TryParse(request.Params["agent_id"], out agent_id);
-                                exist = BasicTracker.ManagerTracker[agent_id] != null;
-                                if (!exist)
+                                var baseManager = BasicTracker.ManagerTracker[agent_id];
+                                if (baseManager == null)
                                 {
-                                    return new JsonReply(104, string.Format("Agent:{0}'s is not  exist", user_id));
+                                    return new JsonReply(103, string.Format("Agent:{0}'s is not  exist", agent_id));
                                 }
+                                if(baseManager.Type == API.QSEnumManagerType.STAFF)
+                                {
+                                    baseManager = baseManager.BaseManager;
+                                }
+
+                                //检查管理员是否在业务分区内
+                                if (baseManager.domain_id != domain_id)
+                                {
+                                    return new JsonReply(106, string.Format("Agent not belong to domain"));
+                                }
+
+                                CurrencyType currency = request.Params["currency"].ParseEnum<CurrencyType>();
 
 
                                 string account;
-                                TLCtxHelper.ModuleAccountManager.CreateAccountForUser(user_id, agent_id, out account);
+                                TLCtxHelper.ModuleAccountManager.CreateAccountForUser(user_id, agent_id, currency,out account);
 
                                 if (string.IsNullOrEmpty(account))
                                 {
-                                    return new JsonReply(103, "Account create error");
+                                    return new JsonReply(104, "Account create error");
                                 }
                                 return new JsonReply(0, string.Format("Account:{0} created", account),
                                     new
                                     {
-                                        UserID = user_id,
-                                        Account = account
+                                        user_id = user_id,
+                                        agent_id = agent_id,
+                                        currency = currency.ToString(),
+                                        account = account,
                                     }
                                 );
                             }
@@ -87,8 +121,9 @@ namespace TradingLib.Contrib.APIService
                         #region QRY_USER
                         case "QRY_USER":
                             {
-                                reqcheck.AddParams("user_id", request.Params["user_id"]);
-                                string md5sign = reqcheck.GetMd5Sign(_md5key);
+                                reqDict.Add("user_id", request.Params["user_id"]);
+                                string waitSign = MD5Helper.CreateLinkString(reqDict);
+                                string md5sign = MD5Helper.MD5Sign(waitSign, _md5key);
                                 if (request.Params["md5sign"] != md5sign)
                                 {
                                     return new JsonReply(100, string.Format("Md5Sign not valid"));
@@ -130,9 +165,10 @@ namespace TradingLib.Contrib.APIService
                         #region DEPOSIT
                         case "DEPOSIT":
                             {
-                                reqcheck.AddParams("account", request.Params["account"]);
-                                reqcheck.AddParams("amount", request.Params["amount"]);
-                                string md5sign = reqcheck.GetMd5Sign(_md5key);
+                                reqDict.Add("account", request.Params["account"]);
+                                reqDict.Add("amount", request.Params["amount"]);
+                                string waitSign = MD5Helper.CreateLinkString(reqDict);
+                                string md5sign = MD5Helper.MD5Sign(waitSign, _md5key);
                                 if (request.Params["md5sign"] != md5sign)
                                 {
                                     return new JsonReply(100, string.Format("Md5Sign not valid"));
@@ -188,9 +224,10 @@ namespace TradingLib.Contrib.APIService
                         #region WITHDRAW
                         case "WITHDRAW":
                             {
-                                reqcheck.AddParams("account", request.Params["account"]);
-                                reqcheck.AddParams("amount", request.Params["amount"]);
-                                string md5sign = reqcheck.GetMd5Sign(_md5key);
+                                reqDict.Add("account", request.Params["account"]);
+                                reqDict.Add("amount", request.Params["amount"]);
+                                string waitSign = MD5Helper.CreateLinkString(reqDict);
+                                string md5sign = MD5Helper.MD5Sign(waitSign, _md5key);
                                 if (request.Params["md5sign"] != md5sign)
                                 {
                                     return new JsonReply(100, string.Format("Md5Sign not valid"));
@@ -258,8 +295,9 @@ namespace TradingLib.Contrib.APIService
                         #region ACTIVE_ACCOUNT
                         case "ACTIVE_ACCOUNT":
                             {
-                                reqcheck.AddParams("account", request.Params["account"]);
-                                string md5sign = reqcheck.GetMd5Sign(_md5key);
+                                reqDict.Add("account", request.Params["account"]);
+                                string waitSign = MD5Helper.CreateLinkString(reqDict);
+                                string md5sign = MD5Helper.MD5Sign(waitSign, _md5key);
                                 if (request.Params["md5sign"] != md5sign)
                                 {
                                     return new JsonReply(100, string.Format("Md5Sign not valid"));
@@ -303,7 +341,7 @@ namespace TradingLib.Contrib.APIService
                 }
                 else
                 {
-                    return new JsonReply(100, "method not provide");
+                    return new JsonReply(99, "method not provide");
                 }
             }
             catch (Exception ex)

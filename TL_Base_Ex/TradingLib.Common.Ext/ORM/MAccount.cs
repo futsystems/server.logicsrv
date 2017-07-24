@@ -472,7 +472,7 @@ namespace TradingLib.ORM
         {
             using (DBMySql db = new DBMySql())
             {
-                string query = String.Format("select user_id as id from accounts where user_id='{0}' and account_category='{1}'", user_id, category.ToString());
+                string query = String.Format("select user_id as id from accounts where user_id='{0}' and account_category='{1}' and deleted='0'", user_id, category.ToString());
                 return db.Connection.Query<UserID>(query, null).Count() > 0;
             }
         }

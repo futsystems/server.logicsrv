@@ -190,7 +190,11 @@ namespace TradingLib.Core
         /// <param name="userId"></param>
         public bool UserHaveAccount(int userID)
         {
-            return _accMap.Values.Any(acc => acc.UserID == userID);
+            if (userID <= 0)
+            {
+                throw new Exception("UserID should greater than 0");
+            }
+            return _accMap.Values.Where(acc=>!acc.Deleted).Any(acc => acc.UserID == userID);
         }
 
         public IAccount GetUserAccount(int userID)

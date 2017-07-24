@@ -79,7 +79,7 @@ namespace TradingLib.API
         /// <param name="agentID"></param>
         /// <param name="account"></param>
         /// <returns></returns>
-        bool CreateAccountForUser(int userID, int agentID, out string account);
+        bool CreateAccountForUser(int userID, int agentID,CurrencyType currency, out string account);
         /// <summary>
         /// 直接进行出入金操作
         /// </summary>

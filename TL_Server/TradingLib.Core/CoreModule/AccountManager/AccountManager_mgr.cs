@@ -87,7 +87,7 @@ namespace TradingLib.Core
         /// <param name="userID"></param>
         /// <param name="agentID"></param>
         /// <returns></returns>
-        public bool CreateAccountForUser(int userID, int agentID,out string account)
+        public bool CreateAccountForUser(int userID, int agentID,CurrencyType currency,out string account)
         {
             account = string.Empty;
             try
@@ -97,6 +97,8 @@ namespace TradingLib.Core
                 creation.Category = QSEnumAccountCategory.SUBACCOUNT;
                 creation.RouterType = QSEnumOrderTransferType.SIM;
                 creation.UserID = userID;
+                creation.Currency = currency;
+
                 this.AddAccount(ref creation);
                 //帐户添加完毕后同步添加profile信息
                 creation.Profile.Account = creation.Account;

@@ -95,6 +95,9 @@ namespace APIClient
 
             btnEncode.Click += new EventHandler(btnEncode_Click);
             btnDecode.Click += new EventHandler(btnDecode_Click);
+
+
+            WireEvent_Web();
         }
 
         
