@@ -131,6 +131,7 @@
     <Compile Include="frm\fmJsonOrderAction.Designer.cs">
       <DependentUpon>fmJsonOrderAction.cs</DependentUpon>
     </Compile>
+    <Compile Include="HttpAPIClient.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="WebSocketWrapper.cs" />

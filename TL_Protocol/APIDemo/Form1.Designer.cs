@@ -123,6 +123,8 @@
             this.btnEncode = new System.Windows.Forms.Button();
             this.label21 = new System.Windows.Forms.Label();
             this.tabPage5 = new System.Windows.Forms.TabPage();
+            this.web_domainId = new System.Windows.Forms.TextBox();
+            this.label28 = new System.Windows.Forms.Label();
             this.web_currency = new System.Windows.Forms.TextBox();
             this.label27 = new System.Windows.Forms.Label();
             this.web_agentID = new System.Windows.Forms.TextBox();
@@ -132,9 +134,9 @@
             this.webAddAccount = new System.Windows.Forms.Button();
             this.md5key = new System.Windows.Forms.TextBox();
             this.label24 = new System.Windows.Forms.Label();
+            this.web_url = new System.Windows.Forms.TextBox();
+            this.label29 = new System.Windows.Forms.Label();
             this.debugControl1 = new APIClient.DebugControl();
-            this.web_domainId = new System.Windows.Forms.TextBox();
-            this.label28 = new System.Windows.Forms.Label();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.cashopVal)).BeginInit();
@@ -1073,6 +1075,8 @@
             // 
             // tabPage5
             // 
+            this.tabPage5.Controls.Add(this.web_url);
+            this.tabPage5.Controls.Add(this.label29);
             this.tabPage5.Controls.Add(this.web_domainId);
             this.tabPage5.Controls.Add(this.label28);
             this.tabPage5.Controls.Add(this.web_currency);
@@ -1092,9 +1096,26 @@
             this.tabPage5.Text = "tabPage5";
             this.tabPage5.UseVisualStyleBackColor = true;
             // 
+            // web_domainId
+            // 
+            this.web_domainId.Location = new System.Drawing.Point(55, 54);
+            this.web_domainId.Name = "web_domainId";
+            this.web_domainId.Size = new System.Drawing.Size(100, 21);
+            this.web_domainId.TabIndex = 10;
+            this.web_domainId.Text = "0";
+            // 
+            // label28
+            // 
+            this.label28.AutoSize = true;
+            this.label28.Location = new System.Drawing.Point(8, 57);
+            this.label28.Name = "label28";
+            this.label28.Size = new System.Drawing.Size(41, 12);
+            this.label28.TabIndex = 9;
+            this.label28.Text = "分区ID";
+            // 
             // web_currency
             // 
-            this.web_currency.Location = new System.Drawing.Point(55, 125);
+            this.web_currency.Location = new System.Drawing.Point(55, 144);
             this.web_currency.Name = "web_currency";
             this.web_currency.Size = new System.Drawing.Size(100, 21);
             this.web_currency.TabIndex = 8;
@@ -1103,7 +1124,7 @@
             // label27
             // 
             this.label27.AutoSize = true;
-            this.label27.Location = new System.Drawing.Point(8, 128);
+            this.label27.Location = new System.Drawing.Point(8, 147);
             this.label27.Name = "label27";
             this.label27.Size = new System.Drawing.Size(29, 12);
             this.label27.TabIndex = 7;
@@ -1111,7 +1132,7 @@
             // 
             // web_agentID
             // 
-            this.web_agentID.Location = new System.Drawing.Point(55, 93);
+            this.web_agentID.Location = new System.Drawing.Point(55, 112);
             this.web_agentID.Name = "web_agentID";
             this.web_agentID.Size = new System.Drawing.Size(100, 21);
             this.web_agentID.TabIndex = 6;
@@ -1120,7 +1141,7 @@
             // label26
             // 
             this.label26.AutoSize = true;
-            this.label26.Location = new System.Drawing.Point(8, 96);
+            this.label26.Location = new System.Drawing.Point(8, 115);
             this.label26.Name = "label26";
             this.label26.Size = new System.Drawing.Size(47, 12);
             this.label26.TabIndex = 5;
@@ -1128,7 +1149,7 @@
             // 
             // web_userID
             // 
-            this.web_userID.Location = new System.Drawing.Point(55, 66);
+            this.web_userID.Location = new System.Drawing.Point(55, 85);
             this.web_userID.Name = "web_userID";
             this.web_userID.Size = new System.Drawing.Size(100, 21);
             this.web_userID.TabIndex = 4;
@@ -1137,7 +1158,7 @@
             // label25
             // 
             this.label25.AutoSize = true;
-            this.label25.Location = new System.Drawing.Point(8, 69);
+            this.label25.Location = new System.Drawing.Point(8, 88);
             this.label25.Name = "label25";
             this.label25.Size = new System.Drawing.Size(41, 12);
             this.label25.TabIndex = 3;
@@ -1145,7 +1166,7 @@
             // 
             // webAddAccount
             // 
-            this.webAddAccount.Location = new System.Drawing.Point(37, 160);
+            this.webAddAccount.Location = new System.Drawing.Point(38, 186);
             this.webAddAccount.Name = "webAddAccount";
             this.webAddAccount.Size = new System.Drawing.Size(75, 23);
             this.webAddAccount.TabIndex = 2;
@@ -1154,7 +1175,7 @@
             // 
             // md5key
             // 
-            this.md5key.Location = new System.Drawing.Point(55, 8);
+            this.md5key.Location = new System.Drawing.Point(268, 6);
             this.md5key.Name = "md5key";
             this.md5key.Size = new System.Drawing.Size(100, 21);
             this.md5key.TabIndex = 1;
@@ -1163,11 +1184,28 @@
             // label24
             // 
             this.label24.AutoSize = true;
-            this.label24.Location = new System.Drawing.Point(8, 17);
+            this.label24.Location = new System.Drawing.Point(221, 15);
             this.label24.Name = "label24";
             this.label24.Size = new System.Drawing.Size(41, 12);
             this.label24.TabIndex = 0;
             this.label24.Text = "MD5Key";
+            // 
+            // web_url
+            // 
+            this.web_url.Location = new System.Drawing.Point(55, 12);
+            this.web_url.Name = "web_url";
+            this.web_url.Size = new System.Drawing.Size(139, 21);
+            this.web_url.TabIndex = 12;
+            this.web_url.Text = "http://127.0.0.1:8080/api";
+            // 
+            // label29
+            // 
+            this.label29.AutoSize = true;
+            this.label29.Location = new System.Drawing.Point(8, 21);
+            this.label29.Name = "label29";
+            this.label29.Size = new System.Drawing.Size(23, 12);
+            this.label29.TabIndex = 11;
+            this.label29.Text = "Url";
             // 
             // debugControl1
             // 
@@ -1183,23 +1221,6 @@
             this.debugControl1.TabIndex = 0;
             this.debugControl1.TimeStamps = true;
             this.debugControl1.UseExternalTimeStamp = false;
-            // 
-            // web_domainId
-            // 
-            this.web_domainId.Location = new System.Drawing.Point(55, 35);
-            this.web_domainId.Name = "web_domainId";
-            this.web_domainId.Size = new System.Drawing.Size(100, 21);
-            this.web_domainId.TabIndex = 10;
-            this.web_domainId.Text = "0";
-            // 
-            // label28
-            // 
-            this.label28.AutoSize = true;
-            this.label28.Location = new System.Drawing.Point(8, 38);
-            this.label28.Name = "label28";
-            this.label28.Size = new System.Drawing.Size(41, 12);
-            this.label28.TabIndex = 9;
-            this.label28.Text = "分区ID";
             // 
             // Form1
             // 
@@ -1336,6 +1357,8 @@
         private System.Windows.Forms.TextBox web_currency;
         private System.Windows.Forms.TextBox web_domainId;
         private System.Windows.Forms.Label label28;
+        private System.Windows.Forms.TextBox web_url;
+        private System.Windows.Forms.Label label29;
     }
 }
 
