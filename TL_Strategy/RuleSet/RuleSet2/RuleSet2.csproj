@@ -53,6 +53,7 @@
     <Compile Include="Account\RSMaxChnage.cs" />
     <Compile Include="Account\RSTime.cs" />
     <Compile Include="Account\RSPriceLimitFlat.cs" />
+    <Compile Include="Account\RSRiskRatioFlat.cs" />
     <Compile Include="Order\RSSecurityBlock.cs" />
     <Compile Include="Order\RSMaxTradeSize.cs" />
     <Compile Include="Order\RSTimeFilter.cs" />
