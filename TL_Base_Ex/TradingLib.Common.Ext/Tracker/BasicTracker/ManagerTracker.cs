@@ -4,12 +4,14 @@ using System.Collections.Concurrent;
 using System.Linq;
 using System.Text;
 using TradingLib.API;
+using Common.Logging;
 
 namespace TradingLib.Common
 {
 
     public class DBManagerTracker
     {
+        ILog logger = LogManager.GetLogger("DBManagerTracker");
         ConcurrentDictionary<string, Manager> managermap = new ConcurrentDictionary<string, Manager>();
         ConcurrentDictionary<int, Manager> mgridmap = new ConcurrentDictionary<int, Manager>();
 
@@ -41,11 +43,28 @@ namespace TradingLib.Common
 
                 
             }
+            List<Manager> errorList = new List<Manager>();
+
             foreach (Manager m in managermap.Values)
             {
                 m.BaseManager = this[m.mgr_fk];
                 m.ParentManager = this[m.parent_fk];
+
+                if (m.BaseManager == null||m.ParentManager == null)//删除不完备导致 有代理相关数据为空
+                {
+                    errorList.Add(m);
+                }
             }
+            logger.Warn("Error Manager:" + string.Join(",", errorList.Select(m => m.Login).ToArray()));
+            foreach (var m in errorList)
+            { 
+                Manager target;
+                managermap.TryRemove(m.Login, out target);
+                mgridmap.TryRemove(m.ID, out target);
+            }
+
+            
+
 
             //绑定代理财务账户
             foreach (var mgr in managermap.Values)
