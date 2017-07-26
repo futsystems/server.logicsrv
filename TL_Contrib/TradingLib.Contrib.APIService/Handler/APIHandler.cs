@@ -15,7 +15,6 @@ namespace TradingLib.Contrib.APIService
     public class APIHandler:RequestHandler
     {
         ILog logger = LogManager.GetLogger("APIHandler");
-        string _md5key = "123456";
         public APIHandler()
         {
             this.Module = "API";
@@ -51,10 +50,15 @@ namespace TradingLib.Contrib.APIService
                                     return new JsonReply(105, string.Format("Domain not exist"));
                                 }
 
+                                if (string.IsNullOrEmpty(domain.Cfg_MD5Key))
+                                {
+                                    return new JsonReply(107, string.Format("Md5Key not setted"));
+                                }
 
                                 //MD5
                                 string waitSign = MD5Helper.CreateLinkString(reqDict);
-                                string md5sign = MD5Helper.MD5Sign(waitSign, _md5key);
+                                string md5sign = MD5Helper.MD5Sign(waitSign,domain.Cfg_MD5Key);
+
                                 if (request.Params["md5sign"] != md5sign)
                                 {
                                     return new JsonReply(100, string.Format("Md5Sign not valid"));
@@ -121,9 +125,21 @@ namespace TradingLib.Contrib.APIService
                         #region QRY_USER
                         case "QRY_USER":
                             {
+                                reqDict.Add("domain_id", request.Params["domain_id"]);
                                 reqDict.Add("user_id", request.Params["user_id"]);
+
+                                //Domain
+                                int domain_id = -1;
+                                int.TryParse(request.Params["domain_id"], out domain_id);
+                                Domain domain = BasicTracker.DomainTracker[domain_id];
+                                if (domain == null)
+                                {
+                                    return new JsonReply(105, string.Format("Domain not exist"));
+                                }
+
+
                                 string waitSign = MD5Helper.CreateLinkString(reqDict);
-                                string md5sign = MD5Helper.MD5Sign(waitSign, _md5key);
+                                string md5sign = MD5Helper.MD5Sign(waitSign, domain.Cfg_MD5Key);
                                 if (request.Params["md5sign"] != md5sign)
                                 {
                                     return new JsonReply(100, string.Format("Md5Sign not valid"));
@@ -165,10 +181,22 @@ namespace TradingLib.Contrib.APIService
                         #region DEPOSIT
                         case "DEPOSIT":
                             {
+                                reqDict.Add("domain_id", request.Params["domain_id"]);
                                 reqDict.Add("account", request.Params["account"]);
                                 reqDict.Add("amount", request.Params["amount"]);
+
+                                //Domain
+                                int domain_id = -1;
+                                int.TryParse(request.Params["domain_id"], out domain_id);
+                                Domain domain = BasicTracker.DomainTracker[domain_id];
+                                if (domain == null)
+                                {
+                                    return new JsonReply(105, string.Format("Domain not exist"));
+                                }
+
+
                                 string waitSign = MD5Helper.CreateLinkString(reqDict);
-                                string md5sign = MD5Helper.MD5Sign(waitSign, _md5key);
+                                string md5sign = MD5Helper.MD5Sign(waitSign, domain.Cfg_MD5Key);
                                 if (request.Params["md5sign"] != md5sign)
                                 {
                                     return new JsonReply(100, string.Format("Md5Sign not valid"));
@@ -224,10 +252,22 @@ namespace TradingLib.Contrib.APIService
                         #region WITHDRAW
                         case "WITHDRAW":
                             {
+                                reqDict.Add("domain_id", request.Params["domain_id"]);
                                 reqDict.Add("account", request.Params["account"]);
                                 reqDict.Add("amount", request.Params["amount"]);
+
+                                //Domain
+                                int domain_id = -1;
+                                int.TryParse(request.Params["domain_id"], out domain_id);
+                                Domain domain = BasicTracker.DomainTracker[domain_id];
+                                if (domain == null)
+                                {
+                                    return new JsonReply(105, string.Format("Domain not exist"));
+                                }
+
+
                                 string waitSign = MD5Helper.CreateLinkString(reqDict);
-                                string md5sign = MD5Helper.MD5Sign(waitSign, _md5key);
+                                string md5sign = MD5Helper.MD5Sign(waitSign, domain.Cfg_MD5Key);
                                 if (request.Params["md5sign"] != md5sign)
                                 {
                                     return new JsonReply(100, string.Format("Md5Sign not valid"));
@@ -295,9 +335,21 @@ namespace TradingLib.Contrib.APIService
                         #region ACTIVE_ACCOUNT
                         case "ACTIVE_ACCOUNT":
                             {
+                                reqDict.Add("domain_id", request.Params["domain_id"]);
                                 reqDict.Add("account", request.Params["account"]);
+
+                                //Domain
+                                int domain_id = -1;
+                                int.TryParse(request.Params["domain_id"], out domain_id);
+                                Domain domain = BasicTracker.DomainTracker[domain_id];
+                                if (domain == null)
+                                {
+                                    return new JsonReply(105, string.Format("Domain not exist"));
+                                }
+
+
                                 string waitSign = MD5Helper.CreateLinkString(reqDict);
-                                string md5sign = MD5Helper.MD5Sign(waitSign, _md5key);
+                                string md5sign = MD5Helper.MD5Sign(waitSign, domain.Cfg_MD5Key);
                                 if (request.Params["md5sign"] != md5sign)
                                 {
                                     return new JsonReply(100, string.Format("Md5Sign not valid"));

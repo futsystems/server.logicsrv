@@ -159,6 +159,23 @@ namespace TradingLib.API
         /// 调试插入成交
         /// </summary>
         bool Misc_InsertTrade { get; set; }
+
+        /// <summary>
+        /// API调用MD5Key
+        /// </summary>
+        string Cfg_MD5Key { get; set; }
+
+        /// <summary>
+        /// 安卓
+        /// </summary>
+        bool Device_Droid { get; set; }
+
+        /// <summary>
+        /// 苹果
+        /// </summary>
+        bool Device_IOS { get; set; }
+
+
         #endregion
 
 

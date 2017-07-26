@@ -202,7 +202,23 @@ namespace TradingLib.Common
         /// 跟单策略数
         /// </summary>
         public int Cfg_FollowStrategyNum { get; set; }
-        
+
+        /// <summary>
+        /// API调用MD5Key
+        /// </summary>
+        public string Cfg_MD5Key { get; set; }
+
+        /// <summary>
+        /// 安卓
+        /// </summary>
+        public bool Device_Droid { get; set; }
+
+        /// <summary>
+        /// 苹果
+        /// </summary>
+        public bool Device_IOS { get; set; }
+
+
         /// <summary>
         /// 
         /// </summary>

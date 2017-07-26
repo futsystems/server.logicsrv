@@ -118,6 +118,11 @@ namespace TradingLib.Common
                 target.Cfg_GrossPosition = domain.Cfg_GrossPosition;
                 target.Cfg_MaxMarginSide = domain.Cfg_MaxMarginSide;
                 target.Cfg_FollowStrategyNum = domain.Cfg_FollowStrategyNum;
+
+                target.Cfg_MD5Key = domain.Cfg_MD5Key;
+                target.Device_Droid = domain.Device_Droid;
+                target.Device_IOS = domain.Device_IOS;
+
                 ORM.MDomain.UpdateDomain(target);
                 
             }
@@ -159,6 +164,10 @@ namespace TradingLib.Common
                 target.Cfg_GrossPosition = domain.Cfg_GrossPosition;
                 target.Cfg_MaxMarginSide = domain.Cfg_MaxMarginSide;
                 target.Cfg_FollowStrategyNum = domain.Cfg_FollowStrategyNum;
+
+                target.Cfg_MD5Key = domain.Cfg_MD5Key;
+                target.Device_Droid = domain.Device_Droid;
+                target.Device_IOS = domain.Device_IOS;
 
                 ORM.MDomain.InsertDomain(target);
                 domain.ID = target.ID;

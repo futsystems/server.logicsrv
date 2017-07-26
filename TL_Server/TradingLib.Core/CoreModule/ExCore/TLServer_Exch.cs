@@ -183,6 +183,8 @@ namespace TradingLib.Core
                 response.RspInfo.Fill("LOGINTYPE_NOT_SUPPORT");
             }
 
+            
+
             //检查域和管理员对象 进行域过期和管理是否激活进行限制
             if (account != null)
             {
@@ -197,6 +199,20 @@ namespace TradingLib.Core
                     response.Authorized = false;
                     response.RspInfo.Fill("PLATFORM_EXPIRED");
                 }
+
+                if (request.ProductInfo == "M.IOS" && (!account.Domain.Device_IOS))
+                {
+                    response.Authorized = false;
+                    response.RspInfo.Fill("UNAUTHORIZED_LOGIN");
+                }
+
+                if (request.ProductInfo == "M.Droid" && (!account.Domain.Device_Droid))
+                {
+                    response.Authorized = false;
+                    response.RspInfo.Fill("UNAUTHORIZED_LOGIN");
+                }
+
+
             }
 
             //2.检查验证结果 并将对应的数据储存到对应的Client对象

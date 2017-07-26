@@ -1,6 +1,7 @@
 <errors>
 <error id="NONE" value="0" prompt="正确"/>
 <error id="INVALID_LOGIN" value="100" prompt="不合法的登入"/>
+<error id="UNAUTHORIZED_LOGIN" value="99" prompt="未授权"/>
 <error id="NOT_TRADINGDAY" value="101" prompt="非交易日"/>
 <error id="CLEARCENTRE_CLOSED" value="102" prompt="清算中心未开启"/>
 <error id="INVALID_ORDER" value="103" prompt="委托无效"/>

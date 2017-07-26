@@ -71,3 +71,4 @@ TradingLib.suo
 .Makefile.swp
 
 TL_Protocol/publish/
+TL_Protocol/publish/TradingLib.XLProtocol.dll
