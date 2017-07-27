@@ -140,22 +140,21 @@ namespace TradingLib.ORM
             }
         }
 
+        /// <summary>
+        /// 去除交易日设定,获取当前表中最大值
+        /// </summary>
+        /// <returns></returns>
         public static int MaxOrderSeq()
         {
             using (DBMySql db = new DBMySql())
             {
-                string query_count = string.Format("SELECT count(pk_id) as count FROM tmp_orders");
-                EntityCount num = db.Connection.Query<EntityCount>(query_count).SingleOrDefault();
-                if (num.Count == 0)
-                {
-                    return 1000;
-                }
-                else
-                {
-                    string query_seq = string.Format("SELECT MAX(orderseq) as MaxOrderSeq FROM tmp_orders WHERE settleday = {0}", TLCtxHelper.ModuleSettleCentre.Tradingday);
-                    orderseq seq = db.Connection.Query<orderseq>(query_seq).SingleOrDefault();
-                    return seq.MaxOrderSeq;
-                }
+                string query_seq = string.Format("SELECT MAX(orderseq) as MaxOrderSeq FROM tmp_orders");
+                orderseq seq1 = db.Connection.Query<orderseq>(query_seq).SingleOrDefault();
+
+                query_seq = string.Format("SELECT MAX(orderseq) as MaxOrderSeq FROM log_orders");
+                orderseq seq2 = db.Connection.Query<orderseq>(query_seq).SingleOrDefault();
+
+                return Math.Max(seq1.MaxOrderSeq, seq2.MaxOrderSeq);
             }
         }
 
@@ -163,13 +162,19 @@ namespace TradingLib.ORM
         {
             using (DBMySql db = new DBMySql())
             {
-                string query = string.Format("SELECT MAX(tradeid) as MaxTradeID FROM tmp_trades WHERE settleday = {0} AND breed='{1}'", TLCtxHelper.ModuleSettleCentre.Tradingday, QSEnumOrderBreedType.ACCT);
-                tradeid id = db.Connection.Query<tradeid>(query).SingleOrDefault();
-                int maxid = 0;
-                if (int.TryParse(id.MaxTradeID, out maxid))
-                    return maxid;
-                else
-                    return 0;
+                string query = string.Format("SELECT MAX(tradeid) as MaxTradeID FROM tmp_trades WHERE breed='{0}'", QSEnumOrderBreedType.ACCT);
+                tradeid id1 = db.Connection.Query<tradeid>(query).SingleOrDefault();
+                query = string.Format("SELECT MAX(tradeid) as MaxTradeID FROM log_trades WHERE breed='{0}'", QSEnumOrderBreedType.ACCT);
+                tradeid id2 = db.Connection.Query<tradeid>(query).SingleOrDefault();
+
+                int maxid1 = 0;
+                int.TryParse(id1.MaxTradeID, out maxid1);
+                int maxid2 = 0;
+                int.TryParse(id2.MaxTradeID, out maxid2);
+                return Math.Max(maxid1, maxid2);
+
+
+               
             }
         }
         /// <summary>
