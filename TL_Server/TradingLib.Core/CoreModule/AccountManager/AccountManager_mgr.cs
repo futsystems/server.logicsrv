@@ -552,21 +552,21 @@ namespace TradingLib.Core
             int end = int.Parse(data["end"].ToString());
             session.GetManager().PermissionCheckAccount(account);
 
-            IList<Order> orders = ORM.MTradingInfo.SelectOrders(account, start, end);
+            var orders = ORM.MTradingInfo.SelectOrders(account, start, end);
 
-            int totalnum = orders.Count;
+            int totalnum = orders.Count();
             if (totalnum > 0)
             {
                 for (int i = 0; i < totalnum; i++)
                 {
-                    session.ReplyMgr(OrderImpl.Serialize(orders[i]), i == totalnum - 1);
+                    session.ReplyMgr(OrderImpl.Serialize(orders.ElementAt(i)), i == totalnum - 1);
                 }
             }
             else
             {
                 session.ReplyMgr("");
             }
-            
+
         }
         /// <summary>
         /// 查询交易账户成交记录
@@ -582,14 +582,14 @@ namespace TradingLib.Core
             int end = int.Parse(data["end"].ToString());
             session.GetManager().PermissionCheckAccount(account);
 
-            IList<Trade> trades = ORM.MTradingInfo.SelectTrades(account, start, end);
+            var trades = ORM.MTradingInfo.SelectTrades(account, start, end);
 
-            int totalnum = trades.Count;
+            int totalnum = trades.Count();
             if (totalnum > 0)
             {
                 for (int i = 0; i < totalnum; i++)
                 {
-                    session.ReplyMgr(TradeImpl.Serialize(trades[i]), i == totalnum - 1);
+                    session.ReplyMgr(TradeImpl.Serialize(trades.ElementAt(i)), i == totalnum - 1);
                 }
             }
             else

@@ -282,10 +282,8 @@ namespace TradingLib.ORM
 
                 string query2 = string.Format("SELECT * FROM  {0}  WHERE settleday >='{1}' AND settleday <='{2}' AND breed='{3}'", "log_orders", begin, end, breed);
                 List<Order> orders2 = db.Connection.Query<OrderImpl>(query2).ToList<Order>();
-
                 //合并委托记录
                 return orders.Union(orders2, new OrderCompare());
-                //return orders;
             }
         }
 
@@ -297,7 +295,7 @@ namespace TradingLib.ORM
         /// <param name="begin"></param>
         /// <param name="end"></param>
         /// <returns></returns>
-        public static List<Order> SelectOrders(string account,int begin,int end,QSEnumOrderBreedType breed = QSEnumOrderBreedType.ACCT)
+        public static IEnumerable<Order> SelectOrders(string account, int begin, int end, QSEnumOrderBreedType breed = QSEnumOrderBreedType.ACCT)
         {
             using (DBMySql db = new DBMySql())
             {
@@ -307,8 +305,7 @@ namespace TradingLib.ORM
                 string query2 = string.Format("SELECT * FROM  {0}  WHERE settleday >='{1}' AND settleday <='{2}' AND account='{3}' AND breed='{4}'", "log_orders", begin, end,account, breed);
                 List<Order> orders2 = db.Connection.Query<OrderImpl>(query2).ToList<Order>();
 
-                //合并委托记录
-                return orders.Union(orders2, new OrderCompare()).ToList() ;
+                return orders.Union(orders2, new OrderCompare());
             }
         }
 
@@ -417,7 +414,7 @@ namespace TradingLib.ORM
         /// <param name="begin"></param>
         /// <param name="end"></param>
         /// <returns></returns>
-        public static IList<Trade> SelectTrades(string account, int begin, int end, QSEnumOrderBreedType breed = QSEnumOrderBreedType.ACCT)
+        public static IEnumerable<Trade> SelectTrades(string account, int begin, int end, QSEnumOrderBreedType breed = QSEnumOrderBreedType.ACCT)
         {
             using (DBMySql db = new DBMySql())
             {
@@ -427,9 +424,8 @@ namespace TradingLib.ORM
                 string query2 = string.Format("SELECT * FROM  {0}  WHERE settleday >='{1}' AND settleday <='{2}'  AND account='{3}' AND breed='{4}'", "log_trades", begin, end,account, breed);
                 List<Trade> trades2 = db.Connection.Query<TradeImpl>(query2).ToList<Trade>();
 
-                //trades.Add(new TradeImpl());
-                return trades.Union(trades2, new TradeCompare()).ToList() ;
-                //return trades;
+                return trades.Union(trades2, new TradeCompare());
+
             }
         }
 
