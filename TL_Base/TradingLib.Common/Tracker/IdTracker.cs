@@ -11,6 +11,11 @@ namespace TradingLib.Common
     public class IdTracker : GenericTracker<long>, IConvertible
     {
         public  const int ConnectorOwnerIDStart = 50;//通道内委托分拆器使用的id virtual owner起始
+
+        public const long OWNER_ORDER = 10;
+        public const long OWNER_TRADE = 11;
+        public const long OWNER_TXN_ACC = 12;
+
         public static implicit operator long(IdTracker idt)
         {
             return idt.AssignId;

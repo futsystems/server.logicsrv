@@ -20,8 +20,8 @@ namespace TradingLib.Core
         ConfigDB _cfgdb;
 
         bool _deleteAccountCheckEquity = false;
-        
 
+        IdTracker _txnTracker = new IdTracker(IdTracker.OWNER_TXN_ACC);
         public AccountManager():
             base(AccountManager.CoreName)
         {

@@ -22,6 +22,10 @@ namespace RuleSet2.Account
         /// </summary>
         decimal risk_ratio = 0;
 
+        /// <summary>
+        /// 强平后是否冻结账户
+        /// </summary>
+        bool acc_lock=false;
 
         public override string Value
         {
@@ -36,7 +40,7 @@ namespace RuleSet2.Account
                     var args = _args.DeserializeObject();
 
                     risk_ratio = decimal.Parse(args["risk_ratio"].ToString());
-
+                    acc_lock = bool.Parse(args["acc_lock"].ToString());
                 }
                 catch (Exception ex)
                 { }
@@ -56,8 +60,12 @@ namespace RuleSet2.Account
             {
                 if (!flatStart)
                 {
-                    if (this.Account.Execute)
-                        TLCtxHelper.ModuleAccountManager.InactiveAccount(this.Account.ID);
+                    if (acc_lock)
+                    {
+                        if (this.Account.Execute)
+                            TLCtxHelper.ModuleAccountManager.InactiveAccount(this.Account.ID);
+                    }
+
                     if (this.Account.AnyPosition)
                     {
                         msg = RuleDescription + ":全平所有仓位并冻结账户";

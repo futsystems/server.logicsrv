@@ -362,7 +362,9 @@ namespace TradingLib.Core
                 {
                     throw new FutsRspError("代理账户不存在 无法执行出入金操作");
                 }
-                if (baseMgr.AgentAccount.AgentType == EnumAgentType.Normal)
+
+                //普通代理 且没有设置老版代理 则无法执行出入金
+                if (baseMgr.AgentAccount.AgentType == EnumAgentType.Normal && (!baseMgr.Permission.r_tradition))
                 {
                     throw new FutsRspError("普通代理无权执行出入金操作");
                 }

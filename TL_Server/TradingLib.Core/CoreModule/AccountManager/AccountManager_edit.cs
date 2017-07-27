@@ -192,23 +192,9 @@ namespace TradingLib.Core
         }
 
 
-        object _txnidgen = new object();
-        string GenTxnID()
-        {
-            lock (_txnidgen)
-            {
-                System.Threading.Thread.Sleep(10);
-                string strDateTimeNumber = DateTime.Now.ToString("yyyyMMddHHmmssms");
-                byte[] randomBytes = new byte[4];
-                RNGCryptoServiceProvider rngCrypto =
-                new RNGCryptoServiceProvider();
-
-                rngCrypto.GetBytes(randomBytes);
-                Int32 rngNum = BitConverter.ToInt32(randomBytes, 0);
-                return strDateTimeNumber + "-"+rngNum.ToString();
-                
-            }
-        }
+       
+        
+        
 
         /// <summary>
         /// 执行分红操作
@@ -250,7 +236,7 @@ namespace TradingLib.Core
 
             cashtxn.Comment = isdeposit?("持仓{0}[{1}] 分红:{2}".Put(txn.Size, txn.Symbol, txn.Dividend)):("持仓{0}[{1}] 应付:{2}".Put(txn.Size,txn.Symbol,txn.Amount));
 
-            cashtxn.TxnID = GenTxnID();
+            cashtxn.TxnID = _txnTracker.AssignId.ToString();
             acc.LoadCashTrans(cashtxn);
             TLCtxHelper.ModuleDataRepository.NewCashTransaction(cashtxn);
 
@@ -292,7 +278,7 @@ namespace TradingLib.Core
             }
 
             //生成唯一序列号
-            txn.TxnID = GenTxnID();
+            txn.TxnID = _txnTracker.AssignId.ToString();
 
             acc.LoadCashTrans(txn);
             TLCtxHelper.ModuleDataRepository.NewCashTransaction(txn);

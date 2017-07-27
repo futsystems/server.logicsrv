@@ -42,6 +42,12 @@ namespace TradingLib.Common
         public string desp { get; set; }
 
         /// <summary>
+        /// 老版传统代理
+        /// </summary>
+        [PermissionFieldAttr("老版代理", "设定账户出入金后可执行出入金(普通代理有效)")]
+        public bool r_tradition { get; set; }
+
+        /// <summary>
         /// 添加交易帐户
         /// </summary>
         [PermissionFieldAttr("添加帐户", "添加子帐户权限")]
