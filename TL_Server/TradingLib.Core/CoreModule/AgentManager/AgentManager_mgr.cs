@@ -158,6 +158,34 @@ namespace TradingLib.Core
             
         }
 
+        [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "QueryStatisticSettlement", "QueryStatisticSettlement -query  settlement statistic", "查询代理下属客户结算统计", QSEnumArgParseType.Json)]
+        public void CTE_QuerySettlementStatistic(ISession session, string json)
+        {
+
+            var data = json.DeserializeObject();
+            string account = data["account"].ToString();
+            int start = int.Parse(data["start"].ToString());
+            int end = int.Parse(data["end"].ToString());
+            bool direct = bool.Parse(data["direct"].ToString());//是否只查询直客
+
+            session.GetManager().PermissionCheckManagerAccount(account);
+
+            List<int> mgrids = new List<int>();
+            if (direct)
+            {
+                mgrids.Add(BasicTracker.ManagerTracker[account].mgr_fk);
+            }
+            else
+            {
+                mgrids.AddRange(BasicTracker.ManagerTracker[account].GetVisibleManager().Select(m => m.mgr_fk));
+            }
+
+            SettlementStatistic[] trans = ORM.MSettlement.QrySettlementStatistic(mgrids.ToArray(), start, end).ToArray();
+            session.ReplyMgrArray(trans);
+
+        }
+
+
         [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "UpdateAgentFlatEquity", "UpdateAgentFlatEquity -update agent flatequity ", "更新代理强平权益", QSEnumArgParseType.Json)]
         public void CTE_UpdateAgentFlatEquity(ISession session, string json)
         {

@@ -75,6 +75,7 @@
     <Compile Include="BusinessEntities\Manager\AgentFinanceInfo.cs" />
     <Compile Include="BusinessEntities\Manager\ManagerProfile.cs" />
     <Compile Include="BusinessEntities\Manager\AgentStatistic.cs" />
+    <Compile Include="BusinessEntities\Settlement\SettlementStatistic.cs" />
     <Compile Include="BusinessEntities\Rule\RuleTimeSpan.cs" />
     <Compile Include="Client\TLNegotiation.cs" />
     <Compile Include="Exception\BaseException.cs" />

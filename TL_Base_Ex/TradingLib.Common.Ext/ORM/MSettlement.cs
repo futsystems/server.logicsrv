@@ -576,6 +576,20 @@ namespace TradingLib.ORM
 
         #endregion
 
+        #region 查询代理下属交易账户统计
+
+        public static IEnumerable<SettlementStatistic> QrySettlementStatistic(int[] mgrIds, int startSettleday, int endSettleday)
+        { 
+            using (DBMySql db = new DBMySql())
+            {
+                string query = string.Format("select settleday,SUM(closeprofitbydate) as closeprofitbydate ,SUM(positionprofitbydate) as positionprofitbydate,SUM(commission) as commission, SUM(cashin) as cashin,SUM(cashout) as cashout,SUM(lastequity) as lastequity ,SUM(equitysettled) as equitysettled  FROM log_settlement WHERE  settleday >= '{0}' AND settleday <= '{1}' AND account in (select account from accounts where mgr_fk in ({2})) GROUP BY settleday;", startSettleday, endSettleday, string.Join(",", mgrIds));
+
+                return db.Connection.Query<SettlementStatistic>(query, null);
+            }
+        }
+
+        #endregion
+
     }
 
     
