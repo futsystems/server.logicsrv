@@ -392,7 +392,7 @@ namespace TradingLib.ORM
         /// <param name="startSettleday"></param>
         /// <param name="endSettleday"></param>
         /// <returns></returns>
-        public static IEnumerable<AccountSettlement> SelectSettlements(string account, int startSettleday, int endSettleday)
+        public static IEnumerable<AccountSettlementImpl> SelectSettlements(string account, int startSettleday, int endSettleday)
         {
             using (DBMySql db = new DBMySql())
             {

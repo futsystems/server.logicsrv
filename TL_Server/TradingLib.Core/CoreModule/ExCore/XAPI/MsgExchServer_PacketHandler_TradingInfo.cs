@@ -296,7 +296,7 @@ namespace TradingLib.Core
         void SrvOnXQrySettleSummary(ISession session, XQrySettleSummaryRequest request, IAccount account)
         {
             logger.Info("XQrySettleSummary" + request.ToString());
-            List<AccountSettlement> list = ORM.MSettlement.SelectSettlements(account.ID, request.StartSettleday, request.EndSettleday).ToList();
+            List<AccountSettlementImpl> list = ORM.MSettlement.SelectSettlements(account.ID, request.StartSettleday, request.EndSettleday).ToList();
 
             if (list.Count > 0)
             {

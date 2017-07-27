@@ -517,7 +517,7 @@ namespace TradingLib.Core
         /// </summary>
         /// <param name="session"></param>
         /// <param name="json"></param>
-        [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "QueryAccountSettlement", "QueryAccountSettlement -query account settlement", "查询交易帐户结算单", QSEnumArgParseType.Json)]
+        [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "QueryAccountSettlementDetail", "QueryAccountSettlement -query account settlement", "查询交易帐户结算单", QSEnumArgParseType.Json)]
         public void CTE_QueryAccountSettlement(ISession session, string json)
         {
             var data = json.DeserializeObject();
@@ -536,6 +536,24 @@ namespace TradingLib.Core
             }
             
         }
+
+
+        [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "QueryAccountSettlements", "QueryAccountSettlements -query account settlement ", "查询交易帐户结算单", QSEnumArgParseType.Json)]
+        public void CTE_QueryAgentSettlements(ISession session, string json)
+        {
+
+            var data = json.DeserializeObject();
+            string account = data["account"].ToString();
+            int start = int.Parse(data["start"].ToString());
+            int end = int.Parse(data["end"].ToString());
+
+            session.GetManager().PermissionCheckAccount(account);
+
+            AccountSettlementImpl[] trans = ORM.MSettlement.SelectSettlements(account, start, end).ToArray();
+            session.ReplyMgrArray(trans);
+
+        }
+
 
         /// <summary>
         /// 查询交易账户委托记录
