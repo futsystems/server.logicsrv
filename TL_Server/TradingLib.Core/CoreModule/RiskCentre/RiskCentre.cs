@@ -164,6 +164,7 @@ namespace TradingLib.Core
 
             //订阅交易信息
             TLCtxHelper.EventIndicator.GotOrderEvent += new OrderDelegate(this.GotOrder);
+            TLCtxHelper.EventIndicator.GotCancelEvent += new LongDelegate(this.GotOrderCancel);
             TLCtxHelper.EventIndicator.GotOrderErrorEvent += new OrderErrorDelegate(this.GotOrderError);
 
             //交易帐户激活
@@ -172,6 +173,8 @@ namespace TradingLib.Core
             //结算重置
             TLCtxHelper.EventSystem.SettleResetEvent += new EventHandler<SystemEventArgs>(EventSystem_SettleResetEvent);
         }
+
+        
 
         void EventSystem_SettleResetEvent(object sender, SystemEventArgs e)
         {
