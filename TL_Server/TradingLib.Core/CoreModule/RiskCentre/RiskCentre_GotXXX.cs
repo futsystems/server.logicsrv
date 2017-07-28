@@ -20,6 +20,27 @@ namespace TradingLib.Core
     {
 
         /// <summary>
+        /// 委托取消后 执行状态更新
+        /// </summary>
+        /// <param name="val"></param>
+        void GotOrderCancel(long val)
+        {
+            logger.Info("risk got order cancel:" + val);
+            foreach (RiskTaskSet ps in riskTasklist)
+            {
+                if (ps.PendingOrders.Contains(val))
+                {
+                    ps.PendingOrders.Remove(val);
+                }
+
+                if (ps.FlatOrderIDList.Contains(val))
+                {
+                    ps.FlatOrderIDList.Remove(val);
+                }
+            }
+        }
+
+        /// <summary>
         /// 获得取消
         /// 取消事务是在处理队列中进行异步处理
         /// 而强平事务的完成是在positionround回报中同步处理
@@ -27,6 +48,7 @@ namespace TradingLib.Core
         /// <param name="oid"></param>
         void GotOrder(Order o)
         {
+            logger.Info("risk got order:" + o.id.ToString() + " " + o.Status.ToString());
             if (o.Status == QSEnumOrderStatus.Canceled)
             {
                 foreach (RiskTaskSet ps in riskTasklist)

@@ -478,6 +478,7 @@ namespace TradingLib.Core
                         }
                     case QSEnumRiskTaskStatus.CancelDone:
                         {
+                            //平多个持仓 为每个待平持仓生成子任务
                             if (ps.NeedGenerateSubTask)//
                             {
                                 logger.Info(ps.Title + ":CancelDone,GenerateSubTask");
@@ -490,7 +491,7 @@ namespace TradingLib.Core
                                 ps.TaskStatus = QSEnumRiskTaskStatus.SubTaskGenerated;
                                 break;
                             }
-                            //如果需要强平 则发送强平
+                            //平单个持仓 直接发送平仓委托
                             if (ps.NeedFlatPosition)
                             {
                                 logger.Info(ps.Title + ":CancelDone,SendFlatOrder");
@@ -509,6 +510,7 @@ namespace TradingLib.Core
                     case QSEnumRiskTaskStatus.CancelTimeOut:
                     case QSEnumRiskTaskStatus.FlatTimeOut:
                         {
+                            /*
                             //此处将任务和子任务一并删除
                             if (ps.SubTask.Count>0)
                             {
@@ -518,10 +520,11 @@ namespace TradingLib.Core
                                 }
                             }
                             removelist.Add(ps);
+                            **/
 
                             /* 如果是CancelTimeOut 则会导致任务一致无法被清除 主任务为CancelTimeOut 而又有持仓需要被平 则一致在if(ps.NeedGenerateSubTask) 内
                              * 
-                             * 
+                             * */
                             if (ps.NeedGenerateSubTask)
                             {
                                 foreach (RiskTaskSet rs in ps.SubTask)
@@ -532,7 +535,8 @@ namespace TradingLib.Core
                             else
                             {
                                 removelist.Add(ps);
-                            }**/
+                            }
+                           
                             break;
                         }
                     case QSEnumRiskTaskStatus.SubTaskGenerated:
