@@ -348,13 +348,37 @@ namespace TradingLib.Core
                             if (ps.NeedCancelOrders)
                             {
                                 logger.Info(ps.Title + ":Cancel Orders");
+                                List<long> cancelRemove = new List<long>();
+                                bool sent = false;
                                 foreach (long oid in ps.PendingOrders)
                                 {
-                                    this.CancelOrder(oid); //取消委托
-                                    Util.sleep(10);
+                                    //再次检查委托是否处于可撤状态
+                                    var o = TLCtxHelper.ModuleClearCentre.SentOrder(oid);
+                                    if (o != null && o.CanCancel())
+                                    {
+                                        sent = true;
+                                        this.CancelOrder(oid); //取消委托
+                                        Util.sleep(10);
+                                    }
+                                    else
+                                    {
+                                        cancelRemove.Add(oid);
+                                    }
                                 }
-                                ps.SentCancelTime = DateTime.Now;
-                                ps.TaskStatus = QSEnumRiskTaskStatus.CancelSent;
+
+                                foreach (var oid in cancelRemove)
+                                {
+                                    ps.PendingOrders.Remove(oid);
+                                }
+                                if (sent)
+                                {
+                                    ps.SentCancelTime = DateTime.Now;
+                                    ps.TaskStatus = QSEnumRiskTaskStatus.CancelSent;
+                                }
+                                else
+                                {
+                                    ps.TaskStatus = QSEnumRiskTaskStatus.CancelDone;
+                                }
                                 break;
                             }
                             //是否需要强平持仓
