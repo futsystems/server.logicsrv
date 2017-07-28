@@ -46,8 +46,6 @@ namespace RuleSet2.Account
                 { }
             }
         }
-        bool flatStart = false;//强平触发
-
 
         List<string> posflatfired = new List<string>();
         public bool CheckAccount(out string msg)
@@ -58,22 +56,23 @@ namespace RuleSet2.Account
             decimal ratio = ((this.Account.MarginFrozen + this.Account.Margin) / this.Account.NowEquity) * 100;
             if (ratio >= risk_ratio)
             {
-                if (!flatStart)
+                //账户没被冻结 执行强平 避免冻结后在冻结处理线程和风控规则线程出现竞争
+                if (this.Account.Execute)
                 {
-                    if (acc_lock)
-                    {
-                        if (this.Account.Execute)
-                            TLCtxHelper.ModuleAccountManager.InactiveAccount(this.Account.ID);
-                    }
-
                     if (this.Account.AnyPosition)
                     {
                         msg = RuleDescription + ":全平所有仓位并冻结账户";
                         TLCtxHelper.ModuleRiskCentre.FlatAllPositions(this.Account.ID, QSEnumOrderSource.RISKCENTREACCOUNTRULE, msg);
                     }
-                    flatStart = true;//开始平仓
-                    return false;
                 }
+
+                if (acc_lock)
+                {
+                    if (this.Account.Execute)
+                        TLCtxHelper.ModuleAccountManager.InactiveAccount(this.Account.ID);
+                }
+                return false;
+                
             }
             return true;
         }

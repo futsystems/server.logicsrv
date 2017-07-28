@@ -534,7 +534,7 @@ namespace TradingLib.Core
                     case QSEnumRiskTaskStatus.CancelTimeOut:
                     case QSEnumRiskTaskStatus.FlatTimeOut:
                         {
-                            /*
+                            
                             //此处将任务和子任务一并删除
                             if (ps.SubTask.Count>0)
                             {
@@ -544,11 +544,11 @@ namespace TradingLib.Core
                                 }
                             }
                             removelist.Add(ps);
-                            **/
+
 
                             /* 如果是CancelTimeOut 则会导致任务一致无法被清除 主任务为CancelTimeOut 而又有持仓需要被平 则一致在if(ps.NeedGenerateSubTask) 内
                              * 
-                             * */
+                             * 
                             if (ps.NeedGenerateSubTask)
                             {
                                 foreach (RiskTaskSet rs in ps.SubTask)
@@ -560,7 +560,7 @@ namespace TradingLib.Core
                             {
                                 removelist.Add(ps);
                             }
-                           
+                            */
                             break;
                         }
                     case QSEnumRiskTaskStatus.SubTaskGenerated:
