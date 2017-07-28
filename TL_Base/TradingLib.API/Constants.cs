@@ -99,5 +99,11 @@ namespace TradingLib.API
         /// 多少时间进行一次dead client清理,4个心跳间隔周期进行一次dead client 清除
         /// </summary>
         public const int CLEARDEADSESSIONPERIOD = HEARTBEATPERIOD * 6;
+
+
+        public const string CLI_SUCCESS = "SUCCESS";
+
+        public const string CLI_ERROR = "ERROR";
+
     }
 }

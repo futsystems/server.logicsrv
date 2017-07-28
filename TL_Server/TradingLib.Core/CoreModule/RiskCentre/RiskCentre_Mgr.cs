@@ -123,5 +123,18 @@ namespace TradingLib.Core
             }
         }
 
+        #region CLI命令行工具
+        [ContribCommandAttr(QSEnumCommandSource.CLI, "prisktask", "prisktask - print risk task list", "")]
+        public string prisktask()
+        {
+
+            foreach (var task in riskTasklist)
+            {
+                logger.Info(task.ToString());
+            }
+            return Const.CLI_SUCCESS;
+        }
+        #endregion
+
     }
 }
