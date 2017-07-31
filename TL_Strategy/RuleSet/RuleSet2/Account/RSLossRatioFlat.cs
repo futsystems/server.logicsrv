@@ -8,9 +8,9 @@ using TradingLib.Common;
 namespace RuleSet2.Account
 {
     /// <summary>
-    /// 浮动亏损/静态权益 > 设定值 就执行平仓
+    /// (冻结保证金+占用保证金)/动态权益 > 设定值 就执行平仓
     /// </summary>
-    public class RSLossRatioFlat : RuleBase, IAccountCheck
+    public class RSRiskRatioFlat : RuleBase, IAccountCheck
     {
         /// <summary>
         /// 参数【json格式】
@@ -18,9 +18,9 @@ namespace RuleSet2.Account
         private string _args = string.Empty;
 
         /// <summary>
-        /// 亏损出发值
+        /// 涨幅触发值
         /// </summary>
-        decimal loss_ratio = 0;
+        decimal risk_ratio = 0;
 
         /// <summary>
         /// 强平后是否冻结账户
@@ -39,7 +39,7 @@ namespace RuleSet2.Account
                     //解析json参数
                     var args = _args.DeserializeObject();
 
-                    loss_ratio = decimal.Parse(args["loss_ratio"].ToString());
+                    risk_ratio = decimal.Parse(args["risk_ratio"].ToString());
                     acc_lock = bool.Parse(args["acc_lock"].ToString());
                 }
                 catch (Exception ex)
@@ -51,14 +51,10 @@ namespace RuleSet2.Account
         public bool CheckAccount(out string msg)
         {
             msg = string.Empty;
-            decimal st_equity = this.Account.LastEquity + this.Account.CashIn - this.Account.CashOut;
+            if (this.Account.NowEquity == 0) return true;
 
-            if (st_equity <= 0) return true;
-            if (this.Account.Profit >= 0) return true;
-
-
-            decimal ratio = (Math.Abs(this.Account.Profit) / st_equity) * 100;
-            if (ratio >= loss_ratio)
+            decimal ratio = ((this.Account.MarginFrozen + this.Account.Margin) / this.Account.NowEquity) * 100;
+            if (ratio >= risk_ratio)
             {
                 //账户没被冻结 执行强平 避免冻结后在冻结处理线程和风控规则线程出现竞争
                 if (this.Account.Execute)
@@ -85,19 +81,19 @@ namespace RuleSet2.Account
         {
             get
             {
-                return "账户亏损/静态权益 大于" + loss_ratio.ToFormatStr() + "% 强平持仓";
+                return "(冻结保证金+占用保证金)/动态权益 大于" + risk_ratio.ToFormatStr() + "% 强平持仓";
             }
         }
 
         #region 覆写静态对象
         public static new string Title
         {
-            get { return "账户亏损/静态权益 大于X% 强平持仓"; }
+            get { return "保证金/动态权益 大于X% 强平持仓"; }
         }
 
         public static new string Description
         {
-            get { return "账户亏损/(昨日权益+入金-出金) 大于X% 强平持仓"; }
+            get { return "(冻结保证金+占用保证金)/动态权益 大于X% 强平持仓"; }
         }
 
         /// <summary>
