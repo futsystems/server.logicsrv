@@ -61,7 +61,7 @@ namespace TradingLib.Contrib.APIService
             data.notify_url = APIGlobal.SrvNotifyUrl + "/tfbpay";
             data.memo = "cs";
             data.card_type = "1";
-            data.bank_segment = this.Test?"1004":"1000";
+            data.bank_segment = this.Test ? "1004" : operatioin.Bank;
             data.user_type = "1";
             data.channel = "1";
             data.encode_type = "MD5";

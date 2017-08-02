@@ -55,6 +55,12 @@ namespace TradingLib.Contrib.APIService
 
                             return tplTracker.Render(action, null);
                         }
+                    case "DEPOSITTFB":
+                        {
+                            var tpl = tplTracker[action];
+
+                            return tplTracker.Render(action, null);
+                        }
                     case "WITHDRAW":
                         {
                             var tpl = tplTracker[action];
