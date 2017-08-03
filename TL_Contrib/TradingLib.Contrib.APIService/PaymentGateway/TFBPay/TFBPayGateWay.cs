@@ -133,14 +133,8 @@ namespace TradingLib.Contrib.APIService
 
         public static CashOperation GetCashOperation(System.Collections.Specialized.NameValueCollection queryString)
         {
-            throw new NotImplementedException();
-            //string cipherData = queryString["cipher_data"];
-            //string privateKey = RSAPrivateKeyJava2DotNet(this.PrivateKey);
-            //string paramSrc = RSADecrypt(cipherData, privateKey, "GB2312");
-
-            //宝付远端回调提供TransID参数 为本地提供的递增的订单编号
-            //string transid = queryString["spbillno"];
-            //return ORM.MCashOperation.SelectCashOperation(transid);
+            string transid = queryString["spbillno"];
+            return ORM.MCashOperation.SelectCashOperation(transid);
         }
 
         public override bool CheckParameters(NHttp.HttpRequest request)
@@ -153,32 +147,6 @@ namespace TradingLib.Contrib.APIService
                 return true;
             }
             return false;
-
-
-            //SortedDictionary<string, string> args = new SortedDictionary<string, string>();
-            //if (request.RequestType.ToUpper() == "POST")
-            //{
-            //    foreach (var key in request.Form.AllKeys)
-            //    {
-            //        args.Add(key, request.Form[key]);
-            //    }
-            //}
-            //else
-            //{
-            //    foreach (var key in request.QueryString.AllKeys)
-            //    {
-            //        args.Add(key, request.QueryString[key]);
-            //    }
-            //}
-
-            //if (args.ContainsKey("respMsg"))
-            //{
-            //    args["respMsg"] = Encoding.UTF8.GetString(Convert.FromBase64String(args["respMsg"]));
-            //}
-
-            //string prestr = CreateLinkString(args);
-            //string signature = args["signature"];
-            //return signature == Sign(prestr, this.Key);
         }
 
         public override bool CheckPayResult(NHttp.HttpRequest request, CashOperation operation)
