@@ -69,5 +69,10 @@ namespace TradingLib.Common
         /// 交易路由ID
         /// </summary>
         public int RouterID { get; set; }
+
+        /// <summary>
+        /// 配置模板编号
+        /// </summary>
+        public int Config_ID { get; set; }
     }
 }

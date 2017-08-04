@@ -67,6 +67,8 @@ namespace TradingLib.Core
 
             //执行操作 并捕获异常 产生异常则给出错误回报
             this.AddAccount(ref creation);//将交易帐户加入到主域
+            this.UpdateAccountConfigTemplate(creation.Account, creation.Config_ID);
+
 
             //帐户添加完毕后同步添加profile信息
             creation.Profile.Account = creation.Account;
@@ -436,25 +438,28 @@ namespace TradingLib.Core
         public void CTE_UpdateAccountConfigTemplate(ISession session, string json)
         {
             var req = json.DeserializeObject();
-            var account = req["account"].ToString();
+            var accounts = req["accounts"].ToString();
             var templateid = int.Parse(req["template_id"].ToString());
             var force = bool.Parse(req["force"].ToString());
-            session.GetManager().PermissionCheckAccount(account);
-            this.UpdateAccountConfigTemplate(account, templateid);
 
-            if (force)
+            foreach (var account in accounts.Split(','))
             {
-                //重置模板
-                this.UpdateAccountCommissionTemplate(account, 0);
-                this.UpdateAccountMarginTemplate(account, 0);
-                this.UpdateAccountExStrategyTemplate(account, 0);
-                //删除风控规则
-                TLCtxHelper.ModuleRiskCentre.DelAccountRuleSet(this[account]);
+                session.GetManager().PermissionCheckAccount(account);
+                this.UpdateAccountConfigTemplate(account, templateid);
+
+                if (force)
+                {
+                    //重置模板
+                    this.UpdateAccountCommissionTemplate(account, 0);
+                    this.UpdateAccountMarginTemplate(account, 0);
+                    this.UpdateAccountExStrategyTemplate(account, 0);
+                    //删除风控规则
+                    TLCtxHelper.ModuleRiskCentre.DelAccountRuleSet(this[account]);
+                }
+                //重置风控规则
+                TLCtxHelper.ModuleRiskCentre.ResetRuleSet(this[account]);
+
             }
-            //重置风控规则
-            TLCtxHelper.ModuleRiskCentre.ResetRuleSet(this[account]);
-
-
             session.RspMessage("更新帐户配置模板成功");
         }
 
