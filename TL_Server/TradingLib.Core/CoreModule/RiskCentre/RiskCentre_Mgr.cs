@@ -231,24 +231,30 @@ namespace TradingLib.Core
             }
         }
 
-
-        [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "FlatAllPosition", "FlatAllPosition - falt all position", "平调所有子账户持仓")]
-        public void CTE_FlatAllPosition(ISession session)
+        [PermissionRequiredAttr("r_execution")]
+        [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "FlatAllPosition", "FlatAllPosition - falt all position", "平调所有子账户持仓", QSEnumArgParseType.Json)]
+        public void CTE_FlatAllPosition(ISession session,string json)
         {
             Manager manager = session.GetManager();
             if (manager.IsRoot())
             {
-                foreach (var account in manager.Domain.GetAccounts())
+                var req = json.DeserializeObject();
+                var accounts = req["accounts"].ToObject<string[]>();
+
+                foreach (var account in accounts)
                 {
-                    TLCtxHelper.ModuleAccountManager.InactiveAccount(account.ID);
-                    TLCtxHelper.ModuleRiskCentre.FlatAllPositions(account.ID, QSEnumOrderSource.QSMONITER, "一键强平");
-                    Util.sleep(500);
+                    if (TLCtxHelper.ModuleAccountManager[account] != null)
+                    {
+                        TLCtxHelper.ModuleAccountManager.InactiveAccount(account);
+                        TLCtxHelper.ModuleRiskCentre.FlatAllPositions(account, QSEnumOrderSource.QSMONITER, "一键强平");
+                        Util.sleep(500);
+                    }
                 }
                 session.RspMessage("强平成功");
             }
             else
             {
-                throw new FutsRspError("无权执行强平操作");
+                throw new FutsRspError("无权执行批量强平操作");
             }
         }
 

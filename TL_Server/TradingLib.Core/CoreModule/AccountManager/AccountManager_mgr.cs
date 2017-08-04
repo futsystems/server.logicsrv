@@ -128,26 +128,30 @@ namespace TradingLib.Core
         /// <param name="session"></param>
         /// <param name="manager"></param>
         [PermissionRequiredAttr("r_account_del")]
-        [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "DelAccount", "DelAccount - del account", "删除交易帐户", QSEnumArgParseType.CommaSeparated)]
-        public void CTE_DelAccount(ISession session, string account)
+        [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "DelAccount", "DelAccount - del account", "删除交易帐户", QSEnumArgParseType.Json)]
+        public void CTE_DelAccount(ISession session, string json)
         {
-            session.GetManager().PermissionCheckAccount(account);
-
-            IAccount acc = this[account];
-            if (acc.GetPositionsHold().Count() > 0)
+            var req = json.DeserializeObject();
+            var accounts = req["accounts"].ToObject<string[]>(); 
+            foreach (var account in accounts)
             {
-                throw new FutsRspError(string.Format("交易帐户:{0} 有持仓 无法删除", acc.ID));
+                session.GetManager().PermissionCheckAccount(account);
+
+                IAccount acc = this[account];
+                if (acc.GetPositionsHold().Count() > 0)
+                {
+                    throw new FutsRspError(string.Format("交易帐户:{0} 有持仓 无法删除", acc.ID));
+                }
+
+                //检查交易帐户资金
+                if (_deleteAccountCheckEquity && (acc.NowEquity > 1 || acc.Credit > 1))
+                {
+                    throw new FutsRspError(string.Format(string.Format("交易帐户:{0} 权益:{1} 信用额度:{2}未出金 无法删除", account, acc.NowEquity, acc.Credit)));
+                }
+
+                this.DelAccount(account);
             }
-
-            //检查交易帐户资金
-            if (_deleteAccountCheckEquity && (acc.NowEquity > 1 || acc.Credit > 1))
-            {
-                throw new FutsRspError(string.Format(string.Format("交易帐户:{0} 权益:{1} 信用额度:{2}未出金 无法删除", account, acc.NowEquity, acc.Credit)));
-            }
-
-            this.DelAccount(account);
-
-            session.RspMessage("交易帐户:" + account + " 删除成功");
+            session.RspMessage("交易帐户:" + accounts + " 删除成功");
         }
 
 
@@ -200,20 +204,23 @@ namespace TradingLib.Core
         public void CTE_UpdateAccountExecute(ISession session, string json)
         {
             var req = json.DeserializeObject();
-            var account = req["account"].ToString();
+            var accounts = req["accounts"].ToObject<string[]>(); 
             var execute = bool.Parse(req["execute"].ToString());
-            session.GetManager().PermissionCheckAccount(account);
-
-            IAccount acct = TLCtxHelper.ModuleAccountManager[account];
-            if (execute && !acct.Execute)
+            foreach (var account in accounts)
             {
-                this.ActiveAccount(account);
-            }
-            if (!execute && acct.Execute)
-            {
-                this.InactiveAccount(account);
-            }
 
+                session.GetManager().PermissionCheckAccount(account);
+
+                IAccount acct = TLCtxHelper.ModuleAccountManager[account];
+                if (execute && !acct.Execute)
+                {
+                    this.ActiveAccount(account);
+                }
+                if (!execute && acct.Execute)
+                {
+                    this.InactiveAccount(account);
+                }
+            }
             
         }
 
@@ -438,11 +445,11 @@ namespace TradingLib.Core
         public void CTE_UpdateAccountConfigTemplate(ISession session, string json)
         {
             var req = json.DeserializeObject();
-            var accounts = req["accounts"].ToString();
+            var accounts = req["accounts"].ToObject<string[]>();
             var templateid = int.Parse(req["template_id"].ToString());
             var force = bool.Parse(req["force"].ToString());
 
-            foreach (var account in accounts.Split(','))
+            foreach (var account in accounts)
             {
                 session.GetManager().PermissionCheckAccount(account);
                 this.UpdateAccountConfigTemplate(account, templateid);
