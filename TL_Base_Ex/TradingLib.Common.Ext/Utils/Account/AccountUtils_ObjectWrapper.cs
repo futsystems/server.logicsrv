@@ -164,38 +164,17 @@ namespace TradingLib.Common
             info.Deleted = acc.Deleted;
             info.RG_ID = acc.RouteGroup == null ? -1 : acc.RouteGroup.ID;
 
-            
-
             //如果将其他模块的数据返回
             info.Commissin_ID = acc.Commission_ID;
             info.Credit = acc.Credit;
             info.Margin_ID = acc.Margin_ID;
             info.ExStrategy_ID = acc.ExStrategy_ID;
+            info.Config_ID = acc.Config_ID;
 
+            var cfg = BasicTracker.ConfigTemplateTracker[info.Config_ID];
+            info.ConfigName = cfg == null ? "" : cfg.Name;
 
-
-            //if(TLCtxHelper.Version.ProductType == QSEnumProductType.VendorMoniter)
-            //{
-            //    IBroker broker = BasicTracker.ConnectorMapTracker.GetBrokerForAccount(acc.ID);
-            //    if(broker != null)
-            //    {
-            //        int id = BasicTracker.ConnectorMapTracker.GetConnectorIDForAccount(acc.ID);
-            //        ConnectorConfig cfg = BasicTracker.ConnectorConfigTracker.GetBrokerConfig(id);
-            //        info.ConnectorToken = cfg!= null?(string.Format("{0}-{1}",cfg.Name,cfg.usrinfo_userid)):"";
-            //        info.MAcctConnected = broker.IsLive;
-            //        Util.Debug(string.Format("Broker:{0} Connected:{1}", broker.Token, broker.IsLive));
-            //    }
-
-            //    IAccountCheck rs = acc.AccountChecks.Where(check => check.GetType().FullName.Equals("AccountRuleSet.RSVendorFlat")).FirstOrDefault();
-            //    info.MAcctRiskRule = rs != null ? rs.RuleDescription : "未设置";
-            
-            //}
-            if (TLCtxHelper.Version.ProductType == QSEnumProductType.CounterSystem)
-            {
-
-                info.IsLogin = acc.IsLogin;
-            }
-
+            info.IsLogin = acc.IsLogin;
             info.IsWarn = acc.IsWarn;
             info.Memo = BasicTracker.AccountProfileTracker[acc.ID].Memo;
             return info;

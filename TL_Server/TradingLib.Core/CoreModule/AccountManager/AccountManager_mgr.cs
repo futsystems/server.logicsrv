@@ -432,11 +432,29 @@ namespace TradingLib.Core
         }
 
         [PermissionRequiredAttr("r_account_edit_template")]
-        [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "UpdateAccountConfigTemplate", "UpdateAccountConfigTemplate - update account config template set", "更新帐户配置模板")]
-        public void CTE_UpdateAccountConfigTemplate(ISession session, string account, int templateid)
+        [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "UpdateAccountConfigTemplate", "UpdateAccountConfigTemplate - update account config template set", "更新帐户配置模板", QSEnumArgParseType.Json)]
+        public void CTE_UpdateAccountConfigTemplate(ISession session, string json)
         {
+            var req = json.DeserializeObject();
+            var account = req["account"].ToString();
+            var templateid = int.Parse(req["template_id"].ToString());
+            var force = bool.Parse(req["force"].ToString());
             session.GetManager().PermissionCheckAccount(account);
             this.UpdateAccountConfigTemplate(account, templateid);
+
+            if (force)
+            {
+                //重置模板
+                this.UpdateAccountCommissionTemplate(account, 0);
+                this.UpdateAccountMarginTemplate(account, 0);
+                this.UpdateAccountExStrategyTemplate(account, 0);
+                //删除风控规则
+                TLCtxHelper.ModuleRiskCentre.DelAccountRuleSet(this[account]);
+            }
+            //重置风控规则
+            TLCtxHelper.ModuleRiskCentre.ResetRuleSet(this[account]);
+
+
             session.RspMessage("更新帐户配置模板成功");
         }
 

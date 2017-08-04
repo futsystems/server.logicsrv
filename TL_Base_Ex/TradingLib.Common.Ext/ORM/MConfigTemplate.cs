@@ -64,8 +64,8 @@ namespace TradingLib.ORM
                 string query = string.Format("DELETE FROM cfg_config_template WHERE id={0}", template_id);
                 db.Connection.Execute(query);
 
-                query = string.Format("DELETE FROM cfg_rule WHERE account={0}", string.Format("CFG_TEMPLATE_{0}",template_id));
-                db.Connection.Execute(query);
+                //query = string.Format("DELETE FROM cfg_rule WHERE account={0}", string.Format("CFG_TEMPLATE_{0}",template_id));
+                //db.Connection.Execute(query);
             }
         }
     }

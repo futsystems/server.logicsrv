@@ -105,5 +105,7 @@ namespace TradingLib.API
 
         public const string CLI_ERROR = "ERROR";
 
+        public const string CONFIG_TEMPLATE_PREFIX = "CONFIG_TEMPLATE_";
+
     }
 }

@@ -39,6 +39,32 @@ namespace TradingLib.ORM
             }
         }
 
+        public static IEnumerable<RuleItem> SelectRuleItem(string account)
+        {
+            using (DBMySql db = new DBMySql())
+            {
+                string query = string.Format("SELECT * FROM cfg_rule WHERE account = '{0}'", account);
+                IEnumerable<RuleItem> result = db.Connection.Query<RuleItem>(query);
+                return result;
+            }
+        }
+
+        /// <summary>
+        /// 获取某个风控规则
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public static RuleItem SelectRuleItem(int id)
+        {
+            using (DBMySql db = new DBMySql())
+            {
+                string query = string.Format("SELECT * FROM cfg_rule WHERE id = '{0}'", id);
+                IEnumerable<RuleItem> result = db.Connection.Query<RuleItem>(query);
+                return result.FirstOrDefault();
+            }
+        }
+
+
         /// <summary>
         /// 更新风控规则项目
         /// </summary>
@@ -83,6 +109,19 @@ namespace TradingLib.ORM
             {
                 string query = string.Format("DELETE FROM cfg_rule WHERE id = '{0}'",item.ID);
                 return db.Connection.Execute(query) >= 0;
+            }
+        }
+
+        /// <summary>
+        /// 删除某个账户所有风控规则
+        /// </summary>
+        /// <param name="account"></param>
+        public static void DelRulteItem(string account)
+        {
+            using (DBMySql db = new DBMySql())
+            {
+                string query = string.Format("DELETE FROM cfg_rule WHERE account = '{0}'",account);
+                db.Connection.Execute(query);
             }
         }
 

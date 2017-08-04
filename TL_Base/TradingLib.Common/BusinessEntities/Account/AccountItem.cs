@@ -129,15 +129,24 @@ namespace TradingLib.Common
         /// </summary>
         public int ExStrategy_ID { get; set; }
 
+
+        /// <summary>
+        /// 配置模板
+        /// </summary>
+        public int Config_ID { get; set; }
+
+        /// <summary>
+        /// 配置模板名称
+        /// </summary>
+        public string ConfigName { get; set; }
+
+
         /// <summary>
         /// 是否处于登入状态
         /// </summary>
         public bool IsLogin { get; set; }
 
-        /// <summary>
-        /// 登入地址
-        /// </summary>
-        //public string SessionInfo { get; set; }
+
 
 
         /// <summary>
@@ -235,9 +244,9 @@ namespace TradingLib.Common
             sb.Append(d);
             sb.Append(account.ExStrategy_ID);
             sb.Append(d);
-            //sb.Append(account.ConnectorToken);
+            sb.Append(account.Config_ID);
             sb.Append(d);
-            //sb.Append(account.MAcctConnected);
+            sb.Append(account.ConfigName);
             sb.Append(d);
             //sb.Append(account.MAcctRiskRule);
             sb.Append(d);
@@ -287,8 +296,8 @@ namespace TradingLib.Common
             //account.CreditSeparate = bool.Parse(rec[27]);
             account.Margin_ID = int.Parse(rec[28]);
             account.ExStrategy_ID = int.Parse(rec[29]);
-            //account.ConnectorToken = rec[30];
-            //account.MAcctConnected = bool.Parse(rec[31]);
+            account.Config_ID = int.Parse(rec[30]);
+            account.ConfigName = rec[31];
             //account.MAcctRiskRule = rec[32];
             account.Currency = (CurrencyType)Enum.Parse(typeof(CurrencyType), rec[33]);
             account.IsWarn = bool.Parse(rec[34]);

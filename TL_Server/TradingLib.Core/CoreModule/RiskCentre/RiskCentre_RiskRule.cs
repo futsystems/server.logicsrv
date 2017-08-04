@@ -52,14 +52,33 @@ namespace TradingLib.Core
         /// <param name="a"></param>
         void LoadRuleItem(IAccount account)
         {
+            bool anyrule = false;
             foreach (RuleItem item in ORM.MRuleItem.SelectRuleItem(account.ID, QSEnumRuleType.OrderRule))
             {
+                anyrule = true;
                 LoadRuleItem(account, item);
             }
             foreach (RuleItem item in ORM.MRuleItem.SelectRuleItem(account.ID, QSEnumRuleType.AccountRule))
             {
+                anyrule = true;
                 LoadRuleItem(account, item);
             }
+
+            var cfgtemplate = BasicTracker.ConfigTemplateTracker[account.Config_ID];
+            if (cfgtemplate != null)
+            {
+                IEnumerable<RuleItem> ruleitems = ORM.MRuleItem.SelectRuleItem(Const.CONFIG_TEMPLATE_PREFIX + cfgtemplate.ID.ToString());
+                //没有加载任何委托风控 则从配置模板中加载委托风控
+                if (!anyrule)
+                {
+                    foreach (var item in ruleitems)
+                    {
+                        LoadRuleItem(account, item);
+                    }
+                }
+            }
+
+
             //加载完毕后 设定帐户的风控规则加载标识
             account.RuleItemLoaded = true;
         }
@@ -95,45 +114,9 @@ namespace TradingLib.Core
             }
         }
 
-        /// <summary>
-        /// 更新风控规则
-        /// 如果没有则新增
-        /// 更新风控规则 都要将帐户添加到风控检查列表 否则新增风控规则后会出现规则不生效的问题
-        /// </summary>
-        /// <param name="item"></param>
-        void UpdateRiskRule(RuleItem item)
-        {
-            IAccount account = TLCtxHelper.ModuleAccountManager[item.Account];
-            //判断帐户是否存在
-            if (account != null)
-            {
-                //id不为0 更新风控规则 删除后然后再添加
-                if (item.ID != 0)
-                {
-                    //删除旧的委托规则
-                    if (item.RuleType == QSEnumRuleType.OrderRule)
-                    {
-                        account.DelOrderCheck(item.ID);
-                    }
-                    else if (item.RuleType == QSEnumRuleType.AccountRule)
-                    {
-                        account.DelAccountCheck(item.ID);
-                    }
+        
 
-                    //更新数据库
-                    ORM.MRuleItem.UpdateRuleItem(item);
-                    //添加新的委托规则
-                    LoadRuleItem(account, item);
-                }
-                else //添加到数据库然后再加入到帐户规则中
-                {
-                    //插入数据库
-                    ORM.MRuleItem.InsertRuleItem(item);//数据先添加 获得全局ID号
-                    //3.添加新的rule到帐户
-                    LoadRuleItem(account, item);
-                }
-            }
-        }
+
 
         /// <summary>
         /// 风控中心删除风控项
@@ -148,6 +131,7 @@ namespace TradingLib.Core
                 {
                     account.DelOrderCheck(item.ID);
                     ORM.MRuleItem.DelRulteItem(item);
+                    
                 }
                 else if (item.RuleType == QSEnumRuleType.AccountRule)
                 {
@@ -159,13 +143,25 @@ namespace TradingLib.Core
         }
 
         /// <summary>
+        /// 删除交易账户下所有风控规则
+        /// </summary>
+        /// <param name="account"></param>
+        public void DelAccountRuleSet(IAccount account)
+        {
+            logger.Info(string.Format("Delete Account:{0}'s risk rule", account.ID));
+            account.ClearAccountCheck();
+            account.ClearOrderCheck();
+            ORM.MRuleItem.DelRulteItem(account.ID);
+        }
+
+        /// <summary>
         /// 重新加载账户的风控策略,用于盘中入金，解冻交易账户
         /// 则需要重新加载风控规则,风控规则被处罚后，相关标志会处于状态位，解冻后需要恢复规则初始状态
         /// </summary>
         /// <param name="account"></param>
-        void ResetRuleSet(IAccount account)
+        public void ResetRuleSet(IAccount account)
         {
-            logger.Info(string.Format("Account:{0} Active,Reload RuleSet", account.ID));
+            logger.Info(string.Format("Account:{0} Reload RuleSet", account.ID));
             account.ClearAccountCheck();
             account.ClearOrderCheck();
             LoadRuleItem(account);
@@ -182,6 +178,7 @@ namespace TradingLib.Core
             IEnumerable<RuleItem> ruleitems = ORM.MRuleItem.SelectAllRuleItems();
             foreach (IAccount account in TLCtxHelper.ModuleAccountManager.Accounts)
             {
+                bool anyrule = false;
                 if (account.RuleItemLoaded)
                 {
                     account.ClearAccountCheck();
@@ -189,7 +186,18 @@ namespace TradingLib.Core
                 }
                 foreach (RuleItem item in ruleitems.Where(r => account.ID == r.Account))
                 {
+                    anyrule = true;
                     LoadRuleItem(account, item);
+                }
+                //没有加载任何委托风控 则从配置模板中加载委托风控
+                if (!anyrule)
+                {
+                    string cfgprefix = Const.CONFIG_TEMPLATE_PREFIX + account.Config_ID.ToString();
+                    foreach (var item in ruleitems.Where(t => t.Account == cfgprefix))
+                    {
+                        LoadRuleItem(account, item);
+                    }
+                    
                 }
                 //加载完毕后 设定帐户的风控规则加载标识
                 account.RuleItemLoaded = true;
