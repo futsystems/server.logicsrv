@@ -16,7 +16,16 @@ namespace TradingLib.Common
         /// <returns></returns>
         public static ExStrategyTemplate GetExStrategyTemplate(this IAccount account)
         {
-            return BasicTracker.ExStrategyTemplateTracker[account.ExStrategy_ID];
+             ExStrategyTemplate t = BasicTracker.ExStrategyTemplateTracker[account.ExStrategy_ID];
+             if (t == null)
+             {
+                 var cfg = BasicTracker.ConfigTemplateTracker[account.Config_ID];
+                 if (cfg != null)
+                 {
+                     t = BasicTracker.ExStrategyTemplateTracker[cfg.ExStrategy_ID];
+                 }
+             }
+             return t;
         }
 
         /// <summary>
