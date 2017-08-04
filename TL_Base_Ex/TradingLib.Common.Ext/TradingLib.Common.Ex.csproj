@@ -111,6 +111,7 @@
     <Compile Include="ORM\MAccountProfile.cs" />
     <Compile Include="ORM\MCashTransaction.cs" />
     <Compile Include="ORM\MCommission.cs" />
+    <Compile Include="ORM\MConfigTemplate.cs" />
     <Compile Include="ORM\MExchangeRate.cs" />
     <Compile Include="ORM\MMargin.cs" />
     <Compile Include="ORM\MPowerData.cs" />
@@ -127,6 +128,7 @@
     <Compile Include="Tracker\BasicTracker\PowrDataTracker.cs" />
     <Compile Include="Tracker\BasicTracker\SettlementPriceTracker.cs" />
     <Compile Include="Tracker\BasicTracker\Template\CommissionTemplateTracker.cs" />
+    <Compile Include="Tracker\BasicTracker\Template\ConfigTemplateTracker.cs" />
     <Compile Include="Tracker\BasicTracker\Template\ExStrategyTemplateTracker.cs" />
     <Compile Include="Tracker\BasicTracker\Template\MarginTemplateTracker.cs" />
     <Compile Include="Tracker\BasicTracker\ManagerProfileTracker.cs" />

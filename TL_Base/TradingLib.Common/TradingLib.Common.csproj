@@ -70,6 +70,7 @@
     <Compile Include="BusinessEntities\BinaryOption\BOUtils.cs" />
     <Compile Include="BusinessEntities\BinaryOption\Utils\BinaryOptionUtisl.cs" />
     <Compile Include="BusinessEntities\BinaryOption\Util_TimeSpan.cs" />
+    <Compile Include="BusinessEntities\Config\ConfigTemplateConfigTemplate.cs" />
     <Compile Include="BusinessEntities\Manager\Agent.cs" />
     <Compile Include="BusinessEntities\Manager\AgentCommissionSplit.cs" />
     <Compile Include="BusinessEntities\Manager\AgentFinanceInfo.cs" />

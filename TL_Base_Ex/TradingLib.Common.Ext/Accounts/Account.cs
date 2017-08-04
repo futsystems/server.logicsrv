@@ -212,6 +212,11 @@ namespace TradingLib.Common
         /// 交易参数模板ID
         /// </summary>
         public int ExStrategy_ID { get; set; }
+
+        /// <summary>
+        /// 配置模板ID
+        /// </summary>
+        public int Config_ID { get; set; }
         #endregion
 
         #region 对象绑定

@@ -123,6 +123,19 @@ namespace TradingLib.Core
             AccountChanged(account);
         }
 
+        /// <summary>
+        /// 更新配置模板
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="templateid"></param>
+        public void UpdateAccountConfigTemplate(string id, int templateid)
+        {
+            IAccount account = this[id];
+            if (account == null) return;
+            account.Config_ID = templateid;
+            ORM.MAccount.UpdateAccountConfigTemplate(id, templateid);
+            AccountChanged(account);
+        }
 
         /// <summary>
         /// 更新账户日内交易设置

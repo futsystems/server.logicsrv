@@ -719,6 +719,108 @@ namespace TradingLib.Core
 
         }
         #endregion
+
+        #region 配置模板
+        [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "QryConfigTemplate", "QryConfigTemplate - qry config template", "查询配置模板")]
+        public void CTE_QryConfigTemplate(ISession session)
+        {
+            Manager manager = session.GetManager();
+            if (manager.IsInRoot())
+            {
+                ConfigTemplate[] items = manager.Domain.GetConfigTemplate().ToArray();
+                if (items.Length == 0)
+                {
+                    session.ReplyMgr(null, true);
+                }
+                for (int i = 0; i < items.Length; i++)
+                {
+                    session.ReplyMgr(items[i], i == items.Length - 1);
+                }
+            }
+            else if (manager.IsInAgent())
+            {
+                ConfigTemplate[] items = manager.Domain.GetConfigTemplate().Where(item => item.Manager_ID == manager.BaseMgrID).ToArray();
+                if (items.Length == 0)
+                {
+                    session.ReplyMgr(null, true);
+                }
+                for (int i = 0; i < items.Length; i++)
+                {
+                    session.ReplyMgr(items[i], i == items.Length - 1);
+                }
+            }
+            else
+            {
+                throw new FutsRspError("无权查询计算策略模板");
+            }
+        }
+
+        [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "UpdateConfigTemplate", "UpdateConfigTemplate - update config template", "更新配置模板", QSEnumArgParseType.Json)]
+        public void CTE_UpdateConfigTemplate(ISession session, string json)
+        {
+            Manager manager = session.GetManager();
+            ConfigTemplate t = json.DeserializeObject<ConfigTemplate>();
+            t.Domain_ID = manager.domain_id;
+            bool isaddd = t.ID == 0;
+
+            //如果是添加手续费模板 则需要预先将数据写入到数据库
+            if (isaddd)
+            {
+                t.Manager_ID = manager.BaseMgrID;//如果是新添加 则设定管理主域ID    
+            }
+            else
+            {
+                if (!manager.IsRoot())
+                {
+                    ExStrategyTemplate template = BasicTracker.ExStrategyTemplateTracker[t.ID];
+                    if (template != null)
+                    {
+                        if (template.Manager_ID != manager.BaseMgrID)
+                        {
+                            throw new FutsRspError(string.Format("无权修改配置模板[{0}]", template.Name));
+                        }
+                    }
+                }
+            }
+
+            BasicTracker.ConfigTemplateTracker.UpdateConfigTemplate(t);
+            session.NotifyMgr("NotifyConfigTemplate", BasicTracker.ConfigTemplateTracker[t.ID]);
+            session.RspMessage("更新配置模板成功");
+
+
+
+        }
+
+        [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "DeleteConfigTemplate", "DeleteConfigTemplate - delete config template", "删除配置模板")]
+        public void CTE_DeleteConfigTemplate(ISession session, int template_id)
+        {
+            Manager manager = session.GetManager();
+            ConfigTemplate template = BasicTracker.ConfigTemplateTracker[template_id];
+            if (template == null)
+            {
+                throw new FutsRspError("指定配置模板不存在");
+            }
+            if (template.Domain_ID != manager.domain_id)
+            {
+                throw new FutsRspError("配置模板与管理员不属于同一域");
+            }
+            if (!manager.IsInRoot())
+            {
+                if (template.Manager_ID != manager.BaseMgrID)
+                {
+                    throw new FutsRspError(string.Format("无权删除配置模板[{0}]", template.Name));
+                }
+            }
+
+            //delete config template
+            BasicTracker.ConfigTemplateTracker.DeleteConfigTemplate(template_id);
+
+            session.NotifyMgr("NotifyDeleteConfigTemplate", template);
+            session.RspMessage("删除配置模板成功");
+        }
+
+        #endregion
+
     }
 
 

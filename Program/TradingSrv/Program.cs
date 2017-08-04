@@ -101,9 +101,6 @@ namespace TraddingSrvCLI
                                     TLCtxHelper.IsReady = true;
 
                                     TLCtxHelper.PrintVersion();
-
-                                    logger.Info("cli run to here");
-                                   
                                     while (true)
                                     {
                                         Thread.Sleep(1000);

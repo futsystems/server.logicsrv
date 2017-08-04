@@ -46,7 +46,9 @@ namespace TradingLib.Common
         MarginTemplateTracker margintracker;
         //计算策略模板
         ExStrategyTemplateTracker exstrategytracker;
-
+        //配置模板
+        ConfigTemplateTracker cfgtemplatetracker;
+        
         //交易帐户个人信息维护器
         AccountProfileTracker accprofiletracker;
         
@@ -300,6 +302,18 @@ namespace TradingLib.Common
             }
         }
 
+        /// <summary>
+        /// 配置模板维护器
+        /// </summary>
+        public static ConfigTemplateTracker ConfigTemplateTracker
+        {
+            get
+            {
+                if (defaultinstance.cfgtemplatetracker == null)
+                    defaultinstance.cfgtemplatetracker = new ConfigTemplateTracker();
+                return defaultinstance.cfgtemplatetracker;
+            }
+        }
         /// <summary>
         /// 交易帐户通道绑定维护器
         /// </summary>

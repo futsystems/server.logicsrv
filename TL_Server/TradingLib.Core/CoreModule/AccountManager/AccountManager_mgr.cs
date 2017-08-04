@@ -430,6 +430,16 @@ namespace TradingLib.Core
             this.UpdateAccountExStrategyTemplate(account, templateid);
             session.RspMessage("更新帐户交易参数模板成功");
         }
+
+        [PermissionRequiredAttr("r_account_edit_template")]
+        [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "UpdateAccountConfigTemplate", "UpdateAccountConfigTemplate - update account config template set", "更新帐户配置模板")]
+        public void CTE_UpdateAccountConfigTemplate(ISession session, string account, int templateid)
+        {
+            session.GetManager().PermissionCheckAccount(account);
+            this.UpdateAccountConfigTemplate(account, templateid);
+            session.RspMessage("更新帐户配置模板成功");
+        }
+
         #endregion
 
 

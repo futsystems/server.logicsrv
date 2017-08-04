@@ -21,7 +21,19 @@ namespace TradingLib.Common
         {
             CommissionTemplate template = null;
             
+            //通过设定的手续费模板ID查找模板数据
             template  = BasicTracker.CommissionTemplateTracker[account.Commission_ID];
+
+            //若没有制定手续费模板 则通过配置模板中的手续费模板来查找模板数据
+            if (template == null)
+            {
+                var cfg = BasicTracker.ConfigTemplateTracker[account.Config_ID];
+                if (cfg != null)
+                {
+                    template = BasicTracker.CommissionTemplateTracker[cfg.Commission_ID];
+                }
+            }
+            //若没有设定配置模板则通过所属管理员获取管理员设定的手续费ID
             if (template == null)
             {
                 Manager m = BasicTracker.ManagerTracker[account.Mgr_fk];
@@ -34,7 +46,6 @@ namespace TradingLib.Common
                     m = m.ParentManager;
                 }
             }
-
             return template;
         }
 
@@ -45,7 +56,19 @@ namespace TradingLib.Common
         /// <returns></returns>
         static MarginTemplate GetMarginTemplate(this IAccount account)
         {
-            return BasicTracker.MarginTemplateTracker[account.Margin_ID];
+            MarginTemplate template = null;
+            template = BasicTracker.MarginTemplateTracker[account.Margin_ID];
+
+            if (template == null)
+            {
+                var cfg = BasicTracker.ConfigTemplateTracker[account.Config_ID];
+                if (cfg != null)
+                {
+                    template = BasicTracker.MarginTemplateTracker[cfg.Margin_ID];
+                }
+            }
+
+            return template;
         }
 
 

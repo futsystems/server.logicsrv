@@ -78,6 +78,10 @@ namespace TradingLib.API
         /// </summary>
         int ExStrategy_ID { get; set; }
 
+        /// <summary>
+        /// 配置模板ID
+        /// </summary>
+        int Config_ID { get; set; }
         #endregion
 
         #region 结算与结算数据加载

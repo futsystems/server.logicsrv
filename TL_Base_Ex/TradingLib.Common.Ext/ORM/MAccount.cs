@@ -64,6 +64,7 @@ namespace TradingLib.ORM
         public int Margin_ID { get; set; }
         public int Commission_ID { get; set; }
         public int exstrategy_id { get; set; }
+        public int config_id { get; set; }
         public int domain_id { get; set; }
         
         public long Confrim_TimeStamp { get; set; }
@@ -121,7 +122,7 @@ namespace TradingLib.ORM
             account.Mgr_fk = fields.Mgr_fk;
             account.Commission_ID = fields.Commission_ID;
             account.Margin_ID = fields.Margin_ID;
-            //account.CreditSeparate = fields.CreditSeparate;
+            account.Config_ID = fields.config_id;
             account.ExStrategy_ID = fields.exstrategy_id;
             account.Currency = fields.Currency;
             account.Deleted = fields.Deleted;
@@ -355,6 +356,21 @@ namespace TradingLib.ORM
                 db.Connection.Execute(query);
             }
         }
+
+        /// <summary>
+        /// 更新账户配置模板
+        /// </summary>
+        /// <param name="account"></param>
+        /// <param name="templateid"></param>
+        public static void UpdateAccountConfigTemplate(string account, int templateid)
+        {
+            using (DBMySql db = new DBMySql())
+            {
+                string query = String.Format("UPDATE accounts SET config_id = {0} WHERE account = '{1}'", templateid, account);
+                db.Connection.Execute(query);
+            }
+        }
+
 
         /// <summary>
         /// 更新帐户的MAC地址
