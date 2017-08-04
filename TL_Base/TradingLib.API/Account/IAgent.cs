@@ -47,6 +47,10 @@ namespace TradingLib.API
         /// </summary>
         int ExStrategy_ID { get; set; }
 
+        /// <summary>
+        /// 默认配置模板
+        /// </summary>
+        int Default_Config_ID { get; set; }
 
         /// <summary>
         /// 创建时间

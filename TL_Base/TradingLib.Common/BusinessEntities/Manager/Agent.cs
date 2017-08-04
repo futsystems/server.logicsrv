@@ -80,6 +80,11 @@ namespace TradingLib.Common
         /// </summary>
         public bool Freezed { get; set; }
 
+        /// <summary>
+        /// 默认配置模板
+        /// </summary>
+        public int Default_Config_ID { get; set; }
+
     }
 
 

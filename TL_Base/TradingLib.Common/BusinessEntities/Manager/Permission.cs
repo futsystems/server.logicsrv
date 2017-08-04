@@ -123,6 +123,8 @@ namespace TradingLib.Common
         [PermissionFieldAttr("添加/编辑模板", "添加/编辑手续费、保证金、交易参数模板")]
         public bool r_template_edit { get; set; }
 
+        [PermissionFieldAttr("设定默认配置模板", "设定账户添加时候所采用的配置模板")]
+        public bool r_default_config_template { get; set; }
 
         /// <summary>
         /// 获取某个字段值

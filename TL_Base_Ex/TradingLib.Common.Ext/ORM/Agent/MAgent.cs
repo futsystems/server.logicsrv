@@ -67,6 +67,22 @@ namespace TradingLib.ORM
                 db.Connection.Execute(query);
             }
         }
+
+        /// <summary>
+        /// 更新代理默认配置模板
+        /// </summary>
+        /// <param name="agent"></param>
+        public static void UpdateAgentDefaultConfigTemplate(AgentImpl agent)
+        {
+            using (DBMySql db = new DBMySql())
+            {
+
+                string query = String.Format("UPDATE agents SET  default_config_id = '{0}'  WHERE id = '{1}'", agent.Default_Config_ID, agent.ID);
+                db.Connection.Execute(query);
+            }
+        }
+
+
         /// <summary>
         /// 更新手续费模板
         /// </summary>

@@ -116,5 +116,8 @@ namespace TradingLib.API
         /// <param name="account"></param>
         /// <param name="id"></param>
         void UpdateAccountExStrategyTemplate(string account, int template_id);
+
+
+        void UpdateAccountConfigTemplate(string account, int template_id,bool force);
     }
 }

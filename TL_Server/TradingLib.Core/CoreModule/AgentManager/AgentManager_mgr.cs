@@ -209,6 +209,46 @@ namespace TradingLib.Core
 
         }
 
+        [PermissionRequiredAttr("r_default_config_template")]
+        [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "UpdateAgentDefaultConfigTemplate", "UpdateAgentDefaultConfigTemplate -update agent default config ", "更新代理默认配置模板", QSEnumArgParseType.Json)]
+        public void CTE_UpdateAgentDefaultConfigTemplate(ISession session, string json)
+        {
+            Manager manager = session.GetManager();
+
+            var data = json.DeserializeObject();
+            string account = data["account"].ToString();
+            int configId = int.Parse(data["config_id"].ToString());
+            bool setacc = bool.Parse(data["setaccount"].ToString());
+
+            session.GetManager().PermissionCheckManagerAccount(account);
+
+
+            AgentImpl agent = BasicTracker.AgentTracker[account];
+            agent.Default_Config_ID = configId;
+            ORM.MAgent.UpdateAgentDefaultConfigTemplate(agent);
+
+            if (setacc)
+            {
+                Manager mgr = BasicTracker.ManagerTracker[account];
+
+                foreach (var acc in mgr.GetVisibleAccount())
+                {
+                    session.GetManager().PermissionCheckAccount(acc.ID);
+
+                    TLCtxHelper.ModuleAccountManager.UpdateAccountConfigTemplate(acc.ID, configId, true);
+                    System.Threading.Thread.Sleep(100);
+                }
+            }
+
+            //通知代理账户变更
+            session.NotifyMgr("NotifyAgent", agent);
+            session.RspMessage("更新会员默认配置模板成功");
+
+
+        }
+
+
+
 
         #endregion
 

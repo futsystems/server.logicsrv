@@ -285,7 +285,6 @@ namespace TradingLib.Core
         /// 查询保证金模板
         /// </summary>
         /// <param name="session"></param>
-        [PermissionRequiredAttr("r_template_edit")]
         [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "QryMarginTemplate", "QryMarginTemplate - qry margin template", "查询保证金模板")]
         public void CTE_QryMarginTemplate(ISession session)
         {
