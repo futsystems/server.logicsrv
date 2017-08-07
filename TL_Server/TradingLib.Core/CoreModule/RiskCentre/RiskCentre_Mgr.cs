@@ -1,4 +1,7 @@
-﻿using System;
+﻿//Copyright 2013 by FutSystems,Inc.
+//20170807 完善配置模板与账户风控规则添加 删除 加载统一操作逻辑
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -14,58 +17,43 @@ namespace TradingLib.Core
         public void CTE_QryRuleSet(ISession session)
         {
             RuleClassItem[] items = this.dicRule.Values.ToArray();
-            int totalnum = items.Length;
-            if (totalnum > 0)
-            {
-                for (int i = 0; i < totalnum; i++)
-                {
-                    session.ReplyMgr(items[i], i == totalnum - 1);
-                }
-            }
-            else
-            {
-                session.ReplyMgr(null);
-            }
+            session.ReplyMgrArray(items);
         }
 
         [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "QryRuleItem", "QryRuleItem - qry rule item of account via type", "查询交易帐户风控项目", QSEnumArgParseType.Json)]
         public void CTE_QryRuleItem(ISession session, string json)
         {
-
             var req = json.DeserializeObject();
-            string acct = req["account"].ToString();
+            string account = req["account"].ToString();
             QSEnumRuleType ruletype = req["ruletype"].ToString().ParseEnum<QSEnumRuleType>();
 
-            if (!acct.StartsWith(Const.CONFIG_TEMPLATE_PREFIX))
+            if (!account.StartsWith(Const.CONFIG_TEMPLATE_PREFIX))
             {
                 List<RuleItem> items = new List<RuleItem>();
-                IAccount account = TLCtxHelper.ModuleAccountManager[acct];
-                if (account == null)
-                {
-                    throw new FutsRspError("交易帐户不存在");
-                }
-                //从内存风控实例 生成ruleitem
+                session.GetManager().PermissionCheckAccount(account);
+                
+                //从风控数据结构返回风控规则
                 if (ruletype == QSEnumRuleType.OrderRule)
                 {
-                    foreach (IOrderCheck oc in GetOrderCheck(account.ID))
+                    foreach (IOrderCheck oc in GetOrderCheck(account))
                     {
                         items.Add(RuleItem.IRule2RuleItem(oc));
                     }
                 }
                 else if (ruletype == QSEnumRuleType.AccountRule)
                 {
-                    foreach (IAccountCheck ac in GetAccountCheck(account.ID))
+                    foreach (IAccountCheck ac in GetAccountCheck(account))
                     {
                         items.Add(RuleItem.IRule2RuleItem(ac));
                     }
                 }
-
                 session.ReplyMgrArray(items.ToArray());
 
             }
             else
             {
-                IEnumerable<RuleItem> items = ORM.MRuleItem.SelectRuleItem(acct, ruletype).Select(item => { GenRuleItemInfo(ref item); return item; });
+                //返回配置模板的风控规则
+                IEnumerable<RuleItem> items = ORM.MRuleItem.SelectRuleItem(account, ruletype).Select(item => { GenRuleItemInfo(ref item); return item; });
                 session.ReplyMgrArray(items.ToArray());
             }
         }
@@ -76,25 +64,21 @@ namespace TradingLib.Core
             RuleItem item = json.DeserializeObject<RuleItem>();
             if (!item.Account.StartsWith(Const.CONFIG_TEMPLATE_PREFIX))
             {
-                IAccount account = TLCtxHelper.ModuleAccountManager[item.Account];
-                //判断帐户是否存在
-                if (account != null)
+                session.GetManager().PermissionCheckAccount(item.Account);
+                //id不为0 更新风控规则 删除后然后再添加
+                if (item.ID != 0)
                 {
-                    //id不为0 更新风控规则 删除后然后再添加
-                    if (item.ID != 0)
-                    {
-                        //更新数据库
-                        ORM.MRuleItem.UpdateRuleItem(item);
-                        //重新加载账户风控规则
-                        LoadRiskRule(account);
-                    }
-                    else //添加到数据库然后再加入到帐户规则中
-                    {
-                        //插入数据库
-                        ORM.MRuleItem.InsertRuleItem(item);
-                        //重新加载账户风控规则
-                        LoadRiskRule(account);
-                    }
+                    //更新数据库
+                    ORM.MRuleItem.UpdateRuleItem(item);
+                    //重新加载账户风控规则
+                    LoadRiskRule(TLCtxHelper.ModuleAccountManager[item.Account]);
+                }
+                else //添加到数据库然后再加入到帐户规则中
+                {
+                    //插入数据库
+                    ORM.MRuleItem.InsertRuleItem(item);
+                    //重新加载账户风控规则
+                    LoadRiskRule(TLCtxHelper.ModuleAccountManager[item.Account]);
                 }
             }
             else
@@ -108,9 +92,10 @@ namespace TradingLib.Core
                 {
                     //插入数据库
                     ORM.MRuleItem.InsertRuleItem(item);
-
+                    //从配置模板ID获得对应的template_id
                     string[] rec = item.Account.Split('_');
                     int template_id = int.Parse(rec[2]);
+                    //重新加载配置模板对应账户的风控规则
                     ReloadConfigTemplateRiskRule(template_id);
                     //生成item 描述等信息
                     GenRuleItemInfo(ref item);
@@ -126,6 +111,8 @@ namespace TradingLib.Core
             RuleItem item = json.DeserializeObject<RuleItem>();
             if (!item.Account.StartsWith(Const.CONFIG_TEMPLATE_PREFIX))
             {
+                session.GetManager().PermissionCheckAccount(item.Account);
+
                 var rule = ORM.MRuleItem.SelectRuleItem(item.ID);
                 if (rule == null)
                 {
@@ -137,16 +124,13 @@ namespace TradingLib.Core
                     throw new FutsRspError(string.Format("由模板创建，无法删除", item.ID));
                 }
 
-                //账户自己的风控规则可以删除
-                IAccount account = TLCtxHelper.ModuleAccountManager[item.Account];
+                //删除数据库记录并重新加载账户风控规则
                 ORM.MRuleItem.DelRulteItem(item);
-                LoadRiskRule(account);
+                LoadRiskRule(TLCtxHelper.ModuleAccountManager[item.Account]);
 
                 //这里需要通过风控规则来解除交易帐户的警告，如果该警告不是该规则触发
-                if (account != null)
-                {
-                    TLCtxHelper.ModuleRiskCentre.Warn(account.ID, false);//解除帐户警告
-                }
+                TLCtxHelper.ModuleRiskCentre.Warn(item.Account, false);//解除帐户警告
+                
             }
             else
             {
@@ -164,6 +148,7 @@ namespace TradingLib.Core
             session.RspMessage("风控规则删除成功");
         }
 
+        #region 辅助函数
         /// <summary>
         /// 配置模板变化后 重新加载绑定该模板的账户风控规则
         /// </summary>
@@ -211,6 +196,9 @@ namespace TradingLib.Core
                 }
             }
         }
+        #endregion
+
+
 
         [PermissionRequiredAttr("r_execution")]
         [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "FlatAllPosition", "FlatAllPosition - falt all position", "平调所有子账户持仓", QSEnumArgParseType.Json)]

@@ -1,4 +1,7 @@
-﻿using System;
+﻿//Copyright 2013 by FutSystems,Inc.
+//20170807 将风控规则处理逻辑从Account对象集中放到风控模块内部
+
+using System;
 using System.Collections.Generic;
 using System.Collections.Concurrent;
 using System.Linq;
@@ -16,7 +19,7 @@ namespace TradingLib.Core
         /// <summary>
         /// 加载风控规则从风控规则dll中加载对应的类然后用于每个交易账户设定规则进行实例化
         /// </summary>
-        private void LoadRulePlugin()
+        void LoadRulePlugin()
         {
             dicRule.Clear();
             foreach (Type t in PluginHelper.LoadOrderRule())
@@ -76,6 +79,10 @@ namespace TradingLib.Core
 
                 }
             }
+            else
+            {
+                logger.Warn(string.Format("RiskRule:{0} plugin not loaded", item.RuleName));
+            }
         }
         #endregion
 
@@ -87,7 +94,7 @@ namespace TradingLib.Core
         /// <param name="a"></param>
         public void LoadRiskRule(IAccount account)
         {
-            logger.Info(string.Format("Account:{0} Load RiskRule", account.ID));
+            logger.Info(string.Format("Load Account:{0}'s RiskRule", account.ID));
 
             ClearRiskRule(account.ID);
             bool anyrule = false;
@@ -102,13 +109,13 @@ namespace TradingLib.Core
                 LoadRuleItem(account, item);
             }
 
-            var cfgtemplate = BasicTracker.ConfigTemplateTracker[account.Config_ID];
-            if (cfgtemplate != null)
+            //没有加载任何委托风控 则尝试从配置模板中加载委托风控
+            if (!anyrule)
             {
-                IEnumerable<RuleItem> ruleitems = ORM.MRuleItem.SelectRuleItem(Const.CONFIG_TEMPLATE_PREFIX + cfgtemplate.ID.ToString());
-                //没有加载任何委托风控 则从配置模板中加载委托风控
-                if (!anyrule)
+                var cfgtemplate = BasicTracker.ConfigTemplateTracker[account.Config_ID];
+                if (cfgtemplate != null)
                 {
+                    IEnumerable<RuleItem> ruleitems = ORM.MRuleItem.SelectRuleItem(Const.CONFIG_TEMPLATE_PREFIX + cfgtemplate.ID.ToString());
                     foreach (var item in ruleitems)
                     {
                         LoadRuleItem(account, item);
@@ -123,7 +130,7 @@ namespace TradingLib.Core
         /// <param name="account"></param>
         public void DeleteRiskRule(IAccount account)
         {
-            logger.Info(string.Format("Delete Account:{0}'s risk rule", account.ID));
+            logger.Info(string.Format("Delete Account:{0}'s RiskRule", account.ID));
             ClearRiskRule(account.ID);
             ORM.MRuleItem.DelRulteItem(account.ID);
         }
@@ -135,7 +142,7 @@ namespace TradingLib.Core
         /// </summary>
         void BatchLoadRiskRule()
         {
-            logger.Info("Load risk rule for account");
+            logger.Info("Batch Load RiskRule");
             IEnumerable<RuleItem> ruleitems = ORM.MRuleItem.SelectAllRuleItems();
             foreach (IAccount account in TLCtxHelper.ModuleAccountManager.Accounts)
             {
@@ -167,6 +174,10 @@ namespace TradingLib.Core
         ConcurrentDictionary<string, ConcurrentDictionary<int, IOrderCheck>> orderCheckMap = new ConcurrentDictionary<string, ConcurrentDictionary<int, IOrderCheck>>();
         ConcurrentDictionary<string, ConcurrentDictionary<int, IAccountCheck>> accountCheckMap = new ConcurrentDictionary<string, ConcurrentDictionary<int, IAccountCheck>>();
 
+        /// <summary>
+        /// 将委托规则放到风控规则数据结构
+        /// </summary>
+        /// <param name="check"></param>
         void CacheRiskRule(IOrderCheck check)
         {
             ConcurrentDictionary<int, IOrderCheck> checkmap = null;
@@ -181,6 +192,10 @@ namespace TradingLib.Core
             }
         }
 
+        /// <summary>
+        /// 将账户规则放到风控规则数据结构
+        /// </summary>
+        /// <param name="check"></param>
         void CacheRiskRule(IAccountCheck check)
         {
             ConcurrentDictionary<int, IAccountCheck> checkmap = null;
@@ -195,6 +210,10 @@ namespace TradingLib.Core
             }
         }
 
+        /// <summary>
+        /// 从风控数据结构中清楚某个账户的风控规则
+        /// </summary>
+        /// <param name="account"></param>
         void ClearRiskRule(string account)
         {
             ConcurrentDictionary<int, IOrderCheck> checkmap1 = null;
@@ -205,7 +224,7 @@ namespace TradingLib.Core
         }
 
         /// <summary>
-        /// 获得所有委托风控
+        /// 获得交易账户所有委托风控
         /// </summary>
         /// <param name="account"></param>
         /// <returns></returns>
@@ -220,7 +239,7 @@ namespace TradingLib.Core
         }
 
         /// <summary>
-        /// 获得所有账户风控
+        /// 获得交易账户所有账户风控
         /// </summary>
         /// <param name="account"></param>
         /// <returns></returns>

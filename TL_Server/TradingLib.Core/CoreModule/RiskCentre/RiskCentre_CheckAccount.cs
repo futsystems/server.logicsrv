@@ -18,11 +18,10 @@ namespace TradingLib.Core
             try
             {
                 string msg = string.Empty;
-                if (!CheckAccountRule(a.ID,out msg) && msg != string.Empty)//账户检查不通过并且有返回消息则我们打印消息
+                if (!CheckAccountRule(a.ID,out msg) && !string.IsNullOrEmpty(msg))
                 {
                     logger.Warn(msg);
                 }
-                
             }
             catch (Exception ex)
             {
