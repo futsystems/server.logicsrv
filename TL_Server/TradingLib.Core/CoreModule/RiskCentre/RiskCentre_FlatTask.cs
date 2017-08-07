@@ -25,8 +25,7 @@ namespace TradingLib.Core
                 if (sec.MarketTime == null)
                     continue;
                 DateTime extime = Util.ToDateTime(sec.Exchange.GetExchangeTime().ToTLDate(), sec.MarketTime.CloseTime);
-
-                DateTime systime = sec.Exchange.ConvertToSystemTime(extime);
+                DateTime systime = sec.Exchange.ConvertToSystemTime(extime);//交易所时间转换成当前系统时间
 
                 if (!closetimemap.Keys.Contains(systime))
                 {
@@ -42,10 +41,15 @@ namespace TradingLib.Core
 
         }
 
+        /// <summary>
+        /// 品种强平任务
+        /// </summary>
+        /// <param name="closetime"></param>
+        /// <param name="list"></param>
         void RegisterMarketCloseFlatTask(DateTime closetime, List<SecurityFamily> list)
         {
             
-            DateTime flattime = closetime.AddMinutes(-1*GlobalConfig.FlatTimeAheadOfMarketClose);//提前5分钟强平
+            DateTime flattime = closetime.AddMinutes(-1*GlobalConfig.FlatTimeAheadOfMarketClose);
             logger.Info(string.Format("Register Close Flat Task,CloseTime:{0} FlatTime:{1}", closetime.ToString("HH:mm:ss"), flattime.ToString("HH:mm:ss")));
             TaskProc task = new TaskProc(this.UUID, "收盘前强平-" + flattime.ToString("HH:mm:ss"), flattime.Hour, flattime.Minute, flattime.Second, delegate() { FlatPositoinBeforeClose(closetime, list); });
             TLCtxHelper.ModuleTaskCentre.RegisterTask(task);
@@ -80,9 +84,6 @@ namespace TradingLib.Core
                     Thread.Sleep(50);
                 }
             }
-
-            
         }
-
     }
 }

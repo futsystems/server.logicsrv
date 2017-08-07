@@ -254,7 +254,6 @@ namespace TradingLib.Core
 
         /// <summary>
         /// 先撤一组委托 然后再强平一组持仓，
-        /// pendingpostions可以为
         /// </summary>
         /// <param name="orders"></param>
         /// <param name="pendingpositons"></param>

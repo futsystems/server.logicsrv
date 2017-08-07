@@ -24,7 +24,6 @@ namespace TradingLib.Core
         ConfigDB _cfgdb;
 
         bool _marketopencheck = true;
-        public bool MarketOpenTimeCheck { get { return _marketopencheck; } }
 
         int _orderlimitsize = 10;
         string commentNoPositionForFlat = "无可平持仓";
@@ -107,7 +106,7 @@ namespace TradingLib.Core
             _cffexLimit = _cfgdb["CFFEXLimit"].AsBool();
 
 
-
+            #region 二元期权相关设置
             if (!_cfgdb.HaveConfig("BO-M1Left"))
             {
                 _cfgdb.UpdateConfig("BO-M1Left", QSEnumCfgType.Int, 30, "M1下单剩余时间");
@@ -155,6 +154,8 @@ namespace TradingLib.Core
                 _cfgdb.UpdateConfig("EnableStkT0", QSEnumCfgType.Bool,false, "股票交易T+0");
             }
             _enableStkT0 = _cfgdb["EnableStkT0"].AsBool();
+            #endregion
+
 
             //加载风空规则
             LoadRulePlugin();

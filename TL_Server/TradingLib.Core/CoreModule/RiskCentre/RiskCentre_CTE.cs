@@ -23,7 +23,18 @@ namespace TradingLib.Core
 
             foreach (IAccount account in TLCtxHelper.ModuleAccountManager.Accounts)
             {
-                this.CheckAccountRule(account);
+                try
+                {
+                    string msg = string.Empty;
+                    if (!CheckAccountRule(account.ID, out msg) && !string.IsNullOrEmpty(msg))
+                    {
+                        logger.Warn(msg);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    logger.Error(string.Format("Check Account Rule Error:{0}", ex.ToString()));
+                }            
             }
         }
 

@@ -322,12 +322,6 @@ namespace TradingLib.Core
             return false;
         }
 
-        //void PositionFlatFail(Position pos, string error)
-        //{
-        //    TLCtxHelper.EventSystem.FirePositionFlatEvent(this, new PositionFlatEventArgs(pos, error));
-        //    //if (PositionFlatEvent != null)
-        //    //    PositionFlatEvent(this, new PositionFlatEventArgs(pos, error));
-        //}
         /// <summary>
         /// 维护风控任务列表
         /// 风控任务包含强平所有持仓，强平某个持仓，撤单等

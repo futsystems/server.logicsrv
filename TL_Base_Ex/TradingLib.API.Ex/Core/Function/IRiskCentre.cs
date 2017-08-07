@@ -8,12 +8,6 @@ namespace TradingLib.API
     public interface IRiskCentre
     {
         /// <summary>
-        /// 时间检查标志
-        /// </summary>
-        bool MarketOpenTimeCheck { get; }
-
-
-        /// <summary>
         /// 删除交易账户风控规则
         /// </summary>
         /// <param name="account"></param>
