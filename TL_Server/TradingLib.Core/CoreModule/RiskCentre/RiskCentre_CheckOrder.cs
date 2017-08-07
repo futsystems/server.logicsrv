@@ -338,10 +338,6 @@ namespace TradingLib.Core
             try
             {
                 msg = "";
-                //延迟加载规则,这样系统就没有必要加载不没有登入的账户规则
-                if (!account.RuleItemLoaded)
-                    this.LoadRuleItem(account);
-
                 //委托开仓 平仓项目检查
                 Position pos = account.GetPosition(o.Symbol, o.PositionSide);//当前对应持仓
                 if (o.IsEntryPosition)//开仓执行资金检查
@@ -519,7 +515,7 @@ namespace TradingLib.Core
                     }
 
                     //执行账号风控规则检查
-                    if (!account.CheckOrderRule(o, out msg))//如果通过风控检查 则置委托状态为Placed
+                    if(!CheckOrderRule(o,out msg))
                     {
                         logger.Info("Order rejected by[Order Rule Check]" + o.GetOrderInfo());
                         

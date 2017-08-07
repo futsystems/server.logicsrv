@@ -272,10 +272,6 @@ namespace TradingLib.Common
             //清空出入金与交易所结算数据
             settlementlist.Clear();
             cashtranslsit.Clear();
-            //重置风控规则
-            ClearAccountCheck();
-            ClearOrderCheck();
-            _ruleitemloaded = false;
         }
 
 

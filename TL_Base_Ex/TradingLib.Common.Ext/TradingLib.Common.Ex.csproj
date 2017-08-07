@@ -153,7 +153,6 @@
     <Compile Include="Accounts\Account_IFinanceTotal.cs" />
     <Compile Include="Accounts\Account_IGeneralCheck.cs" />
     <Compile Include="Accounts\Account_IAccOperation.cs" />
-    <Compile Include="Accounts\Account_IRiskRule.cs" />
     <Compile Include="Utils\Account\AccountUtils_FinCal.cs" />
     <Compile Include="Utils\Account\AccountUtils_TradingInfoEx.cs" />
     <Compile Include="Accounts\Account_IAccTradingInfo.cs" />

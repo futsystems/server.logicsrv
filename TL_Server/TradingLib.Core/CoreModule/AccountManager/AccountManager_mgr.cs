@@ -486,10 +486,10 @@ namespace TradingLib.Core
                 this.UpdateAccountMarginTemplate(account, 0);
                 this.UpdateAccountExStrategyTemplate(account, 0);
                 //删除风控规则
-                TLCtxHelper.ModuleRiskCentre.DelAccountRuleSet(this[account]);
+                TLCtxHelper.ModuleRiskCentre.DeleteRiskRule(this[account]);
             }
             //重置风控规则
-            TLCtxHelper.ModuleRiskCentre.ResetRuleSet(this[account]);
+            TLCtxHelper.ModuleRiskCentre.LoadRiskRule(this[account]);
         }
 
         #endregion

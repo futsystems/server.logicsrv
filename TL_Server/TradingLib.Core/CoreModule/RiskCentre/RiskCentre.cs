@@ -168,7 +168,7 @@ namespace TradingLib.Core
             TLCtxHelper.EventIndicator.GotOrderErrorEvent += new OrderErrorDelegate(this.GotOrderError);
 
             //交易帐户激活
-            TLCtxHelper.EventAccount.AccountActiveEvent += new Action<IAccount>(this.ResetRuleSet);
+            TLCtxHelper.EventAccount.AccountActiveEvent += new Action<IAccount>(this.LoadRiskRule);
 
             //结算重置
             TLCtxHelper.EventSystem.SettleResetEvent += new EventHandler<SystemEventArgs>(EventSystem_SettleResetEvent);
@@ -192,9 +192,11 @@ namespace TradingLib.Core
             logger.Info("风控中心重置");
             //清空强平任务队列
             riskTasklist.Clear();
-
+            //清空风控规则
+            orderCheckMap.Clear();
+            accountCheckMap.Clear();
             //加载所有风控规则
-            LoadRuleItemAll();
+            BatchLoadRiskRule();
         }
 
         #endregion
@@ -202,7 +204,7 @@ namespace TradingLib.Core
         public void Start()
         {
             Util.StartStatus(this.PROGRAME);
-            LoadRuleItemAll();
+            BatchLoadRiskRule();
         }
 
         public void Stop()

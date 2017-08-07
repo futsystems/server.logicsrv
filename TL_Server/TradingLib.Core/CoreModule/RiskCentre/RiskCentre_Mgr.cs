@@ -40,28 +40,21 @@ namespace TradingLib.Core
             {
                 List<RuleItem> items = new List<RuleItem>();
                 IAccount account = TLCtxHelper.ModuleAccountManager[acct];
-
                 if (account == null)
                 {
                     throw new FutsRspError("交易帐户不存在");
                 }
-
-                if (!account.RuleItemLoaded)
-                {
-                    this.LoadRuleItem(account);//风控规则延迟加载,如果帐户没有加载则先加载帐户风控规则
-                }
-
                 //从内存风控实例 生成ruleitem
                 if (ruletype == QSEnumRuleType.OrderRule)
                 {
-                    foreach (IOrderCheck oc in account.OrderChecks)
+                    foreach (IOrderCheck oc in GetOrderCheck(account.ID))
                     {
                         items.Add(RuleItem.IRule2RuleItem(oc));
                     }
                 }
                 else if (ruletype == QSEnumRuleType.AccountRule)
                 {
-                    foreach (IAccountCheck ac in account.AccountChecks)
+                    foreach (IAccountCheck ac in GetAccountCheck(account.ID))
                     {
                         items.Add(RuleItem.IRule2RuleItem(ac));
                     }
@@ -73,7 +66,6 @@ namespace TradingLib.Core
             else
             {
                 IEnumerable<RuleItem> items = ORM.MRuleItem.SelectRuleItem(acct, ruletype).Select(item => { GenRuleItemInfo(ref item); return item; });
-
                 session.ReplyMgrArray(items.ToArray());
             }
         }
@@ -91,29 +83,17 @@ namespace TradingLib.Core
                     //id不为0 更新风控规则 删除后然后再添加
                     if (item.ID != 0)
                     {
-                        //删除旧的委托规则
-                        if (item.RuleType == QSEnumRuleType.OrderRule)
-                        {
-                            account.DelOrderCheck(item.ID);
-                        }
-                        else if (item.RuleType == QSEnumRuleType.AccountRule)
-                        {
-                            account.DelAccountCheck(item.ID);
-                        }
-
                         //更新数据库
                         ORM.MRuleItem.UpdateRuleItem(item);
-                        //添加新的委托规则
-                        LoadRuleItem(account, item);
+                        //重新加载账户风控规则
+                        LoadRiskRule(account);
                     }
                     else //添加到数据库然后再加入到帐户规则中
                     {
                         //插入数据库
-                        ORM.MRuleItem.InsertRuleItem(item);//数据先添加 获得全局ID号
-
-                        ResetRuleSet(account);
-
-                        //LoadRuleItem(account, item);
+                        ORM.MRuleItem.InsertRuleItem(item);
+                        //重新加载账户风控规则
+                        LoadRiskRule(account);
                     }
                 }
             }
@@ -159,9 +139,8 @@ namespace TradingLib.Core
 
                 //账户自己的风控规则可以删除
                 IAccount account = TLCtxHelper.ModuleAccountManager[item.Account];
-                this.DeleteRiskRule(item);
-
-                ResetRuleSet(account);
+                ORM.MRuleItem.DelRulteItem(item);
+                LoadRiskRule(account);
 
                 //这里需要通过风控规则来解除交易帐户的警告，如果该警告不是该规则触发
                 if (account != null)
@@ -185,6 +164,10 @@ namespace TradingLib.Core
             session.RspMessage("风控规则删除成功");
         }
 
+        /// <summary>
+        /// 配置模板变化后 重新加载绑定该模板的账户风控规则
+        /// </summary>
+        /// <param name="template_id"></param>
         void ReloadConfigTemplateRiskRule(int template_id)
         {
             //重新加载某个配置模板所设账户的风控规则
@@ -201,13 +184,11 @@ namespace TradingLib.Core
                     //如果账户没有设定任何风控规则 则加载模板规则
                     if (!allrule.Any(rule => rule.Account == account.ID))
                     {
-                        account.ClearAccountCheck();
-                        account.ClearOrderCheck();
+                        ClearRiskRule(account.ID);
                         foreach (var rule in ruleitems)
                         {
                             LoadRuleItem(account, rule);
                         }
-                        account.RuleItemLoaded = true;
                     }
                 }
             }

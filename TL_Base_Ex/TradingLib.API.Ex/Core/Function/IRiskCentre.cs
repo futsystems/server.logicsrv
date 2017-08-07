@@ -17,13 +17,14 @@ namespace TradingLib.API
         /// 删除交易账户风控规则
         /// </summary>
         /// <param name="account"></param>
-        void DelAccountRuleSet(IAccount account);
+        void DeleteRiskRule(IAccount account);
 
         /// <summary>
         /// 重置交易账户风控规则
         /// </summary>
         /// <param name="account"></param>
-        void ResetRuleSet(IAccount account);
+        void LoadRiskRule(IAccount account);
+
         /// <summary>
         /// 强平某个交易帐户的所有持仓
         /// </summary>

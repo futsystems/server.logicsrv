@@ -17,10 +17,8 @@ namespace TradingLib.Core
         {
             try
             {
-                if (!a.RuleItemLoaded)
-                    LoadRuleItem(a);
                 string msg = string.Empty;
-                if (!a.CheckAccountRule(out msg) && msg != string.Empty)//账户检查不通过并且有返回消息则我们打印消息
+                if (!CheckAccountRule(a.ID,out msg) && msg != string.Empty)//账户检查不通过并且有返回消息则我们打印消息
                 {
                     logger.Warn(msg);
                 }
