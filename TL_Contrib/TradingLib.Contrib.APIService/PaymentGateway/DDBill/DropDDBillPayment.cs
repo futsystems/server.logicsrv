@@ -55,6 +55,8 @@ namespace TradingLib.Contrib.Payment.DDBill
         public string pay_type { get; set; }
 
         public string PayUrl { get; set; }
+
+
         /// <summary>
         /// 交易账户
         /// </summary>

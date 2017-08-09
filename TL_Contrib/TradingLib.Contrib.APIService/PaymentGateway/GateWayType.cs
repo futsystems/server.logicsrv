@@ -98,5 +98,10 @@ namespace TradingLib.Contrib.APIService
         /// 汇潮支付
         /// </summary>
         Ecpss,
+
+        /// <summary>
+        /// 七彩支付
+        /// </summary>
+        Se7Pay,
     }
 }

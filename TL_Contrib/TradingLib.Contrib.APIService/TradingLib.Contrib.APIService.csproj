@@ -134,6 +134,10 @@
     <Compile Include="PaymentGateway\MoBo\MoBoGateWay.cs" />
     <Compile Include="PaymentGateway\MoBo\MoboHelper.cs" />
     <Compile Include="PaymentGateway\MoBo\MoboSignHelper.cs" />
+    <Compile Include="PaymentGateway\RSAUtil.cs" />
+    <Compile Include="PaymentGateway\Se7Pay\DropSe7Payment.cs" />
+    <Compile Include="PaymentGateway\Se7Pay\RSAHelper.cs" />
+    <Compile Include="PaymentGateway\Se7Pay\Se7PayGateWay.cs" />
     <Compile Include="PaymentGateway\SuiXingPay\SuiXingHelper.cs" />
     <Compile Include="PaymentGateway\SuiXingPay\SuiXingPayGateWay.cs" />
     <Compile Include="PaymentGateway\TFBPay\TFBPayGateWay.cs" />
