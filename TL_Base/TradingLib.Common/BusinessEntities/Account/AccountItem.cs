@@ -266,6 +266,7 @@ namespace TradingLib.Common
         {
             string[] rec = msg.Split(',');
             AccountItem account = new AccountItem();
+            int i = 0;
             account.Account = rec[0];
             account.Category = (QSEnumAccountCategory)Enum.Parse(typeof(QSEnumAccountCategory), rec[1]);
             account.OrderRouteType = (QSEnumOrderTransferType)Enum.Parse(typeof(QSEnumOrderTransferType), rec[2]);
@@ -296,7 +297,10 @@ namespace TradingLib.Common
             //account.CreditSeparate = bool.Parse(rec[27]);
             account.Margin_ID = int.Parse(rec[28]);
             account.ExStrategy_ID = int.Parse(rec[29]);
-            account.Config_ID = int.Parse(rec[30]);
+            
+            int.TryParse(rec[30], out i);
+            account.Config_ID = i;
+
             account.ConfigName = rec[31];
             //account.MAcctRiskRule = rec[32];
             account.Currency = (CurrencyType)Enum.Parse(typeof(CurrencyType), rec[33]);
