@@ -39,7 +39,7 @@ namespace TradingLib.Contrib.Payment.Se7Pay
             this.PublicKey = data["PublickKey"].ToString();
 
             string privateKey = RSAHelper.RSAPrivateKeyJava2DotNet(this.PrivateKey);
-            this.SuccessReponse = new { notify_status = "ok", notify_msg = "交易成功", sign = RSAHelper.RSASign("notify_status=ok&notify_msg=交易成功", privateKey) }.SerializeObject();
+            this.SuccessReponse = new { notify_status = "ok", notify_msg = "交易成功", sign = RSAHelper.RSASign("notify_msg=交易成功&notify_status=ok", privateKey) }.SerializeObject();
         }
 
 
