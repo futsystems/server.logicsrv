@@ -50,9 +50,9 @@ namespace TradingLib.Contrib.APIService
                             return tplTracker.Render(action,null);
                         }
                     case "DEPOSITFZ":
+                    case "DEPOSITSE7":
                         {
                             var tpl = tplTracker[action];
-
                             return tplTracker.Render(action, null);
                         }
                     case "WITHDRAW":

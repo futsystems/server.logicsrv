@@ -60,7 +60,6 @@ namespace TradingLib.Contrib.Payment.Se7Pay
             data.notify_url = APIGlobal.SrvNotifyUrl + "/se7pay";
             data.pay_type = "1";
             data.bank_id = operatioin.Bank;
-            data.bank_id = "03080000";
 
 
 
