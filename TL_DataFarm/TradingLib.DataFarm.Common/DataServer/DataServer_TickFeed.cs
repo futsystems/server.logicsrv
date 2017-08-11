@@ -26,6 +26,8 @@ namespace TradingLib.DataFarm.Common
         /// </summary>
         ConcurrentDictionary<string, ConcurrentDictionary<string, IConnection>> symKeyRegMap = new ConcurrentDictionary<string, ConcurrentDictionary<string, IConnection>>();
 
+        ConcurrentDictionary<string, ConcurrentDictionary<string, IConnection>> symKeyRegMapTickData = new ConcurrentDictionary<string, ConcurrentDictionary<string, IConnection>>();
+
         /// <summary>
         /// 行情插件列表
         /// </summary>
@@ -218,6 +220,7 @@ namespace TradingLib.DataFarm.Common
             if (k.UpdateType == "X" || k.UpdateType == "Q" || k.UpdateType == "F" || k.UpdateType == "S")
             {
                 Tick snapshot = Global.TickTracker[k.Exchange, k.Symbol];
+                #region 方式1 快照下发 有成交则发送一次快照，其余类型的数据更新快照 并500ms发送一次
                 //每次成交推送行情快照
                 if (k.UpdateType == "X")
                 {
@@ -229,6 +232,33 @@ namespace TradingLib.DataFarm.Common
                     //每500ms推送其余数据
                     snapshot.QuoteUpdate = true;
                 }
+                #endregion
+
+                #region 方式2 成交数据 报价数据 统计数据单独下发
+                if (k.UpdateType == "X")//成交数据
+                {
+                    NotifyTick2Connection(snapshot.ToTickData(TickDataImpl.TICKTYPE_TRADE));
+                    if (snapshot.QuoteUpdate)
+                    {
+                        NotifyTick2Connection(snapshot.ToTickData(TickDataImpl.TICKTYPE_QUOTE));
+                        snapshot.QuoteUpdate = false;
+                    }
+                }
+                else if (k.UpdateType == "Q")//盘口报价 周期下发
+                {
+                    //每500ms推送其余数据
+                    snapshot.QuoteUpdate = true;
+                }
+                else if (k.UpdateType == "F")//统计数据 下发
+                {
+                    NotifyTick2Connection(snapshot.ToTickData(TickDataImpl.TICKTYPE_STATISTIC));
+                }
+                else if (k.UpdateType == "S")//快照数据下发
+                {
+                    NotifyTick2Connection(snapshot.ToTickData(TickDataImpl.TICKTYPE_SNAPSHOT));
+                }
+                #endregion
+
             }
 
             //通过成交数据以及合约市场事件 驱动Bar数据生成器生成Bar数据
@@ -255,6 +285,7 @@ namespace TradingLib.DataFarm.Common
             {
                 if (!tick.QuoteUpdate) continue;
                 NotifyTick2Connections(tick);
+                NotifyTick2Connection(tick.ToTickData(TickDataImpl.TICKTYPE_QUOTE));
                 tick.QuoteUpdate = false;
             }
         }
@@ -265,6 +296,14 @@ namespace TradingLib.DataFarm.Common
             ticknotify.Tick = k;
             return  ticknotify.Data;
         }
+
+        byte[] CreateTLTickDataData(TickData k)
+        {
+            TickDataNotify tickdatanotify = new TickDataNotify();
+            tickdatanotify.TickData.Add(k);
+            return tickdatanotify.Data;
+        }
+
         byte[] CreateXLTickData(Tick k)
         {
             XLPacketData pkt = new XLPacketData(XLMessageType.T_RTN_MARKETDATA);
@@ -345,8 +384,32 @@ namespace TradingLib.DataFarm.Common
                             logger.Warn(string.Format("Conn FrontType:{0} not handled", conn.FrontType));
                             break;
                     }
+                }
+            }
+        }
 
-                    
+        
+        void NotifyTick2Connection(TickData k)
+        { 
+            ConcurrentDictionary<string, IConnection> target = null;
+            if (symKeyRegMapTickData.TryGetValue(k.GetUniqueKey(), out target))
+            {
+                byte[] tldata = null;
+                //遍历所有连接 按连接类型将数据发送到客户端
+                foreach (var conn in target.Values)
+                {
+                    switch (conn.FrontType)
+                    {
+                        case EnumFrontType.TLSocket:
+                            {
+                                if (tldata == null) tldata = CreateTLTickDataData(k);
+                                this._SendData(conn, tldata);
+                                break;
+                            }
+                        default:
+                            break;
+
+                    }
                 }
             }
         }
@@ -394,7 +457,18 @@ namespace TradingLib.DataFarm.Common
                     regpair.Value.TryRemove(conn.SessionID, out target);
                 }
             }
+
+            foreach (var regpair in symKeyRegMapTickData)
+            {
+                if (regpair.Value.Keys.Contains(conn.SessionID))
+                {
+                    regpair.Value.TryRemove(conn.SessionID, out target);
+                }
+            }
+
         }
+
+        static Version VER2_1_0 = new Version("2.1.0");
 
         /// <summary>
         /// 某个连接注册合约行情
@@ -416,24 +490,80 @@ namespace TradingLib.DataFarm.Common
                 Symbol sym = MDBasicTracker.SymbolTracker[request.Exchange,symbol];
                 if (sym == null) continue;
 
-                if (!symKeyRegMap.Keys.Contains(key))
+                if (conn.Version != null && conn.Version >= VER2_1_0)
                 {
-                    symKeyRegMap.TryAdd(key, new ConcurrentDictionary<string, IConnection>());
-                }
-                ConcurrentDictionary<string, IConnection> regmap = symKeyRegMap[key];
-                if(!regmap.Keys.Contains(conn.SessionID))
-                {
-                    regmap.TryAdd(conn.SessionID,conn);
-                    //客户端订阅后发送当前市场快照
-                    Tick k = Global.TickTracker[request.Exchange, symbol];
-                    if (k != null)
+                    if (!symKeyRegMapTickData.Keys.Contains(key))
                     {
-                        //TickNotify ticknotify = new TickNotify();
-                        //ticknotify.Tick = k;
-                        //this.SendData(conn, ticknotify);
-                        NotifyTick2Connection(k, conn);
+                        symKeyRegMapTickData.TryAdd(key, new ConcurrentDictionary<string, IConnection>());
+                    }
+                    ConcurrentDictionary<string, IConnection> regmap = symKeyRegMapTickData[key];
+                    if (!regmap.Keys.Contains(conn.SessionID))
+                    {
+                        regmap.TryAdd(conn.SessionID, conn);
+                        //客户端订阅后发送当前市场快照
+                        Tick k = Global.TickTracker[request.Exchange, symbol];
+                        if (k != null)
+                        {
+                            NotifyTick2Connection(k, conn);
+                        }
+                    }
+
+                }
+                else
+                {
+                    //老版行情注册
+                    if (!symKeyRegMap.Keys.Contains(key))
+                    {
+                        symKeyRegMap.TryAdd(key, new ConcurrentDictionary<string, IConnection>());
+                    }
+                    ConcurrentDictionary<string, IConnection> regmap = symKeyRegMap[key];
+                    if (!regmap.Keys.Contains(conn.SessionID))
+                    {
+                        regmap.TryAdd(conn.SessionID, conn);
+                        //客户端订阅后发送当前市场快照
+                        Tick k = Global.TickTracker[request.Exchange, symbol];
+                        if (k != null)
+                        {
+                            NotifyTick2Connection(k, conn);
+                        }
                     }
                 }
+            }
+        }
+
+        /// <summary>
+        /// 某个连接注销合约行情
+        /// </summary>
+        /// <param name="conn"></param>
+        /// <param name="request"></param>
+        void OnUngisterSymbol(IConnection conn, UnregisterSymbolTickRequest request)
+        {
+            foreach (var symbol in request.SymbolList)
+            {
+                if (string.IsNullOrEmpty(symbol)) continue;
+
+                //注销所有合约
+                if (symbol == "*")
+                {
+                    ClearSymbolRegisted(conn);
+                    break;
+                }
+                string key = string.Format("{0}-{1}", request.Exchange, symbol);
+
+                //旧版 没有正常注销合约 客户端切换报价列表后 仍然存在大量合约订阅 导致发送实时行情负荷增大
+                if (symKeyRegMap.Keys.Contains(key))
+                {
+                    ConcurrentDictionary<string, IConnection> regmap = symKeyRegMap[key];
+                    IConnection target = null;
+                    regmap.TryRemove(conn.SessionID, out target);
+                }
+                if (symKeyRegMapTickData.Keys.Contains(key))
+                {
+                    ConcurrentDictionary<string, IConnection> regmap = symKeyRegMapTickData[key];
+                    IConnection target = null;
+                    regmap.TryRemove(conn.SessionID, out target);
+                }
+
             }
         }
 
@@ -494,31 +624,7 @@ namespace TradingLib.DataFarm.Common
             }
         }
 
-        /// <summary>
-        /// 某个连接注销合约行情
-        /// </summary>
-        /// <param name="conn"></param>
-        /// <param name="request"></param>
-        void OnUngisterSymbol(IConnection conn, UnregisterSymbolTickRequest request)
-        {
-            foreach (var symbol in request.SymbolList)
-            {
-                if (string.IsNullOrEmpty(symbol)) continue;
-
-                //注销所有合约
-                if (symbol == "*")
-                {
-                    ClearSymbolRegisted(conn);
-                    break;
-                }
-                if (symKeyRegMap.Keys.Contains(symbol))
-                {
-                    ConcurrentDictionary<string, IConnection> regmap = symKeyRegMap[symbol];
-                    IConnection target = null;
-                    regmap.TryRemove(conn.SessionID, out target);
-                }
-            }
-        }
+        
 
 
     }

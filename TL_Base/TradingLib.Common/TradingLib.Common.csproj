@@ -71,6 +71,7 @@
     <Compile Include="BusinessEntities\BinaryOption\Utils\BinaryOptionUtisl.cs" />
     <Compile Include="BusinessEntities\BinaryOption\Util_TimeSpan.cs" />
     <Compile Include="BusinessEntities\Config\ConfigTemplateConfigTemplate.cs" />
+    <Compile Include="BusinessEntities\Data\Tick\TickData.cs" />
     <Compile Include="BusinessEntities\Manager\Agent.cs" />
     <Compile Include="BusinessEntities\Manager\AgentCommissionSplit.cs" />
     <Compile Include="BusinessEntities\Manager\AgentFinanceInfo.cs" />
@@ -90,6 +91,7 @@
     <Compile Include="Follow\FollowStrategyLite.cs" />
     <Compile Include="Follow\FollowStrategyStatus.cs" />
     <Compile Include="Follow\SignalConfig.cs" />
+    <Compile Include="Message\MarketData\TickData.cs" />
     <Compile Include="Utils\Util_Json.cs" />
     <Compile Include="BusinessEntities\Basic\Holiday\Calendar.cs" />
     <Compile Include="BusinessEntities\Basic\Holiday\HolidayCalculator.cs" />

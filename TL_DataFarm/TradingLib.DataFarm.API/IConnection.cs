@@ -41,6 +41,7 @@ namespace TradingLib.DataFarm.API
         /// </summary>
         IServiceHost ServiceHost { get; set; }
 
+        Version Version { get; set; }
         /// <summary>
         /// 回话编号
         /// </summary>

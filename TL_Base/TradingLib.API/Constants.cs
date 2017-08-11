@@ -11,7 +11,14 @@ namespace TradingLib.API
     /// </summary>
     public static class Const
     {
-        public const string APIVersion = "2.0.3";
+        /// <summary>
+        /// 版本号
+        /// 2.0.3
+        /// 
+        /// 2.1.0
+        /// 增加行情部分修改传输协议 通过TickData进行实时行情分发 压缩带宽
+        /// </summary>
+        public const string APIVersion = "2.1.0";
         /// <summary>
         /// 任务调度扫描频率
         /// 每隔多少毫秒扫描一次任务列表

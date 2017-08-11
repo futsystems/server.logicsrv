@@ -87,9 +87,9 @@ namespace TradingLib.Common
             return new byte[0];
         }
         // 4 bytes for length, 4 bytes for type
-        const int HEADERSIZE = 8;
-        const int LENGTHOFFSET = 0;
-        const int TYPEOFFSET = 4;
+        public const int HEADERSIZE = 8;
+        public const int LENGTHOFFSET = 0;
+        public const int TYPEOFFSET = 4;
 
 
 
@@ -232,6 +232,7 @@ namespace TradingLib.Common
                     case MessageTypes.XQRYTRADSPLITRESPONSE:
                     case MessageTypes.XQRYPRICEVOLRESPONSE:
                     case MessageTypes.XQRYMINUTEDATARESPONSE:
+                    case MessageTypes.XTICKNOTIFY2:
                     case MessageTypes.MGR_MD_UPLOADBARDATA:
                         {
                             msg = string.Empty;

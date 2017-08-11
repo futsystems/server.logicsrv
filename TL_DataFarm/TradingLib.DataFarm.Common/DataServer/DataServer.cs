@@ -36,7 +36,10 @@ namespace TradingLib.DataFarm.Common
         int _intradayMonth = 6;
         bool _loadHist = false;
         int _maxCnt = 0;
-        int _apibuildNum = 0;
+
+
+        System.Version _supportVersion;
+
         public DataServer()
         {
             _config = ConfigFile.GetConfigFile("DataCore.cfg");
@@ -55,7 +58,8 @@ namespace TradingLib.DataFarm.Common
             _intradayMonth = ConfigFile["IntradayMonth"].AsInt();
             _loadHist = ConfigFile["LoadHist"].AsBool();
             _maxCnt = ConfigFile["MaxConnection"].AsInt();
-            _apibuildNum = TradingLib.Common.Util.GetBuildNum(Const.APIVersion);
+
+            _supportVersion = new Version("2.0.2");
 
             _cfgdb = new ConfigDB("DataFarm");
             _datastore = new MemoryBarDB(_loadHist, _intradayMonth);

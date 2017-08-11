@@ -220,6 +220,11 @@ namespace TCPServiceHost
 
                                 //创建连接
                                 conn = new TCPSocketConnection(this, session);
+                                //注册客户端时提供了版本信息 则记录该版本
+                                if (!string.IsNullOrEmpty(request.VersionToken))
+                                {
+                                    conn.Version = new Version(request.VersionToken);
+                                }
                                 _connectionMap.TryAdd(sessionId, conn);
 
                                 //发送回报

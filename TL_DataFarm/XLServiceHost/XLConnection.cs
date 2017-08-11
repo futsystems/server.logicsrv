@@ -27,6 +27,7 @@ namespace XLServiceHost
             } 
         }
 
+        public Version Version { get; set; }
 
         public Command Command { get; set; }
         public string SessionID

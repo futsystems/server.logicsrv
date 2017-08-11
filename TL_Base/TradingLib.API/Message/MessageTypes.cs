@@ -191,7 +191,7 @@ namespace TradingLib.API
         XQRYBANKRESPONSE,//查询银行回报
         XUPDATEBANKRESPONSE,//更新银行回报
         XREQCASHOPRESPONSE,//请求出入金操作回报
-
+        XTICKNOTIFY2,//二进制实时行情数据
 
         MD_DEMOTICK,//行情服务器测试Tick
         // END STANDARD MESSAGES

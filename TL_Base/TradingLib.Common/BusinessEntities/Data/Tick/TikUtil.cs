@@ -406,6 +406,87 @@ namespace TradingLib.Common
             return string.Format("{0}-{1}", k.Exchange, k.Symbol);
         }
 
+        public static string GetUniqueKey(this TickData k)
+        {
+            return string.Format("{0}-{1}", k.Exchange, k.Symbol);
+        }
+
+        public static TickDataImpl ToTickData(this Tick k,char type)
+        {
+            TickDataImpl data = null;
+            if (type == TickDataImpl.TICKTYPE_TRADE)
+            {
+                data = new TickDataImpl();
+                data.TickType = TickDataImpl.TICKTYPE_TRADE;
+                data.Exchange = k.Exchange;
+                data.Symbol = k.Symbol;
+                data.Date = k.Date;
+                data.Time = k.Time;
+                data.TradePrice = (double)k.Trade;
+                data.TradeSize = k.Size;
+                data.Vol = k.Vol;
+            }
+            if (type == TickDataImpl.TICKTYPE_QUOTE)
+            {
+                data = new TickDataImpl();
+                data.TickType = TickDataImpl.TICKTYPE_QUOTE;
+                data.Exchange = k.Exchange;
+                data.Symbol = k.Symbol;
+                data.Date = k.Date;
+                data.Time = k.Time;
+                data.AskPrice = (double)k.AskPrice;
+                data.AskSize = k.AskSize;
+                data.BidPrice = (double)k.BidPrice;
+                data.BidSize = k.BidSize;
+
+            }
+            if (type == TickDataImpl.TICKTYPE_STATISTIC)
+            {
+                data = new TickDataImpl();
+                data.TickType = TickDataImpl.TICKTYPE_STATISTIC;
+                data.Exchange = k.Exchange;
+                data.Symbol = k.Symbol;
+
+                data.Open = (double)k.Open;
+                data.High = (double)k.High;
+                data.Low = (double)k.Low;
+                data.Vol = k.Vol;
+                data.OI = k.OpenInterest;
+                data.PreOI = k.PreOpenInterest;
+                data.Settlement = (double)k.Settlement;
+                data.PreSettlement = (double)k.PreSettlement;
+                data.PreClose = (double)k.PreClose;
+            }
+            if (type == TickDataImpl.TICKTYPE_SNAPSHOT)
+            {
+                data = new TickDataImpl();
+                data.TickType = TickDataImpl.TICKTYPE_STATISTIC;
+                data.Exchange = k.Exchange;
+                data.Symbol = k.Symbol;
+                data.Date = k.Date;
+                data.Time = k.Time;
+                data.TradePrice = (double)k.Trade;
+                data.TradeSize = k.Size;
+
+                data.AskPrice = (double)k.AskPrice;
+                data.AskSize = k.AskSize;
+                data.BidPrice = (double)k.BidPrice;
+                data.BidSize = k.BidSize;
+
+                data.Open = (double)k.Open;
+                data.High = (double)k.High;
+                data.Low = (double)k.Low;
+                data.Vol = k.Vol;
+                data.OI = k.OpenInterest;
+                data.PreOI = k.PreOpenInterest;
+                data.Settlement = (double)k.Settlement;
+                data.PreSettlement = (double)k.PreSettlement;
+                data.PreClose = (double)k.PreClose;
+
+
+            }
+            return data;
+        }
         public static void Reset(this Tick k)
         {
             

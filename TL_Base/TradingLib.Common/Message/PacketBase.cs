@@ -327,6 +327,7 @@ namespace TradingLib.Common
     /// </summary>
     public class PacketBase : IPacket
     {
+        
         public PacketBase()
         {
             FrontID = string.Empty;
@@ -414,7 +415,7 @@ namespace TradingLib.Common
         /// </summary>
         public virtual string Content { get { return this.Serialize(); } }
 
-
+        
         /// <summary>
         /// 二进制数据反序列化
         /// </summary>

@@ -154,7 +154,8 @@ namespace TradingLib.DataFarm.Common
                 response.APIVersion = TradingLib.API.Const.APIVersion;
                 response.APIType = QSEnumAPIType.MD_Socket;
                 //执行逻辑判断 是否提供服务 比如连接数大于多少/cpu资源大于多少 就拒绝服务
-                int buildNum = Util.GetBuildNum(request.APIVersion);
+                Version cliVersion = new Version(request.APIVersion);
+
                 if (connectionMap.Count >= _maxCnt)
                 {
                     logger.Warn(string.Format("Hit Max Connection Cnt:{0},will not provider service", _maxCnt));
@@ -167,7 +168,7 @@ namespace TradingLib.DataFarm.Common
                 //TLClient连接到行情端 需要进行配对检查
                 if (arg1.FrontType == EnumFrontType.TLSocket)
                 {
-                    if (buildNum < _apibuildNum)
+                    if (cliVersion < _supportVersion)
                     {
                         logger.Warn(string.Format("Version:{0} is not supported", request.APIVersion));
                         response.OnService = false;

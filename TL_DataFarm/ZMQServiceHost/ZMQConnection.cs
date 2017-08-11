@@ -29,7 +29,7 @@ namespace ZMQServiceHost
             this.Command = null;
 
         }
-
+        public Version Version { get; set; }
         public Command Command { get; set; }
         /// <summary>
         /// Connection所处ServiceHost

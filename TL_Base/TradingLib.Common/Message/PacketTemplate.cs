@@ -304,6 +304,12 @@ namespace TradingLib.Common
                         response.DeserializeBin(message.Data);
                         return response;
                     }
+                case MessageTypes.XTICKNOTIFY2:
+                    {
+                        TickDataNotify notify = new TickDataNotify();
+                        notify.DeserializeBin(message.Data);
+                        return notify;
+                    }
 
                 case MessageTypes.SERVICERESPONSE:
                     return ResponseTemplate<RspQryServiceResponse>.CliRecvResponse(message);

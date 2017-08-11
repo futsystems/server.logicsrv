@@ -581,6 +581,9 @@ namespace TradingLib.Common
         {
             logger.Info("Register client to server");
             RegisterClientRequest req = RequestTemplate<RegisterClientRequest>.CliSendRequest(requestid++);
+            req.FrontType = EnumFrontType.TLSocket;
+            req.VersionToken = Const.APIVersion;
+
             TLSend(req);
         }
         /// <summary>
