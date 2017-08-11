@@ -135,7 +135,7 @@ namespace TradingLib.Contrib.Payment.Se7Pay
             var queryString = request.Params;
             string ResultDesc = queryString["order_msg"];
 
-            return ResultDesc;
+            return "";
         }
     }
 }

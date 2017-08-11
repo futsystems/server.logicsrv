@@ -1,0 +1,22 @@
+﻿<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+</head>
+
+<body onload="document.se7submit.submit()">
+	<form name='se7submit' method="post" action="{{data.Pay_Url}}">
+		<input name='company_oid' type='hidden' value= "{{data.company_oid}}"/>
+		<input name='order_id' type='hidden' value= "{{data.order_id}}"/>
+		<input name='item_name' type='hidden' value= "{{data.item_name}}"/>
+		<input name='item_info' type='hidden' value= "{{data.item_info}}"/>
+		<input name='money_num' type='hidden' value= "{{data.money_num}}"/>		
+		<input name='notify_url' type='hidden' value= "{{data.notify_url}}" />
+		<input name='return_url' type='hidden' value= "{{data.return_url}}" />
+		<input name='pay_type' type='hidden' value= "{{data.pay_type}}"/>
+		<input name='bank_id' type='hidden' value= "{{data.bank_id}}"/>
+		<input name='card_id' type='hidden' value= "{{data.card_id}}"/>
+		<input name='sign' type='hidden' value= "{{data.sign}}"/>
+	</form>
+					
+</body>
+</html>
