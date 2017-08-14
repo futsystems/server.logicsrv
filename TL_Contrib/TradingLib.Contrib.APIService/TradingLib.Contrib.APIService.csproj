@@ -46,6 +46,10 @@
     <Reference Include="Newtonsoft.Json">
       <HintPath>..\..\lib\Newtonsoft.Json.dll</HintPath>
     </Reference>
+    <Reference Include="NHttp, Version=0.1.9.0, Culture=neutral, PublicKeyToken=156364e4f7b202d9, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\lib\NHttp.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data" />
@@ -154,12 +158,6 @@
     <Compile Include="Tracker\APITracker.cs" />
     <Compile Include="Tracker\GateWayTracker.cs" />
     <Compile Include="APIService_Cash.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\NHttp\NHttp.csproj">
-      <Project>{7AD9DA80-AFB9-43EA-BDF2-9B75C47DC2CC}</Project>
-      <Name>NHttp</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
