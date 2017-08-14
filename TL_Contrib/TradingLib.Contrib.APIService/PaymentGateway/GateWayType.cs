@@ -108,5 +108,10 @@ namespace TradingLib.Contrib.APIService
         /// 钱通资产管理
         /// </summary>
         QianTong,
+
+        /// <summary>
+        /// Fjelt
+        /// </summary>
+        Fjelt,
     }
 }

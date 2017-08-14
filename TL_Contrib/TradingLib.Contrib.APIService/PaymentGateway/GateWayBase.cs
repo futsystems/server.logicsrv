@@ -102,6 +102,8 @@ namespace TradingLib.Contrib.APIService
                     return new TradingLib.Contrib.Payment.Se7Pay.Se7PayGateWay(config);
                 case QSEnumGateWayType.QianTong:
                     return new TradingLib.Contrib.Payment.QianTong.QianTongGateWay(config);
+                case QSEnumGateWayType.Fjelt:
+                    return new TradingLib.Contrib.Payment.Fjelt.FjeltGateWay(config);
                 default:
                     return null;
             }
@@ -226,6 +228,11 @@ namespace TradingLib.Contrib.APIService
                         return ORM.MCashOperation.SelectCashOperation(transID);
                        
                     }
+                case "FJELT":
+                    {
+                        return TradingLib.Contrib.Payment.Fjelt.FjeltGateWay.GetCashOperation(request.Params);
+                    }
+
 
                 default:
                     {
