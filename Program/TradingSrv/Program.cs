@@ -44,9 +44,11 @@ namespace TraddingSrvCLI
             try
             {
 
-                //string path = Path.Combine(new string[] { AppDomain.CurrentDomain.BaseDirectory, "config", 5.ToString() });
-                //Console.WriteLine(path);
-                //return;
+                string ret = "<?xml version=\"1.0\" encoding=\"utf-8\" standalone=\"no\"?>\r\n<message application=\"NotifyOrder\" merchantId=\"1008038\" merchantOrderId=\"636383156318160977\" version=\"1.0.1\">\r\n<deductList>\r\n<item payAmt=\"20\" payDesc=\"付款成功\" payOrderId=\"J5ZUH3U53JLXPWQXE\" payStatus=\"01\" payTime=\"20170814160107\"/>\r\n</deductList>\r\n<refundList/>\r\n</message>\r\n";
+                System.Xml.XmlDocument doc = new System.Xml.XmlDocument();
+                doc.LoadXml(ret);
+
+                var transid = doc["message"]["deductList"]["item"].GetAttribute("payStatus");
 
 
                 logger.Info("********* start core daemon *********");

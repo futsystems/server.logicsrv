@@ -103,5 +103,10 @@ namespace TradingLib.Contrib.APIService
         /// 七彩支付
         /// </summary>
         Se7Pay,
+
+        /// <summary>
+        /// 钱通资产管理
+        /// </summary>
+        QianTong,
     }
 }

@@ -100,6 +100,8 @@ namespace TradingLib.Contrib.APIService
                     return new TradingLib.Contrib.Payment.Ecpss.EcpssGateWay(config);
                 case QSEnumGateWayType.Se7Pay:
                     return new TradingLib.Contrib.Payment.Se7Pay.Se7PayGateWay(config);
+                case QSEnumGateWayType.QianTong:
+                    return new TradingLib.Contrib.Payment.QianTong.QianTongGateWay(config);
                 default:
                     return null;
             }
@@ -207,6 +209,24 @@ namespace TradingLib.Contrib.APIService
                     {
                         return TradingLib.Contrib.Payment.Se7Pay.Se7PayGateWay.GetCashOperation(request.Params);
                     }
+                case "QIANTONG":
+                    {
+                        string transID = string.Empty;
+                        IEnumerable<GateWayBase> gws = APITracker.GateWayTracker.GetGateway(QSEnumGateWayType.QianTong);
+                        foreach (var item in gws)
+                        {
+                            TradingLib.Contrib.Payment.QianTong.QianTongGateWay gw = item as TradingLib.Contrib.Payment.QianTong.QianTongGateWay;
+                            if (gw == null) continue;
+                            var val = gw.ParseTransID(request);
+                            if (!string.IsNullOrEmpty(val))
+                            {
+                                transID = val;
+                            }
+                        }
+                        return ORM.MCashOperation.SelectCashOperation(transID);
+                       
+                    }
+
                 default:
                     {
                         gatewayExist = false;

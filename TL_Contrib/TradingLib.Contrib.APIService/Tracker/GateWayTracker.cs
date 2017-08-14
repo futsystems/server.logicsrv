@@ -33,6 +33,11 @@ namespace TradingLib.Contrib.APIService
             return gatewayMap.Values.Where(gw => gw.GateWayType == QSEnumGateWayType.TFBPay);
         }
 
+        public IEnumerable<GateWayBase> GetGateway(QSEnumGateWayType type)
+        {
+            return gatewayMap.Values.Where(gw => gw.GateWayType == type);
+        }
+
         public GateWayConfig GetGateWayConfig(int id)
         {
             GateWayConfig target = null;
