@@ -369,6 +369,8 @@ namespace Broker.SIM
                         _ocache.Write(new OrderImpl(o));
                         // 发送委托回报
                         Trade nf = new TradeImpl(fill);
+                        //成交交易日判定,上个交易日的挂单 在后续交易日成交后会导致交易字段不对
+
                         //关于这里复制后再发出order，这里的process循环 fill order. fill是对order的一个引用，后面修改的数据会覆盖到前面的数据,而gotfillevent触发的时候可能是在另外一个线程中
                         //运行的比如发送回client,或者记录信息等。这样就行程了多个线程对一个对象的访问可能会存在数据部同步的问题。
                         //logger.Info("~~~~~~~~~~ cache fill,fill==null" + (nf == null).ToString());

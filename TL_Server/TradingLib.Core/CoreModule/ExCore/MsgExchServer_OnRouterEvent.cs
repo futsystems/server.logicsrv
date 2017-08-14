@@ -139,6 +139,10 @@ namespace TradingLib.Core
             {
                 logger.Warn(string.Format("Account of Trade:{0} do not exist", t.GetTradeInfo()));
             }
+
+            //判定成交交易日
+            t.SettleDay = t.oSymbol.SecurityFamily.CurrentTradingday();
+
             //设定系统内成交编号
             AssignTradeID(ref t);
 

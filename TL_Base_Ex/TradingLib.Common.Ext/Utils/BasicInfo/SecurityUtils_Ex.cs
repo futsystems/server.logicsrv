@@ -118,10 +118,23 @@ namespace TradingLib.Common
             Exchange exchange = sec.Exchange;
             DateTime extime = exchange.GetExchangeTime();//获得交易所时间
             TradingRange range = sec.MarketTime.JudgeRange(extime);//根据交易所时间判定当前品种所属交易小节
-
             return MarketTimeCheck(exchange, extime, range,out settleday);
-            
-        
+        }
+
+        /// <summary>
+        /// 获得品种当前所属交易日
+        /// 委托检查时获得交易日判定
+        /// 如果挂单在下个交易日成交则无法沿用委托对应的交易日，需要判定该成交对应的交易日
+        /// </summary>
+        /// <param name="sec"></param>
+        /// <returns></returns>
+        public static int CurrentTradingday(this SecurityFamily sec)
+        {
+            Exchange exchange = sec.Exchange;
+            DateTime extime = exchange.GetExchangeTime();//获得交易所时间
+            TradingRange range = sec.MarketTime.JudgeRange(extime);//根据交易所时间判定当前品种所属交易小节
+            if (range == null) return 0;
+            return range.TradingDay(extime).ToTLDate();
         }
 
         public static QSEnumActionCheckResult CheckCancelOrder(this SecurityFamily sec,out int settleday)
