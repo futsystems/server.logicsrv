@@ -1,0 +1,12 @@
+﻿<html>
+<head>
+	<meta name="renderer" content="webkit">
+	<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+</head>
+
+<body onload="document.qiantongsubmit.submit()">
+	<form name='qiantongsubmit' method="post" action="{{data.Pay_Url}}">
+		<input name='msg' type='hidden' value= "{{data.Req_Data}}"/>
+	</form>
+</body>
+</html>
