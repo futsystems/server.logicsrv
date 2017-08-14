@@ -225,7 +225,7 @@ namespace TradingLib.DataFarm.Common
                 if (k.UpdateType == "X")
                 {
                     NotifyTick2Connections(snapshot);
-                    snapshot.QuoteUpdate = false;
+                    //snapshot.QuoteUpdate = false;会导致方式2漏发盘口
                 }
                 else
                 {
@@ -251,10 +251,12 @@ namespace TradingLib.DataFarm.Common
                 }
                 else if (k.UpdateType == "F")//统计数据 下发
                 {
+                    snapshot.QuoteUpdate = true;
                     NotifyTick2Connection(snapshot.ToTickData(TickDataImpl.TICKTYPE_STATISTIC));
                 }
                 else if (k.UpdateType == "S")//快照数据下发
                 {
+                    snapshot.QuoteUpdate = true;
                     NotifyTick2Connection(snapshot.ToTickData(TickDataImpl.TICKTYPE_SNAPSHOT));
                 }
                 #endregion
