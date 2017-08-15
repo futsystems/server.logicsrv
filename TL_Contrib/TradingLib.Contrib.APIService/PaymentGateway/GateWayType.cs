@@ -113,5 +113,10 @@ namespace TradingLib.Contrib.APIService
         /// Fjelt
         /// </summary>
         Fjelt,
+
+        /// <summary>
+        /// 小小贝
+        /// </summary>
+        XiaoXiaoPay,
     }
 }

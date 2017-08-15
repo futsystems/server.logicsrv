@@ -353,8 +353,18 @@ namespace TradingLib.Contrib.APIService
                         }
                     case "CUSTNOTIFY":
                         {
-                        
                             string gwtype = path[3].ToUpper();
+
+                            switch(gwtype)
+                            {
+                                case "XIAOXIAOPAY":
+                                    {
+                                        return tplTracker.Render(ERROR_TPL_ID, new DropError(0, "网关返回"));
+                                    }
+                                default:
+                                    break;
+                            }
+
                             bool gatewayexit = false;
                             CashOperation operation = GateWayBase.GetOperation(gwtype, request, out gatewayexit);
                             if (!gatewayexit)

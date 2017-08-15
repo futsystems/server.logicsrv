@@ -143,6 +143,7 @@
     <Compile Include="PaymentGateway\QianTong\QianTongPayGateWay.cs" />
     <Compile Include="PaymentGateway\QianTong\RSAUtil.cs" />
     <Compile Include="PaymentGateway\RSAUtil.cs" />
+    <Compile Include="PaymentGateway\RSAUtil2.cs" />
     <Compile Include="PaymentGateway\Se7Pay\DropSe7Payment.cs" />
     <Compile Include="PaymentGateway\Se7Pay\RSAHelper.cs" />
     <Compile Include="PaymentGateway\Se7Pay\Se7PayGateWay.cs" />
@@ -151,6 +152,9 @@
     <Compile Include="PaymentGateway\TFBPay\TFBPayGateWay.cs" />
     <Compile Include="PaymentGateway\TFBPay\TFBRSAHelper.cs" />
     <Compile Include="PaymentGateway\Unspay\UnspayGateWay.cs" />
+    <Compile Include="PaymentGateway\XiaoXiaoPay\XiaoXiaoHepler.cs" />
+    <Compile Include="PaymentGateway\XiaoXiaoPay\XiaoXiaoPayGateWay.cs" />
+    <Compile Include="PaymentGateway\XiaoXiaoPay\XiaoXiaoPayment.cs" />
     <Compile Include="PaymentGateway\ZhiHPay\DropZhiHPayment.cs" />
     <Compile Include="PaymentGateway\ZhiHPay\ZhiHPayGateWay.cs" />
     <Compile Include="PaymentGateway\ZhiHPay\ZhiHPayHelper.cs" />
@@ -163,6 +167,7 @@
     <Compile Include="Tracker\GateWayTracker.cs" />
     <Compile Include="APIService_Cash.cs" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
