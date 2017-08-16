@@ -12,6 +12,8 @@ namespace CTPService
 {
     public partial class CTPServiceHost
     {
+        Dictionary<int, List<RspXQrySettleInfoResponse>> RspXQrySettleInfoResponseMap = new Dictionary<int, List<RspXQrySettleInfoResponse>>();
+        const int BATCH_SIZE = 5;
         /// <summary>
         /// 将逻辑服务端的消息进行处理 转换成ServiceHost支持协议内容
         /// 问题
@@ -172,20 +174,43 @@ namespace CTPService
                     case MessageTypes.XSETTLEINFORESPONSE:
                         {
                             RspXQrySettleInfoResponse response = packet as RspXQrySettleInfoResponse;
-                            Struct.V12.LCThostFtdcSettlementInfoField field = new Struct.V12.LCThostFtdcSettlementInfoField();
-                            field.Content = response.SettlementContent.ToByteArray(501, CTPConvert.CTPEncoding);
-                            field.TradingDay = response.Tradingday.ToString();
-                            field.InvestorID = response.TradingAccount;
-                            field.SettlementID = response.SettlementID;
-                            field.SequenceNo = response.SequenceNo;
 
-                            //打包数据
-                            byte[] data = Struct.V12.StructHelperV12.PackRsp<Struct.V12.LCThostFtdcSettlementInfoField>(ref field, EnumSeqType.SeqQry, EnumTransactionID.T_RSP_SMI, response.RequestID, conn.NextSeqQryId, response.IsLast);
-                            int encPktLen = 0;
-                            byte[] encData = Struct.V12.StructHelperV12.EncPkt(data, out encPktLen);
+                            List<RspXQrySettleInfoResponse> target = null;
+                            if (!RspXQrySettleInfoResponseMap.TryGetValue(response.RequestID, out target))
+                            {
+                                target = new List<RspXQrySettleInfoResponse>();
+                                RspXQrySettleInfoResponseMap.Add(response.RequestID, target);
+                            }
+                            target.Add(response);
 
-                            conn.Send(encData, encPktLen);
-                            if (response.IsLast) logger.Info(string.Format("LogicSrv Reply Session:{0} -> RspXQrySettleInfoResponse", conn.SessionID));
+                            //待发送消息满足批量发送要求或遇到最后一个回报则打包消息并发送
+                            if (target.Count == BATCH_SIZE || response.IsLast)
+                            {
+                                List<Struct.V12.LCThostFtdcSettlementInfoField> fieldlist = new List<Struct.V12.LCThostFtdcSettlementInfoField>();
+                                foreach (var item in target)
+                                {
+                                    Struct.V12.LCThostFtdcSettlementInfoField field = new Struct.V12.LCThostFtdcSettlementInfoField();
+                                    field.Content = item.SettlementContent.ToByteArray(501, CTPConvert.CTPEncoding);
+                                    field.TradingDay = item.Tradingday.ToString();
+                                    field.InvestorID = item.TradingAccount;
+                                    field.SettlementID = item.SettlementID;
+                                    field.SequenceNo = item.SequenceNo;
+                                    fieldlist.Add(field);
+                                }
+                                target.Clear();
+                                
+                                 //打包数据
+                                byte[] data = Struct.V12.StructHelperV12.PackRsp<Struct.V12.LCThostFtdcSettlementInfoField>(ref fieldlist, EnumSeqType.SeqQry, EnumTransactionID.T_RSP_SMI, response.RequestID, conn.NextSeqQryId, response.IsLast);
+                                int encPktLen = 0;
+                                byte[] encData = Struct.V12.StructHelperV12.EncPkt(data, out encPktLen);
+                                conn.Send(encData, encPktLen);
+                            }
+
+                            if (response.IsLast)
+                            {
+                                RspXQrySettleInfoResponseMap.Remove(response.RequestID);
+                                logger.Info(string.Format("LogicSrv Reply Session:{0} -> RspXQrySettleInfoResponse", conn.SessionID));
+                            }
                             break;
 
                         }

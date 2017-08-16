@@ -133,6 +133,48 @@ namespace FrontServer
                 case MessageTypes.XSETTLEINFORESPONSE:
                     {
 
+                        /*
+                         RspXQrySettleInfoResponse response = lpkt as RspXQrySettleInfoResponse;
+
+                        List<RspXQrySettleInfoResponse> target = null;
+                        if (!RspXQrySettleInfoResponseMap.TryGetValue(response.RequestID, out target))
+                        {
+                            target = new List<RspXQrySettleInfoResponse>();
+                            RspXQrySettleInfoResponseMap.Add(response.RequestID, target);
+                        }
+                        target.Add(response);
+
+                        if (target.Count == BATCH_SIZE || response.IsLast)
+                        {
+                            XLPacketData pkt = new XLPacketData(XLMessageType.T_RSP_SETTLEINFO);
+                           
+                            //将消息压入数据包
+                            foreach (var item in target)
+                            {
+                                XLSettlementInfoField field = new XLSettlementInfoField();
+                                field.TradingDay = response.Tradingday;
+                                field.UserID = response.TradingAccount;
+                                field.Content = response.SettlementContent;
+                                pkt.AddField(field);
+                            }
+                            target.Clear();
+                            conn.ResponseXLPacket(pkt, (uint)response.RequestID, response.IsLast);
+                        }
+
+                        if (response.IsLast)
+                        {
+                            RspXQrySettleInfoResponseMap.Remove(response.RequestID);
+                        }
+
+                        //conn.ResponseXLPacket(pkt, (uint)response.RequestID, response.IsLast);
+                        if (response.IsLast)
+                        {
+                            logger.Info(string.Format("LogicSrv Reply Session:{0} -> RspXQryExchangeRateResponse", conn.SessionID));
+                        }
+                        break; 
+                         
+                         * */
+
                         RspXQrySettleInfoResponse response = lpkt as RspXQrySettleInfoResponse;
                         XLSettlementInfoField field = new XLSettlementInfoField();
                         field.TradingDay = response.Tradingday;

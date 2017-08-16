@@ -250,6 +250,59 @@ namespace CTPService.Struct.V12
             }
         }
 
+        /// <summary>
+        /// 将一组数据打包到数据结构体
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="fields"></param>
+        /// <param name="seqType"></param>
+        /// <param name="transId"></param>
+        /// <param name="reqId"></param>
+        /// <param name="seqId"></param>
+        /// <param name="isLast"></param>
+        /// <returns></returns>
+        public static byte[] PackRsp<T>(ref List<T> fields, EnumSeqType seqType, EnumTransactionID transId, int reqId, int seqId, bool isLast = true)
+            where T : IByteSwap
+        {
+            proto_hdr protoHeader = new proto_hdr();
+            ftd_hdr ftdHeader = new ftd_hdr();
+
+            ftdc_hdr fieldHeader = new ftdc_hdr();
+            IFieldId tmp = fields[0] as IFieldId;
+            Type type = typeof(T);
+            int fieldSize = Marshal.SizeOf(type);
+            InitFTDCHeader(ref fieldHeader, fieldSize, (EnumFiledID)tmp.FieldId);
+
+            //初始化proftd_hdr
+            int ftdcLen = (Constanst.FTDC_HDRLEN + fieldSize) * fields.Count;//数据域长度 每个数据与包含数据头和数据结构体
+            int pktLen = Constanst.PROFTD_HDRLEN + ftdcLen;//数据包总长度
+            FillRspHeader(ref protoHeader, ref ftdHeader, (ushort)pktLen, seqType, transId, (ushort)1, (uint)reqId, (uint)seqId, isLast);
+
+            int offset = 0;
+            try
+            {
+                Byte[] bytes = new Byte[pktLen];
+
+                Array.Copy(ByteSwapHelp.StructToBytes<proto_hdr>(protoHeader), 0, bytes, 0, Constanst.PROTO_HDRLEN);
+                offset += Constanst.PROTO_HDRLEN;
+                Array.Copy(ByteSwapHelp.StructToBytes<ftd_hdr>(ftdHeader), 0, bytes,offset, Constanst.FTD_HDRLEN);
+                offset += Constanst.FTD_HDRLEN;
+                
+                for (int i = 0; i < fields.Count;i++ )
+                {
+                    Array.Copy(ByteSwapHelp.StructToBytes<ftdc_hdr>(fieldHeader), 0, bytes, offset, Constanst.FTDC_HDRLEN);
+                    offset += Constanst.FTDC_HDRLEN;
+                    Array.Copy(ByteSwapHelp.StructToBytes<T>(fields[i]), 0, bytes, offset, fieldSize);
+                    offset += fieldSize;
+                }
+                return bytes;
+            }
+            finally
+            {
+            }
+        }
+
+
         public static byte[] PackNotify<T>(ref T field, EnumSeqType seqType, EnumTransactionID transId, int seqId)
             where T : IByteSwap
         {

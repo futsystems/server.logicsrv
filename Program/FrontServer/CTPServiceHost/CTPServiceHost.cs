@@ -34,8 +34,8 @@ namespace CTPService
         CTPServerBase ctpSocketServer = null;
         bool _started = false;
         int _port = 55622;
-        int _sendBufferSize = 4069;
-        int _recvBufferSize = 4069;
+        int _sendBufferSize = 4096;
+        int _recvBufferSize = 4096;
         void InitServer()
         {
             ctpSocketServer = new CTPServerBase();
