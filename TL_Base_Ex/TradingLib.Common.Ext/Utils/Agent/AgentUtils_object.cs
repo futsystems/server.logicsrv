@@ -32,7 +32,10 @@ namespace TradingLib.Common
             st.CustUnRealizedPL = agent.CustUnRealizedPL;
 
             st.CustCashIn = agent.CustCashIn;
-            st.CustCashOut = agent.CustCashOut;    
+            st.CustCashOut = agent.CustCashOut;
+            st.CustLongPositionSize = agent.CustLongPositionSize;
+            st.CustShortPositionSize = agent.CustShortPositionSize;
+
 
             return st;
         }

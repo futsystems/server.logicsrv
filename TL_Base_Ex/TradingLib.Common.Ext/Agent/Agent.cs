@@ -391,6 +391,30 @@ namespace TradingLib.Common
                 return custCashOut + agentCashOut;
             }
         }
+
+        [Newtonsoft.Json.JsonIgnore]
+        public int CustLongPositionSize
+        {
+
+            get
+            {
+                if (_manger == null) return 0;
+                return _manger.GetVisibleAccount().Sum(acc => acc.PositionsLong.Sum(pos=>pos.UnsignedSize));
+            }
+        }
+        [Newtonsoft.Json.JsonIgnore]
+        public int CustShortPositionSize
+        {
+
+            get
+            {
+                if (_manger == null) return 0;
+                return _manger.GetVisibleAccount().Sum(acc => acc.PositionsShort.Sum(pos => pos.UnsignedSize));
+            }
+
+        }
+
+
         [Newtonsoft.Json.JsonIgnore]
         public decimal CustCreditCashIn { get { return 0; } }
         [Newtonsoft.Json.JsonIgnore]

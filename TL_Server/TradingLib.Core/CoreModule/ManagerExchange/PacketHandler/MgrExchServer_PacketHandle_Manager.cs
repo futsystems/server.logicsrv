@@ -59,12 +59,14 @@ namespace TradingLib.Core
         public void CTE_QryManagerProfile(ISession session, int mgrid)
         {
             session.GetManager().PermissionCheckManager(mgrid);
-            ManagerProfile mgrProfile = BasicTracker.ManagerProfileTracker[BasicTracker.ManagerTracker[mgrid].Login];
-            session.ReplyMgr(mgrProfile);
+            //ManagerProfile mgrProfile = BasicTracker.ManagerTracker[mgrid].Profile;// BasicTracker.ManagerProfileTracker[BasicTracker.ManagerTracker[mgrid].Login];
+            session.ReplyMgr(BasicTracker.ManagerTracker[mgrid].Profile);
         }
+
 
         /// <summary>
         /// 更新柜员
+        /// 管理段窗口直接传递数据 本地直接更新Manager和ManagerProfile对象
         /// </summary>
         /// <param name="session"></param>
         /// <param name="json"></param>
@@ -93,17 +95,17 @@ namespace TradingLib.Core
             m.Login = login;
             m.Type = mgr_type;
 
-            ManagerProfile mgrProfile = new ManagerProfile();
-            mgrProfile.Account = login;
-            mgrProfile.Name = name;
-            mgrProfile.Mobile = mobile;
-            mgrProfile.QQ = qq;
-            mgrProfile.Email = email;
-            mgrProfile.IDCard = idcard;
-            mgrProfile.Bank_ID = bank;
-            mgrProfile.Branch = branch;
-            mgrProfile.BankAC = bankac;
-            mgrProfile.Memo = memo;
+            m.Profile = new ManagerProfile();
+            m.Profile.Account = login;
+            m.Profile.Name = name;
+            m.Profile.Mobile = mobile;
+            m.Profile.QQ = qq;
+            m.Profile.Email = email;
+            m.Profile.IDCard = idcard;
+            m.Profile.Bank_ID = bank;
+            m.Profile.Branch = branch;
+            m.Profile.BankAC = bankac;
+            m.Profile.Memo = memo;
 
             //代理账户 需要限定账户数量与下级代理数量
             if (mgr_type == QSEnumManagerType.AGENT)
@@ -115,7 +117,6 @@ namespace TradingLib.Core
                 m.AgentLimit = agent_limit;
             }
             bool addNew = (id == 0);
-
             if (addNew)
             {
 
@@ -164,8 +165,6 @@ namespace TradingLib.Core
 
                 //执行数据操作
                 BasicTracker.ManagerTracker.UpdateManager(m);
-                BasicTracker.ManagerProfileTracker.UpdateManagerProfile(mgrProfile);
-
                 var newManager = BasicTracker.ManagerTracker[m.ID];
                 AgentImpl newAgent = null;
                 //若为代理 为代理添加结算账户
@@ -203,10 +202,7 @@ namespace TradingLib.Core
             else
             {
                 session.GetManager().PermissionCheckManager(id);
-
                 BasicTracker.ManagerTracker.UpdateManager(m);
-                BasicTracker.ManagerProfileTracker.UpdateManagerProfile(mgrProfile);
-
                 session.RspMessage("更新管理员成功");
                 //通知管理员信息变更
                 NotifyManagerUpdate(BasicTracker.ManagerTracker[id]);

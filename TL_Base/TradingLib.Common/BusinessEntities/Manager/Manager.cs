@@ -78,6 +78,11 @@ namespace TradingLib.Common
         /// 管理员删除当时对应结算日
         /// </summary>
         public int DeletedSettleday { get; set; }
+
+        /// <summary>
+        /// 管理员Profile
+        /// </summary>
+        public ManagerProfile Profile { get; set; }
     }
 
     public class Manager:ManagerSetting
@@ -133,6 +138,7 @@ namespace TradingLib.Common
         /// <summary>
         /// 代理AgentAccount
         /// </summary>
+        [Newtonsoft.Json.JsonIgnore]
         public IAgent AgentAccount { get; set; }
 
         public override string ToString()

@@ -15,10 +15,14 @@ namespace TradingLib.Common
         ConcurrentDictionary<string, Manager> managermap = new ConcurrentDictionary<string, Manager>();
         ConcurrentDictionary<int, Manager> mgridmap = new ConcurrentDictionary<int, Manager>();
 
+        ConcurrentDictionary<string, ManagerProfile> profilemap = new ConcurrentDictionary<string, ManagerProfile>();
+
         public DBManagerTracker()
         {
-            IList<Manager> mlist = ORM.MManager.SelectManager();
 
+
+
+            IList<Manager> mlist = ORM.MManager.SelectManager();
             foreach (Manager m in mlist)
             {
                 if (m.Deleted && TLCtxHelper.ModuleSettleCentre.Tradingday > m.DeletedSettleday)
@@ -59,7 +63,17 @@ namespace TradingLib.Common
                 mgridmap.TryRemove(m.ID, out target);
             }
 
-            //绑定代理财务账户
+
+            //ManagerProfile
+            foreach (var p in ORM.MManagerProfile.SelectManagerProfile())
+            {
+                if (this[p.Account] == null) //如果对应的Manager不存在 则不加载该Profile
+                    continue;
+                profilemap[p.Account] = p;
+            }
+
+
+            //绑定Manager相关对象
             foreach (var mgr in managermap.Values)
             {
                 //管理员与代理账户需要绑定结算账户
@@ -81,7 +95,16 @@ namespace TradingLib.Common
 
                 //绑定管理员权限
                 mgr.Permission = BasicTracker.UIAccessTracker.GetPermission(mgr);
+
+                //绑定管理员Profile
+                mgr.Profile = this.GetProfile(mgr.Login);
             }
+
+
+            
+
+
+            
         }
 
 
@@ -124,6 +147,8 @@ namespace TradingLib.Common
                 ORM.MManager.MarkManagerDeleted(mgr.ID);
             }
         }
+
+
         public void UpdateManager(ManagerSetting mgr)
         {
             Manager target = null;
@@ -145,6 +170,9 @@ namespace TradingLib.Common
                 ORM.MManager.InsertManager(target);
                 mgr.ID = target.ID;
 
+                //更新Profile
+                this.UpdateManagerProfile(mgr.Profile);
+
                 //添加到数据结构
                 managermap[target.Login] = target;
                 mgridmap[target.ID] = target;
@@ -154,12 +182,18 @@ namespace TradingLib.Common
                 target.ParentManager = this[target.parent_fk];
                 //绑定域
                 target.Domain = BasicTracker.DomainTracker[target.domain_id];
+
+                //绑定Profile
+                target.Profile = this.GetProfile(target.Login);
             }
             else//更新
             {
                 target.AccLimit = mgr.AccLimit;
                 target.AgentLimit = mgr.AgentLimit;
                 ORM.MManager.UpdateManager(target);
+
+                //更新Profile
+                this.UpdateManagerProfile(mgr.Profile);
             }
         }
 
@@ -183,37 +217,7 @@ namespace TradingLib.Common
                 return managermap.Values;
             }
         }
-        ///// <summary>
-        ///// 查询某个管理员可以查询的管理员列表
-        ///// </summary>
-        ///// <param name="mgr"></param>
-        ///// <returns></returns>
-        //public IEnumerable<Manager> GetManagers(Manager mgr)
-        //{
-        //    if (mgr.Type == QSEnumManagerType.SUPERROOT)
-        //    {
-        //        return managermap.Values;
-        //    }
-        //    else if (mgr.Type == QSEnumManagerType.ROOT)
-        //    {
-        //        return managermap.Values.Where(m=>m.domain_id == mgr.domain_id);
-        //    }
-        //    else
-        //    { 
-        //        //如果是代理 返回所有属于该代理的所有柜员
-        //        if(mgr.Type == QSEnumManagerType.AGENT)
-        //        {
-        //            //如果Manager的mgr_fk等于该代理的ID则返回 或则该Manger的下属一级子代理 如果是员工登入则只显示员工帐户
-        //            return managermap.Values.Where(m => m.mgr_fk.Equals(mgr.ID)||m.parent_fk.Equals(mgr.ID));
-        //        }
-        //        else
-        //        {
-        //            return new Manager[]{mgr};
-        //        }
-                
-        //    }
-        //    //return new List<Manager>();
-        //}
+       
 
         /// <summary>
         /// 更新管理员密码
@@ -279,5 +283,63 @@ namespace TradingLib.Common
                 return null;
             }
         }
+
+
+        #region ManagerProfile
+        /// <summary>
+        /// 获得某个交易帐户的Profile
+        /// </summary>
+        /// <param name="account"></param>
+        /// <returns></returns>
+        public ManagerProfile GetProfile(string account)
+        {
+            if (string.IsNullOrEmpty(account)) return null;
+            ManagerProfile target = null;
+            if (this.profilemap.TryGetValue(account, out target))
+            {
+                return target;
+            }
+            else
+            {
+                //如果不存在对应交易账户的profile信息 这里生成对应的默认profile加入 这样通过交易账号获得profile对象 均不可能为空，生成结算单时 避免了profile为空时的异常
+                ManagerProfile profile = new ManagerProfile();
+                profile.Account = account;
+                UpdateManagerProfile(profile);
+                return profilemap[account];
+            }
+        }
+
+
+        /// <summary>
+        /// 更新某个交易帐户的个人信息
+        /// </summary>
+        /// <param name="profile"></param>
+        void UpdateManagerProfile(ManagerProfile profile)
+        {
+            ManagerProfile target = null;
+
+            //已经存在
+            if (this.profilemap.TryGetValue(profile.Account, out target))
+            {
+                ORM.MManagerProfile.UpdateManagerProfile(profile);
+                target.Bank_ID = profile.Bank_ID;
+                target.BankAC = profile.BankAC;
+                target.Branch = profile.Branch;
+                target.Email = profile.Email;
+                target.IDCard = profile.IDCard;
+                target.Mobile = profile.Mobile;
+                target.Name = profile.Name;
+                target.QQ = profile.QQ;
+                target.Memo = profile.Memo;
+
+            }
+            else
+            {
+                ORM.MManagerProfile.InsertManagerProfile(profile);
+                profilemap.TryAdd(profile.Account, profile);
+            }
+        }
+        #endregion
+
     }
 }

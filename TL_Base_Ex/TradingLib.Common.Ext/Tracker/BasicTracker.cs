@@ -26,7 +26,6 @@ namespace TradingLib.Common
         //
         DomainTracker domaintracker;
         DBManagerTracker mgrtracker;
-        ManagerProfileTracker mgrprofiletracker;
 
         AgentTracker agentTracker;
         UIAccessTracker uiaccesstracker;
@@ -108,15 +107,6 @@ namespace TradingLib.Common
             }
         }
 
-        public static ManagerProfileTracker ManagerProfileTracker
-        {
-            get
-            {
-                if (defaultinstance.mgrprofiletracker == null)
-                    defaultinstance.mgrprofiletracker = new ManagerProfileTracker();
-                return defaultinstance.mgrprofiletracker;
-            }
-        }
 
         /// <summary>
         /// 日历对象维护器

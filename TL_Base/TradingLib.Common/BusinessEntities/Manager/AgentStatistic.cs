@@ -30,18 +30,21 @@ namespace TradingLib.Common
 
         public bool Freezed { get; set; }
 
-        public decimal CustMargin { get; set; }//占用保证金
+        public decimal CustMargin { get; set; }//客户占用保证金
 
-        public decimal CustForzenMargin { get; set; }//冻结保证金
+        public decimal CustForzenMargin { get; set; }//客户冻结保证金
 
-        public decimal CustRealizedPL { get; set; }//平仓盈亏
+        public decimal CustRealizedPL { get; set; }//客户平仓盈亏
 
-        public decimal CustUnRealizedPL { get; set; }//浮动盈亏
+        public decimal CustUnRealizedPL { get; set; }//客户浮动盈亏
 
         public decimal CustCashIn { get; set; }
 
         public decimal CustCashOut { get; set; }
 
+        public int CustLongPositionSize { get; set; }
+
+        public int CustShortPositionSize { get; set; }
 
     }
 }

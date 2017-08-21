@@ -146,11 +146,11 @@ namespace TradingLib.Core
                     }
                     else
                     {
-                        ManagerProfile profile = BasicTracker.ManagerProfileTracker[m.Login];
+                        //ManagerProfile profile = BasicTracker.ManagerProfileTracker[m.Login];
                         response.LoginResponse.LoginID = m.Login;
-                        response.LoginResponse.Mobile = profile.Mobile;
-                        response.LoginResponse.Name = profile.Name;
-                        response.LoginResponse.QQ = profile.QQ;
+                        response.LoginResponse.Mobile = m.Profile.Mobile;
+                        response.LoginResponse.Name = m.Profile.Name;
+                        response.LoginResponse.QQ = m.Profile.QQ;
                         response.LoginResponse.ManagerType = m.Type;
                         response.LoginResponse.MGRID = m.ID;//mgrid
                         response.LoginResponse.BaseMGRFK = m.mgr_fk;//主域id

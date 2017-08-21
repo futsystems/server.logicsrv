@@ -131,7 +131,6 @@
     <Compile Include="Tracker\BasicTracker\Template\ConfigTemplateTracker.cs" />
     <Compile Include="Tracker\BasicTracker\Template\ExStrategyTemplateTracker.cs" />
     <Compile Include="Tracker\BasicTracker\Template\MarginTemplateTracker.cs" />
-    <Compile Include="Tracker\BasicTracker\ManagerProfileTracker.cs" />
     <Compile Include="Utils\Account\AccountUtils_ExchangeRate.cs" />
     <Compile Include="Utils\Account\AccountUtils_xx.cs" />
     <Compile Include="Utils\Account\AccountUtils_ExStrategy.cs" />

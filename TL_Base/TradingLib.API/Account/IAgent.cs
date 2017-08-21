@@ -148,6 +148,9 @@ namespace TradingLib.API
 
         decimal CustCreditCashOut { get; }
 
+        int CustLongPositionSize { get; }//多头持仓数量
+
+        int CustShortPositionSize { get; }//空头持仓数量
         #endregion
 
     }
