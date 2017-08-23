@@ -44,6 +44,8 @@ namespace TradingLib.Core
 
         bool _enableStkT0 = false;
 
+        List<string> blockSecCodeList = new List<string>();
+
         public RiskCentre():base(CoreName)
         {
             //1.加载配置文件

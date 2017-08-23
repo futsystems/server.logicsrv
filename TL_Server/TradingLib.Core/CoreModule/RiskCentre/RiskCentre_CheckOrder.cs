@@ -120,6 +120,17 @@ namespace TradingLib.Core
             //    return false;
             //}
 
+            //临时禁止品种
+            if (blockSecCodeList.Count > 0)
+            { 
+                var code = o.oSymbol.SecurityFamily.Code;
+                if (blockSecCodeList.Any(item => item == code))
+                {
+                    errortitle = ConstErrorID.SYMBOL_NOT_TRADEABLE;//合约不可交易
+                    needlog = false;
+                    return false;
+                }
+            }
             #endregion
 
             //中金所限制 开仓数量不能超过10手

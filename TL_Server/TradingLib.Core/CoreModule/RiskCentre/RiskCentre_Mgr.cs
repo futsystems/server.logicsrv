@@ -148,6 +148,26 @@ namespace TradingLib.Core
             session.RspMessage("风控规则删除成功");
         }
 
+        [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "BlockSecurity", "BlockSecurity - block security", "临时静止交易某些品种", QSEnumArgParseType.Json)]
+        public void CTE_BlockSecurity(ISession session, string json)
+        {
+            if (session.GetManager().IsRoot())
+            {
+                string[] items = json.DeserializeObject<string[]>();
+                blockSecCodeList.Clear();
+                blockSecCodeList.AddRange(items);
+                session.ReplyMgr(blockSecCodeList.ToArray());
+                session.RspMessage("临时冻结品种成功");
+            }
+        }
+
+        [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "QrySecurityBlock", "QrySecurityBlock - qry security  blocked", "查询临时静止交易某些品种")]
+        public void SrvOnMGRDelRuleItem(ISession session)
+        {
+            session.ReplyMgr(blockSecCodeList.ToArray());
+        }
+
+
         #region 辅助函数
         /// <summary>
         /// 配置模板变化后 重新加载绑定该模板的账户风控规则
