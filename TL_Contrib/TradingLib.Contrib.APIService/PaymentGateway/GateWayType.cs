@@ -118,5 +118,11 @@ namespace TradingLib.Contrib.APIService
         /// 小小贝
         /// </summary>
         XiaoXiaoPay,
+
+
+        /// <summary>
+        /// 
+        /// </summary>
+        ZhongWeiPay,
     }
 }

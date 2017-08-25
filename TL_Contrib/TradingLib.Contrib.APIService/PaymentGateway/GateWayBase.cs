@@ -106,6 +106,8 @@ namespace TradingLib.Contrib.APIService
                     return new TradingLib.Contrib.Payment.Fjelt.FjeltGateWay(config);
                 case QSEnumGateWayType.XiaoXiaoPay:
                     return new TradingLib.Contrib.Payment.XiaoXiao.XiaoXiaoPayGateWay(config);
+                case QSEnumGateWayType.ZhongWeiPay:
+                    return new TradingLib.Contrib.Payment.ZhongWei.ZhongWeiPayGateWay(config);
                 default:
                     return null;
             }
@@ -238,6 +240,10 @@ namespace TradingLib.Contrib.APIService
                 case "XIAOXIAOPAY":
                     {
                         return TradingLib.Contrib.Payment.XiaoXiao.XiaoXiaoPayGateWay.GetCashOperation(request);
+                    }
+                case "ZHONGWEIPAY":
+                    {
+                        return TradingLib.Contrib.Payment.ZhongWei.ZhongWeiPayGateWay.GetCashOperation(request);
                     }
 
                 default:

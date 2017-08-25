@@ -158,6 +158,8 @@
     <Compile Include="PaymentGateway\ZhiHPay\DropZhiHPayment.cs" />
     <Compile Include="PaymentGateway\ZhiHPay\ZhiHPayGateWay.cs" />
     <Compile Include="PaymentGateway\ZhiHPay\ZhiHPayHelper.cs" />
+    <Compile Include="PaymentGateway\ZhongWeiPay\DropZhongWei.cs" />
+    <Compile Include="PaymentGateway\ZhongWeiPay\ZhongWeiGateWay.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="APIService_.cs" />
     <Compile Include="Common\RequestCheck.cs" />
