@@ -58,7 +58,7 @@ namespace TradingLib.Contrib.Payment.XiaoXiao
                 returnurl = APIGlobal.CustNotifyUrl + "/xiaoxiaopay",
                 notifyurl = APIGlobal.SrvNotifyUrl + "/xiaoxiaopay",
                 ip = "0.0.0.0",
-                paytype = 10009,
+                paytype = 10014,
             };
 
             Hashtable req = new Hashtable();
