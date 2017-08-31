@@ -210,11 +210,11 @@ namespace TradingLib.XLProtocol.Client
 			retCode = 0;
 			//从服务端列表中随机选择一个服务器进行连接
 			var server = remoteServer[random.Next(0, remoteServer.Count - 1)];
-#if IPV4
+//#if IPV4
             Socket socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-#else
-			Socket socket = new Socket(AddressFamily.InterNetworkV6, SocketType.Stream, ProtocolType.Tcp);
-#endif
+//#else
+//			Socket socket = new Socket(AddressFamily.InterNetworkV6, SocketType.Stream, ProtocolType.Tcp);
+//#endif
 			socket.Blocking = false;
 			//socket.SendTimeout = 1000;
 			//byte[] inValue = new byte[] { 1, 0, 0, 0, 0x88, 0x13, 0, 0, 0xd0, 0x07, 0, 0 };// 首次探测时间5 秒, 间隔侦测时间2 秒  
