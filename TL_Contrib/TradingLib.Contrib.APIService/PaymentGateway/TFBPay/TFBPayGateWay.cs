@@ -27,6 +27,7 @@ namespace TradingLib.Contrib.APIService
             this.GateWayType = QSEnumGateWayType.TFBPay;
             var data = config.Config.DeserializeObject();
 
+            /*
             this.PayUrl = data["PayUrl"].ToString();// "http://apitest.tfb8.com/cgi-bin/v2.0/api_cardpay_apply.cgi";
             this.SPID = data["SPID"].ToString(); //"1800071515";
             this.MD5Key = data["MD5Key"].ToString(); //"12345";
@@ -34,6 +35,14 @@ namespace TradingLib.Contrib.APIService
             this.PublickKey = data["PublickKey"].ToString(); //"MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCjDrkoVbyv4jTxeKtKEiK2mZiezQvfJV3sGhiwOnB+By5sa5Sa6Ls4dt5AGVqKHxyQVKRpu/utwtEt2MijWx45P1y2xGe7oDz2hUXP0j8sSa1NP26TmWHwO7czgJxxrdJ6RNqskSfjwsa5YMsqmcrumxUIxeCg5EOkgU26bnPoZQIDAQAB";
             this.PrivateKey = data["PrivateKey"].ToString(); //"MIICdgIBADANBgkqhkiG9w0BAQEFAASCAmAwggJcAgEAAoGBAK+LzCZnUWIsRSxKyGZrZI+BU+Y+wnTXPpVbKcm5LT1fg/+o7aQR6B7pheWSEH5xLiFmtUkWSgZ7tYJhjovJkwgIJ91BQBg3rVT3xPCjeVu88mrdvzQOe6sS5WNPu3Wxbht9uACO16zupdDrruhjRUaCX5tkLukccU3bqp9FpkkNAgMBAAECgYBx8mB1nSLqgqnz8ibatGL185CuJ5a5mO36rM4XLqf66oEX9mMq2KS/S/2p4oHqUTUMYUrTQjCSvMI4+3I3soRI4k4J5VsyP9zHyHzafvNUTUyp2ybaVgmh3oxU4sx015fd+3Qc219l+Jdod+rIi68NJqhhMUU+q7yxmesCUCkZAQJBAOWH5bu9FmFIiSjWHVj6XE0904KOWSoHsenymzMZfM0s1kck1hUvwntUcmUhkiuz4BBmiKOy65MtNyJ6ChE3UP0CQQDDyi/gX/xOhCOpWoDMnYyKGyQH7GMJBIwK/X80Yha3Qtl/WrdqrpNV/ZHyQJgcIQFoMNLbNotoUOMAjthkrR1RAkAU5RAmzQnShVXnH8bAKNpqNayhf+/iAZ1SnMFAH5va2bAP/ex3NUfRDljzl+DElbVaCNt7e3gyh7UzMETmWFDJAkAwFtw1jz3ohxo/QYR7PYNEdLAf5hbZIy3GkUcKNcGAl8HWPxDn+iMkLtkHGIiD+DNhRQS1ZStOnvdyrqNF7yNRAkEAxm2MZmPHl+7jbDjHG6c+3SE6e0s7iZyatgh2gosKXdpqUWe3zVXPN04kLarZ7tasl1IBqHr1LpzdHEUReiNRBQ==";
             this.Test = bool.Parse(data["Test"].ToString()); //true;
+            **/
+            this.PayUrl = "http://api.tfb8.com/cgi-bin/v2.0/api_cardpay_apply.cgi";
+            this.SPID = "1800981597";
+            this.MD5Key = "s-Il91YOC8";
+            this.SPUserID = "1800981597";
+            this.PublickKey = "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCjDrkoVbyv4jTxeKtKEiK2mZiezQvfJV3sGhiwOnB+By5sa5Sa6Ls4dt5AGVqKHxyQVKRpu/utwtEt2MijWx45P1y2xGe7oDz2hUXP0j8sSa1NP26TmWHwO7czgJxxrdJ6RNqskSfjwsa5YMsqmcrumxUIxeCg5EOkgU26bnPoZQIDAQAB";
+            this.PrivateKey = "MIICWwIBAAKBgQCqJr6hE56ZOv62ebcZILqCCLetOI4PvkMckEJBM6qvvq8vOsw+et3Wixpl+i0OVZj09pltMhCkF5agVrlbLlnjIT2xhOiQEybjoPvNmx8SOyBlJ6di2rvDW6Ih/CnZKohozsjvZg1nmV9kUQr5j0eRV8xH240KkksFDjykk/otJQIDAQABAoGAbT409DwhfqX29XdODE8MEALC0u9Vnlv8wLEKKMygUPeviDZK/e5q0Z071K98EBD7BIPzW71iG8idR9KGbTlkMbfIx/WCqS+WeU1xmZCEeDpJ5zug5Cg0K37w/JICvlRNX/nEfe825C0wcYUHJV6Fmg3+lw0Gf57LXI/x/mUdPh0CQQDhypRHJ9Xpkh6qf4ng0l2XxMifx61RUhNAo9vVef1V6d6l1FofSA9OOZMdQbm08jJsysa0ZGsyUSvnk5elClO7AkEAwOp6u8sEaTwhi3qohzL+7q2Ss6RapvL3BVZKE0uJQ16jCXSLneC1by4TN8LVmjnFFZpLOEtQ7+azEBKmX4/EnwJATot4FWCoKz5naIxBXHIRmNAdsmd1xUo15FCcEqEDHbXje/BpAWTB3kZtBMpuXaG7JNlNUkd0euZ9zWssX38+LQJAIgl87CNOvO6CEKTslSYXOq9fQdjOscQOd1+ZJDxglIVfCK0KcSmTeXFMrLrwiwyETGJzwRPwzNMMZtqThirMiwJAIjP15hOle4kdv/myx1WEenbDsYFpRo3Lm0Pw2p5jqZtYnqqfM2Ou48Ty3e/v2BozI1utz7/Ia/y2DU6O6M/K9Q==";
+
 
             this.Charset = "GB2312";
         }
@@ -61,7 +70,7 @@ namespace TradingLib.Contrib.APIService
             data.notify_url = APIGlobal.SrvNotifyUrl + "/tfbpay";
             data.memo = "cs";
             data.card_type = "1";
-            data.bank_segment = this.Test?"1004":"1000";
+            data.bank_segment = operatioin.Bank;
             data.user_type = "1";
             data.channel = "1";
             data.encode_type = "MD5";
