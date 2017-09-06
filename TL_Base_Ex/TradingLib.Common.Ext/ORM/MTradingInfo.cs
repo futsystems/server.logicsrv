@@ -148,10 +148,10 @@ namespace TradingLib.ORM
         {
             using (DBMySql db = new DBMySql())
             {
-                string query_seq = string.Format("SELECT MAX(orderseq) as MaxOrderSeq FROM tmp_orders");
+                string query_seq = string.Format("SELECT MAX(orderseq+0) as MaxOrderSeq FROM tmp_orders");
                 orderseq seq1 = db.Connection.Query<orderseq>(query_seq).SingleOrDefault();
 
-                query_seq = string.Format("SELECT MAX(orderseq) as MaxOrderSeq FROM log_orders");
+                query_seq = string.Format("SELECT MAX(orderseq+0) as MaxOrderSeq FROM log_orders");
                 orderseq seq2 = db.Connection.Query<orderseq>(query_seq).SingleOrDefault();
 
                 return Math.Max(seq1.MaxOrderSeq, seq2.MaxOrderSeq);
@@ -162,9 +162,9 @@ namespace TradingLib.ORM
         {
             using (DBMySql db = new DBMySql())
             {
-                string query = string.Format("SELECT MAX(tradeid) as MaxTradeID FROM tmp_trades WHERE breed='{0}'", QSEnumOrderBreedType.ACCT);
+                string query = string.Format("SELECT MAX(tradeid+0) as MaxTradeID FROM tmp_trades WHERE breed='{0}'", QSEnumOrderBreedType.ACCT);
                 tradeid id1 = db.Connection.Query<tradeid>(query).SingleOrDefault();
-                query = string.Format("SELECT MAX(tradeid) as MaxTradeID FROM log_trades WHERE breed='{0}'", QSEnumOrderBreedType.ACCT);
+                query = string.Format("SELECT MAX(tradeid+0) as MaxTradeID FROM log_trades WHERE breed='{0}'", QSEnumOrderBreedType.ACCT);
                 tradeid id2 = db.Connection.Query<tradeid>(query).SingleOrDefault();
 
                 int maxid1 = 0;
