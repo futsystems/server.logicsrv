@@ -53,6 +53,7 @@ namespace TradingLib.Contrib.APIService
                     case "DEPOSITSE7":
                     case "DEPOSITZW":
                     case "DEPOSITTFB":
+                    case "DEPOSITBANK":
                         {
                             var tpl = tplTracker[action];
                             return tplTracker.Render(action, null);
