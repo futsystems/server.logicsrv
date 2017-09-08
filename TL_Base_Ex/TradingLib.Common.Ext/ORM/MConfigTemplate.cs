@@ -33,7 +33,7 @@ namespace TradingLib.ORM
         {
             using (DBMySql db = new DBMySql())
             {
-                string query = string.Format("UPDATE cfg_config_template SET description='{0}',commission_id='{1}',margin_id='{2}',strategy_id='{3}'  WHERE id='{4}'", item.Description, item.Commission_ID, item.ExStrategy_ID, item.Margin_ID,item.ID);
+                string query = string.Format("UPDATE cfg_config_template SET description='{0}',commission_id='{1}',margin_id='{2}',exstrategy_id='{3}'  WHERE id='{4}'", item.Description, item.Commission_ID, item.Margin_ID, item.ExStrategy_ID, item.ID);
                 db.Connection.Execute(query);
             }
         }
@@ -46,7 +46,7 @@ namespace TradingLib.ORM
         {
             using (DBMySql db = new DBMySql())
             {
-                string query = string.Format("INSERT INTO cfg_config_template (`domain_id`,`manager_id`,`name`,`description`,`commission_id`,`margin_id`,`strategy_id`) VALUES ( '{0}','{1}','{2}','{3}','{4}','{5}','{6}')", item.Domain_ID, item.Manager_ID, item.Name, item.Description, item.Commission_ID, item.Margin_ID, item.ExStrategy_ID);
+                string query = string.Format("INSERT INTO cfg_config_template (`domain_id`,`manager_id`,`name`,`description`,`commission_id`,`margin_id`,`exstrategy_id`) VALUES ( '{0}','{1}','{2}','{3}','{4}','{5}','{6}')", item.Domain_ID, item.Manager_ID, item.Name, item.Description, item.Commission_ID, item.Margin_ID, item.ExStrategy_ID);
                 int row = db.Connection.Execute(query);
                 SetIdentity(db.Connection, id => item.ID = id, "id", "cfg_config_template");
             }
