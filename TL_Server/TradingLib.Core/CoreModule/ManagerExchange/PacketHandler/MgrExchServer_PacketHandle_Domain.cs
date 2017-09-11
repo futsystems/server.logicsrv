@@ -121,6 +121,10 @@ namespace TradingLib.Core
                         
                     //设定域ID
                     toadd.domain_id = domain.ID;
+
+                    toadd.Profile = new ManagerProfile();
+                    toadd.Profile.Account = toadd.Login;
+                    
                     //更新管理员信息
                     BasicTracker.ManagerTracker.UpdateManager(toadd);
                     Manager newManager = BasicTracker.ManagerTracker[toadd.ID];

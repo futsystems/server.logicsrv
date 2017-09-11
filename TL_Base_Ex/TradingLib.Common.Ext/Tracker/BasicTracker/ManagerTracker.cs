@@ -72,6 +72,12 @@ namespace TradingLib.Common
                 profilemap[p.Account] = p;
             }
 
+             //绑定Manager相关对象
+            foreach (var mgr in managermap.Values)
+            {
+                //绑定管理员Profile
+                mgr.Profile = this.GetProfile(mgr.Login);
+            }
 
             //绑定Manager相关对象
             foreach (var mgr in managermap.Values)
@@ -87,7 +93,7 @@ namespace TradingLib.Common
                         setting.Account = mgr.Login;
                         setting.AgentType = mgr.Type == QSEnumManagerType.ROOT ? EnumAgentType.SelfOperated : EnumAgentType.Normal;
                         setting.Currency = GlobalConfig.BaseCurrency;
-                        BasicTracker.AgentTracker.UpdateAgent(setting);
+                        BasicTracker.AgentTracker.UpdateAgent(setting);//绑定Agent时 会引用ManagerTracker形成循环
                         agent = BasicTracker.AgentTracker[setting.ID];
                     }
                     agent.BindManager(mgr);
@@ -96,8 +102,8 @@ namespace TradingLib.Common
                 //绑定管理员权限
                 mgr.Permission = BasicTracker.UIAccessTracker.GetPermission(mgr);
 
-                //绑定管理员Profile
-                mgr.Profile = this.GetProfile(mgr.Login);
+                ////绑定管理员Profile
+                //mgr.Profile = this.GetProfile(mgr.Login);
             }
 
 
