@@ -252,8 +252,8 @@ namespace TradingLib.Core
                             padRightEx(t.UnsignedSize.ToString(), len_SIZE),
                             padRightEx((sym.GetMultiple() * t.xPrice * Math.Abs(t.xSize)).ToFormatStr(fmt), len_TURNOVER),
                             padLeftEx(GetCombFlag(t.OffsetFlag), len_TBMM),
-                            padRightEx((t.Commission * rate).ToFormatStr(fmt), len_PRICE),
-                            padRightEx((t.Profit * rate).ToFormatStr(fmt), len_COMMISSION),
+                            padRightEx((t.Commission * rate).ToFormatStr(), len_PRICE),
+                            padRightEx((t.Profit * rate).ToFormatStr(), len_COMMISSION),
                             padRightEx(t.TradeID, len_SEQID)
 
                             ));
