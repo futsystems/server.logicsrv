@@ -97,6 +97,9 @@
     <Compile Include="MD5Helper.cs" />
     <Compile Include="ORM\MGateWayConfig.cs" />
     <Compile Include="ORM\MRechargeOperation.cs" />
+    <Compile Include="PaymentGateway\101KA\101KAGateWay.cs" />
+    <Compile Include="PaymentGateway\101KA\101KAHelper.cs" />
+    <Compile Include="PaymentGateway\101KA\Drop101KAPayment.cs" />
     <Compile Include="PaymentGateway\AliyPay\AliPayCore.cs" />
     <Compile Include="PaymentGateway\AliyPay\AliPayGateWay.cs" />
     <Compile Include="PaymentGateway\AliyPay\AliPayMD5.cs" />

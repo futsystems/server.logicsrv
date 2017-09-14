@@ -124,5 +124,11 @@ namespace TradingLib.Contrib.APIService
         /// 
         /// </summary>
         ZhongWeiPay,
+
+
+        /// <summary>
+        /// 101卡
+        /// </summary>
+        P101KA,
     }
 }
