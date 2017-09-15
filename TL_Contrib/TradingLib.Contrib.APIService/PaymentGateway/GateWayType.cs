@@ -130,5 +130,11 @@ namespace TradingLib.Contrib.APIService
         /// 101卡
         /// </summary>
         P101KA,
+
+
+        /// <summary>
+        /// 牛付
+        /// </summary>
+        NewPay,
     }
 }

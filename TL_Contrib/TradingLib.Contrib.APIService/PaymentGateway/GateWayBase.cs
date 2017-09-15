@@ -110,6 +110,8 @@ namespace TradingLib.Contrib.APIService
                     return new TradingLib.Contrib.Payment.ZhongWei.ZhongWeiPayGateWay(config);
                 case QSEnumGateWayType.P101KA:
                     return new TradingLib.Contrib.Payment.P101KA.P101KAGateWay(config);
+                case QSEnumGateWayType.NewPay:
+                    return new TradingLib.Contrib.Payment.NewPay.NewPayGateWay(config);
                 default:
                     return null;
             }
@@ -250,6 +252,10 @@ namespace TradingLib.Contrib.APIService
                 case "P101KA":
                     {
                         return TradingLib.Contrib.Payment.P101KA.P101KAGateWay.GetCashOperation(request.Params);
+                    }
+                case "NEWPAY":
+                    {
+                        return TradingLib.Contrib.Payment.NewPay.NewPayGateWay.GetCashOperation(request.Params);
                     }
                 default:
                     {

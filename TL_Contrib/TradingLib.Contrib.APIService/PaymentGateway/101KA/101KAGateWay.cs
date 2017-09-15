@@ -22,7 +22,7 @@ namespace TradingLib.Contrib.Payment.P101KA
 
             this.GateWayType = QSEnumGateWayType.P101KA;
             var data = config.Config.DeserializeObject();
-            this.PayUrl = data["PayUrl"].ToString(); 
+            this.PayUrl = data["PayUrl"].ToString();
             this.MerID = data["MerID"].ToString();
             this.Key = data["Key"].ToString(); 
         }
@@ -81,7 +81,7 @@ namespace TradingLib.Contrib.Payment.P101KA
         public static CashOperation GetCashOperation(System.Collections.Specialized.NameValueCollection queryString)
         {
             //宝付远端回调提供TransID参数 为本地提供的递增的订单编号
-            string transid = queryString["merOrderId"];
+            string transid = queryString["r6_Order"];
             return ORM.MCashOperation.SelectCashOperation(transid);
         }
 

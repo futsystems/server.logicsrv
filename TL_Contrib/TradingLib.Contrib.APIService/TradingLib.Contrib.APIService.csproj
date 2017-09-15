@@ -142,6 +142,8 @@
     <Compile Include="PaymentGateway\MoBo\MoBoGateWay.cs" />
     <Compile Include="PaymentGateway\MoBo\MoboHelper.cs" />
     <Compile Include="PaymentGateway\MoBo\MoboSignHelper.cs" />
+    <Compile Include="PaymentGateway\NewPay\DropNewPayPayment.cs" />
+    <Compile Include="PaymentGateway\NewPay\NewPayGateWay.cs" />
     <Compile Include="PaymentGateway\QianTong\DropQianTongPayment.cs" />
     <Compile Include="PaymentGateway\QianTong\QianTongPayGateWay.cs" />
     <Compile Include="PaymentGateway\QianTong\RSAUtil.cs" />
