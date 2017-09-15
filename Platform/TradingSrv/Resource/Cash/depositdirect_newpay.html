@@ -1,0 +1,21 @@
+﻿<html>
+<body onload="document.depositconfirm.submit()">
+<form name='depositconfirm' method="post" action="{{data.Pay_Url}}" class="uk-panel uk-panel-box uk-form">
+	<input name='version' type='hidden' value= "{{data.version}}"/>
+	<input name='partnerId' type='hidden' value= "{{data.partner_Id}}"/>
+	<input name='orderId' type='hidden' value= "{{data.order_Id}}"/>
+	<input name='goods' type='hidden' value= "{{data.goods}}"/>
+	<input name='amount' type='hidden' value= "{{data.iamount}}"/>
+	<input name='expTime' type='hidden' value= "{{data.exp_Time}}"/>		
+	<input name='notifyUrl' type='hidden' value= "{{data.notify_Url}}" />
+	<input name='pageUrl' type='hidden' value= "{{data.page_Url}}" />
+	<input name='reserve' type='hidden' value= "{{data.reserve}}"/>
+	<input name='extendInfo' type='hidden' value= "{{data.extend_Info}}"/>
+	<input name='payMode' type='hidden' value= "{{data.pay_Mode}}"/>	
+	<input name='bankId' type='hidden' value="{{data.bank_Id}}"/>
+	<input name='creditType' type='hidden' value="{{data.credit_Type}}"/>
+	<input name='sign' type='hidden' value="{{data.sign}}"/>
+</form>
+
+</body>
+</html>
