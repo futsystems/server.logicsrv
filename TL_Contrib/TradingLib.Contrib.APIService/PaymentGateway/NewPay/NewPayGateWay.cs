@@ -22,15 +22,18 @@ namespace TradingLib.Contrib.Payment.NewPay
         {
 
             this.GateWayType = QSEnumGateWayType.NewPay;
-
+            var data = config.Config.DeserializeObject();
+            this.PayUrl = data["PayUrl"].ToString();
+            this.PartnerID = data["MerID"].ToString();
+            this.MD5Key = data["Key"].ToString(); 
 
 
         }
 
 
-        string PayUrl = "";
-        string PartnerID = "";
-        string MD5Key = "";
+        string PayUrl = "https://pay.newpaypay.com/center/proxy/partner/v1/pay.jsp";
+        string PartnerID = "246584000588";
+        string MD5Key = "5457ce87-990b-11e7-9f8e-d995d8294f93";
 
 
         public override Drop CreatePaymentDrop(CashOperation operatioin)
@@ -45,8 +48,8 @@ namespace TradingLib.Contrib.Payment.NewPay
             data.version = "v1";
             data.partnerId = this.PartnerID;
             data.orderId = operatioin.Ref;
-            data.goods = "";
-            data.amount = operatioin.Amount.ToFormatStr();
+            data.goods = Convert.ToBase64String(Encoding.UTF8.GetBytes("充值卡"));
+            data.iamount = operatioin.Amount.ToFormatStr();
 
             data.pageUrl = APIGlobal.CustNotifyUrl + "/newpay";
             data.notifyUrl = APIGlobal.SrvNotifyUrl + "/newpay";
@@ -62,7 +65,7 @@ namespace TradingLib.Contrib.Payment.NewPay
                 data.partnerId,
                 data.orderId,
                 data.goods,
-                data.amount,
+                data.iamount,
                 data.notifyUrl,
                 data.pageUrl,
                 data.payMode,

@@ -42,7 +42,7 @@ namespace TradingLib.Contrib.Payment.NewPay
 
         public string goods { get; set; }
 
-        public string amount { get; set; }
+        public string iamount { get; set; }
 
 
         public string expTime { get; set; }
