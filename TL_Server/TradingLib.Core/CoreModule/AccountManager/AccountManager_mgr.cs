@@ -64,7 +64,7 @@ namespace TradingLib.Core
             //Manager帐户数量限制 如果是在自己的主域中添加交易帐户 则需要检查帐户数量
             int limit = manager.BaseManager.AccLimit;
 
-            int cnt = manager.GetVisibleAccount().Count();//获得该manger下属的所有帐户数目
+            int cnt = manager.GetVisibleAccount().Where(acc => !acc.Deleted).Count();//获得该manger下属的所有帐户数目
             if (cnt >= limit)
             {
                 throw new FutsRspError("可开帐户数量超过限制:" + limit.ToString());
