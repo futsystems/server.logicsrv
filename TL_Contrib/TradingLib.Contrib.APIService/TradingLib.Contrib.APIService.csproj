@@ -131,6 +131,9 @@
     <Compile Include="PaymentGateway\GateWayBase.cs" />
     <Compile Include="PaymentGateway\GateWayType.cs" />
     <Compile Include="PaymentGateway\Gopay\GoPayGateway.cs" />
+    <Compile Include="PaymentGateway\HuiCX\DropHuiCXPayment.cs" />
+    <Compile Include="PaymentGateway\HuiCX\HuiCXGateWay.cs" />
+    <Compile Include="PaymentGateway\HuiCX\HuiCXHelpler.cs" />
     <Compile Include="PaymentGateway\Ielpm\IELPMPay.cs" />
     <Compile Include="PaymentGateway\Ielpm\sdk\CertUtil.cs" />
     <Compile Include="PaymentGateway\Ielpm\sdk\HttpClient.cs" />
