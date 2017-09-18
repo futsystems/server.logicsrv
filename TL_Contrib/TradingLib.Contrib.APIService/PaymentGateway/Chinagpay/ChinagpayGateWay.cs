@@ -150,7 +150,7 @@ namespace TradingLib.Contrib.APIService
         public override string GetResultComment(NHttp.HttpRequest request)
         {
             var queryString = request.Params;
-            string ResultDesc = queryString["respMsg"];
+            string ResultDesc = queryString["respCode"] == "1001" ? "成功" : "失败";
 
             return ResultDesc;
         }
