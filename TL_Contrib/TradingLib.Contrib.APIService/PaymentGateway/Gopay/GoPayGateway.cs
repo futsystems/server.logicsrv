@@ -35,20 +35,36 @@ namespace TradingLib.Contrib.APIService
             this.VerficationCode = data["VerficationCode"].ToString();// "hZdATerAjnT5HV25zBunvFdaUKdPTsvd";
             this.VirCardNo = data["AccNo"].ToString();
 
+            //try
+            //{
+            //    var val = data["Domain"];
+            //    this.Domain = val == null ? string.Empty : val.ToString();
+            //    this.PayDirectUrl = this.PayDirectUrl.Replace(APIGlobal.LocalIPAddress, this.Domain);
+
+            //}
+            //catch (Exception ex)
+            //{ 
+            
+            //}
+
             try
             {
-                var val = data["Domain"];
-                this.Domain = val == null ? string.Empty : val.ToString();
-                this.PayDirectUrl = this.PayDirectUrl.Replace(APIGlobal.LocalIPAddress, this.Domain);
+                this.Domain = data["Domain"].ToString();
 
+                this.frontURL = this.frontURL.Replace(APIGlobal.LocalIPAddress, this.Domain);
+                this.backURl = this.backURl.Replace(APIGlobal.LocalIPAddress, this.Domain);
+                this.PayDirectUrl = this.PayDirectUrl.Replace(APIGlobal.LocalIPAddress, this.Domain);
             }
             catch (Exception ex)
-            { 
-            
+            {
+
             }
+
 
             this.SuccessReponse = "RespCode=0000|JumpURL=";
         }
+        string frontURL = APIGlobal.CustNotifyUrl + "/chinagpay";
+        string backURl = APIGlobal.SrvNotifyUrl + "/chinagpay";
 
         public string Domain { get; set; }
         public string MerID { get; set; }
@@ -68,8 +84,8 @@ namespace TradingLib.Contrib.APIService
             data.TranAmt = operation.Amount.ToFormatStr();
             data.CurrencyType = "156";
 
-            data.FrontMerUrl = APIGlobal.CustNotifyUrl + "/gopay";
-            data.BackgroundMerUrl = APIGlobal.SrvNotifyUrl + "/gopay";
+            data.FrontMerUrl = frontURL;// APIGlobal.CustNotifyUrl + "/gopay";
+            data.BackgroundMerUrl = backURl;// APIGlobal.SrvNotifyUrl + "/gopay";
 
             data.TranDateTime = operation.DateTime.ToString();
             data.VirCardNoIn = this.VirCardNo;

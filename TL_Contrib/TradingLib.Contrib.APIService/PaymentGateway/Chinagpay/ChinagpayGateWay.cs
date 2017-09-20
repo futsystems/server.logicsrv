@@ -73,8 +73,8 @@ namespace TradingLib.Contrib.APIService
             data.TxnTime = operatioin.DateTime.ToString();
             data.TxnAmt = (operatioin.Amount * 100).ToFormatStr("{0:F0}");
             data.Currency = "CNY";
-            data.FrontUrl = frontURL;// APIGlobal.CustNotifyUrl + "/chinagpay";
-            data.BackUrl = backURl;// APIGlobal.SrvNotifyUrl + "/chinagpay";
+            data.FrontUrl =  APIGlobal.CustNotifyUrl + "/chinagpay";
+            data.BackUrl = APIGlobal.SrvNotifyUrl + "/chinagpay";
             data.PayType = "0201";
             data.PayUrl = this.PayUrl;
 
