@@ -32,11 +32,29 @@ namespace TradingLib.Contrib.APIService
             this.PayUrl = data["PayUrl"].ToString(); //"http://pay.chinagpay.com/bas/FrontTrans";
             this.MerID = data["MerID"].ToString(); //"929030000081335";
             this.MD5Key = data["MD5Key"].ToString();// "hZdATerAjnT5HV25zBunvFdaUKdPTsvd";
-        }
 
+            try
+            {
+                this.Domain = data["Domain"].ToString();
+
+                this.frontURL = this.frontURL.Replace(APIGlobal.LocalIPAddress, this.Domain);
+                this.backURl = this.backURl.Replace(APIGlobal.LocalIPAddress, this.Domain);
+                this.PayDirectUrl = this.PayDirectUrl.Replace(APIGlobal.LocalIPAddress, this.Domain);
+            }
+            catch (Exception ex)
+            {
+
+            }
+
+
+        }
+        public string Domain { get; set; }
         public string MerID { get; set; }
         public string PayUrl { get; set; }
         public string MD5Key { get; set; }
+
+        string frontURL = APIGlobal.CustNotifyUrl + "/chinagpay";
+        string backURl = APIGlobal.SrvNotifyUrl + "/chinagpay";
 
         public override Drop CreatePaymentDrop(CashOperation operatioin)
         {
@@ -55,8 +73,8 @@ namespace TradingLib.Contrib.APIService
             data.TxnTime = operatioin.DateTime.ToString();
             data.TxnAmt = (operatioin.Amount * 100).ToFormatStr("{0:F0}");
             data.Currency = "CNY";
-            data.FrontUrl = APIGlobal.CustNotifyUrl + "/chinagpay";
-            data.BackUrl = APIGlobal.SrvNotifyUrl + "/chinagpay";
+            data.FrontUrl = frontURL;// APIGlobal.CustNotifyUrl + "/chinagpay";
+            data.BackUrl = backURl;// APIGlobal.SrvNotifyUrl + "/chinagpay";
             data.PayType = "0201";
             data.PayUrl = this.PayUrl;
 
