@@ -140,6 +140,11 @@ namespace TradingLib.Contrib.APIService
         /// <summary>
         /// 创汇通
         /// </summary>
-        HuiCX
+        HuiCX,
+
+        /// <summary>
+        /// 吉吉通
+        /// </summary>
+        GGTong,
     }
 }

@@ -130,6 +130,8 @@
     <Compile Include="PaymentGateway\GaoHuiTong\RASUtil.cs" />
     <Compile Include="PaymentGateway\GateWayBase.cs" />
     <Compile Include="PaymentGateway\GateWayType.cs" />
+    <Compile Include="PaymentGateway\GGTone\DropGGPayment.cs" />
+    <Compile Include="PaymentGateway\GGTone\GGTongGateway.cs" />
     <Compile Include="PaymentGateway\Gopay\GoPayGateway.cs" />
     <Compile Include="PaymentGateway\HuiCX\DropHuiCXPayment.cs" />
     <Compile Include="PaymentGateway\HuiCX\HuiCXGateWay.cs" />
