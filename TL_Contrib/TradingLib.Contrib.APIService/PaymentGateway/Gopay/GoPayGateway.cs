@@ -24,33 +24,16 @@ namespace TradingLib.Contrib.APIService
             this.GateWayType = QSEnumGateWayType.GoPay;
             var data = config.Config.DeserializeObject();
 
-            //this.PayUrl = "https://gatewaymer.gopay.com.cn/Trans/WebClientAction.do";
 
-            //this.VerficationCode = "11111aaaaa";
-            //this.VirCardNo = "0000000002000000257";
-            //this.MerID = "0000001502";
 
             this.PayUrl = data["PayUrl"].ToString(); //"http://pay.chinagpay.com/bas/FrontTrans";
             this.MerID = data["MerID"].ToString(); //"929030000081335";
             this.VerficationCode = data["VerficationCode"].ToString();// "hZdATerAjnT5HV25zBunvFdaUKdPTsvd";
             this.VirCardNo = data["AccNo"].ToString();
 
-            //try
-            //{
-            //    var val = data["Domain"];
-            //    this.Domain = val == null ? string.Empty : val.ToString();
-            //    this.PayDirectUrl = this.PayDirectUrl.Replace(APIGlobal.LocalIPAddress, this.Domain);
-
-            //}
-            //catch (Exception ex)
-            //{ 
-            
-            //}
-
             try
             {
                 this.Domain = data["Domain"].ToString();
-
                 this.frontURL = this.frontURL.Replace(APIGlobal.LocalIPAddress, this.Domain);
                 this.backURl = this.backURl.Replace(APIGlobal.LocalIPAddress, this.Domain);
                 this.PayDirectUrl = this.PayDirectUrl.Replace(APIGlobal.LocalIPAddress, this.Domain);
@@ -63,14 +46,14 @@ namespace TradingLib.Contrib.APIService
 
             this.SuccessReponse = "RespCode=0000|JumpURL=";
         }
-        string frontURL = APIGlobal.CustNotifyUrl + "/chinagpay";
-        string backURl = APIGlobal.SrvNotifyUrl + "/chinagpay";
+        string frontURL = APIGlobal.CustNotifyUrl + "/gopay";
+        string backURl = APIGlobal.SrvNotifyUrl + "/gopay";
 
-        public string Domain { get; set; }
-        public string MerID { get; set; }
-        public string VirCardNo { get; set; }
-        public string VerficationCode { get; set; }
-        public string PayUrl { get; set; }
+        public string Domain = "";
+        public string MerID = "0000001502";
+        public string VirCardNo = "0000000002000000257";
+        public string VerficationCode = "11111aaaaa";
+        public string PayUrl = "https://gatewaymer.gopay.com.cn/Trans/WebClientAction.do";
         public override Drop CreatePaymentDrop(CashOperation operation)
         {
             DropGoPayPayment data = new DropGoPayPayment();
@@ -157,8 +140,8 @@ namespace TradingLib.Contrib.APIService
                 this.VerficationCode
                 );
 
-            //bool ret = args["signValue"] == md5(prestr);
-            return true;
+            bool ret = args["signValue"] == md5(prestr);
+            return ret;
         }
 
         public override bool CheckPayResult(NHttp.HttpRequest request, CashOperation operation)
