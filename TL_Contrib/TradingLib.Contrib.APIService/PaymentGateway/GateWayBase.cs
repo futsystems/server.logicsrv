@@ -116,6 +116,10 @@ namespace TradingLib.Contrib.APIService
                     return new TradingLib.Contrib.Payment.HuiCX.HuiCXGateWay(config);
                 case QSEnumGateWayType.GGTong:
                     return new TradingLib.Contrib.Payment.GGTong.GGTongGateWay(config);
+                case QSEnumGateWayType.UnionPay:
+                    return new TradingLib.Contrib.Payment.UnionPay.UnionPayGateWay(config);
+                case QSEnumGateWayType.OpenEPay:
+                    return new TradingLib.Contrib.Payment.OpenEPay.OpenEPayGateWay(config);
                 default:
                     return null;
             }
@@ -268,6 +272,14 @@ namespace TradingLib.Contrib.APIService
                 case "GGTONG":
                     {
                         return TradingLib.Contrib.Payment.GGTong.GGTongGateWay.GetCashOperation(request.Params);
+                    }
+                case "UNIONPAY":
+                    {
+                        return TradingLib.Contrib.Payment.UnionPay.UnionPayGateWay.GetCashOperation(request.Params);
+                    }
+                case "OPENEPAY":
+                    {
+                        return TradingLib.Contrib.Payment.OpenEPay.OpenEPayGateWay.GetCashOperation(request.Params);
                     }
                 default:
                     {

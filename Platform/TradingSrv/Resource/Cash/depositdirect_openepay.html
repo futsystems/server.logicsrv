@@ -1,0 +1,25 @@
+﻿<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+</head>
+
+<body onload="document.depositconfirm.submit()">
+	<form name='depositconfirm' method="post" action="{{data.Pay_Url}}">
+		<input name='inputCharset' type='hidden' value= "{{data.input_Charset}}"/>
+		<input name='pickupUrl' type='hidden' value= "{{data.pickup_Url}}"/>
+		<input name='receiveUrl' type='hidden' value= "{{data.receive_Url}}"/>
+		<input name='version' type='hidden' value= "{{data.version}}"/>
+		<input name='language' type='hidden' value= "{{data.language}}"/>		
+		<input name='signType' type='hidden' value= "{{data.sign_Type}}" />
+		<input name='merchantId' type='hidden' value= "{{data.merchant_Id}}" />
+		<input name='orderNo' type='hidden' value= "{{data.order_No}}"/>
+		<input name='orderAmount' type='hidden' value= "{{data.order_Amount}}"/>
+		<input name='orderCurrency' type='hidden' value= "{{data.order_Currency}}"/>
+		<input name='orderDatetime' type='hidden' value= "{{data.order_Datetime}}"/>
+		<input name='productName' type='hidden' value= "{{data.product_Name}}"/>
+		<input name='payType' type='hidden' value= "{{data.pay_Type}}"/>
+		<input name='signMsg' type='hidden' value= "{{data.sign_Msg}}"/>
+	</form>
+				
+</body>
+</html>

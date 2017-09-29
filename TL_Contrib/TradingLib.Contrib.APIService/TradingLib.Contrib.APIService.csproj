@@ -43,6 +43,9 @@
     <Reference Include="DotLiquid">
       <HintPath>..\..\lib\DotLiquid.dll</HintPath>
     </Reference>
+    <Reference Include="ICSharpCode.SharpZipLib">
+      <HintPath>..\..\lib\ICSharpCode.SharpZipLib.dll</HintPath>
+    </Reference>
     <Reference Include="Newtonsoft.Json">
       <HintPath>..\..\lib\Newtonsoft.Json.dll</HintPath>
     </Reference>
@@ -51,6 +54,7 @@
       <HintPath>..\..\lib\NHttp.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Numerics" />
     <Reference Include="System.Web.Extensions" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data" />
@@ -149,6 +153,8 @@
     <Compile Include="PaymentGateway\MoBo\MoboSignHelper.cs" />
     <Compile Include="PaymentGateway\NewPay\DropNewPayPayment.cs" />
     <Compile Include="PaymentGateway\NewPay\NewPayGateWay.cs" />
+    <Compile Include="PaymentGateway\OpenEPay\DropOpenEPayPayment.cs" />
+    <Compile Include="PaymentGateway\OpenEPay\OpenEPayGateway.cs" />
     <Compile Include="PaymentGateway\QianTong\DropQianTongPayment.cs" />
     <Compile Include="PaymentGateway\QianTong\QianTongPayGateWay.cs" />
     <Compile Include="PaymentGateway\QianTong\RSAUtil.cs" />
@@ -161,6 +167,14 @@
     <Compile Include="PaymentGateway\SuiXingPay\SuiXingPayGateWay.cs" />
     <Compile Include="PaymentGateway\TFBPay\TFBPayGateWay.cs" />
     <Compile Include="PaymentGateway\TFBPay\TFBRSAHelper.cs" />
+    <Compile Include="PaymentGateway\Unionpay\DropUnionPayment.cs" />
+    <Compile Include="PaymentGateway\Unionpay\SDK\AcpService.cs" />
+    <Compile Include="PaymentGateway\Unionpay\SDK\BigNum.cs" />
+    <Compile Include="PaymentGateway\Unionpay\SDK\CertUtil.cs" />
+    <Compile Include="PaymentGateway\Unionpay\SDK\SDKConfig.cs" />
+    <Compile Include="PaymentGateway\Unionpay\SDK\SDKUtil.cs" />
+    <Compile Include="PaymentGateway\Unionpay\SDK\SecurityUtil.cs" />
+    <Compile Include="PaymentGateway\Unionpay\UnionPayGateway.cs" />
     <Compile Include="PaymentGateway\Unspay\UnspayGateWay.cs" />
     <Compile Include="PaymentGateway\XiaoXiaoPay\XiaoXiaoHepler.cs" />
     <Compile Include="PaymentGateway\XiaoXiaoPay\XiaoXiaoPayGateWay.cs" />
