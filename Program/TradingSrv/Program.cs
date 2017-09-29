@@ -44,12 +44,8 @@ namespace TraddingSrvCLI
             try
             {
 
-                string ret = "<?xml version=\"1.0\" encoding=\"utf-8\" standalone=\"no\"?>\r\n<message application=\"NotifyOrder\" merchantId=\"1008038\" merchantOrderId=\"636383156318160977\" version=\"1.0.1\">\r\n<deductList>\r\n<item payAmt=\"20\" payDesc=\"付款成功\" payOrderId=\"J5ZUH3U53JLXPWQXE\" payStatus=\"01\" payTime=\"20170814160107\"/>\r\n</deductList>\r\n<refundList/>\r\n</message>\r\n";
-                System.Xml.XmlDocument doc = new System.Xml.XmlDocument();
-                doc.LoadXml(ret);
 
-                var transid = doc["message"]["deductList"]["item"].GetAttribute("payStatus");
-
+               
 
                 logger.Info("********* start core daemon *********");
                 System.OperatingSystem osInfo = System.Environment.OSVersion;
@@ -60,7 +56,6 @@ namespace TraddingSrvCLI
                 //读取配置文件 初始化数据库参数 系统其余设置均从数据库中加载
                 ConfigFile _configFile = ConfigFile.GetConfigFile();
                 DBHelper.InitDBConfig(_configFile["DBAddress"].AsString(), _configFile["DBPort"].AsInt(), _configFile["DBName"].AsString(), _configFile["DBUser"].AsString(), _configFile["DBPass"].AsString());
-
                 
                 //加载配置文件并生成容器
                 var builder = new ContainerBuilder();

@@ -134,8 +134,23 @@ namespace TradingLib.Common
             DateTime extime = exchange.GetExchangeTime();//获得交易所时间
             TradingRange range = sec.MarketTime.JudgeRange(extime);//根据交易所时间判定当前品种所属交易小节
             if (range == null) return 0;
+
+            int settleday = 0;
+            var ret= MarketTimeCheck(exchange, extime, range, out settleday);
+
+            return settleday;
+        }
+
+        public static int CurrentTradingday2(this SecurityFamily sec)
+        {
+            Exchange exchange = sec.Exchange;
+            DateTime extime = exchange.GetExchangeTime();//获得交易所时间
+            TradingRange range = sec.MarketTime.JudgeRange(extime);//根据交易所时间判定当前品种所属交易小节
+            if (range == null) return 0;
+
             return range.TradingDay(extime).ToTLDate();
         }
+
 
         public static QSEnumActionCheckResult CheckCancelOrder(this SecurityFamily sec,out int settleday)
         {
