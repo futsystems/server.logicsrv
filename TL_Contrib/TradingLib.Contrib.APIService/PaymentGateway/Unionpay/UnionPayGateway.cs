@@ -27,7 +27,8 @@ namespace TradingLib.Contrib.Payment.UnionPay
             //this.CertPath = Path.Combine(new string[] { AppDomain.CurrentDomain.BaseDirectory, "config", "cust", config.Domain_ID.ToString(), "700000000000001_acp.p12" });
             //this.CertPasswd = "000000";
 
-            
+            SDKConfig.IfValidateCNName = "false";
+
             SDKConfig.ValidateCertDir = Path.Combine(new string[] { AppDomain.CurrentDomain.BaseDirectory, "config", "cust", config.Domain_ID.ToString()});
             SDKConfig.RootCertPath = Path.Combine(new string[] { AppDomain.CurrentDomain.BaseDirectory, "config", "cust", config.Domain_ID.ToString() });
             SDKConfig.EncryptCert = Path.Combine(new string[] { AppDomain.CurrentDomain.BaseDirectory, "config", "cust", config.Domain_ID.ToString(), "acp_test_enc.cer" });
