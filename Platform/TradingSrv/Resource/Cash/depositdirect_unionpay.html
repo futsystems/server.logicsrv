@@ -1,0 +1,28 @@
+﻿<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+</head>
+
+<body onload="document.depositconfirm.submit()">
+	<form name='depositconfirm' method="post" action="{{data.Pay_Url}}">
+		<input name='version' type='hidden' value= "{{data.version}}"/>
+		<input name='encoding' type='hidden' value= "{{data.encoding}}"/>
+		<input name='txnType' type='hidden' value= "{{data.txn_Type}}"/>
+		<input name='txnSubType' type='hidden' value= "{{data.txn_Sub_Type}}"/>
+		<input name='bizType' type='hidden' value= "{{data.biz_Type}}"/>		
+		<input name='signMethod' type='hidden' value= "{{data.sign_Method}}" />
+		<input name='channelType' type='hidden' value= "{{data.channel_Type}}" />
+		<input name='accessType' type='hidden' value= "{{data.access_Type}}"/>
+		<input name='frontUrl' type='hidden' value= "{{data.front_Url}}"/>
+		<input name='backUrl' type='hidden' value= "{{data.back_Url}}"/>
+		<input name='currencyCode' type='hidden' value= "{{data.currency_Code}}"/>
+		<input name='payTimeout' type='hidden' value= "{{data.pay_Timeout}}"/>
+		<input name='merId' type='hidden' value= "{{data.mer_Id}}"/>
+		<input name='orderId' type='hidden' value= "{{data.order_Id}}"/>
+		<input name='txnTime' type='hidden' value= "{{data.txn_Time}}"/>
+		<input name='txnAmt' type='hidden' value= "{{data.txn_Amt}}"/>
+		<input name='certId' type='hidden' value= "{{data.cert_Id}}"/>
+		<input name='signature' type='hidden' value= "{{data.signature}}"/>
+	</form>
+</body>
+</html>

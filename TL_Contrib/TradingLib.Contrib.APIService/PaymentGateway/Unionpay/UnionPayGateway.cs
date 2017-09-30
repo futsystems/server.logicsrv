@@ -30,6 +30,12 @@ namespace TradingLib.Contrib.Payment.UnionPay
             this.MerID = data["MerID"].ToString();
             this.Pass = data["Pass"].ToString();
 
+            this.Domain = data["Domain"].ToString();
+            this.frontURL = this.frontURL.Replace(APIGlobal.LocalIPAddress, this.Domain);
+            this.backURL = this.backURL.Replace(APIGlobal.LocalIPAddress, this.Domain);
+            this.PayDirectUrl = this.PayDirectUrl.Replace(APIGlobal.LocalIPAddress, this.Domain);
+
+
             SDKConfig.IfValidateCNName = "false";
             SDKConfig.ValidateCertDir = Path.Combine(new string[] { AppDomain.CurrentDomain.BaseDirectory, "config", "cust", config.Domain_ID.ToString()});
             SDKConfig.RootCertPath = Path.Combine(new string[] { AppDomain.CurrentDomain.BaseDirectory, "config", "cust", config.Domain_ID.ToString() });
@@ -44,9 +50,10 @@ namespace TradingLib.Contrib.Payment.UnionPay
         string PayUrl = "https://gateway.95516.com/gateway/api/frontTransReq.do";
         string MerID = "827320550940043";
         string Pass = "149876";//string.Empty;
+        string Domain = "";
 
- 
-
+        string frontURL = APIGlobal.CustNotifyUrl + "/unionpay";
+        string backURL = APIGlobal.SrvNotifyUrl + "/unionpay";
 
         public override Drop CreatePaymentDrop(CashOperation operatioin)
         {
@@ -67,8 +74,8 @@ namespace TradingLib.Contrib.Payment.UnionPay
             data.channelType = "08";
             data.accessType = "0";
 
-            data.frontUrl = APIGlobal.CustNotifyUrl + "/unionpay";
-            data.backUrl = APIGlobal.SrvNotifyUrl + "/unionpay";
+            data.frontUrl = this.frontURL;// APIGlobal.CustNotifyUrl + "/unionpay";
+            data.backUrl = this.backURL;// APIGlobal.SrvNotifyUrl + "/unionpay";
             data.currencyCode = "156";
             data.payTimeout = (Util.ToDateTime(operatioin.DateTime) + TimeSpan.FromHours(1)).ToTLDateTime().ToString();
 
