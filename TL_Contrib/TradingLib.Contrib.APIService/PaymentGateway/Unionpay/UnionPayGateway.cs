@@ -24,28 +24,28 @@ namespace TradingLib.Contrib.Payment.UnionPay
             this.GateWayType = QSEnumGateWayType.UnionPay;
             var data = config.Config.DeserializeObject();
 
-            //this.CertPath = Path.Combine(new string[] { AppDomain.CurrentDomain.BaseDirectory, "config", "cust", config.Domain_ID.ToString(), "700000000000001_acp.p12" });
-            //this.CertPasswd = "000000";
+
+
+            this.PayUrl = data["PayUrl"].ToString();
+            this.MerID = data["MerID"].ToString();
+            this.Pass = data["Pass"].ToString();
 
             SDKConfig.IfValidateCNName = "false";
-
             SDKConfig.ValidateCertDir = Path.Combine(new string[] { AppDomain.CurrentDomain.BaseDirectory, "config", "cust", config.Domain_ID.ToString()});
             SDKConfig.RootCertPath = Path.Combine(new string[] { AppDomain.CurrentDomain.BaseDirectory, "config", "cust", config.Domain_ID.ToString() });
-            SDKConfig.EncryptCert = Path.Combine(new string[] { AppDomain.CurrentDomain.BaseDirectory, "config", "cust", config.Domain_ID.ToString(), "acp_test_enc.cer" });
-            SDKConfig.MiddleCertPath = Path.Combine(new string[] { AppDomain.CurrentDomain.BaseDirectory, "config", "cust", config.Domain_ID.ToString(), "acp_test_middle.cer" });
-            SDKConfig.RootCertPath = Path.Combine(new string[] { AppDomain.CurrentDomain.BaseDirectory, "config", "cust", config.Domain_ID.ToString(), "acp_test_root.cer" });
-            SDKConfig.SignCertPath = Path.Combine(new string[] { AppDomain.CurrentDomain.BaseDirectory, "config", "cust", config.Domain_ID.ToString(), "acp_test_sign.pfx" });
-            //SDKConfig.SignCertPath = Path.Combine(new string[] { AppDomain.CurrentDomain.BaseDirectory, "config", "cust", config.Domain_ID.ToString(), "demo500.pfx" });
-            SDKConfig.SignCertPwd = "000000";
-            //this.PrivateKeyName = Path.Combine(new string[] { AppDomain.CurrentDomain.BaseDirectory, "config", "cust", config.Domain_ID.ToString(), "CS.pfx" });
+            SDKConfig.EncryptCert = Path.Combine(new string[] { AppDomain.CurrentDomain.BaseDirectory, "config", "cust", config.Domain_ID.ToString(), "acp_prod_enc.cer" });
+            SDKConfig.MiddleCertPath = Path.Combine(new string[] { AppDomain.CurrentDomain.BaseDirectory, "config", "cust", config.Domain_ID.ToString(), "acp_prod_middle.cer" });
+            SDKConfig.RootCertPath = Path.Combine(new string[] { AppDomain.CurrentDomain.BaseDirectory, "config", "cust", config.Domain_ID.ToString(), "acp_prod_root.cer" });
+            SDKConfig.SignCertPath = Path.Combine(new string[] { AppDomain.CurrentDomain.BaseDirectory, "config", "cust", config.Domain_ID.ToString(), "acp_prod_sign.pfx" });
+            SDKConfig.SignCertPwd = this.Pass;// "000000";
+          
         }
 
-        string PayUrl = "https://gateway.test.95516.com/gateway/api/frontTransReq.do";
-
+        string PayUrl = "https://gateway.95516.com/gateway/api/frontTransReq.do";
         string MerID = "827320550940043";
+        string Pass = "149876";//string.Empty;
 
-        //string CertPath { get; set; }
-        //string CertPasswd { get; set; }
+ 
 
 
         public override Drop CreatePaymentDrop(CashOperation operatioin)
