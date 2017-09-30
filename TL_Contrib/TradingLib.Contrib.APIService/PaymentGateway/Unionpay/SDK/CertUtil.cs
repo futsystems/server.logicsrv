@@ -456,7 +456,7 @@ namespace com.unionpay.acp.sdk
                 FileStream fileStream = null;
                 try
                 {
-                    fileStream = new FileStream(file.DirectoryName + "\\" + file.Name, FileMode.Open);
+                    fileStream = new FileStream(Path.Combine(new string[]{file.DirectoryName,file.Name}), FileMode.Open);
                     X509Certificate certificate = new X509CertificateParser().ReadCertificate(fileStream);
 
                     Cert cert = new Cert();
