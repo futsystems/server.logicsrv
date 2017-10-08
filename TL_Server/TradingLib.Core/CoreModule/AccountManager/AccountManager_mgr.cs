@@ -154,18 +154,21 @@ namespace TradingLib.Core
             {
                 session.GetManager().PermissionCheckAccount(account);
                 IAccount acc = this[account];
-                /*
-                if (acc.GetPositionsHold().Count() > 0)
-                {
-                    throw new FutsRspError(string.Format("交易帐户:{0} 有持仓 无法删除", acc.ID));
-                }
-                **/
 
-                //检查交易帐户资金
-                //if (_deleteAccountCheckEquity && (acc.NowEquity > 1 || acc.Credit > 1))
-                //{
-                //    throw new FutsRspError(string.Format(string.Format("交易帐户:{0} 权益:{1} 信用额度:{2}未出金 无法删除", account, acc.NowEquity, acc.Credit)));
-                //}
+                if (!GlobalConfig.DeleteDirect)
+                {
+                    //if (acc.GetPositionsHold().Count() > 0)
+                    //{
+                    //    throw new FutsRspError(string.Format("交易帐户:{0} 有持仓 无法删除", acc.ID));
+                    //}
+
+
+                    //检查交易帐户资金
+                    if (_deleteAccountCheckEquity && (acc.NowEquity > 1 || acc.Credit > 1))
+                    {
+                        throw new FutsRspError(string.Format(string.Format("交易帐户:{0} 权益:{1} 信用额度:{2}未出金 无法删除", account, acc.NowEquity, acc.Credit)));
+                    }
+                }
 
                 this.DelAccount(account);
             }

@@ -20,7 +20,6 @@ namespace TradingLib.Core
         ConfigDB _cfgdb;
 
         bool _deleteAccountCheckEquity = false;
-        bool _deleteAccountDirect = false;
 
         IdTracker _txnTracker = new IdTracker(IdTracker.OWNER_TXN_ACC);
         public AccountManager():
@@ -36,11 +35,6 @@ namespace TradingLib.Core
             }
             _deleteAccountCheckEquity = _cfgdb["DeleteAccountCheckEquity"].AsBool();
 
-            if (!_cfgdb.HaveConfig("DeleteAccountDirect"))
-            {
-                _cfgdb.UpdateConfig("DeleteAccountDirect", QSEnumCfgType.Bool, true, "是否立即删除交易帐户");
-            }
-            _deleteAccountDirect = _cfgdb["DeleteAccountDirect"].AsBool();
             
             
             LoadAccount();
@@ -146,7 +140,7 @@ namespace TradingLib.Core
         /// <param name="id"></param>
         public void DelAccount(string id)
         {
-            if (!_deleteAccountDirect)
+            if (!GlobalConfig.DeleteDirect)
             {
                 IAccount account = this[id];
                 if (account == null)
@@ -169,7 +163,6 @@ namespace TradingLib.Core
                 {
                     throw new FutsRspError("交易帐号不存在");
                 }
-
                 try
                 {
 

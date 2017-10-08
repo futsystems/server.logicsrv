@@ -132,25 +132,31 @@ namespace TradingLib.Common
         /// 删除某个管理员
         /// </summary>
         /// <param name="mgr"></param>
-        public void DeleteManager(ManagerSetting mgr)
-        { 
-            /*
-            Manager target = null;
-            if (mgridmap.TryGetValue(mgr.ID, out target))
+        public void DeleteManager(ManagerSetting mgr,bool direct)
+        {
+            if (direct)
             {
-                ORM.MManager.DeleteManager(mgr.ID);
-                mgridmap.TryRemove(mgr.ID, out target);
-                if (target != null)
+                Manager target = null;
+                if (mgridmap.TryGetValue(mgr.ID, out target))
                 {
-                    managermap.TryRemove(mgr.Login, out target);
+                    mgr.Deleted = true;
+                    ORM.MManager.DeleteManager(mgr);
+                    mgridmap.TryRemove(mgr.ID, out target);
+                    if (target != null)
+                    {
+                        managermap.TryRemove(mgr.Login, out target);
+                    }
                 }
-            }**/
-            Manager target = null;
-            if (mgridmap.TryGetValue(mgr.ID, out target))
+            }
+            else
             {
-                mgr.Deleted = true;
-                mgr.DeletedSettleday = TLCtxHelper.ModuleSettleCentre.Tradingday;
-                ORM.MManager.MarkManagerDeleted(mgr.ID);
+                Manager target = null;
+                if (mgridmap.TryGetValue(mgr.ID, out target))
+                {
+                    mgr.Deleted = true;
+                    mgr.DeletedSettleday = TLCtxHelper.ModuleSettleCentre.Tradingday;
+                    ORM.MManager.MarkManagerDeleted(mgr.ID);
+                }
             }
         }
 

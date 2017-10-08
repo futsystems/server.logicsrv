@@ -154,6 +154,11 @@ namespace TradingLib.Common
             {
                 config.UpdateConfig("LogicDelete", QSEnumCfgType.Bool,true, "逻辑删除");
             }
+
+            if (!config.HaveConfig("DeleteDirect"))
+            {
+                config.UpdateConfig("DeleteDirect", QSEnumCfgType.Bool, false, "直接删除");
+            }
         }
 
         /// <summary>
@@ -166,6 +171,17 @@ namespace TradingLib.Common
             get
             {
                 return defaultinstance.config["LogicDelete"].AsBool();
+            }
+        }
+
+        /// <summary>
+        /// 直接删除
+        /// </summary>
+        public static bool DeleteDirect
+        {
+            get
+            {
+                return defaultinstance.config["DeleteDirect"].AsBool();
             }
         }
         /// <summary>
