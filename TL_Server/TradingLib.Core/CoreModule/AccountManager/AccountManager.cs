@@ -20,6 +20,7 @@ namespace TradingLib.Core
         ConfigDB _cfgdb;
 
         bool _deleteAccountCheckEquity = false;
+        bool _deleteAccountDirect = false;
 
         IdTracker _txnTracker = new IdTracker(IdTracker.OWNER_TXN_ACC);
         public AccountManager():
@@ -34,6 +35,12 @@ namespace TradingLib.Core
                 _cfgdb.UpdateConfig("DeleteAccountCheckEquity", QSEnumCfgType.Bool, false, "删除交易帐户是否检查帐户权益");
             }
             _deleteAccountCheckEquity = _cfgdb["DeleteAccountCheckEquity"].AsBool();
+
+            if (!_cfgdb.HaveConfig("DeleteAccountDirect"))
+            {
+                _cfgdb.UpdateConfig("DeleteAccountDirect", QSEnumCfgType.Bool, true, "是否立即删除交易帐户");
+            }
+            _deleteAccountDirect = _cfgdb["DeleteAccountDirect"].AsBool();
             
             
             LoadAccount();
@@ -139,49 +146,53 @@ namespace TradingLib.Core
         /// <param name="id"></param>
         public void DelAccount(string id)
         {
-            IAccount account = this[id];
-            if (account == null)
+            if (!_deleteAccountDirect)
             {
-                logger.Warn(string.Format("Account:{0} do not exist", id));
-                return;
-            }
+                IAccount account = this[id];
+                if (account == null)
+                {
+                    logger.Warn(string.Format("Account:{0} do not exist", id));
+                    return;
+                }
 
-            account.Deleted = true;
-            //数据库更新标识账户逻辑删除
-            ORM.MAccount.MarkAccountDeleted(id);
-
-            TLCtxHelper.EventAccount.FireAccountDelEvent(account);
-            logger.Info(string.Format("Account:{0} Deleted", id));
-
-            /*
-            IAccount account = this[id];
-            if (account == null)
-            {
-                throw new FutsRspError("交易帐号不存在");
-            }
-
-            try
-            {
-
-                _accMap.TryRemove(id, out account);
-                //删除数据库
-                ORM.MAccount.DelAccount(id);//删除数据库记录
-                //删除内存记录
-                TLCtxHelper.ModuleClearCentre.DropAccount(account);
-
-                BasicTracker.AccountProfileTracker.DropAccount(id);
-                //对外触发交易帐户删除事件
                 account.Deleted = true;
+                //数据库更新标识账户逻辑删除
+                ORM.MAccount.MarkAccountDeleted(id);
 
                 TLCtxHelper.EventAccount.FireAccountDelEvent(account);
-
                 logger.Info(string.Format("Account:{0} Deleted", id));
             }
-            catch (Exception ex)
+            else
             {
-                logger.Error("删除交易帐户错误:" + ex.ToString());
-                throw new FutsRspError("删除交易帐户异常，请手工删除相关信息");
-            }**/
+                IAccount account = this[id];
+                if (account == null)
+                {
+                    throw new FutsRspError("交易帐号不存在");
+                }
+
+                try
+                {
+
+                    _accMap.TryRemove(id, out account);
+                    //删除数据库
+                    ORM.MAccount.DelAccount(id);//删除数据库记录
+                    //删除内存记录
+                    TLCtxHelper.ModuleClearCentre.DropAccount(account);
+
+                    BasicTracker.AccountProfileTracker.DropAccount(id);
+                    //对外触发交易帐户删除事件
+                    account.Deleted = true;
+
+                    TLCtxHelper.EventAccount.FireAccountDelEvent(account);
+
+                    logger.Info(string.Format("Account:{0} Deleted", id));
+                }
+                catch (Exception ex)
+                {
+                    logger.Error("删除交易帐户错误:" + ex.ToString());
+                    throw new FutsRspError("删除交易帐户异常，请手工删除相关信息");
+                }
+            }
         }
 
         /// <summary>

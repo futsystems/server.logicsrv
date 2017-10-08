@@ -75,9 +75,10 @@ namespace TradingLib.Common
             func = (mgr) =>
             {
                 if (mgr == null) return false;
+                //if (mgr.domain_id != account.Domain.ID) return false;//不同分区 无权
                 //如果有Root域的管理端登入 则需要通知
-                if (mgr.IsInRoot())
-                    return true;
+                //if (mgr.IsInRoot())
+                //    return true;
                 //如果该交易帐户的代理客户端登入 则需要通知
                 if (mgr.RightAccessAccount(account))
                     return true;

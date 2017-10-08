@@ -234,6 +234,12 @@ namespace TradingLib.Core
             
             if (remove.Type == QSEnumManagerType.AGENT)
             {
+                if (remove.GetVisibleAccount().Count()>0)
+                {
+                    throw new FutsRspError("代理有下级下级子账户");
+                }
+                /*
+                
                 if (remove.AgentAccount != null && remove.AgentAccount.NowEquity > 0.5M)
                 {
                     throw new FutsRspError("代理结算账户权益未清零,无法删除");
@@ -242,7 +248,8 @@ namespace TradingLib.Core
                 if (remove.GetVisibleAccount().Any(acc => acc.NowEquity > 0.5M) || remove.GetVisibleAccount().Any(acc => acc.GetPositionsHold().Count() > 0))
                 {
                     throw new FutsRspError("代理下级子账户权益未清零或有持仓,无法删除");
-                }
+                }**/
+
             }
 
 

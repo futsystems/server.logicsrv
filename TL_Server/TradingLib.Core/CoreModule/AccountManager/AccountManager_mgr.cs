@@ -153,12 +153,13 @@ namespace TradingLib.Core
             foreach (var account in accounts)
             {
                 session.GetManager().PermissionCheckAccount(account);
-
                 IAccount acc = this[account];
+                /*
                 if (acc.GetPositionsHold().Count() > 0)
                 {
                     throw new FutsRspError(string.Format("交易帐户:{0} 有持仓 无法删除", acc.ID));
                 }
+                **/
 
                 //检查交易帐户资金
                 if (_deleteAccountCheckEquity && (acc.NowEquity > 1 || acc.Credit > 1))
