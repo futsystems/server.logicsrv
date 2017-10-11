@@ -155,6 +155,8 @@
     <Compile Include="PaymentGateway\NewPay\NewPayGateWay.cs" />
     <Compile Include="PaymentGateway\OpenEPay\DropOpenEPayPayment.cs" />
     <Compile Include="PaymentGateway\OpenEPay\OpenEPayGateway.cs" />
+    <Compile Include="PaymentGateway\Pay848\DropPay848Payment.cs" />
+    <Compile Include="PaymentGateway\Pay848\Pay848GateWay.cs" />
     <Compile Include="PaymentGateway\QianTong\DropQianTongPayment.cs" />
     <Compile Include="PaymentGateway\QianTong\QianTongPayGateWay.cs" />
     <Compile Include="PaymentGateway\QianTong\RSAUtil.cs" />

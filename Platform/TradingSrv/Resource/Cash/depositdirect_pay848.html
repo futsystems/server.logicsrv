@@ -1,0 +1,18 @@
+﻿<html>
+<head>
+</head>
+
+<body onload="document.depositconfirm.submit()">
+<form name='depositconfirm' method="post" action="{{data.Pay_Url}}">
+	<input name='parter' type='hidden' value= "{{data.parter}}"/>
+	<input name='type' type='hidden' value= "{{data.type}}"/>
+	<input name='value' type='hidden' value= "{{data.value}}"/>
+	<input name='orderid' type='hidden' value= "{{data.orderid}}"/>
+	<input name='callbackurl' type='hidden' value= "{{data.callbackurl}}"/>
+	<input name='hrefbackurl' type='hidden' value= "{{data.hrefbackurl}}"/>
+	<input name='payerIp' type='hidden' value= "{{data.payer_Ip}}"/>
+	<input name='attach' type='hidden' value= "{{data.attach}}"/>
+	<input name='sign' type='hidden' value= "{{data.sign}}"/>
+</form>
+</body>
+</html>

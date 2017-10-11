@@ -156,5 +156,10 @@ namespace TradingLib.Contrib.APIService
         /// 开联通
         /// </summary>
         OpenEPay,
+
+        /// <summary>
+        /// 银信通
+        /// </summary>
+        Pay848,
     }
 }
