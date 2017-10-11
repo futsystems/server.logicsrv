@@ -46,8 +46,8 @@ namespace TradingLib.Contrib.Payment.Pay848
             data.value = operatioin.Amount.ToFormatStr();
             data.orderid = operatioin.Ref;
 
-            data.callbackurl = APIGlobal.CustNotifyUrl + "/pay848";
-            data.hrefbackurl = APIGlobal.SrvNotifyUrl + "/pay848";
+            data.hrefbackurl = APIGlobal.CustNotifyUrl + "/pay848";
+            data.callbackurl = APIGlobal.SrvNotifyUrl + "/pay848";
             data.payerIp = string.Empty;
             data.attach = string.Empty;
 
