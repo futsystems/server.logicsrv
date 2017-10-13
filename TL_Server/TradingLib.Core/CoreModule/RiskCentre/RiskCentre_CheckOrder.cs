@@ -49,7 +49,7 @@ namespace TradingLib.Core
         /// <param name="errortitle"></param>
         /// <param name="inter">是否是内部委托 比如风控系统产生的委托</param>
         /// <returns></returns>
-        public bool CheckOrderStep1(ref Order o,IAccount account,out bool needlog, out string errortitle,bool inter=false)
+        public bool CheckOrderStep1(ref Order o, ISession session, IAccount account, out bool needlog, out string errortitle, bool inter = false)
         {
             errortitle = string.Empty;
             needlog = true;
@@ -344,7 +344,7 @@ namespace TradingLib.Core
         /// <param name="o"></param>
         /// <param name="msg"></param>
         /// <returns></returns>
-        public bool CheckOrderStep2(ref Order o, IAccount account,out string msg, bool inter = false)
+        public bool CheckOrderStep2(ref Order o, ISession session, IAccount account, out string msg, bool inter = false)
         {
             try
             {
@@ -370,8 +370,13 @@ namespace TradingLib.Core
                         case SecurityType.FUT:
                             #region 期货平仓检查
                             {
-                                //如果是上期所的期货品种 需要检查今仓和昨仓
-                                if (o.oSymbol.SecurityFamily.Exchange.EXCode.Equals("SHFE"))
+                                bool ismobile = false;
+                                if (session != null && session.ProductInfo.StartsWith("M."))
+                                {
+                                    ismobile = true;
+                                }
+                                //如果是上期所的期货品种 需要检查今仓和昨仓 手机端直接执行先开先平操作
+                                if ( (!ismobile)&& o.oSymbol.SecurityFamily.Exchange.EXCode.Equals("SHFE"))
                                 {
                                     /* 上期所
                                      * 平今 必须用CloseToday

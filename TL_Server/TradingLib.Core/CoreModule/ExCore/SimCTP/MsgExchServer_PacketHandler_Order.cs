@@ -61,11 +61,10 @@ namespace TradingLib.Core
 
 
             order.id = 0;//从外部传入的委托 统一置委托编号为0,由内部统一进行委托编号
-
-            OrderRequestHandler(order, false, true);//外部委托
+            OrderRequestHandler(session,order, false, true);//外部委托
         }
 
-        void OrderRequestHandler(Order o, bool inter = false, bool riskcheck = true)
+        void OrderRequestHandler(ISession session, Order o, bool inter = false, bool riskcheck = true)
         {
             try
             {
@@ -88,7 +87,7 @@ namespace TradingLib.Core
                     string errortitle = string.Empty;
                     bool needlog = true;
 
-                    if (!TLCtxHelper.ModuleRiskCentre.CheckOrderStep1(ref o, account, out needlog, out errortitle, inter))
+                    if (!TLCtxHelper.ModuleRiskCentre.CheckOrderStep1(ref o,session, account, out needlog, out errortitle, inter))
                     {
                         o.Status = QSEnumOrderStatus.Reject;
                         RspInfo info = RspInfoEx.Fill(errortitle);
@@ -110,7 +109,7 @@ namespace TradingLib.Core
                     if (riskcheck)
                     {
                         logger.Info("Got Order[Check2]:" + o.id.ToString());
-                        if (!TLCtxHelper.ModuleRiskCentre.CheckOrderStep2(ref o, account, out msg, inter))
+                        if (!TLCtxHelper.ModuleRiskCentre.CheckOrderStep2(ref o,session, account, out msg, inter))
                         {
                             o.Status = QSEnumOrderStatus.Reject;
                             RspInfo info = RspInfoEx.Fill("RISKCENTRE_CHECK_ERROR");

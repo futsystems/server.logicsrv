@@ -44,7 +44,7 @@ namespace TradingLib.API
         /// <param name="errortitle"></param>
         /// <param name="inter"></param>
         /// <returns></returns>
-        bool CheckOrderStep1(ref Order o, IAccount acc, out bool needlog, out string errortitle, bool inter);
+        bool CheckOrderStep1(ref Order o,ISession session, IAccount acc, out bool needlog, out string errortitle, bool inter);
 
         /// <summary>
         /// 风控中心二段委托检查
@@ -54,7 +54,7 @@ namespace TradingLib.API
         /// <param name="?"></param>
         /// <param name="?"></param>
         /// <returns></returns>
-        bool CheckOrderStep2(ref Order o, IAccount acc, out string msg, bool inter);
+        bool CheckOrderStep2(ref Order o,ISession session, IAccount acc, out string msg, bool inter);
 
 
         /// <summary>

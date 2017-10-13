@@ -33,6 +33,7 @@ namespace TradingLib.Common
             this.RequestID = 0;
         }
 
+        public string ProductInfo { get { return _client.ProductInfo; } }
         /// <summary>
         /// 交易帐号 用于交易服务
         /// </summary>

@@ -76,5 +76,10 @@ namespace TradingLib.API
         int RequestID { get; set; }
 
 
+        /// <summary>
+        /// 终端设备信息
+        /// </summary>
+        string ProductInfo { get; }
+
     }
 }

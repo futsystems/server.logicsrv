@@ -90,7 +90,7 @@ namespace TradingLib.Core
         /// <param name="o"></param>
         public void SendOrder(Order o)
         {
-            OrderRequestHandler(o, false, true);//外部委托
+            OrderRequestHandler(null,o, false, true);//外部委托
         }
         /// <summary>
         /// B:直接向接口下单(跳过部分风控检查 账户冻结检查,强平时间外交易时间检查,帐户自定义委托检查等)
@@ -99,7 +99,7 @@ namespace TradingLib.Core
         /// <param name="o"></param>
         public void SendOrderInternal(Order o)
         {
-            OrderRequestHandler(o, true, true);//内部委托
+            OrderRequestHandler(null,o, true, true);//内部委托
         }
     }
 }

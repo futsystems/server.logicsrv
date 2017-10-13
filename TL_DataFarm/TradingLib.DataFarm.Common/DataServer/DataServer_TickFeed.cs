@@ -209,6 +209,7 @@ namespace TradingLib.DataFarm.Common
                 return;
             }
 
+
             //获得行情Tick对应合约
             Symbol symbol = MDBasicTracker.SymbolTracker[k.Exchange,k.Symbol];
             if(symbol == null) return;
