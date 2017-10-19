@@ -1,0 +1,20 @@
+﻿<html>
+<head>
+</head>
+
+<body onload="document.depositconfirm.submit()">
+	<form name='depositconfirm' method="post" action="{{data.Pay_Url}}" class="uk-panel uk-panel-box uk-form">
+		<input name='p1_MerchantNo' type='hidden' value= "{{data.p1_Merchant_No}}"/>
+		<input name='p2_OrderNo' type='hidden' value= "{{data.p2_Order_No}}"/>
+		<input name='p3_Amount' type='hidden' value= "{{data.p3_Amount}}"/>
+		<input name='p4_Cur' type='hidden' value= "{{data.p4_Cur}}"/>
+		<input name='p5_ProductName' type='hidden' value= "{{data.p5_Product_Name}}"/>
+		<input name='p6_Mp' type='hidden' value= "{{data.p6_Mp}}"/>		
+		<input name='p7_ReturnUrl' type='hidden' value= "{{data.p7_Return_Url}}" />
+		<input name='p8_NotifyUrl' type='hidden' value= "{{data.p8_Notify_Url}}" />
+		<input name='p9_FrpCode' type='hidden' value= "{{data.p9_Frp_Code}}"/>
+		<input name='pa_OrderPeriod' type='hidden' value= "{{data.pa_Order_Period}}"/>
+		<input name='hmac' type='hidden' value= "{{data.hmac}}"/>	
+	</form>
+</body>
+</html>

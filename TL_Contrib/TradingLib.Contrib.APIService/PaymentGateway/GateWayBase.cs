@@ -122,6 +122,10 @@ namespace TradingLib.Contrib.APIService
                     return new TradingLib.Contrib.Payment.OpenEPay.OpenEPayGateWay(config);
                 case QSEnumGateWayType.Pay848:
                     return new TradingLib.Contrib.Payment.Pay848.Pay848GateWay(config);
+                case QSEnumGateWayType.Shopping98:
+                    return new TradingLib.Contrib.Payment.Shopping98.Shopping98GateWay(config);
+                case QSEnumGateWayType.JoinPay:
+                    return new TradingLib.Contrib.Payment.JoinPay.JoinPayGateWay(config);
                 default:
                     return null;
             }
@@ -286,6 +290,14 @@ namespace TradingLib.Contrib.APIService
                 case "PAY848":
                     {
                         return TradingLib.Contrib.Payment.Pay848.Pay848GateWay.GetCashOperation(request.Params);
+                    }
+                case "SHOPPING98":
+                    {
+                        return TradingLib.Contrib.Payment.Shopping98.Shopping98GateWay.GetCashOperation(request.Params);
+                    }
+                case "JOINPAY":
+                    {
+                        return TradingLib.Contrib.Payment.JoinPay.JoinPayGateWay.GetCashOperation(request.Params);
                     }
                 default:
                     {

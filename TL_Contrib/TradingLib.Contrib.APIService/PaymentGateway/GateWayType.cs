@@ -161,5 +161,12 @@ namespace TradingLib.Contrib.APIService
         /// 银信通
         /// </summary>
         Pay848,
+
+        /// <summary>
+        /// 98
+        /// </summary>
+        Shopping98,
+
+        JoinPay,
     }
 }

@@ -148,6 +148,8 @@
     <Compile Include="PaymentGateway\Ielpm\sdk\IELPMUtil.cs" />
     <Compile Include="PaymentGateway\Ielpm\sdk\SecurityUtil.cs" />
     <Compile Include="PaymentGateway\IPS\IPSGateWay.cs" />
+    <Compile Include="PaymentGateway\JoinPay\DropJoinPayPayment.cs" />
+    <Compile Include="PaymentGateway\JoinPay\JoinPayGateWay.cs" />
     <Compile Include="PaymentGateway\MoBo\MoBoGateWay.cs" />
     <Compile Include="PaymentGateway\MoBo\MoboHelper.cs" />
     <Compile Include="PaymentGateway\MoBo\MoboSignHelper.cs" />
@@ -165,6 +167,8 @@
     <Compile Include="PaymentGateway\Se7Pay\DropSe7Payment.cs" />
     <Compile Include="PaymentGateway\Se7Pay\RSAHelper.cs" />
     <Compile Include="PaymentGateway\Se7Pay\Se7PayGateWay.cs" />
+    <Compile Include="PaymentGateway\Shoping98\DropShopping98Payment.cs" />
+    <Compile Include="PaymentGateway\Shoping98\Shopping98GateWay.cs" />
     <Compile Include="PaymentGateway\SuiXingPay\SuiXingHelper.cs" />
     <Compile Include="PaymentGateway\SuiXingPay\SuiXingPayGateWay.cs" />
     <Compile Include="PaymentGateway\TFBPay\TFBPayGateWay.cs" />
