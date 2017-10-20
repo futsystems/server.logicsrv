@@ -24,12 +24,30 @@ namespace TradingLib.Contrib.Payment.JoinPay
             var data = config.Config.DeserializeObject();
             this.PayUrl = data["PayUrl"].ToString();
             this.MerID = data["MerID"].ToString();
-            this.Key = data["Key"].ToString(); 
-        }
+            this.Key = data["Key"].ToString();
 
+            try
+            {
+                this.Domain = data["Domain"].ToString();
+                this.frontURL = this.frontURL.Replace(APIGlobal.LocalIPAddress, this.Domain);
+                this.backURl = this.backURl.Replace(APIGlobal.LocalIPAddress, this.Domain);
+                this.PayDirectUrl = this.PayDirectUrl.Replace(APIGlobal.LocalIPAddress, this.Domain);
+            }
+            catch (Exception ex)
+            {
+
+            }
+
+        }
+        string Domain = "";
         string PayUrl = "https://www.joinpay.com/gateway/gateway_init.action";
         string MerID = "888100000002340";
         string Key = "08fe2621d8e716b02ec0da35256a998d";
+
+        string frontURL = APIGlobal.CustNotifyUrl + "/joinpay";
+        string backURl = APIGlobal.SrvNotifyUrl + "/joinpay";
+
+
         public override Drop CreatePaymentDrop(CashOperation operatioin)
         {
             DropJoinPayPayment data = new DropJoinPayPayment();
@@ -40,8 +58,8 @@ namespace TradingLib.Contrib.Payment.JoinPay
             data.p4_Cur = "1";
             data.p5_ProductName = "充值";
             data.p6_Mp = "";
-            data.p7_ReturnUrl = APIGlobal.CustNotifyUrl + "/joinpay";
-            data.p8_NotifyUrl = APIGlobal.SrvNotifyUrl + "/joinpay";
+            data.p7_ReturnUrl = frontURL;
+            data.p8_NotifyUrl = backURl;
             data.p9_FrpCode = "";
             data.pa_OrderPeriod = "0";
 

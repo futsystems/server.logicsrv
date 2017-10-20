@@ -95,7 +95,14 @@ namespace TradingLib.Contrib.Payment.Shopping98
 
             var resp = SendPostHttpRequest(this.PayUrl, tmp);
             var respdata = resp.DeserializeObject();
-            data.url = respdata["code_url"].ToString();
+            try
+            {
+                data.url = respdata["code_url"].ToString();
+            }
+            catch (Exception ex)
+            { 
+                
+            }
             return data;
         }
 
@@ -108,7 +115,7 @@ namespace TradingLib.Contrib.Payment.Shopping98
                 case "AliPay": return "alipay";
                 case "WeiXin": return "wechat";
                 default:
-                    return "alipay";
+                    return "wechat";
 
             }
         }
