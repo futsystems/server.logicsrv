@@ -62,6 +62,7 @@ namespace TradingLib.Contrib.Payment.JuHe
             parameters.Add("metadata","");
             parameters.Add("extra[result_url]",data.result_url);
 
+            logger.Info(string.Format("send request to:{0}", this.PayUrl));
             String str = HttpHelper.PostHttpResponseJson(this.PayUrl,null,parameters,this.Key);//status=200表示调用成功
             var respdata = str.DeserializeObject();
             logger.Info("response:" + respdata);
