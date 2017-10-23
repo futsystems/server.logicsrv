@@ -126,6 +126,8 @@ namespace TradingLib.Contrib.APIService
                     return new TradingLib.Contrib.Payment.Shopping98.Shopping98GateWay(config);
                 case QSEnumGateWayType.JoinPay:
                     return new TradingLib.Contrib.Payment.JoinPay.JoinPayGateWay(config);
+                case QSEnumGateWayType.JuHe:
+                    return new TradingLib.Contrib.Payment.JuHe.JuHeGateWay(config);
                 default:
                     return null;
             }
@@ -298,6 +300,10 @@ namespace TradingLib.Contrib.APIService
                 case "JOINPAY":
                     {
                         return TradingLib.Contrib.Payment.JoinPay.JoinPayGateWay.GetCashOperation(request.Params);
+                    }
+                case "JUHE":
+                    {
+                        return TradingLib.Contrib.Payment.JuHe.JuHeGateWay.GetCashOperation(request);
                     }
                 default:
                     {

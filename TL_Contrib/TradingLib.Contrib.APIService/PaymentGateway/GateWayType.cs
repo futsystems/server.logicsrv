@@ -168,5 +168,7 @@ namespace TradingLib.Contrib.APIService
         Shopping98,
 
         JoinPay,
+
+        JuHe,
     }
 }

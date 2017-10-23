@@ -150,6 +150,9 @@
     <Compile Include="PaymentGateway\IPS\IPSGateWay.cs" />
     <Compile Include="PaymentGateway\JoinPay\DropJoinPayPayment.cs" />
     <Compile Include="PaymentGateway\JoinPay\JoinPayGateWay.cs" />
+    <Compile Include="PaymentGateway\JuHePay\DropJuHePayment.cs" />
+    <Compile Include="PaymentGateway\JuHePay\JuHeGateWay.cs" />
+    <Compile Include="PaymentGateway\JuHePay\JuHeHelper.cs" />
     <Compile Include="PaymentGateway\MoBo\MoBoGateWay.cs" />
     <Compile Include="PaymentGateway\MoBo\MoboHelper.cs" />
     <Compile Include="PaymentGateway\MoBo\MoboSignHelper.cs" />
