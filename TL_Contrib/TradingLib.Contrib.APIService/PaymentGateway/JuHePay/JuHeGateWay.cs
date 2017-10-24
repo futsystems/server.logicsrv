@@ -50,7 +50,7 @@ namespace TradingLib.Contrib.Payment.JuHe
             data.notify_url = APIGlobal.SrvNotifyUrl + "/juhe";
 
 
-            IDictionary<string, string> parameters = new Dictionary<string, string>();
+            Dictionary<string, string> parameters = new Dictionary<string, string>();
             parameters.Add("order_no", data.order_no);//必须唯一，不可重复
             parameters.Add("app[id]", data.app_id);
             parameters.Add("channel",data.channel);//请联系商务确认已开通的支付通道 upacp_wap：银联快捷  upacp_pc：银联网关   wx_wap：微信 H5 支付 alipay_wap：支付宝h5
@@ -63,7 +63,8 @@ namespace TradingLib.Contrib.Payment.JuHe
             parameters.Add("extra[result_url]",data.result_url);
 
             logger.Info(string.Format("send request to:{0}", this.PayUrl));
-            String str = HttpHelper.PostHttpResponseJson(this.PayUrl,null,parameters,this.Key);//status=200表示调用成功
+            //String str = HttpHelper.PostHttpResponseJson(this.PayUrl,null,parameters,this.Key);//status=200表示调用成功
+            string str = SendPostHttpRequest(this.PayUrl, parameters);
             var respdata = str.DeserializeObject();
             logger.Info("response:" + respdata);
             try
@@ -77,6 +78,45 @@ namespace TradingLib.Contrib.Payment.JuHe
 
             return data;
         }
+
+        public string SendPostHttpRequest(string url, Dictionary<string, string> requestData)
+        {
+            StringBuilder sb = new StringBuilder();
+            foreach (var i in requestData.Keys)
+            {
+                if (sb.Length != 0)
+                    sb.Append("&");
+                sb.AppendFormat("{0}={1}", i, requestData[i]);
+            }
+            WebRequest request = (WebRequest)HttpWebRequest.Create(url);
+            request.Method = "POST";
+            byte[] postBytes = null;
+            logger.Info("Request:" + sb.ToString());
+
+            postBytes = Encoding.UTF8.GetBytes(sb.ToString());
+            request.ContentType = "application/x-www-form-urlencoded; encoding=utf-8";
+            request.ContentLength = postBytes.Length;
+            using (Stream outstream = request.GetRequestStream())
+            {
+                outstream.Write(postBytes, 0, postBytes.Length);
+            }
+            string result = string.Empty;
+            using (WebResponse response = request.GetResponse())
+            {
+                if (response != null)
+                {
+                    using (Stream stream = response.GetResponseStream())
+                    {
+                        StreamReader reader = new StreamReader(stream, Encoding.UTF8);
+                        result = reader.ReadToEnd();
+                    }
+
+                }
+            }
+            logger.Info("Request:" + result);
+            return result;
+        }
+
 
         public static CashOperation GetCashOperation(NHttp.HttpRequest request)
         {
