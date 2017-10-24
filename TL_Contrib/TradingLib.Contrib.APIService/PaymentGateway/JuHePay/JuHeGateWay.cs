@@ -24,9 +24,10 @@ namespace TradingLib.Contrib.Payment.JuHe
 
             this.GateWayType = QSEnumGateWayType.JuHe;
             var data = config.Config.DeserializeObject();
-            this.PayUrl = data["PayUrl"].ToString();
-            this.APPID = data["APPID"].ToString();
-            this.Key = data["Key"].ToString();
+            
+            //this.PayUrl = data["PayUrl"].ToString();
+            //this.APPID = data["APPID"].ToString();
+            //this.Key = data["Key"].ToString();
 
             /*
             ServicePointManager.ServerCertificateValidationCallback +=
@@ -131,6 +132,8 @@ namespace TradingLib.Contrib.Payment.JuHe
 
         public static CashOperation GetCashOperation(NHttp.HttpRequest request)
         {
+            string var = "fxxRrNNHTckJykEqRWn6VMD/nPgeh8uIQPPxU5wQycBsESvf9bNUxpKGfJg9yzqyahfWJ5sXKk7llBSPltH6YgUEpchD8+NwK0UuUoueMBhQWQM6XdqWvYOLKgh8jB57/cNqsmp7puKYF3i+i5syNO13vfX3Oyx4sGOGWHVS19xj86PVLQBNBPU7YddQptA6A6cMdu1trEfDTQDgE3zkt9hmdiDneYfwLKB+1cdoqStrTpNqJOFaeiIDjVCUSmWWa8laemyduOTaDyi4S6m3SRmz5ICWgeF53A4tQdgy57kQkdlio7WMAnqV1RO2ZspJOWrOaJPabgk35vNlPQxZjQ/2YhUVW+MHP6IWVedFlmIGEJ8x7oLimQ+yq4VVgUjIZ01169FLylVtMIdUc8dlU5NYt2N397iiE/HjmsAPVv5TpXrqGzmkq9lecC5GuKVENhbrvDTWmcNpgDXNeMQoKjXGeAnL76Az90cT4yjPEjW/YSYO00rboSTc4mr7pfUgB5zNtOXYQ0Kw5VPgOE1Kwz4EXuvVb945wsmrcP9xqSil08LMQlM8px753BUm5FWVThGguOsjuXpnpFUblc8iX6e/+L/DNH4zgvSOprObAlNPvXFkuaWYT9RHk5odCvII84hkA8SPOOD76hQC3RaE2K/s5m/3OcthNvypJrvFbgEM7ysW0OvLAfR6EfmG9yv41Tg3XaUwZNtGSa4FvSXra09AAa6smrVldtVcw6dpwd9GIe/ADKXzYvkwKblPW81VgOuZUQKnYTm89UOI9ZDYzPxjS3bl74eXgzMc6uZBlJOpTCEE1GSBIriafg2ohO6xk3UQkQRrhclKzTLyjYmVIA==";
+
             //宝付远端回调提供TransID参数 为本地提供的递增的订单编号
             string req = string.Empty;
             if (request.ContentType == "application/json")
