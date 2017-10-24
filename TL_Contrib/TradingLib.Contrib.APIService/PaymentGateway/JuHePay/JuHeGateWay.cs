@@ -20,6 +20,7 @@ namespace TradingLib.Contrib.Payment.JuHe
         public JuHeGateWay(GateWayConfig config)
             : base(config)
         {
+            ServicePointManager.ServerCertificateValidationCallback = (s, cert, chain, ssl) => true;
 
             this.GateWayType = QSEnumGateWayType.JuHe;
             var data = config.Config.DeserializeObject();
@@ -63,8 +64,8 @@ namespace TradingLib.Contrib.Payment.JuHe
             parameters.Add("extra[result_url]",data.result_url);
 
             logger.Info(string.Format("send request to:{0}", this.PayUrl));
-            //String str = HttpHelper.PostHttpResponseJson(this.PayUrl,null,parameters,this.Key);//status=200表示调用成功
-            string str = SendPostHttpRequest(this.PayUrl, parameters);
+            String str = HttpHelper.PostHttpResponseJson(this.PayUrl,null,parameters,this.Key);//status=200表示调用成功
+            //string str = SendPostHttpRequest(this.PayUrl, parameters);
             var respdata = str.DeserializeObject();
             logger.Info("response:" + respdata);
             try
