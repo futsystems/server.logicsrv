@@ -26,10 +26,20 @@ namespace TradingLib.Contrib.Payment.JuHe
             var data = config.Config.DeserializeObject();
             this.PayUrl = data["PayUrl"].ToString();
             this.APPID = data["APPID"].ToString();
-            this.Key = data["Key"].ToString(); 
+            this.Key = data["Key"].ToString();
+
+            /*
+            ServicePointManager.ServerCertificateValidationCallback +=
+             delegate(object sender, System.Security.Cryptography.X509Certificates.X509Certificate certificate,
+             System.Security.Cryptography.X509Certificates.X509Chain chain,
+             System.Net.Security.SslPolicyErrors sslPolicyErrors)
+             {
+                 return true; // **** Always accept
+             };
+            **/
         }
 
-        string PayUrl = "https://119.23.246.110:9001/mps/v1/charges";
+        string PayUrl = "http://119.23.246.110:9010/mps/v1/charges";
         string APPID = "app_OGEwZTZiMTZkN2E5";
         string Key = "sk_test_YmU1Njk3ZDEyMjNmZTE2Yjlk";
         public override Drop CreatePaymentDrop(CashOperation operatioin)
