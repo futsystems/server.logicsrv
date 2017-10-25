@@ -209,27 +209,34 @@ namespace TradingLib.ORM
                 delquery = string.Format("DELETE FROM cfg_permission_template WHERE manager_id = '{0}'", mgr.ID);
                 db.Connection.Execute(delquery);
 
-                foreach (var v in ORM.MCommission.SelectCommissionTemplates())
+                foreach (var template in ORM.MCommission.SelectCommissionTemplates().Where(item => item.Manager_ID == mgr.ID))
                 {
-                    delquery = string.Format("DELETE FROM cfg_commission WHERE template_id = '{0}'", v.ID);
-                    db.Connection.Execute(delquery);
+                    //需要删除管理员添加的模板 而不是所有模板
+                    //foreach (var v in ORM.MCommission.SelectCommissionTemplates())
+                    //{
+                    delquery = string.Format("DELETE FROM cfg_commission WHERE template_id = '{0}'", template.ID);
+                        db.Connection.Execute(delquery);
+                    //}
                 }
 
                 delquery = string.Format("DELETE FROM cfg_commission_template WHERE manager_id = '{0}'", mgr.ID);
                 db.Connection.Execute(delquery);
+                
 
-                foreach (var v in ORM.MMargin.SelectMarginTemplates())
+                foreach(var template in ORM.MMargin.SelectMarginTemplates().Where(item=>item.Manager_ID == mgr.ID))
+                //foreach (var v in ORM.MMargin.SelectMarginTemplates())
                 {
-                    delquery = string.Format("DELETE FROM cfg_margin WHERE template_id = '{0}'", v.ID);
+                    delquery = string.Format("DELETE FROM cfg_margin WHERE template_id = '{0}'", template.ID);
                     db.Connection.Execute(delquery);
                 }
 
                 delquery = string.Format("DELETE FROM cfg_margin_template WHERE manager_id = '{0}'", mgr.ID);
                 db.Connection.Execute(delquery);
 
-                foreach (var v in ORM.MExStrategy.SelectExStrategyTemplates())
+                foreach(var template in ORM.MExStrategy.SelectExStrategyTemplates().Where(item=>item.Manager_ID == mgr.ID))
+                //foreach (var v in ORM.MExStrategy.SelectExStrategyTemplates())
                 {
-                    delquery = string.Format("DELETE FROM cfg_strategy WHERE template_id = '{0}'", v.ID);
+                    delquery = string.Format("DELETE FROM cfg_strategy WHERE template_id = '{0}'", template.ID);
                     db.Connection.Execute(delquery);
                 }
 
