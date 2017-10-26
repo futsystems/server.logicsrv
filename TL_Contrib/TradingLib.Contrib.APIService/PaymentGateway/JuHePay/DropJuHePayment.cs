@@ -40,6 +40,8 @@ namespace TradingLib.Contrib.Payment.JuHe
 
         public string channel { get; set; }
 
+        public string amountf { get; set; }
+
         public string client_ip { get; set; }
 
         public string subject { get; set; }

@@ -67,11 +67,12 @@ namespace TradingLib.Contrib.Payment.JuHe
             data.Amount = string.Format("{0}[{1}]", operatioin.Amount.ToFormatStr(), operatioin.Amount.ToChineseStr());
             data.Ref = operatioin.Ref;
             data.Operation = Util.GetEnumDescription(operatioin.OperationType);
+            data.Account = operatioin.Account;
 
             data.order_no = operatioin.Ref;
             data.app_id = this.APPID;
             data.channel = "upacp_pc";
-            data.Amount = ((int)(operatioin.Amount * 100)).ToString();
+            data.amountf = ((int)(operatioin.Amount * 100)).ToString();
             data.client_ip = "127.0.0.1";
             data.subject = "充值";
             data.body = "充值";
@@ -83,7 +84,7 @@ namespace TradingLib.Contrib.Payment.JuHe
             parameters.Add("order_no", data.order_no);//必须唯一，不可重复
             parameters.Add("app[id]", data.app_id);
             parameters.Add("channel",data.channel);//请联系商务确认已开通的支付通道 upacp_wap：银联快捷  upacp_pc：银联网关   wx_wap：微信 H5 支付 alipay_wap：支付宝h5
-            parameters.Add("amount", data.Amount);
+            parameters.Add("amount", data.amountf);
             parameters.Add("client_ip", data.client_ip);
             parameters.Add("subject", data.subject);
             parameters.Add("body", data.body);
