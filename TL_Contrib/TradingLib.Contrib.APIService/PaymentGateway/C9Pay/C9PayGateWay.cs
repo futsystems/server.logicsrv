@@ -74,6 +74,12 @@ namespace TradingLib.Contrib.Payment.C9Pay
                 case "03010000": return "BOCO";
                 //邮政
                 case "01000000": return "POST";
+                //中信银行
+                case "03020000": return "ECITIC";
+                //光大
+                case "03030000": return "CEB";
+                //民生
+                case "03050000": return "CMBC";
                 default:
                     return "ICBC";
 
