@@ -25,10 +25,19 @@ namespace TradingLib.Contrib.Payment.JuHe
             this.GateWayType = QSEnumGateWayType.JuHe;
             var data = config.Config.DeserializeObject();
             
-            //this.PayUrl = data["PayUrl"].ToString();
-            //this.APPID = data["APPID"].ToString();
-            //this.Key = data["Key"].ToString();
+            this.PayUrl = data["PayUrl"].ToString();
+            this.APPID = data["APPID"].ToString();
+            this.Key = data["Key"].ToString();
 
+
+            try
+            {
+
+            }
+            catch (Exception ex)
+            {
+                PubKey = data["PubKey"].ToString();
+            }
             /*
             ServicePointManager.ServerCertificateValidationCallback +=
              delegate(object sender, System.Security.Cryptography.X509Certificates.X509Certificate certificate,
@@ -38,11 +47,19 @@ namespace TradingLib.Contrib.Payment.JuHe
                  return true; // **** Always accept
              };
             **/
+            //string var = "fxxRrNNHTckJykEqRWn6VMD/nPgeh8uIQPPxU5wQycBsESvf9bNUxpKGfJg9yzqyahfWJ5sXKk7llBSPltH6YgUEpchD8+NwK0UuUoueMBhQWQM6XdqWvYOLKgh8jB57/cNqsmp7puKYF3i+i5syNO13vfX3Oyx4sGOGWHVS19xj86PVLQBNBPU7YddQptA6A6cMdu1trEfDTQDgE3zkt9hmdiDneYfwLKB+1cdoqStrTpNqJOFaeiIDjVCUSmWWa8laemyduOTaDyi4S6m3SRmz5ICWgeF53A4tQdgy57kQkdlio7WMAnqV1RO2ZspJOWrOaJPabgk35vNlPQxZjQ/2YhUVW+MHP6IWVedFlmIGEJ8x7oLimQ+yq4VVgUjIZ01169FLylVtMIdUc8dlU5NYt2N397iiE/HjmsAPVv5TpXrqGzmkq9lecC5GuKVENhbrvDTWmcNpgDXNeMQoKjXGeAnL76Az90cT4yjPEjW/YSYO00rboSTc4mr7pfUgB5zNtOXYQ0Kw5VPgOE1Kwz4EXuvVb945wsmrcP9xqSil08LMQlM8px753BUm5FWVThGguOsjuXpnpFUblc8iX6e/+L/DNH4zgvSOprObAlNPvXFkuaWYT9RHk5odCvII84hkA8SPOOD76hQC3RaE2K/s5m/3OcthNvypJrvFbgEM7ysW0OvLAfR6EfmG9yv41Tg3XaUwZNtGSa4FvSXra09AAa6smrVldtVcw6dpwd9GIe/ADKXzYvkwKblPW81VgOuZUQKnYTm89UOI9ZDYzPxjS3bl74eXgzMc6uZBlJOpTCEE1GSBIriafg2ohO6xk3UQkQRrhclKzTLyjYmVIA==";
+            //string rawData = JuHeRSAUtil.DecryptByPublicKey(var, PubKey);
+            //var respdata = rawData.DeserializeObject();
+            //string ordid = respdata["data"]["order_no"].ToString();
+            //logger.Info("resp" + rawData);
+
         }
 
         string PayUrl = "http://119.23.246.110:9010/mps/v1/charges";
-        string APPID = "app_OGEwZTZiMTZkN2E5";
-        string Key = "sk_test_YmU1Njk3ZDEyMjNmZTE2Yjlk";
+        string APPID = "app_YjJjMTE0NGFhMjQ5";
+        string Key = "sk_live_MjMwNmVhMjhlMmIyZjNhYTAz";
+        static string PubKey = "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCAGdVJK1oSyaClQTJ4GwFy41uaz/5zIeHYwWNu+sN1Guf/Fr3Gt+VXqwqOKihKJrz6O7kQy98ggyibb0cvEcF1MEiaqk0w64uNuBmmRF49fGbnqg8HpSQbpEmSQzu3nhG9KEZLGQj5a8UIp7QxGS9prfF9L8I2PKpaSVxE2ZocsQIDAQAB";
+                               
         public override Drop CreatePaymentDrop(CashOperation operatioin)
         {
             DropJuHePayment data = new DropJuHePayment();
@@ -134,21 +151,22 @@ namespace TradingLib.Contrib.Payment.JuHe
         {
             string var = "fxxRrNNHTckJykEqRWn6VMD/nPgeh8uIQPPxU5wQycBsESvf9bNUxpKGfJg9yzqyahfWJ5sXKk7llBSPltH6YgUEpchD8+NwK0UuUoueMBhQWQM6XdqWvYOLKgh8jB57/cNqsmp7puKYF3i+i5syNO13vfX3Oyx4sGOGWHVS19xj86PVLQBNBPU7YddQptA6A6cMdu1trEfDTQDgE3zkt9hmdiDneYfwLKB+1cdoqStrTpNqJOFaeiIDjVCUSmWWa8laemyduOTaDyi4S6m3SRmz5ICWgeF53A4tQdgy57kQkdlio7WMAnqV1RO2ZspJOWrOaJPabgk35vNlPQxZjQ/2YhUVW+MHP6IWVedFlmIGEJ8x7oLimQ+yq4VVgUjIZ01169FLylVtMIdUc8dlU5NYt2N397iiE/HjmsAPVv5TpXrqGzmkq9lecC5GuKVENhbrvDTWmcNpgDXNeMQoKjXGeAnL76Az90cT4yjPEjW/YSYO00rboSTc4mr7pfUgB5zNtOXYQ0Kw5VPgOE1Kwz4EXuvVb945wsmrcP9xqSil08LMQlM8px753BUm5FWVThGguOsjuXpnpFUblc8iX6e/+L/DNH4zgvSOprObAlNPvXFkuaWYT9RHk5odCvII84hkA8SPOOD76hQC3RaE2K/s5m/3OcthNvypJrvFbgEM7ysW0OvLAfR6EfmG9yv41Tg3XaUwZNtGSa4FvSXra09AAa6smrVldtVcw6dpwd9GIe/ADKXzYvkwKblPW81VgOuZUQKnYTm89UOI9ZDYzPxjS3bl74eXgzMc6uZBlJOpTCEE1GSBIriafg2ohO6xk3UQkQRrhclKzTLyjYmVIA==";
 
-            //宝付远端回调提供TransID参数 为本地提供的递增的订单编号
-            string req = string.Empty;
+         
+            string recvStr = string.Empty;
             if (request.ContentType == "application/json")
             {
                 byte[] data = new byte[request.ContentLength];
                 request.InputStream.Read(data, 0, request.ContentLength);
                 request.InputStream.Position = 0;
-                req = Encoding.UTF8.GetString(data);
+                recvStr = Encoding.UTF8.GetString(data);
             }
             else
             {
-                req = request.RawContent;
+                recvStr = request.RawContent;
             }
 
-            var respdata = req.DeserializeObject();
+            string rawData = JuHeRSAUtil.DecryptByPublicKey(recvStr, PubKey);
+            var respdata = rawData.DeserializeObject();
             string ordid = respdata["data"]["order_no"].ToString();
 
             return ORM.MCashOperation.SelectCashOperation(ordid);
@@ -156,63 +174,71 @@ namespace TradingLib.Contrib.Payment.JuHe
 
         public override bool CheckParameters(NHttp.HttpRequest request)
         {
-            string req = string.Empty;
+            string recvStr = string.Empty;
             if (request.ContentType == "application/json")
             {
                 byte[] data = new byte[request.ContentLength];
                 request.InputStream.Read(data, 0, request.ContentLength);
                 request.InputStream.Position = 0;
-                req = Encoding.UTF8.GetString(data);
+                recvStr = Encoding.UTF8.GetString(data);
             }
             else
             {
-                req = request.RawContent;
+                recvStr = request.RawContent;
             }
 
             var Request = request.Params;
-
+            string rawData = JuHeRSAUtil.DecryptByPublicKey(recvStr, PubKey);
+            var respdata = rawData.DeserializeObject();
             return true;
         }
 
         public override bool CheckPayResult(NHttp.HttpRequest request, CashOperation operation)
         {
-            string req = string.Empty;
+            string recvStr = string.Empty;
             if (request.ContentType == "application/json")
             {
                 byte[] data = new byte[request.ContentLength];
                 request.InputStream.Read(data, 0, request.ContentLength);
                 request.InputStream.Position = 0;
-                req = Encoding.UTF8.GetString(data);
+                recvStr = Encoding.UTF8.GetString(data);
             }
             else
             {
-                req = request.RawContent;
+                recvStr = request.RawContent;
             }
 
-            var respdata = req.DeserializeObject();
+            var Request = request.Params;
+            string rawData = JuHeRSAUtil.DecryptByPublicKey(recvStr, PubKey);
+            var respdata = rawData.DeserializeObject();
+
             string status = respdata["data"]["paid"].ToString();
 
-            return status == "true";
+            return status.ToUpper() == "TRUE";
         }
 
         public override string GetResultComment(NHttp.HttpRequest request)
         {
-            string req = string.Empty;
+            string recvStr = string.Empty;
             if (request.ContentType == "application/json")
             {
                 byte[] data = new byte[request.ContentLength];
                 request.InputStream.Read(data, 0, request.ContentLength);
                 request.InputStream.Position = 0;
-                req = Encoding.UTF8.GetString(data);
+                recvStr = Encoding.UTF8.GetString(data);
             }
             else
             {
-                req = request.RawContent;
+                recvStr = request.RawContent;
             }
 
-            var respdata = req.DeserializeObject();
+            var Request = request.Params;
+            string rawData = JuHeRSAUtil.DecryptByPublicKey(recvStr, PubKey);
+            var respdata = rawData.DeserializeObject();
+
+
             string status = respdata["data"]["paid"].ToString();
-            return status == "true"  ? "支付成功" : "支付失败";
+            return status.ToUpper() == "TRUE"  ? "支付成功" : "支付失败";
         }
 
     }

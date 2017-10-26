@@ -1,0 +1,79 @@
+﻿<html>
+<head>
+	<title>确认入金信息</title>
+	<meta name="renderer" content="webkit">
+	<meta http-equiv="Content-Type" content="text/html;charset=gb2312" />
+	<link rel="stylesheet" href="//cdn.bootcss.com/uikit/2.25.0/css/uikit.css" />
+	<script src="//cdn.bootcss.com/uikit/2.25.0/js/uikit.js"></script>
+</head>
+
+<body class="uk-height-1-1">
+<div class="uk-container uk-container-center uk-margin-top uk-margin-large-bottom">
+
+            <nav class="uk-navbar uk-margin-large-bottom">
+                <a class="uk-navbar-brand uk-hidden-small" href="/">在线出入金系统</a>
+                <ul class="uk-navbar-nav uk-hidden-small">
+                    <li class="uk-active">
+                        <a href="/cash/deposit">入金</a>
+                    </li>
+                    <li >
+                        <a href="/cash/withdraw">出金</a>
+                    </li>
+                </ul>
+                <a href="#offcanvas" class="uk-navbar-toggle uk-visible-small" data-uk-offcanvas></a>
+                <div class="uk-navbar-brand uk-navbar-center uk-visible-small">TCB</div>
+            </nav>
+
+            <div class="uk-grid" data-uk-grid-margin>
+                <div class="uk-width-medium-1-1">
+				
+					<div class="uk-text-center uk-height-1-1">
+					<div class="uk-vertical-align-middle" style="width: 400px;">
+					<table class="uk-table uk-table-striped">
+						<tr><td>交易帐号:</td><td>{{data.Account}}</td></tr>
+						<tr><td>出入金编号:</td><td>{{data.Ref}}</td></tr>
+						<tr><td>操作:</td><td>{{data.Operation}}</td></tr>
+						<tr><td>金额:</td><td>{{data.Amount}}</td></tr>
+					</table>
+
+					<form name='depositconfirm' method="post" action="{{data.Pay_Url}}" class="uk-panel uk-panel-box uk-form">
+						<input name='tradeCode' type='hidden' value= "{{data.tradeCode}}"/>
+						<input name='requestId' type='hidden' value= "{{data.request_Id}}"/>
+						<input name='tradeProcess' type='hidden' value= "{{data.trade_Process}}"/>
+						<input name='mersignature' type='hidden' value= "{{data.mersignature}}"/>
+						<input name='totalPrice' type='hidden' value= "{{data.total_Price}}"/>
+						<input name='totalBizType' type='hidden' value= "{{data.total_Biz_Type}}"/>		
+						<input name='bankcode' type='hidden' value= "{{data.bankcode}}" />
+						<input name='backurl' type='hidden' value= "{{data.backurl}}" />
+						<input name='returnurl' type='hidden' value= "{{data.returnurl}}"/>
+						<input name='noticeurl' type='hidden' value= "{{data.noticeurl}}"/>
+						<input name='description' type='hidden' value= "{{data.description}}"/>
+						<input name='rnaName' type='hidden' value= "{{data.rnaName}}"/>
+						<input name='rnaIdNumber' type='hidden' value= "{{data.rnaIdNumber}}"/>
+						<input name='rnaMobilePhone' type='hidden' value= "{{data.rnaMobilePhone}}"/>
+						<input name='goodsDesc' type='hidden' value= "{{data.goodsDesc}}"/>
+						<input name='userIdIdentity' type='hidden' value= "{{data.userIdIdentity}}"/>
+						<input name='payType' type='hidden' value= "{{data.payType}}"/>
+						<input name='allowRePay' type='hidden' value= "{{data.allowRePay}}"/>
+						<input name='rePayTimeOut' type='hidden' value= "{{data.rePayTimeOut}}"/>
+						<input name='bankCardType' type='hidden' value= "{{data.bankCardType}}"/>
+						
+						<input name='fund' type='hidden' value= "{{data.fund}}"/>
+						<input name='productName' type='hidden' value= "{{data.product_Name}}"/>
+						<input name='productNumber' type='hidden' value= "{{data.product_Number}}"/>
+						<input name='productId' type='hidden' value= "{{data.product_Id}}"/>
+						<input name='bizType' type='hidden' value= "{{data.biz_Type}}"/>
+						<input name='merAcct' type='hidden' value= "{{data.mer_Acct}}"/>
+						
+						<div class="uk-form-row">
+							<button class="uk-button uk-button-primary" type="submit">确认提交</button>
+						</div>
+					</form>
+					</div>
+										</div>
+				</div>
+			</div>
+
+</div>
+</body>
+</html>

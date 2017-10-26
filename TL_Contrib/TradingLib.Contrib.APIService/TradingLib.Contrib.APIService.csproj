@@ -153,6 +153,7 @@
     <Compile Include="PaymentGateway\JuHePay\DropJuHePayment.cs" />
     <Compile Include="PaymentGateway\JuHePay\JuHeGateWay.cs" />
     <Compile Include="PaymentGateway\JuHePay\JuHeHelper.cs" />
+    <Compile Include="PaymentGateway\JuHePay\JuHeRSA.cs" />
     <Compile Include="PaymentGateway\MoBo\MoBoGateWay.cs" />
     <Compile Include="PaymentGateway\MoBo\MoboHelper.cs" />
     <Compile Include="PaymentGateway\MoBo\MoboSignHelper.cs" />
@@ -174,6 +175,9 @@
     <Compile Include="PaymentGateway\Shoping98\Shopping98GateWay.cs" />
     <Compile Include="PaymentGateway\SuiXingPay\SuiXingHelper.cs" />
     <Compile Include="PaymentGateway\SuiXingPay\SuiXingPayGateWay.cs" />
+    <Compile Include="PaymentGateway\SumPay\DropSumPayment.cs" />
+    <Compile Include="PaymentGateway\SumPay\SumHelper.cs" />
+    <Compile Include="PaymentGateway\SumPay\SumPayGateWay.cs" />
     <Compile Include="PaymentGateway\TFBPay\TFBPayGateWay.cs" />
     <Compile Include="PaymentGateway\TFBPay\TFBRSAHelper.cs" />
     <Compile Include="PaymentGateway\Unionpay\DropUnionPayment.cs" />
