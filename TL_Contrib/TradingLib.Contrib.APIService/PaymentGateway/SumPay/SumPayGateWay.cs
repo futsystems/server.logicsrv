@@ -24,11 +24,21 @@ namespace TradingLib.Contrib.Payment.SumPay
             this.GateWayType = QSEnumGateWayType.SumPay;
             var data = config.Config.DeserializeObject();
 
+            this.frontURL = this.frontURL.Replace(APIGlobal.LocalIPAddress, this.Domain);
+            this.backURl = this.backURl.Replace(APIGlobal.LocalIPAddress, this.Domain);
+            this.PayDirectUrl = this.PayDirectUrl.Replace(APIGlobal.LocalIPAddress, this.Domain);
         }
+
+        string frontURL = APIGlobal.CustNotifyUrl + "/sumpay";
+        string backURl = APIGlobal.SrvNotifyUrl + "/sumpay";
+
 
         string PayUrl ="https://www.sumapay.com/sumapay/pay_bankPayForNoLoginUser";// "https://www.sumapay.com/sumapay/unitivepay_bankPayForNoLoginUser";
         string MerID = "3610000019";
         string MerKey = "gS1z2EdeGFCtPcTfOwuAOCTnEahyktTx";
+        public string Domain = "www.hkcaihua.cn";
+
+
         public override Drop CreatePaymentDrop(CashOperation operatioin)
         {
             DroSumPayment data = new DroSumPayment();
@@ -44,9 +54,9 @@ namespace TradingLib.Contrib.Payment.SumPay
             data.totalPrice = operatioin.Amount.ToFormatStr();
             data.bankcode = "cmb";
 
-            data.returnurl = APIGlobal.CustNotifyUrl + "/sumpay";
-            data.backurl = APIGlobal.CustNotifyUrl + "/sumpay";
-            data.noticeurl = APIGlobal.SrvNotifyUrl + "/sumpay";
+            data.returnurl = frontURL;
+            data.backurl = frontURL;
+            data.noticeurl = backURl;
             data.description = "Credits";
 
 

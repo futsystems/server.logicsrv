@@ -171,6 +171,8 @@ namespace TradingLib.Contrib.APIService
 
         JuHe,
 
-        SumPay
+        SumPay,
+
+        HMPay,
     }
 }
