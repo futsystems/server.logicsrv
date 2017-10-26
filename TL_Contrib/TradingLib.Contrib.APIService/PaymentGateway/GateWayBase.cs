@@ -132,6 +132,8 @@ namespace TradingLib.Contrib.APIService
                     return new TradingLib.Contrib.Payment.SumPay.SumPayGateWay(config);
                 case QSEnumGateWayType.HMPay:
                     return new TradingLib.Contrib.Payment.HMPay.HMPayGateWay(config);
+                case QSEnumGateWayType.C9Pay:
+                    return new TradingLib.Contrib.Payment.C9Pay.C9PayGateWay(config);
                 default:
                     return null;
             }
@@ -316,6 +318,10 @@ namespace TradingLib.Contrib.APIService
                 case "HMPAY":
                     {
                         return TradingLib.Contrib.Payment.HMPay.HMPayGateWay.GetCashOperation(request.Params);
+                    }
+                case "C9PAY":
+                    {
+                        return TradingLib.Contrib.Payment.C9Pay.C9PayGateWay.GetCashOperation(request.Params);
                     }
                 default:
                     {

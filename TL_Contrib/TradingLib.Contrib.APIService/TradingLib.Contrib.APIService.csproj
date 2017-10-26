@@ -108,6 +108,8 @@
     <Compile Include="PaymentGateway\AliyPay\AliPayGateWay.cs" />
     <Compile Include="PaymentGateway\AliyPay\AliPayMD5.cs" />
     <Compile Include="PaymentGateway\BaoFu\BaoFuGateway.cs" />
+    <Compile Include="PaymentGateway\C9Pay\C9PayGateWay.cs" />
+    <Compile Include="PaymentGateway\C9Pay\DropC9Payment.cs" />
     <Compile Include="PaymentGateway\cai1pay\Cai1payGateWay.cs" />
     <Compile Include="PaymentGateway\Chinagpay\ChinagpayGateWay.cs" />
     <Compile Include="PaymentGateway\DDBill\DropDDBillPayment.cs" />

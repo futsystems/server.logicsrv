@@ -1,0 +1,14 @@
+﻿<html>
+<body onload="document.depositconfirm.submit()">
+<form name='depositconfirm' method="post" action="{{data.Pay_Url}}">
+	<input name='MerchantNo' type='hidden' value= "{{data.Merchant_No}}"/>
+	<input name='OrderNo' type='hidden' value= "{{data.Order_No}}"/>
+	<input name='Amount' type='hidden' value= "{{data.Amount_I}}"/>
+	<input name='GoodsInfo' type='hidden' value= "{{data.Goods_Info}}"/>
+	<input name='ReturnUrl' type='hidden' value= "{{data.Return_Url}}"/>		
+	<input name='NotifyUrl' type='hidden' value= "{{data.Notify_Url}}" />
+	<input name='BankCode' type='hidden' value= "{{data.Bank_Code}}"/>
+	<input name='signMd5' type='hidden' value= "{{data.sign_Md5}}"/>
+</form>	
+</body>
+</html>

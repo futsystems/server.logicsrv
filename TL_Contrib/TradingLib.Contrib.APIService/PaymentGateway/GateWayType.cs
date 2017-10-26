@@ -174,5 +174,7 @@ namespace TradingLib.Contrib.APIService
         SumPay,
 
         HMPay,
+
+        C9Pay,
     }
 }
