@@ -26,9 +26,9 @@ namespace TradingLib.Contrib.Payment.QianTong
             this.CerPath = Path.Combine(new string[] { AppDomain.CurrentDomain.BaseDirectory, "config", "cust", config.Domain_ID.ToString(), "server_cert.cer" });
             this.PfxPath = Path.Combine(new string[] { AppDomain.CurrentDomain.BaseDirectory, "config", "cust", config.Domain_ID.ToString(), "merchant_cert.pfx" });
 
-            this.PFXPass =   "11111111";
-            this.PayUrl = "http://www.qtongpay.com/pay/pay.htm";// "https://123.56.119.177:8443/pay/pay.htm";
-            this.MerchantId = "1008038";
+            this.PFXPass =   "Aa996633";
+            this.PayUrl ="http://www.qtongpay.com/pay/pay.htm"; // "https://123.56.119.177:8443/pay/pay.htm";
+            this.MerchantId = "1010199";
         }
 
         string PayUrl { get; set; }
