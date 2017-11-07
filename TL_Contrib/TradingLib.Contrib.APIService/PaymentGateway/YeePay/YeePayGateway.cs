@@ -21,16 +21,26 @@ namespace TradingLib.Contrib.Payment.YeePay
         {
 
             this.GateWayType = QSEnumGateWayType.YeePay;
-            var data = config.Config.DeserializeObject();
-            this.PayUrl = data["PayUrl"].ToString();
-            this.MerID = data["MerID"].ToString();
-            this.Key = data["Key"].ToString();
+            try
+            {
+                var data = config.Config.DeserializeObject();
+                this.PayUrl = data["PayUrl"].ToString();
+                this.MerID = data["MerID"].ToString();
+                this.Key = data["Key"].ToString();
+                this.Domain = data["Domain"].ToString();
+                this.PayDirectUrl = this.PayDirectUrl.Replace(APIGlobal.LocalIPAddress, this.Domain);
+            }
+            catch (Exception ex)
+            { 
+            
+            }
         }
-
+        public string ReturnURL = "";
+        public string AdviceURL = "";
         string PayUrl = "https://www.yeepay.com/app-merchant-proxy/node";
         string MerID = "10015656278";
         string Key = "dcam6m24zkwxtegsqum45dmj2manw24j6ktk8562td16uv5d4ix91ojsql8r";
-
+        string Domain = string.Empty;
         public override Drop CreatePaymentDrop(CashOperation operatioin)
         {
             DropYeePayPayment data = new DropYeePayPayment();
