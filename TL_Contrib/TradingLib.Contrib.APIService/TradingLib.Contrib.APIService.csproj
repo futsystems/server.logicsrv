@@ -170,6 +170,8 @@
     <Compile Include="PaymentGateway\QianTong\DropQianTongPayment.cs" />
     <Compile Include="PaymentGateway\QianTong\QianTongPayGateWay.cs" />
     <Compile Include="PaymentGateway\QianTong\RSAUtil.cs" />
+    <Compile Include="PaymentGateway\RMTech\DropRMTechPayment.cs" />
+    <Compile Include="PaymentGateway\RMTech\RMTechGateWay.cs" />
     <Compile Include="PaymentGateway\RSAUtil.cs" />
     <Compile Include="PaymentGateway\RSAUtil2.cs" />
     <Compile Include="PaymentGateway\Se7Pay\DropSe7Payment.cs" />
@@ -196,6 +198,9 @@
     <Compile Include="PaymentGateway\XiaoXiaoPay\XiaoXiaoHepler.cs" />
     <Compile Include="PaymentGateway\XiaoXiaoPay\XiaoXiaoPayGateWay.cs" />
     <Compile Include="PaymentGateway\XiaoXiaoPay\XiaoXiaoPayment.cs" />
+    <Compile Include="PaymentGateway\YeePay\DropYeePayment.cs" />
+    <Compile Include="PaymentGateway\YeePay\YeePayGateway.cs" />
+    <Compile Include="PaymentGateway\YeePay\YeePayHelper.cs" />
     <Compile Include="PaymentGateway\ZhiHPay\DropZhiHPayment.cs" />
     <Compile Include="PaymentGateway\ZhiHPay\ZhiHPayGateWay.cs" />
     <Compile Include="PaymentGateway\ZhiHPay\ZhiHPayHelper.cs" />

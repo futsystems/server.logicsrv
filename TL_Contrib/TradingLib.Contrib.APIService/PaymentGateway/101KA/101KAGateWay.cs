@@ -89,8 +89,8 @@ namespace TradingLib.Contrib.Payment.P101KA
         {
             var Request = request.Params;
 
-            string p1_MerId = MerID;
             string r0_Cmd = Request["r0_Cmd"];
+            string p1_MerId = MerID;
             string r1_Code = Request["r1_Code"];
             string r2_TrxId = Request["r2_TrxId"];
             string r3_Amt = Request["r3_Amt"];

@@ -134,6 +134,8 @@ namespace TradingLib.Contrib.APIService
                     return new TradingLib.Contrib.Payment.HMPay.HMPayGateWay(config);
                 case QSEnumGateWayType.C9Pay:
                     return new TradingLib.Contrib.Payment.C9Pay.C9PayGateWay(config);
+                case QSEnumGateWayType.YeePay:
+                    return new TradingLib.Contrib.Payment.YeePay.YeePayGateWay(config);
                 default:
                     return null;
             }
@@ -322,6 +324,10 @@ namespace TradingLib.Contrib.APIService
                 case "C9PAY":
                     {
                         return TradingLib.Contrib.Payment.C9Pay.C9PayGateWay.GetCashOperation(request.Params);
+                    }
+                case "YEEPAY":
+                    {
+                        return TradingLib.Contrib.Payment.YeePay.YeePayGateWay.GetCashOperation(request.Params);
                     }
                 default:
                     {

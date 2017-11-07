@@ -176,5 +176,9 @@ namespace TradingLib.Contrib.APIService
         HMPay,
 
         C9Pay,
+
+        YeePay,
+
+        RMTech,
     }
 }
