@@ -180,5 +180,7 @@ namespace TradingLib.Contrib.APIService
         YeePay,
 
         RMTech,
+
+        GYPay,
     }
 }

@@ -139,6 +139,8 @@
     <Compile Include="PaymentGateway\GGTone\DropGGPayment.cs" />
     <Compile Include="PaymentGateway\GGTone\GGTongGateway.cs" />
     <Compile Include="PaymentGateway\Gopay\GoPayGateway.cs" />
+    <Compile Include="PaymentGateway\GYPay\DropGYPayment.cs" />
+    <Compile Include="PaymentGateway\GYPay\GYPayGateWay.cs" />
     <Compile Include="PaymentGateway\HMPay\DropHMPayment.cs" />
     <Compile Include="PaymentGateway\HMPay\HMPayGateWay.cs" />
     <Compile Include="PaymentGateway\HuiCX\DropHuiCXPayment.cs" />
