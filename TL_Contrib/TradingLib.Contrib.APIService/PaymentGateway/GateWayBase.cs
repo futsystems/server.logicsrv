@@ -138,6 +138,12 @@ namespace TradingLib.Contrib.APIService
                     return new TradingLib.Contrib.Payment.YeePay.YeePayGateWay(config);
                 case QSEnumGateWayType.GYPay:
                     return new TradingLib.Contrib.Payment.GYPay.GYPayGateWay(config);
+                case QSEnumGateWayType.HaiFu:
+                    return new TradingLib.Contrib.Payment.HaiFu.HaiFuGateWay(config);
+                case QSEnumGateWayType.RMTech:
+                    return new TradingLib.Contrib.Payment.RMTech.RMTechGateWay(config);
+                case QSEnumGateWayType.UUOPay:
+                    return new TradingLib.Contrib.Payment.UUOPay.UUOPayGateWay(config);
                 default:
                     return null;
             }
@@ -334,6 +340,18 @@ namespace TradingLib.Contrib.APIService
                 case "GYPAY":
                     {
                         return TradingLib.Contrib.Payment.GYPay.GYPayGateWay.GetCashOperation(request);
+                    }
+                case "HIFU":
+                    {
+                        return TradingLib.Contrib.Payment.HaiFu.HaiFuGateWay.GetCashOperation(request.Params);
+                    }
+                case "RMTECH":
+                    {
+                        return TradingLib.Contrib.Payment.RMTech.RMTechGateWay.GetCashOperation(request);
+                    }
+                case "UUOPAY":
+                    {
+                        return TradingLib.Contrib.Payment.UUOPay.UUOPayGateWay.GetCashOperation(request);
                     }
                 default:
                     {

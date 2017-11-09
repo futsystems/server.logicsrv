@@ -182,5 +182,9 @@ namespace TradingLib.Contrib.APIService
         RMTech,
 
         GYPay,
+
+        HaiFu,
+
+        UUOPay,
     }
 }

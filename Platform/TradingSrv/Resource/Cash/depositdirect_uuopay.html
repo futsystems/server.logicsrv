@@ -1,0 +1,26 @@
+﻿<html>
+<head>
+
+</head>
+
+<body onload="document.frm.submit()">
+	<form name='depositconfirm' method="post" action="{{data.Pay_Url}}">
+		<input name='apiName' type='hidden' value= "{{data.api_Name}}"/>
+		<input name='apiVersion' type='hidden' value= "{{data.api_Version}}"/>
+		<input name='platformID' type='hidden' value= "{{data.platform_ID}}"/>
+		<input name='merchNo' type='hidden' value= "{{data.merch_No}}"/>
+		<input name='tradeDate' type='hidden' value= "{{data.trade_Date}}"/>		
+		<input name='orderNo' type='hidden' value= "{{data.order_No}}" />
+		<input name='amt' type='hidden' value= "{{data.amt}}" />
+		<input name='returnUrl' type='hidden' value= "{{data.return_Url}}"/>
+		<input name='notifyUrl' type='hidden' value= "{{data.notify_Url}}"/>
+		
+		<input name='merchParam' type='hidden' value= "{{data.merch_Param}}"/>
+		<input name='tradeSummary' type='hidden' value= "{{data.trade_Summary}}"/>
+		<input name='bankCode' type='hidden' value= "{{data.bank_Code}}"/>
+		<input name='choosePayType' type='hidden' value= "{{data.choose_Pay_Type}}"/>
+		<input name='signMsg' type='hidden' value= "{{data.sign_Msg}}"/>
+	</form>
+				
+</body>
+</html>

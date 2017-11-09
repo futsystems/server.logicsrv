@@ -29,7 +29,8 @@ namespace TradingLib.Contrib.APIService
         {
             get
             {
-                return defaultinstance._followIDTracker.AssignId.ToString();
+                string tmp = defaultinstance._followIDTracker.AssignId.ToString();
+                return tmp.Substring(2,tmp.Length-2);
             }
         }
 

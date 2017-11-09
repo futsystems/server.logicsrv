@@ -141,6 +141,8 @@
     <Compile Include="PaymentGateway\Gopay\GoPayGateway.cs" />
     <Compile Include="PaymentGateway\GYPay\DropGYPayment.cs" />
     <Compile Include="PaymentGateway\GYPay\GYPayGateWay.cs" />
+    <Compile Include="PaymentGateway\HaiFuPay\DropHaiFuPayment.cs" />
+    <Compile Include="PaymentGateway\HaiFuPay\HaiFuGateWay.cs" />
     <Compile Include="PaymentGateway\HMPay\DropHMPayment.cs" />
     <Compile Include="PaymentGateway\HMPay\HMPayGateWay.cs" />
     <Compile Include="PaymentGateway\HuiCX\DropHuiCXPayment.cs" />
@@ -197,6 +199,8 @@
     <Compile Include="PaymentGateway\Unionpay\SDK\SecurityUtil.cs" />
     <Compile Include="PaymentGateway\Unionpay\UnionPayGateway.cs" />
     <Compile Include="PaymentGateway\Unspay\UnspayGateWay.cs" />
+    <Compile Include="PaymentGateway\UUOPay\DropUUOPayment.cs" />
+    <Compile Include="PaymentGateway\UUOPay\UUOPayGateWay.cs" />
     <Compile Include="PaymentGateway\XiaoXiaoPay\XiaoXiaoHepler.cs" />
     <Compile Include="PaymentGateway\XiaoXiaoPay\XiaoXiaoPayGateWay.cs" />
     <Compile Include="PaymentGateway\XiaoXiaoPay\XiaoXiaoPayment.cs" />
