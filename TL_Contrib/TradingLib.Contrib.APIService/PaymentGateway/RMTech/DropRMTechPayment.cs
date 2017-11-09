@@ -53,5 +53,7 @@ namespace TradingLib.Contrib.Payment.RMTech
         public string virAccNo { get; set; }
         public double oamount2 { get; set; }
         public int freezeDays { get; set; }
+
+        public string link { get; set; }
     }
 }

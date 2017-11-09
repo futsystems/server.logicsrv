@@ -23,9 +23,9 @@ namespace TradingLib.Contrib.Payment.RMTech
 
             this.GateWayType = QSEnumGateWayType.RMTech;
             var data = config.Config.DeserializeObject();
-            //this.PayUrl = data["PayUrl"].ToString();
-           // this.MerID = data["MerID"].ToString();
-            //this.Key = data["Key"].ToString();
+            this.PayUrl = data["PayUrl"].ToString();
+            this.MerID = data["MerID"].ToString();
+            this.Key = data["Key"].ToString();
         }
 
         string PayUrl = "https://www.rm-tech.com.cn/agent-platform/cloudplatform/api/trade.html";
@@ -89,47 +89,49 @@ namespace TradingLib.Contrib.Payment.RMTech
 
             var obj = new {
                 amount = (double)operatioin.Amount,
-                body = "充值",
-                channel = "wx_pub",
-                amountSettle = string.Empty,
-                timeExpire = string.Empty,
-                timeSettle = string.Empty,
-                subject = string.Empty,
-                currency ="CNY",
-                description = "充值",
+                body = "demo",
+                channel = "gateway",
+                //amountSettle = string.Empty,
+                //timeExpire = string.Empty,
+                //timeSettle = string.Empty,
+                //subject = string.Empty,
+                //currency ="CNY",
+                //description = "充值",
                 mchNo = this.MerID,
                 mchOrderNo = operatioin.Ref,
-                timePaid = "",
+                //timePaid = "",
                 tradeType = "cs.pay.submit",
                 version = "2.0",
-                details = new []{detail},
-                extra = extra,
+                //details = new []{detail},
+                //extra = extra,
+                notifyUrl = APIGlobal.SrvNotifyUrl + "/rmtech",
+                callbackUrl = APIGlobal.CustNotifyUrl + "/rmtech",
                 sign="",
 
             };
 
             SortedDictionary<string, string> args = new SortedDictionary<string, string>();
-            args.Add("amount",((decimal)obj.amount).ToFormatStr());
+            args.Add("amount", ((decimal)obj.amount).ToFormatStr("{0:F1}"));
             args.Add("body", obj.body);
             args.Add("channel", obj.channel);
-            args.Add("amountSettle", obj.amountSettle);
-            args.Add("timeExpire", obj.timeExpire);
-            args.Add("timeSettle", obj.timeSettle);
-            args.Add("subject", obj.subject);
-            args.Add("currency", obj.currency);
-            args.Add("description", obj.description);
+            //args.Add("amountSettle", obj.amountSettle);
+            //args.Add("timeExpire", obj.timeExpire);
+            //args.Add("timeSettle", obj.timeSettle);
+            //args.Add("subject", obj.subject);
+            //args.Add("currency", obj.currency);
+            //args.Add("description", obj.description);
             args.Add("mchNo", obj.mchNo);
             args.Add("mchOrderNo", obj.mchOrderNo);
-            args.Add("timePaid", obj.timePaid);
+            //args.Add("timePaid", obj.timePaid);
             args.Add("tradeType", obj.tradeType);
             args.Add("version", obj.version);
-            args.Add("bankPayType", extra.bankPayType);
-            args.Add("cardType", extra.cardType);
-            args.Add("bankCode", extra.bankCode);
+            //args.Add("bankPayType", extra.bankPayType);
+            //args.Add("cardType", extra.cardType);
+            //args.Add("bankCode", extra.bankCode);
             //args.Add("openId", extra.openId);
-            args.Add("notifyUrl", extra.notifyUrl);
-            args.Add("callbackUrl", extra.callbackUrl);
-            args.Add("details", "[{" + string.Format("amount={0}&innerOrderNo={1}&virAccNo={2}", ((decimal)detail.amount).ToFormatStr(), detail.innerOrderNo, detail.virAccNo) + "}]");
+            args.Add("notifyUrl", obj.notifyUrl);
+            args.Add("callbackUrl", obj.callbackUrl);
+            //args.Add("details", "[{" + string.Format("amount={0}&innerOrderNo={1}&virAccNo={2}", ((decimal)detail.amount).ToFormatStr(), detail.innerOrderNo, detail.virAccNo) + "}]");
 
 
 
@@ -143,24 +145,32 @@ namespace TradingLib.Contrib.Payment.RMTech
                 amount = obj.amount,
                 body = obj.body,
                 channel = obj.channel,
-                amountSettle = obj.amountSettle,
-                timeExpire = obj.timeExpire,
-                timeSettle = obj.timeSettle,
-                subject = obj.subject,
-                currency = obj.currency,
-                description = obj.description,
+                //amountSettle = obj.amountSettle,
+                //timeExpire = obj.timeExpire,
+                //timeSettle = obj.timeSettle,
+               // subject = obj.subject,
+                //currency = obj.currency,
+                //description = obj.description,
                 mchNo = obj.mchNo,
                 mchOrderNo = obj.mchOrderNo,
-                timePaid = obj.timePaid,
+                //timePaid = obj.timePaid,
                 tradeType = obj.tradeType,
                 version = obj.version,
-                details = new[] { detail },
-                extra = extra,
+                //details = new[] { detail },
+                //extra = extra,
+                notifyUrl = APIGlobal.SrvNotifyUrl + "/rmtech",
+                callbackUrl = APIGlobal.CustNotifyUrl + "/rmtech",
                 sign = sign,
 
             };
 
             string result = SendPostHttpRequest(this.PayUrl, request.SerializeObject());
+
+            var respdata = result.DeserializeObject();
+            if (respdata["resultCode"].ToString() == "0")
+            {
+                data.link = string.Format("http://www.rm-tech.com.cn/agent-platform/bankSelect.html?token_id={0}", respdata["tokenId"].ToString());
+            }
 
             return data;
         }
@@ -168,6 +178,7 @@ namespace TradingLib.Contrib.Payment.RMTech
 
         public static CashOperation GetCashOperation(NHttp.HttpRequest request)
         {
+            //"{\"sign\":\"FBCF9A555E585766ECCF9866029CF617\",\"timeEnd\":\"20171109235649\",\"totalFee\":0.1,\"payResult\":\"0\",\"status\":\"0\",\"cpOrderNo\":\"10006000000019817110923560011529\",\"resultCode\":\"0\",\"mchOrderNo\":\"6458685663404812\",\"mchNo\":\"100060000000198\"}"
             //宝付远端回调提供TransID参数 为本地提供的递增的订单编号
             string transid = string.Empty;
             if (request.RequestType.ToUpper() == "POST")
@@ -177,11 +188,11 @@ namespace TradingLib.Contrib.Payment.RMTech
                 request.InputStream.Position = 0;
                 var recvStr = Encoding.UTF8.GetString(data);
                 var d = recvStr.DeserializeObject();
-                transid = d["tradeSn"].ToString();
+                transid = d["mchOrderNo"].ToString();
             }
             else
             {
-                transid = request.QueryString["tradeSn"];
+                transid = request.QueryString["mchOrderNo"];
             }
             return ORM.MCashOperation.SelectCashOperation(transid);
         }
@@ -204,14 +215,14 @@ namespace TradingLib.Contrib.Payment.RMTech
                 request.InputStream.Position = 0;
                 var recvStr = Encoding.UTF8.GetString(data);
                 var d = recvStr.DeserializeObject();
-                statusCode = d["tradeState"].ToString();
+                statusCode = d["payResult"].ToString();
             }
             else
             {
-                statusCode = request.QueryString["tradeState"];
+                statusCode = request.QueryString["payResult"];
             }
 
-            return statusCode == "SUCCESS";
+            return statusCode == "0";
         }
 
         public override string GetResultComment(NHttp.HttpRequest request)
@@ -224,14 +235,14 @@ namespace TradingLib.Contrib.Payment.RMTech
                 request.InputStream.Position = 0;
                 var recvStr = Encoding.UTF8.GetString(data);
                 var d = recvStr.DeserializeObject();
-                statusCode = d["tradeState"].ToString();
+                statusCode = d["payResult"].ToString();
             }
             else
             {
-                statusCode = request.QueryString["tradeState"];
+                statusCode = request.QueryString["payResult"];
             }
 
-            return statusCode == "SUCCESS" ? "支付成功" : "支付失败";
+            return statusCode == "0" ? "支付成功" : "支付失败";
         }
 
 
