@@ -576,6 +576,32 @@ namespace TradingLib.ORM
 
         #endregion
 
+        /// <summary>
+        /// 清除某个结算日之前所有未结算记录
+        /// </summary>
+        /// <param name="settleday"></param>
+        public static void ClearUnsettledInfoBeforeSettleday(int settleday)
+        {
+            using (DBMySql db = new DBMySql())
+            {
+                string query = string.Format("update tmp_orders set settled=1 where settleday < '{0}'", settleday);
+                db.Connection.Execute(query);
+
+                query = string.Format("update tmp_orders set settled=1 where settleday < '{0}'", settleday);
+                db.Connection.Execute(query);
+
+                query = string.Format("update log_orders set settled=1 where settleday < '{0}'", settleday);
+                db.Connection.Execute(query);
+
+                query = string.Format("update log_trades set settled=1 where settleday < '{0}'", settleday);
+                db.Connection.Execute(query);
+
+
+                query = string.Format("update log_settlement_exchange set settled=1 where settleday < '{0}'", settleday);
+                db.Connection.Execute(query);
+            }
+        }
+
         #region 查询代理下属交易账户统计
 
         public static IEnumerable<SettlementStatistic> QrySettlementStatistic(int[] mgrIds, int startSettleday, int endSettleday)

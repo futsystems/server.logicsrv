@@ -202,6 +202,22 @@ namespace TradingLib.Core
             session.RspMessage("结算价更新成功");
         }
 
+
+        [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "ClearUnsettledInfo", "ClearUnsettledInfo - 清除未结算交易记录", "清除未结算交易记录", QSEnumArgParseType.CommaSeparated)]
+        public void CTE_RollBackToDay(ISession session)
+        {
+            Manager manager = session.GetManager();
+            if (manager == null || (!manager.IsRoot()))
+            {
+                throw new FutsRspError("无权进行该操作");
+            }
+
+            ORM.MSettlement.ClearUnsettledInfoBeforeSettleday(TLCtxHelper.ModuleSettleCentre.Tradingday);
+            session.RspMessage("未结算数据处理完毕");
+
+        }
+
+
         /// <summary>
         /// 回滚交易记录到某个交易日 用于执行手工结算
         /// </summary>

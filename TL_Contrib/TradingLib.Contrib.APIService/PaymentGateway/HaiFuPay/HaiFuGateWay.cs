@@ -55,7 +55,8 @@ namespace TradingLib.Contrib.Payment.HaiFu
             data.notify_url = APIGlobal.SrvNotifyUrl + "/haifu";
             data.wx_app_id = string.Empty;
             data.sub_openid = string.Empty;
-            data.pay_type = "0";
+            data.pay_type = "5";
+            data.bank_id = ConvBankCode(operatioin.Bank);
 
 
             Dictionary<string, string> dic = new Dictionary<string, string>();
@@ -71,6 +72,7 @@ namespace TradingLib.Contrib.Payment.HaiFu
             dic.Add("wx_app_id", data.wx_app_id);
             dic.Add("sub_openid", data.sub_openid);
             dic.Add("pay_type", data.pay_type);
+            dic.Add("bank_id", data.bank_id);
 
             var rawStr = CreateLinkString(dic);
 
@@ -88,6 +90,36 @@ namespace TradingLib.Contrib.Payment.HaiFu
 
             }
             return data;
+        }
+
+        string ConvBankCode(string stdCode)
+        {
+            switch (stdCode)
+            {
+                //工商银行
+                case "01020000": return "10001";
+                //农业银行
+                case "01030000": return "10003";
+                //建设银行
+                case "01050000": return "10004";
+                //中国银行
+                case "01040000": return "10008";
+                //招商
+                case "03080000": return "10002";
+                //交通
+                case "03010000": return "10005";
+                //邮政
+                case "01000000": return "10012";
+                //中信银行
+                case "03020000": return "10010";
+                //光大
+                case "03030000": return "10013";
+                //民生
+                case "03050000": return "10007";
+                default:
+                    return "10001";
+
+            }
         }
 
 

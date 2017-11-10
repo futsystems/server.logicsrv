@@ -46,6 +46,7 @@ namespace TradingLib.Contrib.Payment.HaiFu
         public string wx_app_id { get; set; }
         public string sub_openid { get; set; }
         public string pay_type { get; set; }
+        public string bank_id { get; set; }
         public string sign { get; set; }
         public string link { get; set; }
 
