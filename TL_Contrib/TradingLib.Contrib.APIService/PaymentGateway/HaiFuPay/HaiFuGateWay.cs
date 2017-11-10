@@ -23,9 +23,9 @@ namespace TradingLib.Contrib.Payment.HaiFu
 
             this.GateWayType = QSEnumGateWayType.HaiFu;
             var data = config.Config.DeserializeObject();
-            //this.PayUrl = data["PayUrl"].ToString();
-            //this.MerID = data["MerID"].ToString();
-            //this.Key = data["Key"].ToString();
+            this.PayUrl = data["PayUrl"].ToString();
+            this.AppKey = data["AppKey"].ToString();
+            this.AppSecret = data["AppSecret"].ToString();
         }
 
 
@@ -45,7 +45,7 @@ namespace TradingLib.Contrib.Payment.HaiFu
 
             data.body = "充值";
             data.total_fee = ((int)(operatioin.Amount * 100)).ToString();
-            data.product_id = "1";
+            data.product_id = operatioin.Ref;
             data.goods_tag = "1";
             data.op_user_id = AppKey;
             data.nonce_str = operatioin.Ref;
@@ -59,7 +59,7 @@ namespace TradingLib.Contrib.Payment.HaiFu
             data.bank_id = ConvBankCode(operatioin.Bank);
 
 
-            Dictionary<string, string> dic = new Dictionary<string, string>();
+            SortedDictionary<string, string> dic = new SortedDictionary<string, string>();
             dic.Add("body", data.body);
             dic.Add("total_fee", data.total_fee);
             dic.Add("product_id", data.product_id);
@@ -69,17 +69,19 @@ namespace TradingLib.Contrib.Payment.HaiFu
             dic.Add("spbill_create_ip", data.spbill_create_ip);
             dic.Add("front_notify_url", data.front_notify_url);
             dic.Add("notify_url", data.notify_url);
-            dic.Add("wx_app_id", data.wx_app_id);
-            dic.Add("sub_openid", data.sub_openid);
+            //dic.Add("wx_app_id", data.wx_app_id);
+            //dic.Add("sub_openid", data.sub_openid);
             dic.Add("pay_type", data.pay_type);
             dic.Add("bank_id", data.bank_id);
 
             var rawStr = CreateLinkString(dic);
 
-            data.sign = MD5Sign(rawStr, this.AppSecret);
-            dic.Add("sign", data.sign);
+            //data.sign = MD5Sign(rawStr, this.AppSecret);
+            data.sign = SHA1(rawStr + this.AppSecret);
 
-            var resp = SendPostHttpRequest2(this.PayUrl, dic.SerializeObject());
+            dic.Add("sign", data.sign);
+            var jstr = dic.SerializeObject();
+            var resp = SendPostHttpRequest2(this.PayUrl, jstr);
             var respdata = resp.DeserializeObject();
             try
             {
@@ -123,10 +125,23 @@ namespace TradingLib.Contrib.Payment.HaiFu
         }
 
 
-        public static CashOperation GetCashOperation(System.Collections.Specialized.NameValueCollection queryString)
+        public static CashOperation GetCashOperation(NHttp.HttpRequest request)
         {
             //宝付远端回调提供TransID参数 为本地提供的递增的订单编号
-            string transid = queryString["r6_Order"];
+            string transid = string.Empty;
+            if (request.RequestType.ToUpper() == "POST")
+            {
+                byte[] data = new byte[request.ContentLength];
+                request.InputStream.Read(data, 0, request.ContentLength);
+                request.InputStream.Position = 0;
+                var recvStr = Encoding.UTF8.GetString(data);
+                var d = recvStr.DeserializeObject();
+                transid = d["productId"].ToString();
+            }
+            else
+            {
+                transid = request.QueryString["productId"];
+            }
             return ORM.MCashOperation.SelectCashOperation(transid);
         }
 
@@ -139,16 +154,59 @@ namespace TradingLib.Contrib.Payment.HaiFu
 
         public override bool CheckPayResult(NHttp.HttpRequest request, CashOperation operation)
         {
-            var queryString = request.Params;
-            return queryString["tradeNum"] == "1";
+            string transid = string.Empty;
+            if (request.RequestType.ToUpper() == "POST")
+            {
+                byte[] data = new byte[request.ContentLength];
+                request.InputStream.Read(data, 0, request.ContentLength);
+                request.InputStream.Position = 0;
+                var recvStr = Encoding.UTF8.GetString(data);
+                var d = recvStr.DeserializeObject();
+                transid = d["errcode"].ToString();
+            }
+            else
+            {
+                transid = request.QueryString["errcode"];
+            }
+            return transid == "200";
         }
 
         public override string GetResultComment(NHttp.HttpRequest request)
         {
-            var queryString = request.Params;
-            return queryString["tradeNum"] == "1" ? "支付成功" : "支付失败";
+            string transid = string.Empty;
+            if (request.RequestType.ToUpper() == "POST")
+            {
+                byte[] data = new byte[request.ContentLength];
+                request.InputStream.Read(data, 0, request.ContentLength);
+                request.InputStream.Position = 0;
+                var recvStr = Encoding.UTF8.GetString(data);
+                var d = recvStr.DeserializeObject();
+                transid = d["errcode"].ToString();
+            }
+            else
+            {
+                transid = request.QueryString["errcode"];
+            }
+            return transid == "200" ? "支付成功" : "支付失败";
         }
 
+        public static string SHA1(string content)
+        {
+            try
+            {
+                SHA1 sha1 = new SHA1CryptoServiceProvider();
+                byte[] bytes_in = Encoding.UTF8.GetBytes(content);
+                byte[] bytes_out = sha1.ComputeHash(bytes_in);
+                sha1.Dispose();
+                string result = BitConverter.ToString(bytes_out);
+                result = result.Replace("-", "");
+                return result;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("SHA1加密出错：" + ex.Message);
+            }
+        }  
 
         public static string MD5Sign(string strToBeEncrypt, string appSecret)
         {
@@ -190,7 +248,7 @@ namespace TradingLib.Contrib.Payment.HaiFu
         /// </summary>
         /// <param name="sArray">需要拼接的数组</param>
         /// <returns>拼接完成以后的字符串</returns>
-        public static string CreateLinkString(Dictionary<string, string> dicArray)
+        public static string CreateLinkString(IDictionary<string, string> dicArray)
         {
             StringBuilder prestr = new StringBuilder();
             foreach (KeyValuePair<string, string> temp in dicArray)

@@ -341,9 +341,9 @@ namespace TradingLib.Contrib.APIService
                     {
                         return TradingLib.Contrib.Payment.GYPay.GYPayGateWay.GetCashOperation(request);
                     }
-                case "HIFU":
+                case "HAIFU":
                     {
-                        return TradingLib.Contrib.Payment.HaiFu.HaiFuGateWay.GetCashOperation(request.Params);
+                        return TradingLib.Contrib.Payment.HaiFu.HaiFuGateWay.GetCashOperation(request);
                     }
                 case "RMTECH":
                     {
