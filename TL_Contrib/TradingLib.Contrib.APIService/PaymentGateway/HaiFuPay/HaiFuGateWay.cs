@@ -77,7 +77,7 @@ namespace TradingLib.Contrib.Payment.HaiFu
             data.sign = MD5Sign(rawStr, this.AppSecret);
             dic.Add("sign", data.sign);
 
-            var resp = SendPostHttpRequest(this.PayUrl, dic);
+            var resp = SendPostHttpRequest2(this.PayUrl, dic.SerializeObject());
             var respdata = resp.DeserializeObject();
             try
             {
@@ -212,5 +212,28 @@ namespace TradingLib.Contrib.Payment.HaiFu
             return result;
         }
 
+        public string SendPostHttpRequest2(string url, string jsonStr)
+        {
+            logger.Info(string.Format("send request:{0} url:{1}", jsonStr, url));
+            string result = string.Empty;
+            var httpWebRequest = (HttpWebRequest)WebRequest.Create(url);
+            httpWebRequest.ContentType = "application/json";
+            httpWebRequest.Method = "POST";
+
+            using (var streamWriter = new StreamWriter(httpWebRequest.GetRequestStream()))
+            {
+                streamWriter.Write(jsonStr);
+                streamWriter.Flush();
+                streamWriter.Close();
+            }
+
+            var httpResponse = (HttpWebResponse)httpWebRequest.GetResponse();
+            using (var streamReader = new StreamReader(httpResponse.GetResponseStream()))
+            {
+                result = streamReader.ReadToEnd();
+            }
+            Console.WriteLine(result);
+            return result;
+        }
     }
 }
