@@ -23,9 +23,9 @@ namespace TradingLib.Contrib.Payment.GYPay
 
             this.GateWayType = QSEnumGateWayType.GYPay;
             var data = config.Config.DeserializeObject();
-            //this.PayUrl = data["PayUrl"].ToString();
-            //this.MerID = data["MerID"].ToString();
-            //this.Key = data["Key"].ToString();
+            this.PayUrl = data["PayUrl"].ToString();
+            this.MerID = data["MerID"].ToString();
+            this.Key = data["Key"].ToString();
         }
         string PayUrl = "http://113.106.95.37:7777/gyprovider/netpay/applyPay.do";
         string MerID = "gypay0170113";
@@ -43,7 +43,7 @@ namespace TradingLib.Contrib.Payment.GYPay
             data.gymchtId = this.MerID;
             data.tradeSn = operatioin.Ref;
             data.orderAmount = ((int)(operatioin.Amount * 100)).ToString();
-            data.goodsName = "充值";
+            data.goodsName = "Credits";
             data.bankSegment = ConvBankCode(operatioin.Bank);
             data.cardType = "01";
 
