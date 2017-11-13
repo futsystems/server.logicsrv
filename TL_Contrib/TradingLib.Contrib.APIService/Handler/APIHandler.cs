@@ -57,6 +57,7 @@ namespace TradingLib.Contrib.APIService
 
                                 //MD5
                                 string waitSign = MD5Helper.CreateLinkString(reqDict);
+                                logger.Info("request rawStr:" + waitSign);
                                 string md5sign = MD5Helper.MD5Sign(waitSign,domain.Cfg_MD5Key);
 
                                 if (request.Params["md5sign"] != md5sign)

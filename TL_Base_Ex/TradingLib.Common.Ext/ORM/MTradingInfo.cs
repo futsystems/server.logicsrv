@@ -747,5 +747,36 @@ namespace TradingLib.ORM
 
         #endregion
 
+        public static IEnumerable<SecurityStatistic> QuerySecurityStatistic(int[] mgrid,int start,int end)
+        {
+            using (DBMySql db = new DBMySql())
+            {
+                string query = string.Empty;
+
+                if (mgrid == null || mgrid.Length == 0)
+                {
+                    query = string.Format("select SUM(ABS(xsize)) as total_size ,SUM(commission) as total_commission,exchange,securitycode from log_trades  WHERE settleday >={0} AND settleday <={1} GROUP BY securitycode",start,end);
+                
+                }
+                else
+                {
+                    query = string.Format("select SUM(ABS(xsize)) as total_size ,SUM(commission) as total_commission,exchange,securitycode from log_trades  WHERE settleday >={0} AND settleday <={1} AND account in (select account from accounts where mgr_fk in ({2}))  GROUP BY securitycode", start, end, string.Join(",", mgrid));
+                }
+                return db.Connection.Query<SecurityStatistic>(query);
+            }
+
+        }
+
+    }
+
+    public class SecurityStatistic
+    {
+        public int total_size { get; set; }
+
+        public decimal total_commission { get; set; }
+
+        public string exchange { get; set; }
+
+        public string securitycode { get; set; }        
     }
 }
