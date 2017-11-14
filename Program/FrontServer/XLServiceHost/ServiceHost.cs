@@ -107,6 +107,9 @@ namespace FrontServer.XLServiceHost
                     conn.UpdateHeartBeat();
                     XLPacketData pktData = new XLPacketData(XLMessageType.T_HEARTBEEAT);
                     conn.ResponseXLPacket(pktData, 0, true);
+                    //向逻辑服务端发送心跳
+                    _mqServer.LogicClientHeartBeat(session.SessionID);
+
                     return;
                 }
                 //检查请求域
@@ -150,10 +153,6 @@ namespace FrontServer.XLServiceHost
 
         public void HandleLogicMessage(FrontServer.IConnection connection, IPacket packet)
         {
-        }
-        public void ClearIdleSession()
-        {
-
         }
 
         public void Start()

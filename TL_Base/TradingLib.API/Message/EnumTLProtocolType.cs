@@ -27,5 +27,10 @@ namespace TradingLib.API
         /// websocket
         /// </summary>
         WebSocket,
+
+        /// <summary>
+        /// 未知
+        /// </summary>
+        Unknown=99,
     }
 }

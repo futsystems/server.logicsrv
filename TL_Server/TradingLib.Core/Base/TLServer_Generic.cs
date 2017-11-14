@@ -85,6 +85,8 @@ namespace TradingLib.Core
         public int NumClientsLoggedIn { get { return _clients.Clients.Where(c=>c.Authorized).Count(); } }
 
 
+
+
         Providers _pn = Providers.Unknown;
         /// <summary>
         /// 服务端的ProviderName 标识
@@ -298,6 +300,7 @@ namespace TradingLib.Core
             _newcli.Init(request.FrontID, request.ClientID);
             _newcli.FrontIDi = GetFrontIDi(request.FrontID);
             _newcli.SessionIDi = NexSessionID(request.FrontID);
+            _newcli.FrontType = request.FrontType;
 
             if (client == null)
             {

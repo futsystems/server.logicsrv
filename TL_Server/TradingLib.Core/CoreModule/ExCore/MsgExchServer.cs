@@ -478,5 +478,14 @@ namespace TradingLib.Core
             }
         }
         #endregion
+
+        [TaskAttr("无效客户端检查",5,0, "无效客户端检查")]
+        public void Task_DataCheck()
+        {
+            if (TLCtxHelper.IsReady)
+            {
+                tl.ClearIdelSession();
+            }
+        }
     }
 }

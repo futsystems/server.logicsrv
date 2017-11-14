@@ -198,10 +198,6 @@ namespace FrontServer.TLServiceHost
             }
         }
 
-        public void ClearIdleSession()
-        {
-
-        }
         public void Start()
         {
             InitServer();

@@ -83,6 +83,15 @@ namespace FrontServer
             }
         }
 
+        public void LogicClientHeartBeat(string sessionId)
+        {
+            IConnection target = null;
+            if (connectionMap.TryGetValue(sessionId, out target))
+            {
+                HeartBeat request = RequestTemplate<HeartBeat>.CliSendRequest(0);
+                this.TLSend(sessionId, request);
+            }
+        }
         /// <summary>
         /// 注册交易客户端
         /// </summary>

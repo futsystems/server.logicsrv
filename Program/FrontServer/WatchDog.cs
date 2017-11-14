@@ -14,12 +14,10 @@ namespace FrontServer
         ILog logger = LogManager.GetLogger("WatchDog");
 
         MQServer _mqServer = null;
-        CTPService.CTPServiceHost _ctphost = null;
         const int INTERVAL = 3;
         public WatchDog(MQServer mqserver,CTPService.CTPServiceHost ctphost)
         {
             _mqServer = mqserver;
-            _ctphost = ctphost;
         }
         ManualResetEvent manualEvent = new ManualResetEvent(false);
         /// <summary>
@@ -81,8 +79,6 @@ namespace FrontServer
                 {
                     _mqServer.Start();
                 }
-
-                _ctphost.ClearIdleSession();
             }
             catch (Exception ex)
             {

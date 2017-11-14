@@ -72,6 +72,9 @@ namespace TradingLib.Common
         /// </summary>
         public int SessionIDi { get; set; }
 
+        EnumFrontType _frontType = EnumFrontType.Unknown;
+        public EnumFrontType FrontType { get { return _frontType; } set { _frontType = value; } }
+
 
         public ClientInfoBase(ClientInfoBase copythis)
         {
@@ -103,6 +106,7 @@ namespace TradingLib.Common
 
             FrontIDi = 0;
             SessionIDi = 0;
+            
         }
 
         /// <summary>

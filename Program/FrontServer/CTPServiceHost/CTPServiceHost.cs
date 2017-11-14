@@ -74,21 +74,6 @@ namespace CTPService
             
         }
 
-        public  void ClearIdleSession()
-        {
-            var now = DateTime.Now;
-            foreach (var session in sessionMap.Values.ToArray())
-            {
-                var conn = GetConnection(session.SessionID);
-                if (conn != null)
-                {
-                    if (now.Subtract(conn.State.LastHeartBeat).TotalSeconds > 60)
-                    {
-                        session.Close();
-                    }
-                }
-            }
-        }
 
         ConcurrentDictionary<string, FrontServer.IConnection> connectionMap = new ConcurrentDictionary<string, FrontServer.IConnection>();
 
@@ -125,6 +110,8 @@ namespace CTPService
                                     conn.UpdateHeartBeat();
                                     //返回心跳包
                                     conn.Send(heartBeatPkt);
+                                    //向逻辑服务端发送心跳
+                                    _mqServer.LogicClientHeartBeat(session.SessionID);
                                 }
                                 break;
                             }
