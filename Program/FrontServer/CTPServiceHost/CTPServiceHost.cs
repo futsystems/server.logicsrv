@@ -84,14 +84,7 @@ namespace CTPService
                 {
                     if (now.Subtract(conn.State.LastHeartBeat).TotalSeconds > 60)
                     {
-
                         session.Close();
-                        //logger.Info(string.Format("Session:{0} Closed", session.SessionID));
-                        //OnSessionClosed(session);
-                        //逻辑服务器注销客户端
-                        //_mqServer.LogicUnRegister(session.SessionID);
-
-
                     }
                 }
             }
