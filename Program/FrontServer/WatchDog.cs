@@ -64,7 +64,7 @@ namespace FrontServer
             {
                 if (_mqServer.IsLive)
                 {
-                    if (DateTime.Now.Subtract(_mqServer.LastHeartBeatRecv).TotalSeconds >= INTERVAL * 3)
+                    if (DateTime.Now.Subtract(_mqServer.LastHeartBeatRecv).TotalSeconds >= INTERVAL * 10)
                     {
                         logger.Warn("MQServer's Backend Connectioin is dead");
                         _mqServer.Stop();
