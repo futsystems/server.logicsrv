@@ -55,6 +55,8 @@ namespace FrontServer
             mainThread.Join();
         }
 
+
+
         int _logicPort=5570;
         int _tickPort = 5572;
 
@@ -66,6 +68,112 @@ namespace FrontServer
         Thread mainThread = null;
 
         object _obj = new object();
+
+
+
+        /// <summary>
+        /// 启动数据储存服务
+        /// </summary>
+        public void StartWorker()
+        {
+            logger.Info("[Start Worker Service]");
+            if (_sendgo) return;
+            _sendgo = true;
+            _sendthread = new Thread(ProcessItem);
+            _sendthread.IsBackground = false;
+            _sendthread.Start();
+        }
+
+
+        class WorkerItem
+        {
+            public string SessionID { get; set; }
+
+            public IPacket Packet { get; set; }
+        }
+
+        RingBuffer<WorkerItem> sendbuffer = new RingBuffer<WorkerItem>(50000);
+        //const int SLEEPDEFAULTMS = 100;
+        static ManualResetEvent _sendwaiting = new ManualResetEvent(false);
+        Thread _sendthread = null;
+        bool _sendgo = false;
+        void NewSend()
+        {
+            if ((_sendthread != null) && (_sendthread.ThreadState == System.Threading.ThreadState.WaitSleepJoin))
+            {
+                _sendwaiting.Set();
+            }
+        }
+        const int SLEEPDEFAULTMS = 10000;
+        void ProcessItem()
+        {
+            WorkerItem st = null;
+            while (_sendgo)
+            {
+                try
+                {
+                    while (sendbuffer.hasItems)
+                    {
+                        st = sendbuffer.Read();
+                        //在某个特定情况下 会出现 待发送数据结构为null的情况 多个线程对sendbuffer的访问 形成竞争
+                        if (st == null)
+                        {
+                            logger.Error("XXXX Worker Buffer Got Null Struct");
+                            continue;
+                        }
+
+                        IConnection conn = GetConnection(st.SessionID);
+
+                        try
+                        {
+                            
+                            if (conn != null)
+                            {
+                                if (conn.IsXLProtocol)
+                                {
+                                    this.HandleLogicMessage(conn, st.Packet);
+                                }
+                                else
+                                {
+                                    //调用Connection对应的ServiceHost处理逻辑消息包
+                                    conn.ServiceHost.HandleLogicMessage(conn, st.Packet);
+                                }
+                            }
+                            else
+                            {
+                                logger.Warn(string.Format("Client:{0} do not exist", st.SessionID));
+                            }
+
+                        }
+                        catch (System.TimeoutException t)
+                        { 
+                            //处理超时
+                            if (conn != null)
+                            {
+                                conn.Close();
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+
+                            logger.Error(string.Format("Conn:{0} Handle Packet:{1} Error:{2}", st.SessionID, st.Packet.ToString(), ex.ToString()));
+
+                        }
+                    }
+                    // clear current flag signal
+                    _sendwaiting.Reset();
+                    //logger.Info("process send");
+                    // wait for a new signal to continue reading
+                    _sendwaiting.WaitOne(SLEEPDEFAULTMS);
+
+                }
+                catch (Exception ex)
+                {
+                    logger.Error("SendWorker Process  error:" + ex.ToString());
+                }
+            }
+
+        }
 
 
 
@@ -272,6 +380,9 @@ namespace FrontServer
                                             }
                                             else //其余客户端地址为 UUID表示 转发数据到客户端
                                             {
+                                                sendbuffer.Write(new WorkerItem() { SessionID = clientId, Packet = packet });
+                                                NewSend();
+                                                /*
                                                 IConnection conn = GetConnection(clientId);
                                                 if (conn != null)
                                                 {
@@ -288,7 +399,7 @@ namespace FrontServer
                                                 else
                                                 {
                                                     logger.Warn(string.Format("Client:{0} do not exist", clientId));
-                                                }
+                                                }**/
                                             }
                                         }
                                     }
