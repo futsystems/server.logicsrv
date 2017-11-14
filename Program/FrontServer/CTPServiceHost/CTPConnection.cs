@@ -181,6 +181,7 @@ namespace CTPService
         public FrontServer.IConnectionState IState { get { return this.State; } }
         /// <summary>
         /// 更新心跳状态
+        /// CTP 40秒心跳
         /// </summary>
         public void UpdateHeartBeat()
         {

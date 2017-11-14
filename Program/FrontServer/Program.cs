@@ -221,7 +221,7 @@ namespace FrontServer
             WSServiceHost.WSServiceHost wshost = new WSServiceHost.WSServiceHost(mqServer);
 
             //创建WatchDog
-            WatchDog watchDog = new WatchDog(mqServer);
+            WatchDog watchDog = new WatchDog(mqServer, ctphost);
 
             //依次启动服务
             mqServer.Start();

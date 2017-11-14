@@ -16,5 +16,7 @@ namespace FrontServer
         /// <param name="packet"></param>
         /// <returns></returns>
         void HandleLogicMessage(IConnection connection, IPacket packet);
+
+        void ClearIdleSession();
     }
 }

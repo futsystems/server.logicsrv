@@ -87,8 +87,11 @@ namespace FrontServer.WSServiceHost
             }
             return null;
         }
-      
 
+        public void ClearIdleSession()
+        {
+
+        }
 
 
     }

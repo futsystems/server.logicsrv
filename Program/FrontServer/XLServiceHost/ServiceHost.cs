@@ -151,7 +151,10 @@ namespace FrontServer.XLServiceHost
         public void HandleLogicMessage(FrontServer.IConnection connection, IPacket packet)
         {
         }
+        public void ClearIdleSession()
+        {
 
+        }
 
         public void Start()
         {

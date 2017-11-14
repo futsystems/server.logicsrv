@@ -14,10 +14,12 @@ namespace FrontServer
         ILog logger = LogManager.GetLogger("WatchDog");
 
         MQServer _mqServer = null;
+        CTPService.CTPServiceHost _ctphost = null;
         const int INTERVAL = 3;
-        public WatchDog(MQServer mqserver)
+        public WatchDog(MQServer mqserver,CTPService.CTPServiceHost ctphost)
         {
             _mqServer = mqserver;
+            _ctphost = ctphost;
         }
         ManualResetEvent manualEvent = new ManualResetEvent(false);
         /// <summary>
@@ -60,22 +62,31 @@ namespace FrontServer
         }
         void timer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
         {
-            if (_mqServer.IsLive)
+            try
             {
-                if (DateTime.Now.Subtract(_mqServer.LastHeartBeatRecv).TotalSeconds >= INTERVAL * 3)
+                if (_mqServer.IsLive)
                 {
-                    logger.Warn("MQServer's Backend Connectioin is dead");
-                    _mqServer.Stop();
+                    if (DateTime.Now.Subtract(_mqServer.LastHeartBeatRecv).TotalSeconds >= INTERVAL * 3)
+                    {
+                        logger.Warn("MQServer's Backend Connectioin is dead");
+                        _mqServer.Stop();
+                    }
+                    else
+                    {
+                        _mqServer.LogicHeartBeat();
+                    }
                 }
-                else
-                {
-                    _mqServer.LogicHeartBeat();
-                }
-            }
 
-            if (_mqServer.IsStopped)
+                if (_mqServer.IsStopped)
+                {
+                    _mqServer.Start();
+                }
+
+                _ctphost.ClearIdleSession();
+            }
+            catch (Exception ex)
             {
-                _mqServer.Start();
+                logger.Error("wath dog error:" + ex.ToString());
             }
         }
     }

@@ -74,6 +74,28 @@ namespace CTPService
             
         }
 
+        public  void ClearIdleSession()
+        {
+            var now = DateTime.Now;
+            foreach (var session in sessionMap.Values.ToArray())
+            {
+                var conn = GetConnection(session.SessionID);
+                if (conn != null)
+                {
+                    if (now.Subtract(conn.State.LastHeartBeat).TotalSeconds > 60)
+                    {
+
+                        session.Close();
+                        //logger.Info(string.Format("Session:{0} Closed", session.SessionID));
+                        //OnSessionClosed(session);
+                        //逻辑服务器注销客户端
+                        //_mqServer.LogicUnRegister(session.SessionID);
+
+
+                    }
+                }
+            }
+        }
 
         ConcurrentDictionary<string, FrontServer.IConnection> connectionMap = new ConcurrentDictionary<string, FrontServer.IConnection>();
 

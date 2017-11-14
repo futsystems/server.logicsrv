@@ -587,7 +587,7 @@ namespace TradingLib.ORM
                 string query = string.Format("update tmp_orders set settled=1 where settleday < '{0}'", settleday);
                 db.Connection.Execute(query);
 
-                query = string.Format("update tmp_orders set settled=1 where settleday < '{0}'", settleday);
+                query = string.Format("update tmp_trades set settled=1 where settleday < '{0}'", settleday);
                 db.Connection.Execute(query);
 
                 query = string.Format("update log_orders set settled=1 where settleday < '{0}'", settleday);
