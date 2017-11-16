@@ -33,8 +33,8 @@ namespace TradingLib.Contrib.Payment.OpenEPay
         }
 
         string PayUrl = "http://opsweb.koolyun.cn/gateway/index.do";
-        string MerID = "100020091219001";
-        string MD5Key = "1234567890";
+        string MerID = "101000171115001";
+        string MD5Key = "1qaz2wSx88";
         string Domain = "";
         string frontURL = APIGlobal.CustNotifyUrl + "/openepay";
         string backURL = APIGlobal.SrvNotifyUrl + "/openepay";

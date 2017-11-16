@@ -104,7 +104,7 @@ namespace FrontServer
                 _sendwaiting.Set();
             }
         }
-        const int SLEEPDEFAULTMS = 10000;
+        const int SLEEPDEFAULTMS = 200;
         void ProcessItem()
         {
             WorkerItem st = null;
