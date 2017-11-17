@@ -70,7 +70,7 @@ namespace TradingLib.Core
             return _clients.Clients.Where(client =>(client.Account !=null && client.Account.ID.Equals(account)));
         }
 
-
+        
         public void ClearIdelSession()
         {
             var now = DateTime.Now;
@@ -78,7 +78,7 @@ namespace TradingLib.Core
             {
                 if (client.FrontType == EnumFrontType.SimCTP || client.FrontType == EnumFrontType.XLTinny)
                 { 
-                    if(now.Subtract(client.HeartBeat).TotalSeconds>100)//100秒内没有心跳则清除客户端
+                    if(now.Subtract(client.HeartBeat).TotalSeconds>300)//300秒内没有心跳则清除客户端
                     {
                         logger.Info("clear session:" + client.Location.ClientID);
                         _clients.UnRegistClient(client.Location.ClientID);
