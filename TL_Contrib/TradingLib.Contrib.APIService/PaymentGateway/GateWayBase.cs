@@ -37,9 +37,16 @@ namespace TradingLib.Contrib.APIService
             return null;
         }
 
-        public string SuccessReponse { get; set; }
         /// <summary>
-        /// 检查远端回调访问是否合法
+        /// 获取通知成功返回
+        /// 每个第三方 成功通知 返回不同
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        public string SuccessReponse { get; set; }
+
+        /// <summary>
+        /// 检查远端回调访问是否合法 验签名
         /// </summary>
         /// <param name="queryString"></param>
         /// <returns></returns>
@@ -48,6 +55,12 @@ namespace TradingLib.Contrib.APIService
             return false;
         }
 
+        /// <summary>
+        /// 检查支付结果
+        /// </summary>
+        /// <param name="request"></param>
+        /// <param name="operation"></param>
+        /// <returns></returns>
         public virtual bool CheckPayResult(NHttp.HttpRequest request,CashOperation operation)
         {
             return false;
@@ -144,6 +157,8 @@ namespace TradingLib.Contrib.APIService
                     return new TradingLib.Contrib.Payment.RMTech.RMTechGateWay(config);
                 case QSEnumGateWayType.UUOPay:
                     return new TradingLib.Contrib.Payment.UUOPay.UUOPayGateWay(config);
+                case QSEnumGateWayType.PlugPay:
+                    return new TradingLib.Contrib.Payment.PlugPay.PlugPayGateWay(config);
                 default:
                     return null;
             }
@@ -352,6 +367,10 @@ namespace TradingLib.Contrib.APIService
                 case "UUOPAY":
                     {
                         return TradingLib.Contrib.Payment.UUOPay.UUOPayGateWay.GetCashOperation(request);
+                    }
+                case "PLUGPAY":
+                    {
+                        return TradingLib.Contrib.Payment.PlugPay.PlugPayGateWay.GetCashOperation(request.Params);
                     }
                 default:
                     {

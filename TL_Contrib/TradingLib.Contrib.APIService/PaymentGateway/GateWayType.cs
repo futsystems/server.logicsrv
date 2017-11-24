@@ -186,5 +186,7 @@ namespace TradingLib.Contrib.APIService
         HaiFu,
 
         UUOPay,
+
+        PlugPay
     }
 }

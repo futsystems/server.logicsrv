@@ -54,8 +54,10 @@
       <HintPath>..\..\lib\NHttp.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Drawing" />
     <Reference Include="System.Numerics" />
     <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
@@ -171,6 +173,8 @@
     <Compile Include="PaymentGateway\OpenEPay\OpenEPayGateway.cs" />
     <Compile Include="PaymentGateway\Pay848\DropPay848Payment.cs" />
     <Compile Include="PaymentGateway\Pay848\Pay848GateWay.cs" />
+    <Compile Include="PaymentGateway\PlugPay\DropPlugPayment.cs" />
+    <Compile Include="PaymentGateway\PlugPay\PlugPayGateWay.cs" />
     <Compile Include="PaymentGateway\QianTong\DropQianTongPayment.cs" />
     <Compile Include="PaymentGateway\QianTong\QianTongPayGateWay.cs" />
     <Compile Include="PaymentGateway\QianTong\RSAUtil.cs" />
