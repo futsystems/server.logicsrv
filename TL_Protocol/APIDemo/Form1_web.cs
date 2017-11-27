@@ -20,6 +20,14 @@ namespace APIClient
         void WireEvent_Web()
         {
             webAddAccount.Click += new EventHandler(webAddAccount_Click);
+            webUpdateAccount.Click += new EventHandler(webUpdateAccount_Click);
+        }
+
+        void webUpdateAccount_Click(object sender, EventArgs e)
+        {
+            HttpAPIClient client = new HttpAPIClient(web_url.Text, md5key.Text);
+            string ret = client.ReqUpdateAccount(web_domainId.Text, webupdateacc_acc.Text, webupdateacc_name.Text, webupdateacc_qq.Text, webupdateacc_mobile.Text, webupdateacc_idcard.Text, webupdateacc_bank.Text, webupdateacc_branch.Text, webupdateacc_bankac.Text);
+            logger.Info("resoult:" + ret);
         }
 
 

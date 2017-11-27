@@ -72,7 +72,7 @@ namespace APIClient
             WebRequest request = (WebRequest)HttpWebRequest.Create(url);
             request.Method = "POST";
             byte[] postBytes = null;
-            postBytes = Encoding.UTF8.GetBytes(sb.ToString());
+            postBytes = Encoding.ASCII.GetBytes(sb.ToString());
             request.ContentType = "application/x-www-form-urlencoded; encoding=utf-8";
             request.ContentLength = postBytes.Length;
             using (Stream outstream = request.GetRequestStream())
@@ -131,5 +131,45 @@ namespace APIClient
 
             return ret;
         }
+
+        public string ReqUpdateAccount(string domain_id,string account, string name, string qq, string mobile, string idcard, string bank, string branch, string bankac)
+        {
+            Dictionary<string, string> request = new Dictionary<string, string>();
+
+            request.Add("method", "update_user");
+            request.Add("domain_id", domain_id);
+            request.Add("account", account);
+            request.Add("name", name);
+            request.Add("qq", qq);
+            request.Add("mobile", mobile);
+            request.Add("idcard", idcard);
+            request.Add("bank", bank);
+            request.Add("branch", branch);
+            request.Add("bankac", bankac);
+
+
+            string waitSign = CreateLinkString(request);
+            var sign = MD5Sign(waitSign, _key);
+            request.Add("md5sign", sign);
+
+            request["name"] = UrlEncode(request["name"]);
+            request["branch"] = UrlEncode(request["branch"]);
+            string ret = SendPostHttpRequest(request, _url);
+
+            return ret;
+        }
+
+        public static string UrlEncode(string str)
+        {
+            StringBuilder sb = new StringBuilder();
+            byte[] byStr = Encoding.UTF8.GetBytes(str); //默认是System.Text.Encoding.Default.GetBytes(str)
+            for (int i = 0; i < byStr.Length; i++)
+            {
+                sb.Append(@"%" + Convert.ToString(byStr[i], 16));
+            }
+
+            return (sb.ToString());
+        }
+
     }
 }

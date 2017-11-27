@@ -122,7 +122,86 @@ namespace TradingLib.Contrib.APIService
                                 );
                             }
                         #endregion
+                        #region UPDATE_USER
+                        case "UPDATE_USER":
+                            {
+                                var name = Encoding.UTF8.GetString(Encoding.ASCII.GetBytes(request.Params["name"]));
+                                var branch = Encoding.UTF8.GetString(Encoding.ASCII.GetBytes(request.Params["branch"]));
+                                reqDict.Add("domain_id", request.Params["domain_id"]);
+                                reqDict.Add("account", request.Params["account"]);
+                                reqDict.Add("name", request.Params["name"]);
+                                reqDict.Add("qq", request.Params["qq"]);
+                                reqDict.Add("mobile", request.Params["mobile"]);
+                                reqDict.Add("idcard", request.Params["idcard"]);
+                                reqDict.Add("bank", request.Params["bank"]);
+                                reqDict.Add("branch", request.Params["branch"]);
+                                reqDict.Add("bankac", request.Params["bankac"]);
 
+                                //Domain
+                                int domain_id = -1;
+                                int.TryParse(request.Params["domain_id"], out domain_id);
+                                Domain domain = BasicTracker.DomainTracker[domain_id];
+                                if (domain == null)
+                                {
+                                    return new JsonReply(105, string.Format("Domain not exist"));
+                                }
+
+                                int bank_id = 0;
+                                bool bret = int.TryParse(request.Params["bank"], out bank_id);
+                                if (!bret)
+                                {
+                                    return new JsonReply(108, string.Format("Bank ID error"));
+                                }
+                                if (bank_id <= 0 || bank_id > 12)
+                                {
+                                    return new JsonReply(108, string.Format("Bank ID error"));
+                                }
+
+                                var acc = TLCtxHelper.ModuleAccountManager[request.Params["account"]];
+                                if (acc == null)
+                                {
+                                    return new JsonReply(109, string.Format("account not exist"));
+                                }
+
+                                //检查交易账户
+                                if (string.IsNullOrEmpty(domain.Cfg_MD5Key))
+                                {
+                                    return new JsonReply(107, string.Format("Md5Key not setted"));
+                                }
+
+                                //检查管理员是否在业务分区内
+                                if (acc.Domain.ID != domain_id)
+                                {
+                                    return new JsonReply(110, string.Format("Account not belong to domain"));
+                                }
+
+                                //MD5
+                                string waitSign = MD5Helper.CreateLinkString(reqDict);
+                                logger.Info("request rawStr:" + waitSign);
+                                string md5sign = MD5Helper.MD5Sign(waitSign, domain.Cfg_MD5Key);
+
+                                if (request.Params["md5sign"] != md5sign)
+                                {
+                                    return new JsonReply(100, string.Format("Md5Sign not valid"));
+                                }
+
+                                TLCtxHelper.ModuleAccountManager.UpdateAccountProfile(request.Params["account"], request.Params["name"], request.Params["qq"], request.Params["mobile"], request.Params["idcard"], bank_id, request.Params["branch"], request.Params["bankac"]);
+
+                                return new JsonReply(0, string.Format("Account:{0} Update", request.Params["account"]),
+                                    new
+                                    {
+                                        name = request.Params["name"],
+                                        qq = request.Params["qq"],
+                                        mobile = request.Params["mobile"],
+                                        idcard = request.Params["idcard"],
+                                        bank = request.Params["bank"],
+                                        branch = request.Params["branch"],
+                                        bankac = request.Params["bankac"],
+                                      
+                                    }
+                                );
+                            }
+                        #endregion
                         #region QRY_USER
                         case "QRY_USER":
                             {

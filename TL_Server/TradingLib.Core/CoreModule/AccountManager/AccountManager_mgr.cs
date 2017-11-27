@@ -195,6 +195,30 @@ namespace TradingLib.Core
         }
 
 
+        public void UpdateAccountProfile(string account, string name,string qq, string mobile,string idcard, int bank, string branch, string bankac)
+        {
+            IAccount acc = TLCtxHelper.ModuleAccountManager[account];
+            if (acc == null)
+            {
+                logger.Error(string.Format("account:{0} do not exist", account));
+                return;
+            }
+            AccountProfile profile = new AccountProfile();
+            profile.Account = account;
+            profile.Name = name;
+            profile.Mobile = mobile;
+            profile.IDCard = idcard;
+            profile.Bank_ID = bank;
+            profile.Branch = branch;
+            profile.BankAC = bankac;
+            profile.QQ = qq;
+            
+            BasicTracker.AccountProfileTracker.UpdateAccountProfile(profile);
+
+            //触发交易帐户变动事件
+            TLCtxHelper.EventAccount.FireAccountChangeEent(acc);
+        }
+
         /// <summary>
         /// 更新账户类别
         /// </summary>

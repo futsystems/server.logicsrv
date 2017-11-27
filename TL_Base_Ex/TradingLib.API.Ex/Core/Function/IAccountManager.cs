@@ -119,5 +119,19 @@ namespace TradingLib.API
 
 
         void UpdateAccountConfigTemplate(string account, int template_id,bool force);
+
+
+        /// <summary>
+        /// 更新账户profile
+        /// </summary>
+        /// <param name="account"></param>
+        /// <param name="name"></param>
+        /// <param name="qq"></param>
+        /// <param name="mobile"></param>
+        /// <param name="idcard"></param>
+        /// <param name="bank"></param>
+        /// <param name="branch"></param>
+        /// <param name="bankac"></param>
+        void UpdateAccountProfile(string account, string name, string qq, string mobile, string idcard, int bank, string branch, string bankac);
     }
 }
