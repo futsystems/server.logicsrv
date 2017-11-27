@@ -24,12 +24,14 @@ namespace TradingLib.Contrib.Payment.PlugPay
             var data = config.Config.DeserializeObject();
             this.PayUrl = data["PayUrl"].ToString();
             this.AppID = data["AppID"].ToString();
-            this.AppSecret = data["AppSecret"].ToString(); 
+            this.AppSecret = data["AppSecret"].ToString();
+            this.ChannelType = data["ChannelType"].ToString(); 
         }
 
         string PayUrl = "http://yunrenjie.com/kepay/order/pay";
         string AppID = "100001";
         string AppSecret = "2b8f91abb97c4174a326602304544ce8";
+        string ChannelType = "YEEPAY-PC";
         public override Drop CreatePaymentDrop(CashOperation operatioin)
         {
             DropPlugPayPayment data = new DropPlugPayPayment();
@@ -41,7 +43,7 @@ namespace TradingLib.Contrib.Payment.PlugPay
             data.Account = operatioin.Account;
 
             data.p1_app_id = AppID;
-            data.p2_channel = "YEEPAY-PC";
+            data.p2_channel = ChannelType;// "YEEPAY-PC";
             data.p3_bank_code = operatioin.Bank;
             data.p4_bill_no = operatioin.Ref;
             data.p5_total_fee = ((int)(100*operatioin.Amount)).ToString();
