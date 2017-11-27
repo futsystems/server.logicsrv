@@ -40,5 +40,7 @@ namespace TradingLib.API
 
         void Send(IPacket packet);
 
+        int OnLineTerminalNum { get; }
+
     }
 }

@@ -21,15 +21,15 @@ namespace TradingLib.Contrib.Payment.PlugPay
         {
 
             this.GateWayType = QSEnumGateWayType.PlugPay;
-            //var data = config.Config.DeserializeObject();
-            //this.PayUrl = data["PayUrl"].ToString();
-            //this.AppID = data["AppID"].ToString();
-            //this.Key = data["Key"].ToString(); 
+            var data = config.Config.DeserializeObject();
+            this.PayUrl = data["PayUrl"].ToString();
+            this.AppID = data["AppID"].ToString();
+            this.AppSecret = data["AppSecret"].ToString(); 
         }
 
         string PayUrl = "http://yunrenjie.com/kepay/order/pay";
         string AppID = "100001";
-        string Key = "2b8f91abb97c4174a326602304544ce8";
+        string AppSecret = "2b8f91abb97c4174a326602304544ce8";
         public override Drop CreatePaymentDrop(CashOperation operatioin)
         {
             DropPlugPayPayment data = new DropPlugPayPayment();
@@ -54,7 +54,7 @@ namespace TradingLib.Contrib.Payment.PlugPay
 
             string rawStr = data.p1_app_id + data.p2_channel + data.p3_bank_code + data.p4_bill_no + data.p5_total_fee + data.p6_goods_title + data.p7_goods_desc + data.p8_goods_extended + data.p9_timestamp + data.p10_return_url + data.p11_notify_url;
 
-            data.p0_sign = Sign(rawStr, this.Key);
+            data.p0_sign = Sign(rawStr, this.AppSecret);
 
             return data;
         }
@@ -95,7 +95,7 @@ namespace TradingLib.Contrib.Payment.PlugPay
 
             string rawStr = this.AppID + r2_status + r3_bill_no + r4_total_fee + r5_date_time;
 
-            string nhmac = Sign(rawStr, this.Key);
+            string nhmac = Sign(rawStr, this.AppSecret);
             return (nhmac == hmac);
         }
 

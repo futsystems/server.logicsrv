@@ -109,6 +109,16 @@ namespace TradingLib.Core
         }
 
 
+        /// <summary>
+        /// 查看Root权限的管理段地址
+        /// </summary>
+        /// <param name="account"></param>
+        /// <returns></returns>
+        ILocation[] QryNotifyLocationsForRoot()
+        {
+            return customerExInfoMap.Values.Where(ex => ex.Manager.IsRoot()).Select(ex2 => ex2.Location).ToArray();
+        }
+
 
 
 

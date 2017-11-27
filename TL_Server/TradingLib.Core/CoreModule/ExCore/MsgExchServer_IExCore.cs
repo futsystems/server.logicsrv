@@ -10,6 +10,13 @@ namespace TradingLib.Core
     public partial class MsgExchServer
     {
 
+        public int OnLineTerminalNum
+        {
+            get
+            {
+                return tl.NumClientsLoggedIn;
+            }
+        }
         /// <summary>
         /// 绑定唯一的委托编号
         /// </summary>

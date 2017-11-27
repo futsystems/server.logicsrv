@@ -102,6 +102,21 @@ namespace TradingLib.Core
             response.Result = agent.GetAgentStatistic().SerializeObject();
             CachePacket(response);
         }
+
+        /// <summary>
+        /// 通知管理段与交易端实时数量
+        /// </summary>
+        void NotifyTerminalNumber()
+        {
+            int mgrnum = customerExInfoMap.Values.Count;
+            int accnum = TLCtxHelper.ModuleExCore.OnLineTerminalNum;
+
+            NotifyMGRContribNotify response = ResponseTemplate<NotifyMGRContribNotify>.SrvSendNotifyResponse(QryNotifyLocationsForRoot());
+            response.ModuleID = CoreName;
+            response.CMDStr = "NotifyTerminalNumber";
+            response.Result = new { MgrNum = mgrnum, AccNum = accnum }.SerializeObject();
+            CachePacket(response);
+        }
         /// <summary>
         /// 向某个Manager过滤谓词对应的Manager发送通知
         /// </summary>

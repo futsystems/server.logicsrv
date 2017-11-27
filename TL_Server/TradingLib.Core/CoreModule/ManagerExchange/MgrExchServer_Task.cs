@@ -123,5 +123,18 @@ namespace TradingLib.Core
             }
         }
 
+        [TaskAttr("采集终端登入数量", 5, 0, "定时采集终端登入数量向管理端进行推送")]
+        public void Task_CollectTerminalNumInfo()
+        {
+            try
+            {
+                NotifyTerminalNumber();
+            }
+            catch (Exception ex)
+            {
+                logger.Error("登入终端个数信息采集出错:" + ex.ToString());
+            }
+        }
+
     }
 }
