@@ -1,0 +1,22 @@
+﻿<html>
+<head>
+</head>
+
+<body onload="document.depositconfirm.submit()">
+	<form name='depositconfirm' method="post" action="{{data.Pay_Url}}" class="uk-panel uk-panel-box uk-form">
+		<input name='p1_app_id' type='hidden' value= "{{data.p1_app_id}}"/>
+		<input name='p2_channel' type='hidden' value= "{{data.p2_channel}}"/>
+		<input name='p3_bank_code' type='hidden' value= "{{data.p3_bank_code}}"/>
+		<input name='p4_bill_no' type='hidden' value= "{{data.p4_bill_no}}"/>
+		<input name='p5_total_fee' type='hidden' value= "{{data.p5_total_fee}}"/>
+		<input name='p6_goods_title' type='hidden' value= "{{data.p6_goods_title}}"/>		
+		<input name='p7_goods_desc' type='hidden' value= "{{data.p7_goods_desc}}" />
+		<input name='p8_goods_extended' type='hidden' value= "{{data.p8_goods_extended}}" />
+		<input name='p9_timestamp' type='hidden' value= "{{data.p9_timestamp}}"/>
+		<input name='p10_return_url' type='hidden' value= "{{data.p10_return_url}}"/>
+		<input name='p11_notify_url' type='hidden' value= "{{data.p11_notify_url}}"/>	
+		<input name='p0_sign' type='hidden' value="{{data.p0_sign}}"/>
+	</form>
+
+</body>
+</html>
