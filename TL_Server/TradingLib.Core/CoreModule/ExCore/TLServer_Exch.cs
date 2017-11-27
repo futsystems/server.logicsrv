@@ -217,6 +217,13 @@ namespace TradingLib.Core
                     response.RspInfo.Fill("PLATFORM_EXPIRED");
                 }
 
+                //账户删除检查
+                if (account.Deleted)
+                {
+                    response.Authorized = false;
+                    response.RspInfo.Fill("ACCOUNT_CLOSE");
+                }
+
                 if (request.ProductInfo == "M.IOS" && (!account.Domain.Device_IOS))
                 {
                     response.Authorized = false;
