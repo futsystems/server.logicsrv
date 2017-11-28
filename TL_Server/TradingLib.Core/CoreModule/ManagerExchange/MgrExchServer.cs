@@ -68,14 +68,6 @@ namespace TradingLib.Core
 
         }
 
-        //ILocation[] tl_QryNotifyLocationsViaAccount(string arg)
-        //{
-        //    IAccount account = TLCtxHelper.ModuleAccountManager[arg];
-        //    if (account == null) return new ILocation[]{};
-        //    return QryNotifyLocationsViaAccount(account);
-        //}
-
-
         MgrClientInfoEx GetCustInfoEx(ISession session)
         {
             MgrClientInfoEx target = null;
@@ -89,12 +81,14 @@ namespace TradingLib.Core
 
         void OnClientUnregistedEvent(MgrClientInfo client)
         {
+            //logger.Info("unregisted");
             MgrClientInfoEx o = null;
             customerExInfoMap.TryRemove(client.Location.ClientID, out o);
         }
 
         void OnClientRegistedEvent(MgrClientInfo client)
         {
+            //logger.Info("registed");
             customerExInfoMap[client.Location.ClientID] = new MgrClientInfoEx(client);
         }
 
@@ -116,7 +110,7 @@ namespace TradingLib.Core
         /// <returns></returns>
         ILocation[] QryNotifyLocationsForRoot()
         {
-            return customerExInfoMap.Values.Where(ex => ex.Manager.IsRoot()).Select(ex2 => ex2.Location).ToArray();
+            return customerExInfoMap.Values.Where(ex=>ex.Manager!=null).Where(ex => ex.Manager.IsRoot()).Select(ex2 => ex2.Location).ToArray();
         }
 
 
