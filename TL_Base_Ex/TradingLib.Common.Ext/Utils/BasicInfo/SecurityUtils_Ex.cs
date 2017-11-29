@@ -49,14 +49,14 @@ namespace TradingLib.Common
                 else
                 { 
                     //T+1交易小节 获取当前主日期 判定是否可以交易
-                    DateTime mainday = range.T1MainDay(extime);
+                    DateTime mainday = range.T1MainDay(extime); //夜盘跨越凌晨 则主交易日为当前小节的开始时间 同时要计算交易日 则也以开始时间来计算
                     if (exchange.IsInHoliday(mainday))
                     {
                         settleday = 0;
                         return QSEnumActionCheckResult.InHoliday;
                     }
                     //可以交易 则获得下一个交易日(非假日工作日)
-                    tradingday = exchange.NextWorkDayWithoutHoliday(extime);
+                    tradingday = exchange.NextWorkDayWithoutHoliday(mainday);//同上夜盘跨越凌晨
                 }
             }
                 //交易日常规判定 当前T+1小节 属于紧挨的下一个交易日，如果对应该交易日不交易则该T+1交易小节不交易
