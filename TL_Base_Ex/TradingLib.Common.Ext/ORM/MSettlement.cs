@@ -584,20 +584,23 @@ namespace TradingLib.ORM
         {
             using (DBMySql db = new DBMySql())
             {
-                string query = string.Format("update tmp_orders set settled=1 where settleday < '{0}'", settleday);
+                string query = string.Format("update tmp_orders set settled=1 where settled=0 AND settleday < '{0}'", settleday);
                 db.Connection.Execute(query);
 
-                query = string.Format("update tmp_trades set settled=1 where settleday < '{0}'", settleday);
+                query = string.Format("update tmp_trades set settled=1 where settled=0 AND settleday < '{0}'", settleday);
                 db.Connection.Execute(query);
 
-                query = string.Format("update log_orders set settled=1 where settleday < '{0}'", settleday);
+                query = string.Format("update log_orders set settled=1 where settled=0 AND settleday < '{0}'", settleday);
                 db.Connection.Execute(query);
 
-                query = string.Format("update log_trades set settled=1 where settleday < '{0}'", settleday);
+                query = string.Format("update log_trades set settled=1 where settled=0 AND settleday < '{0}'", settleday);
                 db.Connection.Execute(query);
 
 
-                query = string.Format("update log_settlement_exchange set settled=1 where settleday < '{0}'", settleday);
+                query = string.Format("update log_settlement_exchange set settled=1 where settled=0 AND settleday < '{0}'", settleday);
+                db.Connection.Execute(query);
+
+                query = string.Format("update log_cashtrans set settled=1 where settled=0 AND settleday < '{0}'", settleday);
                 db.Connection.Execute(query);
             }
         }

@@ -82,7 +82,11 @@ namespace TradingLib.Core
 
         }
 
-
+        [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "ExitSystem", "ExitSystem - exit system for reboot", "关闭系统")]
+        public void CTE_ExitSystem(ISession session)
+        {
+            System.Environment.Exit(0);
+        }
 
 
         
