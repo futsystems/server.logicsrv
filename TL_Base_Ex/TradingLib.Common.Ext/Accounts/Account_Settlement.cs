@@ -206,10 +206,10 @@ namespace TradingLib.Common
                 {
                     pos.Settled = true;
                     //如果持仓有隔夜持仓 将对应的隔夜持仓标注成已结算否则会对隔夜持仓重复加载
-                    foreach (var pd in pos.PositionDetailYdRef)
-                    {
-                        TLCtxHelper.ModuleDataRepository.MarkPositionDetailSettled(pd);
-                    }
+                    //foreach (var pd in pos.PositionDetailYdRef)
+                    //{
+                    //    TLCtxHelper.ModuleDataRepository.MarkPositionDetailSettled(pd);
+                    //}
                 }
                 //将已经结算的持仓从内存数据对象中屏蔽 持仓数据是一个状态数据,因此我们这里将上个周期的持仓对象进行屏蔽
                 this.TKPosition.DropSettled();

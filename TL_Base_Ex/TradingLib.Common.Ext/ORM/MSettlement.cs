@@ -67,6 +67,8 @@ namespace TradingLib.ORM
 
         /// <summary>
         /// 标注某个持仓明细已结算
+        /// 在手工结算过程中 由于数据库是异步操作
+        /// 当执行该数据更新时 TLCtxHelper.ModuleSettleCentre.Tradingday 已经发生了变化 导致持仓结算错误
         /// </summary>
         /// <param name="p"></param>
         public static void MarkPositionDetailSettled(PositionDetail p)
@@ -74,6 +76,21 @@ namespace TradingLib.ORM
             using (DBMySql db = new DBMySql())
             {
                 string query = string.Format("UPDATE log_position_detail_hist SET settled='1',settledinday='{0}' WHERE `account` = '{1}' AND `settleday` = '{2}' AND  `symbol`='{3}' AND `tradeid`='{4}' AND `side`='{5}' AND `opendate`='{6}'",TLCtxHelper.ModuleSettleCentre.Tradingday, p.Account, p.Settleday, p.Symbol, p.TradeID, p.Side ? 1 : 0, p.OpenDate);
+                db.Connection.Execute(query);
+            }
+        }
+
+        /// <summary>
+        /// 交易所某个交易日 执行隔夜持仓 结算标注
+        /// 将某个结算日之前的所有未结算持仓 标注成已结算
+        /// </summary>
+        /// <param name="exchange"></param>
+        /// <param name="settleday"></param>
+        public static void MarkPositioinDetailSettled(string exchange, int settleday)
+        {
+            using (DBMySql db = new DBMySql())
+            {
+                string query = string.Format("UPDATE log_position_detail_hist SET settled='1',settledinday='{0}' WHERE `settleday` < '{0}' AND  `settled`=0 AND `exchange`='{1}' ",settleday,exchange);
                 db.Connection.Execute(query);
             }
         }

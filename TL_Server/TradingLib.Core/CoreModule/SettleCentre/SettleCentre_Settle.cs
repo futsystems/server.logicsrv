@@ -303,10 +303,12 @@ namespace TradingLib.Core
                         }
                     }
 
+                    //将交易记录与隔夜持仓结算标注直接进行数据库处理 避免单个账户 遍历生成数据据库操作产生延迟与错误
                     ORM.MTradingInfo.MarkOrderSettled(exchange.EXCode, settleday);
                     ORM.MTradingInfo.MarkTradeSettled(exchange.EXCode, settleday);
+                    ORM.MSettlement.MarkPositioinDetailSettled(exchange.EXCode, settleday);
 
-                    //将所有该交易所的交易记录设置为已结算
+                    
 
 
                     //执行交易通道结算 注:若此处Broker通道结算异常 会导致其余交易所不执行有效结算 从而导致账户整体结算异常 Broker改进成BrokerTracker在通道初始化设定参数时创建 避免通道未启动导致遍历通道交易数据异常
@@ -314,9 +316,6 @@ namespace TradingLib.Core
                     {
                         broker.SettleExchange(exchange, settleday);
                     }
-
-                   
-
                 }
             }
             catch (Exception ex)

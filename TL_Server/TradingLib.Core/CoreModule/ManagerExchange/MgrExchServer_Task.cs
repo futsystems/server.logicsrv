@@ -89,8 +89,6 @@ namespace TradingLib.Core
                         {
                             NotifyAccountStatistic(acc, cst.Location);
                         }
-                        //logger.Debug("push all client statics");
-                        //_lastPushAllTime = DateTime.Now;
                     }
 
                     foreach (IBroker broker in cst.WatchBrokers)
