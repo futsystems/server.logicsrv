@@ -62,25 +62,29 @@ namespace TradingLib.Core
         {
             try
             {
-                int pushAllDiff = (int)DateTime.Now.Subtract(_lastPushAllTime).TotalSeconds;
-
+                int diff = (int)DateTime.Now.Subtract(_lastPushAllTime).TotalSeconds;
+                bool updateall = diff > _pushAllDiff;
+                //遍历所有连接的管理段
                 foreach (var cst in customerExInfoMap.Values)
                 {
+                    if (updateall)
+                    {
+                        logger.Info(string.Format("-->update all,Acc:{0} location:{1}", string.Join(",", cst.WathAccountList.Select(acc => acc.ID).ToArray()), cst.Location.ClientID));
+                    }
                     //便利所有订阅账户列表
                     foreach (IAccount acc in cst.WathAccountList)
                     {
-                        //logger.Debug("帐户信息采集推送");
                         NotifyAccountStatistic(acc, cst.Location);
                     }
 
                     //每隔30秒全推一次信息，用于解决管理端只看到部分交易帐户，筛选帐户时造成列表帐户缺失
-                    if (pushAllDiff > _pushAllDiff && cst.Manager != null)
+                    if (updateall && cst.Manager != null)
                     {
-                        
                         foreach (var acc in cst.Manager.GetAccounts())
                         {
                             NotifyAccountStatistic(acc, cst.Location);
                         }
+                        //logger.Debug("push all client statics");
                         _lastPushAllTime = DateTime.Now;
                     }
 
