@@ -64,6 +64,11 @@ namespace TradingLib.Core
             {
                 int diff = (int)DateTime.Now.Subtract(_lastPushAllTime).TotalSeconds;
                 bool updateall = diff > _pushAllDiff;
+                if (updateall)
+                {
+                    _lastPushAllTime = DateTime.Now;
+                    logger.Info(string.Format("customer ex map cnt:{0}", customerExInfoMap.Count));
+                }
                 //遍历所有连接的管理段
                 foreach (var cst in customerExInfoMap.Values)
                 {
@@ -85,7 +90,7 @@ namespace TradingLib.Core
                             NotifyAccountStatistic(acc, cst.Location);
                         }
                         //logger.Debug("push all client statics");
-                        _lastPushAllTime = DateTime.Now;
+                        //_lastPushAllTime = DateTime.Now;
                     }
 
                     foreach (IBroker broker in cst.WatchBrokers)
