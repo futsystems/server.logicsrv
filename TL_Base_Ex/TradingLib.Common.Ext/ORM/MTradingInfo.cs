@@ -226,6 +226,16 @@ namespace TradingLib.ORM
             }
         }
 
+        public static void MarkOrderSettled(string exchange, int settleday)
+        {
+            using (DBMySql db = new DBMySql())
+            {
+                string query = string.Format("UPDATE tmp_orders SET settled=1 where settled = 0 and settleday<='{0}' and exchange='{1}'",settleday,exchange);
+                db.Connection.Execute(query);
+            }
+        }
+
+        
 
         /// <summary>
         /// 获得最近结算日的下一个结算日的委托数据
@@ -345,7 +355,7 @@ namespace TradingLib.ORM
         /// 标记成交已结算
         /// </summary>
         /// <param name="f"></param>
-        public static void MarkeTradeSettled(Trade f)
+        public static void MarkTradeSettled(Trade f)
         {
             using (DBMySql db = new DBMySql())
             {
@@ -354,6 +364,14 @@ namespace TradingLib.ORM
             }
         }
 
+        public static void MarkTradeSettled(string exchange, int settleday)
+        {
+            using (DBMySql db = new DBMySql())
+            {
+                string query = string.Format("UPDATE tmp_trades SET settled=1 where settled = 0 and settleday<='{0}' and exchange='{1}'", settleday, exchange);
+                db.Connection.Execute(query);
+            }
+        }
 
         /// <summary>
         /// 获得最近结算日的下一个结算日的成交数据

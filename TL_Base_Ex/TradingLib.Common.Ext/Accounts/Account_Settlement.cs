@@ -195,12 +195,12 @@ namespace TradingLib.Common
                 foreach (var o in  this.GetOrders(exchange, settleday))
                 {
                     o.Settled = true;
-                    TLCtxHelper.ModuleDataRepository.MarkOrderSettled(o);
+                    //TLCtxHelper.ModuleDataRepository.MarkOrderSettled(o);
                 }
                 foreach (var f in this.GetTrades(exchange, settleday))
                 {
                     f.Settled = true;
-                    TLCtxHelper.ModuleDataRepository.MarkTradeSettled(f);
+                    //TLCtxHelper.ModuleDataRepository.MarkTradeSettled(f);
                 }
                 foreach (var pos in this.GetPositions(exchange))
                 {

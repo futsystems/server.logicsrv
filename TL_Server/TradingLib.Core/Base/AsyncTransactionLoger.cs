@@ -653,7 +653,7 @@ namespace TradingLib.Core
         {
             try
             {
-                ORM.MTradingInfo.MarkeTradeSettled(f);
+                ORM.MTradingInfo.MarkTradeSettled(f);
             }
             catch (Exception ex)
             {
