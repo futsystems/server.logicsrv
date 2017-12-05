@@ -747,7 +747,7 @@ namespace TradingLib.Core
         [TaskAttr("定时清除无效客户端会话", 60, 0, "定时清除无效客户端会话")]
         public void Task_CleanDeadSession()
         {
-            //debug("删除无效客户端回话......", QSEnumDebugLevel.INFO);
+            logger.Info("clear dead session");
             _clients.DropDeadClient(DateTime.Now.AddSeconds(-1 * deaddiff));
         }
         #endregion
