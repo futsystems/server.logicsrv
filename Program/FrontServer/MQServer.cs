@@ -58,8 +58,6 @@ namespace FrontServer
 
 
         int _logicPort=5570;
-        int _tickPort = 5572;
-
         string _logicServer = "127.0.0.1";
         bool _srvgo = false;
         TimeSpan pollerTimeOut = new TimeSpan(0, 0, 1);
@@ -93,7 +91,6 @@ namespace FrontServer
         }
 
         RingBuffer<WorkerItem> sendbuffer = new RingBuffer<WorkerItem>(50000);
-        //const int SLEEPDEFAULTMS = 100;
         static ManualResetEvent _sendwaiting = new ManualResetEvent(false);
         Thread _sendthread = null;
         bool _sendgo = false;
@@ -191,15 +188,15 @@ namespace FrontServer
             }
         }
 
-        public void LogicClientHeartBeat(string sessionId)
-        {
-            IConnection target = null;
-            if (connectionMap.TryGetValue(sessionId, out target))
-            {
-                HeartBeat request = RequestTemplate<HeartBeat>.CliSendRequest(0);
-                this.TLSend(sessionId, request);
-            }
-        }
+        //public void LogicClientHeartBeat(string sessionId)
+        //{
+        //    IConnection target = null;
+        //    if (connectionMap.TryGetValue(sessionId, out target))
+        //    {
+        //        HeartBeat request = RequestTemplate<HeartBeat>.CliSendRequest(0);
+        //        this.TLSend(sessionId, request);
+        //    }
+        //}
         /// <summary>
         /// 注册交易客户端
         /// </summary>
@@ -300,7 +297,6 @@ namespace FrontServer
             {
                 _ctx = ctx;
                 using(ZSocket backend = new ZSocket(ctx, ZSocketType.DEALER))
-                //using (ZSocket subscriber = new ZSocket(ctx, ZSocketType.SUB))
                 {
                     string address = string.Format("tcp://{0}:{1}", _logicServer, _logicPort);
                     _frontID = "front-" + rd.Next(1000, 9999).ToString();//前置随机变化
@@ -312,21 +308,14 @@ namespace FrontServer
                     logger.Info(string.Format("Connect to logic server:{0}", address));
                     _backend = backend;
 
-                    //string subadd = string.Format("tcp://{0}:{1}", _logicServer, _tickPort);
-                    //subscriber.Connect(subadd);
-                    //subscriber.Subscribe(Encoding.UTF8.GetBytes(""));
-
                     List<ZSocket> sockets = new List<ZSocket>();
                     sockets.Add(backend);
-                    //sockets.Add(subscriber);
 
                     List<ZPollItem> pollitems = new List<ZPollItem>();
                     pollitems.Add(ZPollItem.CreateReceiver());
-                    //pollitems.Add(ZPollItem.CreateReceiver());
 
                     ZError error;
                     ZMessage[] incoming;
-                    //ZPollItem item = ZPollItem.CreateReceiver();
                     logger.Info("MQServer MessageProcess Started");
                     while (_srvgo)
                     {
@@ -382,51 +371,11 @@ namespace FrontServer
                                             {
                                                 sendbuffer.Write(new WorkerItem() { SessionID = clientId, Packet = packet });
                                                 NewSend();
-                                                /*
-                                                IConnection conn = GetConnection(clientId);
-                                                if (conn != null)
-                                                {
-                                                    if (conn.IsXLProtocol)
-                                                    {
-                                                        this.HandleLogicMessage(conn, packet);
-                                                    }
-                                                    else
-                                                    {
-                                                        //调用Connection对应的ServiceHost处理逻辑消息包
-                                                        conn.ServiceHost.HandleLogicMessage(conn, packet);
-                                                    }
-                                                }
-                                                else
-                                                {
-                                                    logger.Warn(string.Format("Client:{0} do not exist", clientId));
-                                                }**/
                                             }
                                         }
                                     }
                                     incoming[0].Clear();
                                 }
-                                //TickSub
-                                //if (incoming[1] != null)
-                                //{
-                                //    string tickstr = incoming[1].First().ReadString(Encoding.UTF8);
-                                //    Tick k = TickImpl.Deserialize2(tickstr);
-                                //    if (k != null && k.UpdateType != "H")
-                                //    { 
-                                //        //处理行情逻辑
-                                //        tickTracker.UpdateTick(k);
-
-                                //        if (k.UpdateType == "X" || k.UpdateType == "Q" || k.UpdateType == "F" || k.UpdateType == "S")
-                                //        {
-                                //            //转发实时行情
-                                //            Tick snapshot = tickTracker[k.Exchange, k.Symbol];
-                                //            //logger.Info("notifytick");
-                                //            NotifyTick2Connections(snapshot);
-                                //        }
-                                        
-                                //    }
-                                //    incoming[1].Clear();
-                                //    //logger.Info(tickstr);
-                                //}
                             }
                             else
                             {
