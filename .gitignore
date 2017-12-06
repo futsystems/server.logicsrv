@@ -29,6 +29,7 @@ Platform/DataCore/**/*.dll
 Platform/TradingSrv/*.dll
 Platform/TradingSrv/**/*.dll
 Platform/TradingSrv/**/*.dll
+Platform/TradingSrv/Secure/*
 
 
 #bin obj debug release
