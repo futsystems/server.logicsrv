@@ -15,6 +15,10 @@
 	</Holiday>
 
 	
+	<Holiday name="Good Friday(耶稣受难日)">
+		<Month>4</Month>
+		<Day>14</Day>
+	</Holiday>
 	
 	<Holiday name=" Labour Day(劳动节)">
 		<Month>5</Month>
@@ -32,6 +36,10 @@
 		<Day>26</Day>
 	</Holiday>
 	
+	<Holiday name="National Day (国庆日)">
+		<Month>8</Month>
+		<Day>9</Day>
+	</Holiday>
 	
 	<Holiday name="回教古尔邦节">
 		<Month>9</Month>

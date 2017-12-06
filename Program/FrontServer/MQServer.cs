@@ -129,12 +129,11 @@ namespace FrontServer
                             
                             if (conn != null)
                             {
-                                //内部消息协议 转换成XLPrototcol供手机端和websocket使用
                                 if (conn.IsXLProtocol)
                                 {
                                     this.HandleLogicMessage(conn, st.Packet);
                                 }
-                                else//TL协议 ctp协议通过ServiceHost中的逻辑进行处理
+                                else
                                 {
                                     //调用Connection对应的ServiceHost处理逻辑消息包
                                     conn.ServiceHost.HandleLogicMessage(conn, st.Packet);
@@ -333,7 +332,6 @@ namespace FrontServer
                     {
                         try
                         {
-                            #region pollin
                             if (sockets.PollIn(pollitems, out incoming, out error, pollerTimeOut))
                             {
                                 //Backend
@@ -441,8 +439,6 @@ namespace FrontServer
                                     throw new ZException(error);
                                 }
                             }
-                            #endregion
-
                         }
                         catch(Exception ex)
                         {
