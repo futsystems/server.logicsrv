@@ -106,6 +106,13 @@
         <service type="TradingLib.API.IModuleFollowCentre,TradingLib.API.Ex"/>
 		<service type="TradingLib.API.IFollowCentre,TradingLib.API.Ex"/>
       </services>
+	  </component>
+	  
+	  <component type="TradingLib.Core.AgentManager,TradingLib.Core" instance-scope="per-lifetime-scope">
+	  <services>
+        <service type="TradingLib.API.IModuleAgentManager,TradingLib.API.Ex"/>
+		<service type="TradingLib.API.IAgentManager,TradingLib.API.Ex"/>
+      </services>
       </component>
 	  
     </components>

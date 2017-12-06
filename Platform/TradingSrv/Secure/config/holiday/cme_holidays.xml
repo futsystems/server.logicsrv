@@ -15,7 +15,11 @@
 		<WeekOfMonth>3</WeekOfMonth>
 	</Holiday>
 
-
+	<!--Holiday name="President's Day">
+		<Month>2</Month>
+		<DayOfWeek>1</DayOfWeek>
+		<WeekOfMonth>3</WeekOfMonth>
+	</Holiday-->
 	
 	<!--Holiday name="Easter">
 		<Easter />
@@ -32,11 +36,6 @@
 		<Day>14</Day>
 	</Holiday>
 	
-	<Holiday name="Memorial Day(阵亡将士追悼日)">
-		<Month>5</Month>
-		<DayOfWeek>1</DayOfWeek>
-		<WeekOfMonth>5</WeekOfMonth>
-	</Holiday>
 
 	
 	<Holiday name="Independence Day(独立纪念日)">
@@ -50,11 +49,6 @@
 		<WeekOfMonth>1</WeekOfMonth>
 	</Holiday>
 
-	<Holiday name="Thanksgiving Day(感恩节)">
-		<Month>11</Month>
-		<DayOfWeek>4</DayOfWeek>
-		<WeekOfMonth>4</WeekOfMonth>
-	</Holiday>
 	
 	
 	<Holiday name="Christmas Day(圣诞节)">
