@@ -225,7 +225,7 @@ namespace FrontServer
 
             //依次启动服务
             mqServer.Start();
-            //mqServer.StartWorker(); 
+            mqServer.StartWorker(); 
             tlhost.Start();
             ctphost.Start();
             xlhost.Start();

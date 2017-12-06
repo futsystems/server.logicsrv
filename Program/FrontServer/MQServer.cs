@@ -29,7 +29,7 @@ namespace FrontServer
         /// <summary>
         /// 当前MQServer是否处于工作状态
         /// </summary>
-        public bool IsLive { get { return _srvgo && _workergo; } }
+        public bool IsLive { get { return _srvgo; } }
 
         bool _stopped = false;
         public bool IsStopped { get { return _stopped; } }
@@ -45,16 +45,6 @@ namespace FrontServer
             mainThread = new Thread(MessageProcess);
             mainThread.IsBackground = true;
             mainThread.Start();
-
-            
-            if (_workergo) return;
-            _workergo = true;
-            logger.Info("[Start Worker Service]");
-            _sendthread = new Thread(WrokerProcess);
-            _sendthread.IsBackground = true;
-            _sendthread.Start();
-
-
         }
 
         public void Stop()
@@ -63,16 +53,13 @@ namespace FrontServer
             logger.Info("Stop MQServer");
             _srvgo = false;
             mainThread.Join();
-
-            if (!_workergo) return;
-            logger.Info("Stop Worker");
-            _workergo = false;
-            _sendthread.Join();
         }
 
 
 
         int _logicPort=5570;
+        int _tickPort = 5572;
+
         string _logicServer = "127.0.0.1";
         bool _srvgo = false;
         TimeSpan pollerTimeOut = new TimeSpan(0, 0, 1);
@@ -87,15 +74,15 @@ namespace FrontServer
         /// <summary>
         /// 启动数据储存服务
         /// </summary>
-        //public void StartWorker()
-        //{
-        //    logger.Info("[Start Worker Service]");
-        //    if (_workergo) return;
-        //    _workergo = true;
-        //    _sendthread = new Thread(ProcessItem);
-        //    _sendthread.IsBackground = false;
-        //    _sendthread.Start();
-        //}
+        public void StartWorker()
+        {
+            logger.Info("[Start Worker Service]");
+            if (_sendgo) return;
+            _sendgo = true;
+            _sendthread = new Thread(ProcessItem);
+            _sendthread.IsBackground = false;
+            _sendthread.Start();
+        }
 
 
         class WorkerItem
@@ -105,12 +92,11 @@ namespace FrontServer
             public IPacket Packet { get; set; }
         }
 
-        RingBuffer<WorkerItem> backendPktBuffer = new RingBuffer<WorkerItem>(50000);
-        RingBuffer<WorkerItem> frontPktBuffer = new RingBuffer<WorkerItem>(50000);
-        const int SLEEPDEFAULTMS = 50;
+        RingBuffer<WorkerItem> sendbuffer = new RingBuffer<WorkerItem>(50000);
+        //const int SLEEPDEFAULTMS = 100;
         static ManualResetEvent _sendwaiting = new ManualResetEvent(false);
         Thread _sendthread = null;
-        bool _workergo = false;
+        bool _sendgo = false;
         void NewSend()
         {
             if ((_sendthread != null) && (_sendthread.ThreadState == System.Threading.ThreadState.WaitSleepJoin))
@@ -118,18 +104,17 @@ namespace FrontServer
                 _sendwaiting.Set();
             }
         }
-        
-        void WrokerProcess()
+        const int SLEEPDEFAULTMS = 500;
+        void ProcessItem()
         {
             WorkerItem st = null;
-            while (_workergo)
+            while (_sendgo)
             {
                 try
                 {
-                    #region backendPktBuffer
-                    while (backendPktBuffer.hasItems)
+                    while (sendbuffer.hasItems)
                     {
-                        st = backendPktBuffer.Read();
+                        st = sendbuffer.Read();
                         //在某个特定情况下 会出现 待发送数据结构为null的情况 多个线程对sendbuffer的访问 形成竞争
                         if (st == null)
                         {
@@ -138,6 +123,7 @@ namespace FrontServer
                         }
 
                         IConnection conn = GetConnection(st.SessionID);
+
                         try
                         {
                             
@@ -170,52 +156,11 @@ namespace FrontServer
                         }
                         catch (Exception ex)
                         {
-                            logger.Error(string.Format("To Client Error Conn:{0} Handle Packet:{1} Error:{2}", st.SessionID, st.Packet.ToString(), ex.ToString()));
+
+                            logger.Error(string.Format("Conn:{0} Handle Packet:{1} Error:{2}", st.SessionID, st.Packet.ToString(), ex.ToString()));
+
                         }
                     }
-                    #endregion
-
-                    #region frontPktBuffer
-                    while (frontPktBuffer.hasItems)
-                    {
-                        st = frontPktBuffer.Read();
-                        //在某个特定情况下 会出现 待发送数据结构为null的情况 多个线程对sendbuffer的访问 形成竞争
-                        if (st == null)
-                        {
-                            logger.Error("XXXX Worker Buffer Got Null Struct");
-                            continue;
-                        }
-                        if (_backend == null)
-                        {
-                            logger.Error("Backend ZSocket null");
-                            continue;
-                        }
-
-                        try
-                        {
-                            using (ZMessage zmsg = new ZMessage())
-                            {
-                                ZError error;
-                                zmsg.Add(new ZFrame(Encoding.UTF8.GetBytes(st.SessionID)));
-                                zmsg.Add(new ZFrame(st.Packet.Data));
-                                if (!_backend.Send(zmsg, out error))
-                                {
-                                    if (error == ZError.ETERM)
-                                    {
-                                        logger.Error("got ZError.ETERM,return directly");
-                                        return;	// Interrupted
-                                    }
-                                    throw new ZException(error);
-                                }
-                            }
-                        }
-                        catch (Exception ex)
-                        {
-                            logger.Error(string.Format("To Backend Error Conn:{0} Handle Packet:{1} Error:{2}", st.SessionID, st.Packet.ToString(), ex.ToString()));
-                        }
-                    }
-
-                    #endregion
                     // clear current flag signal
                     _sendwaiting.Reset();
                     //logger.Info("process send");
@@ -311,36 +256,34 @@ namespace FrontServer
 
         public void TLSend(string address, IPacket packet)
         {
-            frontPktBuffer.Write(new WorkerItem() { SessionID = address, Packet = packet });
-            NewSend();
-            //this.TLSend(address, packet.Data);
+            this.TLSend(address, packet.Data);
         }
-        //public void TLSend(string address,byte[] data)
-        //{
-        //    if (_backend != null)
-        //    {
-        //        lock (_obj)
-        //        {
-        //            using (ZMessage zmsg = new ZMessage())
-        //            {
-        //                ZError error;
-        //                zmsg.Add(new ZFrame(Encoding.UTF8.GetBytes(address)));
-        //                zmsg.Add(new ZFrame(data));
-        //                //logger.Info("adds:" + CTPService.ByteUtil.ByteToHex(Encoding.UTF8.GetBytes(address)));
-        //                //logger.Info("data:" + CTPService.ByteUtil.ByteToHex(data));
-        //                if (!_backend.Send(zmsg, out error))
-        //                {
-        //                    if (error == ZError.ETERM)
-        //                    {
-        //                        logger.Error("got ZError.ETERM,return directly");
-        //                        return;	// Interrupted
-        //                    }
-        //                    throw new ZException(error);
-        //                }
-        //            }
-        //        }
-        //    }
-        //}
+        public void TLSend(string address,byte[] data)
+        {
+            if (_backend != null)
+            {
+                lock (_obj)
+                {
+                    using (ZMessage zmsg = new ZMessage())
+                    {
+                        ZError error;
+                        zmsg.Add(new ZFrame(Encoding.UTF8.GetBytes(address)));
+                        zmsg.Add(new ZFrame(data));
+                        //logger.Info("adds:" + CTPService.ByteUtil.ByteToHex(Encoding.UTF8.GetBytes(address)));
+                        //logger.Info("data:" + CTPService.ByteUtil.ByteToHex(data));
+                        if (!_backend.Send(zmsg, out error))
+                        {
+                            if (error == ZError.ETERM)
+                            {
+                                logger.Error("got ZError.ETERM,return directly");
+                                return;	// Interrupted
+                            }
+                            throw new ZException(error);
+                        }
+                    }
+                }
+            }
+        }
 
         public DateTime LastHeartBeatRecv { get { return _lastHeartBeatRecv; } }
 
@@ -358,6 +301,7 @@ namespace FrontServer
             {
                 _ctx = ctx;
                 using(ZSocket backend = new ZSocket(ctx, ZSocketType.DEALER))
+                //using (ZSocket subscriber = new ZSocket(ctx, ZSocketType.SUB))
                 {
                     string address = string.Format("tcp://{0}:{1}", _logicServer, _logicPort);
                     _frontID = "front-" + rd.Next(1000, 9999).ToString();//前置随机变化
@@ -369,16 +313,21 @@ namespace FrontServer
                     logger.Info(string.Format("Connect to logic server:{0}", address));
                     _backend = backend;
 
+                    //string subadd = string.Format("tcp://{0}:{1}", _logicServer, _tickPort);
+                    //subscriber.Connect(subadd);
+                    //subscriber.Subscribe(Encoding.UTF8.GetBytes(""));
 
                     List<ZSocket> sockets = new List<ZSocket>();
                     sockets.Add(backend);
-                  
+                    //sockets.Add(subscriber);
+
                     List<ZPollItem> pollitems = new List<ZPollItem>();
                     pollitems.Add(ZPollItem.CreateReceiver());
+                    //pollitems.Add(ZPollItem.CreateReceiver());
 
                     ZError error;
                     ZMessage[] incoming;
-                  
+                    //ZPollItem item = ZPollItem.CreateReceiver();
                     logger.Info("MQServer MessageProcess Started");
                     while (_srvgo)
                     {
@@ -421,6 +370,7 @@ namespace FrontServer
                                                         {
                                                             conn.Close();
                                                             this.LogicUnRegister(notify.SessionID);
+
                                                         }
                                                     }
                                                 }
@@ -432,14 +382,53 @@ namespace FrontServer
                                             }
                                             else //其余客户端地址为 UUID表示 转发数据到客户端
                                             {
-                                                backendPktBuffer.Write(new WorkerItem() { SessionID = clientId, Packet = packet });
+                                                sendbuffer.Write(new WorkerItem() { SessionID = clientId, Packet = packet });
                                                 NewSend();
+                                                /*
+                                                IConnection conn = GetConnection(clientId);
+                                                if (conn != null)
+                                                {
+                                                    if (conn.IsXLProtocol)
+                                                    {
+                                                        this.HandleLogicMessage(conn, packet);
+                                                    }
+                                                    else
+                                                    {
+                                                        //调用Connection对应的ServiceHost处理逻辑消息包
+                                                        conn.ServiceHost.HandleLogicMessage(conn, packet);
+                                                    }
+                                                }
+                                                else
+                                                {
+                                                    logger.Warn(string.Format("Client:{0} do not exist", clientId));
+                                                }**/
                                             }
                                         }
                                     }
                                     incoming[0].Clear();
                                 }
-                              
+                                //TickSub
+                                //if (incoming[1] != null)
+                                //{
+                                //    string tickstr = incoming[1].First().ReadString(Encoding.UTF8);
+                                //    Tick k = TickImpl.Deserialize2(tickstr);
+                                //    if (k != null && k.UpdateType != "H")
+                                //    { 
+                                //        //处理行情逻辑
+                                //        tickTracker.UpdateTick(k);
+
+                                //        if (k.UpdateType == "X" || k.UpdateType == "Q" || k.UpdateType == "F" || k.UpdateType == "S")
+                                //        {
+                                //            //转发实时行情
+                                //            Tick snapshot = tickTracker[k.Exchange, k.Symbol];
+                                //            //logger.Info("notifytick");
+                                //            NotifyTick2Connections(snapshot);
+                                //        }
+                                        
+                                //    }
+                                //    incoming[1].Clear();
+                                //    //logger.Info(tickstr);
+                                //}
                             }
                             else
                             {
