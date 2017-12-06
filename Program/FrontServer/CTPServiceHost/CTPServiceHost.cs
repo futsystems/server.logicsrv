@@ -111,7 +111,7 @@ namespace CTPService
                                     //返回心跳包
                                     conn.Send(heartBeatPkt);
                                     //向逻辑服务端发送心跳
-                                    //_mqServer.LogicClientHeartBeat(session.SessionID);
+                                    _mqServer.LogicClientHeartBeat(session.SessionID);
                                 }
                                 break;
                             }

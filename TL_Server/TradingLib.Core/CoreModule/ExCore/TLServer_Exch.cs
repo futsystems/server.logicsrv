@@ -71,21 +71,21 @@ namespace TradingLib.Core
         }
 
         
-        //public void ClearIdelSession()
-        //{
-        //    var now = DateTime.Now;
-        //    foreach (var client in _clients.Clients)
-        //    {
-        //        if (client.FrontType == EnumFrontType.SimCTP || client.FrontType == EnumFrontType.XLTinny)
-        //        { 
-        //            if(now.Subtract(client.HeartBeat).TotalSeconds>300)//300秒内没有心跳则清除客户端
-        //            {
-        //                logger.Info("clear session:" + client.Location.ClientID);
-        //                _clients.UnRegistClient(client.Location.ClientID);
-        //            }
-        //        }
-        //    }
-        //}
+        public void ClearIdelSession()
+        {
+            var now = DateTime.Now;
+            foreach (var client in _clients.Clients)
+            {
+                if (client.FrontType == EnumFrontType.SimCTP || client.FrontType == EnumFrontType.XLTinny)
+                { 
+                    if(now.Subtract(client.HeartBeat).TotalSeconds>300)//300秒内没有心跳则清除客户端
+                    {
+                        logger.Info("clear session:" + client.Location.ClientID);
+                        _clients.UnRegistClient(client.Location.ClientID);
+                    }
+                }
+            }
+        }
 
         /// <summary>
         /// 查找某个地址的ClientInfo
