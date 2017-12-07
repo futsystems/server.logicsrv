@@ -72,10 +72,21 @@ namespace FrontServer.TLServiceHost
             tlSocketServer.NewRequestReceived += new SuperSocket.SocketBase.RequestHandler<TLSessionBase, TLRequestInfo>(tlSocketServer_NewRequestReceived);
         }
 
+        DateTime _lasttime = DateTime.Now;
+        long _requestCnt = 0;
+
         void tlSocketServer_NewRequestReceived(TLSessionBase session, TLRequestInfo requestInfo)
         {
             try
             {
+                _requestCnt ++;
+                if (DateTime.Now.Subtract(_lasttime).Minutes >= 1)
+                {
+                    logger.Info(string.Format("last minute request cnt:{0}", _requestCnt));
+                    _requestCnt = 0;
+                    _lasttime = DateTime.Now;
+                }
+
                 logger.Debug(string.Format("Message type:{0} content:{1} sessoin:{2}", requestInfo.Message.Type, requestInfo.Message.Content, session.SessionID));
 
                 string sessionId = session.SessionID;
