@@ -101,6 +101,7 @@ namespace CTPService
             }
         }
 
+        public bool Connected { get { return _session.Connected; } }
 
         public bool IsXLProtocol { get { return false; } }
 

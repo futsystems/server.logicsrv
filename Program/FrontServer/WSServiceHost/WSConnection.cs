@@ -97,6 +97,7 @@ namespace FrontServer.WSServiceHost
             this.State.IPAddress = session.RemoteEndPoint.ToString();
         }
 
+        public bool Connected { get { return _session.Connected; } }
 
         public bool IsXLProtocol { get { return true; } }
         /// <summary>

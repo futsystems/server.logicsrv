@@ -35,7 +35,10 @@ namespace FrontServer
         /// </summary>
         void Close();
 
-
+        /// <summary>
+        /// 连接状态
+        /// </summary>
+        bool Connected { get; }
         /// <summary>
         /// 应答XLPacketData
         /// </summary>

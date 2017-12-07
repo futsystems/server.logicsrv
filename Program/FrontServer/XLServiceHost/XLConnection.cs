@@ -94,7 +94,7 @@ namespace FrontServer.XLServiceHost
             this.State.IPAddress = session.RemoteEndPoint.ToString();
         }
 
-
+        public bool Connected { get { return _session.Connected; } }
         public bool IsXLProtocol { get { return true; } }
         /// <summary>
         /// 回话编号

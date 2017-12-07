@@ -156,7 +156,7 @@ namespace FrontServer
                         try
                         {
                             
-                            if (conn != null)
+                            if (conn != null && conn.Connected)
                             {
                                 if (conn.IsXLProtocol)
                                 {
