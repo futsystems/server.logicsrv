@@ -194,7 +194,7 @@ namespace FrontServer.TLServiceHost
             }
             catch (Exception ex)
             {
-                logger.Error(string.Format("Handler Logic Packet:{0} Error:{1}", packet.ToString(), ex.ToString()));
+                logger.Error(string.Format("Handler Logic Packet:{0} Error:{1} stack:{2}", packet.ToString(), ex.ToString(),ex.StackTrace));
             }
         }
 
