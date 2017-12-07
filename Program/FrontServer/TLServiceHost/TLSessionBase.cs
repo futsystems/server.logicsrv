@@ -20,7 +20,7 @@ namespace FrontServer.TLServiceHost
         
         protected override void HandleException(Exception e)
         {
-            logger.Error("ex:" + e.ToString());
+            logger.Error("!!!socket ex:" + e.ToString() + e.StackTrace);
             base.HandleException(e);
         }
 
