@@ -117,8 +117,17 @@ namespace FrontServer.TLServiceHost
                                     return;
                                 }
 
-                                //创建连接
+                                //创建连接 如果sessionmap没有记录session则conn为null
                                 conn = CreateConnection(session.SessionID);
+
+                                //conn为空判定
+                                if (conn == null)
+                                {
+                                    session.Close();
+                                    //logger.Info(string.Format("Session:{0} Closed", session.SessionID));
+                                    OnSessionClosed(session);
+                                    return;
+                                }
 
                                 _connectionMap.TryAdd(session.SessionID, conn);
                                 //客户端发送初始化数据包后执行逻辑服务器客户端注册操作
@@ -146,6 +155,17 @@ namespace FrontServer.TLServiceHost
                                 logger.Warn(string.Format("Client:{0} is not registed to server, ignore request", sessionId));
                                 return;
                             }
+                            //conn为空判定
+                            if (conn == null)
+                            {
+                                session.Close();
+                                //logger.Info(string.Format("Session:{0} Closed", session.SessionID));
+                                OnSessionClosed(session);
+                                //逻辑服务器注销客户端
+                                _mqServer.LogicUnRegister(session.SessionID);
+                                return;
+                            }
+
                             conn.UpdateHeartBeat();
                             IPacket packet = PacketHelper.SrvRecvRequest(requestInfo.Message, "", sessionId);
                             if (packet.Type == MessageTypes.HEARTBEATREQUEST)

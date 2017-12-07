@@ -60,11 +60,12 @@ namespace FrontServer.TLServiceHost
 
         public TLConnection CreateConnection(string sessionID)
         {
-            if (!sessionMap.Keys.Contains(sessionID))
-            {
-                logger.Error(string.Format("Session:{0} not exist!", sessionID));
-                return null;
-            }
+            //todo 简化
+            //if (!sessionMap.Keys.Contains(sessionID))
+            //{
+            //    logger.Error(string.Format("Session:{0} not exist!", sessionID));
+            //    return null;
+            //}
             TLSessionBase target = null;
             if (sessionMap.TryGetValue(sessionID, out target))
             {
