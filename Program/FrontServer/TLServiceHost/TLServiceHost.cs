@@ -127,7 +127,10 @@ namespace FrontServer.TLServiceHost
                                 //发送回报
                                 RspRegisterClientResponse response = ResponseTemplate<RspRegisterClientResponse>.SrvSendRspResponse(request);
                                 response.SessionID = sessionId;
-                                conn.Send(response.Data);
+
+                                //创建connection之后 数据发送需要统一由mqserver中的线程进行发送
+                                _mqServer.Send(conn, response.Data);
+                                //conn.Send(response.Data);
 
                                 logger.Info(string.Format("Session:{0} Registed Remote EndPoint:{1}", conn.SessionID, conn.State.IPAddress));
                                 //logger.Info(string.Format("Client:{0} registed to server", sessionId));
@@ -149,7 +152,8 @@ namespace FrontServer.TLServiceHost
                             {
                                 //向客户端发送心跳回报，告知客户端,服务端收到客户端消息,连接有效
                                 HeartBeatResponse response = ResponseTemplate<HeartBeatResponse>.SrvSendRspResponse(packet as HeartBeatRequest);
-                                conn.Send(response.Data);
+                                //conn.Send(response.Data);
+                                _mqServer.Send(conn, response.Data);
                                 return;
                             }
                             if (packet.Type == MessageTypes.LOGINREQUEST)
@@ -167,7 +171,7 @@ namespace FrontServer.TLServiceHost
             }
             catch (Exception ex)
             {
-                logger.Error("Handle MessageType:{0} Content:{1} Error:{2}".Put(requestInfo.Message.Type, requestInfo.Message.Content, ex));
+                logger.Error("Handle Front MessageType:{0} Content:{1} Error:{2} Stack:{3}".Put(requestInfo.Message.Type, requestInfo.Message.Content, ex,ex.StackTrace));
             }
         }
 
@@ -205,7 +209,7 @@ namespace FrontServer.TLServiceHost
             }
             catch (Exception ex)
             {
-                logger.Error(string.Format("Handler Logic Packet:{0} Error:{1} stack:{2}", packet.ToString(), ex.ToString(),ex.StackTrace));
+                logger.Error(string.Format("Handler Backend Logic Packet:{0} Error:{1} stack:{2}", packet.ToString(), ex.ToString(),ex.StackTrace));
             }
         }
 

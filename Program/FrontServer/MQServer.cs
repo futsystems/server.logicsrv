@@ -90,7 +90,16 @@ namespace FrontServer
             public IPacket Packet { get; set; }
         }
 
-        RingBuffer<WorkerItem> sendbuffer = new RingBuffer<WorkerItem>(50000);
+        class SendItem
+        {
+            public IConnection Connection { get; set; }
+
+            public byte[] Data { get; set; }
+        }
+
+        RingBuffer<WorkerItem> itembuffer = new RingBuffer<WorkerItem>(50000);
+        RingBuffer<SendItem> sendItemBuffer = new RingBuffer<SendItem>(50000);
+
         static ManualResetEvent _sendwaiting = new ManualResetEvent(false);
         Thread _sendthread = null;
         bool _sendgo = false;
@@ -101,6 +110,13 @@ namespace FrontServer
                 _sendwaiting.Set();
             }
         }
+
+        public void Send(IConnection conn, byte[] data)
+        {
+            sendItemBuffer.Write(new SendItem() { Connection = conn, Data = data });
+            NewSend();
+        }
+
         const int SLEEPDEFAULTMS = 500;
         void ProcessItem()
         {
@@ -109,9 +125,25 @@ namespace FrontServer
             {
                 try
                 {
-                    while (sendbuffer.hasItems)
+                    while (sendItemBuffer.hasItems)
                     {
-                        st = sendbuffer.Read();
+                        var tmp = sendItemBuffer.Read();
+                        //在某个特定情况下 会出现 待发送数据结构为null的情况 多个线程对sendbuffer的访问 形成竞争
+                        if (tmp == null)
+                        {
+                            logger.Error("XXXX SendItem Buffer Got Null Struct");
+                            continue;
+                        }
+                        if (tmp != null && tmp.Connection != null)
+                        {
+                            tmp.Connection.Send(tmp.Data);
+                        }
+                    }
+
+
+                    while (itembuffer.hasItems)
+                    {
+                        st = itembuffer.Read();
                         //在某个特定情况下 会出现 待发送数据结构为null的情况 多个线程对sendbuffer的访问 形成竞争
                         if (st == null)
                         {
@@ -149,11 +181,12 @@ namespace FrontServer
                             {
                                 conn.Close();
                             }
+                            logger.Error(string.Format("Conn:{0} Handle Packet:{1} Error:{2} trace:{3}", st.SessionID, st.Packet.ToString(), t.ToString(), t.StackTrace));
                         }
                         catch (Exception ex)
                         {
 
-                            logger.Error(string.Format("Conn:{0} Handle Packet:{1} Error:{2}", st.SessionID, st.Packet.ToString(), ex.ToString()));
+                            logger.Error(string.Format("Conn:{0} Handle Packet:{1} Error:{2} trace:{3}", st.SessionID, st.Packet.ToString(), ex.ToString(),ex.StackTrace));
 
                         }
                     }
@@ -369,7 +402,7 @@ namespace FrontServer
                                             }
                                             else //其余客户端地址为 UUID表示 转发数据到客户端
                                             {
-                                                sendbuffer.Write(new WorkerItem() { SessionID = clientId, Packet = packet });
+                                                itembuffer.Write(new WorkerItem() { SessionID = clientId, Packet = packet });
                                                 NewSend();
                                             }
                                         }
