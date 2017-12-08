@@ -228,7 +228,7 @@ namespace CTPService
                             request.LoginType = 1;
                             request.ProductInfo = field.UserProductInfo;
 
-                            _mqServer.TLSend(session.SessionID, request);
+                            _mqServer.ForwardToBackend(session.SessionID, request);
                             conn.State.MACAddress = field.MacAddress;
                             conn.State.CTPVersion = requestInfo.FTDHeader.bVersion.ToString();
                             conn.State.BrokerID = field.BrokerID;
@@ -310,7 +310,7 @@ namespace CTPService
                                 {
                                     Struct.V12.LCThostFtdcQryInvestorField field = (Struct.V12.LCThostFtdcQryInvestorField)data;
                                     QryInvestorRequest request = RequestTemplate<QryInvestorRequest>.CliSendRequest((int)requestInfo.FTDHeader.dReqId);
-                                    _mqServer.TLSend(session.SessionID, request);
+                                    _mqServer.ForwardToBackend(session.SessionID, request);
                                     logger.Info(string.Format("Session:{0} >> ReqQryInvestor", session.SessionID));
                                 }
                                 else
@@ -327,7 +327,7 @@ namespace CTPService
                                 {
                                     Struct.V12.LCThostFtdcQrySettlementInfoConfirmField field = (Struct.V12.LCThostFtdcQrySettlementInfoConfirmField)data;
                                     QrySettleInfoConfirmRequest request = RequestTemplate<QrySettleInfoConfirmRequest>.CliSendRequest((int)requestInfo.FTDHeader.dReqId);
-                                    _mqServer.TLSend(session.SessionID, request);
+                                    _mqServer.ForwardToBackend(session.SessionID, request);
                                     logger.Info(string.Format("Session:{0} >> ReqQrySettlementInfoConfirm", session.SessionID));
                                 }
                                 else
@@ -403,8 +403,8 @@ namespace CTPService
                                 {
                                     Struct.V12.LCThostFtdcQryNoticeField field = (Struct.V12.LCThostFtdcQryNoticeField)data;
                                     QryNoticeRequest request = RequestTemplate<QryNoticeRequest>.CliSendRequest((int)requestInfo.FTDHeader.dReqId);
-                                    
-                                    _mqServer.TLSend(session.SessionID, request);
+
+                                    _mqServer.ForwardToBackend(session.SessionID, request);
                                     logger.Info(string.Format("Session:{0} >> ReqQryNotice", session.SessionID));
                                 }
                                 else
@@ -450,7 +450,7 @@ namespace CTPService
                                     request.Tradingday = string.IsNullOrEmpty(field.TradingDay) ? 0 : int.Parse(field.TradingDay);
 
 
-                                    _mqServer.TLSend(session.SessionID, request);
+                                    _mqServer.ForwardToBackend(session.SessionID, request);
                                     logger.Info(string.Format("Session:{0} >> ReqQrySettlementInfo", session.SessionID));
 
                                 }
@@ -470,7 +470,7 @@ namespace CTPService
                                     ConfirmSettlementRequest request = RequestTemplate<ConfirmSettlementRequest>.CliSendRequest((int)requestInfo.FTDHeader.dReqId);
                                     //request.Account = field.InvestorID;
 
-                                    _mqServer.TLSend(session.SessionID, request);
+                                    _mqServer.ForwardToBackend(session.SessionID, request);
                                     logger.Info(string.Format("Session:{0} >> ReqSettlementInfoConfirm", session.SessionID));
 
                                 }
@@ -493,7 +493,7 @@ namespace CTPService
                                     request.SecurityType = SecurityType.FUT;//查询期货合约
 
 
-                                    _mqServer.TLSend(session.SessionID, request);
+                                    _mqServer.ForwardToBackend(session.SessionID, request);
                                     logger.Info(string.Format("Session:{0} >> ReqQryInstrument", session.SessionID));
 
                                 }
@@ -513,10 +513,10 @@ namespace CTPService
 
                                     QryOrderRequest request = RequestTemplate<QryOrderRequest>.CliSendRequest((int)requestInfo.FTDHeader.dReqId);
                                     //request.Symbol = request.Symbol;
-                                    
 
 
-                                    _mqServer.TLSend(session.SessionID, request);
+
+                                    _mqServer.ForwardToBackend(session.SessionID, request);
                                     logger.Info(string.Format("Session:{0} >> ReqQryOrder", session.SessionID));
 
                                 }
@@ -538,7 +538,7 @@ namespace CTPService
                                     //request.Symbol = field.InstrumentID;
 
 
-                                    _mqServer.TLSend(session.SessionID, request);
+                                    _mqServer.ForwardToBackend(session.SessionID, request);
                                     logger.Info(string.Format("Session:{0} >> ReqQryTrade", session.SessionID));
 
                                 }
@@ -559,7 +559,7 @@ namespace CTPService
                                     QryPositionRequest request = RequestTemplate<QryPositionRequest>.CliSendRequest((int)requestInfo.FTDHeader.dReqId);
 
 
-                                    _mqServer.TLSend(session.SessionID, request);
+                                    _mqServer.ForwardToBackend(session.SessionID, request);
                                     logger.Info(string.Format("Session:{0} >> ReqQryInvestorPosition", session.SessionID));
 
                                 }
@@ -580,7 +580,7 @@ namespace CTPService
                                     QryAccountInfoRequest request = RequestTemplate<QryAccountInfoRequest>.CliSendRequest((int)requestInfo.FTDHeader.dReqId);
 
 
-                                    _mqServer.TLSend(session.SessionID, request);
+                                    _mqServer.ForwardToBackend(session.SessionID, request);
                                     logger.Info(string.Format("Session:{0} >> ReqQryTradingAccount", session.SessionID));
 
                                 }
@@ -600,7 +600,7 @@ namespace CTPService
 
                                     QryContractBankRequest request = RequestTemplate<QryContractBankRequest>.CliSendRequest((int)requestInfo.FTDHeader.dReqId);
 
-                                    _mqServer.TLSend(session.SessionID, request);
+                                    _mqServer.ForwardToBackend(session.SessionID, request);
                                     logger.Info(string.Format("Session:{0} >> ReqQryContractBank", session.SessionID));
 
                                 }
@@ -620,7 +620,7 @@ namespace CTPService
 
                                     QryRegisterBankAccountRequest request = RequestTemplate<QryRegisterBankAccountRequest>.CliSendRequest((int)requestInfo.FTDHeader.dReqId);
 
-                                    _mqServer.TLSend(session.SessionID, request);
+                                    _mqServer.ForwardToBackend(session.SessionID, request);
                                     logger.Info(string.Format("Session:{0} >> ReqQryAccountregister", session.SessionID));
 
                                 }
@@ -643,7 +643,7 @@ namespace CTPService
                                     request.Symbol = field.InstrumentID;
                                     request.OffsetFlag =CTPConvert.ConvOffsetFlag(field.OffsetFlag);
 
-                                    _mqServer.TLSend(session.SessionID, request);
+                                    _mqServer.ForwardToBackend(session.SessionID, request);
                                     logger.Info(string.Format("Session:{0} >> ReqQueryMaxOrderVolume", session.SessionID));
 
                                 }
@@ -687,7 +687,7 @@ namespace CTPService
                                     order.OffsetFlag = CTPConvert.ConvOffsetFlag(field.CombOffsetFlag_0);
 
                                     request.Order = order;
-                                    _mqServer.TLSend(session.SessionID, request);
+                                    _mqServer.ForwardToBackend(session.SessionID, request);
                                     logger.Info(string.Format("Session:{0} >> ReqOrderInsert", session.SessionID));
 
                                 }
@@ -720,7 +720,7 @@ namespace CTPService
 
                                      request.OrderAction = action;
 
-                                     _mqServer.TLSend(session.SessionID, request);
+                                     _mqServer.ForwardToBackend(session.SessionID, request);
                                      logger.Info(string.Format("Session:{0} >> ReqOrderAction", session.SessionID));
                                  }
                                  else
@@ -742,7 +742,7 @@ namespace CTPService
                                     request.OldPassword = field.OldPassword;
                                     request.NewPassword = field.NewPassword;
 
-                                    _mqServer.TLSend(session.SessionID, request);
+                                    _mqServer.ForwardToBackend(session.SessionID, request);
                                     logger.Info(string.Format("Session:{0} >> ReqUserPasswordUpdate", session.SessionID));
 
                                 }
@@ -794,8 +794,8 @@ namespace CTPService
                                     Struct.V12.LCThostFtdcQryTransferSerialField field = (Struct.V12.LCThostFtdcQryTransferSerialField)data;
 
                                     QryTransferSerialRequest request = RequestTemplate<QryTransferSerialRequest>.CliSendRequest((int)requestInfo.FTDHeader.dReqId);
-                                    
-                                    _mqServer.TLSend(session.SessionID, request);
+
+                                    _mqServer.ForwardToBackend(session.SessionID, request);
                                     logger.Info(string.Format("Session:{0} >> ReqQryTransferSerial", session.SessionID));
 
                                 }
@@ -814,8 +814,8 @@ namespace CTPService
                                     Struct.V12.LCThostFtdcQryInvestorPositionDetailField field = (Struct.V12.LCThostFtdcQryInvestorPositionDetailField)data;
                                     
                                     XQryPositionDetailRequest request = RequestTemplate<XQryPositionDetailRequest>.CliSendRequest((int)requestInfo.FTDHeader.dReqId);
-                                    
-                                    _mqServer.TLSend(session.SessionID, request);
+
+                                    _mqServer.ForwardToBackend(session.SessionID, request);
                                     logger.Info(string.Format("Session:{0} >> ReqQryInvestorPositionDetail", session.SessionID));
 
                                 }

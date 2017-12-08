@@ -10,10 +10,10 @@ using Common.Logging;
 
 namespace FrontServer.XLServiceHost
 {
-    public partial class XLServiceHost : FrontServer.IServiceHost
+    public partial class XLServiceHost :XLServiceHostBase, FrontServer.IServiceHost
     {
 
-        ILog logger = LogManager.GetLogger(_name);
+        //ILog logger = LogManager.GetLogger(_name);
 
         const string _name = "XLServiceHost";
         /// <summary>
@@ -25,6 +25,7 @@ namespace FrontServer.XLServiceHost
         FrontServer.MQServer _mqServer = null;
 
         public XLServiceHost(FrontServer.MQServer mqServer)
+            : base("XLServiceHost")
         {
             _mqServer = mqServer;
         }
@@ -106,7 +107,7 @@ namespace FrontServer.XLServiceHost
                 {
                     conn.UpdateHeartBeat();
                     XLPacketData pktData = new XLPacketData(XLMessageType.T_HEARTBEEAT);
-                    conn.ResponseXLPacket(pktData, 0, true);
+                    ResponseXLPacket(conn,pktData, 0, true);
                     //向逻辑服务端发送心跳
                     //_mqServer.LogicClientHeartBeat(session.SessionID);
 
@@ -118,7 +119,7 @@ namespace FrontServer.XLServiceHost
                     logger.Warn(string.Format("Client:{0} empty request,ingore", session.SessionID));
                     return;
                 }
-                _mqServer.HandleXLPacketData(conn, requestInfo.Body,(int)requestInfo.DataHeader.RequestID);
+                this.HandleXLPacketData(conn, requestInfo.Body,(int)requestInfo.DataHeader.RequestID);
 
                 
             }
@@ -151,6 +152,10 @@ namespace FrontServer.XLServiceHost
             logger.Info(string.Format("Session:{0} Registed Remote EndPoint:{1}", conn.SessionID, conn.State.IPAddress));
         }
 
+        public override void ForwardToBackend(string address, IPacket packet)
+        {
+            _mqServer.ForwardToBackend(address, packet);
+        }
 
         public void Start()
         {

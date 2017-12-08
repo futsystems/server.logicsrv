@@ -97,8 +97,8 @@ namespace FrontServer
             public byte[] Data { get; set; }
         }
 
-        RingBuffer<WorkerItem> itembuffer = new RingBuffer<WorkerItem>(50000);
-        RingBuffer<SendItem> sendItemBuffer = new RingBuffer<SendItem>(50000);
+        RingBuffer<WorkerItem> logicMessageBuffer = new RingBuffer<WorkerItem>(50000);
+        RingBuffer<SendItem> clientDataBuffer = new RingBuffer<SendItem>(50000);
 
         static ManualResetEvent _sendwaiting = new ManualResetEvent(false);
         Thread _sendthread = null;
@@ -111,9 +111,9 @@ namespace FrontServer
             }
         }
 
-        public void Send(IConnection conn, byte[] data)
+        public void ForwardToClient(IConnection conn, byte[] data)
         {
-            sendItemBuffer.Write(new SendItem() { Connection = conn, Data = data });
+            clientDataBuffer.Write(new SendItem() { Connection = conn, Data = data });
             NewSend();
         }
 
@@ -125,9 +125,9 @@ namespace FrontServer
             {
                 try
                 {
-                    while (sendItemBuffer.hasItems)
+                    while (clientDataBuffer.hasItems)
                     {
-                        var tmp = sendItemBuffer.Read();
+                        var tmp = clientDataBuffer.Read();
                         //在某个特定情况下 会出现 待发送数据结构为null的情况 多个线程对sendbuffer的访问 形成竞争
                         if (tmp == null)
                         {
@@ -141,9 +141,9 @@ namespace FrontServer
                     }
 
 
-                    while (itembuffer.hasItems)
+                    while (logicMessageBuffer.hasItems)
                     {
-                        st = itembuffer.Read();
+                        st = logicMessageBuffer.Read();
                         //在某个特定情况下 会出现 待发送数据结构为null的情况 多个线程对sendbuffer的访问 形成竞争
                         if (st == null)
                         {
@@ -217,7 +217,7 @@ namespace FrontServer
             if (connectionMap.TryRemove(sessionId, out target))
             {
                 UnregisterClientRequest request = RequestTemplate<UnregisterClientRequest>.CliSendRequest(0);
-                this.TLSend(sessionId, request);
+                this.ForwardToBackend(sessionId, request);
             }
         }
 
@@ -241,7 +241,7 @@ namespace FrontServer
                 RegisterClientRequest request = RequestTemplate<RegisterClientRequest>.CliSendRequest(0);
                 request.FrontType = type;
                 request.VersionToken = versionToken;
-                this.TLSend(connection.SessionID, request);
+                this.ForwardToBackend(connection.SessionID, request);
                 connectionMap.TryAdd(connection.SessionID, connection);
             }
         }
@@ -278,16 +278,17 @@ namespace FrontServer
         {
             logger.Debug("Send Logic HeartBeat");
             LogicLiveRequest request = RequestTemplate<LogicLiveRequest>.CliSendRequest(0);
-            this.TLSend(_frontID, request);
+            this.ForwardToBackend(_frontID, request);
             _lastHeartBeatSend = DateTime.Now;
         }
 
 
-        public void TLSend(string address, IPacket packet)
+        public void ForwardToBackend(string address, IPacket packet)
         {
             this.TLSend(address, packet.Data);
         }
-        public void TLSend(string address,byte[] data)
+        
+        void TLSend(string address,byte[] data)
         {
             if (_backend != null)
             {
@@ -402,7 +403,7 @@ namespace FrontServer
                                             }
                                             else //其余客户端地址为 UUID表示 转发数据到客户端
                                             {
-                                                itembuffer.Write(new WorkerItem() { SessionID = clientId, Packet = packet });
+                                                logicMessageBuffer.Write(new WorkerItem() { SessionID = clientId, Packet = packet });
                                                 NewSend();
                                             }
                                         }

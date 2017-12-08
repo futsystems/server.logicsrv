@@ -95,7 +95,7 @@ namespace FrontServer.XLServiceHost
         }
 
         public bool Connected { get { return _session.Connected; } }
-        public bool IsXLProtocol { get { return true; } }
+        //public bool IsXLProtocol { get { return true; } }
         /// <summary>
         /// 回话编号
         /// </summary>
@@ -189,16 +189,17 @@ namespace FrontServer.XLServiceHost
         {
             _session.Send(data, 0, len);
         }
+
         /// <summary>
         /// 向逻辑服务器发送数据包
         /// 客户端提交上来的请求转换成内部数据格式 向逻辑服务器发送
         /// </summary>
         /// <param name="packet"></param>
-        public void ForwardToLogic(IPacket packet)
-        {
-            logger.Info("ForwardToLogic:" + packet.ToString());
-            //
-        }
+        //public void ForwardToLogic(IPacket packet)
+        //{
+        //    logger.Info("ForwardToLogic:" + packet.ToString());
+        //    //
+        //}
 
         /// <summary>
         /// 关闭会话
@@ -208,24 +209,24 @@ namespace FrontServer.XLServiceHost
             _session.Close();
         }
 
-        /// <summary>
-        /// 应答XLPacketData
-        /// </summary>
-        /// <param name="data"></param>
-        public void ResponseXLPacket(XLPacketData data, uint requestID, bool isLast)
-        {
-            byte[] ret = XLPacketData.PackToBytes(data, XLEnumSeqType.SeqReq, this.NextSeqReqId, requestID, isLast);
-            this.Send(ret);
-        }
+        ///// <summary>
+        ///// 应答XLPacketData
+        ///// </summary>
+        ///// <param name="data"></param>
+        //public void ResponseXLPacket(XLPacketData data, uint requestID, bool isLast)
+        //{
+        //    byte[] ret = XLPacketData.PackToBytes(data, XLEnumSeqType.SeqReq, this.NextSeqReqId, requestID, isLast);
+        //    this.Send(ret);
+        //}
 
-        /// <summary>
-        /// 通知XLPacketData
-        /// </summary>
-        /// <param name="data"></param>
-        public void NotifyXLPacket(XLPacketData data)
-        {
-            byte[] ret = XLPacketData.PackToBytes(data, XLEnumSeqType.SeqRtn, this.NextSeqRtnId, 0, true);
-            this.Send(ret);
-        }
+        ///// <summary>
+        ///// 通知XLPacketData
+        ///// </summary>
+        ///// <param name="data"></param>
+        //public void NotifyXLPacket(XLPacketData data)
+        //{
+        //    byte[] ret = XLPacketData.PackToBytes(data, XLEnumSeqType.SeqRtn, this.NextSeqRtnId, 0, true);
+        //    this.Send(ret);
+        //}
     }
 }

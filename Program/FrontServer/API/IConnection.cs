@@ -28,7 +28,7 @@ namespace FrontServer
         /// 如果是该协议类别 逻辑部分在MQServer中进行统一处理
         /// Service只负责处理协议转换部分
         /// </summary>
-        bool IsXLProtocol { get; }
+        //bool IsXLProtocol { get; }
 
         /// <summary>
         /// 关闭会话
@@ -39,17 +39,6 @@ namespace FrontServer
         /// 连接状态
         /// </summary>
         bool Connected { get; }
-        /// <summary>
-        /// 应答XLPacketData
-        /// </summary>
-        /// <param name="data"></param>
-        void ResponseXLPacket(XLPacketData data,uint requestID,bool isLast);
-
-        /// <summary>
-        /// 通知XLPacketData
-        /// </summary>
-        /// <param name="data"></param>
-        void NotifyXLPacket(XLPacketData data);
 
         /// <summary>
         /// 发送数据

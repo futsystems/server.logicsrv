@@ -90,6 +90,7 @@
     <Compile Include="API\IConnectionState.cs" />
     <Compile Include="API\IServiceHost.cs" />
     <Compile Include="Common\ByteUtil.cs" />
+    <Compile Include="Common\XLServiceHostBase.cs" />
     <Compile Include="CTPServiceHost\Protocol\CNStringMarshaler.cs" />
     <Compile Include="CTPServiceHost\Protocol\Constanst.cs" />
     <Compile Include="CTPServiceHost\Protocol\Convert.cs" />
@@ -111,7 +112,6 @@
     <Compile Include="CTPServiceHost\CTPServiceHost_.cs" />
     <Compile Include="CTPServiceHost\CTPServiceHost_IServiceHost.cs" />
     <Compile Include="MQServer.cs" />
-    <Compile Include="MQServer_Tick.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="CTPServiceHost\TLReceiveFilter.cs" />
@@ -119,7 +119,6 @@
     <Compile Include="CTPServiceHost\TLServerBase.cs" />
     <Compile Include="CTPServiceHost\TLSessionBase.cs" />
     <Compile Include="CTPServiceHost\CTPServiceHost_Connection.cs" />
-    <Compile Include="WSServiceHost\ServiceHost_HandleLogicMessage.cs" />
     <Compile Include="XLConvert.cs" />
     <Compile Include="TLServiceHost\TLConnection.cs" />
     <Compile Include="TLServiceHost\TLServiceHost_Connection.cs" />
@@ -141,8 +140,6 @@
     <Compile Include="XLServiceHost\XLSessionBase.cs" />
     <Compile Include="XLServiceHost\ServiceHost_.cs" />
     <Compile Include="XLServiceHost\ServiceHost_Connection.cs" />
-    <Compile Include="MQServer_XLPacket.cs" />
-    <Compile Include="XLServiceHost\ServiceHost_HandleLogicMessage.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config">

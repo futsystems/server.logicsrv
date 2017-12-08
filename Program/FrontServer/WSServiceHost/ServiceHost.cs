@@ -14,10 +14,10 @@ using Newtonsoft.Json;
 
 namespace FrontServer.WSServiceHost
 {
-    public partial class WSServiceHost : FrontServer.IServiceHost
+    public partial class WSServiceHost :XLServiceHostBase, FrontServer.IServiceHost
     {
 
-        ILog logger = LogManager.GetLogger(_name);
+        //ILog logger = LogManager.GetLogger(_name);
 
         const string _name = "WSServiceHost";
         /// <summary>
@@ -29,6 +29,7 @@ namespace FrontServer.WSServiceHost
         FrontServer.MQServer _mqServer = null;
 
         public WSServiceHost(FrontServer.MQServer mqServer)
+            : base("WSServiceHost")
         {
             _mqServer = mqServer;
         }
@@ -105,7 +106,7 @@ namespace FrontServer.WSServiceHost
 
                 //if (conn.State.Authorized || (pktData.MessageType == XLMessageType.T_REQ_LOGIN))
                 {
-                    _mqServer.HandleXLPacketData(conn, pktData, requestID);
+                    this.HandleXLPacketData(conn, pktData, requestID);
                 }
                 //else
                 { 

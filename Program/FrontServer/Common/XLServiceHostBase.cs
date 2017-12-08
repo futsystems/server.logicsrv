@@ -1,30 +1,44 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.Concurrent;
 using System.Linq;
 using System.Text;
-using System.Threading;
-using ZeroMQ;
 using TradingLib.API;
 using TradingLib.Common;
 using TradingLib.XLProtocol;
 using TradingLib.XLProtocol.V1;
 using Common.Logging;
 
-
 namespace FrontServer
 {
-    /// <summary>
-    /// XLProtocol 交易协议处理
-    /// XLProtocol可以通过二进制或Json与服务端交互
-    /// 客户端通过Connection提交上来的数据包解析成XLPacketData 然后由HandleXLPacketData进行处理 将数据转换成内部TLMessage的格式通过传递到后端逻辑服务器
-    /// 服务端返回过来的消息 转换成XLPacketData 并对外发送
-    /// </summary>
-    public partial class MQServer
+    public class XLServiceHostBase
     {
+        protected ILog logger = null;
 
-        /**
-        void HandleLogicMessage(IConnection conn, IPacket lpkt)
+        public XLServiceHostBase(string name)
+        {
+            logger = LogManager.GetLogger(name);
+        }
+
+        public virtual void ForwardToBackend(string address, IPacket packet)
+        { 
+            
+        }
+
+        public virtual void ResponseXLPacket(IConnection conn,XLPacketData data, uint requestID, bool isLast)
+        {
+            //byte[] ret = XLPacketData.PackToBytes(data, XLEnumSeqType.SeqReq, this.NextSeqReqId, requestID, isLast);
+            byte[] ret = XLPacketData.PackToBytes(data, XLEnumSeqType.SeqReq,0, requestID, isLast);
+            conn.Send(ret);
+        }
+
+        public virtual void NotifyXLPacket(IConnection conn, XLPacketData data)
+        {
+            //byte[] ret = XLPacketData.PackToBytes(data, XLEnumSeqType.SeqRtn, this.NextSeqRtnId, 0, true);
+            byte[] ret = XLPacketData.PackToBytes(data, XLEnumSeqType.SeqRtn,0, 0, true);
+            conn.Send(ret);
+        }
+
+        public void HandleLogicMessage(IConnection conn, IPacket lpkt)
         {
             switch (lpkt.Type)
             {
@@ -36,18 +50,18 @@ namespace FrontServer
                         field.TradingDay = response.TradingDay;
                         field.UserID = response.LoginID;
                         field.Name = response.NickName;
-                        field.Currency = ConvCurrencyType(response.Currency);
-                        
-                        
+                        field.Currency = XLConvert.ConvCurrencyType(response.Currency);
 
-                        ErrorField rsp = ConvertRspInfo(response.RspInfo);
+
+
+                        ErrorField rsp = XLConvert.ConvertRspInfo(response.RspInfo);
 
                         XLPacketData pkt = new XLPacketData(XLMessageType.T_RSP_LOGIN);
                         pkt.AddField(rsp);
                         pkt.AddField(field);
 
 
-                        conn.ResponseXLPacket(pkt, (uint)response.RequestID, response.IsLast);
+                        ResponseXLPacket(conn, pkt, (uint)response.RequestID, response.IsLast);
                         if (response.RspInfo.ErrorID == 0)
                         {
                             conn.IState.Authorized = true;
@@ -64,12 +78,12 @@ namespace FrontServer
 
                         //field.UserID = "";
 
-                        ErrorField rsp = ConvertRspInfo(response.RspInfo);
+                        ErrorField rsp = XLConvert.ConvertRspInfo(response.RspInfo);
                         XLPacketData pkt = new XLPacketData(XLMessageType.T_RSP_UPDATEPASS);
                         pkt.AddField(rsp);
                         pkt.AddField(field);
 
-                        conn.ResponseXLPacket(pkt, (uint)response.RequestID, response.IsLast);
+                        ResponseXLPacket(conn, pkt, (uint)response.RequestID, response.IsLast);
                         logger.Info(string.Format("LogicSrv Reply Session:{0} -> RspReqChangePasswordResponse", conn.SessionID));
 
                         break;
@@ -86,24 +100,24 @@ namespace FrontServer
                             field.ExchangeID = response.InstrumentToSend.ExchangeID;
                             field.SymbolName = response.InstrumentToSend.Name;
                             field.SecurityID = response.InstrumentToSend.Security;
-                            field.SecurityType = ConvSecurityType(response.InstrumentToSend.SecurityType);
+                            field.SecurityType = XLConvert.ConvSecurityType(response.InstrumentToSend.SecurityType);
                             field.Multiple = response.InstrumentToSend.Multiple;
                             field.PriceTick = (double)response.InstrumentToSend.PriceTick;
                             field.ExpireDate = response.InstrumentToSend.ExpireDate.ToString();
-                            field.Currency = ConvCurrencyType(response.InstrumentToSend.Currency);
+                            field.Currency = XLConvert.ConvCurrencyType(response.InstrumentToSend.Currency);
 
 
                             XLPacketData pkt = new XLPacketData(XLMessageType.T_RSP_SYMBOL);
                             pkt.AddField(field);
 
-                            conn.ResponseXLPacket(pkt, (uint)response.RequestID, response.IsLast);
+                            ResponseXLPacket(conn, pkt, (uint)response.RequestID, response.IsLast);
                             logger.Info(string.Format("LogicSrv Reply Session:{0} -> RspQrySymbolResponse", conn.SessionID));
 
                         }
                         else
                         {
                             XLPacketData pkt = new XLPacketData(XLMessageType.T_RSP_SYMBOL);
-                            conn.ResponseXLPacket(pkt, (uint)response.RequestID, response.IsLast);
+                            ResponseXLPacket(conn, pkt, (uint)response.RequestID, response.IsLast);
                             logger.Info(string.Format("LogicSrv Reply Session:{0} -> RspQrySymbolResponse", conn.SessionID));
                         }
 
@@ -118,18 +132,18 @@ namespace FrontServer
                         XLExchangeRateField field = new XLExchangeRateField();
                         field.TradingDay = response.ExchangeRate.Settleday;
                         field.IntermediateRate = (double)response.ExchangeRate.IntermediateRate;
-                        field.Currency = ConvCurrencyType(response.ExchangeRate.Currency);
+                        field.Currency = XLConvert.ConvCurrencyType(response.ExchangeRate.Currency);
 
                         XLPacketData pkt = new XLPacketData(XLMessageType.T_RSP_EXCHANGE_RATE);
                         pkt.AddField(field);
 
-                        conn.ResponseXLPacket(pkt, (uint)response.RequestID, response.IsLast);
+                        ResponseXLPacket(conn, pkt, (uint)response.RequestID, response.IsLast);
                         logger.Info(string.Format("LogicSrv Reply Session:{0} -> RspXQryExchangeRateResponse", conn.SessionID));
 
 
                         break;
                     }
-                    //查询结算单回报
+                //查询结算单回报
                 case MessageTypes.XSETTLEINFORESPONSE:
                     {
 
@@ -142,14 +156,14 @@ namespace FrontServer
                         XLPacketData pkt = new XLPacketData(XLMessageType.T_RSP_SETTLEINFO);
                         pkt.AddField(field);
 
-                        conn.ResponseXLPacket(pkt, (uint)response.RequestID, response.IsLast);
+                        ResponseXLPacket(conn, pkt, (uint)response.RequestID, response.IsLast);
                         if (response.IsLast)
                         {
                             logger.Info(string.Format("LogicSrv Reply Session:{0} -> RspXQryExchangeRateResponse", conn.SessionID));
                         }
                         break;
                     }
-                    //查询结算汇总回报
+                //查询结算汇总回报
                 case MessageTypes.XQRYSETTLESUMMAYRESPONSE:
                     {
                         RspXqrySettleSummaryResponse response = lpkt as RspXqrySettleSummaryResponse;
@@ -157,18 +171,18 @@ namespace FrontServer
 
                         if (response.Settlement == null)
                         {
-                            conn.ResponseXLPacket(pkt, (uint)response.RequestID, response.IsLast);
+                            ResponseXLPacket(conn, pkt, (uint)response.RequestID, response.IsLast);
                         }
                         else
                         {
-                            XLSettleSummaryField field = ConvSettleSummary(response.Settlement);
+                            XLSettleSummaryField field = XLConvert.ConvSettleSummary(response.Settlement);
                             pkt.AddField(field);
-                            conn.ResponseXLPacket(pkt, (uint)response.RequestID, response.IsLast);
+                            ResponseXLPacket(conn, pkt, (uint)response.RequestID, response.IsLast);
                         }
                         if (response.IsLast) logger.Info(string.Format("LogicSrv Reply Session:{0} -> RspXqrySettleSummaryResponse", conn.SessionID));
                         break;
                     }
-                    //查询银行回报
+                //查询银行回报
                 case MessageTypes.XQRYBANKRESPONSE:
                     {
                         RspXQryBankCardResponse response = lpkt as RspXQryBankCardResponse;
@@ -176,18 +190,18 @@ namespace FrontServer
 
                         if (response.BankCardInfo == null)
                         {
-                            conn.ResponseXLPacket(pkt, (uint)response.RequestID, response.IsLast);
+                            ResponseXLPacket(conn, pkt, (uint)response.RequestID, response.IsLast);
                         }
                         else
                         {
-                            XLBankCardField field = ConvBankCard(response.BankCardInfo);
+                            XLBankCardField field = XLConvert.ConvBankCard(response.BankCardInfo);
                             pkt.AddField(field);
-                            conn.ResponseXLPacket(pkt, (uint)response.RequestID, response.IsLast);
+                            ResponseXLPacket(conn, pkt, (uint)response.RequestID, response.IsLast);
                         }
                         if (response.IsLast) logger.Info(string.Format("LogicSrv Reply Session:{0} -> RspXQryBankCardResponse", conn.SessionID));
                         break;
                     }
-                    //更新银行回报
+                //更新银行回报
                 case MessageTypes.XUPDATEBANKRESPONSE:
                     {
                         RspXReqUpdateBankCardResponse response = lpkt as RspXReqUpdateBankCardResponse;
@@ -195,24 +209,24 @@ namespace FrontServer
 
                         if (response.BankCardInfo == null)
                         {
-                            conn.ResponseXLPacket(pkt, (uint)response.RequestID, response.IsLast);
+                            ResponseXLPacket(conn, pkt, (uint)response.RequestID, response.IsLast);
                         }
                         else
                         {
-                            XLBankCardField field = ConvBankCard(response.BankCardInfo);
+                            XLBankCardField field = XLConvert.ConvBankCard(response.BankCardInfo);
                             pkt.AddField(field);
-                            conn.ResponseXLPacket(pkt, (uint)response.RequestID, response.IsLast);
+                            ResponseXLPacket(conn, pkt, (uint)response.RequestID, response.IsLast);
                         }
                         if (response.IsLast) logger.Info(string.Format("LogicSrv Reply Session:{0} -> RspXReqUpdateBankCardResponse", conn.SessionID));
                         break;
                     }
-                    //出入金操作回报
+                //出入金操作回报
                 case MessageTypes.XREQCASHOPRESPONSE:
                     {
                         RspXReqCashOperationResponse response = lpkt as RspXReqCashOperationResponse;
                         XLPacketData pkt = new XLPacketData(XLMessageType.T_RSP_CASHOP);
 
-                        ErrorField rsp = ConvertRspInfo(response.RspInfo);
+                        ErrorField rsp = XLConvert.ConvertRspInfo(response.RspInfo);
                         pkt.AddField(rsp);
                         if (rsp.ErrorID == 0)
                         {
@@ -223,8 +237,8 @@ namespace FrontServer
                             field.RefID = response.CashOperationRequest.RefID;
                             pkt.AddField(field);
                         }
-             
-                        conn.ResponseXLPacket(pkt, (uint)response.RequestID, response.IsLast);
+
+                        ResponseXLPacket(conn, pkt, (uint)response.RequestID, response.IsLast);
                         if (response.IsLast) logger.Info(string.Format("LogicSrv Reply Session:{0} -> RspXReqCashOperationResponse", conn.SessionID));
                         break;
                     }
@@ -237,13 +251,13 @@ namespace FrontServer
 
                         if (response.Order == null || !response.Order.isValid)
                         {
-                            conn.ResponseXLPacket(pkt, (uint)response.RequestID, response.IsLast);
+                            ResponseXLPacket(conn, pkt, (uint)response.RequestID, response.IsLast);
                         }
                         else
                         {
-                            XLOrderField field = ConvOrder(response.Order);
+                            XLOrderField field = XLConvert.ConvOrder(response.Order);
                             pkt.AddField(field);
-                            conn.ResponseXLPacket(pkt, (uint)response.RequestID, response.IsLast);
+                            ResponseXLPacket(conn, pkt, (uint)response.RequestID, response.IsLast);
                         }
                         if (response.IsLast) logger.Info(string.Format("LogicSrv Reply Session:{0} -> RspXQryOrderResponse", conn.SessionID));
                         break;
@@ -255,10 +269,10 @@ namespace FrontServer
                         XLPacketData pkt = new XLPacketData(XLMessageType.T_RTN_ORDER);
                         if (notify.Order != null)
                         {
-                            XLOrderField field = ConvOrder(notify.Order);
+                            XLOrderField field = XLConvert.ConvOrder(notify.Order);
                             pkt.AddField(field);
 
-                            conn.NotifyXLPacket(pkt);
+                            NotifyXLPacket(conn,pkt);
                         }
                         else
                         {
@@ -275,16 +289,16 @@ namespace FrontServer
 
                         if (response.Trade == null || !response.Trade.isValid)
                         {
-                            conn.ResponseXLPacket(pkt, (uint)response.RequestID, response.IsLast);
+                            ResponseXLPacket(conn, pkt, (uint)response.RequestID, response.IsLast);
 
-                            
+
                         }
                         else
                         {
-                            XLTradeField field = ConvTrade(response.Trade);
+                            XLTradeField field = XLConvert.ConvTrade(response.Trade);
                             pkt.AddField(field);
 
-                            conn.ResponseXLPacket(pkt, (uint)response.RequestID, response.IsLast);
+                            ResponseXLPacket(conn, pkt, (uint)response.RequestID, response.IsLast);
                         }
                         if (response.IsLast) logger.Info(string.Format("LogicSrv Reply Session:{0} -> RspXQryTradeResponse", conn.SessionID));
                         break;
@@ -297,10 +311,10 @@ namespace FrontServer
 
                         if (notify.Trade != null)
                         {
-                            XLTradeField field = ConvTrade(notify.Trade);
+                            XLTradeField field = XLConvert.ConvTrade(notify.Trade);
                             pkt.AddField(field);
 
-                            conn.NotifyXLPacket(pkt);
+                            NotifyXLPacket(conn, pkt);
                         }
                         else
                         {
@@ -317,15 +331,15 @@ namespace FrontServer
 
                         if (response.PositionToSend == null || !response.PositionToSend.IsValid)
                         {
-                            conn.ResponseXLPacket(pkt, (uint)response.RequestID, response.IsLast);
-                            
+                            ResponseXLPacket(conn, pkt, (uint)response.RequestID, response.IsLast);
+
                         }
                         else
                         {
-                            XLPositionField field = ConvPosition(response.PositionToSend);
+                            XLPositionField field = XLConvert.ConvPosition(response.PositionToSend);
                             pkt.AddField(field);
 
-                            conn.ResponseXLPacket(pkt, (uint)response.RequestID, response.IsLast);
+                            ResponseXLPacket(conn, pkt, (uint)response.RequestID, response.IsLast);
                         }
                         if (response.IsLast) logger.Info(string.Format("LogicSrv Reply Session:{0} -> RspQryPositionResponse", conn.SessionID));
                         break;
@@ -338,10 +352,10 @@ namespace FrontServer
 
                         if (notify.Position != null)
                         {
-                            XLPositionField field = ConvPosition(notify.Position);
+                            XLPositionField field = XLConvert.ConvPosition(notify.Position);
                             pkt.AddField(field);
 
-                            conn.NotifyXLPacket(pkt);
+                            NotifyXLPacket(conn, pkt);
                         }
                         else
                         {
@@ -374,10 +388,10 @@ namespace FrontServer
 
                         field.NowEquity = (double)info.NowEquity;
                         field.Available = (double)info.AvabileFunds;//当前可用
-                        
+
 
                         pkt.AddField(field);
-                        conn.ResponseXLPacket(pkt, (uint)response.RequestID, response.IsLast);
+                        ResponseXLPacket(conn, pkt, (uint)response.RequestID, response.IsLast);
 
                         if (response.IsLast) logger.Info(string.Format("LogicSrv Reply Session:{0} -> RspQryAccountInfoResponse", conn.SessionID));
                         break;
@@ -392,10 +406,10 @@ namespace FrontServer
                         field.HedgeFlag = XLHedgeFlagType.Speculation;
                         field.SymbolID = response.Symbol;
                         field.MaxVolume = response.MaxVol;
-                        field.OffsetFlag = ConvOffSet(response.OffsetFlag);
+                        field.OffsetFlag = XLConvert.ConvOffSet(response.OffsetFlag);
 
                         pkt.AddField(field);
-                        conn.ResponseXLPacket(pkt, (uint)response.RequestID, response.IsLast);
+                        ResponseXLPacket(conn, pkt, (uint)response.RequestID, response.IsLast);
 
                         if (response.IsLast) logger.Info(string.Format("LogicSrv Reply Session:{0} -> RspQryMaxOrderVolResponse", conn.SessionID));
                         break;
@@ -408,7 +422,7 @@ namespace FrontServer
 
                         XLInputOrderField field = new XLInputOrderField();
                         field.HedgeFlag = XLHedgeFlagType.Speculation;
-                        field.OffsetFlag = ConvOffSet(notify.Order.OffsetFlag);
+                        field.OffsetFlag = XLConvert.ConvOffSet(notify.Order.OffsetFlag);
                         field.Direction = notify.Order.Side ? XLDirectionType.Buy : XLDirectionType.Sell;
 
                         field.SymbolID = notify.Order.Symbol;
@@ -435,7 +449,7 @@ namespace FrontServer
                         pkt.AddField(rsp);
                         pkt.AddField(field);
 
-                        conn.ResponseXLPacket(pkt, (uint)notify.Order.RequestID, true);
+                        ResponseXLPacket(conn, pkt, (uint)notify.Order.RequestID, true);
 
                         logger.Info(string.Format("LogicSrv Reply Session:{0} -> ErrorOrderNotify", conn.SessionID));
                         break;
@@ -462,7 +476,7 @@ namespace FrontServer
                         pkt.AddField(rsp);
                         pkt.AddField(field);
 
-                        conn.ResponseXLPacket(pkt, (uint)notify.OrderAction.RequestID, true);
+                        ResponseXLPacket(conn, pkt, (uint)notify.OrderAction.RequestID, true);
 
                         logger.Info(string.Format("LogicSrv Reply Session:{0} -> ErrorOrderActionNotify", conn.SessionID));
                         break;
@@ -475,13 +489,13 @@ namespace FrontServer
 
                         if (response.CashTransaction == null)
                         {
-                            conn.ResponseXLPacket(pkt, (uint)response.RequestID, response.IsLast);
+                            ResponseXLPacket(conn, pkt, (uint)response.RequestID, response.IsLast);
                         }
                         else
                         {
-                            XLCashTxnField field = ConvCashTxn(response.CashTransaction);
+                            XLCashTxnField field = XLConvert.ConvCashTxn(response.CashTransaction);
                             pkt.AddField(field);
-                            conn.ResponseXLPacket(pkt, (uint)response.RequestID, response.IsLast);
+                            ResponseXLPacket(conn, pkt, (uint)response.RequestID, response.IsLast);
                         }
                         if (response.IsLast) logger.Info(string.Format("LogicSrv Reply Session:{0} -> RspXQryCashTransResponse", conn.SessionID));
                         break;
@@ -492,7 +506,6 @@ namespace FrontServer
 
             }
         }
-         * **/
 
         public void HandleXLPacketData(IConnection conn, XLPacketData pkt, int requestId)
         {
@@ -505,7 +518,7 @@ namespace FrontServer
                 rsp.ErrorMsg = string.Format("Session未登入,无法执行操作:{0}", pkt.MessageType);
                 response.AddField(rsp);
 
-                conn.ResponseXLPacket(response, 0, true);
+                ResponseXLPacket(conn, response, 0, true);
                 return;
             }
             switch (pkt.MessageType)
@@ -524,7 +537,7 @@ namespace FrontServer
                             request.IPAddress = conn.IState.IPAddress;//field.ClientIPAddress;
                             request.LoginType = 1;
                             request.ProductInfo = field.UserProductInfo;
-                            this.TLSend(conn.SessionID, request);
+                            this.ForwardToBackend(conn.SessionID, request);
                             logger.Info(string.Format("Session:{0} >> ReqUserLogin", conn.SessionID));
                         }
                         else
@@ -546,7 +559,7 @@ namespace FrontServer
                             request.OldPassword = field.OldPassword;
                             request.NewPassword = field.NewPassword;
 
-                            this.TLSend(conn.SessionID, request);
+                            this.ForwardToBackend(conn.SessionID, request);
                             logger.Info(string.Format("Session:{0} >> ReqUserPasswordUpdate", conn.SessionID));
 
                         }
@@ -570,7 +583,7 @@ namespace FrontServer
                             request.Symbol = field.SymbolID;
                             request.Security = field.SecurityID;
 
-                            this.TLSend(conn.SessionID, request);
+                            this.ForwardToBackend(conn.SessionID, request);
                             logger.Info(string.Format("Session:{0} >> QrySymbolRequest", conn.SessionID));
 
                         }
@@ -590,7 +603,7 @@ namespace FrontServer
 
                             XQryExchangeRateRequest request = RequestTemplate<XQryExchangeRateRequest>.CliSendRequest(requestId);
 
-                            this.TLSend(conn.SessionID, request);
+                            this.ForwardToBackend(conn.SessionID, request);
                             logger.Info(string.Format("Session:{0} >> XQryExchangeRateRequest", conn.SessionID));
 
                         }
@@ -611,7 +624,7 @@ namespace FrontServer
                             XQrySettleInfoRequest request = RequestTemplate<XQrySettleInfoRequest>.CliSendRequest(requestId);
                             request.Tradingday = field.TradingDay;
 
-                            this.TLSend(conn.SessionID, request);
+                            this.ForwardToBackend(conn.SessionID, request);
                             logger.Info(string.Format("Session:{0} >> XQrySettleInfoRequest", conn.SessionID));
 
                         }
@@ -633,7 +646,7 @@ namespace FrontServer
                             request.StartSettleday = field.StartSettleday;
                             request.EndSettleday = field.EndSettleday;
 
-                            this.TLSend(conn.SessionID, request);
+                            this.ForwardToBackend(conn.SessionID, request);
                             logger.Info(string.Format("Session:{0} >> XLQrySettleSummaryField", conn.SessionID));
 
                         }
@@ -643,7 +656,7 @@ namespace FrontServer
                         }
                         break;
                     }
-                    //请求出入金操作
+                //请求出入金操作
                 case XLMessageType.T_REQ_CASHOP:
                     {
                         var data = pkt.FieldList[0];
@@ -655,8 +668,8 @@ namespace FrontServer
                             request.Amount = (decimal)field.Amount;
                             request.Args = field.Args;
                             request.Gateway = field.Gateway;
-                    
-                            this.TLSend(conn.SessionID, request);
+
+                            this.ForwardToBackend(conn.SessionID, request);
                             logger.Info(string.Format("Session:{0} >> XLReqCashOperationField", conn.SessionID));
 
                         }
@@ -678,7 +691,7 @@ namespace FrontServer
                             request.Start = field.StartSettleday;
                             request.End = field.EndSettleday;
 
-                            this.TLSend(conn.SessionID, request);
+                            this.ForwardToBackend(conn.SessionID, request);
                             logger.Info(string.Format("Session:{0} >> XQryOrderRequest", conn.SessionID));
 
                         }
@@ -700,7 +713,7 @@ namespace FrontServer
                             request.Start = field.StartSettleday;
                             request.End = field.EndSettleday;
 
-                            this.TLSend(conn.SessionID, request);
+                            this.ForwardToBackend(conn.SessionID, request);
                             logger.Info(string.Format("Session:{0} >> XQryTradeRequest", conn.SessionID));
 
                         }
@@ -719,7 +732,7 @@ namespace FrontServer
                             XLQryPositionField field = (XLQryPositionField)data;
 
                             QryPositionRequest request = RequestTemplate<QryPositionRequest>.CliSendRequest(requestId);
-                            this.TLSend(conn.SessionID, request);
+                            this.ForwardToBackend(conn.SessionID, request);
                             logger.Info(string.Format("Session:{0} >> QryPositionRequest", conn.SessionID));
 
                         }
@@ -738,7 +751,7 @@ namespace FrontServer
                             XLQryTradingAccountField field = (XLQryTradingAccountField)data;
 
                             QryAccountInfoRequest request = RequestTemplate<QryAccountInfoRequest>.CliSendRequest(requestId);
-                            this.TLSend(conn.SessionID, request);
+                            this.ForwardToBackend(conn.SessionID, request);
                             logger.Info(string.Format("Session:{0} >> QryAccountInfoRequest", conn.SessionID));
 
                         }
@@ -762,7 +775,7 @@ namespace FrontServer
                             //request.ex = field.ExchangeID;
                             request.OffsetFlag = XLConvert.ConvOffSet(field.OffsetFlag);
 
-                            this.TLSend(conn.SessionID, request);
+                            this.ForwardToBackend(conn.SessionID, request);
                             logger.Info(string.Format("Session:{0} >> ReqQueryMaxOrderVolume", conn.SessionID));
 
                         }
@@ -812,7 +825,7 @@ namespace FrontServer
 
 
                             request.Order = order;
-                            this.TLSend(conn.SessionID, request);
+                            this.ForwardToBackend(conn.SessionID, request);
                             logger.Info(string.Format("Session:{0} >> ReqQueryMaxOrderVolume", conn.SessionID));
 
                         }
@@ -843,7 +856,7 @@ namespace FrontServer
 
                             request.OrderAction = action;
 
-                            this.TLSend(conn.SessionID, request);
+                            this.ForwardToBackend(conn.SessionID, request);
                             logger.Info(string.Format("Session:{0} >> OrderActionRequest", conn.SessionID));
 
                         }
@@ -853,7 +866,7 @@ namespace FrontServer
                         }
                         break;
                     }
-                    //查询出入金记录
+                //查询出入金记录
                 case XLMessageType.T_QRY_CASH_TXN:
                     {
                         var data = pkt.FieldList[0];
@@ -865,7 +878,7 @@ namespace FrontServer
                             request.Start = field.StartSettleday;
                             request.End = field.EndSettleday;
 
-                            this.TLSend(conn.SessionID, request);
+                            this.ForwardToBackend(conn.SessionID, request);
                             logger.Info(string.Format("Session:{0} >> XQryCashTransRequest", conn.SessionID));
 
                         }
@@ -883,7 +896,7 @@ namespace FrontServer
                             XLQryBankCardField field = (XLQryBankCardField)data;
 
                             XQryBankCardRequest request = RequestTemplate<XQryBankCardRequest>.CliSendRequest(requestId);
-                            this.TLSend(conn.SessionID, request);
+                            this.ForwardToBackend(conn.SessionID, request);
                             logger.Info(string.Format("Session:{0} >> XQryBankCardRequest", conn.SessionID));
                         }
                         else
@@ -900,8 +913,8 @@ namespace FrontServer
                             XLReqUpdateBankCardField field = (XLReqUpdateBankCardField)data;
 
                             XReqUpdateBankCardRequest request = RequestTemplate<XReqUpdateBankCardRequest>.CliSendRequest(requestId);
-                            request.BankCardInfo =XLConvert.ConvBankCard(field);
-                            this.TLSend(conn.SessionID, request);
+                            request.BankCardInfo = XLConvert.ConvBankCard(field);
+                            this.ForwardToBackend(conn.SessionID, request);
                             logger.Info(string.Format("Session:{0} >> XReqUpdateBankCardRequest", conn.SessionID));
                         }
                         else
@@ -915,265 +928,5 @@ namespace FrontServer
                     break;
             }
         }
-
-        /*
-
-        /// <summary>
-        /// 转换合约类别
-        /// </summary>
-        /// <param name="type"></param>
-        /// <returns></returns>
-        XLSecurityType ConvSecurityType(SecurityType type)
-        {
-            switch (type)
-            {
-                case SecurityType.FUT: return XLSecurityType.Future;
-                case SecurityType.STK: return XLSecurityType.STK;
-                default:
-                    return XLSecurityType.Future;
-            }
-        }
-
-        XLPositionField ConvPosition(PositionEx pos)
-        {
-            XLPositionField p = new XLPositionField();
-
-            p.TradingDay = pos.Tradingday.ToString();
-            p.UserID = pos.Account;
-            p.SymbolID = pos.Symbol;
-            p.ExchangeID = pos.Exchange;
-            p.PosiDirection = pos.Side ? XLPosiDirectionType.Long : XLPosiDirectionType.Short;
-            p.HedgeFlag = XLHedgeFlagType.Speculation;
-            p.YdPosition = pos.YdPosition;
-            p.Position = pos.Position;
-            p.TodayPosition = pos.TodayPosition;
-            p.OpenVolume = pos.OpenVolume;
-            p.CloseVolume = pos.CloseVolume;
-            p.OpenCost = (double)pos.OpenCost;
-            p.PositionCost = (double)pos.PositionCost;
-            p.Margin = (double)pos.Margin;
-            p.CloseProfit = (double)pos.CloseProfit;
-            p.PositionProfit = (double)pos.UnRealizedProfit;
-            p.Commission = (double)pos.Commission;
-            return p;
-
-        }
-        XLTradeField ConvTrade(Trade trade)
-        {
-            XLTradeField f = new XLTradeField();
-            DateTime dt = Util.ToDateTime(trade.xDate, trade.xTime);
-            f.TradingDay = trade.SettleDay.ToString();
-            f.Date = trade.xDate.ToString();
-            f.Time = dt.ToString("HH:mm:ss");
-            f.UserID = trade.Account;
-            f.SymbolID = trade.Symbol;
-            f.ExchangeID = trade.Exchange;
-            f.OrderRef = trade.OrderRef;
-            f.OrderSysID = trade.OrderSysID;
-            f.TradeID = trade.TradeID;
-            f.Direction = trade.Side ? XLDirectionType.Buy : XLDirectionType.Sell;
-            f.OffsetFlag = ConvOffSet(trade.OffsetFlag);
-            f.HedgeFlag = XLHedgeFlagType.Speculation;
-            f.Price = (double)trade.xPrice;
-            f.Volume = Math.Abs(trade.xSize);
-            f.Profit = (double)trade.Profit;
-            f.Commission = (double)trade.Commission;
-            return f;
-
-        }
-        XLOrderField ConvOrder(Order order)
-        {
-            XLOrderField o = new XLOrderField();
-            DateTime dt = Util.ToDateTime(order.Date, order.Time);
-            o.TradingDay = order.SettleDay.ToString();
-            o.Date = order.Date.ToString();
-            o.Time = dt.ToString("HH:mm:ss");
-            o.UserID = order.Account;
-            o.SymbolID = order.Symbol;
-            o.ExchangeID = order.Exchange;
-            o.LimitPrice = (double)order.LimitPrice;
-            o.StopPrice = (double)order.StopPrice;
-            if (o.LimitPrice > 0)
-            {
-                o.OrderType = XLOrderType.Limit;
-            }
-            else
-            {
-                o.OrderType = XLOrderType.Market;
-            }
-
-            o.VolumeTotal = Math.Abs(order.TotalSize);
-            o.VolumeFilled = Math.Abs(order.FilledSize);
-            o.VolumeUnfilled = Math.Abs(order.Size);
-
-            o.Direction = order.Side ? XLDirectionType.Buy : XLDirectionType.Sell;
-            o.OffsetFlag = ConvOffSet(order.OffsetFlag);
-            o.HedgeFlag = XLHedgeFlagType.Speculation;
-
-            o.OrderRef = order.OrderRef;
-            o.OrderSysID = order.OrderSysID;
-            o.RequestID = order.RequestID;
-            o.OrderID = order.id;
-            o.OrderStatus = ConvOrderStatus(order.Status);
-            o.StatusMsg = order.Comment;
-            o.ForceClose = order.ForceClose ? 1 : 0;
-            o.ForceCloseReason = order.ForceCloseReason;
-
-            return o;
-
-
-        }
-
-        /// <summary>
-        /// 转换开平标识
-        /// </summary>
-        /// <param name="offset"></param>
-        /// <returns></returns>
-        XLOffsetFlagType ConvOffSet(QSEnumOffsetFlag offset)
-        {
-            switch (offset)
-            {
-                case QSEnumOffsetFlag.OPEN: return XLOffsetFlagType.Open;
-                case QSEnumOffsetFlag.CLOSE: return XLOffsetFlagType.Close;
-                case QSEnumOffsetFlag.CLOSETODAY: return XLOffsetFlagType.CloseToday;
-                case QSEnumOffsetFlag.CLOSEYESTERDAY: return XLOffsetFlagType.CloseYesterday;
-                case QSEnumOffsetFlag.FORCECLOSE: return XLOffsetFlagType.ForceClose;
-                case QSEnumOffsetFlag.FORCEOFF: return XLOffsetFlagType.ForceOff;
-                case QSEnumOffsetFlag.UNKNOWN: return XLOffsetFlagType.Unknown;
-                default:
-                    return XLOffsetFlagType.Unknown;
-            }
-        }
-        QSEnumOffsetFlag ConvOffSet(XLOffsetFlagType offset)
-        {
-            switch (offset)
-            {
-                case XLOffsetFlagType.Open: return QSEnumOffsetFlag.OPEN;
-                case XLOffsetFlagType.Close: return QSEnumOffsetFlag.CLOSE;
-                case XLOffsetFlagType.CloseToday: return QSEnumOffsetFlag.CLOSETODAY;
-                case XLOffsetFlagType.CloseYesterday: return QSEnumOffsetFlag.CLOSEYESTERDAY;
-                case XLOffsetFlagType.ForceClose: return QSEnumOffsetFlag.FORCECLOSE;
-                case XLOffsetFlagType.ForceOff: return QSEnumOffsetFlag.FORCEOFF;
-                case XLOffsetFlagType.Unknown: return QSEnumOffsetFlag.UNKNOWN;
-                default:
-                    return QSEnumOffsetFlag.UNKNOWN;
-            }
-        }
-
-        /// <summary>
-        /// 转换委托状态
-        /// </summary>
-        /// <param name="status"></param>
-        /// <returns></returns>
-        XLOrderStatus ConvOrderStatus(QSEnumOrderStatus status)
-        {
-            switch (status)
-            {
-                case QSEnumOrderStatus.Canceled: return XLOrderStatus.Canceled;
-                case QSEnumOrderStatus.Filled: return XLOrderStatus.Filled;
-                case QSEnumOrderStatus.Opened: return XLOrderStatus.Opened;
-                case QSEnumOrderStatus.PartFilled: return XLOrderStatus.PartFilled;
-                case QSEnumOrderStatus.Placed: return XLOrderStatus.Placed;
-                case QSEnumOrderStatus.PreSubmited: return XLOrderStatus.PreSubmited;
-                case QSEnumOrderStatus.Reject: return XLOrderStatus.Reject;
-                case QSEnumOrderStatus.Submited: return XLOrderStatus.Submited;
-                case QSEnumOrderStatus.Unknown: return XLOrderStatus.Unknown;
-                default:
-                    return XLOrderStatus.Unknown;
-            }
-        }
-
-
-        /// <summary>
-        /// 转换货币
-        /// </summary>
-        /// <param name="type"></param>
-        /// <returns></returns>
-        XLCurrencyType ConvCurrencyType(CurrencyType type)
-        {
-            switch (type)
-            {
-                case CurrencyType.RMB: return XLCurrencyType.RMB;
-                case CurrencyType.USD: return XLCurrencyType.USD;
-                case CurrencyType.HKD: return XLCurrencyType.HKD;
-                case CurrencyType.EUR: return XLCurrencyType.EUR;
-                default:
-                    return XLCurrencyType.RMB;
-            }
-        }
-
-        XLSettleSummaryField ConvSettleSummary(AccountSettlement settle)
-        {
-            XLSettleSummaryField field = new XLSettleSummaryField();
-            field.AssetBuyAmount = settle.AssetBuyAmount;
-            field.AssetSellAmount = settle.AssetSellAmount;
-            field.CashIn = settle.CashIn;
-            field.CashOut = settle.CashOut;
-            field.CloseProfitByDate = settle.CloseProfitByDate;
-            field.Commission = settle.Commission;
-            field.CreditCashIn = settle.CreditCashIn;
-            field.CreditCashOut = settle.CreditCashOut;
-            field.CreditSettled = settle.CreditSettled;
-            field.EquitySettled = settle.EquitySettled;
-            field.LastCredit = settle.LastCredit;
-            field.LastEquity = settle.LastEquity;
-            field.PositionProfitByDate = settle.PositionProfitByDate;
-            field.Settleday = settle.Settleday;
-            field.UserID = settle.Account;
-
-            return field;
-
-        }
-
-        XLCashTxnField ConvCashTxn(CashTransaction txn)
-        {
-            XLCashTxnField field = new XLCashTxnField();
-            field.Amount = (double)(txn.TxnType == QSEnumCashOperation.Deposit ? txn.Amount : txn.Amount * -1);
-            field.Comment = txn.Comment;
-            field.DateTime = txn.DateTime;
-            field.Settleday = txn.Settleday;
-            field.TxnID = txn.TxnID;
-            field.UserID = txn.Account;
-
-            return field;
-
-        }
-
-        XLBankCardField ConvBankCard(BankCardInfo info)
-        {
-            XLBankCardField field = new XLBankCardField();
-            field.BankAccount = info.BankAccount;
-            field.BankBrch = info.BankBrch;
-            field.BankID = info.BankID;
-            field.CertCode = info.CertCode;
-            field.MobilePhone = info.MobilePhone;
-            field.Name = info.Name;
-
-            return field;
-        }
-
-        BankCardInfo ConvBankCard(XLReqUpdateBankCardField field)
-        {
-            BankCardInfo info = new BankCardInfo();
-            info.BankAccount = field.BankAccount;
-            info.BankBrch = field.BankBrch;
-            info.BankID = field.BankID;
-            info.CertCode = field.CertCode;
-            info.MobilePhone = field.MobilePhone;
-            info.Name = field.Name;
-
-            return info;
-        }
-
-
-        ErrorField ConvertRspInfo(RspInfo info)
-        {
-            ErrorField field = new ErrorField();
-            field.ErrorID = info.ErrorID;
-            field.ErrorMsg = info.ErrorMessage;
-            return field;
-        }
-         * **/
-
     }
 }

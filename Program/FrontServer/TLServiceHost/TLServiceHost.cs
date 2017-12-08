@@ -138,7 +138,7 @@ namespace FrontServer.TLServiceHost
                                 response.SessionID = sessionId;
 
                                 //创建connection之后 数据发送需要统一由mqserver中的线程进行发送
-                                _mqServer.Send(conn, response.Data);
+                                _mqServer.ForwardToClient(conn, response.Data);
                                 //conn.Send(response.Data);
 
                                 logger.Info(string.Format("Session:{0} Registed Remote EndPoint:{1}", conn.SessionID, conn.State.IPAddress));
@@ -173,7 +173,7 @@ namespace FrontServer.TLServiceHost
                                 //向客户端发送心跳回报，告知客户端,服务端收到客户端消息,连接有效
                                 HeartBeatResponse response = ResponseTemplate<HeartBeatResponse>.SrvSendRspResponse(packet as HeartBeatRequest);
                                 //conn.Send(response.Data);
-                                _mqServer.Send(conn, response.Data);
+                                _mqServer.ForwardToClient(conn, response.Data);
                                 return;
                             }
                             if (packet.Type == MessageTypes.LOGINREQUEST)
@@ -182,7 +182,7 @@ namespace FrontServer.TLServiceHost
                                 request.IPAddress = conn.IState.IPAddress;
                             }
 
-                            _mqServer.TLSend(conn.SessionID, packet);
+                            _mqServer.ForwardToBackend(conn.SessionID, packet);
 
                         }
                         return;
