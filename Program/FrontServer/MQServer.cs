@@ -151,6 +151,7 @@ namespace FrontServer
                     //处理超时
                     if (conn != null)
                     {
+                        logger.Info("--->close connection:" + conn.SessionID);
                         conn.Close();
                     }
                     logger.Error("Worker Process  error:" + t.ToString() + t.StackTrace);

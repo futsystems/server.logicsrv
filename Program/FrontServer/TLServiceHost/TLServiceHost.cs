@@ -121,6 +121,7 @@ namespace FrontServer.TLServiceHost
                                 //conn为空判定
                                 if (conn == null)
                                 {
+                                    logger.Info("--->close connection:" + conn.SessionID);
                                     logger.Error(string.Format("Session:{0} Register,but session not booked", session.SessionID));
                                     session.Close();
                                     OnSessionClosed(session);
@@ -156,6 +157,7 @@ namespace FrontServer.TLServiceHost
                             //conn为空判定
                             if (conn == null)
                             {
+                                logger.Info("--->close connection:" + conn.SessionID);
                                 session.Close();
                                 //logger.Info(string.Format("Session:{0} Closed", session.SessionID));
                                 OnSessionClosed(session);
