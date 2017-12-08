@@ -69,6 +69,7 @@ namespace FrontServer.TLServiceHost
             TLSessionBase target = null;
             if (sessionMap.TryGetValue(sessionID, out target))
             {
+                logger.Info(string.Format("TLConnection:{0} created", sessionID));
                 TLConnection connection = new TLConnection(this, target);
                 return connection;
             }

@@ -55,7 +55,7 @@ namespace FrontServer.TLServiceHost
             cfg.LogBasicSessionActivity = true;
             cfg.MaxRequestLength = 1024 * 10 * 10;
 
-            //cfg.SendTimeOut = 
+            cfg.SendTimeOut = 1500;
             //cfg.SyncSend = true;//同步发送 异步发送在Linux环境下会造成发送异常
 
 
@@ -85,7 +85,11 @@ namespace FrontServer.TLServiceHost
                     _requestCnt = 0;
                     _lasttime = DateTime.Now;
                 }
-
+                if (session == null)
+                {
+                    logger.Error("[Session Null] return directly");
+                    return;
+                }
                 logger.Debug(string.Format("Message type:{0} content:{1} sessoin:{2}", requestInfo.Message.Type, requestInfo.Message.Content, session.SessionID));
 
                 string sessionId = session.SessionID;
@@ -131,7 +135,7 @@ namespace FrontServer.TLServiceHost
                                 _connectionMap.TryAdd(session.SessionID, conn);
                                 //客户端发送初始化数据包后执行逻辑服务器客户端注册操作
                                 _mqServer.LogicRegister(conn,EnumFrontType.TLSocket,request.VersionToken);
-
+                                logger.Info("connection registed");
                                 //发送回报
                                 RspRegisterClientResponse response = ResponseTemplate<RspRegisterClientResponse>.SrvSendRspResponse(request);
                                 response.SessionID = sessionId;

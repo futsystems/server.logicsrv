@@ -99,6 +99,7 @@ namespace FrontServer
             }
         }
         const int SLEEPDEFAULTMS = 500;
+        DateTime _lastWorkerTime = DateTime.Now;
         void WrokerProcess()
         {
             IConnection conn = null;
@@ -106,6 +107,12 @@ namespace FrontServer
             {
                 try
                 {
+                    if (DateTime.Now.Subtract(_lastWorkerTime).TotalSeconds>10)
+                    {
+                        logger.Info("--> Worker thread live");
+                        _lastWorkerTime = DateTime.Now;
+                    }
+
                     while (clientDataBuffer.hasItems)
                     {
                         var tmp = clientDataBuffer.Read();
@@ -260,22 +267,29 @@ namespace FrontServer
             {
                 lock (_obj)
                 {
-                    using (ZMessage zmsg = new ZMessage())
+                    try
                     {
-                        ZError error;
-                        zmsg.Add(new ZFrame(Encoding.UTF8.GetBytes(address)));
-                        zmsg.Add(new ZFrame(packet.Data));
-                        //logger.Info("adds:" + CTPService.ByteUtil.ByteToHex(Encoding.UTF8.GetBytes(address)));
-                        //logger.Info("data:" + CTPService.ByteUtil.ByteToHex(data));
-                        if (!_backend.Send(zmsg, out error))
+                        using (ZMessage zmsg = new ZMessage())
                         {
-                            if (error == ZError.ETERM)
+                            ZError error;
+                            zmsg.Add(new ZFrame(Encoding.UTF8.GetBytes(address)));
+                            zmsg.Add(new ZFrame(packet.Data));
+                            //logger.Info("adds:" + CTPService.ByteUtil.ByteToHex(Encoding.UTF8.GetBytes(address)));
+                            //logger.Info("data:" + CTPService.ByteUtil.ByteToHex(data));
+                            if (!_backend.Send(zmsg, out error))
                             {
-                                logger.Error("got ZError.ETERM,return directly");
-                                return;	// Interrupted
+                                if (error == ZError.ETERM)
+                                {
+                                    logger.Error("got ZError.ETERM,return directly");
+                                    return;	// Interrupted
+                                }
+                                throw new ZException(error);
                             }
-                            throw new ZException(error);
                         }
+                    }
+                    catch (Exception ex)
+                    {
+                        logger.Error("ForwardToBackend Error:" + ex.ToString() + ex.StackTrace);
                     }
                 }
             }
@@ -286,7 +300,7 @@ namespace FrontServer
 
         DateTime _lastHeartBeatSend = DateTime.Now;
         DateTime _lastHeartBeatRecv = DateTime.Now;
-
+        DateTime _lastPollTime = DateTime.Now;
         string _frontID = string.Empty;
         Random rd = new Random();
         void PollProcess()
@@ -321,6 +335,12 @@ namespace FrontServer
                     {
                         try
                         {
+                            if (DateTime.Now.Subtract(_lastPollTime).TotalSeconds > 10)
+                            {
+                                logger.Info("--> Poll thread live");
+                                _lastPollTime = DateTime.Now;
+                            }
+
                             if (sockets.PollIn(pollitems, out incoming, out error, pollerTimeOut))
                             {
                                 //Backend
