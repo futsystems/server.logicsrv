@@ -23,7 +23,7 @@ namespace FrontServer
     public partial class MQServer
     {
 
-
+        /**
         void HandleLogicMessage(IConnection conn, IPacket lpkt)
         {
             switch (lpkt.Type)
@@ -492,6 +492,7 @@ namespace FrontServer
 
             }
         }
+         * **/
 
         public void HandleXLPacketData(IConnection conn, XLPacketData pkt, int requestId)
         {
@@ -759,7 +760,7 @@ namespace FrontServer
                             request.Side = field.Direction == XLDirectionType.Buy ? true : false;
                             request.Symbol = field.SymbolID;
                             //request.ex = field.ExchangeID;
-                            request.OffsetFlag = ConvOffSet(field.OffsetFlag);
+                            request.OffsetFlag = XLConvert.ConvOffSet(field.OffsetFlag);
 
                             this.TLSend(conn.SessionID, request);
                             logger.Info(string.Format("Session:{0} >> ReqQueryMaxOrderVolume", conn.SessionID));
@@ -807,7 +808,7 @@ namespace FrontServer
                             order.RequestID = field.RequestID;
 
                             order.HedgeFlag = QSEnumHedgeFlag.Speculation;
-                            order.OffsetFlag = ConvOffSet(field.OffsetFlag);
+                            order.OffsetFlag = XLConvert.ConvOffSet(field.OffsetFlag);
 
 
                             request.Order = order;
@@ -899,7 +900,7 @@ namespace FrontServer
                             XLReqUpdateBankCardField field = (XLReqUpdateBankCardField)data;
 
                             XReqUpdateBankCardRequest request = RequestTemplate<XReqUpdateBankCardRequest>.CliSendRequest(requestId);
-                            request.BankCardInfo = ConvBankCard(field);
+                            request.BankCardInfo =XLConvert.ConvBankCard(field);
                             this.TLSend(conn.SessionID, request);
                             logger.Info(string.Format("Session:{0} >> XReqUpdateBankCardRequest", conn.SessionID));
                         }
@@ -914,6 +915,8 @@ namespace FrontServer
                     break;
             }
         }
+
+        /*
 
         /// <summary>
         /// 转换合约类别
@@ -1170,5 +1173,7 @@ namespace FrontServer
             field.ErrorMsg = info.ErrorMessage;
             return field;
         }
+         * **/
+
     }
 }

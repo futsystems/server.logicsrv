@@ -211,27 +211,7 @@ namespace FrontServer.TLServiceHost
         }
 
 
-        public void HandleLogicMessage(FrontServer.IConnection connection, IPacket packet)
-        {
-            try
-            {
-                string hex = string.Empty;
-                TLConnection conn = GetConnection(connection.SessionID);
-                if (conn == null)
-                {
-                    logger.Warn(string.Format("Session:{0} TLConnection do not exist", connection.SessionID));
-                    return;
-                }
-                
-                //将逻辑服务器发送过来的数据转发到对应的连接上去
-                conn.Send(packet.Data);
-
-            }
-            catch (Exception ex)
-            {
-                logger.Error(string.Format("Handler Backend Logic Packet:{0} Error:{1} stack:{2}", packet.ToString(), ex.ToString(),ex.StackTrace));
-            }
-        }
+       
 
         public void Start()
         {

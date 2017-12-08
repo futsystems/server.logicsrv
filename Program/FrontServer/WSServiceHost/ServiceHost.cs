@@ -164,11 +164,6 @@ namespace FrontServer.WSServiceHost
 
      
 
-        public void HandleLogicMessage(FrontServer.IConnection connection, IPacket packet)
-        {
-
-        }
-
 
         public void Start()
         {

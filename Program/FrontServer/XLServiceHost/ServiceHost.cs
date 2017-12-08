@@ -151,9 +151,6 @@ namespace FrontServer.XLServiceHost
             logger.Info(string.Format("Session:{0} Registed Remote EndPoint:{1}", conn.SessionID, conn.State.IPAddress));
         }
 
-        public void HandleLogicMessage(FrontServer.IConnection connection, IPacket packet)
-        {
-        }
 
         public void Start()
         {

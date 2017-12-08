@@ -156,17 +156,17 @@ namespace FrontServer
                         try
                         {
                             
-                            if (conn != null && conn.Connected)
+                            if (conn != null && conn.ServiceHost!= null && conn.Connected)
                             {
-                                if (conn.IsXLProtocol)
-                                {
-                                    this.HandleLogicMessage(conn, st.Packet);
-                                }
-                                else
-                                {
+                                //if (conn.IsXLProtocol)
+                                //{
+                                //    this.HandleLogicMessage(conn, st.Packet);
+                                //}
+                                //else
+                                //{
                                     //调用Connection对应的ServiceHost处理逻辑消息包
                                     conn.ServiceHost.HandleLogicMessage(conn, st.Packet);
-                                }
+                                //}
                             }
                             else
                             {

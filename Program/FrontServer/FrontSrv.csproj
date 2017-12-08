@@ -119,12 +119,15 @@
     <Compile Include="CTPServiceHost\TLServerBase.cs" />
     <Compile Include="CTPServiceHost\TLSessionBase.cs" />
     <Compile Include="CTPServiceHost\CTPServiceHost_Connection.cs" />
+    <Compile Include="WSServiceHost\ServiceHost_HandleLogicMessage.cs" />
+    <Compile Include="XLConvert.cs" />
     <Compile Include="TLServiceHost\TLConnection.cs" />
     <Compile Include="TLServiceHost\TLServiceHost_Connection.cs" />
     <Compile Include="TLServiceHost\TLReceiveFilter.cs" />
     <Compile Include="TLServiceHost\TLRequestInfo.cs" />
     <Compile Include="TLServiceHost\TLServerBase.cs" />
     <Compile Include="TLServiceHost\TLServiceHost.cs" />
+    <Compile Include="TLServiceHost\TLServiceHost_HandleLogicMessage.cs" />
     <Compile Include="TLServiceHost\TLSessionBase.cs" />
     <Compile Include="WatchDog.cs" />
     <Compile Include="WSServiceHost\ServiceHost.cs" />
@@ -139,6 +142,7 @@
     <Compile Include="XLServiceHost\ServiceHost_.cs" />
     <Compile Include="XLServiceHost\ServiceHost_Connection.cs" />
     <Compile Include="MQServer_XLPacket.cs" />
+    <Compile Include="XLServiceHost\ServiceHost_HandleLogicMessage.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config">
