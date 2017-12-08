@@ -14,8 +14,15 @@ namespace FrontServer
     {
         protected ILog logger = null;
 
+        string _name = string.Empty;
+        /// <summary>
+        /// ServiceHost名称
+        /// </summary>
+        public string Name { get { return _name; } }
+
         public XLServiceHostBase(string name)
         {
+            _name = name;
             logger = LogManager.GetLogger(name);
         }
 
@@ -29,6 +36,12 @@ namespace FrontServer
             //byte[] ret = XLPacketData.PackToBytes(data, XLEnumSeqType.SeqReq, this.NextSeqReqId, requestID, isLast);
             byte[] ret = XLPacketData.PackToBytes(data, XLEnumSeqType.SeqReq,0, requestID, isLast);
             conn.Send(ret);
+        }
+
+        public virtual byte[] GetResponseXLPacketData(XLPacketData data, uint requestID, bool isLast)
+        {
+            byte[] ret = XLPacketData.PackToBytes(data, XLEnumSeqType.SeqReq, 0, requestID, isLast);
+            return ret;
         }
 
         public virtual void NotifyXLPacket(IConnection conn, XLPacketData data)

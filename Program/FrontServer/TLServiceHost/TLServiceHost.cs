@@ -31,7 +31,6 @@ namespace FrontServer.TLServiceHost
         }
 
         TLServerBase tlSocketServer = null;
-        bool _started = false;
         int _port = 55622;
         int _sendBufferSize = 4069;
         int _recvBufferSize = 4069;
@@ -92,7 +91,7 @@ namespace FrontServer.TLServiceHost
                 string sessionId = session.SessionID;
                 switch (requestInfo.Message.Type)
                 {
-                    //服务查询
+                    //服务查询 查询服务之后 客户端Socket连接会断开
                     case MessageTypes.SERVICEREQUEST:
                         {
                             QryServiceRequest request = RequestTemplate<QryServiceRequest>.SrvRecvRequest("", sessionId, requestInfo.Message.Content);
@@ -119,12 +118,11 @@ namespace FrontServer.TLServiceHost
 
                                 //创建连接 如果sessionmap没有记录session则conn为null
                                 conn = CreateConnection(session.SessionID);
-
                                 //conn为空判定
                                 if (conn == null)
                                 {
+                                    logger.Error(string.Format("Session:{0} Register,but session not booked", session.SessionID));
                                     session.Close();
-                                    //logger.Info(string.Format("Session:{0} Closed", session.SessionID));
                                     OnSessionClosed(session);
                                     return;
                                 }

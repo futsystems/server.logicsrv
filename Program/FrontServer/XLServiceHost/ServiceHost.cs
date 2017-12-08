@@ -12,16 +12,6 @@ namespace FrontServer.XLServiceHost
 {
     public partial class XLServiceHost :XLServiceHostBase, FrontServer.IServiceHost
     {
-
-        //ILog logger = LogManager.GetLogger(_name);
-
-        const string _name = "XLServiceHost";
-        /// <summary>
-        /// ServiceHost名称
-        /// </summary>
-        public string Name { get { return _name; } }
-
-
         FrontServer.MQServer _mqServer = null;
 
         public XLServiceHost(FrontServer.MQServer mqServer)
@@ -31,7 +21,6 @@ namespace FrontServer.XLServiceHost
         }
 
         XLServerBase xlSocketServer = null;
-        bool _started = false;
         int _port = 55622;
         int _sendBufferSize = 4069;
         int _recvBufferSize = 4069;
@@ -87,7 +76,10 @@ namespace FrontServer.XLServiceHost
             try
             {
                 if (requestInfo == null) return;
-                logger.Info(string.Format("PacketData Received,Type:{0} Key:{1}", requestInfo.Body.MessageType, requestInfo.Key));
+                if (requestInfo.Body.MessageType != XLMessageType.T_HEARTBEEAT)
+                {
+                    logger.Info(string.Format("PacketData Received,Type:{0} Key:{1}", requestInfo.Body.MessageType, requestInfo.Key));
+                }
                 XLConnection conn = null;
                 //SessionID 检查连接对象
                 if (!_connectionMap.TryGetValue(session.SessionID, out conn))
@@ -107,10 +99,11 @@ namespace FrontServer.XLServiceHost
                 {
                     conn.UpdateHeartBeat();
                     XLPacketData pktData = new XLPacketData(XLMessageType.T_HEARTBEEAT);
-                    ResponseXLPacket(conn,pktData, 0, true);
+                    var tmpData = GetResponseXLPacketData(pktData, 0, true);
+                    //ResponseXLPacket(conn,pktData, 0, true);
+                    _mqServer.ForwardToClient(conn, tmpData);
                     //向逻辑服务端发送心跳
                     //_mqServer.LogicClientHeartBeat(session.SessionID);
-
                     return;
                 }
                 //检查请求域
@@ -119,9 +112,7 @@ namespace FrontServer.XLServiceHost
                     logger.Warn(string.Format("Client:{0} empty request,ingore", session.SessionID));
                     return;
                 }
-                this.HandleXLPacketData(conn, requestInfo.Body,(int)requestInfo.DataHeader.RequestID);
-
-                
+                this.HandleXLPacketData(conn, requestInfo.Body,(int)requestInfo.DataHeader.RequestID);  
             }
             catch (Exception ex)
             {

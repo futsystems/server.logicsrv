@@ -32,11 +32,11 @@ namespace FrontServer.TLServiceHost
 
         void OnSessionClosed(TLSessionBase session)
         {
-            if (!sessionMap.Keys.Contains(session.SessionID))
-            {
-                logger.Error(string.Format("Session:{0} not exist!", session.SessionID));
-                return;
-            }
+            //if (!sessionMap.Keys.Contains(session.SessionID))
+            //{
+            //    logger.Error(string.Format("Session:{0} not exist!", session.SessionID));
+            //    return;
+            //}
             TLSessionBase target = null;
             if (sessionMap.TryRemove(session.SessionID, out target))
             {
@@ -45,7 +45,7 @@ namespace FrontServer.TLServiceHost
             }
             else
             {
-                logger.Error("some error happend in close session");
+                logger.Error(string.Format("Session:{0} not exist!", session.SessionID));
             }
 
             //检查_connectionMap是否有对应的Connection对象 如果存在则向上抛出事件

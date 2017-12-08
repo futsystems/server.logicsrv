@@ -16,16 +16,6 @@ namespace FrontServer.WSServiceHost
 {
     public partial class WSServiceHost :XLServiceHostBase, FrontServer.IServiceHost
     {
-
-        //ILog logger = LogManager.GetLogger(_name);
-
-        const string _name = "WSServiceHost";
-        /// <summary>
-        /// ServiceHost名称
-        /// </summary>
-        public string Name { get { return _name; } }
-
-
         FrontServer.MQServer _mqServer = null;
 
         public WSServiceHost(FrontServer.MQServer mqServer)
