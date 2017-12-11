@@ -107,7 +107,7 @@ namespace FrontServer
             {
                 try
                 {
-                    if (DateTime.Now.Subtract(_lastWorkerTime).TotalSeconds>10)
+                    if (DateTime.Now.Subtract(_lastWorkerTime).TotalSeconds > 10)
                     {
                         logger.Info("--> Worker thread live");
                         _lastWorkerTime = DateTime.Now;
@@ -122,12 +122,21 @@ namespace FrontServer
                             logger.Error("[Buffer Null] ClientData Buffer Got Null Struct");
                             continue;
                         }
-                        if (tmp.Connection != null && tmp.Connection.Connected)
+                        if (tmp.Connection == null)
+                        {
+                            logger.Error("[Buffer Null] ClientData Buffer Got Null Connection");
+                            continue;
+                        }
+                        conn = GetConnection(tmp.Connection.SessionID);
+                        if (conn != null && conn.Connected)
                         {
                             conn = tmp.Connection;
                             conn.Send(tmp.Data);
                         }
-
+                        else
+                        {
+                            logger.Debug(string.Format("Client:{0} do not exist", tmp.Connection.SessionID));
+                        }
                     }
 
 
@@ -141,31 +150,35 @@ namespace FrontServer
                             continue;
                         }
                         conn = GetConnection(tmp.SessionID);
-
-                        if (conn != null && conn.ServiceHost!= null && conn.Connected)
+                        if (conn != null && conn.ServiceHost != null && conn.Connected)
                         {
                             //调用Connection对应的ServiceHost处理逻辑消息包
                             conn.ServiceHost.HandleLogicMessage(conn, tmp.Packet);
                         }
                         else
                         {
-                            logger.Warn(string.Format("Client:{0} do not exist", tmp.SessionID));
+                            logger.Debug(string.Format("Client:{0} do not exist", tmp.SessionID));
                         }
                     }
                 }
                 catch (System.TimeoutException t)
                 {
-                    //处理超时
+                    //处理超时 logicUnregister 避免重复超时 日志发现关闭后 还是一直处于发送超时状态
                     if (conn != null)
                     {
                         logger.Info("--->close connection:" + conn.SessionID);
+                        LogicUnRegister(conn.SessionID);
                         conn.Close();
                     }
                     logger.Error("Worker Process  error:" + t.ToString() + t.StackTrace);
                 }
                 catch (Exception ex)
                 {
-                    logger.Error("Worker Process  error:" + ex.ToString()+ex.StackTrace);
+                    logger.Error("Worker Process  error:" + ex.ToString() + ex.StackTrace);
+                }
+                finally
+                {
+                    conn = null;
                 }
 
                 // clear current flag signal
