@@ -10,7 +10,7 @@ using System.Net;
 using System.IO;
 using System.Security;
 using System.Security.Cryptography;
-
+using NHttp;
 namespace TradingLib.Contrib.APIService
 {
     public class IPSGateWay:GateWayBase
@@ -63,7 +63,7 @@ namespace TradingLib.Contrib.APIService
         }
 
 
-        public override Drop CreatePaymentDrop(CashOperation operation)
+        public override Drop CreatePaymentDrop(CashOperation operation, HttpRequest request)
         {
             DropIPSPayment data = new DropIPSPayment();
 

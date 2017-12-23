@@ -9,6 +9,7 @@ using System.Security.Cryptography;
 using TradingLib.API;
 using TradingLib.Common;
 using TradingLib.Contrib.APIService;
+using NHttp;
 
 namespace TradingLib.Contrib.Payment.P101KA
 {
@@ -30,7 +31,7 @@ namespace TradingLib.Contrib.Payment.P101KA
         string PayUrl = "http://api.101ka.com/GateWay/Bank/Default.aspx";
         string MerID = "8886781";
         string Key = "074ab6e0020449b0b07e2de7c884750c";
-        public override Drop CreatePaymentDrop(CashOperation operatioin)
+        public override Drop CreatePaymentDrop(CashOperation operatioin, HttpRequest request)
         {
             Drop101KAPayment data = new Drop101KAPayment();
 

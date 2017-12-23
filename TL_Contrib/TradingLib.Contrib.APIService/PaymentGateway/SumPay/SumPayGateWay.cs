@@ -10,7 +10,7 @@ using System.Security.Cryptography;
 using TradingLib.API;
 using TradingLib.Common;
 using TradingLib.Contrib.APIService;
-
+using NHttp;
 namespace TradingLib.Contrib.Payment.SumPay
 {
     public class SumPayGateWay : GateWayBase
@@ -39,7 +39,7 @@ namespace TradingLib.Contrib.Payment.SumPay
         public string Domain = "www.hkcaihua.cn";
 
 
-        public override Drop CreatePaymentDrop(CashOperation operatioin)
+        public override Drop CreatePaymentDrop(CashOperation operatioin, HttpRequest request)
         {
             DroSumPayment data = new DroSumPayment();
 

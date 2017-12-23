@@ -11,7 +11,7 @@ using System.IO;
 using System.Security;
 using System.Security.Cryptography;
 using TradingLib.Contrib.APIService;
-
+using NHttp;
 namespace TradingLib.Contrib.Payment.ZhongWei
 {
     public class ZhongWeiPayGateWay:GateWayBase
@@ -34,7 +34,7 @@ namespace TradingLib.Contrib.Payment.ZhongWei
         public string MD5Key = "rALmPEVoPCvcVBJD5bj0Ls";
         public string PayUrl = "http://pay.zhongweipay.net/api/core.php";
 
-        public override Drop CreatePaymentDrop(CashOperation operatioin)
+        public override Drop CreatePaymentDrop(CashOperation operatioin, HttpRequest request)
         {
             DropZhongWeiPayment data = new DropZhongWeiPayment();
             data.account_no = this.Account;

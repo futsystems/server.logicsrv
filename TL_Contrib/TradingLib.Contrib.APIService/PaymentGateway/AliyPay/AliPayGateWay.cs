@@ -8,7 +8,7 @@ using Common.Logging;
 using DotLiquid;
 using System.Net;
 using System.IO;
-
+using NHttp;
 
 namespace TradingLib.Contrib.APIService
 {
@@ -80,7 +80,7 @@ namespace TradingLib.Contrib.APIService
             return ORM.MCashOperation.SelectCashOperation(transid);
         }
 
-        public override Drop CreatePaymentDrop(CashOperation operation)
+        public override Drop CreatePaymentDrop(CashOperation operation, HttpRequest request)
         {
             DropAliPayPayment data = new DropAliPayPayment();
             SortedDictionary<string, string> args = new SortedDictionary<string, string>();

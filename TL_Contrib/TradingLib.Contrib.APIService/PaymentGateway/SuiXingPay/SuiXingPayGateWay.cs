@@ -10,7 +10,7 @@ using System.Net;
 using System.IO;
 using System.Security;
 using System.Security.Cryptography;
-
+using NHttp;
 namespace TradingLib.Contrib.APIService
 {
     public class SuiXingPayGateWay:GateWayBase
@@ -37,7 +37,7 @@ namespace TradingLib.Contrib.APIService
         public string PrivateKey { get; set; }
         public string PayUrl { get; set; }
 
-        public override Drop CreatePaymentDrop(CashOperation operatioin)
+        public override Drop CreatePaymentDrop(CashOperation operatioin, HttpRequest request)
         {
             DropSuiXingPayment data = new DropSuiXingPayment();
             data.mercNo = this.MercNo;

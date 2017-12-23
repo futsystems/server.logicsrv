@@ -10,7 +10,7 @@ using System.Net;
 using System.IO;
 using System.Security;
 using System.Security.Cryptography;
-
+using NHttp;
 namespace TradingLib.Contrib.APIService
 {
     public class DinpayGateWay:GateWayBase
@@ -49,7 +49,7 @@ namespace TradingLib.Contrib.APIService
 
         public string Domain { get; set; }
 
-        public override Drop CreatePaymentDrop(CashOperation operatioin)
+        public override Drop CreatePaymentDrop(CashOperation operatioin,HttpRequest request)
         {
             DropDinpayment data = new DropDinpayment();
 

@@ -141,7 +141,7 @@ namespace TradingLib.Contrib.APIService
                             //通过账户分区查找支付网关设置 如果有支付网关则通过支付网关来获得对应的数据
                             var gateway = APITracker.GateWayTracker.GetDomainGateway(account.Domain.ID);
 
-                            var data = gateway.CreatePaymentDrop(operation);
+                            var data = gateway.CreatePaymentDrop(operation,request);
                             return tplTracker.Render(string.Format("DEPOSITDIRECT_{0}", gateway.GateWayType.ToString().ToUpper()), data);
 
                         }
@@ -206,7 +206,7 @@ namespace TradingLib.Contrib.APIService
 
                             ORM.MCashOperation.InsertCashOperation(operation);
                             TLCtxHelper.ModuleMgrExchange.Notify("APIService", "NotifyCashOperation", operation, account.GetNotifyPredicate());
-                            var data = gateway.CreatePaymentDrop(operation);
+                            var data = gateway.CreatePaymentDrop(operation,request);
                             return tplTracker.Render(string.Format("DEPOSITCONFIRM_{0}",gateway.GateWayType.ToString().ToUpper()), data);
                         }
                     case "SRVNOTIFY":

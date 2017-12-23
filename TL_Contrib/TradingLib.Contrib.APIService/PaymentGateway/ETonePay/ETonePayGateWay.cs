@@ -11,7 +11,7 @@ using System.IO;
 using System.Security;
 using System.Security.Cryptography;
 using TradingLib.Contrib.APIService;
-
+using NHttp;
 namespace TradingLib.Contrib.Payment.ETone
 {
     public class ETonePayGateWay : GateWayBase
@@ -40,7 +40,7 @@ namespace TradingLib.Contrib.Payment.ETone
 
         public string PayUrl { get; set; }
 
-        public override Drop CreatePaymentDrop(CashOperation operatioin)
+        public override Drop CreatePaymentDrop(CashOperation operatioin, HttpRequest request)
         {
             DropETonePayment data = new DropETonePayment();
 

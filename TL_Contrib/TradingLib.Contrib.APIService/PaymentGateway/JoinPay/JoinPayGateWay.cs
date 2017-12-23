@@ -9,7 +9,7 @@ using System.Security.Cryptography;
 using TradingLib.API;
 using TradingLib.Common;
 using TradingLib.Contrib.APIService;
-
+using NHttp;
 namespace TradingLib.Contrib.Payment.JoinPay
 {
     public class JoinPayGateWay : GateWayBase
@@ -48,7 +48,7 @@ namespace TradingLib.Contrib.Payment.JoinPay
         string backURl = APIGlobal.SrvNotifyUrl + "/joinpay";
 
 
-        public override Drop CreatePaymentDrop(CashOperation operatioin)
+        public override Drop CreatePaymentDrop(CashOperation operatioin, HttpRequest request)
         {
             DropJoinPayPayment data = new DropJoinPayPayment();
 

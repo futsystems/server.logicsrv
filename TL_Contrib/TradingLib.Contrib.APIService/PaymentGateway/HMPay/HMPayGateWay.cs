@@ -9,7 +9,7 @@ using System.Security.Cryptography;
 using TradingLib.API;
 using TradingLib.Common;
 using TradingLib.Contrib.APIService;
-
+using NHttp;
 namespace TradingLib.Contrib.Payment.HMPay
 {
     public class HMPayGateWay : GateWayBase
@@ -31,7 +31,7 @@ namespace TradingLib.Contrib.Payment.HMPay
         string MerKey = "lhll07f7qkm9cned";
 
 
-        public override Drop CreatePaymentDrop(CashOperation operatioin)
+        public override Drop CreatePaymentDrop(CashOperation operatioin, HttpRequest request)
         {
             DropHMPayment data = new DropHMPayment();
             data.PayUrl = this.PayUrl;

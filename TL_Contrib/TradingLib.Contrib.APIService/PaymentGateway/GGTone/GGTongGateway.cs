@@ -10,7 +10,7 @@ using System.Security.Cryptography;
 using TradingLib.API;
 using TradingLib.Common;
 using TradingLib.Contrib.APIService;
-
+using NHttp;
 namespace TradingLib.Contrib.Payment.GGTong
 {
     public class GGTongGateWay : GateWayBase
@@ -38,7 +38,7 @@ namespace TradingLib.Contrib.Payment.GGTong
         string MD5Key = "uqG5HmQFT6TNgigSz7PPQpiv9CQNUzXx";
         string Domain = "huichenyibai.com";
 
-        public override Drop CreatePaymentDrop(CashOperation operatioin)
+        public override Drop CreatePaymentDrop(CashOperation operatioin, HttpRequest request)
         {
             DropGGTongPayment data = new DropGGTongPayment();
 

@@ -10,7 +10,7 @@ using System.Security.Cryptography;
 using TradingLib.API;
 using TradingLib.Common;
 using TradingLib.Contrib.APIService;
-
+using NHttp;
 namespace TradingLib.Contrib.Payment.GYPay
 {
     public class GYPayGateWay : GateWayBase
@@ -31,7 +31,7 @@ namespace TradingLib.Contrib.Payment.GYPay
         string MerID = "gypay0170113";
         string Key = "723c8942281340859cc9210ddb472225";
 
-        public override Drop CreatePaymentDrop(CashOperation operatioin)
+        public override Drop CreatePaymentDrop(CashOperation operatioin, HttpRequest request)
         {
             DropGYPayment data = new DropGYPayment();
             data.PayUrl = this.PayUrl;

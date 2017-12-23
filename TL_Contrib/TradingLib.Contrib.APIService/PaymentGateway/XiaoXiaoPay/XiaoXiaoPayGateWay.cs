@@ -11,7 +11,7 @@ using DotLiquid;
 using TradingLib.API;
 using TradingLib.Common;
 using TradingLib.Contrib.APIService;
-
+using NHttp;
 
 namespace TradingLib.Contrib.Payment.XiaoXiao
 {
@@ -39,7 +39,7 @@ namespace TradingLib.Contrib.Payment.XiaoXiao
         string PublicKey = "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDNFcsoF8H5dHA9aNKMSjfDwYXhR+Lomlc/mkhbUPQxVGF+fNgqgY4QXhBIeQSL/YvkyICoSLlGTJg2vwgUL5zTuQC07nfZ5Tk+vHNwF4umsuseE0aYb2OW6ZyBj4xoVa6EjGmvNH7nZr3+kRHgvTvbXzTVf9azuSxruC9OpOMncwIDAQAB";
 
 
-        public override Drop CreatePaymentDrop(CashOperation operatioin)
+        public override Drop CreatePaymentDrop(CashOperation operatioin, HttpRequest request)
         {
             XiaoXiaoPayment data = new XiaoXiaoPayment();
 

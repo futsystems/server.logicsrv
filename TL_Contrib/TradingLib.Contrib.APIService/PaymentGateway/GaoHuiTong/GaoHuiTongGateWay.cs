@@ -9,7 +9,7 @@ using System.Security.Cryptography;
 using TradingLib.API;
 using TradingLib.Common;
 using TradingLib.Contrib.APIService;
-
+using NHttp;
 namespace TradingLib.Contrib.Payment.GaoHuiTong
 {
     public class GaoHuiTongGateWay:GateWayBase
@@ -40,7 +40,7 @@ namespace TradingLib.Contrib.Payment.GaoHuiTong
 
         public string MD55Key = "HnahbpRDDzFGr8213GC3uA==";
 
-        public override Drop CreatePaymentDrop(CashOperation operatioin)
+        public override Drop CreatePaymentDrop(CashOperation operatioin, HttpRequest request)
         {
             DropGaoHuiTongPayment data = new DropGaoHuiTongPayment();
 

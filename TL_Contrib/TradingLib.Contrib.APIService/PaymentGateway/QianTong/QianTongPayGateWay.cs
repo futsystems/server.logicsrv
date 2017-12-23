@@ -10,7 +10,7 @@ using DotLiquid;
 using TradingLib.API;
 using TradingLib.Common;
 using TradingLib.Contrib.APIService;
-
+using NHttp;
 
 namespace TradingLib.Contrib.Payment.QianTong
 {
@@ -42,7 +42,7 @@ namespace TradingLib.Contrib.Payment.QianTong
         string PfxPath { get; set; }
         string CerPath { get; set; }
 
-        public override Drop CreatePaymentDrop(CashOperation operatioin)
+        public override Drop CreatePaymentDrop(CashOperation operatioin, HttpRequest request)
         {
             DropQianTongPayment data = new DropQianTongPayment();
 

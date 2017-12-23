@@ -8,7 +8,7 @@ using System.Security;
 using System.Security.Cryptography;
 using Common.Logging;
 using DotLiquid;
-
+using NHttp;
 namespace TradingLib.Contrib.APIService
 {
     public class BaoFuGateway:GateWayBase
@@ -54,7 +54,7 @@ namespace TradingLib.Contrib.APIService
         /// </summary>
         /// <param name="operatioin"></param>
         /// <returns></returns>
-        public override Drop CreatePaymentDrop(CashOperation operatioin)
+        public override Drop CreatePaymentDrop(CashOperation operatioin, HttpRequest request)
         {
             DropBaoFuPayment data = new DropBaoFuPayment();
 

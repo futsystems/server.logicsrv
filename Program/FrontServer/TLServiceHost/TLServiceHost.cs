@@ -156,12 +156,19 @@ namespace FrontServer.TLServiceHost
                             if (!_connectionMap.TryGetValue(sessionId, out conn))
                             {
                                 logger.Warn(string.Format("Client:{0} is not registed to server, ignore request", sessionId));
+
+                                logger.Info("--->close connection1:" + conn.SessionID);
+                                session.Close();
+                                //logger.Info(string.Format("Session:{0} Closed", session.SessionID));
+                                OnSessionClosed(session);
+                                //逻辑服务器注销客户端
+                                _mqServer.LogicUnRegister(session.SessionID);
                                 return;
                             }
                             //conn为空判定
                             if (conn == null)
                             {
-                                logger.Info("--->close connection:" + conn.SessionID);
+                                logger.Info("--->close connection2:" + conn.SessionID);
                                 session.Close();
                                 //logger.Info(string.Format("Session:{0} Closed", session.SessionID));
                                 OnSessionClosed(session);

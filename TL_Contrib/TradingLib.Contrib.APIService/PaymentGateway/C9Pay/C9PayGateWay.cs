@@ -9,7 +9,7 @@ using System.Security.Cryptography;
 using TradingLib.API;
 using TradingLib.Common;
 using TradingLib.Contrib.APIService;
-
+using NHttp;
 namespace TradingLib.Contrib.Payment.C9Pay
 {
     public class C9PayGateWay : GateWayBase
@@ -31,7 +31,7 @@ namespace TradingLib.Contrib.Payment.C9Pay
         string MerKey = "7C2C21F8EE1334AEE4913C1B550932029ADB0DB7775709CA";
 
 
-        public override Drop CreatePaymentDrop(CashOperation operatioin)
+        public override Drop CreatePaymentDrop(CashOperation operatioin, HttpRequest request)
         {
             DropC9Payment data = new DropC9Payment();
             data.PayUrl = this.PayUrl;

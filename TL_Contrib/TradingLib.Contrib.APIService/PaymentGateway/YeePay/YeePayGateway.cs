@@ -9,7 +9,7 @@ using System.Security.Cryptography;
 using TradingLib.API;
 using TradingLib.Common;
 using TradingLib.Contrib.APIService;
-
+using NHttp;
 namespace TradingLib.Contrib.Payment.YeePay
 {
     public class YeePayGateWay : GateWayBase
@@ -41,7 +41,7 @@ namespace TradingLib.Contrib.Payment.YeePay
         string MerID = "10015656278";
         string Key = "dcam6m24zkwxtegsqum45dmj2manw24j6ktk8562td16uv5d4ix91ojsql8r";
         string Domain = string.Empty;
-        public override Drop CreatePaymentDrop(CashOperation operatioin)
+        public override Drop CreatePaymentDrop(CashOperation operatioin, HttpRequest request)
         {
             DropYeePayPayment data = new DropYeePayPayment();
 

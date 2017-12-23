@@ -13,7 +13,7 @@ using System.Security.Cryptography;
 using Org.BouncyCastle.Security;
 using Org.BouncyCastle.Crypto.Parameters;
 
-
+using NHttp;
 namespace TradingLib.Contrib.APIService
 {
 
@@ -59,7 +59,7 @@ namespace TradingLib.Contrib.APIService
         public string PayUrl { get; set; }
         public  string Charset { get; set; }
         public bool Test { get; set; }
-        public override Drop CreatePaymentDrop(CashOperation operatioin)
+        public override Drop CreatePaymentDrop(CashOperation operatioin, HttpRequest request)
         {
             DropTFBPayment data = new DropTFBPayment();
 

@@ -10,7 +10,7 @@ using System.Security.Cryptography;
 using TradingLib.API;
 using TradingLib.Common;
 using TradingLib.Contrib.APIService;
-
+using NHttp;
 namespace TradingLib.Contrib.Payment.OpenEPay
 {
     public class OpenEPayGateWay : GateWayBase
@@ -38,7 +38,7 @@ namespace TradingLib.Contrib.Payment.OpenEPay
         string Domain = "";
         string frontURL = APIGlobal.CustNotifyUrl + "/openepay";
         string backURL = APIGlobal.SrvNotifyUrl + "/openepay";
-        public override Drop CreatePaymentDrop(CashOperation operatioin)
+        public override Drop CreatePaymentDrop(CashOperation operatioin, HttpRequest request)
         {
             DropOpenEPayPayment data = new DropOpenEPayPayment();
 

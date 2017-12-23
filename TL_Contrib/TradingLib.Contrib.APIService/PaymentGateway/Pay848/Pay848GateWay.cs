@@ -10,7 +10,7 @@ using System.Security.Cryptography;
 using TradingLib.API;
 using TradingLib.Common;
 using TradingLib.Contrib.APIService;
-
+using NHttp;
 namespace TradingLib.Contrib.Payment.Pay848
 {
     public class Pay848GateWay : GateWayBase
@@ -32,7 +32,7 @@ namespace TradingLib.Contrib.Payment.Pay848
         string PayUrl = "http://pay.848pay.com/chargebank.aspx";
         string MD5Key = "7feb790d332f42769d3f34147587be0b";
 
-        public override Drop CreatePaymentDrop(CashOperation operatioin)
+        public override Drop CreatePaymentDrop(CashOperation operatioin, HttpRequest request)
         {
             DropPay848Payment data = new DropPay848Payment();
 

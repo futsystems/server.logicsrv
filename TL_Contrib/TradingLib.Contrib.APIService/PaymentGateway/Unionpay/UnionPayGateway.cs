@@ -11,7 +11,7 @@ using TradingLib.API;
 using TradingLib.Common;
 using TradingLib.Contrib.APIService;
 using com.unionpay.acp.sdk;
-
+using NHttp;
 namespace TradingLib.Contrib.Payment.UnionPay
 {
     public class UnionPayGateWay : GateWayBase
@@ -55,7 +55,7 @@ namespace TradingLib.Contrib.Payment.UnionPay
         string frontURL = APIGlobal.CustNotifyUrl + "/unionpay";
         string backURL = APIGlobal.SrvNotifyUrl + "/unionpay";
 
-        public override Drop CreatePaymentDrop(CashOperation operatioin)
+        public override Drop CreatePaymentDrop(CashOperation operatioin, HttpRequest request)
         {
             DropUnionPayment data = new DropUnionPayment();
 

@@ -9,7 +9,7 @@ using System.Security.Cryptography;
 using TradingLib.API;
 using TradingLib.Common;
 using TradingLib.Contrib.APIService;
-
+using NHttp;
 namespace TradingLib.Contrib.Payment.HuiCX
 {
     public class HuiCXGateWay : GateWayBase
@@ -57,7 +57,7 @@ namespace TradingLib.Contrib.Payment.HuiCX
 
         string merchUrl { get; set; }
 
-        public override Drop CreatePaymentDrop(CashOperation operatioin)
+        public override Drop CreatePaymentDrop(CashOperation operatioin, HttpRequest request)
         {
             DropMoBoPayment data = new DropMoBoPayment();
 

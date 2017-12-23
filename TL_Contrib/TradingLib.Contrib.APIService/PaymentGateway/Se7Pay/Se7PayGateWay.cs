@@ -8,7 +8,7 @@ using TradingLib.API;
 using TradingLib.Common;
 using TradingLib.Contrib.APIService;
 
-
+using NHttp;
 namespace TradingLib.Contrib.Payment.Se7Pay
 {
     public class Se7PayGateWay : GateWayBase
@@ -48,7 +48,7 @@ namespace TradingLib.Contrib.Payment.Se7Pay
         string PrivateKey = "";
         string PublicKey = "";
 
-        public override Drop CreatePaymentDrop(CashOperation operatioin)
+        public override Drop CreatePaymentDrop(CashOperation operatioin, HttpRequest request)
         {
             DropSe7Payment data = new DropSe7Payment();
 

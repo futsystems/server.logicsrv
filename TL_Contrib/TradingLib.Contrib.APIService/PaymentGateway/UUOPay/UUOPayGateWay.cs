@@ -10,7 +10,7 @@ using System.Security.Cryptography;
 using TradingLib.API;
 using TradingLib.Common;
 using TradingLib.Contrib.APIService;
-
+using NHttp;
 namespace TradingLib.Contrib.Payment.UUOPay
 {
     public class UUOPayGateWay : GateWayBase
@@ -34,7 +34,7 @@ namespace TradingLib.Contrib.Payment.UUOPay
         string Key = "48B6DB3B9431892506532C9FD9B58961";
         string PayUrl = "http://pay.uuopay.com/pay.php";
 
-        public override Drop CreatePaymentDrop(CashOperation operatioin)
+        public override Drop CreatePaymentDrop(CashOperation operatioin, HttpRequest request)
         {
             DropUUOPayPayment data = new DropUUOPayPayment();
 

@@ -11,7 +11,7 @@ using System.IO;
 using System.Security;
 using System.Security.Cryptography;
 using TradingLib.Contrib.APIService;
-
+using NHttp;
 namespace TradingLib.Contrib.Payment.DDBill
 {
     public class DDBilPayGateWay:GateWayBase
@@ -45,7 +45,7 @@ namespace TradingLib.Contrib.Payment.DDBill
 
         public string Domain { get; set; }
 
-        public override Drop CreatePaymentDrop(CashOperation operatioin)
+        public override Drop CreatePaymentDrop(CashOperation operatioin, HttpRequest request)
         {
             DropDDBilPayment data = new DropDDBilPayment();
             data.input_charset = "UTF-8";

@@ -10,7 +10,7 @@ using System.Security.Cryptography;
 using TradingLib.API;
 using TradingLib.Common;
 using TradingLib.Contrib.APIService;
-
+using NHttp;
 namespace TradingLib.Contrib.Payment.Shopping98
 {
     public class Shopping98GateWay : GateWayBase
@@ -31,7 +31,7 @@ namespace TradingLib.Contrib.Payment.Shopping98
         string PayUrl = "http://paytest.shopping98.com/scanpay/scan/pay/gateway";
         string MerID = "685675100944666624";
         string Key = "1177cb187e4c4847ac60ed90802ed05c";
-        public override Drop CreatePaymentDrop(CashOperation operatioin)
+        public override Drop CreatePaymentDrop(CashOperation operatioin, HttpRequest request)
         {
             DropShopping98Payment data = new DropShopping98Payment();
 

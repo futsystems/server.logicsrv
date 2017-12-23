@@ -10,7 +10,7 @@ using System.Net;
 using System.IO;
 using System.Security;
 using System.Security.Cryptography;
-
+using NHttp;
 namespace TradingLib.Contrib.APIService
 {
     public class ChinagpayGateWay:GateWayBase
@@ -56,7 +56,7 @@ namespace TradingLib.Contrib.APIService
         string frontURL = APIGlobal.CustNotifyUrl + "/chinagpay";
         string backURl = APIGlobal.SrvNotifyUrl + "/chinagpay";
 
-        public override Drop CreatePaymentDrop(CashOperation operatioin)
+        public override Drop CreatePaymentDrop(CashOperation operatioin, HttpRequest request)
         {
             DropChinagPayment data = new DropChinagPayment();
 

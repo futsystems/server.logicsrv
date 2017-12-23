@@ -10,7 +10,7 @@ using System.Net;
 using System.IO;
 using System.Security;
 using System.Security.Cryptography;
-
+using NHttp;
 namespace TradingLib.Contrib.APIService
 {
     public class MoBoGateWay:GateWayBase
@@ -58,7 +58,7 @@ namespace TradingLib.Contrib.APIService
 
         string merchUrl { get; set; }
 
-        public override Drop CreatePaymentDrop(CashOperation operatioin)
+        public override Drop CreatePaymentDrop(CashOperation operatioin, HttpRequest request)
         {
             DropMoBoPayment data = new DropMoBoPayment();
 

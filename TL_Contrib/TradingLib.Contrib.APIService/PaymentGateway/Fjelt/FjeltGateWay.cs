@@ -10,7 +10,7 @@ using System.Security.Cryptography;
 using TradingLib.API;
 using TradingLib.Common;
 using TradingLib.Contrib.APIService;
-
+using NHttp;
 namespace TradingLib.Contrib.Payment.Fjelt
 {
     public class FjeltGateWay:GateWayBase
@@ -50,7 +50,7 @@ namespace TradingLib.Contrib.Payment.Fjelt
 
         public static string SECRETKEY = "895FKFmQ1VQIxbHh";
 
-        public override Drop CreatePaymentDrop(CashOperation operatioin)
+        public override Drop CreatePaymentDrop(CashOperation operatioin, HttpRequest request)
         {
             DropFjeltPayment data = new DropFjeltPayment();
 

@@ -8,7 +8,7 @@ using System.Security.Cryptography;
 using TradingLib.API;
 using TradingLib.Common;
 using TradingLib.Contrib.APIService;
-
+using NHttp;
 namespace TradingLib.Contrib.Payment.FZPay
 {
     public class FZPayGateWay:GateWayBase
@@ -35,7 +35,7 @@ namespace TradingLib.Contrib.Payment.FZPay
         public string PartnerID { get; set; }
         public string MD5Key { get; set; }
 
-        public override Drop CreatePaymentDrop(CashOperation operatioin)
+        public override Drop CreatePaymentDrop(CashOperation operatioin, HttpRequest request)
         {
             DropFZPayment data = new DropFZPayment();
 

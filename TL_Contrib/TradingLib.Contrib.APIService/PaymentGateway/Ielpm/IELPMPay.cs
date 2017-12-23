@@ -11,7 +11,7 @@ using System.IO;
 using System.Security;
 using System.Security.Cryptography;
 using ielpm_merchant_code_demo.com.ielpm.merchant.code.sdk;
-
+using NHttp;
 namespace TradingLib.Contrib.APIService
 {
     public class IELPMPayGateWay:GateWayBase
@@ -46,7 +46,7 @@ namespace TradingLib.Contrib.APIService
 
         public string PrivateKeyName { get; set; }
 
-        public override Drop CreatePaymentDrop(CashOperation operatioin)
+        public override Drop CreatePaymentDrop(CashOperation operatioin, HttpRequest request)
         {
             DropIelpmPayment data = new DropIelpmPayment();
 

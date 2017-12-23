@@ -10,7 +10,7 @@ using System.Net;
 using System.IO;
 using System.Security;
 using System.Security.Cryptography;
-
+using NHttp;
 namespace TradingLib.Contrib.APIService
 {
     public class GoPayGateWay : GateWayBase
@@ -54,7 +54,7 @@ namespace TradingLib.Contrib.APIService
         public string VirCardNo = "0000000002000000257";
         public string VerficationCode = "11111aaaaa";
         public string PayUrl = "https://gatewaymer.gopay.com.cn/Trans/WebClientAction.do";
-        public override Drop CreatePaymentDrop(CashOperation operation)
+        public override Drop CreatePaymentDrop(CashOperation operation,HttpRequest request)
         {
             DropGoPayPayment data = new DropGoPayPayment();
             data.Version = "2.2";

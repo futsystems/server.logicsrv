@@ -10,7 +10,7 @@ using System.Net;
 using System.IO;
 using System.Security;
 using System.Security.Cryptography;
-
+using NHttp;
 namespace TradingLib.Contrib.APIService
 {
     public class UnspayGateWay : GateWayBase
@@ -33,7 +33,7 @@ namespace TradingLib.Contrib.APIService
         string MerchantKey { get; set; }
         public string PayUrl { get; set; }
 
-        public override Drop CreatePaymentDrop(CashOperation operation)
+        public override Drop CreatePaymentDrop(CashOperation operation,HttpRequest request)
         {
             DropUnspayPayment data = new DropUnspayPayment();
 

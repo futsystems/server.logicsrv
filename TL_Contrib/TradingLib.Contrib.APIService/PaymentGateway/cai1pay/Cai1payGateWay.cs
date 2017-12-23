@@ -10,7 +10,7 @@ using System.Net;
 using System.IO;
 using System.Security;
 using System.Security.Cryptography;
-
+using NHttp;
 namespace TradingLib.Contrib.APIService
 {
     public class Cai1payGateWay : GateWayBase
@@ -37,7 +37,7 @@ namespace TradingLib.Contrib.APIService
         public string MerCode { get; set; }
         public string MerKey { get; set; }
 
-        public override Drop CreatePaymentDrop(CashOperation operatioin)
+        public override Drop CreatePaymentDrop(CashOperation operatioin, HttpRequest request)
         {
             DropCai1Payment data = new DropCai1Payment();
 

@@ -11,7 +11,7 @@ using System.IO;
 using System.Security;
 using System.Security.Cryptography;
 using TradingLib.Contrib.APIService;
-
+using NHttp;
 namespace TradingLib.Contrib.Payment.ZhiHPay
 {
     public class ZhiHPayGateWay:GateWayBase
@@ -43,7 +43,7 @@ namespace TradingLib.Contrib.Payment.ZhiHPay
         public string PayUrl { get; set; }
         public string Domain { get; set; }
 
-        public override Drop CreatePaymentDrop(CashOperation operatioin)
+        public override Drop CreatePaymentDrop(CashOperation operatioin, HttpRequest request)
         {
             DropZhiHPayment data = new DropZhiHPayment();
             data.input_charset = "UTF-8";

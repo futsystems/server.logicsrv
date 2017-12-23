@@ -9,7 +9,7 @@ using System.Security.Cryptography;
 using TradingLib.API;
 using TradingLib.Common;
 using TradingLib.Contrib.APIService;
-
+using NHttp;
 namespace TradingLib.Contrib.Payment.PlugPay
 {
     public class PlugPayGateWay : GateWayBase
@@ -28,11 +28,11 @@ namespace TradingLib.Contrib.Payment.PlugPay
             this.ChannelType = data["ChannelType"].ToString(); 
         }
 
-        string PayUrl = "http://yunrenjie.com/kepay/order/pay";
+        string PayUrl = "http://yunrenjie.com/plugpay/order/pay";
         string AppID = "100001";
         string AppSecret = "2b8f91abb97c4174a326602304544ce8";
         string ChannelType = "YEEPAY-PC";
-        public override Drop CreatePaymentDrop(CashOperation operatioin)
+        public override Drop CreatePaymentDrop(CashOperation operatioin, HttpRequest request)
         {
             DropPlugPayPayment data = new DropPlugPayPayment();
 
@@ -53,8 +53,8 @@ namespace TradingLib.Contrib.Payment.PlugPay
             data.p9_timestamp = operatioin.DateTime.ToString();
             data.p10_return_url = APIGlobal.CustNotifyUrl + "/plugpay";
             data.p11_notify_url = APIGlobal.SrvNotifyUrl + "/plugpay";
-
-            string rawStr = data.p1_app_id + data.p2_channel + data.p3_bank_code + data.p4_bill_no + data.p5_total_fee + data.p6_goods_title + data.p7_goods_desc + data.p8_goods_extended + data.p9_timestamp + data.p10_return_url + data.p11_notify_url;
+            data.p12_other = new { clientIp = request.UserHostAddress }.SerializeObject();
+            string rawStr = data.p1_app_id + data.p2_channel + data.p3_bank_code + data.p4_bill_no + data.p5_total_fee + data.p6_goods_title + data.p7_goods_desc + data.p8_goods_extended + data.p9_timestamp + data.p10_return_url + data.p11_notify_url + data.p12_other;
 
             data.p0_sign = Sign(rawStr, this.AppSecret);
 

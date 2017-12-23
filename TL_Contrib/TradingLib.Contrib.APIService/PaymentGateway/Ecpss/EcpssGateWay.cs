@@ -8,7 +8,7 @@ using System.Security.Cryptography;
 using TradingLib.API;
 using TradingLib.Common;
 using TradingLib.Contrib.APIService;
-
+using NHttp;
 namespace TradingLib.Contrib.Payment.Ecpss
 {
     public class EcpssGateWay:GateWayBase
@@ -54,7 +54,7 @@ namespace TradingLib.Contrib.Payment.Ecpss
         public string AdviceURL = "";
 
 
-        public override Drop CreatePaymentDrop(CashOperation operatioin)
+        public override Drop CreatePaymentDrop(CashOperation operatioin, HttpRequest request)
         {
             DropEcpssPayment data = new DropEcpssPayment();
 

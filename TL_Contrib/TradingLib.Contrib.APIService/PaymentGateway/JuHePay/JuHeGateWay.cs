@@ -10,7 +10,7 @@ using System.Security.Cryptography;
 using TradingLib.API;
 using TradingLib.Common;
 using TradingLib.Contrib.APIService;
-
+using NHttp;
 namespace TradingLib.Contrib.Payment.JuHe
 {
     public class JuHeGateWay : GateWayBase
@@ -60,7 +60,7 @@ namespace TradingLib.Contrib.Payment.JuHe
         string Key = "sk_live_MjMwNmVhMjhlMmIyZjNhYTAz";
         static string PubKey = "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCAGdVJK1oSyaClQTJ4GwFy41uaz/5zIeHYwWNu+sN1Guf/Fr3Gt+VXqwqOKihKJrz6O7kQy98ggyibb0cvEcF1MEiaqk0w64uNuBmmRF49fGbnqg8HpSQbpEmSQzu3nhG9KEZLGQj5a8UIp7QxGS9prfF9L8I2PKpaSVxE2ZocsQIDAQAB";
                                
-        public override Drop CreatePaymentDrop(CashOperation operatioin)
+        public override Drop CreatePaymentDrop(CashOperation operatioin, HttpRequest request)
         {
             DropJuHePayment data = new DropJuHePayment();
             data.PayUrl = this.PayUrl;

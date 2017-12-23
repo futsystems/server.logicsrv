@@ -10,7 +10,7 @@ using System.Security.Cryptography;
 using TradingLib.API;
 using TradingLib.Common;
 using TradingLib.Contrib.APIService;
-
+using NHttp;
 namespace TradingLib.Contrib.Payment.RMTech
 {
     public class RMTechGateWay : GateWayBase
@@ -32,7 +32,7 @@ namespace TradingLib.Contrib.Payment.RMTech
         string MerID = "100060000000198";
         string Key = "068534056bac473582b1c789b62e3827";
 
-        public override Drop CreatePaymentDrop(CashOperation operatioin)
+        public override Drop CreatePaymentDrop(CashOperation operatioin, HttpRequest req)
         {
             DropRMTechPayment data = new DropRMTechPayment();
 

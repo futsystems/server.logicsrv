@@ -32,10 +32,12 @@ namespace TradingLib.Contrib.APIService
         /// </summary>
         /// <param name="operatioin"></param>
         /// <returns></returns>
-        public virtual Drop CreatePaymentDrop(CashOperation operatioin)
+        public virtual Drop CreatePaymentDrop(CashOperation operatioin, HttpRequest request)
         {
             return null;
         }
+
+
 
         /// <summary>
         /// 获取通知成功返回

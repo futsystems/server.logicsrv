@@ -10,7 +10,7 @@ using System.Security.Cryptography;
 using TradingLib.API;
 using TradingLib.Common;
 using TradingLib.Contrib.APIService;
-
+using NHttp;
 namespace TradingLib.Contrib.Payment.HaiFu
 {
     public class HaiFuGateWay : GateWayBase
@@ -34,7 +34,7 @@ namespace TradingLib.Contrib.Payment.HaiFu
         string AppKey = "ccb8acfdfaabd9682ae6e0ee36920171";
         string AppSecret = "f47cb702f021526c3ec0bd5bd2c25b5213a30956";
 
-        public override Drop CreatePaymentDrop(CashOperation operatioin)
+        public override Drop CreatePaymentDrop(CashOperation operatioin, HttpRequest request)
         {
             DropHaiFuPayment data = new DropHaiFuPayment();
             data.PayUrl = this.PayUrl;

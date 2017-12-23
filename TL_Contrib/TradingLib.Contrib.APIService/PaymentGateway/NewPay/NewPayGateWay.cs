@@ -10,7 +10,7 @@ using System.Security.Cryptography;
 using TradingLib.API;
 using TradingLib.Common;
 using TradingLib.Contrib.APIService;
-
+using NHttp;
 namespace TradingLib.Contrib.Payment.NewPay
 {
     public class NewPayGateWay : GateWayBase
@@ -36,7 +36,7 @@ namespace TradingLib.Contrib.Payment.NewPay
         string MD5Key = "5457ce87-990b-11e7-9f8e-d995d8294f93";
 
 
-        public override Drop CreatePaymentDrop(CashOperation operatioin)
+        public override Drop CreatePaymentDrop(CashOperation operatioin, HttpRequest request)
         {
             DropNewPayPayment data = new DropNewPayPayment();
 
