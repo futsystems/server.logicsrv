@@ -298,8 +298,13 @@ namespace TradingLib.Contrib.APIService
             var data = json.DeserializeObject();
             decimal val = decimal.Parse(data["amount"].ToString());
             EnumBusinessType type = data["business_type"].ToString().ParseEnum<EnumBusinessType>();
-
-            HandleDeposit(session,val, type);
+            string bank = string.Empty;
+            Newtonsoft.Json.Linq.JToken bank_data;
+            if (data.TryGetValue("bank", out bank_data))
+            {
+                bank = bank_data.ToString();
+            }
+            HandleDeposit(session,val, type,bank);
         }
 
         void HandleDeposit(ISession session, decimal val, EnumBusinessType type,string bank="")
