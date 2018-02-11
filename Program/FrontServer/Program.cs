@@ -206,6 +206,7 @@ namespace FrontServer
             }
             #endregion
 
+            /*
             //创建MQServer
             MQServer mqServer = new MQServer();
             //创建TL ServiceHost
@@ -231,6 +232,9 @@ namespace FrontServer
             xlhost.Start();
             wshost.Start();
             watchDog.Join();
+             * **/
+            logger.Info("frontsrv is combined with logic server");
+            System.Threading.Thread.Sleep(int.MaxValue);
 
             
         }

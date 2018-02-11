@@ -55,9 +55,11 @@ namespace TradingLib.Core
                     tl.KillSessioin(sessionID);
 
                     //通知前置断开客户端
-                    NotifyClearClient notify = ResponseTemplate<NotifyClearClient>.SrvSendNotifyResponse();
-                    notify.SessionID = sessionID;
-                    this.NotifyFront(notify);
+                    //NotifyClearClient notify = ResponseTemplate<NotifyClearClient>.SrvSendNotifyResponse();
+                    //notify.SessionID = sessionID;
+                    tl.KillSessioin(sessionID);
+
+                    //this.NotifyFront(notify);
 
                     session.RspMessage("注销连接成功");
                 }
@@ -112,13 +114,13 @@ namespace TradingLib.Core
 
         }
 
-        [ContribCommandAttr(QSEnumCommandSource.CLI, "rebootmq", "rebootmq - reboot front mq server", "")]
-        public string RebootMQ()
-        {
-            NotifyRebooMQSrv notify = ResponseTemplate<NotifyRebooMQSrv>.SrvSendNotifyResponse();
-            this.NotifyFront(notify);
-            return "Send NotifyRebooMQSrv to front server ";
-        }
+        //[ContribCommandAttr(QSEnumCommandSource.CLI, "rebootmq", "rebootmq - reboot front mq server", "")]
+        //public string RebootMQ()
+        //{
+        //    NotifyRebooMQSrv notify = ResponseTemplate<NotifyRebooMQSrv>.SrvSendNotifyResponse();
+        //    this.NotifyFront(notify);
+        //    return "Send NotifyRebooMQSrv to front server ";
+        //}
 
 
     }

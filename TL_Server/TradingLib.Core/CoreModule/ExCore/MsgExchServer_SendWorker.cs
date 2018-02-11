@@ -51,7 +51,7 @@ namespace TradingLib.Core
         RingBuffer<PositionEx> _posupdatecache = new RingBuffer<PositionEx>(BUFFERSIZE);//持仓更新缓存
 
         RingBuffer<IPacket> _packetcache = new RingBuffer<IPacket>(BUFFERSIZE);//数据包缓存队列
-        RingBuffer<IPacket> _frontNotifyCache = new RingBuffer<IPacket>(BUFFERSIZE);//发往前置的业务通知队列
+        //RingBuffer<IPacket> _frontNotifyCache = new RingBuffer<IPacket>(BUFFERSIZE);//发往前置的业务通知队列
 
         bool _sendgo = false;
         Thread messageoutthread;
@@ -111,10 +111,10 @@ namespace TradingLib.Core
                         tl.TLSend(_packetcache.Read());
                     }
 
-                    while (_frontNotifyCache.hasItems)
-                    {
-                        tl.TLNotifyFront(_frontNotifyCache.Read());
-                    }
+                    //while (_frontNotifyCache.hasItems)
+                    //{
+                    //    tl.TLNotifyFront(_frontNotifyCache.Read());
+                    //}
                     Thread.Sleep(10);
                 }
                 catch (Exception ex)

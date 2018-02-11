@@ -246,6 +246,15 @@ namespace FrontServer
             }
         }
 
+        public void DropClient(string clientId)
+        {
+            IConnection conn = GetConnection(clientId);
+            if (conn != null)
+            {
+                conn.Close();
+                this.LogicUnRegister(clientId);
+            }
+        }
         /// <summary>
         /// 发送逻辑服务端心跳
         /// 用于确认逻辑服务器连接可用

@@ -125,6 +125,8 @@ namespace TradingLib.API
         /// </summary>
         /// <returns></returns>
         string ToString();
+
+        void SetSource(string frontid, string clientid);
         
     }
 }

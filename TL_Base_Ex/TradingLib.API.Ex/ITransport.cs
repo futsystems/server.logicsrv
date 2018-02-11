@@ -32,6 +32,13 @@ namespace TradingLib.API
         /// 收到客户端提交上来的消息,类别,消息体,前置,客户端地址
         /// </summary>
         event Action<Message,string,string> GotTLMessageEvent;
+
+        /// <summary>
+        /// 收到客户端提交上来的消息,类别,消息体,前置,客户端地址
+        /// </summary>
+        event Action<IPacket, string, string> NewPacketEvent;
+
+
         /// <summary>
         /// 是否启用流控
         /// </summary>
@@ -44,28 +51,23 @@ namespace TradingLib.API
 
 
         /// <summary>
-        /// 通知所有前置某个消息
+        /// 关闭某个客户端链接
         /// </summary>
-        /// <param name="body"></param>
-        void NotifyFront(byte[] body);
+        /// <param name="clientId"></param>
+        void DropClient(string clientId);
 
         /// <summary>
         /// 向某个客户端发送消息
         /// </summary>
-        /// <param name="body">消息内容</param>
-        /// <param name="address">客户端地址</param>
-        /// <param name="front">前置地址</param>
-        void Send(byte[] body, string address, string front);
+        /// <param name="packet"></param>
+        /// <param name="address"></param>
+        /// <param name="front"></param>
+        void Send(IPacket packet, string address, string front);
+
         /// <summary>
         /// 向行情分发系统发送行情数据
         /// </summary>
         /// <param name="k">Tick数据</param>
         void SendTick(Tick k);
-
-        /// <summary>
-        /// 向行情系统分发行情心跳,用于告知客户端行情连接有效[停盘时,可能行情通道没有数据发送]
-        /// </summary>
-        //void SendTickHeartBeat();
-
     }
 }

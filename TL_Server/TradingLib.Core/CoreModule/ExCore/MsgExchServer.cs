@@ -452,7 +452,7 @@ namespace TradingLib.Core
         public void Start()
         {
             Util.StartStatus(this.PROGRAME);
-            bool ret = tl.Start();
+            bool ret = tl.StartMQ();
             if (ret)
             {
                 logger.Info("Trading Server Starting success");

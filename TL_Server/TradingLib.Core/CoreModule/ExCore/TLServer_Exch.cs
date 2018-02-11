@@ -57,7 +57,8 @@ namespace TradingLib.Core
         /// <param name="clientID"></param>
         public void KillSessioin(string clientID)
         {
-            _clients.UnRegistClient(clientID);
+            _trans.DropClient(clientID);
+            //_clients.UnRegistClient(clientID);
         }
 
         /// <summary>

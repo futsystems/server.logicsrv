@@ -42,7 +42,23 @@
     <Reference Include="Quartz">
       <HintPath>..\..\lib\Quartz.dll</HintPath>
     </Reference>
+    <Reference Include="SuperSocket.Common">
+      <HintPath>..\..\lib\supersocket\SuperSocket.Common.dll</HintPath>
+    </Reference>
+    <Reference Include="SuperSocket.Facility">
+      <HintPath>..\..\lib\supersocket\SuperSocket.Facility.dll</HintPath>
+    </Reference>
+    <Reference Include="SuperSocket.SocketBase">
+      <HintPath>..\..\lib\supersocket\SuperSocket.SocketBase.dll</HintPath>
+    </Reference>
+    <Reference Include="SuperSocket.SocketEngine">
+      <HintPath>..\..\lib\supersocket\SuperSocket.SocketEngine.dll</HintPath>
+    </Reference>
+    <Reference Include="SuperWebSocket">
+      <HintPath>..\..\lib\supersocket\SuperWebSocket.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
+    <Reference Include="System.configuration" />
     <Reference Include="System.Data" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
@@ -64,6 +80,9 @@
     <Reference Include="TradingLib.Common.Ex">
       <HintPath>..\..\lib\TradingLib\TradingLib.Common.Ex.dll</HintPath>
       <Private>False</Private>
+    </Reference>
+    <Reference Include="TradingLib.XLProtocol">
+      <HintPath>..\..\lib\TradingLib\TradingLib.XLProtocol.dll</HintPath>
     </Reference>
     <Reference Include="ZeroMQ">
       <HintPath>..\..\lib\ZeroMQ.dll</HintPath>
@@ -219,6 +238,56 @@
     <Compile Include="CoreModule\ExCore\MsgExchServer.cs" />
     <Compile Include="CoreModule\RiskCentre\RiskCentre.cs" />
     <Compile Include="CoreModule\TaskCentre\TaskCentre_CTE.cs" />
+    <Compile Include="Front\API\IConnection.cs" />
+    <Compile Include="Front\API\IConnectionState.cs" />
+    <Compile Include="Front\API\IServiceHost.cs" />
+    <Compile Include="Front\Common\ByteUtil.cs" />
+    <Compile Include="Front\Common\IByteSwap.cs" />
+    <Compile Include="Front\Common\XLServiceHostBase.cs" />
+    <Compile Include="Front\CTPServiceHost\CTPConnection.cs" />
+    <Compile Include="Front\CTPServiceHost\CTPServiceHost.cs" />
+    <Compile Include="Front\CTPServiceHost\CTPServiceHost_.cs" />
+    <Compile Include="Front\CTPServiceHost\CTPServiceHost_Connection.cs" />
+    <Compile Include="Front\CTPServiceHost\CTPServiceHost_IServiceHost.cs" />
+    <Compile Include="Front\CTPServiceHost\Protocol\CNStringMarshaler.cs" />
+    <Compile Include="Front\CTPServiceHost\Protocol\Constanst.cs" />
+    <Compile Include="Front\CTPServiceHost\Protocol\Convert.cs" />
+    <Compile Include="Front\CTPServiceHost\Protocol\EnumChainType.cs" />
+    <Compile Include="Front\CTPServiceHost\Protocol\EnumEncType.cs" />
+    <Compile Include="Front\CTPServiceHost\Protocol\EnumFTDTagType.cs" />
+    <Compile Include="Front\CTPServiceHost\Protocol\EnumFTDType.cs" />
+    <Compile Include="Front\CTPServiceHost\Protocol\Enums.cs" />
+    <Compile Include="Front\CTPServiceHost\Protocol\EnumSeqType.cs" />
+    <Compile Include="Front\CTPServiceHost\Protocol\Struct\Enum.cs" />
+    <Compile Include="Front\CTPServiceHost\Protocol\Struct\StructBase.cs" />
+    <Compile Include="Front\CTPServiceHost\Protocol\Struct\StructHelperV12.cs" />
+    <Compile Include="Front\CTPServiceHost\Protocol\Struct\Struct_tmp.cs" />
+    <Compile Include="Front\CTPServiceHost\Protocol\Struct\Struct_V12.cs" />
+    <Compile Include="Front\CTPServiceHost\TLReceiveFilter.cs" />
+    <Compile Include="Front\CTPServiceHost\TLRequestInfo.cs" />
+    <Compile Include="Front\CTPServiceHost\TLServerBase.cs" />
+    <Compile Include="Front\CTPServiceHost\TLSessionBase.cs" />
+    <Compile Include="Front\MQServer.cs" />
+    <Compile Include="Front\TLServiceHost\TLConnection.cs" />
+    <Compile Include="Front\TLServiceHost\TLReceiveFilter.cs" />
+    <Compile Include="Front\TLServiceHost\TLRequestInfo.cs" />
+    <Compile Include="Front\TLServiceHost\TLServerBase.cs" />
+    <Compile Include="Front\TLServiceHost\TLServiceHost.cs" />
+    <Compile Include="Front\TLServiceHost\TLServiceHost_Connection.cs" />
+    <Compile Include="Front\TLServiceHost\TLServiceHost_HandleLogicMessage.cs" />
+    <Compile Include="Front\TLServiceHost\TLSessionBase.cs" />
+    <Compile Include="Front\WSServiceHost\ServiceHost.cs" />
+    <Compile Include="Front\WSServiceHost\ServiceHost_Connection.cs" />
+    <Compile Include="Front\WSServiceHost\WSConnection.cs" />
+    <Compile Include="Front\XLConvert.cs" />
+    <Compile Include="Front\XLServiceHost\ServiceHost.cs" />
+    <Compile Include="Front\XLServiceHost\ServiceHost_.cs" />
+    <Compile Include="Front\XLServiceHost\ServiceHost_Connection.cs" />
+    <Compile Include="Front\XLServiceHost\XLConnection.cs" />
+    <Compile Include="Front\XLServiceHost\XLReceiveFilter.cs" />
+    <Compile Include="Front\XLServiceHost\XLRequestInfo.cs" />
+    <Compile Include="Front\XLServiceHost\XLServerBase.cs" />
+    <Compile Include="Front\XLServiceHost\XLSessionBase.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Base\AsyncTransactionLoger.cs" />
     <Compile Include="Base\TIFEngine.cs" />

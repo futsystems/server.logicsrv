@@ -342,6 +342,11 @@ namespace TradingLib.Common
 
         public QSEnumPacketType PacketType { get; protected set; }
 
+        public void SetSource(string frontid, string clientid)
+        {
+            this.FrontID = frontid;
+            this.ClientID = clientid;
+        }
         /// <summary>
         /// 请求数据包前置ID
         /// </summary>

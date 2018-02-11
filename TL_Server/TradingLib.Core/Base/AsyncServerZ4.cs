@@ -19,6 +19,8 @@ namespace TradingLib.Core
     /// </summary>
     public class AsyncServerZ4 : BaseSrvObject, ITransport
     {
+        public event Action<IPacket, string, string> NewPacketEvent;
+
         /// <summary>
         /// 系统默认Poller超时时间
         /// </summary>
@@ -42,6 +44,7 @@ namespace TradingLib.Core
         
 
 
+        
         /// <summary>
         /// 消息处理工作线程数目
         /// </summary>
@@ -124,7 +127,34 @@ namespace TradingLib.Core
                 logger.Debug(msg);
             }
         }
+        public void Send(IPacket packet, string address, string front)
+        {
+            if (_outputChanel == null)
+                return;
+            lock (_outputChanel)
+            {
+                using (ZMessage zmsg = new ZMessage())
+                {
+                    ZError error;
 
+                    if (!string.IsNullOrEmpty(front))
+                    {
+                        zmsg.Add(new ZFrame(Encoding.UTF8.GetBytes(front)));
+                    }
+                    zmsg.Add(new ZFrame(Encoding.UTF8.GetBytes(address)));
+                    zmsg.Add(new ZFrame(packet.Data));
+                    if (!_outputChanel.Send(zmsg, out error))
+                    {
+                        if (error == ZError.ETERM)
+                        {
+                            logger.Error("got ZError.ETERM,return directly");
+                            return;	// Interrupted
+                        }
+                        throw new ZException(error);
+                    }
+                }
+            }
+        }
 
         /// <summary>
         /// 主服务线程
@@ -329,7 +359,10 @@ namespace TradingLib.Core
             }
         }
 
-
+        public void DropClient(string clientId)
+        { 
+        
+        }
 
         //传输层前端
         ZSocket _outputChanel;//用于服务端主动向客户端发送消息
