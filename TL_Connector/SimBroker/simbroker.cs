@@ -248,6 +248,16 @@ namespace Broker.SIM
                         logger.Warn(string.Format("Order:{0} 's account:{1} do not exist", o.id, o.Account));
                         continue;
                     }
+
+                    //增加市场时间检查
+                    int settleday = 0;
+                    //如果进行全局品种当前是否可交易判定 然后进行全局引用
+                    QSEnumActionCheckResult result = o.oSymbol.SecurityFamily.CheckPlaceOrder(out settleday);//判定当前是否处于品种交易时间段内
+                    if (result != QSEnumActionCheckResult.Allowed)
+                    {
+                        unfilled.Add(o);
+                        continue;
+                    }
                     //1.扯单检查 查询是否有该委托的取消,若有取消 则直接返回,不对委托进行成交检查
                     //遍历所有的委托 会将所有的有效取消消耗,若还有取消没有消耗,则是因为其他原因造成的死取消
                     int cidx = gotcancel(o.id, cancels);
