@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=Edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+		<title>在线出入金</title>
+		
+		<link rel="stylesheet" href="http://120.26.45.94/assest/css/style.css">
+	</head>
+	<body>
+		<form name="deposit" method="post" action="/cash/depositconfirm/">
+		<div class="main">
+			<div class="con">
+				<h3 class="tit">在线出入金</h3>
+			
+				<table cellspacing="0" cellpadding="0" class="taba">
+					<tr>
+						<td width="130">交易账号</td>
+						<td>
+							<input type="text" name="Account" id="" value="" class="in">
+						</td>
+					</tr>
+					<tr>
+						<td>账号密码</td>
+						<td>
+							<input type="password" name="Pass" id="" value="" class="in">
+						</td>
+					</tr>
+					<tr>
+						<td>业务选择</td>
+						<td>
+							<input type="radio" name="type" id="typea" value="">
+							<label for="typea">支付</label>
+							<input type="radio" name="type" id="typeb" value="">
+							<label for="typeb">支出</label>
+						</td>
+					</tr>
+					<tr>
+						<td>订单金额</td>
+						<td>
+							<input type="text" name="Amount" id="" value="" class="in"> 元
+						</td>
+					</tr>
+					<tr>
+						<td>支付方式</td>
+						<td>
+							<img src="http://120.26.45.94/assest/img/bank.png">
+						</td>
+					</tr>
+					<tr>
+						<td>银行选择</td>
+						<td id="selectBank">
+							<a href="javascript:void(null)" data-id="001" class="act">
+								<img src="http://120.26.45.94/assest/img/gsyh.png">
+							</a>
+							<a href="javascript:void(null)" data-id="002">
+								<img src="http://120.26.45.94/assest/img/nyyh.png">
+							</a>
+							<a href="javascript:void(null)" data-id="003">
+								<img src="http://120.26.45.94/assest/img/zgyh.png">
+							</a>
+							<a href="javascript:void(null)" data-id="004">
+								<img src="http://120.26.45.94/assest/img/jsyh.png">
+							</a>
+							<a href="javascript:void(null)" data-id="005">
+								<img src="http://120.26.45.94/assest/img/jtyh.png">
+							</a>
+							<a href="javascript:void(null)" data-id="001">
+								<img src="http://120.26.45.94/assest/img/zsyh.png">
+							</a>
+							<a href="javascript:void(null)" data-id="001">
+								<img src="http://120.26.45.94/assest/img/gfyh.png">
+							</a>
+							<a href="javascript:void(null)" data-id="001">
+								<img src="http://120.26.45.94/assest/img/zxyh.png">
+							</a>
+							<a href="javascript:void(null)" data-id="001">
+								<img src="http://120.26.45.94/assest/img/msyh.png">
+							</a>
+							<a href="javascript:void(null)" data-id="001">
+								<img src="http://120.26.45.94/assest/img/gdyh.png">
+							</a>
+							<a href="javascript:void(null)" data-id="001">
+								<img src="http://120.26.45.94/assest/img/payh.png">
+							</a>
+							<a href="javascript:void(null)" data-id="001">
+								<img src="http://120.26.45.94/assest/img/pfyh.png">
+							</a>
+							<a href="javascript:void(null)" data-id="001">
+								<img src="http://120.26.45.94/assest/img/yzyh.png">
+							</a>
+							<a href="javascript:void(null)" data-id="001">
+								<img src="http://120.26.45.94/assest/img/hxyh.png">
+							</a>
+							<a href="javascript:void(null)" data-id="001">
+								<img src="http://120.26.45.94/assest/img/xyyh.png">
+							</a>
+							<a href="javascript:void(null)" data-id="001">
+								<img src="http://120.26.45.94/assest/img/bjyh.png">
+							</a>
+							<a href="javascript:void(null)" data-id="001">
+								<img src="http://120.26.45.94/assest/img/shyh.png">
+							</a>
+						</td>
+					</tr>
+					<tr>
+						<td></td>
+						<td>
+							<input type="submit" name="" id="" value="在线入金" class="btn">
+						</td>
+					</tr>
+				</table>
+			</div>
+		</div>
+		</form>
+		<script type="text/javascript">
+			
+			var bankNum = '001';
+			
+			var obj = document.getElementById('selectBank');
+			var len = obj.children.length;
+			
+			for(var i=0; i<len; i++){
+				obj.getElementsByTagName('a')[i].addEventListener('click', function(){
+					for(var i=0; i<len; i++){
+						obj.getElementsByTagName('a')[i].classList.remove('act');
+					}
+					bankNum = this.getAttribute('data-id');
+					this.classList.add('act');
+				})
+			}
+			
+		</script>
+		
+	</body>
+</html>
