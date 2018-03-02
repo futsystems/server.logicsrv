@@ -74,35 +74,5 @@
 			</div>
 		</div>
 		</form>
-		
-		<script type="text/javascript">
-			
-			var bankNum = '01020000';
-			
-			var obj = document.getElementById('selectBank');
-			var len = obj.children.length;
-			
-			for(var i=0; i<len; i++){
-				obj.getElementsByTagName('a')[i].addEventListener('click', function(){
-					for(var i=0; i<len; i++){
-						obj.getElementsByTagName('a')[i].classList.remove('act');
-					}
-					bankNum = this.getAttribute('data-id');
-					this.classList.add('act');
-					
-					alert(bankNum)
-				})
-				
-			}
-			
-			document.getElementById('typea').addEventListener('change', function(){
-				document.getElementById('deposit').setAttribute('action', '/cash/depositconfirm/');
-			})
-			
-			document.getElementById('typeb').addEventListener('change', function(){
-				document.getElementById('deposit').setAttribute('action', '/cash/withdrawconfirm/');
-			})
-		</script>
-		
 	</body>
 </html>
