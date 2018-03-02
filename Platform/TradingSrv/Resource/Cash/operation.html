@@ -9,7 +9,7 @@
 		<link rel="stylesheet" href="http://120.26.45.94/assest/css/style.css">
 	</head>
 	<body>
-		<form name="deposit" method="post" action="/cash/depositconfirm/">
+		<form name="deposit" id="deposit" method="post" action="/cash/depositconfirm/">
 		<div class="main">
 			<div class="con">
 				<h3 class="tit">在线出入金</h3>
@@ -30,10 +30,10 @@
 					<tr>
 						<td>业务选择</td>
 						<td>
-							<input type="radio" name="type" id="typea" value="">
-							<label for="typea">支付</label>
+							<input type="radio" name="type" id="typea" value="" checked="checked">
+							<label for="typea">入金</label>
 							<input type="radio" name="type" id="typeb" value="">
-							<label for="typeb">支出</label>
+							<label for="typeb">出金</label>
 						</td>
 					</tr>
 					<tr>
@@ -42,6 +42,7 @@
 							<input type="text" name="Amount" id="" value="" class="in"> 元
 						</td>
 					</tr>
+					<input type="hidden" name="bank" id="bank" value="01020000">
 					<tr>
 						<td>支付方式</td>
 						<td>
@@ -51,63 +52,39 @@
 					<tr>
 						<td>银行选择</td>
 						<td id="selectBank">
-							<a href="javascript:void(null)" data-id="001" class="act">
+							<a href="javascript:void(null)" data-id="01020000" class="act">
 								<img src="http://120.26.45.94/assest/img/gsyh.png">
 							</a>
-							<a href="javascript:void(null)" data-id="002">
+							<a href="javascript:void(null)" data-id="01030000">
 								<img src="http://120.26.45.94/assest/img/nyyh.png">
 							</a>
-							<a href="javascript:void(null)" data-id="003">
-								<img src="http://120.26.45.94/assest/img/zgyh.png">
-							</a>
-							<a href="javascript:void(null)" data-id="004">
+							<a href="javascript:void(null)" data-id="01050000">
 								<img src="http://120.26.45.94/assest/img/jsyh.png">
 							</a>
-							<a href="javascript:void(null)" data-id="005">
-								<img src="http://120.26.45.94/assest/img/jtyh.png">
+							<a href="javascript:void(null)" data-id="01040000">
+								<img src="http://120.26.45.94/assest/img/zgyh.png">
 							</a>
-							<a href="javascript:void(null)" data-id="001">
+							<a href="javascript:void(null)" data-id="03080000">
 								<img src="http://120.26.45.94/assest/img/zsyh.png">
 							</a>
-							<a href="javascript:void(null)" data-id="001">
-								<img src="http://120.26.45.94/assest/img/gfyh.png">
+							<a href="javascript:void(null)" data-id="03010000">
+								<img src="http://120.26.45.94/assest/img/jtyh.png">
 							</a>
-							<a href="javascript:void(null)" data-id="001">
-								<img src="http://120.26.45.94/assest/img/zxyh.png">
-							</a>
-							<a href="javascript:void(null)" data-id="001">
-								<img src="http://120.26.45.94/assest/img/msyh.png">
-							</a>
-							<a href="javascript:void(null)" data-id="001">
-								<img src="http://120.26.45.94/assest/img/gdyh.png">
-							</a>
-							<a href="javascript:void(null)" data-id="001">
-								<img src="http://120.26.45.94/assest/img/payh.png">
-							</a>
-							<a href="javascript:void(null)" data-id="001">
-								<img src="http://120.26.45.94/assest/img/pfyh.png">
-							</a>
-							<a href="javascript:void(null)" data-id="001">
+							<a href="javascript:void(null)" data-id="01000000">
 								<img src="http://120.26.45.94/assest/img/yzyh.png">
 							</a>
-							<a href="javascript:void(null)" data-id="001">
-								<img src="http://120.26.45.94/assest/img/hxyh.png">
+							<a href="javascript:void(null)" data-id="AliPay">
+								<img src="http://120.26.45.94/assest/img/alipay.png">
 							</a>
-							<a href="javascript:void(null)" data-id="001">
-								<img src="http://120.26.45.94/assest/img/xyyh.png">
-							</a>
-							<a href="javascript:void(null)" data-id="001">
-								<img src="http://120.26.45.94/assest/img/bjyh.png">
-							</a>
-							<a href="javascript:void(null)" data-id="001">
-								<img src="http://120.26.45.94/assest/img/shyh.png">
+							<a href="javascript:void(null)" data-id="WeiXin">
+								<img src="http://120.26.45.94/assest/img/wx.png">
 							</a>
 						</td>
 					</tr>
 					<tr>
 						<td></td>
 						<td>
-							<input type="submit" name="" id="" value="在线入金" class="btn">
+							<input type="submit" name="" id="" value="提 交" class="btn">
 						</td>
 					</tr>
 				</table>
@@ -116,7 +93,7 @@
 		</form>
 		<script type="text/javascript">
 			
-			var bankNum = '001';
+			var bankNum = '01020000';
 			
 			var obj = document.getElementById('selectBank');
 			var len = obj.children.length;
@@ -128,8 +105,19 @@
 					}
 					bankNum = this.getAttribute('data-id');
 					this.classList.add('act');
+					document.getElementById('bank').value = bankNum;
+					//alert(bankNum)
 				})
+				
 			}
+			
+			document.getElementById('typea').addEventListener('change', function(){
+				document.getElementById('deposit').setAttribute('action', '/cash/depositconfirm/');
+			})
+			
+			document.getElementById('typeb').addEventListener('change', function(){
+				document.getElementById('deposit').setAttribute('action', '/cash/withdrawconfirm/');
+			})
 			
 		</script>
 		
