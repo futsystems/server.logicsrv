@@ -236,7 +236,7 @@ namespace TradingLib.Contrib.APIService
                 }
                 else//deposit
                 {
-                    decimal depositcommission = account.GetWithdrawCommission();
+                    decimal depositcommission = account.GetDepositCommission();
 
                     txn.Amount = txn.Amount * rate;
                     TLCtxHelper.ModuleAccountManager.CashOperation(txn);
