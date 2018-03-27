@@ -19,7 +19,7 @@ namespace TradingLib.Core
     /// </summary>
     public class AsyncServerZ4 : BaseSrvObject, ITransport
     {
-        public event Action<IPacket, string, string> NewPacketEvent;
+        public event Action<IPacket, string> NewPacketEvent;
 
         /// <summary>
         /// 系统默认Poller超时时间
@@ -30,11 +30,6 @@ namespace TradingLib.Core
         /// 系统Worker线程执行消息处理超时时间
         /// </summary>
         TimeSpan WorkerTimeOut = new TimeSpan(0, 0, 2);
-        /// <summary>
-        /// 交易消息事件,当接收到客户端发送上来的消息时,触发该事件,从而调用消息层对消息进行解析与处理
-        /// 传递参数消息类别(操作号),消息体,前置地址,客户端标识
-        /// </summary>
-        public event Action<Message, string, string> GotTLMessageEvent = delegate { };
 
         bool _enableThroutPutTracker = true;
         /// <summary>
@@ -127,7 +122,7 @@ namespace TradingLib.Core
                 logger.Debug(msg);
             }
         }
-        public void Send(IPacket packet, string address, string front)
+        public void Send(IPacket packet, string address)
         {
             if (_outputChanel == null)
                 return;
@@ -137,10 +132,10 @@ namespace TradingLib.Core
                 {
                     ZError error;
 
-                    if (!string.IsNullOrEmpty(front))
-                    {
-                        zmsg.Add(new ZFrame(Encoding.UTF8.GetBytes(front)));
-                    }
+                    //if (!string.IsNullOrEmpty(front))
+                    //{
+                    //    zmsg.Add(new ZFrame(Encoding.UTF8.GetBytes(front)));
+                    //}
                     zmsg.Add(new ZFrame(Encoding.UTF8.GetBytes(address)));
                     zmsg.Add(new ZFrame(packet.Data));
                     if (!_outputChanel.Send(zmsg, out error))
@@ -314,7 +309,7 @@ namespace TradingLib.Core
         /// 分发行情数据
         /// </summary>
         /// <param name="tick">行情数据</param>
-        public void SendTick(Tick k)
+        public void Publish(Tick k)
         {
             string tickstr = TickImpl.Serialize2(k);
             SendTick(tickstr);
@@ -646,23 +641,14 @@ namespace TradingLib.Core
                     if (cnt == 3 && string.IsNullOrEmpty(front)) return;//如果通过前置接入 则front不为空
                 }
 
-                //2.流控 超过消息频率则直接返回不进行该消息的处理(拒绝该消息) 交易服务器才执行流控,管理服务器不执行
-                //if (this._tlmode == QSEnumTLMode.TradingSrv && !zmqTP.NewZmessage(address,zmsg)) 
-                //{
-                //    return true;
-                //}
+                //3.消息处理如果解析出来的消息是有效的则丢入处理流程进行处理，如果无效则不处理
+                IPacket packet = PacketHelper.SrvRecvRequest(msg, front, address);
+                if (NewPacketEvent != null)
+                {
+                    NewPacketEvent(packet, address);
+                }
+                
 
-                //Timeout timeout = new Timeout();
-                //timeout.MessageHandler = () =>
-                //{
-                    //3.消息处理如果解析出来的消息是有效的则丢入处理流程进行处理，如果无效则不处理
-                GotTLMessageEvent(msg, front, address);
-                ////};
-                ////bool re = timeout.DoWithTimeout(WorkerTimeOut);
-                ////if (re)
-                //{
-                ////    logger.Warn(string.Format("Wroker:{0}  Handle Message TimeOut, type:{1} content:{2}",id, msg.Type, msg.Content));
-                //}
 
             }
         }

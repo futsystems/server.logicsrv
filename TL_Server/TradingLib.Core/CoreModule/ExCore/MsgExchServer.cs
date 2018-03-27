@@ -271,7 +271,7 @@ namespace TradingLib.Core
         void InitTLServer()
         {
             tl = new TLServer_Exch(CoreName, _cfgdb["TLServerIP"].AsString(), _cfgdb["TLPort"].AsInt(), _cfgdb["VerbDebug"].AsBool());
-            tl.ProviderName = Providers.QSPlatform;
+            //tl.ProviderName = Providers.QSPlatform;
             tl.NumWorkers = 1;
             tl.ClientLoginTerminalLimit = loginTerminalNum;
 

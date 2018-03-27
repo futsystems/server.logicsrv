@@ -86,8 +86,8 @@ namespace TradingLib.Core
 
 
 
-
-        Providers _pn = Providers.Unknown;
+        /*
+        //Providers _pn = Providers.Unknown;
         /// <summary>
         /// 服务端的ProviderName 标识
         /// </summary>
@@ -100,7 +100,7 @@ namespace TradingLib.Core
                 if (_trans != null)
                     _trans.ProviderName = _pn;
             }
-        }
+        }**/
 
 
         bool _enableTPTracker = true;
@@ -165,9 +165,7 @@ namespace TradingLib.Core
             try
             {
                 _trans = new AsyncServerZ4(PROGRAME, _serveraddress, _port, this.NumWorkers, this.EnableTPTracker, _verb);
-                _trans.GotTLMessageEvent += new Action<Message,string,string>(basehandle);
-                _trans.NewPacketEvent += new Action<IPacket, string, string>(_trans_NewPacketEvent);
-                _trans.ProviderName = ProviderName;//将TLServerProviderName传递给传输层,用于客户端的名称查询
+                _trans.NewPacketEvent += new Action<IPacket, string>(OnPacketEvent);
                 _trans.Start();
                 return true;
             }
@@ -190,9 +188,7 @@ namespace TradingLib.Core
             try
             {
                 _trans = new FrontServer.MQServer();
-                _trans.GotTLMessageEvent += new Action<Message, string, string>(basehandle);
-                _trans.NewPacketEvent += new Action<IPacket, string, string>(_trans_NewPacketEvent);
-                _trans.ProviderName = ProviderName;//将TLServerProviderName传递给传输层,用于客户端的名称查询
+                _trans.NewPacketEvent += new Action<IPacket, string>(OnPacketEvent);
                 _trans.Start();
                 return true;
             }
@@ -228,7 +224,7 @@ namespace TradingLib.Core
             {
                 logger.Error(ex.Message + ex.StackTrace);
             }
-            logger.Info("Stopped: " + ProviderName);
+            logger.Info("Stopped");
         }
         #endregion
 
@@ -516,7 +512,7 @@ namespace TradingLib.Core
                 return;
             if (this.IsLive)
             {
-                _trans.SendTick(tick);
+                _trans.Publish(tick);
             }
         }
 
@@ -588,7 +584,7 @@ namespace TradingLib.Core
         {
             if (this.IsLive)
             {
-                _trans.Send(packet, clientid, frontid);
+                _trans.Send(packet, clientid);
             }
         }
         /// <summary>
@@ -643,54 +639,52 @@ namespace TradingLib.Core
         /// </summary>
         /// <param name="session"></param>
         /// <param name="packet"></param>
-        void PacketEvent(ISession session, IPacket packet,string frontid,string clientid)
+        void PacketEvent(string clientId, IPacket packet)
         {
-            TLCtxHelper.EventSystem.FirePacketEvent(this, new PacketEventArgs(session, packet, frontid, clientid));
+            TLCtxHelper.EventSystem.FirePacketEvent(this, new PacketEventArgs(null, packet, string.Empty, clientId));
         }
 
 
-        void _trans_NewPacketEvent(IPacket packet, string front, string address)
+        void OnPacketEvent(IPacket packet, string clientId)
         {
             long result = NORETURNRESULT;
             try
             {
-                //IPacket packet = PacketHelper.SrvRecvRequest(message, front, address);
-                //debug("<<<<<< Rev Packet:" + packet.ToString(), QSEnumDebugLevel.INFO);
-                T1 client = _clients[address];
+                T1 client = _clients[clientId];
                 Client2Session session = client != null ? CreateSession(client) : null;
                 switch (packet.Type)
                 {
                     case MessageTypes.REGISTERCLIENT://注册
                         SrvRegClient(packet as RegisterClientRequest, client);
-                        PacketEvent(session, packet, front, address);
+                        PacketEvent(clientId, packet);
                         break;
                     case MessageTypes.VERSIONREQUEST://版本查询
                         SrvVersonReq(packet as VersionRequest, client);
-                        PacketEvent(session, packet, front, address);
+                        PacketEvent(clientId, packet);
                         break;
                     case MessageTypes.UPDATELOCATION://地址信息更新
                         SrvOnUpdateLocationInfo(packet as UpdateLocationInfoRequest, client);
-                        PacketEvent(session, packet, front, address);
+                        PacketEvent(clientId, packet);
                         break;
                     case MessageTypes.LOGINREQUEST://登入
                         SrvLoginReq(packet as LoginRequest, client);
-                        PacketEvent(session, packet, front, address);
+                        PacketEvent(clientId, packet);
                         break;
                     case MessageTypes.CLEARCLIENT://注销
                         SrvClearClient(packet as UnregisterClientRequest, client);
-                        PacketEvent(session, packet, front, address);
+                        PacketEvent(clientId, packet);
                         break;
                     case MessageTypes.HEARTBEATREQUEST://客户端请求服务端发送给客户端一个心跳 以让客户端知道 与服务端的连接有效
                         SrvBeatHeartRequest(packet as HeartBeatRequest, client);
-                        PacketEvent(session, packet, front, address);
+                        PacketEvent(clientId, packet);
                         break;
                     case MessageTypes.HEARTBEAT://客户端主动向服务端发送心跳,让服务端知道 客户端还存活
                         SrvBeatHeart(packet as HeartBeat, client);
-                        PacketEvent(session, packet, front, address);
+                        PacketEvent(clientId, packet);
                         break;
                     case MessageTypes.FEATUREREQUEST://功能特征码请求
                         SrvReqFuture(packet as FeatureRequest, client);
-                        PacketEvent(session, packet, front, address);
+                        PacketEvent(clientId, packet);
                         break;
                     default:
                         //如果客户端没有注册到服务器则 不接受任何其他类型的功能请求 要求客户端有效注册到服务器
@@ -700,7 +694,7 @@ namespace TradingLib.Core
 
                         OnSessionStated(session, client);
                         result = handle(session, packet);//外传到子类中去扩展消息类型 通过子类扩展允许tlserver实现更多功能请求
-                        PacketEvent(session, packet, front, address);
+                        PacketEvent(clientId, packet);
                         break;
                 }
 
@@ -718,7 +712,7 @@ namespace TradingLib.Core
             }
         }
 
-
+        /*
         /// <summary>
         /// 将底层传输层上传上来的数据解析成逻辑数据包并处理
         /// Generic只处理服务端通用部分比如 注册,注销,心跳等连接维护类基础工作
@@ -798,7 +792,7 @@ namespace TradingLib.Core
             }
             return;
 
-        }
+        }**/
         #endregion
 
 

@@ -21,11 +21,7 @@ namespace FrontServer
     public partial class MQServer : BaseSrvObject, ITransport
     {
 
-        /// <summary>
-        /// 收到客户端提交上来的消息,类别,消息体,前置,客户端地址
-        /// </summary>
-        public event Action<Message, string, string> GotTLMessageEvent;
-        public event Action<IPacket, string, string> NewPacketEvent;
+        public event Action<IPacket, string> NewPacketEvent;
 
         ConcurrentDictionary<string, IConnection> connectionMap = new ConcurrentDictionary<string, IConnection>();
         public MQServer()
@@ -39,31 +35,18 @@ namespace FrontServer
         /// </summary>
         public bool IsLive { get { return _workergo; } }
 
-        public bool IsStopped { get { return !_workergo; } }
 
-        public Providers ProviderName { get; set; }
-
-        /// <summary>
-        /// 是否启用流控
-        /// </summary>
-        public bool EnableTPTracker { get; set; }
-
-        /// <summary>
-        /// 消息处理线程数量
-        /// </summary>
-        public int NumWorkers { get; set; }
-
-        //创建TL ServiceHost
+        //创建TL ServiceHost PC交易客户端
         TLServiceHost.TLServiceHost tlhost;
 
-        //创建CTP ServiceHost
-        CTPServiceHost ctphost;
+        //创建CTP ServiceHost CTP兼容交易客户端
+        CTPService.CTPServiceHost ctphost;
 
-        //创建XL ServiceHost
+        //创建XL ServiceHost //手机端
         XLServiceHost.XLServiceHost xlhost;
 
          //创建WebSocket ServiceHost
-        WSServiceHost.WSServiceHost wshost;
+        //WSServiceHost.WSServiceHost wshost;
 
         public void Start()
         {
@@ -71,7 +54,6 @@ namespace FrontServer
             if (_workergo) return;
             _workergo = true;
             _workerThread = new Thread(WrokerProcess);
-            _workerThread.IsBackground = false;
             _workerThread.Start();
 
             //创建TL ServiceHost
@@ -84,8 +66,7 @@ namespace FrontServer
             xlhost = new XLServiceHost.XLServiceHost(this);
 
             //创建WebSocket ServiceHost
-            wshost = new WSServiceHost.WSServiceHost(this);
-
+            //wshost = new WSServiceHost.WSServiceHost(this);
 
             tlhost.Start();
 
@@ -93,19 +74,17 @@ namespace FrontServer
 
             xlhost.Start();
 
-            wshost.Start();
+            //wshost.Start();
 
         }
 
         public void Stop()
         {
-            //if (!_pollGo) return;
-            //logger.Info("Stop MQServer");
-            //_pollGo = false;
-            //_pollThread.Join();
+
         }
 
-        public void SendTick(Tick k)
+
+        public void Publish(Tick k)
         {
 
         }
@@ -120,7 +99,7 @@ namespace FrontServer
         /// <param name="packet"></param>
         /// <param name="address"></param>
         /// <param name="front"></param>
-        public void Send(IPacket packet, string address, string front)
+        public void Send(IPacket packet, string address)
         {
             responseBuffer.Write(new LogicMessageItem() { SessionID = address, Packet = packet });
             NewWorkerItem();
@@ -167,6 +146,7 @@ namespace FrontServer
                         _lastWorkerTime = DateTime.Now;
                     }
 
+                    //向客户端发送数据
                     while (clientDataSendBuffer.hasItems)
                     {
                         var tmp = clientDataSendBuffer.Read();
@@ -193,7 +173,7 @@ namespace FrontServer
                         }
                     }
 
-
+                    //客户端响应调用对应的Service HandleLogicMessage进行处理
                     while (responseBuffer.hasItems)
                     {
                         var tmp = responseBuffer.Read();
@@ -215,6 +195,7 @@ namespace FrontServer
                         }
                     }
 
+                    //客户端请求
                     while (requestBuffer.hasItems)
                     {
                         var tmp = requestBuffer.Read();
@@ -225,7 +206,7 @@ namespace FrontServer
                             continue;
                         }
                         tmp.Packet.SetSource("front-local", tmp.SessionID);
-                        NewPacketEvent(tmp.Packet, "front-local", tmp.SessionID);
+                        NewPacketEvent(tmp.Packet, tmp.SessionID);
 
                     }
                 }

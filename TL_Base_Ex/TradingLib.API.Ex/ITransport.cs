@@ -23,32 +23,11 @@ namespace TradingLib.API
         /// </summary>
         void Stop();
 
-        /// <summary>
-        /// 服务标识
-        /// </summary>
-        Providers ProviderName { get; set; }
 
         /// <summary>
         /// 收到客户端提交上来的消息,类别,消息体,前置,客户端地址
         /// </summary>
-        event Action<Message,string,string> GotTLMessageEvent;
-
-        /// <summary>
-        /// 收到客户端提交上来的消息,类别,消息体,前置,客户端地址
-        /// </summary>
-        event Action<IPacket, string, string> NewPacketEvent;
-
-
-        /// <summary>
-        /// 是否启用流控
-        /// </summary>
-        bool EnableTPTracker{get;set;}
-
-        /// <summary>
-        /// 消息处理线程数量
-        /// </summary>
-        int NumWorkers { get; set; }
-
+        event Action<IPacket, string> NewPacketEvent;
 
         /// <summary>
         /// 关闭某个客户端链接
@@ -62,12 +41,12 @@ namespace TradingLib.API
         /// <param name="packet"></param>
         /// <param name="address"></param>
         /// <param name="front"></param>
-        void Send(IPacket packet, string address, string front);
+        void Send(IPacket packet, string cliendtId);
 
         /// <summary>
         /// 向行情分发系统发送行情数据
         /// </summary>
         /// <param name="k">Tick数据</param>
-        void SendTick(Tick k);
+        void Publish(Tick k);
     }
 }
