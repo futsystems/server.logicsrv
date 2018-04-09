@@ -203,9 +203,9 @@ namespace TradingLib.Core
             //绑定合约对象
             IAccount account = TLCtxHelper.ModuleAccountManager[pos.Account];
 
-            if (pos.oSymbol.SecurityFamily.Exchange.EXCode.Equals("SHFE"))
+            if (Util.IsCloseOffsetFlagDiff(pos.oSymbol.Exchange))//pos.oSymbol.SecurityFamily.Exchange.EXCode.Equals("SHFE"))
             {
-                logger.Info("Position:" + pos.GetPositionKey() + " is in Exchange:SHFE, we need to check Close/CloseToday Split");
+                logger.Info("Position:" + pos.GetPositionKey() + " is in Exchange:Close OffsetFlag Diff, we need to check Close/CloseToday Split");
                 int voltd = pos.PositionDetailTodayNew.Sum(p => p.Volume);//今日持仓
                 int volyd = pos.PositionDetailYdNew.Sum(p => p.Volume);//昨日持仓
                 Tick snapshot = TLCtxHelper.ModuleDataRouter.GetTickSnapshot(pos.oSymbol.Exchange,pos.Symbol);

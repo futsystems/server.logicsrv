@@ -1046,6 +1046,12 @@ namespace TradingLib.Common
         }
 
 
+        public static bool IsCloseOffsetFlagDiff(string exchange)
+        {
+            if (exchange == "SHFE") return true;
+            if (exchange == "INE") return true;
+            return false;
+        }
 
         /// <summary>
         /// gets list of readable tickfiles in top level of a folder.

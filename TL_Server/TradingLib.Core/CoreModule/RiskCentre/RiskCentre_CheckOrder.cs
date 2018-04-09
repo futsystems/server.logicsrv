@@ -376,7 +376,7 @@ namespace TradingLib.Core
                                     ismobile = true;
                                 }
                                 //如果是上期所的期货品种 需要检查今仓和昨仓 手机端直接执行先开先平操作
-                                if ( (!ismobile)&& o.oSymbol.SecurityFamily.Exchange.EXCode.Equals("SHFE"))
+                                if ( (!ismobile)&& Util.IsCloseOffsetFlagDiff(o.oSymbol.SecurityFamily.Exchange.EXCode))
                                 {
                                     /* 上期所
                                      * 平今 必须用CloseToday

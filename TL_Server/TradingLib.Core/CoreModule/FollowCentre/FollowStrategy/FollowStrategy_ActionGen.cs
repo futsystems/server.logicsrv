@@ -175,7 +175,7 @@ namespace TradingLib.Core
                         break;
                 }
                 o.LimitPrice = price;
-                if (symbol.Exchange == "SHFE" && o.LimitPrice == 0 && k!= null)
+                if (Util.IsCloseOffsetFlagDiff(symbol.Exchange) && o.LimitPrice == 0 && k != null)
                 {
                     o.LimitPrice = o.Side ? k.Trade + 10 * symbol.SecurityFamily.PriceTick : k.Trade - 10 * symbol.SecurityFamily.PriceTick;
                 }
@@ -228,7 +228,7 @@ namespace TradingLib.Core
 
                             //开平标识
                             o.OffsetFlag = QSEnumOffsetFlag.CLOSE;
-                            if (symbol.Exchange == "SHFE")
+                            if (Util.IsCloseOffsetFlagDiff(symbol.Exchange))
                             {
                                 o.OffsetFlag = QSEnumOffsetFlag.CLOSETODAY;
                             }
@@ -256,7 +256,7 @@ namespace TradingLib.Core
                             }
                             o.LimitPrice = price;
 
-                            if (symbol.Exchange == "SHFE" && o.LimitPrice == 0 && k != null)
+                            if (Util.IsCloseOffsetFlagDiff(symbol.Exchange) && o.LimitPrice == 0 && k != null)
                             {
                                 o.LimitPrice = o.Side ? k.Trade + 10 * symbol.SecurityFamily.PriceTick : k.Trade - 10 * symbol.SecurityFamily.PriceTick;
                             }
@@ -272,11 +272,11 @@ namespace TradingLib.Core
                             o.LimitPrice = 0;
                             //开平标识
                             o.OffsetFlag = QSEnumOffsetFlag.CLOSE;
-                            if (symbol.Exchange == "SHFE")
+                            if (Util.IsCloseOffsetFlagDiff(symbol.Exchange))
                             {
                                 o.OffsetFlag = QSEnumOffsetFlag.CLOSETODAY;
                             }
-                            if (symbol.Exchange == "SHFE" && o.LimitPrice == 0 && k != null)
+                            if (Util.IsCloseOffsetFlagDiff(symbol.Exchange) && o.LimitPrice == 0 && k != null)
                             {
                                 o.LimitPrice = o.Side ? k.Trade + 10 * symbol.SecurityFamily.PriceTick : k.Trade - 10 * symbol.SecurityFamily.PriceTick;
                             }
