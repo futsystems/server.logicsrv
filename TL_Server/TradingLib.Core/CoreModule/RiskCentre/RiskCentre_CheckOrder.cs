@@ -261,6 +261,12 @@ namespace TradingLib.Core
                 return false;
             }
 
+            //盘口有零数据 禁止交易
+            if (k.AskPrice * k.AskSize * k.BidPrice * k.BidSize == 0)
+            {
+                errortitle = "SYMBOL_TICK_ERROR";//市场行情异常
+                return false;
+            }
             
             if (o.isLimit || o.isStop)
             {
