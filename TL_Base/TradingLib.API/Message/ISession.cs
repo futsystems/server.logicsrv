@@ -51,6 +51,11 @@ namespace TradingLib.API
         string AuthorizedID { get; }
 
         /// <summary>
+        /// IP地址
+        /// </summary>
+        string IPAddress { get; }
+
+        /// <summary>
         /// 前置编号 整数
         /// </summary>
         int FrontIDi { get; }

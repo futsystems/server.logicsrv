@@ -87,6 +87,11 @@ namespace TradingLib.Common
         public ILocation Location { get { return _client.Location; } }
 
         /// <summary>
+        /// IP地址
+        /// </summary>
+        public string IPAddress { get { return _client.IPAddress; } }
+
+        /// <summary>
         /// 前置编号 整数
         /// </summary>
         public int FrontIDi { get { return _client.FrontIDi; } }

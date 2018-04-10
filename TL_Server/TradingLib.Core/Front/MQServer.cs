@@ -265,6 +265,7 @@ namespace FrontServer
                 RegisterClientRequest request = RequestTemplate<RegisterClientRequest>.CliSendRequest(0);
                 request.FrontType = type;
                 request.VersionToken = versionToken;
+                request.IPAddress = connection.IState.IPAddress;
                 this.ForwardToBackend(connection.SessionID, request);
                 connectionMap.TryAdd(connection.SessionID, connection);
             }

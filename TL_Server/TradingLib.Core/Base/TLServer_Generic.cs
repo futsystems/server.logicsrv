@@ -300,7 +300,12 @@ namespace TradingLib.Core
             if(request.LocationInfo!=null)
             {
                 logger.Info(string.Format("ClientID:{0} IP:{1} Location:{2} MAC:{3}", client.Location.ClientID,request.LocationInfo.IP,request.LocationInfo.Location, request.LocationInfo.MAC));
-                client.IPAddress = request.LocationInfo.IP;
+
+                if (string.IsNullOrEmpty(client.IPAddress))
+                {
+                    client.IPAddress = request.LocationInfo.IP;
+                }
+
                 client.HardWareCode = request.LocationInfo.MAC;
             }
         }
@@ -326,6 +331,7 @@ namespace TradingLib.Core
             _newcli.FrontIDi = GetFrontIDi(request.FrontID);
             _newcli.SessionIDi = NexSessionID(request.FrontID);
             _newcli.FrontType = request.FrontType;
+            _newcli.IPAddress = request.IPAddress;
 
             if (client == null)
             {

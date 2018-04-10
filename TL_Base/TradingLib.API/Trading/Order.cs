@@ -290,8 +290,6 @@ namespace TradingLib.API
         string BrokerRemoteOrderID { get; set; }
         #endregion
 
-
-
         #region 委托分解属性
 
         /// <summary>

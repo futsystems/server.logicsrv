@@ -25,6 +25,7 @@ namespace TradingLib.Common
         {
             _type = MessageTypes.REGISTERCLIENT;
             this.VersionToken = string.Empty;
+            this.IPAddress = string.Empty;
             this.FrontType = EnumFrontType.Direct;
         }
 
@@ -35,9 +36,11 @@ namespace TradingLib.Common
         /// </summary>
         public string VersionToken { get; set; }
 
+        public string IPAddress { get; set; }
+
         public override string ContentSerialize()
         {
-            return string.Format("{0},{1}", this.FrontType, this.VersionToken);
+            return string.Format("{0},{1},{2}", this.FrontType, this.VersionToken,this.IPAddress);
         }
 
         public override void ContentDeserialize(string contentstr)
@@ -47,6 +50,10 @@ namespace TradingLib.Common
             {
                 this.FrontType = rec[0].ParseEnum<EnumFrontType>();
                 this.VersionToken = rec[1];
+            }
+            if (rec.Length >= 3)
+            {
+                this.IPAddress = rec[2];
             }
         }
     }

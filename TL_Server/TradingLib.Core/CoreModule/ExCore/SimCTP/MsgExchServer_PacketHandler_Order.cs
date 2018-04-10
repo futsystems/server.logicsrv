@@ -22,7 +22,7 @@ namespace TradingLib.Core
         /// <param name="o"></param>
         void SrvOnOrderRequest(ISession session,OrderInsertRequest request,IAccount account)
         {
-            logger.Info("Got Order:" + request.Order.GetOrderInfo());
+            logger.Info("Got Order:" + request.Order.GetOrderInfo() +"IP:"+session.IPAddress);
 
             //检查插入委托请求是否有效
             if (!request.IsValid)
