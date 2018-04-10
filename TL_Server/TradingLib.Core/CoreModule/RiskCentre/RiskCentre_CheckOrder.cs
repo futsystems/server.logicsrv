@@ -376,13 +376,13 @@ namespace TradingLib.Core
                         case SecurityType.FUT:
                             #region 期货平仓检查
                             {
-                                bool ismobile = false;
-                                if (session != null && session.ProductInfo.StartsWith("M."))
-                                {
-                                    ismobile = true;
-                                }
+                                //bool ismobile = false;
+                                //if (session != null && session.ProductInfo.StartsWith("M."))
+                                //{
+                                //    ismobile = true;
+                                //}
                                 //如果是上期所的期货品种 需要检查今仓和昨仓 手机端直接执行先开先平操作
-                                if ( (!ismobile)&& Util.IsCloseOffsetFlagDiff(o.oSymbol.SecurityFamily.Exchange.EXCode))
+                                if (/* (!ismobile)&&**/ Util.IsCloseOffsetFlagDiff(o.oSymbol.SecurityFamily.Exchange.EXCode))
                                 {
                                     /* 上期所
                                      * 平今 必须用CloseToday
