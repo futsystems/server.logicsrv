@@ -70,7 +70,7 @@ namespace TradingLib.Common
                 Socket socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
                 socket.SendBufferSize = BUFFERSIZE;
                 socket.ReceiveBufferSize = BUFFERSIZE; //注默认接受数据BufferSize 8192 如果服务端发送一个大的Bar数据包 会导致数据接受异常
-                socket.Connect(this.Server);
+                socket.Connect(this.Server, this.Port);
 
                 if (socket.Connected)
                 {
@@ -240,7 +240,7 @@ namespace TradingLib.Common
         public override RspQryServiceResponse QryService(QSEnumAPIType apiType, string version)
         {
             Socket s = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-            s.Connect(this.Server);
+            s.Connect(this.Server,this.Port);
             QryServiceRequest request = RequestTemplate<QryServiceRequest>.CliSendRequest(0);
             request.APIType = apiType;
             request.APIVersion = version;

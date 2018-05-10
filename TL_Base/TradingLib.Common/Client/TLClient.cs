@@ -64,11 +64,12 @@ namespace TradingLib.Common
         }
 
 
-        List<IPEndPoint> _serverlist = new List<IPEndPoint>();//服务端IP列表 参数给定的IP地址列表
-        List<IPEndPoint> _serverAvabile = new List<IPEndPoint>();//当前可用的IP列表
+        List<string> _serverlist = new List<string>();//服务端IP列表 参数给定的IP地址列表
+        List<string> _serverAvabile = new List<string>();//当前可用的IP列表
 
+        int _port = 0;
 
-
+        public int Port { get { return _port; } }
         //客户端标识
         string _name = string.Empty;
         public string Name 
@@ -93,7 +94,7 @@ namespace TradingLib.Common
         /// <summary>
         /// 返回当前服务端
         /// </summary>
-        public IPEndPoint CurrentServer
+        public string CurrentServer
         {
             get
             {
@@ -247,20 +248,28 @@ namespace TradingLib.Common
 
         #region TLClient_IP 构造函数
         public TLClient(string server, int port, string clientName)
-            : this(GetEndpoints(port, new string[] { server }), 0,clientName)
+            : this(new string[] { server },port, 0,clientName)
         { 
             
         }
+        
+        //public TLClient(string[] servers, int port, string clientName)
+        //    : this(GetEndpoints(port, servers), 0, clientName)
+        //{ 
+            
+        //}
         public TLClient(string[] servers, int port, string clientName)
-            : this(GetEndpoints(port, servers), 0, clientName)
+            :this(servers,port,0,clientName)
         { 
-            
+
         }
-        public TLClient(List<IPEndPoint> servers,int currentIdx,string clientName)
+
+        public TLClient(string[] servers, int port, int currentIdx, string clientName)
         {
             logger = LogManager.GetLogger(clientName);
             _name = clientName;
-            _serverlist = servers;
+            _serverlist = new List<string>(servers);
+            _port = port;
             _curprovider = currentIdx;
 
         }
@@ -422,26 +431,27 @@ namespace TradingLib.Common
             logger.Info("[Found] Serarching servers with service avabile");
             _serverAvabile.Clear();
             //遍历所有服务端列表 查询服务根据查询服务回报获得可用服务端列表
-            foreach (var endpoint in _serverlist)
+            foreach (var server in _serverlist)
             {
-                logger.Info(_skip + "Attempting to found server at:" + endpoint.ToString());
+                logger.Info(_skip + "Attempting to found server at:" + server);
                 try
                 {
                     //通过底层Sock对象查询服务,服务端会返回查询服务回报,如果查询服务回报ErrorID==0则表明服务可用
                     TLSocketBase socket = new T();
-                    socket.Server = endpoint;
+                    socket.Server = server;
+                    socket.Port = _port;
 
                     RspQryServiceResponse response = socket.QryService(QSEnumAPIType.MD_ZMQ, Const.APIVersion);
                     if (response != null && response.RspInfo.ErrorID == 0)
                     {
-                        logger.Info(_skip+string.Format("Found server at:{0} API:{1} Version:{2} can provider service", endpoint, response.APIType, response.APIVersion));
+                        logger.Info(_skip + string.Format("Found server at:{0} API:{1} Version:{2} can provider service", server, response.APIType, response.APIVersion));
                         //如果服务可用将对应服务端IPEndPoint放入可用列表
-                        _serverAvabile.Add(endpoint);
+                        _serverAvabile.Add(server);
                     }
                 }
                 catch (Exception ex)
                 {
-                    logger.Error("QryService for server:" + endpoint + " error:" + ex.ToString());
+                    logger.Error("QryService for server:" + server + " error:" + ex.ToString());
                 }
             }
             logger.Info(_skip + "Total Found " + _serverAvabile.Count + " servers avabile");
@@ -475,6 +485,7 @@ namespace TradingLib.Common
                 //初始化底层Socket连接
                 _tlsocket = new T();
                 _tlsocket.Server = _serverAvabile[serverIdx];
+                _tlsocket.Port = _port;
                 _tlsocket.MessageEvent += new Action<Message>(handle);
                 //开始启动连接
                 _tlsocket.Connect();

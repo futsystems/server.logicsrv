@@ -31,9 +31,14 @@ namespace TradingLib.Common
             }
         }
 
-        IPEndPoint _server;
-        public IPEndPoint Server { get { return _server; } set { _server=value; } }
+        //IPEndPoint _server;
+        //public IPEndPoint Server { get { return _server; } set { _server=value; } }
 
+        string _server;
+        public string Server { get { return _server; } set { _server = value; } }
+
+        int _port;
+        public int Port { get { return _port; } set { _port = value ; } }
 
         /// <summary>
         /// Socket是否处于连接状态
