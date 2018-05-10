@@ -762,11 +762,17 @@ namespace TradingLib.Common
 
         static List<IPEndPoint> GetEndpoints(int port, params string[] servers)
         {
-            List<IPEndPoint> ip = new List<IPEndPoint>();
+            List<IPEndPoint> iplist = new List<IPEndPoint>();
             foreach (string server in servers)
-                if (IsValidAddress(server))
-                    ip.Add(new IPEndPoint(IPAddress.Parse(server), port));
-            return ip;
+            {
+                foreach (var ipadd in Dns.GetHostAddresses(server))
+                {
+                    iplist.Add(new IPEndPoint(ipadd, port));
+                }
+                //if (IsValidAddress(server))
+                //    ip.Add(new IPEndPoint(IPAddress.Parse(server), port));
+            }
+            return iplist;
         }
 
         private bool IsValidResponse(RspResponsePacket response)

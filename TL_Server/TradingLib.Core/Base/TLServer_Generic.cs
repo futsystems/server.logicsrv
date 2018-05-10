@@ -576,15 +576,6 @@ namespace TradingLib.Core
             }
         }
 
-        /// <summary>
-        /// 发送业务数据包到前置服务器
-        /// </summary>
-        /// <param name="packet"></param>
-        //public void TLNotifyFront(IPacket packet)
-        //{
-        //    this.TLNotifyFront(packet.Data);
-        //}
-
 
         void TLSend(IPacket packet, string clientid, string frontid)
         {
@@ -593,27 +584,6 @@ namespace TradingLib.Core
                 _trans.Send(packet, clientid);
             }
         }
-        /// <summary>
-        /// 向客户端发送数据
-        /// </summary>
-        /// <param name="data"></param>
-        /// <param name="clientid"></param>
-        /// <param name="frontid"></param>
-        //void TLSend(byte[] data, string clientid, string frontid)
-        //{
-        //    if (this.IsLive)
-        //    {
-        //        _trans.Send(data, clientid, frontid);
-        //    }
-        //}
-
-        //void TLNotifyFront(byte[] data)
-        //{
-        //    if (this.IsLive)
-        //    {
-        //        _trans.NotifyFront(data);
-        //    }
-        //}
 
         /// <summary>
         /// TLServer内部发送数据不直接调用TLSend,需要统一向外层组件抛出数据由外层建立的消息发送线程统一对外发送数据
@@ -717,88 +687,6 @@ namespace TradingLib.Core
                 logger.Error(string.Format("Message Type:{0} Content:{1} FrontID:{2} Client:{3}", ex.Type.ToString(), ex.Content, ex.FrontID, ex.ClientID));
             }
         }
-
-        /*
-        /// <summary>
-        /// 将底层传输层上传上来的数据解析成逻辑数据包并处理
-        /// Generic只处理服务端通用部分比如 注册,注销,心跳等连接维护类基础工作
-        /// 这里需要统一登入请求
-        /// </summary>
-        /// <param name="type"></param>
-        /// <param name="msg"></param>
-        /// <param name="front"></param>
-        /// <param name="address"></param>
-        /// <returns></returns>
-        public void basehandle(Message message, string front, string address)
-        {
-            long result = NORETURNRESULT;
-            try
-            {
-                IPacket packet = PacketHelper.SrvRecvRequest(message, front, address);
-                //debug("<<<<<< Rev Packet:" + packet.ToString(), QSEnumDebugLevel.INFO);
-                T1 client = _clients[address];
-                Client2Session session = client!=null?CreateSession(client):null;
-                switch (message.Type)
-                {
-                    case MessageTypes.REGISTERCLIENT://注册
-                        SrvRegClient(packet as RegisterClientRequest,client);
-                        PacketEvent(session, packet,front,address);
-                        break;
-                    case MessageTypes.VERSIONREQUEST://版本查询
-                        SrvVersonReq(packet as VersionRequest, client);
-                        PacketEvent(session, packet, front, address);
-                        break;
-                    case MessageTypes.UPDATELOCATION://地址信息更新
-                        SrvOnUpdateLocationInfo(packet as UpdateLocationInfoRequest, client);
-                        PacketEvent(session, packet, front, address);
-                        break;
-                    case MessageTypes.LOGINREQUEST://登入
-                        SrvLoginReq(packet as LoginRequest, client);
-                        PacketEvent(session, packet, front, address);
-                        break;
-                    case MessageTypes.CLEARCLIENT://注销
-                        SrvClearClient(packet as UnregisterClientRequest,client);
-                        PacketEvent(session, packet, front, address);
-                        break;
-                    case MessageTypes.HEARTBEATREQUEST://客户端请求服务端发送给客户端一个心跳 以让客户端知道 与服务端的连接有效
-                        SrvBeatHeartRequest(packet as HeartBeatRequest, client);
-                        PacketEvent(session, packet, front, address);
-                        break;
-                    case MessageTypes.HEARTBEAT://客户端主动向服务端发送心跳,让服务端知道 客户端还存活
-                        SrvBeatHeart(packet as HeartBeat, client);
-                        PacketEvent(session, packet, front, address);
-                        break;
-                    case MessageTypes.FEATUREREQUEST://功能特征码请求
-                        SrvReqFuture(packet as FeatureRequest, client);
-                        PacketEvent(session, packet, front, address);
-                        break;
-                    default:
-                        //如果客户端没有注册到服务器则 不接受任何其他类型的功能请求 要求客户端有效注册到服务器
-                        if (client == null) return;
-                        //如果该客户端没有认证通过则 不接受任何其他类型的操作请求
-                        if (!client.Authorized) return;//如果授权通过表面已经绑定了对应的状态对象
-
-                        OnSessionStated(session,client);
-                        result = handle(session,packet);//外传到子类中去扩展消息类型 通过子类扩展允许tlserver实现更多功能请求
-                        PacketEvent(session, packet, front, address);
-                        break;
-                }
-
-            }
-            catch (PacketParseError ex)
-            {
-                logger.Error("****** IPacket Deserialize Error");
-                logger.Error(string.Format("Message Type:{0} Content:{1} FrontID:{2} Client:{3}", ex.Type.ToString(), ex.Content, ex.FrontID, ex.ClientID));
-                logger.Info("Raw Exception:" + ex.RawException.ToString());
-            }
-            catch (PacketTypeNotAvabile ex)
-            {
-                logger.Error("****** Can not find PacketClass for Type:" + ex.Type.ToString());
-                logger.Error(string.Format("Message Type:{0} Content:{1} FrontID:{2} Client:{3}", ex.Type.ToString(), ex.Content, ex.FrontID, ex.ClientID));
-            }
-            return;
-
-        }**/
         #endregion
 
 
