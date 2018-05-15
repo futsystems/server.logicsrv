@@ -123,6 +123,15 @@
             this.btnEncode = new System.Windows.Forms.Button();
             this.label21 = new System.Windows.Forms.Label();
             this.tabPage5 = new System.Windows.Forms.TabPage();
+            this.webupdateacc_idcard = new System.Windows.Forms.TextBox();
+            this.label37 = new System.Windows.Forms.Label();
+            this.webUpdateAccount = new System.Windows.Forms.Button();
+            this.webupdateacc_bank = new System.Windows.Forms.TextBox();
+            this.label34 = new System.Windows.Forms.Label();
+            this.webupdateacc_bankac = new System.Windows.Forms.TextBox();
+            this.label35 = new System.Windows.Forms.Label();
+            this.webupdateacc_branch = new System.Windows.Forms.TextBox();
+            this.label36 = new System.Windows.Forms.Label();
             this.webupdateacc_acc = new System.Windows.Forms.TextBox();
             this.label30 = new System.Windows.Forms.Label();
             this.webupdateacc_mobile = new System.Windows.Forms.TextBox();
@@ -144,16 +153,11 @@
             this.webAddAccount = new System.Windows.Forms.Button();
             this.md5key = new System.Windows.Forms.TextBox();
             this.label24 = new System.Windows.Forms.Label();
+            this.webDeposit = new System.Windows.Forms.Button();
+            this.webAmount = new System.Windows.Forms.TextBox();
+            this.label38 = new System.Windows.Forms.Label();
+            this.webWitdhdraw = new System.Windows.Forms.Button();
             this.debugControl1 = new APIClient.DebugControl();
-            this.webupdateacc_bank = new System.Windows.Forms.TextBox();
-            this.label34 = new System.Windows.Forms.Label();
-            this.webupdateacc_bankac = new System.Windows.Forms.TextBox();
-            this.label35 = new System.Windows.Forms.Label();
-            this.webupdateacc_branch = new System.Windows.Forms.TextBox();
-            this.label36 = new System.Windows.Forms.Label();
-            this.webUpdateAccount = new System.Windows.Forms.Button();
-            this.webupdateacc_idcard = new System.Windows.Forms.TextBox();
-            this.label37 = new System.Windows.Forms.Label();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.cashopVal)).BeginInit();
@@ -1092,6 +1096,10 @@
             // 
             // tabPage5
             // 
+            this.tabPage5.Controls.Add(this.webWitdhdraw);
+            this.tabPage5.Controls.Add(this.webAmount);
+            this.tabPage5.Controls.Add(this.label38);
+            this.tabPage5.Controls.Add(this.webDeposit);
             this.tabPage5.Controls.Add(this.webupdateacc_idcard);
             this.tabPage5.Controls.Add(this.label37);
             this.tabPage5.Controls.Add(this.webUpdateAccount);
@@ -1127,8 +1135,85 @@
             this.tabPage5.Padding = new System.Windows.Forms.Padding(3);
             this.tabPage5.Size = new System.Drawing.Size(961, 227);
             this.tabPage5.TabIndex = 4;
-            this.tabPage5.Text = "tabPage5";
+            this.tabPage5.Text = "HttpAPI";
             this.tabPage5.UseVisualStyleBackColor = true;
+            // 
+            // webupdateacc_idcard
+            // 
+            this.webupdateacc_idcard.Location = new System.Drawing.Point(426, 141);
+            this.webupdateacc_idcard.Name = "webupdateacc_idcard";
+            this.webupdateacc_idcard.Size = new System.Drawing.Size(100, 21);
+            this.webupdateacc_idcard.TabIndex = 29;
+            this.webupdateacc_idcard.Text = "0";
+            // 
+            // label37
+            // 
+            this.label37.AutoSize = true;
+            this.label37.Location = new System.Drawing.Point(379, 144);
+            this.label37.Name = "label37";
+            this.label37.Size = new System.Drawing.Size(41, 12);
+            this.label37.TabIndex = 28;
+            this.label37.Text = "idcard";
+            // 
+            // webUpdateAccount
+            // 
+            this.webUpdateAccount.Location = new System.Drawing.Point(223, 186);
+            this.webUpdateAccount.Name = "webUpdateAccount";
+            this.webUpdateAccount.Size = new System.Drawing.Size(75, 23);
+            this.webUpdateAccount.TabIndex = 27;
+            this.webUpdateAccount.Text = "update交易账户";
+            this.webUpdateAccount.UseVisualStyleBackColor = true;
+            // 
+            // webupdateacc_bank
+            // 
+            this.webupdateacc_bank.Location = new System.Drawing.Point(426, 48);
+            this.webupdateacc_bank.Name = "webupdateacc_bank";
+            this.webupdateacc_bank.Size = new System.Drawing.Size(100, 21);
+            this.webupdateacc_bank.TabIndex = 26;
+            this.webupdateacc_bank.Text = "0";
+            // 
+            // label34
+            // 
+            this.label34.AutoSize = true;
+            this.label34.Location = new System.Drawing.Point(379, 51);
+            this.label34.Name = "label34";
+            this.label34.Size = new System.Drawing.Size(29, 12);
+            this.label34.TabIndex = 25;
+            this.label34.Text = "bank";
+            // 
+            // webupdateacc_bankac
+            // 
+            this.webupdateacc_bankac.Location = new System.Drawing.Point(426, 106);
+            this.webupdateacc_bankac.Name = "webupdateacc_bankac";
+            this.webupdateacc_bankac.Size = new System.Drawing.Size(100, 21);
+            this.webupdateacc_bankac.TabIndex = 24;
+            this.webupdateacc_bankac.Text = "0";
+            // 
+            // label35
+            // 
+            this.label35.AutoSize = true;
+            this.label35.Location = new System.Drawing.Point(379, 109);
+            this.label35.Name = "label35";
+            this.label35.Size = new System.Drawing.Size(47, 12);
+            this.label35.TabIndex = 23;
+            this.label35.Text = "bankacc";
+            // 
+            // webupdateacc_branch
+            // 
+            this.webupdateacc_branch.Location = new System.Drawing.Point(426, 79);
+            this.webupdateacc_branch.Name = "webupdateacc_branch";
+            this.webupdateacc_branch.Size = new System.Drawing.Size(100, 21);
+            this.webupdateacc_branch.TabIndex = 22;
+            this.webupdateacc_branch.Text = "0";
+            // 
+            // label36
+            // 
+            this.label36.AutoSize = true;
+            this.label36.Location = new System.Drawing.Point(379, 82);
+            this.label36.Name = "label36";
+            this.label36.Size = new System.Drawing.Size(41, 12);
+            this.label36.TabIndex = 21;
+            this.label36.Text = "branch";
             // 
             // webupdateacc_acc
             // 
@@ -1204,7 +1289,7 @@
             this.web_url.Name = "web_url";
             this.web_url.Size = new System.Drawing.Size(139, 21);
             this.web_url.TabIndex = 12;
-            this.web_url.Text = "http://127.0.0.1:8080/api";
+            this.web_url.Text = "http://127.0.0.1:9999/api";
             // 
             // label29
             // 
@@ -1221,7 +1306,7 @@
             this.web_domainId.Name = "web_domainId";
             this.web_domainId.Size = new System.Drawing.Size(100, 21);
             this.web_domainId.TabIndex = 10;
-            this.web_domainId.Text = "0";
+            this.web_domainId.Text = "2";
             // 
             // label28
             // 
@@ -1309,6 +1394,41 @@
             this.label24.TabIndex = 0;
             this.label24.Text = "MD5Key";
             // 
+            // webDeposit
+            // 
+            this.webDeposit.Location = new System.Drawing.Point(765, 21);
+            this.webDeposit.Name = "webDeposit";
+            this.webDeposit.Size = new System.Drawing.Size(75, 23);
+            this.webDeposit.TabIndex = 30;
+            this.webDeposit.Text = "Deposit";
+            this.webDeposit.UseVisualStyleBackColor = true;
+            // 
+            // webAmount
+            // 
+            this.webAmount.Location = new System.Drawing.Point(594, 48);
+            this.webAmount.Name = "webAmount";
+            this.webAmount.Size = new System.Drawing.Size(100, 21);
+            this.webAmount.TabIndex = 32;
+            this.webAmount.Text = "0";
+            // 
+            // label38
+            // 
+            this.label38.AutoSize = true;
+            this.label38.Location = new System.Drawing.Point(547, 51);
+            this.label38.Name = "label38";
+            this.label38.Size = new System.Drawing.Size(41, 12);
+            this.label38.TabIndex = 31;
+            this.label38.Text = "amount";
+            // 
+            // webWitdhdraw
+            // 
+            this.webWitdhdraw.Location = new System.Drawing.Point(765, 54);
+            this.webWitdhdraw.Name = "webWitdhdraw";
+            this.webWitdhdraw.Size = new System.Drawing.Size(75, 23);
+            this.webWitdhdraw.TabIndex = 33;
+            this.webWitdhdraw.Text = "Withdraw";
+            this.webWitdhdraw.UseVisualStyleBackColor = true;
+            // 
             // debugControl1
             // 
             this.debugControl1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
@@ -1323,83 +1443,6 @@
             this.debugControl1.TabIndex = 0;
             this.debugControl1.TimeStamps = true;
             this.debugControl1.UseExternalTimeStamp = false;
-            // 
-            // webupdateacc_bank
-            // 
-            this.webupdateacc_bank.Location = new System.Drawing.Point(426, 48);
-            this.webupdateacc_bank.Name = "webupdateacc_bank";
-            this.webupdateacc_bank.Size = new System.Drawing.Size(100, 21);
-            this.webupdateacc_bank.TabIndex = 26;
-            this.webupdateacc_bank.Text = "0";
-            // 
-            // label34
-            // 
-            this.label34.AutoSize = true;
-            this.label34.Location = new System.Drawing.Point(379, 51);
-            this.label34.Name = "label34";
-            this.label34.Size = new System.Drawing.Size(29, 12);
-            this.label34.TabIndex = 25;
-            this.label34.Text = "bank";
-            // 
-            // webupdateacc_bankac
-            // 
-            this.webupdateacc_bankac.Location = new System.Drawing.Point(426, 106);
-            this.webupdateacc_bankac.Name = "webupdateacc_bankac";
-            this.webupdateacc_bankac.Size = new System.Drawing.Size(100, 21);
-            this.webupdateacc_bankac.TabIndex = 24;
-            this.webupdateacc_bankac.Text = "0";
-            // 
-            // label35
-            // 
-            this.label35.AutoSize = true;
-            this.label35.Location = new System.Drawing.Point(379, 109);
-            this.label35.Name = "label35";
-            this.label35.Size = new System.Drawing.Size(47, 12);
-            this.label35.TabIndex = 23;
-            this.label35.Text = "bankacc";
-            // 
-            // webupdateacc_branch
-            // 
-            this.webupdateacc_branch.Location = new System.Drawing.Point(426, 79);
-            this.webupdateacc_branch.Name = "webupdateacc_branch";
-            this.webupdateacc_branch.Size = new System.Drawing.Size(100, 21);
-            this.webupdateacc_branch.TabIndex = 22;
-            this.webupdateacc_branch.Text = "0";
-            // 
-            // label36
-            // 
-            this.label36.AutoSize = true;
-            this.label36.Location = new System.Drawing.Point(379, 82);
-            this.label36.Name = "label36";
-            this.label36.Size = new System.Drawing.Size(41, 12);
-            this.label36.TabIndex = 21;
-            this.label36.Text = "branch";
-            // 
-            // webUpdateAccount
-            // 
-            this.webUpdateAccount.Location = new System.Drawing.Point(223, 186);
-            this.webUpdateAccount.Name = "webUpdateAccount";
-            this.webUpdateAccount.Size = new System.Drawing.Size(75, 23);
-            this.webUpdateAccount.TabIndex = 27;
-            this.webUpdateAccount.Text = "update交易账户";
-            this.webUpdateAccount.UseVisualStyleBackColor = true;
-            // 
-            // webupdateacc_idcard
-            // 
-            this.webupdateacc_idcard.Location = new System.Drawing.Point(426, 141);
-            this.webupdateacc_idcard.Name = "webupdateacc_idcard";
-            this.webupdateacc_idcard.Size = new System.Drawing.Size(100, 21);
-            this.webupdateacc_idcard.TabIndex = 29;
-            this.webupdateacc_idcard.Text = "0";
-            // 
-            // label37
-            // 
-            this.label37.AutoSize = true;
-            this.label37.Location = new System.Drawing.Point(379, 144);
-            this.label37.Name = "label37";
-            this.label37.Size = new System.Drawing.Size(41, 12);
-            this.label37.TabIndex = 28;
-            this.label37.Text = "idcard";
             // 
             // Form1
             // 
@@ -1555,6 +1598,10 @@
         private System.Windows.Forms.Button webUpdateAccount;
         private System.Windows.Forms.TextBox webupdateacc_idcard;
         private System.Windows.Forms.Label label37;
+        private System.Windows.Forms.Button webDeposit;
+        private System.Windows.Forms.TextBox webAmount;
+        private System.Windows.Forms.Label label38;
+        private System.Windows.Forms.Button webWitdhdraw;
     }
 }
 

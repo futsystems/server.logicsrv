@@ -21,6 +21,22 @@ namespace APIClient
         {
             webAddAccount.Click += new EventHandler(webAddAccount_Click);
             webUpdateAccount.Click += new EventHandler(webUpdateAccount_Click);
+            webDeposit.Click += new EventHandler(webDeposit_Click);
+            webWitdhdraw.Click += new EventHandler(webWitdhdraw_Click);
+        }
+
+        void webWitdhdraw_Click(object sender, EventArgs e)
+        {
+            HttpAPIClient client = new HttpAPIClient(web_url.Text, md5key.Text);
+            string ret = client.ReqWithdraw(web_domainId.Text, webupdateacc_acc.Text, webAmount.Text);
+            logger.Info("resoult:" + ret);
+        }
+
+        void webDeposit_Click(object sender, EventArgs e)
+        {
+            HttpAPIClient client = new HttpAPIClient(web_url.Text, md5key.Text);
+            string ret = client.ReqDeposit(web_domainId.Text, webupdateacc_acc.Text, webAmount.Text);
+            logger.Info("resoult:" + ret);
         }
 
         void webUpdateAccount_Click(object sender, EventArgs e)

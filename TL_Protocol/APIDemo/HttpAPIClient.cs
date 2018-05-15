@@ -159,6 +159,37 @@ namespace APIClient
             return ret;
         }
 
+        public string ReqDeposit(string domain_id, string account, string val)
+        {
+            Dictionary<string, string> request = new Dictionary<string, string>();
+            request.Add("method", "deposit");
+            request.Add("domain_id", domain_id);
+            request.Add("account", account);
+            request.Add("amount", val);
+
+            string waitSign = CreateLinkString(request);
+            var sign = MD5Sign(waitSign, _key);
+            request.Add("md5sign", sign);
+            string ret = SendPostHttpRequest(request, _url);
+            return ret;
+        }
+
+        public string ReqWithdraw(string domain_id, string account, string val)
+        {
+            Dictionary<string, string> request = new Dictionary<string, string>();
+            request.Add("method", "withdraw");
+            request.Add("domain_id", domain_id);
+            request.Add("account", account);
+            request.Add("amount", val);
+
+            string waitSign = CreateLinkString(request);
+            var sign = MD5Sign(waitSign, _key);
+            request.Add("md5sign", sign);
+            string ret = SendPostHttpRequest(request, _url);
+            return ret;
+        }
+
+
         public static string UrlEncode(string str)
         {
             StringBuilder sb = new StringBuilder();
