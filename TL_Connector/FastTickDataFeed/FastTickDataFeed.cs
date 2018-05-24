@@ -167,22 +167,24 @@ namespace DataFeed.FastTick
         {
             if (!_tickgo) return;
             _tickgo = false;
-            int _wait = 0;
-            while (_tickthread.IsAlive && (_wait++ < 5))
-            {
-                logger.Info("#:" + _wait.ToString() + "  FastTick is stoping...." + "MessageThread Status:" + _tickthread.IsAlive.ToString());
-                Thread.Sleep(500);
-            }
-            if (!_tickthread.IsAlive)
-            {
-                ThreadTracker.Unregister(_tickthread);
-                _tickthread = null;
-                logger.Info("FastTick Stopped successfull...");
-            }
-            else
-            {
-                logger.Error("Some Error Happend In Stoping FastTick");
-            }
+            //int _wait = 0;
+            //while (_tickthread.IsAlive && (_wait++ < 5))
+            //{
+            //    logger.Info("#:" + _wait.ToString() + "  FastTick is stoping...." + "MessageThread Status:" + _tickthread.IsAlive.ToString());
+            //    Thread.Sleep(500);
+            //}
+            //if (!_tickthread.IsAlive)
+            //{
+            //    ThreadTracker.Unregister(_tickthread);
+            //    _tickthread = null;
+            //    logger.Info("FastTick Stopped successfull...");
+            //}
+            //else
+            //{
+            //    logger.Error("Some Error Happend In Stoping FastTick");
+            //}
+            _tickthread.Join();
+            logger.Info("FastTick Stopped successfull...");
         }
 
         void StartTickHandler()
@@ -205,7 +207,7 @@ namespace DataFeed.FastTick
         }
 
         ZSocket _subscriber;//sub socket which receive data
-        ZSocket _symbolreq;//push socket which tell tickserver to regist data
+        //ZSocket _symbolreq;//push socket which tell tickserver to regist data
         bool _tickgo;
         Thread _tickthread;
         bool _tickreceiveruning = false;
@@ -213,14 +215,14 @@ namespace DataFeed.FastTick
         {
             using (var context = new ZContext())
             {
-                using (ZSocket subscriber = new ZSocket(context, ZSocketType.SUB), symbolreq = new ZSocket(context, ZSocketType.REQ))
+                using (ZSocket subscriber = new ZSocket(context, ZSocketType.SUB))//, symbolreq = new ZSocket(context, ZSocketType.REQ))
                 {
                     subscriber.SendHighWatermark = 1000000;
                     subscriber.ReceiveHighWatermark = 1000000;
-                    symbolreq.SendHighWatermark = 1000000;
-                    symbolreq.ReceiveHighWatermark = 1000000;
+                    //symbolreq.SendHighWatermark = 1000000;
+                    //symbolreq.ReceiveHighWatermark = 1000000;
                     string reqadd = "tcp://" + CurrentServer + ":" + reqport;
-                    symbolreq.Connect(reqadd);
+                    //symbolreq.Connect(reqadd);
 
                     string subadd = "tcp://" + CurrentServer + ":" + port;
                     logger.Info(string.Format("Connect to FastTick Server:{0} ReqPort:{1} DataPort{2}", CurrentServer, reqport, port));
@@ -228,7 +230,7 @@ namespace DataFeed.FastTick
                     //订阅行情心跳数据
                     subscriber.Subscribe(Encoding.UTF8.GetBytes("H,"));
 
-                    _symbolreq = symbolreq;
+                    //_symbolreq = symbolreq;
                     _subscriber = subscriber;
 
                     _tickreceiveruning = true;
@@ -270,7 +272,7 @@ namespace DataFeed.FastTick
                             {
                                 logger.Info("Tick Thread Stopped,try to close socket");
                                 subscriber.Close();
-                                symbolreq.Close();
+                                //symbolreq.Close();
                             }
                         }
                         catch (ZException ex)
@@ -297,37 +299,37 @@ namespace DataFeed.FastTick
 
         void Send(IPacket packet)
         {
-            if (_symbolreq != null)
-            {
-                lock (_symbolreq)
-                {
-                    try
-                    {
-                        byte[] message = packet.Data;
-                        _symbolreq.Send(new ZFrame(message));
-                        ZMessage response;
-                        ZError error;
-                        var poller = ZPollItem.CreateReceiver();
-                        if (_symbolreq.PollIn(poller, out response, out error, timeout))
-                        {
-                            logger.Debug(string.Format("Got Rep Response:", response.First().ReadString(Encoding.UTF8)));
-                            response.Clear();
-                        }
-                        else
-                        {
-                            if (error == ZError.ETERM)
-                            {
-                                return;
-                            }
-                            throw new ZException(error);
-                        }
-                    }
-                    catch (Exception ex)
-                    {
-                        logger.Error("发送消息异常:" + ex.ToString());
-                    }
-                }
-            }
+            //if (_symbolreq != null)
+            //{
+            //    lock (_symbolreq)
+            //    {
+            //        try
+            //        {
+            //            byte[] message = packet.Data;
+            //            _symbolreq.Send(new ZFrame(message));
+            //            ZMessage response;
+            //            ZError error;
+            //            var poller = ZPollItem.CreateReceiver();
+            //            if (_symbolreq.PollIn(poller, out response, out error, timeout))
+            //            {
+            //                logger.Debug(string.Format("Got Rep Response:", response.First().ReadString(Encoding.UTF8)));
+            //                response.Clear();
+            //            }
+            //            else
+            //            {
+            //                if (error == ZError.ETERM)
+            //                {
+            //                    return;
+            //                }
+            //                throw new ZException(error);
+            //            }
+            //        }
+            //        catch (Exception ex)
+            //        {
+            //            logger.Error("发送消息异常:" + ex.ToString());
+            //        }
+            //    }
+            //}
         }
 
         /// <summary>
@@ -336,13 +338,15 @@ namespace DataFeed.FastTick
         /// <param name="symbols"></param>
         public void RegisterSymbols(List<Symbol> symbols)
         {
+            logger.Warn("Symbol register move to DataFarm,LogicServer will not subscribe sysmbol");
+
             try
             {
                 //按交易所分组
                 Dictionary<string, List<Symbol>> exSymMap = new Dictionary<string, List<Symbol>>();
                 foreach (Symbol sym in symbols)
                 {
-                    
+
                     List<Symbol> list = null;
                     if (!exSymMap.TryGetValue(sym.Exchange, out list))
                     {
@@ -354,25 +358,25 @@ namespace DataFeed.FastTick
                 //注册交易下所有合约
                 foreach (var pair in exSymMap)
                 {
-                    MDRegisterSymbolsRequest request = RequestTemplate<MDRegisterSymbolsRequest>.CliSendRequest(0);
+                   // MDRegisterSymbolsRequest request = RequestTemplate<MDRegisterSymbolsRequest>.CliSendRequest(0);
                     ExchangeImpl exch = BasicTracker.ExchagneTracker[pair.Key];
                     if (exch == null)
                     {
                         logger.Warn("Exchange:{0} do not exist".Put(pair.Key));
                     }
-                    request.DataFeed = exch.DataFeed;
-                    request.Exchange = pair.Key;
-                    foreach(var sym in pair.Value)
+                    //request.DataFeed = exch.DataFeed;
+                    //request.Exchange = pair.Key;
+                    foreach (var sym in pair.Value)
                     {
-                        request.SymbolList.Add(sym.GetFullSymbol());
+                        //request.SymbolList.Add(sym.GetFullSymbol());
                         foreach (var prefix in _prefixList)
                         {
                             string p = prefix + sym.Symbol;
                             _subscriber.Subscribe(Encoding.UTF8.GetBytes(p));
                         }
-        
+
                     }
-                    Send(request); //?股票为何单个注册
+                    //Send(request); //?股票为何单个注册
                 }
 
                 //TODO 更合理的方式是按交易所分组 单个交易所的行情 是统一一个行情源订阅的 这样可以实现 以交易所 批量订阅多个合约避免多次循环订阅的问题
@@ -403,7 +407,7 @@ namespace DataFeed.FastTick
 
                 //}
 
-                
+
             }
             catch (Exception ex)
             {
