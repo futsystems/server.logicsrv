@@ -155,7 +155,7 @@ namespace TradingLib.Core
             RunConfig.Instance.Profile.LeaveSection();
         }
 
-        [TaskAttr("采集终端登入数量", 5, 0, "定时采集终端登入数量向管理端进行推送")]
+        [TaskAttr("采集终端登入数量", 10, 0, "定时采集终端登入数量向管理端进行推送")]
         public void Task_CollectTerminalNumInfo()
         {
             try
@@ -166,6 +166,8 @@ namespace TradingLib.Core
             {
                 logger.Error("登入终端个数信息采集出错:" + ex.ToString());
             }
+            //
+            logger.Info(RunConfig.Instance.Profile.GetStatsString());
         }
 
     }
