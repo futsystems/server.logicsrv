@@ -159,8 +159,20 @@ namespace TradingLib.Common
             {
                 config.UpdateConfig("DeleteDirect", QSEnumCfgType.Bool, false, "直接删除");
             }
+
+            if (!config.HaveConfig("PositionSymbolMapEnable"))
+            {
+                config.UpdateConfig("PositionSymbolMapEnable", QSEnumCfgType.Bool, false, "持仓合约归类");
+            }
+
+            PositionSymbolMapEnable = config["PositionSymbolMapEnable"].AsBool();
+            PositionImpl.PositionSymbolMapEnable = PositionSymbolMapEnable;
         }
 
+        /// <summary>
+        /// 是否将持仓按合约进行归类缓存
+        /// </summary>
+        public static bool PositionSymbolMapEnable { get; set; }
         /// <summary>
         /// 逻辑删除
         /// 逻辑删除的数据仍然在数据库，可以进行恢复

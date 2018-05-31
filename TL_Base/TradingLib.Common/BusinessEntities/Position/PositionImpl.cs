@@ -15,6 +15,8 @@ namespace TradingLib.Common
     [Serializable]
     public class PositionImpl : TradingLib.API.Position, IConvertible
     {
+        public static bool PositionSymbolMapEnable { get; set; }
+
         protected static ILog logger = LogManager.GetLogger("PositionImpl");
         #region 类型转换
         public decimal ToDecimal(IFormatProvider provider)
@@ -335,12 +337,15 @@ namespace TradingLib.Common
         /// </summary>
         public void GotTick(Tick k)
         {
-            //动态的更新unrealizedpl，这样就不用再委托检查是频繁计算
-            //更新最新的价格信息
-            string key = k.GetSymbolUniqueKey();
-            if (key != this.oSymbol.GetUniqueKey()) return;
-            //if (k.Symbol != (this.oSymbol != null ? this.oSymbol.TickSymbol : this.Symbol))//合约的行情比对或者模拟成交是按Tick进行的。应为异化合约只是合约代码和保证金手续费不同,异化合约依赖于底层合约
-            //    return;
+            if (!PositionSymbolMapEnable)
+            {
+                //动态的更新unrealizedpl，这样就不用再委托检查是频繁计算
+                //更新最新的价格信息
+                string key = k.GetSymbolUniqueKey();
+                if (key != this.oSymbol.GetUniqueKey()) return;
+                //if (k.Symbol != (this.oSymbol != null ? this.oSymbol.TickSymbol : this.Symbol))//合约的行情比对或者模拟成交是按Tick进行的。应为异化合约只是合约代码和保证金手续费不同,异化合约依赖于底层合约
+                //    return;
+            }
 
             //更新最新价
             if (k.IsTrade())

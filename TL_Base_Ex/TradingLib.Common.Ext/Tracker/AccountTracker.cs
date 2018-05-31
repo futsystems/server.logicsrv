@@ -16,6 +16,8 @@ namespace TradingLib.Common
     /// </summary>
     public class AccountTracker:BaseSrvObject
     {
+        Dictionary<string, List<Position>> symPositionBool = new Dictionary<string, List<Position>>();
+
         private ConcurrentDictionary<string, OrderTracker> OrdBook = new ConcurrentDictionary<string, OrderTracker>();
         private ConcurrentDictionary<string, LSPositionTracker> PosBook = new ConcurrentDictionary<string, LSPositionTracker>();
         private ConcurrentDictionary<string, TradeTracker> TradeBook = new ConcurrentDictionary<string, TradeTracker>();
@@ -45,6 +47,19 @@ namespace TradingLib.Common
         {
             if (NewPositionEvent != null)
                 NewPositionEvent(pos);
+
+
+            if (GlobalConfig.PositionSymbolMapEnable)
+            {
+                //按合约分类
+                List<Position> target = null;
+                if (!symPositionBool.TryGetValue(pos.Symbol, out target))
+                {
+                    target = new List<Position>();
+                    symPositionBool.Add(pos.Symbol, target);
+                }
+                target.Add(pos);
+            }
         }
         public event Action<Position> NewPositionEvent;
 
@@ -224,10 +239,25 @@ namespace TradingLib.Common
         /// <param name="k"></param>
         internal void GotTick(Tick k)
         {
-            foreach (LSPositionTracker pt in PosBook.Values)
+            if (!GlobalConfig.PositionSymbolMapEnable)
             {
-                pt.GotTick(k);
+                foreach (LSPositionTracker pt in PosBook.Values)
+                {
+                    pt.GotTick(k);
+                }
             }
+            else
+            {
+                List<Position> target = null;
+                if (symPositionBool.TryGetValue(k.Symbol, out target))
+                {
+                    foreach (var pos in target)
+                    {
+                        pos.GotTick(k);
+                    }
+                }
+            }
+
         }
 
         #endregion
