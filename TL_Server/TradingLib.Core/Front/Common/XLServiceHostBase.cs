@@ -124,15 +124,18 @@ namespace FrontServer
                             pkt.AddField(field);
 
                             ResponseXLPacket(conn, pkt, (uint)response.RequestID, response.IsLast);
-                            logger.Info(string.Format("LogicSrv Reply Session:{0} -> RspQrySymbolResponse", conn.SessionID));
+                            //logger.Info(string.Format("LogicSrv Reply Session:{0} -> RspQrySymbolResponse", conn.SessionID));
 
                         }
                         else
                         {
                             XLPacketData pkt = new XLPacketData(XLMessageType.T_RSP_SYMBOL);
                             ResponseXLPacket(conn, pkt, (uint)response.RequestID, response.IsLast);
-                            logger.Info(string.Format("LogicSrv Reply Session:{0} -> RspQrySymbolResponse", conn.SessionID));
+                            //logger.Info(string.Format("LogicSrv Reply Session:{0} -> RspQrySymbolResponse", conn.SessionID));
                         }
+
+                        if (response.IsLast) logger.Info(string.Format("LogicSrv Reply Session:{0} -> RspQrySymbolResponse", conn.SessionID));
+                        
 
                         break;
 
@@ -151,7 +154,8 @@ namespace FrontServer
                         pkt.AddField(field);
 
                         ResponseXLPacket(conn, pkt, (uint)response.RequestID, response.IsLast);
-                        logger.Info(string.Format("LogicSrv Reply Session:{0} -> RspXQryExchangeRateResponse", conn.SessionID));
+
+                        if(response.IsLast) logger.Info(string.Format("LogicSrv Reply Session:{0} -> RspXQryExchangeRateResponse", conn.SessionID));
 
 
                         break;
@@ -170,10 +174,8 @@ namespace FrontServer
                         pkt.AddField(field);
 
                         ResponseXLPacket(conn, pkt, (uint)response.RequestID, response.IsLast);
-                        if (response.IsLast)
-                        {
-                            logger.Info(string.Format("LogicSrv Reply Session:{0} -> RspXQryExchangeRateResponse", conn.SessionID));
-                        }
+                        if (response.IsLast) logger.Info(string.Format("LogicSrv Reply Session:{0} -> RspXQryExchangeRateResponse", conn.SessionID));
+                        
                         break;
                     }
                 //查询结算汇总回报

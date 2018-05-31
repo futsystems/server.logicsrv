@@ -605,9 +605,9 @@ namespace TradingLib.Core
 
                 //消息合法判定
                 if (!msg.isValid) return;
-
+#if DEBUG
                 logger.Info(string.Format("Work {0} Recv Message Type:{1} Content:{2} Front:{3} Address:{4}", id, msg.Type, msg.Content, front, address));
-
+#endif
                 //处理前置的逻辑连接心跳
                 if (cnt == 3 && msg.Type == MessageTypes.LOGICLIVEREQUEST)
                 {

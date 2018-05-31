@@ -78,7 +78,9 @@ namespace FrontServer.XLServiceHost
                 if (requestInfo == null) return;
                 if (requestInfo.Body.MessageType != XLMessageType.T_HEARTBEEAT)
                 {
+#if DEBUG
                     logger.Info(string.Format("PacketData Received,Type:{0} Key:{1}", requestInfo.Body.MessageType, requestInfo.Key));
+#endif
                 }
                 XLConnection conn = null;
                 //SessionID 检查连接对象
