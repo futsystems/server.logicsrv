@@ -239,21 +239,24 @@ namespace TradingLib.Common
         /// <param name="k"></param>
         internal void GotTick(Tick k)
         {
-            if (!GlobalConfig.PositionSymbolMapEnable)
+            if (k.UpdateType == "X" || (k.PreSettlement > 0 && (double)k.PreSettlement < double.MaxValue))//成交Tick 或者包含昨日结算价
             {
-                foreach (LSPositionTracker pt in PosBook.Values)
+                if (!GlobalConfig.PositionSymbolMapEnable)
                 {
-                    pt.GotTick(k);
-                }
-            }
-            else
-            {
-                ThreadSafeList<Position> target = null;
-                if (symPositionBool.TryGetValue(k.Symbol, out target))
-                {
-                    foreach (var pos in target)
+                    foreach (LSPositionTracker pt in PosBook.Values)
                     {
-                        pos.GotTick(k);
+                        pt.GotTick(k);
+                    }
+                }
+                else
+                {
+                    ThreadSafeList<Position> target = null;
+                    if (symPositionBool.TryGetValue(k.Symbol, out target))
+                    {
+                        foreach (var pos in target)
+                        {
+                            pos.GotTick(k);
+                        }
                     }
                 }
             }
