@@ -202,11 +202,11 @@ namespace TradingLib.Contrib.APIService
                                 );
                             }
                         #endregion
-                        #region QRY_USER
-                        case "QRY_USER":
+                        #region QRY_ACCOUNT
+                        case "QRY_ACCOUNT":
                             {
                                 reqDict.Add("domain_id", request.Params["domain_id"]);
-                                reqDict.Add("user_id", request.Params["user_id"]);
+                                reqDict.Add("account", request.Params["account"]);
 
                                 //Domain
                                 int domain_id = -1;
@@ -217,6 +217,12 @@ namespace TradingLib.Contrib.APIService
                                     return new JsonReply(105, string.Format("Domain not exist"));
                                 }
 
+                                //检查交易账户
+                                if (string.IsNullOrEmpty(domain.Cfg_MD5Key))
+                                {
+                                    return new JsonReply(107, string.Format("Md5Key not setted"));
+                                }
+
 
                                 string waitSign = MD5Helper.CreateLinkString(reqDict);
                                 string md5sign = MD5Helper.MD5Sign(waitSign, domain.Cfg_MD5Key);
@@ -225,26 +231,21 @@ namespace TradingLib.Contrib.APIService
                                     return new JsonReply(100, string.Format("Md5Sign not valid"));
                                 }
 
-                                int user_id = 0;
-                                int.TryParse(request.Params["user_id"], out user_id);
-                                if (user_id <= 0)
-                                {
-                                    return new JsonReply(101, string.Format("UserID:{0} is not valid", user_id));
-                                }
-                                bool exist = TLCtxHelper.ModuleAccountManager.UserHaveAccount(user_id);
-                                if (!exist)
-                                {
-                                    return new JsonReply(104, string.Format("UserID:{0}'s account not exist", user_id));
-                                }
-                                IAccount account = TLCtxHelper.ModuleAccountManager.GetUserAccount(user_id);
+                                var account = TLCtxHelper.ModuleAccountManager[request.Params["account"]];
                                 if (account == null)
                                 {
-                                    return new JsonReply(104, string.Format("UserID:{0}'s account not exist", user_id));
+                                    return new JsonReply(109, string.Format("account not exist"));
                                 }
+
+                                //检查管理员是否在业务分区内
+                                if (account.Domain.ID != domain_id)
+                                {
+                                    return new JsonReply(110, string.Format("Account not belong to domain"));
+                                }
+
                                 return new JsonReply(0, "",
                                     new
                                     {
-                                        UserID = user_id,
                                         Account = account.ID,
                                         Category = account.Category,
                                         LastEquity = account.LastEquity,
@@ -252,6 +253,8 @@ namespace TradingLib.Contrib.APIService
                                         NowEquity = account.NowEquity,
                                         RealizedPL = account.RealizedPL,
                                         UnRealizedPL = account.UnRealizedPL,
+                                        Margin = account.Margin,
+                                        FrozenMargin = account.MarginFrozen,
                                         Commission = account.Commission,
                                     }
                                 );

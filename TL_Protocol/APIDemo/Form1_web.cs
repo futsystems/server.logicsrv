@@ -23,6 +23,14 @@ namespace APIClient
             webUpdateAccount.Click += new EventHandler(webUpdateAccount_Click);
             webDeposit.Click += new EventHandler(webDeposit_Click);
             webWitdhdraw.Click += new EventHandler(webWitdhdraw_Click);
+            webQueryUser.Click += new EventHandler(webQueryUser_Click);
+        }
+
+        void webQueryUser_Click(object sender, EventArgs e)
+        {
+            HttpAPIClient client = new HttpAPIClient(web_url.Text, md5key.Text);
+            string ret = client.ReqQueryUser(web_domainId.Text, webupdateacc_acc.Text);
+            logger.Info("resoult:" + ret);
         }
 
         void webWitdhdraw_Click(object sender, EventArgs e)

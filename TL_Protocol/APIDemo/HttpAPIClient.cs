@@ -174,6 +174,21 @@ namespace APIClient
             return ret;
         }
 
+        public string ReqQueryUser(string domain_id, string account)
+        {
+            Dictionary<string, string> request = new Dictionary<string, string>();
+            request.Add("method", "qry_account");
+            request.Add("domain_id", domain_id);
+            request.Add("account", account);
+
+            string waitSign = CreateLinkString(request);
+            var sign = MD5Sign(waitSign, _key);
+            request.Add("md5sign", sign);
+            string ret = SendPostHttpRequest(request, _url);
+            return ret;
+        }
+
+
         public string ReqWithdraw(string domain_id, string account, string val)
         {
             Dictionary<string, string> request = new Dictionary<string, string>();

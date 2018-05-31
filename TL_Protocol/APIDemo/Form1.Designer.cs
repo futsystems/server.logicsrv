@@ -123,6 +123,10 @@
             this.btnEncode = new System.Windows.Forms.Button();
             this.label21 = new System.Windows.Forms.Label();
             this.tabPage5 = new System.Windows.Forms.TabPage();
+            this.webWitdhdraw = new System.Windows.Forms.Button();
+            this.webAmount = new System.Windows.Forms.TextBox();
+            this.label38 = new System.Windows.Forms.Label();
+            this.webDeposit = new System.Windows.Forms.Button();
             this.webupdateacc_idcard = new System.Windows.Forms.TextBox();
             this.label37 = new System.Windows.Forms.Label();
             this.webUpdateAccount = new System.Windows.Forms.Button();
@@ -153,11 +157,8 @@
             this.webAddAccount = new System.Windows.Forms.Button();
             this.md5key = new System.Windows.Forms.TextBox();
             this.label24 = new System.Windows.Forms.Label();
-            this.webDeposit = new System.Windows.Forms.Button();
-            this.webAmount = new System.Windows.Forms.TextBox();
-            this.label38 = new System.Windows.Forms.Label();
-            this.webWitdhdraw = new System.Windows.Forms.Button();
             this.debugControl1 = new APIClient.DebugControl();
+            this.webQueryUser = new System.Windows.Forms.Button();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.cashopVal)).BeginInit();
@@ -1096,6 +1097,7 @@
             // 
             // tabPage5
             // 
+            this.tabPage5.Controls.Add(this.webQueryUser);
             this.tabPage5.Controls.Add(this.webWitdhdraw);
             this.tabPage5.Controls.Add(this.webAmount);
             this.tabPage5.Controls.Add(this.label38);
@@ -1137,6 +1139,41 @@
             this.tabPage5.TabIndex = 4;
             this.tabPage5.Text = "HttpAPI";
             this.tabPage5.UseVisualStyleBackColor = true;
+            // 
+            // webWitdhdraw
+            // 
+            this.webWitdhdraw.Location = new System.Drawing.Point(765, 54);
+            this.webWitdhdraw.Name = "webWitdhdraw";
+            this.webWitdhdraw.Size = new System.Drawing.Size(75, 23);
+            this.webWitdhdraw.TabIndex = 33;
+            this.webWitdhdraw.Text = "Withdraw";
+            this.webWitdhdraw.UseVisualStyleBackColor = true;
+            // 
+            // webAmount
+            // 
+            this.webAmount.Location = new System.Drawing.Point(594, 48);
+            this.webAmount.Name = "webAmount";
+            this.webAmount.Size = new System.Drawing.Size(100, 21);
+            this.webAmount.TabIndex = 32;
+            this.webAmount.Text = "0";
+            // 
+            // label38
+            // 
+            this.label38.AutoSize = true;
+            this.label38.Location = new System.Drawing.Point(547, 51);
+            this.label38.Name = "label38";
+            this.label38.Size = new System.Drawing.Size(41, 12);
+            this.label38.TabIndex = 31;
+            this.label38.Text = "amount";
+            // 
+            // webDeposit
+            // 
+            this.webDeposit.Location = new System.Drawing.Point(765, 21);
+            this.webDeposit.Name = "webDeposit";
+            this.webDeposit.Size = new System.Drawing.Size(75, 23);
+            this.webDeposit.TabIndex = 30;
+            this.webDeposit.Text = "Deposit";
+            this.webDeposit.UseVisualStyleBackColor = true;
             // 
             // webupdateacc_idcard
             // 
@@ -1394,41 +1431,6 @@
             this.label24.TabIndex = 0;
             this.label24.Text = "MD5Key";
             // 
-            // webDeposit
-            // 
-            this.webDeposit.Location = new System.Drawing.Point(765, 21);
-            this.webDeposit.Name = "webDeposit";
-            this.webDeposit.Size = new System.Drawing.Size(75, 23);
-            this.webDeposit.TabIndex = 30;
-            this.webDeposit.Text = "Deposit";
-            this.webDeposit.UseVisualStyleBackColor = true;
-            // 
-            // webAmount
-            // 
-            this.webAmount.Location = new System.Drawing.Point(594, 48);
-            this.webAmount.Name = "webAmount";
-            this.webAmount.Size = new System.Drawing.Size(100, 21);
-            this.webAmount.TabIndex = 32;
-            this.webAmount.Text = "0";
-            // 
-            // label38
-            // 
-            this.label38.AutoSize = true;
-            this.label38.Location = new System.Drawing.Point(547, 51);
-            this.label38.Name = "label38";
-            this.label38.Size = new System.Drawing.Size(41, 12);
-            this.label38.TabIndex = 31;
-            this.label38.Text = "amount";
-            // 
-            // webWitdhdraw
-            // 
-            this.webWitdhdraw.Location = new System.Drawing.Point(765, 54);
-            this.webWitdhdraw.Name = "webWitdhdraw";
-            this.webWitdhdraw.Size = new System.Drawing.Size(75, 23);
-            this.webWitdhdraw.TabIndex = 33;
-            this.webWitdhdraw.Text = "Withdraw";
-            this.webWitdhdraw.UseVisualStyleBackColor = true;
-            // 
             // debugControl1
             // 
             this.debugControl1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
@@ -1443,6 +1445,15 @@
             this.debugControl1.TabIndex = 0;
             this.debugControl1.TimeStamps = true;
             this.debugControl1.UseExternalTimeStamp = false;
+            // 
+            // webQueryUser
+            // 
+            this.webQueryUser.Location = new System.Drawing.Point(765, 88);
+            this.webQueryUser.Name = "webQueryUser";
+            this.webQueryUser.Size = new System.Drawing.Size(75, 23);
+            this.webQueryUser.TabIndex = 34;
+            this.webQueryUser.Text = "QueryUser";
+            this.webQueryUser.UseVisualStyleBackColor = true;
             // 
             // Form1
             // 
@@ -1602,6 +1613,7 @@
         private System.Windows.Forms.TextBox webAmount;
         private System.Windows.Forms.Label label38;
         private System.Windows.Forms.Button webWitdhdraw;
+        private System.Windows.Forms.Button webQueryUser;
     }
 }
 
