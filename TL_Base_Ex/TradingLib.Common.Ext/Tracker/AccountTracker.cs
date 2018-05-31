@@ -16,7 +16,7 @@ namespace TradingLib.Common
     /// </summary>
     public class AccountTracker:BaseSrvObject
     {
-        Dictionary<string, List<Position>> symPositionBool = new Dictionary<string, List<Position>>();
+        Dictionary<string, ThreadSafeList<Position>> symPositionBool = new Dictionary<string, ThreadSafeList<Position>>();
 
         private ConcurrentDictionary<string, OrderTracker> OrdBook = new ConcurrentDictionary<string, OrderTracker>();
         private ConcurrentDictionary<string, LSPositionTracker> PosBook = new ConcurrentDictionary<string, LSPositionTracker>();
@@ -52,10 +52,10 @@ namespace TradingLib.Common
             if (GlobalConfig.PositionSymbolMapEnable)
             {
                 //按合约分类
-                List<Position> target = null;
+                ThreadSafeList<Position> target = null;
                 if (!symPositionBool.TryGetValue(pos.Symbol, out target))
                 {
-                    target = new List<Position>();
+                    target = new ThreadSafeList<Position>();
                     symPositionBool.Add(pos.Symbol, target);
                 }
                 target.Add(pos);
@@ -248,7 +248,7 @@ namespace TradingLib.Common
             }
             else
             {
-                List<Position> target = null;
+                ThreadSafeList<Position> target = null;
                 if (symPositionBool.TryGetValue(k.Symbol, out target))
                 {
                     foreach (var pos in target)
