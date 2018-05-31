@@ -55,6 +55,7 @@ namespace TradingLib.Core
         }
 
         DateTime _lastPushAllTime = DateTime.Now;
+        DateTime _lastNotifyTime = DateTime.Now;
         int _pushAllDiff = 30;
 
         [TaskAttr("采集帐户信息",1,0, "定时采集帐户信息用于向管理端进行推送")]
@@ -69,6 +70,23 @@ namespace TradingLib.Core
                     _lastPushAllTime = DateTime.Now;
                     logger.Info(string.Format("customer ex map cnt:{0}", customerExInfoMap.Count));
                 }
+                //根据管理段连接个数 更新频率降低 减少运算
+                if (customerExInfoMap.Count >= 10)
+                {
+                    int notifydiff = customerExInfoMap.Count / 10 + 1;//数据更新间隔 每10个增加1秒 10秒以内每秒推送，20个管理段 2秒推送一次 40个管理端 4秒推送一次
+                    if (notifydiff > 4)//最长不超过4秒
+                    {
+                        notifydiff = 4;
+                    }
+
+                    if (DateTime.Now.Subtract(_lastNotifyTime).TotalSeconds < notifydiff)
+                    {
+                        return;
+                    }
+                }
+
+                _lastNotifyTime = DateTime.Now;
+
                 //遍历所有连接的管理段
                 foreach (var cst in customerExInfoMap.Values)
                 {
