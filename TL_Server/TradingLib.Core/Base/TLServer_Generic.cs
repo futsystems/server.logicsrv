@@ -623,6 +623,7 @@ namespace TradingLib.Core
 
         void OnPacketEvent(IPacket packet, string clientId)
         {
+            RunConfig.Instance.Profile.EnterSection("PacketEvent"+this.Name);
             long result = NORETURNRESULT;
             try
             {
@@ -686,6 +687,7 @@ namespace TradingLib.Core
                 logger.Error("****** Can not find PacketClass for Type:" + ex.Type.ToString());
                 logger.Error(string.Format("Message Type:{0} Content:{1} FrontID:{2} Client:{3}", ex.Type.ToString(), ex.Content, ex.FrontID, ex.ClientID));
             }
+            RunConfig.Instance.Profile.LeaveSection();
         }
         #endregion
 

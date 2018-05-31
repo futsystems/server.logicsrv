@@ -50,5 +50,16 @@ namespace TradingLib.Core
             return status;
         }
 
+        [ContribCommandAttr(QSEnumCommandSource.CLI, "pthreads", "pthreads - 打印线程列表", "打印线程列表")]
+        public string CTE_PrintThreads()
+        {
+            return ThreadTracker.PrintThreads();
+        }
+
+        [ContribCommandAttr(QSEnumCommandSource.CLI, "pp", "pp - 打印Profile", "打印Profile")]
+        public string CTE_PrintProfile()
+        {
+            return RunConfig.Instance.Profile.GetStatsString();
+        }
     }
 }

@@ -55,7 +55,8 @@ namespace FrontServer
             _workergo = true;
             _workerThread = new Thread(WrokerProcess);
             _workerThread.Start();
-
+            _workerThread.Name = "MQ Worker Thread";
+            ThreadTracker.Register(_workerThread);
             //创建TL ServiceHost
             tlhost = new TLServiceHost.TLServiceHost(this);
 

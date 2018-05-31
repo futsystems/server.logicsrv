@@ -457,7 +457,8 @@ namespace TradingLib.Core
         //维持了其他基于tick数据操作的线程安全 因为有多个datafeed时完全有可能在同一时刻有2个线程在调用ontick函数
         void asynctick_GotTick(Tick k)
         {
-          
+
+            RunConfig.Instance.Profile.EnterSection("DataFeedGotTick");
             newtick(k, false);
 
             if(_monthSymbolPair == null && !_cacheMonthSymbol)
@@ -480,6 +481,7 @@ namespace TradingLib.Core
                     newtick(k2, false);
                 }
             }
+            RunConfig.Instance.Profile.LeaveSection();
         }
 
         void newtick(Tick k,bool ishist=false)

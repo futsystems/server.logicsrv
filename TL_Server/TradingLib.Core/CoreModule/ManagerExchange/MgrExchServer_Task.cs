@@ -61,6 +61,8 @@ namespace TradingLib.Core
         [TaskAttr("采集帐户信息",1,0, "定时采集帐户信息用于向管理端进行推送")]
         public void Task_CollectAccountInfo()
         {
+            if (!RunConfig.Instance.MGRAccountStatistic) return;
+            RunConfig.Instance.Profile.EnterSection("MgrAccountStatistic");
             try
             {
                 int diff = (int)DateTime.Now.Subtract(_lastPushAllTime).TotalSeconds;
@@ -123,11 +125,15 @@ namespace TradingLib.Core
             {
                 logger.Error("帐户信息采集出错:" + ex.ToString());
             }
+            RunConfig.Instance.Profile.LeaveSection();
         }
 
         [TaskAttr("采集代理帐户信息", 2, 0, "定时采集代理帐户信息用于向管理端进行推送")]
         public void Task_CollectAgentInfo()
         {
+            if (!RunConfig.Instance.MGRAgentStatistic) return;
+
+            RunConfig.Instance.Profile.EnterSection("MgrAgentStatistic");
             try
             {
 
@@ -146,6 +152,7 @@ namespace TradingLib.Core
             {
                 logger.Error("代理信息采集出错:" + ex.ToString());
             }
+            RunConfig.Instance.Profile.LeaveSection();
         }
 
         [TaskAttr("采集终端登入数量", 5, 0, "定时采集终端登入数量向管理端进行推送")]

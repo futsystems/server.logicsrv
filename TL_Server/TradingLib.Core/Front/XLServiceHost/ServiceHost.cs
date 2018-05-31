@@ -114,7 +114,9 @@ namespace FrontServer.XLServiceHost
                     logger.Warn(string.Format("Client:{0} empty request,ingore", session.SessionID));
                     return;
                 }
-                this.HandleXLPacketData(conn, requestInfo.Body,(int)requestInfo.DataHeader.RequestID);  
+                RunConfig.Instance.Profile.EnterSection("XLPacketData");
+                this.HandleXLPacketData(conn, requestInfo.Body,(int)requestInfo.DataHeader.RequestID);
+                RunConfig.Instance.Profile.LeaveSection();
             }
             catch (Exception ex)
             {
