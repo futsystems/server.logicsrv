@@ -171,6 +171,7 @@ namespace TradingLib.Core
 
                     // clear current flag signal
                     _sendwaiting.Reset();
+                    if (GlobalConfig.ProfileEnable) RunConfig.Instance.Profile.LeaveSection();
                     //logger.Info("process send");
                     // wait for a new signal to continue reading
                     _sendwaiting.WaitOne(SLEEPDEFAULTMS);
@@ -181,7 +182,7 @@ namespace TradingLib.Core
                 }
                 finally
                 {
-                    if (GlobalConfig.ProfileEnable) RunConfig.Instance.Profile.LeaveSection();
+                    
                 }
             }
         }
