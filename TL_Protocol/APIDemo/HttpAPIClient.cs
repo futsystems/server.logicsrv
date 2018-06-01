@@ -188,6 +188,35 @@ namespace APIClient
             return ret;
         }
 
+        public string ReqQueryPass(string domain_id, string account)
+        {
+            Dictionary<string, string> request = new Dictionary<string, string>();
+            request.Add("method", "qry_pass");
+            request.Add("domain_id", domain_id);
+            request.Add("account", account);
+
+            string waitSign = CreateLinkString(request);
+            var sign = MD5Sign(waitSign, _key);
+            request.Add("md5sign", sign);
+            string ret = SendPostHttpRequest(request, _url);
+            return ret;
+        }
+
+        public string ReqUpdatePass(string domain_id, string account,string pass)
+        {
+            Dictionary<string, string> request = new Dictionary<string, string>();
+            request.Add("method", "update_pass");
+            request.Add("domain_id", domain_id);
+            request.Add("account", account);
+            request.Add("pass", pass);
+
+            string waitSign = CreateLinkString(request);
+            var sign = MD5Sign(waitSign, _key);
+            request.Add("md5sign", sign);
+            string ret = SendPostHttpRequest(request, _url);
+            return ret;
+        }
+
 
         public string ReqWithdraw(string domain_id, string account, string val)
         {
