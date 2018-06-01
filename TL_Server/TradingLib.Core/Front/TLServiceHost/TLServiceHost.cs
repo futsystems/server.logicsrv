@@ -128,8 +128,8 @@ namespace FrontServer.TLServiceHost
                                 //conn为空判定
                                 if (conn == null)
                                 {
-                                    logger.Info("--->close connection:" + conn.SessionID);
-                                    logger.Error(string.Format("Session:{0} Register,but session not booked", session.SessionID));
+                                    logger.Error(string.Format("Session:{0} Register,but connection created fail", session.SessionID));
+                                    logger.Info("--->close connection [0]:" + session.SessionID);
                                     session.Close();
                                     OnSessionClosed(session);
                                     return;
@@ -145,10 +145,8 @@ namespace FrontServer.TLServiceHost
 
                                 //创建connection之后 数据发送需要统一由mqserver中的线程进行发送
                                 _mqServer.ForwardToClient(conn, response.Data);
-                                //conn.Send(response.Data);
 
                                 logger.Info(string.Format("Session:{0} Registed Remote EndPoint:{1}", conn.SessionID, conn.State.IPAddress));
-                                //logger.Info(string.Format("Client:{0} registed to server", sessionId));
                             }
                             return;
                         }
@@ -160,9 +158,8 @@ namespace FrontServer.TLServiceHost
                             {
                                 logger.Warn(string.Format("Client:{0} is not registed to server, ignore request", sessionId));
 
-                                logger.Info("--->close connection1:" + conn.SessionID);
+                                logger.Info("--->close connection [1]:" + session.SessionID);
                                 session.Close();
-                                //logger.Info(string.Format("Session:{0} Closed", session.SessionID));
                                 OnSessionClosed(session);
                                 //逻辑服务器注销客户端
                                 _mqServer.LogicUnRegister(session.SessionID);
@@ -171,9 +168,8 @@ namespace FrontServer.TLServiceHost
                             //conn为空判定
                             if (conn == null)
                             {
-                                logger.Info("--->close connection2:" + conn.SessionID);
+                                logger.Info("--->close connection [2]:" + session.SessionID);
                                 session.Close();
-                                //logger.Info(string.Format("Session:{0} Closed", session.SessionID));
                                 OnSessionClosed(session);
                                 //逻辑服务器注销客户端
                                 _mqServer.LogicUnRegister(session.SessionID);
@@ -182,14 +178,16 @@ namespace FrontServer.TLServiceHost
 
                             conn.UpdateHeartBeat();
                             IPacket packet = PacketHelper.SrvRecvRequest(requestInfo.Message, "", sessionId);
+
+                            //客户端心跳回报
                             if (packet.Type == MessageTypes.HEARTBEATREQUEST)
                             {
-                                //向客户端发送心跳回报，告知客户端,服务端收到客户端消息,连接有效
                                 HeartBeatResponse response = ResponseTemplate<HeartBeatResponse>.SrvSendRspResponse(packet as HeartBeatRequest);
-                                //conn.Send(response.Data);
                                 _mqServer.ForwardToClient(conn, response.Data);
                                 return;
                             }
+
+                            //客户端登入 记录IP信息
                             if (packet.Type == MessageTypes.LOGINREQUEST)
                             {
                                 LoginRequest request = packet as LoginRequest;
@@ -215,7 +213,6 @@ namespace FrontServer.TLServiceHost
 
         void tlSocketServer_SessionClosed(TLSessionBase session, SuperSocket.SocketBase.CloseReason value)
         {
-            //logger.Info(string.Format("Session:{0} Closed", session.SessionID));
             OnSessionClosed(session);
             //逻辑服务器注销客户端
             _mqServer.LogicUnRegister(session.SessionID);
