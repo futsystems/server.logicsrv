@@ -87,16 +87,19 @@ namespace TradingLib.Core
         void OnOrder(Order o)
         {
             _ocache.Write(o);
+            NewMessageItem();
         }
 
         void OnOrderError(Order  order,RspInfo error)
         {
             _errorordercache.Write(new OrderErrorPack(order,error));
+            NewMessageItem();
         }
 
         void OnTrade(Trade f)
         {
             _fcache.Write(f);
+            NewMessageItem();
         }
     }
 }

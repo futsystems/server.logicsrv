@@ -21,7 +21,7 @@ namespace TradingLib.Core
         {
             if (TLCtxHelper.ModuleSettleCentre.SettleMode != QSEnumSettleMode.StandbyMode) return;
 
-            RunConfig.Instance.Profile.EnterSection("RiskAccountCheck");
+            if (GlobalConfig.ProfileEnable) RunConfig.Instance.Profile.EnterSection("RiskAccountCheck");
             foreach (IAccount account in TLCtxHelper.ModuleAccountManager.Accounts)
             {
                 try
@@ -37,7 +37,7 @@ namespace TradingLib.Core
                     logger.Error(string.Format("Check Account Rule Error:{0}", ex.ToString()));
                 }            
             }
-            RunConfig.Instance.Profile.LeaveSection();
+            if (GlobalConfig.ProfileEnable) RunConfig.Instance.Profile.LeaveSection();
         }
 
         /// <summary>
@@ -48,9 +48,9 @@ namespace TradingLib.Core
         {
             if (TLCtxHelper.ModuleSettleCentre.SettleMode != QSEnumSettleMode.StandbyMode) return;
 
-            RunConfig.Instance.Profile.EnterSection("RiskFlatTask");
+            if (GlobalConfig.ProfileEnable) RunConfig.Instance.Profile.EnterSection("RiskFlatTask");
             this.ProcessRiskTask();
-            RunConfig.Instance.Profile.LeaveSection();
+            if (GlobalConfig.ProfileEnable) RunConfig.Instance.Profile.LeaveSection();
         }
 
 
@@ -64,7 +64,7 @@ namespace TradingLib.Core
         {
             if (TLCtxHelper.ModuleSettleCentre.SettleMode != QSEnumSettleMode.StandbyMode) return;
 
-            RunConfig.Instance.Profile.EnterSection("RiskFrozen");
+            if (GlobalConfig.ProfileEnable) RunConfig.Instance.Profile.EnterSection("RiskFrozen");
             //检查所有有持仓的被冻结账户 账户冻结会自动强平所有持仓
             foreach (IAccount account in TLCtxHelper.ModuleAccountManager.Accounts.Where(a=>!a.Execute).Where(a => a.AnyPosition))
             {
@@ -76,7 +76,7 @@ namespace TradingLib.Core
                     TLCtxHelper.ModuleRiskCentre.FlatAllPositions(account.ID, QSEnumOrderSource.RISKCENTREACCOUNTRULE, "强平冻结帐户持仓");
                 }
             }
-            RunConfig.Instance.Profile.LeaveSection();
+            if (GlobalConfig.ProfileEnable) RunConfig.Instance.Profile.LeaveSection();
         }
 
 

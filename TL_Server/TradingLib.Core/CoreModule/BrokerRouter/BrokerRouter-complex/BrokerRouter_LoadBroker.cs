@@ -42,6 +42,7 @@ namespace TradingLib.Core
                 Order no = new OrderImpl(order);
                 logger.Info("Reply OrderError To MessageExch:" + no.GetOrderInfo() + " ErrorTitle:" + error.ErrorMessage);
                 _errorordernotifycache.Write(new OrderErrorPack(no, error));
+                NewMessageItem();
             }
             else
             {
@@ -72,6 +73,7 @@ namespace TradingLib.Core
                 }
                 logger.Info("Reply OrderActionError To MessageExch:" + order.GetOrderInfo() + " ErrorTitle:" + error.ErrorMessage);
                 _actionerrorcache.Write(new OrderActionErrorPack(action, error));
+                NewMessageItem();
             }
             else
             {
@@ -132,7 +134,10 @@ namespace TradingLib.Core
                     }
                 }
             SENDDIRECT:
-                _fillcache.Write(t);
+                {
+                    _fillcache.Write(t);
+                    NewMessageItem();
+                }
             }
             else
             {
@@ -164,6 +169,7 @@ namespace TradingLib.Core
                 Order no = new OrderImpl(o);
                 logger.Info("Reply Order To MessageExch:" + no.GetOrderInfo());
                 _ordercache.Write(no);
+                NewMessageItem();
             }
             else
             {
@@ -175,6 +181,7 @@ namespace TradingLib.Core
         {
             logger.Info("Reply Cancel To MessageExch:" + oid.ToString());
             _cancelcache.Write(oid);
+            NewMessageItem();
         }
 
 

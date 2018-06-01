@@ -10,20 +10,26 @@ namespace TradingLib.Core
 {
     public partial class MgrExchServer
     {
-        public void Send(IPacket packet)
+        public void Send(IPacket packet,bool fireSend)
         {
-            CachePacket(packet);
+            CachePacket2(packet, fireSend);
         }
-
         void CachePacket(IPacket packet)
         {
+            CachePacket2(packet);
+        }
+        void CachePacket2(IPacket packet,bool firesend=true)
+        {
             _packetcache.Write(packet);
+            if (firesend)
+                NewMessageItem();
+            
         }
 
         void CacheRspResponse(RspResponsePacket packet, bool islat = true)
         {
             packet.IsLast = islat;
-            CachePacket(packet);
+            CachePacket2(packet,islat);
         }
 
         /// <summary>
@@ -40,7 +46,7 @@ namespace TradingLib.Core
             if (_readgo) return;
             _readgo = true;
             messageoutthread = new Thread(messageout);
-            messageoutthread.IsBackground = true;
+            //messageoutthread.IsBackground = true;
             messageoutthread.Name = "MGR Server Message SendOut Thread";
             messageoutthread.Start();
             ThreadTracker.Register(messageoutthread);
@@ -78,6 +84,16 @@ namespace TradingLib.Core
             return !_resumecache.hasItems;
         }
 
+        static ManualResetEvent _sendwaiting = new ManualResetEvent(false);
+        const int SLEEPDEFAULTMS = 500;
+        void NewMessageItem()
+        {
+            if ((messageoutthread != null) && (messageoutthread.ThreadState == System.Threading.ThreadState.WaitSleepJoin))
+            {
+                _sendwaiting.Set();
+            }
+        }
+
         /// <summary>
         /// 所有需要转发到客户端的消息均通过缓存进行，这样避免了多个线程同时操作一个ZeroMQ socket
         /// </summary>
@@ -85,9 +101,11 @@ namespace TradingLib.Core
         {
             while (_readgo)
             {
-                RunConfig.Instance.Profile.EnterSection("MgrExchange_SendWorker");
+                
                 try
                 {
+                    if (GlobalConfig.ProfileEnable) RunConfig.Instance.Profile.EnterSection("MgrExchange_SendWorker");
+
                     #region 发送交易账户列表 以及 回补某个交易账户的交易信息
                     //恢复交易帐户日内数据
                     while (_resumecache.hasItems)
@@ -143,20 +161,28 @@ namespace TradingLib.Core
 
                     }
                     #endregion
-                   
+
                     //发送其他类型的信息
                     while (_packetcache.hasItems && NoResumeRequest())
                     {
                         IPacket packet = _packetcache.Read();
                         tl.TLSend(packet);
                     }
-                    Thread.Sleep(100);
+
+                    // clear current flag signal
+                    _sendwaiting.Reset();
+                    //logger.Info("process send");
+                    // wait for a new signal to continue reading
+                    _sendwaiting.WaitOne(SLEEPDEFAULTMS);
                 }
                 catch (Exception ex)
                 {
                     logger.Error(ex);
                 }
-                RunConfig.Instance.Profile.LeaveSection();
+                finally
+                {
+                    if (GlobalConfig.ProfileEnable) RunConfig.Instance.Profile.LeaveSection();
+                }
             }
         }
 

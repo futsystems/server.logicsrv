@@ -22,7 +22,7 @@ namespace TradingLib.Core
             if (_sendgo) return;
             _sendgo = true;
             messageoutthread = new Thread(messageout);
-            messageoutthread.IsBackground = true;
+            //messageoutthread.IsBackground = true;
             messageoutthread.Name = "TradingServer MessageOut Thread";
             messageoutthread.Start();
             ThreadTracker.Register(messageoutthread);
@@ -51,10 +51,21 @@ namespace TradingLib.Core
         RingBuffer<PositionEx> _posupdatecache = new RingBuffer<PositionEx>(BUFFERSIZE);//持仓更新缓存
 
         RingBuffer<IPacket> _packetcache = new RingBuffer<IPacket>(BUFFERSIZE);//数据包缓存队列
-        //RingBuffer<IPacket> _frontNotifyCache = new RingBuffer<IPacket>(BUFFERSIZE);//发往前置的业务通知队列
 
         bool _sendgo = false;
         Thread messageoutthread;
+
+
+        static ManualResetEvent _sendwaiting = new ManualResetEvent(false);
+        const int SLEEPDEFAULTMS = 500;
+
+        void NewMessageItem()
+        {
+            if ((messageoutthread != null) && (messageoutthread.ThreadState == System.Threading.ThreadState.WaitSleepJoin))
+            {
+                _sendwaiting.Set();
+            }
+        }
 
         /// <summary>
         /// 所有需要转发到客户端的消息均通过缓存进行，这样避免了多个线程同时操作一个ZeroMQ socket
@@ -64,9 +75,10 @@ namespace TradingLib.Core
         {
             while (_sendgo)
             {
-                RunConfig.Instance.Profile.EnterSection("MsgExchange_SendWorker");
                 try
                 {
+                    if (GlobalConfig.ProfileEnable) RunConfig.Instance.Profile.EnterSection("MsgExchange_SendWorker");
+
                     //发送委托
                     while (_ocache.hasItems)
                     {
@@ -88,7 +100,7 @@ namespace TradingLib.Core
                         OrderActionErrorPack e = _erractioncache.Read();
                         ErrorOrderActionNotify notify = ResponseTemplate<ErrorOrderActionNotify>.SrvSendNotifyResponse(e.OrderAction.Account);
                         notify.OrderAction = e.OrderAction;
-                        notify.RspInfo=e.RspInfo;
+                        notify.RspInfo = e.RspInfo;
                         tl.newOrderActionError(notify);
                     }
 
@@ -112,17 +124,21 @@ namespace TradingLib.Core
                         tl.TLSend(_packetcache.Read());
                     }
 
-                    //while (_frontNotifyCache.hasItems)
-                    //{
-                    //    tl.TLNotifyFront(_frontNotifyCache.Read());
-                    //}
-                    Thread.Sleep(10);
+                    // clear current flag signal
+                    _sendwaiting.Reset();
+                    //logger.Info("process send");
+                    // wait for a new signal to continue reading
+                    _sendwaiting.WaitOne(SLEEPDEFAULTMS);
+
                 }
                 catch (Exception ex)
                 {
                     logger.Error("消息发送线程出错 " + ex.ToString());
                 }
-                RunConfig.Instance.Profile.LeaveSection();
+                finally
+                {
+                    if (GlobalConfig.ProfileEnable) RunConfig.Instance.Profile.LeaveSection();
+                }
             }
 
         }

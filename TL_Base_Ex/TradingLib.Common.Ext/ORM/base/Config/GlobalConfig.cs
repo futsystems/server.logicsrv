@@ -167,12 +167,22 @@ namespace TradingLib.Common
 
             PositionSymbolMapEnable = config["PositionSymbolMapEnable"].AsBool();
             PositionImpl.PositionSymbolMapEnable = PositionSymbolMapEnable;
+
+
+            if (!config.HaveConfig("ProfileEnable"))
+            {
+                config.UpdateConfig("ProfileEnable", QSEnumCfgType.Bool, false, "调试热点分析");
+            }
+
+            ProfileEnable = config["ProfileEnable"].AsBool();
         }
 
         /// <summary>
         /// 是否将持仓按合约进行归类缓存
         /// </summary>
         public static bool PositionSymbolMapEnable { get; set; }
+
+        public static bool ProfileEnable { get; set; }
         /// <summary>
         /// 逻辑删除
         /// 逻辑删除的数据仍然在数据库，可以进行恢复

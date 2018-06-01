@@ -21,14 +21,28 @@ namespace TradingLib.Core
         RingBuffer<OrderErrorPack> _errorordernotifycache = new RingBuffer<OrderErrorPack>(buffersize);//委托错误缓存
         RingBuffer<OrderActionErrorPack> _actionerrorcache = new RingBuffer<OrderActionErrorPack>(buffersize);//委托操作错误缓存
         Thread msgoutthread = null;
+
+        static ManualResetEvent _sendwaiting = new ManualResetEvent(false);
+        const int SLEEPDEFAULTMS = 500;
+
+        void NewMessageItem()
+        {
+            if ((msgoutthread != null) && (msgoutthread.ThreadState == System.Threading.ThreadState.WaitSleepJoin))
+            {
+                _sendwaiting.Set();
+            }
+        }
+
+
         bool msgoutgo = false;
         void msgoutprocess()
         {
             while (msgoutgo)
             {
-                RunConfig.Instance.Profile.EnterSection("BrokerRouter MessageOut");
                 try
                 {
+                    if (GlobalConfig.ProfileEnable) RunConfig.Instance.Profile.EnterSection("BrokerRouter MessageOut");
+
                     //转发委托
                     while (_ordercache.hasItems)
                     {
@@ -59,13 +73,22 @@ namespace TradingLib.Core
                         OrderActionErrorPack error = _actionerrorcache.Read();
                         TLCtxHelper.EventRouter.FireOrderActionErrorEvent(error.OrderAction, error.RspInfo);
                     }
-                    Thread.Sleep(100);
+
+                    // clear current flag signal
+                    _sendwaiting.Reset();
+                    //logger.Info("process send");
+                    // wait for a new signal to continue reading
+                    _sendwaiting.WaitOne(SLEEPDEFAULTMS);
+
                 }
                 catch (Exception ex)
                 {
                     logger.Info(PROGRAME + ":process message out error:" + ex.ToString());
                 }
-                RunConfig.Instance.Profile.LeaveSection();
+                finally
+                {
+                    if (GlobalConfig.ProfileEnable)  RunConfig.Instance.Profile.LeaveSection();
+                }
             }
         }
         void StartProcessMsgOut()
@@ -73,7 +96,7 @@ namespace TradingLib.Core
             if (msgoutgo) return;
             msgoutgo = true;
             msgoutthread = new Thread(msgoutprocess);
-            msgoutthread.IsBackground = true;
+            //msgoutthread.IsBackground = true;
             msgoutthread.Name = "BrokerRouter MessageOut Thread";
             msgoutthread.Start();
             ThreadTracker.Register(msgoutthread);

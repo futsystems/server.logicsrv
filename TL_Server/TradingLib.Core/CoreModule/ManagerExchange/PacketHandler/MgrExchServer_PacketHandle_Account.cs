@@ -68,6 +68,7 @@ namespace TradingLib.Core
                 var c = customerExInfoMap[session.Location.ClientID];
                 c.Selected(acc);
                 _resumecache.Write(c);
+                NewMessageItem();
             }
         }
 

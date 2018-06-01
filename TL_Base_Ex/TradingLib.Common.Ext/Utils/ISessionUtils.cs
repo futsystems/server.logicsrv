@@ -67,7 +67,7 @@ namespace TradingLib.Common
         /// <param name="packet"></param>
         private static void SendPacketMgr(this ISession session, IPacket packet)
         {
-            TLCtxHelper.ModuleMgrExchange.Send(packet);
+            TLCtxHelper.ModuleMgrExchange.Send(packet,true);
         }
 
         /// <summary>
@@ -84,7 +84,7 @@ namespace TradingLib.Common
             response.IsLast = islast;
             response.Result = obj.SerializeObject();
 
-            session.SendPacketMgr(response);
+            TLCtxHelper.ModuleMgrExchange.Send(response, islast);
         }
 
         /// <summary>

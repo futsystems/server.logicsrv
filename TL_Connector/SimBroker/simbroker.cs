@@ -558,11 +558,11 @@ namespace Broker.SIM
         {
             while (ptgo)
             {
-                RunConfig.Instance.Profile.EnterSection("PaperTraderEngine");
+                if(GlobalConfig.ProfileEnable) RunConfig.Instance.Profile.EnterSection("PaperTraderEngine");
                 processIn();//将委托与取消从ringbuffer移动到Queue中等待执行成交或取消 由于移动委托操作与委托模拟成交操作是在同一个线程内进行，因此这里queue不存在多线程操作的安全问题
                 processPaperTrading();
                 Thread.Sleep(500);//每隔200毫秒进行一次模拟撮合
-                RunConfig.Instance.Profile.LeaveSection();
+                if (GlobalConfig.ProfileEnable)  RunConfig.Instance.Profile.LeaveSection();
             }
         }
 

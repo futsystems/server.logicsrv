@@ -15,13 +15,13 @@ namespace TradingLib.Core
         /// <param name="k"></param>
         void OnTickEvent(Tick k)
         {
-            RunConfig.Instance.Profile.EnterSection("ClearCentreTick");
+            if (GlobalConfig.ProfileEnable)  RunConfig.Instance.Profile.EnterSection("ClearCentreTick");
             TLCtxHelper.ModuleClearCentre.GotTick(k);
-            RunConfig.Instance.Profile.LeaveSection();
+            if (GlobalConfig.ProfileEnable)  RunConfig.Instance.Profile.LeaveSection();
 
-            RunConfig.Instance.Profile.EnterSection("IndicatorTick");
+            if (GlobalConfig.ProfileEnable) RunConfig.Instance.Profile.EnterSection("IndicatorTick");
             TLCtxHelper.EventIndicator.FireTickEvent(k);
-            RunConfig.Instance.Profile.LeaveSection();
+            if (GlobalConfig.ProfileEnable) RunConfig.Instance.Profile.LeaveSection();
             //对外通知
             this.NotifyTick(k);
         }

@@ -623,10 +623,12 @@ namespace TradingLib.Core
 
         void OnPacketEvent(IPacket packet, string clientId)
         {
-            RunConfig.Instance.Profile.EnterSection("PacketEvent_"+this.Name);
+            
             long result = NORETURNRESULT;
             try
             {
+                if (GlobalConfig.ProfileEnable) RunConfig.Instance.Profile.EnterSection("PacketEvent_" + this.Name);
+
                 T1 client = _clients[clientId];
                 Client2Session session = client != null ? CreateSession(client) : null;
                 switch (packet.Type)
@@ -687,7 +689,10 @@ namespace TradingLib.Core
                 logger.Error("****** Can not find PacketClass for Type:" + ex.Type.ToString());
                 logger.Error(string.Format("Message Type:{0} Content:{1} FrontID:{2} Client:{3}", ex.Type.ToString(), ex.Content, ex.FrontID, ex.ClientID));
             }
-            RunConfig.Instance.Profile.LeaveSection();
+            finally
+            {
+                if (GlobalConfig.ProfileEnable)  RunConfig.Instance.Profile.LeaveSection();
+            }
         }
         #endregion
 

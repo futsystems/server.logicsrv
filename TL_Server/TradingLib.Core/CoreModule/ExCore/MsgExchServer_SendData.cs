@@ -15,6 +15,7 @@ namespace TradingLib.Core
         public void Send(IPacket packet)
         {
             _packetcache.Write(packet);
+            NewMessageItem();
         }
         /// <summary>
         /// 缓存应答数据包
@@ -25,16 +26,24 @@ namespace TradingLib.Core
         void CacheRspResponse(RspResponsePacket packet, bool islat = true)
         {
             packet.IsLast = islat;
-            CachePacket(packet);
+            //查询回报 待所有数据进入缓存 然后根据islast来触发发送信号 避免多次触发信号
+            CachePacket2(packet,islat);
         }
         /// <summary>
         /// 缓存数据包
         /// 此处为业务数据包发送唯一入口(交易数据通过Notify函数写入特定缓存进行发送) 
         /// </summary>
         /// <param name="packet"></param>
-        void CachePacket(IPacket packet)
+        void CachePacket2(IPacket packet,bool fireSend = true)
         {
             _packetcache.Write(packet);
+            if(fireSend)
+                NewMessageItem();
+        }
+
+        void CachePacket(IPacket packet)
+        {
+            CachePacket2(packet);
         }
 
         /// <summary>
@@ -55,6 +64,7 @@ namespace TradingLib.Core
             //如果需要将委托状态通知发送到客户端 则设置needsend为true
             //路由中心返回委托回报时,发送给客户端的委托需要进行copy 否则后续GotOrderEvent事件如果对委托有修改,则会导致发送给客户端的委托发生变化,委托发送是在线程内延迟执行
             _ocache.Write(o);//new OrderImpl(o));
+            NewMessageItem();
         }
 
         /// <summary>
@@ -64,6 +74,7 @@ namespace TradingLib.Core
         protected void NotifyFill(Trade f)
         {
             _fcache.Write(f);//new TradeImpl(f));
+            NewMessageItem();
         }
 
         /// <summary>
@@ -73,6 +84,7 @@ namespace TradingLib.Core
         protected void NotifyPositionUpdate(Position pos)
         {
             _posupdatecache.Write(pos.GenPositionEx());
+            NewMessageItem();
 
         }
 
@@ -84,6 +96,7 @@ namespace TradingLib.Core
         protected void NotifyOrderError(Order o, RspInfo e)
         {
             _errorordercache.Write(new OrderErrorPack(o, e));
+            NewMessageItem();
         }
 
         /// <summary>
@@ -94,6 +107,7 @@ namespace TradingLib.Core
         protected void NotifyOrderActionError(OrderAction a, RspInfo e)
         {
             _erractioncache.Write(new OrderActionErrorPack(a, e));
+            NewMessageItem();
         }
 
         protected void NotifyCancel(long oid)

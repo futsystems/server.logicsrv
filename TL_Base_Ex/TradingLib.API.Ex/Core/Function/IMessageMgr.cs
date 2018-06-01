@@ -13,7 +13,7 @@ namespace TradingLib.API
         /// 将IPacket放到缓存 进行发送
         /// </summary>
         /// <param name="packet"></param>
-        void Send(IPacket packet);
+        void Send(IPacket packet,bool fireSend);
 
         /// <summary>
         /// 获得某个通知列表

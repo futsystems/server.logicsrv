@@ -76,10 +76,12 @@ namespace FrontServer.TLServiceHost
 
         void tlSocketServer_NewRequestReceived(TLSessionBase session, TLRequestInfo requestInfo)
         {
-            RunConfig.Instance.Profile.EnterSection("TLSocket NewRequest");
+            
             try
             {
-                _requestCnt ++;
+                if (GlobalConfig.ProfileEnable) RunConfig.Instance.Profile.EnterSection("TLSocket NewRequest");
+
+                _requestCnt++;
                 if (DateTime.Now.Subtract(_lasttime).Minutes >= 1)
                 {
                     logger.Info(string.Format("last minute request cnt:{0}", _requestCnt));
@@ -135,7 +137,7 @@ namespace FrontServer.TLServiceHost
 
                                 _connectionMap.TryAdd(session.SessionID, conn);
                                 //客户端发送初始化数据包后执行逻辑服务器客户端注册操作
-                                _mqServer.LogicRegister(conn,EnumFrontType.TLSocket,request.VersionToken);
+                                _mqServer.LogicRegister(conn, EnumFrontType.TLSocket, request.VersionToken);
                                 logger.Info("connection registed");
                                 //发送回报
                                 RspRegisterClientResponse response = ResponseTemplate<RspRegisterClientResponse>.SrvSendRspResponse(request);
@@ -203,10 +205,12 @@ namespace FrontServer.TLServiceHost
             }
             catch (Exception ex)
             {
-                logger.Error("Handle Front MessageType:{0} Content:{1} Error:{2} Stack:{3}".Put(requestInfo.Message.Type, requestInfo.Message.Content, ex,ex.StackTrace));
+                logger.Error("Handle Front MessageType:{0} Content:{1} Error:{2} Stack:{3}".Put(requestInfo.Message.Type, requestInfo.Message.Content, ex, ex.StackTrace));
             }
-
-            RunConfig.Instance.Profile.LeaveSection();
+            finally
+            {
+                if (GlobalConfig.ProfileEnable) RunConfig.Instance.Profile.LeaveSection();
+            }
         }
 
         void tlSocketServer_SessionClosed(TLSessionBase session, SuperSocket.SocketBase.CloseReason value)

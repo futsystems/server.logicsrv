@@ -458,7 +458,7 @@ namespace TradingLib.Core
         void asynctick_GotTick(Tick k)
         {
 
-            RunConfig.Instance.Profile.EnterSection("DataFeedGotTick");
+            if (GlobalConfig.ProfileEnable)  RunConfig.Instance.Profile.EnterSection("DataFeedGotTick");
             newtick(k, false);
 
             if(_monthSymbolPair == null && !_cacheMonthSymbol)
@@ -481,7 +481,7 @@ namespace TradingLib.Core
                     newtick(k2, false);
                 }
             }
-            RunConfig.Instance.Profile.LeaveSection();
+            if (GlobalConfig.ProfileEnable)  RunConfig.Instance.Profile.LeaveSection();
         }
 
         void newtick(Tick k,bool ishist=false)
