@@ -36,7 +36,7 @@ namespace TradingLib.Core
             }
 
             tl = new TLServer_MgrExch(_cfgdb["TLServerIP"].AsString(), _cfgdb["TLPort"].AsInt(), false);
-            tl.NumWorkers = 5;
+            tl.NumWorkers = 1;
 
             tl.CachePacketEvent += new IPacketDelegate(CachePacket);
             tl.NewPacketRequest += new Action<ISession, IPacket, Manager>(OnPacketRequest);
