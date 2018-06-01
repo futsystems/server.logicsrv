@@ -26,6 +26,7 @@ namespace TradingLib.Core
         {
             while (msgoutgo)
             {
+                RunConfig.Instance.Profile.EnterSection("BrokerRouter MessageOut");
                 try
                 {
                     //转发委托
@@ -64,6 +65,7 @@ namespace TradingLib.Core
                 {
                     logger.Info(PROGRAME + ":process message out error:" + ex.ToString());
                 }
+                RunConfig.Instance.Profile.LeaveSection();
             }
         }
         void StartProcessMsgOut()

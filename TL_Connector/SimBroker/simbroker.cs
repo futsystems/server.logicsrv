@@ -221,6 +221,7 @@ namespace Broker.SIM
         Dictionary<long, Order> firstPendingOrder = new Dictionary<long, TradingLib.API.Order>();//第一次扫描没有成交的委托 则用最新价进行成交
         void processPaperTrading()
         { 
+            
              try
             {
                 Order[] orders;
@@ -557,9 +558,11 @@ namespace Broker.SIM
         {
             while (ptgo)
             {
+                RunConfig.Instance.Profile.EnterSection("PaperTraderEngine");
                 processIn();//将委托与取消从ringbuffer移动到Queue中等待执行成交或取消 由于移动委托操作与委托模拟成交操作是在同一个线程内进行，因此这里queue不存在多线程操作的安全问题
                 processPaperTrading();
-                Thread.Sleep(200);//每隔200毫秒进行一次模拟撮合
+                Thread.Sleep(500);//每隔200毫秒进行一次模拟撮合
+                RunConfig.Instance.Profile.LeaveSection();
             }
         }
 

@@ -64,6 +64,7 @@ namespace TradingLib.Core
         {
             while (_sendgo)
             {
+                RunConfig.Instance.Profile.EnterSection("MsgExchange_SendWorker");
                 try
                 {
                     //发送委托
@@ -121,6 +122,7 @@ namespace TradingLib.Core
                 {
                     logger.Error("消息发送线程出错 " + ex.ToString());
                 }
+                RunConfig.Instance.Profile.LeaveSection();
             }
 
         }

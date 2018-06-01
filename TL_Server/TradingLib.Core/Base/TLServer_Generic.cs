@@ -623,7 +623,7 @@ namespace TradingLib.Core
 
         void OnPacketEvent(IPacket packet, string clientId)
         {
-            RunConfig.Instance.Profile.EnterSection("PacketEvent"+this.Name);
+            RunConfig.Instance.Profile.EnterSection("PacketEvent_"+this.Name);
             long result = NORETURNRESULT;
             try
             {

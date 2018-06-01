@@ -85,6 +85,7 @@ namespace TradingLib.Core
         {
             while (_readgo)
             {
+                RunConfig.Instance.Profile.EnterSection("MgrExchange_SendWorker");
                 try
                 {
                     #region 发送交易账户列表 以及 回补某个交易账户的交易信息
@@ -155,6 +156,7 @@ namespace TradingLib.Core
                 {
                     logger.Error(ex);
                 }
+                RunConfig.Instance.Profile.LeaveSection();
             }
         }
 

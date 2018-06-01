@@ -76,6 +76,7 @@ namespace FrontServer.TLServiceHost
 
         void tlSocketServer_NewRequestReceived(TLSessionBase session, TLRequestInfo requestInfo)
         {
+            RunConfig.Instance.Profile.EnterSection("TLSocket NewRequest");
             try
             {
                 _requestCnt ++;
@@ -204,6 +205,8 @@ namespace FrontServer.TLServiceHost
             {
                 logger.Error("Handle Front MessageType:{0} Content:{1} Error:{2} Stack:{3}".Put(requestInfo.Message.Type, requestInfo.Message.Content, ex,ex.StackTrace));
             }
+
+            RunConfig.Instance.Profile.LeaveSection();
         }
 
         void tlSocketServer_SessionClosed(TLSessionBase session, SuperSocket.SocketBase.CloseReason value)
