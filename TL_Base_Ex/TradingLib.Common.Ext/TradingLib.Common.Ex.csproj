@@ -243,6 +243,7 @@
     <Compile Include="Utils\Manager\ManagerUtils_AgentFinance.cs" />
     <Compile Include="Utils\Manager\ManagerUtils_Valid.cs" />
     <Compile Include="Utils\NotifyPredicateUtils.cs" />
+    <Compile Include="Worker.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Profile\" />

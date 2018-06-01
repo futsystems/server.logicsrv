@@ -98,6 +98,8 @@ namespace TraddingSrvCLI
                                     TLCtxHelper.IsReady = true;
 
                                     TLCtxHelper.PrintVersion();
+
+                                    //TLCtxHelper.Worker.StartWorker();
                                     while (true)
                                     {
                                         Thread.Sleep(1000);

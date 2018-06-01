@@ -95,6 +95,9 @@ namespace TradingLib.Common
             this.m_SessionEvent = new SessionEvent<TrdClientInfo>();
             this.m_AccountEvent = new AccountEvent();
             //this.m_ExContribEvent = new ExContribEvent();
+
+            worker = new Worker();
+            //worker.StartWorker();
         }
 
 
@@ -116,6 +119,9 @@ namespace TradingLib.Common
             }
         }
 
+
+        Worker worker;
+        public static Worker Worker { get { return defaultInstance.worker; } }
 
         #region scope
         static ILifetimeScope _scope = null;
