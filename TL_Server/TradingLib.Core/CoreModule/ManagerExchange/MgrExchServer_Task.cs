@@ -95,7 +95,7 @@ namespace TradingLib.Core
                 {
                     if (updateall)
                     {
-                        logger.Info(string.Format("-->update all,Acc:{0} location:{1}", string.Join(",", cst.WathAccountList.Select(acc => acc.ID).ToArray()), cst.Location.ClientID));
+                        logger.Debug(string.Format("-->update all,Acc:{0} location:{1}", string.Join(",", cst.WathAccountList.Select(acc => acc.ID).ToArray()), cst.Location.ClientID));
                     }
                     //便利所有订阅账户列表
                     foreach (IAccount acc in cst.WathAccountList)
