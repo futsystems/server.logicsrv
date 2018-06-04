@@ -73,6 +73,7 @@ namespace FrontServer.TLServiceHost
 
         DateTime _lasttime = DateTime.Now;
         long _requestCnt = 0;
+        ConcurrentDictionary<MessageTypes, int> typeCntMap = new ConcurrentDictionary<MessageTypes, int>();
 
         void tlSocketServer_NewRequestReceived(TLSessionBase session, TLRequestInfo requestInfo)
         {
@@ -82,11 +83,23 @@ namespace FrontServer.TLServiceHost
                 if (GlobalConfig.ProfileEnable) RunConfig.Instance.Profile.EnterSection("TLSocket NewRequest");
 
                 _requestCnt++;
+                if (!typeCntMap.ContainsKey(requestInfo.Message.Type))
+                {
+                    typeCntMap.TryAdd(requestInfo.Message.Type, 0);
+                }
+                typeCntMap[requestInfo.Message.Type] = (typeCntMap[requestInfo.Message.Type] + 1);
+
                 if (DateTime.Now.Subtract(_lasttime).Minutes >= 1)
                 {
-                    logger.Info(string.Format("last minute request cnt:{0}", _requestCnt));
+                    logger.Info(string.Format("last minute TL request cnt:{0}", _requestCnt));
+                    foreach (var item in typeCntMap)
+                    {
+                        logger.Info(string.Format("     type :{0} cnt:{1}",item.Key,item.Value));
+                        typeCntMap[item.Key] = 0;
+                    }
                     _requestCnt = 0;
                     _lasttime = DateTime.Now;
+
                 }
                 if (session == null)
                 {

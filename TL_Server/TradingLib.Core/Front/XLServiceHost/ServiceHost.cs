@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Concurrent;
 using System.Linq;
 using System.Text;
 using TradingLib.API;
@@ -71,6 +72,10 @@ namespace FrontServer.XLServiceHost
             _mqServer.LogicUnRegister(session.SessionID);
         }
 
+        DateTime _lasttime = DateTime.Now;
+        long _requestCnt = 0;
+        ConcurrentDictionary<XLMessageType, int> typeCntMap = new ConcurrentDictionary<XLMessageType, int>();
+
         void xlSocketServer_NewRequestReceived(XLSessionBase session, XLRequestInfo requestInfo)
         {
             try
@@ -82,6 +87,27 @@ namespace FrontServer.XLServiceHost
                     logger.Info(string.Format("PacketData Received,Type:{0} Key:{1}", requestInfo.Body.MessageType, requestInfo.Key));
 #endif
                 }
+
+                _requestCnt++;
+                if (!typeCntMap.ContainsKey(requestInfo.Body.MessageType))
+                {
+                    typeCntMap.TryAdd(requestInfo.Body.MessageType, 0);
+                }
+                typeCntMap[requestInfo.Body.MessageType] = (typeCntMap[requestInfo.Body.MessageType] + 1);
+
+                if (DateTime.Now.Subtract(_lasttime).Minutes >= 1)
+                {
+                    logger.Info(string.Format("last minute XL request cnt:{0}", _requestCnt));
+                    foreach (var item in typeCntMap)
+                    {
+                        logger.Info(string.Format("     type :{0} cnt:{1}", item.Key, item.Value));
+                        typeCntMap[item.Key] = 0;
+                    }
+                    _requestCnt = 0;
+                    _lasttime = DateTime.Now;
+
+                }
+
                 XLConnection conn = null;
                 //SessionID 检查连接对象
                 if (!_connectionMap.TryGetValue(session.SessionID, out conn))
