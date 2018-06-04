@@ -221,7 +221,7 @@ namespace FrontServer.TLServiceHost
 
         void tlSocketServer_NewSessionConnected(TLSessionBase session)
         {
-            if (_mqServer == null || !_mqServer.IsLive) session.Close();
+            if (_mqServer == null || !_mqServer.IsLive) session.Close();//mqServer为空或者非运行状态 则不接收外部连接建立
             OnSessionCreated(session);
         }
 

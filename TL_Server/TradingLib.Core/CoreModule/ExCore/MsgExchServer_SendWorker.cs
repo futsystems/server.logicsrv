@@ -136,7 +136,7 @@ namespace TradingLib.Core
                 }
                 catch (Exception ex)
                 {
-                    logger.Error("消息发送线程出错 " + ex.ToString());
+                    logger.Error("消息发送线程出错 " + ex.ToString()+ ex.StackTrace.ToString());
                 }
                 finally
                 {

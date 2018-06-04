@@ -115,6 +115,11 @@ namespace TradingLib.Core
         public override ILocation[] GetNotifyTargets(IPacket packet)
         {
             NotifyResponsePacket notify= packet as NotifyResponsePacket;
+            if (notify == null)
+            {
+                logger.Info("notify is null,"+ " packet:" + (packet == null ? "Null Packet" : packet.ToString()));
+            }
+
             //查找以交易帐户登入的地址列表
             ILocation[] locationlist = ClientsForAccount(notify.Account).Select(client =>client.Location).ToArray();
             //logger.Info("交易帐户:" + notify.Account + " 链接端数量:" + locationlist.Length.ToString());
