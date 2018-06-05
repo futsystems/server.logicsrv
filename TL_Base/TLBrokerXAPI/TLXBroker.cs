@@ -241,12 +241,28 @@ namespace TradingLib.BrokerXAPI
             //_wrapper.OnQryTradeEvent += new CBOnQryTrade(_wrapper_OnQryTradeEvent);
             //_wrapper.OnQryPositionDetailEvent += new CBOnQryPositionDetail(_wrapper_OnQryPositionDetailEvent);
 
-            //_wrapper.OnLogEvent += new CBOnLog(_wrapper_OnLogEvent);
+            _wrapper.OnLogEvent += new CBOnLog(OnLog);
             //_wrapper.OnMessageEvent += new CBOnMessage(_wrapper_OnMessageEvent);
             //_wrapper.OnTransferEvent += new CBOnTransfer(_wrapper_OnTransferEvent);
         }
 
-      
+
+        void OnLog(IntPtr pData, int len)
+        {
+            try
+            {
+                byte[] data = new byte[len];
+                Marshal.Copy(pData, data, 0, len);
+                string message = System.Text.Encoding.UTF8.GetString(data, 0, len);
+                logger.Info("[Native Log] " + message);
+            }
+            catch (Exception ex)
+            {
+                logger.Error("OnLogEvent Error:" + ex.ToString());
+            }
+
+            
+        }
 
         /// <summary>
         /// 执行对象销毁

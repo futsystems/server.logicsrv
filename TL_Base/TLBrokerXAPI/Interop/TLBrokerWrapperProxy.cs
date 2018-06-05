@@ -122,7 +122,7 @@ namespace TradingLib.BrokerXAPI.Interop
             //_RegOnQryOrder = NativeLib.GetUnmanagedFunction<RegOnQryOrderProc>("RegOnQryOrder");
             //_RegOnQryTrade = NativeLib.GetUnmanagedFunction<RegOnQryTradeProc>("RegOnQryTrade");
             //_RegOnQryPositionDetail = NativeLib.GetUnmanagedFunction<RegOnQryPositionDetailProc>("RegOnPositionDetail");
-            //_RegOnLog = NativeLib.GetUnmanagedFunction<RegOnLogProc>("RegOnLog");
+            _RegOnLog = NativeLib.GetUnmanagedFunction<RegOnLogProc>("RegOnLog");
             //_RegOnMessage = NativeLib.GetUnmanagedFunction<RegOnMessageProc>("RegOnMessage");
             //_RegOnTransfer = NativeLib.GetUnmanagedFunction<RegOnTransferProc>("RegOnTransfer");
         }
@@ -469,6 +469,12 @@ namespace TradingLib.BrokerXAPI.Interop
         public delegate void RegRtnOrderActionErrorProc(IntPtr pWrapper, CBRtnOrderActionError cb);
         RegRtnOrderActionErrorProc _RegRtnOrderActionError;
 
+
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        public delegate void RegOnLogProc(IntPtr pWrapper, CBOnLog cb);
+        RegOnLogProc _RegOnLog;
+
+
         /*
         /// <summary>
         /// 注册合约回调
@@ -563,6 +569,13 @@ namespace TradingLib.BrokerXAPI.Interop
         {
             add { cbRtnOrderActionError += value; _RegRtnOrderActionError(this.Wrapper, cbRtnOrderActionError); }
             remove { cbRtnOrderActionError -= value; _RegRtnOrderActionError(this.Wrapper, cbRtnOrderActionError); }
+        }
+
+        CBOnLog cbOnLog;
+        public event CBOnLog OnLogEvent
+        {
+            add { cbOnLog += value; _RegOnLog(this.Wrapper, cbOnLog); }
+            remove { cbOnLog -= value; _RegOnLog(this.Wrapper, cbOnLog); }
         }
 
         /*
