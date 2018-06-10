@@ -152,7 +152,7 @@ namespace TradingLib.Contrib.APIService
                                 {
                                     return new JsonReply(108, string.Format("Bank ID error"));
                                 }
-                                if (bank_id <= 0 || bank_id > 12)
+                                if (bank_id <= 0 || bank_id > 13)
                                 {
                                     return new JsonReply(108, string.Format("Bank ID error"));
                                 }
