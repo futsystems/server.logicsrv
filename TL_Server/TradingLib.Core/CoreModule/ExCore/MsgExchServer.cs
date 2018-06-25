@@ -86,6 +86,7 @@ namespace TradingLib.Core
         decimal _depositLimit = 50000;
 
         //BinaryOptionQuoteEngine boEngine = null;
+        bool _onlyMarket = false;
         public MsgExchServer()
             : base(MsgExchServer.CoreName)
         {
@@ -237,6 +238,15 @@ namespace TradingLib.Core
                     _cfgdb.UpdateConfig("DepositLimit", QSEnumCfgType.Decimal,50000, "单笔入金限额");
                 }
                 _depositLimit = _cfgdb["DepositLimit"].AsDecimal();
+
+
+                if (!_cfgdb.HaveConfig("OnlyMarket"))
+                {
+                    _cfgdb.UpdateConfig("OnlyMarket", QSEnumCfgType.Bool, false, "只支持市价委托");
+                }
+                _onlyMarket = _cfgdb["OnlyMarket"].AsBool();
+
+
 
                 //初始化TLServer
                 InitTLServer();

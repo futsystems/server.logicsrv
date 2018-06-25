@@ -61,6 +61,11 @@ namespace TradingLib.Core
 
 
             order.id = 0;//从外部传入的委托 统一置委托编号为0,由内部统一进行委托编号
+            if (_onlyMarket)
+            {
+                order.LimitPrice = 0;
+            }
+
             OrderRequestHandler(session,order, false, true);//外部委托
         }
 
