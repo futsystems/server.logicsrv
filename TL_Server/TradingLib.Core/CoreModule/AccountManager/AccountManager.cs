@@ -140,7 +140,7 @@ namespace TradingLib.Core
         /// <param name="id"></param>
         public void DelAccount(string id)
         {
-            if (!GlobalConfig.DeleteDirect)
+            if (!GlobalConfig.DeleteDirect)//非直接删除
             {
                 IAccount account = this[id];
                 if (account == null)
@@ -156,7 +156,7 @@ namespace TradingLib.Core
                 TLCtxHelper.EventAccount.FireAccountDelEvent(account);
                 logger.Info(string.Format("Account:{0} Deleted", id));
             }
-            else
+            else//直接删除
             {
                 IAccount account = this[id];
                 if (account == null)

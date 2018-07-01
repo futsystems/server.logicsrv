@@ -169,10 +169,15 @@ namespace TradingLib.Core
                         throw new FutsRspError(string.Format(string.Format("交易帐户:{0} 权益:{1} 信用额度:{2}未出金 无法删除", account, acc.NowEquity, acc.Credit)));
                     }
                 }
-
-                this.DelAccount(account);
+                //队列中删除
+                System.Threading.ThreadPool.QueueUserWorkItem(o => 
+                { 
+                    this.DelAccount(account); 
+                    session.RspMessage("交易帐户:" + string.Join(",", accounts) + " 删除成功"); 
+                });
+                
             }
-            session.RspMessage("交易帐户:" + string.Join(",",accounts) + " 删除成功");
+            //session.RspMessage("交易帐户:" + string.Join(",",accounts) + " 删除成功");
         }
 
 
