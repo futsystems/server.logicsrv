@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Concurrent;
 using System.Linq;
 using System.Text;
 using TradingLib.API;
@@ -24,6 +25,9 @@ namespace TradingLib.Contrib.APIService
 
         const string ERROR_TPL_ID = "ERROR";
         List<string> confirmedOperationRefList = new List<string>();//数据库更新后再查询 这里无法确保获取最新的Operation状态
+
+        //记录入金操作ID与themeid的对应关系 用于最后返回显示
+        ConcurrentDictionary<string, string> operationThemeMap = new ConcurrentDictionary<string, string>();
 
         public override object Process(HttpRequest request)
         {
@@ -59,6 +63,7 @@ namespace TradingLib.Contrib.APIService
                             return tplTracker.Render(action, null);
                         }
                     case "OPERATION":
+                    case "OPERATION2":
                         {
                             var tpl = tplTracker[action];
                             return tplTracker.Render(action, null);
@@ -69,47 +74,53 @@ namespace TradingLib.Contrib.APIService
 
                             return tplTracker.Render(action, null);
                         }
+
+                    #region withdaw confirm page
                     case "WITHDRAWCONFIRM":
                         {
                             var acct = request.Params["account"];
                             var pass = request.Params["pass"];
+                            var themeid = request.Params["ThemeId"];
+
+                            string errorTemplateID = ERROR_TPL_ID + themeid;
+
                             decimal amount = 0;
                             IAccount account = TLCtxHelper.ModuleAccountManager[acct];
                             if (account == null)
                             {
-                                return tplTracker.Render(ERROR_TPL_ID, new DropError(101, "交易账户不存在"));
+                                return tplTracker.Render(errorTemplateID, new DropError(101, "交易账户不存在"));
                             }
                             if (!TLCtxHelper.ModuleAccountManager.VaildAccount(acct, pass))
                             {
-                                return tplTracker.Render(ERROR_TPL_ID, new DropError(102, "密码错误"));
+                                return tplTracker.Render(errorTemplateID, new DropError(102, "密码错误"));
                             }
                             try
                             {
                                 amount = decimal.Parse(request.Params["amount"]);
                                 if (amount <= 0)
                                 {
-                                    return tplTracker.Render(ERROR_TPL_ID, new DropError(103, "金额需大于零"));
+                                    return tplTracker.Render(errorTemplateID, new DropError(103, "金额需大于零"));
                                 }
                             }
                             catch (Exception ex)
                             {
-                                return tplTracker.Render(ERROR_TPL_ID, new DropError(102, "输入金额格式错误"));
+                                return tplTracker.Render(errorTemplateID, new DropError(102, "输入金额格式错误"));
                             }
 
                             IEnumerable<CashOperation> pendingWithdraws = ORM.MCashOperation.SelectPendingCashOperation(account.ID).Where(c => c.OperationType == QSEnumCashOperation.WithDraw);
                             if (pendingWithdraws.Count() > 0)
                             {
-                                return tplTracker.Render(ERROR_TPL_ID, new DropError(102, "有出金请求未处理"));
+                                return tplTracker.Render(errorTemplateID, new DropError(102, "有出金请求未处理"));
                             }
 
                             if (account.GetPositionsHold().Count()>0 || account.GetPendingOrders().Count()>0)
                             {
-                                return tplTracker.Render(ERROR_TPL_ID, new DropError(102, "交易账户有持仓或挂单,无法执行出金"));
+                                return tplTracker.Render(errorTemplateID, new DropError(102, "交易账户有持仓或挂单,无法执行出金"));
                             }
 
                             if (amount > account.NowEquity)
                             {
-                                return tplTracker.Render(ERROR_TPL_ID, new DropError(102, string.Format("出金金额大于账户权益:{0}", account.NowEquity.ToFormatStr())));
+                                return tplTracker.Render(errorTemplateID, new DropError(102, string.Format("出金金额大于账户权益:{0}", account.NowEquity.ToFormatStr())));
                             }
                             //输入参数验证完毕
                             CashOperation operation = new CashOperation();
@@ -126,9 +137,10 @@ namespace TradingLib.Contrib.APIService
                             ORM.MCashOperation.InsertCashOperation(operation);
                             TLCtxHelper.ModuleMgrExchange.Notify("APIService","NotifyCashOperation",operation,account.GetNotifyPredicate());
                             return tplTracker.Render("WITHDRAWCONFIRM", new DropCashOperation(operation));
-
-
                         }
+                    #endregion
+
+                    #region deposit direct used from PC Xtrader
                     case "DEPOSITDIRECT"://直接支付确认 用于交易端提交入金请求后 返回支付链接,自动跳转到第三方支付网关
                         { 
                             var transref = request.Params["Ref"];
@@ -150,10 +162,15 @@ namespace TradingLib.Contrib.APIService
                             return tplTracker.Render(string.Format("DEPOSITDIRECT_{0}", gateway.GateWayType.ToString().ToUpper()), data);
 
                         }
+                    #endregion
+
+                    #region depositon confirm page
                     case "DEPOSITCONFIRM":
                         {
                             var acct = request.Params["account"];
                             var pass = request.Params["pass"];
+                            var themeid = request.Params["ThemeId"];
+                            //logger.Info("theme id is :" + themeid);
                             var bank = string.Empty;
 
                             if (request.Params.AllKeys.Contains("bank"))
@@ -163,38 +180,39 @@ namespace TradingLib.Contrib.APIService
                             
                             decimal amount = 0;
 
+                            string errorTemplateID = ERROR_TPL_ID + themeid;
 
                             IAccount account = TLCtxHelper.ModuleAccountManager[acct];
                             if (account == null)
                             {
-                                return tplTracker.Render(ERROR_TPL_ID, new DropError(101, "交易账户不存在"));
+                                return tplTracker.Render(errorTemplateID, new DropError(101, "交易账户不存在"));
                             }
                             if (!TLCtxHelper.ModuleAccountManager.VaildAccount(acct, pass))
                             {
-                                return tplTracker.Render(ERROR_TPL_ID, new DropError(102, "密码错误"));
+                                return tplTracker.Render(errorTemplateID, new DropError(102, "密码错误"));
                             }
                             try
                             {
                                 amount = decimal.Parse(request.Params["amount"]);
                                 if (amount <= 0)
                                 {
-                                    return tplTracker.Render(ERROR_TPL_ID, new DropError(103, "金额需大于零"));
+                                    return tplTracker.Render(errorTemplateID, new DropError(103, "金额需大于零"));
                                 }
                             }
                             catch (Exception ex)
                             {
-                                return tplTracker.Render(ERROR_TPL_ID, new DropError(102, "输入金额格式错误"));
+                                return tplTracker.Render(errorTemplateID, new DropError(102, "输入金额格式错误"));
                             }
 
                             //通过账户分区查找支付网关设置 如果有支付网关则通过支付网关来获得对应的数据
                             var gateway = APITracker.GateWayTracker.GetDomainGateway(account.Domain.ID);
                             if (gateway == null)
                             {
-                                return tplTracker.Render(ERROR_TPL_ID, new DropError(102, "未设置支付通道"));
+                                return tplTracker.Render(errorTemplateID, new DropError(102, "未设置支付通道"));
                             }
                             if (!gateway.Avabile)
                             {
-                                return tplTracker.Render(ERROR_TPL_ID, new DropError(102, "支付通道未开启"));
+                                return tplTracker.Render(errorTemplateID, new DropError(102, "支付通道未开启"));
                             }
 
                             //输入参数验证完毕
@@ -210,10 +228,26 @@ namespace TradingLib.Contrib.APIService
                             operation.Bank = bank;
 
                             ORM.MCashOperation.InsertCashOperation(operation);
+
+                            //记录themeid
+                            if (!string.IsNullOrEmpty(themeid))
+                            {
+                                operationThemeMap.TryAdd(operation.Ref, themeid);
+                            }
+
                             TLCtxHelper.ModuleMgrExchange.Notify("APIService", "NotifyCashOperation", operation, account.GetNotifyPredicate());
                             var data = gateway.CreatePaymentDrop(operation,request);
-                            return tplTracker.Render(string.Format("DEPOSITCONFIRM_{0}",gateway.GateWayType.ToString().ToUpper()), data);
+                            string templateId = string.Format("DEPOSITCONFIRM_{0}",gateway.GateWayType.ToString().ToUpper());
+                            string templateIdTheme = templateId + themeid;
+                            if (!tplTracker.Exist(templateIdTheme))//如果没有样式修改 则返回使用默认模板
+                            {
+                                templateIdTheme = templateId;
+                            }
+                            return tplTracker.Render(templateIdTheme, data);
                         }
+                    #endregion
+
+                    #region srvnotify
                     case "SRVNOTIFY":
                         {
                             string gwtype = path[3].ToUpper();
@@ -359,6 +393,9 @@ namespace TradingLib.Contrib.APIService
                             }
 
                         }
+                    #endregion
+
+                    #region custnotify
                     case "CUSTNOTIFY":
                         {
                             string gwtype = path[3].ToUpper();
@@ -385,21 +422,30 @@ namespace TradingLib.Contrib.APIService
                                 logger.Error(string.Format("CashOperatin not exit,Info:{0}", request.RawUrl));
                                 return tplTracker.Render(ERROR_TPL_ID, new DropError(202, "未找到相应订单"));
                             }
+                            string themeid = string.Empty;
+                            if (operationThemeMap.ContainsKey(operation.Ref))
+                            {
+                                operationThemeMap.TryGetValue(operation.Ref, out themeid);
+                            }
+
+                            string errorTemplateID = ERROR_TPL_ID + themeid;
+
+
                             IAccount account = TLCtxHelper.ModuleAccountManager[operation.Account];
                             if (account == null)
                             {
                                 logger.Error(string.Format("Account not exit,Info:{0}", request.RawUrl));
-                                return tplTracker.Render(ERROR_TPL_ID, new DropError(102, "订单账户不存在"));
+                                return tplTracker.Render(errorTemplateID, new DropError(102, "订单账户不存在"));
                             }
 
                             var gateway = APITracker.GateWayTracker.GetDomainGateway(account.Domain.ID);
                             if (gateway == null)
                             {
-                                return tplTracker.Render(ERROR_TPL_ID, new DropError(102, "未设置支付通道"));
+                                return tplTracker.Render(errorTemplateID, new DropError(102, "未设置支付通道"));
                             }
                             if (!gateway.Avabile)
                             {
-                                return tplTracker.Render(ERROR_TPL_ID, new DropError(102, "支付通道未开启"));
+                                return tplTracker.Render(errorTemplateID, new DropError(102, "支付通道未开启"));
                             }
 
                             //1.检查支付网关回调参数是否合法
@@ -409,20 +455,22 @@ namespace TradingLib.Contrib.APIService
                                 bool payResult = gateway.CheckPayResult(request, operation);
                                 if (payResult)
                                 {
-                                    return tplTracker.Render(ERROR_TPL_ID, new DropError(0, "支付成功"));
+                                    return tplTracker.Render(errorTemplateID, new DropError(0, "支付成功"));
                                 }
                                 else
                                 {
-                                    return tplTracker.Render(ERROR_TPL_ID, new DropError(202, "支付失败"));
+                                    return tplTracker.Render(errorTemplateID, new DropError(202, "支付失败"));
                                 }
                             }
                             else
                             {
-                                return tplTracker.Render(ERROR_TPL_ID, new DropError(201, "支付网关回调异常:参数检查错误"));
+                                return tplTracker.Render(errorTemplateID, new DropError(201, "支付网关回调异常:参数检查错误"));
                             }
 
 
                         }
+                    #endregion
+
                     default:
                         break;
                 }

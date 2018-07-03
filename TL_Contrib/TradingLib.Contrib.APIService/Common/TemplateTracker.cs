@@ -15,6 +15,11 @@ namespace TradingLib.Contrib.APIService
         string _suffix = "html";
         Dictionary<string, Template> templatemap = new Dictionary<string, Template>();
 
+
+        public bool Exist(string id)
+        {
+            return templatemap.ContainsKey(id);
+        }
         /// <summary>
         /// 在某个目录下 创建一个模板维护器 加载以suffix为后缀的文件
         /// </summary>

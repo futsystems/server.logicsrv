@@ -1,0 +1,140 @@
+
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=Edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+		<title>在线出入金</title>
+		
+		<link rel="stylesheet" href="http://120.26.45.94/assest2/css/style.css">
+	</head>
+	<body>
+		
+		<div class="slide"></div>
+		
+		<form name="deposit" id="deposit" method="post" action="/cash/depositconfirm/">
+		<input type="hidden" name="ThemeId"  value="2" >
+		<div class="main">
+			<div class="con">
+				<h3 class="tit">在线出入金</h3>
+			
+				<table cellspacing="0" cellpadding="0" class="taba">
+					<tr>
+						<td width="130">交易账号</td>
+						<td>
+							<input type="text" name="Account" id="" value="" class="in">
+						</td>
+					</tr>
+					<tr>
+						<td>账号密码</td>
+						<td>
+							<input type="password" name="Pass" id="" value="" class="in">
+						</td>
+					</tr>
+					<tr>
+						<td>业务选择</td>
+						<td>
+							<input type="radio" name="type" id="typea" value="" checked="checked">
+							<label for="typea">入金</label>
+							<input type="radio" name="type" id="typeb" value="">
+							<label for="typeb">出金</label>
+						</td>
+					</tr>
+					<tr>
+						<td>订单金额</td>
+						<td>
+							<input type="text" name="Amount" id="" value="" class="in"> 元
+						</td>
+					</tr>
+					<input type="hidden" name="bank" id="bank" value="01020000">
+					<tr>
+						<td>支付方式</td>
+						<td>
+							<img src="http://120.26.45.94/assest/img/bank.png">
+						</td>
+					</tr>
+					<tr>
+						<td>银行选择</td>
+						<td id="selectBank">
+							<a href="javascript:void(null)" data-id="01020000" class="act">
+								<img src="http://120.26.45.94/assest2/img/gsyh.png">
+							</a>
+							<a href="javascript:void(null)" data-id="01030000">
+								<img src="http://120.26.45.94/assest2/img/nyyh.png">
+							</a>
+							<a href="javascript:void(null)" data-id="01050000">
+								<img src="http://120.26.45.94/assest2/img/jsyh.png">
+							</a>
+							<a href="javascript:void(null)" data-id="01040000">
+								<img src="http://120.26.45.94/assest2/img/zgyh.png">
+							</a>
+							<a href="javascript:void(null)" data-id="03080000">
+								<img src="http://120.26.45.94/assest2/img/zsyh.png">
+							</a>
+							<a href="javascript:void(null)" data-id="03010000">
+								<img src="http://120.26.45.94/assest2/img/jtyh.png">
+							</a>
+							<a href="javascript:void(null)" data-id="01000000">
+								<img src="http://120.26.45.94/assest2/img/yzyh.png">
+							</a>
+							
+							<a href="javascript:void(null)" data-id="01000000">
+								<img src="http://120.26.45.94/assest2/img/zxyh.png">
+							</a>
+							<a href="javascript:void(null)" data-id="01000000">
+								<img src="http://120.26.45.94/assest2/img/gdyh.png">
+							</a>
+							<a href="javascript:void(null)" data-id="01000000">
+								<img src="http://120.26.45.94/assest2/img/msyh.png">
+							</a>
+							<a href="javascript:void(null)" data-id="01000000">
+								<img src="http://120.26.45.94/assest2/img/payh.png">
+							</a>
+							<a href="javascript:void(null)" data-id="qt">
+								<img src="http://120.26.45.94/assest2/img/qtyh.png">
+							</a>
+						</td>
+					</tr>
+					<tr>
+						<td></td>
+						<td>
+							<input type="submit" name="" id="" value="提 交" class="btn">
+						</td>
+					</tr>
+				</table>
+			</div>
+		</div>
+		</form>
+		<script type="text/javascript">
+			
+			var bankNum = '01020000';
+			
+			var obj = document.getElementById('selectBank');
+			var len = obj.children.length;
+			
+			for(var i=0; i<len; i++){
+				obj.getElementsByTagName('a')[i].addEventListener('click', function(){
+					for(var i=0; i<len; i++){
+						obj.getElementsByTagName('a')[i].classList.remove('act');
+					}
+					bankNum = this.getAttribute('data-id');
+					this.classList.add('act');
+					document.getElementById('bank').value = bankNum;
+					//alert(bankNum)
+				})
+				
+			}
+			
+			document.getElementById('typea').addEventListener('change', function(){
+				document.getElementById('deposit').setAttribute('action', '/cash/depositconfirm/');
+			})
+			
+			document.getElementById('typeb').addEventListener('change', function(){
+				document.getElementById('deposit').setAttribute('action', '/cash/withdrawconfirm/');
+			})
+			
+		</script>
+		
+	</body>
+</html>
