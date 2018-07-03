@@ -136,7 +136,12 @@ namespace TradingLib.Contrib.APIService
 
                             ORM.MCashOperation.InsertCashOperation(operation);
                             TLCtxHelper.ModuleMgrExchange.Notify("APIService","NotifyCashOperation",operation,account.GetNotifyPredicate());
-                            return tplTracker.Render("WITHDRAWCONFIRM", new DropCashOperation(operation));
+                            string templateIdTheme = "WITHDRAWCONFIRM" + themeid;
+                            if (!tplTracker.Exist(templateIdTheme))//如果没有样式修改 则返回使用默认模板
+                            {
+                                templateIdTheme = "WITHDRAWCONFIRM";
+                            }
+                            return tplTracker.Render(templateIdTheme, new DropCashOperation(operation));
                         }
                     #endregion
 
