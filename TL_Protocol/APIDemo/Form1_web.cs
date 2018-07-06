@@ -26,6 +26,30 @@ namespace APIClient
             webQueryUser.Click += new EventHandler(webQueryUser_Click);
             webQueryPass.Click += new EventHandler(webQueryPass_Click);
             webUpdatePass.Click += new EventHandler(webUpdatePass_Click);
+            webQryOrder.Click += new EventHandler(webQryOrder_Click);
+            webQryTrade.Click += new EventHandler(webQryTrade_Click);
+            webQryCash.Click += new EventHandler(webQryCash_Click);
+        }
+
+        void webQryCash_Click(object sender, EventArgs e)
+        {
+            HttpAPIClient client = new HttpAPIClient(web_url.Text, md5key.Text);
+            string ret = client.ReqQryCash(web_domainId.Text, webupdateacc_acc.Text, int.Parse(webstart.Text), int.Parse(webend.Text));
+            logger.Info("resoult:" + ret); 
+        }
+
+        void webQryTrade_Click(object sender, EventArgs e)
+        {
+            HttpAPIClient client = new HttpAPIClient(web_url.Text, md5key.Text);
+            string ret = client.ReqQryTrade(web_domainId.Text, webupdateacc_acc.Text, int.Parse(webstart.Text), int.Parse(webend.Text));
+            logger.Info("resoult:" + ret); 
+        }
+
+        void webQryOrder_Click(object sender, EventArgs e)
+        {
+            HttpAPIClient client = new HttpAPIClient(web_url.Text, md5key.Text);
+            string ret = client.ReqQryOrder(web_domainId.Text, webupdateacc_acc.Text, int.Parse(webstart.Text), int.Parse(webend.Text));
+            logger.Info("resoult:" + ret); 
         }
 
         void webUpdatePass_Click(object sender, EventArgs e)

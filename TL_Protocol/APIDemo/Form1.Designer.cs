@@ -123,6 +123,10 @@
             this.btnEncode = new System.Windows.Forms.Button();
             this.label21 = new System.Windows.Forms.Label();
             this.tabPage5 = new System.Windows.Forms.TabPage();
+            this.webpass = new System.Windows.Forms.TextBox();
+            this.label39 = new System.Windows.Forms.Label();
+            this.webUpdatePass = new System.Windows.Forms.Button();
+            this.webQueryPass = new System.Windows.Forms.Button();
             this.webQueryUser = new System.Windows.Forms.Button();
             this.webWitdhdraw = new System.Windows.Forms.Button();
             this.webAmount = new System.Windows.Forms.TextBox();
@@ -158,11 +162,14 @@
             this.webAddAccount = new System.Windows.Forms.Button();
             this.md5key = new System.Windows.Forms.TextBox();
             this.label24 = new System.Windows.Forms.Label();
-            this.webQueryPass = new System.Windows.Forms.Button();
+            this.webQryOrder = new System.Windows.Forms.Button();
             this.debugControl1 = new APIClient.DebugControl();
-            this.webUpdatePass = new System.Windows.Forms.Button();
-            this.webpass = new System.Windows.Forms.TextBox();
-            this.label39 = new System.Windows.Forms.Label();
+            this.webQryTrade = new System.Windows.Forms.Button();
+            this.webQryCash = new System.Windows.Forms.Button();
+            this.webstart = new System.Windows.Forms.TextBox();
+            this.label40 = new System.Windows.Forms.Label();
+            this.webend = new System.Windows.Forms.TextBox();
+            this.label41 = new System.Windows.Forms.Label();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.cashopVal)).BeginInit();
@@ -1101,6 +1108,13 @@
             // 
             // tabPage5
             // 
+            this.tabPage5.Controls.Add(this.webend);
+            this.tabPage5.Controls.Add(this.label41);
+            this.tabPage5.Controls.Add(this.webstart);
+            this.tabPage5.Controls.Add(this.label40);
+            this.tabPage5.Controls.Add(this.webQryCash);
+            this.tabPage5.Controls.Add(this.webQryTrade);
+            this.tabPage5.Controls.Add(this.webQryOrder);
             this.tabPage5.Controls.Add(this.webpass);
             this.tabPage5.Controls.Add(this.label39);
             this.tabPage5.Controls.Add(this.webUpdatePass);
@@ -1147,6 +1161,41 @@
             this.tabPage5.TabIndex = 4;
             this.tabPage5.Text = "HttpAPI";
             this.tabPage5.UseVisualStyleBackColor = true;
+            // 
+            // webpass
+            // 
+            this.webpass.Location = new System.Drawing.Point(594, 79);
+            this.webpass.Name = "webpass";
+            this.webpass.Size = new System.Drawing.Size(100, 21);
+            this.webpass.TabIndex = 38;
+            this.webpass.Text = "0";
+            // 
+            // label39
+            // 
+            this.label39.AutoSize = true;
+            this.label39.Location = new System.Drawing.Point(547, 82);
+            this.label39.Name = "label39";
+            this.label39.Size = new System.Drawing.Size(53, 12);
+            this.label39.TabIndex = 37;
+            this.label39.Text = "new pass";
+            // 
+            // webUpdatePass
+            // 
+            this.webUpdatePass.Location = new System.Drawing.Point(765, 147);
+            this.webUpdatePass.Name = "webUpdatePass";
+            this.webUpdatePass.Size = new System.Drawing.Size(75, 23);
+            this.webUpdatePass.TabIndex = 36;
+            this.webUpdatePass.Text = "UpdatePass";
+            this.webUpdatePass.UseVisualStyleBackColor = true;
+            // 
+            // webQueryPass
+            // 
+            this.webQueryPass.Location = new System.Drawing.Point(765, 117);
+            this.webQueryPass.Name = "webQueryPass";
+            this.webQueryPass.Size = new System.Drawing.Size(75, 23);
+            this.webQueryPass.TabIndex = 35;
+            this.webQueryPass.Text = "QueryPass";
+            this.webQueryPass.UseVisualStyleBackColor = true;
             // 
             // webQueryUser
             // 
@@ -1275,7 +1324,7 @@
             this.webupdateacc_acc.Name = "webupdateacc_acc";
             this.webupdateacc_acc.Size = new System.Drawing.Size(100, 21);
             this.webupdateacc_acc.TabIndex = 20;
-            this.webupdateacc_acc.Text = "0";
+            this.webupdateacc_acc.Text = "8500008";
             // 
             // label30
             // 
@@ -1448,14 +1497,14 @@
             this.label24.TabIndex = 0;
             this.label24.Text = "MD5Key";
             // 
-            // webQueryPass
+            // webQryOrder
             // 
-            this.webQueryPass.Location = new System.Drawing.Point(765, 117);
-            this.webQueryPass.Name = "webQueryPass";
-            this.webQueryPass.Size = new System.Drawing.Size(75, 23);
-            this.webQueryPass.TabIndex = 35;
-            this.webQueryPass.Text = "QueryPass";
-            this.webQueryPass.UseVisualStyleBackColor = true;
+            this.webQryOrder.Location = new System.Drawing.Point(846, 21);
+            this.webQryOrder.Name = "webQryOrder";
+            this.webQryOrder.Size = new System.Drawing.Size(75, 23);
+            this.webQryOrder.TabIndex = 39;
+            this.webQryOrder.Text = "QueryOrder";
+            this.webQryOrder.UseVisualStyleBackColor = true;
             // 
             // debugControl1
             // 
@@ -1472,31 +1521,57 @@
             this.debugControl1.TimeStamps = true;
             this.debugControl1.UseExternalTimeStamp = false;
             // 
-            // webUpdatePass
+            // webQryTrade
             // 
-            this.webUpdatePass.Location = new System.Drawing.Point(765, 147);
-            this.webUpdatePass.Name = "webUpdatePass";
-            this.webUpdatePass.Size = new System.Drawing.Size(75, 23);
-            this.webUpdatePass.TabIndex = 36;
-            this.webUpdatePass.Text = "UpdatePass";
-            this.webUpdatePass.UseVisualStyleBackColor = true;
+            this.webQryTrade.Location = new System.Drawing.Point(846, 50);
+            this.webQryTrade.Name = "webQryTrade";
+            this.webQryTrade.Size = new System.Drawing.Size(75, 23);
+            this.webQryTrade.TabIndex = 40;
+            this.webQryTrade.Text = "QueryTrade";
+            this.webQryTrade.UseVisualStyleBackColor = true;
             // 
-            // webpass
+            // webQryCash
             // 
-            this.webpass.Location = new System.Drawing.Point(594, 79);
-            this.webpass.Name = "webpass";
-            this.webpass.Size = new System.Drawing.Size(100, 21);
-            this.webpass.TabIndex = 38;
-            this.webpass.Text = "0";
+            this.webQryCash.Location = new System.Drawing.Point(846, 85);
+            this.webQryCash.Name = "webQryCash";
+            this.webQryCash.Size = new System.Drawing.Size(75, 23);
+            this.webQryCash.TabIndex = 41;
+            this.webQryCash.Text = "QueryCash";
+            this.webQryCash.UseVisualStyleBackColor = true;
             // 
-            // label39
+            // webstart
             // 
-            this.label39.AutoSize = true;
-            this.label39.Location = new System.Drawing.Point(547, 82);
-            this.label39.Name = "label39";
-            this.label39.Size = new System.Drawing.Size(53, 12);
-            this.label39.TabIndex = 37;
-            this.label39.Text = "new pass";
+            this.webstart.Location = new System.Drawing.Point(426, 168);
+            this.webstart.Name = "webstart";
+            this.webstart.Size = new System.Drawing.Size(100, 21);
+            this.webstart.TabIndex = 43;
+            this.webstart.Text = "0";
+            // 
+            // label40
+            // 
+            this.label40.AutoSize = true;
+            this.label40.Location = new System.Drawing.Point(379, 171);
+            this.label40.Name = "label40";
+            this.label40.Size = new System.Drawing.Size(35, 12);
+            this.label40.TabIndex = 42;
+            this.label40.Text = "start";
+            // 
+            // webend
+            // 
+            this.webend.Location = new System.Drawing.Point(585, 168);
+            this.webend.Name = "webend";
+            this.webend.Size = new System.Drawing.Size(100, 21);
+            this.webend.TabIndex = 45;
+            this.webend.Text = "0";
+            // 
+            // label41
+            // 
+            this.label41.AutoSize = true;
+            this.label41.Location = new System.Drawing.Point(538, 171);
+            this.label41.Name = "label41";
+            this.label41.Size = new System.Drawing.Size(23, 12);
+            this.label41.TabIndex = 44;
+            this.label41.Text = "end";
             // 
             // Form1
             // 
@@ -1661,6 +1736,13 @@
         private System.Windows.Forms.Button webUpdatePass;
         private System.Windows.Forms.TextBox webpass;
         private System.Windows.Forms.Label label39;
+        private System.Windows.Forms.Button webQryOrder;
+        private System.Windows.Forms.Button webQryTrade;
+        private System.Windows.Forms.Button webQryCash;
+        private System.Windows.Forms.TextBox webend;
+        private System.Windows.Forms.Label label41;
+        private System.Windows.Forms.TextBox webstart;
+        private System.Windows.Forms.Label label40;
     }
 }
 

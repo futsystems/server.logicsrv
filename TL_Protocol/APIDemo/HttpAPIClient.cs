@@ -233,6 +233,56 @@ namespace APIClient
             return ret;
         }
 
+        public string ReqQryOrder(string domain_id, string account,int start,int end)
+        {
+            Dictionary<string, string> request = new Dictionary<string, string>();
+            request.Add("method", "qry_order");
+            request.Add("domain_id", domain_id);
+            request.Add("account", account);
+            request.Add("start", start.ToString());
+            request.Add("end", end.ToString());
+
+            string waitSign = CreateLinkString(request);
+            var sign = MD5Sign(waitSign, _key);
+            request.Add("md5sign", sign);
+            string ret = SendPostHttpRequest(request, _url);
+            return ret;
+        }
+
+
+
+        public string ReqQryTrade(string domain_id, string account, int start, int end)
+        {
+            Dictionary<string, string> request = new Dictionary<string, string>();
+            request.Add("method", "qry_trade");
+            request.Add("domain_id", domain_id);
+            request.Add("account", account);
+            request.Add("start", start.ToString());
+            request.Add("end", end.ToString());
+
+            string waitSign = CreateLinkString(request);
+            var sign = MD5Sign(waitSign, _key);
+            request.Add("md5sign", sign);
+            string ret = SendPostHttpRequest(request, _url);
+            return ret;
+        }
+
+        public string ReqQryCash(string domain_id, string account, int start, int end)
+        {
+            Dictionary<string, string> request = new Dictionary<string, string>();
+            request.Add("method", "qry_cashtxn");
+            request.Add("domain_id", domain_id);
+            request.Add("account", account);
+            request.Add("start", start.ToString());
+            request.Add("end", end.ToString());
+
+            string waitSign = CreateLinkString(request);
+            var sign = MD5Sign(waitSign, _key);
+            request.Add("md5sign", sign);
+            string ret = SendPostHttpRequest(request, _url);
+            return ret;
+        }
+
 
         public static string UrlEncode(string str)
         {

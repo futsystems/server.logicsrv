@@ -312,6 +312,201 @@ namespace TradingLib.Contrib.APIService
                             }
                         #endregion
 
+                        #region QRY_ORDER
+                        case "QRY_ORDER":
+                            {
+                                reqDict.Add("domain_id", request.Params["domain_id"]);
+                                reqDict.Add("account", request.Params["account"]);
+                                reqDict.Add("start", request.Params["start"]);
+                                reqDict.Add("end", request.Params["end"]);
+
+
+                                //Domain
+                                int domain_id = -1;
+                                int.TryParse(request.Params["domain_id"], out domain_id);
+                                Domain domain = BasicTracker.DomainTracker[domain_id];
+                                if (domain == null)
+                                {
+                                    return new JsonReply(105, string.Format("Domain not exist"));
+                                }
+
+                                //检查交易账户
+                                if (string.IsNullOrEmpty(domain.Cfg_MD5Key))
+                                {
+                                    return new JsonReply(107, string.Format("Md5Key not setted"));
+                                }
+
+
+                                string waitSign = MD5Helper.CreateLinkString(reqDict);
+                                string md5sign = MD5Helper.MD5Sign(waitSign, domain.Cfg_MD5Key);
+                                if (request.Params["md5sign"] != md5sign)
+                                {
+                                    return new JsonReply(100, string.Format("Md5Sign not valid"));
+                                }
+
+                                var account = TLCtxHelper.ModuleAccountManager[request.Params["account"]];
+                                if (account == null)
+                                {
+                                    return new JsonReply(109, string.Format("account not exist"));
+                                }
+
+                                //检查管理员是否在业务分区内
+                                if (account.Domain.ID != domain_id)
+                                {
+                                    return new JsonReply(110, string.Format("Account not belong to domain"));
+                                }
+
+                                int start = int.Parse(request.Params["start"]);
+                                int end = int.Parse(request.Params["end"]);
+
+                                //
+                                if (start == 0 && end == 0)
+                                {
+                                    var ret = account.Orders.Select(o => o.ToJsonObj()).ToArray();
+                                    return new JsonReply(0, "", ret);
+                                }
+                                else if (start * end > 0)
+                                {
+                                    var ret = TradingLib.ORM.MTradingInfo.SelectOrders(account.ID, start, end).Select(o => o.ToJsonObj()).ToArray();
+                                    return new JsonReply(0, "", ret);
+                                }
+                                else
+                                {
+                                    return new JsonReply(110, string.Format("Erro time span"));
+                                }
+                            }
+                        #endregion
+
+                        #region QRY_TRADE
+                        case "QRY_TRADE":
+                            {
+                                reqDict.Add("domain_id", request.Params["domain_id"]);
+                                reqDict.Add("account", request.Params["account"]);
+                                reqDict.Add("start", request.Params["start"]);
+                                reqDict.Add("end", request.Params["end"]);
+
+
+                                //Domain
+                                int domain_id = -1;
+                                int.TryParse(request.Params["domain_id"], out domain_id);
+                                Domain domain = BasicTracker.DomainTracker[domain_id];
+                                if (domain == null)
+                                {
+                                    return new JsonReply(105, string.Format("Domain not exist"));
+                                }
+
+                                //检查交易账户
+                                if (string.IsNullOrEmpty(domain.Cfg_MD5Key))
+                                {
+                                    return new JsonReply(107, string.Format("Md5Key not setted"));
+                                }
+
+
+                                string waitSign = MD5Helper.CreateLinkString(reqDict);
+                                string md5sign = MD5Helper.MD5Sign(waitSign, domain.Cfg_MD5Key);
+                                if (request.Params["md5sign"] != md5sign)
+                                {
+                                    return new JsonReply(100, string.Format("Md5Sign not valid"));
+                                }
+
+                                var account = TLCtxHelper.ModuleAccountManager[request.Params["account"]];
+                                if (account == null)
+                                {
+                                    return new JsonReply(109, string.Format("account not exist"));
+                                }
+
+                                //检查管理员是否在业务分区内
+                                if (account.Domain.ID != domain_id)
+                                {
+                                    return new JsonReply(110, string.Format("Account not belong to domain"));
+                                }
+
+                                int start = int.Parse(request.Params["start"]);
+                                int end = int.Parse(request.Params["end"]);
+
+                                //
+                                if (start == 0 && end == 0)
+                                {
+                                    var ret = account.Trades.Select(f => f.ToJsonObj()).ToArray();
+                                    return new JsonReply(0, "", ret);
+                                }
+                                else if (start>0 && end > 0)
+                                {
+                                    var ret = TradingLib.ORM.MTradingInfo.SelectTrades(account.ID, start, end).Select(o => o.ToJsonObj()).ToArray();
+                                    return new JsonReply(0, "", ret);
+                                }
+                                else
+                                {
+                                    return new JsonReply(111, string.Format("Erro time span"));
+                                }
+                            }
+                        #endregion
+
+                        #region QRY_CASHTXN
+                        case "QRY_CASHTXN":
+                            {
+                                reqDict.Add("domain_id", request.Params["domain_id"]);
+                                reqDict.Add("account", request.Params["account"]);
+                                reqDict.Add("start", request.Params["start"]);
+                                reqDict.Add("end", request.Params["end"]);
+
+
+                                //Domain
+                                int domain_id = -1;
+                                int.TryParse(request.Params["domain_id"], out domain_id);
+                                Domain domain = BasicTracker.DomainTracker[domain_id];
+                                if (domain == null)
+                                {
+                                    return new JsonReply(105, string.Format("Domain not exist"));
+                                }
+
+                                //检查交易账户
+                                if (string.IsNullOrEmpty(domain.Cfg_MD5Key))
+                                {
+                                    return new JsonReply(107, string.Format("Md5Key not setted"));
+                                }
+
+
+                                string waitSign = MD5Helper.CreateLinkString(reqDict);
+                                string md5sign = MD5Helper.MD5Sign(waitSign, domain.Cfg_MD5Key);
+                                if (request.Params["md5sign"] != md5sign)
+                                {
+                                    return new JsonReply(100, string.Format("Md5Sign not valid"));
+                                }
+
+                                var account = TLCtxHelper.ModuleAccountManager[request.Params["account"]];
+                                if (account == null)
+                                {
+                                    return new JsonReply(109, string.Format("account not exist"));
+                                }
+
+                                //检查管理员是否在业务分区内
+                                if (account.Domain.ID != domain_id)
+                                {
+                                    return new JsonReply(110, string.Format("Account not belong to domain"));
+                                }
+
+                                int start = int.Parse(request.Params["start"]);
+                                int end = int.Parse(request.Params["end"]);
+
+                                if (start == 0 && end == 0)
+                                {
+                                    var ret = TradingLib.ORM.MCashTransaction.SelectEquityCashTxns(account.ID, TLCtxHelper.ModuleSettleCentre.Tradingday, TLCtxHelper.ModuleSettleCentre.Tradingday).Select(t => t.ToJsonObj()).ToArray();
+                                    return new JsonReply(0, "", ret);
+                                }
+                                else if (start>0 && end > 0)
+                                {
+                                    var ret = TradingLib.ORM.MCashTransaction.SelectEquityCashTxns(account.ID,start,end).Select(t => t.ToJsonObj()).ToArray();
+                                    return new JsonReply(0, "", ret);
+                                }
+                                else
+                                {
+                                    return new JsonReply(111, string.Format("Erro time span"));
+                                }
+                            }
+                        #endregion
+
+
                         #region UPDATE_PASS
                         case "UPDATE_PASS":
                             {
@@ -366,6 +561,8 @@ namespace TradingLib.Contrib.APIService
                                 );
                             }
                         #endregion
+
+
                         #region DEPOSIT
                         case "DEPOSIT":
                             {
@@ -519,6 +716,8 @@ namespace TradingLib.Contrib.APIService
                                 });
                             }
                         #endregion
+
+
 
                         #region ACTIVE_ACCOUNT
                         case "ACTIVE_ACCOUNT":
