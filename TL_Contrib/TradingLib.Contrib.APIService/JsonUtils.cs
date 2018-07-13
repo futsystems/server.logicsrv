@@ -27,8 +27,8 @@ namespace TradingLib.Contrib.APIService
                 OrderSysID = o.OrderSysID,
                 LocalID =o.BrokerLocalOrderID,
                 RemoteID = o.BrokerRemoteOrderID,
-                OffsetFlag = o.OffsetFlag,
-                Side = o.Side,
+                OffsetFlag = o.OffsetFlag.ToString(),
+                Side = o.Side.ToString(),
             };
         }
 
@@ -46,8 +46,8 @@ namespace TradingLib.Contrib.APIService
                 LocalID = f.BrokerLocalOrderID,
                 RemoteID = f.BrokerRemoteOrderID,
                 TradeID = f.TradeID,
-                OffsetFlag = f.OffsetFlag,
-                Side =f.Side,
+                OffsetFlag = f.OffsetFlag.ToString(),
+                Side =f.Side.ToString(),
             };
         }
 
@@ -59,8 +59,8 @@ namespace TradingLib.Contrib.APIService
                 DateTime = txn.DateTime,
                 Account = txn.Account,
                 Value = txn.Amount,
-                TxnType = txn.TxnType,
-                EquityType = txn.EquityType,
+                TxnType = txn.TxnType.ToString(),
+                EquityType = txn.EquityType.ToString(),
             };
         }
     }
