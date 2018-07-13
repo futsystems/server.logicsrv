@@ -471,6 +471,7 @@ namespace TradingLib.Contrib.APIService
                                 string md5sign = MD5Helper.MD5Sign(waitSign, domain.Cfg_MD5Key);
                                 if (request.Params["md5sign"] != md5sign)
                                 {
+                                    logger.Warn(string.Format("waitSign:{0} md5key:{1}", waitSign, domain.Cfg_MD5Key));
                                     return new JsonReply(100, string.Format("Md5Sign not valid"));
                                 }
 
