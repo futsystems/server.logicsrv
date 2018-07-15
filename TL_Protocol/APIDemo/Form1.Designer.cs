@@ -123,6 +123,13 @@
             this.btnEncode = new System.Windows.Forms.Button();
             this.label21 = new System.Windows.Forms.Label();
             this.tabPage5 = new System.Windows.Forms.TabPage();
+            this.webend = new System.Windows.Forms.TextBox();
+            this.label41 = new System.Windows.Forms.Label();
+            this.webstart = new System.Windows.Forms.TextBox();
+            this.label40 = new System.Windows.Forms.Label();
+            this.webQryCash = new System.Windows.Forms.Button();
+            this.webQryTrade = new System.Windows.Forms.Button();
+            this.webQryOrder = new System.Windows.Forms.Button();
             this.webpass = new System.Windows.Forms.TextBox();
             this.label39 = new System.Windows.Forms.Label();
             this.webUpdatePass = new System.Windows.Forms.Button();
@@ -162,14 +169,8 @@
             this.webAddAccount = new System.Windows.Forms.Button();
             this.md5key = new System.Windows.Forms.TextBox();
             this.label24 = new System.Windows.Forms.Label();
-            this.webQryOrder = new System.Windows.Forms.Button();
             this.debugControl1 = new APIClient.DebugControl();
-            this.webQryTrade = new System.Windows.Forms.Button();
-            this.webQryCash = new System.Windows.Forms.Button();
-            this.webstart = new System.Windows.Forms.TextBox();
-            this.label40 = new System.Windows.Forms.Label();
-            this.webend = new System.Windows.Forms.TextBox();
-            this.label41 = new System.Windows.Forms.Label();
+            this.webStatus = new System.Windows.Forms.Button();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.cashopVal)).BeginInit();
@@ -1108,6 +1109,7 @@
             // 
             // tabPage5
             // 
+            this.tabPage5.Controls.Add(this.webStatus);
             this.tabPage5.Controls.Add(this.webend);
             this.tabPage5.Controls.Add(this.label41);
             this.tabPage5.Controls.Add(this.webstart);
@@ -1161,6 +1163,67 @@
             this.tabPage5.TabIndex = 4;
             this.tabPage5.Text = "HttpAPI";
             this.tabPage5.UseVisualStyleBackColor = true;
+            // 
+            // webend
+            // 
+            this.webend.Location = new System.Drawing.Point(585, 168);
+            this.webend.Name = "webend";
+            this.webend.Size = new System.Drawing.Size(100, 21);
+            this.webend.TabIndex = 45;
+            this.webend.Text = "0";
+            // 
+            // label41
+            // 
+            this.label41.AutoSize = true;
+            this.label41.Location = new System.Drawing.Point(538, 171);
+            this.label41.Name = "label41";
+            this.label41.Size = new System.Drawing.Size(23, 12);
+            this.label41.TabIndex = 44;
+            this.label41.Text = "end";
+            // 
+            // webstart
+            // 
+            this.webstart.Location = new System.Drawing.Point(426, 168);
+            this.webstart.Name = "webstart";
+            this.webstart.Size = new System.Drawing.Size(100, 21);
+            this.webstart.TabIndex = 43;
+            this.webstart.Text = "0";
+            // 
+            // label40
+            // 
+            this.label40.AutoSize = true;
+            this.label40.Location = new System.Drawing.Point(379, 171);
+            this.label40.Name = "label40";
+            this.label40.Size = new System.Drawing.Size(35, 12);
+            this.label40.TabIndex = 42;
+            this.label40.Text = "start";
+            // 
+            // webQryCash
+            // 
+            this.webQryCash.Location = new System.Drawing.Point(846, 85);
+            this.webQryCash.Name = "webQryCash";
+            this.webQryCash.Size = new System.Drawing.Size(75, 23);
+            this.webQryCash.TabIndex = 41;
+            this.webQryCash.Text = "QueryCash";
+            this.webQryCash.UseVisualStyleBackColor = true;
+            // 
+            // webQryTrade
+            // 
+            this.webQryTrade.Location = new System.Drawing.Point(846, 50);
+            this.webQryTrade.Name = "webQryTrade";
+            this.webQryTrade.Size = new System.Drawing.Size(75, 23);
+            this.webQryTrade.TabIndex = 40;
+            this.webQryTrade.Text = "QueryTrade";
+            this.webQryTrade.UseVisualStyleBackColor = true;
+            // 
+            // webQryOrder
+            // 
+            this.webQryOrder.Location = new System.Drawing.Point(846, 21);
+            this.webQryOrder.Name = "webQryOrder";
+            this.webQryOrder.Size = new System.Drawing.Size(75, 23);
+            this.webQryOrder.TabIndex = 39;
+            this.webQryOrder.Text = "QueryOrder";
+            this.webQryOrder.UseVisualStyleBackColor = true;
             // 
             // webpass
             // 
@@ -1497,15 +1560,6 @@
             this.label24.TabIndex = 0;
             this.label24.Text = "MD5Key";
             // 
-            // webQryOrder
-            // 
-            this.webQryOrder.Location = new System.Drawing.Point(846, 21);
-            this.webQryOrder.Name = "webQryOrder";
-            this.webQryOrder.Size = new System.Drawing.Size(75, 23);
-            this.webQryOrder.TabIndex = 39;
-            this.webQryOrder.Text = "QueryOrder";
-            this.webQryOrder.UseVisualStyleBackColor = true;
-            // 
             // debugControl1
             // 
             this.debugControl1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
@@ -1521,57 +1575,14 @@
             this.debugControl1.TimeStamps = true;
             this.debugControl1.UseExternalTimeStamp = false;
             // 
-            // webQryTrade
+            // webStatus
             // 
-            this.webQryTrade.Location = new System.Drawing.Point(846, 50);
-            this.webQryTrade.Name = "webQryTrade";
-            this.webQryTrade.Size = new System.Drawing.Size(75, 23);
-            this.webQryTrade.TabIndex = 40;
-            this.webQryTrade.Text = "QueryTrade";
-            this.webQryTrade.UseVisualStyleBackColor = true;
-            // 
-            // webQryCash
-            // 
-            this.webQryCash.Location = new System.Drawing.Point(846, 85);
-            this.webQryCash.Name = "webQryCash";
-            this.webQryCash.Size = new System.Drawing.Size(75, 23);
-            this.webQryCash.TabIndex = 41;
-            this.webQryCash.Text = "QueryCash";
-            this.webQryCash.UseVisualStyleBackColor = true;
-            // 
-            // webstart
-            // 
-            this.webstart.Location = new System.Drawing.Point(426, 168);
-            this.webstart.Name = "webstart";
-            this.webstart.Size = new System.Drawing.Size(100, 21);
-            this.webstart.TabIndex = 43;
-            this.webstart.Text = "0";
-            // 
-            // label40
-            // 
-            this.label40.AutoSize = true;
-            this.label40.Location = new System.Drawing.Point(379, 171);
-            this.label40.Name = "label40";
-            this.label40.Size = new System.Drawing.Size(35, 12);
-            this.label40.TabIndex = 42;
-            this.label40.Text = "start";
-            // 
-            // webend
-            // 
-            this.webend.Location = new System.Drawing.Point(585, 168);
-            this.webend.Name = "webend";
-            this.webend.Size = new System.Drawing.Size(100, 21);
-            this.webend.TabIndex = 45;
-            this.webend.Text = "0";
-            // 
-            // label41
-            // 
-            this.label41.AutoSize = true;
-            this.label41.Location = new System.Drawing.Point(538, 171);
-            this.label41.Name = "label41";
-            this.label41.Size = new System.Drawing.Size(23, 12);
-            this.label41.TabIndex = 44;
-            this.label41.Text = "end";
+            this.webStatus.Location = new System.Drawing.Point(765, 176);
+            this.webStatus.Name = "webStatus";
+            this.webStatus.Size = new System.Drawing.Size(75, 23);
+            this.webStatus.TabIndex = 46;
+            this.webStatus.Text = "QueryCash";
+            this.webStatus.UseVisualStyleBackColor = true;
             // 
             // Form1
             // 
@@ -1743,6 +1754,7 @@
         private System.Windows.Forms.Label label41;
         private System.Windows.Forms.TextBox webstart;
         private System.Windows.Forms.Label label40;
+        private System.Windows.Forms.Button webStatus;
     }
 }
 

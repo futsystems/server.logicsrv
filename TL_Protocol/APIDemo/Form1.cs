@@ -82,6 +82,7 @@ namespace APIClient
             wsBtnPlaceOrder.Click += new EventHandler(wsBtnPlaceOrder_Click);
             wsBtnCancel.Click += new EventHandler(wsBtnCancel_Click);
 
+
             btnStartMd.Click += new EventHandler(btnStartMd_Click);
             btnStopMd.Click += new EventHandler(btnStopMd_Click);
             btnMdLogin.Click += new EventHandler(btnMdLogin_Click);

@@ -31,5 +31,7 @@ namespace TradingLib.API
         /// <param name="predictate"></param>
         void Notify(string module, string cmdstr, object obj, Predicate<Manager> predictate);
 
+
+        int OnLineTerminalNum { get; }
     }
 }

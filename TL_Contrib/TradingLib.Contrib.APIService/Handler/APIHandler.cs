@@ -33,6 +33,22 @@ namespace TradingLib.Contrib.APIService
                     method = method.ToUpper();
                     switch (method)
                     {
+                        #region STATUS
+
+                        case "STATUS":
+                            {
+                                var obj = new
+                                {
+                                    ManagerNum = TLCtxHelper.ModuleMgrExchange.OnLineTerminalNum,//管理段个数
+                                    AccountNum = TLCtxHelper.ModuleExCore.OnLineTerminalNum,//交易账户
+                                    OrderNum = TLCtxHelper.ModuleClearCentre.TotalOrders.Count(),//当前委托数量
+                                    TradeNum = TLCtxHelper.ModuleClearCentre.TotalTrades.Count(),//当前成交数量
+                                };
+
+                                return new JsonReply(0,"",obj);
+                            }
+                        #endregion
+
                         #region ADD_USER
                         case "ADD_USER":
                             {

@@ -29,6 +29,14 @@ namespace APIClient
             webQryOrder.Click += new EventHandler(webQryOrder_Click);
             webQryTrade.Click += new EventHandler(webQryTrade_Click);
             webQryCash.Click += new EventHandler(webQryCash_Click);
+            webStatus.Click += new EventHandler(webStatus_Click);
+        }
+
+        void webStatus_Click(object sender, EventArgs e)
+        {
+            HttpAPIClient client = new HttpAPIClient(web_url.Text, md5key.Text);
+            string ret = client.ReqStatus();
+            logger.Info("resoult:" + ret); 
         }
 
         void webQryCash_Click(object sender, EventArgs e)

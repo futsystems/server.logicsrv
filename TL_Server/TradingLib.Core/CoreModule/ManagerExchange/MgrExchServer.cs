@@ -21,6 +21,9 @@ namespace TradingLib.Core
 
         ConcurrentDictionary<string, MgrClientInfoEx> customerExInfoMap = new ConcurrentDictionary<string, MgrClientInfoEx>();
 
+
+        public int OnLineTerminalNum { get { return customerExInfoMap.Values.Count; } }
+
         public MgrExchServer()
             : base(MgrExchServer.CoreName)
         {
@@ -203,7 +206,7 @@ namespace TradingLib.Core
         ThreadSafeList<IAgent> watchAgents = new ThreadSafeList<IAgent>();
         public IEnumerable<IAgent> WatchAgentList { get { return watchAgents; } }
 
-
+       
         /// <summary>
         /// 保存了管理端当前需要推送实时交易信息的帐号,任何时刻管理端只接受若干个账户财务信息更新，以及某个账户的交易记录
         /// </summary>

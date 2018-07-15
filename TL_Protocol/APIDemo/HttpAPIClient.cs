@@ -188,6 +188,14 @@ namespace APIClient
             return ret;
         }
 
+        public string ReqStatus()
+        {
+            Dictionary<string, string> request = new Dictionary<string, string>();
+            request.Add("method", "status");
+            string ret = SendPostHttpRequest(request, _url);
+            return ret;
+        }
+
         public string ReqQueryPass(string domain_id, string account)
         {
             Dictionary<string, string> request = new Dictionary<string, string>();

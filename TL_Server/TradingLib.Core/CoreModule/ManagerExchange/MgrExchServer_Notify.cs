@@ -108,7 +108,7 @@ namespace TradingLib.Core
         /// </summary>
         void NotifyTerminalNumber()
         {
-            int mgrnum = customerExInfoMap.Values.Count;
+            int mgrnum = TLCtxHelper.ModuleMgrExchange.OnLineTerminalNum;
             int accnum = TLCtxHelper.ModuleExCore.OnLineTerminalNum;
 
             NotifyMGRContribNotify response = ResponseTemplate<NotifyMGRContribNotify>.SrvSendNotifyResponse(QryNotifyLocationsForRoot());
