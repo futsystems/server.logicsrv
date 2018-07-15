@@ -10,10 +10,11 @@ import json
 import requests
 
 
-def status_request():
+def status_request(server,port,method):
+    http_address = "http://%s:%s/api/" % (server,port)
     response = requests.post(
-        "http://127.0.0.1:8080/api/",
-        data={"method": "status",})
+        http_address,
+        data={"method": method,})
 
     return response.status_code , response.json()
 
@@ -22,16 +23,15 @@ class LogicStatusCheck(nagiosplugin.Resource):
     """
     used to check logic status
     """
-    def __init__(self, address, reqport):
-        self.module = 'MgrExchServer'
-        self.method = 'qrystatus'
-        self.address = address
-        self.reqport = reqport
+    def __init__(self, address, port):
+        self.method = 'status'
+        self.api_address = address
+        self.api_port = port
         self.data=None
 
     def probe(self):
         try:
-            status,reply = status_request()
+            status,reply = status_request(self.api_address,self.api_port,self.method)
             if reply['RspCode'] == 0:
                 return [
                     nagiosplugin.Metric('MGR', reply['Payload']['ManagerNum'], min=0, context='perf'),
@@ -49,13 +49,12 @@ class LogicStatusCheck(nagiosplugin.Resource):
 
 class LogicStatusSummary(nagiosplugin.Summary):
     def  ok(self, results):
-        return str(results['MGR'].metric)
+        return "M:%s A:%s O:%s T:%s" % (str(results['MGR'].metric),str(results['ACCT'].metric),str(results['ORDER'].metric),str(results['TRADE'].metric))
 
     def problem(self, results):
         return super(LogicStatusSummary,self).problem(results)
 
 def main():
-    print 'start main'
     argp = argparse.ArgumentParser()
     argp.add_argument('-H', '--host',default='127.0.0.1',
                     help='logic server address'),
