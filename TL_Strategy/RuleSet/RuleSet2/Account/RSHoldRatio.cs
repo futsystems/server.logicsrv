@@ -74,18 +74,18 @@ namespace RuleSet2.Account
                             {
                                 if (margin <= targetMargin)
                                     continue;
-
-                                if ((margin - targetMargin) > acc.CalPositionMargin(pos))
+                                var posmargin = acc.CalPositionMargin(pos) * acc.GetExchangeRate(pos.oSymbol.SecurityFamily);
+                                if ((margin - targetMargin) > posmargin)
                                 {
                                     TLCtxHelper.ModuleRiskCentre.FlatPosition(pos, pos.UnsignedSize, QSEnumOrderSource.RISKCENTREACCOUNTRULE, msg);
-                                    margin -= pos.CalcPositionMargin();
+                                    margin -= posmargin;
                                 }
                                 else
                                 {
-                                    int flatNum = (int)(pos.UnsignedSize * (margin - targetMargin) / acc.CalPositionMargin(pos));
+                                    int flatNum = (int)(pos.UnsignedSize * (margin - targetMargin) / posmargin);
                                     flatNum = flatNum < pos.UnsignedSize ? flatNum + 1 : flatNum;
 
-                                    margin -= pos.CalcPositionMargin() * (flatNum / pos.UnsignedSize);//计算强平后的
+                                    margin -= posmargin * (flatNum / pos.UnsignedSize);//计算强平后的
                                     //强平部分持仓
                                     TLCtxHelper.ModuleRiskCentre.FlatPosition(pos, flatNum, QSEnumOrderSource.RISKCENTREACCOUNTRULE, msg);
                                 }
