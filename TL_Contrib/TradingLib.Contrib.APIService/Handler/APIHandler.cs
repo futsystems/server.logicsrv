@@ -381,7 +381,7 @@ namespace TradingLib.Contrib.APIService
                                     var ret = account.Orders.Select(o => o.ToJsonObj()).ToArray();
                                     return new JsonReply(0, "", ret);
                                 }
-                                else if (start * end > 0)
+                                else if (start > 0 && end > 0)
                                 {
                                     var ret = TradingLib.ORM.MTradingInfo.SelectOrders(account.ID, start, end).Select(o => o.ToJsonObj()).ToArray();
                                     return new JsonReply(0, "", ret);
