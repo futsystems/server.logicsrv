@@ -100,10 +100,6 @@ namespace TradingLib.Common
         {
             try
             {
-                if (this.ID == "8100007")
-                {
-                    int x = 1;
-                }
                 ///0.检查对应交易所是否有结算记录
                 if (settlementlist.Any(settle => settle.Settleday == settleday && settle.Exchange == exchange.EXCode))
                 {
@@ -182,7 +178,8 @@ namespace TradingLib.Common
 
                 //浮动盈亏
                 //根据交易所结算规则返回逐日浮动盈亏或0 逐笔结算不将浮动盈亏结算进入当日权益
-                settlement.PositionProfitByDate = exchange.SettleType == QSEnumSettleType.ByDate ? this.GetPositions(exchange).Where(pos=>pos.IsMarginTrading()).Sum(pos => pos.CalPositionProfitByDate()) : 0;
+                //FIX 盯市盈亏要计算汇率
+                settlement.PositionProfitByDate = exchange.SettleType == QSEnumSettleType.ByDate ? this.GetPositions(exchange).Where(pos => pos.IsMarginTrading()).Sum(pos => pos.CalPositionProfitByDate()*this.GetExchangeRate(pos.oSymbol.SecurityFamily)) : 0;
 
                 settlement.AssetBuyAmount = this.GetPositions(exchange).Where(pos => !pos.IsMarginTrading()).Sum(pos => pos.CalcBuyAmount()*this.GetExchangeRate(pos.oSymbol.SecurityFamily));
 

@@ -362,7 +362,6 @@ namespace TradingLib.Core
                     decimal unpl = 0;
                     decimal unplbydate = 0;
                     decimal hmargin = 0;
-
                     settlelist.Add(SectionName("持仓明细"));
                     settlelist.Add(sline);
                     settlelist.Add(string.Format("|{0}|{1}|{2}|{3}|{4}|{5}|{6}|{7}|{8}|{9}|{10}|{11}|{12}|",
@@ -384,6 +383,7 @@ namespace TradingLib.Core
                     foreach (PositionDetail pd in positiondetails)
                     {
                         SecurityFamily sym = account.GetSecurity(pd.SecCode);
+                        decimal rate = account.GetExchangeRate(s.Settleday, sym);
                         i++;
                         size += pd.Volume;
                         unpl += 0;
@@ -402,7 +402,7 @@ namespace TradingLib.Core
                             padCenterEx(pd.LastSettlementPrice.ToFormatStr(fmt), len_PRICE),
                             padCenterEx(pd.SettlementPrice.ToFormatStr(fmt), len_PRICE),
                             padRightEx("0", len_PROFIT),
-                            padRightEx(pd.PositionProfitByDate.ToFormatStr(), len_PROFIT),
+                            padRightEx((pd.PositionProfitByDate * rate).ToFormatStr(), len_PROFIT),
                             padRightEx(pd.Margin.ToFormatStr(), len_MARGIN),
                             padRightEx(pd.Margin.ToFormatStr(), len_MARGIN)
                             ));
@@ -497,7 +497,7 @@ namespace TradingLib.Core
                             padRightEx(shortprice.ToFormatStr(fmt), len_PRICE),
                             padCenterEx(pd.LastSettlementPrice.ToFormatStr(fmt), len_PRICE),
                             padCenterEx(pd.SettlementPrice.ToFormatStr(fmt), len_PRICE),
-                            padRightEx(settleunpl.ToFormatStr(), len_PROFIT),
+                            padRightEx((settleunpl * rate).ToFormatStr(), len_PROFIT),
                             padRightEx(lmargin.ToFormatStr(), len_MARGIN),
                             padRightEx((lmargin * rate).ToFormatStr(), len_MARGIN),
                             padLeftEx("投", len_TBMM)
