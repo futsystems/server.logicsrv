@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using TradingLib.API;
+using Common.Logging;
 
 namespace TradingLib.Common
 {
@@ -10,6 +11,7 @@ namespace TradingLib.Common
 
     public class AgentImpl : AgentSetting, IAgent
     {
+        static ILog logger = LogManager.GetLogger("Agent");
 
         ThreadSafeList<CashTransaction> cashtranslsit = new ThreadSafeList<CashTransaction>();//当日出入金记录
         ThreadSafeList<AgentCommissionSplit> splitlist = new ThreadSafeList<AgentCommissionSplit>();//当日手续费拆分记录
@@ -98,7 +100,10 @@ namespace TradingLib.Common
             settlement.LastEquity = this.LastEquity;
             settlement.LastCredit = this.LastCredit;
 
-
+            //if (this.Account == "88")
+            //{
+            //    int x = 1;
+            //}
             //自盈代理
             if (this.AgentType == EnumAgentType.SelfOperated && _manger != null)
             {
@@ -142,6 +147,12 @@ namespace TradingLib.Common
                         TLCtxHelper.ModuleDataRepository.NewAgentCashTransactioin(txn);
                     }
                 }
+            }
+
+            logger.Info(string.Format("Agent:{0} Commission Income:{1} Cost:{2} Cnt:{3} UnSettled Cnt:{4} ",this.Account, this.CommissionIncome, this.CommissionCost, splitlist.Count, splitlist.Where(s => !s.Settled).Count()));
+            foreach (var item in splitlist)
+            {
+                logger.Info(string.Format("   item:{0} {1} {2} {3}",item.Account,item.TradeID,item.CommissionIncome,item.CommissionCost));
             }
 
             settlement.CashIn = this.CashIn;

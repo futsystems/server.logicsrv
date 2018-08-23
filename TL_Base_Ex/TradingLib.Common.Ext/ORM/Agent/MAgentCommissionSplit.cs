@@ -36,12 +36,12 @@ namespace TradingLib.ORM
             {
                 if (tradingday == 0)
                 {
-                    string query = string.Format("SELECT * FROM log_agent_commission_split WHERE settled=0");
+                    string query = string.Format("SELECT account,settleday,traderid as tradeid,commissionincome,commissioncost, settled,currency  FROM log_agent_commission_split WHERE settled=0");
                     return db.Connection.Query<AgentCommissionSplitImpl>(query);
                 }
                 else
                 {
-                    string query = string.Format("SELECT * FROM log_agent_commission_split WHERE settled=0 AND settleday='{0}'", tradingday);
+                    string query = string.Format("SELECT account,settleday,traderid as tradeid,commissionincome,commissioncost, settled,currency  FROM log_agent_commission_split WHERE settled=0 AND settleday='{0}'", tradingday);
                     return db.Connection.Query<AgentCommissionSplitImpl>(query);
                 }
             }
