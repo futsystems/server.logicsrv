@@ -88,6 +88,36 @@ namespace TradingLib.Core
             System.Environment.Exit(0);
         }
 
+        [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "CleanData", "CleanData - clean data", "删除历史数据", QSEnumArgParseType.Json)]
+        public void CTE_DelAccount(ISession session, string json)
+        {
+            var req = json.DeserializeObject();
+            var date = req["date"].ToString();
+            Manager manager = session.GetManager();
+            if (!manager.IsInRoot())
+            {
+                throw new FutsRspError("无权执行数据清理操作");
+            }
+
+            DateTime to = Util.ToDateTime(int.Parse(date), 0);
+            DateTime now = Util.ToDateTime(TLCtxHelper.ModuleSettleCentre.LastSettleday, 0);
+
+            if (now.Subtract(to).TotalDays < 7)
+            {
+                throw new FutsRspError("最少保留1周交易数据");
+            }
+
+
+            
+            //队列中删除
+            System.Threading.ThreadPool.QueueUserWorkItem(o =>
+            {
+                ORM.MTradingInfo.CleanData(int.Parse(date));
+                session.RspMessage("历史数据清理成功");
+            });
+
+        }
+
 
         
         

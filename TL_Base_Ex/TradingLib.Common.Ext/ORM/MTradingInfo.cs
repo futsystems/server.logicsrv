@@ -785,6 +785,54 @@ namespace TradingLib.ORM
 
         }
 
+
+        public static void CleanData(int settleday)
+        {
+            using (DBMySql db = new DBMySql())
+            {
+                string delquery = string.Empty;
+                delquery = string.Format("delete from tmp_orders where settleday<= '{0}'", settleday);
+                db.Connection.Execute(delquery);
+                delquery = string.Format("delete from tmp_trades where settleday<= '{0}'", settleday);
+                db.Connection.Execute(delquery);
+                delquery = string.Format("delete from log_orders where settleday<= '{0}'", settleday);
+                db.Connection.Execute(delquery);
+                delquery = string.Format("delete from log_trades where settleday<= '{0}'", settleday);
+                db.Connection.Execute(delquery);
+                delquery = string.Format("delete from log_settlement where settleday<= '{0}'", settleday);
+                db.Connection.Execute(delquery);
+                delquery = string.Format("delete from log_settlement_exchange where settleday<= '{0}'", settleday);
+                db.Connection.Execute(delquery);
+                delquery = string.Format("delete from log_position_close_detail where settleday<= '{0}'", settleday);
+                db.Connection.Execute(delquery);
+                delquery = string.Format("delete from log_position_detail_hist where settleday<= '{0}'", settleday);
+                db.Connection.Execute(delquery);
+                delquery = string.Format("delete from log_cashtrans where settleday<= '{0}'", settleday);
+                db.Connection.Execute(delquery);
+                delquery = string.Format("delete from log_system_packet");
+                db.Connection.Execute(delquery);
+                delquery = string.Format("delete from log_system_task where settleday<= '{0}'", settleday);
+                db.Connection.Execute(delquery);
+                delquery = string.Format("delete from log_settlement_price where settleday<= '{0}'", settleday);
+                db.Connection.Execute(delquery);
+                delquery = string.Format("delete from contrib_cash_payment_operation where datetime<= '{0}000000'", settleday);
+                db.Connection.Execute(delquery);
+
+                delquery = string.Format("delete from log_agent_cashtrans where settleday<= '{0}'", settleday);
+                db.Connection.Execute(delquery);
+                delquery = string.Format("delete from log_agent_commission_split where settleday<= '{0}'", settleday);
+                db.Connection.Execute(delquery);
+                delquery = string.Format("delete from log_agent_settlement where settleday<= '{0}'", settleday);
+                db.Connection.Execute(delquery);
+                delquery = string.Format("delete from log_exchange_rate where settleday<= '{0}'", settleday);
+                db.Connection.Execute(delquery);
+                delquery = string.Format("delete from log_agent_cashtrans where settleday<= '{0}'", settleday);
+                db.Connection.Execute(delquery);
+
+            }
+            
+        }
+
     }
 
     public class SecurityStatistic
