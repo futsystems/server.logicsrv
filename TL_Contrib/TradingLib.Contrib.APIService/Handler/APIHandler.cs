@@ -523,6 +523,55 @@ namespace TradingLib.Contrib.APIService
                             }
                         #endregion
 
+                        #region QRY_POSITION
+                        case "QRY_POSITION":
+                            {
+                                reqDict.Add("domain_id", request.Params["domain_id"]);
+                                reqDict.Add("account", request.Params["account"]);
+
+                                //Domain
+                                int domain_id = -1;
+                                int.TryParse(request.Params["domain_id"], out domain_id);
+                                Domain domain = BasicTracker.DomainTracker[domain_id];
+                                if (domain == null)
+                                {
+                                    return new JsonReply(105, string.Format("Domain not exist"));
+                                }
+
+                                //检查交易账户
+                                if (string.IsNullOrEmpty(domain.Cfg_MD5Key))
+                                {
+                                    return new JsonReply(107, string.Format("Md5Key not setted"));
+                                }
+
+
+                                string waitSign = MD5Helper.CreateLinkString(reqDict);
+                                string md5sign = MD5Helper.MD5Sign(waitSign, domain.Cfg_MD5Key);
+                                if (request.Params["md5sign"] != md5sign)
+                                {
+                                    logger.Warn(string.Format("waitSign:{0} md5key:{1}", waitSign, domain.Cfg_MD5Key));
+                                    return new JsonReply(100, string.Format("Md5Sign not valid"));
+                                }
+
+                                var account = TLCtxHelper.ModuleAccountManager[request.Params["account"]];
+                                if (account == null)
+                                {
+                                    return new JsonReply(109, string.Format("account not exist"));
+                                }
+
+                                //检查管理员是否在业务分区内
+                                if (account.Domain.ID != domain_id)
+                                {
+                                    return new JsonReply(110, string.Format("Account not belong to domain"));
+                                }
+
+                                
+                                var ret =account.Positions.Select(pos => pos.ToJsonObj()).ToArray();
+                                return new JsonReply(0, "", ret);
+
+                            }
+                        #endregion
+
 
                         #region UPDATE_PASS
                         case "UPDATE_PASS":

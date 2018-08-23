@@ -65,5 +65,43 @@ namespace TradingLib.Contrib.APIService
                 EquityType = txn.EquityType.ToString(),//资金类别 优先/列后
             };
         }
+
+        public static object ToJsonObj(this Position pos)
+        {
+            return new
+            {
+                Symbol = pos.Symbol,
+                Exchange = pos.oSymbol.Exchange,
+                Multiple = pos.oSymbol.Multiple,
+                Side = (pos.DirectionType == QSEnumPositionDirectionType.Long).ToString(),
+                AvgPrice = pos.AvgPrice,
+                PositionCost = pos.PositionDetailTotal.Where(pd => !pd.IsClosed()).Sum(pd => pd.CostPrice() * pd.Volume * pos.oSymbol.Multiple),
+                OpenCost = pos.PositionDetailTotal.Where(pd=>!pd.IsClosed()).Sum(pd => pd.OpenPrice * pd.Volume * pos.oSymbol.Multiple),
+                
+               
+                ClosePL = pos.ClosedPL,
+                CloseProfit = pos.ClosedPL * pos.oSymbol.Multiple,
+
+                UnRealizedPL = pos.UnRealizedPL,
+                UnRealizedProfit = pos.UnRealizedPL * pos.oSymbol.Multiple,
+
+
+                //总持仓数量 总的有效数量
+                Position = pos.UnsignedSize,
+                //今仓 有效数量 当日平仓会改变该数值
+                TodayPosition = pos.PositionDetailTodayNew.Where(pd => !pd.IsClosed()).Sum(pd => pd.Volume),
+                //昨仓 是初始状态的昨日持仓数量 平仓后 不改变该数值
+                YdPosition = pos.PositionDetailYdRef.Where(pd => !pd.IsClosed()).Sum(pd => pd.Volume),
+
+
+                //保证金
+                Margin = pos.CalcPositionMargin(),
+
+                //持仓成交的手续费 累加所有成交的手续费
+                Commission = pos.CalCommission(),
+
+
+            };
+        }
     }
 }
