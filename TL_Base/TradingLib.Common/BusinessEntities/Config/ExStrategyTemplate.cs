@@ -69,7 +69,7 @@ namespace TradingLib.Common
             this.EntrySlip = 0;
             this.ExitSlip = 0;
             this.LimitCheck = false;
-            this.Probability = 100;
+            this.Probability = 0;
 
             this.SimExecuteCFFEXStrategy = false;
             this.SimExecuteFillAll = false;
@@ -135,17 +135,17 @@ namespace TradingLib.Common
         public int EntrySlip { get; set; }
 
         /// <summary>
-        /// 平仓滑点
+        /// 废弃
         /// </summary>
         public int ExitSlip { get; set; }
 
         /// <summary>
-        /// 限价单检查
+        /// 废弃
         /// </summary>
         public bool LimitCheck { get; set; }
 
         /// <summary>
-        /// 执行概率
+        /// 废弃
         /// </summary>
         public int Probability { get; set; }
 

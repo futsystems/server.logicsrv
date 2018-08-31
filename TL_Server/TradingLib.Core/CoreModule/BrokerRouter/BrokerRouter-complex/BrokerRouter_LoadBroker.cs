@@ -91,53 +91,12 @@ namespace TradingLib.Core
                     _splittracker.GotSonFill(fill);
                     return;
                 }
+
                 logger.Info("Reply Fill To MessageExch:" + fill.GetTradeInfo());
-
-                //设置成交滑点
                 Trade t = new TradeImpl(fill);
-                IAccount account = TLCtxHelper.ModuleAccountManager[t.Account];
-                if (account != null)
-                {
-                    ExStrategy strategy = account.GetExStrategy();
-                    //交易参数模板存在 则调整成交价格
-                    if (strategy != null)
-                    {
-                        //如果需要检查限价单 则获得对应的委托
-                        if (strategy.LimitCheck)
-                        {
-                            Order o = TLCtxHelper.ModuleClearCentre.SentOrder(t.id);
-                            //委托为空 直接发送成交
-                            if (o == null)
-                            {
-                                goto SENDDIRECT;
-                            }
-                            //限价单 直接发送成交
-                            if (o.isLimit)
-                            {
-                                goto SENDDIRECT;
-                            }
-                        }
-
-                        int val = _slipRandom.Next(0, 100);
-                        //获得的随机数在设定的范围内 则执行价格修正
-                        if (val <= strategy.Probability)
-                        {
-                            if (t.IsEntryPosition)
-                            {
-                                t.xPrice = t.xPrice + (t.Side ? 1 : -1) * strategy.EntrySlip * t.oSymbol.SecurityFamily.PriceTick;
-                            }
-                            else
-                            {
-                                t.xPrice = t.xPrice + (t.Side ? 1 : -1) * strategy.ExitSlip * t.oSymbol.SecurityFamily.PriceTick;
-                            }
-                        }
-                    }
-                }
-            SENDDIRECT:
-                {
-                    _fillcache.Write(t);
-                    NewMessageItem();
-                }
+                _fillcache.Write(fill);
+                NewMessageItem();
+                
             }
             else
             {
