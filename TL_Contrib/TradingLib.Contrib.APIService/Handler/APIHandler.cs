@@ -15,6 +15,7 @@ namespace TradingLib.Contrib.APIService
     public class APIHandler:RequestHandler
     {
         ILog logger = LogManager.GetLogger("APIHandler");
+
         public APIHandler()
         {
             this.Module = "API";
@@ -27,6 +28,7 @@ namespace TradingLib.Contrib.APIService
             {
                 Dictionary<string, string> reqDict = new Dictionary<string, string>();
                 string method = request.Params["method"];
+                string userHost = request.UserHostAddress;
                 reqDict.Add("method", method);
                 if (!string.IsNullOrEmpty(method))
                 {
@@ -48,6 +50,78 @@ namespace TradingLib.Contrib.APIService
                                 return new JsonReply(0,"",obj);
                             }
                         #endregion
+
+                        #region QRY_EXPIRE
+                        case "QRY_EXPIRE":
+                            {
+
+                                if (!APIGlobal.ConfigServerIPList.Contains(userHost))
+                                {
+                                    return new JsonReply(113, string.Format("Host:{0} is not allowed",userHost));
+                                }
+
+                                //Domain
+                                int domain_id = -1;
+                                int.TryParse(request.Params["domain_id"], out domain_id);
+                                Domain domain = BasicTracker.DomainTracker[domain_id];
+                                if (domain == null)
+                                {
+                                    return new JsonReply(105, string.Format("Domain not exist"));
+                                }
+
+                                var obj = new
+                                {
+                                    Deploy = TLCtxHelper.Version.DeployID,
+                                    DataExpired = domain.DateExpired,
+
+                                };
+
+                                return new JsonReply(0,"",obj);
+                            }
+                        #endregion
+
+                        #region UPDATE_EXPIRE
+                        case "UPDATE_EXPIRE":
+                            {
+                                try
+                                {
+                                    if (!APIGlobal.ConfigServerIPList.Contains(userHost))
+                                    {
+                                        return new JsonReply(113, string.Format("Host:{0} is not allowed", userHost));
+                                    }
+
+                                    //Domain
+                                    int domain_id = -1;
+                                    int.TryParse(request.Params["domain_id"], out domain_id);
+                                    Domain domain = BasicTracker.DomainTracker[domain_id];
+                                    if (domain == null)
+                                    {
+                                        return new JsonReply(105, string.Format("Domain not exist"));
+                                    }
+
+                                    int expire = domain.DateExpired;
+                                    int.TryParse(request.Params["expire"], out expire);
+
+                                    domain.DateExpired = expire;
+                                    ORM.MDomain.UpdateDomain(domain as DomainImpl);
+
+                                    var obj = new
+                                    {
+                                        Deploy = TLCtxHelper.Version.DeployID,
+                                        DataExpired = domain.DateExpired,
+
+                                    };
+
+                                    return new JsonReply(0, "", obj);
+                                }
+                                catch (Exception ex)
+                                {
+                                    logger.Error("update expire error:" + ex.ToString());
+                                    return new JsonReply(112, string.Format("Update Expire Error"));
+                                }
+                            }
+                        #endregion
+
 
                         #region ADD_USER
                         case "ADD_USER":
@@ -138,6 +212,7 @@ namespace TradingLib.Contrib.APIService
                                 );
                             }
                         #endregion
+
                         #region UPDATE_USER
                         case "UPDATE_USER":
                             {
@@ -218,6 +293,7 @@ namespace TradingLib.Contrib.APIService
                                 );
                             }
                         #endregion
+
                         #region QRY_ACCOUNT
                         case "QRY_ACCOUNT":
                             {
@@ -277,6 +353,7 @@ namespace TradingLib.Contrib.APIService
                                 );
                             }
                         #endregion
+
                         #region QRY_PASS
                         case "QRY_PASS":
                             {
@@ -572,7 +649,6 @@ namespace TradingLib.Contrib.APIService
                             }
                         #endregion
 
-
                         #region UPDATE_PASS
                         case "UPDATE_PASS":
                             {
@@ -627,7 +703,6 @@ namespace TradingLib.Contrib.APIService
                                 );
                             }
                         #endregion
-
 
                         #region DEPOSIT
                         case "DEPOSIT":
@@ -782,8 +857,6 @@ namespace TradingLib.Contrib.APIService
                                 });
                             }
                         #endregion
-
-
 
                         #region ACTIVE_ACCOUNT
                         case "ACTIVE_ACCOUNT":

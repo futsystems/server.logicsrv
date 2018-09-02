@@ -28,5 +28,7 @@ namespace TradingLib.Contrib.APIService
                 return BaseUrl + "/cash/srvnotify";
             }
         }
+
+        public static List<string> ConfigServerIPList = new List<string>();
     }
 }

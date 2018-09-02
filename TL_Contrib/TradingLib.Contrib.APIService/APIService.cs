@@ -25,6 +25,7 @@ namespace TradingLib.Contrib.APIService
         int _port = 8080;
         string _address = "127.0.0.1";
         decimal _depositLimit = 50000;
+        List<string> cfgSrvIPList = new List<string>();
 
         public APIServiceBundle()
             : base(APIServiceBundle.ContribName)
@@ -55,6 +56,31 @@ namespace TradingLib.Contrib.APIService
                 _cfgdb.UpdateConfig("DepositLimit", QSEnumCfgType.Decimal, 50000, "单笔入金限额");
             }
             _depositLimit = _cfgdb["DepositLimit"].AsDecimal();
+
+            if (!_cfgdb.HaveConfig("ConfigServer"))
+            {
+                _cfgdb.UpdateConfig("ConfigServer", QSEnumCfgType.String, "cfg.broker-cloud.net", "ConfigServer");
+            }
+
+            try
+            {
+                //add vpn address
+                APIGlobal.ConfigServerIPList.Add("139.196.49.200");
+
+                var addressList = System.Net.Dns.GetHostAddresses(_cfgdb["ConfigServer"].AsString());
+                foreach (var address in addressList)
+                {
+                    APIGlobal.ConfigServerIPList.Add(address.ToString());
+                }
+
+
+
+                logger.Info("cfg server list:" + string.Join(",", APIGlobal.ConfigServerIPList.ToArray()));
+            }
+            catch (Exception ex)
+            {
+                logger.Error("Get Config Server Address Error:" + ex.ToString());
+            }
 
             APIGlobal.BaseUrl = string.Format("http://{0}:{1}", _address, _port);
             APIGlobal.LocalIPAddress = _address;
