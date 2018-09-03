@@ -40,8 +40,6 @@ namespace TradingLib.Common
             this.Cfg_GrossPosition = true;
             this.Cfg_MaxMarginSide = true;
             this.Cfg_FollowStrategyNum = 0;
-
-
         }
         /// <summary>
         /// 域ID
@@ -163,7 +161,7 @@ namespace TradingLib.Common
         public bool Module_Follow { get; set; }
 
         /// <summary>
-        /// 滑点模块
+        /// 废弃
         /// </summary>
         public bool Module_Slip { get; set; }
 
@@ -183,7 +181,7 @@ namespace TradingLib.Common
         public bool Switch_Router { get; set; }
 
         /// <summary>
-        /// 调试插入成交
+        /// 废弃
         /// </summary>
         public bool Misc_InsertTrade { get; set; }
 
@@ -218,13 +216,10 @@ namespace TradingLib.Common
         /// </summary>
         public bool Device_IOS { get; set; }
 
-
         /// <summary>
-        /// 
+        /// 废弃
         /// </summary>
         public int CFG_SyncVendor_ID { get; set; }
-
-
 
         /// <summary>
         /// 是否处于运营状态
