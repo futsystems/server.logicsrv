@@ -19,8 +19,6 @@ namespace TradingLib.Common
     {
         ConcurrentDictionary<long, Order> ordermap = new ConcurrentDictionary<long, Order>();
         ConcurrentDictionary<long, Trade> trademap = new ConcurrentDictionary<long, Trade>();
-        ConcurrentDictionary<long, BinaryOptionOrder> boordermap = new ConcurrentDictionary<long, BinaryOptionOrder>();
-
 
         ConcurrentDictionary<string, Trade> tradeIdMap = new ConcurrentDictionary<string, Trade>();
 
@@ -67,10 +65,6 @@ namespace TradingLib.Common
             return ordermap.Keys.Contains(o.id);
         }
 
-        public bool IsTracked(BinaryOptionOrder o)
-        {
-            return boordermap.Keys.Contains(o.ID);
-        }
         /// <summary>
         /// 新持仓对象生成
         /// </summary>
@@ -99,10 +93,6 @@ namespace TradingLib.Common
             ordermap.TryAdd(o.id, o);
         }
 
-        public void NewOrder(BinaryOptionOrder o)
-        {
-            boordermap.TryAdd(o.ID, o);
-        }
 
         /// <summary>
         /// 去除某个委托数据

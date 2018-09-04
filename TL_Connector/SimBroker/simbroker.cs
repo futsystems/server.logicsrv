@@ -462,11 +462,6 @@ namespace Broker.SIM
         }
 
 
-        public void SendOrder(BinaryOptionOrder o)
-        {
-            throw new NotImplementedException();
-        }
-
 
         /// <summary>
         /// 接收brokerrouter路由过来的委托

@@ -18,12 +18,6 @@ namespace TradingLib.API
         void SendOrder(Order o);
 
         /// <summary>
-        /// 提交二元期权委托
-        /// </summary>
-        /// <param name="o"></param>
-        void SendOrder(BinaryOptionOrder o);
-
-        /// <summary>
         /// 取消委托
         /// </summary>
         /// <param name="val"></param>

@@ -15,21 +15,10 @@ namespace TradingLib.API
         /// <param name="o"></param>
         void SendOrder(Order o);
         /// <summary>
-        /// 向Broker发送二元期权委托
-        /// </summary>
-        /// <param name="o"></param>
-        void SendOrder(BinaryOptionOrder o);
-        /// <summary>
         /// 向broker取消一个order
         /// </summary>
         /// <param name="oid"></param>
         void CancelOrder(long oid);
-
-        /// <summary>
-        /// 用于交易通道中需要有Tick进行驱动的逻辑,比如委托触发等
-        /// </summary>
-        /// <param name="k"></param>
-        //void GotTick(Tick k);
 
 
         #region 事件

@@ -43,19 +43,6 @@ namespace TradingLib.Common
         /// </summary>
         public OrderTracker TKOrder { get; set; }
 
-
-        /// <summary>
-        /// BO委托维护器
-        /// </summary>
-        public BOOrderTracker TKBOOrder { get; set; }
-
-
-        /// <summary>
-        /// 获得所有二元期权委托
-        /// </summary>
-        public IEnumerable<BinaryOptionOrder> BinaryOptionOrders { get { return TKBOOrder; } }
-
-
         /// <summary>
         /// 返回维护器所发送的委托数量
         /// </summary>

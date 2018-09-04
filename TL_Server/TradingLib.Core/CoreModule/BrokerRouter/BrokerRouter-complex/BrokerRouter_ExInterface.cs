@@ -15,43 +15,6 @@ namespace TradingLib.Core
     /// </summary>
     public partial class BrokerRouter
     {
-
-        public void SendOrder(BinaryOptionOrder o)
-        {
-            try
-            {
-                IBroker broker = TLCtxHelper.ServiceRouterManager.DefaultSimBOBroker;
-                if (o.Status != EnumBOOrderStatus.Reject)
-                {
-                    logger.Info("Send BO-Order To Broker Side:" + o.ToString());
-                    if (broker != null && broker.IsLive)
-                    {
-                        //o.Broker = broker.Token;//通过Broker发送委托时,将Token设定到委托对应字段
-                        broker.SendOrder(o);
-                        //接口侧提交委托异常
-                        if (o.Status == EnumBOOrderStatus.Reject)
-                        {
-                            //GotOrderErrorNotify(o, "EXECUTION_BROKER_PLACEORDER_ERROR");
-                        }
-                        //return true;
-                    }
-                    else
-                    {
-                        //如果没有交易通道则拒绝该委托
-                        o.Status = EnumBOOrderStatus.Reject;
-                        //errorTitle = "EXECUTION_BROKER_NOT_FOUND";
-                        //logger.Warn("没有可以交易的通道 |" + o.GetOrderInfo());
-                        //return false;
-                    }
-
-                }
-            }
-            catch (Exception ex)
-            { 
-            
-            }
-        }
-
         /// <summary>
         /// 向Broker发送Order,TradingServer统一通过 BrokerRouter 发送委托,BrokerRouter 则在本地按一定的规则找到对应的
         /// 交易接口将委托发送出去

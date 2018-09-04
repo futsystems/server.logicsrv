@@ -115,33 +115,7 @@ namespace TradingLib.Core
             
         }
 
-        /// <summary>
-        /// 向客户端发送委托更新回报
-        /// </summary>
-        /// <param name="o"></param>
-        protected void NotifyBOOrder(BinaryOptionOrder o)
-        {
-            BOOrderNotify notify = ResponseTemplate<BOOrderNotify>.SrvSendNotifyResponse(o.Account);
-            notify.Order = o;
 
-            CachePacket(notify);
-
-        }
-
-        /// <summary>
-        /// 向客户端发送委托错误回报
-        /// </summary>
-        /// <param name="o"></param>
-        /// <param name="e"></param>
-        protected void NotifyBOOrderError(BinaryOptionOrder o, RspInfo e)
-        {
-            BOOrderErrorNotify notify = ResponseTemplate<BOOrderErrorNotify>.SrvSendNotifyResponse(o.Account);
-            notify.Order = o;
-            notify.RspInfo = e;
-
-            CachePacket(notify);
-
-        }
 
         /// <summary>
         /// 将数据通知前置

@@ -244,20 +244,5 @@ namespace TradingLib.Core
                 o.Comment = simprompt + ":" + o.Comment;
             }
         }
-
-        #region 二元期权回报处理
-        void OnBOOrderErrorEvent(BinaryOptionOrder o, RspInfo info, bool needlog = true)
-        {
-
-            this.NotifyBOOrderError(o, info);
-        }
-
-        void OnBOOrderEvent(BinaryOptionOrder o)
-        {
-
-            this.NotifyBOOrder(o);
-        }
-        #endregion
-
     }
 }

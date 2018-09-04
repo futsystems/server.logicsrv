@@ -578,44 +578,5 @@ namespace TradingLib.Common
             return /*account.CalcStkMoneyNetChange()+ **/account.CalcStkMoneyFrozen();
         }
         #endregion
-
-
-        #region 二元期权财务计算
-
-
-        /// <summary>
-        /// 没有退出或拒绝的二元期权 累加获得占用资金
-        /// </summary>
-        /// <param name="account"></param>
-        /// <returns></returns>
-        public static decimal CalcBOMoneyFrozen(this IAccount account)
-        {
-            return account.BinaryOptionOrders.Where(o=>o.IsOpen()).Sum(o => o.Amount);
-        }
-
-        /// <summary>
-        /// 正常退出的二元期权 下单金额为已经使用掉的资金
-        /// </summary>
-        /// <param name="account"></param>
-        /// <returns></returns>
-        public static decimal CalcBOMoneyUsed(this IAccount account)
-        {
-            return account.BinaryOptionOrders.Where(o => o.IsExit()).Sum(o => o.Amount);
-        }
-
-        /// <summary>
-        /// 正常退出的二元期权 平仓盈亏累加获得该帐户该项下的平仓盈亏
-        /// </summary>
-        /// <param name="account"></param>
-        /// <returns></returns>
-        public static decimal CalcBORealziedPL(this IAccount account)
-        {
-            return account.BinaryOptionOrders.Where(o => o.IsExit()).Sum(o => o.RealizedPL);
-        }
-
-
-        #endregion
-
-
     }
 }

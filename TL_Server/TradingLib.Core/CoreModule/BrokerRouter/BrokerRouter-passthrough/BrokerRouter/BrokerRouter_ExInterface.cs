@@ -24,10 +24,6 @@ namespace TradingLib.Core
             throw new NotImplementedException();
         }
 
-        public void SendOrder(BinaryOptionOrder o)
-        {
-            throw new NotImplementedException();
-        }
         /// <summary>
         /// 对外发送委托
         /// </summary>

@@ -105,7 +105,6 @@
     <Compile Include="CoreModule\AccountManager\AccountManager_mgr.cs" />
     <Compile Include="CoreModule\AgentManager\AgentManager.cs" />
     <Compile Include="CoreModule\AgentManager\AgentManager_mgr.cs" />
-    <Compile Include="CoreModule\BinaryOption\BinaryOptionQuoteEngine.cs" />
     <Compile Include="CoreModule\BrokerRouter\BrokerRouter-passthrough\BrokerRouter\BrokerRouter.cs" />
     <Compile Include="CoreModule\BrokerRouter\BrokerRouter-passthrough\BrokerRouter\BrokerRouter_.cs" />
     <Compile Include="CoreModule\BrokerRouter\BrokerRouter-passthrough\BrokerRouter\BrokerRouter_ExInterface.cs" />
@@ -123,8 +122,6 @@
     <Compile Include="CoreModule\ClearCentre\ClearCentreSrv_AccountCashOperation.cs" />
     <Compile Include="CoreModule\FollowCentre\Common.cs" />
     <Compile Include="CoreModule\DataRepository\DataRepository.cs" />
-    <Compile Include="CoreModule\ExCore\BinaryOption\MsgExchServer_BOOrderRequestHandler.cs" />
-    <Compile Include="CoreModule\ExCore\BinaryOption\MsgExchServer_BinaryOption.cs" />
     <Compile Include="CoreModule\ExCore\MsgExchServer_mgr.cs" />
     <Compile Include="CoreModule\ExCore\XAPI\MsgExchServer_PacketHandler_TradingInfo.cs" />
     <Compile Include="CoreModule\ExCore\XAPI\MsgExchServer_PacketHandler_BasicInfo.cs" />
@@ -212,7 +209,6 @@
     <Compile Include="CoreModule\RiskCentre\RiskCentre_GotXXX.cs" />
     <Compile Include="CoreModule\RiskCentre\RiskCentre_RiskRule.cs" />
     <Compile Include="CoreModule\RiskCentre\RiskCentre_Trading.cs" />
-    <Compile Include="CoreModule\RiskCentre\RiskCentre_CheckBOOrder.cs" />
     <Compile Include="CoreModule\RiskCentre\RiskTask.cs" />
     <Compile Include="CoreModule\SettleCentre\ExchangeSettleInfo.cs" />
     <Compile Include="CoreModule\SettleCentre\SettleCentre.cs" />

@@ -252,9 +252,6 @@ namespace TradingLib.Common
                     case MessageTypes.MD_DEMOTICK:
                         return RequestTemplate<MDDemoTickRequest>.SrvRecvRequest(frontid, clientid, message.Content);
 
-                    case MessageTypes.BOSENDORDER:
-                        return RequestTemplate<BOOrderInsertRequest>.SrvRecvRequest(frontid, clientid, message.Content);
-
                     case MessageTypes.MGR_MD_UPLOADBARDATA:
                         UploadBarDataRequest request = new UploadBarDataRequest();
                         request.DeserializeBin(message.Data);

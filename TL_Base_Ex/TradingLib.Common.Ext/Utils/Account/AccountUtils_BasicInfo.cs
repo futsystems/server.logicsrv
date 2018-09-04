@@ -68,21 +68,6 @@ namespace TradingLib.Common
                 return true;
             }
         }
-        //TODO SK合约键值修改
-        public static bool TrckerOrderSymbol(this IAccount account, ref BinaryOptionOrder o)
-        {
-            Symbol symbol = account.Domain.GetSymbol("",o.BinaryOption.Symbol);
-            //TODO:增加合约可交易判定
-            if (symbol == null)
-            {
-                return false;
-            }
-            else
-            {
-                o.oSymbol = symbol;
-                return true;
-            }
-        }
 
         /// <summary>
         /// 获得某个帐户的Instrument数据

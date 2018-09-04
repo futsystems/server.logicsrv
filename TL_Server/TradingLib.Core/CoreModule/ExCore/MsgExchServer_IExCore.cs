@@ -31,16 +31,6 @@ namespace TradingLib.Core
                 o.OrderSeq = this.NextOrderSeq;
         }
 
-        /// <summary>
-        /// 绑定委托的委托编号
-        /// </summary>
-        /// <param name="o"></param>
-        public void AssignOrderID(ref BinaryOptionOrder o)
-        {
-            if (o.ID <= 0)
-                o.ID = _orderIDTracker.AssignId;
-        }
-
         public void AssignTradeID(ref Trade f)
         {
             //系统本地给成交赋日内唯一流水号 成交端的TradeID由接口负责

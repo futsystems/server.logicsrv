@@ -296,10 +296,6 @@ namespace TradingLib.BrokerXAPI
             throw new NotImplementedException();
         }
 
-        public virtual void SendOrder(BinaryOptionOrder o)
-        {
-            throw new NotImplementedException();
-        }
         /// <summary>
         /// 通过成交接口取消委托
         /// </summary>

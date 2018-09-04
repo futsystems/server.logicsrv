@@ -274,14 +274,6 @@ namespace TradingLib.Core
                         SrvOnContribRequest(request, session);
                     }
                     break;
-
-
-                case MessageTypes.BOSENDORDER://请求二元委托
-                    {
-                        BOOrderInsertRequest request = packet as BOOrderInsertRequest;
-                        SrvOnBOOrderInsertOrder(request, account);
-                    }
-                    break;
                 default:
                     logger.Warn("packet:" + packet.ToString() + " can not be handled");
                     break;

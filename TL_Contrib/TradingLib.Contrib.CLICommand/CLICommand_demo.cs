@@ -108,27 +108,6 @@ namespace TradingLib.Contrib.CLICommand
     {
         IdTracker idk = new IdTracker();
 
-        [CoreCommandAttr(QSEnumCommandSource.CLI, "boorder", "boorder - sendboorder", "发送二元期权")]
-        public string CTE_BOOrder()
-        {
-            IBroker bobroker = TLCtxHelper.ServiceRouterManager.DefaultSimBOBroker;
-            if (bobroker == null || !bobroker.IsLive)
-                return "Broker is valid";
-            BinaryOptionOrder o = new BOUpDownOrder("CNH6", 1000,EnumBinaryOptionSideType.Call, EnumBinaryOptionTimeSpan.MIN1);
-
-            o.Account = "demo";
-            o.ID = idk.AssignId;
-            //设置盈亏比例
-            //o.SuccessRatio = 0.8M;
-            //o.FailRatio = 1;
-
-
-            logger.Info("Got Order:" + o.ToString());
-            bobroker.SendOrder(o);
-
-            return "";
-        }
-
         [CoreCommandAttr(QSEnumCommandSource.CLI, "printpos", "printpos - print position of account", "输出某个帐户的持仓")]
         public string CTE_PrintPosition(string account)
         {

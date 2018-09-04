@@ -12,11 +12,6 @@ namespace Broker.Live
 {
     public partial class TLBrokerIB
     {
-
-        public void SendOrder(BinaryOptionOrder o)
-        {
-            throw new NotImplementedException();
-        }
         /// <summary>
         /// 通过接口提交委托
         /// IB接口 可以跨越多空进行买卖 不用判定开平或者可平仓数量,只需要直接讲对应的数量提交即可

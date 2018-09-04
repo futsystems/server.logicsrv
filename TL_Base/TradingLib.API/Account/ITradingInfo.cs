@@ -41,11 +41,6 @@ namespace TradingLib.API
         IEnumerable<Trade> Trades { get; }
 
         /// <summary>
-        /// 获得所有二元委托对象
-        /// </summary>
-        IEnumerable<BinaryOptionOrder> BinaryOptionOrders { get; }
-
-        /// <summary>
         /// 获得所有隔夜持仓数据
         /// </summary>
         IEnumerable<PositionDetail> YdPositions { get; }

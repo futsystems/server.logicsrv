@@ -63,13 +63,6 @@
     <Compile Include="BusinessEntities\Account\SessionInfo.cs" />
     <Compile Include="BusinessEntities\Bank\BankCardInfo.cs" />
     <Compile Include="BusinessEntities\Bank\CashOperationRequest.cs" />
-    <Compile Include="BusinessEntities\BinaryOption\BinaryOptionImpl.cs" />
-    <Compile Include="BusinessEntities\BinaryOption\BinaryOptionOrderImpl.cs" />
-    <Compile Include="BusinessEntities\BinaryOption\BinaryOptions.cs" />
-    <Compile Include="BusinessEntities\BinaryOption\BOUpDownOrder.cs" />
-    <Compile Include="BusinessEntities\BinaryOption\BOUtils.cs" />
-    <Compile Include="BusinessEntities\BinaryOption\Utils\BinaryOptionUtisl.cs" />
-    <Compile Include="BusinessEntities\BinaryOption\Util_TimeSpan.cs" />
     <Compile Include="BusinessEntities\Config\ConfigTemplateConfigTemplate.cs" />
     <Compile Include="BusinessEntities\Data\Tick\TickData.cs" />
     <Compile Include="BusinessEntities\Manager\Agent.cs" />
@@ -96,7 +89,6 @@
     <Compile Include="BusinessEntities\Basic\Holiday\Calendar.cs" />
     <Compile Include="BusinessEntities\Basic\Holiday\HolidayCalculator.cs" />
     <Compile Include="BusinessEntities\Manager\Permission.cs" />
-    <Compile Include="Message\BinaryOption\Order.cs" />
     <Compile Include="Message\Common\UtilStruct.cs" />
     <Compile Include="Message\MarketData\MGRMarketData.cs" />
     <Compile Include="Message\MarketData\QryMinuteData.cs" />
@@ -124,7 +116,6 @@
     <Compile Include="Protocol\LoginInfo.cs" />
     <Compile Include="Protocol\DataFarm\RestoreTask.cs" />
     <Compile Include="BusinessEntities\Stock\PowerTransactionImpl.cs" />
-    <Compile Include="Tracker\BOOrderTracker.cs" />
     <Compile Include="Tracker\TradeTracker.cs" />
     <Compile Include="BusinessEntities\Trade\TradeCompare.cs" />
     <Compile Include="BusinessEntities\Config\CommissionTemplate.cs" />
@@ -327,9 +318,7 @@
     <Compile Include="Zlib\ZStream.cs" />
     <Compile Include="Zlib\ZStreamException.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Message\1old\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
