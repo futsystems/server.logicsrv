@@ -201,6 +201,15 @@ namespace TradingLib.Contrib.APIService
                                 {
                                     return new JsonReply(104, "Account create error");
                                 }
+
+                                //自动设置模板ID
+                                int config_id = baseManager.AgentAccount.Default_Config_ID;
+                                //有效配置模板 则更新该账户的配置模板
+                                if (config_id > 0)
+                                {
+                                    TLCtxHelper.ModuleAccountManager.UpdateAccountConfigTemplate(account, config_id, true);
+                                }
+
                                 return new JsonReply(0, string.Format("Account:{0} created", account),
                                     new
                                     {
