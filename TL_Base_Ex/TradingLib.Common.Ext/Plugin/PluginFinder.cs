@@ -36,7 +36,7 @@ namespace TradingLib.Common
         {
             //设定动态dll加载目录
             searchPathList.Add("RuleSet");
-            searchPathList.Add("Contrib");
+            //searchPathList.Add("Contrib");
 			searchPathList.Add("Connector");
 
             this.DesiredInterfaces = new List<Type>();
@@ -46,7 +46,7 @@ namespace TradingLib.Common
 
 			//需要加载的插件接口
             this.DesiredInterfaces.Add(typeof(ICore));
-            this.DesiredInterfaces.Add(typeof(IContrib));
+            //this.DesiredInterfaces.Add(typeof(IContrib));
             //行情与成交通道
             this.DesiredInterfaces.Add(typeof(IBroker));
             this.DesiredInterfaces.Add(typeof(IDataFeed));

@@ -108,6 +108,13 @@
       </services>
 	  </component>
 	  
+	  <component type="TradingLib.Contrib.APIService.APIServiceBundle,TradingLib.Core" instance-scope="per-lifetime-scope">
+	  <services>
+        <service type="TradingLib.API.IModuleAPIService,TradingLib.API.Ex"/>
+		<service type="TradingLib.API.IAPIService,TradingLib.API.Ex"/>
+      </services>
+	  </component>
+	  
 	  <component type="TradingLib.Core.AgentManager,TradingLib.Core" instance-scope="per-lifetime-scope">
 	  <services>
         <service type="TradingLib.API.IModuleAgentManager,TradingLib.API.Ex"/>

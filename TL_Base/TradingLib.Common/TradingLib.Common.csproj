@@ -73,6 +73,7 @@
     <Compile Include="BusinessEntities\Settlement\SettlementStatistic.cs" />
     <Compile Include="BusinessEntities\Rule\RuleTimeSpan.cs" />
     <Compile Include="Client\TLNegotiation.cs" />
+    <Compile Include="ControlLogFactoryAdapter.cs" />
     <Compile Include="Exception\BaseException.cs" />
     <Compile Include="Exception\DataRepositoryException.cs" />
     <Compile Include="Exception\TradingLibError.cs" />

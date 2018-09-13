@@ -132,14 +132,9 @@ namespace TradingSrv.Win
                             using (var connectorMgr = scope.Resolve<IConnectorManager>())//2.路由管理器,绑定核心部分的数据与成交路由,并加载Connector
                             {
                                 connectorMgr.Init();
-                                using (var contribMgr = scope.Resolve<IContribManager>())//3.扩展模块管理器 加载扩展模块,启动扩展模块
-                                {
-                                    contribMgr.Init();
-                                    contribMgr.Load();
-
                                     ////////////////////////////////// Stat Section
                                     //0.启动扩展服务
-                                    contribMgr.Start();
+                                    //contribMgr.Start();
 
                                     //1.待所有服务器启动完毕后 启动核心服务
                                     coreMgr.Start();
@@ -161,7 +156,7 @@ namespace TradingSrv.Win
                                     {
                                         System.Threading.Thread.Sleep(1000);
                                     }
-                                }
+                                
                             }
                         }
                     }

@@ -9,7 +9,7 @@ using TradingLib.API;
 using TradingLib.Common;
 using TradingLib.Core;
 using Autofac;
-
+using TradingLib.Contrib.APIService;
 
 namespace TradingLib.ServiceManager
 {
@@ -39,8 +39,10 @@ namespace TradingLib.ServiceManager
         private IModuleSettleCentre _settleCentre;//结算中心
         private IModuleRiskCentre _riskCentre;//风控服务
         private IModuleTaskCentre _taskcentre;//调度服务
-        private IModuleFollowCentre _followcentre;//跟单服务
+        //private IModuleFollowCentre _followcentre;//跟单服务
         private IModuleAgentManager _agentmanager;//代理账户管理模块
+
+        private IModuleAPIService _apiservice;//api接口模块
 
         /*
          *  数据库连接缓存 数据库连接 9
@@ -98,14 +100,15 @@ namespace TradingLib.ServiceManager
             logger.Info("[INIT CORE] MgrExchServer");//服务端管理界面,提供管理客户端接入,查看并设置相关数据
             _managerExchange = TLCtxHelper.Scope.Resolve<IModuleMgrExchange>();//初始化管理服务
 
-            //logger.Info("[INIT CORE] WebMsgExchServer");
-            //_webmsgExchange = TLCtxHelper.Scope.Resolve<IModuleAPIExchange>();
+            logger.Info("[INIT CORE] APIService");
+            _apiservice = TLCtxHelper.Scope.Resolve<IModuleAPIService>();
+            
 
             logger.Info("[INIT CORE] TaskCentre");
             _taskcentre = TLCtxHelper.Scope.Resolve<IModuleTaskCentre>();//初始化任务执行中心 在所有组件加载完毕后 在统一加载定时任务设置
 
-            logger.Info("[INIT CORE] FollowCentre");
-            _followcentre = TLCtxHelper.Scope.Resolve<IModuleFollowCentre>();
+            //logger.Info("[INIT CORE] FollowCentre");
+            //_followcentre = TLCtxHelper.Scope.Resolve<IModuleFollowCentre>();
             #endregion
 
         }
@@ -138,12 +141,13 @@ namespace TradingLib.ServiceManager
             _managerExchange.Start();
 
             //_webmsgExchange.Start();
+            _apiservice.Start();
          
             _messageExchagne.Start();//交易服务启动
 
             _taskcentre.Start();
 
-            _followcentre.Start();
+            //_followcentre.Start();
 
             logger.Info("----------- Core Started -----------------");
         }
@@ -156,6 +160,7 @@ namespace TradingLib.ServiceManager
             _messageExchagne.Stop();//正常停止
 
             //_webmsgExchange.Stop();//web消息接口
+            _apiservice.Stop();
 
             _managerExchange.Stop();//与message类似
 

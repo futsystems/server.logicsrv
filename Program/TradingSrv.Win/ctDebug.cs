@@ -20,7 +20,7 @@ namespace TradingSrv.Win
             InitializeComponent();
             ContextMenu = new ContextMenu();
             ContextMenu.MenuItems.Add("清除记录", new EventHandler(clearlogs));
-            ContextMenu.MenuItems.Add("Create Ticket", new EventHandler(createticket));
+            //ContextMenu.MenuItems.Add("Create Ticket", new EventHandler(createticket));
             toggleselectall();
         }
         public event DebugDelegate NewCreateTicketEvent;

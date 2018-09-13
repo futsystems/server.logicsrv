@@ -36,8 +36,14 @@
     <Reference Include="Common.Logging.Core">
       <HintPath>..\..\lib\Common.Logging.Core.dll</HintPath>
     </Reference>
+    <Reference Include="DotLiquid">
+      <HintPath>..\..\lib\DotLiquid.dll</HintPath>
+    </Reference>
     <Reference Include="Newtonsoft.Json">
       <HintPath>..\..\lib\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="NHttp">
+      <HintPath>..\..\lib\NHttp.dll</HintPath>
     </Reference>
     <Reference Include="Quartz">
       <HintPath>..\..\lib\Quartz.dll</HintPath>
@@ -105,6 +111,48 @@
     <Compile Include="CoreModule\AccountManager\AccountManager_mgr.cs" />
     <Compile Include="CoreModule\AgentManager\AgentManager.cs" />
     <Compile Include="CoreModule\AgentManager\AgentManager_mgr.cs" />
+    <Compile Include="CoreModule\APIService\APIGlobal.cs" />
+    <Compile Include="CoreModule\APIService\APIService.cs" />
+    <Compile Include="CoreModule\APIService\APIService_.cs" />
+    <Compile Include="CoreModule\APIService\APIService_Cash.cs" />
+    <Compile Include="CoreModule\APIService\APIService_Counter.cs" />
+    <Compile Include="CoreModule\APIService\Common\CashOperation.cs" />
+    <Compile Include="CoreModule\APIService\Common\GateWayConfig.cs" />
+    <Compile Include="CoreModule\APIService\Common\HttpUtils.cs" />
+    <Compile Include="CoreModule\APIService\Common\JsonReply.cs" />
+    <Compile Include="CoreModule\APIService\Common\RequestCheck.cs" />
+    <Compile Include="CoreModule\APIService\Common\TemplateTracker.cs" />
+    <Compile Include="CoreModule\APIService\Drop\DropAliPayPayment.cs" />
+    <Compile Include="CoreModule\APIService\Drop\DropBaoFuPayment.cs" />
+    <Compile Include="CoreModule\APIService\Drop\DropCai1Payment.cs" />
+    <Compile Include="CoreModule\APIService\Drop\DropChinagPayment.cs" />
+    <Compile Include="CoreModule\APIService\Drop\DropDinpayment.cs" />
+    <Compile Include="CoreModule\APIService\Drop\DropError.cs" />
+    <Compile Include="CoreModule\APIService\Drop\DropETonePayment.cs" />
+    <Compile Include="CoreModule\APIService\Drop\DropGoPayPayment.cs" />
+    <Compile Include="CoreModule\APIService\Drop\DropIelpmPayment.cs" />
+    <Compile Include="CoreModule\APIService\Drop\DropIPSPayment.cs" />
+    <Compile Include="CoreModule\APIService\Drop\DropMoBoPayment.cs" />
+    <Compile Include="CoreModule\APIService\Drop\DropOperation.cs" />
+    <Compile Include="CoreModule\APIService\Drop\DropSuiXingPayment.cs" />
+    <Compile Include="CoreModule\APIService\Drop\DropTFBPayment.cs" />
+    <Compile Include="CoreModule\APIService\Drop\DropUnspayPayment.cs" />
+    <Compile Include="CoreModule\APIService\Handler\APIHandler.cs" />
+    <Compile Include="CoreModule\APIService\Handler\CashHandler.cs" />
+    <Compile Include="CoreModule\APIService\Handler\RequestHandler.cs" />
+    <Compile Include="CoreModule\APIService\HttpServer.cs" />
+    <Compile Include="CoreModule\APIService\JsonUtils.cs" />
+    <Compile Include="CoreModule\APIService\MD5Helper.cs" />
+    <Compile Include="CoreModule\APIService\ORM\MGateWayConfig.cs" />
+    <Compile Include="CoreModule\APIService\ORM\MRechargeOperation.cs" />
+    <Compile Include="CoreModule\APIService\PaymentGateway\BaoFu\BaoFuGateway.cs" />
+    <Compile Include="CoreModule\APIService\PaymentGateway\GateWayBase.cs" />
+    <Compile Include="CoreModule\APIService\PaymentGateway\GateWayType.cs" />
+    <Compile Include="CoreModule\APIService\PaymentGateway\PlugPay\DropPlugPayment.cs" />
+    <Compile Include="CoreModule\APIService\PaymentGateway\PlugPay\PlugPayGateWay.cs" />
+    <Compile Include="CoreModule\APIService\PaymentGateway\RSAUtil.cs" />
+    <Compile Include="CoreModule\APIService\Tracker\APITracker.cs" />
+    <Compile Include="CoreModule\APIService\Tracker\GateWayTracker.cs" />
     <Compile Include="CoreModule\BrokerRouter\BrokerRouter-passthrough\BrokerRouter\BrokerRouter.cs" />
     <Compile Include="CoreModule\BrokerRouter\BrokerRouter-passthrough\BrokerRouter\BrokerRouter_.cs" />
     <Compile Include="CoreModule\BrokerRouter\BrokerRouter-passthrough\BrokerRouter\BrokerRouter_ExInterface.cs" />

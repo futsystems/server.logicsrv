@@ -57,6 +57,7 @@
     <Compile Include="Core\Function\IFollowCentre.cs" />
     <Compile Include="Core\Function\IMessageMgr.cs" />
     <Compile Include="Core\Function\ITaskCentre.cs" />
+    <Compile Include="Core\Function\IAPIService.cs" />
     <Compile Include="EnumActionCheckResult.cs" />
     <Compile Include="Enums.cs" />
     <Compile Include="Module\IModuleAccountManager.cs" />
@@ -79,6 +80,7 @@
     <Compile Include="Delegate.cs" />
     <Compile Include="Module\ICore.cs" />
     <Compile Include="Module\IModuleBrokerRouter.cs" />
+    <Compile Include="Module\IModuleAPIService.cs" />
     <Compile Include="ServiceManager\IServiceManager.cs" />
     <Compile Include="ITransport.cs" />
     <Compile Include="Core\Function\IRiskCentre.cs" />

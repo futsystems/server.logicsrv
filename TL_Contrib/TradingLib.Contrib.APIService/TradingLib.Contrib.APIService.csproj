@@ -31,9 +31,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="BouncyCastle.Crypto">
-      <HintPath>..\..\lib\BouncyCastle.Crypto.dll</HintPath>
-    </Reference>
     <Reference Include="Common.Logging">
       <HintPath>..\..\lib\Common.Logging.dll</HintPath>
     </Reference>
@@ -42,9 +39,6 @@
     </Reference>
     <Reference Include="DotLiquid">
       <HintPath>..\..\lib\DotLiquid.dll</HintPath>
-    </Reference>
-    <Reference Include="ICSharpCode.SharpZipLib">
-      <HintPath>..\..\lib\ICSharpCode.SharpZipLib.dll</HintPath>
     </Reference>
     <Reference Include="Newtonsoft.Json">
       <HintPath>..\..\lib\Newtonsoft.Json.dll</HintPath>
@@ -57,7 +51,6 @@
     <Reference Include="System.Drawing" />
     <Reference Include="System.Numerics" />
     <Reference Include="System.Web.Extensions" />
-    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
@@ -104,119 +97,12 @@
     <Compile Include="MD5Helper.cs" />
     <Compile Include="ORM\MGateWayConfig.cs" />
     <Compile Include="ORM\MRechargeOperation.cs" />
-    <Compile Include="PaymentGateway\101KA\101KAGateWay.cs" />
-    <Compile Include="PaymentGateway\101KA\101KAHelper.cs" />
-    <Compile Include="PaymentGateway\101KA\Drop101KAPayment.cs" />
-    <Compile Include="PaymentGateway\AliyPay\AliPayCore.cs" />
-    <Compile Include="PaymentGateway\AliyPay\AliPayGateWay.cs" />
-    <Compile Include="PaymentGateway\AliyPay\AliPayMD5.cs" />
     <Compile Include="PaymentGateway\BaoFu\BaoFuGateway.cs" />
-    <Compile Include="PaymentGateway\C9Pay\C9PayGateWay.cs" />
-    <Compile Include="PaymentGateway\C9Pay\DropC9Payment.cs" />
-    <Compile Include="PaymentGateway\cai1pay\Cai1payGateWay.cs" />
-    <Compile Include="PaymentGateway\Chinagpay\ChinagpayGateWay.cs" />
-    <Compile Include="PaymentGateway\DDBill\DropDDBillPayment.cs" />
-    <Compile Include="PaymentGateway\DDBill\DDBillPayGateWay.cs" />
-    <Compile Include="PaymentGateway\DDBill\DDBilPayHelper.cs" />
-    <Compile Include="PaymentGateway\dinpay\DinpayGateWay.cs" />
-    <Compile Include="PaymentGateway\dinpay\DinpayHelp.cs" />
-    <Compile Include="PaymentGateway\Ecpss\DropEcpss.cs" />
-    <Compile Include="PaymentGateway\Ecpss\EcpssGateWay.cs" />
-    <Compile Include="PaymentGateway\Ecpss\EcpssHelper.cs" />
-    <Compile Include="PaymentGateway\ETonePay\ETonePayGateWay.cs" />
-    <Compile Include="PaymentGateway\ETonePay\EtonePayUtils.cs" />
-    <Compile Include="PaymentGateway\Fjelt\DropFjeltPayment.cs" />
-    <Compile Include="PaymentGateway\Fjelt\FjeltGateWay.cs" />
-    <Compile Include="PaymentGateway\Fjelt\FjeltHelper.cs" />
-    <Compile Include="PaymentGateway\FZPay\DropFZPayment.cs" />
-    <Compile Include="PaymentGateway\FZPay\FZPayGateWay.cs" />
-    <Compile Include="PaymentGateway\FZPay\FZPayHelper.cs" />
-    <Compile Include="PaymentGateway\GaoHuiTong\AESUtil.cs" />
-    <Compile Include="PaymentGateway\GaoHuiTong\DropGaoHuiTongPayment.cs" />
-    <Compile Include="PaymentGateway\GaoHuiTong\GaoHuiTongGateWay.cs" />
-    <Compile Include="PaymentGateway\GaoHuiTong\GaoHuiTongHelper.cs" />
-    <Compile Include="PaymentGateway\GaoHuiTong\RASHelper.cs" />
-    <Compile Include="PaymentGateway\GaoHuiTong\RASUtil.cs" />
     <Compile Include="PaymentGateway\GateWayBase.cs" />
     <Compile Include="PaymentGateway\GateWayType.cs" />
-    <Compile Include="PaymentGateway\GGTone\DropGGPayment.cs" />
-    <Compile Include="PaymentGateway\GGTone\GGTongGateway.cs" />
-    <Compile Include="PaymentGateway\Gopay\GoPayGateway.cs" />
-    <Compile Include="PaymentGateway\GYPay\DropGYPayment.cs" />
-    <Compile Include="PaymentGateway\GYPay\GYPayGateWay.cs" />
-    <Compile Include="PaymentGateway\HaiFuPay\DropHaiFuPayment.cs" />
-    <Compile Include="PaymentGateway\HaiFuPay\HaiFuGateWay.cs" />
-    <Compile Include="PaymentGateway\HMPay\DropHMPayment.cs" />
-    <Compile Include="PaymentGateway\HMPay\HMPayGateWay.cs" />
-    <Compile Include="PaymentGateway\HuiCX\DropHuiCXPayment.cs" />
-    <Compile Include="PaymentGateway\HuiCX\HuiCXGateWay.cs" />
-    <Compile Include="PaymentGateway\HuiCX\HuiCXHelpler.cs" />
-    <Compile Include="PaymentGateway\Ielpm\IELPMPay.cs" />
-    <Compile Include="PaymentGateway\Ielpm\sdk\CertUtil.cs" />
-    <Compile Include="PaymentGateway\Ielpm\sdk\HttpClient.cs" />
-    <Compile Include="PaymentGateway\Ielpm\sdk\IELPMComparer .cs" />
-    <Compile Include="PaymentGateway\Ielpm\sdk\IELPMConfig.cs" />
-    <Compile Include="PaymentGateway\Ielpm\sdk\IELPMUtil.cs" />
-    <Compile Include="PaymentGateway\Ielpm\sdk\SecurityUtil.cs" />
-    <Compile Include="PaymentGateway\IPS\IPSGateWay.cs" />
-    <Compile Include="PaymentGateway\JoinPay\DropJoinPayPayment.cs" />
-    <Compile Include="PaymentGateway\JoinPay\JoinPayGateWay.cs" />
-    <Compile Include="PaymentGateway\JuHePay\DropJuHePayment.cs" />
-    <Compile Include="PaymentGateway\JuHePay\JuHeGateWay.cs" />
-    <Compile Include="PaymentGateway\JuHePay\JuHeHelper.cs" />
-    <Compile Include="PaymentGateway\JuHePay\JuHeRSA.cs" />
-    <Compile Include="PaymentGateway\MoBo\MoBoGateWay.cs" />
-    <Compile Include="PaymentGateway\MoBo\MoboHelper.cs" />
-    <Compile Include="PaymentGateway\MoBo\MoboSignHelper.cs" />
-    <Compile Include="PaymentGateway\NewPay\DropNewPayPayment.cs" />
-    <Compile Include="PaymentGateway\NewPay\NewPayGateWay.cs" />
-    <Compile Include="PaymentGateway\OpenEPay\DropOpenEPayPayment.cs" />
-    <Compile Include="PaymentGateway\OpenEPay\OpenEPayGateway.cs" />
-    <Compile Include="PaymentGateway\Pay848\DropPay848Payment.cs" />
-    <Compile Include="PaymentGateway\Pay848\Pay848GateWay.cs" />
     <Compile Include="PaymentGateway\PlugPay\DropPlugPayment.cs" />
     <Compile Include="PaymentGateway\PlugPay\PlugPayGateWay.cs" />
-    <Compile Include="PaymentGateway\QianTong\DropQianTongPayment.cs" />
-    <Compile Include="PaymentGateway\QianTong\QianTongPayGateWay.cs" />
-    <Compile Include="PaymentGateway\QianTong\RSAUtil.cs" />
-    <Compile Include="PaymentGateway\RMTech\DropRMTechPayment.cs" />
-    <Compile Include="PaymentGateway\RMTech\RMTechGateWay.cs" />
     <Compile Include="PaymentGateway\RSAUtil.cs" />
-    <Compile Include="PaymentGateway\RSAUtil2.cs" />
-    <Compile Include="PaymentGateway\Se7Pay\DropSe7Payment.cs" />
-    <Compile Include="PaymentGateway\Se7Pay\RSAHelper.cs" />
-    <Compile Include="PaymentGateway\Se7Pay\Se7PayGateWay.cs" />
-    <Compile Include="PaymentGateway\Shoping98\DropShopping98Payment.cs" />
-    <Compile Include="PaymentGateway\Shoping98\Shopping98GateWay.cs" />
-    <Compile Include="PaymentGateway\SuiXingPay\SuiXingHelper.cs" />
-    <Compile Include="PaymentGateway\SuiXingPay\SuiXingPayGateWay.cs" />
-    <Compile Include="PaymentGateway\SumPay\DropSumPayment.cs" />
-    <Compile Include="PaymentGateway\SumPay\SumHelper.cs" />
-    <Compile Include="PaymentGateway\SumPay\SumPayGateWay.cs" />
-    <Compile Include="PaymentGateway\TFBPay\TFBPayGateWay.cs" />
-    <Compile Include="PaymentGateway\TFBPay\TFBRSAHelper.cs" />
-    <Compile Include="PaymentGateway\Unionpay\DropUnionPayment.cs" />
-    <Compile Include="PaymentGateway\Unionpay\SDK\AcpService.cs" />
-    <Compile Include="PaymentGateway\Unionpay\SDK\BigNum.cs" />
-    <Compile Include="PaymentGateway\Unionpay\SDK\CertUtil.cs" />
-    <Compile Include="PaymentGateway\Unionpay\SDK\SDKConfig.cs" />
-    <Compile Include="PaymentGateway\Unionpay\SDK\SDKUtil.cs" />
-    <Compile Include="PaymentGateway\Unionpay\SDK\SecurityUtil.cs" />
-    <Compile Include="PaymentGateway\Unionpay\UnionPayGateway.cs" />
-    <Compile Include="PaymentGateway\Unspay\UnspayGateWay.cs" />
-    <Compile Include="PaymentGateway\UUOPay\DropUUOPayment.cs" />
-    <Compile Include="PaymentGateway\UUOPay\UUOPayGateWay.cs" />
-    <Compile Include="PaymentGateway\XiaoXiaoPay\XiaoXiaoHepler.cs" />
-    <Compile Include="PaymentGateway\XiaoXiaoPay\XiaoXiaoPayGateWay.cs" />
-    <Compile Include="PaymentGateway\XiaoXiaoPay\XiaoXiaoPayment.cs" />
-    <Compile Include="PaymentGateway\YeePay\DropYeePayment.cs" />
-    <Compile Include="PaymentGateway\YeePay\YeePayGateway.cs" />
-    <Compile Include="PaymentGateway\YeePay\YeePayHelper.cs" />
-    <Compile Include="PaymentGateway\ZhiHPay\DropZhiHPayment.cs" />
-    <Compile Include="PaymentGateway\ZhiHPay\ZhiHPayGateWay.cs" />
-    <Compile Include="PaymentGateway\ZhiHPay\ZhiHPayHelper.cs" />
-    <Compile Include="PaymentGateway\ZhongWeiPay\DropZhongWei.cs" />
-    <Compile Include="PaymentGateway\ZhongWeiPay\ZhongWeiGateWay.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="APIService_.cs" />
     <Compile Include="Common\RequestCheck.cs" />
