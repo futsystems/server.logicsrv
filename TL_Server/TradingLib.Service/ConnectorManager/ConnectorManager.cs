@@ -134,8 +134,8 @@ namespace TradingLib.ServiceManager
         /// 停止
         /// </summary>
         public void Stop()
-        { 
-        
+        {
+            StopConnector();
         }
 
 

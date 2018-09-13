@@ -134,6 +134,11 @@ namespace TradingLib.Core
                     {
                         throw new FutsRspError("可开柜员数量超过限制:" + maxcnt.ToString());
                     }
+
+                    if (cnt >= LicenseConfig.Instance.AgentCNT)
+                    {
+                        throw new FutsRspError("可开柜员数量超过授权限制:" + LicenseConfig.Instance.AgentCNT.ToString());
+                    }
                 }
 
 

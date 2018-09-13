@@ -32,9 +32,18 @@ namespace TradingLib.Core
             var account = creation.Account;
 
             //域帐户数目检查 排除已经删除账户
-            if (manager.Domain.GetAccounts().Where(acc=>!acc.Deleted).Count() >= manager.Domain.AccLimit)
+            int accNum = manager.Domain.GetAccounts().Where(acc => !acc.Deleted).Count();
+            if (accNum >= manager.Domain.AccLimit)
             {
                 throw new FutsRspError("帐户数目达到上限:" + manager.Domain.AccLimit.ToString());
+            }
+            if (accNum >= 5 && manager.Domain.ID == 1)
+            {
+                throw new FutsRspError("管理域不能超过5个测试账户");
+            }
+            if (accNum >= LicenseConfig.Instance.AccountCNT)
+            {
+                throw new FutsRspError("帐户数目达到授权上限:" + LicenseConfig.Instance.AccountCNT);
             }
 
             if (creation.BaseManagerID == 0)

@@ -211,11 +211,23 @@ namespace TradingLib.Core
             //检查域和管理员对象 进行域过期和管理是否激活进行限制
             if (account != null)
             {
-                if (account.Domain.IsExpired())//域过期
+                //if (account.Domain.IsExpired())//域过期
+                //{
+                //    response.Authorized = false;
+                //    response.RspInfo.Fill("PLATFORM_EXPIRED");
+                //}
+
+                if (LicenseConfig.Instance.IsExpired())
                 {
                     response.Authorized = false;
                     response.RspInfo.Fill("PLATFORM_EXPIRED");
                 }
+                if (account.Domain.ID > LicenseConfig.Instance.DomainCNT)
+                {
+                    response.Authorized = false;
+                    response.RspInfo.Fill("PLATFORM_EXPIRED");
+                }
+                
                 Manager mgr = BasicTracker.ManagerTracker[account.Mgr_fk];
                 if (mgr == null || (!mgr.Active))
                 {
@@ -230,13 +242,13 @@ namespace TradingLib.Core
                     response.RspInfo.Fill("ACCOUNT_CLOSE");
                 }
 
-                if (request.ProductInfo == "M.IOS" && (!account.Domain.Device_IOS))
+                if (request.ProductInfo == "M.IOS" && (!LicenseConfig.Instance.EnableAPI))
                 {
                     response.Authorized = false;
                     response.RspInfo.Fill("UNAUTHORIZED_LOGIN");
                 }
 
-                if (request.ProductInfo == "M.Droid" && (!account.Domain.Device_Droid))
+                if (request.ProductInfo == "M.Droid" && (!LicenseConfig.Instance.EnableAPI))
                 {
                     response.Authorized = false;
                     response.RspInfo.Fill("UNAUTHORIZED_LOGIN");

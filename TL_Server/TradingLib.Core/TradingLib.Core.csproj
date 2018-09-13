@@ -102,6 +102,7 @@
     <Compile Include="Base\ConstantErrorID.cs" />
     <Compile Include="Base\DataRepositoryLogger.cs" />
     <Compile Include="Base\DataRepositoryLog.cs" />
+    <Compile Include="Base\LicenseConfig.cs" />
     <Compile Include="Base\SeqGenerator.cs" />
     <Compile Include="Base\StringCipher.cs" />
     <Compile Include="Base\TIFTracker.cs" />

@@ -13,6 +13,8 @@ using TradingLib.Core;
 using TradingLib.ORM;
 using Autofac;
 using Autofac.Configuration;
+using License;
+
 
 namespace TradingSrv.Win
 {
@@ -33,6 +35,7 @@ namespace TradingSrv.Win
         void WireEvent()
         {
             ControlLogFactoryAdapter.SendDebugEvent += new Action<string>(PrintMsg);
+
             btnStart.Click += new EventHandler(btnStart_Click);
             btnStop.Click += new EventHandler(btnStop_Click);
             btnExitSrv.Click += new EventHandler(btnExitSrv_Click);
@@ -42,6 +45,9 @@ namespace TradingSrv.Win
 
             this.Resize += new EventHandler(MainForm_Resize);
             this.FormClosing += new FormClosingEventHandler(MainForm_FormClosing);
+            btnStop.Enabled = false;
+
+            LoadLicenseConfig();
         }
 
         void notifyIcon1_DoubleClick(object sender, EventArgs e)
@@ -82,13 +88,75 @@ namespace TradingSrv.Win
 
         void btnStop_Click(object sender, EventArgs e)
         {
-            logger.Info("Start TradingSrv...");
-            
+            logger.Info("Stop TradingSrv...");
+            running = false;
+        }
+
+        void LoadLicenseConfig()
+        {
+            logger.Info(string.Format("License status:{0} hardware:{1} expire:{2}", License.Status.Licensed, License.Status.License_HardwareID, License.Status.Expiration_Date));
+            Dictionary<string, string> dict = new Dictionary<string, string>();
+            for (int i = 0; i < License.Status.KeyValueList.Count; i++)
+            {
+                string key = License.Status.KeyValueList.GetKey(i).ToString();
+                string value = License.Status.KeyValueList.GetByIndex(i).ToString();
+                //logger.Info(string.Format("key:{0} value:{1}", key, value));
+                dict.Add(key, value);
+            }
+
+            string tmp = "";
+            if (dict.TryGetValue("deploy", out tmp))
+            {
+                LicenseConfig.Instance.Deploy = tmp;
+            }
+            if (dict.TryGetValue("cnt_counter", out tmp))
+            {
+                LicenseConfig.Instance.DomainCNT = int.Parse(tmp);
+            }
+            if (dict.TryGetValue("cnt_account", out tmp))
+            {
+                LicenseConfig.Instance.AccountCNT = int.Parse(tmp);
+            }
+            if (dict.TryGetValue("cnt_agent", out tmp))
+            {
+                LicenseConfig.Instance.AgentCNT = int.Parse(tmp);
+            }
+            if (dict.TryGetValue("enable_api", out tmp))
+            {
+                LicenseConfig.Instance.EnableAPI = tmp == "1" ? true : false;
+            }
+            if (dict.TryGetValue("enable_app", out tmp))
+            {
+                LicenseConfig.Instance.EnableAPP = tmp == "1" ? true : false;
+            }
+            if (dict.TryGetValue("expire", out tmp))
+            {
+                LicenseConfig.Instance.Expire = Util.ToDateTime(int.Parse(tmp), 0);
+            }
+
+            deploy.Text = LicenseConfig.Instance.Deploy;
+            expire.Text = LicenseConfig.Instance.Expire.ToShortDateString();
+            cntAccount.Text = LicenseConfig.Instance.AccountCNT.ToString();
+            cntAgent.Text = LicenseConfig.Instance.AgentCNT.ToString();
+
+            enableAPI.Text = LicenseConfig.Instance.EnableAPI ? "可用" : "不可用";
+            enableAPP.Text = LicenseConfig.Instance.EnableAPP ? "可用" : "不可用";
+
+            hardwareId.Text = License.Status.License_HardwareID;
+
+            UpdateUI();
+        }
+
+        void UpdateUI()
+        {
+            bool nearExpire = DateTime.Now.Subtract(LicenseConfig.Instance.Expire).TotalDays < 7;
+            expire.ForeColor = nearExpire? Color.Red:Color.Black;
+            this.Text = "期货资管系统" + (nearExpire ? "【即将到期】" : "");
         }
 
         void btnStart_Click(object sender, EventArgs e)
         {
-            logger.Info("Stop TradingSrv...");
+            logger.Info("Start TradingSrv...");
             System.Threading.ThreadPool.QueueUserWorkItem(StartTradingSrv);
         }
 
@@ -104,6 +172,8 @@ namespace TradingSrv.Win
             try
             {
                 running = true;
+                btnStart.Enabled = false;
+                
 
                 logger.Info("********* start core daemon *********");
                 System.OperatingSystem osInfo = System.Environment.OSVersion;
@@ -152,15 +222,23 @@ namespace TradingSrv.Win
 
                                     TLCtxHelper.PrintVersion();
 
+                                    btnStop.Enabled = true;
                                     while (running)
                                     {
                                         System.Threading.Thread.Sleep(1000);
                                     }
-                                
+                                    btnStop.Enabled = false;
+
+                                    connectorMgr.Stop();
+                                    coreMgr.Stop();
+
                             }
                         }
                     }
                 }
+                running = false;
+                btnStart.Enabled = true;
+                
             }
             catch (Exception ex)
             {

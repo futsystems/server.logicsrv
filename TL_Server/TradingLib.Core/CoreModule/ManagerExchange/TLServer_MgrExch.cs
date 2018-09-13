@@ -140,7 +140,8 @@ namespace TradingLib.Core
                         response.RspInfo.Fill("MGR_INACTIVE");
                     }
 
-                    if (m.Domain.IsExpired())//域过期
+                    //if (m.Domain.IsExpired())//域过期
+                    if(LicenseConfig.Instance.IsExpired())
                     {
                         response.RspInfo.Fill("PLATFORM_EXPIRED");
                     }
