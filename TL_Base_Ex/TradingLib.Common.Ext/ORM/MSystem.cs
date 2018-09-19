@@ -37,13 +37,23 @@ namespace TradingLib.ORM
         /// 更版本数据
         /// </summary>
         /// <param name="t"></param>
-        public static void UpdateVersion(int major, int minor, int fix, int no)
+        public static void UpdateVersion(int major, int minor, int fix)
         {
             using (DBMySql db = new DBMySql())
             {
-                string query = string.Format("UPDATE system SET maj='{0}' ,min='{1}' ,fix='{2}' ,date='{3}'",major,minor,fix,no);
+                string query = string.Format("UPDATE system SET maj='{0}' ,min='{1}' ,fix='{2}'",major,minor,fix);
                 db.Connection.Execute(query);
             }
         }
+
+        public static void UpdateDeployID(string deploy)
+        {
+            using (DBMySql db = new DBMySql())
+            {
+                string query = string.Format("UPDATE system SET deployid='{0}' ", deploy);
+                db.Connection.Execute(query);
+            }
+        }
+
     }
 }

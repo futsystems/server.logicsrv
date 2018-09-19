@@ -13,14 +13,14 @@ namespace TradingLib.Common
     /// <summary>
     /// 单例全局上下文
     /// </summary>
-    public class TLCtxHelper:IDisposable
+    public class TLCtxHelper : IDisposable
     {
         private static TLCtxHelper defaultInstance;
-        
+
         private static ILog logger = LogManager.GetLogger("TLCtxHelper");
 
 
-        
+
 
         //private IUtil m_util;
 
@@ -47,11 +47,11 @@ namespace TradingLib.Common
             }
         }
 
-        static TLVersion _version=null;
+        static TLVersion _version = null;
         /// <summary>
         /// 版本信息
         /// </summary>
-        public static TLVersion Version 
+        public static TLVersion Version
         {
             get
             {
@@ -61,7 +61,7 @@ namespace TradingLib.Common
                 }
                 return _version;
             }
-            
+
         }
 
         /// <summary>
@@ -69,14 +69,11 @@ namespace TradingLib.Common
         /// </summary>
         public static void PrintVersion()
         {
-
             logger.Info("");
             logger.Info(string.Format(". StartUpTime:{0}", Util.ToDateTime(StartUpTime).ToString()));
             logger.Info(string.Format(". Tradingday:{0}", TLCtxHelper.ModuleSettleCentre.Tradingday));
-            
             logger.Info(string.Format(". Version:{0}", Version.Version));
             logger.Info(string.Format(". VersionNo:{0}", Version.BuildNum));
-            logger.Info(string.Format(". Author:{0}", "Root"));
         }
 
 
@@ -103,8 +100,8 @@ namespace TradingLib.Common
 
 
         public void Dispose()
-        { 
-        
+        {
+
         }
 
         public static void DisposeInstance()
@@ -458,7 +455,7 @@ namespace TradingLib.Common
             }
         }
 
-        
+
         #endregion
 
 
@@ -474,59 +471,8 @@ namespace TradingLib.Common
         public static Profiler Profiler = new Profiler();
 
 
-        /// <summary>
-        /// 通过可执行文件目录下的build.md文件获得当前的程序版本
-        /// 如果有版本数据则更新到数据库
-        /// </summary>
-        public static void ParseVersion()
-        {
-            string fn = "build.md";
-            if (File.Exists("build.md"))
-            {
-                using (FileStream fs = File.Open(fn, FileMode.Open))
-                {
-                    using (StreamReader sr = new StreamReader(fs))
-                    {
-                        string line = sr.ReadLine();
-                        if (line.StartsWith("v"))
-                        {
-                            string[] rec = line.Split('-');
-                            string mainversion = rec[1];
-                            string commitno = rec[2];
-                            string[] versions = mainversion.Split('.');
-                            if (versions.Length == 3)
-                            {
-                                bool parseflag = true;
-                                int major = 0;
-                                parseflag = parseflag && int.TryParse(versions[0], out major);
-                                int minor = 0;
-                                parseflag = parseflag && int.TryParse(versions[1], out minor);
-                                int fix = 0;
-                                parseflag = parseflag && int.TryParse(versions[2], out fix);
-
-                                int no = 0;
-                                parseflag = parseflag && int.TryParse(commitno, out no);
-
-                                if (parseflag)
-                                {
-                                    logger.Info(string.Format(". Parse Version Major:{0} Minor:{1} Fix:{2} CommitNo:{3}", major, minor, fix, no));
-                                    ORM.MSystem.UpdateVersion(major, minor, fix, no);
-                                    //重新加载版本信息
-                                    _version = ORM.MSystem.GetVersion();
-                                }
-                            }
-                                
-                        }
-                    }
-                }
-                
-            }
-        
-        }
 
     }
-
-
 
 
 }

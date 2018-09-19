@@ -23,12 +23,11 @@ namespace TradingLib.Core
 
         private LicenseConfig()
         {
-            //this.UseLicense = false;
-            this.Deploy = "XXXX";
-            this.Expire = DateTime.Now;
-            this.AccountCNT = 100;
+            this.Deploy = "TEST";
+            this.Expire = DateTime.Now.AddDays(1);
+            this.AccountCNT = 10;
             this.DomainCNT = 2;
-            this.AgentCNT = 10;
+            this.AgentCNT = 2;
             this.EnableAPI = false;
             this.EnableAPP = false;
         }
@@ -46,11 +45,5 @@ namespace TradingLib.Core
         public bool EnableAPI { get; set; }
 
         public bool EnableAPP { get; set; }
-
-        public bool IsExpired()
-        {
-            return this.Expire.Subtract(DateTime.Now).TotalDays < 0;
-        }
-      
     }
 }

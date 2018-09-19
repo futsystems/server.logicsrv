@@ -73,6 +73,16 @@ namespace TradingLib.Core
                     throw new FutsRspError("独立部署不允许添加多个分区");
                 }
 
+                if (isadd && BasicTracker.DomainTracker.Domains.Count() >= LicenseConfig.Instance.DomainCNT)
+                {
+                    throw new FutsRspError("分区数量达到授权上限:"+LicenseConfig.Instance.DomainCNT.ToString());
+                }
+
+                //update domain limit information
+                domain.AccLimit = LicenseConfig.Instance.AccountCNT;
+                domain.AgentLimit = LicenseConfig.Instance.AgentCNT;
+                domain.DateExpired = LicenseConfig.Instance.Expire.ToTLDate();
+
                 BasicTracker.DomainTracker.UpdateDomain(domain);
 
 

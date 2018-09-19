@@ -139,15 +139,19 @@ namespace TradingLib.Core
                     {
                         response.RspInfo.Fill("MGR_INACTIVE");
                     }
+                    
+                    //管理员所属分区编号大于授权可开最大编号则不允许登入 返回不存在提示
+                    if (m.domain_id > LicenseConfig.Instance.DomainCNT)
+                    {
+                        response.RspInfo.Fill("MGR_NOT_EXIST");
+                    }
 
-                    //if (m.Domain.IsExpired())//域过期
-                    if(LicenseConfig.Instance.IsExpired())
+                    if (m.Domain.IsExpired())//域过期 分区时间统一由授权时间进行更新了
                     {
                         response.RspInfo.Fill("PLATFORM_EXPIRED");
                     }
                     else
                     {
-                        //ManagerProfile profile = BasicTracker.ManagerProfileTracker[m.Login];
                         response.LoginResponse.LoginID = m.Login;
                         response.LoginResponse.Mobile = m.Profile.Mobile;
                         response.LoginResponse.Name = m.Profile.Name;

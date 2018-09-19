@@ -128,16 +128,16 @@ namespace TradingLib.Core
                         throw new FutsRspError("无权开设下级代理");
                     }
 
-                    int maxcnt = Math.Min(manager.Domain.AgentLimit, manager.AgentLimit);
-                    int cnt = manager.GetVisibleManager().Where(mgr => !mgr.Deleted).Count() - 1;//1为自己
-                    if (cnt >= maxcnt)
+                    int tmp = manager.Domain.AgentLimit;
+                    if (manager.Domain.GetManagers().Where(mgr => !mgr.Deleted).Count() - 1 >= tmp)
                     {
-                        throw new FutsRspError("可开柜员数量超过限制:" + maxcnt.ToString());
+                        throw new FutsRspError("可开柜员数量超过分区限制:" + tmp.ToString());
                     }
 
-                    if (cnt >= LicenseConfig.Instance.AgentCNT)
+                    tmp = manager.AgentLimit;
+                    if(manager.GetVisibleManager().Where(mgr => !mgr.Deleted).Count() - 1 >= tmp)
                     {
-                        throw new FutsRspError("可开柜员数量超过授权限制:" + LicenseConfig.Instance.AgentCNT.ToString());
+                        throw new FutsRspError("可开柜员数量超过会员限制:" + tmp.ToString());
                     }
                 }
 

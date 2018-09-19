@@ -21,7 +21,7 @@ namespace TradingLib.ORM
             this.Date = 0;
             this.UpdateDate = 0;
             this.ProductType = QSEnumProductType.CounterSystem;
-            this.DeployID = "";
+
         }
 
         /// <summary>
@@ -69,6 +69,7 @@ namespace TradingLib.ORM
         /// 部署编号
         /// </summary>
         public string DeployID { get; set; }
+
     }
 
     internal class positionroundinfo

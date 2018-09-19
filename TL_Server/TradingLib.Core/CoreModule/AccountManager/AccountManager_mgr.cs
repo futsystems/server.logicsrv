@@ -37,14 +37,16 @@ namespace TradingLib.Core
             {
                 throw new FutsRspError("帐户数目达到上限:" + manager.Domain.AccLimit.ToString());
             }
+            //root domain can not add more than 5 account
             if (accNum >= 5 && manager.Domain.ID == 1)
             {
                 throw new FutsRspError("管理域不能超过5个测试账户");
             }
-            if (accNum >= LicenseConfig.Instance.AccountCNT)
-            {
-                throw new FutsRspError("帐户数目达到授权上限:" + LicenseConfig.Instance.AccountCNT);
-            }
+            //have update domain account limite with license,so no need this check
+            //if (accNum >= LicenseConfig.Instance.AccountCNT)
+            //{
+            //    throw new FutsRspError("帐户数目达到授权上限:" + LicenseConfig.Instance.AccountCNT);
+            //}
 
             if (creation.BaseManagerID == 0)
             {

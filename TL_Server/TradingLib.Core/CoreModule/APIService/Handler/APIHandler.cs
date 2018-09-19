@@ -9,6 +9,7 @@ using DotLiquid;
 using Common.Logging;
 using TradingLib.API;
 using TradingLib.Common;
+using TradingLib.Core;
 
 namespace TradingLib.Contrib.APIService
 {
@@ -126,6 +127,11 @@ namespace TradingLib.Contrib.APIService
                         #region ADD_USER
                         case "ADD_USER":
                             {
+                                if (!LicenseConfig.Instance.EnableAPI)
+                                {
+                                    return new JsonReply(107, string.Format("API is not enable"));
+                                }
+
                                 reqDict.Add("domain_id", request.Params["domain_id"]);
                                 reqDict.Add("user_id", request.Params["user_id"]);
                                 reqDict.Add("agent_id", request.Params["agent_id"]);
@@ -225,6 +231,11 @@ namespace TradingLib.Contrib.APIService
                         #region UPDATE_USER
                         case "UPDATE_USER":
                             {
+                                if (!LicenseConfig.Instance.EnableAPI)
+                                {
+                                    return new JsonReply(107, string.Format("API is not enable"));
+                                }
+
                                 var name = Encoding.UTF8.GetString(Encoding.ASCII.GetBytes(request.Params["name"]));
                                 var branch = Encoding.UTF8.GetString(Encoding.ASCII.GetBytes(request.Params["branch"]));
                                 reqDict.Add("domain_id", request.Params["domain_id"]);
@@ -306,6 +317,11 @@ namespace TradingLib.Contrib.APIService
                         #region QRY_ACCOUNT
                         case "QRY_ACCOUNT":
                             {
+                                if (!LicenseConfig.Instance.EnableAPI)
+                                {
+                                    return new JsonReply(107, string.Format("API is not enable"));
+                                }
+
                                 reqDict.Add("domain_id", request.Params["domain_id"]);
                                 reqDict.Add("account", request.Params["account"]);
 
@@ -366,6 +382,11 @@ namespace TradingLib.Contrib.APIService
                         #region QRY_PASS
                         case "QRY_PASS":
                             {
+                                if (!LicenseConfig.Instance.EnableAPI)
+                                {
+                                    return new JsonReply(107, string.Format("API is not enable"));
+                                }
+
                                 reqDict.Add("domain_id", request.Params["domain_id"]);
                                 reqDict.Add("account", request.Params["account"]);
 
@@ -417,6 +438,10 @@ namespace TradingLib.Contrib.APIService
                         #region QRY_ORDER
                         case "QRY_ORDER":
                             {
+                                if (!LicenseConfig.Instance.EnableAPI)
+                                {
+                                    return new JsonReply(107, string.Format("API is not enable"));
+                                }
                                 reqDict.Add("domain_id", request.Params["domain_id"]);
                                 reqDict.Add("account", request.Params["account"]);
                                 reqDict.Add("start", request.Params["start"]);
@@ -482,6 +507,11 @@ namespace TradingLib.Contrib.APIService
                         #region QRY_TRADE
                         case "QRY_TRADE":
                             {
+                                if (!LicenseConfig.Instance.EnableAPI)
+                                {
+                                    return new JsonReply(107, string.Format("API is not enable"));
+                                }
+
                                 reqDict.Add("domain_id", request.Params["domain_id"]);
                                 reqDict.Add("account", request.Params["account"]);
                                 reqDict.Add("start", request.Params["start"]);
@@ -547,6 +577,11 @@ namespace TradingLib.Contrib.APIService
                         #region QRY_CASHTXN
                         case "QRY_CASHTXN":
                             {
+                                if (!LicenseConfig.Instance.EnableAPI)
+                                {
+                                    return new JsonReply(107, string.Format("API is not enable"));
+                                }
+
                                 reqDict.Add("domain_id", request.Params["domain_id"]);
                                 reqDict.Add("account", request.Params["account"]);
                                 reqDict.Add("start", request.Params["start"]);
@@ -612,6 +647,11 @@ namespace TradingLib.Contrib.APIService
                         #region QRY_POSITION
                         case "QRY_POSITION":
                             {
+                                if (!LicenseConfig.Instance.EnableAPI)
+                                {
+                                    return new JsonReply(107, string.Format("API is not enable"));
+                                }
+
                                 reqDict.Add("domain_id", request.Params["domain_id"]);
                                 reqDict.Add("account", request.Params["account"]);
 
@@ -661,6 +701,11 @@ namespace TradingLib.Contrib.APIService
                         #region UPDATE_PASS
                         case "UPDATE_PASS":
                             {
+                                if (!LicenseConfig.Instance.EnableAPI)
+                                {
+                                    return new JsonReply(107, string.Format("API is not enable"));
+                                }
+
                                 reqDict.Add("domain_id", request.Params["domain_id"]);
                                 reqDict.Add("account", request.Params["account"]);
                                 reqDict.Add("pass", request.Params["pass"]);
@@ -716,6 +761,11 @@ namespace TradingLib.Contrib.APIService
                         #region DEPOSIT
                         case "DEPOSIT":
                             {
+                                if (!LicenseConfig.Instance.EnableAPI)
+                                {
+                                    return new JsonReply(107, string.Format("API is not enable"));
+                                }
+
                                 reqDict.Add("domain_id", request.Params["domain_id"]);
                                 reqDict.Add("account", request.Params["account"]);
                                 reqDict.Add("amount", request.Params["amount"]);
@@ -787,6 +837,11 @@ namespace TradingLib.Contrib.APIService
                         #region WITHDRAW
                         case "WITHDRAW":
                             {
+                                if (!LicenseConfig.Instance.EnableAPI)
+                                {
+                                    return new JsonReply(107, string.Format("API is not enable"));
+                                }
+
                                 reqDict.Add("domain_id", request.Params["domain_id"]);
                                 reqDict.Add("account", request.Params["account"]);
                                 reqDict.Add("amount", request.Params["amount"]);
@@ -918,13 +973,6 @@ namespace TradingLib.Contrib.APIService
                         default:
                             return new JsonReply(202, string.Format("Method:{0} not supported", method));
                     }
-                    Console.WriteLine("method:" + method);
-
-                    return new
-                    {
-                        demo = 12,
-                        msg = "it is ok",
-                    };
                 }
                 else
                 {

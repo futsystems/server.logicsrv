@@ -211,17 +211,12 @@ namespace TradingLib.Core
             //检查域和管理员对象 进行域过期和管理是否激活进行限制
             if (account != null)
             {
-                //if (account.Domain.IsExpired())//域过期
-                //{
-                //    response.Authorized = false;
-                //    response.RspInfo.Fill("PLATFORM_EXPIRED");
-                //}
-
-                if (LicenseConfig.Instance.IsExpired())
+                if (account.Domain.IsExpired())//域过期
                 {
                     response.Authorized = false;
                     response.RspInfo.Fill("PLATFORM_EXPIRED");
                 }
+
                 if (account.Domain.ID > LicenseConfig.Instance.DomainCNT)
                 {
                     response.Authorized = false;
