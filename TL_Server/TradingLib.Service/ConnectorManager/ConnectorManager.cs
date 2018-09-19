@@ -97,7 +97,7 @@ namespace TradingLib.ServiceManager
         /// </summary>
         public void Init()
         {
-            Util.InitStatus(this.PROGRAME, true);
+            logger.Info("Init....");
             //加载接口类型
             LoadConnectorType();
 
@@ -118,7 +118,7 @@ namespace TradingLib.ServiceManager
         /// </summary>
         public void Start()
         {
-            Util.StatusSection(this.PROGRAME, "STARTCONNECTOR", QSEnumInfoColor.INFODARKRED,true);
+            logger.StatusStart(this.PROGRAME);
             if (_startDefaultConnector)
             {
                 //TODO:启动动作判定
@@ -135,6 +135,7 @@ namespace TradingLib.ServiceManager
         /// </summary>
         public void Stop()
         {
+            logger.StatusStop(this.PROGRAME);
             StopConnector();
         }
 
@@ -175,7 +176,7 @@ namespace TradingLib.ServiceManager
 
         public override void Dispose()
         {
-            Util.DestoryStatus(this.PROGRAME, true);
+            logger.StatusDestory(this.PROGRAME);
             base.Dispose();
         }
 

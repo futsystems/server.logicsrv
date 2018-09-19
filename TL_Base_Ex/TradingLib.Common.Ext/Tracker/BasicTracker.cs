@@ -85,8 +85,8 @@ namespace TradingLib.Common
                 defaultinstance.symtracker = null;
                 defaultinstance.rgtracker = null;
                 defaultinstance.uiaccesstracker = null;
-                defaultinstance.Dispose();
-                defaultinstance = null;
+                //defaultinstance.Dispose();
+                //defaultinstance = null;
             }
         }
 

@@ -81,7 +81,16 @@ namespace FrontServer
 
         public void Stop()
         {
+            xlhost.Stop();
 
+            ctphost.Stop();
+
+            tlhost.Stop();
+
+            _workergo = false;
+            _workerThread.Join();
+
+            logger.Info("MQServer Worker Thread Stopped");
         }
 
 

@@ -27,37 +27,37 @@ namespace TradingLib.Common
         public static string GlobalPrefix = ">>> ";
 
 
-        public static void LoadStatus(string body, bool samecolor = false)
-        {
-            StatusSection(body, "LOAD",QSEnumInfoColor.INFOGREEN, samecolor);
-        }
-        public static void InitStatus(string body, bool samecolor = false)
-        {
-            StatusSection(body, "INIT", QSEnumInfoColor.INFOGREEN, samecolor);
-        }
+        //public static void LoadStatus(string body, bool samecolor = false)
+        //{
+        //    StatusSection(body, "LOAD",QSEnumInfoColor.INFOGREEN, samecolor);
+        //}
+        //public static void InitStatus(string body, bool samecolor = false)
+        //{
+        //    StatusSection(body, "INIT", QSEnumInfoColor.INFOGREEN, samecolor);
+        //}
 
-        public static void DestoryStatus(string body, bool samecolor = false)
-        {
-            StatusSection(body, "DESTORY", QSEnumInfoColor.INFODARKRED, samecolor);
-        }
+        //public static void DestoryStatus(string body, bool samecolor = false)
+        //{
+        //    StatusSection(body, "DESTORY", QSEnumInfoColor.INFODARKRED, samecolor);
+        //}
 
-        /// <summary>
-        /// 开始信息
-        /// </summary>
-        /// <param name="body"></param>
-        public static void StartStatus(string body,bool samecolor=false)
-        {
-            StatusSection(body, "START",QSEnumInfoColor.INFOGREEN, samecolor);
-        }
+        ///// <summary>
+        ///// 开始信息
+        ///// </summary>
+        ///// <param name="body"></param>
+        //public static void StartStatus(string body,bool samecolor=false)
+        //{
+        //    StatusSection(body, "START",QSEnumInfoColor.INFOGREEN, samecolor);
+        //}
 
         /// <summary>
         /// 停止信息
         /// </summary>
         /// <param name="body"></param>
-        public static void StopStatus(string body,bool samecolor = false)
-        {
-            StatusSection(body, "STOP", QSEnumInfoColor.INFODARKRED, samecolor);
-        }
+        //public static void StopStatus(string body,bool samecolor = false)
+        //{
+        //    StatusSection(body, "STOP", QSEnumInfoColor.INFODARKRED, samecolor);
+        //}
         public static int GetAvabileConsoleWidth()
         {
             int width = Console.LargestWindowWidth;
@@ -66,16 +66,16 @@ namespace TradingLib.Common
             else
                 return 100;
         }
-        public static void StatusSection(string body, string status, QSEnumInfoColor color,bool samecolor = false)
-        {
+        //public static void StatusSection(string body, string status, QSEnumInfoColor color,bool samecolor = false)
+        //{
             //WriteSectionLine();
             //_logger.Info(body.PadLeft(20, ' '));
-            WriteSectionLine(body, status);
+        //    WriteSectionLine(body, status);
             //Console.WriteLine();
             //Console.WriteLine("".PadLeft(GetAvabileConsoleWidth()/ 2 - 1, '.'));
             //ConsoleColorStatus(body, string.Format("[{0}]", status), samecolor ? color : QSEnumInfoColor.INFOWHITE, color);
             //Console.WriteLine();
-        }
+        //}
 
         static int MaxLengh = 100;
         public static void WriteSectionLine()

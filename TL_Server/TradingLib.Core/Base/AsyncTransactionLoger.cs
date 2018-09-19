@@ -37,9 +37,8 @@ namespace TradingLib.Core
         //注当缓存超过后系统记录的交易信息就会发生错误。因此这里我们需要放大缓存大小并且在控制面板中需要监视。
         const int MAXLOG = 100000;
 
-        DataRepositoryLogger _log;
-        RingBuffer<DataRepositoryLog> _datarepcache;//储存日志缓存
-        RingBuffer<DataRepositoryLog> _datareperrorcache;//数据储存异常缓存
+        //RingBuffer<DataRepositoryLog> _datarepcache;//储存日志缓存
+        //RingBuffer<DataRepositoryLog> _datareperrorcache;//数据储存异常缓存
 
         RingBuffer<Order> _ocache;//委托插入缓存
         RingBuffer<Order> _oupdatecache;//委托更新缓存
@@ -71,8 +70,8 @@ namespace TradingLib.Core
         public AsyncTransactionLoger(int maxbr)
             : base("AsyncTransactionLoger")
         {
-            _log = new DataRepositoryLogger();
-            _datarepcache = new RingBuffer<DataRepositoryLog>(maxbr);
+            
+            //_datarepcache = new RingBuffer<DataRepositoryLog>(maxbr);
 
             _ocache = new RingBuffer<Order>(maxbr);
             _oupdatecache = new RingBuffer<Order>(maxbr);
@@ -90,7 +89,7 @@ namespace TradingLib.Core
             _exsettlecache = new RingBuffer<ExchangeSettlement>(maxbr);
             _cashtxnsettlecash = new RingBuffer<CashTransaction>(maxbr);
 
-            _datareperrorcache = new RingBuffer<DataRepositoryLog>(maxbr);
+            //_datareperrorcache = new RingBuffer<DataRepositoryLog>(maxbr);
 
 
             _agentcommissionsplit = new RingBuffer<AgentCommissionSplit>(maxbr);
@@ -127,7 +126,7 @@ namespace TradingLib.Core
             _loggo = true;
 
             //初始化
-            _log.Init();
+            //_log.Init();
 
             _logthread = new Thread(this.readedata);
             _logthread.Name = "AsyncTransaction logger";
@@ -369,7 +368,6 @@ namespace TradingLib.Core
                 //mysql则通过不断尝试进行数据库连接,当连接成功后重新将日志插入数据库
                 catch (DataRepositoryException ex)
                 {
-                    _datareperrorcache.Write(new DataRepositoryLog(ex.RepositoryType, ex.RepositoryData));
                     logger.Error(string.Format("数据储存发生错误 Method:{0} Data:{1} Error:{2}", ex.RepositoryType, ex.RepositoryData.ToString(), ex.InnerException.ToString()));
                 }
                 catch (Exception ex)
@@ -388,7 +386,6 @@ namespace TradingLib.Core
         public void NewOrder(Order o)
         {
             Order oc = new OrderImpl(o);//复制委托 防止委托参数发生变化
-            _datarepcache.Write(new DataRepositoryLog(EnumDataRepositoryType.InsertOrder, oc));
             _ocache.Write(oc);
 
             newlog();
@@ -396,7 +393,6 @@ namespace TradingLib.Core
         public void UpdateOrder(Order o)
         {
             Order oc = new OrderImpl(o);
-            _datarepcache.Write(new DataRepositoryLog(EnumDataRepositoryType.UpdateOrder, oc));
             _oupdatecache.Write(oc);
             newlog();
         }
@@ -404,7 +400,6 @@ namespace TradingLib.Core
         public void NewTrade(Trade f)
         {
             Trade nf = new TradeImpl(f);
-            _datarepcache.Write(new DataRepositoryLog(EnumDataRepositoryType.InsertTrade,nf));
             _tcache.Write(nf);
             newlog();
         }
@@ -412,7 +407,6 @@ namespace TradingLib.Core
         public void NewOrderAction(OrderAction action)
         {
             _oactioncache.Write(action);
-            _datarepcache.Write(new DataRepositoryLog(EnumDataRepositoryType.InsertOrderAction,action));
             newlog();
         }
 
@@ -420,14 +414,12 @@ namespace TradingLib.Core
         public void NewPositionCloseDetail(PositionCloseDetail pc)
         {
             _posclosecache.Write(pc);
-            _datarepcache.Write(new DataRepositoryLog(EnumDataRepositoryType.InsertPositionCloseDetail, pc));
             newlog();
         }
 
         public void NewCashTransaction(CashTransaction txn)
         {
             _cashtxncache.Write(txn);
-            _datarepcache.Write(new DataRepositoryLog(EnumDataRepositoryType.InsertCashTransaction, txn));
             newlog();
         }
 

@@ -903,5 +903,14 @@ namespace CTPService
             ctpSocketServer.Start();
             logger.Info(string.Format("CTPService Start at Prot:{0}", _port));
         }
+
+        public void Stop()
+        {
+            if (ctpSocketServer != null)
+            {
+                ctpSocketServer.Stop();
+            }
+            logger.Info("CTPService Stopped");
+        }
     }
 }

@@ -139,7 +139,7 @@ namespace TradingLib.Common
                 }
                 agent = agent.ParentManager;//递归到父域
             }
-            logger.Warn(manager.ToString() + " have no permission set,use default");
+            //logger.Debug(manager.ToString() + " have no permission set,use default");
             return GetDefaultAgentPermission();//其余代理 返回默认代理商的权限
         }
 

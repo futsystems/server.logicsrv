@@ -43,12 +43,12 @@ namespace TradingLib.Core
         }
         public void Start()
         {
-            Util.StartStatus(this.PROGRAME);
+            logger.StatusStart(this.PROGRAME);
         }
 
         public void Stop()
         {
-            Util.StopStatus(this.PROGRAME);
+            logger.StatusStop(this.PROGRAME);
         }
 
         /// <summary>

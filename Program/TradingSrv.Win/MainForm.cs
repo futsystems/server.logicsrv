@@ -180,7 +180,7 @@ namespace TradingSrv.Win
                 System.PlatformID platformID = osInfo.Platform;
                 Console.WriteLine(platformID.ToString());
 
-                Util.StatusSection("Database", "INIT", QSEnumInfoColor.INFOGREEN, true);
+                logger.Status("Database", "INIT");
                 //读取配置文件 初始化数据库参数 系统其余设置均从数据库中加载
                 ConfigFile _configFile = ConfigFile.GetConfigFile();
                 DBHelper.InitDBConfig(_configFile["DBAddress"].AsString(), _configFile["DBPort"].AsInt(), _configFile["DBName"].AsString(), _configFile["DBUser"].AsString(), _configFile["DBPass"].AsString());

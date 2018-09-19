@@ -24,7 +24,6 @@ namespace TradingLib.Core
     {
         const string CoreName = "TaskCentre";
         public string CoreId { get { return this.PROGRAME; } }
-        System.Timers.Timer _timer = null;
 
         IScheduler _scheduler = null;
         public TaskCentre()
@@ -114,15 +113,7 @@ namespace TradingLib.Core
         /// </summary>
         public void Start()
         {
-            Util.StartStatus(this.PROGRAME);
-            //if (_timer == null)
-            //{
-            //    _timer = new System.Timers.Timer();
-            //    _timer.Elapsed += new System.Timers.ElapsedEventHandler(TimeEvent);
-            //    _timer.Interval = Const.TASKFREQ;
-            //    _timer.Enabled = true;
-            //    _timer.Start();
-            //}
+            logger.StatusStart(this.PROGRAME);
             _scheduler.Start();
         }
 
@@ -131,16 +122,13 @@ namespace TradingLib.Core
         /// </summary>
         public void Stop()
         {
-            Util.StopStatus(this.PROGRAME);
-            if (_timer != null)
-            {
-                _timer.Stop();
-            }
+            logger.StatusStop(this.PROGRAME);
+            _scheduler.Clear();
         }
 
         public override void Dispose()
         {
-            Util.DestoryStatus(this.PROGRAME);
+            logger.StatusDestory(this.PROGRAME);
             base.Dispose();
             //_timer.Elapsed -= new System.Timers.ElapsedEventHandler(TimeEvent);
             //_timer = null;

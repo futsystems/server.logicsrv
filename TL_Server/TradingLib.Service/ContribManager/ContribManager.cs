@@ -28,7 +28,7 @@ namespace TradingLib.ServiceManager
         /// </summary>
         public void Init()
         {
-            Util.InitStatus(this.PROGRAME, true);
+            logger.StatusInit(this.PROGRAME);
             //1.从配置文件中加载扩展模块列表
             List<string> contribList = GetContribList();
 
@@ -71,7 +71,7 @@ namespace TradingLib.ServiceManager
         /// </summary>
         public void Load()
         {
-            Util.LoadStatus(this.PROGRAME, true);
+            logger.StatusLoad(this.PROGRAME);
             foreach (string key in contribmap.Keys)
             {
                 logger.Info("[LOAD CONTRIB] " + key);
@@ -90,7 +90,7 @@ namespace TradingLib.ServiceManager
         /// </summary>
         public void Destory()
         {
-            Util.DestoryStatus(this.PROGRAME, true);
+            logger.StatusDestory(this.PROGRAME);
             foreach (string key in contribmap.Keys)
             {
                 logger.Info("[RELEASE CONTRIB] " + key);
@@ -110,7 +110,7 @@ namespace TradingLib.ServiceManager
         /// </summary>
         public void Start()
         {
-            Util.StartStatus(this.PROGRAME, true);
+            logger.StatusStart(this.PROGRAME);
             foreach (string key in contribmap.Keys)
             {
                 logger.Info(string.Format("[START CONTRIB] {0}", key));
@@ -131,7 +131,7 @@ namespace TradingLib.ServiceManager
         /// </summary>
         public void Stop()
         {
-            Util.StopStatus(this.PROGRAME, true);
+            logger.StatusStop(this.PROGRAME);
             foreach (string key in contribmap.Keys)
             {
                 logger.Info(string.Format("[STOP CONTRIB] {0}", key));

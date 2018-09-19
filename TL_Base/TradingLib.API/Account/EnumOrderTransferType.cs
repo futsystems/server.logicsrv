@@ -13,7 +13,7 @@ namespace TradingLib.API
     {
         [Description("实盘")]
         LIVE,
-        [Description("模拟")]
+        [Description("练习")]
         SIM,
     }
 }

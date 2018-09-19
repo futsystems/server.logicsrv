@@ -119,7 +119,7 @@ namespace TradingLib.Core
 
         public void Start()
         {
-            Util.StartStatus(this.PROGRAME);
+            logger.StatusStart(this.PROGRAME);
             StartProcessMsgOut();
             //_ordHelper.Start();
             //_tifengine.Start();
@@ -128,7 +128,7 @@ namespace TradingLib.Core
 
         public void Stop()
         {
-            Util.StopStatus(this.PROGRAME);
+            logger.StatusStop(this.PROGRAME);
             //_ordHelper.Stop();
             //_tifengine.Stop();
             StopProcessMsgOut();
@@ -136,7 +136,7 @@ namespace TradingLib.Core
 
         public override void Dispose()
         {
-            Util.DestoryStatus(this.PROGRAME);
+            logger.StatusDestory(this.PROGRAME);
             base.Dispose();
 
         }

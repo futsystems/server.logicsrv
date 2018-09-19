@@ -171,7 +171,7 @@ namespace TradingLib.Core
         /// </summary>
         public void Start()
         {
-            Util.StartStatus(this.PROGRAME);
+            logger.StatusStart(this.PROGRAME);
             _asynLoger.Start();
         }
 
@@ -180,14 +180,14 @@ namespace TradingLib.Core
         /// </summary>
         public void Stop()
         {
-            Util.StopStatus(this.PROGRAME);
+            logger.StatusStop(this.PROGRAME);
             _asynLoger.Stop();
         }
 
-        public void Dispose()
+        public override void Dispose()
         {
             base.Dispose();
-            Util.DestoryStatus(this.PROGRAME);
+            logger.StatusDestory(this.PROGRAME);
             _asynLoger.Dispose();
         }
 

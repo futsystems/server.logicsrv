@@ -525,19 +525,19 @@ namespace TradingLib.Core
 
         public void Start()
         {
-            Util.StartStatus(this.PROGRAME);
+            logger.StatusStart(this.PROGRAME);
             asynctick.Start();
         }
 
         public void Stop()
         {
-            Util.StopStatus(this.PROGRAME);
+            logger.StatusStop(this.PROGRAME);
             asynctick.Stop();
         }
 
         public override void Dispose()
         {
-            Util.DestoryStatus(this.PROGRAME);
+            logger.StatusDestory(this.PROGRAME);
             base.Dispose();
             asynctick.GotTick -= new TickDelegate(asynctick_GotTick);
         }

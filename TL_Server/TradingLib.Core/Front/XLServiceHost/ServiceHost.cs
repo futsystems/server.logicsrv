@@ -185,5 +185,14 @@ namespace FrontServer.XLServiceHost
             logger.Info(string.Format("XLService Start at Prot:{0}", _port));
         }
 
+        public void Stop()
+        {
+            if (xlSocketServer != null)
+            {
+                xlSocketServer.Stop();
+            }
+            logger.Info("XLService Stopped");
+        }
+
     }
 }

@@ -361,7 +361,8 @@ namespace TradingLib.Common
 
         internal void BindContribEvent()
         {
-            Util.StatusSection("CTX", "CONTRIBEVENT", QSEnumInfoColor.INFOGREEN, true);
+            logger.Status("CTX", "CONTRIBEVENT");
+           
             logger.Debug("Binding ContribEvent with ContribCommand(Handler)");
             foreach (string key in contribEventMap.Keys)
             {

@@ -43,16 +43,8 @@ namespace TraddingSrvCLI
             AppDomain.CurrentDomain.UnhandledException += new UnhandledExceptionEventHandler(CurrentDomain_UnhandledException);
             try
             {
-
-
-               
-
-                logger.Info("********* start core daemon *********");
-                System.OperatingSystem osInfo = System.Environment.OSVersion;
-                System.PlatformID platformID = osInfo.Platform;
-                Console.WriteLine(platformID.ToString());
-
-                Util.StatusSection("Database", "INIT", QSEnumInfoColor.INFOGREEN, true);
+                LoadLicenseConfig();
+                logger.Status("Database", "INIT");
                 //读取配置文件 初始化数据库参数 系统其余设置均从数据库中加载
                 ConfigFile _configFile = ConfigFile.GetConfigFile();
                 DBHelper.InitDBConfig(_configFile["DBAddress"].AsString(), _configFile["DBPort"].AsInt(), _configFile["DBName"].AsString(), _configFile["DBUser"].AsString(), _configFile["DBPass"].AsString());
@@ -74,37 +66,33 @@ namespace TraddingSrvCLI
                             using (var connectorMgr = scope.Resolve<IConnectorManager>())//2.路由管理器,绑定核心部分的数据与成交路由,并加载Connector
                             {
                                 connectorMgr.Init();
-                                using (var contribMgr = scope.Resolve<IContribManager>())//3.扩展模块管理器 加载扩展模块,启动扩展模块
+
+                                ////////////////////////////////// Stat Section
+                                //0.启动扩展服务
+                                //contribMgr.Start();
+
+                                //1.待所有服务器启动完毕后 启动核心服务
+                                coreMgr.Start();
+
+                                //3.绑定扩展模块调用事件
+                                TLCtxHelper.BindContribEvent();
+
+                                //启动连接管理器 启动通道
+                                connectorMgr.Start();
+
+                                //解析版本信息
+                                TLCtxHelper.ParseVersion();
+
+                                //最后确认主备机服务状态，并启用全局状态标识，所有的消息接收需要该标识打开,否则不接受任何操作类的消息
+                                TLCtxHelper.IsReady = true;
+
+                                TLCtxHelper.PrintVersion();
+
+                                while (true)
                                 {
-                                    contribMgr.Init();
-                                    contribMgr.Load();
-
-                                    ////////////////////////////////// Stat Section
-                                    //0.启动扩展服务
-                                    contribMgr.Start();
-
-                                    //1.待所有服务器启动完毕后 启动核心服务
-                                    coreMgr.Start();
-
-                                    //3.绑定扩展模块调用事件
-                                    TLCtxHelper.BindContribEvent();
-
-                                    //启动连接管理器 启动通道
-                                    connectorMgr.Start();
-
-                                    //解析版本信息
-                                    TLCtxHelper.ParseVersion();
-                                    //最后确认主备机服务状态，并启用全局状态标识，所有的消息接收需要该标识打开,否则不接受任何操作类的消息
-                                    TLCtxHelper.IsReady = true;
-
-                                    TLCtxHelper.PrintVersion();
-
-                                    //TLCtxHelper.Worker.StartWorker();
-                                    while (true)
-                                    {
-                                        Thread.Sleep(1000);
-                                    }
+                                    Thread.Sleep(1000);
                                 }
+                                
                             }
                         }
                     }
@@ -116,6 +104,48 @@ namespace TraddingSrvCLI
             }
         }
 
+
+        static void LoadLicenseConfig()
+        {
+            logger.Info(string.Format("License status:{0} hardware:{1} expire:{2}", License.Status.Licensed, License.Status.License_HardwareID, License.Status.Expiration_Date));
+            Dictionary<string, string> dict = new Dictionary<string, string>();
+            for (int i = 0; i < License.Status.KeyValueList.Count; i++)
+            {
+                string key = License.Status.KeyValueList.GetKey(i).ToString();
+                string value = License.Status.KeyValueList.GetByIndex(i).ToString();
+                dict.Add(key, value);
+            }
+
+            string tmp = "";
+            if (dict.TryGetValue("deploy", out tmp))
+            {
+                LicenseConfig.Instance.Deploy = tmp;
+            }
+            if (dict.TryGetValue("cnt_counter", out tmp))
+            {
+                LicenseConfig.Instance.DomainCNT = int.Parse(tmp);
+            }
+            if (dict.TryGetValue("cnt_account", out tmp))
+            {
+                LicenseConfig.Instance.AccountCNT = int.Parse(tmp);
+            }
+            if (dict.TryGetValue("cnt_agent", out tmp))
+            {
+                LicenseConfig.Instance.AgentCNT = int.Parse(tmp);
+            }
+            if (dict.TryGetValue("enable_api", out tmp))
+            {
+                LicenseConfig.Instance.EnableAPI = tmp == "1" ? true : false;
+            }
+            if (dict.TryGetValue("enable_app", out tmp))
+            {
+                LicenseConfig.Instance.EnableAPP = tmp == "1" ? true : false;
+            }
+            if (dict.TryGetValue("expire", out tmp))
+            {
+                LicenseConfig.Instance.Expire = Util.ToDateTime(int.Parse(tmp), 0);
+            }
+        }
  
        
         static void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)

@@ -187,7 +187,6 @@
             this.btnStop.Name = "btnStop";
             this.btnStop.Size = new System.Drawing.Size(66, 35);
             this.btnStop.Text = "停止";
-            this.btnStop.Visible = false;
             // 
             // tabControl1
             // 

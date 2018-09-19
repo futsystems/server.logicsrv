@@ -154,7 +154,7 @@ namespace TradingLib.Core
         #region 启动 停止 销毁
         public void Start()
         {
-            Util.StartStatus(this.PROGRAME);
+            logger.StatusStart(this.PROGRAME);
             LoadData();
 
             //启动后根据当前时间判定清算中心状态 结算中心在结算前5分钟关闭系统 在重置系统后5分钟打开系统
@@ -169,13 +169,13 @@ namespace TradingLib.Core
 
         public void Stop()
         {
-            Util.StopStatus(this.PROGRAME);
+            logger.StatusStop(this.PROGRAME);
         }
 
 
         public override void Dispose()
         {
-            Util.DestoryStatus(this.PROGRAME);
+            logger.StatusDestory(this.PROGRAME);
             base.Dispose();
             acctk.Dispose();
         }

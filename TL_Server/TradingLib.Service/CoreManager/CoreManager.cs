@@ -63,7 +63,7 @@ namespace TradingLib.ServiceManager
         /// </summary>
         public void Init()
         {
-            Util.InitStatus(this.PROGRAME, true);
+            logger.StatusInit(this.PROGRAME);
             #region 加载核心模块
 
             logger.Info("[INIT CORE] DataRepository");
@@ -119,7 +119,7 @@ namespace TradingLib.ServiceManager
         /// </summary>
         public void Start()
         {
-            Util.StartStatus(this.PROGRAME, true);
+            logger.StatusStart(this.PROGRAME);
 
             _datarepository.Start();
 
@@ -154,7 +154,7 @@ namespace TradingLib.ServiceManager
 
         public void Stop()
         {
-            Util.StopStatus(this.PROGRAME,true);
+            logger.StatusStop(this.PROGRAME);
             _taskcentre.Stop();//timer 停止
 
             _messageExchagne.Stop();//正常停止
@@ -185,7 +185,7 @@ namespace TradingLib.ServiceManager
 
         public override void Dispose()
         {
-            Util.DestoryStatus(this.PROGRAME, true);
+            logger.StatusDestory(this.PROGRAME);
             base.Dispose();
 
             //底层静态对象释放

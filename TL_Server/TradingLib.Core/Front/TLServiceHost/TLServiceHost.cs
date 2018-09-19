@@ -248,6 +248,15 @@ namespace FrontServer.TLServiceHost
             logger.Info(string.Format("TLService Start at Prot:{0}", _port));
         }
 
+        public void Stop()
+        {
+            if (tlSocketServer != null)
+            {
+                tlSocketServer.Stop();
+            }
+            logger.Info("TLService Stopped");
+        }
+
     }
 
 }

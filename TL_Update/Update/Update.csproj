@@ -41,6 +41,9 @@
     <Reference Include="Beetle">
       <HintPath>..\Lib\Beetle.dll</HintPath>
     </Reference>
+    <Reference Include="License">
+      <HintPath>..\..\lib\License.dll</HintPath>
+    </Reference>
     <Reference Include="Smark.Core">
       <HintPath>..\Lib\Smark.Core.dll</HintPath>
     </Reference>

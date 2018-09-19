@@ -109,14 +109,8 @@ namespace TradingLib.Core
             if (!msgoutgo) return;
             ThreadTracker.Unregister(msgoutthread);
             msgoutgo = false;
-            int mainwait = 0;
-            while (msgoutthread.IsAlive && mainwait < 10)
-            {
-                Thread.Sleep(1000);
-                mainwait++;
-            }
-            msgoutthread.Abort();
-            msgoutthread = null;
+            msgoutthread.Join();
+            logger.Warn("************ broker router msg thread stopped");
         }
     }
 }

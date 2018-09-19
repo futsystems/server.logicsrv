@@ -81,10 +81,10 @@ namespace Update
         {
             try
             {
-                if (Arges.Length > 0)
-                    Utils.IPAddress = Arges[0];
-                if (Arges.Length > 1)
-                    Utils.Port = Arges[1];
+                //if (Arges.Length > 0)
+                //    Utils.IPAddress = Arges[0];
+                //if (Arges.Length > 1)
+                //    Utils.Port = Arges[1];
                 if (Arges.Length > 2)
                     Utils.AppName = Arges[2];
                 if (Arges.Length > 3)

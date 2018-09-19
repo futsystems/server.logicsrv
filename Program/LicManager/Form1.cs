@@ -15,7 +15,31 @@ namespace LicManager
         public Form1()
         {
             InitializeComponent();
-            btnGenerate.Click += new EventHandler(btnGenerate_Click);
+            btnGenSrv.Click += new EventHandler(btnGenerate_Click);
+            btnGenTerminal.Click += new EventHandler(btnGenTerminal_Click);
+        }
+
+        void btnGenTerminal_Click(object sender, EventArgs e)
+        {
+            LicenseGenerator licensegen = new LicenseGenerator();
+            licensegen.LoadMasterKeyFromFile("masterkey.key");
+            licensegen.AddAdditonalLicenseInformation("deploy", deploy2.Text);
+            licensegen.AddAdditonalLicenseInformation("broker_srv",brokerServer.Text);
+            licensegen.AddAdditonalLicenseInformation("update_srv",updateServer.Text);
+           
+            licensegen.Hardware_Enabled = false;
+            licensegen.Expiration_Date_Enabled = false;
+
+            SaveFileDialog savefile = new SaveFileDialog();
+            // set a default file name
+            savefile.FileName = string.Format("{0}_terminal.license", deploy2.Text);
+            // set filters - this can be done in properties as well
+            savefile.Filter = "License files (*.license)|*.license";
+
+            if (savefile.ShowDialog() == DialogResult.OK)
+            {
+                licensegen.CreateLicenseFile(savefile.FileName);
+            }
         }
 
         void btnGenerate_Click(object sender, EventArgs e)
@@ -41,7 +65,7 @@ namespace LicManager
 
             SaveFileDialog savefile = new SaveFileDialog();
             // set a default file name
-            savefile.FileName = string.Format("{0}.license", deploy.Text);
+            savefile.FileName = string.Format("{0}_server.license", deploy.Text);
             // set filters - this can be done in properties as well
             savefile.Filter = "License files (*.license)|*.license";
 

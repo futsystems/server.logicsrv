@@ -71,6 +71,10 @@
       <HintPath>..\..\lib\Common.Logging.Core.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="License, Version=1.0.0.0, Culture=neutral, PublicKeyToken=f80b1601a4d8a9dd">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\lib\License.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.XML" />

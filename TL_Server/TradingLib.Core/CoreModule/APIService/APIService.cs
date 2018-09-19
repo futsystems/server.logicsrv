@@ -175,6 +175,7 @@ namespace TradingLib.Contrib.APIService
         /// </summary>
         public void Start() 
         {
+            logger.StatusStart(this.PROGRAME);
             _httpServer = new HttpServer(_address,_port);
             _httpServer.Start();
         }
@@ -182,7 +183,12 @@ namespace TradingLib.Contrib.APIService
         /// <summary>
         /// 停止
         /// </summary>
-        public void Stop() { }
+        public void Stop() 
+        {
+            logger.StatusStop(this.PROGRAME);
+            _httpServer.Stop();
+        
+        }
 
     }
 }

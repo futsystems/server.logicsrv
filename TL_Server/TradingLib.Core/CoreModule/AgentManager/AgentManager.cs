@@ -166,7 +166,7 @@ namespace TradingLib.Core
 
         public void Start()
         {
-            Util.StartStatus(this.PROGRAME);
+            logger.StatusStart(this.PROGRAME);
             if (_workergo) return;
             _workergo = true;
             _workthread = new Thread(Process);
@@ -177,7 +177,10 @@ namespace TradingLib.Core
 
         public void Stop()
         {
-            Util.StopStatus(this.PROGRAME);
+            logger.StatusStop(this.PROGRAME);
+            _workergo = false;
+            _workthread.Join();
+            logger.Warn("**************** agent worker thread stopped");
         }
 
 

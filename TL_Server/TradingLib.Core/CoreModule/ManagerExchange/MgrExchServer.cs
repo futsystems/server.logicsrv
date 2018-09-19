@@ -123,7 +123,7 @@ namespace TradingLib.Core
 
         public override void Dispose()
         {
-            Util.DestoryStatus(this.PROGRAME);
+            logger.StatusDestory(this.PROGRAME);
             base.Dispose();
             tl.Dispose();
             tl = null;
@@ -139,8 +139,7 @@ namespace TradingLib.Core
         bool _valid = false;
         public void Start()
         {
-            //StartMessageOut();
-            Util.StartStatus(this.PROGRAME);
+            logger.StatusStart(this.PROGRAME);
             //debug("##########启动 Manager Server###################", QSEnumDebugLevel.INFO);
             try
             {
@@ -161,7 +160,7 @@ namespace TradingLib.Core
         }
         public void Stop()
         {
-            Util.StopStatus(this.PROGRAME);
+            logger.StatusStop(this.PROGRAME);
             if (tl != null && tl.IsLive)
             {
                 tl.Stop();

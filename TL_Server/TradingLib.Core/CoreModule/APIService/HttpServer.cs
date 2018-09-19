@@ -55,7 +55,10 @@ namespace TradingLib.Contrib.APIService
 
         public void Stop()
         {
-
+            if (_server != null)
+            {
+                _server.Stop();
+            }
         }
 
         void HandleHttpRequest(HttpRequestEventArgs arg)

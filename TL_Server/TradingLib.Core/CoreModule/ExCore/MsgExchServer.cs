@@ -398,7 +398,7 @@ namespace TradingLib.Core
 
         public override void Dispose()
         {
-            Util.DestoryStatus(this.PROGRAME);
+            logger.StatusDestory(this.PROGRAME);
             base.Dispose();
             tl.Dispose();
             tl = null;
@@ -461,7 +461,7 @@ namespace TradingLib.Core
         /// </summary>
         public void Start()
         {
-            Util.StartStatus(this.PROGRAME);
+            logger.StatusStart(this.PROGRAME);
             bool ret = tl.StartMQ();
             if (ret)
             {
@@ -481,11 +481,12 @@ namespace TradingLib.Core
         /// </summary>
         public void Stop()
         {
-            Util.StopStatus(this.PROGRAME);
+            logger.StatusStop(this.PROGRAME);
             if (tl != null && tl.IsLive)
             {
                 tl.Stop();
             }
+            logger.Info("************* msg exchange stopped");
         }
         #endregion
 

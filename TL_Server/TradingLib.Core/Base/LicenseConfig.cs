@@ -33,8 +33,6 @@ namespace TradingLib.Core
             this.EnableAPP = false;
         }
 
-        //public bool UseLicense { get; set; }
-
         public string Deploy { get; set; }
 
         public DateTime Expire { get; set; }

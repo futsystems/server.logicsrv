@@ -24,17 +24,44 @@ namespace Update
         {
             get
             {
-                return INI.IniReadValue(SELECTION_CONFIG, KEY_UNIT);
+                if (License.Status.Licensed)
+                {
+                    Dictionary<string, string> dict = new Dictionary<string, string>();
+
+                    for (int i = 0; i < License.Status.KeyValueList.Count; i++)
+                    {
+                        string key = License.Status.KeyValueList.GetKey(i).ToString();
+                        string value = License.Status.KeyValueList.GetByIndex(i).ToString();
+                        dict.Add(key, value);
+                    }
+
+                    string tmp = "demo";
+                    //从授权文件获取服务端地址
+                    if (dict.TryGetValue("deploy", out tmp))
+                    {
+                        
+                    }
+                    //MessageBox.Show("UPDATASERVER:" + tmp);
+                    return tmp;
+                }
+                else
+                {
+                    return "demo";
+                }
+                //return INI.IniReadValue(SELECTION_CONFIG, KEY_IPADDRESS);
+            
+                //return INI.IniReadValue(SELECTION_CONFIG, KEY_UNIT);
             }
-            set
-            {
-                INI.IniWriteValue(SELECTION_CONFIG, KEY_UNIT, value);
-            }
+            //set
+            //{
+            //    INI.IniWriteValue(SELECTION_CONFIG, KEY_UNIT, value);
+            //}
         }
         public static string AppNameUpdate
         {
             get
             {
+
                 return INI.IniReadValue(SELECTION_CONFIG, KEY_APPNAMEUPDATE);
             }
             set
@@ -46,23 +73,47 @@ namespace Update
         {
             get
             {
-                return INI.IniReadValue(SELECTION_CONFIG, KEY_IPADDRESS);
+                if (License.Status.Licensed)
+                {
+                    Dictionary<string, string> dict = new Dictionary<string, string>();
+
+                    for (int i = 0; i < License.Status.KeyValueList.Count; i++)
+                    {
+                        string key = License.Status.KeyValueList.GetKey(i).ToString();
+                        string value = License.Status.KeyValueList.GetByIndex(i).ToString();
+                        dict.Add(key, value);
+                    }
+
+                    string tmp = "127.0.0.1";
+                    //从授权文件获取服务端地址
+                    if (dict.TryGetValue("update_srv", out tmp))
+                    {
+                        
+                    }
+                    //MessageBox.Show("UPDATASERVER:" + tmp);
+                    return tmp;
+                }
+                else
+                {
+                    return "127.0.0.1";
+                }
+                //return INI.IniReadValue(SELECTION_CONFIG, KEY_IPADDRESS);
             }
-            set
-            {
-                INI.IniWriteValue(SELECTION_CONFIG, KEY_IPADDRESS, value);
-            }
+            //set
+            //{
+            //    INI.IniWriteValue(SELECTION_CONFIG, KEY_IPADDRESS, value);
+            //}
         }
         public static string Port
         {
             get
             {
-                return INI.IniReadValue(SELECTION_CONFIG, KEY_PORT);
+                return "8662";// INI.IniReadValue(SELECTION_CONFIG, KEY_PORT);
             }
-            set
-            {
-                INI.IniWriteValue(SELECTION_CONFIG, KEY_PORT, value);
-            }
+            //set
+            //{
+            //    INI.IniWriteValue(SELECTION_CONFIG, KEY_PORT, value);
+            //}
         }
         public static string AppName
         {
@@ -79,7 +130,7 @@ namespace Update
         {
             get
             {
-                return INI.IniReadValue(SELECTION_CONFIG, KEY_AUTOCLOSE);
+                return  INI.IniReadValue(SELECTION_CONFIG, KEY_AUTOCLOSE);
             }
             set
             {
