@@ -134,7 +134,7 @@ namespace TradingLib.ServiceManager
             _agentmanager.Start();
 
             _datafeedRouter.Start();
-            _datafeedRouter.LoadTickSnapshot();
+            //_datafeedRouter.LoadTickSnapshot();
 
             _brokerRouter.Start();
 

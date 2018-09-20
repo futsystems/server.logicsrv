@@ -38,7 +38,7 @@ namespace TradingLib.Core
             //建立合约列表用于记录所维护的行情数据
             mb = new List<Symbol>();
             
-            _snapshotcahefile = Path.Combine(new string[] { "cache", "ticksnapshot" });
+            //_snapshotcahefile = Path.Combine(new string[] { "cache", "ticksnapshot" });
             //订阅重置事件
             TLCtxHelper.EventSystem.SettleResetEvent += new EventHandler<SystemEventArgs>(EventSystem_SettleResetEvent);
 
@@ -351,34 +351,34 @@ namespace TradingLib.Core
         /// 加载行情快照
         /// 主要用于盘中程序崩溃后从行情快照文件恢复最近的行情价格,用于防治行情错乱导致其他风控,策略等执行异常
         /// </summary>
-        public void LoadTickSnapshot()
-        {
-            try
-            {
-                //LibUtil.Debug("##############load ticksnapshot...................");
-                //实例化一个文件流--->与写入文件相关联  
-				using (FileStream fs = new FileStream(_snapshotcahefile, FileMode.OpenOrCreate))
-                {
-                    //实例化一个StreamWriter-->与fs相关联  
-                    using (StreamReader sw = new StreamReader(fs))
-                    {
-                        while (sw.Peek() > 0)
-                        {
-                            string str = sw.ReadLine();
-                            Tick k = TickImpl.Deserialize2(str);
-                            //通过缓存行情快照可以恢复到重启时间点的状态,这样浮动盈亏计算就不会应为缺失数据而计算错误，从而导致错误触发强平
-                            //this.GotTick(k);//需要对外触发Tick然后驱动position的浮动盈亏
-                            newtick(k, true);
-                            //_ticktracker.GotTick(k);//维护每个symbol的tick快照
-                        }
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                logger.Error("Error In loadtick:" + ex.ToString());  
-            }
-        }
+        //public void LoadTickSnapshot()
+        //{
+        //    try
+        //    {
+        //        //LibUtil.Debug("##############load ticksnapshot...................");
+        //        //实例化一个文件流--->与写入文件相关联  
+        //        using (FileStream fs = new FileStream(_snapshotcahefile, FileMode.OpenOrCreate))
+        //        {
+        //            //实例化一个StreamWriter-->与fs相关联  
+        //            using (StreamReader sw = new StreamReader(fs))
+        //            {
+        //                while (sw.Peek() > 0)
+        //                {
+        //                    string str = sw.ReadLine();
+        //                    Tick k = TickImpl.Deserialize2(str);
+        //                    //通过缓存行情快照可以恢复到重启时间点的状态,这样浮动盈亏计算就不会应为缺失数据而计算错误，从而导致错误触发强平
+        //                    //this.GotTick(k);//需要对外触发Tick然后驱动position的浮动盈亏
+        //                    newtick(k, true);
+        //                    //_ticktracker.GotTick(k);//维护每个symbol的tick快照
+        //                }
+        //            }
+        //        }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        logger.Error("Error In loadtick:" + ex.ToString());  
+        //    }
+        //}
         #endregion
 
 
