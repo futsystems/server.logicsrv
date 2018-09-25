@@ -11,4 +11,8 @@
 %SYSTEMROOT%\Microsoft.NET\Framework\v4.0.30319\msbuild /target:Publish  build.proj
 
 
+cd ..
+cd build\logicsrv
+build.cmd
+
 
