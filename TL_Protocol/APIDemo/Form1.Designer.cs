@@ -123,6 +123,7 @@
             this.btnEncode = new System.Windows.Forms.Button();
             this.label21 = new System.Windows.Forms.Label();
             this.tabPage5 = new System.Windows.Forms.TabPage();
+            this.webStatus = new System.Windows.Forms.Button();
             this.webend = new System.Windows.Forms.TextBox();
             this.label41 = new System.Windows.Forms.Label();
             this.webstart = new System.Windows.Forms.TextBox();
@@ -170,7 +171,6 @@
             this.md5key = new System.Windows.Forms.TextBox();
             this.label24 = new System.Windows.Forms.Label();
             this.debugControl1 = new APIClient.DebugControl();
-            this.webStatus = new System.Windows.Forms.Button();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.cashopVal)).BeginInit();
@@ -182,17 +182,18 @@
             // 
             // tabControl1
             // 
-            this.tabControl1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.tabControl1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
             this.tabControl1.Controls.Add(this.tabPage1);
             this.tabControl1.Controls.Add(this.tabPage2);
             this.tabControl1.Controls.Add(this.tabPage3);
             this.tabControl1.Controls.Add(this.tabPage4);
             this.tabControl1.Controls.Add(this.tabPage5);
             this.tabControl1.Location = new System.Drawing.Point(0, 0);
+            this.tabControl1.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(969, 253);
+            this.tabControl1.Size = new System.Drawing.Size(1938, 506);
             this.tabControl1.TabIndex = 1;
             // 
             // tabPage1
@@ -225,17 +226,19 @@
             this.tabPage1.Controls.Add(this.label2);
             this.tabPage1.Controls.Add(this.exAddress);
             this.tabPage1.Controls.Add(this.label1);
-            this.tabPage1.Location = new System.Drawing.Point(4, 22);
+            this.tabPage1.Location = new System.Drawing.Point(8, 39);
+            this.tabPage1.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
             this.tabPage1.Name = "tabPage1";
-            this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage1.Size = new System.Drawing.Size(961, 227);
+            this.tabPage1.Padding = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            this.tabPage1.Size = new System.Drawing.Size(1922, 459);
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "Socket/二进制";
             this.tabPage1.UseVisualStyleBackColor = true;
             // 
             // cashopVal
             // 
-            this.cashopVal.Location = new System.Drawing.Point(264, 166);
+            this.cashopVal.Location = new System.Drawing.Point(528, 332);
+            this.cashopVal.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
             this.cashopVal.Maximum = new decimal(new int[] {
             1000000,
             0,
@@ -247,59 +250,65 @@
             0,
             -2147483648});
             this.cashopVal.Name = "cashopVal";
-            this.cashopVal.Size = new System.Drawing.Size(76, 21);
+            this.cashopVal.Size = new System.Drawing.Size(152, 35);
             this.cashopVal.TabIndex = 27;
             // 
             // btnExCashOp
             // 
-            this.btnExCashOp.Location = new System.Drawing.Point(346, 164);
+            this.btnExCashOp.Location = new System.Drawing.Point(692, 328);
+            this.btnExCashOp.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
             this.btnExCashOp.Name = "btnExCashOp";
-            this.btnExCashOp.Size = new System.Drawing.Size(71, 23);
+            this.btnExCashOp.Size = new System.Drawing.Size(142, 46);
             this.btnExCashOp.TabIndex = 26;
             this.btnExCashOp.Text = "CashOP";
             this.btnExCashOp.UseVisualStyleBackColor = true;
             // 
             // btnExUpdateBankCard
             // 
-            this.btnExUpdateBankCard.Location = new System.Drawing.Point(308, 135);
+            this.btnExUpdateBankCard.Location = new System.Drawing.Point(616, 270);
+            this.btnExUpdateBankCard.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
             this.btnExUpdateBankCard.Name = "btnExUpdateBankCard";
-            this.btnExUpdateBankCard.Size = new System.Drawing.Size(109, 23);
+            this.btnExUpdateBankCard.Size = new System.Drawing.Size(218, 46);
             this.btnExUpdateBankCard.TabIndex = 25;
             this.btnExUpdateBankCard.Text = "UpdateBankCard";
             this.btnExUpdateBankCard.UseVisualStyleBackColor = true;
             // 
             // btnExQryBank
             // 
-            this.btnExQryBank.Location = new System.Drawing.Point(308, 106);
+            this.btnExQryBank.Location = new System.Drawing.Point(616, 212);
+            this.btnExQryBank.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
             this.btnExQryBank.Name = "btnExQryBank";
-            this.btnExQryBank.Size = new System.Drawing.Size(109, 23);
+            this.btnExQryBank.Size = new System.Drawing.Size(218, 46);
             this.btnExQryBank.TabIndex = 24;
             this.btnExQryBank.Text = "QryBankCard";
             this.btnExQryBank.UseVisualStyleBackColor = true;
             // 
             // btnExQrySettleSummary
             // 
-            this.btnExQrySettleSummary.Location = new System.Drawing.Point(308, 77);
+            this.btnExQrySettleSummary.Location = new System.Drawing.Point(616, 154);
+            this.btnExQrySettleSummary.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
             this.btnExQrySettleSummary.Name = "btnExQrySettleSummary";
-            this.btnExQrySettleSummary.Size = new System.Drawing.Size(109, 23);
+            this.btnExQrySettleSummary.Size = new System.Drawing.Size(218, 46);
             this.btnExQrySettleSummary.TabIndex = 23;
             this.btnExQrySettleSummary.Text = "QrySettleSummary";
             this.btnExQrySettleSummary.UseVisualStyleBackColor = true;
             // 
             // btnExQrySettle
             // 
-            this.btnExQrySettle.Location = new System.Drawing.Point(146, 193);
+            this.btnExQrySettle.Location = new System.Drawing.Point(292, 386);
+            this.btnExQrySettle.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
             this.btnExQrySettle.Name = "btnExQrySettle";
-            this.btnExQrySettle.Size = new System.Drawing.Size(75, 23);
+            this.btnExQrySettle.Size = new System.Drawing.Size(150, 46);
             this.btnExQrySettle.TabIndex = 22;
             this.btnExQrySettle.Text = "QrySettle";
             this.btnExQrySettle.UseVisualStyleBackColor = true;
             // 
             // btnHeartBeat
             // 
-            this.btnHeartBeat.Location = new System.Drawing.Point(504, 5);
+            this.btnHeartBeat.Location = new System.Drawing.Point(1008, 10);
+            this.btnHeartBeat.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
             this.btnHeartBeat.Name = "btnHeartBeat";
-            this.btnHeartBeat.Size = new System.Drawing.Size(75, 23);
+            this.btnHeartBeat.Size = new System.Drawing.Size(150, 46);
             this.btnHeartBeat.TabIndex = 21;
             this.btnHeartBeat.Text = "心跳";
             this.btnHeartBeat.UseVisualStyleBackColor = true;
@@ -307,186 +316,207 @@
             // exapiverbose
             // 
             this.exapiverbose.AutoSize = true;
-            this.exapiverbose.Location = new System.Drawing.Point(406, 41);
+            this.exapiverbose.Location = new System.Drawing.Point(812, 82);
+            this.exapiverbose.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
             this.exapiverbose.Name = "exapiverbose";
-            this.exapiverbose.Size = new System.Drawing.Size(72, 16);
+            this.exapiverbose.Size = new System.Drawing.Size(138, 28);
             this.exapiverbose.TabIndex = 20;
             this.exapiverbose.Text = "传输日志";
             this.exapiverbose.UseVisualStyleBackColor = true;
             // 
             // btnExCancelOrder
             // 
-            this.btnExCancelOrder.Location = new System.Drawing.Point(146, 164);
+            this.btnExCancelOrder.Location = new System.Drawing.Point(292, 328);
+            this.btnExCancelOrder.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
             this.btnExCancelOrder.Name = "btnExCancelOrder";
-            this.btnExCancelOrder.Size = new System.Drawing.Size(77, 23);
+            this.btnExCancelOrder.Size = new System.Drawing.Size(154, 46);
             this.btnExCancelOrder.TabIndex = 19;
             this.btnExCancelOrder.Text = "撤销委托";
             this.btnExCancelOrder.UseVisualStyleBackColor = true;
             // 
             // btnExPlaceOrder
             // 
-            this.btnExPlaceOrder.Location = new System.Drawing.Point(146, 135);
+            this.btnExPlaceOrder.Location = new System.Drawing.Point(292, 270);
+            this.btnExPlaceOrder.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
             this.btnExPlaceOrder.Name = "btnExPlaceOrder";
-            this.btnExPlaceOrder.Size = new System.Drawing.Size(77, 23);
+            this.btnExPlaceOrder.Size = new System.Drawing.Size(154, 46);
             this.btnExPlaceOrder.TabIndex = 18;
             this.btnExPlaceOrder.Text = "提交委托";
             this.btnExPlaceOrder.UseVisualStyleBackColor = true;
             // 
             // btnExQryMaxOrderVol
             // 
-            this.btnExQryMaxOrderVol.Location = new System.Drawing.Point(146, 106);
+            this.btnExQryMaxOrderVol.Location = new System.Drawing.Point(292, 212);
+            this.btnExQryMaxOrderVol.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
             this.btnExQryMaxOrderVol.Name = "btnExQryMaxOrderVol";
-            this.btnExQryMaxOrderVol.Size = new System.Drawing.Size(111, 23);
+            this.btnExQryMaxOrderVol.Size = new System.Drawing.Size(222, 46);
             this.btnExQryMaxOrderVol.TabIndex = 17;
             this.btnExQryMaxOrderVol.Text = "查询最大报单数量";
             this.btnExQryMaxOrderVol.UseVisualStyleBackColor = true;
             // 
             // btnExQryTradingAccount
             // 
-            this.btnExQryTradingAccount.Location = new System.Drawing.Point(148, 77);
+            this.btnExQryTradingAccount.Location = new System.Drawing.Point(296, 154);
+            this.btnExQryTradingAccount.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
             this.btnExQryTradingAccount.Name = "btnExQryTradingAccount";
-            this.btnExQryTradingAccount.Size = new System.Drawing.Size(75, 23);
+            this.btnExQryTradingAccount.Size = new System.Drawing.Size(150, 46);
             this.btnExQryTradingAccount.TabIndex = 16;
             this.btnExQryTradingAccount.Text = "查询交易账户";
             this.btnExQryTradingAccount.UseVisualStyleBackColor = true;
             // 
             // btnExQryPosition
             // 
-            this.btnExQryPosition.Location = new System.Drawing.Point(12, 193);
+            this.btnExQryPosition.Location = new System.Drawing.Point(24, 386);
+            this.btnExQryPosition.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
             this.btnExQryPosition.Name = "btnExQryPosition";
-            this.btnExQryPosition.Size = new System.Drawing.Size(75, 23);
+            this.btnExQryPosition.Size = new System.Drawing.Size(150, 46);
             this.btnExQryPosition.TabIndex = 15;
             this.btnExQryPosition.Text = "查询持仓";
             this.btnExQryPosition.UseVisualStyleBackColor = true;
             // 
             // btnExQryTrade
             // 
-            this.btnExQryTrade.Location = new System.Drawing.Point(12, 164);
+            this.btnExQryTrade.Location = new System.Drawing.Point(24, 328);
+            this.btnExQryTrade.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
             this.btnExQryTrade.Name = "btnExQryTrade";
-            this.btnExQryTrade.Size = new System.Drawing.Size(75, 23);
+            this.btnExQryTrade.Size = new System.Drawing.Size(150, 46);
             this.btnExQryTrade.TabIndex = 14;
             this.btnExQryTrade.Text = "查询成交";
             this.btnExQryTrade.UseVisualStyleBackColor = true;
             // 
             // btnExQryOrder
             // 
-            this.btnExQryOrder.Location = new System.Drawing.Point(12, 135);
+            this.btnExQryOrder.Location = new System.Drawing.Point(24, 270);
+            this.btnExQryOrder.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
             this.btnExQryOrder.Name = "btnExQryOrder";
-            this.btnExQryOrder.Size = new System.Drawing.Size(75, 23);
+            this.btnExQryOrder.Size = new System.Drawing.Size(150, 46);
             this.btnExQryOrder.TabIndex = 13;
             this.btnExQryOrder.Text = "查询委托";
             this.btnExQryOrder.UseVisualStyleBackColor = true;
             // 
             // btnExQrySymbol
             // 
-            this.btnExQrySymbol.Location = new System.Drawing.Point(12, 106);
+            this.btnExQrySymbol.Location = new System.Drawing.Point(24, 212);
+            this.btnExQrySymbol.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
             this.btnExQrySymbol.Name = "btnExQrySymbol";
-            this.btnExQrySymbol.Size = new System.Drawing.Size(75, 23);
+            this.btnExQrySymbol.Size = new System.Drawing.Size(150, 46);
             this.btnExQrySymbol.TabIndex = 12;
             this.btnExQrySymbol.Text = "查询合约";
             this.btnExQrySymbol.UseVisualStyleBackColor = true;
             // 
             // btnExUpdatePass
             // 
-            this.btnExUpdatePass.Location = new System.Drawing.Point(12, 77);
+            this.btnExUpdatePass.Location = new System.Drawing.Point(24, 154);
+            this.btnExUpdatePass.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
             this.btnExUpdatePass.Name = "btnExUpdatePass";
-            this.btnExUpdatePass.Size = new System.Drawing.Size(75, 23);
+            this.btnExUpdatePass.Size = new System.Drawing.Size(150, 46);
             this.btnExUpdatePass.TabIndex = 11;
             this.btnExUpdatePass.Text = "修改交易密码";
             this.btnExUpdatePass.UseVisualStyleBackColor = true;
             // 
             // exPass
             // 
-            this.exPass.Location = new System.Drawing.Point(204, 34);
+            this.exPass.Location = new System.Drawing.Point(408, 68);
+            this.exPass.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
             this.exPass.Name = "exPass";
-            this.exPass.Size = new System.Drawing.Size(53, 21);
+            this.exPass.Size = new System.Drawing.Size(102, 35);
             this.exPass.TabIndex = 10;
             this.exPass.Text = "123456";
             // 
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(142, 37);
+            this.label3.Location = new System.Drawing.Point(284, 74);
+            this.label3.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(59, 12);
+            this.label3.Size = new System.Drawing.Size(118, 24);
             this.label3.TabIndex = 9;
             this.label3.Text = "Password:";
             // 
             // exUser
             // 
-            this.exUser.Location = new System.Drawing.Point(59, 34);
+            this.exUser.Location = new System.Drawing.Point(118, 68);
+            this.exUser.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
             this.exUser.Name = "exUser";
-            this.exUser.Size = new System.Drawing.Size(77, 21);
+            this.exUser.Size = new System.Drawing.Size(150, 35);
             this.exUser.TabIndex = 8;
             this.exUser.Text = "8500001";
             // 
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(10, 37);
+            this.label4.Location = new System.Drawing.Point(20, 74);
+            this.label4.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(47, 12);
+            this.label4.Size = new System.Drawing.Size(94, 24);
             this.label4.TabIndex = 7;
             this.label4.Text = "UserID:";
             // 
             // btnExLogin
             // 
-            this.btnExLogin.Location = new System.Drawing.Point(308, 37);
+            this.btnExLogin.Location = new System.Drawing.Point(616, 74);
+            this.btnExLogin.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
             this.btnExLogin.Name = "btnExLogin";
-            this.btnExLogin.Size = new System.Drawing.Size(75, 23);
+            this.btnExLogin.Size = new System.Drawing.Size(150, 46);
             this.btnExLogin.TabIndex = 6;
             this.btnExLogin.Text = "登入";
             this.btnExLogin.UseVisualStyleBackColor = true;
             // 
             // btnStopEx
             // 
-            this.btnStopEx.Location = new System.Drawing.Point(406, 5);
+            this.btnStopEx.Location = new System.Drawing.Point(812, 10);
+            this.btnStopEx.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
             this.btnStopEx.Name = "btnStopEx";
-            this.btnStopEx.Size = new System.Drawing.Size(92, 23);
+            this.btnStopEx.Size = new System.Drawing.Size(184, 46);
             this.btnStopEx.TabIndex = 5;
             this.btnStopEx.Text = "停止交易接口";
             this.btnStopEx.UseVisualStyleBackColor = true;
             // 
             // btnStartEx
             // 
-            this.btnStartEx.Location = new System.Drawing.Point(308, 5);
+            this.btnStartEx.Location = new System.Drawing.Point(616, 10);
+            this.btnStartEx.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
             this.btnStartEx.Name = "btnStartEx";
-            this.btnStartEx.Size = new System.Drawing.Size(92, 23);
+            this.btnStartEx.Size = new System.Drawing.Size(184, 46);
             this.btnStartEx.TabIndex = 4;
             this.btnStartEx.Text = "启动交易接口";
             this.btnStartEx.UseVisualStyleBackColor = true;
             // 
             // exPort
             // 
-            this.exPort.Location = new System.Drawing.Point(249, 7);
+            this.exPort.Location = new System.Drawing.Point(498, 14);
+            this.exPort.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
             this.exPort.Name = "exPort";
-            this.exPort.Size = new System.Drawing.Size(53, 21);
+            this.exPort.Size = new System.Drawing.Size(102, 35);
             this.exPort.TabIndex = 3;
             this.exPort.Text = "41455";
             // 
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(202, 10);
+            this.label2.Location = new System.Drawing.Point(404, 20);
+            this.label2.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(35, 12);
+            this.label2.Size = new System.Drawing.Size(70, 24);
             this.label2.TabIndex = 2;
             this.label2.Text = "端口:";
             // 
             // exAddress
             // 
-            this.exAddress.Location = new System.Drawing.Point(59, 7);
+            this.exAddress.Location = new System.Drawing.Point(118, 14);
+            this.exAddress.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
             this.exAddress.Name = "exAddress";
-            this.exAddress.Size = new System.Drawing.Size(133, 21);
+            this.exAddress.Size = new System.Drawing.Size(262, 35);
             this.exAddress.TabIndex = 1;
             this.exAddress.Text = "local.cloud-deploy.com";
             // 
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(10, 10);
+            this.label1.Location = new System.Drawing.Point(20, 20);
+            this.label1.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(35, 12);
+            this.label1.Size = new System.Drawing.Size(70, 24);
             this.label1.TabIndex = 0;
             this.label1.Text = "地址:";
             // 
@@ -510,170 +540,189 @@
             this.tabPage2.Controls.Add(this.btnWSStart);
             this.tabPage2.Controls.Add(this.wsAddress);
             this.tabPage2.Controls.Add(this.label5);
-            this.tabPage2.Location = new System.Drawing.Point(4, 22);
+            this.tabPage2.Location = new System.Drawing.Point(8, 39);
+            this.tabPage2.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
             this.tabPage2.Name = "tabPage2";
-            this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage2.Size = new System.Drawing.Size(961, 227);
+            this.tabPage2.Padding = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            this.tabPage2.Size = new System.Drawing.Size(1922, 459);
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "WebSocket/Json";
             this.tabPage2.UseVisualStyleBackColor = true;
             // 
             // wsBtnCancel
             // 
-            this.wsBtnCancel.Location = new System.Drawing.Point(146, 164);
+            this.wsBtnCancel.Location = new System.Drawing.Point(292, 328);
+            this.wsBtnCancel.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
             this.wsBtnCancel.Name = "wsBtnCancel";
-            this.wsBtnCancel.Size = new System.Drawing.Size(77, 23);
+            this.wsBtnCancel.Size = new System.Drawing.Size(154, 46);
             this.wsBtnCancel.TabIndex = 28;
             this.wsBtnCancel.Text = "撤销委托";
             this.wsBtnCancel.UseVisualStyleBackColor = true;
             // 
             // wsBtnPlaceOrder
             // 
-            this.wsBtnPlaceOrder.Location = new System.Drawing.Point(146, 135);
+            this.wsBtnPlaceOrder.Location = new System.Drawing.Point(292, 270);
+            this.wsBtnPlaceOrder.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
             this.wsBtnPlaceOrder.Name = "wsBtnPlaceOrder";
-            this.wsBtnPlaceOrder.Size = new System.Drawing.Size(77, 23);
+            this.wsBtnPlaceOrder.Size = new System.Drawing.Size(154, 46);
             this.wsBtnPlaceOrder.TabIndex = 27;
             this.wsBtnPlaceOrder.Text = "提交委托";
             this.wsBtnPlaceOrder.UseVisualStyleBackColor = true;
             // 
             // wsBtnQryMaxOrderVol
             // 
-            this.wsBtnQryMaxOrderVol.Location = new System.Drawing.Point(146, 106);
+            this.wsBtnQryMaxOrderVol.Location = new System.Drawing.Point(292, 212);
+            this.wsBtnQryMaxOrderVol.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
             this.wsBtnQryMaxOrderVol.Name = "wsBtnQryMaxOrderVol";
-            this.wsBtnQryMaxOrderVol.Size = new System.Drawing.Size(111, 23);
+            this.wsBtnQryMaxOrderVol.Size = new System.Drawing.Size(222, 46);
             this.wsBtnQryMaxOrderVol.TabIndex = 26;
             this.wsBtnQryMaxOrderVol.Text = "查询最大报单数量";
             this.wsBtnQryMaxOrderVol.UseVisualStyleBackColor = true;
             // 
             // wsBtnQryAccount
             // 
-            this.wsBtnQryAccount.Location = new System.Drawing.Point(148, 77);
+            this.wsBtnQryAccount.Location = new System.Drawing.Point(296, 154);
+            this.wsBtnQryAccount.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
             this.wsBtnQryAccount.Name = "wsBtnQryAccount";
-            this.wsBtnQryAccount.Size = new System.Drawing.Size(75, 23);
+            this.wsBtnQryAccount.Size = new System.Drawing.Size(150, 46);
             this.wsBtnQryAccount.TabIndex = 25;
             this.wsBtnQryAccount.Text = "查询交易账户";
             this.wsBtnQryAccount.UseVisualStyleBackColor = true;
             // 
             // wsBtnQryPos
             // 
-            this.wsBtnQryPos.Location = new System.Drawing.Point(12, 193);
+            this.wsBtnQryPos.Location = new System.Drawing.Point(24, 386);
+            this.wsBtnQryPos.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
             this.wsBtnQryPos.Name = "wsBtnQryPos";
-            this.wsBtnQryPos.Size = new System.Drawing.Size(75, 23);
+            this.wsBtnQryPos.Size = new System.Drawing.Size(150, 46);
             this.wsBtnQryPos.TabIndex = 24;
             this.wsBtnQryPos.Text = "查询持仓";
             this.wsBtnQryPos.UseVisualStyleBackColor = true;
             // 
             // wsBtnQryTrade
             // 
-            this.wsBtnQryTrade.Location = new System.Drawing.Point(12, 164);
+            this.wsBtnQryTrade.Location = new System.Drawing.Point(24, 328);
+            this.wsBtnQryTrade.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
             this.wsBtnQryTrade.Name = "wsBtnQryTrade";
-            this.wsBtnQryTrade.Size = new System.Drawing.Size(75, 23);
+            this.wsBtnQryTrade.Size = new System.Drawing.Size(150, 46);
             this.wsBtnQryTrade.TabIndex = 23;
             this.wsBtnQryTrade.Text = "查询成交";
             this.wsBtnQryTrade.UseVisualStyleBackColor = true;
             // 
             // wsBtnQryOrder
             // 
-            this.wsBtnQryOrder.Location = new System.Drawing.Point(12, 135);
+            this.wsBtnQryOrder.Location = new System.Drawing.Point(24, 270);
+            this.wsBtnQryOrder.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
             this.wsBtnQryOrder.Name = "wsBtnQryOrder";
-            this.wsBtnQryOrder.Size = new System.Drawing.Size(75, 23);
+            this.wsBtnQryOrder.Size = new System.Drawing.Size(150, 46);
             this.wsBtnQryOrder.TabIndex = 22;
             this.wsBtnQryOrder.Text = "查询委托";
             this.wsBtnQryOrder.UseVisualStyleBackColor = true;
             // 
             // wsBtnQrySymbol
             // 
-            this.wsBtnQrySymbol.Location = new System.Drawing.Point(12, 106);
+            this.wsBtnQrySymbol.Location = new System.Drawing.Point(24, 212);
+            this.wsBtnQrySymbol.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
             this.wsBtnQrySymbol.Name = "wsBtnQrySymbol";
-            this.wsBtnQrySymbol.Size = new System.Drawing.Size(75, 23);
+            this.wsBtnQrySymbol.Size = new System.Drawing.Size(150, 46);
             this.wsBtnQrySymbol.TabIndex = 21;
             this.wsBtnQrySymbol.Text = "查询合约";
             this.wsBtnQrySymbol.UseVisualStyleBackColor = true;
             // 
             // wsBtnUpdatePass
             // 
-            this.wsBtnUpdatePass.Location = new System.Drawing.Point(12, 77);
+            this.wsBtnUpdatePass.Location = new System.Drawing.Point(24, 154);
+            this.wsBtnUpdatePass.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
             this.wsBtnUpdatePass.Name = "wsBtnUpdatePass";
-            this.wsBtnUpdatePass.Size = new System.Drawing.Size(75, 23);
+            this.wsBtnUpdatePass.Size = new System.Drawing.Size(150, 46);
             this.wsBtnUpdatePass.TabIndex = 20;
             this.wsBtnUpdatePass.Text = "修改交易密码";
             this.wsBtnUpdatePass.UseVisualStyleBackColor = true;
             // 
             // wsPassword
             // 
-            this.wsPassword.Location = new System.Drawing.Point(200, 40);
+            this.wsPassword.Location = new System.Drawing.Point(400, 80);
+            this.wsPassword.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
             this.wsPassword.Name = "wsPassword";
-            this.wsPassword.Size = new System.Drawing.Size(53, 21);
+            this.wsPassword.Size = new System.Drawing.Size(102, 35);
             this.wsPassword.TabIndex = 15;
             this.wsPassword.Text = "123456";
             // 
             // label6
             // 
             this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(138, 43);
+            this.label6.Location = new System.Drawing.Point(276, 86);
+            this.label6.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
             this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(59, 12);
+            this.label6.Size = new System.Drawing.Size(118, 24);
             this.label6.TabIndex = 14;
             this.label6.Text = "Password:";
             // 
             // wsUser
             // 
-            this.wsUser.Location = new System.Drawing.Point(55, 40);
+            this.wsUser.Location = new System.Drawing.Point(110, 80);
+            this.wsUser.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
             this.wsUser.Name = "wsUser";
-            this.wsUser.Size = new System.Drawing.Size(77, 21);
+            this.wsUser.Size = new System.Drawing.Size(150, 35);
             this.wsUser.TabIndex = 13;
             this.wsUser.Text = "8500001";
             // 
             // label7
             // 
             this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(6, 43);
+            this.label7.Location = new System.Drawing.Point(12, 86);
+            this.label7.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
             this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(47, 12);
+            this.label7.Size = new System.Drawing.Size(94, 24);
             this.label7.TabIndex = 12;
             this.label7.Text = "UserID:";
             // 
             // wsBtnLogin
             // 
-            this.wsBtnLogin.Location = new System.Drawing.Point(310, 38);
+            this.wsBtnLogin.Location = new System.Drawing.Point(620, 76);
+            this.wsBtnLogin.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
             this.wsBtnLogin.Name = "wsBtnLogin";
-            this.wsBtnLogin.Size = new System.Drawing.Size(75, 23);
+            this.wsBtnLogin.Size = new System.Drawing.Size(150, 46);
             this.wsBtnLogin.TabIndex = 11;
             this.wsBtnLogin.Text = "登入";
             this.wsBtnLogin.UseVisualStyleBackColor = true;
             // 
             // btnWSStop
             // 
-            this.btnWSStop.Location = new System.Drawing.Point(310, 7);
+            this.btnWSStop.Location = new System.Drawing.Point(620, 14);
+            this.btnWSStop.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
             this.btnWSStop.Name = "btnWSStop";
-            this.btnWSStop.Size = new System.Drawing.Size(92, 23);
+            this.btnWSStop.Size = new System.Drawing.Size(184, 46);
             this.btnWSStop.TabIndex = 6;
             this.btnWSStop.Text = "停止交易接口";
             this.btnWSStop.UseVisualStyleBackColor = true;
             // 
             // btnWSStart
             // 
-            this.btnWSStart.Location = new System.Drawing.Point(212, 7);
+            this.btnWSStart.Location = new System.Drawing.Point(424, 14);
+            this.btnWSStart.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
             this.btnWSStart.Name = "btnWSStart";
-            this.btnWSStart.Size = new System.Drawing.Size(92, 23);
+            this.btnWSStart.Size = new System.Drawing.Size(184, 46);
             this.btnWSStart.TabIndex = 5;
             this.btnWSStart.Text = "启动交易接口";
             this.btnWSStart.UseVisualStyleBackColor = true;
             // 
             // wsAddress
             // 
-            this.wsAddress.Location = new System.Drawing.Point(37, 9);
+            this.wsAddress.Location = new System.Drawing.Point(74, 18);
+            this.wsAddress.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
             this.wsAddress.Name = "wsAddress";
-            this.wsAddress.Size = new System.Drawing.Size(169, 21);
+            this.wsAddress.Size = new System.Drawing.Size(334, 35);
             this.wsAddress.TabIndex = 3;
             this.wsAddress.Text = "ws://127.0.0.1:41655/";
             // 
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(8, 12);
+            this.label5.Location = new System.Drawing.Point(16, 24);
+            this.label5.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
             this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(23, 12);
+            this.label5.Size = new System.Drawing.Size(46, 24);
             this.label5.TabIndex = 2;
             this.label5.Text = "URL";
             // 
@@ -714,310 +763,346 @@
             this.tabPage3.Controls.Add(this.mdAddress);
             this.tabPage3.Controls.Add(this.label11);
             this.tabPage3.Controls.Add(this.button1);
-            this.tabPage3.Location = new System.Drawing.Point(4, 22);
+            this.tabPage3.Location = new System.Drawing.Point(8, 39);
+            this.tabPage3.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
             this.tabPage3.Name = "tabPage3";
-            this.tabPage3.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage3.Size = new System.Drawing.Size(961, 227);
+            this.tabPage3.Padding = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            this.tabPage3.Size = new System.Drawing.Size(1922, 459);
             this.tabPage3.TabIndex = 2;
             this.tabPage3.Text = "行情Socket";
             this.tabPage3.UseVisualStyleBackColor = true;
             // 
             // mdInterval
             // 
-            this.mdInterval.Location = new System.Drawing.Point(334, 128);
+            this.mdInterval.Location = new System.Drawing.Point(668, 256);
+            this.mdInterval.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
             this.mdInterval.Name = "mdInterval";
-            this.mdInterval.Size = new System.Drawing.Size(53, 21);
+            this.mdInterval.Size = new System.Drawing.Size(102, 35);
             this.mdInterval.TabIndex = 44;
             this.mdInterval.Text = "60";
             // 
             // label20
             // 
             this.label20.AutoSize = true;
-            this.label20.Location = new System.Drawing.Point(272, 131);
+            this.label20.Location = new System.Drawing.Point(544, 262);
+            this.label20.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
             this.label20.Name = "label20";
-            this.label20.Size = new System.Drawing.Size(59, 12);
+            this.label20.Size = new System.Drawing.Size(118, 24);
             this.label20.TabIndex = 43;
             this.label20.Text = "Interval:";
             // 
             // btnQryBar2
             // 
-            this.btnQryBar2.Location = new System.Drawing.Point(499, 168);
+            this.btnQryBar2.Location = new System.Drawing.Point(998, 336);
+            this.btnQryBar2.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
             this.btnQryBar2.Name = "btnQryBar2";
-            this.btnQryBar2.Size = new System.Drawing.Size(75, 23);
+            this.btnQryBar2.Size = new System.Drawing.Size(150, 46);
             this.btnQryBar2.TabIndex = 42;
             this.btnQryBar2.Text = "查询Bar2";
             this.btnQryBar2.UseVisualStyleBackColor = true;
             // 
             // btnQryBar1
             // 
-            this.btnQryBar1.Location = new System.Drawing.Point(499, 134);
+            this.btnQryBar1.Location = new System.Drawing.Point(998, 268);
+            this.btnQryBar1.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
             this.btnQryBar1.Name = "btnQryBar1";
-            this.btnQryBar1.Size = new System.Drawing.Size(75, 23);
+            this.btnQryBar1.Size = new System.Drawing.Size(150, 46);
             this.btnQryBar1.TabIndex = 41;
             this.btnQryBar1.Text = "查询Bar1";
             this.btnQryBar1.UseVisualStyleBackColor = true;
             // 
             // mdEnd
             // 
-            this.mdEnd.Location = new System.Drawing.Point(237, 170);
+            this.mdEnd.Location = new System.Drawing.Point(474, 340);
+            this.mdEnd.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
             this.mdEnd.Name = "mdEnd";
-            this.mdEnd.Size = new System.Drawing.Size(110, 21);
+            this.mdEnd.Size = new System.Drawing.Size(216, 35);
             this.mdEnd.TabIndex = 40;
             // 
             // label18
             // 
             this.label18.AutoSize = true;
-            this.label18.Location = new System.Drawing.Point(202, 173);
+            this.label18.Location = new System.Drawing.Point(404, 346);
+            this.label18.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
             this.label18.Name = "label18";
-            this.label18.Size = new System.Drawing.Size(29, 12);
+            this.label18.Size = new System.Drawing.Size(58, 24);
             this.label18.TabIndex = 39;
             this.label18.Text = "End:";
             // 
             // mdStart
             // 
-            this.mdStart.Location = new System.Drawing.Point(57, 170);
+            this.mdStart.Location = new System.Drawing.Point(114, 340);
+            this.mdStart.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
             this.mdStart.Name = "mdStart";
-            this.mdStart.Size = new System.Drawing.Size(107, 21);
+            this.mdStart.Size = new System.Drawing.Size(210, 35);
             this.mdStart.TabIndex = 38;
             this.mdStart.Text = "0";
             // 
             // label19
             // 
             this.label19.AutoSize = true;
-            this.label19.Location = new System.Drawing.Point(10, 173);
+            this.label19.Location = new System.Drawing.Point(20, 346);
+            this.label19.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
             this.label19.Name = "label19";
-            this.label19.Size = new System.Drawing.Size(41, 12);
+            this.label19.Size = new System.Drawing.Size(82, 24);
             this.label19.TabIndex = 37;
             this.label19.Text = "Start:";
             // 
             // mdMaxCount
             // 
-            this.mdMaxCount.Location = new System.Drawing.Point(204, 131);
+            this.mdMaxCount.Location = new System.Drawing.Point(408, 262);
+            this.mdMaxCount.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
             this.mdMaxCount.Name = "mdMaxCount";
-            this.mdMaxCount.Size = new System.Drawing.Size(53, 21);
+            this.mdMaxCount.Size = new System.Drawing.Size(102, 35);
             this.mdMaxCount.TabIndex = 36;
             this.mdMaxCount.Text = "500";
             // 
             // label16
             // 
             this.label16.AutoSize = true;
-            this.label16.Location = new System.Drawing.Point(142, 134);
+            this.label16.Location = new System.Drawing.Point(284, 268);
+            this.label16.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
             this.label16.Name = "label16";
-            this.label16.Size = new System.Drawing.Size(59, 12);
+            this.label16.Size = new System.Drawing.Size(118, 24);
             this.label16.TabIndex = 35;
             this.label16.Text = "MaxCount:";
             // 
             // mdStartIndex
             // 
-            this.mdStartIndex.Location = new System.Drawing.Point(85, 131);
+            this.mdStartIndex.Location = new System.Drawing.Point(170, 262);
+            this.mdStartIndex.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
             this.mdStartIndex.Name = "mdStartIndex";
-            this.mdStartIndex.Size = new System.Drawing.Size(51, 21);
+            this.mdStartIndex.Size = new System.Drawing.Size(98, 35);
             this.mdStartIndex.TabIndex = 34;
             this.mdStartIndex.Text = "0";
             // 
             // label17
             // 
             this.label17.AutoSize = true;
-            this.label17.Location = new System.Drawing.Point(10, 134);
+            this.label17.Location = new System.Drawing.Point(20, 268);
+            this.label17.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
             this.label17.Name = "label17";
-            this.label17.Size = new System.Drawing.Size(71, 12);
+            this.label17.Size = new System.Drawing.Size(142, 24);
             this.label17.TabIndex = 33;
             this.label17.Text = "StartIndex:";
             // 
             // mdMinuteDataStart
             // 
-            this.mdMinuteDataStart.Location = new System.Drawing.Point(313, 93);
+            this.mdMinuteDataStart.Location = new System.Drawing.Point(626, 186);
+            this.mdMinuteDataStart.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
             this.mdMinuteDataStart.Name = "mdMinuteDataStart";
-            this.mdMinuteDataStart.Size = new System.Drawing.Size(118, 21);
+            this.mdMinuteDataStart.Size = new System.Drawing.Size(232, 35);
             this.mdMinuteDataStart.TabIndex = 32;
             // 
             // label15
             // 
             this.label15.AutoSize = true;
-            this.label15.Location = new System.Drawing.Point(272, 96);
+            this.label15.Location = new System.Drawing.Point(544, 192);
+            this.label15.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
             this.label15.Name = "label15";
-            this.label15.Size = new System.Drawing.Size(35, 12);
+            this.label15.Size = new System.Drawing.Size(70, 24);
             this.label15.TabIndex = 31;
             this.label15.Text = "Time:";
             // 
             // btnMdQryMinuteData
             // 
-            this.btnMdQryMinuteData.Location = new System.Drawing.Point(499, 91);
+            this.btnMdQryMinuteData.Location = new System.Drawing.Point(998, 182);
+            this.btnMdQryMinuteData.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
             this.btnMdQryMinuteData.Name = "btnMdQryMinuteData";
-            this.btnMdQryMinuteData.Size = new System.Drawing.Size(75, 23);
+            this.btnMdQryMinuteData.Size = new System.Drawing.Size(150, 46);
             this.btnMdQryMinuteData.TabIndex = 30;
             this.btnMdQryMinuteData.Text = "查询分时";
             this.btnMdQryMinuteData.UseVisualStyleBackColor = true;
             // 
             // mdSymbol
             // 
-            this.mdSymbol.Location = new System.Drawing.Point(204, 93);
+            this.mdSymbol.Location = new System.Drawing.Point(408, 186);
+            this.mdSymbol.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
             this.mdSymbol.Name = "mdSymbol";
-            this.mdSymbol.Size = new System.Drawing.Size(53, 21);
+            this.mdSymbol.Size = new System.Drawing.Size(102, 35);
             this.mdSymbol.TabIndex = 29;
             this.mdSymbol.Text = "HSIJ7";
             // 
             // label13
             // 
             this.label13.AutoSize = true;
-            this.label13.Location = new System.Drawing.Point(142, 96);
+            this.label13.Location = new System.Drawing.Point(284, 192);
+            this.label13.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
             this.label13.Name = "label13";
-            this.label13.Size = new System.Drawing.Size(47, 12);
+            this.label13.Size = new System.Drawing.Size(94, 24);
             this.label13.TabIndex = 28;
             this.label13.Text = "Symbol:";
             // 
             // mdExchange
             // 
-            this.mdExchange.Location = new System.Drawing.Point(59, 93);
+            this.mdExchange.Location = new System.Drawing.Point(118, 186);
+            this.mdExchange.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
             this.mdExchange.Name = "mdExchange";
-            this.mdExchange.Size = new System.Drawing.Size(77, 21);
+            this.mdExchange.Size = new System.Drawing.Size(150, 35);
             this.mdExchange.TabIndex = 27;
             this.mdExchange.Text = "HKEX";
             // 
             // label14
             // 
             this.label14.AutoSize = true;
-            this.label14.Location = new System.Drawing.Point(10, 96);
+            this.label14.Location = new System.Drawing.Point(20, 192);
+            this.label14.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
             this.label14.Name = "label14";
-            this.label14.Size = new System.Drawing.Size(35, 12);
+            this.label14.Size = new System.Drawing.Size(70, 24);
             this.label14.TabIndex = 26;
             this.label14.Text = "Exch:";
             // 
             // btnMdQrySymbol
             // 
-            this.btnMdQrySymbol.Location = new System.Drawing.Point(406, 37);
+            this.btnMdQrySymbol.Location = new System.Drawing.Point(812, 74);
+            this.btnMdQrySymbol.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
             this.btnMdQrySymbol.Name = "btnMdQrySymbol";
-            this.btnMdQrySymbol.Size = new System.Drawing.Size(75, 23);
+            this.btnMdQrySymbol.Size = new System.Drawing.Size(150, 46);
             this.btnMdQrySymbol.TabIndex = 25;
             this.btnMdQrySymbol.Text = "查询合约";
             this.btnMdQrySymbol.UseVisualStyleBackColor = true;
             // 
             // mdSymbols
             // 
-            this.mdSymbols.Location = new System.Drawing.Point(59, 63);
+            this.mdSymbols.Location = new System.Drawing.Point(118, 126);
+            this.mdSymbols.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
             this.mdSymbols.Name = "mdSymbols";
-            this.mdSymbols.Size = new System.Drawing.Size(198, 21);
+            this.mdSymbols.Size = new System.Drawing.Size(392, 35);
             this.mdSymbols.TabIndex = 24;
             this.mdSymbols.Text = "HSIF7,CLG7";
             // 
             // label12
             // 
             this.label12.AutoSize = true;
-            this.label12.Location = new System.Drawing.Point(10, 66);
+            this.label12.Location = new System.Drawing.Point(20, 132);
+            this.label12.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
             this.label12.Name = "label12";
-            this.label12.Size = new System.Drawing.Size(35, 12);
+            this.label12.Size = new System.Drawing.Size(70, 24);
             this.label12.TabIndex = 23;
             this.label12.Text = "合约:";
             // 
             // btnMdSubMarket
             // 
-            this.btnMdSubMarket.Location = new System.Drawing.Point(308, 66);
+            this.btnMdSubMarket.Location = new System.Drawing.Point(616, 132);
+            this.btnMdSubMarket.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
             this.btnMdSubMarket.Name = "btnMdSubMarket";
-            this.btnMdSubMarket.Size = new System.Drawing.Size(75, 23);
+            this.btnMdSubMarket.Size = new System.Drawing.Size(150, 46);
             this.btnMdSubMarket.TabIndex = 22;
             this.btnMdSubMarket.Text = "注册行情";
             this.btnMdSubMarket.UseVisualStyleBackColor = true;
             // 
             // mdPass
             // 
-            this.mdPass.Location = new System.Drawing.Point(204, 34);
+            this.mdPass.Location = new System.Drawing.Point(408, 68);
+            this.mdPass.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
             this.mdPass.Name = "mdPass";
-            this.mdPass.Size = new System.Drawing.Size(53, 21);
+            this.mdPass.Size = new System.Drawing.Size(102, 35);
             this.mdPass.TabIndex = 21;
             this.mdPass.Text = "123456";
             // 
             // label8
             // 
             this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(142, 37);
+            this.label8.Location = new System.Drawing.Point(284, 74);
+            this.label8.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
             this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(59, 12);
+            this.label8.Size = new System.Drawing.Size(118, 24);
             this.label8.TabIndex = 20;
             this.label8.Text = "Password:";
             // 
             // mdUser
             // 
-            this.mdUser.Location = new System.Drawing.Point(59, 34);
+            this.mdUser.Location = new System.Drawing.Point(118, 68);
+            this.mdUser.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
             this.mdUser.Name = "mdUser";
-            this.mdUser.Size = new System.Drawing.Size(77, 21);
+            this.mdUser.Size = new System.Drawing.Size(150, 35);
             this.mdUser.TabIndex = 19;
             this.mdUser.Text = "8500001";
             // 
             // label9
             // 
             this.label9.AutoSize = true;
-            this.label9.Location = new System.Drawing.Point(10, 37);
+            this.label9.Location = new System.Drawing.Point(20, 74);
+            this.label9.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
             this.label9.Name = "label9";
-            this.label9.Size = new System.Drawing.Size(47, 12);
+            this.label9.Size = new System.Drawing.Size(94, 24);
             this.label9.TabIndex = 18;
             this.label9.Text = "UserID:";
             // 
             // btnMdLogin
             // 
-            this.btnMdLogin.Location = new System.Drawing.Point(308, 37);
+            this.btnMdLogin.Location = new System.Drawing.Point(616, 74);
+            this.btnMdLogin.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
             this.btnMdLogin.Name = "btnMdLogin";
-            this.btnMdLogin.Size = new System.Drawing.Size(75, 23);
+            this.btnMdLogin.Size = new System.Drawing.Size(150, 46);
             this.btnMdLogin.TabIndex = 17;
             this.btnMdLogin.Text = "登入";
             this.btnMdLogin.UseVisualStyleBackColor = true;
             // 
             // btnStopMd
             // 
-            this.btnStopMd.Location = new System.Drawing.Point(406, 5);
+            this.btnStopMd.Location = new System.Drawing.Point(812, 10);
+            this.btnStopMd.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
             this.btnStopMd.Name = "btnStopMd";
-            this.btnStopMd.Size = new System.Drawing.Size(92, 23);
+            this.btnStopMd.Size = new System.Drawing.Size(184, 46);
             this.btnStopMd.TabIndex = 16;
             this.btnStopMd.Text = "停止行情接口";
             this.btnStopMd.UseVisualStyleBackColor = true;
             // 
             // btnStartMd
             // 
-            this.btnStartMd.Location = new System.Drawing.Point(308, 5);
+            this.btnStartMd.Location = new System.Drawing.Point(616, 10);
+            this.btnStartMd.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
             this.btnStartMd.Name = "btnStartMd";
-            this.btnStartMd.Size = new System.Drawing.Size(92, 23);
+            this.btnStartMd.Size = new System.Drawing.Size(184, 46);
             this.btnStartMd.TabIndex = 15;
             this.btnStartMd.Text = "启动行情接口";
             this.btnStartMd.UseVisualStyleBackColor = true;
             // 
             // mdPort
             // 
-            this.mdPort.Location = new System.Drawing.Point(249, 7);
+            this.mdPort.Location = new System.Drawing.Point(498, 14);
+            this.mdPort.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
             this.mdPort.Name = "mdPort";
-            this.mdPort.Size = new System.Drawing.Size(53, 21);
+            this.mdPort.Size = new System.Drawing.Size(102, 35);
             this.mdPort.TabIndex = 14;
             this.mdPort.Text = "55633";
             // 
             // label10
             // 
             this.label10.AutoSize = true;
-            this.label10.Location = new System.Drawing.Point(202, 10);
+            this.label10.Location = new System.Drawing.Point(404, 20);
+            this.label10.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
             this.label10.Name = "label10";
-            this.label10.Size = new System.Drawing.Size(35, 12);
+            this.label10.Size = new System.Drawing.Size(70, 24);
             this.label10.TabIndex = 13;
             this.label10.Text = "端口:";
             // 
             // mdAddress
             // 
-            this.mdAddress.Location = new System.Drawing.Point(59, 7);
+            this.mdAddress.Location = new System.Drawing.Point(118, 14);
+            this.mdAddress.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
             this.mdAddress.Name = "mdAddress";
-            this.mdAddress.Size = new System.Drawing.Size(133, 21);
+            this.mdAddress.Size = new System.Drawing.Size(262, 35);
             this.mdAddress.TabIndex = 12;
             this.mdAddress.Text = "127.0.0.1";
             // 
             // label11
             // 
             this.label11.AutoSize = true;
-            this.label11.Location = new System.Drawing.Point(10, 10);
+            this.label11.Location = new System.Drawing.Point(20, 20);
+            this.label11.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
             this.label11.Name = "label11";
-            this.label11.Size = new System.Drawing.Size(35, 12);
+            this.label11.Size = new System.Drawing.Size(70, 24);
             this.label11.TabIndex = 11;
             this.label11.Text = "地址:";
             // 
             // button1
             // 
-            this.button1.Location = new System.Drawing.Point(869, 6);
+            this.button1.Location = new System.Drawing.Point(1738, 12);
+            this.button1.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
             this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(75, 23);
+            this.button1.Size = new System.Drawing.Size(150, 46);
             this.button1.TabIndex = 0;
             this.button1.Text = "button1";
             this.button1.UseVisualStyleBackColor = true;
@@ -1033,67 +1118,75 @@
             this.tabPage4.Controls.Add(this.ekey);
             this.tabPage4.Controls.Add(this.btnEncode);
             this.tabPage4.Controls.Add(this.label21);
-            this.tabPage4.Location = new System.Drawing.Point(4, 22);
+            this.tabPage4.Location = new System.Drawing.Point(8, 39);
+            this.tabPage4.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
             this.tabPage4.Name = "tabPage4";
-            this.tabPage4.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage4.Size = new System.Drawing.Size(961, 227);
+            this.tabPage4.Padding = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            this.tabPage4.Size = new System.Drawing.Size(1922, 459);
             this.tabPage4.TabIndex = 3;
             this.tabPage4.Text = "tabPage4";
             this.tabPage4.UseVisualStyleBackColor = true;
             // 
             // btnDecode
             // 
-            this.btnDecode.Location = new System.Drawing.Point(337, 91);
+            this.btnDecode.Location = new System.Drawing.Point(674, 182);
+            this.btnDecode.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
             this.btnDecode.Name = "btnDecode";
-            this.btnDecode.Size = new System.Drawing.Size(75, 23);
+            this.btnDecode.Size = new System.Drawing.Size(150, 46);
             this.btnDecode.TabIndex = 7;
             this.btnDecode.Text = "解密";
             this.btnDecode.UseVisualStyleBackColor = true;
             // 
             // encstr
             // 
-            this.encstr.Location = new System.Drawing.Point(77, 88);
+            this.encstr.Location = new System.Drawing.Point(154, 176);
+            this.encstr.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
             this.encstr.Name = "encstr";
-            this.encstr.Size = new System.Drawing.Size(203, 21);
+            this.encstr.Size = new System.Drawing.Size(402, 35);
             this.encstr.TabIndex = 6;
             // 
             // label23
             // 
             this.label23.AutoSize = true;
-            this.label23.Location = new System.Drawing.Point(30, 91);
+            this.label23.Location = new System.Drawing.Point(60, 182);
+            this.label23.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
             this.label23.Name = "label23";
-            this.label23.Size = new System.Drawing.Size(29, 12);
+            this.label23.Size = new System.Drawing.Size(58, 24);
             this.label23.TabIndex = 5;
             this.label23.Text = "密文";
             // 
             // rawstr
             // 
-            this.rawstr.Location = new System.Drawing.Point(77, 52);
+            this.rawstr.Location = new System.Drawing.Point(154, 104);
+            this.rawstr.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
             this.rawstr.Name = "rawstr";
-            this.rawstr.Size = new System.Drawing.Size(203, 21);
+            this.rawstr.Size = new System.Drawing.Size(402, 35);
             this.rawstr.TabIndex = 4;
             // 
             // label22
             // 
             this.label22.AutoSize = true;
-            this.label22.Location = new System.Drawing.Point(30, 55);
+            this.label22.Location = new System.Drawing.Point(60, 110);
+            this.label22.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
             this.label22.Name = "label22";
-            this.label22.Size = new System.Drawing.Size(29, 12);
+            this.label22.Size = new System.Drawing.Size(58, 24);
             this.label22.TabIndex = 3;
             this.label22.Text = "原文";
             // 
             // ekey
             // 
-            this.ekey.Location = new System.Drawing.Point(65, 11);
+            this.ekey.Location = new System.Drawing.Point(130, 22);
+            this.ekey.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
             this.ekey.Name = "ekey";
-            this.ekey.Size = new System.Drawing.Size(147, 21);
+            this.ekey.Size = new System.Drawing.Size(290, 35);
             this.ekey.TabIndex = 2;
             // 
             // btnEncode
             // 
-            this.btnEncode.Location = new System.Drawing.Point(337, 44);
+            this.btnEncode.Location = new System.Drawing.Point(674, 88);
+            this.btnEncode.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
             this.btnEncode.Name = "btnEncode";
-            this.btnEncode.Size = new System.Drawing.Size(75, 23);
+            this.btnEncode.Size = new System.Drawing.Size(150, 46);
             this.btnEncode.TabIndex = 1;
             this.btnEncode.Text = "加密";
             this.btnEncode.UseVisualStyleBackColor = true;
@@ -1101,9 +1194,10 @@
             // label21
             // 
             this.label21.AutoSize = true;
-            this.label21.Location = new System.Drawing.Point(30, 20);
+            this.label21.Location = new System.Drawing.Point(60, 40);
+            this.label21.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
             this.label21.Name = "label21";
-            this.label21.Size = new System.Drawing.Size(29, 12);
+            this.label21.Size = new System.Drawing.Size(58, 24);
             this.label21.TabIndex = 0;
             this.label21.Text = "密钥";
             // 
@@ -1156,441 +1250,490 @@
             this.tabPage5.Controls.Add(this.webAddAccount);
             this.tabPage5.Controls.Add(this.md5key);
             this.tabPage5.Controls.Add(this.label24);
-            this.tabPage5.Location = new System.Drawing.Point(4, 22);
+            this.tabPage5.Location = new System.Drawing.Point(8, 39);
+            this.tabPage5.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
             this.tabPage5.Name = "tabPage5";
-            this.tabPage5.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage5.Size = new System.Drawing.Size(961, 227);
+            this.tabPage5.Padding = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            this.tabPage5.Size = new System.Drawing.Size(1922, 459);
             this.tabPage5.TabIndex = 4;
             this.tabPage5.Text = "HttpAPI";
             this.tabPage5.UseVisualStyleBackColor = true;
             // 
+            // webStatus
+            // 
+            this.webStatus.Location = new System.Drawing.Point(1530, 352);
+            this.webStatus.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            this.webStatus.Name = "webStatus";
+            this.webStatus.Size = new System.Drawing.Size(150, 46);
+            this.webStatus.TabIndex = 46;
+            this.webStatus.Text = "QueryStatus";
+            this.webStatus.UseVisualStyleBackColor = true;
+            // 
             // webend
             // 
-            this.webend.Location = new System.Drawing.Point(585, 168);
+            this.webend.Location = new System.Drawing.Point(1170, 336);
+            this.webend.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
             this.webend.Name = "webend";
-            this.webend.Size = new System.Drawing.Size(100, 21);
+            this.webend.Size = new System.Drawing.Size(196, 35);
             this.webend.TabIndex = 45;
             this.webend.Text = "0";
             // 
             // label41
             // 
             this.label41.AutoSize = true;
-            this.label41.Location = new System.Drawing.Point(538, 171);
+            this.label41.Location = new System.Drawing.Point(1076, 342);
+            this.label41.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
             this.label41.Name = "label41";
-            this.label41.Size = new System.Drawing.Size(23, 12);
+            this.label41.Size = new System.Drawing.Size(46, 24);
             this.label41.TabIndex = 44;
             this.label41.Text = "end";
             // 
             // webstart
             // 
-            this.webstart.Location = new System.Drawing.Point(426, 168);
+            this.webstart.Location = new System.Drawing.Point(852, 336);
+            this.webstart.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
             this.webstart.Name = "webstart";
-            this.webstart.Size = new System.Drawing.Size(100, 21);
+            this.webstart.Size = new System.Drawing.Size(196, 35);
             this.webstart.TabIndex = 43;
             this.webstart.Text = "0";
             // 
             // label40
             // 
             this.label40.AutoSize = true;
-            this.label40.Location = new System.Drawing.Point(379, 171);
+            this.label40.Location = new System.Drawing.Point(758, 342);
+            this.label40.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
             this.label40.Name = "label40";
-            this.label40.Size = new System.Drawing.Size(35, 12);
+            this.label40.Size = new System.Drawing.Size(70, 24);
             this.label40.TabIndex = 42;
             this.label40.Text = "start";
             // 
             // webQryCash
             // 
-            this.webQryCash.Location = new System.Drawing.Point(846, 85);
+            this.webQryCash.Location = new System.Drawing.Point(1692, 170);
+            this.webQryCash.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
             this.webQryCash.Name = "webQryCash";
-            this.webQryCash.Size = new System.Drawing.Size(75, 23);
+            this.webQryCash.Size = new System.Drawing.Size(150, 46);
             this.webQryCash.TabIndex = 41;
             this.webQryCash.Text = "QueryCash";
             this.webQryCash.UseVisualStyleBackColor = true;
             // 
             // webQryTrade
             // 
-            this.webQryTrade.Location = new System.Drawing.Point(846, 50);
+            this.webQryTrade.Location = new System.Drawing.Point(1692, 100);
+            this.webQryTrade.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
             this.webQryTrade.Name = "webQryTrade";
-            this.webQryTrade.Size = new System.Drawing.Size(75, 23);
+            this.webQryTrade.Size = new System.Drawing.Size(150, 46);
             this.webQryTrade.TabIndex = 40;
             this.webQryTrade.Text = "QueryTrade";
             this.webQryTrade.UseVisualStyleBackColor = true;
             // 
             // webQryOrder
             // 
-            this.webQryOrder.Location = new System.Drawing.Point(846, 21);
+            this.webQryOrder.Location = new System.Drawing.Point(1692, 42);
+            this.webQryOrder.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
             this.webQryOrder.Name = "webQryOrder";
-            this.webQryOrder.Size = new System.Drawing.Size(75, 23);
+            this.webQryOrder.Size = new System.Drawing.Size(150, 46);
             this.webQryOrder.TabIndex = 39;
             this.webQryOrder.Text = "QueryOrder";
             this.webQryOrder.UseVisualStyleBackColor = true;
             // 
             // webpass
             // 
-            this.webpass.Location = new System.Drawing.Point(594, 79);
+            this.webpass.Location = new System.Drawing.Point(1188, 158);
+            this.webpass.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
             this.webpass.Name = "webpass";
-            this.webpass.Size = new System.Drawing.Size(100, 21);
+            this.webpass.Size = new System.Drawing.Size(196, 35);
             this.webpass.TabIndex = 38;
             this.webpass.Text = "0";
             // 
             // label39
             // 
             this.label39.AutoSize = true;
-            this.label39.Location = new System.Drawing.Point(547, 82);
+            this.label39.Location = new System.Drawing.Point(1094, 164);
+            this.label39.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
             this.label39.Name = "label39";
-            this.label39.Size = new System.Drawing.Size(53, 12);
+            this.label39.Size = new System.Drawing.Size(106, 24);
             this.label39.TabIndex = 37;
             this.label39.Text = "new pass";
             // 
             // webUpdatePass
             // 
-            this.webUpdatePass.Location = new System.Drawing.Point(765, 147);
+            this.webUpdatePass.Location = new System.Drawing.Point(1530, 294);
+            this.webUpdatePass.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
             this.webUpdatePass.Name = "webUpdatePass";
-            this.webUpdatePass.Size = new System.Drawing.Size(75, 23);
+            this.webUpdatePass.Size = new System.Drawing.Size(150, 46);
             this.webUpdatePass.TabIndex = 36;
             this.webUpdatePass.Text = "UpdatePass";
             this.webUpdatePass.UseVisualStyleBackColor = true;
             // 
             // webQueryPass
             // 
-            this.webQueryPass.Location = new System.Drawing.Point(765, 117);
+            this.webQueryPass.Location = new System.Drawing.Point(1530, 234);
+            this.webQueryPass.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
             this.webQueryPass.Name = "webQueryPass";
-            this.webQueryPass.Size = new System.Drawing.Size(75, 23);
+            this.webQueryPass.Size = new System.Drawing.Size(150, 46);
             this.webQueryPass.TabIndex = 35;
             this.webQueryPass.Text = "QueryPass";
             this.webQueryPass.UseVisualStyleBackColor = true;
             // 
             // webQueryUser
             // 
-            this.webQueryUser.Location = new System.Drawing.Point(765, 88);
+            this.webQueryUser.Location = new System.Drawing.Point(1530, 176);
+            this.webQueryUser.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
             this.webQueryUser.Name = "webQueryUser";
-            this.webQueryUser.Size = new System.Drawing.Size(75, 23);
+            this.webQueryUser.Size = new System.Drawing.Size(150, 46);
             this.webQueryUser.TabIndex = 34;
             this.webQueryUser.Text = "QueryUser";
             this.webQueryUser.UseVisualStyleBackColor = true;
             // 
             // webWitdhdraw
             // 
-            this.webWitdhdraw.Location = new System.Drawing.Point(765, 54);
+            this.webWitdhdraw.Location = new System.Drawing.Point(1530, 108);
+            this.webWitdhdraw.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
             this.webWitdhdraw.Name = "webWitdhdraw";
-            this.webWitdhdraw.Size = new System.Drawing.Size(75, 23);
+            this.webWitdhdraw.Size = new System.Drawing.Size(150, 46);
             this.webWitdhdraw.TabIndex = 33;
             this.webWitdhdraw.Text = "Withdraw";
             this.webWitdhdraw.UseVisualStyleBackColor = true;
             // 
             // webAmount
             // 
-            this.webAmount.Location = new System.Drawing.Point(594, 48);
+            this.webAmount.Location = new System.Drawing.Point(1188, 96);
+            this.webAmount.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
             this.webAmount.Name = "webAmount";
-            this.webAmount.Size = new System.Drawing.Size(100, 21);
+            this.webAmount.Size = new System.Drawing.Size(196, 35);
             this.webAmount.TabIndex = 32;
             this.webAmount.Text = "0";
             // 
             // label38
             // 
             this.label38.AutoSize = true;
-            this.label38.Location = new System.Drawing.Point(547, 51);
+            this.label38.Location = new System.Drawing.Point(1094, 102);
+            this.label38.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
             this.label38.Name = "label38";
-            this.label38.Size = new System.Drawing.Size(41, 12);
+            this.label38.Size = new System.Drawing.Size(82, 24);
             this.label38.TabIndex = 31;
             this.label38.Text = "amount";
             // 
             // webDeposit
             // 
-            this.webDeposit.Location = new System.Drawing.Point(765, 21);
+            this.webDeposit.Location = new System.Drawing.Point(1530, 42);
+            this.webDeposit.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
             this.webDeposit.Name = "webDeposit";
-            this.webDeposit.Size = new System.Drawing.Size(75, 23);
+            this.webDeposit.Size = new System.Drawing.Size(150, 46);
             this.webDeposit.TabIndex = 30;
             this.webDeposit.Text = "Deposit";
             this.webDeposit.UseVisualStyleBackColor = true;
             // 
             // webupdateacc_idcard
             // 
-            this.webupdateacc_idcard.Location = new System.Drawing.Point(426, 141);
+            this.webupdateacc_idcard.Location = new System.Drawing.Point(852, 282);
+            this.webupdateacc_idcard.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
             this.webupdateacc_idcard.Name = "webupdateacc_idcard";
-            this.webupdateacc_idcard.Size = new System.Drawing.Size(100, 21);
+            this.webupdateacc_idcard.Size = new System.Drawing.Size(196, 35);
             this.webupdateacc_idcard.TabIndex = 29;
             this.webupdateacc_idcard.Text = "0";
             // 
             // label37
             // 
             this.label37.AutoSize = true;
-            this.label37.Location = new System.Drawing.Point(379, 144);
+            this.label37.Location = new System.Drawing.Point(758, 288);
+            this.label37.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
             this.label37.Name = "label37";
-            this.label37.Size = new System.Drawing.Size(41, 12);
+            this.label37.Size = new System.Drawing.Size(82, 24);
             this.label37.TabIndex = 28;
             this.label37.Text = "idcard";
             // 
             // webUpdateAccount
             // 
-            this.webUpdateAccount.Location = new System.Drawing.Point(223, 186);
+            this.webUpdateAccount.Location = new System.Drawing.Point(446, 372);
+            this.webUpdateAccount.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
             this.webUpdateAccount.Name = "webUpdateAccount";
-            this.webUpdateAccount.Size = new System.Drawing.Size(75, 23);
+            this.webUpdateAccount.Size = new System.Drawing.Size(150, 46);
             this.webUpdateAccount.TabIndex = 27;
             this.webUpdateAccount.Text = "update交易账户";
             this.webUpdateAccount.UseVisualStyleBackColor = true;
             // 
             // webupdateacc_bank
             // 
-            this.webupdateacc_bank.Location = new System.Drawing.Point(426, 48);
+            this.webupdateacc_bank.Location = new System.Drawing.Point(852, 96);
+            this.webupdateacc_bank.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
             this.webupdateacc_bank.Name = "webupdateacc_bank";
-            this.webupdateacc_bank.Size = new System.Drawing.Size(100, 21);
+            this.webupdateacc_bank.Size = new System.Drawing.Size(196, 35);
             this.webupdateacc_bank.TabIndex = 26;
             this.webupdateacc_bank.Text = "0";
             // 
             // label34
             // 
             this.label34.AutoSize = true;
-            this.label34.Location = new System.Drawing.Point(379, 51);
+            this.label34.Location = new System.Drawing.Point(758, 102);
+            this.label34.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
             this.label34.Name = "label34";
-            this.label34.Size = new System.Drawing.Size(29, 12);
+            this.label34.Size = new System.Drawing.Size(58, 24);
             this.label34.TabIndex = 25;
             this.label34.Text = "bank";
             // 
             // webupdateacc_bankac
             // 
-            this.webupdateacc_bankac.Location = new System.Drawing.Point(426, 106);
+            this.webupdateacc_bankac.Location = new System.Drawing.Point(852, 212);
+            this.webupdateacc_bankac.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
             this.webupdateacc_bankac.Name = "webupdateacc_bankac";
-            this.webupdateacc_bankac.Size = new System.Drawing.Size(100, 21);
+            this.webupdateacc_bankac.Size = new System.Drawing.Size(196, 35);
             this.webupdateacc_bankac.TabIndex = 24;
             this.webupdateacc_bankac.Text = "0";
             // 
             // label35
             // 
             this.label35.AutoSize = true;
-            this.label35.Location = new System.Drawing.Point(379, 109);
+            this.label35.Location = new System.Drawing.Point(758, 218);
+            this.label35.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
             this.label35.Name = "label35";
-            this.label35.Size = new System.Drawing.Size(47, 12);
+            this.label35.Size = new System.Drawing.Size(94, 24);
             this.label35.TabIndex = 23;
             this.label35.Text = "bankacc";
             // 
             // webupdateacc_branch
             // 
-            this.webupdateacc_branch.Location = new System.Drawing.Point(426, 79);
+            this.webupdateacc_branch.Location = new System.Drawing.Point(852, 158);
+            this.webupdateacc_branch.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
             this.webupdateacc_branch.Name = "webupdateacc_branch";
-            this.webupdateacc_branch.Size = new System.Drawing.Size(100, 21);
+            this.webupdateacc_branch.Size = new System.Drawing.Size(196, 35);
             this.webupdateacc_branch.TabIndex = 22;
             this.webupdateacc_branch.Text = "0";
             // 
             // label36
             // 
             this.label36.AutoSize = true;
-            this.label36.Location = new System.Drawing.Point(379, 82);
+            this.label36.Location = new System.Drawing.Point(758, 164);
+            this.label36.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
             this.label36.Name = "label36";
-            this.label36.Size = new System.Drawing.Size(41, 12);
+            this.label36.Size = new System.Drawing.Size(82, 24);
             this.label36.TabIndex = 21;
             this.label36.Text = "branch";
             // 
             // webupdateacc_acc
             // 
-            this.webupdateacc_acc.Location = new System.Drawing.Point(251, 48);
+            this.webupdateacc_acc.Location = new System.Drawing.Point(502, 96);
+            this.webupdateacc_acc.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
             this.webupdateacc_acc.Name = "webupdateacc_acc";
-            this.webupdateacc_acc.Size = new System.Drawing.Size(100, 21);
+            this.webupdateacc_acc.Size = new System.Drawing.Size(196, 35);
             this.webupdateacc_acc.TabIndex = 20;
             this.webupdateacc_acc.Text = "8500008";
             // 
             // label30
             // 
             this.label30.AutoSize = true;
-            this.label30.Location = new System.Drawing.Point(204, 51);
+            this.label30.Location = new System.Drawing.Point(408, 102);
+            this.label30.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
             this.label30.Name = "label30";
-            this.label30.Size = new System.Drawing.Size(47, 12);
+            this.label30.Size = new System.Drawing.Size(94, 24);
             this.label30.TabIndex = 19;
             this.label30.Text = "account";
             // 
             // webupdateacc_mobile
             // 
-            this.webupdateacc_mobile.Location = new System.Drawing.Point(251, 138);
+            this.webupdateacc_mobile.Location = new System.Drawing.Point(502, 276);
+            this.webupdateacc_mobile.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
             this.webupdateacc_mobile.Name = "webupdateacc_mobile";
-            this.webupdateacc_mobile.Size = new System.Drawing.Size(100, 21);
+            this.webupdateacc_mobile.Size = new System.Drawing.Size(196, 35);
             this.webupdateacc_mobile.TabIndex = 18;
             this.webupdateacc_mobile.Text = "RMB";
             // 
             // label31
             // 
             this.label31.AutoSize = true;
-            this.label31.Location = new System.Drawing.Point(204, 141);
+            this.label31.Location = new System.Drawing.Point(408, 282);
+            this.label31.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
             this.label31.Name = "label31";
-            this.label31.Size = new System.Drawing.Size(41, 12);
+            this.label31.Size = new System.Drawing.Size(82, 24);
             this.label31.TabIndex = 17;
             this.label31.Text = "mobile";
             // 
             // webupdateacc_qq
             // 
-            this.webupdateacc_qq.Location = new System.Drawing.Point(251, 106);
+            this.webupdateacc_qq.Location = new System.Drawing.Point(502, 212);
+            this.webupdateacc_qq.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
             this.webupdateacc_qq.Name = "webupdateacc_qq";
-            this.webupdateacc_qq.Size = new System.Drawing.Size(100, 21);
+            this.webupdateacc_qq.Size = new System.Drawing.Size(196, 35);
             this.webupdateacc_qq.TabIndex = 16;
             this.webupdateacc_qq.Text = "0";
             // 
             // label32
             // 
             this.label32.AutoSize = true;
-            this.label32.Location = new System.Drawing.Point(204, 109);
+            this.label32.Location = new System.Drawing.Point(408, 218);
+            this.label32.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
             this.label32.Name = "label32";
-            this.label32.Size = new System.Drawing.Size(17, 12);
+            this.label32.Size = new System.Drawing.Size(34, 24);
             this.label32.TabIndex = 15;
             this.label32.Text = "qq";
             // 
             // webupdateacc_name
             // 
-            this.webupdateacc_name.Location = new System.Drawing.Point(251, 79);
+            this.webupdateacc_name.Location = new System.Drawing.Point(502, 158);
+            this.webupdateacc_name.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
             this.webupdateacc_name.Name = "webupdateacc_name";
-            this.webupdateacc_name.Size = new System.Drawing.Size(100, 21);
+            this.webupdateacc_name.Size = new System.Drawing.Size(196, 35);
             this.webupdateacc_name.TabIndex = 14;
             this.webupdateacc_name.Text = "0";
             // 
             // label33
             // 
             this.label33.AutoSize = true;
-            this.label33.Location = new System.Drawing.Point(204, 82);
+            this.label33.Location = new System.Drawing.Point(408, 164);
+            this.label33.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
             this.label33.Name = "label33";
-            this.label33.Size = new System.Drawing.Size(29, 12);
+            this.label33.Size = new System.Drawing.Size(58, 24);
             this.label33.TabIndex = 13;
             this.label33.Text = "name";
             // 
             // web_url
             // 
-            this.web_url.Location = new System.Drawing.Point(55, 12);
+            this.web_url.Location = new System.Drawing.Point(110, 24);
+            this.web_url.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
             this.web_url.Name = "web_url";
-            this.web_url.Size = new System.Drawing.Size(139, 21);
+            this.web_url.Size = new System.Drawing.Size(274, 35);
             this.web_url.TabIndex = 12;
             this.web_url.Text = "http://127.0.0.1:9999/api";
             // 
             // label29
             // 
             this.label29.AutoSize = true;
-            this.label29.Location = new System.Drawing.Point(8, 21);
+            this.label29.Location = new System.Drawing.Point(16, 42);
+            this.label29.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
             this.label29.Name = "label29";
-            this.label29.Size = new System.Drawing.Size(23, 12);
+            this.label29.Size = new System.Drawing.Size(46, 24);
             this.label29.TabIndex = 11;
             this.label29.Text = "Url";
             // 
             // web_domainId
             // 
-            this.web_domainId.Location = new System.Drawing.Point(55, 54);
+            this.web_domainId.Location = new System.Drawing.Point(110, 108);
+            this.web_domainId.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
             this.web_domainId.Name = "web_domainId";
-            this.web_domainId.Size = new System.Drawing.Size(100, 21);
+            this.web_domainId.Size = new System.Drawing.Size(196, 35);
             this.web_domainId.TabIndex = 10;
             this.web_domainId.Text = "2";
             // 
             // label28
             // 
             this.label28.AutoSize = true;
-            this.label28.Location = new System.Drawing.Point(8, 57);
+            this.label28.Location = new System.Drawing.Point(16, 114);
+            this.label28.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
             this.label28.Name = "label28";
-            this.label28.Size = new System.Drawing.Size(41, 12);
+            this.label28.Size = new System.Drawing.Size(82, 24);
             this.label28.TabIndex = 9;
             this.label28.Text = "分区ID";
             // 
             // web_currency
             // 
-            this.web_currency.Location = new System.Drawing.Point(55, 144);
+            this.web_currency.Location = new System.Drawing.Point(110, 288);
+            this.web_currency.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
             this.web_currency.Name = "web_currency";
-            this.web_currency.Size = new System.Drawing.Size(100, 21);
+            this.web_currency.Size = new System.Drawing.Size(196, 35);
             this.web_currency.TabIndex = 8;
             this.web_currency.Text = "RMB";
             // 
             // label27
             // 
             this.label27.AutoSize = true;
-            this.label27.Location = new System.Drawing.Point(8, 147);
+            this.label27.Location = new System.Drawing.Point(16, 294);
+            this.label27.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
             this.label27.Name = "label27";
-            this.label27.Size = new System.Drawing.Size(29, 12);
+            this.label27.Size = new System.Drawing.Size(58, 24);
             this.label27.TabIndex = 7;
             this.label27.Text = "货币";
             // 
             // web_agentID
             // 
-            this.web_agentID.Location = new System.Drawing.Point(55, 112);
+            this.web_agentID.Location = new System.Drawing.Point(110, 224);
+            this.web_agentID.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
             this.web_agentID.Name = "web_agentID";
-            this.web_agentID.Size = new System.Drawing.Size(100, 21);
+            this.web_agentID.Size = new System.Drawing.Size(196, 35);
             this.web_agentID.TabIndex = 6;
             this.web_agentID.Text = "0";
             // 
             // label26
             // 
             this.label26.AutoSize = true;
-            this.label26.Location = new System.Drawing.Point(8, 115);
+            this.label26.Location = new System.Drawing.Point(16, 230);
+            this.label26.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
             this.label26.Name = "label26";
-            this.label26.Size = new System.Drawing.Size(47, 12);
+            this.label26.Size = new System.Drawing.Size(94, 24);
             this.label26.TabIndex = 5;
             this.label26.Text = "AgentID";
             // 
             // web_userID
             // 
-            this.web_userID.Location = new System.Drawing.Point(55, 85);
+            this.web_userID.Location = new System.Drawing.Point(110, 170);
+            this.web_userID.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
             this.web_userID.Name = "web_userID";
-            this.web_userID.Size = new System.Drawing.Size(100, 21);
+            this.web_userID.Size = new System.Drawing.Size(196, 35);
             this.web_userID.TabIndex = 4;
             this.web_userID.Text = "0";
             // 
             // label25
             // 
             this.label25.AutoSize = true;
-            this.label25.Location = new System.Drawing.Point(8, 88);
+            this.label25.Location = new System.Drawing.Point(16, 176);
+            this.label25.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
             this.label25.Name = "label25";
-            this.label25.Size = new System.Drawing.Size(41, 12);
+            this.label25.Size = new System.Drawing.Size(82, 24);
             this.label25.TabIndex = 3;
             this.label25.Text = "UserID";
             // 
             // webAddAccount
             // 
-            this.webAddAccount.Location = new System.Drawing.Point(38, 186);
+            this.webAddAccount.Location = new System.Drawing.Point(76, 372);
+            this.webAddAccount.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
             this.webAddAccount.Name = "webAddAccount";
-            this.webAddAccount.Size = new System.Drawing.Size(75, 23);
+            this.webAddAccount.Size = new System.Drawing.Size(150, 46);
             this.webAddAccount.TabIndex = 2;
             this.webAddAccount.Text = "创建交易账户";
             this.webAddAccount.UseVisualStyleBackColor = true;
             // 
             // md5key
             // 
-            this.md5key.Location = new System.Drawing.Point(268, 6);
+            this.md5key.Location = new System.Drawing.Point(536, 12);
+            this.md5key.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
             this.md5key.Name = "md5key";
-            this.md5key.Size = new System.Drawing.Size(100, 21);
+            this.md5key.Size = new System.Drawing.Size(196, 35);
             this.md5key.TabIndex = 1;
             this.md5key.Text = "123456";
             // 
             // label24
             // 
             this.label24.AutoSize = true;
-            this.label24.Location = new System.Drawing.Point(221, 15);
+            this.label24.Location = new System.Drawing.Point(442, 30);
+            this.label24.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
             this.label24.Name = "label24";
-            this.label24.Size = new System.Drawing.Size(41, 12);
+            this.label24.Size = new System.Drawing.Size(82, 24);
             this.label24.TabIndex = 0;
             this.label24.Text = "MD5Key";
             // 
             // debugControl1
             // 
-            this.debugControl1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.debugControl1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+                        | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
             this.debugControl1.EnableSearching = true;
             this.debugControl1.ExternalTimeStamp = 0;
-            this.debugControl1.Location = new System.Drawing.Point(0, 254);
-            this.debugControl1.Margin = new System.Windows.Forms.Padding(2);
+            this.debugControl1.Location = new System.Drawing.Point(0, 508);
+            this.debugControl1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.debugControl1.Name = "debugControl1";
-            this.debugControl1.Size = new System.Drawing.Size(969, 291);
+            this.debugControl1.Size = new System.Drawing.Size(1938, 582);
             this.debugControl1.TabIndex = 0;
             this.debugControl1.TimeStamps = true;
             this.debugControl1.UseExternalTimeStamp = false;
             // 
-            // webStatus
-            // 
-            this.webStatus.Location = new System.Drawing.Point(765, 176);
-            this.webStatus.Name = "webStatus";
-            this.webStatus.Size = new System.Drawing.Size(75, 23);
-            this.webStatus.TabIndex = 46;
-            this.webStatus.Text = "QueryCash";
-            this.webStatus.UseVisualStyleBackColor = true;
-            // 
             // Form1
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(12F, 24F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(969, 546);
+            this.ClientSize = new System.Drawing.Size(1938, 1092);
             this.Controls.Add(this.tabControl1);
             this.Controls.Add(this.debugControl1);
+            this.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
             this.Name = "Form1";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "API客户端";

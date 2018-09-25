@@ -46,6 +46,10 @@ namespace TradingLib.Contrib.APIService
                                     AccountNum = TLCtxHelper.ModuleExCore.OnLineTerminalNum,//交易账户
                                     OrderNum = TLCtxHelper.ModuleClearCentre.TotalOrders.Count(),//当前委托数量
                                     TradeNum = TLCtxHelper.ModuleClearCentre.TotalTrades.Count(),//当前成交数量
+                                    UAO = ORM.MTradingInfo.GetUnsettledAcctOrderNum(TLCtxHelper.ModuleSettleCentre.LastSettleday),
+                                    UAT = ORM.MTradingInfo.GetUnsettledExchangeSettlementNum(TLCtxHelper.ModuleSettleCentre.LastSettleday),
+                                    UAE = ORM.MTradingInfo.GetUnsettledAcctTradeNum(TLCtxHelper.ModuleSettleCentre.LastSettleday),
+
                                 };
 
                                 return new JsonReply(0,"",obj);

@@ -32,7 +32,7 @@ namespace TradingLib.Core
         /// </summary>
         public void Init()
         {
-            setfile();
+            //setfile();
         }
 
         int _currentTradingday = 0;
@@ -47,7 +47,7 @@ namespace TradingLib.Core
             return Path.Combine(Util.DataRepositoryDir, string.Format("DATA.{0}.txt", tradingday));
         }
 
-        void setfile()
+        void setfile00()
         {
             fn = GetLogFileName(_currentTradingday);
             try
@@ -72,19 +72,19 @@ namespace TradingLib.Core
         {
             try
             {
-                if (_log != null && log!=null)
-                {
-                    if (_currentTradingday != TLCtxHelper.ModuleSettleCentre.Tradingday)
-                    {
-                        _currentTradingday = TLCtxHelper.ModuleSettleCentre.Tradingday;
-                        setfile();
-                    }
-                    string msg = DataRepositoryLog.Serialize(log);
-                    if (!string.IsNullOrEmpty(msg))
-                    {
-                        _log.WriteLine(msg);
-                    }
-                }
+                //if (_log != null && log!=null)
+                //{
+                //    if (_currentTradingday != TLCtxHelper.ModuleSettleCentre.Tradingday)
+                //    {
+                //        _currentTradingday = TLCtxHelper.ModuleSettleCentre.Tradingday;
+                //        //setfile();
+                //    }
+                //    string msg = DataRepositoryLog.Serialize(log);
+                //    if (!string.IsNullOrEmpty(msg))
+                //    {
+                //        _log.WriteLine(msg);
+                //    }
+                //}
             }
             catch (Exception ex)
             {

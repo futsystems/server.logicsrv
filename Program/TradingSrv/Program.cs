@@ -56,9 +56,16 @@ namespace TraddingSrvCLI
 
                 logger.Status("Database", "INIT");
                 //读取配置文件 初始化数据库参数 系统其余设置均从数据库中加载
-                ConfigFile _configFile = ConfigFile.GetConfigFile();
-                DBHelper.InitDBConfig(_configFile["DBAddress"].AsString(), _configFile["DBPort"].AsInt(), _configFile["DBName"].AsString(), _configFile["DBUser"].AsString(), _configFile["DBPass"].AsString());
 
+                if (License.Status.Licensed)
+                {
+                    DBHelper.InitDBConfig(LicenseConfig.Instance.DBHost, 3306,LicenseConfig.Instance.DBName,LicenseConfig.Instance.DBUser,LicenseConfig.Instance.DBPass);
+                }
+                else
+                {
+                    ConfigFile _configFile = ConfigFile.GetConfigFile();
+                    DBHelper.InitDBConfig(_configFile["DBAddress"].AsString(), _configFile["DBPort"].AsInt(), _configFile["DBName"].AsString(), _configFile["DBUser"].AsString(), _configFile["DBPass"].AsString());
+                }
                 MSystem.UpdateVersion(info.FileMajorPart, info.FileMinorPart, info.FileBuildPart);
                 MSystem.UpdateDeployID(LicenseConfig.Instance.Deploy);
 
@@ -163,6 +170,25 @@ namespace TraddingSrvCLI
             {
                 LicenseConfig.Instance.Expire = Util.ToDateTime(int.Parse(tmp), 0);
             }
+            if (dict.TryGetValue("db_host", out tmp))
+            {
+                LicenseConfig.Instance.DBHost = tmp;
+            }
+            if (dict.TryGetValue("db_name", out tmp))
+            {
+                LicenseConfig.Instance.DBName = tmp;
+            }
+            if (dict.TryGetValue("db_user", out tmp))
+            {
+                LicenseConfig.Instance.DBUser = tmp;
+            }
+            if (dict.TryGetValue("db_pass", out tmp))
+            {
+                LicenseConfig.Instance.DBPass = tmp;
+            }
+
+
+
         }
  
        

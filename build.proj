@@ -5,106 +5,86 @@
 <Configuration Condition="'$(Configuration)' == ''">Release</Configuration>
 <OperatingPlatform Condition="'$(OperatingPlatform)' == ''">Windows</OperatingPlatform>
 <clrzmqSuffix Condition="'$(OperatingPlatform)' == 'Unix'">-unix</clrzmqSuffix>
-<PackageDir>build\logicsrv\bin</PackageDir>
-<PackageDirDataCore>build\datacore\bin</PackageDirDataCore>
-<PackageDirFrontSrv>build\frontsrv\bin</PackageDirFrontSrv>
+<PackageDir>..\build\logicsrv\</PackageDir>
 </PropertyGroup>
 
-  <ItemGroup>
-    <CleanFiles Include="lib\TradingLib\*" />
-    <CleanFiles Include="lib\TradingLib\Contrib\*" />
-		<CleanFiles Include="lib\TradingLib\Connector\*" />
-		<CleanFiles Include="lib\TradingLib\Account\*" />
-		<CleanFiles Include="lib\TradingLib\RuleSet\*" />
-    <CleanFiles Include="TL*\*\bin\$(Configuration)\**" />
-    <CleanFiles Include="TL*\*\obj\$(Configuration)\**" />
-  </ItemGroup>
+<ItemGroup>
+	<CleanFiles Include="lib\TradingLib\*" />
+	<CleanFiles Include="lib\TradingLib\Contrib\*" />
+	<CleanFiles Include="lib\TradingLib\Connector\*" />
+	<CleanFiles Include="lib\TradingLib\Account\*" />
+	<CleanFiles Include="lib\TradingLib\RuleSet\*" />
+	<CleanFiles Include="TL*\*\bin\$(Configuration)\**" />
+	<CleanFiles Include="TL*\*\obj\$(Configuration)\**" />
+</ItemGroup>
 
-	<ItemGroup>
-		<PackageCleanFiles Include="$(PackageDir)\*.dll" />
-		<PackageCleanFiles Include="$(PackageDir)\*.exe" />
-		<PackageCleanFiles Include="$(PackageDir)\*.a" />
-    <PackageCleanFiles Include="$(PackageDir)\**\*.dll" />
-	</ItemGroup>
-  <ItemGroup>
-    <BuildFilesBase Include="lib\TradingLib\*" />
-  </ItemGroup>
-  <ItemGroup>
-    <BuildFilesContrib Include="lib\TradingLib\Contrib\*" />
-  </ItemGroup>
-  <ItemGroup>
-    <BuildFilesConnector Include="lib\TradingLib\Connector\*" />
-  </ItemGroup>
-  <ItemGroup>
-    <BuildFilesAccount Include="lib\TradingLib\Account\*" />
-  </ItemGroup>
-  <ItemGroup>
-    <BuildFilesRuleSet Include="lib\TradingLib\RuleSet\*" />
-  </ItemGroup>
+<ItemGroup>
+	<PackageCleanFiles Include="$(PackageDir)\*.dll" />
+	<PackageCleanFiles Include="$(PackageDir)\*.exe" />
+	<PackageCleanFiles Include="$(PackageDir)\*.a" />
+	<PackageCleanFiles Include="$(PackageDir)\**\*.dll" />
+</ItemGroup>
+
+<ItemGroup>
+	<BuildFilesBase Include="lib\TradingLib\*" />
+</ItemGroup>
+<ItemGroup>
+	<BuildFilesContrib Include="lib\TradingLib\Contrib\*" />
+</ItemGroup>
+<ItemGroup>
+	<BuildFilesConnector Include="lib\TradingLib\Connector\*" />
+</ItemGroup>
+<ItemGroup>
+	<BuildFilesAccount Include="lib\TradingLib\Account\*" />
+</ItemGroup>
+<ItemGroup>
+	<BuildFilesRuleSet Include="lib\TradingLib\RuleSet\*" />
+</ItemGroup>
   
-  <ItemGroup>
-		<LibFiles Include="lib\Quartz.dll" />
-		<LibFiles Include="lib\MySql.Data.dll" />
-		<LibFiles Include="lib\Autofac.dll" />
-		<LibFiles Include="lib\Autofac.Configuration.dll" />
-		<LibFiles Include="lib\Common.Logging.Core.dll" />
-		<LibFiles Include="lib\Common.Logging.dll" />
-		<LibFiles Include="lib\Common.Logging.NLog31.dll" />
-		<LibFiles Include="lib\NLog.dll" />
-		<LibFiles Include="lib\NHttp.dll" />
-		<LibFiles Include="lib\Newtonsoft.Json.dll" />	
-		<LibFiles Include="lib\log4net.dll" />	
-		<LibFiles Include="lib\supersocket\SuperSocket.Common.dll" />	
-		<LibFiles Include="lib\supersocket\SuperSocket.Facility.dll" />	
-		<LibFiles Include="lib\supersocket\SuperSocket.SocketBase.dll" />	
-		<LibFiles Include="lib\supersocket\SuperSocket.SocketEngine.dll" />	
-		<LibFiles Include="lib\supersocket\SuperWebSocket.dll" />
-		<LibFiles Condition=" '$(OperatingPlatform)' == 'Windows' " Include="lib\libzmq\clrzmq-4.x\win\ZeroMQ.dll" />
-		<LibFiles Condition=" '$(OperatingPlatform)' == 'Unix' " Include="lib\libzmq\clrzmq-4.x\mono\ZeroMQ.dll" />
-		<LibFiles Condition=" '$(OperatingPlatform)' == 'Unix' " Include="lib\mono\NodaTime.dll" />
-  </ItemGroup>
-  <ItemGroup>
-    <BuildFilesExecute Include="Platform\TradingSrv\LogicSrv.exe" />
-	<BuildFilesExecute Include="Platform\TradingSrv\FrontSrv.exe" />
-  </ItemGroup>
+<ItemGroup>
+	<LibFiles Include="lib\Quartz.dll" />
+	<LibFiles Include="lib\MySql.Data.dll" />
+	<LibFiles Include="lib\Autofac.dll" />
+	<LibFiles Include="lib\Autofac.Configuration.dll" />
+	<LibFiles Include="lib\Common.Logging.Core.dll" />
+	<LibFiles Include="lib\Common.Logging.dll" />
+	<LibFiles Include="lib\Common.Logging.NLog31.dll" />
+	<LibFiles Include="lib\NLog.dll" />
+	<LibFiles Include="lib\License.dll" />
+	<LibFiles Include="lib\NHttp.dll" />
+	<LibFiles Include="lib\Newtonsoft.Json.dll" />	
+	<LibFiles Include="lib\log4net.dll" />	
+	<LibFiles Include="lib\DotLiquid.dll" />	
+	<LibFiles Include="lib\supersocket\SuperSocket.Common.dll" />	
+	<LibFiles Include="lib\supersocket\SuperSocket.Facility.dll" />	
+	<LibFiles Include="lib\supersocket\SuperSocket.SocketBase.dll" />	
+	<LibFiles Include="lib\supersocket\SuperSocket.SocketEngine.dll" />	
+	<LibFiles Include="lib\supersocket\SuperWebSocket.dll" />
+	<LibFiles Include="lib\ZeroMQ.dll" />
+	<LibFiles Include="lib\NodaTime.dll" />
+</ItemGroup>
   
-  <ItemGroup>
-    <BuildFilesFrontSrv Include="lib\TradingLib\TradingLib.API.dll" />
-	<BuildFilesFrontSrv Include="lib\TradingLib\TradingLib.Common.dll" />
-	<BuildFilesFrontSrv Include="lib\TradingLib\TradingLib.XLProtocol.dll" />
-	<BuildFilesFrontSrv Include="Platform\TradingSrv\FrontSrv.exe" />
-  </ItemGroup>
-  
-  <ItemGroup>
-    <ConfigFiles Include="Platform\TradingSrv\config\*" />
-  </ItemGroup>
-  
-	
-  
+<ItemGroup>
+	<BuildFilesExecute Include="Platform\TradingSrv\LogicSrv.exe" />
+</ItemGroup>
 
 
   
 
-  <Target Name="Clean">
-    <Delete Files="@(CleanFiles)"/>
-  </Target>
-  
-  
-	<Target Name="demo">
-	<MSBuild Projects="TL_Base\TLBrokerXAPI\TLBrokerXAPI.csproj" Properties="Configuration=$(Configuration);" />
-	</Target>
-  
-  <Target Name="Base">
+<Target Name="Clean">
+	<Delete Files="@(CleanFiles)"/>
+</Target>
+
+<Target Name="Base">
 	<MSBuild Projects="TL_Base\TradingLib.API\TradingLib.API.csproj" Properties="Configuration=$(Configuration);" />
 	<MSBuild Projects="TL_Base\TradingLib.Common\TradingLib.Common.csproj" Properties="Configuration=$(Configuration);" />
 
 	<MSBuild Projects="TL_Base_Ex\TradingLib.API.Ex\TradingLib.API.Ex.csproj" Properties="Configuration=$(Configuration);" />
 	<MSBuild Projects="TL_Base_Ex\TradingLib.Common.Ext\TradingLib.Common.Ex.csproj" Properties="Configuration=$(Configuration);" />
-	
+
 	<MSBuild Projects="TL_Base\TLBrokerXAPI\TLBrokerXAPI.csproj" Properties="Configuration=$(Configuration);" />
 	<MSBuild Projects="TL_Protocol\TradingLib.XLProtocol\TradingLib.XLProtocol.csproj" Properties="Configuration=$(Configuration);" />
-	
-  </Target>
+</Target>
 
   <Target Name="Server">
 		<MSBuild Projects="TL_Server\TradingLib.Core\TradingLib.Core.csproj" Properties="Configuration=$(Configuration);" />
@@ -121,7 +101,6 @@
 		<MSBuild Projects="TL_Connector\FastTickDataFeed\FastTickDataFeed.csproj" Properties="Configuration=$(Configuration);" />
 		<MSBuild Projects="TL_Connector\SimBroker\SimBroker.csproj" Properties="Configuration=$(Configuration);" />
 		<MSBuild Projects="TL_Connector\TLBrokerCTP\TLBrokerCTPDirect.csproj" Properties="Configuration=$(Configuration);" />
-		<MSBuild Projects="TL_Connector\TLBrokerCTPResverse\TLBrokerCTPResverse.csproj" Properties="Configuration=$(Configuration);" />
 		<MSBuild Projects="TL_Connector\TLBrokerESunny\TLBrokerESunnyDirect.csproj" Properties="Configuration=$(Configuration);" />
   </Target>
 
@@ -132,10 +111,7 @@
 
 	<Target Name="ExServer" DependsOnTargets="Base">
 		<MSBuild Projects="Program\TradingSrv\LogicSrv.csproj" Properties="Configuration=$(Configuration);" />
-		<MSBuild Projects="Program\FrontServer\FrontSrv.csproj" Properties="Configuration=$(Configuration);" />
 	</Target>
-	
-
 
   
  	<Target Name="Test" DependsOnTargets="Compile">
@@ -147,25 +123,22 @@
 	</Target>
 
 	<Target Name="Publish">
-		<MakeDir Directories="$(PackageDir)\Contrib" />
+		<!--MakeDir Directories="$(PackageDir)\Contrib" /-->
 		<MakeDir Directories="$(PackageDir)\Connector" />
 		<MakeDir Directories="$(PackageDir)\RuleSet" />
 		<MakeDir Directories="$(PackageDir)\RequiredLibraries" />
 		
 		<Copy SourceFiles="@(BuildFilesBase)" DestinationFolder="$(PackageDir)" ContinueOnError="false" />
-		<Copy SourceFiles="@(BuildFilesContrib)" DestinationFolder="$(PackageDir)\Contrib" ContinueOnError="false" />
+		<!--Copy SourceFiles="@(BuildFilesContrib)" DestinationFolder="$(PackageDir)\Contrib" ContinueOnError="false" /-->
 		<Copy SourceFiles="@(BuildFilesConnector)" DestinationFolder="$(PackageDir)\Connector" ContinueOnError="false" />
 		<Copy SourceFiles="@(BuildFilesAccount)" DestinationFolder="$(PackageDir)\Account" ContinueOnError="false" />
 		<Copy SourceFiles="@(BuildFilesRuleSet)" DestinationFolder="$(PackageDir)\RuleSet" ContinueOnError="false" />
 
 		<Copy SourceFiles="@(LibFiles)" DestinationFolder="$(PackageDir)\RequiredLibraries" ContinueOnError="false" />
 		<Copy SourceFiles="@(BuildFilesExecute)" DestinationFolder="$(PackageDir)" ContinueOnError="false" />
-		
-		<Copy SourceFiles="@(LibFiles)" DestinationFolder="$(PackageDirFrontSrv)\RequiredLibraries" ContinueOnError="false" />
-		<Copy SourceFiles="@(BuildFilesFrontSrv)" DestinationFolder="$(PackageDirFrontSrv)" ContinueOnError="false" />
 	</Target>
 	
-	
+	<!--datacore section -->
 	<ItemGroup>
 		<DataCoreExe Include="Platform\DataCore\DataCoreSrv.exe" />
 		<DataCoreExe Include="Platform\DataCore\DataCoreSrv.exe.config" />

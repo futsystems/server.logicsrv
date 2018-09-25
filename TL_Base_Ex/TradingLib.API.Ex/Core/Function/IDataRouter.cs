@@ -41,7 +41,7 @@ namespace TradingLib.API
         /// <param name="datafeed"></param>
         void LoadDataFeed(IDataFeed datafeed);
 
-        //void LoadTickSnapshot();
+        void LoadTickSnapshot();
 
         ///// <summary>
         ///// 启动

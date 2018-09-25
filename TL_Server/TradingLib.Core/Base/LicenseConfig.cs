@@ -30,6 +30,12 @@ namespace TradingLib.Core
             this.AgentCNT = 2;
             this.EnableAPI = false;
             this.EnableAPP = false;
+
+            this.DBHost = "127.0.0.1";
+            this.DBName = "demo_system";
+            this.DBUser = "root";
+            this.DBPass = "123456";
+
         }
 
         public string Deploy { get; set; }
@@ -45,5 +51,13 @@ namespace TradingLib.Core
         public bool EnableAPI { get; set; }
 
         public bool EnableAPP { get; set; }
+
+        public string DBHost { get; set; }
+
+        public string DBName { get; set; }
+
+        public string DBUser { get; set; }
+
+        public string DBPass { get; set; }
     }
 }
