@@ -67,9 +67,7 @@ namespace TradingLib.Contrib.APIService
             {
                 //Console.WriteLine(string.Format("HttpMethod:{0} RawUrl:{1} Url:{2}", arg.Request.HttpMethod, arg.Request.RawUrl, arg.Request.Url));
                 object ret = HandleRequest(arg.Request,arg.Response);
-                writer.Write(ret is string?ret:ret.SerializeObject());
-
-                
+                writer.Write(ret is string?ret:ret.SerializeObject()); 
             }
         }
 

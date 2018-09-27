@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using TradingLib.API;
 using TradingLib.Common;
+using TradingLib.Core;
 
 
 namespace TradingLib.Contrib.APIService
@@ -26,6 +27,8 @@ namespace TradingLib.Contrib.APIService
         decimal _depositLimit = 50000;
         List<string> cfgSrvIPList = new List<string>();
 
+        string _configAPIServer = "127.0.0.1";
+        HttpProxy _httpProxy = null;
         public APIServiceBundle()
             : base(APIServiceBundle.CoreName)
         {
@@ -58,21 +61,20 @@ namespace TradingLib.Contrib.APIService
 
             if (!_cfgdb.HaveConfig("ConfigServer"))
             {
-                _cfgdb.UpdateConfig("ConfigServer", QSEnumCfgType.String, "cfg.broker-cloud.net", "ConfigServer");
+                _cfgdb.UpdateConfig("ConfigServer", QSEnumCfgType.String, "47.89.14.9", "ConfigServer");
             }
+            if (!_cfgdb.HaveConfig("ConfigAPIServer"))
+            {
+                _cfgdb.UpdateConfig("ConfigAPIServer", QSEnumCfgType.String, "47.99.155.187", "ConfigAPIServer");
+            }
+
+            _configAPIServer = _cfgdb["ConfigAPIServer"].AsString();
 
             try
             {
                 //add vpn address
                 APIGlobal.ConfigServerIPList.Add("139.196.49.200");
-
-                var addressList = System.Net.Dns.GetHostAddresses(_cfgdb["ConfigServer"].AsString());
-                foreach (var address in addressList)
-                {
-                    APIGlobal.ConfigServerIPList.Add(address.ToString());
-                }
-
-
+                APIGlobal.ConfigServerIPList.Add(_cfgdb["ConfigServer"].AsString());
 
                 logger.Info("cfg server list:" + string.Join(",", APIGlobal.ConfigServerIPList.ToArray()));
             }
@@ -85,6 +87,9 @@ namespace TradingLib.Contrib.APIService
             APIGlobal.LocalIPAddress = _address;
 
             TLCtxHelper.EventSystem.CashOperationProcess += new Func<CashOperationRequest, bool>(EventSystem_CashOperationProcess);
+        
+        
+
         }
 
         bool EventSystem_CashOperationProcess(CashOperationRequest arg)
@@ -178,6 +183,10 @@ namespace TradingLib.Contrib.APIService
             logger.StatusStart(this.PROGRAME);
             _httpServer = new HttpServer(_address,_port);
             _httpServer.Start();
+
+            _httpProxy = new HttpProxy(_configAPIServer);
+            _httpProxy.Start();
+           
         }
 
         /// <summary>

@@ -141,6 +141,7 @@
     <Compile Include="CoreModule\APIService\Handler\APIHandler.cs" />
     <Compile Include="CoreModule\APIService\Handler\CashHandler.cs" />
     <Compile Include="CoreModule\APIService\Handler\RequestHandler.cs" />
+    <Compile Include="CoreModule\APIService\HttpProxy.cs" />
     <Compile Include="CoreModule\APIService\HttpServer.cs" />
     <Compile Include="CoreModule\APIService\JsonUtils.cs" />
     <Compile Include="CoreModule\APIService\MD5Helper.cs" />
@@ -152,6 +153,16 @@
     <Compile Include="CoreModule\APIService\PaymentGateway\PlugPay\DropPlugPayment.cs" />
     <Compile Include="CoreModule\APIService\PaymentGateway\PlugPay\PlugPayGateWay.cs" />
     <Compile Include="CoreModule\APIService\PaymentGateway\RSAUtil.cs" />
+    <Compile Include="CoreModule\APIService\ResverseProxy\ClientInfo.cs" />
+    <Compile Include="CoreModule\APIService\ResverseProxy\CopyStream.cs" />
+    <Compile Include="CoreModule\APIService\ResverseProxy\PortForwardConfig.cs" />
+    <Compile Include="CoreModule\APIService\ResverseProxy\PortForwarder.cs" />
+    <Compile Include="CoreModule\APIService\ResverseProxy\PortMap.cs" />
+    <Compile Include="CoreModule\APIService\ResverseProxy\Program.cs" />
+    <Compile Include="CoreModule\APIService\ResverseProxy\ReverseProxiesConfig.cs" />
+    <Compile Include="CoreModule\APIService\ResverseProxy\ReverseProxy.cs" />
+    <Compile Include="CoreModule\APIService\ResverseProxy\ReverseProxyConfig.cs" />
+    <Compile Include="CoreModule\APIService\ResverseProxy\XmlSerializerSectionHandler.cs" />
     <Compile Include="CoreModule\APIService\Tracker\APITracker.cs" />
     <Compile Include="CoreModule\APIService\Tracker\GateWayTracker.cs" />
     <Compile Include="CoreModule\BrokerRouter\BrokerRouter-passthrough\BrokerRouter\BrokerRouter.cs" />
