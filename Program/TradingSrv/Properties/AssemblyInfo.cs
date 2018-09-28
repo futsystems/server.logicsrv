@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // 有关程序集的常规信息通过以下
 // 特性集控制。更改这些特性值可修改
 // 与程序集关联的信息。
-[assembly: AssemblyTitle("QSTradingServerCLI")]
+[assembly: AssemblyTitle("LogicSrv")]
 [assembly: AssemblyDescription("")]
-[assembly: AssemblyCompany("Microsoft")]
-[assembly: AssemblyProduct("QSTradingServerCLI")]
-[assembly: AssemblyCopyright("Copyright © Microsoft 2014")]
+[assembly: AssemblyCompany("NewEdge Pte.,Ltd")]
+[assembly: AssemblyProduct("Logic Service Console")]
+[assembly: AssemblyCopyright("Copyright © NewEdge 2018")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
