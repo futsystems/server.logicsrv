@@ -77,13 +77,13 @@
             this.toolStripMenuItem1,
             this.退出xToolStripMenuItem});
             this.contextMenuStrip1.Name = "contextMenuStrip1";
-            this.contextMenuStrip1.Size = new System.Drawing.Size(113, 76);
+            this.contextMenuStrip1.Size = new System.Drawing.Size(165, 118);
             // 
             // 显示ToolStripMenuItem
             // 
             this.显示ToolStripMenuItem.Image = global::Ant.Server.Properties.Resources._1330161772_display;
             this.显示ToolStripMenuItem.Name = "显示ToolStripMenuItem";
-            this.显示ToolStripMenuItem.Size = new System.Drawing.Size(112, 22);
+            this.显示ToolStripMenuItem.Size = new System.Drawing.Size(164, 36);
             this.显示ToolStripMenuItem.Text = "显示";
             this.显示ToolStripMenuItem.Click += new System.EventHandler(this.显示ToolStripMenuItem_Click);
             // 
@@ -91,26 +91,26 @@
             // 
             this.关于ToolStripMenuItem.Image = global::Ant.Server.Properties.Resources.About;
             this.关于ToolStripMenuItem.Name = "关于ToolStripMenuItem";
-            this.关于ToolStripMenuItem.Size = new System.Drawing.Size(112, 22);
+            this.关于ToolStripMenuItem.Size = new System.Drawing.Size(164, 36);
             this.关于ToolStripMenuItem.Text = "关于";
             this.关于ToolStripMenuItem.Click += new System.EventHandler(this.关于ToolStripMenuItem_Click);
             // 
             // toolStripMenuItem1
             // 
             this.toolStripMenuItem1.Name = "toolStripMenuItem1";
-            this.toolStripMenuItem1.Size = new System.Drawing.Size(109, 6);
+            this.toolStripMenuItem1.Size = new System.Drawing.Size(161, 6);
             // 
             // 退出xToolStripMenuItem
             // 
             this.退出xToolStripMenuItem.Image = global::Ant.Server.Properties.Resources._1330161383_exit;
             this.退出xToolStripMenuItem.Name = "退出xToolStripMenuItem";
-            this.退出xToolStripMenuItem.Size = new System.Drawing.Size(112, 22);
+            this.退出xToolStripMenuItem.Size = new System.Drawing.Size(164, 36);
             this.退出xToolStripMenuItem.Text = "退出(&x)";
             this.退出xToolStripMenuItem.Click += new System.EventHandler(this.退出xToolStripMenuItem_Click);
             // 
             // toolStrip1
             // 
-            this.toolStrip1.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F);
+            this.toolStrip1.Font = new System.Drawing.Font("Segoe UI", 9F);
             this.toolStrip1.ImageScalingSize = new System.Drawing.Size(24, 24);
             this.toolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripLabel1,
@@ -123,22 +123,23 @@
             this.cmdExit});
             this.toolStrip1.Location = new System.Drawing.Point(0, 0);
             this.toolStrip1.Name = "toolStrip1";
-            this.toolStrip1.Size = new System.Drawing.Size(602, 31);
+            this.toolStrip1.Padding = new System.Windows.Forms.Padding(0, 0, 2, 0);
+            this.toolStrip1.Size = new System.Drawing.Size(1204, 38);
             this.toolStrip1.TabIndex = 1;
             this.toolStrip1.Text = "toolStrip1";
             // 
             // toolStripLabel1
             // 
             this.toolStripLabel1.Name = "toolStripLabel1";
-            this.toolStripLabel1.Size = new System.Drawing.Size(58, 28);
+            this.toolStripLabel1.Size = new System.Drawing.Size(120, 35);
             this.toolStripLabel1.Text = "服务端口:";
             // 
             // txtPort
             // 
             this.txtPort.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.txtPort.Name = "txtPort";
-            this.txtPort.Size = new System.Drawing.Size(50, 31);
-            this.txtPort.Text = "9560";
+            this.txtPort.Size = new System.Drawing.Size(98, 38);
+            this.txtPort.Text = "5988";
             // 
             // cmdStart
             // 
@@ -146,7 +147,7 @@
             this.cmdStart.Image = global::Ant.Server.Properties.Resources._1330162125_start;
             this.cmdStart.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.cmdStart.Name = "cmdStart";
-            this.cmdStart.Size = new System.Drawing.Size(28, 28);
+            this.cmdStart.Size = new System.Drawing.Size(28, 35);
             this.cmdStart.Text = "启动服务";
             this.cmdStart.Click += new System.EventHandler(this.cmdStart_Click);
             // 
@@ -157,14 +158,14 @@
             this.cmdStop.Image = global::Ant.Server.Properties.Resources._1330329068_stop_red;
             this.cmdStop.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.cmdStop.Name = "cmdStop";
-            this.cmdStop.Size = new System.Drawing.Size(28, 28);
+            this.cmdStop.Size = new System.Drawing.Size(28, 35);
             this.cmdStop.ToolTipText = "停止服务";
             this.cmdStop.Click += new System.EventHandler(this.cmdStop_Click);
             // 
             // toolStripSeparator2
             // 
             this.toolStripSeparator2.Name = "toolStripSeparator2";
-            this.toolStripSeparator2.Size = new System.Drawing.Size(6, 31);
+            this.toolStripSeparator2.Size = new System.Drawing.Size(6, 38);
             // 
             // cmdExportCA
             // 
@@ -172,14 +173,14 @@
             this.cmdExportCA.Image = global::Ant.Server.Properties.Resources._1330162186_stock_certificate;
             this.cmdExportCA.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.cmdExportCA.Name = "cmdExportCA";
-            this.cmdExportCA.Size = new System.Drawing.Size(28, 28);
+            this.cmdExportCA.Size = new System.Drawing.Size(28, 35);
             this.cmdExportCA.Text = "生成证书";
             this.cmdExportCA.Click += new System.EventHandler(this.cmdExportCA_Click);
             // 
             // toolStripSeparator1
             // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(6, 31);
+            this.toolStripSeparator1.Size = new System.Drawing.Size(6, 38);
             // 
             // cmdExit
             // 
@@ -187,7 +188,7 @@
             this.cmdExit.Image = global::Ant.Server.Properties.Resources._1330161383_exit;
             this.cmdExit.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.cmdExit.Name = "cmdExit";
-            this.cmdExit.Size = new System.Drawing.Size(28, 28);
+            this.cmdExit.Size = new System.Drawing.Size(28, 35);
             this.cmdExit.Text = "退出";
             this.cmdExit.Click += new System.EventHandler(this.cmdExit_Click);
             // 
@@ -200,48 +201,49 @@
             this.txtReceive,
             this.toolStripStatusLabel4,
             this.txtSend});
-            this.statusStrip1.Location = new System.Drawing.Point(0, 444);
+            this.statusStrip1.Location = new System.Drawing.Point(0, 892);
             this.statusStrip1.Name = "statusStrip1";
-            this.statusStrip1.Size = new System.Drawing.Size(602, 22);
+            this.statusStrip1.Padding = new System.Windows.Forms.Padding(2, 0, 28, 0);
+            this.statusStrip1.Size = new System.Drawing.Size(1204, 40);
             this.statusStrip1.TabIndex = 3;
             this.statusStrip1.Text = "statusStrip1";
             // 
             // toolStripStatusLabel2
             // 
             this.toolStripStatusLabel2.Name = "toolStripStatusLabel2";
-            this.toolStripStatusLabel2.Size = new System.Drawing.Size(71, 17);
+            this.toolStripStatusLabel2.Size = new System.Drawing.Size(140, 35);
             this.toolStripStatusLabel2.Text = "当前连接数:";
             // 
             // txtConnections
             // 
             this.txtConnections.Name = "txtConnections";
-            this.txtConnections.Size = new System.Drawing.Size(11, 17);
+            this.txtConnections.Size = new System.Drawing.Size(28, 35);
             this.txtConnections.Text = "0";
             // 
             // toolStripStatusLabel3
             // 
             this.toolStripStatusLabel3.BorderSides = System.Windows.Forms.ToolStripStatusLabelBorderSides.Left;
             this.toolStripStatusLabel3.Name = "toolStripStatusLabel3";
-            this.toolStripStatusLabel3.Size = new System.Drawing.Size(63, 17);
+            this.toolStripStatusLabel3.Size = new System.Drawing.Size(120, 35);
             this.toolStripStatusLabel3.Text = "上行数据:";
             // 
             // txtReceive
             // 
             this.txtReceive.Name = "txtReceive";
-            this.txtReceive.Size = new System.Drawing.Size(11, 17);
+            this.txtReceive.Size = new System.Drawing.Size(28, 35);
             this.txtReceive.Text = "0";
             // 
             // toolStripStatusLabel4
             // 
             this.toolStripStatusLabel4.BorderSides = System.Windows.Forms.ToolStripStatusLabelBorderSides.Left;
             this.toolStripStatusLabel4.Name = "toolStripStatusLabel4";
-            this.toolStripStatusLabel4.Size = new System.Drawing.Size(63, 17);
+            this.toolStripStatusLabel4.Size = new System.Drawing.Size(120, 35);
             this.toolStripStatusLabel4.Text = "下行数据:";
             // 
             // txtSend
             // 
             this.txtSend.Name = "txtSend";
-            this.txtSend.Size = new System.Drawing.Size(11, 17);
+            this.txtSend.Size = new System.Drawing.Size(28, 35);
             this.txtSend.Text = "0";
             // 
             // timer1
@@ -254,9 +256,11 @@
             // 
             this.groupBox1.Controls.Add(this.txtLog);
             this.groupBox1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.groupBox1.Location = new System.Drawing.Point(0, 31);
+            this.groupBox1.Location = new System.Drawing.Point(0, 38);
+            this.groupBox1.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(602, 413);
+            this.groupBox1.Padding = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            this.groupBox1.Size = new System.Drawing.Size(1204, 854);
             this.groupBox1.TabIndex = 6;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "日志";
@@ -267,26 +271,28 @@
             this.txtLog.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.txtLog.Dock = System.Windows.Forms.DockStyle.Fill;
             this.txtLog.ForeColor = System.Drawing.Color.Lime;
-            this.txtLog.Location = new System.Drawing.Point(3, 17);
+            this.txtLog.Location = new System.Drawing.Point(6, 34);
+            this.txtLog.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
             this.txtLog.Name = "txtLog";
             this.txtLog.ReadOnly = true;
-            this.txtLog.Size = new System.Drawing.Size(596, 393);
+            this.txtLog.Size = new System.Drawing.Size(1192, 814);
             this.txtLog.TabIndex = 5;
             this.txtLog.Text = "";
             // 
             // FrmMain
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(12F, 24F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(602, 466);
+            this.ClientSize = new System.Drawing.Size(1204, 932);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.toolStrip1);
             this.Controls.Add(this.statusStrip1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-            this.MinimumSize = new System.Drawing.Size(500, 500);
+            this.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            this.MinimumSize = new System.Drawing.Size(974, 929);
             this.Name = "FrmMain";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "QSTrading更新服务端";
+            this.Text = "NewEdge更新服务端";
             this.MinimumSizeChanged += new System.EventHandler(this.FrmMain_MinimumSizeChanged);
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FrmMain_FormClosing);
             this.Load += new System.EventHandler(this.FrmMain_Load);
