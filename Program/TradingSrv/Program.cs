@@ -80,12 +80,15 @@ namespace TraddingSrvCLI
                     {
                         //注册全局scope 用于动态生成组件
                         TLCtxHelper.RegisterScope(scope);
-                        //update domain expire date information
-                        BasicTracker.DomainTracker.UpdateLicenseExpire(LicenseConfig.Instance.Expire);
-                        //update account limit
-                        BasicTracker.DomainTracker.UpdateLicenseAccountLimit(LicenseConfig.Instance.AccountCNT);
-                        //update agent limit
-                        BasicTracker.DomainTracker.UpdateLicenseAgentLimit(LicenseConfig.Instance.AgentCNT);
+                        //update domain expire date information 独立部署 使用授权信息更新分区信息
+                        if (LicenseConfig.Instance.DomainCNT == 2)
+                        {
+                            BasicTracker.DomainTracker.UpdateLicenseExpire(LicenseConfig.Instance.Expire);
+                            //update account limit
+                            BasicTracker.DomainTracker.UpdateLicenseAccountLimit(LicenseConfig.Instance.AccountCNT);
+                            //update agent limit
+                            BasicTracker.DomainTracker.UpdateLicenseAgentLimit(LicenseConfig.Instance.AgentCNT);
+                        }
 
 
                         using (var coreMgr = scope.Resolve<ICoreManager>())//1.核心模块管理器,加载核心服务组件

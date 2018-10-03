@@ -71,11 +71,14 @@ namespace TradingLib.XLProtocol.V1
         /// </summary>
         [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 16)]
         public string UserID;
+
         /// <summary>
         /// 姓名
         /// </summary>
-        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 16)]
-        public string Name;
+        //[MarshalAs(UnmanagedType.ByValTStr, SizeConst = 16)]
+        //public string Name;
+        [MarshalAs(UnmanagedType.ByValArray, SizeConst = 16)]
+        public byte[] Name;
 
         /// <summary>
         /// 账户货币
@@ -172,8 +175,10 @@ namespace TradingLib.XLProtocol.V1
         /// <summary>
         /// 合约名称
         /// </summary>
-        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 21)]
-        public string SymbolName;
+        //[MarshalAs(UnmanagedType.ByValTStr, SizeConst = 21)]
+        //public string SymbolName;
+        [MarshalAs(UnmanagedType.ByValArray, SizeConst = 21)]
+        public byte[] SymbolName;
 
         /// <summary>
         /// 产品代码
@@ -376,8 +381,10 @@ namespace TradingLib.XLProtocol.V1
         /// <summary>
         /// 委托状态消息
         /// </summary>
-        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 256)]
-        public string StatusMsg;
+        //[MarshalAs(UnmanagedType.ByValTStr, SizeConst = 256)]
+        //public string StatusMsg;
+        [MarshalAs(UnmanagedType.ByValArray, SizeConst = 256)]
+        public byte[] StatusMsg;
 
         /// <summary>
         /// 用户强评标志
@@ -387,8 +394,10 @@ namespace TradingLib.XLProtocol.V1
         /// <summary>
         /// 强平原因
         /// </summary>
-        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 256)]
-        public string ForceCloseReason;
+        //[MarshalAs(UnmanagedType.ByValTStr, SizeConst = 256)]
+        //public string ForceCloseReason;
+        [MarshalAs(UnmanagedType.ByValArray, SizeConst = 256)]
+        public byte[] ForceCloseReason;
 
 
 
@@ -797,8 +806,10 @@ namespace TradingLib.XLProtocol.V1
         /// <summary>
         /// 消息正文
         /// </summary>
-        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 501)]
-        public string Content;
+        //[MarshalAs(UnmanagedType.ByValTStr, SizeConst = 501)]
+        //public string Content;
+        [MarshalAs(UnmanagedType.ByValArray, SizeConst = 501)]
+        public byte[] Content;
 
         /// <summary>
         /// 域类别
@@ -1022,8 +1033,10 @@ namespace TradingLib.XLProtocol.V1
         /// <summary>
         /// 备注
         /// </summary>
-        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 256)]
-        public string Comment;
+        //[MarshalAs(UnmanagedType.ByValTStr, SizeConst = 256)]
+        //public string Comment;
+        [MarshalAs(UnmanagedType.ByValArray, SizeConst = 256)]
+        public byte[] Comment;
 
         /// <summary>
         /// 结算日

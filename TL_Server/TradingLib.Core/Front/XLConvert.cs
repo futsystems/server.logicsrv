@@ -107,9 +107,9 @@ namespace FrontServer
             o.RequestID = order.RequestID;
             o.OrderID = order.id;
             o.OrderStatus = XLConvert.ConvOrderStatus(order.Status);
-            o.StatusMsg = order.Comment;
+            o.StatusMsg = order.Comment.ToByteArray(256,System.Text.Encoding.UTF8);
             o.ForceClose = order.ForceClose ? 1 : 0;
-            o.ForceCloseReason = order.ForceCloseReason;
+            o.ForceCloseReason = order.ForceCloseReason.ToByteArray(256, System.Text.Encoding.UTF8); ;
 
             return o;
 
@@ -221,7 +221,7 @@ namespace FrontServer
         {
             XLCashTxnField field = new XLCashTxnField();
             field.Amount = (double)(txn.TxnType == QSEnumCashOperation.Deposit ? txn.Amount : txn.Amount * -1);
-            field.Comment = txn.Comment;
+            field.Comment = txn.Comment.ToByteArray(256, System.Text.Encoding.UTF8); ;
             field.DateTime = txn.DateTime;
             field.Settleday = txn.Settleday;
             field.TxnID = txn.TxnID;

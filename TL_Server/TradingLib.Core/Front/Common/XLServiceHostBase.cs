@@ -62,7 +62,8 @@ namespace FrontServer
                         XLRspLoginField field = new XLRspLoginField();
                         field.TradingDay = response.TradingDay;
                         field.UserID = response.LoginID;
-                        field.Name = response.NickName;
+                        //field.Name = response.NickName;
+                        field.Name = response.NickName.ToByteArray(16, Encoding.UTF8); 
                         field.Currency = XLConvert.ConvCurrencyType(response.Currency);
 
 
@@ -111,7 +112,7 @@ namespace FrontServer
                             XLSymbolField field = new XLSymbolField();
                             field.SymbolID = response.InstrumentToSend.Symbol;
                             field.ExchangeID = response.InstrumentToSend.ExchangeID;
-                            field.SymbolName = response.InstrumentToSend.Name;
+                            field.SymbolName = response.InstrumentToSend.Name.ToByteArray(21, System.Text.Encoding.UTF8); ;
                             field.SecurityID = response.InstrumentToSend.Security;
                             field.SecurityType = XLConvert.ConvSecurityType(response.InstrumentToSend.SecurityType);
                             field.Multiple = response.InstrumentToSend.Multiple;
@@ -168,7 +169,7 @@ namespace FrontServer
                         XLSettlementInfoField field = new XLSettlementInfoField();
                         field.TradingDay = response.Tradingday;
                         field.UserID = response.TradingAccount;
-                        field.Content = response.SettlementContent;
+                        field.Content = response.SettlementContent.ToByteArray(501, System.Text.Encoding.UTF8); ;
 
                         XLPacketData pkt = new XLPacketData(XLMessageType.T_RSP_SETTLEINFO);
                         pkt.AddField(field);
