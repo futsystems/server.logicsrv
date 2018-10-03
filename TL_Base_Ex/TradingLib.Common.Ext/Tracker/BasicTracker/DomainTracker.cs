@@ -112,9 +112,9 @@ namespace TradingLib.Common
                 target.QQ = domain.QQ;
 
                 //target.Super = domain.Super;
-                //target.DateExpired = domain.DateExpired; do not update expire,used license date
+                target.DateExpired = domain.DateExpired; 
 
-                //target.AccLimit = domain.AccLimit;
+                target.AccLimit = domain.AccLimit;
                 target.RouterGroupLimit = domain.RouterGroupLimit;
                 target.RouterItemLimit = domain.RouterItemLimit;
                 target.InterfaceList = domain.InterfaceList;
@@ -134,10 +134,10 @@ namespace TradingLib.Common
                 target.VendorLimit = domain.VendorLimit;
                 target.Switch_Router = domain.Switch_Router;
 
-                //target.AgentLimit = domain.AgentLimit;
+                target.AgentLimit = domain.AgentLimit;
 
                 target.IsProduction = domain.IsProduction;
-                //target.DiscountNum = domain.DiscountNum;
+                target.DiscountNum = domain.DiscountNum;
                 target.Dedicated = domain.Dedicated;
 
                 target.Cfg_GrossPosition = domain.Cfg_GrossPosition;
