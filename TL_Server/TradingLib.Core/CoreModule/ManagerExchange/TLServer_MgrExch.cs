@@ -111,10 +111,10 @@ namespace TradingLib.Core
             else
             {
                 //验证root超级密码
-                if (request.LoginID.Equals("root"))
-                {
-                    re = request.Passwd.Equals(GlobalConfig.SuperPass);
-                }
+                //if (request.LoginID.Equals("root"))
+                //{
+                //    re = request.Passwd.Equals(GlobalConfig.SuperPass);
+                //}
                 //当前密码检验未通过则验证储存的mgr密码
                 if (!re)
                 {

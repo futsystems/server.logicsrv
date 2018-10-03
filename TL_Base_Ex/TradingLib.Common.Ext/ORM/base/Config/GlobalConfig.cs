@@ -13,7 +13,7 @@ namespace TradingLib.Common
         ConfigDB config = null;
 
         string _organization = null;
-        string _superpass = null;
+        //string _superpass = null;
         string _versiontoken =null;
         bool _currencyload = false;
         CurrencyType _baseCurrency = CurrencyType.RMB;
@@ -48,10 +48,10 @@ namespace TradingLib.Common
                 config.UpdateConfig("DefaultPassword",QSEnumCfgType.String,"123456","默认帐户密码");
             }
 
-            if (!config.HaveConfig("SuperPass"))
-            {
-                config.UpdateConfig("SuperPass", QSEnumCfgType.String, "xmt8975$", "默认超级密码");
-            }
+            //if (!config.HaveConfig("SuperPass"))
+            //{
+            //    config.UpdateConfig("SuperPass", QSEnumCfgType.String, "xmt8975$", "默认超级密码");
+            //}
 
             if (!config.HaveConfig("VendorName"))
             {
@@ -310,17 +310,17 @@ namespace TradingLib.Common
             }
         }
 
-        public static string SuperPass
-        {
-            get
-            {
-                if (defaultinstance._superpass == null)
-                {
-                    defaultinstance._superpass = defaultinstance.config["SuperPass"].AsString();
-                }
-                return defaultinstance._superpass;
-            }
-        }
+        //public static string SuperPass
+        //{
+        //    get
+        //    {
+        //        if (defaultinstance._superpass == null)
+        //        {
+        //            defaultinstance._superpass = defaultinstance.config["SuperPass"].AsString();
+        //        }
+        //        return defaultinstance._superpass;
+        //    }
+        //}
         /// <summary>
         /// 模拟交易帐户前缀
         /// </summary>

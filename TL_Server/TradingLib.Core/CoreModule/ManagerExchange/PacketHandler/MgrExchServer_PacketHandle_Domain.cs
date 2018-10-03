@@ -78,10 +78,16 @@ namespace TradingLib.Core
                     throw new FutsRspError("分区数量达到授权上限:"+LicenseConfig.Instance.DomainCNT.ToString());
                 }
 
-                //update domain limit information
-                domain.AccLimit = LicenseConfig.Instance.AccountCNT;
-                domain.AgentLimit = LicenseConfig.Instance.AgentCNT;
-                domain.DateExpired = LicenseConfig.Instance.Expire.ToTLDate();
+                //独立服务器 则使用授权信息中的限制信息来更新分区设置
+                if (LicenseConfig.Instance.DomainCNT == 2)
+                {
+                    //update domain limit information
+                    domain.AccLimit = LicenseConfig.Instance.AccountCNT;
+                    domain.AgentLimit = LicenseConfig.Instance.AgentCNT;
+                    domain.DateExpired = LicenseConfig.Instance.Expire.ToTLDate();
+                }
+                //云平台只限制分区数量，单个分区的限制通过超级分区进行设置
+                
 
                 BasicTracker.DomainTracker.UpdateDomain(domain);
 
