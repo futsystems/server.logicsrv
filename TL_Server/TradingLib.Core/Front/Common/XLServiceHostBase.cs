@@ -460,7 +460,7 @@ namespace FrontServer
                         }
                         ErrorField rsp = new ErrorField();
                         rsp.ErrorID = notify.RspInfo.ErrorID;
-                        rsp.ErrorMsg = notify.RspInfo.ErrorMessage;
+                        rsp.ErrorMsg = notify.RspInfo.ErrorMessage.ToByteArray(81, Encoding.UTF8); ;
 
                         pkt.AddField(rsp);
                         pkt.AddField(field);
@@ -487,7 +487,7 @@ namespace FrontServer
 
                         ErrorField rsp = new ErrorField();
                         rsp.ErrorID = notify.RspInfo.ErrorID;
-                        rsp.ErrorMsg = notify.RspInfo.ErrorMessage;
+                        rsp.ErrorMsg = notify.RspInfo.ErrorMessage.ToByteArray(81, Encoding.UTF8); ;
 
                         pkt.AddField(rsp);
                         pkt.AddField(field);
@@ -531,7 +531,7 @@ namespace FrontServer
                 XLPacketData response = new XLPacketData(XLMessageType.T_RSP_ERROR);
                 ErrorField rsp = new ErrorField();
                 rsp.ErrorID = 400;
-                rsp.ErrorMsg = string.Format("Session未登入,无法执行操作:{0}", pkt.MessageType);
+                rsp.ErrorMsg = string.Format("Session未登入,无法执行操作:{0}", pkt.MessageType).ToByteArray(81,Encoding.UTF8);;
                 response.AddField(rsp);
 
                 ResponseXLPacket(conn, response, 0, true);

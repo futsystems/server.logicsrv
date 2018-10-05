@@ -129,8 +129,10 @@ namespace TradingLib.XLProtocol
         /// <summary>
         /// 错误信息
         /// </summary>
-        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 81)]
-        public string ErrorMsg;
+        //[MarshalAs(UnmanagedType.ByValTStr, SizeConst = 81)]
+        //public string ErrorMsg;
+        [MarshalAs(UnmanagedType.ByValArray, SizeConst = 81)]
+        public byte[] ErrorMsg;
 
         /// <summary>
         /// 域ID

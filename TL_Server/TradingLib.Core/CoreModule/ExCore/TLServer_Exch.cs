@@ -237,13 +237,13 @@ namespace TradingLib.Core
                     response.RspInfo.Fill("ACCOUNT_CLOSE");
                 }
 
-                if (request.ProductInfo == "M.IOS" && (!LicenseConfig.Instance.EnableAPI))
+                if (request.ProductInfo == "M.IOS" && ((!LicenseConfig.Instance.EnableAPI) || (!account.Domain.Device_IOS)))
                 {
                     response.Authorized = false;
                     response.RspInfo.Fill("UNAUTHORIZED_LOGIN");
                 }
 
-                if (request.ProductInfo == "M.Droid" && (!LicenseConfig.Instance.EnableAPI))
+                if (request.ProductInfo == "M.Droid" && ((!LicenseConfig.Instance.EnableAPI)||(!account.Domain.Device_Droid)))
                 {
                     response.Authorized = false;
                     response.RspInfo.Fill("UNAUTHORIZED_LOGIN");

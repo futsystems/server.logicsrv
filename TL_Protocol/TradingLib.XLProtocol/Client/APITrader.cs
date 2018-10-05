@@ -193,7 +193,7 @@ namespace TradingLib.XLProtocol.Client
             {
                 ErrorField rsp = new ErrorField();
                 rsp.ErrorID = 2;
-                rsp.ErrorMsg = "连接建立失败";
+                rsp.ErrorMsg = XLStructHelp.ToByteArray("连接建立失败", 61, System.Text.Encoding.UTF8);
                 OnRspError(rsp);
             }
         }

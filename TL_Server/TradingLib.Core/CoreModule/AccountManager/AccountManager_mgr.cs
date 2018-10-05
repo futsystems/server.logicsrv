@@ -166,29 +166,23 @@ namespace TradingLib.Core
                 session.GetManager().PermissionCheckAccount(account);
                 IAccount acc = this[account];
 
+                //非直接删除 需要检查账户资金
                 if (!GlobalConfig.DeleteDirect)
                 {
-                    //if (acc.GetPositionsHold().Count() > 0)
-                    //{
-                    //    throw new FutsRspError(string.Format("交易帐户:{0} 有持仓 无法删除", acc.ID));
-                    //}
-
-
                     //检查交易帐户资金
                     if (_deleteAccountCheckEquity && (acc.NowEquity > 1 || acc.Credit > 1))
                     {
                         throw new FutsRspError(string.Format(string.Format("交易帐户:{0} 权益:{1} 信用额度:{2}未出金 无法删除", account, acc.NowEquity, acc.Credit)));
                     }
                 }
-                //队列中删除
+                var accId = account;//需要增加中间变量 否则windows 处理异常，永远获取的是最后一个account
+                //队列中删除 
                 System.Threading.ThreadPool.QueueUserWorkItem(o => 
-                { 
-                    this.DelAccount(account); 
-                    session.RspMessage("交易帐户:" + string.Join(",", accounts) + " 删除成功"); 
-                });
-                
+                {
+                    this.DelAccount(accId); 
+                }); 
             }
-            //session.RspMessage("交易帐户:" + string.Join(",",accounts) + " 删除成功");
+            session.RspMessage("交易帐户:" + string.Join(",",accounts) + " 删除提交成功");
         }
 
 

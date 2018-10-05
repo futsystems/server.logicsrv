@@ -118,7 +118,7 @@ namespace TradingLib.XLProtocol.Client
             {
                 ErrorField rsp = new ErrorField();
                 rsp.ErrorID = retCode;
-				rsp.ErrorMsg = SocketClient.ErrorStr(retCode);
+                rsp.ErrorMsg = XLStructHelp.ToByteArray(SocketClient.ErrorStr(retCode), 81, Encoding.UTF8);
                 OnRspError(rsp);
             }
         }

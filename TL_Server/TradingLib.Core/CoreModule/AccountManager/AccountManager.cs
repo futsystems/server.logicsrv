@@ -140,6 +140,7 @@ namespace TradingLib.Core
         /// <param name="id"></param>
         public void DelAccount(string id)
         {
+            logger.Info(string.Format("Delete Account:{0}", id));
             if (!GlobalConfig.DeleteDirect)//非直接删除
             {
                 IAccount account = this[id];
@@ -161,7 +162,8 @@ namespace TradingLib.Core
                 IAccount account = this[id];
                 if (account == null)
                 {
-                    throw new FutsRspError("交易帐号不存在");
+                    logger.Warn(string.Format("Account:{0} do not exist", id));
+                    return;
                 }
                 try
                 {
@@ -183,7 +185,7 @@ namespace TradingLib.Core
                 catch (Exception ex)
                 {
                     logger.Error("删除交易帐户错误:" + ex.ToString());
-                    throw new FutsRspError("删除交易帐户异常，请手工删除相关信息");
+                    //throw new FutsRspError("删除交易帐户异常，请手工删除相关信息");
                 }
             }
         }

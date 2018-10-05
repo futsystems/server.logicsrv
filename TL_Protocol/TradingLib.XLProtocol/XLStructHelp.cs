@@ -65,6 +65,15 @@ namespace TradingLib.XLProtocol
             }
         }
 
+        public static byte[] ToByteArray(string val, int size, Encoding encoding)
+        {
+            byte[] dest = new byte[size];
+            byte[] source = encoding.GetBytes(val);
+            int len = source.Length <= size ? source.Length : size;
+            Array.Copy(source, 0, dest, 0, len);
+            return dest;
+        }
+
 
 
         public static UInt16 ReverseBytes(UInt16 value)

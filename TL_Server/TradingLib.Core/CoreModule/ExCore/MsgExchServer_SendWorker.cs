@@ -22,7 +22,6 @@ namespace TradingLib.Core
             if (_sendgo) return;
             _sendgo = true;
             messageoutthread = new Thread(messageout);
-            //messageoutthread.IsBackground = true;
             messageoutthread.Name = "TradingServer MessageOut Thread";
             messageoutthread.Start();
             ThreadTracker.Register(messageoutthread);

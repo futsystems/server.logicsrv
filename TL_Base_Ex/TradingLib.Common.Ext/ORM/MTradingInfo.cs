@@ -829,10 +829,31 @@ namespace TradingLib.ORM
                 db.Connection.Execute(delquery);
                 delquery = string.Format("delete from log_agent_cashtrans where settleday<= '{0}'", settleday);
                 db.Connection.Execute(delquery);
+            }
+        }
+
+        public static void CleanOTE()
+        {
+            using (DBMySql db = new DBMySql())
+            {
+                string tmp = string.Empty;
+                //update  tmp_orders set settled=1 where settled=0 and settleday<=20181004;
+                tmp = string.Format("update  tmp_orders set settled=1 where settled=0 and settleday<= '{0}'", TLCtxHelper.ModuleSettleCentre.LastSettleday);
+                db.Connection.Execute(tmp);
+
+                tmp = string.Format("update  tmp_trades set settled=1 where settled=0 and settleday<= '{0}'", TLCtxHelper.ModuleSettleCentre.LastSettleday);
+                db.Connection.Execute(tmp);
+
+                tmp = string.Format("update  log_cashtrans set settled=1 where settled=0 and settleday<= '{0}'", TLCtxHelper.ModuleSettleCentre.LastSettleday);
+                db.Connection.Execute(tmp);
+
+                tmp = string.Format("update  log_settlement_exchange set settled=1 where settled=0 and settleday<= '{0}'", TLCtxHelper.ModuleSettleCentre.LastSettleday);
+                db.Connection.Execute(tmp);
 
             }
-            
         }
+
+
 
     }
 

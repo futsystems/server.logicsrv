@@ -262,7 +262,7 @@ namespace FrontServer
         {
             ErrorField field = new ErrorField();
             field.ErrorID = info.ErrorID;
-            field.ErrorMsg = info.ErrorMessage;
+            field.ErrorMsg = info.ErrorMessage.ToByteArray(81, System.Text.Encoding.UTF8); ;
             return field;
         }
     }

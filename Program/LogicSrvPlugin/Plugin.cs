@@ -64,11 +64,11 @@ namespace LogicSrv
 
                     int mgrCNT = int.Parse(tmp["Payload"]["ManagerNum"].ToString());
                     int accCNT = int.Parse(tmp["Payload"]["AccountNum"].ToString());
-                    int orderCNT = int.Parse(tmp["Payload"]["AccountNum"].ToString());
+                    int orderCNT = int.Parse(tmp["Payload"]["OrderNum"].ToString());
                     int tradeCNT = int.Parse(tmp["Payload"]["TradeNum"].ToString());
-                    int uao = int.Parse(tmp["Payload"]["TradeNum"].ToString());
-                    int uat = int.Parse(tmp["Payload"]["TradeNum"].ToString());
-                    int uae = int.Parse(tmp["Payload"]["TradeNum"].ToString());
+                    int uao = int.Parse(tmp["Payload"]["UAO"].ToString());
+                    int uat = int.Parse(tmp["Payload"]["UAT"].ToString());
+                    int uae = int.Parse(tmp["Payload"]["UAE"].ToString());
 
                     if ((uae + uat + uae) > 0)
                     {

@@ -112,7 +112,7 @@ namespace FrontServer.WSServiceHost
                 XLPacketData pkt = new XLPacketData(XLMessageType.T_RSP_ERROR);
                 ErrorField rsp = new ErrorField();
                 rsp.ErrorID = 400;
-                rsp.ErrorMsg = "Json解析异常";
+                rsp.ErrorMsg = "Json解析异常".ToByteArray(81,Encoding.UTF8);
                 pkt.AddField(rsp);
 
                 conn.ResponseXLPacket(pkt, 0, true);

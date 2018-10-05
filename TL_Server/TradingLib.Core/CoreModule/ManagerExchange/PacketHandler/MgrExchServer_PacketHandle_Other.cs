@@ -107,16 +107,38 @@ namespace TradingLib.Core
                 throw new FutsRspError("最少保留1周交易数据");
             }
 
-
-            
             //队列中删除
             System.Threading.ThreadPool.QueueUserWorkItem(o =>
             {
                 ORM.MTradingInfo.CleanData(int.Parse(date));
                 session.RspMessage("历史数据清理成功");
             });
-
         }
+
+        /// <summary>
+        /// 在某些情况下会出现当日委托 成交 交易所结算 出入金等数据没有正常结算，导致下一个交易日出现多余数据的情况
+        /// </summary>
+        /// <param name="session"></param>
+        /// <param name="json"></param>
+        [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "CleanOTE", "CleanOTE - clean ote", "清除结算异常数据", QSEnumArgParseType.Json)]
+        public void CTE_DelAccount(ISession session)
+        {
+            Manager manager = session.GetManager();
+            if (!manager.IsInRoot())
+            {
+                throw new FutsRspError("无权执行清理结算异常操作");
+            }
+
+            
+            //队列中删除
+            System.Threading.ThreadPool.QueueUserWorkItem(o =>
+            {
+                ORM.MTradingInfo.CleanOTE();
+                session.RspMessage("结算异常数据清理成功");
+            });
+        }
+
+
 
 
         

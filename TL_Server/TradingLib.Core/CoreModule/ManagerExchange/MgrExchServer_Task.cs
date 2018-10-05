@@ -100,6 +100,7 @@ namespace TradingLib.Core
                     //便利所有订阅账户列表
                     foreach (IAccount acc in cst.WathAccountList)
                     {
+                        if (acc == null) continue;
                         NotifyAccountStatistic(acc, cst.Location);
                     }
 

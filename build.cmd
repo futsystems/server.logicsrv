@@ -15,4 +15,8 @@ cd ..
 cd build\logicsrv
 build.cmd
 
+cd ..
+cd ..
+cd Futs.base
+
 
