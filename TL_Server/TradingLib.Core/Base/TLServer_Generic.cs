@@ -541,38 +541,45 @@ namespace TradingLib.Core
         /// <param name="packet"></param>
         public void TLSend(IPacket packet)
         {
-            //debug(">>>>>> Send Packet:" + packet.ToString(),QSEnumDebugLevel.INFO);
-            switch (packet.PacketType)
+            try
             {
-                //应答类的数据包通过forntid,clientid定位进行直接发送 用于发送到指定的client端
-                case QSEnumPacketType.RSPRESPONSE:
-                    {
-                        string front = packet.FrontID;
-                        string client = packet.ClientID;
-                        //byte[] data = packet.Data;
-                        TLSend(packet, client, front);
-                        return;
-                    }
-
-                //通知类的数据包通过account反向寻址到对应的client端,然后进行发送,某个account有可能会存在多个客户端登入
-                case QSEnumPacketType.NOTIFYRESPONSE:
-                case QSEnumPacketType.LOCATIONNOTIFYRESPONSE:
-                    {
-                        //获得packet对应的通知地址列表
-                        ILocation[] targets = GetNotifyTargets(packet);
-                        //byte[] data = packet.Data;
-                        //遍历地址列表对外发送
-                        foreach (ILocation location in targets)
+                //debug(">>>>>> Send Packet:" + packet.ToString(),QSEnumDebugLevel.INFO);
+                switch (packet.PacketType)
+                {
+                    //应答类的数据包通过forntid,clientid定位进行直接发送 用于发送到指定的client端
+                    case QSEnumPacketType.RSPRESPONSE:
                         {
-                            TLSend(packet, location.ClientID, location.FrontID);
+                            string front = packet.FrontID;
+                            string client = packet.ClientID;
+                            //byte[] data = packet.Data;
+                            TLSend(packet, client, front);
+                            return;
                         }
-                        
-                        return;
-                    }
 
-                default:
-                    logger.Warn(string.Format("PacketType:{0} Content:{1} can not send out properly", packet.PacketType, packet.Content));
-                    break;
+                    //通知类的数据包通过account反向寻址到对应的client端,然后进行发送,某个account有可能会存在多个客户端登入
+                    case QSEnumPacketType.NOTIFYRESPONSE:
+                    case QSEnumPacketType.LOCATIONNOTIFYRESPONSE:
+                        {
+                            //获得packet对应的通知地址列表
+                            ILocation[] targets = GetNotifyTargets(packet);
+                            //byte[] data = packet.Data;
+                            //遍历地址列表对外发送
+                            foreach (ILocation location in targets)
+                            {
+                                TLSend(packet, location.ClientID, location.FrontID);
+                            }
+
+                            return;
+                        }
+
+                    default:
+                        logger.Warn(string.Format("PacketType:{0} Content:{1} can not send out properly", packet.PacketType, packet.Content));
+                        break;
+                }
+            }
+            catch (Exception ex)
+            {
+                logger.Error("TLSend error:" + ex.ToString());
             }
         }
 

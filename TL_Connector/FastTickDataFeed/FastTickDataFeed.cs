@@ -23,8 +23,7 @@ namespace DataFeed.FastTick
 		int reqport=6001;
 
         ConfigDB _cfgdb;
-        int _tickversion = 1;
-        bool _reqSubscriber = false;//是否建立reqport发送注册请求
+        
 
         string _prefixStr = string.Empty;
         List<string> _prefixList = new List<string>();
@@ -38,8 +37,8 @@ namespace DataFeed.FastTick
             if (!_cfgdb.HaveConfig("TickServerVersion"))
             {
                 _cfgdb.UpdateConfig("TickServerVersion", QSEnumCfgType.Int, 1, "行情服务器版本");
+               
             }
-            _tickversion = _cfgdb["TickServerVersion"].AsInt();
 
             if (!_cfgdb.HaveConfig("TickPrefix"))
             {
@@ -55,7 +54,7 @@ namespace DataFeed.FastTick
             {
                 _cfgdb.UpdateConfig("ReqSubscriber", QSEnumCfgType.Bool, false, "建立Re Port发起注册请求");
             }
-            _reqSubscriber = _cfgdb["ReqSubscriber"].AsBool();
+            
         }
 
 
@@ -196,18 +195,9 @@ namespace DataFeed.FastTick
             }
         }
 
-        ZSocket GetReqSocket(ZContext ctx)
-        {
-            if (_reqSubscriber)
-            {
-                return new ZSocket(ctx, ZSocketType.REQ);   
-            }
-            return null;
-        }
-        TimeSpan pollerTimeOut = new TimeSpan(0, 0, 1);
 
+        TimeSpan pollerTimeOut = new TimeSpan(0, 0, 1);
         ZSocket _subscriber;//sub socket which receive data
-        ZSocket _symbolreq;//push socket which tell tickserver to regist data
         bool _tickgo;
         Thread _tickthread;
         bool _tickreceiveruning = false;
@@ -215,35 +205,16 @@ namespace DataFeed.FastTick
         {
             using (var context = new ZContext())
             {
-                using (ZSocket subscriber = new ZSocket(context, ZSocketType.SUB), symbolreq = GetReqSocket(context))
+                using (ZSocket subscriber = new ZSocket(context, ZSocketType.SUB))
                 {
-                    if (_reqSubscriber)
-                    {
-                        string reqadd = "tcp://" + CurrentServer + ":" + reqport;
-                        symbolreq.Linger = System.TimeSpan.FromSeconds(1);
-                        symbolreq.Connect(reqadd);
-                    }
-
                     string subadd = "tcp://" + CurrentServer + ":" + port;
                     subscriber.Linger = System.TimeSpan.FromSeconds(1);
                     subscriber.Connect(subadd);
 
-                    if (_reqSubscriber)
-                    {
-                        logger.Info(string.Format("Connect to FastTick Server:{0} ReqPort:{1} DataPort{2}", CurrentServer, reqport, port));
-                    }
-                    else
-                    {
-                        logger.Info(string.Format("Connect to FastTick Server:{0} DataPort{1}", CurrentServer, port));
-                    }
-
+                    logger.Info(string.Format("Connect to FastTick Server:{0} DataPort{1}", CurrentServer, port));
+  
                     //订阅行情心跳数据
                     subscriber.Subscribe(Encoding.UTF8.GetBytes("H,"));
-
-                    if (_reqSubscriber)
-                    {
-                        _symbolreq = symbolreq;
-                    }
                     _subscriber = subscriber;
 
                     List<ZSocket> sockets = new List<ZSocket>();
@@ -251,7 +222,6 @@ namespace DataFeed.FastTick
 
                     List<ZPollItem> pollitems = new List<ZPollItem>();
                     pollitems.Add(ZPollItem.CreateReceiver());
-
 
                     ZMessage[] incoming;
                     ZError error;
@@ -295,10 +265,6 @@ namespace DataFeed.FastTick
                             {
                                 logger.Info("Tick Thread Stopped,try to close socket");
                                 subscriber.Close();
-                                if (_reqSubscriber)
-                                {
-                                    symbolreq.Close();
-                                }
                             }
                         }
                         catch (ZException ex)
@@ -310,11 +276,8 @@ namespace DataFeed.FastTick
                         {
                             logger.Error("Tick数据处理错误" + ex.ToString());
                         }
-
                     }
-                    
                 }
-                context.Terminate();
             }
             _tickreceiveruning = false;
             NotifyDisconnected();
@@ -323,162 +286,26 @@ namespace DataFeed.FastTick
         #endregion
 
 
-
-        #region 通过请求端口执行API请求
-
-        object reqobj = new object();
-        void Send(IPacket packet)
-        {
-            if (!_reqSubscriber)
-            {
-                logger.Warn("Disable ReqSubscriber,drop request");
-                return;
-            }
-            if (_symbolreq != null)
-            {
-                lock (reqobj)
-                {
-                    try
-                    {
-                        byte[] message = packet.Data;
-                        _symbolreq.Send(new ZFrame(message));
-                        ZMessage response;
-                        ZError error;
-                        var poller = ZPollItem.CreateReceiver();
-                        if (_symbolreq.PollIn(poller, out response, out error, timeout))
-                        {
-                            logger.Debug(string.Format("Got Rep Response:", response.First().ReadString(Encoding.UTF8)));
-                            response.Clear();
-                        }
-                        else
-                        {
-                            if (error == ZError.ETERM)
-                            {
-                                return;
-                            }
-                            throw new ZException(error);
-                        }
-                    }
-                    catch (Exception ex)
-                    {
-                        logger.Error("发送消息异常:" + ex.ToString());
-                    }
-                }
-            }
-        }
-
         /// <summary>
         /// 注册市场数据
+        /// 行情订阅统一由历史行情服务器进行
+        /// 交易服务器只需要通过设定订阅前缀来过滤本地接收到的行情数据
+        /// 行情发布系统默认全订阅所有行情
         /// </summary>
         /// <param name="symbols"></param>
         public void RegisterSymbols(List<Symbol> symbols)
         {
-            //logger.Warn("Symbol register move to DataFarm,LogicServer will not subscribe sysmbol");
-
-            try
+            foreach (var sym in symbols)
             {
-                //按交易所分组
-                Dictionary<string, List<Symbol>> exSymMap = new Dictionary<string, List<Symbol>>();
-                foreach (Symbol sym in symbols)
+                foreach (var prefix in _prefixList)
                 {
-
-                    List<Symbol> list = null;
-                    if (!exSymMap.TryGetValue(sym.Exchange, out list))
+                    string p = prefix + sym.Symbol;
+                    if (_subscriber != null)
                     {
-                        list = new List<Symbol>();
-                        exSymMap.Add(sym.Exchange, list);
+                        _subscriber.Subscribe(Encoding.UTF8.GetBytes(p));
                     }
-                    list.Add(sym);
                 }
-                //注册交易下所有合约
-                foreach (var pair in exSymMap)
-                {
-                    MDRegisterSymbolsRequest request = RequestTemplate<MDRegisterSymbolsRequest>.CliSendRequest(0);
-                    ExchangeImpl exch = BasicTracker.ExchagneTracker[pair.Key];
-                    if (exch == null)
-                    {
-                        logger.Warn("Exchange:{0} do not exist".Put(pair.Key));
-                    }
-                    request.DataFeed = exch.DataFeed;
-                    request.Exchange = pair.Key;
-                    foreach (var sym in pair.Value)
-                    {
-                        request.SymbolList.Add(sym.GetFullSymbol());
-                        foreach (var prefix in _prefixList)
-                        {
-                            string p = prefix + sym.Symbol;
-                            if (_subscriber != null)
-                            {
-                                _subscriber.Subscribe(Encoding.UTF8.GetBytes(p));
-                            }
-                        }
-
-                    }
-                    Send(request); //?股票为何单个注册
-                }
-
-                //TODO 更合理的方式是按交易所分组 单个交易所的行情 是统一一个行情源订阅的 这样可以实现 以交易所 批量订阅多个合约避免多次循环订阅的问题
-
-                //将合约按照行情源类型进行分组
-                //Dictionary<QSEnumDataFeedTypes, List<Symbol>> map = SplitSymbolViaDataFeedType(symbols);
-
-                //foreach (KeyValuePair<QSEnumDataFeedTypes, List<Symbol>> kv in map)
-                //{
-                //    //string symlist = string.Join(",", kv.Value.Select(sym=>sym.Symbol));
-                //    //将合约字头逐个向publisher进行订阅
-                //    foreach (Symbol s in kv.Value)
-                //    {
-                //        string prefix = s.Symbol + "^";
-                //        _subscriber.Subscribe(Encoding.UTF8.GetBytes(prefix));//subscribe对应的symbol字头用于获得tick数据
-                //    }
-
-                //    //通过FastTickServer的管理端口 请求FastTickServer向行情源订阅行情数据,Publisher的订阅是内部的一个分发订阅 不会产生向行情源订阅实际数据
-                //    //注册合约协议格式 DATAFEED:SYMBOL|EXCHANGE
-                //    foreach (var sym in kv.Value)
-                //    {
-                //        MDRegisterSymbolsRequest request = RequestTemplate<MDRegisterSymbolsRequest>.CliSendRequest(0);
-                //        request.DataFeed = kv.Key;
-                //        request.Exchange = sym.SecurityFamily.Exchange.EXCode;
-                //        request.SymbolList.Add(sym.GetFullSymbol());
-                //        //Send(request); //?股票为何单个注册
-                //    }
-
-                //}
-
-
-            }
-            catch (Exception ex)
-            {
-                logger.Error(":请求市场数据异常" + ex.ToString());
             }
         }
-
-        /// <summary>
-        /// 将合约按DataFeed进行分组
-        /// </summary>
-        /// <param name="basket"></param>
-        /// <returns></returns>
-        Dictionary<QSEnumDataFeedTypes,List<Symbol>> SplitSymbolViaDataFeedType(List<Symbol> basket)
-        {
-            Dictionary<QSEnumDataFeedTypes, List<Symbol>> map = new Dictionary<QSEnumDataFeedTypes, List<Symbol>>();
-            foreach (Symbol sym in basket)
-            {
-                QSEnumDataFeedTypes type = sym.SecurityFamily.DataFeed;
-                if (map.Keys.Contains(type))
-                {
-                    map[type].Add(sym);
-                }
-                else
-                {
-                    map[type] = new List<Symbol>();
-                    map[type].Add(sym);
-                }
-            }
-            return map;
-        }
-        #endregion
-
-
-
     }
 }

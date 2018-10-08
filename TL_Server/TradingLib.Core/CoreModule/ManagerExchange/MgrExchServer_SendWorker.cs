@@ -166,6 +166,10 @@ namespace TradingLib.Core
                     while (_packetcache.hasItems && NoResumeRequest())
                     {
                         IPacket packet = _packetcache.Read();
+                        if (packet == null)
+                        {
+                            continue;
+                        }
                         tl.TLSend(packet);
                     }
 
