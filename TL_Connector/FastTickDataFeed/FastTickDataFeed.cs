@@ -5,7 +5,7 @@ using System.Text;
 using TradingLib.API;
 using TradingLib.Common;
 using System.Threading;
-using ZeroMQ;
+using NetMQ;
 using TradingLib.BrokerXAPI;
 using Common.Logging;
 
@@ -172,6 +172,10 @@ namespace DataFeed.FastTick
         {
             if (!_tickgo) return;
             _tickgo = false;
+            if (tickPoller != null && tickPoller.IsRunning)
+            {
+                tickPoller.Stop();
+            }
             _tickthread.Join();
             logger.Info("FastTick Stopped successfull...");
         }
@@ -191,83 +195,44 @@ namespace DataFeed.FastTick
             {
                 Thread.Sleep(500);
                 i++;
-                logger.Info("wait datafeed start....");
+                logger.Info("Datafeed Start....");
             }
         }
 
-
-        TimeSpan pollerTimeOut = new TimeSpan(0, 0, 1);
-        ZSocket _subscriber;//sub socket which receive data
+        NetMQ.Sockets.SubscriberSocket _subscriber;//sub socket which receive data
         bool _tickgo;
         Thread _tickthread;
         bool _tickreceiveruning = false;
+        NetMQPoller tickPoller = null;
         private void TickHandler()
         {
-            using (var context = new ZContext())
+            using (NetMQ.Sockets.SubscriberSocket subscriber = new NetMQ.Sockets.SubscriberSocket()) 
             {
-                using (ZSocket subscriber = new ZSocket(context, ZSocketType.SUB))
-                {
-                    string subadd = "tcp://" + CurrentServer + ":" + port;
-                    subscriber.Linger = System.TimeSpan.FromSeconds(1);
-                    subscriber.Connect(subadd);
+                string subadd = "tcp://" + CurrentServer + ":" + port;
+                subscriber.Options.Linger = System.TimeSpan.FromSeconds(1);
+                subscriber.Connect(subadd);
 
-                    logger.Info(string.Format("Connect to FastTick Server:{0} DataPort{1}", CurrentServer, port));
+                logger.Info(string.Format("Connect to FastTick Server:{0} DataPort{1}", CurrentServer, port));
   
-                    //订阅行情心跳数据
-                    subscriber.Subscribe(Encoding.UTF8.GetBytes("H,"));
-                    _subscriber = subscriber;
+                //订阅行情心跳数据
+                subscriber.Subscribe(Encoding.UTF8.GetBytes("H,"));
+                _subscriber = subscriber;
 
-                    List<ZSocket> sockets = new List<ZSocket>();
-                    sockets.Add(_subscriber);
-
-                    List<ZPollItem> pollitems = new List<ZPollItem>();
-                    pollitems.Add(ZPollItem.CreateReceiver());
-
-                    ZMessage[] incoming;
-                    ZError error;
-
-                    _tickreceiveruning = true;
-                    //行情源连接事件 DataRouter会订阅该事件 同时进行合约注册操作 该过程可能会消耗比较多的时间，因此造成这里阻塞 导致心跳接受异常 需要将订阅操作放入线程池中运行
-                    NotifyConnected();
-
-                    while (_tickgo)
+                tickPoller = new NetMQPoller { subscriber };
+                subscriber.ReceiveReady += (s, a) =>
                     {
                         try
                         {
-                            if (sockets.PollIn(pollitems, out incoming, out error, pollerTimeOut))
-                            {
-                                if (incoming[0] != null)
-                                {
-                                    string tickstr = incoming[0].First().ReadString(Encoding.UTF8);
-                                    //清空数据否则会内存泄露
-                                    incoming[0].Clear();
-                                    //logger.Info("ticksr:" + tickstr);
-                                    Tick k = TickImpl.Deserialize2(tickstr);
-                                    if (k != null && k.UpdateType != "H")
-                                        NotifyTick(k);
-                                    //记录数据到达时间
-                                    _lastheartbeat = DateTime.Now;
-                                }
-                            }
-                            else
-                            {
-                                if (error == ZError.ETERM)
-                                {
-                                    return;	// Interrupted
-                                }
-                                if (error != ZError.EAGAIN)
-                                {
-                                    throw new ZException(error);
-                                }
-                            }
-
-                            if (!_tickgo)
-                            {
-                                logger.Info("Tick Thread Stopped,try to close socket");
-                                subscriber.Close();
-                            }
+                            var zmsg = a.Socket.ReceiveMultipartMessage();
+                            var tickstr = zmsg.First.ConvertToString(Encoding.UTF8);
+                            //logger.Info("ticksr:" + tickstr);
+                            Tick k = TickImpl.Deserialize2(tickstr);
+                            if (k != null && k.UpdateType != "H")
+                                NotifyTick(k);
+                            //记录数据到达时间
+                            _lastheartbeat = DateTime.Now;
                         }
-                        catch (ZException ex)
+                        catch (NetMQException ex)
                         {
                             logger.Error("Tick Sock错误:" + ex.ToString());
 
@@ -276,9 +241,14 @@ namespace DataFeed.FastTick
                         {
                             logger.Error("Tick数据处理错误" + ex.ToString());
                         }
-                    }
-                }
+                    };
+                _tickreceiveruning = true;
+                //行情源连接事件 DataRouter会订阅该事件 同时进行合约注册操作 该过程可能会消耗比较多的时间，因此造成这里阻塞 导致心跳接受异常 需要将订阅操作放入线程池中运行
+                NotifyConnected();
+
+                tickPoller.Run();
             }
+            
             _tickreceiveruning = false;
             NotifyDisconnected();
 

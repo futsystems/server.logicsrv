@@ -10,49 +10,6 @@ namespace TradingLib.Core
 {
     public partial class MgrExchServer
     {
-        string _interfacelist = null;
-        string GetInterfaceList()
-        {
-            if (string.IsNullOrEmpty(_interfacelist))
-            {
-                List<string> iplist = new List<string>();
-                NetworkInterface[] nics = NetworkInterface.GetAllNetworkInterfaces();
-                foreach (NetworkInterface adapter in nics)
-                {
-                    //判断是否为以太网卡
-                    //Wireless80211         无线网卡    Ppp     宽带连接
-                    //Ethernet              以太网卡   
-                    //这里篇幅有限贴几个常用的，其他的返回值大家就自己百度吧！
-                    if (adapter.NetworkInterfaceType == NetworkInterfaceType.Ethernet)
-                    {
-                        //获取以太网卡网络接口信息
-                        IPInterfaceProperties ip = adapter.GetIPProperties();
-                        //获取单播地址集
-                        UnicastIPAddressInformationCollection ipCollection = ip.UnicastAddresses;
-                        foreach (UnicastIPAddressInformation ipadd in ipCollection)
-                        {
-                            //InterNetwork    IPV4地址      InterNetworkV6        IPV6地址
-                            //Max            MAX 位址
-                            if (ipadd.Address.AddressFamily == AddressFamily.InterNetwork)
-                                //判断是否为ipv4
-                                iplist.Add(ipadd.Address.ToString());
-                        }
-                    }
-                }
-                _interfacelist = string.Join(",", iplist.ToArray());
-            }
-            return _interfacelist;
-        }
-
-        string _deployname = null;
-        string GetDeployName()
-        {
-            if (string.IsNullOrEmpty(_deployname))
-            {
-                return _deployname = string.Format("{0}-{1}","Deploy1.9", GetInterfaceList());
-            }
-            return _deployname;
-        }
 
         DateTime _lastPushAllTime = DateTime.Now;
         DateTime _lastNotifyTime = DateTime.Now;
@@ -97,6 +54,7 @@ namespace TradingLib.Core
                     {
                         logger.Debug(string.Format("-->update all,Acc:{0} location:{1}", string.Join(",", cst.WathAccountList.Select(acc => acc.ID).ToArray()), cst.Location.ClientID));
                     }
+                    
                     //便利所有订阅账户列表
                     foreach (IAccount acc in cst.WathAccountList)
                     {
@@ -113,6 +71,7 @@ namespace TradingLib.Core
                         }
                     }
 
+                    /**
                     foreach (IBroker broker in cst.WatchBrokers)
                     {
                         NotifyMGRContribNotify notify = ResponseTemplate<NotifyMGRContribNotify>.SrvSendNotifyResponse(cst.Location);
@@ -120,7 +79,8 @@ namespace TradingLib.Core
                         notify.CMDStr = "NotifyBrokerPM";
                         notify.Result = broker.PositionMetrics.ToArray().SerializeObject();// JsonReply.SuccessReply(broker.PositionMetrics.ToArray()).ToJson();// new Mixins.ReplyWriter().Start().FillReply(Mixins.JsonReply.GenericSuccess()).FillPlayload(broker.PositionMetrics.ToArray()).End().ToString();
                         CachePacket(notify);
-                    }
+                    }**/
+
                 }
             }
             catch (Exception ex)
@@ -173,8 +133,17 @@ namespace TradingLib.Core
             {
                 logger.Error("登入终端个数信息采集出错:" + ex.ToString());
             }
-            //
             logger.Info(RunConfig.Instance.Profile.GetStatsString());
+        }
+
+        //[TaskAttr("清理内存", 600, 0, "每10分钟回收一次内存秒")]
+        public void Task_GCRelease()
+        {
+            logger.Info("GC Release");
+            GC.Collect();
+            GC.WaitForPendingFinalizers();
+            GC.Collect();
+            logger.Info("GC Release Finished");
         }
 
     }

@@ -80,6 +80,8 @@ namespace TradingLib.Core
         }
 
 
+        
+
         #region 命令行操作
 
         [ContribCommandAttr(QSEnumCommandSource.CLI, "flat", "flat - 强平某帐户所有持仓", "强平某个帐户的持仓，先撤单，然后再强平")]

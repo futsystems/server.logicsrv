@@ -39,6 +39,9 @@
     <Reference Include="DotLiquid">
       <HintPath>..\..\lib\DotLiquid.dll</HintPath>
     </Reference>
+    <Reference Include="NetMQ">
+      <HintPath>..\..\lib\NetMQ.dll</HintPath>
+    </Reference>
     <Reference Include="Newtonsoft.Json">
       <HintPath>..\..\lib\Newtonsoft.Json.dll</HintPath>
     </Reference>
@@ -90,9 +93,6 @@
     <Reference Include="TradingLib.XLProtocol">
       <HintPath>..\..\lib\TradingLib\TradingLib.XLProtocol.dll</HintPath>
     </Reference>
-    <Reference Include="ZeroMQ">
-      <HintPath>..\..\lib\ZeroMQ.dll</HintPath>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\..\Shared\VersionInfo.cs">
@@ -107,6 +107,7 @@
     <Compile Include="Base\StringCipher.cs" />
     <Compile Include="Base\TIFTracker.cs" />
     <Compile Include="Base\TLServer_Generic.cs" />
+    <Compile Include="Base\AsyncServerNetMQ.cs" />
     <Compile Include="CoreModule\AccountManager\AccountManager.cs" />
     <Compile Include="CoreModule\AccountManager\AccountManager_edit.cs" />
     <Compile Include="CoreModule\AccountManager\AccountManager_mgr.cs" />

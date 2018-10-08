@@ -58,7 +58,7 @@ namespace TradingLib.Core
         /// <param name="item"></param>
         void LoadRuleItem(IAccount account, RuleItem item)
         {
-            logger.Debug(string.Format("Load RuleSet Account:{0} Name:{1}", account.ID, item.RuleName));
+            //logger.Debug(string.Format("Load RuleSet Account:{0} Name:{1}", account.ID, item.RuleName));
             RuleClassItem klassitem = null;
             //从风控类型字典中找到对应的类型并进行实例化
             if (dicRule.TryGetValue(item.RuleName, out klassitem))
