@@ -30,12 +30,6 @@ namespace TradingLib.API
         event Action<IPacket, string> NewPacketEvent;
 
         /// <summary>
-        /// 关闭某个客户端链接
-        /// </summary>
-        /// <param name="clientId"></param>
-        void DropClient(string clientId);
-
-        /// <summary>
         /// 向某个客户端发送消息
         /// </summary>
         /// <param name="packet"></param>

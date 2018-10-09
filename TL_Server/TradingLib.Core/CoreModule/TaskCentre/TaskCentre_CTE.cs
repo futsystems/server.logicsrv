@@ -26,5 +26,7 @@ namespace TradingLib.Core
             }
             return sb.ToString();
         }
+
+        
     }
 }

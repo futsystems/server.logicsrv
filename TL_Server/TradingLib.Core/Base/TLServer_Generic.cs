@@ -164,7 +164,7 @@ namespace TradingLib.Core
             logger.Info(string.Format("Start server at {0}:{1}",_serveraddress,_port));
             try
             {
-                _trans = new AsyncServerNetMQ(PROGRAME, _serveraddress, _port, this.NumWorkers, this.EnableTPTracker, _verb);
+                _trans = new AsyncServerNetMQ(PROGRAME, _serveraddress, _port, this.NumWorkers);
                 _trans.NewPacketEvent += new Action<IPacket, string>(OnPacketEvent);
                 _trans.Start();
                 return true;
