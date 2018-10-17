@@ -107,6 +107,19 @@ namespace TradingLib.ORM
                 db.Connection.Execute(query);
             }
         }
+
+        /// <summary>
+        /// 更新某个结算日的所有交易所结算记录
+        /// </summary>
+        /// <param name="settleday"></param>
+        public static void MarkExchangeSettlementSettled(int settleday)
+        {
+            using (DBMySql db = new DBMySql())
+            {
+                string query = string.Format("UPDATE log_settlement_exchange SET settled='1' WHERE settleday = '{0}'", settleday);
+                db.Connection.Execute(query);
+            }
+        }
         /// <summary>
         /// 查询未结算隔夜持仓明细
         /// </summary>

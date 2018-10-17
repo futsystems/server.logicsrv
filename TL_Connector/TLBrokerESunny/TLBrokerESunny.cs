@@ -651,21 +651,21 @@ namespace Broker.Live
             foreach (var o in this.GetOrders(exchange, settleday))
             {
                 o.Settled = true;
-                TLCtxHelper.ModuleDataRepository.MarkOrderSettled(o);
+                //TLCtxHelper.ModuleDataRepository.MarkOrderSettled(o);
             }
             foreach (var f in this.GetTrades(exchange, settleday))
             {
                 f.Settled = true;
-                TLCtxHelper.ModuleDataRepository.MarkTradeSettled(f);
+                //TLCtxHelper.ModuleDataRepository.MarkTradeSettled(f);
             }
             foreach (var pos in this.GetPositions(exchange))
             {
                 pos.Settled = true;
                 //如果持仓有隔夜持仓 将对应的隔夜持仓标注成已结算否则会对隔夜持仓重复加载
-                foreach (var pd in pos.PositionDetailYdRef)
-                {
-                    TLCtxHelper.ModuleDataRepository.MarkPositionDetailSettled(pd);
-                }
+                //foreach (var pd in pos.PositionDetailYdRef)
+                //{
+                    //TLCtxHelper.ModuleDataRepository.MarkPositionDetailSettled(pd);
+                //}
             }
             //将已经结算的持仓从内存数据对象中屏蔽 持仓数据是一个状态数据,因此我们这里将上个周期的持仓对象进行屏蔽
             this.BrokerTracker.DropSettled();

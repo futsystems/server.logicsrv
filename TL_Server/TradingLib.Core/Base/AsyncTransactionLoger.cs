@@ -37,8 +37,6 @@ namespace TradingLib.Core
         //注当缓存超过后系统记录的交易信息就会发生错误。因此这里我们需要放大缓存大小并且在控制面板中需要监视。
         const int MAXLOG = 100000;
 
-        //RingBuffer<DataRepositoryLog> _datarepcache;//储存日志缓存
-        //RingBuffer<DataRepositoryLog> _datareperrorcache;//数据储存异常缓存
 
         RingBuffer<Order> _ocache;//委托插入缓存
         RingBuffer<Order> _oupdatecache;//委托更新缓存
@@ -48,12 +46,6 @@ namespace TradingLib.Core
         RingBuffer<PositionDetail> _posdetailcache;//持仓明细缓存
         RingBuffer<ExchangeSettlement> _exsettlementcache;//交易所结算缓存
         RingBuffer<CashTransaction> _cashtxncache;//出入金记录缓存
-
-        RingBuffer<Order> _osettlecache;//委托结算缓存
-        RingBuffer<Trade> _tsettlecache;//成交结算缓存
-        RingBuffer<PositionDetail> _pdsettledcache;//持仓明细结算缓存
-        RingBuffer<ExchangeSettlement> _exsettlecache;//交易所结算结算缓存
-        RingBuffer<CashTransaction> _cashtxnsettlecash;//出入金操作结算缓存
 
         RingBuffer<AgentCommissionSplit> _agentcommissionsplit;//代理手续费拆分缓存
         RingBuffer<CashTransaction> _agentcashtxncache;//出入金记录缓存
@@ -70,27 +62,16 @@ namespace TradingLib.Core
         public AsyncTransactionLoger(int maxbr)
             : base("AsyncTransactionLoger")
         {
-            
-            //_datarepcache = new RingBuffer<DataRepositoryLog>(maxbr);
-
             _ocache = new RingBuffer<Order>(maxbr);
             _oupdatecache = new RingBuffer<Order>(maxbr);
-            _osettlecache = new RingBuffer<Order>(maxbr);
             _tcache = new RingBuffer<Trade>(maxbr);
-            _tsettlecache = new RingBuffer<Trade>(maxbr);
-
             _oactioncache = new RingBuffer<OrderAction>(maxbr);
+
             _posclosecache = new RingBuffer<PositionCloseDetail>(maxbr);
             _posdetailcache = new RingBuffer<PositionDetail>(maxbr);
+
             _exsettlementcache = new RingBuffer<ExchangeSettlement>(maxbr);
             _cashtxncache = new RingBuffer<CashTransaction>(maxbr);
-
-            _pdsettledcache = new RingBuffer<PositionDetail>(maxbr);
-            _exsettlecache = new RingBuffer<ExchangeSettlement>(maxbr);
-            _cashtxnsettlecash = new RingBuffer<CashTransaction>(maxbr);
-
-            //_datareperrorcache = new RingBuffer<DataRepositoryLog>(maxbr);
-
 
             _agentcommissionsplit = new RingBuffer<AgentCommissionSplit>(maxbr);
             _agentcashtxncache = new RingBuffer<CashTransaction>(maxbr);
@@ -125,8 +106,6 @@ namespace TradingLib.Core
             if (_loggo) return;
             _loggo = true;
 
-            //初始化
-            //_log.Init();
 
             _logthread = new Thread(this.readedata);
             _logthread.Name = "AsyncTransaction logger";
@@ -135,30 +114,8 @@ namespace TradingLib.Core
             _logthread.Start();
         }
 
-        //public int OrderInCache { get { return _ocache.Count; } }
-        //public int TradeInCache { get { return _tcache.Count; } }
 
-        //public int OrderUpdateInCache { get { return _oupdatecache.Count; } }
-        //public int PosCloseInCache { get { return _posclosecache.Count; } }
-
-        ///// <summary>
-        ///// fired when barrequest is read asychronously from buffer
-        ///// </summary>
-        ////public event BarRequestDel GotBarRequest;//有新的barRequest处理事件
-        ///// <summary>
-        /////  fired when buffer is empty
-        ///// </summary>
-        //public event VoidDelegate GotBRQueueEmpty;
-        ///// <summary>
-        ///// fired when buffer is written
-        ///// </summary>
-        //public event VoidDelegate GotBRQueued;
-        ///// <summary>
-        ///// should be zero unless buffer too small
-        ///// </summary>
-        
-
-        public const int SLEEPDEFAULTMS = 10000;
+        public const int SLEEPDEFAULTMS = 2000;
         static ManualResetEvent _logwaiting = new ManualResetEvent(false);
         Thread _logthread = null;
         bool _loggo = false;
@@ -175,82 +132,6 @@ namespace TradingLib.Core
             {
                 try
                 {
-                    #region 数据储存日志处理
-                    ////记录关键交易数据储存日志
-                    //while (_datarepcache.hasItems)
-                    //{
-                    //    DataRepositoryLog log = _datarepcache.Read();
-                    //    _log.GotDataRepositoryLog(log);
-                    //}
-                    //#endregion
-
-                    //#region 储存异常处理
-                    ////异常储存记录 需要判定数据库连接有效后执行数据储存
-                    //while (_datareperrorcache.hasItems)
-                    //{
-                    //    try
-                    //    {
-                    //        //1.判定数据库连接可用 如果不可用 则直接跳转到末尾不执行数据库的数据操作以及新的数据写入操作
-                    //        bool dbconn = true;
-                    //        if (!dbconn)
-                    //        {
-                    //            goto PASSDBOPERATION;
-                    //        }
-
-                    //        //2.将上次数据储存异常过程中的数据重新插入到数据库
-                    //        DataRepositoryLog log = _datareperrorcache.Read();
-                    //        switch (log.RepositoryType)
-                    //        {
-                    //            case EnumDataRepositoryType.InsertOrder:
-                    //                DBInsertOrder(log.RepositoryData as Order);
-                    //                break;
-                    //            case EnumDataRepositoryType.UpdateOrder:
-                    //                DBUpdateOrder(log.RepositoryData as Order);
-                    //                break;
-                    //            case EnumDataRepositoryType.InsertTrade:
-                    //                DBInsertTrade(log.RepositoryData as Trade);
-                    //                break;
-                    //            case EnumDataRepositoryType.InsertPositionCloseDetail:
-                    //                DBInsertPositionCloseDetail(log.RepositoryData as PositionCloseDetail);
-                    //                break;
-                    //            case EnumDataRepositoryType.InsertPositionDetail:
-                    //                DBInsertPositionDetail(log.RepositoryData as PositionDetail);
-                    //                break;
-                    //            case EnumDataRepositoryType.InsertExchangeSettlement:
-                    //                DBInsertExchangeSettlement(log.RepositoryData as ExchangeSettlement);
-                    //                break;
-                    //            case EnumDataRepositoryType.InsertCashTransaction:
-                    //                DBInsertCashTransaction(log.RepositoryData as CashTransaction);
-                    //                break;
-
-                    //            case EnumDataRepositoryType.SettleOrder:
-                    //                DBSettleOrder(log.RepositoryData as Order);
-                    //                break;
-                    //            case EnumDataRepositoryType.SettleTrade:
-                    //                DBSettleTrade(log.RepositoryData as Trade);
-                    //                break;
-                    //            case EnumDataRepositoryType.SettlePositionDetail:
-                    //                DBSettlePositionDetail(log.RepositoryData as PositionDetail);
-                    //                break;
-                    //            case EnumDataRepositoryType.SettleExchangeSettlement:
-                    //                DBSettleExchangeSettlement(log.RepositoryData as ExchangeSettlement);
-                    //                break;
-                    //            case EnumDataRepositoryType.SettleCashTransaction:
-                    //                DBSettleCashTransaction(log.RepositoryData as CashTransaction);
-                    //                break;
-                    //            default:
-                    //                break;
-                    //        }
-                    //    }
-                    //    catch (Exception ex)
-                    //    {
-                    //        logger.Error("Handle DataRepositorylog Error:" + ex.ToString());
-                    //    }
-                    //}
-
-                    #endregion
-
-                    #region 交易记录插入与更新
                     //插入委托
                     while (_ocache.hasItems)
                     {
@@ -311,53 +192,19 @@ namespace TradingLib.Core
                         DBInsertCashTransaction(txn);
                         Thread.Sleep(_delay);
                     }
-                    #endregion
-
-                    #region 更新结算标识
-                    //更新委托结算标识
-                    while (!_ocache.hasItems && !_oupdatecache.hasItems && _osettlecache.hasItems)
-                    {
-                        Order o = _osettlecache.Read();
-                        DBSettleOrder(o);
-                    }
-                    //更新成交结算标识
-                    while (!_ocache.hasItems && !_tcache.hasItems && _tsettlecache.hasItems)
-                    {
-                        Trade f = _tsettlecache.Read();
-                        DBSettleTrade(f);
-                    }
-                    //更新持仓明细结算标识
-                    while (!_posdetailcache.hasItems && _pdsettledcache.hasItems)
-                    {
-                        PositionDetail pd = _pdsettledcache.Read();
-                        DBSettlePositionDetail(pd);
-                    }
-                    //更新交易所结算标识
-                    while (!_exsettlementcache.hasItems &&_exsettlecache.hasItems)
-                    {
-                        ExchangeSettlement settle = _exsettlecache.Read();
-                        DBSettleExchangeSettlement(settle);
-                    }
-                    //更新出入金结算标识
-                    while (!_cashtxncache.hasItems && _cashtxnsettlecash.hasItems)
-                    {
-                        CashTransaction txn = _cashtxnsettlecash.Read();
-                        DBSettleCashTransaction(txn);
-                    }
-
+                    //插入手续费代理分润
                     while (_agentcommissionsplit.hasItems)
                     {
                         AgentCommissionSplit split = _agentcommissionsplit.Read();
                         DBInsertAgentCommissioinSplit(split);
                     }
+                    //插入代理出入金数据
                     while (_agentcashtxncache.hasItems)
                     {
                         CashTransaction txn = _agentcashtxncache.Read();
                         DBInsertAgentCashTransaction(txn);
                     }
-                    #endregion
 
-                    //PASSDBOPERATION:
                     // clear current flag signal
                     _logwaiting.Reset();
                     // wait for a new signal to continue reading
@@ -432,14 +279,12 @@ namespace TradingLib.Core
         public void NewPositionDetail(PositionDetail pd)
         {
             _posdetailcache.Write(pd);
-            //_datarepcache.Write(new DataRepositoryLog(EnumDataRepositoryType.InsertPositionDetail,pd));
             newlog();
         }
 
         public void NewExchangeSettlement(ExchangeSettlement settle)
         {
             _exsettlementcache.Write(settle);
-            //_datarepcache.Write(new DataRepositoryLog(EnumDataRepositoryType.InsertExchangeSettlement,settle));
             newlog();
         }
 
@@ -457,56 +302,6 @@ namespace TradingLib.Core
         
         #endregion
 
-        #region 结算标识
-        /// <summary>
-        /// 结算委托
-        /// </summary>
-        /// <param name="o"></param>
-        public void MarkOrderSettled(Order o)
-        {
-            Order oc = new OrderImpl(o);
-            _osettlecache.Write(oc);
-            newlog();
-        }
-        /// <summary>
-        /// 结算成交
-        /// </summary>
-        /// <param name="f"></param>
-        public void MarkTradeSettled(Trade f)
-        {
-            Trade nf = new TradeImpl(f);
-            _tsettlecache.Write(nf);
-            newlog();
-        }
-        /// <summary>
-        /// 结算持仓明细
-        /// </summary>
-        /// <param name="pd"></param>
-        public void MarkPositionDetailSettled(PositionDetail pd)
-        {
-            _pdsettledcache.Write(pd);
-            newlog();
-        }
-        /// <summary>
-        /// 结算交易所结算
-        /// </summary>
-        /// <param name="settle"></param>
-        public void MarkExchangeSettlementSettled(ExchangeSettlement settle)
-        {
-            _exsettlecache.Write(settle);
-            newlog();
-        }
-
-        /// <summary>
-        /// 结算出入金记录
-        /// </summary>
-        /// <param name="txn"></param>
-        public void MarkCashTransactionSettled(CashTransaction txn)
-        {
-            _cashtxnsettlecash.Write(txn);
-            newlog();
-        }
-        #endregion
 
 
         #region 数据库插入/更新操作
@@ -626,66 +421,6 @@ namespace TradingLib.Core
             catch (Exception ex)
             {
                 throw new DataRepositoryException(EnumDataRepositoryType.InsertCashTransaction, txn, ex);
-            }
-        }
-
-        void DBSettleOrder(Order o)
-        {
-            try
-            {
-                ORM.MTradingInfo.MarkOrderSettled(o);
-            }
-            catch (Exception ex)
-            {
-                throw new DataRepositoryException(EnumDataRepositoryType.SettleOrder, o, ex);
-            }
-        }
-
-        void DBSettleTrade(Trade f)
-        {
-            try
-            {
-                ORM.MTradingInfo.MarkTradeSettled(f);
-            }
-            catch (Exception ex)
-            {
-                throw new DataRepositoryException(EnumDataRepositoryType.SettleTrade, f, ex);
-            }
-        }
-
-        void DBSettlePositionDetail(PositionDetail pd)
-        {
-            try
-            {
-                ORM.MSettlement.MarkPositionDetailSettled(pd);
-            }
-            catch (Exception ex)
-            {
-                throw new DataRepositoryException(EnumDataRepositoryType.SettlePositionDetail, pd, ex);
-            }
-        }
-
-        void DBSettleExchangeSettlement(ExchangeSettlement settle)
-        {
-            try
-            {
-                ORM.MSettlement.MarkExchangeSettlementSettled(settle);
-            }
-            catch (Exception ex)
-            {
-                throw new DataRepositoryException(EnumDataRepositoryType.SettleExchangeSettlement, settle, ex);
-            }
-        }
-
-        void DBSettleCashTransaction(CashTransaction txn)
-        {
-            try
-            {
-                ORM.MCashTransaction.MarkeCashTransactionSettled(txn);
-            }
-            catch (Exception ex)
-            {
-                throw new DataRepositoryException(EnumDataRepositoryType.SettleCashTransaction, txn, ex);
             }
         }
 

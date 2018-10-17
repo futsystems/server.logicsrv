@@ -45,22 +45,26 @@ namespace TradingLib.Common
             settlement.CreditSettled = settlement.LastCredit + settlement.CreditCashIn - settlement.CreditCashOut;
 
 
-            //保存结算记录
+            //保存交易账户结算记录
             ORM.MSettlement.InsertAccountSettlement(settlement);
+
             TLCtxHelper.ModuleSettleCentre.InvestAccountSettled(settlement);
 
+            /* 账户结算在同一时间集中进行，账户结算过程中只需要对内存中的相关数据进行标记
+             * 数据库中的交易所结算记录以及出入金记录统一进行标记 见结算中心SettleAccount函数
+             * */
             //标注交易所结算记录
             foreach (var settle in settlementlist)
             {
                 settle.Settled = true;
-                TLCtxHelper.ModuleDataRepository.MarkExchangeSettlementSettled(settle);
+                //TLCtxHelper.ModuleDataRepository.MarkExchangeSettlementSettled(settle);
             }
 
             //标注出入金记录 已结算
             foreach (var txn in cashtranslsit)
             {
                 txn.Settled = true;//标注已结算
-                TLCtxHelper.ModuleDataRepository.MarkCashTransactionSettled(txn);
+                //TLCtxHelper.ModuleDataRepository.MarkCashTransactionSettled(txn);
             }
             //设置昨日权益等信息
             this.LastEquity = settlement.EquitySettled;
@@ -107,6 +111,7 @@ namespace TradingLib.Common
                     return;
                 }
 
+                //生成交易所结算记录
                 ExchangeSettlement settlement = new ExchangeSettlementImpl();
                 settlement.Account = this.ID;
                 settlement.Exchange = exchange.EXCode;
@@ -118,7 +123,7 @@ namespace TradingLib.Common
                 foreach (Position pos in this.GetPositions(exchange).Where(p => !p.isFlat))
                 {
                     //设定持仓结算价格
-                    var target = BasicTracker.SettlementPriceTracker[settleday, pos.Symbol];// TLCtxHelper.ModuleSettleCentre.GetSettlementPrice(settleday, pos.Symbol);
+                    var target = BasicTracker.SettlementPriceTracker[settleday, pos.Symbol];
                     if (target != null && target.Settlement > 0)
                     {
                         pos.SettlementPrice = target.Settlement;

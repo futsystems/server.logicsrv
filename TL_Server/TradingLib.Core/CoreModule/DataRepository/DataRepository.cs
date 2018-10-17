@@ -55,34 +55,7 @@ namespace TradingLib.Core
             //TLCtxHelper.EventSystem.SettleResetEvent += new EventHandler<SystemEventArgs>(EventSystem_SettleResetEvent);
         }
 
-        
 
-        #region 更新记录的结算标识
-        public void MarkOrderSettled(Order o)
-        {
-            _asynLoger.MarkOrderSettled(o);
-        }
-
-        public void MarkTradeSettled(Trade f)
-        {
-            _asynLoger.MarkTradeSettled(f);
-        }
-
-        public void MarkPositionDetailSettled(PositionDetail pd)
-        {
-            _asynLoger.MarkPositionDetailSettled(pd);
-        }
-
-        public void MarkExchangeSettlementSettled(ExchangeSettlement settle)
-        {
-            _asynLoger.MarkExchangeSettlementSettled(settle);
-        }
-
-        public void MarkCashTransactionSettled(CashTransaction txn)
-        {
-            _asynLoger.MarkCashTransactionSettled(txn);
-        }
-        #endregion
 
         #region 插入更新交易数据
         /// <summary>

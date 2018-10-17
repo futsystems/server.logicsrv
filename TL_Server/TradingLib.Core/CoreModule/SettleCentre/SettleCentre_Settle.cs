@@ -280,7 +280,7 @@ namespace TradingLib.Core
                     //结算日为交易所当前日期
                     int settleday = extime.ToTLDate();
 
-                    logger.Info(string.Format("交易所:{0} 执行结算 结算日:{1}", exchange.EXCode, settleday));
+                    logger.Info(string.Format("Exchange:{0} Settle Tradingday:{1}", exchange.EXCode, settleday));
                     if (!histmode) //正常结算模式 需要保存结算价
                     {
                         //保存交易所对应的结算价格
@@ -304,12 +304,12 @@ namespace TradingLib.Core
                     }
 
                     //将交易记录与隔夜持仓结算标注直接进行数据库处理 避免单个账户 遍历生成数据据库操作产生延迟与错误
+                    //委托结算标注
                     ORM.MTradingInfo.MarkOrderSettled(exchange.EXCode, settleday);
+                    //成交结算标注
                     ORM.MTradingInfo.MarkTradeSettled(exchange.EXCode, settleday);
+                    //持仓明细标注
                     ORM.MSettlement.MarkPositioinDetailSettled(exchange.EXCode, settleday);
-
-                    
-
 
                     //执行交易通道结算 注:若此处Broker通道结算异常 会导致其余交易所不执行有效结算 从而导致账户整体结算异常 Broker改进成BrokerTracker在通道初始化设定参数时创建 避免通道未启动导致遍历通道交易数据异常
                     foreach (var broker in TLCtxHelper.ServiceRouterManager.Brokers)
@@ -331,14 +331,13 @@ namespace TradingLib.Core
         /// </summary>
         void SettleAccount()
         {
-            logger.Info(string.Format("#####SettleAccount: Start Settele Account,Current Tradingday:{0}", Tradingday));
+            logger.Info(string.Format("#####SettleAccount: Start Settele Account,Current Settleday:{0}", Tradingday));
             this.SettleMode = QSEnumSettleMode.SettleMode;//结算中心进入结算状态
             accountSettlementMap.Clear();
 
             //触发结算前事件
             TLCtxHelper.EventSystem.FireBeforeSettleEvent(this, new SystemEventArgs());
 
-            logger.Info("系统执行帐户结算,结算日:" + this.Tradingday);
             DateTime now = DateTime.Now;
             foreach (IAccount acc in TLCtxHelper.ModuleAccountManager.Accounts)
             {
@@ -357,9 +356,13 @@ namespace TradingLib.Core
                 }
             }
 
-            //数据库中标记结算日的手续费拆分与出入金记录
-            ORM.MAgentCashTransaction.MarkeCashTransactionSettled(this.Tradingday);
+            //标记代理手续费拆分已结算
             ORM.MAgentCommissionSplit.MarkeAgentCommissionSplitSettled(this.Tradingday);
+            //标记出入金记录已结算
+            ORM.MAgentCashTransaction.MarkeCashTransactionSettled(this.Tradingday);
+            //标记交易所结算记录已结算
+            ORM.MSettlement.MarkExchangeSettlementSettled(this.Tradingday);
+            
 
             //TODO:滚动交易日是在结算时执行还是在重置时执行 
             //更新交易日

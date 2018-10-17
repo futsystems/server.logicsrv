@@ -76,31 +76,31 @@ namespace TradingLib.API
         /// 标注委托已结算
         /// </summary>
         /// <param name="o"></param>
-        void MarkOrderSettled(Order o);
+        //void MarkOrderSettled(Order o);
 
         /// <summary>
         /// 标注成交已结算
         /// </summary>
         /// <param name="f"></param>
-        void MarkTradeSettled(Trade f);
+        //void MarkTradeSettled(Trade f);
 
         /// <summary>
         /// 标注隔夜持仓已结算
         /// </summary>
         /// <param name="pd"></param>
-        void MarkPositionDetailSettled(PositionDetail pd);
+        //void MarkPositionDetailSettled(PositionDetail pd);
 
         /// <summary>
         /// 标注交易所结算已结算
         /// </summary>
         /// <param name="settle"></param>
-        void MarkExchangeSettlementSettled(ExchangeSettlement settle);
+        //void MarkExchangeSettlementSettled(ExchangeSettlement settle);
 
         /// <summary>
         /// 标注出入金已经结算
         /// </summary>
         /// <param name="txn"></param>
-        void MarkCashTransactionSettled(CashTransaction txn);
+        //void MarkCashTransactionSettled(CashTransaction txn);
 
 
         
