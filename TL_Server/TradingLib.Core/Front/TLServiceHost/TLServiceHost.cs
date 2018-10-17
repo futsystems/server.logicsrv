@@ -91,10 +91,10 @@ namespace FrontServer.TLServiceHost
 
                 if (DateTime.Now.Subtract(_lasttime).Minutes >= 1)
                 {
-                    logger.Info(string.Format("last minute TL request cnt:{0}", _requestCnt));
+                    logger.Debug(string.Format("last minute TL request cnt:{0}", _requestCnt));
                     foreach (var item in typeCntMap)
                     {
-                        logger.Info(string.Format("     type :{0} cnt:{1}",item.Key,item.Value));
+                        logger.Debug(string.Format("     type :{0} cnt:{1}", item.Key, item.Value));
                         typeCntMap[item.Key] = 0;
                     }
                     _requestCnt = 0;

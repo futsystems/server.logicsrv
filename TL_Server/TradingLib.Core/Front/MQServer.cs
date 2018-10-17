@@ -151,7 +151,7 @@ namespace FrontServer
                 {
                     if (DateTime.Now.Subtract(_lastWorkerTime).TotalSeconds > 10)
                     {
-                        logger.Info("--> Worker thread live");
+                        logger.Debug("--> Worker thread live");
                         _lastWorkerTime = DateTime.Now;
                     }
 

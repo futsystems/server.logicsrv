@@ -28,7 +28,8 @@ namespace TradingLib.Core
                 if (updateall)
                 {
                     _lastPushAllTime = DateTime.Now;
-                    logger.Info(string.Format("customer ex map cnt:{0}", customerExInfoMap.Count));
+                    logger.Debug(string.Format("customer ex map cnt:{0}", customerExInfoMap.Count));
+                    
                 }
                 //根据管理段连接个数 更新频率降低 减少运算
                 if (customerExInfoMap.Count >= 10)
@@ -133,7 +134,11 @@ namespace TradingLib.Core
             {
                 logger.Error("登入终端个数信息采集出错:" + ex.ToString());
             }
-            logger.Info(RunConfig.Instance.Profile.GetStatsString());
+
+            if (GlobalConfig.ProfileEnable)
+            {
+                logger.Info(RunConfig.Instance.Profile.GetStatsString());
+            }
         }
 
         //[TaskAttr("清理内存", 600, 0, "每10分钟回收一次内存秒")]
