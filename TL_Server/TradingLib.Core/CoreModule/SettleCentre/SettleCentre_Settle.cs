@@ -358,8 +358,11 @@ namespace TradingLib.Core
 
             //标记代理手续费拆分已结算
             ORM.MAgentCommissionSplit.MarkeAgentCommissionSplitSettled(this.Tradingday);
-            //标记出入金记录已结算
+            //标记代理出入金记录已结算
             ORM.MAgentCashTransaction.MarkeCashTransactionSettled(this.Tradingday);
+
+            //标注交易账户出入金已结算
+            ORM.MCashTransaction.MarkeCashTransactionSettled(this.Tradingday);
             //标记交易所结算记录已结算
             ORM.MSettlement.MarkExchangeSettlementSettled(this.Tradingday);
             

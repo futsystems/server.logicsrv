@@ -38,6 +38,19 @@ namespace TradingLib.ORM
         }
 
         /// <summary>
+        /// 标记某个结算日出入金记录为已结算
+        /// </summary>
+        /// <param name="settleday"></param>
+        public static void MarkeCashTransactionSettled(int settleday)
+        {
+            using (DBMySql db = new DBMySql())
+            {
+                string query = string.Format("UPDATE log_cashtrans SET settled=1 WHERE settleday = '{0}'", settleday);
+                db.Connection.Execute(query);
+            }
+        }
+
+        /// <summary>
         /// 获得所有未结算出入金记录
         /// </summary>
         /// <returns></returns>
