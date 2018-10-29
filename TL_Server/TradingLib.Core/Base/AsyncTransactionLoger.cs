@@ -50,6 +50,18 @@ namespace TradingLib.Core
         RingBuffer<AgentCommissionSplit> _agentcommissionsplit;//代理手续费拆分缓存
         RingBuffer<CashTransaction> _agentcashtxncache;//出入金记录缓存
 
+
+        /// <summary>
+        /// 是否有缓存数据
+        /// 在执行结算时 要等待所有缓存数据写入完毕后才可以执行结算操作
+        /// </summary>
+        public bool HaveCacheData {
+
+            get
+            {
+                return _ocache.hasItems || _oupdatecache.hasItems || _tcache.hasItems || _oactioncache.hasItems || _posclosecache.hasItems || _posdetailcache.hasItems || _exsettlementcache.hasItems || _cashtxncache.hasItems || _agentcommissionsplit.hasItems || _agentcashtxncache.hasItems;
+            }
+        }
         /// <summary>
         /// create an asynchronous responder
         /// </summary>

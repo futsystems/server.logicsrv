@@ -303,6 +303,11 @@ namespace TradingLib.Core
                         }
                     }
 
+                    while (TLCtxHelper.ModuleDataRepository.HaveCacheData)
+                    {
+                        System.Threading.Thread.Sleep(1000);
+                        logger.Info("Wait data repository cache data update");
+                    }
                     //将交易记录与隔夜持仓结算标注直接进行数据库处理 避免单个账户 遍历生成数据据库操作产生延迟与错误
                     //委托结算标注
                     ORM.MTradingInfo.MarkOrderSettled(exchange.EXCode, settleday);

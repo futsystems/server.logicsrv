@@ -137,7 +137,8 @@ namespace TradingLib.Core
         }
         #endregion
 
-
+        public bool HaveCacheData { get { return _asynLoger.HaveCacheData; } }
+        
 
         /// <summary>
         /// 启动服务

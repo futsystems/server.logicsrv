@@ -72,6 +72,8 @@ namespace TradingLib.API
         /// <param name="txn"></param>
         void NewAgentCashTransactioin(CashTransaction txn);
 
+
+        bool HaveCacheData { get; }
         /// <summary>
         /// 标注委托已结算
         /// </summary>
