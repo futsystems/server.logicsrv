@@ -29,6 +29,7 @@ namespace TradingLib.Contrib.APIService
 
         string _configAPIServer = "127.0.0.1";
         HttpProxy _httpProxy = null;
+        int localAppPort = 80;
         public APIServiceBundle()
             : base(APIServiceBundle.CoreName)
         {
@@ -70,6 +71,13 @@ namespace TradingLib.Contrib.APIService
 
             _configAPIServer = _cfgdb["ConfigAPIServer"].AsString();
 
+            if (!_cfgdb.HaveConfig("LocalAppPort"))
+            {
+                _cfgdb.UpdateConfig("LocalAppPort", QSEnumCfgType.Int, 80, "LocalAppPort");
+            }
+            localAppPort = _cfgdb["LocalAppPort"].AsInt();
+
+
             try
             {
                 //add vpn address
@@ -85,6 +93,10 @@ namespace TradingLib.Contrib.APIService
 
             APIGlobal.BaseUrl = string.Format("http://{0}:{1}", _address, _port);
             APIGlobal.LocalIPAddress = _address;
+
+            
+            
+
 
             TLCtxHelper.EventSystem.CashOperationProcess += new Func<CashOperationRequest, bool>(EventSystem_CashOperationProcess);
         
@@ -184,7 +196,7 @@ namespace TradingLib.Contrib.APIService
             _httpServer = new HttpServer(_address,_port);
             _httpServer.Start();
 
-            _httpProxy = new HttpProxy(_configAPIServer);
+            _httpProxy = new HttpProxy(localAppPort, _configAPIServer);
             _httpProxy.Start();
            
         }

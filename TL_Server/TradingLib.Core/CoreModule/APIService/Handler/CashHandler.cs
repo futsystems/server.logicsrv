@@ -118,10 +118,12 @@ namespace TradingLib.Contrib.APIService
                                 return tplTracker.Render(errorTemplateID, new DropError(102, "交易账户有持仓或挂单,无法执行出金"));
                             }
 
-                            if (amount > account.NowEquity)
+                            var rate = account.GetExchangeRate(CurrencyType.RMB);
+                            if (amount * rate > account.NowEquity)
                             {
                                 return tplTracker.Render(errorTemplateID, new DropError(102, string.Format("出金金额大于账户权益:{0}", account.NowEquity.ToFormatStr())));
                             }
+
                             //输入参数验证完毕
                             CashOperation operation = new CashOperation();
                             operation.BusinessType = EnumBusinessType.Normal;

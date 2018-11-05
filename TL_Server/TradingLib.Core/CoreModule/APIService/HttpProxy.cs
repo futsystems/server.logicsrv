@@ -16,20 +16,19 @@ namespace TradingLib.Core
 
         ReverseProxy.ReverseProxy proxy = null;
 
-        string remoteIp = "127.-.0.1";
-        public HttpProxy(string ip)
+        string remoteIp = "127.0.0.1";
+        int localPort = 80;
+        public HttpProxy(int port,string ip)
         {
             remoteIp = ip;
+            localPort = port;
         }
+
         bool _go = false;
         void Process()
         {
             proxy = new ReverseProxy.ReverseProxy();
-            proxy.AddForwarder(80, new IPEndPoint[] { new IPEndPoint(IPAddress.Parse(remoteIp), 80) });
-            //while (_go)
-            //{
-            //    Thread.Sleep(1000);
-            //}
+            proxy.AddForwarder(localPort, new IPEndPoint[] { new IPEndPoint(IPAddress.Parse(remoteIp), 80) });
         }
         public void Start()
         {
