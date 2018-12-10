@@ -819,6 +819,8 @@ namespace TradingLib.Contrib.APIService
                                 txn.EquityType = QSEnumEquityType.OwnEquity;
                                 txn.TxnType = QSEnumCashOperation.Deposit;
                                 txn.Comment = "API入金";
+                                txn.Settleday = TLCtxHelper.ModuleSettleCentre.Tradingday;
+                                txn.DateTime = Util.ToTLDateTime();
 
                                 TLCtxHelper.ModuleAccountManager.CashOperation(txn);
 
@@ -906,10 +908,13 @@ namespace TradingLib.Contrib.APIService
                                 txn.EquityType = QSEnumEquityType.OwnEquity;
                                 txn.TxnType = QSEnumCashOperation.WithDraw;
                                 txn.Comment = "API出金";
+                                txn.Settleday = TLCtxHelper.ModuleSettleCentre.Tradingday;
+                                txn.DateTime = Util.ToTLDateTime();
 
                                 //执行出金操作
                                 TLCtxHelper.ModuleAccountManager.CashOperation(txn);
 
+                                
                                 return new JsonReply(0, string.Format("Withdraw:{0} success", amount), new
                                 {
                                     UserID = acc.UserID,
