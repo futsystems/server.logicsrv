@@ -60,7 +60,10 @@ namespace TradingLib.Common
             _hc = null;
         }
 
-
+        internal IEnumerable<string> GetHolidays()
+        {
+            return _hc.OrderedHolidays.Select(h => h.Date + " " + h.Name);
+        }
         /// <summary>
         /// 判断某个时间是否在假期内
         /// 假日列表内 只要有一个日期和提供的时间是同一天,则表明该日期是假日

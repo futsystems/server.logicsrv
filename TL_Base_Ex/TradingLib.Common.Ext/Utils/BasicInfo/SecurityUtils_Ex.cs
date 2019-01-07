@@ -8,8 +8,9 @@ namespace TradingLib.Common
 {
     public static class SecurityUtils_Ex
     {
-
-        /// <summary>
+        /**
+         * 
+         /// <summary>
         /// 判定交易小节是否可交易
         /// </summary>
         /// <param name="exchange"></param>
@@ -83,6 +84,195 @@ namespace TradingLib.Common
             return QSEnumActionCheckResult.Allowed;
         }
 
+         * */
+
+        /// <summary>
+        /// 判定当前交易日
+        /// 如果交易日为零 则不能交易
+        /// </summary>
+        /// <param name="exchange"></param>
+        /// <param name="extime"></param>
+        /// <returns></returns>
+        public static int MarketTimeCheck(this SecurityFamily sec, DateTime extime)
+        {
+            TradingRange range = sec.MarketTime.JudgeRange(extime);
+            //Console.WriteLine("localtime:" + localTime.ToString() + " exchange time:" + extime.ToString() + " range;" + (range == null ? " null" : range.ToString()));
+            //
+            if (range == null)
+            {
+                return 0;
+            }
+
+            //当前为工作日 且当前处于假期 则直接返回 InHoliday 不用判定交易小节到底在哪个交易日
+            //if (extime.IsWorkDay() && sec.Exchange.IsInHoliday(extime))
+            //{
+            //    return 0;
+            //}
+            DateTime tradingday = extime;
+
+            if (sec.Exchange.Country == Country.CN)
+            {
+                //香港交易所规则 1.当前属于假期 则都不交易 已被前面的判定规则覆盖 如果T+1交易日 则从当前日期来判定 而不是通过下一个交易日来判定(和国内夜盘区别)
+                if (sec.Exchange.EXCode == "HKEX")
+                {
+                    //T交易小节 获取当前交易小节对应交易日 并做判定
+                    if (range.SettleFlag == QSEnumRangeSettleFlag.T)
+                    {
+                        tradingday = range.TradingDay(extime);
+                        if (sec.Exchange.IsInHoliday(tradingday))
+                        {
+                            return 0;
+                        }
+                    }
+                    else
+                    {
+                        //T+1交易小节 获取当前主日期 判定是否可以交易
+                        DateTime mainday = range.T1MainDay(extime); //夜盘跨越凌晨 则主交易日为当前小节的开始时间 同时要计算交易日 则也以开始时间来计算
+                        if (sec.Exchange.IsInHoliday(mainday))
+                        {
+                            return 0;
+                        }
+                        //可以交易 则获得下一个交易日(非假日工作日)
+                        tradingday = sec.Exchange.NextWorkDayWithoutHoliday(mainday);//同上夜盘跨越凌晨
+                    }
+                }
+                else
+                {
+                    //国内期货
+                    //当前为工作日 且当前处于假期 则不交易 包括夜盘 也不交易
+                    if (extime.IsWorkDay() && sec.Exchange.IsInHoliday(extime))
+                    {
+                        return 0;
+                    }
+                    //获得当前交易小节所属交易日 如果该交易日放假则不交易
+                    tradingday = range.TradingDay(extime);
+                    if (sec.Exchange.IsInHoliday(tradingday))
+                    {
+                        return 0;
+                    }
+                    //return tradingday.ToTLDate();
+                }
+            }
+            //交易日常规判定 当前T+1小节 属于紧挨的下一个交易日，如果对应该交易日不交易则该T+1交易小节不交易
+            else
+            {
+
+                //获得当前交易小节所属交易日 如果该交易日放假则为Holiday
+                tradingday = range.TradingDay(extime);
+                //Console.WriteLine("Tradingday:" + tradingday.ToTLDate());
+                if (sec.Exchange.IsInHoliday(tradingday))
+                {
+                    //Console.WriteLine("holiday");
+                    return 0;
+                }
+            }
+
+
+            //如果是属于T交易日 则只要在交易小节内且交易所不放假 则都是可以交易的,T+1则需要判断下一个交易日是否交易
+            //if (range.SettleFlag == QSEnumRangeSettleFlag.T1)
+            //{
+            //    if (exchange.IsInHoliday(t1_tradingday))
+            //    {
+            //        return QSEnumActionCheckResult.InHoliday;
+            //    }
+            //}
+            return tradingday.ToTLDate();
+        }
+        /// <summary>
+        /// 判定交易小节是否可交易
+        /// </summary>
+        /// <param name="exchange"></param>
+        /// <param name="extime"></param>
+        /// <param name="range"></param>
+        /// <param name="settleday"></param>
+        /// <returns></returns>
+        static QSEnumActionCheckResult MarketTimeCheck(Exchange exchange,DateTime extime,TradingRange range,out int settleday)
+        {
+            settleday = 0;
+            if (range == null)
+            {
+                settleday = 0;
+                return QSEnumActionCheckResult.RangeNotExist    ;
+            }
+
+            //当前为工作日 且当前处于假期 则直接返回 InHoliday 不用判定交易小节到底在哪个交易日
+            //if (extime.IsWorkDay() && exchange.IsInHoliday(extime))
+            //{
+            //    settleday = 0;
+            //    return QSEnumActionCheckResult.InHoliday;
+            //}
+            DateTime tradingday=DateTime.Now;
+
+            if (exchange.Country == Country.CN)
+            {
+            //规则 1.当前属于假期 则都不交易 已被前面的判定规则覆盖 如果T+1交易日 则从当前日期来判定 而不是通过下一个交易日来判定
+                if (exchange.EXCode == "HKEX")
+                {
+                    //T交易小节 获取当前交易小节对应交易日 并做判定
+                    if (range.SettleFlag == QSEnumRangeSettleFlag.T)
+                    {
+                        tradingday = range.TradingDay(extime);
+                        if (exchange.IsInHoliday(tradingday))
+                        {
+                            settleday = 0;
+                            return QSEnumActionCheckResult.InHoliday;
+                        }
+                    }
+                    else
+                    {
+                        //T+1交易小节 获取当前主日期 判定是否可以交易
+                        DateTime mainday = range.T1MainDay(extime); //夜盘跨越凌晨 则主交易日为当前小节的开始时间 同时要计算交易日 则也以开始时间来计算
+                        if (exchange.IsInHoliday(mainday))
+                        {
+                            settleday = 0;
+                            return QSEnumActionCheckResult.InHoliday;
+                        }
+                        //可以交易 则获得下一个交易日(非假日工作日)
+                        tradingday = exchange.NextWorkDayWithoutHoliday(mainday);//同上夜盘跨越凌晨
+                    }
+                }
+                else
+                {
+                    //国内期货
+                    //当前为工作日 且当前处于假期 则不交易 包括夜盘 也不交易
+                    if (extime.IsWorkDay() && exchange.IsInHoliday(extime))
+                    {
+                        settleday = 0;
+                        return QSEnumActionCheckResult.InHoliday;
+                    }
+                    //获得当前交易小节所属交易日 如果该交易日放假则不交易
+                    tradingday = range.TradingDay(extime);
+                    if (exchange.IsInHoliday(tradingday))
+                    {
+                        settleday = 0;
+                        return QSEnumActionCheckResult.InHoliday;
+                    }
+                }
+            }
+                //交易日常规判定 当前T+1小节 属于紧挨的下一个交易日，如果对应该交易日不交易则该T+1交易小节不交易
+            else
+            {
+                //获得当前交易小节所属交易日 如果该交易日放假则为Holiday
+                tradingday = range.TradingDay(extime);
+                if (exchange.IsInHoliday(tradingday))
+                {
+                    settleday = 0;
+                    return QSEnumActionCheckResult.InHoliday;
+                }
+            }
+            
+            //如果是属于T交易日 则只要在交易小节内且交易所不放假 则都是可以交易的,T+1则需要判断下一个交易日是否交易
+            //if (range.SettleFlag == QSEnumRangeSettleFlag.T1)
+            //{
+            //    if (exchange.IsInHoliday(t1_tradingday))
+            //    {
+            //        return QSEnumActionCheckResult.InHoliday;
+            //    }
+            //}
+            settleday = tradingday.ToTLDate();
+            return QSEnumActionCheckResult.Allowed;
+        }
+
         /// <summary>
         /// 判定某个品种几分钟后是否可以下单
         /// </summary>
@@ -107,7 +297,10 @@ namespace TradingLib.Common
 
 
 
-        /// <summary>
+        /*
+         * 
+         
+              /// <summary>
         /// 检查品种当前是否可以提交委托
         /// 交易小节完善后 可以通过交易小节具体判断 当前是否是否可以交易或撤单
         /// </summary>
@@ -119,6 +312,24 @@ namespace TradingLib.Common
             DateTime extime = exchange.GetExchangeTime();//获得交易所时间
             TradingRange range = sec.MarketTime.JudgeRange(extime);//根据交易所时间判定当前品种所属交易小节
             return MarketTimeCheck(exchange, extime, range,out settleday);
+        }
+         * */
+        /// <summary>
+        /// 检查品种当前是否可以提交委托
+        /// 交易小节完善后 可以通过交易小节具体判断 当前是否是否可以交易或撤单
+        /// </summary>
+        /// <param name="sec"></param>
+        /// <returns></returns>
+        public static QSEnumActionCheckResult CheckPlaceOrder(this SecurityFamily sec,out int settleday)
+        {
+            Exchange exchange = sec.Exchange;
+            DateTime extime = exchange.GetExchangeTime();//获得交易所时间
+            //TradingRange range = sec.MarketTime.JudgeRange(extime);//根据交易所时间判定当前品种所属交易小节
+            settleday = sec.MarketTimeCheck(extime);
+            if (settleday != 0)
+                return QSEnumActionCheckResult.Allowed;
+            return QSEnumActionCheckResult.InHoliday;
+            //return MarketTimeCheck(exchange, extime, range,out settleday);
         }
 
         /// <summary>

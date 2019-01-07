@@ -135,7 +135,7 @@ namespace TradingLib.Common
                 }
                 return extime;
             }
-            else if (range.StartDay < range.EndDay)
+            else if (range.StartDay < range.EndDay)//跨越2个工作日
             {
                 //如果开始时间为星期日 则属于星期一对应的结算日
                 if (range.StartDay == DayOfWeek.Sunday) //不存在T 和 T+1的判断

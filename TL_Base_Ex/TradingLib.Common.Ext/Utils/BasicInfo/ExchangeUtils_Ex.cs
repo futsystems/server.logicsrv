@@ -16,7 +16,7 @@ namespace TradingLib.Common
         /// </summary>
         /// <param name="exchagne"></param>
         /// <returns></returns>
-        private static Calendar GetCalendar(this Exchange exchagne)
+        public static Calendar GetCalendar(this Exchange exchagne)
         {
             return BasicTracker.CalendarTracker[exchagne.Calendar];
         }
