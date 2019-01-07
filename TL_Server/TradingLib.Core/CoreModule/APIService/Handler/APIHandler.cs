@@ -815,12 +815,42 @@ namespace TradingLib.Contrib.APIService
 
                                 CashTransactionImpl txn = new CashTransactionImpl();
                                 txn.Account = acc.ID;
-                                txn.Amount = amount;
+                                //txn.Amount = amount;
                                 txn.EquityType = QSEnumEquityType.OwnEquity;
                                 txn.TxnType = QSEnumCashOperation.Deposit;
                                 txn.Comment = "API入金";
                                 txn.Settleday = TLCtxHelper.ModuleSettleCentre.Tradingday;
                                 txn.DateTime = Util.ToTLDateTime();
+                                txn.Operator = "API";
+
+                                //汇率换算
+                                var rate = acc.GetExchangeRate(CurrencyType.RMB);
+                                txn.Amount = txn.Amount * rate;
+                                //decimal nowequity = acc.LastEquity + acc.CashIn - acc.CashOut;
+                                TLCtxHelper.ModuleAccountManager.CashOperation(txn);
+
+                                //执行手续费收取
+                                if (txn.TxnType == QSEnumCashOperation.Deposit)
+                                {
+                                    decimal depositcommission = acc.GetDepositCommission();
+                                    if (depositcommission > 0)
+                                    {
+                                        decimal commission = 0;
+                                        if (depositcommission >= 1)
+                                        {
+                                            commission = depositcommission;
+                                        }
+                                        else
+                                        {
+                                            commission = txn.Amount * depositcommission;
+                                        }
+
+                                        var commissionTxn = CashOperation.GenCommissionTransaction(account);
+                                        commissionTxn.Amount = commission;
+                                        TLCtxHelper.ModuleAccountManager.CashOperation(commissionTxn);
+                                    }
+                                }
+
 
                                 TLCtxHelper.ModuleAccountManager.CashOperation(txn);
 

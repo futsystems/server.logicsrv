@@ -127,6 +127,21 @@ namespace TradingLib.Contrib.APIService
             return txn;
         }
 
+        public static CashTransaction GenCommissionTransaction(string account)
+        {
+            CashTransactionImpl txn = new CashTransactionImpl();
+            txn.Account = account;
+            txn.Amount = 0;
+            txn.EquityType = QSEnumEquityType.OwnEquity;
+            txn.TxnType = QSEnumCashOperation.WithDraw;
+            txn.TxnRef = "API-Commission";
+            txn.DateTime = Util.ToTLDateTime();
+            txn.Comment = "手续费";
+            txn.Operator = "System";
+            txn.Settleday = TLCtxHelper.ModuleSettleCentre.Tradingday;
+            return txn;
+        }
+
 
         public static CashTransaction GenCreditTransaction(CashOperation operation,decimal amount)
         {
