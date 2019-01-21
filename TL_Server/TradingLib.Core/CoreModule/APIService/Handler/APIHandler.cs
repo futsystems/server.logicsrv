@@ -203,6 +203,26 @@ namespace TradingLib.Contrib.APIService
 
                                 CurrencyType currency = request.Params["currency"].ParseEnum<CurrencyType>();
 
+                                //域帐户数目检查 排除已经删除账户
+                                int accNum = baseManager.Domain.GetAccounts().Where(acc => !acc.Deleted).Count();
+                                if (accNum >= baseManager.Domain.AccLimit)
+                                {
+                                    return new JsonReply(104, "Account num limited:" + baseManager.Domain.AccLimit.ToString());
+                                }
+
+                                //root domain can not add more than 5 account
+                                if (accNum >= 5 && baseManager.Domain.ID == 1)
+                                {
+                                    return new JsonReply(104, "管理域不能超过5个测试账户");
+                                }
+
+                                int limit = baseManager.AccLimit;
+
+                                int cnt = baseManager.GetVisibleAccount().Where(acc => !acc.Deleted).Count();//获得该manger下属的所有帐户数目
+                                if (cnt >= limit)
+                                {
+                                    return new JsonReply(104, "Account num limited");
+                                }
 
                                 string account;
                                 TLCtxHelper.ModuleAccountManager.CreateAccountForUser(user_id, agent_id, currency,out account);
