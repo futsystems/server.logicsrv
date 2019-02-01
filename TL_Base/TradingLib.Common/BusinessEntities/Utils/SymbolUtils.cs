@@ -254,7 +254,8 @@ namespace TradingLib.Common
             //郑州CF610 格式
             if (sym.SecurityFamily.Exchange.EXCode == "CZCE")
             {
-                expire = "1" + symbol.Substring(symbol.Length - 3, 3);
+                //expire = "1" + symbol.Substring(symbol.Length - 3, 3);
+                expire = GetLetterShortYear(int.Parse(symbol.Substring(symbol.Length - 3, 1)));
             }
             int num = 0;
             secCode = string.Empty;
@@ -282,11 +283,48 @@ namespace TradingLib.Common
                     expire = symbol.Substring(symbol.Length - 1, 1);//获取后面1位 年
                     if (int.TryParse(expire, out num))
                     {
-                        year = 2000 + (10 + num);
+                        year = 2000 + int.Parse(GetLetterShortYear(num));
                         month = int.Parse(SymbolImpl.MonthLetter2Num(symbol.Substring(symbol.Length - 2, 1)));
                         secCode = symbol.Substring(0, symbol.Length - 2);
                     }
                 }
+            }
+        }
+
+        /// <summary>
+        /// 根据合约末尾数字 以及当前年份 推断出二位数年份
+        /// 当前合约1到12月份 为连续的12个月，不可能跨越多个年份，
+        /// 所以只需要比较去年，今年，明年  3个年份的末尾数据与合约末尾数字比较
+        /// </summary>
+        /// <param name="num"></param>
+        /// <returns></returns>
+        public static string GetLetterShortYear(int num)
+        {
+            var year = DateTime.Now.ToString("yyyy"); //2019
+            var lastYear = (int.Parse(year) - 1).ToString();//上一年
+            var nextYear = (int.Parse(year) + 1).ToString();//下一年
+
+            int yearLastNum = int.Parse(year.Substring(3, 1));
+            int lastYearLastNum = int.Parse(lastYear.Substring(3, 1));
+            int nextYearLastNum = int.Parse(nextYear.Substring(3, 1));
+
+            //1.合约末尾年份数字等于当前年份数字 则年份就是当前年份
+            if (num == yearLastNum)
+            {
+                return year.Substring(2, 2);
+            }
+            //2.合约末尾年份数字等于下一个年份数字 则年份就是下一个年份
+            else if (num == nextYearLastNum)
+            {
+                return nextYear.Substring(2, 2);
+            }
+            else if (num == lastYearLastNum)
+            {
+                return lastYear.Substring(2, 2);
+            }
+            else
+            {
+                return "00";
             }
         }
 
