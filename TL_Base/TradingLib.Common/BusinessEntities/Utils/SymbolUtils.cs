@@ -251,11 +251,11 @@ namespace TradingLib.Common
             
             string symbol = sym.Symbol;
             string expire = symbol.Substring(symbol.Length - 4, 4);
-            //郑州CF610 格式
+            //郑州CF610 格式 转换成1610
             if (sym.SecurityFamily.Exchange.EXCode == "CZCE")
             {
                 //expire = "1" + symbol.Substring(symbol.Length - 3, 3);
-                expire = GetLetterShortYear(int.Parse(symbol.Substring(symbol.Length - 3, 1)));
+                expire = GetLetterShortYear(int.Parse(symbol.Substring(symbol.Length - 3, 1))) + symbol.Substring(symbol.Length - 2, 2);
             }
             int num = 0;
             secCode = string.Empty;
