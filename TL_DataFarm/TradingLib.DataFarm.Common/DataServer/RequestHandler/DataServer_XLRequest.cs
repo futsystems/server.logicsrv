@@ -46,7 +46,7 @@ namespace TradingLib.DataFarm.Common
                             XLRspLoginField field = new XLRspLoginField();
                             field.TradingDay = 1;
                             field.UserID = request.UserID;
-                            field.Name = Encoding.UTF8.GetBytes("");
+                            field.Name = "".ToByteArray(16, Encoding.UTF8);
 
                             ErrorField rsp = new ErrorField();
 
@@ -105,7 +105,7 @@ namespace TradingLib.DataFarm.Common
                                 XLSymbolField field = new XLSymbolField();
                                 field.SymbolID = sym.Symbol;
                                 field.ExchangeID = sym.Exchange;
-                                field.SymbolName = Encoding.UTF8.GetBytes(sym.GetTitleName(true));
+                                field.SymbolName = sym.GetTitleName(true).ToByteArray(21, Encoding.UTF8);;
                                 field.SecurityID = sym.SecurityFamily.Code;
                                 field.SecurityType = XLSecurityType.Future;
                                 field.Multiple = sym.SecurityFamily.Multiple;
