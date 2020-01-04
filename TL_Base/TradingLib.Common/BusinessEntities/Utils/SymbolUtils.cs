@@ -255,13 +255,14 @@ namespace TradingLib.Common
             if (sym.SecurityFamily.Exchange.EXCode == "CZCE")
             {
                 //expire = "1" + symbol.Substring(symbol.Length - 3, 3);
+                //expire = 年(16) + 月(10)
                 expire = GetLetterShortYear(int.Parse(symbol.Substring(symbol.Length - 3, 1))) + symbol.Substring(symbol.Length - 2, 2);
             }
             int num = 0;
             secCode = string.Empty;
             year = 0;
             month = 0;
-            //后四位是数字 解析后判定月份和年份
+            //后四位是数字 解析后判定月份和年份 例子IF2002
             if (int.TryParse(expire, out num))
             {
                 month = int.Parse(expire.ToString().Substring(expire.Length - 2, 2));
@@ -271,14 +272,14 @@ namespace TradingLib.Common
             else
             {
                 expire = symbol.Substring(symbol.Length - 2, 2);//获取后面两位 年
-                //后两位是数字 
+                //后两位是数字 CLF21 F月份 21年
                 if (int.TryParse(expire, out num))
                 {
                     year = 2000 + int.Parse(expire);
                     month = int.Parse(SymbolImpl.MonthLetter2Num(symbol.Substring(symbol.Length - 3, 1)));
                     secCode = symbol.Substring(0, symbol.Length - 3);
                 }
-                else
+                else//例子: CLF1 F月份 1年
                 {
                     expire = symbol.Substring(symbol.Length - 1, 1);//获取后面1位 年
                     if (int.TryParse(expire, out num))
@@ -300,13 +301,15 @@ namespace TradingLib.Common
         /// <returns></returns>
         public static string GetLetterShortYear(int num)
         {
-            var year = DateTime.Now.ToString("yyyy"); //2019
-            var lastYear = (int.Parse(year) - 1).ToString();//上一年
-            var nextYear = (int.Parse(year) + 1).ToString();//下一年
+            //return string.Format("2{0}", num);
+            //根据本地时间判定
+            var year = DateTime.Now.ToString("yyyy"); //2021
+            var lastYear = (int.Parse(year) - 1).ToString();//上一年2020
+            var nextYear = (int.Parse(year) + 1).ToString();//下一年2022
 
-            int yearLastNum = int.Parse(year.Substring(3, 1));
-            int lastYearLastNum = int.Parse(lastYear.Substring(3, 1));
-            int nextYearLastNum = int.Parse(nextYear.Substring(3, 1));
+            int yearLastNum = int.Parse(year.Substring(3, 1));//1
+            int lastYearLastNum = int.Parse(lastYear.Substring(3, 1));//0
+            int nextYearLastNum = int.Parse(nextYear.Substring(3, 1));//2
 
             //1.合约末尾年份数字等于当前年份数字 则年份就是当前年份
             if (num == yearLastNum)
