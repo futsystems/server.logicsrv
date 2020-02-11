@@ -7,6 +7,7 @@ namespace TradingLib.Contrib.APIService
 {
     public enum  QSEnumGateWayType
     {
+
         /// <summary>
         /// 宝付
         /// </summary>

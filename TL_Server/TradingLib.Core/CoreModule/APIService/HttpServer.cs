@@ -63,6 +63,7 @@ namespace TradingLib.Contrib.APIService
 
         void HandleHttpRequest(HttpRequestEventArgs arg)
         {
+            arg.Response.Headers.Add("Access-Control-Allow-Origin", "*");
             using (var writer = new StreamWriter(arg.Response.OutputStream))
             {
                 //Console.WriteLine(string.Format("HttpMethod:{0} RawUrl:{1} Url:{2}", arg.Request.HttpMethod, arg.Request.RawUrl, arg.Request.Url));

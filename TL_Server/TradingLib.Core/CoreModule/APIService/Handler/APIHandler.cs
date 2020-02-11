@@ -131,10 +131,13 @@ namespace TradingLib.Contrib.APIService
                         #region ADD_USER
                         case "ADD_USER":
                             {
+#if DEBUG
+#else
                                 if (!LicenseConfig.Instance.EnableAPI)
                                 {
                                     return new JsonReply(107, string.Format("API is not enable"));
                                 }
+#endif
 
                                 reqDict.Add("domain_id", request.Params["domain_id"]);
                                 reqDict.Add("user_id", request.Params["user_id"]);
@@ -255,10 +258,13 @@ namespace TradingLib.Contrib.APIService
                         #region UPDATE_USER
                         case "UPDATE_USER":
                             {
+#if DEBUG
+#else
                                 if (!LicenseConfig.Instance.EnableAPI)
                                 {
                                     return new JsonReply(107, string.Format("API is not enable"));
                                 }
+#endif
 
                                 var name = Encoding.UTF8.GetString(Encoding.ASCII.GetBytes(request.Params["name"]));
                                 var branch = Encoding.UTF8.GetString(Encoding.ASCII.GetBytes(request.Params["branch"]));
@@ -341,10 +347,13 @@ namespace TradingLib.Contrib.APIService
                         #region QRY_ACCOUNT
                         case "QRY_ACCOUNT":
                             {
+#if DEBUG
+#else
                                 if (!LicenseConfig.Instance.EnableAPI)
                                 {
                                     return new JsonReply(107, string.Format("API is not enable"));
                                 }
+#endif
 
                                 reqDict.Add("domain_id", request.Params["domain_id"]);
                                 reqDict.Add("account", request.Params["account"]);
@@ -406,10 +415,13 @@ namespace TradingLib.Contrib.APIService
                         #region QRY_PASS
                         case "QRY_PASS":
                             {
+#if DEBUG
+#else
                                 if (!LicenseConfig.Instance.EnableAPI)
                                 {
                                     return new JsonReply(107, string.Format("API is not enable"));
                                 }
+#endif
 
                                 reqDict.Add("domain_id", request.Params["domain_id"]);
                                 reqDict.Add("account", request.Params["account"]);
@@ -462,10 +474,13 @@ namespace TradingLib.Contrib.APIService
                         #region QRY_ORDER
                         case "QRY_ORDER":
                             {
+#if DEBUG
+#else
                                 if (!LicenseConfig.Instance.EnableAPI)
                                 {
                                     return new JsonReply(107, string.Format("API is not enable"));
                                 }
+#endif
                                 reqDict.Add("domain_id", request.Params["domain_id"]);
                                 reqDict.Add("account", request.Params["account"]);
                                 reqDict.Add("start", request.Params["start"]);
@@ -531,10 +546,13 @@ namespace TradingLib.Contrib.APIService
                         #region QRY_TRADE
                         case "QRY_TRADE":
                             {
+#if DEBUG
+#else
                                 if (!LicenseConfig.Instance.EnableAPI)
                                 {
                                     return new JsonReply(107, string.Format("API is not enable"));
                                 }
+#endif
 
                                 reqDict.Add("domain_id", request.Params["domain_id"]);
                                 reqDict.Add("account", request.Params["account"]);
@@ -601,10 +619,13 @@ namespace TradingLib.Contrib.APIService
                         #region QRY_CASHTXN
                         case "QRY_CASHTXN":
                             {
+#if DEBUG
+#else
                                 if (!LicenseConfig.Instance.EnableAPI)
                                 {
                                     return new JsonReply(107, string.Format("API is not enable"));
                                 }
+#endif
 
                                 reqDict.Add("domain_id", request.Params["domain_id"]);
                                 reqDict.Add("account", request.Params["account"]);
@@ -671,10 +692,13 @@ namespace TradingLib.Contrib.APIService
                         #region QRY_POSITION
                         case "QRY_POSITION":
                             {
+#if DEBUG
+#else
                                 if (!LicenseConfig.Instance.EnableAPI)
                                 {
                                     return new JsonReply(107, string.Format("API is not enable"));
                                 }
+#endif
 
                                 reqDict.Add("domain_id", request.Params["domain_id"]);
                                 reqDict.Add("account", request.Params["account"]);
@@ -725,10 +749,13 @@ namespace TradingLib.Contrib.APIService
                         #region UPDATE_PASS
                         case "UPDATE_PASS":
                             {
+#if DEBUG
+#else
                                 if (!LicenseConfig.Instance.EnableAPI)
                                 {
                                     return new JsonReply(107, string.Format("API is not enable"));
                                 }
+#endif
 
                                 reqDict.Add("domain_id", request.Params["domain_id"]);
                                 reqDict.Add("account", request.Params["account"]);
@@ -785,10 +812,13 @@ namespace TradingLib.Contrib.APIService
                         #region DEPOSIT
                         case "DEPOSIT":
                             {
+#if DEBUG
+#else
                                 if (!LicenseConfig.Instance.EnableAPI)
                                 {
                                     return new JsonReply(107, string.Format("API is not enable"));
                                 }
+#endif
 
                                 reqDict.Add("domain_id", request.Params["domain_id"]);
                                 reqDict.Add("account", request.Params["account"]);
@@ -835,7 +865,7 @@ namespace TradingLib.Contrib.APIService
 
                                 CashTransactionImpl txn = new CashTransactionImpl();
                                 txn.Account = acc.ID;
-                                //txn.Amount = amount;
+                                txn.Amount = amount;
                                 txn.EquityType = QSEnumEquityType.OwnEquity;
                                 txn.TxnType = QSEnumCashOperation.Deposit;
                                 txn.Comment = "API入金";
@@ -846,8 +876,20 @@ namespace TradingLib.Contrib.APIService
                                 //汇率换算
                                 var rate = acc.GetExchangeRate(CurrencyType.RMB);
                                 txn.Amount = txn.Amount * rate;
-                                //decimal nowequity = acc.LastEquity + acc.CashIn - acc.CashOut;
+                                //执行入金操作
                                 TLCtxHelper.ModuleAccountManager.CashOperation(txn);
+
+                                CashOperation operation = new CashOperation();
+                                operation.BusinessType = EnumBusinessType.Normal;
+                                operation.Account = acc.ID;
+                                operation.Amount = amount;
+                                operation.DateTime = Util.ToTLDateTime();
+                                operation.GateWayType = (QSEnumGateWayType)(-1);
+                                operation.OperationType = QSEnumCashOperation.Deposit;
+                                operation.Ref = APITracker.NextRef;
+                                operation.Domain_ID = acc.Domain.ID;
+                                operation.Status = API.QSEnumCashInOutStatus.CONFIRMED;
+                                ORM.MCashOperation.InsertCashOperation(operation);
 
                                 //执行手续费收取
                                 if (txn.TxnType == QSEnumCashOperation.Deposit)
@@ -872,7 +914,7 @@ namespace TradingLib.Contrib.APIService
                                 }
 
 
-                                TLCtxHelper.ModuleAccountManager.CashOperation(txn);
+                                //TLCtxHelper.ModuleAccountManager.CashOperation(txn);
 
                                 return new JsonReply(0, string.Format("Deposit:{0} success", amount), new
                                 {
@@ -893,10 +935,13 @@ namespace TradingLib.Contrib.APIService
                         #region WITHDRAW
                         case "WITHDRAW":
                             {
+#if DEBUG
+#else
                                 if (!LicenseConfig.Instance.EnableAPI)
                                 {
                                     return new JsonReply(107, string.Format("API is not enable"));
                                 }
+#endif
 
                                 reqDict.Add("domain_id", request.Params["domain_id"]);
                                 reqDict.Add("account", request.Params["account"]);
@@ -964,6 +1009,17 @@ namespace TradingLib.Contrib.APIService
                                 //执行出金操作
                                 TLCtxHelper.ModuleAccountManager.CashOperation(txn);
 
+                                CashOperation operation = new CashOperation();
+                                operation.BusinessType = EnumBusinessType.Normal;
+                                operation.Account = acc.ID;
+                                operation.Amount = amount;
+                                operation.DateTime = Util.ToTLDateTime();
+                                operation.GateWayType = (QSEnumGateWayType)(-1);
+                                operation.OperationType = QSEnumCashOperation.WithDraw;
+                                operation.Ref = APITracker.NextRef;
+                                operation.Domain_ID = acc.Domain.ID;
+                                operation.Status = API.QSEnumCashInOutStatus.CONFIRMED;
+                                ORM.MCashOperation.InsertCashOperation(operation);
                                 
                                 return new JsonReply(0, string.Format("Withdraw:{0} success", amount), new
                                 {
