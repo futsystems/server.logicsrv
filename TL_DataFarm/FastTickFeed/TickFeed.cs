@@ -385,6 +385,8 @@ namespace TradingLib.DataFarm
 
                     _tickreceiveruning = true;
                     OnConnected();
+                    string tickstr = null;
+
                     while (_tickgo)
                     {
                         try
@@ -393,7 +395,7 @@ namespace TradingLib.DataFarm
                             {
                                 if (incoming[0] != null)
                                 {
-                                    string tickstr = incoming[0].First().ReadString(Encoding.UTF8);
+                                    tickstr = incoming[0].First().ReadString(Encoding.UTF8);
                                     //清空数据否则会内存泄露
                                     incoming[0].Clear();
                                     //logger.Info("ticksr:" + tickstr);
@@ -426,11 +428,13 @@ namespace TradingLib.DataFarm
                         }
                         catch (ZException ex)
                         {
+                            logger.Error("TickStr: " + tickstr);
                             logger.Error("Tick Sock错误:" + ex.ToString());
 
                         }
                         catch (System.Exception ex)
                         {
+                            logger.Error("TickStr: " + tickstr);
                             logger.Error("Tick数据处理错误" + ex.ToString());
                         }
 
@@ -441,7 +445,6 @@ namespace TradingLib.DataFarm
                 }
             }
         }
-
         #endregion
 
     }
