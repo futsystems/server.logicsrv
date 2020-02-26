@@ -429,13 +429,13 @@ namespace TradingLib.DataFarm
                         catch (ZException ex)
                         {
                             logger.Error("TickStr: " + tickstr);
-                            logger.Error("Tick Sock错误:" + ex.ToString());
+                            logger.Error("Tick Sock error:" + ex.ToString());
 
                         }
                         catch (System.Exception ex)
                         {
                             logger.Error("TickStr: " + tickstr);
-                            logger.Error("Tick数据处理错误" + ex.ToString());
+                            logger.Error("Tick Handler error" + ex.ToString());
                         }
 
                     }
