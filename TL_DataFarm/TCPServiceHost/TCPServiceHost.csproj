@@ -37,22 +37,6 @@
     <Reference Include="Common.Logging.Core">
       <HintPath>..\..\lib\Common.Logging.Core.dll</HintPath>
     </Reference>
-    <Reference Include="SuperSocket.Common, Version=1.6.6.0, Culture=neutral, PublicKeyToken=6c80000676988ebb, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\lib\supersocket\1.6.7\SuperSocket.Common.dll</HintPath>
-    </Reference>
-    <Reference Include="SuperSocket.Facility, Version=1.6.6.0, Culture=neutral, PublicKeyToken=6c80000676988ebb, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\lib\supersocket\1.6.7\SuperSocket.Facility.dll</HintPath>
-    </Reference>
-    <Reference Include="SuperSocket.SocketBase, Version=1.6.6.0, Culture=neutral, PublicKeyToken=6c80000676988ebb, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\lib\supersocket\1.6.7\SuperSocket.SocketBase.dll</HintPath>
-    </Reference>
-    <Reference Include="SuperSocket.SocketEngine, Version=1.6.6.0, Culture=neutral, PublicKeyToken=6c80000676988ebb, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\lib\supersocket\1.6.7\SuperSocket.SocketEngine.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.configuration" />
     <Reference Include="System.Xml.Linq" />
@@ -66,7 +50,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="LogFactory.cs" />
+    <Compile Include="Logger.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TCPServiceHost.cs" />
     <Compile Include="TCPServiceHost_Session.cs" />
@@ -78,6 +62,22 @@
     <Compile Include="TLSessionBase.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\..\SuperSocket-1.6\Common\SuperSocket.Common.Net40.csproj">
+      <Project>{DD3D4804-8AC3-4509-A373-D7764AF4186D}</Project>
+      <Name>SuperSocket.Common.Net40 %286.DataFarm\1-SuperSocket\SuperSocket.Common.Net40%29</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\SuperSocket-1.6\Facility\SuperSocket.Facility.Net40.csproj">
+      <Project>{F20BFDE6-2EE5-4554-A928-CA50634DC15F}</Project>
+      <Name>SuperSocket.Facility.Net40 %286.DataFarm\1-SuperSocket\SuperSocket.Facility.Net40%29</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\SuperSocket-1.6\SocketBase\SuperSocket.SocketBase.Net40.csproj">
+      <Project>{DCA5582F-5A38-4799-AAB1-4018010F1AC8}</Project>
+      <Name>SuperSocket.SocketBase.Net40 %286.DataFarm\1-SuperSocket\SuperSocket.SocketBase.Net40%29</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\SuperSocket-1.6\SocketEngine\SuperSocket.SocketEngine.Net40.csproj">
+      <Project>{EF2DEE7F-97AA-4174-B757-299913DF58FD}</Project>
+      <Name>SuperSocket.SocketEngine.Net40 %286.DataFarm\1-SuperSocket\SuperSocket.SocketEngine.Net40%29</Name>
+    </ProjectReference>
     <ProjectReference Include="..\TradingLib.DataFarm.API\TradingLib.DataFarm.API.csproj">
       <Project>{FE184B78-DFA2-4E10-98CD-C6EAC59D84D9}</Project>
       <Name>TradingLib.DataFarm.API</Name>

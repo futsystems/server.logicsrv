@@ -15,13 +15,22 @@ namespace DataCoreSrv
     class Program
     {
 
+        
+        
         const string PROGRAME = "DataCore";
         static ILog logger = LogManager.GetLogger(PROGRAME);
         static void Main(string[] args)
         {
+            //var host = new TCPServiceHost.TCPServiceHost();
+            //host.Start();
             try
             {
                 AppDomain.CurrentDomain.UnhandledException += new UnhandledExceptionEventHandler(CurrentDomain_UnhandledException);
+
+                var n = new System.Random();
+                var minute = n.Next(5);
+                logger.Info("Wait for:" + minute.ToString() + " minutes to start");
+                System.Threading.Thread.Sleep(TimeSpan.FromMinutes(minute));//随机等待
 
                 DataServer dataSrv = new DataServer();
                 dataSrv.Start(true);

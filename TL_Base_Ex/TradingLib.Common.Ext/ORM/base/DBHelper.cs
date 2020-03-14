@@ -36,7 +36,7 @@ namespace TradingLib.ORM
 
         static string DBAddress="127.0.0.1";
         static int DBPort=3306;
-        static string DBName="futsystems";
+        static string DBName="demo";
         static string UserName="root";
         static string PassWord="123456";
 

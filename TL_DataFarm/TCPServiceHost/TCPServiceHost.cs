@@ -125,9 +125,11 @@ namespace TCPServiceHost
             
             //cfg.SendTimeOut = 
             //cfg.SyncSend = true;//同步发送 异步发送在Linux环境下会造成发送异常
-            
 
-            if (!tcpSocketServer.Setup(cfg))
+            logger.Info("log setting1 " + cfg.LogAllSocketException.ToString() + " " + cfg.LogBasicSessionActivity.ToString());
+
+
+            if (!tcpSocketServer.Setup(cfg,logFactory:new DFLogFactory()))
             {
                 logger.Error("Setup TcpSocket Error");
             }

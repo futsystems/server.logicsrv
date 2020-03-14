@@ -130,7 +130,7 @@ namespace XLServiceHost
             //cfg.SyncSend = true;//同步发送 异步发送在Linux环境下会造成发送异常
             
 
-            if (!tcpSocketServer.Setup(cfg))
+            if (!tcpSocketServer.Setup(cfg,logFactory:new DFLogFactory()))
             {
                 logger.Error("Setup TcpSocket Error");
             }
