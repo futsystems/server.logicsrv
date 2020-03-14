@@ -37,21 +37,21 @@
     <Reference Include="Common.Logging.Core">
       <HintPath>..\..\lib\Common.Logging.Core.dll</HintPath>
     </Reference>
-    <Reference Include="SuperSocket.Common, Version=1.6.4.0, Culture=neutral, PublicKeyToken=6c80000676988ebb, processorArchitecture=MSIL">
+    <Reference Include="SuperSocket.Common, Version=1.6.6.0, Culture=neutral, PublicKeyToken=6c80000676988ebb, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\lib\supersocket\1.6.6\SuperSocket.Common.dll</HintPath>
+      <HintPath>..\..\lib\supersocket\1.6.7\SuperSocket.Common.dll</HintPath>
     </Reference>
-    <Reference Include="SuperSocket.Facility, Version=1.6.4.0, Culture=neutral, PublicKeyToken=6c80000676988ebb, processorArchitecture=MSIL">
+    <Reference Include="SuperSocket.Facility, Version=1.6.6.0, Culture=neutral, PublicKeyToken=6c80000676988ebb, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\lib\supersocket\1.6.6\SuperSocket.Facility.dll</HintPath>
+      <HintPath>..\..\lib\supersocket\1.6.7\SuperSocket.Facility.dll</HintPath>
     </Reference>
-    <Reference Include="SuperSocket.SocketBase, Version=1.6.4.0, Culture=neutral, PublicKeyToken=6c80000676988ebb, processorArchitecture=MSIL">
+    <Reference Include="SuperSocket.SocketBase, Version=1.6.6.0, Culture=neutral, PublicKeyToken=6c80000676988ebb, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\lib\supersocket\1.6.6\SuperSocket.SocketBase.dll</HintPath>
+      <HintPath>..\..\lib\supersocket\1.6.7\SuperSocket.SocketBase.dll</HintPath>
     </Reference>
-    <Reference Include="SuperSocket.SocketEngine, Version=1.6.4.0, Culture=neutral, PublicKeyToken=6c80000676988ebb, processorArchitecture=MSIL">
+    <Reference Include="SuperSocket.SocketEngine, Version=1.6.6.0, Culture=neutral, PublicKeyToken=6c80000676988ebb, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\lib\supersocket\1.6.6\SuperSocket.SocketEngine.dll</HintPath>
+      <HintPath>..\..\lib\supersocket\1.6.7\SuperSocket.SocketEngine.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.configuration" />

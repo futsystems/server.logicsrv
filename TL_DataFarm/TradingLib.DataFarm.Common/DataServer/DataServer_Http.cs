@@ -13,16 +13,16 @@ namespace TradingLib.DataFarm.Common
 
     public partial class DataServer
     {
-        HttpServer _httpServer = null;
+        //HttpServer _httpServer = null;
 
-        void StartHttpServer()
-        {
-            if (_httpEnable)
-            {
-                logger.Info("Start Http Service at port:" + _httpPort.ToString());
-                _httpServer = new HttpServer(_httpPort);
-                _httpServer.Start();
-            }
-        }
+        //void StartHttpServer()
+        //{
+        //    if (_httpEnable)
+        //    {
+        //        logger.Info("Start Http Service at port:" + _httpPort.ToString());
+        //        _httpServer = new HttpServer(_httpPort);
+        //        _httpServer.Start();
+        //    }
+        //}
     }
 }

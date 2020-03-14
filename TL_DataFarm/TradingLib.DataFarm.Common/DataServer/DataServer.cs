@@ -148,7 +148,7 @@ namespace TradingLib.DataFarm.Common
             this.StartSendService();
 
             //启动Http服务
-            this.StartHttpServer();
+            //this.StartHttpServer();
 
             //注册任务
             this.RegisterTask();
